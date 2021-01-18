@@ -2,165 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41A152F9AC5
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 08:46:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3CA62F9B55
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 09:33:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbhARHpU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 02:45:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51800 "EHLO
+        id S2387834AbhARIcu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 03:32:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733029AbhARHpT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 02:45:19 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E5D6C0613C1
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Jan 2021 23:44:39 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l1PDG-0007pM-BJ; Mon, 18 Jan 2021 08:44:34 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l1PDF-0004CK-Mg; Mon, 18 Jan 2021 08:44:33 +0100
-Date:   Mon, 18 Jan 2021 08:44:33 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Nicola Di Lieto <nicola.dilieto@gmail.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
-Message-ID: <20210118074433.fzdyfpd7xxrfynbt@pengutronix.de>
-References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
- <20201211170432.6113-1-nicola.dilieto@gmail.com>
- <20201211170432.6113-2-nicola.dilieto@gmail.com>
- <20210117130434.663qpp6noujptdyt@pengutronix.de>
- <20210117135803.gt2zgta5pv7o6t6t@einstein.dilieto.eu>
- <20210117184556.7huqlkxykjwionok@pengutronix.de>
- <20210117210618.ptnypp4zgk4lfuab@einstein.dilieto.eu>
+        with ESMTP id S1726488AbhARIci (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 03:32:38 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99A4FC061573;
+        Mon, 18 Jan 2021 00:31:56 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id 6so8254396wri.3;
+        Mon, 18 Jan 2021 00:31:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=mV6Bo6RnxoD+Wo+WZWXYj5Z/xntqPRjWRdQIckQx4+s=;
+        b=R7Xg4fdNVNvV1pjh0MXgS0lrsw0EbZ82Zr1s7Re2aHAHuSL81ou6Oclr4q6MrsN7G5
+         QB3JI4InchASbmxYjgUrrs+B1QvTBANCqyIFc+5bFKm7jPU+86pHBsYILBY6v8/6GhSP
+         ZehxNKrH84r6p1TYLwx7vjzkP+by56EtxjcUR9EEvdoyMvdAr1a5+HF5R9OFpoxnKKCn
+         VevZleRUpkZ1bY+aOaHvxyrtt20PO2GmqXsFHtZWZeyez9WPgJ6xN0RAmhbeBV5UmYuK
+         kteQbfJrZsZf9QMs4O/QDTS9XtBKxv9w0fC5XFrxTY/6hM4IZ6K5ual0FCMXUnjoGk2q
+         oHlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=mV6Bo6RnxoD+Wo+WZWXYj5Z/xntqPRjWRdQIckQx4+s=;
+        b=lNTJLtD5CQVi4vCNUKhUJbWQBQiqWOBglvzli17Z8q1U/C4We7Rj8A4UhXR/DL37OD
+         zkdSKp11X12cOpj1T9YXtswXCXQlQXpHo4V8h1B3D4vJP3hIjAcEqJBpWeeGWjdZ0NHy
+         Gf9CKqrM+PkOtTMETJ553we5yFzgc27DoH3CCeKbYS6cUOdWcApi1BeZXEnFcXsmu0WQ
+         R8R7sUPfap1CtVVwyG/rLkNl4aKc/lAb9zb7zSioV74S9iwdMZOzos9PdhRju6DKHZkB
+         BUm4lMrOMlMJWAanZCCLRkLN3fj82qCBdHQfDPv/06nGB3YKSm6GYqaAOKYFrEDG/KNQ
+         P8QA==
+X-Gm-Message-State: AOAM532RcYV+LW3F+CK6mCKx+yl58HCtS6Afr6fBQi6Lad8rmlannncF
+        MCGRpep7WQ1V2joPCeE7VrH1eOZneudt7g==
+X-Google-Smtp-Source: ABdhPJxZBCHKwlIldrumbbeb3NS0Fy5oV5Jm1Q4nPb19wsm+4b4tguqLaJiglYZRuof4GpdxIi48gQ==
+X-Received: by 2002:a05:6000:222:: with SMTP id l2mr24227009wrz.392.1610958715325;
+        Mon, 18 Jan 2021 00:31:55 -0800 (PST)
+Received: from [192.168.1.211] ([2.29.208.120])
+        by smtp.gmail.com with ESMTPSA id p15sm28555537wrt.15.2021.01.18.00.31.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jan 2021 00:31:54 -0800 (PST)
+Subject: Re: [PATCH v2 1/7] acpi: utils: move acpi_lpss_dep() to utils
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        kieran.bingham@ideasonboard.com
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-2-djrscally@gmail.com>
+ <YAU3msXszVZ8CLjs@pendragon.ideasonboard.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <0ac56c5f-7a8b-5bab-13fc-300206d65d13@gmail.com>
+Date:   Mon, 18 Jan 2021 08:31:52 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bw6bmqeu4wz2fqj6"
-Content-Disposition: inline
-In-Reply-To: <20210117210618.ptnypp4zgk4lfuab@einstein.dilieto.eu>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <YAU3msXszVZ8CLjs@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Laurent
 
---bw6bmqeu4wz2fqj6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Nicola,
-
-On Sun, Jan 17, 2021 at 10:06:18PM +0100, Nicola Di Lieto wrote:
-> On Sun, Jan 17, 2021 at 07:45:56PM +0100, Uwe Kleine-K=F6nig wrote:
-> > > > > +	pwm_gpio->output =3D pwm_gpio->state ^ pwm_gpio->cur.invert;
-> >=20
-> > So far I understood also only comment. What wasn't obvious immediately
-> > is the state member.
->=20
-> Would it become clear enough by adding: "state is the logical PWM output;
-> the actual PIN output level is inverted by XORing with cur.invert when the
-> latter is true" ?
-
-This was at least good enough for me to understand it now.
-
-So iff state is true, the PWM is in the active phase of the current
-period. Maybe "currently_active" is a better name for this variable?
-
-Then the code could (with some comments added and a few more variables
-renamed) could look as follows:
-
-	if (ddata->currently_active) {
-		/* Enter the inactive part of the current period. */
-		ddata->currently_active =3D false;
-		next_transistion =3D ddata->cur.toff_ns;
-	} else {
-		/*
-		 * Start a new period. First check if there is a new
-		 * configuration setting pending in ddata->new.
-		 */
-		ddata->currently_active =3D true;
-
-		if (spin_trylock(&ddata->lock)) {
-			ddata->cur =3D ddata->new;
-			spin_unlock(&ddata->lock);
-		}
-		next_transition =3D ddata->cur.ton_ns;
-	}
-	...
-
-which IMHO is easier to understand.
-
-I think there are still two problems with this approach:
-
- - The locking is hard to follow, .enabled is accessed using atomic
-   accessors, .new is protected by the spinlock and the other members
-   are not accessed concurrently, right?
-   If pwm_apply(..., {.enabled =3D false}) and pwm_apply(.., {.enabled =3D
-   true}) are called in quick sequence (e.g. faster than the first call
-   triggers the work queue) there is trouble ahead, isn't there?
-
- - If .duty_cycle is equal to 0 (or .period) the output should be
-   constant. I think this isn't what will happen.
-
-> > > Would it be ok to cancel the timer first and then "return
-> > > pwmchip_remove(...)"?
-> >=20
-> > No. The PWM must stay functional until pwmchip_remove() returns.
-> >=20
->=20
-> Could you please clarify what I should do when pwmchip_remove returns
-> non-zero? In my original implementation
-> - if pwmchip_remove returns a non-zero error code, I return it to the
-> caller and do not cancel the timer.
-> - if pwmchip_remove returns zero, I cancel the timer and return zero to  =
-the
-> caller
-
-IMHO it's a bug that pwmchip_remove() can return an error code. I think
-the best you can do currently is:
-
-	ret =3D pwmchip_remove(...)
-	WARN_ON(ret);
-
-	hrtimer_cancel(..);
-
-	return 0;
-
-because whatever you do is wrong. To sort this out needs some thought
-and work in the framework and so is unrelated to this patch.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bw6bmqeu4wz2fqj6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAFPF4ACgkQwfwUeK3K
-7AlLnAf9G1EK9AIg46lWQP7nqCqeeYRHv0WufpKO7/EQuBWV9s8z3ZTGLykYTkk8
-3hC5RtuuejUrMVwGNdV4B4t5iTB56rdyMnk1PISIJhopmFz5naNhFKmNh7RHCzwF
-hbwAiI0veY0+C31L6XvqAel0qb7T8Co8+IGoDmurMw2DDxo9NsGjfR0ZJuqG/ji/
-vFUKYXEf1F+Q7TjjyTDwAFINBsN4JdWSeKKuVU6eklIodve0M0qAbZx+jyqFhPYd
-L6ryZ40DxAl2NuyCVjJqkCvkU67XUEuqyEFhKQtFlxI1mVhaCRywcKuPVGO9ahp0
-eNq+Yt0sAPGx1oyz6H+bwUwXZ6+xew==
-=jOxa
------END PGP SIGNATURE-----
-
---bw6bmqeu4wz2fqj6--
+On 18/01/2021 07:24, Laurent Pinchart wrote:
+> Hi Daniel,
+>
+> Thank you for the patch.
+>
+> On Mon, Jan 18, 2021 at 12:34:22AM +0000, Daniel Scally wrote:
+>> I need to be able to identify devices which declare themselves to be
+>> dependent on other devices through _DEP; add this function to utils.c
+>> and export it to the rest of the ACPI layer.
+>>
+>> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+>> ---
+>> Changes in v2:
+>> 	- Introduced
+>>
+>>  drivers/acpi/acpi_lpss.c | 24 ------------------------
+>>  drivers/acpi/internal.h  |  1 +
+>>  drivers/acpi/utils.c     | 24 ++++++++++++++++++++++++
+>>  3 files changed, 25 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+>> index be73974ce449..70c7d9a3f715 100644
+>> --- a/drivers/acpi/acpi_lpss.c
+>> +++ b/drivers/acpi/acpi_lpss.c
+>> @@ -543,30 +543,6 @@ static struct device *acpi_lpss_find_device(const char *hid, const char *uid)
+>>  	return bus_find_device(&pci_bus_type, NULL, &data, match_hid_uid);
+>>  }
+>>  
+>> -static bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
+>> -{
+>> -	struct acpi_handle_list dep_devices;
+>> -	acpi_status status;
+>> -	int i;
+>> -
+>> -	if (!acpi_has_method(adev->handle, "_DEP"))
+>> -		return false;
+>> -
+>> -	status = acpi_evaluate_reference(adev->handle, "_DEP", NULL,
+>> -					 &dep_devices);
+>> -	if (ACPI_FAILURE(status)) {
+>> -		dev_dbg(&adev->dev, "Failed to evaluate _DEP.\n");
+>> -		return false;
+>> -	}
+>> -
+>> -	for (i = 0; i < dep_devices.count; i++) {
+>> -		if (dep_devices.handles[i] == handle)
+>> -			return true;
+>> -	}
+>> -
+>> -	return false;
+>> -}
+>> -
+>>  static void acpi_lpss_link_consumer(struct device *dev1,
+>>  				    const struct lpss_device_links *link)
+>>  {
+>> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+>> index cb229e24c563..ee62c0973576 100644
+>> --- a/drivers/acpi/internal.h
+>> +++ b/drivers/acpi/internal.h
+>> @@ -79,6 +79,7 @@ static inline void acpi_lpss_init(void) {}
+>>  #endif
+>>  
+>>  void acpi_apd_init(void);
+>> +bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle);
+> "lpss" stands for low power subsystem, an Intel device within the PCH
+> that handles I2C, SPI, UART, ... I think the function should be renamed,
+> as it's now generic. acpi_dev_has_dep() is a potential candidate, I'm
+> sure better ones exist. A bit of kerneldoc would also not hurt.
+Okedokey; I shall add kerneldoc and think of an appropriate name, plus
+rename all the uses of it. How about acpi_dev_is_dep()? "has_dep" to me
+implies anything at all in _DEP should return true.
+>>  
+>>  acpi_status acpi_hotplug_schedule(struct acpi_device *adev, u32 src);
+>>  bool acpi_queue_hotplug_work(struct work_struct *work);
+>> diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
+>> index ddca1550cce6..78b38775f18b 100644
+>> --- a/drivers/acpi/utils.c
+>> +++ b/drivers/acpi/utils.c
+>> @@ -807,6 +807,30 @@ static int acpi_dev_match_cb(struct device *dev, const void *data)
+>>  	return hrv == match->hrv;
+>>  }
+>>  
+>> +bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
+>> +{
+>> +	struct acpi_handle_list dep_devices;
+>> +	acpi_status status;
+>> +	int i;
+>> +
+>> +	if (!acpi_has_method(adev->handle, "_DEP"))
+>> +		return false;
+>> +
+>> +	status = acpi_evaluate_reference(adev->handle, "_DEP", NULL,
+>> +					 &dep_devices);
+>> +	if (ACPI_FAILURE(status)) {
+>> +		dev_dbg(&adev->dev, "Failed to evaluate _DEP.\n");
+>> +		return false;
+>> +	}
+>> +
+>> +	for (i = 0; i < dep_devices.count; i++) {
+>> +		if (dep_devices.handles[i] == handle)
+>> +			return true;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>>  /**
+>>   * acpi_dev_present - Detect that a given ACPI device is present
+>>   * @hid: Hardware ID of the device.
