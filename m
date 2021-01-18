@@ -2,47 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6936F2FA3D6
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 15:59:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0FFE2FA3FC
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 16:04:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392922AbhARO6R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 09:58:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60034 "EHLO
+        id S2404915AbhARPCr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 10:02:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391682AbhARO6F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 09:58:05 -0500
+        with ESMTP id S2393226AbhARPBF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 10:01:05 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60A5CC061574
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 06:57:25 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF63FC061757
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 07:00:24 -0800 (PST)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1l1Vy6-00037n-CY; Mon, 18 Jan 2021 15:57:22 +0100
+        id 1l1W0l-0003JB-LH; Mon, 18 Jan 2021 16:00:07 +0100
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1l1Vy6-0007Uf-2l; Mon, 18 Jan 2021 15:57:22 +0100
-Date:   Mon, 18 Jan 2021 15:57:21 +0100
+        id 1l1W0V-0007WT-3p; Mon, 18 Jan 2021 15:59:51 +0100
+Date:   Mon, 18 Jan 2021 15:59:50 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Cc:     Baruch Siach <baruch@tkos.co.il>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 2/2] dt-bindings: gpio: pca953x: increase allowed length
- for gpio-line-names
-Message-ID: <20210118145721.6puoqfd6jx3x76jh@pengutronix.de>
-References: <20210113194952.104734-1-u.kleine-koenig@pengutronix.de>
- <20210113194952.104734-2-u.kleine-koenig@pengutronix.de>
- <CACRpkdbVKzE_pe0mPb4H2c0RVJGxEtiFEfMpTCoEO+7qdVBHFQ@mail.gmail.com>
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 0/5] gpio: mvebu: pwm fixes and improvements
+Message-ID: <20210118145950.57oojkpe2b6zjmsf@pengutronix.de>
+References: <cover.1610529002.git.baruch@tkos.co.il>
+ <CACRpkdZvECD74V2+84+TJOW8cx-OUH-nHOouTxgNGSxkqPzsjw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3vlece4lwqrljhc3"
+        protocol="application/pgp-signature"; boundary="4tyzmw24tono5g4i"
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbVKzE_pe0mPb4H2c0RVJGxEtiFEfMpTCoEO+7qdVBHFQ@mail.gmail.com>
+In-Reply-To: <CACRpkdZvECD74V2+84+TJOW8cx-OUH-nHOouTxgNGSxkqPzsjw@mail.gmail.com>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -52,53 +58,53 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---3vlece4lwqrljhc3
+--4tyzmw24tono5g4i
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 18, 2021 at 03:36:08PM +0100, Linus Walleij wrote:
-> On Wed, Jan 13, 2021 at 8:50 PM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
->=20
-> > Some supported chips (e.g. pca9505) support 40 chips. To be able to give
->=20
-> 40 lines I guess? (No big deal. Everyone understand what you mean.)
+Hello Linus,
 
-Yes, I noticed that myself and fixed that in v2
-(https://lore.kernel.org/r/20210115164658.187681-1-u.kleine-koenig@pengutro=
-nix.de)
-
-> > each line a name the length of the gpio-line-names property must be
-> > allowed to contain up to 40 entries.
+On Mon, Jan 18, 2021 at 02:45:14PM +0100, Linus Walleij wrote:
+> On Wed, Jan 13, 2021 at 10:23 AM Baruch Siach <baruch@tkos.co.il> wrote:
+>=20
+> > This series adds a few related fixes to the pwm .apply and .get_state
+> > callbacks.
 > >
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > The first patch was originally part of the series adding Armada 8K/7K p=
+wm
+> > support. I split it out to a separate series following review comments =
+=66rom
+> > Uwe Kleine-K=F6nig who spotted a few more issues. There is no dependenc=
+y between
+> > this and the Armada 8K/7K series.
 >=20
+> This version looks really good and +/- minor tweaks as indicated by
+> Uwe:
 > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Who will pick up this series (preferable v2 instead of this (implicit)
-v1)? Will they notice this Reviewed-by?
+The most recent version of this series is v4.
 
-Thanks
+Best regards
 Uwe
 
 --=20
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---3vlece4lwqrljhc3
+--4tyzmw24tono5g4i
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAFoc8ACgkQwfwUeK3K
-7Alp+gf+MbTZQlKr9dm/t79pr4utXSUvEU8jo/ZumncN9bspoecUEgzuGGYuEqGJ
-N5wpDqnpBz+UPdy+P2rCXNdlAZtPQT2f0w3DmllGUG7NTV0F+vFJG8v6H2I6f9Cv
-Pi+iqXKSme1BkQNOrYTQCLKn1nb7fzBYQynRJvPDtuCxkue4LCorAL+L6ZJjaaYr
-lts/1V6Lrifvyh2hVQBjHkaEI9Q8KtP2LZQNDKnkB9Bt6oheT+YDZFztRJPA4RXN
-fz8zZE5exGK8dSCvQTYdRvg40w80tqb908rFKCQivpEGbPqy533pFiz7YhOjvWvs
-G6U+JdYV0/sWPc9XybNDedEf8TLArA==
-=YSCe
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAFomQACgkQwfwUeK3K
+7Aka3Af7Bt/IECK5Ip0iUiop1hHEluezWkLhf/SuXttl/HIkCPoB6m9amFHI68tl
+06Zn/DrJULPj2iVUAtt2x9zSb+cExW+FZDhrol3/Sotuu1ozr7AH4JH7tZIIK9E8
+Q0OL6b4vj6UT+i8rILONZ3tdpBMDNpf+hpucnVEpZIP2WaBlNcqQM3cUBtk+FcdU
+0zNeBiZtYL1O5TEjGyA4h2W/HjP22aKZH/kPJMDT7LS+Bh3w5GWEd5aH8SuRgGaQ
+GBbN0lm7BYNYaHRRaS9KmBe6Pec1UxcP4m1qDJZKCxJwaywlaLI7trEONb6hl27G
+Ask+CpBXZaC+zkYR+kCVp4NoTr6Ebw==
+=yrA0
 -----END PGP SIGNATURE-----
 
---3vlece4lwqrljhc3--
+--4tyzmw24tono5g4i--
