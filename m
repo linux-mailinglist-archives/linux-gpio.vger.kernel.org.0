@@ -2,90 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F15F82FA1E7
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 14:43:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8556F2FA1F9
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 14:46:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404719AbhARNmc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 08:42:32 -0500
-Received: from mga07.intel.com ([134.134.136.100]:10492 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404711AbhARNmU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Jan 2021 08:42:20 -0500
-IronPort-SDR: P/aLfYNCWzZvOjW8PltsiVEmZxWvYjNJTnsfgR63y3irYHV1Un0vZt6W5PlNQ2NEkF7dIRIvHp
- MfwR11kJ2IQg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9867"; a="242873211"
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="242873211"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 05:40:26 -0800
-IronPort-SDR: rnA36ufbqqksn8ZusWPXOFeFsAE/uuC4PAfY6JkJptU8DoskRgGs6S40MSrnT1xooUagruogc0
- MxI+8e0K7sow==
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="346878970"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 05:40:21 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1l1UmZ-002Bg5-Mn; Mon, 18 Jan 2021 15:41:23 +0200
-Date:   Mon, 18 Jan 2021 15:41:23 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
-        andy@kernel.org, mika.westerberg@linux.intel.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@kernel.org, lee.jones@linaro.org, hdegoede@redhat.com,
-        mgross@linux.intel.com, robert.moore@intel.com,
-        erik.kaneda@intel.com, sakari.ailus@linux.intel.com,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v2 4/7] i2c: i2c-core-acpi: Add i2c_acpi_dev_name()
-Message-ID: <20210118134123.GJ4077@smile.fi.intel.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-5-djrscally@gmail.com>
- <YAVSf7+iTPNYf5XS@pendragon.ideasonboard.com>
+        id S2404662AbhARNnj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 08:43:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404771AbhARNnf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 08:43:35 -0500
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7277C061573
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 05:42:54 -0800 (PST)
+Received: by mail-lj1-x233.google.com with SMTP id m13so18211124ljo.11
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 05:42:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AjAbOdlgo9FDkSJLOMR1xs2vpDAbpOPnLP1xRILckhg=;
+        b=pvP8y7dPdgXUcANy1K8PfZ+1uoR/B4sfCUvMFHaLyYe/keXJEu2M17I78vHGEfEKBf
+         1Q8Z6v2U5meI9+u8PnYjGGKgMkKI6GzHZF8k97FVPn4dNvisu6B1HndqTDEt3qT7dAEi
+         sW8ApdPdc5ZfAqy95dmSrr2OxlIjBSeyxK5e3mvcyh2Lv9tQRzy+Hj43h3d5j0xNKlq6
+         Hjr1Mv7wtm3FM7FwgyTfkjDVb1Kmfgvo8zdCoZDop/LhhZ5dnU57C3PimcrV58uzvFwf
+         ZtqEGJ3TNfO033Y9P9mDi4hXQTZwCN8vJUFrWg7yJCQjpHR3p93gLJfSRghYtbwyBGgw
+         MwKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AjAbOdlgo9FDkSJLOMR1xs2vpDAbpOPnLP1xRILckhg=;
+        b=R3J3CL/2xpJ77mdWSXUnLyNyFy+mqwjIisb/5WN3wZO1ANo2NCjjq26PyRwBLvpE5q
+         n6w1ZF4a7tGii8hKXkPfWLctoyOropkmVjdlfUdkeXk05DIiZ1M5Vh1OueK+PWn6UFkz
+         f98HNVMW55jnIoSbmV+o4dXfu67xZ9IIuXr9T0ET/vEsJFf7yb0IYIeEk2fo4XHnCreP
+         bAM509xgGUssudH3DE3IzMu6Lc2+RY/xd0S5XjL6ZQrY3oHmBFemrDOk2MRB1Xd16SaL
+         9eTXINi1sVOuzICQ5N/7yeuWbVmEYYftO2b1q2yWD9S9l+KziOr++CLVorKRrMUOCjot
+         Z50w==
+X-Gm-Message-State: AOAM531wNahTyGcmh1zBEFa0ZlpbVYxXIuAOsK9+4NT0WTgdDeXD+/Hh
+        1DlpqkPRKJf39kapVh4uCpCQnQC7YjunrdkH1iP+LA==
+X-Google-Smtp-Source: ABdhPJyEgZIiDxXymUPdwUgxEJxJ6JpmtdC2klx+vAcVOvbWq4CDOq+Ue7khu+rZk7m73bkgeZza6B+NITQiBmSebro=
+X-Received: by 2002:a2e:586:: with SMTP id 128mr10793860ljf.273.1610977373236;
+ Mon, 18 Jan 2021 05:42:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YAVSf7+iTPNYf5XS@pendragon.ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <1610440080-68600-1-git-send-email-abaci-bugfix@linux.alibaba.com>
+In-Reply-To: <1610440080-68600-1-git-send-email-abaci-bugfix@linux.alibaba.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 Jan 2021 14:42:41 +0100
+Message-ID: <CACRpkdY5xLHQuLjXuZvzN76eMKAHkU70yLm9XBrHLLDvncSWdw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sprd: style: Simplify bool comparison
+To:     YANG LI <abaci-bugfix@linux.alibaba.com>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>, linhua.xu@unisoc.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 11:18:55AM +0200, Laurent Pinchart wrote:
-> On Mon, Jan 18, 2021 at 12:34:25AM +0000, Daniel Scally wrote:
+On Tue, Jan 12, 2021 at 9:28 AM YANG LI <abaci-bugfix@linux.alibaba.com> wrote:
 
-...
+> Fix the following coccicheck warning:
+> ./drivers/pinctrl/sprd/pinctrl-sprd.c:690:8-23: WARNING: Comparison to
+> bool
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: YANG LI <abaci-bugfix@linux.alibaba.com>
 
-> > +/**
-> > + * i2c_acpi_dev_name - Construct i2c device name for devs sourced from ACPI
-> > + * @adev:     ACPI device to construct the name for
-> > + *
-> > + * Constructs the name of an i2c device matching the format used by
-> > + * i2c_dev_set_name() to allow users to refer to an i2c device by name even
-> > + * before they have been instantiated.
-> > + *
-> > + * The caller is responsible for freeing the returned pointer.
-> > + */
-> > +char *i2c_acpi_dev_name(struct acpi_device *adev)
-> > +{
-> > +	return kasprintf(GFP_KERNEL, I2C_DEV_NAME_FORMAT, acpi_dev_name(adev));
-> 
-> There's a real danger of a memory leak, as the function name sounds very
-> similar to dev_name() or acpi_dev_name() and those don't allocate
-> memory. I'm not sure what a better name would be, but given that this
-> function is only used in patch 6/7 and not in the I2C subsystem itself,
-> I wonder if we should inline this kasprintf() call in the caller and
-> drop this patch.
+Patch applied, fixing subject as indicated by Baolin.
 
-Dan, I'm fine with either choice.
+First fix I get from Alibabas robot :)
 
-> > +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
