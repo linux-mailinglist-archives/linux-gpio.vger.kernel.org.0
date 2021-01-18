@@ -2,74 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5195C2FA269
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 15:03:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBD422FA335
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 15:37:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391516AbhARMan (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 07:30:43 -0500
-Received: from mga07.intel.com ([134.134.136.100]:10055 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391503AbhARMaj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Jan 2021 07:30:39 -0500
-IronPort-SDR: nUwFUPJV6CSSo518YJoIPh6QYXAsuZMMB2c9JMkiVvps0LfDPy9QM6a39QgjQ1KhD1lwDqAPOf
- 25ZwWjMvfLoQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9867"; a="242866894"
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="242866894"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 04:28:53 -0800
-IronPort-SDR: 6iH2ILx1Vuk7B7LU89OE6QX3T0bl5uWmnLgdqabGa401cHoG+kpRpyXtCNjDmh0DUPh5ZxHfA4
- 5T0Cd9pQihGg==
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="346860180"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 04:28:48 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1l1TfK-0027Uk-F1; Mon, 18 Jan 2021 14:29:50 +0200
-Date:   Mon, 18 Jan 2021 14:29:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
-        andy@kernel.org, mika.westerberg@linux.intel.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@kernel.org, lee.jones@linaro.org, hdegoede@redhat.com,
-        mgross@linux.intel.com, robert.moore@intel.com,
-        erik.kaneda@intel.com, sakari.ailus@linux.intel.com,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v2 1/7] acpi: utils: move acpi_lpss_dep() to utils
-Message-ID: <20210118122950.GE4077@smile.fi.intel.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-2-djrscally@gmail.com>
- <YAU3msXszVZ8CLjs@pendragon.ideasonboard.com>
+        id S2393001AbhAROhM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 09:37:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390825AbhAROhC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 09:37:02 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5641C061573
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 06:36:21 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id x20so24347711lfe.12
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 06:36:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VnozxiVtT8LfRAKBlvkwNTPKq2sjh1M1hTG/VkrbqVo=;
+        b=Qe4heyHLyP5mc9Fdz+yXEEn/dBKE8DdByYTz/0Kwf27PCbYnm6cDJ6bMwk3/S7WUsB
+         uwtkHl+a+JQs1d1TEHQhXA9f7Fke2uLspEjycST6DIFtQgcR4/7AEPOpsN1F8DkrAU3C
+         4pqDfMFbNmwpZ1suoFp0zNb2roYAXPwBwe1mOggQZdluVE6a5goFUZaew6o5u9LiPOvz
+         EFO/l0xeAkjgNyCmrdROvEIdBpy227iDtvtv5uxS5HlCTU3fO4r01twzAktPLU+HwwCO
+         BUICPJLyvS/tRgbVIOEmSJCqQFlVYUMZBxas+LxiRgLoibuGWprW1z4s4VOO2rMtYcA4
+         y/vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VnozxiVtT8LfRAKBlvkwNTPKq2sjh1M1hTG/VkrbqVo=;
+        b=nZW6U+Vs1Jcju2DAO/HKUzUD5eRCQB3NhMrxry4KlFa0m4C8FuqwY/i28Cj6O+lERD
+         hEyePRxHYzEiCQYv5EErxDyZ9Iw3Z8P5qpHCIMC4TlZYMzXJp3jqc+bKBff7gXMCdDus
+         +WTUn9cTIPlX5OsuIo26cHMmkbOg52h17dDqZHZq37fpjeoJOKK+IkDSNuqV9s/s529N
+         /hFmfv/pDbIrR0pnIt9IHiTLCci6e/OPFzhQ+h7jhG/+mMOMPDueeJvVaAaiD1/TRift
+         etbSfNT+4B93VojG2j6J4jKajDfmIp+VPljc5VIq/Uzp+331CtPpFTq+cHooeLzrMo+r
+         UH9g==
+X-Gm-Message-State: AOAM531ClwPXT4cJeAwnsRFj+Md4O4EGCjvovwCMn2ga7g/IlbzbMdRI
+        lbB2DeTg/c+ZUmcJ5x3waaJBZa7Bl3QMcC7MqjXUjQ==
+X-Google-Smtp-Source: ABdhPJyY7OJUJYXQs3eY5XSmWodhWuHtWw5KwgWFtzcCkS/5ZqzHMaJgigjXuUNfYcnXVVp3q4tmd1c9nu1+kQpgVmI=
+X-Received: by 2002:a19:8bc6:: with SMTP id n189mr11007722lfd.291.1610980580204;
+ Mon, 18 Jan 2021 06:36:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YAU3msXszVZ8CLjs@pendragon.ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210113194952.104734-1-u.kleine-koenig@pengutronix.de> <20210113194952.104734-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20210113194952.104734-2-u.kleine-koenig@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 Jan 2021 15:36:08 +0100
+Message-ID: <CACRpkdbVKzE_pe0mPb4H2c0RVJGxEtiFEfMpTCoEO+7qdVBHFQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: gpio: pca953x: increase allowed length
+ for gpio-line-names
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 09:24:10AM +0200, Laurent Pinchart wrote:
-> On Mon, Jan 18, 2021 at 12:34:22AM +0000, Daniel Scally wrote:
+On Wed, Jan 13, 2021 at 8:50 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 
-...
+> Some supported chips (e.g. pca9505) support 40 chips. To be able to give
 
-> > +bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle);
-> 
-> "lpss" stands for low power subsystem, an Intel device within the PCH
-> that handles I2C, SPI, UART, ... I think the function should be renamed,
-> as it's now generic. acpi_dev_has_dep() is a potential candidate, I'm
-> sure better ones exist. A bit of kerneldoc would also not hurt.
+40 lines I guess? (No big deal. Everyone understand what you mean.)
 
-Actually a good suggestions. Please apply my tag after addressing above.
+> each line a name the length of the gpio-line-names property must be
+> allowed to contain up to 40 entries.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-
+Yours,
+Linus Walleij
