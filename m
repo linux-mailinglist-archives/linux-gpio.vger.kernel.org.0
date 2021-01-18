@@ -2,90 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0D0E2FA3A4
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 15:53:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6936F2FA3D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 15:59:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405044AbhAROw1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 09:52:27 -0500
-Received: from mail-40131.protonmail.ch ([185.70.40.131]:38174 "EHLO
-        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393075AbhAROwW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 09:52:22 -0500
-Date:   Mon, 18 Jan 2021 14:51:30 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1610981499;
-        bh=qt2x5rgrpJue2xHPYqaQ4C7ABTsoce3bhOjz1FhicmU=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=pZBYgsbrcbcAlwRreIIzd7K09ne/a30fnt1I38L3S7wWkVfApM+oshWHpvErqPg1/
-         sL5OS3Y0TndIU3J3PtbU8x4FDmtwqkbU4uGotikqUVAdjhxSO82csOil4HEdw3zE4h
-         d0JRD++/HF2CL+FmFYsPSOVDR0TDwMCMXIlrJCLQ=
-To:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "andy@kernel.org" <andy@kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "wsa@kernel.org" <wsa@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.kaneda@intel.com" <erik.kaneda@intel.com>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
-Message-ID: <w3qrFtorGLZ_wMnr_Mi7cltli9g8jsMtiQ7Z1Usnj2IKfJ1MJz6-wxlIAEQ-ErgU1x6IBxdAIHBHtQ3OOT_FJOuUYheILlUc20ysNL_zroo=@protonmail.com>
-In-Reply-To: <20210118135121.GM4077@smile.fi.intel.com>
-References: <20210118003428.568892-1-djrscally@gmail.com> <20210118003428.568892-7-djrscally@gmail.com> <-GKrxu8GJvGe-PlKkLpblw9N-DtVtS7i87BOCLgJR72yf4hUFpUgiOlGcFero_gqgUxJrX2gxtLOnz_31hJugfam0SXXmXxIzGIhS162mhI=@protonmail.com> <20210118135121.GM4077@smile.fi.intel.com>
+        id S2392922AbhARO6R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 09:58:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391682AbhARO6F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 09:58:05 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60A5CC061574
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 06:57:25 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l1Vy6-00037n-CY; Mon, 18 Jan 2021 15:57:22 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l1Vy6-0007Uf-2l; Mon, 18 Jan 2021 15:57:22 +0100
+Date:   Mon, 18 Jan 2021 15:57:21 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 2/2] dt-bindings: gpio: pca953x: increase allowed length
+ for gpio-line-names
+Message-ID: <20210118145721.6puoqfd6jx3x76jh@pengutronix.de>
+References: <20210113194952.104734-1-u.kleine-koenig@pengutronix.de>
+ <20210113194952.104734-2-u.kleine-koenig@pengutronix.de>
+ <CACRpkdbVKzE_pe0mPb4H2c0RVJGxEtiFEfMpTCoEO+7qdVBHFQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
-        autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-        mailout.protonmail.ch
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3vlece4lwqrljhc3"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbVKzE_pe0mPb4H2c0RVJGxEtiFEfMpTCoEO+7qdVBHFQ@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-2021. janu=C3=A1r 18., h=C3=A9tf=C5=91 14:51 keltez=C3=A9ssel, Andy Shevche=
-nko =C3=ADrta:
 
-> On Mon, Jan 18, 2021 at 11:12:34AM +0000, Barnab=C3=A1s P=C5=91cze wrote:
-> > 2021. janu=C3=A1r 18., h=C3=A9tf=C5=91 1:34 keltez=C3=A9ssel, Daniel Sc=
-ally =C3=ADrta:
->
-> > Have you considered putting the source (and header) files into a dedica=
-ted
-> > folder? I think it'd help manageability in the long run, and it'd be im=
-mediately
-> > obvious that these source files form a single "unit".
->
-> What would be the folder name? Because, for example, intel_cht_int33fe* h=
-ave no
-> folder (yet?) and here it's kinda similar case when HID describes somethi=
-ng
-> else than just one IP.
+--3vlece4lwqrljhc3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think "intel_skl_int3472" would not be a bad name for the folder. And I b=
-elieve
-"intel_cht_int33fe" could be given its own folder as well.
+On Mon, Jan 18, 2021 at 03:36:08PM +0100, Linus Walleij wrote:
+> On Wed, Jan 13, 2021 at 8:50 PM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+>=20
+> > Some supported chips (e.g. pca9505) support 40 chips. To be able to give
+>=20
+> 40 lines I guess? (No big deal. Everyone understand what you mean.)
 
+Yes, I noticed that myself and fixed that in v2
+(https://lore.kernel.org/r/20210115164658.187681-1-u.kleine-koenig@pengutro=
+nix.de)
 
-Regards,
-Barnab=C3=A1s P=C5=91cze
+> > each line a name the length of the gpio-line-names property must be
+> > allowed to contain up to 40 entries.
+> >
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Who will pick up this series (preferable v2 instead of this (implicit)
+v1)? Will they notice this Reviewed-by?
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--3vlece4lwqrljhc3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAFoc8ACgkQwfwUeK3K
+7Alp+gf+MbTZQlKr9dm/t79pr4utXSUvEU8jo/ZumncN9bspoecUEgzuGGYuEqGJ
+N5wpDqnpBz+UPdy+P2rCXNdlAZtPQT2f0w3DmllGUG7NTV0F+vFJG8v6H2I6f9Cv
+Pi+iqXKSme1BkQNOrYTQCLKn1nb7fzBYQynRJvPDtuCxkue4LCorAL+L6ZJjaaYr
+lts/1V6Lrifvyh2hVQBjHkaEI9Q8KtP2LZQNDKnkB9Bt6oheT+YDZFztRJPA4RXN
+fz8zZE5exGK8dSCvQTYdRvg40w80tqb908rFKCQivpEGbPqy533pFiz7YhOjvWvs
+G6U+JdYV0/sWPc9XybNDedEf8TLArA==
+=YSCe
+-----END PGP SIGNATURE-----
+
+--3vlece4lwqrljhc3--
