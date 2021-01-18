@@ -2,74 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 364A72FA067
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 13:52:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB0AE2FA15C
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 14:24:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391827AbhARMvg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 07:51:36 -0500
-Received: from mga18.intel.com ([134.134.136.126]:61139 "EHLO mga18.intel.com"
+        id S2391614AbhARMdo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 07:33:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38094 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404184AbhARMmU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Jan 2021 07:42:20 -0500
-IronPort-SDR: SkGcwupswNGLQHSWriIwCxt/klL562MaRnnjTh7+xVxtMqeT6WnviWT3XkCugn/4Bqb6srGNlK
- 47DOW7X3VVsw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9867"; a="166464352"
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="166464352"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 04:40:26 -0800
-IronPort-SDR: oSWFvo61tofrjLPCFH97dQVRoKqzgpBmXaWc5zc2ABj9doVVZ9Q01N2m5WSRfDbiFzx8e0AEkl
- eMnEkW8tszEA==
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="569180584"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 04:40:21 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1l1TqV-0028Bt-5G; Mon, 18 Jan 2021 14:41:23 +0200
-Date:   Mon, 18 Jan 2021 14:41:23 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
-        andy@kernel.org, mika.westerberg@linux.intel.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@kernel.org, lee.jones@linaro.org, hdegoede@redhat.com,
-        mgross@linux.intel.com, robert.moore@intel.com,
-        erik.kaneda@intel.com, sakari.ailus@linux.intel.com,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v2 3/7] i2c: i2c-core-base: Use format macro in
- i2c_dev_set_name()
-Message-ID: <20210118124123.GH4077@smile.fi.intel.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-4-djrscally@gmail.com>
- <YAU4ol/X3QF2eS9/@pendragon.ideasonboard.com>
+        id S2391450AbhARMdj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Jan 2021 07:33:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 545C3ACBA;
+        Mon, 18 Jan 2021 12:32:55 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     u.kleine-koenig@pengutronix.de
+Cc:     f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        wahrenst@gmx.net, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        linux-clk@vger.kernel.org, sboyd@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
+        andy.shevchenko@gmail.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v7 00/11] Raspberry Pi PoE HAT fan support
+Date:   Mon, 18 Jan 2021 13:32:33 +0100
+Message-Id: <20210118123244.13669-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YAU4ol/X3QF2eS9/@pendragon.ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 09:28:34AM +0200, Laurent Pinchart wrote:
-> On Mon, Jan 18, 2021 at 12:34:24AM +0000, Daniel Scally wrote:
+The aim of this series is to add support to the fan found on RPi's PoE
+HAT. Some commentary on the design can be found below. But the important
+part to the people CC'd here not involved with PWM is that, in order to
+achieve this properly, we also have to fix the firmware interface the
+driver uses to communicate with the PWM bus (and many other low level
+functions). Specifically, we have to make sure the firmware interface
+isn't unbound while consumers are still up. So, patch #1 & #2 introduce
+reference counting in the firmware interface driver and patches #3 to #8
+update all firmware users. Patches #9 to #11 introduce the new PWM
+driver.
 
-> I'd change the subject line to say "Add a format macro for I2C device
-> names", as that's the most important part of the patch. Apart from that,
+I sent everything as a single series as the final version of the PWM
+drivers depends on the firmware fixes, but I'll be happy to split this
+into two separate series if you think it's better.
 
+--- Original cover letter below ---
 
-Actually prefix can be "i2c: core: ".
+This series aims at adding support to RPi's official PoE HAT fan[1].
 
-Hint: look at the git history to find what was lately used mostly.
+The HW setup is the following:
 
-	% git log --oneline -- drivers/i2c/i2c-*
+| Raspberry Pi                               | PoE HAT                    |
+ arm core -> Mailbox -> RPi co-processor -> I2C -> Atmel MCU -> PWM -> FAN
+
+The arm cores have only access to the mailbox interface, as i2c0, even if
+physically accessible, is to be used solely by the co-processor
+(VideoCore 4/6).
+
+This series implements a PWM bus, and has pwm-fan sitting on top of it as per
+this discussion: https://lkml.org/lkml/2018/9/2/486. Although this design has a
+series of shortcomings:
+
+- It depends on a DT binding: it's not flexible if a new hat shows up with new
+  functionality, we're not 100% sure we'll be able to expand it without
+  breaking backwards compatibility. But without it we can't make use of DT
+  thermal-zones, which IMO is overkill.
+
+- We're using pwm-fan, writing a hwmon driver would, again, give us more
+  flexibility, but it's not really needed at the moment.
+
+I personally think that it's not worth the effort, it's unlikely we'll get
+things right in advance. And ultimately, if the RPi people come up with
+something new, we can always write a new driver/bindings from scratch (as in
+not reusing previous code).
+
+That said, I'm more than happy to change things if there is a consensus that
+another design will do the trick.
+
+[1] https://www.raspberrypi.org/blog/introducing-power-over-ethernet-poe-hat/
+
+---
+
+Changes since v6:
+ - Address PWM driver comments
+
+Changes since v5:
+ - Small cleanups
+ - Add extra code comments
+
+Changes since v4:
+ - Cleanup devm calls
+ - Rename compatible string so it's unique to the PoE HAT
+
+Changes since v3:
+ - Split first patch, #1 introduces refcount, then #2 the devm function
+ - Fix touchscreen function
+ - Use kref
+
+Changes since v2:
+ - Introduce devm_rpi_firmware_get()
+ - Small cleanups in PWM driver
+
+Changes since v1:
+ - Address PWM driver changes
+ - Fix binding, now with 2 cells
+
+Nicolas Saenz Julienne (11):
+  firmware: raspberrypi: Keep count of all consumers
+  firmware: raspberrypi: Introduce devm_rpi_firmware_get()
+  clk: bcm: rpi: Release firmware handle on unbind
+  gpio: raspberrypi-exp: Release firmware handle on unbind
+  reset: raspberrypi: Release firmware handle on unbind
+  soc: bcm: raspberrypi-power: Release firmware handle on unbind
+  staging: vchiq: Release firmware handle on unbind
+  input: raspberrypi-ts: Release firmware handle when not needed
+  dt-bindings: pwm: Add binding for RPi firmware PWM bus
+  DO NOT MERGE: ARM: dts: Add RPi's official PoE hat support
+  pwm: Add Raspberry Pi Firmware based PWM bus
+
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml |  20 ++
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts         |  54 +++++
+ drivers/clk/bcm/clk-raspberrypi.c             |   2 +-
+ drivers/firmware/raspberrypi.c                |  69 +++++-
+ drivers/gpio/gpio-raspberrypi-exp.c           |   2 +-
+ drivers/input/touchscreen/raspberrypi-ts.c    |   2 +-
+ drivers/pwm/Kconfig                           |   9 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-raspberrypi-poe.c             | 220 ++++++++++++++++++
+ drivers/reset/reset-raspberrypi.c             |   2 +-
+ drivers/soc/bcm/raspberrypi-power.c           |   2 +-
+ .../interface/vchiq_arm/vchiq_arm.c           |   2 +-
+ .../pwm/raspberrypi,firmware-poe-pwm.h        |  13 ++
+ include/soc/bcm2835/raspberrypi-firmware.h    |  10 +
+ 14 files changed, 399 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/pwm/pwm-raspberrypi-poe.c
+ create mode 100644 include/dt-bindings/pwm/raspberrypi,firmware-poe-pwm.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.29.2
 
