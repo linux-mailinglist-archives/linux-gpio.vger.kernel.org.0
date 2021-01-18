@@ -2,131 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 823252FA0D8
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 14:11:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F02932FA098
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 14:02:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404351AbhARNLf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 08:11:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38988 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404009AbhARMeZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Jan 2021 07:34:25 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1F1A3B948;
-        Mon, 18 Jan 2021 12:33:04 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     u.kleine-koenig@pengutronix.de
-Cc:     f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        wahrenst@gmx.net, linux-input@vger.kernel.org,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        linux-clk@vger.kernel.org, sboyd@kernel.org,
-        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
-        andy.shevchenko@gmail.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v7 10/11] DO NOT MERGE: ARM: dts: Add RPi's official PoE hat support
-Date:   Mon, 18 Jan 2021 13:32:43 +0100
-Message-Id: <20210118123244.13669-11-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210118123244.13669-1-nsaenzjulienne@suse.de>
-References: <20210118123244.13669-1-nsaenzjulienne@suse.de>
+        id S2391733AbhARM4o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 07:56:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391680AbhARMgJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 07:36:09 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70667C061573;
+        Mon, 18 Jan 2021 04:35:28 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id d26so16289092wrb.12;
+        Mon, 18 Jan 2021 04:35:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=dDqpVUDIXcJxr0nlcBjerifvUAz/3KcnYbeDUROK8QQ=;
+        b=fl6qCPK0st1ldqXiDkQnc419pVnLOQ0MSAIv9SHxcspuyM8ZHmzNgoJAbRlU10C3A6
+         5+R4zmEEDlO3BLLTeWgkqnwbPdrskLCiiMZO3P3TtdOMzGrZC33Rt0fYfVfly0H+xZ3S
+         xHRzv87/bSu4nxCaNTgZ6VYZKlg3BBZKDEPa3dXMdKdO9i7l5A+LQ8XXprPDaDLIlTQT
+         upgEumMBp6yh2r41woGp62z1C4Qgb7yzBbF4ZyOYVisRvcaOBFc/aqBHMPTmh3dyJV5+
+         UVMEOHk9VWtz2x1WtOYCl0P7D45S8ow0FmRCW3fRH2pFRfsyhca3LCXxI/Cv0yqIOQDs
+         nQgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=dDqpVUDIXcJxr0nlcBjerifvUAz/3KcnYbeDUROK8QQ=;
+        b=bOEPeV3nA3/Vs353xeclKBlzvDR7w3qcBWP6Te3AbULgMfriWygnBGcdL69Wj+CIgu
+         /VExGcIe9Wxk6FzypF29pK882p/cbqvYXxhVd76pFOG6bYR6hkDyn5NAC1rZVRXtqqs4
+         Py5ADsVG7c0gdjYMwdBaWwmh8PuBsiG6U36o5JDqZ1wPcyvL6cwjSWHoaaPAqtmgv0qt
+         4sZfz2T5XcXBVbQNyDurW3DoyUqw54X8ohVn2Onp4aeXsPElPC5Xy4FFxdy8b6WH15NN
+         QsxOv4pmBZ7f1V8kJZOyB67Ho4UAtSudJ13rKroVZ2sHCFgfpBcCqlz68kWt9q3Xra6R
+         /nkg==
+X-Gm-Message-State: AOAM533T9L/FpePYPBPk6FE0wCppe7o3XL6XUG11McLziDnxUAdVHcGc
+        ExlhFhNkFVGspRqSFU27XBQ=
+X-Google-Smtp-Source: ABdhPJz6TFx4ZcRZ3wBY64+lquhHyb/9EVGtIBxJImQ9wVhyzU+A7KvmYddJtho3ZOk+pbS8rdhD9Q==
+X-Received: by 2002:adf:eb4e:: with SMTP id u14mr25832729wrn.99.1610973327263;
+        Mon, 18 Jan 2021 04:35:27 -0800 (PST)
+Received: from [192.168.1.211] ([2.29.208.120])
+        by smtp.gmail.com with ESMTPSA id 33sm32880949wrn.35.2021.01.18.04.35.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jan 2021 04:35:26 -0800 (PST)
+Subject: Re: [PATCH v2 1/7] acpi: utils: move acpi_lpss_dep() to utils
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, kieran.bingham@ideasonboard.com
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-2-djrscally@gmail.com>
+ <YAU3msXszVZ8CLjs@pendragon.ideasonboard.com>
+ <20210118122950.GE4077@smile.fi.intel.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <a0e3cc39-c497-5fab-947e-e47d44509b9f@gmail.com>
+Date:   Mon, 18 Jan 2021 12:35:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210118122950.GE4077@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This is an example on how to enable the fan on top of RPi's official PoE
-hat.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 54 +++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+On 18/01/2021 12:29, Andy Shevchenko wrote:
+> On Mon, Jan 18, 2021 at 09:24:10AM +0200, Laurent Pinchart wrote:
+>> On Mon, Jan 18, 2021 at 12:34:22AM +0000, Daniel Scally wrote:
+> ...
+>
+>>> +bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle);
+>> "lpss" stands for low power subsystem, an Intel device within the PCH
+>> that handles I2C, SPI, UART, ... I think the function should be renamed,
+>> as it's now generic. acpi_dev_has_dep() is a potential candidate, I'm
+>> sure better ones exist. A bit of kerneldoc would also not hurt.
+> Actually a good suggestions. Please apply my tag after addressing above.
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index 403bacf986eb..9ae44620c5b8 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -5,6 +5,7 @@
- #include "bcm283x-rpi-usb-peripheral.dtsi"
- 
- #include <dt-bindings/reset/raspberrypi,firmware-reset.h>
-+#include <dt-bindings/pwm/raspberrypi,firmware-poe-pwm.h>
- 
- / {
- 	compatible = "raspberrypi,4-model-b", "brcm,bcm2711";
-@@ -68,6 +69,54 @@ sd_vcc_reg: sd_vcc_reg {
- 		enable-active-high;
- 		gpio = <&expgpio 6 GPIO_ACTIVE_HIGH>;
- 	};
-+
-+	fan: pwm-fan {
-+		compatible = "pwm-fan";
-+		cooling-levels = <0 50 150 255>;
-+		#cooling-cells = <2>;
-+		pwms = <&fwpwm RASPBERRYPI_FIRMWARE_PWM_POE 80000>;
-+	};
-+
-+	thermal-zones {
-+		cpu_thermal: cpu-thermal {
-+			trips {
-+				threshold: trip-point@0 {
-+					temperature = <45000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				target: trip-point@1 {
-+					temperature = <50000>;
-+					hysteresis = <2000>;
-+					type = "active";
-+				};
-+
-+				cpu_hot: cpu_hot@0 {
-+					temperature = <55000>;
-+					hysteresis = <2000>;
-+					type = "active";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&threshold>;
-+					cooling-device = <&fan 0 1>;
-+				};
-+
-+				map1 {
-+					trip = <&target>;
-+					cooling-device = <&fan 1 2>;
-+				};
-+
-+				map2 {
-+					trip = <&cpu_hot>;
-+					cooling-device = <&fan 2 3>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &ddc0 {
-@@ -103,6 +152,11 @@ reset: reset {
- 		compatible = "raspberrypi,firmware-reset";
- 		#reset-cells = <1>;
- 	};
-+
-+	fwpwm: pwm {
-+		compatible = "raspberrypi,firmware-poe-pwm";
-+		#pwm-cells = <2>;
-+	};
- };
- 
- &gpio {
--- 
-2.29.2
+
+Will do, thanks
 
