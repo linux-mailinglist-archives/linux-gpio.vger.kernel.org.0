@@ -2,119 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 050372F9AA9
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 08:38:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CA782F9AB2
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 08:42:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732751AbhARHik (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 02:38:40 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:54932 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbhARHii (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 02:38:38 -0500
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4A3AB2BB;
-        Mon, 18 Jan 2021 08:37:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1610955476;
-        bh=zgto1uNnvZ2GpO37f5o+w/xXmKyI+iSAGEN7OiEiaTg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=acCJ589txn50jkAr3fEASXMMzRmaZIz1oP5tPfDocMDArWr5uuIvsW/mM2T7l0oBK
-         bE37I4w3alC0Zl5oS60W/sy6ImOYwbazQDV3bKTlUeeu9eOX1xKO5RjZAdsCiffrdf
-         LJBngh/Psk0bcPTc+ezuVxjTaHg8YsYhnKVdhE3c=
-Date:   Mon, 18 Jan 2021 09:37:40 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@acpica.org,
-        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
-        hdegoede@redhat.com, mgross@linux.intel.com,
-        robert.moore@intel.com, erik.kaneda@intel.com,
-        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v2 5/7] gpio: gpiolib-acpi: Export acpi_get_gpiod()
-Message-ID: <YAU6xCZq8mRkRm6U@pendragon.ideasonboard.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-6-djrscally@gmail.com>
+        id S1732719AbhARHlr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 02:41:47 -0500
+Received: from muru.com ([72.249.23.125]:55324 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730272AbhARHlq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Jan 2021 02:41:46 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 382D680AE;
+        Mon, 18 Jan 2021 07:41:03 +0000 (UTC)
+Date:   Mon, 18 Jan 2021 09:41:00 +0200
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Emmanuel Vadot <manu@bidouilliste.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        devicetree@vger.kernel.org, bcousson@baylibre.com,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH v4 2/2] ARM: dts: am33xx-l4: change #pinctrl-cells from 1
+ to 2
+Message-ID: <YAU7jHQv8E5ln5zS@atomide.com>
+References: <20200701013320.130441-1-drew@beagleboard.org>
+ <20200701013320.130441-3-drew@beagleboard.org>
+ <20210115190201.9273b637a7f967e7e55bc740@bidouilliste.com>
+ <20210115214018.GA554007@x1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210118003428.568892-6-djrscally@gmail.com>
+In-Reply-To: <20210115214018.GA554007@x1>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Daniel,
-
-Thank you for the patch.
-
-On Mon, Jan 18, 2021 at 12:34:26AM +0000, Daniel Scally wrote:
-> I need to be able to translate GPIO resources in an acpi_device's _CRS
-> into gpio_descs. Those are represented in _CRS as a pathname to a GPIO
-> device plus the pin's index number: this function is perfect for that
-> purpose.
+* Drew Fustini <drew@beagleboard.org> [210115 21:40]:
+> On Fri, Jan 15, 2021 at 07:02:01PM +0100, Emmanuel Vadot wrote:
+> > 
+> >  Hello Drew,
+> > 
+> > On Wed,  1 Jul 2020 03:33:20 +0200
+> > Drew Fustini <drew@beagleboard.org> wrote:
+> > 
+> > > Increase #pinctrl-cells to 2 so that mux and conf be kept separate. This
+> > > requires the AM33XX_PADCONF macro in omap.h to also be modified to keep pin
+> > > conf and pin mux values separate.
+> > > 
+> > > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> > > ---
+> > >  arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
+> > >  include/dt-bindings/pinctrl/omap.h | 2 +-
+> > >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+> > > index a9cbefc80c0c..3141590e5889 100644
+> > > --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+> > > +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+> > > @@ -278,7 +278,7 @@ scm: scm@0 {
+> > >  				am33xx_pinmux: pinmux@800 {
+> > >  					compatible = "pinctrl-single";
+> > >  					reg = <0x800 0x238>;
+> > > -					#pinctrl-cells = <1>;
+> > > +					#pinctrl-cells = <2>;
+> > >  					pinctrl-single,register-width = <32>;
+> > >  					pinctrl-single,function-mask = <0x7f>;
+> > >  				};
+> > > diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
+> > > index 625718042413..2d2a8c737822 100644
+> > > --- a/include/dt-bindings/pinctrl/omap.h
+> > > +++ b/include/dt-bindings/pinctrl/omap.h
+> > > @@ -65,7 +65,7 @@
+> > >  #define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+> > >  #define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+> > >  #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+> > > -#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
+> > > +#define AM33XX_PADCONF(pa, conf, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux)
+> > >  
+> > >  /*
+> > >   * Macros to allow using the offset from the padconf physical address
+> > > -- 
+> > > 2.25.1
+> > 
+> >  Based on the bindings doc a value of 2 is only acceptable if one uses
+> > pinctrl-single,bits but all the am33xx pins still uses
+> > pinctrl-single,pins.
+> >  I noticed this because this breaks FreeBSD when I tried with 5.9 dts.
+> > 
+> > -- 
+> > Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
 > 
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> Changes in v2:
+> Hello Emmanuel,
 > 
-> 	-None
+> Sorry to hear about that. This change was made based on discussion with
+> Tony Lindgren this past July. Trent Piepho later pointed out issues wtih
+> the change including the binding documentation. I had tried to fix
+> the documentation in September [1]. However, I notice that it seems I
+> missed changing the lines near the top of pinctrl-single.txt [2]:
 > 
->  drivers/gpio/gpiolib-acpi.c | 3 ++-
->  include/linux/acpi.h        | 5 +++++
->  2 files changed, 7 insertions(+), 1 deletion(-)
+> - #pinctrl-cells : number of cells in addition to the index, set to 1
+>   for pinctrl-single,pins and 2 for pinctrl-single,bits
 > 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index e37a57d0a2f0..83f9f85cd0ab 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -111,7 +111,7 @@ static int acpi_gpiochip_find(struct gpio_chip *gc, void *data)
->   * controller does not have GPIO chip registered at the moment. This is to
->   * support probe deferral.
->   */
-> -static struct gpio_desc *acpi_get_gpiod(char *path, int pin)
-> +struct gpio_desc *acpi_get_gpiod(char *path, int pin)
->  {
->  	struct gpio_chip *chip;
->  	acpi_handle handle;
-> @@ -127,6 +127,7 @@ static struct gpio_desc *acpi_get_gpiod(char *path, int pin)
->  
->  	return gpiochip_get_desc(chip, pin);
->  }
-> +EXPORT_SYMBOL_GPL(acpi_get_gpiod);
->  
->  static irqreturn_t acpi_gpio_irq_handler(int irq, void *data)
->  {
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 2630c2e953f7..5cd272326eb7 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -1066,6 +1066,7 @@ void __acpi_handle_debug(struct _ddebug *descriptor, acpi_handle handle, const c
->  bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
->  				struct acpi_resource_gpio **agpio);
->  int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index);
-> +struct gpio_desc *acpi_get_gpiod(char *path, int pin);
->  #else
->  static inline bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
->  					      struct acpi_resource_gpio **agpio)
-> @@ -1076,6 +1077,10 @@ static inline int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
->  {
->  	return -ENXIO;
->  }
-> +struct gpio_desc *acpi_get_gpiod(char *path, int pin)
-> +{
-> +	return NULL;
-> +}
->  #endif
->  
->  /* Device properties */
+> I am thinking that should be re-written as:
+> 
+> - #pinctrl-cells : number of cells in addition to the index, this value
+>   can be 1 or 2 for pinctrl-single,pins and must be 2 for pinctrl-single,bits
+> 
+> Tony - what do you think?
 
--- 
+Sounds good to me.
+
 Regards,
 
-Laurent Pinchart
+Tony
+
+> [1] https://lore.kernel.org/linux-gpio/20200919200836.3218536-1-drew@beagleboard.org/
+> [2] https://www.kernel.org/doc/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
