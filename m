@@ -2,82 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBD422FA335
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 15:37:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF4C02FA34D
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 15:41:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393001AbhAROhM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 09:37:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55444 "EHLO
+        id S2392939AbhAROkI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 09:40:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390825AbhAROhC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 09:37:02 -0500
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5641C061573
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 06:36:21 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id x20so24347711lfe.12
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 06:36:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VnozxiVtT8LfRAKBlvkwNTPKq2sjh1M1hTG/VkrbqVo=;
-        b=Qe4heyHLyP5mc9Fdz+yXEEn/dBKE8DdByYTz/0Kwf27PCbYnm6cDJ6bMwk3/S7WUsB
-         uwtkHl+a+JQs1d1TEHQhXA9f7Fke2uLspEjycST6DIFtQgcR4/7AEPOpsN1F8DkrAU3C
-         4pqDfMFbNmwpZ1suoFp0zNb2roYAXPwBwe1mOggQZdluVE6a5goFUZaew6o5u9LiPOvz
-         EFO/l0xeAkjgNyCmrdROvEIdBpy227iDtvtv5uxS5HlCTU3fO4r01twzAktPLU+HwwCO
-         BUICPJLyvS/tRgbVIOEmSJCqQFlVYUMZBxas+LxiRgLoibuGWprW1z4s4VOO2rMtYcA4
-         y/vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VnozxiVtT8LfRAKBlvkwNTPKq2sjh1M1hTG/VkrbqVo=;
-        b=nZW6U+Vs1Jcju2DAO/HKUzUD5eRCQB3NhMrxry4KlFa0m4C8FuqwY/i28Cj6O+lERD
-         hEyePRxHYzEiCQYv5EErxDyZ9Iw3Z8P5qpHCIMC4TlZYMzXJp3jqc+bKBff7gXMCdDus
-         +WTUn9cTIPlX5OsuIo26cHMmkbOg52h17dDqZHZq37fpjeoJOKK+IkDSNuqV9s/s529N
-         /hFmfv/pDbIrR0pnIt9IHiTLCci6e/OPFzhQ+h7jhG/+mMOMPDueeJvVaAaiD1/TRift
-         etbSfNT+4B93VojG2j6J4jKajDfmIp+VPljc5VIq/Uzp+331CtPpFTq+cHooeLzrMo+r
-         UH9g==
-X-Gm-Message-State: AOAM531ClwPXT4cJeAwnsRFj+Md4O4EGCjvovwCMn2ga7g/IlbzbMdRI
-        lbB2DeTg/c+ZUmcJ5x3waaJBZa7Bl3QMcC7MqjXUjQ==
-X-Google-Smtp-Source: ABdhPJyY7OJUJYXQs3eY5XSmWodhWuHtWw5KwgWFtzcCkS/5ZqzHMaJgigjXuUNfYcnXVVp3q4tmd1c9nu1+kQpgVmI=
-X-Received: by 2002:a19:8bc6:: with SMTP id n189mr11007722lfd.291.1610980580204;
- Mon, 18 Jan 2021 06:36:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20210113194952.104734-1-u.kleine-koenig@pengutronix.de> <20210113194952.104734-2-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20210113194952.104734-2-u.kleine-koenig@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Jan 2021 15:36:08 +0100
-Message-ID: <CACRpkdbVKzE_pe0mPb4H2c0RVJGxEtiFEfMpTCoEO+7qdVBHFQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: gpio: pca953x: increase allowed length
- for gpio-line-names
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S2393042AbhAROjP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 09:39:15 -0500
+Received: from m-r2.th.seeweb.it (m-r2.th.seeweb.it [IPv6:2001:4b7a:2000:18::171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD7A5C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 06:38:19 -0800 (PST)
+Received: from IcarusMOD.eternityproject.eu (unknown [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 888D63EED9;
+        Mon, 18 Jan 2021 15:38:16 +0100 (CET)
+Subject: Re: [PATCH v2 1/2] pinctrl: Add driver for Awinic AW9523/B I2C GPIO
+ Expander
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        konrad.dybcio@somainline.org, marijn.suijten@somainline.org,
+        martin.botka@somainline.org, phone-devel@vger.kernel.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+References: <20210111182928.587285-1-angelogioacchino.delregno@somainline.org>
+ <CACRpkdZp3oqj4VeUZEPu=POwAdf-7R3NzNoN9XehtEi_R_fgkw@mail.gmail.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>
+Message-ID: <1e34145b-a04a-1cbb-7fbc-87c69b8dcfd7@somainline.org>
+Date:   Mon, 18 Jan 2021 15:38:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdZp3oqj4VeUZEPu=POwAdf-7R3NzNoN9XehtEi_R_fgkw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 8:50 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+Il 18/01/21 14:19, Linus Walleij ha scritto:
+> On Mon, Jan 11, 2021 at 7:29 PM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@somainline.org> wrote:
+> 
+>> The Awinic AW9523(B) is a multi-function I2C gpio expander in a
+>> TQFN-24L package, featuring PWM (max 37mA per pin, or total max
+>> power 3.2Watts) for LED driving capability.
+>>
+>> It has two ports with 8 pins per port (for a total of 16 pins),
+>> configurable as either PWM with 1/256 stepping or GPIO input/output,
+>> 1.8V logic input; each GPIO can be configured as input or output
+>> independently from each other.
+>>
+>> This IC also has an internal interrupt controller, which is capable
+>> of generating an interrupt for each GPIO, depending on the
+>> configuration, and will raise an interrupt on the INTN pin to
+>> advertise this to an external interrupt controller.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+> 
+> I really like the looks of this new version! :)
+> 
+> Just some minor questions now:
+> 
+>> +static int aw9523_gpio_irq_type(struct irq_data *d, unsigned int type)
+>> +{
+>> +       switch (type) {
+>> +       case IRQ_TYPE_NONE:
+>> +       case IRQ_TYPE_LEVEL_MASK:
+>> +       case IRQ_TYPE_LEVEL_HIGH:
+>> +       case IRQ_TYPE_LEVEL_LOW:
+>> +               return 0;
+> 
+> This still doesn't make sense, I think you can see why.
+> 
+> If level IRQs can fire both when the line is high and low without
+> any configuration in any register whatsoever, then IRQs are
+> *constantly* fireing. Which I suppose they are not.
+> 
+> Something is wrong here. Either you just support one
+> of them or there is a way to configure whether to act as
+> high or low level.
+> 
+> I'm also mildly sceptic because GPIO expanders ... do they
+> really support level IRQs, and does it make sense when you
+> think about it? I would rather expect edge IRQs as these have
+> a natural trigger point and level IRQs may very well be gone
+> by the time you come around to read the status register.
+> I suppose it can be done but the events must be really slow
+> then, slower than the 400kHz of an I2C bus.
+> 
+> Can you please look over the interrupt logic in your specs?
+> 
+> Yours,
+> Linus Walleij
+> 
 
-> Some supported chips (e.g. pca9505) support 40 chips. To be able to give
+Have I misunderstood this part of the API?
 
-40 lines I guess? (No big deal. Everyone understand what you mean.)
+By the way, this is really LEVEL irq, not EDGE... To avoid any
+misunderstanding, I think that the best way to show you what I
+am seeing is to just copy-paste the relevant piece from the
+datasheet for this hardware (it's not a confidential datasheet
+and freely found on the internet).
 
-> each line a name the length of the gpio-line-names property must be
-> allowed to contain up to 40 entries.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+Check this out:
+" External MCU is required acknowledge by INTN pin. INTN is open-drain
+out-
+put, low-level active, and need external pull-up resistor.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+When AW9523B detect port change, any input state from high-level to
+low-level or from
+  low-level to high-level will generate interrupt after
+8us internal deglitch. "
 
-Yours,
-Linus Walleij
+...but since the datasheet is sometimes unclear about "things" (I am
+mostly sure that they have translated it to english from chinese), I
+have actually checked whether the INTN pin was pushed LOW when one of
+the inputs goes from HIGH to LOW.. and.. it does... and as you imagine
+yeah.. it's slow.. and yes, as slow as you can imagine. :)
+
+So, in short, this chip is raising an interrupt when any input changes
+state, regardless of the change being LOW->HIGH or HIGH->LOW.
+
+Thanks
+- Angelo
+
