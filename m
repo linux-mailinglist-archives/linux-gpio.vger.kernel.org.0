@@ -2,113 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8FAB2FA1A3
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 14:33:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 815AD2FA21E
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 14:52:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392269AbhARNah (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 08:30:37 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:34061 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392259AbhARNac (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Jan 2021 08:30:32 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 4AF3C58073D;
-        Mon, 18 Jan 2021 08:29:24 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 18 Jan 2021 08:29:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=t9OxNww6HWANpl54DQNy0q2p7lT
-        jdtSam7hUc9ITNzs=; b=attOfT2JhEVIdl47sbSUK/s47o8YAfdcDGViEkjPbvU
-        kN8PHV6KfcrnUlnGI0H/zGWV/lYQ/pducVd00hrRS9hHyg5OfAtW+KJ2R7HwnmfM
-        5iq8BYpz51zKcuocrj/vP/AFPEJr6TVyHo59LKoSM2ypTJ3ltvkw7ig3SZRLpt6J
-        lHil40Rhw642JFs1NT3z9U4K8NleFiVPQLc4Z9OuIehemycr1YyXyJA5QKrxo70H
-        eDLO50qTvALYLnz1Ks4SUZiW4qcyk2hcYolm3Rb5rS0qbMkRO+CHH2VOMDGu+ErN
-        xB781iOqbwRtIrqoJ26sBo1Tswut5Ch0qwYcnIjPcpQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=t9OxNw
-        w6HWANpl54DQNy0q2p7lTjdtSam7hUc9ITNzs=; b=JLHGu7fHEcDAC3NTaQcGeg
-        2zuGNPvX2PpaqiuoI2b+5uzzAGAZgsRdDByCUBrgB5fy0cMCaP8CRolCKBFlJ/sR
-        X1kRLMWD9VZ6my4AMb3FldcOg4/VuN8U/YhM4GT73PUa1F/5q2hVOXgfoYPozTZ5
-        aPe+HCCQI4UpJlR3uDhTcIce8tHBGGduqmC3B0l2roCmjTnsJyz7d+k3U/uJrFUm
-        13np3cXhXdbg9687Nt2cHPGOEfgZEtC5AmgJGmZTjcnrCkszd6i4m39MRGK1M6rb
-        AAPkScJKpYr5N/NKGipPdD39TJBWKAktFxffAtxjpmnUKEjF36E2OMxwMGpWom3g
-        ==
-X-ME-Sender: <xms:NI0FYLIiNmWXWwbaBOvX3PkXmJan0ViGFZ-ojBJmhyXS1K3iVNa5lw>
-    <xme:NI0FYPLNRltU0bDEd2GQ1Xxu5PT-iD6D6C9A7Sk6FAfmmOa9lZLnp7l12gQSmiHRi
-    -Zrhngv83FYsfv-lsA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrtdekgdehvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:NI0FYDt0pSg1-AUo5z1Yvjzoxwbl3xLerUXHPUiBfMJIcKdBKKSBTA>
-    <xmx:NI0FYEbrJoo_yNV_QLnwaAmtR3yoHU3_Tjg0sjzAjVTBfcXu1H1P3A>
-    <xmx:NI0FYCbVvp5PEZ8UjVR07oNPg80W2GiLGc4M9heDz_EqLypu37LF9w>
-    <xmx:NI0FYOQCrC6S2s8pkCXuA9lrz5vEuC25zctrNXBuf5ScukApMwpr8Q>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D162B240057;
-        Mon, 18 Jan 2021 08:29:23 -0500 (EST)
-Date:   Mon, 18 Jan 2021 14:29:22 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Shuosheng Huang <huangshuosheng@allwinnertech.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 03/21] dt-bindings: pinctrl: Add Allwinner H616
- compatible strings
-Message-ID: <20210118132922.bsq34567ojf3q7mm@gilmour>
-References: <20210118020848.11721-1-andre.przywara@arm.com>
- <20210118020848.11721-4-andre.przywara@arm.com>
+        id S2392308AbhARNe0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 08:34:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733181AbhARNeC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 08:34:02 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 581D5C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 05:33:18 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id 6so23711850ejz.5
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 05:33:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gpeJt4sFwqBjOrypvHBXhkahW36fR0StjLmTVgCtx60=;
+        b=hDXxDkcaKc7QNbc330eLBN3cb3dfHrC+IXPmlM/8Py/JhfIlPFAZxIQKSIbwuW2O4w
+         a4FAgystYnEPU62jeHwsnOV77tlhvsesS4V6/gTk1UUGjoefRmk6YImjixp6Gm8ukN/q
+         h/Fko+ulgHMj6nqJAQLttZlsIMRG5wHnR4IK1l8CiPiIJjzV9b+bYyVDaMnXnXYKv8nI
+         dAWjRidp+RY11T16qTQT/YCT5lPfKQZxSA3Emlc+gfCEzm4YQ7xRPsHHm5AXVRzLEnv+
+         jIOZL6EnGbxbglqq00WoMynZCsR3iGkc7vqsgiklk+8hOTbvVQ6P2wxYQBJ0rAa4UDTt
+         uoAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gpeJt4sFwqBjOrypvHBXhkahW36fR0StjLmTVgCtx60=;
+        b=Te6tPwT7RUQtu1Fb3BVIQWFeJ8VXzXLiSx22CoLaXsx4HPgf2ebKWdcdqWIk83+SjH
+         Ze4Yxow2iQxcvS693kuE1o4rAI2bF8rro6mVo+kv3kcKLCrJTlvykjhY+XBrraSKitIg
+         Qf7ohirToeWGvlV7UdbLoRE67E3aRZA5cv+soE1ko0rRsuDZGT0RvH+AlMHQ2r3HH8Yx
+         svrAUqwBAzuJMj5LzM2e//20C9O8L5EmmUtWzoF0MfAEp1+EilYYnF8/rSBIvbCTjZvC
+         6cGzHNT2TnczmBEHcirZ//z717CCRni/Lh8jvod/81pqQLKavojzv0GSUzOwnAKi8hWq
+         mC/A==
+X-Gm-Message-State: AOAM531Sl1G/eDdzChrQmKUkw2jsQIFvQFVh5GRvSDyfSordR5yuXpki
+        K5jhvH1UzmbKMdnySYa4R5uxjNn37BTSpMCrLftXomIfARY=
+X-Google-Smtp-Source: ABdhPJwVX59jV33b/2juxlTLiEw7kRhKO1iEukLetuvO57JbX+1ydMf4Oy10iEUEc7vjhQI74tXtTpB5iSL87be58eE=
+X-Received: by 2002:a17:906:388b:: with SMTP id q11mr4290515ejd.421.1610976797058;
+ Mon, 18 Jan 2021 05:33:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7nwyzr24mrjxwgux"
-Content-Disposition: inline
-In-Reply-To: <20210118020848.11721-4-andre.przywara@arm.com>
+References: <20210112010307.200310-1-damien.lemoal@wdc.com>
+In-Reply-To: <20210112010307.200310-1-damien.lemoal@wdc.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 Jan 2021 14:33:05 +0100
+Message-ID: <CACRpkdbTazK7yLPVe79SoneD+tdiXv9GPvN29dSMgCZkf8Pjbg@mail.gmail.com>
+Subject: Re: [PATCH v11 02/10] pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sean Anderson <seanga2@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Damien,
 
---7nwyzr24mrjxwgux
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+this looks all right to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-On Mon, Jan 18, 2021 at 02:08:30AM +0000, Andre Przywara wrote:
-> A new SoC, a new compatible string.
-> Also we were too miserly with just allowing seven interrupt banks.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Shall I apply just this one patch to the pinctrl tree?
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+I think the line that touches arch/*/Kconfig should be dropped
+then, that better go to the SoC tree.
 
-Maxime
-
---7nwyzr24mrjxwgux
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYAWNMgAKCRDj7w1vZxhR
-xfN+AP90aYXbY08sDFUSinXCA22Rk+Qm62JSM2tvdDBHmNO2iAEA69kKXTttiaA/
-0gVIfdRT6KZpkqlutGYANT73gjGWdgo=
-=AJkx
------END PGP SIGNATURE-----
-
---7nwyzr24mrjxwgux--
+Yours,
+Linus Walleij
