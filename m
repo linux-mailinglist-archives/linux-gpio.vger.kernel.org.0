@@ -2,331 +2,348 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E0A72FABB4
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 21:42:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EFB32FABD6
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jan 2021 21:51:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388997AbhARUjd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 15:39:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49150 "EHLO
+        id S2390359AbhARUsw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 15:48:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388321AbhARUjV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 15:39:21 -0500
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5B19C061575
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 12:38:39 -0800 (PST)
-Received: by mail-yb1-xb31.google.com with SMTP id e67so5295587ybc.12
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jan 2021 12:38:39 -0800 (PST)
+        with ESMTP id S2394441AbhARUrY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 15:47:24 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165B4C061757;
+        Mon, 18 Jan 2021 12:46:37 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id c124so14715504wma.5;
+        Mon, 18 Jan 2021 12:46:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YhToM7IjXFf7PiS5+2d0PmH/vMBj4YKlxeJ8qHTByDs=;
-        b=hGfh5m/9b2i2+e64U0z66ReZb3tkZMk6t/V7i83DkGhXp6FkXlNxHVlmyIbnqaloAO
-         QQ1PJWvNkVnu6EGxUhRa/Ow2V58KDt7xPTSNQI++JiCZRrtWaIpyyZILCP3EbpoQezTx
-         u6D5BkcKGOCEt5RWFbYteb0KWOdSqNZqW7K5eYC8A4Clv1TYSUxtnELZE1lx2jIkZP7r
-         +ioqDnXiTromCcI8Ihj57voVcGpQ1aF02KIQDbqBUedXDW2DImZc1y2myH7wpuLYBcQy
-         CYFG83MxNoovrNMW/w8oRes4mCQdHxfk1V10fEdqfyewuSeg7ENFqvWwZysATxISUmBS
-         D9ig==
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=9pd6NP8MKjOIZLtlaBPlwpeyWjI68tp87PnWyTG6FQo=;
+        b=P7MDBVp2loUeGaeaCPb9ydJEPSginKWp9PFeqivuX7x+oNuy4YmjoWQtCR+1FZK3lp
+         maXNw5mdKbPvYczcDHWlM1VN5o/qJXC8Uhfc0KXMZMW+XlhRpQOTnVDeD6cGQaY/ae00
+         6R968ILzIQlI9sYkvsO2YETiAmTtnlF+uKYDKJOTM5j2dx52jtb1QbE6NSD31vscEL3J
+         /fUGV1mjvjo3airWsTnBIuO+n2TcZaivt9BEOv+FhcIQtDZqu2wY+maAB2DBNumNRHK2
+         hkpiD7BY8Rwsz9rcQjFA4OkY9ZLZj/ryjbQS/C0SnPYdc/Av9l4eccXlKZO0yrLEL0rf
+         l+aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YhToM7IjXFf7PiS5+2d0PmH/vMBj4YKlxeJ8qHTByDs=;
-        b=QLjVzi4j+SCLeYtbJM9/Kd6J9cqbk3CnCQOPIMX6H3pHfM1mVfg1XxppBLwnd2jNxx
-         8xCWg57/PJlslXKdcEUIgTNf+JUmccZ19hLNfJenL0fGRUvo/5dIUPaxjn5XKhK8Knz+
-         +/mhLvWAM1/wtqW+zLku1txgRmGQ+Ti0Q/fPPCh5HMuUvNg57+vg+imE9xXlPQdGB0x2
-         LNLqA7UHhostLJnB/1XFtiH6+nWoTunCzIHOj+2Iho39xQlQ8bYwdsVBsnoriOLi0+Dc
-         zjwY1bY8gtzfAs5L/Xa4oVdVnpfQGxRnK20X0ItucC9C/9eA0yRuqfgyESjMc2U9ACXq
-         QJTg==
-X-Gm-Message-State: AOAM533JUb/roJEYJzL5B3oKAlT8vK2zBrqkZJQK7ZF4os09hok3XXbX
-        SKjrRhP2Rn7J6FE1tTlv5nrs6dR8boBounbkehYlbw==
-X-Google-Smtp-Source: ABdhPJw7rwFn7aUAdETTEMqsHoSCpRPI3wwo4ec0Vn51K0kHuxUARBwtcHwybpaUm96KDuksSXLLoflTCdEtbZsn2bU=
-X-Received: by 2002:a25:d295:: with SMTP id j143mr1420246ybg.20.1611002318707;
- Mon, 18 Jan 2021 12:38:38 -0800 (PST)
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=9pd6NP8MKjOIZLtlaBPlwpeyWjI68tp87PnWyTG6FQo=;
+        b=MzrVzoUR+J7m52AMvdiZl+mi0MAOrJiEd/CqWAE033asHnntega4kGD5sGfv5co0OP
+         hQmg2EJj64C4F0OX6CAoYdTlYPdSYaale/snjDt27RDpgVbOHfBUu/DwUVFVNxC/8r8P
+         pTHTxLLdR4ekm6AgdMf7w4RYHZ9DRIO9HO78it/Yn4Z4fzE4EbQfhuZZVs4rxSpIPGU/
+         RGKVPkmOL7Dpy2VPBS27m7OmndMlTbaTvrm9YN1L1VU7izifzpb+bTzpJ94BFGugj4ln
+         iMTFO/sjgVNm0ju129BRUA6CPG9Z+NvnfLE/Q1i2Hr53MQI58se9rX1kW2sjZPlfrsT6
+         FlWQ==
+X-Gm-Message-State: AOAM531+7Ymfi7rz67AJI/O8moeo33UUlNKLmDWu2iUxDclUmuWg+/Dm
+        jFjXHzPEdyNPCH5a92a5hj0=
+X-Google-Smtp-Source: ABdhPJyi0RSCbLsr1taKlUHRyiXCxtKBjT2oiXy25DuCHFmuTZZFyrIWKN1HWGLpUoWz11fxYUhB3Q==
+X-Received: by 2002:a05:600c:2044:: with SMTP id p4mr5632wmg.11.1611002795765;
+        Mon, 18 Jan 2021 12:46:35 -0800 (PST)
+Received: from [192.168.1.211] ([2.29.208.120])
+        by smtp.gmail.com with ESMTPSA id 33sm35554183wrn.35.2021.01.18.12.46.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jan 2021 12:46:35 -0800 (PST)
+From:   Daniel Scally <djrscally@gmail.com>
+Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        kieran.bingham@ideasonboard.com
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-7-djrscally@gmail.com>
+ <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
+Message-ID: <3872041c-1a4a-2508-d325-80242598d55e@gmail.com>
+Date:   Mon, 18 Jan 2021 20:46:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20210116011412.3211292-1-saravanak@google.com> <87r1mjkc07.wl-maz@kernel.org>
-In-Reply-To: <87r1mjkc07.wl-maz@kernel.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 18 Jan 2021 12:38:02 -0800
-Message-ID: <CAGETcx_5JJ2An=URY=0GwBbZzjfqN4w=-+2BuCsstYePej3sRw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Bind gpio_device to a driver to enable
- fw_devlink=on by default
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 17, 2021 at 4:02 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> Hi Saravana,
->
-> Thanks for posting this, much appreciated.
->
-> On Sat, 16 Jan 2021 01:14:11 +0000,
-> Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > There are multiple instances of GPIO devictree nodes of the form:
-> >
-> > foo {
-> >       compatible = "acme,foo";
-> >       ...
-> >
-> >       gpio0: gpio0@xxxxxxxx {
-> >               compatible = "acme,bar";
-> >               ...
-> >               gpio-controller;
-> >       };
-> >
-> >       gpio1: gpio1@xxxxxxxx {
-> >               compatible = "acme,bar";
-> >               ...
-> >               gpio-controller;
-> >       };
-> >
-> >       ...
-> > }
-> >
-> > bazz {
-> >       my-gpios = <&gpio0 ...>;
-> > }
-> >
-> > Case 1: The driver for "foo" populates struct device for these gpio*
-> > nodes and then probes them using a driver that binds with "acme,bar".
-> > This lines up with how DT nodes with the "compatible" property are
-> > generally converted to struct devices and then registered with driver
-> > core to probe them. This also allows the gpio* devices to hook into all
-> > the driver core capabilities like runtime PM, probe deferral,
-> > suspend/resume ordering, device links, etc.
-> >
-> > Case 2: The driver for "foo" doesn't populate its child device nodes
-> > with "compatible" property and instead just loops through its child
-> > nodes and directly registers the GPIOs with gpiolib without ever
-> > populating a struct device or binding a driver to it.
->
-> That's not quite an accurate description. The gpiolib subsystem does
-> create a struct device. It doesn't register a driver though, which is
-> what causes the issue with fr_devlink (more on that below).
+Hi Laurent, thanks for the comments - really appreciate the detail.
 
-The devices created by gpiolib care are created for case 1 and case 2.
-They are just devices gpiolib uses to represent a virtual software
-device to hook different attributes to and expose them in sysfs. I'm
-not talking about those devices here. The devices I'm referring to are
-devices that represent the actual HW IP -- so what I'm saying is
-accurate.
 
-> >
-> > Drivers that follow the case 2 cause problems with fw_devlink=on.  This
-> > is because fw_devlink will prevent bazz from probing until there's a
-> > struct device that has gpio0 as its fwnode (because bazz lists gpio0 as
-> > a GPIO supplier). Once the struct device is available, fw_devlink will
-> > create a device link between with gpio0 as the supplier and bazz as the
-> > consumer. After this point, the device link will prevent bazz from
-> > probing until its supplier (the gpio0 device) has bound to a driver.
-> > Once the supplier is bound to a driver, the probe of bazz is triggered
-> > automatically.
-> >
-> > Finding and refactoring all the instances of drivers that follow case 2
-> > will cause a lot of code churn and it not something that can be done in
-> > one shot. Examples of such instances are [1] [2].
-> >
-> > This patch works around this problem and avoids all the code churn by
-> > simply creating a stub driver to bind to the gpio_device. Since the
-> > gpio_device already points to the GPIO device tree node, this allows all
-> > the consumers to continue probing when the driver follows case 2.
-> >
-> > If/when all the old drivers are refactored, we can revert this
-> > patch.
+Some specific responses below but assume a general "will do" to
+everything you mentioned otherwise...
+
+On 18/01/2021 09:15, Laurent Pinchart wrote:
+>> +	  PMIC) and one designed for Chrome OS.
+> How about expanding this a bit to explain what the INT3472 stands for ?
 >
-> My personal gripe with this approach is that it is an abrupt change in
-> the way DT and device model are mapped onto each other.
+> 	  The INT3472 is an Intel camera power controller, a logical device
+> 	  found on some Skylake-based systems that can map to different
+> 	  hardware devices depending on the platform. On machines
+> 	  designed for Chrome OS, it maps to a TPS68470 camera PMIC. On
+> 	  machines designed for Windows, it maps to either a TP68470
+> 	  camera PMIC, a uP6641Q sensor PMIC, or a set of discrete GPIOs
+> 	  and power gates.
+
+Yeah sure ok
+
+
+>> This driver handles all three
+>> +	  situations by discovering information it needs to discern them at
+>> +	  runtime.
+>> +
+>> +	  If your device was designed for Chrome OS, this driver will provide
+>> +	  an ACPI operation region, which must be available before any of the
+>> +	  devices using this are probed. For this reason, you should select Y
+>> +	  if your device was designed for ChromeOS. This option also configures
+>> +	  the designware-i2c driver to be built-in, for the same reason.
+> Is the last sentence a leftover ?
+
+Oops - it is, but it was supposed to remind me to double check that that
+was still necessary. I'll take a look, thanks.
+
+
+>> +
+>> +#include "intel_skl_int3472_common.h"
+>> +
+>> +int skl_int3472_get_cldb_buffer(struct acpi_device *adev,
+>> +				struct int3472_cldb *cldb)
+>> +{
+>> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+>> +	acpi_handle handle = adev->handle;
+>> +	union acpi_object *obj;
+>> +	acpi_status status;
+>> +	int ret = 0;
+>> +
+>> +	status = acpi_evaluate_object(handle, "CLDB", NULL, &buffer);
+>> +	if (ACPI_FAILURE(status))
+>> +		return -ENODEV;
+>> +
+>> +	obj = buffer.pointer;
+>> +	if (!obj) {
+>> +		dev_err(&adev->dev, "ACPI device has no CLDB object\n");
+> Is this the code path that is taken on Chrome OS ? If so an error
+> message isn't appropriate. I'd drop this message, and instead add an
+> error message in the discrete PMIC code.
+
+Ah yes of course, thanks, I'll move the error message.
+
+
+>> +
+>> +	unsigned int n_gpios; /* how many GPIOs have we seen */
+>> +
+>> +	struct int3472_gpio_regulator regulator;
+>> +	struct int3472_gpio_clock clock;
+> You don't necessarily need to define separate structures for this, you
+> could also write
 >
-> As far as I know (and someone please correct me if I am wrong), there
-> is zero expectation that a device/subdevice/random IP block described
-> by a node with a "compatible" property will end-up being managed by a
-> driver that is bound to that particular node.
+> 	struct {
+> 		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
+> 		char supply_name[GPIO_REGULATOR_SUPPLY_NAME_LENGTH];
+> 		struct gpio_desc *gpio;
+> 		struct regulator_dev *rdev;
+> 		struct regulator_desc rdesc;
+> 	} regulator;
 >
-> The node/subnode division is a good way to express some HW boundaries,
-> but doesn't say anything about the way this should be handled in the
-> kernel. Assuming that everything containing a "compatible" string will
-> eventually be bound to a driver is IMO pretty limiting.
-
-The default behavior of of_platform_populate() is to create a struct
-device for every node with "compatible" property. That's how top level
-devices (or children of simple-bus devices) are populated. IIRC,
-that's what a lot of other busses do too. So, if anything, not having
-a struct device for nodes with "compatible" property is an exception.
-
-Honestly, if one has a driver that supports a HW IP, I don't see any
-reason it should operate outside of the device-driver model supported
-by driver core. The driver code is there for a reason -- to solve all
-the common problems faced by drivers. Operating outside of it just
-causes reinventing the wheel, things like playing chicken with
-initcalls to make sure drivers initialize their device in the right
-order, not working with deferred probe, etc. For example, the rockchip
-driver in your device (the one that follows case 2) tries to get some
-clocks. But if that fails with -EPROBE_DEFER, the driver has no way
-for it to recover and just doesn't register the GPIO anymore.
-
-Obviously exceptions are allowed for devices that are needed before
-the driver core even comes up -- like early, clocks, irqs and timers
-for the kernel/scheduler to kick off.
-
-> >
-> > [1] - https://lore.kernel.org/lkml/20201014191235.7f71fcb4@xhacker.debian/
-> > [2] - https://lore.kernel.org/lkml/e28e1f38d87c12a3c714a6573beba6e1@kernel.org/
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> > Cc: Kever Yang <kever.yang@rock-chips.com>
-> > Fixes: e590474768f1 ("driver core: Set fw_devlink=on by default")
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> > v1 -> v2:
-> > - Fixed up compilation errors that were introduced accidentally
-> > - Fixed a missing put_device()
-> >
-> >  drivers/gpio/gpiolib.c | 37 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index b02cc2abd3b6..12c579a953b0 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -574,6 +574,9 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
-> >       unsigned        i;
-> >       int             base = gc->base;
-> >       struct gpio_device *gdev;
-> > +     struct device_node *of_node;
-> > +     struct fwnode_handle *fwnode;
-> > +     struct device *fwnode_dev;
-> >
-> >       /*
-> >        * First: allocate and populate the internal stat container, and
-> > @@ -596,6 +599,22 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
-> >               gdev->dev.of_node = gc->of_node;
-> >       else
-> >               gc->of_node = gdev->dev.of_node;
-> > +
-> > +     of_node = gdev->dev.of_node;
-> > +     fwnode = of_fwnode_handle(of_node);
-> > +     fwnode_dev = get_dev_from_fwnode(fwnode);
-> > +     /*
-> > +      * If your driver hits this warning, it's because you are directly
-> > +      * parsing a device tree node with "compatible" property and
-> > +      * initializing it instead of using the standard DT + device driver
-> > +      * model of creating a struct device and then initializing it in the
-> > +      * probe function. Please refactor your driver.
-> > +      */
-> > +     if (!fwnode_dev && of_find_property(of_node, "compatible", NULL)) {
-> > +             chip_warn(gc, "Create a real device for %pOF\n", of_node);
+> 	struct {
+> 		struct clk *clk;
+> 		struct clk_hw clk_hw;
+> 		struct clk_lookup *cl;
+> 		struct gpio_desc *gpio;
+> 	} clock;
 >
-> chip_warn() is not a good idea here, as gc->dev hasn't been
-> initialised yet, and results in the following output:
+> It's entirely up to you.
 
-Thanks, will look into this.
 
+Ooh yeah I like that more, thanks very much.
+
+
+>> +/* 79234640-9e10-4fea-a5c1-b5aa8b19756f */
+>> +static const guid_t int3472_gpio_guid =
+>> +	GUID_INIT(0x79234640, 0x9e10, 0x4fea,
+>> +		  0xa5, 0xc1, 0xb5, 0xaa, 0x8b, 0x19, 0x75, 0x6f);
+>> +
+>> +/* 822ace8f-2814-4174-a56b-5f029fe079ee */
+>> +static const guid_t cio2_sensor_module_guid =
+>> +	GUID_INIT(0x822ace8f, 0x2814, 0x4174,
+>> +		  0xa5, 0x6b, 0x5f, 0x02, 0x9f, 0xe0, 0x79, 0xee);
+> A comment that explains what those DSM functions do would be useful for
+> reference. It has taken lots of time to figure it out, let's spare the
+> pain to the next person who tries to understand this :-)
+
+
+Hah - good point, well made. I'll explain what they're for then.
+
+
+>> +static int skl_int3472_clk_enable(struct clk_hw *hw)
+>> +{
+>> +	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+>> +
+>> +	gpiod_set_value(clk->gpio, 1);
+> The clock enable() and disable() methods are not supposed to sleep,
+> while setting a GPIO value may sleep in the general case. Should this be
+> moved to skl_int3472_clk_prepare() ? Same for skl_int3472_clk_disable()
+> and skl_int3472_clk_unprepare().
+
+
+I was under the assumption the difference between gpiod_set_value() and
+gpiod_set_value_cansleep() was that gpiod_set_value() _can't_ sleep, but
+actually reading the function's comments it seems it will just complain
+if it turns out it can sleep:
+
+
+* This function can be called from contexts where we cannot sleep, and will
+* complain if the GPIO chip functions potentially sleep. It doesn't
+complain, on either of my devices, but I guess that can't be guaranteed
+for _every_ device, so these calls probably are safer in (un)prepare() yes.
+
+>> +			}
+>> +
+>> +			i++;
+>> +		}
+>> +	}
+>> +
+>> +	if (!func)
+>> +		return 0;
+> I initially thought this wasn't right, as if no entry was found in the
+> mapping table, func would still have its non-NULL value as passed to
+> this function. I then realized that you're checking if the match that
+> was found is NULL. A comment to explain this would be useful.
+
+
+Yep ok - I actually had one and decided it was superfluous and removed
+it - my bad.
+
+>> +
+>> +	status = acpi_get_handle(NULL, path, &handle);
+>> +	if (ACPI_FAILURE(status))
+>> +		return -EINVAL;
+>> +
+>> +	ret = acpi_bus_get_device(handle, &adev);
+>> +	if (ret)
+>> +		return -ENODEV;
+>> +
+>> +	table_entry = (struct gpiod_lookup)GPIO_LOOKUP_IDX(acpi_dev_name(adev),
+>> +							   ares->data.gpio.pin_table[0],
+>> +							   func, 0, polarity);
+> I wonder if
 >
-> [    0.113996] gpio (null): (gpio0): Create a real device for /pinctrl/gpio0@ff720000
-> [    0.114727] gpio (null): (gpio1): Create a real device for /pinctrl/gpio1@ff730000
-> [    0.115340] gpio (null): (gpio2): Create a real device for /pinctrl/gpio2@ff780000
-> [    0.115912] gpio (null): (gpio3): Create a real device for /pinctrl/gpio3@ff788000
-> [    0.116437] gpio (null): (gpio4): Create a real device for /pinctrl/gpio4@ff790000
+> 	table_entry.key = acpi_dev_name(adev);
+> 	table_entry.chip_hwnum = ares->data.gpio.pin_table[0];
+> 	table_entry.con_id = func;
+> 	table_entry.idx = 0;
+> 	table_entry.flags = polarity;
 >
-> > +             gdev->dev.fwnode = fwnode;
-> > +     }
-> > +     put_device(fwnode_dev);
-> >  #endif
-> >
-> >       gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
-> > @@ -4202,6 +4221,17 @@ void gpiod_put_array(struct gpio_descs *descs)
-> >  }
-> >  EXPORT_SYMBOL_GPL(gpiod_put_array);
-> >
-> > +static int gpio_drv_probe(struct device *dev)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +static struct device_driver gpio_drv = {
-> > +     .name = "gpio_drv",
-> > +     .bus = &gpio_bus_type,
-> > +     .probe = gpio_drv_probe,
-> > +};
-> > +
-> >  static int __init gpiolib_dev_init(void)
-> >  {
-> >       int ret;
-> > @@ -4213,9 +4243,16 @@ static int __init gpiolib_dev_init(void)
-> >               return ret;
-> >       }
-> >
-> > +     if (driver_register(&gpio_drv) < 0) {
-> > +             pr_err("gpiolib: could not register GPIO stub driver\n");
-> > +             bus_unregister(&gpio_bus_type);
-> > +             return ret;
-> > +     }
-> > +
-> >       ret = alloc_chrdev_region(&gpio_devt, 0, GPIO_DEV_MAX, GPIOCHIP_NAME);
-> >       if (ret < 0) {
-> >               pr_err("gpiolib: failed to allocate char dev region\n");
-> > +             driver_unregister(&gpio_drv);
-> >               bus_unregister(&gpio_bus_type);
-> >               return ret;
-> >       }
+> (with struct gpiod_lookup table_entry = { }; above) would be more
+> readable. Up to you.
 >
-> On the positive side, this patch brings my RK3399 system back to life.
-> However, on a system that doesn't suffer from this problem, I end-up
-> with the following issue:
+>> +
+>> +	memcpy(&int3472->gpios.table[int3472->n_sensor_gpios], &table_entry,
+>> +	       sizeof(table_entry));
+> Ah, or maybe
 >
-> $ ls -l /sys/bus/platform/drivers/mb86s70-gpio/51000000.gpio/of_node
-> lrwxrwxrwx 1 root root 0 Jan 17 11:15 /sys/bus/platform/drivers/mb86s70-gpio/51000000.gpio/of_node -> ../../../firmware/devicetree/base/gpio@51000000
-> $ ls -l /sys/bus/gpio/drivers/gpio_drv/gpiochip0/of_node
-> lrwxrwxrwx 1 root root 0 Jan 16 18:30 /sys/bus/gpio/drivers/gpio_drv/gpiochip0/of_node -> ../../../../firmware/devicetree/base/gpio@51000000
+> 	struct gpio_lookup *table_entry;
 >
-> where two drivers are now handling the same of_node. Somehow, I don't
-> think this is a good idea, even if I didn't spot anything problematic
-> yet (maybe because there isn't anything useful hanging off the GPIOs
-> on this particular machine).
-
-I agree it looks weird, but it doesn't really break anything and I'm
-pretty confident about it. IIRC there are other cases (unrelated to
-fw_devlink) where this happens too. Also, there are many cases of two
-devices pointing to the same of_node. If we really don't like this,
-then the solution is to have gpiolib NOT initialize the of_node like
-this. I can also have the stub driver not probe this device for case
-1. That's pretty easy to do.
-
-> Overall, I'm concerned that this is a change in semantics that affects
-> the whole device model, and I wonder whether forcing everyone in the
-> same mould is the right approach.
+> 	table_entry = &int3472->gpios.table[int3472->n_sensor_gpios];
+> 	table_entry->key = acpi_dev_name(adev);
+> 	table_entry->chip_hwnum = ares->data.gpio.pin_table[0];
+> 	table_entry->con_id = func;
+> 	table_entry->idx = 0;
+> 	table_entry->flags = polarity;
 >
-> An alternative I've been thinking about is to flag the device as
-> "satisfying existing dependencies" at the point where it is
-> registered. Because at the end of the day, we don't really care for
-> the *driver* part of it (case in point, the stub driver you introduced
-> doesn't do anything). We only care about *someone* saying "this device
-> is ready to be used".
+> (no need to memset() to 0 first as the whole structure has been
+> allocated with kzalloc()).
 
-This might be doable (haven't fully thought of the corner cases it
-might cause for device links) if gpiolib had put the device in a class
-(instead of a bus) because "class" devices don't probe. "Bus" devices
-are expected to probe and there's no way to tell if it's safe to
-ignore waiting for this device to probe. That'd break device links
-(not just fw_devlink) in a fundamental way too. Also, I don't know the
-reasons why gpiolib uses a bus instead of a class, but if we change
-that now, it's going to affect the sysfs layout and break UAPI.
 
-So, IMHO, this patch (with the clean up for Case 1) is the best
-compromise to get fw_devlink=on working. Considering how trivial this
-patch is and fw_devlink=on helping out a lot of people, I'd recommend
-we go with this patch and if we find a better solution later, we can
-implement that and remove this.
+Yeah you're right, this looks much nicer - thanks.
 
--Saravana
+
+>> +	int ret = 0;
+>> +
+>> +	init.name = kasprintf(GFP_KERNEL, "%s-clk",
+>> +			      acpi_dev_name(int3472->adev));
+> You need to check for NULL and return -ENOMEM.
+
+
+Oops, of course, thanks
+
+
+>> +		goto err_unregister_clk;
+> If this fails, you will end up calling clk_unregister() and
+> clkdev_drop() in skl_int3472_discrete_remove(). You should replace the
+> check in the remove function with
+>
+> 	if (!int3472->clock.cl) {
+
+You're right, good spot, thank you.
+
+
+>> +		dev_err(&int3472->pdev->dev, "No sensor module config\n");
+>> +		return PTR_ERR(sensor_config);
+>> +	}
+> Would it make sense to call this in skl_int3472_discrete_probe() or
+> skl_int3472_parse_crs() and cache the config pointer ?
+
+
+Yes, probably actually, and then the GPIO mapping function can just
+check for its presence.
+
+
+>> +	init_data.constraints.valid_ops_mask = REGULATOR_CHANGE_STATUS;
+>> +	init_data.num_consumer_supplies = 1;
+>> +	init_data.consumer_supplies = &sensor_config->supply_map;
+>> +
+>> +	snprintf(int3472->regulator.regulator_name,
+>> +		 GPIO_REGULATOR_NAME_LENGTH, "int3472-discrete-regulator");
+> s/GPIO_REGULATOR_NAME_LENGTH/sizeof(int3472->regulator.regulator_name)/
+>
+> Do regulator names need to be unique ? If so you may have a problem if a
+> platform has two discrete INT3472.
+
+
+Unlike clocks, the regulator framework doesn't shout at you when you do
+this, but I agree it's suboptimal at the very least, I'll set it to
+..."%s-regulator", acpi_dev_name(int3472->adev)... as with the clock.
+
+
+>> +	case INT3472_GPIO_TYPE_PRIVACY_LED:
+>> +		ret = skl_int3472_map_gpio_to_sensor(int3472, ares,
+>> +						     "indicator-led",
+>> +						     GPIO_ACTIVE_HIGH);
+> Mapping the indicator LED to the sensor isn't great, as all sensor
+> drivers would then need to handle it. Could it be handled in the
+> regulator instead, so that it would be turned on automatically when the
+> sensor is powered up ? Another option, more complicated, would be to
+> handle it in the CIO2 driver (but I'm not sure how we would map it).
+
+
+Not with the regulator, because it turns out only the 0x0b pin is one of
+those and those appear on very few devices in scope, so it wouldn't be
+called on a Surface Book 2 for example. Perhaps as part of clock
+prepare/enable? I don't much like the idea of it running in the CIO2
+driver to be honest, feels a bit out of place.
+
+
+>> +
+>> +	if (int3472->gpios_mapped)
+>> +		gpiod_remove_lookup_table(&int3472->gpios);
+> You could avoid the need for the gpios_mapped field by checking for
+>
+> 	if (int3472->gpios.list.next)
+>
+> Up to you.
+
+
+Thank you! I was scratching my head trying to figure out a better way of
+doing that.
+
