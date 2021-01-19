@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C52A2FB29F
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 08:16:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB8E42FB2B6
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 08:19:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbhASHPg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jan 2021 02:15:36 -0500
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:44803 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbhASHOm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 02:14:42 -0500
-Received: by mail-lf1-f44.google.com with SMTP id m25so27590192lfc.11;
-        Mon, 18 Jan 2021 23:14:24 -0800 (PST)
+        id S1726601AbhASHQZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jan 2021 02:16:25 -0500
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:35573 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbhASHPH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 02:15:07 -0500
+Received: by mail-lj1-f175.google.com with SMTP id p13so20794503ljg.2;
+        Mon, 18 Jan 2021 23:14:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=P+qSMLDwGxE2JaNJxyZHsDHJ0xuN3IOTE+zNh6TVqf0=;
-        b=B5sPLwMmSGZ7a3yW+x8NAT0VpgSHT/Op2olujQsRZTZnfFxla7Y577uXQnRZWwfUKb
-         vSkop34dz+pbnvJqxeARW5I1QWSbkJ8WZ5YzjKYZr5+DyCW0ye+RYc+ivJhyIWHrDubx
-         52wEBzNCPcCLQQER+jfJpFzBAyVT4PaYTI5idwU+r51633Erb24xKIxGhjc6W2h4FOJD
-         qykgOaDLBTcfgejuNVxtJK4ArDMyzz+hLa71r5+NjNqeC9xbjzsMO/0Py6BLFWLsayOe
-         x9JABhWWth/v6KNHte/h16Q4UhTJumT1f8roA4g0fvruw8m6FyLPKkx7H/xFZacqpC/v
-         gWMA==
-X-Gm-Message-State: AOAM530mVHf31ZrlJu7zq7qVC62f2+hWR64lvpvY0yQDoMvatHWRV0lm
-        XYP1QskGrN0RUe2rM6jmflM=
-X-Google-Smtp-Source: ABdhPJyhPq5gBNyzuAtHByHBCEaWug1JFAfsuCEmg7e4TK6mPMxRbbYp3M7Qkz63uDppCQb0efK8wQ==
-X-Received: by 2002:a19:dc5:: with SMTP id 188mr1254716lfn.513.1611040438809;
-        Mon, 18 Jan 2021 23:13:58 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HcEq01wGvES8F7d5s4ArfJgTmyrtGVfxLQPWHyjZtEY=;
+        b=Th1uNnpfOaiDv7vMu8ojKSjzzvfiWoGNueiWObO6hpxGxgaGIpcILTqUoRugh9hcf0
+         vaxndQMTaM3bBe72Sp6iZpCFldnipnw/5vMGcO1mY+bElJ3osV81h+kUcUlfO889XMuU
+         lPZdfVaJaqsmRuvlKUiDnwsZ0QveNdPbxeqIsLGl5cAW/SgLMhqG5jXLRNNNhun0gcA4
+         YfuU30T9UyhExqgSUJe4XfVEJx91UsR1S2qSb0lRd7YTD9oHR0yV1EDx/It6J5S0j0zS
+         399QayqqQ2tpOY1e9mDPLUR75U+eYKcYIwB7ZBr7t7Jb/LQnolgrt60qMS9aI0b+S9C3
+         R8RA==
+X-Gm-Message-State: AOAM531h6p9Jy1ym8jAbBrzvcHmBI8kws4sGDVbV/P/GO3JlBbgmBU4g
+        QDHvn90od5aGMV4Rb+HbYfg=
+X-Google-Smtp-Source: ABdhPJzhUbkMrUIhKnjfnBqJmD4OkwBeet6fZd7QQxvgDFhpJT1vw0rSg761pxbrtWfuyPStPmzyIg==
+X-Received: by 2002:a2e:6a11:: with SMTP id f17mr1352418ljc.202.1611040464754;
+        Mon, 18 Jan 2021 23:14:24 -0800 (PST)
 Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id m13sm1905288ljo.121.2021.01.18.23.13.57
+        by smtp.gmail.com with ESMTPSA id u15sm53637lfl.170.2021.01.18.23.14.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Jan 2021 23:13:57 -0800 (PST)
-Date:   Tue, 19 Jan 2021 09:13:49 +0200
+        Mon, 18 Jan 2021 23:14:24 -0800 (PST)
+Date:   Tue, 19 Jan 2021 09:14:16 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -49,156 +49,91 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-power@fi.rohmeurope.com, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v2 00/17] Support ROHM BD71815 PMIC
-Message-ID: <cover.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v2 01/17] regulator: bd718x7, bd71828, Fix dvs voltage levels
+Message-ID: <7b7a9111e02e06574849bacd5703e6c5cdcd2206.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Patch series introducing support for ROHM BD71815 PMIC
+The ROHM BD718x7 and BD71828 drivers support setting HW state
+specific voltages from device-tree. This is used also by various
+in-tree DTS files.
 
-Please note that this series depends on previously sent patches.
+These drivers do incorrectly try to compose bit-map using enum
+values. By a chance this works for first two valid levels having
+values 1 and 2 - but setting values for the rest of the levels
+do indicate capbility of setting values for first levels as
+well. Luckily the regulators which support settin values for
+SUSPEND/LPSR do usually also support setting values for RUN
+and IDLE too - thus this has not been such a fatal issue.
 
-Already merged regulator patches (in regulator tree - not yet in Linus'
-tree):
-[PATCH] regulator: ROHM bd7xxxx: Do not depend on parent driver data
-https://lore.kernel.org/lkml/20210105130221.GA3438042@localhost.localdomain/
-[PATCH] regulator: bd718x7: Stop using parent data
-https://lore.kernel.org/lkml/20210107122355.GA35080@localhost.localdomain/
+Fix this by defining the old enum values as bits and using
+new enum in parsing code. This allows keeping existing IC
+specific drivers intact and only adding the defines and
+slightly changing the rohm-regulator.c
 
-Already merged GPIO patch (in GPIO tree - not yet in Linus' tree):
-[PATCH] gpio: bd7xxxx: Do not depend on parent driver data
-https://lore.kernel.org/lkml/20210105125335.GA3430233@localhost.localdomain/
+Fixes: 21b72156ede8b ("regulator: bd718x7: Split driver to common and bd718x7 specific parts")
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-
-This series also includes already sent patches:
-The patches 1, 2 and 3 have been sent separately to mfd/regulator, rtc and clk
-subsystems - but they have not yet been reviewed / applied. They are present
-also in this series because the series depends on those changes.
-I will drop those patches from this series if they get merged to
-(MFD or regulator)/RTC/clk trees from previous submits.
-
-patch 1 previous submit:
-regulator: bd718x7, bd71828, Fix dvs voltage levels
+Please note that this same change has been sent individually:
 https://lore.kernel.org/lkml/20210118075851.GA1016281@localhost.localdomain/
+It is present in this series only because some patches depend on it.
 
-patch 2 previous submit:
-rtc: bd70528: Do not require parent data
-https://lore.kernel.org/lkml/20210105152350.GA3714833@localhost.localdomain/
+ drivers/regulator/rohm-regulator.c |  9 ++++++---
+ include/linux/mfd/rohm-generic.h   | 14 ++++++--------
+ 2 files changed, 12 insertions(+), 11 deletions(-)
 
-patch 3 previous submit:
-clk: BD718x7: Do not depend on parent driver data
-https://lore.kernel.org/lkml/20210105123028.GA3409663@localhost.localdomain/
-
-
-Please note that due to the dependencies all of the patches are probably
-not applying cleanly to all subsystem trees. (regulator/RTC patches to
-other subsystems). I understand it perfectly well if this series can't be
-merged before all dependencies are merged to all relevant subsystem trees
-but I would be grateful if I got the first set of review comments even
-before that.
-
-
-ROHM BD71815 is a power management IC used in some battery powered
-systems. It contains regulators, GPO(s), charger + coulomb counter, RTC
-and a clock gate.
-
-All regulators can be controlled via I2C. LDO4 can additionally be set to
-be enabled/disabled by a GPIO. LDO3 voltage could be selected from two
-voltages written into separate VSEL reisters using GPIO but this mode is
-not supported by driver. On top of that the PMIC has the typical HW
-state machine which is present also on many other ROHM PMICs.
-
-IC contains two GPOs - but one of the GPOs is marked as GND in
-data-sheet. Thus the driver by default only exposes one GPO. The second
-GPO can be enabled by special DT property.
-
-RTC is almost similar to what is on BD71828. For currently used features
-only the register address offset to RTC block differs.
-
-The charger driver is not included in this series. ROHM has a charger
-driver with some fuel-gauging logig written in but this is not included
-here. I am working on separating the logic from HW specific driver and
-supporting both BD71815 and BD71828 chargers in separate patch series.
-
-Changelog v2:
-  - Rebased on top of v5.11-rc3
-  - Added another "preliminary patch" which fixes HW-dvs voltage
-    handling (patch 1)
-  - split regulator patch to two.
-  - changed dt-binding patch ordering.
-  regulators:
-    - staticized probe
-    - removed some unnecessary defines
-    - updated comments
-    - split rohm-regulator patch adding SNVS and supporting simple
-      linear mapping into two - one adding support for mapping, other
-      adding SNVS.
-  GPIO:
-    - removed unnecessary headers
-    - clarified dev/parent->dev usage
-    - removed forgotten #define DEBUG
-  dt-bindings:
-    - changed patch order to meet ref-dependencies
-    - added missing regulator nodes
-    - changed string property for clk mode to tristated
-  MFD:
-    - header cleanups.
-  CLK:
-    - fixed commit message
-
-Matti Vaittinen (17):
-  regulator: bd718x7, bd71828, Fix dvs voltage levels
-  rtc: bd70528: Do not require parent data
-  clk: BD718x7: Do not depend on parent driver data
-  mfd: bd718x7: simplify by cleaning unnecessary device data
-  dt_bindings: bd71828: Add clock output mode
-  dt_bindings: regulator: Add ROHM BD71815 PMIC regulators
-  dt_bindings: mfd: Add ROHM BD71815 PMIC
-  mfd: Add ROHM BD71815 ID
-  mfd: Support for ROHM BD71815 PMIC core
-  gpio: support ROHM BD71815 GPOs
-  regulator: helpers: Export helper voltage listing
-  regulator: rohm-regulator: linear voltage support
-  regulator: rohm-regulator: Support SNVS HW state.
-  regulator: Support ROHM BD71815 regulators
-  clk: bd718x7: Add support for clk gate on ROHM BD71815 PMIC
-  rtc: bd70528: Support RTC on ROHM BD71815
-  MAINTAINERS: Add ROHM BD71815AGW
-
- .../bindings/mfd/rohm,bd71815-pmic.yaml       | 202 ++++++
- .../bindings/mfd/rohm,bd71828-pmic.yaml       |   6 +
- .../regulator/rohm,bd71815-regulator.yaml     | 116 +++
- MAINTAINERS                                   |   3 +
- drivers/clk/clk-bd718x7.c                     |  21 +-
- drivers/gpio/Kconfig                          |  10 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-bd71815.c                   | 171 +++++
- drivers/mfd/Kconfig                           |  15 +-
- drivers/mfd/rohm-bd71828.c                    | 416 ++++++++++-
- drivers/mfd/rohm-bd718x7.c                    |  43 +-
- drivers/regulator/Kconfig                     |  11 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/bd71815-regulator.c         | 682 ++++++++++++++++++
- drivers/regulator/helpers.c                   |  36 +-
- drivers/regulator/rohm-regulator.c            |  32 +-
- drivers/rtc/Kconfig                           |   6 +-
- drivers/rtc/rtc-bd70528.c                     | 104 ++-
- include/linux/mfd/rohm-bd71815.h              | 561 ++++++++++++++
- include/linux/mfd/rohm-bd71828.h              |   3 +
- include/linux/mfd/rohm-bd718x7.h              |  13 -
- include/linux/mfd/rohm-generic.h              |  19 +-
- include/linux/regulator/driver.h              |   2 +
- 23 files changed, 2321 insertions(+), 153 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71815-pmic.yaml
- create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71815-regulator.yaml
- create mode 100644 drivers/gpio/gpio-bd71815.c
- create mode 100644 drivers/regulator/bd71815-regulator.c
- create mode 100644 include/linux/mfd/rohm-bd71815.h
-
+diff --git a/drivers/regulator/rohm-regulator.c b/drivers/regulator/rohm-regulator.c
+index 399002383b28..5c558b153d55 100644
+--- a/drivers/regulator/rohm-regulator.c
++++ b/drivers/regulator/rohm-regulator.c
+@@ -52,9 +52,12 @@ int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
+ 	char *prop;
+ 	unsigned int reg, mask, omask, oreg = desc->enable_reg;
+ 
+-	for (i = 0; i < ROHM_DVS_LEVEL_MAX && !ret; i++) {
+-		if (dvs->level_map & (1 << i)) {
+-			switch (i + 1) {
++	for (i = 0; i < ROHM_DVS_LEVEL_VALID_AMOUNT && !ret; i++) {
++		int bit;
++
++		bit = BIT(i);
++		if (dvs->level_map & bit) {
++			switch (bit) {
+ 			case ROHM_DVS_LEVEL_RUN:
+ 				prop = "rohm,dvs-run-voltage";
+ 				reg = dvs->run_reg;
+diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
+index 4283b5b33e04..2b85b9deb03a 100644
+--- a/include/linux/mfd/rohm-generic.h
++++ b/include/linux/mfd/rohm-generic.h
+@@ -20,14 +20,12 @@ struct rohm_regmap_dev {
+ 	struct regmap *regmap;
+ };
+ 
+-enum {
+-	ROHM_DVS_LEVEL_UNKNOWN,
+-	ROHM_DVS_LEVEL_RUN,
+-	ROHM_DVS_LEVEL_IDLE,
+-	ROHM_DVS_LEVEL_SUSPEND,
+-	ROHM_DVS_LEVEL_LPSR,
+-	ROHM_DVS_LEVEL_MAX = ROHM_DVS_LEVEL_LPSR,
+-};
++#define ROHM_DVS_LEVEL_RUN		BIT(0)
++#define ROHM_DVS_LEVEL_IDLE		BIT(1)
++#define ROHM_DVS_LEVEL_SUSPEND		BIT(2)
++#define ROHM_DVS_LEVEL_LPSR		BIT(3)
++#define ROHM_DVS_LEVEL_VALID_AMOUNT	4
++#define ROHM_DVS_LEVEL_UNKNOWN		0
+ 
+ /**
+  * struct rohm_dvs_config - dynamic voltage scaling register descriptions
 -- 
 2.25.4
 
