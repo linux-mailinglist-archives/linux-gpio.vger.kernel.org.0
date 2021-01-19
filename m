@@ -2,217 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CB1C2FBD5A
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 18:18:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA2E42FC03E
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 20:44:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbhASRQT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jan 2021 12:16:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59212 "EHLO
+        id S1729573AbhASTkn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jan 2021 14:40:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389382AbhASRLF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 12:11:05 -0500
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D625C061575
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jan 2021 09:10:25 -0800 (PST)
-Received: by mail-ot1-x331.google.com with SMTP id a109so20517585otc.1
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jan 2021 09:10:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pXSkCf6NTgWeornYKqyzoK7uvy0u52bJAmSUmFRq6Kk=;
-        b=fSkRlQI1Eq9zu7gjrvH74OD6VquTHZLJC/QSHGiWhCmHuBGHf/OjtT5VlBJz9LG/s8
-         Yom9x6VRsm+PgVQGiKa4yfQjuh6OdKacXb2GZBG/Cmp5wDGTgkEIWNqS4eptcZnafWI3
-         3q7b5gb7fBw70nh6VliSeSefH4OUygnybHTDjtX1YrZUs+u2feJoIU/hCZRBXYzREtFN
-         nnLlVPr6etMMpEHSq0mWn3mLQAaUHGlEBUgvtDtlB+E8dHQJ8PtuKMZWlCPtuXfRg/g3
-         9tAduNlcf1iAza8c9/WS4JRwj69Bo0S3q9aDnOVFbb7XDYylU51lK6DAfKIIjwXWQOWn
-         ZPAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pXSkCf6NTgWeornYKqyzoK7uvy0u52bJAmSUmFRq6Kk=;
-        b=mpa0ZF5/C+bPjgiYOvpLkiwtTkXze0gQvovo2NlOLRoRjtORsLePko6vsql6uf7EwK
-         cX7nWUpqvSQz5cIbTF0rWqhOBlcMg9IYL4mXSMd1T6vNFgo9/+Tnc2mMYPfffWc/e/jK
-         HfItkaiCIzcMniWp1ArfN6p1rbsUMEoJ+l/MMv45vG4l+DDEx7QP7f7aMzQVXSnTyZW8
-         XXSXoVk3Um8VA4CI/CnIjtyb9LkPGEFc8BaFAgrFg7EVdfNo634C8m8to0S7A9sv8wjC
-         /j62iJNW7U5loj+ZKDegV+DfJK1fRgmbmMrE5Dtl6Ei5Gb3NG0Oql1BBAixgf/aVFtBj
-         bE6A==
-X-Gm-Message-State: AOAM532jU4o3hJXohHK2LIwwxgacC4EAMaUIzJtHXlo/vA/Oxtk50/eo
-        ElhmnpToTu9CA+8VfKPBwOlqPg==
-X-Google-Smtp-Source: ABdhPJwIVkhmej3WLIceC3lEJrYdFar4S/jJLeGL7N6ySC0eU3Z1pEwOya5yOuDEO52p/OcABnn1HQ==
-X-Received: by 2002:a9d:6188:: with SMTP id g8mr4131050otk.299.1611076224437;
-        Tue, 19 Jan 2021 09:10:24 -0800 (PST)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id n11sm3975378oij.37.2021.01.19.09.10.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Jan 2021 09:10:23 -0800 (PST)
-Date:   Tue, 19 Jan 2021 11:10:22 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
+        with ESMTP id S1729966AbhASTkc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 14:40:32 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23C06C061574
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jan 2021 11:39:52 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l1wql-0007Vp-Hz; Tue, 19 Jan 2021 20:39:35 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l1wqc-0000CL-3n; Tue, 19 Jan 2021 20:39:26 +0100
+Date:   Tue, 19 Jan 2021 20:39:25 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add SM8350 pinctrl
- bindings
-Message-ID: <YAcSfhpy3IA9H0qb@builder.lan>
-References: <20210106054950.303244-1-vkoul@kernel.org>
- <20210106054950.303244-2-vkoul@kernel.org>
- <X/dCIuUR/El8Gxaa@builder.lan>
- <20210113025627.GA1414436@robh.at.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 5/5] gpio: mvebu: improve handling of pwm zero on/off
+ values
+Message-ID: <20210119193925.xcqr6owx7nf4h63l@pengutronix.de>
+References: <cover.1610882271.git.baruch@tkos.co.il>
+ <065aa239ba7e10b64f1c563aba08626f5de790ba.1610882271.git.baruch@tkos.co.il>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jsctpgqt2dlm4ahi"
 Content-Disposition: inline
-In-Reply-To: <20210113025627.GA1414436@robh.at.kernel.org>
+In-Reply-To: <065aa239ba7e10b64f1c563aba08626f5de790ba.1610882271.git.baruch@tkos.co.il>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue 12 Jan 20:56 CST 2021, Rob Herring wrote:
 
-> On Thu, Jan 07, 2021 at 11:17:22AM -0600, Bjorn Andersson wrote:
-> > On Tue 05 Jan 23:49 CST 2021, Vinod Koul wrote:
-> > 
-> > > Add device tree binding Documentation details for Qualcomm SM8350
-> > > pinctrl driver.
-> > > 
-> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> > >  .../bindings/pinctrl/qcom,sm8350-tlmm.yaml    | 149 ++++++++++++++++++
-> > >  1 file changed, 149 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8350-tlmm.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-tlmm.yaml
-> > > new file mode 100644
-> > > index 000000000000..abdafd25bfc2
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-tlmm.yaml
-> > > @@ -0,0 +1,149 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pinctrl/qcom,sm8350-tlmm.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Qualcomm Technologies, Inc. SM8350 TLMM block
-> > > +
-> > > +maintainers:
-> > > +  - Vinod Koul <vkoul@kernel.org>
-> > > +
-> > > +description: |
-> > > +  This binding describes the Top Level Mode Multiplexer block found in the
-> > > +  SM8350 platform.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: qcom,sm8350-tlmm
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupt-controller: true
-> > > +
-> > > +  '#interrupt-cells':
-> > > +    description: Specifies the PIN numbers and Flags, as defined in
-> > > +      include/dt-bindings/interrupt-controller/irq.h
-> > > +    const: 2
-> > > +
-> > > +  gpio-controller: true
-> > > +
-> > > +  '#gpio-cells':
-> > > +    description: Specifying the pin number and flags, as defined in
-> > > +      include/dt-bindings/gpio/gpio.h
-> > > +    const: 2
-> > > +
-> > > +  gpio-ranges:
-> > > +    maxItems: 1
-> > > +
-> > > +  gpio-reserved-ranges:
-> > > +    maxItems: 1
-> > > +
-> > > +#PIN CONFIGURATION NODES
-> > > +patternProperties:
-> > > +  '-pinmux$':
-> > 
-> > I believe that what Rob was asking for was the matter of describing the
-> > mux and config subnodes under this one. But I don't know really how to
-> > express this, because the following are all valid:
-> > 
-> > default_state: default-state {
-> > 	pins = "gpio1";
-> > 	bias-disable;
-> > };
-> > 
-> > default_state: default-state {
-> > 	rx {
-> > 		pins = "gpio1";
-> > 		function = "gpio";
-> > 		bias-disable;
-> > 	};
-> > };
-> > 
-> > default_state: default-state {
-> > 	pinmux {
-> > 		pins = "gpio1";
-> > 		function = "gpio";
-> > 	};
-> > 
-> > 	pinconf {
-> > 		pins = "gpio1";
-> > 		bias-disable;
-> > 	};
-> > };
-> > 
-> > I.e. the properties described here applies either to this node directly,
-> > or any subnodes (1 level) down.
-> 
-> Why!?
-> 
+--jsctpgqt2dlm4ahi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's is how the generic pinctrl framework in Linux has parsed these
-nodes for the last several years, so I expect all pinctrl bindings to
-show this.
+Hello Baruch,
 
-And in particular, rather than forcing people to use the third form
-above the free naming of the subnodes allows to describe an entire 4 pin
-UART in a single pin state (the last requires 3-4 nodes + duplicates for
-sleep state), and for single gpio things the first one doesn't force
-people to make up phony names - which typically lands them in the last
-case (using pinmux/pinconf).
+On Sun, Jan 17, 2021 at 03:17:06PM +0200, Baruch Siach wrote:
+> Hardware appears to treat zero value as 2^32. Take advantage of this
+> fact to support on/off values of up to UINT_MAX+1 =3D=3D 2^32. Adjust both
+> .apply and .get_sate to handle zero as a special case.
 
-> You can create a definition and reuse it. Something like this:
-> 
-> $defs:
->   pin-node:
->     type: object
->     properties:
->       ...
-> 
-> patternProperties:
->   '-state$':
->     oneOf:
->       - $ref: #/$defs/pin-node
-> 
->       - patternProperties:
->           '.*':
->             $ref: #/$defs/pin-node
+s/get_sate/get_state/
 
-So I presume then that it would make sense to convert
-{pinmux,pinconf}-node.yaml this form and then in our binding we should
-somehow just refer to these.
+> Rounded up division result in .get_state can't be zero, since the
+> dividend is now larger than 0. Remove check for this case.
+>=20
+> Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Analyzed-by: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> ---
+>  drivers/gpio/gpio-mvebu.c | 38 ++++++++++++++++++++++----------------
+>  1 file changed, 22 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index 6b017854ce61..37f5bd65062f 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -667,22 +667,20 @@ static void mvebu_pwm_get_state(struct pwm_chip *ch=
+ip,
+>  	spin_lock_irqsave(&mvpwm->lock, flags);
+> =20
+>  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm), &u);
+> -	val =3D (unsigned long long) u * NSEC_PER_SEC;
+> -	val =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
+> -	if (val)
+> -		state->duty_cycle =3D val;
+> +	/* Hardware treats zero as 2^32. See mvebu_pwm_apply(). */
+> +	if (u > 0)
+> +		val =3D (unsigned long long) u * NSEC_PER_SEC;
+>  	else
+> -		state->duty_cycle =3D 1;
+> +		val =3D ((unsigned long long) UINT_MAX+1) * NSEC_PER_SEC;
+> +	state->duty_cycle =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
 
-But what's the appropriate method of extending and limiting pin-node? We
-have additional constraints and not all the properties are valid for the
-Qualcomm TLMM.
+Instead of
 
-Regards,
-Bjorn
+	if (u > 0)
+		val =3D (unsigned long long) u * NSEC_PER_SEC;
+	else
+		val =3D ((unsigned long long) UINT_MAX+1) * NSEC_PER_SEC;
 
-> 
-> 
-> Rob
+	state->duty_cycle =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
+
+you could also write
+
+	if (u > 0)
+		val =3D u;
+	else
+		val =3D UINT_MAX + 1;
+
+	state->duty_cycle =3D DIV_ROUND_UP_ULL(val * NSEC_PER_SEC, mvpwm->clk_rate=
+);
+
+which is a bit lighter (IMHO).
+
+> =20
+> -	val =3D (unsigned long long) u; /* on duration */
+>  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
+> -	val +=3D (unsigned long long) u; /* period =3D on + off duration */
+> -	val *=3D NSEC_PER_SEC;
+> -	val =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
+> -	if (val)
+> -		state->period =3D val;
+> +	/* period =3D on + off duration */
+> +	if (u > 0)
+> +		val +=3D (unsigned long long) u * NSEC_PER_SEC;
+>  	else
+> -		state->period =3D 1;
+> +		val +=3D ((unsigned long long) UINT_MAX+1) * NSEC_PER_SEC;
+> +	state->period =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
+
+> =20
+>  	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset, &u);
+>  	if (u)
+> @@ -704,9 +702,15 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+> =20
+>  	val =3D (unsigned long long) mvpwm->clk_rate * state->duty_cycle;
+>  	do_div(val, NSEC_PER_SEC);
+> -	if (val > UINT_MAX)
+> +	if (val > (unsigned long long) UINT_MAX+1)
+
+Please add whitespace around the +
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--jsctpgqt2dlm4ahi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAHNWoACgkQwfwUeK3K
+7AnXjgf9EwtZ55HS0s52jx06kVWGpriRFGau/ipPimx3D5uMO1gXKxlWiqRpA2xp
+yn3LutJ5nPW3E1zJZ243BcswZe3EEuyl3THD7nAvTlK/fwaBUmd/Tc0lPdTBYKAf
+qZxb2IiX++LA4ATTLLWrxXeW52dRR8lD3CteidMra1tIUwXLKH/KDaHSwH7PCxzQ
+Dgcu6u5IUMH0SoWHpqPagKLKSMgCaoY4M7C32AxQ1xMygFyVFCezQ0/r2/xWocF+
+fjvCVut44wwSYH3uvYLJ4Es2ko9dp0GWFxbT/n3RFkDh739tMNYicYI29Fp0yLwm
+fJIl6K4OFSLqnj4IckOr4vIJEq2Imw==
+=xEsd
+-----END PGP SIGNATURE-----
+
+--jsctpgqt2dlm4ahi--
