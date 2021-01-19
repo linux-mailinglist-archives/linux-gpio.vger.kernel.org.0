@@ -2,191 +2,330 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C4CD2FAF7A
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 05:37:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BF542FB153
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 07:25:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732068AbhASEcL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 23:32:11 -0500
-Received: from mga11.intel.com ([192.55.52.93]:43228 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731364AbhASEao (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Jan 2021 23:30:44 -0500
-IronPort-SDR: MGEsCFSiTsPv1lfwTsDI2mtcFsd/KQjNsG8FOEBOPJBUNJjinrWeIl3KLF+gr2ukxaW4qBLgPv
- JVO2hBjL3AZg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9868"; a="175373054"
-X-IronPort-AV: E=Sophos;i="5.79,357,1602572400"; 
-   d="scan'208";a="175373054"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 20:29:51 -0800
-IronPort-SDR: XOiAIRKrqTAQDZ5xucKI1UDj4pejVeW0lNdAdVO9bQmYx9mEeGol5kphgVaYUagc6AJxaZsgMe
- R7muPY4/qoaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,357,1602572400"; 
-   d="scan'208";a="383788651"
-Received: from lkp-server01.sh.intel.com (HELO 260eafd5ecd0) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 18 Jan 2021 20:29:49 -0800
-Received: from kbuild by 260eafd5ecd0 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1l1ieL-0004iZ-5M; Tue, 19 Jan 2021 04:29:49 +0000
-Date:   Tue, 19 Jan 2021 12:28:59 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:fixes] BUILD SUCCESS
- cf9d052aa6005f1e8dfaf491d83bf37f368af69e
-Message-ID: <6006600b.dnPF1berLgshSpt/%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727781AbhASGX5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jan 2021 01:23:57 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50596 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbhASGUd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 01:20:33 -0500
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2CA884FB;
+        Tue, 19 Jan 2021 07:19:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1611037180;
+        bh=IYpSSFS5uWQHDE9xBeG8TUITMXIREX1vOTs+lDKH2fY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fCQHz1mqiFog/n+vu2z9TTuTmUnhIkZZ7adowo6pzDyODOnLrel4VCyQxtfcU3700
+         YfriRj5RuUjTvCY1P8EccHorUmMjSv9LYDQZR84aIiTRkCjrcMMwVwF9pk+HOTyeXc
+         j6cJlKhTecsiF6FZlzwuxb77uUABz+kE6ydGhLPo=
+Date:   Tue, 19 Jan 2021 08:19:23 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
+Message-ID: <YAZ5648kEmCuobdj@pendragon.ideasonboard.com>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-7-djrscally@gmail.com>
+ <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
+ <3872041c-1a4a-2508-d325-80242598d55e@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3872041c-1a4a-2508-d325-80242598d55e@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: cf9d052aa6005f1e8dfaf491d83bf37f368af69e  pinctrl: qcom: Don't clear pending interrupts when enabling
+Hi Daniel,
 
-elapsed time: 720m
+On Mon, Jan 18, 2021 at 08:46:34PM +0000, Daniel Scally wrote:
+> Hi Laurent, thanks for the comments - really appreciate the detail.
+> 
+> Some specific responses below but assume a general "will do" to
+> everything you mentioned otherwise...
+> 
+> On 18/01/2021 09:15, Laurent Pinchart wrote:
+> >> +	  PMIC) and one designed for Chrome OS.
+> > 
+> > How about expanding this a bit to explain what the INT3472 stands for ?
+> >
+> > 	  The INT3472 is an Intel camera power controller, a logical device
+> > 	  found on some Skylake-based systems that can map to different
+> > 	  hardware devices depending on the platform. On machines
+> > 	  designed for Chrome OS, it maps to a TPS68470 camera PMIC. On
+> > 	  machines designed for Windows, it maps to either a TP68470
+> > 	  camera PMIC, a uP6641Q sensor PMIC, or a set of discrete GPIOs
+> > 	  and power gates.
+> 
+> Yeah sure ok
+> 
+> >> This driver handles all three
+> >> +	  situations by discovering information it needs to discern them at
+> >> +	  runtime.
+> >> +
+> >> +	  If your device was designed for Chrome OS, this driver will provide
+> >> +	  an ACPI operation region, which must be available before any of the
+> >> +	  devices using this are probed. For this reason, you should select Y
+> >> +	  if your device was designed for ChromeOS. This option also configures
+> >> +	  the designware-i2c driver to be built-in, for the same reason.
+> > 
+> > Is the last sentence a leftover ?
+> 
+> Oops - it is, but it was supposed to remind me to double check that that
+> was still necessary. I'll take a look, thanks.
+> 
+> >> +
+> >> +#include "intel_skl_int3472_common.h"
+> >> +
+> >> +int skl_int3472_get_cldb_buffer(struct acpi_device *adev,
+> >> +				struct int3472_cldb *cldb)
+> >> +{
+> >> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> >> +	acpi_handle handle = adev->handle;
+> >> +	union acpi_object *obj;
+> >> +	acpi_status status;
+> >> +	int ret = 0;
+> >> +
+> >> +	status = acpi_evaluate_object(handle, "CLDB", NULL, &buffer);
+> >> +	if (ACPI_FAILURE(status))
+> >> +		return -ENODEV;
+> >> +
+> >> +	obj = buffer.pointer;
+> >> +	if (!obj) {
+> >> +		dev_err(&adev->dev, "ACPI device has no CLDB object\n");
+> > 
+> > Is this the code path that is taken on Chrome OS ? If so an error
+> > message isn't appropriate. I'd drop this message, and instead add an
+> > error message in the discrete PMIC code.
+> 
+> Ah yes of course, thanks, I'll move the error message.
+> 
+> >> +
+> >> +	unsigned int n_gpios; /* how many GPIOs have we seen */
+> >> +
+> >> +	struct int3472_gpio_regulator regulator;
+> >> +	struct int3472_gpio_clock clock;
+> > 
+> > You don't necessarily need to define separate structures for this, you
+> > could also write
+> >
+> > 	struct {
+> > 		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
+> > 		char supply_name[GPIO_REGULATOR_SUPPLY_NAME_LENGTH];
+> > 		struct gpio_desc *gpio;
+> > 		struct regulator_dev *rdev;
+> > 		struct regulator_desc rdesc;
+> > 	} regulator;
+> >
+> > 	struct {
+> > 		struct clk *clk;
+> > 		struct clk_hw clk_hw;
+> > 		struct clk_lookup *cl;
+> > 		struct gpio_desc *gpio;
+> > 	} clock;
+> >
+> > It's entirely up to you.
+> 
+> Ooh yeah I like that more, thanks very much.
+> 
+> >> +/* 79234640-9e10-4fea-a5c1-b5aa8b19756f */
+> >> +static const guid_t int3472_gpio_guid =
+> >> +	GUID_INIT(0x79234640, 0x9e10, 0x4fea,
+> >> +		  0xa5, 0xc1, 0xb5, 0xaa, 0x8b, 0x19, 0x75, 0x6f);
+> >> +
+> >> +/* 822ace8f-2814-4174-a56b-5f029fe079ee */
+> >> +static const guid_t cio2_sensor_module_guid =
+> >> +	GUID_INIT(0x822ace8f, 0x2814, 0x4174,
+> >> +		  0xa5, 0x6b, 0x5f, 0x02, 0x9f, 0xe0, 0x79, 0xee);
+> > 
+> > A comment that explains what those DSM functions do would be useful for
+> > reference. It has taken lots of time to figure it out, let's spare the
+> > pain to the next person who tries to understand this :-)
+> 
+> Hah - good point, well made. I'll explain what they're for then.
+> 
+> >> +static int skl_int3472_clk_enable(struct clk_hw *hw)
+> >> +{
+> >> +	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+> >> +
+> >> +	gpiod_set_value(clk->gpio, 1);
+> > 
+> > The clock enable() and disable() methods are not supposed to sleep,
+> > while setting a GPIO value may sleep in the general case. Should this be
+> > moved to skl_int3472_clk_prepare() ? Same for skl_int3472_clk_disable()
+> > and skl_int3472_clk_unprepare().
+> 
+> I was under the assumption the difference between gpiod_set_value() and
+> gpiod_set_value_cansleep() was that gpiod_set_value() _can't_ sleep, but
+> actually reading the function's comments it seems it will just complain
+> if it turns out it can sleep:
+> 
+> * This function can be called from contexts where we cannot sleep, and will
+> * complain if the GPIO chip functions potentially sleep. It doesn't
+> complain, on either of my devices, but I guess that can't be guaranteed
+> for _every_ device, so these calls probably are safer in (un)prepare() yes.
 
-configs tested: 129
-configs skipped: 2
+If we could guarantee that the GPIOs are connected to the SoC, we could
+keep using the code above, as there should be no need to sleep. The
+question is whether this can be guaranteed or not. It's true that I
+would be surprised if the GPIOs were connected, for instance, to an I2C
+GPIO expander..
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> >> +			}
+> >> +
+> >> +			i++;
+> >> +		}
+> >> +	}
+> >> +
+> >> +	if (!func)
+> >> +		return 0;
+> > 
+> > I initially thought this wasn't right, as if no entry was found in the
+> > mapping table, func would still have its non-NULL value as passed to
+> > this function. I then realized that you're checking if the match that
+> > was found is NULL. A comment to explain this would be useful.
+> 
+> Yep ok - I actually had one and decided it was superfluous and removed
+> it - my bad.
+> 
+> >> +
+> >> +	status = acpi_get_handle(NULL, path, &handle);
+> >> +	if (ACPI_FAILURE(status))
+> >> +		return -EINVAL;
+> >> +
+> >> +	ret = acpi_bus_get_device(handle, &adev);
+> >> +	if (ret)
+> >> +		return -ENODEV;
+> >> +
+> >> +	table_entry = (struct gpiod_lookup)GPIO_LOOKUP_IDX(acpi_dev_name(adev),
+> >> +							   ares->data.gpio.pin_table[0],
+> >> +							   func, 0, polarity);
+> > 
+> > I wonder if
+> >
+> > 	table_entry.key = acpi_dev_name(adev);
+> > 	table_entry.chip_hwnum = ares->data.gpio.pin_table[0];
+> > 	table_entry.con_id = func;
+> > 	table_entry.idx = 0;
+> > 	table_entry.flags = polarity;
+> >
+> > (with struct gpiod_lookup table_entry = { }; above) would be more
+> > readable. Up to you.
+> >
+> >> +
+> >> +	memcpy(&int3472->gpios.table[int3472->n_sensor_gpios], &table_entry,
+> >> +	       sizeof(table_entry));
+> > 
+> > Ah, or maybe
+> >
+> > 	struct gpio_lookup *table_entry;
+> >
+> > 	table_entry = &int3472->gpios.table[int3472->n_sensor_gpios];
+> > 	table_entry->key = acpi_dev_name(adev);
+> > 	table_entry->chip_hwnum = ares->data.gpio.pin_table[0];
+> > 	table_entry->con_id = func;
+> > 	table_entry->idx = 0;
+> > 	table_entry->flags = polarity;
+> >
+> > (no need to memset() to 0 first as the whole structure has been
+> > allocated with kzalloc()).
+> 
+> Yeah you're right, this looks much nicer - thanks.
+> 
+> >> +	int ret = 0;
+> >> +
+> >> +	init.name = kasprintf(GFP_KERNEL, "%s-clk",
+> >> +			      acpi_dev_name(int3472->adev));
+> > 
+> > You need to check for NULL and return -ENOMEM.
+> 
+> Oops, of course, thanks
+> 
+> >> +		goto err_unregister_clk;
+> > 
+> > If this fails, you will end up calling clk_unregister() and
+> > clkdev_drop() in skl_int3472_discrete_remove(). You should replace the
+> > check in the remove function with
+> >
+> > 	if (!int3472->clock.cl) {
+> 
+> You're right, good spot, thank you.
+> 
+> >> +		dev_err(&int3472->pdev->dev, "No sensor module config\n");
+> >> +		return PTR_ERR(sensor_config);
+> >> +	}
+> > 
+> > Would it make sense to call this in skl_int3472_discrete_probe() or
+> > skl_int3472_parse_crs() and cache the config pointer ?
+> 
+> Yes, probably actually, and then the GPIO mapping function can just
+> check for its presence.
+> 
+> >> +	init_data.constraints.valid_ops_mask = REGULATOR_CHANGE_STATUS;
+> >> +	init_data.num_consumer_supplies = 1;
+> >> +	init_data.consumer_supplies = &sensor_config->supply_map;
+> >> +
+> >> +	snprintf(int3472->regulator.regulator_name,
+> >> +		 GPIO_REGULATOR_NAME_LENGTH, "int3472-discrete-regulator");
+> > 
+> > s/GPIO_REGULATOR_NAME_LENGTH/sizeof(int3472->regulator.regulator_name)/
+> >
+> > Do regulator names need to be unique ? If so you may have a problem if a
+> > platform has two discrete INT3472.
+> 
+> Unlike clocks, the regulator framework doesn't shout at you when you do
+> this, but I agree it's suboptimal at the very least, I'll set it to
+> ..."%s-regulator", acpi_dev_name(int3472->adev)... as with the clock.
+> 
+> >> +	case INT3472_GPIO_TYPE_PRIVACY_LED:
+> >> +		ret = skl_int3472_map_gpio_to_sensor(int3472, ares,
+> >> +						     "indicator-led",
+> >> +						     GPIO_ACTIVE_HIGH);
+> > 
+> > Mapping the indicator LED to the sensor isn't great, as all sensor
+> > drivers would then need to handle it. Could it be handled in the
+> > regulator instead, so that it would be turned on automatically when the
+> > sensor is powered up ? Another option, more complicated, would be to
+> > handle it in the CIO2 driver (but I'm not sure how we would map it).
+> 
+> Not with the regulator, because it turns out only the 0x0b pin is one of
+> those and those appear on very few devices in scope, so it wouldn't be
+> called on a Surface Book 2 for example. Perhaps as part of clock
+> prepare/enable? I don't much like the idea of it running in the CIO2
+> driver to be honest, feels a bit out of place.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                 kfr2r09-romimage_defconfig
-sparc64                             defconfig
-arm                          pxa910_defconfig
-sparc                            allyesconfig
-powerpc                    amigaone_defconfig
-arm                           tegra_defconfig
-arm                          collie_defconfig
-powerpc                 mpc836x_mds_defconfig
-powerpc                      tqm8xx_defconfig
-sh                          polaris_defconfig
-s390                             allyesconfig
-m68k                        mvme147_defconfig
-arm                          tango4_defconfig
-powerpc                  iss476-smp_defconfig
-powerpc                      ep88xc_defconfig
-powerpc                      mgcoge_defconfig
-arm                            xcep_defconfig
-powerpc                 mpc837x_rdb_defconfig
-arm                         nhk8815_defconfig
-s390                       zfcpdump_defconfig
-h8300                     edosk2674_defconfig
-mips                     decstation_defconfig
-mips                malta_qemu_32r6_defconfig
-arm                         s3c2410_defconfig
-sh                              ul2_defconfig
-m68k                          multi_defconfig
-openrisc                         alldefconfig
-mips                           xway_defconfig
-sparc                       sparc32_defconfig
-mips                       lemote2f_defconfig
-arm                          imote2_defconfig
-powerpc                      pcm030_defconfig
-sh                   sh7724_generic_defconfig
-xtensa                    smp_lx200_defconfig
-arm                             ezx_defconfig
-arm                           viper_defconfig
-arm                            zeus_defconfig
-mips                      bmips_stb_defconfig
-arm                            hisi_defconfig
-arm                     am200epdkit_defconfig
-arm                         vf610m4_defconfig
-mips                          rm200_defconfig
-arm                        magician_defconfig
-h8300                               defconfig
-openrisc                 simple_smp_defconfig
-powerpc                 mpc85xx_cds_defconfig
-powerpc                 xes_mpc85xx_defconfig
-arm                      tct_hammer_defconfig
-mips                           jazz_defconfig
-powerpc                     skiroot_defconfig
-xtensa                generic_kc705_defconfig
-powerpc                     tqm5200_defconfig
-m68k                         amcore_defconfig
-xtensa                       common_defconfig
-sh                            hp6xx_defconfig
-i386                             alldefconfig
-m68k                            q40_defconfig
-powerpc                 mpc8560_ads_defconfig
-csky                                defconfig
-mips                    maltaup_xpa_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                             allyesconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a004-20210118
-i386                 randconfig-a001-20210118
-x86_64               randconfig-a015-20210118
-x86_64               randconfig-a013-20210118
-x86_64               randconfig-a012-20210118
-x86_64               randconfig-a016-20210118
-x86_64               randconfig-a011-20210118
-x86_64               randconfig-a014-20210118
-i386                 randconfig-a011-20210118
-i386                 randconfig-a012-20210118
-i386                 randconfig-a016-20210118
-i386                 randconfig-a015-20210118
-i386                 randconfig-a013-20210118
-i386                 randconfig-a014-20210118
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+The clock is another option, but could there be platforms where the
+clock GPIO isn't present ?
 
-clang tested configs:
-x86_64               randconfig-a004-20210118
-x86_64               randconfig-a006-20210118
-x86_64               randconfig-a001-20210118
-x86_64               randconfig-a003-20210118
-x86_64               randconfig-a005-20210118
-x86_64               randconfig-a002-20210118
+Another option would be to let userspace handle that GPIO, but we then
+need to convey it to userspace.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> >> +
+> >> +	if (int3472->gpios_mapped)
+> >> +		gpiod_remove_lookup_table(&int3472->gpios);
+> > 
+> > You could avoid the need for the gpios_mapped field by checking for
+> >
+> > 	if (int3472->gpios.list.next)
+> >
+> > Up to you.
+> 
+> Thank you! I was scratching my head trying to figure out a better way of
+> doing that.
+
+-- 
+Regards,
+
+Laurent Pinchart
