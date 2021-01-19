@@ -2,87 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F9652FAE17
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 01:36:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F11B2FAF12
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 04:19:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732516AbhASAfn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jan 2021 19:35:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43242 "EHLO
+        id S2388715AbhASDTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jan 2021 22:19:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730466AbhASAfm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 19:35:42 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D07FCC061573;
-        Mon, 18 Jan 2021 16:35:01 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id o20so2777722pfu.0;
-        Mon, 18 Jan 2021 16:35:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=A+w50Vih7bh7r6NhMfLHjI3rJuvTXBao84Pg+b5ACWw=;
-        b=asRzq3PbTXsbN36BQeFWyDx8o2hc/nmTp1JxvQ04asBOV6I8CorQKP6mKqf4un4z31
-         /xq/XeKzmWxREskEI/JrNhKNzHs85oem6cLyZTM20vDrPSa6aLz3MV/ongHOLKzB1iww
-         q64XSS+o/FuvwelGnaHlkArzbGml4nZNPoNEGmUAothzOunCZuO6m1fHSCgomJTWC6ts
-         bLEAW/bQ8Bj6YCzKMlDy55E4ZxXBDeDjNBKXdPB3C+LJ2cmZUAgwTvBTB6cOwtNdXtt5
-         Ko2c5CPqzTV76LgCm5rkuO1HFUVC9feXfvfhqARVs2cwlaPeFEzpo/wRzm+z79/xRnOh
-         o0Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A+w50Vih7bh7r6NhMfLHjI3rJuvTXBao84Pg+b5ACWw=;
-        b=jvoazLi5N6vzUj2BEFv20ignhlRyEto/6vYcb3lwaMn+As/qjJFX0uW7Y4O0dNDNyJ
-         JTxb+N4GMt2kT8kKesElWl++wmLwkyICa8KNDuofZVnFKBD3V7fRfNb7yq+USCYxr7Va
-         NzerplekQaa0LL4VnhFzZebO4KlJHdl3lHJwUeRpjSYD/R6eUPA7ZsuzlIrDQDhoV56T
-         mBNVySDh18JyAO7DDlD91x9FNUlUcxpSbiQTc5NgL1j1InfHGDq+GlHfoLegYcS8qcNM
-         xl0ME5rjSB6ORQ3xYGBZqqAHd7gxEvSzIbSKu3y1GMzJUr5ZZvmMzFc7i6xuzM4kGmgd
-         yapA==
-X-Gm-Message-State: AOAM531sakipoWQT1z3DafvQnRQK8AeMltDtQTwMSeHJg/UUotXI8R/E
-        +ithDxdQY7SnqYFv/HXX2Jkr/nePbu8=
-X-Google-Smtp-Source: ABdhPJwOJ+oDIl4+eeCArKn2hOOYdUE4j2JdQ33vMT9R+El9S+RT+FzKxeldExwX0y4jXSDrq75nrw==
-X-Received: by 2002:a63:7503:: with SMTP id q3mr2048035pgc.318.1611016501393;
-        Mon, 18 Jan 2021 16:35:01 -0800 (PST)
-Received: from sol (106-69-181-154.dyn.iinet.net.au. [106.69.181.154])
-        by smtp.gmail.com with ESMTPSA id x11sm4544431pfj.99.2021.01.18.16.34.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Jan 2021 16:35:00 -0800 (PST)
-Date:   Tue, 19 Jan 2021 08:34:55 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        with ESMTP id S1728223AbhASDTD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jan 2021 22:19:03 -0500
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139D1C061575;
+        Mon, 18 Jan 2021 19:18:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=IDJteZLGpl5jFaFEs8wvm4tfskugOjAqMpYM3vOLN5g=; b=XikgqOcpDeKkL/7YUivnWGWWyX
+        KoXul4jcGUyhbk9e9yExzQV1TfN5fNHozm2DOqqRKDxPd+2GEKoAby5cKKo9Caa11aYzgo1C8u9hM
+        4QTdyfV7QZQMCKpFKnUq3untnI2Vop9cjeDBPjGC4cEehSRv6gseP5crIrB7QzMAVueqrLsdecJoq
+        9uiTWa8TB68b69/zznJKLtBdIH7CRa8Ed46oxwP+LOWnkngy6HmHqybbuMTWUskSExTOhwbcHGesJ
+        TzlYWB4MKExqN/6AyutOFaFtkk2Ya0Al84JtG7Ui7vrOWQxKGHg/rbCwwKY0UO4dWb2bFaTGtcT78
+        AzHjOWoA==;
+Received: from [2601:1c0:6280:3f0::9abc] (helo=merlin.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1l1hX9-0008A9-Uo; Tue, 19 Jan 2021 03:18:20 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        Bamvor Jian Zhang <bamv2005@gmail.com>
-Subject: Re: [PATCH v2 0/7] selftests: gpio: rework and port to GPIO uAPI v2
-Message-ID: <20210119003455.GB5169@sol>
-References: <20210107025731.226017-1-warthog618@gmail.com>
- <CACRpkdZf2GhScg=sUG35nA5P6jXH93uuK0Fq_uhz29wBQLHOKQ@mail.gmail.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH] gpio: sifive: select IRQ_DOMAIN_HIERARCHY rather than depend on it
+Date:   Mon, 18 Jan 2021 19:18:13 -0800
+Message-Id: <20210119031813.16980-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZf2GhScg=sUG35nA5P6jXH93uuK0Fq_uhz29wBQLHOKQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 04:04:51PM +0100, Linus Walleij wrote:
-> On Thu, Jan 7, 2021 at 3:58 AM Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> >   selftests: gpio: rework and simplify test implementation
-> >   selftests: gpio: remove obsolete gpio-mockup-chardev.c
-> >   selftests: remove obsolete build restriction for gpio
-> >   selftests: remove obsolete gpio references from kselftest_deps.sh
-> >   tools: gpio: remove uAPI v1 code no longer used by selftests
-> >   selftests: gpio: port to GPIO uAPI v2
-> >   selftests: gpio: add CONFIG_GPIO_CDEV to config
-> 
-> Bartosz I think you can just merge these patches into the GPIO tree, at least
-> I think that is what I have done in the past.
-> 
+This is the only driver in the kernel source tree that depends on
+IRQ_DOMAIN_HIERARCHY instead of selecting it. Since it is not a
+visible Kconfig symbol, depending on it (expecting a user to
+set/enable it) doesn't make much sense, so change it to select
+instead of "depends on".
 
-Could you touch up that Fixes tag in patch 1 if you merge v2?
+Fixes: 96868dce644d ("gpio/sifive: Add GPIO driver for SiFive SoCs")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Greentime Hu <greentime.hu@sifive.com>
+Cc: Yash Shah <yash.shah@sifive.com>
+---
+ drivers/gpio/Kconfig |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-Kent.
+--- linux-next-20210118.orig/drivers/gpio/Kconfig
++++ linux-next-20210118/drivers/gpio/Kconfig
+@@ -521,7 +521,8 @@ config GPIO_SAMA5D2_PIOBU
+ 
+ config GPIO_SIFIVE
+ 	bool "SiFive GPIO support"
+-	depends on OF_GPIO && IRQ_DOMAIN_HIERARCHY
++	depends on OF_GPIO
++	select IRQ_DOMAIN_HIERARCHY
+ 	select GPIO_GENERIC
+ 	select GPIOLIB_IRQCHIP
+ 	select REGMAP_MMIO
