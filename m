@@ -2,150 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22E1F2FB989
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 15:36:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8F612FB98C
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 15:36:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405510AbhASOcx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jan 2021 09:32:53 -0500
-Received: from mail-eopbgr70088.outbound.protection.outlook.com ([40.107.7.88]:15332
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728716AbhASNC3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 19 Jan 2021 08:02:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bgmgvos5xcSZ9sV+SaR0v4CsmmR4p8cvnz7vdPK8e3/8YeVMleXrqmT9f4Hx0NJRLaF/Mb1d+H1HsPnOk+ceCLG5KgXXxZ7GssPRFD36yHQ+pwZYZ9qkPAwJeUsk9Z9/XMTR4kuVLMbU6K3//FV9If8p9+fHhL6yFyz6Iwj7ujqLiC/kyZPxveMIk3nS8gJRn4rTDntEU5c35fQqLzN/2vIkQKQLzCMYkMaPt4uJwRwDDVLrvXWSKOchsBPyBLQwsDTaNDj1Nuvw55Csavdmor8xyCFiCO7aXHQcL9OPXjrluwSgK6WGgWDCSGAZZEH98akk2g3VGaUhBlkEZ5BsUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JKqVj/fp4WM3UMFkqjbW8Lbih9Ry8GprkE13tckiM8U=;
- b=VxZXifRawpD5yrRVKMAFim4ZwKnUN3ysQHDJwRIKIBSiWZXQVdmAcDJnWhmLVXuXE6EauGWjLcmADZY121C/ktNuPqZW4UVY+o5H6n722fP+IT0Ev6ottOiRIWmofbYwKTQVDbJLHQD0p3X1mM31q/C/brBiO1cBSuiKSSsUJhu9lITccB//F7QV1FW4L1LcIEsgV0eAy527FOduQseNuKwnkc1Xv+TmpaWuKUQ6m2Yd7Sv+lEtxQ4rP1/SL04E2iQLxQtSICpNQSyimHeh5YQFyVv5pvys6UxjEXt4sYEfDti/nPebqhwBEmrKMkE0Qmp95EqzwkhN04JTxwH3m8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fi.rohmeurope.com; dmarc=pass action=none
- header.from=fi.rohmeurope.com; dkim=pass header.d=fi.rohmeurope.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=rohmsemiconductoreurope.onmicrosoft.com;
- s=selector1-rohmsemiconductoreurope-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JKqVj/fp4WM3UMFkqjbW8Lbih9Ry8GprkE13tckiM8U=;
- b=A7uGSl6E7UHV16hmkoIdN2Lip/gvx3wPOPHEaYXWlxxNpJIPtD5tsvH7ctM6htBk0TNkFWVu0D3NGmUpg41G35rgRfamR2aDkNVFYEbqCQsGHUkuyImjExKgSAPUS5gN9YlwwKOk5ogay7uG8zDTWImC1WlAOBOfWQK7iQETt58=
-Received: from HE1PR03MB3162.eurprd03.prod.outlook.com (2603:10a6:7:55::20) by
- HE1PR0302MB2668.eurprd03.prod.outlook.com (2603:10a6:3:f1::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3763.13; Tue, 19 Jan 2021 13:01:38 +0000
-Received: from HE1PR03MB3162.eurprd03.prod.outlook.com
- ([fe80::cd6c:2eae:c885:c9d]) by HE1PR03MB3162.eurprd03.prod.outlook.com
- ([fe80::cd6c:2eae:c885:c9d%6]) with mapi id 15.20.3763.014; Tue, 19 Jan 2021
- 13:01:38 +0000
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 10/17] gpio: support ROHM BD71815 GPOs
-Thread-Topic: [PATCH v2 10/17] gpio: support ROHM BD71815 GPOs
-Thread-Index: AQHW7jP1aCOdIjy6aUiaKgV7fuUEzqouyhYAgAAf8oA=
-Date:   Tue, 19 Jan 2021 13:01:37 +0000
-Message-ID: <8bd5d95df1daaee0d7b3fee33e5c5cad679759a6.camel@fi.rohmeurope.com>
-References: <cover.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
-         <50f72f1f7f28e969a1e0353712fcc530bce9dd06.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
-         <CAMpxmJVjnAMig16qWkjpaHwQ+4Ld9yEc-gg-CGv28QQYBB6gNg@mail.gmail.com>
-In-Reply-To: <CAMpxmJVjnAMig16qWkjpaHwQ+4Ld9yEc-gg-CGv28QQYBB6gNg@mail.gmail.com>
-Reply-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Accept-Language: fi-FI, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: baylibre.com; dkim=none (message not signed)
- header.d=none;baylibre.com; dmarc=none action=none
- header.from=fi.rohmeurope.com;
-x-originating-ip: [62.78.225.252]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 546ec45e-95e8-44f3-0a86-08d8bc7a5bb4
-x-ms-traffictypediagnostic: HE1PR0302MB2668:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HE1PR0302MB2668BC326B779F97B9729536ADA30@HE1PR0302MB2668.eurprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nP9aklN01nCJ7c8JXVAFSY9n6JiJWslsVISTvxLCi8QFyHJ0jpWaqVttd7Mrcd1V157zcO29L7xHlXDZqcd46xKa0CXJdmAG2b6/TiqCtV4Im46gWucYcnVqRjsH2e23AULQhIGHHeyiBLJkf73u/vQL1RfGogMKnvKfRyWbqGynJ2/iHEVCfWaibkIDMu9Ds1hycT9fJWiVK9JbBDhf6iMOLU4IKbFMcrPE5a9kUQ1D5dgJxWXasLfbiwR3nprOP9B28pxGuO93uKU/Rwvttlk96QDuybteDoa+uk19o900L9A6wIJGRq8VDZerPUEx0Kw9T2MUCGLEtQ4rv05YRjQq94NTd1kPFeNQMl8WIlj+fTjpXFvNy9jNP9ljdHYCBo6G2znDRDfg8xpZpS3kuQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR03MB3162.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(366004)(346002)(396003)(39850400004)(83380400001)(86362001)(26005)(186003)(6486002)(316002)(4326008)(53546011)(2616005)(6506007)(71200400001)(7416002)(66556008)(3450700001)(64756008)(66476007)(8936002)(66446008)(6512007)(54906003)(66946007)(76116006)(6916009)(478600001)(2906002)(5660300002)(8676002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?eDFjWWJaSVI5NEdlUU1CbWtqRjBacEN5eVZDRjVYWEpsdUprTW1YVDM3SUls?=
- =?utf-8?B?U3RwbDNueVV2TGd5bHQzZGxKQXpiaUVYS2tZVU45R0lNbUZWMHRUdHdyZEZa?=
- =?utf-8?B?SUw0bG45THlwWVpBNUFUdzMzSTRvNmZDZWlDbTJaMndIY2JkSWgycUgzVU1H?=
- =?utf-8?B?ei9HQThLSlhNak42YjRpdWJ5NkhaNFhmZEthMG5pQ3dOVERySzljcEtROGFQ?=
- =?utf-8?B?UUl1YnQ5R3oydXZIRTFlYzZERE9keGQ3RGkzaldJUGxFRXV0aDNZdmtZckZP?=
- =?utf-8?B?M0xuUXdKSGFvb09hM0ZDTUwvbE5oeHgyVnRzcU15blc3bkJrVExuMWRMVzkv?=
- =?utf-8?B?a2tFVzBvNEUrQThiNU5kUjY4S1VHek1keW1jZUVmaGprOU9HYWFDSmNwdktk?=
- =?utf-8?B?cXV0eFV2TEZvV2hudDE4NzAvdUQrenA4V2p6ZmMycVBzbEhvcEVQSUxDQ0JC?=
- =?utf-8?B?RWhWL1psOVdQbkpSVVp3S1l2YjlYeXZyVnBBQ0R3dE8xeFllWUVJaDZhM2VT?=
- =?utf-8?B?UXB3emtDazFJQWpXUno3SHVGVW1iWWJLM3BGc3lYRVdHSWo5RHRmdTJUL2JW?=
- =?utf-8?B?SXpMZnpkaFVrZUNheUxabVBicERoZGpBbitrVVdBRHIvcmdqRVlzZUpxdGVl?=
- =?utf-8?B?V00rRGxXS29GR1NNbWJvblFLS1JqQUNzZzQ3UFBncjlDdDJTWXFON2hkL1lv?=
- =?utf-8?B?MVR4dXRKRWdvQzh5cFp5WmxnWnh1Z2RxdzVTRis4S3NLRU0zKy95L1VyaE9Q?=
- =?utf-8?B?dHNDZDNCTjI1dG1xUElMZER3cVlIU3FOMjkwMHJRaDhVaUdMMzBRSlp4RDZh?=
- =?utf-8?B?QkZWWG9VQkdrMzdMaEczcXY3NlBIN21hZ29ZUitkWUpvTDFKTlUrMUl0bHlm?=
- =?utf-8?B?THFiM1NXQ1FvcFowNTJkbjNVVzNuOG5mOUd1VklzTUxvU0ZqVldnd0ZCcDFW?=
- =?utf-8?B?d2UrazExZTZBcEE3akV1dXhrOUpESHhUOFdNRzFrRFI3cmJlNDR0MFRIaVF6?=
- =?utf-8?B?NUZEd29CTlFFNHUxSVRHRktpdExibEc4V1FnaTBmL3lVRFM1RGxoNWFabGlx?=
- =?utf-8?B?YWlReW9wM2I1SmUzN2hWOGE2ck9iVm5EUjUxc1hXTUwwSngzSlE1T3BoOUJ0?=
- =?utf-8?B?d3lNUXJOYW82Ymd4Z3BSYUdKOHpTM1JEeERCODdXS3hQcWVSbGpVcEZSQ3pp?=
- =?utf-8?B?SkpuR25xT0VyeWppWDI3cFduRW90YVZoV1E2emhFUnAyZmZGcnJIUE9WUlhT?=
- =?utf-8?B?S3JzQkJMdVNHTzUzN09zSXQ0UG9sVkFFS2poRmFISVdPZ2REaHp5WmFOc1Qz?=
- =?utf-8?B?YnJDRXBxRFdTZm5sTStVcUxkN0N6dkZXRld0bzJwRkdQc3IrbVZTem92MUp4?=
- =?utf-8?B?cGZDUHpIMjB1NFYvaFJ6Q3JFWlNFeW9QZE9NdFBQeDExUU45dlRmL3V2ZU1M?=
- =?utf-8?B?aERiYlRGN0VVcHloK1FKbHF5cC9aaDN1Nmp5Ym1RPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FEB28E79FDFD0648825D54FE989BAFE0@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S2405522AbhASOcz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jan 2021 09:32:55 -0500
+Received: from mail-oi1-f179.google.com ([209.85.167.179]:43398 "EHLO
+        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404399AbhASNUn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 08:20:43 -0500
+Received: by mail-oi1-f179.google.com with SMTP id q25so21077411oij.10;
+        Tue, 19 Jan 2021 05:19:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kUDdGSpowK1CEbj8McVC+bBtkLq63WQr+Zql2YLqG5U=;
+        b=APR2QqebwLBhixWfzvKPO1J2toMMxc5wGp2eyDUTVTgDdeiNhXK9t6GdizLJ1xkZqO
+         9FUJcPELlC8JsKvZHgBtP/Ouyr8wWl7/QC6N2kqS0Li/vWGRmut2IRxVbXPhlkaNolc+
+         YXtBkshomBq06Z92/3M3YA3v32X5IuS3Fjcs2T+j7H8yNeRu/EH+gKLfKCGJPh9Buv2w
+         PH0oMcgsVw9Y6E7Bp34L49D7RMsDRVlVulxSNBXLwVyuZf1n6mqf1hlwIDnkodjDxUv5
+         TSBMz7CAVNaWyjyCpMwPiJ6OEpyBpr+lxLlu9AucA+mGHM9ffrkAt1B/xb2zhDj9eT2T
+         EnZg==
+X-Gm-Message-State: AOAM5320PfM7sBJ4mg7+Ikxwfq1IGR98LK0HQaVUFF7cmGuDrycn1e5q
+        +seTqS7UdaDCLlahsDcTmZN/4kOlHfyFAY4r+II=
+X-Google-Smtp-Source: ABdhPJx6gcAwtwXRqp5/IJOsji1kIJ+Z/62NGRk7TKZOMu+nRuZ+LcTh4icQ0/TaVor6jnR3+WE/obLzf1Lcm6Gy7n8=
+X-Received: by 2002:aca:5c05:: with SMTP id q5mr2555018oib.157.1611062368209;
+ Tue, 19 Jan 2021 05:19:28 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: fi.rohmeurope.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR03MB3162.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 546ec45e-95e8-44f3-0a86-08d8bc7a5bb4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2021 13:01:38.2153
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 94f2c475-a538-4112-b5dd-63f17273d67a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: A3kbTi+TmNaU2SfEWPoLlKzqcnJrBqDBv7hk04kne4sexhj66/joxn7ahlthVPOOIIaPaKHjNCNd1VeEPKChKKoD2Ca89dtrLcTiuEO0T2UoUwVX9W9Sa3DX9pS5QQia
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0302MB2668
+References: <20210118003428.568892-1-djrscally@gmail.com> <20210118003428.568892-5-djrscally@gmail.com>
+ <YAVSf7+iTPNYf5XS@pendragon.ideasonboard.com>
+In-Reply-To: <YAVSf7+iTPNYf5XS@pendragon.ideasonboard.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 19 Jan 2021 14:19:16 +0100
+Message-ID: <CAJZ5v0hUELtKc9CK=z47XQvSAAx=wTWvoVwP-PaMqugaXaCgZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] i2c: i2c-core-acpi: Add i2c_acpi_dev_name()
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Scally <djrscally@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, andy@kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgQmFydG9zeiwNCg0KT24gVHVlLCAyMDIxLTAxLTE5IGF0IDEyOjA3ICswMTAwLCBCYXJ0b3N6
-IEdvbGFzemV3c2tpIHdyb3RlOg0KPiBPbiBUdWUsIEphbiAxOSwgMjAyMSBhdCA4OjIzIEFNIE1h
-dHRpIFZhaXR0aW5lbg0KPiA8bWF0dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPiB3cm90
-ZToNCj4gPiBTdXBwb3J0IEdQTyhzKSBmb3VuZCBmcm9tIFJPSE0gQkQ3MTgxNSBwb3dlciBtYW5h
-Z2VtZW50IElDLiBUaGUgSUMNCj4gPiBoYXMgdHdvDQo+ID4gR1BPIHBpbnMgYnV0IG9ubHkgb25l
-IGlzIHByb3Blcmx5IGRvY3VtZW50ZWQgaW4gZGF0YS1zaGVldC4gVGhlDQo+ID4gZHJpdmVyDQo+
-ID4gZXhwb3NlcyBieSBkZWZhdWx0IG9ubHkgdGhlIGRvY3VtZW50ZWQgR1BPLiBUaGUgc2Vjb25k
-IEdQTyBpcw0KPiA+IGNvbm5lY3RlZCB0bw0KPiA+IEU1IHBpbiBhbmQgaXMgbWFya2VkIGFzIEdO
-RCBpbiBkYXRhLXNoZWV0LiBDb250cm9sIGZvciB0aGlzDQo+ID4gdW5kb2N1bWVudGVkDQo+ID4g
-cGluIGNhbiBiZSBlbmFibGVkIHVzaW5nIGEgc3BlY2lhbCBEVCBwcm9wZXJ0eS4NCj4gPiANCj4g
-PiBUaGlzIGRyaXZlciBpcyBkZXJpdmVkIGZyb20gd29yayBieSBQZXRlciBZYW5nIDwNCj4gPiB5
-YW5nbHNoQGVtYmVzdC10ZWNoLmNvbT4NCj4gPiBhbHRob3VnaCBub3Qgc28gbXVjaCBvZiBvcmln
-aW5hbCBpcyBsZWZ0Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8
-bWF0dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiANCj4gSGkgTWF0dGksDQo+IA0K
-PiBsb29rcyBncmVhdCwganVzdCBhIGNvdXBsZSBuaXRzLg0KPiANCg0KVGhhbmtzIGZvciB0aGUg
-cmV2aWV3ISBJJ2xsIHN0b3JlIHlvdXIgZmluc2luZ3MgYW5kIGZpeCB0aGVtIHdoZW4gSQ0KcmVz
-cGluIHRoaXMuIEkgdGhpbmsgYWxsIG9mIHlvdXIgcG9pbnRzIHdlcmUgdmFsaWQuIEFzIEkga25v
-dyB0aGlzIGlzDQpsYXJnaXNoIHNlcmllcyAoYW5kIGFzIEkga25vdyBJIGFjY2lkZW50YWxseSBz
-ZW50IGZpcnN0IDEwIHYyIHBhdGNoZXMNCnRvIGFsbCByZWNpcGllbnRzIG5vIG1hdHRlciB3aGF0
-IHN1YnN5c3RlbSB3YXMgaW1wYWN0ZWQpIEknbGwgd2FpdCBmb3INCmEgd2hpbGUgYmVmb3JlIHJl
-c2VuZGluZyAoYXQgbGVhc3QgYSB3ZWVrKS4gQmVzaWRlcyBJIGRvbid0IGV4cGVjdCB0aGUNCmRl
-cGVuZGVuY2llcyB0byBiZSBtZXJnZWQgYmVmb3JlIG5leHQga2VybmVsIHJlbGVhc2Ugc28gdGhp
-cyBpcyBub3QNCnVyZ2VudCA6KQ0KDQotIGJ1dCB0aGFua3MhDQoNCkJyLA0KCU1hdHRpDQoNCg==
+On Mon, Jan 18, 2021 at 9:55 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Daniel,
+>
+> Thank you for the patch.
+>
+> On Mon, Jan 18, 2021 at 12:34:25AM +0000, Daniel Scally wrote:
+> > We want to refer to an i2c device by name before it has been
+>
+> s/i2c device/acpi i2c device/ ?
+>
+> > created by the kernel; add a function that constructs the name
+> > from the acpi device instead.
+> >
+> > Signed-off-by: Daniel Scally <djrscally@gmail.com>
+> > ---
+> > Changes in v2:
+> >
+> >       - Stopped using devm_kasprintf()
+> >
+> >  drivers/i2c/i2c-core-acpi.c | 16 ++++++++++++++++
+> >  include/linux/i2c.h         |  5 +++++
+> >  2 files changed, 21 insertions(+)
+> >
+> > diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> > index 37c510d9347a..98c3ba9a2350 100644
+> > --- a/drivers/i2c/i2c-core-acpi.c
+> > +++ b/drivers/i2c/i2c-core-acpi.c
+> > @@ -497,6 +497,22 @@ struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
+> >  }
+> >  EXPORT_SYMBOL_GPL(i2c_acpi_new_device);
+> >
+> > +/**
+> > + * i2c_acpi_dev_name - Construct i2c device name for devs sourced from ACPI
+> > + * @adev:     ACPI device to construct the name for
+> > + *
+> > + * Constructs the name of an i2c device matching the format used by
+> > + * i2c_dev_set_name() to allow users to refer to an i2c device by name even
+> > + * before they have been instantiated.
+> > + *
+> > + * The caller is responsible for freeing the returned pointer.
+> > + */
+> > +char *i2c_acpi_dev_name(struct acpi_device *adev)
+> > +{
+> > +     return kasprintf(GFP_KERNEL, I2C_DEV_NAME_FORMAT, acpi_dev_name(adev));
+>
+> There's a real danger of a memory leak, as the function name sounds very
+> similar to dev_name() or acpi_dev_name() and those don't allocate
+> memory. I'm not sure what a better name would be, but given that this
+> function is only used in patch 6/7 and not in the I2C subsystem itself,
+> I wonder if we should inline this kasprintf() call in the caller and
+> drop this patch.
+
+IMO if this is a one-off usage, it's better to open-code it.
