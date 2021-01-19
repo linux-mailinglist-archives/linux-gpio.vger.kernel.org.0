@@ -2,98 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75EE12FC386
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 23:34:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A45D2FC498
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jan 2021 00:19:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbhASWc7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jan 2021 17:32:59 -0500
-Received: from mga18.intel.com ([134.134.136.126]:24755 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727669AbhASRoS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 19 Jan 2021 12:44:18 -0500
-IronPort-SDR: dJV84DJ/vSSJ+Hn8A+Wxhhtm3za3Zz/j8Sqwl21dBj00sBMoTG3/iIJ32hKObH1S0bMA52ZeqM
- W5dm7lHYx3mw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9869"; a="166632754"
-X-IronPort-AV: E=Sophos;i="5.79,359,1602572400"; 
-   d="scan'208";a="166632754"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2021 09:42:19 -0800
-IronPort-SDR: EL58UZk+sJ19P4ixy5WWw7RUj9/Yx+9c2hUyTbYVWS2dSrkQoe04HMeVAzYEqHzQNh6FuH/9zD
- F+SVCiy3PhJQ==
-X-IronPort-AV: E=Sophos;i="5.79,359,1602572400"; 
-   d="scan'208";a="501005745"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2021 09:42:13 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1l1v2B-004oA2-Fm; Tue, 19 Jan 2021 19:43:15 +0200
-Date:   Tue, 19 Jan 2021 19:43:15 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
-        andy@kernel.org, mika.westerberg@linux.intel.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@kernel.org, lee.jones@linaro.org, hdegoede@redhat.com,
-        mgross@linux.intel.com, robert.moore@intel.com,
-        erik.kaneda@intel.com, sakari.ailus@linux.intel.com,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
-Message-ID: <YAcaM9Tcif1rS3V/@smile.fi.intel.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-7-djrscally@gmail.com>
- <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
- <20210118144606.GO4077@smile.fi.intel.com>
- <75e99a06-4579-44ee-5f20-8f2ee3309a68@gmail.com>
- <1053125f-7cb2-8aa0-3204-24df62986184@gmail.com>
- <20210119093358.GO4077@smile.fi.intel.com>
- <YAcKj9fyNZY8QETd@pendragon.ideasonboard.com>
+        id S1729240AbhASXQj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jan 2021 18:16:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbhASXPj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 18:15:39 -0500
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C0EC0613C1
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jan 2021 15:14:58 -0800 (PST)
+Received: by mail-yb1-xb36.google.com with SMTP id k4so17670083ybp.6
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jan 2021 15:14:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Marg7pjTRtpl09VyTT0jCfl3UMPAKnBqUunBe2OgC58=;
+        b=TKSYhYiP2tTGQZc9sbRFcM1T3K1NFpIAC+H5XtvnYTzAlPs2J03WjRiDZruXmEkE+I
+         u6Sug9gorg1W5siqZWi/2KTcL+J6q9lSyN9nkXefRpVu1uZg6NMSBnliNQfz0ZVP+Wvv
+         aZE101jRtqJ/iOghJQP7M7Q1TPeZZKcC1K39LdsiUJ3xA2hrMsVMz1G8HN3oBkpf8WPd
+         IXHJExRPEA84RY7rgPv4SWTUlDawwVJhts+JY7G6wl35gSwe4G0lWwR92mBEdRDRHIr0
+         +AHhZRnr5ULX37uqfagyndXyQaKXEfYSfiDFRAWMexiPCV1n73bON6QKXCr8r4/S3tIo
+         dp3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Marg7pjTRtpl09VyTT0jCfl3UMPAKnBqUunBe2OgC58=;
+        b=rNIaLBDMH/iprX/HpMOts1Yl/CfY73n+gMepDTSLyBP3mlFOPEiL1OFdkZxA5QC2IA
+         qNdi+Cc/Sq0DSrpMH19Dcxy9be7tHT2Xf7/uYC+BQ7bELnqx6/3mbXFsFO6snjejpa3+
+         AFkAaIK4XALTt87hZWoH6OA3DZt3a4dEGMsIA2fgehLtf3rFWX6EOnkJbbuq0fzY4tOa
+         bTBJHvcBt5kjjkd9rNM6Htj1UJYVYXpJVzGgpLAPSUw34WkUllzh1VE9n8DCrRQyNTs5
+         r0nVucUpsuBC408iio80hKlPTVdMg+H8GRkrI5a0pHVXptZmf105nnmXVkcHAd0gXv69
+         ThFw==
+X-Gm-Message-State: AOAM533Kc8YpoKJsqTMsxkZZmTiBm6kA+gDPr7T8YL6yYT0y1PLA1oiv
+        9ThoFj7hl2IEBXu8hb7I8/KiBZlCNbzWeMau0Hg=
+X-Google-Smtp-Source: ABdhPJxbiDRHpwt+9UcYayL+Xg1d2kHHfCHdlAMKlBcunBREdjMEkIMfu7mpbjuGoJX+r4G8g2qsx5q5P/s8H+rfoqE=
+X-Received: by 2002:a25:dac6:: with SMTP id n189mr9637303ybf.85.1611098098022;
+ Tue, 19 Jan 2021 15:14:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YAcKj9fyNZY8QETd@pendragon.ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Received: by 2002:a05:7110:3311:b029:32:43a0:9516 with HTTP; Tue, 19 Jan 2021
+ 15:14:57 -0800 (PST)
+Reply-To: sroomf70@gmail.com
+From:   "Mrs. Nefi Setu" <mrs.nefisetu@gmail.com>
+Date:   Wed, 20 Jan 2021 00:14:57 +0100
+Message-ID: <CANyAxoY7zEgBBp5j--Qx0Yy=+V+=e8bkmGT+wy1B_Qr7jQXkLg@mail.gmail.com>
+Subject: Greetings,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 19, 2021 at 06:36:31PM +0200, Laurent Pinchart wrote:
-> On Tue, Jan 19, 2021 at 11:33:58AM +0200, Andy Shevchenko wrote:
-> > On Tue, Jan 19, 2021 at 12:11:40AM +0000, Daniel Scally wrote:
-> > > On 18/01/2021 21:19, Daniel Scally wrote:
-
-...
-
-> > See my previous reply. TL;DR: you have to modify clk-gpio.c to export couple of
-> > methods to be able to use it as a library.
-> 
-> That seems really overkill given the very simple implementation of the
-> clock provided here.
-
-Less code in the end is called an overkill? Hmm...
-I think since we in Linux it's better to utilize what it provides. Do you want
-me to prepare a patch to show that there is no overkill at all?
-
-...
-
-> > > (also, Laurent, if we did it this way we wouldn't be able to also handle
-> > > the led-indicator GPIO here without some fairly major rework)
-> > 
-> > LED indicators are done as LED class devices (see plenty of examples in PDx86
-> > drivers: drivers/platform/x86/)
-> 
-> How do you expose the link between the sensor and its indicator LED to
-> userspace ? Isn't it better to handle it in the kernel to avoid rogue
-> userspace turning the camera on without notifying the user ?
-
-I didn't get this. It's completely a LED handling driver business. We may
-expose it to user space or not, but it's orthogonal to the usage of LED class
-IIUC. Am I mistaken here?
-
 -- 
-With Best Regards,
-Andy Shevchenko
+I'm Mrs. Nefi Setu, did you Receive the (FUND), that was paid to you?
+please, do not hesitate to Let me know with your full name:.. for
+immediate verification notice,
 
+Thanks,
 
+Mrs. Nefi Setu,
+Foreign Remittance Director
+
+Sincerely Yours, Respectfully,
+
+Mr Bill T Winters,
+Group Chief Executive Officer & Executive Director,
