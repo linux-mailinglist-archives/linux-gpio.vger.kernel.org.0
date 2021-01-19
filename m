@@ -2,101 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DF132FC3E2
+	by mail.lfdr.de (Postfix) with ESMTP id 2E6282FC3E1
 	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 23:41:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403921AbhASObw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jan 2021 09:31:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34238 "EHLO
+        id S2405115AbhASOcH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jan 2021 09:32:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391068AbhASKwo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 05:52:44 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D19C061575
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jan 2021 02:52:02 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id f1so6820593edr.12
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jan 2021 02:52:02 -0800 (PST)
+        with ESMTP id S2391183AbhASLAU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 06:00:20 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEFFC061757;
+        Tue, 19 Jan 2021 02:59:40 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id b8so10308980plx.0;
+        Tue, 19 Jan 2021 02:59:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S5vcWLYKoGwyM8t/8S/E9AoWHkff5piFNbt11pwE+L4=;
-        b=OYNL7Mmt90KQttNu8O6EHRPz5gOXvj4jjK26OTEkQyAIdkbb3CaAZLJ/fjlvehiHDt
-         04W6iTXTXisPI2DB1+3MVgnjCmzCL8H1S/2u9tNewftXOUjpEYamX3kHCzDeYOvLjZHc
-         yRLV30F9RQsz7tLFFqL1mVQC9TUmaxG/SJk0qcxZMhQM4o6uNVuL6uf49rriGVZbxL49
-         ENHNohylxEmqORe94erBKgn4OI/3yNyZKcXkEM2mxzLbC4QPb4tBOb3p80Xc2QM0VM7T
-         LZAxtcITNI29oCCWjJiFLOq+hulglwVJR1AgopBDac1b2Sb3cDeRlC1u7zv83pntoz+j
-         zN+g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2FDiZ6od0fvQh7WzUZnbGxxoxVajqn8rZ5Nyw7ukQhM=;
+        b=CfevHelY0M0Q8sniU03dWoxCXyGea12k+yHYrnOAuetxEesrkfgIlWtfy7H3izws9O
+         q3ST3hp6q7UNbAWoRM7yXJGRdkkEPBFX7noEfzwwwf7zDI6rhiLUQaniHgome26PbBsk
+         7Fe2silUEW6jc2ToHyqfXeu5UwbiIa7JSkeZKpJA7CRZy4YFjsM3HQbD6OxTYRjGqxdG
+         INOkAGLEgEN9+PU1eSvfuIk+qbUP5bcxFbsto2UVSwD7RkEU3XpyWXgid2ROUhExBWv9
+         Q6SGOiA60iHvQCycthECli2DbzAPzLZB49sD5c+BUfEqTBVjGEvKW987/a5BzQe2TlpX
+         OXtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S5vcWLYKoGwyM8t/8S/E9AoWHkff5piFNbt11pwE+L4=;
-        b=gGsDsPwCvfaJ+0PwuBvVjGFYo3VMg7oouj2QQ8U2aJKKbCxYVM/Zz5cvxYgsUqvY5D
-         8kLfkQvh1a5umRg6jvYGXRRxrNN5Ufi168sxeeB+br9bzJUWuT6V/mu/UF7DkGBnfqz6
-         5L1i/Y5rTnLCr2rDkuW0VMq7LxNqnJpoIXOfespAmnrSdB4TTDoteYnTkKiq0uqc11AC
-         ViJI3kl97+SyT1tA8o1FdRNJrPrTvXBV0zH/ickjs8bAE8qnX0CqW+v8liRjkv9op1Vf
-         gBHj7zXNAQf7ilmMiXt7R5Ly0E2vvDS3RcQe/bsDDl4OdRpdxOr/l942BUw/orbFRmNa
-         Wgxg==
-X-Gm-Message-State: AOAM533pgwu2/rOc9eSEAppT5XFkg7fJh3aAF29rPcz3hjlMi8l+Mboq
-        QnNQ8hw/QoljLqaCoL/crKt3DXLbKVYf8Ifsgusqpg==
-X-Google-Smtp-Source: ABdhPJxOZhnu32XzKOnT4zurXFOW0ag856sfqQAup+T3PYxZupUS6s1eH8MU80S2ZdVx6TdwG9mQZKiOmEqlueTrCxA=
-X-Received: by 2002:aa7:ca13:: with SMTP id y19mr2817438eds.59.1611053520922;
- Tue, 19 Jan 2021 02:52:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20201228150052.2633-1-nikita.shubin@maquefel.me> <20210118090508.21686-1-nikita.shubin@maquefel.me>
-In-Reply-To: <20210118090508.21686-1-nikita.shubin@maquefel.me>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 19 Jan 2021 11:51:50 +0100
-Message-ID: <CAMpxmJVrYS1FT0DUdY40D0AZFtjRqrSihj6CO-Z+RCLpZ82t3Q@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: warning on gpiochip->to_irq defined
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2FDiZ6od0fvQh7WzUZnbGxxoxVajqn8rZ5Nyw7ukQhM=;
+        b=bOqz/2RNYVvBWzec1Xb3IJUm3+bseLbaUccblaGQlbUrUsewarObTBzlTEVjIezSBX
+         rGcCrwG2uUDjikMV/VSbR+4f5NWUCJNZyvdD5B+O+LrW30R6A29ZBWi64roHlmRCZHzl
+         9bE7FHBHLS0GJ3idZGjTFqSBQGseYaMr7S1Nc88SZGMT66NiAQlbjccynRe9+8ZUymQA
+         flUWGBWoTdsu71/8r/59WPbGLIm4Zb5/gkfQDJm/Aej8svJmd+xn/KhE1xJyx9lMNSII
+         U9P0AIMaOcad6z2/705D0JcNKu3G0fUF0T0h7rF5EjAoaPK88lmdrvCkCPAbA+xAlPuQ
+         ASrA==
+X-Gm-Message-State: AOAM533qvese8PdXQSa+qGQP7bRLqE8dA1HvfFS1VejvavLmCUqH7SGJ
+        ZRBW5FpzOn7zWE6HP0KMudg=
+X-Google-Smtp-Source: ABdhPJxyLJIgULTnX2m2lZkZhNNmupD+5+0pVQKyeFBaTgJYI5RBZ4sN/jOzV58/mIL3judNWX9wKg==
+X-Received: by 2002:a17:902:8492:b029:de:17d0:16cf with SMTP id c18-20020a1709028492b02900de17d016cfmr4055536plo.74.1611053979877;
+        Tue, 19 Jan 2021 02:59:39 -0800 (PST)
+Received: from sol (106-69-181-154.dyn.iinet.net.au. [106.69.181.154])
+        by smtp.gmail.com with ESMTPSA id v9sm18204495pff.102.2021.01.19.02.59.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Jan 2021 02:59:39 -0800 (PST)
+Date:   Tue, 19 Jan 2021 18:59:33 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
+Subject: Re: [PATCH v2 0/7] selftests: gpio: rework and port to GPIO uAPI v2
+Message-ID: <20210119105933.GA21741@sol>
+References: <20210107025731.226017-1-warthog618@gmail.com>
+ <CACRpkdZf2GhScg=sUG35nA5P6jXH93uuK0Fq_uhz29wBQLHOKQ@mail.gmail.com>
+ <20210119003455.GB5169@sol>
+ <CAMpxmJUkFL+w7afS2NKF-xiMR==HVR1Mk8uQm3782DBoG0qneA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJUkFL+w7afS2NKF-xiMR==HVR1Mk8uQm3782DBoG0qneA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 10:05 AM Nikita Shubin
-<nikita.shubin@maquefel.me> wrote:
->
-> gpiochip->to_irq method is redefined in gpiochip_add_irqchip.
->
-> A lot of gpiod driver's still define ->to_irq method, let's give
-> a gentle warning that they can no longer rely on it, so they can remove
-> it on ocassion.
->
-> Fixes: e0d8972898139 ("gpio: Implement tighter IRQ chip integration")
-> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> ---
-> v1->v2:
-> - Change chip_err to chip_warn
-> ---
->  drivers/gpio/gpiolib.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 5ce0c14c637b..5a9410c2537d 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1489,6 +1489,9 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->                 type = IRQ_TYPE_NONE;
->         }
->
-> +       if (gc->to_irq)
-> +               chip_warn(gc, "to_irq is redefined in %s and you shouldn't rely on it\n", __func__);
-> +
->         gc->to_irq = gpiochip_to_irq;
->         gc->irq.default_type = type;
->         gc->irq.lock_key = lock_key;
-> --
-> 2.29.2
->
+On Tue, Jan 19, 2021 at 11:37:46AM +0100, Bartosz Golaszewski wrote:
+> On Tue, Jan 19, 2021 at 1:35 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Mon, Jan 18, 2021 at 04:04:51PM +0100, Linus Walleij wrote:
+> > > On Thu, Jan 7, 2021 at 3:58 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> > > >   selftests: gpio: rework and simplify test implementation
+> > > >   selftests: gpio: remove obsolete gpio-mockup-chardev.c
+> > > >   selftests: remove obsolete build restriction for gpio
+> > > >   selftests: remove obsolete gpio references from kselftest_deps.sh
+> > > >   tools: gpio: remove uAPI v1 code no longer used by selftests
+> > > >   selftests: gpio: port to GPIO uAPI v2
+> > > >   selftests: gpio: add CONFIG_GPIO_CDEV to config
+> > >
+> > > Bartosz I think you can just merge these patches into the GPIO tree, at least
+> > > I think that is what I have done in the past.
+> > >
+> >
+> > Could you touch up that Fixes tag in patch 1 if you merge v2?
+> >
+> > Thanks,
+> > Kent.
+> 
+> Kent,
+> 
+> This doesn't apply to my for-next branch - there's a conflict in
+> tools/testing/selftests/gpio/Makefile, could you take a look?
+> 
 
-Applied to fixes, thanks!
+Which is your for-next branch?
 
-Bartosz
+The patch set is based on and applies cleanly to gpio/for-next 7ac554888233,
+so I'm not sure which branch you are targetting.
+
+Cheers,
+Kent.
