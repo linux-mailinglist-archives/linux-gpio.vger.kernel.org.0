@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 730012FB983
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 15:36:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C50312FB986
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jan 2021 15:36:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405472AbhASOcq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jan 2021 09:32:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55548 "EHLO
+        id S2405493AbhASOct (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jan 2021 09:32:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393075AbhASMcZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 07:32:25 -0500
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B985C0613C1;
-        Tue, 19 Jan 2021 04:31:44 -0800 (PST)
-Received: by mail-pg1-x533.google.com with SMTP id v19so12842614pgj.12;
-        Tue, 19 Jan 2021 04:31:44 -0800 (PST)
+        with ESMTP id S2404286AbhASMdd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 07:33:33 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B486FC0613D6;
+        Tue, 19 Jan 2021 04:31:59 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id e9so6262609plh.3;
+        Tue, 19 Jan 2021 04:31:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+JLDSkRZX1A32iY7ojiQ/x6no5IxYCI3Qh2YXDpNLT4=;
-        b=G3TNRC655dwGqNqNnIpiH041uEUGD6dfO7WXo/y23S0wYnsdle0LPGRJ+hPfSGO529
-         ARiAuphiP9v8JVNIsTCPUI/ckP5feQ33jojN0k9ZUPtgeZbdOHhY8FhOlg/vex/3ijG9
-         N02KDKpbE4CyNGDOxR6w/AJsm6As/oSa/0S+zbQm2jwd7IRW2OwEHtlUHGqGGRvKwCMC
-         Hy2Tp/Cdjtb9z4CD2p/sq91RkA+cAaC12rMaBssyKC31IsX7CFs1k8moYx6qHceJbRKM
-         beTL9tgkEWsO6D9JyNjHGkm+88yXzCqrseadvCzL/MBx1xjgMSXXduOaUzU61ATGOxuu
-         RqAQ==
+        bh=IKTIqcQhkM3h5tDVoQgabgdbJqdqY8zjeGWY7T21Mo0=;
+        b=Lc8inz36bV709VGqzp1ApA1O7MVA0IQfYykipyTgn/0gmhgn/eurbMV5w3oLjVzduZ
+         5UtfH8SSHGlCX/EoDe6h+foEGVtNCBd/p2rrNlgRC7gZuXVOyL7yFg6hQHx8+56of6e4
+         RPRVSqNr+WN7jF1mRyKnGaLItUF7rX921lru+jlO+aEMn+rGQCIs/T3VJ6BenyaJP7Kb
+         +BP9Ltj+JJ8WHBpOqpmncF+apD5wErwKpFL/b0+koR2UW6v5a195W8K4E2YI/2m9254+
+         26QMjlH1MYs1U+0Rzp7JRRAMtX0abw8CQXMf/73aSo6KXmBNqCU+CyDI4HsH7pUeUICy
+         1LYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+JLDSkRZX1A32iY7ojiQ/x6no5IxYCI3Qh2YXDpNLT4=;
-        b=rGQms7uv4AzV+7LR/0FJDopPyJmBFgDS+eP/C8Z6FvqyhH1+/c5puzYFy89p/ZhD5W
-         egp5wD6smkwnnPUuRDFu0xckqfHobeqHdQy3Tm1XnFfpiAZHiI9KrglwTE54StQkVYZp
-         rxQcKgQOdNGMKjb7yWQRkQRw2ZpPivLxu2HxeoHH+94RzQSKxHpiDTGIKGYpVhxs73tX
-         S2t7uoicM+ZB8PesdTWH0Wrp90V4HHi+tcabAP8IzdYtlPVhzuFhyg01eH7Fi+jNjYYm
-         5PGXSVeW4uPuIbL08ZonFBVmKDP/ZmgRnaSo5y4gAOtK1BfwLjC3eeshsnQ/PlV8JvhF
-         I6Nw==
-X-Gm-Message-State: AOAM5318b8WJCUjGmv/TAEHHvBPJjlgrlAsAmRhV6sEpYJpi6/mcwvJe
-        jAYLE6JgVzp4MTqwADK1BsNd3exSSRU=
-X-Google-Smtp-Source: ABdhPJzPdxqggGs5/R0uiPSxsoutD60rLp6zKUbBPVf7+xR0X8CLBMmMddtE1cI3STYfDhsOlTw1cw==
-X-Received: by 2002:a63:cf06:: with SMTP id j6mr4214942pgg.195.1611059503900;
-        Tue, 19 Jan 2021 04:31:43 -0800 (PST)
+        bh=IKTIqcQhkM3h5tDVoQgabgdbJqdqY8zjeGWY7T21Mo0=;
+        b=id4KJeXcZFqm6eZl731iP4Bok+dFN3A41+7mtgZfWE+jKc0dO6e/XfTSkuU4DWHGrT
+         V6LNNDBgvv/pfcHT9AP24lHpDe+bYq0N6MN1spOJHzZKpYkcG6dBSRzPy2NQva5YR2/9
+         NWUsAkYhogA0mVppY7AcUNT34d7S98foQazkoPGEr1dpId0cpDXnuLiZpKiE2K/rqupN
+         NwRPUkb+4lO9ZmtUYKZ57roKP1j2S9RJb/oJJNYri/pEA+2FbbqoMEJTMlaP3JWX5Rce
+         rBToICyaHtLpQ2wAh8NjvdSueCHBIBI7g7jCTa0GMgqDrpDeYsD3QCV+uGv8gjGvEzML
+         JCAA==
+X-Gm-Message-State: AOAM5331Mnws1neU2WT4Zz8B/HiYJPmVMhXbdk3lgdJ3qpOsGZOFSinx
+        +C1i6IognDaK0TJZCwvzgyPq9kdNONw=
+X-Google-Smtp-Source: ABdhPJya2Hri6hDk3mcgBsM+oNYotByVuzx9UzsuUXVoI4fHHkuvOqPQPg0Yubq/c7YO/relM51Clw==
+X-Received: by 2002:a17:90a:f988:: with SMTP id cq8mr5313365pjb.71.1611059519011;
+        Tue, 19 Jan 2021 04:31:59 -0800 (PST)
 Received: from sol.lan (106-69-181-154.dyn.iinet.net.au. [106.69.181.154])
-        by smtp.gmail.com with ESMTPSA id q4sm19283052pgr.39.2021.01.19.04.31.40
+        by smtp.gmail.com with ESMTPSA id q4sm19283052pgr.39.2021.01.19.04.31.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Jan 2021 04:31:43 -0800 (PST)
+        Tue, 19 Jan 2021 04:31:58 -0800 (PST)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kselftest@vger.kernel.org, bgolaszewski@baylibre.com,
         linus.walleij@linaro.org, shuah@kernel.org, bamv2005@gmail.com
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v3 4/7] selftests: remove obsolete gpio references from kselftest_deps.sh
-Date:   Tue, 19 Jan 2021 20:30:56 +0800
-Message-Id: <20210119123059.102004-5-warthog618@gmail.com>
+Subject: [PATCH v3 7/7] selftests: gpio: add CONFIG_GPIO_CDEV to config
+Date:   Tue, 19 Jan 2021 20:30:59 +0800
+Message-Id: <20210119123059.102004-8-warthog618@gmail.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210119123059.102004-1-warthog618@gmail.com>
 References: <20210119123059.102004-1-warthog618@gmail.com>
@@ -64,35 +64,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIO Makefile has been greatly simplified so remove references to lines
-which no longer exist.
+GPIO CDEV is now optional and required for the selftests so add it to
+the config.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- tools/testing/selftests/kselftest_deps.sh | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ tools/testing/selftests/gpio/config | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/kselftest_deps.sh b/tools/testing/selftests/kselftest_deps.sh
-index bbc04646346b..00e60d6eb16b 100755
---- a/tools/testing/selftests/kselftest_deps.sh
-+++ b/tools/testing/selftests/kselftest_deps.sh
-@@ -129,13 +129,11 @@ l2_tests=$(grep -r --include=Makefile ": LDLIBS" | \
- 		grep -v "VAR_LDLIBS" | awk -F: '{print $1}')
- 
- # Level 3
--# gpio,  memfd and others use pkg-config to find mount and fuse libs
-+# memfd and others use pkg-config to find mount and fuse libs
- # respectively and save it in VAR_LDLIBS. If pkg-config doesn't find
- # any, VAR_LDLIBS set to default.
- # Use the default value and filter out pkg-config for dependency check.
- # e.g:
--# gpio/Makefile
--#	VAR_LDLIBS := $(shell pkg-config --libs mount) 2>/dev/null)
- # memfd/Makefile
- #	VAR_LDLIBS := $(shell pkg-config fuse --libs 2>/dev/null)
- 
+diff --git a/tools/testing/selftests/gpio/config b/tools/testing/selftests/gpio/config
+index abaa6902b7b6..ce100342c20b 100644
+--- a/tools/testing/selftests/gpio/config
++++ b/tools/testing/selftests/gpio/config
+@@ -1,2 +1,3 @@
+ CONFIG_GPIOLIB=y
++CONFIG_GPIO_CDEV=y
+ CONFIG_GPIO_MOCKUP=m
 -- 
 2.30.0
 
