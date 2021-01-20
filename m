@@ -2,73 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D97F62FD4BC
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jan 2021 17:00:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CE7E2FD55E
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jan 2021 17:22:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391071AbhATP7Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Jan 2021 10:59:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390825AbhATP7M (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 20 Jan 2021 10:59:12 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2403771AbhATQT3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jan 2021 11:19:29 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:55070 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391451AbhATQRk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 20 Jan 2021 11:17:40 -0500
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D12782336D;
-        Wed, 20 Jan 2021 15:58:31 +0000 (UTC)
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1l2FsL-008zAu-Rb; Wed, 20 Jan 2021 15:58:30 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Jan 2021 15:58:29 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
+        by mx.tkos.co.il (Postfix) with ESMTPS id 6A0C444056C;
+        Wed, 20 Jan 2021 18:16:37 +0200 (IST)
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] gpiolib: Bind gpio_device to a driver to enable
- fw_devlink=on by default
-In-Reply-To: <YAhQzxaHCffpPSdQ@kroah.com>
-References: <20210116011412.3211292-1-saravanak@google.com>
- <87r1mjkc07.wl-maz@kernel.org>
- <CAGETcx_5JJ2An=URY=0GwBbZzjfqN4w=-+2BuCsstYePej3sRw@mail.gmail.com>
- <01f733ab81959e4cf847cbf1d521ad9d@kernel.org> <YAhQzxaHCffpPSdQ@kroah.com>
-User-Agent: Roundcube Webmail/1.4.10
-Message-ID: <2c2950c5bf94e456560704dbfa48ed16@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, saravanak@google.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, Jisheng.Zhang@synaptics.com, kever.yang@rock-chips.com, kernel-team@android.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5 0/4] gpio: mvebu: pwm fixes and improvements
+Date:   Wed, 20 Jan 2021 18:16:24 +0200
+Message-Id: <cover.1611128398.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.29.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2021-01-20 15:48, Greg Kroah-Hartman wrote:
-> On Wed, Jan 20, 2021 at 03:39:30PM +0000, Marc Zyngier wrote:
+This series adds a few related fixes to the pwm .apply and .get_state
+callbacks.
 
->> Anyway, I said what I had to say. If platforms break with this
->> change, I'll expect it to be disabled in 5.12.
-> 
-> I'm thinking we can not change the default and will probably revert 
-> this
-> patch "soon".
+The first patch was originally part of the series adding Armada 8K/7K pwm
+support. I split it out to a separate series following review comments from
+Uwe Kleine-König who spotted a few more issues. There is no dependency between
+this and the Armada 8K/7K series.
 
-I think there is a lot of value in keeping this enabled for a bit,
-so that we can work out what breaks, and find solutions that scale
-a bit better.
+v5:
 
-Thanks,
+  * Drop a patch applied to the gpio tree
 
-         M.
+  * Fix patch 4/4 description typo (Uwe)
+
+  * Reduce the number of multiplications (Uwe)
+
+  * Add spaces around '+' (Uwe)
+
+  * Use '1ULL' instead of explicit cast to reduce verbosity
+
+  * Add Linus' Reviewed-by tags to patches that are unchanged since v2
+
+v4:
+
+  * Take advantage of zero value being treated as 2^32 by hardware. Rewrite
+    patch 5/5 (Uwe).
+
+v3:
+
+  * Improve patch 3/5 description (Uwe)
+
+  * Add more Reviewed-by tags from Uwe
+
+v2:
+
+Address Uwe Kleine-König comments.
+
+  * Improve patch 1/5 summary line
+
+  * Add more information to patch 1/5 description
+
+  * Add more information to patch 2/5 description
+
+  * Don't round period/duty_cycle up in .apply (patch 3/5)
+
+  * Expand the comment in path 5/5 based on RMK's analysis of hardware
+    behaviour
+
+  * Add Uwe's Reviewed-by tags
+
+Baruch Siach (4):
+  gpio: mvebu: improve pwm period calculation accuracy
+  gpio: mvebu: make pwm .get_state closer to idempotent
+  gpio: mvebu: don't limit pwm period/duty_cycle to UINT_MAX
+  gpio: mvebu: improve handling of pwm zero on/off values
+
+ drivers/gpio/gpio-mvebu.c | 47 +++++++++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 22 deletions(-)
+
 -- 
-Jazz is not dead. It just smells funny...
+2.29.2
+
