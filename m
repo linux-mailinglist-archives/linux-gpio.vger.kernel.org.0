@@ -2,125 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 410C52FDD0D
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 00:40:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E5FF2FDD11
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 00:40:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbhATWfG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Jan 2021 17:35:06 -0500
-Received: from mga11.intel.com ([192.55.52.93]:43959 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbhATVuv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 20 Jan 2021 16:50:51 -0500
-IronPort-SDR: dQotdB7rP0x0hLIYaBbYPB0FD5GyNg9OisQX+rjtkorB4b1mzdHWBWnS1i3F8FZOgZEv6WqgEi
- bFSDw9mkDwkg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9870"; a="175675353"
-X-IronPort-AV: E=Sophos;i="5.79,362,1602572400"; 
-   d="scan'208";a="175675353"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 13:45:51 -0800
-IronPort-SDR: lpgXQv6hPjDrq2skee6bD+HlHgTZfXQKiHoLmNKxDGhRldYrWDcgYZKbG3FBQ8U12+uMfIylvA
- Bl0SfowahHjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,362,1602572400"; 
-   d="scan'208";a="391696532"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 20 Jan 2021 13:45:49 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B442F161; Wed, 20 Jan 2021 23:45:48 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 3/5] lib/cmdline: Allow get_options() to take 0 to validate the input
-Date:   Wed, 20 Jan 2021 23:45:45 +0200
-Message-Id: <20210120214547.89770-3-andriy.shevchenko@linux.intel.com>
+        id S1728418AbhATWfX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jan 2021 17:35:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730410AbhATWWU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jan 2021 17:22:20 -0500
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A16B8C0613CF
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jan 2021 14:21:07 -0800 (PST)
+Received: by mail-oi1-x22b.google.com with SMTP id q25so26756670oij.10
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jan 2021 14:21:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iuuB/jOlzPElZfMvk5p2UDvJi85zELwSvE3glw8OPIw=;
+        b=e2o98l27C2vaXITzOO4ZXqZ4QA16q+H8vup/3a0lHVCDl1dlwZmg+AwCy/mdauli/1
+         tXjQ3FLWcMf+lEq6r7IPBOZvlP9a4E8IwTwsa/dw6uWlTNk/2shXK+4TDAejDTO46O/N
+         APFPzMl4dfG06AxgPuyBnpMIPZfmnjcEbnSdtSxIy6zj3egxRf1bQvw3+DJ2nMwRa2Tt
+         WKixlcmo1MfHtx5NwsfK5CMZujrUhC0DTwAOUQ5CRTwLvQKdS04LajteEys2UH1Cvgwu
+         1q3pNSTXhFEqanuq8hrhkQ9imy2VvBtou79eF/53c9C0SsfLrDjMTW7ri3vAklH/HL3X
+         aJ8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iuuB/jOlzPElZfMvk5p2UDvJi85zELwSvE3glw8OPIw=;
+        b=fyLa1B6LKK5kdVTe1FBElgCb9rSMgTUuA6e0IP/nOuBvYDUv1mEHK1GlBPkhtet7Ri
+         +bM5D70WVN+IBvd8JzWOSRRtk8zWce7Z09M+ZR1SitmeB1HPi2JwwFPTj6QhsUkKXxx/
+         PH+9wmnuh2dXOU9Zqwkui0t9khZsrX62A3yR55lfffL8SeN+4diIOgmbwlI/aR27ZPio
+         iixg0+KfYn16XnHiHZg05IDav8/Uc05Sn1eqDAeqMGEAaSo2EVoGFQZcu+czIZcDjTIJ
+         ekbSNVzzOWjbDWCCtuFBT1Wz/Qn6X7ZZ02WQ+kOqoIWU2CgzRs7FIUVtarRrSZztNvF5
+         QdOQ==
+X-Gm-Message-State: AOAM532Q+s05X+b+ZtTxOvuE4fANF/F4JKo7gjpOD896d7WCt+GFAn31
+        8fUctIBXXDP1KERIxUuFv4yhew==
+X-Google-Smtp-Source: ABdhPJytfmfxPYq2+G1uFOWDMntzi0gw0jgFPSvVK1kERm0z+jCb/zumi/rIT1FeyHa6hU0hHsiMDg==
+X-Received: by 2002:a05:6808:9a:: with SMTP id s26mr4254499oic.124.1611181266962;
+        Wed, 20 Jan 2021 14:21:06 -0800 (PST)
+Received: from localhost.localdomain (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id h127sm660819oia.28.2021.01.20.14.21.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Jan 2021 14:21:06 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] pinctrl: qcom: TLMM driver for SC8180x
+Date:   Wed, 20 Jan 2021 14:21:11 -0800
+Message-Id: <20210120222114.1609779-1-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210120214547.89770-1-andriy.shevchenko@linux.intel.com>
-References: <20210120214547.89770-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Allow get_options() to take 0 as a number of integers parameter to validate
-the input.
+These patches introduces a binding documenting the shared properties of all
+TLMM blocks, then defines the binding for the SC8180x specifically, followed by
+the actual driver.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- lib/cmdline.c       | 14 +++++++++++---
- lib/cmdline_kunit.c | 10 +++++++++-
- 2 files changed, 20 insertions(+), 4 deletions(-)
+Bjorn Andersson (3):
+  dt-bindings: pinctrl: qcom: Define common TLMM binding
+  dt-bindings: pinctrl: qcom: Add sc8180x binding
+  pinctrl: qcom: Add sc8180x TLMM driver
 
-diff --git a/lib/cmdline.c b/lib/cmdline.c
-index 2a9ae2143e42..1106a8bcd63e 100644
---- a/lib/cmdline.c
-+++ b/lib/cmdline.c
-@@ -91,6 +91,9 @@ EXPORT_SYMBOL(get_option);
-  *	full, or when no more numbers can be retrieved from the
-  *	string.
-  *
-+ *	When @nints is 0, the function just validates the given @str and
-+ *	returns amount of parseable integers as described below.
-+ *
-  *	Returns:
-  *
-  *	The first element is filled by the amount of the collected numbers
-@@ -103,15 +106,20 @@ EXPORT_SYMBOL(get_option);
- 
- char *get_options(const char *str, int nints, int *ints)
- {
-+	bool validate = nints == 0;
- 	int res, i = 1;
- 
--	while (i < nints) {
--		res = get_option((char **)&str, ints + i);
-+	while (i < nints || validate) {
-+		int *pint = validate ? ints : ints + i;
-+
-+		res = get_option((char **)&str, pint);
- 		if (res == 0)
- 			break;
- 		if (res == 3) {
-+			int n = validate ? 0 : nints - i;
- 			int range_nums;
--			range_nums = get_range((char **)&str, ints + i, nints - i);
-+
-+			range_nums = get_range((char **)&str, pint, n);
- 			if (range_nums < 0)
- 				break;
- 			/*
-diff --git a/lib/cmdline_kunit.c b/lib/cmdline_kunit.c
-index 74da9ed61779..a6119c164b48 100644
---- a/lib/cmdline_kunit.c
-+++ b/lib/cmdline_kunit.c
-@@ -109,15 +109,23 @@ static void cmdline_do_one_range_test(struct kunit *test, const char *in,
- {
- 	unsigned int i;
- 	int r[16];
-+	int *p;
- 
- #define FMT	"in test %u"
- #define FMT2	"expected %d numbers, got %d"
- #define FMT3	"at %d"
- 	memset(r, 0, sizeof(r));
- 	get_options(in, ARRAY_SIZE(r), r);
--	KUNIT_EXPECT_EQ_MSG(test, r[0], e[0], FMT " " FMT2, n, e[0], r[0]);
-+	KUNIT_EXPECT_EQ_MSG(test, r[0], e[0], FMT " (parsed) " FMT2, n, e[0], r[0]);
- 	for (i = 1; i < ARRAY_SIZE(r); i++)
- 		KUNIT_EXPECT_EQ_MSG(test, r[i], e[i], FMT " " FMT3, n, i);
-+
-+	memset(r, 0, sizeof(r));
-+	get_options(in, 0, r);
-+	KUNIT_EXPECT_EQ_MSG(test, r[0], e[0], FMT " (validated) " FMT2, n, e[0], r[0]);
-+
-+	p = memchr_inv(&r[1], 0, sizeof(r) - sizeof(r[0]));
-+	KUNIT_EXPECT_PTR_EQ_MSG(test, p, (int *)0, FMT " out of bound " FMT3, n, p - r);
- #undef FMT3
- #undef FMT2
- #undef FMT
+ .../pinctrl/qcom,sc8180x-pinctrl.yaml         |  153 ++
+ .../bindings/pinctrl/qcom,tlmm-common.yaml    |   85 +
+ drivers/pinctrl/qcom/Kconfig                  |    9 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-sc8180x.c        | 1624 +++++++++++++++++
+ 5 files changed, 1872 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc8180x-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sc8180x.c
+
 -- 
 2.29.2
 
