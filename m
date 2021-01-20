@@ -2,91 +2,170 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55C7A2FD8AB
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jan 2021 19:47:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AAE22FDB5A
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jan 2021 22:25:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbhATSpG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Jan 2021 13:45:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404470AbhATSWa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jan 2021 13:22:30 -0500
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80AB6C0613C1
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jan 2021 10:21:50 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id w14so5974086pfi.2
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jan 2021 10:21:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3zA2PNOgC/6qMsKy4aM1hGJRHMX6FMexQumMpBDwYYg=;
-        b=A2qykjDjIALvxy2rFZKrHfmDImHmjIdmVaOm1B4dktGCC6yYKvZrZ6S7nG7X9dROx9
-         XFrIpnfiuGjIXk19bJ5F9H89C0OapDwiH4l3CTO2FtJI2eo3Ia/zCXgKqr8o2Vtpd1Ly
-         gtNNmG6xu4x2tMeE/lHyDX929zDR/2iG7zXXMti9igv6IPU4rLBJvCxWRBB1RkgNfPEk
-         EcrFtDCIeIrrs/7e1C8T8d1TZR+3eZKB02i2onasg0Zx5PtiSn3kz4tmSzUggXyi1i7y
-         XNxwbYay885qrx+O7+HpHrSk7cd+e0dt3xDDRCk3C4peRJWEEGCk1KsGpbeRHkNPP1K7
-         u+/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=3zA2PNOgC/6qMsKy4aM1hGJRHMX6FMexQumMpBDwYYg=;
-        b=Ez0UFcuwmiuz3En2qjWQt/MLAHAfdTraji7lQqBtluubyO8wogbjvg7G5srIyteV50
-         l2eW5cOjxaHeRh950CBZkaMctFvfggi9pAyxevTlFUODe2ZqE7DCRb6kCEuSK8J4psuE
-         cOejia8LPtuQQ1GTldtElfzByCWFXBGbn8gxcEdtukaQaecq0YMJGgPh9nSi0Sf32Iju
-         ygbZrwGGOxLtYFJbaHtqkymOI1FuTRqNVCaNPzLetrz3NZ8YVEyZOWgEG9mVGkU+6vSR
-         ndNp6t70xOxD2zJkWOhswaeaDII8cdBvYgW8B/7lALb7xIWGNhbamW1hGyWwHwzaEjU2
-         qneA==
-X-Gm-Message-State: AOAM530OJ/NlfmoMeTCUgFOkB4rcs7f7l9+fyb2VwXVR12jqIGDXFbEY
-        ZtUhAJth5ayD0qYIT3CV2GuTeQ==
-X-Google-Smtp-Source: ABdhPJxZ9IXq8e3w29XqwyA4tFdKUt34VgrdrBdiovLR95Y4t32vajYGB/nJA8DVEItUbXob/hqirQ==
-X-Received: by 2002:a63:1142:: with SMTP id 2mr10642235pgr.263.1611166909930;
-        Wed, 20 Jan 2021 10:21:49 -0800 (PST)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id x127sm2965069pfb.74.2021.01.20.10.21.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 10:21:49 -0800 (PST)
-Date:   Wed, 20 Jan 2021 10:21:49 -0800 (PST)
-X-Google-Original-Date: Wed, 20 Jan 2021 10:21:47 PST (-0800)
-Subject:     Re: [PATCH v11 02/10] pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver
-In-Reply-To: <CACRpkdbTazK7yLPVe79SoneD+tdiXv9GPvN29dSMgCZkf8Pjbg@mail.gmail.com>
-CC:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
-        seanga2@gmail.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     linus.walleij@linaro.org
-Message-ID: <mhng-8e7e9405-6528-4fec-8d2e-41eb7ec1362c@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1731202AbhATNmi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jan 2021 08:42:38 -0500
+Received: from mga07.intel.com ([134.134.136.100]:26813 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388785AbhATM6w (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 20 Jan 2021 07:58:52 -0500
+IronPort-SDR: a16MObkPOgydVTtVtVn4sM3NMfNjZeDoh+63rUHnmjQmOm0Wm4QkCuVAEg/gD0CFioFNXcowF2
+ JvTe+hZkEphA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9869"; a="243168906"
+X-IronPort-AV: E=Sophos;i="5.79,361,1602572400"; 
+   d="scan'208";a="243168906"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 04:56:58 -0800
+IronPort-SDR: E3+DqvOKS99F18AO9ed7Ig/CTmbzFRmG4z7PEc2gZkB40x9L2sX9NZvSvQK14js++SPQenII19
+ EhuidwvK1I+w==
+X-IronPort-AV: E=Sophos;i="5.79,361,1602572400"; 
+   d="scan'208";a="351036000"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 04:56:53 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l2D3b-006A5X-GZ; Wed, 20 Jan 2021 14:57:55 +0200
+Date:   Wed, 20 Jan 2021 14:57:55 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
+        andy@kernel.org, mika.westerberg@linux.intel.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        wsa@kernel.org, lee.jones@linaro.org, hdegoede@redhat.com,
+        mgross@linux.intel.com, robert.moore@intel.com,
+        erik.kaneda@intel.com, sakari.ailus@linux.intel.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
+Message-ID: <YAgo06hhlael1/rm@smile.fi.intel.com>
+References: <20210118003428.568892-7-djrscally@gmail.com>
+ <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
+ <20210118144606.GO4077@smile.fi.intel.com>
+ <75e99a06-4579-44ee-5f20-8f2ee3309a68@gmail.com>
+ <20210119092448.GN4077@smile.fi.intel.com>
+ <a735380b-57ac-1950-b29a-07fe6cb708d2@gmail.com>
+ <20210119110837.GT4077@smile.fi.intel.com>
+ <YAcNT1d5zQHGsoe6@pendragon.ideasonboard.com>
+ <YAccEtQIBrbKPSmv@smile.fi.intel.com>
+ <YAev1YviLVfEHSg6@pendragon.ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <YAev1YviLVfEHSg6@pendragon.ideasonboard.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 18 Jan 2021 05:33:05 PST (-0800), linus.walleij@linaro.org wrote:
-> Hi Damien,
->
-> this looks all right to me.
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Shall I apply just this one patch to the pinctrl tree?
+On Wed, Jan 20, 2021 at 06:21:41AM +0200, Laurent Pinchart wrote:
+> On Tue, Jan 19, 2021 at 07:51:14PM +0200, Andy Shevchenko wrote:
+> > On Tue, Jan 19, 2021 at 06:48:15PM +0200, Laurent Pinchart wrote:
+> > > On Tue, Jan 19, 2021 at 01:08:37PM +0200, Andy Shevchenko wrote:
+> > > > On Tue, Jan 19, 2021 at 10:40:42AM +0000, Daniel Scally wrote:
+> > > > > On 19/01/2021 09:24, Andy Shevchenko wrote:
+> > > > > >>>>> +static struct i2c_driver int3472_tps68470 = {
+> > > > > >>>>> +	.driver = {
+> > > > > >>>>> +		.name = "int3472-tps68470",
+> > > > > >>>>> +		.acpi_match_table = int3472_device_id,
+> > > > > >>>>> +	},
+> > > > > >>>>> +	.probe_new = skl_int3472_tps68470_probe,
+> > > > > >>>>> +};
+> > > > > >>> I'm not sure we want to have like this. If I'm not mistaken the I²C driver can
+> > > > > >>> be separated without ACPI IDs (just having I²C IDs) and you may instantiate it
+> > > > > >>> via i2c_new_client_device() or i2c_acpi_new_device() whichever suits better...
+> > > > > >> Sorry, I'm a bit confused by this. The i2c device is already
+> > > > > >> present...we just want the driver to bind to them, so what role do those
+> > > > > >> functions have there?
+> > > > > > What I meant is something like
+> > > > > >
+> > > > > >  *_i2c.c
+> > > > > > 	real I²C driver for the TPS chip, but solely with I²C ID table, no ACPI
+> > > > > > 	involved (and it sounds like it should be mfd/tps one, in which you
+> > > > > > 	just cut out ACPI IDs and convert to pure I²C one, that what I had
+> > > > > > 	suggested in the first place)
+> > > > > 
+> > > > > Ahh; sorry - i misunderstood what you meant there. I understand now I
+> > > > > think, but there is one complication; the ACPI subsystem already creates
+> > > > > a client for that i2c adapter and address; i2c_new_client_device()
+> > > > > includes a check to see whether that adapter / address combination has
+> > > > > an i2c device already.  So we would have to have the platform driver
+> > > > > with ACPI ID first find the existing i2c_client and unregister it before
+> > > > > registering the new one...the existing clients have a name matching the
+> > > > > ACPI device instance name (e.g i2c-INT3472:00) which we can't use as an
+> > > > > i2c_device_id of course.
+> > > > 
+> > > > See how INT33FE is being handled. Hint: drivers/acpi/scan.c:~1600
+> > > > 
+> > > > static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
+> > > > 	{"BSG1160", },
+> > > > 	{"BSG2150", },
+> > > > 	{"INT33FE", },
+> > > > 	{"INT3515", },
+> > > > 	{}
+> > > > };
+> > > > 
+> > > > So, we quirklist it here and instantiate manually from platform driver (new
+> > > > coming one).
+> > > 
+> > > This is documented as used for devices that have multiple I2cSerialBus
+> > > resources. That's not the case for the INT3472 as far as I can tell. I
+> > > don't think we should abuse this mechanism.
+> > 
+> > This is quite a similar case to that one. Let's avoid yak shaving, right?
+> 
+> Exactly my point, that's why I think this patch is good overall, I don't
+> think it requires a complete rewrite.
 
-That's fine with me.  The DT bindings are in riscv/for-next, maybe it's best to
-take those as well and I'll drop them?  I don't generally like to drop stuff
-from for-next, but that's probably better than having everything all mixed up.
+The approach in the series is to reinvent the MFD driver which I against of.
+I don;t think we need to kill it there and reborn in a new form and dragging
+code from there to here to there.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git/commit/?h=for-next&id=ed3137edb31b86702511e7ad12b4abe8686b6805
+On top of that the approach with a quirk driver in the middle seems to me
+cleaner than using different paths how the two drivers are being initialized.
+In the proposed approach there will be one making decision point and easy to
+understand what's going on.
 
-> I think the line that touches arch/*/Kconfig should be dropped
-> then, that better go to the SoC tree.
+The bad example of two making decision points is acpi_lpss.c vs. individual
+drivers (however in that case it have different ID's, i.e. ACPI vs. PCI),
 
-I'm OK with you taking them along with my Ack, but if you don't want to that's
-fine.  Just LMK
+> > > Don't forget that the TPS68470 I2C driver needs to be ACPI-aware, as it
+> > > has to register an OpRegion for ACPI-based Chrome OS devices. On other
+> > > platforms (including DT platforms), it should only register regulators,
+> > > clocks and GPIOs. Given the differences between those platforms, I don't
+> > > think a TPS68470 driver that would fake being unaware of being probed
+> > > through ACPI would be a good idea. We can always refactor the code later
+> > > when we'll have a non-ACPI based platform using the TPS68470, without
+> > > such a platform there's no way we can test the I2C driver without ACPI
+> > > anyway.
+> > 
+> > Are you agree that MFD approach should stay? How then we can manage to have an
+> > MFD driver cohabit with our new driver? I proposed a clean solution which will
+> > handle all possible cases via quirk driver. Having two drivers enumerated by
+> > different scenarios is a call for troubles (we have already with one of that
+> > sensors).
+> 
+> I think we should solve this problem when it will arise. Solving
+> problems with complex architectures without a platform to test the code
+> on is a pretty sure way to get the architecture design wrong. Let's get
+> this merged, it's an improvement compared to the current situation, and
+> then let's improve it further on top when we'll need to support more use
+> cases.
 
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+But this is problem already here right now. The submitted code is to support
+a new platform that needs a quirk and treats INT3472 differently. The usual
+way is to refactor the existing solution to make them both to have a best
+compromise.
 
-> Yours,
-> Linus Walleij
+> > And there is no "faking" anything, it's rather gating it depending on the
+> > platform.
 
-Thanks!
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
