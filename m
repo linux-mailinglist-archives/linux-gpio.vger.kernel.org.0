@@ -2,67 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79E832FD663
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jan 2021 18:05:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D18C62FD721
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jan 2021 18:34:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391781AbhATRDN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Jan 2021 12:03:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391078AbhATRCf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 20 Jan 2021 12:02:35 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 246882137B;
-        Wed, 20 Jan 2021 17:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1611162114;
-        bh=IXE7YWSp5sbnX68+dQh69BcI37K7iwemDVat4dRrGbI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z7Tw5usoEKTk66L8gHy7wd3/duewE8m0yylC8SpRmKBhHx7SRPSYcgG+tOIpAfEIs
-         YdeZG8ymMFP1EaKdsov6qoOumpBSBB8vQ5Hlu9lF5RgN/V/lglL7GxlPz6vs1IDG2D
-         fAvTYi9CoWto2QxIdC1OqD7QaW4d5oWm2F8XY6Oo=
-Date:   Wed, 20 Jan 2021 18:01:19 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
+        id S1725956AbhATRdx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jan 2021 12:33:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbhATR0E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jan 2021 12:26:04 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3FECC0613D3
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jan 2021 09:25:24 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l2HED-0007E4-9d; Wed, 20 Jan 2021 18:25:09 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l2HDt-0003dQ-No; Wed, 20 Jan 2021 18:24:49 +0100
+Date:   Wed, 20 Jan 2021 18:24:49 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] gpiolib: Bind gpio_device to a driver to enable
- fw_devlink=on by default
-Message-ID: <YAhh3+e1cxLN0OLS@kroah.com>
-References: <20210116011412.3211292-1-saravanak@google.com>
- <87r1mjkc07.wl-maz@kernel.org>
- <CAGETcx_5JJ2An=URY=0GwBbZzjfqN4w=-+2BuCsstYePej3sRw@mail.gmail.com>
- <01f733ab81959e4cf847cbf1d521ad9d@kernel.org>
- <YAhQzxaHCffpPSdQ@kroah.com>
- <2c2950c5bf94e456560704dbfa48ed16@kernel.org>
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 4/4] gpio: mvebu: improve handling of pwm zero on/off
+ values
+Message-ID: <20210120172449.z55oyiktpez76zwe@pengutronix.de>
+References: <cover.1611128398.git.baruch@tkos.co.il>
+ <fb61ffe7275237715af92015b2216b8355feb0d6.1611128398.git.baruch@tkos.co.il>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7i7bkmbdao25rjm4"
 Content-Disposition: inline
-In-Reply-To: <2c2950c5bf94e456560704dbfa48ed16@kernel.org>
+In-Reply-To: <fb61ffe7275237715af92015b2216b8355feb0d6.1611128398.git.baruch@tkos.co.il>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 03:58:29PM +0000, Marc Zyngier wrote:
-> On 2021-01-20 15:48, Greg Kroah-Hartman wrote:
-> > On Wed, Jan 20, 2021 at 03:39:30PM +0000, Marc Zyngier wrote:
-> 
-> > > Anyway, I said what I had to say. If platforms break with this
-> > > change, I'll expect it to be disabled in 5.12.
-> > 
-> > I'm thinking we can not change the default and will probably revert this
-> > patch "soon".
-> 
-> I think there is a lot of value in keeping this enabled for a bit,
-> so that we can work out what breaks, and find solutions that scale
-> a bit better.
 
-Ok, will leave it alone for a few more weeks.
+--7i7bkmbdao25rjm4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
+On Wed, Jan 20, 2021 at 06:16:28PM +0200, Baruch Siach wrote:
+> Hardware appears to treat zero value as 2^32. Take advantage of this
+> fact to support on/off values of up to UINT_MAX+1 =3D=3D 2^32. Adjust both
+> .apply and .get_state to handle zero as a special case.
+>=20
+> Rounded up division result in .get_state can't be zero, since the
+> dividend is now larger than 0. Remove check for this case.
+>=20
+> Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Analyzed-by: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 
-greg k-h
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--7i7bkmbdao25rjm4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAIZ14ACgkQwfwUeK3K
+7Am43QgAlhpAMjUS5lyrhrNQdVVIq+zrFhcmzsorsvBCzxThEDvX8zDEagYumWpI
+eLhnqfrf8Sih4Q8IdvC49DlYMj77DcMlwLYNvCf+KR4LkcBrANp8MsKyGMXdKmRu
+KaOo5greL3fISrXCddluJBz/AY3lNRSvasQgYBbZlUcWmIT4usiRpuuS7XfRmkFS
+23rzl3TZ4XEtyLnr73jJ7xmYgJg9aNRlOUOtIZ8kQ11Y6fl+wQWgCpsodWo/4t/B
+3YASAH9hMBhboxD3cGhhG+Gza7XomINaZhKLFUf3PoBGnueGju0suOsF9tT1p2wS
+s/gxj0bkBsQWrbglhgk2x2RRoZcH5A==
+=EzHw
+-----END PGP SIGNATURE-----
+
+--7i7bkmbdao25rjm4--
