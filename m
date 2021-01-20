@@ -2,92 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C53B2FC526
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jan 2021 00:54:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA1C02FC610
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jan 2021 01:48:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbhASXxT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jan 2021 18:53:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45954 "EHLO
+        id S1729360AbhATArP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jan 2021 19:47:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406358AbhASN6z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 08:58:55 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8932C061573;
-        Tue, 19 Jan 2021 05:58:06 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id r4so10537460pls.11;
-        Tue, 19 Jan 2021 05:58:06 -0800 (PST)
+        with ESMTP id S1729070AbhATArM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jan 2021 19:47:12 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCC7C061757;
+        Tue, 19 Jan 2021 16:46:14 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id q8so178647lfm.10;
+        Tue, 19 Jan 2021 16:46:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KL4XTeXlgYSf3JC4dzvkf+Ob0LcmcMIcOK/73KdYSys=;
-        b=RP8XNWcgdk0ReCZvzMJI+MVBI4cqb1Tp+obUwl0iC/ywxJfA0moQ6Iy8DEWrWmQ0Fu
-         RiVyA4OEYU6whVzbw0fAHrNczTFIVZRMdlRNRjENnWMyzwiSPOW12Skt29j62b3PClQR
-         sYdRAbTZSLYdWTwKXiQadEG4l5ebbOcEA9Qg144lub/sMqjUsnNlN9pmXg7IGosM+0Ty
-         OYVrMTAbMBpJUhMXyEqxjE4q0Cm8AZhF8f1DbhskDBGbUDl+o91bRK+VXxi0Gyr2lwqq
-         jdNbWUcEhkmvslxFvKp+Rk6ixrZkBL1o/ImSt1SLGBs+pE+AQa+kl0gVq3ofu1yPeBtP
-         MDvw==
+        bh=+yTAnXtjPrGxO02YmxJ6XSfUB2dhdEl68apWpq9Pbuk=;
+        b=aWR9uj6s3zndMEFoZ0kLGAmhuCaTsnAHptSyzcafSG7fqIryWI9a5yiM/dJtg7cQ31
+         xBuT1njrtSKCDJUwwVbAM2PunBKhKs/LSzcG2bV3C5PKxh5sZ2pMdNKFXtT11CXBXTQc
+         95xFXZCtrb0KGKUpfj2P3YJXOyHL9aSDk7y715K94Mkv/aCxnUwZR+pkgLrvbP63yZ4a
+         tvYyVQr4BuxHVXuPEO+soQnt9V+9ZXse1vcmQ9YKTou5lId/bjyqGWdoAvog9pRNWIWf
+         P7nGzwbSjXFPbF9maU7JyKVY5oMqYdEo7YspHvXT/4qdjqEeUmnkxEVgIdaVWZjfr9Bs
+         bNYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KL4XTeXlgYSf3JC4dzvkf+Ob0LcmcMIcOK/73KdYSys=;
-        b=mLgRayafOEW+Ut4fMePTw5T9NcQl1hStRs7GMXdxVOdwTgct4o43P0qpNjqCltmj+u
-         73+3abXaxx701XMgnKTbTvxFgEySt3rIeejrsHNwlfp8kk7roU5CCLeHXq99l2Ofx/FB
-         vvEPUkHpm+BRPGCo1NAnRI/KiL6+WhqU7q37UOLjP39tt+znh2qCiuCoBLu5lVJt0g81
-         lpwfK0ajaHRek97Ge38PdhvVS/uhDbMpSGvgMgSAMWS7t3B9KKdoBnA1PqzT4Qyg7kD0
-         KrdF2GBgvgWG0EIdYIc6Zz4EcH+dGpmmNnl8I/1x/aggAVgP527WW9b1tZTSzo/396jy
-         srSA==
-X-Gm-Message-State: AOAM533/7krPvv7KHSti8w92rWCtn0POdya4lklh0GT9BWo1BmSBr2YP
-        +Km8Npkg7yfVX+al06cLK3r80B0Xxrk=
-X-Google-Smtp-Source: ABdhPJzH2iEUJxT2cTQQ2+zZ4EtLm7SM90YRu8usYcXGs9F9EQWJEZPk6GX3gDdx9mV/Fx0BREh0HQ==
-X-Received: by 2002:a17:90a:808a:: with SMTP id c10mr5589172pjn.229.1611064685930;
-        Tue, 19 Jan 2021 05:58:05 -0800 (PST)
-Received: from sol.lan (106-69-181-154.dyn.iinet.net.au. [106.69.181.154])
-        by smtp.gmail.com with ESMTPSA id c5sm6617710pfi.5.2021.01.19.05.58.02
+        bh=+yTAnXtjPrGxO02YmxJ6XSfUB2dhdEl68apWpq9Pbuk=;
+        b=mKglqnXoEdfVnkP8iWm5KxLzPmWRmmRQBzFZy1lF75hlCKQgy+oKRdkqEl3zOpDvfo
+         mFIPGYZ8MLoODaxoDw8SUmXKlEzQiLs5mg17wEVuvTskYmqfLjuYM/jU+7Zx8Q+EcAAX
+         vU8yLAGB+71kwT0DLGXxpV7cE+wLQKm35fOVxuH/15eMr379gEJLhSTROMoW6j34AKMf
+         HnqZCbUT0kUV3S2GJLVasnoow9W9yvIC9Q97hSSMIslFYyP3lpXdJTskSTvzLw5wHy7c
+         C9kkqnX+Mrs7J3n/lAHbxBFT1ovKQwPZXj5Pja5FY6AzmhdWKvT0i0ZMQo8FHphvKKNY
+         LUVw==
+X-Gm-Message-State: AOAM532ajCvapBTfGnrskUkXUztnXUbudQyiWzae5CwIliETVELsbaVT
+        Ibr4LNVTZqXFLf2fZ7IrklE=
+X-Google-Smtp-Source: ABdhPJy8eIsMtMERKkZrAhe3XZuLfuFDeOMsJR2MapSRDZs82HYp5fV158YEgPkRzK0K5NOueIL+tA==
+X-Received: by 2002:a19:ee09:: with SMTP id g9mr995874lfb.272.1611103572917;
+        Tue, 19 Jan 2021 16:46:12 -0800 (PST)
+Received: from localhost.localdomain (109-252-192-57.dynamic.spd-mgts.ru. [109.252.192.57])
+        by smtp.gmail.com with ESMTPSA id v23sm21046ljg.97.2021.01.19.16.46.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Jan 2021 05:58:05 -0800 (PST)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH] gpio: uapi: fix line info flags description
-Date:   Tue, 19 Jan 2021 21:57:27 +0800
-Message-Id: <20210119135727.105360-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.30.0
+        Tue, 19 Jan 2021 16:46:12 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matt Merhar <mattmerhar@protonmail.com>,
+        Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] gpio: tegra: Fix irq_set_affinity
+Date:   Wed, 20 Jan 2021 03:45:48 +0300
+Message-Id: <20210120004548.31692-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The description of the flags field of the struct gpio_v2_line_info
-mentions "the GPIO lines" while the info only applies to an individual
-GPIO line.  This was accidentally changed from "the GPIO line" during
-formatting improvements.
+The irq_set_affinity callback should not be set if parent IRQ domain
+doesn't present because gpio-tegra driver callback fails in this case,
+causing a noisy error messages on system suspend:
 
-Reword to "this GPIO line" to clarify and to be consistent with other
-struct gpio_v2_line_info fields.
+ Disabling non-boot CPUs ...
+ IRQ 26: no longer affine to CPU1
+ IRQ128: set affinity failed(-22).
+ IRQ130: set affinity failed(-22).
+ IRQ131: set affinity failed(-22).
+ IRQ 27: no longer affine to CPU2
+ IRQ128: set affinity failed(-22).
+ IRQ130: set affinity failed(-22).
+ IRQ131: set affinity failed(-22).
+ IRQ 28: no longer affine to CPU3
+ IRQ128: set affinity failed(-22).
+ IRQ130: set affinity failed(-22).
+ IRQ131: set affinity failed(-22).
+ Entering suspend state LP1
 
-Fixes: 2cc522d3931b ("gpio: uapi: kernel-doc formatting improvements")
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Hence just don't specify the irq_set_affinity callback if parent PMC
+IRQ domain is missing. Tegra isn't capable of setting affinity per GPIO,
+affinity could be set only per GPIO bank, thus there is nothing to do
+for gpio-tegra in regards to CPU affinity without the parent IRQ domain.
+
+Tested-by: Peter Geis <pgwipeout@gmail.com> # Ouya T30
+Tested-by: Matt Merhar <mattmerhar@protonmail.com> # Ouya T30
+Tested-by: Dmitry Osipenko <digetx@gmail.com> # A500 T20 and Nexus7 T30
+Fixes: efcdca286eef ("gpio: tegra: Convert to gpio_irq_chip")
+Reported-by: Matt Merhar <mattmerhar@protonmail.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- include/uapi/linux/gpio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-tegra.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index e4eb0b8c5cf9..7a6f7948a7df 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -212,7 +212,7 @@ struct gpio_v2_line_request {
-  * @offset: the local offset on this GPIO chip, fill this in when
-  * requesting the line information from the kernel
-  * @num_attrs: the number of attributes in @attrs
-- * @flags: flags for the GPIO lines, with values from &enum
-+ * @flags: flags for this GPIO line, with values from &enum
-  * gpio_v2_line_flag, such as %GPIO_V2_LINE_FLAG_ACTIVE_LOW,
-  * %GPIO_V2_LINE_FLAG_OUTPUT etc, added together.
-  * @attrs: the configuration attributes associated with the line
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index 6c79e9d2f932..9a43129313fa 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -701,7 +701,6 @@ static int tegra_gpio_probe(struct platform_device *pdev)
+ #ifdef CONFIG_PM_SLEEP
+ 	tgi->ic.irq_set_wake		= tegra_gpio_irq_set_wake;
+ #endif
+-	tgi->ic.irq_set_affinity	= tegra_gpio_irq_set_affinity;
+ 	tgi->ic.irq_request_resources	= tegra_gpio_irq_request_resources;
+ 	tgi->ic.irq_release_resources	= tegra_gpio_irq_release_resources;
+ 
+@@ -754,6 +753,8 @@ static int tegra_gpio_probe(struct platform_device *pdev)
+ 
+ 		if (!irq->parent_domain)
+ 			return -EPROBE_DEFER;
++
++		tgi->ic.irq_set_affinity = tegra_gpio_irq_set_affinity;
+ 	}
+ 
+ 	tgi->regs = devm_platform_ioremap_resource(pdev, 0);
 -- 
-2.30.0
+2.29.2
 
