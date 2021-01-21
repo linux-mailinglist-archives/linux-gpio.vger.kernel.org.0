@@ -2,119 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0A5F2FE6CD
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 10:55:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C739F2FE74E
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 11:16:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbhAUJyi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jan 2021 04:54:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49374 "EHLO
+        id S1725863AbhAUKPW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jan 2021 05:15:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbhAUJyV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 04:54:21 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B40FC061757
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 01:53:40 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id a1so1079687wrq.6
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 01:53:40 -0800 (PST)
+        with ESMTP id S1728708AbhAUJrt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 04:47:49 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998C9C061575;
+        Thu, 21 Jan 2021 01:47:31 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id b5so1050428wrr.10;
+        Thu, 21 Jan 2021 01:47:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eci1FQfpoEAtnK1o4pF6wH1+jl8xOMIXcTakllSDiEQ=;
-        b=smG4LuuwEoPMqICbcrS8fi0j07dt5hcTLTip5ddqlcoA02+u6s78O29wC4I4ejSxvE
-         jijkD6tjS0lw7G7sI67GjR6oJmdnkXDqlCFSt8V/Rnr+0ZKa3nLQ+wzRmILbu/eA/Z6o
-         M55jTtvDstnN/ZVUpuAkcDbU1R5rOs5Q0SUisYQh7k5RF4wWfVj0t1pRmPHeDNOQuzVA
-         nBH6EdJgcqUiM7+Qk+OJblUE+eETxCTmKpq48TIdwSPeLlNMWxFrIOygZOtZkkxn1vwh
-         liOjbdMK7taXxaHniwBuZCoo/UqtKA4lNDqiz74cXyg4IY1vLaU++VApRjA3bNzJV23X
-         frmg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=yKc5i0pAM0tVHvQhN0nKtZMVSNkJgO1BmOAhXjVUe9U=;
+        b=jIYHon01Ye/54nu5CwPQAQ1eytx++CbmX92yv5dAYqEzAk0u6CSuQBswvAjb0XZdjc
+         /OS/PSaOUHTY1TJq6dp1oPKEGQeCSRw6NJw73BzzcQqQep3Xbru5wnL0mRUjYcB2nd2M
+         HUC7yB3w6wJFnLcFHlIbh7Ppm8ILeqye9tIFD2kFAyi9xIhMwUwk/1FJ7AtsJxeEnO72
+         FO+HTjnEz/9GUR1c8OwVuO04P54NRbYIkws+lqSHxuyBPIz2Doi6LlBDJadZnb8RHkML
+         xfkza48hXgIx5aVxKUAIBrgKqzPCK47T8+XgbVSqQo7zftiSAtInnyeaZ1JbVTsl9DJT
+         mRZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eci1FQfpoEAtnK1o4pF6wH1+jl8xOMIXcTakllSDiEQ=;
-        b=t5oFKkW8Q0LEMy5EJaohR+wNx4udrw/dBq34tMXuQ9MHfVPVsppnozkZGNkhxV7t7Z
-         XKXoYt9p4Lf08hDkeGqrmXQvtUr0AS4MjhsWwtqToiiFnNVZhZ4q+FKXLJVjJ+AXsTk8
-         77yj3PzuaFkjBpfQUVaOWtdh4qNWH/3CxTBBMkmjxBSipRqghQm9x1DMag3K+5F0I0ah
-         xg6fXrAMOTIx8g1kg+xAJI/DPKi+c2KTVIr4Ehx53B8JHJ0/ybaLGG9yrzqhY0poSsCY
-         eCake27gFnUtRLH8oN/8Mxc4UPkjWuQiNJaMryVz99n4876h31mA3NXvKnMcM7si0Y6L
-         yBDw==
-X-Gm-Message-State: AOAM531PE0TuCzON3ubGUSN/3bYi15YITwM9m+OR0A0gsn9WqXdHmQ0c
-        rLjrMu9X20RHDBHy7P/npFMsxrHOXZZvTw==
-X-Google-Smtp-Source: ABdhPJz+R/JFXZpAgY/1GjXdfbXgiysWELihaAFCING/1dQeVKSw2wAxEo+AcVvBhRMX85LDh/s1ow==
-X-Received: by 2002:adf:e512:: with SMTP id j18mr13286432wrm.52.1611222819046;
-        Thu, 21 Jan 2021 01:53:39 -0800 (PST)
-Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
-        by smtp.gmail.com with ESMTPSA id u5sm8369816wmg.9.2021.01.21.01.53.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jan 2021 01:53:38 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.11-rc5
-Date:   Thu, 21 Jan 2021 10:52:46 +0100
-Message-Id: <20210121095246.11061-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.29.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=yKc5i0pAM0tVHvQhN0nKtZMVSNkJgO1BmOAhXjVUe9U=;
+        b=bWHH2iFPNcPCMju5nj88bv4k8A9wCNEg3F3bZx2ywYjijEfVRYP1OHjpOPmK/W733W
+         CwOJiJ+AOrUfyKgkUO/QO0ZD3op0ddBnhHucs6XmHEuDq+LjoyJhiacw+fgev8H6Nlbs
+         Ch9milkC5dJ4nAB4hfmWXOePbrYwJTuJc6TIl1/HC9qNiqwYvFFY8Bon9+36eMymr2e6
+         bdLvyCu/dX08Y9VGDa0CCgtvOUCW+z5aICrhtn/L7twxZo+KZ4OvB78p/zAHblQ7F2ed
+         YCYAzX+mLpl7KYsyf57esTcoNBnSyIeAfvJBVa8m3ruNq8AM/P5jEvODeaXMhxXD+5M8
+         5bRw==
+X-Gm-Message-State: AOAM530wFjzXsY3SHlgz85modexMT00GJ25fHhXWWjDE5RgKibDoY6V3
+        jKd1Mmk7sa9/w8ESl4MNj/U=
+X-Google-Smtp-Source: ABdhPJwjt1eJ+KrHwe5acgIBFhZjuKePkobn9OcmLVCO2pB2kKBCZs08qinTPDkGKYdcEneH3v0nqA==
+X-Received: by 2002:adf:902a:: with SMTP id h39mr13230023wrh.147.1611222450386;
+        Thu, 21 Jan 2021 01:47:30 -0800 (PST)
+Received: from [192.168.1.211] ([2.29.208.120])
+        by smtp.gmail.com with ESMTPSA id u5sm8350654wmg.9.2021.01.21.01.47.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Jan 2021 01:47:29 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] acpi: utils: Add function to fetch dependent
+ acpi_devices
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, andy@kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-3-djrscally@gmail.com>
+ <CAJZ5v0gVQsZ4rxXW8uMidW9zfY_S50zpfrL-Gq0J3Z4-qqBiww@mail.gmail.com>
+ <b381b48e-1bf2-f3e7-10a6-e51cd261f43c@gmail.com>
+ <CAJZ5v0iU2m4Hs6APuauQ645DwbjYaB8nJFjYH0+7yQnR-FPZBQ@mail.gmail.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <e2d7e5e9-920f-7227-76a6-b166e30e11e5@gmail.com>
+Date:   Thu, 21 Jan 2021 09:47:28 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0iU2m4Hs6APuauQ645DwbjYaB8nJFjYH0+7yQnR-FPZBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Linus,
+Hi Rafael
 
-This is my first pull-request sent directly to you. It contains a couple GPIO
-fixes for this release cycle - nothing too urgent. Details are in the signed
-tag.
+On 19/01/2021 13:15, Rafael J. Wysocki wrote:
+> On Mon, Jan 18, 2021 at 9:51 PM Daniel Scally <djrscally@gmail.com> wrote:
+>> On 18/01/2021 16:14, Rafael J. Wysocki wrote:
+>>> On Mon, Jan 18, 2021 at 1:37 AM Daniel Scally <djrscally@gmail.com> wrote:
+>>>> In some ACPI tables we encounter, devices use the _DEP method to assert
+>>>> a dependence on other ACPI devices as opposed to the OpRegions that the
+>>>> specification intends. We need to be able to find those devices "from"
+>>>> the dependee, so add a function to parse all ACPI Devices and check if
+>>>> the include the handle of the dependee device in their _DEP buffer.
+>>> What exactly do you need this for?
+>> So, in our DSDT we have devices with _HID INT3472, plus sensors which
+>> refer to those INT3472's in their _DEP method. The driver binds to the
+>> INT3472 device, we need to find the sensors dependent on them.
+>>
+> Well, this is an interesting concept. :-)
+>
+> Why does _DEP need to be used for that?  Isn't there any other way to
+> look up the dependent sensors?
+>
+>>> Would it be practical to look up the suppliers in acpi_dep_list instead?
+>>>
+>>> Note that supplier drivers may remove entries from there, but does
+>>> that matter for your use case?
+>> Ah - that may work, yes. Thank you, let me test that.
+> Even if that doesn't work right away, but it can be made work, I would
+> very much prefer that to the driver parsing _DEP for every device in
+> the namespace by itself.
 
-Please pull,
-Bartosz Golaszewski
 
-The following changes since commit 5c8fe583cce542aa0b84adc939ce85293de36e5e:
+This does work; do you prefer it in scan.c, or in utils.c (in which case
+with acpi_dep_list declared as external var in internal.h)?
 
-  Linux 5.11-rc1 (2020-12-27 15:30:22 -0800)
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.11-rc5
-
-for you to fetch changes up to 298d75c9b18875d2d582dcd5145a45cac8d2bae2:
-
-  gpio: tegra: Add missing dependencies (2021-01-19 13:37:10 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v5.11-rc5
-
-- rework the character device code to avoid a frame size warning
-- fix printk format issues in gpio-tools
-- warn on redefinition of the to_irq callback in core gpiolib code
-- fix PWM period calculation in gpio-mvebu
-- make gpio-sifive Kconfig entry consistent with other drivers
-- fix a build issue in gpio-tegra
-
-----------------------------------------------------------------
-Baruch Siach (1):
-      gpio: mvebu: fix pwm .get_state period calculation
-
-Kent Gibson (3):
-      gpiolib: cdev: fix frame size warning in gpio_ioctl()
-      tools: gpio: fix %llu warning in gpio-event-mon.c
-      tools: gpio: fix %llu warning in gpio-watch.c
-
-Nikita Shubin (1):
-      gpiolib: add a warning on gpiochip->to_irq defined
-
-Randy Dunlap (1):
-      gpio: sifive: select IRQ_DOMAIN_HIERARCHY rather than depend on it
-
-Thierry Reding (1):
-      gpio: tegra: Add missing dependencies
-
- drivers/gpio/Kconfig        |   5 +-
- drivers/gpio/gpio-mvebu.c   |  19 +++---
- drivers/gpio/gpiolib-cdev.c | 145 ++++++++++++++++++++++----------------------
- drivers/gpio/gpiolib.c      |   3 +
- tools/gpio/gpio-event-mon.c |   4 +-
- tools/gpio/gpio-watch.c     |   5 +-
- 6 files changed, 93 insertions(+), 88 deletions(-)
