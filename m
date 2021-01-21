@@ -2,131 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AE402FE5A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 09:57:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA8E62FE60B
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 10:14:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbhAUI4s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jan 2021 03:56:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
+        id S1726247AbhAUJOa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jan 2021 04:14:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbhAUI4Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 03:56:25 -0500
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7A3AC0613CF
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 00:55:37 -0800 (PST)
-Received: by mail-vs1-xe2a.google.com with SMTP id j138so307705vsd.8
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 00:55:37 -0800 (PST)
+        with ESMTP id S1726367AbhAUJK6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 04:10:58 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD247C061757
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 01:10:17 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id w1so1522436ejf.11
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 01:10:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ePsu1N7aD3BdUwzr3RcjhQbXEG8+bIemaO7C4xKDs2A=;
-        b=Dmmxrw/ElDqEXAM9Qtq+V/hu48fzs4rvxkyHyBHsg45ozoS55ZMz39ndyE2rKMYvAP
-         N07ZymUbewZ7oqS+k4b1OKgosrOcBt5tUvJmz3bGXcij1HIswjtnsx4oy9gj5F+oG+uf
-         45qKAXJvn/b6l6sI7xXAItrPqGrSYDURu7VYc=
+        bh=KvSZXCYCWOThZAfGsURUVFj6535QaWB9mdWG/Okc3Dc=;
+        b=KwxrYMpHH9qLRqqFUZUCA/DpVUlNgagc9NdihZv6Bm4DwVruBYO7srGUU9Nq3fnieT
+         5mkU7Hmeen6wQzsG8A5DBEisThlpyPJ+haaaE9pTRg1QnpDswmpCOd2KaB1y1kV90/I9
+         WNRuxeh7payKI6+CrTTdR0mKCFBIamgnCzS997gxh1RUMHZgxiZIFrIl5Y82kNSvWZ+0
+         UgY3NtQouMUwza9ORQ/KGtT+AdFxOWZtxlKdLyS4GdbFQtQhkaeQiZoteAoxI+PzTVGL
+         +5KblkR4eZm1JIi1CybByAZJWA3BHsvxZJLkz2r72TfxDhzbtNroCZsXPBZT7xI/cdfz
+         BelQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ePsu1N7aD3BdUwzr3RcjhQbXEG8+bIemaO7C4xKDs2A=;
-        b=Yu+JCP6k6V+v2DobvqtZZ1SQN9hGWQkfVpb1W103RKTvwZCjdu4GhBuQc9cv7CdV5a
-         JoQsEd9Ru007mJUbuUbjK/U+1mAqRh45Up2IA6ogKHPXceC/5nkKBZ/KTrT9/BnQVMeX
-         KTlzZu7kj5jS4ttJ3E3BMGjK5rjQfdQMOCg0QcSrmMLckeM0nBH4jkagLqvjqylIvV1z
-         78Dk/tofbjdwUPN8A453Q+wRvD4FeFXUv0xM6fXTij5rBUtCA6BhiBht4Ytce749FvxH
-         OJqVDiA7iOejFVvc24casWtGc6BODwI7U+qXGJHbMijVlJ4eNAS0iQ7gzxKGkcoTdURP
-         DsLQ==
-X-Gm-Message-State: AOAM533/cO/DkT+KdXGWGVjkBQWbKQ1inRjF7P6+E/0Ig/g0N4c92tBb
-        RxNTSICL5usO9MHmcDD3agZNdV+pNYmgabGEEjKFEg==
-X-Google-Smtp-Source: ABdhPJwxrDWSJlmr6JsdKTRj7/1M3Ec382ozhg9FjxGukN5mtPevGUwKoeEIFrQhHTvT1P4bO5GUAfKiwlkreLAWmv4=
-X-Received: by 2002:a05:6102:34f:: with SMTP id e15mr9659982vsa.21.1611219336958;
- Thu, 21 Jan 2021 00:55:36 -0800 (PST)
+        bh=KvSZXCYCWOThZAfGsURUVFj6535QaWB9mdWG/Okc3Dc=;
+        b=kAWRDwOtxrRpjSRg9L0JOBA+CW9AelpJ2H2jCBFepSjme0ruXmB/g4g2/ACqgpw62c
+         9yPD8uED5JaTK0eA+u0R9DMfYOFbMLCyKXsvUc5c3LFw6YgUiyE7Rcx7CAEKdzdw8FmL
+         GwbWihRwChhPXpCbUnUZ9Hlw5ATLYB9XoVOJg+YZ1X+Arhnxs39tyYpbSq0gcD5OacaV
+         p/rUL4Xd+ud+41iKi4r/GGzwbpvzD6WIrb1sShB/DHf0KyWw89hfb9GVDDrmQaIR+UD6
+         pf91BkmmaRPz2AwUBCNnQh9OFA+DdndwRES+A1kOD41WG+UPCgxmnA+W2YpXz3YOkVbF
+         OHOA==
+X-Gm-Message-State: AOAM531IproAUwN1j2DE/hEe6QKGdF5CyD8TUBv65sgPOUWeB6M+Ig83
+        UXclps/+ATuplipkI7RTqL97yulbB5NNUjL4uhNxDQ==
+X-Google-Smtp-Source: ABdhPJzcDVgtUI8VbkH5psf2+PhlkdEMXEoekbPbL+gHtEGw/aDUCBqg1KYZYSHgu+t5lCtRgdvSbxl+tt0/5XpuByI=
+X-Received: by 2002:a17:906:3146:: with SMTP id e6mr8232507eje.363.1611220216355;
+ Thu, 21 Jan 2021 01:10:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20210121075149.1310-1-hailong.fan@mediatek.com>
-In-Reply-To: <20210121075149.1310-1-hailong.fan@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 21 Jan 2021 16:55:25 +0800
-Message-ID: <CANMq1KBqKUofLaM+OEaTq6PSeYomNSLvn65c+Wyi1cKsLDNboQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND] pinctrl: mediatek: Fix trigger type setting follow
- for unexpected interrupt
-To:     Hailong Fan <hailong.fan@mediatek.com>
-Cc:     Sean Wang <sean.wang@kernel.org>,
+References: <20210119123059.102004-1-warthog618@gmail.com>
+In-Reply-To: <20210119123059.102004-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 21 Jan 2021 10:10:05 +0100
+Message-ID: <CAMpxmJVfeWW81UKpsx-pCQF1jhHwrFiuxVfvkgBxFLCHPeEXXQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] selftests: gpio: rework and port to GPIO uAPI v2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, youlin.pei@mediatek.com,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Chen-Tsung Hsieh <chentsung@chromium.org>,
-        gtk_pangao@mediatek.com, Hanks Chen <hanks.chen@mediatek.com>,
-        Yong Wu <yong.wu@mediatek.com>
+        Shuah Khan <shuah@kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 3:52 PM Hailong Fan <hailong.fan@mediatek.com> wrote:
+On Tue, Jan 19, 2021 at 1:31 PM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> When flipping the polarity will be generated interrupt under certain
-> circumstances, but GPIO external signal has not changed.
-> Then, mask the interrupt before polarity setting, and clear the
-> unexpected interrupt after trigger type setting completed.
+> Initially I just wanted to port the selftests to the latest GPIO uAPI,
+> but on finding that, due to dependency issues, the selftests are not built
+> for the buildroot environments that I do most of my GPIO testing in, I
+> decided to take a closer look.
 >
-> Signed-off-by: Hailong Fan <hailong.fan@mediatek.com>
-> ---
-> Resend since some server reject.
-> ---
->  drivers/pinctrl/mediatek/mtk-eint.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+> The first patch is essentially a rewrite of the exising test suite.
+> It uses a simplified abstraction of the uAPI interfaces to allow a common
+> test suite to test the gpio-mockup using either of the uAPI interfaces.
+> The simplified cdev interface is implemented in gpio-mockup.sh, with the
+> actual driving of the uAPI implemented in gpio-mockup-cdev.c.
+> The simplified sysfs interface replaces gpio-mockup-sysfs.sh and is
+> loaded over the cdev implementation when selected.
 >
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-> index 22736f60c16c..3acda6bb401e 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> @@ -157,6 +157,7 @@ static void mtk_eint_ack(struct irq_data *d)
->  static int mtk_eint_set_type(struct irq_data *d, unsigned int type)
->  {
->         struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
-> +       unsigned int unmask;
-
-bool?
-
->         u32 mask = BIT(d->hwirq & 0x1f);
->         void __iomem *reg;
+> The new tests should also be simpler to extend to cover new mockup
+> interfaces, such as the one Bart has been working on.
 >
-> @@ -173,6 +174,13 @@ static int mtk_eint_set_type(struct irq_data *d, unsigned int type)
->         else
->                 eint->dual_edge[d->hwirq] = 0;
+> I have dropped support for testing modules other than gpio-mockup from
+> the command line options, as the tests are very gpio-mockup specific so
+> I didn't see any calling for it.
 >
-> +       if (!mtk_eint_get_mask(eint, d->hwirq)) {
-> +               mtk_eint_mask(d);
-> +               unmask = 1;
-> +       } else {
-> +               unmask = 0;
-> +       }
-> +
->         if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING)) {
->                 reg = mtk_eint_get_offset(eint, d->hwirq, eint->regs->pol_clr);
->                 writel(mask, reg);
-> @@ -189,8 +197,9 @@ static int mtk_eint_set_type(struct irq_data *d, unsigned int type)
->                 writel(mask, reg);
->         }
+> I have also tried to emphasise in the test output that the tests are
+> covering the gpio-mockup itself.  They do perform some implicit testing
+> of gpiolib and the uAPI interfaces, and so can be useful as smoke tests
+> for those, but their primary focus is the gpio-mockup.
 >
-> -       if (eint->dual_edge[d->hwirq])
-> -               mtk_eint_flip_edge(eint, d->hwirq);
-
-Why are you dropping this? Aren't we at risk to miss the first edge
-after mtk_eint_set_type is called?
-
-> +       mtk_eint_ack(d);
-> +       if (unmask == 1)
-
-Just `if (unmask)`
-
-> +               mtk_eint_unmask(d);
+> Patches 2 through 5 do some cleaning up that is now possible with the
+> new implementation, including enabling building in buildroot environments.
+> Patch 4 doesn't strictly clean up all the old gpio references that it
+> could - the gpio was the only Level 1 test, so the Level 1 tests could
+> potentially be removed, but I was unsure if there may be other
+> implications to removing a whole test level, or that it may be useful
+> as a placeholder in case other static LDLIBS tests are added in
+> the future??
 >
->         return 0;
->  }
+> Patch 6 finally gets around to porting the tests to the latest GPIO uAPI.
+>
+> And Patch 7 updates the config to set the CONFIG_GPIO_CDEV option that
+> was added in v5.10.
+>
+> Cheers,
+> Kent.
+>
+> Changes v2 -> v3:
+>  - remove 'commit' from Fixes tag in patch 1.
+>  - rebase on Bart's gpio/for-next
+>
+> Changes v1 -> v2 (all in patch 1 and gpio-mockup.sh unless stated
+>  otherwise):
+>  - reorder includes in gpio-mockup-cdev.c
+>  - a multitude of improvements to gpio-mockup.sh and gpio-mockup-sysfs.sh
+>    based on Andy's review comments
+>  - improved cleanup to ensure all child processes are killed on exit
+>  - added race condition prevention or mitigation including the wait in
+>    release_line, the retries in assert_mock, the assert_mock in set_mock,
+>    and the sleep in set_line
+>
+> Kent Gibson (7):
+>   selftests: gpio: rework and simplify test implementation
+>   selftests: gpio: remove obsolete gpio-mockup-chardev.c
+>   selftests: remove obsolete build restriction for gpio
+>   selftests: remove obsolete gpio references from kselftest_deps.sh
+>   tools: gpio: remove uAPI v1 code no longer used by selftests
+>   selftests: gpio: port to GPIO uAPI v2
+>   selftests: gpio: add CONFIG_GPIO_CDEV to config
+>
+>  tools/gpio/gpio-utils.c                       |  89 ----
+>  tools/gpio/gpio-utils.h                       |   6 -
+>  tools/testing/selftests/Makefile              |   9 -
+>  tools/testing/selftests/gpio/Makefile         |  26 +-
+>  tools/testing/selftests/gpio/config           |   1 +
+>  .../testing/selftests/gpio/gpio-mockup-cdev.c | 198 +++++++
+>  .../selftests/gpio/gpio-mockup-chardev.c      | 323 ------------
+>  .../selftests/gpio/gpio-mockup-sysfs.sh       | 168 ++----
+>  tools/testing/selftests/gpio/gpio-mockup.sh   | 497 ++++++++++++------
+>  tools/testing/selftests/kselftest_deps.sh     |   4 +-
+>  10 files changed, 603 insertions(+), 718 deletions(-)
+>  create mode 100644 tools/testing/selftests/gpio/gpio-mockup-cdev.c
+>  delete mode 100644 tools/testing/selftests/gpio/gpio-mockup-chardev.c
+>
+>
+> base-commit: 64e6066e16b8c562983dd9d33e604c0001ae0fc7
 > --
-> 2.18.0
+> 2.30.0
+>
+
+Series applied, thanks!
+
+Bartosz
