@@ -2,300 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 112872FE17B
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 06:21:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B143A2FE225
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 06:58:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725829AbhAUFV1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jan 2021 00:21:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46672 "EHLO
+        id S1725969AbhAUF5p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jan 2021 00:57:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbhAUFTS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 00:19:18 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188A5C0613CF
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jan 2021 21:18:38 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id lw17so4259322pjb.0
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jan 2021 21:18:38 -0800 (PST)
+        with ESMTP id S1727012AbhAUDUf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jan 2021 22:20:35 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE2FC061757
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jan 2021 19:19:14 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id b5so725098pjl.0
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jan 2021 19:19:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eymIJQ/bZBaf3IO0jY0y/0sV9R1X6umj5ImReKGy4zQ=;
-        b=v/BOJVU+waAj4qk228cSCiYrx8ufdpjn0kEWYQGpGmP5OpXmdK8AHPwQNaPCs99swK
-         /tE19e7oqpnMq6HugKov4FVzRXjMJblVrPmor4SU9yR5g+PZ5lXZv5TN0b2i4MgatNzl
-         lH9s+qeu6ograFIzOXmYt/vqVivViSCtU51JHqhl/izb9MULwKFZlegUcX55HfIQ0Czg
-         nJbP+5HabEGerUHLrMntJAlFtq5jcJToFG3JOETiJyGhnWM/U7PZ3SPYTNvgLfPTggkF
-         YeDtkiR6ROAhwDWkSNAjnAhSZEtUJEfse1EKmTi7wDA0VK9nZcRKGOcK0wBDk9ZwZr+b
-         mhaw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TfFXs9mHknQ0FYX15Kzdj3tfAorhNNw9oOMWrG9kjOg=;
+        b=G6cX1b7FU4HY4wZI+2MjTESh6qWFl1UVhBIep94K4oZaALWIOSY6dnRj21zF4/BoXu
+         HOY0R8JbcFjkGE4k+Zh9urkWuo+9FIWLh8d+OZvt1CUgoJGttfPhd3dVdtggdeaOK/+r
+         Xo3Hus9G9ODpuWvdUGVpPK65/zpfP8epxZUohIm68dixOAdh1/MytY7fXYPEMotvojky
+         vAZoPZS7CAKj6fUqdOFIa+yUGrwNf/7aHc4bATbv69u7mYLdp6MWf/MZYCX48dKRxNRA
+         vhHoutAXbknZqpMjhsHP5PrEEGToTb+slTC6XSa73gn+HsGSyqA6fAiaQPYao6zAJ6zI
+         7y5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eymIJQ/bZBaf3IO0jY0y/0sV9R1X6umj5ImReKGy4zQ=;
-        b=PF0Mc6AX9ZzZoG4RndLpmsj1UXUqu1YkKEFB7tL+MBkhCvjKhOYsPXF4gtq7XK0fcO
-         SwelC+V4VdP8afT/GjlRwmWvLXc6KPIg9BByl83LOQRBJ/xfjiGGemP5TLCVvR0uyODc
-         2boenSBHjG/NzL3FLg2SAJTWkgN9PVL3DrRCww/e9JNgks7d3G4K22/YM8J+INQ0F+rv
-         xYPwyfk8sP2qSf97wysXHiz8iO3iLeCM60OcRmS57C0KE7oFJEtsiICBbO7bIg4VLr2t
-         qol+yFprgec9pKR8pxZqfhCh3naVe0WdPdxZCqm8DICwdiaWitbmWwU4wod4ggTr+GQV
-         Jdnw==
-X-Gm-Message-State: AOAM533ZwJNKSOYxLHbToWfvrz9mFXdHHkVPhPFqqrtN+X8Ze1JoAMGe
-        2Sbiy7oEVPkX7aKKQATaQVOdztyqI61aFNVz
-X-Google-Smtp-Source: ABdhPJywd+m6KsXdeJhxe8d0WULkMNsq9hCkrTUs4JVA5GkXZXWKJEzdNkI9Is6Wzcqi1l2eZGsgFQ==
-X-Received: by 2002:a17:90a:470f:: with SMTP id h15mr9925097pjg.179.1611206317169;
-        Wed, 20 Jan 2021 21:18:37 -0800 (PST)
-Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:d139:25ba:c4c6:2929])
-        by smtp.gmail.com with ESMTPSA id b7sm3907184pff.96.2021.01.20.21.18.35
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TfFXs9mHknQ0FYX15Kzdj3tfAorhNNw9oOMWrG9kjOg=;
+        b=G99CGEoL2FkbU0iuA9nkYNbdc08okfhfjCuM/ZA09zNQpT5MqnDGkGFBoX3cIOaP/B
+         Biw/xoRJ7CsLKFfJxtji639CuurzfeuuA5Kw+0xa6/cUBU7MFmX9Yr578l5Fq4/0ZXrt
+         tD2+N2Exu38hJqv3VWMlAa6PtX2dlZLcyUDQx2J+yJ64LAKXO0Fo+s46fhQ0+GVM9o0w
+         u7K2+cYFTxaEeq5saT7myJG2LLgqNepXsaTAKuJRDxcJTHyOMvN2A6iLjazkMDwkXnZD
+         HoFPB27ag7MabMT4SUtlxdjiEnYEJyIIatXYKBMYUToigeLL0F6hIy7McaDWREuKe2xR
+         dkcw==
+X-Gm-Message-State: AOAM53243+gKLBR9m6OekIHNcWIZo0Jn6Ma/9+kt1mDSIQWGFC45V986
+        d8s4q+YEctY54Z5X81b9KrNJIA==
+X-Google-Smtp-Source: ABdhPJx2sHHMfN5ZADdBI6iJaxaoVTtR18nr1yhDctYo0c+exErrZ2AbajkyA2sgazoZuo8xJzmyJg==
+X-Received: by 2002:a17:902:ed8e:b029:de:8c17:f7e8 with SMTP id e14-20020a170902ed8eb02900de8c17f7e8mr12957440plj.19.1611199153742;
+        Wed, 20 Jan 2021 19:19:13 -0800 (PST)
+Received: from x1 ([2601:1c0:4701:ae70:d139:25ba:c4c6:2929])
+        by smtp.gmail.com with ESMTPSA id e5sm3603667pfc.76.2021.01.20.19.19.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 21:18:36 -0800 (PST)
+        Wed, 20 Jan 2021 19:19:12 -0800 (PST)
+Date:   Wed, 20 Jan 2021 19:19:10 -0800
 From:   Drew Fustini <drew@beagleboard.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [RFC PATCH] pinctrl: pinmux: Add pinmux-set debugfs file
-Date:   Wed, 20 Jan 2021 21:18:07 -0800
-Message-Id: <20210121051806.623743-1-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Pantelis Antoniou <pantelis.antoniou@linaro.org>,
+        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: Re: [RFC PATCH v2] pinctrl: add helper to expose pinctrl state in
+ debugfs
+Message-ID: <20210121031910.GA252950@x1>
+References: <20201218045134.4158709-1-drew@beagleboard.org>
+ <CAHp75Vfwb+f3k2+mAj+jB=XsKFX-hCxx61A_PCmwz6y-YKHMcg@mail.gmail.com>
+ <20201224203603.GA59600@x1>
+ <CACRpkdb9RnGJbct+D-88JPDSbaVp1XS8vjhhHYosy20EPkLjaw@mail.gmail.com>
+ <20210109025527.GA2918377@x1>
+ <CACRpkdaOfU=OLp5D-EXK2oU9bScLZ-QjLdCSrewiSBa0SRRNwg@mail.gmail.com>
+ <X/wiZjioLqcTYVfj@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <X/wiZjioLqcTYVfj@atomide.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This RFC is a change in approach from my previous RFC patch [1]. It adds
-"pinnux-set" to debugfs. A function and group on the pin control device
-will be activated when 2 integers "<function-selector> <group-selector>"
-are written to the file. The debugfs write operation pinmux_set_write()
-handles this by calling ops->set_mux() with fsel and gsel.
+On Mon, Jan 11, 2021 at 12:03:18PM +0200, Tony Lindgren wrote:
+> Hi,
+> 
+> * Linus Walleij <linus.walleij@linaro.org> [210109 21:14]:
+> > On Sat, Jan 9, 2021 at 3:55 AM Drew Fustini <drew@beagleboard.org> wrote:
+> > 
+> > > I discussed my use case and this patch on #armlinux earlier this week
+> > > and Alexandre Belloni suggested looking at the pinmux-pins debugfs file.
+> > 
+> > This sounds reasonable.
+> > 
+> > > This made me think that a possible solution could be to define a store
+> > > function for pinmux-pins to handle something like "<pin#> <function#>".
+> > > I believe the ability to activate a pin function (or pin group) from
+> > > userspace would satisfy our beagleboard.org use-case.
+> > >
+> > > Does that seem like a reasonable approach?
+> > 
+> > This sounds like a good approach.
+> 
+> Makes sense to me too.
+> 
+> We may want to make it into a proper sysfs interface eventually to not
+> require debugfs be enabled in .config. But that's another set of patches,
+> certainly makes sense to first enable it for debugfs.
+> 
+> Regards,
+> 
+> Tony
 
-RFC question: should pinmux-set take function name and group name
-instead of the selector numbers?
+I have added a debugfs file "pinmux-set" to pinmux.c. This allows
+"<function-number> <group-number>" to be written into that file. The
+function pinmux_set_write() calls ops->set_mux() with fsel and gsel.
 
-The following is an example on the PocketBeagle [2] which has the AM3358
-SoC and binds to pinctrl-single. I added this to the device tree [3] to
-represent two of the pins on the expansion header as an example: P1.36
-and P2.01. Both of these header pins are designed to be set to PWM mode
-by default [4] but can now be set back to gpio mode through pinmux-set.
+I'll post an RFC with the code, but I am wondering if it would better
+to take the function as a name and then lookup the function number
+(fsel)?
 
-	&am33xx_pinmux {
+thanks,
+drew
 
-	/* use the pin controller itself as the owner device */
-	pinctrl-names = "default",
-			"P1_36_gpio", "P1_36_gpio_pu", "P1_36_gpio_pd",
-			"P1_36_gpio_input", "P1_36_pwm",
-			"P2_01_gpio", "P2_01_gpio_pu", "P2_01_gpio_pd",
-			"P2_01_gpio_input", "P2_01_pwm";
 
-	/* set hog for default mode */
-	pinctrl-0 = < &P1_36_default_pin &P2_01_default_pin >;
-	/* these will create pin functions for each mode */
-	pinctrl-1 = <&P1_36_gpio_pin>;
-	pinctrl-2 = <&P1_36_gpio_pu_pin>;
-	pinctrl-3 = <&P1_36_gpio_pd_pin>;
-	pinctrl-4 = <&P1_36_gpio_input_pin>;
-	pinctrl-5 = <&P1_36_pwm_pin>;
-	pinctrl-6 = <&P2_01_default_pin>;
-	pinctrl-7 = <&P2_01_gpio_pin>;
-	pinctrl-8 = <&P2_01_gpio_pu_pin>;
-	pinctrl-9 = <&P2_01_gpio_pd_pin>;
-	pinctrl-10 = <&P2_01_gpio_input_pin>;
-	pinctrl-11 = <&P2_01_pwm_pin>;
-
-	/* P1_36 (ZCZ ball A13) ehrpwm0a */
-	P1_36_default_pin: pinmux_P1_36_default_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0990, PIN_OUTPUT_PULLDOWN | INPUT_EN | MUX_MODE1) >; };
-	P1_36_gpio_pin: pinmux_P1_36_gpio_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0990, PIN_OUTPUT | INPUT_EN | MUX_MODE7) >; };
-	P1_36_gpio_pu_pin: pinmux_P1_36_gpio_pu_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0990, PIN_OUTPUT_PULLUP | INPUT_EN | MUX_MODE7) >; };
-	P1_36_gpio_pd_pin: pinmux_P1_36_gpio_pd_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0990, PIN_OUTPUT_PULLDOWN | INPUT_EN | MUX_MODE7) >; };
-	P1_36_gpio_input_pin: pinmux_P1_36_gpio_input_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0990, PIN_INPUT | MUX_MODE7) >; };
-	P1_36_pwm_pin: pinmux_P1_36_pwm_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0990, PIN_OUTPUT_PULLDOWN | INPUT_EN | MUX_MODE1) >; };
-	P1_36_spi_sclk_pin: pinmux_P1_36_spi_sclk_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0990, PIN_OUTPUT_PULLUP | INPUT_EN | MUX_MODE3) >; };
-	P1_36_pruout_pin: pinmux_P1_36_pruout_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0990, PIN_OUTPUT_PULLDOWN | INPUT_EN | MUX_MODE5) >; };
-	P1_36_pruin_pin: pinmux_P1_36_pruin_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0990, PIN_INPUT | MUX_MODE6) >; };
-
-	/* P2_01 (ZCZ ball U14) ehrpwm1a */
-	P2_01_default_pin: pinmux_P2_01_default_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0848, PIN_OUTPUT_PULLDOWN | INPUT_EN | MUX_MODE6) >; };
-	P2_01_gpio_pin: pinmux_P2_01_gpio_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0848, PIN_OUTPUT | INPUT_EN | MUX_MODE7) >; };
-	P2_01_gpio_pu_pin: pinmux_P2_01_gpio_pu_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0848, PIN_OUTPUT_PULLUP | INPUT_EN | MUX_MODE7) >; };
-	P2_01_gpio_pd_pin: pinmux_P2_01_gpio_pd_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0848, PIN_OUTPUT_PULLDOWN | INPUT_EN | MUX_MODE7) >; };
-	P2_01_gpio_input_pin: pinmux_P2_01_gpio_input_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0848, PIN_INPUT | MUX_MODE7) >; };
-	P2_01_pwm_pin: pinmux_P2_01_pwm_pin { pinctrl-single,pins = <
-		AM33XX_IOPAD(0x0848, PIN_OUTPUT_PULLDOWN | INPUT_EN | MUX_MODE6) >; };
-
-The following shows the pin functions registered for the pin controller:
-
-root@beaglebone:/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single# cat pinmux-functions
-function: pinmux_P1_36_default_pin, groups = [ pinmux_P1_36_default_pin ]
-function: pinmux_P2_01_default_pin, groups = [ pinmux_P2_01_default_pin ]
-function: pinmux_P1_36_gpio_pin, groups = [ pinmux_P1_36_gpio_pin ]
-function: pinmux_P1_36_gpio_pu_pin, groups = [ pinmux_P1_36_gpio_pu_pin ]
-function: pinmux_P1_36_gpio_pd_pin, groups = [ pinmux_P1_36_gpio_pd_pin ]
-function: pinmux_P1_36_gpio_input_pin, groups = [ pinmux_P1_36_gpio_input_pin ]
-function: pinmux_P1_36_pwm_pin, groups = [ pinmux_P1_36_pwm_pin ]
-function: pinmux_P2_01_gpio_pin, groups = [ pinmux_P2_01_gpio_pin ]
-function: pinmux_P2_01_gpio_pu_pin, groups = [ pinmux_P2_01_gpio_pu_pin ]
-function: pinmux_P2_01_gpio_pd_pin, groups = [ pinmux_P2_01_gpio_pd_pin ]
-function: pinmux_P2_01_gpio_input_pin, groups = [ pinmux_P2_01_gpio_input_pin ]
-function: pinmux_P2_01_pwm_pin, groups = [ pinmux_P2_01_pwm_pin ]
-function: pinmux-uart0-pins, groups = [ pinmux-uart0-pins ]
-function: pinmux-mmc0-pins, groups = [ pinmux-mmc0-pins ]
-function: pinmux-i2c0-pins, groups = [ pinmux-i2c0-pins ]
-
-Activate the pinmux_P1_36_gpio_pin function (fsel 2):
-
-root@beaglebone:/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single# echo '2 2' > pinmux-set
-
-Extra debug output that I added shows that pinctrl-single's set_mux()
-has set the register correctly for gpio mode:
-
-pinmux core: DEBUG pinmux_set_write(): returned 0
-pinmux core: DEBUG pinmux_set_write(): buf=[2 2]
-pinmux core: DEBUG pinmux_set_write(): sscanf(2,2)
-pinmux core: DEBUG pinmux_set_write(): call ops->set_mux(fsel=2, gsel=2)
-pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): call pinmux_generic_get_function() on fselector=2
-pinctrl-single 44e10800.pinmux: enabling (null) function2
-pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): func->nvals=1
-pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): offset=0x190 old_val=0x21 val=0x2f
-
-Activate the pinmux_P1_36_pwm_pin function (fsel 6):
-
-root@beaglebone:/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single# echo '6 6' > pinmux-set
-
-pinctrl-single set_mux() is able to set register correctly for pwm mode:
-
-pinmux core: DEBUG pinmux_set_write(): returned 0
-pinmux core: DEBUG pinmux_set_write(): buf=[6 6]
-pinmux core: DEBUG pinmux_set_write(): sscanf(6,6)
-pinmux core: DEBUG pinmux_set_write(): call ops->set_mux(fsel=6, gsel=6)
-pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): call pinmux_generic_get_function() on fselector=6
-pinctrl-single 44e10800.pinmux: enabling (null) function6
-pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): func->nvals=1
-pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): offset=0x190 old_val=0x2f val=0x21
-
-I would appreciate any feedback on this approach.  Thank you!
-
--Drew
-
-[1] https://lore.kernel.org/linux-gpio/20201218045134.4158709-1-drew@beagleboard.org/
-[2] https://beagleboard.org/pocket
-[3] arch/arm/boot/dts/am335x-pocketbeagle.dts
-[4] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#70-connectors-
-
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Jason Kridner <jkridner@beagleboard.org>,
-Cc: Robert Nelson <robertcnelson@beagleboard.org>,
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-Cc: Tony Lindgren <tony@atomide.com>,
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- drivers/pinctrl/pinmux.c | 65 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
-
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index bab888fe3f8e..300e2b3d0ea8 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -673,6 +673,69 @@ void pinmux_show_setting(struct seq_file *s,
- DEFINE_SHOW_ATTRIBUTE(pinmux_functions);
- DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
- 
-+static ssize_t pinmux_set_write(struct file *file, const char __user *user_buf,
-+				   size_t cnt, loff_t *ppos)
-+{
-+	int err;
-+	int fsel;
-+	int gsel;
-+	int ret;
-+	char *buf;
-+	struct seq_file *sfile;
-+	struct pinctrl_dev *pctldev;
-+	const struct pinmux_ops *ops;
-+
-+	if (*ppos != 0)
-+		return -EINVAL;
-+
-+	if (cnt == 0)
-+		return 0;
-+
-+	buf = memdup_user_nul(user_buf, cnt);
-+	if (IS_ERR(buf))
-+		return PTR_ERR(buf);
-+
-+	if (buf[cnt - 1] == '\n')
-+		buf[cnt - 1] = '\0';
-+
-+	ret = sscanf(buf, "%d %d", &fsel, &gsel);
-+	if (ret != 2) {
-+		pr_warn("%s: sscanf() expects '<fsel> <gsel>'", __func__);
-+		err = -EINVAL;
-+		goto err_freebuf;
-+	}
-+
-+	sfile = file->private_data;
-+	pctldev = sfile->private;
-+	ops = pctldev->desc->pmxops;
-+	ret = ops->set_mux(pctldev, fsel, gsel);
-+	if (ret != 0) {
-+		pr_warn("%s(): set_mux() failed: %d", __func__, ret);
-+		err = -EINVAL;
-+		goto err_freebuf;
-+	}
-+	kfree(buf);
-+	return cnt;
-+
-+err_freebuf:
-+	kfree(buf);
-+	return err;
-+}
-+
-+static int pinmux_set_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, NULL, inode->i_private);
-+}
-+
-+static const struct file_operations pinmux_set_ops = {
-+	.owner = THIS_MODULE,
-+	.open = pinmux_set_open,
-+	.read = seq_read,
-+	.write = pinmux_set_write,
-+	.llseek = no_llseek,
-+	.release = single_release,
-+};
-+
- void pinmux_init_device_debugfs(struct dentry *devroot,
- 			 struct pinctrl_dev *pctldev)
- {
-@@ -680,6 +743,8 @@ void pinmux_init_device_debugfs(struct dentry *devroot,
- 			    devroot, pctldev, &pinmux_functions_fops);
- 	debugfs_create_file("pinmux-pins", S_IFREG | S_IRUGO,
- 			    devroot, pctldev, &pinmux_pins_fops);
-+	debugfs_create_file("pinmux-set", S_IFREG | S_IWUSR,
-+			    devroot, pctldev, &pinmux_set_ops);
- }
- 
- #endif /* CONFIG_DEBUG_FS */
--- 
-2.25.1
 
