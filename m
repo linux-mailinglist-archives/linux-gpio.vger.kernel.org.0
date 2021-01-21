@@ -2,250 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCC122FE999
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 13:06:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57F0C2FE9A4
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 13:10:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730026AbhAUMEh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jan 2021 07:04:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39302 "EHLO
+        id S1726467AbhAUMJ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jan 2021 07:09:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbhAULSv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 06:18:51 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A50C061575
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 03:18:10 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id b5so1472101pjl.0
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 03:18:10 -0800 (PST)
+        with ESMTP id S1730864AbhAUMFR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 07:05:17 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09234C061757;
+        Thu, 21 Jan 2021 04:04:33 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id y187so1310093wmd.3;
+        Thu, 21 Jan 2021 04:04:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6bes0Vw1DdLxpip5g3W45HIxF4+WZ+UV5UhGxiPjs0I=;
-        b=MR7GaeLVkAhV3oMbuL8TEsC/xgsfYj7jSyxa2ixGUNnCflU9ZS/dyyYQkdfQoFhPBH
-         wFlNqs/44oyeaQ4JhBaos0vkpnlqmfIX3lY9yJfUoqAiWODoMJ39xUYaWeLCxOsXOM2L
-         /PZ94jM1E7Wn8FP3hhNBNpjvG/Q/c8bWZTSR0GXh/xWDQvKgkrJb0jImkv12MVahsbei
-         WdnGbETOC9Pe3m4POk431hCEustuvCMCpdCrhiVbDS9TnpNhbZIQi3YqNFSgBi/6FuXu
-         b2j96aYO6AY8rpOu6r1lP1eEvocfGc+l1oxGfBcwl5kIUK7wF4Rbe2bC1k4rzhg0awGt
-         0wGg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=NPaJmIoqOQ2ZtBkLTXast52ZNe1Rt1J2mdt0JMfHVxE=;
+        b=MMEoBFia73Ara9Y6z+76gKokEEI1bzPJ9TpoHM+qHnrUCVU0RGG3mYhqcZl36/rgK0
+         ca92dJ7ZDT7DUMqo6tSKr1pxGQZK3zYyHHqPhjtDvCbMdumYU6g06q+z+sJVAqtP9USN
+         XoTGkadKrFekrw0EnRDNFXSUBCXIk/z3TkxjgdKzsOWd38Ffl2PHDK/ANcQzDS4Yn4lM
+         hHXDqH5yGHBK6+xyNVWrLs5Z/Uwz6jv84fokQ6IiCGkuy4+gYYGSvHvVcr8hTwZr7wIU
+         kq8PlZ/Wia4iPy4CjGhFIsvUPZ2CYiBctH7AaPAEacWwR5IoYnBjc6fi1pPzvtkGD82j
+         HbPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6bes0Vw1DdLxpip5g3W45HIxF4+WZ+UV5UhGxiPjs0I=;
-        b=VUOUGhYMuogJTjmpJU8DPXbghzJrZKTNj8kpAqmHTARs9qSjHc1+exFHMwG9U5wYTW
-         GirOcCSAL3MItuhhilVQbCcTeqD4qihRihuFimgC7V/ElF6EKs+bHTm6D5M7B++EckvQ
-         zSUpVZ7ZvcxgHx9GJeoEYQaRYvBnYujZhpH72d+fgT1sZuctljn6dXWSg/M313WUERsl
-         Ta5PgRj2qK8LZSz8n51yQl5AWSF9GObC5D9Z2oYgrY36CdovdmBFcw/txsnAId2lgQOP
-         qyZnwwhhdT264f4YvkB2wOwMvl0SMsZStPki6/6x131Khz5sL32Pxbuq9VTeQP/WH//6
-         klig==
-X-Gm-Message-State: AOAM5333cGx/suCscFyQMt3/xtsxrwTP8TPPnDS6xQ9/fF+KBVVp43GI
-        AKXTa1YhzXzSaNu7GaRzeXY7v6dQu73MT4t+ymyJc6lEZjZhnMm4
-X-Google-Smtp-Source: ABdhPJwguUuh+DVlHmVuTVjNoKlOMc216AEmX/Kk6Nf8b1aTlvxxy3DX+nkmI/6GqF/FpKCIhe6WQ9Nxd+N+ZzkQwlE=
-X-Received: by 2002:a17:902:758b:b029:df:d1f6:9af9 with SMTP id
- j11-20020a170902758bb02900dfd1f69af9mr2518795pll.21.1611227888965; Thu, 21
- Jan 2021 03:18:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20210121051806.623743-1-drew@beagleboard.org>
-In-Reply-To: <20210121051806.623743-1-drew@beagleboard.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 21 Jan 2021 13:18:58 +0200
-Message-ID: <CAHp75Vd5M0kyNzq+5gcZEd=6hK_7Y5_dEJ39-yQO7WuYRM4KWw@mail.gmail.com>
-Subject: Re: [RFC PATCH] pinctrl: pinmux: Add pinmux-set debugfs file
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=NPaJmIoqOQ2ZtBkLTXast52ZNe1Rt1J2mdt0JMfHVxE=;
+        b=G1+U4J6u4tkCd/LYMiyQ3IjD7/ByW7KdWYs8Fx45oOYDOsqZj0kp6cur7F30i9U49J
+         CdR2tDM8/m1jgrtnRnhcNa1m7qqRqdOVoJ8bnI57xZ8oAowmLEJfbeOIDv7eYXdM0BtX
+         m+djLA1sfuDqSTZFJ5he9DtlKNuhoDGHQn/gcP1gNHCbHrpIbQqoWSj1cO4Ut4fiKDBD
+         dxLSd178pWCHoV0qD5EO9ivgtq1tM5Z5eXUIANBCcQjK8BM4BTNHRiHZcz7W13w9uyw7
+         v5v/+V4/MMQFDRrJUGUetx6I+mNX15k7B2o2KnpuAbGMHJ9Q7ydiVoCxalW4no1W3ZSf
+         iJjA==
+X-Gm-Message-State: AOAM5334wnc3JTPqeWQZVUwtPvKwh8uDgw8jd6jIBbyVBtK1KyoDAKBf
+        JzHu8LfQ8e4BkMwoIVtrq08=
+X-Google-Smtp-Source: ABdhPJwLdBKcGRNBAVpRiCip7CUbIQZuIXcYHBeps2IOw9tAKoPEKqtROcIFSlKGeTrZSbBGNejK9g==
+X-Received: by 2002:a1c:18e:: with SMTP id 136mr8788559wmb.69.1611230671786;
+        Thu, 21 Jan 2021 04:04:31 -0800 (PST)
+Received: from [192.168.1.211] ([2.29.208.120])
+        by smtp.gmail.com with ESMTPSA id m2sm7632951wml.34.2021.01.21.04.04.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Jan 2021 04:04:31 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] acpi: utils: Add function to fetch dependent
+ acpi_devices
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, andy@kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-3-djrscally@gmail.com>
+ <CAJZ5v0gVQsZ4rxXW8uMidW9zfY_S50zpfrL-Gq0J3Z4-qqBiww@mail.gmail.com>
+ <b381b48e-1bf2-f3e7-10a6-e51cd261f43c@gmail.com>
+ <CAJZ5v0iU2m4Hs6APuauQ645DwbjYaB8nJFjYH0+7yQnR-FPZBQ@mail.gmail.com>
+ <e2d7e5e9-920f-7227-76a6-b166e30e11e5@gmail.com>
+ <CAJZ5v0gg5oXG3yOO9iDvPKSsadYrFojW6JcKfZcQbFFpO78zAQ@mail.gmail.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <85ccf00d-7c04-b1da-a4bc-82c805df69c9@gmail.com>
+Date:   Thu, 21 Jan 2021 12:04:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAJZ5v0gg5oXG3yOO9iDvPKSsadYrFojW6JcKfZcQbFFpO78zAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 7:18 AM Drew Fustini <drew@beagleboard.org> wrote:
+
+On 21/01/2021 11:58, Rafael J. Wysocki wrote:
+> On Thu, Jan 21, 2021 at 10:47 AM Daniel Scally <djrscally@gmail.com> wrote:
+>> Hi Rafael
+>>
+>> On 19/01/2021 13:15, Rafael J. Wysocki wrote:
+>>> On Mon, Jan 18, 2021 at 9:51 PM Daniel Scally <djrscally@gmail.com> wrote:
+>>>> On 18/01/2021 16:14, Rafael J. Wysocki wrote:
+>>>>> On Mon, Jan 18, 2021 at 1:37 AM Daniel Scally <djrscally@gmail.com> wrote:
+>>>>>> In some ACPI tables we encounter, devices use the _DEP method to assert
+>>>>>> a dependence on other ACPI devices as opposed to the OpRegions that the
+>>>>>> specification intends. We need to be able to find those devices "from"
+>>>>>> the dependee, so add a function to parse all ACPI Devices and check if
+>>>>>> the include the handle of the dependee device in their _DEP buffer.
+>>>>> What exactly do you need this for?
+>>>> So, in our DSDT we have devices with _HID INT3472, plus sensors which
+>>>> refer to those INT3472's in their _DEP method. The driver binds to the
+>>>> INT3472 device, we need to find the sensors dependent on them.
+>>>>
+>>> Well, this is an interesting concept. :-)
+>>>
+>>> Why does _DEP need to be used for that?  Isn't there any other way to
+>>> look up the dependent sensors?
+>>>
+>>>>> Would it be practical to look up the suppliers in acpi_dep_list instead?
+>>>>>
+>>>>> Note that supplier drivers may remove entries from there, but does
+>>>>> that matter for your use case?
+>>>> Ah - that may work, yes. Thank you, let me test that.
+>>> Even if that doesn't work right away, but it can be made work, I would
+>>> very much prefer that to the driver parsing _DEP for every device in
+>>> the namespace by itself.
+>>
+>> This does work; do you prefer it in scan.c, or in utils.c (in which case
+>> with acpi_dep_list declared as external var in internal.h)?
+> Let's put it in scan.c for now, because there is the lock protecting
+> the list in there too.
 >
-> This RFC is a change in approach from my previous RFC patch [1]. It adds
-> "pinnux-set" to debugfs. A function and group on the pin control device
-> will be activated when 2 integers "<function-selector> <group-selector>"
-> are written to the file. The debugfs write operation pinmux_set_write()
-> handles this by calling ops->set_mux() with fsel and gsel.
+> How do you want to implement this?  Something like "walk the list and
+> run a callback for the matching entries" or do you have something else
+> in mind?
 
-s/ops//
 
-> RFC question: should pinmux-set take function name and group name
-> instead of the selector numbers?
+Something like this (though with a mutex_lock()). It could be simplified
+by dropping the prev stuff, but we have seen INT3472 devices with
+multiple sensors declaring themselves dependent on the same device
 
-I would prefer names and integers (but from user p.o.v. names are
-easier to understand, while numbers are good for scripting).
 
-The following is better to include in documentation and remove from
-the commit message.
+struct acpi_device *
+acpi_dev_get_next_dependent_dev(struct acpi_device *supplier,
+                struct acpi_device *prev)
+{
+    struct acpi_dep_data *dep;
+    struct acpi_device *adev;
+    int ret;
 
-> The following is an example on the PocketBeagle [2] which has the AM3358
-> SoC and binds to pinctrl-single. I added this to the device tree [3] to
-> represent two of the pins on the expansion header as an example: P1.36
-> and P2.01. Both of these header pins are designed to be set to PWM mode
-> by default [4] but can now be set back to gpio mode through pinmux-set.
+    if (!supplier)
+        return ERR_PTR(-EINVAL);
 
-...
+    if (prev) {
+        /*
+         * We need to find the previous device in the list, so we know
+         * where to start iterating from.
+         */
+        list_for_each_entry(dep, &acpi_dep_list, node)
+            if (dep->consumer == prev->handle &&
+                dep->supplier == supplier->handle)
+                break;
 
-> The following shows the pin functions registered for the pin controller:
->
-> root@beaglebone:/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single# cat pinmux-functions
+        dep = list_next_entry(dep, node);
+    } else {
+        dep = list_first_entry(&acpi_dep_list, struct acpi_dep_data,
+                       node);
+    }
 
-Shorter is better, what about simply
 
-# cat /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pinmux-functions
-?
+    list_for_each_entry_from(dep, &acpi_dep_list, node) {
+        if (dep->supplier == supplier->handle) {
+            ret = acpi_bus_get_device(dep->consumer, &adev);
+            if (ret)
+                return ERR_PTR(ret);
 
-Btw  in reST format you may create a nice citation of this. And yes,
-this should also go to the documentation.
+            return adev;
+        }
+    }
 
-> function: pinmux_P1_36_default_pin, groups = [ pinmux_P1_36_default_pin ]
-> function: pinmux_P2_01_default_pin, groups = [ pinmux_P2_01_default_pin ]
-> function: pinmux_P1_36_gpio_pin, groups = [ pinmux_P1_36_gpio_pin ]
-> function: pinmux_P1_36_gpio_pu_pin, groups = [ pinmux_P1_36_gpio_pu_pin ]
-> function: pinmux_P1_36_gpio_pd_pin, groups = [ pinmux_P1_36_gpio_pd_pin ]
-> function: pinmux_P1_36_gpio_input_pin, groups = [ pinmux_P1_36_gpio_input_pin ]
-> function: pinmux_P1_36_pwm_pin, groups = [ pinmux_P1_36_pwm_pin ]
-> function: pinmux_P2_01_gpio_pin, groups = [ pinmux_P2_01_gpio_pin ]
-> function: pinmux_P2_01_gpio_pu_pin, groups = [ pinmux_P2_01_gpio_pu_pin ]
-> function: pinmux_P2_01_gpio_pd_pin, groups = [ pinmux_P2_01_gpio_pd_pin ]
-> function: pinmux_P2_01_gpio_input_pin, groups = [ pinmux_P2_01_gpio_input_pin ]
-> function: pinmux_P2_01_pwm_pin, groups = [ pinmux_P2_01_pwm_pin ]
-> function: pinmux-uart0-pins, groups = [ pinmux-uart0-pins ]
-> function: pinmux-mmc0-pins, groups = [ pinmux-mmc0-pins ]
-> function: pinmux-i2c0-pins, groups = [ pinmux-i2c0-pins ]
->
-> Activate the pinmux_P1_36_gpio_pin function (fsel 2):
->
-> root@beaglebone:/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single# echo '2 2' > pinmux-set
->
-> Extra debug output that I added shows that pinctrl-single's set_mux()
-> has set the register correctly for gpio mode:
->
-> pinmux core: DEBUG pinmux_set_write(): returned 0
-> pinmux core: DEBUG pinmux_set_write(): buf=[2 2]
-> pinmux core: DEBUG pinmux_set_write(): sscanf(2,2)
-> pinmux core: DEBUG pinmux_set_write(): call ops->set_mux(fsel=2, gsel=2)
-> pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): call pinmux_generic_get_function() on fselector=2
-> pinctrl-single 44e10800.pinmux: enabling (null) function2
-> pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): func->nvals=1
-> pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): offset=0x190 old_val=0x21 val=0x2f
->
-> Activate the pinmux_P1_36_pwm_pin function (fsel 6):
->
-> root@beaglebone:/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single# echo '6 6' > pinmux-set
->
-> pinctrl-single set_mux() is able to set register correctly for pwm mode:
->
-> pinmux core: DEBUG pinmux_set_write(): returned 0
-> pinmux core: DEBUG pinmux_set_write(): buf=[6 6]
-> pinmux core: DEBUG pinmux_set_write(): sscanf(6,6)
-> pinmux core: DEBUG pinmux_set_write(): call ops->set_mux(fsel=6, gsel=6)
-> pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): call pinmux_generic_get_function() on fselector=6
-> pinctrl-single 44e10800.pinmux: enabling (null) function6
-> pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): func->nvals=1
-> pinctrl-single 44e10800.pinmux: DEBUG pcs_set_mux(): offset=0x190 old_val=0x2f val=0x21
+    return NULL;
+}
 
-This and above is still part of documentation, and not a commit message thingy.
-
-...
-
-> +static ssize_t pinmux_set_write(struct file *file, const char __user *user_buf,
-> +                                  size_t cnt, loff_t *ppos)
-> +{
-> +       int err;
-> +       int fsel;
-> +       int gsel;
-> +       int ret;
-> +       char *buf;
-> +       struct seq_file *sfile;
-> +       struct pinctrl_dev *pctldev;
-> +       const struct pinmux_ops *ops;
-
-Reversed xmas tree order please, and you may group some of them, like
-
-   int fsel, gsel;
-
-> +       if (*ppos != 0)
-> +               return -EINVAL;
-
-> +       if (cnt == 0)
-> +               return 0;
-
-Has it ever happened here?
-
-> +       buf = memdup_user_nul(user_buf, cnt);
-> +       if (IS_ERR(buf))
-> +               return PTR_ERR(buf);
-> +
-> +       if (buf[cnt - 1] == '\n')
-> +               buf[cnt - 1] = '\0';
-
-Shouldn't you rather use strndup_from_user() (or how is it called?)
-
-> +       ret = sscanf(buf, "%d %d", &fsel, &gsel);
-> +       if (ret != 2) {
-> +               pr_warn("%s: sscanf() expects '<fsel> <gsel>'", __func__);
-
-No __func__ and instead use dev_err() (it is strange you are using
-warn level for errors).
-
-> +               err = -EINVAL;
-> +               goto err_freebuf;
-> +       }
-
-> +       sfile = file->private_data;
-> +       pctldev = sfile->private;
-
-These can be applied directly in the definition block above.
-
-> +       ops = pctldev->desc->pmxops;
-> +       ret = ops->set_mux(pctldev, fsel, gsel);
-
-> +       if (ret != 0) {
-
-if (ret)
-
-> +               pr_warn("%s(): set_mux() failed: %d", __func__, ret);
-
-As above.
-
-> +               err = -EINVAL;
-> +               goto err_freebuf;
-> +       }
-
-> +       kfree(buf);
-> +       return cnt;
-> +
-> +err_freebuf:
-> +       kfree(buf);
-> +       return err;
-
-Can be simply
-
- err_freebuf:
-        kfree(buf);
-        return err ?: cnt;
-
-> +}
-> +
-
-...
-
-> +       debugfs_create_file("pinmux-set", S_IFREG | S_IWUSR,
-> +                           devroot, pctldev, &pinmux_set_ops);
-
-I would rather call it 'pinmux-select'.
-
-Overall since it's a debugfs I do not much care about interfaces and
-particular implementation details, but in general looks good to me,
-thanks for doing this!
-
--- 
-With Best Regards,
-Andy Shevchenko
