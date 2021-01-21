@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A35142FEB68
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 14:19:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EB032FEB6D
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 14:19:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731788AbhAUNSJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jan 2021 08:18:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36800 "EHLO
+        id S1729340AbhAUNTI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jan 2021 08:19:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731775AbhAUNSE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 08:18:04 -0500
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F7FEC061575
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 05:17:23 -0800 (PST)
-Received: by mail-lj1-x236.google.com with SMTP id e7so2397726ljg.10
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 05:17:23 -0800 (PST)
+        with ESMTP id S1731250AbhAUNSl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 08:18:41 -0500
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05E7C061757
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 05:18:00 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id e7so2399776ljg.10
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 05:18:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+EUNlXiP3wPkeG2dM3xY7LcMnWvipCnmto2zGrqh7Jk=;
-        b=KEva3QoW/Q0vHGdHixNo5Rdkh4xSw/ZpKYkTdQZ8zWZ3sDO7ID9xpq4fAiQc3T4VUD
-         EKcMCiu+pcvzo/pO/QtD7S2Sv81h+HvDzjudLfYlVkrpQerD0cSkNtFZ2UMpmsOrNffU
-         g0dnxDWdWLE9H73X50SdTv+oQvnxUHgGhfzE5jxqbMzcQeBSYSEYpRzhNgkFDYh1IAqB
-         E+l5OTOEvqOdnUxIoxPzxPbch7FG3L+vPTw4ppCBbe/PPxSQCvjoo4NzMq6wLh/ujzR3
-         uetqT2knUoZbAgplSwkiItllE0UZj9ZNX/L44jv6P1ADdK/aILNe7nf1DYAYBqeWD/1m
-         FcPA==
+        bh=lugTKlnSgFnC7kyiesKb7/2gMqEnCIT07CX0y0/KBbc=;
+        b=M7oNfJx6ONjuzOvXnMHVRjlrmSGxd9xPKeCVIDVy3uydXSl5GNY1wkCf+RVLsu/GKP
+         FZEjKmQIGM+GnkbCMvxBNmrvu3uAq6Ml6P1UVPDJJsBcEIGPTKvdQg8K0s4DuqD/m4Qd
+         WsMY2c+YuIzPGFP082S2yOzDOOtAEdgafrgzVKOD6XU6Gye3H4+P9l2Ek4GvZDTnpu7x
+         qbm3G2oLL4H5C5yfDXQfRB24K8g5wPnka94Hry3XhmIOjKomCMVMheNPIa0aMYb+rAqb
+         0u4B+rxFss8cM9bUpuqYk3de6yCExK4i7fdIywIVvKEWMJDvIoj2BLwCWtf0RMsycCRC
+         80UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+EUNlXiP3wPkeG2dM3xY7LcMnWvipCnmto2zGrqh7Jk=;
-        b=IHtn8cEyU0Pe+7caYA/oOy0lwKvF7surhFqILKJteuiSqxvsq5JvQLxBAFlx94eRHu
-         ddSxtVOjzv+CQDEyTklD+Yqf0HxZ7CBLUlgbw1Qid74gZBZ5c6dTnBB4YBjP7qL6ltKd
-         axjF+ic0H7+xXl/8B+YYFmTQTMvPJnGspdmLN/drS36YS8GcyceANVhOrOS7BiIVz7pN
-         XucgM0RRWV3ozdHm0JRXOROKBCi2ueh3+AICd1lsHacKwVdsymnpu8faazYvPz1iECHY
-         h3/51NN4x8GvkBjDqt56urv2ZS6SkvcgvPHbZTU6V82MVGjqOyFrSFVr7cKZ4QYNyj/f
-         vDaw==
-X-Gm-Message-State: AOAM531r7Kb+ISxthXM9KrSFeX57u4sUeXUyAE8kFE7BO0NdjjcEToVJ
-        QjO4DH307s+SVVXuhVmKJCdsUd3a6OYPxqN/H5jhVQ==
-X-Google-Smtp-Source: ABdhPJw0ChpK+IYPDYHhBNNZozKDGiIjheqwdhKqWnVzTDU63Tb6oYv4fyLX5YjScnuMnbv8maAjgdeOhKz/6e0GUvE=
-X-Received: by 2002:a2e:b047:: with SMTP id d7mr6660709ljl.467.1611235042154;
- Thu, 21 Jan 2021 05:17:22 -0800 (PST)
+        bh=lugTKlnSgFnC7kyiesKb7/2gMqEnCIT07CX0y0/KBbc=;
+        b=OkBNlqQZU4Hc5wtReDwDN6mzwN+gLm7jmu9yR3WfjOGufunQ/ShThoQ5/VKcCdw8PT
+         vJHyNam3/mtryhKbPmYOghvfS4g3mKvKNICTcg4Jh2+8b63HW8LqaPYjhK4ZcQmAWRr6
+         O7VNhFe1ogDAqBM+xleLlepyo+m/M8iwbS8kKUpQ/prjmF+Kbq/zPgMk4+QxnE3A7lwL
+         GK8Lm4kqRkSQ+R5PNuuFumd9/0g4o3LxI7TEVEcm5E2+CERS3wN1+LiXFWJOG4YmULv0
+         6v/eSkPg1Li5m1C5Q/fRVl1ySmzT9Omp95sKenNTTj0z295kWAHE5gq8rzOPRl6g40s9
+         p/mA==
+X-Gm-Message-State: AOAM531vZTHhtE3Ceott/8aKexyiozvi7y0wvs43ZA96ZxxidwLmdqws
+        hXhTBC0I/biz/yOk4RMALbVTQ5jsTeIQmpenzGFt5A==
+X-Google-Smtp-Source: ABdhPJy2OlcuPaM6RagrRDrG0M4ja9L8VgffWWuinTVWDSiOU5ltH5xpw2JO2BS7AGRxt/ztERmgLXR6G8bF/zCK/Gw=
+X-Received: by 2002:a2e:b4cd:: with SMTP id r13mr3888461ljm.273.1611235078524;
+ Thu, 21 Jan 2021 05:17:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20210120214547.89770-1-andriy.shevchenko@linux.intel.com> <20210120214547.89770-4-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210120214547.89770-4-andriy.shevchenko@linux.intel.com>
+References: <20210120214547.89770-1-andriy.shevchenko@linux.intel.com> <20210120214547.89770-5-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210120214547.89770-5-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 21 Jan 2021 14:17:11 +0100
-Message-ID: <CACRpkdZttmFc2oMJECGDWP3DMRVWsdq5V6bKprX+dymRfEgopw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] gpio: aggregator: Replace isrange() by using get_options()
+Date:   Thu, 21 Jan 2021 14:17:47 +0100
+Message-ID: <CACRpkdanZ7yenqB0ThNLzfK0safTK4zgd_nxDkfd+RYPS+KuvA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] gpio: aggregator: Remove trailing comma in
+ terminator entries
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -62,12 +63,11 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Wed, Jan 20, 2021 at 10:45 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> We already have a nice helper called get_options() which can be used
-> to validate the input format. Replace isrange() by using it.
+> Remove trailing comma in terminator entries to avoid potential
+> expanding an array behind it.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This is really neat.
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
