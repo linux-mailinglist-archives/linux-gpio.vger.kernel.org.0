@@ -2,78 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04D212FE9D8
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 13:21:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC9FC2FE9BA
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 13:15:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbhAUMU1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jan 2021 07:20:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51298 "EHLO
+        id S1729943AbhAUMPI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jan 2021 07:15:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730963AbhAUMOj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 07:14:39 -0500
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3BCC0613CF
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 04:13:54 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id h7so2197101lfc.6
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 04:13:54 -0800 (PST)
+        with ESMTP id S1730994AbhAUMOu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 07:14:50 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED49BC0613ED
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 04:14:01 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id m187so1258584wme.2
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jan 2021 04:14:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Myx5eVNR3ui/ZOjCm1kbNmJ8TPZ/ps+O2zKImwlnNDw=;
-        b=PptR/y8axGlQYN9TjYXCbMoAG0s9YFu7WBRrSDpGtB4PxYHLcMVlk118pM5qfOWW5v
-         cdsHHzq+NzVA64vjIHoOaI2pG6eW0HyXMNYzJYXP6uQco7rmyZcHEkwoT8jjWFlhYlqQ
-         nipubU0tuAlSnFeEwTuF8RA75WkX9zhciNVZ4PsafyU0QOwCNiU415fObnn5VMdigI8L
-         NcM4rsveU9bue68MPHVSzYNsfivoQ1vUVpip0p7Mzt1t+VH33AwCo1h133ny0FjMzsBC
-         Xvjb0PjGMSD8YoQdRLpTuH+hy/ssqyzVR8IrtRmcQTCI9W3sRRXbwgF+lXfp0h0a1Tu1
-         j/EQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1fh/a4DYJLi+AyFxFDtHnnnCfJUqWq8QRUBkRL69peM=;
+        b=uhtmotDTNcSU3elkTAGv5ljRnhN+O0WXOi+p5MvFvHsI8xTZRnSfv//K0qPQAcyCTJ
+         set7h6+CIAFEgUkRQeZbWhAip5XSFiM+vdUIyAfTUj44O4uJz9ORrFANHe5GiCegWyWF
+         zbBxz60Z/Ze0CXHMVHw0ItPZyr80p2tiNaqKgKrVD1tGvzz0eoEZEVvMcGrY07kBHfDd
+         SbeiJqTJIW2bJ0c4kmMrbXlgUtFcKiw8ngHPwQb64FWxbFACEhcvdc6wQ6cJ7o0OeriU
+         EkYeDXVPUkno5yxMjmERrX1N9YIsccmM04qrPVkhW68XUhCNfLWoB4rPOi+vGC3/l3Ba
+         HgJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Myx5eVNR3ui/ZOjCm1kbNmJ8TPZ/ps+O2zKImwlnNDw=;
-        b=fbgD6XHIos4jxV/PjWk59it7D+KkI2mcjM2Etc0+o1OSR8cAWdUSG0iJ3xQsORUB1e
-         VH+38nJ1qXxM5tbyCoDWGlR/iLL1l4kPHs1cpqLOpM0IKNumqZ8769WWUnt5uTEjrwiT
-         XrI/MB89BYeePmaLCVBYnScu+ldj1O9H50rO34lsJv00ayPJ1OUSR+nal0e6t4MsQ8Rt
-         bPV50qbwGUMWuiHE63VIV/uc5ywDfjhEN1ipEtgcfk7WbzZIVF2thx9SjtRxOddt4Ghp
-         xmFQ2oLbrqB8oUxmFGA5vNv6hiZ25/Mq3iZi+SzcYwsRdLID5LyYiJY04tFC4vDKJeqC
-         ddYA==
-X-Gm-Message-State: AOAM530bqpwQ3ds7zAFFAKB9hOvEyqQzD8rpsJLc9jmpePZ0G488HSO7
-        BkgHLoNS5yC5bHgBS61onpT3Hoex5n68T9QQyUWTVw==
-X-Google-Smtp-Source: ABdhPJy4ogC8cUFfatEuWax8vy3nRxBHlsEqavCD4L8Eh8EmBpIGmwwKufkZvlfvqgQZlGAbFOE1QSnK8tLR9sU608M=
-X-Received: by 2002:a19:8bc6:: with SMTP id n189mr6311874lfd.291.1611231233107;
- Thu, 21 Jan 2021 04:13:53 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1fh/a4DYJLi+AyFxFDtHnnnCfJUqWq8QRUBkRL69peM=;
+        b=MOmUw1nz3vZPiFlS2eprynXjS88fg+k/DFKI3Tk3diAYtz+oyGCDeLvdunm3cMNgXb
+         Nmrn/v2Q+GravkM6EsX0YIe59Fk5Mo3VYZAtsJPf4BIaEAIIhm6gbP4iRglqhmpPskzX
+         DLnhV3HNfILqOl92GDBZl/izpAK1UdSiJcYiIE9GvX5BYMf4AKrsS5/vE/UImZRJLOtm
+         3LkPbNdSnCVpBnk2R9YE2xLgE9yfdUSSxUF1V1GeknpvwkYSGzZwc2b2k6xqIMFjBoNi
+         LmaUzxtrxTLp4XMFJ6w2XwcXoMO3k+K/6H8eE4NQk2IzoJnlOj9RxKi+29wuyFiKI9CC
+         PFQQ==
+X-Gm-Message-State: AOAM533eADpHifWmbi6PW+JUh4XTjuIZ6cBc/mbefBIwBs8p67zcXqZR
+        Z9PC41dzMVoYl0on7N7Jagl29YPjyDEghA==
+X-Google-Smtp-Source: ABdhPJx9Bhv813mdnZiQlWQ4Uk812dfwvV+b3bgBmx5XiuSgvG/PaMMnuhhojD92G4yGmytdYhen2A==
+X-Received: by 2002:a1c:f706:: with SMTP id v6mr8828963wmh.85.1611231240762;
+        Thu, 21 Jan 2021 04:14:00 -0800 (PST)
+Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
+        by smtp.gmail.com with ESMTPSA id w129sm7964855wmb.11.2021.01.21.04.14.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Jan 2021 04:14:00 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] gpio: mockup: tweak the Kconfig help text
+Date:   Thu, 21 Jan 2021 13:13:55 +0100
+Message-Id: <20210121121355.31654-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-References: <20210120132045.2127659-1-arnd@kernel.org> <20210120132045.2127659-3-arnd@kernel.org>
-In-Reply-To: <20210120132045.2127659-3-arnd@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 21 Jan 2021 13:13:42 +0100
-Message-ID: <CACRpkdZWtGzLUnDg5G4CUnyc9NpSZoTu3Cf2qE-rNCNw6HXqag@mail.gmail.com>
-Subject: Re: [PATCH 2/5] pinctrl: remove zte zx driver
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jun Nie <jun.nie@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 2:20 PM Arnd Bergmann <arnd@kernel.org> wrote:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> The zte zx platform is getting removed, so this driver is no
-> longer needed.
->
-> Cc: Jun Nie <jun.nie@linaro.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+gpio-mockup doesn't require SYSFS to be selected so drop that bit from
+the Kconfig text.
 
-Patch applied.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index c70f46e80a3b..e8e3ed803c07 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1633,8 +1633,7 @@ config GPIO_MOCKUP
+ 	select IRQ_SIM
+ 	help
+ 	  This enables GPIO Testing driver, which provides a way to test GPIO
+-	  subsystem through sysfs(or char device) and debugfs. GPIO_SYSFS
+-	  must be selected for this test.
++	  subsystem through sysfs (or char device) and debugfs.
+ 	  User could use it through the script in
+ 	  tools/testing/selftests/gpio/gpio-mockup.sh. Reference the usage in
+ 	  it.
+-- 
+2.29.1
+
