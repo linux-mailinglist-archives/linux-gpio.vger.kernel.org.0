@@ -2,87 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C08262FF15F
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 18:07:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A450D2FF16B
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 18:10:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388448AbhAURHK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jan 2021 12:07:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39218 "EHLO mail.kernel.org"
+        id S2388493AbhAURKe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jan 2021 12:10:34 -0500
+Received: from mga06.intel.com ([134.134.136.31]:65052 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388318AbhAURHC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 21 Jan 2021 12:07:02 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C448E23A54;
-        Thu, 21 Jan 2021 17:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611248781;
-        bh=AcrmoB+h/zi8HkyQOGW0ipwVsjuiLu5lEygPUCOSziI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nHwYplwmzmV/RgR+6OYNo7t5ugwqY1LFSFDMmoTsgv9ZzpwgKB/K/O/nNVbn2Y653
-         piCZylP722MxqXNb7GrPCno1NAnfpzdK/4+6kp4kRJH7599ZcrmmrUidUMPbOdmE3I
-         EvKlcQpbKdhZr47y7YPDuVPspLgfwtWDcyjKPrOn6ZOCt+sG8tCp0EAd4EcmqheOef
-         T7Le/hL4SbIjXHV2cZCIPUAIIzBrE6OHE0ZXBicNALu8RkFT3LKuGQr8fncLEjQbPP
-         sDAG23r6UJUzh0EAoZOO8a1dpVjeDv0caIiLHqy4ljsYuDJfVp/ZrY2G+b4cVFTJ0o
-         zTJZlscreZQ+A==
-Date:   Thu, 21 Jan 2021 22:36:17 +0530
-From:   Vinod Koul <vkoul@kernel.org>
+        id S2388322AbhAURK2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 21 Jan 2021 12:10:28 -0500
+IronPort-SDR: GRgJLU+OueWqSYD+bFi+3xpkdjHBPAn7G2Z0dPgwiBSdqFb27WGbEg1SVSmb1vDSrDgFR1Mgx+
+ 49Noy/iKp2Pw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9871"; a="240843772"
+X-IronPort-AV: E=Sophos;i="5.79,364,1602572400"; 
+   d="scan'208";a="240843772"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 09:08:25 -0800
+IronPort-SDR: 19OsrA0I8xoruRLq5p31rpUBfk1H7b5L09+oUZGG8XQpKGDjgH4vY2qtwhh9wnDk6mzZMM5FQm
+ YbEqXQKJI+4w==
+X-IronPort-AV: E=Sophos;i="5.79,364,1602572400"; 
+   d="scan'208";a="366983163"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 09:08:23 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l2dST-007m7X-Bx; Thu, 21 Jan 2021 19:09:21 +0200
+Date:   Thu, 21 Jan 2021 19:09:21 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: qcom: Define common TLMM
- binding
-Message-ID: <20210121170617.GH2771@vkoul-mobl>
-References: <20210120222114.1609779-1-bjorn.andersson@linaro.org>
- <20210120222114.1609779-2-bjorn.andersson@linaro.org>
- <CACRpkdY6G_EP8QAp1C-eghdbgcgwQezA1ap=nDtSHPNqjuDF6Q@mail.gmail.com>
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v2 5/5] gpio: aggregator: Remove trailing comma in
+ terminator entries
+Message-ID: <YAm1QUjqnW9UbtM6@smile.fi.intel.com>
+References: <20210120214547.89770-1-andriy.shevchenko@linux.intel.com>
+ <20210120214547.89770-5-andriy.shevchenko@linux.intel.com>
+ <CACRpkdanZ7yenqB0ThNLzfK0safTK4zgd_nxDkfd+RYPS+KuvA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdY6G_EP8QAp1C-eghdbgcgwQezA1ap=nDtSHPNqjuDF6Q@mail.gmail.com>
+In-Reply-To: <CACRpkdanZ7yenqB0ThNLzfK0safTK4zgd_nxDkfd+RYPS+KuvA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21-01-21, 14:20, Linus Walleij wrote:
-> On Wed, Jan 20, 2021 at 11:21 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
+On Thu, Jan 21, 2021 at 02:17:47PM +0100, Linus Walleij wrote:
+> On Wed, Jan 20, 2021 at 10:45 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> > Several properties are shared between all TLMM bindings. By providing a
-> > common binding to define these properties each platform's binding can be
-> > reduced to just listing which of these properties should be checked for
-> > - or further specified.
+> > Remove trailing comma in terminator entries to avoid potential
+> > expanding an array behind it.
 > >
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-
-> Overall it looks good, just cutting some slack for reviewers (especially
-> DT people) before applying.
-
-Yeah it does clean stuff up. I have rebased on SM8350 series on top of this, will post soon.
-
-> > +description:
-> > +  This defines the common properties used to describe all Qualcomm TLMM
-> > +  bindings and pinconf/pinmux states for these.
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> I vaguely recall asking you in the past what the acronym TLMM actually
-> means. This would be a good place to expand the acronym so people
-> know what these four letters actually represent.
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-It is Top Level Mode Multiplexer (TLMM) it is actually used in the
-binding doc :)
+Thanks!
 
-> 
-> (There, I finally gave you an official reason to go and poke Qualcomm
-> hardware engineers about this. ;)
-> 
-> Yours,
-> Linus Walleij
+Bart, I would like to send this series as a part of my Intel GPIO PR or tell me
+if you wish another approach.
 
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
+
+
