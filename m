@@ -2,92 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FA692FECB3
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 15:15:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91A4E2FED50
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jan 2021 15:49:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbhAUOO1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jan 2021 09:14:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730498AbhAUOMa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 09:12:30 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB06BC061757;
-        Thu, 21 Jan 2021 06:11:49 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id cq1so1729423pjb.4;
-        Thu, 21 Jan 2021 06:11:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JW9ioCIv1CN9dpUff2ilq0NQobpsdFiEo872jSzvttc=;
-        b=sM0Zc3BFMgdbbmHE1zL99lWNXAEQCe9dO0SmL8D6vGyplCcmDFwypzdp3ETeqDhhZU
-         Py4skrSHON8cHlAhH6tkeWFttYjGCmtIHSyprak4njCt2rS131ihzlJvVfhZN3Ntlcym
-         RspnvArUIhFJa5Prs2lmry1a8E5X1GEZKSkmKPzldX1AeagHTBK2gUYeMTyP1nbZidba
-         pFxZcBjFSyInOCgdiRLTUuetskwOQodnHE2etMW8jWuLKOjEutlyzCAJ7123yiF77WfK
-         E1CTsRFLHB6m+dNQpnIdmu0xdQ6LzBCyKTDbueK4H8/+xuNNg60iEDwnM7vvGNp0OdOQ
-         CHhg==
+        id S1731614AbhAUOlR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jan 2021 09:41:17 -0500
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:45994 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731621AbhAUOk5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jan 2021 09:40:57 -0500
+Received: by mail-ot1-f53.google.com with SMTP id n42so1754160ota.12;
+        Thu, 21 Jan 2021 06:40:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JW9ioCIv1CN9dpUff2ilq0NQobpsdFiEo872jSzvttc=;
-        b=romdihtafJY3VKQb/eLrrqhyV6nU1YkwjtM0f8Onj43yPPxK793RxbdZD+QSbePjgm
-         7fukyspWxkgei0GbMiAOLRVsGYc2GZb5QpehiwtdpDXPU1HfKdbmlXvrkmxLaXDDqFjW
-         D2uDgcAZD0laLsJS4I17/NYn+MT3Qg0Fy9KpWZuwDHiHBmO/yFaS0EYVb526nRB0zrmz
-         lM9HsIeWSs4Zjsccwm+4uyn3RkKe/UCf0qgJJQwDh4lzz0WSGvE56zyakfr1/KUIeLX0
-         hPV2mRhspGQx890kQ/rs+P/GdWROzeXBBGsnccbioI7DxbVJ2DypPKDsInXVGCskg7TT
-         H+sg==
-X-Gm-Message-State: AOAM532EDnm0bzFx++JfoM3F9bzIG3ilDo/9qqXNl3YgBDybXZ0mtKRT
-        vl0OdnuizpDowoVoSs9Om9WEb7JP6Gw=
-X-Google-Smtp-Source: ABdhPJzXsn55/jY7ozsATzA5BnKppJMkXwN41LkGVQZQ56JfkWzr5tYZ6C8xRGuGkwtuTWoolucZnA==
-X-Received: by 2002:a17:90b:23d3:: with SMTP id md19mr12125902pjb.119.1611238308915;
-        Thu, 21 Jan 2021 06:11:48 -0800 (PST)
-Received: from sol.lan (106-69-181-154.dyn.iinet.net.au. [106.69.181.154])
-        by smtp.gmail.com with ESMTPSA id c11sm5339699pfl.185.2021.01.21.06.11.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jan 2021 06:11:48 -0800 (PST)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH] gpiolib: cdev: clear debounce period if line set to output
-Date:   Thu, 21 Jan 2021 22:10:38 +0800
-Message-Id: <20210121141038.437564-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.30.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e2wC/gqTSVsEHUIwD9i+N/18O78gZ5uCZkeTAoDdvWM=;
+        b=N/Dm8JP1SX8I81Iak5zh5Lc1eM6okSBElw7EryE1P35cBxz2Z7gktT6Rfu/D8CwG5a
+         7+pzRGeQtoUELB7LOHVRQLONWOAI2H4A5FL+k3tglrNexAuxL4Qhbrb6zKAXPRb0tMLe
+         9+m2DYlpHwwtDkiFsu6gJVXSFaLopRHi9hmU0IWUOA8hL7onSWrDOD7Vba2Wv0UuizlM
+         a7KhgAWIo4eIUsb1k3E49stKjzCfnEPzUMlfrD4jfUCSQbPPvW/JbjikFRW2X5uDPjjh
+         kgOLcoSN3Wk9aMD+ZdTsa84SjFe/r7pKAoNRsyZHk44/XzRI8eHzTl45sDlCDN8RXntq
+         smZg==
+X-Gm-Message-State: AOAM531+sL7HuYayhPMFJQtH+pHe21FVVco7Yt5j2EltybfUH5t332B6
+        6QrAMxW5VIuIC5KJx5w8hzJ/nj8KYuyM1gopmRA=
+X-Google-Smtp-Source: ABdhPJxygx7O8j/Cs5KFm/tGd04SykZqet5/kp/3jkr6W6fOeKCg3atmGLgcAGJqtDf4Cqjy9l1O2Q+aMR5sGiyOhng=
+X-Received: by 2002:a9d:1710:: with SMTP id i16mr10445162ota.260.1611240007526;
+ Thu, 21 Jan 2021 06:40:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210118003428.568892-1-djrscally@gmail.com> <20210118003428.568892-3-djrscally@gmail.com>
+ <CAJZ5v0gVQsZ4rxXW8uMidW9zfY_S50zpfrL-Gq0J3Z4-qqBiww@mail.gmail.com>
+ <b381b48e-1bf2-f3e7-10a6-e51cd261f43c@gmail.com> <CAJZ5v0iU2m4Hs6APuauQ645DwbjYaB8nJFjYH0+7yQnR-FPZBQ@mail.gmail.com>
+ <e2d7e5e9-920f-7227-76a6-b166e30e11e5@gmail.com> <CAJZ5v0gg5oXG3yOO9iDvPKSsadYrFojW6JcKfZcQbFFpO78zAQ@mail.gmail.com>
+ <85ccf00d-7c04-b1da-a4bc-82c805df69c9@gmail.com>
+In-Reply-To: <85ccf00d-7c04-b1da-a4bc-82c805df69c9@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 21 Jan 2021 15:39:55 +0100
+Message-ID: <CAJZ5v0jO9O1zhBMNRNB5kRt1o86BTjr1kRuFUe=nNVTDwBQhEg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] acpi: utils: Add function to fetch dependent acpi_devices
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, andy@kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When set_config changes a line from input to output debounce is
-implicitly disabled, as debounce makes no sense for outputs, but the
-debounce period is not being cleared and is still reported in the
-line info.
+On Thu, Jan 21, 2021 at 1:04 PM Daniel Scally <djrscally@gmail.com> wrote:
+>
+>
+> On 21/01/2021 11:58, Rafael J. Wysocki wrote:
+> > On Thu, Jan 21, 2021 at 10:47 AM Daniel Scally <djrscally@gmail.com> wrote:
+> >> Hi Rafael
+> >>
+> >> On 19/01/2021 13:15, Rafael J. Wysocki wrote:
+> >>> On Mon, Jan 18, 2021 at 9:51 PM Daniel Scally <djrscally@gmail.com> wrote:
+> >>>> On 18/01/2021 16:14, Rafael J. Wysocki wrote:
+> >>>>> On Mon, Jan 18, 2021 at 1:37 AM Daniel Scally <djrscally@gmail.com> wrote:
+> >>>>>> In some ACPI tables we encounter, devices use the _DEP method to assert
+> >>>>>> a dependence on other ACPI devices as opposed to the OpRegions that the
+> >>>>>> specification intends. We need to be able to find those devices "from"
+> >>>>>> the dependee, so add a function to parse all ACPI Devices and check if
+> >>>>>> the include the handle of the dependee device in their _DEP buffer.
+> >>>>> What exactly do you need this for?
+> >>>> So, in our DSDT we have devices with _HID INT3472, plus sensors which
+> >>>> refer to those INT3472's in their _DEP method. The driver binds to the
+> >>>> INT3472 device, we need to find the sensors dependent on them.
+> >>>>
+> >>> Well, this is an interesting concept. :-)
+> >>>
+> >>> Why does _DEP need to be used for that?  Isn't there any other way to
+> >>> look up the dependent sensors?
+> >>>
+> >>>>> Would it be practical to look up the suppliers in acpi_dep_list instead?
+> >>>>>
+> >>>>> Note that supplier drivers may remove entries from there, but does
+> >>>>> that matter for your use case?
+> >>>> Ah - that may work, yes. Thank you, let me test that.
+> >>> Even if that doesn't work right away, but it can be made work, I would
+> >>> very much prefer that to the driver parsing _DEP for every device in
+> >>> the namespace by itself.
+> >>
+> >> This does work; do you prefer it in scan.c, or in utils.c (in which case
+> >> with acpi_dep_list declared as external var in internal.h)?
+> > Let's put it in scan.c for now, because there is the lock protecting
+> > the list in there too.
+> >
+> > How do you want to implement this?  Something like "walk the list and
+> > run a callback for the matching entries" or do you have something else
+> > in mind?
+>
+>
+> Something like this (though with a mutex_lock()). It could be simplified
+> by dropping the prev stuff, but we have seen INT3472 devices with
+> multiple sensors declaring themselves dependent on the same device
+>
+>
+> struct acpi_device *
+> acpi_dev_get_next_dependent_dev(struct acpi_device *supplier,
+>                 struct acpi_device *prev)
+> {
+>     struct acpi_dep_data *dep;
+>     struct acpi_device *adev;
+>     int ret;
+>
+>     if (!supplier)
+>         return ERR_PTR(-EINVAL);
+>
+>     if (prev) {
+>         /*
+>          * We need to find the previous device in the list, so we know
+>          * where to start iterating from.
+>          */
+>         list_for_each_entry(dep, &acpi_dep_list, node)
+>             if (dep->consumer == prev->handle &&
+>                 dep->supplier == supplier->handle)
+>                 break;
+>
+>         dep = list_next_entry(dep, node);
+>     } else {
+>         dep = list_first_entry(&acpi_dep_list, struct acpi_dep_data,
+>                        node);
+>     }
+>
+>
+>     list_for_each_entry_from(dep, &acpi_dep_list, node) {
+>         if (dep->supplier == supplier->handle) {
+>             ret = acpi_bus_get_device(dep->consumer, &adev);
+>             if (ret)
+>                 return ERR_PTR(ret);
+>
+>             return adev;
+>         }
+>     }
+>
+>     return NULL;
+> }
 
-So clear the debounce period when the debouncer is stopped in
-edge_detector_stop().
-
-Fixed: 65cff7047640 ("gpiolib: cdev: support setting debounce")
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- drivers/gpio/gpiolib-cdev.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 12b679ca552c..3551aaf5a361 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -776,6 +776,8 @@ static void edge_detector_stop(struct line *line)
- 	cancel_delayed_work_sync(&line->work);
- 	WRITE_ONCE(line->sw_debounced, 0);
- 	WRITE_ONCE(line->eflags, 0);
-+	if (line->desc)
-+		WRITE_ONCE(line->desc->debounce_period_us, 0);
- 	/* do not change line->level - see comment in debounced_value() */
- }
- 
--- 
-2.30.0
-
+That would work I think, but would it be practical to modify
+acpi_walk_dep_device_list() so that it runs a callback for every
+consumer found instead of or in addition to the "delete from the list
+and free the entry" operation?
