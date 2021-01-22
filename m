@@ -2,41 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40D8D3003E6
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:14:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D7D63003E8
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:15:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbhAVNOW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 08:14:22 -0500
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:33620 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbhAVNOC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 08:14:02 -0500
-Received: by mail-ot1-f46.google.com with SMTP id 63so5014715oty.0
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:13:46 -0800 (PST)
+        id S1726633AbhAVNPD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 08:15:03 -0500
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:38126 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbhAVNPB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 08:15:01 -0500
+Received: by mail-ot1-f41.google.com with SMTP id s2so2795313otp.5
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:14:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p8kHmwLhN0bgOfM/91MGxJRoKdOl21yDcWOvJozOxsg=;
-        b=e/zHDvn4U2PAWhaNSZikcaOctI/aYY7VJmcdMA9lF3dbpnPqG1UhYBUoipbrb8iRPv
-         PjvHIOb+f58AlTp+946stYgsKnpzkYKRUVpeXS5CYhBHyAgLX4vm9pG1DGYX9epp305n
-         untPZoBHOIeBRsN0ALY0fHcL3YoKA0jWoQUCGuleF2KxLUQqGCoz76FFt5UJ36yvp7CE
-         UGnrsrd/FWr3m53byFDGS66ITKAAU4PTp01EPuIUBlOQfMmOIESEbOVQOzOtNjvEyoY1
-         3drWiR79/3z+RsboSTOgxddXknhodNOAoSdX/mjPVBihNSDlKLhDR64zLlllCtJiHMHI
-         JuLw==
-X-Gm-Message-State: AOAM533aAkA6R1SIVhrjS314mw/LfuWR3BeR62vkVyirjcW7XIyWVIFK
-        GZnvjHfBT7ta/ekn6DRs/KafEydMa5oGmmzj/JW9PCTr
-X-Google-Smtp-Source: ABdhPJzFWE7xxwE1m8uswTdNqgUA9CvWzPsghJM6GpI5gUCoTmOiapzaij0aNkL0YPDp1QFprQk4fdx6UwyVfb8bDO0=
-X-Received: by 2002:a9d:c01:: with SMTP id 1mr3190117otr.107.1611321201536;
- Fri, 22 Jan 2021 05:13:21 -0800 (PST)
+        bh=AnH/YNcoHDFNkyP+n4jsdiFLN7wzfDUTYAAH/KnWYwY=;
+        b=C+S56AbpqqmsTGFOQ3PMY27cePHDWvhpXNr7SrIhhj5VwlXp2/mtznHnERFBpyqLve
+         bWfFmk1iuy0j/gQ+gXEaDIqDX5647Hu4fqE4BEMLLZfG6RxpPYcK1Dh/aCkF21KiFX3D
+         K9n4Gh/QMtBbVeKJBtDt0f3AECTp+Jph7s9k7N1/90fszYW3ifge1HaXKHKQl99w+nbN
+         b9ldwjsObuLLW2b1Khhq0FrEMpJCXsl2dG+uc2J62ciQMfWwZSdmycYCJ95FP/nR+Zqm
+         k/fYqHN+pE7+9DT2NjUxASMphzhuERjvX9CdTP128GP9RBfwqPHelJmaOlBNRY2TKzDC
+         UvbQ==
+X-Gm-Message-State: AOAM533C+2SKIu9kBCT9jvGER2eKF7UPk8YasUSpA/0nF8hb9dD/DsRq
+        H4uMB1/J77wE+raD5jHQqPZK20IcMzoVcDeRKRlunQjn
+X-Google-Smtp-Source: ABdhPJzWm+lb0S1Fn55SfH643EvqGt8Gxla9JO8Av2lJ4e2ANG5MrQ6jDWS+AFo1l9zmG34JsoM+v9r8mUnPd49A2Ik=
+X-Received: by 2002:a05:6830:1f5a:: with SMTP id u26mr3262682oth.250.1611321260952;
+ Fri, 22 Jan 2021 05:14:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20210122123853.75162-1-andriy.shevchenko@linux.intel.com> <20210122123853.75162-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210122123853.75162-3-andriy.shevchenko@linux.intel.com>
+References: <20210122123853.75162-1-andriy.shevchenko@linux.intel.com> <20210122123853.75162-4-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210122123853.75162-4-andriy.shevchenko@linux.intel.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 22 Jan 2021 14:13:10 +0100
-Message-ID: <CAMuHMdVekbD0tYsQEVXc6W1OnETziVoFpU9WMgZw5C5ufc+72A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] lib/cmdline: Allow get_options() to take 0 to
- validate the input
+Date:   Fri, 22 Jan 2021 14:14:09 +0100
+Message-ID: <CAMuHMdWejXyj4Z3eZ5S5te8OT2NUPQAhG5PUGFs46VxAQG+2Vw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] gpio: aggregator: Replace isrange() by using get_options()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -50,47 +49,17 @@ Hi Andy,
 
 On Fri, Jan 22, 2021 at 1:39 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
-> Allow get_options() to take 0 as a number of integers parameter to validate
-> the input.
+
+> We already have a nice helper called get_options() which can be used
+> to validate the input format. Replace isrange() by using it.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Thanks for your patch!
-
-> --- a/lib/cmdline.c
-> +++ b/lib/cmdline.c
-
-> @@ -103,15 +106,20 @@ EXPORT_SYMBOL(get_option);
->
->  char *get_options(const char *str, int nints, int *ints)
->  {
-> +       bool validate = (nints == 0);
->         int res, i = 1;
->
-> -       while (i < nints) {
-> -               res = get_option((char **)&str, ints + i);
-> +       while (i < nints || validate) {
-> +               int *pint = validate ? ints : ints + i;
-
-I think you can use NULL for validation, as per the documentation for
-get_option().
-
-> +
-> +               res = get_option((char **)&str, pint);
->                 if (res == 0)
->                         break;
->                 if (res == 3) {
-> +                       int n = validate ? 0 : nints - i;
->                         int range_nums;
-> -                       range_nums = get_range((char **)&str, ints + i, nints - i);
-> +
-> +                       range_nums = get_range((char **)&str, pint, n);
->                         if (range_nums < 0)
->                                 break;
->                         /*
-
-Regardless:
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Let's hope this is never backported to stable before [PATCH 3/6]....
 
 Gr{oetje,eeting}s,
 
