@@ -2,248 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C262300398
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:01:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1BEF3003B3
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:04:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbhAVM7t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 07:59:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbhAVM7o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 07:59:44 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA27CC06174A
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 04:59:03 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id n6so6421031edt.10
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 04:59:03 -0800 (PST)
+        id S1727645AbhAVNB5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 08:01:57 -0500
+Received: from mail-co1nam11on2045.outbound.protection.outlook.com ([40.107.220.45]:19123
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727280AbhAVNBt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 Jan 2021 08:01:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Md/GhxzlNxb5WEHpZowEGSNjKVATfxg/UVzjXG0SSDB3EOW6s7gCBkHHdrRjrSp9ZcWoXOetagxINlCNHNvzwtkEB9HqYr3GJI0RJhTwcLCNJALU3PiXZ3tRIGyfkHM/mHYbVKue29PJ04wwBGfBgyZUw73GaKXGDBtv4kn81CFtv1koNyOh/T/JjMYwFoCw+Io4168tNQhtQtYNFjrW7k3t8iuZjrdFSSm7MnWaicWGHX+38ZMT+VY/s8MB47Zty/5+NMi1Sb7p/GNxEac92bkkviypf2AFjdlHxJFSF3jyzMYzPbo2dtbFmCwtvJINu8uDsWYg5NMzhnGsQwkz8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pNiMaO9n4BBApteukGPPmEIi3lrJT2YhUqoWvzuIQ5s=;
+ b=WsDzQ2Bsrjnaeo0BwlI1Ct88kojSZT3tUZlYy03y8HvZxdskrxM+a3itICk1p4j2Rhmdp6OvFdB8XnCBcW1+PjqiPcZtw8+N4fy9DuKvX97e+1DAWBHHOm3rBy5OMmDDi91eavBNDOEy2jyNwCmU5SJa1Z1IK61FOmAZgTaJBdEwztzdLSb6TlVT3sr/E+xqusflmA9We3MBfD+VFe0+3QBTWlywEq8Un1FpmQlWf1YrEuxL1bU+jb1fABEKeCHpAZtls9o0pubPLWRw25zbspLCKm7R/TTtmfMPMD+68nRcxPZwWvbRE2iRJ0tT62QNxQo6Rk+1i3zDqLyBVZXGmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IJRMyBa4Hn27zH6SoJpaMCuNCQ8I4sXJv8rChdjBtGQ=;
-        b=q1W7E8fqVdpjVGGW65CI2Bp8mlkwJ8iQ3tBUfG/LXpsAT19qOUMYFVBCAV+lf345eU
-         NqrSD/6UykgWB9Ceesij6Jp6XSlXuC8cBTGrJGHBTUrBGIY8DSVwlYaqG/gk6d+mKG8v
-         TLAuFT96UPrc78Eq41NEVeakMvjVyJf92dldNukv0HVpGW5Yf0+ubwjzdMfaauoLENdi
-         0bzhQufJ2IfaNggV+AMch11pcPZEBJwpy3AaxwO7H43XnZcd0dT55wrcfICebj/yqDCe
-         JKw+H2aYY+zRRO3agvNBUOxB9N+rFzS724WD7wouX3SatRK4kh/rso1IyXD5s6qiDLJb
-         Zegg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IJRMyBa4Hn27zH6SoJpaMCuNCQ8I4sXJv8rChdjBtGQ=;
-        b=UCo4M8yhN92y2exI9wWGle4vt11mihBpfjZzZVlqYs8z4ol2aQXf+q+vjwKbRaVNUi
-         e913RdgGUio30wDZixzBEpX83+2M4WaW89SarRoQ9b37E3m0VHf3SwvxuHktTrEbtlNO
-         rmQfIEEYOg5j2fGHWIrEs7K8qT4MAUfCCLSwFLQv2vOrz7JvE15tOuSppzeCjHFekCsi
-         8QuyDdDJj96+t/yUW8hHNfwYZcyXdHgml7G+2B/oyKqrfUrqkYR5G38aG0Yb/7vapsAV
-         TcSNIQ1QMYc4LyHyNesIV0ePr/bSt/rfmxfK2kIDFADIHfZ7avq3SvgbrU4oNIYnfQIg
-         8yUQ==
-X-Gm-Message-State: AOAM533zL48/LrFs+Hs4V0iJPYesOoGMosfltpmw1tXT0XXYgqC6cLPH
-        CYgiOLGBcILYY0NliyvL82TaB4QcFNZKI4KYQyWI6w==
-X-Google-Smtp-Source: ABdhPJxnKNA2uw8HWdjktdKovv7UoqyJ7GBzL61SPgknUbAGoD6BseGLdFOncqVlbzYTxOMUXe1NQyC3/w8aQEPKASk=
-X-Received: by 2002:a05:6402:35ca:: with SMTP id z10mr3161191edc.186.1611320342667;
- Fri, 22 Jan 2021 04:59:02 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pNiMaO9n4BBApteukGPPmEIi3lrJT2YhUqoWvzuIQ5s=;
+ b=AgB9rRqoThI6h+v4/FAymYe9wj7lp4u5lnyiHNpmQykrlmxzhTd9YeHrg6C0IpsT5mQDpCyjaQ08rlZ5bRaS5zmJwksxR5RG/CWTw2FNhMfTvcG9PmWV8PfAZCMmi+gc+pwT2v0WUuZ1dx9Wgxh2pi+t2Y3ZipmuvGl5VERe0Cs=
+Received: from SN4PR0401CA0044.namprd04.prod.outlook.com
+ (2603:10b6:803:2a::30) by CY4PR02MB2759.namprd02.prod.outlook.com
+ (2603:10b6:903:11a::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.9; Fri, 22 Jan
+ 2021 13:00:32 +0000
+Received: from SN1NAM02FT057.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:2a:cafe::24) by SN4PR0401CA0044.outlook.office365.com
+ (2603:10b6:803:2a::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.12 via Frontend
+ Transport; Fri, 22 Jan 2021 13:00:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ SN1NAM02FT057.mail.protection.outlook.com (10.152.73.105) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3784.12 via Frontend Transport; Fri, 22 Jan 2021 13:00:31 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 22 Jan 2021 05:00:07 -0800
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.1913.5 via Frontend Transport; Fri, 22 Jan 2021 05:00:07 -0800
+Envelope-to: git@xilinx.com,
+ michal.simek@xilinx.com,
+ saikrishna12468@gmail.com,
+ linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ gregkh@linuxfoundation.org,
+ robh+dt@kernel.org,
+ linus.walleij@linaro.org
+Received: from [172.30.17.109] (port=43336)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1l2w2m-0002j7-Sd; Fri, 22 Jan 2021 05:00:06 -0800
+Subject: Re: [PATCH v2 1/3] firmware: xilinx: Added pinctrl support
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        git <git@xilinx.com>, <saikrishna12468@gmail.com>
+References: <1611034054-63867-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <1611034054-63867-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <CACRpkdYH_ZdwF_aXTrp-5rYCifmHF2X8172513q9P+t4vy_RLg@mail.gmail.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <aa09f5e1-ad52-4ae4-aaae-7a2e70054236@xilinx.com>
+Date:   Fri, 22 Jan 2021 14:00:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-References: <cover.1610364681.git.baruch@tkos.co.il> <ba8d5d482a98690140e02c3a35506490e0c6ecb4.1610364681.git.baruch@tkos.co.il>
-In-Reply-To: <ba8d5d482a98690140e02c3a35506490e0c6ecb4.1610364681.git.baruch@tkos.co.il>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 22 Jan 2021 13:58:51 +0100
-Message-ID: <CAMpxmJUGHqJ0C9A84LBF_xzwjbqwFnUnYqFTGBg2CXhKUWd-zg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] gpio: mvebu: add pwm support for Armada 8K/7K
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkdYH_ZdwF_aXTrp-5rYCifmHF2X8172513q9P+t4vy_RLg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1ad2cd72-3269-4c4b-32fa-08d8bed5b36f
+X-MS-TrafficTypeDiagnostic: CY4PR02MB2759:
+X-Microsoft-Antispam-PRVS: <CY4PR02MB27599455D701B97836385B19C6A00@CY4PR02MB2759.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:1751;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cTV2C1XCSOOq9EQV+TiIjq6aibjm0KHo6GqIobTJsmOhDw8ZwGVoo4H9r/t6bGR5/A4tn+7jbTulerV3QkOebJESwDiq2vJgrYLKJfb20Jhd9NdRbfuHcp6sKUVt0EcJx9BD/oLJ0APLk2sRKT4uuK24jzFAVMvPSNWwLLgGhbPLvjVaC6/RKnKdSJZ549PTxN867NoLKQeU3Vja1Qlgqe7wKHGt1rLpmN+ObBJyHEi9U3Eqccm0xW7TQNepOIaAlBn2uG7St6W9WeRE7dAJRu26khTsPjDcz77mvCvH087p8a0QVjnExiOdsw6N/MUWtq+jcljT2pnkmMAcrzuJjiRgyT0U53mrfs2BEhxb+WbGGBWC7j6bfAXVbj8o+/cQnL00wb75JlJbnWlpDZyBs0GqV3EMDgw/OKqNPnSqdaqbgq1EwzJbfNkAn0tcIsuXzPfuPz4QFpU/mljJFdv3WvB8opZqcS5zmi/vrSZ1Z0wa6xmAz3GqNmqNkMgJNZ+spjJCquNG54gaFE88LTtThg==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(396003)(376002)(46966006)(110136005)(316002)(54906003)(36906005)(8676002)(82310400003)(5660300002)(6666004)(356005)(8936002)(36756003)(4744005)(9786002)(336012)(53546011)(2906002)(44832011)(7636003)(426003)(4326008)(2616005)(478600001)(82740400003)(31686004)(186003)(47076005)(70206006)(70586007)(31696002)(26005)(50156003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2021 13:00:31.9836
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ad2cd72-3269-4c4b-32fa-08d8bed5b36f
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT057.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2759
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 11, 2021 at 12:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
->
-> Use the marvell,pwm-offset DT property to store the location of PWM
-> signal duration registers.
->
-> Since we have more than two GPIO chips per system, we can't use the
-> alias id to differentiate between them. Use the offset value for that.
->
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
->  drivers/gpio/gpio-mvebu.c | 101 +++++++++++++++++++++++++-------------
->  1 file changed, 68 insertions(+), 33 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index 4261e3b22b4e..6bd45c59056a 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -70,7 +70,12 @@
->   */
->  #define PWM_BLINK_ON_DURATION_OFF      0x0
->  #define PWM_BLINK_OFF_DURATION_OFF     0x4
-> +#define PWM_BLINK_COUNTER_B_OFF                0x8
->
-> +/* Armada 8k variant gpios register offsets */
-> +#define AP80X_GPIO0_OFF_A8K            0x1040
-> +#define CP11X_GPIO0_OFF_A8K            0x100
-> +#define CP11X_GPIO1_OFF_A8K            0x140
->
->  /* The MV78200 has per-CPU registers for edge mask and level mask */
->  #define GPIO_EDGE_MASK_MV78200_OFF(cpu)          ((cpu) ? 0x30 : 0x18)
-> @@ -93,6 +98,7 @@
->
->  struct mvebu_pwm {
->         struct regmap           *regs;
-> +       u32                      offset;
->         unsigned long            clk_rate;
->         struct gpio_desc        *gpiod;
->         struct pwm_chip          chip;
-> @@ -283,12 +289,12 @@ mvebu_gpio_write_level_mask(struct mvebu_gpio_chip *mvchip, u32 val)
->   */
->  static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwm *mvpwm)
->  {
-> -       return PWM_BLINK_ON_DURATION_OFF;
-> +       return mvpwm->offset + PWM_BLINK_ON_DURATION_OFF;
->  }
->
->  static unsigned int mvebu_pwmreg_blink_off_duration(struct mvebu_pwm *mvpwm)
->  {
-> -       return PWM_BLINK_OFF_DURATION_OFF;
-> +       return mvpwm->offset + PWM_BLINK_OFF_DURATION_OFF;
->  }
->
->  /*
-> @@ -775,51 +781,80 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
->         struct device *dev = &pdev->dev;
->         struct mvebu_pwm *mvpwm;
->         void __iomem *base;
-> +       u32 offset;
->         u32 set;
->
-> -       if (!of_device_is_compatible(mvchip->chip.of_node,
-> -                                    "marvell,armada-370-gpio"))
-> -               return 0;
-> -
-> -       /*
-> -        * There are only two sets of PWM configuration registers for
-> -        * all the GPIO lines on those SoCs which this driver reserves
-> -        * for the first two GPIO chips. So if the resource is missing
-> -        * we can't treat it as an error.
-> -        */
-> -       if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
-> +       if (of_device_is_compatible(mvchip->chip.of_node,
-> +                                   "marvell,armada-370-gpio")) {
-> +               /*
-> +                * There are only two sets of PWM configuration registers for
-> +                * all the GPIO lines on those SoCs which this driver reserves
-> +                * for the first two GPIO chips. So if the resource is missing
-> +                * we can't treat it as an error.
-> +                */
-> +               if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
-> +                       return 0;
-> +               offset = 0;
-> +       } else if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
-> +               int ret = of_property_read_u32(dev->of_node,
-> +                                              "marvell,pwm-offset", &offset);
-> +               if (ret < 0)
-> +                       return 0;
-> +       } else {
->                 return 0;
-> +       }
->
->         if (IS_ERR(mvchip->clk))
->                 return PTR_ERR(mvchip->clk);
->
-> -       /*
-> -        * Use set A for lines of GPIO chip with id 0, B for GPIO chip
-> -        * with id 1. Don't allow further GPIO chips to be used for PWM.
-> -        */
-> -       if (id == 0)
-> -               set = 0;
-> -       else if (id == 1)
-> -               set = U32_MAX;
-> -       else
-> -               return -EINVAL;
-> -       regmap_write(mvchip->regs,
-> -                    GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset, set);
-> -
->         mvpwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
->         if (!mvpwm)
->                 return -ENOMEM;
->         mvchip->mvpwm = mvpwm;
->         mvpwm->mvchip = mvchip;
-> +       mvpwm->offset = offset;
-> +
-> +       if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
-> +               mvpwm->regs = mvchip->regs;
-> +
-> +               switch (mvchip->offset) {
-> +               case AP80X_GPIO0_OFF_A8K:
-> +               case CP11X_GPIO0_OFF_A8K:
-> +                       /* Blink counter A */
-> +                       set = 0;
-> +                       break;
-> +               case CP11X_GPIO1_OFF_A8K:
-> +                       /* Blink counter B */
-> +                       set = U32_MAX;
-> +                       mvpwm->offset += PWM_BLINK_COUNTER_B_OFF;
-> +                       break;
-> +               default:
-> +                       return -EINVAL;
-> +               }
-> +       } else {
-> +               base = devm_platform_ioremap_resource_byname(pdev, "pwm");
-> +               if (IS_ERR(base))
-> +                       return PTR_ERR(base);
->
-> -       base = devm_platform_ioremap_resource_byname(pdev, "pwm");
-> -       if (IS_ERR(base))
-> -               return PTR_ERR(base);
-> +               mvpwm->regs = devm_regmap_init_mmio(&pdev->dev, base,
-> +                                                   &mvebu_gpio_regmap_config);
-> +               if (IS_ERR(mvpwm->regs))
-> +                       return PTR_ERR(mvpwm->regs);
->
-> -       mvpwm->regs = devm_regmap_init_mmio(&pdev->dev, base,
-> -                                           &mvebu_gpio_regmap_config);
-> -       if (IS_ERR(mvpwm->regs))
-> -               return PTR_ERR(mvpwm->regs);
-> +               /*
-> +                * Use set A for lines of GPIO chip with id 0, B for GPIO chip
-> +                * with id 1. Don't allow further GPIO chips to be used for PWM.
-> +                */
-> +               if (id == 0)
-> +                       set = 0;
-> +               else if (id == 1)
-> +                       set = U32_MAX;
-> +               else
-> +                       return -EINVAL;
-> +       }
-> +
-> +       regmap_write(mvchip->regs,
-> +                    GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset, set);
+Hi,
 
-Hi Baruch!
+On 1/22/21 1:50 PM, Linus Walleij wrote:
+> On Tue, Jan 19, 2021 at 6:28 AM Sai Krishna Potthuri
+> <lakshmi.sai.krishna.potthuri@xilinx.com> wrote:
+> 
+>> Add pinctrl support to query platform specific information (pins)
+>> from firmware.
+>>
+>> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+> 
+> I need an ACK from the maintainer of this file to merge it with the rest to
+> the pinctrl tree. I suppose Michal?
 
-Can you confirm that this line is on purpose and that it should be
-executed even for chips that use a separate regmap for PWM?
+here it is.
+Acked-by: Michal Simek <michal.simek@xilinx.com>
 
-Bartosz
-
->
->         mvpwm->clk_rate = clk_get_rate(mvchip->clk);
->         if (!mvpwm->clk_rate) {
-> --
-> 2.29.2
->
+Thanks,
+Michal
