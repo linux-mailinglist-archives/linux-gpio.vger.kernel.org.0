@@ -2,91 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE5E53003D3
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:10:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF0783003DE
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:12:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbhAVNJy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 08:09:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbhAVNIx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 08:08:53 -0500
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82288C0613D6
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:08:13 -0800 (PST)
-Received: by mail-lj1-x233.google.com with SMTP id a25so5296904ljn.0
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:08:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pqbgbuupJ6YRo4yM4nlPb/XZOmzm//nHXWr+3gjw64c=;
-        b=Ajt8rKN2KW1S1sLsIadPmAQEP+1A0NTg/t19H0R8JX0CPQvyuQLA0QynFcjja5exJl
-         u0O+PWNzII6aok5wdVdeCeDIcFSMVNbJzqhYcFv/z7BKi3Ls1mSeg+A4aUWrTOdAG5aQ
-         2QBWkwz6+6TxmuqS7/wjIV0Gcfk4cr9F6Za7i8PZGEt0KzumyGUwjMCXM2qpxUwv0iua
-         IL+hbMQf5rHN7R6I72yXF7/p3V0hVntkCe429mmQsOXGGQaJl4+xvQJUAAj9anGDD6t/
-         4Jm3J46fyodYOkQem3Akgahdtcn5waV8YPJrvdnSZjUQevfLPpiLau9NG+RI5hov1y+8
-         pMdw==
+        id S1727322AbhAVNLT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 08:11:19 -0500
+Received: from mail-oi1-f171.google.com ([209.85.167.171]:43684 "EHLO
+        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727990AbhAVNLQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 08:11:16 -0500
+Received: by mail-oi1-f171.google.com with SMTP id q25so5880260oij.10
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:10:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pqbgbuupJ6YRo4yM4nlPb/XZOmzm//nHXWr+3gjw64c=;
-        b=LcSxzaD+KclGINyJlrYKd9bgoFIWPHBTW2X5S//K1ejVSm3y9QIb1x0nArrqxutpL1
-         tJhbRZFm6HWlIE9ZA9aVikcG6QR10bug2prGTFSVOeHQTkDb3XElhuRMhBl0b1X1+QjQ
-         V00QIaqyfU1NjJ7bCKnmLwWrpIDdsl2J2ViPBIP6tvU3oTgwivi3sETUASsHsS9fMTEF
-         BRMIKr7jGTHt5NwQNanK++7/O5IUEtLEbhl1nf7zGnvnLbmt8IaOHpzOLqZAfc/m8CVA
-         YhPMOfn3li8auwdmtJePpyJAxSB9iMpv2vIFUwJI22eUKHAqgZhvMMBcf0WhhBGpPyX4
-         aEXw==
-X-Gm-Message-State: AOAM531D4zcw4bMPE6edZ9KBs8gVp91457PLA5tE0j0OprKgcm0MiNB3
-        XReDr28wbcYrrrubrEaCBiUNGQJD28inQI7qwgC+ag==
-X-Google-Smtp-Source: ABdhPJwK6aDRKF8coJzfBbb01pE6jH1d1hiwvfPbp93jmF30rLIOwCNMyRrSNUDDnN3vCDDzqsJyZdfQ4iNf5kMJPr8=
-X-Received: by 2002:a2e:88c1:: with SMTP id a1mr647295ljk.74.1611320891999;
- Fri, 22 Jan 2021 05:08:11 -0800 (PST)
+        bh=oJnvb0vHQ6Gs5fmNJSrN8qbCxo6Xp8n48rfPn1+Nt6k=;
+        b=GGblCYEWBmZjB365f77eaJiyfFMMP2Be3YMQYkQbtchBxU10WNPNgUpw5DcCmYnuRY
+         JCffWIUQoDGq3O5r9WOjpII+Bu47rKT8BqAxpACUzXXGuDu9T3mYHvFGOYewnuFc+3gl
+         B4/+RNVmzaARrPtu5ZN7faPMAHURW1z9pZ5h4yu88fnigPR2KhvaiK91AZxuLW24+NIi
+         5KraQ6M+gvv0Ld5PoWFPBwO6+NY6cPk6+WpruIhbiJxvgIjaYlcDoANDRNevHjxxUWzB
+         eInJmOObSvJBjeW6q7cR0Djmpnzl+BLIfUAteGIW9OF5ty8hxi9/SBrLdFxdX0dpSTkG
+         2EYQ==
+X-Gm-Message-State: AOAM53256EuJbimF5duvFMVvoJFQHyodG06g/UqAjeh2ziU/cejym9ab
+        6g+vZU3CNKxKT9I3JrXfRwhNoAIV4YMXEYajzYI=
+X-Google-Smtp-Source: ABdhPJw6CMvCbXiN2Iw7bX1RZMIu2c3Yn+m6QS3nBn63vzpFSH+7uv6GEewTNrutDBYnQjfUviUi6fOGzfI6ASMidLU=
+X-Received: by 2002:aca:31d5:: with SMTP id x204mr3101980oix.153.1611321028045;
+ Fri, 22 Jan 2021 05:10:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20210121223756.1112199-1-saravanak@google.com> <CAHp75VcrsVcUWaaE8JZHGDMyX9MKYONoVo+9-rzT7rvnkH5xSg@mail.gmail.com>
-In-Reply-To: <CAHp75VcrsVcUWaaE8JZHGDMyX9MKYONoVo+9-rzT7rvnkH5xSg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Jan 2021 14:08:00 +0100
-Message-ID: <CACRpkdYbxrJsaGVskzBjMp05P4NkP5bkReH3TjXJWivG0rFcVw@mail.gmail.com>
-Subject: Re: [PATCH v4] gpiolib: Bind gpio_device to a driver to enable
- fw_devlink=on by default
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
+References: <20210122123853.75162-1-andriy.shevchenko@linux.intel.com> <20210122123853.75162-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210122123853.75162-2-andriy.shevchenko@linux.intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 22 Jan 2021 14:10:17 +0100
+Message-ID: <CAMuHMdVxNNh+L-Hz7_QURPCWzGfKd-jTKyQXn2WbMpX4habDSA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] lib/cmdline: Update documentation to reflect behaviour
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 22, 2021 at 10:55 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Jan 22, 2021 at 12:40 AM Saravana Kannan <saravanak@google.com> wrote:
+Hi Andriy,
 
-> > @@ -596,6 +596,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
-> >                 gdev->dev.of_node = gc->of_node;
-> >         else
-> >                 gc->of_node = gdev->dev.of_node;
-> > +       gdev->dev.fwnode = of_fwnode_handle(gdev->dev.of_node);
+On Fri, Jan 22, 2021 at 1:39 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> get_options() API has some tricks to optimize that may be not so obvious
+> to the caller. Update documentation to reflect current behaviour.
 >
-> This looks like a complete breakage on ACPI enabled systems.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This looks broken to me too, if OF functions are compiled out
-this happens:
+Thanks for your patch!
 
-include/linux/of.h:#define of_fwnode_handle(node) NULL
+> --- a/lib/cmdline.c
+> +++ b/lib/cmdline.c
+> @@ -83,7 +83,7 @@ EXPORT_SYMBOL(get_option);
+>   *     get_options - Parse a string into a list of integers
+>   *     @str: String to be parsed
+>   *     @nints: size of integer array
+> - *     @ints: integer array
+> + *     @ints: integer array (must have a room for at least one element)
 
-And if there is a valid fwnode in the device it gets overwritten
-with NULL.
+must have room
 
-This is partly why I want the DT code to be in its own file.
+>   *
+>   *     This function parses a string containing a comma-separated
+>   *     list of integers, a hyphen-separated range of _positive_ integers,
+> @@ -91,6 +91,11 @@ EXPORT_SYMBOL(get_option);
+>   *     full, or when no more numbers can be retrieved from the
+>   *     string.
+>   *
+> + *     Returns:
+> + *
+> + *     The first element is filled by the amount of the collected numbers
 
-Yours,
-Linus Walleij
+the number of collected integers?
+
+Yes, the lack of articles in RU can be a disadvantage...
+
+> + *     in the range. The rest is what was parsed from the @str.
+> + *
+>   *     Return value is the character in the string which caused
+>   *     the parse to end (typically a null terminator, if @str is
+>   *     completely parseable).
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
