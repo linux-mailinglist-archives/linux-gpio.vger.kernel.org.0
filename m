@@ -2,99 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30E23300493
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:53:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FF833004C1
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 15:03:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbhAVNwq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 08:52:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbhAVNwn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 08:52:43 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A9ACC06174A
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:52:03 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id q20so3702165pfu.8
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:52:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0CdidXL9JqNASCWuJRmNf4tnrFhZ2Ys482HTC2wueeU=;
-        b=eC5U90fghxE+n7CKNa61zlt/x+toKTPUKMHPD58h8ct+ARa5CJJ3MLoHsqR1sGY6po
-         sjdAV4QjW9rKBFqbBlhJ8yMmsnMbe0ven0xG8CX6DYnaRFrjAA4P96wHvMHBd6Vj6XU6
-         xy/rfetnkfrrTdV/j7+97xOUlMg6e5Bw0rKfT7b+DuH+q3gaWtcYg24qmqx9wmjAqXSk
-         mtwaa9A6IOOtEwAaWna4M0cCTkEYUKV+rVraChYFJtkYb+9J3KqLyg2adleiqo702QHm
-         9M5lPjT1k6seAB5LZz1p9P5gYm/D+T8Uk1uj8WIQ6Y9IKPv4AG739uqhUWAes0Zik6we
-         NsSA==
+        id S1728136AbhAVOCS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 09:02:18 -0500
+Received: from mail-ot1-f47.google.com ([209.85.210.47]:36816 "EHLO
+        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728086AbhAVOBd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 09:01:33 -0500
+Received: by mail-ot1-f47.google.com with SMTP id v21so5126506otj.3;
+        Fri, 22 Jan 2021 06:01:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0CdidXL9JqNASCWuJRmNf4tnrFhZ2Ys482HTC2wueeU=;
-        b=PdcKU1cLEiKc28L1QsCJV2APNPGh4/hdC1asn89r/nK1Un+V4HANaK7ef9UpCgNZ7h
-         BI0kZHPrsHCyam9n8S4UXgnsksGcHZu1THDyj+mFFMkYDoks98iNtIlzlVy8XUz0dxWl
-         3Z9RtY/v0FI2OtTZ+jpSSHrvTvqDBY1Md0kad0LB7wUoCoukl4liBVLWowICLgQ7mjm9
-         jvDRBCDvBF2qbvBm7gUmyfqfWp88Z4G9p3n8g6Ngo/OcA/fOxUs2VIqe8nMwYkqTI2Jp
-         SxF0FwcIhHRwaH78vccA+JMHRe45K+r8glkYDLFnniUNyc4ZXYmzHQmG+Zq691ik89YX
-         8Wzg==
-X-Gm-Message-State: AOAM532nmlkm1ZY1GSXzSjFq3qdQhvMlsAHnbQdLjql1gmmb7itrFbY+
-        +OiN85REQ1XFGGWTtF4/bLYs
-X-Google-Smtp-Source: ABdhPJxoSgjsOi7KJvW0fiz+egsgCeN7n5OWTeHOlCuGtfnw/Wy6J3Ex3Apm3cGyw6U2OXiWp0ieKw==
-X-Received: by 2002:a63:1e56:: with SMTP id p22mr4842928pgm.70.1611323522493;
-        Fri, 22 Jan 2021 05:52:02 -0800 (PST)
-Received: from work ([103.77.37.137])
-        by smtp.gmail.com with ESMTPSA id f3sm2135041pfb.119.2021.01.22.05.51.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Jan 2021 05:52:01 -0800 (PST)
-Date:   Fri, 22 Jan 2021 19:21:58 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Subject: Re: [PATCH] pinctrl: actions: Add the platform dependency to drivers
-Message-ID: <20210122135158.GB32437@work>
-References: <20210121062547.27173-1-manivannan.sadhasivam@linaro.org>
- <CACRpkdYDB883r7RRa-i1T_aWvDW1n3c_LvScigQVnt5TsPbPCg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYDB883r7RRa-i1T_aWvDW1n3c_LvScigQVnt5TsPbPCg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=J/tUZzvykoZkd9JJt583sreD3ebEWjT4q0KMk8iAjqs=;
+        b=Kjc73uMaGJexrOckRL21e/BN2964KNcur3G+WcffjVJYY9CsxqG5y3QEZl+WwmPslZ
+         S6kkA8v63pvh6eFqJyL1eH9WJXL5pJ92XriDAg1ssvGfjW6wgarm/hOh240w+TR3QrD6
+         Y3LY7DGks6IJJqPl3lBqPXvLcS2XBqQijDmJj6fXrC5BYgErOy2G9spGX8Y2pf0RrVcw
+         Tvwu8yTX1mBN76PJ9TxfgyOhEE6dt3U27Hdt2j07zd1bEvhjwO/KgPdcwUr7hIL/PqDH
+         AgaFd+SeTSpVbmcpN8ncvGZJLrToRDZR5LXL4kIfvERwpDVB3d+cxV7kWSbQASa8SakW
+         HcqQ==
+X-Gm-Message-State: AOAM533IQW12rdEmvScMQuIFffXHATI5/T7pd1aZXnFy+ONWTEUKiJT+
+        334PfX4YRiAvvG2dkOSwJcB2msXZwg==
+X-Google-Smtp-Source: ABdhPJzhQuF9hbFB1akXwm17GIM4g4G+p+4YUHPYtMeU07fuzkJuP792ZqPdxjpJE/sSEs8J9neF2g==
+X-Received: by 2002:a05:6830:1614:: with SMTP id g20mr3330366otr.77.1611324052392;
+        Fri, 22 Jan 2021 06:00:52 -0800 (PST)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s123sm566256oos.3.2021.01.22.06.00.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Jan 2021 06:00:51 -0800 (PST)
+Received: (nullmailer pid 674371 invoked by uid 1000);
+        Fri, 22 Jan 2021 14:00:45 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+In-Reply-To: <20210121171747.3161543-2-vkoul@kernel.org>
+References: <20210121171747.3161543-1-vkoul@kernel.org> <20210121171747.3161543-2-vkoul@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: pinctrl: qcom: Add SM8350 pinctrl bindings
+Date:   Fri, 22 Jan 2021 08:00:45 -0600
+Message-Id: <1611324045.680277.674370.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 22, 2021 at 02:19:07PM +0100, Linus Walleij wrote:
-> On Thu, Jan 21, 2021 at 7:26 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
+On Thu, 21 Jan 2021 22:47:46 +0530, Vinod Koul wrote:
+> Add device tree binding Documentation details for Qualcomm SM8350
+> pinctrl driver.
 > 
-> > The Actions Semi pinctrl drivers are a mix of both ARM32 and ARM64
-> > platforms. So let's add the correct platform dependency to avoid them
-> > being selected on the other.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Are you not opting out of build tests when you do this?
-> 
-> What about:
-> 
-> depends on ARM64 || COMPILE_TEST
-> (etc)
-> ?
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../bindings/pinctrl/qcom,sm8350-pinctrl.yaml | 146 ++++++++++++++++++
+>  1 file changed, 146 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
 > 
 
-Oh yeah, I missed it. Will send v2.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Thanks,
-Mani
+yamllint warnings/errors:
 
-> Yours,
-> Linus Walleij
-> 
-> Yours,
-> Linus Walleij
+dtschema/dtc warnings/errors:
+Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.8/dist-packages/dtschema/schemas/pinctrl/qcom,tlmm-common.yaml'
+xargs: dt-doc-validate: exited with status 255; aborting
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.example.dt.yaml'
+Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.8/dist-packages/dtschema/schemas/pinctrl/qcom,tlmm-common.yaml'
+make[1]: *** [scripts/Makefile.lib:344: Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.example.dt.yaml] Error 255
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1370: dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1429976
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
