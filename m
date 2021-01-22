@@ -2,131 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2210630090E
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 17:53:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 084D5300AC3
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 19:11:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbhAVQwh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 11:52:37 -0500
-Received: from mail-ot1-f53.google.com ([209.85.210.53]:40287 "EHLO
-        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729445AbhAVQpD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 11:45:03 -0500
-Received: by mail-ot1-f53.google.com with SMTP id i20so5656648otl.7;
-        Fri, 22 Jan 2021 08:44:50 -0800 (PST)
+        id S1729036AbhAVSLK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 13:11:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbhAVR6A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 12:58:00 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 004ABC0613D6
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 09:57:19 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id m6so4313222pfk.1
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 09:57:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=4VYGCkLUZ2VNqZ5zWsKUgngBtD/KSgWDqt4NWk1tf8I=;
+        b=pxX8pRIHqOdD7i9A0OAsEdZxRboAwn3HvflWZNOMDnPHKLDcSIzMQpK2eksbkDrmIY
+         LkNsCvIxDijFUeCljHrWhea8BG0/5MOLEC3IfmU5ChSHPE3SQHTYimQAEg8uLf9gRDV4
+         9Jj9fiGz3uGgZoejrWTcH/WcKry0A1eoB670hvvMEX/VLzimn3xI9ZnplaTKPlvh6rgd
+         618Q7h8jbuAUwwRF6JtMLAM1AJ5alq6odiHY7Y1sRqFgOOiM60p8p9DPAsyDluKmsIC3
+         32VQutSdcnkIBhymN5vRAjYLkWIo3OicEu7VaOBQXhQSq2Cm7eWJNmoQFQiWhhUbEjJW
+         /riw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pnrEQfhYuBrzK0vLqeOqp/B/gAHb1xQ8W9kS69q0vhc=;
-        b=pI8W10DMWEQAItnG4UPTtU0UcZJFUzaFSgeQZTOzZqIMh8CB/ujfPW0DT/VMgEU4x3
-         zYTc2S8Y6Ghlle8LSs3oda6PAqW1GlE8eVbW+xSXeqLy/s1K26mI4fy6e7vAVz9AOVNk
-         yZ7mAkEUBrt7LuTHmwM5ehoK5j+cdZaX9kOBAfJLg9mKbFK0FrQ4JuECFCOdP/ujwu+a
-         3+9J8xZAX/UgubvUCkGoOWaBcb9jjQrqm+/rNQ0I6ErM4ChAQEFJljpW21FPHheOjdH5
-         b9VGkuo5ZW079u0g2yxHhxhPMThE65/3i/qxPi3JmpsrM+8dmA9JJOtwisiz87EfCQQ0
-         9NaQ==
-X-Gm-Message-State: AOAM531stR6Ex3v644ZZr76dFZhJGGvzOa0tpfA/zpD0dPYrAVoiHsfD
-        DWTX9+9uuuqD8izccRWgmg==
-X-Google-Smtp-Source: ABdhPJxWCkx1VUfDE7OUA/3RFJiCyA1xvZdIVdEX5OCRqoTUAmSOU6tAx5Dp0yfPw2mcrQ4TgUl56g==
-X-Received: by 2002:a05:6830:838:: with SMTP id t24mr4018961ots.139.1611333865388;
-        Fri, 22 Jan 2021 08:44:25 -0800 (PST)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q77sm1688312ooq.15.2021.01.22.08.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Jan 2021 08:44:24 -0800 (PST)
-Received: (nullmailer pid 939438 invoked by uid 1000);
-        Fri, 22 Jan 2021 16:44:23 -0000
-Date:   Fri, 22 Jan 2021 10:44:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: pinctrl: qcom: Add SM8350 pinctrl
- bindings
-Message-ID: <20210122164423.GA931999@robh.at.kernel.org>
-References: <20210121171747.3161543-1-vkoul@kernel.org>
- <20210121171747.3161543-2-vkoul@kernel.org>
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=4VYGCkLUZ2VNqZ5zWsKUgngBtD/KSgWDqt4NWk1tf8I=;
+        b=Z1L/2+yWYTNb2ZCacopmER3gJXG2E7lx9i9aPD+6cnHM1N7rn7dxaxKsHu7YkPcY3q
+         gvxVc27gfw6FfF06eWol2kephabbs6WFw509npYWdyhpRofmVPgI8tWTDAsi6iawKkbx
+         lEsa4twjnzp6z1cKALmbz/rtE4vjATMhuS92/ZGML7cC2JyoxMCODaQiKwLzRunO0tcw
+         MtrbVz4vW4iJeyBlIHjdJFDhVz5x2MjVl/geb7Zl0Tn14TliOR7wHIZjiajI1/Y0yImL
+         znS4RYZq3Cr2qVRzRuTy3f7aqWlTmX95w6VOrH79NQFWzd6BFy3+WgCkGPjApcKuUcT/
+         rpLw==
+X-Gm-Message-State: AOAM530EjqJwLDeS56tyer/VCm4RjlXaViaubLnqmKYmsb3PsnkQ4xNM
+        zusu+nU3EUuacIcW6rB5Vn0qt0slcnh7Ns57Q1o=
+X-Google-Smtp-Source: ABdhPJyGeMkpNsBx6/yL8yw8UhRx7OTyxbjobPW+K+R9iP7kDd5Uv83/n/Kb8fiRO2edOCsatfbW0mj05hddqwERTfg=
+X-Received: by 2002:a63:ef14:: with SMTP id u20mr5811026pgh.93.1611338239494;
+ Fri, 22 Jan 2021 09:57:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210121171747.3161543-2-vkoul@kernel.org>
+Sender: brianphilippe50@gmail.com
+Received: by 2002:a17:90b:3844:0:0:0:0 with HTTP; Fri, 22 Jan 2021 09:57:19
+ -0800 (PST)
+From:   "Mrs. Nadia Emaan" <mrsnadiaemaan50@gmail.com>
+Date:   Fri, 22 Jan 2021 17:57:19 +0000
+X-Google-Sender-Auth: _VpxTkEtrHKGZhIvrLXkXqgQmic
+Message-ID: <CAGvUTU8YC-76gZZY7=gZ+Er_v9vD2gZVD2HCsHNxTVvshf45Rw@mail.gmail.com>
+Subject: May the peace of God be with You;:
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 10:47:46PM +0530, Vinod Koul wrote:
-> Add device tree binding Documentation details for Qualcomm SM8350
-> pinctrl driver.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  .../bindings/pinctrl/qcom,sm8350-pinctrl.yaml | 146 ++++++++++++++++++
->  1 file changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..706bc79db60b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
-> @@ -0,0 +1,146 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm8350-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. SM8350 TLMM block
-> +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
-> +
-> +description: |
-> +  This binding describes the Top Level Mode Multiplexer (TLMM) block found
-> +  in the SM8350 platform.
-> +
-> +allOf:
-> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sm8350-tlmm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts: true
-> +  interrupt-controller: true
-> +  '#interrupt-cells': true
-> +  gpio-controller: true
-> +  gpio-reserved-ranges: true
-> +  '#gpio-cells': true
-> +  gpio-ranges: true
-> +  wakeup-parent: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +patternProperties:
-> +  '-state$':
-> +    oneOf:
-> +      - $ref: "#/$defs/qcom-sm8350-tlmm-state"
-> +      - patternProperties:
-> +          ".*":
-> +            $ref: "#/$defs/qcom-sm8350-tlmm-state"
-> +
-> +'$defs':
+Hello My beloved,
 
-No need for quotes. Otherwise,
+I am contacting you through this means because I need your urgent
+assistance and also help me to carry a charity project in your
+country. I found your email address as a true child of God for past
+few days now that I have been praying to know if you are really the
+chosen one for this great charity project, according to God's
+direction, after all prayers I am convinced, and I have decided to
+contact you. Please, i want you use the funds for the Lord's work,
+with confidence, read and respond now.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 
-I'm assuming this passes checks because I can't check due to the 
-dependencies.
+My name is Ms. Nadia Faroul Emaan , a widow, but currently based in West
+Africa since my life with my late husband, who was a businessman in
+this country before dying some years ago. We were married to many
+years without a child. He died after a brief illness that lasted only
+six days and I myself have been suffering from an ovarian cancer
+disease. At this moment I am about to finish the race in this way
+because the disease has reached a very bad stage, without any family
+member and without children. I hope you do not expose or betray this
+trust and I am sure that I am about to trust you for the mutual
+benefit of orphans and the less privileged. I have some funds that I
+inherited from my late husband, the total sum of ($ 12,500,000.00)
+deposited at a bank here in Burkina Faso. After knowing my current
+state of health, I decided to trust you with this fund, believing that
+you will use it in the way I will instruct here.
 
-Rob
+
+you will use this $12.5 Million for public benefit as follows;
+
+1. Establish An Orphanage Home To Help The Orphanages Children.
+2. Build A Hospital To Help The Poor.
+3. Build A Nursing Home For Elderly People Need Care & Meal.
+
+You will named them after my late husband.Therefore, I need you to
+help me and claim this money and use it for charities, for orphanages
+and provide justice and help to the poor, needy and to promote the
+words of God and the effort to maintain the house of God, according to
+the bible in the book of. Jeremiah 22: 15-16, not minding out
+different religions.
+
+It will be a pleasure to compensate with 40% percent of the total
+money for your effort in handling the transaction, while 60% of the
+money will go to charity project.
+
+All I need from you is sincerity and ability to complete the task of
+God without any failure. It will be my pleasure to see that the bank
+has finally released and transferred the fund to your bank account in
+the country, even before I die here in the hospital, due to my current
+state of health, everything must be processed as soon as possible.
+
+I am waiting for your immediate response, if you are only interested
+in obtaining more details about the transaction and execution of this
+humanitarian project for the glory and honor of God.
+
+Sorry if you received this letter in your spam, is due to recent
+connection/network error here in the country.
+
+Please I am waiting for your urgent reply now.
+
+May God Bless you,
+Mrs. Faroul Nadia Emaan.
