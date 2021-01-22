@@ -2,58 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9C6230025A
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 13:04:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB48C30025E
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 13:04:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbhAVMC5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 07:02:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48724 "EHLO
+        id S1726740AbhAVMD6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 07:03:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727718AbhAVMCq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 07:02:46 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F9EC061786
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 04:02:06 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id bx12so6230170edb.8
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 04:02:06 -0800 (PST)
+        with ESMTP id S1727850AbhAVMDa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 07:03:30 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8532C061793
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 04:02:18 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id ke15so7259100ejc.12
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 04:02:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2KI6hX15GLNc3/Zwk+3jktz2PkpyxrJPc9EgkCyOlB8=;
-        b=G5tVjaSycld7W6lDh+iKl7DzUf6NbO+3prZA1wc1j7++uVePfpDwzZoa/VP2QdU6rM
-         FirwaeZ0RIggnrr0RHY0p3M+/qG6Jo2KCyL5oT3CS/zPiW8gliS/pVlnIJXHlM6WfCuz
-         ZP8dor+tlETUeNkSP7s7VOCfv21xPOOfKRjoP6WUsC3BpFYUQmfgXFaQew2llvm2fUVZ
-         RAZyQYTzBpG+/frhJAFGOS3rBbquRMssS//Undpgd6ys43ylj0o3ARsZ5AY/8N+2AykQ
-         +Qd3dqShs7jgq2bmnizUg0YgZBjC+IgOKQsGMXTS7K4pUR143g8UkPeFaOtkhTgo3m1R
-         cq3w==
+        bh=slHYFFxR9Z+LS4QCDTC1/yAWR1DNMktmjKNs0Jbqoa4=;
+        b=XqIjW3c+OgQmTLy890KH8ay1G/1B8eJSSwzK8T47YnvlJ2uhaC5xhG8DASHlyRRx+6
+         Qv87iZikSDq6Q2zBxVdcBgOmKsyuxIme/mtAgiSzZsJSRyHqdVCZv+mKgaqw/HrRucOo
+         MlzOd3FffMQNwMjKS0zic01y4qVYngNlrBGcZ5amsa8toOiARCoDgGtBLbmRsXewr7X1
+         te115otsLSzRtAbG/nZL+3EI33s7mZ70YTkQA3lYDXRHwa8fV6P+gAbptJXds23Gaxd8
+         kiaBXXX/joLplm6CrBJXyL1bcyWZgtzRiB27Bk8BN/jE3kbrlhMGOZgCYAEvauOGbQ/j
+         xYpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2KI6hX15GLNc3/Zwk+3jktz2PkpyxrJPc9EgkCyOlB8=;
-        b=Xy/oD3nluRrymZTLb+vJSI11rmyxQ0JurPYc2o1GJICIZAy95DiOJW7YZy0WazwJMg
-         2kg13BI5M31LtS0bDrFLyRBVSAL0zOMwGpAeT6RvxxzKhVZZJgNHYm81DN4+hQvONw+A
-         8s+Roxdg3AXJCxHdfF1vv9g5Fg4DLDWkjS6H89EDJCl89o3fVq8DlejFP4looxk78Fgj
-         Vocjb7iKC3KKuHvupYIpClJUb3DbE/ZF3GyfPcE/6iXU/2SWx5KZ6RMMadkaTmygwLMr
-         MuQ3KMuTdfDL3hKtLcCrzTEcNP1Yen1skJybSNyNEBtAJEktaLrtlZvuyyJwU6b5JHbO
-         6XLA==
-X-Gm-Message-State: AOAM5313ORKLoPKLasJXg6Fj+mpmX8S9rMxI5n1sJv7DKe716I4FSVB9
-        0quZrZ43Pkg8uSxViQK6qSbR/ha6Kkq1eCKXwVBl3g==
-X-Google-Smtp-Source: ABdhPJyvNh+GV3SV/S4iKNTv46EFVOvM0xFOINGooc6QIuDXKfliDJ4znnxaI2fKibq88mDu+fAZMCmGZI0/3MSRMCk=
-X-Received: by 2002:a05:6402:35ca:: with SMTP id z10mr2982399edc.186.1611316925382;
- Fri, 22 Jan 2021 04:02:05 -0800 (PST)
+        bh=slHYFFxR9Z+LS4QCDTC1/yAWR1DNMktmjKNs0Jbqoa4=;
+        b=WlhRTOcT0w3a5AGYSzWWTbVeJdtHQ4cIG8+6S4FiS3Fd4edlEO3RiBKWbqoY2cJtXN
+         yjBfu4T/J+dso9LAOiYRuXimJeOx7OqoPgiU9raFzWZAwhgPLwzSZWyGT6CLCKDcabit
+         JAZI1c525qUCp+4zsbJNS08pvviqHRxMWfLftwPknOxmqona+k3BJSZoqrtVvHP74Dxu
+         vqNA0jsu2PNjp1bDiJbThcGP9vPq758K4j+K/pV6Zu8jOVpNbT/axpw1Uq/UA+X2Fp70
+         erQkPnx9hQcz+qbcuQYpNiJZNpn6etd2U1fFe/1iyJEKZz8wSSGHgQtXlZoN6YF7GnbY
+         s+jw==
+X-Gm-Message-State: AOAM532g4ofjAc4miUUVDxCFBQz9PMOf338fuqJRvB7SGKM/iEBiQF4v
+        gngLrp5GRPQ+07Db7TEdQw/l2koR2NkdJip0TJHadw==
+X-Google-Smtp-Source: ABdhPJyuXpVTE/3WXs8SQxTM5UHQxMuuzkEY9SwxwGhwXJB3kOm/gXrkhSEd722NuemIo/CF5hmL3CLsY6PmhPlAx9s=
+X-Received: by 2002:a17:906:1c4b:: with SMTP id l11mr2785269ejg.155.1611316937572;
+ Fri, 22 Jan 2021 04:02:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20210108092405.19291-1-zhengyongjun3@huawei.com>
-In-Reply-To: <20210108092405.19291-1-zhengyongjun3@huawei.com>
+References: <20210108092355.19228-1-zhengyongjun3@huawei.com>
+In-Reply-To: <20210108092355.19228-1-zhengyongjun3@huawei.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 22 Jan 2021 13:01:54 +0100
-Message-ID: <CAMpxmJXHs4ixgQPD+M5XJdHWEJLX-DZvJ_D65qc1MgiB6OnjLQ@mail.gmail.com>
-Subject: Re: [PATCH v2 -next] gpio: max77620: convert comma to semicolon
+Date:   Fri, 22 Jan 2021 13:02:06 +0100
+Message-ID: <CAMpxmJULe5QbvCxPHecDhLjGUs_FX1q_k+TBFuOruWKeKZr7bw@mail.gmail.com>
+Subject: Re: [PATCH v2 -next] gpio: tegra186: convert comma to semicolon
 To:     Zheng Yongjun <zhengyongjun3@huawei.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -65,22 +68,22 @@ On Fri, Jan 8, 2021 at 10:23 AM Zheng Yongjun <zhengyongjun3@huawei.com> wrote:
 >
 > Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
 > ---
->  drivers/gpio/gpio-max77620.c | 2 +-
+>  drivers/gpio/gpio-tegra186.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-> index 7c0a9ef0b500..82b3a913005d 100644
-> --- a/drivers/gpio/gpio-max77620.c
-> +++ b/drivers/gpio/gpio-max77620.c
-> @@ -325,7 +325,7 @@ static int max77620_gpio_probe(struct platform_device *pdev)
->         girq->parents = NULL;
->         girq->default_type = IRQ_TYPE_NONE;
->         girq->handler = handle_edge_irq;
-> -       girq->init_hw = max77620_gpio_irq_init_hw,
-> +       girq->init_hw = max77620_gpio_irq_init_hw;
->         girq->threaded = true;
->
->         platform_set_drvdata(pdev, mgpio);
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index 9500074b1f1b..05974b760796 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -647,7 +647,7 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+>         gpio->gpio.get_direction = tegra186_gpio_get_direction;
+>         gpio->gpio.direction_input = tegra186_gpio_direction_input;
+>         gpio->gpio.direction_output = tegra186_gpio_direction_output;
+> -       gpio->gpio.get = tegra186_gpio_get,
+> +       gpio->gpio.get = tegra186_gpio_get;
+>         gpio->gpio.set = tegra186_gpio_set;
+>         gpio->gpio.set_config = tegra186_gpio_set_config;
+>         gpio->gpio.add_pin_ranges = tegra186_gpio_add_pin_ranges;
 > --
 > 2.22.0
 >
