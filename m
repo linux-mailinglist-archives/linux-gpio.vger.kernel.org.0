@@ -2,165 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC5CA30074E
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 16:30:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EBD030076E
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 16:35:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbhAVP2y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 10:28:54 -0500
-Received: from mx-ginzinger.sigmacloud.services ([185.154.235.147]:50589 "EHLO
-        mx-ginzinger.sigmacloud.services" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728651AbhAVP2s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 22 Jan 2021 10:28:48 -0500
-X-Greylist: delayed 369 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Jan 2021 10:28:46 EST
-Received: from [31.193.165.228] (port=43253 helo=mx-ginzinger.sigmacloud.services)
-        by mx-ginzinger.sigmacloud.services with esmtps (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.82_1-5b7a7c0-XX)
-        (envelope-from <Henri.Roosen@ginzinger.com>)
-        id 1l2yFm-0007p2-1I; Fri, 22 Jan 2021 16:21:38 +0100
-Received: from exc1.buero.ginzinger.com (10.1.1.204) by
- exc1.buero.ginzinger.com (10.1.1.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Fri, 22 Jan 2021 16:21:38 +0100
-Received: from exc1.buero.ginzinger.com ([fe80::ad39:a353:4517:a5c4]) by
- exc1.buero.ginzinger.com ([fe80::ad39:a353:4517:a5c4%2]) with mapi id
- 15.01.2106.002; Fri, 22 Jan 2021 16:21:38 +0100
-X-CTCH-RefID: str=0001.0A782F1A.600AED82.005D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-From:   Roosen Henri <Henri.Roosen@ginzinger.com>
-To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-CC:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-Subject: libgpiod/dts: way to prevent direction switching and setting initial state of gpio
-Thread-Topic: libgpiod/dts: way to prevent direction switching and setting
- initial state of gpio
-Thread-Index: AQHW8NJHs+d4EOA6AUSaZlJvoM9caw==
-Date:   Fri, 22 Jan 2021 15:21:37 +0000
-Message-ID: <430dbc57416c0da4fcf36c80b029830013d909ed.camel@ginzinger.com>
-Accept-Language: en-US, de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.2.1.65]
-x-exclaimer-md-original-subject: [NOSIG][NODISC]libgpiod/dts: way to prevent
- direction switching and setting initial state of gpio
-x-exclaimer-md-config: 9dd172f7-de2e-4231-b886-ec11f46e03b3
+        id S1728651AbhAVPeA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 10:34:00 -0500
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:39442 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729201AbhAVPds (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 10:33:48 -0500
+Received: by mail-ot1-f42.google.com with SMTP id i30so5416144ota.6;
+        Fri, 22 Jan 2021 07:33:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dH4mL8XiIr5tXI9uOJYWrjHPyyDGTmGdAo3u+JoYNyI=;
+        b=oBZF5E+O37tD7mXR5R+EPg9fv910Lpu+09blql9o9OFNIXlAa7Xk8ZO2/8cO9xlbGO
+         UVocxpLqd9EJSnsBnBLFvWH1UWCieaV9zAwdZi7c36nIbX6j9BNtqOMBpyXWtz3eJZeg
+         v54pFzwxUTrj1l5KBPeEgoH7C/YOhFvmKcgQgXkkOWpG5rIseUHnkb+2h6P/Vh4QEOLq
+         xPIA384o3j6iIS9JqPdk77hi5743O+oAJY47PSJOTT5cSE0gxXUDz0TGPfgFHg4htnen
+         1pbIx7Pgg3RziKq3x9IwBWoKCJ3Kn0IdpagQ+cDbIl/aYzSXraveBeiwuO2q4LhH85JE
+         UJiQ==
+X-Gm-Message-State: AOAM530SDdgFbkjH7APXSWICE7kywA6J+4sIhJ9XaIgTxTlVwcR8mrqk
+        JKWYD9Vf3NHNg2PquWTzWtXgFIxX0sTg9NiRRkw=
+X-Google-Smtp-Source: ABdhPJzvvYGMEOddIwDfbu1Ch1Ldzr38ZXPQBNQ7cEfEJMp99F9DE2EAd0/mfH2G3gSE7PO0L9iUsXXe2XtRwLJdvX0=
+X-Received: by 2002:a05:6830:2313:: with SMTP id u19mr534710ote.321.1611329586496;
+ Fri, 22 Jan 2021 07:33:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----FB97E7E6F1A64DDAC145824529D93912"
+References: <20210108152447.116871-1-f.suligoi@asem.it> <CAHp75Vf54TTXr4HH6TxMo0QRTBa5V3=La1LCDxSizaYZjJM9Qg@mail.gmail.com>
+In-Reply-To: <CAHp75Vf54TTXr4HH6TxMo0QRTBa5V3=La1LCDxSizaYZjJM9Qg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 22 Jan 2021 16:32:55 +0100
+Message-ID: <CAJZ5v0iVp8z7WAqX1NxQNKx55tfwUJtx-gK67x=Npxjf05g4Kg@mail.gmail.com>
+Subject: Re: [PATCH v1] Documentation: ACPI: add new rule for gpio-line-names
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This is an S/MIME signed message
+On Fri, Jan 8, 2021 at 5:03 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, Jan 8, 2021 at 5:28 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
+> >
+> > The gpio-line-names lists must respect some rules.
+> >
+> > This patch adds a new rule in documentation, to avoid
+> > the use of duplicate names in the same gpiochip.
+>
+> Thanks!
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> > ---
+> >  Documentation/firmware-guide/acpi/gpio-properties.rst | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
+> > index b36aa3e743d8..4e264c16ddff 100644
+> > --- a/Documentation/firmware-guide/acpi/gpio-properties.rst
+> > +++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
+> > @@ -146,6 +146,7 @@ following rules (see also the examples):
+> >      other words, it is not mandatory to fill all the GPIO lines
+> >    - empty names are allowed (two quotation marks ``""`` correspond to an empty
+> >      name)
+> > +  - names inside one GPIO controller/expander must be unique
+> >
+> >  Example of a GPIO controller of 16 lines, with an incomplete list with two
+> >  empty names::
+> > --
 
-------FB97E7E6F1A64DDAC145824529D93912
-Content-Language: de-DE
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <12B566C00A8C214E8B8AC3164E13D40D@ginzinger.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-
-SGksDQoNCkknbSB1c2luZyBsaWJncGlvZCB0byBhbGxvdyBncGlvIGZ1bmN0aW9uYWxpdHkgdG8g
-YmUgdXNlZCBmcm9tDQp1c2Vyc3BhY2UuDQoNCkJlY2F1c2Ugb2YgYm9hcmQgZGVzaWduLCBzb21l
-IGdwaW8ncyBzaG91bGQgb25seSBiZSB1c2VkIGFzIGlucHV0Lg0KRHJpdmluZyBzdWNoIGdwaW8n
-cyBhcyBvdXRwdXQgbWlnaHQgY2F1c2UgdW5kZWZpbmVkIGJlaGF2aW9yIG9yIGRhbWFnZQ0KdGhl
-IGJvYXJkLg0KDQpUaGUgcHJvcGVyIHdheSB0byBjb25maWd1cmUgc3VjaCBhIGxpbWl0YXRpb24g
-d291bGQgYmUgdXNpbmcgdGhlIGtlcm5lbA0KZGV2aWNldHJlZSBkZWZpbml0aW9uIG9mIGEgZ3Bp
-by4gVG8gbXkga25vd2xlZGdlLCB0aGUga2VybmVsIGR0cw0KY3VycmVudGx5IGhhcyBubyB3YXkg
-b2YgcHJldmVudGluZyB0aGlzLg0KDQpBbHNvLCBmdW5jdGlvbmFsaXR5IGlzIG5lZWRlZCB0byBi
-ZSBhYmxlIHRvIGRlZmluZSB0aGUgaW5pdGlhbA0KZGlyZWN0aW9uL3N0YXRlIG9mIGdwaW8ncywg
-d2hpY2ggc2hvdWxkIGJlIGFsbG93ZWQgdG8gYmUgY2hhbmdlZCBieQ0KdXNlcnNwYWNlIGF0IGEg
-bGF0ZXIgcG9pbnQgaW4gdGltZS4NCg0KVG8gbXkga25vd2xlZGdlLCB0aGUga2VybmVsIGR0cyBj
-dXJyZW50bHkgaGFzIG5vIHByb3BlciB3YXkgb2YNCnN1cHBvcnRpbmcgdGhpcy4gVGhlcmUgaXMg
-dGhlICJncGlvLWhvZyIgdG8gZGVmaW5lIHRoZSBpbml0aWFsIHN0YXRlIG9mDQphIGdwaW8gYXQg
-Ym9vdCB0aW1lLCBidXQgdGhlbiBjYW5ub3QgYmUgdXNlZCBieSBsaWJncGlvZCBpbiB1c2Vyc3Bh
-Y2UsDQphcyB0aGUgcGluIGlzIHJlcG9ydGVkIHRvIGJlICJpbiB1c2UiLg0KDQpJJ20gbm90IHN1
-cmUgaWYgdGhlc2UgdHdvIHJlcXVpcmVtZW50cyBoYXZlIGJlZW4gZGlzY3Vzc2VkIGluIHRoZSBw
-YXN0LA0KYnV0IGluIG15IG9waW5pb24sIGluIG9yZGVyIHRvIHByb3Blcmx5IHN1cHBvcnQgZ3Bp
-bydzIGluIHVzZXJzcGFjZQ0KZnJvbSBhIGJvYXJkcyBwZXJzcGVjdGl2ZSwgdGhpcyBmdW5jdGlv
-bmFsaXR5IGlzIG5lZWRlZC4NCg0KSSdkIGxpa2UgYW4gb3BpbmlvbiBmcm9tIHRoZSBtYWludGFp
-bmVycyBhYm91dCB0aGVzZSByZXF1aXJlbWVudHMgYW5kDQppbiBjYXNlIHRoZXJlIGlzIG5vIG9i
-amVjdGlvbiB3ZSBjb3VsZCBzdGFydCBhIGRpc2N1c3Npb24gYWJvdXQgdGhlDQpwcm9wZXIgd2F5
-IHRvIGltcGxlbWVudCB0aGlzLg0KDQpUaGFua3MsDQpIZW5yaQ0K
-
-------FB97E7E6F1A64DDAC145824529D93912
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-
-MIIOFAYJKoZIhvcNAQcCoIIOBTCCDgECAQExDzANBglghkgBZQMEAgEFADALBgkq
-hkiG9w0BBwGgggsYMIIF5jCCA86gAwIBAgIQapvhODv/K2ufAdXZuKdSVjANBgkq
-hkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFu
-Y2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExp
-bWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3Jp
-dHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMC
-R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
-ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
-U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEi
-MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYh
-UPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9NEjk6vW7rN/5sYFLIP1of3l0NKZ6
-fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+UlNEQ1/5ErCsHq9x9aU/x1
-KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2qvGlnHJvijjI
-03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZjrqc
-k39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMB
-AAGjggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNV
-HQ4EFgQUgq9sjPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1Ud
-EwEB/wQIMAYBAf8CAQAwEQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/
-oD2GO2h0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRp
-b25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEBBGUwYzA7BggrBgEFBQcwAoYvaHR0
-cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRkVHJ1c3RDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkqhkiG9w0BAQwF
-AAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+jsQgwR
-GiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDc
-ZoFD7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwp
-WZT89RY0wpJO+2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNm
-NppI4ZNMUH4Tam85S1j6E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade
-2022O/tUU1gb4jfWCcyvB8czm12FgX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztve
-BdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiOSEmIDsS5N5w/8IW1Hva5hEFy6fDA
-fd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz/W3JlHaeI5iKFn4UJu1/
-cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSam9V1niiCfOBe
-2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpOUvxh
-csjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIwggUqMIIEEqAD
-AgECAhEAgK6FAFOiNDdgM5+lyjA8gTANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
-Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9E
-TyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0Ew
-HhcNMTgwNzE4MDAwMDAwWhcNMjEwNzE3MjM1OTU5WjArMSkwJwYJKoZIhvcNAQkB
-FhpoZW5yaS5yb29zZW5AZ2luemluZ2VyLmNvbTCCASIwDQYJKoZIhvcNAQEBBQAD
-ggEPADCCAQoCggEBAMmwBmquEWhoUH5WNJe7bQRLBAccBq0ZBVQbLAbJQwN5bg9i
-wSsPG7mveXqXYWpuHhbb7lbs3zFTS4H511nWurRqcvVceVOs5vtsbVMHjfuNmHo8
-WrMCJPFBw64uBUoGdsiwuAvA0CeFpPyA/CsAuvIbmvEF+GxMjaeQhqQ9d5K4z4I6
-w6R3wFtNJiSUMUSdgtnNPDYnUIKILR3mfbSCHWA7Pepe1dh+S9JFWhcoNv1h6D/R
-SAKVdUtC2GS0vt3nk4cEg8Z0s4/OvVDRm2jluvPK+fEeUfGahwHFrk68nYTq3v2P
-dMxHg93+Li+jYAX6R3XXGbdcjZJ3UM5MGEKq+u0CAwEAAaOCAdowggHWMB8GA1Ud
-IwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBQ9s9JCcV1JOI2I
-/oXSyF8VIj2VhTAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUE
-FjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIB
-AwUwKzApBggrBgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMw
-WgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RP
-UlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYI
-KwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2NhLmNv
-bS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0Eu
-Y3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wJQYDVR0R
-BB4wHIEaaGVucmkucm9vc2VuQGdpbnppbmdlci5jb20wDQYJKoZIhvcNAQELBQAD
-ggEBAKdv6bSTLlu63Ckq7aibIwJCE0hhs83Z6Jr5G2wWrwVdFB9Dkb6l2NmdGRoq
-qbSz3Remg5qamURXec3XdEBxO1FPMcZJrHKAZuNjYdj1tzYA/rbTdYmVbno1TG5/
-O6rVb7A624UZHoucW+NpfNCrxfQY+BliMbCKJEWqQE0P6vyDenSYa76NLt1699B5
-vyHbYLrJHAjFzHe7BqSkP815C47KpJFXuGYasewJDOpvyINtn6kBlrAIanoVfDFa
-W9aUjUeNjqmcCEN4TpuSZCf1L8oWAjv5oH0R87orEAFZnSVWDIW8i7TMiFtCiF3D
-LYmN6J96LCNCs0iQIFqcnJnkHAkxggLAMIICvAIBATCBrTCBlzELMAkGA1UEBhMC
-R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
-ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
-U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQCA
-roUAU6I0N2Azn6XKMDyBMA0GCWCGSAFlAwQCAQUAoIHkMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIxMDEyMjE1MjE0MFowLwYJKoZI
-hvcNAQkEMSIEIAG2j7KeCFskD2uOowQSLCqIw6rlaPDyf31jbFXwQWR9MHkGCSqG
-SIb3DQEJDzFsMGowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQME
-AQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
-BSsOAwIHMA0GCCqGSIb3DQMCAgEoMA0GCSqGSIb3DQEBAQUABIIBAEDxNv4EUq+N
-P8tqj9P2QqrWDfezxoqiZCIEzR4kJWxha1t/t4WC3ZIS9+a5LOEfhDArTMLdlzJO
-YP0eG8Kr2mG3vFbhUs+CQ6TDdM4vYFWSFiwSTSi90iXrjQP+t8Jcf6cwzYbSLY4v
-clXrrmEihMCYWyPs+85pjFZsQxPBYqCjhOmwhMXzvtOXL6/fu3/u0MeLRJ+72Tql
-jdy0EE9vbm/68auThVr+Ixv5ILJ/mzFEuVgQy2w/0UfRlhk4vk0BLuX9gW9vZoW1
-M5oytoURWz/L3ZHzbbEPc47WY1ROcuIVJeLdZG2mn2m+Udv1Tiyfs/pfOBU2+xuZ
-Sa7qOjlGiZY=
-
-------FB97E7E6F1A64DDAC145824529D93912--
-
+Applied as 5.12 material, thanks!
