@@ -2,40 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF0783003DE
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:12:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40D8D3003E6
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:14:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbhAVNLT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 08:11:19 -0500
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:43684 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727990AbhAVNLQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 08:11:16 -0500
-Received: by mail-oi1-f171.google.com with SMTP id q25so5880260oij.10
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:10:53 -0800 (PST)
+        id S1726820AbhAVNOW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 08:14:22 -0500
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:33620 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbhAVNOC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 08:14:02 -0500
+Received: by mail-ot1-f46.google.com with SMTP id 63so5014715oty.0
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:13:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oJnvb0vHQ6Gs5fmNJSrN8qbCxo6Xp8n48rfPn1+Nt6k=;
-        b=GGblCYEWBmZjB365f77eaJiyfFMMP2Be3YMQYkQbtchBxU10WNPNgUpw5DcCmYnuRY
-         JCffWIUQoDGq3O5r9WOjpII+Bu47rKT8BqAxpACUzXXGuDu9T3mYHvFGOYewnuFc+3gl
-         B4/+RNVmzaARrPtu5ZN7faPMAHURW1z9pZ5h4yu88fnigPR2KhvaiK91AZxuLW24+NIi
-         5KraQ6M+gvv0Ld5PoWFPBwO6+NY6cPk6+WpruIhbiJxvgIjaYlcDoANDRNevHjxxUWzB
-         eInJmOObSvJBjeW6q7cR0Djmpnzl+BLIfUAteGIW9OF5ty8hxi9/SBrLdFxdX0dpSTkG
-         2EYQ==
-X-Gm-Message-State: AOAM53256EuJbimF5duvFMVvoJFQHyodG06g/UqAjeh2ziU/cejym9ab
-        6g+vZU3CNKxKT9I3JrXfRwhNoAIV4YMXEYajzYI=
-X-Google-Smtp-Source: ABdhPJw6CMvCbXiN2Iw7bX1RZMIu2c3Yn+m6QS3nBn63vzpFSH+7uv6GEewTNrutDBYnQjfUviUi6fOGzfI6ASMidLU=
-X-Received: by 2002:aca:31d5:: with SMTP id x204mr3101980oix.153.1611321028045;
- Fri, 22 Jan 2021 05:10:28 -0800 (PST)
+        bh=p8kHmwLhN0bgOfM/91MGxJRoKdOl21yDcWOvJozOxsg=;
+        b=e/zHDvn4U2PAWhaNSZikcaOctI/aYY7VJmcdMA9lF3dbpnPqG1UhYBUoipbrb8iRPv
+         PjvHIOb+f58AlTp+946stYgsKnpzkYKRUVpeXS5CYhBHyAgLX4vm9pG1DGYX9epp305n
+         untPZoBHOIeBRsN0ALY0fHcL3YoKA0jWoQUCGuleF2KxLUQqGCoz76FFt5UJ36yvp7CE
+         UGnrsrd/FWr3m53byFDGS66ITKAAU4PTp01EPuIUBlOQfMmOIESEbOVQOzOtNjvEyoY1
+         3drWiR79/3z+RsboSTOgxddXknhodNOAoSdX/mjPVBihNSDlKLhDR64zLlllCtJiHMHI
+         JuLw==
+X-Gm-Message-State: AOAM533aAkA6R1SIVhrjS314mw/LfuWR3BeR62vkVyirjcW7XIyWVIFK
+        GZnvjHfBT7ta/ekn6DRs/KafEydMa5oGmmzj/JW9PCTr
+X-Google-Smtp-Source: ABdhPJzFWE7xxwE1m8uswTdNqgUA9CvWzPsghJM6GpI5gUCoTmOiapzaij0aNkL0YPDp1QFprQk4fdx6UwyVfb8bDO0=
+X-Received: by 2002:a9d:c01:: with SMTP id 1mr3190117otr.107.1611321201536;
+ Fri, 22 Jan 2021 05:13:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20210122123853.75162-1-andriy.shevchenko@linux.intel.com> <20210122123853.75162-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210122123853.75162-2-andriy.shevchenko@linux.intel.com>
+References: <20210122123853.75162-1-andriy.shevchenko@linux.intel.com> <20210122123853.75162-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210122123853.75162-3-andriy.shevchenko@linux.intel.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 22 Jan 2021 14:10:17 +0100
-Message-ID: <CAMuHMdVxNNh+L-Hz7_QURPCWzGfKd-jTKyQXn2WbMpX4habDSA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] lib/cmdline: Update documentation to reflect behaviour
+Date:   Fri, 22 Jan 2021 14:13:10 +0100
+Message-ID: <CAMuHMdVekbD0tYsQEVXc6W1OnETziVoFpU9WMgZw5C5ufc+72A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] lib/cmdline: Allow get_options() to take 0 to
+ validate the input
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -45,51 +46,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andriy,
+Hi Andy,
 
 On Fri, Jan 22, 2021 at 1:39 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
-> get_options() API has some tricks to optimize that may be not so obvious
-> to the caller. Update documentation to reflect current behaviour.
+> Allow get_options() to take 0 as a number of integers parameter to validate
+> the input.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
 Thanks for your patch!
 
 > --- a/lib/cmdline.c
 > +++ b/lib/cmdline.c
-> @@ -83,7 +83,7 @@ EXPORT_SYMBOL(get_option);
->   *     get_options - Parse a string into a list of integers
->   *     @str: String to be parsed
->   *     @nints: size of integer array
-> - *     @ints: integer array
-> + *     @ints: integer array (must have a room for at least one element)
 
-must have room
+> @@ -103,15 +106,20 @@ EXPORT_SYMBOL(get_option);
+>
+>  char *get_options(const char *str, int nints, int *ints)
+>  {
+> +       bool validate = (nints == 0);
+>         int res, i = 1;
+>
+> -       while (i < nints) {
+> -               res = get_option((char **)&str, ints + i);
+> +       while (i < nints || validate) {
+> +               int *pint = validate ? ints : ints + i;
 
->   *
->   *     This function parses a string containing a comma-separated
->   *     list of integers, a hyphen-separated range of _positive_ integers,
-> @@ -91,6 +91,11 @@ EXPORT_SYMBOL(get_option);
->   *     full, or when no more numbers can be retrieved from the
->   *     string.
->   *
-> + *     Returns:
-> + *
-> + *     The first element is filled by the amount of the collected numbers
+I think you can use NULL for validation, as per the documentation for
+get_option().
 
-the number of collected integers?
+> +
+> +               res = get_option((char **)&str, pint);
+>                 if (res == 0)
+>                         break;
+>                 if (res == 3) {
+> +                       int n = validate ? 0 : nints - i;
+>                         int range_nums;
+> -                       range_nums = get_range((char **)&str, ints + i, nints - i);
+> +
+> +                       range_nums = get_range((char **)&str, pint, n);
+>                         if (range_nums < 0)
+>                                 break;
+>                         /*
 
-Yes, the lack of articles in RU can be a disadvantage...
-
-> + *     in the range. The rest is what was parsed from the @str.
-> + *
->   *     Return value is the character in the string which caused
->   *     the parse to end (typically a null terminator, if @str is
->   *     completely parseable).
-
-With the above fixed:
+Regardless:
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
