@@ -2,84 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EBD030076E
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 16:35:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2210630090E
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 17:53:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbhAVPeA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 10:34:00 -0500
-Received: from mail-ot1-f42.google.com ([209.85.210.42]:39442 "EHLO
-        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729201AbhAVPds (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 10:33:48 -0500
-Received: by mail-ot1-f42.google.com with SMTP id i30so5416144ota.6;
-        Fri, 22 Jan 2021 07:33:32 -0800 (PST)
+        id S1729225AbhAVQwh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 11:52:37 -0500
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:40287 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729445AbhAVQpD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 11:45:03 -0500
+Received: by mail-ot1-f53.google.com with SMTP id i20so5656648otl.7;
+        Fri, 22 Jan 2021 08:44:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dH4mL8XiIr5tXI9uOJYWrjHPyyDGTmGdAo3u+JoYNyI=;
-        b=oBZF5E+O37tD7mXR5R+EPg9fv910Lpu+09blql9o9OFNIXlAa7Xk8ZO2/8cO9xlbGO
-         UVocxpLqd9EJSnsBnBLFvWH1UWCieaV9zAwdZi7c36nIbX6j9BNtqOMBpyXWtz3eJZeg
-         v54pFzwxUTrj1l5KBPeEgoH7C/YOhFvmKcgQgXkkOWpG5rIseUHnkb+2h6P/Vh4QEOLq
-         xPIA384o3j6iIS9JqPdk77hi5743O+oAJY47PSJOTT5cSE0gxXUDz0TGPfgFHg4htnen
-         1pbIx7Pgg3RziKq3x9IwBWoKCJ3Kn0IdpagQ+cDbIl/aYzSXraveBeiwuO2q4LhH85JE
-         UJiQ==
-X-Gm-Message-State: AOAM530SDdgFbkjH7APXSWICE7kywA6J+4sIhJ9XaIgTxTlVwcR8mrqk
-        JKWYD9Vf3NHNg2PquWTzWtXgFIxX0sTg9NiRRkw=
-X-Google-Smtp-Source: ABdhPJzvvYGMEOddIwDfbu1Ch1Ldzr38ZXPQBNQ7cEfEJMp99F9DE2EAd0/mfH2G3gSE7PO0L9iUsXXe2XtRwLJdvX0=
-X-Received: by 2002:a05:6830:2313:: with SMTP id u19mr534710ote.321.1611329586496;
- Fri, 22 Jan 2021 07:33:06 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pnrEQfhYuBrzK0vLqeOqp/B/gAHb1xQ8W9kS69q0vhc=;
+        b=pI8W10DMWEQAItnG4UPTtU0UcZJFUzaFSgeQZTOzZqIMh8CB/ujfPW0DT/VMgEU4x3
+         zYTc2S8Y6Ghlle8LSs3oda6PAqW1GlE8eVbW+xSXeqLy/s1K26mI4fy6e7vAVz9AOVNk
+         yZ7mAkEUBrt7LuTHmwM5ehoK5j+cdZaX9kOBAfJLg9mKbFK0FrQ4JuECFCOdP/ujwu+a
+         3+9J8xZAX/UgubvUCkGoOWaBcb9jjQrqm+/rNQ0I6ErM4ChAQEFJljpW21FPHheOjdH5
+         b9VGkuo5ZW079u0g2yxHhxhPMThE65/3i/qxPi3JmpsrM+8dmA9JJOtwisiz87EfCQQ0
+         9NaQ==
+X-Gm-Message-State: AOAM531stR6Ex3v644ZZr76dFZhJGGvzOa0tpfA/zpD0dPYrAVoiHsfD
+        DWTX9+9uuuqD8izccRWgmg==
+X-Google-Smtp-Source: ABdhPJxWCkx1VUfDE7OUA/3RFJiCyA1xvZdIVdEX5OCRqoTUAmSOU6tAx5Dp0yfPw2mcrQ4TgUl56g==
+X-Received: by 2002:a05:6830:838:: with SMTP id t24mr4018961ots.139.1611333865388;
+        Fri, 22 Jan 2021 08:44:25 -0800 (PST)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q77sm1688312ooq.15.2021.01.22.08.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Jan 2021 08:44:24 -0800 (PST)
+Received: (nullmailer pid 939438 invoked by uid 1000);
+        Fri, 22 Jan 2021 16:44:23 -0000
+Date:   Fri, 22 Jan 2021 10:44:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: pinctrl: qcom: Add SM8350 pinctrl
+ bindings
+Message-ID: <20210122164423.GA931999@robh.at.kernel.org>
+References: <20210121171747.3161543-1-vkoul@kernel.org>
+ <20210121171747.3161543-2-vkoul@kernel.org>
 MIME-Version: 1.0
-References: <20210108152447.116871-1-f.suligoi@asem.it> <CAHp75Vf54TTXr4HH6TxMo0QRTBa5V3=La1LCDxSizaYZjJM9Qg@mail.gmail.com>
-In-Reply-To: <CAHp75Vf54TTXr4HH6TxMo0QRTBa5V3=La1LCDxSizaYZjJM9Qg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 22 Jan 2021 16:32:55 +0100
-Message-ID: <CAJZ5v0iVp8z7WAqX1NxQNKx55tfwUJtx-gK67x=Npxjf05g4Kg@mail.gmail.com>
-Subject: Re: [PATCH v1] Documentation: ACPI: add new rule for gpio-line-names
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210121171747.3161543-2-vkoul@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 8, 2021 at 5:03 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Jan 8, 2021 at 5:28 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
-> >
-> > The gpio-line-names lists must respect some rules.
-> >
-> > This patch adds a new rule in documentation, to avoid
-> > the use of duplicate names in the same gpiochip.
->
-> Thanks!
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
-> > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> > ---
-> >  Documentation/firmware-guide/acpi/gpio-properties.rst | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
-> > index b36aa3e743d8..4e264c16ddff 100644
-> > --- a/Documentation/firmware-guide/acpi/gpio-properties.rst
-> > +++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
-> > @@ -146,6 +146,7 @@ following rules (see also the examples):
-> >      other words, it is not mandatory to fill all the GPIO lines
-> >    - empty names are allowed (two quotation marks ``""`` correspond to an empty
-> >      name)
-> > +  - names inside one GPIO controller/expander must be unique
-> >
-> >  Example of a GPIO controller of 16 lines, with an incomplete list with two
-> >  empty names::
-> > --
+On Thu, Jan 21, 2021 at 10:47:46PM +0530, Vinod Koul wrote:
+> Add device tree binding Documentation details for Qualcomm SM8350
+> pinctrl driver.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../bindings/pinctrl/qcom,sm8350-pinctrl.yaml | 146 ++++++++++++++++++
+>  1 file changed, 146 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..706bc79db60b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
+> @@ -0,0 +1,146 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm8350-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. SM8350 TLMM block
+> +
+> +maintainers:
+> +  - Vinod Koul <vkoul@kernel.org>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer (TLMM) block found
+> +  in the SM8350 platform.
+> +
+> +allOf:
+> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sm8350-tlmm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts: true
+> +  interrupt-controller: true
+> +  '#interrupt-cells': true
+> +  gpio-controller: true
+> +  gpio-reserved-ranges: true
+> +  '#gpio-cells': true
+> +  gpio-ranges: true
+> +  wakeup-parent: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +patternProperties:
+> +  '-state$':
+> +    oneOf:
+> +      - $ref: "#/$defs/qcom-sm8350-tlmm-state"
+> +      - patternProperties:
+> +          ".*":
+> +            $ref: "#/$defs/qcom-sm8350-tlmm-state"
+> +
+> +'$defs':
 
-Applied as 5.12 material, thanks!
+No need for quotes. Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+I'm assuming this passes checks because I can't check due to the 
+dependencies.
+
+Rob
