@@ -2,174 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15A6C2FFFA6
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 11:01:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ABB32FFFB3
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 11:05:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbhAVJ7W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 04:59:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47964 "EHLO
+        id S1727590AbhAVKCS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 05:02:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727727AbhAVJua (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 04:50:30 -0500
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5A0C061786
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 01:50:03 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id w18so3349271pfu.9
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 01:50:03 -0800 (PST)
+        with ESMTP id S1727769AbhAVKBJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 05:01:09 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6471C061356
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 02:00:02 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id m22so6712425lfg.5
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 02:00:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OKi5EXU5rgmzsI6aDa7OCZTcXDJNQQk0V5qykYmEWEQ=;
-        b=r5d0wM8IZqYTdqTe1SOJb+tDn7WcwYvVRne8tHym6vj+9wk8zY1c65X5uQcL+/VH+M
-         4vN7WmHmvovFPOAHzyHgBDeiHScEWX8v8Dwma0x+rnaF1xRGALxt5i5p42hGcBSlqcSi
-         Z5zG9Z7HzOifELGIWJ2u2BGwJxrZEpbtaxDuouNE4x5g8v6GveTwI+ZqaT8Zrinf28FY
-         CAiWD/bRfyeNkbp0kLbUuqS8UzJMrH9eI4d5+6o9BmxKHgZWwSTAhbPjlfNmprLMpRA6
-         mFDzfp2rr9xB5v8kINCNgy6bDhb+eAvUm2Rp934ELiKHTkIxj57qJf35cpYYeLAvRRQ9
-         l2xw==
+        bh=3b6S2/z3tpa4MkB+bZqY5tPcMx97QoLNDAPmEmPnGt0=;
+        b=CD6w0ZgUypDgjE9zR0ZJVOxq+rlOgFypR7WRO0P5wQjcTwWxl7hRP3Ql2htnVNIAcX
+         a6IqCbfY2yRx6C5mdcNVOsZuG69XJvCbRsJ9Uwt9kAhwZJKg1z4WKyK8EfJxQXhrmawK
+         jvFt+Si3bh4KoOEFtnIjQlVBRf7/v7+F49qvweV/jRKr+KlXm110gJzTsJCQIWgstzaw
+         67MyDzp+6NUBDMO2GYmaWO2h4m36KrN07K4BoFPv7KykDmlqx27YNW9ojW1K0wkSNu+M
+         JNGZPmD0ZAsv4GIQ7hMVzNvVvRqICKOZ5otGgE3Bh6ATdVkrvErsTghZo2d4jrVmARuI
+         cncg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OKi5EXU5rgmzsI6aDa7OCZTcXDJNQQk0V5qykYmEWEQ=;
-        b=QvWJdH0KnFtLqnsG774UJ9ArnAOj9eIt+E6DM81kCMxU3thYres4nEUZ24CFLj36iT
-         WRqy+78U4WRutE1iGJB5ZVIvmfHuEF0yPeOvaNG5EyhC/mG0HN5jJAT0PH/gBlg57J1l
-         W48FkcD1Ku8BlObZfwApRN90zjp/w7U5v0nEJ0sTElvzT45Kohjx+rOV1yhV2WT9WpCD
-         r0zTctQrkHaURajpZJupXPPuO1R1m0pOzyiy3FiPyzsY6Bk4euG9i6zMMzhZVtCQU0OK
-         mkGBBIXZvkrGNiiBZTfWL1lWTMajd4M+4ibMom2YlDPkg21t+eiDx6ngcJAXFNH4uK1f
-         yITQ==
-X-Gm-Message-State: AOAM531Mv02TgWiM1sNzqwaek6+byxhqfdqRzJEESIUytz1/6r9f9bnz
-        68Bb43zKWJcQoT2Ia4FyYRJ8hQY9DnH7Y6lNt98=
-X-Google-Smtp-Source: ABdhPJw9nAy2TIV/TBisoHC5r2WsLItDqHIawvumE1Q6ksX4wjBwOCrQ9yL9NMYUcbGN8kVOKGFPsKppK+dZ/LS61mA=
-X-Received: by 2002:a65:644b:: with SMTP id s11mr4012113pgv.4.1611309003007;
- Fri, 22 Jan 2021 01:50:03 -0800 (PST)
+        bh=3b6S2/z3tpa4MkB+bZqY5tPcMx97QoLNDAPmEmPnGt0=;
+        b=q+n1QYDKP2d3V/4RyS3vRye8nkWZLMZ7aXh8fMs4NT0p6XCCJ/ZhJcBZ89EgauxeSJ
+         vod/HCtLvr3EH3uqc/eBJXN3beblsK3cF1OvFNtzDt/IfbkTDvz1G9hoKPSgkxOmaZWr
+         IvkOckoiccnChMHm9eAPVKG+dZXYVh1zZSDIYNbPLliUgy8BZlwj33MZufDhuO6SLe7/
+         ttzatXaHqJOCeU3ZfreuWfxR6vwlw3mBI9YPlNeZVUpj5gKpEp4e8zCa0DXUpRGh7RJq
+         YvhV0pf2vYE5S+47UswWjiA+nYU660zr0mwa56hPe23ruOMW2S43qvlVuTsZ5j88nAzU
+         lUvg==
+X-Gm-Message-State: AOAM533yhTKBsPm2zKH5StPDZ7bauvMtqoUqRCLxNFjkmePBf6dOkpD9
+        Ouq24naia7sxAGRx0ZR2e768C/LDHBbyXGnoLIkSHQ==
+X-Google-Smtp-Source: ABdhPJwUwANyZtTNJ+wpcGjC0EBfyorEBi8TdaoRhCKcIcRkNc2spagF6/gcNBcB8Dn2Aspuc2waqUkn0aaoZM6u8JY=
+X-Received: by 2002:ac2:5c45:: with SMTP id s5mr19528lfp.586.1611309601102;
+ Fri, 22 Jan 2021 02:00:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20210121051806.623743-1-drew@beagleboard.org> <CAHp75Vd5M0kyNzq+5gcZEd=6hK_7Y5_dEJ39-yQO7WuYRM4KWw@mail.gmail.com>
- <20210121232653.GA672978@x1>
-In-Reply-To: <20210121232653.GA672978@x1>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 22 Jan 2021 11:50:52 +0200
-Message-ID: <CAHp75Vejt3mN4SBTVnRkyLkDA+jnh3Y4pC5bOGdKAdUZGCPFWw@mail.gmail.com>
-Subject: Re: [RFC PATCH] pinctrl: pinmux: Add pinmux-set debugfs file
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20210111182928.587285-1-angelogioacchino.delregno@somainline.org>
+ <CACRpkdZp3oqj4VeUZEPu=POwAdf-7R3NzNoN9XehtEi_R_fgkw@mail.gmail.com> <1e34145b-a04a-1cbb-7fbc-87c69b8dcfd7@somainline.org>
+In-Reply-To: <1e34145b-a04a-1cbb-7fbc-87c69b8dcfd7@somainline.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Jan 2021 10:59:50 +0100
+Message-ID: <CACRpkdacfa6usOZtc+A=ZxEpB1ij_gAKX2PLMOaX0mY_0qHp6A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: Add driver for Awinic AW9523/B I2C GPIO Expander
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        konrad.dybcio@somainline.org, marijn.suijten@somainline.org,
+        martin.botka@somainline.org, phone-devel@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 22, 2021 at 1:26 AM Drew Fustini <drew@beagleboard.org> wrote:
-> On Thu, Jan 21, 2021 at 01:18:58PM +0200, Andy Shevchenko wrote:
-> > On Thu, Jan 21, 2021 at 7:18 AM Drew Fustini <drew@beagleboard.org> wrote:
+On Mon, Jan 18, 2021 at 3:38 PM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@somainline.org> wrote:
 
-...
-
-> > > RFC question: should pinmux-set take function name and group name
-> > > instead of the selector numbers?
-> >
-> > I would prefer names and integers (but from user p.o.v. names are
-> > easier to understand, while numbers are good for scripting).
+> By the way, this is really LEVEL irq, not EDGE... To avoid any
+> misunderstanding, I think that the best way to show you what I
+> am seeing is to just copy-paste the relevant piece from the
+> datasheet for this hardware (it's not a confidential datasheet
+> and freely found on the internet).
 >
-> I don't actually see any example of looking up the function name in the
-> existing pinctrl code. There is pin_function_tree in struct pinctrl_dev.
-> pinmux_generic_get_function_name() does radix_tree_lookup() with the
-> selector integer as the key, but there is no corresponding "get function
-> selector by name" function.
+> Check this out:
+> " External MCU is required acknowledge by INTN pin. INTN is open-drain
+> out-
+> put, low-level active, and need external pull-up resistor.
+
+This talks about what polarity (active low) the pin from the expander
+to the SoC/CPU is. It has nothing to do with the line into the
+expander.
+
+> When AW9523B detect port change, any input state from high-level to
+> low-level or from
+>   low-level to high-level will generate interrupt after
+> 8us internal deglitch. "
 >
-> I think I would need to go through all the nodes in the radix tree to
-> find the name that matches. Although, I am just learning now about the
-> radix implementation in Linux so there might be a simpler way that I am
-> missing.
-
-I probably have to revive my work towards gluing ACPI with pin control
-where AFAIR I have created some kind of radix / rbtree for something
-(not sure it's exactly what you need here, so consider this just as a
-side note).
-
-...
-
-> > The following is better to include in documentation and remove from
-> > the commit message.
-
-> > Shorter is better, what about simply
-> >
-> > # cat /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pinmux-functions
-> > ?
-> >
-> > Btw  in reST format you may create a nice citation of this. And yes,
-> > this should also go to the documentation.
+> ...but since the datasheet is sometimes unclear about "things" (I am
+> mostly sure that they have translated it to english from chinese), I
+> have actually checked whether the INTN pin was pushed LOW when one of
+> the inputs goes from HIGH to LOW.. and.. it does... and as you imagine
+> yeah.. it's slow.. and yes, as slow as you can imagine. :)
 >
-> Good point, I'll shorten the example lines in v2.
+> So, in short, this chip is raising an interrupt when any input changes
+> state, regardless of the change being LOW->HIGH or HIGH->LOW.
 
-Even better to tell that we operate on the level of mount point of
-debugfs and use
+This means that the expander only supports
+IRQ_TYPE_EDGE_BOTH and nothing else.
 
- # cat pinctrl/44e10800.pinmux-pinctrl-single/pinmux-functions
+"port change" above means edges.
 
-> > This and above is still part of documentation, and not a commit message thingy.
->
-> Is something I should add to Documentation/driver-api/pinctl.rst in a
-> seperate patch?
+Augment your driver to only accept this type.
 
-Not sure, I think more about as a part of this very path you change
-code and documentation. But usually it's a preference of the certain
-subsystem.
+The consumers better request IRQ_TYPE_EDGE_BOTH
+(from a device tree for example) and consumers better
+handle the fact that they get interrupts on both rising
+and falling edge as well, else they may need special
+code to handle it. This is not a very nice feature of
+the expander, it would be more helpful to users to
+get interrupts on only rising or only falling edges, but
+as written, it will generate interrupts on both transitions.
 
-...
-
-> > > +       if (cnt == 0)
-> > > +               return 0;
-> >
-> > Has it ever happened here?
->
-> Good point, I guess there is no reason for userspace to write 0 bytes.
-
-My point is that this check is done somewhere in the guts of kernfs.
-When in doubt I recommend to look around in the kernel and check most
-recent code with similar code pieces.
-
-...
-
-> > > +       buf = memdup_user_nul(user_buf, cnt);
-> > > +       if (IS_ERR(buf))
-> > > +               return PTR_ERR(buf);
-> > > +
-> > > +       if (buf[cnt - 1] == '\n')
-> > > +               buf[cnt - 1] = '\0';
-> >
-> > Shouldn't you rather use strndup_from_user() (or how is it called?)
-
-Any comments?
-
-...
-
-> > Can be simply
-> >
-> >  err_freebuf:
-> >         kfree(buf);
-> >         return err ?: cnt;
->
-> Thanks, I didn't really like the duplication but was having trouble
-> thinking of a cleaner way to write it.  That is good to know it is ok to
-> use the ternary operator in a return statement.
-
-Again, depends on certain subsystem maintainer's preferences.
-
-
-> > > +       debugfs_create_file("pinmux-set", S_IFREG | S_IWUSR,
-> > > +                           devroot, pctldev, &pinmux_set_ops);
-
-One more thing, as a preparatory patch please move from S_I* to plain
-octal numbers as it's preferable.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
