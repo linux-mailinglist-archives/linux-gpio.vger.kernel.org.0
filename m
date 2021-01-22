@@ -2,74 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42018300413
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:25:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A674300480
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jan 2021 14:49:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbhAVNX4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 08:23:56 -0500
-Received: from mail-oi1-f178.google.com ([209.85.167.178]:46436 "EHLO
-        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbhAVNXt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 08:23:49 -0500
-Received: by mail-oi1-f178.google.com with SMTP id q205so5879601oig.13
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 05:23:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N9TJq7gw8sRGrdgfSYgLb4SIv1sZGZZJdezSmJn9ifE=;
-        b=CNhgB58OaSLonhZlIkvwlts6P4EIHCsZS1pcnBG8h1nWRHRa69behrpKkTsVqLGD0P
-         zCQLAHpLoUzCbHRS6uMJSZBBPS/z0+jVB4GccVhVxFPsyysLKsrz1PhJg4AcLgVp5a9H
-         fsb+wr/nn/HVYXvs/0AM4sSAFVDzwKq9Hk81fv+LKGV2v3G9hBS5po17ZHFA8C/mZGo1
-         J9FJlOjMIECWvz0rOVrvHm37MM6FbJlxYuLuk/ENizv3VXg/DP9RE+49cV3BF5RJH9R3
-         IaClaCZxszSB1gPgYYpDEUCM+WIuWSN4w/gXcAD5WRmrm+mlMO6o9KmY7M1KXrFIVRDE
-         Hk8w==
-X-Gm-Message-State: AOAM531NWQ4r5kq9M4YyHkDCfOuD6eJ83AqDApaPJs4xfpWkma7KgFrF
-        ad5UEYie6a8zazSMhp3YnW8J7Wpa8KxcgAEMQyw=
-X-Google-Smtp-Source: ABdhPJyiWDmX+XCl84dQU8Zd7R7TwBcb8mjIBaG4UdBmOdGHrTjqVisYyZN9yuBHwwzL4Hn2FjIPavWzSiF0E7Kr7MQ=
-X-Received: by 2002:aca:bbc4:: with SMTP id l187mr3180582oif.148.1611321782489;
- Fri, 22 Jan 2021 05:23:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20210122123853.75162-1-andriy.shevchenko@linux.intel.com> <20210122123853.75162-5-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210122123853.75162-5-andriy.shevchenko@linux.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 22 Jan 2021 14:22:51 +0100
-Message-ID: <CAMuHMdVYw7WywSMwxQ-vGOuqOiEjPVambM1o84sYeON-QVcZhQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] gpio: aggregator: Use compound literal from the header
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1727486AbhAVNrz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 08:47:55 -0500
+Received: from mga01.intel.com ([192.55.52.88]:13959 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727354AbhAVNry (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 Jan 2021 08:47:54 -0500
+IronPort-SDR: tGOcFnDhSlJBFqCUlznYAIcpt0FiLOgpV+rcrymWtCwQrOFn3TirYNO8FOU5039oU9230dpFMU
+ 2ouIAjz4QJZA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9871"; a="198201668"
+X-IronPort-AV: E=Sophos;i="5.79,366,1602572400"; 
+   d="scan'208";a="198201668"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2021 05:46:08 -0800
+IronPort-SDR: 4BL0vArxNw3ZdNqAVcbM8MDF/4gF4tiCdn901uRVYnoDyRAunXmYSri1TgBPp0yknlrasQGgKr
+ e2Pm49LPv/PQ==
+X-IronPort-AV: E=Sophos;i="5.79,366,1602572400"; 
+   d="scan'208";a="467927162"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2021 05:46:07 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l2wmM-008w6t-5x; Fri, 22 Jan 2021 15:47:10 +0200
+Date:   Fri, 22 Jan 2021 15:47:10 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 2/6] lib/cmdline: Update documentation to reflect
+ behaviour
+Message-ID: <YArXXlPLtMB4cdlO@smile.fi.intel.com>
+References: <20210122123853.75162-1-andriy.shevchenko@linux.intel.com>
+ <20210122123853.75162-2-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdVxNNh+L-Hz7_QURPCWzGfKd-jTKyQXn2WbMpX4habDSA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVxNNh+L-Hz7_QURPCWzGfKd-jTKyQXn2WbMpX4habDSA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Fri, Jan 22, 2021 at 02:10:17PM +0100, Geert Uytterhoeven wrote:
+> On Fri, Jan 22, 2021 at 1:39 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > get_options() API has some tricks to optimize that may be not so obvious
+> > to the caller. Update documentation to reflect current behaviour.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Thanks for your patch!
 
-Thanks for your patch!
+Thanks for review.
+I'll fix this in my repo w/o sending a v4.
 
-On Fri, Jan 22, 2021 at 1:39 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> Instead of doing it in place, convert GPIO_LOOKUP_IDX() and GPIO_HOG()
-> to be compund literals that's allow to use them as rvalue in assignments.
+> > --- a/lib/cmdline.c
+> > +++ b/lib/cmdline.c
+> > @@ -83,7 +83,7 @@ EXPORT_SYMBOL(get_option);
+> >   *     get_options - Parse a string into a list of integers
+> >   *     @str: String to be parsed
+> >   *     @nints: size of integer array
+> > - *     @ints: integer array
+> > + *     @ints: integer array (must have a room for at least one element)
+> 
+> must have room
+> 
+> >   *
+> >   *     This function parses a string containing a comma-separated
+> >   *     list of integers, a hyphen-separated range of _positive_ integers,
+> > @@ -91,6 +91,11 @@ EXPORT_SYMBOL(get_option);
+> >   *     full, or when no more numbers can be retrieved from the
+> >   *     string.
+> >   *
+> > + *     Returns:
+> > + *
+> > + *     The first element is filled by the amount of the collected numbers
+> 
+> the number of collected integers?
+> 
+> Yes, the lack of articles in RU can be a disadvantage...
 
-... to compound literals, which can be used as rvalues ...
+:-)
 
-> Due to above conversion, use compound literal from the header
-> in the gpio-aggregator.c.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> 
+> > + *     in the range. The rest is what was parsed from the @str.
+> > + *
+> >   *     Return value is the character in the string which caused
+> >   *     the parse to end (typically a null terminator, if @str is
+> >   *     completely parseable).
+> 
+> With the above fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
