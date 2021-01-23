@@ -2,108 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A9E1301111
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Jan 2021 00:40:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3E883012F6
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Jan 2021 05:16:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbhAVXkA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jan 2021 18:40:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58012 "EHLO
+        id S1726588AbhAWEQP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jan 2021 23:16:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727946AbhAVXj7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 18:39:59 -0500
-Received: from relay08.th.seeweb.it (relay08.th.seeweb.it [IPv6:2001:4b7a:2000:18::169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F40C1C06174A
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 15:39:18 -0800 (PST)
-Received: from IcarusMOD.eternityproject.eu (unknown [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 77B203EEDE;
-        Sat, 23 Jan 2021 00:39:13 +0100 (CET)
-Subject: Re: [PATCH v2 1/2] pinctrl: Add driver for Awinic AW9523/B I2C GPIO
- Expander
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        konrad.dybcio@somainline.org, marijn.suijten@somainline.org,
-        martin.botka@somainline.org, phone-devel@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
-References: <20210111182928.587285-1-angelogioacchino.delregno@somainline.org>
- <CACRpkdZp3oqj4VeUZEPu=POwAdf-7R3NzNoN9XehtEi_R_fgkw@mail.gmail.com>
- <1e34145b-a04a-1cbb-7fbc-87c69b8dcfd7@somainline.org>
- <CACRpkdacfa6usOZtc+A=ZxEpB1ij_gAKX2PLMOaX0mY_0qHp6A@mail.gmail.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>
-Message-ID: <f9cc7046-1855-cbe5-51ed-ab5f76716805@somainline.org>
-Date:   Sat, 23 Jan 2021 00:39:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
-MIME-Version: 1.0
-In-Reply-To: <CACRpkdacfa6usOZtc+A=ZxEpB1ij_gAKX2PLMOaX0mY_0qHp6A@mail.gmail.com>
+        with ESMTP id S1726533AbhAWEQN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jan 2021 23:16:13 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90DB0C06174A
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 20:15:33 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id g15so5127807pjd.2
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jan 2021 20:15:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xCKUtFB5AUq1zD0repi+CXyQ+OLFoMfHVfJO3G4+2+M=;
+        b=vhq+YrJ90PBFBtx19eu201m4T9vp+sq202+YYsBMRwpVsdmz9sAHvh5e4iWIZLrCi/
+         T5jU1ZVCKGCbTiBBkFm5CrdzfXmCczvz6OzGsP9OOJxnJum715qaHP8TpRDE0hAqYEe/
+         m2+ScBGUv77pHKdYIPYbf9L4gm65HtiVtnLEVnILFNHNgBPhGGUr0U80d0E5WMGGt91m
+         QHqsAiytER9cg4Xs0HbMvhdvKxv/Tdsk9LIZVmoosQgfQVkAKwVA9WVnp2urS0m9cIED
+         2FKKyANCVDgSKS5xJvlQyWLemc+a9JjdbF+7eyN0Dtsy6xXFIeIfYq03P2W5g/sRB4cq
+         6gzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=xCKUtFB5AUq1zD0repi+CXyQ+OLFoMfHVfJO3G4+2+M=;
+        b=srtCM2E9dXCCNaDLQWornxjwRyNK0Fg/55fTfGz0R0X8izqF4ads9EXG32bywDdX8+
+         rNw2Q2KoJWyXApSa2oR4o8L66ycN3SVQeaNdj3LCQFGOyac0cJQ0uy6tyJ+K9I6qVBnS
+         lWxUEVsf/WjotS/Z4vvEni/jEqL9Mq2FrSUXr0V548+u2QhjLeLtOuX41CJW5zPvfo82
+         CXuAKuCxJanrwdffgyydtND+MYM4BTtZn43oJLzSEdKwSTE3hjHehAR/sRfyH1YuW2/w
+         1TWPZ/Bl96qTu5tuYwJPqmLO5KBOdAjtLkwytiGROGx+IGqx/2TH42Say/kX7a3nJm+I
+         VR0g==
+X-Gm-Message-State: AOAM530L56aCQXDHgNZr71Cn8YNxy5pjzLPpDsgPbho3ShidqWMNSZGB
+        LEBLqIeApH6f0IjAMCwk/W0Jcg==
+X-Google-Smtp-Source: ABdhPJxTcn8px+6zfNoLrgMT8aWf+N1AzTljJsLW4aBD2WfsXLyTmuDDz3l0oVnr1BOXYvAUeiSxBg==
+X-Received: by 2002:a17:90a:fa18:: with SMTP id cm24mr9179849pjb.180.1611375333088;
+        Fri, 22 Jan 2021 20:15:33 -0800 (PST)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id c62sm9775252pfa.116.2021.01.22.20.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Jan 2021 20:15:31 -0800 (PST)
+Date:   Fri, 22 Jan 2021 20:15:31 -0800 (PST)
+X-Google-Original-Date: Fri, 22 Jan 2021 20:15:30 PST (-0800)
+Subject:     Re: [PATCH v11 02/10] pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver
+In-Reply-To: <BL0PR04MB6514439CE158BAB4253D8903E7A10@BL0PR04MB6514.namprd04.prod.outlook.com>
+CC:     linus.walleij@linaro.org, linux-riscv@lists.infradead.org,
+        linux-gpio@vger.kernel.org, seanga2@gmail.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Message-ID: <mhng-4406eaf7-474a-41a6-8a23-8d75e79c8521@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 22/01/21 10:59, Linus Walleij ha scritto:
-> On Mon, Jan 18, 2021 at 3:38 PM AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@somainline.org> wrote:
-> 
->> By the way, this is really LEVEL irq, not EDGE... To avoid any
->> misunderstanding, I think that the best way to show you what I
->> am seeing is to just copy-paste the relevant piece from the
->> datasheet for this hardware (it's not a confidential datasheet
->> and freely found on the internet).
->>
->> Check this out:
->> " External MCU is required acknowledge by INTN pin. INTN is open-drain
->> out-
->> put, low-level active, and need external pull-up resistor.
-> 
-> This talks about what polarity (active low) the pin from the expander
-> to the SoC/CPU is. It has nothing to do with the line into the
-> expander.
-> 
->> When AW9523B detect port change, any input state from high-level to
->> low-level or from
->>    low-level to high-level will generate interrupt after
->> 8us internal deglitch. "
->>
->> ...but since the datasheet is sometimes unclear about "things" (I am
->> mostly sure that they have translated it to english from chinese), I
->> have actually checked whether the INTN pin was pushed LOW when one of
->> the inputs goes from HIGH to LOW.. and.. it does... and as you imagine
->> yeah.. it's slow.. and yes, as slow as you can imagine. :)
->>
->> So, in short, this chip is raising an interrupt when any input changes
->> state, regardless of the change being LOW->HIGH or HIGH->LOW.
-> 
-> This means that the expander only supports
-> IRQ_TYPE_EDGE_BOTH and nothing else.
-> 
-> "port change" above means edges.
-> 
-> Augment your driver to only accept this type.
-> 
-> The consumers better request IRQ_TYPE_EDGE_BOTH
-> (from a device tree for example) and consumers better
-> handle the fact that they get interrupts on both rising
-> and falling edge as well, else they may need special
-> code to handle it. This is not a very nice feature of
-> the expander, it would be more helpful to users to
-> get interrupts on only rising or only falling edges, but
-> as written, it will generate interrupts on both transitions.
-> 
-> Yours,
-> Linus Walleij
-> 
+On Thu, 21 Jan 2021 00:32:38 PST (-0800), Damien Le Moal wrote:
+>> On 2021/01/21 17:25, Linus Walleij wrote:
+>> On Thu, Jan 21, 2021 at 1:15 AM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
+>>> On 2021/01/21 3:21, Palmer Dabbelt wrote:
+>>>> On Mon, 18 Jan 2021 05:33:05 PST (-0800), linus.walleij@linaro.org wrote:
+>>>>> Hi Damien,
+>>>>>
+>>>>> this looks all right to me.
+>>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>>>
+>>>>> Shall I apply just this one patch to the pinctrl tree?
+>>>>
+>>>> That's fine with me.  The DT bindings are in riscv/for-next, maybe it's best to
+>>>> take those as well and I'll drop them?  I don't generally like to drop stuff
+>>>> from for-next, but that's probably better than having everything all mixed up.
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git/commit/?h=for-next&id=ed3137edb31b86702511e7ad12b4abe8686b6805
+>>>>
+>>>>> I think the line that touches arch/*/Kconfig should be dropped
+>>>>> then, that better go to the SoC tree.
+>>>>
+>>>> I'm OK with you taking them along with my Ack, but if you don't want to that's
+>>>> fine.  Just LMK
+>>>>
+>>>> Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+>>>
+>>> Linus,
+>>>
+>>> Please let me know which way you want to proceed. If you want to take the patch,
+>>> I will resend without the Kconfig change and move that change to another patch.
+>> 
+>> It's fine to proceed as is, since Palmer already applied the bindings to
+>> his tree, just apply the pinctrl driver there as well. I don't see any
+>> risk of collisions in the tree.
+>
+> Sounds good. Thanks !
 
-I see the reading mistake now... oh wow, that was... sad, from me.
-I will fix this ASAP and will send back a v3.
+I don't see an actual Ack here, but I'm OK taking it.  IIRC there were some
+issues with the DT stuff as well, I don't remember if they got resolved or if I
+should be expecting a v14.
 
-Thank you!
+>
+>> 
+>> Yours,
+>> Linus Walleij
+>> 
 
-- Angelo
+
+-- 
+Damien Le Moal
+Western Digital Research
+
