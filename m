@@ -2,121 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F56C301866
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Jan 2021 21:46:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC4F93018BA
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Jan 2021 23:51:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbhAWUpO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Jan 2021 15:45:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46430 "EHLO
+        id S1726264AbhAWWvE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Jan 2021 17:51:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbhAWUpI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Jan 2021 15:45:08 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD7FC0613D6
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Jan 2021 12:44:27 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id gx1so362320pjb.1
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Jan 2021 12:44:27 -0800 (PST)
+        with ESMTP id S1725943AbhAWWvA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Jan 2021 17:51:00 -0500
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E86E0C061786
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Jan 2021 14:50:19 -0800 (PST)
+Received: by mail-lf1-x129.google.com with SMTP id o10so12595464lfl.13
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Jan 2021 14:50:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dvMYNkNjGYNCHe9/NmoKStGyFrAuo/5RBiMGNky1jDI=;
-        b=zlm0a4QU1AWPVm9ieuwbBVhX0aPmBGd73jAuu7PWo3AyOc4d/0jJM4aQRLOwarKUFo
-         PAehHadbxwvhQpTU98gjj02eSuVcp9oC5nQWcqar2k6Dd1iYQlsgUFe8X6XMgqmUPcWR
-         LBAgCM/spY7U0Y7mdeHhbLASePl+j7n4iuCEDb8BWebi8xqFpZ6Io55aDyfSY0jcYihU
-         xmrM++dTiaiTfWnk7ir14Oz0X4Ll+epeEh/ChDqS0dmnAFR3srxw7YAshDU372EiF7pN
-         hAkFRgjRSpWLd8WO2dVetDXA1x+rpbd5WyJvSOtIZGg7kGWX0JY7JaaqZZWW/CPyhLON
-         lmAA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5FMoc4rlspXDa8RwRSPjCdNzMvT7gR3rZeQf96XBACU=;
+        b=pbHIGHcB7/lNJJmV0AhwRirB26dYTxu3e31nG5k+1V883Fo3serpCHGlkQjvptzw5V
+         jgt+5itvcsdHXwk6ot4vFnyGEHAS+ojZseTkdpm+/KgcJyCqR0wcd4X9ZzF9YqCBRWo5
+         jHdgu/hAV9UMV1H6VqC/qljA6s23hMAvIDlLgLI9w+m0U/3080Pudx5ozHB/diXy/fHy
+         NDPjNz61WrHQE+PBQnguw3uKznYeJeMWwQmKnoVxNNAV72/1GN4Ep8r43BVvGwvLPuP0
+         FqVg19A3UAINYsplzs5ty+R5Nlf4DRxAqlrD8zNVOw1innEqLSKe3o3vd5CS2uBqCNDq
+         PXAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dvMYNkNjGYNCHe9/NmoKStGyFrAuo/5RBiMGNky1jDI=;
-        b=lb5wxN1GPyU0jpCDHwV9OoTppDBDSHpKS7oqM82oXGu2LP0OVFOYeo2almiCbAZJRI
-         oQUfRJTxx2F0RWfnj+TJiQ7FkdDaqZSHNMM5BUooqkFk1pKYxPm0PwFcqwwf7mMhvdSV
-         Q1jrx1xlVbKUA14dj33MCunH17PptQQmOHtIBPrydnYnOLvqvwg5Aq60NoMpbduJjcJi
-         ao5vBr6lAFxj9HrkPgLp7GLYTOQtkIheDAksiydAAiKnE/GSJvhU7GqOWYO8Kmxs6vLF
-         T3vJgQ6ijEboFUmIIpD7G8LKXD9EUK0BudONFLZwe7kCg4Ng4PVp8FrfR7/thX1dEjrj
-         5jwQ==
-X-Gm-Message-State: AOAM530i0lHwX8Eu5vHeQj0ebxADohV4Dt9K1+cUUIJBylWsv5SGbNI7
-        mFO47taQ4h4GzOUnYyuNu4Tdx9eMSITlGA==
-X-Google-Smtp-Source: ABdhPJxOMQTqxky8rjTpP+uglM/ara8rlsfxx/LrqAoUjFs2Mv/KRLB1P1EI+91yCSgg2Tf+IL+/Og==
-X-Received: by 2002:a17:902:d4d0:b029:df:d246:ca81 with SMTP id o16-20020a170902d4d0b02900dfd246ca81mr11455044plg.58.1611434667049;
-        Sat, 23 Jan 2021 12:44:27 -0800 (PST)
-Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:c3d9:f9cb:a39f:c812])
-        by smtp.gmail.com with ESMTPSA id me5sm12693639pjb.19.2021.01.23.12.44.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Jan 2021 12:44:26 -0800 (PST)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH] pinctrl: pinmux: add function selector to pinmux-functions
-Date:   Sat, 23 Jan 2021 12:22:14 -0800
-Message-Id: <20210123202212.528046-1-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5FMoc4rlspXDa8RwRSPjCdNzMvT7gR3rZeQf96XBACU=;
+        b=j6giMdxCMJSTK1vKECH9XRjmo8csX/zb+dd80QyvpLD0+NbnOq2p1IKif4O48FV04R
+         czdZt4jKOh4P1FhbipuHgyzoGgeIuLUDdIKwJ4Fh7/YceG3JFyRWeSwcIIl9wlEyQqxn
+         x8pns45dAQwLnWfHii0B+r/8UnhQJRPPrPyPUMGohOCuz4nDCVj8ZLRE37m3UMhzuA7S
+         Ew3GZst7MCd4W5EOMPDgv8dKfkz5mqw6c0HWbsLxZNVSog1GBbBTYzWAy6ScDpQktA4v
+         oVfw4dLHQDKpIQ8w8Wn10YWnxUMeyY4SwXsAe1UohQDorwXmbG/UNxFRr+igwORqvlaH
+         /bag==
+X-Gm-Message-State: AOAM530PGb9Z4Azcc07w/aevlwpm2b1OfA47B3XvjfDEXv2F8vtY7Uxx
+        nNGDqLBlQbQqFqrwoyXw8oyxJnc1idpWNYMN7FZouA==
+X-Google-Smtp-Source: ABdhPJz7Cj86RdMSh12IrhlVXOFnQOdiRQMmkZvBPn+guW/2OITi8G0VXT9ofQRUB8w1pTsH++NbMzf6BCL3BQx5gEM=
+X-Received: by 2002:a05:6512:3238:: with SMTP id f24mr826516lfe.29.1611442218331;
+ Sat, 23 Jan 2021 14:50:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210122185543.16554-1-digetx@gmail.com>
+In-Reply-To: <20210122185543.16554-1-digetx@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 23 Jan 2021 23:50:07 +0100
+Message-ID: <CACRpkdZTyBuz240iYuvi91k3dLKKXX=4DNxFEBP7mSNB58XtDw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Support building gpio-tegra driver as loadable module
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the function selector to the pinmux-functions debugfs output. This
-is an integer which is the index into the pinmux function tree.  It will
-make it easier to correlate function name to function selector without
-having to count the lines in the output.
+On Fri, Jan 22, 2021 at 7:59 PM Dmitry Osipenko <digetx@gmail.com> wrote:
 
-Example output of "pinmux-functions":
+> This small series adds modularization support to the gpio-tegra driver,
+> i.e. driver now could be built as a loadable kernel module.
+>
+> Dmitry Osipenko (3):
+>   gpio: tegra: Use debugfs_create_devm_seqfile()
+>   gpio: tegra: Clean up whitespaces in tegra_gpio_driver
+>   gpio: tegra: Support building driver as a loadable module
 
-function 0: pinmux-uart0-pins, groups = [ pinmux-uart0-pins ]
-function 1: pinmux-uart1-pins, groups = [ pinmux-uart1-pins ]
-function 2: pinmux-uart2-pins, groups = [ pinmux-uart2-pins ]
-function 3: pinmux-mmc0-pins, groups = [ pinmux-mmc0-pins ]
-function 3: pinmux-mmc1-pins, groups = [ pinmux-mmc1-pins ]
-function 5: pinmux-i2c0-pins, groups = [ pinmux-i2c0-pins ]
-function 6: pinmux-i2c1-pins, groups = [ pinmux-i2c1-pins ]
-function 7: pinmux-i2c2-pins, groups = [ pinmux-i2c2-pins ]
-function 8: pinmux-pwm0-pins, groups = [ pinmux-pwm0-pins ]
-function 9: pinmux-pwm1-pins, groups = [ pinmux-pwm1-pins ]
-function 10: pinmux-adc-pins, groups = [ pinmux-adc-pins ]
+As these three patches clearly make the kernel look better after
+than before:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Cc: Jason Kridner <jkridner@beagleboard.org>
-Cc: Robert Nelson <robertcnelson@beagleboard.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
-Patch note:
-This may seem trivial but I found myself coming up with series of pipes
-in the shell just so I could see the function selector in line with the
-function names. At first, I thought I could just pipe to 'cat -n' but
-that counts at offset 1 instead of 0. The only downside I can see to
-this patch would be if someone is depending on the existing format but
-I don't believe that is a concern for debugfs, right?
+However when we are doing this I would strongly encourage you
+to also make a patch implementing remove() so you can insmod
+rmmod the module at runtime.
 
- drivers/pinctrl/pinmux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 326b3fc41b55..b09021b8d3ba 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -564,7 +564,7 @@ static int pinmux_functions_show(struct seq_file *s, void *what)
- 			continue;
- 		}
- 
--		seq_printf(s, "function: %s, groups = [ ", func);
-+		seq_printf(s, "function %d: %s, groups = [ ", func_selector, func);
- 		for (i = 0; i < num_groups; i++)
- 			seq_printf(s, "%s ", groups[i]);
- 		seq_puts(s, "]\n");
--- 
-2.25.1
-
+Yours,
+Linus Walleij
