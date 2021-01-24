@@ -2,80 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55A52301A25
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Jan 2021 07:18:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CD46301C51
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Jan 2021 14:48:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbhAXGRy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Jan 2021 01:17:54 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:57288 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725803AbhAXGRx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 24 Jan 2021 01:17:53 -0500
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 29867440205;
-        Sun, 24 Jan 2021 08:17:07 +0200 (IST)
-References: <cover.1610364681.git.baruch@tkos.co.il>
- <ba8d5d482a98690140e02c3a35506490e0c6ecb4.1610364681.git.baruch@tkos.co.il>
- <CAMpxmJUGHqJ0C9A84LBF_xzwjbqwFnUnYqFTGBg2CXhKUWd-zg@mail.gmail.com>
-User-agent: mu4e 1.4.14; emacs 27.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v7 1/3] gpio: mvebu: add pwm support for Armada 8K/7K
-In-reply-to: <CAMpxmJUGHqJ0C9A84LBF_xzwjbqwFnUnYqFTGBg2CXhKUWd-zg@mail.gmail.com>
-Date:   Sun, 24 Jan 2021 08:17:06 +0200
-Message-ID: <87a6syeu59.fsf@tarshish>
+        id S1726065AbhAXNsE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Jan 2021 08:48:04 -0500
+Received: from aposti.net ([89.234.176.197]:51890 "EHLO aposti.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbhAXNsB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 24 Jan 2021 08:48:01 -0500
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     gregkh <gregkh@linuxfoundation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        stable <stable@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, od@zcrc.me,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [BACKPORT 5.4 PATCH] pinctrl: ingenic: Fix JZ4760 support
+Date:   Sun, 24 Jan 2021 13:47:04 +0000
+Message-Id: <20210124134704.202931-1-paul@crapouillou.net>
+In-Reply-To: <1611494593252195@kroah.com>
+References: <1611494593252195@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+- JZ4760 and JZ4760B have a similar register layout as the JZ4740, and
+  don't use the new register layout, which was introduced with the
+  JZ4770 SoC and not the JZ4760 or JZ4760B SoCs.
 
-Thanks for you review.
+- The JZ4740 code path only expected two function modes to be
+  configurable for each pin, and wouldn't work with more than two. Fix
+  it for the JZ4760, which has four configurable function modes.
 
-On Fri, Jan 22 2021, Bartosz Golaszewski wrote:
-> On Mon, Jan 11, 2021 at 12:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
->> Use the marvell,pwm-offset DT property to store the location of PWM
->> signal duration registers.
->>
->> Since we have more than two GPIO chips per system, we can't use the
->> alias id to differentiate between them. Use the offset value for that.
->>
->> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Fixes: 0257595a5cf4 ("pinctrl: Ingenic: Add pinctrl driver for JZ4760 and JZ4760B.")
+Cc: <stable@vger.kernel.org> # 5.3
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-[...]
-
->> +       regmap_write(mvchip->regs,
->> +                    GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset, set);
->
-> Can you confirm that this line is on purpose and that it should be
-> executed even for chips that use a separate regmap for PWM?
-
-Yes. The blink counter selection register is at the same offset is all
-chips that support the GPIO blink feature. Only the on/off registers
-offset is different.
-
-baruch
-
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 8bd0a078bfc4..61e7d938d4c5 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -1378,7 +1378,7 @@ static inline bool ingenic_gpio_get_value(struct ingenic_gpio_chip *jzgc,
+ static void ingenic_gpio_set_value(struct ingenic_gpio_chip *jzgc,
+ 				   u8 offset, int value)
+ {
+-	if (jzgc->jzpc->version >= ID_JZ4760)
++	if (jzgc->jzpc->version >= ID_JZ4770)
+ 		ingenic_gpio_set_bit(jzgc, JZ4760_GPIO_PAT0, offset, !!value);
+ 	else
+ 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_DATA, offset, !!value);
+@@ -1389,7 +1389,7 @@ static void irq_set_type(struct ingenic_gpio_chip *jzgc,
+ {
+ 	u8 reg1, reg2;
+ 
+-	if (jzgc->jzpc->version >= ID_JZ4760) {
++	if (jzgc->jzpc->version >= ID_JZ4770) {
+ 		reg1 = JZ4760_GPIO_PAT1;
+ 		reg2 = JZ4760_GPIO_PAT0;
+ 	} else {
+@@ -1464,7 +1464,7 @@ static void ingenic_gpio_irq_enable(struct irq_data *irqd)
+ 	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
+ 	int irq = irqd->hwirq;
+ 
+-	if (jzgc->jzpc->version >= ID_JZ4760)
++	if (jzgc->jzpc->version >= ID_JZ4770)
+ 		ingenic_gpio_set_bit(jzgc, JZ4760_GPIO_INT, irq, true);
+ 	else
+ 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, true);
+@@ -1480,7 +1480,7 @@ static void ingenic_gpio_irq_disable(struct irq_data *irqd)
+ 
+ 	ingenic_gpio_irq_mask(irqd);
+ 
+-	if (jzgc->jzpc->version >= ID_JZ4760)
++	if (jzgc->jzpc->version >= ID_JZ4770)
+ 		ingenic_gpio_set_bit(jzgc, JZ4760_GPIO_INT, irq, false);
+ 	else
+ 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, false);
+@@ -1505,7 +1505,7 @@ static void ingenic_gpio_irq_ack(struct irq_data *irqd)
+ 			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_HIGH);
+ 	}
+ 
+-	if (jzgc->jzpc->version >= ID_JZ4760)
++	if (jzgc->jzpc->version >= ID_JZ4770)
+ 		ingenic_gpio_set_bit(jzgc, JZ4760_GPIO_FLAG, irq, false);
+ 	else
+ 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_DATA, irq, true);
+@@ -1562,7 +1562,7 @@ static void ingenic_gpio_irq_handler(struct irq_desc *desc)
+ 
+ 	chained_irq_enter(irq_chip, desc);
+ 
+-	if (jzgc->jzpc->version >= ID_JZ4760)
++	if (jzgc->jzpc->version >= ID_JZ4770)
+ 		flag = ingenic_gpio_read_reg(jzgc, JZ4760_GPIO_FLAG);
+ 	else
+ 		flag = ingenic_gpio_read_reg(jzgc, JZ4740_GPIO_FLAG);
+@@ -1643,7 +1643,7 @@ static int ingenic_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+ 	struct ingenic_pinctrl *jzpc = jzgc->jzpc;
+ 	unsigned int pin = gc->base + offset;
+ 
+-	if (jzpc->version >= ID_JZ4760)
++	if (jzpc->version >= ID_JZ4770)
+ 		return ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_INT) ||
+ 			ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_PAT1);
+ 
+@@ -1676,7 +1676,7 @@ static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
+ 		ingenic_shadow_config_pin(jzpc, pin, JZ4760_GPIO_PAT1, func & 0x2);
+ 		ingenic_shadow_config_pin(jzpc, pin, JZ4760_GPIO_PAT0, func & 0x1);
+ 		ingenic_shadow_config_pin_load(jzpc, pin);
+-	} else if (jzpc->version >= ID_JZ4760) {
++	} else if (jzpc->version >= ID_JZ4770) {
+ 		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_INT, false);
+ 		ingenic_config_pin(jzpc, pin, GPIO_MSK, false);
+ 		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PAT1, func & 0x2);
+@@ -1684,7 +1684,7 @@ static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
+ 	} else {
+ 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_FUNC, true);
+ 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_TRIG, func & 0x2);
+-		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_SELECT, func > 0);
++		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_SELECT, func & 0x1);
+ 	}
+ 
+ 	return 0;
+@@ -1734,7 +1734,7 @@ static int ingenic_pinmux_gpio_set_direction(struct pinctrl_dev *pctldev,
+ 		ingenic_shadow_config_pin(jzpc, pin, GPIO_MSK, true);
+ 		ingenic_shadow_config_pin(jzpc, pin, JZ4760_GPIO_PAT1, input);
+ 		ingenic_shadow_config_pin_load(jzpc, pin);
+-	} else if (jzpc->version >= ID_JZ4760) {
++	} else if (jzpc->version >= ID_JZ4770) {
+ 		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_INT, false);
+ 		ingenic_config_pin(jzpc, pin, GPIO_MSK, true);
+ 		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PAT1, input);
+@@ -1764,7 +1764,7 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
+ 	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
+ 	bool pull;
+ 
+-	if (jzpc->version >= ID_JZ4760)
++	if (jzpc->version >= ID_JZ4770)
+ 		pull = !ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_PEN);
+ 	else
+ 		pull = !ingenic_get_pin_config(jzpc, pin, JZ4740_GPIO_PULL_DIS);
+@@ -1796,7 +1796,7 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
+ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
+ 		unsigned int pin, bool enabled)
+ {
+-	if (jzpc->version >= ID_JZ4760)
++	if (jzpc->version >= ID_JZ4770)
+ 		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PEN, !enabled);
+ 	else
+ 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !enabled);
 -- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+2.29.2
+
