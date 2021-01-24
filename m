@@ -2,186 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A9FA301C55
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Jan 2021 14:50:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99294301E9A
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Jan 2021 21:03:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725769AbhAXNu2 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Sun, 24 Jan 2021 08:50:28 -0500
-Received: from aposti.net ([89.234.176.197]:51952 "EHLO aposti.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbhAXNu0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 24 Jan 2021 08:50:26 -0500
-Date:   Sun, 24 Jan 2021 13:49:32 +0000
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [BACKPORT 5.4 PATCH] pinctrl: ingenic: Fix JZ4760 support
-To:     gregkh <gregkh@linuxfoundation.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        stable <stable@vger.kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me
-Message-Id: <KEYFNQ.YUG2S0J7JWMP2@crapouillou.net>
-In-Reply-To: <20210124134704.202931-1-paul@crapouillou.net>
-References: <1611494593252195@kroah.com>
-        <20210124134704.202931-1-paul@crapouillou.net>
+        id S1725969AbhAXUCq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Jan 2021 15:02:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbhAXUCp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Jan 2021 15:02:45 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65E0C061574
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Jan 2021 12:02:05 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id kx7so7049560pjb.2
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Jan 2021 12:02:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+rg00FzYj6K8hgdCck8q0gQENvaFKlmec4XdGuwimYA=;
+        b=Z2zjUddLcVyoB5AlgF5l8KIDuIFNQYWQwnS023PlNBe1gQGjGI5hvPUqGz/Y8z75in
+         cplNQbMf26pn8Vk6a4IrE97FcGxfdwpjePe8S78TVsghJoZH1oCenFV6XfDtjAbRI454
+         /LeLjyIWfqJQo/Wn4cNXfRnaEMoQGbb9qE4BeDIsdoQHIwqCuNNlHnLi0bfiw8PI767A
+         q/SXaHRi5GKkLXbiBGZc7f7Ib4RnJMZjsMWjrhaqQe3XA11zbmxPhXS6lN3Spp7mwPFr
+         RLXaC+806K8KP3RBvt+8LIq8XtCWfXTIiERAyWVdK7Ep/IbeQK2Dn0bnctGERI+j+2I1
+         7jgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+rg00FzYj6K8hgdCck8q0gQENvaFKlmec4XdGuwimYA=;
+        b=AptLyszfzrDMpr3izQsticzUletcIIbSHrOmgfVxuD+cslAy3AHVlP2h88vOuMj6+z
+         RtlD8mbqndbdzOa968q+/WtCiwFEetxNI1FpC4aMmAc11hkYl4sl4V3ubKqyWQd3k9RB
+         OueOpTCMI27B1gA8LygsJHpZSoIcjPSFkbX8nefIYTzauL8OKEo7zu8ta0wezHuiDtbl
+         ZxAv18SzKEpamjpLmAwsTWXBWyn1oQQ/lp2EyXG1Q6hg6KVJ5ltY7qYJJK3XlSsIQGb3
+         vvVVk0QU+w1+bRKgnBQVS1R9wND0IdW1Y3KTBgpRXFKQOMEjP+t9NXD17aOHpDTA5gYn
+         8Ycg==
+X-Gm-Message-State: AOAM531WgoZk/9eEoSsGcXcKxi9R+GRkxSCDOjDMxtmjQJd+Rp5pUakN
+        BQWPHEFqioqXJYNahSTCxT/eV2RjRLHfGpeQ7r6qubMTJ8Kaeim5
+X-Google-Smtp-Source: ABdhPJyjN+gMNcyixcxl7WDUJeDuvPPClehgKdJOfoUys3ewiyy7MK/Ht0HGqorrWzbHoHZEgO1pQQFDBLTuX+zjehc=
+X-Received: by 2002:a17:902:7b96:b029:de:7ae6:b8db with SMTP id
+ w22-20020a1709027b96b02900de7ae6b8dbmr16318855pll.0.1611518525176; Sun, 24
+ Jan 2021 12:02:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: 8BIT
+References: <20210123202212.528046-1-drew@beagleboard.org>
+In-Reply-To: <20210123202212.528046-1-drew@beagleboard.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 24 Jan 2021 22:01:49 +0200
+Message-ID: <CAHp75Vfa2iS0RTXxaoUv9zwr7+GvaUwm0xqu4tiSF8zu1CkECQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinmux: add function selector to pinmux-functions
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sat, Jan 23, 2021 at 10:44 PM Drew Fustini <drew@beagleboard.org> wrote:
 
 
-Le dim. 24 janv. 2021 à 13:47, Paul Cercueil <paul@crapouillou.net> a 
-écrit :
-> - JZ4760 and JZ4760B have a similar register layout as the JZ4740, and
->   don't use the new register layout, which was introduced with the
->   JZ4770 SoC and not the JZ4760 or JZ4760B SoCs.
-> 
-> - The JZ4740 code path only expected two function modes to be
->   configurable for each pin, and wouldn't work with more than two. Fix
->   it for the JZ4760, which has four configurable function modes.
+> Patch note:
+> This may seem trivial but I found myself coming up with series of pipes
+> in the shell just so I could see the function selector in line with the
+> function names. At first, I thought I could just pipe to 'cat -n' but
+> that counts at offset 1 instead of 0.
 
-Forgot to add the original commit ID: 
-9a85c09a3f507b925d75cb0c7c8f364467038052
+SO advises [1] to use `nl -v0` instead.
 
-Cheers,
--Paul
+> The only downside I can see to
+> this patch would be if someone is depending on the existing format but
+> I don't believe that is a concern for debugfs, right?
 
-> Fixes: 0257595a5cf4 ("pinctrl: Ingenic: Add pinctrl driver for JZ4760 
-> and JZ4760B.")
-> Cc: <stable@vger.kernel.org> # 5.3
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/pinctrl/pinctrl-ingenic.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index 8bd0a078bfc4..61e7d938d4c5 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -1378,7 +1378,7 @@ static inline bool 
-> ingenic_gpio_get_value(struct ingenic_gpio_chip *jzgc,
->  static void ingenic_gpio_set_value(struct ingenic_gpio_chip *jzgc,
->  				   u8 offset, int value)
->  {
-> -	if (jzgc->jzpc->version >= ID_JZ4760)
-> +	if (jzgc->jzpc->version >= ID_JZ4770)
->  		ingenic_gpio_set_bit(jzgc, JZ4760_GPIO_PAT0, offset, !!value);
->  	else
->  		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_DATA, offset, !!value);
-> @@ -1389,7 +1389,7 @@ static void irq_set_type(struct 
-> ingenic_gpio_chip *jzgc,
->  {
->  	u8 reg1, reg2;
-> 
-> -	if (jzgc->jzpc->version >= ID_JZ4760) {
-> +	if (jzgc->jzpc->version >= ID_JZ4770) {
->  		reg1 = JZ4760_GPIO_PAT1;
->  		reg2 = JZ4760_GPIO_PAT0;
->  	} else {
-> @@ -1464,7 +1464,7 @@ static void ingenic_gpio_irq_enable(struct 
-> irq_data *irqd)
->  	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
->  	int irq = irqd->hwirq;
-> 
-> -	if (jzgc->jzpc->version >= ID_JZ4760)
-> +	if (jzgc->jzpc->version >= ID_JZ4770)
->  		ingenic_gpio_set_bit(jzgc, JZ4760_GPIO_INT, irq, true);
->  	else
->  		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, true);
-> @@ -1480,7 +1480,7 @@ static void ingenic_gpio_irq_disable(struct 
-> irq_data *irqd)
-> 
->  	ingenic_gpio_irq_mask(irqd);
-> 
-> -	if (jzgc->jzpc->version >= ID_JZ4760)
-> +	if (jzgc->jzpc->version >= ID_JZ4770)
->  		ingenic_gpio_set_bit(jzgc, JZ4760_GPIO_INT, irq, false);
->  	else
->  		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, false);
-> @@ -1505,7 +1505,7 @@ static void ingenic_gpio_irq_ack(struct 
-> irq_data *irqd)
->  			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_HIGH);
->  	}
-> 
-> -	if (jzgc->jzpc->version >= ID_JZ4760)
-> +	if (jzgc->jzpc->version >= ID_JZ4770)
->  		ingenic_gpio_set_bit(jzgc, JZ4760_GPIO_FLAG, irq, false);
->  	else
->  		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_DATA, irq, true);
-> @@ -1562,7 +1562,7 @@ static void ingenic_gpio_irq_handler(struct 
-> irq_desc *desc)
-> 
->  	chained_irq_enter(irq_chip, desc);
-> 
-> -	if (jzgc->jzpc->version >= ID_JZ4760)
-> +	if (jzgc->jzpc->version >= ID_JZ4770)
->  		flag = ingenic_gpio_read_reg(jzgc, JZ4760_GPIO_FLAG);
->  	else
->  		flag = ingenic_gpio_read_reg(jzgc, JZ4740_GPIO_FLAG);
-> @@ -1643,7 +1643,7 @@ static int ingenic_gpio_get_direction(struct 
-> gpio_chip *gc, unsigned int offset)
->  	struct ingenic_pinctrl *jzpc = jzgc->jzpc;
->  	unsigned int pin = gc->base + offset;
-> 
-> -	if (jzpc->version >= ID_JZ4760)
-> +	if (jzpc->version >= ID_JZ4770)
->  		return ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_INT) ||
->  			ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_PAT1);
-> 
-> @@ -1676,7 +1676,7 @@ static int ingenic_pinmux_set_pin_fn(struct 
-> ingenic_pinctrl *jzpc,
->  		ingenic_shadow_config_pin(jzpc, pin, JZ4760_GPIO_PAT1, func & 0x2);
->  		ingenic_shadow_config_pin(jzpc, pin, JZ4760_GPIO_PAT0, func & 0x1);
->  		ingenic_shadow_config_pin_load(jzpc, pin);
-> -	} else if (jzpc->version >= ID_JZ4760) {
-> +	} else if (jzpc->version >= ID_JZ4770) {
->  		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_INT, false);
->  		ingenic_config_pin(jzpc, pin, GPIO_MSK, false);
->  		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PAT1, func & 0x2);
-> @@ -1684,7 +1684,7 @@ static int ingenic_pinmux_set_pin_fn(struct 
-> ingenic_pinctrl *jzpc,
->  	} else {
->  		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_FUNC, true);
->  		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_TRIG, func & 0x2);
-> -		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_SELECT, func > 0);
-> +		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_SELECT, func & 0x1);
->  	}
-> 
->  	return 0;
-> @@ -1734,7 +1734,7 @@ static int 
-> ingenic_pinmux_gpio_set_direction(struct pinctrl_dev *pctldev,
->  		ingenic_shadow_config_pin(jzpc, pin, GPIO_MSK, true);
->  		ingenic_shadow_config_pin(jzpc, pin, JZ4760_GPIO_PAT1, input);
->  		ingenic_shadow_config_pin_load(jzpc, pin);
-> -	} else if (jzpc->version >= ID_JZ4760) {
-> +	} else if (jzpc->version >= ID_JZ4770) {
->  		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_INT, false);
->  		ingenic_config_pin(jzpc, pin, GPIO_MSK, true);
->  		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PAT1, input);
-> @@ -1764,7 +1764,7 @@ static int ingenic_pinconf_get(struct 
-> pinctrl_dev *pctldev,
->  	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
->  	bool pull;
-> 
-> -	if (jzpc->version >= ID_JZ4760)
-> +	if (jzpc->version >= ID_JZ4770)
->  		pull = !ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_PEN);
->  	else
->  		pull = !ingenic_get_pin_config(jzpc, pin, JZ4740_GPIO_PULL_DIS);
-> @@ -1796,7 +1796,7 @@ static int ingenic_pinconf_get(struct 
-> pinctrl_dev *pctldev,
->  static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
->  		unsigned int pin, bool enabled)
->  {
-> -	if (jzpc->version >= ID_JZ4760)
-> +	if (jzpc->version >= ID_JZ4770)
->  		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PEN, !enabled);
->  	else
->  		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !enabled);
-> --
-> 2.29.2
-> 
+Debugfs is not an ABI.
 
+[1]: https://superuser.com/a/1433656/415970
 
+-- 
+With Best Regards,
+Andy Shevchenko
