@@ -2,97 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE573301F65
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Jan 2021 23:48:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CEEF301F68
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Jan 2021 23:49:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbhAXWrn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Jan 2021 17:47:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40798 "EHLO
+        id S1726573AbhAXWtW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Jan 2021 17:49:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbhAXWrm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Jan 2021 17:47:42 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 847B5C061574
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Jan 2021 14:47:01 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id m22so15102614lfg.5
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Jan 2021 14:47:01 -0800 (PST)
+        with ESMTP id S1726619AbhAXWtV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Jan 2021 17:49:21 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947C3C061574
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Jan 2021 14:48:40 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id b26so15077408lff.9
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Jan 2021 14:48:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=y/Ur1icl1bDhiJCpdkX42xbQJISQc10E4JkJfciYOIg=;
-        b=Fia13/11rrtVr3VD7jIbc1K2BXfyYbZKOQTkLB5fAphprZoIvpPCfPD9iEjTxrgu6L
-         4FV34p6SGvJ+iLunKep0oqWeCiFrP/WtmaaTq9zJLy6Xhh/TgI0S7C/Xo/Idfmv+cAgA
-         +0Ucp8n8H19ggvIdUc0BtrkWn7+4itcS3JLyj81g0jXRaJV0I5VOgSI0wfxhbpVGHjEZ
-         xuNH/O9sJgiIDcV/+B7ykpvJgvaltM55BcY+DSRsFA/WMFhp0GcU1q3g/NHexoA898y8
-         r2XAq8Yo7i46ovoLHCweo+CMO6+tE7lVpj/hiFnpL6l5HGhrhjGbFgoSqwcgGI817arb
-         ofCA==
+         :cc;
+        bh=k72UoikMLlx525q0BFl83qbEjXZdDbuFpiXkKFefd7E=;
+        b=tQClYM4kbyiYhTRSSExdyfAs2c9urPQucz4RsGA9G5Tp+ic2fGnfWSGYI8mNO58P7n
+         VcTgoH4/3psQ7/yj5Z11yCI1QNcpSfojkG4Yqdz562XyF4lIIFBNBEs+c3SN092KHeF4
+         LXW8fO9n/M4yjjwQFYTiis3DeBA5I2cjKP5yI2+gaKcGuamMdsSMk4B9u2h6Zk2ONzuZ
+         TqZnhy/XmsR46l//fJzLJmyJoME7GMfH2rvOVxfG40g9p9aN3rRSmwl48ppSCgKs1klN
+         +XUL/VClN7zVuvd9pkqSmrTmcoedcYi1THqi48yXRzFl3bkbv/X+5PnGa9oL90tv4LU0
+         vDlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=y/Ur1icl1bDhiJCpdkX42xbQJISQc10E4JkJfciYOIg=;
-        b=tsz9sJRtRP3AwUrWOgQaF4eTKVt11Hmw5FHx5dXiFJDvKB0EtXX8AjEu9CM5GGw3oI
-         EgibUI4z6z0xJloWwmGyoWE/Psv/Izzp+3DmIpo7ckTq0dj8huyKFQ/pMhsv06bLKwLJ
-         VTsYH8dZcP7pZkhW5D3utigDi6tjHPnuQIEmqCReprjeMccsfIMdgHqJWap+r05l5LPf
-         le4pm3OBOJyUJFFhcM0xu6ar2T2rEWM85fN5hi4aMQPHGTl7XxH2slyFzXTCu67yy3nC
-         clPa8Wxi0Tt5A4DqfhShPqSTK2aGqpBWDES6lzQcUIXTlynZwCVAGYWxE92M67VZI2w3
-         gSoQ==
-X-Gm-Message-State: AOAM5303rr7yh4F6WYnW+CI+Wf1gICDG5MmIm1A7p6VR4kb2o+GcGAaS
-        eXxBdBTDD07zlNGrNSXxisl1xm5TNhXh1/Nq8REMYQ==
-X-Google-Smtp-Source: ABdhPJxRmV/i00A0XXkkWgplWNjeR+UwYPMT/qKg224LqsPZ4Tm9OrCC49nvwsY/P09TlEZqpiPKi95861RYTNut0G8=
-X-Received: by 2002:ac2:5c45:: with SMTP id s5mr278583lfp.586.1611528420080;
- Sun, 24 Jan 2021 14:47:00 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=k72UoikMLlx525q0BFl83qbEjXZdDbuFpiXkKFefd7E=;
+        b=MS0QcIQnUID5q5uEA1JML6VVfVYJsviMI8sW8JNec1ipmS/xwqm/lJkct+eyaYfgGe
+         fMS2zBYILZcI+VgY82cwoy1YB5BxnBrTS/gahZTY1CDbham6FFldSR3Jm99BjYVqbF2k
+         w8aJmv/IjPB5t6FE15XozSIHeQSYx/GA6MOfNN34cv1nSwEmIlTeV9s8q6Hy6YLafb0l
+         soFtaokYkHHiScZsR0vKjuDVEI/GX4l0oqnvONOgv9rlh+h7zDkRClKkfS6W1eqQK6fg
+         sbpPmf2W/cmEVjcBsNNL7r5m+lP395Uh9n/qtB65qo7nKM7PG0LE9KpWWfhNtoHCuUJz
+         Y8BA==
+X-Gm-Message-State: AOAM530tq1nfWisPffRKeh1dZLUChlvJuY/0Fk4fs3amYEcaKF3x8e6y
+        zbGfPIAocIPwoGZvdhgDrskB3wrQwvE81kF+tb/d2A==
+X-Google-Smtp-Source: ABdhPJz/+nrjIGb4xXZxfzfhXVYKkT7wQAbKzwhpCYComLn0ZFzcN0Vb7Ug68VyvxtG75sQkk+k4Ro/onASsTCi2eSY=
+X-Received: by 2002:a19:495d:: with SMTP id l29mr264084lfj.465.1611528519160;
+ Sun, 24 Jan 2021 14:48:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20210122185543.16554-1-digetx@gmail.com> <CACRpkdZTyBuz240iYuvi91k3dLKKXX=4DNxFEBP7mSNB58XtDw@mail.gmail.com>
- <24d46928-8c57-acba-f9cf-49afbe4c983c@gmail.com>
-In-Reply-To: <24d46928-8c57-acba-f9cf-49afbe4c983c@gmail.com>
+References: <20210122193600.1415639-1-saravanak@google.com>
+ <CACRpkdYtToLVxyMxC=24AoGVk89c9FyQt899OTz9Jx8yJeu+mw@mail.gmail.com> <CAGETcx8Zozoe2BuP+zmJhQkJ6V0gJ1mtf5907BifEExw8s-zvQ@mail.gmail.com>
+In-Reply-To: <CAGETcx8Zozoe2BuP+zmJhQkJ6V0gJ1mtf5907BifEExw8s-zvQ@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 24 Jan 2021 23:46:49 +0100
-Message-ID: <CACRpkdaR9+mxXXjRADG4+qaGiqgwVRPcCAo-5nZwXXASYfs9+g@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Support building gpio-tegra driver as loadable module
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
+Date:   Sun, 24 Jan 2021 23:48:28 +0100
+Message-ID: <CACRpkdbid_LbxfmJ3cN7R1jupvOxeY10tXR=O79LAqgqg5H4ug@mail.gmail.com>
+Subject: Re: [PATCH v5] gpiolib: Bind gpio_device to a driver to enable
+ fw_devlink=on by default
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Android Kernel Team <kernel-team@android.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 24, 2021 at 12:56 AM Dmitry Osipenko <digetx@gmail.com> wrote:
-> 24.01.2021 01:50, Linus Walleij =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Fri, Jan 22, 2021 at 7:59 PM Dmitry Osipenko <digetx@gmail.com> wrot=
-e:
-> >
-> >> This small series adds modularization support to the gpio-tegra driver=
-,
-> >> i.e. driver now could be built as a loadable kernel module.
-> >>
-> >> Dmitry Osipenko (3):
-> >>   gpio: tegra: Use debugfs_create_devm_seqfile()
-> >>   gpio: tegra: Clean up whitespaces in tegra_gpio_driver
-> >>   gpio: tegra: Support building driver as a loadable module
-> >
-> > As these three patches clearly make the kernel look better after
-> > than before:
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > However when we are doing this I would strongly encourage you
-> > to also make a patch implementing remove() so you can insmod
-> > rmmod the module at runtime.
->
-> The remove() is optional for drivers, it doesn't prevent the rmmod.
+On Sun, Jan 24, 2021 at 3:54 AM Saravana Kannan <saravanak@google.com> wrote:
 
-Aha you mean all resources are managed (devm_*) so that
-rmmod/insmod works fine with this driver?
+>  Considering the "Fixes" is only in driver-core-next, should this go
+> through driver-core?
 
-OK then! :) the work is finished.
+I think Bartosz should pick it up as a GPIO fix for the -rc:s
+because it touches code that he is managing.
 
 Yours,
 Linus Walleij
