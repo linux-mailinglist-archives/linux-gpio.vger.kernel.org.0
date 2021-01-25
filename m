@@ -2,144 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2F683034B1
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jan 2021 06:26:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AF243034B2
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jan 2021 06:26:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbhAZFZt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jan 2021 00:25:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41934 "EHLO
+        id S1727277AbhAZFZv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jan 2021 00:25:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727277AbhAYJzk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jan 2021 04:55:40 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3831EC061352
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jan 2021 01:44:03 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id bx12so14390645edb.8
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jan 2021 01:44:03 -0800 (PST)
+        with ESMTP id S1727108AbhAYKAN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jan 2021 05:00:13 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18027C06178A
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jan 2021 01:51:08 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id a14so3138787edu.7
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jan 2021 01:51:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EKLMKnkstet3NWkC7zAKLu7Avtb2ZmMVXQ+VJfE7jwI=;
-        b=qXRyadwd8FejHhWhL/mHFh0bUcyEUBMMnHkyF3Ab4dETWY3Nw0ywxFJ3WzClhzsaZW
-         9Y9mgew1tQ0Ay6EozD+OQlJXtk6VWQzPwluLRBkNaUnpCzKfTdBSMcpzK8Z5O2Ve+FTz
-         SHHI3qrFhOvVTeJaXTSA6r5cxXW+C4vKQL8CUvJtupZQbSAxSqaR2Na6IlZuoVcTlffc
-         L5WXcVwtE7arYZRLCLcVAACM+FwJQtrFooN/L01UG7nr8OtmwW/A64Yew3Rs65lJMN7J
-         hSytpKBIZpapf83jksv5Nk79pDobvGyjq35yuOoNbF742HSbm0GC42wsKSPnqhQJFomb
-         DVkg==
+         :cc;
+        bh=3sTQAwHfoRJvaKH/vQWa6xXs9OxptXgHLkzhd5OV29s=;
+        b=g/i43z2GWqz/4c79iTb6rWqtPWnhKOVpg3Vg9s38NW+G3Z0pwVpjGcrclqfSZo64Yi
+         gHDsozhgY9mASX9VmaYaGrb4is/OEa3j4lSAms1pZqp0x+6+rlz7B1Jenj8TUqC4LHxT
+         jqckVQVqK3SB44NbZJB/xGXqfSrwOM6BWYACfcwD7fYhrx5ICGhQEWFE3ge87LOfEf4Z
+         tTNw4k9nMiz+XngnriPnQfm/gkQ4Y0HmUGIwPwa9ohv9PiDXsx2De3xFvz6ZouKVTbwA
+         Z21uapXWdJPkMyyD6idS3wH3bZSnCgb2120N26RUTz1a3eGEz7Bwsk7ZuwRon7y1Fv9v
+         p7CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EKLMKnkstet3NWkC7zAKLu7Avtb2ZmMVXQ+VJfE7jwI=;
-        b=sdsgFBOiIjPE6Ck8uKdhq9/H7Vw0LJwZrCNUxZFAT8X10Csy+EKAOxwGxWpmv6qZF3
-         w0+QEIo5u0Dr/RaYU1M9yWj+jx24pwdUOSKv//aj23JW5jlnySHtzrcgEcThGU9k3YIF
-         G38VLo6ejDhl0qDfISmD5Lo0fqm3aTrm6z1vIP+Ss07vUYUG1hfBA44f3Ni//WuwndPj
-         I6+Crm8Rnz0gfFArcon+RbIYAAbEKd1OWvN+vio+HykVuJ5tB23lwPZ5kN9oSh3dIU8x
-         in2V5kbpto2JTA5cBN5U8uLYcxYpjHN1OjOjc3UBmbF9R2YfSwrKLotattOrpTtuGzwD
-         u1og==
-X-Gm-Message-State: AOAM531K7vAfjHXuSPKtSEYmUGlUxN0Y/2Tk78Gi86C22A8+qzUPwOnA
-        ZvaHR4N5tCTkLEW/3Ix6cJOCvMgGZR45Jd2nLCwzSg==
-X-Google-Smtp-Source: ABdhPJwaJgoAymqk6k9f9KmhdwfEU8ljgtUOr3PqrtmdVbzbw0NT6bHHmw5XnnMxAXCQ8FJybKBSYCp6RcAFKPCwfOc=
-X-Received: by 2002:a50:b742:: with SMTP id g60mr806323ede.113.1611567842009;
- Mon, 25 Jan 2021 01:44:02 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=3sTQAwHfoRJvaKH/vQWa6xXs9OxptXgHLkzhd5OV29s=;
+        b=asdMoZWACW+dHEinW0w42M2TlFi7rx9K4VAukIriEMjOrFWDP1U+i4PAwH+PknKf5z
+         eBCg1ODkMMQksRUxEXL8xqtcY62kU3jtWzy6p/SHhX1khj0RBjESTQqquXHEMS0tkq4c
+         SJA5bG1k6UtikDol6b9Xpo+EfuYxNSyMXGZOiJRnr+XnbAuWHvDqu/jGrfXRd86hpaCG
+         FUiW7gs5ZsHgO2g0j4rsp8tjyT48hdMoVklgYoM6L9aqymVQ9rVh1K96z4P7iHwEFs4x
+         6NmuF1oJ0sJ7h4tO6mWjuOjZs+unQB0opa06RkW+prviJikSaNRE9j179KaVMHMwK8wN
+         UuAA==
+X-Gm-Message-State: AOAM531F6u9RAnQlbrlpEiUqRLRkywbwx9xdDYaaDL7vLYWOW031zg9+
+        4JSFVg8dxYTHOHDWrb93JJgQ5MARYeuzPXVAy+bRzM2zOfY=
+X-Google-Smtp-Source: ABdhPJzWD3VL+KVS+vVKPAdqW7ymqMv6I0aPQjq8A00k5+X0z5Xp8y4QIOPSPbclFNO/cHTlUUkW7h2zoHxRpJDgdvo=
+X-Received: by 2002:a05:6402:35ca:: with SMTP id z10mr985353edc.186.1611568266803;
+ Mon, 25 Jan 2021 01:51:06 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1611128398.git.baruch@tkos.co.il>
-In-Reply-To: <cover.1611128398.git.baruch@tkos.co.il>
+References: <cover.1610364681.git.baruch@tkos.co.il> <75637257694de0d4a9e432e1d8270019a4e6328b.1610364681.git.baruch@tkos.co.il>
+In-Reply-To: <75637257694de0d4a9e432e1d8270019a4e6328b.1610364681.git.baruch@tkos.co.il>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 25 Jan 2021 10:43:50 +0100
-Message-ID: <CAMpxmJWUN238GA+kCYVf8mD9GJBuAW00wOkAdk2Ae_-8mNsFTw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] gpio: mvebu: pwm fixes and improvements
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
+Date:   Mon, 25 Jan 2021 10:50:56 +0100
+Message-ID: <CAMpxmJWjSyWkM6B-A7_eMZ38RmE4trvJ3oLaJdbkpr9Z00Ne0w@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] arm64: dts: armada: add pwm offsets for ap/cp gpios
+To:     Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Russell King <linux@armlinux.org.uk>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
         linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Baruch Siach <baruch@tkos.co.il>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 5:16 PM Baruch Siach <baruch@tkos.co.il> wrote:
+On Mon, Jan 11, 2021 at 12:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
 >
-> This series adds a few related fixes to the pwm .apply and .get_state
-> callbacks.
+> The 'marvell,pwm-offset' property of both GPIO blocks (per CP component)
+> point to the same counter registers offset. The driver will decide how
+> to use counters A/B.
 >
-> The first patch was originally part of the series adding Armada 8K/7K pwm
-> support. I split it out to a separate series following review comments fr=
-om
-> Uwe Kleine-K=C3=B6nig who spotted a few more issues. There is no dependen=
-cy between
-> this and the Armada 8K/7K series.
+> This is different from the convention of pwm on earlier Armada series
+> (370/38x). On those systems the assignment of A/B counters to GPIO
+> blocks is coded in both DT and the driver. The actual behaviour of the
+> current driver on Armada 8K/7K is the same as earlier systems.
 >
-> v5:
+> Add also clock properties for base pwm frequency reference.
 >
->   * Drop a patch applied to the gpio tree
->
->   * Fix patch 4/4 description typo (Uwe)
->
->   * Reduce the number of multiplications (Uwe)
->
->   * Add spaces around '+' (Uwe)
->
->   * Use '1ULL' instead of explicit cast to reduce verbosity
->
->   * Add Linus' Reviewed-by tags to patches that are unchanged since v2
->
-> v4:
->
->   * Take advantage of zero value being treated as 2^32 by hardware. Rewri=
-te
->     patch 5/5 (Uwe).
->
-> v3:
->
->   * Improve patch 3/5 description (Uwe)
->
->   * Add more Reviewed-by tags from Uwe
->
-> v2:
->
-> Address Uwe Kleine-K=C3=B6nig comments.
->
->   * Improve patch 1/5 summary line
->
->   * Add more information to patch 1/5 description
->
->   * Add more information to patch 2/5 description
->
->   * Don't round period/duty_cycle up in .apply (patch 3/5)
->
->   * Expand the comment in path 5/5 based on RMK's analysis of hardware
->     behaviour
->
->   * Add Uwe's Reviewed-by tags
->
-> Baruch Siach (4):
->   gpio: mvebu: improve pwm period calculation accuracy
->   gpio: mvebu: make pwm .get_state closer to idempotent
->   gpio: mvebu: don't limit pwm period/duty_cycle to UINT_MAX
->   gpio: mvebu: improve handling of pwm zero on/off values
->
->  drivers/gpio/gpio-mvebu.c | 47 +++++++++++++++++++++------------------
->  1 file changed, 25 insertions(+), 22 deletions(-)
->
-> --
-> 2.29.2
->
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> ---
 
-Series applied, thanks a lot for the improvements! And thanks to Uwe
-and Russel for the reviews.
+Andrew, Gregory, Sebastian,
+
+Can we get your Acks on this patch? Are you fine with it going through
+the GPIO tree?
 
 Bartosz
