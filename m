@@ -2,154 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57C41304D7B
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 01:41:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D193C30511A
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 05:43:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732210AbhAZXJZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jan 2021 18:09:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49506 "EHLO
+        id S239368AbhA0El4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jan 2021 23:41:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389432AbhAZTIy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jan 2021 14:08:54 -0500
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C735CC06174A
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 11:08:13 -0800 (PST)
-Received: by mail-ej1-x635.google.com with SMTP id w1so24503175ejf.11
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 11:08:13 -0800 (PST)
+        with ESMTP id S2388200AbhAZXUo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jan 2021 18:20:44 -0500
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C016EC06174A;
+        Tue, 26 Jan 2021 15:19:32 -0800 (PST)
+Received: by mail-yb1-xb2f.google.com with SMTP id v200so249984ybe.1;
+        Tue, 26 Jan 2021 15:19:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ccncod4bJ72tcGcy7W1/RKUQfGbg1f/NFT4D3fRxO50=;
-        b=yEYdB7vsEehLKEZC2ypXX0M42F4dJ3KGTo3pasLpV495AsHFNvYpn91cR8wDxCPZz9
-         8auip/3OOarJfZC9X/KwcSyFdjx/0WG1wExuts04bUNAeHQVB30ULQqdu4TIHgOeO0ir
-         a01lMvlZH3bcrZwRrXgAcPs3I0KDIsCf60uJ0JXYfkAMsJKFWtZdEd9tYIfLau2vwW/W
-         Dj1CzGtwF4k2yNjJ466EehQZHkaez7C6W/yDcHJzouSrozO2OgQJp0s97PSpXa+BBqD9
-         9pm88HFjlpQXpzG1hfvUWSBLMbbmPN+GHxgIZuWqqHMNbrgevpWYhFGfNYCy9R/weYNw
-         ZFmA==
+        bh=yG8TN3kSOy/r5C1fLciwDAgyrhAMN8G3ZSfNxn4LKwI=;
+        b=JGn9UVd1WL6oLaAIgsVyZFefcVBcfaNKnNmOKOUyzbrJVYPNvDflHiTqTCWbm08KKm
+         cHN3UA9Qctcy/zocpr/AYU08cR4RovIIz4JlaEWXZxBMFL7ThTcs/Xw7vAn5YKV9F6bS
+         Ovrxi5Oqb0xAcSldXg7BPjJ7e8IrIwVj7lashPMbLmBoH+ir0sIVOOgNZRTTXJMWihA5
+         aBH8+0LeIHQz5MZkI5ksYuuMbyMEKaAIyhlG64IipkZUPMFKbeYo+0C5IyD9IBsL+mgu
+         NXmYmPsFaDDfqufP8ivVnzJswuQdVImtIfytTHJaKUTtTMsOam8GbSNJKsqKsz3Wlfh9
+         WIpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ccncod4bJ72tcGcy7W1/RKUQfGbg1f/NFT4D3fRxO50=;
-        b=Qvms90TDfEr5eppl1tYgnoqXgYf79u7HM4ZIBGMlwI/V/K9TMC53YEGwc3K7T0TFu6
-         Detao8KmwFn0CNWjqoOe0riVRM6K+rA3sEOsvozeslslxcQ7Iu6nXWJpPiRQU/mMOolX
-         Evc5gF48HjDrECTF+5bpQ3y1HLfitayCvjAUqBqehU5Th/oxClo/OHHsIKsrPYhxIHQ0
-         OTe7lTysOaPLO6qqtzBErZNdfa2TRX/78nrwagTpdtN6f05SfeAffWPxY+PjJrvEHgQz
-         0V+FGvfqtwTX/3XRRVGlGM6XSV54gLKPe3n4hi+27SqBUvNUrMR6ii5JPPVYE3rbaRet
-         o3Rg==
-X-Gm-Message-State: AOAM532eCREzgqSehaDwBhttdjKNsu540XcuSb2dpXDWYwfsJxwsCYV8
-        y6vq+GefcAt/m/8oMD0hLp5EoY8U+jNmNKsmzN9iLw==
-X-Google-Smtp-Source: ABdhPJyoTxhQLMpU2yvgvDSgyt29JQpVwyAN40O84op4wXCsNdUUDazQbbBsPeQgeng/l8ZfzuDE12LMcJxrQxoFvlI=
-X-Received: by 2002:a17:906:dfd3:: with SMTP id jt19mr4402078ejc.64.1611688092563;
- Tue, 26 Jan 2021 11:08:12 -0800 (PST)
+        bh=yG8TN3kSOy/r5C1fLciwDAgyrhAMN8G3ZSfNxn4LKwI=;
+        b=VQzjlGnjwwKXGtmg6M3zPDHX9hCe0FvY+1Msdl0oVJ5vHLuE+4qGmnWBI57mXUva7y
+         o2zvi+FzAv5LA0fyQ2mFNkirTYcUWFu6rtB7y5CuUU4H9/r/LFnGD1Sv3W3ipeMUgpVn
+         gVl90qg9KKqVNQ3arWXLYJUM0cKycEa4WSavMk0jeUuAKupGWS1KEmrQ4RVJQ2jClT8h
+         GGRhhVet7wd2XwpYaDkDGNHSiZYxluzuJ0AglniaJcwBGjTUoxFClli+Ka4hndHpGl1T
+         u2kRQ3x+sNihGyWuJLyVokibcXkad+Y98a+yijURkntQVA/ThsgygVbv2L34g6aImJ/a
+         FnWA==
+X-Gm-Message-State: AOAM533BgN2PQxauxeOIdYNK6Ug0jpmGKfmcMDPWlukyubKw8RusOpJ5
+        JvyaszjypAx1sHDpQ/44uzA0VLDYSZaaDdIuolM=
+X-Google-Smtp-Source: ABdhPJzBIh/uw8fHMxIPrq4i5pm0L5Jnoe2iN2FtZdlZzW9R7RDH1coLX0c8arxTOhBav4i1zaEHR/zAQGpitgryc7o=
+X-Received: by 2002:a25:9b81:: with SMTP id v1mr10594112ybo.168.1611703172052;
+ Tue, 26 Jan 2021 15:19:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20210111133426.22040-1-brgl@bgdev.pl> <20210111133426.22040-7-brgl@bgdev.pl>
- <CAHp75VfeO10DXc2nCRKP9=6uppJ28k36E8yr20+YCd0mKUGjWA@mail.gmail.com>
- <CAMRc=MevGmAMBK20O2BBmyD9NjCSpC9-O_j_0HM6DQV66rnA2Q@mail.gmail.com>
- <20210111144647.GY4077@smile.fi.intel.com> <CAMpxmJW=6YXgPBJ3=1sBbNAOWTV4idwHz-cWv+YborZ4hLtcKA@mail.gmail.com>
- <20210125055527.GA344851@sol> <CAMRc=Mc4gK6BXKV8-b9qBTgm8m5DqW35UPxPWn7PbfJ-8LB4Yw@mail.gmail.com>
- <YBBNSzKHYNXki6NY@kroah.com>
-In-Reply-To: <YBBNSzKHYNXki6NY@kroah.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 26 Jan 2021 20:08:01 +0100
-Message-ID: <CAMRc=MeQ2gNgCEuf9apUgmzxeCUUPjD5oAChXXVOw=JmoqqaGA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 6/6] core: add the kernel uapi header to the repository
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com> <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
+ <CAHp75Vc9RAHvTDAw1ryHq_CPRMtjqkzg9081nw0+RPY_yWPJgA@mail.gmail.com>
+ <CAMeQTsY6k64LUg3DYbi67W6-Gx6znOeJbDfKUhzGt-BxF2BgKA@mail.gmail.com>
+ <CAHp75VdKxARQAyyTd=ZcaoER1iF6Mk4AS1Dn6U9VCjt_D_+q8A@mail.gmail.com>
+ <3b4c2f63-14e6-5041-3c15-c2d65b229269@redhat.com> <CAHp75VcEq4thOub+k5rDR61KZX4jCZj2zJr2OqsdedmpSB64KA@mail.gmail.com>
+In-Reply-To: <CAHp75VcEq4thOub+k5rDR61KZX4jCZj2zJr2OqsdedmpSB64KA@mail.gmail.com>
+From:   Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Date:   Wed, 27 Jan 2021 00:19:17 +0100
+Message-ID: <CAMeQTsZMK9E4=qB-Kxnt9i4RGDFRkVMAgyYSck_tmk7C7yTH2A@mail.gmail.com>
+Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 6:11 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Tue, Jan 26, 2021 at 9:53 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Tue, Jan 26, 2021 at 04:07:47PM +0100, Bartosz Golaszewski wrote:
-> > On Mon, Jan 25, 2021 at 6:55 AM Kent Gibson <warthog618@gmail.com> wrote:
+> On Tue, Jan 26, 2021 at 8:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> > On 1/26/21 6:14 PM, Andy Shevchenko wrote:
+> > > On Tue, Jan 26, 2021 at 6:55 PM Patrik Jakobsson
+> > > <patrik.r.jakobsson@gmail.com> wrote:
+> > >> On Tue, Jan 26, 2021 at 4:51 PM Andy Shevchenko
+> > >> <andy.shevchenko@gmail.com> wrote:
+> > >>> On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
+> > >>> <patrik.r.jakobsson@gmail.com> wrote:
+> > >>>> On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
+> > >>>> <andriy.shevchenko@linux.intel.com> wrote:
+> > >>>>>
+> > >>>>> Hi guys,
+> > >>>>>
+> > >>>>> This is first part of Intel MID outdated platforms removal. It's collected into
+> > >>>>> immutable branch with a given tag, please pull to yours subsystems.
+> > >>>>
+> > >>>> Hi Andy,
+> > >>>> Do you plan on eventually removing X86_INTEL_MID completely? If so,
+> > >>>> then I should probably start looking at removing the corresponding
+> > >>>> parts in GMA500.
+> > >>>
+> > >>> Nope. It is related to only Medfield / Clovertrail platforms.
+> > >>>
+> > >>> There are other (MID) platforms that may / might utilize this driver
+> > >>> in the future.
+> > >>
+> > >> Right, there's still Oaktrail / Moorestown with hardware in the wild.
 > > >
+> > > Actually Moorestown had to be removed a few years ago (kernel won't
+> > > boot on them anyway from that date when Alan removed support under
+> > > arch/x86 for it).
+
+Ok. I lump Moorestown and Oaktrail together since they have the same
+Z6xx series CPU/GPU (GMA600). I still have a working Oaktrail device
+so that support should stay in gma500.
+
+> > >
+> > > I'm talking about Merrifield and Moorefield that can utilize it and
+> > > also some other platforms that are not SFI based (Cedar something...
+> > > IIRC).
 > >
-> > [snip!]
-> >
-> > > >
-> > > > I don't like the ifdef hell so I prefer to bundle the header. I'm open
-> > > > to other suggestions, although I can't come up with anything else.
-> > > >
-> > >
-> > > Going off on a bit of a tangent, but I'm trying to add support for
-> > > decoding the GPIO ioctls into strace and am running up against a similar
-> > > issue.
-> > >
-> > > The way strace does it is to check the uAPI header on the host and use
-> > > it if possible.  To handle where it may be stale, local types are
-> > > defined that mirror any types that may have been added since the header
-> > > was originally released.  If the corresponding type is available in the
-> > > linux header then it is used, else the local type.
-> > >
-> > > This obviously creates a lot of pointless boilerplate code and
-> > > preprocessor chicanery so I floated the idea of just including the latest
-> > > header in the strace tree, as you are doing here for libgpiod.
-> > > But that raised the issue of licencing, specifically if you copy the
-> > > linux/gpio.h into a source tree does that mean that the whole project
-> > > becomes GPL 2.0?  That is an issue for strace as it is LGPL 2.1 - as is
-> > > libgpiod.
-> > >
-> > > The Linux uAPI headers are under the GPL-2.0 WITH Linux-syscall-note,
-> > > which is also not totally clear on this point[1].
-> > >
-> > > My gut feeling was that using and even copying API headers doesn't
-> > > constitute a derived work, as per the FSF view quoted in [1], and
-> > > ethically might even be less of a violation than copying and re-defining
-> > > individual types, but I'd rather not rely on a gut feeling.
-> > >
-> > > Is there some clear opinion or precedent on this point?
-> > > i.e. are libgpiod and strace in legal licence jeopardy if they include
-> > > gpio.h in their source tree?
-> > >
-> > > Cheers,
-> > > Kent.
-> > >
-> > > [1] https://lkml.org/lkml/2020/2/21/2193
-> >
-> > Thanks for pointing that out. I lack the legal knowledge to have an
-> > opinion of my own on this.
-> >
-> > Cc'ing Greg KH for help.
-> >
-> > Greg: do you know if it's fine to bundle a 'GPL-2.0 WITH
-> > Linux-syscall-note' uAPI header together with an LGPL-v2.1-or-later
-> > user-space shared library?
+> > Yes at least there are some 64 bit capable SoCs with GMA500 which were
+> > used in NAS like devices. These NAS-es actually have a VGA output
+> > (and maybe also DVI?) which is attached to the GMA500.
+
+Yes these should be Cedarview/Cedartrail. Some of them are 64-bit and
+some are 32-bit. I think it came down to if bios enabled it or not.
+Cedarview comes with VGA, DVI and eDP/DP. Quite a few Cedarview
+devices exist in the wild.
+
 >
-> How would you "bundle" such a thing as that is not what is in the kernel
-> source tree?  If you are going to copy files out of the kernel and do
-> other things with them, well, I recommend asking a lawyer as I am not
-> one :)
+> Since you are talking about 64-bit, definitely they are *not*
+> Moorestown, Medfield, Clovertrail since the mentioned never were
+> 64-bit. But it would be nice to see the CPU model number to be sure.
 >
-> good luck!
+> > I know people are running Fedora on these, so we should at least keep
+> > these supported.
 >
-> greg k-h
+> Is it possible to gather the CPU model number from them? (Or at least
+> the exact device/box name)
 
-By "bundling" I mean - copying the kernel uAPI header verbatim from
-the kernel tree into the project repository. The reason for that is
-the fact that always relying on the toolchain kernel headers leads to
-build issues if we want to support more recent kernel features in the
-library while the supplied headers don't define all required symbols.
+Yes, it would be interesting to know more about Clovertrail. gma500
+only supports up to the Cedarview GPUs but Clovertrail might also use
+a Cedarview GPU.
 
-We can either make the latest supported version of linux headers a
-hard requirement for building (I did that and buildroot folks yelled
-at me because two stable versions of the library had different kernel
-headers requirements) or redefine certain symbols (new symbols since
-the oldest supported kernel version) or - and this is preferred unless
-it's against the linux license - include the kernel headers in the
-source tarball of the library.
-
-I hope this is not a stupid question but obviously I don't know any
-lawyer well versed in software copyright: can we direct this question
-to anyone at the Linux Foundation maybe?
-
-Bartosz
+-Patrik
