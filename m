@@ -2,135 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D6CC304278
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jan 2021 16:28:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86FF3304324
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jan 2021 16:56:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389846AbhAZP0M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jan 2021 10:26:12 -0500
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:53361 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391539AbhAZPZR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 26 Jan 2021 10:25:17 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 615C2B47;
-        Tue, 26 Jan 2021 10:24:30 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Tue, 26 Jan 2021 10:24:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=N58P68rmnDJxoYYRk7nViKAuN+J
-        BxJrfBhrOUbLBiS8=; b=bMv/TMmgBMOX8kgzlkOTxmHHdgOeJQKfRcSIvfMwu6B
-        gNDqqOSaEo5BfkhYgYhFHkjKnwh7mymtcT4EqO5OcWgZQBx+3Gl0pux8H5ZuXLFi
-        LPSG7O94PpTMRTaAO9H67HJtzdshOIjNiAl5rkQJscFSsQid9NSm066hr6Snzo2K
-        FDtfC/7d4GeB3lO811YglJBK8lyJkkYhSuP+Df35Adx7qn7QTFNOrzwmqTx44yLT
-        lGYdN7G5vHuu46i+nB+xllZ94xkXOwopC7cbWReju5N/mQeclN22dQLSUgRSkWxT
-        GKaydJni/KvTIVNY7WMI9ZV3FO53Jgg1+b5d8b50tTg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=N58P68
-        rmnDJxoYYRk7nViKAuN+JBxJrfBhrOUbLBiS8=; b=dqNxADrXGnulfEb1fcwQGS
-        JKmK6JqjYrmEbtuxDY9X3Fne/f7iEn2neuW3Rj9THnmmwCzDa42g1ysiJtbz/hDT
-        RDqZO1D6qS85AqyLFSZFMjgdSqnvkWsZCkONakjM7KXQI09MAgv0a95OrFF+Xr7M
-        3H6M0M79HN8Ef8X6g/1OMQ5mFr4TfewdNcUmmP232IRSIr+zrw7gDzv9ObdtouGU
-        2Eb443dKT/yENKknDYr66viLHpE+hCIcepk+x9NUQDVsc2BOhB2HFGo+JMT1qn/0
-        cmQN6Hgah11w9yMnMeqXFVYQvyCNajfePm5OLFp4/opOgjc/0qwmAPUtbv/UwbSw
-        ==
-X-ME-Sender: <xms:LDQQYAk2th3yH9GW2Bs341OEuXh8dUU5TcNy1SnzoWEkXFd9NQcJVg>
-    <xme:LDQQYP0zY0E5G87x4LV1b5wn6Fw_MB4DhgLmzG55IUMZAofbwigSnqftuDU9u6cbM
-    vX6mXgZXtL6YvzrZmU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdeigddugecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:LDQQYOrIjkK4YsUH8Z00KU-GuAIrFK7iXiYq0Yer5xuNC6IHQzdr3A>
-    <xmx:LDQQYMkz6Qf5u4gTfLb4M9sxLmhS5YlT2MbqHgmSBQtOzHrshn-vUw>
-    <xmx:LDQQYO1mYSpQPsTPMFokeVZTjly4xr5R6aSgVLpEZ6ot-8KoWUJ_7g>
-    <xmx:LTQQYK-qRUMryIfVopHcPNQybCGguCGCoFxozKnNQ6VUoJE3hyJoRw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5F9F4108005B;
-        Tue, 26 Jan 2021 10:24:28 -0500 (EST)
-Date:   Tue, 26 Jan 2021 16:24:26 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     liu xiang <liu.xiang@zlingsmart.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        liuxiang_1999 <liuxiang_1999@126.com>
-Subject: Re: [PATCH] pinctrl: sunxi: fix use-after-free in sunxi_pmx_free()
-Message-ID: <20210126152426.pmnuipcyaloaz4tx@gilmour>
-References: <20210119062908.20169-1-liu.xiang@zlingsmart.com>
- <20210121164013.cqfxvach4ugkohm7@gilmour>
- <CACRpkdb1gn2e9=ip6ipAwW27vmf1FCs_y1Z=w-K8y8Z9MXVBMw@mail.gmail.com>
- <5c4b7a8c-c549-43ae-8ec6-5ae3ed26d321.liu.xiang@zlingsmart.com>
- <CACRpkdaJQcuWwS2g4UgRpWb+iHYSmWoNj6gEsvGwtPZq+aJBbQ@mail.gmail.com>
+        id S1731036AbhAZPlh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jan 2021 10:41:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392582AbhAZPka (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jan 2021 10:40:30 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E25EC061D7F
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 07:39:50 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id a20so2201061pjs.1
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 07:39:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ry2gpr6gXFVf9iEI53wDazGx/7l4smEJsdfHqtTX24g=;
+        b=fut77XsLgqRrTecfD8hYhm9vkVQR+/2SxFdqR+yrvS81FLqhWJfD8kMELzwLPpHyKX
+         QRL5vKAFe7Wtgg/zyy0pj/Q0lDVKY+UlDgdVRYMGqa+CukUxn0gTsx4jzYO5Y0DLqP/9
+         hK6evT3ZxexhMHnV05EYzqCeyRmKDkLUt8B0WUX/OKrOgRq1SKoDoeGhb02o9yC0rDh4
+         xQh7+KnSrgVheNGhBbp+rV5pIgbOkkCs+UKaXIR6WjRoMxl8DzPr7/8NtMIFn6MSffjH
+         xr0bl331JWQ00Gpn0dYjlaNLhNNQ7L4evvwkKqCITeNkWuBBnRKJzMRHeux8aRWPjrkD
+         6uBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ry2gpr6gXFVf9iEI53wDazGx/7l4smEJsdfHqtTX24g=;
+        b=MmzJS1X61LJoBXez6ImBJhN6ijZxuq2AWfFEHA6icv5RPhAIxHwLAHwBEa5Khl1hRV
+         jDumhloUweVRvEOzucUORDlzVd9sO/Z4NSm9ef/KwaEBQrfFVm//LRvBSb8jVZlnCAs8
+         dBXLM5/uOcKve8i08l5j1JGDKVgoD/90RDSEnsUAyBCXheNzlkdYARxqfkR2z6OKIy3i
+         ZE23Ck/5QsTPaiB75SS9Wbv83Xg70hneFsHbG0ektrI4pyyW6bB/cg/NsTW+VPpSmOsq
+         TcxGYwOVyYlAu4Zp7wdBXktNKuCtoDHvy16Ey+7WpeWh6iyL8VvHoexcSNBwcjTWaIXm
+         Ga7w==
+X-Gm-Message-State: AOAM531NFEhhJ6lMoWT9Cl/JTQxBWRfMsn+dgl2zpQZqxFB7YYRRvdht
+        qiDfSMu7R5UdPGD2WLkA9zvc
+X-Google-Smtp-Source: ABdhPJyEIQlk7u5/AohAMRMIjlOMghL0I91m9bodQZa0HBw1shzSQ741fgJ6fM4ZcGleJWi+lCBn8Q==
+X-Received: by 2002:a17:90a:c68d:: with SMTP id n13mr360368pjt.71.1611675589591;
+        Tue, 26 Jan 2021 07:39:49 -0800 (PST)
+Received: from localhost.localdomain ([2409:4072:6d84:5293:c96f:fa31:6124:85e6])
+        by smtp.gmail.com with ESMTPSA id n128sm20433159pga.55.2021.01.26.07.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Jan 2021 07:39:48 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     linus.walleij@linaro.org
+Cc:     afaerber@suse.de, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cristian.ciocaltea@gmail.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2] pinctrl: actions: Add the platform dependency to drivers
+Date:   Tue, 26 Jan 2021 21:09:35 +0530
+Message-Id: <20210126153935.29623-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3t3ycay2bf7rxezc"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaJQcuWwS2g4UgRpWb+iHYSmWoNj6gEsvGwtPZq+aJBbQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The Actions Semi pinctrl drivers are a mix of both ARM32 and ARM64
+platforms. So let's add the correct platform dependency to avoid them
+being selected on the other.
 
---3t3ycay2bf7rxezc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Also make sure they are available for build test by depending on
+COMPILE_TEST.
 
-On Tue, Jan 26, 2021 at 04:03:29PM +0100, Linus Walleij wrote:
-> On Tue, Jan 26, 2021 at 7:31 AM liu xiang <liu.xiang@zlingsmart.com> wrot=
-e:
->=20
-> > > Liu can you make a patch to Kconfig to just select REGULATOR?
-> > > Possibly even the specific regulator driver this SoC is using
-> > > if it is very specific for this purpose.
-> >
-> > I found that the regulator driver is related to the specific board, not=
- the SoC.
-> > There is no board config for ARM64 SoC like ARM.
-> > Is a good idea to select the regulator driver in the pinctrl Konfig? Or=
- just
-> > select CONFIG_REGULATOR_FIXED_VOLTAGE to avoid the use-after-free warni=
-ng?
->=20
-> If that regulator is what the board uses to satisfy this driver then that
-> is what you should select. Write some blurb in the commit message
-> about what is going on.
->=20
-> You can even add a comment in Kconfig like that:
->=20
-> # Needed to provide power to rails
-> select REGULATOR_FIXED_VOLTAGE
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
 
-Virtually all the boards will need a regulator, but you can't make the
-assumption that this is the driver that is going to be used. In most
-case, it isn't.
+Added depends on COMPILE_TEST
 
-But it's not really a big deal, we depend on the framework itself being
-enabled for regulator_get to return the proper error, not one given
-driver.
+ drivers/pinctrl/actions/Kconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Maxime
+diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
+index a1d16e8280e5..119f0e471efd 100644
+--- a/drivers/pinctrl/actions/Kconfig
++++ b/drivers/pinctrl/actions/Kconfig
+@@ -12,18 +12,21 @@ config PINCTRL_OWL
+ 
+ config PINCTRL_S500
+ 	bool "Actions Semi S500 pinctrl driver"
++	depends on ARM || COMPILE_TEST
+ 	depends on PINCTRL_OWL
+ 	help
+ 	  Say Y here to enable Actions Semi S500 pinctrl driver
+ 
+ config PINCTRL_S700
+ 	bool "Actions Semi S700 pinctrl driver"
++	depends on ARM64 || COMPILE_TEST
+ 	depends on PINCTRL_OWL
+ 	help
+ 	  Say Y here to enable Actions Semi S700 pinctrl driver
+ 
+ config PINCTRL_S900
+ 	bool "Actions Semi S900 pinctrl driver"
++	depends on ARM64 || COMPILE_TEST
+ 	depends on PINCTRL_OWL
+ 	help
+ 	  Say Y here to enable Actions Semi S900 pinctrl driver
+-- 
+2.25.1
 
---3t3ycay2bf7rxezc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYBA0KgAKCRDj7w1vZxhR
-xdm2AP9Vg1fFmdBMLPOzFtzelXWiubltA/UbM3djut80g40SsgEAonnEgt7nnczQ
-xpjCO5ObhLC7IWv1ZoKyTSfECCr2SgY=
-=NX1o
------END PGP SIGNATURE-----
-
---3t3ycay2bf7rxezc--
