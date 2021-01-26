@@ -2,90 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23BE5304146
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jan 2021 16:01:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 704C9304152
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jan 2021 16:03:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391646AbhAZPBb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jan 2021 10:01:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52354 "EHLO
+        id S2406020AbhAZPCF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jan 2021 10:02:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406011AbhAZPBX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jan 2021 10:01:23 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C266C0698C4
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 07:00:21 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id m22so23107516lfg.5
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 07:00:21 -0800 (PST)
+        with ESMTP id S2406014AbhAZPCC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jan 2021 10:02:02 -0500
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22316C061A31
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 07:01:22 -0800 (PST)
+Received: by mail-lj1-x22c.google.com with SMTP id 3so19956461ljc.4
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 07:01:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oou4JBBLNg89AoflcEwukaUQeMGozONrAI+ykd68abc=;
-        b=CMa6kBvpR7r2i7zpxtIhNACZ2ViuaRO16BBxLI8B05cp9KOHqdEStU7xvCXZWY74SX
-         9lqFxZaRm4aqr+c9UZoLdzO0SOMIUuiYyxAeIJJGdPM/fiZR4aDiStE89i/QvkPTJ04r
-         UajsbqVlBJyRziIRZGuKOojtOnzJ5Q4KD2yRDbzkXpaQtXrh1M9quvjUl/9uy5spVVb5
-         GO92t8QxJaHe3M7H82gYGbZA9hX7M29967sScvq3sc6d0cfSQmE9sZiJQiLeevmZHPqx
-         RurYYDJ0RzvHiUwdCy41fLjd6IqcaiDE2XMbg2avVyrkBgog0Qghh8I/VRVS9XJ7SVPY
-         wkdg==
+        bh=lirWGcwxQ/9sPMV+iwf/h9oS1/CrHerBIWG2c3EGSGk=;
+        b=oxDNjk3iYXpmm6bruISbusuPot9758mJ8Dgv+nZKud8ztqpQNcDycw29k3Ecz0PiyL
+         o42TBWfTSj49+9TPcA+9BZ3Zim6TnBDn56Ya7bmFqDxaz0wH8t9qCSXFJezTPjfiRwaB
+         O6bJhXI6k27/dPyMOVaiNgRVN/zh8XTY05LAa0W6F2iIsY65mUpDEvUDWbKPts4L4neT
+         UlP7PrSI5Q/gg5m8VV4LRpepfajeLsAioMA8gRGlOYAe5ItJpoAKB2veaJUXnDlyjpbl
+         uzlUiwlNAa5t4lx/ZS9G6uSjCBSLmozFkbTwd7jb14OdgxmDinoWOCAHfVC5eMwuA4le
+         p0OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oou4JBBLNg89AoflcEwukaUQeMGozONrAI+ykd68abc=;
-        b=maQVaByQ5nSNZyYNDx6XfqEIWgU69M8StxJUsa4uSlxXw9aiw8knGocbC9G+FEmFxy
-         nAcsT6BrFGJR6rF/satCusjPIofmveEGJ7ONiAs4l0Jt3DaDxwEDPKD/egbX9Nc6Os/c
-         +p+YQ/4kNHtJoCnZWOvfCa/DfLftQ0AA/01pz6SfzZQkJPWvkz65EE0qbJkPzNDvsvcA
-         3EBvBscx9mq0Zzb+qZ5r2MLQwJdUiAyDWdurjMWeS3KflwS8KNvi5cehGjp4+x1p9O4S
-         czIJAqglYAacVNSEYqrBrWNKLbUMQaLxwlD+Mhi6WqN/lDBAOrZLPzYaGnv1I3nkbfWi
-         uC4A==
-X-Gm-Message-State: AOAM532tc0jYIPgud0dfm792xkahc2F+ZkhUMAAd6T0nfVR0/Zi1xRGM
-        DlDhFqIab2k188OI2kZw+4nfDJd5VAF2yGRbxErmig==
-X-Google-Smtp-Source: ABdhPJzrV9fkzjpZBwQ0mQ9Fy53MLqpTRDv/TPUMKddMWfeRpgkK8NEwID8Bpzlme642rYr1YhFm4FNjevHCdUpgQwY=
-X-Received: by 2002:ac2:4285:: with SMTP id m5mr2664496lfh.649.1611673219946;
- Tue, 26 Jan 2021 07:00:19 -0800 (PST)
+        bh=lirWGcwxQ/9sPMV+iwf/h9oS1/CrHerBIWG2c3EGSGk=;
+        b=BpjDxdyLDwaXhr3tqr5EpTutuYEV4AB26VRuND7KHNOIos8N+47QSnm8xlHCYFRKBR
+         qB8O+SrTaOYNSpMq6Z10cOqtQvCzN5+HMybRki3ChXlQeFq2ctILvW6JPYUzLPSu4+zD
+         3+enUGgRrdwcVVihb6zxj5sgGlpkV9WmhB0s+7OTMH6Hd6bicz1ZvLZBO2qYD+Gj0jXu
+         BaDHwCTeB6++/7UvcqGD1EWoR8aSFmksPY/uDPVWnZzKLuz2LBbRKub+QTQpaImareiF
+         FLy+f++IbCjymmKUUvoG0Q+giZUjs9sk0gCK1G5oMAgzWOoyKNvHvKGsF4wQ4b2XBcUN
+         EZfQ==
+X-Gm-Message-State: AOAM532ZLuR/k6Ox1F7E0nI0MurZUchYzCH6XWvssWnYHuJJPN2et0EA
+        vjifHooQ9z7mmCJ1TXEk3wXxlk2pvqz/4gbZychaer/IzorDVg==
+X-Google-Smtp-Source: ABdhPJw7GgZKBeeQTizTG5WDVnMhfRi/N35rHmdXVZj4220Qaw571LqXQu07Fhyh4yYgtdx58u66xSSMeVVEqT4HoEo=
+X-Received: by 2002:a2e:b4cd:: with SMTP id r13mr3179920ljm.273.1611673280673;
+ Tue, 26 Jan 2021 07:01:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20210126132531.2084711-1-robert.foss@linaro.org> <20210126132531.2084711-2-robert.foss@linaro.org>
-In-Reply-To: <20210126132531.2084711-2-robert.foss@linaro.org>
+References: <20210126050817.GA187797@x1>
+In-Reply-To: <20210126050817.GA187797@x1>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Jan 2021 16:00:09 +0100
-Message-ID: <CACRpkda4pChqJoR-RH_QGMq0NBgyWFsyhzQHthFWPZkm62qC8A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] dt-bindings: mediatek: mt8192: Fix
- dt_binding_check warning
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        jiaxin.yu@mediatek.com, shane.chien@mediatek.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
+Date:   Tue, 26 Jan 2021 16:01:08 +0100
+Message-ID: <CACRpkdafPAJXYar=n2En7GC=gVQ74iOejH4j5cDu3Co3PR8h=Q@mail.gmail.com>
+Subject: Re: pinctl.rst instead of pinctrl.rst?
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 2:26 PM Robert Foss <robert.foss@linaro.org> wrote:
+On Tue, Jan 26, 2021 at 6:08 AM Drew Fustini <drew@beagleboard.org> wrote:
 
-> Silence indentation level warning reported by dt_binding_check in
-> order to reduce noise during routine checks.
+> I was having trouble finding the pinctrl rst documentation until I
+> realized it is named pinctl with no 'r':
 >
-> $ make dt_binding_check
-> mt8192-mt6359-rt1015-rt5682.yaml:10:4: [warning] wrong indentation:
-> expected 2 but found 3 (indentation)
+> Documentation/driver-api/pinctl.rst
 >
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> Is there a reason for this?
 
-Patch applied!
+No.
+
+> Is it worth me submitting a patch to rename and change tree-wide
+> references?
+
+I would rather rename it pin-control.rst in that case.
 
 Yours,
 Linus Walleij
