@@ -2,112 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1132B3057D4
+	by mail.lfdr.de (Postfix) with ESMTP id 81BC63057D5
 	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 11:08:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S313191AbhAZXIS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jan 2021 18:08:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727787AbhAZRMh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 26 Jan 2021 12:12:37 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6E47C20829;
-        Tue, 26 Jan 2021 17:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1611681101;
-        bh=1RqLaKLn0eWSVef+4izSGoIe6A285ci13nIaK3dV0A8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y4B18Toq0y7SywC7KsFkurt5MSgt3OXB7WP5LnPCeMi5ywl3E8e1OBeyKUjILu8x6
-         G9OR8nUAhrpnjW88XRzwZRqrNfvUpzqUrtWEso5ei58iTvtPnA5OR854KC2Hm4Mp64
-         mpfzX5/SyWgZiq2zaSf7bTxhZCghos+FF4sC9kWM=
-Date:   Tue, 26 Jan 2021 18:11:39 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [libgpiod][PATCH 6/6] core: add the kernel uapi header to the
- repository
-Message-ID: <YBBNSzKHYNXki6NY@kroah.com>
-References: <20210111133426.22040-1-brgl@bgdev.pl>
- <20210111133426.22040-7-brgl@bgdev.pl>
- <CAHp75VfeO10DXc2nCRKP9=6uppJ28k36E8yr20+YCd0mKUGjWA@mail.gmail.com>
- <CAMRc=MevGmAMBK20O2BBmyD9NjCSpC9-O_j_0HM6DQV66rnA2Q@mail.gmail.com>
- <20210111144647.GY4077@smile.fi.intel.com>
- <CAMpxmJW=6YXgPBJ3=1sBbNAOWTV4idwHz-cWv+YborZ4hLtcKA@mail.gmail.com>
- <20210125055527.GA344851@sol>
- <CAMRc=Mc4gK6BXKV8-b9qBTgm8m5DqW35UPxPWn7PbfJ-8LB4Yw@mail.gmail.com>
+        id S313261AbhAZXIX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jan 2021 18:08:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389310AbhAZRO3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jan 2021 12:14:29 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9385BC061756;
+        Tue, 26 Jan 2021 09:13:46 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id b17so3586383plz.6;
+        Tue, 26 Jan 2021 09:13:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t5TtFJJmGGXnlkPzRkZI964XfU9tnGtrVx8sJ+nhhgg=;
+        b=C3EzaIXBST8Cm9Ao23YPKGZNoi53AvO8DVjjAwPROAIXUYs1VE82+8vfqjXNnqjdzD
+         liqtV8Y1DERtPWo1nyvHfJ0dIM/8zl2g2OV+IH1gVcjgZEzRSEwCDurFQdLYTY8HnEN1
+         0fEepFjeJDCr3qWqSlfUjxky/XAISoB3hBYR8DzKKdH2NMCPGUGAbfnSuwrsbFq96NSW
+         FlpZ22yilEbZ4sX0iNjxessv0r3jc76/3YCmf9c62Vft0I82Rgw+V8YLURrimjjWJIAj
+         1uTnO8ujuLiPhWVT8RByXB8RRIBu5vPkxq1srzRNiDQBiGg7xvbsiV//h51SSHrX+7L6
+         Zmsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t5TtFJJmGGXnlkPzRkZI964XfU9tnGtrVx8sJ+nhhgg=;
+        b=EQrAyz7uNWIbMzrEI9XTa5+pomvQxKZvOQa7VRXe44hgs5/UndIzIfk5kvkqviTlWK
+         qmLKsw2P/2ssZ/MGfHEYt9wI30OD2IStIk5GOLKhhkaDSqz7XmlVUUkpOi/lTxzgtu8Z
+         /JvqU27ePZTbIvkf8YPG6rmd+Tl/PNlN4jqd0+EKNRu9q2L+eTqE8abG4JWLhR1Mf6O3
+         ZjW9GYZKq5cmWDctzwSoIUsWPdUG3l5mhUGetQi+0D0ewpWhAyEwHQG5M63A3IfV2SNe
+         GuURoDjupeexct32qOffijaHoY2XKygZ3TwEFMMGUoiLuiZTQckLB3v8ylyk5izLL5tl
+         DJag==
+X-Gm-Message-State: AOAM530yVKCo8yzmsb9sYwXHfNI+bec0ZLEc1dwXFh6sgomRRfYT7YKg
+        13ZRYhSh2wgHH13KGNnskb7G94yAFlSGunmaJFM=
+X-Google-Smtp-Source: ABdhPJx92R0qs5/XdlRo/afRbr8RCC/r8mWGIZcmtX5Tb/02Z6ZBjPok93oodD57c37HChymbSyI5sp/7oQ9C8Xpisw=
+X-Received: by 2002:a17:90a:644a:: with SMTP id y10mr797421pjm.129.1611681226049;
+ Tue, 26 Jan 2021 09:13:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mc4gK6BXKV8-b9qBTgm8m5DqW35UPxPWn7PbfJ-8LB4Yw@mail.gmail.com>
+References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com> <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
+ <CAHp75Vc9RAHvTDAw1ryHq_CPRMtjqkzg9081nw0+RPY_yWPJgA@mail.gmail.com> <CAMeQTsY6k64LUg3DYbi67W6-Gx6znOeJbDfKUhzGt-BxF2BgKA@mail.gmail.com>
+In-Reply-To: <CAMeQTsY6k64LUg3DYbi67W6-Gx6znOeJbDfKUhzGt-BxF2BgKA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 26 Jan 2021 19:14:35 +0200
+Message-ID: <CAHp75VdKxARQAyyTd=ZcaoER1iF6Mk4AS1Dn6U9VCjt_D_+q8A@mail.gmail.com>
+Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 04:07:47PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Jan 25, 2021 at 6:55 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Tue, Jan 26, 2021 at 6:55 PM Patrik Jakobsson
+<patrik.r.jakobsson@gmail.com> wrote:
+> On Tue, Jan 26, 2021 at 4:51 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
 > >
-> 
-> [snip!]
-> 
+> > On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
+> > <patrik.r.jakobsson@gmail.com> wrote:
+> > > On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > Hi guys,
+> > > >
+> > > > This is first part of Intel MID outdated platforms removal. It's collected into
+> > > > immutable branch with a given tag, please pull to yours subsystems.
 > > >
-> > > I don't like the ifdef hell so I prefer to bundle the header. I'm open
-> > > to other suggestions, although I can't come up with anything else.
-> > >
+> > > Hi Andy,
+> > > Do you plan on eventually removing X86_INTEL_MID completely? If so,
+> > > then I should probably start looking at removing the corresponding
+> > > parts in GMA500.
 > >
-> > Going off on a bit of a tangent, but I'm trying to add support for
-> > decoding the GPIO ioctls into strace and am running up against a similar
-> > issue.
+> > Nope. It is related to only Medfield / Clovertrail platforms.
 > >
-> > The way strace does it is to check the uAPI header on the host and use
-> > it if possible.  To handle where it may be stale, local types are
-> > defined that mirror any types that may have been added since the header
-> > was originally released.  If the corresponding type is available in the
-> > linux header then it is used, else the local type.
-> >
-> > This obviously creates a lot of pointless boilerplate code and
-> > preprocessor chicanery so I floated the idea of just including the latest
-> > header in the strace tree, as you are doing here for libgpiod.
-> > But that raised the issue of licencing, specifically if you copy the
-> > linux/gpio.h into a source tree does that mean that the whole project
-> > becomes GPL 2.0?  That is an issue for strace as it is LGPL 2.1 - as is
-> > libgpiod.
-> >
-> > The Linux uAPI headers are under the GPL-2.0 WITH Linux-syscall-note,
-> > which is also not totally clear on this point[1].
-> >
-> > My gut feeling was that using and even copying API headers doesn't
-> > constitute a derived work, as per the FSF view quoted in [1], and
-> > ethically might even be less of a violation than copying and re-defining
-> > individual types, but I'd rather not rely on a gut feeling.
-> >
-> > Is there some clear opinion or precedent on this point?
-> > i.e. are libgpiod and strace in legal licence jeopardy if they include
-> > gpio.h in their source tree?
-> >
-> > Cheers,
-> > Kent.
-> >
-> > [1] https://lkml.org/lkml/2020/2/21/2193
-> 
-> Thanks for pointing that out. I lack the legal knowledge to have an
-> opinion of my own on this.
-> 
-> Cc'ing Greg KH for help.
-> 
-> Greg: do you know if it's fine to bundle a 'GPL-2.0 WITH
-> Linux-syscall-note' uAPI header together with an LGPL-v2.1-or-later
-> user-space shared library?
+> > There are other (MID) platforms that may / might utilize this driver
+> > in the future.
+>
+> Right, there's still Oaktrail / Moorestown with hardware in the wild.
 
-How would you "bundle" such a thing as that is not what is in the kernel
-source tree?  If you are going to copy files out of the kernel and do
-other things with them, well, I recommend asking a lawyer as I am not
-one :)
+Actually Moorestown had to be removed a few years ago (kernel won't
+boot on them anyway from that date when Alan removed support under
+arch/x86 for it).
 
-good luck!
+I'm talking about Merrifield and Moorefield that can utilize it and
+also some other platforms that are not SFI based (Cedar something...
+IIRC).
 
-greg k-h
+> > I.o.w. we probably can remove the oldest stuff in the driver WRT above
+> > mentioned platforms, but leave the driver for the rest.
+> > I wouldn't be in a hurry with this though, display drivers are easy to
+> > remove, but really hard to get back on velocity after that.
+>
+> Ok, I'll have a look at removing Medfield. That code should have been
+> removed a long time ago.
+
+-- 
+With Best Regards,
+Andy Shevchenko
