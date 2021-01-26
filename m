@@ -2,64 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4818430498A
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jan 2021 21:06:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A5B8304988
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jan 2021 21:06:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732770AbhAZF1N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jan 2021 00:27:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
+        id S1732777AbhAZF1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jan 2021 00:27:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732050AbhAZCfa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 Jan 2021 21:35:30 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E997922597;
-        Tue, 26 Jan 2021 02:34:46 +0000 (UTC)
+        id S1726851AbhAZDUv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 25 Jan 2021 22:20:51 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id EAAE022AAC;
+        Tue, 26 Jan 2021 03:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611628488;
-        bh=h/E3TukMgw6yPHxLONt2DoWslLEkA9x2ERLKq9CpXQQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=usUg3mKQ9NtxwIsGY5jdjQ6eG4MhJHnnLGnNyaIHgrnLgoWVMUj7X69chvYxdtr2x
-         v9vT6Z2496cmpk34OB3qeFTUAT+LDfy9FGh389gLGSOtB/lsvD8jI5aCv14fszMERI
-         neVSYKPikcJkceAX1cVAfotdjxzmTbWRrnkOzz5NWbo3WWarqnqPyCQtZuHb8Ey2Cv
-         5mvXm1s5jwueXNLe/g367tm8hGQe5D9zeXPCVTr+5oy4yFl4NuRTn7owpkpX5Urzv0
-         P8rOSr/fCq+Fz1s8tLTuOrRWYEHeqVWluL0e9O0aRdWgGpiLyDctxE28op5HIZ6VwZ
-         OQCt8ez9j4/Uw==
-Date:   Mon, 25 Jan 2021 18:34:46 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     DENG Qingfang <dqfext@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Frank Wunderlich <frank-w@public-files.de>,
-        =?UTF-8?B?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-Subject: Re: [PATCH net-next v2 0/2] dsa: add MT7530 GPIO support
-Message-ID: <20210125183446.1d6243a8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20210125044322.6280-1-dqfext@gmail.com>
-References: <20210125044322.6280-1-dqfext@gmail.com>
+        s=k20201202; t=1611631211;
+        bh=0BYXnPwP/7+FDy+ACZrXbGfA1ZDJYTwE8vtnENsCVNQ=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=F/7gZBD48vDK9w4c64ZBsQ03x7wkIpODzeFTv/nX6uTsAN0IYL3aQRIZfgACk7x0v
+         ve2Rgg9PU4PTiRZhpCJ4mLIMttr6L/4dLszZtuZWqRgQvVACFvNIeFKclCnqgj6zQS
+         qy2DqvAOtyLPaxc3kF8GqNJbqmi2UqBaEiH1PyAh6TGOyOpn1qoMmc/v1o2lRUzUUP
+         Zyrhi6fG8zv35EDMh6IQzRE0E0njiFUNZ9Ll6Q3GTwXBNN5kJXwZm02Ltv4rMDbWgB
+         brHPZ2y+DJv5IgZc9J/jTznH9osmA6lZcQaw6P0bHTmcYOxPfFI77vIFmMYo2OcBT/
+         Sbf2Lsst+JKMQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id DAF8461E41;
+        Tue, 26 Jan 2021 03:20:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2 0/2] dsa: add MT7530 GPIO support
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <161163121089.4087.613122174827769113.git-patchwork-notify@kernel.org>
+Date:   Tue, 26 Jan 2021 03:20:10 +0000
+References: <20210125044322.6280-1-dqfext@gmail.com>
+In-Reply-To: <20210125044322.6280-1-dqfext@gmail.com>
+To:     DENG Qingfang <dqfext@gmail.com>
+Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        olteanv@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        robh+dt@kernel.org, matthias.bgg@gmail.com, sean.wang@mediatek.com,
+        Landen.Chao@mediatek.com, p.zabel@pengutronix.de,
+        linux@armlinux.org.uk, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, frank-w@public-files.de,
+        opensource@vdorst.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 25 Jan 2021 12:43:20 +0800 DENG Qingfang wrote:
+Hello:
+
+This series was applied to netdev/net-next.git (refs/heads/master):
+
+On Mon, 25 Jan 2021 12:43:20 +0800 you wrote:
 > MT7530's LED controller can be used as GPIO controller. Add support for
 > it.
+> 
+> DENG Qingfang (2):
+>   dt-bindings: net: dsa: add MT7530 GPIO controller binding
+>   net: dsa: mt7530: MT7530 optional GPIO support
+> 
+> [...]
 
-I added back Rob's tag and all the missing tags which patchwork 
-did not register. Damn thing is really flaky right now. Anyway..
+Here is the summary with links:
+  - [net-next,v2,1/2] dt-bindings: net: dsa: add MT7530 GPIO controller binding
+    https://git.kernel.org/netdev/net-next/c/974d5ba60df7
+  - [net-next,v2,2/2] net: dsa: mt7530: MT7530 optional GPIO support
+    https://git.kernel.org/netdev/net-next/c/429a0edeefd8
 
-Applied, thanks everyone!
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
