@@ -2,198 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50FD13052E7
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 07:13:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDF923052C9
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 07:06:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233725AbhA0GDO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jan 2021 01:03:14 -0500
-Received: from mga11.intel.com ([192.55.52.93]:5225 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236836AbhA0DnO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 26 Jan 2021 22:43:14 -0500
-IronPort-SDR: yufWlrxAkBOgrGQ8NXtpXy1yL3oismBccmLGs2BFa2bgRgs6I5ni7Vt+1rDe0hCmXdFCOXLutY
- bnOZimur2f9g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9876"; a="176502708"
-X-IronPort-AV: E=Sophos;i="5.79,378,1602572400"; 
-   d="scan'208";a="176502708"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2021 19:42:31 -0800
-IronPort-SDR: dCDqMd5wFWvM80tZxWzbO+7jAb2uuKPcTbePF6/qrA/JnbRWQssh/X9OFWLXNia/9U5/15eAt9
- gmEkBtf3ulQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,378,1602572400"; 
-   d="scan'208";a="473000007"
-Received: from lkp-server02.sh.intel.com (HELO 625d3a354f04) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Jan 2021 19:42:30 -0800
-Received: from kbuild by 625d3a354f04 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1l4biv-0001IU-OU; Wed, 27 Jan 2021 03:42:29 +0000
-Date:   Wed, 27 Jan 2021 11:41:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- e79167284d62d3f9e67da76926d5990cca481dd3
-Message-ID: <6010e0ee.d5+Gh4wdlcSzmXTV%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        id S234958AbhA0GDU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jan 2021 01:03:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232846AbhA0FsH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jan 2021 00:48:07 -0500
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903ECC061786
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 21:46:18 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id e19so478927pfh.6
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jan 2021 21:46:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dQTVty13FWkU7w1uhlDVsfbx9oRCoQ1u3obrytMgFvo=;
+        b=fp3hWsuxXsv3uG2o797K2QBX244/CQ5VJLjvF0UzxjXQtfGfry2l0bQUaP47KcW7DF
+         uSr9KWKPd/MHu2urs2W6SKY/nejY128EfaGZXyuyU6CYm+LEDDxbopM6RG4skTE2B7wf
+         26av1b8qyd1H051MYEqOdQOogb4emT0baXgthDwCEC0UK0KZ1qy9kayrdhwJpbUaqFM4
+         Xy6PkReARLb7QsaCop4gfo8jMpNH2HRFGrbp3qOinqa5hE53QATYyGhJhVNcL9y3at0j
+         bzTR6/wYW86VqIJfONG7hWAMNYD+Dd+xNEKwq7WWiZY6KsaY2O1ayvdocHOIzAvw/s3m
+         nIWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=dQTVty13FWkU7w1uhlDVsfbx9oRCoQ1u3obrytMgFvo=;
+        b=df3/RjwowHirohTyna7/JFZJ5Zpu8YLlLwG+KIaBpZfOoKQJsRijcMvSCTnMuG4qp7
+         fXmvrpdIzpNHb1XqzG6jYSbZvyIBviFREN93ymkrWDIXWdex60e+1fejzHf6vndbbEmo
+         j+DdZ6Fdnn2NFksRkMEyEasp7VlR0MSWiaeH2IkU98+REwYk+a/8JkoUOFaXjQfrN4fb
+         Rpf5k71q+WwYM6EdhlYxCxQ27OkS2UvS22e43beo3Q1r8R2w+9WgIaU4Tp2yRS93H1+R
+         kdT16SmvUGJHXFpH/7wL4pugwtPGbf+yH6LmPkEzUeMwmVLgV6U5Paq+5IELjlMdg0g/
+         mLKQ==
+X-Gm-Message-State: AOAM532X1wR/cAKeG1XRCJEvgBqP4tIL9VD6/ugxknbAuCu1buB7jQ6/
+        JMn6fkGH3n1wDms3yGiflV3mOg==
+X-Google-Smtp-Source: ABdhPJwQPp8sa/gDYpvmRptSsHpV/LmYDfv2OiMy5FTeSLrwIgRYhHIe+HQu2rEh6ylL00Kyd+rZXg==
+X-Received: by 2002:a65:6484:: with SMTP id e4mr9521885pgv.401.1611726377946;
+        Tue, 26 Jan 2021 21:46:17 -0800 (PST)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id i132sm884744pfe.10.2021.01.26.21.46.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Jan 2021 21:46:17 -0800 (PST)
+Date:   Tue, 26 Jan 2021 21:46:17 -0800 (PST)
+X-Google-Original-Date: Tue, 26 Jan 2021 21:44:15 PST (-0800)
+Subject:     Re: [PATCH v11 02/10] pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver
+In-Reply-To: <BL0PR04MB6514540BF8CC35309C376394E7BF0@BL0PR04MB6514.namprd04.prod.outlook.com>
+CC:     linus.walleij@linaro.org, linux-riscv@lists.infradead.org,
+        linux-gpio@vger.kernel.org, seanga2@gmail.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Message-ID: <mhng-1e63addb-f00d-49c7-be01-995d5a403a43@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: e79167284d62d3f9e67da76926d5990cca481dd3  Merge branch 'devel' into for-next
+On Fri, 22 Jan 2021 22:19:51 PST (-0800), Damien Le Moal wrote:
+> On 2021/01/23 13:15, Palmer Dabbelt wrote:
+>> On Thu, 21 Jan 2021 00:32:38 PST (-0800), Damien Le Moal wrote:
+>>>> On 2021/01/21 17:25, Linus Walleij wrote:
+>>>> On Thu, Jan 21, 2021 at 1:15 AM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
+>>>>> On 2021/01/21 3:21, Palmer Dabbelt wrote:
+>>>>>> On Mon, 18 Jan 2021 05:33:05 PST (-0800), linus.walleij@linaro.org wrote:
+>>>>>>> Hi Damien,
+>>>>>>>
+>>>>>>> this looks all right to me.
+>>>>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>>>>>
+>>>>>>> Shall I apply just this one patch to the pinctrl tree?
+>>>>>>
+>>>>>> That's fine with me.  The DT bindings are in riscv/for-next, maybe it's best to
+>>>>>> take those as well and I'll drop them?  I don't generally like to drop stuff
+>>>>>> from for-next, but that's probably better than having everything all mixed up.
+>>>>>>
+>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git/commit/?h=for-next&id=ed3137edb31b86702511e7ad12b4abe8686b6805
+>>>>>>
+>>>>>>> I think the line that touches arch/*/Kconfig should be dropped
+>>>>>>> then, that better go to the SoC tree.
+>>>>>>
+>>>>>> I'm OK with you taking them along with my Ack, but if you don't want to that's
+>>>>>> fine.  Just LMK
+>>>>>>
+>>>>>> Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+>>>>>
+>>>>> Linus,
+>>>>>
+>>>>> Please let me know which way you want to proceed. If you want to take the patch,
+>>>>> I will resend without the Kconfig change and move that change to another patch.
+>>>>
+>>>> It's fine to proceed as is, since Palmer already applied the bindings to
+>>>> his tree, just apply the pinctrl driver there as well. I don't see any
+>>>> risk of collisions in the tree.
+>>>
+>>> Sounds good. Thanks !
+>> 
+>> I don't see an actual Ack here, but I'm OK taking it.  IIRC there were some
+>> issues with the DT stuff as well, I don't remember if they got resolved or if I
+>> should be expecting a v14.
+>
+> Palmer,
+> 
+> Linus sent a reviewed-by tag (see above).
+> 
+> For the dt-bindings problems, the v13 that I sent already addresses all make
+> dtbs_check warning and also addresses Rob's comments. The v13 dt-bindings
+> patches need review, as well as the clk driver patch. Will ping Stephen about
+> that one.
+> I will send a v14 only if there are more comments that need to be addressed.
 
-elapsed time: 724m
-
-configs tested: 136
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                          landisk_defconfig
-powerpc                 mpc832x_mds_defconfig
-powerpc                        warp_defconfig
-powerpc                     tqm8560_defconfig
-powerpc                      ppc44x_defconfig
-powerpc                      ep88xc_defconfig
-sh                          kfr2r09_defconfig
-powerpc                    klondike_defconfig
-powerpc                    mvme5100_defconfig
-mips                           ip22_defconfig
-openrisc                    or1ksim_defconfig
-powerpc                     tqm8541_defconfig
-arm                            lart_defconfig
-openrisc                            defconfig
-c6x                         dsk6455_defconfig
-powerpc                        cell_defconfig
-xtensa                    xip_kc705_defconfig
-arm                       imx_v6_v7_defconfig
-arm                        realview_defconfig
-arm                         vf610m4_defconfig
-alpha                               defconfig
-mips                           ci20_defconfig
-mips                       rbtx49xx_defconfig
-um                           x86_64_defconfig
-arm                         lubbock_defconfig
-powerpc                      acadia_defconfig
-sh                        dreamcast_defconfig
-powerpc                 mpc837x_mds_defconfig
-arm                      integrator_defconfig
-powerpc                    adder875_defconfig
-arm                       cns3420vb_defconfig
-um                            kunit_defconfig
-sh                        edosk7705_defconfig
-arm                       aspeed_g4_defconfig
-powerpc                     pq2fads_defconfig
-powerpc                     powernv_defconfig
-arm                          pcm027_defconfig
-mips                       capcella_defconfig
-arm                          ep93xx_defconfig
-mips                         tb0287_defconfig
-arm                             pxa_defconfig
-parisc                           alldefconfig
-powerpc                 mpc832x_rdb_defconfig
-arm                        spear6xx_defconfig
-c6x                                 defconfig
-powerpc                           allnoconfig
-arm                        spear3xx_defconfig
-sh                           se7750_defconfig
-sh                          rsk7264_defconfig
-m68k                          amiga_defconfig
-powerpc                     asp8347_defconfig
-powerpc                       ppc64_defconfig
-nds32                               defconfig
-arc                         haps_hs_defconfig
-mips                        nlm_xlr_defconfig
-arm                        neponset_defconfig
-arm                        multi_v7_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-i386                 randconfig-a001-20210126
-i386                 randconfig-a002-20210126
-i386                 randconfig-a004-20210126
-i386                 randconfig-a006-20210126
-i386                 randconfig-a003-20210126
-i386                 randconfig-a005-20210126
-x86_64               randconfig-a012-20210126
-x86_64               randconfig-a016-20210126
-x86_64               randconfig-a015-20210126
-x86_64               randconfig-a011-20210126
-x86_64               randconfig-a013-20210126
-x86_64               randconfig-a014-20210126
-i386                 randconfig-a013-20210127
-i386                 randconfig-a011-20210127
-i386                 randconfig-a012-20210127
-i386                 randconfig-a015-20210127
-i386                 randconfig-a014-20210127
-i386                 randconfig-a016-20210127
-i386                 randconfig-a013-20210126
-i386                 randconfig-a011-20210126
-i386                 randconfig-a012-20210126
-i386                 randconfig-a015-20210126
-i386                 randconfig-a014-20210126
-i386                 randconfig-a016-20210126
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a003-20210126
-x86_64               randconfig-a002-20210126
-x86_64               randconfig-a001-20210126
-x86_64               randconfig-a005-20210126
-x86_64               randconfig-a006-20210126
-x86_64               randconfig-a004-20210126
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Ah, thanks.  This is on for-next.  I'll look at the rest, but probably not
+tonight as it's a bit late here.
