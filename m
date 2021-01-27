@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0D233066CB
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 22:53:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 608473066E0
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 22:58:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235651AbhA0Vvq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jan 2021 16:51:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54806 "EHLO
+        id S234162AbhA0Vzq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jan 2021 16:55:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231228AbhA0VvL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jan 2021 16:51:11 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E4EDC061574
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Jan 2021 13:50:31 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id q12so4794027lfo.12
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Jan 2021 13:50:31 -0800 (PST)
+        with ESMTP id S234402AbhA0Vzo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jan 2021 16:55:44 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1E6C0613D6
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Jan 2021 13:55:04 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id t8so3898666ljk.10
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Jan 2021 13:55:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DXnYo/XJRlIPCj8X2tLXK8QJF68OekDoMODkg5Cs0to=;
-        b=pg/6iGqfQaKlxtC68K+rAGE0l/r+jCk3jRYKTNxeIe/kGFvlAozMiF7FkhXAwDotpc
-         sq0SEzqhWBoliRNAZ2d48vK8ONUKg36SPHiRRD2F416LQhXC3HBvWXWjLzFPZr4wJA9T
-         w3DEUyCGwbxMwEcr7ATZqBcqPcav29/24zG57LhL5q48JBKEkCeQg/SQFgByG/CEKAFm
-         pyJ7PUnX75Ti8dA5e+cN3b4p3CqM8uKn5lfkttlyKoCF38gcfbgWrfceE8NWN7Zgsl0v
-         9d0mpuMOcSA4KaT+K1A12zFgPIqKV0WxrxytOw6qwl/GQUusiCSlS30BdYDAOku9iQ4k
-         mGBw==
+        bh=XXrtCyCjYsLyQB5J5HVNKZC2dJFTtjHISSLSn1Pu5nw=;
+        b=nEiBaXMx+39kTkBJIH2ehcKIGphFLcY49T+9/BZ1X2sFWUpKoligjubX0wwHVO4LLi
+         7NOGEmOdLwxER5zkv29LIUb0/1hsrNmS6g1KM7yMlxW+qeZIHCIFaX4xW8xKCoMfYQha
+         FBY8teYnKkZECrKVYbrPSb+hm7+urPwRc4SbRei9JqET8A+Mit0hdNV4RiRdDh5ba4rr
+         cwStutQD/2+eaC6ZeyHWzgiD9hr2GazsvhykPy4jjhyFhvjbO5w1IaK4DSu+aCuXfukf
+         hz2bknfL1f2kdwe28WJJQuz5Yr4sFSodVdyO9E0yLyoWOIN8GTZuBwmWKdr3JDwczGf6
+         r1ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DXnYo/XJRlIPCj8X2tLXK8QJF68OekDoMODkg5Cs0to=;
-        b=Pk4TE2wz+lzxDHSD6f2/ta9AiJdNMW7cI5ivxXaKGBeJt/fd/DigmpvcIll6WIgkVI
-         78UhxtkfyQUDjjvbVhZeIAlRdPaIoXShc4uzCiIuqE3zRQ1+KUMaAUZ36VaWhrcEGV9P
-         4CSPSQ6dXJfPIZft2dPrj1d+l7OnkkTAVREl00mdrtvcq70KvvC+GVgYnn27SJit6h4u
-         SR9Wtt7+AnAaIjQq6wE2FzqPChO58p61q3AcE2/ac/pcZ33Loui0xsTzBs90mBWtaeVv
-         PQ1Lf7onwQRy2k1lBMs2JxMjpluSk8K7xMZ/MJCxgr/uFyPPZ8WPFdJmp80gBYGiVxu0
-         NMKA==
-X-Gm-Message-State: AOAM531pzf69k+eVpooM9VqDj+rb1dg2WI30hEO6m4PzXf9XTma/D4uy
-        HoTFLHVHG9TUfg3i495ugIzD7S53VHBsAcARkAEWuw==
-X-Google-Smtp-Source: ABdhPJwPwhCSnEu4DJXmWxHiGV0Kg1iUL+SLH552zkH5ER3+Ncg66gbxNzy3d0LGDZ+iGDktGzsR7vteAkTwFG2AuUc=
-X-Received: by 2002:a19:600e:: with SMTP id u14mr2420516lfb.465.1611784229621;
- Wed, 27 Jan 2021 13:50:29 -0800 (PST)
+        bh=XXrtCyCjYsLyQB5J5HVNKZC2dJFTtjHISSLSn1Pu5nw=;
+        b=qQB3RcutdTTI6cc0Cq2Gr6loKyuzfPnskLZ+jNVZnI8agqMMh6H8KOWlER7T6hnB+a
+         8pPCHSGcyv1R4/TSkf7PBkzzBuoN/rh4QvMXC5NOLbZ73AR3XhSam4HHJ0G6SM8BqK/x
+         LDERy+8mlGOFCtxtiDWD2EmuYjOD/sUS+gzcxLRdWfT9b5XwO+hxrIHJlYzEegUcY5mX
+         d6PjGfPTEAAj8efZib+pzjaH3GfmWml60FTQcECrzbsZpFKtqjbXZI9ygQbXaBGMhiSJ
+         NyhIH2J8NrfpwIIX4PjCa47n8xxLgefkdPdB0S3z5vpcYJsKRMR1X1S8ygyejLvsjC5E
+         43Aw==
+X-Gm-Message-State: AOAM530u1Ej4MyIDhigsXZZykMze7y7FEyaheKikjaKs5himsT1CZTS6
+        9O4VrnpykAjqb91cXrLnMQEaG6wzW0WPhSpmoc/T0w==
+X-Google-Smtp-Source: ABdhPJxLT9lSak4xY2i/k7POK3Rl/Ji4L2FrI7CKy6oLRSaOHVNrh5TdryYiwuVa0F2etxzBLk/6pAfaJWIG2WjmegA=
+X-Received: by 2002:a2e:8ec3:: with SMTP id e3mr6405043ljl.467.1611784502902;
+ Wed, 27 Jan 2021 13:55:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20201228150052.2633-1-nikita.shubin@maquefel.me>
- <20210127104617.1173-1-nikita.shubin@maquefel.me> <20210127104617.1173-4-nikita.shubin@maquefel.me>
-In-Reply-To: <20210127104617.1173-4-nikita.shubin@maquefel.me>
+References: <20201228150052.2633-1-nikita.shubin@maquefel.me> <20210127104617.1173-1-nikita.shubin@maquefel.me>
+In-Reply-To: <20210127104617.1173-1-nikita.shubin@maquefel.me>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 Jan 2021 22:50:18 +0100
-Message-ID: <CACRpkdasDvLjYj=xAVUD+8L-D=fh7Jvk8xM1NERUuAxwev0FTw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/9] gpio: ep93xx: Fix wrong irq numbers in port F
+Date:   Wed, 27 Jan 2021 22:54:52 +0100
+Message-ID: <CACRpkdYPYua-NuxVC7aBxJtLYFEECL-60jr4pYgK4=fd5Mb-6g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] gpio: ep93xx: fixes series patch
 To:     Nikita Shubin <nikita.shubin@maquefel.me>
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -65,20 +64,22 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Wed, Jan 27, 2021 at 11:46 AM Nikita Shubin
 <nikita.shubin@maquefel.me> wrote:
 
-> Port F irq's should be statically mapped to EP93XX_GPIO_F_IRQ_BASE.
+> Series of patches to fix ep93xx gpio driver to make IRQ's working.
 >
-> So we need to specify girq->first otherwise:
->
-> "If device tree is used, then first_irq will be 0 and
-> irqs get mapped dynamically on the fly"
->
-> And that's not the thing we want.
->
-> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> The following are fix patches (these are enough to get gpio-ep93xx
+> working with modern kernel):
 
-True, to satisfy old board file-type machines we unfortunately
-have to do this.
+I see that there is a strange level of attention to patches to this
+platform!
+
+Since you fix all my mistakes made in converting this driver
+in the past I will just say:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+For all of them.
+
+There are some nitpicks from the reviewers to fix up but
+overall this looks very very good.
 
 Yours,
 Linus Walleij
