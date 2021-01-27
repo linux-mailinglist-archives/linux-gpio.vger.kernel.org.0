@@ -2,64 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DC93305B3B
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 13:25:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A35EE305CFF
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 14:23:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236438AbhA0MYv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jan 2021 07:24:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45216 "EHLO
+        id S238351AbhA0NXD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jan 2021 08:23:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237866AbhA0MWF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jan 2021 07:22:05 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB6AC061788;
-        Wed, 27 Jan 2021 04:21:25 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id i9so1474087wmq.1;
-        Wed, 27 Jan 2021 04:21:24 -0800 (PST)
+        with ESMTP id S233033AbhA0NUt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jan 2021 08:20:49 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985B1C061574;
+        Wed, 27 Jan 2021 05:20:08 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id y187so1630447wmd.3;
+        Wed, 27 Jan 2021 05:20:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=message-id:subject:from:to:cc:date:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=6wzhM0vYiCJZX/iFlWpvlgaHX6fMT0ar8DkHkOnklLo=;
-        b=qszFMFNNVkARa3XOYQlsRtBUli5kzHIrCzcp2oQdStspXx8PAIPcTP+JEPWh1BhcWp
-         WYkQsi9hSMJw/etFq3lcDCJ6pmmBtdJGuxVf5nBSUjYEu0HLti1RKsqkx1CliSE+Fzpg
-         vXp6gkCxWJMgg5gPSI3U8hofi/EkeQQMloTty5cQPidk3NDgE7Z0iUvCtGl0UahH8ATA
-         ocyTarVDhEEtuSWTYyehDTClnk+2FS19wHFGO5ftJtCgWQnq4daQoI0abAnscpL4dRPU
-         oERI6tCpdGqmNWWpWbCFevVHXplpGSaIhWdZ+CXP9SIsiSX8W8miLtXiRklPdp+jWzRQ
-         qqKw==
+        bh=yPWKRv9GrknOWoi0+WWcWBO8SWSui1xeocnHbNhYmqc=;
+        b=qGCHzSFQWqKUQeA2u+SzdadvcmuxSzHEU+OYN10h+zN1iHgGE/TbVopjxHX6Va+1UO
+         oR8f4aCwi7iPagNhwBEdc+7nxxR009a0HlIyN8KDd9/z6eNgBs7strgSzpDRHJaAVlYF
+         hdPKneUqNS6smHgIgvpPo9Hv46rBM4+Ef+HqdC3T9gkhGYorYy6zFE0QbV4LOuXo5YjZ
+         P6LpbDI+yDkc920mnr2TOQrBcYNtGM+6uTUdtKw73CQOL0Z5ayqXabHUgjQ3KdCNBsPh
+         xBgTxUh4V7MR27ILkvsvlh3nFwv8p1LLku3PdeyW4XplPDo8KHYdWyo5gMnJCrR8XbPw
+         4baw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=6wzhM0vYiCJZX/iFlWpvlgaHX6fMT0ar8DkHkOnklLo=;
-        b=K8SUK0LQrZqEORrNNTYEGC2Qk4KHTcXNDGDMWCMwTZ4Yeg3gkldmuS2hgsZxES+Zcw
-         h+ZWqI+fwTnUuM68XbPw5qzYL7HSky1S1pl8SpRs5IBg7+DiWpoqzY5ye9Oj4+VnlPqH
-         u+bjvYSb9xhwcY8JtmECLzn5ALQ3s6fYlPeA0W76/3xnKTzaaukZlqP2cXZPrLiowXnX
-         JOERJWwHu+hxTh5rP9xNaifVUuIhI2kqMm+DrQbnWfACJup9j3qT+mnPannPbWNZFjFC
-         ikJFvtzmByf5/t/4H559bq05V/+bC928UgMGS+F0gykw7GQl41htYmMGZdJHOMqSRthd
-         AsXw==
-X-Gm-Message-State: AOAM53093p1zFjClAgZcS5vXa0uad5aJvYmSXbvplp2nMsqGzdG0Dg/V
-        2OEsUXktfKoEeFJqNgXwD+I=
-X-Google-Smtp-Source: ABdhPJydU2J+Sg2HOmDomq+Z5srxSDfdoZgIvjYqDKBoALGWhkkabAj7a7Opbx3wxAk3eQpIpLKOBA==
-X-Received: by 2002:a05:600c:3515:: with SMTP id h21mr3976949wmq.179.1611750083788;
-        Wed, 27 Jan 2021 04:21:23 -0800 (PST)
+        bh=yPWKRv9GrknOWoi0+WWcWBO8SWSui1xeocnHbNhYmqc=;
+        b=VhcI0HrHiRuIddZ0LijJuBdpJjiC1xBWF+9WV8RikOCSmrfAANj5PW8dI+6laJ1ad4
+         TcS4fF7Mx0bGCsZstRUAGgW7HRVcJ1zw53m1M4DQ7efqMTFtstMqfzUUdf/62e6zbMXS
+         UwxiHDbwpOchMn3zIm66T0TSU1jTft0l/NaFz2qZNYrI7c9HOLVVF+8WCq4JbpAunxSy
+         q3LTqM3FIQixUHTfOdV+3+m0YskYzkp3LYz61PxeJENmwgiwoBmn7QYfmi9l7v/zrCyO
+         Ql9YBjh3HHjmaydJwaemXPKJ2d50PwPBRh/zOtKLmanZ2a447IKCHnWaLiDjCejYDHiO
+         6JSg==
+X-Gm-Message-State: AOAM533wjf6mEGRZxIfLm7hhlqNdZi99xj1ZT/abX4B4t6TwUTblLfUZ
+        gfLATexTPTf4wpfzw7vZX8M=
+X-Google-Smtp-Source: ABdhPJyWvkH/VrWnONhdA+0B+w9mXaRcLeVQtBC3fU4GW+AJd2Bz40qRXrs3jMv9eS/X+hfvQuxcXA==
+X-Received: by 2002:a1c:68c5:: with SMTP id d188mr4378988wmc.64.1611753607360;
+        Wed, 27 Jan 2021 05:20:07 -0800 (PST)
 Received: from [192.168.1.21] ([195.245.17.255])
-        by smtp.gmail.com with ESMTPSA id n125sm2438268wmf.30.2021.01.27.04.21.22
+        by smtp.gmail.com with ESMTPSA id k15sm2549242wmj.6.2021.01.27.05.20.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Jan 2021 04:21:22 -0800 (PST)
-Message-ID: <00f0e7a1d276b0efe5005d0645fdc9d9e86376c0.camel@gmail.com>
-Subject: Re: [PATCH v2 4/9] gpio: ep93xx: drop to_irq binding
+        Wed, 27 Jan 2021 05:20:06 -0800 (PST)
+Message-ID: <3470feebc41ee2c05bb7e71760f2b97a45ce71d7.camel@gmail.com>
+Subject: Re: [PATCH v2 5/9] gpio: ep93xx: Fix typo s/hierarchial/hierarchical
 From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
 To:     Nikita Shubin <nikita.shubin@maquefel.me>
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 27 Jan 2021 13:21:22 +0100
-In-Reply-To: <20210127104617.1173-5-nikita.shubin@maquefel.me>
+Date:   Wed, 27 Jan 2021 14:20:05 +0100
+In-Reply-To: <20210127104617.1173-6-nikita.shubin@maquefel.me>
 References: <20201228150052.2633-1-nikita.shubin@maquefel.me>
          <20210127104617.1173-1-nikita.shubin@maquefel.me>
-         <20210127104617.1173-5-nikita.shubin@maquefel.me>
+         <20210127104617.1173-6-nikita.shubin@maquefel.me>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.38.2 
 MIME-Version: 1.0
@@ -71,45 +71,33 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 Hi!
 
 On Wed, 2021-01-27 at 13:46 +0300, Nikita Shubin wrote:
-> As ->to_irq is redefined in gpiochip_add_irqchip, having it defined
-> in
-> driver is useless, so let's drop it.
+> Fix typo in comment.
 > 
 > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Acked-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 
 > ---
->  drivers/gpio/gpio-ep93xx.c | 6 ------
->  1 file changed, 6 deletions(-)
+>  drivers/gpio/gpio-ep93xx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
-> index 9c3d049e5af7..dee19372ebbd 100644
+> index dee19372ebbd..8f66e3ca0cfb 100644
 > --- a/drivers/gpio/gpio-ep93xx.c
 > +++ b/drivers/gpio/gpio-ep93xx.c
-> @@ -337,11 +337,6 @@ static int ep93xx_gpio_set_config(struct
-> gpio_chip *gc, unsigned offset,
->         return 0;
->  }
->  
-> -static int ep93xx_gpio_f_to_irq(struct gpio_chip *gc, unsigned
-> offset)
-> -{
-> -       return EP93XX_GPIO_F_IRQ_BASE + offset;
-> -}
-> -
->  static void ep93xx_init_irq_chips(struct ep93xx_gpio *epg)
->  {
->         int i;
-> @@ -429,7 +424,6 @@ static int ep93xx_gpio_add_bank(struct gpio_chip
+> @@ -402,7 +402,7 @@ static int ep93xx_gpio_add_bank(struct gpio_chip
 > *gc,
->                 }
->                 girq->default_type = IRQ_TYPE_NONE;
->                 girq->handler = handle_level_irq;
-> -               gc->to_irq = ep93xx_gpio_f_to_irq;
->                 girq->first = EP93XX_GPIO_F_IRQ_BASE;
->         }
 >  
+>                 /*
+>                  * FIXME: convert this to use hierarchical IRQ
+> support!
+> -                * this requires fixing the root irqchip to be
+> hierarchial.
+> +                * this requires fixing the root irqchip to be
+> hierarchical.
+>                  */
+>                 girq->parent_handler = ep93xx_gpio_f_irq_handler;
+>                 girq->num_parents = 8;
 
 -- 
 Alexander Sverdlin.
