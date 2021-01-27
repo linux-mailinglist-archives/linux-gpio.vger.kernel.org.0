@@ -2,80 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D4B3305611
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 09:48:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F82930576A
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 10:54:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231286AbhA0IrE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jan 2021 03:47:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232439AbhA0Iow (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jan 2021 03:44:52 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B655DC061756
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Jan 2021 00:44:00 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id ox12so1515525ejb.2
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Jan 2021 00:44:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VBoX9hVLIK+oMgTk+dawfpHrm1ttGvw0qHc2NqmHHf8=;
-        b=elkDXousOGGrCcsRX8PGXQELxv21CQthn7MNhBUY6RhzHlJz5eyXpk5Vqet0bfEY0R
-         TgAimdqJ+ztzHIDojc9jgK2TSno/AHzKTAdFIEeOvYk6DZDpnzHywc0KYYXJXRwPndOz
-         dYxrvbff3oo/PAXeEfOuU218rtraIRrakhx4Ij0CDmhKPUEcDOQcIYjkndmTf1ukwGzD
-         fsn406xnUcxhtuW/mrVZuU7vQoGKaoQHqO5BVcbGDOAjCrX2UBwJ0DWTUCAnuOy5jM71
-         7Y0b0+9JWgSb/CK98zFez9Cldkcp4IaWA+IE6znpNV9U5LLvEI9AXNXHXM97Lj0wk385
-         /iuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VBoX9hVLIK+oMgTk+dawfpHrm1ttGvw0qHc2NqmHHf8=;
-        b=acbuIy4FXRBov8+B7oUg2ZDq5a4Oga5kHDS3IXt6d4vhBFYc/i46cefiLv+xeR76aZ
-         VH9EAKpKvwqE/wGvBm0w8okpDEwkg9oYxA/1FhdYI8860SzvCLmXK+nLVE80pn6EtE0M
-         j64kmzfKwpPl8uQgwgEKoK0VtVDJe489Bo1lckSWGPqDxwRURvTqurEvaRgNyjXJ+m5B
-         bL03JnZ/g2SQGIx5SesyEWNyF1Y2a+V2mVwJaZg9VFMYdh+oTK05bVtG/gS+fMVitANe
-         GuHwtFm7CaGmjLKpznOu9KhLor5jg5+onXvN8ED01UErLj4HHWejYI0bP9/20xITndk2
-         vEuQ==
-X-Gm-Message-State: AOAM530SgeOnWtQ6WXqdElvm7M1pWd82ODdMu1CxTsanq5UPOXi5mUVK
-        OaWQ/1NC5FXODyfgqRrH0XA73HkhBOsgQ+wPMgGNBA==
-X-Google-Smtp-Source: ABdhPJxRGbmBX6Yc8OicV5+mz00/YJkUOHcaOdkdyE5ZXdtl8tF5n6ay1RAg7fhgfwWLA+JF8TsqGlRpAq7cGpEhdIM=
-X-Received: by 2002:a17:906:b042:: with SMTP id bj2mr5995258ejb.261.1611737039385;
- Wed, 27 Jan 2021 00:43:59 -0800 (PST)
+        id S233297AbhA0Jwn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jan 2021 04:52:43 -0500
+Received: from esa.microchip.iphmx.com ([68.232.153.233]:58743 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235585AbhA0Jt4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jan 2021 04:49:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1611740996; x=1643276996;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+3i+bsPM/grhoAZtDpyUhjFVOODZ7Fc6Eq84gg2f818=;
+  b=JAxjt3M5KA3kJapUnVehhhYxkVl+vY9GJXFQ9NG4N6Hm6+DvPb0oTj07
+   qepgs1yPKj3KLfBliWcL7cHYlNdpcxks/FStT30g9GGqFwfrIniHr99l0
+   jwg6c/olmSllOVPKGBJMPOTDIQ6S7e2h3pLZBA6ZVYMYInvL5bo6muTot
+   /KSYVg5i/oWwQsqDLBMgUYtnkEb/flwSQphIpmMl86bZWR7gO4JT+AwcK
+   lCQSpZJVTPqHkH/w+6+C3ZGFexVavO8usPQbkC6i0mKgdfPnMOA4pTnO3
+   Md9Lx6KFlEA+SF+YbgyE2hVZ6RXdexpkrTh5MoHspx+aLq83bRZ+R41+8
+   A==;
+IronPort-SDR: dFPHY0sCCTNNwPne0kBOloW2EeIse7t/zz+h+MNximRmMgEYikXlR4mu5raGqGuDas0NdvqZ5E
+ nZXqVJPLK6BBFBpvrLV0DRlsroaJgdUfYVaz+n8PiAi/aSf4CeWOJmTUH45d7J7PEjUdoQB4d0
+ r3NQwcGOTDo2SH6N914fukbtpxL+n0NrsecMEZxYJ/i+hqrZcYLoKZ3KJOaW5ZDMtlDaXb0S9L
+ zgnUMyZgf+OacryWxzKtNch+aVKhDhv7GdXzIAaz/zQD40YiOzthcFEeHV0zrDTenHkMrsc3Kt
+ 2pE=
+X-IronPort-AV: E=Sophos;i="5.79,378,1602572400"; 
+   d="scan'208";a="106951920"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2021 02:48:37 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 27 Jan 2021 02:48:37 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Wed, 27 Jan 2021 02:48:37 -0700
+Date:   Wed, 27 Jan 2021 10:48:36 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+CC:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: at91-pio4: add slew-rate
+Message-ID: <20210127094836.xwmhl7dd4oalykzz@sekiro>
+References: <1611569954-23279-1-git-send-email-claudiu.beznea@microchip.com>
+ <1611569954-23279-2-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-References: <20210115111311.31601-1-brgl@bgdev.pl> <20210120170032.GA22929@lst.de>
-In-Reply-To: <20210120170032.GA22929@lst.de>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 27 Jan 2021 09:43:48 +0100
-Message-ID: <CAMRc=MfpX_Ta42bMcOW14zqh+gWm+Sxhrb5abfa52PKXfmQb0w@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] configfs: implement committable items and add
- sample code
-To:     Christoph Hellwig <hch@lst.de>, Joel Becker <jlbec@evilplan.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1611569954-23279-2-git-send-email-claudiu.beznea@microchip.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 6:00 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> Joel,
->
-> if you are fine with this version I think we should let Bartosz pick
-> this up through whatever tree he needs it for.  I'd be more comfortable
-> if you ACKed this as you know the original design better than I do.
+On Mon, Jan 25, 2021 at 12:19:12PM +0200, Claudiu Beznea wrote:
+> Document slew-rate DT binding for SAMA7G5.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-Hi Joel,
+Thanks
 
-Gentle ping about this series. Since the user facing interface is
-mostly agreed upon, I already started working on the module using it -
-it would be great if we could get it in for v5.12.
-
-Best Regards,
-Bartosz Golaszewski
+> ---
+>  .../devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt       | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
+> index 265015bc0603..e2b861ce16d8 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
+> @@ -35,9 +35,11 @@ ioset settings. Use the macros from boot/dts/<soc>-pinfunc.h file to get the
+>  right representation of the pin.
+>  
+>  Optional properties:
+> -- GENERIC_PINCONFIG: generic pinconfig options to use, bias-disable,
+> -bias-pull-down, bias-pull-up, drive-open-drain, input-schmitt-enable,
+> -input-debounce, output-low, output-high.
+> +- GENERIC_PINCONFIG: generic pinconfig options to use:
+> +	- bias-disable, bias-pull-down, bias-pull-up, drive-open-drain,
+> +	  input-schmitt-enable, input-debounce, output-low, output-high.
+> +	- for microchip,sama7g5-pinctrl only:
+> +		- slew-rate: 0 - disabled, 1 - enabled (default)
+>  - atmel,drive-strength: 0 or 1 for low drive, 2 for medium drive and 3 for
+>  high drive. The default value is low drive.
+>  
+> -- 
+> 2.7.4
+> 
