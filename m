@@ -2,156 +2,398 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 142F1305A37
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 12:47:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6686305A5B
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 12:52:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236456AbhA0LqM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jan 2021 06:46:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236852AbhA0LoJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 Jan 2021 06:44:09 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BC1BE2075B;
-        Wed, 27 Jan 2021 11:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1611747808;
-        bh=/5nIAIDUtEaoz4kHWH0BEbwNsK21CQq+sbChjoihsg0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IQGMBmbx/vgvQtqOxbD6IG97hoY57wV3FdhxibxhGqPgmt9iqaEKFoPLat+ZgkfCP
-         VIyyU37TTlxzq8t4qmpqgS/S3tyLytZVPjk7eC2nCJnWd2COygBH9lV54o4ukxCrDV
-         x9bV36pKir6kBGyzarJEetS3VWfVvx/e4qx3dqsw=
-Date:   Wed, 27 Jan 2021 12:43:25 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [libgpiod][PATCH 6/6] core: add the kernel uapi header to the
- repository
-Message-ID: <YBFR3bwLyrc1a6Ln@kroah.com>
-References: <20210111133426.22040-1-brgl@bgdev.pl>
- <20210111133426.22040-7-brgl@bgdev.pl>
- <CAHp75VfeO10DXc2nCRKP9=6uppJ28k36E8yr20+YCd0mKUGjWA@mail.gmail.com>
- <CAMRc=MevGmAMBK20O2BBmyD9NjCSpC9-O_j_0HM6DQV66rnA2Q@mail.gmail.com>
- <20210111144647.GY4077@smile.fi.intel.com>
- <CAMpxmJW=6YXgPBJ3=1sBbNAOWTV4idwHz-cWv+YborZ4hLtcKA@mail.gmail.com>
- <20210125055527.GA344851@sol>
- <CAMRc=Mc4gK6BXKV8-b9qBTgm8m5DqW35UPxPWn7PbfJ-8LB4Yw@mail.gmail.com>
- <YBBNSzKHYNXki6NY@kroah.com>
- <CAMRc=MeQ2gNgCEuf9apUgmzxeCUUPjD5oAChXXVOw=JmoqqaGA@mail.gmail.com>
+        id S231158AbhA0Lvy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jan 2021 06:51:54 -0500
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:12690 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237341AbhA0Ltx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jan 2021 06:49:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1611748192; x=1643284192;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=TH2lZcib2rBCPzpNm8umKIrysEnQDunpypdTtnjjP4o=;
+  b=ukbZe7soDahgDEf0zto8kZRqxLMUFzLP2y/xRsYGwjQch4b25lOdORG0
+   MlFVfVG7UN8Qv7v32BREgW5JBuyYJRqVUwYydJ2CxgFGGkxOUuVKKeT1v
+   SqzYbrI+339FQgYcOWkgr+5WCOBdxbfrmnuXNcDadiYiyfa0UZtIr8nLG
+   BI1LBfRdjaRY6JCxhT/Yqna+4z6wJvY9oEjhkU8+lfzoHZ/ual5Feni+A
+   3nHET1n0rLiybOMQ1SGT8bkR2mPsUs+RYNWLOSGkY7cKpVKaZbgFEDzhu
+   3r+pbwxM3Fwh9NalNDG3lMkat2L1qv3KRBPeA/d+Bx6orbnNB/SFuPQuR
+   A==;
+IronPort-SDR: e+s57JvSdJdO6msD8tUzWI8A9LP+1WKZv1lSql/0z7i8zSQ87tXdd0MH7C5+Y8Pq/8NDzmIWtb
+ TqT+8Cvs5olAiXNPyRTFE6iuKpbr9dOo9ncka6V0fwKonEwxY/c1AVP+dnxQ6f3/KnoJXvOzA7
+ HNuu48FFksBwyUzD2ilB4ZhWg0OJWyDqsVsje0jMXg7nErlZhBbAxM8bQ98n2rdVYwxoVFEvlj
+ aavUobVsFp2UnWpNnfH1CBpnGrzMmyr5K98BTNMsxWc6nkmiq8EMzT65II0N/HFCgo7+bV18DX
+ I9U=
+X-IronPort-AV: E=Sophos;i="5.79,379,1602572400"; 
+   d="scan'208";a="104411901"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2021 04:46:10 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 27 Jan 2021 04:46:10 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 27 Jan 2021 04:46:04 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v2 3/3] pinctrl: at91-pio4: fix "Prefer 'unsigned int' to bare use of 'unsigned'"
+Date:   Wed, 27 Jan 2021 13:45:45 +0200
+Message-ID: <1611747945-29960-4-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1611747945-29960-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1611747945-29960-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MeQ2gNgCEuf9apUgmzxeCUUPjD5oAChXXVOw=JmoqqaGA@mail.gmail.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 08:08:01PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Jan 26, 2021 at 6:11 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Jan 26, 2021 at 04:07:47PM +0100, Bartosz Golaszewski wrote:
-> > > On Mon, Jan 25, 2021 at 6:55 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> > >
-> > > [snip!]
-> > >
-> > > > >
-> > > > > I don't like the ifdef hell so I prefer to bundle the header. I'm open
-> > > > > to other suggestions, although I can't come up with anything else.
-> > > > >
-> > > >
-> > > > Going off on a bit of a tangent, but I'm trying to add support for
-> > > > decoding the GPIO ioctls into strace and am running up against a similar
-> > > > issue.
-> > > >
-> > > > The way strace does it is to check the uAPI header on the host and use
-> > > > it if possible.  To handle where it may be stale, local types are
-> > > > defined that mirror any types that may have been added since the header
-> > > > was originally released.  If the corresponding type is available in the
-> > > > linux header then it is used, else the local type.
-> > > >
-> > > > This obviously creates a lot of pointless boilerplate code and
-> > > > preprocessor chicanery so I floated the idea of just including the latest
-> > > > header in the strace tree, as you are doing here for libgpiod.
-> > > > But that raised the issue of licencing, specifically if you copy the
-> > > > linux/gpio.h into a source tree does that mean that the whole project
-> > > > becomes GPL 2.0?  That is an issue for strace as it is LGPL 2.1 - as is
-> > > > libgpiod.
-> > > >
-> > > > The Linux uAPI headers are under the GPL-2.0 WITH Linux-syscall-note,
-> > > > which is also not totally clear on this point[1].
-> > > >
-> > > > My gut feeling was that using and even copying API headers doesn't
-> > > > constitute a derived work, as per the FSF view quoted in [1], and
-> > > > ethically might even be less of a violation than copying and re-defining
-> > > > individual types, but I'd rather not rely on a gut feeling.
-> > > >
-> > > > Is there some clear opinion or precedent on this point?
-> > > > i.e. are libgpiod and strace in legal licence jeopardy if they include
-> > > > gpio.h in their source tree?
-> > > >
-> > > > Cheers,
-> > > > Kent.
-> > > >
-> > > > [1] https://lkml.org/lkml/2020/2/21/2193
-> > >
-> > > Thanks for pointing that out. I lack the legal knowledge to have an
-> > > opinion of my own on this.
-> > >
-> > > Cc'ing Greg KH for help.
-> > >
-> > > Greg: do you know if it's fine to bundle a 'GPL-2.0 WITH
-> > > Linux-syscall-note' uAPI header together with an LGPL-v2.1-or-later
-> > > user-space shared library?
-> >
-> > How would you "bundle" such a thing as that is not what is in the kernel
-> > source tree?  If you are going to copy files out of the kernel and do
-> > other things with them, well, I recommend asking a lawyer as I am not
-> > one :)
-> >
-> > good luck!
-> >
-> > greg k-h
-> 
-> By "bundling" I mean - copying the kernel uAPI header verbatim from
-> the kernel tree into the project repository. The reason for that is
-> the fact that always relying on the toolchain kernel headers leads to
-> build issues if we want to support more recent kernel features in the
-> library while the supplied headers don't define all required symbols.
-> 
-> We can either make the latest supported version of linux headers a
-> hard requirement for building (I did that and buildroot folks yelled
-> at me because two stable versions of the library had different kernel
-> headers requirements) or redefine certain symbols (new symbols since
-> the oldest supported kernel version) or - and this is preferred unless
-> it's against the linux license - include the kernel headers in the
-> source tarball of the library.
-> 
-> I hope this is not a stupid question but obviously I don't know any
-> lawyer well versed in software copyright: can we direct this question
-> to anyone at the Linux Foundation maybe?
+Fix "Prefer 'unsigned int' to bare use of 'unsigned'" checkpatch.pl
+warning.
 
-Ok, first off, I am not a lawyer so don't take legal advice from me.
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+---
+ drivers/pinctrl/pinctrl-at91-pio4.c | 110 +++++++++++++++++++-----------------
+ 1 file changed, 57 insertions(+), 53 deletions(-)
 
-But, if you copy the .h file directly, and keep the same license on the
-file, that should be fine as you would be using it under the "GPLv2 with
-syscall note" license for your userspace program, right?
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index f202cdb6dc3c..a5d328808e4c 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -80,8 +80,8 @@
+  * @slew_rate_support: slew rate support
+  */
+ struct atmel_pioctrl_data {
+-	unsigned nbanks;
+-	unsigned last_bank_count;
++	unsigned int nbanks;
++	unsigned int last_bank_count;
+ 	unsigned int slew_rate_support;
+ };
+ 
+@@ -91,11 +91,11 @@ struct atmel_group {
+ };
+ 
+ struct atmel_pin {
+-	unsigned pin_id;
+-	unsigned mux;
+-	unsigned ioset;
+-	unsigned bank;
+-	unsigned line;
++	unsigned int pin_id;
++	unsigned int mux;
++	unsigned int ioset;
++	unsigned int bank;
++	unsigned int line;
+ 	const char *device;
+ };
+ 
+@@ -125,16 +125,16 @@ struct atmel_pin {
+ struct atmel_pioctrl {
+ 	void __iomem		*reg_base;
+ 	struct clk		*clk;
+-	unsigned		nbanks;
++	unsigned int		nbanks;
+ 	struct pinctrl_dev	*pinctrl_dev;
+ 	struct atmel_group	*groups;
+ 	const char * const	*group_names;
+ 	struct atmel_pin	**pins;
+-	unsigned		npins;
++	unsigned int		npins;
+ 	struct gpio_chip	*gpio_chip;
+ 	struct irq_domain	*irq_domain;
+ 	int			*irqs;
+-	unsigned		*pm_wakeup_sources;
++	unsigned int		*pm_wakeup_sources;
+ 	struct {
+ 		u32		imr;
+ 		u32		odsr;
+@@ -177,11 +177,11 @@ static void atmel_gpio_irq_ack(struct irq_data *d)
+ 	 */
+ }
+ 
+-static int atmel_gpio_irq_set_type(struct irq_data *d, unsigned type)
++static int atmel_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = irq_data_get_irq_chip_data(d);
+ 	struct atmel_pin *pin = atmel_pioctrl->pins[d->hwirq];
+-	unsigned reg;
++	unsigned int reg;
+ 
+ 	atmel_gpio_write(atmel_pioctrl, pin->bank, ATMEL_PIO_MSKR,
+ 			 BIT(pin->line));
+@@ -268,7 +268,7 @@ static struct irq_chip atmel_gpio_irq_chip = {
+ 	.irq_set_wake	= atmel_gpio_irq_set_wake,
+ };
+ 
+-static int atmel_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
++static int atmel_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
+ 
+@@ -316,11 +316,12 @@ static void atmel_gpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
+ 
+-static int atmel_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
++static int atmel_gpio_direction_input(struct gpio_chip *chip,
++				      unsigned int offset)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
+ 	struct atmel_pin *pin = atmel_pioctrl->pins[offset];
+-	unsigned reg;
++	unsigned int reg;
+ 
+ 	atmel_gpio_write(atmel_pioctrl, pin->bank, ATMEL_PIO_MSKR,
+ 			 BIT(pin->line));
+@@ -331,11 +332,11 @@ static int atmel_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+ 	return 0;
+ }
+ 
+-static int atmel_gpio_get(struct gpio_chip *chip, unsigned offset)
++static int atmel_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
+ 	struct atmel_pin *pin = atmel_pioctrl->pins[offset];
+-	unsigned reg;
++	unsigned int reg;
+ 
+ 	reg = atmel_gpio_read(atmel_pioctrl, pin->bank, ATMEL_PIO_PDSR);
+ 
+@@ -369,12 +370,13 @@ static int atmel_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
+ 	return 0;
+ }
+ 
+-static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
++static int atmel_gpio_direction_output(struct gpio_chip *chip,
++				       unsigned int offset,
+ 				       int value)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
+ 	struct atmel_pin *pin = atmel_pioctrl->pins[offset];
+-	unsigned reg;
++	unsigned int reg;
+ 
+ 	atmel_gpio_write(atmel_pioctrl, pin->bank,
+ 			 value ? ATMEL_PIO_SODR : ATMEL_PIO_CODR,
+@@ -389,7 +391,7 @@ static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
+ 	return 0;
+ }
+ 
+-static void atmel_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
++static void atmel_gpio_set(struct gpio_chip *chip, unsigned int offset, int val)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
+ 	struct atmel_pin *pin = atmel_pioctrl->pins[offset];
+@@ -445,11 +447,11 @@ static struct gpio_chip atmel_gpio_chip = {
+ 
+ /* --- PINCTRL --- */
+ static unsigned int atmel_pin_config_read(struct pinctrl_dev *pctldev,
+-					  unsigned pin_id)
++					  unsigned int pin_id)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+-	unsigned bank = atmel_pioctrl->pins[pin_id]->bank;
+-	unsigned line = atmel_pioctrl->pins[pin_id]->line;
++	unsigned int bank = atmel_pioctrl->pins[pin_id]->bank;
++	unsigned int line = atmel_pioctrl->pins[pin_id]->line;
+ 	void __iomem *addr = atmel_pioctrl->reg_base
+ 			     + bank * ATMEL_PIO_BANK_OFFSET;
+ 
+@@ -461,11 +463,11 @@ static unsigned int atmel_pin_config_read(struct pinctrl_dev *pctldev,
+ }
+ 
+ static void atmel_pin_config_write(struct pinctrl_dev *pctldev,
+-				   unsigned pin_id, u32 conf)
++				   unsigned int pin_id, u32 conf)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+-	unsigned bank = atmel_pioctrl->pins[pin_id]->bank;
+-	unsigned line = atmel_pioctrl->pins[pin_id]->line;
++	unsigned int bank = atmel_pioctrl->pins[pin_id]->bank;
++	unsigned int line = atmel_pioctrl->pins[pin_id]->line;
+ 	void __iomem *addr = atmel_pioctrl->reg_base
+ 			     + bank * ATMEL_PIO_BANK_OFFSET;
+ 
+@@ -483,7 +485,7 @@ static int atmel_pctl_get_groups_count(struct pinctrl_dev *pctldev)
+ }
+ 
+ static const char *atmel_pctl_get_group_name(struct pinctrl_dev *pctldev,
+-					     unsigned selector)
++					     unsigned int selector)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+@@ -491,19 +493,20 @@ static const char *atmel_pctl_get_group_name(struct pinctrl_dev *pctldev,
+ }
+ 
+ static int atmel_pctl_get_group_pins(struct pinctrl_dev *pctldev,
+-				     unsigned selector, const unsigned **pins,
+-				     unsigned *num_pins)
++				     unsigned int selector,
++				     const unsigned int **pins,
++				     unsigned int *num_pins)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+-	*pins = (unsigned *)&atmel_pioctrl->groups[selector].pin;
++	*pins = (unsigned int *)&atmel_pioctrl->groups[selector].pin;
+ 	*num_pins = 1;
+ 
+ 	return 0;
+ }
+ 
+ static struct atmel_group *
+-atmel_pctl_find_group_by_pin(struct pinctrl_dev *pctldev, unsigned pin)
++atmel_pctl_find_group_by_pin(struct pinctrl_dev *pctldev, unsigned int pin)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+ 	int i;
+@@ -524,7 +527,7 @@ static int atmel_pctl_xlate_pinfunc(struct pinctrl_dev *pctldev,
+ 				    const char **func_name)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+-	unsigned pin_id, func_id;
++	unsigned int pin_id, func_id;
+ 	struct atmel_group *grp;
+ 
+ 	pin_id = ATMEL_GET_PIN_NO(pinfunc);
+@@ -554,10 +557,10 @@ static int atmel_pctl_xlate_pinfunc(struct pinctrl_dev *pctldev,
+ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 					struct device_node *np,
+ 					struct pinctrl_map **map,
+-					unsigned *reserved_maps,
+-					unsigned *num_maps)
++					unsigned int *reserved_maps,
++					unsigned int *num_maps)
+ {
+-	unsigned num_pins, num_configs, reserve;
++	unsigned int num_pins, num_configs, reserve;
+ 	unsigned long *configs;
+ 	struct property	*pins;
+ 	u32 pinfunc;
+@@ -628,10 +631,10 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ static int atmel_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 				     struct device_node *np_config,
+ 				     struct pinctrl_map **map,
+-				     unsigned *num_maps)
++				     unsigned int *num_maps)
+ {
+ 	struct device_node *np;
+-	unsigned reserved_maps;
++	unsigned int reserved_maps;
+ 	int ret;
+ 
+ 	*map = NULL;
+@@ -679,13 +682,13 @@ static int atmel_pmx_get_functions_count(struct pinctrl_dev *pctldev)
+ }
+ 
+ static const char *atmel_pmx_get_function_name(struct pinctrl_dev *pctldev,
+-					       unsigned selector)
++					       unsigned int selector)
+ {
+ 	return atmel_functions[selector];
+ }
+ 
+ static int atmel_pmx_get_function_groups(struct pinctrl_dev *pctldev,
+-					 unsigned selector,
++					 unsigned int selector,
+ 					 const char * const **groups,
+ 					 unsigned * const num_groups)
+ {
+@@ -698,11 +701,11 @@ static int atmel_pmx_get_function_groups(struct pinctrl_dev *pctldev,
+ }
+ 
+ static int atmel_pmx_set_mux(struct pinctrl_dev *pctldev,
+-			     unsigned function,
+-			     unsigned group)
++			     unsigned int function,
++			     unsigned int group)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+-	unsigned pin;
++	unsigned int pin;
+ 	u32 conf;
+ 
+ 	dev_dbg(pctldev->dev, "enable function %s group %s\n",
+@@ -726,13 +729,13 @@ static const struct pinmux_ops atmel_pmxops = {
+ };
+ 
+ static int atmel_conf_pin_config_group_get(struct pinctrl_dev *pctldev,
+-					   unsigned group,
++					   unsigned int group,
+ 					   unsigned long *config)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+-	unsigned param = pinconf_to_config_param(*config), arg = 0;
++	unsigned int param = pinconf_to_config_param(*config), arg = 0;
+ 	struct atmel_group *grp = atmel_pioctrl->groups + group;
+-	unsigned pin_id = grp->pin;
++	unsigned int pin_id = grp->pin;
+ 	u32 res;
+ 
+ 	res = atmel_pin_config_read(pctldev, pin_id);
+@@ -786,21 +789,21 @@ static int atmel_conf_pin_config_group_get(struct pinctrl_dev *pctldev,
+ }
+ 
+ static int atmel_conf_pin_config_group_set(struct pinctrl_dev *pctldev,
+-					   unsigned group,
++					   unsigned int group,
+ 					   unsigned long *configs,
+-					   unsigned num_configs)
++					   unsigned int num_configs)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+ 	struct atmel_group *grp = atmel_pioctrl->groups + group;
+-	unsigned bank, pin, pin_id = grp->pin;
++	unsigned int bank, pin, pin_id = grp->pin;
+ 	u32 mask, conf = 0;
+ 	int i;
+ 
+ 	conf = atmel_pin_config_read(pctldev, pin_id);
+ 
+ 	for (i = 0; i < num_configs; i++) {
+-		unsigned param = pinconf_to_config_param(configs[i]);
+-		unsigned arg = pinconf_to_config_argument(configs[i]);
++		unsigned int param = pinconf_to_config_param(configs[i]);
++		unsigned int arg = pinconf_to_config_argument(configs[i]);
+ 
+ 		dev_dbg(pctldev->dev, "%s: pin=%u, config=0x%lx\n",
+ 			__func__, pin_id, configs[i]);
+@@ -900,7 +903,8 @@ static int atmel_conf_pin_config_group_set(struct pinctrl_dev *pctldev,
+ }
+ 
+ static void atmel_conf_pin_config_dbg_show(struct pinctrl_dev *pctldev,
+-					   struct seq_file *s, unsigned pin_id)
++					   struct seq_file *s,
++					   unsigned int pin_id)
+ {
+ 	struct atmel_pioctrl *atmel_pioctrl = pinctrl_dev_get_drvdata(pctldev);
+ 	u32 conf;
+@@ -1108,8 +1112,8 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	for (i = 0 ; i < atmel_pioctrl->npins; i++) {
+ 		struct atmel_group *group = atmel_pioctrl->groups + i;
+-		unsigned bank = ATMEL_PIO_BANK(i);
+-		unsigned line = ATMEL_PIO_LINE(i);
++		unsigned int bank = ATMEL_PIO_BANK(i);
++		unsigned int line = ATMEL_PIO_LINE(i);
+ 
+ 		atmel_pioctrl->pins[i] = devm_kzalloc(dev,
+ 				sizeof(**atmel_pioctrl->pins), GFP_KERNEL);
+-- 
+2.7.4
 
-So there shouldn't be an issue there that I can determine, as we want
-userspace programs to be free to use those headers to interact with the
-kernel.
-
-It's come up in the past that we might want to somehow make this much
-more obvious, and we have talked about this with the legal community,
-but that's only in the context of making it more obvious that we want
-people to write programs of any license to talk to the kernel, not that
-we would want to keep anyone from doing that :)
-
-thanks,
-
-greg k-h
