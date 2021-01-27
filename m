@@ -2,128 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FEA1305FCF
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 16:40:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C91B3064B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jan 2021 21:02:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235673AbhA0Pet (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jan 2021 10:34:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235196AbhA0PFO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 Jan 2021 10:05:14 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2C359207D8;
-        Wed, 27 Jan 2021 15:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1611759873;
-        bh=A5lQceW5WkUV3NZnaUs4+oJ/FTWq97QkH8sVu2gmDxI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GGdWepzCfbLCO2phk+j0D0bqMvwv8XEWgT2bYxwztDmIgxFnXa/wgjb9EuyrIh2YD
-         1uTfhT/K8AHZPl4ITw1qqumb0eKJiTUByjBWrp8GGHTKK6O3p6EMhVZP5GQHs1wANx
-         cxxaY0iR+6fwiInu54C+PFqHe834IWZ5hQUY9cic=
-Date:   Wed, 27 Jan 2021 16:04:30 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
+        id S232143AbhA0UB6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jan 2021 15:01:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:20454 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232550AbhA0UAl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 27 Jan 2021 15:00:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611777551;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h/UsaQpy9owGSAnCeo3VsEu5JuZEkF1vXo3NykuqkpE=;
+        b=jBfqrtFFCRBvQYRSW3aqtsSGZ0XyO5lHAFTQXaBzhieGM8EFJmVeQm3hLcsa4EraLjm6Mz
+        pBFFeeVnISU9Mpt5ciRNMFQzYh1qe2KvPhM5nR+NA3KncTcT0SuM8kJXx7X3+hBdpfPfvs
+        o1VIv/8SQGtQAXYGmG0pLqP8nblnpzs=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-ZLU4z28qPtKEmHrht4ff1w-1; Wed, 27 Jan 2021 14:59:09 -0500
+X-MC-Unique: ZLU4z28qPtKEmHrht4ff1w-1
+Received: by mail-ej1-f70.google.com with SMTP id ar27so11339ejc.22
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Jan 2021 11:59:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h/UsaQpy9owGSAnCeo3VsEu5JuZEkF1vXo3NykuqkpE=;
+        b=rcMHwlOONDl60EcZV+8hRz3gHcl18mJxsXueJcNqQGemaWp+mOukthUedRJaJVy8VF
+         cXASsBCOffEH6qBlmNolgdyRdErNMhOpuSPJu0f4qTv9ccSXgytMQ+CC8YBcabzyx6Hb
+         yv+frq69/zAL8jbWloGX2RgFhzhihP+IDY9uusSa7Z7Kbcj2LK4jBH8rCXE6QI7IqJlF
+         YqITlk6qQSvjnTbT5tUMi9IkcU1gCpwXNDW6QTtdRtkg9E+IplHg0aNVGuu6Ph+zoeQC
+         AsrIyumBKzTyvQNVHV2sDhxd9MGUYGh67gZkqCkz+lUKnVskOU2OKT2RkUc3rzG5+vds
+         MyAQ==
+X-Gm-Message-State: AOAM533kom9uopTFMkyNaa9iADMKBrZK8+atEkBhU5O6k6ILL1dVKJup
+        0rhKGz/s4+W2LShUwUz+T3kv1AQfeY4UBc7LOKlViaWwFrY5ZLGmIOBEe85LwMLHOQBoS/m+MOX
+        xLXlqE+Z4eOvIqHMjlB4tKw==
+X-Received: by 2002:a17:906:708f:: with SMTP id b15mr8139584ejk.267.1611777548266;
+        Wed, 27 Jan 2021 11:59:08 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwlaO5BzU++0K+fbZ4fszfnZHOzoIQSWZSqrmuYdsQcWzs897KjBJMn22JCj/RJRaVwvpFeVw==
+X-Received: by 2002:a17:906:708f:: with SMTP id b15mr8139580ejk.267.1611777548103;
+        Wed, 27 Jan 2021 11:59:08 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
+        by smtp.gmail.com with ESMTPSA id v9sm1275522ejd.92.2021.01.27.11.59.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Jan 2021 11:59:07 -0800 (PST)
+Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        kernel-team@android.com, linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5] gpiolib: Bind gpio_device to a driver to enable
- fw_devlink=on by default
-Message-ID: <YBGA/tK+yyX3i1xx@kroah.com>
-References: <20210122193600.1415639-1-saravanak@google.com>
- <YBF3MVttE1aTfx7o@kroah.com>
- <CAMpxmJXDo6oXKzkun9PCT3bWN8adUcyWvf3Sr7SkrKD6r4P8Pg@mail.gmail.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com>
+ <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
+ <CAHp75Vc9RAHvTDAw1ryHq_CPRMtjqkzg9081nw0+RPY_yWPJgA@mail.gmail.com>
+ <CAMeQTsY6k64LUg3DYbi67W6-Gx6znOeJbDfKUhzGt-BxF2BgKA@mail.gmail.com>
+ <CAHp75VdKxARQAyyTd=ZcaoER1iF6Mk4AS1Dn6U9VCjt_D_+q8A@mail.gmail.com>
+ <3b4c2f63-14e6-5041-3c15-c2d65b229269@redhat.com>
+ <CAHp75VcEq4thOub+k5rDR61KZX4jCZj2zJr2OqsdedmpSB64KA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1c860f9a-f007-e7c6-6142-dbeed10c40ba@redhat.com>
+Date:   Wed, 27 Jan 2021 20:59:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJXDo6oXKzkun9PCT3bWN8adUcyWvf3Sr7SkrKD6r4P8Pg@mail.gmail.com>
+In-Reply-To: <CAHp75VcEq4thOub+k5rDR61KZX4jCZj2zJr2OqsdedmpSB64KA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 27, 2021 at 03:31:17PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Jan 27, 2021 at 3:22 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, Jan 22, 2021 at 11:35:59AM -0800, Saravana Kannan wrote:
-> > > There are multiple instances of GPIO device tree nodes of the form:
-> > >
-> > > foo {
-> > >       compatible = "acme,foo";
-> > >       ...
-> > >
-> > >       gpio0: gpio0@xxxxxxxx {
-> > >               compatible = "acme,bar";
-> > >               ...
-> > >               gpio-controller;
-> > >       };
-> > >
-> > >       gpio1: gpio1@xxxxxxxx {
-> > >               compatible = "acme,bar";
-> > >               ...
-> > >               gpio-controller;
-> > >       };
-> > >
-> > >       ...
-> > > }
-> > >
-> > > bazz {
-> > >       my-gpios = <&gpio0 ...>;
-> > > }
-> > >
-> > > Case 1: The driver for "foo" populates struct device for these gpio*
-> > > nodes and then probes them using a driver that binds with "acme,bar".
-> > > This driver for "acme,bar" then registers the gpio* nodes with gpiolib.
-> > > This lines up with how DT nodes with the "compatible" property are
-> > > typically converted to struct devices and then registered with driver
-> > > core to probe them. This also allows the gpio* devices to hook into all
-> > > the driver core capabilities like runtime PM, probe deferral,
-> > > suspend/resume ordering, device links, etc.
-> > >
-> > > Case 2: The driver for "foo" doesn't populate struct devices for these
-> > > gpio* nodes before registering them with gpiolib. Instead it just loops
-> > > through its child nodes and directly registers the gpio* nodes with
-> > > gpiolib.
-> > >
-> > > Drivers that follow case 2 cause problems with fw_devlink=on. This is
-> > > because fw_devlink will prevent bazz from probing until there's a struct
-> > > device that has gpio0 as its fwnode (because bazz lists gpio0 as a GPIO
-> > > supplier). Once the struct device is available, fw_devlink will create a
-> > > device link with gpio0 device as the supplier and bazz device as the
-> > > consumer. After this point, since the gpio0 device will never bind to a
-> > > driver, the device link will prevent bazz device from ever probing.
-> > >
-> > > Finding and refactoring all the instances of drivers that follow case 2
-> > > will cause a lot of code churn and it is not something that can be done
-> > > in one shot. In some instances it might not even be possible to refactor
-> > > them cleanly. Examples of such instances are [1] [2].
-> > >
-> > > This patch works around this problem and avoids all the code churn by
-> > > simply setting the fwnode of the gpio_device and creating a stub driver
-> > > to bind to the gpio_device. This allows all the consumers to continue
-> > > probing when the driver follows case 2.
-> > >
-> > > [1] - https://lore.kernel.org/lkml/20201014191235.7f71fcb4@xhacker.debian/
-> > > [2] - https://lore.kernel.org/lkml/e28e1f38d87c12a3c714a6573beba6e1@kernel.org/
-> > > Cc: Marc Zyngier <maz@kernel.org>
-> > > Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> > > Cc: Kever Yang <kever.yang@rock-chips.com>
-> > > Fixes: e590474768f1 ("driver core: Set fw_devlink=on by default")
-> >
-> > As this commit is in my driver-core git tree, can I just take this in
-> > the same tree?  Can I get an ack from the maintainer for this?
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Go ahead.
-> 
-> Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi,
 
-Thanks, now queued up.
+On 1/26/21 9:54 PM, Andy Shevchenko wrote:
+> On Tue, Jan 26, 2021 at 8:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>> On 1/26/21 6:14 PM, Andy Shevchenko wrote:
+>>> On Tue, Jan 26, 2021 at 6:55 PM Patrik Jakobsson
+>>> <patrik.r.jakobsson@gmail.com> wrote:
+>>>> On Tue, Jan 26, 2021 at 4:51 PM Andy Shevchenko
+>>>> <andy.shevchenko@gmail.com> wrote:
+>>>>> On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
+>>>>> <patrik.r.jakobsson@gmail.com> wrote:
+>>>>>> On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
+>>>>>> <andriy.shevchenko@linux.intel.com> wrote:
+>>>>>>>
+>>>>>>> Hi guys,
+>>>>>>>
+>>>>>>> This is first part of Intel MID outdated platforms removal. It's collected into
+>>>>>>> immutable branch with a given tag, please pull to yours subsystems.
+>>>>>>
+>>>>>> Hi Andy,
+>>>>>> Do you plan on eventually removing X86_INTEL_MID completely? If so,
+>>>>>> then I should probably start looking at removing the corresponding
+>>>>>> parts in GMA500.
+>>>>>
+>>>>> Nope. It is related to only Medfield / Clovertrail platforms.
+>>>>>
+>>>>> There are other (MID) platforms that may / might utilize this driver
+>>>>> in the future.
+>>>>
+>>>> Right, there's still Oaktrail / Moorestown with hardware in the wild.
+>>>
+>>> Actually Moorestown had to be removed a few years ago (kernel won't
+>>> boot on them anyway from that date when Alan removed support under
+>>> arch/x86 for it).
+>>>
+>>> I'm talking about Merrifield and Moorefield that can utilize it and
+>>> also some other platforms that are not SFI based (Cedar something...
+>>> IIRC).
+>>
+>> Yes at least there are some 64 bit capable SoCs with GMA500 which were
+>> used in NAS like devices. These NAS-es actually have a VGA output
+>> (and maybe also DVI?) which is attached to the GMA500.
+> 
+> Since you are talking about 64-bit, definitely they are *not*
+> Moorestown, Medfield, Clovertrail since the mentioned never were
+> 64-bit. But it would be nice to see the CPU model number to be sure.
 
-greg k-h
+My info on this comes from this bugreport:
+https://bugzilla.redhat.com/show_bug.cgi?id=1665766
+
+And the machine that bugreport is about is a "Thecus N5550 NAS box (Intel Atom D2550/Cedarview platform)"
+
+Regards,
+
+Hans
+
