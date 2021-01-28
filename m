@@ -2,85 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5509307576
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jan 2021 13:05:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D55F3075E9
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jan 2021 13:23:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231504AbhA1MD4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Jan 2021 07:03:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231373AbhA1MDH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Jan 2021 07:03:07 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F3ADC06178A
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Jan 2021 04:02:05 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id q12so7215376lfo.12
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Jan 2021 04:02:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=usfc03r7bo+9iWnGhn3YJY+bfRfQpQsiPPvtGVZjTJo=;
-        b=npthAUeo3rWK36iMclfXUXlzdH0VQDifjmso0bBCFVXOyQtra7DzyHgEmzJCt30dt/
-         SJ9fMz6E+ZXbymrWtxziw9opC0BGbilGWBJXbYZg/g+BYXgWz07+qrex1EOMXMqIpzpE
-         6jYfIeX/eLZOEM3VQR+NV2YEMCt5h3yT2zkYs2fBjC+YshcbiveecNrV2CoAJtG6ZVel
-         ii8PNYw1BYp2K+WyqndwkTLNHTfxmpxwnUysv03/L8DCd9xBIWL+Ex04T8ZFQN2SR4Jv
-         XJrieSOBP7Hg+fXfNeCpqIezF0N6+ilCD2nUbDQYYsRnM51XurcjK/Q5y7e31SHMaiG8
-         0S7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=usfc03r7bo+9iWnGhn3YJY+bfRfQpQsiPPvtGVZjTJo=;
-        b=f78bvHn9BaYaoScXE4vuYpTN/Aywc1GQNQoapWj4ImhyCX191qJBfQMTevttO0au4S
-         6MOVpFVRdhzxOMpSlr/vW792J45iiflx8J35/KM1r3QLjgrR8o2WDqGOWdyqvVxsBHF8
-         sfWybMnrmwmzhgbuH0D3pk3Yf/8sKo+CpXptJtgDYf5ypiYP95WU63iu2lIR94wB21Rg
-         Fu9LlErOVuFJ+6pU8vqNInhIyDMASlXLT1oXLd8MgJmmcnlRy+pF8ovryvxJXx+ke6sV
-         qIio3JidjeW5Awv0DTXs3m84vEYwDcNzTdk/SnbbRxHw6/iIvplfSl0OBu3vRm7qOu7j
-         HQXQ==
-X-Gm-Message-State: AOAM532BC7PAbGwfv3uQ5rMivKP6Pxq3NFwsRjG1hAI8GYG/foZQlvAO
-        lKMr6dWocg2T3R63iGzPrUDOkLgzqjkjr/kgd+BWVw==
-X-Google-Smtp-Source: ABdhPJza5WEqdY64nMdJh4p+Ysom/A+I1BzOUDl9O6I2P4XzvnsQTS6dm+guTw4PUOLC3FEaVrkSaMBAp3FtmqHRCno=
-X-Received: by 2002:a19:b8e:: with SMTP id 136mr7679656lfl.29.1611835321876;
- Thu, 28 Jan 2021 04:02:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20210127000303.436595-1-drew@beagleboard.org> <20210127000303.436595-2-drew@beagleboard.org>
-In-Reply-To: <20210127000303.436595-2-drew@beagleboard.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Jan 2021 13:01:51 +0100
-Message-ID: <CACRpkdYkyxXmxhikvnpxc07MmWPweFAphRPCMd02Ye4EyuOVNQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: am335x-boneblack.dts: unique gpio-line-names
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        id S231705AbhA1MXM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Jan 2021 07:23:12 -0500
+Received: from forward105p.mail.yandex.net ([77.88.28.108]:47485 "EHLO
+        forward105p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231508AbhA1MWY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 28 Jan 2021 07:22:24 -0500
+Received: from sas1-2c02ca35cfae.qloud-c.yandex.net (sas1-2c02ca35cfae.qloud-c.yandex.net [IPv6:2a02:6b8:c14:3992:0:640:2c02:ca35])
+        by forward105p.mail.yandex.net (Yandex) with ESMTP id AF0554D41D0B;
+        Thu, 28 Jan 2021 15:21:35 +0300 (MSK)
+Received: from sas1-27140bb19246.qloud-c.yandex.net (sas1-27140bb19246.qloud-c.yandex.net [2a02:6b8:c08:1803:0:640:2714:bb1])
+        by sas1-2c02ca35cfae.qloud-c.yandex.net (mxback/Yandex) with ESMTP id DOD2zEoBkr-LZGO4aYo;
+        Thu, 28 Jan 2021 15:21:35 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1611836495;
+        bh=yxUd7GW+52WO9gCx62QYkoMSITctOlyet8SNAIkbEtU=;
+        h=Date:Subject:To:From:Message-Id:Cc;
+        b=HJZ/xqQLwdo10VJQKXQVa/T3kIhYUxoSgB7hWqarTvhxjD2yb0Fe/sp8mIp5r2oi7
+         8xPfAANeUzFv6E9/YWFHIECNFTK+yVIzgfi1YoZLqLTPoh1kSLxaC0sWX4fH8n/WKe
+         xapbkTMlt/NHZQFYjcfZ+tAgZmsU3437Ych8hA0k=
+Authentication-Results: sas1-2c02ca35cfae.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by sas1-27140bb19246.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id dVFT85naok-LYn8A8ge;
+        Thu, 28 Jan 2021 15:21:34 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nikita Shubin <nikita.shubin@maquefel.me>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] gpio: ep93xx: fixes series patch
+Date:   Thu, 28 Jan 2021 15:21:16 +0300
+Message-Id: <20210128122123.25341-1-nikita.shubin@maquefel.me>
+X-Mailer: git-send-email 2.29.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 27, 2021 at 1:05 AM Drew Fustini <drew@beagleboard.org> wrote:
+v2: 
+https://lore.kernel.org/linux-gpio/20210127104617.1173-1-nikita.shubin@maquefel.me/
 
-> Based on linux-gpio discussion [1], it is best practice to make the
-> gpio-line-names unique. Generic names like "[ethernet]" are replaced
-> with the name of the unique signal on the AM3358 SoC ball corresponding
-> to the gpio line. "[NC]" is also renamed to the standard "NC" name to
-> represent "not connected".
->
-> [1] https://lore.kernel.org/linux-gpio/20201216195357.GA2583366@x1/
->
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+v2->v3 changes
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+[PATCH v3 1/7] gpio: ep93xx: fix BUG_ON port F usage
+As suggested Andy Shevchenko dropped  most of commit message
 
-Yours,
-Linus Walleij
+[PATCH v3 2/7] gpio: ep93xx: Fix single irqchip with multi
+ gpiochips
+- Andy Shevchenko:
+	- added coma
+- Alexander Sverdlin:
+	- changed to fixes commit d2b091961510
+
+[PATCH v2 6/9] gpio: ep93xx: refactor ep93xx_gpio_add_bank
+- Alexander Sverdlin:
+	- use ->num_parents instead of ARRAY_SIZE()
+
+Alexander - i think you are right about these two patches
+they have no meaning currently, so i dropped them.
+
+[PATCH v2 7/9] gpio: ep93xx: separate IRQ's setup
+- Alexander Sverdlin:
+	- drop patch entirely
+
+[PATCH v2 9/9] gpio: ep93xx: replace bools with idx for IRQ ports
+- Alexander Sverdlin:
+	- drop patch entirely
