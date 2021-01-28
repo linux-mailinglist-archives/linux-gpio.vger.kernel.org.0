@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 518EC307A80
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jan 2021 17:18:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08D95307A85
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jan 2021 17:18:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231233AbhA1QRA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Jan 2021 11:17:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37736 "EHLO
+        id S231603AbhA1QSq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Jan 2021 11:18:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231654AbhA1QQl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Jan 2021 11:16:41 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A96C061573;
-        Thu, 28 Jan 2021 08:16:01 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id 11so4296789pfu.4;
-        Thu, 28 Jan 2021 08:16:01 -0800 (PST)
+        with ESMTP id S232076AbhA1QSo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Jan 2021 11:18:44 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2CFC061573;
+        Thu, 28 Jan 2021 08:18:04 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id n10so4578351pgl.10;
+        Thu, 28 Jan 2021 08:18:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=j5smMsSfDNRIFTZ6zVMHDSZsMWxi1PSm64c19lBgQL4=;
-        b=bYU8DCdQroLMmiyTShRy3lBln2/3DJA8WxaZ8TtOxPCu+39KTVWvacmJ6kY49VlJhq
-         GQjnJbtDzSxwEU50rmI86Y3AT0R7of7Q5XCl+tRK7t+SzQHWDeqQ3vnqTNjNyPyUtEi4
-         2J4Cs+fSb1vouJKeRQNRuzhqDd7phq9XuQ9NikCXM2GwZnVC4O8vrioTAbqYo29eGuHH
-         PlnsQIrsAP8Hn35BwENq6iqsJYxH0fpm04EMoxaP+KvuYTo74DUuhHfzaP7GvXj3tmxT
-         nALn0NGR7RZyy8vHA/qe+t6eEX5Ni4cNmG7ZGUbXfrqTxp0JlY1erA83FHTD+x8OuX/t
-         s+pQ==
+        bh=6D+s1Wpr7yaiLzHkUhrsYSfAQmNRTVE7OsFOsBaTvrE=;
+        b=uD/2LJ9CSOpDfJMmIylD5MQ+S7a2TVf8up80ch46TmM5p1he8lrDGViC/0KIcch27M
+         dZirOCdBVL8JUjyTrBEu2Lwco2Cq9/3gdkYq6mtLBUbOWmFPqzdXNCFIpZW7nMtI3JaH
+         z9Yv1F2KzoMGIrpBOLO4OSsUQTK39jhorLxL1hJdhktx6hNTs17L2elXE2GdwvZHY6e7
+         TBdBid2gBgI7NhV+pc4IHy9R6/a2+NJzF4NUzhFrFrSPHrRjwk3XumIVwMup9TwtxeK3
+         SgCozZrd3iCSQli5AvbHEmJpu02l2SQvl0Skzo/iLGkxJPJL0PfkvCxWglcCINqLQjOi
+         OZXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=j5smMsSfDNRIFTZ6zVMHDSZsMWxi1PSm64c19lBgQL4=;
-        b=lwzpbvSzbVraZLnPViPlGeozMM64E5QPChZhOOFJNng72NzecCiOYBr8H2TNC205ZW
-         F8oaD8IEKaXP+26nJRB+qYtXfCbND4MtycB9k7s1gXuPqt1pnQLfCLYObVM03TGX/JZH
-         aW1jpWMAkUnu7TFQxtb5nAp9svxbQRLxpaUCT1jvngXvenoHoCC+dhqoKZ60MAJZCCa/
-         8folrXtIbMj0Z4O0yEDM3qJoMu4psVBaKkmM540e8U9XXqw2YqFrPpJz+S5cy3iQn/y8
-         YYv6HHlvJRpj5T7WJvdOq9+EbV8TkiQXVy0Kzorjc+zZX6JVW7xSYAs/4eoEMdujlUHH
-         Mh+g==
-X-Gm-Message-State: AOAM530O8mr1LXwi7Sh+OzzHrr185PshrZnVAdkxDBWo3eVSbwH+MZcU
-        aNmToEYlZq5INZPSZ6vVZPUNzABfU77uj1Ze/9I=
-X-Google-Smtp-Source: ABdhPJwFdbOR+m8Jtq3bYIMd6HOhrotBl4a7/jYl0E1+eB2wf0kbMbZ4gKwp2qwPlRDEhwRR8IkzPAgFN8ajIe8DI7o=
-X-Received: by 2002:a62:445:0:b029:19c:162b:bbef with SMTP id
- 66-20020a6204450000b029019c162bbbefmr197860pfe.40.1611850561286; Thu, 28 Jan
- 2021 08:16:01 -0800 (PST)
+        bh=6D+s1Wpr7yaiLzHkUhrsYSfAQmNRTVE7OsFOsBaTvrE=;
+        b=PfxCeiz71FeZ7cGC6wehi1ZB9DT8R8rthXYP4GUWacIS/Vw0Krg1kvxkXzfysKbQGY
+         38E0TBWeUjbVBoG4T+gJRykdGeH0EkPSyKAaVaMGpSgDY+0dNorzi9pPNSApo9R0MNjL
+         3Xav/siVL9MRih+R/w2JTtjiJvN3aEUeXhJ4M0gnF70kJUfqPC1FCHbb9nQlu9X4nywN
+         7FHqPrMpMDxaf0JGnGaMmrAPKqwEs6sMSq+Gzxehr1ABpe2nLDD4djDgeAP4CDN5jyTb
+         AvtGA5FkW9FdKF7XWN9cb8E7AiawWM27fr8nxSi8l3gdmyLG9tL3zpVgEV5Cgzku6Yw+
+         6u7Q==
+X-Gm-Message-State: AOAM531jn33WfCahqjEnXHKSOHvtuYJi0lJ3HePrQ0hZTbJ+hg5wuKpv
+        Tv7GgPEpZNh/Gg254OHVFkbopzp8QpRPUzvQ0iw=
+X-Google-Smtp-Source: ABdhPJyEyudScInc0S60opq+NvMGmlHm8D9K/F1nRpyYGiUvYDUeZhuXtfrmJwon8jAYMwgFPrdOaRFwyJxUlFc0ILI=
+X-Received: by 2002:a63:e50:: with SMTP id 16mr322795pgo.74.1611850683919;
+ Thu, 28 Jan 2021 08:18:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20210128122123.25341-1-nikita.shubin@maquefel.me>
-In-Reply-To: <20210128122123.25341-1-nikita.shubin@maquefel.me>
+References: <20210128122123.25341-1-nikita.shubin@maquefel.me> <20210128122123.25341-7-nikita.shubin@maquefel.me>
+In-Reply-To: <20210128122123.25341-7-nikita.shubin@maquefel.me>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 28 Jan 2021 18:15:45 +0200
-Message-ID: <CAHp75VeuKVwbgH1DBJ1-TxdNh8u4_3d0CUmabWRXq=90YDsqww@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] gpio: ep93xx: fixes series patch
+Date:   Thu, 28 Jan 2021 18:17:47 +0200
+Message-ID: <CAHp75Vcz0jYqVeCdE9xMYk6RECBASSsuk0ys9rRi7zs0L2JpqQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] gpio: ep93xx: refactor ep93xx_gpio_add_bank
 To:     Nikita Shubin <nikita.shubin@maquefel.me>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -63,15 +62,14 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Thu, Jan 28, 2021 at 2:21 PM Nikita Shubin <nikita.shubin@maquefel.me> wrote:
->
-> v2:
-> https://lore.kernel.org/linux-gpio/20210127104617.1173-1-nikita.shubin@maquefel.me/
->
-> v2->v3 changes
 
-I stopped reviewing at some point, b/c I have a feeling that I gave
-you tags (and others) against some patches and none of them has any.
-Am I missing something?
+> - replace plain numbers with girq->num_parents in devm_kcalloc
+
+devm_kcalloc()
+
+> - replace plain numbers with girq->num_parents for port F
+> - refactor i - 1 to i + 1 to make loop more readable
+> - combine getting IRQ's loop and setting handler's into single loop
 
 -- 
 With Best Regards,
