@@ -2,75 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08D95307A85
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jan 2021 17:18:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2157307A91
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jan 2021 17:21:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231603AbhA1QSq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Jan 2021 11:18:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38172 "EHLO
+        id S232446AbhA1QUh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Jan 2021 11:20:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232076AbhA1QSo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Jan 2021 11:18:44 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2CFC061573;
-        Thu, 28 Jan 2021 08:18:04 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id n10so4578351pgl.10;
-        Thu, 28 Jan 2021 08:18:04 -0800 (PST)
+        with ESMTP id S232331AbhA1QU2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Jan 2021 11:20:28 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B952AC061573;
+        Thu, 28 Jan 2021 08:19:47 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id o10so5452367wmc.1;
+        Thu, 28 Jan 2021 08:19:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6D+s1Wpr7yaiLzHkUhrsYSfAQmNRTVE7OsFOsBaTvrE=;
-        b=uD/2LJ9CSOpDfJMmIylD5MQ+S7a2TVf8up80ch46TmM5p1he8lrDGViC/0KIcch27M
-         dZirOCdBVL8JUjyTrBEu2Lwco2Cq9/3gdkYq6mtLBUbOWmFPqzdXNCFIpZW7nMtI3JaH
-         z9Yv1F2KzoMGIrpBOLO4OSsUQTK39jhorLxL1hJdhktx6hNTs17L2elXE2GdwvZHY6e7
-         TBdBid2gBgI7NhV+pc4IHy9R6/a2+NJzF4NUzhFrFrSPHrRjwk3XumIVwMup9TwtxeK3
-         SgCozZrd3iCSQli5AvbHEmJpu02l2SQvl0Skzo/iLGkxJPJL0PfkvCxWglcCINqLQjOi
-         OZXg==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=vnF/8n1joNx7ZvClg7mI0UIu1XccpzjX5uAACDp4lRU=;
+        b=sdCAOEFG4JHJZBMrUHhd3c9eVxJBPDjMe5gk0ezOJGkbrh9swpDyW6VO6/PQkBkv1E
+         KHeIEVwutZLuuBerq0xXP6x2QZRDRjuAW60a4OIe2ujBVbjteXwHu5ID3ssTf3oSSnWK
+         YnGIwCeSZWK2E8lgl5hWCsb/RYgZ8R+RjnxDPzOxFuEr7Ib6rLXYrRI+rZtw3hGoOugl
+         A8DVhpDp7kgyzKpVMP8dytOQchHBpAXWzqJX7P8IXgRFqqwxAhMJFiAZcsEcZicKtxpD
+         obuzBMk2ddb4nL23a6eqdTDzsNBIJuvNR1fPBrhX/aG9v9KqFngONHq6WZTHD+I9Nawn
+         5Ikg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6D+s1Wpr7yaiLzHkUhrsYSfAQmNRTVE7OsFOsBaTvrE=;
-        b=PfxCeiz71FeZ7cGC6wehi1ZB9DT8R8rthXYP4GUWacIS/Vw0Krg1kvxkXzfysKbQGY
-         38E0TBWeUjbVBoG4T+gJRykdGeH0EkPSyKAaVaMGpSgDY+0dNorzi9pPNSApo9R0MNjL
-         3Xav/siVL9MRih+R/w2JTtjiJvN3aEUeXhJ4M0gnF70kJUfqPC1FCHbb9nQlu9X4nywN
-         7FHqPrMpMDxaf0JGnGaMmrAPKqwEs6sMSq+Gzxehr1ABpe2nLDD4djDgeAP4CDN5jyTb
-         AvtGA5FkW9FdKF7XWN9cb8E7AiawWM27fr8nxSi8l3gdmyLG9tL3zpVgEV5Cgzku6Yw+
-         6u7Q==
-X-Gm-Message-State: AOAM531jn33WfCahqjEnXHKSOHvtuYJi0lJ3HePrQ0hZTbJ+hg5wuKpv
-        Tv7GgPEpZNh/Gg254OHVFkbopzp8QpRPUzvQ0iw=
-X-Google-Smtp-Source: ABdhPJyEyudScInc0S60opq+NvMGmlHm8D9K/F1nRpyYGiUvYDUeZhuXtfrmJwon8jAYMwgFPrdOaRFwyJxUlFc0ILI=
-X-Received: by 2002:a63:e50:: with SMTP id 16mr322795pgo.74.1611850683919;
- Thu, 28 Jan 2021 08:18:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20210128122123.25341-1-nikita.shubin@maquefel.me> <20210128122123.25341-7-nikita.shubin@maquefel.me>
-In-Reply-To: <20210128122123.25341-7-nikita.shubin@maquefel.me>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 28 Jan 2021 18:17:47 +0200
-Message-ID: <CAHp75Vcz0jYqVeCdE9xMYk6RECBASSsuk0ys9rRi7zs0L2JpqQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] gpio: ep93xx: refactor ep93xx_gpio_add_bank
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=vnF/8n1joNx7ZvClg7mI0UIu1XccpzjX5uAACDp4lRU=;
+        b=AFEXkukwO0GLn54zbAj6LH/MYgEdBsKGjzewdEXeHwlFN1gu4ZslpvuvXWTPeJsN2m
+         RIhN76K9ckjTO6EgBrl5dsz24pmBh0WB8fjfBsNuqDTMH/xBU+owb3GIm3F9LwVWC0+A
+         PyLtEFjocxF0cDZIwIn2vtN6NFG/J+3xfe1mt4F3ZF0e3j+Tzz/xY45EsSjwty9N1nuP
+         DAaGvOLsMmWqF8pEiINBuaToEe37ZXliiQ7cgGghsplPpGllvCGI2e+Z1zZyyP0YZdnN
+         8KhwW9zenjHo+2bjZBaKhD8SHWLa0POTVw9im0/eAEw8H/seW6WfZvB+sVb631UmhYMl
+         F2Gg==
+X-Gm-Message-State: AOAM531TwlWq/pp1STS6Bd6kJIkaSSaMi/B96tQ7I/dB9tNbe/mWyObG
+        EvR6rKNQC5qhwiTiV/YOSVo=
+X-Google-Smtp-Source: ABdhPJyO2/k4X024ZvXWDo1LFXX2pbu2yvZzgWV0d2SMNi8MpjCw0ZTODMvlwBsvDhgi/jEJoCLwkg==
+X-Received: by 2002:a05:600c:154f:: with SMTP id f15mr48443wmg.46.1611850786555;
+        Thu, 28 Jan 2021 08:19:46 -0800 (PST)
+Received: from [192.168.1.21] ([195.245.17.255])
+        by smtp.gmail.com with ESMTPSA id i6sm7552163wrs.71.2021.01.28.08.19.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Jan 2021 08:19:45 -0800 (PST)
+Message-ID: <a0c121fdfb2893ec89425534387212524e4ff7cf.camel@gmail.com>
+Subject: Re: [PATCH v3 1/7] gpio: gpio-ep93xx: fix BUG_ON port F usage
+From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nikita Shubin <nikita.shubin@maquefel.me>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 28 Jan 2021 17:19:45 +0100
+In-Reply-To: <CAHp75VfBb5+K9cSAzj9EBD+KtswkHSNMZWoCaU=bKvOO3fXRjw@mail.gmail.com>
+References: <20210128122123.25341-1-nikita.shubin@maquefel.me>
+         <20210128122123.25341-2-nikita.shubin@maquefel.me>
+         <CAHp75VfBb5+K9cSAzj9EBD+KtswkHSNMZWoCaU=bKvOO3fXRjw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 28, 2021 at 2:21 PM Nikita Shubin <nikita.shubin@maquefel.me> wrote:
+Hello Nikita,
 
-> - replace plain numbers with girq->num_parents in devm_kcalloc
+On Thu, 2021-01-28 at 18:11 +0200, Andy Shevchenko wrote:
+> > +/*
+> > + * F Port index in GPIOCHIP'S array is 5
+> > + * but we use index 2 for stored values and offsets
+> > + */
+> > +#define EP93XX_GPIO_F_PORT_INDEX 5
+> 
+> Hmm... Why not to use an array with holes instead.
+> 
+> ...
+> 
+> > +       if (port == EP93XX_GPIO_F_PORT_INDEX)
+> > +               port = 2;
+> 
+> Sorry, but I'm not in favour of this as it adds confusion.
+> See above for the potential way to solve.
 
-devm_kcalloc()
+well, I was thinking the same yesterday. It just adds another
+level on confusion into the code, which even the author got
+wrong :)
 
-> - replace plain numbers with girq->num_parents for port F
-> - refactor i - 1 to i + 1 to make loop more readable
-> - combine getting IRQ's loop and setting handler's into single loop
+Array with holes would be more obvious, but one can also embedd
+the necessary values into struct ep93xx_gpio_bank.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Alexander Sverdlin.
+
+
