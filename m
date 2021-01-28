@@ -2,91 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C54C5307046
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jan 2021 08:54:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB900307230
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jan 2021 10:02:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231371AbhA1Hx0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Jan 2021 02:53:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37262 "EHLO mail.kernel.org"
+        id S231733AbhA1JAM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Jan 2021 04:00:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231596AbhA1HwT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 28 Jan 2021 02:52:19 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 829B864DD1;
-        Thu, 28 Jan 2021 07:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1611820293;
-        bh=ZanzQmOBwTPZjYDebv8dSidjk8tn44gz015ev2aHnZQ=;
+        id S229709AbhA1JAL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 28 Jan 2021 04:00:11 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7EDCB64D9A;
+        Thu, 28 Jan 2021 09:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611824456;
+        bh=0L3aHlbV9lGw/pwOLtUtCbTsuwnYQQ6OL1z4Tf1UkSs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H4JGdZkbAR6twH2laZyDhCdTfwPaoEqYri29M22pc1WEMQUt9fLfXCpQ7WIPMQTIz
-         kpPEe/epF6WuWgjx0cszg5xvJzAyJVJ75rYBXRAkh+oAZegtd+irbqE4JAW+//x4hV
-         w64ZdysYXg72bNrYn8T8mQ185S9HOM4IrroC6BOg=
-Date:   Thu, 28 Jan 2021 08:51:29 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
+        b=kB1wCwOZLoPTen+92GJbcpkCz6Jti3sicvzQdRYpS5aL1gBN/XQAT6L7Dks/fNDUb
+         bbu8z/tbap7g7kAEy0m3cs+ttQaA+QgEETmvsPluXeW3EluF5clx7KNgoeiCrSp+nP
+         deWUfFXHvod5gsc7FMrd5SogzahQmdzIL8fRJqoOWkgzfcMlzPE64uBeWfmfNjJNSu
+         0MWRUIps9xo+VY70lp1I1RBTp56RF9VM8rvogU1e2mWIasogQwJqgIBOH2wf/dlxXT
+         bYtE9RKwJL4DcrkQvgIgVRVOZH9512UCEHxoUy4OwkB19nScMbJeuswWn9Aa/mTz0S
+         Lu1uXCa3/ZXTw==
+Date:   Thu, 28 Jan 2021 10:00:53 +0100
+From:   Wolfram Sang <wsa@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, andy@kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [libgpiod][PATCH 6/6] core: add the kernel uapi header to the
- repository
-Message-ID: <YBJtAeyNHMFVHQ3o@kroah.com>
-References: <CAHp75VfeO10DXc2nCRKP9=6uppJ28k36E8yr20+YCd0mKUGjWA@mail.gmail.com>
- <CAMRc=MevGmAMBK20O2BBmyD9NjCSpC9-O_j_0HM6DQV66rnA2Q@mail.gmail.com>
- <20210111144647.GY4077@smile.fi.intel.com>
- <CAMpxmJW=6YXgPBJ3=1sBbNAOWTV4idwHz-cWv+YborZ4hLtcKA@mail.gmail.com>
- <20210125055527.GA344851@sol>
- <CAMRc=Mc4gK6BXKV8-b9qBTgm8m5DqW35UPxPWn7PbfJ-8LB4Yw@mail.gmail.com>
- <YBBNSzKHYNXki6NY@kroah.com>
- <CAMRc=MeQ2gNgCEuf9apUgmzxeCUUPjD5oAChXXVOw=JmoqqaGA@mail.gmail.com>
- <YBFR3bwLyrc1a6Ln@kroah.com>
- <20210128032641.GA11655@sol>
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH v2 4/7] i2c: i2c-core-acpi: Add i2c_acpi_dev_name()
+Message-ID: <20210128090053.GE963@ninjato>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-5-djrscally@gmail.com>
+ <YAVSf7+iTPNYf5XS@pendragon.ideasonboard.com>
+ <CAJZ5v0hUELtKc9CK=z47XQvSAAx=wTWvoVwP-PaMqugaXaCgZQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dFWYt1i2NyOo1oI9"
 Content-Disposition: inline
-In-Reply-To: <20210128032641.GA11655@sol>
+In-Reply-To: <CAJZ5v0hUELtKc9CK=z47XQvSAAx=wTWvoVwP-PaMqugaXaCgZQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 28, 2021 at 11:26:41AM +0800, Kent Gibson wrote:
-> Bart and Dmitry: I submit that we are good to copy the headers into the
-> repositories, but we should take a few steps just to make clear that we
-> are in full compliance with the GPL v2.
-> 
-> Firstly, we are distributing the headers under Section 1 (distribution)
-> of the GPL, so we should keep the headers in a separate directory that
-> contains its own COPYING file as well as the GPL v2 and Linux syscall note
-> - unless they are already available elsewhere in the repo.
-> 
-> The headers must be copied verbatim so as to not trigger Section 2
-> (modification).  And it is probably good to include in the commit
-> comment what kernel version or commit they were drawn from so that can
-> be easily confirmed.
-> 
-> Section 3 still doesn't apply, as any resulting object code or
-> executables are no more a derived work due to the availability of the
-> header than they were previously.  And I don't think anyone is claiming
-> that the repo itself is a derived work - in this context it is just a
-> distribution medium.
-> 
-> The COPYING file, or equivalent, for the project should explicitly
-> exclude any claim on the kernel header directory to make clear we are
-> not trying to sublicense the headers as LGPL - which could breach
-> Section 4.
-> 
-> Other than those points, I don't see anywhere we may be in breach.
 
-That looks good, you should also consider following the REUSE
-specification:
-	https://reuse.software/
-which recommends using a LICENSES/ directory for the different licenses
-in your project and use SPDX lines at the top of your files to make
-everything explicit.  The `reuse lint` command line tool should give you
-lots of hints on good things to fix up in this area.
+--dFWYt1i2NyOo1oI9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Good luck!
 
-greg k-h
+> > There's a real danger of a memory leak, as the function name sounds very
+> > similar to dev_name() or acpi_dev_name() and those don't allocate
+> > memory. I'm not sure what a better name would be, but given that this
+> > function is only used in patch 6/7 and not in the I2C subsystem itself,
+> > I wonder if we should inline this kasprintf() call in the caller and
+> > drop this patch.
+>=20
+> IMO if this is a one-off usage, it's better to open-code it.
+
+Sounds reasonable to me, too.
+
+
+--dFWYt1i2NyOo1oI9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmASfUUACgkQFA3kzBSg
+KbY9PRAAjVQXWyde1sa4VM3SZZiem5T6eY2LSnbYh9L717+Npfw3qTdRvsWN0klU
+1+ZO5n3IkqvbY3/N70ONHrw1kvhC+u+8CvPMN+sBZqrCLApC0E1CEnL1WzqgjIRf
+7qpzTOv20TCb5REdvBj2FBPoCd3jdBWBfYUvR3SmbQBhSYo4m8EutoYiBw35cjUy
+P6lV52Z6bUb9KW+iUUNnqBNqGPyWN6sELoh9t4H8BvTfavaXUZjotFt00PdJV0Ya
+KBLfanATBa9iwH7BZr2jUNpgDZHMQHnHY/bmFvPFc7exd+trCSjJiFg/SxOWh9HV
+uUSg25rj699WMJq67QQleo1RVnTkM5uG3vtUa3cQssxp3fCsnvCNvY7xB24APHJx
+foJqDMCICM4YnUIkAOsIenwzxL3kptt5mD95qzRKUI8+ENY07QjQOEnp3BhLcJIQ
+vE0CVEGZ/nlhxciaXt+5KkOgDNkQ/zbazYSKhRJ0i7NtAGuL1ageey/x9b32+xi5
+zQcEChNhfWOVPdaW95jZRaM/hAHyRB/em35So7tmw3AllrUIWscXk22xS+o2N0Ur
+kTEK5JEUeXz3/oNcYIQSc+mClHINxq8k65Fy34bWBRv5ZFXOvpMMIR6Ayzzvj9Xd
+p8ZNIoPeRclQ6557C0nGGgiTo1+o7/YPQMo/J4utGGRoB9NhK18=
+=9VIP
+-----END PGP SIGNATURE-----
+
+--dFWYt1i2NyOo1oI9--
