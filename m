@@ -2,122 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E92D30986E
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Jan 2021 22:22:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96E0A309983
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Jan 2021 01:44:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232002AbhA3VVN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 Jan 2021 16:21:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40754 "EHLO
+        id S232280AbhAaAn5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 30 Jan 2021 19:43:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231997AbhA3VVM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Jan 2021 16:21:12 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83BB6C061573
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Jan 2021 13:20:32 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l5xfB-00088E-R7; Sat, 30 Jan 2021 22:20:13 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l5xf7-0004I4-Nd; Sat, 30 Jan 2021 22:20:09 +0100
-Date:   Sat, 30 Jan 2021 22:20:09 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S231923AbhAaAn4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Jan 2021 19:43:56 -0500
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85307C061573;
+        Sat, 30 Jan 2021 16:43:16 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id m6so9101397pfk.1;
+        Sat, 30 Jan 2021 16:43:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Bi+IsvsSXp0znUX7pYnup3aiWOEdAJ3KLmdVbOIabxQ=;
+        b=J9jHFxXGBJgjbToroef44LlnAzQD1QQ7lpDiqm9cbOf8XZhc7M2BaqLwTRP4ryGs3r
+         8OXEdXohWSG6xQ9JpiaZP9MmOEdYy5DYo/cthuejRkBKTDTthqOVRopkqb2QPC1VaszK
+         co9amzo8I3uvBvE3E3KLztQg0ZnZ61xSFicB9kfP27TppQ303oNdJrz7jqDYElmG9tFV
+         Y5i861nY/oNIs8jAqV9oFk1Pr0KvUyQV5RZXM2Zz1CWwQL5EJSBUmo3acyzcMvWCemH8
+         AebIjyr3IB3PpWXBjiCx6nli+lJWa5Pc8OkEfNdhXhcBHOJB6GjEP59X7G4FsBIFNIdx
+         dyVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Bi+IsvsSXp0znUX7pYnup3aiWOEdAJ3KLmdVbOIabxQ=;
+        b=PwtBGjNfz74WG7rc2jn4PC/zuTJdh8kkkFbQGPO4ZviOj/gwzoukvOmDUlTTrsVBJn
+         KZSoIdjcBaF9HlBO4oXhHinLtg5NgBwApkKqGwUj3xfOpHl1tNuHHH5McDTgi2k9RO/S
+         j6U/VlPGPn39TppCfPk00Pmwd46N/RKEihkgUnEkFuIh4Olu1DxhRTJBFek1SiNOn5J9
+         4arL2drQlKhgqiAwkyg5icubUpX51xsMJ1mOJncad3KoUb/VcJ+0qCZlowQp3I/NAq7n
+         AtRj1u4zuhd6lgHPWi/BCFa+UWWlhta3/yLhKB799mCPezQIcQM0CjCCnRD1mNJZJhWD
+         DTNw==
+X-Gm-Message-State: AOAM533LskO9qsAZdmRR2aa28zk5UEuDE2UoCmU/0g6Paa5NjJT/L0Xb
+        rsKkgoE0i5iNqcD+q9FdgjY=
+X-Google-Smtp-Source: ABdhPJzk8ZLXXQ4Kl3C8+a4c6WQGnQQI1UFvKx32TJ2QWTh8g8/RUkbw/Q4/ME0vHc06OHKjbMzbKQ==
+X-Received: by 2002:a63:7748:: with SMTP id s69mr10772576pgc.81.1612053796058;
+        Sat, 30 Jan 2021 16:43:16 -0800 (PST)
+Received: from sol (106-69-169-43.dyn.iinet.net.au. [106.69.169.43])
+        by smtp.gmail.com with ESMTPSA id q2sm11820333pfj.32.2021.01.30.16.43.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Jan 2021 16:43:15 -0800 (PST)
+Date:   Sun, 31 Jan 2021 08:43:08 +0800
+From:   Kent Gibson <warthog618@gmail.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Joel Becker <jlbec@evilplan.org>,
         Christoph Hellwig <hch@lst.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Jonathan Corbet <corbet@lwn.net>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 0/8] gpio: implement the configfs testing module
-Message-ID: <20210130212009.2uugdj6vmisegau2@pengutronix.de>
+Subject: Re: [PATCH 8/8] gpio: sim: new testing module
+Message-ID: <20210131004308.GA4687@sol>
 References: <20210129134624.9247-1-brgl@bgdev.pl>
+ <20210129134624.9247-9-brgl@bgdev.pl>
+ <YBQwUkQz3LrG5G4i@smile.fi.intel.com>
+ <CAMRc=MeSy4zWOAGxfoBih62WxAXuOLtkK3ROyt+4LuqLvDxtaQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rkbaj7v6xsniiasc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210129134624.9247-1-brgl@bgdev.pl>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <CAMRc=MeSy4zWOAGxfoBih62WxAXuOLtkK3ROyt+4LuqLvDxtaQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sat, Jan 30, 2021 at 09:37:55PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Jan 29, 2021 at 4:57 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Fri, Jan 29, 2021 at 02:46:24PM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ...
+> >
 
---rkbaj7v6xsniiasc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[snip]
 
-Hello,
+> > Honestly, I don't like the idea of Yet Another (custom) Parser in the kernel.
+> >
+> > Have you investigated existing parsers? We have cmdline.c, gpio-aggregator.c,
+> > etc. Besides the fact of test cases which are absent here. And who knows what
+> > we allow to be entered.
+> >
+> 
+> Yes, I looked all around the kernel to find something I could reuse
+> but failed to find anything useful for this particular purpose. If you
+> have something you could point me towards, I'm open to alternatives.
+> 
+> Once we agree on the form of the module, I'll port self-tests to using
+> it instead of gpio-mockup, so we'll have some tests in the tree.
+> 
 
-On Fri, Jan 29, 2021 at 02:46:16PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->=20
-> This series adds a new GPIO testing module based on configfs committable =
-items
-> and sysfs. The goal is to provide a testing driver that will be configura=
-ble
-> at runtime (won't need module reload) and easily extensible. The control =
-over
-> the attributes is also much more fine-grained than in gpio-mockup.
->=20
-> I am aware that Uwe submitted a virtual driver called gpio-simulator some=
- time
-> ago and I was against merging it as it wasn't much different from gpio-mo=
-ckup.
-> I would ideally want to have a single testing driver to maintain so I am
-> proposing this module as a replacement for gpio-mockup but since selftests
-> and libgpiod depend on it and it also has users in the community, we can't
-> outright remove it until everyone switched to the new interface. As for U=
-we's
-> idea for linking two simulated chips so that one controls the other - whi=
-le
-> I prefer to have an independent code path for controlling the lines (hence
-> the sysfs attributes), I'm open to implementing it in this new driver. It
-> should be much more feature friendly thanks to configfs than gpio-mockup.
+Given the existing selftests focus on testing the gpio-mockup itself, it
+would be more appropriate that you add separate tests for gpio-sim.
 
-Funny you still think about my simulator driver. I recently thought
-about reanimating it for my private use. The idea was to implement a
-rotary-encoder driver (that contrast to
-drivers/input/misc/rotary_encoder.c really implements an encoder and not
-a decoder). With the two linked chips I can plug
-drivers/input/misc/rotary_encoder.c on one side and my encoder on the
-other to test both drivers completely in software.
+As an end user I'm interested in the concrete example of driving gpio-sim
+that selftests would provide, so I'm looking forward to seeing that.
 
-I didn't look into your driver yet, but getting such a driver into
-mainline would be very welcome!
-
-I intend to look into your driver next week, but please don't hold back
-on merging for my feedback.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---rkbaj7v6xsniiasc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAVzYYACgkQwfwUeK3K
-7AnGTwf/esxm8sdTZ0MzfOs9NI5Q2UFGSbdA27kdJ2/CmyU1Sa2DjykILrrptESJ
-Autv9EHRhKgNLwhGFlIOHaSHA6mz5xQlD5k8jJ71hRt85fzcufOpgNqbxlGqm2HJ
-7jNcSwP9OYHRJLZ7Yd7cDm4T6S053+MAsz4RKexFJVizh1gDU9f3gKb0kLnuWim8
-0R518ZSG0FqQKQN2d5JQkAqEibh0E4dT8+Ba9LM3uuHyX/o1ReNGYfi2SGoSkqk5
-TCZlK5nFy5lUuqmn4yu2imh0QRoNQdkoEEQu2MlyN3OD+OyV4Ph4JAu4ogwMlzjy
-P/pcvJAW77SRp6iRc+1kMO5mJdfKtg==
-=l6+t
------END PGP SIGNATURE-----
-
---rkbaj7v6xsniiasc--
+Cheers,
+Kent.
