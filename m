@@ -2,82 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAB6E30A499
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Feb 2021 10:47:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66DAE30A53E
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Feb 2021 11:21:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232894AbhBAJqW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Feb 2021 04:46:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232879AbhBAJqQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Feb 2021 04:46:16 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ADBFC061788
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Feb 2021 01:45:28 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id s5so5189453edw.8
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Feb 2021 01:45:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9uABgpS7k+RTtvPAoMkAM0dxRvOCtHWBF9H6zn9nrBI=;
-        b=gv+wjo0fdOeJa1xZqyy9AJDjR1eYMvCS028em0KvhYq9PK3qkvslQ2sOx596g8hDF7
-         M9iTQoNu3dlXYS8dFdAhCDwUIN87j20Mf9ycUggQ3KPmx4YT/O/ypcVm8tKX6KqleQZL
-         G0HMOrdH4xaSl83SwKUDtAn/eCbZj42nKcVmUyO3r3RG+tJDTve5+cv2pVWKv4pPg2hy
-         cMBeTZOP8GBMQpzAx/c7d4MzEfTjsFXxxA/0VwNgNuTL8t1mHYB2N+YPXnYn/LMfncjF
-         AsIqyPQkLUdsAvg8lXmXZhI8TRBb1U3XNRjBPFOIvhuTMdushHWKufllnb4F+VPxNhlU
-         lhDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9uABgpS7k+RTtvPAoMkAM0dxRvOCtHWBF9H6zn9nrBI=;
-        b=qw9JXv6uzvlUSgPLxDaw9wfdBVHegBBsWXu0/9HjxO2qRvBKDoBu7onLTzrIkUJufe
-         7boTugJZ7yhUSRbI9vtB2t/JHPy0L3mV68bgGNnoc5orjH1qunmvQUfmQxW5NclR+v2j
-         eKw66jM2eAg0G/bvHjqq4IOetN78taUysZgMMCyX8KULjNCbh5JR+2BNsZUykKSJ9ECc
-         F+4oV40jt55ek1pqZus5B9Nxz8lREaXZx0WQ7UJGoAM4wRYuOm1cQpq74yTaqkq2yrT8
-         EV8SZsZSILMQMS5TyvB02yV09VtTsfMCaOw1W0sKK9Ck6NImpVWRFqDlxDP+eyPmIP80
-         RlQQ==
-X-Gm-Message-State: AOAM532tJZIYTh8dQf/nAPOe6Js6k7BxpG9KETUR372GiOrJnKsmiqUc
-        J3SGZOZQOFlKhJjGBPGnVdNmY/qvdFBYkzYSm0EzNA==
-X-Google-Smtp-Source: ABdhPJxTIMbi5fN6d5G6f7C/RF5lJIUqZs7nl9/d489pk63N4yH6j8rxUSH6QH/dN2bs17hHrjk3Cfa4vgWJccvN/QE=
-X-Received: by 2002:a05:6402:134b:: with SMTP id y11mr17732512edw.88.1612172727097;
- Mon, 01 Feb 2021 01:45:27 -0800 (PST)
+        id S232966AbhBAKV1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Feb 2021 05:21:27 -0500
+Received: from mga14.intel.com ([192.55.52.115]:28116 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232752AbhBAKVX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 1 Feb 2021 05:21:23 -0500
+IronPort-SDR: INRPGqexD9NLwoLsUxjkSbA7fMm4CfYOXYfDAmmo81TtqluJ0tjyfDHaJk4eowneEcQRnko2ny
+ Gwa5bvBjpCOA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9881"; a="179886442"
+X-IronPort-AV: E=Sophos;i="5.79,392,1602572400"; 
+   d="scan'208";a="179886442"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 02:19:32 -0800
+IronPort-SDR: ZvShelBViC+QoJw7CsRqYxq9B+j6EaXC5vdg3U9jWMc0d6I96+YSrWotYUxx5uRUqJP5pADF3K
+ 9xpu7huXTtuw==
+X-IronPort-AV: E=Sophos;i="5.79,392,1602572400"; 
+   d="scan'208";a="506784591"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 02:19:29 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l6WIo-0016BM-65; Mon, 01 Feb 2021 12:19:26 +0200
+Date:   Mon, 1 Feb 2021 12:19:26 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 5/8] lib: bitmap: remove the 'extern' keyword from
+ function declarations
+Message-ID: <YBfVrj1BPCo+YAvH@smile.fi.intel.com>
+References: <20210129134624.9247-1-brgl@bgdev.pl>
+ <20210129134624.9247-6-brgl@bgdev.pl>
+ <YBQw3+K/6GDPK5xa@smile.fi.intel.com>
+ <CAMRc=Md74KunuEvVsofn9cqcoKEqprepKadPdZA+JV_GMH7X7g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210127000303.436595-1-drew@beagleboard.org> <20210127000303.436595-2-drew@beagleboard.org>
-In-Reply-To: <20210127000303.436595-2-drew@beagleboard.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 1 Feb 2021 10:45:15 +0100
-Message-ID: <CAMpxmJWHoY_ij4fS-6vYigzqLxCEWBvY=AB6GK1jVM9oMub7Ug@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: am335x-boneblack.dts: unique gpio-line-names
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Benoit Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Md74KunuEvVsofn9cqcoKEqprepKadPdZA+JV_GMH7X7g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 27, 2021 at 1:05 AM Drew Fustini <drew@beagleboard.org> wrote:
->
-> Based on linux-gpio discussion [1], it is best practice to make the
-> gpio-line-names unique. Generic names like "[ethernet]" are replaced
-> with the name of the unique signal on the AM3358 SoC ball corresponding
-> to the gpio line. "[NC]" is also renamed to the standard "NC" name to
-> represent "not connected".
->
-> [1] https://lore.kernel.org/linux-gpio/20201216195357.GA2583366@x1/
->
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
+On Sat, Jan 30, 2021 at 09:25:08PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Jan 29, 2021 at 4:59 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Fri, Jan 29, 2021 at 02:46:21PM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > The 'extern' keyword doesn't have any benefits in header files. Remove it.
+> >
+> > > +int __bitmap_equal(const unsigned long *bitmap1,
+> > > +                const unsigned long *bitmap2, unsigned int nbits);
+> >
+> > Why not
+> >
+> > int __bitmap_equal(const unsigned long *bitmap1, const unsigned long *bitmap2,
+> >                    unsigned int nbits);
+> >
+> > and so on?
+> >
+> > It's even in 80 limit.
+> >
+> 
+> I feel like this is purely a matter of taste. No rules define exactly
+> how the lines should be broken. I prefer the longer part to be below,
+> it just looks better to my eyes.
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+In above case it's even logically better to split as I proposed.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
