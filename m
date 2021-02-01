@@ -2,131 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22A8C30A8CA
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Feb 2021 14:32:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCAF130ABE9
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Feb 2021 16:51:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231478AbhBANcu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Feb 2021 08:32:50 -0500
-Received: from mga01.intel.com ([192.55.52.88]:27060 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231653AbhBANct (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 1 Feb 2021 08:32:49 -0500
-IronPort-SDR: VL4isOO8cYfueigfXzCozKqN+7mgRq5dahLvI3v7APfwQ5XzRN9eO503NI0xdsuzDUUKr3AXJo
- M56u98Fw7wwg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9881"; a="199577187"
-X-IronPort-AV: E=Sophos;i="5.79,392,1602572400"; 
-   d="scan'208";a="199577187"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 05:31:02 -0800
-IronPort-SDR: H9In4iRwQzn5oMIqePm/36S4CwyxKYZNadtrxiGynVPKXGEPSjyIsDuJxZiYM0s11xrfheEAgh
- VrenEZ1iqVSg==
-X-IronPort-AV: E=Sophos;i="5.79,392,1602572400"; 
-   d="scan'208";a="412420491"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 05:30:59 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1l6ZI7-0018ma-SC; Mon, 01 Feb 2021 15:30:55 +0200
-Date:   Mon, 1 Feb 2021 15:30:55 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 8/8] gpio: sim: new testing module
-Message-ID: <YBgCj3SK5J7KIOnC@smile.fi.intel.com>
-References: <20210129134624.9247-1-brgl@bgdev.pl>
- <20210129134624.9247-9-brgl@bgdev.pl>
- <YBQwUkQz3LrG5G4i@smile.fi.intel.com>
- <CAMRc=MeSy4zWOAGxfoBih62WxAXuOLtkK3ROyt+4LuqLvDxtaQ@mail.gmail.com>
- <YBfX38JBa0psBizQ@smile.fi.intel.com>
- <CAMRc=Mfgw5oA-TA2PN-Z+ape0POAtLwVeDJnzH1iuzKw5wYQ5Q@mail.gmail.com>
- <YBf4zjo7JJaw5iu1@smile.fi.intel.com>
- <CAMRc=MfzxmE-+SSOp6HoV1i7hZ3dNgGgrQCeDjUUkbeXJFOhzw@mail.gmail.com>
+        id S231532AbhBAPvF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Feb 2021 10:51:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231556AbhBAPu6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Feb 2021 10:50:58 -0500
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44464C061573
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Feb 2021 07:50:10 -0800 (PST)
+Received: by mail-ej1-x630.google.com with SMTP id a9so6735635ejr.2
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Feb 2021 07:50:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=umfeuXW08c1qiq1OJKFy/yOM2bFxEDQdo0ZTFrpR6VM=;
+        b=X55wTf8G8OwgkjiABiwOVZmZuE1SSTejF01oX9CAb9n3QEZi3TNqI7CwHyRJVhrEFN
+         GNGjSDM9cLnmzD3Ljm236PQMaCf7WUUu5qPVPIdHP6adoZqpKRYfk09ezhm8wQnU9pjs
+         VmPIkmA8qM9eNVcqZfM14QUMGgmY5jV8xvSfhtWtmZPg/BQEuVXDFurbNT/YKXcdCFrk
+         OS6FVb8PGTypAwqVecLQBN5X7A+SIQ7IHg/YOia0/iHGCHYs2KAQQgyWe5q84ZBUFijc
+         /9mn8Z0960EE4ZxuyuzhI8Xy9EtxIJ2bRESkF0z2jtKJJpmT5ywjnHH+IBzTS2wbzBOj
+         dZ7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=umfeuXW08c1qiq1OJKFy/yOM2bFxEDQdo0ZTFrpR6VM=;
+        b=H//TAalqRZ1LEIvRTEj5M7rEVrVLR814Ow+/V43dlQHxhZVTBzaeN69yvbGserW2nE
+         6UAB1oiF9ZhlRow9XrV0jD+cPyMJPhM8PfuMBPMRoqW1+s2Tu09bOFfWaOlP9/qrvyNd
+         12S6RjS0MXcpfaFrDZDWFEoaypLo56uR9m8h3j7FETM3KL1R1LYnypr9SbVvQwbBZjI8
+         vWTprGV8h3+uJKy/jW0ZazkWh713qK/jjtaI65RQWMP3eQK97/v5wZ8yzjDzWB6Zhluw
+         RZDKVN4qSSivmLlE0C4z+v4ROqfiw2sRUPiYeqrO6k0J5bfJzvs7mZtvKzIa6B1IMsx6
+         8jAQ==
+X-Gm-Message-State: AOAM531vLIcQLjDQyirLzw6FdRdkYXmb1mOG01fZwg2L9ajoYpBBpNpf
+        2+AdMGZfHb95rrutTVWRHpcipUyoIlqxOQQWpMv6EQ==
+X-Google-Smtp-Source: ABdhPJyqX+cSxuF/Ai9y1AvPhH+Cl3I3e5ctWQcw5mGfTYM4iIFkJfgPLPPov5Wrc5TyEA/JuJlMiM80zHHiXTCgGpI=
+X-Received: by 2002:a17:906:19c3:: with SMTP id h3mr17993759ejd.429.1612194608986;
+ Mon, 01 Feb 2021 07:50:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfzxmE-+SSOp6HoV1i7hZ3dNgGgrQCeDjUUkbeXJFOhzw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210129081917.1808218-1-quanyang.wang@windriver.com>
+ <CAHp75VemJWQDKFFrrCKWnUGHFiPhuh=4Aqhn8T6qF5yuMOCOKg@mail.gmail.com> <02e614e9-fe2f-d7b2-6c47-2431475780ed@windriver.com>
+In-Reply-To: <02e614e9-fe2f-d7b2-6c47-2431475780ed@windriver.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 1 Feb 2021 16:49:58 +0100
+Message-ID: <CAMpxmJWNJ3MVT58nKhkzNDtr39Tr7xPTSKvmcisKY9OBVg7wzQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: free device name on error path to fix kmemleak
+To:     "quanyang.wang" <quanyang.wang@windriver.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 01, 2021 at 01:53:16PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Feb 1, 2021 at 1:49 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Feb 01, 2021 at 11:59:31AM +0100, Bartosz Golaszewski wrote:
-> > > On Mon, Feb 1, 2021 at 11:28 AM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Sat, Jan 30, 2021 at 09:37:55PM +0100, Bartosz Golaszewski wrote:
-> > > > > On Fri, Jan 29, 2021 at 4:57 PM Andy Shevchenko
-> > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > On Fri, Jan 29, 2021 at 02:46:24PM +0100, Bartosz Golaszewski wrote:
-
-...
-
-> > > > > > > +struct gpio_sim_chip_config {
-> > > > > > > +     struct config_item item;
-> > > > > > > +
-> > > > > > > +     /*
-> > > > > > > +      * If pdev is NULL, the item is 'pending' (waiting for configuration).
-> > > > > > > +      * Once the pointer is assigned, the device has been created and the
-> > > > > > > +      * item is 'live'.
-> > > > > > > +      */
-> > > > > > > +     struct platform_device *pdev;
-> > > > > >
-> > > > > > Are you sure
-> > > > > >
-> > > > > >         struct device *dev;
-> > > > > >
-> > > > > > is not sufficient?
-> > > > > >
-> > > > >
-> > > > > It may be but I really prefer those simulated devices to be on the platform bus.
-> > > >
-> > > > My point here is that there is no need to keep specific bus devices type,
-> > > > because you may easily derive it from the struct device pointer. Basically if
-> > > > you are almost using struct device in your code (seems to me the case), you
-> > > > won't need to carry bus specific one and dereference it each time.
-> > >
-> > > But don't we need a bus to even register a device? I haven't checked
-> > > in a long time but IIRC it's mandatory.
-> > >
-> > > Let me give you a different argument - the platform device offers a
-> > > very simple API for registering devices with properties being
-> > > duplicated behind the scenes etc. It seems to me that registering a
-> > > bare struct device * would take more boiler-plate code for not much
-> > > gain.
+On Sat, Jan 30, 2021 at 4:45 AM quanyang.wang
+<quanyang.wang@windriver.com> wrote:
+>
+> Hi Andy,
+>
+> On 1/30/21 1:26 AM, Andy Shevchenko wrote:
+> > On Fri, Jan 29, 2021 at 2:01 PM <quanyang.wang@windriver.com> wrote:
+> >> From: Quanyang Wang <quanyang.wang@windriver.com>
+> >>
+> >> In gpiochip_add_data_with_key, we should check the return value of
+> >> dev_set_name to ensure that device name is allocated successfully
+> >> and then add a label on the error path to free device name to fix
+> >> kmemleak as below:
+> > Thanks for the report.
+> > Unfortunately...
 > >
-> > Yes, I'm not objecting the platform bus choice. I'm objecting the keeping of
-> > the pointer to the bus specific structure.
+> >> +       ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
+> >> +       if (ret)
+> >> +               goto err_free_ida;
+> > ...
 > >
-> > There are helpers like to_platform_device() which make the bus specific
-> > pointers go away from the structures and easier code when you use exactly
-> > pointer to struct device rather than bus specific one.
+> >> +err_free_dev_name:
+> >> +       kfree(dev_name(&gdev->dev));
+> > ...this approach seems to  create a possible double free if I'm not mistaken.
+> Thanks for your comment.  I didn't catch the double free. Would you
+> please point it out?
 > >
-> 
-> Ok I get it. We almost never dereference it though. We do it in probe,
-> but there's no way around it. In sysfs callbacks we already get a
-> pointer to struct device. And when unregistering the platform device,
-> we need to pass it as struct platform_device anyway. I don't see any
-> gain from that and would prefer to keep it as is.
+> > The idea is that device name should be cleaned in kobject ->release()
+> > callback when device is put.
+>
+> Yes, the device name should be freed by calling put_device(&gdev->dev).
+> But int gpiochip_add_data_with_key,
+>
+> when running dev_set_name, "gdev->dev.release" hasn't been installed
+> until in the tail of gpiochip_add_data_with_key.
+>
+> So we couldn't call put_device here.
+>
+> Any suggestion is much appreciated.
+>
+> Thanks,
+>
+> Quanyang
+>
+> > Can you elaborate?
+> >
 
-It's purely trade off, if you have more *dev in use, better to use *dev, if
-*pdev, then use it, although my practice shows that in most cases keeping bus
-specific pointer is an overkill.
+Andy,
 
--- 
-With Best Regards,
-Andy Shevchenko
+gdev->dev.release is assigned as the very last step in
+gpiochip_add_data_with_key() so the patch looks correct to me. Do you
+still have objections? Maybe I'm not seeing something.
 
-
+Bart
