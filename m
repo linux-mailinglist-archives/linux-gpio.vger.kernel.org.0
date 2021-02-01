@@ -2,111 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FDD830A373
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Feb 2021 09:40:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6703F30A3E6
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Feb 2021 10:00:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbhBAIjP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Feb 2021 03:39:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37512 "EHLO
+        id S232482AbhBAI7s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Feb 2021 03:59:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232285AbhBAIjG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Feb 2021 03:39:06 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65FA9C0613ED
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Feb 2021 00:38:05 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id b9so3414881ejy.12
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Feb 2021 00:38:05 -0800 (PST)
+        with ESMTP id S232512AbhBAI7r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Feb 2021 03:59:47 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F89C061573
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Feb 2021 00:59:07 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id s11so17943581edd.5
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Feb 2021 00:59:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=z4AuE6zxjnO1SI9ppd5bfchNPmK3baNkX/gyPe+l0t8=;
-        b=kCyNznqU+jdacM7Tug3g2mt986OIGwhThXmFdCnBI5qvL7bKM0q4Ue4w33dvry2Nfg
-         BXAOVMrP8rpJ8JjScqAN/7PBO8mvhyP0pBwMr/d+fupexWDNqfFcZvC8GI/yRY8dV++t
-         rU1epvmkKxi3+FCTCONM/tSZE8Z85GGn6xwDdwvdAEX+uB5Del88TU5AolPYq6bZlD6i
-         /irA7W60+faSJVy3yuvhPdkFqBkmr2g/k/Mv1R2PhlBAWIfMWzRLle196mjwzbztwmpU
-         Wx2k4ajd+LAFv7YufsWTAdDV4ywpoS4iqi6G2Kwxv0F1orO3G9NJZLBB+zj+nu3MlOBK
-         K1jQ==
+        bh=YO7mBFE+tnPFG3MuqP+RM+WeWF+bBTQ2zr7iiZtekbQ=;
+        b=RSP/ixQYEtW3D0MCcu+tNTgMGsf2IwC2u33UCCMgjKlXvTI4wzttUmK6LoKgsojdIm
+         bm0XLDdxE/xjRG3ZGUXzsWz2S5U2EfjqVqCYP4AwUV/6XCL/WDIKavosiRMHNND1NZSB
+         dW5ErpSx/7KGPHwQTE3mnVHWHe3eHAbfl0ZQV3i+wQCxgO7f/qq/aIv67gN1T54Ua0ge
+         PIMJLSbDPtpxEPYDwTlajukWWE4zyzSY9FnG+TjfTJAb2KgnSUzpyEWW8yj437Xk7KT8
+         a2LJqyRk4i/DN0vRWAQi8fAXl9Kh2bxbaoWUsuUCkzEGGNwTsuhT8240foGgp6Gilk3D
+         kThg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=z4AuE6zxjnO1SI9ppd5bfchNPmK3baNkX/gyPe+l0t8=;
-        b=HkDlX9/rpFXVQOuRZwfnwpUmdwmCQ/HxdNt7fBKgj9E/MkXK+ZSOCWTT5qWAIS0XiP
-         +V5XsSm0B24PDA4geyd3HuFh5hDxwykk8OMNjZ3BuYD3bGhXuFozCGmyEAZ2EsO8Rg0v
-         bvNDRyFNdgBpjTZHyr6m5jP4nXVkJER8XWLZx/vL/9WsyfAj+TQ4KFl/hHa9sm6YEsrn
-         LNrYL7csbynE7/vsLZuyKWlSo8Fu+sD/93eN5fvc1NjCW9AT5F/sBUETPYHx3prH5+sF
-         J3HjHaA7TFlM0OJcTvTVvwxFb8kzHpLXuz5L8FgPOaD972o33d2TxC+2vSor7uMgfiYn
-         Eg3Q==
-X-Gm-Message-State: AOAM531o+Yey8R/u7ttkPcalIdsYnhkfDooWN96oFMUKGCMtnCnR+x8+
-        q5K8l8RG3990ImF/w1z4sn3RML0eCksmFncM86wJQA==
-X-Google-Smtp-Source: ABdhPJw7iZgXyHCD35LZFETL5VROJDAs+q4uynErDBWz1W4mY47jjlfbaQN0o2fztKMogr1ympEDX0yMLs5fnR2rmu0=
-X-Received: by 2002:a17:906:4707:: with SMTP id y7mr4854532ejq.445.1612168684094;
- Mon, 01 Feb 2021 00:38:04 -0800 (PST)
+        bh=YO7mBFE+tnPFG3MuqP+RM+WeWF+bBTQ2zr7iiZtekbQ=;
+        b=Yr7hbay0je1w4Ig/0FGvfDBB8pJrxAvfTqJg+i6fDNgitPe8LdI92D5/BwKRRuh2OT
+         DR6qMnhFSMLBdp6t+qHIDHOjtNSVX7v4aCLpFpPxzPC3wQT8TfVc4HOr6aruFXvjZ7vs
+         dGfFcOE8nkIyWzMG8Esri3goYKGSakdDoMC4tX5wOFKWYf2K0ZqFMTVVzaV+QeKsJD1T
+         CN5Pex1Pdksmi0wPu0+MEIJgCocfuBvs/Lx+jelb7a4aHo/RjcCZAS5aEnLcU9WDCsEt
+         R7ijkBnzbTRzNd+KGq9tLEaMv4uI9a4HsyDJAmUhJ4MVBlX+ONUG0Gs0oTAJSUAlMC/r
+         i91A==
+X-Gm-Message-State: AOAM5311L6Db14WQULNSyzXDMG6BUgtPYeFRS7amR+k12t0px9uoXgvj
+        TSWbOWB6iVs8ka+ws2SwJlS6pTXW90AdHO6c6GZycvD+cCw=
+X-Google-Smtp-Source: ABdhPJxsUimNM1ukmldmIBP8S69QEICasyFTYbyT1ZQ+7qzmjRxlGlzUAQrBe0QQu1AvqU/n4owlss0KVc9KEFXpxPo=
+X-Received: by 2002:a50:b742:: with SMTP id g60mr17477914ede.113.1612169945982;
+ Mon, 01 Feb 2021 00:59:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20210129134624.9247-1-brgl@bgdev.pl> <20210129134624.9247-9-brgl@bgdev.pl>
- <YBQwUkQz3LrG5G4i@smile.fi.intel.com> <CAMRc=MeSy4zWOAGxfoBih62WxAXuOLtkK3ROyt+4LuqLvDxtaQ@mail.gmail.com>
- <20210131004308.GA4687@sol>
-In-Reply-To: <20210131004308.GA4687@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 1 Feb 2021 09:37:53 +0100
-Message-ID: <CAMRc=Me+Cg1WdV4eaggigBy4ZtnOLmaQ_c34kKv-iWU6Qtg9uQ@mail.gmail.com>
-Subject: Re: [PATCH 8/8] gpio: sim: new testing module
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <20210105105914.13172-1-wsa+renesas@sang-engineering.com>
+ <CAMuHMdUT8CEyJ1ERmLr443SuZgemFF40cDviSGwhYM7ZnN_b_g@mail.gmail.com> <20210127103919.GC928@ninjato>
+In-Reply-To: <20210127103919.GC928@ninjato>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 1 Feb 2021 09:58:55 +0100
+Message-ID: <CAMpxmJWKEHsdHAnQt-ozVPHDcjSPrTo3c7D8gGFiPvwrA8TzwQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpiolib: remove shadowed variable
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 31, 2021 at 1:43 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Wed, Jan 27, 2021 at 11:39 AM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
 >
-> On Sat, Jan 30, 2021 at 09:37:55PM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Jan 29, 2021 at 4:57 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
+> On Tue, Jan 05, 2021 at 12:14:34PM +0100, Geert Uytterhoeven wrote:
+> > On Tue, Jan 5, 2021 at 12:00 PM Wolfram Sang
+> > <wsa+renesas@sang-engineering.com> wrote:
+> > > After refactoring, we had two variables for the same thing. Remove the
+> > > second declaration, one is enough here. Found by cppcheck.
 > > >
-> > > On Fri, Jan 29, 2021 at 02:46:24PM +0100, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > ...
+> > > drivers/gpio/gpiolib.c:2551:17: warning: Local variable 'ret' shadows outer variable [shadowVariable]
 > > >
->
-> [snip]
->
-> > > Honestly, I don't like the idea of Yet Another (custom) Parser in the kernel.
-> > >
-> > > Have you investigated existing parsers? We have cmdline.c, gpio-aggregator.c,
-> > > etc. Besides the fact of test cases which are absent here. And who knows what
-> > > we allow to be entered.
-> > >
+> > > Fixes: d377f56f34f5 ("gpio: gpiolib: Normalize return code variable name")
+> > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > >
-> > Yes, I looked all around the kernel to find something I could reuse
-> > but failed to find anything useful for this particular purpose. If you
-> > have something you could point me towards, I'm open to alternatives.
-> >
-> > Once we agree on the form of the module, I'll port self-tests to using
-> > it instead of gpio-mockup, so we'll have some tests in the tree.
-> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
-> Given the existing selftests focus on testing the gpio-mockup itself, it
-> would be more appropriate that you add separate tests for gpio-sim.
+> Ccing Linus & Bartosz
 >
-> As an end user I'm interested in the concrete example of driving gpio-sim
-> that selftests would provide, so I'm looking forward to seeing that.
->
-> Cheers,
-> Kent.
 
-Makes sense, I'll add tests in v2.
+For some reason this is not on patchwork and I also don't have it in
+my inbox, can you resend, please?
 
-Bartosz
+Bart
