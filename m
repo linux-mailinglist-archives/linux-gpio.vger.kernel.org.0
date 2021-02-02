@@ -2,165 +2,248 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24E7730BAC5
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Feb 2021 10:18:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C43330BB9C
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Feb 2021 11:00:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232964AbhBBJRz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Feb 2021 04:17:55 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:41337 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232464AbhBBJQ6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Feb 2021 04:16:58 -0500
-Received: by mail-il1-f200.google.com with SMTP id d11so4931906ilu.8
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Feb 2021 01:16:42 -0800 (PST)
+        id S231424AbhBBJ7H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Feb 2021 04:59:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231139AbhBBJ7B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Feb 2021 04:59:01 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24DA2C061573;
+        Tue,  2 Feb 2021 01:58:20 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id e15so1711501wme.0;
+        Tue, 02 Feb 2021 01:58:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aRWlB17fgJ7FBH80ZaL2irHbFGq9l/cSPpFGGk65Sp0=;
+        b=jr8Y7EVTubO4xkazVVobZAPzZmg2jsav0Qka/39DaINvgiuxy4NV2/s/+++Qf9qdRg
+         a/whI2ECcaMWwxnNQybb2z7q6X/qeI4wVdaTJtkZKYEihuu4h+NP567Ok/H2+JD/5dhS
+         EuZAQwvZxMIMyO4tZ5TiXJpqVBXAS8Y9qw+SIAIZZTnvvIUyfqHNT/O6IgB4URn6fmeL
+         DMo5PDBVAI+hf5gb+kIdrMeNgDvfCkDSCdIzpu4ZaJWUXb84Nleks/nFL7gEffMqYr7b
+         kLp51qp05OOClLpQR9NvyRaosH6kyPktIroXbKpr+/cJxRfN671HjNTbm9PoNdy6xm38
+         QFSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bZ0yFA7nEfPK6NHzUikcevfhZbnqWxsxbvcAiDCsbi0=;
-        b=hV8hrGhmXSGCBbz1pIt/7GNKxpzjrdlE5m0rNalinN4DjPx2BxGdmZfz8e1d9xAMQT
-         VHh9VKbscpkLGiak1l87nxhhl5KJ2P5vFYVQL02xQmHyGk54ZLDUYkIk9zrMD6niwPVf
-         UaW6Bh7lb1F+6mmqZxOeJiROHfpIy1BZMPHxPQtVx2T/XAMB7bbUMKSlXPy4/1XjVJpp
-         9kmpiF4u2ZAWqSjEb3Q7dxkR7TmggWCvREi8aOPjGVW4cflqEEeVr4yJJzmXbze9uaOw
-         w60lDszaDrKSqMhOS5cqWseaJ7P7Le3guOgIeHGrL/jFD7caNZUnYPtZaeuiMKEMh/cT
-         ujbQ==
-X-Gm-Message-State: AOAM530+iQxB+1W97Odz1jDHSmIpSyps/Bg7PNyPqFHUUQmF1BFyvOVG
-        eLkqZfS3QYCYvPeBKoanxgbVML+PEJDAwBrW0xEEtGPidRqx
-X-Google-Smtp-Source: ABdhPJzlD2KJ07MPrKtmsN3QsxO0afv6dZVBaa0wYffb0aRCP1FGxkBupk3vERW6FAFNs6iurugpZsbwSDBNJdW9q+J435Ahcy8T
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aRWlB17fgJ7FBH80ZaL2irHbFGq9l/cSPpFGGk65Sp0=;
+        b=E3dhDC3G/NueOX1NJSK2qhx+Chqb9UZgPeSwj6R3nSCWnPToLWC8aTb1bwI/hz1TxO
+         lPV90Wkn2kvCwuxhuhDvjDqvjG+puPK/djgfUAqpjLWjhyDIMo+qgUJT+FdR+RdB9KMS
+         K8MtxQSDmqwgJ3m5hihBOx53C/0oUyCC8xvmxDfCBGPoQZHZI1uva03h/KC03bqmkS+i
+         94MGF6XB6NAZohv0u6qLpqTd7nQ8o7G/8rWpx9lDtGCJHsWw52kOHZDRTnQCBkyrJttr
+         i1rIfZPdhIT/FIxswPBuZEr8EzS9TvVaJmOkOeSTd+AQq+M/DidFKvrOm5zEzyueODec
+         tRAg==
+X-Gm-Message-State: AOAM532DyRuw3pWmbRAr5HJ8Qr4Coc+xjORdlFQyRu4xoDGIRcI+nbtC
+        dn4AoTCszDu4eP/cc6+EdiA=
+X-Google-Smtp-Source: ABdhPJzExWAL1lD8x9TqPU/EeGYBZQ9l6JLXhM07AU/7P3U6pjBm3uQII891MxzVZ/yfRYSAsOmKQA==
+X-Received: by 2002:a1c:c356:: with SMTP id t83mr1417532wmf.99.1612259898784;
+        Tue, 02 Feb 2021 01:58:18 -0800 (PST)
+Received: from [192.168.1.211] ([2.31.224.123])
+        by smtp.gmail.com with ESMTPSA id e16sm30913024wrp.24.2021.02.02.01.58.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Feb 2021 01:58:18 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] acpi: utils: Add function to fetch dependent
+ acpi_devices
+From:   Daniel Scally <djrscally@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, andy@kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-3-djrscally@gmail.com>
+ <CAJZ5v0gVQsZ4rxXW8uMidW9zfY_S50zpfrL-Gq0J3Z4-qqBiww@mail.gmail.com>
+ <b381b48e-1bf2-f3e7-10a6-e51cd261f43c@gmail.com>
+ <CAJZ5v0iU2m4Hs6APuauQ645DwbjYaB8nJFjYH0+7yQnR-FPZBQ@mail.gmail.com>
+ <e2d7e5e9-920f-7227-76a6-b166e30e11e5@gmail.com>
+ <CAJZ5v0gg5oXG3yOO9iDvPKSsadYrFojW6JcKfZcQbFFpO78zAQ@mail.gmail.com>
+ <85ccf00d-7c04-b1da-a4bc-82c805df69c9@gmail.com>
+ <CAJZ5v0jO9O1zhBMNRNB5kRt1o86BTjr1kRuFUe=nNVTDwBQhEg@mail.gmail.com>
+ <0fac24d2-e8fc-7dc8-0f2f-44c7aadb1daf@gmail.com>
+ <CAJZ5v0jVxMMGh6k-vXeBRsCtD0L14poNUrg4kZOpCfOz2sZGZQ@mail.gmail.com>
+ <ee8f6b58-55c8-e0a0-c161-bdef361f9e0a@gmail.com>
+Message-ID: <d9ec0439-4323-51a2-70e7-c258fe63cd86@gmail.com>
+Date:   Tue, 2 Feb 2021 09:58:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1541:: with SMTP id h1mr6736936iow.171.1612257376667;
- Tue, 02 Feb 2021 01:16:16 -0800 (PST)
-Date:   Tue, 02 Feb 2021 01:16:16 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000390af005ba56ec0f@google.com>
-Subject: general protection fault in put_device
-From:   syzbot <syzbot+3512de0f935d494a45a6@syzkaller.appspotmail.com>
-To:     bgolaszewski@baylibre.com, gregkh@linuxfoundation.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, saravanak@google.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ee8f6b58-55c8-e0a0-c161-bdef361f9e0a@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+Hi Rafael
 
-syzbot found the following issue on:
+On 21/01/2021 21:06, Daniel Scally wrote:
+> 
+> On 21/01/2021 18:08, Rafael J. Wysocki wrote:
+>> On Thu, Jan 21, 2021 at 5:34 PM Daniel Scally <djrscally@gmail.com> wrote:
+>>>
+>>> On 21/01/2021 14:39, Rafael J. Wysocki wrote:
+>>>> On Thu, Jan 21, 2021 at 1:04 PM Daniel Scally <djrscally@gmail.com> wrote:
+>>>>> On 21/01/2021 11:58, Rafael J. Wysocki wrote:
+>>>>>> On Thu, Jan 21, 2021 at 10:47 AM Daniel Scally <djrscally@gmail.com> wrote:
+>>>>>>> Hi Rafael
+>>>>>>>
+>>>>>>> On 19/01/2021 13:15, Rafael J. Wysocki wrote:
+>>>>>>>> On Mon, Jan 18, 2021 at 9:51 PM Daniel Scally <djrscally@gmail.com> wrote:
+>>>>>>>>> On 18/01/2021 16:14, Rafael J. Wysocki wrote:
+>>>>>>>>>> On Mon, Jan 18, 2021 at 1:37 AM Daniel Scally <djrscally@gmail.com> wrote:
+>>>>>>>>>>> In some ACPI tables we encounter, devices use the _DEP method to assert
+>>>>>>>>>>> a dependence on other ACPI devices as opposed to the OpRegions that the
+>>>>>>>>>>> specification intends. We need to be able to find those devices "from"
+>>>>>>>>>>> the dependee, so add a function to parse all ACPI Devices and check if
+>>>>>>>>>>> the include the handle of the dependee device in their _DEP buffer.
+>>>>>>>>>> What exactly do you need this for?
+>>>>>>>>> So, in our DSDT we have devices with _HID INT3472, plus sensors which
+>>>>>>>>> refer to those INT3472's in their _DEP method. The driver binds to the
+>>>>>>>>> INT3472 device, we need to find the sensors dependent on them.
+>>>>>>>>>
+>>>>>>>> Well, this is an interesting concept. :-)
+>>>>>>>>
+>>>>>>>> Why does _DEP need to be used for that?  Isn't there any other way to
+>>>>>>>> look up the dependent sensors?
+>>>>>>>>
+>>>>>>>>>> Would it be practical to look up the suppliers in acpi_dep_list instead?
+>>>>>>>>>>
+>>>>>>>>>> Note that supplier drivers may remove entries from there, but does
+>>>>>>>>>> that matter for your use case?
+>>>>>>>>> Ah - that may work, yes. Thank you, let me test that.
+>>>>>>>> Even if that doesn't work right away, but it can be made work, I would
+>>>>>>>> very much prefer that to the driver parsing _DEP for every device in
+>>>>>>>> the namespace by itself.
+>>>>>>> This does work; do you prefer it in scan.c, or in utils.c (in which case
+>>>>>>> with acpi_dep_list declared as external var in internal.h)?
+>>>>>> Let's put it in scan.c for now, because there is the lock protecting
+>>>>>> the list in there too.
+>>>>>>
+>>>>>> How do you want to implement this?  Something like "walk the list and
+>>>>>> run a callback for the matching entries" or do you have something else
+>>>>>> in mind?
+>>>>> Something like this (though with a mutex_lock()). It could be simplified
+>>>>> by dropping the prev stuff, but we have seen INT3472 devices with
+>>>>> multiple sensors declaring themselves dependent on the same device
+>>>>>
+>>>>>
+>>>>> struct acpi_device *
+>>>>> acpi_dev_get_next_dependent_dev(struct acpi_device *supplier,
+>>>>>                 struct acpi_device *prev)
+>>>>> {
+>>>>>     struct acpi_dep_data *dep;
+>>>>>     struct acpi_device *adev;
+>>>>>     int ret;
+>>>>>
+>>>>>     if (!supplier)
+>>>>>         return ERR_PTR(-EINVAL);
+>>>>>
+>>>>>     if (prev) {
+>>>>>         /*
+>>>>>          * We need to find the previous device in the list, so we know
+>>>>>          * where to start iterating from.
+>>>>>          */
+>>>>>         list_for_each_entry(dep, &acpi_dep_list, node)
+>>>>>             if (dep->consumer == prev->handle &&
+>>>>>                 dep->supplier == supplier->handle)
+>>>>>                 break;
+>>>>>
+>>>>>         dep = list_next_entry(dep, node);
+>>>>>     } else {
+>>>>>         dep = list_first_entry(&acpi_dep_list, struct acpi_dep_data,
+>>>>>                        node);
+>>>>>     }
+>>>>>
+>>>>>
+>>>>>     list_for_each_entry_from(dep, &acpi_dep_list, node) {
+>>>>>         if (dep->supplier == supplier->handle) {
+>>>>>             ret = acpi_bus_get_device(dep->consumer, &adev);
+>>>>>             if (ret)
+>>>>>                 return ERR_PTR(ret);
+>>>>>
+>>>>>             return adev;
+>>>>>         }
+>>>>>     }
+>>>>>
+>>>>>     return NULL;
+>>>>> }
+>>>> That would work I think, but would it be practical to modify
+>>>> acpi_walk_dep_device_list() so that it runs a callback for every
+>>>> consumer found instead of or in addition to the "delete from the list
+>>>> and free the entry" operation?
+>>>
+>>> I think that this would work fine, if that's the way you want to go.
+>>> We'd just need to move everything inside the if (dep->supplier ==
+>>> handle) block to a new callback, and for my purposes I think also add a
+>>> way to stop parsing the list from the callback (so like have the
+>>> callbacks return int and stop parsing on a non-zero return). Do you want
+>>> to expose that ability to pass a callback outside of ACPI?
+>> Yes.
+>>
+>>> Or just export helpers to call each of the callbacks (one to fetch the next
+>>> dependent device, one to decrement the unmet dependencies counter)
+>> If you can run a callback for every matching entry, you don't really
+>> need to have a callback to return the next matching entry.  You can do
+>> stuff for all of them in one go
+> 
+> Well it my case it's more to return a pointer to the dep->consumer's
+> acpi_device for a matching entry, so my idea was where there's multiple
+> dependents you could use this as an iterator...but it could just be
+> extended to that if needed later; I don't actually need to do it right now.
+> 
+> 
+>> note that it probably is not a good
+>> idea to run the callback under the lock, so the for loop currently in
+>> there is not really suitable for that
+> 
+> No problem;  I'll tweak that then
 
-HEAD commit:    b01f250d Add linux-next specific files for 20210129
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=144cd11cd00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=725bc96dc234fda7
-dashboard link: https://syzkaller.appspot.com/bug?extid=3512de0f935d494a45a6
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1093e16f500000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13756b44d00000
+Slightly walking back my "No problem" here; as I understand this there's
+kinda two options:
 
-The issue was bisected to:
+1. Walk over the (locked) list, when a match is found unlock, run the
+callback and re-lock.
 
-commit 4731210c09f5977300f439b6c56ba220c65b2348
-Author: Saravana Kannan <saravanak@google.com>
-Date:   Fri Jan 22 19:35:59 2021 +0000
+The problem with that idea is unless I'm mistaken there's no guarantee
+that the .next pointer is still valid then (even using the *_safe()
+methods) because either the next or the next + 1 entry could have been
+removed whilst the list was unlocked and the callback was being ran, so
+this seems a little unsafe.
 
-    gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default
+2. Walk over the (locked) list twice, the first time counting matching
+entries and using that to allocate a temporary buffer, then walk again
+to store the matching entries into the buffer. Finally, run the callback
+for everything in the buffer, free it and return.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12a1c51cd00000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=11a1c51cd00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16a1c51cd00000
+Obviously that's a lot less efficient than the current function, which
+isn't particularly palatable.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3512de0f935d494a45a6@syzkaller.appspotmail.com
-Fixes: 4731210c09f5 ("gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default")
-
-viperboard 1-1:0.143: version 0.00 found at bus 001 address 002
-viperboard-i2c viperboard-i2c.2.auto: failure setting i2c_bus_freq to 100
-viperboard-i2c: probe of viperboard-i2c.2.auto failed with error -5
-usb 1-1: USB disconnect, device number 2
-general protection fault, probably for non-canonical address 0xdffffc00000000b3: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000598-0x000000000000059f]
-CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.11.0-rc5-next-20210129-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:__list_del_entry_valid+0x1d/0xf0 lib/list_debug.c:42
-Code: 48 8b 34 24 eb b4 0f 1f 80 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 41 55 41 54 55 48 89 fd 48 83 c7 08 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 a0 00 00 00 48 89 ea 4c 8b 65 08 48 b8 00 00 00
-RSP: 0018:ffffc90000ca7308 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff88814149e008 RCX: 0000000000000000
-RDX: 00000000000000b3 RSI: ffffffff83e19360 RDI: 0000000000000598
-RBP: 0000000000000590 R08: 0000000000000001 R09: ffffffff8ef7388f
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000590
-R13: 0000000000000598 R14: ffff88814782ff20 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880b9e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055e1f4df6008 CR3: 0000000016785000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __list_del_entry include/linux/list.h:132 [inline]
- list_del include/linux/list.h:146 [inline]
- gpiodevice_release+0x49/0x250 drivers/gpio/gpiolib.c:477
- device_release+0x9f/0x240 drivers/base/core.c:2055
- kobject_cleanup lib/kobject.c:705 [inline]
- kobject_release lib/kobject.c:736 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1c8/0x540 lib/kobject.c:753
- put_device+0x1b/0x30 drivers/base/core.c:3283
- release_nodes+0x49b/0x8f0 drivers/base/devres.c:523
- devres_release_all+0x74/0xd0 drivers/base/devres.c:545
- __device_release_driver+0x3d2/0x6f0 drivers/base/dd.c:1160
- device_release_driver_internal drivers/base/dd.c:1187 [inline]
- device_release_driver+0x26/0x40 drivers/base/dd.c:1210
- bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
- device_del+0x502/0xd40 drivers/base/core.c:3363
- platform_device_del.part.0+0x1f/0x220 drivers/base/platform.c:783
- platform_device_del include/linux/err.h:41 [inline]
- platform_device_unregister+0x38/0x80 drivers/base/platform.c:821
- mfd_remove_devices_fn drivers/mfd/mfd-core.c:375 [inline]
- mfd_remove_devices_fn+0x166/0x1b0 drivers/mfd/mfd-core.c:357
- device_for_each_child_reverse+0x110/0x180 drivers/base/core.c:3526
- mfd_remove_devices+0x75/0xa0 drivers/mfd/mfd-core.c:391
- vprbrd_disconnect+0x43/0xf0 drivers/mfd/viperboard.c:111
- usb_unbind_interface+0x1d8/0x8d0 drivers/usb/core/driver.c:458
- __device_release_driver+0x3bd/0x6f0 drivers/base/dd.c:1156
- device_release_driver_internal drivers/base/dd.c:1187 [inline]
- device_release_driver+0x26/0x40 drivers/base/dd.c:1210
- bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
- device_del+0x502/0xd40 drivers/base/core.c:3363
- usb_disable_device+0x35b/0x7b0 drivers/usb/core/message.c:1413
- usb_disconnect.cold+0x27d/0x780 drivers/usb/core/hub.c:2218
- hub_port_connect drivers/usb/core/hub.c:5074 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5363 [inline]
- port_event drivers/usb/core/hub.c:5509 [inline]
- hub_event+0x1c8a/0x42d0 drivers/usb/core/hub.c:5591
- process_one_work+0x98d/0x15f0 kernel/workqueue.c:2275
- process_scheduled_works kernel/workqueue.c:2337 [inline]
- worker_thread+0x82b/0x1120 kernel/workqueue.c:2423
- kthread+0x3b1/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:296
-Modules linked in:
----[ end trace c9367f77087536d6 ]---
-RIP: 0010:__list_del_entry_valid+0x1d/0xf0 lib/list_debug.c:42
-Code: 48 8b 34 24 eb b4 0f 1f 80 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 41 55 41 54 55 48 89 fd 48 83 c7 08 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 a0 00 00 00 48 89 ea 4c 8b 65 08 48 b8 00 00 00
-RSP: 0018:ffffc90000ca7308 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff88814149e008 RCX: 0000000000000000
-RDX: 00000000000000b3 RSI: ffffffff83e19360 RDI: 0000000000000598
-RBP: 0000000000000590 R08: 0000000000000001 R09: ffffffff8ef7388f
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000590
-R13: 0000000000000598 R14: ffff88814782ff20 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880b9e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ff7b003f068 CR3: 000000001b33c000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Apologies if I've missed a better option that would work fine; but
+failing that do you still want me to go ahead and change
+acpi_walk_dep_device_list() to do this (I'd choose #2 of the above), or
+fallback to using acpi_dev_get_next_dependent_dev() described above? If
+the latter, does acpi_walk_dep_device_list() maybe need re-naming to
+make clear it's not a generalised function?
