@@ -2,143 +2,217 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C5AF30CB9D
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Feb 2021 20:32:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D068830CA2B
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Feb 2021 19:43:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239829AbhBBTaq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Feb 2021 14:30:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233500AbhBBN60 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Feb 2021 08:58:26 -0500
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA210C061573
-        for <linux-gpio@vger.kernel.org>; Tue,  2 Feb 2021 05:57:43 -0800 (PST)
-Received: by mail-lj1-x22a.google.com with SMTP id y14so11415785ljn.8
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Feb 2021 05:57:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NL/I/BuRrrACgurhUs3cVKRwX323hl2f+ZOCamuPdHc=;
-        b=Q4MrU9ZAwKq4E1DSZLMnCoc4OEZF8kZhBb2pF0FJiU3Pi5Qclgben0NCZKzz5YtTJB
-         9a4T0NrurxbKFRVHL6nRf6cayFXco1vtMTAguuMELuH9WCvLtWBfUr4o74pyHto/FpQ7
-         SkCuriyomu1Wkgd7fCSuzlV8RxSFtLhU1Z9Fq4n5J0g5fBIJTV0FJ1FB9uBjVC43z07k
-         iELYQJGHgpO1v5aWng7dMxzibJvi7M5nng5stkf/znfHZNjSLIThrhjx7F8V3iowvbhj
-         yyGTbdZNBUCbVz/fJi4R9U4EL1R9nfq16BAxk7QsmXSvwDk22WaWUMFxetzRVfVAzlgV
-         yG2g==
+        id S238762AbhBBSkp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Feb 2021 13:40:45 -0500
+Received: from mail-oi1-f176.google.com ([209.85.167.176]:41151 "EHLO
+        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233747AbhBBODd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Feb 2021 09:03:33 -0500
+Received: by mail-oi1-f176.google.com with SMTP id m13so22769499oig.8;
+        Tue, 02 Feb 2021 06:03:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NL/I/BuRrrACgurhUs3cVKRwX323hl2f+ZOCamuPdHc=;
-        b=XjcuYhh0kfXE1rNszTgKRdbI1n8D+5NC2GR4T64JC7u+FYLIEu48U1g/TOCgu8cDlt
-         G8AGuPc8AOPCfJ9X0nuFlML+Yr1wfEBmpTvXrST7YXe8nhYxBrzM2qD/Ln6j0fZVSfdY
-         FkYyHgHQkXXwVVswkw0PHQeaVUYWiX8mX0xgOD8x+hjYLyqSJTXinbzd4zsY/i0/oQLI
-         Qdhh7ZYoiom0f8gRGbKdwk1+TlmU7XrqBtnpcuOUC8eoYychgfu+Gfv36BY1f//9qvuJ
-         D3fu6zQYPCdUY9k8FR3ZIokfoGoKl3k41xIgzBww6a/sxpwtRSSA+AjIa6b6YZ8xYNnk
-         lkgA==
-X-Gm-Message-State: AOAM531TDlg0n8kFAUu2pQzRM2xTl0UZbp6aHarJkqc3RuVzMue9+K/z
-        f/cQeomVB0LCdjWPwS7WMi1AQ0229NjiExiSnYPW+A==
-X-Google-Smtp-Source: ABdhPJxazmAVdgS3EL8u7mgAM/H3dEDSjolBtS+6TpYMpVKMBwB8RnDWvB3K64ZQY7Fj+MjVXFsQEzBUzuP72v9jK0I=
-X-Received: by 2002:a2e:8ec3:: with SMTP id e3mr12733519ljl.467.1612274262224;
- Tue, 02 Feb 2021 05:57:42 -0800 (PST)
+        bh=XDOyyPXnhfDnLT42xUgfRv/pv03j1De9PVl4XkKNTZA=;
+        b=OpQ6Mhcxvv+v3UUayQFxm/KdKjtiERcapfcohwYPXvegjVaVWaWon4/oZSJEq4pNoU
+         5CC3B9xeqUkTHylxHE+/h5DIaDB85GfLegUH3NFBbZZEnBvzeiIGsdLRWxvw/tPTSz8E
+         PIwnu6OtXaCe0HZpid6TYUCxghiMUaNSR+iqSCYs81YSISZsZkfnnd247gXvj1MrtkGE
+         CC09EQhyK+3pwje+j62op8ogIfuIr7osnefbuPDK3yfQ8kRbjtk4EAy0Fy7qkT4g7Meq
+         td8P0GiyPX8BWMXPbZTE8zcl/vAOhn/1UAApNKiHXEa5jGZdfunJLczZKt+NRhnv1hC/
+         xBjQ==
+X-Gm-Message-State: AOAM532rqGgzrboTv8adwP4pcRkRkXuwt5GFBiMifKPpN1Zxe8lwZ/v4
+        34m0czMB48fIKZ6no++/MJeZtIviK/qUl8n+X1k=
+X-Google-Smtp-Source: ABdhPJy0oGC9SrhvIPc6y3juU8i2CP65UYGiYv7W/WBqh/2pB9aSRhWKzEhtJZ6OKnjn/r/lWBX1jT4binoRV/rlprg=
+X-Received: by 2002:aca:308a:: with SMTP id w132mr2611030oiw.69.1612274571030;
+ Tue, 02 Feb 2021 06:02:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20210128153601.153126-1-alban.bedel@aerq.com>
-In-Reply-To: <20210128153601.153126-1-alban.bedel@aerq.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 2 Feb 2021 14:57:31 +0100
-Message-ID: <CACRpkdaP8-mnXuBZRKad53tvGrS0BdfTRKNezr0mhRVf8qkYig@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: add support for open drain pins on PCAL6524
-To:     Alban Bedel <alban.bedel@aerq.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <20210118003428.568892-1-djrscally@gmail.com> <20210118003428.568892-3-djrscally@gmail.com>
+ <CAJZ5v0gVQsZ4rxXW8uMidW9zfY_S50zpfrL-Gq0J3Z4-qqBiww@mail.gmail.com>
+ <b381b48e-1bf2-f3e7-10a6-e51cd261f43c@gmail.com> <CAJZ5v0iU2m4Hs6APuauQ645DwbjYaB8nJFjYH0+7yQnR-FPZBQ@mail.gmail.com>
+ <e2d7e5e9-920f-7227-76a6-b166e30e11e5@gmail.com> <CAJZ5v0gg5oXG3yOO9iDvPKSsadYrFojW6JcKfZcQbFFpO78zAQ@mail.gmail.com>
+ <85ccf00d-7c04-b1da-a4bc-82c805df69c9@gmail.com> <CAJZ5v0jO9O1zhBMNRNB5kRt1o86BTjr1kRuFUe=nNVTDwBQhEg@mail.gmail.com>
+ <0fac24d2-e8fc-7dc8-0f2f-44c7aadb1daf@gmail.com> <CAJZ5v0jVxMMGh6k-vXeBRsCtD0L14poNUrg4kZOpCfOz2sZGZQ@mail.gmail.com>
+ <ee8f6b58-55c8-e0a0-c161-bdef361f9e0a@gmail.com> <d9ec0439-4323-51a2-70e7-c258fe63cd86@gmail.com>
+In-Reply-To: <d9ec0439-4323-51a2-70e7-c258fe63cd86@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 2 Feb 2021 15:02:39 +0100
+Message-ID: <CAJZ5v0j7U=e+GHLqpivqfvOKCyCZWm4VK3___4tTfcxD==vcHA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] acpi: utils: Add function to fetch dependent acpi_devices
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, andy@kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 28, 2021 at 4:36 PM Alban Bedel <alban.bedel@aerq.com> wrote:
-
-> From a quick glance at various datasheet the PCAL6524 seems to be the
-> only chip in this familly that support setting the drive mode of
-> single pins. Other chips either don't support it at all, or can only
-> set the drive mode of whole banks, which doesn't map to the GPIO API.
+On Tue, Feb 2, 2021 at 10:58 AM Daniel Scally <djrscally@gmail.com> wrote:
 >
-> Add a new flag, PCAL6524, to mark chips that have the extra registers
-> needed for this feature. Then mark the needed register banks as
-> readable and writable, here we don't set OUT_CONF as writable,
-> although it is, as we only need to read it. Finally add a function
-> that configure the OUT_INDCONF register when the GPIO API set the
-> drive mode of the pins.
+> Hi Rafael
 >
-> Signed-off-by: Alban Bedel <alban.bedel@aerq.com>
+> On 21/01/2021 21:06, Daniel Scally wrote:
+> >
+> > On 21/01/2021 18:08, Rafael J. Wysocki wrote:
+> >> On Thu, Jan 21, 2021 at 5:34 PM Daniel Scally <djrscally@gmail.com> wrote:
+> >>>
+> >>> On 21/01/2021 14:39, Rafael J. Wysocki wrote:
+> >>>> On Thu, Jan 21, 2021 at 1:04 PM Daniel Scally <djrscally@gmail.com> wrote:
+> >>>>> On 21/01/2021 11:58, Rafael J. Wysocki wrote:
+> >>>>>> On Thu, Jan 21, 2021 at 10:47 AM Daniel Scally <djrscally@gmail.com> wrote:
+> >>>>>>> Hi Rafael
+> >>>>>>>
+> >>>>>>> On 19/01/2021 13:15, Rafael J. Wysocki wrote:
+> >>>>>>>> On Mon, Jan 18, 2021 at 9:51 PM Daniel Scally <djrscally@gmail.com> wrote:
+> >>>>>>>>> On 18/01/2021 16:14, Rafael J. Wysocki wrote:
+> >>>>>>>>>> On Mon, Jan 18, 2021 at 1:37 AM Daniel Scally <djrscally@gmail.com> wrote:
+> >>>>>>>>>>> In some ACPI tables we encounter, devices use the _DEP method to assert
+> >>>>>>>>>>> a dependence on other ACPI devices as opposed to the OpRegions that the
+> >>>>>>>>>>> specification intends. We need to be able to find those devices "from"
+> >>>>>>>>>>> the dependee, so add a function to parse all ACPI Devices and check if
+> >>>>>>>>>>> the include the handle of the dependee device in their _DEP buffer.
+> >>>>>>>>>> What exactly do you need this for?
+> >>>>>>>>> So, in our DSDT we have devices with _HID INT3472, plus sensors which
+> >>>>>>>>> refer to those INT3472's in their _DEP method. The driver binds to the
+> >>>>>>>>> INT3472 device, we need to find the sensors dependent on them.
+> >>>>>>>>>
+> >>>>>>>> Well, this is an interesting concept. :-)
+> >>>>>>>>
+> >>>>>>>> Why does _DEP need to be used for that?  Isn't there any other way to
+> >>>>>>>> look up the dependent sensors?
+> >>>>>>>>
+> >>>>>>>>>> Would it be practical to look up the suppliers in acpi_dep_list instead?
+> >>>>>>>>>>
+> >>>>>>>>>> Note that supplier drivers may remove entries from there, but does
+> >>>>>>>>>> that matter for your use case?
+> >>>>>>>>> Ah - that may work, yes. Thank you, let me test that.
+> >>>>>>>> Even if that doesn't work right away, but it can be made work, I would
+> >>>>>>>> very much prefer that to the driver parsing _DEP for every device in
+> >>>>>>>> the namespace by itself.
+> >>>>>>> This does work; do you prefer it in scan.c, or in utils.c (in which case
+> >>>>>>> with acpi_dep_list declared as external var in internal.h)?
+> >>>>>> Let's put it in scan.c for now, because there is the lock protecting
+> >>>>>> the list in there too.
+> >>>>>>
+> >>>>>> How do you want to implement this?  Something like "walk the list and
+> >>>>>> run a callback for the matching entries" or do you have something else
+> >>>>>> in mind?
+> >>>>> Something like this (though with a mutex_lock()). It could be simplified
+> >>>>> by dropping the prev stuff, but we have seen INT3472 devices with
+> >>>>> multiple sensors declaring themselves dependent on the same device
+> >>>>>
+> >>>>>
+> >>>>> struct acpi_device *
+> >>>>> acpi_dev_get_next_dependent_dev(struct acpi_device *supplier,
+> >>>>>                 struct acpi_device *prev)
+> >>>>> {
+> >>>>>     struct acpi_dep_data *dep;
+> >>>>>     struct acpi_device *adev;
+> >>>>>     int ret;
+> >>>>>
+> >>>>>     if (!supplier)
+> >>>>>         return ERR_PTR(-EINVAL);
+> >>>>>
+> >>>>>     if (prev) {
+> >>>>>         /*
+> >>>>>          * We need to find the previous device in the list, so we know
+> >>>>>          * where to start iterating from.
+> >>>>>          */
+> >>>>>         list_for_each_entry(dep, &acpi_dep_list, node)
+> >>>>>             if (dep->consumer == prev->handle &&
+> >>>>>                 dep->supplier == supplier->handle)
+> >>>>>                 break;
+> >>>>>
+> >>>>>         dep = list_next_entry(dep, node);
+> >>>>>     } else {
+> >>>>>         dep = list_first_entry(&acpi_dep_list, struct acpi_dep_data,
+> >>>>>                        node);
+> >>>>>     }
+> >>>>>
+> >>>>>
+> >>>>>     list_for_each_entry_from(dep, &acpi_dep_list, node) {
+> >>>>>         if (dep->supplier == supplier->handle) {
+> >>>>>             ret = acpi_bus_get_device(dep->consumer, &adev);
+> >>>>>             if (ret)
+> >>>>>                 return ERR_PTR(ret);
+> >>>>>
+> >>>>>             return adev;
+> >>>>>         }
+> >>>>>     }
+> >>>>>
+> >>>>>     return NULL;
+> >>>>> }
+> >>>> That would work I think, but would it be practical to modify
+> >>>> acpi_walk_dep_device_list() so that it runs a callback for every
+> >>>> consumer found instead of or in addition to the "delete from the list
+> >>>> and free the entry" operation?
+> >>>
+> >>> I think that this would work fine, if that's the way you want to go.
+> >>> We'd just need to move everything inside the if (dep->supplier ==
+> >>> handle) block to a new callback, and for my purposes I think also add a
+> >>> way to stop parsing the list from the callback (so like have the
+> >>> callbacks return int and stop parsing on a non-zero return). Do you want
+> >>> to expose that ability to pass a callback outside of ACPI?
+> >> Yes.
+> >>
+> >>> Or just export helpers to call each of the callbacks (one to fetch the next
+> >>> dependent device, one to decrement the unmet dependencies counter)
+> >> If you can run a callback for every matching entry, you don't really
+> >> need to have a callback to return the next matching entry.  You can do
+> >> stuff for all of them in one go
+> >
+> > Well it my case it's more to return a pointer to the dep->consumer's
+> > acpi_device for a matching entry, so my idea was where there's multiple
+> > dependents you could use this as an iterator...but it could just be
+> > extended to that if needed later; I don't actually need to do it right now.
+> >
+> >
+> >> note that it probably is not a good
+> >> idea to run the callback under the lock, so the for loop currently in
+> >> there is not really suitable for that
+> >
+> > No problem;  I'll tweak that then
+>
+> Slightly walking back my "No problem" here; as I understand this there's
+> kinda two options:
+>
+> 1. Walk over the (locked) list, when a match is found unlock, run the
+> callback and re-lock.
 
-Thats's nice!
+That's what I was thinking about.
 
-> + *     Output port configuration       0x40 + 7 * bank_size    R
-> + *
-> + *   - PCAL6524 with individual pin configuration
-> + *     Individual pin output config    0x40 + 12 * bank_size   RW
+> The problem with that idea is unless I'm mistaken there's no guarantee
+> that the .next pointer is still valid then (even using the *_safe()
+> methods) because either the next or the next + 1 entry could have been
+> removed whilst the list was unlocked and the callback was being ran, so
+> this seems a little unsafe.
 
-So this will become 0x70? It's a bit hard for me this weird
-register layout...
+This can be addressed by rotating the list while walking it, but that
+becomes problematic if there are concurrent walkers.
 
-> +static int pcal6524_gpio_set_drive_mode(struct pca953x_chip *chip,
-> +                                       unsigned int offset,
-> +                                       unsigned long config)
-> +{
-> +       u8 out_conf_reg = pca953x_recalc_addr(
-> +               chip, PCAL953X_OUT_CONF, 0);
-> +       u8 out_indconf_reg = pca953x_recalc_addr(
-> +               chip, PCAL6524_OUT_INDCONF, offset);
-> +       u8 mask = BIT(offset % BANK_SZ), val;
-
-Split to two variable declarations please, this is hard to read.
-
-> +       unsigned int out_conf;
-> +       int ret;
-
-So we set mask to the bit index for the line we want to affect.
-
-> +       if (config == PIN_CONFIG_DRIVE_OPEN_DRAIN)
-> +               val = mask;
-> +       else if (config == PIN_CONFIG_DRIVE_PUSH_PULL)
-> +               val = 0;
-> +       else
-> +               return -EINVAL;
-
-And this makes sense, we set it to 1 to enable open drain.
-
-> +       /* Invert the value if ODENn is set */
-> +       ret = regmap_read(chip->regmap, out_conf_reg, &out_conf);
-> +       if (ret)
-> +               goto exit;
-> +       if (out_conf & BIT(offset / BANK_SZ))
-
-I suppose this could be written if (out_conf & mask)?
-
-> +               val ^= mask;
-
-Invert? Why?
-
-The datasheet says:
-
-  "If the ODENx bit is set at logic 0 (push-pull), any bit set to logic 1
-  in the IOCRx register will reverse the output state of that pin only
-  to open-drain. When ODENx bit is set at logic 1 (open-drain), a
-  logic 1 in IOCRx will set that pin to push-pull."
-
-So your logic is accounting for the fact that someone go and set
-one of the bits in ODENx to 1, but aren't they all by default set
-to zero (or should be programmed by the driver to zero)
-so that you can control open drain individually here by simply
-setting the corresponding bit to 1 for open drain and 0 for
-push-pull?
-
-> +       /* Configure the drive mode */
-> +       ret = regmap_write_bits(chip->regmap, out_indconf_reg, mask, val);
-
-Yours,
-Linus Walleij
+OK, I guess running the callback under the lock is not really a big
+deal (and for the deletion case this is actually necessary), so let's
+do that.
