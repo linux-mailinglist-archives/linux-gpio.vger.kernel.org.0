@@ -2,101 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1BF030BD26
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Feb 2021 12:32:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BF0430BD44
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Feb 2021 12:39:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231195AbhBBLbo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Feb 2021 06:31:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231349AbhBBL2u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Feb 2021 06:28:50 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA42FC061788
-        for <linux-gpio@vger.kernel.org>; Tue,  2 Feb 2021 03:27:56 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id q2so7741095edi.4
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Feb 2021 03:27:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iWOA32QhLi/aaIbw7/tQiFcnwtGUsf/zeYi+0G0XjnQ=;
-        b=gcLtq7RCac83zOJpeiOm5/H5ASWi3bsod5EFUn8KibxB5xHfa0VAilfjK+Qctqogth
-         j7QaKzYhbO6ue2Iaak22Iczf4jP1j+gZyu6XpVZIruSZfLfkRrEFIFb3G1YvINN+WnK8
-         RO+RrK9fV+pag2KDPsmniKxHTdF/E/f4Ibx5gAOckF2ZuD8zEbptHkr3FMIE+FpqIlxl
-         H4ZHPTSn7FGxSJeHRnHCtuXBOnoOPpS5jTPvOIb3PVx/yANCl60P8plvpBTuCy2vw8+8
-         mvvqkEfF7HIoN3q+Y6xMRCFbpzfu+wUb8N8OOGFAnoUzHbPOZKE3WH9W+MIQuRAiixHK
-         COGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iWOA32QhLi/aaIbw7/tQiFcnwtGUsf/zeYi+0G0XjnQ=;
-        b=Yz0xer29+opbLOuC6moGuAZuLxyZ+5TiEe1iFlGOi1QwLasBxgdxuPOnx3kpIch4Gw
-         mz183gxTB6Ha6ZKm0FRlcCRznPRvnG0J+8fNBmcmQ8j37K1yGupZAKIed2kyEhnFvsPs
-         hDWYDElzsBiC+dM6p4YRvx88uTneAaYMmEVlayUG5kWu00zL40+UI2CZigj8mK737NFp
-         q6enFHm/60hFGRv8MYcz9B+jA44pkfLQ0OY1ClOtN167UGD8QHpQ/ta9KZ/MdcXCS9SX
-         N94hAowi2eSsmTtp0JMcFH8QF6sx80FHn9Cn41v8z3idN8VXfal4V/w0tjlbnhgSod8N
-         VUqQ==
-X-Gm-Message-State: AOAM532OVcUigpbsPWtjNEDcJuoxKYsI0uo421Ktj8QHE7IHr8/tI3rb
-        g76g99XzKKTBFYNDF7X1p8ysrcA+8mS37+07r3RA+g==
-X-Google-Smtp-Source: ABdhPJyEpBs2USy/Md7AF1xZtNppphNWkRvrACm4JRAHRBdyqh2Ms3Qc+QWjkYeV73NKLZeb84954QIUZzP9icOaTbk=
-X-Received: by 2002:a05:6402:306f:: with SMTP id bs15mr882872edb.232.1612265275509;
- Tue, 02 Feb 2021 03:27:55 -0800 (PST)
+        id S230033AbhBBLgV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Feb 2021 06:36:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230248AbhBBLfI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 2 Feb 2021 06:35:08 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CC32464E9B;
+        Tue,  2 Feb 2021 11:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612265666;
+        bh=iQZjdrytDnYe4+JE2zLjRm1WSmA5jVNSNUrdiPWQqaA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eA1YvFBH617s0j/ZHp9BrVaGBQse3Roq/akpIFgO8h4YK7KAtGXqfn+8F30qXEGn7
+         P3fVr3ENGAQ4m9QgKtpkUPG4jrbeBxRwk7RTtuxPmir9B4L60SU088ooeP6orMQHDu
+         Spuos6n/rMOJ8jJtTVDIgcik1eTfAqlgK9b0v8LRuK6tRytdQ4aUfUVyJ+18iaAhoh
+         FGJe5MlorJAi0JzgkEjW89Rh17W/sNrttGvuWEjyOLa8x+94QTjk8A/f3kJhKLkBt2
+         R3ftH5ewKRfAoHATLdIPutAS0p0/+FYXfweTB/hYQNJvVly/Qpi0aaRKGr5gaxG5zN
+         PN6NIwhGI3Lbw==
+Date:   Tue, 2 Feb 2021 05:34:23 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [REPORT][next] pinctrl: pinctrl-microchip-sgpio: out-of-bounds bug
+ in sgpio_clrsetbits()
+Message-ID: <20210202113423.GA277746@embeddedor>
 MIME-Version: 1.0
-References: <cover.1610364681.git.baruch@tkos.co.il> <75637257694de0d4a9e432e1d8270019a4e6328b.1610364681.git.baruch@tkos.co.il>
- <CAMpxmJWjSyWkM6B-A7_eMZ38RmE4trvJ3oLaJdbkpr9Z00Ne0w@mail.gmail.com> <87tuqzspnu.fsf@BL-laptop>
-In-Reply-To: <87tuqzspnu.fsf@BL-laptop>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 2 Feb 2021 12:27:44 +0100
-Message-ID: <CAMpxmJUjTcVJq_q+Aiv0Lg5Z4Nxe1XRgTLnLtKErgpRSyB2kwQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] arm64: dts: armada: add pwm offsets for ap/cp gpios
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Baruch Siach <baruch@tkos.co.il>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 29, 2021 at 4:56 PM Gregory CLEMENT
-<gregory.clement@bootlin.com> wrote:
->
-> Hello Bartosz,
->
-> > On Mon, Jan 11, 2021 at 12:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
-> >>
-> >> The 'marvell,pwm-offset' property of both GPIO blocks (per CP component)
-> >> point to the same counter registers offset. The driver will decide how
-> >> to use counters A/B.
-> >>
-> >> This is different from the convention of pwm on earlier Armada series
-> >> (370/38x). On those systems the assignment of A/B counters to GPIO
-> >> blocks is coded in both DT and the driver. The actual behaviour of the
-> >> current driver on Armada 8K/7K is the same as earlier systems.
-> >>
-> >> Add also clock properties for base pwm frequency reference.
-> >>
-> >> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> >> ---
-> >
-> > Andrew, Gregory, Sebastian,
-> >
-> > Can we get your Acks on this patch? Are you fine with it going through
-> > the GPIO tree?
->
-> I prefer applying it on our tree to avoid merge conflicts.
->
-> Gregory
+Hi,
 
-Ok, I applied the remaining patches from this series.
+While addressing some out-of-bounds warnings, I found the following bug:
 
-Bartosz
+drivers/pinctrl/pinctrl-microchip-sgpio.c:154:57: warning: array subscript 10 is above array bounds of ‘const u8[10]’ {aka ‘const unsigned char[10]’} [-Warray-bounds]
+
+The bug was introduced by commit be2dc859abd4 ("pinctrl: pinctrl-microchip-sgpio: Add irq support (for sparx5)"):
+
+575         sgpio_clrsetbits(bank->priv, REG_INT_TRIGGER + SGPIO_MAX_BITS, addr.bit,
+576                          BIT(addr.port), (!!(type & 0x2)) << addr.port);
+
+REG_INT_TRIGGER + SGPIO_MAX_BITS turns out to be 10, which is outside the boundaries
+of priv->properties->regoff[] at line 154:
+
+151 static inline void sgpio_clrsetbits(struct sgpio_priv *priv,                                        
+152                                     u32 rno, u32 off, u32 clear, u32 set)                           
+153 {                                                                                                   
+154         u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];                        
+155         u32 val = readl(reg);                                                                       
+156                                                                                                     
+157         val &= ~clear;                                                                              
+158         val |= set;                                                                                 
+159                                                                                                     
+160         writel(val, reg);                                                                           
+161 }
+
+because priv->properties->regoff[] is an array of MAXREG elements, with MAXREG
+representing the value of 10 in the following enum:
+
+ 28 enum {                                                                                              
+ 29         REG_INPUT_DATA,                                                                             
+ 30         REG_PORT_CONFIG,                                                                            
+ 31         REG_PORT_ENABLE,                                                                            
+ 32         REG_SIO_CONFIG,                                                                             
+ 33         REG_SIO_CLOCK,                                                                              
+ 34         REG_INT_POLARITY,                                                                           
+ 35         REG_INT_TRIGGER,                                                                            
+ 36         REG_INT_ACK,                                                                                
+ 37         REG_INT_ENABLE,                                                                             
+ 38         REG_INT_IDENT,                                                                              
+ 39         MAXREG                                                                                      
+ 40 };
+
+ 52 struct sgpio_properties {                                                                           
+ 53         int arch;                                                                                   
+ 54         int flags;                                                                                  
+ 55         u8 regoff[MAXREG];                                                                          
+ 56 };
+
+Thanks
+--
+Gustavo
