@@ -2,110 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A73530D830
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 12:10:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99EC230D87E
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 12:25:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234058AbhBCLJE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Feb 2021 06:09:04 -0500
-Received: from mga05.intel.com ([192.55.52.43]:11003 "EHLO mga05.intel.com"
+        id S233972AbhBCLXa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Feb 2021 06:23:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233258AbhBCLJD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 3 Feb 2021 06:09:03 -0500
-IronPort-SDR: AY9yi9FagsWAuqgJrTNTvNKqUTEPKTVhGYq/eXQ0ZVQq0HmnHoqXeYrOlXvlvT/qynVrGL1Ofx
- im7v50m9I25g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="265856388"
-X-IronPort-AV: E=Sophos;i="5.79,398,1602572400"; 
-   d="scan'208";a="265856388"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 03:08:19 -0800
-IronPort-SDR: o134eirMFPeTUWOydEEw8aYttN75QcofTnGYMkGLqCpwZuyydYfYGmESVeFcTSWS2xu+NjzHnO
- eEoISbHn+T7w==
-X-IronPort-AV: E=Sophos;i="5.79,398,1602572400"; 
-   d="scan'208";a="433366277"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 03:08:15 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1l7G15-001c7c-VW; Wed, 03 Feb 2021 13:08:11 +0200
-Date:   Wed, 3 Feb 2021 13:08:11 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
+        id S234198AbhBCLXI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 3 Feb 2021 06:23:08 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B73E164DE8;
+        Wed,  3 Feb 2021 11:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612351346;
+        bh=wGQw7gT3qnKCIXEO+rxqRvVbPbNtV92xRV2Pv+Ej3+o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MrJAtf5mnK1C4Q4ZyKjla2kAdXf633/lnbrk7VmF4rTw8ELv9cY7AI3lYFHz5IvTs
+         gW1JO8UMu0KWxpiE11pDElcoFi2aScKR/6EtEhTveStAUFXYmhZ/2VkMZcgd1/0YfE
+         ni15CbrfkH0uB9TmCzEv5FfL+g5ymnw5CEbyZXJD4ppEFij+lOdgpYmtLPj5YnxQt2
+         S89UXBGzveoZJe7weH0eyO7487Q9x29lPyzQEfs7eq9AcnO8mCcpuFXjNyVKHYr8yx
+         p+BAk8A9gP2L8aa7Eyu5laiQUOjkYC5JRKTNmmv8FsKcsF1NgygkcixHo6F7gFSZQG
+         dH3CVM+A3lgnQ==
+Date:   Wed, 3 Feb 2021 16:52:22 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Daniel Palmer <daniel@thingy.jp>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
-Message-ID: <YBqEG4GGXmfD6f0f@smile.fi.intel.com>
-References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com>
- <886bbdc0-3391-2140-a2d4-1688b262966f@redhat.com>
- <CAHp75VeFvwE64zX8Wu8XvMMJ6vgxAaoYpvH2rJ_FD3CCnFZNHA@mail.gmail.com>
- <8d350b8c-5f1d-256d-cdc5-8501af0c0cad@redhat.com>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vincent Cheng <vincent.cheng.xh@renesas.com>,
+        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-watchdog@vger.kernel.org,
+        Eric Anholt <eric@anholt.net>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: Re: [PATCH 3/3] dt-bindings: Fix errors in 'if' schemas
+Message-ID: <20210203112222.GO2771@vkoul-mobl>
+References: <20210202205544.24812-1-robh@kernel.org>
+ <20210202205544.24812-3-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8d350b8c-5f1d-256d-cdc5-8501af0c0cad@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20210202205544.24812-3-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 03, 2021 at 11:35:59AM +0100, Hans de Goede wrote:
-> On 2/3/21 10:54 AM, Andy Shevchenko wrote:
-> > On Tue, Jan 26, 2021 at 4:23 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >> On 1/26/21 1:38 PM, Andy Shevchenko wrote:
-> >>> Hi guys,
-> >>>
-> >>> This is first part of Intel MID outdated platforms removal. It's collected into
-> >>> immutable branch with a given tag, please pull to yours subsystems.
-> >>>
-> >>> (All changes are tagged by the respective maintainers)
-> > 
-> >> Erm, I already have this 2 in platform-drivers-x86/for-next since you said that
-> >> these 2 could be merged independently.
-> >>
-> >> Anyways I just did a test-merge and there is no conflict, so everything is ok.
-> >>
-> >> From my pov this looks good and I plan to merge this into platform-drivers-x86/for-next
-> >> before the merge-window.
-> >>
-> >> I'm going to hold off on doing that for a bit for now in case one of the other
-> >> subsys maintainers has any objections.
-> > 
-> > Any news on this? Have you pulled it somewhere (I don't see it in Linux next)?
+On 02-02-21, 14:55, Rob Herring wrote:
+> Properties in if/then schemas weren't getting checked by the meta-schemas.
+> Enabling meta-schema checks finds several errors.
 > 
-> I was going through all pending pdx86 stuff yesterday to prep for the upcoming
-> merge-window. I was doing so in FIFO order and I ran out of steam just as I got
-> to this pull-req.
+> The use of an 'items' schema (as opposed to the list form) is wrong in
+> some cases as it applies to all entries. 'contains' is the correct schema
+> to use in the case of multiple entries.
 > 
-> So today is a new day and after sending out a fixes pull-req for 5.11 this is
-> (was) the first thing on my list.
-> 
-> I've merged this into my review-hans now (and I will push it to for-next soon).
-> 
-> I did one last check of all the commits after merging, and I found one small
-> issue.
-> 
-> The "gpio: msic: Remove driver for deprecated platform" commit forgets to
-> drop the Makefile line for the msic driver:
-> 
-> obj-$(CONFIG_GPIO_MSIC)                 += gpio-msic.o
-> 
-> This is not a reason to redo the entire branch, but it would be good if you
-> can do a follow up patch to fix this.
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: linux-crypto@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/crypto/allwinner,sun8i-ce.yaml   | 3 +--
+>  .../devicetree/bindings/display/brcm,bcm2835-hvs.yaml    | 2 +-
+>  Documentation/devicetree/bindings/leds/ti,tca6507.yaml   | 1 +
+>  Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml  | 2 +-
+>  Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml | 3 +--
+>  .../devicetree/bindings/phy/renesas,usb2-phy.yaml        | 5 ++---
 
-Indeed. Thanks for catching this, I'll fixed locally and will send it soon.
+For phy:
+
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+~Vinod
