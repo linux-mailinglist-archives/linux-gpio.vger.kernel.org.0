@@ -2,142 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D09C30D932
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 12:52:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9F8D30D952
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 12:57:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234383AbhBCLwQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Feb 2021 06:52:16 -0500
-Received: from mga05.intel.com ([192.55.52.43]:13808 "EHLO mga05.intel.com"
+        id S234183AbhBCL5T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Feb 2021 06:57:19 -0500
+Received: from mga06.intel.com ([134.134.136.31]:4129 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234380AbhBCLwO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 3 Feb 2021 06:52:14 -0500
-IronPort-SDR: +DfdmeH5WsENUYlwf9DAxVcJK7t76gzldFX+lV2eeIfABb0n5EFknjIX8AARL+yc3iX2noENsb
- Fjq+Zo9DqUBw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="265861048"
+        id S233972AbhBCL5S (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 3 Feb 2021 06:57:18 -0500
+IronPort-SDR: 9mDBfjbpN4hHX8yCzSjTgrlox1hK75R3nDOS/vl46poyv4I0xYbtMa2JghixilrasC6CwzEp+y
+ p9FtbFe7tUeg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="242539248"
 X-IronPort-AV: E=Sophos;i="5.79,398,1602572400"; 
-   d="scan'208";a="265861048"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 03:51:33 -0800
-IronPort-SDR: qbZZ1+RYMkcGQ9Tu6paB57VwtXrYiNGWQYNoh7EzAxBpAdXwE7JHxF/juYBNqZXU/vD9vk7NPA
- wEdDfSu4W8Mw==
-X-ExtLoop1: 1
+   d="scan'208";a="242539248"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 03:55:32 -0800
+IronPort-SDR: J4LiDpMiqBngvDYi7kzzJwAShA/sl0y7VMFXFHMiq8AQjvqN9+M5xr4xGJxZ5IAhObF0zI5IE0
+ T6L5zfwTFJUA==
 X-IronPort-AV: E=Sophos;i="5.79,398,1602572400"; 
-   d="scan'208";a="575871586"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 03 Feb 2021 03:51:32 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3E766212; Wed,  3 Feb 2021 13:51:30 +0200 (EET)
-Date:   Wed, 3 Feb 2021 13:51:30 +0200
+   d="scan'208";a="372354870"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 03:55:31 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l7Gkq-001cmd-8g; Wed, 03 Feb 2021 13:55:28 +0200
+Date:   Wed, 3 Feb 2021 13:55:28 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux GPIO <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-gpio for 5.12-1
-Message-ID: <YBqOQpaTpUbDcdKo@black.fi.intel.com>
+        linux-gpio@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1] gpio: msic: Drop driver from Makefile
+Message-ID: <YBqPMMIHadSrwZce@smile.fi.intel.com>
+References: <20210203112922.48629-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20210203112922.48629-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux GPIO  maintainers,
+On Wed, Feb 03, 2021 at 01:29:22PM +0200, Andy Shevchenko wrote:
+> Driver is gone, no need to keep a Makefile entry for it. Remove.
 
-Non-traditional bunch for Intel GPIO drivers, because it includes an aggregator
-clean up with necessary libraries update and test cases. Besides that, it has
-nothing special, except removing couple of drivers from the subsystem. In any
-case this PR is independent, but would be nice to couple it with PR of
-ib-drm-gpio-pdx86-rtc-wdt-v5.12-1 which I had sent couple of weeks earlier.
+To be precise, this is coupled with my two PRs, one for removal of bunch of the
+drivers (there is an immutable tag, I can apply it there and send a new PR,
+though) and one with Intel GPIO drivers, however it's included in the latter.
 
-Thanks,
-
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit 5c8fe583cce542aa0b84adc939ce85293de36e5e:
-
-  Linux 5.11-rc1 (2020-12-27 15:30:22 -0800)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.12-1
-
-for you to fetch changes up to c5318e248f527fc8753e361bb61439f4e0c6d745:
-
-  gpio: msic: Drop driver from Makefile (2021-02-03 13:05:56 +0200)
-
-----------------------------------------------------------------
-intel-gpio for v5.12-1
-
-* Use generic parser of the ranges in GPIO aggregator driver
-* Clean up Whiskey Cove driver to use new APIs and drop ambiguous casting
-* Remove couple of drivers for deprecated platforms
-
-The following is an automated git shortlog grouped by driver:
-
-aggregator:
- -  Remove trailing comma in terminator entries
- -  Use compound literal from the header
- -  Replace isrange() by using get_options()
-
-intel-mid:
- -  Remove driver for deprecated platform
-
-lib/cmdline:
- -  Allow get_options() to take 0 to validate the input
- -  Update documentation to reflect behaviour
-
-lib/cmdline_kunit:
- -  add a new test case for get_options()
-
-merrifield:
- -  Make bias configuration available for GPIOs
-
-msic:
- -  Drop driver from Makefile
- -  Remove driver for deprecated platform
-
-wcove:
- -  Split out to_ireg() helper and deduplicate the code
- -  Switch to use regmap_set_bits(), regmap_clear_bits()
- -  Get rid of error prone casting in IRQ handler
- -  convert comma to semicolon
-
-----------------------------------------------------------------
-Andy Shevchenko (13):
-      gpio: merrifield: Make bias configuration available for GPIOs
-      lib/cmdline_kunit: add a new test case for get_options()
-      lib/cmdline: Update documentation to reflect behaviour
-      lib/cmdline: Allow get_options() to take 0 to validate the input
-      gpio: aggregator: Replace isrange() by using get_options()
-      gpio: aggregator: Use compound literal from the header
-      gpio: aggregator: Remove trailing comma in terminator entries
-      gpio: msic: Remove driver for deprecated platform
-      gpio: intel-mid: Remove driver for deprecated platform
-      gpio: wcove: Get rid of error prone casting in IRQ handler
-      gpio: wcove: Switch to use regmap_set_bits(), regmap_clear_bits()
-      gpio: wcove: Split out to_ireg() helper and deduplicate the code
-      gpio: msic: Drop driver from Makefile
-
-Zheng Yongjun (1):
-      gpio: wcove: convert comma to semicolon
-
- MAINTAINERS                    |   2 -
- drivers/gpio/Kconfig           |  14 --
- drivers/gpio/Makefile          |   2 -
- drivers/gpio/TODO              |   2 +-
- drivers/gpio/gpio-aggregator.c |  40 +---
- drivers/gpio/gpio-intel-mid.c  | 414 -----------------------------------------
- drivers/gpio/gpio-merrifield.c |   5 +
- drivers/gpio/gpio-msic.c       | 314 -------------------------------
- drivers/gpio/gpio-wcove.c      |  65 +++----
- include/linux/gpio/machine.h   |   4 +-
- lib/cmdline.c                  |  21 ++-
- lib/cmdline_kunit.c            |  56 ++++++
- 12 files changed, 120 insertions(+), 819 deletions(-)
- delete mode 100644 drivers/gpio/gpio-intel-mid.c
- delete mode 100644 drivers/gpio/gpio-msic.c
+TL;DR: it's harmless not to apply this one and basically sent to Hans as he
+reported this.
 
 -- 
 With Best Regards,
