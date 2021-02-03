@@ -2,61 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C68E130D66D
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 10:37:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A774530D6A1
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 10:49:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232944AbhBCJgz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Feb 2021 04:36:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48400 "EHLO
+        id S233206AbhBCJsu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Feb 2021 04:48:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232660AbhBCJgt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Feb 2021 04:36:49 -0500
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3514C061786
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Feb 2021 01:36:08 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id l12so27490682ljc.3
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Feb 2021 01:36:08 -0800 (PST)
+        with ESMTP id S233445AbhBCJsh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Feb 2021 04:48:37 -0500
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F2FC0613D6
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Feb 2021 01:47:57 -0800 (PST)
+Received: by mail-qt1-x835.google.com with SMTP id v3so17116472qtw.4
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Feb 2021 01:47:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=0x0f.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6GnRcNKibxztYcvUQzDGCgHL6AviuIrNT8YjYqp4o+g=;
-        b=FULorK8vsWlfT9sFbadP6z4zJxOs9AiVRnvUe7J2rfjR8hquBrIAC9NlypGz9UeYow
-         fXSHbY/48b4B5FIWctnJBzdDTMZq9tEReP6vEhxmitTovmHof64D1sG8EOw5cefbG83b
-         b6WHunVOHISOl9wNdGRCjou+X/7CDB2GZGoy1u48n6WpbKI7eHXwxjaSrEfO+KrQAeGa
-         MiIrxSEsA6COQt6+e85FcGXmmkpNbcJ6g/AC8Pvg2DqvXoSiLe8ytw/3OA8kIkmwOMSD
-         yBCRLiGLJ8rT5lH/iTbOBidfsCnzjchOZKQeN/OhXQqHkDq0+TtRW3ouM6MyzaxbLyzz
-         Rqvw==
+        bh=zk8/vp8JgNY876P4l17ZIlAqzB9Wo0hE+dFWOx8FtrM=;
+        b=SY8KB6ZL7hu4tsDAT4WtjBrjedqhdXnJ0WfEvfJfTY4yh0iSUYYRhinj5pTMbKBDV1
+         aUGstOUKrtsV6s3+W+PrL5fuzfzO0w1ItRwwVf+Gj24JPi7XOxzASbip5S8aN+T6CEwU
+         +NX0nAvHbl0Z+rP1h+42oA2pbBBS/9Oc57Pzw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6GnRcNKibxztYcvUQzDGCgHL6AviuIrNT8YjYqp4o+g=;
-        b=cjJXsNST1NZtZH9BbPwlp+gUz4Em2eSxviY2FBx6ZT9zcRvSekp8QPxh1FYTM8Fh4g
-         yZ6CxJGdPPmLHAfhuZfG8CU5QLf8gwvIDiiQ01r2Qv1lWptT6gNyMf/RcRb35jm1Fr0U
-         gz5xLGOxPcmV7HKRIUw5B3nJN63Lyv8HcIhuLjjW28ICpEUJcyKcpuN6qP4RcrqtDsQz
-         wNzlHC1tui8C7gbwkEj/3Bj1/nk4LpNVex/jf/gGMgkoWvnlQX6Z+0QnPRdvPA/trCiS
-         wxwbjyHDRF0JhDWSRrzixN8Jygk+8ZOR3+kH3AfaQ48wFboTJ06mlRDYZYrQWZ8mAQHz
-         vvnA==
-X-Gm-Message-State: AOAM530MB/3YyYN4YlWrwllJeEKcpKFcm5pSZBj9vKsmbcNwttMMLR+H
-        yeDBKlOLn8ZqvxCIOuz4AOKSLfVcTshNgrOPEJOfLA==
-X-Google-Smtp-Source: ABdhPJy4FflXpUjChVW+K6gb6Ck95k2cKDdhJLsDyahupxAN2akbTAdmitGaAnNIhYk43WdM7SiuRSAXZjsbLKYTmG8=
-X-Received: by 2002:a2e:8746:: with SMTP id q6mr1238712ljj.326.1612344967044;
- Wed, 03 Feb 2021 01:36:07 -0800 (PST)
+        bh=zk8/vp8JgNY876P4l17ZIlAqzB9Wo0hE+dFWOx8FtrM=;
+        b=HYeqo7rMJMyakVpfK3yjXpOxj0JWPeQSp15SfxgK/XXcyEIwU9YdH1to0twFi+7xCg
+         1qnFfenUcrSDd86zY/8NIsAB3JqdWocBgCOSA+gQzlAT2chADX6nnlW5CoTHaO6DKyK6
+         +kJ51n0n1YV0WCqSZnwrZ2m7Xa1IQWsSvFxHG6sXZzqcmjxTY7U4F5W2ODw9IgLdkkoj
+         gopy5U/dJuibYnSijjt88aNglYTepjzAGuuCPu0IJRtnOnrmD/NuWt6Vfx4YHMNzLORS
+         EzSYS8hFtGj+TYUs1lQ0gZh/OdGRUIuR7ro4e1NJCpyw253PdVd7LAOhEoHcER7/G2ox
+         BGtQ==
+X-Gm-Message-State: AOAM532I5r7GPr4fk0d+Ro/vg7XUJMDH+Uat9qR+PChdude5n9QTU80E
+        hAEyj4y6Q8f0CSo+z98yHyMdhK8IrDGuoi6d6NaQZg==
+X-Google-Smtp-Source: ABdhPJybIlxUI+vQirOWdUqx6AbdqbGySWHXWBWrXBPSLHmsuhjkp60HqhVWg2mWEWZVLnKYEXPVHI64xIy6+ueWcow=
+X-Received: by 2002:ac8:5dc8:: with SMTP id e8mr1685704qtx.249.1612345676494;
+ Wed, 03 Feb 2021 01:47:56 -0800 (PST)
 MIME-Version: 1.0
 References: <20210202205544.24812-1-robh@kernel.org>
 In-Reply-To: <20210202205544.24812-1-robh@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Feb 2021 10:35:56 +0100
-Message-ID: <CACRpkdZF1zvykXj58oKjBVqomH86BSW8N=noDs8q3BA--CLAvw@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Wed, 3 Feb 2021 18:48:59 +0900
+Message-ID: <CAFr9PX=NmCev3c1jQ3VA89rwcTr3jpRQB-NKf+j+LOeOMHy1Og@mail.gmail.com>
 Subject: Re: [PATCH 1/3] dt-bindings: Fix undocumented compatible strings in examples
 To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
         Daniel Palmer <daniel@thingy.jp>,
@@ -71,53 +68,34 @@ Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
         Guenter Roeck <linux@roeck-us.net>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Vincent Cheng <vincent.cheng.xh@renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 2, 2021 at 9:55 PM Rob Herring <robh@kernel.org> wrote:
+Hi Rob,
 
-> Running 'dt-validate -m' will flag any compatible strings missing a schema.
-> Fix all the errors found in DT binding examples. Most of these are just
-> typos.
+On Wed, 3 Feb 2021 at 05:55, Rob Herring <robh@kernel.org> wrote:
+> diff --git a/Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml b/Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
+> index 1f2ef408bb43..fe1e1c63ffe3 100644
+> --- a/Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
+> @@ -46,7 +46,7 @@ examples:
+>      #include <dt-bindings/gpio/msc313-gpio.h>
 >
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Daniel Palmer <daniel@thingy.jp>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Avi Fishman <avifishman70@gmail.com>
-> Cc: Tomer Maimon <tmaimon77@gmail.com>
-> Cc: Tali Perry <tali.perry1@gmail.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: Vincent Cheng <vincent.cheng.xh@renesas.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-crypto@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-i2c@vger.kernel.org
-> Cc: iommu@lists.linux-foundation.org
-> Cc: linux-watchdog@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+>      gpio: gpio@207800 {
+> -      compatible = "mstar,msc313e-gpio";
+> +      compatible = "mstar,msc313-gpio";
+>        #gpio-cells = <2>;
+>        reg = <0x207800 0x200>;
+>        gpio-controller;
 
-Ooops.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+This is correct. The compatible string dropped the e at some point and
+I must have missed the example.
+Thanks for the fix.
 
-Yours,
-Linus Walleij
+Reviewed-by: Daniel Palmer <daniel@thingy.jp>
