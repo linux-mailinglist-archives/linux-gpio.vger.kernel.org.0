@@ -2,125 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8261B30D94B
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 12:57:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43C8330D969
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 13:01:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234377AbhBCL4q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Feb 2021 06:56:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44332 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234170AbhBCL4p (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 3 Feb 2021 06:56:45 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B2493AEE7;
-        Wed,  3 Feb 2021 11:56:02 +0000 (UTC)
-Message-ID: <fcf4d0934a1523975c325c9911c1830a2121b27a.camel@suse.de>
-Subject: Re: [PATCH 3/3] dt-bindings: Fix errors in 'if' schemas
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Daniel Palmer <daniel@thingy.jp>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>,
+        id S234469AbhBCMBA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Feb 2021 07:01:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234444AbhBCMAv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Feb 2021 07:00:51 -0500
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F024EC061788;
+        Wed,  3 Feb 2021 04:00:10 -0800 (PST)
+Received: by mail-pf1-x42b.google.com with SMTP id y142so8510665pfb.3;
+        Wed, 03 Feb 2021 04:00:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8Q1P72jDkAiYrJpjzWAvpbntKoausolrxBiuy4JKYsU=;
+        b=fDrx5Or5VRpfg0J7QHIKpfwG6BvxR2ERJWWHPjDfAaUejJVu1+Lphwm60HsVkuikLe
+         e1sHT1hZMPRRZ3ovKgUGew1dkaqdw4pBNiPnmB8yen/BctrP7HnMPXz/SbdK+Dp9x7vW
+         uPEYy2kznc4sybpKeRDjxyxaQgKUyb1Th9jiUpN7xJz2FGsasLJTXsT/vwA1NLWNzLJ+
+         KAcSG8Q5GXuMvXhOcivvt2fglEyHG2Ld6dZ1ym2InitH+U9vX2IJhgtkpeBWVRZsOpOO
+         dIpO0eQT9n283bMo/cN/iky+WD/FJi9DKoYX4aVStwDqZBZGFD3PCKQU9hsDwSdU36Ya
+         L01g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Q1P72jDkAiYrJpjzWAvpbntKoausolrxBiuy4JKYsU=;
+        b=RXiZpETvF+DV8HNul5Vvj2oKjj5lxuWTjCAMuEONN9sj82hxwYVTp9YX8U06LfKh1U
+         1YFOFQgNpseRJgQ/x/3IQQj9pLVyLPxSfEyfPRNvJHYPUeSdTl06OjB0H/GkwCEhGJeb
+         XmELl/oNlnI6UCGBxj8UU7ubNgZHp4WNpk8kuUGUKzZbeIb7uwReIUSg2ApDT8X2/EvH
+         nwgCcR0tump+sJ3pevTngGo1xB2ipimACldNFZKgOv3AnpHL8ebIycpLEI5ups7tiV/5
+         l2XqpP5oKAmnpy2SkX+vb92cfHE6DFqKxsKxG/QiqiSvRQe3n80ewj8UXXpxM5uaFUFF
+         JxSw==
+X-Gm-Message-State: AOAM533qtcN2Lg3S5aMtTV/fp9lUJ8EDH2wmA0c51Qv/umfyVZ0WKAHI
+        9X2OMzw4Pn+3IH+kLuQqWGF18d71gukkHK2H+Ms=
+X-Google-Smtp-Source: ABdhPJwMYgHV+Be/xu9zUBwCMnm5ihAYrPPMqvnQFLvWfX6DEWf/Ni/nWT3r+LTx0J8aXQZzhafNyDhVWll2iLr9nUU=
+X-Received: by 2002:a62:5a86:0:b029:1ae:6b45:b6a9 with SMTP id
+ o128-20020a625a860000b02901ae6b45b6a9mr2753818pfb.7.1612353610466; Wed, 03
+ Feb 2021 04:00:10 -0800 (PST)
+MIME-Version: 1.0
+References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com> <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
+In-Reply-To: <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 3 Feb 2021 13:59:54 +0200
+Message-ID: <CAHp75VeYroY5uG38NrsqwbHnjT0j_LMMD3JmNmRED3OY5ff7xA@mail.gmail.com>
+Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Vincent Cheng <vincent.cheng.xh@renesas.com>,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-watchdog@vger.kernel.org,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Date:   Wed, 03 Feb 2021 12:55:58 +0100
-In-Reply-To: <20210202205544.24812-3-robh@kernel.org>
-References: <20210202205544.24812-1-robh@kernel.org>
-         <20210202205544.24812-3-robh@kernel.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-5GqMeNDA14mTF3lYuG5p"
-User-Agent: Evolution 3.38.3 
-MIME-Version: 1.0
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
+<patrik.r.jakobsson@gmail.com> wrote:
+> On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > Hi guys,
+> >
+> > This is first part of Intel MID outdated platforms removal. It's collected into
+> > immutable branch with a given tag, please pull to yours subsystems.
+>
+> Hi Andy,
+> Do you plan on eventually removing X86_INTEL_MID completely? If so,
+> then I should probably start looking at removing the corresponding
+> parts in GMA500.
 
---=-5GqMeNDA14mTF3lYuG5p
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I have noticed new commits in DRM against GMA500 and it seems now in a
+conflict with my immutable branch. Are you sure you don't forget to
+pull it?
 
-On Tue, 2021-02-02 at 14:55 -0600, Rob Herring wrote:
-> Properties in if/then schemas weren't getting checked by the meta-schemas=
-.
-> Enabling meta-schema checks finds several errors.
->=20
-> The use of an 'items' schema (as opposed to the list form) is wrong in
-> some cases as it applies to all entries. 'contains' is the correct schema
-> to use in the case of multiple entries.
->=20
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Ray Jui <rjui@broadcom.com>
-> Cc: Scott Branden <sbranden@broadcom.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: linux-crypto@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-
---=-5GqMeNDA14mTF3lYuG5p
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAmAaj04ACgkQlfZmHno8
-x/7Bywf9Ghk5CuwNSJHbRiqlKJ1q12tWeWcLF7LmZIFgm2sawjY0skG82SyJfJow
-cwKef8GMfZ51OrlO4VmeoOJ1sK8zmq6rkPz24dgE0Fe82CRAXneaxyr+m19SOgll
-vmrtNrEQpRqlVrOTo4A2jAufrJtStlw2VAy0jJT/QlRlyRwArJoUskuIqwNzj7wF
-KbgUjHD7GbVhRHlbfhsY7TdO6MYB4iKQek7IgiYoK8lB8TexlKr2ygDdBj1aXs4u
-omTYdJANyOFSbFAmnWfl3ScKeyS7lVHPUZybV6rHp6YDt+k1vjRivIzZXOLXrv14
-i2YyoJudc8K5ZBi0AE6j2Y0njKpi9A==
-=vnPw
------END PGP SIGNATURE-----
-
---=-5GqMeNDA14mTF3lYuG5p--
-
+-- 
+With Best Regards,
+Andy Shevchenko
