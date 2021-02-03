@@ -2,85 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF4D130D9EA
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 13:40:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41F2530DAA1
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Feb 2021 14:10:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230226AbhBCMkQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Feb 2021 07:40:16 -0500
-Received: from esa.microchip.iphmx.com ([68.232.154.123]:55739 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231159AbhBCMjt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Feb 2021 07:39:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1612355988; x=1643891988;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=AdTHEClqq4Qqa1lO3aXnEWNDtT86vAA8Mw0krUz2ZYc=;
-  b=QAACZ9Su+mOzwGHzJXtfsiBSJkdqj8QTbWQlUArA+Uti/IubC8TkTe+3
-   S3QPZWQ0zUK0hCAbYmKgSdlOmSxLBZjAysxF7G6VtEeFaOzrmaNpcyawD
-   a+FMMtUgKL0NFFg1dv2PCB5E6LEVpFZkRC4k0PisfjpEQpWpVGAmgHK4i
-   xgKhiCBgpVTsPwO9NTtJenBijTDtV8UDtUwkHmU+fbL/0mBAT6pgW+o2i
-   8/GJ8e0cLirBciVxJBOgKW/rgqZjQSKOU+/3gAwLU0jhFby+XfHA19Uk2
-   S0ZV5wBES15bNJIcgiJ9XGlbBQVQ0GFe2N8Mi/ljWyxjYEBVfk81gJ+At
-   g==;
-IronPort-SDR: Tts59nglJzw2kUzKY/ZWi0grf4sq4u7+ryxOl8/LFzAsXTZKITbjASo91bPDxgt0FLBRgx2N7L
- h6R14gPCfUpo3H0NyQXVALEUtxUvW+6yZq9aA7fHoR/hpe2zD470mEu81LEofOJvk+ivsbnR26
- hqIt0sURKAXNtGFgRQuaR98cb6JnbS5GPvC7TgMTOdCGWrC614o2Z4MvgGZcFyn/mcmBKLPPkm
- edJ3xg2rwtkst9teD84cajjgBou1+9fViRd9Cm7qEeotem+d2RRk7b37qCVCGtDZ5sGgMgIZBB
- C5o=
-X-IronPort-AV: E=Sophos;i="5.79,398,1602572400"; 
-   d="scan'208";a="42754787"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Feb 2021 05:38:30 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 3 Feb 2021 05:38:30 -0700
-Received: from soft-dev10.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 3 Feb 2021 05:38:28 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Subject: [PATCH 1/1] pinctrl: pinctrl-microchip-sgpio: Fix wrong register offset for IRQ trigger
-Date:   Wed, 3 Feb 2021 13:38:25 +0100
-Message-ID: <20210203123825.611576-1-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.25.1
+        id S230020AbhBCNJr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Feb 2021 08:09:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229608AbhBCNJp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Feb 2021 08:09:45 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0F2C061573
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Feb 2021 05:09:05 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id e15so5184483wme.0
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Feb 2021 05:09:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kITRYmL9gYyUSTr+OQk1FZU6u9l8o2aUuI4jTkAxf4o=;
+        b=DrATJn7fPqQ32wdnSdxvpOC6uLX5INiZsvqke4K8loBMQBpGV+//FTFikEkBm9piMi
+         wFTQL/UAq+cPx7wvB6erw5tHB1rl1xQg+GsyrvcYtMF28IceHmDwJ8D+9OCU+mXDhFQg
+         82+VnSzu4OXHxsCWAok2O4DW8GYjgf0HTXbhxroChvIz8pl4gtp7H+TtYnUoywfAD48D
+         Z5RQARvDlf+944xs2X40nfT983qEq1LrIykuRWfTi4D1WtqC4UVq7n0WhvWHOERvos6z
+         YFR3QeNJlwGyz+2NdFf9sad4eNGIvI1W77HCNBmNGgRP+9pHGyQ4y8rjZEIAVRocUGtV
+         j2Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kITRYmL9gYyUSTr+OQk1FZU6u9l8o2aUuI4jTkAxf4o=;
+        b=V8zmazqObzZpxS9baBRjeJ0M3R4D16hswB9yt8gs40V3thBKQJrU4vqd5k03S0iVti
+         QRBhw1TgE/1laC1wYnJct1ICIaZTBBdYWPTdvM3nw2KmLgzftpizBJhl4yB7toOq4ZX7
+         FTgc9ZrY3I3KrMmHrsYf0oXkengL+3vH6bClPVyCu4zq3/9NQNhxty+8x+juVQ8xwhzU
+         H6AuCkmCyaNwcecavcKIbZoxx+jvYuxHf/LpcV15zzdSRG+D+NjyRHTbJm+GjvdKlE4D
+         ls3FbaOboqpblY3pExeIpu5Ti+F2A4WlNSg3/eM8mSb8Wbf73WgXj50GyK8JuuMEAGa9
+         nTHg==
+X-Gm-Message-State: AOAM531NQKEth6Eb6xP+wa4obbGcq4/zW6lW+vDUSNsu85o5rSdIGrRJ
+        A1Bwi/UcK8GEBAGlhGqhx52VnA==
+X-Google-Smtp-Source: ABdhPJxuOMj9hloUakkWJIg9DRccJERGx8rzkaFXU90o6FHTSQ5YHjTLuy5KIh2B+HrDu+rqZkR1JA==
+X-Received: by 2002:a05:600c:3591:: with SMTP id p17mr2834006wmq.153.1612357743323;
+        Wed, 03 Feb 2021 05:09:03 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id g16sm2624414wmi.30.2021.02.03.05.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Feb 2021 05:09:02 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.11-rc7
+Date:   Wed,  3 Feb 2021 14:08:57 +0100
+Message-Id: <20210203130857.17648-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch fixes using a wrong register offset when configuring an IRQ
-trigger type.
+Linus,
 
-Fixes: be2dc859abd4 ("pinctrl: pinctrl-microchip-sgpio: Add irq support (for sparx5)")
-Reported-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- drivers/pinctrl/pinctrl-microchip-sgpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+here are some more fixes from the GPIO subsystem for this release. This
+time it's only core fixes. Details are in the signed tag.
 
-diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-index 6a43edefa490..61ba245bd0f8 100644
---- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-+++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-@@ -574,7 +574,7 @@ static void microchip_sgpio_irq_settype(struct irq_data *data,
- 	/* Type value spread over 2 registers sets: low, high bit */
- 	sgpio_clrsetbits(bank->priv, REG_INT_TRIGGER, addr.bit,
- 			 BIT(addr.port), (!!(type & 0x1)) << addr.port);
--	sgpio_clrsetbits(bank->priv, REG_INT_TRIGGER + SGPIO_MAX_BITS, addr.bit,
-+	sgpio_clrsetbits(bank->priv, REG_INT_TRIGGER, SGPIO_MAX_BITS + addr.bit,
- 			 BIT(addr.port), (!!(type & 0x2)) << addr.port);
+Please pull,
+Bartosz
 
- 	if (type == SGPIO_INT_TRG_LEVEL)
---
-2.25.1
+The following changes since commit 6ee1d745b7c9fd573fba142a2efdad76a9f1cb04:
+
+  Linux 5.11-rc5 (2021-01-24 16:47:14 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.11-rc7
+
+for you to fetch changes up to c07ea8d0b170c0cf6592a53981841c7973e142ea:
+
+  gpio: gpiolib: remove shadowed variable (2021-02-01 13:24:28 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v5.11-rc7
+
+- fix a memory leak in error path in gpiolib
+- clear debounce period in output mode in the character device code
+- remove shadowed variable
+
+----------------------------------------------------------------
+Kent Gibson (1):
+      gpiolib: cdev: clear debounce period if line set to output
+
+Quanyang Wang (1):
+      gpiolib: free device name on error path to fix kmemleak
+
+Wolfram Sang (1):
+      gpio: gpiolib: remove shadowed variable
+
+ drivers/gpio/gpiolib-cdev.c |  2 ++
+ drivers/gpio/gpiolib.c      | 12 +++++++++---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
