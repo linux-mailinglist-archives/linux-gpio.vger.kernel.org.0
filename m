@@ -2,97 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9252530EDAC
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 08:49:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0AE130EF18
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 09:57:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232941AbhBDHrn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Feb 2021 02:47:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52768 "EHLO
+        id S234924AbhBDI4R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Feb 2021 03:56:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234483AbhBDHrm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 02:47:42 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3691DC0613ED
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Feb 2021 23:47:02 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id c132so1542781pga.3
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Feb 2021 23:47:02 -0800 (PST)
+        with ESMTP id S231767AbhBDI4R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 03:56:17 -0500
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B42C061573;
+        Thu,  4 Feb 2021 00:55:37 -0800 (PST)
+Received: by mail-il1-x12c.google.com with SMTP id y17so1835135ili.12;
+        Thu, 04 Feb 2021 00:55:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=41k6/Br2dEAheslDj6eGm8t3m1CekeaO74gqIfyKr4g=;
-        b=pt/96seHNS8L+ZfNOR2uSQGE6w8Iwl6JN0uGCGfThVAm+Vf5mx2eY9Jqtabjq/tKHa
-         bCZCV7lMQJadrFZ7TUrHuBBfAnO4yVWX57wcntVmA7LiI12Kc+WssQ0BG+qLsVe0nYd4
-         LEG7dXuJ6xUjbnnXd9D75vVbYYhHqgp83sQ8eu9Lx7xWacouf2FaFo5IJVKq0ALHVIWj
-         ihsAbbV54PZhT+fYHPI8Gk05cNJmpJfNzn6qZFajNhrF+vA5fVWrJ/D3TCGTx8RWHl3Y
-         hRWTqApjoqUJywQjIdI2I7iaoJCOUR15i4bmIdki1IW29Mv5xZOjaY56TduB/aoF667+
-         KBcA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wgqtCgxTyEkoatPNuk1/d0sbXAfUIl1+10KCCoubueE=;
+        b=jCSq/9Hh63zcQprobHHi7fqAMnr1T2L7KH/Q67a+uu2UEN7CgnIVX9A/LLfm03nbg9
+         H1kcCYOYwyB05dsLtHzVaxu3Eu8hTeCsidcToCnq7LqWtlcCu3b4dy+REHvnfFQHMEkv
+         T3QJZLfLx4DHBGXRzSHVJhiXCC4vTsrYG9C2wdGN8hSkoQJIZgTUyDiSMQjS7Pl9qwnY
+         hulCbu3rHsOdcJxUd71ivdXusLLRfzVnIQbAql6TAqa/gXW8g3DTQqB7PnoAU5hFePA0
+         7dc/unNnpjdRZcKVXxACKnwAXq0U82J0rfR8QoHAp8pqGL0HRnb0ebxTsYnIoo1AyJdr
+         5lcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=41k6/Br2dEAheslDj6eGm8t3m1CekeaO74gqIfyKr4g=;
-        b=lBN1H5AA+XpxHAcPGwXbmWlQ4SHxpgkvJzxYrtc0LutVgJ+dk7179b0Q/NBkc4Qz1w
-         Ndj5jGtudcTpvYDDaGML59qoiYgblgmukkpHcUy8RUIpvk1eyfWOtlvC9NghRPTWLwxk
-         2svKL+AoauVXIt7iDzWGv1zCDhtYJgVAneyoMU776Raesm0rNrH8GPJToNUnFyK7ZXVr
-         M84W7vpt4xhyeJfrjnlAdhNNASNcLHvpPOSyqn71YlkvmlEgyUVYtlxyDqBPP3lX0wfD
-         blXa9WSXkYRJCFjAKZvFe/BuGAobfMuBUg/0hKy0GYbh2RqiZ2oFxYYom1CyQFMFT4qT
-         J19A==
-X-Gm-Message-State: AOAM531qvxojDGLQocicJqVMNHHr9Q3mda8T+GAFjv0muA8xxeCVL1mJ
-        ZwNF2syZdMvu+0lrBcJ2n0qjsg==
-X-Google-Smtp-Source: ABdhPJwOPqkO5dZ7dKG8OXWMJxBLQnabg7BBjYr7iIDslub4fSbdAcIlrod2x2BXblIBzpvT1gkuPQ==
-X-Received: by 2002:aa7:9f5a:0:b029:1d4:fa02:a044 with SMTP id h26-20020aa79f5a0000b02901d4fa02a044mr1794422pfr.30.1612424821654;
-        Wed, 03 Feb 2021 23:47:01 -0800 (PST)
-Received: from x1 ([2601:1c0:4701:ae70:7b0:75e8:7735:4209])
-        by smtp.gmail.com with ESMTPSA id m5sm5233340pgj.11.2021.02.03.23.47.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Feb 2021 23:47:00 -0800 (PST)
-Date:   Wed, 3 Feb 2021 23:46:58 -0800
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     bcousson@baylibre.com, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] ARM: dts: am335x-pocketbeagle: unique gpio-line-names
-Message-ID: <20210204074658.GA271881@x1>
-References: <20210127000303.436595-1-drew@beagleboard.org>
- <YBubDME90umkF9aQ@atomide.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wgqtCgxTyEkoatPNuk1/d0sbXAfUIl1+10KCCoubueE=;
+        b=AzKIHMIQRHMr7kbTx5pBLTFKJTnvTcEAsrRzKIGGB23c43ftUZt8qOVPP5p+d1CuzI
+         VLuEQnOlQMl88fEogyKTMv8G1pU17exlg1139MnX/IcEA8N5kDPAX1UdM4bAaNP/ze4U
+         hK9wWZRpR6eeMSjmFVK97aoYqBtBMRldTszUkrnN5yDpHGx2TbIDH845h+d7MMQNsobm
+         apXpH0HJtrDeNCZwc0gay5p62htAImfyBqF1rKhePHUfFIxe9rZae3qX7zyz5FBclAdl
+         QLNcqGtAmi7LzkGafga5S4Xzhv37+/IOwpdcAe1MMT1ebpfORWZ3H6YDS4lmRVb+HW+X
+         4ynA==
+X-Gm-Message-State: AOAM530HcKqt4a+zVwg9Arpn1+H7xPFgbbbQmIQcVSFvwTe+PVRJb/YE
+        STSIR3MSwwiK6+gchO6h2NbzMxzGvq6Aqro8WpKAKEgDuYM=
+X-Google-Smtp-Source: ABdhPJz9k6ybKd/Iiv1NxWPmTbfh043bu1P7WPQnmsZo7oVbMtqG2ILSVjiEDDVCGcHmpd+YXWLg0ahrVxJ9GSai0fA=
+X-Received: by 2002:a05:6e02:20e8:: with SMTP id q8mr5961862ilv.205.1612428936646;
+ Thu, 04 Feb 2021 00:55:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YBubDME90umkF9aQ@atomide.com>
+References: <cover.1608963094.git.syednwaris@gmail.com> <da4eaafa84f32375319014f6e9af5c104a6153fd.1608963095.git.syednwaris@gmail.com>
+ <CAHp75VcSsfDKY3w4ufZktXzRB=GiObAV6voPfmeAHcbdwX0uqg@mail.gmail.com>
+In-Reply-To: <CAHp75VcSsfDKY3w4ufZktXzRB=GiObAV6voPfmeAHcbdwX0uqg@mail.gmail.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Thu, 4 Feb 2021 14:25:24 +0530
+Message-ID: <CACG_h5otB5hhAX0z9YzN8bT6Nz5WVRUQWbhENF+u8Z3WsCp_8A@mail.gmail.com>
+Subject: Re: [PATCH 2/5] lib/test_bitmap.c: Add for_each_set_clump test cases
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "vilhelm.gray@gmail.com" <vilhelm.gray@gmail.com>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "rrichter@marvell.com" <rrichter@marvell.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 04, 2021 at 08:58:20AM +0200, Tony Lindgren wrote:
-> * Drew Fustini <drew@beagleboard.org> [210127 02:04]:
-> > Based on linux-gpio discussion [1], it is best practice to make the
-> > gpio-line-names unique. Generic names like "[ethernet]" are replaced
-> > with the name of the unique signal on the AM3358 SoC ball corresponding
-> > to the gpio line. "[NC]" is also renamed to the standard "NC" name to
-> > represent "not connected".
-> > 
-> > [1] https://lore.kernel.org/linux-gpio/20201216195357.GA2583366@x1/
-> 
-> So are these needed for v5.12 as fixes, or can these wait until after
-> the merge window for v5.13?
-> 
-> Regards,
-> 
-> Tony
+On Sat, Dec 26, 2020 at 8:15 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+>
+>
+> On Saturday, December 26, 2020, Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+>>
+>> The introduction of the generic for_each_set_clump macro need test
+>> cases to verify the implementation. This patch adds test cases for
+>> scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
+>> The cases contain situations where clump is getting split at the word
+>> boundary and also when zeroes are present in the start and middle of
+>> bitmap.
+>
+>
+> You have to split it to a separate test under drivers/gpio, because now it has no sense to be like this.
 
-I suppose it depends on if/when the patches to make gpio lines unique
-go in.  I believe the last response from Linus W. was in mid-December
-and indicated he holding off merging as it was immature [1]
+Hi Andy,
 
-Thanks,
-Drew
+How do I split it into separate test under drivers/gpio ? I have
+thought of making a test_clump_bits.c file in drivers/gpio.
+But how do I integrate this test file so that tests are executed at
+runtime? Similar to tests in lib/test_bitmap.c ?
 
-[1] https://lore.kernel.org/linux-gpio/CACRpkdbXRHCDGX-YBbNY7cMob0dZNhi1ETA3QnC71ZtOYB30JQ@mail.gmail.com/
+I believe I need to make changes in config files so that tests in
+test_clump_bits.c ( in drivers/gpio ) are executed at runtime. Could
+you please provide some steps on how to do that. Thank You !
+
+Regards
+Syed Nayyar Waris
