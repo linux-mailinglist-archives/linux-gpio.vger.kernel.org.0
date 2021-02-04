@@ -2,107 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0AE130EF18
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 09:57:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35B8A30EFDE
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 10:44:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234924AbhBDI4R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Feb 2021 03:56:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39206 "EHLO
+        id S233668AbhBDJoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Feb 2021 04:44:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231767AbhBDI4R (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 03:56:17 -0500
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B42C061573;
-        Thu,  4 Feb 2021 00:55:37 -0800 (PST)
-Received: by mail-il1-x12c.google.com with SMTP id y17so1835135ili.12;
-        Thu, 04 Feb 2021 00:55:37 -0800 (PST)
+        with ESMTP id S234863AbhBDJom (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 04:44:42 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C631EC061573
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Feb 2021 01:44:01 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id b9so4153309ejy.12
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Feb 2021 01:44:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wgqtCgxTyEkoatPNuk1/d0sbXAfUIl1+10KCCoubueE=;
-        b=jCSq/9Hh63zcQprobHHi7fqAMnr1T2L7KH/Q67a+uu2UEN7CgnIVX9A/LLfm03nbg9
-         H1kcCYOYwyB05dsLtHzVaxu3Eu8hTeCsidcToCnq7LqWtlcCu3b4dy+REHvnfFQHMEkv
-         T3QJZLfLx4DHBGXRzSHVJhiXCC4vTsrYG9C2wdGN8hSkoQJIZgTUyDiSMQjS7Pl9qwnY
-         hulCbu3rHsOdcJxUd71ivdXusLLRfzVnIQbAql6TAqa/gXW8g3DTQqB7PnoAU5hFePA0
-         7dc/unNnpjdRZcKVXxACKnwAXq0U82J0rfR8QoHAp8pqGL0HRnb0ebxTsYnIoo1AyJdr
-         5lcA==
+        bh=RvWUGt+ympmL3cWE6ntntn1B23xanMkb9vaTBwRHIxM=;
+        b=pdc4ZugEYYdi7y5Yes8jifFdhdtSsLF9R8gGO8rxouBRQrbqoS7JTFU95StPCjzoAK
+         /OI+QCTovZoueCzWfs8Q2ljZpJfALcBv0+VIMPNGKQf5ZAt/6HXy4EKnry8gJsf6mml9
+         CAIeWOGoZKgAuwzXjixegbM9ntgVFdq9GBDPslT2809Dq6/Ktd8dcXObnPjtmE9038Uk
+         Pfot/W8HhDc06T8VQ0sKXJkJZOYBGx5Ob4DZ9FHCqZmvS4B39ctY06T11EM69l3712hi
+         z4WQpbB70TaCmP/qncaLkCDrM5L80pOBXnHw3DHKjhYVz+3C4emwy8PBIb/kdsCIebxu
+         sUIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wgqtCgxTyEkoatPNuk1/d0sbXAfUIl1+10KCCoubueE=;
-        b=AzKIHMIQRHMr7kbTx5pBLTFKJTnvTcEAsrRzKIGGB23c43ftUZt8qOVPP5p+d1CuzI
-         VLuEQnOlQMl88fEogyKTMv8G1pU17exlg1139MnX/IcEA8N5kDPAX1UdM4bAaNP/ze4U
-         hK9wWZRpR6eeMSjmFVK97aoYqBtBMRldTszUkrnN5yDpHGx2TbIDH845h+d7MMQNsobm
-         apXpH0HJtrDeNCZwc0gay5p62htAImfyBqF1rKhePHUfFIxe9rZae3qX7zyz5FBclAdl
-         QLNcqGtAmi7LzkGafga5S4Xzhv37+/IOwpdcAe1MMT1ebpfORWZ3H6YDS4lmRVb+HW+X
-         4ynA==
-X-Gm-Message-State: AOAM530HcKqt4a+zVwg9Arpn1+H7xPFgbbbQmIQcVSFvwTe+PVRJb/YE
-        STSIR3MSwwiK6+gchO6h2NbzMxzGvq6Aqro8WpKAKEgDuYM=
-X-Google-Smtp-Source: ABdhPJz9k6ybKd/Iiv1NxWPmTbfh043bu1P7WPQnmsZo7oVbMtqG2ILSVjiEDDVCGcHmpd+YXWLg0ahrVxJ9GSai0fA=
-X-Received: by 2002:a05:6e02:20e8:: with SMTP id q8mr5961862ilv.205.1612428936646;
- Thu, 04 Feb 2021 00:55:36 -0800 (PST)
+        bh=RvWUGt+ympmL3cWE6ntntn1B23xanMkb9vaTBwRHIxM=;
+        b=sBRh/IfhSmneS2pu//0az/JBFPdHckxUMqAPzM3SMsEnea5HW26Bjw4izAAZnMObmx
+         wkoeVzgVuxpGz62mgxFVSunkkt/9Z7UKtyJMeOHA/8MEOMhhaErHpMrVtdJuxTu7/0Xh
+         bwZxGQTDVbMfAW2ng+JHELney7RW6KbEhQZcQnuA2YpPgBAalc+M+9i+aEhcPeV+7uDo
+         JKDWgL+Hn6+otHpplY+ca4RJ+5KsmpmvQeFo80l+oeT/ox6neH5OH4Mg3wW85CRx0VAd
+         FhQxeWQyLOLQ9fNJS3ygmN3IX2MgZFolLI75LSM8dq8KJ0wJiQKoV0GdmJqXVnFHpTsT
+         LX/A==
+X-Gm-Message-State: AOAM532wWAsAsOl2lvTfXL9ZFcG6Ls5/HxosWfzEbGjl92rpu3q4d/4p
+        42+YBtJuWxd1ic3hTi6/tf5euJVu4JQG2oFk7DnLELWxkew=
+X-Google-Smtp-Source: ABdhPJy95Qv4rXPN+CfjFNzOuIekTyKCVoLLAPBCdrJN+pRtLkmUrRe/7YzTN1snqMFVBZhmYKRioZAdNs4UVn6pCyc=
+X-Received: by 2002:a17:906:8053:: with SMTP id x19mr7122092ejw.470.1612431840417;
+ Thu, 04 Feb 2021 01:44:00 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1608963094.git.syednwaris@gmail.com> <da4eaafa84f32375319014f6e9af5c104a6153fd.1608963095.git.syednwaris@gmail.com>
- <CAHp75VcSsfDKY3w4ufZktXzRB=GiObAV6voPfmeAHcbdwX0uqg@mail.gmail.com>
-In-Reply-To: <CAHp75VcSsfDKY3w4ufZktXzRB=GiObAV6voPfmeAHcbdwX0uqg@mail.gmail.com>
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-Date:   Thu, 4 Feb 2021 14:25:24 +0530
-Message-ID: <CACG_h5otB5hhAX0z9YzN8bT6Nz5WVRUQWbhENF+u8Z3WsCp_8A@mail.gmail.com>
-Subject: Re: [PATCH 2/5] lib/test_bitmap.c: Add for_each_set_clump test cases
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "vilhelm.gray@gmail.com" <vilhelm.gray@gmail.com>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "rrichter@marvell.com" <rrichter@marvell.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+References: <20210203122325.19427-1-brgl@bgdev.pl> <20210204011923.GA9515@sol>
+In-Reply-To: <20210204011923.GA9515@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 4 Feb 2021 10:43:49 +0100
+Message-ID: <CAMpxmJX99n4JtUyNVqkAa1kCuSBX3dtee-5CXSe3z4Bf+SnOHQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] COPYING: organize the licenses in a separate
+ LICENSES directory
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 26, 2020 at 8:15 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Thu, Feb 4, 2021 at 2:19 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
+> On Wed, Feb 03, 2021 at 01:23:25PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Add the LICENSES directory as suggested by Greg KH. It will contain the
+> > license files relevant to this project that is: LGPL-2.1 for the library
+> > and GPL-2.0 & the Linux-syscall-note for the Linux Kernel uAPI header.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
+> I see you are following the kernel licencing rules wrt license file
+> naming and formatting.
+> Have you considered following the REUSE spec, as Greg also suggested,
+> instead?
 >
-> On Saturday, December 26, 2020, Syed Nayyar Waris <syednwaris@gmail.com> wrote:
->>
->> The introduction of the generic for_each_set_clump macro need test
->> cases to verify the implementation. This patch adds test cases for
->> scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
->> The cases contain situations where clump is getting split at the word
->> boundary and also when zeroes are present in the start and middle of
->> bitmap.
+> Cheers,
+> Kent.
 >
->
-> You have to split it to a separate test under drivers/gpio, because now it has no sense to be like this.
 
-Hi Andy,
+The library is tightly coupled with the kernel so I thought it's best
+to follow the same scheme. Every file also has an SPDX identifier so
+together this looks clean to me.
 
-How do I split it into separate test under drivers/gpio ? I have
-thought of making a test_clump_bits.c file in drivers/gpio.
-But how do I integrate this test file so that tests are executed at
-runtime? Similar to tests in lib/test_bitmap.c ?
-
-I believe I need to make changes in config files so that tests in
-test_clump_bits.c ( in drivers/gpio ) are executed at runtime. Could
-you please provide some steps on how to do that. Thank You !
-
-Regards
-Syed Nayyar Waris
+Bart
