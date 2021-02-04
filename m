@@ -2,117 +2,198 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26A5430F64D
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 16:30:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC51F30FABD
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 19:10:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237332AbhBDPab (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Feb 2021 10:30:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237325AbhBDP3k (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 4 Feb 2021 10:29:40 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1CEEE64DF5;
-        Thu,  4 Feb 2021 15:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1612452539;
-        bh=I6xC+Xl7rj9KjJh8OT+FRp7sxPgM1E+61VHhivEMUsU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WcRZnvioNG7VFrSgWK+Z0q9blvJWKlVZ/fNFQTAkkNlXRbtu4XZ8YY6wTdroBK/q+
-         buNdv8g6BFDyuzSm6z/vgjSGHhnA39A3zw6/geD5Ho+lkj03jRecRw9hCzWKz7TnPf
-         L6QV8t86Vh+YIHEdlCZDx3Wnz3FaRCdaxFpEwBF8=
-Date:   Thu, 4 Feb 2021 16:28:56 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio: uapi: use the preferred SPDX license identifier
-Message-ID: <YBwSuAjNu4FtXSn/@kroah.com>
-References: <20210204124357.3817-1-brgl@bgdev.pl>
- <YBv61eNnVksYq9mr@kroah.com>
- <CAMpxmJXcVOHbozzhQQW2GPg-6ivCWL3pQmyC-oU_YW5NX=gK3w@mail.gmail.com>
- <YBwGHWSV1/ZZm7u/@kroah.com>
- <CAMpxmJUof3DN2YHBOQm1Z-hrtS1cj6in5CAHowce++36XtqsnA@mail.gmail.com>
+        id S238753AbhBDSHR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Feb 2021 13:07:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238425AbhBDSDu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 13:03:50 -0500
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A5D5C061221
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Feb 2021 10:02:36 -0800 (PST)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by michel.telenet-ops.be with bizsmtp
+        id R62Q240044C55Sk0662QyJ; Thu, 04 Feb 2021 19:02:34 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1l7im7-003Fgj-G8; Thu, 04 Feb 2021 18:50:39 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1l7eCF-006uET-Ge; Thu, 04 Feb 2021 13:57:19 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sean Wang <sean.wang@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: pinctrl: Group tuples in pin control properties
+Date:   Thu,  4 Feb 2021 13:57:18 +0100
+Message-Id: <20210204125718.1646082-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJUof3DN2YHBOQm1Z-hrtS1cj6in5CAHowce++36XtqsnA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 04, 2021 at 04:17:51PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Feb 4, 2021 at 3:35 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Feb 04, 2021 at 03:15:50PM +0100, Bartosz Golaszewski wrote:
-> > > On Thu, Feb 4, 2021 at 2:47 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Thu, Feb 04, 2021 at 01:43:57PM +0100, Bartosz Golaszewski wrote:
-> > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > >
-> > > > > GPL-2.0 license identifier is deprecated, let's use the preferred
-> > > > > identifier: GPL-2.0-only.
-> > > > >
-> > > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > ---
-> > > > > Hi Kent, Greg,
-> > > > >
-> > > > > I started working on making libgpiod licensing reuse-compliant and noticed
-> > > > > that the reuse-tool is telling me that the GPL-2.0 SPDX identifier in the
-> > > > > GPIO uapi header is deprecated. Since I'm required to copy the header
-> > > > > verbatim into libgpiod's repository, I think we need to fix that at source
-> > > > > first.
-> > > > >
-> > > > >  include/uapi/linux/gpio.h | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-> > > > > index e4eb0b8c5cf9..3e01ededbf36 100644
-> > > > > --- a/include/uapi/linux/gpio.h
-> > > > > +++ b/include/uapi/linux/gpio.h
-> > > > > @@ -1,4 +1,4 @@
-> > > > > -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > > > > +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-> > > >
-> > > > No, there is no need to convert the kernel to the "latest" spdx level,
-> > > > when we started out there was no "-only" nonsense (hint no other license
-> > > > has that crud), and "GPL-2.0" is a totally valid summary of the license.
-> > > >
-> > > > So please don't go changing it all in-kernel, that way lies madness.
-> > > > Let's finish fixing up ALL kernel files before worrying about what SPDX
-> > > > "version" we are at.
-> > > >
-> > >
-> > > But then, the reuse script is telling me:
-> > >
-> > >     Unfortunately, your project is not compliant with version 3.0 of
-> > > the REUSE Specification :-(
-> > >
-> > > because I'm using a deprecated license. :(
-> >
-> > Go yell at the REUSE people, there's no requirement to have the most
-> > recent version of SPDX, is there?   :)
-> >
-> > And if that's the only thing wrong with the project when running 'reuse
-> > lint' then you should be happy, no one will complain at all.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Ok, I get it but let me try one last time: there's absolutely no harm
-> in merging this patch for the next release, is there? Currently there
-> are around 15000 instances of "GPL-2.0-only" in the kernel vs 30000
-> "GPL-2.0" - so the former is not that uncommon.
+To improve human readability and enable automatic validation, the tuples
+in "pinctrl-*" properties should be grouped using angle brackets.
 
-It's up to the owner/maintainer of this file in the end, but I don't
-want to see patches doing this for many more files, as it's pointless
-churn as far as the kernel is concerned.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ .../devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt    |  2 +-
+ .../devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt    |  2 +-
+ .../devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt  |  2 +-
+ .../devicetree/bindings/pinctrl/pinctrl-bindings.txt   |  4 ++--
+ .../devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt   |  2 +-
+ .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt     |  2 +-
+ .../devicetree/bindings/pinctrl/pinctrl-single.txt     | 10 +++++-----
+ .../devicetree/bindings/pinctrl/samsung-pinctrl.txt    |  2 +-
+ 8 files changed, 13 insertions(+), 13 deletions(-)
 
-thanks,
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
+index e295dda4bbbab958..40e0a9a19525b40d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
+@@ -39,7 +39,7 @@ For example:
+ 		      <0x660009b0 0x40>;
+ 
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&nand_sel &uart3_rx &sdio0_d4>;
++		pinctrl-0 = <&nand_sel>, <&uart3_rx>, <&sdio0_d4>;
+ 
+ 		/* Select nand function */
+ 		nand_sel: nand_sel {
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt
+index 603564e5fe6f0e54..dede11e4ef78087f 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt
+@@ -30,7 +30,7 @@ For example:
+ 		      <0x1803f408 0x04>;
+ 
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&pwm &gpio_b &nand_sel>;
++		pinctrl-0 = <&pwm>, <&gpio_b>, <&nand_sel>;
+ 
+ 		pwm: pwm {
+ 			function = "pwm";
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+index 8ac1d0851a0f8f0a..bfab5ca49fd1211a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+@@ -60,7 +60,7 @@ iomuxc-lpsr controller and SDA pad from iomuxc controller as:
+ 
+ i2c1: i2c@30a20000 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_i2c1_1 &pinctrl_i2c1_2>;
++	pinctrl-0 = <&pinctrl_i2c1_1>, <&pinctrl_i2c1_2>;
+ };
+ 
+ iomuxc-lpsr@302c0000 {
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index 4613bb17ace3f6e1..9dae60acf950641d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -77,13 +77,13 @@ For example:
+ 	device {
+ 		pinctrl-names = "active", "idle";
+ 		pinctrl-0 = <&state_0_node_a>;
+-		pinctrl-1 = <&state_1_node_a &state_1_node_b>;
++		pinctrl-1 = <&state_1_node_a>, <&state_1_node_b>;
+ 	};
+ 
+ 	/* For the same device if using state IDs */
+ 	device {
+ 		pinctrl-0 = <&state_0_node_a>;
+-		pinctrl-1 = <&state_1_node_a &state_1_node_b>;
++		pinctrl-1 = <&state_1_node_a>, <&state_1_node_b>;
+ 	};
+ 
+ 	/*
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+index 8b94aa8f5971ceb7..6ec3c8d79f496b52 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+@@ -134,7 +134,7 @@ gpio21: gpio@21 {
+ 	#interrupt-cells = <0x2>;
+ 	microchip,irq-mirror;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&i2cgpio0irq &gpio21pullups>;
++	pinctrl-0 = <&i2cgpio0irq>, <&gpio21pullups>;
+ 
+ 	gpio21pullups: pinmux {
+ 		pins =	"gpio0", "gpio1", "gpio2", "gpio3",
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+index 931a18cd1e238e6c..360e59c9301a93a8 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+@@ -91,7 +91,7 @@ Examples:
+ 	pinctrl@1c20800 {
+ 		compatible = "mediatek,mt8135-pinctrl";
+ 		reg = <0 0x1000B000 0 0x1000>;
+-		mediatek,pctl-regmap = <&syscfg_pctl_a &syscfg_pctl_b>;
++		mediatek,pctl-regmap = <&syscfg_pctl_a>, <&syscfg_pctl_b>;
+ 		pins-are-numbered;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+index bb99991193148cb2..bfd222b0549569df 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+@@ -80,7 +80,7 @@ Optional properties:
+   property.
+ 
+ 		/* pin base, nr pins & gpio function */
+-		pinctrl-single,gpio-range = <&range 0 3 0 &range 3 9 1>;
++		pinctrl-single,gpio-range = <&range 0 3 0>, <&range 3 9 1>;
+ 
+ - interrupt-controller : standard interrupt controller binding if using
+   interrupts for wake-up events for example. In this case pinctrl-single
+@@ -185,10 +185,10 @@ pmx_gpio: pinmux@d401e000 {
+ 	pinctrl-single,function-mask = <7>;
+ 
+ 	/* sparse GPIO range could be supported */
+-	pinctrl-single,gpio-range = <&range 0 3 0 &range 3 9 1
+-				&range 12 1 0 &range 13 29 1
+-				&range 43 1 0 &range 44 49 1
+-				&range 94 1 1 &range 96 2 1>;
++	pinctrl-single,gpio-range = <&range 0 3 0>, <&range 3 9 1>,
++				    <&range 12 1 0>, <&range 13 29 1>,
++				    <&range 43 1 0>, <&range 44 49 1>,
++				    <&range 94 1 1>, <&range 96 2 1>;
+ 
+ 	range: gpio-range {
+ 		#pinctrl-single,gpio-range-cells = <3>;
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+index 7734ab6fec449471..38a1416fd2cd8e1a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+@@ -336,7 +336,7 @@ Example 3: A uart client node that supports 'default' and 'flow-control' states.
+ 		interrupts = <0 52 0>;
+ 		pinctrl-names = "default", "flow-control;
+ 		pinctrl-0 = <&uart0_data>;
+-		pinctrl-1 = <&uart0_data &uart0_fctl>;
++		pinctrl-1 = <&uart0_data>, <&uart0_fctl>;
+ 	};
+ 
+ Example 4: Set up the default pin state for uart controller.
+-- 
+2.25.1
 
-greg k-h
