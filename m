@@ -2,95 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8C9F30F358
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 13:46:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5044630F3F9
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 14:38:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236097AbhBDMoq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Feb 2021 07:44:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59856 "EHLO
+        id S236273AbhBDNhl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Feb 2021 08:37:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236073AbhBDMoo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 07:44:44 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3649AC0613D6
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Feb 2021 04:44:03 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id l12so3370914wry.2
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Feb 2021 04:44:03 -0800 (PST)
+        with ESMTP id S236385AbhBDNhd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 08:37:33 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B86C061788;
+        Thu,  4 Feb 2021 05:36:48 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id 7so3589476wrz.0;
+        Thu, 04 Feb 2021 05:36:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kHsfvPu4rtpa1c+YtfjMmyJ7QoWs/xXcZLK6R6p5UYA=;
-        b=GF8iVNy4Jyy1ZLM9SIJBS+TlyWkCv/KlrF7eDv9MxW8ST2wVUHXdKpdkQfeo1ki8m3
-         RdX5gBUneFeIyUzmmsHdlDrLswvCeNNGLb9GFFwQbT2XaGnAc6wdhvtrbBBdAc0jO7QJ
-         BDVadQvkpmT1cBIHRcBUDAB4yfoJ9ty3SqS755Pb1aGodppoi0OFvHbGRy1OMuNzWIuB
-         RyoF5oZBJbb6lqA7ptZaSwo7GsVSw8Wg6Oee0RCAlT7sk/P6j07xsrS2BGWskhVduNqY
-         HtliCyCnfKn3/U+Prhgw7hs/Dr5RuNBhdtjgbRvhWZN85r+F+U5gwnGi5NT1YVHdSmZY
-         VqPg==
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=i6/bNL7HF1iysG21qSzvFJ1UcbOS4/QnqxxVysWkLuU=;
+        b=UxD0a1lDoSmq0j3gyV+VewxgLUPZLnSVo0X+4W+gBeRF1M/LB7WycJ425L0kJsdjvV
+         nO2YKPHBbzX4gMH+gDIRb355VPuETYaTWSfc7AUmGaofrMlsQOsQmSO4a4fIpkQ/4W5v
+         L/zISmHYjpNtJPqmfGXMtCVbnLNlj/2HPhiGlhTeKkr5SZSndZUhr0jvkrCmPba7JX9Z
+         K9eGxkMxf2qd+47lNN+thrHQ/wlN3xSB38sw6m5tP+usZs9jT3q/nAMHHmxEhUoJEvBu
+         i6OMsx4qWLprLu2424I9ahf4eoSNELsw6bCxN2DuQxikVpzhZaJC8IEWma0cEPpp+Lgs
+         cxEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kHsfvPu4rtpa1c+YtfjMmyJ7QoWs/xXcZLK6R6p5UYA=;
-        b=GKHDiWXSN/SeKzD6ZA9T+Vkf2U8xSJ7VLiSbaflE7u8OcU9xNuuGsKjLPDDZcWSmOR
-         XNPYsyz55MBOBC5GoDZJxikELYT9P3mhfPiddBpYXsd5irXW4Dp/ZcxJ/zb18mvjkRd0
-         l0P2MIBXFGzGsflfrz0xOPh+Dvan0HcfKw4zY3T7db70QtpcTezaxxJId8AKByCp81Zq
-         tapPl0Tq5r9FAhDIJsVkBhkCtH3PK6tng/aAGJ1wOkECgzEqGw8Mu/A+Awdz7o5hBgVD
-         o0NwHQ09j+gNfnWkK3xkmzMZmgi6n4vRJZoOEl23txmzUg3bUJjXHHm8P47Phde04VcF
-         BxKw==
-X-Gm-Message-State: AOAM530bPqZaNWMRpl9Bctp3y4eyCZZX7DYVKoVfNR/Jvprub0aiKLR2
-        VM0XzKw0fBJyrAGP/MSLALtg7g==
-X-Google-Smtp-Source: ABdhPJziPrMStGFtcrowA1GTfEjzneGa8qCfa3ZE9xQPsFcJe8zLFY0maD0KuSiXexa5Leh21L3vgw==
-X-Received: by 2002:adf:ebc2:: with SMTP id v2mr9203073wrn.88.1612442641986;
-        Thu, 04 Feb 2021 04:44:01 -0800 (PST)
-Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
-        by smtp.gmail.com with ESMTPSA id z185sm6538248wmb.0.2021.02.04.04.44.01
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=i6/bNL7HF1iysG21qSzvFJ1UcbOS4/QnqxxVysWkLuU=;
+        b=XMM7paZ0uN0o2ttNnUJuwdJ3YYtGNyzO7B+XSCXJDtR2IFmm9cYJZzAcjIqUr7k+KO
+         fKFKiBGHZ/EzubcgT85ZKaI6lEUz1u0H2OpgghZTQbwKQDIWxQ271XxANSR7LdnAmVf4
+         vecDgHhOf+QALxJU+x35eizwBxhW5NlzUKCIT6Yp5JrF9sDIM9nV+L2oPjsbk/6lzIez
+         zBRdl7r0+ex0Rom3yKgVfnXais4rJSpw5VZDsNio5/e4meZWu3Nk5rR+kzHLjUedKTAE
+         pjH88m+3bJsVdyDNrgzL9izcMs2zHUGxViPSkybsc+RxU8xiP5T0/gJzO0DMHD9R1ebB
+         gG/w==
+X-Gm-Message-State: AOAM532R7Kz+RF8W2Vm/zpjzBEGRuyvajcCSfw59DkOjeaLEtFUA37LH
+        NOMBUtDo4fJSE9HtEtpJd4k=
+X-Google-Smtp-Source: ABdhPJxrbWdFxZJl51XjeEhG+ltbbvljSjn6Y67jLdF39+NBwKsnOYIziLPvuvmZgWQqU9l0kMiy2w==
+X-Received: by 2002:adf:f743:: with SMTP id z3mr9523620wrp.165.1612445807699;
+        Thu, 04 Feb 2021 05:36:47 -0800 (PST)
+Received: from [192.168.1.21] ([195.245.17.255])
+        by smtp.gmail.com with ESMTPSA id 35sm8993637wrn.42.2021.02.04.05.36.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Feb 2021 04:44:01 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] gpio: uapi: use the preferred SPDX license identifier
-Date:   Thu,  4 Feb 2021 13:43:57 +0100
-Message-Id: <20210204124357.3817-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.29.1
+        Thu, 04 Feb 2021 05:36:46 -0800 (PST)
+Message-ID: <164d778019f68dd024cb42f869e7d967618514cb.camel@gmail.com>
+Subject: Re: [PATCH v3 1/7] gpio: gpio-ep93xx: fix BUG_ON port F usage
+From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To:     "nikita.shubin@maquefel.me" <nikita.shubin@maquefel.me>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 04 Feb 2021 14:36:45 +0100
+In-Reply-To: <28201612442592@mail.yandex.ru>
+References: <20210128122123.25341-1-nikita.shubin@maquefel.me>
+         <20210128122123.25341-2-nikita.shubin@maquefel.me>
+         <CAHp75VfBb5+K9cSAzj9EBD+KtswkHSNMZWoCaU=bKvOO3fXRjw@mail.gmail.com>
+         <a0c121fdfb2893ec89425534387212524e4ff7cf.camel@gmail.com>
+         <28201612442592@mail.yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Nikita,
 
-GPL-2.0 license identifier is deprecated, let's use the preferred
-identifier: GPL-2.0-only.
+On Thu, 2021-02-04 at 15:55 +0300, nikita.shubin@maquefel.me wrote:
+> I considered your offer of using array with holes.
+>  
+> It looks pretty ugly to me, couse it leads to bloated arrays:
+>  
+> static unsigned char gpio_int_unmasked[EP93XX_GPIO_CHIP_NUM];
+> static unsigned char gpio_int_enabled[EP93XX_GPIO_CHIP_NUM];
+> static unsigned char gpio_int_type1[EP93XX_GPIO_CHIP_NUM];
+> static unsigned char gpio_int_type2[EP93XX_GPIO_CHIP_NUM];
+> static unsigned char gpio_int_debounce[EP93XX_GPIO_CHIP_NUM];
+>  
+> /* Port ordering is: A B F */
+> static const u8 int_type1_register_offset[EP93XX_GPIO_CHIP_NUM]    = { 0x90, 0xac, 0x0, 0x0, 0x0, 0x4c };
+> static const u8 int_type2_register_offset[EP93XX_GPIO_CHIP_NUM]    = { 0x94, 0xb0, 0x0, 0x0, 0x0, 0x50 };
+> static const u8 eoi_register_offset[EP93XX_GPIO_CHIP_NUM]    = { 0x98, 0xb4, 0x0, 0x0, 0x0, 0x54 };
+> static const u8 int_en_register_offset[EP93XX_GPIO_CHIP_NUM]    = { 0x9c, 0xb8, 0x0, 0x0, 0x0, 0x58 };
+> static const u8 int_debounce_register_offset[EP93XX_GPIO_CHIP_NUM]    = { 0xa8, 0xc4, 0x0, 0x0, 0x0, 0x64 };
+>  
+> Is this really the thing we want ?
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
-Hi Kent, Greg,
+Even in this form it's less error-prone than to have two
+index-spaces, and hidden conversion from one numbering scheme
+to other.
 
-I started working on making libgpiod licensing reuse-compliant and noticed
-that the reuse-tool is telling me that the GPL-2.0 SPDX identifier in the
-GPIO uapi header is deprecated. Since I'm required to copy the header
-verbatim into libgpiod's repository, I think we need to fix that at source
-first.
+Alternatives that I see are:
+1.
+https://gcc.gnu.org/onlinedocs/gcc/Designated-Inits.html
 
- include/uapi/linux/gpio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+2.
+Embedd the necessary values into struct ep93xx_gpio_bank.
+This option can probably simplify the handling of the names
+for irq chips as well.
+ 
+> 28.01.2021, 19:19, "Alexander Sverdlin" <alexander.sverdlin@gmail.com>:
+> > Hello Nikita,
+> > 
+> > On Thu, 2021-01-28 at 18:11 +0200, Andy Shevchenko wrote:
+> > >  > +/*
+> > >  > + * F Port index in GPIOCHIP'S array is 5
+> > >  > + * but we use index 2 for stored values and offsets
+> > >  > + */
+> > >  > +#define EP93XX_GPIO_F_PORT_INDEX 5
+> > >  
+> > >  Hmm... Why not to use an array with holes instead.
+> > >  
+> > >  ...
+> > >  
+> > >  > +       if (port == EP93XX_GPIO_F_PORT_INDEX)
+> > >  > +               port = 2;
+> > >  
+> > >  Sorry, but I'm not in favour of this as it adds confusion.
+> > >  See above for the potential way to solve.
+> > 
+> > well, I was thinking the same yesterday. It just adds another
+> > level on confusion into the code, which even the author got
+> > wrong :)
+> > 
+> > Array with holes would be more obvious, but one can also embedd
+> > the necessary values into struct ep93xx_gpio_bank.
+> >  
+> > --
+> > Alexander Sverdlin.
+> > 
+> >  
 
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index e4eb0b8c5cf9..3e01ededbf36 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
- /*
-  * <linux/gpio.h> - userspace ABI for the GPIO character devices
-  *
 -- 
-2.29.1
+Alexander Sverdlin.
+
 
