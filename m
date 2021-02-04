@@ -2,113 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92C9930F18C
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 12:07:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8C9F30F358
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Feb 2021 13:46:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235576AbhBDLHE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Feb 2021 06:07:04 -0500
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:60701 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235575AbhBDLHC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 06:07:02 -0500
-Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 305E53C0DA8;
-        Thu,  4 Feb 2021 10:59:00 +0000 (UTC)
-X-Originating-IP: 86.202.109.140
-Received: from localhost (lfbn-lyo-1-13-140.w86-202.abo.wanadoo.fr [86.202.109.140])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 36493FF80B;
-        Thu,  4 Feb 2021 10:57:53 +0000 (UTC)
-Date:   Thu, 4 Feb 2021 11:57:52 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
-Message-ID: <20210204105752.GA3940374@piout.net>
-References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com>
- <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
- <CAHp75VeYroY5uG38NrsqwbHnjT0j_LMMD3JmNmRED3OY5ff7xA@mail.gmail.com>
- <CAMeQTsZRng0UWkO5fXUmZW=-gnKWiigwO0BwMY9p1T2D-hoMNA@mail.gmail.com>
- <CAKMK7uEBaWMz-AjuJO3vvUBvacqMHuevOhMhQ0a+r5TtyDpwuQ@mail.gmail.com>
- <797cf4ac-ffdc-e73e-cb58-d027beb6e3b4@redhat.com>
+        id S236097AbhBDMoq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Feb 2021 07:44:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236073AbhBDMoo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 07:44:44 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3649AC0613D6
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Feb 2021 04:44:03 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id l12so3370914wry.2
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Feb 2021 04:44:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kHsfvPu4rtpa1c+YtfjMmyJ7QoWs/xXcZLK6R6p5UYA=;
+        b=GF8iVNy4Jyy1ZLM9SIJBS+TlyWkCv/KlrF7eDv9MxW8ST2wVUHXdKpdkQfeo1ki8m3
+         RdX5gBUneFeIyUzmmsHdlDrLswvCeNNGLb9GFFwQbT2XaGnAc6wdhvtrbBBdAc0jO7QJ
+         BDVadQvkpmT1cBIHRcBUDAB4yfoJ9ty3SqS755Pb1aGodppoi0OFvHbGRy1OMuNzWIuB
+         RyoF5oZBJbb6lqA7ptZaSwo7GsVSw8Wg6Oee0RCAlT7sk/P6j07xsrS2BGWskhVduNqY
+         HtliCyCnfKn3/U+Prhgw7hs/Dr5RuNBhdtjgbRvhWZN85r+F+U5gwnGi5NT1YVHdSmZY
+         VqPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kHsfvPu4rtpa1c+YtfjMmyJ7QoWs/xXcZLK6R6p5UYA=;
+        b=GKHDiWXSN/SeKzD6ZA9T+Vkf2U8xSJ7VLiSbaflE7u8OcU9xNuuGsKjLPDDZcWSmOR
+         XNPYsyz55MBOBC5GoDZJxikELYT9P3mhfPiddBpYXsd5irXW4Dp/ZcxJ/zb18mvjkRd0
+         l0P2MIBXFGzGsflfrz0xOPh+Dvan0HcfKw4zY3T7db70QtpcTezaxxJId8AKByCp81Zq
+         tapPl0Tq5r9FAhDIJsVkBhkCtH3PK6tng/aAGJ1wOkECgzEqGw8Mu/A+Awdz7o5hBgVD
+         o0NwHQ09j+gNfnWkK3xkmzMZmgi6n4vRJZoOEl23txmzUg3bUJjXHHm8P47Phde04VcF
+         BxKw==
+X-Gm-Message-State: AOAM530bPqZaNWMRpl9Bctp3y4eyCZZX7DYVKoVfNR/Jvprub0aiKLR2
+        VM0XzKw0fBJyrAGP/MSLALtg7g==
+X-Google-Smtp-Source: ABdhPJziPrMStGFtcrowA1GTfEjzneGa8qCfa3ZE9xQPsFcJe8zLFY0maD0KuSiXexa5Leh21L3vgw==
+X-Received: by 2002:adf:ebc2:: with SMTP id v2mr9203073wrn.88.1612442641986;
+        Thu, 04 Feb 2021 04:44:01 -0800 (PST)
+Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
+        by smtp.gmail.com with ESMTPSA id z185sm6538248wmb.0.2021.02.04.04.44.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Feb 2021 04:44:01 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] gpio: uapi: use the preferred SPDX license identifier
+Date:   Thu,  4 Feb 2021 13:43:57 +0100
+Message-Id: <20210204124357.3817-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <797cf4ac-ffdc-e73e-cb58-d027beb6e3b4@redhat.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04/02/2021 11:50:03+0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 2/4/21 11:36 AM, Daniel Vetter wrote:
-> > On Thu, Feb 4, 2021 at 11:19 AM Patrik Jakobsson
-> > <patrik.r.jakobsson@gmail.com> wrote:
-> >>
-> >> On Wed, Feb 3, 2021 at 1:00 PM Andy Shevchenko
-> >> <andy.shevchenko@gmail.com> wrote:
-> >>>
-> >>> On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
-> >>> <patrik.r.jakobsson@gmail.com> wrote:
-> >>>> On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
-> >>>> <andriy.shevchenko@linux.intel.com> wrote:
-> >>>>>
-> >>>>> Hi guys,
-> >>>>>
-> >>>>> This is first part of Intel MID outdated platforms removal. It's collected into
-> >>>>> immutable branch with a given tag, please pull to yours subsystems.
-> >>>>
-> >>>> Hi Andy,
-> >>>> Do you plan on eventually removing X86_INTEL_MID completely? If so,
-> >>>> then I should probably start looking at removing the corresponding
-> >>>> parts in GMA500.
-> >>>
-> >>> I have noticed new commits in DRM against GMA500 and it seems now in a
-> >>> conflict with my immutable branch. Are you sure you don't forget to
-> >>> pull it?
-> >>
-> >> Hi Andy, sorry I missed pulling the immutable branch before taking the
-> >> gma500 medfield removal. I was unsure how to do that through drm-misc
-> >> and it's tools so I got sidetracked. What would be the correct way to
-> >> fix this?
-> > 
-> > Imo Linus can resolve this, it's pretty trivial, as long as both pull
-> > requests point it out to him.
-> 
-> The removal of older Intel platforms touches a number of subsystem trees,
-> the idea about the IM branch was that all subsystem-trees would merge that.
-> 
-> I can certainly point out the problem in the pdx86 pull-req to Linus,
-> but the GPIO pull-req also contains a merge of the IM branch as will
-> the x86/tip and rtc pull-reqs I believe. We can add a remark to all
-> the pull-reqs about the issue I guess ?
-> 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-FWIW, I'm not going to merge the PR in the rtc tree because it is a
-simple removal and doesn't have any conflicts.
+GPL-2.0 license identifier is deprecated, let's use the preferred
+identifier: GPL-2.0-only.
 
-> But it might be better to still merge the branch into drm-misc-next and
-> resolve the conflict there. I think that should avoid Linus seeing it ?
-> 
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+Hi Kent, Greg,
 
-Linus doesn't mind seeing and solving conflicts.
+I started working on making libgpiod licensing reuse-compliant and noticed
+that the reuse-tool is telling me that the GPL-2.0 SPDX identifier in the
+GPIO uapi header is deprecated. Since I'm required to copy the header
+verbatim into libgpiod's repository, I think we need to fix that at source
+first.
 
+ include/uapi/linux/gpio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+index e4eb0b8c5cf9..3e01ededbf36 100644
+--- a/include/uapi/linux/gpio.h
++++ b/include/uapi/linux/gpio.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+ /*
+  * <linux/gpio.h> - userspace ABI for the GPIO character devices
+  *
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.29.1
+
