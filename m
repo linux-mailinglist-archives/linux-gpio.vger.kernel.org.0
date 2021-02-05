@@ -2,83 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13F9E311438
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Feb 2021 23:06:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0589F3115AF
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Feb 2021 23:43:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232901AbhBEWCA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Feb 2021 17:02:00 -0500
-Received: from atlmailgw1.ami.com ([63.147.10.40]:59858 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232953AbhBEO5g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Feb 2021 09:57:36 -0500
-X-AuditID: ac1060b2-427ff70000001a01-01-601d73ccbbc9
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id 09.CB.06657.CC37D106; Fri,  5 Feb 2021 11:35:24 -0500 (EST)
-Received: from ami-us-wk.us.megatrends.com (172.16.98.207) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Fri, 5 Feb 2021 11:35:23 -0500
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Andrew Jeffery <andrew@aj.id.au>
-CC:     Hongwei Zhang <hongweiz@ami.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <openbmc@lists.ozlabs.org>
-Subject: [PATCH, v1 1/1] gpio: aspeed: Add gpio base address reading
-Date:   Fri, 5 Feb 2021 11:34:51 -0500
-Message-ID: <20210113223808.31626-2-hongweiz@ami.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210113223808.31626-1-hongweiz@ami.com>
-References: <20210113223808.31626-1-hongweiz@ami.com>
+        id S229631AbhBEWir (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Feb 2021 17:38:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231833AbhBEOCg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Feb 2021 09:02:36 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 33F7464E2A;
+        Fri,  5 Feb 2021 14:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612533701;
+        bh=NFeWIebETg3okPClyzNzxfFim9lVW6swzDLEuTntgIo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eoQ/m5XH0+SUUDudg/i3Z0Lty/d7yrvyftbrWjo46RHfmBOnXsMwSGo+BDiIXlxD5
+         9YRrJNiCgGWISqQQvXQIatKRGzfHfYX6vn++p1qefLwOflxcb8BvwCjXrD4A0GxI1z
+         kEnFDQyLVvxit7TzofSyH3zT8m5fKBC+/l9Y5osPtr+FsKc8fAYoh0K3TsfGMxMw9t
+         irJCbnx2o5l3PbUKbyOyi41YMHQFuZ1+LNN668IbsGz8eFHRhjGK3f1VQuoIwg5KXK
+         IXCHZuVGCeSt/U5ai/AxJpIcvuIt881IKrzkYuD9Yqjg6ixXukURyJAqMcS1VPXV/V
+         vBzyiBKiAsg3g==
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/2] pinctrl: qcom: Add SM8350 pinctrl support
+Date:   Fri,  5 Feb 2021 19:31:30 +0530
+Message-Id: <20210205140132.274242-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.207]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsWyRiBhgu6ZYtkEgx8v9C12Xeaw+DL3FIvF
-        7/N/mS2m/FnOZLHp8TVWi+bV55gtNs//w2hxedccNotTLS9YHDg9rrbvYvd4f6OV3ePix2PM
-        Hneu7WHz2Lyk3uP8jIWMHp83yQWwR3HZpKTmZJalFunbJXBl/D/3i6mgg73iV/8JxgbGQ6xd
-        jJwcEgImEnu6G5m7GLk4hAR2MUncb17KAuHsZJT4+KGbBaSKTUBNYu/mOUwgtoiAisTu3rfs
-        IEXMAieZJJY/PQ82SljARWL1r/dsIDYLUFHn2u+MIDavgKlEw/RdLBDr5CVWbzjADGJzCphJ
-        vGq4BlYjBFSzoX0WO0S9oMTJmU/A6pkFJCQOvnjBDFEjK3Hr0GMmiDmKEg9+fWedwCgwC0nL
-        LCQtCxiZVjEKJZbk5CZm5qSXG+ol5mbqJefnbmKEhPumHYwtF80PMTJxMB5ilOBgVhLhTWyT
-        ShDiTUmsrEotyo8vKs1JLT7EKM3BoiTOu8r9aLyQQHpiSWp2ampBahFMlomDU6qB8VLB9VLP
-        DT4XNx6uF+SUuSN53Gw3q6GpRbjvn8P2gtu22Rp9NLG56FzteHrC1r3Vjr0PukwqHNQ/TWho
-        +SjU3fS7Su/oxpLTotfZP6tt3zG9L5cllN33eL6ZzetDorXHZ2sZr6z4vIrpfmdqqmBW3Bfp
-        DjY9p30hnTONkiTDA0518t4LklutxFKckWioxVxUnAgAHqXWC2UCAAA=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This adds binding and driver for TLMM block found in SM8350 SoC
 
-> Hello,
-> 
-> On Thu, 14 Jan 2021, at 09:08, Hongwei Zhang wrote:
-> > Add gpio base address reading in the driver; in old code, it just 
-> > returns -1 to gpio->chip.base.
-> 
-> Why do you want to do this? It feels hacky. The base address only affects the legacy sysfs number-space, 
-> and even then if you're using the sysfs interface you can discover the base address for a specific gpiochip 
-> via the associated attribute. For example:
-> 
-> # cat /sys/bus/platform/devices/1e780000.gpio/gpio/gpiochip*/base
-> 816
-> 
-> I feel that you should instead be changing your userspace not to assume a fixed value.
-> 
-> Finally, the base value is a linux-specific thing and doesn't belong in the devicetree, and if it did, you 
-> would also need to update the devicetree binding in Documentation/.
-> 
-> Cheers,
-> 
-> Andrew
+The binding is dependent on TLMM common binding from Bjorn:
+ https://lore.kernel.org/linux-arm-msm/20210126042650.1725176-1-bjorn.andersson@linaro.org
 
-Hi Andrew,
+Changes in v6:
+ - Add rob and bjorn r-b
+ - removed quotes around 'defs' and drop the phandle for binding
 
-Thanks for your review and advice.
+Changes in v5:
+ - rebase and revise binding based on Bjorn's qcom common TLMM binding
 
---Hongwei
+Changes in v4:
+ - rename to qcom,sm8350-tlmm along with binding and driver structs
+ - fix some nits in binding pointer by Rob
+
+Vinod Koul (2):
+  dt-bindings: pinctrl: qcom: Add SM8350 pinctrl bindings
+  pinctrl: qcom: Add SM8350 pinctrl driver
+
+ .../bindings/pinctrl/qcom,sm8350-pinctrl.yaml |  145 ++
+ drivers/pinctrl/qcom/Kconfig                  |    9 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-sm8350.c         | 1649 +++++++++++++++++
+ 4 files changed, 1804 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8350-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8350.c
+
+-- 
+2.26.2
 
