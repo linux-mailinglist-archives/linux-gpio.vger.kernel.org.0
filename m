@@ -2,67 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91E70310331
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Feb 2021 04:11:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63F7E3105A1
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Feb 2021 08:13:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbhBEDJR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Feb 2021 22:09:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbhBEDJK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Feb 2021 22:09:10 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12302C06178A;
-        Thu,  4 Feb 2021 19:08:30 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id j11so4806535wmi.3;
-        Thu, 04 Feb 2021 19:08:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:sender:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=hqf55dXwvcYwwL4sAkoYuOM6RPu6wxeec88n5sMRYiY=;
-        b=qKV6lK/xTrI0xWZI/8Vwj4HWtece1YWaUDe9sPcNOebT0x9iH9t9HcfJIQkpWQqu4j
-         9tLsV973I65GjSCqyS40JivInipCupY+1WZAfBNpdOynDt+97z63FrcpdVze5raYfFI1
-         ELiZ/G9wyN0fnfIjx/4fXB0vrZdvzQZF98iXIaty+2RnmRohcZKyquzcoEI7HJVOKKX+
-         EiIOfD4L+JHLtQCVKSDCCxXZVCK4MxNFtPjEIW4ZVaTqiXLcosgUnVu2mpqrz5slCIU6
-         OojTwfk4ppz8i2nlpZs6lLbHMceui26pWhk6A71VZRttpKbJam5k9i/jzM4/k1VhIFAv
-         //BQ==
+        id S231532AbhBEHMW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Feb 2021 02:12:22 -0500
+Received: from mail-ed1-f48.google.com ([209.85.208.48]:34461 "EHLO
+        mail-ed1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231476AbhBEHMC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Feb 2021 02:12:02 -0500
+Received: by mail-ed1-f48.google.com with SMTP id df22so7616633edb.1;
+        Thu, 04 Feb 2021 23:11:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:sender:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=hqf55dXwvcYwwL4sAkoYuOM6RPu6wxeec88n5sMRYiY=;
-        b=fGZY9xPP13GVBXXMytLVmy4dUT3ZCBl7ro2iO2tzQB9V6NtlHlU1WIffRCKLZpGpFs
-         TunlGsH4Zvq3K0GInppg3DWQ6nFY9zo9OCTlLbfqbcT/PQPkayTxHnhgG2AAoU5/1HfN
-         VVucPa+R3cd9on/7Iwf4zdH1ndpzYsxtKOnL6VSymQawxuZsW8hrz9e2OeLzl/dgaQK9
-         HWox4Vg3ubaB7uc8Cr/eNL0mbPl41XDD6k59/uPPLfyvGi2GihpvQ5611x2QMqQ2sXYc
-         SWixN9YRCcnHIfjyWkM9XdAjD15+wAcu2Pbtukm6aIqL6TRZflV0fIny7xopeB0Td1ei
-         oFpg==
-X-Gm-Message-State: AOAM530acKnINW+aC3ADGhAO15HtsmlJf59mPZLjJWA5yurPXOhlWe0j
-        flfCEAyHDuKpQDhkTU0jfxbUDMcg6nY66w==
-X-Google-Smtp-Source: ABdhPJzMvxq+Dz6Cd25sA4YjrzKq+MpOJZGous+0kvBheLF8WnJDbF6X9Nj/FnREqpI7o/SY4LFdpA==
-X-Received: by 2002:a1c:3185:: with SMTP id x127mr1593295wmx.117.1612494508861;
-        Thu, 04 Feb 2021 19:08:28 -0800 (PST)
-Received: from [192.168.1.6] ([154.124.28.35])
-        by smtp.gmail.com with ESMTPSA id n9sm10836813wrq.41.2021.02.04.19.08.24
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Thu, 04 Feb 2021 19:08:27 -0800 (PST)
-Message-ID: <601cb6ab.1c69fb81.5ea54.2ea9@mx.google.com>
-Sender: Skylar Anderson <barr.markimmbayie@gmail.com>
-From:   calantha camara <sgt.andersonskylar0@gmail.com>
-X-Google-Original-From: calantha camara
-Content-Type: text/plain; charset="iso-8859-1"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c6300FPJgdNhEYdiFOY4v3mF7KUoaPzekcF12DCQngw=;
+        b=hdFWJBMgnYjS+npkASqdNs4Mjy+usqtZ+wYzYFN/iYHou/F6DcA/RAhUEEggqA9UR5
+         g2MKG5zxzR+ytdjKEoPJjRL7mTku+4v8C8K1HCpsBS4rWF5Dc0wThOgEl4Td6GPtRzMy
+         DDc6Y4oB4Tsrnn5IeRSOVcJdMp9OAGn4cWQtCyM8XTnPN4m5jNk5yEBYcklegTyeaCQQ
+         IJiav7nVW9Ope+ypg9BfNGQxpkrME5xjXbPyaJXWPRTA3AtPZoNwwPVzysI2R3OwRfJl
+         DLCluZAWVcH+SMi/6BpLXgix7B1xZgI3CmmtLOTdKwVMBCE8w/sLPLQWpChiYuQspivO
+         x76w==
+X-Gm-Message-State: AOAM532kojfKtDfQ1EKmKe2G8iZzJjvpm3QHDETfLhKgg53f21o7KEKV
+        es7xhEOro3qMhDWVHnHokeo=
+X-Google-Smtp-Source: ABdhPJzMsS7GJ3tNPHi18Tl9yXVfbJrYFFNhnZea/BS4TtA/CfEwjxcggsZUsuEjnlIp7/Nj3dKCog==
+X-Received: by 2002:aa7:dc17:: with SMTP id b23mr2263816edu.139.1612509080553;
+        Thu, 04 Feb 2021 23:11:20 -0800 (PST)
+Received: from kozik-lap (adsl-84-226-167-205.adslplus.ch. [84.226.167.205])
+        by smtp.googlemail.com with ESMTPSA id e6sm3746713edv.46.2021.02.04.23.11.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Feb 2021 23:11:19 -0800 (PST)
+Date:   Fri, 5 Feb 2021 08:11:18 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sean Wang <sean.wang@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: Group tuples in pin control
+ properties
+Message-ID: <20210205071118.obqsdlu64udsp5b2@kozik-lap>
+References: <20210204125718.1646082-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: hi dear
-To:     Recipients <calantha@vger.kernel.org>
-Date:   Fri, 05 Feb 2021 03:08:17 +0000
-Reply-To: calanthac20@gmail.com
-X-Mailer: cdcaafe51be8cdb99a1c85906066cad3d0e60e273541515a58395093a7c4e1f0eefb01d7fc4e6278706e9fb8c4dad093c3263345202970888b6b4d817f9e998c032e7d59
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210204125718.1646082-1-geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-do you speak Eglish
+On Thu, Feb 04, 2021 at 01:57:18PM +0100, Geert Uytterhoeven wrote:
+> To improve human readability and enable automatic validation, the tuples
+> in "pinctrl-*" properties should be grouped using angle brackets.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt    |  2 +-
+>  .../devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt    |  2 +-
+>  .../devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt  |  2 +-
+>  .../devicetree/bindings/pinctrl/pinctrl-bindings.txt   |  4 ++--
+>  .../devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt   |  2 +-
+>  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt     |  2 +-
+>  .../devicetree/bindings/pinctrl/pinctrl-single.txt     | 10 +++++-----
+>  .../devicetree/bindings/pinctrl/samsung-pinctrl.txt    |  2 +-
+>  8 files changed, 13 insertions(+), 13 deletions(-)
+
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Best regards,
+Krzysztof
