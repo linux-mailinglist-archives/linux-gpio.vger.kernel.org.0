@@ -2,35 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1070631063C
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Feb 2021 09:07:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1B8131063F
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Feb 2021 09:07:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231259AbhBEIGC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Feb 2021 03:06:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230267AbhBEIGA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Feb 2021 03:06:00 -0500
-Received: from forward102p.mail.yandex.net (forward102p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:102])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EE3C06178B;
-        Fri,  5 Feb 2021 00:05:19 -0800 (PST)
-Received: from forward102q.mail.yandex.net (forward102q.mail.yandex.net [IPv6:2a02:6b8:c0e:1ba:0:640:516:4e7d])
-        by forward102p.mail.yandex.net (Yandex) with ESMTP id 846F31D42DC7;
-        Fri,  5 Feb 2021 11:05:17 +0300 (MSK)
-Received: from vla1-2e2fe8fd096a.qloud-c.yandex.net (vla1-2e2fe8fd096a.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:3495:0:640:2e2f:e8fd])
-        by forward102q.mail.yandex.net (Yandex) with ESMTP id 803C23A20002;
-        Fri,  5 Feb 2021 11:05:17 +0300 (MSK)
+        id S231316AbhBEIGE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Feb 2021 03:06:04 -0500
+Received: from forward101o.mail.yandex.net ([37.140.190.181]:57780 "EHLO
+        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230133AbhBEIGC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Feb 2021 03:06:02 -0500
+Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
+        by forward101o.mail.yandex.net (Yandex) with ESMTP id 5B7D73C03740;
+        Fri,  5 Feb 2021 11:05:18 +0300 (MSK)
+Received: from vla1-ae662a693c21.qloud-c.yandex.net (vla1-ae662a693c21.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:2915:0:640:ae66:2a69])
+        by forward100q.mail.yandex.net (Yandex) with ESMTP id 575C77080009;
+        Fri,  5 Feb 2021 11:05:18 +0300 (MSK)
 Received: from vla1-1bc5b51c612f.qloud-c.yandex.net (vla1-1bc5b51c612f.qloud-c.yandex.net [2a02:6b8:c0d:89c:0:640:1bc5:b51c])
-        by vla1-2e2fe8fd096a.qloud-c.yandex.net (mxback/Yandex) with ESMTP id kq3TvhGqOL-5HI4TAcp;
-        Fri, 05 Feb 2021 11:05:17 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1612512317;
-        bh=L3i2GMpCyjFi2r2lWDiygR7hyvUJiR70+wZlbupXrw4=;
+        by vla1-ae662a693c21.qloud-c.yandex.net (mxback/Yandex) with ESMTP id iilsBm1FJI-5IHmpm7V;
+        Fri, 05 Feb 2021 11:05:18 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1612512318;
+        bh=+WtcWBh58n5WNwBJ+Z/NkhGBdSYSmclbOjEUFB/CcOE=;
         h=In-Reply-To:References:Date:Subject:To:From:Message-Id:Cc;
-        b=bKMBPtC1fMKSDNbS5HIRqxJIkORcpOoor9qm/DMFyEj865JxHfowdZMTIYwUQBZ/S
-         eC2OTY13u+pF24ia9LjQT2NC6WeBSMJLdSvhWr8zBBeauxH97ZSlTwmeAzBXCyFcEc
-         jNSDA+zJchNPm1hcTr0bfWSrkp8gSpF/dDgRGE0s=
-Authentication-Results: vla1-2e2fe8fd096a.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by vla1-1bc5b51c612f.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 8MWdPhaokU-5Gn8ZJw6;
+        b=ahbC8NAwD+LjDX/63GTuQdw9YYfH/toKKnlgWpEsD0B2XSymcNJw3T/G6oYG+W426
+         315h16PCAbsPcaxByKccKIcyYAM4BtfNZfInwFf+22qe5tSbWNCoqp+ClgbOSIVjP3
+         NxI7kOTPaZSXAp8RqHx+juTqhhenuyl3Z7AZ/BCg=
+Authentication-Results: vla1-ae662a693c21.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by vla1-1bc5b51c612f.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 8MWdPhaokU-5Hn8rYH6;
         Fri, 05 Feb 2021 11:05:17 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
@@ -41,9 +38,9 @@ Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/7] gpio: gpio-ep93xx: Fix wrong irq numbers in port F
-Date:   Fri,  5 Feb 2021 11:05:03 +0300
-Message-Id: <20210205080507.16007-4-nikita.shubin@maquefel.me>
+Subject: [PATCH v4 4/7] gpio: ep93xx: drop to_irq binding
+Date:   Fri,  5 Feb 2021 11:05:04 +0300
+Message-Id: <20210205080507.16007-5-nikita.shubin@maquefel.me>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20210205080507.16007-1-nikita.shubin@maquefel.me>
 References: <20210205080507.16007-1-nikita.shubin@maquefel.me>
@@ -54,32 +51,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Port F irq's should be statically mapped to EP93XX_GPIO_F_IRQ_BASE.
-
-So we need to specify girq->first otherwise:
-
-"If device tree is used, then first_irq will be 0 and
-irqs get mapped dynamically on the fly"
-
-And that's not the thing we want.
+As ->to_irq is redefined in gpiochip_add_irqchip, having it defined in
+driver is useless, so let's drop it.
 
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 ---
- drivers/gpio/gpio-ep93xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpio-ep93xx.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
-index 3c9f7233e62d..38eeaa5c0e1e 100644
+index 38eeaa5c0e1e..6208a8010ff5 100644
 --- a/drivers/gpio/gpio-ep93xx.c
 +++ b/drivers/gpio/gpio-ep93xx.c
-@@ -426,6 +426,7 @@ static int ep93xx_gpio_add_bank(struct ep93xx_gpio_chip *egc,
+@@ -330,11 +330,6 @@ static int ep93xx_gpio_set_config(struct gpio_chip *gc, unsigned offset,
+ 	return 0;
+ }
+ 
+-static int ep93xx_gpio_f_to_irq(struct gpio_chip *gc, unsigned offset)
+-{
+-	return EP93XX_GPIO_F_IRQ_BASE + offset;
+-}
+-
+ static void ep93xx_init_irq_chip(struct irq_chip *ic, const char *irq_name)
+ {
+ 	ic->name = irq_name;
+@@ -425,7 +420,6 @@ static int ep93xx_gpio_add_bank(struct ep93xx_gpio_chip *egc,
+ 		}
  		girq->default_type = IRQ_TYPE_NONE;
  		girq->handler = handle_level_irq;
- 		gc->to_irq = ep93xx_gpio_f_to_irq;
-+		girq->first = EP93XX_GPIO_F_IRQ_BASE;
+-		gc->to_irq = ep93xx_gpio_f_to_irq;
+ 		girq->first = EP93XX_GPIO_F_IRQ_BASE;
  	}
  
- 	return devm_gpiochip_add_data(dev, gc, epg);
 -- 
 2.26.2
 
