@@ -2,140 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F7EF31170A
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Feb 2021 00:30:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4A0C311A0C
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Feb 2021 04:29:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229736AbhBEXXQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Feb 2021 18:23:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231194AbhBEKDF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Feb 2021 05:03:05 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31477C06178C
-        for <linux-gpio@vger.kernel.org>; Fri,  5 Feb 2021 02:02:16 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id f14so10956655ejc.8
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Feb 2021 02:02:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hsH61KDDx3Y8OXz/ss9YObsNe+q0AigWapDctDER+4o=;
-        b=0tGaTw+7R4737QFUR7L03ZUcXH86QHMgoqUHr23glRdIx079vNPmrPdq733mNlcmpz
-         gWlue8u7HtNZuwztRRTiNdL+QeM8vff1jsYhDjUiIlmHjEHIg/Uu6PTL6R9EGJd5jnui
-         fy3BDRuOhtMi/b6OIUnfFIZpj6gW/LHkRkwKEwpuPS3+oCsEy+nwBayXJPEbcj9tSIYR
-         mzohb+aD+asOyK/5d3OZI5o4FcMp5E8Ly5FYKBckPcEJrajoPk5vCBc3ffkA1DKctFHl
-         ueTRTjCYofnO/KPblRuMNmwS7lse3lltLUuDzavC6i1+j4x43hCL4bqQbTw/jOyfq7FD
-         eDuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hsH61KDDx3Y8OXz/ss9YObsNe+q0AigWapDctDER+4o=;
-        b=aeZ23VuXoT3RxweEk5REUdiUeidMtcMzRSRUN9G0K/yFJvVTUi2tiOyFWSuOsyx2FO
-         kYItehuL2781bcEGaOVqaCA0Xw4anGFdrADdM7PiDWbci5MGZWi/4hr4fVYHGrTOZ0tS
-         Hzwz/ayq/791Wrz3t3wBiv3VPvwcjhkehxcGv2UjzkCchzR3ulgQdVVxARZYSnGPsOkT
-         KNb29j2G/Tu7tGdDNi2m20T4CNTNO8E4GtUU661+RzyX2+m+zxXVZJIl8ZKKZYmbAlAE
-         bzZlNNaDTrHe/u+cIPYklxEY0jvXsY0ih5oFCygqPOmRqmS9A/ZRwhMga+Fq+RiP7ij2
-         6uWg==
-X-Gm-Message-State: AOAM5312cGxeDb7eIMfgCHNlVp0hKAA/H2uP2iNMLRoSY+xKO2CPW6T6
-        UqZIMiboaf1DeolSGImXvHDs7zAt+vzeC+gYxN2yUA==
-X-Google-Smtp-Source: ABdhPJx7xtmfvkbZBlgp22UnO9FMKZTPTwGhYg+QYtWNxMQmoX5+jZMzc9EWb1UGVcog4SwbazfAjmEnpvk1r7powrc=
-X-Received: by 2002:a17:906:84d7:: with SMTP id f23mr3484797ejy.87.1612519334867;
- Fri, 05 Feb 2021 02:02:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20210205020730.1746354-1-saravanak@google.com>
-In-Reply-To: <20210205020730.1746354-1-saravanak@google.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 5 Feb 2021 11:02:04 +0100
-Message-ID: <CAMRc=Mci+LThvb5M5hmzjoCNSK1EAqZEqo7YU9Gp5Mo0FSRggw@mail.gmail.com>
-Subject: Re: [PATCH v1] gpiolib: Don't probe gpio_device if it's not the
- primary device
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S231302AbhBFD3E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Feb 2021 22:29:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232518AbhBFDV4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Feb 2021 22:21:56 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B28764F9D;
+        Sat,  6 Feb 2021 01:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612574755;
+        bh=/OO95ptKWwAfPKnln79sj7p50JlIFunorcpU1Za6txs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pGgQmtxfWDXFXdKv2lSHbQ8Hffg6ZF3khCddSyZagHNacjnJaiAhbckTqDOXSlJJw
+         smcT7P+JGZSL/MjDF4Cr8Rs6HfFWATUw/sTBGhUPRRRpjDs3haoC8wG9ic1njvO/iK
+         rA1Cyzbi+mBzO9SFOe5WFmN5JDg7RgiYb53u4NFEFWBc78kD1AKiH1wec60VpnljyX
+         5yAvAzFuWeaQAaZ5McL28B12bYT5mLA0y/C30Ug7IchPcpGuxmaACHs+AUk24p6dwI
+         S3tKhxddOqP8c9w+NOQxMKcPulyOZs43cf5XSh7rqi9xUyn0TiyVcGfr8ZD7n7HFTi
+         xaZJjX6p2Okig==
+Date:   Sat, 6 Feb 2021 02:25:51 +0100
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Daniel Palmer <daniel@thingy.jp>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Osipenko <digetx@gmail.com>, kernel-team@android.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vincent Cheng <vincent.cheng.xh@renesas.com>,
+        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: Fix undocumented compatible strings in
+ examples
+Message-ID: <20210206012551.GB3847@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Daniel Palmer <daniel@thingy.jp>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vincent Cheng <vincent.cheng.xh@renesas.com>,
+        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-watchdog@vger.kernel.org
+References: <20210202205544.24812-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
+Content-Disposition: inline
+In-Reply-To: <20210202205544.24812-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 5, 2021 at 3:08 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> Dmitry reported[1] boot error messages caused by
-> commit 4731210c09f5 ("gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default").
->
-> gpio-1022 (cpu-pwr-req-hog): hogged as input
-> max77620-pinctrl max77620-pinctrl: pin gpio4 already requested by max77620-pinctrl; cannot claim for gpiochip1
-> max77620-pinctrl max77620-pinctrl: pin-4 (gpiochip1) status -22
-> max77620-pinctrl max77620-pinctrl: could not request pin 4 (gpio4) from group gpio4  on device max77620-pinctrl
-> gpio_stub_drv gpiochip1: Error applying setting, reverse things back
-> gpio_stub_drv: probe of gpiochip1 failed with error -22
->
-> This happens because when we try to probe a device, driver core calls
-> into pinctrl to set up the pins. However, if the GPIO DT node already
-> has a proper device created and probed, trying to probe the gpio_device
-> with a stub driver makes the pins be claimed twice. pinctrl doesn't like
-> this and throws an error.
->
-> So, this patch makes sure the gpio_stub_drv doesn't match with a
-> gpio_device if it's not the primary device for the fwnode.
->
-> [1] - https://lore.kernel.org/lkml/544ad0e4-0954-274c-8e77-866aaa5661a8@gmail.com/
-> Fixes: 4731210c09f5 ("gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default")
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
-> Greg/Linus,
->
-> This will need to go into driver-core because the Fixes is in
-> driver-core too.
->
-> Thanks,
-> Saravana
->
->  drivers/gpio/gpiolib.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 8e0564c50840..8ad679a928b0 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -56,8 +56,10 @@
->  static DEFINE_IDA(gpio_ida);
->  static dev_t gpio_devt;
->  #define GPIO_DEV_MAX 256 /* 256 GPIO chip devices supported */
-> +static int gpio_bus_match(struct device *dev, struct device_driver *drv);
->  static struct bus_type gpio_bus_type = {
->         .name = "gpio",
-> +       .match = gpio_bus_match,
->  };
->
->  /*
-> @@ -4199,6 +4201,18 @@ void gpiod_put_array(struct gpio_descs *descs)
->  }
->  EXPORT_SYMBOL_GPL(gpiod_put_array);
->
-> +
-> +static int gpio_bus_match(struct device *dev, struct device_driver *drv)
-> +{
-> +       /*
-> +        * Only match if the fwnode doesn't already have a proper struct device
-> +        * created for it.
-> +        */
-> +       if (dev->fwnode && dev->fwnode->dev != dev)
-> +               return 0;
-> +       return 1;
-> +}
-> +
->  static int gpio_stub_drv_probe(struct device *dev)
->  {
->         /*
-> --
-> 2.30.0.365.g02bc693789-goog
->
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 02, 2021 at 02:55:42PM -0600, Rob Herring wrote:
+> Running 'dt-validate -m' will flag any compatible strings missing a schem=
+a.
+> Fix all the errors found in DT binding examples. Most of these are just
+> typos.
+>=20
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Daniel Palmer <daniel@thingy.jp>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Avi Fishman <avifishman70@gmail.com>
+> Cc: Tomer Maimon <tmaimon77@gmail.com>
+> Cc: Tali Perry <tali.perry1@gmail.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: Vincent Cheng <vincent.cheng.xh@renesas.com>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-crypto@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
+> Cc: iommu@lists.linux-foundation.org
+> Cc: linux-watchdog@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+Acked-by: Wolfram Sang <wsa@kernel.org> # for I2C
+
+
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmAd8B4ACgkQFA3kzBSg
+KbbdSRAAtkrymAGNS5LGn321fm8TqaN3fodZIhNLfeeWULr/eImrk2RJCYzunjC6
+Nb8wJvEywJuB1E4YzkiFTgWxKVeLmFnUFodUSlufnefhzGl4Q+2udtIlUr3CqBaM
+K7b7RS452nISpyzJHTBfdWr4VwEUOHqmrYXG3jLExytI6Enrun7qqY6hu7WwXUIT
+tZ7CUUP30kMy3K1ahkItDx0SGBRf5hWrG+KAzSj9cyZKHFBaIv3WKV/bUMC6OC+Y
+h83LhJP40pBTFZWlk+jwchtr4ZWNF6GG9vuIcXWI35Y9tYUDsX0fWnRj3LSMdp8u
+QMK0sZFo4oIejPXH61NxPWZ6IHVcy21veXay4ZXApxNjsuwyitBb7/aRrJDEoJsr
+MlS6IMR7MXnujHlxwoJ+3sSIvPhRyeWgTC1pmp4qL2LwImDHrooS3pJANxAl7Ws6
++RKt3Mkf0w5k5r2HiukAHI7Lywkwb74sit3LU3D6awsZicpRT9c/tNlGnTNsl6Hu
++Mu9JP+//QSe+eRhOsXCnwMl8eEutYWvPadijYg87IbPxat3uDuiQz5E7S5dMTSR
+UerC7itsB9z9Hpb8zDdQAboNPdw04c+kfWn53Mu7cxhvxhzYyf+jZsu8tMIG60Bb
+LheRj95DOtU9bnIaQ8NdiBy3k9LESOW9ULADetyHoQZLM5Qb7Zk=
+=d/1y
+-----END PGP SIGNATURE-----
+
+--ZfOjI3PrQbgiZnxM--
