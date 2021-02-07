@@ -2,69 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4C38311E24
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Feb 2021 15:57:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B14C312149
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Feb 2021 05:20:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbhBFO4u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 6 Feb 2021 09:56:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55586 "EHLO
+        id S229767AbhBGET3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 6 Feb 2021 23:19:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbhBFO4p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Feb 2021 09:56:45 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278A1C0611C0
-        for <linux-gpio@vger.kernel.org>; Sat,  6 Feb 2021 06:56:08 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id y8so12900815ede.6
-        for <linux-gpio@vger.kernel.org>; Sat, 06 Feb 2021 06:56:08 -0800 (PST)
+        with ESMTP id S229763AbhBGETI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Feb 2021 23:19:08 -0500
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8C76C061756;
+        Sat,  6 Feb 2021 20:18:27 -0800 (PST)
+Received: by mail-il1-x12a.google.com with SMTP id a16so9743459ilq.5;
+        Sat, 06 Feb 2021 20:18:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=sY4fgq/DSyThalwU7QX+pWYKs/8sGH7ZznMUn5qQ1EY=;
-        b=be9tjb+OWNHJndy1m5EocOdwIhBfISHHXuo03iHvkf99IBeAS2ZIP4zO+CffKoAXli
-         wFT/YxtIr4WF2n1YSMwug96AX6h42NKZrdX6hvIP0FW987zbVxsareo/sU3roaLny3Pm
-         1I0EAvIv2c3c8gMqzIhJboZgHRcl5wu2OT/70suQQY9rPZh+owVr7rQ4YbzNpmhfKrYI
-         /WFKqkkmd6SPcZoTOVzYWmghpUGccg0Q45HGIh3V4O6JvUm92greLImmIug/U0fb2r4r
-         q9VWwZUaDL82BSMDI5DQFGoKkEfp6hQ2o0DuZZGA9TKrtSyCuxJgVwhKlVG9/j3xxq6N
-         +ONA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C0nh6s6iVQifHimFBlt9HsSWgh0AuZfoaMEvFjIFmTw=;
+        b=PXVstjrRPiSBUJHkTotsW1+xZIPbMhPQV5Z/9ECzLJcj9omaRFj/6zfj3OX82+S3ih
+         4w/Fs8HvInZDyln13YIVs84TWEv20e5JlM+hLuUBkx8JhC+7Ya2FeH6egJn9Gvj/uC0w
+         zmaw7JsHrGrkAVN7gBbG8l2NnPrGdoz7q/0vSzJgTZFRmUSKNdKu6zWNr/AuPlc06Pya
+         TADXJLoXyT+V0vCtPflXWT9WBl+pAbThonZAQRg0gMAt+PKYDU1+v8lZUy6X44QWMYPs
+         TdIlqmiX6q3jpt7L0LjxaceE+yaPwJzomfd4YU22pqHsqHjrDwDcBbt9DvoCfKx6hOs3
+         OOSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=sY4fgq/DSyThalwU7QX+pWYKs/8sGH7ZznMUn5qQ1EY=;
-        b=TZWlUS6wOXO2b1Cv2y5uM+3O7ZFB7JZbJm1zD6chRvAzxhgMcXxi2B6D2d9bsGR4Iy
-         hMe5hchPeBzp09HN/SaBkabuVLaDGVsoGeaHwkWUB3+FTlNUBnlEvgbM3adCcs84QvkP
-         pqKgY3fVSxAqSV0GAX/URDBrFtAhWGtbRwBhEB/Ir0vKhtp2PhyoX2iSmjNXj1JDYYrT
-         xFP0SccdIG1V4DRiH0IKY+GUTR4/U6Ga4zew/36UjydEgAuKq4OoAAXyoDCFuC3yNQoF
-         v9Ct9ZxQHOBGdqALABkY+4kCWKqIzNqq2rSc00VHK2YsFiOKkeqGsIBS6coe71+dHqlv
-         tsTw==
-X-Gm-Message-State: AOAM530oiRnpjv+mZ33F2vVvxeJruVE+ksQy/QDj3bCw3Xh9BMt4qZfU
-        bS8TmCiGikM7b6zSjYHwDtC7YK6zfhqe7ZUYaOc=
-X-Google-Smtp-Source: ABdhPJwg+95ztD5QblcuO+8CjjIKmoEQ6sWNyKmWrA0wQ2pVp+Zgel1cyodQV1zvNjOO8ObzDtcisUsYne5SMT74xW8=
-X-Received: by 2002:a05:6402:13cd:: with SMTP id a13mr8813735edx.87.1612623366928;
- Sat, 06 Feb 2021 06:56:06 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C0nh6s6iVQifHimFBlt9HsSWgh0AuZfoaMEvFjIFmTw=;
+        b=kmLw1bKaObUE+SvZzVJolTu1s/EVyMXQYyVTm/2W0/SRQUf4ehb1hRe5plP+2i6LRv
+         2hRfdCspqU5h9vFAVgzLRkVVDJkXCCMAUj1U6U6i4AOoeMFCLtsTd8dnPPkGVTKt68YP
+         ZaeNWsPhsyHQgfpVKKMZDkvspAuSdZgPBXlMqEVARgrhirSOuF35/Cgha0ddRJlxPbJm
+         UhOXnOS+N3pf3RJuL3S9lUktyUxJhM2Zp4DWcPgSklzXuQySVegsMFZxUd9/wwb3nTJA
+         6LMvzJZ3vmtNCzdPHUH5ZRp/mygGpORk4aw8BNv7ES5SbMzTcQPKcSXmUt8QFwaDPJWq
+         FsZQ==
+X-Gm-Message-State: AOAM533pEFQv5xru72vkZIqe4PUL5B8kaCtCtSStlMBnlpUNoKr1dwpc
+        6VuWO+TujL5Osirf5erW+jZ/mBi/2V3Y+G2G33g=
+X-Google-Smtp-Source: ABdhPJwuh8pvYd3UmzNgZcDRU1W1DbwxMv0Vdth/wCvy0cjMA/poeLmKteZhRQv890ip+9TXKH+FH3gDJI/8VK32ieo=
+X-Received: by 2002:a05:6e02:b2e:: with SMTP id e14mr10135604ilu.164.1612671507292;
+ Sat, 06 Feb 2021 20:18:27 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a17:906:25d0:0:0:0:0 with HTTP; Sat, 6 Feb 2021 06:56:06
- -0800 (PST)
-Reply-To: lawyer.nba@gmail.com
-From:   Barrister Daven Bango <stephennbada9@gmail.com>
-Date:   Sat, 6 Feb 2021 15:56:06 +0100
-Message-ID: <CAGSHw-DxGPGtoG1+UQ6TB+LhiET-F_GxGO0MtswtFbtkGe4W1Q@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
+References: <cover.1608963094.git.syednwaris@gmail.com> <da4eaafa84f32375319014f6e9af5c104a6153fd.1608963095.git.syednwaris@gmail.com>
+ <CAHp75VcSsfDKY3w4ufZktXzRB=GiObAV6voPfmeAHcbdwX0uqg@mail.gmail.com> <CACG_h5otB5hhAX0z9YzN8bT6Nz5WVRUQWbhENF+u8Z3WsCp_8A@mail.gmail.com>
+In-Reply-To: <CACG_h5otB5hhAX0z9YzN8bT6Nz5WVRUQWbhENF+u8Z3WsCp_8A@mail.gmail.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Sun, 7 Feb 2021 09:48:17 +0530
+Message-ID: <CACG_h5rLzpo-oz9uPe4d66-e088Y8YXiUhkLwEEf7MVyLDcJRg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] lib/test_bitmap.c: Add for_each_set_clump test cases
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "vilhelm.gray@gmail.com" <vilhelm.gray@gmail.com>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "rrichter@marvell.com" <rrichter@marvell.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=20
-Korisnik fonda =C4=8Destitanja, Va=C5=A1a sredstva za naknadu od 850.000,00
-ameri=C4=8Dkih dolara odobrila je Me=C4=91unarodna monetarna organizacija (=
-MMF)
-u suradnji s (FBI) nakon mnogo istraga. =C4=8Cekamo da se obratimo za
-dodatne informacije
+On Thu, Feb 4, 2021 at 2:25 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+>
+> On Sat, Dec 26, 2020 at 8:15 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> >
+> >
+> > On Saturday, December 26, 2020, Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> >>
+> >> The introduction of the generic for_each_set_clump macro need test
+> >> cases to verify the implementation. This patch adds test cases for
+> >> scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
+> >> The cases contain situations where clump is getting split at the word
+> >> boundary and also when zeroes are present in the start and middle of
+> >> bitmap.
+> >
+> >
+> > You have to split it to a separate test under drivers/gpio, because now it has no sense to be like this.
+>
+> Hi Andy,
+>
+> How do I split it into separate test under drivers/gpio ? I have
+> thought of making a test_clump_bits.c file in drivers/gpio.
+> But how do I integrate this test file so that tests are executed at
+> runtime? Similar to tests in lib/test_bitmap.c ?
+>
+> I believe I need to make changes in config files so that tests in
+> test_clump_bits.c ( in drivers/gpio ) are executed at runtime. Could
+> you please provide some steps on how to do that. Thank You !
+>
+> Regards
+> Syed Nayyar Waris
 
-Advokat: Daven Bango
-Telefon: +22891667276
-(URED MMF-a LOME TOGO)
+Hi Andy, could you please help me on the above. Thanks !
+
+Regards
+Syed Nayyar Waris
