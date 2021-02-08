@@ -2,75 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0383312CB5
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Feb 2021 10:07:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96A34312CCF
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Feb 2021 10:09:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231197AbhBHJBA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Feb 2021 04:01:00 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12528 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231126AbhBHI7X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Feb 2021 03:59:23 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4DZ0JS3jdnzMTXW;
-        Mon,  8 Feb 2021 16:56:56 +0800 (CST)
-Received: from huawei.com (10.69.192.56) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.498.0; Mon, 8 Feb 2021
- 16:58:35 +0800
-From:   Luo Jiaxing <luojiaxing@huawei.com>
-To:     <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <andriy.shevchenko@linux.intel.com>, <grygorii.strashko@ti.com>,
-        <ssantosh@kernel.org>, <khilman@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@openeuler.org>
-Subject: [PATCH for next v1 2/2] gpio: grgpio: Replace spin_lock_irqsave with spin_lock in grgpio_irq_handler()
-Date:   Mon, 8 Feb 2021 16:57:57 +0800
-Message-ID: <1612774677-56758-3-git-send-email-luojiaxing@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1612774677-56758-1-git-send-email-luojiaxing@huawei.com>
-References: <1612774677-56758-1-git-send-email-luojiaxing@huawei.com>
+        id S231258AbhBHJIl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Feb 2021 04:08:41 -0500
+Received: from forward106p.mail.yandex.net ([77.88.28.109]:36707 "EHLO
+        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231284AbhBHJAz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Feb 2021 04:00:55 -0500
+Received: from iva3-2436f5349071.qloud-c.yandex.net (iva3-2436f5349071.qloud-c.yandex.net [IPv6:2a02:6b8:c0c:498b:0:640:2436:f534])
+        by forward106p.mail.yandex.net (Yandex) with ESMTP id 11A821C828E7;
+        Mon,  8 Feb 2021 12:00:01 +0300 (MSK)
+Received: from iva5-057a0d1fbbd8.qloud-c.yandex.net (iva5-057a0d1fbbd8.qloud-c.yandex.net [2a02:6b8:c0c:7f1c:0:640:57a:d1f])
+        by iva3-2436f5349071.qloud-c.yandex.net (mxback/Yandex) with ESMTP id plVk62kBPw-00Huw22K;
+        Mon, 08 Feb 2021 12:00:01 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1612774801;
+        bh=QivlRSg2glO+ZbFgQYWUy3CpeN6FzJgloLpPwkNnnfo=;
+        h=Date:Subject:To:From:Message-Id:Cc;
+        b=hXIIODv/mxiUBe0yQ1xS955HJphKDOIh1cVfNGb3vqy5UMQTwCert+ZQB9HhEhjLQ
+         h0gicTJsL1FgCqEZsTAg0ehIf6IyKM8cchpNTRwMkBFa/A+h2Te8/yCw/1m+3EyVax
+         TUUXzhlMnVYBYHDme/Tf9ibNex+7d3TPockumeyg=
+Authentication-Results: iva3-2436f5349071.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by iva5-057a0d1fbbd8.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id N9nOuejTfy-xxJmJdUX;
+        Mon, 08 Feb 2021 12:00:00 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nikita Shubin <nikita.shubin@maquefel.me>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/7] gpio: ep93xx: fixes series patch
+Date:   Mon,  8 Feb 2021 11:59:47 +0300
+Message-Id: <20210208085954.30050-1-nikita.shubin@maquefel.me>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There is no need to use API with _irqsave in grgpio_irq_handler(),
-because it already be in a irq-disabled context.
+v2: 
+https://lore.kernel.org/linux-gpio/20210127104617.1173-1-nikita.shubin@maquefel.me/
 
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
----
- drivers/gpio/gpio-grgpio.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+v3:
+https://lore.kernel.org/linux-gpio/20210128122123.25341-1-nikita.shubin@maquefel.me/
 
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index f954359..fa5aa31 100644
---- a/drivers/gpio/gpio-grgpio.c
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -195,11 +195,10 @@ static irqreturn_t grgpio_irq_handler(int irq, void *dev)
- {
- 	struct grgpio_priv *priv = dev;
- 	int ngpio = priv->gc.ngpio;
--	unsigned long flags;
- 	int i;
- 	int match = 0;
- 
--	spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-+	spin_lock(&priv->gc.bgpio_lock);
- 
- 	/*
- 	 * For each gpio line, call its interrupt handler if it its underlying
-@@ -215,7 +214,7 @@ static irqreturn_t grgpio_irq_handler(int irq, void *dev)
- 		}
- 	}
- 
--	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-+	spin_unlock(&priv->gc.bgpio_lock);
- 
- 	if (!match)
- 		dev_warn(priv->dev, "No gpio line matched irq %d\n", irq);
--- 
-2.7.4
+v4:
+https://lore.kernel.org/linux-gpio/20210205080507.16007-1-nikita.shubin@maquefel.me/
+
+v4->v5 changes
+
+[PATCH v5 1/7] gpio: ep93xx: fix BUG_ON port F usage
+Alexander Sverdlin:
+- make to_ep93xx_gpio_irq_chip() static 
+
+[PATCH v5 2/7] gpio: ep93xx: Fix single irqchip with multi gpiochips
+Alexander Sverdlin:
+- generate IRQ chip's names dynamicaly from label
 
