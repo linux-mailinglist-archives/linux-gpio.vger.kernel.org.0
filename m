@@ -2,65 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F65D312BB5
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Feb 2021 09:33:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F93A312CAD
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Feb 2021 10:01:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229821AbhBHIaM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Feb 2021 03:30:12 -0500
-Received: from smtp-18d.idc2.mandic.com.br ([177.70.124.135]:39111 "EHLO
-        smtp-18.idc2.mandic.com.br" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229894AbhBHIaI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Feb 2021 03:30:08 -0500
-Received: by smtp-18.smtp.mandic.prv (Postfix, from userid 491)
-        id 5BC52607E9FB; Mon,  8 Feb 2021 05:29:22 -0300 (-03)
-Received: from smtp-18.idc2.mandic.com.br (ifsmtp2 [192.168.1.38])
-        by smtp-18.smtp.mandic.prv (Postfix) with ESMTPS id C1044607AAA4;
-        Mon,  8 Feb 2021 05:29:16 -0300 (-03)
-Received: from User (unknown [52.235.38.23])
-        by smtp-18.smtp.mandic.prv (Postfix) with ESMTPA id 78375465E268;
-        Mon,  8 Feb 2021 05:26:42 -0300 (-03)
-Reply-To: <ms.reem@yandex.com>
-From:   "Ms. Reem" <stefy@macrometrica.com.br>
-Subject: Re:reply
-Date:   Mon, 8 Feb 2021 08:29:15 -0000
+        id S230012AbhBHI76 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Feb 2021 03:59:58 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:12865 "EHLO
+        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231321AbhBHI5z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Feb 2021 03:57:55 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4DZ0Gl2gvjz7htx;
+        Mon,  8 Feb 2021 16:55:27 +0800 (CST)
+Received: from huawei.com (10.69.192.56) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.498.0; Mon, 8 Feb 2021
+ 16:56:44 +0800
+From:   Luo Jiaxing <luojiaxing@huawei.com>
+To:     <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <andriy.shevchenko@linux.intel.com>, <grygorii.strashko@ti.com>,
+        <ssantosh@kernel.org>, <khilman@kernel.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@openeuler.org>
+Subject: [PATCH for next v1 0/2] gpio: few clean up patches to replace spin_lock_irqsave with spin_lock
+Date:   Mon, 8 Feb 2021 16:56:15 +0800
+Message-ID: <1612774577-55943-1-git-send-email-luojiaxing@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-X-Mandic-Auth: DYB6x5JcyVot9snxiAasWC73cfc93V+pC3vUrorm87+eXbqAUeEHL0ZNPgpM50IYQeUbiYx0PkMIK2oavHcOOA==
-X-Mandic-Sender: stefy@macrometrica.com.br
-Message-Id: <20210208082916.C1044607AAA4@smtp-18.smtp.mandic.prv>
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+There is no need to use API with _irqsave in hard IRQ handler, So replace
+those with spin_lock.
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (3) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home in Cambodia on their behalf and
-for our "Mutual Benefits".
+Luo Jiaxing (2):
+  gpio: omap: Replace raw_spin_lock_irqsave with raw_spin_lock in
+    omap_gpio_irq_handler()
+  gpio: grgpio: Replace spin_lock_irqsave with spin_lock in
+    grgpio_irq_handler()
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Cambodian/Vietnam Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+ drivers/gpio/gpio-grgpio.c |  5 ++---
+ drivers/gpio/gpio-omap.c   | 15 ++++++---------
+ 2 files changed, 8 insertions(+), 12 deletions(-)
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-ms.reem@yandex.com
+-- 
+2.7.4
 
-Regards,
-Ms. Reem.
