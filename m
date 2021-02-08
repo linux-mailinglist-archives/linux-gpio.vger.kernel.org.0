@@ -2,107 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3625D312665
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Feb 2021 18:32:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F7B2312A54
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Feb 2021 07:00:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbhBGRcR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Feb 2021 12:32:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
+        id S229590AbhBHF7o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Feb 2021 00:59:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbhBGRcJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Feb 2021 12:32:09 -0500
-Received: from iam.tj (soggy.cloud [IPv6:2a01:7e00:e000:151::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A88C06174A
-        for <linux-gpio@vger.kernel.org>; Sun,  7 Feb 2021 09:31:24 -0800 (PST)
-Received: from [IPv6:2a02:8011:2007:0:4e8f:8e4c:119:9fc0] (unknown [IPv6:2a02:8011:2007:0:4e8f:8e4c:119:9fc0])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        by iam.tj (Postfix) with ESMTPSA id 7B232340F6
-        for <linux-gpio@vger.kernel.org>; Sun,  7 Feb 2021 17:31:22 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=elloe.vision; s=2019;
-        t=1612719082; bh=BAmseRFvSkThPirqOmWpY1zYxK4YVrmsMdIcbGtrmw4=;
-        h=To:From:Subject:Date:From;
-        b=p2ybKjNPBe3JbeoqjaszdH6Jq0FUJpZ3mVMzOFxExNtDBgQB62L2Ghem69LO3i3QQ
-         S1z5yIomJB8vQE2DYUb6b0ixZYjx/Kk+pNtirz03dFnO6JMKhH1f8DNMCoTTjZuoyc
-         WVTU6fHRrZoVJbgXtsq9WiPiNmH1CO+0BivuUDbgKP6q8/cUH0uaecRVuj3YxkZaIL
-         I6VTfsL9X5vcB+vpBZpQQxFePfxjdVidEqpxQBk2+J1wbJZ3/mK6uy+/uzjno4Sal3
-         3awUIlx7lM9cI/JLSDCUIFyEmPMsnbcYO1T+8QPJdluBdoR4OeGdy4mRPPfz3zRTL2
-         U2xdQgC1yNL4A==
-To:     linux-gpio@vger.kernel.org
-From:   "Tj (Elloe Linux)" <ml.linux@elloe.vision>
-Subject: amd_gpio_irq_handler: irq 7: nobody cared
-Organization: Elloe CIC
-Message-ID: <1d3e7009-1b6b-33dc-d6ab-29dd42c5a9a9@elloe.vision>
-Date:   Sun, 7 Feb 2021 17:31:22 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S229565AbhBHF7m (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Feb 2021 00:59:42 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A70C06174A
+        for <linux-gpio@vger.kernel.org>; Sun,  7 Feb 2021 21:59:02 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id w1so22649945ejf.11
+        for <linux-gpio@vger.kernel.org>; Sun, 07 Feb 2021 21:59:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tYtyn0t74f5TG7BO7dszPSjwDHfBRH5yigTfJIbsbfM=;
+        b=aeWwn0BgbGbDRQBcI8/6eoluPE32h4S3EtIGByH6JDWiCeGU3K5T+8F/B97iALgSra
+         f+BFFf+Tor0wO9iE6ZS5gVJa0dU+RcU1qManRecots4AbHQXSfvff35Kr4pTcJb6c9hX
+         q/SlYArWRJwvolJ8nJR1PbyZAjIwpDO6Zd8f4kJ/3t8jDi7NjCtfq/anS5eO5eLlRjBY
+         xGQiMwwb1NLgMbm/H2hrYeDeSooxd/1zywdN6lbriIxVAXpdmhsq5t+MkrBTPX8DGj4h
+         yVn8KuUUnPco8OGsiij+QHwkMBd45v5XjZmESkfBXv9AsmqsblSnNcTHJftF12jrBYEI
+         CnSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tYtyn0t74f5TG7BO7dszPSjwDHfBRH5yigTfJIbsbfM=;
+        b=hfHV9rxGbMLJ5ehV+tB9eSW21NEYcBxEdl5lITT4JoHNfKRKBKzRbW+J7Zp6Z45k0k
+         P0eSF7G41uqS8HE9k7obRD3grT5b4YATxjBrCbMEcZfyCpx1vvNghSyG6QkrFUiUx0q2
+         TuSBj3qrJho9j3y4eHTiLQXevHb+vrU+NFcKeL85cHW0Khlnd3cmVnkCM3PiH5dpai7l
+         t+7tKt9+ucc78W6vY78H92qTWnrM1w/prbJfAYjrIHivNGwrzGc4O9VLKyKd+DZpiYq4
+         qgY6SICIwmzLjEETqgl0h8zX4hZzs+mEcKhWmcqtrtkqRaSvUqqa0cwKzN5JXLssilyt
+         yE6w==
+X-Gm-Message-State: AOAM532a2KyABX6cefb+8bjs0mVXE+JCqJEFR+RSC3ksL+65RbplGiv+
+        UWoQxf1PAQmTXlmAk9bzAHdKPdDa5pG1lK/NH9VfAQ==
+X-Google-Smtp-Source: ABdhPJyTFOhTTEtE5CPLaZeX4AgDIqlLIdsxLW0RKMO4iPrPn5IUXGo7YJ5f2lAGr+DPh+XOu986MmDSfMRNwUlz4sg=
+X-Received: by 2002:a17:906:4707:: with SMTP id y7mr15220218ejq.445.1612763941155;
+ Sun, 07 Feb 2021 21:59:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <1612688430-54282-1-git-send-email-yang.lee@linux.alibaba.com>
+In-Reply-To: <1612688430-54282-1-git-send-email-yang.lee@linux.alibaba.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 8 Feb 2021 06:58:50 +0100
+Message-ID: <CAMpxmJU568mCzEo1MShA7rgp1bWh_3j44hQw3oMWggczj31f8w@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: cdev: convert stream-like files from
+To:     Yang Li <yang.lee@linux.alibaba.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On recent 5.19.* and the latest 5.11-rc6 at commit 825b5991a46e on a
-Lenovo E495 I'm seeing:
+On Sun, Feb 7, 2021 at 10:00 AM Yang Li <yang.lee@linux.alibaba.com> wrote:
+>
+> Eliminate the following coccicheck warning:
+> ./drivers/gpio/gpiolib-cdev.c:2307:7-23: WARNING: gpio_fileops: .read()
+> has stream semantic; safe to change nonseekable_open -> stream_open.
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> ---
+>  drivers/gpio/gpiolib-cdev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index 1631727..bad68ef 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -2304,7 +2304,7 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
+>         get_device(&gdev->dev);
+>         file->private_data = cdev;
+>
+> -       ret = nonseekable_open(inode, file);
+> +       ret = stream_open(inode, file);
+>         if (ret)
+>                 goto out_unregister_notifier;
+>
+> --
+> 1.8.3.1
+>
 
-kernel: Linux version 5.11.0-rc6+ (tj@elloe000) (gcc (Ubuntu
-9.3.0-17ubuntu1~20.04) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #18
-SMP PREEMPT Sun Feb 7 15:58:14 GMT 2021
-kernel: Command line: BOOT_IMAGE=/vmlinuz-5.11.0-rc6+
-root=/dev/mapper/ELLOE000-rootfs ro acpi_osi=! "acpi_osi=Windows 2016"
-systemd.unified_cgroup_hierarchy=1 nosplash
-...
-kernel: DMI: LENOVO 20NECTO1WW/20NECTO1WW, BIOS R11ET32W (1.12 ) 12/23/2019
-...
-smpboot: CPU0: AMD Ryzen 7 3700U with Radeon Vega Mobile Gfx (family:
-0x17, model: 0x18, stepping: 0x1)
-...
-kernel: irq 7: nobody cared (try booting with the "irqpoll" option)
-kernel: CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.11.0-rc6+ #18
-kernel: Hardware name: LENOVO 20NECTO1WW/20NECTO1WW, BIOS R11ET32W (1.12
-) 12/23/2019
-kernel: Call Trace:
-kernel: <IRQ>
-kernel: dump_stack+0x74/0x92
-kernel: __report_bad_irq+0x3a/0xaf
-kernel: note_interrupt.cold+0xb/0x60
-kernel: handle_irq_event_percpu+0x73/0x80
-kernel: handle_irq_event+0x39/0x60
-kernel: handle_fasteoi_irq+0x9c/0x150
-kernel: common_interrupt+0x68/0x140
-kernel: asm_common_interrupt+0x1e/0x40
-kernel: RIP: 0010:__do_softirq+0x73/0x2cd
-kernel: Code: 7b 81 52 00 01 00 00 89 75 ac c7 45 c8 0a 00 00 00 48 89
-45 c0 48 89 45 b0 65 66 c7 05 d4 b9 82 52 00 00 fb 66 0f 1f 44 00 00
-<bb> ff ff ff ff 49 c7 c3 c0 60 00 ae 41 0f bc df 83 c3 01 89 5d d4
-kernel: RSP: 0018:ffffa71540280f90 EFLAGS: 00000282
-kernel: RAX: ffff8acd80920000 RBX: 0000000000000000 RCX: 0000000000000020
-kernel: RDX: 0000000000000000 RSI: 0000000000200042 RDI: 0000000000000000
-kernel: RBP: ffffa71540280fe8 R08: 0000000000000000 R09: 000000004e2727f7
-kernel: R10: 000000004e170080 R11: 000000000000371b R12: ffffa7154017fe08
-kernel: R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000080
-kernel: asm_call_irq_on_stack+0x12/0x20
-kernel: </IRQ>
-kernel: do_softirq_own_stack+0x3d/0x50
-kernel: irq_exit_rcu+0xa4/0xb0
-kernel: sysvec_apic_timer_interrupt+0x35/0x90
-kernel: asm_sysvec_apic_timer_interrupt+0x12/0x20
-kernel: RIP: 0010:tick_nohz_idle_enter+0x47/0x50
-kernel: Code: 4e 4c 53 48 83 bb b0 00 00 00 00 75 20 80 4b 4c 01 e8 ed
-12 ff ff 80 4b 4c 04 48 89 43 78 e8 c0 20 f9 ff fb 66 0f 1f 44 00 00
-<5b> 5d c3 0f 0b eb dc 66 90 0f 1f 44 00 00 55 48 89 e5 53 48 c7 c3
-kernel: RSP: 0018:ffffa7154017feb0 EFLAGS: 00000282
-kernel: RAX: 000000004dff0c6a RBX: ffff8ad4108df8c0 RCX: 000000004dfea97a
-kernel: RDX: 000000004e0da480 RSI: 000000004dfea97a RDI: fffffffffff104fa
-kernel: RBP: ffffa7154017feb8 R08: 000000004dff0c6a R09: ffff8acd80a12840
-kernel: R10: 000000000000037f R11: 0000000000000000 R12: 0000000000000091
-kernel: R13: ffff8acd80920000 R14: 0000000000000000 R15: 0000000000000000
-kernel: do_idle+0x40/0x260
-kernel: cpu_startup_entry+0x20/0x30
-kernel: start_secondary+0x126/0x160
-kernel: secondary_startup_64_no_verify+0xc2/0xcb
-kernel: handlers:
-kernel: [<00000000b9a06805>] amd_gpio_irq_handler
-kernel: Disabling IRQ #7
+I think you have a false positive here - we don't even take the offset
+argument into account so I don't see how the line_watch_read callback
+could be interpreted as seekable.
+
+Bart
