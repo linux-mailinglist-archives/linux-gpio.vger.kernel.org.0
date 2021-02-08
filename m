@@ -2,187 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8883B3142E8
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Feb 2021 23:26:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71C7D3142E4
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Feb 2021 23:26:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231627AbhBHWZZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Feb 2021 17:25:25 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:50717 "EHLO
+        id S231576AbhBHWZU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Feb 2021 17:25:20 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:45149 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231549AbhBHWZE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Feb 2021 17:25:04 -0500
+        with ESMTP id S231473AbhBHWZD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Feb 2021 17:25:03 -0500
 Received: from orion.localdomain ([95.115.15.83]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MKKlN-1lUTlZ2RrT-00Lm3a; Mon, 08 Feb 2021 23:22:14 +0100
+ 1MYe6H-1lMjTA0aKB-00VdwQ; Mon, 08 Feb 2021 23:22:15 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     rafael@kernel.org, info@metux.net, linus.walleij@linaro.org,
         bgolaszewski@baylibre.com, robh+dt@kernel.org,
         frowand.list@gmail.com, pantelis.antoniou@konsulko.com,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RFC PATCH 05/12] of: kobj: __of_attach_node_sysfs(): add optional basename parameter
-Date:   Mon,  8 Feb 2021 23:21:56 +0100
-Message-Id: <20210208222203.22335-6-info@metux.net>
+Subject: [RFC PATCH 06/12] of: kobj: introduce of_attach_tree_sysfs()
+Date:   Mon,  8 Feb 2021 23:21:57 +0100
+Message-Id: <20210208222203.22335-7-info@metux.net>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20210208222203.22335-1-info@metux.net>
 References: <20210208222203.22335-1-info@metux.net>
-X-Provags-ID: V03:K1:npTHoKrL2oZbIv5cy3FmU1KTINiQbH4qQhD55Xayo4OIGdDxoev
- gbzaBfDm82BI+WL0Q5XXfcw2bf1mhzCP5EfsMEH22W+YrQEoWvpFapetR8aW4a4Mn1BHh31
- Pm01SE0jNYzBPFs79nvITLiY849a6/f12ji880iUonxJzqoj9k+3PirBtebr4pjkU1/KWJ6
- kwWQTazNy00Vr3t1i8Sfg==
+X-Provags-ID: V03:K1:ZtGzokklzdJEAZwPGATmrH1/M0zLFv6KzHuwBPz7+oXxl4Nxg1b
+ T2WWlO6QkPZXpRM1Fek92mrgiTDDi1HM4UyPU3mKz4QBO9Pec9Z03+jXoat9A4OWPnc+qTZ
+ GQpY0FB294LDM9mM68UB1WcUCHpIcSU5rAjnAwx6EpgOFzSD7ZA882En9rcIIDkIyV1dY9P
+ ZiFJ84GVJGUmb+x3Lzg9w==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8z86mJ3AC+k=:6VyNFzdPV/KSorHycOvmKI
- 5+mYc3CjznHOHfVs9RqH3PCNXVGIpSxUI9D+ViGXZNfZsZfe0TWmFDHPRI+NUnLnqq/y39poV
- M+L575DO+CQ79T2eODO2/7m92kauR41BCOyik0it83xhr/t4A2tKO+VyIoZ8bC5jsnKZxUzIK
- 2rz7fIDerNi3zIaY8d7u8BPJm2YXgaF+W8zNFYo7t/4e4pWC5AUFYk4IEeKpWJUjLB6LRtPYI
- TIe4V5y2mz7+h9eVfE34zXk8Hwtec2comFPyuCJ6F360VrgfAw6kOfUGC4zP/mtUnvP3ia2U4
- y4efzNucwczV+sryhyHUjKNumVF8H39Yk5wcuLIbuos8JJwu6Ic1eVMinOH5wmNNZ46rHiOV6
- 5Rx95sodEKfSXBQPIJjsPaZfsuThBd+efbCtI0KgSaeBgm0WPUNNFFIfkvIzF
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nx2Q60Qwd9I=:b8Ucwi6B5pI52GcH8caQh8
+ L+DLzZZ6WY7Cu3cRAtHCxlhyENquB3BP1CIlxK9wyXd9Nf4VDBAPh4PwWKGzi+f3sZETCWcCZ
+ LqjFZbz4XF2mUhd08TojxNMy2qS2pjezRtcn4hTEz6uAlKATI1c5/4K+bD3qZ8MclX+2EnQSG
+ ki69/8FFFb/IZnyYP+2Ke1opL6gBtGV9wXHifv+eob+31L/66TAVVl1ORHtQFFArNoToPfFV4
+ DuB1bSWhI/keD7yDi/wv6SYWhNjWYzU+uQPehAnq86ALhihBIs0Nmu738nu2KXpjVGF5PczLf
+ kHq75BLEfUNsZ2iPTHrItQBAqh8flYDq6bRX/NgYtQbGdlCK0LCQw9HBHkVyfnCr30w4A3Sjv
+ vWY6d0iwGvCr0kXEuSxvN0sEAOVRco5IpDWW4YN3wmKz37QevT9uy/rP3r5To
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Introduce additional parameter for specifying the name of the base directory
-underneath /sys/firmware/devicetree. This is for scenarios where we want
-entirely separate oftree instances. Passing NULL falls back to the existing
-base name 'base'.
+Introduce helper for attaching an (separate) oftree into sysfs.
+This is useful, when drivers use their own internal device trees,
+separate from the platform's global one, and wanna make it visible
+to userspace via sysfs.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/of/base.c       | 2 +-
- drivers/of/dynamic.c    | 4 ++--
- drivers/of/kobj.c       | 7 +++++--
- drivers/of/of_private.h | 6 +++---
- drivers/of/unittest.c   | 6 +++---
- 5 files changed, 14 insertions(+), 11 deletions(-)
+ drivers/of/kobj.c  | 17 +++++++++++++++++
+ include/linux/of.h |  7 +++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 649c2a32bb48..be63493bd232 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -177,7 +177,7 @@ void __init of_core_init(void)
- 		return;
- 	}
- 	for_each_of_allnodes(np) {
--		__of_attach_node_sysfs(np);
-+		__of_attach_node_sysfs(np, NULL);
- 		if (np->phandle && !phandle_cache[of_phandle_cache_hash(np->phandle)])
- 			phandle_cache[of_phandle_cache_hash(np->phandle)] = np;
- 	}
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 9a824decf61f..63768f0dc60e 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -243,7 +243,7 @@ int of_attach_node(struct device_node *np)
- 	__of_attach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	__of_attach_node_sysfs(np);
-+	__of_attach_node_sysfs(np, NULL);
- 	mutex_unlock(&of_mutex);
- 
- 	of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, &rd);
-@@ -635,7 +635,7 @@ static int __of_changeset_entry_apply(struct of_changeset_entry *ce)
- 
- 	switch (ce->action) {
- 	case OF_RECONFIG_ATTACH_NODE:
--		__of_attach_node_sysfs(ce->np);
-+		__of_attach_node_sysfs(ce->np, NULL);
- 		break;
- 	case OF_RECONFIG_DETACH_NODE:
- 		__of_detach_node_sysfs(ce->np);
 diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index a32e60b024b8..511d7e8b9068 100644
+index 511d7e8b9068..96dc5a2753f4 100644
 --- a/drivers/of/kobj.c
 +++ b/drivers/of/kobj.c
-@@ -112,20 +112,23 @@ void __of_update_property_sysfs(struct device_node *np, struct property *newprop
- 	__of_add_property_sysfs(np, newprop);
+@@ -166,3 +166,20 @@ void __of_detach_node_sysfs(struct device_node *np)
+ 
+ 	of_node_put(np);
  }
- 
--int __of_attach_node_sysfs(struct device_node *np)
-+int __of_attach_node_sysfs(struct device_node *np, const char *basename)
- {
- 	const char *name;
- 	struct kobject *parent;
- 	struct property *pp;
- 	int rc;
- 
-+	if (!basename)
-+		basename = "base";
 +
- 	if (!of_kset)
- 		return 0;
++void of_attach_tree_sysfs(struct device_node *root, const char* base)
++{
++	struct device_node *np;
++
++	if (!root)
++		return;
++
++	/* need to from our parent, so we don't traverse above our root,
++	 * if it's actually a subtree */
++	root->parent = NULL;
++
++	__of_attach_node_sysfs(root, base);
++	for_each_of_allnodes_from(root, np)
++		__of_attach_node_sysfs(np, base);
++}
++EXPORT_SYMBOL_GPL(of_attach_tree_sysfs);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 3612429632f4..c2fb12ce07f9 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -421,6 +421,8 @@ extern int of_update_property(struct device_node *np, struct property *newprop);
+ extern int of_attach_node(struct device_node *);
+ extern int of_detach_node(struct device_node *);
  
- 	np->kobj.kset = of_kset;
- 	if (!np->parent) {
- 		/* Nodes without parents are new top level trees */
--		name = safe_name(&of_kset->kobj, "base");
-+		name = safe_name(&of_kset->kobj, basename);
- 		parent = NULL;
- 	} else {
- 		name = safe_name(&np->parent->kobj, kbasename(np->full_name));
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index d9e6a324de0a..371f4da77161 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -63,7 +63,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp);
- void __of_remove_property_sysfs(struct device_node *np, struct property *prop);
- void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
- 		struct property *oldprop);
--int __of_attach_node_sysfs(struct device_node *np);
-+int __of_attach_node_sysfs(struct device_node *np, const char *basename);
- void __of_detach_node_sysfs(struct device_node *np);
- #else
- static inline int __of_add_property_sysfs(struct device_node *np, struct property *pp)
-@@ -73,7 +73,7 @@ static inline int __of_add_property_sysfs(struct device_node *np, struct propert
- static inline void __of_remove_property_sysfs(struct device_node *np, struct property *prop) {}
- static inline void __of_update_property_sysfs(struct device_node *np,
- 		struct property *newprop, struct property *oldprop) {}
--static inline int __of_attach_node_sysfs(struct device_node *np)
-+static inline int __of_attach_node_sysfs(struct device_node *np, const char *basename)
- {
- 	return 0;
++extern void of_attach_tree_sysfs(struct device_node *root, const char* base);
++
+ #define of_match_ptr(_ptr)	(_ptr)
+ 
+ /**
+@@ -1010,6 +1012,11 @@ static inline phys_addr_t of_dma_get_max_cpu_address(struct device_node *np)
+ 	return PHYS_ADDR_MAX;
  }
-@@ -135,7 +135,7 @@ extern int __of_update_property(struct device_node *np,
- extern void __of_update_property_sysfs(struct device_node *np,
- 		struct property *newprop, struct property *oldprop);
  
--extern int __of_attach_node_sysfs(struct device_node *np);
-+extern int __of_attach_node_sysfs(struct device_node *np, const char *basename);
- extern void __of_detach_node(struct device_node *np);
- extern void __of_detach_node_sysfs(struct device_node *np);
- 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index eb51bc147440..caf4ade8b141 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1391,7 +1391,7 @@ static void attach_node_and_children(struct device_node *np)
- 	of_node_clear_flag(np, OF_DETACHED);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	__of_attach_node_sysfs(np);
-+	__of_attach_node_sysfs(np, NULL);
- 	mutex_unlock(&of_mutex);
- 
- 	while (child) {
-@@ -1451,7 +1451,7 @@ static int __init unittest_data_add(void)
- 	if (!of_root) {
- 		of_root = unittest_data_node;
- 		for_each_of_allnodes(np)
--			__of_attach_node_sysfs(np);
-+			__of_attach_node_sysfs(np, NULL);
- 		of_aliases = of_find_node_by_path("/aliases");
- 		of_chosen = of_find_node_by_path("/chosen");
- 		of_overlay_mutex_unlock();
-@@ -3115,7 +3115,7 @@ static __init void of_unittest_overlay_high_level(void)
- 		of_root->child = overlay_base_root->child;
- 
- 	for_each_of_allnodes_from(overlay_base_root, np)
--		__of_attach_node_sysfs(np);
-+		__of_attach_node_sysfs(np, NULL);
- 
- 	if (of_symbols) {
- 		struct property *new_prop;
++static inline void of_attach_tree_sysfs(struct device_node *root,
++					const char* base)
++{
++}
++
+ #define of_match_ptr(_ptr)	NULL
+ #define of_match_node(_matches, _node)	NULL
+ #endif /* CONFIG_OF */
 -- 
 2.11.0
 
