@@ -2,127 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFFDE3150EA
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 14:53:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D9083150F3
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 14:54:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232002AbhBINxD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Feb 2021 08:53:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231874AbhBINvp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 9 Feb 2021 08:51:45 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 803FA64EEE;
-        Tue,  9 Feb 2021 13:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612878664;
-        bh=0hwOj+12J6Ypx4B1kz3p1bMsshTrMiayq1kwo7nbC/k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=g7dSUvxHkI1WtzkIAld7dHXvKRwNM7+FHpKAmh6lYzPA3tO+HOUiHbcpzcxIeTDrS
-         L+5NgY/jdBdWAKzXCO/yXREpKTE3WNEomuVGDwiodUXjk0t5O8cmUJL5UA54INj4Mr
-         AMAJF+ItKme5LuMeGL3kge+WmebMFjs+kyhCrq60N1PRSwuDc4Xcn7dL//O9ltygfy
-         YKo+8ne4Vga1D8ZknDOs2IMYn1CRwTRuD1O3MYl6xb0VkICr8kWpw8vtBmnAL2Tf65
-         ktTUQJRG5//S32rgiEKJkPNiuGSTTL74RrXehZw8iVbUXLNcfwerPJbXrerFUOvuR6
-         o2L2J/j7NGSWA==
-Received: by mail-qt1-f171.google.com with SMTP id w20so12953588qta.0;
-        Tue, 09 Feb 2021 05:51:04 -0800 (PST)
-X-Gm-Message-State: AOAM530MgceseAO1bmMKoPvRLXX6KOvHADgbQr2upVHZjwyToOB/fV2q
-        mAG+CpcLhlMU5me/s1Yu5yz7v0Kq4uA9XYRQYA==
-X-Google-Smtp-Source: ABdhPJzpsae26OkwoIy2nrHJJjzyWoEWmigexX9s/QckxKzoVk7hJ7rWxROznLXeo2XbpJpy6FKj2O+gZWrofmFQYy8=
-X-Received: by 2002:a05:622a:488:: with SMTP id p8mr19368445qtx.137.1612878663486;
- Tue, 09 Feb 2021 05:51:03 -0800 (PST)
+        id S232034AbhBINxx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Feb 2021 08:53:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231993AbhBINw4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Feb 2021 08:52:56 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0601FC061786;
+        Tue,  9 Feb 2021 05:52:15 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id s15so9772399plr.9;
+        Tue, 09 Feb 2021 05:52:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ltX/D6liAM5hSiXkr+tjZJvQ+HPeM0NdJdyG+zrYIJI=;
+        b=a5y6kLI7NmpM1X7QcRaPYEzgLKvEdV7hmEsn2TGrcLO1gOhvINHMeN7+yWmqhzZoyP
+         oi2yQZwPSgNMm8DbpPdl+tO5SXSpikIMi9eUWstGgmwNvujUyH5vxRG7ddFSEHRdiFVB
+         GPaiXdo3rQd4h2RYOMetFr/VbyhiyCwAnwXVY7sd8UPFNXZh7mfguNHuHDpcsT9fJbkc
+         gk00qdwp6vhGFlGX0nmP6GJS1fVIzW/27AqfBbQYU333lG9HPTYBdwMh5nCafNToa8nG
+         YnsLVcYuPnITkQ3Y8gA7/PCgVb97aqR4u1aJSWo0mqdwYb3or9+7Tbq3GO4M0gEZBLQk
+         gy/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ltX/D6liAM5hSiXkr+tjZJvQ+HPeM0NdJdyG+zrYIJI=;
+        b=dd+rvdHn9YUi33APp/PCSc/mvIoDqaN2ahpxP91VU7IM9oO2TdkEd04hmK20XK0vrx
+         wv5V8fjPmF0+oB2eSoEzNqMlV74Lc6eA8h3dEYSjXXi1YiSjgwfWMttOAQ3ckxweluHO
+         owitikHomPzIyd2nkJdl7NWb3L4w4vjVFbcOJaXUWYxDMKsrbwI+iwmUk/WkGqLf3Bp1
+         MENS5hCS+pztPLPHGTCYcu974BAlc+XTX4GYm0mozHntXRhPSYbB2EIAkfPWSMQRkgnV
+         NFYbDQJPHOzhiJl0qp4y1YuY1UfOsqqkpJSK971Oq5KUywAPSTK7il8PDHWA0XTGZWXz
+         4pWw==
+X-Gm-Message-State: AOAM532RcrPTM0nOIZgRfL93pNPTsOiiUHOBRfwfooQTdxZNgK0Nlfb3
+        xS2ojnMvb9fzZAYmidk2/W8jaHieCMTW8QN9UYw=
+X-Google-Smtp-Source: ABdhPJxtKiBHHx8i8Yp4W/4/oUuJ2Hr9HCwlpdOOdEkv0rfq6DfcaZ+pxR/hbtRrBioSJ8K7Sc5gdo7lfeWXgya+Aqg=
+X-Received: by 2002:a17:90a:c84:: with SMTP id v4mr4206391pja.228.1612878734494;
+ Tue, 09 Feb 2021 05:52:14 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
- <950a87e680822ab6457ff95bba96730fed93e14d.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
- <20210209022450.GA2546257@robh.at.kernel.org> <0534345fdba452baefed4ad740a51d394b2ac423.camel@fi.rohmeurope.com>
-In-Reply-To: <0534345fdba452baefed4ad740a51d394b2ac423.camel@fi.rohmeurope.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 9 Feb 2021 07:50:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJXWkBJKPYm0SwWp03pYbwXUBziBF5B5nZ1tX8TnK7W7g@mail.gmail.com>
-Message-ID: <CAL_JsqJXWkBJKPYm0SwWp03pYbwXUBziBF5B5nZ1tX8TnK7W7g@mail.gmail.com>
-Subject: Re: [PATCH v2 06/17] dt_bindings: regulator: Add ROHM BD71815 PMIC regulators
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20210208085954.30050-1-nikita.shubin@maquefel.me>
+ <5450294.DvuYhMxLoT@redslave> <CAHp75VeW6EWrGPbzBrSPry9Lb8GDvA-C-mkCvmJMTVPeeVxjKg@mail.gmail.com>
+ <2202252.ElGaqSPkdT@redslave>
+In-Reply-To: <2202252.ElGaqSPkdT@redslave>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 9 Feb 2021 15:51:58 +0200
+Message-ID: <CAHp75VeOPgN9TMjd4diuiuTZJML23JJCj8AZaApenznmMCiV5Q@mail.gmail.com>
+Subject: Re: [PATCH v5 2/7] gpio: ep93xx: Fix single irqchip with multi gpiochips
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 9, 2021 at 7:10 AM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
->
-> Hello Again Rob,
->
-> And thanks for reviewing the bindings!
->
-> On Mon, 2021-02-08 at 20:24 -0600, Rob Herring wrote:
-> > On Tue, Jan 19, 2021 at 09:17:09AM +0200, Matti Vaittinen wrote:
-> > > Add binding documentation for regulators on ROHM BD71815 PMIC.
-> > > 5 bucks, 7 LDOs and a boost for LED.
-> > >
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > ---
->
-> snip
->
-> > > +
-> > > +      rohm,dvs-run-voltage:
-> >
-> > Use standard unit suffix.
-> >
-> > > +        description:
-> > > +          PMIC "RUN" state voltage in uV when PMIC HW states are
-> > > used. See
-> > > +          comments below for bucks/LDOs which support this. 0
-> > > means
-> > > +          regulator should be disabled at RUN state.
-> > > +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> >
-> > And then drop this.
->
-> Quote from v1 review:
->
-> > > > > > > +      rohm,dvs-run-voltage:
-> > > > > >
-> > > > > > These should have a unit suffix.
-> > > > >
-> > > > > I know but these are existing properties. I'd like to re-use
-> them
-> > > > > as
-> > > > > they have exported parser helpers - and I am unsure what kind
-> of
-> > > > > breakages changing them would cause. (The BD71837/BD71847 which
-> > > > > introduced these properties are one of the PMICs which are
-> pretty
-> > > > > widely used.)
-> > > >
-> > > > Okay. Hopefully I remember next time I see this...
-> > >
-> > > Actually, I think I can add support for rohm,dvs-run-microvolt and
-> > > fellows to these same helpers so new devices can use appropriately
-> > > named properties. That would mean there is duplicate properties for
-> > > same purpose - but maybe it allows us to eventually deprecate the
-> old
-> > > ones... Which of these options would you prefer?
-> >
-> > Just keep the existing ones.
->
-> Seem you predicted this XD If you still think it's Ok to keep the
-> existing ones, then I'll take this an ack, Ok?
+On Tue, Feb 9, 2021 at 2:54 PM Nikita Shubin <nikita.shubin@maquefel.me> wrote:
+> On Tuesday, 9 February 2021 15:46:19 MSK Andy Shevchenko wrote:
+> >On Tue, Feb 9, 2021 at 2:35 PM Nikita Shubin
+> <nikita.shubin@maquefel.me> wrote:
+> >> On Monday, 8 February 2021 16:20:17 MSK Andy Shevchenko wrote:
+> >> >On Mon, Feb 8, 2021 at 11:00 AM Nikita Shubin
+> >> <nikita.shubin@maquefel.me> wrote:
 
-Ah right,
+...
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> >> >> +       ic->name = devm_kasprintf(dev, GFP_KERNEL, "gpio-irq-%s",
+> >> >> label);
+> >> >
+> >> >Is the label being NULL okay?
+>
+> You mean ENOMEM should be honored ? I think you are right about it.
+
+Depending on what is the answer to the question below. If NULL label
+is okay (and here is just optional) then simply comment it in the
+code, otherwise check is missed.
+
+> >> The label is taken from ep93xx_gpio_banks[], so unless we explicitly
+> >> pass zero to ep93xx_init_irq_chip(), we are ok.
+> >
+> >Maybe I was unclear, let me rephrase: Is the *resulting* label being
+> >NULL okay?
+
+-- 
+With Best Regards,
+Andy Shevchenko
