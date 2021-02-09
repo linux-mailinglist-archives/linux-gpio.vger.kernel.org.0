@@ -2,98 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22166314EFC
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 13:36:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83A16314F70
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 13:50:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbhBIMgt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Feb 2021 07:36:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45316 "EHLO
+        id S229601AbhBIMsw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Feb 2021 07:48:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbhBIMgs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Feb 2021 07:36:48 -0500
-Received: from forward103o.mail.yandex.net (forward103o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::606])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C98C061786;
-        Tue,  9 Feb 2021 04:36:08 -0800 (PST)
-Received: from sas1-43b74f7725b7.qloud-c.yandex.net (sas1-43b74f7725b7.qloud-c.yandex.net [IPv6:2a02:6b8:c14:391a:0:640:43b7:4f77])
-        by forward103o.mail.yandex.net (Yandex) with ESMTP id 4F7BF5F80186;
-        Tue,  9 Feb 2021 15:35:59 +0300 (MSK)
-Received: from sas1-e20a8b944cac.qloud-c.yandex.net (sas1-e20a8b944cac.qloud-c.yandex.net [2a02:6b8:c14:6696:0:640:e20a:8b94])
-        by sas1-43b74f7725b7.qloud-c.yandex.net (mxback/Yandex) with ESMTP id GelvmXSRRD-ZxH0gjER;
-        Tue, 09 Feb 2021 15:35:59 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1612874159;
-        bh=Wc4fzS9kWMCQeIC8ECmYVoAUo+upjBZ8ebEELfikIaY=;
-        h=In-Reply-To:Subject:To:From:Message-ID:Cc:References:Date;
-        b=cLGYZVdsPsW+zKYxVhhcAzXcupsL1vjKMbUfXE0aG99LmYHNe4xIOc64QsLk6NoPr
-         f/PTHI5LqVRP+wVbBBI3s4rbbcJ5bpvakE3q5ECKEin6K4wYI8QJJvPMBdFR06lnOa
-         QrZQXIF7dNpK7kSUleGOcwERlE3YQVUTgSJHD9fA=
-Authentication-Results: sas1-43b74f7725b7.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by sas1-e20a8b944cac.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id S7EuFwtpNv-ZwneF2GY;
-        Tue, 09 Feb 2021 15:35:58 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        with ESMTP id S230148AbhBIMrQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Feb 2021 07:47:16 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322BFC061786;
+        Tue,  9 Feb 2021 04:46:36 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id z21so12403034pgj.4;
+        Tue, 09 Feb 2021 04:46:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dDnisQF2+WlHWQgJi5E0P4BUZN0Xweu+8ke/gRajKx8=;
+        b=Cv/+28RrMUJrDQolppWkMZ/3cbXhruKtFi5HgOg3VzbC2EJXg77mHV+EnY7E0+XmT2
+         DhqpFTy27ed0O67+Y9isk5TFZurNFbhP3J/v26WAno0+acETNAFAB/Uf0Xq4OLzDXNdE
+         Nrtid7ZWg+CIaTfBKoLxZrLwXKFWr038Z1r/ABU47QV9x/o1B77Bqq6NCKxaa/4L8uR1
+         jfDJZXyjSLVv6WYPx5WnecSlxcenbLW5DEju/rRBHwfvNPg88S1HauXcytggcnWrzySy
+         Mu5Ri41iF7migX8zItXiohijP75gcH/GoBVXKRmVFPPM9iKV+dGdOs5/R/1Y1ZNUCEwS
+         8j1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dDnisQF2+WlHWQgJi5E0P4BUZN0Xweu+8ke/gRajKx8=;
+        b=PR0Kk6cjlIzoIjLZ5NWEt1PquLRKhS46GnKRP0xECpvjCDZWjUp5hbID+TsTd7DhTF
+         7Cp0XLdTvS/6mupYo8JC5vdWzTQA0BJLyXxoO7HOenIfSgfWaPsrNy5+oa1dZnZeaONE
+         pnvmbSA1NqFdn1UX/WXKuMaptRw4/t7O+a+Y2dEdlkmdVXBpnDbGkJtkvCGSQnVJxbDQ
+         i+uSN/W0Qw96+7O9XEmW6fiwpX6UQEOp8yMXA7xwGcoqP7GvR/695KOYsZOuZ+Wkkqco
+         QMNXz+gvzjpsT4I24ROo8BZjOsoZ5TJn1sdtIHHrrcvfx8mtWdAEPd/sSmCJwbPAjhnb
+         auNQ==
+X-Gm-Message-State: AOAM532Gep3iDklXFOZ+2uGmLXI7gh4v6anSiYkbIlAWtEzMgm8ZXBqx
+        UapOtNgdc8uiauC0JIl7120jcCKKHuuA3ZbU1OQ=
+X-Google-Smtp-Source: ABdhPJwuMPbJi5vizUB1xD/+TDl5gYbQSfBW/blEbPQUDQlbYNWN1qn0FJUvP7Pb/kSFl8MdjjIcA0R7kQsz5bRYUpY=
+X-Received: by 2002:a65:5ac9:: with SMTP id d9mr8299277pgt.74.1612874795517;
+ Tue, 09 Feb 2021 04:46:35 -0800 (PST)
+MIME-Version: 1.0
+References: <20210208085954.30050-1-nikita.shubin@maquefel.me>
+ <20210208085954.30050-3-nikita.shubin@maquefel.me> <CAHp75VdV72fkpYgGqgebHfnN+VcVv04YvPxazpu1ZYsjMFP6Ow@mail.gmail.com>
+ <5450294.DvuYhMxLoT@redslave>
+In-Reply-To: <5450294.DvuYhMxLoT@redslave>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 9 Feb 2021 14:46:19 +0200
+Message-ID: <CAHp75VeW6EWrGPbzBrSPry9Lb8GDvA-C-mkCvmJMTVPeeVxjKg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/7] gpio: ep93xx: Fix single irqchip with multi gpiochips
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/7] gpio: ep93xx: Fix single irqchip with multi gpiochips
-Date:   Tue, 09 Feb 2021 15:33:56 +0300
-Message-ID: <5450294.DvuYhMxLoT@redslave>
-In-Reply-To: <CAHp75VdV72fkpYgGqgebHfnN+VcVv04YvPxazpu1ZYsjMFP6Ow@mail.gmail.com>
-References: <20210208085954.30050-1-nikita.shubin@maquefel.me> <20210208085954.30050-3-nikita.shubin@maquefel.me> <CAHp75VdV72fkpYgGqgebHfnN+VcVv04YvPxazpu1ZYsjMFP6Ow@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Andy.
+On Tue, Feb 9, 2021 at 2:35 PM Nikita Shubin <nikita.shubin@maquefel.me> wrote:
+> On Monday, 8 February 2021 16:20:17 MSK Andy Shevchenko wrote:
+> >On Mon, Feb 8, 2021 at 11:00 AM Nikita Shubin
+> <nikita.shubin@maquefel.me> wrote:
 
-On Monday, 8 February 2021 16:20:17 MSK Andy Shevchenko wrote:
->On Mon, Feb 8, 2021 at 11:00 AM Nikita Shubin 
-<nikita.shubin@maquefel.me> wrote:
->> Fixes the following warnings which results in interrupts disabled on
->> port B/F:
->> 
->> gpio gpiochip1: (B): detected irqchip that is shared with multiple
->> gpiochips: please fix the driver. gpio gpiochip5: (F): detected
->> irqchip that is shared with multiple gpiochips: please fix the
->> driver.
->> 
->> - added separate irqchip for each interrupt capable gpiochip
->> - provided unique names for each irqchip
+...
+
+> >> +static void ep93xx_init_irq_chip(struct device *dev, struct irq_chip
+> >> *ic, const char *label) +{
+> >>
+> >> +       ic->name = devm_kasprintf(dev, GFP_KERNEL, "gpio-irq-%s",
+> >> label);
+> >Is the label being NULL okay?
 >
->...
->
->> +static void ep93xx_init_irq_chip(struct device *dev, struct irq_chip
->> *ic, const char *label) +{
->> 
->> +       ic->name = devm_kasprintf(dev, GFP_KERNEL, "gpio-irq-%s",
->> label);
->Is the label being NULL okay?
+> The label is taken from ep93xx_gpio_banks[], so unless we explicitly
+> pass zero to ep93xx_init_irq_chip(), we are ok.
 
-The label is taken from ep93xx_gpio_banks[], so unless we explicitly 
-pass zero to ep93xx_init_irq_chip(), we are ok.
+Maybe I was unclear, let me rephrase: Is the *resulting* label being NULL okay?
 
->
->> +       ic->irq_ack = ep93xx_gpio_irq_ack;
->> +       ic->irq_mask_ack = ep93xx_gpio_irq_mask_ack;
->> +       ic->irq_mask = ep93xx_gpio_irq_mask;
->> +       ic->irq_unmask = ep93xx_gpio_irq_unmask;
->> +       ic->irq_set_type = ep93xx_gpio_irq_type;
->> +}
->
->...
->
->> -               girq->chip = &ep93xx_gpio_irq_chip;
->
->I don't see where you remove that static structure.
+> >> +       ic->irq_ack = ep93xx_gpio_irq_ack;
+> >> +       ic->irq_mask_ack = ep93xx_gpio_irq_mask_ack;
+> >> +       ic->irq_mask = ep93xx_gpio_irq_mask;
+> >> +       ic->irq_unmask = ep93xx_gpio_irq_unmask;
+> >> +       ic->irq_set_type = ep93xx_gpio_irq_type;
+> >> +}
 
-Good catch - thank you very much, also i noticed that i forgot to switch 
-IRQ chip in irq_set_chip_and_handler() for port F.
-
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
