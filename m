@@ -2,76 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89A9B3154A5
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 18:07:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C9C33154AD
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 18:09:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233175AbhBIRGq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Feb 2021 12:06:46 -0500
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:39472 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232937AbhBIRGp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Feb 2021 12:06:45 -0500
-Received: by mail-oi1-f175.google.com with SMTP id l19so7669715oih.6;
-        Tue, 09 Feb 2021 09:06:28 -0800 (PST)
+        id S232875AbhBIRIe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Feb 2021 12:08:34 -0500
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:34108 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232877AbhBIRI2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Feb 2021 12:08:28 -0500
+Received: by mail-ot1-f53.google.com with SMTP id y11so18140912otq.1;
+        Tue, 09 Feb 2021 09:08:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XpXPzWPaycvh2regG1Os+zYNENzX5S0WHLa6/lkbuqw=;
-        b=L4TvbktUIRt6vNjC8jvy1v1Rk+JIDFvzaQAWNu9tCKbdGjowHr7yGSXVxi9ieaDKEz
-         Wa9LbdOLZLrxVczOW/MoHeBQP5RV5KQCIFJi6FP8D1eBceB3z4Erxip1RTIhUO7MorpK
-         Q286R6CfSHePr4eF0GITBkcf4JWjrC9JiC/gE3ljnWzQec2ufIT+bX0fwX8ElONA/QMg
-         OwEOgSCSprQXDUBdgiGs5mzyboqDwOtb+gGBCldrXgjDXrXQNYKRBTI/VcBguNZLDKED
-         gpkiZL8L2LPOEO5zK1yfh+DOWd6g0Rpl9zIfCVC7/Kl7QU+2Z25F8UBrKXrPgAAAY3Z7
-         K1GA==
-X-Gm-Message-State: AOAM532JlT4xkLZrlvGLfQtYbcWK4P0p2hKeT3veoDWmaaMZQ60PECnv
-        T90qcfyu6pmyalaDO3BMQK4h86lb6A==
-X-Google-Smtp-Source: ABdhPJyXaypdw2kMEVhknZuDzkP38KotNgqJbfvOVaO4cxf8qEY93mBHY4CQZ7JKKj2QoKl2wujM9A==
-X-Received: by 2002:aca:5bc1:: with SMTP id p184mr3053388oib.155.1612890363541;
-        Tue, 09 Feb 2021 09:06:03 -0800 (PST)
+        bh=17f3kkBqUdZrHURKPOsXQiGxbiGj0w4p0Y6sE1YIXfI=;
+        b=Ek8vETojol8V3/3WEHwm1FCHtAuMVcbOef1pyymXrtiNoGYpjK0yqAo0oioXSjo2Hn
+         hefjHKRljOnSBZda8/xh/77aVaTW0oScrxfLU0KR4tCxOxWAdL/tESawmQj+3agRKFw7
+         se13OugH2+fcZlUR1X4+kD/bNLvzSgnKvkZltsTenOhafPrQTgBYSwr4/n6b7n1e7iEy
+         W/Mxf0ooTYWTQ9N7eVxz3bKBWLpZehngrVo0VyOrZEBGM67PjjPXHPJ75u1ilne/QrsO
+         OJTyBhkPEhdP7XtYd2KMTEQiQmhGy0IExZ3VMV3B3oIUAE4i5d9NAttbORFidppgLZH+
+         m5Rw==
+X-Gm-Message-State: AOAM530m1L9Y+BEtk2DDrAlTlgIi8qX3z2GnlHyNce7FF7gvQI+r+7cb
+        Tp6W/PQwItJNuyd5tJCPNg==
+X-Google-Smtp-Source: ABdhPJwbN5JoKDX4ZhlXhc0wpO3RziRRaSgramnMuzTzaL6wP/AbLA3VMQ9hFf6Ig6lew9+cmIv7Lg==
+X-Received: by 2002:a05:6830:90a:: with SMTP id v10mr16742679ott.364.1612890466659;
+        Tue, 09 Feb 2021 09:07:46 -0800 (PST)
 Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s26sm4444258otp.54.2021.02.09.09.06.00
+        by smtp.gmail.com with ESMTPSA id b25sm1450568otf.16.2021.02.09.09.07.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 09:06:01 -0800 (PST)
-Received: (nullmailer pid 3942006 invoked by uid 1000);
-        Tue, 09 Feb 2021 17:06:00 -0000
-Date:   Tue, 9 Feb 2021 11:06:00 -0600
+        Tue, 09 Feb 2021 09:07:45 -0800 (PST)
+Received: (nullmailer pid 3944753 invoked by uid 1000);
+        Tue, 09 Feb 2021 17:07:44 -0000
+Date:   Tue, 9 Feb 2021 11:07:44 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: qcom: Define common TLMM
- binding
-Message-ID: <20210209170600.GA3941951@robh.at.kernel.org>
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: qcom: Add sc8180x binding
+Message-ID: <20210209170744.GA3944698@robh.at.kernel.org>
 References: <20210126042650.1725176-1-bjorn.andersson@linaro.org>
+ <20210126042650.1725176-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210126042650.1725176-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20210126042650.1725176-2-bjorn.andersson@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 25 Jan 2021 20:26:48 -0800, Bjorn Andersson wrote:
-> Several properties are shared between all TLMM bindings. By providing a
-> common binding to define these properties each platform's binding can be
-> reduced to just listing which of these properties should be checked for
-> - or further specified.
+On Mon, 25 Jan 2021 20:26:49 -0800, Bjorn Andersson wrote:
+> Add binding for the TLMM block in the Qualcomm SC8180X platform.
 > 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
 > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
-> 
-> Changes since v1:
-> - Dropped "phandle", as Rob pushed this to the dt-schema instead
-> - Expanded the "TLMM" abbreviation
-> 
->  .../bindings/pinctrl/qcom,tlmm-common.yaml    | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
+>  .../pinctrl/qcom,sc8180x-pinctrl.yaml         | 152 ++++++++++++++++++
+>  1 file changed, 152 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc8180x-pinctrl.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
