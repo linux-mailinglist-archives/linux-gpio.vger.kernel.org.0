@@ -2,79 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C47F315277
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 16:16:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89A9B3154A5
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 18:07:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232134AbhBIPQK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Feb 2021 10:16:10 -0500
-Received: from m12-14.163.com ([220.181.12.14]:55559 "EHLO m12-14.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231682AbhBIPQK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 9 Feb 2021 10:16:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=LlShF
-        b2fSb2NOGUMw55RoD2ItAjMgTWh0BuqH5OEWqo=; b=qAAWi7Y/bXWN4HmZfD5xX
-        VYDwi3hQdr2eGgQ+oFBuLQH266FPZ08cwrDfyDyDV17Vu9KM7XztIzLOkAPwmn56
-        TS/pqd8KfAPSqqCiJsFhcSdqiZ45KVJHAn8/XQiVEaL6znMDRTEAvGE37gZXLuR6
-        d6IzuTCYwty147HxfplmZs=
-Received: from [192.168.31.187] (unknown [223.87.231.49])
-        by smtp10 (Coremail) with SMTP id DsCowAAXvPh+myJgpQbxkA--.3568S2;
-        Tue, 09 Feb 2021 22:26:08 +0800 (CST)
-Subject: Re: [PATCH] pinctrl: renesas:fix possible null pointer dereference
- struct pinmux_range *
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhang Kun <zhangkun@cdjrlc.com>
-References: <20210207150736.24382-1-alex_luca@163.com>
- <CAMuHMdV445RaAydwgd=Sx6Y+jLJ-PpPSut8wi=Mj-qznYWi84g@mail.gmail.com>
-From:   Alex <alex_luca@163.com>
-Message-ID: <b2642624-f7d9-3e50-1880-1115988343a8@163.com>
-Date:   Tue, 9 Feb 2021 22:26:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S233175AbhBIRGq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Feb 2021 12:06:46 -0500
+Received: from mail-oi1-f175.google.com ([209.85.167.175]:39472 "EHLO
+        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232937AbhBIRGp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Feb 2021 12:06:45 -0500
+Received: by mail-oi1-f175.google.com with SMTP id l19so7669715oih.6;
+        Tue, 09 Feb 2021 09:06:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XpXPzWPaycvh2regG1Os+zYNENzX5S0WHLa6/lkbuqw=;
+        b=L4TvbktUIRt6vNjC8jvy1v1Rk+JIDFvzaQAWNu9tCKbdGjowHr7yGSXVxi9ieaDKEz
+         Wa9LbdOLZLrxVczOW/MoHeBQP5RV5KQCIFJi6FP8D1eBceB3z4Erxip1RTIhUO7MorpK
+         Q286R6CfSHePr4eF0GITBkcf4JWjrC9JiC/gE3ljnWzQec2ufIT+bX0fwX8ElONA/QMg
+         OwEOgSCSprQXDUBdgiGs5mzyboqDwOtb+gGBCldrXgjDXrXQNYKRBTI/VcBguNZLDKED
+         gpkiZL8L2LPOEO5zK1yfh+DOWd6g0Rpl9zIfCVC7/Kl7QU+2Z25F8UBrKXrPgAAAY3Z7
+         K1GA==
+X-Gm-Message-State: AOAM532JlT4xkLZrlvGLfQtYbcWK4P0p2hKeT3veoDWmaaMZQ60PECnv
+        T90qcfyu6pmyalaDO3BMQK4h86lb6A==
+X-Google-Smtp-Source: ABdhPJyXaypdw2kMEVhknZuDzkP38KotNgqJbfvOVaO4cxf8qEY93mBHY4CQZ7JKKj2QoKl2wujM9A==
+X-Received: by 2002:aca:5bc1:: with SMTP id p184mr3053388oib.155.1612890363541;
+        Tue, 09 Feb 2021 09:06:03 -0800 (PST)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s26sm4444258otp.54.2021.02.09.09.06.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Feb 2021 09:06:01 -0800 (PST)
+Received: (nullmailer pid 3942006 invoked by uid 1000);
+        Tue, 09 Feb 2021 17:06:00 -0000
+Date:   Tue, 9 Feb 2021 11:06:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: qcom: Define common TLMM
+ binding
+Message-ID: <20210209170600.GA3941951@robh.at.kernel.org>
+References: <20210126042650.1725176-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdV445RaAydwgd=Sx6Y+jLJ-PpPSut8wi=Mj-qznYWi84g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: DsCowAAXvPh+myJgpQbxkA--.3568S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKw15uryDCF1kKw1UZryrWFg_yoW3XrX_u3
-        98Kry7C3W5C3W3C3Zxur1FvrnrJan5uFWkX3ykJ393tr9aqFsxJF1kWr18A3yfGrW8Gw4q
-        kayFvr4jqrW7ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUnEfO7UUUUU==
-X-Originating-IP: [223.87.231.49]
-X-CM-SenderInfo: xdoh5spoxftqqrwthudrp/1tbiHgk0ylSIsv9QawABsC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210126042650.1725176-1-bjorn.andersson@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2/9/21 10:12 PM, Geert Uytterhoeven wrote:
-> Hi Alex,
+On Mon, 25 Jan 2021 20:26:48 -0800, Bjorn Andersson wrote:
+> Several properties are shared between all TLMM bindings. By providing a
+> common binding to define these properties each platform's binding can be
+> reduced to just listing which of these properties should be checked for
+> - or further specified.
 > 
-> Thanks for your patch!
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 > 
-> On Sun, Feb 7, 2021 at 4:08 PM <alex_luca@163.com> wrote:
->> From: Zhang Kun <zhangkun@cdjrlc.com>
->>
->> The parameters of  sh_pfc_enum_in_range() pinmux_range *r should be checked
->> first for possible null ponter, especially when PINMUX_TYPE_FUNCTION as the
->> pinmux_type was passed by sh_pfc_config_mux().
+> Changes since v1:
+> - Dropped "phandle", as Rob pushed this to the dt-schema instead
+> - Expanded the "TLMM" abbreviation
 > 
-> If pinmux_type in sh_pfc_config_mux() is PINMUX_TYPE_FUNCTION or
-> PINMUX_TYPE_GPIO, range is indeed NULL.
-> But as the call
-> 
->     in_range = sh_pfc_enum_in_range(enum_id, range);
-> 
-> is not done in case of these pinmux types, I don't see where the
-> problem is.  What am I missing?
+>  .../bindings/pinctrl/qcom,tlmm-common.yaml    | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
 > 
 
-Oh, you are right. I think I know what I missed.
-Thank you.
-
-Alex
-
+Reviewed-by: Rob Herring <robh@kernel.org>
