@@ -2,95 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AFEE31512F
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 15:05:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78FB0315150
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Feb 2021 15:13:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231687AbhBIODx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Feb 2021 09:03:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231540AbhBIOD1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Feb 2021 09:03:27 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C98B7C061786;
-        Tue,  9 Feb 2021 06:02:46 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id w18so11955474pfu.9;
-        Tue, 09 Feb 2021 06:02:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M7fwo48BR7BGL4KzBqbK9xjqhYe8q/AqPBmEuMWxDm0=;
-        b=Tb4S5V12uFYeUtuGWpVkw3S6swm/1gPr3h2RgGxw1J+DWaFOD0vW8ed+VCOqJWE7Bv
-         6t/uE0FULjP8nUXRnKZTYz4677hYCvTCFT5QWNoPRKX4OnJ6tH6qKdNNYg1X27zgWww8
-         7IiR1HbosYhMmHxPDqSrSrfLCdbl4jFBraQ0J4pfTqF6bZewduwzZIVi5x479FaXK8HE
-         DfMItTsVRClu1S50pFnWVNiFfV3W6k3fYa/ffQyu9rVV7v1XayBm5G36DvuM+kM2qDo/
-         9GeF/8lBSRJV2lK7EQ1zYxW+XNMltCYrT6ImKUOBhAW3pcOPcZJKbHmDrg5yAdk/lcaw
-         a78Q==
+        id S231686AbhBIONB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Feb 2021 09:13:01 -0500
+Received: from mail-ot1-f44.google.com ([209.85.210.44]:42114 "EHLO
+        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230154AbhBIOM4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Feb 2021 09:12:56 -0500
+Received: by mail-ot1-f44.google.com with SMTP id q4so7920952otm.9;
+        Tue, 09 Feb 2021 06:12:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M7fwo48BR7BGL4KzBqbK9xjqhYe8q/AqPBmEuMWxDm0=;
-        b=WvGyS+n2NvLRRasauM3jXHeaJ+inVhVYqd8eocnSSUTIZ8aXs2Pwp7hKecRvWc5PmI
-         kLAykrgCXZiGd8vQpEt+XUS+V4blLdZ9lCVeUVp9GGnmg/KDHapy7r2bo0pq+IdWSsJ5
-         9nSW0pXWJjmXOhq56b1zpK9HeT7N9zFbBtMW1JFvVyBECvQVwMz1qcG7ylRpFuu6vbQZ
-         xcZ8fya5E7RAlzKQ173i/zTXkw7O/JHaBvbHlfQTpzEeya4M8OvG9Sc+P7GjT8fdf3Ld
-         /Ku25Av84ktJJoB/WoD13tMfpZivNMhcGwZYke7ws8796UAaDIL/BiZBO6+IVG6GN6/P
-         Z+WA==
-X-Gm-Message-State: AOAM530ViycgkE8f6x+B8ZD9BIxmov5whncFFTeyJuBSudXWI1ZpAcZd
-        hkYIB8DeBvKZrN4MNzovs7Tq7Mv7deP/vDrZp48=
-X-Google-Smtp-Source: ABdhPJw4E9l8wZjcvKJN7wYBkJNAWGHaL31GoddgBws/Hck0l6YSTZXTTt0kyOmkayPOjgiCoFnjVZbP7QQol5JG73o=
-X-Received: by 2002:a65:5ac9:: with SMTP id d9mr8572065pgt.74.1612879366390;
- Tue, 09 Feb 2021 06:02:46 -0800 (PST)
+        bh=qUZxHRlnhQ53xeYDDnIj3RkZGBfKRePKk2dnEVhR0QE=;
+        b=lc89TU7G7F/P2mWXIO6G+EHQFXzDCPcqwvJS1XHenWtSw6UzhfiiEAU7OL+/5Mqx8Z
+         S6Jy1D22SMisdJwjcYyTtmjRqZN1I8o6zPFECeSVha8vCGc8OTfBl4KSJCuDUw0bqKYS
+         kh0Eq4+91StEDwImZrgjDO6+ECA0SoCBVbkrgYXqliUEGUS5q37KzbJxCBYoWWXzf+nQ
+         b+/6ypLLjn5FCe1md5qbeQpUMH8eYfws16oSx5tHqNRPLiuOaTf0IWn1ubYrC5rc6uBA
+         rHWAmueBZuHAjHr9NDvZ2ulxM5j52a+hauMn+hTATFnY2EkUsySs49HBEkddcboPWKaS
+         4qdg==
+X-Gm-Message-State: AOAM531vg30SI90afglqluhsi2AxXM3bekJ4WGfBs5MGRCpdJCKSOS9b
+        X1T0io29LWqLTHy5ZWhLEUtzzR/Plc459ocYnbI=
+X-Google-Smtp-Source: ABdhPJzUk409ROxM1slEJZDbOB4ncC7/rhEOYPlVp8VGSdnhIzcAlxHERjzkCkqZ94bwxluaQEDJR//tUQjvKB2ybCY=
+X-Received: by 2002:a9d:3604:: with SMTP id w4mr16168933otb.107.1612879935459;
+ Tue, 09 Feb 2021 06:12:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20210209133110.7383-1-nikita.shubin@maquefel.me>
-In-Reply-To: <20210209133110.7383-1-nikita.shubin@maquefel.me>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 9 Feb 2021 16:02:30 +0200
-Message-ID: <CAHp75VfVZLU_4+-=XQjPRhktJTTyeGaUOZnJmNPryp028VnFrA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/7] gpio: ep93xx: fixes series patch
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
+References: <20210207150736.24382-1-alex_luca@163.com>
+In-Reply-To: <20210207150736.24382-1-alex_luca@163.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 9 Feb 2021 15:12:03 +0100
+Message-ID: <CAMuHMdV445RaAydwgd=Sx6Y+jLJ-PpPSut8wi=Mj-qznYWi84g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas:fix possible null pointer dereference
+ struct pinmux_range *
+To:     alex_luca@163.com
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhang Kun <zhangkun@cdjrlc.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 9, 2021 at 3:31 PM Nikita Shubin <nikita.shubin@maquefel.me> wrote:
->
-> v2:
-> https://lore.kernel.org/linux-gpio/20210127104617.1173-1-nikita.shubin@maquefel.me/
->
-> v3:
-> https://lore.kernel.org/linux-gpio/20210128122123.25341-1-nikita.shubin@maquefel.me/
->
-> v4:
-> https://lore.kernel.org/linux-gpio/20210205080507.16007-1-nikita.shubin@maquefel.me/
->
-> v5:
-> https://lore.kernel.org/linux-gpio/20210208085954.30050-1-nikita.shubin@maquefel.me/
->
-> v5->v6 changes
->
-> [PATCH v6 2/7] gpio: ep93xx: Fix single irqchip with multi gpiochips
-> Andy Shevchenko:
-> - add devm_kasprintf() return value check and move it out from
->   ep93xx_init_irq_chip()
-> - removed ep93xx_gpio_irq_chip
-> - pass girq->chip instead of removed ep93xx_gpio_irq_chip to
->   irq_set_chip_and_handler for port F
->
-> Tested all patches on ts7250 board.
+Hi Alex,
 
-Thanks!
-For the entire series:
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Thanks for your patch!
+
+On Sun, Feb 7, 2021 at 4:08 PM <alex_luca@163.com> wrote:
+> From: Zhang Kun <zhangkun@cdjrlc.com>
+>
+> The parameters of  sh_pfc_enum_in_range() pinmux_range *r should be checked
+> first for possible null ponter, especially when PINMUX_TYPE_FUNCTION as the
+> pinmux_type was passed by sh_pfc_config_mux().
+
+If pinmux_type in sh_pfc_config_mux() is PINMUX_TYPE_FUNCTION or
+PINMUX_TYPE_GPIO, range is indeed NULL.
+But as the call
+
+    in_range = sh_pfc_enum_in_range(enum_id, range);
+
+is not done in case of these pinmux types, I don't see where the
+problem is.  What am I missing?
+
+> Signed-off-by: Zhang Kun <zhangkun@cdjrlc.com>
+
+As you picked up a patch from Zhang, you should add your own SoB here.
+
+> --- a/drivers/pinctrl/renesas/core.c
+> +++ b/drivers/pinctrl/renesas/core.c
+> @@ -128,6 +128,9 @@ int sh_pfc_get_pin_index(struct sh_pfc *pfc, unsigned int pin)
+>
+>  static int sh_pfc_enum_in_range(u16 enum_id, const struct pinmux_range *r)
+>  {
+> +       if (!r)
+> +               return 0;
+> +
+>         if (enum_id < r->begin)
+>                 return 0;
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
