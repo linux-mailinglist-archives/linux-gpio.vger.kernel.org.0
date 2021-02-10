@@ -2,94 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE2FA316989
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 15:57:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80EC5316CC8
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 18:33:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbhBJO53 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Feb 2021 09:57:29 -0500
-Received: from mga06.intel.com ([134.134.136.31]:61841 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229888AbhBJO52 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 10 Feb 2021 09:57:28 -0500
-IronPort-SDR: fdi66C2t2dwZ+/gK89fEmj+UDUTi2DXFcfhCJjwRHYOA31yWZm9NE5q0zc/9SAKmdnenIji15c
- gQitbFoMJv8g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9890"; a="243575327"
-X-IronPort-AV: E=Sophos;i="5.81,168,1610438400"; 
-   d="scan'208";a="243575327"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2021 06:56:42 -0800
-IronPort-SDR: Uv/sQUYf46bgYDKfel7rXV+9Fn8OF1Z98xSc8zWQy6IB7TB+HDS3Q5dLxFo8a9fCUlIDvQQ7Lp
- lbLsyioiTD4g==
-X-IronPort-AV: E=Sophos;i="5.81,168,1610438400"; 
-   d="scan'208";a="421074065"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2021 06:56:40 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1l9quz-003klX-JR; Wed, 10 Feb 2021 16:56:37 +0200
-Date:   Wed, 10 Feb 2021 16:56:37 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-Cc:     luojiaxing <luojiaxing@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
+        id S232268AbhBJRcB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Feb 2021 12:32:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232287AbhBJRbo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 12:31:44 -0500
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54AC7C061756
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 09:31:04 -0800 (PST)
+Received: by mail-pf1-x431.google.com with SMTP id c11so1698002pfp.10
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 09:31:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=r3TD1VAfUO11hF9aR+MVS7dpwQ4XHZyMR7TiZnGBl0g=;
+        b=JFoezMNI7Nb31jHhwYFqP7nmDWA7073Dh5KxzGSxmXniyuDG8tb0hMnQZEikXrqcJH
+         DDuDNhIFh51Fh9LBHlwW5xgjdKp31CMNmxmYCPehx6dfgEMjAZDlhgQb1hMT/VfBNSgQ
+         F6SIOWzti1rHnvPYZxrGB5VZEpYxgSNE48nZds/Pe8gB6qM/rOUPzDdCh6/kIZ090IZa
+         WKMx8bkWnRIxSvqvQ6uqNQbyNvVaABOyxR2Fb3tFOGl173gPgOmgwvRR37qWbINyZWjV
+         DMmnSU9EqiZXbzQiHNb1h6Rea5HvCAi/tRLydSOJobWAz93H+AcLeAVX8wdrkksf2kT9
+         YjqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=r3TD1VAfUO11hF9aR+MVS7dpwQ4XHZyMR7TiZnGBl0g=;
+        b=G3SYqgO16T2pArDsZzF9m2UcUEIMp+vMoFtUaZcrlrsYqjr979TnVIsr07Q2PaEIB5
+         VnnMswyFYDXvRFSdH3A05717ngKVDkk8nC+hMIBU09oDcMSy84HwIWNaAvxmfz9nMOp8
+         a5D/IfC6R0PXAV669WmOdxwGl2vOXw+YSZ2qtOaN43LxL6JRXZmqFaebGNShqxlrUCtp
+         AytUkABCK2Npr+zrbkUPPIViF2rRq/D12qMnf7ZYYrHBeL0vd8o06LnCGJnJDZllW+sk
+         wX2zyBWKtG4tpoJd21+mgynJ39fDApmrlwEkj7KgYq6I+bVOkmNzri65DnnU8FoshdGS
+         wGow==
+X-Gm-Message-State: AOAM531rubeJ8X7bYdbsxhm6CH/NyEyW9zZ5RuP1Lrkyoh6/9d6qCJqP
+        JNC0Jae3wDsAoVC1i3kqnZ/PDQ==
+X-Google-Smtp-Source: ABdhPJyxaBuTrDORPtY6pXqrKAzLL/RSuxC5vxYQJdxX/k8MC5hxfnNUcPe2nTKsUGq5plyO4rkUoQ==
+X-Received: by 2002:aa7:92c6:0:b029:1cb:1c6f:c605 with SMTP id k6-20020aa792c60000b02901cb1c6fc605mr4179151pfa.4.1612978263556;
+        Wed, 10 Feb 2021 09:31:03 -0800 (PST)
+Received: from x1 ([2601:1c0:4701:ae70:7b19:df69:92d6:528e])
+        by smtp.gmail.com with ESMTPSA id 68sm3153793pfg.90.2021.02.10.09.31.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Feb 2021 09:31:02 -0800 (PST)
+Date:   Wed, 10 Feb 2021 09:31:00 -0800
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Subject: Re: [Linuxarm]  Re: [PATCH for next v1 0/2] gpio: few clean up
- patches to replace spin_lock_irqsave with spin_lock
-Message-ID: <YCP0JeEUcoPp9B/H@smile.fi.intel.com>
-References: <1612774577-55943-1-git-send-email-luojiaxing@huawei.com>
- <2b8001bb-0bcd-3fea-e15c-2722e7243209@huawei.com>
- <CAHp75VcpeYpsW6B85F0u=B+GToNh=1fYdRSMeQqE0vOtOdSi8A@mail.gmail.com>
- <1a5dfcf2-11a2-f549-782d-447d58e21305@huawei.com>
- <CAHp75Vd5UV3E79sdq8uQ4pgjFORdJknpm-g7No3tomnKhinMnw@mail.gmail.com>
- <c2458ac9-669b-bd46-df98-7d86d38459b1@huawei.com>
- <CAHp75VdrskuNkvFr4MPbbg8c8=VSug0GT+vs=cMRMOqLr+-f5A@mail.gmail.com>
- <947bcef0d56a4d0c82729d6899394f4a@hisilicon.com>
+        Tony Lindgren <tony@atomide.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: Re: [PATCH v2 2/2] pinctrl: pinmux: Add pinmux-select debugfs file
+Message-ID: <20210210173100.GA178344@x1>
+References: <20210210074946.155417-1-drew@beagleboard.org>
+ <20210210074946.155417-3-drew@beagleboard.org>
+ <CAHp75VcDVVZ=hg5hfRTs9hJ20gdEE_Xhccyg859nsvtyxTXCyw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <947bcef0d56a4d0c82729d6899394f4a@hisilicon.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAHp75VcDVVZ=hg5hfRTs9hJ20gdEE_Xhccyg859nsvtyxTXCyw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 10, 2021 at 11:50:45AM +0000, Song Bao Hua (Barry Song) wrote:
-> > -----Original Message-----
-> > From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
-> > Sent: Wednesday, February 10, 2021 11:51 PM
-> > On Wed, Feb 10, 2021 at 5:43 AM luojiaxing <luojiaxing@huawei.com> wrote:
-> > > On 2021/2/9 17:42, Andy Shevchenko wrote:
-
-...
-
-> > > Between IRQ handler A and IRQ handle A, it's no need for a SLIS.
-> > 
-> > Right, but it's not the case in the patches you provided.
+On Wed, Feb 10, 2021 at 11:56:49AM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 10, 2021 at 9:50 AM Drew Fustini <drew@beagleboard.org> wrote:
+> >
+> > Add "pinmux-select" to debugfs which will activate a function and group
+> > when 2 integers "<function-selector> <group-selector>" are written to
+> > the file. The write operation pinmux_select() handles this by checking
+> > if fsel and gsel are valid selectors and then calling ops->set_mux().
+> >
+> > The existing "pinmux-functions" debugfs file lists the pin functions
+> > registered for the pin controller. For example:
+> >
+> > function: pinmux-uart0, groups = [ pinmux-uart0-pins ]
+> > function: pinmux-mmc0, groups = [ pinmux-mmc0-pins ]
+> > function: pinmux-mmc1, groups = [ pinmux-mmc1-pins ]
+> > function: pinmux-i2c0, groups = [ pinmux-i2c0-pins ]
+> > function: pinmux-i2c1, groups = [ pinmux-i2c1-pins ]
+> > function: pinmux-spi1, groups = [ pinmux-spi1-pins ]
+> >
+> > To activate function pinmux-i2c1 (fsel 4) and group pinmux-i2c1-pins
+> > (gsel 4):
+> >
+> > echo '4 4' > pinmux-select
 > 
-> The code still holds spin_lock. So if two cpus call same IRQ handler,
-> spin_lock makes them spin; and if interrupts are threaded, spin_lock
-> makes two threads run the same handler one by one.
+> ...
+> 
+> >  DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
+> >
+> 
+> > +
+> 
+> One blank line (existed) is enough.
+> 
+> > +#define PINMUX_MAX_NAME 64
+> 
+> ...
+> 
+> > +       buf = devm_kzalloc(pctldev->dev, PINMUX_MAX_NAME * 2, GFP_KERNEL);
+> 
+> You have to (re-)read documentation about Device Managed Resources.
+> Keyword here is *device*! Pay attention to it. TL;DR: misuse of device
+> managed resources here.
+> Potentially memory exhausting (local DoS attack), but see below.
+> 
+> > +       if (!buf)
+> > +               return -ENOMEM;
+> 
+> ...
+> 
+> > +       devm_kfree(pctldev->dev, buf);
+> 
+> Calling devm_kfree() or other devm_*() release kinda APIs is a red
+> flag in 99%. See above.
 
-If you run on an SMP system and it happens that spin_lock_irqsave() just
-immediately after spin_unlock(), you will get into the troubles. Am I mistaken?
+Thank you for reviewing and pointing out this issue.
 
-I think this entire activity is a carefully crafted mine field for the future
-syzcaller and fuzzers alike. I don't believe there are no side effects in a long
-term on all possible systems and configurations (including forced threaded IRQ
-handlers).
+Do you mean that I should not be treating these buffers used in the 
+debugfs write op as belonging to the pin controller device?
 
-I would love to see a better explanation in the commit message of such patches
-which makes it clear that there are *no* side effects.
+I have looked through the kernel code and I realize now that I don't see
+any instances of devm_*() being used inside the read or write op for a
+debugfs file. As I consider it further, devm_*() does not seem to make
+sense as I am creating the buffers only for temporary use inside
+pinmux_select().
 
-For time being, NAK to the all patches of this kind.
+I'll get that fixed in v3.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thank you,
+Drew
