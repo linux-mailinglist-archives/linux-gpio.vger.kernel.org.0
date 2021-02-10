@@ -2,157 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C1D031731D
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 23:16:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3EEF317361
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 23:31:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233466AbhBJWQL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Feb 2021 17:16:11 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:47467 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230229AbhBJWQC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 17:16:02 -0500
-Received: from [192.168.1.155] ([77.2.178.237]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M2wXK-1lB3fM1E7g-003Jg0; Wed, 10 Feb 2021 23:13:24 +0100
-Subject: Re: RFC: oftree based setup of composite board devices
-To:     Rob Herring <robh+dt@kernel.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Frank Rowand <frowand.list@gmail.com>,
+        id S232633AbhBJWbB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Feb 2021 17:31:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232588AbhBJWbB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 17:31:01 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2929C061756
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 14:30:20 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id w18so2237054pfu.9
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 14:30:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r+QJXkuBE0EcskODI67dDLG/EouRi6CorwRUDEaVztU=;
+        b=cDckGXbaJyAfxdfRYA2hh9GVQLzR2nSd+LnIUI1ZKVs2XITR7aOVAyKsRmqHeNqWEY
+         koWMWbDZIyOVAHtPtgVmMZZVTe73DRmxwVHTN4uD/1jpFgAXC4KZuKl6oQNMj0IzT49j
+         2YOuh95DgOGBWk0CB5W9nYejqAEqcZxsT2cXzSjydKUMrMsIA90pcmd9YjRtEStYd+zy
+         FB4pE1XT/0vVYOhAi+I2Fr3x7HBXRaDAF0LSDGnpHyIOHBHLshEgPXYi2o2tWaHH8+8Z
+         b5g0rGen2FWzsm3cn3GwemYygFzaN8TlbO7f6uDXIYAjJHhxkrd4AjdBtoJdTcRv5d/H
+         CX9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r+QJXkuBE0EcskODI67dDLG/EouRi6CorwRUDEaVztU=;
+        b=CInBxlpkVWSkfrPi/2Mq+lxf0VIAaTXRJswx+lRrX1TK72nI2AemJ/A/vFNOsg+k8c
+         FxiTjUFqqIeqbj40+Ss/EG1nU9x4d/krkSJs4rJHMNjzCHVWNNO8f0qy7SCMqaDtY3Rd
+         gl4ww6gG2HIqU01zlZ2aGddfoNt9/BChVcTA9hft10aoFh0Jv5B9IPKsyD9SCEqWDMWA
+         vXLW3XYNX2OiHggx18veowJZHt2F4kaVbi6WNfL3iDhoDV9AYeOG68y1zEjBg+yvPYyS
+         taDLeWqMLICT8tz4FXAuUvFKLsOjnZoknAxOVeSP3QFaj2OjOdp8Xxpt74hjcgKNv/F4
+         IVBg==
+X-Gm-Message-State: AOAM533YZSihRC/UjvzTstsTCtCxwH7Osmi4BmHvfHCsUEXFqxlW41cS
+        lUAfudV0NA/LDQYFEVmQhgwT0A==
+X-Google-Smtp-Source: ABdhPJxsUwH76rLptCf2BhfCdx+phjW+Q5xAxtrXnTUfNHqs+XHNxhWsEhKIyIomjJTwSW4/ZPF4bw==
+X-Received: by 2002:a05:6a00:138f:b029:1b8:b9d5:3a2c with SMTP id t15-20020a056a00138fb02901b8b9d53a2cmr5480406pfg.10.1612996220223;
+        Wed, 10 Feb 2021 14:30:20 -0800 (PST)
+Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:7b19:df69:92d6:528e])
+        by smtp.gmail.com with ESMTPSA id t17sm3686307pgk.25.2021.02.10.14.30.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Feb 2021 14:30:19 -0800 (PST)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tony Lindgren <tony@atomide.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
-References: <20210208222203.22335-1-info@metux.net>
- <CAL_JsqJ-bz35mUM3agYjq5x+Y+u9rL1RwesCaA-x=MW8uv5CrA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <2cadfb9a-58d2-ebd9-2992-90efea1fc132@metux.net>
-Date:   Wed, 10 Feb 2021 23:13:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Joe Perches <joe@perches.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH v4 0/2] pinctrl: pinmux: Add pinmux-select debugfs file
+Date:   Wed, 10 Feb 2021 14:28:50 -0800
+Message-Id: <20210210222851.232374-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJ-bz35mUM3agYjq5x+Y+u9rL1RwesCaA-x=MW8uv5CrA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:lV+1hlvUI0I6cuKSofVaILejnrBvHrh8arutmvhdPogsj0zM3S3
- +WZVJW7wwOFyWxHPd6OqBD5vY9glex0Zi2mS1qkDGMmmEazdfqXsr7LEoCA2HaqLwCV7URP
- zt0OAR7cp3XZ0cMEG9z2RyDtfGvBQsQjg3BR+06hyXyN6JMXFA1GHbTplK9/oL827Bamvuy
- UGwDoyPzmmgaO/JBMyz0w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l0wPzfodjyQ=:1Ur+xQTitLNUyftQb8OfH9
- SRMTHhvTNaDeM5JLX07sWKxC3gkRAAICFY1KkDfpsfjhY+o5yK+3XsxFVWEWJiPoGoqJ6md9k
- xRcqC7RCJvRDks0MxOd/Qqs/9miSYtH7rb8gxl4RNBzWzqCJiynWDgZEgxOKNXhIvkmMEdokt
- CL22wu8I6BnJB22Wo+gfqMw5s7wx28jK0v8Gjx9roJMHNOguy6D8Sf5d0NL6ZXPW2aiksf8KX
- xYTtguy816SnZItyYhvdLJ2RCTDOrbNRuzo8rmMwc/LzVvClKKI5ArbZwHSUT+xzPv5aVnO2W
- zhmxmxiRl5kiTJBw9AiQlolQM8GM5OjksmCwDMhvpV8gMj4jjtGJsHbOWBirg+5HBHhVV3LgK
- skJ5sKvLEmKRnPwyMN7wx6YNuL6xeS47hC4z+axN7fQklvGFguNnR+xuIiv+K
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09.02.21 00:48, Rob Herring wrote:
+This series first converts the debugfs files in the pinctrl subsystem to
+octal permissions and then adds a new debugfs file "pinmux-select".
 
-Hi,
+Function name and group name can be written to "pinmux-select" which
+will cause the function and group to be activated on the pin controller.
 
->> here's an RFC for using compiled-in dtb's for initializing board devices
->> that can't be probed via bus'es or firmware.
-> 
-> I'm not convinced compiled in is the mechanism we want.
+Notes for PATCH v4:
+- correct the commit message in the second patch to reference function
+  and group name instead of integer selectors. Apologies for not fixing
+  that in v3
+- fix typos in cover letter
 
-To make it clear, I'm talking of DTBs compiled into the ofboard driver
-(which itself can be a module). And yes, that's pretty much what I want.
-It's meant for drop-in replacement of composite board drivers, in cases
-where this driver doesn't do more than initializing other drivers.
+Notes for PATCH v3:
+- add Suggested-by: Andy Shevchenko to the "pinctrl: use to octal
+  permissions for debugfs files" patch
+- change the octal permissions from 0400 to 0444 to correctly match the
+  symbolic permissions (thanks to Joe Perches and Geert Uytterhoeven)
+- note that S_IFREG flag is added to the mode in __debugfs_create_file()
+  (thanks to Andy for highlighting this and Joe for suggesting I should
+  add a note to the commit message)
+- fix order of the goto labels so that the buffers are freed correctly
+  as suggested by Dan Carpenter
+- move from devm_kzalloc() to kzalloc() as the buffers are only used
+  inside the pinmux_select() function and not related to the lifetime
+  of the pin controller device (thanks to Andy for pointing this out)
+- correct the pinmux-select example in commit message to use the
+  function and group name instead of selector (thanks to Geert)
 
-Therefore, it should work without any special userland actions, and it
-should put all board specific stuff into dtb.
+Notes for PATCH v2:
+- create patch series that includes patch to switch all the debugfs
+  files in pinctrl subsystem over to octal permission
+- write function name and group name, instead of error-prone selector
+  numbers, to the 'pinmux-select' file
+- switch from static to dynamic allocation for the kernel buffer filled
+  by strncpy_from_user()
+- look up function selector from function name using
+  pinmux_func_name_to_selector()
+- validate group name with get_function_groups() and match_string()
+- look up selector for group name with pinctrl_get_group_selector()
 
->> Use cases are boards with non-oftree firmware (ACPI, etc) where certain
->> platform devices can't be directly enumerated via firmware. Traditionally
->> we had to write board specific drivers that check for board identification
->> (DMI strings, etc), then initialize the actual devices and their links
->> (eg. gpio<->leds/buttons, ...). Often this can be expressed just by DT.
-> 
-> This is something I've wanted to see for a while. There's use cases
-> for DT based systems too. The example I'd like to see supported are
-> USB serial adapters with downstream serdev, GPIO, I2C, SPI, etc. Then
-> plug more than one of those in.
+Notes for PATCH v1:
+- posted seperate patch to switch all the debugfs files in pinctrl
+  subsystem over to octal permission [1]
+- there is no existing documentation for any of the debugfs enteries for
+  pinctrl, so it seemed to have a bigger scope than just this patch. I
+  also noticed that rst documentation is confusingly named "pinctl" (no
+  'r') and started thread about that [2]. Linus suggested chaning that
+  to 'pin-control'. Thus I am planning a seperate documentation patch
+  series where the file is renamed, references changed and a section on
+  the pinctrl debugfs files is added.
 
-Yes, that's also on my 2do list (eg. adcs behind some usb-i2c dongle)
+Notes for RFC v2 [3]:
+- rename debugfs file "pinmux-set" to "pinmux-select"
+- renmae pinmux_set_write() to pinmux_select()
+- switch from memdup_user_nul() to strncpy_from_user()
+- switch from pr_warn() to dev_err()
 
-> I think there's a couple of approaches we could take. Either support
-> multiple root nodes as you have done or keep a single root and add
-> child nodes to them. I think the latter would be less invasive. In the
-> non-DT cases, we'd just always create an empty skeleton DT. A 3rd
-> variation on a DT system is we could want to create parent nodes if
-> they don't exist to attach this DT to so we have a full hierarchy.
+[1] https://lore.kernel.org/linux-gpio/20210126044742.87602-1-drew@beagleboard.org/
+[2] https://lore.kernel.org/linux-gpio/20210126050817.GA187797@x1/
+[3] https://lore.kernel.org/linux-gpio/20210123064909.466225-1-drew@beagleboard.org/
 
-I'm already investigating this idea.
+Drew Fustini (2):
+  pinctrl: use to octal permissions for debugfs files
+  pinctrl: pinmux: Add pinmux-select debugfs file
 
-Actually, I'm also thinking a bit further, whether for the future it
-could make sense converting the acpi tables into oftree at runtime.
-Not sure whether it's good idea, but maybe we could consolidate the
-platform driver probing into one, more generic mechanism.
-
->> Yet some drawbacks of the current implementation:
->>
->>   * individual FDT's can't be modularized yet (IMHO, we don't have DMI-based
->>     modprobing anyways)
-> 
-> I think we need to use either firmware loading or udev mechanisms to
-> load the FDTs.
-
-In my usecase neither would not be a good idea, because:
-
-a) on common machines (eg. pc's) we can't touch firmware easily
-    (if we could, we wouldn't need those board drivers in the first
-     place - we'd just fix the firmware :p)
-b) I'd like to have my new mechanism as a drop-in replacement for
-    existing drivers, reduce the init boilerplace to just a piece of dt.
-    Don't wanna force users to do userland changes on a kernel upgrade.
-
-Userland-driven approach IMHO makes sense for extra devices behind some
-interfaces, that itself is probed otherwise, and we don't know hat the
-user has attached to it (eg. USB->SPI adapter).
-
->>   * can't reconfigure or attach to devices outside the individual DT's
->>     (eg. probed by PCI, etc)
-> 
-> Not sure I follow.
-
-Let's take an example:
-
-I've got a PCI card with a bunch of generic chips, where we already have
-drivers for. A traditional driver would be probed the usual pci way, and
-then instantiate sub-devices directly.
-
-That's lots of boilerplace code, whose semantics could be described
-entirely via DT. In order to make that work, I need two things:
-
-1. create a pci device instance (when the card is found)
-2. instantiate all sub-devices with the card device as parent
-
-Another problem:
-
-I've got extra devices behind an interface that itself already is
-enumerated by firmware or some bus, but the extra devices aren't.
-(eg. acpi already enumerates some gpio's, but not what's connected
-to them, eg. leds, keys, ...). In this case, I somehow need to get
-these parent devices into my DT's scope, so the additional devices
-can refer to them.
-
-
---mtx
+ drivers/pinctrl/core.c    |   6 +--
+ drivers/pinctrl/pinconf.c |   4 +-
+ drivers/pinctrl/pinmux.c  | 111 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 114 insertions(+), 7 deletions(-)
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.25.1
+
