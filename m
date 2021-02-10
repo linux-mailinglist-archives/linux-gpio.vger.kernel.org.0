@@ -2,105 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D98031683E
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 14:47:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EC16316853
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 14:51:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbhBJNqx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Feb 2021 08:46:53 -0500
-Received: from esa.microchip.iphmx.com ([68.232.154.123]:35175 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbhBJNqx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 08:46:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1612964811; x=1644500811;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=ZK4J4t3KWKLxryUAQFN/kK0YWfWodwLhG+egShcVgjk=;
-  b=C/RYe1PGyEfQwLoZSoqPrBndsM1OVPO443SHdQEEuCyR/aZHHk4NP2K+
-   0nDTRLzRcVAOQ77eUz/GkeZM7BjAulHDBIW6lSMNGXkjR55CLr0wlXS0/
-   kLDFet54oBP+3CHNv5Mut3j8TIHchi4m0xH5ruvi+pHHPD4VTHLbzop5h
-   k+d7y2HfC9/a5Dyt7FRX3ubjavWN2xU8uuCEM4S6fRB9nf2/PXllhLHtO
-   Ol1hou/9glFxzOPIRRU2FriYsulEwBAIVwsVIiEsFPaBmH6egB4oQiAFv
-   eCYMLDzuGP/DRLJoHEShXLwEFHIasos90rnFov5HO+dozhtD90mj0ri25
-   Q==;
-IronPort-SDR: 0YM2d3k1fC5uD+d18/ORVHjsexLnkcU6bWKJubDijtuma1EpLElYgzgyBJqZ6bJseDv/VthiXn
- guCoa1Eh4gUaz7c/oZrloXPJH8FoS/lrz6wQqXwcHEsfM0ixnXx45amA4hyoL/KGmI1SjJnuAK
- k/OOWl/mTLMR6v5GXPbVi+RfEF+WeW4giC3X04RJT2i5zkn0uwu6+muiPLKOCYtUdwhKFA7t04
- CFv2RCDEu7QJCMZXPdrdg9xmZUaIcA9QR6blI4TdW25E3FIRT5mXlOIwkCzjAB5HIfwrUR20xf
- LEc=
-X-IronPort-AV: E=Sophos;i="5.81,168,1610434800"; 
-   d="scan'208";a="106116804"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Feb 2021 06:45:35 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 10 Feb 2021 06:45:35 -0700
-Received: from soft-dev10.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Wed, 10 Feb 2021 06:45:33 -0700
-References: <20210210132751.1422386-1-geert+renesas@glider.be>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <UNGLinuxDriver@microchip.com>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: PINCTRL_MICROCHIP_SGPIO should depend on ARCH_SPARX5 || SOC_VCOREIII
-In-Reply-To: <20210210132751.1422386-1-geert+renesas@glider.be>
-Date:   Wed, 10 Feb 2021 14:45:31 +0100
-Message-ID: <87mtwcujd0.fsf@microchip.com>
+        id S231668AbhBJNvY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Feb 2021 08:51:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231489AbhBJNvA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 08:51:00 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA01DC061786
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 05:50:19 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id f14so4303863ejc.8
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 05:50:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TTNJEfoQUaDnKZJmRpNWMQ9bWqNkHovtgW4jAdcH7YU=;
+        b=Dlz7MKU/9UeXQKBzTFiSk719BaoT1HYGidmcF6MAEEDd9enG8a3UcEQ7clv++YknVd
+         LZ3yUZNHrgCDUARz/tWhiIfs0Gvt4eTl+1Y8mF3Cle0a3hQiG0XBkC44dFLIjtZG7yRs
+         pYt5fMdv4UPd8GujBGOQCd/Z1N4H0dJJLtLHEpPDc0y8ESV7CjMY53WoGJSVwtONeHAk
+         8Elj1AidnO70XGmtuj+I5r+m6KB+Pm756uQ8o2xKYKzSwC0aLn8B2gxxWigsDlzDLMz0
+         fpv/HelKiQTe08dYWfAI3xom+B0jTAxzOs1MHIw5jRi570NuTVHhv7XyTE2OE0aqQxWC
+         BdmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TTNJEfoQUaDnKZJmRpNWMQ9bWqNkHovtgW4jAdcH7YU=;
+        b=c4euwnb0qML4ZxJ+zT1+42nYkSu5ehhOw1PDl/w/2XssvNxNfrGrszSTgXM0XXhUst
+         zFgYGpUGJJML5kmS4CgPbn2FdekkvJMKBW2QNtDt/SZStLP0H/hQQkbFf6dZTfV2i5kX
+         gAlcqDvByuv2x5qk4OmmUAoXW8/FkMBz1eQddICMTu9oY4HoirmXC3JqFgJeBbGdUgIn
+         kynyU+j1DxHtvxQ6rGD2U0Vv58XMHBBQ07DJ9RzGcEBe0o3N8oFtNS7xfFu6r8QfUl1E
+         vY/Whqeqtjo45USkFBuebeIoE6QqPecAXlHXwIiNts0EOZWUySVjuW5hJ3ZSxwLDKLMK
+         4QqA==
+X-Gm-Message-State: AOAM531t3HKa/j5vTWaGT1CFowyC0H5HZFyZCYoEIXeJ10DvEco6AGYh
+        eiHSfUdW37v6d96j+AC38At+oncADwc1ZdUAbtwUrQ==
+X-Google-Smtp-Source: ABdhPJwRaTDjhBuZQGy2fNZbRshWThFtyxyfeLUOVTfCnfenIP1OwfkLDCKxNSDplkwzPsnz7QCMYvtDO5tQRPO1u4Y=
+X-Received: by 2002:a17:907:2d09:: with SMTP id gs9mr2883611ejc.363.1612965018296;
+ Wed, 10 Feb 2021 05:50:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20210209133110.7383-1-nikita.shubin@maquefel.me>
+In-Reply-To: <20210209133110.7383-1-nikita.shubin@maquefel.me>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 10 Feb 2021 14:50:07 +0100
+Message-ID: <CAMpxmJUKkhhJOMf0WUintH=xPXO7+qLz-R2AyK5wygECzip3Nw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/7] gpio: ep93xx: fixes series patch
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-Geert Uytterhoeven writes:
-
-> the Microsemi/Microchip Serial GPIO device is present only Microsemi
-> VCore III and Microchip Sparx5 SoCs.  Hence add a dependency on
-> ARCH_SPARX5 || SOC_VCOREIII, to prevent asking the user about this
-> driver when configuring a kernel without support for these SoCs.
+On Tue, Feb 9, 2021 at 2:31 PM Nikita Shubin <nikita.shubin@maquefel.me> wrote:
 >
-> Fixes: 7e5ea974e61c8dd0 ("pinctrl: pinctrl-microchip-sgpio: Add pinctrl driver for Microsemi Serial GPIO")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/pinctrl/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> v2:
+> https://lore.kernel.org/linux-gpio/20210127104617.1173-1-nikita.shubin@maquefel.me/
 >
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 113073d5f89bbf70..3b75b1d7d3d1f1b0 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -353,8 +353,8 @@ config PINCTRL_OCELOT
+> v3:
+> https://lore.kernel.org/linux-gpio/20210128122123.25341-1-nikita.shubin@maquefel.me/
 >
->  config PINCTRL_MICROCHIP_SGPIO
->         bool "Pinctrl driver for Microsemi/Microchip Serial GPIO"
-> -       depends on OF
-> -       depends on HAS_IOMEM
-> +       depends on OF && HAS_IOMEM
-> +       depends on ARCH_SPARX5 || SOC_VCOREIII || COMPILE_TEST
->         select GPIOLIB
->         select GPIOLIB_IRQCHIP
->         select GENERIC_PINCONF
+> v4:
+> https://lore.kernel.org/linux-gpio/20210205080507.16007-1-nikita.shubin@maquefel.me/
+>
+> v5:
+> https://lore.kernel.org/linux-gpio/20210208085954.30050-1-nikita.shubin@maquefel.me/
+>
+> v5->v6 changes
+>
+> [PATCH v6 2/7] gpio: ep93xx: Fix single irqchip with multi gpiochips
+> Andy Shevchenko:
+> - add devm_kasprintf() return value check and move it out from
+>   ep93xx_init_irq_chip()
+> - removed ep93xx_gpio_irq_chip
+> - pass girq->chip instead of removed ep93xx_gpio_irq_chip to
+>   irq_set_chip_and_handler for port F
+>
+> Tested all patches on ts7250 board.
 
-Geert,
+Series applied, thanks everyone for reviews and testing!
 
-Thank you for your patch. Unfortunately, it makes it impossible to use
-the driver across PCIe - which is a specifically desired configuration.
-
-Could you add CONFIG_PCI to the || chain?
-
-Cheers,
-
--- 
-Lars Povlsen,
-Microchip
+Bartosz
