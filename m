@@ -2,225 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3FC931726E
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 22:36:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C1D031731D
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 23:16:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233215AbhBJVf4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Feb 2021 16:35:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233117AbhBJVfy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 16:35:54 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E7B3C061788
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 13:34:36 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id cl8so1900032pjb.0
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 13:34:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JfzPRn0smx1X0bwrbbLGl5ibsIc3skfpmEQCK6QDBoA=;
-        b=qi3xlsU/JgsSiXc7YqTY6c1QKaVb09wkTPP5vGp4OY35gMAH1cR4+pSjK1ogMMJEvH
-         XtXgUHUmfa5i6ya6uLt+KAzVWpZDZp322DQsb8NahcNEgh+ilqn6leTQobtPPJWeQlwY
-         2ybLNNi3RgDSoPhcwlZFtW0RsoTRxsYqe9g1VP49c2x8oughvMOKxzuLvNyigiEqB/ZQ
-         YKhQMzFof0LfLYko8hUdK5QEh2CqCKmZyuTXs8gpVfMbyNOVElgvtlldHFh4boNtE/UT
-         QFTgB46VGmWC5fSNL8yp35WNE1US738RzRftv2I8ua/nMqBtR4m3mceEO2+1lLysz31z
-         nltQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JfzPRn0smx1X0bwrbbLGl5ibsIc3skfpmEQCK6QDBoA=;
-        b=CvMtTj6Q6st+himTV1h6CYXv89rYaiAJNUBpLAVPu1qg7u583WQ270YfEbiyOZBomz
-         kmDbiC6+EDCN9r9llu2ngFNjWyICQFSSs5OIeyzWQBlh0T8IFANxC7aOYc8+trHID6J0
-         Qu44WZmPoRz+SxFH5NUsPhoLa/FNBcBHyRGlfd20WLosJIBMRkDDlqYdmx1YeVy2trYi
-         3x1dCgx8TJe7QKI//E3aMEc9FKb3nC+otlznLg1vaRIv0kefggmnLBmJKnTJq4hhEoJw
-         rmnLtpWuHWocB+n/i33CpIeBKyhZFclUxskHYjQkAcoogN41v0XdLHDFE1UTAAX/IlXX
-         Mpog==
-X-Gm-Message-State: AOAM5329IFs/PAfIn8pj/m5OwbnX4XkR2FRwlv57jFmOS49ZwXJzNaXT
-        SM67ascVeFUu/w6AYHT5hBRpdw==
-X-Google-Smtp-Source: ABdhPJxHFIMX/VD2j3TmcZnktIQuoyb6ikBVBsiJ4AHlkUldpqIQc2V3Fidhws+JdM5EaKfkhfbN1Q==
-X-Received: by 2002:a17:902:e812:b029:de:57c4:f6f2 with SMTP id u18-20020a170902e812b02900de57c4f6f2mr4846246plg.37.1612992876007;
-        Wed, 10 Feb 2021 13:34:36 -0800 (PST)
-Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:7b19:df69:92d6:528e])
-        by smtp.gmail.com with ESMTPSA id h8sm3006928pfv.154.2021.02.10.13.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Feb 2021 13:34:35 -0800 (PST)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        id S233466AbhBJWQL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Feb 2021 17:16:11 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:47467 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230229AbhBJWQC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 17:16:02 -0500
+Received: from [192.168.1.155] ([77.2.178.237]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M2wXK-1lB3fM1E7g-003Jg0; Wed, 10 Feb 2021 23:13:24 +0100
+Subject: Re: RFC: oftree based setup of composite board devices
+To:     Rob Herring <robh+dt@kernel.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Frank Rowand <frowand.list@gmail.com>,
         Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v3 2/2] pinctrl: pinmux: Add pinmux-select debugfs file
-Date:   Wed, 10 Feb 2021 13:34:20 -0800
-Message-Id: <20210210213419.227285-3-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210210213419.227285-1-drew@beagleboard.org>
-References: <20210210213419.227285-1-drew@beagleboard.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
+References: <20210208222203.22335-1-info@metux.net>
+ <CAL_JsqJ-bz35mUM3agYjq5x+Y+u9rL1RwesCaA-x=MW8uv5CrA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <2cadfb9a-58d2-ebd9-2992-90efea1fc132@metux.net>
+Date:   Wed, 10 Feb 2021 23:13:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJ-bz35mUM3agYjq5x+Y+u9rL1RwesCaA-x=MW8uv5CrA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:lV+1hlvUI0I6cuKSofVaILejnrBvHrh8arutmvhdPogsj0zM3S3
+ +WZVJW7wwOFyWxHPd6OqBD5vY9glex0Zi2mS1qkDGMmmEazdfqXsr7LEoCA2HaqLwCV7URP
+ zt0OAR7cp3XZ0cMEG9z2RyDtfGvBQsQjg3BR+06hyXyN6JMXFA1GHbTplK9/oL827Bamvuy
+ UGwDoyPzmmgaO/JBMyz0w==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l0wPzfodjyQ=:1Ur+xQTitLNUyftQb8OfH9
+ SRMTHhvTNaDeM5JLX07sWKxC3gkRAAICFY1KkDfpsfjhY+o5yK+3XsxFVWEWJiPoGoqJ6md9k
+ xRcqC7RCJvRDks0MxOd/Qqs/9miSYtH7rb8gxl4RNBzWzqCJiynWDgZEgxOKNXhIvkmMEdokt
+ CL22wu8I6BnJB22Wo+gfqMw5s7wx28jK0v8Gjx9roJMHNOguy6D8Sf5d0NL6ZXPW2aiksf8KX
+ xYTtguy816SnZItyYhvdLJ2RCTDOrbNRuzo8rmMwc/LzVvClKKI5ArbZwHSUT+xzPv5aVnO2W
+ zhmxmxiRl5kiTJBw9AiQlolQM8GM5OjksmCwDMhvpV8gMj4jjtGJsHbOWBirg+5HBHhVV3LgK
+ skJ5sKvLEmKRnPwyMN7wx6YNuL6xeS47hC4z+axN7fQklvGFguNnR+xuIiv+K
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add "pinmux-select" to debugfs which will activate a function and group
-when 2 integers "<function-selector> <group-selector>" are written to
-the file. The write operation pinmux_select() handles this by checking
-if fsel and gsel are valid selectors and then calling ops->set_mux().
+On 09.02.21 00:48, Rob Herring wrote:
 
-The existing "pinmux-functions" debugfs file lists the pin functions
-registered for the pin controller. For example:
+Hi,
 
-function: pinmux-uart0, groups = [ pinmux-uart0-pins ]
-function: pinmux-mmc0, groups = [ pinmux-mmc0-pins ]
-function: pinmux-mmc1, groups = [ pinmux-mmc1-pins ]
-function: pinmux-i2c0, groups = [ pinmux-i2c0-pins ]
-function: pinmux-i2c1, groups = [ pinmux-i2c1-pins ]
-function: pinmux-spi1, groups = [ pinmux-spi1-pins ]
+>> here's an RFC for using compiled-in dtb's for initializing board devices
+>> that can't be probed via bus'es or firmware.
+> 
+> I'm not convinced compiled in is the mechanism we want.
 
-To activate function pinmux-i2c1 and group pinmux-i2c1-pins:
+To make it clear, I'm talking of DTBs compiled into the ofboard driver
+(which itself can be a module). And yes, that's pretty much what I want.
+It's meant for drop-in replacement of composite board drivers, in cases
+where this driver doesn't do more than initializing other drivers.
 
-echo pinmux-i2c1 pinmux-i2c1-pins > mux-select
+Therefore, it should work without any special userland actions, and it
+should put all board specific stuff into dtb.
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- drivers/pinctrl/pinmux.c | 107 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
+>> Use cases are boards with non-oftree firmware (ACPI, etc) where certain
+>> platform devices can't be directly enumerated via firmware. Traditionally
+>> we had to write board specific drivers that check for board identification
+>> (DMI strings, etc), then initialize the actual devices and their links
+>> (eg. gpio<->leds/buttons, ...). Often this can be expressed just by DT.
+> 
+> This is something I've wanted to see for a while. There's use cases
+> for DT based systems too. The example I'd like to see supported are
+> USB serial adapters with downstream serdev, GPIO, I2C, SPI, etc. Then
+> plug more than one of those in.
 
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index c651b2db0925..23fa32f0a067 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -673,6 +673,111 @@ void pinmux_show_setting(struct seq_file *s,
- DEFINE_SHOW_ATTRIBUTE(pinmux_functions);
- DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
- 
-+#define PINMUX_MAX_NAME 64
-+static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
-+				   size_t len, loff_t *ppos)
-+{
-+	struct seq_file *sfile = file->private_data;
-+	struct pinctrl_dev *pctldev = sfile->private;
-+	const struct pinmux_ops *pmxops = pctldev->desc->pmxops;
-+	const char *const *groups;
-+	char *buf, *fname, *gname;
-+	unsigned int num_groups;
-+	int fsel, gsel, ret;
-+
-+	if (len > (PINMUX_MAX_NAME * 2)) {
-+		dev_err(pctldev->dev, "write too big for buffer");
-+		return -EINVAL;
-+	}
-+
-+	buf = kzalloc(PINMUX_MAX_NAME * 2, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	fname = kzalloc(PINMUX_MAX_NAME, GFP_KERNEL);
-+	if (!fname) {
-+		ret = -ENOMEM;
-+		goto free_buf;
-+	}
-+
-+	gname = kzalloc(PINMUX_MAX_NAME, GFP_KERNEL);
-+	if (!buf) {
-+		ret = -ENOMEM;
-+		goto free_fname;
-+	}
-+
-+	ret = strncpy_from_user(buf, user_buf, PINMUX_MAX_NAME * 2);
-+	if (ret < 0) {
-+		dev_err(pctldev->dev, "failed to copy buffer from userspace");
-+		goto free_gname;
-+	}
-+	buf[len-1] = '\0';
-+
-+	ret = sscanf(buf, "%s %s", fname, gname);
-+	if (ret != 2) {
-+		dev_err(pctldev->dev, "expected format: <function-name> <group-name>");
-+		goto free_gname;
-+	}
-+
-+	fsel = pinmux_func_name_to_selector(pctldev, fname);
-+	if (fsel < 0) {
-+		dev_err(pctldev->dev, "invalid function %s in map table\n", fname);
-+		ret = -EINVAL;
-+		goto free_gname;
-+	}
-+
-+	ret = pmxops->get_function_groups(pctldev, fsel, &groups, &num_groups);
-+	if (ret) {
-+		dev_err(pctldev->dev, "no groups for function %d (%s)", fsel, fname);
-+		goto free_gname;
-+
-+	}
-+
-+	ret = match_string(groups, num_groups, gname);
-+	if (ret < 0) {
-+		dev_err(pctldev->dev, "invalid group %s", gname);
-+		goto free_gname;
-+	}
-+
-+	ret = pinctrl_get_group_selector(pctldev, gname);
-+	if (ret < 0) {
-+		dev_err(pctldev->dev, "failed to get group selectorL %s", gname);
-+		goto free_gname;
-+	}
-+	gsel = ret;
-+
-+	ret = pmxops->set_mux(pctldev, fsel, gsel);
-+	if (ret) {
-+		dev_err(pctldev->dev, "set_mux() failed: %d", ret);
-+		goto free_gname;
-+	}
-+
-+	return len;
-+
-+free_gname:
-+	devm_kfree(pctldev->dev, gname);
-+free_fname:
-+	devm_kfree(pctldev->dev, fname);
-+free_buf:
-+	devm_kfree(pctldev->dev, buf);
-+
-+	return ret;
-+}
-+
-+static int pinmux_select_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, NULL, inode->i_private);
-+}
-+
-+static const struct file_operations pinmux_select_ops = {
-+	.owner = THIS_MODULE,
-+	.open = pinmux_select_open,
-+	.read = seq_read,
-+	.write = pinmux_select,
-+	.llseek = no_llseek,
-+	.release = single_release,
-+};
-+
- void pinmux_init_device_debugfs(struct dentry *devroot,
- 			 struct pinctrl_dev *pctldev)
- {
-@@ -680,6 +785,8 @@ void pinmux_init_device_debugfs(struct dentry *devroot,
- 			    devroot, pctldev, &pinmux_functions_fops);
- 	debugfs_create_file("pinmux-pins", 0444,
- 			    devroot, pctldev, &pinmux_pins_fops);
-+	debugfs_create_file("pinmux-select", 0200,
-+			    devroot, pctldev, &pinmux_select_ops);
- }
- 
- #endif /* CONFIG_DEBUG_FS */
+Yes, that's also on my 2do list (eg. adcs behind some usb-i2c dongle)
+
+> I think there's a couple of approaches we could take. Either support
+> multiple root nodes as you have done or keep a single root and add
+> child nodes to them. I think the latter would be less invasive. In the
+> non-DT cases, we'd just always create an empty skeleton DT. A 3rd
+> variation on a DT system is we could want to create parent nodes if
+> they don't exist to attach this DT to so we have a full hierarchy.
+
+I'm already investigating this idea.
+
+Actually, I'm also thinking a bit further, whether for the future it
+could make sense converting the acpi tables into oftree at runtime.
+Not sure whether it's good idea, but maybe we could consolidate the
+platform driver probing into one, more generic mechanism.
+
+>> Yet some drawbacks of the current implementation:
+>>
+>>   * individual FDT's can't be modularized yet (IMHO, we don't have DMI-based
+>>     modprobing anyways)
+> 
+> I think we need to use either firmware loading or udev mechanisms to
+> load the FDTs.
+
+In my usecase neither would not be a good idea, because:
+
+a) on common machines (eg. pc's) we can't touch firmware easily
+    (if we could, we wouldn't need those board drivers in the first
+     place - we'd just fix the firmware :p)
+b) I'd like to have my new mechanism as a drop-in replacement for
+    existing drivers, reduce the init boilerplace to just a piece of dt.
+    Don't wanna force users to do userland changes on a kernel upgrade.
+
+Userland-driven approach IMHO makes sense for extra devices behind some
+interfaces, that itself is probed otherwise, and we don't know hat the
+user has attached to it (eg. USB->SPI adapter).
+
+>>   * can't reconfigure or attach to devices outside the individual DT's
+>>     (eg. probed by PCI, etc)
+> 
+> Not sure I follow.
+
+Let's take an example:
+
+I've got a PCI card with a bunch of generic chips, where we already have
+drivers for. A traditional driver would be probed the usual pci way, and
+then instantiate sub-devices directly.
+
+That's lots of boilerplace code, whose semantics could be described
+entirely via DT. In order to make that work, I need two things:
+
+1. create a pci device instance (when the card is found)
+2. instantiate all sub-devices with the card device as parent
+
+Another problem:
+
+I've got extra devices behind an interface that itself already is
+enumerated by firmware or some bus, but the extra devices aren't.
+(eg. acpi already enumerates some gpio's, but not what's connected
+to them, eg. leds, keys, ...). In this case, I somehow need to get
+these parent devices into my DT's scope, so the additional devices
+can refer to them.
+
+
+--mtx
+
 -- 
-2.25.1
-
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
