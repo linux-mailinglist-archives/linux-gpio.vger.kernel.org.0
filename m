@@ -2,91 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EC16316853
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 14:51:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9B2B316858
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 14:54:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231668AbhBJNvY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Feb 2021 08:51:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231489AbhBJNvA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 08:51:00 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA01DC061786
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 05:50:19 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id f14so4303863ejc.8
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 05:50:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TTNJEfoQUaDnKZJmRpNWMQ9bWqNkHovtgW4jAdcH7YU=;
-        b=Dlz7MKU/9UeXQKBzTFiSk719BaoT1HYGidmcF6MAEEDd9enG8a3UcEQ7clv++YknVd
-         LZ3yUZNHrgCDUARz/tWhiIfs0Gvt4eTl+1Y8mF3Cle0a3hQiG0XBkC44dFLIjtZG7yRs
-         pYt5fMdv4UPd8GujBGOQCd/Z1N4H0dJJLtLHEpPDc0y8ESV7CjMY53WoGJSVwtONeHAk
-         8Elj1AidnO70XGmtuj+I5r+m6KB+Pm756uQ8o2xKYKzSwC0aLn8B2gxxWigsDlzDLMz0
-         fpv/HelKiQTe08dYWfAI3xom+B0jTAxzOs1MHIw5jRi570NuTVHhv7XyTE2OE0aqQxWC
-         BdmQ==
+        id S230014AbhBJNx6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Feb 2021 08:53:58 -0500
+Received: from mail-oi1-f175.google.com ([209.85.167.175]:33565 "EHLO
+        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229870AbhBJNxy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 08:53:54 -0500
+Received: by mail-oi1-f175.google.com with SMTP id g84so2079407oib.0;
+        Wed, 10 Feb 2021 05:53:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TTNJEfoQUaDnKZJmRpNWMQ9bWqNkHovtgW4jAdcH7YU=;
-        b=c4euwnb0qML4ZxJ+zT1+42nYkSu5ehhOw1PDl/w/2XssvNxNfrGrszSTgXM0XXhUst
-         zFgYGpUGJJML5kmS4CgPbn2FdekkvJMKBW2QNtDt/SZStLP0H/hQQkbFf6dZTfV2i5kX
-         gAlcqDvByuv2x5qk4OmmUAoXW8/FkMBz1eQddICMTu9oY4HoirmXC3JqFgJeBbGdUgIn
-         kynyU+j1DxHtvxQ6rGD2U0Vv58XMHBBQ07DJ9RzGcEBe0o3N8oFtNS7xfFu6r8QfUl1E
-         vY/Whqeqtjo45USkFBuebeIoE6QqPecAXlHXwIiNts0EOZWUySVjuW5hJ3ZSxwLDKLMK
-         4QqA==
-X-Gm-Message-State: AOAM531t3HKa/j5vTWaGT1CFowyC0H5HZFyZCYoEIXeJ10DvEco6AGYh
-        eiHSfUdW37v6d96j+AC38At+oncADwc1ZdUAbtwUrQ==
-X-Google-Smtp-Source: ABdhPJwRaTDjhBuZQGy2fNZbRshWThFtyxyfeLUOVTfCnfenIP1OwfkLDCKxNSDplkwzPsnz7QCMYvtDO5tQRPO1u4Y=
-X-Received: by 2002:a17:907:2d09:: with SMTP id gs9mr2883611ejc.363.1612965018296;
- Wed, 10 Feb 2021 05:50:18 -0800 (PST)
+        bh=MFikpXfhNdl/eEzw3oQhEBfIDumYf2JlVlOqmQDedOI=;
+        b=Ognr5ljrmxUK7qbMTcFvter/n1ysZLlKlDbvTbdAlfrUgO1ykMuYvBf/iTgVymb4lH
+         /tQhwXchzdS7DrL+GuxtMlJUMTHXt/wCGUQ/E8j9IY++fIqVMmhye/UsMt/boidDYWk/
+         G0X5sw4Vr02W548SSX6pipT4w68a9Yk+NgwsPoNN0WhNfaHkaW3kQhBTWIoaQ9/XCxHI
+         jgr9V72iT0CTJYN9AGORu6o5wmM2RPbzDFqf2Z3jiarW4RrPiSNwXdMwWEFH7GkWbkMz
+         oNcA0L5o0veErYfLFSf10vfE1OwLFHP0EUQL3ZfqQK9LudtK5FMT1LSWg/oSHqy2kEUx
+         64Sw==
+X-Gm-Message-State: AOAM530HN5m7TJOSdNWMWC1quz0I6RNFP62FtEbNyt1Ok5ESBnPvYvRT
+        eUn7713m21PEnTk5gc/3XmTyetsNXJ1bFYXRAyoK5RVIf5E=
+X-Google-Smtp-Source: ABdhPJwgsM3k99jHtl8LWwiECKTK5AVq9Jm35syK4gPBHb1a8creoTJSnEuLotWNjQdpB470ixXnRbQtCmpaLYsG5dU=
+X-Received: by 2002:a54:4e88:: with SMTP id c8mr2058595oiy.148.1612965192777;
+ Wed, 10 Feb 2021 05:53:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20210209133110.7383-1-nikita.shubin@maquefel.me>
-In-Reply-To: <20210209133110.7383-1-nikita.shubin@maquefel.me>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 10 Feb 2021 14:50:07 +0100
-Message-ID: <CAMpxmJUKkhhJOMf0WUintH=xPXO7+qLz-R2AyK5wygECzip3Nw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/7] gpio: ep93xx: fixes series patch
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20210210132751.1422386-1-geert+renesas@glider.be> <87mtwcujd0.fsf@microchip.com>
+In-Reply-To: <87mtwcujd0.fsf@microchip.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 10 Feb 2021 14:53:01 +0100
+Message-ID: <CAMuHMdVpHUmwfob6t_aWvaVVHpSDpF5HvLe_W5+KY9ky5A-qEw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: PINCTRL_MICROCHIP_SGPIO should depend on
+ ARCH_SPARX5 || SOC_VCOREIII
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 9, 2021 at 2:31 PM Nikita Shubin <nikita.shubin@maquefel.me> wrote:
->
-> v2:
-> https://lore.kernel.org/linux-gpio/20210127104617.1173-1-nikita.shubin@maquefel.me/
->
-> v3:
-> https://lore.kernel.org/linux-gpio/20210128122123.25341-1-nikita.shubin@maquefel.me/
->
-> v4:
-> https://lore.kernel.org/linux-gpio/20210205080507.16007-1-nikita.shubin@maquefel.me/
->
-> v5:
-> https://lore.kernel.org/linux-gpio/20210208085954.30050-1-nikita.shubin@maquefel.me/
->
-> v5->v6 changes
->
-> [PATCH v6 2/7] gpio: ep93xx: Fix single irqchip with multi gpiochips
-> Andy Shevchenko:
-> - add devm_kasprintf() return value check and move it out from
->   ep93xx_init_irq_chip()
-> - removed ep93xx_gpio_irq_chip
-> - pass girq->chip instead of removed ep93xx_gpio_irq_chip to
->   irq_set_chip_and_handler for port F
->
-> Tested all patches on ts7250 board.
+Hi Lars,
 
-Series applied, thanks everyone for reviews and testing!
+On Wed, Feb 10, 2021 at 2:45 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+> Geert Uytterhoeven writes:
+> > the Microsemi/Microchip Serial GPIO device is present only Microsemi
+> > VCore III and Microchip Sparx5 SoCs.  Hence add a dependency on
+> > ARCH_SPARX5 || SOC_VCOREIII, to prevent asking the user about this
+> > driver when configuring a kernel without support for these SoCs.
+> >
+> > Fixes: 7e5ea974e61c8dd0 ("pinctrl: pinctrl-microchip-sgpio: Add pinctrl driver for Microsemi Serial GPIO")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  drivers/pinctrl/Kconfig | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> > index 113073d5f89bbf70..3b75b1d7d3d1f1b0 100644
+> > --- a/drivers/pinctrl/Kconfig
+> > +++ b/drivers/pinctrl/Kconfig
+> > @@ -353,8 +353,8 @@ config PINCTRL_OCELOT
+> >
+> >  config PINCTRL_MICROCHIP_SGPIO
+> >         bool "Pinctrl driver for Microsemi/Microchip Serial GPIO"
+> > -       depends on OF
+> > -       depends on HAS_IOMEM
+> > +       depends on OF && HAS_IOMEM
+> > +       depends on ARCH_SPARX5 || SOC_VCOREIII || COMPILE_TEST
+> >         select GPIOLIB
+> >         select GPIOLIB_IRQCHIP
+> >         select GENERIC_PINCONF
+>
+> Thank you for your patch. Unfortunately, it makes it impossible to use
+> the driver across PCIe - which is a specifically desired configuration.
+>
+> Could you add CONFIG_PCI to the || chain?
 
-Bartosz
+Sure.
+
+Is PCIe the only other transport over which the register can be accessed?
+Or can this also be done over e.g. SPI, like on Ocelot[1]?
+
+[1] https://lore.kernel.org/linux-gpio/20200511145329.GV34497@piout.net/
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
