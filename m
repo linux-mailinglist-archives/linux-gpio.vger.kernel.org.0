@@ -2,48 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E787316FA2
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 20:08:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 054C9316FD8
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Feb 2021 20:15:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233336AbhBJTGr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Feb 2021 14:06:47 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:51986 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232869AbhBJTGo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 14:06:44 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11AJ4aeD162805;
-        Wed, 10 Feb 2021 19:05:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=wJepcm1G3WY4luzOFFwanPvz7D03bJCF3/6VVjzKfs8=;
- b=We/AJ+CnE3Yo4RIreHwhZCi91BQ5thRZUlodewhIaBfOZehW48Gmh7cE6o+wNn00+Z+z
- ucfaNG3J3B4urgiTva03GEmdydUy6T0Jm+0tm8GjS3X2ciFxTy1vqa0cuVkJ3Mgw8NCl
- cBa3aBxU7b7RFeWFqeN4CM9Q2toZ7Zkm5xGxcTWNMMeTtDLySPT211zQgkHsAs5rzcNj
- hUMZu8EoPhXbQB5PDiIf3TMu/D9AzNHfBKxo8rjBlHt2kG9Q4c49pROLaxhxateEgixf
- RnPCffN0MRLkbp0rOKE+Rpaq9gNHp4KXwBr003bDn8bh2DGI75bavAsH255hB6naI8J1 8A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 36hjhqvqee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Feb 2021 19:05:48 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11AJ54sl144233;
-        Wed, 10 Feb 2021 19:05:46 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 36j51xys52-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Feb 2021 19:05:46 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 11AJ5iai031925;
-        Wed, 10 Feb 2021 19:05:44 GMT
-Received: from kadam (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 10 Feb 2021 11:05:42 -0800
-Date:   Wed, 10 Feb 2021 22:05:29 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     kbuild@lists.01.org, Drew Fustini <drew@beagleboard.org>,
+        id S234553AbhBJTPZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Feb 2021 14:15:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234520AbhBJTPW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Feb 2021 14:15:22 -0500
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF77EC06178A
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 11:14:11 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id z21so1867002pgj.4
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Feb 2021 11:14:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JmUcntoSnbYZCu5swdMquGULXXyoqXzqD9LGXM3UkFg=;
+        b=k4inAo+WcC/PkZIpNA1ki8dI+F1fTtz/sDYC+IpWZPRJkVx36ZuwYunWaIHmW/3dLl
+         A8/rQBnqff+HhJ+54zErI04kQdsu1tMYhbh0Vr6zey73AJPJEP+PYQ4tFFlFMnSTklAa
+         aWwPujo9I5kBwVqvai507Zc4QYYeV3fF3QBd7x8N0sEWTJTOi8FjeasCCRxNACWNQwFv
+         PDdHj6pt4ATJVdUB2uSE0dwr3uPa0u1f3g75l1GYTHSdp1jGxiLgLzKUKrjSiuIaur02
+         xa/tqYPwSa7aVd7ZAzTaKfnTCGmm/lheemBrmj4JZ/CEs9D3It+49TsxNNxcd9W3BFtg
+         gkzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JmUcntoSnbYZCu5swdMquGULXXyoqXzqD9LGXM3UkFg=;
+        b=i7t2/VdK6/1Rr8/tC02SVlmxv7zlpej1sw2KJQ7a9n3WaQNEcE9h3hl2yy5jKKwysi
+         OBDwmGZ+lA8Pg1SHwwWiQwsAKeWrv4srER2AnQzbG1yiRX2qAD9CEKQZ/r0Mr1easQB6
+         Q7EMk11i+SurHgXTsPsx2Dirl6cOsykiZV0rMPJlqWaxI1WQb0qrH/F3bhnLDKzr57+6
+         F1gYqg0wyyHO8tY3wsLxKukLYycpA0lkyHSJrb6dz7sK8hBzTc+r/I2N39jYDg2UZBAB
+         QgECq11LbD0kdYdVG8l6OvuGtTD8tu82FYtGlebehbxr/EPS84O08U3vv6avs0VpZfhq
+         XG9w==
+X-Gm-Message-State: AOAM532C2W9DfwQ2afy4HVa4vtA64aBO4M7ZKyGuEEh6Xjha+9IG3OZ4
+        weqA+SBFcAogkiM1IyqBenMB8w==
+X-Google-Smtp-Source: ABdhPJzCmrupbTOqFkod0ripyoNlPL0T5+L6rdPo9BlWXY72YKmeGuFpgLM6I2lt23SEvc1o8S3R3w==
+X-Received: by 2002:a62:52d1:0:b029:1da:1371:20b8 with SMTP id g200-20020a6252d10000b02901da137120b8mr4551090pfb.73.1612984451507;
+        Wed, 10 Feb 2021 11:14:11 -0800 (PST)
+Received: from x1 ([2601:1c0:4701:ae70:7b19:df69:92d6:528e])
+        by smtp.gmail.com with ESMTPSA id h15sm3173312pfo.84.2021.02.10.11.14.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Feb 2021 11:14:10 -0800 (PST)
+Date:   Wed, 10 Feb 2021 11:14:08 -0800
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>, kbuild@lists.01.org,
         Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -55,67 +62,62 @@ Cc:     kbuild@lists.01.org, Drew Fustini <drew@beagleboard.org>,
         Robert Nelson <robertcnelson@beagleboard.org>,
         kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org
 Subject: Re: [PATCH v2 2/2] pinctrl: pinmux: Add pinmux-select debugfs file
-Message-ID: <20210210190528.GE20820@kadam>
+Message-ID: <20210210191408.GB188420@x1>
 References: <20210210074946.155417-3-drew@beagleboard.org>
  <20210210182044.GY2696@kadam>
  <CAMuHMdUTG-0PMsP--i4KE2RA_zOaQgpUDksvtU8dLPW9dSpoug@mail.gmail.com>
+ <20210210190528.GE20820@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUTG-0PMsP--i4KE2RA_zOaQgpUDksvtU8dLPW9dSpoug@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-IMR: 1
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9891 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 phishscore=0
- mlxscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102100169
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9891 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1015 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102100169
+In-Reply-To: <20210210190528.GE20820@kadam>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 10, 2021 at 07:39:16PM +0100, Geert Uytterhoeven wrote:
-> Hi Dan,
+On Wed, Feb 10, 2021 at 10:05:29PM +0300, Dan Carpenter wrote:
+> On Wed, Feb 10, 2021 at 07:39:16PM +0100, Geert Uytterhoeven wrote:
+> > Hi Dan,
+> > 
+> > On Wed, Feb 10, 2021 at 7:21 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > > 99b2f99aa41aa7 Drew Fustini  2021-02-09  694    buf = devm_kzalloc(pctldev->dev, PINMUX_MAX_NAME * 2, GFP_KERNEL);
+> > > 99b2f99aa41aa7 Drew Fustini  2021-02-09  695    if (!buf)
+> > > 99b2f99aa41aa7 Drew Fustini  2021-02-09  696            return -ENOMEM;
+> > > 99b2f99aa41aa7 Drew Fustini  2021-02-09  697
+> > > 99b2f99aa41aa7 Drew Fustini  2021-02-09  698    fname = devm_kzalloc(pctldev->dev, PINMUX_MAX_NAME, GFP_KERNEL);
+> > > 99b2f99aa41aa7 Drew Fustini  2021-02-09  699    if (!fname) {
+> > > 99b2f99aa41aa7 Drew Fustini  2021-02-09  700            ret = -ENOMEM;
+> > > 99b2f99aa41aa7 Drew Fustini  2021-02-09  701            goto free_buf;
+> > >
+> > > The gotos are out of order.  They should be in mirror/reverse order of
+> > > the allocations:
+> > >
+> > > free_gmane:
+> > >         devm_kfree(pctldev->dev, gname);
+> > > free_fname:
+> > >         devm_kfree(pctldev->dev, fname);
+> > > free_buf:
+> > >         devm_kfree(pctldev->dev, buf);
+> > >
+> > > But also why do we need to use devm_kfree() at all?  I thought the whole
+> > > point of devm_ functions was that they are garbage collected
+> > > automatically for you.  Can we not just delete all error handling and
+> > > return -ENOMEM here?
+> > 
+> > No, because the lifetime of the objects allocated here does not match the
+> > lifetime of dev.  If they're not freed here, they will only be freed when the
+> > device is unbound.  As the user can access the sysfs files at will, he can
+> > OOM the system.
+> > 
 > 
-> On Wed, Feb 10, 2021 at 7:21 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > 99b2f99aa41aa7 Drew Fustini  2021-02-09  694    buf = devm_kzalloc(pctldev->dev, PINMUX_MAX_NAME * 2, GFP_KERNEL);
-> > 99b2f99aa41aa7 Drew Fustini  2021-02-09  695    if (!buf)
-> > 99b2f99aa41aa7 Drew Fustini  2021-02-09  696            return -ENOMEM;
-> > 99b2f99aa41aa7 Drew Fustini  2021-02-09  697
-> > 99b2f99aa41aa7 Drew Fustini  2021-02-09  698    fname = devm_kzalloc(pctldev->dev, PINMUX_MAX_NAME, GFP_KERNEL);
-> > 99b2f99aa41aa7 Drew Fustini  2021-02-09  699    if (!fname) {
-> > 99b2f99aa41aa7 Drew Fustini  2021-02-09  700            ret = -ENOMEM;
-> > 99b2f99aa41aa7 Drew Fustini  2021-02-09  701            goto free_buf;
-> >
-> > The gotos are out of order.  They should be in mirror/reverse order of
-> > the allocations:
-> >
-> > free_gmane:
-> >         devm_kfree(pctldev->dev, gname);
-> > free_fname:
-> >         devm_kfree(pctldev->dev, fname);
-> > free_buf:
-> >         devm_kfree(pctldev->dev, buf);
-> >
-> > But also why do we need to use devm_kfree() at all?  I thought the whole
-> > point of devm_ functions was that they are garbage collected
-> > automatically for you.  Can we not just delete all error handling and
-> > return -ENOMEM here?
-> 
-> No, because the lifetime of the objects allocated here does not match the
-> lifetime of dev.  If they're not freed here, they will only be freed when the
-> device is unbound.  As the user can access the sysfs files at will, he can
-> OOM the system.
-> 
+> Then why not use vanilla kmalloc()?
 
-Then why not use vanilla kmalloc()?
+Yes, I believe that is the correct approach.  The problem was due to my
+misunderstanding of when devm_*() was appropriate.  In this case, I
+should have been using the vanilla allocation as the buffers used in
+this debugfs write operation are not tied to the lifetime of the pin
+controller device.  The are just allocated for internal use inside the
+write function.
 
-regards,
-dan carpenter
-
+thanks,
+drew
