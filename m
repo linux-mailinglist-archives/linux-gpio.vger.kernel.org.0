@@ -2,218 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57C1A318A0D
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Feb 2021 13:07:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F5F5318BE1
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Feb 2021 14:22:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbhBKMEl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Feb 2021 07:04:41 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:42250 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230328AbhBKMCV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Feb 2021 07:02:21 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11BBmu7I193682;
-        Thu, 11 Feb 2021 12:01:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=JlHMtwzoGJad+lRl/QAFsxOviAa1mqmYy7Gmfhb0yxA=;
- b=yLKjGowP88OgerhM4QsQJ+nql7HBpLv3Qt6SQOJHvqzEYiDTdnfaGA1S/GgAJm8qtKlZ
- BaTvzdUqf2UYVFjzopxB+4dQmmNhOkPnUYgwg2+EOTWbR3NXkpiR3a+iRfk4nswELsoD
- phirJNPMNuTgdsJEqMczW9vDDE0//q1/Sc6Hs15cEWE5IUdwT19ZuhtnE1ZjdTBkVuaf
- rJyzwMvow6OJmTkVYyKR28wzlzkexGHd1LUfQu/gSANThi4F0C6QA+/QjdoZdWtP/ZcB
- l95IuEuzzLFmKEd/3Sae552n5VP5Uy6M+dHo8U6/mAlyK7zyq5fFECuXvpP6nOEhqJQS og== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 36mv9dsc6v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Feb 2021 12:01:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11BBolL2143114;
-        Thu, 11 Feb 2021 12:01:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 36j4vu5h33-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Feb 2021 12:01:12 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 11BC16ou027776;
-        Thu, 11 Feb 2021 12:01:06 GMT
-Received: from kadam (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Feb 2021 04:01:05 -0800
-Date:   Thu, 11 Feb 2021 15:00:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        id S231243AbhBKNVB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Feb 2021 08:21:01 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:37999 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231235AbhBKNSn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Feb 2021 08:18:43 -0500
+Received: from [192.168.1.155] ([95.114.27.115]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M8yPu-1lE3Av2zoM-0063xQ; Thu, 11 Feb 2021 14:15:51 +0100
+Subject: Re: [RFC PATCH 12/12] platform/x86/of: add support for PC Engines APU
+ v2/3/4 boards
+To:     Rob Herring <robh+dt@kernel.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Frank Rowand <frowand.list@gmail.com>,
         Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v4 2/2] pinctrl: pinmux: Add pinmux-select debugfs file
-Message-ID: <20210211120051.GN20820@kadam>
-References: <20210210222851.232374-1-drew@beagleboard.org>
- <20210210222851.232374-3-drew@beagleboard.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org
+References: <20210208222203.22335-1-info@metux.net>
+ <20210208222203.22335-13-info@metux.net>
+ <CAL_JsqJw+EjMoc92e-XMjn=0wat3TmcToHU1V2rW9UB9UhmDEA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <1a96e003-e264-9f9b-4239-4b3b002c0198@metux.net>
+Date:   Thu, 11 Feb 2021 14:15:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210210222851.232374-3-drew@beagleboard.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-IMR: 1
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9891 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 suspectscore=0 malwarescore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102110108
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9891 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 mlxlogscore=999
- bulkscore=0 suspectscore=0 phishscore=0 adultscore=0 impostorscore=0
- mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102110108
+In-Reply-To: <CAL_JsqJw+EjMoc92e-XMjn=0wat3TmcToHU1V2rW9UB9UhmDEA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:X03an0jzA7Ik2yin6U2Zx4JrFGvXamVp+aFMSxgk7gvcKjOnIG2
+ wRS+NMnI958UjkK1bAW4exbjNEvRWZ4ey6UZ/64Wd23lvW+3NvDnpHNqEqa3EAzsTjMSeCb
+ uDnDWaaxXEORuRz806oib9eZzBt5K/+/B3QtShlGtjSybccD7Yex6xVSQN8drwU+hYgwMdT
+ UNQdvFXyUb8a8euhz5KLQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iBvfJPWk7OE=:tQXOSq539WLmvFCUNCOBEG
+ W4jA2/b156mHHTcc63xYdiTc8DwuHKNNCPNatkoJNn+AmALQJ0VWiwHZKTWrgm2lcxJsMtRxo
+ wnZVhG59kLAMEwXRwSLzyD4AD3Wb9d2jQW5gyYVXos+6kb0UQTDYQsboEZhxo9CKlLD/ceQtV
+ Mi7uaSAvqgfTECa6MnBYgzbln8Xpp3rYHWQT6SGGgVKW2hN42JwUneuwrnyALk9Rzb53NNdtv
+ PhoarSX7K0oU5Vn5AkuhYFzVvWl5xufuI9IV28Rajfp1IG/sq4zutlTf4t8jWUzoHH1D3JQdJ
+ TixDQ5UEECULBXxxLM8BFIe5ZWUedHT8MiuHrWg0aW945siyMdOalTHlKHcUmBocrrC3M5F6z
+ V1wlARoAS3v3rUDA1rv+uEcw5xpeCZ2pDY3NQMEdxwtWHerWKVdE2G/eEj/QW
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 10, 2021 at 02:28:54PM -0800, Drew Fustini wrote:
-> Add "pinmux-select" to debugfs which will activate a function and group
-> when "<function-name group-name>" are written to the file. The write
-> operation pinmux_select() handles this by checking that the names map to
-> valid selectors and then calling ops->set_mux().
-> 
-> The existing "pinmux-functions" debugfs file lists the pin functions
-> registered for the pin controller. For example:
-> 
-> function: pinmux-uart0, groups = [ pinmux-uart0-pins ]
-> function: pinmux-mmc0, groups = [ pinmux-mmc0-pins ]
-> function: pinmux-mmc1, groups = [ pinmux-mmc1-pins ]
-> function: pinmux-i2c0, groups = [ pinmux-i2c0-pins ]
-> function: pinmux-i2c1, groups = [ pinmux-i2c1-pins ]
-> function: pinmux-spi1, groups = [ pinmux-spi1-pins ]
-> 
-> To activate function pinmux-i2c1 and group pinmux-i2c1-pins:
-> 
-> echo "pinmux-i2c1 pinmux-i2c1-pins" > pinmux-select
-> 
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->  drivers/pinctrl/pinmux.c | 107 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 107 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-> index c651b2db0925..23fa32f0a067 100644
-> --- a/drivers/pinctrl/pinmux.c
-> +++ b/drivers/pinctrl/pinmux.c
-> @@ -673,6 +673,111 @@ void pinmux_show_setting(struct seq_file *s,
->  DEFINE_SHOW_ATTRIBUTE(pinmux_functions);
->  DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
->  
-> +#define PINMUX_MAX_NAME 64
-> +static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
-> +				   size_t len, loff_t *ppos)
-> +{
-> +	struct seq_file *sfile = file->private_data;
-> +	struct pinctrl_dev *pctldev = sfile->private;
-> +	const struct pinmux_ops *pmxops = pctldev->desc->pmxops;
-> +	const char *const *groups;
-> +	char *buf, *fname, *gname;
-> +	unsigned int num_groups;
-> +	int fsel, gsel, ret;
-> +
-> +	if (len > (PINMUX_MAX_NAME * 2)) {
-> +		dev_err(pctldev->dev, "write too big for buffer");
-> +		return -EINVAL;
-> +	}
-> +
-> +	buf = kzalloc(PINMUX_MAX_NAME * 2, GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	fname = kzalloc(PINMUX_MAX_NAME, GFP_KERNEL);
-> +	if (!fname) {
-> +		ret = -ENOMEM;
-> +		goto free_buf;
-> +	}
-> +
-> +	gname = kzalloc(PINMUX_MAX_NAME, GFP_KERNEL);
-> +	if (!buf) {
-> +		ret = -ENOMEM;
-> +		goto free_fname;
-> +	}
-> +
-> +	ret = strncpy_from_user(buf, user_buf, PINMUX_MAX_NAME * 2);
-> +	if (ret < 0) {
-> +		dev_err(pctldev->dev, "failed to copy buffer from userspace");
-> +		goto free_gname;
-> +	}
-> +	buf[len-1] = '\0';
-> +
-> +	ret = sscanf(buf, "%s %s", fname, gname);
-> +	if (ret != 2) {
-> +		dev_err(pctldev->dev, "expected format: <function-name> <group-name>");
-> +		goto free_gname;
-> +	}
-> +
-> +	fsel = pinmux_func_name_to_selector(pctldev, fname);
-> +	if (fsel < 0) {
-> +		dev_err(pctldev->dev, "invalid function %s in map table\n", fname);
-> +		ret = -EINVAL;
-> +		goto free_gname;
-> +	}
-> +
-> +	ret = pmxops->get_function_groups(pctldev, fsel, &groups, &num_groups);
-> +	if (ret) {
-> +		dev_err(pctldev->dev, "no groups for function %d (%s)", fsel, fname);
-> +		goto free_gname;
-> +
-> +	}
-> +
-> +	ret = match_string(groups, num_groups, gname);
-> +	if (ret < 0) {
-> +		dev_err(pctldev->dev, "invalid group %s", gname);
-> +		goto free_gname;
-> +	}
-> +
-> +	ret = pinctrl_get_group_selector(pctldev, gname);
-> +	if (ret < 0) {
-> +		dev_err(pctldev->dev, "failed to get group selectorL %s", gname);
-> +		goto free_gname;
-> +	}
-> +	gsel = ret;
-> +
-> +	ret = pmxops->set_mux(pctldev, fsel, gsel);
-> +	if (ret) {
-> +		dev_err(pctldev->dev, "set_mux() failed: %d", ret);
-> +		goto free_gname;
-> +	}
-> +
-> +	return len;
-> +
-> +free_gname:
-> +	devm_kfree(pctldev->dev, gname);
-> +free_fname:
-> +	devm_kfree(pctldev->dev, fname);
-> +free_buf:
-> +	devm_kfree(pctldev->dev, buf);
+On 09.02.21 01:06, Rob Herring wrote:
 
-Ugh...  I honestly thought Smatch was supposed to print a warning when
-you used devm_kfree() on kzalloc()ed memory, but I guess the warning is
-only the other way around.
+Hi,
 
-Smatch does complain about it as a leak because it was expecting a
-regular free.
+>> +/ {
+>> +    apu2x {
+>> +        compatible = "virtual,dmi-board";
+>> +        dmi-sys-vendor = "PC engines";
+>> +        dmi-board-name =
+>> +          "APU2",
+>> +          "apu2",
+>> +          "PC engines apu2",
+>> +          "APU3",
+>> +          "apu3",
+>> +          "PC engines apu3",
+>> +          "APU4",
+>> +          "apu4",
+>> +          "PC engines apu4";
+> 
+> I think these DMI properties just need to be the compatible string(s).
+> We already have a way to do matching with DT and don't need a
+> secondary way. If you can
 
-drivers/pinctrl/pinmux.c:330 pinmux_func_name_to_selector() warn: potential NULL parameter dereference 'fname'
-drivers/pinctrl/pinmux.c:764 pinmux_select() warn: possible memory leak of 'gname'
-drivers/pinctrl/pinmux.c:764 pinmux_select() warn: sscanf doesn't return error codes
-drivers/pinctrl/pinmux.c:764 pinmux_select() warn: returning success when sscanf failed
+It's not easy fitting that into one string, because we've got lots of
+combinations that need to be matched. In this specific case, I haven't
+seen any board where the vendor name isn't an exact match of the given
+string (that's why it's only one entry), but in the past seen several
+boards where even this changes between bios versions. The board names,
+more varying.
 
-And what about the success path?  Shouldn't we free these on the success
-path as well?
+Something that's not reflected in this example yet: there're even more
+subtle differences between production series (eg. certain pins not
+wired, etc). Supporting such things would need adding more matching
+rules and possibly runtime DT manipulations.
 
-regards,
-dan carpenter
+>> +        unbind {
+>> +            acpi = "PNP0076:00", "PNP0B00:00";
+>> +            platform = "platform-framebuffer.0", "PNP0103:00";
+> 
+> This node really needs to go. It's clearly Linuxisms. It either has to
+> go in the kernel or userspace.
 
+Note that the whole thing here *is* a Linuxism. This kind of DTs is
+built into the kernel, not in firmware or anywhere else. This stuff is
+only for cases where firmware is not giving, or giving broken
+information. And it's for replacing hand-written C code by a machine
+readable description.
+
+I had to put that in, since in some cases firmware (-versions) already
+enumerates some devices, but does it in a wrong or incomplete way.
+So, these devices need to be removed first, before the correct ones
+can be initialized. (note that this patch, for now, is just an hacking
+example - some details are still broken).
+
+If anybody has a better idea how to do that, let me know.
+
+In general, I'd like to have everything for one board (family) in one
+declarative file.
+
+>> +        };
+>> +        devices {
+>> +            gpio1: gpio1 {
+>> +                compatible = "amd,fch-gpio";
+> 
+> This of course will need to be documented.
+
+Yes, but that's a different issue. It's still in RFC stage.
+The gpio-amd-fch changes are in this patch queue for a complete example,
+but probably will be upstreamed separately.
+
+>> +                gpio-controller;
+>> +                status = "okay";
+> 
+> nit: That's the default.
+
+Okay, dropping it.
+
+
+--mtx
+
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
