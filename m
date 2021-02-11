@@ -2,143 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A17A3187AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Feb 2021 11:05:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF4C731892D
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Feb 2021 12:15:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229577AbhBKKDk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Feb 2021 05:03:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229734AbhBKJ7i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Feb 2021 04:59:38 -0500
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD016C06178B;
-        Thu, 11 Feb 2021 01:58:57 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id e9so3054159plh.3;
-        Thu, 11 Feb 2021 01:58:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p8yLOwNK06k61JVsuPj/t4DRkDw7VF6DC3KbEb5PjTQ=;
-        b=Fi8jMmmXt16oxPYsGiHBscD2cBUO84ThSxG1Cxn9+lH4Xh6hWhuGgwmU+FRS8DfQvB
-         Ok3wKu9nHdl6QKXkKk3q+npUPmqpDTFUeGjUJT4HqBDHRVPh6i7dRNEWy2QDOkvjQi0H
-         /Eovxn7ZbMJzkQjuHoNGstiABQkF65p9CRRTj5GVWKPDF+1k4eCazd66hqOZFX7Iwosw
-         oPZ3VJG8RVS5YHqOokaOinMk1JqYx87vtqrWy+PVBGm/+q2RsPixbRKwZ1lRQ+TGZqRA
-         OA0HuZZWgIZclz0xEi4v9ksC/40ipOQ3andDmrOYnoJQLxFwZx5pb5h6d8GZWUCQIrY2
-         l8dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p8yLOwNK06k61JVsuPj/t4DRkDw7VF6DC3KbEb5PjTQ=;
-        b=uFezRO1iaZSsC91vZm8SFbgnKcKyUNHBRGKcJs/InpA6JLREC5uwleJsH4vWsAUMTd
-         +4pNARlNXO/8ysUZJc1qwO5XQ5WD/XH49PBGEDe1x0vyIntPl72656M3c6azqfOtORYT
-         yhedljQrz4l1xsAmzaiB9/VCYXNM0pOqS2l9cCpuII7gvlY9eNmOfEd2gJHq4npQyiKB
-         oAs1EzQ517M+vyohB+fXs6WOWBOe4mKyVCcIkaq2TJeI08cpaUXvmLpegHSlvGMMMCfl
-         jZScvJVpPA6sSxzToSA0nWxQlEoO8LD5je/FF2lYTyfjOD0PmgvjmOWBFdgwkJn9DZKJ
-         lz1w==
-X-Gm-Message-State: AOAM533Gn7YPbHVat1x5R/kwKCtW5eKxpEo8r1bkhGZG0TKYj0rLZs42
-        mVZs1pR1BM8OZu/h5embD7kSAZJInPokMotkYJ4oXRGdWCl6cA==
-X-Google-Smtp-Source: ABdhPJyf4xwKLSfFmGwFi/Ojw4dL9aSbjV3MlCCc0chfBi30eCcdMRRoFhrUzLtBCF4gis5whBTqXHqFe+rRWeFkT6I=
-X-Received: by 2002:a17:902:be14:b029:e1:bec9:f4a7 with SMTP id
- r20-20020a170902be14b02900e1bec9f4a7mr7221275pls.21.1613037536770; Thu, 11
- Feb 2021 01:58:56 -0800 (PST)
-MIME-Version: 1.0
-References: <1612774577-55943-1-git-send-email-luojiaxing@huawei.com>
- <2b8001bb-0bcd-3fea-e15c-2722e7243209@huawei.com> <CAHp75VcpeYpsW6B85F0u=B+GToNh=1fYdRSMeQqE0vOtOdSi8A@mail.gmail.com>
- <1a5dfcf2-11a2-f549-782d-447d58e21305@huawei.com> <CAHp75Vd5UV3E79sdq8uQ4pgjFORdJknpm-g7No3tomnKhinMnw@mail.gmail.com>
- <c2458ac9-669b-bd46-df98-7d86d38459b1@huawei.com> <CAHp75VdrskuNkvFr4MPbbg8c8=VSug0GT+vs=cMRMOqLr+-f5A@mail.gmail.com>
- <947bcef0d56a4d0c82729d6899394f4a@hisilicon.com> <YCP0JeEUcoPp9B/H@smile.fi.intel.com>
- <7d9c4fa854924bfc890e98da2d88ea36@hisilicon.com>
-In-Reply-To: <7d9c4fa854924bfc890e98da2d88ea36@hisilicon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 11 Feb 2021 11:58:40 +0200
-Message-ID: <CAHp75VfuRT8kFxrCMZfmufVPewjmuDS2adrkQwWmRA-euaMGpw@mail.gmail.com>
-Subject: Re: [Linuxarm] Re: [PATCH for next v1 0/2] gpio: few clean up patches
- to replace spin_lock_irqsave with spin_lock
-To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-Cc:     luojiaxing <luojiaxing@huawei.com>,
+        id S230452AbhBKLNO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Feb 2021 06:13:14 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:34735 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230177AbhBKLLH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Feb 2021 06:11:07 -0500
+Received: from [192.168.1.155] ([95.114.27.115]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MD9jV-1l17QC0RBB-0099Pb; Thu, 11 Feb 2021 12:08:13 +0100
+Subject: Re: RFC: oftree based setup of composite board devices
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree <devicetree@vger.kernel.org>
+References: <20210208222203.22335-1-info@metux.net>
+ <CAHp75VdNTenoE0AOmGfndqQ7SrxbuK+SvfFYn3W2GmqhkCSByQ@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <1b92deea-cf6d-7eca-197f-b12456279890@metux.net>
+Date:   Thu, 11 Feb 2021 12:08:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VdNTenoE0AOmGfndqQ7SrxbuK+SvfFYn3W2GmqhkCSByQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:b9A9dq5V8fihDmjvZhBFHOoi4E8lefbHXnatkfNzvB5AT4g9od6
+ t+O8YLrEAibQbKkHbIWQXLSB+cyswM9brfHoEbIa8gA9ix9PC8xOGXoGjbTLuHP9K6NkXuH
+ JduC80jExRkTgF3GsUf6CfcFgBdgbXdvZTNw8Iefs0ij6me4xTKPjJRTgoPMwyKE8/RzJZT
+ tOfttwIXMZOZm44b0lpMw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1F6Ka2HvoSE=:2INNsaW/QpqgA4rGTJpZIB
+ FlgH6N6nKrfTv/kbIpcUvc5piVs0tXds527kDpVoVMFU9xW5m2C26YInv5iW8H29JGkafAo80
+ 0Q2892XGIBMlJMxOIywuxKeheMJMIlCtm8qXbWbG1s1kZWET0q3uDO1DFBNmAylDV3pLHYh1b
+ j3a7MPkKOBYLVDTdQKb7kLDVccdAcCiCEygYylNhstHff5vS/MyKOr9hY8T5qfc05cUJAA7So
+ igglI7EVDC8s1wXjKAINZpOoQEnmN3M7TlVUFdFtArR/GR9IxmD/Dg+7qPzQqfxaWU1nXZRWE
+ uybnlHnFPxCbnKVNRvI1tETN3SMfqGOpIZyGJa9xbVsyt5yfacD2r35sVGP87HHyIsjcDWDot
+ +9LOMm1PeFwt60uQ2vO9MkPJTyl/WvBHkWrLgox1hSWDeMDkqWnj9ZdQZfhD3iLCA28ZYQij6
+ qOiFrb0bCVOba7l1DSCOTr7TcznwaK/KJU1eAKdIno8lLnf8gRbx
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 10, 2021 at 10:42 PM Song Bao Hua (Barry Song)
-<song.bao.hua@hisilicon.com> wrote:
-> > -----Original Message-----
-> > From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
-> > Sent: Thursday, February 11, 2021 3:57 AM
-> > On Wed, Feb 10, 2021 at 11:50:45AM +0000, Song Bao Hua (Barry Song) wrote:
-> > > > -----Original Message-----
-> > > > From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
-> > > > Sent: Wednesday, February 10, 2021 11:51 PM
-> > > > On Wed, Feb 10, 2021 at 5:43 AM luojiaxing <luojiaxing@huawei.com> wrote:
-> > > > > On 2021/2/9 17:42, Andy Shevchenko wrote:
-> >
-> > ...
-> >
-> > > > > Between IRQ handler A and IRQ handle A, it's no need for a SLIS.
-> > > >
-> > > > Right, but it's not the case in the patches you provided.
-> > >
-> > > The code still holds spin_lock. So if two cpus call same IRQ handler,
-> > > spin_lock makes them spin; and if interrupts are threaded, spin_lock
-> > > makes two threads run the same handler one by one.
-> >
-> > If you run on an SMP system and it happens that spin_lock_irqsave() just
-> > immediately after spin_unlock(), you will get into the troubles. Am I mistaken?
->
-> Hi Andy,
-> Thanks for your reply.
->
-> But I don't agree spin_lock_irqsave() just immediately after spin_unlock()
-> could a problem on SMP.
-> When the 1st cpu releases spinlock by spin_unlock, it has completed its section
-> of accessing the critical data, then 2nd cpu gets the spin_lock. These two CPUs
-> won't have overlap on accessing the same data.
->
-> >
-> > I think this entire activity is a carefully crafted mine field for the future
-> > syzcaller and fuzzers alike. I don't believe there are no side effects in a
-> > long
-> > term on all possible systems and configurations (including forced threaded IRQ
-> > handlers).
->
-> Also I don't understand why forced threaded IRQ could be a problem. Since IRQ has
-> been a thread, this actually makes the situation much simpler than non-threaded
-> IRQ. Since all threads including those IRQ threads want to hold spin_lock,
-> they won't access the same critical data at the same time either.
->
-> >
-> > I would love to see a better explanation in the commit message of such patches
-> > which makes it clear that there are *no* side effects.
-> >
->
-> People had the same questions before, But I guess the discussion in this commit
-> has led to a better commit log:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4eb7d0cd59
->
-> > For time being, NAK to the all patches of this kind.
->
-> Fair enough, if you expect better explanation, I agree the commit log is too
-> short.
+On 10.02.21 11:30, Andy Shevchenko wrote:
 
-Yes, my main concern that the commit message style as "I feel it's
-wrong" is inappropriate to this kind of patch. The one you pointed out
-above is better, you may give it even more thrust by explaining why it
-was in the first place and what happened between the driver gained
-this type of spinlock and your patch.
+Hi,
 
+>> Use cases are boards with non-oftree firmware (ACPI, etc) where certain
+>> platform devices can't be directly enumerated via firmware. Traditionally
+>> we had to write board specific drivers that check for board identification
+>> (DMI strings, etc), then initialize the actual devices and their links
+>> (eg. gpio<->leds/buttons, ...). Often this can be expressed just by DT.
+> 
+> In ACPI we support DT compatible strings, and we support overlays for
+> a long time. Would it work for you?
+
+please tell me more, how ACPI and DT can already work together ?
+
+You already know my apu board driver - that's my first example usecase.
+
+There're few things I don't know how to solve w/ overlays:
+
+* match rules shall be inside the DTS
+* future match rules shall also check for bios versions etc
+* adding new boards shall be possible by just adding another DTS to
+   the tree (not a whole module)
+* supporting several board variants (w/ small differences) by one DTS
+* sometimes existing devices (eg. enumerated by acpi) need to be kicked
+   out (buggy firmware, ...)
+* can't rely on any special userland tweaks
+
+>> The approach can be easily be extended to other kinds of composite devices,
+>> eg. PCI cards or USB dongles.
+> 
+> What do you mean? PCI and USB are self-enumerated. What's wrong with them?
+
+In general yes, but of course you need drivers for them. Sometimes those
+devices are composites of other devices, wired up in some special way.
+Traditionally, we'd need to write a special driver that just don't do
+much more than instantiating other drivers.
+
+Those things could be expressed via DTS, so we don't need to write
+individual drivers anymore.
+
+>> Yet some drawbacks of the current implementation:
+>>
+>>   * individual FDT's can't be modularized yet (IMHO, we don't have DMI-based
+>>     modprobing anyways)
+> 
+> What?! https://lwn.net/Articles/233385/
+> `git grep -n 'MODULE_DEVICE_TABLE(dmi'`
+
+Shame on me, I really must have missed that all the time, thanks for the
+hint.
+
+But that has some drawbacks in my case:
+
+* need to split the information into several places (instead of having
+   all in one DTS)
+* need to have one separate module board, or merge the dmi tables.
+
+My goal is having everything that describes a board into one DTS 
+(source) file.
+
+
+--mtx
 
 -- 
-With Best Regards,
-Andy Shevchenko
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
