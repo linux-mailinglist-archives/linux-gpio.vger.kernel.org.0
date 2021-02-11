@@ -2,76 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2695831742C
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Feb 2021 00:16:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9584A318590
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Feb 2021 08:13:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234132AbhBJXQU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Feb 2021 18:16:20 -0500
-Received: from smtprelay0066.hostedemail.com ([216.40.44.66]:41828 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S233574AbhBJXNi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 10 Feb 2021 18:13:38 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 2F19018029DA9;
-        Wed, 10 Feb 2021 23:12:43 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:973:988:989:1260:1261:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1730:1747:1777:1792:2393:2559:2562:2693:2828:3138:3139:3140:3141:3142:3352:3622:3653:3865:3867:3871:3872:4321:4362:5007:7652:7903:10004:10400:10848:11026:11232:11658:11914:12049:12296:12297:12740:12760:12895:13069:13311:13357:13439:13548:14659:14721:21080:21611:21627:30054:30060:30070:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: cork97_4c1518427613
-X-Filterd-Recvd-Size: 2099
-Received: from [192.168.1.159] (unknown [47.151.137.21])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Feb 2021 23:12:41 +0000 (UTC)
-Message-ID: <0bd0286b12832bdbe815325f581aec3a8ae3ca2d.camel@perches.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: use to octal permissions for debugfs
- files
-From:   Joe Perches <joe@perches.com>
+        id S229694AbhBKHNY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Feb 2021 02:13:24 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:51000 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229517AbhBKHNW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Feb 2021 02:13:22 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11B78kFm120041;
+        Thu, 11 Feb 2021 07:12:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=pSbVfKgu7eIJjgTqh9AyZUoJkFb11jRAkYyjkWpaPf4=;
+ b=B98kCmijzkCGspzl9qXlkBLuXQWXCxkPB9lKcbYHMEMb2YPKhKpD7nHcbpj5VRzHbvbX
+ UzydUYHWtBeuI12D0lv1FPU0vi9/6UzBG7L+mjTN2nCcZYz13gjd4UQu7RCkkXQ/3SR9
+ XGiTwnjlo8CpJAi600/8j9om9VLIlcZFqmdYVUmPbrjWmswcsCqy/KBYlD8B6dlcBbOL
+ J34TBFj0l4EBEfV96Vbogn9yAJKWyNsi5auYaT7peRkji9WgQm/egkZZei2PxUD4uW1U
+ 29OysGP36FTgzcpvfo7zAtK0na1GHg4zXehCBlmOfs2itIVeZrmKOuAIj/Fc55TkRy4V XA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 36mv9drh2g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Feb 2021 07:12:19 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11B7A1Je064036;
+        Thu, 11 Feb 2021 07:12:17 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 36j4pr5g7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Feb 2021 07:12:16 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 11B7C5WS011045;
+        Thu, 11 Feb 2021 07:12:06 GMT
+Received: from kadam (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Feb 2021 23:12:05 -0800
+Date:   Thu, 11 Feb 2021 10:11:53 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
 To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Tony Lindgren <tony@atomide.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
         Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Date:   Wed, 10 Feb 2021 15:12:39 -0800
-In-Reply-To: <20210210212115.GA216435@x1>
-References: <20210210074946.155417-1-drew@beagleboard.org>
-         <20210210074946.155417-2-drew@beagleboard.org>
-         <87437daafdd86fa5c765ff9b17b6c7b097f0c317.camel@perches.com>
-         <CAHp75VeJT0dPATD-Ux+JCEYxNTigbOn_6D_F1VQkfL=vuiCBPQ@mail.gmail.com>
-         <ef9bc69ea67b70557265f117ce2a09f8019bb17d.camel@perches.com>
-         <20210210212115.GA216435@x1>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v4 2/2] pinctrl: pinmux: Add pinmux-select debugfs file
+Message-ID: <20210211071153.GJ20820@kadam>
+References: <20210210222851.232374-1-drew@beagleboard.org>
+ <20210210222851.232374-3-drew@beagleboard.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210210222851.232374-3-drew@beagleboard.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-IMR: 1
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9891 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102110063
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9891 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 suspectscore=0 phishscore=0 adultscore=0 impostorscore=0
+ mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2102110063
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 2021-02-10 at 13:21 -0800, Drew Fustini wrote:
-> I will change from the incorrect 0400 to 0444.
+On Wed, Feb 10, 2021 at 02:28:54PM -0800, Drew Fustini wrote:
+> +	ret = strncpy_from_user(buf, user_buf, PINMUX_MAX_NAME * 2);
+> +	if (ret < 0) {
+> +		dev_err(pctldev->dev, "failed to copy buffer from userspace");
+> +		goto free_gname;
+> +	}
+> +	buf[len-1] = '\0';
+> +
+> +	ret = sscanf(buf, "%s %s", fname, gname);
+> +	if (ret != 2) {
+> +		dev_err(pctldev->dev, "expected format: <function-name> <group-name>");
+> +		goto free_gname;
 
-Thanks.
+We need a "ret = -EINVAL;" before the goto.  sscanf doesn't return error
+codes.  Normally we would write it like so:
 
-> As for S_IFREG, it does seem like leaving off S_IFREG is the most common
-> case when using octal permissions with debugfs_create_*():
-> 
-> $ git grep debugfs_create drivers/ |grep 0444 |grep -v S_IFREG | wc -l
-> 302
-> $ git grep debugfs_create drivers/ |grep 0444 |grep S_IFREG | wc -l
-> 9
+	if (sscanf(buf, "%s %s", fname, gname) != 2) {
+		dev_err(pctldev->dev, "expected format: <function-name> <group-name>");
+		ret = -EINVAL;
+		goto free_gname;
+	}
 
-It's ~2:1 when using S_IRUGO
+I'm going to write a Smatch check for this today.
 
-$ git grep debugfs_create_file drivers/ | grep S_IRUGO | grep -v S_IFREG | wc -l
-109
-$ git grep debugfs_create_file drivers/ | grep S_IRUGO | grep S_IFREG | wc -l
-48
+> +	}
+> +
+> +	fsel = pinmux_func_name_to_selector(pctldev, fname);
+> +	if (fsel < 0) {
+> +		dev_err(pctldev->dev, "invalid function %s in map table\n", fname);
+> +		ret = -EINVAL;
 
+ret = fsel;
 
+> +		goto free_gname;
+> +	}
+> +
+
+regards,
+dan carpenter
