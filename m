@@ -2,145 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F5F5318BE1
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Feb 2021 14:22:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4357F318D3B
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Feb 2021 15:24:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231243AbhBKNVB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Feb 2021 08:21:01 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:37999 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231235AbhBKNSn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Feb 2021 08:18:43 -0500
-Received: from [192.168.1.155] ([95.114.27.115]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M8yPu-1lE3Av2zoM-0063xQ; Thu, 11 Feb 2021 14:15:51 +0100
-Subject: Re: [RFC PATCH 12/12] platform/x86/of: add support for PC Engines APU
- v2/3/4 boards
-To:     Rob Herring <robh+dt@kernel.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org
-References: <20210208222203.22335-1-info@metux.net>
- <20210208222203.22335-13-info@metux.net>
- <CAL_JsqJw+EjMoc92e-XMjn=0wat3TmcToHU1V2rW9UB9UhmDEA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <1a96e003-e264-9f9b-4239-4b3b002c0198@metux.net>
-Date:   Thu, 11 Feb 2021 14:15:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S232047AbhBKOVn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Feb 2021 09:21:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232138AbhBKOTe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Feb 2021 09:19:34 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD2EC061574
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Feb 2021 06:18:52 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id g6so4302524wrs.11
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Feb 2021 06:18:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4qlsG/vgFwt6W3xkjjlbgx54qKfPJTS+Ij9Sun9FcVs=;
+        b=Xhez2VOzf2UdNPbuCWLRQEl2hhslKG12pJqxv8aIq9KoRKZmoHkeSdKERv69m06izW
+         2gOJ9+Vkzu8+Dzp68kmqcH37PaDSnYewwjZt47GufIzK7zsvHKbsfg3xIxUnQs76N7Bb
+         0na0UlLJhqcfAK1ptfKdCDgPNh5n+QUZxULQmwtNK71bFEBuyJByBKioSDNPbFjsJsEC
+         g5VVj/Lme7FpnUDAziLrEMkwZalVzjBRyW3iqDgUJlU0+a6Sr/zo+SIwiCFI+Q7aKtCA
+         x9YIqQ/wd9f65W6XARNiHq4F0YGNBbRInVepxvH4daNBXuEyXHGP0rG6FIhj7geNd4a2
+         NgsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4qlsG/vgFwt6W3xkjjlbgx54qKfPJTS+Ij9Sun9FcVs=;
+        b=nEQEJMs/OM/Gb0QBg88V9Xj0MrHqzN/yzyerO9bYr0nMezPGIPKlpeHJqDOZSlVts0
+         Jsbsi/cBQnvkdOomOf1dbWsPUhFacWlIktYQJZitTS/Pm6oWgX0Bmtc3v1iOrxiGe1lg
+         PVjYo2i2Y2Md+cSvf+EwAx3d9TjZUd6j/jLD2LqCC9yRnw0sIkDtlUktRllNgmFvDahE
+         0TxG/HGUr+rdTJExq+5Sj6U9pOTlCNNhC4jguuC4YZ17QOjC0TyAcav16bjVsYcoFU0c
+         OxgRC8qoEAm4ybMuIVNJPa1kBRjmx4FKyuI3mMW3LjI2bkmn6TKWtNPQjwV9KQS0w10A
+         jeUQ==
+X-Gm-Message-State: AOAM532ea6dQ+Xq1K8Orr1gJP+UF7TY+Q1ydJmp6Qyaayxq5G95onUqb
+        909p4G7sMhuVjXvKBIW5stWs1A==
+X-Google-Smtp-Source: ABdhPJw/KrCPg+OG007V3Udv45jp1L6+S3wsre2Kua+nluc+0WEdDxFz6eDB3N8qSAESXM6AQAeNvg==
+X-Received: by 2002:a5d:50d2:: with SMTP id f18mr6206045wrt.338.1613053131489;
+        Thu, 11 Feb 2021 06:18:51 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id f8sm4893997wrp.65.2021.02.11.06.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Feb 2021 06:18:51 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.11
+Date:   Thu, 11 Feb 2021 15:18:43 +0100
+Message-Id: <20210211141843.32699-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJw+EjMoc92e-XMjn=0wat3TmcToHU1V2rW9UB9UhmDEA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:X03an0jzA7Ik2yin6U2Zx4JrFGvXamVp+aFMSxgk7gvcKjOnIG2
- wRS+NMnI958UjkK1bAW4exbjNEvRWZ4ey6UZ/64Wd23lvW+3NvDnpHNqEqa3EAzsTjMSeCb
- uDnDWaaxXEORuRz806oib9eZzBt5K/+/B3QtShlGtjSybccD7Yex6xVSQN8drwU+hYgwMdT
- UNQdvFXyUb8a8euhz5KLQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iBvfJPWk7OE=:tQXOSq539WLmvFCUNCOBEG
- W4jA2/b156mHHTcc63xYdiTc8DwuHKNNCPNatkoJNn+AmALQJ0VWiwHZKTWrgm2lcxJsMtRxo
- wnZVhG59kLAMEwXRwSLzyD4AD3Wb9d2jQW5gyYVXos+6kb0UQTDYQsboEZhxo9CKlLD/ceQtV
- Mi7uaSAvqgfTECa6MnBYgzbln8Xpp3rYHWQT6SGGgVKW2hN42JwUneuwrnyALk9Rzb53NNdtv
- PhoarSX7K0oU5Vn5AkuhYFzVvWl5xufuI9IV28Rajfp1IG/sq4zutlTf4t8jWUzoHH1D3JQdJ
- TixDQ5UEECULBXxxLM8BFIe5ZWUedHT8MiuHrWg0aW945siyMdOalTHlKHcUmBocrrC3M5F6z
- V1wlARoAS3v3rUDA1rv+uEcw5xpeCZ2pDY3NQMEdxwtWHerWKVdE2G/eEj/QW
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09.02.21 01:06, Rob Herring wrote:
+Linus,
 
-Hi,
+This is hopefully the last batch of fixes for this release cycle. We
+have a minor fix for a Kconfig regression as well as fixes for older
+bugs in gpio-ep93xx.
 
->> +/ {
->> +    apu2x {
->> +        compatible = "virtual,dmi-board";
->> +        dmi-sys-vendor = "PC engines";
->> +        dmi-board-name =
->> +          "APU2",
->> +          "apu2",
->> +          "PC engines apu2",
->> +          "APU3",
->> +          "apu3",
->> +          "PC engines apu3",
->> +          "APU4",
->> +          "apu4",
->> +          "PC engines apu4";
-> 
-> I think these DMI properties just need to be the compatible string(s).
-> We already have a way to do matching with DT and don't need a
-> secondary way. If you can
+Please pull,
+Bartosz
 
-It's not easy fitting that into one string, because we've got lots of
-combinations that need to be matched. In this specific case, I haven't
-seen any board where the vendor name isn't an exact match of the given
-string (that's why it's only one entry), but in the past seen several
-boards where even this changes between bios versions. The board names,
-more varying.
+The following changes since commit 92bf22614b21a2706f4993b278017e437f7785b3:
 
-Something that's not reflected in this example yet: there're even more
-subtle differences between production series (eg. certain pins not
-wired, etc). Supporting such things would need adding more matching
-rules and possibly runtime DT manipulations.
+  Linux 5.11-rc7 (2021-02-07 13:57:38 -0800)
 
->> +        unbind {
->> +            acpi = "PNP0076:00", "PNP0B00:00";
->> +            platform = "platform-framebuffer.0", "PNP0103:00";
-> 
-> This node really needs to go. It's clearly Linuxisms. It either has to
-> go in the kernel or userspace.
+are available in the Git repository at:
 
-Note that the whole thing here *is* a Linuxism. This kind of DTs is
-built into the kernel, not in firmware or anywhere else. This stuff is
-only for cases where firmware is not giving, or giving broken
-information. And it's for replacing hand-written C code by a machine
-readable description.
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.11
 
-I had to put that in, since in some cases firmware (-versions) already
-enumerates some devices, but does it in a wrong or incomplete way.
-So, these devices need to be removed first, before the correct ones
-can be initialized. (note that this patch, for now, is just an hacking
-example - some details are still broken).
+for you to fetch changes up to 28dc10eb77a2db7681b08e3b109764bbe469e347:
 
-If anybody has a better idea how to do that, let me know.
+  gpio: ep93xx: Fix single irqchip with multi gpiochips (2021-02-10 14:47:27 +0100)
 
-In general, I'd like to have everything for one board (family) in one
-declarative file.
+----------------------------------------------------------------
+gpio fixes for v5.11
 
->> +        };
->> +        devices {
->> +            gpio1: gpio1 {
->> +                compatible = "amd,fch-gpio";
-> 
-> This of course will need to be documented.
+- don't build gpio-mxs unconditionally with COMPILE_TEST enabled
+- fix two problems with interrupt handling in gpio-ep93xx
 
-Yes, but that's a different issue. It's still in RFC stage.
-The gpio-amd-fch changes are in this patch queue for a complete example,
-but probably will be upstreamed separately.
+----------------------------------------------------------------
+Geert Uytterhoeven (1):
+      gpio: mxs: GPIO_MXS should not default to y unconditionally
 
->> +                gpio-controller;
->> +                status = "okay";
-> 
-> nit: That's the default.
+Nikita Shubin (2):
+      gpio: ep93xx: fix BUG_ON port F usage
+      gpio: ep93xx: Fix single irqchip with multi gpiochips
 
-Okay, dropping it.
-
-
---mtx
-
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+ drivers/gpio/Kconfig       |   3 +-
+ drivers/gpio/gpio-ep93xx.c | 216 +++++++++++++++++++++++++--------------------
+ 2 files changed, 120 insertions(+), 99 deletions(-)
