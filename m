@@ -2,124 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E6C7319DC1
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 12:59:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C20B319DEB
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 13:12:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbhBLL7L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Feb 2021 06:59:11 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:49311 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230510AbhBLL5p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 06:57:45 -0500
-Received: from [192.168.1.155] ([77.9.136.38]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MtfRp-1m2DDQ1vWp-00v86A; Fri, 12 Feb 2021 12:54:51 +0100
-Subject: Re: [RFC PATCH 11/12] platform/x86: skeleton for oftree based board
- device initialization
+        id S230260AbhBLMJV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Feb 2021 07:09:21 -0500
+Received: from mail-dm6nam12on2046.outbound.protection.outlook.com ([40.107.243.46]:49120
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229650AbhBLMJU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 12 Feb 2021 07:09:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NRcdOnIGKWqkDtALKS9PvNVKYQmNCNO1a1dIO5U5q/N+WwRYJaOjfrGrT0KaFfDqOHQBD9GsYzB4c4ZG4wncxHgc08RhFs3NEiVEz2GrlyTRqPgx2/RFfVxqFcTuiNeGxT+isOZxsVocvRuNuGQ0zpZWTYpWtjl0IU3qoeXJxRA8j20/W+FC7z7ZO6hetxvDtGqNRmoO3z/HmaWBMjjtQ30WEbOkK138Eg8yX6drNuhUhIAd5lXKgG3+ZhSZIQ1jLufN2oWaqRdmt9WbK/x0N244xgbL5ULcEOcME7NSyG1UziPbbbyWHd87R9H8l0NiMZAZcgPI86J3T7reqZipdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ETtCIIgTT0lD7mkStZLR4kBDZP6Lp5NBM4hZYdDaPic=;
+ b=LETCF7bAZ2oZvgJQ0j6FzRzkl7sqnfAuJeLBpHxZIeEGmPYifa74qSsmeLFUSI9JvDTe8SInTIFxl6QXp76nXF+axcO1pEs5HdK4XBdl7iojcQKiHUP8ftX1YqnbXaJGBVWp/hwl0dzR5ylvBY+Ze8kqjgaHTor4PXT/mUTS5FEcTuxD7XzSxVVmmZYdbkslBGl45MMJ5qYcze2hLUICEF+rrxynyN//0AJsg3feZ//R72h9uZdOCwMg8FIlqv0nCxo3rdRmkjhgU6G3+f9v4d6/Yj1Vh/maQqLpaObaS0cHpdQ6RcGpeOcw/uVuRCt+5rQViL2hCKQJI8kspFaPjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ETtCIIgTT0lD7mkStZLR4kBDZP6Lp5NBM4hZYdDaPic=;
+ b=Go3hAnRSrCIvFIzhwn6gmbY/RQWYel8z1ka7JLJmau9zgZ0dgA9RVgJoN5WPt4E5SoxTJr0/IqFc6MGBK5cj7oIJoX7O90lARXms4GOC2vXFbZ7frPOlm47qtul10ZXkEMYCY1qw7ryw4vVDMo/coBA1xQ8uTt0rllxFauUxgNY=
+Received: from MN2PR01CA0040.prod.exchangelabs.com (2603:10b6:208:23f::9) by
+ SN6PR02MB4416.namprd02.prod.outlook.com (2603:10b6:805:a4::28) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3846.26; Fri, 12 Feb 2021 12:08:27 +0000
+Received: from BL2NAM02FT056.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:23f:cafe::16) by MN2PR01CA0040.outlook.office365.com
+ (2603:10b6:208:23f::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.25 via Frontend
+ Transport; Fri, 12 Feb 2021 12:08:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ BL2NAM02FT056.mail.protection.outlook.com (10.152.77.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3846.25 via Frontend Transport; Fri, 12 Feb 2021 12:08:26 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 12 Feb 2021 04:08:11 -0800
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.1913.5 via Frontend Transport; Fri, 12 Feb 2021 04:08:11 -0800
+Envelope-to: git@xilinx.com,
+ michal.simek@xilinx.com,
+ saikrishna12468@gmail.com,
+ robh+dt@kernel.org,
+ linus.walleij@linaro.org,
+ gregkh@linuxfoundation.org,
+ linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Received: from [172.23.64.106] (port=53718 helo=xhdvnc125.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <lakshmi.sai.krishna.potthuri@xilinx.com>)
+        id 1lAXF4-000326-3l; Fri, 12 Feb 2021 04:08:10 -0800
+Received: by xhdvnc125.xilinx.com (Postfix, from userid 14964)
+        id 3A80B1211F7; Fri, 12 Feb 2021 17:38:09 +0530 (IST)
+From:   Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
-References: <20210208222203.22335-1-info@metux.net>
- <20210208222203.22335-12-info@metux.net>
- <CACRpkdYbOX_RDqwxaiugtYB4vSpSKChvKsPjcB_vv3Q74QeG2Q@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <c5ed2b27-21a2-5a07-8dd9-e080f9a6cd98@metux.net>
-Date:   Fri, 12 Feb 2021 12:54:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        Michal Simek <michal.simek@xilinx.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <git@xilinx.com>,
+        <saikrishna12468@gmail.com>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Subject: [PATCH v3 0/3] Add ZynqMP pinctrl driver
+Date:   Fri, 12 Feb 2021 17:37:20 +0530
+Message-ID: <1613131643-60062-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+X-Mailer: git-send-email 2.1.1
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYbOX_RDqwxaiugtYB4vSpSKChvKsPjcB_vv3Q74QeG2Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Npo/PU7UdIpTpagqXDvQYHTvyeYgYpL3AhZrbNJI23XzTyfeuFE
- THes8swi8Le3F2P/ubGpPoYak7vaedItBxpsgGCM0TeLONNoEft33fPoSTjC5S3Zcq3S5c/
- YLZVZ48IvmJV02Z4TIQNduQuz6fm+S8pRAqf22GzYLstAbXK6cap/ZWVZTrZhBSvBSa8MDt
- TciwW/8TStMGki1KwecmA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WDiPXQt54Es=:9IYQdYBamq+Xb6JVydt0yX
- ngDglnl/G7B9zcWXfFAYw3vIA+SYhpAr2lxBW7g5cG5tQtTd3mc8u3HXqIrk0iUvPal14pbfB
- h9eMjHvayGDcI9KYyoDTK6S2rprl0pV3qFdh9mfIaregLKrA0+RkxP/IXezCXOB3EXp0Hp28f
- RfXg5/bDBpcbQL/V9U6F2q24m44Icp76OfMcbuAlny2mN/QqVIjgLQ1cXBpOtlYbG/1U0vKEG
- mqTm+rEE0/61L7v0aZM+TsiBw0XrFcqs3ygd8CB+ZIpoi9Y7jnzsWWthpqc5abnrnAa6pJclz
- oEWC0b1dYVOzcFv/jyWL4F338dIL3WZmUNLaKq8+k1omHiWVK9DqW0VsrWBj8YC6dom4kphZT
- QKJpbqxlbi8LQlkgvXKiZvYukbTH3R04OhMt/ostar8OWMbL7jbMdc0M7FE2A
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6b05c541-3d4d-4892-64e2-08d8cf4ee765
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4416:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB4416A514179131D2EF596740BD8B9@SN6PR02MB4416.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:949;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cA9JiqpKzIBCR63F8dvfTKCliGx6E4k6pZpB7OIWbjZUbS7oNxcrDu+4gc4bm+FjfOTNsRCl0PBl+S4eunNbtZ9PRtgT8sfwB9puw9m4ppO1prMXbC9jCQHLEk3LGh6xJ5qQjnbWdgv5WHk9QU9j1Rnyr+jbpOoACLckhGLceOdvyELI433Es360/9yuHYaI0QguIC2joYQ+bAfNcNBP3Q7yRwIGSUH2v2M1s+YmwZ9DfQhipLaxQ6J0R0bri2XjGZwUf0weeyaNRLKFVnJ1Rbvfc5Gwnj4sDYKMyGKX341Z3jW1ci51DcbMeUckMqSo5F4jGzSDDxjjZleH77462Sp3Rh6my4PGse+XpLP336DdYysseoFcKOIeW8/RFzEuCr7SNO2Oda3NsKgwEcFQc0cRTNx2PV9q95ZWh5aj9WKcTeRc8D2d/De96RzlkPnpt8xidjafB/QjnHoj5muLRlPe97gEGpeh23Vy+gV8fZ/lp8jWeKEYmmWIxeBhfkqDg/BzAEvVxIWnXsRQy37z8Z0dnDeKELz23hUKsRuAeIb1W/sA4NdTYInCCq6I7BbqMxUNIqn49gNhvDYlQVr6eih4C3m3AYG8eQEtlEo/bKJlIOklhG6Zxf2LnRF1jLOliXuLgVleqnLpVVlDInQE0ml99yLoq69rBA4UUoZGgEHkptRfBdOyRltZaQaHR0RK
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(396003)(39860400002)(136003)(346002)(376002)(36840700001)(46966006)(5660300002)(70586007)(36906005)(316002)(70206006)(7636003)(6266002)(2906002)(47076005)(4326008)(36860700001)(107886003)(54906003)(42186006)(110136005)(83380400001)(82740400003)(426003)(336012)(478600001)(6666004)(82310400003)(2616005)(26005)(356005)(8676002)(36756003)(8936002)(186003)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2021 12:08:26.8096
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b05c541-3d4d-4892-64e2-08d8cf4ee765
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT056.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4416
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12.02.21 10:58, Linus Walleij wrote:
+Add support for Xilinx ZynqMP pinctrl driver and also update the
+Xilinx firmware driver to support pinctrl functionality.
+This driver queries the pin information from the firmware and
+allow configuring the pins as per the request.
 
-Hi,
+changes in v3:
+- Fixed binding doc comments from Rob.
+- Used 'maxItems' for groups and pins properties.
+- Updated commit subject and description to have
+present tense statements.
 
-> I think Intel people often take the stance that the ACPI DSDT (or whatever)
-> needs to be fixed.
+changes in v2:
+- Use pattern for pin names in yaml file.
+- Updated to support multiple groups and pins.
+- Added type ref for the vendor specific properties.
+- Removed 'schmitt-cmos', instead used common properties.
+- Removed macros for drive-strength property.
 
-It should, actually board/firmware vendors should think more carefully
-and do it right in the first place. But reality is different. And
-firmware upgrade often is anything but easy (as soon as we leave the
-field of average Joh Doe's home PC)
+Sai Krishna Potthuri (3):
+  firmware: xilinx: Add pinctrl support
+  dt-bindings: pinctrl: Add binding for ZynqMP pinctrl driver
+  pinctrl: Add Xilinx ZynqMP pinctrl driver support
 
-> If the usecase is to explicitly work around deployed firmware that cannot
-> and will not be upgraded/fixed by describing the hardware using DT
-> instead, based on just the DMI ID then we should spell that out
-> explicitly.
-
-Okay, maybe I should have stated this more clearly.
-
-OTOH, the scope is also a little bit greater: certain external cards
-that don't need much special handling for the card itself, just
-enumerate devices (and connections between them) using existing drivers.
-
-That's a pretty common scenario in industrial backplane systems, where
-we have lots of different (even application specific) cards, usually
-composed of standard chips, that can be identified by some ID, but
-cannot describe themselves. We have to write lots of specific drivers
-for them, usually just for instantiating existing drivers. (we rarely
-see such code going towards mainline).
-
-A similar case (mainlined) seems to be the RCAR display unit - they're
-using dt overlays that are built into the driver and applied by it
-based on the detected DU at runtime. RCAR seems to be a pure DT
-platform, so that's an obvious move. APU2/3/4 is ACPI based, so I went
-in a different direction - but I'm now investigating how to make DT
-overlays work on an ACPI platform (eg. needs some initial nodes, ...)
-In case that's successful, I'll rework my RFC to use overlays, and
-it will become much smaller (my oftree core changes then won't be
-necessary anymore).
-
-> It feels a bit like fixing a problem using a different hardware description
-> just because we can. Look in drivers/gpio/gpiolib-acpi.c
-> table gpiolib_acpi_quirks[]. It's just an example how this is fixed using
-> fine granular ACPI-specific mechanisms at several places in the kernel
-> instead of just tossing out the whole description and redoing it in
-> device tree.
-
-I'm quite reluctant to put everything in there. Theoretically, for apu
-case, I could prevent enumerating the incomplete gpios there, but the
-actual driver setup still remains (certainly don't wanna put that into
-such a global place). But the original problem of having to write so
-much code for just instantiating generic drivers remains. And
-distributing knowledge of certain devices over several places doesn't
-feel like a good idea to me.
-
-
---mtx
+ .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml |  339 ++++++
+ drivers/firmware/xilinx/zynqmp.c              |  114 ++
+ drivers/pinctrl/Kconfig                       |   13 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-zynqmp.c              | 1031 +++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-zynqmp.h  |   19 +
+ include/linux/firmware/xlnx-zynqmp.h          |   90 ++
+ 7 files changed, 1607 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-zynqmp.c
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-zynqmp.h
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.17.1
+
