@@ -2,171 +2,213 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A9D7319FCD
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 14:26:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D3EC31A05E
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 15:14:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231236AbhBLNX2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Feb 2021 08:23:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231814AbhBLNW4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 08:22:56 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A852DC061574;
-        Fri, 12 Feb 2021 05:22:15 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id a24so3145223plm.11;
-        Fri, 12 Feb 2021 05:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LlK4oOejkGmVCANiTlUnm8yrZASNqtveudOgthnjqjI=;
-        b=iQSwM5JwXDKLM+rqGqJmII6cCxrZTr/MDyQJcOwWPdUIGET0SX5Dx13XxnWQoAB9ce
-         Yl/C+Dxd75UvNlHjdqdFOvI3d49JZhiBywK3vO9N83sZOlwQU3mLGNoVFiFIMtzr/GHe
-         vlII8OXJn+L2qWA7GV2gpHFjmDN84VXCKXAujllae/ClEjYEuu4ABe9ijORyyc99KJel
-         iAWaJs2XjitDtSwsr1UsCh2gWMmCdk6GpV6sJLpKNDrjJ4LDnhm17LeQGe+6VHoprmpd
-         qB/jEHYVAzgUPn1QREHwoiEfhRO/e2Is8Hpj3lwdSFIJdo12N8xnMPq0/3IQYvMeamib
-         W4HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LlK4oOejkGmVCANiTlUnm8yrZASNqtveudOgthnjqjI=;
-        b=q5NcLFN9CElP2o+Glk8nn/D+z2yP8M6uLCbJBbi0xZUDht889ybZW2gPxPA5FtDe5M
-         JNlHvViICdH8o3P8M6nI3ivJcYFjfBsqZEOq5WMGp+awrJNn4wrtBORtfjb00afVW6Ea
-         X6ma2aEQgG8AjC7dCKGzt7HM+cqNDY8zq+fbdfA5c1qTOWE3lV2wVU3hn/bwhsX8JnF4
-         YmQa4rcZOJFi/N2LxtRgRmwpNZR0tw/k93t/pMuG1R/HFQ1ZXc3aJf7RnAQdcJxk3GO7
-         IytzFIvUcRiux99KVDQNC8Zl5ybcBIQ5S7ZDz3wFkZc41kWRYTC5PSxs7dnDMxZrHCSe
-         i8yA==
-X-Gm-Message-State: AOAM530oXakW7YIYVu7/P/+Rn6PLV4m4Zgr1P1cgXILOlR/JzARUwKeh
-        6o4Zogh5i7m/OM+89L4hip4=
-X-Google-Smtp-Source: ABdhPJyV9t8X6mKuwfE8e/aZK1KZFuuyTqGY4IAiBevhX62jo7ymr64zGlqJd1+zqtCK1Yew5apvoQ==
-X-Received: by 2002:a17:90a:6549:: with SMTP id f9mr2754627pjs.17.1613136135243;
-        Fri, 12 Feb 2021 05:22:15 -0800 (PST)
-Received: from syed.domain.name ([103.201.127.1])
-        by smtp.gmail.com with ESMTPSA id q43sm5591021pjq.25.2021.02.12.05.22.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Feb 2021 05:22:15 -0800 (PST)
-Date:   Fri, 12 Feb 2021 18:52:00 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     bgolaszewski@baylibre.com
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        yamada.masahiro@socionext.com, akpm@linux-foundation.org,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, linux-arch@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: [PATCH v2 3/3] gpio: xilinx: Utilize generic bitmap_get_value and
- _set_value
-Message-ID: <1b1f706b60e4c571c4f17d53ac640e8bd8384856.1613134924.git.syednwaris@gmail.com>
-References: <cover.1613134924.git.syednwaris@gmail.com>
+        id S229940AbhBLOK7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Feb 2021 09:10:59 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57154 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231627AbhBLOK5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 09:10:57 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 11CE8hBM102056;
+        Fri, 12 Feb 2021 08:08:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1613138923;
+        bh=uBxCxEg+TQK7Bkc4s3MNk+l0me+bcp9GAH7hic6AQQ4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OhxrUCnXbQqJETtZBIoX9wZTglI2abSZrxj53uXDRfK9jLzqI4fe9Hh+KDVZ+cN4/
+         HzXB16jslbzwXP5ypGuiKR1LcpVMzxWmlXda0nfAYL6LLfBWSBzIBt28ppN2eWZjrT
+         li/Wbzi7Ui3ROK4l4k9oStSaarLmAzQCuovvGqfE=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 11CE8hU6023557
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Feb 2021 08:08:43 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
+ Feb 2021 08:08:43 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 12 Feb 2021 08:08:43 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 11CE8fDC076514;
+        Fri, 12 Feb 2021 08:08:41 -0600
+Subject: Re: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
+ raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Arnd Bergmann <arnd@kernel.org>,
+        luojiaxing <luojiaxing@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
+References: <1612774577-55943-1-git-send-email-luojiaxing@huawei.com>
+ <1612774577-55943-2-git-send-email-luojiaxing@huawei.com>
+ <fab1e871-08e4-fc71-9dbf-9bcacf18e2e1@ti.com>
+ <CAK8P3a0m4ocfLyJZ5wMxyKESYUJ5um5sb5MyAzC8ckCb6qAH5g@mail.gmail.com>
+ <d5465b81-bb53-49ee-a556-40d208deb765@ti.com>
+ <a61ef337fd1c4538a47fe855920f95d3@hisilicon.com>
+ <CAK8P3a3SHQNjF5ZpqHQweG7BQ52Xi1hQKDiMVKq4aNK_7VDw6w@mail.gmail.com>
+ <e34a4085-268f-1cd0-a5dc-a87a2e655fe2@ti.com>
+ <2a12cf7a21f74a0c9e2552a467b77fae@hisilicon.com>
+ <YCZfBMPwmzD2U/4c@smile.fi.intel.com>
+ <c4a07bef5dd24fd2af0aa7fe4c78b903@hisilicon.com>
+ <33720e72-a438-8ffe-1b5f-38756738ad9b@ti.com>
+ <014b2e0d2b134bfdbe629ab6146c6bb4@hisilicon.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <92f75957-4f04-e62e-1a3e-09933a8881b5@ti.com>
+Date:   Fri, 12 Feb 2021 16:08:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1613134924.git.syednwaris@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <014b2e0d2b134bfdbe629ab6146c6bb4@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch reimplements the xgpio_set_multiple() function in
-drivers/gpio/gpio-xilinx.c to use the new generic functions:
-bitmap_get_value() and bitmap_set_value(). The code is now simpler
-to read and understand. Moreover, instead of looping for each bit
-in xgpio_set_multiple() function, now we can check each channel at
-a time and save cycles.
 
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
----
- drivers/gpio/gpio-xilinx.c | 63 +++++++++++++++++++-------------------
- 1 file changed, 32 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index be539381fd82..8445e69cf37b 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -15,6 +15,7 @@
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
- #include <linux/slab.h>
-+#include "gpiolib.h"
- 
- /* Register Offset Definitions */
- #define XGPIO_DATA_OFFSET   (0x0)	/* Data register  */
-@@ -141,37 +142,37 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- {
- 	unsigned long flags;
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
--	int index = xgpio_index(chip, 0);
--	int offset, i;
--
--	spin_lock_irqsave(&chip->gpio_lock[index], flags);
--
--	/* Write to GPIO signals */
--	for (i = 0; i < gc->ngpio; i++) {
--		if (*mask == 0)
--			break;
--		/* Once finished with an index write it out to the register */
--		if (index !=  xgpio_index(chip, i)) {
--			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--				       index * XGPIO_CHANNEL_OFFSET,
--				       chip->gpio_state[index]);
--			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
--			index =  xgpio_index(chip, i);
--			spin_lock_irqsave(&chip->gpio_lock[index], flags);
--		}
--		if (__test_and_clear_bit(i, mask)) {
--			offset =  xgpio_offset(chip, i);
--			if (test_bit(i, bits))
--				chip->gpio_state[index] |= BIT(offset);
--			else
--				chip->gpio_state[index] &= ~BIT(offset);
--		}
--	}
--
--	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
--
--	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-+	u32 *const state = chip->gpio_state;
-+	unsigned int *const width = chip->gpio_width;
-+
-+	DECLARE_BITMAP(old, 64);
-+	DECLARE_BITMAP(new, 64);
-+	DECLARE_BITMAP(changed, 64);
-+
-+	spin_lock_irqsave(&chip->gpio_lock[0], flags);
-+	spin_lock(&chip->gpio_lock[1]);
-+
-+	bitmap_set_value(old, 64, state[0], width[0], 0);
-+	bitmap_set_value(old, 64, state[1], width[1], width[0]);
-+	bitmap_replace(new, old, bits, mask, gc->ngpio);
-+
-+	bitmap_set_value(old, 64, state[0], 32, 0);
-+	bitmap_set_value(old, 64, state[1], 32, 32);
-+	state[0] = bitmap_get_value(new, 0, width[0]);
-+	state[1] = bitmap_get_value(new, width[0], width[1]);
-+	bitmap_set_value(new, 64, state[0], 32, 0);
-+	bitmap_set_value(new, 64, state[1], 32, 32);
-+	bitmap_xor(changed, old, new, 64);
-+
-+	if (((u32 *)changed)[0])
-+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,
-+				state[0]);
-+	if (((u32 *)changed)[1])
-+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
-+				XGPIO_CHANNEL_OFFSET, state[1]);
-+
-+	spin_unlock(&chip->gpio_lock[1]);
-+	spin_unlock_irqrestore(&chip->gpio_lock[0], flags);
- }
- 
- /**
+On 12/02/2021 15:12, Song Bao Hua (Barry Song) wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Grygorii Strashko [mailto:grygorii.strashko@ti.com]
+>> Sent: Saturday, February 13, 2021 12:53 AM
+>> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>; Andy Shevchenko
+>> <andy.shevchenko@gmail.com>
+>> Cc: Arnd Bergmann <arnd@kernel.org>; luojiaxing <luojiaxing@huawei.com>; Linus
+>> Walleij <linus.walleij@linaro.org>; Santosh Shilimkar <ssantosh@kernel.org>;
+>> Kevin Hilman <khilman@kernel.org>; open list:GPIO SUBSYSTEM
+>> <linux-gpio@vger.kernel.org>; linux-kernel@vger.kernel.org;
+>> linuxarm@openeuler.org
+>> Subject: Re: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
+>> raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
+>>
+>>
+>>
+>> On 12/02/2021 13:29, Song Bao Hua (Barry Song) wrote:
+>>>
+>>>
+>>>> -----Original Message-----
+>>>> From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
+>>>> Sent: Friday, February 12, 2021 11:57 PM
+>>>> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
+>>>> Cc: Grygorii Strashko <grygorii.strashko@ti.com>; Arnd Bergmann
+>>>> <arnd@kernel.org>; luojiaxing <luojiaxing@huawei.com>; Linus Walleij
+>>>> <linus.walleij@linaro.org>; Santosh Shilimkar <ssantosh@kernel.org>; Kevin
+>>>> Hilman <khilman@kernel.org>; open list:GPIO SUBSYSTEM
+>>>> <linux-gpio@vger.kernel.org>; linux-kernel@vger.kernel.org;
+>>>> linuxarm@openeuler.org
+>>>> Subject: Re: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
+>>>> raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
+>>>>
+>>>> On Fri, Feb 12, 2021 at 10:42:19AM +0000, Song Bao Hua (Barry Song) wrote:
+>>>>>> From: Grygorii Strashko [mailto:grygorii.strashko@ti.com]
+>>>>>> Sent: Friday, February 12, 2021 11:28 PM
+>>>>>> On 12/02/2021 11:45, Arnd Bergmann wrote:
+>>>>>>> On Fri, Feb 12, 2021 at 6:05 AM Song Bao Hua (Barry Song)
+>>>>>>> <song.bao.hua@hisilicon.com> wrote:
+>>>>
+>>>>>>>>> Note. there is also generic_handle_irq() call inside.
+>>>>>>>>
+>>>>>>>> So generic_handle_irq() is not safe to run in thread thus requires
+>>>>>>>> an interrupt-disabled environment to run? If so, I'd rather this
+>>>>>>>> irqsave moved into generic_handle_irq() rather than asking everyone
+>>>>>>>> calling it to do irqsave.
+>>>>>>>
+>>>>>>> In a preempt-rt kernel, interrupts are run in task context, so they clearly
+>>>>>>> should not be called with interrupts disabled, that would defeat the
+>>>>>>> purpose of making them preemptible.
+>>>>>>>
+>>>>>>> generic_handle_irq() does need to run with in_irq()==true though,
+>>>>>>> but this should be set by the caller of the gpiochip's handler, and
+>>>>>>> it is not set by raw_spin_lock_irqsave().
+>>>>>>
+>>>>>> It will produce warning from __handle_irq_event_percpu(), as this is IRQ
+>>>>>> dispatcher
+>>>>>> and generic_handle_irq() will call one of handle_level_irq or
+>>>> handle_edge_irq.
+>>>>>>
+>>>>>> The history behind this is commit 450fa54cfd66 ("gpio: omap: convert to
+>>>> use
+>>>>>> generic irq handler").
+>>>>>>
+>>>>>> The resent related discussion:
+>>>>>> https://lkml.org/lkml/2020/12/5/208
+>>>>>
+>>>>> Ok, second thought. irqsave before generic_handle_irq() won't defeat
+>>>>> the purpose of preemption too much as the dispatched irq handlers by
+>>>>> gpiochip will run in their own threads but not in the thread of
+>>>>> gpiochip's handler.
+>>>>>
+>>>>> so looks like this patch can improve by:
+>>>>> * move other raw_spin_lock_irqsave to raw_spin_lock;
+>>>>> * keep the raw_spin_lock_irqsave before generic_handle_irq() to mute
+>>>>> the warning in genirq.
+>>>>
+>>>> Isn't the idea of irqsave is to prevent dead lock from the process context
+>> when
+>>>> we get interrupt on the *same* CPU?
+>>>
+>>> Anyway, gpiochip is more tricky as it is also a irq dispatcher. Moving
+>>> spin_lock_irq to spin_lock in the irq handler of non-irq dispatcher
+>>> driver is almost always correct.
+>>>
+>>> But for gpiochip, would the below be true though it is almost alway true
+>>> for non-irq dispatcher?
+>>>
+>>> 1. While gpiochip's handler runs in hardIRQ, interrupts are disabled, so no
+>> more
+>>> interrupt on the same cpu -> No deadleak.
+>>>
+>>> 2. While gpiochip's handler runs in threads
+>>> * other non-threaded interrupts such as timer tick might come on same cpu,
+>>> but they are an irrelevant driver and thus they are not going to get the
+>>> lock gpiochip's handler has held. -> no deadlock.
+>>> * other devices attached to this gpiochip might get interrupts, since
+>>> gpiochip's handler is running in threads, raw_spin_lock can help avoid
+>>> messing up the critical data by two threads -> still no deadlock.
+>>
+>> The worst RT case I can imagine is when gpio API is still called from hard IRQ
+>> context by some
+>> other device driver - some toggling for example.
+>> Note. RT or "threadirqs" does not mean gpiochip become sleepable.
+>>
+>> In this case:
+>>    threaded handler
+>>      raw_spin_lock
+>> 	IRQ from other device
+>>             hard_irq handler
+>>               gpiod_x()
+>> 		raw_spin_lock_irqsave() -- oops
+> 
+> Actually no oops here. other drivers don't hold the same
+> spinlock of this driver.
+
+huh.
+driver/module A requests gpio and uses it in its hard_irq handler by calling GPIO API
+(Like gpiod_set_value()), those will go to this driver and end up in omap_gpio_set().
+
+> 
+>>
+>> But in general, what are the benefit of such changes at all, except better marking
+>> call context annotation,
+>> so we are spending so much time on it?
+> 
+> TBH, the benefit is really tiny except code cleanup. just curious how things could
+> be different while it happens in an irq dispatcher's handler.
+
+
 -- 
-2.29.0
-
+Best regards,
+grygorii
