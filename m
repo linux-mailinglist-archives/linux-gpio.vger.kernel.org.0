@@ -2,46 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FD93319D5F
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 12:31:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F84B319D71
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 12:39:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbhBLL3v convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 12 Feb 2021 06:29:51 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3022 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbhBLL3p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 06:29:45 -0500
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4DcWSc3gBJzRCD4;
-        Fri, 12 Feb 2021 19:27:44 +0800 (CST)
-Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.498.0; Fri, 12 Feb 2021 19:29:02 +0800
-Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
- dggemi761-chm.china.huawei.com (10.1.198.147) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2106.2; Fri, 12 Feb 2021 19:29:02 +0800
-Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
- dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.2106.006;
- Fri, 12 Feb 2021 19:29:02 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Arnd Bergmann <arnd@kernel.org>,
+        id S230231AbhBLLgO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Feb 2021 06:36:14 -0500
+Received: from mga04.intel.com ([192.55.52.120]:19162 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229608AbhBLLgJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 12 Feb 2021 06:36:09 -0500
+IronPort-SDR: ujN2ft9JopBZ8gFUtD/WwCiEsaDgK7H2r1/gYMfsNhqzr0/k0zFmdPdmgLMqH5cr47/QrsFCoo
+ MQlo7g8kHvLw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9892"; a="179839817"
+X-IronPort-AV: E=Sophos;i="5.81,173,1610438400"; 
+   d="scan'208";a="179839817"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 03:35:28 -0800
+IronPort-SDR: fKEZl5tW7/OgtMrdBFFTAyhyBIzGnvXuMoKgxRUWTCg48aGQRJQ57JNa3VNuVLgoQRsx/mtOcB
+ rGAiEOwDjKXA==
+X-IronPort-AV: E=Sophos;i="5.81,173,1610438400"; 
+   d="scan'208";a="579244453"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 03:35:25 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1lAWjK-004TUA-I8; Fri, 12 Feb 2021 13:35:22 +0200
+Date:   Fri, 12 Feb 2021 13:35:22 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
         luojiaxing <luojiaxing@huawei.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Santosh Shilimkar <ssantosh@kernel.org>,
-        "Kevin Hilman" <khilman@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Subject: RE: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
+Subject: Re: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
  raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
-Thread-Topic: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
- raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
-Thread-Index: AQHXASPSlQt84o9SE0i+o14ylEf4e6pTywWAgACGpJD//4GQAIAAiAmg
-Date:   Fri, 12 Feb 2021 11:29:02 +0000
-Message-ID: <c4a07bef5dd24fd2af0aa7fe4c78b903@hisilicon.com>
+Message-ID: <YCZn+idf9A7OpKbb@smile.fi.intel.com>
 References: <1612774577-55943-1-git-send-email-luojiaxing@huawei.com>
  <1612774577-55943-2-git-send-email-luojiaxing@huawei.com>
  <fab1e871-08e4-fc71-9dbf-9bcacf18e2e1@ti.com>
@@ -51,69 +51,19 @@ References: <1612774577-55943-1-git-send-email-luojiaxing@huawei.com>
  <CAK8P3a3SHQNjF5ZpqHQweG7BQ52Xi1hQKDiMVKq4aNK_7VDw6w@mail.gmail.com>
  <e34a4085-268f-1cd0-a5dc-a87a2e655fe2@ti.com>
  <2a12cf7a21f74a0c9e2552a467b77fae@hisilicon.com>
- <YCZfBMPwmzD2U/4c@smile.fi.intel.com>
-In-Reply-To: <YCZfBMPwmzD2U/4c@smile.fi.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.31]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+ <CAK8P3a0aNfF5D+y--5-reBYO2svykCJFxpZ=1dJoK5JDGHPqKw@mail.gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0aNfF5D+y--5-reBYO2svykCJFxpZ=1dJoK5JDGHPqKw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
-> Sent: Friday, February 12, 2021 11:57 PM
-> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> Cc: Grygorii Strashko <grygorii.strashko@ti.com>; Arnd Bergmann
-> <arnd@kernel.org>; luojiaxing <luojiaxing@huawei.com>; Linus Walleij
-> <linus.walleij@linaro.org>; Santosh Shilimkar <ssantosh@kernel.org>; Kevin
-> Hilman <khilman@kernel.org>; open list:GPIO SUBSYSTEM
-> <linux-gpio@vger.kernel.org>; linux-kernel@vger.kernel.org;
-> linuxarm@openeuler.org
-> Subject: Re: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
-> raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
-> 
-> On Fri, Feb 12, 2021 at 10:42:19AM +0000, Song Bao Hua (Barry Song) wrote:
-> > > From: Grygorii Strashko [mailto:grygorii.strashko@ti.com]
-> > > Sent: Friday, February 12, 2021 11:28 PM
-> > > On 12/02/2021 11:45, Arnd Bergmann wrote:
-> > > > On Fri, Feb 12, 2021 at 6:05 AM Song Bao Hua (Barry Song)
-> > > > <song.bao.hua@hisilicon.com> wrote:
-> 
-> > > >>> Note. there is also generic_handle_irq() call inside.
-> > > >>
-> > > >> So generic_handle_irq() is not safe to run in thread thus requires
-> > > >> an interrupt-disabled environment to run? If so, I'd rather this
-> > > >> irqsave moved into generic_handle_irq() rather than asking everyone
-> > > >> calling it to do irqsave.
-> > > >
-> > > > In a preempt-rt kernel, interrupts are run in task context, so they clearly
-> > > > should not be called with interrupts disabled, that would defeat the
-> > > > purpose of making them preemptible.
-> > > >
-> > > > generic_handle_irq() does need to run with in_irq()==true though,
-> > > > but this should be set by the caller of the gpiochip's handler, and
-> > > > it is not set by raw_spin_lock_irqsave().
-> > >
-> > > It will produce warning from __handle_irq_event_percpu(), as this is IRQ
-> > > dispatcher
-> > > and generic_handle_irq() will call one of handle_level_irq or
-> handle_edge_irq.
-> > >
-> > > The history behind this is commit 450fa54cfd66 ("gpio: omap: convert to
-> use
-> > > generic irq handler").
-> > >
-> > > The resent related discussion:
-> > > https://lkml.org/lkml/2020/12/5/208
+On Fri, Feb 12, 2021 at 11:59:28AM +0100, Arnd Bergmann wrote:
+> On Fri, Feb 12, 2021 at 11:42 AM Song Bao Hua (Barry Song)
+> <song.bao.hua@hisilicon.com> wrote:
 > >
 > > Ok, second thought. irqsave before generic_handle_irq() won't defeat
 > > the purpose of preemption too much as the dispatched irq handlers by
@@ -125,33 +75,13 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 > > * keep the raw_spin_lock_irqsave before generic_handle_irq() to mute
 > > the warning in genirq.
 > 
-> Isn't the idea of irqsave is to prevent dead lock from the process context when
-> we get interrupt on the *same* CPU?
+> It seems that the other drivers just call handle_nested_irq() instead
+> of generic_handle_irq().
 
-Anyway, gpiochip is more tricky as it is also a irq dispatcher. Moving
-spin_lock_irq to spin_lock in the irq handler of non-irq dispatcher
-driver is almost always correct.
+And IIRC all of them request threaded IRQ explicitly.
 
-But for gpiochip, would the below be true though it is almost alway true
-for non-irq dispatcher?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-1. While gpiochip's handler runs in hardIRQ, interrupts are disabled, so no more
-interrupt on the same cpu -> No deadleak.
-
-2. While gpiochip's handler runs in threads
-* other non-threaded interrupts such as timer tick might come on same cpu,
-but they are an irrelevant driver and thus they are not going to get the
-lock gpiochip's handler has held. -> no deadlock.
-* other devices attached to this gpiochip might get interrupts, since 
-gpiochip's handler is running in threads, raw_spin_lock can help avoid
-messing up the critical data by two threads -> still no deadlock.
-
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
-> 
-
-Thanks
-Barry
 
