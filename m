@@ -2,90 +2,198 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9257E31A3BB
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 18:38:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCD9931A5CA
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 21:07:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbhBLRiZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Feb 2021 12:38:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbhBLRiY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 12:38:24 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D98C061574
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 09:37:45 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id m6so6251357pfk.1
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 09:37:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kW4kCcmZpN9DXSNX16HNa+NYisnsmMLvFLsGVM7NGGs=;
-        b=g66WvT5ybaijeCWJNQ81WWGHK/fuYsNV9UWhFxQKOZiHHzOGOCJhGA60plFJiyfz07
-         /d5zAV1tJmJ/kGv0BH9afH0V8OTzVozqgSAONLVAEUPfidijmpdD2LDjxlhCXQNpAhwR
-         KCpEFEUCZtd95p8fnBx0DwB6wEao3NHA355ie+igGBchUnEfyhxDn+Z3nyzNtkF6d5m3
-         iI8qvIgEBnHWscmKOonGvrFAtNgtMOAy861tNxp9aUOuBt/RODni1Qx2Qc/G+ebClGhp
-         wuBKefmKjpocn4fxU7HxYbXeErEGGLzg7M6TcxgIU7Tfi0Y1MQsjh9dKt+6gGhajZJuq
-         ieNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kW4kCcmZpN9DXSNX16HNa+NYisnsmMLvFLsGVM7NGGs=;
-        b=k7X7xo+zqF15Cq6tkcTyqSbxUopm5iqOEaiR/YWv/u6eAWTWq7LwcZUATCWZUcTtXo
-         G1VT+6bAUFTCGUKidg5g3ofTssdle18h/ewMAJGZRBm09RaGB7d3hx5+NVeOgzPprqwj
-         eFVx+MDFaXABhvHcNQlJvEwS4gpQRjK7jBdmdrIXzBR092XmomtRIUlxpfvcyRIZI4Uz
-         5ZESt25qCCin0A9psXEPh/P725QLa68WY9eg7UqLK/lJvL8iD9iRjfsf36ZBuDgdvC2C
-         MwBtlFTrRXh3zgzBRELYPWCixRY+WmLIrI99YRZ+20phWwophtOtZtfS3lIbOZgt1fkr
-         7vzw==
-X-Gm-Message-State: AOAM531vFcLl+JjaqPIf2H6NuHwwMehCqZXwq2QY4yusL3eDGqtsuB+N
-        rKhozLMyJR1bLFE1fc1oICdfug==
-X-Google-Smtp-Source: ABdhPJy9io6J3C5KbIOyrn6eZ6xjVshGEO1x8G1WfrqbgwVjf7IUtCx//OIUGA7PcYhEwPErP30bQg==
-X-Received: by 2002:a63:a552:: with SMTP id r18mr4143162pgu.19.1613151464942;
-        Fri, 12 Feb 2021 09:37:44 -0800 (PST)
-Received: from x1 ([2601:1c0:4701:ae70:55c2:10c0:c1dd:8558])
-        by smtp.gmail.com with ESMTPSA id 17sm9948748pgy.53.2021.02.12.09.37.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Feb 2021 09:37:44 -0800 (PST)
-Date:   Fri, 12 Feb 2021 09:37:42 -0800
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: use to octal permissions for debugfs files
-Message-ID: <20210212173742.GA660547@x1>
-References: <20210126044742.87602-1-drew@beagleboard.org>
- <CACRpkdbcOvOS4OSZt8cAWV7+-D8sHN7HWhrxGLU7fqKiwB1CCg@mail.gmail.com>
+        id S229583AbhBLUG5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Feb 2021 15:06:57 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3023 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229796AbhBLUG4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 15:06:56 -0500
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4DckxK41KVzRBrW;
+        Sat, 13 Feb 2021 04:04:53 +0800 (CST)
+Received: from dggemi760-chm.china.huawei.com (10.1.198.146) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.498.0; Sat, 13 Feb 2021 04:06:11 +0800
+Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
+ dggemi760-chm.china.huawei.com (10.1.198.146) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2106.2; Sat, 13 Feb 2021 04:06:11 +0800
+Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
+ dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.2106.006;
+ Sat, 13 Feb 2021 04:06:11 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Arnd Bergmann <arnd@kernel.org>,
+        luojiaxing <luojiaxing@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
+Subject: RE: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
+ raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
+Thread-Topic: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
+ raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
+Thread-Index: AQHXASPSlQt84o9SE0i+o14ylEf4e6pTywWAgACGpJD//4GQAIAAiAmg//+HpICAAJikgP//jTIAABypsIA=
+Date:   Fri, 12 Feb 2021 20:06:11 +0000
+Message-ID: <8ca9814a674f4d3ab8bd74698ef9e693@hisilicon.com>
+References: <1612774577-55943-1-git-send-email-luojiaxing@huawei.com>
+ <1612774577-55943-2-git-send-email-luojiaxing@huawei.com>
+ <fab1e871-08e4-fc71-9dbf-9bcacf18e2e1@ti.com>
+ <CAK8P3a0m4ocfLyJZ5wMxyKESYUJ5um5sb5MyAzC8ckCb6qAH5g@mail.gmail.com>
+ <d5465b81-bb53-49ee-a556-40d208deb765@ti.com>
+ <a61ef337fd1c4538a47fe855920f95d3@hisilicon.com>
+ <CAK8P3a3SHQNjF5ZpqHQweG7BQ52Xi1hQKDiMVKq4aNK_7VDw6w@mail.gmail.com>
+ <e34a4085-268f-1cd0-a5dc-a87a2e655fe2@ti.com>
+ <2a12cf7a21f74a0c9e2552a467b77fae@hisilicon.com>
+ <YCZfBMPwmzD2U/4c@smile.fi.intel.com>
+ <c4a07bef5dd24fd2af0aa7fe4c78b903@hisilicon.com>
+ <33720e72-a438-8ffe-1b5f-38756738ad9b@ti.com>
+ <014b2e0d2b134bfdbe629ab6146c6bb4@hisilicon.com>
+ <92f75957-4f04-e62e-1a3e-09933a8881b5@ti.com>
+In-Reply-To: <92f75957-4f04-e62e-1a3e-09933a8881b5@ti.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.201.105]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbcOvOS4OSZt8cAWV7+-D8sHN7HWhrxGLU7fqKiwB1CCg@mail.gmail.com>
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 12, 2021 at 08:58:58AM +0100, Linus Walleij wrote:
-> On Tue, Jan 26, 2021 at 5:55 AM Drew Fustini <drew@beagleboard.org> wrote:
-> 
-> > Switch over pinctrl debugfs files to use octal permissions as they are
-> > preferred over symbolic permissions. Refer to commit f90774e1fd27
-> > ("checkpatch: look for symbolic permissions and suggest octal instead").
-> >
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> 
-> That's right. Patch applied!
-> 
-> Yours,
-> Linus Walleij
-
-Thanks, Linus.  However, Andy suggested I make this a series as it was
-prep for my patch to add 'pinmux-select' to debugfs.  I posted it as
-part of a 2 patch series [1].  In addition, Joe Perches noticed I forgot
-3 instances of debugfs_create_file() in core.c so I was about to fix
-that in v5 of the patch series.  v5 is mostly addressing comments on the
-pinmux-select feature.
-
-Thank you,
-Drew
-
-[1] https://lore.kernel.org/linux-gpio/20210210222851.232374-1-drew@beagleboard.org/
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3J5Z29yaWkgU3RyYXNo
+a28gW21haWx0bzpncnlnb3JpaS5zdHJhc2hrb0B0aS5jb21dDQo+IFNlbnQ6IFNhdHVyZGF5LCBG
+ZWJydWFyeSAxMywgMjAyMSAzOjA5IEFNDQo+IFRvOiBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcp
+IDxzb25nLmJhby5odWFAaGlzaWxpY29uLmNvbT47IEFuZHkgU2hldmNoZW5rbw0KPiA8YW5keS5z
+aGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4gQ2M6IEFybmQgQmVyZ21hbm4gPGFybmRAa2VybmVsLm9y
+Zz47IGx1b2ppYXhpbmcgPGx1b2ppYXhpbmdAaHVhd2VpLmNvbT47IExpbnVzDQo+IFdhbGxlaWog
+PGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47IFNhbnRvc2ggU2hpbGlta2FyIDxzc2FudG9zaEBr
+ZXJuZWwub3JnPjsNCj4gS2V2aW4gSGlsbWFuIDxraGlsbWFuQGtlcm5lbC5vcmc+OyBvcGVuIGxp
+c3Q6R1BJTyBTVUJTWVNURU0NCj4gPGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnPjsgbGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXhhcm1Ab3BlbmV1bGVyLm9yZw0KPiBTdWJq
+ZWN0OiBSZTogW0xpbnV4YXJtXSBSZTogW1BBVENIIGZvciBuZXh0IHYxIDEvMl0gZ3Bpbzogb21h
+cDogUmVwbGFjZQ0KPiByYXdfc3Bpbl9sb2NrX2lycXNhdmUgd2l0aCByYXdfc3Bpbl9sb2NrIGlu
+IG9tYXBfZ3Bpb19pcnFfaGFuZGxlcigpDQo+IA0KPiANCj4gDQo+IE9uIDEyLzAyLzIwMjEgMTU6
+MTIsIFNvbmcgQmFvIEh1YSAoQmFycnkgU29uZykgd3JvdGU6DQo+ID4NCj4gPg0KPiA+PiAtLS0t
+LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBHcnlnb3JpaSBTdHJhc2hrbyBbbWFp
+bHRvOmdyeWdvcmlpLnN0cmFzaGtvQHRpLmNvbV0NCj4gPj4gU2VudDogU2F0dXJkYXksIEZlYnJ1
+YXJ5IDEzLCAyMDIxIDEyOjUzIEFNDQo+ID4+IFRvOiBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcp
+IDxzb25nLmJhby5odWFAaGlzaWxpY29uLmNvbT47IEFuZHkgU2hldmNoZW5rbw0KPiA+PiA8YW5k
+eS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4gPj4gQ2M6IEFybmQgQmVyZ21hbm4gPGFybmRAa2Vy
+bmVsLm9yZz47IGx1b2ppYXhpbmcgPGx1b2ppYXhpbmdAaHVhd2VpLmNvbT47DQo+IExpbnVzDQo+
+ID4+IFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47IFNhbnRvc2ggU2hpbGlta2Fy
+DQo+IDxzc2FudG9zaEBrZXJuZWwub3JnPjsNCj4gPj4gS2V2aW4gSGlsbWFuIDxraGlsbWFuQGtl
+cm5lbC5vcmc+OyBvcGVuIGxpc3Q6R1BJTyBTVUJTWVNURU0NCj4gPj4gPGxpbnV4LWdwaW9Admdl
+ci5rZXJuZWwub3JnPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPj4gbGludXhh
+cm1Ab3BlbmV1bGVyLm9yZw0KPiA+PiBTdWJqZWN0OiBSZTogW0xpbnV4YXJtXSBSZTogW1BBVENI
+IGZvciBuZXh0IHYxIDEvMl0gZ3Bpbzogb21hcDogUmVwbGFjZQ0KPiA+PiByYXdfc3Bpbl9sb2Nr
+X2lycXNhdmUgd2l0aCByYXdfc3Bpbl9sb2NrIGluIG9tYXBfZ3Bpb19pcnFfaGFuZGxlcigpDQo+
+ID4+DQo+ID4+DQo+ID4+DQo+ID4+IE9uIDEyLzAyLzIwMjEgMTM6MjksIFNvbmcgQmFvIEh1YSAo
+QmFycnkgU29uZykgd3JvdGU6DQo+ID4+Pg0KPiA+Pj4NCj4gPj4+PiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiA+Pj4+IEZyb206IEFuZHkgU2hldmNoZW5rbyBbbWFpbHRvOmFuZHkuc2hl
+dmNoZW5rb0BnbWFpbC5jb21dDQo+ID4+Pj4gU2VudDogRnJpZGF5LCBGZWJydWFyeSAxMiwgMjAy
+MSAxMTo1NyBQTQ0KPiA+Pj4+IFRvOiBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcpIDxzb25nLmJh
+by5odWFAaGlzaWxpY29uLmNvbT4NCj4gPj4+PiBDYzogR3J5Z29yaWkgU3RyYXNoa28gPGdyeWdv
+cmlpLnN0cmFzaGtvQHRpLmNvbT47IEFybmQgQmVyZ21hbm4NCj4gPj4+PiA8YXJuZEBrZXJuZWwu
+b3JnPjsgbHVvamlheGluZyA8bHVvamlheGluZ0BodWF3ZWkuY29tPjsgTGludXMgV2FsbGVpag0K
+PiA+Pj4+IDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+OyBTYW50b3NoIFNoaWxpbWthciA8c3Nh
+bnRvc2hAa2VybmVsLm9yZz47DQo+IEtldmluDQo+ID4+Pj4gSGlsbWFuIDxraGlsbWFuQGtlcm5l
+bC5vcmc+OyBvcGVuIGxpc3Q6R1BJTyBTVUJTWVNURU0NCj4gPj4+PiA8bGludXgtZ3Bpb0B2Z2Vy
+Lmtlcm5lbC5vcmc+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+Pj4+IGxpbnV4
+YXJtQG9wZW5ldWxlci5vcmcNCj4gPj4+PiBTdWJqZWN0OiBSZTogW0xpbnV4YXJtXSBSZTogW1BB
+VENIIGZvciBuZXh0IHYxIDEvMl0gZ3Bpbzogb21hcDogUmVwbGFjZQ0KPiA+Pj4+IHJhd19zcGlu
+X2xvY2tfaXJxc2F2ZSB3aXRoIHJhd19zcGluX2xvY2sgaW4gb21hcF9ncGlvX2lycV9oYW5kbGVy
+KCkNCj4gPj4+Pg0KPiA+Pj4+IE9uIEZyaSwgRmViIDEyLCAyMDIxIGF0IDEwOjQyOjE5QU0gKzAw
+MDAsIFNvbmcgQmFvIEh1YSAoQmFycnkgU29uZykgd3JvdGU6DQo+ID4+Pj4+PiBGcm9tOiBHcnln
+b3JpaSBTdHJhc2hrbyBbbWFpbHRvOmdyeWdvcmlpLnN0cmFzaGtvQHRpLmNvbV0NCj4gPj4+Pj4+
+IFNlbnQ6IEZyaWRheSwgRmVicnVhcnkgMTIsIDIwMjEgMTE6MjggUE0NCj4gPj4+Pj4+IE9uIDEy
+LzAyLzIwMjEgMTE6NDUsIEFybmQgQmVyZ21hbm4gd3JvdGU6DQo+ID4+Pj4+Pj4gT24gRnJpLCBG
+ZWIgMTIsIDIwMjEgYXQgNjowNSBBTSBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcpDQo+ID4+Pj4+
+Pj4gPHNvbmcuYmFvLmh1YUBoaXNpbGljb24uY29tPiB3cm90ZToNCj4gPj4+Pg0KPiA+Pj4+Pj4+
+Pj4gTm90ZS4gdGhlcmUgaXMgYWxzbyBnZW5lcmljX2hhbmRsZV9pcnEoKSBjYWxsIGluc2lkZS4N
+Cj4gPj4+Pj4+Pj4NCj4gPj4+Pj4+Pj4gU28gZ2VuZXJpY19oYW5kbGVfaXJxKCkgaXMgbm90IHNh
+ZmUgdG8gcnVuIGluIHRocmVhZCB0aHVzIHJlcXVpcmVzDQo+ID4+Pj4+Pj4+IGFuIGludGVycnVw
+dC1kaXNhYmxlZCBlbnZpcm9ubWVudCB0byBydW4/IElmIHNvLCBJJ2QgcmF0aGVyIHRoaXMNCj4g
+Pj4+Pj4+Pj4gaXJxc2F2ZSBtb3ZlZCBpbnRvIGdlbmVyaWNfaGFuZGxlX2lycSgpIHJhdGhlciB0
+aGFuIGFza2luZyBldmVyeW9uZQ0KPiA+Pj4+Pj4+PiBjYWxsaW5nIGl0IHRvIGRvIGlycXNhdmUu
+DQo+ID4+Pj4+Pj4NCj4gPj4+Pj4+PiBJbiBhIHByZWVtcHQtcnQga2VybmVsLCBpbnRlcnJ1cHRz
+IGFyZSBydW4gaW4gdGFzayBjb250ZXh0LCBzbyB0aGV5DQo+IGNsZWFybHkNCj4gPj4+Pj4+PiBz
+aG91bGQgbm90IGJlIGNhbGxlZCB3aXRoIGludGVycnVwdHMgZGlzYWJsZWQsIHRoYXQgd291bGQg
+ZGVmZWF0IHRoZQ0KPiA+Pj4+Pj4+IHB1cnBvc2Ugb2YgbWFraW5nIHRoZW0gcHJlZW1wdGlibGUu
+DQo+ID4+Pj4+Pj4NCj4gPj4+Pj4+PiBnZW5lcmljX2hhbmRsZV9pcnEoKSBkb2VzIG5lZWQgdG8g
+cnVuIHdpdGggaW5faXJxKCk9PXRydWUgdGhvdWdoLA0KPiA+Pj4+Pj4+IGJ1dCB0aGlzIHNob3Vs
+ZCBiZSBzZXQgYnkgdGhlIGNhbGxlciBvZiB0aGUgZ3Bpb2NoaXAncyBoYW5kbGVyLCBhbmQNCj4g
+Pj4+Pj4+PiBpdCBpcyBub3Qgc2V0IGJ5IHJhd19zcGluX2xvY2tfaXJxc2F2ZSgpLg0KPiA+Pj4+
+Pj4NCj4gPj4+Pj4+IEl0IHdpbGwgcHJvZHVjZSB3YXJuaW5nIGZyb20gX19oYW5kbGVfaXJxX2V2
+ZW50X3BlcmNwdSgpLCBhcyB0aGlzIGlzDQo+IElSUQ0KPiA+Pj4+Pj4gZGlzcGF0Y2hlcg0KPiA+
+Pj4+Pj4gYW5kIGdlbmVyaWNfaGFuZGxlX2lycSgpIHdpbGwgY2FsbCBvbmUgb2YgaGFuZGxlX2xl
+dmVsX2lycSBvcg0KPiA+Pj4+IGhhbmRsZV9lZGdlX2lycS4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBU
+aGUgaGlzdG9yeSBiZWhpbmQgdGhpcyBpcyBjb21taXQgNDUwZmE1NGNmZDY2ICgiZ3Bpbzogb21h
+cDogY29udmVydA0KPiB0bw0KPiA+Pj4+IHVzZQ0KPiA+Pj4+Pj4gZ2VuZXJpYyBpcnEgaGFuZGxl
+ciIpLg0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IFRoZSByZXNlbnQgcmVsYXRlZCBkaXNjdXNzaW9uOg0K
+PiA+Pj4+Pj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMjAvMTIvNS8yMDgNCj4gPj4+Pj4NCj4g
+Pj4+Pj4gT2ssIHNlY29uZCB0aG91Z2h0LiBpcnFzYXZlIGJlZm9yZSBnZW5lcmljX2hhbmRsZV9p
+cnEoKSB3b24ndCBkZWZlYXQNCj4gPj4+Pj4gdGhlIHB1cnBvc2Ugb2YgcHJlZW1wdGlvbiB0b28g
+bXVjaCBhcyB0aGUgZGlzcGF0Y2hlZCBpcnEgaGFuZGxlcnMgYnkNCj4gPj4+Pj4gZ3Bpb2NoaXAg
+d2lsbCBydW4gaW4gdGhlaXIgb3duIHRocmVhZHMgYnV0IG5vdCBpbiB0aGUgdGhyZWFkIG9mDQo+
+ID4+Pj4+IGdwaW9jaGlwJ3MgaGFuZGxlci4NCj4gPj4+Pj4NCj4gPj4+Pj4gc28gbG9va3MgbGlr
+ZSB0aGlzIHBhdGNoIGNhbiBpbXByb3ZlIGJ5Og0KPiA+Pj4+PiAqIG1vdmUgb3RoZXIgcmF3X3Nw
+aW5fbG9ja19pcnFzYXZlIHRvIHJhd19zcGluX2xvY2s7DQo+ID4+Pj4+ICoga2VlcCB0aGUgcmF3
+X3NwaW5fbG9ja19pcnFzYXZlIGJlZm9yZSBnZW5lcmljX2hhbmRsZV9pcnEoKSB0byBtdXRlDQo+
+ID4+Pj4+IHRoZSB3YXJuaW5nIGluIGdlbmlycS4NCj4gPj4+Pg0KPiA+Pj4+IElzbid0IHRoZSBp
+ZGVhIG9mIGlycXNhdmUgaXMgdG8gcHJldmVudCBkZWFkIGxvY2sgZnJvbSB0aGUgcHJvY2VzcyBj
+b250ZXh0DQo+ID4+IHdoZW4NCj4gPj4+PiB3ZSBnZXQgaW50ZXJydXB0IG9uIHRoZSAqc2FtZSog
+Q1BVPw0KPiA+Pj4NCj4gPj4+IEFueXdheSwgZ3Bpb2NoaXAgaXMgbW9yZSB0cmlja3kgYXMgaXQg
+aXMgYWxzbyBhIGlycSBkaXNwYXRjaGVyLiBNb3ZpbmcNCj4gPj4+IHNwaW5fbG9ja19pcnEgdG8g
+c3Bpbl9sb2NrIGluIHRoZSBpcnEgaGFuZGxlciBvZiBub24taXJxIGRpc3BhdGNoZXINCj4gPj4+
+IGRyaXZlciBpcyBhbG1vc3QgYWx3YXlzIGNvcnJlY3QuDQo+ID4+Pg0KPiA+Pj4gQnV0IGZvciBn
+cGlvY2hpcCwgd291bGQgdGhlIGJlbG93IGJlIHRydWUgdGhvdWdoIGl0IGlzIGFsbW9zdCBhbHdh
+eSB0cnVlDQo+ID4+PiBmb3Igbm9uLWlycSBkaXNwYXRjaGVyPw0KPiA+Pj4NCj4gPj4+IDEuIFdo
+aWxlIGdwaW9jaGlwJ3MgaGFuZGxlciBydW5zIGluIGhhcmRJUlEsIGludGVycnVwdHMgYXJlIGRp
+c2FibGVkLCBzbw0KPiBubw0KPiA+PiBtb3JlDQo+ID4+PiBpbnRlcnJ1cHQgb24gdGhlIHNhbWUg
+Y3B1IC0+IE5vIGRlYWRsZWFrLg0KPiA+Pj4NCj4gPj4+IDIuIFdoaWxlIGdwaW9jaGlwJ3MgaGFu
+ZGxlciBydW5zIGluIHRocmVhZHMNCj4gPj4+ICogb3RoZXIgbm9uLXRocmVhZGVkIGludGVycnVw
+dHMgc3VjaCBhcyB0aW1lciB0aWNrIG1pZ2h0IGNvbWUgb24gc2FtZSBjcHUsDQo+ID4+PiBidXQg
+dGhleSBhcmUgYW4gaXJyZWxldmFudCBkcml2ZXIgYW5kIHRodXMgdGhleSBhcmUgbm90IGdvaW5n
+IHRvIGdldCB0aGUNCj4gPj4+IGxvY2sgZ3Bpb2NoaXAncyBoYW5kbGVyIGhhcyBoZWxkLiAtPiBu
+byBkZWFkbG9jay4NCj4gPj4+ICogb3RoZXIgZGV2aWNlcyBhdHRhY2hlZCB0byB0aGlzIGdwaW9j
+aGlwIG1pZ2h0IGdldCBpbnRlcnJ1cHRzLCBzaW5jZQ0KPiA+Pj4gZ3Bpb2NoaXAncyBoYW5kbGVy
+IGlzIHJ1bm5pbmcgaW4gdGhyZWFkcywgcmF3X3NwaW5fbG9jayBjYW4gaGVscCBhdm9pZA0KPiA+
+Pj4gbWVzc2luZyB1cCB0aGUgY3JpdGljYWwgZGF0YSBieSB0d28gdGhyZWFkcyAtPiBzdGlsbCBu
+byBkZWFkbG9jay4NCj4gPj4NCj4gPj4gVGhlIHdvcnN0IFJUIGNhc2UgSSBjYW4gaW1hZ2luZSBp
+cyB3aGVuIGdwaW8gQVBJIGlzIHN0aWxsIGNhbGxlZCBmcm9tIGhhcmQNCj4gSVJRDQo+ID4+IGNv
+bnRleHQgYnkgc29tZQ0KPiA+PiBvdGhlciBkZXZpY2UgZHJpdmVyIC0gc29tZSB0b2dnbGluZyBm
+b3IgZXhhbXBsZS4NCj4gPj4gTm90ZS4gUlQgb3IgInRocmVhZGlycXMiIGRvZXMgbm90IG1lYW4g
+Z3Bpb2NoaXAgYmVjb21lIHNsZWVwYWJsZS4NCj4gPj4NCj4gPj4gSW4gdGhpcyBjYXNlOg0KPiA+
+PiAgICB0aHJlYWRlZCBoYW5kbGVyDQo+ID4+ICAgICAgcmF3X3NwaW5fbG9jaw0KPiA+PiAJSVJR
+IGZyb20gb3RoZXIgZGV2aWNlDQo+ID4+ICAgICAgICAgICAgIGhhcmRfaXJxIGhhbmRsZXINCj4g
+Pj4gICAgICAgICAgICAgICBncGlvZF94KCkNCj4gPj4gCQlyYXdfc3Bpbl9sb2NrX2lycXNhdmUo
+KSAtLSBvb3BzDQo+ID4NCj4gPiBBY3R1YWxseSBubyBvb3BzIGhlcmUuIG90aGVyIGRyaXZlcnMg
+ZG9uJ3QgaG9sZCB0aGUgc2FtZQ0KPiA+IHNwaW5sb2NrIG9mIHRoaXMgZHJpdmVyLg0KPiANCj4g
+aHVoLg0KPiBkcml2ZXIvbW9kdWxlIEEgcmVxdWVzdHMgZ3BpbyBhbmQgdXNlcyBpdCBpbiBpdHMg
+aGFyZF9pcnEgaGFuZGxlciBieSBjYWxsaW5nDQo+IEdQSU8gQVBJDQo+IChMaWtlIGdwaW9kX3Nl
+dF92YWx1ZSgpKSwgdGhvc2Ugd2lsbCBnbyB0byB0aGlzIGRyaXZlciBhbmQgZW5kIHVwIGluDQo+
+IG9tYXBfZ3Bpb19zZXQoKS4NCg0KWWVzLCB0aGlzIGNvdWxkIGJlIGEgY29ybmVyIHRob3VnaCBp
+dCBkb2Vzbid0IG1ha2UgYW55IHNlbnNlDQp0byB1c2UgSVJRRl9OT19USFJFQUQgZm9yIHRoaXMg
+a2luZCBvZiBkcml2ZXIvbW9kdWxlIEEgb24gcnQNCmFzIHRoaXMgd2lsbCBkZWZlYXQgdGhlIHB1
+cnBvc2Ugb2YgcHJlZW1wdGlvbiBieSBhZGRpbmcgYSBsb25nDQppcnFzb2ZmIHNlY3Rpb24uDQoN
+ClNpbmNlIGl0IGNhbm5vdCBjb21wbGV0ZWx5IGF2b2lkIHRoaXMgbG9ja2RlcCBpc3N1ZSwgSSB0
+aGluaw0KdGhhdCBpdCBpcyBwb2ludGxlc3MgdG8gY29udGludWUgc3RydWdnbGluZyB3aXRoIHRo
+aXMgcGF0Y2gNCndoaWNoIGlzIGNoYW5naW5nIGFuIGlycSBkaXNwYXRjaGVyIGRyaXZlciBhbnkg
+bW9yZS4gDQoNCj4gDQo+ID4NCj4gPj4NCj4gPj4gQnV0IGluIGdlbmVyYWwsIHdoYXQgYXJlIHRo
+ZSBiZW5lZml0IG9mIHN1Y2ggY2hhbmdlcyBhdCBhbGwsIGV4Y2VwdCBiZXR0ZXINCj4gbWFya2lu
+Zw0KPiA+PiBjYWxsIGNvbnRleHQgYW5ub3RhdGlvbiwNCj4gPj4gc28gd2UgYXJlIHNwZW5kaW5n
+IHNvIG11Y2ggdGltZSBvbiBpdD8NCj4gPg0KPiA+IFRCSCwgdGhlIGJlbmVmaXQgaXMgcmVhbGx5
+IHRpbnkgZXhjZXB0IGNvZGUgY2xlYW51cC4ganVzdCBjdXJpb3VzIGhvdyB0aGluZ3MNCj4gY291
+bGQNCj4gPiBiZSBkaWZmZXJlbnQgd2hpbGUgaXQgaGFwcGVucyBpbiBhbiBpcnEgZGlzcGF0Y2hl
+cidzIGhhbmRsZXIuDQo+IA0KPiANCj4gLS0NCj4gQmVzdCByZWdhcmRzLA0KPiBHcnlnb3JpaQ0K
+DQpUaGFua3MNCkJhcnJ5DQoNCg==
