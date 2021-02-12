@@ -2,114 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3E88319BC7
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 10:22:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93CB8319BF7
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 10:39:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229756AbhBLJV4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Feb 2021 04:21:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
+        id S230219AbhBLJiW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Feb 2021 04:38:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbhBLJVy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 04:21:54 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404B5C061574
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 01:21:13 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id c11so5443528pfp.10
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 01:21:13 -0800 (PST)
+        with ESMTP id S230159AbhBLJiS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 04:38:18 -0500
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5AF0C0613D6
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 01:37:37 -0800 (PST)
+Received: by mail-lf1-x133.google.com with SMTP id j19so12150331lfr.12
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 01:37:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2Xr++FWOGrRgeZX24DXMr+Mjana0jr7tu3CsjIljibE=;
-        b=lwSecrGDkqIXoWpEN4asiZlDDh0SyJIg5YWpsegvrIP2/Wzxwl2j5MsGXj3lqkw27v
-         Od2bLz0a42TTb6GPIX5S04kcxOXckSOTmJ25a9oLId7vxwO46qhy6f/NVoE258v/9XZk
-         VWy1++OIa7Sazk0G2Er4EOEOJeC27fS8dGUw4r5sSJ71Q22YsFF+ZE1N+fNTPDRqgyl/
-         HeTC2JJEkKW+kxa9PJgDQs/DDSkwmxviqnKkMp6l35+3cvhOzpXqdT0ljFxJs3m643G1
-         oq/iiDU//u7Q09Zv6JmWetPb9eolDSym7JYOARg7uubcLR/AnOYIIsM9SRsUbx80mmlh
-         FXlw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tkQG1XwORvJeQny3T2q3qwq+3l4PlQt8nYKO7d6xMus=;
+        b=vySTaqAeq8QfuWffEsQxhpwvET4VT2xrxtWRlCFKP/NoeusFFv5XShePxzCQod+MYr
+         gVcBq9FppxrRLz52qfHZw26quVOmihqmU0OnI59qzWZiVSW8EndYFsZauFT755e+YCVU
+         qAwb/FU0D+xXJBA711p/GdBkQBLXNDxUyE/DLWkwoAv4urJgTT+Kg7swkzFdRoDF2WYs
+         CaUVv1VGsZkBMy9PJQSc7jGkf7ayPSQLH3KTNBgIv1JB95cfH+by/bSBE+Jykr2snTDV
+         EhWRVfPMfy+/eTwk1KHdUNNkHrIl8Fg5rnlFm/1c+wueS+GDdYVLslz9RCcibJTMAvPt
+         KjfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2Xr++FWOGrRgeZX24DXMr+Mjana0jr7tu3CsjIljibE=;
-        b=sQ6AI7a2FLEe3zUS1In4ayzUFUnwp6vAb62T+onGdggteygb0tBrBCCosZwitKxp2y
-         9YUTOjwi/cbOsWNvraWt+krxIQYKUyqx7ULwMDfgCzaDVSyADQIxpltfCHw83TwAFrXM
-         KLzRorevzXqKiGSbjdVnQKfignidvzah82yXCWc+gqMHOnxBNYMW2+F60ZTUrqJ0o7wT
-         MYWAIYNW7ixYpdGmt41KXdrsAGXwRZ2Jza7n5qcsBPuWcp7VjhjytguvXW7BIKHqqYAC
-         kKTvLNMZlFXc37oRAKaCPgEohdu/Um5yBIPd4h/PT5duZd7PGSmvlvPryUrHGb0PHGSe
-         VMLg==
-X-Gm-Message-State: AOAM533CoCE6D8cdUYibpu5nmoGonCbxUp2hcb8UcyoC/q8SFAbetBJE
-        w2QPm16Cj5ChPLDPxlkSLrss
-X-Google-Smtp-Source: ABdhPJzyFjDUiRxUEYywtsVsMENJrvBe66j6j61ZUfT+SNhLegdE0d/azLlQcAl/w6Ek9FKo1G5JzA==
-X-Received: by 2002:a63:4556:: with SMTP id u22mr2243746pgk.270.1613121672763;
-        Fri, 12 Feb 2021 01:21:12 -0800 (PST)
-Received: from work ([103.66.79.123])
-        by smtp.gmail.com with ESMTPSA id cq2sm7308016pjb.55.2021.02.12.01.21.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Feb 2021 01:21:12 -0800 (PST)
-Date:   Fri, 12 Feb 2021 14:51:09 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: actions: Add depends on || COMPILE_TEST
-Message-ID: <20210212092109.GA18975@work>
-References: <20210212081411.50774-1-linus.walleij@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tkQG1XwORvJeQny3T2q3qwq+3l4PlQt8nYKO7d6xMus=;
+        b=icSi17cSWQX5OHPQLgA4rP8qu9P/99OcVrENTGarqoGWy/GV4K80KtJ4ys16LcXGN6
+         MhVwWR4xDN57T5xN/bCuH+mCCQd5Puz2snrhvmyvvotQ5ZIhYehucWvQoJQu/oVJArHr
+         rFo0XGKfS9CvY9jRrVxQa6cnffI6Euz6gWJTqxmVRVSkqUCom3QtqB0q65pFHUj77zvV
+         8pwpyTqNdFM5oxq90eQzC7hwP45GAqM3FR1vDnD/MahzPxRkj+6uAguiBx4VjLQ14LA9
+         RwfgOcsEIYa5LQOCbCFhlX7i0laLW8w5qRimKANmlHpfmEBCwCXh/NPDWgnPjVo+x99W
+         1YcQ==
+X-Gm-Message-State: AOAM532lp0uDwbVXQwgu0oalntjv1sIcf6RN6/xQLI9Y6+AWvtnivH99
+        dUidSWAeMgYPLS/nIPgMS0AxaoV14MSc9BerKeDO9Q==
+X-Google-Smtp-Source: ABdhPJzfSMXafe7QDD8aIWgywYScz0nt1ibx1N1bfZA9Ifhpxa3+t2daf6p36bwgYGDhcAIbnuJuB55CCU1zK65sb8w=
+X-Received: by 2002:a19:600e:: with SMTP id u14mr1109673lfb.465.1613122656181;
+ Fri, 12 Feb 2021 01:37:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210212081411.50774-1-linus.walleij@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20210205020730.1746354-1-saravanak@google.com>
+In-Reply-To: <20210205020730.1746354-1-saravanak@google.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 12 Feb 2021 10:37:25 +0100
+Message-ID: <CACRpkdbWccPqqAxgPVAW0v3+6gdM9dK0EFiBsaUGgc88F1XvCg@mail.gmail.com>
+Subject: Re: [PATCH v1] gpiolib: Don't probe gpio_device if it's not the
+ primary device
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 12, 2021 at 09:14:11AM +0100, Linus Walleij wrote:
-> I happened to apply the v1 of the patch restriction the
-> selection to ARM or ARM64, sorry for my sloppiness.
-> Fixing up the mistake as I can't back the patch out now.
-> 
-> Fixes: 5784921f7b6c ("pinctrl: actions: Add the platform dependency to drivers")
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+On Fri, Feb 5, 2021 at 3:07 AM Saravana Kannan <saravanak@google.com> wrote:
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
+> Dmitry reported[1] boot error messages caused by
+> commit 4731210c09f5 ("gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default").
+>
+> gpio-1022 (cpu-pwr-req-hog): hogged as input
+> max77620-pinctrl max77620-pinctrl: pin gpio4 already requested by max77620-pinctrl; cannot claim for gpiochip1
+> max77620-pinctrl max77620-pinctrl: pin-4 (gpiochip1) status -22
+> max77620-pinctrl max77620-pinctrl: could not request pin 4 (gpio4) from group gpio4  on device max77620-pinctrl
+> gpio_stub_drv gpiochip1: Error applying setting, reverse things back
+> gpio_stub_drv: probe of gpiochip1 failed with error -22
+>
+> This happens because when we try to probe a device, driver core calls
+> into pinctrl to set up the pins. However, if the GPIO DT node already
+> has a proper device created and probed, trying to probe the gpio_device
+> with a stub driver makes the pins be claimed twice. pinctrl doesn't like
+> this and throws an error.
+>
+> So, this patch makes sure the gpio_stub_drv doesn't match with a
+> gpio_device if it's not the primary device for the fwnode.
+>
+> [1] - https://lore.kernel.org/lkml/544ad0e4-0954-274c-8e77-866aaa5661a8@gmail.com/
+> Fixes: 4731210c09f5 ("gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default")
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Tested-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/pinctrl/actions/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
-> index 8bb8345b17da..119f0e471efd 100644
-> --- a/drivers/pinctrl/actions/Kconfig
-> +++ b/drivers/pinctrl/actions/Kconfig
-> @@ -12,21 +12,21 @@ config PINCTRL_OWL
->  
->  config PINCTRL_S500
->  	bool "Actions Semi S500 pinctrl driver"
-> -	depends on ARM
-> +	depends on ARM || COMPILE_TEST
->  	depends on PINCTRL_OWL
->  	help
->  	  Say Y here to enable Actions Semi S500 pinctrl driver
->  
->  config PINCTRL_S700
->  	bool "Actions Semi S700 pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->  	depends on PINCTRL_OWL
->  	help
->  	  Say Y here to enable Actions Semi S700 pinctrl driver
->  
->  config PINCTRL_S900
->  	bool "Actions Semi S900 pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->  	depends on PINCTRL_OWL
->  	help
->  	  Say Y here to enable Actions Semi S900 pinctrl driver
-> -- 
-> 2.29.2
-> 
+> Greg/Linus,
+>
+> This will need to go into driver-core because the Fixes is in
+> driver-core too.
+
+OK that seems to be the right solution. Maybe I would try to
+explain the situation in the comment in gpio_bus_match
+a bit more, but anyway:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
