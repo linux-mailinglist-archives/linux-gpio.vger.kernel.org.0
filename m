@@ -2,101 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1F3E31A638
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 21:50:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 662BD31A7B7
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 23:33:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230047AbhBLUts (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Feb 2021 15:49:48 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3442 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231551AbhBLUtr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 15:49:47 -0500
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Dcltf1mVTz5Qm3;
-        Sat, 13 Feb 2021 04:47:38 +0800 (CST)
-Received: from dggemi709-chm.china.huawei.com (10.3.20.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.498.0; Sat, 13 Feb 2021 04:49:04 +0800
-Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
- dggemi709-chm.china.huawei.com (10.3.20.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2106.2; Sat, 13 Feb 2021 04:49:04 +0800
-Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
- dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.2106.006;
- Sat, 13 Feb 2021 04:49:03 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Arnd Bergmann <arnd@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        luojiaxing <luojiaxing@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Santosh Shilimkar" <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Subject: RE: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
- raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
-Thread-Topic: [Linuxarm] Re: [PATCH for next v1 1/2] gpio: omap: Replace
- raw_spin_lock_irqsave with raw_spin_lock in omap_gpio_irq_handler()
-Thread-Index: AQHXASPSlQt84o9SE0i+o14ylEf4e6pTywWAgACGpJD//4GQAIAAiAmg//+HpICAAI6IgIAAimfw
-Date:   Fri, 12 Feb 2021 20:49:03 +0000
-Message-ID: <a92d5e15724a4843887212d7e05c99f8@hisilicon.com>
-References: <1612774577-55943-1-git-send-email-luojiaxing@huawei.com>
- <1612774577-55943-2-git-send-email-luojiaxing@huawei.com>
- <fab1e871-08e4-fc71-9dbf-9bcacf18e2e1@ti.com>
- <CAK8P3a0m4ocfLyJZ5wMxyKESYUJ5um5sb5MyAzC8ckCb6qAH5g@mail.gmail.com>
- <d5465b81-bb53-49ee-a556-40d208deb765@ti.com>
- <a61ef337fd1c4538a47fe855920f95d3@hisilicon.com>
- <CAK8P3a3SHQNjF5ZpqHQweG7BQ52Xi1hQKDiMVKq4aNK_7VDw6w@mail.gmail.com>
- <e34a4085-268f-1cd0-a5dc-a87a2e655fe2@ti.com>
- <2a12cf7a21f74a0c9e2552a467b77fae@hisilicon.com>
- <YCZfBMPwmzD2U/4c@smile.fi.intel.com>
- <c4a07bef5dd24fd2af0aa7fe4c78b903@hisilicon.com>
- <33720e72-a438-8ffe-1b5f-38756738ad9b@ti.com>
- <CAK8P3a0JEhhw4vB=YgUJj5_ywds=sVuzPd4Zf0iiRwX4Mgsk3g@mail.gmail.com>
-In-Reply-To: <CAK8P3a0JEhhw4vB=YgUJj5_ywds=sVuzPd4Zf0iiRwX4Mgsk3g@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.105]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S229660AbhBLWda (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Feb 2021 17:33:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232152AbhBLWbE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 17:31:04 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8BB4C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 14:30:22 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id r2so564922plr.10
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 14:30:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hqun1mCL3Uj8nnBET9CEvjX/lw7OX880oHLfK8YQm3E=;
+        b=z0oIZhb0JzsRbNMFDHzZw+XcEQqd4fPjxTMRM+ynICX6gDjBSqzsyQh1LUZoKeDnbS
+         6eloasQgzsH+eywOjGtQVSxctD06RZHYp3SdFL4nOjW0Vqqaa/zUn6+OBbF7Cu19pJye
+         7fRP+aRaGXyHFuXJJEMpMVU+mCjnwvjDWAxDZhsXuutlnQ1RmcK6kJzp/zjl3HO/Lx0C
+         b03BguXUgKLYnHQBISL4TALAx9aJIemWV+enQHXT4JQPlYNq3RMWKll+65KMJv7foUVG
+         d5I4+TE9bu7zq89Le28gkJBOaH/UelqGgt5PhL1/evbkmBMbd5lrKuaEAvtwRDAO7V+D
+         o8mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hqun1mCL3Uj8nnBET9CEvjX/lw7OX880oHLfK8YQm3E=;
+        b=m2tys2hjdr9LmWkMWzAd5VTZivWSHXB9S+iR3+zNFFjZin0N05J2yYn5QMy/T8z+XU
+         wvhKLpmT0L0TKIi/bJD2fGw/3JJMpmZQP0jN+oxoO0FC7a4aDwDzsX/aQvLM5jc72v0y
+         XnRGh6h5TULeIgmVkC+ZC85rsG+Wa7BsWeW4ly2ndJF3ladVZW8xji1nBW1upfUHWUIz
+         Ty4phltLTARASjesON50qYN+P1+0YSYYUlixesKAt/akJZS5wP+aNAhzdRdKFLd3zn19
+         7TJLgfdw1BkbyNaya8FtkPeHBYP12x9gA8y2dbORNA2f0XQTa0SWU3t/d4SH/ijEto9/
+         4bXA==
+X-Gm-Message-State: AOAM531MnFMBhGsjttIRC2LUXDeILSdPUxJZd7sUfclZziE5NJwibCuE
+        QxT0ECCUBmCnvcZyFWtmo077Ew==
+X-Google-Smtp-Source: ABdhPJzCt9f6OATe4sn2T1ptWunulz+QS3wgNEWUiWa4ib24beXi361QiuU6ByAWi3GMntf0xwRfcA==
+X-Received: by 2002:a17:902:b598:b029:e2:daa2:161c with SMTP id a24-20020a170902b598b02900e2daa2161cmr4616900pls.20.1613169020863;
+        Fri, 12 Feb 2021 14:30:20 -0800 (PST)
+Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:55c2:10c0:c1dd:8558])
+        by smtp.gmail.com with ESMTPSA id j26sm9530351pfa.35.2021.02.12.14.30.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Feb 2021 14:30:20 -0800 (PST)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tony Lindgren <tony@atomide.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Joe Perches <joe@perches.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH v5 0/2] pinctrl: pinmux: Add pinmux-select debugfs file
+Date:   Fri, 12 Feb 2021 14:30:13 -0800
+Message-Id: <20210212223015.727608-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuZCBCZXJnbWFubiBb
-bWFpbHRvOmFybmRAa2VybmVsLm9yZ10NCj4gU2VudDogU2F0dXJkYXksIEZlYnJ1YXJ5IDEzLCAy
-MDIxIDk6MjMgQU0NCj4gVG86IEdyeWdvcmlpIFN0cmFzaGtvIDxncnlnb3JpaS5zdHJhc2hrb0B0
-aS5jb20+DQo+IENjOiBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcpIDxzb25nLmJhby5odWFAaGlz
-aWxpY29uLmNvbT47IEFuZHkgU2hldmNoZW5rbw0KPiA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNv
-bT47IGx1b2ppYXhpbmcgPGx1b2ppYXhpbmdAaHVhd2VpLmNvbT47IExpbnVzDQo+IFdhbGxlaWog
-PGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47IFNhbnRvc2ggU2hpbGlta2FyIDxzc2FudG9zaEBr
-ZXJuZWwub3JnPjsNCj4gS2V2aW4gSGlsbWFuIDxraGlsbWFuQGtlcm5lbC5vcmc+OyBvcGVuIGxp
-c3Q6R1BJTyBTVUJTWVNURU0NCj4gPGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnPjsgbGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXhhcm1Ab3BlbmV1bGVyLm9yZw0KPiBTdWJq
-ZWN0OiBSZTogW0xpbnV4YXJtXSBSZTogW1BBVENIIGZvciBuZXh0IHYxIDEvMl0gZ3Bpbzogb21h
-cDogUmVwbGFjZQ0KPiByYXdfc3Bpbl9sb2NrX2lycXNhdmUgd2l0aCByYXdfc3Bpbl9sb2NrIGlu
-IG9tYXBfZ3Bpb19pcnFfaGFuZGxlcigpDQo+IA0KPiBPbiBGcmksIEZlYiAxMiwgMjAyMSBhdCAx
-Mjo1MyBQTSBHcnlnb3JpaSBTdHJhc2hrbw0KPiA8Z3J5Z29yaWkuc3RyYXNoa29AdGkuY29tPiB3
-cm90ZToNCj4gPg0KPiA+IFRoZSB3b3JzdCBSVCBjYXNlIEkgY2FuIGltYWdpbmUgaXMgd2hlbiBn
-cGlvIEFQSSBpcyBzdGlsbCBjYWxsZWQgZnJvbSBoYXJkDQo+IElSUSBjb250ZXh0IGJ5IHNvbWUN
-Cj4gPiBvdGhlciBkZXZpY2UgZHJpdmVyIC0gc29tZSB0b2dnbGluZyBmb3IgZXhhbXBsZS4NCj4g
-PiBOb3RlLiBSVCBvciAidGhyZWFkaXJxcyIgZG9lcyBub3QgbWVhbiBncGlvY2hpcCBiZWNvbWUg
-c2xlZXBhYmxlLg0KPiA+DQo+ID4gSW4gdGhpcyBjYXNlOg0KPiA+ICAgdGhyZWFkZWQgaGFuZGxl
-cg0KPiA+ICAgICByYXdfc3Bpbl9sb2NrDQo+ID4gICAgICAgICBJUlEgZnJvbSBvdGhlciBkZXZp
-Y2UNCj4gPiAgICAgICAgICAgIGhhcmRfaXJxIGhhbmRsZXINCj4gPiAgICAgICAgICAgICAgZ3Bp
-b2RfeCgpDQo+ID4gICAgICAgICAgICAgICAgIHJhd19zcGluX2xvY2tfaXJxc2F2ZSgpIC0tIG9v
-cHMNCj4gPg0KPiANCj4gR29vZCBwb2ludCwgSSBoYWQgbWlzc2VkIHRoZSBmYWN0IHRoYXQgZHJp
-dmVycyBjYW4gY2FsbCBncGlvIGZ1bmN0aW9ucyBmcm9tDQo+IGhhcmRpcnEgY29udGV4dCB3aGVu
-IEkgcmVwbGllZCBlYXJsaWVyLCBncGlvIGlzIGNsZWFybHkgc3BlY2lhbCBoZXJlLg0KDQoNClll
-cy4gR3BpbyBwcm92aWRlcyBBUElzLCB0aHVzLCBvdGhlciBkcml2ZXJzIGNhbiBnbyBkaXJlY3Rs
-eSBpbnRvIHRoZQ0KdGVycml0b3J5IG9mIGdwaW8gZHJpdmVyLg0KDQpBbm90aGVyIG9uZSB3aGlj
-aCBpcyBldmVuIG1vcmUgc3BlY2lhbCBtaWdodCBiZSBtNjhrLCB3aGljaCBJIGNjLWVkIHlvdQ0K
-eWVzdGVyZGF5Og0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC9jNDZkZGI5NTRjZmU0NWQ5
-ODQ5YzkxMTI3MWQ3ZWMyM0BoaXNpbGljb24uY29tLw0KDQo+IA0KPiAgICAgICAgICAgQXJuZA0K
-DQpUaGFua3MNCkJhcnJ5DQoNCg==
+This series first converts the debugfs files in the pinctrl subsystem to
+octal permissions and then adds a new debugfs file "pinmux-select".
+
+Function name and group name can be written to "pinmux-select" which
+will cause the function and group to be activated on the pin controller.
+
+Notes for PATCH v5:
+- convert permissions from symbolic to octal for debugfs_create_file()
+  calls in core.c that Joe Perches pointed out I had missed
+- Linus W: please let me know if I should break this series apart as you
+  already applied an earlier version of octal conversion patch today [1]
+- switch from sscanf() to just pointing to function name and group name
+  inside of the buffer. This also avoids having to allocate additional
+  buffers for fname and gname. Geert and Andy highlighted this security
+  issue and Andy suggested code to use instead of sscanf().
+- switch from devm_kfree() to kfree() after Dan Carpenter warned me
+- remove .read from pinmux_select_ops per Geert since it is write only
+- add usage format to error when unable find fname or gname in buffer
+
+Notes for PATCH v4:
+- correct the commit message in the second patch to reference function
+  and group name instead of integer selectors. Apologies for not fixing
+  that in v3
+- fix typos in cover letter
+
+Notes for PATCH v3:
+- add Suggested-by: Andy Shevchenko to the "pinctrl: use to octal
+  permissions for debugfs files" patch
+- change the octal permissions from 0400 to 0444 to correctly match the
+  symbolic permissions (thanks to Joe Perches and Geert Uytterhoeven)
+- note that S_IFREG flag is added to the mode in __debugfs_create_file()
+  (thanks to Andy for highlighting this and Joe for suggesting I should
+  add a note to the commit message)
+- fix order of the goto labels so that the buffers are freed correctly
+  as suggested by Dan Carpenter
+- move from devm_kzalloc() to kzalloc() as the buffers are only used
+  inside the pinmux_select() function and not related to the lifetime
+  of the pin controller device (thanks to Andy for pointing this out)
+- correct the pinmux-select example in commit message to use the
+  function and group name instead of selector (thanks to Geert)
+
+Notes for PATCH v2:
+- create patch series that includes patch to switch all the debugfs
+  files in pinctrl subsystem over to octal permission
+- write function name and group name, instead of error-prone selector
+  numbers, to the 'pinmux-select' file
+- switch from static to dynamic allocation for the kernel buffer filled
+  by strncpy_from_user()
+- look up function selector from function name using
+  pinmux_func_name_to_selector()
+- validate group name with get_function_groups() and match_string()
+- look up selector for group name with pinctrl_get_group_selector()
+
+Notes for PATCH v1:
+- posted seperate patch to switch all the debugfs files in pinctrl
+  subsystem over to octal permission
+- there is no existing documentation for any of the debugfs enteries for
+  pinctrl, so it seemed to have a bigger scope than just this patch. I
+  also noticed that rst documentation is confusingly named "pinctl" (no
+  'r') and started thread about that [2]. Linus suggested chaning that
+  to 'pin-control'. Thus I am planning a seperate documentation patch
+  series where the file is renamed, references changed and a section on
+  the pinctrl debugfs files is added.
+
+Notes for RFC v2 [3]:
+- rename debugfs file "pinmux-set" to "pinmux-select"
+- renmae pinmux_set_write() to pinmux_select()
+- switch from memdup_user_nul() to strncpy_from_user()
+- switch from pr_warn() to dev_err()
+
+[1] https://lore.kernel.org/linux-gpio/20210126044742.87602-1-drew@beagleboard.org/
+[2] https://lore.kernel.org/linux-gpio/20210126050817.GA187797@x1/
+[3] https://lore.kernel.org/linux-gpio/20210123064909.466225-1-drew@beagleboard.org/
+
+Drew Fustini (2):
+  pinctrl: use to octal permissions for debugfs files
+  pinctrl: pinmux: Add pinmux-select debugfs file
+
+ drivers/pinctrl/core.c    |  12 ++---
+ drivers/pinctrl/pinconf.c |   4 +-
+ drivers/pinctrl/pinmux.c  | 103 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 109 insertions(+), 10 deletions(-)
+
+-- 
+2.25.1
+
