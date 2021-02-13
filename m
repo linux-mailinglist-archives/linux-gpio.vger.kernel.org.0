@@ -2,217 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BEBD31A7BE
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Feb 2021 23:41:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26FF331A8C0
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Feb 2021 01:24:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232025AbhBLWdj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Feb 2021 17:33:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56310 "EHLO
+        id S230125AbhBMAYW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Feb 2021 19:24:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232224AbhBLWbI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 17:31:08 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0B2C061788
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 14:30:27 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id j5so549062pgb.11
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 14:30:27 -0800 (PST)
+        with ESMTP id S229602AbhBMAYV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 19:24:21 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B04C061756
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 16:23:41 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id e9so563151pjj.0
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 16:23:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kRQyzW+k1IRH4R+HarppwyyaLUjMFuIFVi6ARjRjxtA=;
-        b=d1vhf4eVeouPnG88sIroW/z7jNiI7TBPiaEhLZb1xHEh1WBWoTfAcVjeEicdBj0/3w
-         AvvaTHfcq1IT4zb/eD5gKooPpDWfaJW4UzHPmo3YGxoRwOYOPzeY0q9TAoBKcqkWCCRZ
-         cIMUmDZlLz4PKZpxCBinDBl0VQUPt0QeCYscJijLwbPaTNTN+fnG+w0kP+HYeA638TWm
-         MNH3JVfQyQ28+uN9FitZsaXDbFomPIPnMmLRAeUnIOTVWrUFsFNOKHJT28QpsVI/WzTp
-         YMBGSX3Sz4x+XCuvRiTSbNkl/ayu06HAOcugCwhu4LngpLAQU0jRC/3SzcjoNAqC89q1
-         Qwwg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fNaB+Z8UtZPx/Yeh2IrJ1nsVH7Wdo5mwB6XRElv2VJw=;
+        b=lkST1u/4/y4kRoUDcbqjQLH2jMgln5li97tYq+vsDMq8v5R6Iijwj+AQGeni9tPs+N
+         jioxQpfvEu4qj49aPU7TkT6wXRyIXZORoqAiv5EpBxMQRObgphxXft43aBRipnBp3j4W
+         R8tf4Aa2TfnFC9/dsHzwK1CMARZEwxsCW6PEujRO83vtIcPxa+qs2hYRn2hoAU9rn4Ip
+         AqdMQLv3rxabmqwOpOwrgY1jCUM2BX1VUonUWtAPhm2M4ZSI1JOokjO+me1gQWQ4LNT4
+         jI35WAnQDp2yR5E06bo8rF4P2CjCUuyPfnZnjt3JhSZJmHUoOXDDsPt16spS/ckdXk5u
+         t9og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kRQyzW+k1IRH4R+HarppwyyaLUjMFuIFVi6ARjRjxtA=;
-        b=uVPFKVm09MetQMS5WJUqQSse8U1Xf3jgat/k76liMmOGeVsr2ByXVSZ1Yj/zR6cG46
-         qIAur2PLY4zy41bpuYvLb/VJzgOavbv5mCQQtxMW5d/c7Vg4JpGC8Wgt9dK4HY9hVzdH
-         9Ty198DA1i8UkNq/CoKNdC+ADGHbPJbv4/xD+3r8C+j4R8fj1nuwyLnGylBFYjMqAMyX
-         97c9Li6rrBQ8z/z3aN76bCbmvMab14xB4Fye8s3WQQspQf8fCxuYwq/c2jsCcA57afMz
-         OnF0VK7DVlQrSz34la9wD2wWcgqdpTE28lDL1AkvBtI23D92nnMIkUxwwQc48Ty32UuJ
-         F/AQ==
-X-Gm-Message-State: AOAM532nnrGBWAfwiEAZaI6CrQ5SrCFQfdcIMEAppaqofDagzowEIV7q
-        +ftUa2T/7Zw6GC0xF8vJppe+Ag==
-X-Google-Smtp-Source: ABdhPJyXHL8XNU0IidIP8aBSb0OBcIjWH1cL5U41FYVG/feor/z/OUWFX8yf4Mx3x09DuPtfwxC61Q==
-X-Received: by 2002:a63:515e:: with SMTP id r30mr5257278pgl.253.1613169026821;
-        Fri, 12 Feb 2021 14:30:26 -0800 (PST)
-Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:55c2:10c0:c1dd:8558])
-        by smtp.gmail.com with ESMTPSA id j26sm9530351pfa.35.2021.02.12.14.30.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fNaB+Z8UtZPx/Yeh2IrJ1nsVH7Wdo5mwB6XRElv2VJw=;
+        b=VNurQqJ6v4cybvk8e3yuZ86Jz80fYpwuosJTXqMAP8knlDzFidH4HolBZ2wlm7iQtr
+         bnri666IAdvCB1Teln6GCcu/AJI/i+aj3FzQo34zq8aVzCy4gh0E0+TD7aBNBUZZfCRX
+         muW94xMz3cJdkbgDgbuZAnEnkujQkTFY2IGRHMUKzcF2/wxbxI781gitL8l3kyi+OF6i
+         CUCHUU7fuJ68ol1875Ls1y3UuXCPfd+ki5sZDGtMJreJxLp3DVFwx8zBsK+cAOSui7th
+         gthp74koO1zuwww5mKTidJu15btotEIuoZx7Mq6wLkA0ltwADjsFRZjaUp3c4RzpSQGw
+         J9IA==
+X-Gm-Message-State: AOAM53210DFDUI4pH+efXnrhkuwOYu7On8irhFLJM6ybOLy991U+rLSn
+        YnvOq/Tf+QpMCMh1sqzvWuE=
+X-Google-Smtp-Source: ABdhPJwAp2dN3ihJkGvPC6ttR6u/TSkI1M0rzfaMpmLNxk/u0qPq/mreWAINwD2+VqErehUeTjhgmQ==
+X-Received: by 2002:a17:90a:aa8a:: with SMTP id l10mr5120025pjq.86.1613175820933;
+        Fri, 12 Feb 2021 16:23:40 -0800 (PST)
+Received: from sol (106-69-179-46.dyn.iinet.net.au. [106.69.179.46])
+        by smtp.gmail.com with ESMTPSA id z31sm8712619pjj.47.2021.02.12.16.23.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Feb 2021 14:30:26 -0800 (PST)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v5 2/2] pinctrl: pinmux: Add pinmux-select debugfs file
-Date:   Fri, 12 Feb 2021 14:30:15 -0800
-Message-Id: <20210212223015.727608-3-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210212223015.727608-1-drew@beagleboard.org>
-References: <20210212223015.727608-1-drew@beagleboard.org>
+        Fri, 12 Feb 2021 16:23:40 -0800 (PST)
+Date:   Sat, 13 Feb 2021 08:23:36 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Pedro Botella <pbotella@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Subject: Re: [libgpiod] Bug in python binding when requesting output?
+Message-ID: <20210213002336.GA7405@sol>
+References: <CAJAEvhib-M-UQeoCDs+aex-hdE-vJSQk=C5B7z4A9WmR+JcxQQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJAEvhib-M-UQeoCDs+aex-hdE-vJSQk=C5B7z4A9WmR+JcxQQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add "pinmux-select" to debugfs which will activate a function and group
-when "<function-name group-name>" are written to the file. The write
-operation pinmux_select() handles this by checking that the names map to
-valid selectors and then calling ops->set_mux().
+On Thu, Feb 11, 2021 at 09:54:22PM +0100, Pedro Botella wrote:
+> Hi,
+> 
+> I'm experiencing what I think is a bug in the python bindings for libgpiod.
+> I believe a line.request with type gpiod.LINE_REQ_DIR_OUT always
+> results in that line being set to '0'.
 
-The existing "pinmux-functions" debugfs file lists the pin functions
-registered for the pin controller. For example:
+That is correct - when requesting a line as output at the kernel uAPI
+the initial value must always be provided.  If you do not provide
+default_vals via the Python API then the output should be defaulted to
+'0' by the Python binding.
 
-function: pinmux-uart0, groups = [ pinmux-uart0-pins ]
-function: pinmux-mmc0, groups = [ pinmux-mmc0-pins ]
-function: pinmux-mmc1, groups = [ pinmux-mmc1-pins ]
-function: pinmux-i2c0, groups = [ pinmux-i2c0-pins ]
-function: pinmux-i2c1, groups = [ pinmux-i2c1-pins ]
-function: pinmux-spi1, groups = [ pinmux-spi1-pins ]
+> To reproduce:
+> 1. request a line with type gpiod.LINE_REQ_DIR_OUT
+> 2. set the line to '1'
+> 3. release the line
+> 4. request the same line with type gpiod.LINE_REQ_DIR_OUT
+> 5. get the value, it should now be '0'
+> 
 
-To activate function pinmux-i2c1 and group pinmux-i2c1-pins:
+To clarify, the expected behaviour is that the output is defaulted
+to '0' if default values are not provided.
+So the problem you are seeing is that the output is not consistently '0'?
 
-echo "pinmux-i2c1 pinmux-i2c1-pins" > pinmux-select
+If you are expecting to see a '1' then you are expecting the lack of
+default_vals in the kwds to leave the output value as is, but that is
+not the case - it should default to '0'.
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- drivers/pinctrl/pinmux.c | 99 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+> I think the issue is in "gpiod_LineBulk_request" in
+> https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/bindings/python/gpiodmodule.c
+> There a call to "gpiod_line_request_bulk" with default_vals being
+> passed as a pointer. Later on in the code, this parameter is checked
+> for NULL, if it is not NULL then the values in the array are used as
+> default_vals.
+> I believe that a NULL pointer should be passed instead if no
+> default_vals have been requested when doing a Line.request from
+> Python.
+> 
 
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index c651b2db0925..c16a6167ac3a 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -673,6 +673,103 @@ void pinmux_show_setting(struct seq_file *s,
- DEFINE_SHOW_ATTRIBUTE(pinmux_functions);
- DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
- 
-+#define PINMUX_SELECT_MAX 128
-+static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
-+				   size_t len, loff_t *ppos)
-+{
-+	const char *usage =
-+		"usage: echo '<function-name> <group-name>' > pinmux-select";
-+	struct seq_file *sfile = file->private_data;
-+	struct pinctrl_dev *pctldev = sfile->private;
-+	const struct pinmux_ops *pmxops = pctldev->desc->pmxops;
-+	const char *const *groups;
-+	char *buf, *fname, *gname;
-+	unsigned int num_groups;
-+	int fsel, gsel, ret;
-+
-+	if (len > PINMUX_SELECT_MAX) {
-+		dev_err(pctldev->dev, "write too big for buffer");
-+		return -EINVAL;
-+	}
-+
-+	buf = kzalloc(PINMUX_SELECT_MAX, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	ret = strncpy_from_user(buf, user_buf, PINMUX_SELECT_MAX);
-+	if (ret < 0) {
-+		dev_err(pctldev->dev, "failed to copy buffer from userspace");
-+		goto free_buf;
-+	}
-+	buf[len-1] = '\0';
-+
-+	fname = strstrip(buf);
-+	if (*fname == '\0') {
-+		dev_err(pctldev->dev, usage);
-+		ret = -EINVAL;
-+		goto free_buf;
-+	}
-+
-+	gname = strchr(fname, ' ');
-+	if (!gname) {
-+		dev_err(pctldev->dev, usage);
-+		ret = -EINVAL;
-+		goto free_buf;
-+	}
-+	*gname++ = '\0';
-+
-+	fsel = pinmux_func_name_to_selector(pctldev, fname);
-+	if (fsel < 0) {
-+		dev_err(pctldev->dev, "invalid function %s in map table\n", fname);
-+		ret = fsel;
-+		goto free_buf;
-+	}
-+
-+	ret = pmxops->get_function_groups(pctldev, fsel, &groups, &num_groups);
-+	if (ret) {
-+		dev_err(pctldev->dev, "no groups for function %d (%s)", fsel, fname);
-+		goto free_buf;
-+	}
-+
-+	ret = match_string(groups, num_groups, gname);
-+	if (ret < 0) {
-+		dev_err(pctldev->dev, "invalid group %s", gname);
-+		goto free_buf;
-+	}
-+
-+	gsel = pinctrl_get_group_selector(pctldev, gname);
-+	if (gsel < 0) {
-+		dev_err(pctldev->dev, "failed to get group selector for %s", gname);
-+		ret = gsel;
-+		goto free_buf;
-+	}
-+
-+	ret = pmxops->set_mux(pctldev, fsel, gsel);
-+	if (ret) {
-+		dev_err(pctldev->dev, "set_mux() failed: %d", ret);
-+		goto free_buf;
-+	}
-+	ret = len;
-+
-+free_buf:
-+	kfree(buf);
-+
-+	return ret;
-+}
-+
-+static int pinmux_select_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, NULL, inode->i_private);
-+}
-+
-+static const struct file_operations pinmux_select_ops = {
-+	.owner = THIS_MODULE,
-+	.open = pinmux_select_open,
-+	.write = pinmux_select,
-+	.llseek = no_llseek,
-+	.release = single_release,
-+};
-+
- void pinmux_init_device_debugfs(struct dentry *devroot,
- 			 struct pinctrl_dev *pctldev)
- {
-@@ -680,6 +777,8 @@ void pinmux_init_device_debugfs(struct dentry *devroot,
- 			    devroot, pctldev, &pinmux_functions_fops);
- 	debugfs_create_file("pinmux-pins", 0444,
- 			    devroot, pctldev, &pinmux_pins_fops);
-+	debugfs_create_file("pinmux-select", 0200,
-+			    devroot, pctldev, &pinmux_select_ops);
- }
- 
- #endif /* CONFIG_DEBUG_FS */
--- 
-2.25.1
+Agreed - passing default_vals uninitialized to gpiod_line_request_bulk()
+is a bug.
+It should be zeroed, or a NULL pointer should be passed if the
+default_vals were not provided in the kwds. Otherwise the output
+value will be set based on the uninitializezd contents of default_vals.
 
+Would you like to provide a patch?
+
+In the meantime the obvious workaround is to always provide default_vals
+in the kwds.
+
+Cheers,
+Kent.
