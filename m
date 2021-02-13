@@ -2,115 +2,217 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26FF331A8C0
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Feb 2021 01:24:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91CA931A99D
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Feb 2021 03:08:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230125AbhBMAYW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Feb 2021 19:24:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbhBMAYV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Feb 2021 19:24:21 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B04C061756
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 16:23:41 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id e9so563151pjj.0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Feb 2021 16:23:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fNaB+Z8UtZPx/Yeh2IrJ1nsVH7Wdo5mwB6XRElv2VJw=;
-        b=lkST1u/4/y4kRoUDcbqjQLH2jMgln5li97tYq+vsDMq8v5R6Iijwj+AQGeni9tPs+N
-         jioxQpfvEu4qj49aPU7TkT6wXRyIXZORoqAiv5EpBxMQRObgphxXft43aBRipnBp3j4W
-         R8tf4Aa2TfnFC9/dsHzwK1CMARZEwxsCW6PEujRO83vtIcPxa+qs2hYRn2hoAU9rn4Ip
-         AqdMQLv3rxabmqwOpOwrgY1jCUM2BX1VUonUWtAPhm2M4ZSI1JOokjO+me1gQWQ4LNT4
-         jI35WAnQDp2yR5E06bo8rF4P2CjCUuyPfnZnjt3JhSZJmHUoOXDDsPt16spS/ckdXk5u
-         t9og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fNaB+Z8UtZPx/Yeh2IrJ1nsVH7Wdo5mwB6XRElv2VJw=;
-        b=VNurQqJ6v4cybvk8e3yuZ86Jz80fYpwuosJTXqMAP8knlDzFidH4HolBZ2wlm7iQtr
-         bnri666IAdvCB1Teln6GCcu/AJI/i+aj3FzQo34zq8aVzCy4gh0E0+TD7aBNBUZZfCRX
-         muW94xMz3cJdkbgDgbuZAnEnkujQkTFY2IGRHMUKzcF2/wxbxI781gitL8l3kyi+OF6i
-         CUCHUU7fuJ68ol1875Ls1y3UuXCPfd+ki5sZDGtMJreJxLp3DVFwx8zBsK+cAOSui7th
-         gthp74koO1zuwww5mKTidJu15btotEIuoZx7Mq6wLkA0ltwADjsFRZjaUp3c4RzpSQGw
-         J9IA==
-X-Gm-Message-State: AOAM53210DFDUI4pH+efXnrhkuwOYu7On8irhFLJM6ybOLy991U+rLSn
-        YnvOq/Tf+QpMCMh1sqzvWuE=
-X-Google-Smtp-Source: ABdhPJwAp2dN3ihJkGvPC6ttR6u/TSkI1M0rzfaMpmLNxk/u0qPq/mreWAINwD2+VqErehUeTjhgmQ==
-X-Received: by 2002:a17:90a:aa8a:: with SMTP id l10mr5120025pjq.86.1613175820933;
-        Fri, 12 Feb 2021 16:23:40 -0800 (PST)
-Received: from sol (106-69-179-46.dyn.iinet.net.au. [106.69.179.46])
-        by smtp.gmail.com with ESMTPSA id z31sm8712619pjj.47.2021.02.12.16.23.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Feb 2021 16:23:40 -0800 (PST)
-Date:   Sat, 13 Feb 2021 08:23:36 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Pedro Botella <pbotella@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
-Subject: Re: [libgpiod] Bug in python binding when requesting output?
-Message-ID: <20210213002336.GA7405@sol>
-References: <CAJAEvhib-M-UQeoCDs+aex-hdE-vJSQk=C5B7z4A9WmR+JcxQQ@mail.gmail.com>
+        id S229693AbhBMCIy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Feb 2021 21:08:54 -0500
+Received: from mga05.intel.com ([192.55.52.43]:37699 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229650AbhBMCIy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 12 Feb 2021 21:08:54 -0500
+IronPort-SDR: tEcsoO07J+yLeFpkE8a/WiANTiP0bMviiXgjM3gB16mMLeompvL58QXRmp6zWTfbDEWayL2n8m
+ kCsVSoETT9dg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9893"; a="267348949"
+X-IronPort-AV: E=Sophos;i="5.81,175,1610438400"; 
+   d="scan'208";a="267348949"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 18:08:13 -0800
+IronPort-SDR: iA+tvtTx2fF0BrRgQtnSYRmkCkon4DtFgoUFx+/Vq7Y5qgwWyMi0qXcICQCEDqsbjqbGw0g9qt
+ RuJhkZbhk+7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,175,1610438400"; 
+   d="scan'208";a="400064196"
+Received: from lkp-server02.sh.intel.com (HELO cd560a204411) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 12 Feb 2021 18:08:12 -0800
+Received: from kbuild by cd560a204411 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lAkLz-000516-Bo; Sat, 13 Feb 2021 02:08:11 +0000
+Date:   Sat, 13 Feb 2021 10:07:40 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ 74f2dd447900256e8aa986be868bcd835d3c60d1
+Message-ID: <6027346c.ihMfSbItEcd4lxPY%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJAEvhib-M-UQeoCDs+aex-hdE-vJSQk=C5B7z4A9WmR+JcxQQ@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 11, 2021 at 09:54:22PM +0100, Pedro Botella wrote:
-> Hi,
-> 
-> I'm experiencing what I think is a bug in the python bindings for libgpiod.
-> I believe a line.request with type gpiod.LINE_REQ_DIR_OUT always
-> results in that line being set to '0'.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 74f2dd447900256e8aa986be868bcd835d3c60d1  dt-bindings: pinctrl: Group tuples in pin control properties
 
-That is correct - when requesting a line as output at the kernel uAPI
-the initial value must always be provided.  If you do not provide
-default_vals via the Python API then the output should be defaulted to
-'0' by the Python binding.
+elapsed time: 721m
 
-> To reproduce:
-> 1. request a line with type gpiod.LINE_REQ_DIR_OUT
-> 2. set the line to '1'
-> 3. release the line
-> 4. request the same line with type gpiod.LINE_REQ_DIR_OUT
-> 5. get the value, it should now be '0'
-> 
+configs tested: 155
+configs skipped: 3
 
-To clarify, the expected behaviour is that the output is defaulted
-to '0' if default values are not provided.
-So the problem you are seeing is that the output is not consistently '0'?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you are expecting to see a '1' then you are expecting the lack of
-default_vals in the kwds to leave the output value as is, but that is
-not the case - it should default to '0'.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                         shannon_defconfig
+arm                     davinci_all_defconfig
+arc                        vdk_hs38_defconfig
+sh                        sh7763rdp_defconfig
+c6x                        evmc6474_defconfig
+nios2                         3c120_defconfig
+powerpc                     tqm5200_defconfig
+arm                           u8500_defconfig
+mips                        nlm_xlp_defconfig
+sh                      rts7751r2d1_defconfig
+m68k                            q40_defconfig
+arm                            lart_defconfig
+arm                            pleb_defconfig
+arm                   milbeaut_m10v_defconfig
+h8300                            alldefconfig
+arm                         axm55xx_defconfig
+sparc                            allyesconfig
+sh                        apsh4ad0a_defconfig
+mips                       bmips_be_defconfig
+powerpc                  iss476-smp_defconfig
+sh                           se7705_defconfig
+m68k                          hp300_defconfig
+powerpc                 linkstation_defconfig
+sh                            migor_defconfig
+mips                      maltasmvp_defconfig
+m68k                                defconfig
+arm                          pxa3xx_defconfig
+sh                           se7206_defconfig
+sh                         ap325rxa_defconfig
+powerpc                       eiger_defconfig
+xtensa                  cadence_csp_defconfig
+powerpc                 xes_mpc85xx_defconfig
+powerpc                 mpc832x_rdb_defconfig
+m68k                        m5407c3_defconfig
+c6x                              allyesconfig
+powerpc64                           defconfig
+arc                              alldefconfig
+microblaze                      mmu_defconfig
+powerpc                 mpc834x_mds_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                        fsp2_defconfig
+powerpc                      ppc64e_defconfig
+mips                           ci20_defconfig
+powerpc                   bluestone_defconfig
+sh                          rsk7203_defconfig
+powerpc                    gamecube_defconfig
+mips                          ath79_defconfig
+powerpc64                        alldefconfig
+s390                          debug_defconfig
+powerpc                       holly_defconfig
+powerpc                     kmeter1_defconfig
+powerpc                     mpc5200_defconfig
+openrisc                  or1klitex_defconfig
+arm                       cns3420vb_defconfig
+arm                           h5000_defconfig
+arm                        clps711x_defconfig
+arc                        nsim_700_defconfig
+powerpc                      pmac32_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                        icon_defconfig
+xtensa                    xip_kc705_defconfig
+powerpc                    socrates_defconfig
+arm                        neponset_defconfig
+arm                         orion5x_defconfig
+xtensa                         virt_defconfig
+mips                         bigsur_defconfig
+sparc                               defconfig
+m68k                             allmodconfig
+arm                        magician_defconfig
+mips                            e55_defconfig
+parisc                              defconfig
+parisc                generic-32bit_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+i386                               tinyconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20210209
+x86_64               randconfig-a001-20210209
+x86_64               randconfig-a005-20210209
+x86_64               randconfig-a004-20210209
+x86_64               randconfig-a002-20210209
+x86_64               randconfig-a003-20210209
+i386                 randconfig-a001-20210209
+i386                 randconfig-a005-20210209
+i386                 randconfig-a003-20210209
+i386                 randconfig-a002-20210209
+i386                 randconfig-a006-20210209
+i386                 randconfig-a004-20210209
+i386                 randconfig-a003-20210212
+i386                 randconfig-a005-20210212
+i386                 randconfig-a002-20210212
+i386                 randconfig-a001-20210212
+i386                 randconfig-a004-20210212
+i386                 randconfig-a006-20210212
+i386                 randconfig-a016-20210209
+i386                 randconfig-a013-20210209
+i386                 randconfig-a012-20210209
+i386                 randconfig-a014-20210209
+i386                 randconfig-a011-20210209
+i386                 randconfig-a015-20210209
+i386                 randconfig-a016-20210211
+i386                 randconfig-a014-20210211
+i386                 randconfig-a012-20210211
+i386                 randconfig-a013-20210211
+i386                 randconfig-a011-20210211
+i386                 randconfig-a015-20210211
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-> I think the issue is in "gpiod_LineBulk_request" in
-> https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/bindings/python/gpiodmodule.c
-> There a call to "gpiod_line_request_bulk" with default_vals being
-> passed as a pointer. Later on in the code, this parameter is checked
-> for NULL, if it is not NULL then the values in the array are used as
-> default_vals.
-> I believe that a NULL pointer should be passed instead if no
-> default_vals have been requested when doing a Line.request from
-> Python.
-> 
+clang tested configs:
+x86_64               randconfig-a013-20210209
+x86_64               randconfig-a014-20210209
+x86_64               randconfig-a015-20210209
+x86_64               randconfig-a012-20210209
+x86_64               randconfig-a016-20210209
+x86_64               randconfig-a011-20210209
 
-Agreed - passing default_vals uninitialized to gpiod_line_request_bulk()
-is a bug.
-It should be zeroed, or a NULL pointer should be passed if the
-default_vals were not provided in the kwds. Otherwise the output
-value will be set based on the uninitializezd contents of default_vals.
-
-Would you like to provide a patch?
-
-In the meantime the obvious workaround is to always provide default_vals
-in the kwds.
-
-Cheers,
-Kent.
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
