@@ -2,121 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D1E431BE3F
+	by mail.lfdr.de (Postfix) with ESMTP id 7E1F431BE40
 	for <lists+linux-gpio@lfdr.de>; Mon, 15 Feb 2021 17:07:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230313AbhBOQD6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Feb 2021 11:03:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231791AbhBOPt1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Feb 2021 10:49:27 -0500
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0917BC06178C
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Feb 2021 07:48:47 -0800 (PST)
-Received: by mail-ej1-x630.google.com with SMTP id w1so11819332ejf.11
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Feb 2021 07:48:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p0u4wGLrMFOGXx7ZSIOFz7UpWVHqOCG0C18CzKHGYfw=;
-        b=mfXCIRhBpkPHWc3lUEHP4YWXHZVdTjCE88cDSUZvYg0DMiWUn+gCILsIDEKxY5oGTZ
-         aO5tNkU7RMVd6XrwVTncmxDBLQJ4JAMpTi/ARGV4K43+93xc0r+TzNOlhk3Nh0O4USrt
-         uOJGSfDIJ7juVZAGp885PgSblKWK4BsZRkE18+wLctpeyLIXAO5E8JSeM0SrHsVv9RCQ
-         GIEsfz+r9ZQu+Lm+n8cL5JXPgKpwit6C+xpaQzz9yN5Il+L/RB2nEsqfB4G1IfptIYGY
-         9UR2Ofose9jmhD3zcJDmLa0jDvf8Y29BagDbUVomvsFYKATppNcw8iBc4X/Np1vc4Xiu
-         sm+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p0u4wGLrMFOGXx7ZSIOFz7UpWVHqOCG0C18CzKHGYfw=;
-        b=TwrgIYvX2WEUCRuGy9STJ1UgXa8AtdxbviLC7/kLyh3OeEB9zH2/j/idFA9CMXW7sl
-         HgqeIrcD3+Tv27N4A2ttqqVdBwS1WiMfWetzo7HFg74xlnkCYhoH55boDVneGyiuGmOH
-         pWQSH+YrxVKGC/Ib7u2VgT64OV+RCRm7BnEFIm/kubDweuZ5Uk7q6nb/pcunJC/BKXbB
-         +IHTdFJvjAC5b9H8pHWvjGeNImByNfgr84kLPVC5Z7Okw09K3mwKOMWIbVoSYlDaDqbp
-         mwxrdsnZzu0WWRu3GkOCDxhU4Il9D7MjlVml1XJYP35WIc3A0NRIpelyKw9FnN9xI8E+
-         bPMA==
-X-Gm-Message-State: AOAM532EMcD26XqCMVWFV8ZwqbXI6n+nh2k+GVgxnyycsEy3LQMLLXhj
-        1RA6QiKgO7onGIRxVtslGVqoOEa7uIDHLcqIJXHkqA==
-X-Google-Smtp-Source: ABdhPJygMY110InBxI64Azbg3pDQJmwvPqvO4NjZvShoHr1+w4AylBc5r68M+wRPeJ70xsujQFEVtY+JAZ2KIbYlZ3U=
-X-Received: by 2002:a17:906:4dd8:: with SMTP id f24mr2736601ejw.14.1613404125758;
- Mon, 15 Feb 2021 07:48:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20210215124831.60707-1-warthog618@gmail.com>
-In-Reply-To: <20210215124831.60707-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 15 Feb 2021 16:48:34 +0100
-Message-ID: <CAMRc=Mc8Dt12j0ymYdjOkCdvCB4X_UGq+7n4NvAwZKwVJp5mMg@mail.gmail.com>
-Subject: Re: [lingpiod][PATCH] bindings: python: fix uninitialized
- default_vals being passed to gpiod_LineBulk_request()
-To:     Kent Gibson <warthog618@gmail.com>
+        id S231791AbhBOQEa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Feb 2021 11:04:30 -0500
+Received: from mga02.intel.com ([134.134.136.20]:21245 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232336AbhBOPx1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Feb 2021 10:53:27 -0500
+IronPort-SDR: tWehkKMtFH9CY5WB7N1vWo1aD2GU9vUCgyEeLdW7Hv4Fu0+7Z8wNOtF2Gha5JkH1eldsQv1XWg
+ icb91fOb6gyg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9896"; a="169842328"
+X-IronPort-AV: E=Sophos;i="5.81,180,1610438400"; 
+   d="scan'208";a="169842328"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2021 07:51:40 -0800
+IronPort-SDR: FUEmh7Vb2fNJDn+bvRi/TFwheK255ZO6sq2OrpMU/5Mja6NE/sb2TujMtjjZd9+BOuAXXY7I62
+ 3rbujDoNsR1w==
+X-IronPort-AV: E=Sophos;i="5.81,180,1610438400"; 
+   d="scan'208";a="438615690"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2021 07:51:38 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lBg9w-005G9P-4o; Mon, 15 Feb 2021 17:51:36 +0200
+Date:   Mon, 15 Feb 2021 17:51:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pedro Botella <pbotella@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/3] gpio: xilinx: Utilize generic bitmap_get_value
+ and _set_value
+Message-ID: <YCqYiIIhKk004Js8@smile.fi.intel.com>
+References: <1b1f706b60e4c571c4f17d53ac640e8bd8384856.1613134924.git.syednwaris@gmail.com>
+ <202102141226.pmNlFRSx-lkp@intel.com>
+ <CACG_h5q5emgfbf4L-Czfh1GRiTUrx7a+LXCfsxUmQ8YSs1aoKw@mail.gmail.com>
+ <YCp7QYTe4nVxS3AK@smile.fi.intel.com>
+ <CACG_h5qbeSty16A6zmxAV=Pi=BQ=Su7U7Sb=j1t5_2qZ3ExO_Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACG_h5qbeSty16A6zmxAV=Pi=BQ=Su7U7Sb=j1t5_2qZ3ExO_Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 15, 2021 at 1:51 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> If "default_vals" is not provided in the kwds then default_vals are
-> passed uninitialized to gpiod_line_request_bulk(), so rename the
-> existing default_vals to vals and introduce a new default_vals that
-> points to vals, or NULL if no defaults have been passed.
->
-> Fixes: 96c524c4951c (bindings: implement python bindings)
-> Reported-by: Pedro Botella <pbotella@gmail.com>
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  bindings/python/gpiodmodule.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
-> index fee4c32..832787d 100644
-> --- a/bindings/python/gpiodmodule.c
-> +++ b/bindings/python/gpiodmodule.c
-> @@ -1327,12 +1327,13 @@ static PyObject *gpiod_LineBulk_request(gpiod_LineBulkObject *self,
->                                   NULL };
->
->         int rv, type = gpiod_LINE_REQ_DIR_AS_IS, flags = 0,
-> -           default_vals[GPIOD_LINE_BULK_MAX_LINES], val;
-> +           vals[GPIOD_LINE_BULK_MAX_LINES], val;
->         PyObject *def_vals_obj = NULL, *iter, *next;
->         struct gpiod_line_request_config conf;
->         struct gpiod_line_bulk bulk;
->         Py_ssize_t num_def_vals;
->         char *consumer = NULL;
-> +       const int *default_vals = NULL;
->         Py_ssize_t i;
->
->         if (gpiod_LineBulkOwnerIsClosed(self))
-> @@ -1348,7 +1349,7 @@ static PyObject *gpiod_LineBulk_request(gpiod_LineBulkObject *self,
->         gpiod_MakeRequestConfig(&conf, consumer, type, flags);
->
->         if (def_vals_obj) {
-> -               memset(default_vals, 0, sizeof(default_vals));
-> +               memset(vals, 0, sizeof(vals));
->
->                 num_def_vals = PyObject_Size(def_vals_obj);
->                 if (num_def_vals != self->num_lines) {
-> @@ -1375,8 +1376,9 @@ static PyObject *gpiod_LineBulk_request(gpiod_LineBulkObject *self,
->                                 return NULL;
->                         }
->
-> -                       default_vals[i] = !!val;
-> +                       vals[i] = !!val;
->                 }
-> +               default_vals = vals;
->         }
->
->         Py_BEGIN_ALLOW_THREADS;
-> --
-> 2.30.0
->
+On Mon, Feb 15, 2021 at 07:23:10PM +0530, Syed Nayyar Waris wrote:
+> On Mon, Feb 15, 2021 at 7:16 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Feb 15, 2021 at 06:56:10PM +0530, Syed Nayyar Waris wrote:
+> > > On Sun, Feb 14, 2021 at 10:11 AM kernel test robot <lkp@intel.com> wrote:
 
-Applied, thanks!
+> > > > >> ERROR: modpost: "bitmap_get_value" [drivers/gpio/gpio-xilinx.ko] undefined!
+> > > > >> ERROR: modpost: "bitmap_set_value" [drivers/gpio/gpio-xilinx.ko] undefined!
+> > > >
+> > >
+> > > Dear All,
+> > >
+> > > I was able to reproduce the above 2 build errors with the config file
+> > > provided and the build command mentioned in the above mail. But I need
+> > > help to fix the build errors.
+> > >
+> > > Scenario:
+> > > Function 'bitmap_get_value()' is declared in 'gpiolib.h'. It is
+> > > defined in 'gpiolib.c'. Function 'bitmap_get_value()'  is then being
+> > > used in gpio-xilinx.c and the build error is thrown. Similar situation
+> > > holds for the other function 'bitmap_set_value'.
+> > >
+> > > How do I resolve the above build error?. Kindly illuminate. The full
+> > > patchset can be found at:
+> > > https://lore.kernel.org/patchwork/cover/1380056/
+> >
+> > Missed EXPORT_SYMBOL_GPL() or so?
+> 
+> It has EXPORT_SYMBOL_GPL(). But the build errors still persist.
 
-Bartosz
+Okay, I don't see an email with configuration file, so you need to dig it up to
+understand what combination of options brought this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
