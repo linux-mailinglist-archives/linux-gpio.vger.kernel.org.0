@@ -2,127 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7505C31BA9C
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Feb 2021 14:54:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3694731BAA3
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Feb 2021 14:58:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230253AbhBONyJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Feb 2021 08:54:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230162AbhBONyD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Feb 2021 08:54:03 -0500
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8136CC061574
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Feb 2021 05:53:22 -0800 (PST)
-Received: by mail-il1-x12d.google.com with SMTP id y15so5486592ilj.11
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Feb 2021 05:53:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oiwOKOJOtlKOkF96Nh2tnr1j3jp46qOvhg59c1F3pU4=;
-        b=JKiq/L14XJTaLSzucW8gar2aYADLEMVCryoFu8nABSyWfChhgW7nicTYAmYiJiP5nY
-         kAv/AiELsI+RM3fAPxrHxFWd/aAbyYwFTVYfrKVHloM7yzJsmz08cLjvs3HHbtrlxt7e
-         gFE3BB2oyaL8P8yjyx+36eMVYxFj0nvnQrUa7C1Znrb48a68A15K4cscair1uuZ4SHjf
-         G0fjCI1vxITEvwTM4dGng1JhIlz0UHQnNbVv2IPhddl0bU2AmmoHX3RxBg6rehs8djUx
-         zhu56l/W7LMG68n8EwOI+xKKtQ6c/L1L+4+rUT1bzzXFTS5yWh/DlquxszyoLjP5VwQQ
-         MhQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oiwOKOJOtlKOkF96Nh2tnr1j3jp46qOvhg59c1F3pU4=;
-        b=X1vwkMKBvwzHLx/wuQuUY8uLgtmuR9YQF/8dx3DnpZ24mXILhz/AJBoPsCvndBknjh
-         J2PwDQOkjJjBFmU7I4aANFHAdM0eyRyrEzyMk+Qkl3cTOPVMRsvNzjL4E/IGeSxGSoYD
-         w4JSojjGB+4H5J0OMeotiH8krxFhQ/RFhOfYyjMUZGjs4QVomH7UjQThpluB5OxIGegF
-         CHKBrsSS3WzpboQrijn7NBLfWC4LDKD0omez3fg6cGzTH+bnkqnFi+IwRc4azYMeXomY
-         vRgHJb1WkFueq3bqL4sXUH33KlnEXtVvM+lnw6Wx2+8WkstclL+RzJ5P24AlXskd5anm
-         0LJA==
-X-Gm-Message-State: AOAM531N5FvNIqSzQDAeYfA9Yr/hCPNhERktEOVVaS1rilh5C3XXjqpS
-        JqUyh4rTDhxqh5Ort4dW1qp7+UGM5OsOe+4eJMk=
-X-Google-Smtp-Source: ABdhPJx2Kgep2Zv8jd5D9tIwLdO2MyjLdfWlj/4xvqIQaIDlphZRMWNEMKfO46SeEtLCbHUJ7bDMCzqEzrhnXN/Q5t4=
-X-Received: by 2002:a05:6e02:218f:: with SMTP id j15mr12570397ila.40.1613397202004;
- Mon, 15 Feb 2021 05:53:22 -0800 (PST)
+        id S230307AbhBON6C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Feb 2021 08:58:02 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4220 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S230142AbhBON6A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Feb 2021 08:58:00 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11FDq8UQ009146;
+        Mon, 15 Feb 2021 14:56:59 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=subject : from : to
+ : cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=selector1;
+ bh=OBeyeTFxKgl8hhHSdOSxuj1e1QIjV0tDdTCwWxH9VkI=;
+ b=IgesQH20dBFRCXv2Xlon5h08FLstAaZOB35Nv7yhho2QlPt9SZ6itqY8HzWMEzLnGK/w
+ h7Xg/uvfCjPil3Rw3VWh57BaHC7XmjaAhlOlV5EU6hJ4/IBKr/O+9EqsFSiFTiWQ2g9a
+ vp2HceZVenHx/dIEsHBQGvwv+rFAOlKvJYlJZd91yDLvhrFhBsiINDicqtyqz6d48uMm
+ m4Dou1kcT/ApBV4Zapqvo4aDhsvfogf9MhYIwEz3GBRDRy8AFvLiHvtCFa0+lm4LtHv2
+ gWEkuozTvUJkF6T4hyCrkiQW7tEOc3lsG+QFO/A0tL8GMI+EZinRhH19YesJYZXXbPzq HQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 36p4sf3739-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Feb 2021 14:56:59 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DCF7B100034;
+        Mon, 15 Feb 2021 14:56:58 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag2node3.st.com [10.75.127.6])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C03A525F40C;
+        Mon, 15 Feb 2021 14:56:58 +0100 (CET)
+Received: from [10.211.12.240] (10.75.127.47) by SFHDAG2NODE3.st.com
+ (10.75.127.6) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 15 Feb
+ 2021 14:56:57 +0100
+Subject: Re: [PATCH] pinctrl: stm32: add missing of_node_put
+From:   foss <fabien.dessenne@foss.st.com>
+To:     <angkery@163.com>, <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE-SCND-02 <alexandre.torgue@foss.st.com>,
+        <maz@kernel.org>,
+        Etienne CARRIERE-SCND-01 <etienne.carriere@foss.st.com>,
+        <geert+renesas@glider.be>, <matti.vaittinen@fi.rohmeurope.com>,
+        <marex@denx.de>
+CC:     <linux-gpio@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <yangjunlin@yulong.com>
+References: <4a576fb8-682e-d1af-777d-436f9bc53794@foss.st.com>
+Message-ID: <6d7ad2ea-92dc-3caa-a931-2c932325a46b@foss.st.com>
+Date:   Mon, 15 Feb 2021 14:56:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1b1f706b60e4c571c4f17d53ac640e8bd8384856.1613134924.git.syednwaris@gmail.com>
- <202102141226.pmNlFRSx-lkp@intel.com> <CACG_h5q5emgfbf4L-Czfh1GRiTUrx7a+LXCfsxUmQ8YSs1aoKw@mail.gmail.com>
- <YCp7QYTe4nVxS3AK@smile.fi.intel.com>
-In-Reply-To: <YCp7QYTe4nVxS3AK@smile.fi.intel.com>
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-Date:   Mon, 15 Feb 2021 19:23:10 +0530
-Message-ID: <CACG_h5qbeSty16A6zmxAV=Pi=BQ=Su7U7Sb=j1t5_2qZ3ExO_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] gpio: xilinx: Utilize generic bitmap_get_value and _set_value
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4a576fb8-682e-d1af-777d-436f9bc53794@foss.st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG2NODE3.st.com
+ (10.75.127.6)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-02-15_08:2021-02-12,2021-02-15 signatures=0
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 15, 2021 at 7:16 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Feb 15, 2021 at 06:56:10PM +0530, Syed Nayyar Waris wrote:
-> > On Sun, Feb 14, 2021 at 10:11 AM kernel test robot <lkp@intel.com> wrote:
-> > >
-> > > Hi Syed,
-> > >
-> > > I love your patch! Yet something to improve:
-> > >
-> > > [auto build test ERROR on e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62]
-> > >
-> > > url:    https://github.com/0day-ci/linux/commits/Syed-Nayyar-Waris/Introduce-the-for_each_set_clump-macro/20210212-213005
-> > > base:   e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62
-> > > config: i386-randconfig-d002-20200329 (attached as .config)
-> > > compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
-> > > reproduce (this is a W=1 build):
-> > >         # https://github.com/0day-ci/linux/commit/d83196ca7a23f614773c049b69ce3896679cec61
-> > >         git remote add linux-review https://github.com/0day-ci/linux
-> > >         git fetch --no-tags linux-review Syed-Nayyar-Waris/Introduce-the-for_each_set_clump-macro/20210212-213005
-> > >         git checkout d83196ca7a23f614773c049b69ce3896679cec61
-> > >         # save the attached .config to linux build tree
-> > >         make W=1 ARCH=i386
-> > >
-> > > If you fix the issue, kindly add following tag as appropriate
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > >
-> > > All errors (new ones prefixed by >>, old ones prefixed by <<):
-> > >
-> > > >> ERROR: modpost: "bitmap_get_value" [drivers/gpio/gpio-xilinx.ko] undefined!
-> > > >> ERROR: modpost: "bitmap_set_value" [drivers/gpio/gpio-xilinx.ko] undefined!
-> > >
-> >
-> > Dear All,
-> >
-> > I was able to reproduce the above 2 build errors with the config file
-> > provided and the build command mentioned in the above mail. But I need
-> > help to fix the build errors.
-> >
-> > Scenario:
-> > Function 'bitmap_get_value()' is declared in 'gpiolib.h'. It is
-> > defined in 'gpiolib.c'. Function 'bitmap_get_value()'  is then being
-> > used in gpio-xilinx.c and the build error is thrown. Similar situation
-> > holds for the other function 'bitmap_set_value'.
-> >
-> > How do I resolve the above build error?. Kindly illuminate. The full
-> > patchset can be found at:
-> > https://lore.kernel.org/patchwork/cover/1380056/
->
-> Missed EXPORT_SYMBOL_GPL() or so?
+Resending in plain-text format.
 
-It has EXPORT_SYMBOL_GPL(). But the build errors still persist.
 
-Thanks
-Syed
-
+On 15/02/2021 2:26 pm, foss wrote:
+>
+> Hi Junlin
 >
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
+> Thank you for the patch!
 >
 >
+> Fabien
+>
+>
+>> From: Junlin Yang<yangjunlin@yulong.com>
+>>
+>> Fix OF node leaks by calling of_node_put in for_each_available_child_of_node when the cycle returns.
+>>
+>> Generated by: scripts/coccinelle/iterators/for_each_child.cocci
+>>
+>> Signed-off-by: Junlin Yang<yangjunlin@yulong.com>
+>
+> Acked-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
+>
+>
+>> ---
+>>   drivers/pinctrl/stm32/pinctrl-stm32.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+>> index 7d9bded..da72e3e 100644
+>> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+>> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+>> @@ -1542,8 +1542,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
+>>   		if (of_property_read_bool(child, "gpio-controller")) {
+>>   			bank->rstc = of_reset_control_get_exclusive(child,
+>>   								    NULL);
+>> -			if (PTR_ERR(bank->rstc) == -EPROBE_DEFER)
+>> +			if (PTR_ERR(bank->rstc) == -EPROBE_DEFER) {
+>> +				of_node_put(child);
+>>   				return -EPROBE_DEFER;
+>> +			}
+>>   
+>>   			bank->clk = of_clk_get_by_name(child, NULL);
+>>   			if (IS_ERR(bank->clk)) {
+>> @@ -1551,6 +1553,7 @@ int stm32_pctl_probe(struct platform_device *pdev)
+>>   					dev_err(dev,
+>>   						"failed to get clk (%ld)\n",
+>>   						PTR_ERR(bank->clk));
+>> +				of_node_put(child);
+>>   				return PTR_ERR(bank->clk);
+>>   			}
+>>   			i++;
+>> --
+>> 1.9.1
+>>
