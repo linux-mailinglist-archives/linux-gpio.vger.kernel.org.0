@@ -2,116 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D02A031B9C7
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Feb 2021 13:51:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA2631B9D7
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Feb 2021 13:54:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230374AbhBOMuy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Feb 2021 07:50:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60662 "EHLO
+        id S230098AbhBOMyo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Feb 2021 07:54:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230104AbhBOMuO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Feb 2021 07:50:14 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02C4C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Feb 2021 04:49:33 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id l18so3865997pji.3
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Feb 2021 04:49:33 -0800 (PST)
+        with ESMTP id S229945AbhBOMyn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Feb 2021 07:54:43 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 352C7C061574;
+        Mon, 15 Feb 2021 04:54:03 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id u11so3672858plg.13;
+        Mon, 15 Feb 2021 04:54:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ej+JwfiLrGVBZczn7pQZZw/pvRzkrr5E9glHAS483S8=;
-        b=mT1EAbgoy9tEo2N0HxBaSpUty5J3s/9P9o/1l7wIp1IU99x5qAApBMZsWthBjRjehn
-         dtrVdS8ZxAhYv6lG2F0A7t9yPPrk+KXwJ6ItYqbpkTWZX3DBmCh+K9i2WE7WPU54fgYE
-         ilIYu2i/EXObMIu6uPUErxKKZNSqyquAmpdOT8gYj9MZ4+wQz161MfUDPQoSNyMFaW0u
-         IcBwmjgXPHpcucpzUJMdPTy8c3DJBGaFLmmLHBPIZELtfUQt8q4iK7mqgKGf0Bm0VtGE
-         xF8vZQ2hqYmxCaCzTDh8Ll2eESNMZZCD6FB7vabFzIe89oHznksSs7so2ej+3WZbQeG0
-         /OpA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BZgaSt3foww3LKti1xLjH9ESlqQ5fFDh0YJtrgKJLUo=;
+        b=Eeqtr7wDuFgFKopoZe3pNkVjy58jZlEpcjj+VH6zl5DsCxkPsHxgLZGZoTJK6EasEV
+         KoRDouq2BQsWF/dXRaDvUTemda5K9MuGdNql1GZRpVzVroURhG/fVODTTBWE4jpiSDYj
+         BWPoOebmkZMujAG/PpfEYX0zDLodNSRqSTbbu3ELhP6xL3gPF8hOTez56mHx8ZjP1tNX
+         ciqx5Yc38GuLAmOAcJitO9ICq4sld/DID3FS7nAWOnX92e2naxPVKxHQwcpONMRGYO43
+         stuW2shrGgT3NfkBs4gwaZ978wmrgzk18v7lDE+AIQYTHc1uV0lCiPmvj9lmNcbKtsDn
+         gkiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ej+JwfiLrGVBZczn7pQZZw/pvRzkrr5E9glHAS483S8=;
-        b=mPrAiYHeB7w0HBlvt9F/k9Ixku1p66WNBTQzeeepfqeG+M+aHFU7e29sAxMrPup6LA
-         4TWav8cf5TCpvT0LGEJnfq/duhJJrAR9ziRh9JxuV0b8yopFigvV0/x1xoYFam5JPZMj
-         baE92zIquQRV/hEWOpfOj3SzhHM58RPBNT+j16ib/yryGOMVDq+RL9bo4c7yDOFKLom0
-         AqxLHmdPfb7gLlh9UBqpuWnYUW3AONlzftgCfI5CX5h3uh+w65rdE/xt6TS2N+y1pzs5
-         9/mpm2fCxQQD4tNmGJDk91Jg4ADu/QktTmDQzk5r9VboYE6eNeXY8RURj+8D+KYtpq5d
-         ircQ==
-X-Gm-Message-State: AOAM532Ne3nVw0QaJvWfI9QvusZOd8QU8LDhR3rW1MVqXRBPd5PlgwKN
-        7p966wnx28j7g0B1pcTgHShxCYI5YDGYVQ==
-X-Google-Smtp-Source: ABdhPJzy1JQXy2bz2pVjH8So3oBuEWsk8UJ+wxDiC6OG3jnqASvN/3cXAkkYIKveT2bTjE8aJV24ZQ==
-X-Received: by 2002:a17:90a:5d0d:: with SMTP id s13mr15880389pji.156.1613393373000;
-        Mon, 15 Feb 2021 04:49:33 -0800 (PST)
-Received: from sol.lan (106-69-179-46.dyn.iinet.net.au. [106.69.179.46])
-        by smtp.gmail.com with ESMTPSA id p29sm18829331pgm.64.2021.02.15.04.49.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Feb 2021 04:49:32 -0800 (PST)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Pedro Botella <pbotella@gmail.com>
-Subject: [lingpiod][PATCH] bindings: python: fix uninitialized default_vals being passed to gpiod_LineBulk_request()
-Date:   Mon, 15 Feb 2021 20:48:31 +0800
-Message-Id: <20210215124831.60707-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.30.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BZgaSt3foww3LKti1xLjH9ESlqQ5fFDh0YJtrgKJLUo=;
+        b=LnUll52wGTe89QMQWg9GNcl8+zEFS9wc4rMemL/qwQgDTATh+T0H3NUdaPQeQGkaNM
+         zKz0kNW3XsrsnwMICd44Da3v8Kyh2tdkLUP95Y8KETDJyBb2d2Si3ptUUJ8KzSdgeND2
+         brqqM7bgGJ2qj2Bdk8J/iBEU+9ec3bd15tJAuIl5jFAE9TJwiev9e4vGUGYKlDbwrym0
+         rtJUTm+tdoD5H5jc5jixPoWVitg1Zb2/sqxXcGyy29qzbmofzcQKi/Z28h12YLg0GJCw
+         L7vQrMwEXYqvEK2TZ/zZAtyef+WcG4iyPBVnY6hp0dOcAg+Igd4LJQvr7MlSVsI7oPEe
+         qytA==
+X-Gm-Message-State: AOAM531Y/eYBWP1os5hQclHIIWZPdMEVIjHuDXBO1ROg08ANstvW0uqe
+        zGmHCNHOFoyFDb1c67P+/2YP4jApnzrRNGJjJrk=
+X-Google-Smtp-Source: ABdhPJx4iLBwW3dX8rPuAiC+0iF5zsyULMLkaPC60k4/jtyHgAKkfJPWmra1H+U8qgGwcRbvgUHDkLwWX5dkuyIyU8Y=
+X-Received: by 2002:a17:902:7b96:b029:de:7ae6:b8db with SMTP id
+ w22-20020a1709027b96b02900de7ae6b8dbmr15067149pll.0.1613393642679; Mon, 15
+ Feb 2021 04:54:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210211175140.85391-1-alban.bedel@aerq.com>
+In-Reply-To: <20210211175140.85391-1-alban.bedel@aerq.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 15 Feb 2021 14:53:46 +0200
+Message-ID: <CAHp75VfUY5-VtCWjaU6Q=hJY9hyUz8B36C0528RXUxkbnL9yEA@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: pca953x: add support for open drain pins on PCAL6524
+To:     Alban Bedel <alban.bedel@aerq.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If "default_vals" is not provided in the kwds then default_vals are
-passed uninitialized to gpiod_line_request_bulk(), so rename the
-existing default_vals to vals and introduce a new default_vals that
-points to vals, or NULL if no defaults have been passed.
+Hint: don't forget to include reviewers from previous version
 
-Fixes: 96c524c4951c (bindings: implement python bindings)
-Reported-by: Pedro Botella <pbotella@gmail.com>
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- bindings/python/gpiodmodule.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+On Thu, Feb 11, 2021 at 7:52 PM Alban Bedel <alban.bedel@aerq.com> wrote:
+>
+> From a quick glance at various datasheets the PCAL6524 and the
+> PCAL6534 seems to be the only chips in this family that support
+> setting the drive mode of single pins. Other chips either don't
+> support it at all, or can only set the drive mode of whole banks,
+> which doesn't map to the GPIO API.
+>
+> Add a new flag, PCAL65xx_REGS, to mark chips that have the extra
+> registers needed for this feature. Then mark the needed register banks
+> as readable and writable, here we don't set OUT_CONF as writable,
+> although it is, as we only need to read it. Finally add a function
+> that configures the OUT_INDCONF register when the GPIO API sets the
+> drive mode of the pins.
 
-diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
-index fee4c32..832787d 100644
---- a/bindings/python/gpiodmodule.c
-+++ b/bindings/python/gpiodmodule.c
-@@ -1327,12 +1327,13 @@ static PyObject *gpiod_LineBulk_request(gpiod_LineBulkObject *self,
- 				  NULL };
- 
- 	int rv, type = gpiod_LINE_REQ_DIR_AS_IS, flags = 0,
--	    default_vals[GPIOD_LINE_BULK_MAX_LINES], val;
-+	    vals[GPIOD_LINE_BULK_MAX_LINES], val;
- 	PyObject *def_vals_obj = NULL, *iter, *next;
- 	struct gpiod_line_request_config conf;
- 	struct gpiod_line_bulk bulk;
- 	Py_ssize_t num_def_vals;
- 	char *consumer = NULL;
-+	const int *default_vals = NULL;
- 	Py_ssize_t i;
- 
- 	if (gpiod_LineBulkOwnerIsClosed(self))
-@@ -1348,7 +1349,7 @@ static PyObject *gpiod_LineBulk_request(gpiod_LineBulkObject *self,
- 	gpiod_MakeRequestConfig(&conf, consumer, type, flags);
- 
- 	if (def_vals_obj) {
--		memset(default_vals, 0, sizeof(default_vals));
-+		memset(vals, 0, sizeof(vals));
- 
- 		num_def_vals = PyObject_Size(def_vals_obj);
- 		if (num_def_vals != self->num_lines) {
-@@ -1375,8 +1376,9 @@ static PyObject *gpiod_LineBulk_request(gpiod_LineBulkObject *self,
- 				return NULL;
- 			}
- 
--			default_vals[i] = !!val;
-+			vals[i] = !!val;
- 		}
-+		default_vals = vals;
- 	}
- 
- 	Py_BEGIN_ALLOW_THREADS;
+...
+
+> +#define PCAL65xx_REGS          BIT(10)
+
+Can we have it as a _TYPE, please?
+
+...
+
+> +#define PCAL65xx_BANK_INDOUT_CONF BIT(8 + 12)
+
+IND is a bit ambiguous based on the description below.
+After you elaborate, I probably can propose better naming.
+
+...
+
+> + *   - PCAL65xx with individual pin configuration
+> + *     Individual pin output config    0x40 + 12 * bank_size   RW
+
+Not sure I understand what "individual" means here (no, I haven't
+looked into the datasheet).
+
+...
+
+> +       if (config == PIN_CONFIG_DRIVE_OPEN_DRAIN)
+> +               val = mask;
+> +       else if (config == PIN_CONFIG_DRIVE_PUSH_PULL)
+> +               val = 0;
+> +       else
+> +               return -EINVAL;
+
+Switch-case will look more naturally here (despite being longer in
+terms of LOCs).
+
+...
+
+> +exit:
+
+exit_unlock:
+
+> +       mutex_unlock(&chip->i2c_lock);
+> +       return ret;
+
+...
+
+> +#define OF_L65XX(__nrgpio) OF_953X(__nrgpio, PCA_LATCH_INT | PCAL65xx_REGS)
+
+When you change to the type, it will go accordingly. Don't add
+LATCH_INT to the macro.
+
 -- 
-2.30.0
-
+With Best Regards,
+Andy Shevchenko
