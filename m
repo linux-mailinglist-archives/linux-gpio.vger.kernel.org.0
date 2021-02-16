@@ -2,77 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22F9431C77D
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Feb 2021 09:43:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FEC431C833
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Feb 2021 10:39:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229833AbhBPInS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Feb 2021 03:43:18 -0500
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:44788 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbhBPImA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Feb 2021 03:42:00 -0500
-Received: by mail-oi1-f181.google.com with SMTP id r75so10426289oie.11;
-        Tue, 16 Feb 2021 00:41:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ku8Xj83nLsMwP3pJntnRZwjc0a+L78DnpeGJC5WXyEc=;
-        b=fdd4M9lIPY9RJ3vj3kRuFzJFLKmBLd5XPjBvXcOGiQqKVl7TqAibO83tQRbUJ3yXok
-         T2jf4/LXtJA+0wY+meWSKuZSCo3PaUjgk+qOguxt3rrUAv/DRgMndVKWujd6GAfweIG0
-         McaLjlESOJXrY9NlxMMUx/+/Bi3OgKDauLPliHSosUZ7Iz3dLW1uruh8i21nlMn/daf3
-         4XrsVvyE607xdSpYx4SGIvUWlCr2o4CxWfsU11rZVthQGUq+hiTOLX2SGNnpSjFFkIyO
-         ZbbqPA7ixWzH4arcgbX5THcBfFSsJCLNFz5wOMfG4ZmBFScDVGqAvmEXWYKaN9ez6HR1
-         4Irg==
-X-Gm-Message-State: AOAM5310ppoEdzBDL1+hbRkHlu9AU1VpXjfvyilZuLYkot++NIRdsDLL
-        kdc18bRybspP0SrFgQUpPOX5zfO2YOHDiU5M+uM2zzp2
-X-Google-Smtp-Source: ABdhPJzH59+9qfPThs4S+oDVC/b1lqufPtDmCTgP9OCeG611wdnMp8WbBZ27+38vYkskiEhsG65NlvAt7jH5m+gALyg=
-X-Received: by 2002:aca:d8c6:: with SMTP id p189mr1927470oig.54.1613464878460;
- Tue, 16 Feb 2021 00:41:18 -0800 (PST)
+        id S229996AbhBPJig (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Feb 2021 04:38:36 -0500
+Received: from m12-11.163.com ([220.181.12.11]:49881 "EHLO m12-11.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229806AbhBPJie (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 16 Feb 2021 04:38:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=2dWxA
+        W+RTjRWRqri4fiH/+uWnTVM2BT821JbkpPbVGk=; b=Bl3u5HivPuwSFU7OrTAfN
+        cAQivAcRy43qelN/o1xDRLlu72jhfr7X3IAyz+qL95Bg+OxAdwsvRoHrBUkItzfh
+        MVUcQEWZiixJx0he6Y7jJY2wZdMLcRoySNx72DrD2nIUzjWXM2XN8K7wIlrFjQ/o
+        C5mYDgsnGS3EJO1N+vOf58=
+Received: from yangjunlin.ccdomain.com (unknown [218.17.89.92])
+        by smtp7 (Coremail) with SMTP id C8CowAAnHJQcfCtgPNS3Nw--.40902S2;
+        Tue, 16 Feb 2021 16:02:37 +0800 (CST)
+From:   angkery <angkery@163.com>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Junlin Yang <yangjunlin@yulong.com>
+Subject: [PATCH] pinctrl: equilibrium: add missing of_node_put
+Date:   Tue, 16 Feb 2021 16:02:31 +0800
+Message-Id: <20210216080231.1303-1-angkery@163.com>
+X-Mailer: git-send-email 2.24.0.windows.2
 MIME-Version: 1.0
-References: <20210212223015.727608-1-drew@beagleboard.org> <20210212223015.727608-2-drew@beagleboard.org>
-In-Reply-To: <20210212223015.727608-2-drew@beagleboard.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 16 Feb 2021 09:41:07 +0100
-Message-ID: <CAMuHMdULsKoPrYfPxF89-=bCVgzm5RNmOuPDnhxJg9B6j=qc6w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] pinctrl: use to octal permissions for debugfs files
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: C8CowAAnHJQcfCtgPNS3Nw--.40902S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WF1fWrWDAw4kur15tr17Awb_yoW8Kr47pF
+        ZxCFy5JryUJFs7Wa4Iy34qvFWrKan7Kayjv3y2gan7ZFsxJw1UJa1YqFyjqas5CF1rZ345
+        JFyYvay29r4UGr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jLzVbUUUUU=
+X-Originating-IP: [218.17.89.92]
+X-CM-SenderInfo: 5dqjyvlu16il2tof0z/xtbBRh07I13l+nXtIwAAs6
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 12, 2021 at 11:30 PM Drew Fustini <drew@beagleboard.org> wrote:
-> Switch over pinctrl debugfs files to use octal permissions as they are
-> preferred over symbolic permissions. Refer to commit f90774e1fd27
-> ("checkpatch: look for symbolic permissions and suggest octal instead").
->
-> Note: S_IFREG flag is added to the mode by __debugfs_create_file()
-> in fs/debugfs/inode.c
->
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+From: Junlin Yang <yangjunlin@yulong.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fix OF node leaks by calling of_node_put in
+for_each_child_of_node when the cycle returns.
 
-Gr{oetje,eeting}s,
+Generated by: scripts/coccinelle/iterators/for_each_child.cocci
 
-                        Geert
+Signed-off-by: Junlin Yang <yangjunlin@yulong.com>
+---
+ drivers/pinctrl/pinctrl-equilibrium.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/pinctrl/pinctrl-equilibrium.c b/drivers/pinctrl/pinctrl-equilibrium.c
+index 067271b..a194d80 100644
+--- a/drivers/pinctrl/pinctrl-equilibrium.c
++++ b/drivers/pinctrl/pinctrl-equilibrium.c
+@@ -628,7 +628,8 @@ static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
+ 			break;
+ 
+ 		default:
+-				return -EINVAL;
++			of_node_put(np);
++			return -EINVAL;
+ 		}
+ 		i++;
+ 	}
+@@ -707,34 +708,42 @@ static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
+ 		group.num_pins = of_property_count_u32_elems(np, "pins");
+ 		if (group.num_pins < 0) {
+ 			dev_err(dev, "No pins in the group: %s\n", prop->name);
++			of_node_put(np);
+ 			return -EINVAL;
+ 		}
+ 		group.name = prop->value;
+ 		group.pins = devm_kcalloc(dev, group.num_pins,
+ 					  sizeof(*(group.pins)), GFP_KERNEL);
+-		if (!group.pins)
++		if (!group.pins) {
++			of_node_put(np);
+ 			return -ENOMEM;
++		}
+ 
+ 		pinmux = devm_kcalloc(dev, group.num_pins, sizeof(*pinmux),
+ 				      GFP_KERNEL);
+-		if (!pinmux)
++		if (!pinmux) {
++			of_node_put(np);
+ 			return -ENOMEM;
++		}
+ 
+ 		for (j = 0; j < group.num_pins; j++) {
+ 			if (of_property_read_u32_index(np, "pins", j, &pin_id)) {
+ 				dev_err(dev, "Group %s: Read intel pins id failed\n",
+ 					group.name);
++				of_node_put(np);
+ 				return -EINVAL;
+ 			}
+ 			if (pin_id >= drvdata->pctl_desc.npins) {
+ 				dev_err(dev, "Group %s: Invalid pin ID, idx: %d, pin %u\n",
+ 					group.name, j, pin_id);
++				of_node_put(np);
+ 				return -EINVAL;
+ 			}
+ 			group.pins[j] = pin_id;
+ 			if (of_property_read_u32_index(np, "pinmux", j, &pinmux_id)) {
+ 				dev_err(dev, "Group %s: Read intel pinmux id failed\n",
+ 					group.name);
++				of_node_put(np);
+ 				return -EINVAL;
+ 			}
+ 			pinmux[j] = pinmux_id;
+@@ -745,6 +754,7 @@ static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
+ 						pinmux);
+ 		if (err < 0) {
+ 			dev_err(dev, "Failed to register group %s\n", group.name);
++			of_node_put(np);
+ 			return err;
+ 		}
+ 		memset(&group, 0, sizeof(group));
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1.9.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
