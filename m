@@ -2,124 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FEC431C833
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Feb 2021 10:39:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB04631C9B2
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Feb 2021 12:32:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbhBPJig (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Feb 2021 04:38:36 -0500
-Received: from m12-11.163.com ([220.181.12.11]:49881 "EHLO m12-11.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229806AbhBPJie (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 16 Feb 2021 04:38:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=2dWxA
-        W+RTjRWRqri4fiH/+uWnTVM2BT821JbkpPbVGk=; b=Bl3u5HivPuwSFU7OrTAfN
-        cAQivAcRy43qelN/o1xDRLlu72jhfr7X3IAyz+qL95Bg+OxAdwsvRoHrBUkItzfh
-        MVUcQEWZiixJx0he6Y7jJY2wZdMLcRoySNx72DrD2nIUzjWXM2XN8K7wIlrFjQ/o
-        C5mYDgsnGS3EJO1N+vOf58=
-Received: from yangjunlin.ccdomain.com (unknown [218.17.89.92])
-        by smtp7 (Coremail) with SMTP id C8CowAAnHJQcfCtgPNS3Nw--.40902S2;
-        Tue, 16 Feb 2021 16:02:37 +0800 (CST)
-From:   angkery <angkery@163.com>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Junlin Yang <yangjunlin@yulong.com>
-Subject: [PATCH] pinctrl: equilibrium: add missing of_node_put
-Date:   Tue, 16 Feb 2021 16:02:31 +0800
-Message-Id: <20210216080231.1303-1-angkery@163.com>
-X-Mailer: git-send-email 2.24.0.windows.2
+        id S230196AbhBPLcX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Feb 2021 06:32:23 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:12092 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229811AbhBPLcW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 16 Feb 2021 06:32:22 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11GBUujp004270;
+        Tue, 16 Feb 2021 03:31:27 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=pfpt0220;
+ bh=tTDkPmc0CcmndlBQaCLe72JM+sLOACfpwxbMK7sbpuA=;
+ b=MnkssHTHMPXm5qUxE3vo7xzXrlgjZs44CFyv/R4mQ+vuJM2JxsvP9nUGlQsBigNvuPvh
+ Oq6wAv0bEfOGXinL1Iq5v6arZfSiyrOsQQqOKNt3ejHOS2Cw5Al2a8S2kj2lBqXXq+F4
+ NMmHASLXoS6QSjfQXqTjhHVpC2VU9E0mgEwTs+j4HUyFhf8uHOOb47+L7ttGJKSUhrIH
+ IkKb4d1fhhQ71isoxx4Qf5a60SupbOjO8Q24HBHOw3NPih2fHGNZPVqgamN+wsUyCCOK
+ m5EAfk5w27eSs5YrEdCDqLeRL1UJGt1EN+kjFJMOy5uSWM1HNTgBkYSriuGJp6jDoU67 TQ== 
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 36pf5txsf0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 16 Feb 2021 03:31:27 -0800
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 16 Feb
+ 2021 03:31:26 -0800
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 16 Feb
+ 2021 03:31:25 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 16 Feb 2021 03:31:25 -0800
+Received: from octopus.marvell.com (octopus.marvell.com [10.5.24.3])
+        by maili.marvell.com (Postfix) with ESMTP id A37343F7043;
+        Tue, 16 Feb 2021 03:31:21 -0800 (PST)
+From:   <kostap@marvell.com>
+To:     <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     <daniel.lezcano@linaro.org>, <amit.kucheria@linaro.org>,
+        <viresh.kumar@linaro.org>, <linus.walleij@linaro.org>,
+        <sebastian.hesselbarth@gmail.com>, <gregory.clement@bootlin.com>,
+        <andrew@lunn.ch>, <robh+dt@kernel.org>, <mw@semihalf.com>,
+        <jaz@semihalf.com>, <nadavh@marvell.com>, <stefanc@marvell.com>,
+        <bpeled@marvell.com>, Konstantin Porotchkin <kostap@marvell.com>
+Subject: [PATCH 0/2] Fix Marvell CP110 pin control finction names
+Date:   Tue, 16 Feb 2021 13:31:16 +0200
+Message-ID: <20210216113118.17484-1-kostap@marvell.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: C8CowAAnHJQcfCtgPNS3Nw--.40902S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7WF1fWrWDAw4kur15tr17Awb_yoW8Kr47pF
-        ZxCFy5JryUJFs7Wa4Iy34qvFWrKan7Kayjv3y2gan7ZFsxJw1UJa1YqFyjqas5CF1rZ345
-        JFyYvay29r4UGr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jLzVbUUUUU=
-X-Originating-IP: [218.17.89.92]
-X-CM-SenderInfo: 5dqjyvlu16il2tof0z/xtbBRh07I13l+nXtIwAAs6
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-02-16_01:2021-02-16,2021-02-15 signatures=0
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Junlin Yang <yangjunlin@yulong.com>
+From: Konstantin Porotchkin <kostap@marvell.com>
 
-Fix OF node leaks by calling of_node_put in
-for_each_child_of_node when the cycle returns.
+These patches are fixing the CP110 pin control driver and the related
+documentation.
+Current CP110 pin control driver uses two different MPP functions named
+the same (sdio) in MPP54 and MPP55 definitions.
+Since these names are used for the MPP functionality selection, all
+function names within single MPP group should be unique.
+This patches series fixes function names in MPP54 and MPP55 pin
+definitions.
 
-Generated by: scripts/coccinelle/iterators/for_each_child.cocci
+Konstantin Porotchkin (2):
+  doc: cp110-system-controller: fix the pin function names
+  drivers/pinctrl: armada-cp110 - fix MPP54/MPP55 functions
 
-Signed-off-by: Junlin Yang <yangjunlin@yulong.com>
----
- drivers/pinctrl/pinctrl-equilibrium.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ .../bindings/arm/marvell/cp110-system-controller.txt          | 4 ++--
+ drivers/pinctrl/mvebu/pinctrl-armada-cp110.c                  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-equilibrium.c b/drivers/pinctrl/pinctrl-equilibrium.c
-index 067271b..a194d80 100644
---- a/drivers/pinctrl/pinctrl-equilibrium.c
-+++ b/drivers/pinctrl/pinctrl-equilibrium.c
-@@ -628,7 +628,8 @@ static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
- 			break;
- 
- 		default:
--				return -EINVAL;
-+			of_node_put(np);
-+			return -EINVAL;
- 		}
- 		i++;
- 	}
-@@ -707,34 +708,42 @@ static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
- 		group.num_pins = of_property_count_u32_elems(np, "pins");
- 		if (group.num_pins < 0) {
- 			dev_err(dev, "No pins in the group: %s\n", prop->name);
-+			of_node_put(np);
- 			return -EINVAL;
- 		}
- 		group.name = prop->value;
- 		group.pins = devm_kcalloc(dev, group.num_pins,
- 					  sizeof(*(group.pins)), GFP_KERNEL);
--		if (!group.pins)
-+		if (!group.pins) {
-+			of_node_put(np);
- 			return -ENOMEM;
-+		}
- 
- 		pinmux = devm_kcalloc(dev, group.num_pins, sizeof(*pinmux),
- 				      GFP_KERNEL);
--		if (!pinmux)
-+		if (!pinmux) {
-+			of_node_put(np);
- 			return -ENOMEM;
-+		}
- 
- 		for (j = 0; j < group.num_pins; j++) {
- 			if (of_property_read_u32_index(np, "pins", j, &pin_id)) {
- 				dev_err(dev, "Group %s: Read intel pins id failed\n",
- 					group.name);
-+				of_node_put(np);
- 				return -EINVAL;
- 			}
- 			if (pin_id >= drvdata->pctl_desc.npins) {
- 				dev_err(dev, "Group %s: Invalid pin ID, idx: %d, pin %u\n",
- 					group.name, j, pin_id);
-+				of_node_put(np);
- 				return -EINVAL;
- 			}
- 			group.pins[j] = pin_id;
- 			if (of_property_read_u32_index(np, "pinmux", j, &pinmux_id)) {
- 				dev_err(dev, "Group %s: Read intel pinmux id failed\n",
- 					group.name);
-+				of_node_put(np);
- 				return -EINVAL;
- 			}
- 			pinmux[j] = pinmux_id;
-@@ -745,6 +754,7 @@ static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
- 						pinmux);
- 		if (err < 0) {
- 			dev_err(dev, "Failed to register group %s\n", group.name);
-+			of_node_put(np);
- 			return err;
- 		}
- 		memset(&group, 0, sizeof(group));
 -- 
-1.9.1
+2.17.1
 
