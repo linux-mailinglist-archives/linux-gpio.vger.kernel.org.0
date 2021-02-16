@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CB7C31D2C7
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Feb 2021 23:46:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA53C31D2CF
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Feb 2021 23:49:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230059AbhBPWq0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Feb 2021 17:46:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45172 "EHLO
+        id S230332AbhBPWrF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Feb 2021 17:47:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230471AbhBPWqY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Feb 2021 17:46:24 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FD56C0613D6
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Feb 2021 14:45:43 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id o63so7206055pgo.6
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Feb 2021 14:45:43 -0800 (PST)
+        with ESMTP id S231217AbhBPWrD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Feb 2021 17:47:03 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9368FC06178A
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Feb 2021 14:45:44 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id c19so236227pjq.3
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Feb 2021 14:45:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=crc+oaPBwmJLuhdzYhxtkJDRIfu/BQGupIafKHnaRI8=;
-        b=NgI7gJ4JI1UkXnfzOj1d5e0puXKF0CFg5Ngwr26Ty+v0cMPjzuLPsHdrG1oxucrm3j
-         +qDzFszW5aAftxhA+MBdTDgM0RhSVHxeOfUOpfzqA1QVD1pNsY1qK9R8vC/HKQsbBfkJ
-         Ru8buAsLA7VJWd14gjMPRtG5p88u5VX9ARV6LlxCMRFC5c2Gnz+7CEUV4gnMpjLE6znV
-         4j4wQ9Zqf7+K3uhBo/3pfZogIoxFC3kKCz2LQkJ1z4obiPElkq3MCMNuS37Q3jLRVBTF
-         YgObZYAintFp3QgQs5m/9Tp/PPcKg+7OUd56e/X8nEKmLlr/elq34Jwm58W25pMhvP9J
-         w81Q==
+        bh=6QiOBS6BUHnryLZxvzeTgumc3kOt1flt/TgOQxcQpDo=;
+        b=kV4K7oarDSe88yNGSyGvoITKYZU54zXvY7GsEyS8DnsftNPPZfbg1g0/rtvJVnh9RY
+         6QTaB4SWs4YPF5SrcGS71Qj2L54rAScd8G/3AYkqDMyFBzXrx9gd26Ma4UbybqayzaQU
+         e9Q0O67rsuWN/2z/zhH0wP1zAiR35inm0baLQ+F1Dkc5VB4j+9GsD9xvuxYFw0ywv8uF
+         B+S0PYt+CNb5gl3C6DCxlEoTeTFVQr+O6t9Q6/1F5ixSSHZk01d4wI7tYNYpqD1OzMsB
+         OgQt0HB5K0aNT0mtaEkmg9iPzrm6WBoV2DT5tHHzP/Q/6Flk1Kwcua1rXV5iNNKOP7Ns
+         60Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=crc+oaPBwmJLuhdzYhxtkJDRIfu/BQGupIafKHnaRI8=;
-        b=FJ+HwIfhnLwjaJUVIF/CaDq6tfQStvSldMm1XV3VoGY0281YrnmKAvqIDo4L09uuDj
-         12MWj0XdEqypy9dJteZuMthP308tHrdap/mDofqjuYk6rBFeVSj6OfnRx+gr+6BWLjDY
-         V1lqZZ592X7LTP20XfOaDLddxEcQUhn8QH9J8LGTcdOlbp8cIFkCaZlP93blCOjUQA+q
-         AlB+qZeffXr8VGebYHnQNBEeo7N3GxkP+k01M5filmD7yMLK1a86h0fGMDk0PD3zRHSd
-         lDXMv8Ie26w8bnXvIpUH9t3cF4cSju86ZyCTjuGduSN4uEbEvghy4d8m8EW2vxcclUlQ
-         p/TA==
-X-Gm-Message-State: AOAM530a/qx1tC8i4qIqAiWmXOIVSLm1MNvHhiPCaWTEvdwGPv7ikcri
-        zsxanexQfZbq6et0b+srLJN49w==
-X-Google-Smtp-Source: ABdhPJxLnXNsoWH1JjMoI3/wIgr2kpc3vJgMQ2414V+PTKVmYjyIGY60cN5fpVQ5AXErrjL6rdRVNA==
-X-Received: by 2002:a63:2b82:: with SMTP id r124mr21093120pgr.310.1613515542849;
-        Tue, 16 Feb 2021 14:45:42 -0800 (PST)
+        bh=6QiOBS6BUHnryLZxvzeTgumc3kOt1flt/TgOQxcQpDo=;
+        b=aHrnUVXBMu/OO9mX3VQaxpRdmKe7CucsSy2C1/ny33S1qViBrI7evwrG+MSXLyiNt1
+         zPtYQQcWkRaPc4bjx3Y3YLOpm00NOksrSA802RDdrIXMIHWdSEd3xSJdBI08ed4qUwv2
+         JnWC/VIDo6Cs/HTsB/X4R0TrBLqHgG7WJUbWcO8+1dw6xPA0JrauL81lF7SOm9bM7F4q
+         EK5vqRYXFU1BpTeweso4bRM+G5Kt6Ejicrk+uGRBg6/iX/V2CLVuWD6KbCAcMV6MCifq
+         zJ6/I83Oddc4Gi73jm6nhxNTUBmnwoacCqDKgduUh1ZDJLD0c9+/wIsR5RUj3hukqrrm
+         y6Pw==
+X-Gm-Message-State: AOAM530BQUfqpFKcDR2/ZgoeG3TvFRZMby3KipqqBbLrjm1OHx5PGbiX
+        GOt7CfAhEcFSNRF/IjMu5zG7ng==
+X-Google-Smtp-Source: ABdhPJzq/fFJMriHhU/Nmr6DX3rLr81/13JNJCvYn1uEDQonGF+8w6lCIuWe0oq37UVG/ukUxxko/w==
+X-Received: by 2002:a17:902:a714:b029:e3:1cd:a033 with SMTP id w20-20020a170902a714b02900e301cda033mr21198535plq.27.1613515544167;
+        Tue, 16 Feb 2021 14:45:44 -0800 (PST)
 Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:4e06:8d2c:6f9:5b31])
-        by smtp.gmail.com with ESMTPSA id 184sm1922465pfc.176.2021.02.16.14.45.41
+        by smtp.gmail.com with ESMTPSA id 184sm1922465pfc.176.2021.02.16.14.45.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Feb 2021 14:45:42 -0800 (PST)
+        Tue, 16 Feb 2021 14:45:43 -0800 (PST)
 From:   Drew Fustini <drew@beagleboard.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -60,11 +60,10 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Joe Perches <joe@perches.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v6 1/3] pinctrl: use to octal permissions for debugfs files
-Date:   Tue, 16 Feb 2021 14:44:53 -0800
-Message-Id: <20210216224455.1504008-2-drew@beagleboard.org>
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH v6 2/3] pinctrl: pinmux: Add pinmux-select debugfs file
+Date:   Tue, 16 Feb 2021 14:44:54 -0800
+Message-Id: <20210216224455.1504008-3-drew@beagleboard.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210216224455.1504008-1-drew@beagleboard.org>
 References: <20210216224455.1504008-1-drew@beagleboard.org>
@@ -74,90 +73,159 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Switch over pinctrl debugfs files to use octal permissions as they are
-preferred over symbolic permissions. Refer to commit f90774e1fd27
-("checkpatch: look for symbolic permissions and suggest octal instead").
+Add "pinmux-select" to debugfs which will activate a function and group:
 
-Note: S_IFREG flag is added to the mode by __debugfs_create_file()
-in fs/debugfs/inode.c
+  echo "<function-name group-name>" > pinmux-select
 
-Suggested-by: Joe Perches <joe@perches.com>
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The write operation pinmux_select() handles this by checking that the
+names map to valid selectors and then calling ops->set_mux().
+
+The existing "pinmux-functions" debugfs file lists the pin functions
+registered for the pin controller. For example:
+
+  function: pinmux-uart0, groups = [ pinmux-uart0-pins ]
+  function: pinmux-mmc0, groups = [ pinmux-mmc0-pins ]
+  function: pinmux-mmc1, groups = [ pinmux-mmc1-pins ]
+  function: pinmux-i2c0, groups = [ pinmux-i2c0-pins ]
+  function: pinmux-i2c1, groups = [ pinmux-i2c1-pins ]
+  function: pinmux-spi1, groups = [ pinmux-spi1-pins ]
+
+To activate function pinmux-i2c1 and group pinmux-i2c1-pins:
+
+  echo "pinmux-i2c1 pinmux-i2c1-pins" > pinmux-select
+
 Signed-off-by: Drew Fustini <drew@beagleboard.org>
 ---
- drivers/pinctrl/core.c    | 12 ++++++------
- drivers/pinctrl/pinconf.c |  4 ++--
- drivers/pinctrl/pinmux.c  |  4 ++--
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ drivers/pinctrl/pinmux.c | 102 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 3663d87f51a0..07458742bc0f 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1888,11 +1888,11 @@ static void pinctrl_init_device_debugfs(struct pinctrl_dev *pctldev)
- 			dev_name(pctldev->dev));
- 		return;
- 	}
--	debugfs_create_file("pins", S_IFREG | S_IRUGO,
-+	debugfs_create_file("pins", 0444,
- 			    device_root, pctldev, &pinctrl_pins_fops);
--	debugfs_create_file("pingroups", S_IFREG | S_IRUGO,
-+	debugfs_create_file("pingroups", 0444,
- 			    device_root, pctldev, &pinctrl_groups_fops);
--	debugfs_create_file("gpio-ranges", S_IFREG | S_IRUGO,
-+	debugfs_create_file("gpio-ranges", 0444,
- 			    device_root, pctldev, &pinctrl_gpioranges_fops);
- 	if (pctldev->desc->pmxops)
- 		pinmux_init_device_debugfs(device_root, pctldev);
-@@ -1914,11 +1914,11 @@ static void pinctrl_init_debugfs(void)
- 		return;
- 	}
- 
--	debugfs_create_file("pinctrl-devices", S_IFREG | S_IRUGO,
-+	debugfs_create_file("pinctrl-devices", 0444,
- 			    debugfs_root, NULL, &pinctrl_devices_fops);
--	debugfs_create_file("pinctrl-maps", S_IFREG | S_IRUGO,
-+	debugfs_create_file("pinctrl-maps", 0444,
- 			    debugfs_root, NULL, &pinctrl_maps_fops);
--	debugfs_create_file("pinctrl-handles", S_IFREG | S_IRUGO,
-+	debugfs_create_file("pinctrl-handles", 0444,
- 			    debugfs_root, NULL, &pinctrl_fops);
- }
- 
-diff --git a/drivers/pinctrl/pinconf.c b/drivers/pinctrl/pinconf.c
-index 02c075cc010b..d9d54065472e 100644
---- a/drivers/pinctrl/pinconf.c
-+++ b/drivers/pinctrl/pinconf.c
-@@ -370,9 +370,9 @@ DEFINE_SHOW_ATTRIBUTE(pinconf_groups);
- void pinconf_init_device_debugfs(struct dentry *devroot,
- 			 struct pinctrl_dev *pctldev)
- {
--	debugfs_create_file("pinconf-pins", S_IFREG | S_IRUGO,
-+	debugfs_create_file("pinconf-pins", 0444,
- 			    devroot, pctldev, &pinconf_pins_fops);
--	debugfs_create_file("pinconf-groups", S_IFREG | S_IRUGO,
-+	debugfs_create_file("pinconf-groups", 0444,
- 			    devroot, pctldev, &pinconf_groups_fops);
- }
- 
 diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index bab888fe3f8e..c651b2db0925 100644
+index c651b2db0925..08f336e4246c 100644
 --- a/drivers/pinctrl/pinmux.c
 +++ b/drivers/pinctrl/pinmux.c
-@@ -676,9 +676,9 @@ DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
+@@ -23,6 +23,7 @@
+ #include <linux/string.h>
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
++#include <linux/ctype.h>
+ #include <linux/pinctrl/machine.h>
+ #include <linux/pinctrl/pinmux.h>
+ #include "core.h"
+@@ -673,6 +674,105 @@ void pinmux_show_setting(struct seq_file *s,
+ DEFINE_SHOW_ATTRIBUTE(pinmux_functions);
+ DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
+ 
++#define PINMUX_SELECT_MAX 50
++static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
++				   size_t len, loff_t *ppos)
++{
++	struct seq_file *sfile = file->private_data;
++	struct pinctrl_dev *pctldev = sfile->private;
++	const struct pinmux_ops *pmxops = pctldev->desc->pmxops;
++	const char *const *groups;
++	char *buf, *fname, *gname;
++	unsigned int num_groups;
++	int fsel, gsel, ret;
++
++	if (len > PINMUX_SELECT_MAX)
++		return -ENOMEM;
++
++	buf = kzalloc(PINMUX_SELECT_MAX, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	ret = strncpy_from_user(buf, user_buf, PINMUX_SELECT_MAX);
++	if (ret < 0)
++		goto exit_free_buf;
++	buf[len-1] = '\0';
++
++	/* remove leading and trailing spaces of input buffer */
++	fname = strstrip(buf);
++	if (*fname == '\0') {
++		ret = -EINVAL;
++		goto exit_free_buf;
++	}
++
++	/* find a separator like a space character */
++	for (gname = fname; !isspace(*gname); gname++) {
++		if (*gname == '\0') {
++			ret = -EINVAL;
++			goto exit_free_buf;
++		}
++	}
++	*gname = '\0';
++
++	/* drop extra spaces between function and group name */
++	gname = skip_spaces(gname + 1);
++	if (*gname == '\0') {
++		ret = -EINVAL;
++		goto exit_free_buf;
++	}
++
++	fsel = pinmux_func_name_to_selector(pctldev, fname);
++	if (fsel < 0) {
++		dev_err(pctldev->dev, "invalid function %s in map table\n", fname);
++		ret = fsel;
++		goto exit_free_buf;
++	}
++
++	ret = pmxops->get_function_groups(pctldev, fsel, &groups, &num_groups);
++	if (ret) {
++		dev_err(pctldev->dev, "no groups for function %d (%s)", fsel, fname);
++		goto exit_free_buf;
++	}
++
++	ret = match_string(groups, num_groups, gname);
++	if (ret < 0) {
++		dev_err(pctldev->dev, "invalid group %s", gname);
++		goto exit_free_buf;
++	}
++
++	gsel = pinctrl_get_group_selector(pctldev, gname);
++	if (gsel < 0) {
++		dev_err(pctldev->dev, "failed to get group selector for %s", gname);
++		ret = gsel;
++		goto exit_free_buf;
++	}
++
++	ret = pmxops->set_mux(pctldev, fsel, gsel);
++	if (ret) {
++		dev_err(pctldev->dev, "set_mux() failed: %d", ret);
++		goto exit_free_buf;
++	}
++	ret = len;
++
++exit_free_buf:
++	kfree(buf);
++
++	return ret;
++}
++
++static int pinmux_select_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, NULL, inode->i_private);
++}
++
++static const struct file_operations pinmux_select_ops = {
++	.owner = THIS_MODULE,
++	.open = pinmux_select_open,
++	.write = pinmux_select,
++	.llseek = no_llseek,
++	.release = single_release,
++};
++
  void pinmux_init_device_debugfs(struct dentry *devroot,
  			 struct pinctrl_dev *pctldev)
  {
--	debugfs_create_file("pinmux-functions", S_IFREG | S_IRUGO,
-+	debugfs_create_file("pinmux-functions", 0444,
+@@ -680,6 +780,8 @@ void pinmux_init_device_debugfs(struct dentry *devroot,
  			    devroot, pctldev, &pinmux_functions_fops);
--	debugfs_create_file("pinmux-pins", S_IFREG | S_IRUGO,
-+	debugfs_create_file("pinmux-pins", 0444,
+ 	debugfs_create_file("pinmux-pins", 0444,
  			    devroot, pctldev, &pinmux_pins_fops);
++	debugfs_create_file("pinmux-select", 0200,
++			    devroot, pctldev, &pinmux_select_ops);
  }
  
+ #endif /* CONFIG_DEBUG_FS */
 -- 
 2.25.1
 
