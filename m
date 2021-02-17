@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6A8F31D9F2
+	by mail.lfdr.de (Postfix) with ESMTP id 105BF31D9F1
 	for <lists+linux-gpio@lfdr.de>; Wed, 17 Feb 2021 14:05:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231842AbhBQND0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Feb 2021 08:03:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58162 "EHLO
+        id S232220AbhBQNDZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Feb 2021 08:03:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232143AbhBQNDX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Feb 2021 08:03:23 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FBC0C061788
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 05:02:42 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id 7so17389357wrz.0
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 05:02:42 -0800 (PST)
+        with ESMTP id S232837AbhBQNDV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Feb 2021 08:03:21 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19EF8C0613D6
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 05:02:41 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id u14so17330511wri.3
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 05:02:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=31fWdQi1GozkNMQzBBlHlT26JuHQ55SFGVVKFOVleMo=;
-        b=SxFyz4cBe3wDOL8lDBisTYSHQF/dAWcBl9SaWLu/G57RLeFPXzpCthNbTLdBR3HHXg
-         Cui99kPtXU1eOxLk6Wx8vemAhrVTqsokNh6hM/BVbO+eXqP2vbHGyWSiRAj1EDnG32cZ
-         Vs8Eon7pA4ES7ksH71PF+/QbPGcfUn0ERXzbiVsqlVO0L2ZP6TTlya2IyEbkAzAhL7XP
-         m6Clq/awaigP5NGlruLImR5P+tBnlg6P3ezjdTuSz8t2b9DkN7O1kJHiNZz1hPF2QGDg
-         PkU718rVIldvUgbeJjC2fDb23xqA61xXEWWHCHAXDJsZq9/aP8gzLKpDwiLA/yRwE9rf
-         iJkA==
+        bh=Bzg79/29OhbB6lxc5VZo3gmz1Yd0Or4Fa/047kiocsg=;
+        b=TFZvwAmZKYX+tuTbyt+f9dcNS1P8wlzBPpSxKJUS1FqZ5YR57GoHi+1Yt1BReCHaUH
+         GQHV/1bQVU67GD0WoZt8orbnUMBJb/PCTvAFXcO/mzkME1x0z5yYzWz0DIl9Vmc5sV/X
+         SDyY2v4/WSYAkxg/G++wVK4k1baLjKCEOmR9i8UTjphUeCufkKMLS74E+iv9tGtfJNhe
+         /Bzm5n2BdjV6yfM+k3SzObBeSX0erOX1xveEIwUm0ECms/Zyq3Jp8/lvPO05XE4hDuLg
+         0KWDTs+d1OXlkyhdihqUNp1XbWBuwE3avJNfj4A92PEfQdLsAkHujKkMCqaGdEoBm8xP
+         R+cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=31fWdQi1GozkNMQzBBlHlT26JuHQ55SFGVVKFOVleMo=;
-        b=MMrmFrYB2UIkzFzN2/CvEz7CzWU3VV6FayoHBY/WA4Uu/66BN9Fny57JQ9RM3rrWNx
-         5kfYgdPQUI9heOEsQJOQB2i+z5Bdi3lSowRY9U1sXuntBbDvxJdhavVbVipLqqD1qPXJ
-         7E0sqOs3vvkys1dHFaTWz5jMYKMl00gISykvtBA8qnoBNyFrl64N0gnu8hYgRqmUBv0b
-         3wW5Z6KJzYibi6dQWFJK+5k9eoDFq7PTrHA8ekNcTkx20hhXz4JmH0W9V29mbPBlL/BW
-         x0O6OHMENHvIYvWwacthFpjMS1GVE0Pu7ZGmbscz+foKrPl2lYEKETclnhUBO6FYWsow
-         MQlA==
-X-Gm-Message-State: AOAM53337S3lFo5NjwLZvJfsZxdoWiSvJOAlKPND8ln6KCjXqArq8xt4
-        zwmd1njU62EwnKXcBW0vUfQVcw==
-X-Google-Smtp-Source: ABdhPJzSNrnSlcCjbOuN9U7rhl8Lk5Lq8foebvtpDiVv6zqQ/Dx+gYKzZZMZUarwQ1QZUUY+prNLtA==
-X-Received: by 2002:a5d:570b:: with SMTP id a11mr29867526wrv.242.1613566959002;
+        bh=Bzg79/29OhbB6lxc5VZo3gmz1Yd0Or4Fa/047kiocsg=;
+        b=EhAULH3QuJ9eZ7ERc+3NdijJUdNPvd4bHE4LnyMDI4Ge0jTlNqk25WUbwJKeOUexYW
+         9yXB0peCHBsk7wMjc5166QVHjZM3yQfiCcxx8xSH4kYzSpLc9tNHQJ8NS7X0awNgT+jL
+         iI+MONt1UvDL0gRecfmX4ehbiiOJ6ShlXXHJ4YD6ONYKeohmn/FmmLkXGHeiNcpLoH9n
+         5hAKrECSxUEMA3s17XS4OXNwiWxqPV2/GkwT7OmJpmYN2FVoyqSMOhTBg9b8uKX0leoY
+         M+VFPbGyHoNmzsv9Jd7a7O9wYLM/1WvB1t1wOzTuuxKbkfHZa+zmWLrfE/6dX1SxsM5e
+         Z37w==
+X-Gm-Message-State: AOAM530X/g/sr3ye2NxCJ6O1UgqZyyJ8IlicJgjoMOnuTyvkY9pqTU9x
+        eVtRGyZIxLqRWjeVsKotdrjlUA==
+X-Google-Smtp-Source: ABdhPJyqLWoHxbLR6LrxBFwP354gf7yq0X0nGZuMInqKoCjb4JRTgHlZ5gaScWK1aNr6yeZ82HdI/g==
+X-Received: by 2002:adf:ab18:: with SMTP id q24mr29066689wrc.80.1613566959658;
         Wed, 17 Feb 2021 05:02:39 -0800 (PST)
 Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
-        by smtp.gmail.com with ESMTPSA id w8sm3910789wrm.21.2021.02.17.05.02.38
+        by smtp.gmail.com with ESMTPSA id w8sm3910789wrm.21.2021.02.17.05.02.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Feb 2021 05:02:38 -0800 (PST)
+        Wed, 17 Feb 2021 05:02:39 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [libgpiod][PATCH 2/3] licensing: relicense non-library code under GPL-2.0-or-later
-Date:   Wed, 17 Feb 2021 14:02:24 +0100
-Message-Id: <20210217130225.6378-3-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH 3/3] licensing: relicense C++ library code under LGPL-3.0-or-later
+Date:   Wed, 17 Feb 2021 14:02:25 +0100
+Message-Id: <20210217130225.6378-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.29.1
 In-Reply-To: <20210217130225.6378-1-brgl@bgdev.pl>
 References: <20210217130225.6378-1-brgl@bgdev.pl>
@@ -66,609 +66,282 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-LGPL-2.1 is a license meant for shared libraries. Because I didn't know
-any better I used it for all files in the repository, including programs
-linking against libgpiod. The standard approach for many similar projects
-is to use LGPL for library code and GPL for programs (and also Makefiles
-and other files containing code or configuration).
+Using LGPL-2.1 for C++ library code is an issue raised several times on
+the linux-gpio mailing list. Programs using C++ libraries often include
+significant portions of code generated behind the scenes from C++ headers
+(via templates, default implementations etc.).
 
-Relicense all programs, tests, makefiles and autotools files under
-GPL-2.0 or later.
+Section 3 of LGPL-3.0 clarifies the use of code defined in or generated
+from C++ headers so this changset proposes to use LGPL-3.0 for all C++
+library code in libgpiod.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- Makefile.am                                | 3 ++-
- autogen.sh                                 | 2 +-
- bindings/Makefile.am                       | 2 +-
- bindings/cxx/Makefile.am                   | 2 +-
- bindings/cxx/examples/Makefile.am          | 2 +-
- bindings/cxx/examples/gpiodetectcxx.cpp    | 2 +-
- bindings/cxx/examples/gpiofindcxx.cpp      | 2 +-
- bindings/cxx/examples/gpiogetcxx.cpp       | 2 +-
- bindings/cxx/examples/gpioinfocxx.cpp      | 2 +-
- bindings/cxx/examples/gpiomoncxx.cpp       | 2 +-
- bindings/cxx/examples/gpiosetcxx.cpp       | 2 +-
- bindings/cxx/tests/Makefile.am             | 2 +-
- bindings/cxx/tests/gpiod-cxx-test-main.cpp | 2 +-
- bindings/cxx/tests/gpiod-cxx-test.cpp      | 2 +-
- bindings/cxx/tests/tests-chip.cpp          | 2 +-
- bindings/cxx/tests/tests-event.cpp         | 2 +-
- bindings/cxx/tests/tests-iter.cpp          | 2 +-
- bindings/cxx/tests/tests-line.cpp          | 2 +-
- bindings/python/Makefile.am                | 2 +-
- bindings/python/examples/Makefile.am       | 2 +-
- bindings/python/examples/gpiodetect.py     | 2 +-
- bindings/python/examples/gpiofind.py       | 2 +-
- bindings/python/examples/gpioget.py        | 2 +-
- bindings/python/examples/gpioinfo.py       | 2 +-
- bindings/python/examples/gpiomon.py        | 2 +-
- bindings/python/examples/gpioset.py        | 2 +-
- bindings/python/tests/Makefile.am          | 2 +-
- bindings/python/tests/gpiod_py_test.py     | 2 +-
- configure.ac                               | 2 +-
- include/Makefile.am                        | 2 +-
- lib/Makefile.am                            | 2 +-
- man/Makefile.am                            | 2 +-
- tests/Makefile.am                          | 2 +-
- tests/gpiod-test.c                         | 2 +-
- tests/gpiod-test.h                         | 2 +-
- tests/mockup/Makefile.am                   | 2 +-
- tests/tests-bulk.c                         | 2 +-
- tests/tests-chip.c                         | 2 +-
- tests/tests-event.c                        | 2 +-
- tests/tests-line.c                         | 2 +-
- tests/tests-misc.c                         | 2 +-
- tools/Makefile.am                          | 2 +-
- tools/gpio-tools-test                      | 2 +-
- tools/gpio-tools-test.bats                 | 2 +-
- tools/gpiodetect.c                         | 2 +-
- tools/gpiofind.c                           | 2 +-
- tools/gpioget.c                            | 2 +-
- tools/gpioinfo.c                           | 2 +-
- tools/gpiomon.c                            | 2 +-
- tools/gpioset.c                            | 2 +-
- tools/tools-common.c                       | 2 +-
- tools/tools-common.h                       | 2 +-
- 52 files changed, 53 insertions(+), 52 deletions(-)
+ LICENSES/LGPL-3.0-or-later.txt     | 165 +++++++++++++++++++++++++++++
+ Makefile.am                        |   1 +
+ bindings/cxx/chip.cpp              |   2 +-
+ bindings/cxx/gpiod.hpp             |   2 +-
+ bindings/cxx/iter.cpp              |   2 +-
+ bindings/cxx/line.cpp              |   2 +-
+ bindings/cxx/line_bulk.cpp         |   2 +-
+ bindings/cxx/tests/gpio-mockup.cpp |   2 +-
+ bindings/cxx/tests/gpio-mockup.hpp |   2 +-
+ 9 files changed, 173 insertions(+), 7 deletions(-)
+ create mode 100644 LICENSES/LGPL-3.0-or-later.txt
 
+diff --git a/LICENSES/LGPL-3.0-or-later.txt b/LICENSES/LGPL-3.0-or-later.txt
+new file mode 100644
+index 0000000..0a04128
+--- /dev/null
++++ b/LICENSES/LGPL-3.0-or-later.txt
+@@ -0,0 +1,165 @@
++                   GNU LESSER GENERAL PUBLIC LICENSE
++                       Version 3, 29 June 2007
++
++ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
++ Everyone is permitted to copy and distribute verbatim copies
++ of this license document, but changing it is not allowed.
++
++
++  This version of the GNU Lesser General Public License incorporates
++the terms and conditions of version 3 of the GNU General Public
++License, supplemented by the additional permissions listed below.
++
++  0. Additional Definitions.
++
++  As used herein, "this License" refers to version 3 of the GNU Lesser
++General Public License, and the "GNU GPL" refers to version 3 of the GNU
++General Public License.
++
++  "The Library" refers to a covered work governed by this License,
++other than an Application or a Combined Work as defined below.
++
++  An "Application" is any work that makes use of an interface provided
++by the Library, but which is not otherwise based on the Library.
++Defining a subclass of a class defined by the Library is deemed a mode
++of using an interface provided by the Library.
++
++  A "Combined Work" is a work produced by combining or linking an
++Application with the Library.  The particular version of the Library
++with which the Combined Work was made is also called the "Linked
++Version".
++
++  The "Minimal Corresponding Source" for a Combined Work means the
++Corresponding Source for the Combined Work, excluding any source code
++for portions of the Combined Work that, considered in isolation, are
++based on the Application, and not on the Linked Version.
++
++  The "Corresponding Application Code" for a Combined Work means the
++object code and/or source code for the Application, including any data
++and utility programs needed for reproducing the Combined Work from the
++Application, but excluding the System Libraries of the Combined Work.
++
++  1. Exception to Section 3 of the GNU GPL.
++
++  You may convey a covered work under sections 3 and 4 of this License
++without being bound by section 3 of the GNU GPL.
++
++  2. Conveying Modified Versions.
++
++  If you modify a copy of the Library, and, in your modifications, a
++facility refers to a function or data to be supplied by an Application
++that uses the facility (other than as an argument passed when the
++facility is invoked), then you may convey a copy of the modified
++version:
++
++   a) under this License, provided that you make a good faith effort to
++   ensure that, in the event an Application does not supply the
++   function or data, the facility still operates, and performs
++   whatever part of its purpose remains meaningful, or
++
++   b) under the GNU GPL, with none of the additional permissions of
++   this License applicable to that copy.
++
++  3. Object Code Incorporating Material from Library Header Files.
++
++  The object code form of an Application may incorporate material from
++a header file that is part of the Library.  You may convey such object
++code under terms of your choice, provided that, if the incorporated
++material is not limited to numerical parameters, data structure
++layouts and accessors, or small macros, inline functions and templates
++(ten or fewer lines in length), you do both of the following:
++
++   a) Give prominent notice with each copy of the object code that the
++   Library is used in it and that the Library and its use are
++   covered by this License.
++
++   b) Accompany the object code with a copy of the GNU GPL and this license
++   document.
++
++  4. Combined Works.
++
++  You may convey a Combined Work under terms of your choice that,
++taken together, effectively do not restrict modification of the
++portions of the Library contained in the Combined Work and reverse
++engineering for debugging such modifications, if you also do each of
++the following:
++
++   a) Give prominent notice with each copy of the Combined Work that
++   the Library is used in it and that the Library and its use are
++   covered by this License.
++
++   b) Accompany the Combined Work with a copy of the GNU GPL and this license
++   document.
++
++   c) For a Combined Work that displays copyright notices during
++   execution, include the copyright notice for the Library among
++   these notices, as well as a reference directing the user to the
++   copies of the GNU GPL and this license document.
++
++   d) Do one of the following:
++
++       0) Convey the Minimal Corresponding Source under the terms of this
++       License, and the Corresponding Application Code in a form
++       suitable for, and under terms that permit, the user to
++       recombine or relink the Application with a modified version of
++       the Linked Version to produce a modified Combined Work, in the
++       manner specified by section 6 of the GNU GPL for conveying
++       Corresponding Source.
++
++       1) Use a suitable shared library mechanism for linking with the
++       Library.  A suitable mechanism is one that (a) uses at run time
++       a copy of the Library already present on the user's computer
++       system, and (b) will operate properly with a modified version
++       of the Library that is interface-compatible with the Linked
++       Version.
++
++   e) Provide Installation Information, but only if you would otherwise
++   be required to provide such information under section 6 of the
++   GNU GPL, and only to the extent that such information is
++   necessary to install and execute a modified version of the
++   Combined Work produced by recombining or relinking the
++   Application with a modified version of the Linked Version. (If
++   you use option 4d0, the Installation Information must accompany
++   the Minimal Corresponding Source and Corresponding Application
++   Code. If you use option 4d1, you must provide the Installation
++   Information in the manner specified by section 6 of the GNU GPL
++   for conveying Corresponding Source.)
++
++  5. Combined Libraries.
++
++  You may place library facilities that are a work based on the
++Library side by side in a single library together with other library
++facilities that are not Applications and are not covered by this
++License, and convey such a combined library under terms of your
++choice, if you do both of the following:
++
++   a) Accompany the combined library with a copy of the same work based
++   on the Library, uncombined with any other library facilities,
++   conveyed under the terms of this License.
++
++   b) Give prominent notice with the combined library that part of it
++   is a work based on the Library, and explaining where to find the
++   accompanying uncombined form of the same work.
++
++  6. Revised Versions of the GNU Lesser General Public License.
++
++  The Free Software Foundation may publish revised and/or new versions
++of the GNU Lesser General Public License from time to time. Such new
++versions will be similar in spirit to the present version, but may
++differ in detail to address new problems or concerns.
++
++  Each version is given a distinguishing version number. If the
++Library as you received it specifies that a certain numbered version
++of the GNU Lesser General Public License "or any later version"
++applies to it, you have the option of following the terms and
++conditions either of that published version or of any later version
++published by the Free Software Foundation. If the Library as you
++received it does not specify a version number of the GNU Lesser
++General Public License, you may choose any version of the GNU Lesser
++General Public License ever published by the Free Software Foundation.
++
++  If the Library as you received it specifies that a proxy can decide
++whether future versions of the GNU Lesser General Public License shall
++apply, that proxy's public statement of acceptance of any version is
++permanent authorization for you to choose that version for the
++Library.
 diff --git a/Makefile.am b/Makefile.am
-index 203c291..0e44305 100644
+index 0e44305..dfc6c95 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- ACLOCAL_AMFLAGS = -I m4
-@@ -8,6 +8,7 @@ SUBDIRS = include lib
- EXTRA_DIST = \
- 	LICENSES/CC-BY-SA-4.0.txt \
+@@ -10,6 +10,7 @@ EXTRA_DIST = \
  	LICENSES/GPL-2.0-only.txt \
-+	LICENSES/GPL-2.0-or-later.txt \
+ 	LICENSES/GPL-2.0-or-later.txt \
  	LICENSES/LGPL-2.1-or-later.txt \
++	LICENSES/LGPL-3.0-or-later.txt \
  	LICENSES/Linux-syscall-note.txt
  
-diff --git a/autogen.sh b/autogen.sh
-index 7d21070..420b821 100755
---- a/autogen.sh
-+++ b/autogen.sh
-@@ -1,5 +1,5 @@
- #!/bin/sh
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- # SPDX-FileCopyrightText: 2017 Thierry Reding <treding@nvidia.com>
- 
-diff --git a/bindings/Makefile.am b/bindings/Makefile.am
-index c5301f9..8f8c762 100644
---- a/bindings/Makefile.am
-+++ b/bindings/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- SUBDIRS = .
-diff --git a/bindings/cxx/Makefile.am b/bindings/cxx/Makefile.am
-index 23c03f4..655d1cd 100644
---- a/bindings/cxx/Makefile.am
-+++ b/bindings/cxx/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- lib_LTLIBRARIES = libgpiodcxx.la
-diff --git a/bindings/cxx/examples/Makefile.am b/bindings/cxx/examples/Makefile.am
-index bdd951d..748b581 100644
---- a/bindings/cxx/examples/Makefile.am
-+++ b/bindings/cxx/examples/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- AM_CPPFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
-diff --git a/bindings/cxx/examples/gpiodetectcxx.cpp b/bindings/cxx/examples/gpiodetectcxx.cpp
-index 84dff9d..872cd96 100644
---- a/bindings/cxx/examples/gpiodetectcxx.cpp
-+++ b/bindings/cxx/examples/gpiodetectcxx.cpp
+ if WITH_TOOLS
+diff --git a/bindings/cxx/chip.cpp b/bindings/cxx/chip.cpp
+index 49c5602..5b8125b 100644
+--- a/bindings/cxx/chip.cpp
++++ b/bindings/cxx/chip.cpp
 @@ -1,4 +1,4 @@
 -// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-License-Identifier: LGPL-3.0-or-later
  // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
  
- /* C++ reimplementation of the gpiodetect tool. */
-diff --git a/bindings/cxx/examples/gpiofindcxx.cpp b/bindings/cxx/examples/gpiofindcxx.cpp
-index cafcbb1..0bccd94 100644
---- a/bindings/cxx/examples/gpiofindcxx.cpp
-+++ b/bindings/cxx/examples/gpiofindcxx.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- /* C++ reimplementation of the gpiofind tool. */
-diff --git a/bindings/cxx/examples/gpiogetcxx.cpp b/bindings/cxx/examples/gpiogetcxx.cpp
-index 486ff57..94b3dac 100644
---- a/bindings/cxx/examples/gpiogetcxx.cpp
-+++ b/bindings/cxx/examples/gpiogetcxx.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- /* Simplified C++ reimplementation of the gpioget tool. */
-diff --git a/bindings/cxx/examples/gpioinfocxx.cpp b/bindings/cxx/examples/gpioinfocxx.cpp
-index 76b7bc1..2175adc 100644
---- a/bindings/cxx/examples/gpioinfocxx.cpp
-+++ b/bindings/cxx/examples/gpioinfocxx.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- /* Simplified C++ reimplementation of the gpioinfo tool. */
-diff --git a/bindings/cxx/examples/gpiomoncxx.cpp b/bindings/cxx/examples/gpiomoncxx.cpp
-index 6b199c4..4d6ac6e 100644
---- a/bindings/cxx/examples/gpiomoncxx.cpp
-+++ b/bindings/cxx/examples/gpiomoncxx.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- /* Simplified C++ reimplementation of the gpiomon tool. */
-diff --git a/bindings/cxx/examples/gpiosetcxx.cpp b/bindings/cxx/examples/gpiosetcxx.cpp
-index fb093cb..71b27a9 100644
---- a/bindings/cxx/examples/gpiosetcxx.cpp
-+++ b/bindings/cxx/examples/gpiosetcxx.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- /* Simplified C++ reimplementation of the gpioset tool. */
-diff --git a/bindings/cxx/tests/Makefile.am b/bindings/cxx/tests/Makefile.am
-index 3599c02..cbdecdc 100644
---- a/bindings/cxx/tests/Makefile.am
-+++ b/bindings/cxx/tests/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- AM_CPPFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
-diff --git a/bindings/cxx/tests/gpiod-cxx-test-main.cpp b/bindings/cxx/tests/gpiod-cxx-test-main.cpp
-index 7343c1a..11bf8e5 100644
---- a/bindings/cxx/tests/gpiod-cxx-test-main.cpp
-+++ b/bindings/cxx/tests/gpiod-cxx-test-main.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #define CATCH_CONFIG_MAIN
-diff --git a/bindings/cxx/tests/gpiod-cxx-test.cpp b/bindings/cxx/tests/gpiod-cxx-test.cpp
-index 1f1f20f..834f372 100644
---- a/bindings/cxx/tests/gpiod-cxx-test.cpp
-+++ b/bindings/cxx/tests/gpiod-cxx-test.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <linux/version.h>
-diff --git a/bindings/cxx/tests/tests-chip.cpp b/bindings/cxx/tests/tests-chip.cpp
-index bf4db0d..a84b150 100644
---- a/bindings/cxx/tests/tests-chip.cpp
-+++ b/bindings/cxx/tests/tests-chip.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <catch2/catch.hpp>
-diff --git a/bindings/cxx/tests/tests-event.cpp b/bindings/cxx/tests/tests-event.cpp
-index 25cccde..aeb50dd 100644
---- a/bindings/cxx/tests/tests-event.cpp
-+++ b/bindings/cxx/tests/tests-event.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <catch2/catch.hpp>
-diff --git a/bindings/cxx/tests/tests-iter.cpp b/bindings/cxx/tests/tests-iter.cpp
-index 11243c9..848889b 100644
---- a/bindings/cxx/tests/tests-iter.cpp
-+++ b/bindings/cxx/tests/tests-iter.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <catch2/catch.hpp>
-diff --git a/bindings/cxx/tests/tests-line.cpp b/bindings/cxx/tests/tests-line.cpp
-index 01f785d..c1ad8d2 100644
---- a/bindings/cxx/tests/tests-line.cpp
-+++ b/bindings/cxx/tests/tests-line.cpp
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <catch2/catch.hpp>
-diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
-index fd4092d..4405d8f 100644
---- a/bindings/python/Makefile.am
-+++ b/bindings/python/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- pyexec_LTLIBRARIES = gpiod.la
-diff --git a/bindings/python/examples/Makefile.am b/bindings/python/examples/Makefile.am
-index c9bee28..4169469 100644
---- a/bindings/python/examples/Makefile.am
-+++ b/bindings/python/examples/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- EXTRA_DIST =				\
-diff --git a/bindings/python/examples/gpiodetect.py b/bindings/python/examples/gpiodetect.py
-index 665f07a..da6ee9a 100755
---- a/bindings/python/examples/gpiodetect.py
-+++ b/bindings/python/examples/gpiodetect.py
-@@ -1,5 +1,5 @@
- #!/usr/bin/env python3
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- '''Reimplementation of the gpiodetect tool in Python.'''
-diff --git a/bindings/python/examples/gpiofind.py b/bindings/python/examples/gpiofind.py
-index 74aff8e..117d583 100755
---- a/bindings/python/examples/gpiofind.py
-+++ b/bindings/python/examples/gpiofind.py
-@@ -1,5 +1,5 @@
- #!/usr/bin/env python3
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- '''Reimplementation of the gpiofind tool in Python.'''
-diff --git a/bindings/python/examples/gpioget.py b/bindings/python/examples/gpioget.py
-index 6cff18b..26a2ced 100755
---- a/bindings/python/examples/gpioget.py
-+++ b/bindings/python/examples/gpioget.py
-@@ -1,5 +1,5 @@
- #!/usr/bin/env python3
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- '''Simplified reimplementation of the gpioget tool in Python.'''
-diff --git a/bindings/python/examples/gpioinfo.py b/bindings/python/examples/gpioinfo.py
-index 238e04c..84188f1 100755
---- a/bindings/python/examples/gpioinfo.py
-+++ b/bindings/python/examples/gpioinfo.py
-@@ -1,5 +1,5 @@
- #!/usr/bin/env python3
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- '''Simplified reimplementation of the gpioinfo tool in Python.'''
-diff --git a/bindings/python/examples/gpiomon.py b/bindings/python/examples/gpiomon.py
-index 891760e..b29f3ce 100755
---- a/bindings/python/examples/gpiomon.py
-+++ b/bindings/python/examples/gpiomon.py
-@@ -1,5 +1,5 @@
- #!/usr/bin/env python3
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- '''Simplified reimplementation of the gpiomon tool in Python.'''
-diff --git a/bindings/python/examples/gpioset.py b/bindings/python/examples/gpioset.py
-index 947e916..63e08dc 100755
---- a/bindings/python/examples/gpioset.py
-+++ b/bindings/python/examples/gpioset.py
-@@ -1,5 +1,5 @@
- #!/usr/bin/env python3
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- '''Simplified reimplementation of the gpioset tool in Python.'''
-diff --git a/bindings/python/tests/Makefile.am b/bindings/python/tests/Makefile.am
-index 7c8bb5e..972b669 100644
---- a/bindings/python/tests/Makefile.am
-+++ b/bindings/python/tests/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- dist_bin_SCRIPTS = gpiod_py_test.py
-diff --git a/bindings/python/tests/gpiod_py_test.py b/bindings/python/tests/gpiod_py_test.py
-index a1e22e8..f264db3 100755
---- a/bindings/python/tests/gpiod_py_test.py
-+++ b/bindings/python/tests/gpiod_py_test.py
-@@ -1,5 +1,5 @@
- #!/usr/bin/env python3
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- import errno
-diff --git a/configure.ac b/configure.ac
-index 32b50a8..70896ce 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- AC_PREREQ([2.69])
-diff --git a/include/Makefile.am b/include/Makefile.am
-index dcbfde0..7f986ec 100644
---- a/include/Makefile.am
-+++ b/include/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- include_HEADERS = gpiod.h
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 1bc86e0..d8b19f0 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- lib_LTLIBRARIES = libgpiod.la
-diff --git a/man/Makefile.am b/man/Makefile.am
-index c6d589f..4d2c29b 100644
---- a/man/Makefile.am
-+++ b/man/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- if WITH_MANPAGES
-diff --git a/tests/Makefile.am b/tests/Makefile.am
-index 04fa3b2..49aa215 100644
---- a/tests/Makefile.am
-+++ b/tests/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- SUBDIRS = mockup
-diff --git a/tests/gpiod-test.c b/tests/gpiod-test.c
-index 46249a7..2681278 100644
---- a/tests/gpiod-test.c
-+++ b/tests/gpiod-test.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <errno.h>
-diff --git a/tests/gpiod-test.h b/tests/gpiod-test.h
-index 9b9e4ba..2688d3c 100644
---- a/tests/gpiod-test.h
-+++ b/tests/gpiod-test.h
+ #include <functional>
+diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
+index 84669e7..d987b3a 100644
+--- a/bindings/cxx/gpiod.hpp
++++ b/bindings/cxx/gpiod.hpp
 @@ -1,4 +1,4 @@
 -/* SPDX-License-Identifier: LGPL-2.1-or-later */
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
  /* SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com> */
  
- /*
-diff --git a/tests/mockup/Makefile.am b/tests/mockup/Makefile.am
-index af29a95..36cd397 100644
---- a/tests/mockup/Makefile.am
-+++ b/tests/mockup/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- lib_LTLIBRARIES = libgpiomockup.la
-diff --git a/tests/tests-bulk.c b/tests/tests-bulk.c
-index d079003..ad08f2d 100644
---- a/tests/tests-bulk.c
-+++ b/tests/tests-bulk.c
+ #ifndef __LIBGPIOD_GPIOD_CXX_HPP__
+diff --git a/bindings/cxx/iter.cpp b/bindings/cxx/iter.cpp
+index 0d7e90a..eba7d30 100644
+--- a/bindings/cxx/iter.cpp
++++ b/bindings/cxx/iter.cpp
 @@ -1,4 +1,4 @@
 -// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-License-Identifier: LGPL-3.0-or-later
  // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
  
- #include <errno.h>
-diff --git a/tests/tests-chip.c b/tests/tests-chip.c
-index 6713565..928dc49 100644
---- a/tests/tests-chip.c
-+++ b/tests/tests-chip.c
+ #include <gpiod.hpp>
+diff --git a/bindings/cxx/line.cpp b/bindings/cxx/line.cpp
+index d24df18..1d114ac 100644
+--- a/bindings/cxx/line.cpp
++++ b/bindings/cxx/line.cpp
 @@ -1,4 +1,4 @@
 -// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-License-Identifier: LGPL-3.0-or-later
  // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
  
- #include <errno.h>
-diff --git a/tests/tests-event.c b/tests/tests-event.c
-index a213bf0..53d3e8c 100644
---- a/tests/tests-event.c
-+++ b/tests/tests-event.c
+ #include <gpiod.hpp>
+diff --git a/bindings/cxx/line_bulk.cpp b/bindings/cxx/line_bulk.cpp
+index b31efb5..d40364d 100644
+--- a/bindings/cxx/line_bulk.cpp
++++ b/bindings/cxx/line_bulk.cpp
 @@ -1,4 +1,4 @@
 -// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-License-Identifier: LGPL-3.0-or-later
  // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
  
- #include <errno.h>
-diff --git a/tests/tests-line.c b/tests/tests-line.c
-index 8de1e6a..3985990 100644
---- a/tests/tests-line.c
-+++ b/tests/tests-line.c
+ #include <gpiod.hpp>
+diff --git a/bindings/cxx/tests/gpio-mockup.cpp b/bindings/cxx/tests/gpio-mockup.cpp
+index 54e69b7..2e99dd4 100644
+--- a/bindings/cxx/tests/gpio-mockup.cpp
++++ b/bindings/cxx/tests/gpio-mockup.cpp
 @@ -1,4 +1,4 @@
 -// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-License-Identifier: LGPL-3.0-or-later
  // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
  
- #include <errno.h>
-diff --git a/tests/tests-misc.c b/tests/tests-misc.c
-index a98329f..051ab81 100644
---- a/tests/tests-misc.c
-+++ b/tests/tests-misc.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <string.h>
-diff --git a/tools/Makefile.am b/tools/Makefile.am
-index bbfcab6..4a13266 100644
---- a/tools/Makefile.am
-+++ b/tools/Makefile.am
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- AM_CFLAGS = -I$(top_srcdir)/include/ -include $(top_builddir)/config.h
-diff --git a/tools/gpio-tools-test b/tools/gpio-tools-test
-index 7d42374..b3d19f5 100755
---- a/tools/gpio-tools-test
-+++ b/tools/gpio-tools-test
-@@ -1,5 +1,5 @@
- #!/usr/bin/env bash
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- MIN_KERNEL_VERSION="5.5.0"
-diff --git a/tools/gpio-tools-test.bats b/tools/gpio-tools-test.bats
-index ba0a904..b35a36e 100755
---- a/tools/gpio-tools-test.bats
-+++ b/tools/gpio-tools-test.bats
-@@ -1,5 +1,5 @@
- #!/usr/bin/env bats
--# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- # Simple test harness for the gpio-tools.
-diff --git a/tools/gpiodetect.c b/tools/gpiodetect.c
-index 1780f40..7a2015e 100644
---- a/tools/gpiodetect.c
-+++ b/tools/gpiodetect.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <dirent.h>
-diff --git a/tools/gpiofind.c b/tools/gpiofind.c
-index 45033d9..4936c4f 100644
---- a/tools/gpiofind.c
-+++ b/tools/gpiofind.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <dirent.h>
-diff --git a/tools/gpioget.c b/tools/gpioget.c
-index 0d8e286..527dc22 100644
---- a/tools/gpioget.c
-+++ b/tools/gpioget.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <getopt.h>
-diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
-index aba5bde..84588bc 100644
---- a/tools/gpioinfo.c
-+++ b/tools/gpioinfo.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <dirent.h>
-diff --git a/tools/gpiomon.c b/tools/gpiomon.c
-index e9f2055..8bf2c70 100644
---- a/tools/gpiomon.c
-+++ b/tools/gpiomon.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <errno.h>
-diff --git a/tools/gpioset.c b/tools/gpioset.c
-index b34efea..7e9d88f 100644
---- a/tools/gpioset.c
-+++ b/tools/gpioset.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- #include <errno.h>
-diff --git a/tools/tools-common.c b/tools/tools-common.c
-index 98a4b9d..80087ee 100644
---- a/tools/tools-common.c
-+++ b/tools/tools-common.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-License-Identifier: GPL-2.0-or-later
- // SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
- 
- /* Common code for GPIO tools. */
-diff --git a/tools/tools-common.h b/tools/tools-common.h
-index 779dde5..5d5b505 100644
---- a/tools/tools-common.h
-+++ b/tools/tools-common.h
+ #include <system_error>
+diff --git a/bindings/cxx/tests/gpio-mockup.hpp b/bindings/cxx/tests/gpio-mockup.hpp
+index 7a071fb..9ca27bd 100644
+--- a/bindings/cxx/tests/gpio-mockup.hpp
++++ b/bindings/cxx/tests/gpio-mockup.hpp
 @@ -1,4 +1,4 @@
 -/* SPDX-License-Identifier: LGPL-2.1-or-later */
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
  /* SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com> */
  
- #ifndef __GPIOD_TOOLS_COMMON_H__
+ #ifndef __GPIOD_CXX_TEST_HPP__
 -- 
 2.29.1
 
