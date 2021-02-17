@@ -2,149 +2,256 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB05631D677
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Feb 2021 09:21:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 187D631D753
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Feb 2021 11:12:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230045AbhBQITn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Feb 2021 03:19:43 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:44632 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbhBQITn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Feb 2021 03:19:43 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11H8EVJ8194598;
-        Wed, 17 Feb 2021 08:18:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=8Fd3YC/y7oHuWnHytgKLmnWCvXnmiTYOYH8Mln3sbJY=;
- b=GDAJKbTFlLr22rRwMyqvjbaN1iVbN9tmnVf7/7hGlA6iXJ8ny3/ubVdyKZp+0dbMOGsr
- dw1ez+T/qPpyZVikS8R0HEpoKVjs6Fpk5Ors+amC6tTToxmJ3ePLYvCidY1+Yiy8nBCM
- Qq7ptHgOk58bBzKWKZCSi0mAH/5komnQK5ViIM/HvTDjPMM1OR2AUv8ypTtOrOOze/N2
- qjBvrbjQIyAgHeEFz1ZL1r6HFesqJx/DdXiPmK8vg4ewn81BPvZm9582IFOefTqrNUF6
- cfm+m41PobmwRRmhrbv++O4+SZMjMxINWSwDfu5dl538+6q0Q1K4mkICB7bbzKso9S7c zQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 36p7dnhcf2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Feb 2021 08:18:45 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11H8G6Pt051826;
-        Wed, 17 Feb 2021 08:18:44 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 36prpxup0t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Feb 2021 08:18:43 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 11H8Ib4Z024550;
-        Wed, 17 Feb 2021 08:18:37 GMT
-Received: from kadam (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Feb 2021 00:18:36 -0800
-Date:   Wed, 17 Feb 2021 11:18:26 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
+        id S232198AbhBQKLS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Feb 2021 05:11:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232210AbhBQKLH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Feb 2021 05:11:07 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19C6C061574;
+        Wed, 17 Feb 2021 02:10:27 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id p21so2526804pgl.12;
+        Wed, 17 Feb 2021 02:10:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R3amEnqTrjGlEFPrUrxJ7Z//9UhhhB9TemZrGckJqHM=;
+        b=TU/BX86zcPFQR6S97iGcuO6njJeSDGcshoUuZh5eO9HC6Z1NoN5a2ZTImcOesOlecU
+         mWqpTcSNrgJau1QV9BGlfPNw+veBEpeHC1u0tEKPecCo0BXyxRhZlNwEmiPShgprhuTi
+         tZywy1OPG3oKGYTV6JACfSTkyxBGeh1hOGowA5B8jHUr3eDtynXS79tXHDuIf3+oJ0gm
+         OoBh92WgZJnDIgOg/b4UDrqgRIXs6T9KDK7BSipFHPXta3AFt5sPoNLy+JgfXDe1YViR
+         JMmLQIRtmnp4+NMeVBxm3DeynmY9kUx9BJcyUP8p+UPdVrfud+xX/ZwZlCaCxD3yrTLo
+         s2uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R3amEnqTrjGlEFPrUrxJ7Z//9UhhhB9TemZrGckJqHM=;
+        b=B8GSu077ynUMuaOnMhm8EVAvkiHH4TX9XXiylCePUFaF9FvDLfQu9UO7Z70DXAg9e+
+         nI78J/XZS0r4YwobZJ6+FybBWB+vInf1YxlKpStAWgXgOG+i08SvaqtVK3im59hqU0hw
+         rCc0yxVXVGXMpCYqkvr2bTqV4ReWw0aFTwnTTv+IJ3xoPz9N4PlaFS7JhydOzgQoMOW+
+         HsCi0kaflupCc4yiLbHDBxLcMARcn6SWtl+UiR9tpxBYkbDZxPU/qYVDm1tDdY/Yto7G
+         E7PAfk9Zvgoy+i7klF64nCRsxgyaoVYMvb8/YrfdaK6J6yfem1/i33me7x1su5jr2y1A
+         bYKg==
+X-Gm-Message-State: AOAM532ip9PaceOhzmyoSMgSs6dNlSuOOV3gVkmpwVGm75WnklkrEFYj
+        V6s0og6bqNNmlOMlYLvKgXXXcjLaaV8VmbTF/OE=
+X-Google-Smtp-Source: ABdhPJwEBAgNhwsFu4aMsZ75JMBNPMOgIt6H8qFNOv4fGBTUXzQaNROd8mU25Zke9Ql5c2KJRABHqAgKD8OkN+haAg0=
+X-Received: by 2002:a63:3d0:: with SMTP id 199mr23357594pgd.4.1613556626978;
+ Wed, 17 Feb 2021 02:10:26 -0800 (PST)
+MIME-Version: 1.0
+References: <20210216224455.1504008-1-drew@beagleboard.org> <20210216224455.1504008-3-drew@beagleboard.org>
+In-Reply-To: <20210216224455.1504008-3-drew@beagleboard.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 17 Feb 2021 12:10:10 +0200
+Message-ID: <CAHp75VekJC4mTvKndNvQMgLM5x5pY40swYaduRQE2s1TZvtR6A@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] pinctrl: pinmux: Add pinmux-select debugfs file
 To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
         Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Subject: Re: [PATCH v4 2/2] pinctrl: pinmux: Add pinmux-select debugfs file
-Message-ID: <20210217081826.GJ2222@kadam>
-References: <20210210222851.232374-1-drew@beagleboard.org>
- <20210210222851.232374-3-drew@beagleboard.org>
- <20210211071153.GJ20820@kadam>
- <7b4105ca8671a2962910deb5418a934bf07d1458.camel@perches.com>
- <20210211073938.GL20820@kadam>
- <20210212033533.GA347396@x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210212033533.GA347396@x1>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-IMR: 1
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9897 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- phishscore=0 adultscore=0 mlxscore=0 suspectscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102170061
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9897 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 mlxscore=0
- phishscore=0 spamscore=0 adultscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102170061
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Joe Perches <joe@perches.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Documentation List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 11, 2021 at 07:35:33PM -0800, Drew Fustini wrote:
-> On Thu, Feb 11, 2021 at 10:39:38AM +0300, Dan Carpenter wrote:
-> > On Wed, Feb 10, 2021 at 11:24:23PM -0800, Joe Perches wrote:
-> > > On Thu, 2021-02-11 at 10:11 +0300, Dan Carpenter wrote:
-> > > > On Wed, Feb 10, 2021 at 02:28:54PM -0800, Drew Fustini wrote:
-> > > > > +	ret = strncpy_from_user(buf, user_buf, PINMUX_MAX_NAME * 2);
-> > > > > +	if (ret < 0) {
-> > > > > +		dev_err(pctldev->dev, "failed to copy buffer from userspace");
-> > > > > +		goto free_gname;
-> > > > > +	}
-> > > > > +	buf[len-1] = '\0';
-> > > > > +
-> > > > > +	ret = sscanf(buf, "%s %s", fname, gname);
-> > > > > +	if (ret != 2) {
-> > > > > +		dev_err(pctldev->dev, "expected format: <function-name> <group-name>");
-> > > > > +		goto free_gname;
-> > > > 
-> > > > We need a "ret = -EINVAL;" before the goto.  sscanf doesn't return error
-> > > > codes.  Normally we would write it like so:
-> > > > 
-> > > > 	if (sscanf(buf, "%s %s", fname, gname) != 2) {
-> > > > 		dev_err(pctldev->dev, "expected format: <function-name> <group-name>");
-> > > > 		ret = -EINVAL;
-> > > > 		goto free_gname;
-> > > > 	}
-> > > > 
-> > > > I'm going to write a Smatch check for this today.
-> > > 
-> > > It's a pretty frequently used style:
-> > > 
-> > > $ git grep -P '\w+\s*=\s+sscanf\b' | wc -l
-> > > 327
-> > 
-> > Yeah.  That's true.  I looked through a couple of those and they were
-> > fine.  (Sample size 2)  But the other format is more common.
-> > 
-> > $ git grep sscanf | grep = | wc -l
-> > 803
-> > 
-> > I have written a Smatch check to complain whenever we propogate the
-> > return value from sscanf.  I'll let you know tomorrow how that goes.
-> > 
-> > I should write another check which says "On this error path, we know
-> > sscanf was not equal to the value we wanted but we are still returning
-> > success".
-> > 
-> > regards,
-> > dan carpenter
-> > 
-> 
-> Thank you for comments regarding sscanf().  And also thank you for the
-> LF mentorship session on smatch this morning.  It helped me understand
-> it much better.
+On Wed, Feb 17, 2021 at 12:45 AM Drew Fustini <drew@beagleboard.org> wrote:
+>
+> Add "pinmux-select" to debugfs which will activate a function and group:
+>
+>   echo "<function-name group-name>" > pinmux-select
+>
+> The write operation pinmux_select() handles this by checking that the
+> names map to valid selectors and then calling ops->set_mux().
+>
+> The existing "pinmux-functions" debugfs file lists the pin functions
+> registered for the pin controller. For example:
+>
+>   function: pinmux-uart0, groups = [ pinmux-uart0-pins ]
+>   function: pinmux-mmc0, groups = [ pinmux-mmc0-pins ]
+>   function: pinmux-mmc1, groups = [ pinmux-mmc1-pins ]
+>   function: pinmux-i2c0, groups = [ pinmux-i2c0-pins ]
+>   function: pinmux-i2c1, groups = [ pinmux-i2c1-pins ]
+>   function: pinmux-spi1, groups = [ pinmux-spi1-pins ]
+>
+> To activate function pinmux-i2c1 and group pinmux-i2c1-pins:
+>
+>   echo "pinmux-i2c1 pinmux-i2c1-pins" > pinmux-select
 
-Good deal!
+Thanks, looks almost good to me (few nit-picks below)
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-The warning about propagating errors from sscanf caught a couple bugs.
-The one about returning success if sscanf failed didn't catch anything.
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+>  drivers/pinctrl/pinmux.c | 102 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+>
+> diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+> index c651b2db0925..08f336e4246c 100644
+> --- a/drivers/pinctrl/pinmux.c
+> +++ b/drivers/pinctrl/pinmux.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/string.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/seq_file.h>
+> +#include <linux/ctype.h>
 
-The sscanf overflow patch didn't find anything either, but I think we've
-had those bugs in the past and so I expect some in the future so I will
-keep that one in my private tests without pushing it.
+Perhaps squeeze it to look slightly more ordered?
 
-regards,
-dan carpenter
+>  #include <linux/pinctrl/machine.h>
+>  #include <linux/pinctrl/pinmux.h>
+>  #include "core.h"
+> @@ -673,6 +674,105 @@ void pinmux_show_setting(struct seq_file *s,
+>  DEFINE_SHOW_ATTRIBUTE(pinmux_functions);
+>  DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
 
+> +#define PINMUX_SELECT_MAX 50
+
+Why suddenly this number? Maybe 64 for the sake of good power of 2?
+
+> +static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
+> +                                  size_t len, loff_t *ppos)
+> +{
+> +       struct seq_file *sfile = file->private_data;
+> +       struct pinctrl_dev *pctldev = sfile->private;
+> +       const struct pinmux_ops *pmxops = pctldev->desc->pmxops;
+> +       const char *const *groups;
+> +       char *buf, *fname, *gname;
+> +       unsigned int num_groups;
+> +       int fsel, gsel, ret;
+> +
+> +       if (len > PINMUX_SELECT_MAX)
+> +               return -ENOMEM;
+> +
+> +       buf = kzalloc(PINMUX_SELECT_MAX, GFP_KERNEL);
+> +       if (!buf)
+> +               return -ENOMEM;
+> +
+> +       ret = strncpy_from_user(buf, user_buf, PINMUX_SELECT_MAX);
+> +       if (ret < 0)
+> +               goto exit_free_buf;
+> +       buf[len-1] = '\0';
+> +
+> +       /* remove leading and trailing spaces of input buffer */
+> +       fname = strstrip(buf);
+> +       if (*fname == '\0') {
+> +               ret = -EINVAL;
+> +               goto exit_free_buf;
+> +       }
+> +
+> +       /* find a separator like a space character */
+
+"find a separator which is a spacelike character" ?
+
+> +       for (gname = fname; !isspace(*gname); gname++) {
+> +               if (*gname == '\0') {
+> +                       ret = -EINVAL;
+> +                       goto exit_free_buf;
+> +               }
+> +       }
+> +       *gname = '\0';
+> +
+> +       /* drop extra spaces between function and group name */
+
+names
+
+> +       gname = skip_spaces(gname + 1);
+> +       if (*gname == '\0') {
+> +               ret = -EINVAL;
+> +               goto exit_free_buf;
+> +       }
+> +
+> +       fsel = pinmux_func_name_to_selector(pctldev, fname);
+> +       if (fsel < 0) {
+> +               dev_err(pctldev->dev, "invalid function %s in map table\n", fname);
+> +               ret = fsel;
+> +               goto exit_free_buf;
+> +       }
+
+Here and below you could do other way around, i.e.
+
+ret = ...
+if (ret < 0) {
+ ...
+}
+fsel = ret;
+
+> +       ret = pmxops->get_function_groups(pctldev, fsel, &groups, &num_groups);
+> +       if (ret) {
+> +               dev_err(pctldev->dev, "no groups for function %d (%s)", fsel, fname);
+> +               goto exit_free_buf;
+> +       }
+> +
+> +       ret = match_string(groups, num_groups, gname);
+> +       if (ret < 0) {
+> +               dev_err(pctldev->dev, "invalid group %s", gname);
+> +               goto exit_free_buf;
+> +       }
+> +
+> +       gsel = pinctrl_get_group_selector(pctldev, gname);
+> +       if (gsel < 0) {
+> +               dev_err(pctldev->dev, "failed to get group selector for %s", gname);
+> +               ret = gsel;
+> +               goto exit_free_buf;
+> +       }
+> +
+> +       ret = pmxops->set_mux(pctldev, fsel, gsel);
+> +       if (ret) {
+> +               dev_err(pctldev->dev, "set_mux() failed: %d", ret);
+> +               goto exit_free_buf;
+> +       }
+> +       ret = len;
+> +
+> +exit_free_buf:
+> +       kfree(buf);
+> +
+> +       return ret;
+> +}
+> +
+> +static int pinmux_select_open(struct inode *inode, struct file *file)
+> +{
+> +       return single_open(file, NULL, inode->i_private);
+> +}
+> +
+> +static const struct file_operations pinmux_select_ops = {
+> +       .owner = THIS_MODULE,
+> +       .open = pinmux_select_open,
+> +       .write = pinmux_select,
+> +       .llseek = no_llseek,
+> +       .release = single_release,
+> +};
+> +
+>  void pinmux_init_device_debugfs(struct dentry *devroot,
+>                          struct pinctrl_dev *pctldev)
+>  {
+> @@ -680,6 +780,8 @@ void pinmux_init_device_debugfs(struct dentry *devroot,
+>                             devroot, pctldev, &pinmux_functions_fops);
+>         debugfs_create_file("pinmux-pins", 0444,
+>                             devroot, pctldev, &pinmux_pins_fops);
+> +       debugfs_create_file("pinmux-select", 0200,
+> +                           devroot, pctldev, &pinmux_select_ops);
+>  }
+>
+>  #endif /* CONFIG_DEBUG_FS */
+> --
+> 2.25.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
