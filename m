@@ -2,137 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03F2731D76C
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Feb 2021 11:21:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EC2631D9EF
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Feb 2021 14:05:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232183AbhBQKSG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Feb 2021 05:18:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
+        id S232827AbhBQNDT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Feb 2021 08:03:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232318AbhBQKRv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Feb 2021 05:17:51 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D4AC061756;
-        Wed, 17 Feb 2021 02:17:11 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id o38so8178937pgm.9;
-        Wed, 17 Feb 2021 02:17:11 -0800 (PST)
+        with ESMTP id S232409AbhBQNDS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Feb 2021 08:03:18 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE68C061756
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 05:02:36 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id n8so17282659wrm.10
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 05:02:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uUihTefjqIAmQxqDsY7sGc4WNgB25pgmkvLnHk+zr0M=;
-        b=Y40G0VIe6PsED4Mk/qur99QANAUuV3Si698lAW1MFXTXudUdXB3VomSUvUjNntQhFI
-         73ON+2fifvwUH8oMmTeH1s5qxt8c0E+wSXtBtjZDU0HSwPn+6M4NtitmQBqnz/pW0k3K
-         1LtkIj5oJTwVFUw5dwfvhnXyUmk5Noye4cQlw7m3UnwG6J9CY98ce+ZL04Cl1yveKRlv
-         N7jl+8UcSNQ1+evsCUOni2Y0/4VpJg89OkFyjEnzgw9a0jT++8rk3iNoTdABpr3KRm7K
-         NitU0idyJq2iGrQ1YvQav7hJq45FMQzZClthXmmD9wtNEBSmoPUA0/7jNFrIY969bObL
-         oMXQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RJpQ7mQFxdYAwANLNc1NzqchKvO/AebmR2wYrOiuIMs=;
+        b=uWJyi+GSCig8ZB/KSEZYKOzIxh/CkYnw5zZOzLpRnqO1leaJ2ZWg+nMjWDFCQJAzT4
+         yA6H2Uvl0XbsA72fOMO7KF6EL89ZpVo+TlDED0s3oze5gCcukVqhLV9hfinJ126INeyw
+         VP3t8mxKIAqp+hJKy/qCXlAmGF1P/1y1SBz1UlIlxIW+vH4kwIu4ot9jqRkWP13LXFed
+         4R1G4vgTg1ftUoFTuYt79CHxKUxcrnFy4Qzow3F79sURHnjZ+JuoBbkLTmcF0A/ENoon
+         hyRp+yewpbYZMEy8UQOh0rrxN4uSaAtBmWqO5QVlk/J935XCNP/gzhqpVZd0ECbFFYDY
+         ohnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uUihTefjqIAmQxqDsY7sGc4WNgB25pgmkvLnHk+zr0M=;
-        b=Qk4sXdJtgL4shHwNtxOa+VQNlb3wpevwR6yiSv+sjMtqUSGWqaLwFpODym20yUBQQf
-         KsUTSE6XvDDQjwDf0LSQM2hMpnbZW0/WQXM+swYY1T8ABgXyc4NyXbS0XeaQnkTJl7LS
-         cwbAdPIDzECZQTfTjLY8pEinSIh1d5PVAR7XWvMp9gmHckb9/A/aWU5LrF5dUJm/TVk0
-         DGk6z4zvHVya1RiNMXEWznjDFpbtwVI2ZLpgtzLmGopL2spBG5DlXoFKIorHiizRC5w+
-         KWnDzbNZDXs5ylrKjqBNA1naLw+1CdN9/B8/6cOoSLqfKkDiFdP49vnnomaFUU7YhaWC
-         3DfA==
-X-Gm-Message-State: AOAM5326wTgkqblAdLyPf46tVMu8c5NcWXdWXeumzX8XcKkFd000rQe9
-        3RvGAoq3rU4BUKhz4pDuQnAvDMsI1rQ9x2R6kfg=
-X-Google-Smtp-Source: ABdhPJzayHVcbJMk5xLETWxUGMZ9+zU5JUZjBIhFAzTFO4cx477pSIWb8CULht8zMIZXDp7K7kK9vl5ngin2x/pbQ0w=
-X-Received: by 2002:a63:3d0:: with SMTP id 199mr23377851pgd.4.1613557030577;
- Wed, 17 Feb 2021 02:17:10 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RJpQ7mQFxdYAwANLNc1NzqchKvO/AebmR2wYrOiuIMs=;
+        b=rmdTf+7PAe0Z/NryGdgnmOKvhC/c/+0UlnPS5SQEV57O446qCL50KFrbTYF+xijiW9
+         Q4JK934f7PYNCaJnhCTMzcff9E1MddnLl9dB16ngJYgBqGPGdZN1k89HsHr/qcUrGazu
+         fV9crUnjNIheX7TCzTEWjjaBHfD/toRAbznoCx6/g2K4J4lG1+kBs6vD5u8nWUlCGh1M
+         KKcO5nZesMLGogaXH6YEPPBq4zcle2YN6XK9kEOg/MqsWoe36/bucF6IasnLXjRz6DAm
+         npxVM4URd0eInJWMcfiJfJPc+XWr9FoMmWoZePvRruMTTwf+kr8Lh2GHRNw/HAtcpQHr
+         IFwA==
+X-Gm-Message-State: AOAM532YNGmLpGo1m9k57ZWf6EDBzE6q2DnyobHAJ0AXUDuNzc63pJ6V
+        GR10bctRkAHhtFcCBlnW17ZI9Hc7ybMIBA==
+X-Google-Smtp-Source: ABdhPJxPESPm6yIvsee0vBDJB0kZlhQvlywWAvuebFtZ/exZsLYXRgAcXkrEAFlYyVBvTt1uMK6UdQ==
+X-Received: by 2002:adf:f10c:: with SMTP id r12mr18611862wro.185.1613566954775;
+        Wed, 17 Feb 2021 05:02:34 -0800 (PST)
+Received: from localhost.localdomain (lfbn-nic-1-190-206.w2-15.abo.wanadoo.fr. [2.15.39.206])
+        by smtp.gmail.com with ESMTPSA id w8sm3910789wrm.21.2021.02.17.05.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Feb 2021 05:02:34 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [libgpiod][PATCH 0/3] licensing: try to get licensing right
+Date:   Wed, 17 Feb 2021 14:02:22 +0100
+Message-Id: <20210217130225.6378-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-References: <20210216224455.1504008-1-drew@beagleboard.org> <20210216224455.1504008-4-drew@beagleboard.org>
-In-Reply-To: <20210216224455.1504008-4-drew@beagleboard.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 17 Feb 2021 12:16:54 +0200
-Message-ID: <CAHp75Vdp58uCVS2Gw3pQ7wVatHHcFrHB53-ynybxcAcJ2bUKpg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] docs/pinctrl: document debugfs files
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Documentation List <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 17, 2021 at 12:45 AM Drew Fustini <drew@beagleboard.org> wrote:
->
-> Document debugfs directories and files created for pinctrl subsystem.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Thanks for doing this!
-I won't bikeshed now because it's about debugfs anyway, so
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+This series tries to improve the licensing situation of libgpiod before we
+proceed with v2.0.
 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->  Documentation/driver-api/pinctl.rst | 37 +++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->
-> diff --git a/Documentation/driver-api/pinctl.rst b/Documentation/driver-api/pinctl.rst
-> index 3d2deaf48841..37bc3bd64cd8 100644
-> --- a/Documentation/driver-api/pinctl.rst
-> +++ b/Documentation/driver-api/pinctl.rst
-> @@ -1428,3 +1428,40 @@ on the pins defined by group B::
->  The above has to be done from process context. The reservation of the pins
->  will be done when the state is activated, so in effect one specific pin
->  can be used by different functions at different times on a running system.
-> +
-> +
-> +Debugfs files
-> +=============
-> +These files are created in ``/sys/kernel/debug/pinctrl``:
-> +
-> +- ``pinctrl-devices``: prints each pin controller device along with columns to
-> +  indicate support for pinmux and pinconf
-> +
-> +- ``pinctrl-handles``: iterate through the list of pin controller handles and
-> +  print the corresponding pinmux maps
-> +
-> +- ``pinctrl-maps``: print all pinctrl maps
-> +
-> +A sub-directory is created inside of ``/sys/kernel/debug/pinctrl`` for each pin
-> +controller device containing these files:
-> +
-> +- ``pins``: prints a line for each pin registered on the pin controller. The
-> +  pinctrl driver may add additional information such as register contents.
-> +
-> +- ``gpio-ranges``: print ranges that map gpio lines to pins on the controller
-> +
-> +- ``pingroups``: print all pin groups registered on the pin controller
-> +
-> +- ``pinconf-pins``: print pin config settings for each pin
-> +
-> +- ``pinconf-groups``: print pin config settings per pin group
-> +
-> +- ``pinmux-functions``: print each pin function along with the pin groups that
-> +  map to the pin function
-> +
-> +- ``pinmux-pins``: iterate through all pins and print mux owner, gpio owner
-> +  and if the pin is a hog
-> +
-> +- ``pinmux-select``: write to this file to activate a pin function and group::
-> +
-> +        echo "<function-name group-name>" > pinmux-select
-> --
-> 2.25.1
->
+The first patch is rather uncotroversial: it makes the project compliant
+with the REUSE v3.0 specification.
 
+Next two patches propose to change the licenses for certain files:
+non-library source files are relicensed under GPL-2.0-or-later while C++
+library code's license is upgraded to LGPL-3.0-or-later.
 
---
-With Best Regards,
-Andy Shevchenko
+The only person other than myself who contributed significant code to the
+relicensed files is Kent Gibson (Cc'ed) so these patches will need his
+ack.
+
+Bartosz Golaszewski (3):
+  licensing: make the project REUSE-compliant
+  licensing: relicense non-library code under GPL-2.0-or-later
+  licensing: relicense C++ library code under LGPL-3.0-or-later
+
+ .gitignore                                 |   3 +
+ COPYING                                    | 511 +--------------------
+ Doxyfile.in                                |   9 +-
+ LICENSES/CC-BY-SA-4.0.txt                  | 427 +++++++++++++++++
+ LICENSES/GPL-2.0-only.txt                  | 339 ++++++++++++++
+ LICENSES/GPL-2.0-or-later.txt              |   1 +
+ LICENSES/LGPL-2.1-or-later.txt             | 502 ++++++++++++++++++++
+ LICENSES/LGPL-3.0-or-later.txt             | 165 +++++++
+ LICENSES/Linux-syscall-note.txt            |  25 +
+ Makefile.am                                |  19 +-
+ NEWS                                       |   3 +
+ README                                     |   3 +
+ TODO                                       |   3 +
+ autogen.sh                                 |  11 +-
+ bindings/Makefile.am                       |   9 +-
+ bindings/cxx/Makefile.am                   |   9 +-
+ bindings/cxx/chip.cpp                      |   8 +-
+ bindings/cxx/examples/.gitignore           |   3 +
+ bindings/cxx/examples/Makefile.am          |   9 +-
+ bindings/cxx/examples/gpiodetectcxx.cpp    |   8 +-
+ bindings/cxx/examples/gpiofindcxx.cpp      |   8 +-
+ bindings/cxx/examples/gpiogetcxx.cpp       |   8 +-
+ bindings/cxx/examples/gpioinfocxx.cpp      |   8 +-
+ bindings/cxx/examples/gpiomoncxx.cpp       |   8 +-
+ bindings/cxx/examples/gpiosetcxx.cpp       |   8 +-
+ bindings/cxx/gpiod.hpp                     |   8 +-
+ bindings/cxx/iter.cpp                      |   8 +-
+ bindings/cxx/libgpiodcxx.pc.in             |   3 +
+ bindings/cxx/line.cpp                      |  10 +-
+ bindings/cxx/line_bulk.cpp                 |   8 +-
+ bindings/cxx/tests/.gitignore              |   3 +
+ bindings/cxx/tests/Makefile.am             |   9 +-
+ bindings/cxx/tests/gpio-mockup.cpp         |   8 +-
+ bindings/cxx/tests/gpio-mockup.hpp         |   8 +-
+ bindings/cxx/tests/gpiod-cxx-test-main.cpp |   8 +-
+ bindings/cxx/tests/gpiod-cxx-test.cpp      |   8 +-
+ bindings/cxx/tests/tests-chip.cpp          |   8 +-
+ bindings/cxx/tests/tests-event.cpp         |   8 +-
+ bindings/cxx/tests/tests-iter.cpp          |   8 +-
+ bindings/cxx/tests/tests-line.cpp          |   8 +-
+ bindings/python/Makefile.am                |   9 +-
+ bindings/python/examples/Makefile.am       |   9 +-
+ bindings/python/examples/gpiodetect.py     |   9 +-
+ bindings/python/examples/gpiofind.py       |   9 +-
+ bindings/python/examples/gpioget.py        |   9 +-
+ bindings/python/examples/gpioinfo.py       |   9 +-
+ bindings/python/examples/gpiomon.py        |   9 +-
+ bindings/python/examples/gpioset.py        |   9 +-
+ bindings/python/gpiodmodule.c              |   6 +-
+ bindings/python/tests/Makefile.am          |   9 +-
+ bindings/python/tests/gpiod_py_test.py     |   9 +-
+ bindings/python/tests/gpiomockupmodule.c   |   6 +-
+ configure.ac                               |   9 +-
+ include/Makefile.am                        |   9 +-
+ include/gpiod.h                            |   6 +-
+ lib/Makefile.am                            |   9 +-
+ lib/core.c                                 |   6 +-
+ lib/helpers.c                              |   6 +-
+ lib/libgpiod.pc.in                         |   4 +
+ lib/misc.c                                 |   6 +-
+ lib/uapi/gpio.h                            |  22 +-
+ man/.gitignore                             |   3 +
+ man/Makefile.am                            |   9 +-
+ man/template                               |   3 +
+ tests/.gitignore                           |   3 +
+ tests/Makefile.am                          |   9 +-
+ tests/gpiod-test.c                         |   8 +-
+ tests/gpiod-test.h                         |   8 +-
+ tests/mockup/Makefile.am                   |   9 +-
+ tests/mockup/gpio-mockup.c                 |   8 +-
+ tests/mockup/gpio-mockup.h                 |   6 +-
+ tests/tests-bulk.c                         |   8 +-
+ tests/tests-chip.c                         |   8 +-
+ tests/tests-event.c                        |   8 +-
+ tests/tests-line.c                         |   8 +-
+ tests/tests-misc.c                         |   8 +-
+ tools/.gitignore                           |   3 +
+ tools/Makefile.am                          |   9 +-
+ tools/gpio-tools-test                      |   9 +-
+ tools/gpio-tools-test.bats                 |   9 +-
+ tools/gpiodetect.c                         |   8 +-
+ tools/gpiofind.c                           |   8 +-
+ tools/gpioget.c                            |   8 +-
+ tools/gpioinfo.c                           |   8 +-
+ tools/gpiomon.c                            |   8 +-
+ tools/gpioset.c                            |   8 +-
+ tools/tools-common.c                       |   8 +-
+ tools/tools-common.h                       |   8 +-
+ 88 files changed, 1663 insertions(+), 936 deletions(-)
+ create mode 100644 LICENSES/CC-BY-SA-4.0.txt
+ create mode 100644 LICENSES/GPL-2.0-only.txt
+ create mode 120000 LICENSES/GPL-2.0-or-later.txt
+ create mode 100644 LICENSES/LGPL-2.1-or-later.txt
+ create mode 100644 LICENSES/LGPL-3.0-or-later.txt
+ create mode 100644 LICENSES/Linux-syscall-note.txt
+
+-- 
+2.29.1
+
