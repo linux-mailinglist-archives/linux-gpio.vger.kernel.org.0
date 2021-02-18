@@ -2,196 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9926831E3D1
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Feb 2021 02:22:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72A7B31E41A
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Feb 2021 02:42:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229752AbhBRBWf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Feb 2021 20:22:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47310 "EHLO
+        id S230308AbhBRBlc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Feb 2021 20:41:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbhBRBWb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Feb 2021 20:22:31 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8905C0613D6
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 17:21:51 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id kr16so371902pjb.2
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 17:21:51 -0800 (PST)
+        with ESMTP id S230199AbhBRBl2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Feb 2021 20:41:28 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C070C061574
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 17:40:47 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id u11so323440plg.13
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 17:40:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6nHFcuW0zCPZ5++pdOfiKryO/LWPYqqtH/YHPQMnr48=;
-        b=Xj8aFyFdqnycX+2x/yS0Reb20BbX1vf/Tn9pSx+unKF+2bXE9L/zfvrYq2IuwN07hs
-         S+nUVP84N29l9WWcd5cIhqLkgGPyWmt1flfB3kAqPXXnf5dLnrX7RrEHwCp1Y30h+z60
-         5qo4q6ocziDcdVHNuZzoamM1ZJozsVlYUKpxFg/AqmVPbXsXeYveyjGxv09ye7I+xwET
-         13FjPC1FiAzQJMABAm2HzUT1phLVbVQ9NRmdCARgBBWBDlYZMnCjaotlY4hY7Y5Apco+
-         EgmmMcgWpnETOKEuAkzgK8HFpZw9WH7ROC1/KkCFhOEXPN5jJOCRFlwAhAcc/7XlGYP3
-         7/fA==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=CKLIplANtlw+H6KGkI3Gjb7Sm6V1BuDdC2WqPKVR28o=;
+        b=NyrWCRrVdeblHxkXD443KkU6DLS2r2TVO+lZ67Iy4Z/Gmog7uNR2B09OY7kWELQkF9
+         TbIgE892qHDVzWCoQesvVA654Ir3vOy+pZ+ntjhyRs3Rto9B/cPaugiiYALorMjPoyYg
+         JKbYgHDnXNh69v2uoMJ6Opuqeg+eyXiALQxXwcAxt/qU5YjyuO6s1cIrhQkf59gPQwTY
+         +Iyoqh424t0/2Lu58l0G56Iy3/EMiIQ6mlbm31XXupfpr4Ddh+SUuXjv8laXGYZfOsfa
+         xEeI2AUTQ5eaDkBf8KFpevn/RD3nW/vTV+66u0uuPWg+D7TJkE8Gg+1a1yUh77UPGWAW
+         FmTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6nHFcuW0zCPZ5++pdOfiKryO/LWPYqqtH/YHPQMnr48=;
-        b=M+IEM29nMc2GRnLpMO4GdnpAENoKl9FPEp3FqFBLP4aaZuM6hlxYFyQZ7ejVr1EtHO
-         daPZChQZsMK88EXQ1x9p0ocP+4lT+O5vBN8ae1KheqrviZVlbnznOcCyFrSFnI1VIDbG
-         d/zD0MQ58dRYY51rxEhDUE+1+sAt9wT5/DqCYyz6Zquxi+KpW5Ta/rcmsOSb3pyka9mE
-         TQ31rwLdlRd43oGVJ4nqniM69CdQUdR4FuQf1bDlE0olyY+cc7X0bVQdqZTbklfqorS4
-         gbCfNr7wJXyWGYVHQ7f1fsYDSS1V4kTFqkP50+c5SanU76aGuIKQoJ2HIhqXkPCDXWOW
-         EttQ==
-X-Gm-Message-State: AOAM532TvriKCdzSbl7Adotfgz5c/YWjednHyGcufTwrawS6iI2Fehst
-        sxnOAisJrctk7Fa8c4qPeEE=
-X-Google-Smtp-Source: ABdhPJyjKWewAo+iOlKPROspugeWqrUkz/w3b4Jw4PvoOLJc3AASkjQvTYcMYQjaUfICI4AGrgw2Gg==
-X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr1524693pjq.171.1613611311087;
-        Wed, 17 Feb 2021 17:21:51 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=CKLIplANtlw+H6KGkI3Gjb7Sm6V1BuDdC2WqPKVR28o=;
+        b=S56Mwgmjn/R343XG8HDvTK8+r4ix50WWcNy9y70NluBwgYLKrBFgv2gdFlptCuf8JT
+         vOlaSGgjWAc2P2/eXfpzVoiGxZggyQFq4WU9G4bvRwMFWCdqbAw7PcQHisH+T3PT48rP
+         8DAxvNrngzlntU0muh0lTYdD6Xjuohz9arnIh17XUBWK6VLzvtGicgL0V3k2jW1/bCcH
+         FjwIwuW1Kfvb7N6Kpzjx1aH/3EqFhWc0NZHopZvQW28P46cTC+bLAGRjbD3w9XsX1UKy
+         h0mbvuOiiLIlEiYbpjKCo/mg8f5sEwXSPKTko7K0AWSmhq+xuN9sJBv+HaXh/4kZTMed
+         ECwg==
+X-Gm-Message-State: AOAM531Z/ZReb7XfusYsc/SNtbGAmyCS+viPux15J6V037L3bIVoiNIN
+        /bEIHHBIfBMzXxkFNv/Gp5rUzjlCivHLkg==
+X-Google-Smtp-Source: ABdhPJzqFmjhFD9nmmUjlR4Z2fe13hQ/TexRhqLt9en3UUtoJUm7VFt4ZYUOFe4d2EcSWfIbXo0pxA==
+X-Received: by 2002:a17:902:b094:b029:e3:a2f:4681 with SMTP id p20-20020a170902b094b02900e30a2f4681mr1686569plr.69.1613612446657;
+        Wed, 17 Feb 2021 17:40:46 -0800 (PST)
 Received: from sol (106-69-179-46.dyn.iinet.net.au. [106.69.179.46])
-        by smtp.gmail.com with ESMTPSA id h186sm326438pgc.38.2021.02.17.17.21.48
+        by smtp.gmail.com with ESMTPSA id i184sm435702pfe.19.2021.02.17.17.40.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Feb 2021 17:21:50 -0800 (PST)
-Date:   Thu, 18 Feb 2021 09:21:46 +0800
+        Wed, 17 Feb 2021 17:40:46 -0800 (PST)
+Date:   Thu, 18 Feb 2021 09:40:42 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+To:     linux-gpio@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [libgpiod][PATCH 0/3] licensing: try to get licensing right
-Message-ID: <20210218012146.GA12952@sol>
-References: <20210217130225.6378-1-brgl@bgdev.pl>
+Subject: strace 5.11 released - now decodes GPIO ioctls
+Message-ID: <20210218014042.GC12952@sol>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210217130225.6378-1-brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 17, 2021 at 02:02:22PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> This series tries to improve the licensing situation of libgpiod before we
-> proceed with v2.0.
-> 
-> The first patch is rather uncotroversial: it makes the project compliant
-> with the REUSE v3.0 specification.
-> 
-> Next two patches propose to change the licenses for certain files:
-> non-library source files are relicensed under GPL-2.0-or-later while C++
-> library code's license is upgraded to LGPL-3.0-or-later.
-> 
-> The only person other than myself who contributed significant code to the
-> relicensed files is Kent Gibson (Cc'ed) so these patches will need his
-> ack.
-> 
-
-That works for me.
-
-Acked-by: Kent Gibson <warthog618@gmail.com>
-
-for the series.
+Just a quick note that, as of v5.11, strace now supports decoding of GPIO
+cdev ioctls, both v1 and v2.
 
 Cheers,
 Kent.
 
-> Bartosz Golaszewski (3):
->   licensing: make the project REUSE-compliant
->   licensing: relicense non-library code under GPL-2.0-or-later
->   licensing: relicense C++ library code under LGPL-3.0-or-later
-> 
->  .gitignore                                 |   3 +
->  COPYING                                    | 511 +--------------------
->  Doxyfile.in                                |   9 +-
->  LICENSES/CC-BY-SA-4.0.txt                  | 427 +++++++++++++++++
->  LICENSES/GPL-2.0-only.txt                  | 339 ++++++++++++++
->  LICENSES/GPL-2.0-or-later.txt              |   1 +
->  LICENSES/LGPL-2.1-or-later.txt             | 502 ++++++++++++++++++++
->  LICENSES/LGPL-3.0-or-later.txt             | 165 +++++++
->  LICENSES/Linux-syscall-note.txt            |  25 +
->  Makefile.am                                |  19 +-
->  NEWS                                       |   3 +
->  README                                     |   3 +
->  TODO                                       |   3 +
->  autogen.sh                                 |  11 +-
->  bindings/Makefile.am                       |   9 +-
->  bindings/cxx/Makefile.am                   |   9 +-
->  bindings/cxx/chip.cpp                      |   8 +-
->  bindings/cxx/examples/.gitignore           |   3 +
->  bindings/cxx/examples/Makefile.am          |   9 +-
->  bindings/cxx/examples/gpiodetectcxx.cpp    |   8 +-
->  bindings/cxx/examples/gpiofindcxx.cpp      |   8 +-
->  bindings/cxx/examples/gpiogetcxx.cpp       |   8 +-
->  bindings/cxx/examples/gpioinfocxx.cpp      |   8 +-
->  bindings/cxx/examples/gpiomoncxx.cpp       |   8 +-
->  bindings/cxx/examples/gpiosetcxx.cpp       |   8 +-
->  bindings/cxx/gpiod.hpp                     |   8 +-
->  bindings/cxx/iter.cpp                      |   8 +-
->  bindings/cxx/libgpiodcxx.pc.in             |   3 +
->  bindings/cxx/line.cpp                      |  10 +-
->  bindings/cxx/line_bulk.cpp                 |   8 +-
->  bindings/cxx/tests/.gitignore              |   3 +
->  bindings/cxx/tests/Makefile.am             |   9 +-
->  bindings/cxx/tests/gpio-mockup.cpp         |   8 +-
->  bindings/cxx/tests/gpio-mockup.hpp         |   8 +-
->  bindings/cxx/tests/gpiod-cxx-test-main.cpp |   8 +-
->  bindings/cxx/tests/gpiod-cxx-test.cpp      |   8 +-
->  bindings/cxx/tests/tests-chip.cpp          |   8 +-
->  bindings/cxx/tests/tests-event.cpp         |   8 +-
->  bindings/cxx/tests/tests-iter.cpp          |   8 +-
->  bindings/cxx/tests/tests-line.cpp          |   8 +-
->  bindings/python/Makefile.am                |   9 +-
->  bindings/python/examples/Makefile.am       |   9 +-
->  bindings/python/examples/gpiodetect.py     |   9 +-
->  bindings/python/examples/gpiofind.py       |   9 +-
->  bindings/python/examples/gpioget.py        |   9 +-
->  bindings/python/examples/gpioinfo.py       |   9 +-
->  bindings/python/examples/gpiomon.py        |   9 +-
->  bindings/python/examples/gpioset.py        |   9 +-
->  bindings/python/gpiodmodule.c              |   6 +-
->  bindings/python/tests/Makefile.am          |   9 +-
->  bindings/python/tests/gpiod_py_test.py     |   9 +-
->  bindings/python/tests/gpiomockupmodule.c   |   6 +-
->  configure.ac                               |   9 +-
->  include/Makefile.am                        |   9 +-
->  include/gpiod.h                            |   6 +-
->  lib/Makefile.am                            |   9 +-
->  lib/core.c                                 |   6 +-
->  lib/helpers.c                              |   6 +-
->  lib/libgpiod.pc.in                         |   4 +
->  lib/misc.c                                 |   6 +-
->  lib/uapi/gpio.h                            |  22 +-
->  man/.gitignore                             |   3 +
->  man/Makefile.am                            |   9 +-
->  man/template                               |   3 +
->  tests/.gitignore                           |   3 +
->  tests/Makefile.am                          |   9 +-
->  tests/gpiod-test.c                         |   8 +-
->  tests/gpiod-test.h                         |   8 +-
->  tests/mockup/Makefile.am                   |   9 +-
->  tests/mockup/gpio-mockup.c                 |   8 +-
->  tests/mockup/gpio-mockup.h                 |   6 +-
->  tests/tests-bulk.c                         |   8 +-
->  tests/tests-chip.c                         |   8 +-
->  tests/tests-event.c                        |   8 +-
->  tests/tests-line.c                         |   8 +-
->  tests/tests-misc.c                         |   8 +-
->  tools/.gitignore                           |   3 +
->  tools/Makefile.am                          |   9 +-
->  tools/gpio-tools-test                      |   9 +-
->  tools/gpio-tools-test.bats                 |   9 +-
->  tools/gpiodetect.c                         |   8 +-
->  tools/gpiofind.c                           |   8 +-
->  tools/gpioget.c                            |   8 +-
->  tools/gpioinfo.c                           |   8 +-
->  tools/gpiomon.c                            |   8 +-
->  tools/gpioset.c                            |   8 +-
->  tools/tools-common.c                       |   8 +-
->  tools/tools-common.h                       |   8 +-
->  88 files changed, 1663 insertions(+), 936 deletions(-)
->  create mode 100644 LICENSES/CC-BY-SA-4.0.txt
->  create mode 100644 LICENSES/GPL-2.0-only.txt
->  create mode 120000 LICENSES/GPL-2.0-or-later.txt
->  create mode 100644 LICENSES/LGPL-2.1-or-later.txt
->  create mode 100644 LICENSES/LGPL-3.0-or-later.txt
->  create mode 100644 LICENSES/Linux-syscall-note.txt
-> 
-> -- 
-> 2.29.1
-> 
+----- Forwarded message from "Dmitry V. Levin" <ldv@altlinux.org> -----
+
+Date: Wed, 17 Feb 2021 20:15:26 +0300
+From: "Dmitry V. Levin" <ldv@altlinux.org>
+To: strace-devel@lists.strace.io
+Subject: strace 5.11 released
+
+Starting with version 4.13, strace follows the schedule of linux kernel
+and new versions of strace are released along with new versions of linux
+kernel, so strace 5.11 is tagged and uploaded.
+
+$ git tag -v v5.11 2> /dev/null | sed -n '/^$/,$p'
+
+Noteworthy changes in strace 5.11 (2021-02-17)
+==============================================
+
+* Improvements
+  * Implemented poke injection (--inject=SET:poke_enter= and
+    --inject=SET:poke_exit= options).
+  * Implemented decoding of epoll_pwait2 syscall introduced in Linux 5.11.
+  * Implemented decoding of GPIO_* ioctl commands.
+  * Implemented decoding of FS_IOC_FS[GS]ETXATTR, FS_IOC_[GS]ETFLAGS,
+    and FS_IOC32_[GS]ETFLAGS ioctl commands.
+  * Implemented decoding of SIOCADDMULTI, SIOCDELMULTI, SIOCGIFENCAP,
+    SIOCOUTQNSD, SIOCSIFENCAP, and SIOCSIFHWBROADCAST ioctl commands.
+  * Implemented decoding of UBI_IOCRPEB and UBI_IOCSPEB ioctl commands.
+  * Implemented decoding of V4L2_BUF_TYPE_META_CAPTURE,
+    V4L2_BUF_TYPE_META_OUTPUT, and VIDIOC_QUERY_EXT_CTRL ioctl commands.
+  * Updated lists of BPF_*, BTRFS_*, CLOSE_RANGE_*, ETH_*, IORING_*, KVM_*,
+    PR_*, PTRACE_*, RTA_*, RTAX_*, RTM_*, RTNH_*, SCTP_*, SO_*, SYS_*, UFFD_*,
+    and V4L2_* constants.
+  * Updated lists of ioctl commands from Linux 5.11.
+
+* Bug fixes
+  * Fixed decoding of SIOCGIFINDEX, SIOCBRADDIF, and SIOCBRDELIF ioctl commands.
+  * Fixed decoding of FIO[GS]ETOWN, SIOC[GS]PGRP, and SIOCATMARK ioctl commands
+    on alpha, mips, sh, and xtensa architectures.
+  * Fixed fork--pidns-translation test on sparc and sparc64.
+  * Fixed build on hppa with uapi headers from Linux >= 5.10.
+
+Contributors
+============
+
+This release was made possible by the contributions of many people.
+The maintainers are grateful to everyone who has contributed
+changes or bug reports.  These include:
+
+* Dmitry V. Levin
+* Elvira Khabirova
+* Eugene Syromyatnikov
+* Gleb Fotengauer-Malinovskiy
+* Kent Gibson
+* Philippe De Muyter
+* Sven Schnelle
+
+Please refer to the CREDITS file for the full list of strace contributors.
+
+-- 
+ldv
+
+
+
+-- 
+Strace-devel mailing list
+Strace-devel@lists.strace.io
+https://lists.strace.io/mailman/listinfo/strace-devel
+
+
+----- End forwarded message -----
