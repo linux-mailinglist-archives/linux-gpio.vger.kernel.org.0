@@ -2,136 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72A7B31E41A
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Feb 2021 02:42:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7372331ED7D
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Feb 2021 18:47:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230308AbhBRBlc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Feb 2021 20:41:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230199AbhBRBl2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Feb 2021 20:41:28 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C070C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 17:40:47 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id u11so323440plg.13
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Feb 2021 17:40:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=CKLIplANtlw+H6KGkI3Gjb7Sm6V1BuDdC2WqPKVR28o=;
-        b=NyrWCRrVdeblHxkXD443KkU6DLS2r2TVO+lZ67Iy4Z/Gmog7uNR2B09OY7kWELQkF9
-         TbIgE892qHDVzWCoQesvVA654Ir3vOy+pZ+ntjhyRs3Rto9B/cPaugiiYALorMjPoyYg
-         JKbYgHDnXNh69v2uoMJ6Opuqeg+eyXiALQxXwcAxt/qU5YjyuO6s1cIrhQkf59gPQwTY
-         +Iyoqh424t0/2Lu58l0G56Iy3/EMiIQ6mlbm31XXupfpr4Ddh+SUuXjv8laXGYZfOsfa
-         xEeI2AUTQ5eaDkBf8KFpevn/RD3nW/vTV+66u0uuPWg+D7TJkE8Gg+1a1yUh77UPGWAW
-         FmTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=CKLIplANtlw+H6KGkI3Gjb7Sm6V1BuDdC2WqPKVR28o=;
-        b=S56Mwgmjn/R343XG8HDvTK8+r4ix50WWcNy9y70NluBwgYLKrBFgv2gdFlptCuf8JT
-         vOlaSGgjWAc2P2/eXfpzVoiGxZggyQFq4WU9G4bvRwMFWCdqbAw7PcQHisH+T3PT48rP
-         8DAxvNrngzlntU0muh0lTYdD6Xjuohz9arnIh17XUBWK6VLzvtGicgL0V3k2jW1/bCcH
-         FjwIwuW1Kfvb7N6Kpzjx1aH/3EqFhWc0NZHopZvQW28P46cTC+bLAGRjbD3w9XsX1UKy
-         h0mbvuOiiLIlEiYbpjKCo/mg8f5sEwXSPKTko7K0AWSmhq+xuN9sJBv+HaXh/4kZTMed
-         ECwg==
-X-Gm-Message-State: AOAM531Z/ZReb7XfusYsc/SNtbGAmyCS+viPux15J6V037L3bIVoiNIN
-        /bEIHHBIfBMzXxkFNv/Gp5rUzjlCivHLkg==
-X-Google-Smtp-Source: ABdhPJzqFmjhFD9nmmUjlR4Z2fe13hQ/TexRhqLt9en3UUtoJUm7VFt4ZYUOFe4d2EcSWfIbXo0pxA==
-X-Received: by 2002:a17:902:b094:b029:e3:a2f:4681 with SMTP id p20-20020a170902b094b02900e30a2f4681mr1686569plr.69.1613612446657;
-        Wed, 17 Feb 2021 17:40:46 -0800 (PST)
-Received: from sol (106-69-179-46.dyn.iinet.net.au. [106.69.179.46])
-        by smtp.gmail.com with ESMTPSA id i184sm435702pfe.19.2021.02.17.17.40.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Feb 2021 17:40:46 -0800 (PST)
-Date:   Thu, 18 Feb 2021 09:40:42 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: strace 5.11 released - now decodes GPIO ioctls
-Message-ID: <20210218014042.GC12952@sol>
+        id S230314AbhBRRl5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Feb 2021 12:41:57 -0500
+Received: from mga07.intel.com ([134.134.136.100]:2130 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233616AbhBROPd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 18 Feb 2021 09:15:33 -0500
+IronPort-SDR: pwiwHWxugM2a+bzzydPk1fmiSSr63fc1ThxU92Y8oss9KlLChdlECzl4K4mO/91bUMak8mrTk/
+ s39UV7z6YFxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9898"; a="247590890"
+X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
+   d="scan'208";a="247590890"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 06:14:16 -0800
+IronPort-SDR: ElQZXhgmFtC60IIVlW+/UT5UP1hzG5Xt8dnWRP3n5MYhm+tebIYls/GzvQokwvZldIkSO2xR73
+ LRQaLIzyIUtg==
+X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
+   d="scan'208";a="439822549"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 06:14:15 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1lCk4K-005xt5-EF; Thu, 18 Feb 2021 16:14:12 +0200
+Date:   Thu, 18 Feb 2021 16:14:12 +0200
+From:   "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+To:     "Bedel, Alban" <alban.bedel@aerq.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] gpio: pca953x: add support for open drain pins on
+ PCAL6524
+Message-ID: <YC52NFly5b3mxujS@smile.fi.intel.com>
+References: <20210211175140.85391-1-alban.bedel@aerq.com>
+ <CAHp75VfUY5-VtCWjaU6Q=hJY9hyUz8B36C0528RXUxkbnL9yEA@mail.gmail.com>
+ <4d67d5627921b0f7ca6579b81f97691c53ef0c34.camel@aerq.com>
+ <CAHp75Vczzhs=8k9G1FQYvqOV+Xg3GHp2=TykJX+E5ypT8puFqw@mail.gmail.com>
+ <a1f4f5cc14a5037a8b122c811d2f24a8d3068c41.camel@aerq.com>
+ <CAHp75VekEoU3y0iZ9RyfB4887n1hbLMcKfrgzYWfa6_cbKp_iQ@mail.gmail.com>
+ <6018d92d2fc91841e76324adaf9f285e39b6fc00.camel@aerq.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <6018d92d2fc91841e76324adaf9f285e39b6fc00.camel@aerq.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Just a quick note that, as of v5.11, strace now supports decoding of GPIO
-cdev ioctls, both v1 and v2.
+On Wed, Feb 17, 2021 at 06:57:20PM +0000, Bedel, Alban wrote:
+> On Wed, 2021-02-17 at 16:19 +0200, Andy Shevchenko wrote:
+> > On Wed, Feb 17, 2021 at 3:11 PM Bedel, Alban <alban.bedel@aerq.com>
+> > wrote:
+> > > On Tue, 2021-02-16 at 19:50 +0200, Andy Shevchenko wrote:
+> > > > On Tue, Feb 16, 2021 at 6:37 PM Bedel, Alban <
+> > > > alban.bedel@aerq.com>
+> > > > wrote:
+> > > > > On Mon, 2021-02-15 at 14:53 +0200, Andy Shevchenko wrote:
+> > > > > > On Thu, Feb 11, 2021 at 7:52 PM Alban Bedel <
+> > > > > > alban.bedel@aerq.com
+> > > > > > wrote:
+> > 
+> > ...
+> > 
+> > > > > > > +#define PCAL65xx_REGS          BIT(10)
+> > > > > > 
+> > > > > > Can we have it as a _TYPE, please?
+> > > > > 
+> > > > > Let's please take a closer look at these macros and what they
+> > > > > mean.
+> > > > > Currently we have 3 possible set of functions that are
+> > > > > indicated by
+> > > > > setting bits in driver_data using the PCA_xxx macros:
+> > > > > 
+> > > > > - Basic register only: 0
+> > > > > - With interrupt support: PCA_INT
+> > > > > - With latching interrupt regs: PCA_INT | PCA_PCAL =
+> > > > > PCA_LATCH_INT
+> > > > > 
+> > > > > This patch then add a forth case:
+> > > > > 
+> > > > > - With pin config regs: PCA_INT | PCA_PCAL |
+> > > > > $MACRO_WE_ARE_DICUSSING
+> > > > > 
+> > > > > Then there is the PCA953X_TYPE and PCA957X_TYPE macros which
+> > > > > indicate
+> > > > > the need for a different regmap config and register layout.
+> > > > 
+> > > > Exactly, and you have a different register layout (coincidentally
+> > > > overlaps with the original PCA953x).
+> > > 
+> > > We have 2 layout for the base registers, the "mixed up registers"
+> > > of
+> > > the PCA957x and the "standard" of the PCA953x. Then we have the
+> > > PCALxxxx chips which extend the base PCA953x registers with further
+> > > registers for better interrupt handling. These are not treated as a
+> > > new
+> > > type in the current code, but as an extra feature on top of the
+> > > PCA953x.
+> > 
+> > Yes, because they are about interrupts AFAICS.
+> 
+> This distinction seems arbitrary, each more advanced version of the
+> chip just has more features along with a new register block.
+> 
+> > >  The PCAL65xx we are talking about add a further register
+> > > block, so following the existing concept its not a new layout.
+> > 
+> > Yes, with one important detail, i.e. it extends the "mixed up"
+> > registers, it's not a separate "feature" in this sense. The separate
+> > "feature" can be, for example, PWM registers. I admit that this most
+> > of the angle of preference how to draw a line between the features.
+> > 
+> > I prefer to see it as a type because of two things (in the current
+> > code):
+> >  - OF_9*() macros take only two arguments, second of which is
+> > Interrupt related
+> >  - PCA_INT group of bits is about Interrupt only
+> 
+> No, the register set indicated by PCA_PCAL also allow setting pull
+> up/down which is supported by this driver. Furthermore the extra
+> registers of the PCAL65XX also allow configuring edge triggered mode
+> for interrupts. I really don't see why there should be 2 class of
+> features, that only make the code more complex.
+> 
+> > Your proposal will disrupt the code (more invasive).
+> 
+> I tried to implement what you like to see:
+> 
+>  1 file changed, 105 insertions(+), 20 deletions(-)
+> 
+> vs my proposal:
+> 
+>  1 file changed, 65 insertions(+), 3 deletions(-)
 
-Cheers,
-Kent.
-
------ Forwarded message from "Dmitry V. Levin" <ldv@altlinux.org> -----
-
-Date: Wed, 17 Feb 2021 20:15:26 +0300
-From: "Dmitry V. Levin" <ldv@altlinux.org>
-To: strace-devel@lists.strace.io
-Subject: strace 5.11 released
-
-Starting with version 4.13, strace follows the schedule of linux kernel
-and new versions of strace are released along with new versions of linux
-kernel, so strace 5.11 is tagged and uploaded.
-
-$ git tag -v v5.11 2> /dev/null | sed -n '/^$/,$p'
-
-Noteworthy changes in strace 5.11 (2021-02-17)
-==============================================
-
-* Improvements
-  * Implemented poke injection (--inject=SET:poke_enter= and
-    --inject=SET:poke_exit= options).
-  * Implemented decoding of epoll_pwait2 syscall introduced in Linux 5.11.
-  * Implemented decoding of GPIO_* ioctl commands.
-  * Implemented decoding of FS_IOC_FS[GS]ETXATTR, FS_IOC_[GS]ETFLAGS,
-    and FS_IOC32_[GS]ETFLAGS ioctl commands.
-  * Implemented decoding of SIOCADDMULTI, SIOCDELMULTI, SIOCGIFENCAP,
-    SIOCOUTQNSD, SIOCSIFENCAP, and SIOCSIFHWBROADCAST ioctl commands.
-  * Implemented decoding of UBI_IOCRPEB and UBI_IOCSPEB ioctl commands.
-  * Implemented decoding of V4L2_BUF_TYPE_META_CAPTURE,
-    V4L2_BUF_TYPE_META_OUTPUT, and VIDIOC_QUERY_EXT_CTRL ioctl commands.
-  * Updated lists of BPF_*, BTRFS_*, CLOSE_RANGE_*, ETH_*, IORING_*, KVM_*,
-    PR_*, PTRACE_*, RTA_*, RTAX_*, RTM_*, RTNH_*, SCTP_*, SO_*, SYS_*, UFFD_*,
-    and V4L2_* constants.
-  * Updated lists of ioctl commands from Linux 5.11.
-
-* Bug fixes
-  * Fixed decoding of SIOCGIFINDEX, SIOCBRADDIF, and SIOCBRDELIF ioctl commands.
-  * Fixed decoding of FIO[GS]ETOWN, SIOC[GS]PGRP, and SIOCATMARK ioctl commands
-    on alpha, mips, sh, and xtensa architectures.
-  * Fixed fork--pidns-translation test on sparc and sparc64.
-  * Fixed build on hppa with uapi headers from Linux >= 5.10.
-
-Contributors
-============
-
-This release was made possible by the contributions of many people.
-The maintainers are grateful to everyone who has contributed
-changes or bug reports.  These include:
-
-* Dmitry V. Levin
-* Elvira Khabirova
-* Eugene Syromyatnikov
-* Gleb Fotengauer-Malinovskiy
-* Kent Gibson
-* Philippe De Muyter
-* Sven Schnelle
-
-Please refer to the CREDITS file for the full list of strace contributors.
+Do you have any repo to look for both solutions?
 
 -- 
-ldv
+With Best Regards,
+Andy Shevchenko
 
 
-
--- 
-Strace-devel mailing list
-Strace-devel@lists.strace.io
-https://lists.strace.io/mailman/listinfo/strace-devel
-
-
------ End forwarded message -----
