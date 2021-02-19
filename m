@@ -2,40 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64EC831F64F
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Feb 2021 10:11:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FA9B31F672
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Feb 2021 10:21:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbhBSJKC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Feb 2021 04:10:02 -0500
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:37638 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229958AbhBSJHo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Feb 2021 04:07:44 -0500
-Received: by mail-oi1-f172.google.com with SMTP id y199so5163022oia.4;
-        Fri, 19 Feb 2021 01:07:28 -0800 (PST)
+        id S229800AbhBSJVR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Feb 2021 04:21:17 -0500
+Received: from mail-ot1-f51.google.com ([209.85.210.51]:41156 "EHLO
+        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229527AbhBSJVL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Feb 2021 04:21:11 -0500
+Received: by mail-ot1-f51.google.com with SMTP id s107so4510226otb.8;
+        Fri, 19 Feb 2021 01:20:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WMmV+pg/AZEmOZWqm+tCw4vrAAYkC3Vrjkj4xpthz5Q=;
-        b=qBgKiSZjiy+AsAFN0BRkVX/1Gy66LIv9oVg43bXGptf9YINb+E7sgU0ToL2VYJ3dxc
-         0qV/aSF5W7UNUtpxSHLlmkS+3aYaboSAksG5lfQnxDtwSdFsJcw6brf4/9cUTYT17mUY
-         5T4EHvWPojdCgLThd42rOlV3H8qRXMLrw409zEDTbmScYOlaqI9M8CJcFcd1MofGyZ5j
-         ArwzDuquJmA97UVRvVWPY4ecCiWWgEw8dVbWeeFxThvAU6O1M3kRia6glxTCCcYTdYcz
-         QjPzzbpjmbzupL/egG/ShZHTCYbqMZVdvuY2geEjMORCLXq8tUqH25fRNS58pidM/ziL
-         7hNw==
-X-Gm-Message-State: AOAM530nNbtcIbOCFXE8B1KJ1u4mg0NyC5TSKwWTqDZDlBrOoNJ8oubT
-        k3mtI/rQMLFocNPmukrDzPL18rU+FY49bcfGUdA=
-X-Google-Smtp-Source: ABdhPJxUDGyEvmeXZSHKn0xtxAcKCVUH2HgwBut5V3rBKZFoINqT1AaIOH4mYn/CXF7oGXnaG4WgBw+wf8B4k5R8xDM=
-X-Received: by 2002:aca:744:: with SMTP id 65mr5682790oih.153.1613725622900;
- Fri, 19 Feb 2021 01:07:02 -0800 (PST)
+        bh=SYEpGoDgvI1QlzJlU8ePdTmRC3GRxsqITcqVy9n45cY=;
+        b=KU7VHZPtJ2P5KynNLFYEVRwAgW5VKEcobysHO4UPsWA8NP5ROEDHWWdFud/Ifz/KOE
+         knZ2CvMxYthS/W+IQKGI4o5M3sCLEhNIIMOtdNOt3oII5jtNMexU7z7puZbuZhGBNNW/
+         w3AeQKUCoQmuyv3jaIfJPabwXbnIq7R9HnvHjv3P0ZuufSjKn3GI3xUjEGik6BQvWvsU
+         ZYV/Odkqyad9ZFqI4UTrFbaQIa4G/YdEZGtlDbKsi65OHVVjsF70/K7xNmM1+sHEnr5P
+         NmXacrF3VOr2wyRpii2KtqDkQK4urrmeJbfNAY+g5P6YtXAWtcp3a5P7kK5PkGJFcbZ6
+         UMaw==
+X-Gm-Message-State: AOAM531pHefkQGAVazUcLroHqMG/l0sRWZ+KWRoqbZ8Tl3sB1F5JEjpg
+        Nh4OX7/JKn4pGJA7E3K1rDhHe/tGTP+HeVee53A=
+X-Google-Smtp-Source: ABdhPJy7q8P2LtwfPYQgkPIegG+jc5n3oogMK/uGMAfvC/1FRtz16dPDqNjkj5uhgwUBUnTzcQR/PzqNDGCa3koXHlc=
+X-Received: by 2002:a05:6830:148d:: with SMTP id s13mr6076963otq.250.1613726429698;
+ Fri, 19 Feb 2021 01:20:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20210217221457.1827266-1-drew@beagleboard.org> <20210217221457.1827266-3-drew@beagleboard.org>
-In-Reply-To: <20210217221457.1827266-3-drew@beagleboard.org>
+References: <20210217221457.1827266-1-drew@beagleboard.org> <20210217221457.1827266-4-drew@beagleboard.org>
+In-Reply-To: <20210217221457.1827266-4-drew@beagleboard.org>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 19 Feb 2021 10:06:51 +0100
-Message-ID: <CAMuHMdXNz8ZbFXRgYCGuAd1+Cz8xTvMc-rkwXXiE-E-Fb5XXNA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] pinctrl: pinmux: Add pinmux-select debugfs file
+Date:   Fri, 19 Feb 2021 10:20:18 +0100
+Message-ID: <CAMuHMdXrD4-bcTR0ioY20qZOMaDparyFDqCzQr71te1_Uqw4eQ@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] docs/pinctrl: document debugfs files
 To:     Drew Fustini <drew@beagleboard.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -58,71 +58,76 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 Hi Drew,
 
 On Wed, Feb 17, 2021 at 11:15 PM Drew Fustini <drew@beagleboard.org> wrote:
-> Add "pinmux-select" to debugfs which will activate a function and group:
+> Document debugfs directories and files created for pinctrl subsystem.
 >
->   echo "<function-name group-name>" > pinmux-select
->
-> The write operation pinmux_select() handles this by checking that the
-> names map to valid selectors and then calling ops->set_mux().
->
-> The existing "pinmux-functions" debugfs file lists the pin functions
-> registered for the pin controller. For example:
->
->   function: pinmux-uart0, groups = [ pinmux-uart0-pins ]
->   function: pinmux-mmc0, groups = [ pinmux-mmc0-pins ]
->   function: pinmux-mmc1, groups = [ pinmux-mmc1-pins ]
->   function: pinmux-i2c0, groups = [ pinmux-i2c0-pins ]
->   function: pinmux-i2c1, groups = [ pinmux-i2c1-pins ]
->   function: pinmux-spi1, groups = [ pinmux-spi1-pins ]
->
-> To activate function pinmux-i2c1 and group pinmux-i2c1-pins:
->
->   echo "pinmux-i2c1 pinmux-i2c1-pins" > pinmux-select
->
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Reviewed-by: Tony Lindgren <tony@atomide.com>
 > Signed-off-by: Drew Fustini <drew@beagleboard.org>
 
 Thanks for your patch!
 
-On R-Car M2-W, which does not use pinctrl-single, I have:
+> --- a/Documentation/driver-api/pinctl.rst
+> +++ b/Documentation/driver-api/pinctl.rst
+> @@ -1428,3 +1428,40 @@ on the pins defined by group B::
+>  The above has to be done from process context. The reservation of the pins
+>  will be done when the state is activated, so in effect one specific pin
+>  can be used by different functions at different times on a running system.
+> +
+> +
+> +Debugfs files
+> +=============
+> +These files are created in ``/sys/kernel/debug/pinctrl``:
+> +
+> +- ``pinctrl-devices``: prints each pin controller device along with columns to
+> +  indicate support for pinmux and pinconf
+> +
+> +- ``pinctrl-handles``: iterate through the list of pin controller handles and
+> +  print the corresponding pinmux maps
 
-    # cat pinmux-functions
-    ...
-    function 14: i2c2, groups = [ i2c2 i2c2_b i2c2_c i2c2_d ]
-    ...
-    function 51: ssi, groups = [ ssi0_data ssi0_data_b ssi0129_ctrl
-ssi0129_ctrl_b ssi1_data ssi1_data_b ssi1_ctrl ssi1_ctrl_b ssi2_data
-ssi2_ctrl ssi3_data ssi34_ctrl ssi4_data ssi4_ctrl ssi5_data ssi5_ctrl
-ssi6_data ssi6_ctrl ssi7_data ssi7_data_b ssi78_ctrl ssi78_ctrl_b
-ssi8_data ssi8_data_b ssi9_data ssi9_data_b ssi9_ctrl ssi9_ctrl_b ]
-    ...
+Do you need the iterate part?
 
-On the Koelsch board:
+"prints each configured pin controller handle and the corresponding
+ pinmux maps"?
 
-    # cd /sys/kernel/debug/pinctrl/e6060000.pinctrl-sh-pfc/
-    # echo ssi ssi2_ctrl > pinmux-select # Configure i2c2 pins for ssi
-    # i2cdetect -y -a 2                  # Fails
-    # echo i2c2 i2c2 > pinmux-select     # Restore i2c2
-    # i2cdetect -y -a 2                  # Works again
+> +
+> +- ``pinctrl-maps``: print all pinctrl maps
+> +
+> +A sub-directory is created inside of ``/sys/kernel/debug/pinctrl`` for each pin
+> +controller device containing these files:
 
-The order of the 2 parameters looks a bit odd to me, as the operation
-configures the pins from "group" to be used for "function".
-See also arch/arm/boot/dts/r8a7791-koelsch.dts
-For the i2c2 example it's not that obvious, but for ssi it is.
-Might feel different for pinctrl-single, and perhaps I just need to get
-used to it ;-)
+Sort the below alphabetically?
 
-Anyway:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> +
+> +- ``pins``: prints a line for each pin registered on the pin controller. The
+> +  pinctrl driver may add additional information such as register contents.
+> +
+> +- ``gpio-ranges``: print ranges that map gpio lines to pins on the controller
+> +
+> +- ``pingroups``: print all pin groups registered on the pin controller
+> +
+> +- ``pinconf-pins``: print pin config settings for each pin
+> +
+> +- ``pinconf-groups``: print pin config settings per pin group
+> +
+> +- ``pinmux-functions``: print each pin function along with the pin groups that
+> +  map to the pin function
+> +
+> +- ``pinmux-pins``: iterate through all pins and print mux owner, gpio owner
+> +  and if the pin is a hog
+> +
+> +- ``pinmux-select``: write to this file to activate a pin function and group::
+
+a pin function for a group?
+
+> +
+> +        echo "<function-name group-name>" > pinmux-select
 
 Gr{oetje,eeting}s,
 
                         Geert
 
-
---
+-- 
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
