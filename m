@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC8E232070E
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Feb 2021 21:28:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79CF2320711
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Feb 2021 21:28:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbhBTU2k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Feb 2021 15:28:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59114 "EHLO
+        id S229867AbhBTU2o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Feb 2021 15:28:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbhBTU2k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Feb 2021 15:28:40 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D86EAC061786
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Feb 2021 12:27:59 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id l18so6280617pji.3
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Feb 2021 12:27:59 -0800 (PST)
+        with ESMTP id S229847AbhBTU2o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Feb 2021 15:28:44 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06F9C06178C
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Feb 2021 12:28:03 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id b15so1207240pjb.0
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Feb 2021 12:28:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Lh1fqu5jQvUJWqN2vGIZC04+SCim6mRTkhKCU1/DMZk=;
-        b=GSWfTWMxq6Abe7PcxhzK1GpfgjvrDWkvJPfM7DF2f9TcBqQJi51BenJooWmaDFeLaW
-         PpG9i7kNCHyRMs/IEy1/V2eBv3t+DB3q3+LZCk6bjh/q8sdaZqf/pbK8sPcxEGdcqaal
-         XPtRCI14JqPZCuVli9hNTCTRIF43WY3vfv9QHYSjIbTwQEwRqJ/3swpZV8lKnEDh4oTA
-         p7o072F+wmDG1TasG7ZpPyZIMG+JTtWU5avoMYNTrJXYUD5WS8A4miDO322ku3R8NL2b
-         aLLCWHd1CcEWIJFhoQZ6QeGQ3nCLdIjnrSKiZwo0f6CaygOvdcMobzDjAGfpZGMuZTbL
-         Iq8Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OBtTzri1cScqDnwkEDlkQhcrUhTCJcMkyhXW4hdMGZI=;
+        b=zmRlVRwyqIdZyO5J2dle6JUjid7RjcLyGcWR77bvZwb+Rl4DdAeYYH72ZL1i82pFDz
+         M1qXAvOUmLAsg4ClDoqctzOnHRIEspEU5yqgTy6Dee5urYA2d9RDfNZaohOptWvKCUMS
+         U7pI75ldQwGXI+KNAI/Fi4+BG4NrDZeWKLcuDOPPmVgd2ffJWeTf5YcY0vTQBvBmJt48
+         alBZ1Z+LzUHBHfafYJThAlgYjMM0fcQsrFy6ZZH5TWm5Vkd/+KTe1yUF5+dc1j3L6U+R
+         bYAQtTdyILgnEXksyO8GvrgGKj2czIW2Zq8LWDWCRrl1XK+DaTVNdm9MNQ8DxgRsSswV
+         muWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Lh1fqu5jQvUJWqN2vGIZC04+SCim6mRTkhKCU1/DMZk=;
-        b=XE/H8rIXVP7lDQbL/0Ev7p2P+Ps4esKsgXMS8oKcoOiVCAb3PFIJ70g8z3TBypofYf
-         Uu3PJaxbKZf2uCCrsbj1JtUtL2JbBSur+50nmRd/97z93/V3APJr+RtSF3ELUJ8lJTRO
-         0aBXYl22yZYw/6UhRIQSzeWjK/kym/DLE8uQie43VNjMtBsGndLrle5V6a8UQAC32S99
-         Zbn10sSYLJBcnuorVvn+tnKbFG7LpkPXPtwQ6dPH8MeH7N1XioAsFqTwHYuL62c3Mwxh
-         iZeUzTw5gPMQhUIwcXaLp/qmWiGqxvqC6Lx2tZfftjSmSXlIdPwvfDVQXlCc4ZtNK35u
-         jISw==
-X-Gm-Message-State: AOAM531nXfDeXFEdVmq/5J2PwGaZtoq6l082P5WEyVZs6MjrAT/aDP1v
-        P9TFb1CmV+LmSte127ksrhVEp131rOMKfRey
-X-Google-Smtp-Source: ABdhPJwl395g58YLdoeoyqrGzA8R1aAp12GC1uiM8E+6Vm78XEAF6uhSj9Uo6tWHJl6txsfcD6pSlg==
-X-Received: by 2002:a17:90a:e64f:: with SMTP id ep15mr13790522pjb.151.1613852879210;
-        Sat, 20 Feb 2021 12:27:59 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OBtTzri1cScqDnwkEDlkQhcrUhTCJcMkyhXW4hdMGZI=;
+        b=MYUsr/ePJropUs2YTK2AqofQap3GKyMJgkGi7AZuLUMjeSnvBcfXRlnVBATFVJBBVB
+         4wmDhRUopGTrA0eHxCO3b3RV5ejK2gAS4y27XK+sdhy/gQ0cc4jZTJoK+ADJIytaeBOc
+         p8TioyyR60jv6IZvujPMSJBS0Lz+lTFd62960EAcBZsBf9MlO5Xk4VyFD3lYTNdf7CLM
+         SLPv8RQo6ZTUeVauDQoSuPQg6Dr6utEpP0Fs0mwFOCGHJVkzy3VVhv3tPRshzikQCZY/
+         X757jvj7ujv3nqOda7JOmXXZfqrmqzB6JwEz84LaDXOJ7ywH+/8J2mC5M17hl0Am8yh7
+         mR8w==
+X-Gm-Message-State: AOAM5321YHAlDqJd40nxaGWYEeLIqfALbvaC+dFVI9nWPAMK7ro5r8qw
+        qaXlIrW5cowftEL+1ksfL8q4Gw==
+X-Google-Smtp-Source: ABdhPJyCnWL4tfnCf5iMQxfLoYhXdN4fbL+c4Roh79SV+1CtzWmvVtHqODPPHLdyNRGUmqB3VQr8DQ==
+X-Received: by 2002:a17:90a:7e94:: with SMTP id j20mr15894904pjl.8.1613852883189;
+        Sat, 20 Feb 2021 12:28:03 -0800 (PST)
 Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:3902:ca9d:7b75:1d0c])
-        by smtp.gmail.com with ESMTPSA id 125sm13497871pfu.7.2021.02.20.12.27.57
+        by smtp.gmail.com with ESMTPSA id 125sm13497871pfu.7.2021.02.20.12.28.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Feb 2021 12:27:58 -0800 (PST)
+        Sat, 20 Feb 2021 12:28:02 -0800 (PST)
 From:   Drew Fustini <drew@beagleboard.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -60,136 +60,105 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Joe Perches <joe@perches.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v8 0/3] pinctrl: pinmux: Add pinmux-select debugfs file
-Date:   Sat, 20 Feb 2021 12:27:47 -0800
-Message-Id: <20210220202750.117421-1-drew@beagleboard.org>
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v8 1/3] pinctrl: use to octal permissions for debugfs files
+Date:   Sat, 20 Feb 2021 12:27:48 -0800
+Message-Id: <20210220202750.117421-2-drew@beagleboard.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210220202750.117421-1-drew@beagleboard.org>
+References: <20210220202750.117421-1-drew@beagleboard.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This series first converts the debugfs files in the pinctrl subsystem to
-octal permissions and then adds a new debugfs file "pinmux-select".
+Switch over pinctrl debugfs files to use octal permissions as they are
+preferred over symbolic permissions. Refer to commit f90774e1fd27
+("checkpatch: look for symbolic permissions and suggest octal instead").
 
-Group name and function name can be written to "pinmux-select" which
-will cause the pin function for the specified group to be activated on
-the pin controller.
+Note: S_IFREG flag is added to the mode by __debugfs_create_file()
+in fs/debugfs/inode.c
 
-The final patch in this series documents the debugfs files for pinctrl.
+Suggested-by: Joe Perches <joe@perches.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ drivers/pinctrl/core.c    | 12 ++++++------
+ drivers/pinctrl/pinconf.c |  4 ++--
+ drivers/pinctrl/pinmux.c  |  4 ++--
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-Notes for PATCH v8:
-- add 'Reviewed-by:' from Geert Uytterhoeven for pinmux-select patch
-- add 'Tested-by:' from Geert Uytterhoeven for pinmux-select patch
-- change pinmux-select format to '<group-name function-name>' based on
-  feedback from Geert
-- rephrase parts of documentation per Geert's comments
-
-Notes for PATCH v7:
-- add 'Reviewed-by:' from Andy Shevchenko for pinmux-select patch
-- add 'Reviewed-by:' from Andy Shevchenko for documentation patch
-- add 'Reviewed-by:' from Tony Lindgren to all patches
-- change order of '#include <linux/ctype.h>' per Andy's suggestion
-- change PINMUX_SELECT_MAX back to 128 as I had accidentally changed it
-  to 50 and Andy pointed this out.
-- grammer fixes as suggested by Andy
-- rework assignment of fsel and ret from pinmux_func_name_to_selector()
-- rework assignment of gsel and ret from pinctrl_get_group_selector()
-
-Notes for PATCH v6:
-- add 'Suggested-by:' for Joe Perches to octal permissions patch
-- add 'Reviewed-by:' from Andy and Geert to octal permissions patch
-- reword example in the pinmux-select patch per Andy's advice
-- indent the example output per Andy's advice
-- remove usage error messages as Andy advised it is too verbose
-- return -ENOMEM when write is too big for the input buffer per Andy's advice
-- handle whitespace before, in between, and after the function name and
-  group name as suggested by Andy
-- rename free_buf to exit_free_buf per Andy's advice
-- add documentation patch to series which documents the debugfs files
-  for the pinctrl subsystem including the new pinmux-select file
-
-Notes for PATCH v5:
-- convert permissions from symbolic to octal for debugfs_create_file()
-  calls in core.c that Joe Perches pointed out I had missed
-- Linus W: please let me know if I should break this series apart as you
-  already applied an earlier version of octal conversion patch today [1]
-- switch from sscanf() to just pointing to function name and group name
-  inside of the buffer. This also avoids having to allocate additional
-  buffers for fname and gname. Geert and Andy highlighted this security
-  issue and Andy suggested code to use instead of sscanf().
-- switch from devm_kfree() to kfree() after Dan Carpenter warned me
-- remove .read from pinmux_select_ops per Geert since it is write only
-- add usage format to error when unable find fname or gname in buffer
-
-Notes for PATCH v4:
-- correct the commit message in the second patch to reference function
-  and group name instead of integer selectors. Apologies for not fixing
-  that in v3
-- fix typos in cover letter
-
-Notes for PATCH v3:
-- add Suggested-by: Andy Shevchenko to the "pinctrl: use to octal
-  permissions for debugfs files" patch
-- change the octal permissions from 0400 to 0444 to correctly match the
-  symbolic permissions (thanks to Joe Perches and Geert Uytterhoeven)
-- note that S_IFREG flag is added to the mode in __debugfs_create_file()
-  (thanks to Andy for highlighting this and Joe for suggesting I should
-  add a note to the commit message)
-- fix order of the goto labels so that the buffers are freed correctly
-  as suggested by Dan Carpenter
-- move from devm_kzalloc() to kzalloc() as the buffers are only used
-  inside the pinmux_select() function and not related to the lifetime
-  of the pin controller device (thanks to Andy for pointing this out)
-- correct the pinmux-select example in commit message to use the
-  function and group name instead of selector (thanks to Geert)
-
-Notes for PATCH v2:
-- create patch series that includes patch to switch all the debugfs
-  files in pinctrl subsystem over to octal permission
-- write function name and group name, instead of error-prone selector
-  numbers, to the 'pinmux-select' file
-- switch from static to dynamic allocation for the kernel buffer filled
-  by strncpy_from_user()
-- look up function selector from function name using
-  pinmux_func_name_to_selector()
-- validate group name with get_function_groups() and match_string()
-- look up selector for group name with pinctrl_get_group_selector()
-
-Notes for PATCH v1:
-- posted seperate patch to switch all the debugfs files in pinctrl
-  subsystem over to octal permission
-- there is no existing documentation for any of the debugfs enteries for
-  pinctrl, so it seemed to have a bigger scope than just this patch. I
-  also noticed that rst documentation is confusingly named "pinctl" (no
-  'r') and started thread about that [2]. Linus suggested chaning that
-  to 'pin-control'. Thus I am planning a seperate documentation patch
-  series where the file is renamed, references changed and a section on
-  the pinctrl debugfs files is added.
-
-Notes for RFC v2 [3]:
-- rename debugfs file "pinmux-set" to "pinmux-select"
-- renmae pinmux_set_write() to pinmux_select()
-- switch from memdup_user_nul() to strncpy_from_user()
-- switch from pr_warn() to dev_err()
-
-[1] https://lore.kernel.org/linux-gpio/20210126044742.87602-1-drew@beagleboard.org/
-[2] https://lore.kernel.org/linux-gpio/20210126050817.GA187797@x1/
-[3] https://lore.kernel.org/linux-gpio/20210123064909.466225-1-drew@beagleboard.org/
-
-Drew Fustini (3):
-  pinctrl: use to octal permissions for debugfs files
-  pinctrl: pinmux: Add pinmux-select debugfs file
-  docs/pinctrl: document debugfs files
-
- Documentation/driver-api/pinctl.rst |  37 ++++++++++
- drivers/pinctrl/core.c              |  12 ++--
- drivers/pinctrl/pinconf.c           |   4 +-
- drivers/pinctrl/pinmux.c            | 106 +++++++++++++++++++++++++++-
- 4 files changed, 149 insertions(+), 10 deletions(-)
-
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 3663d87f51a0..07458742bc0f 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1888,11 +1888,11 @@ static void pinctrl_init_device_debugfs(struct pinctrl_dev *pctldev)
+ 			dev_name(pctldev->dev));
+ 		return;
+ 	}
+-	debugfs_create_file("pins", S_IFREG | S_IRUGO,
++	debugfs_create_file("pins", 0444,
+ 			    device_root, pctldev, &pinctrl_pins_fops);
+-	debugfs_create_file("pingroups", S_IFREG | S_IRUGO,
++	debugfs_create_file("pingroups", 0444,
+ 			    device_root, pctldev, &pinctrl_groups_fops);
+-	debugfs_create_file("gpio-ranges", S_IFREG | S_IRUGO,
++	debugfs_create_file("gpio-ranges", 0444,
+ 			    device_root, pctldev, &pinctrl_gpioranges_fops);
+ 	if (pctldev->desc->pmxops)
+ 		pinmux_init_device_debugfs(device_root, pctldev);
+@@ -1914,11 +1914,11 @@ static void pinctrl_init_debugfs(void)
+ 		return;
+ 	}
+ 
+-	debugfs_create_file("pinctrl-devices", S_IFREG | S_IRUGO,
++	debugfs_create_file("pinctrl-devices", 0444,
+ 			    debugfs_root, NULL, &pinctrl_devices_fops);
+-	debugfs_create_file("pinctrl-maps", S_IFREG | S_IRUGO,
++	debugfs_create_file("pinctrl-maps", 0444,
+ 			    debugfs_root, NULL, &pinctrl_maps_fops);
+-	debugfs_create_file("pinctrl-handles", S_IFREG | S_IRUGO,
++	debugfs_create_file("pinctrl-handles", 0444,
+ 			    debugfs_root, NULL, &pinctrl_fops);
+ }
+ 
+diff --git a/drivers/pinctrl/pinconf.c b/drivers/pinctrl/pinconf.c
+index 02c075cc010b..d9d54065472e 100644
+--- a/drivers/pinctrl/pinconf.c
++++ b/drivers/pinctrl/pinconf.c
+@@ -370,9 +370,9 @@ DEFINE_SHOW_ATTRIBUTE(pinconf_groups);
+ void pinconf_init_device_debugfs(struct dentry *devroot,
+ 			 struct pinctrl_dev *pctldev)
+ {
+-	debugfs_create_file("pinconf-pins", S_IFREG | S_IRUGO,
++	debugfs_create_file("pinconf-pins", 0444,
+ 			    devroot, pctldev, &pinconf_pins_fops);
+-	debugfs_create_file("pinconf-groups", S_IFREG | S_IRUGO,
++	debugfs_create_file("pinconf-groups", 0444,
+ 			    devroot, pctldev, &pinconf_groups_fops);
+ }
+ 
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index bab888fe3f8e..c651b2db0925 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -676,9 +676,9 @@ DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
+ void pinmux_init_device_debugfs(struct dentry *devroot,
+ 			 struct pinctrl_dev *pctldev)
+ {
+-	debugfs_create_file("pinmux-functions", S_IFREG | S_IRUGO,
++	debugfs_create_file("pinmux-functions", 0444,
+ 			    devroot, pctldev, &pinmux_functions_fops);
+-	debugfs_create_file("pinmux-pins", S_IFREG | S_IRUGO,
++	debugfs_create_file("pinmux-pins", 0444,
+ 			    devroot, pctldev, &pinmux_pins_fops);
+ }
+ 
 -- 
 2.25.1
 
