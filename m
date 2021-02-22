@@ -2,495 +2,280 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54B7A321AA7
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Feb 2021 15:59:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E876321BAB
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Feb 2021 16:39:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230169AbhBVO7O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Feb 2021 09:59:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36888 "EHLO
+        id S230447AbhBVPiQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Feb 2021 10:38:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230040AbhBVO7I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Feb 2021 09:59:08 -0500
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EB3C061574;
-        Mon, 22 Feb 2021 06:58:26 -0800 (PST)
-Received: by mail-pg1-x532.google.com with SMTP id a4so10346873pgc.11;
-        Mon, 22 Feb 2021 06:58:26 -0800 (PST)
+        with ESMTP id S231687AbhBVPiG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Feb 2021 10:38:06 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C21CC06174A
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Feb 2021 07:37:22 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id l12so19546035wry.2
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Feb 2021 07:37:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HOaauMMyDlhqB10tkeThF/VMmwpuyOv7IZ1mUjwhwgg=;
-        b=dAoI2QOa7v6ssxQbplgr8THdoyauc6/Jguj5Cc0dd4QZG2NEJ32z4xRJAf4kdu1IaO
-         yoNYbAy6vcMpZcz9WU6i6PTfHDKoLG2wVb3WsjGoq/u6/jUM1iEwOpDuXUeovN6Uv6Hu
-         r8j5hfeCcYMsaoxDOkyelA7KblPYRxs1+h9M7CahTeA7LfxjrEQabrtVJrhG8o6QKgZL
-         2M1pRxJSrODl7xXVBns5Jq870uUHU9Xl2TMgPzM02MQ8hOjpx9RvzzIrAKSozsjdRFNH
-         C76qITp4u9xXUd5jYhJhLdCsXeMpX6KlBEylANA12F5lD2R+HgNaj965X1Pz0RPtaXah
-         d83g==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vin7O05u8KUmJaYcuCS5ZchFMqzvO90r/qOds8lH6l0=;
+        b=UGeeIUalA/oQN+VeK+TcUvW9zCEoNcm9z+ekdeEd2lf+MIr4vnSYXxLjifgEm6kghi
+         KDHCCaPi65uDzdrVnQLqDkcZYW9qTKFLBVEOmho62JHdTf7j1gLJ4MufidLtWlcra2NJ
+         oe/D0gGI6ebzu36dcdzWMhxU3eAwau4LS4s/NMABJOuktDYHGKC7XFgGw0RDseviRy7H
+         3jyQrIrAbDQGQ8mIey9E+47RTwHhBKqLWChvyhyhF9F8+ybppnQ4nN2MeWpvtcbqFzHY
+         aQjM9Sc4ioRmHsc4LiyqX7QuSsCveIRpzJcZLJ9F+T2gakUvWzV4t1WWuAkUOX58XprN
+         X5kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HOaauMMyDlhqB10tkeThF/VMmwpuyOv7IZ1mUjwhwgg=;
-        b=JtXsJHmQ7Jx2mBgkCLXmknel+HDkmLI42qyzWoQeMHxlHGr3k3wThYBFoCDTavsGMz
-         et6hsQWlDCJksa/RBP9uOpaX9lOCiNWlfR0PrmNNXGLMEVw3j6MMo7KpJhdScbhfdM0W
-         UX/BFqDvm8qpos/z9DabbpGKcZ+zKvqA7iak/S17BsyxmiB9jMucVKqYk888ep+Rj8fo
-         qypHeJVpF/hBaYB4kuD/vG9peJ5xPvrwoT0dNAOAmajBDd8OmOKs1/GU1L6kZjLOKKa4
-         qlNgQHBPwLZ+eet3qY9LzWPH564QRVMSyZA0Pup5vOfwGvpYqL/QUa6uFgPtyfeCH8mn
-         sqjQ==
-X-Gm-Message-State: AOAM532EVX+DfTaalBf5IGg4sF3+Y8Wsl8C+34WzuyJUpE8eJ5Js9jPP
-        VwJ55CNHGnql/WM6ljuXuWGTmaT/wn+47JSw3ts=
-X-Google-Smtp-Source: ABdhPJzF78SlbvvyPKbWHBGek0KUF/efqME8Z72Y9t/Lmw0ezeDJUO9gBbzYeQKCFJQr/9Hf9xll5t1DYtuNfGaVPjs=
-X-Received: by 2002:a05:6a00:854:b029:1b7:6233:c5f with SMTP id
- q20-20020a056a000854b02901b762330c5fmr14734542pfk.73.1614005906042; Mon, 22
- Feb 2021 06:58:26 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vin7O05u8KUmJaYcuCS5ZchFMqzvO90r/qOds8lH6l0=;
+        b=jUamJl5WifAthi4+Y5RD1sytEULHQtmPYUK6yKOfINBv8D/+jewIKAnhGk6lawdKdj
+         VLvHoSg+X6kziwYd/ltl2PhOt2shjiS8Cx/MTyuGARgPIBB9LiSbFRCXHlCPLhPiDoKs
+         xxy7fD8uzO+rsibnVbHgqR0fgAKK8hY4CezIIbM06FKJmo7AT2uQrCsrDy6LKqc7KhVV
+         15HoXKkPmZaSpe9hZ7FobYFIgxnyF23gkkgCQoUk9esidWNpCcZuXlUhJhRcLY0l6CSf
+         tORyPP4XEA4et5CnQGdxwG0pygw3MVw8g34n1+Fs0p93Ndd9qlkgiqGydHk3Vlsru0Fw
+         RVvw==
+X-Gm-Message-State: AOAM532YoZkeld8owGs34HkH2AkTOmkT7s18ycpSW4ppumu6yNRCQdLJ
+        b6JKdm1/tFUlQAS6PXS4em5AAw==
+X-Google-Smtp-Source: ABdhPJyRoPZWdsORNqxl+3Iuu9xnzkwI00A/L61+LPfjLcl90RpgWY40nzcORIfruDgxHPXlAGyOlw==
+X-Received: by 2002:a5d:4ed1:: with SMTP id s17mr4409857wrv.402.1614008241026;
+        Mon, 22 Feb 2021 07:37:21 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id v6sm30195781wrx.32.2021.02.22.07.37.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Feb 2021 07:37:20 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: updates for v5.12
+Date:   Mon, 22 Feb 2021 16:37:14 +0100
+Message-Id: <20210222153714.4961-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-References: <20210222130735.1313443-1-djrscally@gmail.com> <20210222130735.1313443-6-djrscally@gmail.com>
-In-Reply-To: <20210222130735.1313443-6-djrscally@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Feb 2021 16:58:09 +0200
-Message-ID: <CAHp75Vd2Dc2Poq7VNRXRT-0VjkYdEFY2WKpz8fWpAQViQRO4jA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] platform/x86: Add intel_skl_int3472 driver
-To:     Daniel Scally <djrscally@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        kieran.bingham+renesas@ideasonboard.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        devel@acpica.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
->
-> ACPI devices with _HID INT3472 are currently matched to the tps68470
-> driver, however this does not cover all situations in which that _HID
-> occurs. We've encountered three possibilities:
->
-> 1. On Chrome OS devices, an ACPI device with _HID INT3472 (representing
-> a physical TPS68470 device) that requires a GPIO and OpRegion driver
-> 2. On devices designed for Windows, an ACPI device with _HID INT3472
-> (again representing a physical TPS68470 device) which requires GPIO,
-> Clock and Regulator drivers.
-> 3. On other devices designed for Windows, an ACPI device with _HID
-> INT3472 which does **not** represent a physical TPS68470, and is instead
-> used as a dummy device to group some system GPIO lines which are meant
-> to be consumed by the sensor that is dependent on this entry.
->
-> This commit adds a new module, registering a platform driver to deal
-> with the 3rd scenario plus an i2c driver to deal with #1 and #2, by
-> querying the CLDB buffer found against INT3472 entries to determine
-> which is most appropriate.
-
-Can you split CLK parts (and maybe regulators as well) to something
-like intel_skl_int3472_clk.c?
-
-...
-
-> +#include <linux/acpi.h>
-> +#include <linux/i2c.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-
-> +               dev_err(&adev->dev, "%s object is not an ACPI buffer\n", id);
-
-Perhaps acpi_handle_err() et al. instead of dev_*(&adev->dev, ...)
-where it's applicable?
-
-...
-
-> +       if (obj->buffer.length > sizeof(*cldb)) {
-> +               dev_err(&adev->dev, "The CLDB buffer is too large\n");
-> +               ret = -EINVAL;
-
-ENOSPC? ENOMEM?
-
-> +               goto out_free_obj;
-> +       }
-
-...
-
-> +static int skl_int3472_init(void)
-> +{
-
-> +       int ret = 0;
-
-Redundant assignment.
-
-> +       ret = platform_driver_register(&int3472_discrete);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = i2c_register_driver(THIS_MODULE, &int3472_tps68470);
-> +       if (ret)
-> +               platform_driver_unregister(&int3472_discrete);
-
-Not a fan of the above, but let's see what others will say...
-
-> +       return ret;
-> +}
-> +module_init(skl_int3472_init);
-
-...
-
-> +#include <linux/clk-provider.h>
-
-This is definitely not for *.h. (Not all C files needed this)
-
-> +#include <linux/gpio/machine.h>
-
-Ditto.
-
-> +#include <linux/regulator/driver.h>
-> +#include <linux/regulator/machine.h>
-
-Ditto.
-
-...
-
-> +/*
-> + * 79234640-9e10-4fea-a5c1-b5aa8b19756f
-> + * This _DSM GUID returns information about the GPIO lines mapped to a
-> + * discrete INT3472 device. Function number 1 returns a count of the GPIO
-> + * lines that are mapped. Subsequent functions return 32 bit ints encoding
-> + * information about the GPIO line, including its purpose.
-> + */
-> +static const guid_t int3472_gpio_guid =
-> +       GUID_INIT(0x79234640, 0x9e10, 0x4fea,
-> +                 0xa5, 0xc1, 0xb5, 0xaa, 0x8b, 0x19, 0x75, 0x6f);
-
-uuid.h ?
-
-...
-
-> +/*
-> + * The regulators have to have .ops to be valid, but the only ops we actually
-> + * support are .enable and .disable which are handled via .ena_gpiod. Pass an
-> + * empty struct to clear the check without lying about capabilities.
-> + */
-> +static const struct regulator_ops int3472_gpio_regulator_ops = { 0 };
-
-{ 0 } is implied by the static keyword and C standard.
-
-...
-
-> +static int skl_int3472_clk_prepare(struct clk_hw *hw)
-> +{
-> +       struct int3472_gpio_clock *clk = to_int3472_clk(hw);
-> +
-> +       gpiod_set_value(clk->ena_gpio, 1);
-
-> +       if (clk->led_gpio)
-
-Make it optional and drop this check. Same for other places of use of this GPIO.
-
-> +               gpiod_set_value(clk->led_gpio, 1);
-> +
-> +       return 0;
-> +}
-
-...
-
-> +static int skl_int3472_clk_enable(struct clk_hw *hw)
-> +{
-> +       /*
-> +        * We're just turning a GPIO on to enable, which operation has the
-> +        * potential to sleep. Given enable cannot sleep, but prepare can,
-> +        * we toggle the GPIO in prepare instead. Thus, nothing to do here.
-> +        */
-
-Missed . and / or  () in some words? (Describing callbacks, personally
-I use the form "->callback()" in such cases)
-
-> +       return 0;
-> +}
-
-...
-
-> +static unsigned int skl_int3472_get_clk_frequency(struct int3472_discrete_device *int3472)
-> +{
-> +       union acpi_object *obj;
-
-> +       unsigned int ret = 0;
-
-unsigned for ret is unusual. Looking into the code, first of all it
-doesn't need this assignment; second, it probably can gain a better
-name: "frequency"?
-
-> +       obj = skl_int3472_get_acpi_buffer(int3472->sensor, "SSDB");
-> +       if (IS_ERR(obj))
-> +               return 0; /* report rate as 0 on error */
-> +
-> +       if (obj->buffer.length < CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET + sizeof(u32)) {
-> +               dev_err(int3472->dev, "The buffer is too small\n");
-> +               goto out_free_buff;
-> +       }
-> +
-> +       ret = *(u32 *)(obj->buffer.pointer + CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET);
-> +
-> +out_free_buff:
-> +       kfree(obj);
-> +       return ret;
-> +}
-
-...
-
-> +       sensor_config = int3472->sensor_config;
-
-> +       if (!IS_ERR_OR_NULL(sensor_config) && sensor_config->function_maps) {
-
-Hmm...
-
-Would
-
-if (IS_ERR_OR_NULL(sensor_config))
-  return 0;
-
-if (!_maps)
-  return 0;
-
-with respective comments working here?
-
-> +               const struct int3472_gpio_function_remap *remap =
-> +                       sensor_config->function_maps;
-
-Split assignment so we can see what is the initial for-loop iterator value.
-
-> +               for (; remap->documented; ++remap)
-
-remap++
-
-> +                       if (!strcmp(func, remap->documented)) {
-> +                               func = remap->actual;
-> +                               break;
-> +                       }
-> +       }
-> +
-> +       /* Functions mapped to NULL should not be mapped to the sensor */
-> +       if (!func)
-> +               return 0;
-
-...
-
-> +static int skl_int3472_register_clock(struct int3472_discrete_device *int3472)
-> +{
-> +       struct clk_init_data init = {
-> +               .ops = &skl_int3472_clock_ops,
-> +               .flags = CLK_GET_RATE_NOCACHE,
-> +       };
-> +       int ret = 0;
-> +
-> +       init.name = kasprintf(GFP_KERNEL, "%s-clk",
-> +                             acpi_dev_name(int3472->adev));
-
-devm_*() ? Or is the lifetime different?
-
-> +       if (!init.name)
-> +               return -ENOMEM;
-> +
-> +       int3472->clock.frequency = skl_int3472_get_clk_frequency(int3472);
-> +
-> +       int3472->clock.clk_hw.init = &init;
-> +       int3472->clock.clk = clk_register(&int3472->adev->dev,
-> +                                         &int3472->clock.clk_hw);
-> +       if (IS_ERR(int3472->clock.clk)) {
-> +               ret = PTR_ERR(int3472->clock.clk);
-> +               goto out_free_init_name;
-> +       }
-> +
-> +       int3472->clock.cl = clkdev_create(int3472->clock.clk, NULL,
-> +                                         int3472->sensor_name);
-> +       if (!int3472->clock.cl) {
-> +               ret = -ENOMEM;
-> +               goto err_unregister_clk;
-> +       }
-> +
-> +       goto out_free_init_name;
-> +
-> +err_unregister_clk:
-> +       clk_unregister(int3472->clock.clk);
-> +out_free_init_name:
-> +       kfree(init.name);
-> +
-> +       return ret;
-> +}
-
-...
-
-> +       sensor_config = int3472->sensor_config;
-> +       if (IS_ERR_OR_NULL(sensor_config)) {
-> +               dev_err(int3472->dev, "No sensor module config\n");
-
-> +               return PTR_ERR(sensor_config);
-
-NULL -> 0. Is it okay?
-
-> +       }
-
-...
-
-> +       int ret = 0;
-
-Seems redundant assignment.
-...
-
-> +       if (ares->type != ACPI_RESOURCE_TYPE_GPIO ||
-> +           ares->data.gpio.connection_type != ACPI_RESOURCE_GPIO_TYPE_IO)
-> +               return 1; /* Deliberately positive so parsing continues */
-
-I don't like to lose control over ACPI_RESOURCE_TYPE_GPIO, i.e.
-spreading it over kernel code (yes, I know about one existing TS
-case).
-Consider to provide a helper in analogue to acpi_gpio_get_irq_resource().
-
-...
-
-> +       if (ret < 0 && ret != -EPROBE_DEFER)
-> +               dev_err(int3472->dev, err_msg);
-
-dev_err_probe() will make the above conditional go away. And you may even do...
-
-> +       int3472->n_gpios++;
-> +       ACPI_FREE(obj);
-
-> +       return ret;
-
-...here
-
-return dev_err_probe(...);
-
-...
-
-> +       struct list_head resource_list;
-
-> +       INIT_LIST_HEAD(&resource_list);
-
-LIST_HEAD(resource_list);
-
-will do two in one.
-
-...
-
-> +       if (int3472->clock.ena_gpio) {
-
-Not sure you need this here.
-
-> +               ret = skl_int3472_register_clock(int3472);
-> +               if (ret)
-> +                       goto out_free_res_list;
-
-> +       } else {
-> +               if (int3472->clock.led_gpio)
-
-Ditto.
-
-> +                       dev_warn(int3472->dev,
-> +                                "No clk GPIO. The privacy LED won't work\n");
-> +       }
-
-...
-
-> +       /* Max num GPIOs we've seen plus a terminator */
-> +       int3472 = kzalloc(struct_size(int3472, gpios.table,
-> +                         INT3472_MAX_SENSOR_GPIOS + 1), GFP_KERNEL);
-
-Wonder of you can use devm_*() APIs in this function.
-
-> +       if (!int3472)
-> +               return -ENOMEM;
-
-...
-
-> +       int3472->sensor = acpi_dev_get_dependent_dev(adev);
-> +       if (IS_ERR_OR_NULL(int3472->sensor)) {
-> +               dev_err(&pdev->dev,
-> +                       "INT3472 seems to have no dependents.\n");
-
-> +               ret = -ENODEV;
-
-Don't shadow error code when you got IS_ERR() case.
-
-> +               goto err_free_int3472;
-> +       }
-
-...
-
-> +int skl_int3472_discrete_remove(struct platform_device *pdev)
-> +{
-> +       struct int3472_discrete_device *int3472 = platform_get_drvdata(pdev);
-
-> +       if (int3472->gpios.dev_id)
-> +               gpiod_remove_lookup_table(&int3472->gpios);
-
-gpiod_remove_lookup_table() is now NULL-aware.
-But in any case I guess you don't need the above check.
-
-> +       if (!IS_ERR(int3472->regulator.rdev))
-
-> +               regulator_unregister(int3472->regulator.rdev);
-
-Shouldn't it be the pointer to the regulator itself?
-
-> +       if (!IS_ERR(int3472->clock.clk))
-
-If you get it optional, you won't need this additional check.
-
-> +               clk_unregister(int3472->clock.clk);
-> +
-> +       if (int3472->clock.cl)
-> +               clkdev_drop(int3472->clock.cl);
-> +
-> +       gpiod_put(int3472->regulator.gpio);
-> +       gpiod_put(int3472->clock.ena_gpio);
-> +       gpiod_put(int3472->clock.led_gpio);
-> +
-> +       acpi_dev_put(int3472->sensor);
-> +
-> +       kfree(int3472->sensor_name);
-> +       kfree(int3472);
-> +
-> +       return 0;
-> +}
-
-...
-
-> +       ret = skl_int3472_fill_cldb(adev, &cldb);
-> +       if (!ret && cldb.control_logic_type != 2) {
-> +               dev_err(&client->dev, "Unsupported control logic type %u\n",
-> +                       cldb.control_logic_type);
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (ret)
-> +               cldb_present = false;
-
-if (ret)
-  ...
-else if (...)  {
-  ...
-  return ...;
-}
-
--- 
-With Best Regards,
-Andy Shevchenko
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Linus,
+
+This is the pull request from the GPIO subsystem for this merge window. It's
+been a relatively calm release cycle and we're actually removing more code
+than we're adding. All patches have been in next with most having spent several
+weeks there. The PR is rebased on top of v5.11 because certain bug fixes on
+which patches for v5.12 depend were only merged after v5.11-rc7. Details are in
+the signed tag. Please pull!
+
+Best Regards,
+Bartosz Golaszewski
+
+The following changes since commit f40ddce88593482919761f74910f42f4b84c004b:
+
+  Linux 5.11 (2021-02-14 14:32:24 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.12
+
+for you to fetch changes up to a8002a35935aaefcd6a42ad3289f62bab947f2ca:
+
+  gpio: pcf857x: Fix missing first interrupt (2021-02-18 15:52:44 +0100)
+
+----------------------------------------------------------------
+gpio updates for v5.12
+
+- new driver for the Toshiba Visconti platform
+- rework of interrupt handling in gpio-tegra
+- updates for GPIO selftests: we're now using the character device to perform
+  the subsystem checks
+- support for a new rcar variant + some code refactoring
+- refactoring of gpio-ep93xx
+- SPDX License identifier has been updated in the uapi header so that userspace
+  programs bundling it can become fully REUSE-compliant
+- improvements to pwm handling in gpio-mvebu
+- support for interrupt handling and power management for gpio-xilinx as well
+  as some code refactoring
+- support for a new chip variant in gpio-pca953x
+- removal of drivers: zte xs & intel-mid and removal of leftovers from
+  intel-msic
+- impovements to intel drivers pulled from Andy Shevchenko
+- improvements to the gpio-aggregator virtual GPIO driver
+- and several minor tweaks and fixes to code and documentation all over the
+  place
+
+----------------------------------------------------------------
+Andy Shevchenko (13):
+      gpio: merrifield: Make bias configuration available for GPIOs
+      lib/cmdline_kunit: add a new test case for get_options()
+      lib/cmdline: Update documentation to reflect behaviour
+      lib/cmdline: Allow get_options() to take 0 to validate the input
+      gpio: aggregator: Replace isrange() by using get_options()
+      gpio: aggregator: Use compound literal from the header
+      gpio: aggregator: Remove trailing comma in terminator entries
+      gpio: msic: Remove driver for deprecated platform
+      gpio: intel-mid: Remove driver for deprecated platform
+      gpio: wcove: Get rid of error prone casting in IRQ handler
+      gpio: wcove: Switch to use regmap_set_bits(), regmap_clear_bits()
+      gpio: wcove: Split out to_ireg() helper and deduplicate the code
+      gpio: msic: Drop driver from Makefile
+
+Arnd Bergmann (1):
+      gpio: remove zte zx driver
+
+Aswath Govindraju (1):
+      dt-bindings: gpio: Add compatible string for AM64 SoC
+
+Bartosz Golaszewski (3):
+      gpio: bd7xxxx: use helper variable for pdev->dev
+      gpio: mockup: tweak the Kconfig help text
+      gpio: uapi: use the preferred SPDX license identifier
+
+Baruch Siach (6):
+      gpio: mvebu: improve pwm period calculation accuracy
+      gpio: mvebu: make pwm .get_state closer to idempotent
+      gpio: mvebu: don't limit pwm period/duty_cycle to UINT_MAX
+      gpio: mvebu: improve handling of pwm zero on/off values
+      gpio: mvebu: add pwm support for Armada 8K/7K
+      dt-bindings: ap806: document gpio marvell,pwm-offset property
+
+Colin Ian King (1):
+      gpio: fix spelling mistake in Kconfig "supprot" -> "support"
+
+Dmitry Osipenko (6):
+      gpio: tegra: Fix wake interrupt
+      gpio: tegra: Improve formatting of the code
+      gpio: tegra: Use debugfs_create_devm_seqfile()
+      gpio: tegra: Clean up whitespaces in tegra_gpio_driver
+      gpio: tegra: Support building driver as a loadable module
+      gpio: tegra: Fix irq_set_affinity
+
+Geert Uytterhoeven (3):
+      dt-bindings: gpio: rcar: Add r8a779a0 support
+      gpio: rcar: Optimize GPIO pin state read on R-Car Gen3
+      gpio: rcar: Add R-Car V3U (R8A779A0) support
+
+Jonathan Neuschäfer (2):
+      docs: gpio: Fix formatting in description of gpiod_*_array_* functions
+      docs: gpio: intro: Improve HTML formatting
+
+Kent Gibson (8):
+      selftests: gpio: rework and simplify test implementation
+      selftests: gpio: remove obsolete gpio-mockup-chardev.c
+      selftests: remove obsolete build restriction for gpio
+      selftests: remove obsolete gpio references from kselftest_deps.sh
+      tools: gpio: remove uAPI v1 code no longer used by selftests
+      selftests: gpio: port to GPIO uAPI v2
+      selftests: gpio: add CONFIG_GPIO_CDEV to config
+      gpio: uapi: fix line info flags description
+
+Lad Prabhakar (2):
+      gpio: rcar: Remove redundant compatible values
+      gpio: Kconfig: Update help description for GPIO_RCAR config
+
+Matti Vaittinen (1):
+      gpio: bd7xxxx: Do not depend on parent driver data
+
+Maxim Kiselev (1):
+      gpio: pcf857x: Fix missing first interrupt
+
+Nikita Shubin (5):
+      gpio: ep93xx: Fix wrong irq numbers in port F
+      gpio: ep93xx: drop to_irq binding
+      gpio: ep93xx: Fix typo s/hierarchial/hierarchical
+      gpio: ep93xx: refactor ep93xx_gpio_add_bank
+      gpio: ep93xx: refactor base IRQ number
+
+Nobuhiro Iwamatsu (4):
+      dt-bindings: gpio: Add bindings for Toshiba Visconti GPIO Controller
+      gpio: visconti: Add Toshiba Visconti GPIO support
+      MAINTAINERS: Add entries for Toshiba Visconti GPIO controller
+      arm: dts: visconti: Add DT support for Toshiba Visconti5 GPIO driver
+
+Srinivas Neeli (5):
+      gpio: gpio-xilinx: Simplify with dev_err_probe()
+      gpio: gpio-xilinx: Reduce spinlock array to array
+      gpio: gpio-xilinx: Add interrupt support
+      gpio: gpio-xilinx: Add support for suspend and resume
+      gpio: gpio-xilinx: Add check if width exceeds 32
+
+Thierry Reding (1):
+      gpio: tegra: Convert to gpio_irq_chip
+
+Uwe Kleine-König (3):
+      gpio: pca953x: Add support for pca9506
+      dt-bindings: gpio: pca953x: Document new supported chip pca9506
+      dt-bindings: gpio: pca953x: Increase allowed length for gpio-line-names
+
+Zheng Yongjun (5):
+      gpio: sl28cpld: convert comma to semicolon
+      gpio: max77620: convert comma to semicolon
+      gpio: tegra186: convert comma to semicolon
+      gpio: vx855: convert comma to semicolon
+      gpio: wcove: convert comma to semicolon
+
+ .../arm/marvell/ap80x-system-controller.txt        |   8 +
+ .../devicetree/bindings/gpio/gpio-davinci.txt      |   1 +
+ .../devicetree/bindings/gpio/gpio-pca95xx.yaml     |   3 +-
+ .../bindings/gpio/renesas,rcar-gpio.yaml           |   3 +
+ .../bindings/gpio/toshiba,gpio-visconti.yaml       |  70 +++
+ .../devicetree/bindings/gpio/zx296702-gpio.txt     |  24 -
+ Documentation/driver-api/gpio/consumer.rst         |   5 +-
+ Documentation/driver-api/gpio/intro.rst            |   8 +-
+ MAINTAINERS                                        |   4 +-
+ arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts   |   4 +
+ arch/arm64/boot/dts/toshiba/tmpv7708.dtsi          |  11 +
+ drivers/gpio/Kconfig                               |  44 +-
+ drivers/gpio/Makefile                              |   4 +-
+ drivers/gpio/TODO                                  |   2 +-
+ drivers/gpio/gpio-aggregator.c                     |  40 +-
+ drivers/gpio/gpio-bd70528.c                        |  59 ++-
+ drivers/gpio/gpio-bd71828.c                        |  39 +-
+ drivers/gpio/gpio-ep93xx.c                         |  28 +-
+ drivers/gpio/gpio-intel-mid.c                      | 414 -----------------
+ drivers/gpio/gpio-max77620.c                       |   2 +-
+ drivers/gpio/gpio-merrifield.c                     |   5 +
+ drivers/gpio/gpio-msic.c                           | 314 -------------
+ drivers/gpio/gpio-mvebu.c                          | 148 +++---
+ drivers/gpio/gpio-pca953x.c                        |   2 +
+ drivers/gpio/gpio-pcf857x.c                        |   2 +-
+ drivers/gpio/gpio-rcar.c                           |  85 ++--
+ drivers/gpio/gpio-sl28cpld.c                       |   4 +-
+ drivers/gpio/gpio-tegra.c                          | 263 +++++++----
+ drivers/gpio/gpio-tegra186.c                       |   2 +-
+ drivers/gpio/gpio-visconti.c                       | 218 +++++++++
+ drivers/gpio/gpio-vx855.c                          |   2 +-
+ drivers/gpio/gpio-wcove.c                          |  65 +--
+ drivers/gpio/gpio-xilinx.c                         | 369 ++++++++++++++-
+ drivers/gpio/gpio-zx.c                             | 289 ------------
+ drivers/pinctrl/visconti/pinctrl-common.c          |  23 +
+ include/linux/gpio/machine.h                       |   4 +-
+ include/uapi/linux/gpio.h                          |   4 +-
+ lib/cmdline.c                                      |  21 +-
+ lib/cmdline_kunit.c                                |  56 +++
+ tools/gpio/gpio-utils.c                            |  89 ----
+ tools/gpio/gpio-utils.h                            |   6 -
+ tools/testing/selftests/Makefile                   |   9 -
+ tools/testing/selftests/gpio/Makefile              |  26 +-
+ tools/testing/selftests/gpio/config                |   1 +
+ tools/testing/selftests/gpio/gpio-mockup-cdev.c    | 198 ++++++++
+ tools/testing/selftests/gpio/gpio-mockup-chardev.c | 323 -------------
+ tools/testing/selftests/gpio/gpio-mockup-sysfs.sh  | 168 +++----
+ tools/testing/selftests/gpio/gpio-mockup.sh        | 497 ++++++++++++++-------
+ tools/testing/selftests/kselftest_deps.sh          |   4 +-
+ 49 files changed, 1827 insertions(+), 2143 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/zx296702-gpio.txt
+ delete mode 100644 drivers/gpio/gpio-intel-mid.c
+ delete mode 100644 drivers/gpio/gpio-msic.c
+ create mode 100644 drivers/gpio/gpio-visconti.c
+ delete mode 100644 drivers/gpio/gpio-zx.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-mockup-cdev.c
+ delete mode 100644 tools/testing/selftests/gpio/gpio-mockup-chardev.c
