@@ -2,77 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6069632320B
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Feb 2021 21:25:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C862F323241
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Feb 2021 21:44:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234262AbhBWUZE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Feb 2021 15:25:04 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:38155 "EHLO
+        id S233959AbhBWUno (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Feb 2021 15:43:44 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:52647 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234231AbhBWUZB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Feb 2021 15:25:01 -0500
+        with ESMTP id S233266AbhBWUno (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Feb 2021 15:43:44 -0500
 Received: from [192.168.1.155] ([77.9.11.4]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MfL5v-1lm58U2uBX-00gqLG; Tue, 23 Feb 2021 21:13:29 +0100
-Subject: Re: [RFC PATCH 09/12] drivers: base: reintroduce find_bus()
-To:     Greg KH <gregkh@linuxfoundation.org>,
+ 1MElhb-1l3uBY17fv-00GL8U; Tue, 23 Feb 2021 21:41:03 +0100
+Subject: Re: [RFC PATCH 11/12] platform/x86: skeleton for oftree based board
+ device initialization
+To:     Frank Rowand <frowand.list@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, frowand.list@gmail.com,
-        pantelis.antoniou@konsulko.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
 References: <20210208222203.22335-1-info@metux.net>
- <20210208222203.22335-10-info@metux.net> <YCen7uHqFJQ/U/5p@kroah.com>
+ <20210208222203.22335-12-info@metux.net>
+ <CACRpkdYbOX_RDqwxaiugtYB4vSpSKChvKsPjcB_vv3Q74QeG2Q@mail.gmail.com>
+ <c5ed2b27-21a2-5a07-8dd9-e080f9a6cd98@metux.net>
+ <f370fa7b-a5b1-4151-7018-10d1b75fa8b2@gmail.com>
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <da82c033-3a82-3420-4d06-f5c39c524ae9@metux.net>
-Date:   Tue, 23 Feb 2021 21:13:26 +0100
+Message-ID: <98005671-f0f4-02df-dbbf-b449c75a5da3@metux.net>
+Date:   Tue, 23 Feb 2021 21:41:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <YCen7uHqFJQ/U/5p@kroah.com>
+In-Reply-To: <f370fa7b-a5b1-4151-7018-10d1b75fa8b2@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:K6t2Brz0acFlLE8pKtT6EGZ5DDbr4Gjg0xoO6NHOPqBovg9y0hR
- IJMjqOpjpq5NIsaB9MvbGjthbOf4bgBmXJYMpzI/rzoA02FLiiy0nfhoPf2O8kThWU6d8Xb
- ZR5fi7rP/0aT/JCfJFoeZfwhPChSxOjwNHGzjaE+PT71Xn5oy5kEcG61MawmAWkD4iC159a
- 0/4sb2ns8N2cdck7Gvakw==
+X-Provags-ID: V03:K1:5A+N3SNfNui62ql8UhrDO5JCDlCas9O9Wnu0EIukQgAj7FxnmqM
+ OOL6oxZJXhKJnUpD8VL6M3M55mQOYFfqIeEWdEJmcHNhbqzzeafaFidI3elE7DfUiPazUoc
+ 5by0M/oV9xQhX9YvzuYXWhf6kMl/MZjGAo0vjFr1hIYzkw7PIMGcZJutRoDJT0idSuq+Nyx
+ GMtCEu3oDDP3Fjda+U5Ww==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qbsrZD4idXU=:wE73xu0E1ANdDKF1shWBbp
- JbE3hzM8TGBHd6XAG9ZKRYTiKx37+y5kK041SKPg2zs7vblDGEFjCiaCLC/k9AGCmO6PAQprO
- zvZjyX2dw79F17kvZI/6jXrWRRnY5W/0RDLKwvVl8y2tezKbLt7UUSqooYohCi8xivBf0/+/B
- 93nJhI9srSjMIoyRBknP7UnWqp5hxodBPMtxKqElbEb6pvn/4rQePJzFXPJ85BP4L66zn+t7b
- xhGRPiMFAjSTfF+TTVFtqYR9OecMgQjV/nNVGeLnIRRoYviGRV3KNitRyJuXc5uk9OEiE6z1Y
- 96bHwJ4ioQ+yyrmldMyIr3bwi3TcpXrCeXNCI+zraKUPuSVadAgdy2hsmOfcj6bdXqSdxhVi0
- Mg/5UKWadIfCU3kSgO6u9w6iuMLMpEgrU7azW5TMcrZ9wkynT+YHjHHkgiG10
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WrK0loCgv7U=:QB2ocuY85TNPL4+q1guy8p
+ ygwSWcnZ0VsVWY+FyyQJ2OTFaS7OQOuywCtsvpzuWK8tDJFYjD35H/92Lon3CG6pD12wLricm
+ tXEFrboO9m+R20Adg6HsCNCZS9X2wCu69EL/CQN5rr0LoVTTB4xGoJxIV9kFdieUGc7Dh/72D
+ UqEiCaSfU8Zwf5G2Ovl2874UvIQlOvL0gDZBdwjp42f+l9FjmEZqdYKLmkfP7mP07bwBUkbOu
+ VRt88X2dgTSY14Bbyjl0tsa0tEZyQOb9No9kU+JjvxXoehdiVptXiuEWqdpiNLGDt+6DjitOR
+ iuQTz6DC8YFMPIpoeCdcSTDQ2eDcaClVDld/RWZLfQ8TdrguL2PBo8WwXMvRvdz01PBLw0Pg9
+ v5cFWcyQoWnGgAMlQwWnEkn9MNCMkr5F9+ZFSh3EWghzgpYVJsGHJQEFsLFzO
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13.02.21 11:20, Greg KH wrote:
-> On Mon, Feb 08, 2021 at 11:22:00PM +0100, Enrico Weigelt, metux IT consult wrote:
->> ---
->>   drivers/base/bus.c         | 14 ++++++++++----
->>   include/linux/device/bus.h |  2 ++
->>   2 files changed, 12 insertions(+), 4 deletions(-)
-> 
-> Um, no.
+On 15.02.21 02:18, Frank Rowand wrote:
 
-Why not ? Do you have a better idea ?
+> The RCAR use of overlays that are built into the driver are a known
+> pattern that is explicitly not to be repeated. 
 
-What I actually need is a way to unbdind a specific device, identified
-by bus name and device name. The problem to be solved here is dropping
-devices that have been enumerated in a bad way by firmware (ACPI in this
-case), and then recreating it in a clean, consistent way.
+Well, that driver indeed looks quite complex - if belive unnecessarily.
+But can't judge on these devices, don't have one of them.
 
-If there was a variant of bus_find_device_by_name() which takes the name
-instead of ptr to the bus, that would also be okay for me.
+In my case, I believe it's a simple and straightforward approach,
+instead of writing a whole driver, that just consists of a bunch
+of tables and some trivial setup calls. DT seems to be a perfect
+choice for that, since it's a very short and precise language for
+describing hw layout, w/o any piece of imperative code.
+
+The only point where I'm still not satisfied with: module auto-loading
+requires the match data in the kernel module. But i'd like to have
+everything in one source file and not having to write individual
+modules for invididual boards anymore. Finally, there should be one
+dts per board and really minimal effort adding another dts.
+(hmm, maybe I should try generating glue code from dt ?)
+
+BTW: I've already rewritten much of it, using overlay instead of an
+completely own detached tree (so, some of the prev patches will fall
+off the queue).
 
 
 --mtx
 
--- 
 -- 
 ---
 Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
