@@ -2,131 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2F96322B26
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Feb 2021 14:08:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FE2B3231A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Feb 2021 20:56:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232684AbhBWNHO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Feb 2021 08:07:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39486 "EHLO
+        id S232731AbhBWTy5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Feb 2021 14:54:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232757AbhBWNGz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Feb 2021 08:06:55 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34739C061574;
-        Tue, 23 Feb 2021 05:06:15 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id 7so22531429wrz.0;
-        Tue, 23 Feb 2021 05:06:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=f+onw66c3J/jwc8hln7Yc6aR0hW3T4faLeLEwbwBKYs=;
-        b=TFyUfxFL62HVqE4YCdeQXL5jm/2STgwp6pGk3otQDBqmx86ntU/1+v/G630hS2UBk5
-         pu+TPzSK9FECkMxiRSqG4FL3jtm0V/NzJApH9Mcir64rKExgmueFIIBf9s5AGXntRGZW
-         OUomToxQx1vYlpz5TsUPQD/Fn+0goj/QOJGAt7rf5NYNPmbaxGUurkGxE2Xx2dOk2Jus
-         LmOH6AFs42hYCJ0h9UXRzBnoB87qyCR4O6ZlV7gWjluIpcaYV/JW0ET6w2kWGEbUWadf
-         XMlmKJP+Tp7Ckj49FBlkI0rXgaMTi+DSlS/fYcsafXhOv3ERHs0TRqslgZiFWpN5CE07
-         FljA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=f+onw66c3J/jwc8hln7Yc6aR0hW3T4faLeLEwbwBKYs=;
-        b=UZLr9cTHYYjOja55LQiifMcfupjU11ahGKOFUopXyvmphyh8DXvLvepMEfEK/drAwG
-         GzRxZl1xdafykg3EO0y4wCmX0pap4jbD98FmIh/A5LI2BAo/JVru9Vksn8KRMPIV4hmy
-         cq2FciOGJK+wFlhBoeHc7+HRW5E5D43dCk6b+JDdvbA9Ch3sNb63XHTza9F5Vgrh/Z6o
-         95iolis+Qg6MTtTi1jWxX9aadKzMLl+/L+KljxSLKcgnjTR/3uR5th9FqlKZKipcxdfV
-         znp1Qo2M23xYxdzavposcLs7DPcN9GtYyj5VGdHZkU7OtAnoTbU3EX+0lA1oa7Oks7Vi
-         QYGQ==
-X-Gm-Message-State: AOAM532li4HvzVXzxZNMudPsUqaLDgXoeuMldPDtMirPjaya83meIkhA
-        LWeXHw3qlsNGL7w9vB84EcQ=
-X-Google-Smtp-Source: ABdhPJz3ywr56dS7+CyMfJ0kNbrNBD5f8qjIPD60ufZOBpaKV94f9x5i2IiFyfLGSsl022RxnETTgA==
-X-Received: by 2002:a5d:524b:: with SMTP id k11mr5485275wrc.122.1614085573922;
-        Tue, 23 Feb 2021 05:06:13 -0800 (PST)
-Received: from [192.168.1.211] ([2.31.224.123])
-        by smtp.gmail.com with ESMTPSA id 2sm32080219wre.24.2021.02.23.05.06.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Feb 2021 05:06:13 -0800 (PST)
-Subject: Re: [PATCH v3 5/6] platform/x86: Add intel_skl_int3472 driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        kieran.bingham+renesas@ideasonboard.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        devel@acpica.org
-References: <20210222130735.1313443-1-djrscally@gmail.com>
- <20210222130735.1313443-6-djrscally@gmail.com>
- <CAHp75Vd2Dc2Poq7VNRXRT-0VjkYdEFY2WKpz8fWpAQViQRO4jA@mail.gmail.com>
- <534849f6-c7b5-19b0-a09f-cd410cde93bd@gmail.com>
- <YDTuldAG9FB8+RAd@smile.fi.intel.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <febc7af6-96ee-a5a0-f0c9-6e7f89908535@gmail.com>
-Date:   Tue, 23 Feb 2021 13:06:11 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S232361AbhBWTy5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Feb 2021 14:54:57 -0500
+Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA2FC061574
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Feb 2021 11:54:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+         s=20161220; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=JkQL+E3lJfQjt5EDy61yDIEomfWT+mfZlgU67WweCJ0=; b=KftRF4wVYw7Pahi4StsN0Bz43x
+        ERKAbbUxXExbVlYsjQ47mw2kePV2FGcS8MqnhZmPM4riwUOiFBqvWaxqcGaUD8XbciwbD3tsPP6JZ
+        8qCcAyrunvf9YMSjP/wHgMe3rQhFELMGD1uwiDCAAYtcquBO6eynoGHQMr3BgjVlCPUjTKs0cy+ES
+        +ulYQnv7tI7rUqJjGry3TZ4Ct8fyfuRvtPbCf9oTLxDZ4zf4ay6Pde4ufgUL3x9edrcnc8HRN3Ng0
+        xOWZLYnHgR6m5mdvPMy9a9FX/YCxorSD7LcAIOrxUfsKels+guljWbbc1FsmmA4y2GkQPbSBwu8ml
+        7ULYw8EQ==;
+Received: from 194-168-191-90.dyn.estpak.ee ([90.191.168.194] helo=ubuntu)
+        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <sandberg@mailfence.com>)
+        id 1lEdl6-0005iD-9y
+        for linux-gpio@vger.kernel.org; Tue, 23 Feb 2021 21:54:13 +0200
+Received: by ubuntu (sSMTP sendmail emulation); Tue, 23 Feb 2021 21:54:00 +0200
+From:   Mauri Sandberg <sandberg@mailfence.com>
+To:     linux-gpio@vger.kernel.org
+Subject: [RFC] Driver for the NXP 74HC153 chip
+Date:   Tue, 23 Feb 2021 21:53:25 +0200
+Message-Id: <20210223195326.1355245-1-sandberg@mailfence.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <YDTuldAG9FB8+RAd@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 90.191.168.194
+X-SA-Exim-Mail-From: sandberg@mailfence.com
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23/02/2021 12:01, Andy Shevchenko wrote:
->>>> +       if (ares->type != ACPI_RESOURCE_TYPE_GPIO ||
->>>> +           ares->data.gpio.connection_type != ACPI_RESOURCE_GPIO_TYPE_IO)
->>>> +               return 1; /* Deliberately positive so parsing continues */
->>> I don't like to lose control over ACPI_RESOURCE_TYPE_GPIO, i.e.
->>> spreading it over kernel code (yes, I know about one existing TS
->>> case).
->>> Consider to provide a helper in analogue to acpi_gpio_get_irq_resource().
->> Sure, but I probably name it acpi_gpio_is_io_resource() - a function
->> named "get" which returns a bool seems a bit funny to me.
-> But don't you need the resource itself?
->
-> You may extract and check resource at the same time as
-> acpi_gpio_get_irq_resource() does.
+Initiating a round of reviews for this GPIO expander if it could be
+eventually merged in the kernel tree.
+
+Basically I would like to hear how does it look and what is it missing.
+Should something be added about device-tree binding, etc.
+
+-- Mauri Sandberg
 
 
-Oh! Reading comprehension fail; I didn't notice it was returning the
-pointer through agpio; you're right of course.
-
->
-> ...
->
->>>> +       struct int3472_discrete_device *int3472 = platform_get_drvdata(pdev);
->>>> +       if (int3472->gpios.dev_id)
->>>> +               gpiod_remove_lookup_table(&int3472->gpios);
->>> gpiod_remove_lookup_table() is now NULL-aware.
->>> But in any case I guess you don't need the above check.
->> Sorry; forgot to call out that I didn't follow that suggestion;
->> int3472->gpios is a _struct_ rather than a pointer, so &int3472->gpios
->> won't be NULL, even if I haven't filled anything in to there yet because
->> it failed before it got to that point. So, not sure that it quite works
->> there.
-> I think if you initialize the ->list member you can remove without check.
-
-
-I'll give that a try - thanks
-
->
