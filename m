@@ -2,96 +2,295 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C862F323241
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Feb 2021 21:44:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E8FC3233DF
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Feb 2021 23:46:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233959AbhBWUno (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Feb 2021 15:43:44 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:52647 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233266AbhBWUno (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Feb 2021 15:43:44 -0500
-Received: from [192.168.1.155] ([77.9.11.4]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MElhb-1l3uBY17fv-00GL8U; Tue, 23 Feb 2021 21:41:03 +0100
-Subject: Re: [RFC PATCH 11/12] platform/x86: skeleton for oftree based board
- device initialization
-To:     Frank Rowand <frowand.list@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
-References: <20210208222203.22335-1-info@metux.net>
- <20210208222203.22335-12-info@metux.net>
- <CACRpkdYbOX_RDqwxaiugtYB4vSpSKChvKsPjcB_vv3Q74QeG2Q@mail.gmail.com>
- <c5ed2b27-21a2-5a07-8dd9-e080f9a6cd98@metux.net>
- <f370fa7b-a5b1-4151-7018-10d1b75fa8b2@gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <98005671-f0f4-02df-dbbf-b449c75a5da3@metux.net>
-Date:   Tue, 23 Feb 2021 21:41:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S232660AbhBWWlx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Feb 2021 17:41:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232947AbhBWWi1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Feb 2021 17:38:27 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08319C06178C;
+        Tue, 23 Feb 2021 14:36:21 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id d11so11493wrj.7;
+        Tue, 23 Feb 2021 14:36:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ah83kt3Sm3D1d+lLFWL65vi0Lu9I48EYI0/NMBiqjs8=;
+        b=VCjAbOX3tnv/li79G4BgwDt2kWpano46CAkSVPxu1WpUZxAIeH2gHvPqhqKWAzKAIv
+         j/9nStnFX4MMNPOfwFuMJVA3s5f20/NQV07R2CX8q7ZbzRXG2Ac4SxiOHuJIkrbtoqW3
+         e+zZZiRUYf9CEq2kJ+GFx36fncmsKCCQp3XcR8m+fu0m5JggRb2kvyYXESeY/eTI1OPQ
+         dGu1z4JtYB6JuIBa479tjDv6gzXg8T9YiwpzY+gPqO3Y9izMhnUJk/SzoUomJ55FGS/+
+         mIhpv/w3e+dE+irarR49HQ6Xmg5nv19bDrIfbFUHycMHa+WZfFCih5A+MGnNI5UrmURq
+         +VHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ah83kt3Sm3D1d+lLFWL65vi0Lu9I48EYI0/NMBiqjs8=;
+        b=KB0v/xnCh9HIjd4u5bk+85QreQVxfxzPzuEjzJBc6Pwq1c6/aIKfAjAS2KF7ND2RPs
+         ML1hJ9wif105XDffSechIcTJ9Fwd8/4WLXRXX6Pn52rIIhnmnVzF9KVyMU+uN4iADnKw
+         TEt8v4p3Hu/GLtFs/c7f1rnjnTNttXFHYWfS+d7iUIAnpMEmjr0zFHUoMksTrD4Rk23X
+         AWgfbbhhuQcDhJTsO5TzxkLK4KPQF2bCge5pEscpoX74aosvyDva0Z33fgikN0FayPln
+         Nha5H9DYuunwVhN8uXwvuW2nUaGbP4fi4jyMeAoW4qXnnlQCqB8I9TgA6x5mE7DOjiuz
+         /YkQ==
+X-Gm-Message-State: AOAM533w+c+kQQig3ai59lETEn4C7mimKR1qZIdtKiz+1S+MhW5Ixenw
+        s4QBrS70ahRl7xcSdPw94nw=
+X-Google-Smtp-Source: ABdhPJwnYOe4MUlS7WdCOQ24u/LBi5bZNMIa/KIAiHkYhqmPiCgcsU9ksVF4+S/7VhsbCgBNMZtO/A==
+X-Received: by 2002:adf:e60a:: with SMTP id p10mr3211656wrm.291.1614119779729;
+        Tue, 23 Feb 2021 14:36:19 -0800 (PST)
+Received: from [192.168.1.211] ([2.31.224.123])
+        by smtp.gmail.com with ESMTPSA id o10sm175814wrx.5.2021.02.23.14.36.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Feb 2021 14:36:19 -0800 (PST)
+Subject: Re: [PATCH v3 5/6] platform/x86: Add intel_skl_int3472 driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     tfiga@chromium.org, sakari.ailus@linux.intel.com,
+        rajmohan.mani@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        andy.shevchenko@linux.intel.com,
+        kieran.bingham+renesas@ideasonboard.com, hdegoede@redhat.com,
+        mgross@linux.intel.com, luzmaximilian@gmail.com,
+        robert.moore@intel.com, erik.kaneda@intel.com, me@fabwu.ch,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org
+References: <20210222130735.1313443-1-djrscally@gmail.com>
+ <20210222130735.1313443-6-djrscally@gmail.com>
+ <YDVfyt2d2Nhsa7l3@pendragon.ideasonboard.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <1360fc85-3f39-1dce-eee9-c4e76c2087ae@gmail.com>
+Date:   Tue, 23 Feb 2021 22:36:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <f370fa7b-a5b1-4151-7018-10d1b75fa8b2@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:5A+N3SNfNui62ql8UhrDO5JCDlCas9O9Wnu0EIukQgAj7FxnmqM
- OOL6oxZJXhKJnUpD8VL6M3M55mQOYFfqIeEWdEJmcHNhbqzzeafaFidI3elE7DfUiPazUoc
- 5by0M/oV9xQhX9YvzuYXWhf6kMl/MZjGAo0vjFr1hIYzkw7PIMGcZJutRoDJT0idSuq+Nyx
- GMtCEu3oDDP3Fjda+U5Ww==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WrK0loCgv7U=:QB2ocuY85TNPL4+q1guy8p
- ygwSWcnZ0VsVWY+FyyQJ2OTFaS7OQOuywCtsvpzuWK8tDJFYjD35H/92Lon3CG6pD12wLricm
- tXEFrboO9m+R20Adg6HsCNCZS9X2wCu69EL/CQN5rr0LoVTTB4xGoJxIV9kFdieUGc7Dh/72D
- UqEiCaSfU8Zwf5G2Ovl2874UvIQlOvL0gDZBdwjp42f+l9FjmEZqdYKLmkfP7mP07bwBUkbOu
- VRt88X2dgTSY14Bbyjl0tsa0tEZyQOb9No9kU+JjvxXoehdiVptXiuEWqdpiNLGDt+6DjitOR
- iuQTz6DC8YFMPIpoeCdcSTDQ2eDcaClVDld/RWZLfQ8TdrguL2PBo8WwXMvRvdz01PBLw0Pg9
- v5cFWcyQoWnGgAMlQwWnEkn9MNCMkr5F9+ZFSh3EWghzgpYVJsGHJQEFsLFzO
+In-Reply-To: <YDVfyt2d2Nhsa7l3@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15.02.21 02:18, Frank Rowand wrote:
+Hi Laurent
 
-> The RCAR use of overlays that are built into the driver are a known
-> pattern that is explicitly not to be repeated. 
+On 23/02/2021 20:04, Laurent Pinchart wrote:
+> +
+> +/*
+> + * Here follows platform specific mapping information that we can pass to
+> + * the functions mapping resources to the sensors. Where the sensors have
+> + * a power enable pin defined in DSDT we need to provide a supply name so
+> + * the sensor drivers can find the regulator. The device name will be derived
+> + * from the sensor's ACPI device within the code. Optionally, we can provide a
+> + * NULL terminated array of function name mappings to deal with any platform
+> + * specific deviations from the documented behaviour of GPIOs.
+> + *
+> + * Map a GPIO function name to NULL to prevent the driver from mapping that
+> + * GPIO at all.
+> + */
+> +
+> +static const struct int3472_gpio_function_remap ov2680_gpio_function_remaps[] = {
+> +	{ "reset", NULL },
+> +	{ "powerdown", "reset" },
+> +	{ }
+> +};
+> +
+> +static struct int3472_sensor_config int3472_sensor_configs[] = {
+> This should be static const (and there will be some fallout due to that,
+> as skl_int3472_register_regulator() modifies the supply_map, so I think
+> you'll have a copy of supply_map in int3472_discrete_device).
 
-Well, that driver indeed looks quite complex - if belive unnecessarily.
-But can't judge on these devices, don't have one of them.
 
-In my case, I believe it's a simple and straightforward approach,
-instead of writing a whole driver, that just consists of a bunch
-of tables and some trivial setup calls. DT seems to be a perfect
-choice for that, since it's a very short and precise language for
-describing hw layout, w/o any piece of imperative code.
+Ack to all of the constness; you mentioned that last time too - not sure
+how I missed doing those! I think I can just having a local struct
+regulator_consumer_supply in skl_int3472_register_regulator and fill it
+from int3472->sensor_config.supply_map
 
-The only point where I'm still not satisfied with: module auto-loading
-requires the match data in the kernel module. But i'd like to have
-everything in one source file and not having to write individual
-modules for invididual boards anymore. Finally, there should be one
-dts per board and really minimal effort adding another dts.
-(hmm, maybe I should try generating glue code from dt ?)
+>> +static unsigned int skl_int3472_get_clk_frequency(struct int3472_discrete_device *int3472)
+>> +{
+>> +	union acpi_object *obj;
+>> +	unsigned int ret = 0;
+>> +
+>> +	obj = skl_int3472_get_acpi_buffer(int3472->sensor, "SSDB");
+>> +	if (IS_ERR(obj))
+>> +		return 0; /* report rate as 0 on error */
+>> +
+>> +	if (obj->buffer.length < CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET + sizeof(u32)) {
+> Should we define an ssdb structure instead of peeking into the buffer
+> with an offset ?
 
-BTW: I've already rewritten much of it, using overlay instead of an
-completely own detached tree (so, some of the prev patches will fall
-off the queue).
+
+I thought about that, but in the end decided it didn't seem worth
+defining the whole SSDB structure just to use one field. Particularly
+since we use it in cio2-bridge already, so if we're going to do that it
+really ought to just live in a header that's included in both - and that
+seemed even less worthwhile.
 
 
---mtx
+I don't have a strong feeling though, so if you think it's better to
+define the struct I'm happy to.
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+
+>> +static unsigned long skl_int3472_clk_recalc_rate(struct clk_hw *hw,
+>> +						 unsigned long parent_rate)
+>> +{
+>> +	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+>> +	struct int3472_discrete_device *int3472 = to_int3472_device(clk);
+>> +
+>> +	return int3472->clock.frequency;
+> Maybe just
+>
+> 	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+>
+> 	return clk->frequency;
+
+
+Oops, of course.
+
+>> +static int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+>> +					  struct acpi_resource *ares)
+>> +{
+>> +	char *path = ares->data.gpio.resource_source.string_ptr;
+>> +	struct int3472_sensor_config *sensor_config;
+>> +	struct regulator_init_data init_data = { };
+>> +	struct regulator_config cfg = { };
+>> +	int ret;
+>> +
+>> +	sensor_config = int3472->sensor_config;
+>> +	if (IS_ERR_OR_NULL(sensor_config)) {
+>> +		dev_err(int3472->dev, "No sensor module config\n");
+>> +		return PTR_ERR(sensor_config);
+>> +	}
+>> +
+>> +	if (!sensor_config->supply_map.supply) {
+>> +		dev_err(int3472->dev, "No supply name defined\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	init_data.constraints.valid_ops_mask = REGULATOR_CHANGE_STATUS;
+>> +	init_data.num_consumer_supplies = 1;
+>> +	sensor_config->supply_map.dev_name = int3472->sensor_name;
+>> +	init_data.consumer_supplies = &sensor_config->supply_map;
+>> +
+>> +	snprintf(int3472->regulator.regulator_name,
+>> +		 sizeof(int3472->regulator.regulator_name), "%s-regulator",
+>> +		 acpi_dev_name(int3472->adev));
+>> +	snprintf(int3472->regulator.supply_name,
+>> +		 GPIO_REGULATOR_SUPPLY_NAME_LENGTH, "supply-0");
+>> +
+>> +	int3472->regulator.rdesc = INT3472_REGULATOR(
+>> +						int3472->regulator.regulator_name,
+>> +						int3472->regulator.supply_name,
+>> +						&int3472_gpio_regulator_ops);
+>> +
+>> +	int3472->regulator.gpio = acpi_get_gpiod(path,
+>> +						 ares->data.gpio.pin_table[0],
+>> +						 "int3472,regulator");
+>> +	if (IS_ERR(int3472->regulator.gpio)) {
+>> +		dev_err(int3472->dev, "Failed to get regulator GPIO lines\n");
+> s/lines/line/ (sorry, it was a typo in my review of v2)
+
+
+No problem!
+
+>> +static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
+>> +{
+>> +	struct list_head resource_list;
+>> +	int ret;
+>> +
+>> +	INIT_LIST_HEAD(&resource_list);
+>> +
+>> +	int3472->sensor_config = skl_int3472_get_sensor_module_config(int3472);
+> I have forgotten some of the context I'm afraid :-/ Are there valid use
+> cases for not checking for an error here, or should we do so and drop
+> the error checks in other functions above ?
+
+
+Not all platforms need a sensor_config; only those which have either a
+regulator pin or need a GPIO function to be remapped; the rest will do
+without it.
+
+So, we need to not check for an error here because the absence of a
+sensor_config isn't necessarily an error, we won't know till later.
+
+> +int skl_int3472_discrete_probe(struct platform_device *pdev)
+> +{
+> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
+> +	struct int3472_discrete_device *int3472;
+> +	struct int3472_cldb cldb;
+> +	int ret;
+> +
+> +	ret = skl_int3472_fill_cldb(adev, &cldb);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Couldn't fill CLDB structure\n");
+> +		return ret;
+> +	}
+> +
+> +	if (cldb.control_logic_type != 1) {
+> +		dev_err(&pdev->dev, "Unsupported control logic type %u\n",
+> +			cldb.control_logic_type);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Max num GPIOs we've seen plus a terminator */
+> +	int3472 = kzalloc(struct_size(int3472, gpios.table,
+> +			  INT3472_MAX_SENSOR_GPIOS + 1), GFP_KERNEL);
+> +	if (!int3472)
+> +		return -ENOMEM;
+> +
+> +	int3472->adev = adev;
+> +	int3472->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, int3472);
+> +
+> +	int3472->sensor = acpi_dev_get_dependent_dev(adev);
+> +	if (IS_ERR_OR_NULL(int3472->sensor)) {
+> +		dev_err(&pdev->dev,
+> +			"INT3472 seems to have no dependents.\n");
+> +		ret = -ENODEV;
+> +		goto err_free_int3472;
+> +	}
+> +	get_device(&int3472->sensor->dev);
+> I see no corresponding put_device(), am I missing something ? I'm also
+> not sure why this is needed.
+>
+
+The put is acpi_dev_put() in skl_int3472_discrete_remove(); there seems
+to be no acpi_dev_get() for some reason. We use the sensor acpi_device
+to get the clock frequency, and to fetch the sensor module string, so I
+thought it ought to hold a reference on those grounds.
+
+
+>> diff --git a/drivers/platform/x86/intel-int3472/intel_skl_int3472_tps68470.c b/drivers/platform/x86/intel-int3472/intel_skl_int3472_tps68470.c
+>> new file mode 100644
+>> index 000000000000..d0d2391e263f
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/intel-int3472/intel_skl_int3472_tps68470.c
+>> @@ -0,0 +1,113 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/* Author: Dan Scally <djrscally@gmail.com> */
+>> +
+>> +#include <linux/i2c.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/mfd/tps68470.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include "intel_skl_int3472_common.h"
+>> +
+>> +static const struct mfd_cell tps68470_c[] = {
+>> +	{ .name = "tps68470-gpio" },
+>> +	{ .name = "tps68470_pmic_opregion" },
+>> +};
+>> +
+>> +static const struct mfd_cell tps68470_w[] = {
+> Maybe more explicit names than _c and _w could be nice ?
+
+
+_chrome and _windows was in my mind - sound ok?
+
