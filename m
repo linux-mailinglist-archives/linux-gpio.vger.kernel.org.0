@@ -2,104 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E8CB324216
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Feb 2021 17:31:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FE8B32441B
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Feb 2021 19:55:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233117AbhBXQaR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Feb 2021 11:30:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233482AbhBXQ3Q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 24 Feb 2021 11:29:16 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CD72464DA3;
-        Wed, 24 Feb 2021 16:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1614184103;
-        bh=kKdB/WD5paalw9c2TAIpowxNthjQ5ojhimY95FmQYl8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DnnYjOAQtG2XmL/p8DLOl0SJJbMuRxw1x+g3PIkVfd+LT83jAi7/Gy9nHnub5r9cj
-         8twtkgQcD2Ea9NAtHMgOLD4XtfiKOrs5fHi1Kom0+pJV5Mqf6y6wf8rtCkIpqPdb+n
-         bvdUPoD4gOi+PWt5fsJaTK3K1+Z3g03ZiaknmEd4=
-Date:   Wed, 24 Feb 2021 17:28:20 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, frowand.list@gmail.com,
-        pantelis.antoniou@konsulko.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 09/12] drivers: base: reintroduce find_bus()
-Message-ID: <YDZ+pEY3vJZ+GsvO@kroah.com>
-References: <20210208222203.22335-1-info@metux.net>
- <20210208222203.22335-10-info@metux.net>
- <YCen7uHqFJQ/U/5p@kroah.com>
- <da82c033-3a82-3420-4d06-f5c39c524ae9@metux.net>
- <YDYHhYRDBDKGSZ1r@kroah.com>
- <9db34ee4-30dc-9e69-6e82-00cbf4615ed5@metux.net>
+        id S235510AbhBXSyx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Feb 2021 13:54:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235239AbhBXSyD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Feb 2021 13:54:03 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B87EC061786
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Feb 2021 10:53:23 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id u125so2745630wmg.4
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Feb 2021 10:53:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wSDwhm/B1nWo0YlDilnMA2vAdsLISNow4izMT6iWvdo=;
+        b=bXx0TC7khU2YQJiIWSJUaY2tY0YZ5qs8ZG9rBMaTJxeKvS6l97yBFfz8pleY5CAcVC
+         H5Fxn8Y8HMrm+2rRZLfJms1r3QInfziKa+KPiKiaaKabaQA3I3aVdqykgooY4fGlumVL
+         9L/XTaiD9FjyxChT0oO6Ma/hoKVefEgxFub3oh+zFXpg59Clw9nOZT52liTsyR2zQWQ2
+         y6bBPHcFSKhOoIczxbJj368qklPgMxRauYVdSiEX2fBuA8ILdTRHbJlEkmaPJG15wQ9x
+         vP2TJs4BiPnw3N2bn4MDWGycjpV/JEdOcYBurfDnV37bmL7yLv6eCrRDddQti8OU0tLg
+         EpVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wSDwhm/B1nWo0YlDilnMA2vAdsLISNow4izMT6iWvdo=;
+        b=YWXEJ+uhtEH6xj1I9hFxgPA11BV0RbQvn44rS50vl8Gn4Je62Atw2wToFNm6KmAQhs
+         +Gyf/UTBFWvWz+hOXUzHdcREUedmoN9JxGymBSolKIHrNCvm7YuKiHkMhfstqyAnqn/U
+         jYxyTXlyVUsAJhdyPY/HcKviWJRM8B75PhiOb+Di0stcwCvEJs463YeWo/Wcnjxfvd67
+         yj5upF2OKl0yJxmvg5faU3gUUL3EexiXK8xrHSyhkgHBj2s+QAdao6mKvSN9FroVb5kd
+         cjJkoDYeo9D1cLLYZYjZQdeIbfxu7CWEOYBgj5qnve8UMuMKv5fj9RGuW5fMXh72IfDe
+         DNAQ==
+X-Gm-Message-State: AOAM531aTsAfwLVcU3jf40gnMpTyDuzR7V2K1yhGMZe6dkZWc9BoylhN
+        MY7Kb5oipWv9q3/eaTEc78bXSQ==
+X-Google-Smtp-Source: ABdhPJwf1WSX8JSwkGLulrchv8DPoj7L6b+WpKbVRfmXKpvRS9bB1jvM2fJE3Wk8hjBrvP4Zqy4Iag==
+X-Received: by 2002:a1c:e402:: with SMTP id b2mr4941472wmh.103.1614192801807;
+        Wed, 24 Feb 2021 10:53:21 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id s11sm4568791wme.22.2021.02.24.10.53.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Feb 2021 10:53:21 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] selftests: gpio: update .gitignore
+Date:   Wed, 24 Feb 2021 19:53:16 +0100
+Message-Id: <20210224185316.17942-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9db34ee4-30dc-9e69-6e82-00cbf4615ed5@metux.net>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 04:30:42PM +0100, Enrico Weigelt, metux IT consult wrote:
-> On 24.02.21 09:00, Greg KH wrote:
-> 
-> > Have the firmware code do it itself, do nto try to "reach across" like
-> > this.
-> 
-> By "firmware code" you mean Linux acpi core or the board's bios ?
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-either.
+The executable that we build for GPIO selftests was renamed to
+gpio-mockup-cdev. Let's update .gitignore so that we don't show it
+as an untracked file.
 
-> a) Fixing BIOS would be the cleanest solution, but we cant expect all
->    users to do field upgrades. Many of the devices (eg. the customer,
->    I've originally wrote the apu board driver for, deployed them in
->    really remote locations, sometimes even just reachable by ship,
->    heli or horse, litterally)
-> 
-> b) Explicit blacklisting somewhere in apci enumeration code could work,
->    but I really hate the idea of such board and bios version specific
->    quirks in a place, completely unrelated to the actual board driver.
+Fixes: 8bc395a6a2e2 ("selftests: gpio: rework and simplify test implementation")
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ tools/testing/selftests/gpio/.gitignore | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We have quirks all over the place, that's normal and how we handle
-broken hardware/bios al the time.
+diff --git a/tools/testing/selftests/gpio/.gitignore b/tools/testing/selftests/gpio/.gitignore
+index 4c69408f3e84..a4969f7ee020 100644
+--- a/tools/testing/selftests/gpio/.gitignore
++++ b/tools/testing/selftests/gpio/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-gpio-mockup-chardev
++gpio-mockup-cdev
+-- 
+2.29.1
 
-> Actually, I'm also hoping to find a proper way for having those things
-> in one file per board, in the future. (probably not applicable for
-> early stuff, or _OSI(Linux), etc)
-
-I don't know what "things" you are referring to here at all.
-
-> > And what problem are you really trying to solve here by doing this?
-> 
-> The problem is that *some* bios versions (that came much later, after
-> pcengines-apuv2 driver went into production) added a few things that
-> the driver is already doing - different versions doing it differently
-> (eg. even enumerating gpio connected leds with completely different
-> names, etc), and still some gpio connected devices missing. Some
-> versions (just forgot, which one it's been exactly) even enumerate
-> *some* gpios (and LEDs behind them) as a different device, whose Linux
-> driver just happens to work. Meanwhile I can't find any reference of
-> that in the coreboot source, anymore.
-
-I have no idea what you are talking about here, you did not describe a
-problem :(
-
-> As you can see: bios is anything but reliable on that platform.
-
-I do not understand.
-
-> What I'm trying to achieve: the kernel should behave exactly the
-> same, no matter what board revision, bios version, kernel version,
-> etc. (there should be especially no need to have special per-board
-> quirks in userland, depending on board rev, bios version, kernel
-> version).
-> 
-> If you've got a better solution, I'll be glad to hear it.
-
-I really do not understand the problem, sorry.
-
-greg k-h
