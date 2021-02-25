@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 491E53253B4
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Feb 2021 17:43:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C0183253BD
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Feb 2021 17:43:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233077AbhBYQnJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Feb 2021 11:43:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53970 "EHLO
+        id S233161AbhBYQnM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Feb 2021 11:43:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232588AbhBYQnD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Feb 2021 11:43:03 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB8FC06174A;
-        Thu, 25 Feb 2021 08:42:22 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id i9so4867773wml.0;
-        Thu, 25 Feb 2021 08:42:22 -0800 (PST)
+        with ESMTP id S232787AbhBYQnE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Feb 2021 11:43:04 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A94C061786;
+        Thu, 25 Feb 2021 08:42:23 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id g11so1441995wmh.1;
+        Thu, 25 Feb 2021 08:42:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=+3P3GdthYLepHoOKDe71ONHgmsqcMTg0LEDKKo0meIo=;
-        b=sY+PMmDrM47fDUq6Bn86SlcJcMV5oBsARNqwDYlGHq9OnANXdmlu0Xy/ZPUyxjHHXr
-         l/m9mFKubpWsrB2OHagTLFipq2n3vJ4NxJOPy5O6OGbcSEvxaetMSkm+wpNU63GIMhDx
-         qyGWwcpZRA9aZwvjZREtfGiRI0TBlzSD7EThildWnyPGsxpUSu/vVNqm5UmNgiBhztV8
-         7wd8L0QaHnDqS3g0aiGN9zY6mVQmv87n0xqkw2le1L1+/VKhbrilXa08ryipJhda43NN
-         2C4PGHekxCu6rmJcTBlCs4rPKg/zvqoAACbnp8FMwATbMJ1zDkcPDbHgvTfboBbfqUFj
-         GI3g==
+        bh=dLlC1LtxEBko7Y+crRoY9/o8oPZpGvVfWGDAZ24Hitc=;
+        b=RGe706ONP5Y8FsEhFRx0hL73moEePVthbZ+M9ZbH25yLiS5dRQXr0yc5AGSGGhsxoa
+         +FB/dWT+jksz0VYOto9kRz1pz31DIPTGR0xT8v25s7zfxCKLFueAajSgeQ/PIPNg57wi
+         62bcImqFIQuuV/79kn05w0Qtdr/rYqgmK3KbNdiFYuSUnMYoLhQ6eAgr5mbzXOEbhC1V
+         mTxolTq+UYOBmB6TrnQHCohjj7jBrLwULD3DscpaJXOvi9Xr3+POUVv8PWtB7CSN1cIy
+         dOtdVLJ5z97ClV6k7qL+Sgr/YAxMMHRrwCFLQA7ALTgl864EpY3yzoSh3G0lK6Fk0gE4
+         CRhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+3P3GdthYLepHoOKDe71ONHgmsqcMTg0LEDKKo0meIo=;
-        b=Gea7ziZRFM9jhu3MAgYST5N4Qj1frna5omnTOp98XKXh/UTzbY/4bcsSfUL97DrhPe
-         n6so00uuza+JPOEPmJpDtJ6YcI9LcmO8vvr5KYovQa2KYDkQFucNLd5YiMm7I/iI8F/p
-         8PKusrVQxqpo2mea19xFaWEiPUmILoqQ6kTh+fleIjVavyGDmw/BySFPopBS5/c9Ipze
-         JQeyZ5v0+h5/PmoknpJM8kClusxAaMYccpjx0bAzGdn5Cl5R+FokT5aV0Y5SCs0OlAZs
-         GpJVShkxyn/unbbB5w6LN6YUSbipNlhtdqB3Iv2gKUTxATRGHjc5kqa4UZ4W8tv394qI
-         NAzg==
-X-Gm-Message-State: AOAM5339mWTJ8PNw7ovnuX2TKSVl11ce0EMCWSUFecXfEvIDw/XF24i5
-        ki2ACG94cTVXXYCIjUyBZQ4=
-X-Google-Smtp-Source: ABdhPJyVb9zY5I6apgQVI2/e3nQ5H4Vx6ZpytVbgSCEGMQfpQNS/qLS4RQmKzKBOTFOc8K6tAYAOiQ==
-X-Received: by 2002:a7b:cc0c:: with SMTP id f12mr3086841wmh.137.1614271341237;
+        bh=dLlC1LtxEBko7Y+crRoY9/o8oPZpGvVfWGDAZ24Hitc=;
+        b=kQ1ZOU17duzvoTczGW+AUB8S5tdeI8triFFVU8JSjRgCBFJFIt2NRUFYEB0qAv/3i4
+         Qri4sMHJJ2rVdh8hs1fvXi8P2z6xqhIChVdjKBou32lwURTnKTccP739MQoMHEZg+1W9
+         MuBelUxdMGyj4Axs9ecmzVMNNwga+05fgNON5stcBF/rRQTce/sK5ZusmHdW67d6kaPa
+         TazhMPL6DxNVKu8Z1bFequMcOd3/PLUoJmsyiY8b7Uh5zcMrxRpKB820clIOUcLd4POA
+         9cnIgHJtMLkCVojmOurFQm8vO9F890O/MFCjXHKmpxhv/pbLnkljhWT0LJLiowdPv7fn
+         d9zQ==
+X-Gm-Message-State: AOAM531SDXqr3M2cHWmRYPpb1yc4qDF6OD8jsvcx8BZlOo1N0DXm2kIe
+        fSyV5c4TkOztATiEOmJz/QZ45gdHg1NuSw==
+X-Google-Smtp-Source: ABdhPJw+f7wulOXUpQN6ThVGbmdLP/cTHe5x0lHXWIMIfZ8xvlg3cg5X2u0aSikH7NFsG1EvDHsB3Q==
+X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr4194685wmm.64.1614271341968;
         Thu, 25 Feb 2021 08:42:21 -0800 (PST)
 Received: from skynet.lan (170.red-88-1-105.dynamicip.rima-tde.net. [88.1.105.170])
-        by smtp.gmail.com with ESMTPSA id u4sm372779wrm.24.2021.02.25.08.42.20
+        by smtp.gmail.com with ESMTPSA id u4sm372779wrm.24.2021.02.25.08.42.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 25 Feb 2021 08:42:21 -0800 (PST)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
@@ -56,9 +56,9 @@ To:     f.fainelli@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
         Necip Fazil Yildiran <fazilyildiran@gmail.com>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 02/12] pinctrl: add a pincontrol driver for BCM6328
-Date:   Thu, 25 Feb 2021 17:42:06 +0100
-Message-Id: <20210225164216.21124-3-noltari@gmail.com>
+Subject: [PATCH 03/12] Documentation: add BCM6358 pincontroller binding documentation
+Date:   Thu, 25 Feb 2021 17:42:07 +0100
+Message-Id: <20210225164216.21124-4-noltari@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210225164216.21124-1-noltari@gmail.com>
 References: <20210225164216.21124-1-noltari@gmail.com>
@@ -69,641 +69,152 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a pincontrol driver for BCM6328. BCM628 supports muxing 32 pins as
-GPIOs, as LEDs for the integrated LED controller, or various other
-functions. Its pincontrol mux registers also control other aspects, like
-switching the second USB port between host and device mode.
+Add binding documentation for the pincontrol core found in BCM6358 SoCs.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 ---
- drivers/pinctrl/bcm/Kconfig           |  11 +
- drivers/pinctrl/bcm/Makefile          |   1 +
- drivers/pinctrl/bcm/pinctrl-bcm6328.c | 581 ++++++++++++++++++++++++++
- 3 files changed, 593 insertions(+)
- create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm6328.c
+ .../pinctrl/brcm,bcm6358-pinctrl.yaml         | 131 ++++++++++++++++++
+ 1 file changed, 131 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
 
-diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-index 0ed14de0134c..4c6e41cf7a32 100644
---- a/drivers/pinctrl/bcm/Kconfig
-+++ b/drivers/pinctrl/bcm/Kconfig
-@@ -29,6 +29,17 @@ config PINCTRL_BCM2835
- 	help
- 	   Say Y here to enable the Broadcom BCM2835 GPIO driver.
- 
-+config PINCTRL_BCM6328
-+	bool "Broadcom BCM6328 GPIO driver"
-+	depends on OF_GPIO && (BMIPS_GENERIC || COMPILE_TEST)
-+	select PINMUX
-+	select PINCONF
-+	select GENERIC_PINCONF
-+	select MFD_SYSCON
-+	default BMIPS_GENERIC
-+	help
-+	   Say Y here to enable the Broadcom BCM6328 GPIO driver.
-+
- config PINCTRL_IPROC_GPIO
- 	bool "Broadcom iProc GPIO (with PINCONF) driver"
- 	depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
-diff --git a/drivers/pinctrl/bcm/Makefile b/drivers/pinctrl/bcm/Makefile
-index 79d5e49fdd9a..7e7c6e25b26d 100644
---- a/drivers/pinctrl/bcm/Makefile
-+++ b/drivers/pinctrl/bcm/Makefile
-@@ -3,6 +3,7 @@
- 
- obj-$(CONFIG_PINCTRL_BCM281XX)		+= pinctrl-bcm281xx.o
- obj-$(CONFIG_PINCTRL_BCM2835)		+= pinctrl-bcm2835.o
-+obj-$(CONFIG_PINCTRL_BCM6328)		+= pinctrl-bcm6328.o
- obj-$(CONFIG_PINCTRL_IPROC_GPIO)	+= pinctrl-iproc-gpio.o
- obj-$(CONFIG_PINCTRL_CYGNUS_MUX)	+= pinctrl-cygnus-mux.o
- obj-$(CONFIG_PINCTRL_NS)		+= pinctrl-ns.o
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm6328.c b/drivers/pinctrl/bcm/pinctrl-bcm6328.c
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
 new file mode 100644
-index 000000000000..0b1e45145fdd
+index 000000000000..d86608173498
 --- /dev/null
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm6328.c
-@@ -0,0 +1,581 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Driver for BCM6328 GPIO unit (pinctrl + GPIO)
-+ *
-+ * Copyright (C) 2021 Álvaro Fernández Rojas <noltari@gmail.com>
-+ * Copyright (C) 2016 Jonas Gorski <jonas.gorski@gmail.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/gpio.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/pinctrl/machine.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinmux.h>
-+
-+#include "../core.h"
-+#include "../pinctrl-utils.h"
-+
-+#define MODULE_NAME		"bcm6328-pinctrl"
-+#define BCM6328_NUM_GPIOS	32
-+
-+#define BANK_SIZE		sizeof(uint32_t)
-+#define PINS_PER_BANK		(BANK_SIZE * BITS_PER_BYTE)
-+
-+#define BCM6328_DIROUT_REG	0x04
-+#define BCM6328_DATA_REG	0x0c
-+#define BCM6328_MODE_REG	0x18
-+#define BCM6328_MUX_HI_REG	0x1c
-+#define BCM6328_MUX_LO_REG	0x20
-+#define BCM6328_MUX_OTHER_REG	0x24
-+
-+struct bcm6328_pingroup {
-+	const char *name;
-+	const unsigned * const pins;
-+	const unsigned num_pins;
-+};
-+
-+struct bcm6328_function {
-+	const char *name;
-+	const char * const *groups;
-+	const unsigned num_groups;
-+
-+	unsigned mode_val:1;
-+	unsigned mux_val:2;
-+};
-+
-+struct bcm6328_pinctrl {
-+	struct device *dev;
-+	struct regmap *regs;
-+
-+	struct pinctrl_dev *pctl_dev;
-+	struct gpio_chip gpio_chip;
-+	struct pinctrl_desc pctl_desc;
-+	struct pinctrl_gpio_range gpio_range;
-+};
-+
-+static const struct pinctrl_pin_desc bcm6328_pins[] = {
-+	PINCTRL_PIN(0, "gpio0"),
-+	PINCTRL_PIN(1, "gpio1"),
-+	PINCTRL_PIN(2, "gpio2"),
-+	PINCTRL_PIN(3, "gpio3"),
-+	PINCTRL_PIN(4, "gpio4"),
-+	PINCTRL_PIN(5, "gpio5"),
-+	PINCTRL_PIN(6, "gpio6"),
-+	PINCTRL_PIN(7, "gpio7"),
-+	PINCTRL_PIN(8, "gpio8"),
-+	PINCTRL_PIN(9, "gpio9"),
-+	PINCTRL_PIN(10, "gpio10"),
-+	PINCTRL_PIN(11, "gpio11"),
-+	PINCTRL_PIN(12, "gpio12"),
-+	PINCTRL_PIN(13, "gpio13"),
-+	PINCTRL_PIN(14, "gpio14"),
-+	PINCTRL_PIN(15, "gpio15"),
-+	PINCTRL_PIN(16, "gpio16"),
-+	PINCTRL_PIN(17, "gpio17"),
-+	PINCTRL_PIN(18, "gpio18"),
-+	PINCTRL_PIN(19, "gpio19"),
-+	PINCTRL_PIN(20, "gpio20"),
-+	PINCTRL_PIN(21, "gpio21"),
-+	PINCTRL_PIN(22, "gpio22"),
-+	PINCTRL_PIN(23, "gpio23"),
-+	PINCTRL_PIN(24, "gpio24"),
-+	PINCTRL_PIN(25, "gpio25"),
-+	PINCTRL_PIN(26, "gpio26"),
-+	PINCTRL_PIN(27, "gpio27"),
-+	PINCTRL_PIN(28, "gpio28"),
-+	PINCTRL_PIN(29, "gpio29"),
-+	PINCTRL_PIN(30, "gpio30"),
-+	PINCTRL_PIN(31, "gpio31"),
-+
-+	/*
-+	 * No idea where they really are; so let's put them according
-+	 * to their mux offsets.
-+	 */
-+	PINCTRL_PIN(36, "hsspi_cs1"),
-+	PINCTRL_PIN(38, "usb_p2"),
-+};
-+
-+static unsigned gpio0_pins[] = { 0 };
-+static unsigned gpio1_pins[] = { 1 };
-+static unsigned gpio2_pins[] = { 2 };
-+static unsigned gpio3_pins[] = { 3 };
-+static unsigned gpio4_pins[] = { 4 };
-+static unsigned gpio5_pins[] = { 5 };
-+static unsigned gpio6_pins[] = { 6 };
-+static unsigned gpio7_pins[] = { 7 };
-+static unsigned gpio8_pins[] = { 8 };
-+static unsigned gpio9_pins[] = { 9 };
-+static unsigned gpio10_pins[] = { 10 };
-+static unsigned gpio11_pins[] = { 11 };
-+static unsigned gpio12_pins[] = { 12 };
-+static unsigned gpio13_pins[] = { 13 };
-+static unsigned gpio14_pins[] = { 14 };
-+static unsigned gpio15_pins[] = { 15 };
-+static unsigned gpio16_pins[] = { 16 };
-+static unsigned gpio17_pins[] = { 17 };
-+static unsigned gpio18_pins[] = { 18 };
-+static unsigned gpio19_pins[] = { 19 };
-+static unsigned gpio20_pins[] = { 20 };
-+static unsigned gpio21_pins[] = { 21 };
-+static unsigned gpio22_pins[] = { 22 };
-+static unsigned gpio23_pins[] = { 23 };
-+static unsigned gpio24_pins[] = { 24 };
-+static unsigned gpio25_pins[] = { 25 };
-+static unsigned gpio26_pins[] = { 26 };
-+static unsigned gpio27_pins[] = { 27 };
-+static unsigned gpio28_pins[] = { 28 };
-+static unsigned gpio29_pins[] = { 29 };
-+static unsigned gpio30_pins[] = { 30 };
-+static unsigned gpio31_pins[] = { 31 };
-+
-+static unsigned hsspi_cs1_pins[] = { 36 };
-+static unsigned usb_port1_pins[] = { 38 };
-+
-+#define BCM6328_GROUP(n)					\
-+	{							\
-+		.name = #n,					\
-+		.pins = n##_pins,				\
-+		.num_pins = ARRAY_SIZE(n##_pins),		\
-+	}
-+
-+static struct bcm6328_pingroup bcm6328_groups[] = {
-+	BCM6328_GROUP(gpio0),
-+	BCM6328_GROUP(gpio1),
-+	BCM6328_GROUP(gpio2),
-+	BCM6328_GROUP(gpio3),
-+	BCM6328_GROUP(gpio4),
-+	BCM6328_GROUP(gpio5),
-+	BCM6328_GROUP(gpio6),
-+	BCM6328_GROUP(gpio7),
-+	BCM6328_GROUP(gpio8),
-+	BCM6328_GROUP(gpio9),
-+	BCM6328_GROUP(gpio10),
-+	BCM6328_GROUP(gpio11),
-+	BCM6328_GROUP(gpio12),
-+	BCM6328_GROUP(gpio13),
-+	BCM6328_GROUP(gpio14),
-+	BCM6328_GROUP(gpio15),
-+	BCM6328_GROUP(gpio16),
-+	BCM6328_GROUP(gpio17),
-+	BCM6328_GROUP(gpio18),
-+	BCM6328_GROUP(gpio19),
-+	BCM6328_GROUP(gpio20),
-+	BCM6328_GROUP(gpio21),
-+	BCM6328_GROUP(gpio22),
-+	BCM6328_GROUP(gpio23),
-+	BCM6328_GROUP(gpio24),
-+	BCM6328_GROUP(gpio25),
-+	BCM6328_GROUP(gpio26),
-+	BCM6328_GROUP(gpio27),
-+	BCM6328_GROUP(gpio28),
-+	BCM6328_GROUP(gpio29),
-+	BCM6328_GROUP(gpio30),
-+	BCM6328_GROUP(gpio31),
-+
-+	BCM6328_GROUP(hsspi_cs1),
-+	BCM6328_GROUP(usb_port1),
-+};
-+
-+/* GPIO_MODE */
-+static const char * const led_groups[] = {
-+	"gpio0",
-+	"gpio1",
-+	"gpio2",
-+	"gpio3",
-+	"gpio4",
-+	"gpio5",
-+	"gpio6",
-+	"gpio7",
-+	"gpio8",
-+	"gpio9",
-+	"gpio10",
-+	"gpio11",
-+	"gpio12",
-+	"gpio13",
-+	"gpio14",
-+	"gpio15",
-+	"gpio16",
-+	"gpio17",
-+	"gpio18",
-+	"gpio19",
-+	"gpio20",
-+	"gpio21",
-+	"gpio22",
-+	"gpio23",
-+};
-+
-+/* PINMUX_SEL */
-+static const char * const serial_led_data_groups[] = {
-+	"gpio6",
-+};
-+
-+static const char * const serial_led_clk_groups[] = {
-+	"gpio7",
-+};
-+
-+static const char * const inet_act_led_groups[] = {
-+	"gpio11",
-+};
-+
-+static const char * const pcie_clkreq_groups[] = {
-+	"gpio16",
-+};
-+
-+static const char * const ephy0_act_led_groups[] = {
-+	"gpio25",
-+};
-+
-+static const char * const ephy1_act_led_groups[] = {
-+	"gpio26",
-+};
-+
-+static const char * const ephy2_act_led_groups[] = {
-+	"gpio27",
-+};
-+
-+static const char * const ephy3_act_led_groups[] = {
-+	"gpio28",
-+};
-+
-+static const char * const hsspi_cs1_groups[] = {
-+	"hsspi_cs1"
-+};
-+
-+static const char * const usb_host_port_groups[] = {
-+	"usb_port1",
-+};
-+
-+static const char * const usb_device_port_groups[] = {
-+	"usb_port1",
-+};
-+
-+#define BCM6328_MODE_FUN(n)				\
-+	{						\
-+		.name = #n,				\
-+		.groups = n##_groups,			\
-+		.num_groups = ARRAY_SIZE(n##_groups),	\
-+		.mode_val = 1,				\
-+	}
-+
-+#define BCM6328_MUX_FUN(n, mux)				\
-+	{						\
-+		.name = #n,				\
-+		.groups = n##_groups,			\
-+		.num_groups = ARRAY_SIZE(n##_groups),	\
-+		.mux_val = mux,				\
-+	}
-+
-+static const struct bcm6328_function bcm6328_funcs[] = {
-+	BCM6328_MODE_FUN(led),
-+	BCM6328_MUX_FUN(serial_led_data, 2),
-+	BCM6328_MUX_FUN(serial_led_clk, 2),
-+	BCM6328_MUX_FUN(inet_act_led, 1),
-+	BCM6328_MUX_FUN(pcie_clkreq, 2),
-+	BCM6328_MUX_FUN(ephy0_act_led, 1),
-+	BCM6328_MUX_FUN(ephy1_act_led, 1),
-+	BCM6328_MUX_FUN(ephy2_act_led, 1),
-+	BCM6328_MUX_FUN(ephy3_act_led, 1),
-+	BCM6328_MUX_FUN(hsspi_cs1, 2),
-+	BCM6328_MUX_FUN(usb_host_port, 1),
-+	BCM6328_MUX_FUN(usb_device_port, 2),
-+};
-+
-+static inline unsigned int bcm6328_bank_pin(unsigned int pin)
-+{
-+	return pin % PINS_PER_BANK;
-+}
-+
-+static inline unsigned int bcm6318_mux_off(unsigned int pin)
-+{
-+	static const unsigned int bcm6328_mux[] = {
-+		BCM6328_MUX_LO_REG,
-+		BCM6328_MUX_HI_REG,
-+		BCM6328_MUX_OTHER_REG
-+	};
-+
-+	return bcm6328_mux[pin / 16];
-+}
-+
-+static inline unsigned int bcm6328_reg_off(unsigned int reg, unsigned int pin)
-+{
-+	return reg - (pin / PINS_PER_BANK) * BANK_SIZE;
-+}
-+
-+static int bcm6328_gpio_direction_input(struct gpio_chip *chip,
-+					unsigned int pin)
-+{
-+	struct bcm6328_pinctrl *pc = gpiochip_get_data(chip);
-+	unsigned int dirout = bcm6328_reg_off(BCM6328_DIROUT_REG, pin);
-+	unsigned int bank_pin = bcm6328_bank_pin(pin);
-+	int ret;
-+
-+	/*
-+	 * Check with the pinctrl driver whether this pin is usable as
-+	 * an input GPIO
-+	 */
-+	ret = pinctrl_gpio_direction_input(chip->base + pin);
-+	if (ret)
-+		return ret;
-+
-+	regmap_update_bits(pc->regs, dirout, BIT(bank_pin), 0);
-+
-+	return 0;
-+}
-+
-+static int bcm6328_gpio_direction_output(struct gpio_chip *chip,
-+					 unsigned int pin, int value)
-+{
-+	struct bcm6328_pinctrl *pc = gpiochip_get_data(chip);
-+	unsigned int data = bcm6328_reg_off(BCM6328_DATA_REG, pin);
-+	unsigned int dirout = bcm6328_reg_off(BCM6328_DIROUT_REG, pin);
-+	unsigned int bank_pin = bcm6328_bank_pin(pin);
-+	unsigned int val = value ? BIT(bank_pin) : 0;
-+	int ret;
-+
-+	/*
-+	 * Check with the pinctrl driver whether this pin is usable as
-+	 * an output GPIO
-+	 */
-+	ret = pinctrl_gpio_direction_output(chip->base + pin);
-+	if (ret)
-+		return ret;
-+
-+	regmap_update_bits(pc->regs, dirout, BIT(bank_pin), BIT(bank_pin));
-+	regmap_update_bits(pc->regs, data, BIT(bank_pin), val);
-+
-+	return 0;
-+}
-+
-+static int bcm6328_gpio_get(struct gpio_chip *chip, unsigned int pin)
-+{
-+	struct bcm6328_pinctrl *pc = gpiochip_get_data(chip);
-+	unsigned int data = bcm6328_reg_off(BCM6328_DATA_REG, pin);
-+	unsigned int bank_pin = bcm6328_bank_pin(pin);
-+	unsigned int val;
-+
-+	regmap_read(pc->regs, data, &val);
-+
-+	return !!(val & BIT(bank_pin));
-+}
-+
-+static int bcm6328_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
-+{
-+	struct bcm6328_pinctrl *pc = gpiochip_get_data(chip);
-+	unsigned int dirout = bcm6328_reg_off(BCM6328_DIROUT_REG, pin);
-+	unsigned int bank_pin = bcm6328_bank_pin(pin);
-+	unsigned int val;
-+
-+	regmap_read(pc->regs, dirout, &val);
-+
-+	if (val & BIT(bank_pin))
-+		return GPIO_LINE_DIRECTION_OUT;
-+
-+	return GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static void bcm6328_gpio_set(struct gpio_chip *chip, unsigned int pin,
-+			     int value)
-+{
-+	struct bcm6328_pinctrl *pc = gpiochip_get_data(chip);
-+	unsigned int data = bcm6328_reg_off(BCM6328_DATA_REG, pin);
-+	unsigned int bank_pin = bcm6328_bank_pin(pin);
-+	unsigned int val = value ? BIT(bank_pin) : 0;
-+
-+	regmap_update_bits(pc->regs, data, BIT(bank_pin), val);
-+}
-+
-+static int bcm6328_gpio_to_irq(struct gpio_chip *chip, unsigned gpio)
-+{
-+	char irq_name[7];
-+
-+	sprintf(irq_name, "gpio%d", gpio);
-+
-+	return of_irq_get_byname(chip->of_node, irq_name);
-+}
-+
-+static int bcm6328_pinctrl_get_group_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(bcm6328_groups);
-+}
-+
-+static const char *bcm6328_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-+						  unsigned group)
-+{
-+	return bcm6328_groups[group].name;
-+}
-+
-+static int bcm6328_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-+					  unsigned group, const unsigned **pins,
-+					  unsigned *num_pins)
-+{
-+	*pins = bcm6328_groups[group].pins;
-+	*num_pins = bcm6328_groups[group].num_pins;
-+
-+	return 0;
-+}
-+
-+static int bcm6328_pinctrl_get_func_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(bcm6328_funcs);
-+}
-+
-+static const char *bcm6328_pinctrl_get_func_name(struct pinctrl_dev *pctldev,
-+						 unsigned selector)
-+{
-+	return bcm6328_funcs[selector].name;
-+}
-+
-+static int bcm6328_pinctrl_get_groups(struct pinctrl_dev *pctldev,
-+				      unsigned selector,
-+				      const char * const **groups,
-+				      unsigned * const num_groups)
-+{
-+	*groups = bcm6328_funcs[selector].groups;
-+	*num_groups = bcm6328_funcs[selector].num_groups;
-+
-+	return 0;
-+}
-+
-+static void bcm6328_rmw_mux(struct bcm6328_pinctrl *pc, unsigned pin,
-+			    unsigned int mode, unsigned int mux)
-+{
-+	if (pin < BCM6328_NUM_GPIOS)
-+		regmap_update_bits(pc->regs, BCM6328_MODE_REG, BIT(pin),
-+				   mode ? BIT(pin) : 0);
-+
-+	regmap_update_bits(pc->regs, bcm6318_mux_off(pin),
-+			   3UL << ((pin % 16) * 2),
-+			   mux << ((pin % 16) * 2));
-+}
-+
-+static int bcm6328_pinctrl_set_mux(struct pinctrl_dev *pctldev,
-+				   unsigned selector, unsigned group)
-+{
-+	struct bcm6328_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	const struct bcm6328_pingroup *pg = &bcm6328_groups[group];
-+	const struct bcm6328_function *f = &bcm6328_funcs[selector];
-+
-+	bcm6328_rmw_mux(pc, pg->pins[0], f->mode_val, f->mux_val);
-+
-+	return 0;
-+}
-+
-+static int bcm6328_gpio_request_enable(struct pinctrl_dev *pctldev,
-+				       struct pinctrl_gpio_range *range,
-+				       unsigned offset)
-+{
-+	struct bcm6328_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	/* disable all functions using this pin */
-+	bcm6328_rmw_mux(pc, offset, 0, 0);
-+
-+	return 0;
-+}
-+
-+static struct pinctrl_ops bcm6328_pctl_ops = {
-+	.get_groups_count = bcm6328_pinctrl_get_group_count,
-+	.get_group_name = bcm6328_pinctrl_get_group_name,
-+	.get_group_pins = bcm6328_pinctrl_get_group_pins,
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map = pinctrl_utils_free_map,
-+};
-+
-+static struct pinmux_ops bcm6328_pmx_ops = {
-+	.get_functions_count = bcm6328_pinctrl_get_func_count,
-+	.get_function_name = bcm6328_pinctrl_get_func_name,
-+	.get_function_groups = bcm6328_pinctrl_get_groups,
-+	.set_mux = bcm6328_pinctrl_set_mux,
-+	.gpio_request_enable = bcm6328_gpio_request_enable,
-+	.strict = true,
-+};
-+
-+static int bcm6328_pinctrl_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct bcm6328_pinctrl *pc;
-+	int err;
-+
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, pc);
-+	pc->dev = dev;
-+
-+	pc->regs = syscon_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(pc->regs))
-+		return PTR_ERR(pc->regs);
-+
-+	pc->gpio_chip.label = MODULE_NAME;
-+	pc->gpio_chip.owner = THIS_MODULE;
-+	pc->gpio_chip.request = gpiochip_generic_request;
-+	pc->gpio_chip.free = gpiochip_generic_free;
-+	pc->gpio_chip.direction_input = bcm6328_gpio_direction_input;
-+	pc->gpio_chip.direction_output = bcm6328_gpio_direction_output;
-+	pc->gpio_chip.get_direction = bcm6328_gpio_get_direction;
-+	pc->gpio_chip.get = bcm6328_gpio_get;
-+	pc->gpio_chip.set = bcm6328_gpio_set;
-+	pc->gpio_chip.set_config = gpiochip_generic_config;
-+	pc->gpio_chip.base = -1;
-+	pc->gpio_chip.ngpio = BCM6328_NUM_GPIOS;
-+	pc->gpio_chip.can_sleep = false;
-+	pc->gpio_chip.parent = dev;
-+	pc->gpio_chip.of_node = np;
-+
-+	if (of_get_property(np, "interrupt-names", NULL))
-+		pc->gpio_chip.to_irq = bcm6328_gpio_to_irq;
-+
-+	err = gpiochip_add_data(&pc->gpio_chip, pc);
-+	if (err) {
-+		dev_err(dev, "could not add GPIO chip\n");
-+		return err;
-+	}
-+
-+	pc->pctl_desc.name = MODULE_NAME,
-+	pc->pctl_desc.pins = bcm6328_pins,
-+	pc->pctl_desc.npins = ARRAY_SIZE(bcm6328_pins),
-+	pc->pctl_desc.pctlops = &bcm6328_pctl_ops,
-+	pc->pctl_desc.pmxops = &bcm6328_pmx_ops,
-+	pc->pctl_desc.owner = THIS_MODULE,
-+
-+	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
-+	if (IS_ERR(pc->pctl_dev)) {
-+		gpiochip_remove(&pc->gpio_chip);
-+		return PTR_ERR(pc->pctl_dev);
-+	}
-+
-+	pc->gpio_range.name = MODULE_NAME;
-+	pc->gpio_range.npins = BCM6328_NUM_GPIOS;
-+	pc->gpio_range.base = pc->gpio_chip.base;
-+	pc->gpio_range.gc = &pc->gpio_chip;
-+	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
-+
-+	dev_info(dev, "registered\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm6328_pinctrl_match[] = {
-+	{ .compatible = "brcm,bcm6328-pinctrl", },
-+	{ },
-+};
-+
-+static struct platform_driver bcm6328_pinctrl_driver = {
-+	.probe = bcm6328_pinctrl_probe,
-+	.driver = {
-+		.name = MODULE_NAME,
-+		.of_match_table = bcm6328_pinctrl_match,
-+	},
-+};
-+
-+builtin_platform_driver(bcm6328_pinctrl_driver);
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
+@@ -0,0 +1,131 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/brcm,bcm6358-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Broadcom BCM6358 pin controller
++
++maintainers:
++  - Álvaro Fernández Rojas <noltari@gmail.com>
++  - Jonas Gorski <jonas.gorski@gmail.com>
++
++description: |+
++  The pin controller node should be the child of a syscon node.
++
++  Refer to the bindings described in
++  Documentation/devicetree/bindings/mfd/syscon.yaml
++
++properties:
++  compatible:
++    const: brcm,bcm6358-pinctrl
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    description:
++      Specifies the pin number and flags, as defined in
++      include/dt-bindings/gpio/gpio.h
++    const: 2
++
++  interrupts-extended:
++    description:
++      One interrupt per each of the 4 GPIO ports supported by the controller,
++      sorted by port number ascending order.
++    minItems: 6
++    maxItems: 6
++
++patternProperties:
++  '^.*$':
++    if:
++      type: object
++    then:
++      properties:
++        function:
++          $ref: "/schemas/types.yaml#/definitions/string"
++          enum: [ ebi_cs, uart1, serial_led, legacy_led, led, spi_cs, utopia,
++                  pwm_syn_clk, sys_irq ]
++
++        pins:
++          $ref: "/schemas/types.yaml#/definitions/string"
++          enum: [ ebi_cs_grp, uart1_grp, serial_led_grp, legacy_led_grp,
++                  led_grp, spi_cs_grp, utopia_grp, pwm_syn_clk, sys_irq_grp ]
++
++required:
++  - compatible
++  - gpio-controller
++  - '#gpio-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio@fffe0080 {
++      compatible = "syscon", "simple-mfd";
++      reg = <0xfffe0080 0x80>;
++
++      pinctrl: pinctrl {
++        compatible = "brcm,bcm6358-pinctrl";
++
++        gpio-controller;
++        #gpio-cells = <2>;
++
++        interrupts-extended = <&ext_intc1 0 0>,
++                              <&ext_intc1 1 0>,
++                              <&ext_intc0 0 0>,
++                              <&ext_intc0 1 0>,
++                              <&ext_intc0 2 0>,
++                              <&ext_intc0 3 0>;
++        interrupt-names = "gpio32",
++                          "gpio33",
++                          "gpio34",
++                          "gpio35",
++                          "gpio36",
++                          "gpio37";
++
++        pinctrl_ebi_cs: ebi_cs {
++          function = "ebi_cs";
++          groups = "ebi_cs_grp";
++        };
++
++        pinctrl_uart1: uart1 {
++          function = "uart1";
++          groups = "uart1_grp";
++        };
++
++        pinctrl_serial_led: serial_led {
++          function = "serial_led";
++          groups = "serial_led_grp";
++        };
++
++        pinctrl_legacy_led: legacy_led {
++          function = "legacy_led";
++          groups = "legacy_led_grp";
++        };
++
++        pinctrl_led: led {
++          function = "led";
++          groups = "led_grp";
++        };
++
++        pinctrl_spi_cs_23: spi_cs {
++          function = "spi_cs";
++          groups = "spi_cs_grp";
++        };
++
++        pinctrl_utopia: utopia {
++          function = "utopia";
++          groups = "utopia_grp";
++        };
++
++        pinctrl_pwm_syn_clk: pwm_syn_clk {
++          function = "pwm_syn_clk";
++          groups = "pwm_syn_clk_grp";
++        };
++
++        pinctrl_sys_irq: sys_irq {
++          function = "sys_irq";
++          groups = "sys_irq_grp";
++        };
++      };
++    };
 -- 
 2.20.1
 
