@@ -2,96 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59901324C17
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Feb 2021 09:34:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 116ED324CA1
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Feb 2021 10:20:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234112AbhBYIeF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Feb 2021 03:34:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233826AbhBYIeD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Feb 2021 03:34:03 -0500
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04FB7C06174A;
-        Thu, 25 Feb 2021 00:33:23 -0800 (PST)
-Received: by mail-qk1-x72e.google.com with SMTP id f17so4928332qkl.5;
-        Thu, 25 Feb 2021 00:33:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rzXO5uwkd4UlJ7sr2WOeKxv8d9eLoFxx3aBaT5I3Xd0=;
-        b=c+Gb2y3lvWIdiTTwJEZYdb4xQO2rmh9hHZCSxVIafHZtsJ3ATYKqx2+eCcNTkcwEvf
-         BgBsK0kt+eeDcIrLyT+qsS22xe8PiT4tueyRXW+d5n/h3ckRC+TNJJCNRsWFbQZBa5aX
-         1U/Yn+VeQBHJan47Yr6k66r3YqnNFyTTBhAwB/HvsaZycOAupY4h33OjaVF8K27zsdDs
-         VcL2iFRaEWbQc144yfY1LMldK7R30ojmBGDTrpdXaiAlgGXb44ANsgCv90KvooVelwER
-         QH5h7kFUCt3HXLjvENF9R3axiohnb4XfkGfdWWrMyt+fj/muH2iPRXpfXzj+7qW6NxRK
-         AnEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=rzXO5uwkd4UlJ7sr2WOeKxv8d9eLoFxx3aBaT5I3Xd0=;
-        b=QOuDbn9m/OcBmiofmTVNhP9VR5Si7nvTKNQ0hdq1ev6uOCy3P2Mo1TvdLk06MUSBGe
-         /OxKCljh6vOvf58lglzgL9TSJQFlsCNoXxbqxt6+TekUFUHe9Lz/egD/6wZ5QR0BvNjT
-         hcV5tb1kLYRtdW6XoiOMOWkrknSwkekyFktkLcYChftadTCX1x9bfXZr+W6BdOXy574Z
-         Ahmhc3zkknn1z3D0c6fPmpZc8yhgQJdHOzz8UZdJe02XvF82Mep6b/ZLc4LSvcn6vc2+
-         E6S4rlgEgsSLXp47MceJaaCajqxxXcofLcg+OrA2hWQ8JknfUjzFctSy+zx+tA3Tzbdm
-         FBhQ==
-X-Gm-Message-State: AOAM530nmkV6z6Gde3ZwZLxVR/PBJIraDNhW41yhzaku696FJpD2NHtG
-        BNezQ2W8UO7dQGz6iGN7LYk=
-X-Google-Smtp-Source: ABdhPJz8y38zscafFLc9OKZ/olaRjt8Bu/8KetP9TXgOr1f0pUCfBPvgZNXfAjfbUpOSmxOhKv7d3w==
-X-Received: by 2002:a37:806:: with SMTP id 6mr1652231qki.258.1614242002195;
-        Thu, 25 Feb 2021 00:33:22 -0800 (PST)
-Received: from kde-neon-desktop.orld.fl.wtsky.net ([208.64.158.251])
-        by smtp.gmail.com with ESMTPSA id g74sm171054qke.3.2021.02.25.00.33.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Feb 2021 00:33:20 -0800 (PST)
-Sender: Julian Braha <julian.braha@gmail.com>
-From:   Julian Braha <julianbraha@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH v1] drivers: pinctrl: qcom: fix Kconfig dependency on GPIOLIB
-Date:   Thu, 25 Feb 2021 03:33:06 -0500
-Message-Id: <20210225083306.25792-1-julianbraha@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S233285AbhBYJT0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Feb 2021 04:19:26 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:57035 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235525AbhBYJQH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 25 Feb 2021 04:16:07 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UPXLIzy_1614244524;
+Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0UPXLIzy_1614244524)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 25 Feb 2021 17:15:24 +0800
+From:   Yang Li <yang.lee@linux.alibaba.com>
+To:     paul@crapouillou.net
+Cc:     linus.walleij@linaro.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH] pinctrl: ingenic: add missing call to of_node_put()
+Date:   Thu, 25 Feb 2021 17:15:22 +0800
+Message-Id: <1614244522-64464-1-git-send-email-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When PINCTRL_MSM is enabled, and GPIOLIB is disabled,
-Kbuild gives the following warning:
+In one of the error paths of the for_each_child_of_node() loop in
+ingenic_gpio_probe, add missing call to of_node_put().
 
-WARNING: unmet direct dependencies detected for GPIOLIB_IRQCHIP
-  Depends on [n]: GPIOLIB [=n]
-  Selected by [y]:
-  - PINCTRL_MSM [=y] && PINCTRL [=y] && (ARCH_QCOM || COMPILE_TEST [=y])
+Fix the following coccicheck warning:
+./drivers/pinctrl/pinctrl-ingenic.c:2485:1-23: WARNING: Function
+"for_each_child_of_node" should have of_node_put() before return around
+line 2489.
 
-This is because PINCTRL_MSM selects GPIOLIB_IRQCHIP,
-without selecting or depending on GPIOLIB, despite
-GPIOLIB_IRQCHIP depending on GPIOLIB. Having PINCTRL_MSM
-select GPIOLIB will cause a recursive dependency error.
-
-Signed-off-by: Julian Braha <julianbraha@gmail.com>
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 ---
- drivers/pinctrl/qcom/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-ingenic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index 6853a896c476..d42ac59875ab 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -3,7 +3,7 @@ if (ARCH_QCOM || COMPILE_TEST)
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index f274612..b7294a2 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -2486,6 +2486,7 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
+ 		if (of_match_node(ingenic_gpio_of_match, node)) {
+ 			err = ingenic_gpio_probe(jzpc, node);
+ 			if (err)
++				of_node_put(node);
+ 				return err;
+ 		}
+ 	}
+-- 
+1.8.3.1
 
- config PINCTRL_MSM
- 	tristate "Qualcomm core pin controller driver"
--	depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
-+	depends on GPIOLIB && (QCOM_SCM || !QCOM_SCM) #if QCOM_SCM=m this can't be =y
- 	select PINMUX
- 	select PINCONF
- 	select GENERIC_PINCONF
---
-2.27.0
