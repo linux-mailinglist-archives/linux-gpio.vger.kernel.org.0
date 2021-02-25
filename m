@@ -2,46 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F670325398
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Feb 2021 17:35:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCF0D3253B2
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Feb 2021 17:43:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232473AbhBYQf2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Feb 2021 11:35:28 -0500
-Received: from mga11.intel.com ([192.55.52.93]:64509 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229548AbhBYQfZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 25 Feb 2021 11:35:25 -0500
-IronPort-SDR: 9MROr3sVW4uVNbMPfjENwq3SDhrTbZZsTpOUBTXjD4anoCv4HzU5048n0ZC1lKn0E8dWlda7NA
- n4nonc9ldwng==
-X-IronPort-AV: E=McAfee;i="6000,8403,9906"; a="182156002"
-X-IronPort-AV: E=Sophos;i="5.81,206,1610438400"; 
-   d="scan'208";a="182156002"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2021 08:33:37 -0800
-IronPort-SDR: fjDB3eGn2eE2JeLHekf1/qYF0tXgnHKtLDmvwTwVZZuQzwWsKi7fKvdtZDv9eVy1BTbJqg+Uu2
- /v3DPK/LO3TQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,206,1610438400"; 
-   d="scan'208";a="432360281"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 25 Feb 2021 08:33:34 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 10DA854A; Thu, 25 Feb 2021 18:33:34 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Subject: [PATCH v1 3/3] gpio: pca953x: Set IRQ type when handle Intel Galileo Gen 2
-Date:   Thu, 25 Feb 2021 18:33:20 +0200
-Message-Id: <20210225163320.71267-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210225163320.71267-1-andriy.shevchenko@linux.intel.com>
-References: <20210225163320.71267-1-andriy.shevchenko@linux.intel.com>
+        id S232290AbhBYQnD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Feb 2021 11:43:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232203AbhBYQnC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Feb 2021 11:43:02 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17A0FC061574;
+        Thu, 25 Feb 2021 08:42:21 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id v1so5896373wrd.6;
+        Thu, 25 Feb 2021 08:42:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Npwl672MiRQEKruxh4+PrenCbJvpjjs2CJMv5XpKxrg=;
+        b=pYDcqiUvzVyuuuMXd91U8RlkK/dNvkqB4Ob6OT53RGQ+hpu320NTN9K6sKWPHoKDhg
+         0lmjoEHsENDDkg8W14LboPkSQ7yevOhQCRITP+7Isu4yerB2JPXoVUXYa1WFJlgG0iY5
+         3U2j7Qa40PsQUpmm7fyQvk+ls51cvddMDwKXU1n8pYBKYFSmBxprKjpryzzpRukajn9H
+         USFD2bqriACfvHAJpwxqam0GVVuzoGS5uEqt+1DeeX3hajE5tRtNOFKJoD1bxo2syNoA
+         mLTA3Jce2zRSplZFnnFvp1mmpBCwUGVKQ4YaogMf5eTqNHGudmq4BVczSojsKGIvQ6my
+         Wc6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Npwl672MiRQEKruxh4+PrenCbJvpjjs2CJMv5XpKxrg=;
+        b=qJoZXHxvzLRd58lk+KD/W2+TUTWpqmCjHoJqmYb3tyZ3GeurgygnS+EirwXZBmnEwh
+         4S4XsFlfHgp32bqxFTzPtYYxPAosQfWOs08YDt8aBLTrVC8lUXQYklYUx/26xbq4bAgk
+         MXH/WyR6cmmgxOTFp6YFYS7gqtHNV9P79XqY++T0sOXcxIk9GC1U5vbhE469ErX9b9a0
+         1LbP/Igc0ayxqX5hIJFQ0slSv9Z3i1doDq6mC8hjpnVpbiDHEtTU0ApHio74GnnXs9Nn
+         pmOVyD023gQQtIemq4m8oTKJ2n4l2eK/O6A+KJzQcv1gYO/1NQsIuHJd2rJoPuDvfNo7
+         XmYw==
+X-Gm-Message-State: AOAM531caDZSoe8teQQ+MN5EVE0+gjOjWHBykqe2eF6sQtahlwR68j3P
+        ikD34BCcBX48/owjuuStWsFqc4VukDm4Rw==
+X-Google-Smtp-Source: ABdhPJz0SBmMrSqawvmqhQZtg8Y287mT7VHL1G19RRIcnBE2g8teIXZFuvfxdvrCwoKFddOCrEfD+w==
+X-Received: by 2002:a5d:52c2:: with SMTP id r2mr4541406wrv.40.1614271339832;
+        Thu, 25 Feb 2021 08:42:19 -0800 (PST)
+Received: from skynet.lan (170.red-88-1-105.dynamicip.rima-tde.net. [88.1.105.170])
+        by smtp.gmail.com with ESMTPSA id u4sm372779wrm.24.2021.02.25.08.42.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Feb 2021 08:42:19 -0800 (PST)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     f.fainelli@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/12] pinctrl: add BCM63XX pincontrol support
+Date:   Thu, 25 Feb 2021 17:42:04 +0100
+Message-Id: <20210225164216.21124-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -49,129 +67,69 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The commit 0ea683931adb ("gpio: dwapb: Convert driver to using the
-GPIO-lib-based IRQ-chip") indeliberately made a regression on how
-IRQ line from GPIO I²C expander is handled. I.e. it reveals that
-the quirk for Intel Galileo Gen 2 misses the part of setting IRQ type
-which previously was predefined by gpio-dwapb driver. Now, we have to
-reorganize the approach to call necessary parts, which can be done via
-ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER quirk.
+First of all, I've based this on the patches sent by Jonas Gorski back in
+2016:
+https://www.spinics.net/lists/linux-gpio/msg15983.html
+http://patchwork.ozlabs.org/project/linux-gpio/patch/1471604025-21575-2-git-send-email-jonas.gorski@gmail.com/
 
-Without this fix and with above mentioned change the kernel hangs
-on the first IRQ event with:
+I've tried to address all coments from Linus Walleij, but I know that
+this may still need some other modifications
 
-    gpio gpiochip3: Persistence not supported for GPIO 1
-    irq 32, desc: 62f8fb50, depth: 0, count: 0, unhandled: 0
-    ->handle_irq():  41c7b0ab, handle_bad_irq+0x0/0x40
-    ->irq_data.chip(): e03f1e72, 0xc2539218
-    ->action(): 0ecc7e6f
-    ->action->handler(): 8a3db21e, irq_default_primary_handler+0x0/0x10
-       IRQ_NOPROBE set
-    unexpected IRQ trap at vector 20
+This patchset adds appropriate binding documentation and drivers for
+pin controller cores found in the BCM63XX MIPS SoCs currently supported.
 
-Fixes: ba8c90c61847 ("gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2")
-Depends-on: 0ea683931adb ("gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-pca953x.c | 78 +++++++++++--------------------------
- 1 file changed, 23 insertions(+), 55 deletions(-)
+While the GPIO part is always the same, the pinmux part varies quite a
+lot between different SoCs. Sometimes they have defined groups which
+can be muxed into different functions, sometimes each function has a
+different group. Sometimes you can mux individual pins. Often it is a
+combination of single pins and groups.
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 825b362eb4b7..6898c27f71f8 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -112,8 +112,29 @@ MODULE_DEVICE_TABLE(i2c, pca953x_id);
- #ifdef CONFIG_GPIO_PCA953X_IRQ
- 
- #include <linux/dmi.h>
--#include <linux/gpio.h>
--#include <linux/list.h>
-+
-+static const struct acpi_gpio_params pca953x_irq_gpios = { 0, 0, true };
-+
-+static const struct acpi_gpio_mapping pca953x_acpi_irq_gpios[] = {
-+	{ "irq-gpios", &pca953x_irq_gpios, 1, ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER },
-+	{ }
-+};
-+
-+static int pca953x_acpi_get_irq(struct device *dev)
-+{
-+	int ret;
-+
-+	ret = devm_acpi_dev_add_driver_gpios(dev, pca953x_acpi_irq_gpios);
-+	if (ret)
-+		dev_warn(dev, "can't add GPIO ACPI mapping\n");
-+
-+	ret = acpi_dev_gpio_irq_get_by(ACPI_COMPANION(dev), "irq-gpios", 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_info(dev, "ACPI interrupt quirk (IRQ %d)\n", ret);
-+	return ret;
-+}
- 
- static const struct dmi_system_id pca953x_dmi_acpi_irq_info[] = {
- 	{
-@@ -132,59 +153,6 @@ static const struct dmi_system_id pca953x_dmi_acpi_irq_info[] = {
- 	},
- 	{}
- };
--
--#ifdef CONFIG_ACPI
--static int pca953x_acpi_get_pin(struct acpi_resource *ares, void *data)
--{
--	struct acpi_resource_gpio *agpio;
--	int *pin = data;
--
--	if (acpi_gpio_get_irq_resource(ares, &agpio))
--		*pin = agpio->pin_table[0];
--	return 1;
--}
--
--static int pca953x_acpi_find_pin(struct device *dev)
--{
--	struct acpi_device *adev = ACPI_COMPANION(dev);
--	int pin = -ENOENT, ret;
--	LIST_HEAD(r);
--
--	ret = acpi_dev_get_resources(adev, &r, pca953x_acpi_get_pin, &pin);
--	acpi_dev_free_resource_list(&r);
--	if (ret < 0)
--		return ret;
--
--	return pin;
--}
--#else
--static inline int pca953x_acpi_find_pin(struct device *dev) { return -ENXIO; }
--#endif
--
--static int pca953x_acpi_get_irq(struct device *dev)
--{
--	int pin, ret;
--
--	pin = pca953x_acpi_find_pin(dev);
--	if (pin < 0)
--		return pin;
--
--	dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
--
--	if (!gpio_is_valid(pin))
--		return -EINVAL;
--
--	ret = gpio_request(pin, "pca953x interrupt");
--	if (ret)
--		return ret;
--
--	ret = gpio_to_irq(pin);
--
--	/* When pin is used as an IRQ, no need to keep it requested */
--	gpio_free(pin);
--
--	return ret;
--}
- #endif
- 
- static const struct acpi_device_id pca953x_acpi_ids[] = {
+Some core versions require the GPIO direction to be set according to the
+function, most do not. Sometimes the mux register(s) contain bits for
+unrelated other functions.
+
+Álvaro Fernández Rojas (12):
+  Documentation: add BCM6328 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6328
+  Documentation: add BCM6358 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6358
+  Documentation: add BCM6362 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6362
+  Documentation: add BCM6368 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6368
+  Documentation: add BCM63268 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM63268
+  Documentation: add BCM6318 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6318
+
+ .../pinctrl/brcm,bcm6318-pinctrl.yaml         | 173 ++++
+ .../pinctrl/brcm,bcm63268-pinctrl.yaml        | 198 +++++
+ .../pinctrl/brcm,bcm6328-pinctrl.yaml         | 161 ++++
+ .../pinctrl/brcm,bcm6358-pinctrl.yaml         | 131 +++
+ .../pinctrl/brcm,bcm6362-pinctrl.yaml         | 240 +++++
+ .../pinctrl/brcm,bcm6368-pinctrl.yaml         | 255 ++++++
+ drivers/pinctrl/bcm/Kconfig                   |  66 ++
+ drivers/pinctrl/bcm/Makefile                  |   6 +
+ drivers/pinctrl/bcm/pinctrl-bcm6318.c         | 674 ++++++++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm63268.c        | 821 ++++++++++++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm6328.c         | 581 +++++++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm6358.c         | 526 +++++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm6362.c         | 794 +++++++++++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm6368.c         | 679 +++++++++++++++
+ 14 files changed, 5305 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6318-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm6318.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm63268.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm6328.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm6358.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm6362.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm6368.c
+
 -- 
-2.30.0
+2.20.1
 
