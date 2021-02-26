@@ -2,80 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CF50326401
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Feb 2021 15:25:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E43C32646E
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Feb 2021 15:56:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229590AbhBZOYI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 26 Feb 2021 09:24:08 -0500
-Received: from aposti.net ([89.234.176.197]:41486 "EHLO aposti.net"
+        id S230106AbhBZOzp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Feb 2021 09:55:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229586AbhBZOYG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 26 Feb 2021 09:24:06 -0500
-Date:   Fri, 26 Feb 2021 14:23:11 +0000
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2] pinctrl: ingenic: add missing call to of_node_put()
-To:     Yang Li <yang.lee@linux.alibaba.com>
-Cc:     linus.walleij@linaro.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <NY35PQ.UZ27JQ71RLXE2@crapouillou.net>
-In-Reply-To: <1614303297-24178-1-git-send-email-yang.lee@linux.alibaba.com>
-References: <1614303297-24178-1-git-send-email-yang.lee@linux.alibaba.com>
+        id S229996AbhBZOzn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 26 Feb 2021 09:55:43 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D60F664EDB;
+        Fri, 26 Feb 2021 14:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614351303;
+        bh=w9ir0e0TIjg6ykgGXU5YOusAn0SRJtGaS1FrxyZ1mPw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Hf0gcllL+xERrx5ymy3htPhW7wWanvYtm69ik67x2dE4CohkSYCjI3GG4tbnEkPVQ
+         7L5QNz2yWO7POKWDbnCJfY4PlYCQe5WAAPU3ZKjy1SbtpIqqA51bQ9SSvkFegPws29
+         WuTF2OkeJd9tcnHw4cbao9XR2YjtbLXwy5b+Xv614GUG5VE4z/r/C4KgIxVhvS7I+J
+         YwAjgkm3JwJMmEjh+q+6c2RY9lVu3b0BwbKnRrBPOsolkGiBPN+WbWgajzrzCEiGuW
+         xDNhnc8/B7ZoWE3YIQc6/qLAmta8avnzKfFtNncYJw98i9u1/C0UsY/xuggVfQhAdh
+         prDGuNa1jB6PQ==
+Received: from johan by xi.lan with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1lFeWY-0000Jz-JQ; Fri, 26 Feb 2021 15:55:23 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/2] gpio: regression fixes
+Date:   Fri, 26 Feb 2021 15:52:44 +0100
+Message-Id: <20210226145246.1171-1-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Here's a fix for a regression in 5.12 due to the new stub-driver hack,
+and a fix for potential list corruption due to missing locking which has
+been there since the introduction of the character-device interface in
+4.6.
 
-Le ven. 26 févr. 2021 à 9:34, Yang Li <yang.lee@linux.alibaba.com> a 
-écrit :
-> In one of the error paths of the for_each_child_of_node() loop in
-> ingenic_gpio_probe, add missing call to of_node_put().
-> 
-> Fix the following coccicheck warning:
-> ./drivers/pinctrl/pinctrl-ingenic.c:2485:1-23: WARNING: Function
-> "for_each_child_of_node" should have of_node_put() before return 
-> around
-> line 2489.
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+Johan
 
-Acked-by: Paul Cercueil <paul@crapouillou.net>
 
-Cheers,
--Paul
+Johan Hovold (2):
+  gpio: fix NULL-deref-on-deregistration regression
+  gpio: fix gpio-device list corruption
 
-> ---
-> 
-> Changes in v2:
-> -add braces for if
-> 
->  drivers/pinctrl/pinctrl-ingenic.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index f274612..c8ecd01 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -2485,8 +2485,10 @@ static int __init ingenic_pinctrl_probe(struct 
-> platform_device *pdev)
->  	for_each_child_of_node(dev->of_node, node) {
->  		if (of_match_node(ingenic_gpio_of_match, node)) {
->  			err = ingenic_gpio_probe(jzpc, node);
-> -			if (err)
-> +			if (err) {
-> +				of_node_put(node);
->  				return err;
-> +			}
->  		}
->  	}
-> 
-> --
-> 1.8.3.1
-> 
+ drivers/gpio/gpiolib.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
+-- 
+2.26.2
 
