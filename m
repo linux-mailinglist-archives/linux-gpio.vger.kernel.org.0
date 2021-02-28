@@ -2,100 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3F7332701C
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Feb 2021 03:53:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68B3C32738C
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Feb 2021 18:13:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbhB1Cxh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 27 Feb 2021 21:53:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36216 "EHLO
+        id S231326AbhB1RMq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Feb 2021 12:12:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbhB1Cxg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 27 Feb 2021 21:53:36 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7757CC06174A
-        for <linux-gpio@vger.kernel.org>; Sat, 27 Feb 2021 18:52:56 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id e9so8531282pjj.0
-        for <linux-gpio@vger.kernel.org>; Sat, 27 Feb 2021 18:52:56 -0800 (PST)
+        with ESMTP id S230461AbhB1RMj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Feb 2021 12:12:39 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10048C06174A;
+        Sun, 28 Feb 2021 09:11:58 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id g5so23843438ejt.2;
+        Sun, 28 Feb 2021 09:11:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=vpdHEyJD7sn/0eeQxVrrnQwX5J7unyGFY9KXLtypecU=;
-        b=egll23z+9j/zwj+FnnZEYgh9EoAkYvB3s/oloXSjkGOy9G/Ho2O2KtcALQ1aziXUHC
-         PlCQE7JC4+PgnFu8tqTIgyxISn+IwXg6i94bNWWQTq1KfbXDME3cw6GA21juzkk5fWEg
-         fniZFmCir4lgV1BsWZF2pHFuaZt17Ay45Dqb6Ue7PgoaCJsG5zC52UOjj/dgxHnN8glu
-         1H1HloI6R6a9q+B9RaHMbirIY8+W2J2fCrfoDI9dk94VB7zoHZt0Fg+rMx56Bbpy2RT6
-         2GORwpvwSNjmCe7Lghv4GUOHBuqMfYVyHTmAnDSm1Q5aC7vlOkcKEhFgCWvmQyiCfW31
-         hHHg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dfQ46OGWItLgoKPUR/Czwfd0qqTUSj25+jf5yrElG/4=;
+        b=GzeA/aDB2UBhnNVhm++I/Jk3Up7Sjll8FWko6UUVrR8GbwUj6tdWvj7U7T3p1JnaWE
+         tuDT5n8KyfWwgonEFcDAlbP9Wnm/lzI5ynLZd5zXrmZLcqy0e5qJFV+Ury6tgPUdhcIC
+         ZnUpySrUVv3A0oExsLsVOkNej6wDTO/NVed1e1lRxfeovoJIixufVCuML3LKRgEXHaK6
+         AQIpA41ncR2vIctG/YIpRBR7PPh4Vs9caRlig7rCLuPUPKUXlteysI6kNYwN/3Yc//ci
+         tD2NQsug/MYd9mQ+dWSVvw0ZV+w1YK/V6hQL8df04yN35+nWGaht76tutf0kiQ1Fxgq5
+         E6Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vpdHEyJD7sn/0eeQxVrrnQwX5J7unyGFY9KXLtypecU=;
-        b=E5It9LZjyPhFbfRpuMn9u9QtwnXBerl1EDHAcv4pbxtWBC8vL2q27Mu295hhvB4Qmd
-         dFRUbVwjSVn5j7MjEhGgE1I/YMqoGK11WLDXSwmP3PfEsa+hrgclSXxsRQL9zct6OeXQ
-         JQw+9y6paxeZc+0Vwe6rzANKCeclpTjBBTy25khpzyQo1/WZcOmbh1uCw+vkRDyu24Yu
-         5pWQVtMgjhPWnan5SJTEkyRDhRCZ4GSqMQj5Qq4Tku7Kv7ik6AWm51T9vM8xEKFPD4Md
-         Fbvp9nzrntlQDNq0fn2lEJ+3s8q6qLJve6c0NXZ/raGph0Bmp4lhNfC0jxiQ5IzJZ3++
-         7vZQ==
-X-Gm-Message-State: AOAM531TlvYOeQ6uEGCAbxobhNIZ07hqxWa5gfxd4yMoe3NA7cgjnExf
-        QYXIlXdK/CbgDMNhuC7xI6TM0A==
-X-Google-Smtp-Source: ABdhPJxFfmHYbTNUaIm1IEocF7TulwE2CGRD1aqjvgfJssSGShoGeSpf8A09vbZEvdH2Y8t6eifC3Q==
-X-Received: by 2002:a17:902:fe96:b029:e4:2f39:9083 with SMTP id x22-20020a170902fe96b02900e42f399083mr9684729plm.47.1614480775497;
-        Sat, 27 Feb 2021 18:52:55 -0800 (PST)
-Received: from localhost.localdomain (80.251.214.228.16clouds.com. [80.251.214.228])
-        by smtp.gmail.com with ESMTPSA id s4sm7329527pji.2.2021.02.27.18.52.53
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dfQ46OGWItLgoKPUR/Czwfd0qqTUSj25+jf5yrElG/4=;
+        b=DFk3PQk4Tg5+x/JyUn1GIB9WRKbs4ZjvCjYZr9JKO8621MT6/JMbxVEVcdDoUwHVL+
+         For3KnKO03QZ25kxJo4JrfZHSkIeuz8ttxAxFkjgF2q6WYdlaegFsyL7pwebxMCJOuh/
+         NrMre9pjnYhb6I4oOeQe6UNOpaC6IPz2m13QnfLeVZ2YZGlmr1DYxmPi+bvVPkKasB7e
+         u9RBjICZzwxg7kg714yWmesb+O+Rtbcpc99VRzJxNj+AhqwCvcU1kFYQqrqosKdGeMu3
+         qv1KRTCKEbd/EDeY1ITs68EsyfQGwPqrqB4AdfJhZ2zoof+PofoZAtTFpktFx3ZcE2nA
+         XTjg==
+X-Gm-Message-State: AOAM5304vRkhWj/qH8naxa3syBxpk1crx5yAp/FsV3b7mRkxQxwuuOcN
+        4SYwXjH8z05UBhk34i8rBvOfdoP18tGg
+X-Google-Smtp-Source: ABdhPJw5sLbCUCcgxkhNvC6IgO3vmNaTgOeasYPBEho60Poa4WNRXoZ/cPiXNkLCHgbgyBJUziViqw==
+X-Received: by 2002:a17:906:acb:: with SMTP id z11mr3855755ejf.193.1614532316774;
+        Sun, 28 Feb 2021 09:11:56 -0800 (PST)
+Received: from localhost.localdomain ([46.53.249.223])
+        by smtp.gmail.com with ESMTPSA id fw3sm6654338ejb.82.2021.02.28.09.11.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Feb 2021 18:52:55 -0800 (PST)
-From:   Shawn Guo <shawn.guo@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH] pinctrl: qcom: support gpio_chip .set_config call
-Date:   Sun, 28 Feb 2021 10:52:49 +0800
-Message-Id: <20210228025249.19684-1-shawn.guo@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Sun, 28 Feb 2021 09:11:56 -0800 (PST)
+Date:   Sun, 28 Feb 2021 20:11:54 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, linux-arch@vger.kernel.org
+Subject: [PATCH 12/11] pragma once: scripted treewide conversion
+Message-ID: <YDvO2kmidKZaK26j@localhost.localdomain>
+References: <YDvLYzsGu+l1pQ2y@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <YDvLYzsGu+l1pQ2y@localhost.localdomain>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In case of ACPI boot, GPIO core does the right thing to parse GPIO pin
-configs from ACPI table, and call into gpio_chip's .set_config hook for
-setting them up.  It enables such support on qcom platform by using
-generic config function, which in turn calls into .pin_config_set of
-pinconf for setting up hardware.  For qcom platform, it's possible to
-reuse pin group config functions for pin config hooks, because every pin
-is maintained as a single group.
+[  Bcc a lot of lists so that people understand what's this is all         ]
+[  about without creating uber-cc-thread.                                  ]
+[  Apologies if I missed your subsystem                                    ]
+[  Please see [PATCH 11/11: pragma once: conversion script (in Python 2)]  ]
 
-This change fixes the problem that Touchpad of Lenovo Flex 5G laptop
-doesn't work with ACPI boot, because PullUp config of Touchpad GpioInt
-pin is not set up by kernel driver.
+Hi, Linus.
 
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 3 +++
- 1 file changed, 3 insertions(+)
+Please run the script below from top-level directory, it will convert
+most kernel headers to #pragma once directive advancing them into
+21-st century.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index a591be9f380a..2526f299bdce 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -493,6 +493,8 @@ static const struct pinconf_ops msm_pinconf_ops = {
- 	.is_generic		= true,
- 	.pin_config_group_get	= msm_config_group_get,
- 	.pin_config_group_set	= msm_config_group_set,
-+	.pin_config_get		= msm_config_group_get,
-+	.pin_config_set		= msm_config_group_set,
- };
- 
- static int msm_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-@@ -717,6 +719,7 @@ static const struct gpio_chip msm_gpio_template = {
- 	.get_direction    = msm_gpio_get_direction,
- 	.get              = msm_gpio_get,
- 	.set              = msm_gpio_set,
-+	.set_config       = gpiochip_generic_config,
- 	.request          = gpiochip_generic_request,
- 	.free             = gpiochip_generic_free,
- 	.dbg_show         = msm_gpio_dbg_show,
--- 
-2.17.1
+The advantages are:
 
+* less LOC
+
+	18087 files changed, 18878 insertions(+), 99804 deletions(-)
+	= -81 kLOC (give or take)
+
+* less mental tax on developers forced to name things which aren't even
+  real code
+
+* less junk in preprocessor hashtables and editors/IDEs autocompletion
+  lists
+
+There are two bit exceptions: UAPI headers and ACPICA.
+Given ubiquity of #pragma once, I personally think even these subsystems
+should be converted in the future.
+
+Compile tested on alpha, arc, arm, arm64, h8300, ia64, m68k, microblaze,
+mips, nios2, parisc, powerpc, riscv, s390, sh, sparc, um-i386, um-x86_64,
+i386, x86_64, xtensa (allnoconfig, all defconfigs, allmodconfig with or
+without SMP/DEBUG_KERNEL + misc stuff).
+
+Not compile tested on csky, hexagon, nds32, openrisc. 
+
+Love,
+	Alexey
+
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+
+
+
+#!/bin/sh -x
+find . -type f -name '*.h' -print	|\
+LC_ALL=C sort				|\
+sed -e 's#^./##g'			|\
+xargs ./scripts/pragma-once.py
+
+find . -type d -name 'uapi' | xargs git checkout -f
+git checkout -f arch/alpha/include/asm/cmpxchg.h
+git checkout -f arch/arm/mach-imx/hardware.h
+git checkout -f arch/arm/mach-ixp4xx/include/mach/hardware.h
+git checkout -f arch/arm/mach-sa1100/include/mach/hardware.h
+git checkout -f arch/mips/include/asm/mips-cps.h
+git checkout -f arch/x86/boot/boot.h
+git checkout -f arch/x86/boot/ctype.h
+git checkout -f arch/x86/include/asm/cpufeatures.h
+git checkout -f arch/x86/include/asm/disabled-features.h
+git checkout -f arch/x86/include/asm/required-features.h
+git checkout -f arch/x86/include/asm/vmxfeatures.h
+git checkout -f arch/x86/include/asm/vvar.h
+git checkout -f drivers/acpi/acpica/
+git checkout -f drivers/gpu/drm/amd/pm/inc/vega10_ppsmc.h
+git checkout -f drivers/gpu/drm/amd/pm/powerplay/ppsmc.h
+git checkout -f drivers/input/misc/yealink.h
+git checkout -f drivers/media/usb/dvb-usb-v2/mxl111sf-demod.h
+git checkout -f drivers/media/usb/dvb-usb-v2/mxl111sf-tuner.h
+git checkout -f drivers/pcmcia/yenta_socket.h
+git checkout -f drivers/staging/rtl8723bs/include/hal_com_h2c.h
+git checkout -f include/linux/acpi.h
+git checkout -f include/linux/bitops.h
+git checkout -f include/linux/compiler_types.h
+git checkout -f include/linux/device.h
+git checkout -f include/linux/kbuild.h
+git checkout -f include/linux/libfdt_env.h
+git checkout -f include/linux/local_lock.h
+git checkout -f include/linux/spinlock.h
+git checkout -f include/linux/spinlock_api_smp.h
+git checkout -f include/linux/spinlock_types.h
+git checkout -f include/linux/tracepoint.h
+git checkout -f mm/gup_test.h
+git checkout -f net/batman-adv/main.h
+git checkout -f scripts/dtc/
+git checkout -f tools/include/linux/bitops.h
+git checkout -f tools/include/linux/compiler.h
+git checkout -f tools/testing/selftests/clone3/clone3_selftests.h
+git checkout -f tools/testing/selftests/futex/include/atomic.h
+git checkout -f tools/testing/selftests/futex/include/futextest.h
+git checkout -f tools/testing/selftests/futex/include/logging.h
+git checkout -f tools/testing/selftests/kselftest.h
+git checkout -f tools/testing/selftests/kselftest_harness.h
+git checkout -f tools/testing/selftests/pidfd/pidfd.h
+git checkout -f tools/testing/selftests/x86/helpers.h
