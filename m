@@ -2,68 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F5E8327A60
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 10:06:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4106327A66
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 10:07:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233691AbhCAJFi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 04:05:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233462AbhCAJF0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 04:05:26 -0500
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E81BC06174A
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 01:04:45 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id m11so17628767lji.10
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 01:04:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=moD2Bdyb2T8MfmJZBIlIYzfxm5CdyB0xIbsQnTWSPR8=;
-        b=LOaMXpVnE8hA/6DWa7au2DpCAqwkiQKO7db2fFhYNdXcXo6EuJFJMFPFXRp6AbD/SZ
-         KDJ7rlZ/vU3xhYCCdMEUzcN/VxHZYULxH+nWb5D3qg+DM4CGOIHLRaFBd/Wp7Z5xTakP
-         7j/xuA3k2hUyzKe12xmLHpQ0k081fyws8IgkxPc+PiWuLRxVIs9jvoQkBbuYOqAxlfn4
-         CzN6Y0hgNAnEXSdiX1Y/9x7rPUPgBYX2bQ9ir7J7iwpf2BhEBvIKeYoq8MTXcAYopsJO
-         5Cl8xxnBkcL0XQc3gqwyu3kaN6DpeNIk6h4FgVMPoGpa8rIDiuc/oQehCpa+gBHG7R7v
-         YJ+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=moD2Bdyb2T8MfmJZBIlIYzfxm5CdyB0xIbsQnTWSPR8=;
-        b=F/d2GtV/AiKkI3Az1ng90uPzjYpbopgan13i7bnKQGHzXukJ+OC16I1w98ZSpGmUKp
-         aJSQorTv+8EZOmMSbL60gKiasAZgudhmo56QZeOCgnAS8O25MzsI7YloD23BDLIKQ+CY
-         d6F4ya/7xFOod3IS+G0CUOwNQRumWhOia1RaON2K8hKG0/eagemG7HEWR71cQEz3dh2L
-         qGIloq/mV0E+Bh92dOgyKutUm0cCABJy8T7JKDSnBkGcB/SuRtwgg4AZmmK0LngHcoqN
-         iQ3LZ7C74foAsSd37/c2b/1/7koVCgYF4XkIQgXU1ANobgEMU2k7Fc8R/r5gi4Dhf7E7
-         WaNw==
-X-Gm-Message-State: AOAM5300eDK89rBWy1vwTtIEHDDGHwKWDfg7bWjHkFWPK8JysJawEBWr
-        h7bWsNnZ6muDMB7XNjXfmKoNqAxiuVQvoTu9e6J3NA==
-X-Google-Smtp-Source: ABdhPJykzbxUIYmdBeweyOS17day9++BKDJZetDZ8M+30ZfaHO9RvDEqDtTaE0iKvg2rH4GWP2uEKqF+i8NiJLgNcAs=
-X-Received: by 2002:a2e:9754:: with SMTP id f20mr6474861ljj.200.1614589484033;
- Mon, 01 Mar 2021 01:04:44 -0800 (PST)
-MIME-Version: 1.0
-References: <20210218014042.GC12952@sol>
-In-Reply-To: <20210218014042.GC12952@sol>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 1 Mar 2021 10:04:33 +0100
-Message-ID: <CACRpkdbZ3pZ+6vWW6jGZz5mytV4Xbc=82Pehi=Ov4s0LLj7jCA@mail.gmail.com>
-Subject: Re: strace 5.11 released - now decodes GPIO ioctls
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S233741AbhCAJGK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 04:06:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233700AbhCAJFt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 1 Mar 2021 04:05:49 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8612564E04;
+        Mon,  1 Mar 2021 09:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614589508;
+        bh=MZVQyEykFEiKaPxHXQUeHA3EpjEPE1zGkLiaitaAfXk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sjqL5XOsHdzhHTiiKCtrYIBrQgOpr/3ayO0gknBc4SL9+LFjL28xPTa/ucUzFGQW0
+         6ZEEbA+0Kg9ChBCQ/E8bVYIER3GnR5SVLyusgRy2TSydxDdZlSjxI4dWKMPaLOl00J
+         YPgJlIAsRXAhTepPrKizFJLlnCPgxCGxfDZjH8eA3N9Dtzs5a+LryGt4qflaIwWXmA
+         3nx9iECPAy0jp3eYZ6kyObFu3bboNDhdBxCaDDy1LtDVPLbkm7VaGlc9nNYgESZoI+
+         WGy1niXjuktuT7ZFZNZHrjuivvsBB6OkeATsJSsaU1wvPK4o4hcSnL938TBdF1blzS
+         yzvmESmpDT40w==
+Received: from johan by xi.lan with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1lGeUX-0006pG-Ak; Mon, 01 Mar 2021 10:05:26 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH v2 0/2] gpio: regression fixes
+Date:   Mon,  1 Mar 2021 10:05:17 +0100
+Message-Id: <20210301090519.26192-1-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 18, 2021 at 2:40 AM Kent Gibson <warthog618@gmail.com> wrote:
+Here's a fix for a regression in 5.12 due to the new stub-driver hack,
+and a fix for potential list corruption due to missing locking which has
+been there since the introduction of the character-device interface in
+4.6.
 
-> Just a quick note that, as of v5.11, strace now supports decoding of GPIO
-> cdev ioctls, both v1 and v2.
+Johan
 
-Wow thanks for fixing this tool Kent!
+Changes in v2
+ - drop the corresponding drv_set_drvdata() which is no longer needed
+   after patch 1/2
+ - add Saravanas's reviewed-by tag to patch 2/2
 
-Yours,
-Linus Walleij
+
+Johan Hovold (2):
+  gpio: fix NULL-deref-on-deregistration regression
+  gpio: fix gpio-device list corruption
+
+ drivers/gpio/gpiolib.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+-- 
+2.26.2
+
