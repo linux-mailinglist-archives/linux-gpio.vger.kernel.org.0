@@ -2,91 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FBAB327A83
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 10:14:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63D89327A97
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 10:20:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233429AbhCAJNS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 04:13:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55936 "EHLO
+        id S233841AbhCAJT6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 04:19:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233360AbhCAJNS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 04:13:18 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB942C06174A
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 01:12:31 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id w21so19648563edc.7
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 01:12:31 -0800 (PST)
+        with ESMTP id S233836AbhCAJT5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 04:19:57 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42EA8C061756
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 01:19:17 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id m22so24314550lfg.5
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 01:19:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=r0+snQP1OepvOAiKkI6VdpONCkQ1/Rgo1L2y7WjmwNk=;
-        b=nGmjnLE7ZDBq3oOYbXNMIcEoVDx/O0RUm+YOH3vsrEji5UGz604U8C2Ai/8G9RcvcM
-         L7s16lIwr4uZZVA+i3iB+bIHTuDi7EgQ69dBx24+h6IQM9EpcRygR3erd7kIqZhYft58
-         jADpQ8lQBSdVrqeC7yj5hBgD7P+i80oF4QgnxASD9i4XKq3BLWGI3dEQSPxAX3trj8oD
-         yYv+2dLwJzacrFLXVi/NF5oC4hxnQ8s8K4o6HhdtzqDDiDGMXhXXy+OUhmog4zytav4j
-         rfyHNc7t/7a/aBG0DwODJhrrs8o0SrL+5jm9oB3/73ehAdDQdsUI6kd1sLEENfDJg6Z8
-         tyeQ==
+        bh=tACmQpZqJbPVbrp6VhKqN/6XRGZrHClEhqKE2HVBdfg=;
+        b=opsBlPquhp9ku3v6FhnXXhIlTleSnTTbxfQEpfPjkSRwStpTRV1ptxI2WO8jE9XclJ
+         XpTIft0pxOEWXzAzTEN1YwlodgCUpQld8M4QqLyzFU4GSAZh804fQKpQUKEGYlDiZUXH
+         nRwM9IZfr6VqS55oLHbzTDJgPZ4DqY2FGirB7ml74lO7vavhIm/nmqRJ4Z+3dHcsK22f
+         llXZk6W2uS5bi3sUKVoujd0nz5OECf0lhOYspbTulnQwF6r7vCM8QSjjycf5Icwjchij
+         OmiWFE/8ZS/xfjVD6fnZ3kqHBIp5p5HDWOjFrcRHzdSHji7RmCQ0JbSNy4NtCsX3l0gV
+         SHHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=r0+snQP1OepvOAiKkI6VdpONCkQ1/Rgo1L2y7WjmwNk=;
-        b=ARaTZSKxBXiZ6KYJuTTW0j11FOKpd+KZleSAfctpdjXL9pTHsSGVBrpPyK/DLCyBxK
-         tju7Y7C2jYtNBRqpgCYj9aF60e77HbUbw3FtHigFrPS2UDqktd1c2TpZuz/hD7snIP5k
-         pUDFFcfzMbOaySIn+fsx8p7pf3cqVlF2l/+TlWSZgHWgPPPrxAJd7atd4awo6wAPAfjB
-         i2ThbCl+uFbmoqHuvssKjm+yV2ATocWjuHNpTnSJzZmvqhdySQdRmDPf9/kXF13kbZNf
-         XwBVD23qbb3xCCeImWahGdlRHPF7GnedYxpnlmBi7QIemauE83LQGIAw0FBj00T/bOaO
-         dnuQ==
-X-Gm-Message-State: AOAM531e/WlLv4S/0zH+ONxJLrKIzZdh02Qru9FmwDwk2uX1KM8GOpoy
-        oQ367+hoivdogtfjMfOlWwkQHHaAWNcpVhXcIBOOVQ==
-X-Google-Smtp-Source: ABdhPJwDn45OLVxfK0AvUxzViyAWO2/K09SNBO4hSgbVWRAKZiFfvX7DjsaB0haD6ktSH9eDR6qxDczCF112IZCEETw=
-X-Received: by 2002:aa7:d588:: with SMTP id r8mr15283394edq.88.1614589950563;
- Mon, 01 Mar 2021 01:12:30 -0800 (PST)
+        bh=tACmQpZqJbPVbrp6VhKqN/6XRGZrHClEhqKE2HVBdfg=;
+        b=YWGSyFd5NPBMSJrABBgWp6dNDr7wsPXEPNwppMyfzfpDfgpZFyTjpraOajbrNQrNak
+         dp0MWmRzoEG68/avPtnjbUkDqxV7QhbihvOPDPbTyu2u8jhieLbhRF2X5t+EcyUmlCSk
+         igbIVxOg9sT51/Pliw7csHWR3PWsu8BbSqDcKlmDq6zxX4OR4ZNJuO06L8wjIJrhb/4S
+         OY+zh2fHKT8ro6KtD+yYUhNq70tc2n6V4IjLTH/fc9hDYbj4Z8hN4qW+Qxi4KUnhXEdz
+         q7t4nC7SuZ00SNnv32ByZBRNjHVUPrT6staxoAUThEOQ5qYx3w+dy8/5IL0YAvUFPZJf
+         O0Vg==
+X-Gm-Message-State: AOAM532XkSD/s1DhSUpwBxg5AreUY/v/zMhgfaZNSpr47WjvFLSaWgxS
+        Yks5d5xds+lL0VeZFmU9m1tQeHeN9CNzx8StROwizsug1cY=
+X-Google-Smtp-Source: ABdhPJzy2r3weDzNAYM/z+Ke1adpfXf0ceGI1xwHJ3MyTdEL/jEWXBZ0VDU6pmGkYMCP2JR0G2W6HwtndcKJHQUWt/k=
+X-Received: by 2002:ac2:5d21:: with SMTP id i1mr8597506lfb.649.1614590355682;
+ Mon, 01 Mar 2021 01:19:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20210301090519.26192-1-johan@kernel.org>
-In-Reply-To: <20210301090519.26192-1-johan@kernel.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 1 Mar 2021 10:12:19 +0100
-Message-ID: <CAMpxmJXfyM89vfFDQfvOU+CX5EQSp_n_UrbEYC5MP0T-0phc-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio: regression fixes
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <63d610ba-5f63-2be1-6215-f44bd88d94d2@xilinx.com>
+In-Reply-To: <63d610ba-5f63-2be1-6215-f44bd88d94d2@xilinx.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 1 Mar 2021 10:19:04 +0100
+Message-ID: <CACRpkdZEYqPU6Zr+a6fivZiz-hKx6-KVdYVR7j--y+k2KXZaPw@mail.gmail.com>
+Subject: Re: DT overlay applied via pinctrl description
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 1, 2021 at 10:05 AM Johan Hovold <johan@kernel.org> wrote:
->
-> Here's a fix for a regression in 5.12 due to the new stub-driver hack,
-> and a fix for potential list corruption due to missing locking which has
-> been there since the introduction of the character-device interface in
-> 4.6.
->
-> Johan
->
-> Changes in v2
->  - drop the corresponding drv_set_drvdata() which is no longer needed
->    after patch 1/2
->  - add Saravanas's reviewed-by tag to patch 2/2
->
->
-> Johan Hovold (2):
->   gpio: fix NULL-deref-on-deregistration regression
->   gpio: fix gpio-device list corruption
->
->  drivers/gpio/gpiolib.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> --
-> 2.26.2
->
+On Tue, Feb 16, 2021 at 4:35 PM Michal Simek <michal.simek@xilinx.com> wrote:
 
-Patches applied, thanks!
+> I have a question about expectations when pinctrl setting is applied. In
+> DTS all nodes are described in the order available in DT.
+>
+> uart-default {
+>         mux {
+>                 ...
+>         };
+>
+>         conf {
+>                 ...
+>         };
+> };
+>
+> I don't know if this standard description or not. I definitely see other
+> pinctrl drivers which are using different structure.
+>
+> Anyway when overlay is applied the order has changed to
+> uart-default {
+>         conf {
+>                 ...
+>         };
+>
+>         mux {
+>                 ...
+>         };
+> };
+>
+> which is causing issue because pin is configured first via conf node
+> before it is requested via mux. This is something what firmware is
+> checking and error out.
 
-Bartosz
+As Frank says the DT ordering has no semantic meaning, it is essentially
+a functional language, describes object relations not sequences.
+
+The Linux kernel applies the mux and conf in that order because of how
+the code is implemented (this order also makes a lot of sense for the
+hardware). I would recommend to trace the execution of an overlay
+being applied and try to find the reason conf goes before mux and fix
+the bug there. I think it is a bug in how pinctrl handles DT overlays.
+
+Yours,
+Linus Walleij
