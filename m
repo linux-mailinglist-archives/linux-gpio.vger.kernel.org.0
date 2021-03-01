@@ -2,78 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C36EA327A68
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 10:07:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FBAB327A83
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 10:14:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233711AbhCAJGM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 04:06:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233703AbhCAJFt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 1 Mar 2021 04:05:49 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8369864E01;
-        Mon,  1 Mar 2021 09:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614589508;
-        bh=MZS+vEFMJfhOIBzq9iXKTlDqzsIfvu2g36hJM0R+3u8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nSPNlYQIJ5RPGN2tOwO2XcDRcIq7qsYe6seUFzMl+43ZPfLHt5Qs8Zc9NIAxa3Sd0
-         iSeYwM68ZDad+/L1fkJK18PKcNSjr4r03oXhCSQUCzHRRvkFj747loFrXKiG15TM7n
-         Uq15eSvrljHoiGg5+S7NwhFv8GnwYAstkMqQQN453h2R3lCbsKOgUKZQbJxhGBpS3W
-         yCa36EtVJWTzSzwPz7lOidmb5usLs6W1Ln4Q2Z8XZOHQ3D3i1aC6x6en6V+lJW5r1a
-         jpjTwj4RlUlFUKriVtfDjoQQ/eem2gW+hSvkG1zf+R0StEC2+CHXnpo9zvpl2PA9IS
-         MmsxXcyg16c7g==
-Received: from johan by xi.lan with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1lGeUY-0006pL-8h; Mon, 01 Mar 2021 10:05:26 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH v2 2/2] gpio: fix gpio-device list corruption
-Date:   Mon,  1 Mar 2021 10:05:19 +0100
-Message-Id: <20210301090519.26192-3-johan@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210301090519.26192-1-johan@kernel.org>
-References: <20210301090519.26192-1-johan@kernel.org>
+        id S233429AbhCAJNS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 04:13:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233360AbhCAJNS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 04:13:18 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB942C06174A
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 01:12:31 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id w21so19648563edc.7
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 01:12:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r0+snQP1OepvOAiKkI6VdpONCkQ1/Rgo1L2y7WjmwNk=;
+        b=nGmjnLE7ZDBq3oOYbXNMIcEoVDx/O0RUm+YOH3vsrEji5UGz604U8C2Ai/8G9RcvcM
+         L7s16lIwr4uZZVA+i3iB+bIHTuDi7EgQ69dBx24+h6IQM9EpcRygR3erd7kIqZhYft58
+         jADpQ8lQBSdVrqeC7yj5hBgD7P+i80oF4QgnxASD9i4XKq3BLWGI3dEQSPxAX3trj8oD
+         yYv+2dLwJzacrFLXVi/NF5oC4hxnQ8s8K4o6HhdtzqDDiDGMXhXXy+OUhmog4zytav4j
+         rfyHNc7t/7a/aBG0DwODJhrrs8o0SrL+5jm9oB3/73ehAdDQdsUI6kd1sLEENfDJg6Z8
+         tyeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r0+snQP1OepvOAiKkI6VdpONCkQ1/Rgo1L2y7WjmwNk=;
+        b=ARaTZSKxBXiZ6KYJuTTW0j11FOKpd+KZleSAfctpdjXL9pTHsSGVBrpPyK/DLCyBxK
+         tju7Y7C2jYtNBRqpgCYj9aF60e77HbUbw3FtHigFrPS2UDqktd1c2TpZuz/hD7snIP5k
+         pUDFFcfzMbOaySIn+fsx8p7pf3cqVlF2l/+TlWSZgHWgPPPrxAJd7atd4awo6wAPAfjB
+         i2ThbCl+uFbmoqHuvssKjm+yV2ATocWjuHNpTnSJzZmvqhdySQdRmDPf9/kXF13kbZNf
+         XwBVD23qbb3xCCeImWahGdlRHPF7GnedYxpnlmBi7QIemauE83LQGIAw0FBj00T/bOaO
+         dnuQ==
+X-Gm-Message-State: AOAM531e/WlLv4S/0zH+ONxJLrKIzZdh02Qru9FmwDwk2uX1KM8GOpoy
+        oQ367+hoivdogtfjMfOlWwkQHHaAWNcpVhXcIBOOVQ==
+X-Google-Smtp-Source: ABdhPJwDn45OLVxfK0AvUxzViyAWO2/K09SNBO4hSgbVWRAKZiFfvX7DjsaB0haD6ktSH9eDR6qxDczCF112IZCEETw=
+X-Received: by 2002:aa7:d588:: with SMTP id r8mr15283394edq.88.1614589950563;
+ Mon, 01 Mar 2021 01:12:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210301090519.26192-1-johan@kernel.org>
+In-Reply-To: <20210301090519.26192-1-johan@kernel.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 1 Mar 2021 10:12:19 +0100
+Message-ID: <CAMpxmJXfyM89vfFDQfvOU+CX5EQSp_n_UrbEYC5MP0T-0phc-Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] gpio: regression fixes
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Make sure to hold the gpio_lock when removing the gpio device from the
-gpio_devices list (when dropping the last reference) to avoid corrupting
-the list when there are concurrent accesses.
+On Mon, Mar 1, 2021 at 10:05 AM Johan Hovold <johan@kernel.org> wrote:
+>
+> Here's a fix for a regression in 5.12 due to the new stub-driver hack,
+> and a fix for potential list corruption due to missing locking which has
+> been there since the introduction of the character-device interface in
+> 4.6.
+>
+> Johan
+>
+> Changes in v2
+>  - drop the corresponding drv_set_drvdata() which is no longer needed
+>    after patch 1/2
+>  - add Saravanas's reviewed-by tag to patch 2/2
+>
+>
+> Johan Hovold (2):
+>   gpio: fix NULL-deref-on-deregistration regression
+>   gpio: fix gpio-device list corruption
+>
+>  drivers/gpio/gpiolib.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> --
+> 2.26.2
+>
 
-Fixes: ff2b13592299 ("gpio: make the gpiochip a real device")
-Cc: stable@vger.kernel.org      # 4.6
-Reviewed-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/gpio/gpiolib.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Patches applied, thanks!
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 6e0572515d02..4253837f870b 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -475,8 +475,12 @@ EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
- static void gpiodevice_release(struct device *dev)
- {
- 	struct gpio_device *gdev = container_of(dev, struct gpio_device, dev);
-+	unsigned long flags;
- 
-+	spin_lock_irqsave(&gpio_lock, flags);
- 	list_del(&gdev->list);
-+	spin_unlock_irqrestore(&gpio_lock, flags);
-+
- 	ida_free(&gpio_ida, gdev->id);
- 	kfree_const(gdev->label);
- 	kfree(gdev->descs);
--- 
-2.26.2
-
+Bartosz
