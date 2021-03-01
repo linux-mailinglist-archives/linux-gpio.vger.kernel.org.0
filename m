@@ -2,88 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 559B0328022
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 14:59:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70B0E328074
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 15:15:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236125AbhCAN6r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 08:58:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
+        id S236160AbhCAOOf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 09:14:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236121AbhCAN6q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 08:58:46 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A7C7C061788
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 05:58:05 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id w21so20827725edc.7
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 05:58:05 -0800 (PST)
+        with ESMTP id S236266AbhCAOO1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 09:14:27 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90995C06178A
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 06:13:45 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id e7so25751605lft.2
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 06:13:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nKuWC3rVV9sra+4DDgdLnle85IT4vlB1n7DPoNwpayo=;
-        b=STgKjcbbPqlcVj+Yg1do/AfuQIj/wmBwy56Kj0C4VQoXnZHFAiF79BD5kiIcPWzgDB
-         /ZXT0GpsZgkfB8E5WMMZcT285MlbPXod+cZrK1EXjwzKrhy35bATHm0CPmObm0oq2iwE
-         oEI+69fCBlum8d1WP/UXUJFU4vArguEIHlK4IC8nudxpjtvVAcAyL0j06R8Zfiu+2jag
-         SuVppZD1+mT0+pC3MHTdWLPRlXomrKYGro0wq7F2vycFK/G5nxbDhmwfPKJpv0RT4Ihn
-         5eUckBWRXm8wdtgsfsoDYYpwSvGKOLFIDSToQdvRq+F7T+vF6H2YKs+tBmUrTssHgTFq
-         mByg==
+        bh=LjJd3o/MlwMe48ArU7+US4+TfCoWT+j2MUISNRkW3PY=;
+        b=xZaiqKC8/BHsuXDDURaZ2P4M3vbSp6MdHNCMCRcuLEPg8MDpcstcTodGAGy0TocsWR
+         lksnBx0mzoCsYf+ZobS/eJKm1ZrPRyywrPJPqForzJ+x6VZVcxzNE9JG6KDcRED+spYF
+         3GH7bIef1SSv77A2ODR3EbELMPCMuVRK1Swz6EZlTCHdfKD/iUwY5DfwbGOEcAqmYoyI
+         gAGQlCM5ouGlX3L7jC6BCBQQ6dSIuFKx6X9rJUYK+Jd1WT7xAj9IMw1JHKl0gikTAZZa
+         dmE5MncqWWVyEVPZtxGX2aVoR8KQPYIa+nfR7Qc/ZMpvVvBaPHXuqFPS0tEAaYqBuJRn
+         gnhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nKuWC3rVV9sra+4DDgdLnle85IT4vlB1n7DPoNwpayo=;
-        b=BESCtEMp0QOEBT8rOAQyDN/DbaBKFJTuQOshlB19qtBN+qJshh8dDNAW5OuV9K8bNz
-         QpCufLJe3sVXCRn2NpcjpWv21pc/khaGX7ZXcGbR5x4+iUapLmMjHvWzXMti250FObMZ
-         hsjayylaQSszVUCJFWWB5LWBgsJmeE3dtdWgZZURiqI/woxxeS3xumgK9OXOAnrtvlaU
-         3gV2CfPT8vP5TvYX0A1yISfs1mF/45eqrhtxZreMzMZ7DcupBb94a9ZpsDaugCVuVjOg
-         4DnRLLV9DsqyzgYSdAp8UKzQ19HUOsIocn8hwyZaRBylYEKhIS6AzdCDN7L8lOq9ZYxN
-         VXfA==
-X-Gm-Message-State: AOAM531iocMVL4zLXvizDJSS0tOQxFd7V7JW4ytEg6YkTi6hefWarSwc
-        8k8qGV7lHHoOOo6XPmsW7yr5O4ix6p9kiqBKmdJN6w==
-X-Google-Smtp-Source: ABdhPJwYJDxPiEv3ADUo2gt/NLH8qTuwvXhaLRKLrw+7IP/68NCdtzYiQfFshSLhg0rbOrVB84ornicr77iSkLSXmE0=
-X-Received: by 2002:a05:6402:35c8:: with SMTP id z8mr3291764edc.341.1614607083797;
- Mon, 01 Mar 2021 05:58:03 -0800 (PST)
+        bh=LjJd3o/MlwMe48ArU7+US4+TfCoWT+j2MUISNRkW3PY=;
+        b=haMudhTBDhBHKjRasMaIydni0fVWnpECkWRv/OcW/gXg5+3ShtlNYhi0AznsSNPL/g
+         Js454h2ltE2TgDHYctlnnx1zY0A1CNULlD/LY7Kg4OVQ3IAVKxDbuRGoOFCE4zKmQE8W
+         NyfaaRorIJalDq98I1zQEL5QHCI1oxycfzbEKJMaN3/BjS5c8rstw65J7RaaMsHYcYd7
+         CfnL/Te9WZMo7bQH6QFL+GWkk99QzEs9J17b00uwXdh9WplkM92X+R25pb9KOBTWuuzn
+         71+tgjnVBWrYFJyplA9xLQ4BDe1k5Q91Np8tQPbr4Vc3RLykwMBRedLgLhTWXUb4ZvqU
+         VGkg==
+X-Gm-Message-State: AOAM530kdTPmtg0+JFI/6bpofh00nT3szrVhQ80qMp7QWMkaX7RB7cBZ
+        5FmDgxpsmMHjo6TLeKd5jglYxmrZ/3N6HG+otoLAsA==
+X-Google-Smtp-Source: ABdhPJy1c3S3yJJfQXyJI9V/D7vsc4oSehquPrNH4w/6UrIsJywXl0E1e6fwdaIIxsg8NkYtwlh1BnhKnhZCA24fQpA=
+X-Received: by 2002:a05:6512:547:: with SMTP id h7mr9894150lfl.529.1614608024158;
+ Mon, 01 Mar 2021 06:13:44 -0800 (PST)
 MIME-Version: 1.0
-References: <1614069358-50943-1-git-send-email-yang.lee@linux.alibaba.com>
- <YDTsWR/kXhd96ICI@smile.fi.intel.com> <YDe8/2toCGEH2Mf1@smile.fi.intel.com>
-In-Reply-To: <YDe8/2toCGEH2Mf1@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 1 Mar 2021 14:57:53 +0100
-Message-ID: <CAMpxmJV5go-fHR2RWWdyi5a6ONeXrhC5c958oNZNzszt2aGN9A@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: acpi: Add missing IRQF_ONESHOT
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Yang Li <yang.lee@linux.alibaba.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <63d610ba-5f63-2be1-6215-f44bd88d94d2@xilinx.com>
+ <CACRpkdZEYqPU6Zr+a6fivZiz-hKx6-KVdYVR7j--y+k2KXZaPw@mail.gmail.com> <45cea3bb-6e5d-4005-ef2a-67b08772e0d7@xilinx.com>
+In-Reply-To: <45cea3bb-6e5d-4005-ef2a-67b08772e0d7@xilinx.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 1 Mar 2021 15:13:32 +0100
+Message-ID: <CACRpkdY=17xTdByUMdKfqCPS0ZcwMPC4w5EBaPrHgnEmkKYc-g@mail.gmail.com>
+Subject: Re: DT overlay applied via pinctrl description
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 25, 2021 at 4:07 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Feb 23, 2021 at 01:51:53PM +0200, Andy Shevchenko wrote:
-> > On Tue, Feb 23, 2021 at 04:35:58PM +0800, Yang Li wrote:
-> > > fixed the following coccicheck:
-> > > ./drivers/gpio/gpiolib-acpi.c:176:7-27: ERROR: Threaded IRQ with no
-> > > primary handler requested without IRQF_ONESHOT
-> > >
-> > > Make sure threaded IRQs without a primary handler are always request
-> > > with IRQF_ONESHOT
-> >
-> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> Bart, I guess I will collect this in my branch and send you a PR.
-> I have more fixes to that file anyway.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+On Mon, Mar 1, 2021 at 10:31 AM Michal Simek <michal.simek@xilinx.com> wrote:
+> On 3/1/21 10:19 AM, Linus Walleij wrote:
 
-Fine with me!
+> Does this mean that you prefer to fix how dt overlay applying instead of
+> fixing code to apply mux configs first before conf one?
+>
+> Something like this? (just c&p patch below)
+
+I think your patch looks correct! Can you make a proper patch,
+make sure it solves your problem and submit to the mailing
+list for review?
+
+Yours,
+Linus Walleij
