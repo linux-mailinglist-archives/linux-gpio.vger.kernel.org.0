@@ -2,156 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68B3C32738C
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Feb 2021 18:13:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 514AE3275E8
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 02:44:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231326AbhB1RMq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Feb 2021 12:12:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49154 "EHLO
+        id S231352AbhCABoW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Feb 2021 20:44:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230461AbhB1RMj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Feb 2021 12:12:39 -0500
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10048C06174A;
-        Sun, 28 Feb 2021 09:11:58 -0800 (PST)
-Received: by mail-ej1-x635.google.com with SMTP id g5so23843438ejt.2;
-        Sun, 28 Feb 2021 09:11:57 -0800 (PST)
+        with ESMTP id S231329AbhCABoW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Feb 2021 20:44:22 -0500
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433F5C061786
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Feb 2021 17:43:42 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id q20so10408507pfu.8
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Feb 2021 17:43:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dfQ46OGWItLgoKPUR/Czwfd0qqTUSj25+jf5yrElG/4=;
-        b=GzeA/aDB2UBhnNVhm++I/Jk3Up7Sjll8FWko6UUVrR8GbwUj6tdWvj7U7T3p1JnaWE
-         tuDT5n8KyfWwgonEFcDAlbP9Wnm/lzI5ynLZd5zXrmZLcqy0e5qJFV+Ury6tgPUdhcIC
-         ZnUpySrUVv3A0oExsLsVOkNej6wDTO/NVed1e1lRxfeovoJIixufVCuML3LKRgEXHaK6
-         AQIpA41ncR2vIctG/YIpRBR7PPh4Vs9caRlig7rCLuPUPKUXlteysI6kNYwN/3Yc//ci
-         tD2NQsug/MYd9mQ+dWSVvw0ZV+w1YK/V6hQL8df04yN35+nWGaht76tutf0kiQ1Fxgq5
-         E6Vw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=aF7j0WJJpO1/nGRHIYUOrG0PcSrwpElNSBQzShtOxAg=;
+        b=bT78xFJS6n2mVcxgbK9YAyfzCLv/nSxP+uWW9aDb5nsRgJWIBdhfCJ5fe+PANgjfvF
+         ponw9GJMlSsLrDgIdQNrU8KF7yYbhezfuZDYNZrGfOR4OmN586mdN3JVIfqJd1n3DhSi
+         DRAtyDU309NALtPdotC+3QXfP+jgooq+o3g/AytgMLW5ulBzv4cLvk/h8+JA1x0ZT/Nf
+         +lsoMYpaOkRs61eDNv9R9MP8HyUi4nDxt1FD6Glw8S+G1SFRz2lNWqjmfrmEh3ZZYEoX
+         tM48jzWfFzyyFUtXi8VmAN01ivKsAdvoXyClkKJlm9unRZUNfHnb+jvUcz+WgJaDqmqd
+         SV0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dfQ46OGWItLgoKPUR/Czwfd0qqTUSj25+jf5yrElG/4=;
-        b=DFk3PQk4Tg5+x/JyUn1GIB9WRKbs4ZjvCjYZr9JKO8621MT6/JMbxVEVcdDoUwHVL+
-         For3KnKO03QZ25kxJo4JrfZHSkIeuz8ttxAxFkjgF2q6WYdlaegFsyL7pwebxMCJOuh/
-         NrMre9pjnYhb6I4oOeQe6UNOpaC6IPz2m13QnfLeVZ2YZGlmr1DYxmPi+bvVPkKasB7e
-         u9RBjICZzwxg7kg714yWmesb+O+Rtbcpc99VRzJxNj+AhqwCvcU1kFYQqrqosKdGeMu3
-         qv1KRTCKEbd/EDeY1ITs68EsyfQGwPqrqB4AdfJhZ2zoof+PofoZAtTFpktFx3ZcE2nA
-         XTjg==
-X-Gm-Message-State: AOAM5304vRkhWj/qH8naxa3syBxpk1crx5yAp/FsV3b7mRkxQxwuuOcN
-        4SYwXjH8z05UBhk34i8rBvOfdoP18tGg
-X-Google-Smtp-Source: ABdhPJw5sLbCUCcgxkhNvC6IgO3vmNaTgOeasYPBEho60Poa4WNRXoZ/cPiXNkLCHgbgyBJUziViqw==
-X-Received: by 2002:a17:906:acb:: with SMTP id z11mr3855755ejf.193.1614532316774;
-        Sun, 28 Feb 2021 09:11:56 -0800 (PST)
-Received: from localhost.localdomain ([46.53.249.223])
-        by smtp.gmail.com with ESMTPSA id fw3sm6654338ejb.82.2021.02.28.09.11.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aF7j0WJJpO1/nGRHIYUOrG0PcSrwpElNSBQzShtOxAg=;
+        b=QP5EHL7yoPgQXonm6LxQbJ5R0m5sL9dZRXy8v4teKP/wNEe36oTKyogO34Qkx2X9uq
+         7i5qYIXulu3YbNiCfCSZHw5GDqUyNQNyLT0LpPfucSwsMkxrgWAFeTD0Pv4BTRdBsfLR
+         Q7+XcXl11QQeXqR6Dv3nDj89w0mXootDaV6yXNcglyYi8I6uzhhD2YYSZDczzgYkO3lj
+         KY3tTYW+SAm7eY3GlqKxgqubu1h3ACEGurgjJpFnEM4N0acJyf7SBfIChwvKF5pnHl8U
+         dsQuB+Vx6rjxQ41RS7ZWhCbDZv3/XdH6J3PBcGbZlNfBwaWk1bdTq0K1gkycuhkdteTq
+         +eTg==
+X-Gm-Message-State: AOAM53387jTZuQQMFMfcotYdjaISWPpOdRILwVONmqr+dSrUKXiI1tmV
+        Y8oRiw7s8S7RHgz0hv+f1z2Owg==
+X-Google-Smtp-Source: ABdhPJw3/E6zl8DmW/nnkUG85leryZ2eVLWGElEWlfGFPnwDiv+6AEtx2veUoVjka/WkOw+Q2HHR0A==
+X-Received: by 2002:a63:2948:: with SMTP id p69mr11778549pgp.15.1614563021729;
+        Sun, 28 Feb 2021 17:43:41 -0800 (PST)
+Received: from localhost.localdomain (80.251.214.228.16clouds.com. [80.251.214.228])
+        by smtp.gmail.com with ESMTPSA id q95sm5641080pjq.20.2021.02.28.17.43.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Feb 2021 09:11:56 -0800 (PST)
-Date:   Sun, 28 Feb 2021 20:11:54 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, linux-arch@vger.kernel.org
-Subject: [PATCH 12/11] pragma once: scripted treewide conversion
-Message-ID: <YDvO2kmidKZaK26j@localhost.localdomain>
-References: <YDvLYzsGu+l1pQ2y@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YDvLYzsGu+l1pQ2y@localhost.localdomain>
+        Sun, 28 Feb 2021 17:43:40 -0800 (PST)
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH 0/2] Add ACPI support for SC8180X pinctrl driver
+Date:   Mon,  1 Mar 2021 09:43:27 +0800
+Message-Id: <20210301014329.30104-1-shawn.guo@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[  Bcc a lot of lists so that people understand what's this is all         ]
-[  about without creating uber-cc-thread.                                  ]
-[  Apologies if I missed your subsystem                                    ]
-[  Please see [PATCH 11/11: pragma once: conversion script (in Python 2)]  ]
+This is a couple of patches that enable ACPI probe for SC8180X pinctrl
+driver.  The msm core driver needs a bit change to handle tiles mapping
+differently between DT and ACPI.
 
-Hi, Linus.
+Shawn Guo (2):
+  pinctrl: qcom: handle tiles for ACPI boot
+  pinctrl: qcom: sc8180x: add ACPI probe support
 
-Please run the script below from top-level directory, it will convert
-most kernel headers to #pragma once directive advancing them into
-21-st century.
+ drivers/pinctrl/qcom/Kconfig           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c     | 18 +++++++---
+ drivers/pinctrl/qcom/pinctrl-msm.h     |  1 +
+ drivers/pinctrl/qcom/pinctrl-sc8180x.c | 48 +++++++++++++++++++++++++-
+ 4 files changed, 63 insertions(+), 6 deletions(-)
 
-The advantages are:
+-- 
+2.17.1
 
-* less LOC
-
-	18087 files changed, 18878 insertions(+), 99804 deletions(-)
-	= -81 kLOC (give or take)
-
-* less mental tax on developers forced to name things which aren't even
-  real code
-
-* less junk in preprocessor hashtables and editors/IDEs autocompletion
-  lists
-
-There are two bit exceptions: UAPI headers and ACPICA.
-Given ubiquity of #pragma once, I personally think even these subsystems
-should be converted in the future.
-
-Compile tested on alpha, arc, arm, arm64, h8300, ia64, m68k, microblaze,
-mips, nios2, parisc, powerpc, riscv, s390, sh, sparc, um-i386, um-x86_64,
-i386, x86_64, xtensa (allnoconfig, all defconfigs, allmodconfig with or
-without SMP/DEBUG_KERNEL + misc stuff).
-
-Not compile tested on csky, hexagon, nds32, openrisc. 
-
-Love,
-	Alexey
-
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-
-
-
-#!/bin/sh -x
-find . -type f -name '*.h' -print	|\
-LC_ALL=C sort				|\
-sed -e 's#^./##g'			|\
-xargs ./scripts/pragma-once.py
-
-find . -type d -name 'uapi' | xargs git checkout -f
-git checkout -f arch/alpha/include/asm/cmpxchg.h
-git checkout -f arch/arm/mach-imx/hardware.h
-git checkout -f arch/arm/mach-ixp4xx/include/mach/hardware.h
-git checkout -f arch/arm/mach-sa1100/include/mach/hardware.h
-git checkout -f arch/mips/include/asm/mips-cps.h
-git checkout -f arch/x86/boot/boot.h
-git checkout -f arch/x86/boot/ctype.h
-git checkout -f arch/x86/include/asm/cpufeatures.h
-git checkout -f arch/x86/include/asm/disabled-features.h
-git checkout -f arch/x86/include/asm/required-features.h
-git checkout -f arch/x86/include/asm/vmxfeatures.h
-git checkout -f arch/x86/include/asm/vvar.h
-git checkout -f drivers/acpi/acpica/
-git checkout -f drivers/gpu/drm/amd/pm/inc/vega10_ppsmc.h
-git checkout -f drivers/gpu/drm/amd/pm/powerplay/ppsmc.h
-git checkout -f drivers/input/misc/yealink.h
-git checkout -f drivers/media/usb/dvb-usb-v2/mxl111sf-demod.h
-git checkout -f drivers/media/usb/dvb-usb-v2/mxl111sf-tuner.h
-git checkout -f drivers/pcmcia/yenta_socket.h
-git checkout -f drivers/staging/rtl8723bs/include/hal_com_h2c.h
-git checkout -f include/linux/acpi.h
-git checkout -f include/linux/bitops.h
-git checkout -f include/linux/compiler_types.h
-git checkout -f include/linux/device.h
-git checkout -f include/linux/kbuild.h
-git checkout -f include/linux/libfdt_env.h
-git checkout -f include/linux/local_lock.h
-git checkout -f include/linux/spinlock.h
-git checkout -f include/linux/spinlock_api_smp.h
-git checkout -f include/linux/spinlock_types.h
-git checkout -f include/linux/tracepoint.h
-git checkout -f mm/gup_test.h
-git checkout -f net/batman-adv/main.h
-git checkout -f scripts/dtc/
-git checkout -f tools/include/linux/bitops.h
-git checkout -f tools/include/linux/compiler.h
-git checkout -f tools/testing/selftests/clone3/clone3_selftests.h
-git checkout -f tools/testing/selftests/futex/include/atomic.h
-git checkout -f tools/testing/selftests/futex/include/futextest.h
-git checkout -f tools/testing/selftests/futex/include/logging.h
-git checkout -f tools/testing/selftests/kselftest.h
-git checkout -f tools/testing/selftests/kselftest_harness.h
-git checkout -f tools/testing/selftests/pidfd/pidfd.h
-git checkout -f tools/testing/selftests/x86/helpers.h
