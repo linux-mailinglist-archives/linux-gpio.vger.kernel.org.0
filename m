@@ -2,93 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E71793279A8
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 09:46:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA8F6327A5E
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 10:06:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233385AbhCAIpM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 03:45:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233319AbhCAIpK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 1 Mar 2021 03:45:10 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4773A64DEF;
-        Mon,  1 Mar 2021 08:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614588269;
-        bh=yI9vk7/j1WOYnOHUSAxSo33Gf4b9ogltKOcygaxgC/A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AwU+infUiSF+eRxYlr3iF3Nhty9BbOR3OFHSqz0/Xw9d9LTaxrngHHfGWJvirKuJH
-         KWq6z5dhctFSfAJL1Pmfmq/zNSwv57U2iFnfAfAmq9K+VNBKbKc/XX2KBZN9NNuW06
-         fqthBzcLxzrCoHozjj/iAJnjCizyJJwk3ATIhIwRgV7f0WBj9MZHeYVtUk0GOlKIAL
-         9fmoq3Lsup02yWimweaIH5dzNx1PhE8s88zWWjvvcwlLZHoNYlwXoXEKesGRp6fxWl
-         uvGeYPRacjNptGp8pHpyEJn9ymAyzWYDkuBP9t/rTS4K4QvOhfbjeRG6szB9R/jwS4
-         0aVel+tqYRxUQ==
-Received: from johan by xi.lan with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1lGeAY-00017E-1A; Mon, 01 Mar 2021 09:44:46 +0100
-Date:   Mon, 1 Mar 2021 09:44:46 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot+d27b4c8adbbff70fbfde@syzkaller.appspotmail.com
-Subject: Re: [PATCH 1/2] gpio: fix NULL-deref-on-deregistration regression
-Message-ID: <YDypfjoBpHsd+dCo@hovoldconsulting.com>
-References: <20210226145246.1171-1-johan@kernel.org>
- <20210226145246.1171-2-johan@kernel.org>
- <CAGETcx-4Q+SkdLO-rXE-zt2kdz=J1cnrPjv07mt0KRtCPa_OGg@mail.gmail.com>
+        id S233297AbhCAJF1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 04:05:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233840AbhCAJEA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 04:04:00 -0500
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8899FC06174A
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 01:03:19 -0800 (PST)
+Received: by mail-lj1-x22b.google.com with SMTP id q14so18502653ljp.4
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 01:03:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=gzxCVL+nyodcUSCU9VZAZpLakwe/w50q0cyfOXq54xY=;
+        b=ZHUFfp2IK9gllxOuG1MLe3/yFCuCVf6Rt1dzYQjCW6fB0DsV3A9CddVWKZEZteJrc+
+         /N7RGfW8KJHyFycLitpkrkMtclDQ6boIeedGTMkPoPS+Rn0QwakbKBH/pWDloaP6fEY8
+         EYjUR9AJ2AOzFkPdeYCNwGTvrB9PoFSPfKSarX6RB+fkfZ5swW+Ac9zpdvyE1eaLJw2p
+         Q7YdcSqtN5luoVeNLABnwl3RPxIo5fCVcJbtPLySVCevCZ44uq56skpiTScWp469ySPo
+         kwBsTm0SW/Fra67f3caKqpoQUo/Zt0DBuvC7X7gYFNYniYoHaeRmuGg/oyTSIxyz2wmL
+         rNwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=gzxCVL+nyodcUSCU9VZAZpLakwe/w50q0cyfOXq54xY=;
+        b=f3wlU9RRaHtNFkmpCIQgs8YTH4UAMe+pm+LBCrRUK36J462NIvLGOz28o3WB5K9myJ
+         guQcHvUc3ciNrjmaYbSCcibGFNzhmiP+Xu9ISsT17bmIDwnOBhcxTp/UXKsgrL+cHrpE
+         KSU342bq4k/QcfOkgSm7IJaKRmrV+CJwzmLHBx9Q6AssowLGD+smdI3VqJ1C/h+ny/Oc
+         NhYMkTqHUbuOiifDqacONLVdSt4ZgQEspTLvvfZaG47VoiVQCKBb/pZMW8NlNSunMMTm
+         ojr7opYkEff7WkbYWthqk9yL8SOnIcY0O04evLH8LWmgOX2UkmKR0Q7THTBSXO+JJRsf
+         9GSQ==
+X-Gm-Message-State: AOAM531mpPyjTbSNKATHBGWzFLnnh4h2O2wPygo9vzx7GPdltUptseef
+        5yJXvKBfqqcj4uumrZaWYXhMb1AInLMPln1h935zxfLwT7A=
+X-Google-Smtp-Source: ABdhPJzl9vwfVcM7lZPrUpqhZ6r0aRYAekXp0Ghs2HqGwlAIJhfdHwZkuwqYtc4pK0cwjK4stRX7Npv7BAkeSs9IzLo=
+X-Received: by 2002:a2e:1649:: with SMTP id 9mr178381ljw.74.1614589398090;
+ Mon, 01 Mar 2021 01:03:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx-4Q+SkdLO-rXE-zt2kdz=J1cnrPjv07mt0KRtCPa_OGg@mail.gmail.com>
+References: <20210219174633.8646-1-michaelestner@web.de>
+In-Reply-To: <20210219174633.8646-1-michaelestner@web.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 1 Mar 2021 10:03:07 +0100
+Message-ID: <CACRpkdb1i=TXMWW5wNbxERBUAAsQp+QhoCcgsPTVte0vH5CQnQ@mail.gmail.com>
+Subject: Re: [PATCH] Signed-off-by: Michael Estner <michaelestner@web.de>
+To:     Michael Estner <michaelestner@web.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 26, 2021 at 01:54:12PM -0800, Saravana Kannan wrote:
-> On Fri, Feb 26, 2021 at 6:55 AM Johan Hovold <johan@kernel.org> wrote:
-> >
-> > Fix a NULL-pointer deference when deregistering the gpio character
-> > device that was introduced by the recent stub-driver hack. When the new
-> > "driver" is unbound as part of deregistration, driver core clears the
-> > driver-data pointer which is used to retrieve the struct gpio_device in
-> > its release callback.
-> >
-> > Fix this by using container_of() in the release callback as should have
-> > been done all along.
-> >
-> > Fixes: 4731210c09f5 ("gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default")
-> > Cc: Saravana Kannan <saravanak@google.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Reported-by: syzbot+d27b4c8adbbff70fbfde@syzkaller.appspotmail.com
-> > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > ---
-> >  drivers/gpio/gpiolib.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index adf55db080d8..e1016bc8cf14 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -474,7 +474,7 @@ EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
-> >
-> >  static void gpiodevice_release(struct device *dev)
-> >  {
-> > -       struct gpio_device *gdev = dev_get_drvdata(dev);
-> > +       struct gpio_device *gdev = container_of(dev, struct gpio_device, dev);
-> 
-> Can you also delete the dev_set_drvdata() in
-> gpiochip_add_data_with_key() if the drvdata is not used
-> elsewhere anymore? I skimmed the code and it doesn't look like it, but
-> I could be wrong.
+Hi Michael!
 
-Yeah, I considered it but didn't want to risk introducing any new
-regressions just to clean up a redundant store.
+Thanks for your patch!
 
-But looking at it again today, I agree that it looks like it isn't used
-anywhere else. I'll send a v2. Thanks.
+Make sure to send patches to the linux-gpio list and Bartosz
+as well.
 
-Johan
+On Fri, Feb 19, 2021 at 6:46 PM Michael Estner <michaelestner@web.de> wrote:
+>
+> Delete unused else if iteration.
+> ---
+>  drivers/gpio/gpiolib.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 97eec8d8dbdc..1fe38fc99b8f 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -612,9 +612,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>         dev_set_drvdata(&gdev->dev, gdev);
+>         if (gc->parent && gc->parent->driver)
+>                 gdev->owner = gc->parent->driver->owner;
+> -       else if (gc->owner)
+> -               /* TODO: remove chip->owner */
+> -               gdev->owner = gc->owner;
+
+As long as we have not resolved the TODO I think this needs to stay around.
+
+What makes you think this is not needed anymore?
+
+Yours,
+Linus Walleij
