@@ -2,179 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2254D3275EB
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 02:45:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 902AA327810
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 08:11:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231394AbhCABoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Feb 2021 20:44:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45058 "EHLO
+        id S231185AbhCAHJL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 02:09:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230084AbhCABoo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Feb 2021 20:44:44 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B80C06178B
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Feb 2021 17:43:46 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id l7so6206486pfd.3
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Feb 2021 17:43:46 -0800 (PST)
+        with ESMTP id S232408AbhCAHIQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 02:08:16 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA03DC061786
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Feb 2021 23:07:35 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id bd6so5984639edb.10
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Feb 2021 23:07:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=z0mBMHxaT4uoBSQcFVbT2L0+EZv1w1tZ9nt7sG1lKAE=;
-        b=iTqMK3mxYaalRnrW436u79qOOY0+3tfhvfkJlOeiDEVZT8Dm0bkiObfGY7PwGqaxL1
-         pRAwN6jl3Zje67R6tzz+AIs0jSCtXi6WfdcK18XfL/xbuFp7rKwdAW1DRfquidKITsay
-         SLQfr/oJoLkMKiaJKrPO1g7h7dMpNuH5h9m4pfkKlKLKV3FFQqejzehbb5Up6PHInsVj
-         i83SKFOTx1z1RBXzrS0Wa3ZsUIIo9YXRUrOnC8Wbv9ovuhgAO2t3dvV0SsyyRp5LMbdR
-         TvaR77CpInVN8R07ACq131vOKscnDRFORn+1YX+5qs565g5Bq9SSUU1Yrkq3+2423lM4
-         7oyw==
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DYtRy3yB5Mwslt+yJOER3GwxZYF8eTP3aAHJxAyC5bg=;
+        b=PAE89XNRN4JmSZ+dGX+cOFaS5BTaXu/klkdTkYzBdV/oMITtlp57dMCWtyTV564QTf
+         873K64P8tw8oNGHzua6CDF6X92fqH1S+/aImbTQBSjF2A/ZShRWRhRxBBDPE/gSVI97n
+         mSLXfZbJ9r8iQeO/ZZUBcU/RRQ9fBDOSdkgyQGp78yLikZwycB+xq1+5VLWoPJIVGQCm
+         V3WuZyexbxH3+LErGEr7PoqHmevVPP0MmqSreggHNBRtQxTAuclLm74fECuK5+ZBVZwg
+         27QkiRsCMghU2uQNXCHquHcgMP/srieWGDwtqnTTkdLh+6+yY3pujQ7r/iC6RgPhRKA6
+         j0Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=z0mBMHxaT4uoBSQcFVbT2L0+EZv1w1tZ9nt7sG1lKAE=;
-        b=JNQn7+OAhoB+v4Bu+MwdCfNRQ45cFJOhReTea5l+AB1D7YNMq3kQRVhiHaWjqLRn01
-         b9hvi2fCvC+ytnTBoI9M0jljSi7iuRF3DV47CaAfktZUanwZCeZnRq5t2xkrEHcbGeRn
-         +0uZR0e5doJr0TFMm0Y3JGWCyEMeyS+WQ8PvSlCOMoyrwn6LnD7lqCq36oFCXD5plxlO
-         Gmii6AXeC6PM8Fwu38EhpTq8gaY5tzWbDbGP+CHgVXTcBoBZ2E39J0MJbctku/8d0Zkv
-         wwIz78djyMYF5CTcJsQQ8DwYjVDsqPwQgzCFFKDsmnf8p58+0tHyDm7AlU9kYL+zTXGs
-         ZFLA==
-X-Gm-Message-State: AOAM531HWknpYnRw+KsXL9d6x37Xb4N/vopiekvcEJdlK/DPaSHvg4L7
-        Hr2Ee0XL7IwI4leVvhyjuUjgXg==
-X-Google-Smtp-Source: ABdhPJz+JIopAVE1SCT8Pgx4eS/YoSS7qIkoEiQUv/aFVw7tAIVL/Td5pgMEB/6u677fhh5oR2fSTg==
-X-Received: by 2002:a63:1c19:: with SMTP id c25mr11586114pgc.374.1614563025828;
-        Sun, 28 Feb 2021 17:43:45 -0800 (PST)
-Received: from localhost.localdomain (80.251.214.228.16clouds.com. [80.251.214.228])
-        by smtp.gmail.com with ESMTPSA id q95sm5641080pjq.20.2021.02.28.17.43.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Feb 2021 17:43:45 -0800 (PST)
-From:   Shawn Guo <shawn.guo@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH 2/2] pinctrl: qcom: sc8180x: add ACPI probe support
-Date:   Mon,  1 Mar 2021 09:43:29 +0800
-Message-Id: <20210301014329.30104-3-shawn.guo@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210301014329.30104-1-shawn.guo@linaro.org>
-References: <20210301014329.30104-1-shawn.guo@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DYtRy3yB5Mwslt+yJOER3GwxZYF8eTP3aAHJxAyC5bg=;
+        b=aZ3z+jVeJ8C5QCZ2SvUmO+wivGbXXdO6ITURjkOzBg1ZMTYe+g0kH6sc9pGTS+cUyq
+         6kD5gV/9oB7WWH6p+YnTtswIuCi0vqf7QulFv5Edh6hMoJpkQQyssd1kcWnXtPBAKLCg
+         pr+PONaHdlLRjfPUwg+D13AncVdL4O9rUoaZP1UOyctWt3NSsPy2NP5GYLNmH9zSbVav
+         78EoPzaugoZ0vvonQ7w7/MifLP1lUu8Kc6/VS7LSpJZ58fYPUnDADhTv1BnlJ00mbJZ8
+         1dgkjBhpvx50iQjGpUq55U3jqDvBi56tmnGdvSP/76zc2DSRaY3loRUbCl9DZqh7R+r2
+         vDuA==
+X-Gm-Message-State: AOAM530jgSShrKiXVC5pQTUVkgPt0ITkZeiSA7/gHeLctp2Pv80O0uDI
+        92pD/rweOqeUg4EIYvFFZ96oRQ==
+X-Google-Smtp-Source: ABdhPJzU97fS4x+QIpbcGx8eNIDjWR1iyMkyZKUI9B2lqOj7lmI9OqlGCtafetceHBh0yQseHGHpGA==
+X-Received: by 2002:aa7:c3c4:: with SMTP id l4mr5666090edr.335.1614582448655;
+        Sun, 28 Feb 2021 23:07:28 -0800 (PST)
+Received: from ?IPv6:2a02:768:2307:40d6::648? ([2a02:768:2307:40d6::648])
+        by smtp.gmail.com with ESMTPSA id y12sm6423721ejb.104.2021.02.28.23.07.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Feb 2021 23:07:28 -0800 (PST)
+Subject: Re: [PATCH v3 1/3] firmware: xilinx: Add pinctrl support
+To:     Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Cc:     saikrishna12468@gmail.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        git@xilinx.com, linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <1613131643-60062-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <1613131643-60062-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <CABMQnVJ+hQ_sdXMdLzhv2Y65QW8Vi01VAjV=SCeOei-zOZ5dwQ@mail.gmail.com>
+From:   Michal Simek <monstr@monstr.eu>
+Message-ID: <ecef1943-fec3-9b35-a326-87764512c691@monstr.eu>
+Date:   Mon, 1 Mar 2021 08:07:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
+MIME-Version: 1.0
+In-Reply-To: <CABMQnVJ+hQ_sdXMdLzhv2Y65QW8Vi01VAjV=SCeOei-zOZ5dwQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It adds ACPI probe support with tile offsets passed over to msm core
-driver via sc8180x_tile_offsets, as TLMM is described a single memory
-region in ACPI DSDT.
+Hi Noburiho,
 
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
----
- drivers/pinctrl/qcom/Kconfig           |  2 +-
- drivers/pinctrl/qcom/pinctrl-sc8180x.c | 48 +++++++++++++++++++++++++-
- 2 files changed, 48 insertions(+), 2 deletions(-)
+On 2/28/21 1:17 AM, Nobuhiro Iwamatsu wrote:
+> Hi,
+> 
+> 2021年2月12日(金) 21:10 Sai Krishna Potthuri
+> <lakshmi.sai.krishna.potthuri@xilinx.com>:
+>>
+>> Adding pinctrl support to query platform specific information (pins)
+>> from firmware.
+>>
+>> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+>> Acked-by: Michal Simek <michal.simek@xilinx.com>
+>> ---
+>>  drivers/firmware/xilinx/zynqmp.c     | 114 +++++++++++++++++++++++++++
+>>  include/linux/firmware/xlnx-zynqmp.h |  90 +++++++++++++++++++++
+>>  2 files changed, 204 insertions(+)
+>>
+>> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+>> index efb8a66efc68..299c3d5a9ebd 100644
+>> --- a/drivers/firmware/xilinx/zynqmp.c
+>> +++ b/drivers/firmware/xilinx/zynqmp.c
+>> @@ -784,6 +784,120 @@ int zynqmp_pm_fpga_get_status(u32 *value)
+>>  }
+>>  EXPORT_SYMBOL_GPL(zynqmp_pm_fpga_get_status);
+>>
+> 
+> <snip>
+> 
+>> @@ -125,6 +131,12 @@ enum pm_query_id {
+>>         PM_QID_CLOCK_GET_FIXEDFACTOR_PARAMS,
+>>         PM_QID_CLOCK_GET_PARENTS,
+>>         PM_QID_CLOCK_GET_ATTRIBUTES,
+>> +       PM_QID_PINCTRL_GET_NUM_PINS = 6,
+>> +       PM_QID_PINCTRL_GET_NUM_FUNCTIONS = 7,
+>> +       PM_QID_PINCTRL_GET_NUM_FUNCTION_GROUPS = 8,
+>> +       PM_QID_PINCTRL_GET_FUNCTION_NAME = 9,
+>> +       PM_QID_PINCTRL_GET_FUNCTION_GROUPS = 10,
+>> +       PM_QID_PINCTRL_GET_PIN_GROUPS = 11,
+> 
+> These do not have to have values, Because PM_QID_INVALID is 0.
+> 
+>>         PM_QID_CLOCK_GET_NUM_CLOCKS = 12,
+> 
+> And you can drop value from this.
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index 6853a896c476..9f0218c4f9b3 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -222,7 +222,7 @@ config PINCTRL_SC7280
- 
- config PINCTRL_SC8180X
- 	tristate "Qualcomm Technologies Inc SC8180x pin controller driver"
--	depends on GPIOLIB && OF
-+	depends on GPIOLIB && (OF || ACPI)
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-index b765bf667574..38117ceb4d8f 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-@@ -4,6 +4,7 @@
-  * Copyright (c) 2020-2021, Linaro Ltd.
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -17,6 +18,12 @@ static const char * const sc8180x_tiles[] = {
- 	"west"
- };
- 
-+static const u32 sc8180x_tile_offsets[] = {
-+	0x00d00000,
-+	0x00500000,
-+	0x00100000
-+};
-+
- enum {
- 	SOUTH,
- 	EAST,
-@@ -1557,6 +1564,13 @@ static const struct msm_pingroup sc8180x_groups[] = {
- 	[193] = SDC_QDSD_PINGROUP(sdc2_data, 0x4b2000, 9, 0),
- };
- 
-+static const int sc8180x_acpi_reserved_gpios[] = {
-+	0, 1, 2, 3,
-+	47, 48, 49, 50,
-+	126, 127, 128, 129,
-+	-1
-+};
-+
- static const struct msm_gpio_wakeirq_map sc8180x_pdc_map[] = {
- 	{ 3, 31 }, { 5, 32 }, { 8, 33 }, { 9, 34 }, { 10, 100 }, { 12, 104 },
- 	{ 24, 37 }, { 26, 38 }, { 27, 41 }, { 28, 42 }, { 30, 39 }, { 36, 43 },
-@@ -1588,11 +1602,42 @@ static struct msm_pinctrl_soc_data sc8180x_pinctrl = {
- 	.nwakeirq_map = ARRAY_SIZE(sc8180x_pdc_map),
- };
- 
-+static const struct msm_pinctrl_soc_data sc8180x_acpi_pinctrl = {
-+	.tiles = sc8180x_tiles,
-+	.ntiles = ARRAY_SIZE(sc8180x_tiles),
-+	.tile_offsets = sc8180x_tile_offsets,
-+	.pins = sc8180x_pins,
-+	.npins = ARRAY_SIZE(sc8180x_pins),
-+	.groups = sc8180x_groups,
-+	.ngroups = ARRAY_SIZE(sc8180x_groups),
-+	.reserved_gpios = sc8180x_acpi_reserved_gpios,
-+	.ngpios = 191,
-+};
-+
- static int sc8180x_pinctrl_probe(struct platform_device *pdev)
- {
--	return msm_pinctrl_probe(pdev, &sc8180x_pinctrl);
-+	int ret;
-+
-+	if (pdev->dev.of_node) {
-+		ret = msm_pinctrl_probe(pdev, &sc8180x_pinctrl);
-+	} else if (has_acpi_companion(&pdev->dev)) {
-+		ret = msm_pinctrl_probe(pdev, &sc8180x_acpi_pinctrl);
-+	} else {
-+		dev_err(&pdev->dev, "DT and ACPI disabled\n");
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
- }
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id sc8180x_pinctrl_acpi_match[] = {
-+	{ "QCOM040D"},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(acpi, sc8180x_pinctrl_acpi_match);
-+#endif
-+
- static const struct of_device_id sc8180x_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sc8180x-tlmm", },
- 	{ },
-@@ -1603,6 +1648,7 @@ static struct platform_driver sc8180x_pinctrl_driver = {
- 	.driver = {
- 		.name = "sc8180x-pinctrl",
- 		.of_match_table = sc8180x_pinctrl_of_match,
-+		.acpi_match_table = ACPI_PTR(sc8180x_pinctrl_acpi_match),
- 	},
- 	.probe = sc8180x_pinctrl_probe,
- 	.remove = msm_pinctrl_remove,
+Please take a look at
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/linux/firmware/xlnx-zynqmp.h?h=v5.12-rc1&id=1077d4367ab3b97f6db2f66c87289af863652215
+
+We are using explicit values as was recommended by Greg.
+
+Thanks,
+Michal
+
+
 -- 
-2.17.1
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
 
