@@ -2,133 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51EAF328118
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 15:39:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B69AF328161
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 15:53:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236395AbhCAOih (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 09:38:37 -0500
-Received: from mga06.intel.com ([134.134.136.31]:22794 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233264AbhCAOig (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 1 Mar 2021 09:38:36 -0500
-IronPort-SDR: Wd0ijbrmPt4JxAWOQ1raTU08WQNppXZyN3RrTnQ/w55BmnVGwdF9bXeBJ+mlPPUvTnfzItaDaw
- bzX8DyxWXPGg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9910"; a="247889529"
-X-IronPort-AV: E=Sophos;i="5.81,215,1610438400"; 
-   d="scan'208";a="247889529"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2021 06:37:55 -0800
-IronPort-SDR: duW0D+KerDngZSEWaMz1H6+yPmTqevBEpwMX5zXxrbnHdOB9wCJZ4ECUCRMzQ+Jluq29ekvKFh
- Hv9oRYrNQxoQ==
-X-IronPort-AV: E=Sophos;i="5.81,215,1610438400"; 
-   d="scan'208";a="397752865"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2021 06:37:53 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1lGjgE-009A1z-R8; Mon, 01 Mar 2021 16:37:50 +0200
-Date:   Mon, 1 Mar 2021 16:37:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Shawn Guo <shawn.guo@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: qcom: sc8180x: add ACPI probe support
-Message-ID: <YDz8PtFy8PpdUlSF@smile.fi.intel.com>
-References: <20210301014329.30104-1-shawn.guo@linaro.org>
- <20210301014329.30104-3-shawn.guo@linaro.org>
+        id S236619AbhCAOwU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 09:52:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236626AbhCAOwO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 09:52:14 -0500
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EED1C06178A
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 06:51:31 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id k9so6008045lfo.12
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 06:51:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9BnG6OcLz4MdkA8niW29Ho+/QnSajzdzvM6d+k9RjhA=;
+        b=YdCqs+GMjIwYpuli9n6ChS9KcSVMisnjvmPMVhyTZr1+QgSH6aYWMXdGN7+BX+bC0N
+         RUf1HL4pXH40LSezbd8Vz+YeBJ7BvNhLsUREpDjlwIF02U4C8/cEuCW2e9Aspgz5bkFY
+         RibEIgSjE69BuZ+V0NH9HCiRyAN9/Ur02tR9K6zXnm21K0vf+DdTDJ8rovmSKE7iK4yJ
+         bfxk7TUjcuYiXgH2nyPEGHs2DrOfjmefWHshsYBhF9Ypn74S2M8poDHQSjxLt6yhz5rG
+         g3T8bHOGyMwokI2l2zqTu1bng3ENcQnuLNG8nvpnXGTu3xMVRVvEVWVfwcZoYY1JH8WS
+         PLIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9BnG6OcLz4MdkA8niW29Ho+/QnSajzdzvM6d+k9RjhA=;
+        b=uIqGaphmC5o7vnbVWFwakB5QGwkiHtKf0/nWoT+ZpA0B13RLPvEYEOnrL2MWiX8h34
+         PnpJGeDdyCg6diKAAUGUeO2+koGDNGqdFzfWdwXxkTD5nRX38Iwh1Ex4GfEBIR84CLer
+         +XDC0GSZv+hz5SxmD3uNPLflWS5RAUupSLORK3ZndY5XYEHlpRKR6f19EN+Fe3Lkev0W
+         Uu2TnfLrb+bQSsnhMtHeCcw0fR3bAsWwJzEKgmQpe64PClUjQ/kkb0ksu1/F3DEVv0jV
+         8kuJvFuF4DwG86CJKjRaq+WNsnXzM9PDTPZNILjlEh85tOS/wZHuAkHZ4+uj8zWmKHP6
+         oRXQ==
+X-Gm-Message-State: AOAM530H4XQhZqKOhEAV3TMrkzkbLeQ49zmBcTSVPFAVfmXHdE++OB8X
+        9UMDhcvbGMLjnpLrI9n4SvDJKXMLdQu/VppAh/CW6w==
+X-Google-Smtp-Source: ABdhPJw2hltL6dqzQRsiwOWELt2s4pnYTKVvz2cutcRv4szIKBMeFXJwGheIGYaQTVosfai7/l6TGb0G57xQwMFnKWs=
+X-Received: by 2002:ac2:4d95:: with SMTP id g21mr10180879lfe.29.1614610289944;
+ Mon, 01 Mar 2021 06:51:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210301014329.30104-3-shawn.guo@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210208222203.22335-1-info@metux.net> <20210208222203.22335-8-info@metux.net>
+In-Reply-To: <20210208222203.22335-8-info@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 1 Mar 2021 15:51:19 +0100
+Message-ID: <CACRpkdb5R+VQrv0QuKa+EYmAMkodRpyv4fV1QCWQ+vcEyd0sZQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 07/12] gpio: amd-fch: add oftree probing support
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 01, 2021 at 09:43:29AM +0800, Shawn Guo wrote:
-> It adds ACPI probe support with tile offsets passed over to msm core
-> driver via sc8180x_tile_offsets, as TLMM is described a single memory
-> region in ACPI DSDT.
+On Mon, Feb 8, 2021 at 11:24 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 
-...
+> Add support for probing via device tree.
+(...)
+> +       pdata->gpio_num = of_property_count_elems_of_size(dev->of_node,
+> +                                                         "gpio-regs",
+> +                                                         sizeof(u32));
+> +       pdata->gpio_reg = devm_kzalloc(dev, sizeof(int)*pdata->gpio_num,
+> +                                      GFP_KERNEL);
+> +       if (!pdata->gpio_reg)
+> +               goto nomem;
 
->  config PINCTRL_SC8180X
->  	tristate "Qualcomm Technologies Inc SC8180x pin controller driver"
-> -	depends on GPIOLIB && OF
-> +	depends on GPIOLIB && (OF || ACPI)
+I don't know what the idea is with this but register are not normally defined
+in the DTS files. The registers are determined from the compatible value.
 
-Can you consider dropping OF dependency completely?
+> +       pdata->gpio_names = devm_kzalloc(dev, sizeof(char*)*pdata->gpio_num,
+> +                                        GFP_KERNEL);
+> +       if (!pdata->gpio_names)
+> +               goto nomem;
+(...)
+> +       ret = of_property_read_string_array(dev->of_node, "gpio-line-names",
+> +                                           pdata->gpio_names, pdata->gpio_num);
 
-> +#include <linux/acpi.h>
+And this is already handled by the core.
 
-No use of this header, see below.
-
-(Perhaps you meant mod_devicetable.h)
-
-...
-
-> +static const u32 sc8180x_tile_offsets[] = {
-> +	0x00d00000,
-> +	0x00500000,
-> +	0x00100000
-
-Leave comma here.
-
-> +};
-
-...
-
-> +static const int sc8180x_acpi_reserved_gpios[] = {
-> +	0, 1, 2, 3,
-> +	47, 48, 49, 50,
-> +	126, 127, 128, 129,
-
-> +	-1
-
--1?
-Is it kinda terminator?
-
-> +};
-
-...
-
-> +	if (pdev->dev.of_node) {
-> +		ret = msm_pinctrl_probe(pdev, &sc8180x_pinctrl);
-> +	} else if (has_acpi_companion(&pdev->dev)) {
-> +		ret = msm_pinctrl_probe(pdev, &sc8180x_acpi_pinctrl);
-> +	} else {
-> +		dev_err(&pdev->dev, "DT and ACPI disabled\n");
-> +		ret = -EINVAL;
-> +	}
-
-Use driver_data field for this and device_get_match_data() instead of above.
-
-...
-
-> +#ifdef CONFIG_ACPI
-
-Drop this ugly ifdeffery.
-
-> +static const struct acpi_device_id sc8180x_pinctrl_acpi_match[] = {
-> +	{ "QCOM040D"},
-
-> +	{ },
-
-No comma for terminator line.
-
-> +};
-> +MODULE_DEVICE_TABLE(acpi, sc8180x_pinctrl_acpi_match);
-> +#endif
-
-...
-
-> +		.acpi_match_table = ACPI_PTR(sc8180x_pinctrl_acpi_match),
-
-No ACPI_PTR(), please.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
