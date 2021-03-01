@@ -2,108 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3CBA3286CC
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 18:17:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF8BF328BE1
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 19:45:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237710AbhCARPR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 12:15:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46168 "EHLO
+        id S240133AbhCASlt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 13:41:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237656AbhCARM6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 12:12:58 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837D9C061793
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 09:10:22 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id u11so10286565plg.13
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 09:10:22 -0800 (PST)
+        with ESMTP id S232849AbhCASju (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 13:39:50 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B15B7C061788
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 10:38:44 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id w21so22119653edc.7
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 10:38:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8yj/u9DZvgsD4rWcutSZdFZSClNz9WQtizXOJWHy0CY=;
-        b=Zjtw0rGizztjymDxc8AtSyCQuFkymUgQdnsPc4V+vaui5KY/IE7NmPjH77gdY6jQjG
-         pIHNzTrc2Vk/CJDPxSN9q4TctoWngu6tlU8qRbE2kEumTEIXp5lQho0ZPo0HWCMNpHVM
-         kJ2VtWLBm+BLVZyz0kT/pnpGNyv+hMaWudnjLg4H63f+oGA7LsVzJ+vWms81MKSxYxbh
-         4xJeWpbMVG3A8400haCrBn7oTWtkeiNhQd/U3uSkWuEFAfwj/xjTXzYbExJrahEZkBmF
-         VBxBR/ZlbryIjuoVmyZNBIPBXb+6t66fzishVBtebgHwgXaDKJh3iFfaJqeiStGQAUlC
-         KQfw==
+        bh=SKo9ExMmrHlTmongI5RfBIEyb1clP7RLxk+jvZHmVD4=;
+        b=B/kqgluz4LUCIM9eXc2T4GUIkgsTm4XaeaTC4hkke5K2wxJepoied5sSGEGJghh0j2
+         RAeBXpFN+1M6kWoSVdADVkgR9k6UvQHF7TIB0kYPvRVcIqTfxWk2h5XdY7g28RG3iuVB
+         Ms4KMHL9nFzoWtQ80MJ/w7Fdqg8s5LQeDMaYTpAEnZtElpt86wl9C9f6IVaRKSbl+evW
+         NWBLf2jWaFbQ4UdvLxjuGz8E2u2AReYmuwRpTACbnStVHzpLAm2Cx7ZJag4BLRc0i3l+
+         NJ3Xzpk5LR/PzQzrSbCi8Yw0jm1lRWFGVET3g+qTxRCOJU2haNP4Ucl5IgnHhSQbkRR5
+         +50w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8yj/u9DZvgsD4rWcutSZdFZSClNz9WQtizXOJWHy0CY=;
-        b=Exs36Fqb0wjdp17H3h3iT0frl2BNOYV7IEYmKuuv5fmdPGtsY+yc9DUjdYRQyQZNyB
-         tVpUQYStuJX3PtyUDUCzU5kAmHXz5CQ13XRkdiOiFLLYDvnoVC9YX/gpPwJwNK54owNe
-         jHMc7HUw6gWYsOghQJpu5B3NU2dLVh4bWAoc+A0nUTHJd7Ko7ANNpgORyBNXdBA7o82c
-         iBEgs7roarIEXplB3JX5MJqv/MwnN6GPGV7BOgIUFMBMl414RmVnLRud6rABblIfmf7u
-         jICJnbolIdESEWCGG5rtTgbfuAUU7rD9wVmYSm4qnS414E6FHpWm0b3q56eZGrGQw4/f
-         qlSQ==
-X-Gm-Message-State: AOAM531AjLWlgPMgBCnHbaqSIaTkMPtUb1k/h1hoReBeG0UeJLxv0KzQ
-        m4dsWztlU/4XTaAxjnp7jRc2IfZ4/6ARV4V+aLA=
-X-Google-Smtp-Source: ABdhPJx/mDIwcc1Hn3fG/YowJb1LwqAsj4oJIu3A+bLtVdXcwSB9N6h/r3QGOqwt65oUlwardDBs7jdpsTgeUmG3Ha8=
-X-Received: by 2002:a17:90a:db49:: with SMTP id u9mr19250826pjx.181.1614618622154;
- Mon, 01 Mar 2021 09:10:22 -0800 (PST)
+        bh=SKo9ExMmrHlTmongI5RfBIEyb1clP7RLxk+jvZHmVD4=;
+        b=YepKTRjmnqT0PUIOXO5jlUDW2UYbkCpYUG0IAAhF+gfNEoH5f5la2afaG9+zG1MoMo
+         8397fO+u3WxpwxrQgAE/Moqgc/xs78ixiwrsVhm1EdZFwyN2QQ8r2smq1nHzu+ZzzuNw
+         XO5ZU1sC5005iT8crEN1H7q8BVXU7hhLBxHjJV8PoWqnDwnjaLMkiBKmHlSX4yvsgHYE
+         M491dqzF98d8kDHp2t+LldMc0w/Xlxs3Yc3LFIe5edaCEeJwEuh2nGU0j4HX+AJSI0Rn
+         Y5Z/kTkz/X40Kt0Y9bGwvDO5LrgYu12J1TV3U9NstvOtgiuV/f7K2HhNv3+Nc3fudqKU
+         yNfw==
+X-Gm-Message-State: AOAM531fHaPbfyXaY0x3Wm0aFi6W95TehV/+6fOKJtmDYXKn3Koqens/
+        MLJWBIw3uMLdnaTg/bvaNw0Xnnae6wUA4xC3VtSmWQ==
+X-Google-Smtp-Source: ABdhPJx7UANxwj0FNZT+2AAuYY9GCTsUe9HtySLQBUkDygFZNi8hF2U3NNQZCx1VFjzXFBXUzxzh76B5gWo3UAAK+bQ=
+X-Received: by 2002:a05:6402:84e:: with SMTP id b14mr17874087edz.186.1614623923425;
+ Mon, 01 Mar 2021 10:38:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20201012154709.68521-1-andriy.shevchenko@linux.intel.com> <YDZRTiQ3pLfk1/Z0@smile.fi.intel.com>
-In-Reply-To: <YDZRTiQ3pLfk1/Z0@smile.fi.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 1 Mar 2021 19:10:05 +0200
-Message-ID: <CAHp75VfbxA+u+mY4h2opGZa6n6e6u-yj+3HcumvQR1=wTmb6ew@mail.gmail.com>
-Subject: Re: [PATCH v1] ARM: Drop ARCH_NR_GPIOS definition
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <20210301090519.26192-1-johan@kernel.org> <CAMpxmJXfyM89vfFDQfvOU+CX5EQSp_n_UrbEYC5MP0T-0phc-Q@mail.gmail.com>
+ <CAHp75Vc2NN59qxQ_5W4Uz_N6Nsrz=oKCCGUhizg1BpQuNHfmVg@mail.gmail.com>
+In-Reply-To: <CAHp75Vc2NN59qxQ_5W4Uz_N6Nsrz=oKCCGUhizg1BpQuNHfmVg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 1 Mar 2021 19:38:32 +0100
+Message-ID: <CAMpxmJWNsOgasaq5UVsCnfnDxv_wjGhHY1g1wK-Bw-M12pWzWw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] gpio: regression fixes
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 4:21 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Mar 1, 2021 at 5:57 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Mon, Oct 12, 2020 at 06:47:09PM +0300, Andy Shevchenko wrote:
-> > The conditional by the generic header is the same,
-> > hence drop unnecessary duplication.
+> On Mon, Mar 1, 2021 at 11:13 AM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > On Mon, Mar 1, 2021 at 10:05 AM Johan Hovold <johan@kernel.org> wrote:
+> > >
+> > > Here's a fix for a regression in 5.12 due to the new stub-driver hack,
+> > > and a fix for potential list corruption due to missing locking which has
+> > > been there since the introduction of the character-device interface in
+> > > 4.6.
+> > >
+> > > Johan
+> > >
+> > > Changes in v2
+> > >  - drop the corresponding drv_set_drvdata() which is no longer needed
+> > >    after patch 1/2
+> > >  - add Saravanas's reviewed-by tag to patch 2/2
+> > >
+> > >
+> > > Johan Hovold (2):
+> > >   gpio: fix NULL-deref-on-deregistration regression
+> > >   gpio: fix gpio-device list corruption
+> > >
+> > >  drivers/gpio/gpiolib.c | 7 +++++--
+> > >  1 file changed, 5 insertions(+), 2 deletions(-)
 >
-> Any comment on this anybody?
+> > Patches applied, thanks!
+>
+> Ooops, you are fast!
 
-+Cc: Linus and Arnd, maybe you can help to advance this to somewhere?
+The regression broke my gpip-sim I'm working on right now so I tested it too.
 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  arch/arm/include/asm/gpio.h | 4 ----
-> >  1 file changed, 4 deletions(-)
-> >
-> > diff --git a/arch/arm/include/asm/gpio.h b/arch/arm/include/asm/gpio.h
-> > index c50e383358c4..f3bb8a2bf788 100644
-> > --- a/arch/arm/include/asm/gpio.h
-> > +++ b/arch/arm/include/asm/gpio.h
-> > @@ -2,10 +2,6 @@
-> >  #ifndef _ARCH_ARM_GPIO_H
-> >  #define _ARCH_ARM_GPIO_H
-> >
-> > -#if CONFIG_ARCH_NR_GPIO > 0
-> > -#define ARCH_NR_GPIOS CONFIG_ARCH_NR_GPIO
-> > -#endif
-> > -
-> >  /* Note: this may rely upon the value of ARCH_NR_GPIOS set in mach/gpio.h */
-> >  #include <asm-generic/gpio.h>
-> >
-> > --
-> > 2.28.0
-> >
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Bartosz
