@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B69AF328161
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 15:53:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ACE6328188
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 15:57:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236619AbhCAOwU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 09:52:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44140 "EHLO
+        id S236720AbhCAO4o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 09:56:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236626AbhCAOwO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 09:52:14 -0500
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EED1C06178A
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 06:51:31 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id k9so6008045lfo.12
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 06:51:31 -0800 (PST)
+        with ESMTP id S236716AbhCAO4W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 09:56:22 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B11D6C06178B
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 06:55:41 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id q14so19745439ljp.4
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 06:55:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9BnG6OcLz4MdkA8niW29Ho+/QnSajzdzvM6d+k9RjhA=;
-        b=YdCqs+GMjIwYpuli9n6ChS9KcSVMisnjvmPMVhyTZr1+QgSH6aYWMXdGN7+BX+bC0N
-         RUf1HL4pXH40LSezbd8Vz+YeBJ7BvNhLsUREpDjlwIF02U4C8/cEuCW2e9Aspgz5bkFY
-         RibEIgSjE69BuZ+V0NH9HCiRyAN9/Ur02tR9K6zXnm21K0vf+DdTDJ8rovmSKE7iK4yJ
-         bfxk7TUjcuYiXgH2nyPEGHs2DrOfjmefWHshsYBhF9Ypn74S2M8poDHQSjxLt6yhz5rG
-         g3T8bHOGyMwokI2l2zqTu1bng3ENcQnuLNG8nvpnXGTu3xMVRVvEVWVfwcZoYY1JH8WS
-         PLIg==
+        bh=tnpOO1HCMDXpZVJ4TRrGsHFf+M4ik5c2oeXAvl9URfQ=;
+        b=FtuktIcgFjkP+lffETe2dQRR3faqxThx7Z+FrZdfTNEpjy2/6i+IwQQbWERlk1QYDB
+         cGoAjzqc4grAlmEK4OMTydKLzH/YOZaHwJeB6/fv7VTqhI3rnmkw74olFgXvHhZd58Uo
+         7Ycqofp8NnLYI0Zg7o2jGUW+YaxMnjQWxO0G8D5Krx2St2mWlOTCvEwicGwbYEwGeLSo
+         kr9tnf2vSqke3OimzUbHMNpiudVKZK5w2xpozmOJWR3vOhfqclNiiIXeNI9mFBf1Y+pe
+         sFM7G/Fa0gN8m/8Ru5Hc12D00IiWQMPj5LF3CUoCOTn5e2tMT7OrRnwXJ1O+Me72g7Oq
+         Pmog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9BnG6OcLz4MdkA8niW29Ho+/QnSajzdzvM6d+k9RjhA=;
-        b=uIqGaphmC5o7vnbVWFwakB5QGwkiHtKf0/nWoT+ZpA0B13RLPvEYEOnrL2MWiX8h34
-         PnpJGeDdyCg6diKAAUGUeO2+koGDNGqdFzfWdwXxkTD5nRX38Iwh1Ex4GfEBIR84CLer
-         +XDC0GSZv+hz5SxmD3uNPLflWS5RAUupSLORK3ZndY5XYEHlpRKR6f19EN+Fe3Lkev0W
-         Uu2TnfLrb+bQSsnhMtHeCcw0fR3bAsWwJzEKgmQpe64PClUjQ/kkb0ksu1/F3DEVv0jV
-         8kuJvFuF4DwG86CJKjRaq+WNsnXzM9PDTPZNILjlEh85tOS/wZHuAkHZ4+uj8zWmKHP6
-         oRXQ==
-X-Gm-Message-State: AOAM530H4XQhZqKOhEAV3TMrkzkbLeQ49zmBcTSVPFAVfmXHdE++OB8X
-        9UMDhcvbGMLjnpLrI9n4SvDJKXMLdQu/VppAh/CW6w==
-X-Google-Smtp-Source: ABdhPJw2hltL6dqzQRsiwOWELt2s4pnYTKVvz2cutcRv4szIKBMeFXJwGheIGYaQTVosfai7/l6TGb0G57xQwMFnKWs=
-X-Received: by 2002:ac2:4d95:: with SMTP id g21mr10180879lfe.29.1614610289944;
- Mon, 01 Mar 2021 06:51:29 -0800 (PST)
+        bh=tnpOO1HCMDXpZVJ4TRrGsHFf+M4ik5c2oeXAvl9URfQ=;
+        b=rKVUA8az2qG2R2cg45fVew0WQ8cYw3FaFUgWP7v0PI3zTH7RZc404YfdY6R1PR3nd9
+         5/8CG4ZzsxC7SyqJP4GKcKDgBbieNQThE2vKFVoW0dg/Dq7YApqjgcs11jfBG2QPJSFM
+         LeG4mNPjGbMhWa7HTjv0/WjAMYFeUHyBswWqnP7lq4Gsp35Z+iiYhrph7XB3/ZrCU+Ih
+         NzLnmkWkzgoUnzVn5KNmK3VGvwsA0XqfmwGLgDfeCxUg7E2mD14tsDcsF1sh0mUulMRY
+         rPj6AHjkPTxetE5k8nhW1iYAK3cT/a1RHHCwK1ifWwU9b9pgiykGBvIkjXZAEV+QF+x7
+         s/Dg==
+X-Gm-Message-State: AOAM531SHtQ69Rz806mu/kwGUaKkQZBhh6XMbTFy0Ux6TeGeGzYHkH09
+        Pc5PFIA6WJkM58Ia+QAbSMfGfOM0hJCzx34F4bC54w==
+X-Google-Smtp-Source: ABdhPJybRja+1CiW+Qxg0/bCEGHOEl3HR72OhOAPLa0QQOfFepT/r7JpGuivG2pp66Ua3QULP2Q8zfRzX1u/sJEvmJA=
+X-Received: by 2002:a2e:9754:: with SMTP id f20mr7184365ljj.200.1614610540264;
+ Mon, 01 Mar 2021 06:55:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20210208222203.22335-1-info@metux.net> <20210208222203.22335-8-info@metux.net>
-In-Reply-To: <20210208222203.22335-8-info@metux.net>
+References: <20210208222203.22335-1-info@metux.net> <20210208222203.22335-13-info@metux.net>
+In-Reply-To: <20210208222203.22335-13-info@metux.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 1 Mar 2021 15:51:19 +0100
-Message-ID: <CACRpkdb5R+VQrv0QuKa+EYmAMkodRpyv4fV1QCWQ+vcEyd0sZQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 07/12] gpio: amd-fch: add oftree probing support
+Date:   Mon, 1 Mar 2021 15:55:29 +0100
+Message-ID: <CACRpkdZzceUex8no9V6R0oW-3dRhhPypF7HsJ=ggOphJLGixLA@mail.gmail.com>
+Subject: Re: [RFC PATCH 12/12] platform/x86/of: add support for PC Engines APU
+ v2/3/4 boards
 To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -65,31 +66,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 8, 2021 at 11:24 PM Enrico Weigelt, metux IT consult
+On Mon, Feb 8, 2021 at 11:22 PM Enrico Weigelt, metux IT consult
 <info@metux.net> wrote:
 
-> Add support for probing via device tree.
-(...)
-> +       pdata->gpio_num = of_property_count_elems_of_size(dev->of_node,
-> +                                                         "gpio-regs",
-> +                                                         sizeof(u32));
-> +       pdata->gpio_reg = devm_kzalloc(dev, sizeof(int)*pdata->gpio_num,
-> +                                      GFP_KERNEL);
-> +       if (!pdata->gpio_reg)
-> +               goto nomem;
+> +                gpio-regs = <
+> +                    AMD_FCH_GPIO_REG_GPIO57 // led1
+> +                    AMD_FCH_GPIO_REG_GPIO58 // led2
+> +                    AMD_FCH_GPIO_REG_GPIO59_DEVSLP1 // led3
+> +                    AMD_FCH_GPIO_REG_GPIO32_GE1 // modesw
+> +                    AMD_FCH_GPIO_REG_GPIO33_GE2 // simawap
+> +                    AMD_FCH_GPIO_REG_GPIO55_DEVSLP0 // mpcie2
+> +                    AMD_FCH_GPIO_REG_GPIO51 // mpcie3
+> +                >;
 
-I don't know what the idea is with this but register are not normally defined
-in the DTS files. The registers are determined from the compatible value.
-
-> +       pdata->gpio_names = devm_kzalloc(dev, sizeof(char*)*pdata->gpio_num,
-> +                                        GFP_KERNEL);
-> +       if (!pdata->gpio_names)
-> +               goto nomem;
-(...)
-> +       ret = of_property_read_string_array(dev->of_node, "gpio-line-names",
-> +                                           pdata->gpio_names, pdata->gpio_num);
-
-And this is already handled by the core.
+Please don't define registers in the DTS files. Determine the set of registers
+from the compatible string and put them in the driver. If that is not possible,
+the compatible string is not precise enough and needs to indicate properly
+which hardware this is.
 
 Yours,
 Linus Walleij
