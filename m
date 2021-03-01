@@ -2,138 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 902AA327810
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 08:11:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E71793279A8
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 09:46:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231185AbhCAHJL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 02:09:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232408AbhCAHIQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 02:08:16 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA03DC061786
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Feb 2021 23:07:35 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id bd6so5984639edb.10
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Feb 2021 23:07:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DYtRy3yB5Mwslt+yJOER3GwxZYF8eTP3aAHJxAyC5bg=;
-        b=PAE89XNRN4JmSZ+dGX+cOFaS5BTaXu/klkdTkYzBdV/oMITtlp57dMCWtyTV564QTf
-         873K64P8tw8oNGHzua6CDF6X92fqH1S+/aImbTQBSjF2A/ZShRWRhRxBBDPE/gSVI97n
-         mSLXfZbJ9r8iQeO/ZZUBcU/RRQ9fBDOSdkgyQGp78yLikZwycB+xq1+5VLWoPJIVGQCm
-         V3WuZyexbxH3+LErGEr7PoqHmevVPP0MmqSreggHNBRtQxTAuclLm74fECuK5+ZBVZwg
-         27QkiRsCMghU2uQNXCHquHcgMP/srieWGDwtqnTTkdLh+6+yY3pujQ7r/iC6RgPhRKA6
-         j0Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DYtRy3yB5Mwslt+yJOER3GwxZYF8eTP3aAHJxAyC5bg=;
-        b=aZ3z+jVeJ8C5QCZ2SvUmO+wivGbXXdO6ITURjkOzBg1ZMTYe+g0kH6sc9pGTS+cUyq
-         6kD5gV/9oB7WWH6p+YnTtswIuCi0vqf7QulFv5Edh6hMoJpkQQyssd1kcWnXtPBAKLCg
-         pr+PONaHdlLRjfPUwg+D13AncVdL4O9rUoaZP1UOyctWt3NSsPy2NP5GYLNmH9zSbVav
-         78EoPzaugoZ0vvonQ7w7/MifLP1lUu8Kc6/VS7LSpJZ58fYPUnDADhTv1BnlJ00mbJZ8
-         1dgkjBhpvx50iQjGpUq55U3jqDvBi56tmnGdvSP/76zc2DSRaY3loRUbCl9DZqh7R+r2
-         vDuA==
-X-Gm-Message-State: AOAM530jgSShrKiXVC5pQTUVkgPt0ITkZeiSA7/gHeLctp2Pv80O0uDI
-        92pD/rweOqeUg4EIYvFFZ96oRQ==
-X-Google-Smtp-Source: ABdhPJzU97fS4x+QIpbcGx8eNIDjWR1iyMkyZKUI9B2lqOj7lmI9OqlGCtafetceHBh0yQseHGHpGA==
-X-Received: by 2002:aa7:c3c4:: with SMTP id l4mr5666090edr.335.1614582448655;
-        Sun, 28 Feb 2021 23:07:28 -0800 (PST)
-Received: from ?IPv6:2a02:768:2307:40d6::648? ([2a02:768:2307:40d6::648])
-        by smtp.gmail.com with ESMTPSA id y12sm6423721ejb.104.2021.02.28.23.07.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 Feb 2021 23:07:28 -0800 (PST)
-Subject: Re: [PATCH v3 1/3] firmware: xilinx: Add pinctrl support
-To:     Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
-        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
-Cc:     saikrishna12468@gmail.com, devicetree@vger.kernel.org,
+        id S233385AbhCAIpM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Mar 2021 03:45:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233319AbhCAIpK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 1 Mar 2021 03:45:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4773A64DEF;
+        Mon,  1 Mar 2021 08:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614588269;
+        bh=yI9vk7/j1WOYnOHUSAxSo33Gf4b9ogltKOcygaxgC/A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AwU+infUiSF+eRxYlr3iF3Nhty9BbOR3OFHSqz0/Xw9d9LTaxrngHHfGWJvirKuJH
+         KWq6z5dhctFSfAJL1Pmfmq/zNSwv57U2iFnfAfAmq9K+VNBKbKc/XX2KBZN9NNuW06
+         fqthBzcLxzrCoHozjj/iAJnjCizyJJwk3ATIhIwRgV7f0WBj9MZHeYVtUk0GOlKIAL
+         9fmoq3Lsup02yWimweaIH5dzNx1PhE8s88zWWjvvcwlLZHoNYlwXoXEKesGRp6fxWl
+         uvGeYPRacjNptGp8pHpyEJn9ymAyzWYDkuBP9t/rTS4K4QvOhfbjeRG6szB9R/jwS4
+         0aVel+tqYRxUQ==
+Received: from johan by xi.lan with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1lGeAY-00017E-1A; Mon, 01 Mar 2021 09:44:46 +0100
+Date:   Mon, 1 Mar 2021 09:44:46 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        git@xilinx.com, linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <1613131643-60062-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <1613131643-60062-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <CABMQnVJ+hQ_sdXMdLzhv2Y65QW8Vi01VAjV=SCeOei-zOZ5dwQ@mail.gmail.com>
-From:   Michal Simek <monstr@monstr.eu>
-Message-ID: <ecef1943-fec3-9b35-a326-87764512c691@monstr.eu>
-Date:   Mon, 1 Mar 2021 08:07:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot+d27b4c8adbbff70fbfde@syzkaller.appspotmail.com
+Subject: Re: [PATCH 1/2] gpio: fix NULL-deref-on-deregistration regression
+Message-ID: <YDypfjoBpHsd+dCo@hovoldconsulting.com>
+References: <20210226145246.1171-1-johan@kernel.org>
+ <20210226145246.1171-2-johan@kernel.org>
+ <CAGETcx-4Q+SkdLO-rXE-zt2kdz=J1cnrPjv07mt0KRtCPa_OGg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CABMQnVJ+hQ_sdXMdLzhv2Y65QW8Vi01VAjV=SCeOei-zOZ5dwQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx-4Q+SkdLO-rXE-zt2kdz=J1cnrPjv07mt0KRtCPa_OGg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Noburiho,
-
-On 2/28/21 1:17 AM, Nobuhiro Iwamatsu wrote:
-> Hi,
+On Fri, Feb 26, 2021 at 01:54:12PM -0800, Saravana Kannan wrote:
+> On Fri, Feb 26, 2021 at 6:55 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > Fix a NULL-pointer deference when deregistering the gpio character
+> > device that was introduced by the recent stub-driver hack. When the new
+> > "driver" is unbound as part of deregistration, driver core clears the
+> > driver-data pointer which is used to retrieve the struct gpio_device in
+> > its release callback.
+> >
+> > Fix this by using container_of() in the release callback as should have
+> > been done all along.
+> >
+> > Fixes: 4731210c09f5 ("gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default")
+> > Cc: Saravana Kannan <saravanak@google.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reported-by: syzbot+d27b4c8adbbff70fbfde@syzkaller.appspotmail.com
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > ---
+> >  drivers/gpio/gpiolib.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index adf55db080d8..e1016bc8cf14 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -474,7 +474,7 @@ EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
+> >
+> >  static void gpiodevice_release(struct device *dev)
+> >  {
+> > -       struct gpio_device *gdev = dev_get_drvdata(dev);
+> > +       struct gpio_device *gdev = container_of(dev, struct gpio_device, dev);
 > 
-> 2021年2月12日(金) 21:10 Sai Krishna Potthuri
-> <lakshmi.sai.krishna.potthuri@xilinx.com>:
->>
->> Adding pinctrl support to query platform specific information (pins)
->> from firmware.
->>
->> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
->> Acked-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>  drivers/firmware/xilinx/zynqmp.c     | 114 +++++++++++++++++++++++++++
->>  include/linux/firmware/xlnx-zynqmp.h |  90 +++++++++++++++++++++
->>  2 files changed, 204 insertions(+)
->>
->> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
->> index efb8a66efc68..299c3d5a9ebd 100644
->> --- a/drivers/firmware/xilinx/zynqmp.c
->> +++ b/drivers/firmware/xilinx/zynqmp.c
->> @@ -784,6 +784,120 @@ int zynqmp_pm_fpga_get_status(u32 *value)
->>  }
->>  EXPORT_SYMBOL_GPL(zynqmp_pm_fpga_get_status);
->>
-> 
-> <snip>
-> 
->> @@ -125,6 +131,12 @@ enum pm_query_id {
->>         PM_QID_CLOCK_GET_FIXEDFACTOR_PARAMS,
->>         PM_QID_CLOCK_GET_PARENTS,
->>         PM_QID_CLOCK_GET_ATTRIBUTES,
->> +       PM_QID_PINCTRL_GET_NUM_PINS = 6,
->> +       PM_QID_PINCTRL_GET_NUM_FUNCTIONS = 7,
->> +       PM_QID_PINCTRL_GET_NUM_FUNCTION_GROUPS = 8,
->> +       PM_QID_PINCTRL_GET_FUNCTION_NAME = 9,
->> +       PM_QID_PINCTRL_GET_FUNCTION_GROUPS = 10,
->> +       PM_QID_PINCTRL_GET_PIN_GROUPS = 11,
-> 
-> These do not have to have values, Because PM_QID_INVALID is 0.
-> 
->>         PM_QID_CLOCK_GET_NUM_CLOCKS = 12,
-> 
-> And you can drop value from this.
+> Can you also delete the dev_set_drvdata() in
+> gpiochip_add_data_with_key() if the drvdata is not used
+> elsewhere anymore? I skimmed the code and it doesn't look like it, but
+> I could be wrong.
 
-Please take a look at
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/linux/firmware/xlnx-zynqmp.h?h=v5.12-rc1&id=1077d4367ab3b97f6db2f66c87289af863652215
+Yeah, I considered it but didn't want to risk introducing any new
+regressions just to clean up a redundant store.
 
-We are using explicit values as was recommended by Greg.
+But looking at it again today, I agree that it looks like it isn't used
+anywhere else. I'll send a v2. Thanks.
 
-Thanks,
-Michal
-
-
--- 
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
-
+Johan
