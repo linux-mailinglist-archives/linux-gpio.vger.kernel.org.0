@@ -2,164 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AE9832ACCF
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:00:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 022DF32ACD5
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:07:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377894AbhCBVLt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Mar 2021 16:11:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58862 "EHLO
+        id S1381653AbhCBVMN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Mar 2021 16:12:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377070AbhCBApe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 19:45:34 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D403FC061756
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 16:44:53 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id t26so12750965pgv.3
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 16:44:53 -0800 (PST)
+        with ESMTP id S1348511AbhCBBDM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 20:03:12 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33706C061788
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 17:02:32 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id t9so757059pjl.5
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 17:02:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=39RX2YE4NXwbxTEMtPuIacM6Gof41YukFLFpW3m9oBI=;
-        b=YgR7FX+4ACXbwxkoqvkDW5uCOYJ690pOqAAaK1bJXHWxkt5pJ8+kK7zFes7PXSFT/l
-         4Zx3I3S5UZmNXmb6ABMssVAf0bwV9DZeG0qyPlzQPTLKmkzT7V5ekIMcC3hISSH72Xq4
-         vGViPPnQTl+Q0+HSQKJJ1Zp2p0o1uvOBnCxlyjxRR0BiDxSuJ3Q/6gp7UUaquNG6PG5Z
-         A02hfxV1Fhaxr/iQD5KC/xUy/jN3u/iH4jOY+2ByUoAFkINjCnQBwsQnp5zkyT3p2wq5
-         OuhaxTNf/RndxkmIAXk5f4Dl/lgr27DC9OU2rOx3x2/zdfaSqsoyYC8103fRBG2ZxIx3
-         P6Dg==
+        bh=+0VUSGFLYK6QWHloiD8y298ROdYOOUYk1IlRpMFRmfo=;
+        b=CRwemkUeeRQDrhVpkiPov4BtSxK9bsoGlRXnq/dJd9iKSBkJCXX5XES/HyloT+RRLO
+         am60H/0ik0a1HZxTlqBSCipir9xE2E6avzwd+tCdpivhYEFLdR6gLVxQjmmHrELi3Qf0
+         qQfHcfdfntwmoAq4XF3h3SNGWMrIT6dKIaBNSYs+FOhczVy/ZV10rU3Bp4PKYH8a25U5
+         npy+py42ZFZbOh/+Hr4n1+x2XdLstV6lIYj+xuP3vXEp7mqEAP1fKnus5aC9kdWIXJWs
+         tc8s3uVm9OEPfdFpFeQGu2QFD39H/8+Xw6XQkQAc+gsR8pWfJ+VCozXyIkYsfLIii9FJ
+         siqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=39RX2YE4NXwbxTEMtPuIacM6Gof41YukFLFpW3m9oBI=;
-        b=sWHQ/rtns52AGfJPWOOGBwQfuXrDtQ3Y6L5siD9yEU/WRHAIcPrdSBJn2FYzTYcz+O
-         xeh+S2LErD0XdENfo2eFGscI3pWDM8Ioy04RYQzERyiJd932k6otS1lFXybOE2sPQGJN
-         sMcVELGQ4kXi0JESUlsjyHlNHa0pRAv3yhMEytWn28HHVPOzG1QAticYS7x8mkAg1e0W
-         a/5Cb4dnss/WCHgQEdIHW0rJoNQ8ylTAm9hjvjPB7pyvouSVuGu7wduaHI4cT8VyTI8z
-         PBTqeSyBeB0OkZTYsp1KOtp9yt11NPULdUD9xxvhlknf0kEsi+FzQH/RKGqbavCY0Foq
-         Vazw==
-X-Gm-Message-State: AOAM532Kl8PBsGP34V7cAYPFIYbltmdBTV7iSTnoPv081T8N1Z6RrKCn
-        W6VKcRDGOdFCOx46+rLg0UId1PsLU7AeRg==
-X-Google-Smtp-Source: ABdhPJzt2/UYkyu0GiyWPXLQFW8tzLr86iEp21k+9n54aauH5+FHIw1+2jGFHSlV1h3RqD4VIpA1ow==
-X-Received: by 2002:a63:d451:: with SMTP id i17mr733709pgj.391.1614645893181;
-        Mon, 01 Mar 2021 16:44:53 -0800 (PST)
+        bh=+0VUSGFLYK6QWHloiD8y298ROdYOOUYk1IlRpMFRmfo=;
+        b=M7x1/iCiTgBEpK/ZyRvDWAtTDJaa3cLlX71NekA9IZhm8HyQZaAHSg9Aw4nK6wBfxk
+         Mm9UfkNc9nL7GmHncbvvC3+wmO5u0eB7PwbFGnp/LOhDuEwuO2GZ8GPsEqsIGx73DUCU
+         rNGwehMRxe4QaIgbhUlTWxPcoBmsHJn3nqAY5GCZRA9nf2WQeaIkB8fVOkdX9YsEX1cV
+         GhQ9f8b/Rs6ROdGotjXLyMq38H8FTxoxn2Qgzjv02JM4pHNDBYfWj9GSilSHjV4jKMx5
+         9A4jm10upsUIxJXD6/c94Zl4o8i/ghdsCeBePhB7LJcew65sYxM8pW33BrEaEq4GoHEJ
+         u+pA==
+X-Gm-Message-State: AOAM530jfe43qxl+xkQ3GRJAz8wgpK+TE8Yuhcp9Uw+DgF/K+xSbZuoW
+        zuB9rgXkQFOMEThhEkB4HfyNmA==
+X-Google-Smtp-Source: ABdhPJzedTNcIpv9/QDN3avssVwIFVJxWrkxdxTB+bnuEwPGehr8/eb88Y17vm9Mwc0nDqOQWshkmA==
+X-Received: by 2002:a17:90a:8:: with SMTP id 8mr1653128pja.6.1614646951556;
+        Mon, 01 Mar 2021 17:02:31 -0800 (PST)
 Received: from dragon (80.251.214.228.16clouds.com. [80.251.214.228])
-        by smtp.gmail.com with ESMTPSA id cv3sm680211pjb.9.2021.03.01.16.44.50
+        by smtp.gmail.com with ESMTPSA id 134sm19325298pfc.113.2021.03.01.17.02.29
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Mar 2021 16:44:52 -0800 (PST)
-Date:   Tue, 2 Mar 2021 08:44:47 +0800
+        Mon, 01 Mar 2021 17:02:31 -0800 (PST)
+Date:   Tue, 2 Mar 2021 09:02:26 +0800
 From:   Shawn Guo <shawn.guo@linaro.org>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: support override broken GPIO number in
- ACPI table
-Message-ID: <20210302004446.GF24428@dragon>
-References: <20210226033919.8871-1-shawn.guo@linaro.org>
- <CAHp75Vcb=NO9OWjSpBeVC4c+9=aXE=yiDWVBwLD1DnzwdgFD6Q@mail.gmail.com>
- <20210226093925.GA24428@dragon>
- <CAHp75Vc6xYv+197SOrSefQHD2h4Xy_N20gQajW4uF2PU=sJfLg@mail.gmail.com>
- <20210227034641.GC24428@dragon>
- <YDzb5llywkzbGEF+@smile.fi.intel.com>
+Subject: Re: [PATCH] pinctrl: qcom: support gpio_chip .set_config call
+Message-ID: <20210302010225.GG24428@dragon>
+References: <20210228025249.19684-1-shawn.guo@linaro.org>
+ <CAHp75Vdi1WuZxhBKqGS7xnVzZpBrKwNbXbp5k0Y5ibZ4aAyBrg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YDzb5llywkzbGEF+@smile.fi.intel.com>
+In-Reply-To: <CAHp75Vdi1WuZxhBKqGS7xnVzZpBrKwNbXbp5k0Y5ibZ4aAyBrg@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-+ Jeffrey
-
-On Mon, Mar 01, 2021 at 02:19:50PM +0200, Andy Shevchenko wrote:
-> On Sat, Feb 27, 2021 at 11:46:42AM +0800, Shawn Guo wrote:
-> > On Fri, Feb 26, 2021 at 12:57:37PM +0200, Andy Shevchenko wrote:
-> > > On Fri, Feb 26, 2021 at 11:39 AM Shawn Guo <shawn.guo@linaro.org> wrote:
-> > > >
-> > > > On Fri, Feb 26, 2021 at 11:12:07AM +0200, Andy Shevchenko wrote:
-> > > > > On Fri, Feb 26, 2021 at 5:42 AM Shawn Guo <shawn.guo@linaro.org> wrote:
-> > > > > >
-> > > > > > Running kernel with ACPI on Lenovo Flex 5G laptop, touchpad is just
-> > > > > > not working.  That's because the GpioInt number of TSC2 node in ACPI
-> > > > > > table is simply wrong, and the number even exceeds the maximum GPIO
-> > > > > > lines.  As the touchpad works fine with Windows on the same machine,
-> > > > > > presumably this is something Windows-ism.  Although it's obviously
-> > > > > > a specification violation, believe of that Microsoft will fix this in
-> > > > > > the near future is not really realistic.
-> > > > > >
-> > > > > > It adds the support of overriding broken GPIO number in ACPI table
-> > > > > > on particular machines, which are matched using DMI info.  Such
-> > > > > > mechanism for fixing up broken firmware and ACPI table is not uncommon
-> > > > > > in kernel.  And hopefully it can be useful for other machines that get
-> > > > > > broken GPIO number coded in ACPI table.
-> > > > >
-> > > > > Thanks for the report and patch.
-> > > > >
-> > > > > First of all, have you reported the issue to Lenovo? At least they
-> > > > > will know that they did wrong.
-> > > >
-> > > > Yes, we are reporting this to Lenovo, but to be honest, we are not sure
-> > > > how much they will care about it, as they are shipping the laptop with
-> > > > Windows only.
-> > > >
-> > > > > Second, is it possible to have somewhere output of `acpidump -o
-> > > > > flex5g.dat` (the flex5g.dat file)?
-> > > >
-> > > > https://raw.githubusercontent.com/aarch64-laptops/build/master/misc/lenovo-flex-5g/dsdt.dsl
-> > > >
-> > > > > And as Mika said once to one of mine patches "since you know the
-> > > > > number ahead there is no need to pollute GPIO ACPI library core with
-> > > > > this quirk". But in any case I would like to see the ACPI tables
-> > > > > first.
-> > > >
-> > > > Oh, so you had something similar already?  Could you point me to the
-> > > > patch and discussion?
-> > > 
-> > > Similar, but might be not the same:
-> > >  - patches in the upstream [1] (v3 applied), discussion [2]
-> > >  - new version with some additional fixes [3]
-> > 
-> > Thanks for all the pointers.  It looks to me that it's the same problem
-> > - the GPIO number in ACPI table is broken and needs an override from
-> > kernel.
+On Mon, Mar 01, 2021 at 07:07:03PM +0200, Andy Shevchenko wrote:
+> On Sun, Feb 28, 2021 at 4:55 AM Shawn Guo <shawn.guo@linaro.org> wrote:
+> >
+> > In case of ACPI boot, GPIO core does the right thing to parse GPIO pin
+> > configs from ACPI table, and call into gpio_chip's .set_config hook for
+> > setting them up.  It enables such support on qcom platform by using
+> > generic config function, which in turn calls into .pin_config_set of
+> > pinconf for setting up hardware.  For qcom platform, it's possible to
+> > reuse pin group config functions for pin config hooks, because every pin
+> > is maintained as a single group.
+> >
+> > This change fixes the problem that Touchpad of Lenovo Flex 5G laptop
+> > doesn't work with ACPI boot, because PullUp config of Touchpad GpioInt
+> > pin is not set up by kernel driver.
 > 
-> Not exactly. On Galileo Gen 2 platform it's broken in understandable way.
-> In your case it's different and I'm not sure at all that's considered "broken"
-> in the MS' eyes.
-
-At least, I was told by Jeffrey that MS admits this is something needs
-to be fixed in the future.
-
+> by the kernel
 > 
-> > So I think what we need is a generic solution to a problem
-> > not uncommon.  Rather than asking all different drivers to resolve the
-> > same problem all over the kernel, I believe GPIO ACPI library is just
-> > the right place.
-> > 
-> > Looking at your platform and problem, I realise that to be a generic
-> > solution, my patch needs an additional device identification matching,
-> > as one GPIO number that is broken for one device could be correct for
-> > another.  I will improve it, so that your problem can be resolved by
-> > simply adding a new entry to acpi_gpio_pin_override_table[].
+> ...
 > 
-> Before any steps further I really want to see more information about that IP
-> and how firmware applied the numbering scheme.
-
-Deduced by those working GPIO numbers in ACPI table and how Linux kernel
-is working, I think the GPIO is numbered without any bank thing.  All
-available pins are just numbered linearly, and every pin can be
-configured in GPIO mode.
-
+> >         .pin_config_group_get   = msm_config_group_get,
+> >         .pin_config_group_set   = msm_config_group_set,
+> > +       .pin_config_get         = msm_config_group_get,
+> > +       .pin_config_set         = msm_config_group_set,
 > 
-> If it's confidential, you may sent any insights privately.
+> This can't be right. They have different semantics.
 
-Unfortunately, all those documents are confidential to me as well.
+As mentioned in the commit log, this works considering every pin is
+maintained as a single group on Qualcomm platform.  So configuring one
+pin is essentially to configure the group containing the pin.  I can do
+something like below, if you think that's easier to understand.
+
+static int msm_config_pin_get(struct pinctrl_dev *pctldev, unsigned int pin,
+                              unsigned long *config)
+{
+        return msm_config_group_get(pctldev, pin, config);
+}
+
+static int msm_config_pin_set(struct pinctrl_dev *pctldev, unsigned pin,
+                              unsigned long *configs, unsigned num_configs)
+{
+        return msm_config_group_set(pctldev, pin, configs, num_configs);
+}
+
+static const struct pinconf_ops msm_pinconf_ops = {
+	...
+        .pin_config_get         = msm_config_pin_get,
+        .pin_config_set         = msm_config_pin_set,
+};
 
 Shawn
