@@ -2,84 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DCA632ACE4
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:09:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EEF032ACE5
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:09:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383748AbhCBVRx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Mar 2021 16:17:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48558 "EHLO
+        id S1383758AbhCBVR5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Mar 2021 16:17:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377972AbhCBIqE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 03:46:04 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66083C061794
-        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 00:36:13 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id l12so24101599edt.3
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 00:36:13 -0800 (PST)
+        with ESMTP id S239070AbhCBIve (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 03:51:34 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89314C0617A7
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 00:42:36 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id bm21so14823856ejb.4
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 00:42:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XPEd3ZWOrDPdJsgpae0YrRdxIn9JORoOxr1+HhQ4nsQ=;
-        b=YP5OR8dqN/jG7rmEVnDIoEVcFqLwM6RLa8I2TgZ7OyhAk3kKbCUzALhYWDZECgBFVq
-         aqsHXXwlWW12fIyk/8AarK51wyYTVSALKsOGoy9yB9VLDl4dsrS5M47OxX7WCTNUzf2M
-         aQ2tsaoY9zVFjT2Ilpbo+HDU6YxUQj//eFvfkuh9q1BUOkuRs/uqPFCv97gX5IepGCQi
-         Gx5MmYiSu5DooNg6uzceOLJaUtPVkFEiNaXthVHOyXDpTfSX2bHjhp6K1aP+6tpCGZqb
-         Wiix9ho6dyHmeujZasdYsNLmSQwer4C1+tSapg+g8LW5Uaf5s1wIyvGZAO0yjj9UKsoQ
-         Qndw==
+        bh=cqj83OHH0uy6jXnn/6KBeppUvOHSpH1VsMfJDu/RtSk=;
+        b=vFLsMKKiZvzx63grS8/bVXFdMNv4fOLL4c6hkZiljW/H7KUmXzXu0TblXaRgN7HH0X
+         sRs278w+B9Rb9CUADc+tXJmc99YoEPc0ZR9rfxIxgMyQNt4y3G7x2aD67k/sNXjEZfhW
+         SGFg3mWcj6hrBADdf8mpl54LZxCOv3zNiWvHoXdhJh1EMjvyFGpE8PaOby5gGpPuOYgE
+         mZSyst99gu5zwfj7CGCF8sYoSrc6pocYzwx6R9208KKecfp4+/5tacG3ZkRyrpqFiHJa
+         U2pRkeernB6y465khfgeXxt6r4PwcofdmInvJF4RE5YbGQXDsWNqbO0oSzM+SD+6Pa3p
+         Se8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XPEd3ZWOrDPdJsgpae0YrRdxIn9JORoOxr1+HhQ4nsQ=;
-        b=KQFFFwndF+NTXeT3fG5dTWjkXBizvUFCiZwsUR9QyokvCnJJf9M9X3PEoYN0vdGrVx
-         RuCG0MSHuIJkMPd/tWOt8jSmXKyyiMx9So8278fJ9ztf4tG3PrbnFKW2D0TESUAWRak2
-         M8UvGqLgmgbguC9Dhf5sjZ7dOnNIxIKQ7Uy1A3qPCDltcRUDRjJ2KjhXwA03qEVR7n/R
-         JSLtrV8QWAUk+2VNkoxfCmCAlLdGF5he3F6eCL9tkhyufRR7oOx95ehVykSWOXWxC5EB
-         1R5qIjCOaGntMipzNYzXaFOU3Ss16NDKYGD/wFQSvjMyrc/GP0vkirIAAuS0qR3dO5sY
-         GJYA==
-X-Gm-Message-State: AOAM531ETBqynE0HaJG1ScKh/odHO35IcrQBuQAd+re4I40Kr8NsKtqy
-        +cbI2RVwnveo3+1E4Emgxi26hQ1DjUR6Fu4rSwCKNQ==
-X-Google-Smtp-Source: ABdhPJx/bIxnUCaiO4mcXpkxxeCw7G9Tjsy5WYLNgO6oYK3hHdtHN4D7xyPKg5cGGEnq2EQMIZCFEmBauhr2OqioNbM=
-X-Received: by 2002:a05:6402:382:: with SMTP id o2mr5274208edv.238.1614674172145;
- Tue, 02 Mar 2021 00:36:12 -0800 (PST)
+        bh=cqj83OHH0uy6jXnn/6KBeppUvOHSpH1VsMfJDu/RtSk=;
+        b=kSBunUJypG8964YVuoW6HZeiUIy+siBZ2IalXrP9MiMaNxsr7QphjpS+sGsOm+rzKG
+         y6t6in1WyPmovwBWx1a1TK9tX0InAB/jvGXeZCoR4r8j40B6q4QuiLd9ftc3WAHZ8wPy
+         OOQwP37vlJmtR5bxCQo2Ef8GxB4cZ/y5HAWWYUssrGPSi3wV6JYL7YNSEAKKiN0Dy4Hp
+         t+bcbwhN0GlLP5N8fOmDncwqPql8xY2mkTJXf9amB2KoW/crdQCkwJihZGs/K0S/I3p2
+         5ywfgXonu11RMTvm7cN9yU9dbWdHfvbns6KQuWcZ5aAEvk/tXQnwgviQY/OIBrkzQlgu
+         YAKw==
+X-Gm-Message-State: AOAM532hf6qWi73BZS9gb4KVvtRgrL3a9hB3wLaRwJDgVnhKdqq/Vm7q
+        8ZBAGQpzC+Hmbv2ddwCFXMIl9icvzdz7A+t0SCmTJQ==
+X-Google-Smtp-Source: ABdhPJzGPey4/zJAweoL7NIyiBWG5j+JHefetxzo+d4UB+dkYOkVHlCSa1ueXoWOLvYaTHqorLcuIeAd2yR+S+Tvt6o=
+X-Received: by 2002:a17:906:ac6:: with SMTP id z6mr19121663ejf.505.1614674555172;
+ Tue, 02 Mar 2021 00:42:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20210212223015.727608-1-drew@beagleboard.org> <20210212223015.727608-2-drew@beagleboard.org>
-In-Reply-To: <20210212223015.727608-2-drew@beagleboard.org>
+References: <20210216113118.17484-1-kostap@marvell.com>
+In-Reply-To: <20210216113118.17484-1-kostap@marvell.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 2 Mar 2021 09:36:01 +0100
-Message-ID: <CACRpkdb1-OqZU93nMD+iztPOfLEn3-j+-=uTEo+zbE2TmezmLQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] pinctrl: use to octal permissions for debugfs files
-To:     Drew Fustini <drew@beagleboard.org>
+Date:   Tue, 2 Mar 2021 09:42:24 +0100
+Message-ID: <CACRpkdb+ampUXg1qN6iH8aTagqvfJwosHD6c2WGLA3p_JCXa-g@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Fix Marvell CP110 pin control finction names
+To:     Kostya Porotchkin <kostap@marvell.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "(Exiting) Amit Kucheria" <amit.kucheria@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Grzegorz Jaszczyk <jaz@semihalf.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Stefan Chulski <stefanc@marvell.com>, bpeled@marvell.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 12, 2021 at 11:30 PM Drew Fustini <drew@beagleboard.org> wrote:
+On Tue, Feb 16, 2021 at 12:31 PM <kostap@marvell.com> wrote:
 
-> Switch over pinctrl debugfs files to use octal permissions as they are
-> preferred over symbolic permissions. Refer to commit f90774e1fd27
-> ("checkpatch: look for symbolic permissions and suggest octal instead").
+> From: Konstantin Porotchkin <kostap@marvell.com>
 >
-> Note: S_IFREG flag is added to the mode by __debugfs_create_file()
-> in fs/debugfs/inode.c
->
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> These patches are fixing the CP110 pin control driver and the related
+> documentation.
+> Current CP110 pin control driver uses two different MPP functions named
+> the same (sdio) in MPP54 and MPP55 definitions.
+> Since these names are used for the MPP functionality selection, all
+> function names within single MPP group should be unique.
+> This patches series fixes function names in MPP54 and MPP55 pin
+> definitions.
 
-Patch applied, thanks for fixing this!
+Excellent fix, patches applied!
 
 Yours,
 Linus Walleij
