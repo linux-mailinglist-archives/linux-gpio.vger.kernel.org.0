@@ -2,115 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72F7C32AD1D
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:14:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC07F32AD1E
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:14:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381732AbhCBVXl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Mar 2021 16:23:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59378 "EHLO
+        id S1381742AbhCBVXn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Mar 2021 16:23:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379982AbhCBQJb (ORCPT
+        with ESMTP id S1379991AbhCBQJb (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 11:09:31 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20555C0617A7
-        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 08:08:08 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id hs11so36268998ejc.1
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 08:08:08 -0800 (PST)
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E91FFC06178A
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 08:08:33 -0800 (PST)
+Received: by mail-oi1-x235.google.com with SMTP id f3so22442747oiw.13
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 08:08:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ySBfAUfKkrTxnqwRAlElNRuJskL0Nij32l2OtUpRMe8=;
-        b=O4952JgPIL+2tmFGrwVq0Mz2DWtGeThdchNYHRKuK2HtIW5BWKnfwTpOrMWdNDa1dF
-         ROEA/v93M49/StTpJD0e+6vtgCssUvWYdSZ9Wwb5HosRH45KD+tbPETJddRsI8F8CETk
-         kkLG30ByW1gZM7oIs3k9ReNaqz7RkHeFmetF4Ul9FtJ/avk8EURsL6GWmxIso3EjfIJP
-         wHha7T3dbNiE36mo5ifMA9lolpocPXC61k2dzpCfFYylzveW9Poho944CYdLWRojmgNK
-         X9aPyJl1wN/X9goP/29Gbofkq6NrwVHTvLhTPfEiTTx3vzWfHbZfTRmYgvAh7G4gyJsh
-         b/aw==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Iyg5/gmDpXa1jkqB7UpkDVF44ozbQk+LrXdmXFLi+mQ=;
+        b=QlDW0kV0xR7d2PI3OkkjYDQpbg2TthQphcKDaLqyXEZXPDcXbIpI+twvLrDUW7TmXk
+         j2tmHJKJlU7FpO2f/Mo4UQg2Gc+p0H0b0tpTneFZ2mWdMj0nmT93HFOne2ZcoYI1Hyys
+         5NYKslYuXBbYVwbLKBuaJ0WSn97OjjsEi+IdQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ySBfAUfKkrTxnqwRAlElNRuJskL0Nij32l2OtUpRMe8=;
-        b=elI/iggH9MXduZy3vjVcwTAwqJ6d5mjWEDVcJSx52u8GSbofloBfRuyqqTuT5KCSsb
-         3/aNu1kwnsKwi/Gz/DjBrPKtiyIH4mpdC2noDsHdQv0ULolT+V9tNVZmEcMDAd47mjmM
-         GZwqAocyeVDJia1yNBKeCCzTiPJe+fFg9Wk6io+0YZfo860xKk/odeUyHonqYLa7MGkU
-         Zic5sN3zrN6D547C3f395pIAyDCoTyb8unfkAxXX6w7mdF3oQWc8T7UiY2riZNu+8mh5
-         LVqv+ErCcbQvvoBNAH+RXnDyfO3RrOMgfhEkEQ8Sr90w7ffiiC2Yol5hoU1AH2Gwqi/v
-         IacQ==
-X-Gm-Message-State: AOAM533poY1JLfqNPFXUslPck+y+TJB/rZG2rBXqgF4WmuTT+X8zkmOg
-        e2iW5PiNk6XqXjmE5aw980o8zxl+apr1uffYBr2uYA==
-X-Google-Smtp-Source: ABdhPJyDNlQbitvS0R9F0Y/EyzkBOlI0yLYBJOj4a7MK+Gohur1NOzSn7P7javeAqgETQJbauLEnqE6IGdoj3QI/EuA=
-X-Received: by 2002:a17:906:5044:: with SMTP id e4mr21277561ejk.445.1614701286820;
- Tue, 02 Mar 2021 08:08:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20210225163320.71267-1-andriy.shevchenko@linux.intel.com>
- <20210225163320.71267-2-andriy.shevchenko@linux.intel.com>
- <CACRpkdZj4TqOoJmfDhL1MuZCT9quz+5Gj8C6ckZ1i6cYCq9SOA@mail.gmail.com>
- <YD5VJMDC1TmIN/T8@smile.fi.intel.com> <20210302151430.GY2542@lahna.fi.intel.com>
- <YD5X7XUrx9AQvaXP@smile.fi.intel.com>
-In-Reply-To: <YD5X7XUrx9AQvaXP@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 2 Mar 2021 17:07:55 +0100
-Message-ID: <CAMpxmJX5sKwuta_Ws-VLuA_95ji6xaSB-0ZoNtQ-dL5mAwQcpg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpiolib: acpi: Add ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER quirk
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Iyg5/gmDpXa1jkqB7UpkDVF44ozbQk+LrXdmXFLi+mQ=;
+        b=o52W6S3jDnSWtNxBnauE8mTQU4Mv33vsbmX1YTEQZtxD1o06DK2CkiAtykyjCmc4OT
+         tarMnuooG8REjGgHSTUGwUTx6Zijfpop719BhfIbF+UQm0vqXOay59HIt9nQv8YWTDUc
+         +1X08Huh/mtYr+sQcQVZL8nKYehU2ZqEUHAPBQoqkxzlT0saCElUShJTzwyjXZCMCMXQ
+         pqpfHRn+wMgmnbP1HXswu2L08vu6Pog2gaOJ+AiV6vwxERTZsondk9Vn1IkLPdxl5kDa
+         SajTf4XfZsSIEidBVKfk/dGxS1gowcGmz3ekgwYU6B7nBxtY0sYCJqrTkKkwWPnCiriK
+         aAcw==
+X-Gm-Message-State: AOAM533LXW4F4YsZjzGo66H/3SkkmmlRCKz/huY66SI7Wuevte8CL15L
+        mlF2eZaAvWI/gb4/DNEtsL1VQg==
+X-Google-Smtp-Source: ABdhPJwrREsvHfrVd40PiwsLPqs6KjdgJfB62cZobVP3fc1O90rLaYVIgSpH68HkxEkKK9+nwNmWxw==
+X-Received: by 2002:aca:4587:: with SMTP id s129mr3726303oia.133.1614701313281;
+        Tue, 02 Mar 2021 08:08:33 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id z17sm4330351oto.58.2021.03.02.08.08.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Mar 2021 08:08:32 -0800 (PST)
+Subject: Re: [PATCH] selftests: gpio: update .gitignore
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20210224185316.17942-1-brgl@bgdev.pl>
+ <CACRpkdZ915TABrSt0A_1tM3Jt_op4gcCY1b-d2ocM7wjKJFoPA@mail.gmail.com>
+ <b188690a-31e5-fca9-1226-9dbf7c9f9448@linuxfoundation.org>
+ <CAMpxmJUu3x7iCT=Zsung1TFU-f2qY-oTujoDNkF+sMG4SXJXgw@mail.gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <ca7a7b4d-1f8e-f109-3db1-59332ba2edd4@linuxfoundation.org>
+Date:   Tue, 2 Mar 2021 09:08:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
+MIME-Version: 1.0
+In-Reply-To: <CAMpxmJUu3x7iCT=Zsung1TFU-f2qY-oTujoDNkF+sMG4SXJXgw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 2, 2021 at 4:21 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Mar 02, 2021 at 05:14:30PM +0200, Mika Westerberg wrote:
-> > On Tue, Mar 02, 2021 at 05:09:24PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Mar 02, 2021 at 03:48:43PM +0100, Linus Walleij wrote:
-> > > > On Thu, Feb 25, 2021 at 5:33 PM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > > On some systems the ACPI tables has wrong pin number and instead of
-> > > > > having a relative one it provides an absolute one in the global GPIO
-> > > > > number space.
-> > > > >
-> > > > > Add ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER quirk to cope with such cases.
-> > > > >
-> > > > > Fixes: ba8c90c61847 ("gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2")
-> > > > > Depends-on: 0ea683931adb ("gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip")
-> > > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > >
-> > > > OH THE HORROR!
-> > > > However, we discussed it before. It is as it is.
-> > >
-> > > Unfortunately :-( (And recently it seems MS does something really "creative" on
-> > > ARM ACPI platform)
-> > >
-> > > > It's the right place to fix the problem, so:
-> > > > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > >
-> > > I am waiting for Mika, but if he keeps silent let's say to the end of the day,
-> > > I will submit it as is to the v5.12-rcX fixes.
-> >
-> > Sorry for the delay - I somehow missed this. Feel free to add my ACK too.
->
-> Thanks, Mika!
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+On 3/2/21 9:07 AM, Bartosz Golaszewski wrote:
+> On Tue, Mar 2, 2021 at 4:27 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>> On 3/2/21 7:44 AM, Linus Walleij wrote:
+>>> On Wed, Feb 24, 2021 at 7:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>>
+>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>
+>>>> The executable that we build for GPIO selftests was renamed to
+>>>> gpio-mockup-cdev. Let's update .gitignore so that we don't show it
+>>>> as an untracked file.
+>>>>
+>>>> Fixes: 8bc395a6a2e2 ("selftests: gpio: rework and simplify test implementation")
+>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>
+>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>
+>>> Yours,
+>>> Linus Walleij
+>>>
+>>
+>>
+>> Thank you. I will queue this up.
+>>
+>> thanks,
+>> -- Shuah
+> 
+> Hi Shuah,
+> 
+> Please let me queue this through the GPIO tree as I have some more
+> development coming up this cycle that will require this. This will be
+> a new driver + selftests so it will all have to go through the GPIO
+> tree anyway.
+> 
+> Bart
+> 
 
-Hi Andy,
+Perfect.
 
-Do you want me to take these, or will you include them in your PR?
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Bart
+thanks,
+-- Shuah
