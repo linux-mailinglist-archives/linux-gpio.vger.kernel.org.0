@@ -2,203 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD67332AD42
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:16:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83D5032BAEB
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 22:02:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1572960AbhCBV3j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Mar 2021 16:29:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53286 "EHLO
+        id S233125AbhCCMHi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Mar 2021 07:07:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1582022AbhCBUCA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 15:02:00 -0500
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A18AC061756;
-        Tue,  2 Mar 2021 12:01:18 -0800 (PST)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 1A7322223E;
-        Tue,  2 Mar 2021 21:01:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1614715275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0KW/FK8JYfP2NgbfURSSqrkgkLGVEKeSJfvl4xPN+Zk=;
-        b=puDD5PjfnhmgTQdXwgjIVlzikBXCoF51Q9LK5M2KY8nBIaOzjZj7dnLNWtRG9LthC1tsXi
-        ozBb7oGCHUnoeFVYnZqHnFXdg0UR+ZaTlYLcqs3++DB5QCpJJloSDUzivDQ4YDKhaHFwwc
-        nFxIyhHJTcNMDtkkDlFXNtkYHIOgdMo=
+        with ESMTP id S1379137AbhCBWkC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 17:40:02 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C059C06178A
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 14:39:22 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id u4so33916709lfs.0
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 14:39:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3Nrqj6kb9Z2QHezcr0m3iuedQ5qVAoBvg4Binpr+01U=;
+        b=lIeUHVCOe3jgTgM3KXOxLoR8pvgx/P5vnZQlcH7Az0xthmmx4xUAMEwoxqn5l9jIbm
+         Fy/n07bOcE9TGZVwB87uCc4zW6lufilrfdHYdtsfRjrVsGx7kqhkCZoXLKUqC0flClsa
+         y2P7Kq+x8Z8V01f/Nvd7WqIl/cGyCvOLJoqGdlUqorjngU1GteUOHAw4PgJP7I3QUU59
+         73KRyMyx/JQI3+RN4dwRF4DBi4AKzlRibvY0af6JNyB/I6IR24Lm8OYLRAxbZj3Z80qG
+         Cxj2frUAbCw9cvhCARCGjnhAoLNoOQWXavR438bafpETmc5atSrPb3Mod4Vc++XkrY86
+         96Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3Nrqj6kb9Z2QHezcr0m3iuedQ5qVAoBvg4Binpr+01U=;
+        b=AQy5jRN0Xrg77p73A01YixCaowwDg/dMH49SNicMxItIV+8+vYyQELvZ7gkaTxa1ju
+         NyOim78o7G6TwnYtm/elVG905+K9mnHlEwmzK4zmonK1w7jR719yiELw4gF0NpIyHfyY
+         hvbOSu+tPhuPSi+b00TsbRoXTKR2Az4eSCRR78fTzE0N04HuJeTa99YOqWe1F0swao9h
+         msDaynYz6ZZN1crBgDYQwkIC4h9y+V4neVXrVEK23V0uU7G8ZSPQoQj/X/zKWpEPfKDk
+         zPdJVNoBypMOpQflKkQzjowxLa62+YbJKrtewwsEnOEAE/Po6EgPxcl/4Tj8uki9Yrhr
+         ju4g==
+X-Gm-Message-State: AOAM532g+yCN/L7Wc0M5V9ERihfqtlJVKgDtu/8we3FSjZAVX0lnlTpX
+        940c4BF4iUMI3fZm+1c0/fxySfUdRatAADdSQ4GYsQ==
+X-Google-Smtp-Source: ABdhPJz+ibiVyy0BEqJW8vekeQ3tIxYpuN/bTHg2ACNjPud1wTTfSuHoVn/aVPdzGUpOGtrxrn3TLk2Z53YMNKc/4dE=
+X-Received: by 2002:a05:6512:547:: with SMTP id h7mr13821445lfl.529.1614724760474;
+ Tue, 02 Mar 2021 14:39:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 02 Mar 2021 21:01:15 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-Cc:     f.fainelli@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/12] pinctrl: add a pincontrol driver for BCM6328
-In-Reply-To: <20210302191613.29476-3-noltari@gmail.com>
-References: <20210302191613.29476-1-noltari@gmail.com>
- <20210302191613.29476-3-noltari@gmail.com>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <c69dc0da70d69add1c5e4d64d04c25e9@walle.cc>
-X-Sender: michael@walle.cc
+References: <20210302180601.12082-1-noltari@gmail.com> <b4a344af55ad238a554c56e31b1b87ed@walle.cc>
+ <4af4b519-84eb-3cb4-bb0e-9c5ac6204348@gmail.com>
+In-Reply-To: <4af4b519-84eb-3cb4-bb0e-9c5ac6204348@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 2 Mar 2021 23:39:09 +0100
+Message-ID: <CACRpkdbHV+HCfTw__2u_EF1SbmG_0Ce-6VMs7wbAe+HtJXYM_A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: regmap: move struct gpio_regmap definition
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2021-03-02 20:16, schrieb Álvaro Fernández Rojas:
-> Add a pincontrol driver for BCM6328. BCM628 supports muxing 32 pins as
-> GPIOs, as LEDs for the integrated LED controller, or various other
-> functions. Its pincontrol mux registers also control other aspects, 
-> like
-> switching the second USB port between host and device mode.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-> ---
->  v2: switch to GPIO_REGMAP
-> 
->  drivers/pinctrl/bcm/Kconfig           |  13 +
->  drivers/pinctrl/bcm/Makefile          |   1 +
->  drivers/pinctrl/bcm/pinctrl-bcm6328.c | 481 ++++++++++++++++++++++++++
->  3 files changed, 495 insertions(+)
->  create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm6328.c
-> 
-> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-> index 0ed14de0134c..76728f097c25 100644
-> --- a/drivers/pinctrl/bcm/Kconfig
-> +++ b/drivers/pinctrl/bcm/Kconfig
-> @@ -29,6 +29,19 @@ config PINCTRL_BCM2835
->  	help
->  	   Say Y here to enable the Broadcom BCM2835 GPIO driver.
-> 
-> +config PINCTRL_BCM6328
-> +	bool "Broadcom BCM6328 GPIO driver"
-> +	depends on OF_GPIO && (BMIPS_GENERIC || COMPILE_TEST)
-> +	select GPIO_REGMAP
-> +	select GPIOLIB_IRQCHIP
-> +	select IRQ_DOMAIN_HIERARCHY
-> +	select PINMUX
-> +	select PINCONF
-> +	select GENERIC_PINCONF
+On Tue, Mar 2, 2021 at 7:14 PM =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gm=
+ail.com> wrote:
 
-select GPIO_REGMAP ?
+> I'm trying to add support for bcm63xx pin controllers, and Linus
+> suggested that I could use gpio regmap instead of adding duplicated code.
+> However, I need to access gpio_chip inside gpio_regmap to call
+> pinctrl_add_gpio_range() with gpio_chip.base.
 
-> +	default BMIPS_GENERIC
-> +	help
-> +	   Say Y here to enable the Broadcom BCM6328 GPIO driver.
-> +
->  config PINCTRL_IPROC_GPIO
->  	bool "Broadcom iProc GPIO (with PINCONF) driver"
->  	depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
-> diff --git a/drivers/pinctrl/bcm/Makefile 
-> b/drivers/pinctrl/bcm/Makefile
-> index 79d5e49fdd9a..7e7c6e25b26d 100644
-> --- a/drivers/pinctrl/bcm/Makefile
-> +++ b/drivers/pinctrl/bcm/Makefile
-> @@ -3,6 +3,7 @@
-> 
->  obj-$(CONFIG_PINCTRL_BCM281XX)		+= pinctrl-bcm281xx.o
->  obj-$(CONFIG_PINCTRL_BCM2835)		+= pinctrl-bcm2835.o
-> +obj-$(CONFIG_PINCTRL_BCM6328)		+= pinctrl-bcm6328.o
->  obj-$(CONFIG_PINCTRL_IPROC_GPIO)	+= pinctrl-iproc-gpio.o
->  obj-$(CONFIG_PINCTRL_CYGNUS_MUX)	+= pinctrl-cygnus-mux.o
->  obj-$(CONFIG_PINCTRL_NS)		+= pinctrl-ns.o
-> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm6328.c
-> b/drivers/pinctrl/bcm/pinctrl-bcm6328.c
-> new file mode 100644
-> index 000000000000..f2b1a14e7903
-> --- /dev/null
-> +++ b/drivers/pinctrl/bcm/pinctrl-bcm6328.c
-[..]
-> +static int bcm6328_reg_mask_xlate(struct gpio_regmap *gpio,
-> +				  unsigned int base, unsigned int offset,
-> +				  unsigned int *reg, unsigned int *mask)
-> +{
-> +	unsigned int line = offset % gpio->ngpio_per_reg;
-> +	unsigned int stride = offset / gpio->ngpio_per_reg;
-> +
-> +	*reg = base - stride * gpio->reg_stride;
-> +	*mask = BIT(line);
-> +
-> +	return 0;
-> +}
+Can't you just put the ranges in the device tree using the standard
+property gpio-ranges?
 
-How many registers are there? npgio_per_reg is 32 but so is ngpio.
-So isn't there only one register? And thus, can you use the default
-gpio_regmap_simple_xlat()?
+These will be added automatically after the chip is added.
 
-[..]
+It is documented in
+Documentation/devicetree/bindings/gpio/gpio.txt
+a bit down the file.
 
-> +static int bcm6328_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct gpio_regmap_config grc = {0};
-> +	struct gpio_regmap *gr;
-> +	struct bcm6328_pinctrl *pc;
-> +	int err;
-> +
-> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-> +	if (!pc)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, pc);
-> +	pc->dev = dev;
-> +
-> +	pc->regs = syscon_node_to_regmap(dev->parent->of_node);
-> +	if (IS_ERR(pc->regs))
-> +		return PTR_ERR(pc->regs);
-> +
-> +	grc.parent = dev;
-> +	grc.ngpio = BCM6328_NUM_GPIOS;
-> +	grc.ngpio_per_reg = BCM6328_BANK_GPIOS;
-> +	grc.regmap = pc->regs;
-> +	grc.reg_dat_base = BCM6328_DATA_REG;
-> +	grc.reg_dir_out_base = BCM6328_DIROUT_REG;
-> +	grc.reg_mask_xlate = bcm6328_reg_mask_xlate;
-> +	grc.reg_set_base = BCM6328_DATA_REG;
-> +	grc.reg_stride = 4;
-> +
-> +	gr = devm_gpio_regmap_register(dev, &grc);
-> +	err = PTR_ERR_OR_ZERO(gr);
-> +	if (err) {
-> +		dev_err(dev, "could not add GPIO chip\n");
-> +		return err;
-> +	}
-> +
-> +	pc->pctl_desc.name = MODULE_NAME;
-> +	pc->pctl_desc.pins = bcm6328_pins;
-> +	pc->pctl_desc.npins = ARRAY_SIZE(bcm6328_pins);
-> +	pc->pctl_desc.pctlops = &bcm6328_pctl_ops;
-> +	pc->pctl_desc.pmxops = &bcm6328_pmx_ops;
-> +	pc->pctl_desc.owner = THIS_MODULE;
-> +
-> +	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
-> +	if (IS_ERR(pc->pctl_dev)) {
-> +		gpiochip_remove(&gr->gpio_chip);
-> +		return PTR_ERR(pc->pctl_dev);
-> +	}
-> +
-> +	pc->gpio_range.name = MODULE_NAME;
-> +	pc->gpio_range.npins = BCM6328_NUM_GPIOS;
-> +	pc->gpio_range.base = gr->gpio_chip.base;
-> +	pc->gpio_range.gc = &gr->gpio_chip;
-> +	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+The code is in of_gpiochip_add_pin_range() in gpiolib-of.c
+called from of_gpiochip_add() which is always called
+when gpiochip_add_data_with_key(), the main gpiochip
+registering function is called.
 
-Ahh I see. What about adding a new function in gpio-regmap.c:
-   gpio_regmap_pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range)?
+This would just do the work for you with no effort in the driver.
 
-gpio-regmap should have all the information to fill all the
-required properties. I'm unsure whether gpio-regmap should also
-allocate the gpio_range.
+It is a bit counterintuitive that this can be done in the device
+tree but the hierarchical IRQs cannot do the same clever
+manouver to map IRQs, sorry.
 
-Maybe someone can come up with a better function name though.
-
--michael
+Yours,
+Linus Walleij
