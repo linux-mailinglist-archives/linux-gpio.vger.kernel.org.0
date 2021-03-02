@@ -2,98 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF8BF328BE1
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Mar 2021 19:45:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4783A32AC1D
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Mar 2021 22:11:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240133AbhCASlt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Mar 2021 13:41:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36534 "EHLO
+        id S1377690AbhCBVJi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Mar 2021 16:09:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232849AbhCASju (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 13:39:50 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B15B7C061788
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 10:38:44 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id w21so22119653edc.7
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 10:38:44 -0800 (PST)
+        with ESMTP id S1348022AbhCBA2N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 19:28:13 -0500
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5BBC06178A
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 16:27:33 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id n10so12688468pgl.10
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 16:27:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SKo9ExMmrHlTmongI5RfBIEyb1clP7RLxk+jvZHmVD4=;
-        b=B/kqgluz4LUCIM9eXc2T4GUIkgsTm4XaeaTC4hkke5K2wxJepoied5sSGEGJghh0j2
-         RAeBXpFN+1M6kWoSVdADVkgR9k6UvQHF7TIB0kYPvRVcIqTfxWk2h5XdY7g28RG3iuVB
-         Ms4KMHL9nFzoWtQ80MJ/w7Fdqg8s5LQeDMaYTpAEnZtElpt86wl9C9f6IVaRKSbl+evW
-         NWBLf2jWaFbQ4UdvLxjuGz8E2u2AReYmuwRpTACbnStVHzpLAm2Cx7ZJag4BLRc0i3l+
-         NJ3Xzpk5LR/PzQzrSbCi8Yw0jm1lRWFGVET3g+qTxRCOJU2haNP4Ucl5IgnHhSQbkRR5
-         +50w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RRU270YlOIbTR3Jczpep3B6cFOurKYvHFTuOv1fd+U4=;
+        b=DHxoaAwHa7TMohlAjLE5qbGEz3mY0BcSqY6nAFtujiL/AIiWlwSXEZX81zZaIh1tct
+         m8MrlRTCPX5d6WiAEKZB8RWkH20PjnDlOh8APE0SSb0Z3ISW49vBp7aGNpwZDUKbpvg1
+         v2T6g33yx2xzOL9cWC1TzlGHU0TvCMnfmR2WaDEPVKyTr5UeXKSySsSt80mnIru4bMT4
+         cU3TQkg2pmY+jp3SOwDdklAb/orzYh/yk3dfFSqAk6W9456pi+ZjXIV2w7o7F/JeBll8
+         xConXBRHUKLIzX6+7fFmcv5o2WbpadfSYftl8yJ0hYYPYDHJfbxFVke0t+ZOUCT7tirJ
+         UC2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SKo9ExMmrHlTmongI5RfBIEyb1clP7RLxk+jvZHmVD4=;
-        b=YepKTRjmnqT0PUIOXO5jlUDW2UYbkCpYUG0IAAhF+gfNEoH5f5la2afaG9+zG1MoMo
-         8397fO+u3WxpwxrQgAE/Moqgc/xs78ixiwrsVhm1EdZFwyN2QQ8r2smq1nHzu+ZzzuNw
-         XO5ZU1sC5005iT8crEN1H7q8BVXU7hhLBxHjJV8PoWqnDwnjaLMkiBKmHlSX4yvsgHYE
-         M491dqzF98d8kDHp2t+LldMc0w/Xlxs3Yc3LFIe5edaCEeJwEuh2nGU0j4HX+AJSI0Rn
-         Y5Z/kTkz/X40Kt0Y9bGwvDO5LrgYu12J1TV3U9NstvOtgiuV/f7K2HhNv3+Nc3fudqKU
-         yNfw==
-X-Gm-Message-State: AOAM531fHaPbfyXaY0x3Wm0aFi6W95TehV/+6fOKJtmDYXKn3Koqens/
-        MLJWBIw3uMLdnaTg/bvaNw0Xnnae6wUA4xC3VtSmWQ==
-X-Google-Smtp-Source: ABdhPJx7UANxwj0FNZT+2AAuYY9GCTsUe9HtySLQBUkDygFZNi8hF2U3NNQZCx1VFjzXFBXUzxzh76B5gWo3UAAK+bQ=
-X-Received: by 2002:a05:6402:84e:: with SMTP id b14mr17874087edz.186.1614623923425;
- Mon, 01 Mar 2021 10:38:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20210301090519.26192-1-johan@kernel.org> <CAMpxmJXfyM89vfFDQfvOU+CX5EQSp_n_UrbEYC5MP0T-0phc-Q@mail.gmail.com>
- <CAHp75Vc2NN59qxQ_5W4Uz_N6Nsrz=oKCCGUhizg1BpQuNHfmVg@mail.gmail.com>
-In-Reply-To: <CAHp75Vc2NN59qxQ_5W4Uz_N6Nsrz=oKCCGUhizg1BpQuNHfmVg@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 1 Mar 2021 19:38:32 +0100
-Message-ID: <CAMpxmJWNsOgasaq5UVsCnfnDxv_wjGhHY1g1wK-Bw-M12pWzWw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio: regression fixes
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Johan Hovold <johan@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RRU270YlOIbTR3Jczpep3B6cFOurKYvHFTuOv1fd+U4=;
+        b=QHxOcEq2Jyqaw/Z/3pr6T8M6b4WWMQ7IDmm5eK8LQ4COb3Q2QrwD14oxlZHFrrm+Bw
+         ZeWGdNaRp6FB8bB0q6A1ZrI7K7nu8MSNnB7nRAc8TzJMV8Yu/vsVNn3kDHyBsK79qUz6
+         /ruNXRshBiVNXpVy+/OMqVdii6BgKkSC2coT6vz7K5ml70652X4CiaroRQfFd+UqqHMF
+         hOkwYWp7KTQizwa7/+JW4Qo9G220jjEpQelQhu8/WJJd5zNWbBlbu+PLdNbOgt2mWN8q
+         L+0Tln6AuPnBxFZNpxrUGQSnihntOh3TlXbyOuJJhxnigpWhtASJ4TJuZvAGyeDRY8du
+         C8iA==
+X-Gm-Message-State: AOAM530MUfRjreK483y+5erBgnr/1MJHSwhm4En9HqN2Q2eY5YUPwQWY
+        6nVWI93sQO0t3HKGOapwR2fFow==
+X-Google-Smtp-Source: ABdhPJxk620SmxOEf0mXUXOIpP7SJT19PXewbp7X7qAGQF/BfSgLXnNEgQk1qGRLHUCLh9hIarv/BQ==
+X-Received: by 2002:a63:d20a:: with SMTP id a10mr15567339pgg.451.1614644853032;
+        Mon, 01 Mar 2021 16:27:33 -0800 (PST)
+Received: from dragon (80.251.214.228.16clouds.com. [80.251.214.228])
+        by smtp.gmail.com with ESMTPSA id g17sm14765900pfb.214.2021.03.01.16.27.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Mar 2021 16:27:32 -0800 (PST)
+Date:   Tue, 2 Mar 2021 08:27:26 +0800
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: support override broken GPIO number in
+ ACPI table
+Message-ID: <20210302002725.GE24428@dragon>
+References: <20210226033919.8871-1-shawn.guo@linaro.org>
+ <CAHp75Vcb=NO9OWjSpBeVC4c+9=aXE=yiDWVBwLD1DnzwdgFD6Q@mail.gmail.com>
+ <20210226093925.GA24428@dragon>
+ <CAHp75Vc6xYv+197SOrSefQHD2h4Xy_N20gQajW4uF2PU=sJfLg@mail.gmail.com>
+ <YDjZOU+VMWasjzUb@smile.fi.intel.com>
+ <20210227031944.GB24428@dragon>
+ <YDzbQqHspfvpYS7Z@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YDzbQqHspfvpYS7Z@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 1, 2021 at 5:57 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Mar 1, 2021 at 11:13 AM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > On Mon, Mar 1, 2021 at 10:05 AM Johan Hovold <johan@kernel.org> wrote:
-> > >
-> > > Here's a fix for a regression in 5.12 due to the new stub-driver hack,
-> > > and a fix for potential list corruption due to missing locking which has
-> > > been there since the introduction of the character-device interface in
-> > > 4.6.
-> > >
-> > > Johan
-> > >
-> > > Changes in v2
-> > >  - drop the corresponding drv_set_drvdata() which is no longer needed
-> > >    after patch 1/2
-> > >  - add Saravanas's reviewed-by tag to patch 2/2
-> > >
-> > >
-> > > Johan Hovold (2):
-> > >   gpio: fix NULL-deref-on-deregistration regression
-> > >   gpio: fix gpio-device list corruption
-> > >
-> > >  drivers/gpio/gpiolib.c | 7 +++++--
-> > >  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> > Patches applied, thanks!
->
-> Ooops, you are fast!
+On Mon, Mar 01, 2021 at 02:17:06PM +0200, Andy Shevchenko wrote:
+> On Sat, Feb 27, 2021 at 11:19:45AM +0800, Shawn Guo wrote:
+> > On Fri, Feb 26, 2021 at 01:19:21PM +0200, Andy Shevchenko wrote:
+> > > On Fri, Feb 26, 2021 at 12:57:37PM +0200, Andy Shevchenko wrote:
+> > > > On Fri, Feb 26, 2021 at 11:39 AM Shawn Guo <shawn.guo@linaro.org> wrote:
+> > > > > On Fri, Feb 26, 2021 at 11:12:07AM +0200, Andy Shevchenko wrote:
+> > > > > > On Fri, Feb 26, 2021 at 5:42 AM Shawn Guo <shawn.guo@linaro.org> wrote:
+> > > > > > > Running kernel with ACPI on Lenovo Flex 5G laptop, touchpad is just
+> > > > > > > not working.  That's because the GpioInt number of TSC2 node in ACPI
+> > > > > > > table is simply wrong, and the number even exceeds the maximum GPIO
+> > > > > > > lines.  As the touchpad works fine with Windows on the same machine,
+> > > > > > > presumably this is something Windows-ism.  Although it's obviously
+> > > > > > > a specification violation, believe of that Microsoft will fix this in
+> > > > > > > the near future is not really realistic.
+> > > > > > >
+> > > > > > > It adds the support of overriding broken GPIO number in ACPI table
+> > > > > > > on particular machines, which are matched using DMI info.  Such
+> > > > > > > mechanism for fixing up broken firmware and ACPI table is not uncommon
+> > > > > > > in kernel.  And hopefully it can be useful for other machines that get
+> > > > > > > broken GPIO number coded in ACPI table.
+> > > > > >
+> > > > > > Thanks for the report and patch.
+> > > > > >
+> > > > > > First of all, have you reported the issue to Lenovo? At least they
+> > > > > > will know that they did wrong.
+> > > > >
+> > > > > Yes, we are reporting this to Lenovo, but to be honest, we are not sure
+> > > > > how much they will care about it, as they are shipping the laptop with
+> > > > > Windows only.
+> > > > >
+> > > > > > Second, is it possible to have somewhere output of `acpidump -o
+> > > > > > flex5g.dat` (the flex5g.dat file)?
+> > > > >
+> > > > > https://raw.githubusercontent.com/aarch64-laptops/build/master/misc/lenovo-flex-5g/dsdt.dsl
+> > > 
+> > > Looking into DSDT I think the problem is much worse. First of all there are
+> > > many cases where pins like 0x140, 0x1c0, etc are being used. On top of that
+> > > there is no GPIO driver in the upstream (as far as I can see by HID, perhaps
+> > > there is a driver but for different HID. And I see that GPIO device consumes a
+> > > lot of Interrupts from GIC as well (it's ARM platfrom as far as I understand).
+> > 
+> > Yes, it's a laptop built on Qualcomm Snapdragon SC8180X SoC.  The GPIO
+> > driver is generic for all Snapdragon SoCs, and has been available in
+> > upstream for many years (for DT though). It can be found as the gpio_chip
+> > implementation in MSM pinctrl driver [1].  The SC8180X specific part can
+> > be found as pinctrl-sc8180x.c [2], and it's already working for DT boot.
+> > The only missing piece is to add "QCOM040D" as the acpi_device_id to
+> > support ACPI boot, and it will be submitted after 5.12-rc1 comes out.
+> > 
+> > > Looking at the Microsoft brain damaged way of understanding GPIOs and hardware
+> > > [1], I am afraid you really want to have a specific GPIO driver for this. So,
+> > > for now until we have better picture of what's going on, NAK to this patch.
+> > 
+> > Thanks for the pointer to Microsoft document.  On Snapdragon, we have
+> > only one GPIO instance that accommodates all GPIO pins, so I'm not sure
+> > that Microsoft GPIOs mapping layer is relevant here at all.
+> > 
+> > Please take a look at the GPIO driver, and feel free to let me know if
+> > you need any further information to understand what's going on.
+> 
+> Yes, I looked into the driver and see that it has 3 blocks of GPIOs (we call
+> them communities, but in the driver the term 'tiles' is used) AFAIU (correct me
+> if I'm wrong). And who knows how many banks in each of them.
 
-The regression broke my gpip-sim I'm working on right now so I tested it too.
+I'm not sure that the 3 'tiles' means 3 blocks of GPIOs.  Maybe, @Bjorn
+can help clarify.  But the ACPI table shows that there is only 'GIO0'
+with 'QCOM040D' HID.
 
-Bartosz
+> 
+> I'm afraid that MS does on his way and not yours.
+> 
+> Can we have TRM for GPIO IP used there and any evidence / document from
+> firmware team about the implementation of the GPIO numbering in the ACPI
+> (at Intel we have so called BIOS Writers Guide that is given to the customers
+> where such info can be found)?
+
+Unfortunately, I do not have the access to any sort of these documents.
+But I looped in Jeffrey who is part of Qualcomm kernel/firmware team,
+and should be able to help clarify GPIO numbering in the ACPI table.
+
+Shawn
+
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pinctrl/qcom/pinctrl-msm.c#n713
+> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pinctrl/qcom/pinctrl-sc8180x.c
