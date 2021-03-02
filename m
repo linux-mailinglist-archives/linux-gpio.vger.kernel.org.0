@@ -2,139 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D98432AD1B
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:14:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E527832AD1A
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:14:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381715AbhCBVXd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Mar 2021 16:23:33 -0500
-Received: from mga14.intel.com ([192.55.52.115]:28994 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1838963AbhCBPzj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 2 Mar 2021 10:55:39 -0500
-IronPort-SDR: Hf7Ghe9knhi58dM7OWlsYb0h8H3uRSQk65A8yuFoqYIAlSpPqO/JFiFDg/+Iap3Di2sBF8+AVA
- k85bCjaTsZ3w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9911"; a="186186272"
-X-IronPort-AV: E=Sophos;i="5.81,216,1610438400"; 
-   d="scan'208";a="186186272"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2021 07:48:39 -0800
-IronPort-SDR: ZWMAlJ2mLUsr3nnYma+Y/37oQXdEFnsMWLnqaRfluAqw5eGWOjfUpgwWSNip3C2hKkv/aYMzfJ
- KhlCHSS2FNtw==
-X-IronPort-AV: E=Sophos;i="5.81,216,1610438400"; 
-   d="scan'208";a="444796643"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2021 07:48:37 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lH7GF-009Q7Q-29; Tue, 02 Mar 2021 17:48:35 +0200
-Date:   Tue, 2 Mar 2021 17:48:35 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v1 1/4] gpiolib: Unify the checks on fwnode type
-Message-ID: <YD5eU8LrMnq2dlUU@smile.fi.intel.com>
-References: <20210302153451.50593-1-andriy.shevchenko@linux.intel.com>
+        id S1381703AbhCBVXX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Mar 2021 16:23:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1445677AbhCBPxQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 10:53:16 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D8E6C061788
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 07:51:50 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id r25so23545362ljk.11
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 07:51:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XkFRU+e2ZzErICVZt64la/N6SIBgvzln5FOCC2jd6us=;
+        b=xKsYqyM5r9yaCIJiwpNenDF39ksE3ryaYQwvAn4/okoPAGVL1ZFGPZbU9M+LkDE3eN
+         o+FbX82MqvpS/Bh3M2RBbpU6VMWwSY+Hu7bxQ8iYFIj0JsyPoATTvn9HK+mEcxVL0a6/
+         ScXzj4GlGPUozGIjer7xj69cDVJ2T18fV0jAfNO40cRlgcZ2NMzPUnW0lDe687JtrkQt
+         0leF6/WTClzcv3zM4ZHQqFe/QMPVaARG4MjDycua/DQZuY28N2gev3T3AzhcgkjM5Sd3
+         WZ+MHK2IfNIZIJ3QEHXZok+8h+LAyLI7dH5aYrszlyogVOGslGeZuN1TG+00Rur+d8nU
+         Fj/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XkFRU+e2ZzErICVZt64la/N6SIBgvzln5FOCC2jd6us=;
+        b=jPhVz8zJTqaNYdVy9b+B9NoBvQuccNwO1NJu/qAbJ/KogLyuBOscNwAT9RB39D5XT5
+         osI8qv4HLmgWhn8FEUGb0Gd77ydrAUg8GT5ZGAISRgUmJfYkqlg4hyNuvMp/hLYdEuU5
+         RwBXHJVUhNoIwdxojUiYb/mnZRHbJ+lp/5K0XQgC1SbnUxG8lXVtG8z7iWVLjpHz1HvO
+         mfbfopENUZIHr4x2RwX3mzfUe92GjuNNc1JM6Go6nLQ9ghMNyr8XfSyItxoTMp53bve1
+         EGQ3BzTv4W1W/hj6mw5CIrKMHN2Y/teHz9bM77R4iAYos5kzVjT9OtkxDxb5AwZ1dleu
+         nhHA==
+X-Gm-Message-State: AOAM530EdQKa9MFwmiJ81ug/jKk1X75cBIbsJeTf2qFnBQR71ZLqYIum
+        N/xNYGRPbfl/e0Q7oXBHhJ/GA1sRtfEhAPGhvJAOcQ==
+X-Google-Smtp-Source: ABdhPJzJhER6CVtwXGDeSmkG4Z+mAI8RxDwe/pgckeL+qTk+7//S8m+JgvnQlyNSiX++CUeWk1BMdwkaakM6qx3Cj6Y=
+X-Received: by 2002:a2e:9cb:: with SMTP id 194mr3362574ljj.438.1614700308624;
+ Tue, 02 Mar 2021 07:51:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210302153451.50593-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20201012154709.68521-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20201012154709.68521-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 2 Mar 2021 16:51:37 +0100
+Message-ID: <CACRpkdZCrEpXq1DrWJ7Qq4P3xbOAcQQ3qUe0k0J8_FQv2vpZSg@mail.gmail.com>
+Subject: Re: [PATCH v1] ARM: Drop ARCH_NR_GPIOS definition
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 02, 2021 at 05:34:48PM +0200, Andy Shevchenko wrote:
-> We have (historically) different approaches how we identify the type
-> of a given fwnode. Let's standardize them across the library code.
+Hi Andy,
 
-This patch has one functional mistake (see below), otherwise I will anyway wait
-for people to comment on the series.
+On Mon, Oct 12, 2020 at 5:47 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
+> The conditional by the generic header is the same,
+> hence drop unnecessary duplication.
+>
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib.c | 28 +++++++++++++---------------
->  1 file changed, 13 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index adf55db080d8..484ac92903ab 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -3678,11 +3678,12 @@ EXPORT_SYMBOL_GPL(fwnode_gpiod_get_index);
->   */
->  int gpiod_count(struct device *dev, const char *con_id)
->  {
-> +	const struct fwnode_handle *fwnode = dev_fwnode(dev);
 
-It should be
+sorry for extremely slow reply.
 
-	const struct fwnode_handle *fwnode = dev ? dev_fwnode(dev) : NULL;
+I think we could merge this into the GPIO tree if Russell is OK with it,
+alternatively put it in Russell's patch tracker. It looks absolutely correct.
 
->  	int count = -ENOENT;
->  
-> -	if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
-> +	if (is_of_node(fwnode))
->  		count = of_gpio_get_count(dev, con_id);
-> -	else if (IS_ENABLED(CONFIG_ACPI) && dev && ACPI_HANDLE(dev))
-> +	else if (is_acpi_node(fwnode))
->  		count = acpi_gpio_count(dev, con_id);
->  
->  	if (count < 0)
-> @@ -3820,18 +3821,17 @@ struct gpio_desc *__must_check gpiod_get_index(struct device *dev,
->  	int ret;
->  	/* Maybe we have a device name, maybe not */
->  	const char *devname = dev ? dev_name(dev) : "?";
-> +	const struct fwnode_handle *fwnode = dev ? dev_fwnode(dev) : NULL;
->  
->  	dev_dbg(dev, "GPIO lookup for consumer %s\n", con_id);
->  
-> -	if (dev) {
-> -		/* Using device tree? */
-> -		if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
-> -			dev_dbg(dev, "using device tree for GPIO lookup\n");
-> -			desc = of_find_gpio(dev, con_id, idx, &lookupflags);
-> -		} else if (ACPI_COMPANION(dev)) {
-> -			dev_dbg(dev, "using ACPI for GPIO lookup\n");
-> -			desc = acpi_find_gpio(dev, con_id, idx, &flags, &lookupflags);
-> -		}
-> +	/* Using device tree? */
-> +	if (is_of_node(fwnode)) {
-> +		dev_dbg(dev, "using device tree for GPIO lookup\n");
-> +		desc = of_find_gpio(dev, con_id, idx, &lookupflags);
-> +	} else if (is_acpi_node(fwnode)) {
-> +		dev_dbg(dev, "using ACPI for GPIO lookup\n");
-> +		desc = acpi_find_gpio(dev, con_id, idx, &flags, &lookupflags);
->  	}
->  
->  	/*
-> @@ -3915,9 +3915,6 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
->  	struct gpio_desc *desc = ERR_PTR(-ENODEV);
->  	int ret;
->  
-> -	if (!fwnode)
-> -		return ERR_PTR(-EINVAL);
-> -
->  	if (is_of_node(fwnode)) {
->  		desc = gpiod_get_from_of_node(to_of_node(fwnode),
->  					      propname, index,
-> @@ -3933,7 +3930,8 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
->  
->  		acpi_gpio_update_gpiod_flags(&dflags, &info);
->  		acpi_gpio_update_gpiod_lookup_flags(&lflags, &info);
-> -	}
-> +	} else
-> +		return ERR_PTR(-EINVAL);
->  
->  	/* Currently only ACPI takes this path */
->  	ret = gpiod_request(desc, label);
-> -- 
-> 2.30.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
