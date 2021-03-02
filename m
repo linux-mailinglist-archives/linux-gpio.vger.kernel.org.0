@@ -2,99 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E5A032AD1C
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:14:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72F7C32AD1D
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:14:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381723AbhCBVXh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Mar 2021 16:23:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59188 "EHLO
+        id S1381732AbhCBVXl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Mar 2021 16:23:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240890AbhCBQIQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 11:08:16 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C8DC061788
-        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 08:07:15 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id d13so20842315edp.4
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 08:07:15 -0800 (PST)
+        with ESMTP id S1379982AbhCBQJb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 11:09:31 -0500
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20555C0617A7
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 08:08:08 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id hs11so36268998ejc.1
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 08:08:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GIfeSEfmL8wAyn5TADy2HISNOXLZvpkt9t432wxDvWY=;
-        b=vyZbsxwrlYxjFHO7Cc7mMvqFh/M7mu7PpuET7PCvtmDP+W6Pv+1+rgFEO8TybiCyJy
-         9Yp4qA1gQZKIOM1b0ubIdVbOZdkXiwSnFfKWMlJKpnimsInqzhxXlCsA2lBsUWgM6eYX
-         /+XjZB2k7crAsVNBDYRJiOr1sVSuT7a/hS7vYq8K16p4/nexvblVwrqHINLPERKhbxr4
-         rJt8O8BOsN8acrKZgulVsP/wbz0w2+lkOk1i6H2ujGil7vAQS28r7UI8b92LGMpyl2jK
-         HJgTq1hX8BNTHmathm0HmsPyAjuhdfZ4CE7bPy4ogkzmuv7gIHFnvRPmzc+bpdTjH9ub
-         Z4Eg==
+        bh=ySBfAUfKkrTxnqwRAlElNRuJskL0Nij32l2OtUpRMe8=;
+        b=O4952JgPIL+2tmFGrwVq0Mz2DWtGeThdchNYHRKuK2HtIW5BWKnfwTpOrMWdNDa1dF
+         ROEA/v93M49/StTpJD0e+6vtgCssUvWYdSZ9Wwb5HosRH45KD+tbPETJddRsI8F8CETk
+         kkLG30ByW1gZM7oIs3k9ReNaqz7RkHeFmetF4Ul9FtJ/avk8EURsL6GWmxIso3EjfIJP
+         wHha7T3dbNiE36mo5ifMA9lolpocPXC61k2dzpCfFYylzveW9Poho944CYdLWRojmgNK
+         X9aPyJl1wN/X9goP/29Gbofkq6NrwVHTvLhTPfEiTTx3vzWfHbZfTRmYgvAh7G4gyJsh
+         b/aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GIfeSEfmL8wAyn5TADy2HISNOXLZvpkt9t432wxDvWY=;
-        b=hUXk7llu5ULcr+O689mDZOpEIZtOctZFhk7ODHf5297Axc6kZwsUEOQNFkzNnNtLDR
-         3YF+mQMalxgWSZ41Jqfnmd0toYgap/weng9+dyOx6MFWc9rcgLBH4WUcQqZmcUgLzrZ1
-         rI0HA2jFCW2JuRHrrQweLHUOoieCPhKYjSznLbRsYCt3A0jD6hB9KKp5dh2f4Ys5bKo4
-         CLuhR5fp1YkB8OJa3t350qkboaXXRjf0ZsCQqL4NfXeVpCI+b9Z8dfWwkShWWagk4oO9
-         TM3xDzoWMaaYHvRcb2k7kJeEEu0RgNgLTbqrGW9G/Ldn/3/xRWodRt596UXAHM9yexnA
-         yWDQ==
-X-Gm-Message-State: AOAM532O9kDOFqvQaUZnG1Upm8QKXkexPmAlt2Y6OF4sODhhqt5FIwTn
-        9zL8iBRtK3/AK91CdaYFnBR0GntAaWti8AsQx7lUuw==
-X-Google-Smtp-Source: ABdhPJwHuw1y3Y/v8jdMtjN1ZkyeSqxulDA1RDfV0AnDqqIe93CMsVo0jEsYKuMl36cJANkKqZoyE2G7jIaraKzXkGU=
-X-Received: by 2002:aa7:d588:: with SMTP id r8mr21122916edq.88.1614701233853;
- Tue, 02 Mar 2021 08:07:13 -0800 (PST)
+        bh=ySBfAUfKkrTxnqwRAlElNRuJskL0Nij32l2OtUpRMe8=;
+        b=elI/iggH9MXduZy3vjVcwTAwqJ6d5mjWEDVcJSx52u8GSbofloBfRuyqqTuT5KCSsb
+         3/aNu1kwnsKwi/Gz/DjBrPKtiyIH4mpdC2noDsHdQv0ULolT+V9tNVZmEcMDAd47mjmM
+         GZwqAocyeVDJia1yNBKeCCzTiPJe+fFg9Wk6io+0YZfo860xKk/odeUyHonqYLa7MGkU
+         Zic5sN3zrN6D547C3f395pIAyDCoTyb8unfkAxXX6w7mdF3oQWc8T7UiY2riZNu+8mh5
+         LVqv+ErCcbQvvoBNAH+RXnDyfO3RrOMgfhEkEQ8Sr90w7ffiiC2Yol5hoU1AH2Gwqi/v
+         IacQ==
+X-Gm-Message-State: AOAM533poY1JLfqNPFXUslPck+y+TJB/rZG2rBXqgF4WmuTT+X8zkmOg
+        e2iW5PiNk6XqXjmE5aw980o8zxl+apr1uffYBr2uYA==
+X-Google-Smtp-Source: ABdhPJyDNlQbitvS0R9F0Y/EyzkBOlI0yLYBJOj4a7MK+Gohur1NOzSn7P7javeAqgETQJbauLEnqE6IGdoj3QI/EuA=
+X-Received: by 2002:a17:906:5044:: with SMTP id e4mr21277561ejk.445.1614701286820;
+ Tue, 02 Mar 2021 08:08:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20210224185316.17942-1-brgl@bgdev.pl> <CACRpkdZ915TABrSt0A_1tM3Jt_op4gcCY1b-d2ocM7wjKJFoPA@mail.gmail.com>
- <b188690a-31e5-fca9-1226-9dbf7c9f9448@linuxfoundation.org>
-In-Reply-To: <b188690a-31e5-fca9-1226-9dbf7c9f9448@linuxfoundation.org>
+References: <20210225163320.71267-1-andriy.shevchenko@linux.intel.com>
+ <20210225163320.71267-2-andriy.shevchenko@linux.intel.com>
+ <CACRpkdZj4TqOoJmfDhL1MuZCT9quz+5Gj8C6ckZ1i6cYCq9SOA@mail.gmail.com>
+ <YD5VJMDC1TmIN/T8@smile.fi.intel.com> <20210302151430.GY2542@lahna.fi.intel.com>
+ <YD5X7XUrx9AQvaXP@smile.fi.intel.com>
+In-Reply-To: <YD5X7XUrx9AQvaXP@smile.fi.intel.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 2 Mar 2021 17:07:02 +0100
-Message-ID: <CAMpxmJUu3x7iCT=Zsung1TFU-f2qY-oTujoDNkF+sMG4SXJXgw@mail.gmail.com>
-Subject: Re: [PATCH] selftests: gpio: update .gitignore
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
+Date:   Tue, 2 Mar 2021 17:07:55 +0100
+Message-ID: <CAMpxmJX5sKwuta_Ws-VLuA_95ji6xaSB-0ZoNtQ-dL5mAwQcpg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] gpiolib: acpi: Add ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER quirk
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 2, 2021 at 4:27 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+On Tue, Mar 2, 2021 at 4:21 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> On 3/2/21 7:44 AM, Linus Walleij wrote:
-> > On Wed, Feb 24, 2021 at 7:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Tue, Mar 02, 2021 at 05:14:30PM +0200, Mika Westerberg wrote:
+> > On Tue, Mar 02, 2021 at 05:09:24PM +0200, Andy Shevchenko wrote:
+> > > On Tue, Mar 02, 2021 at 03:48:43PM +0100, Linus Walleij wrote:
+> > > > On Thu, Feb 25, 2021 at 5:33 PM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > > On some systems the ACPI tables has wrong pin number and instead of
+> > > > > having a relative one it provides an absolute one in the global GPIO
+> > > > > number space.
+> > > > >
+> > > > > Add ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER quirk to cope with such cases.
+> > > > >
+> > > > > Fixes: ba8c90c61847 ("gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2")
+> > > > > Depends-on: 0ea683931adb ("gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip")
+> > > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > >
+> > > > OH THE HORROR!
+> > > > However, we discussed it before. It is as it is.
+> > >
+> > > Unfortunately :-( (And recently it seems MS does something really "creative" on
+> > > ARM ACPI platform)
+> > >
+> > > > It's the right place to fix the problem, so:
+> > > > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > >
+> > > I am waiting for Mika, but if he keeps silent let's say to the end of the day,
+> > > I will submit it as is to the v5.12-rcX fixes.
 > >
-> >> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>
-> >> The executable that we build for GPIO selftests was renamed to
-> >> gpio-mockup-cdev. Let's update .gitignore so that we don't show it
-> >> as an untracked file.
-> >>
-> >> Fixes: 8bc395a6a2e2 ("selftests: gpio: rework and simplify test implementation")
-> >> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Yours,
-> > Linus Walleij
-> >
+> > Sorry for the delay - I somehow missed this. Feel free to add my ACK too.
+>
+> Thanks, Mika!
 >
 >
-> Thank you. I will queue this up.
+> --
+> With Best Regards,
+> Andy Shevchenko
 >
-> thanks,
-> -- Shuah
+>
 
-Hi Shuah,
+Hi Andy,
 
-Please let me queue this through the GPIO tree as I have some more
-development coming up this cycle that will require this. This will be
-a new driver + selftests so it will all have to go through the GPIO
-tree anyway.
+Do you want me to take these, or will you include them in your PR?
 
 Bart
