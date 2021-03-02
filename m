@@ -2,118 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 022DF32ACD5
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:07:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5730E32ACD6
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:08:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381653AbhCBVMN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Mar 2021 16:12:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34426 "EHLO
+        id S1381925AbhCBVNV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Mar 2021 16:13:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348511AbhCBBDM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 20:03:12 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33706C061788
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 17:02:32 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id t9so757059pjl.5
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 17:02:32 -0800 (PST)
+        with ESMTP id S235239AbhCBBTY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Mar 2021 20:19:24 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78740C061756;
+        Mon,  1 Mar 2021 17:18:44 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id l12so18108999wry.2;
+        Mon, 01 Mar 2021 17:18:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+0VUSGFLYK6QWHloiD8y298ROdYOOUYk1IlRpMFRmfo=;
-        b=CRwemkUeeRQDrhVpkiPov4BtSxK9bsoGlRXnq/dJd9iKSBkJCXX5XES/HyloT+RRLO
-         am60H/0ik0a1HZxTlqBSCipir9xE2E6avzwd+tCdpivhYEFLdR6gLVxQjmmHrELi3Qf0
-         qQfHcfdfntwmoAq4XF3h3SNGWMrIT6dKIaBNSYs+FOhczVy/ZV10rU3Bp4PKYH8a25U5
-         npy+py42ZFZbOh/+Hr4n1+x2XdLstV6lIYj+xuP3vXEp7mqEAP1fKnus5aC9kdWIXJWs
-         tc8s3uVm9OEPfdFpFeQGu2QFD39H/8+Xw6XQkQAc+gsR8pWfJ+VCozXyIkYsfLIii9FJ
-         siqQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b5JpSopPY2Ba++MnmvP2oy7vlccUYn7Bdxr1A7Oe/pI=;
+        b=vEOiFiRkTJygK/lt0xOwiye1jZBqFA7aQQ0jfkwsAdWpgMIwunDIln6TsffSNMwdNn
+         mOK364Py8BBpvzeD/V2maBlVLsuQm3ytH+gp2mvfDeoXHXc3wb9DI2dQiPhXAsq4CqcZ
+         kz9dBWj97SXQtAGzUvcxx9GYO1sP3jCD6DViLCUPczUGbj3i9ZN+poW0E2UZl22+H8qQ
+         qPGFrDibQQP7PmCr30TE0SLLXCtkaWpc2ritz3AWUmKRcpSSaS2+A/qke4tqy7FG1lk9
+         PHGmohKfkJNvrvMn8q7t3s2RxjTo93w7mfMIhKSbSsN0PXfuGCEeQcPdhKiCllXZN1Oh
+         x/vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+0VUSGFLYK6QWHloiD8y298ROdYOOUYk1IlRpMFRmfo=;
-        b=M7x1/iCiTgBEpK/ZyRvDWAtTDJaa3cLlX71NekA9IZhm8HyQZaAHSg9Aw4nK6wBfxk
-         Mm9UfkNc9nL7GmHncbvvC3+wmO5u0eB7PwbFGnp/LOhDuEwuO2GZ8GPsEqsIGx73DUCU
-         rNGwehMRxe4QaIgbhUlTWxPcoBmsHJn3nqAY5GCZRA9nf2WQeaIkB8fVOkdX9YsEX1cV
-         GhQ9f8b/Rs6ROdGotjXLyMq38H8FTxoxn2Qgzjv02JM4pHNDBYfWj9GSilSHjV4jKMx5
-         9A4jm10upsUIxJXD6/c94Zl4o8i/ghdsCeBePhB7LJcew65sYxM8pW33BrEaEq4GoHEJ
-         u+pA==
-X-Gm-Message-State: AOAM530jfe43qxl+xkQ3GRJAz8wgpK+TE8Yuhcp9Uw+DgF/K+xSbZuoW
-        zuB9rgXkQFOMEThhEkB4HfyNmA==
-X-Google-Smtp-Source: ABdhPJzedTNcIpv9/QDN3avssVwIFVJxWrkxdxTB+bnuEwPGehr8/eb88Y17vm9Mwc0nDqOQWshkmA==
-X-Received: by 2002:a17:90a:8:: with SMTP id 8mr1653128pja.6.1614646951556;
-        Mon, 01 Mar 2021 17:02:31 -0800 (PST)
-Received: from dragon (80.251.214.228.16clouds.com. [80.251.214.228])
-        by smtp.gmail.com with ESMTPSA id 134sm19325298pfc.113.2021.03.01.17.02.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Mar 2021 17:02:31 -0800 (PST)
-Date:   Tue, 2 Mar 2021 09:02:26 +0800
-From:   Shawn Guo <shawn.guo@linaro.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: support gpio_chip .set_config call
-Message-ID: <20210302010225.GG24428@dragon>
-References: <20210228025249.19684-1-shawn.guo@linaro.org>
- <CAHp75Vdi1WuZxhBKqGS7xnVzZpBrKwNbXbp5k0Y5ibZ4aAyBrg@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b5JpSopPY2Ba++MnmvP2oy7vlccUYn7Bdxr1A7Oe/pI=;
+        b=IqjVTA5I3XzWvtzwHCX5yjo2Rrt3FZPSsUVseNi6AQlcN8sYeGSrCAHE+rcZk4c//L
+         RGEdGAzebteLYcGxxY8duXlxucrqwRHjHe3VDydyBqWVaSFL+Dpk0w4SV/VemaNJOMZz
+         +v3GATyKm4LDzI1hwZorS2Tldjqle5kqHc7HLdv/mb8i8xN4FncFrOUb8ilgqhMSZXXC
+         vHSjNz7najg4vgEhfJ/SN1P66B5uL2hTJ+zeDCa05rleRb2EVoBpql98v9fZ7YDJD0lX
+         t6X2Jq49LVsCqA3xmnIgzg7dBmbSFTAYU3rqxFrwNGzv2cf0rPGFr0n1G5n62FooBSdB
+         pXsQ==
+X-Gm-Message-State: AOAM532GAk7jedqBjIFKsN1UOy5hOAHG4R8rJyMwLOjkB4b9CuDvLRO8
+        KGaq/58X009YJO3Vv310RvJcw3ZFmmZW0WDT
+X-Google-Smtp-Source: ABdhPJy8n7OKNFczVy0IootLTBtWXICCrYTBHKaL9I0I9WnHHEFXUqN7b3MBIL0eMHO782sZTMkE+Q==
+X-Received: by 2002:a5d:6290:: with SMTP id k16mr19516503wru.264.1614647923283;
+        Mon, 01 Mar 2021 17:18:43 -0800 (PST)
+Received: from localhost.localdomain ([195.245.17.255])
+        by smtp.gmail.com with ESMTPSA id 36sm29018553wrh.94.2021.03.01.17.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Mar 2021 17:18:42 -0800 (PST)
+From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: omap: Honor "aliases" node
+Date:   Tue,  2 Mar 2021 02:18:13 +0100
+Message-Id: <20210302011813.2331879-1-alexander.sverdlin@gmail.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vdi1WuZxhBKqGS7xnVzZpBrKwNbXbp5k0Y5ibZ4aAyBrg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 01, 2021 at 07:07:03PM +0200, Andy Shevchenko wrote:
-> On Sun, Feb 28, 2021 at 4:55 AM Shawn Guo <shawn.guo@linaro.org> wrote:
-> >
-> > In case of ACPI boot, GPIO core does the right thing to parse GPIO pin
-> > configs from ACPI table, and call into gpio_chip's .set_config hook for
-> > setting them up.  It enables such support on qcom platform by using
-> > generic config function, which in turn calls into .pin_config_set of
-> > pinconf for setting up hardware.  For qcom platform, it's possible to
-> > reuse pin group config functions for pin config hooks, because every pin
-> > is maintained as a single group.
-> >
-> > This change fixes the problem that Touchpad of Lenovo Flex 5G laptop
-> > doesn't work with ACPI boot, because PullUp config of Touchpad GpioInt
-> > pin is not set up by kernel driver.
-> 
-> by the kernel
-> 
-> ...
-> 
-> >         .pin_config_group_get   = msm_config_group_get,
-> >         .pin_config_group_set   = msm_config_group_set,
-> > +       .pin_config_get         = msm_config_group_get,
-> > +       .pin_config_set         = msm_config_group_set,
-> 
-> This can't be right. They have different semantics.
+Currently the naming of the GPIO chips depends on their order in the DT,
+but also on the kernel version (I've noticed the change from v5.10.x to
+v5.11). Honor the persistent enumeration in the "aliases" node like other
+GPIO drivers do.
 
-As mentioned in the commit log, this works considering every pin is
-maintained as a single group on Qualcomm platform.  So configuring one
-pin is essentially to configure the group containing the pin.  I can do
-something like below, if you think that's easier to understand.
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+---
+Yes, I noticed checkpatch "WARNING: DT binding docs and includes should be
+a separate patch."
+However, the parts below are tiny and barely make sense separately.
 
-static int msm_config_pin_get(struct pinctrl_dev *pctldev, unsigned int pin,
-                              unsigned long *config)
-{
-        return msm_config_group_get(pctldev, pin, config);
-}
+ Documentation/devicetree/bindings/gpio/gpio-omap.txt | 6 ++++++
+ drivers/gpio/gpio-omap.c                             | 5 +++++
+ 2 files changed, 11 insertions(+)
 
-static int msm_config_pin_set(struct pinctrl_dev *pctldev, unsigned pin,
-                              unsigned long *configs, unsigned num_configs)
-{
-        return msm_config_group_set(pctldev, pin, configs, num_configs);
-}
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+index e57b2cb28f6c..6050db3fd84e 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+@@ -30,9 +30,15 @@ OMAP specific properties:
+ - ti,gpio-always-on: 	Indicates if a GPIO bank is always powered and
+ 			so will never lose its logic state.
+ 
++Note: GPIO ports can have an alias correctly numbered in "aliases" node for
++persistent enumeration.
+ 
+ Example:
+ 
++aliases {
++	gpio0 = &gpio0;
++};
++
+ gpio0: gpio@44e07000 {
+     compatible = "ti,omap4-gpio";
+     reg = <0x44e07000 0x1000>;
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 41952bb818ad..dd2a8f6d920f 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -1014,6 +1014,11 @@ static int omap_gpio_chip_init(struct gpio_bank *bank, struct irq_chip *irqc)
+ 			bank->chip.parent = &omap_mpuio_device.dev;
+ 		bank->chip.base = OMAP_MPUIO(0);
+ 	} else {
++#ifdef CONFIG_OF_GPIO
++		ret = of_alias_get_id(bank->chip.of_node, "gpio");
++		if (ret >= 0)
++			gpio = ret * bank->width;
++#endif
+ 		label = devm_kasprintf(bank->chip.parent, GFP_KERNEL, "gpio-%d-%d",
+ 				       gpio, gpio + bank->width - 1);
+ 		if (!label)
+-- 
+2.30.1
 
-static const struct pinconf_ops msm_pinconf_ops = {
-	...
-        .pin_config_get         = msm_config_pin_get,
-        .pin_config_set         = msm_config_pin_set,
-};
-
-Shawn
