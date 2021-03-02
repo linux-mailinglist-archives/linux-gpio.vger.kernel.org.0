@@ -2,132 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1727832ACDD
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:08:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16B7E32ACE2
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:09:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383717AbhCBVRM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Mar 2021 16:17:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
+        id S1383738AbhCBVRk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Mar 2021 16:17:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1576925AbhCBFfK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 00:35:10 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 552FFC06121E
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Mar 2021 21:32:18 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id d12so10549835pfo.7
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Mar 2021 21:32:18 -0800 (PST)
+        with ESMTP id S1376889AbhCBIRM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 03:17:12 -0500
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C3EC06178C
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 00:09:59 -0800 (PST)
+Received: by mail-ot1-x329.google.com with SMTP id 40so10821075otu.0
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 00:09:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AND5hR7g+etm8p1XQXNCrrPsiiY+ufosQMI5JJrzRVE=;
-        b=K8lCA4A1uHoty55BpP30fhzuelUH2422FzM5XyB/82aEOA5s8Jc2Pgs1pEWiBARHZJ
-         BQl/rNrns8TZZ3ExaMbFs9OZ5/1pqLO8alJmor3Sd7nfjHmpzqeM5cDtJEXy2Qi/309W
-         421xXN/4fvHLnYge+BcT9EoTKWNzKqc0SELYrRo3cU1QPhtfC7iqOzW1yVwOswg6ZDb7
-         zcjwnnD3DCiTlt7xxta+/eTAf3f3cXHfkmaTghgaoc+RGIjSKC+e9HUjr7OPFsoFS190
-         Ndf3AJb3ndkz+HcMgWIPB/dgvK9FxiS6OjhAOC0miRXWLZlistc5JY+uC2Krwokxad01
-         AV5Q==
+        d=nigauri-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9Yp6IMdjr+fqwidy7ap2X/QWUwpISs2GQo/1YVRp7Ac=;
+        b=qAkKQwplIRSYPFSBTkFqpPss5lNeOKxBF1YZUQSp7kYRXZUqWrVQsFn12dHZ+LogaK
+         Mh6A+iegnW9TEbkFcua6807by2HnlA6kjS5zv37AiSb3lBibMdSfCTGRZhE/+lJgpyF3
+         RUu0x8vhBF61bb1z4Dwh+hQ9zJplN9iQsrI6V3j8fI0JHMtQ0y0ulvjjAme22e8/p0AD
+         y8ka3wOHtS/9jpqITKNEQM76IymEaSgsgCNVHbgWwRpoCadfJ2zONKNgnkJ1xYV+dJmH
+         jBiZcEHBgQTauvhMo4xDyjUeFnNSRIYz9mgChPParMuLUa687M2RMGb6c1OzlMABG9YM
+         20pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AND5hR7g+etm8p1XQXNCrrPsiiY+ufosQMI5JJrzRVE=;
-        b=hjpLhjxDznCH4SbKbCrLlLXBC2y1kIaUDC/svim0XVjejHMFh81D+dUNL5IyssltFk
-         xRXEyZQu8FXOk1wnUWFkt3ZDe6KE6aagW4UKcvlCTowf2k+tvuLF5H0YkakS1c9z6g8s
-         Yd+z6JETZpeTlelM56KtqLnoLzI+X1cSAk32tgBLfnlnWhJsGj8hRop4wvpL5huzGhvv
-         uAvJrx8yU1LrJR2bNDT2pJxmBbAoZhPZYNIY4uDczHOo4WlLdNjry3YS+9Aa0BFkaN8j
-         466Jo2Rrf5LGw4cZvJe1VTi8oIzG7n4I6iOoSZ3kHup936jAp+QvxtRn10gF9os3Qjir
-         R0tA==
-X-Gm-Message-State: AOAM530iT45yodDPkIt8zEPzETJYhdtryPSL3g/t0gQN4/ci/b/+HW2/
-        0WzjnowwI3cb/CU50CB+8fQsUw==
-X-Google-Smtp-Source: ABdhPJwR7z3pWYUC4wTDcM0bfq7Sktc8xgnJwNYrkaJBxgxBFwsQ1OUnnxNUFTqJB+axKz/ngiOIvg==
-X-Received: by 2002:a62:804a:0:b029:1e7:d747:de3 with SMTP id j71-20020a62804a0000b02901e7d7470de3mr1888106pfd.38.1614663137892;
-        Mon, 01 Mar 2021 21:32:17 -0800 (PST)
-Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:37ab:7b44:a136:e385])
-        by smtp.gmail.com with ESMTPSA id o129sm17929757pgo.27.2021.03.01.21.32.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Mar 2021 21:32:16 -0800 (PST)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v9 4/4] docs/pinctrl: document debugfs files
-Date:   Mon,  1 Mar 2021 21:30:59 -0800
-Message-Id: <20210302053059.1049035-5-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210302053059.1049035-1-drew@beagleboard.org>
-References: <20210302053059.1049035-1-drew@beagleboard.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9Yp6IMdjr+fqwidy7ap2X/QWUwpISs2GQo/1YVRp7Ac=;
+        b=TXtDL8vhgzHP2xnOR802dbZg8gdNU6sPcSgTggcDMeW2cIJDUN4r8NuzB9mh6KxLH0
+         Ww7VfTeDfLkAuQ8FRJZapbPlgiuACC0OV9Yhmqx97IHzJ5kqCoGTxWSJkuZV3/uh/pX0
+         H2XW55PqsdG/fyw03dWFLKj7XajPFvhZczuShXkB+48hAk/JYt8S+HjSoys3FIAzKGFE
+         AmU6n+lXD59vJC+MBQu10WKFHBVdFDls7qDk1/8NNQ2+VWyJhFaUi5RQyObzXBIO6BIH
+         H7X7naqr08BobslXpGq9vjRlo6hjG2QuXX5VdG49DJ9TpXbQsNUz+r7Mn/ALCSVxplp5
+         ZfIw==
+X-Gm-Message-State: AOAM533Cozcq2+vIlE50zALmeuX+CHAP0GgTDZJVuk+TSlIEkMTFLk+6
+        LLVMTCo+Tv5uuqsmWtdeyiAC0W7xmaG6q9y7ctHK
+X-Google-Smtp-Source: ABdhPJycQAU4H6nnBzd35FvJRpJes9uYQ1qv/FXAqvovHsqD1ff/W8fUGoryH984ghEAgEUX/l3Rc0jaCsNxcZcB5Xs=
+X-Received: by 2002:a9d:63ce:: with SMTP id e14mr16281721otl.347.1614672598987;
+ Tue, 02 Mar 2021 00:09:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1613131643-60062-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <1613131643-60062-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <CABMQnVJ+hQ_sdXMdLzhv2Y65QW8Vi01VAjV=SCeOei-zOZ5dwQ@mail.gmail.com> <ecef1943-fec3-9b35-a326-87764512c691@monstr.eu>
+In-Reply-To: <ecef1943-fec3-9b35-a326-87764512c691@monstr.eu>
+From:   Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+Date:   Tue, 2 Mar 2021 17:09:33 +0900
+Message-ID: <CABMQnVJLRZ18iZH4oQbZSaC6Bw4do9GnrAVH1sHh6hLa+B2b+A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] firmware: xilinx: Add pinctrl support
+To:     Michal Simek <monstr@monstr.eu>
+Cc:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        saikrishna12468@gmail.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        git@xilinx.com, linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Document debugfs directories and files created for pinctrl subsystem.
+Hi,
 
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- Documentation/driver-api/pin-control.rst | 37 ++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+2021=E5=B9=B43=E6=9C=881=E6=97=A5(=E6=9C=88) 16:07 Michal Simek <monstr@mon=
+str.eu>:
+>
+> Hi Noburiho,
+>
+> On 2/28/21 1:17 AM, Nobuhiro Iwamatsu wrote:
+> > Hi,
+> >
+> > 2021=E5=B9=B42=E6=9C=8812=E6=97=A5(=E9=87=91) 21:10 Sai Krishna Potthur=
+i
+> > <lakshmi.sai.krishna.potthuri@xilinx.com>:
+> >>
+> >> Adding pinctrl support to query platform specific information (pins)
+> >> from firmware.
+> >>
+> >> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xili=
+nx.com>
+> >> Acked-by: Michal Simek <michal.simek@xilinx.com>
+> >> ---
+> >>  drivers/firmware/xilinx/zynqmp.c     | 114 ++++++++++++++++++++++++++=
++
+> >>  include/linux/firmware/xlnx-zynqmp.h |  90 +++++++++++++++++++++
+> >>  2 files changed, 204 insertions(+)
+> >>
+> >> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilin=
+x/zynqmp.c
+> >> index efb8a66efc68..299c3d5a9ebd 100644
+> >> --- a/drivers/firmware/xilinx/zynqmp.c
+> >> +++ b/drivers/firmware/xilinx/zynqmp.c
+> >> @@ -784,6 +784,120 @@ int zynqmp_pm_fpga_get_status(u32 *value)
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(zynqmp_pm_fpga_get_status);
+> >>
+> >
+> > <snip>
+> >
+> >> @@ -125,6 +131,12 @@ enum pm_query_id {
+> >>         PM_QID_CLOCK_GET_FIXEDFACTOR_PARAMS,
+> >>         PM_QID_CLOCK_GET_PARENTS,
+> >>         PM_QID_CLOCK_GET_ATTRIBUTES,
+> >> +       PM_QID_PINCTRL_GET_NUM_PINS =3D 6,
+> >> +       PM_QID_PINCTRL_GET_NUM_FUNCTIONS =3D 7,
+> >> +       PM_QID_PINCTRL_GET_NUM_FUNCTION_GROUPS =3D 8,
+> >> +       PM_QID_PINCTRL_GET_FUNCTION_NAME =3D 9,
+> >> +       PM_QID_PINCTRL_GET_FUNCTION_GROUPS =3D 10,
+> >> +       PM_QID_PINCTRL_GET_PIN_GROUPS =3D 11,
+> >
+> > These do not have to have values, Because PM_QID_INVALID is 0.
+> >
+> >>         PM_QID_CLOCK_GET_NUM_CLOCKS =3D 12,
+> >
+> > And you can drop value from this.
+>
+> Please take a look at
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/include/linux/firmware/xlnx-zynqmp.h?h=3Dv5.12-rc1&id=3D1077d4367ab3b97f6d=
+b2f66c87289af863652215
+>
+> We are using explicit values as was recommended by Greg.
 
-diff --git a/Documentation/driver-api/pin-control.rst b/Documentation/driver-api/pin-control.rst
-index 3d2deaf48841..c905b273e833 100644
---- a/Documentation/driver-api/pin-control.rst
-+++ b/Documentation/driver-api/pin-control.rst
-@@ -1428,3 +1428,40 @@ on the pins defined by group B::
- The above has to be done from process context. The reservation of the pins
- will be done when the state is activated, so in effect one specific pin
- can be used by different functions at different times on a running system.
-+
-+
-+Debugfs files
-+=============
-+These files are created in ``/sys/kernel/debug/pinctrl``:
-+
-+- ``pinctrl-devices``: prints each pin controller device along with columns to
-+  indicate support for pinmux and pinconf
-+
-+- ``pinctrl-handles``: prints each configured pin controller handle and the
-+  corresponding pinmux maps
-+
-+- ``pinctrl-maps``: print all pinctrl maps
-+
-+A sub-directory is created inside of ``/sys/kernel/debug/pinctrl`` for each pin
-+controller device containing these files:
-+
-+- ``pins``: prints a line for each pin registered on the pin controller. The
-+  pinctrl driver may add additional information such as register contents.
-+
-+- ``gpio-ranges``: print ranges that map gpio lines to pins on the controller
-+
-+- ``pingroups``: print all pin groups registered on the pin controller
-+
-+- ``pinconf-pins``: print pin config settings for each pin
-+
-+- ``pinconf-groups``: print pin config settings per pin group
-+
-+- ``pinmux-functions``: print each pin function along with the pin groups that
-+  map to the pin function
-+
-+- ``pinmux-pins``: iterate through all pins and print mux owner, gpio owner
-+  and if the pin is a hog
-+
-+- ``pinmux-select``: write to this file to activate a pin function for a group::
-+
-+        echo "<group-name function-name>" > pinmux-select
--- 
-2.25.1
+Oh, sorry.
+I didn't see this comment. Thank you for this information.
 
+>
+> Thanks,
+> Michal
+>
+
+Best regards,
+  Nobuhiro
+
+
+--=20
+Nobuhiro Iwamatsu
+   iwamatsu at {nigauri.org / debian.org}
+   GPG ID: 40AD1FA6
