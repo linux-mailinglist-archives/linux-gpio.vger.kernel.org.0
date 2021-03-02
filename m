@@ -2,89 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EEF032ACE5
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:09:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 582E932ACE7
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 03:10:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383758AbhCBVR5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Mar 2021 16:17:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49644 "EHLO
+        id S1383768AbhCBVSB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Mar 2021 16:18:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239070AbhCBIve (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 03:51:34 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89314C0617A7
-        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 00:42:36 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id bm21so14823856ejb.4
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 00:42:36 -0800 (PST)
+        with ESMTP id S1378869AbhCBJET (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Mar 2021 04:04:19 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9133C061756
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Mar 2021 01:03:38 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id v13so7762477edw.9
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Mar 2021 01:03:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cqj83OHH0uy6jXnn/6KBeppUvOHSpH1VsMfJDu/RtSk=;
-        b=vFLsMKKiZvzx63grS8/bVXFdMNv4fOLL4c6hkZiljW/H7KUmXzXu0TblXaRgN7HH0X
-         sRs278w+B9Rb9CUADc+tXJmc99YoEPc0ZR9rfxIxgMyQNt4y3G7x2aD67k/sNXjEZfhW
-         SGFg3mWcj6hrBADdf8mpl54LZxCOv3zNiWvHoXdhJh1EMjvyFGpE8PaOby5gGpPuOYgE
-         mZSyst99gu5zwfj7CGCF8sYoSrc6pocYzwx6R9208KKecfp4+/5tacG3ZkRyrpqFiHJa
-         U2pRkeernB6y465khfgeXxt6r4PwcofdmInvJF4RE5YbGQXDsWNqbO0oSzM+SD+6Pa3p
-         Se8w==
+        bh=bgcx8XYRJ2MIUiVBQ1Ps5WQFXuncO1kcZgg8iDvQbp8=;
+        b=LGKN6BORWdVe1OkMw8pb/80gdgXfZFrvz3WAb9MRvNjT0XK7n1I0/gcnKqFyfJpymy
+         6ZWCxeoe2/9XjsnhGjttJYMk/z7M7+kLd8TIov/2tZ2KgDR/tM32U9114e3+vdiEejTz
+         g8IcVHgVWhPZZG8lmpXySJWr1t2KR+39edOu+aCjQakgyNcF2LwyB65Kyl0NYhdwF1/C
+         AiqM9bShTkMc1E/o2NwA40qKQa0dD7TaGmsjNV3PJU3w5SrTMaNF7hdaBPC62rzXInuc
+         AmWiM5C61I+swiTlBhg1wXHa1pKmDnDUwXWoG08SJi2TjtIIx/mIHbFUtEq4LiXVKvxo
+         scMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cqj83OHH0uy6jXnn/6KBeppUvOHSpH1VsMfJDu/RtSk=;
-        b=kSBunUJypG8964YVuoW6HZeiUIy+siBZ2IalXrP9MiMaNxsr7QphjpS+sGsOm+rzKG
-         y6t6in1WyPmovwBWx1a1TK9tX0InAB/jvGXeZCoR4r8j40B6q4QuiLd9ftc3WAHZ8wPy
-         OOQwP37vlJmtR5bxCQo2Ef8GxB4cZ/y5HAWWYUssrGPSi3wV6JYL7YNSEAKKiN0Dy4Hp
-         t+bcbwhN0GlLP5N8fOmDncwqPql8xY2mkTJXf9amB2KoW/crdQCkwJihZGs/K0S/I3p2
-         5ywfgXonu11RMTvm7cN9yU9dbWdHfvbns6KQuWcZ5aAEvk/tXQnwgviQY/OIBrkzQlgu
-         YAKw==
-X-Gm-Message-State: AOAM532hf6qWi73BZS9gb4KVvtRgrL3a9hB3wLaRwJDgVnhKdqq/Vm7q
-        8ZBAGQpzC+Hmbv2ddwCFXMIl9icvzdz7A+t0SCmTJQ==
-X-Google-Smtp-Source: ABdhPJzGPey4/zJAweoL7NIyiBWG5j+JHefetxzo+d4UB+dkYOkVHlCSa1ueXoWOLvYaTHqorLcuIeAd2yR+S+Tvt6o=
-X-Received: by 2002:a17:906:ac6:: with SMTP id z6mr19121663ejf.505.1614674555172;
- Tue, 02 Mar 2021 00:42:35 -0800 (PST)
+        bh=bgcx8XYRJ2MIUiVBQ1Ps5WQFXuncO1kcZgg8iDvQbp8=;
+        b=Jpl1u7muZHk5UOeIyN2I7kArlSwKRqFHOiC43iS1YaWm+59TU5bwbXcMjlvUCqdLjf
+         neXt53z+Mumh3bH07D4eyI0tx7Z3l0C2MhbIX6z8G2ZDZu9+ta2P3WOXjGtIuVwcc/1Q
+         7+2VkKlYVUIbzxEJQSH2j8Bu4lC7vCpAkz0JiHkPrZbRArG8O6bPYjuphuiAVfPhh975
+         n6tIqx4Ky8MnpcpqxEwue1apuK4TRUpzpxEj3s68RFFTZRlGn4GGqemz9gvHMZIb4mTX
+         1wSIS3mbPcBHkBBIwpx3CB6bYDoz1nb3lAxCZsfVSKPA39NHxwUi3HEfjh+TiAR//i76
+         ANPQ==
+X-Gm-Message-State: AOAM533/A2KvXMDfTDm09F5famYx1TH1rCUmtdvJRS2wDZxB7q5T5K32
+        NZCp6lV2PyS9UdcovSkvG805Vn+VZP5TGLwhf+ar8MeOiBkAWw==
+X-Google-Smtp-Source: ABdhPJwyRopB083Gu9P1H7B9AQhYk+FtYbteWd9NpSms8Dn0jR0vWJd6E5uC7ouqFNupa/N2LYkDYWyDeo/a/JFx+K8=
+X-Received: by 2002:aa7:dc56:: with SMTP id g22mr6165534edu.219.1614675817514;
+ Tue, 02 Mar 2021 01:03:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20210216113118.17484-1-kostap@marvell.com>
-In-Reply-To: <20210216113118.17484-1-kostap@marvell.com>
+References: <20210215103643.898-1-angkery@163.com>
+In-Reply-To: <20210215103643.898-1-angkery@163.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 2 Mar 2021 09:42:24 +0100
-Message-ID: <CACRpkdb+ampUXg1qN6iH8aTagqvfJwosHD6c2WGLA3p_JCXa-g@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Fix Marvell CP110 pin control finction names
-To:     Kostya Porotchkin <kostap@marvell.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Tue, 2 Mar 2021 10:03:26 +0100
+Message-ID: <CACRpkdZ-Ty12apvgMyedwu8-pqwTreRXv-OJ=V3OCZNBCx0qiw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: stm32: add missing of_node_put
+To:     angkery <angkery@163.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Etienne Carriere <etienne.carriere@st.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Marek Vasut <marex@denx.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "(Exiting) Amit Kucheria" <amit.kucheria@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Grzegorz Jaszczyk <jaz@semihalf.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Stefan Chulski <stefanc@marvell.com>, bpeled@marvell.com
+        Junlin Yang <yangjunlin@yulong.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 16, 2021 at 12:31 PM <kostap@marvell.com> wrote:
+On Mon, Feb 15, 2021 at 11:41 AM angkery <angkery@163.com> wrote:
 
-> From: Konstantin Porotchkin <kostap@marvell.com>
+> From: Junlin Yang <yangjunlin@yulong.com>
 >
-> These patches are fixing the CP110 pin control driver and the related
-> documentation.
-> Current CP110 pin control driver uses two different MPP functions named
-> the same (sdio) in MPP54 and MPP55 definitions.
-> Since these names are used for the MPP functionality selection, all
-> function names within single MPP group should be unique.
-> This patches series fixes function names in MPP54 and MPP55 pin
-> definitions.
+> Fix OF node leaks by calling of_node_put in
+> for_each_available_child_of_node when the cycle returns.
+>
+> Generated by: scripts/coccinelle/iterators/for_each_child.cocci
+>
+> Signed-off-by: Junlin Yang <yangjunlin@yulong.com>
 
-Excellent fix, patches applied!
+Patch applied with Fabien's ACK!
 
 Yours,
 Linus Walleij
