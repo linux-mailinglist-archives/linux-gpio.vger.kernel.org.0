@@ -2,149 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94DA332C7DD
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 02:12:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07D5432C7E4
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 02:12:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351876AbhCDAc7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Mar 2021 19:32:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242006AbhCCOzW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Mar 2021 09:55:22 -0500
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A3DC0613E3
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Mar 2021 06:51:09 -0800 (PST)
-Received: by mail-oi1-x236.google.com with SMTP id j1so26226238oiw.3
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Mar 2021 06:51:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ws/0H/NBtbGAfBsufQouIyZBnJjYNp6N//wE944yD2A=;
-        b=PBx9BOiiU9F8cKscjuanYUvBgUjV1VF+fWKhzW/8b/FHiQLg5W/BAeg0Us0cHwFvUS
-         XCViMM+N7ql6JsXW81H/1HY6Z5wTm90hpXJ/DIQVxDUhl1FleP2tCgBamhUWQ/1c/s9a
-         EYhwNqWwrizarG5JRentlw6KFxAgKzFDSwsFGO0iKIDtubff+6ToTAF8Ji6G/UM/mFCD
-         Y/EG2wErU2z+HBwTk2Qv8jlUwIcqnCpVxKR7qqTKABh6xpRklmJUcjw/luF2OZld0ob2
-         Bi14vKkIYuVs1EzSUuyGOuakYhRCc7xBm2t8coFynRdvdAllyBMzh6wJSKyq3YtF56pC
-         5Jbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ws/0H/NBtbGAfBsufQouIyZBnJjYNp6N//wE944yD2A=;
-        b=pbyrfkeHnDnpCmkPwVZNfX+xCTzpRryJKlUb2xxov1zru/ehXj56IOgQeqFset0Bk6
-         OS2zISpsD+RuK7tpApBn5+RN7MbHHif70bf+qLaMu4vM8trp+3C05klsDTHc9YHrBxqB
-         1fbiAdPk4m3u9mleqOdDN+iorOHV6FvLWgjX/OCzAZ8Ne80aUpnY2mJ3Em++rQGUlyDJ
-         4vh/fMDjD3nMbqLH4bT56oQszsW4TOstoA16h4IaRyNGoW0kN00OIQO4GA4CGZDrq2Nf
-         15izF5mCVgE9gi/1406+4pqTQ3Mm8YLchbiExgCqctB5r1cEpGH5JtyeGDeyiOeRfgat
-         wiLw==
-X-Gm-Message-State: AOAM531AC6xp92DE5wO88iAQzMIe0EaueDuWHo6Nvi+1MDe4clHeI/si
-        lELAh/vm09fLhG6SJa75zEekcA==
-X-Google-Smtp-Source: ABdhPJzofhTGYtIsBJ7sqsu7289D2ieSzP7iLSu2PUtje7TbDa7z3ZM8WEgDeRZX4SxvpFZGqwsBvg==
-X-Received: by 2002:aca:cf05:: with SMTP id f5mr7657309oig.32.1614783069005;
-        Wed, 03 Mar 2021 06:51:09 -0800 (PST)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id s21sm4842863oos.5.2021.03.03.06.51.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Mar 2021 06:51:08 -0800 (PST)
-Date:   Wed, 3 Mar 2021 08:51:06 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+        id S1351970AbhCDAdH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Mar 2021 19:33:07 -0500
+Received: from m42-2.mailgun.net ([69.72.42.2]:31904 "EHLO m42-2.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244822AbhCCPLz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 3 Mar 2021 10:11:55 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1614784282; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=sRQIESzJzYRECzNj+RqCqmuf8C0lz4OU1zfKTclwppQ=; b=JWrV6Z/SFRAkuj86eNfXduQ1kBspMZ96ZbgWNNhSeWdPmqdxi+CnUrxo3YyXZSin1iDFhrPg
+ z3cyqveqwwxNzZugPObBSmuf+u1PPePdK6nKCHNWz2ca8hn116+gJbAeiXQGsoX/DoB37YW1
+ 1e96zknWU4yXMkH2iIVARytphc4=
+X-Mailgun-Sending-Ip: 69.72.42.2
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 603fa6ffc862e1b9fdd2a74d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Mar 2021 15:10:55
+ GMT
+Sender: jhugo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 47FB3C43463; Wed,  3 Mar 2021 15:10:55 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A,SPF_FAIL autolearn=no autolearn_force=no version=3.4.0
+Received: from [10.226.59.216] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A73D8C433C6;
+        Wed,  3 Mar 2021 15:10:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A73D8C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH] gpiolib: acpi: support override broken GPIO number in
+ ACPI table
 To:     Shawn Guo <shawn.guo@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2] pinctrl: qcom: support gpio_chip .set_config call
-Message-ID: <YD+iWuLS/9knWLFb@builder.lan>
-References: <20210303131858.3976-1-shawn.guo@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org
+References: <20210226033919.8871-1-shawn.guo@linaro.org>
+ <CAHp75Vcb=NO9OWjSpBeVC4c+9=aXE=yiDWVBwLD1DnzwdgFD6Q@mail.gmail.com>
+ <20210226093925.GA24428@dragon>
+ <CAHp75Vc6xYv+197SOrSefQHD2h4Xy_N20gQajW4uF2PU=sJfLg@mail.gmail.com>
+ <YDjZOU+VMWasjzUb@smile.fi.intel.com> <20210227031944.GB24428@dragon>
+ <YDzbQqHspfvpYS7Z@smile.fi.intel.com> <20210302002725.GE24428@dragon>
+ <YD4twyAGvDDOCv+n@smile.fi.intel.com>
+ <abbfcdfa-c287-3828-ed6f-bc1e1f13c6b2@codeaurora.org>
+ <20210303094300.GB17424@dragon>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <41593c7e-368b-cfb8-b24a-2e4dca48b465@codeaurora.org>
+Date:   Wed, 3 Mar 2021 08:10:52 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210303131858.3976-1-shawn.guo@linaro.org>
+In-Reply-To: <20210303094300.GB17424@dragon>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed 03 Mar 07:18 CST 2021, Shawn Guo wrote:
-
-> In case of ACPI boot, GPIO core does the right thing to parse GPIO pin
-> configs from ACPI table, and call into gpio_chip's .set_config hook for
-> setting them up.  It enables such support on qcom platform by using
-> generic config function, which in turn calls into .pin_config_set of
-> pinconf for setting up hardware.  For qcom platform, it's possible to
-> reuse pin group config functions for pin config hooks, because every pin
-> is maintained as a single group.
+On 3/3/2021 2:43 AM, Shawn Guo wrote:
+> On Tue, Mar 02, 2021 at 10:02:49PM -0700, Jeffrey Hugo wrote:
+>> Sorry, just joining the thread now.  Hopefully I'm addressing everything
+>> targeted at me.
+>>
+>> I used to do kernel work on MSMs, then kernel work on server CPUs, but now I
+>> do kernel work on AI accelerators.  Never was on the firmware team, but I
+>> have a lot of contacts in those areas.  On my own time, I support Linux on
+>> the Qualcomm laptops.
+>>
+>> Its not MS that needs to fix things (although there is plenty of things I
+>> could point to that MS could fix), its the Qualcomm Windows FW folks.  They
+>> have told me a while ago they were planning on fixing this issue on some
+>> future chipset, but apparently that hasn't happened yet.  Sadly, once these
+>> laptops ship, they are in a frozen maintenance mode.
+>>
+>> In my opinion, MS has allowed Qualcomm to get away with doing bad things in
+>> ACPI on the Qualcomm laptops.  The ACPI is not a true hardware description
+>> that is OS agnostic as it should be, and probably violates the spec in many
+>> ways.  Instead, the ACPI is written against the Windows drivers, and has a
+>> lot of OS driver crap pushed into it.
+>>
+>> The GPIO description is one such thing.
+>>
+>> As I understand it, any particular SoC will have a number of GPIOs supported
+>> by the TLMM.  0 - N.  Linux understands this.  However, in the ACPI of the
+>> Qualcomm Windows laptops, you will likely find atleast one GPIO number which
+>> exceeds this N.  These are "virtual" GPIOs, and are a construct of the
+>> Windows Qualcomm TLMM driver and how it interfaces with the frameworks
+>> within Windows.
+>>
+>> Some GPIO lines can be configured as wakeup sources by routing them to a
+>> specific hardware block in the SoC (which block it is varies from SoC to
+>> SoC).  Windows has a specific weird way of handling this which requires a
+>> unique "GPIO chip" to handle.  GPIO chips in Windows contain 32 GPIOs, so
+>> for each wakeup GPIO, the TLMM driver creates a GPIO chip (essentially
+>> creating 32 GPIOs), and assigns the added GPIOs numbers which exceed N.  The
+>> TLMM driver has an internal mapping of which virtual GPIO number corresponds
+>> to which real GPIO.
+>>
+>> So, ACPI says that some peripheral has GPIO N+X, which is not a real GPIO.
+>> That peripheral goes and requests that GPIO, which gets routed to the TLMM
+>> driver, and the TLMM driver translates that number to the real GPIO, and
+>> provides the reference back to the peripheral, while also setting up the
+>> special wakeup hardware.
+>>
+>> So, N+1 is the first supported wakup GPIO, N+1+32 is the next one, then
+>> N+1+32+32, and so on.
 > 
-> This change fixes the problem that Touchpad of Lenovo Flex 5G laptop
-> doesn't work with ACPI boot, because PullUp config of Touchpad GpioInt
-> pin is not set up by the kernel.
+> Jeffrey,
 > 
-
-I like the fact that this solves your gpio configuration issue, but I'm
-uncertain if just adding support for configuring pins (in addition to
-groups) in the driver is the right solution.
-
-@Linus, to summarize, the Qualcomm TLMM configures pingroups, but all
-gpios are defined as a single pin. pinctrl_gpio_set_config() is invoked
-based on the configuration provided in the ACPI tables, so Shawn's
-proposal is to just implement "config by pin" as well.
-Would this not be a problem shared with all pinctrl drivers that
-configure gpios in groups?
-
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> ---
-> Changes for v2:
-> - Add pin config functions that simply call into group config ones.
+> Thanks so much for these great information!
 > 
->  drivers/pinctrl/qcom/pinctrl-msm.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+> May I ask a bit more about how the virtual number N+1+32*n maps back to
+> the real number (R)?  For example of touchpad GPIO on Flex 5G, I think
+> we have:
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index af6ed7f43058..a59bb4cbd97e 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -489,10 +489,24 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
->  	return 0;
->  }
->  
-> +static int msm_config_pin_get(struct pinctrl_dev *pctldev, unsigned int pin,
-> +			      unsigned long *config)
-> +{
-> +	return msm_config_group_get(pctldev, pin, config);
-> +}
-> +
-> +static int msm_config_pin_set(struct pinctrl_dev *pctldev, unsigned pin,
-> +			      unsigned long *configs, unsigned num_configs)
-> +{
-> +	return msm_config_group_set(pctldev, pin, configs, num_configs);
-> +}
-> +
->  static const struct pinconf_ops msm_pinconf_ops = {
->  	.is_generic		= true,
->  	.pin_config_group_get	= msm_config_group_get,
->  	.pin_config_group_set	= msm_config_group_set,
-> +	.pin_config_get		= msm_config_pin_get,
-> +	.pin_config_set		= msm_config_pin_set,
->  };
->  
->  static int msm_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-> @@ -717,6 +731,7 @@ static const struct gpio_chip msm_gpio_template = {
->  	.get_direction    = msm_gpio_get_direction,
->  	.get              = msm_gpio_get,
->  	.set              = msm_gpio_set,
-> +	.set_config       = gpiochip_generic_config,
-
-Generally the pinconf/pinmux part of the driver deals with groups, and
-the gpio_chip deals with gpio numbers. So I think that either
-gpiochip_generic_config() should somehow do the translation, or we
-should use a different function that does it (even though there's no
-translation).
-
-Regards,
-Bjorn
-
->  	.request          = gpiochip_generic_request,
->  	.free             = gpiochip_generic_free,
->  	.dbg_show         = msm_gpio_dbg_show,
-> -- 
-> 2.17.1
+>    N+1+32*n = 0x0280
+>    N = 191
+>    R = 24
 > 
+> If my math not bad, n = 14.  How does 14 map to 24?
+
+
+So, if this was 845, the wakeup hardware would be the PDC.  Only a 
+specific number of GPIOs are routed to the PDC.  When the TLMM is 
+powered off in suspend, the PDC pays attention to the GPIOs that are 
+routed to it, and are configured in the PDC as wakeup sources.  When the 
+GPIO is asserted, the signal to the TLMM gets lost, but the PDC catches 
+it.  The PDC will kick the CPU/SoC out of suspend, and then once the 
+wakup process is complete, replay the GPIO so that the TLMM has the signal.
+
+In your example, 14 would be the 14th GPIO that is routed to the PDC. 
+You would need SoC hardware documentation to know the mapping from PDC 
+line 14 to GPIO line X.  This is going to be SoC specific, so 845 
+documentation is not going to help you for SC8XXX.
+
+Chances are, you are going to need to get this documentation from 
+Qualcomm (I don't know if its in IPCatalog or not), and put SoC specific 
+lookup tables in the TLMM driver.
+
+Does that make sense, or did I not answer the question you were actually 
+asking?
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
