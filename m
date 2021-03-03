@@ -2,108 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BD5532BB4F
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 22:21:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20F4832BB56
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 22:22:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237189AbhCCMVy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Mar 2021 07:21:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1843031AbhCCKYg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Mar 2021 05:24:36 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D24C035438;
-        Wed,  3 Mar 2021 01:32:04 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id w11so22845558wrr.10;
-        Wed, 03 Mar 2021 01:32:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=UKH6JyNVGycrje635cm8/24AFBzoSarHf1U+e9Q+8Ts=;
-        b=aGGAUotLv4VqjycU5qpz5qXFjmjWfmlMEREwAEO1Dehpv6eXNl5IQuC2YOfXja3nCt
-         tuuJeFDypcPv/N9yLQkkv69RwZHY3lppJaJ/hofGtsUVlLHj4QrjIOp68IqLNsdPcELy
-         9E1lP9XfmEGd2+EDlL2OShmJb+/CeF537M0cdJ82rDR5mqp4EP+93kMpwr0xA7Z3v8qT
-         UXgYeoOjJHnAcMcgbpDYokCSwQ2/9BT1R0S412rd4pJq63mXJBYjLX9BocCC3azE5eyU
-         IEPiMatp3dKZhwl0aYRBvxlj2bbfKAn2AH8B63KBNWY81POEhNa4yEaDI0tAOZ0VVSdl
-         X99w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=UKH6JyNVGycrje635cm8/24AFBzoSarHf1U+e9Q+8Ts=;
-        b=WvkzV+8lu03B0vBcdAr7fxyf8BEwDVoTvJtbfwfEHuYuAr3tvY87Y28WEdBh5kz7ra
-         73XUrrcx2dht1tHyzgNvbK7Y96fOocKol43feZrf7ZtgpdTRzs9jsK4pQT/WTqWunwKA
-         EDaoB5KPCXYIEIhfx/Wowns2V8/cz5iKrdNsixQTuKG6qtMySP2QeAAMSNcZbkontg6x
-         Qe1EIajOVRE99JcO7/UKOQv51MfPZRGZ5slph70btI6zu+4aptFENgQ8M9JhBmU6anxW
-         0KZwMBppY1Zd2D829ZOFvoJs97rRxTmEmPsLrGcN6AXV9ud3geQt94vHF0q0cqBEs4rm
-         Bm5g==
-X-Gm-Message-State: AOAM530vAETTTOaQowi1sQxbPTWzX01wv+aTH+dGUkIumQsg40Ycjf2f
-        UFMSRR8Gnar8UiYSnLQWzcw=
-X-Google-Smtp-Source: ABdhPJw4+XfbVZwH3cNB0g9yh1a/RXbhCsHP024nurdnI5Ltn2OZODJhZunn9lJpDOCosVyxuLjTAQ==
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr17265889wrp.118.1614763923363;
-        Wed, 03 Mar 2021 01:32:03 -0800 (PST)
-Received: from macbook-pro-alvaro.lan (170.red-88-1-105.dynamicip.rima-tde.net. [88.1.105.170])
-        by smtp.gmail.com with ESMTPSA id z7sm3616216wrt.70.2021.03.03.01.32.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Mar 2021 01:32:03 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.60.0.2.21\))
-Subject: Re: [PATCH v2 00/12] pinctrl: add BCM63XX pincontrol support
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <CACRpkdZQRtTi75KMFDpM6eJ9hVuPLNJBBs6bHKMt7_PNW8gcFQ@mail.gmail.com>
-Date:   Wed, 3 Mar 2021 10:32:01 +0100
-Cc:     Michael Walle <michael@walle.cc>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3A67CEC5-C025-40F2-A0CE-0EFA10337E5A@gmail.com>
-References: <20210302191613.29476-1-noltari@gmail.com>
- <CACRpkdZQRtTi75KMFDpM6eJ9hVuPLNJBBs6bHKMt7_PNW8gcFQ@mail.gmail.com>
+        id S1352055AbhCCMWJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Mar 2021 07:22:09 -0500
+Received: from mga18.intel.com ([134.134.136.126]:57467 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1357260AbhCCKtM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 3 Mar 2021 05:49:12 -0500
+IronPort-SDR: ITl52kVMyquAggf4WUUYMQpDS3cejhGJHYNBAINoQzq0+HOgoOhwzie/6JLQ0VxLBBLn9MGOJl
+ cVFDde6GzP9g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9911"; a="174791953"
+X-IronPort-AV: E=Sophos;i="5.81,219,1610438400"; 
+   d="scan'208";a="174791953"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2021 01:35:12 -0800
+IronPort-SDR: YBDaTUXqLyRMtmbMNfaclOX5T6CSs+tGX7QJIdiXXZnPQmzKRJWkAuJY/gZ4+xL9g14llWXUk1
+ 0jeTK56el7Zw==
+X-IronPort-AV: E=Sophos;i="5.81,219,1610438400"; 
+   d="scan'208";a="445184452"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2021 01:35:11 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lHNuO-009bZz-Kp; Wed, 03 Mar 2021 11:35:08 +0200
+Date:   Wed, 3 Mar 2021 11:35:08 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: Apple Mail (2.3654.60.0.2.21)
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v1 4/4] gpiolib: Reuse device's fwnode to create IRQ
+ domain
+Message-ID: <YD9YTGnFbmcnJKsR@smile.fi.intel.com>
+References: <20210302153451.50593-1-andriy.shevchenko@linux.intel.com>
+ <20210302153451.50593-4-andriy.shevchenko@linux.intel.com>
+ <CACRpkdYjs7y=YMoQmFc2iXoMEtSAk7S+zYsz1Y=yPYw=97T+Nw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYjs7y=YMoQmFc2iXoMEtSAk7S+zYsz1Y=yPYw=97T+Nw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Wed, Mar 03, 2021 at 10:22:02AM +0100, Linus Walleij wrote:
+> On Tue, Mar 2, 2021 at 4:35 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > When IRQ domain is created for an ACPI case, the name of it becomes unknown-%d
+> > since for now it utilizes of_node member only and doesn't consider fwnode case.
+> > Convert IRQ domain creation code to utilize fwnode instead.
+> >
+> > Before/After the change on Intel Galileo Gen 2 with two GPIO (IRQ) controllers:
+> >
+> >   unknown-1     ==>     \_SB.PCI0.GIP0.GPO
+> >   unknown-2     ==>     \_SB.NIO3
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> This first part seems to do what you want,
 
-> El 3 mar 2021, a las 10:29, Linus Walleij <linus.walleij@linaro.org> =
-escribi=C3=B3:
->=20
-> On Tue, Mar 2, 2021 at 8:16 PM =C3=81lvaro Fern=C3=A1ndez Rojas =
-<noltari@gmail.com> wrote:
->=20
->> v2: introduce changes suggested by Linus Walleij and remove =
-interrupts
->> - In order to use GPIO_REGMAP, the need to get gpio_chip from =
-gpio_regmap
->> and use it for pinctrl_add_gpio_range() and =
-gpio_chip.direction_input()
->> and gpio_chip.direction_output().
->=20
-> Looking so much better don't you think? :)
+...
 
-Yeah :)
+> But this:
+> 
+> > @@ -1504,15 +1497,14 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+> >                         return ret;
+> >         } else {
+> >                 /* Some drivers provide custom irqdomain ops */
+> > -               if (gc->irq.domain_ops)
+> > -                       ops = gc->irq.domain_ops;
+> > -
+> > -               if (!ops)
+> > -                       ops = &gpiochip_domain_ops;
+> > -               gc->irq.domain = irq_domain_add_simple(np,
+> > -                       gc->ngpio,
+> > -                       gc->irq.first,
+> > -                       ops, gc);
+> > +               ops = gc->irq.domain_ops ?: &gpiochip_domain_ops;
+> > +               if (gc->irq.first)
+> > +                       gc->irq.domain = irq_domain_create_legacy(fwnode, gc->ngpio,
+> > +                                                                 gc->irq.first, 0,
+> > +                                                                 ops, gc);
+> > +               else
+> > +                       gc->irq.domain = irq_domain_create_linear(fwnode, gc->ngpio,
+> > +                                                                 ops, gc);
+> 
+> This looks like a refactoring and reimplementation of irq_domain_add_simple()?
 
->=20
-> If you also get rid of the exposed struct using DT gpio-ranges we are
-> done I think, just need some DT review slack for the DT maintainers
-> for the bindings.
+If you named it as irq_domain_create_simple(), then yes, but the problem is
+that we don't have irq_domain_create_simple() API right now.
 
-I=E2=80=99m already preparing v3 series, introducing shared base code =
-and simplifying everything :).
+> Why, and should it rather be a separate patch?
 
->=20
-> Yours,
-> Linus Walleij
+Nope.
 
-Best regards,
-=C3=81lvaro.=
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
