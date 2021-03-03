@@ -2,106 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94CFA32BB55
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 22:22:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A96B32BB4D
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Mar 2021 22:21:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348571AbhCCMWG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Mar 2021 07:22:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37812 "EHLO
+        id S236957AbhCCMVr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Mar 2021 07:21:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1843075AbhCCKZT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Mar 2021 05:25:19 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3BA1C0611BE
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Mar 2021 00:45:16 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id d13-20020a17090abf8db02900c0590648b1so2556787pjs.1
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Mar 2021 00:45:16 -0800 (PST)
+        with ESMTP id S1843011AbhCCKXs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Mar 2021 05:23:48 -0500
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B62EC0698C3
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Mar 2021 01:06:14 -0800 (PST)
+Received: by mail-lj1-x22d.google.com with SMTP id r23so27652960ljh.1
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Mar 2021 01:06:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iSIb0xgaCgC+aCcwfRzO1TQQvKt5CzxSqRNrFTdkvfQ=;
-        b=huJnKgSZDMoWitgZnQc7pXqwd7FRofIR7KDj6HnGtfcYMEb+ozQD5VbFRDxJclNv1s
-         e68bkT1XyTvYs6hTdfetK9agvV5yY5T+HSYwXD0oVRaUglKEAWyq/t1FlbFxwlzGTWG9
-         xmh+OFL0qoIYhUMx/VvsqRU4MRPZBCjmxfI5WspLnANXTosXcIxJbfP2YaGRkXLhh8SU
-         oi/MoZgAKiwIbpH4REM70KfLMTo1SmKPPoSOGZ/2R5qvq2K8wEFavyVVxQRT358qI9k1
-         Bo8BnuyIhKGS9XsizWOqF00Wi8cMNR9k5ryyfXOJzlV03vzPmpkUDn0SwS2R3A6sifZc
-         SgGQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BLNnFYjqNcTjokausBuyGfdJVlNmncxriqxX7udgA8w=;
+        b=DpCnjlrpowOzfuGXvNFJt3KBxiB2US6k5s4AObRRVmnX9beVPN2unj79H3bXcRNrwb
+         QHTKbpZn8me2BlpqVi2tyGufWgLOKYIFnej1/japvd31GO5W+9eWkeRlzjFfEZrCPeSh
+         USKnYElb56T5YWG9vS9bkvUTg4LHfa3I+txOVxNL+29hSG74B+tYNwo6hK6mTgcRrkJt
+         yH3E0jZsPF49MQRb5A7qEEcJuzqqFOshV6JNFuDFb46QZb4pYy4SRJnI4V3HhCrOFskH
+         xSzVdmS5HuzjlH2rm53dcklA+kYg4QEVsapEZ6Pd9y9rIbiQDYzO1LyFUEi4FFuKhGnK
+         N6uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iSIb0xgaCgC+aCcwfRzO1TQQvKt5CzxSqRNrFTdkvfQ=;
-        b=YFPBmnjcfIycI/xbwCbbPpCPqvAzsQbQ4QbD9t3MM3bdIeFDeqx9EZwwnPBjjfUqgr
-         KL6eVrcafIbYaSKKBnAW6mju//ToedvskPP7P/qFnqbWWJbLZryx/F2GrakoDGHJmHyY
-         QS3oiiJbn4+4KatAFf3kMgRpDo9Zrmmm00CbMl59Xk5UD3r9iLGZ7mk6/OvfqJ87US4+
-         pwwbdg+h25OI0dOvnEp4nudiIHVUiAf73mDDS1giqE9LO0I4CKxKy5wtzqbuaNZH7r+P
-         rGzPXVY5NVFW5a0TX8bdgFjxQrvZ1fhz3CJ5dOig3eyrgsrtOPfL3lFu+pRXw4YIyWZ9
-         ZxMg==
-X-Gm-Message-State: AOAM533vlKyxGTL5S4B0pwWa37wcDDqM630Ukcp/dW0alU6lXUgI9z9l
-        iHMZXn5bdMD65YaT0BxdKB6TNuoKXu8ulA==
-X-Google-Smtp-Source: ABdhPJxNDp9Ua4ii/mm6SqQgm1n6fnSN3b0KMoyfdZEGT5y6O3miiV+hJpRnr2HSGnoNeI/c+CrD8A==
-X-Received: by 2002:a17:90a:d516:: with SMTP id t22mr8782767pju.51.1614761116299;
-        Wed, 03 Mar 2021 00:45:16 -0800 (PST)
-Received: from dragon (80.251.214.228.16clouds.com. [80.251.214.228])
-        by smtp.gmail.com with ESMTPSA id w207sm22324837pff.62.2021.03.03.00.45.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Mar 2021 00:45:15 -0800 (PST)
-Date:   Wed, 3 Mar 2021 16:45:09 +0800
-From:   Shawn Guo <shawn.guo@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: support override broken GPIO number in
- ACPI table
-Message-ID: <20210303084508.GA17424@dragon>
-References: <CAHp75Vcb=NO9OWjSpBeVC4c+9=aXE=yiDWVBwLD1DnzwdgFD6Q@mail.gmail.com>
- <20210226093925.GA24428@dragon>
- <CAHp75Vc6xYv+197SOrSefQHD2h4Xy_N20gQajW4uF2PU=sJfLg@mail.gmail.com>
- <YDjZOU+VMWasjzUb@smile.fi.intel.com>
- <20210227031944.GB24428@dragon>
- <YDzbQqHspfvpYS7Z@smile.fi.intel.com>
- <20210302002725.GE24428@dragon>
- <YD4twyAGvDDOCv+n@smile.fi.intel.com>
- <abbfcdfa-c287-3828-ed6f-bc1e1f13c6b2@codeaurora.org>
- <YD9DnWC4ht7AYjb/@smile.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BLNnFYjqNcTjokausBuyGfdJVlNmncxriqxX7udgA8w=;
+        b=AD+/HWSaY3CS1JmOVadycY5i/V1wkPqNFTZti0miVj6SE7OJDe670+8j2stZZxf2jT
+         UljNfiksXKCS5vTQtqJYhWvsOw5XiFGfo6W7mBFuhTKBMKDDcq8VzAmisZO3Hmx8wxCb
+         hub6oAzL+cQRuJ9BucTAl0sSyI426MIGJdI1KVMqBb4CLeV+CWb5+708Uj0kqkSFCh0V
+         T8R3mW1yiwzCbw7ZkfXWkCCeVrLy19dh/yIbXHU6GKtP7OHWzs6rqGxbLf+BM1DoYK8E
+         GkVQvA7OPjSzbCjive6sqgq18sOxHN4aqVh6YCANd8QLBEm4O0gZWG5H0z0U0PxXO25S
+         oYNQ==
+X-Gm-Message-State: AOAM531SHMqsKir3trIkEv8XiGBHhh7OZEaowVY8AoWEjywLsFN7Ljxd
+        YzXE0WXcfxYJCbjgbVndtflPjhslkW8CdTq5h+ltgw==
+X-Google-Smtp-Source: ABdhPJy29RaKWlRe4eI3SRdB4bhTj7JlRDbwJSaE2h81AQv3qsz44ugMuspKaO/GGMsjQIGM+4cSxi7AM97OjznnWP8=
+X-Received: by 2002:a2e:9cb:: with SMTP id 194mr5435203ljj.438.1614762372970;
+ Wed, 03 Mar 2021 01:06:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YD9DnWC4ht7AYjb/@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1614244522-64464-1-git-send-email-yang.lee@linux.alibaba.com>
+In-Reply-To: <1614244522-64464-1-git-send-email-yang.lee@linux.alibaba.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Mar 2021 10:06:01 +0100
+Message-ID: <CACRpkdY8OCkbQUa6tq-invLM14hMEXVuY0OVaT0kywF5xXS6Vg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ingenic: add missing call to of_node_put()
+To:     Yang Li <yang.lee@linux.alibaba.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>, linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 03, 2021 at 10:06:53AM +0200, Andy Shevchenko wrote:
-> Since the mapping of those wake IRQs is totally platform specific, it needs a
-> platform driver. On above mentioned x86 platforms we have a one you may take as
-> an example (good or bad it's another story):
-> drivers/platform/x86/intel_int0002_vgpio.c.
-> 
-> I think you will need something like this somewhere in ARM platform
-> infrastructure in the Linux kernel.
+On Thu, Feb 25, 2021 at 10:15 AM Yang Li <yang.lee@linux.alibaba.com> wrote:
 
-Well, you have the Virtual GPIO controller defined in ACPI as device
-"INT0002", but we do not have such a thing.  I'm not sure it makes much
-sense to create a baseless driver.
+> In one of the error paths of the for_each_child_of_node() loop in
+> ingenic_gpio_probe, add missing call to of_node_put().
+>
+> Fix the following coccicheck warning:
+> ./drivers/pinctrl/pinctrl-ingenic.c:2485:1-23: WARNING: Function
+> "for_each_child_of_node" should have of_node_put() before return around
+> line 2489.
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
-> 
-> That said, I don't see that those numbers are "broken", they have their own
-> meaning and specific mapping to the real GPIOs and it's so platform specific,
-> that we can't treat it as a quirk.
+Patch applied!
 
-Those numbers have their own meaning only for Windows.  It's OS specific
-rather than platform specific.  Snapdragon platform manual has explicit
-numbering of every single GPIO pin.  Those broken numbers in ACPI table
-violate the hardware specification and are *broken* to Linux which
-implements GPIO driver properly.
-
-Shawn
+Yours,
+Linus Walleij
