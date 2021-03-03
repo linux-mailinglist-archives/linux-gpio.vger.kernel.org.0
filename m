@@ -2,85 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B87932C7DA
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 02:12:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ADAB32C7E3
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 02:12:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355440AbhCDAc6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Mar 2021 19:32:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39410 "EHLO
+        id S239899AbhCDAdG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Mar 2021 19:33:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240250AbhCCOyX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Mar 2021 09:54:23 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD565C061761
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Mar 2021 06:43:49 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id p1so25828477edy.2
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Mar 2021 06:43:49 -0800 (PST)
+        with ESMTP id S244778AbhCCPLo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Mar 2021 10:11:44 -0500
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A72C061765
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Mar 2021 06:45:33 -0800 (PST)
+Received: by mail-pg1-x52a.google.com with SMTP id p21so16500142pgl.12
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Mar 2021 06:45:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gx/CAxRkG+g22fvZcYrKkczJRf8ZWzrsVOc8x8tG0jc=;
-        b=NFP5g1auQ39CLU0pi5+DbFEiBU0tzQDkIivm7c/96UffPXAlcDWCcYv3wJkeVkoYkp
-         7ZrepVdyYIR1+Y9OFPzjVHTwqmfGORIb3yxBdT+02LlBJWMS7hbhnsjtICLeOMAm7w7P
-         H2zxhcP3q8jSkdnshsWDxH0iAoz3pvsnitkkutqm6nyfd/K/+kDk9Wd+3FYeBhZK25y8
-         qGuHm91JEpdMnI4i49v8mD8qFtQX8j/L59pXQex3rxE/n79XqhBlqw/hQOhsxEHTLut3
-         GS9762MKazYKXcDAH/YQTB+z7HsyQCV63pioAuz5jjv9gw+XccjfJaSAbrLx6cgJjtW9
-         QVxA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=J/L9Vsw6/4k+W5B5jJbhVRSy0ZASEPs2i2qo9aGLtRI=;
+        b=VGb1t57vd1AnaLDcJVgN0jcQy4XECFfONFfDLkIfkz2Y2zxu1CIzs1wUoRVoUt5cBE
+         skF1UitNqMHZcMEaG27wih+EWlksdJA3G22qW1x6PpOHuSJQDxC6p9CQBWVyjkmuI6TQ
+         oIIGFKQBIkdztN5UFttnMGc3DQJPkHEDUqsLlMWzsJ4/x5jl5l36k5fUayG54ngnjAqr
+         FTc8XTaGF7QkIxxL7+r2awBrKJJpmUK2JkUY94had+VGDesrEJyxs/m5IXgjTyiHCyZG
+         j/y9+IVY+qqn1otynXFQIZvW3wyHtmNaU9htF4kN/blogsAGvdCg3x/EQbPycgC7Eaar
+         9ZiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gx/CAxRkG+g22fvZcYrKkczJRf8ZWzrsVOc8x8tG0jc=;
-        b=E9R4gSB8x/ELCHgo9EgxIuV+DKCqzpJwrVX3mMX4ClnLOr72vTRkHx0+y3Vh9ld2rS
-         orrpRJm4cC4NRA61RVQBQmtQ827YL8zZaEJDVcEWqq4PXgBJZU1Rgnx7zV7KBTg9Gxhh
-         Z7QpZIdEOh+DhFdnz0rgzrinf0kWHhOyIGCqAPQA+THScyg+/jHk9vZcn+g+3T/Mz1aW
-         satREnX9WW76MvT9SDYGOodNSDFAnfIRE+0E0Zi1+GGYxNyVjdSnH09QF9MTgSmliqgM
-         dMpD3KSaoIv52CR5aGGQmXW1JRdLzUReXiufwuD3pzcvh19baR0B22HA2GpDbI7W+u0q
-         yh5g==
-X-Gm-Message-State: AOAM533/pHGBASG0MnchCMhmqxqK83kANwWI7hxxfjG+8wRKu+9zSrb5
-        l9iJT3j9bVw9bFUeV6Riz5253rusLKkt+Z2fr+csRA==
-X-Google-Smtp-Source: ABdhPJxxG4V/98LNDqu69Zvy0yA8l27EgNtixJRX41q+qMn1tV9KMwKw6dZ2etG+w3xe2TMZvfMcwLkvxjMcWdMfY6c=
-X-Received: by 2002:aa7:db41:: with SMTP id n1mr7786562edt.186.1614782628333;
- Wed, 03 Mar 2021 06:43:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J/L9Vsw6/4k+W5B5jJbhVRSy0ZASEPs2i2qo9aGLtRI=;
+        b=WsDq/DvytJXjVCzvgwDlSyi8jKnQ43Jf/Y2YHRV7NNmOQi0YSWbdNH6BK3wY/EQpVx
+         Ju0ENWbdGpCnB9ejp5xS4I865SFyDb2MOfKMzkWHMd0RLCD4sS3xAkOZA9Eklaq75YQ9
+         I/GD0vdGq2RkqrSLYrOBd7tIuKpVxrbbH29dvWtZDn4H4ulPQL7deA3jSvQREFycPDJC
+         dw7qQGnfONjB+LoV/oOLqCb95Y6pEs4opSGkwdtYyBKQ7lYXn2H0zsl7ey9j53J7O4FV
+         A2Ie/xSUWeeCwMPnWNfkAEEwYMU/LOSgstbODwzF/jEhLIgIcrvi08ObznpSLe0gV1hq
+         8DkQ==
+X-Gm-Message-State: AOAM532V+q1Os8ZEctbHewTFd2COOUvlX433dnuvrWM8dfCrr+rkszGh
+        q+4eaTxOC6Y+6XQvrC7EJ9obZg==
+X-Google-Smtp-Source: ABdhPJyxVLc/RTAHDPDHeJkezvj/md/ZQ4R/ctQEls9J9aAp1iO/W16NfVaxdhPgrjyYZxkQmSaBng==
+X-Received: by 2002:aa7:9f52:0:b029:1ee:db83:dac6 with SMTP id h18-20020aa79f520000b02901eedb83dac6mr3276872pfr.45.1614782732430;
+        Wed, 03 Mar 2021 06:45:32 -0800 (PST)
+Received: from dragon (80.251.214.228.16clouds.com. [80.251.214.228])
+        by smtp.gmail.com with ESMTPSA id t6sm23716191pgp.57.2021.03.03.06.45.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Mar 2021 06:45:32 -0800 (PST)
+Date:   Wed, 3 Mar 2021 22:45:27 +0800
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] pinctrl: qcom: handle tiles for ACPI boot
+Message-ID: <20210303144526.GC17424@dragon>
+References: <20210303132622.4115-1-shawn.guo@linaro.org>
+ <20210303132622.4115-2-shawn.guo@linaro.org>
+ <YD+YSS/s79gqwEpS@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <cover.1613134924.git.syednwaris@gmail.com>
-In-Reply-To: <cover.1613134924.git.syednwaris@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 3 Mar 2021 15:43:37 +0100
-Message-ID: <CAMpxmJXWk8YJR6-DHMj3+Dk4-TdE-FuFtxK_MvbsoLVqZA9rLg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Introduce the for_each_set_clump macro
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robert Richter <rrichter@marvell.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-pm <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YD+YSS/s79gqwEpS@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 12, 2021 at 2:19 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
->
-> Hello Bartosz,
->
-> Since this patchset primarily affects GPIO drivers, would you like
-> to pick it up through your GPIO tree?
->
+On Wed, Mar 03, 2021 at 04:08:09PM +0200, Andy Shevchenko wrote:
+> On Wed, Mar 03, 2021 at 09:26:21PM +0800, Shawn Guo wrote:
+> > It's not always the case that DT and ACPI describe hardware resource in
+> > the same schema, even for a single platform.  For example, on SC8180X,
+> > DT uses the tiles schema while ACPI describe memory resource as a single
+> > region.  It patches msm_pinctrl_probe() function to map tiles regions
+> > only for DT.  While for ACPI, it maps the single memory resource and
+> > calculate tile bases with offsets passed from SoC data.
+> 
+> ...
+> 
+> > +#include <linux/acpi.h>
+> 
+> There are at least two possibilities to avoid this:
 
-Sure, as soon as you figure out what's wrong with the xilinx patch.
-Could you also follow William's suggestion and rename the functions?
+So could you explain why we should avoid including this header?
 
-Bart
+Shawn
+
+>  - use is_of_node(dev_fwnode(dev)), or in case you need board files support,
+>    !(fwnode && is_of_fwnode(fwnode))
+>  - provide the tiles support directly from the driver thru internal data structures
+> 
+>  And to me the second approach seems better, because there is no guarantee that
+>  tiles support is only defined by the fwnode type.
