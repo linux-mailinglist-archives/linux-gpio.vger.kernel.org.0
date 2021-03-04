@@ -2,194 +2,199 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57C8232CCE9
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 07:39:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0467532CD16
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 07:46:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235318AbhCDGiY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 01:38:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45912 "EHLO
+        id S235589AbhCDGpU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 01:45:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235302AbhCDGiA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 01:38:00 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4979C061574
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Mar 2021 22:37:19 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id s16so15559406plr.9
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Mar 2021 22:37:19 -0800 (PST)
+        with ESMTP id S234425AbhCDGpR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 01:45:17 -0500
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5A3C061574;
+        Wed,  3 Mar 2021 22:44:37 -0800 (PST)
+Received: by mail-lj1-x22c.google.com with SMTP id u18so18311977ljd.3;
+        Wed, 03 Mar 2021 22:44:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DcBwSRYXwJgh73TAHGnFm4EDcUGNqvcxJAKsIbZgreY=;
-        b=St5xIRnflDz/K+jN2ygevVUdjx/uGuut94oNGw0svvyhspYOOk1Vt0ZfdS4MpwPvqo
-         noVforIO9Bh0Fs6VoCvdQJi7kJrnj7pOU8/7c5jvQjajZx/cpif2YA9r2heDcIGd4FXn
-         q4cg7LtYHdNO94y3Hl3KizP8t9mKCLPm3o/MfT/LobHE4pv6bxpK4KsQuskcb/yZkCkx
-         fvqa6xkNTgNF/L3Bbtyu/sFtfcV4dCS8YItxp8Ol10KzRkx5HlirpacYOoOcxO0+8v9t
-         vssSyIDQtK58bOeTWSejORuhaXBRQWquRVmhQxAEDfWOzHH616fMUEq/7HSC8v7v6cgg
-         ZFWQ==
+         :content-disposition:in-reply-to;
+        bh=5dPNy/fWUlSOC24Di7+vnxbeD5VbGpIQk9p1aWlyy6Y=;
+        b=B+36IKDutQlaSTLSRwDQk7mlCQQvnvswJ72hNIJSI/QcUrFTyxhPVELjisK4A94UkS
+         giIcHkUX/XoRY1tFS8rARf4+OPuykhuGqY2iBngTHjFRg7z+veyaN+YT9o8M8YTQVCGg
+         fBOO6g+0ACwDdGAp+WnPTcm9pVhptZ34kH9inrBcp/1i6TJa2tSV8t5IRF/hBHRq9Bdf
+         Vulko/veRZo7C9vNa6GhW5DHdF+1dJiFjuNvlC6/hIqHce3hPUqnFXboE89cA/jrP7eb
+         Iss9BZyfDWjbl2Ns6ZDNn+uMu6Do+iPpAEG2tHgaRvJhPH1IsVreXqR7nFtdms+ZuEZp
+         26kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DcBwSRYXwJgh73TAHGnFm4EDcUGNqvcxJAKsIbZgreY=;
-        b=ccYRaTVYEGQUlA+n1HWlqVaOYkOQjt5QHT/KVzzOq9oNPVe+IDL+5w704HS4OBIHDo
-         RBRk3PZIs+PDiPe9QpBHw1R4FwW9uVMY04XQl5lBeD3OL/QovojtKSkBeXbpZqBtVnl7
-         HpW2+wDTB9lwYljKmczQ/Bsld2a8AbXWFQK+bLVjx7gcHHpp6Vbk34jnUABvufrtRN+x
-         jUk1znENqmSVoqvpJkJ6vz170yKhVUPNGnhRJ00J7atg4cMAL0FcrpQrZTxQEwis5k3S
-         wQsoYhxHoERKktGKW0aJFBdzFtQbonqDM+ZsvU+Sr/iui67BXc2tbIWv1HWOPoTnmOxF
-         cOHw==
-X-Gm-Message-State: AOAM532tD+VbsjYfkS3bnQK2Bnny5v+TqUA2OgHeTLSlO7sfyBnDPedP
-        fXGDET0quM6clpmnEuSYE205tA==
-X-Google-Smtp-Source: ABdhPJxYvDMRvNIVVUpHDhVH2zFVimjOWMbu8V6B7Pvx4Ez+nmm/+HVSHqEFj28W9qYQ+CnSXeSDhA==
-X-Received: by 2002:a17:902:a412:b029:e5:d7dd:9e41 with SMTP id p18-20020a170902a412b02900e5d7dd9e41mr2655188plq.78.1614839839141;
-        Wed, 03 Mar 2021 22:37:19 -0800 (PST)
-Received: from dragon (80.251.214.228.16clouds.com. [80.251.214.228])
-        by smtp.gmail.com with ESMTPSA id 67sm27421739pfw.92.2021.03.03.22.37.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Mar 2021 22:37:18 -0800 (PST)
-Date:   Thu, 4 Mar 2021 14:37:12 +0800
-From:   Shawn Guo <shawn.guo@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: support override broken GPIO number in
- ACPI table
-Message-ID: <20210304063711.GF17424@dragon>
-References: <CAHp75Vc6xYv+197SOrSefQHD2h4Xy_N20gQajW4uF2PU=sJfLg@mail.gmail.com>
- <YDjZOU+VMWasjzUb@smile.fi.intel.com>
- <20210227031944.GB24428@dragon>
- <YDzbQqHspfvpYS7Z@smile.fi.intel.com>
- <20210302002725.GE24428@dragon>
- <YD4twyAGvDDOCv+n@smile.fi.intel.com>
- <abbfcdfa-c287-3828-ed6f-bc1e1f13c6b2@codeaurora.org>
- <20210303094300.GB17424@dragon>
- <41593c7e-368b-cfb8-b24a-2e4dca48b465@codeaurora.org>
- <YD+yBmPrKm1n8Tjm@builder.lan>
+         :mime-version:content-disposition:in-reply-to;
+        bh=5dPNy/fWUlSOC24Di7+vnxbeD5VbGpIQk9p1aWlyy6Y=;
+        b=tgl3iplLaB2rGbk0cg5AIVEslkd8Q5Rktueo5nz+gEcsVIfsUAmTzjLurt23+U5JS+
+         dL0ViZqYjmH2LB6H4rLWE1AKfJNmt8uYgZ8gfJRR9xmomUE2KQkyYIONtP+z/utGJqO0
+         3WDzLxPsaQXpGo3VuhcRg7XSVd8V+AGP9jDU0qsjv/izcn/5a4eLoikMh8Gbdzm3dJA1
+         kRMasBiiu+b3lhGHA3S9ZoL63B+yoOwm7WcKsuqRxT+OIvlrVHxYMbIJVfQ++KVn28Ob
+         8CmgnGWy5r6j5UWUbkM6AHJp0KzAiimZQQTr5N613+peXQdyhsTVpGAagjHPm2ScNc1v
+         u+lw==
+X-Gm-Message-State: AOAM532ih5aXG7c+oOzCyLUNhalS5+73ncD9u6pnU53u1NZQjnY2fT+G
+        AggpC08lLcK3fzDL+R1KB4E=
+X-Google-Smtp-Source: ABdhPJzV1HBtHmReuq2K6OSZOnFhY7SteJrDtkacYg724y7AqJ6DEZTRHBlDHO9Ip2lQWLbRxzbbaA==
+X-Received: by 2002:a2e:8114:: with SMTP id d20mr1468091ljg.83.1614840275562;
+        Wed, 03 Mar 2021 22:44:35 -0800 (PST)
+Received: from mobilestation ([95.79.88.254])
+        by smtp.gmail.com with ESMTPSA id p21sm3173217lfu.227.2021.03.03.22.44.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Mar 2021 22:44:35 -0800 (PST)
+Date:   Thu, 4 Mar 2021 09:44:33 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Brad Larson <brad@pensando.io>
+Cc:     linux-arm-kernel@lists.infradead.org, arnd@arndb.de,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        broonie@kernel.org, adrian.hunter@intel.com,
+        ulf.hansson@linaro.org, olof@lixom.net, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] spi: dw: Add support for Pensando Elba SoC SPI
+Message-ID: <20210304064433.vqyqg3byedvc4quz@mobilestation>
+References: <20210304034141.7062-1-brad@pensando.io>
+ <20210304034141.7062-4-brad@pensando.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YD+yBmPrKm1n8Tjm@builder.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210304034141.7062-4-brad@pensando.io>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 03, 2021 at 09:57:58AM -0600, Bjorn Andersson wrote:
-> On Wed 03 Mar 09:10 CST 2021, Jeffrey Hugo wrote:
-> 
-> > On 3/3/2021 2:43 AM, Shawn Guo wrote:
-> > > On Tue, Mar 02, 2021 at 10:02:49PM -0700, Jeffrey Hugo wrote:
-> > > > Sorry, just joining the thread now.  Hopefully I'm addressing everything
-> > > > targeted at me.
-> > > > 
-> > > > I used to do kernel work on MSMs, then kernel work on server CPUs, but now I
-> > > > do kernel work on AI accelerators.  Never was on the firmware team, but I
-> > > > have a lot of contacts in those areas.  On my own time, I support Linux on
-> > > > the Qualcomm laptops.
-> > > > 
-> > > > Its not MS that needs to fix things (although there is plenty of things I
-> > > > could point to that MS could fix), its the Qualcomm Windows FW folks.  They
-> > > > have told me a while ago they were planning on fixing this issue on some
-> > > > future chipset, but apparently that hasn't happened yet.  Sadly, once these
-> > > > laptops ship, they are in a frozen maintenance mode.
-> > > > 
-> > > > In my opinion, MS has allowed Qualcomm to get away with doing bad things in
-> > > > ACPI on the Qualcomm laptops.  The ACPI is not a true hardware description
-> > > > that is OS agnostic as it should be, and probably violates the spec in many
-> > > > ways.  Instead, the ACPI is written against the Windows drivers, and has a
-> > > > lot of OS driver crap pushed into it.
-> > > > 
-> > > > The GPIO description is one such thing.
-> > > > 
-> > > > As I understand it, any particular SoC will have a number of GPIOs supported
-> > > > by the TLMM.  0 - N.  Linux understands this.  However, in the ACPI of the
-> > > > Qualcomm Windows laptops, you will likely find atleast one GPIO number which
-> > > > exceeds this N.  These are "virtual" GPIOs, and are a construct of the
-> > > > Windows Qualcomm TLMM driver and how it interfaces with the frameworks
-> > > > within Windows.
-> > > > 
-> > > > Some GPIO lines can be configured as wakeup sources by routing them to a
-> > > > specific hardware block in the SoC (which block it is varies from SoC to
-> > > > SoC).  Windows has a specific weird way of handling this which requires a
-> > > > unique "GPIO chip" to handle.  GPIO chips in Windows contain 32 GPIOs, so
-> > > > for each wakeup GPIO, the TLMM driver creates a GPIO chip (essentially
-> > > > creating 32 GPIOs), and assigns the added GPIOs numbers which exceed N.  The
-> > > > TLMM driver has an internal mapping of which virtual GPIO number corresponds
-> > > > to which real GPIO.
-> > > > 
-> > > > So, ACPI says that some peripheral has GPIO N+X, which is not a real GPIO.
-> > > > That peripheral goes and requests that GPIO, which gets routed to the TLMM
-> > > > driver, and the TLMM driver translates that number to the real GPIO, and
-> > > > provides the reference back to the peripheral, while also setting up the
-> > > > special wakeup hardware.
-> > > > 
-> > > > So, N+1 is the first supported wakup GPIO, N+1+32 is the next one, then
-> > > > N+1+32+32, and so on.
-> > > 
-> > > Jeffrey,
-> > > 
-> > > Thanks so much for these great information!
-> > > 
-> > > May I ask a bit more about how the virtual number N+1+32*n maps back to
-> > > the real number (R)?  For example of touchpad GPIO on Flex 5G, I think
-> > > we have:
-> > > 
-> > >    N+1+32*n = 0x0280
-> > >    N = 191
-> 
-> There's 190 GPIOs on SC8180x, but then the math doesn't add up to a
-> whole number...
+Hello Brad.
+Thanks for the patch. See my comments below.
 
-In pinctrl-sc8180x driver you wrote, it has sc8180x_pinctrl.ngpios = 191.
-Which one of you should I listen to :)
+On Wed, Mar 03, 2021 at 07:41:36PM -0800, Brad Larson wrote:
+> The Pensando Elba SoC uses a GPIO based chip select
+> for two DW SPI busses with each bus having two
+> chip selects.
 
-BTW, if you read this number from DTS, I already sent you a series to
-fix them.
-
-https://lore.kernel.org/linux-gpio/20210303033106.549-1-shawn.guo@linaro.org/
+I see a contradiction here. Normally GPIO-based chip-select is a
+property of a platform, but not a SoC/CPU/MCU/etc. Most of the time
+SoC SPI interfaces still get to have native CS pins, while at some
+platform configurations (like in case of DW APB SPI, which doesn't
+provide a way to directly toggle its native CSs) it's easier or even
+safer to use GPIOs as CS signals. Of course theoretically a SoC could
+be synthesized so it doesn't have native CS output pins, but only some
+virtual internal CS flags, but I've never seen such. Anyway according
+to the custom CS method below it's not your case because you still
+provide support for SPI-devices handled by native CS (else branch in
+the if (spi->cs_gpiod) {} else {} statement).
 
 > 
-> > >    R = 24
-> > > 
-> > > If my math not bad, n = 14.  How does 14 map to 24?
-> > 
-> > 
-> > So, if this was 845, the wakeup hardware would be the PDC.  Only a specific
-> > number of GPIOs are routed to the PDC.  When the TLMM is powered off in
-> > suspend, the PDC pays attention to the GPIOs that are routed to it, and are
-> > configured in the PDC as wakeup sources.  When the GPIO is asserted, the
-> > signal to the TLMM gets lost, but the PDC catches it.  The PDC will kick the
-> > CPU/SoC out of suspend, and then once the wakup process is complete, replay
-> > the GPIO so that the TLMM has the signal.
-> > 
+> Signed-off-by: Brad Larson <brad@pensando.io>
+> ---
+>  drivers/spi/spi-dw-mmio.c | 35 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 34 insertions(+), 1 deletion(-)
 > 
-> SC8180x has the same hardware design.
+> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+> index 17c06039a74d..417bd2125c07 100644
+> --- a/drivers/spi/spi-dw-mmio.c
+> +++ b/drivers/spi/spi-dw-mmio.c
+> @@ -56,7 +56,7 @@ struct dw_spi_mscc {
+>  /*
+>   * The Designware SPI controller (referred to as master in the documentation)
+>   * automatically deasserts chip select when the tx fifo is empty. The chip
+> - * selects then needs to be either driven as GPIOs or, for the first 4 using the
+> + * selects then needs to be either driven as GPIOs or, for the first 4 using
+>   * the SPI boot controller registers. the final chip select is an OR gate
+>   * between the Designware SPI controller and the SPI boot controller.
+>   */
+> @@ -237,6 +237,38 @@ static int dw_spi_canaan_k210_init(struct platform_device *pdev,
+>  	return 0;
+>  }
+>
+  
+> +static void dw_spi_elba_set_cs(struct spi_device *spi, bool enable)
+> +{
+> +	struct dw_spi *dws = spi_master_get_devdata(spi->master);
+> +
+> +	if (!enable) {
+> +		if (spi->cs_gpiod) {
+> +			/*
+> +			 * Using a GPIO-based chip-select, the DW SPI
+> +			 * controller still needs its own CS bit selected
+> +			 * to start the serial engine.  On Elba the specific
+> +			 * CS doesn't matter, so use CS0.
+> +			 */
+> +			dw_writel(dws, DW_SPI_SER, BIT(0));
+> +		} else {
+> +			/*
+> +			 * Using the intrinsic DW chip-select; set the
+> +			 * appropriate CS.
+> +			 */
+> +			dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
+> +		}
+> -	} else
+  +	} else {
+> +		dw_writel(dws, DW_SPI_SER, 0);
+  +	} /* See [1] */
+> +}
+
+The custom CS-method above doesn't look much different from the
+dw_spi_set_cs() method defined in the spi-dw-core.o driver, except
+having at least two problems:
+1) It assumes that "enable" argument means the CS-enabling flag, while
+in fact it's the CS-level which depending on the SPI_CS_HIGH flag
+set/cleared will be 1/0 respectively if CS is supposed to be enabled.
+That aspect has already been fixed in the dw_spi_set_cs() method.
+2) The method enables CS[0] if GPIO-CS is used for a particular SPI
+device. That will cause problems for a GPIO/native CS intermixed case
+of having for instance one SPI-device connected to native CS[0] and
+another one - to a GPIO. So trying to communicate with the second SPI
+device you'll end up having the native CS[0] activated too thus
+having an SPI transfer sent to two SPI-device at the same time.
+Of course that's not what you'd want.
+
+Anyway I don't really see why you even need a custom CS method here. A
+generic method dw_spi_set_cs() shall work for your SPI interface.
+If I am wrong, please explain why. Did you try the generic CS method
+on your platform?
+
+[1] Placing Braces and Spaces. Chapter 3). Documentation/process/coding-style.rst
+
+> +
+> +static int dw_spi_elba_init(struct platform_device *pdev,
+> +			    struct dw_spi_mmio *dwsmmio)
+> +{
+> +	dwsmmio->dws.set_cs = dw_spi_elba_set_cs;
+> +
+> +	return 0;
+> +}
+> +
+>  static int dw_spi_mmio_probe(struct platform_device *pdev)
+>  {
+>  	int (*init_func)(struct platform_device *pdev,
+> @@ -351,6 +383,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
+>  	{ .compatible = "intel,keembay-ssi", .data = dw_spi_keembay_init},
+>  	{ .compatible = "microchip,sparx5-spi", dw_spi_mscc_sparx5_init},
+>  	{ .compatible = "canaan,k210-spi", dw_spi_canaan_k210_init},
+
+> +	{ .compatible = "pensando,elba-spi", .data = dw_spi_elba_init },
+
+If you agree with me and remove the custom CS-method defined above in
+this patch, then all you'll need is just to add "pensando,elba-spi" here
+with generic init-callback set - dw_spi_dw_apb_init.
+
+Finally defining new compatible string requires the bindings update.
+In the framework of DW APB SPI interface they are defined in:
+Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+So you need to have that DT-schema accordingly altered.
+
+The bindings note concerns the rest of the updates in your patchset too.
+
+-Sergey
+
+>  	{ /* end of table */}
+>  };
+>  MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
+> -- 
+> 2.17.1
 > 
-> > In your example, 14 would be the 14th GPIO that is routed to the PDC. You
-> > would need SoC hardware documentation to know the mapping from PDC line 14
-> > to GPIO line X.  This is going to be SoC specific, so 845 documentation is
-> > not going to help you for SC8XXX.
-> > 
-> > Chances are, you are going to need to get this documentation from Qualcomm
-> > (I don't know if its in IPCatalog or not), and put SoC specific lookup
-> > tables in the TLMM driver.
-> > 
-> 
-> I added the table in the driver, see sc8180x_pdc_map[], and it has gpio
-> 14 at position 7, with the 14th entry being gpio 38 - which seems like
-> an unlikely change from the reference schematics.
-
-As it's clear that the real GPIO number is 24, and the only possible map
-in sc8180x_pdc_map[] is:
-
-	{ .gpio = 24, wakeirq = 37 }
-
-So we need to understand how 14 turns to 37.
-
-Shawn
