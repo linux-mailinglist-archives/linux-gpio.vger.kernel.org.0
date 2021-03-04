@@ -2,86 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46FE732CE77
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 09:31:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32F1132CE79
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 09:31:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236732AbhCDI3t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 03:29:49 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:43941 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236831AbhCDI3r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 03:29:47 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EE7E32223A;
-        Thu,  4 Mar 2021 09:29:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1614846546;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1j4UMCrX0AEJRJZ4Ec8Gm1WvvUQka0jywWPtTgKs8UM=;
-        b=snsS6CrlVkGwIZuCH5woq3zU1CIJ+LlhjN+CY34F/goxsEN8tpRxnaUzDy4HzsGqJhdaMi
-        i1hOi1DHVafCl+jryzsIccFmUTD5mhv0NnOGgDWhegmlAdiCbujxnrooCruMZ3rO8s4STb
-        J6U6jUZ2REYvgXTYFfP6ZRbnKEi9X0M=
+        id S236793AbhCDIax (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 03:30:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236831AbhCDIa0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 03:30:26 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A27DEC061574
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 00:29:45 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id e7so41826063lft.2
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 00:29:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z/YunITDzSj54Y4k2da7IIbwcZOzFgpMcTcXrvSJIsY=;
+        b=JaUPYLR7xkZXBatHr7s2xfITNdM0H4Jctt/Fw2uA9rVTPRXS2ypGfQgeG9h77/gY5y
+         7R8yulF7mLSY0OgIKuT6J/Ojr06v7NT7A6N5Nkq6CnoaP8Yr0tttUmgXRo9RzzIK0UnP
+         UVtLZe4POq614g7G8HEaMlTlNd/edz0pZ/qrLnEd/fMjim5WibSx3ajwVPMfR0eZ2ABR
+         f02UlJEuLJBHeRh0WEyp58aIIIxQeyyyLJX8vDD1h13rv3fk1tJqBy+UArpvwCFZt+GW
+         WZgE6/MLDaJg5nIEm/9E9KW4ILP0L+viXBuImxX4kz7o8HLReWKq8Y/Pv7jUdUKfuVSr
+         3rIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z/YunITDzSj54Y4k2da7IIbwcZOzFgpMcTcXrvSJIsY=;
+        b=JrNr2kig2blUqvayYGl2MlI/VmdZoEEOfV+jH+8yjvcx9MomXczVStXMJns6faedyY
+         XFJONAcUSap68gx29xHEI8FULRFHcPWSv4RWSExELNL1x4T4CNb41WMK7WFF33F3TUU5
+         PY3lX9VLgw7d2wrZldwZNDqbt3yDwrQZjV573Wcl880LmWu+nm7ZVl8uBEpUxBWp1yC3
+         IAN34MGbrnVfxCi9i8yi4Tyf+7T0i/5nngPRJWN/ZsGJYy6NmKAHT7cLbnPAVl9U+crZ
+         GOcehfut305bC2CYc6Y2uXFVtdHfKXjOQ03Jyx+YEvSBVlYRXAvCBDRCjUNjMpcYkYTn
+         bzQA==
+X-Gm-Message-State: AOAM531Pcrq0/xZJpDRmb/Ge8iS3q/NcdYhi4zJ0JGzgicfSXX6pKdsv
+        v5qx4FAWK9Qh/kVbiskIco+kVI+YKWeOvOIz09bXRA==
+X-Google-Smtp-Source: ABdhPJy5zH9v2taHTbOivNt/jHFRx+P8htUtEtdRjWfaZYj8ZCyXiyfzifW75rVWQfROIBOwLzH5JMbjd+5Vk4a/t7c=
+X-Received: by 2002:a05:6512:10d1:: with SMTP id k17mr1556851lfg.649.1614846584130;
+ Thu, 04 Mar 2021 00:29:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 04 Mar 2021 09:29:05 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-2-brad@pensando.io>
+In-Reply-To: <20210304034141.7062-2-brad@pensando.io>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 Mar 2021 09:29:33 +0100
+Message-ID: <CACRpkdbQD6p7fbGtuu1c92uXfSFDCTwqjqsXHpgnD5Lg4v0Okw@mail.gmail.com>
+Subject: Re: [PATCH 1/8] gpio: Add Elba SoC gpio driver for spi cs control
+To:     Brad Larson <brad@pensando.io>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: regmap: disable IRQ domain without GPIOLIB_IRQCHIP
-In-Reply-To: <20210304070501.30942-1-noltari@gmail.com>
-References: <20210304070501.30942-1-noltari@gmail.com>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <265ad883fee30b799fd53954876dc567@walle.cc>
-X-Sender: michael@walle.cc
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2021-03-04 08:05, schrieb Álvaro Fernández Rojas:
-> The current code doesn't check if GPIOLIB_IRQCHIP is enabled, which 
-> results in
-> a compilation error when trying to build gpio-regmap without having 
-> selected
-> CONFIG_GPIOLIB_IRQCHIP.
-> 
-> Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using 
-> regmap")
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Hi Brad,
 
-Nice catch.
+thanks for your patch!
 
-However, instead of having that ifdef, commit 6a45b0e2589f ("gpiolib:
-Introduce gpiochip_irqchip_add_domain()") could be fixed. That one is
-missing a stub if CONFIG_GPIOLIB_IRQCHIP is not defined.
+On Thu, Mar 4, 2021 at 4:42 AM Brad Larson <brad@pensando.io> wrote:
 
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -624,8 +624,16 @@ void gpiochip_irq_domain_deactivate(struct 
-irq_domain *domain,
-  bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gc,
-                                 unsigned int offset);
+> This GPIO driver is for the Pensando Elba SoC which
+> provides control of four chip selects on two SPI busses.
+>
+> Signed-off-by: Brad Larson <brad@pensando.io>
+(...)
 
-+#ifdef CONFIG_GPIOLIB_IRQCHIP
-  int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
-                                 struct irq_domain *domain);
-+#else
-+static inline int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
-+                                             struct irq_domain *domain)
-+{
-+       return 0;
-+}
-+#endif /* CONFIG_GPIOLIB_IRQCHIP */
+> +#include <linux/gpio.h>
 
-Linus, do you agree?
+Use this in new drivers:
+#include <linux/gpio/driver.h>
 
--michael
+> + * pin:             3            2        |       1            0
+> + * bit:         7------6------5------4----|---3------2------1------0
+> + *     cs1  cs1_ovr  cs0  cs0_ovr |  cs1  cs1_ovr  cs0  cs0_ovr
+> + *                ssi1            |             ssi0
+> + */
+> +#define SPICS_PIN_SHIFT(pin)   (2 * (pin))
+> +#define SPICS_MASK(pin)                (0x3 << SPICS_PIN_SHIFT(pin))
+> +#define SPICS_SET(pin, val)    ((((val) << 1) | 0x1) << SPICS_PIN_SHIFT(pin))
+
+So 2 bits per GPIO line in one register? (Nice doc!)
+
+> +struct elba_spics_priv {
+> +       void __iomem *base;
+> +       spinlock_t lock;
+> +       struct gpio_chip chip;
+> +};
+> +
+> +static int elba_spics_get_value(struct gpio_chip *chip, unsigned int pin)
+> +{
+> +       return -ENXIO;
+> +}
+
+Write a comment that the chip only supports output mode,
+because it repurposes SPI CS pins as generic GPIO out,
+maybe at the top of the file?
+
+I suppose these systems also actually (ab)use the SPI cs
+for things that are not really SPI CS? Because otherwise
+this could just be part of the SPI driver (native chip select).
+
+> +static const struct of_device_id ebla_spics_of_match[] = {
+> +       { .compatible = "pensando,elba-spics" },
+
+Have you documented this?
+
+Other than that this is a nice and complete driver.
+
+Yours,
+Linus Walleij
