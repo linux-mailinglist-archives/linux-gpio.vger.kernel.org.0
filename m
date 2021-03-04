@@ -2,127 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 310AB32D0F1
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 11:39:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A86C32D112
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 11:45:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238805AbhCDKhT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 05:37:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
+        id S238977AbhCDKpT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 05:45:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232574AbhCDKhM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 05:37:12 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A819C061756;
-        Thu,  4 Mar 2021 02:36:32 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id n22so7563441wmc.2;
-        Thu, 04 Mar 2021 02:36:32 -0800 (PST)
+        with ESMTP id S238948AbhCDKoy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 05:44:54 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90171C061574;
+        Thu,  4 Mar 2021 02:44:14 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id jx13so6303636pjb.1;
+        Thu, 04 Mar 2021 02:44:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:content-transfer-encoding:mime-version:subject:date:references
-         :to:in-reply-to:message-id;
-        bh=xY18sDReiJtJFeAF/26+YfWwB3kOz8MfHZwLEcrETmU=;
-        b=iBU/cfrN1GjLaZriPhe4xvSPWdmX1yc8eW2V3cP+i9DL/OLOYae31oePt5ssezOLld
-         wpy5vFTU7QuqxghjvGmvZFX2tOvj7vYqO9j8macUEUxXpmhv5PIWlKE4Po/gz3zOGNhe
-         RmUPrsZrlMHZni2In3Wof1gjXY2UHWSKNVrTvaso3sGKpFTEvb7u8Y657+lQgVRjDVq2
-         64iPm/CsyIbg1nlTq0AhtwGInybLhm2GRH0P9qLGGwk9V0s0oB8WUhEJzAjkpZ62ofHD
-         0H+z6PbxhjujtXYuOLK17UMTdo48dAHOlk6aoacdzZXoqsqP4mRWAXtOObmGXxeme1Nd
-         ygpg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SLFL8rzRY2STH4EMGAgJ5usZ36sACoBvlyeWGMYpsKc=;
+        b=s5LUZwikmDSvmQmiBsTyqazXNMvwI6KBM4+4HuNKZBZU8N4BaB06RzspWrA4WOU7RL
+         CrNKZ0U0/LCf5kYLSbEkXufhMuobArjPQa19Ffgt7dpsIuuSPFmiplIZJy+v/o0ECjjn
+         qtQgdz/OHCIcEhpzXuX8PiuSPQpMmmSM7cIYdvdyw6yBBHv6mG9kENwV5tuReRMz4Rqg
+         AlUuV5hR6nyjvzRv+kZtTBQzqA3mnfxoiakaziiSekrZoGGgn729BES9QNonohgqmMBw
+         CqiKvdhnLjhUCjoGBIl8FbohrX7P03Iee6nT4OnISMdGtOva3nH6VTuknXn+spqUbXyP
+         s//Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:date:references:to:in-reply-to:message-id;
-        bh=xY18sDReiJtJFeAF/26+YfWwB3kOz8MfHZwLEcrETmU=;
-        b=mOI3AUfFpvy5bwNK3ia31l3bhmz15YsY7bIZmiQV8CCRndXvE9ir2Qj7dXVmE/wvxl
-         GKykvzcl91RrPNbmanP0KXjznCAytbbDX8ra47IiEPz1+AajgUwIJOnCdhBY8Lwd4w+R
-         1L2kw1OrsxO0qQFsrvPSyVnEBxAGnPfgsNzGpoJO0nsiRjYBtmmbtbtUobKxoM3GtMqJ
-         aW85ZuZKKcXEVKpOi/BMsFzb2hmIdGXRgKOfIsH3bxhYilHHaGYq0c4B5TGBqtR7DPfB
-         XDqzzudLI/nqJ2AcAC1U7MNWQlO2KhdXtT6sVzRnG+4AK3FbQklp+nxTy/PbbTIYr4NL
-         UBPw==
-X-Gm-Message-State: AOAM533S6Q9GzT/x/WwRkVsxmEm6rMIJ0VqdlFcZmFMaysOIe4yyONmA
-        2och/gfa6RpH1jZQvtaiwh8=
-X-Google-Smtp-Source: ABdhPJwrPyjdzcsvLiOFNJ80oRzMv3mI7Jxa5ILFUJSSxT3uVBVIFm2DlaAZzwp8bQQw+Wau/7ltZA==
-X-Received: by 2002:a7b:c353:: with SMTP id l19mr3280813wmj.147.1614854190989;
-        Thu, 04 Mar 2021 02:36:30 -0800 (PST)
-Received: from macbook-pro-alvaro.lan (170.red-88-1-105.dynamicip.rima-tde.net. [88.1.105.170])
-        by smtp.gmail.com with ESMTPSA id i26sm1848858wmb.18.2021.03.04.02.36.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Mar 2021 02:36:30 -0800 (PST)
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.60.0.2.21\))
-Subject: Re: [PATCH v4 01/15] gpio: guard gpiochip_irqchip_add_domain() with
- GPIOLIB_IRQCHIP
-Date:   Thu, 4 Mar 2021 11:36:30 +0100
-References: <20210304085710.7128-1-noltari@gmail.com>
- <20210304085710.7128-2-noltari@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SLFL8rzRY2STH4EMGAgJ5usZ36sACoBvlyeWGMYpsKc=;
+        b=kSilvNjL0rljr9tYYTzTVdBkRUp9cvgbX8gxq8MYZnX1bfQZHFfOWR7IzfPLFvcJFv
+         0uh3wrszUfhuL0h9leu7sn7BDKXmKGvU8+F9IBfh96LMR8pnv9CjqpF7raZG/YvjzbXG
+         vGHTN1oMPyqNcbMjRS2d/9u65r55FenIS9nu7+MhCywNNFO5tvuBUdr5i4JSwInCHMrN
+         nyvwEmfAI9Fp12s+A9f4fHIgQHLRZubYVmbWeJ6jtlTQk7ybIPtcXSlyTqHFokNh3ivS
+         WlCdTT3IBZTOpCfyJ/L0H8DuokXzA8otmKhaSJR+G2DXYxMlGg2xGu1U/A+AGJ2/ZptC
+         Jocg==
+X-Gm-Message-State: AOAM533FpenavtGe+E1lM4GLkJPP6+PrLzgK2Ka4WwUpHMw8yHsALtOx
+        87wclx4yXVaLRFfWUNZzDe8LIndomXZfKwPfIgM=
+X-Google-Smtp-Source: ABdhPJzY96CZ08bwe8vzX8X3R2EoDlQQCOukVs7j9FIkMpYxCx7XcMhiXGgRbAknr4ixK9mol7vBg+3DCednUyZAY+s=
+X-Received: by 2002:a17:902:a710:b029:e3:b18:7e5b with SMTP id
+ w16-20020a170902a710b02900e30b187e5bmr3258185plq.17.1614854654024; Thu, 04
+ Mar 2021 02:44:14 -0800 (PST)
+MIME-Version: 1.0
+References: <20210304085710.7128-1-noltari@gmail.com> <20210304085710.7128-4-noltari@gmail.com>
+In-Reply-To: <20210304085710.7128-4-noltari@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 4 Mar 2021 12:43:57 +0200
+Message-ID: <CAHp75Vc_v5M9XjWei09KzXo_oo95b2WQSamMjdQvxkCzNXrSXg@mail.gmail.com>
+Subject: Re: [PATCH v4 03/15] pinctrl: bcm: add bcm63xx base code
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Michael Walle <michael@walle.cc>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
         Jonas Gorski <jonas.gorski@gmail.com>,
         Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20210304085710.7128-2-noltari@gmail.com>
-Message-Id: <BAC3CA00-A3E5-4FCE-9A15-F8BF1DAA1E9C@gmail.com>
-X-Mailer: Apple Mail (2.3654.60.0.2.21)
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add missing tag:
-
-Suggested-by: Michael Walle <michael@walle.cc>
-
-> El 4 mar 2021, a las 9:56, =C3=81lvaro Fern=C3=A1ndez Rojas =
-<noltari@gmail.com> escribi=C3=B3:
->=20
-> The current code doesn't check if GPIOLIB_IRQCHIP is enabled, which =
-results in
-> a compilation error when trying to build gpio-regmap if =
-CONFIG_GPIOLIB_IRQCHIP
-> isn't enabled.
->=20
-> Fixes: 6a45b0e2589f ("gpiolib: Introduce =
-gpiochip_irqchip_add_domain()")
+On Thu, Mar 4, 2021 at 10:57 AM =C3=81lvaro Fern=C3=A1ndez Rojas
+<noltari@gmail.com> wrote:
+>
+> Add a helper for registering BCM63XX pin controllers.
+>
 > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> ---
-> v4: add patch (fix include instead of gpio-regmap.c)
->=20
-> include/linux/gpio/driver.h | 9 +++++++++
-> 1 file changed, 9 insertions(+)
->=20
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index 286de0520574..ecf0032a0995 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -624,8 +624,17 @@ void gpiochip_irq_domain_deactivate(struct =
-irq_domain *domain,
-> bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gc,
-> 				unsigned int offset);
->=20
-> +#ifdef CONFIG_GPIOLIB_IRQCHIP
-> int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
-> 				struct irq_domain *domain);
-> +#else
-> +static inline int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
-> +					      struct irq_domain *domain)
-> +{
-> +	WARN_ON(1);
-> +	return -EINVAL;
-> +}
-> +#endif
->=20
-> int gpiochip_generic_request(struct gpio_chip *gc, unsigned int =
-offset);
-> void gpiochip_generic_free(struct gpio_chip *gc, unsigned int offset);
-> --=20
-> 2.20.1
->=20
+> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 
+This SoB is in a strange place.
+
+The order is wrong taking into account the From header (committer). So,
+it's not clear who is the author, who is a co-developer, and who is
+the committer (one person may utilize few roles).
+Check for the rest of the series as well (basically this is the rule
+of thumb to recheck entire code for the comment you have got at any
+single place of it).
+
+...
+
+> +static const struct of_device_id bcm63xx_gpio_of_match[] =3D {
+> +       { .compatible =3D "brcm,bcm6318-gpio", },
+> +       { .compatible =3D "brcm,bcm6328-gpio", },
+> +       { .compatible =3D "brcm,bcm6358-gpio", },
+> +       { .compatible =3D "brcm,bcm6362-gpio", },
+> +       { .compatible =3D "brcm,bcm6368-gpio", },
+> +       { .compatible =3D "brcm,bcm63268-gpio", },
+
+> +       { /* sentinel */ },
+
+Comma is not needed in terminator line
+
+> +};
+
+...
+
+> +       dev_info(dev, "registered\n");
+
+Unneeded noise.
+
+...
+
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/regmap.h>
+
+The rule of thumb is to include only the headers that the below code
+is direct user of.
+
+The above are not used anyhow, while missed types.h and several
+forward declarations.
+
+> +#include "../core.h"
+
+Seems the same.
+
+> +#define BCM63XX_BANK_GPIOS 32
+> +
+> +struct bcm63xx_pinctrl_soc {
+> +       struct pinctrl_ops *pctl_ops;
+> +       struct pinmux_ops *pmx_ops;
+> +
+> +       const struct pinctrl_pin_desc *pins;
+> +       unsigned npins;
+> +
+> +       unsigned int ngpios;
+> +};
+> +
+> +struct bcm63xx_pinctrl {
+> +       struct device *dev;
+> +       struct regmap *regs;
+> +
+> +       struct pinctrl_desc pctl_desc;
+> +       struct pinctrl_dev *pctl_dev;
+> +
+> +       void *driver_data;
+> +};
+
+
+--
+With Best Regards,
+Andy Shevchenko
