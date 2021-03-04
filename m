@@ -2,84 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B2332D37A
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 13:46:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC41A32D3B1
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 13:55:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231295AbhCDMpi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 07:45:38 -0500
-Received: from mga04.intel.com ([192.55.52.120]:11045 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231380AbhCDMph (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 4 Mar 2021 07:45:37 -0500
-IronPort-SDR: u7Idw7SmjT8ACY8yV6SQhV7ssOSdEEv48pEynvt6eNGOiDZ4k0MTnqhfgFn2TGFUUQ3LdQdXql
- pqrzUxhQS5DA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9912"; a="184995806"
-X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
-   d="scan'208";a="184995806"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 04:44:57 -0800
-IronPort-SDR: PFS5WN15+/l7ZDnrtTZzkEM1ktnVDiTZU1rPDCCRiJItDwZuygi1rdPCi5EZUz9dfmk2rVbw9c
- E+QKv9TlF1yQ==
-X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
-   d="scan'208";a="507368416"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 04:44:55 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1lHnLZ-009sSy-9e; Thu, 04 Mar 2021 14:44:53 +0200
-Date:   Thu, 4 Mar 2021 14:44:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Shawn Guo <shawn.guo@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Add ACPI support for SC8180X pinctrl driver
-Message-ID: <YEDWRXwAp7wouzFN@smile.fi.intel.com>
-References: <20210304060520.24975-1-shawn.guo@linaro.org>
+        id S240606AbhCDMyK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 07:54:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240434AbhCDMxu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 07:53:50 -0500
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117DFC06175F;
+        Thu,  4 Mar 2021 04:53:10 -0800 (PST)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 14BE522234;
+        Thu,  4 Mar 2021 13:53:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1614862388;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hzVNHoTq4Zh/BPxJFlD6HgbdvDSkHjG47AZ/A9uRXCo=;
+        b=JzQZxKUbxPngrAV5UlIGF3hJ6BeQQX6jtdjLaIW8IpU6imrUUXNwLthVTr7gqmOz6LxL6e
+        QWTnoR4F4ZppEnfvrNaKec5af1A1wK5nBiGMOjq6ouZy2rQAB05JNr/UMQHvbfZmXu90+V
+        TV8YNX/FDGBWk1p87EcCt/SaU/t0Vv8=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210304060520.24975-1-shawn.guo@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 04 Mar 2021 13:53:07 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 04/15] Documentation: add BCM6328 pincontroller binding
+ documentation
+In-Reply-To: <20210304085710.7128-5-noltari@gmail.com>
+References: <20210304085710.7128-1-noltari@gmail.com>
+ <20210304085710.7128-5-noltari@gmail.com>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <46c75d8e769980d46869025580f3484f@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 04, 2021 at 02:05:18PM +0800, Shawn Guo wrote:
-> This is a couple of patches that enable ACPI probe for SC8180X pinctrl
-> driver.  It takes pinctrl-sdm845 driver as the example to remove the
-> use of tiles, so that we can align memory resource description between
-> DT and ACPI, and simpfy the driver code.
-
-Some minor comments, in any case, FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-
-Thanks!
-
-> Changes for v3:
-> - Remove the use of tiles.
-> - Drop unneed include of <linux/acpi.h>.
+Am 2021-03-04 09:56, schrieb Álvaro Fernández Rojas:
+> Add binding documentation for the pincontrol core found in BCM6328 
+> SoCs.
 > 
-> Changes for v2:
-> - Pass soc_data pointer via .driver_data.
-> - Drop use of CONFIG_ACPI and ACPI_PTR().
-> - Add comment for sc8180x_acpi_reserved_gpios[] terminator.
-> - Add comments for tiles handling.
-> 
-> Shawn Guo (2):
->   pinctrl: qcom: sc8180x: drop the use of tiles
->   pinctrl: qcom: sc8180x: add ACPI probe support
-> 
->  drivers/pinctrl/qcom/Kconfig           |  2 +-
->  drivers/pinctrl/qcom/pinctrl-sc8180x.c | 80 ++++++++++++++++----------
->  2 files changed, 52 insertions(+), 30 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+btw. the subject should (preferably) be prefixed with "dt-bindings:".
 
+See Documentation/devicetree/bindings/submitting-patches.rst
 
+-michael
