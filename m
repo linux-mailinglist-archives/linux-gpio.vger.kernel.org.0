@@ -2,130 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D304532D5F7
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 16:06:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE6EF32D617
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 16:09:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233331AbhCDPF4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 10:05:56 -0500
-Received: from mga05.intel.com ([192.55.52.43]:45930 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233350AbhCDPFh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 4 Mar 2021 10:05:37 -0500
-IronPort-SDR: oZyi+NMoAx+zvYk8X6advUO4g9T1DBuLhf8V/KgTR++dhLZjpL+9ADrEt0MyIN0EIX+gG1sFrB
- akVp5HNGwXXg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9913"; a="272434366"
-X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
-   d="scan'208";a="272434366"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 07:02:41 -0800
-IronPort-SDR: T/lljRT6flKnT97E8+POoH1NlqQ9wNUlEhehBgu0CEOct+sHAS1Mv+QX2iIs8WS42UpR6ow5wK
- vTx3CzSS04UQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
-   d="scan'208";a="374579029"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 04 Mar 2021 07:02:38 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 8FF7E29E; Thu,  4 Mar 2021 17:02:38 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        id S233765AbhCDPHf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 10:07:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233792AbhCDPHZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 10:07:25 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B62CC061760;
+        Thu,  4 Mar 2021 07:06:44 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id o2so9508231wme.5;
+        Thu, 04 Mar 2021 07:06:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=L1Zl/0TZh+dv1ZZwJhM8UfC9fmhPyjvuavEu2JqaSa4=;
+        b=KE12hCluTNnvJoeFuZhjiIciZVcKdw9e5L+j+YqiOgKif8RTUA7LLGe8idFgMVToPH
+         bcdDGAPKFEluQoNR9xpgWAEt0VunnaCeyETlqUAu5OBII0+LLgHeeZxnHWtEWJrI2YZ1
+         /iUlHROBJQXjiPLbansXSxHu5TORHjVwnQSFYFdikl5sArIsUSOKLitpW8NiNzgYHR2o
+         rXommfxyXHfag19HDeS2kDS75BBHQNjnKBTr8XyVnf9sWproD5RmwbPpNk0s5zPWz3On
+         WgnAwAKd69fpMnOwhTKhmDRHA+dE4kiCP+mUKVpmN0l+ZE2B25xFGaqWMN0v0SLFglb5
+         gGAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=L1Zl/0TZh+dv1ZZwJhM8UfC9fmhPyjvuavEu2JqaSa4=;
+        b=LlUCZaDTTg+UYEC1EfZ6q6lxFi7Rht5xXVJ4y71Sg0vZcT7wCE2FQOoo/hnJ8abat1
+         qwCu04/4Vo08jwVYP0poknhynt60jP0BQFCeX8Tz5Hk1UxZLyrbNYKsgUSbCRcgnpOid
+         /MC8KelZ+sofZHWmXqf+8Tvj0Vsd9qRVMq8qh7Aphj11UatkkqBzA8AcA/v9BNRIT5Bt
+         7GhCFCUbnNVR8Kb6Tnwtooa/aPlKKZQDxH3QsTxrZWqjtey5P0DAGcMOQGAkxiw4vBBJ
+         FlU8sXzr4+sNwuaY9BH0uGkwKuDYQHxVh1WaJJHSD/9ZcEZlzvFLGngXzQYG1+W3qGa1
+         ruZA==
+X-Gm-Message-State: AOAM533vCFUJOqh3OKnhMLFPmK862tHFF4z5O2UxlUMz+/zH7rbtP3t1
+        z0eKc8n8IuOOZZYqSB9ZxZc=
+X-Google-Smtp-Source: ABdhPJySbLXVsv0l4IlmJRLWHWepYj8zH37vcgFudgrWQNLRVg/ijC3NIHghbunILF76CxR98fzMhg==
+X-Received: by 2002:a7b:c341:: with SMTP id l1mr4251960wmj.182.1614870403324;
+        Thu, 04 Mar 2021 07:06:43 -0800 (PST)
+Received: from macbook-pro-alvaro.lan (170.red-88-1-105.dynamicip.rima-tde.net. [88.1.105.170])
+        by smtp.gmail.com with ESMTPSA id u20sm10905295wru.6.2021.03.04.07.06.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Mar 2021 07:06:43 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.60.0.2.21\))
+Subject: Re: [PATCH v4 02/15] gpio: regmap: set gpio_chip of_node
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <CAHp75VcpGNaQDR5puEX3nTGOQC0vHNjCje3MLLynoBHdjEi0_w@mail.gmail.com>
+Date:   Thu, 4 Mar 2021 16:06:43 +0100
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Walle <michael@walle.cc>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH v2 5/5] gpiolib: Reuse device's fwnode to create IRQ domain
-Date:   Thu,  4 Mar 2021 17:02:15 +0200
-Message-Id: <20210304150215.80652-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210304150215.80652-1-andriy.shevchenko@linux.intel.com>
-References: <20210304150215.80652-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9A8A595D-2556-4493-AA96-41A3C3E39292@gmail.com>
+References: <20210304085710.7128-1-noltari@gmail.com>
+ <20210304085710.7128-3-noltari@gmail.com>
+ <CAHp75VcpGNaQDR5puEX3nTGOQC0vHNjCje3MLLynoBHdjEi0_w@mail.gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+X-Mailer: Apple Mail (2.3654.60.0.2.21)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When IRQ domain is created for an ACPI case, the name of it becomes unknown-%d
-since for now it utilizes of_node member only and doesn't consider fwnode case.
-Convert IRQ domain creation code to utilize fwnode instead.
+Hi Andy,
 
-Before/After the change on Intel Galileo Gen 2 with two GPIO (IRQ) controllers:
+> El 4 mar 2021, a las 11:35, Andy Shevchenko =
+<andy.shevchenko@gmail.com> escribi=C3=B3:
+>=20
+> On Thu, Mar 4, 2021 at 10:57 AM =C3=81lvaro Fern=C3=A1ndez Rojas
+> <noltari@gmail.com> wrote:
+>>=20
+>> This is needed for properly registering gpio regmap as a child of a =
+regmap
+>=20
+> gpio -> GPIO
+>=20
+>> pin controller.
+>=20
+> ...
+>=20
+>> + * @of_node:           (Optional) The device node
+>=20
+>> +       struct device_node *of_node;
+>=20
+> Can we use fwnode from day 1, please?
 
-  unknown-1	==>	\_SB.PCI0.GIP0.GPO
-  unknown-2	==>	\_SB.NIO3
+Could you explain this? I haven=E2=80=99t dealt with fwnode never :$
+BTW, this is done to fix this check when parsing gpio ranges:
+=
+https://github.com/torvalds/linux/blob/f69d02e37a85645aa90d18cacfff36dba37=
+0f797/drivers/gpio/gpiolib-of.c#L933-L934
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 28 ++++++++--------------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 6827736ba05c..254d59b088fe 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1457,9 +1457,9 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
- 				struct lock_class_key *lock_key,
- 				struct lock_class_key *request_key)
- {
-+	struct fwnode_handle *fwnode = dev_fwnode(&gc->gpiodev->dev);
- 	struct irq_chip *irqchip = gc->irq.chip;
--	const struct irq_domain_ops *ops = NULL;
--	struct device_node *np;
-+	const struct irq_domain_ops *ops;
- 	unsigned int type;
- 	unsigned int i;
- 
-@@ -1471,7 +1471,6 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
- 		return -EINVAL;
- 	}
- 
--	np = gc->gpiodev->dev.of_node;
- 	type = gc->irq.default_type;
- 
- 	/*
-@@ -1479,16 +1478,10 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
- 	 * used to configure the interrupts, as you may end up with
- 	 * conflicting triggers. Tell the user, and reset to NONE.
- 	 */
--	if (WARN(np && type != IRQ_TYPE_NONE,
--		 "%s: Ignoring %u default trigger\n", np->full_name, type))
-+	if (WARN(fwnode && type != IRQ_TYPE_NONE,
-+		 "%pfw: Ignoring %u default trigger\n", fwnode, type))
- 		type = IRQ_TYPE_NONE;
- 
--	if (has_acpi_companion(gc->parent) && type != IRQ_TYPE_NONE) {
--		acpi_handle_warn(ACPI_HANDLE(gc->parent),
--				 "Ignoring %u default trigger\n", type);
--		type = IRQ_TYPE_NONE;
--	}
--
- 	if (gc->to_irq)
- 		chip_warn(gc, "to_irq is redefined in %s and you shouldn't rely on it\n", __func__);
- 
-@@ -1504,15 +1497,10 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
- 			return ret;
- 	} else {
- 		/* Some drivers provide custom irqdomain ops */
--		if (gc->irq.domain_ops)
--			ops = gc->irq.domain_ops;
--
--		if (!ops)
--			ops = &gpiochip_domain_ops;
--		gc->irq.domain = irq_domain_add_simple(np,
--			gc->ngpio,
--			gc->irq.first,
--			ops, gc);
-+		ops = gc->irq.domain_ops ?: &gpiochip_domain_ops;
-+		gc->irq.domain = irq_domain_create_simple(fwnode, gc->ngpio,
-+								  gc->irq.first,
-+								  ops, gc);
- 		if (!gc->irq.domain)
- 			return -EINVAL;
- 	}
--- 
-2.30.1
-
+Best regards,
+=C3=81lvaro.=
