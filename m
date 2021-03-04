@@ -2,114 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B94FA32D695
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 16:28:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CDEF32D6A0
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 16:29:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234734AbhCDP0p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 10:26:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
+        id S233751AbhCDP1R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 10:27:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234340AbhCDP0d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 10:26:33 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF77C061574;
-        Thu,  4 Mar 2021 07:25:52 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id e9so6789509pjs.2;
-        Thu, 04 Mar 2021 07:25:52 -0800 (PST)
+        with ESMTP id S234815AbhCDP1D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 10:27:03 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF7D3C061756;
+        Thu,  4 Mar 2021 07:26:22 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id d11so28086705wrj.7;
+        Thu, 04 Mar 2021 07:26:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ncJ9NY/mLyZMyG/VF15N0utvd28RHjvV/VjGSmt6itQ=;
-        b=R4Op5H9t8KFewCTZbhQJy588E6qbxl1MkZDhb5BK3FA3Lg0cHKejtzNljCcOstnhg1
-         SXOnqNfbqbPNQRn94sx3Ox8JoisAXOWTuEHniyG5gD6ftbUMW7V3qArnVHiM0xAXti+5
-         +Pv8tiYFtTk3Uy5tNq1uA5b3rVliFBubnbBuLOYNv9uEL6hIMuwHo4nU3G6pjnP82AwH
-         mBoVbXpiaTJOhB5Zqv17RFtafdCfLQzF9Ed6UtseL147gztlUT5+XPgSFYdc99Z8Z0Qz
-         Aors5ONs7HEafr1sw3Ppo7XusL4BGd4d4kgI00OvHiIkfZ3i7WKjAfXL/3Je9ccRfYrD
-         6/8A==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZHKklL7F+P7ZqR+p79sjN1b24ShCqovtpYMcp8vZvhw=;
+        b=VBVb7fKQSb+7dVTHOdj/tfMnZY5OmSUD+alZ8ginNdjeHX2rJSECkpfTQxSOsUxF1q
+         eE7l1AbbDbEoiR0jLuxkhjAhADZGWfM7bMBLqJSv6GOboUQ10xaJZIq7Bbgud9UCAsJM
+         eW6DZCU00loPTtY8Xv/CTTHwbPtYAmSLcoVurxfAqCWva46lyJkmE/WDfSaE+D3vPfA9
+         snI4hoA7DwobEZ9ElY3kWk9CwSM8Vqo1qbiFp4XyWQQ4+QdCEFDfJbnCGgJto2pcB/dd
+         WKy5wgFT26yRWiLJSfXTiWJlRgDc/JfiYAzpJjBRmtutuN83WWrvWp4Ax2fOKfLAVltv
+         fajA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ncJ9NY/mLyZMyG/VF15N0utvd28RHjvV/VjGSmt6itQ=;
-        b=MkJfxWJtFrlmZfBR4Sxc91bQf20e1MR2LRmhaEdpYnSghakGLNWiRYrL7JYHrz3Acf
-         5oD8MokQEEmOrjqk9Z7/yFWUfnRaNFeTRYu2m5xUPlvLBaSu/WgXDtI25HmHy7jm5kuf
-         1crQUriyQbfEGRMjRP6dS5B2cGmm8tAAbCrc14U0505+pwxQMQVF20gs9rgYQl60ivWx
-         dI6Qr3GM7YyfhJ9JH+2Mjk9OocMiHcRvp4JMD141wukCuLA+fzuCh4nujHrx8RqxZr5g
-         upXR9AIV/ql8VRrzcZ9NQbFLr+lxI6wcW6IWZm/gIcDVUmrIwepOsMDL2w9NMwUHeS4g
-         l0Jg==
-X-Gm-Message-State: AOAM532SWHefYCXwsR0jJeFPXnMfXxEV3pdAO0oMrp1+6r4jF1htvLsG
-        BV0IFR13/gUcbggeSDHb7snIfi02Y0t4uTwk2Ks=
-X-Google-Smtp-Source: ABdhPJxHZCsqwFCy36YgzTmJjZ7IYrUiA8VuH+hqCe8/2LwepnSASruYlu6RG3jg3/DslIQ/bCdEE5IPRPH+eonudQM=
-X-Received: by 2002:a17:90a:db49:: with SMTP id u9mr5241457pjx.181.1614871552276;
- Thu, 04 Mar 2021 07:25:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20210304085710.7128-1-noltari@gmail.com> <20210304085710.7128-6-noltari@gmail.com>
- <CAHp75Vc8Gk0ZVjfQH71-Du1ZB1HT5qrgbT6HZgXQd-C6xE05ZQ@mail.gmail.com>
- <F56A2594-5E16-457F-B170-D9D14E6592FE@gmail.com> <CAHp75VcVmzKOVn_v0iggaA3gtfYwh3CzO8rFpxA_JbebsEtWPQ@mail.gmail.com>
- <CAE32628-DC0D-479F-BB17-2CFA475D5128@gmail.com>
-In-Reply-To: <CAE32628-DC0D-479F-BB17-2CFA475D5128@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 4 Mar 2021 17:25:35 +0200
-Message-ID: <CAHp75Vf6+1u5myV7cL1903Qc92H7vPFMuc916-_wjKQ6zwmoqg@mail.gmail.com>
-Subject: Re: [PATCH v4 05/15] pinctrl: add a pincontrol driver for BCM6328
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Walle <michael@walle.cc>,
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZHKklL7F+P7ZqR+p79sjN1b24ShCqovtpYMcp8vZvhw=;
+        b=ipVCQtEewPHa7R+LGrIhSejKsgt8qhQsriedltdfpAtrmjrFjb+QlOybFGUVVKMcB1
+         08K8c1b7w/6+e06uP6BzuaWkrNo19TnOwQKyLJIiF/B5ox9U2oHE+rnC9Ts4DCuorwTk
+         jN7LBAJN10pjGw9WM/a7hOsuP521SiQ3xvAq0nrN/F8o7m0E5QSrPsSGZN8n74dMw/Dx
+         LM8Ot/no0iLpW7r9aw053RHeM0SQSYo4wu5iM6E6/0D472085efmuyOVwRSq4h0PJjam
+         cdJXxkjUTmCWK4Lzw3FBBGAVD7LpgH2DvEwtUqaEt0NrSqgeB2NCcKT8Uw6sMxdzWALl
+         n+eg==
+X-Gm-Message-State: AOAM5302Of1InvWiunt3blDMwwZj32Mwx++BSfAJOJerfItCsqTUY1j7
+        E/nVMVuuNSWFwN+jko4r6NU=
+X-Google-Smtp-Source: ABdhPJywp9PgaY4Pv37FT4Yo/5jvjFSHh3DXxLI5gIQwiyVYQXKZd3d3YnjdX80NmcvVJhpafHvLcg==
+X-Received: by 2002:a05:6000:1788:: with SMTP id e8mr4623441wrg.171.1614871581682;
+        Thu, 04 Mar 2021 07:26:21 -0800 (PST)
+Received: from macbook-pro-alvaro.lan (170.red-88-1-105.dynamicip.rima-tde.net. [88.1.105.170])
+        by smtp.gmail.com with ESMTPSA id l2sm38059495wrv.50.2021.03.04.07.26.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Mar 2021 07:26:21 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.60.0.2.21\))
+Subject: Re: [PATCH v2] gpio: regmap: set gpio_chip of_node
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <CAHp75Vc6azROSAc=ZUjY+VhAjZDMsukr2ZY1fQHMFwncL7_AbQ@mail.gmail.com>
+Date:   Thu, 4 Mar 2021 16:26:22 +0100
+Cc:     Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <E174F742-BBBC-4B86-831F-96C520931A69@gmail.com>
+References: <20210304071506.18434-1-noltari@gmail.com>
+ <CAHp75Vc6azROSAc=ZUjY+VhAjZDMsukr2ZY1fQHMFwncL7_AbQ@mail.gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+X-Mailer: Apple Mail (2.3654.60.0.2.21)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 4, 2021 at 2:25 PM =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gm=
-ail.com> wrote:
-> > El 4 mar 2021, a las 13:12, Andy Shevchenko <andy.shevchenko@gmail.com>=
- escribi=C3=B3:
-> > On Thu, Mar 4, 2021 at 1:13 PM =C3=81lvaro Fern=C3=A1ndez Rojas <noltar=
-i@gmail.com> wrote:
-> >>> El 4 mar 2021, a las 11:49, Andy Shevchenko <andy.shevchenko@gmail.co=
-m> escribi=C3=B3:
-> >>> On Thu, Mar 4, 2021 at 10:57 AM =C3=81lvaro Fern=C3=A1ndez Rojas
-> >>> <noltari@gmail.com> wrote:
+Hi Andy,
 
-...
+> El 4 mar 2021, a las 16:22, Andy Shevchenko =
+<andy.shevchenko@gmail.com> escribi=C3=B3:
+>=20
+> On Thu, Mar 4, 2021 at 5:18 PM =C3=81lvaro Fern=C3=A1ndez Rojas =
+<noltari@gmail.com> wrote:
+>>=20
+>> This is needed for properly registering gpio regmap as a child of a =
+regmap
+>> pin controller.
+>=20
+>> +       chip->of_node =3D config->of_node ?: =
+dev_of_node(config->parent);
+>=20
+> After a closer look I have no clue why you need this patch at all.
+> The second part, i.e. assigning parent's fwnode, is done already in
+> the GPIO library core.
+> The first part, keeping fwnode in the regmap configuration puzzles me. =
+Why?
 
-> >>>> +               BCM6328_MUX_LO_REG,
-> >>>> +               BCM6328_MUX_HI_REG,
-> >>>
-> >>>> +               BCM6328_MUX_OTHER_REG
-> >>>
-> >>> When it's not terminator add a comma, otherwise remove a comma.
-> >
-> >> =E2=80=A6 so you want me to add a comma or not?
-> >
-> > Hmm... you tell me! If this is a list which covers all possible cases
-> > _and_ the last one is the kinda maximum value (aka terminator), then
-> > comma is not needed, otherwise add it (to me feels like the latter
-> > should be done here).
->
-> Well=E2=80=A6 Then it shouldn=E2=80=99t be needed, since this is a list w=
-hich covers all possible cases and the last one is a terminator.
+I=E2=80=99ve flagged this as superseded since Linus asked me to send it =
+with bcm63xx patches and I=E2=80=99ve already answered this same =
+question there.
 
-Honestly the name suggests otherwise. And looking into the code there
-is no guarantee you won't split that _OTHER_ area to something with
-new compatible hardware.
-Renaming to BCM6328_MUX_MAX_REG will clear that this is terminator,
-but it means its value shouldn't be used except as to understand the
-amount of supported registers of this enumerator.
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
 
-
---=20
-With Best Regards,
-Andy Shevchenko
+Best regards,
+=C3=81lvaro.=
