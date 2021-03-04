@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AD7032DB2A
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 21:27:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BF1032DB32
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 21:29:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbhCDU03 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 15:26:29 -0500
-Received: from mga17.intel.com ([192.55.52.151]:57527 "EHLO mga17.intel.com"
+        id S233299AbhCDU1d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 15:27:33 -0500
+Received: from mga01.intel.com ([192.55.52.88]:8101 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232933AbhCDU01 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 4 Mar 2021 15:26:27 -0500
-IronPort-SDR: L54fK8jbMmkA5XHUluoVA67LIyJTyUQ7sQvUnTJPOt/JpH6lsIx/XBFjxcT6iS+osizQl292gG
- 2Yo5b+F/p+UQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9913"; a="167399823"
+        id S238645AbhCDU11 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 4 Mar 2021 15:27:27 -0500
+IronPort-SDR: TbrUg2FSSA2r3beawkSnzVBWta0oKSh+6IBDyyeho7elwc0U6EsWNOO7dRxRwCNiXw8RFpCum3
+ nNr6GsBBVq6g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9913"; a="207219630"
 X-IronPort-AV: E=Sophos;i="5.81,223,1610438400"; 
-   d="scan'208";a="167399823"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 12:25:46 -0800
-IronPort-SDR: KXqlBZdi/zTvhYz/vMKP+MaHlyKuoTYA+epmiJgaF8MZUoZ2yL3db2vjNKGUyvNtNKr4iTwoNo
- pMIzigIjRhFQ==
+   d="scan'208";a="207219630"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 12:26:47 -0800
+IronPort-SDR: KSX4DfXcN0D0NhWSZY1S4GcWgnwIyPdqza2NMlx7YG6LMnE2zu+cUChwxcEpN7pHWJQb+2f/vJ
+ CDAUlOdxd2zQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.81,223,1610438400"; 
-   d="scan'208";a="369871185"
+   d="scan'208";a="518787562"
 Received: from lkp-server02.sh.intel.com (HELO 2482ff9f8ac0) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 04 Mar 2021 12:25:45 -0800
+  by orsmga004.jf.intel.com with ESMTP; 04 Mar 2021 12:26:45 -0800
 Received: from kbuild by 2482ff9f8ac0 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lHuXY-0002N8-KP; Thu, 04 Mar 2021 20:25:44 +0000
-Date:   Fri, 05 Mar 2021 04:25:37 +0800
+        id 1lHuYW-0002Nf-Pd; Thu, 04 Mar 2021 20:26:44 +0000
+Date:   Fri, 05 Mar 2021 04:25:51 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 1ccb486315127946d59bc9c6c14b210615aae5e8
-Message-ID: <60414241.+BH12pgbSP+7QWGd%lkp@intel.com>
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ 59263b2bab476e9aa7379e95f62f0f8da39fa740
+Message-ID: <6041424f.YxESvB6SHNTICUBN%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +43,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 1ccb486315127946d59bc9c6c14b210615aae5e8  pinctrl: ingenic: add missing call to of_node_put()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 59263b2bab476e9aa7379e95f62f0f8da39fa740  Merge branch 'devel' into for-next
 
 elapsed time: 720m
 
-configs tested: 128
+configs tested: 133
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -107,6 +107,11 @@ riscv                            allmodconfig
 powerpc                     akebono_defconfig
 powerpc                 mpc8272_ads_defconfig
 powerpc               mpc834x_itxgp_defconfig
+x86_64                           alldefconfig
+m68k                       m5275evb_defconfig
+mips                        bcm47xx_defconfig
+arc                        nsimosci_defconfig
+arm                         nhk8815_defconfig
 powerpc                      pasemi_defconfig
 powerpc64                           defconfig
 ia64                                defconfig
