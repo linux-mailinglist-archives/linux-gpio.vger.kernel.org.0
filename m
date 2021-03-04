@@ -2,75 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D878B32CFFB
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 10:47:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD2B732D0B0
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 11:31:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237916AbhCDJqH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 04:46:07 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:37689 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237909AbhCDJpk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 04:45:40 -0500
-Received: from mail-ot1-f45.google.com ([209.85.210.45]) by
- mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MKKpV-1l4KvM311b-00LnNe; Thu, 04 Mar 2021 10:43:07 +0100
-Received: by mail-ot1-f45.google.com with SMTP id j8so1196745otc.0;
-        Thu, 04 Mar 2021 01:43:06 -0800 (PST)
-X-Gm-Message-State: AOAM531LkWx+WR7CbwGtzEMUdZiCjH3TRYdXoT81BUobxv2kHrKHJqyt
-        E1vx2B9BSSe7lEshfBg1R0fkQEQNF98HyjbrIKw=
-X-Google-Smtp-Source: ABdhPJzXUnZi1hHLvC4dUbPTb80i0k+xJjv00UqbhC+F0NRGhVxE6/TJKObEP1C8smvDLYSAYZqvGq7BFJ7u+C6SdbE=
-X-Received: by 2002:a9d:6b8b:: with SMTP id b11mr2818377otq.210.1614850985815;
- Thu, 04 Mar 2021 01:43:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-7-brad@pensando.io>
-In-Reply-To: <20210304034141.7062-7-brad@pensando.io>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 4 Mar 2021 10:42:49 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0EaT28a55dJKJxhQKa3p3ZmpFw7sj3G+o4C419UfT5oQ@mail.gmail.com>
-Message-ID: <CAK8P3a0EaT28a55dJKJxhQKa3p3ZmpFw7sj3G+o4C419UfT5oQ@mail.gmail.com>
-Subject: Re: [PATCH 6/8] arm64: Add config for Pensando SoC platforms
-To:     Brad Larson <brad@pensando.io>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        id S238488AbhCDKaz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 05:30:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238486AbhCDKas (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 05:30:48 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4660C061760
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 02:30:07 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id e10so26786912wro.12
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 02:30:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aM63+RDhluwqJBuGnmIJvTjjyukvVqWvoYfMxyCIVWg=;
+        b=fp2CjAV/qoUqzdjpxUFgkrPiH/9HfdFVSvUHOrDSSdogHc27E7v/dCx47R/Ilw40ay
+         WnDilZ1zYT5SbzV7V0q/liwsJvdsqqbutH9XCf1ouMzS/ibt2VGdRtZ957jl5p+2N3xo
+         a2KkMckpwcgbHB7eoA4dRba9eV7FqOOBT8zlnalOfDU8iZgRIwCcUlBDRLDJkJeC2bNu
+         rwiOmQzxlGsQkkpn+bXxXvp/xjQMhkdLYayVYTD6V7BUFQYR/AuODGoCfxhLRLv5sv0+
+         UD6yyvHo7nlyDXKiDOQmksFpf7W33nl/FHPNXiqqwkb1bNwbKmTA7FF9o0IAlerHp036
+         GGPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aM63+RDhluwqJBuGnmIJvTjjyukvVqWvoYfMxyCIVWg=;
+        b=XbsU3w3A7f2VjbijiD+Q00krLkzbHs62hsFioMt/mrb/dcQVWkEYF62UDoNUlvvJzu
+         KizxapuCAHjrWinkzKyl5rztVgeZp3UkAcUNpqEf0BFnP5maE12ESFyAkXFIP9SOqHWO
+         OiWWVIRY+QJtDn1ZlJeCIsmX2JkvpmfZ46HU0Zx0Xbuk2ZGnLojTYJm02bTxSeSLr0fD
+         zf3FJGbj0DrzZyOo8vB6f86JKOuCRE3yZsogiUW82FVq1fa3lXSp/ZmAjQjU0UMpC+RV
+         xzh5QYQyVshwP4P09H45bTQo5kdcq+GkRCFVb4VFdSNwSptPs40mh5f+g7XtjAsGlB/i
+         BryQ==
+X-Gm-Message-State: AOAM5317cQSz55M+z7P5OwaVG4MAwXmlTZJm1eoIDdt4vNitFo+78g0o
+        GoULRxaUvrx8vJvVgmfPfG85Ng==
+X-Google-Smtp-Source: ABdhPJxYKbyuYK6j0RpKfM0aApHGWIPxdId+ivpJNXTWOiixdB6hzMSJ+h4ihOcsRiNEz2Gh6nnldA==
+X-Received: by 2002:adf:f0cb:: with SMTP id x11mr3236992wro.206.1614853806438;
+        Thu, 04 Mar 2021 02:30:06 -0800 (PST)
+Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
+        by smtp.gmail.com with ESMTPSA id f7sm35501854wre.78.2021.03.04.02.30.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Mar 2021 02:30:06 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        Shuah Khan <shuah@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dMRRch4nDV6kqVsPZq21veOwypuVReTnzCSu1bzqAYhR2YmxfMY
- ZTVsQSZ+GCktNzUmTZMnTbrORRW48iiyKMh1PRiFY5kZ6bqoIg3ei3y5FmSAqrkJqwhr57t
- tXmriHFu2kkCEDUX22ucSvm5AnXcLFT6CTOMb0zs6urq6svDsfL8H6GMJtHq+M/ZljgANvf
- c4w/tOdjJ7n8D0K1fo5nA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Uf3BXgtTBH4=:ZcFmGL+UJ7zNCZq3v/gJ4v
- kf6W84D+Fk5OpAuTkDDJEtv1TGws5Caw+Dhe/sJgQ2AyNZOJnwL5v4kxsauR8ccSIo88A5FL2
- I7skBGTiZuPw6UnD5OJZnEV4HBLG8JUn0WXbAub1hnmmUdXE6hNL7mUacEI0XavtlpTCfikJH
- PTOvU8sPosVYYemphPkVYw2oG3ttHsE81K5arqKJOmGS3+SkzBbu7ELSoCnUsV0sNPjFaDGhG
- asxcckNYsH3H8RFF+KeDquj25Kne/9TwIoGBB6gkcvlKeKGZkhS6c8/DEkpg4SUdoSeeqJICs
- ybf2Kwk9/rmCBD6nBIviH8ETvxLZRvs18m+hKZi2Mngewxfap0qr3KrZ1H5pYtvXXLWj0lYH+
- aAei+98l2CBoCpy9/GSQzyIaX+kODFvKChkaO6R0U6rtOTm2xvP6Yu4jOCbrwCEqv6+tMLpGY
- PS3xnEda8fvcGWDupkmDvkHNIHHoX0b83EweuyWnm/TV8t7dGxzZHWDwhpPjVbrtehuoPBA0L
- ohUbtkgtJCRoPHuipoNpHr9VR/FjxNB4h2dd/mR+NF6FLWCNx9QlKTiLQAQAATxKg==
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 00/12] gpio: implement the configfs testing module
+Date:   Thu,  4 Mar 2021 11:24:40 +0100
+Message-Id: <20210304102452.21726-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.29.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 4, 2021 at 4:41 AM Brad Larson <brad@pensando.io> wrote:
->
-> Add ARCH_PENSANDO configuration option for Pensando SoC
-> based platforms.
->
-> Signed-off-by: Brad Larson <brad@pensando.io>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The changelog and the platform help text could use a little more information
-about what that platform is and where to find more information. This will
-help users decide whether they should enable support for the platform or not.
+This series adds a new GPIO testing module based on configfs committable items
+and sysfs. The goal is to provide a testing driver that will be configurable
+at runtime (won't need module reload) and easily extensible. The control over
+the attributes is also much more fine-grained than in gpio-mockup.
 
-       Arnd
+This series also contains a respin of the patches I sent separately to the
+configfs maintainers - these patches implement the concept of committable
+items that was well defined for a long time but never actually completed.
+
+Apart from the new driver itself, its selftests and the configfs patches, this
+series contains some changes to the bitmap API - most importantly: it adds
+devres managed variants of bitmap_alloc() and bitmap_zalloc().
+
+v1 -> v2:
+- add selftests for gpio-sim
+- add helper programs for selftests
+- update the configfs rename callback to work with the new API introduced in
+  v5.11
+- fix a missing quote in the documentation
+- use !! whenever using bits operation that are required to return 0 or 1
+- use provided bitmap API instead of reimplementing copy or fill operations
+- fix a deadlock in gpio_sim_direction_output()
+- add new read-only configfs attributes for mapping of configfs items to GPIO
+  device names
+- and address other minor issues pointed out in reviews of v1
+
+Bartosz Golaszewski (12):
+  configfs: increase the item name length
+  configfs: use (1UL << bit) for internal flags
+  configfs: implement committable items
+  samples: configfs: add a committable group
+  lib: bitmap: remove the 'extern' keyword from function declarations
+  lib: bitmap: order includes alphabetically
+  lib: bitmap: provide devm_bitmap_alloc() and devm_bitmap_zalloc()
+  drivers: export device_is_bound()
+  gpio: sim: new testing module
+  selftests: gpio: provide a helper for reading chip info
+  selftests: gpio: add a helper for reading GPIO line names
+  selftests: gpio: add test cases for gpio-sim
+
+ Documentation/admin-guide/gpio/gpio-sim.rst   |  72 ++
+ Documentation/filesystems/configfs.rst        |   6 +-
+ drivers/base/dd.c                             |   1 +
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sim.c                       | 878 ++++++++++++++++++
+ fs/configfs/configfs_internal.h               |  22 +-
+ fs/configfs/dir.c                             | 245 ++++-
+ include/linux/bitmap.h                        | 129 +--
+ include/linux/configfs.h                      |   3 +-
+ lib/bitmap.c                                  |  42 +-
+ samples/configfs/configfs_sample.c            | 153 +++
+ tools/testing/selftests/gpio/.gitignore       |   2 +
+ tools/testing/selftests/gpio/Makefile         |   4 +-
+ tools/testing/selftests/gpio/config           |   1 +
+ tools/testing/selftests/gpio/gpio-chip-info.c |  57 ++
+ tools/testing/selftests/gpio/gpio-line-name.c |  55 ++
+ tools/testing/selftests/gpio/gpio-sim.sh      | 229 +++++
+ 18 files changed, 1822 insertions(+), 86 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
+ create mode 100644 drivers/gpio/gpio-sim.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
+ create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
+
+-- 
+2.29.1
+
