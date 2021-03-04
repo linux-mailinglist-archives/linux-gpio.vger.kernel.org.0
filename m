@@ -2,119 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03FD532D12A
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 11:52:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D877B32D13E
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 11:57:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238890AbhCDKvL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 05:51:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235138AbhCDKup (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 05:50:45 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 015C8C061574;
-        Thu,  4 Mar 2021 02:50:05 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id x24so1407880pfn.5;
-        Thu, 04 Mar 2021 02:50:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FoGsnOzXi7H9nz19W/bgb/1Kxx0meiyadtP/QvxkNiA=;
-        b=n53vzKHXuqPKNk87GMWTNa2nfV96TlDoPYmjDgzqyo8kcAWpEOU6OhiwMfLVeo/qf2
-         pyjk16yl/13dlOsHu5T3E2PzqDcGryW6gjBTdeA99cZm0dp452DOUH2E84CvTqOSJul9
-         mPFfdH0ASp/msC5XRsUr0CLBhjO0o6J7dMG8/0X1uTFZdYJX9skqHIIyjFRIteJnQa/S
-         /r5eWnNud0OqXJ3jGdt/96Th4uZDK/NPoTKSjRqVT9fCkw4IVc/eoE4HoCA+Ge37X7ED
-         aKTuI9TdwZddRXhrkVPFbNO4zmy/YPz03Dv6OnJ2mgSySDmjEh6jnHvG1cHqR2mrGvm3
-         knNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FoGsnOzXi7H9nz19W/bgb/1Kxx0meiyadtP/QvxkNiA=;
-        b=ShtlVHSOQCsGU7NIKVfN996S3l1Qok5athbKuuxCdVZd5SjpfeHI4nCdjEeX33fs0y
-         0OuHE+Yu6EXC4LbxemzC5xKnwXNP5FpMODQcQXR1S9e1ErNYoAZfiujV5rH8UxwNS+HK
-         3KuHRnYy7yOrq04oGt+4UGSKrk8A9N1qvVepAhyklzNfTVPpxtC+F5AzT7txkSDs0PA1
-         xltWOD6gEXBZ3/bYinV0teDoLObT12vMMyQjYTIIxsbDGvpg0r5DSEBwMgpqkwQ/gyR5
-         aTXovzGyteHCZFZht/zAxpEMX9w804R7IsjbkS5zYKWT2RMrd8E4ivIGdtZsgIb6ITqI
-         hTIg==
-X-Gm-Message-State: AOAM532W+v5ZzSN9boaC9gj9koKAWkrtMZrEZNS9zgs/JxCfjEJhvhOO
-        2QcwT4MSSA5KNE9S2SNg477TSdHKZVFUOHwnVv8=
-X-Google-Smtp-Source: ABdhPJy2flX7Ea1zvFciNHtUD9op+hNlZxpNVpbA5cITJj9ODh1I6pHXRdOeEnWrzVfiJdLABTAKr4UQrRue03M70aQ=
-X-Received: by 2002:a62:7c43:0:b029:1ef:20ce:ba36 with SMTP id
- x64-20020a627c430000b02901ef20ceba36mr2144918pfc.40.1614855004451; Thu, 04
- Mar 2021 02:50:04 -0800 (PST)
+        id S239082AbhCDK4e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 05:56:34 -0500
+Received: from mga09.intel.com ([134.134.136.24]:57040 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239104AbhCDK4Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 4 Mar 2021 05:56:25 -0500
+IronPort-SDR: 2b4TZsXRF5MmGfoVZBlVZBPWT2uVwKtAyuzJPFCJVZx2GxNVkTYlpiNPBFcbEfdwolrFS9s62e
+ 0sw2TRkqM96w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9912"; a="187502557"
+X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
+   d="scan'208";a="187502557"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 02:54:39 -0800
+IronPort-SDR: BBjc4ASGZrl9v6kZbw0YBwGuvrIQCG30tqgAv2gDH73ac2+9gjjKz+w/OBYNvsJPBPjZI+wj2j
+ qWlugjb0vdRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
+   d="scan'208";a="600483580"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 04 Mar 2021 02:54:38 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id CB5EC1F4; Thu,  4 Mar 2021 12:54:37 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/1] pinctrl: intel: No need to disable IRQs in the handler
+Date:   Thu,  4 Mar 2021 12:54:32 +0200
+Message-Id: <20210304105432.36544-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-References: <20210304085710.7128-1-noltari@gmail.com> <20210304085710.7128-6-noltari@gmail.com>
-In-Reply-To: <20210304085710.7128-6-noltari@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 4 Mar 2021 12:49:48 +0200
-Message-ID: <CAHp75Vc8Gk0ZVjfQH71-Du1ZB1HT5qrgbT6HZgXQd-C6xE05ZQ@mail.gmail.com>
-Subject: Re: [PATCH v4 05/15] pinctrl: add a pincontrol driver for BCM6328
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Walle <michael@walle.cc>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 4, 2021 at 10:57 AM =C3=81lvaro Fern=C3=A1ndez Rojas
-<noltari@gmail.com> wrote:
->
-> Add a pincontrol driver for BCM6328. BCM628 supports muxing 32 pins as
-> GPIOs, as LEDs for the integrated LED controller, or various other
-> functions. Its pincontrol mux registers also control other aspects, like
-> switching the second USB port between host and device mode.
+In IRQ handler interrupts are already disabled, hence no need
+to repeat it. Even in the threaded case, which is disabled here,
+it is not a problem because IRQ framework serializes descriptor
+handling. Remove disabling IRQ part in the handler.
 
-...
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> +static inline unsigned int bcm6328_mux_off(unsigned int pin)
-> +{
-> +       static const unsigned int bcm6328_mux[] =3D {
-> +               BCM6328_MUX_LO_REG,
-> +               BCM6328_MUX_HI_REG,
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 93237d6e4316..268aaad3bb08 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1173,16 +1173,15 @@ static int intel_gpio_community_irq_handler(struct intel_pinctrl *pctrl,
+ 	for (gpp = 0; gpp < community->ngpps; gpp++) {
+ 		const struct intel_padgroup *padgrp = &community->gpps[gpp];
+ 		unsigned long pending, enabled, gpp_offset;
+-		unsigned long flags;
+ 
+-		raw_spin_lock_irqsave(&pctrl->lock, flags);
++		raw_spin_lock(&pctrl->lock);
+ 
+ 		pending = readl(community->regs + community->is_offset +
+ 				padgrp->reg_num * 4);
+ 		enabled = readl(community->regs + community->ie_offset +
+ 				padgrp->reg_num * 4);
+ 
+-		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
++		raw_spin_unlock(&pctrl->lock);
+ 
+ 		/* Only interrupts that are enabled */
+ 		pending &= enabled;
+-- 
+2.30.1
 
-> +               BCM6328_MUX_OTHER_REG
-
-When it's not terminator add a comma, otherwise remove a comma.
-
-Also, why is it inside a function? It's anyway global and constant.
-
-> +       };
-
-...
-
-> +       regmap_update_bits(pc->regs, bcm6328_mux_off(pin),
-> +                          3UL << ((pin % 16) * 2),
-
-3UL =3D> #define BLABLA  GENMASK(1, 0)
-
-> +                          mux << ((pin % 16) * 2));
-
-...
-
-> +static const struct of_device_id bcm6328_pinctrl_match[] =3D {
-> +       { .compatible =3D "brcm,bcm6328-pinctrl", },
-> +       { },
-
-No comma.
-
-> +};
-
-Above comments to all your patches.
-
---=20
-With Best Regards,
-Andy Shevchenko
