@@ -2,83 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68EBF32D368
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 13:42:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 541B332D379
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 13:46:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbhCDMlV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 07:41:21 -0500
-Received: from mga07.intel.com ([134.134.136.100]:47761 "EHLO mga07.intel.com"
+        id S231387AbhCDMpi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 07:45:38 -0500
+Received: from mga11.intel.com ([192.55.52.93]:47931 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231196AbhCDMlD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 4 Mar 2021 07:41:03 -0500
-IronPort-SDR: 0yhW5H8Y9440mYZWOeL2GGmOqFcwnBmZQrj4T9qtv8wOZoVWarr4k23UrA+Vl6GXBse1T/jRM0
- ykpbRKlUlwrw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9912"; a="251445631"
+        id S231137AbhCDMpI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 4 Mar 2021 07:45:08 -0500
+IronPort-SDR: R6GDCNphcnaCXJBGYx9fQ9Yv/rn/gnykpS49hosqaBfry6zs3z4FHFC5fOW+Oj5dBXZjmojIjP
+ eXITA5nQGgWg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9912"; a="184033151"
 X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
-   d="scan'208";a="251445631"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 04:40:22 -0800
-IronPort-SDR: 3KzrXP9kNaS/V38g+74u4PsLGEFJM3J/rNRb8K20X7zLtv8c5PxTYPE0u+0rQ6h9iDUnv2D+CI
- 2pqhR6m1UNMg==
+   d="scan'208";a="184033151"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 04:44:27 -0800
+IronPort-SDR: p8FUAs55UNOmZL36JMANYGjyBuIIbwaK2V3JuQTGsgOX6OkkStHw4kfbyVFvzlLQy37qqfS5S1
+ GpYDBv+ka6gQ==
 X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
-   d="scan'208";a="445717781"
+   d="scan'208";a="400593532"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 04:40:20 -0800
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 04:44:26 -0800
 Received: from andy by smile with local (Exim 4.94)
         (envelope-from <andriy.shevchenko@intel.com>)
-        id 1lHnH8-009sQJ-8P; Thu, 04 Mar 2021 14:40:18 +0200
-Date:   Thu, 4 Mar 2021 14:40:18 +0200
+        id 1lHnL5-009sSg-NZ; Thu, 04 Mar 2021 14:44:23 +0200
+Date:   Thu, 4 Mar 2021 14:44:23 +0200
 From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH v2] pinctrl: qcom: support gpio_chip .set_config call
-Message-ID: <YEDVMpHyCGbZOrmF@smile.fi.intel.com>
-References: <20210303131858.3976-1-shawn.guo@linaro.org>
- <YD+iWuLS/9knWLFb@builder.lan>
- <CACRpkdbZNJR5XaNaEWxwKdxED2mXnN_bN+mLjfPRMxyxVP3TVw@mail.gmail.com>
+To:     Shawn Guo <shawn.guo@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] pinctrl: qcom: sc8180x: add ACPI probe support
+Message-ID: <YEDWJ5XhvB2VdoJT@smile.fi.intel.com>
+References: <20210304060520.24975-1-shawn.guo@linaro.org>
+ <20210304060520.24975-3-shawn.guo@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbZNJR5XaNaEWxwKdxED2mXnN_bN+mLjfPRMxyxVP3TVw@mail.gmail.com>
+In-Reply-To: <20210304060520.24975-3-shawn.guo@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 04, 2021 at 09:41:05AM +0100, Linus Walleij wrote:
-> On Wed, Mar 3, 2021 at 3:51 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
+On Thu, Mar 04, 2021 at 02:05:20PM +0800, Shawn Guo wrote:
+> It adds ACPI probe support for pinctrl-sc8180x driver.
 > 
-> > I like the fact that this solves your gpio configuration issue, but I'm
-> > uncertain if just adding support for configuring pins (in addition to
-> > groups) in the driver is the right solution.
-> >
-> > @Linus, to summarize, the Qualcomm TLMM configures pingroups, but all
-> > gpios are defined as a single pin. pinctrl_gpio_set_config() is invoked
-> > based on the configuration provided in the ACPI tables, so Shawn's
-> > proposal is to just implement "config by pin" as well.
-> > Would this not be a problem shared with all pinctrl drivers that
-> > configure gpios in groups?
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> ---
+>  drivers/pinctrl/qcom/Kconfig           |  2 +-
+>  drivers/pinctrl/qcom/pinctrl-sc8180x.c | 39 ++++++++++++++++++++++++--
+>  2 files changed, 38 insertions(+), 3 deletions(-)
 > 
-> It is done as Shawn does it in e.g. the Intel drivers.
-> 
-> This is a side effect of ACPI: ACPI thinks about the world mostly
-> in term of GPIO pins, there was a pin ctrl draft at one point but I don't
-> think it ever got off the ground. The standards committe just has not
-> been able to think about the world in terms of pin control. Or they
-> think the pin control abstraction is just wrong. Could be either.
+> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> index 6853a896c476..9f0218c4f9b3 100644
+> --- a/drivers/pinctrl/qcom/Kconfig
+> +++ b/drivers/pinctrl/qcom/Kconfig
+> @@ -222,7 +222,7 @@ config PINCTRL_SC7280
+>  
+>  config PINCTRL_SC8180X
+>  	tristate "Qualcomm Technologies Inc SC8180x pin controller driver"
+> -	depends on GPIOLIB && OF
+> +	depends on GPIOLIB && (OF || ACPI)
+>  	select PINCTRL_MSM
+>  	help
+>  	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+> index 66f76ed22200..45ecb4a022ca 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+> @@ -1546,6 +1546,13 @@ static const struct msm_pingroup sc8180x_groups[] = {
+>  	[193] = SDC_QDSD_PINGROUP(sdc2_data, 0x4b2000, 9, 0),
+>  };
+>  
+> +static const int sc8180x_acpi_reserved_gpios[] = {
+> +	0, 1, 2, 3,
+> +	47, 48, 49, 50,
+> +	126, 127, 128, 129,
+> +	-1 /* terminator */
+> +};
 
-Pin control has been though thru and implemented in the ACPICA, but we have no
-time to fulfil this work to cover pin control subsystem in the Linux kernel.
+Wondering if this is converted to valid_mask at some point?
 
-> This means that on ACPI systems pin config will be done with
-> this mechanism but on DT systems it will be done another way.
-> The mechanisms are essentially orthogonal usecase-wise, it should
-> work as long as there is some proper testing and concern
-> for both cases.
+>  static const struct msm_gpio_wakeirq_map sc8180x_pdc_map[] = {
+>  	{ 3, 31 }, { 5, 32 }, { 8, 33 }, { 9, 34 }, { 10, 100 }, { 12, 104 },
+>  	{ 24, 37 }, { 26, 38 }, { 27, 41 }, { 28, 42 }, { 30, 39 }, { 36, 43 },
+> @@ -1575,13 +1582,40 @@ static struct msm_pinctrl_soc_data sc8180x_pinctrl = {
+>  	.nwakeirq_map = ARRAY_SIZE(sc8180x_pdc_map),
+>  };
+>  
+> +static const struct msm_pinctrl_soc_data sc8180x_acpi_pinctrl = {
+> +	.pins = sc8180x_pins,
+> +	.npins = ARRAY_SIZE(sc8180x_pins),
+> +	.groups = sc8180x_groups,
+> +	.ngroups = ARRAY_SIZE(sc8180x_groups),
+> +	.reserved_gpios = sc8180x_acpi_reserved_gpios,
+> +	.ngpios = 191,
+> +};
+> +
+>  static int sc8180x_pinctrl_probe(struct platform_device *pdev)
+>  {
+> -	return msm_pinctrl_probe(pdev, &sc8180x_pinctrl);
+> +	const struct msm_pinctrl_soc_data *soc_data;
+> +
+> +	soc_data = device_get_match_data(&pdev->dev);
+
+#include <linux/property.h>
+
+> +	if (!soc_data)
+> +		return -EINVAL;
+> +
+> +	return msm_pinctrl_probe(pdev, soc_data);
+>  }
+>  
+> +static const struct acpi_device_id sc8180x_pinctrl_acpi_match[] = {
+
+#include <linux/mod_devicetable.h>
+
+> +	{
+> +		.id = "QCOM040D",
+> +		.driver_data = (kernel_ulong_t) &sc8180x_acpi_pinctrl,
+> +	},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, sc8180x_pinctrl_acpi_match);
+> +
+>  static const struct of_device_id sc8180x_pinctrl_of_match[] = {
+> -	{ .compatible = "qcom,sc8180x-tlmm", },
+> +	{
+> +		.compatible = "qcom,sc8180x-tlmm",
+> +		.data = &sc8180x_pinctrl,
+> +	},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, sc8180x_pinctrl_of_match);
+> @@ -1590,6 +1624,7 @@ static struct platform_driver sc8180x_pinctrl_driver = {
+>  	.driver = {
+>  		.name = "sc8180x-pinctrl",
+>  		.of_match_table = sc8180x_pinctrl_of_match,
+> +		.acpi_match_table = sc8180x_pinctrl_acpi_match,
+>  	},
+>  	.probe = sc8180x_pinctrl_probe,
+>  	.remove = msm_pinctrl_remove,
+> -- 
+> 2.17.1
+> 
 
 -- 
 With Best Regards,
