@@ -2,127 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32F1132CE79
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 09:31:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD87632CEA7
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 09:42:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236793AbhCDIax (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 03:30:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41754 "EHLO
+        id S233142AbhCDImF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 03:42:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236831AbhCDIa0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 03:30:26 -0500
+        with ESMTP id S236282AbhCDIl6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 03:41:58 -0500
 Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A27DEC061574
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 00:29:45 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id e7so41826063lft.2
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 00:29:45 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD797C06175F
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 00:41:17 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id d3so41805981lfg.10
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 00:41:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=z/YunITDzSj54Y4k2da7IIbwcZOzFgpMcTcXrvSJIsY=;
-        b=JaUPYLR7xkZXBatHr7s2xfITNdM0H4Jctt/Fw2uA9rVTPRXS2ypGfQgeG9h77/gY5y
-         7R8yulF7mLSY0OgIKuT6J/Ojr06v7NT7A6N5Nkq6CnoaP8Yr0tttUmgXRo9RzzIK0UnP
-         UVtLZe4POq614g7G8HEaMlTlNd/edz0pZ/qrLnEd/fMjim5WibSx3ajwVPMfR0eZ2ABR
-         f02UlJEuLJBHeRh0WEyp58aIIIxQeyyyLJX8vDD1h13rv3fk1tJqBy+UArpvwCFZt+GW
-         WZgE6/MLDaJg5nIEm/9E9KW4ILP0L+viXBuImxX4kz7o8HLReWKq8Y/Pv7jUdUKfuVSr
-         3rIA==
+        bh=Okv32JXF1LMpLYOCEvzIN6ZERj01qsUHCNfZJbYyz2A=;
+        b=K2shqvyzmTW+cLGDnhOmTYnLGZyLbMMHz5JymrPCVIvwQtTzT8Ad6ncnH+IiNBjcsr
+         P3pAWxUIMZXRDAqQEsctzuA63QuxX8l3KHdMWpm6lwGlhI5RYXINWFlW15KjKc6cxTOx
+         1luYDrXN/257vAhXxO/mkzjztS2Ao/j3mOf7aitXvKDcvySHnDKzyKKr3OYTP5RSCnby
+         s3eBJMmx4WAs0xr6aSUO3pKhnpd6FPqk0ed39pOtG0uH7egdc/s/0456xXFocagkunpg
+         Uzuy/ZntHwfnzqCLkHP3JrKiqdO3WWe9V/g2R8gxNppPO7bfQ+urer2iFOW+USmiarcm
+         qhQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=z/YunITDzSj54Y4k2da7IIbwcZOzFgpMcTcXrvSJIsY=;
-        b=JrNr2kig2blUqvayYGl2MlI/VmdZoEEOfV+jH+8yjvcx9MomXczVStXMJns6faedyY
-         XFJONAcUSap68gx29xHEI8FULRFHcPWSv4RWSExELNL1x4T4CNb41WMK7WFF33F3TUU5
-         PY3lX9VLgw7d2wrZldwZNDqbt3yDwrQZjV573Wcl880LmWu+nm7ZVl8uBEpUxBWp1yC3
-         IAN34MGbrnVfxCi9i8yi4Tyf+7T0i/5nngPRJWN/ZsGJYy6NmKAHT7cLbnPAVl9U+crZ
-         GOcehfut305bC2CYc6Y2uXFVtdHfKXjOQ03Jyx+YEvSBVlYRXAvCBDRCjUNjMpcYkYTn
-         bzQA==
-X-Gm-Message-State: AOAM531Pcrq0/xZJpDRmb/Ge8iS3q/NcdYhi4zJ0JGzgicfSXX6pKdsv
-        v5qx4FAWK9Qh/kVbiskIco+kVI+YKWeOvOIz09bXRA==
-X-Google-Smtp-Source: ABdhPJy5zH9v2taHTbOivNt/jHFRx+P8htUtEtdRjWfaZYj8ZCyXiyfzifW75rVWQfROIBOwLzH5JMbjd+5Vk4a/t7c=
-X-Received: by 2002:a05:6512:10d1:: with SMTP id k17mr1556851lfg.649.1614846584130;
- Thu, 04 Mar 2021 00:29:44 -0800 (PST)
+        bh=Okv32JXF1LMpLYOCEvzIN6ZERj01qsUHCNfZJbYyz2A=;
+        b=Kqq/0CStPxvdlXKnHLn4uMj45VmehqDe2AGPtUaSxV3Dyk+U569m14n6EzynfiuoYl
+         l27ZcxTS0iduO9qJsIKmzUkKI3uTwiz+xiNXEfkCxjAm2qmRzwVD15ZANqGpzO8OI/86
+         ebaIUFeLYV3o4JEpc4+4ZHv91ssik1MJATjo+Jq5uWtHq53u4EqmbgF2PVFektShmHqV
+         mwpYQHBcTkjb+AxTa8wafkmVce1nswbd4UZb2mh85Xxob7PvGnofgdqhW1UYaGdmjdoU
+         iEB4M+VUfpo6N6mkV3654/JFhweBSDsBvZNtB8lI73ZYKjO412ygUGn7L6RJUaWdzhpV
+         847w==
+X-Gm-Message-State: AOAM530kffonPN6/IuQ7bYkH6pJI5z87f9W9KXCxzOmDfWZaUDCRBVDL
+        vZhHQtJF6bI00uxTAm3stpME9mHdhMcfDONTDBfrmN7DTscQeA==
+X-Google-Smtp-Source: ABdhPJzFNOWIPzQOlLTgpY27J/Js+axbe02741mFnHIctJ1aRf0jQYagS8DAb+7ZJ85hQttej8JHI/gsBlcJ4it1CtE=
+X-Received: by 2002:a05:6512:10d1:: with SMTP id k17mr1579805lfg.649.1614847276334;
+ Thu, 04 Mar 2021 00:41:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-2-brad@pensando.io>
-In-Reply-To: <20210304034141.7062-2-brad@pensando.io>
+References: <20210303131858.3976-1-shawn.guo@linaro.org> <YD+iWuLS/9knWLFb@builder.lan>
+In-Reply-To: <YD+iWuLS/9knWLFb@builder.lan>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Mar 2021 09:29:33 +0100
-Message-ID: <CACRpkdbQD6p7fbGtuu1c92uXfSFDCTwqjqsXHpgnD5Lg4v0Okw@mail.gmail.com>
-Subject: Re: [PATCH 1/8] gpio: Add Elba SoC gpio driver for spi cs control
-To:     Brad Larson <brad@pensando.io>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
+Date:   Thu, 4 Mar 2021 09:41:05 +0100
+Message-ID: <CACRpkdbZNJR5XaNaEWxwKdxED2mXnN_bN+mLjfPRMxyxVP3TVw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: qcom: support gpio_chip .set_config call
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Shawn Guo <shawn.guo@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        MSM <linux-arm-msm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Brad,
+On Wed, Mar 3, 2021 at 3:51 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 
-thanks for your patch!
-
-On Thu, Mar 4, 2021 at 4:42 AM Brad Larson <brad@pensando.io> wrote:
-
-> This GPIO driver is for the Pensando Elba SoC which
-> provides control of four chip selects on two SPI busses.
+> I like the fact that this solves your gpio configuration issue, but I'm
+> uncertain if just adding support for configuring pins (in addition to
+> groups) in the driver is the right solution.
 >
-> Signed-off-by: Brad Larson <brad@pensando.io>
-(...)
+> @Linus, to summarize, the Qualcomm TLMM configures pingroups, but all
+> gpios are defined as a single pin. pinctrl_gpio_set_config() is invoked
+> based on the configuration provided in the ACPI tables, so Shawn's
+> proposal is to just implement "config by pin" as well.
+> Would this not be a problem shared with all pinctrl drivers that
+> configure gpios in groups?
 
-> +#include <linux/gpio.h>
+It is done as Shawn does it in e.g. the Intel drivers.
 
-Use this in new drivers:
-#include <linux/gpio/driver.h>
+This is a side effect of ACPI: ACPI thinks about the world mostly
+in term of GPIO pins, there was a pin ctrl draft at one point but I don't
+think it ever got off the ground. The standards committe just has not
+been able to think about the world in terms of pin control. Or they
+think the pin control abstraction is just wrong. Could be either.
 
-> + * pin:             3            2        |       1            0
-> + * bit:         7------6------5------4----|---3------2------1------0
-> + *     cs1  cs1_ovr  cs0  cs0_ovr |  cs1  cs1_ovr  cs0  cs0_ovr
-> + *                ssi1            |             ssi0
-> + */
-> +#define SPICS_PIN_SHIFT(pin)   (2 * (pin))
-> +#define SPICS_MASK(pin)                (0x3 << SPICS_PIN_SHIFT(pin))
-> +#define SPICS_SET(pin, val)    ((((val) << 1) | 0x1) << SPICS_PIN_SHIFT(pin))
-
-So 2 bits per GPIO line in one register? (Nice doc!)
-
-> +struct elba_spics_priv {
-> +       void __iomem *base;
-> +       spinlock_t lock;
-> +       struct gpio_chip chip;
-> +};
-> +
-> +static int elba_spics_get_value(struct gpio_chip *chip, unsigned int pin)
-> +{
-> +       return -ENXIO;
-> +}
-
-Write a comment that the chip only supports output mode,
-because it repurposes SPI CS pins as generic GPIO out,
-maybe at the top of the file?
-
-I suppose these systems also actually (ab)use the SPI cs
-for things that are not really SPI CS? Because otherwise
-this could just be part of the SPI driver (native chip select).
-
-> +static const struct of_device_id ebla_spics_of_match[] = {
-> +       { .compatible = "pensando,elba-spics" },
-
-Have you documented this?
-
-Other than that this is a nice and complete driver.
+This means that on ACPI systems pin config will be done with
+this mechanism but on DT systems it will be done another way.
+The mechanisms are essentially orthogonal usecase-wise, it should
+work as long as there is some proper testing and concern
+for both cases.
 
 Yours,
 Linus Walleij
