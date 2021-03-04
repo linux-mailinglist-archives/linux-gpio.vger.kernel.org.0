@@ -2,81 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECF4832CE33
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 09:16:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AF6C32CE3D
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 09:17:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236408AbhCDIOx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 03:14:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38400 "EHLO
+        id S233607AbhCDIQ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 03:16:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236414AbhCDIOs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 03:14:48 -0500
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76CCAC06175F
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 00:14:07 -0800 (PST)
-Received: by mail-lj1-x22c.google.com with SMTP id a17so32237402ljq.2
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 00:14:07 -0800 (PST)
+        with ESMTP id S236376AbhCDIQU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 03:16:20 -0500
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D01CC061574
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 00:15:40 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id m11so31360817lji.10
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 00:15:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=7DE3EOn1LK/QiW+pLa0hfXIsp16ijWPfYYWPT7KOMCY=;
-        b=OlRTcnZ1Dv90YX3sASl4duzPrkW2Hl1l+B/t+0QNwArp474ZavCfZReagMouJgCY5E
-         jncwOHQTTXWvcvmYO/+UsqsqtVpVputW09BXeaHhpdcn/6i99XGN/rsG/RZZH2pNpZMr
-         BbJ1BFQfnYkfwgdjIYggV4zoXNP2mM7N5gKyULDkASPy5bVUhhwYtURCLYtXx27GeefR
-         evoFDDLw8xT25h7k/JfUByvQLjs4CrT7krJ9jP++196k9jtd6pXFuXDFxh6QaqaVkmp7
-         z7oTxTO2xwha3P+t9CAiinBQGDFHGdxP7yprFahLaOQkIHbXxfFf8FnDBVinpmY2IHUC
-         9Yuw==
+        bh=SJyZlyEHfVnR3j+KQtSDL4OnWvfrZW9Sy7fZt9eeLfo=;
+        b=P8t+fHloRwyoIkI05NgYKdBCj+KdvhlHCPckJ8tCWVkZH2q2Hn4sfLlHhYgp7BnoeE
+         eoFoUC6WWaVF5Uhle/DtZrldalw0YHLZbr/dsqY9ONnVILQTRJhIm7kJKQNxnLf7awcZ
+         VmQRCa+UGKBxD81acuKo6BhSTroMA/vwyMVeDrOZm8bTjoUunxISbeT/rWjXcxl1drK2
+         UFv1w96BtYmz4K3KbfXWmO4lsABr2MErnhBVS7tCE4kXU6S3iFWNjTi241Cs32nzI0+6
+         9hnbpVuKoLqpwrZKCtQOzcXiifofVpgaQtcqR6RTfqCrMfSb/Mp/d0wX9ctq42TZXGK2
+         qPqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7DE3EOn1LK/QiW+pLa0hfXIsp16ijWPfYYWPT7KOMCY=;
-        b=DfCfHVDnUjTzzsIWMhx6KOY8QLsJrNob0tL9jT4CPtpZ6SY++PFCtYV91wxhM55jCB
-         AxCv7jFhxDDBkgBMt/ZIDSVnip+1JFLx2uVuu4Xl2DnNHvlyfgjtM7MQGn324dM/HGJU
-         ra8OokkElPr1XERyDM6Pb+8T/2gAYcfyHXawZmTSq6R671MHE9jYrFX8nhCUJYoHeCRP
-         q/MfHnAcpI30Vg8yt7NJ+0SD2EqNATvQq+40/EDebWV4xDTLjEW6GAKTkI1dswlWxQ7C
-         GYdA9VsRYU8UDpy3wErGH/fjMAqaZYm0m0HvvHBHEcyfhoU3PsuFhRt2xSCmg7I80Qj3
-         tc1Q==
-X-Gm-Message-State: AOAM532nRJmmi/H/KwQgNLeRExqT7XBmw3hndOLhyb4DzIN169kW8ejH
-        W6dU90hyjwue0HTLIwWzvbRERt5QYmI3WUc9MDP9Ww==
-X-Google-Smtp-Source: ABdhPJxF2y/oAkTQveeV+6k32lK7mTd6pcnX8/iQxyXeiafRULoetV+AexgBOWv5iLq2yF4Uy79/Qz798b++kz7zvq8=
-X-Received: by 2002:a2e:1649:: with SMTP id 9mr1758960ljw.74.1614845645809;
- Thu, 04 Mar 2021 00:14:05 -0800 (PST)
+        bh=SJyZlyEHfVnR3j+KQtSDL4OnWvfrZW9Sy7fZt9eeLfo=;
+        b=WGZGXLJgJqvtxNNOQbVrUcu4gx4DoF8r6fS0u1PqC6B1D2Rfbaq5S460LT79M8XoLv
+         o/pkWgh/xlMLqUarCA9ctLuqKwkv/TGPLOzXrjEYvYM+obAsfILdZi/HDIUMECaMAxkC
+         h4PFFcY7p14BObLBUuMeltdbg2RvfSvWaKW7ksfBAQSxE12MSQtmOpEEHXb2SybNqi2q
+         PnUmA/D0Flg5Sk6BlXXi8j9jhmb83wva2MqzpjnBbLL1eM7S2iuoqcmojNQUyr56oIC9
+         r7Eq6nvzEvMrhykpHu03MfMocK0veTy9cosO6QTJckEOTbHKPAfSjR6qS2wVo2ODW21b
+         ezug==
+X-Gm-Message-State: AOAM5331HehOPEEQG57tHsZcsRPAgqmn4WTBt8AKrKwvx1U256qXNIMg
+        lSH/t0rGVnx+jza34BCQebG/u3QwWn6Y9bOUtYxFIg==
+X-Google-Smtp-Source: ABdhPJytRMXDzPZQu9LPmyCokZi4HFF5dQrsReDzAH3IBF+V58SrZ/BITOlZXALmZp0DjFGB3W+fMGqSsDPtpdNrgfY=
+X-Received: by 2002:a2e:9004:: with SMTP id h4mr1678123ljg.326.1614845738903;
+ Thu, 04 Mar 2021 00:15:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20210303142310.6371-1-noltari@gmail.com> <20210303142310.6371-2-noltari@gmail.com>
- <40403445ae34e822474e5f39be75fd0b@walle.cc> <E341768B-BF42-4749-8D43-8C5CB24D64C3@gmail.com>
-In-Reply-To: <E341768B-BF42-4749-8D43-8C5CB24D64C3@gmail.com>
+References: <20210303203444.3140677-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20210303203444.3140677-1-j.neuschaefer@gmx.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Mar 2021 09:13:54 +0100
-Message-ID: <CACRpkdaJ3kGj6wi7L8_0WXq_dj4tt2LEbhPUy20R-Z-Mam_pdQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/14] gpio: regmap: set gpio_chip of_node
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Michael Walle <michael@walle.cc>, Rob Herring <robh+dt@kernel.org>,
+Date:   Thu, 4 Mar 2021 09:15:28 +0100
+Message-ID: <CACRpkdbG7LJ9jwdsdAxTad8LSKH_9BqcL0N+DMhg6Sxp6Mr=uQ@mail.gmail.com>
+Subject: Re: [PATCH] docs: driver-api: gpio: consumer: Mark another line of
+ code as such
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 3, 2021 at 5:12 PM =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gm=
-ail.com> wrote:
+On Wed, Mar 3, 2021 at 9:35 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 
-> Do you want me to send v4 with these changes?
-> Or maybe just this single patch?
+> Make it so that this #include line is rendered in monospace, like other
+> code blocks.
+>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
-It's usually better to resend the series because then the b4 tool
-will pick it all up properly.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
