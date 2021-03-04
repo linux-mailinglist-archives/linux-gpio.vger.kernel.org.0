@@ -2,132 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0F4E32DA72
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 20:34:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E42D632DA94
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 20:51:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237508AbhCDTeL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 14:34:11 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:22179 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237333AbhCDTdp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 14:33:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614886339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wrPAflFGNHOXutzM/wry07r42DdisR9sPKXbgj55UKc=;
-        b=MOs5TDKo49Y0W9moDx9xJhLFiLJOLjMng8mls7+8c0uO3xUqNKurUKI4fLli4sxL4i2lQl
-        9YsuSFuvmWHHcX0ZfrIE5ie1vdDAcK3Fv19em557TS8HPsEiXkYUhiS16lKWQDg2bHiDII
-        gCpAVHb48phWGi2dWB0wGNOd1JGfRtQ=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-168-zVNEPTElOe-TNG6sq2LTWw-1; Thu, 04 Mar 2021 14:32:18 -0500
-X-MC-Unique: zVNEPTElOe-TNG6sq2LTWw-1
-Received: by mail-ej1-f69.google.com with SMTP id w22so12699264ejv.18
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 11:32:17 -0800 (PST)
+        id S233328AbhCDTuo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 14:50:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231941AbhCDTuS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 14:50:18 -0500
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FEDAC061756
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 11:49:38 -0800 (PST)
+Received: by mail-qk1-x72f.google.com with SMTP id l4so14340218qkl.0
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 11:49:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GGdJz+F7X0YEt83RQ+ubusZIDW1JVh1grqyHtT5UzMM=;
+        b=LgJjks1gY6hesLWCBLbeQ72UJ/bbmO2sufio87kHG+xYrjFTzqgXsEkS7aa9nU58ee
+         5LEMGPvWEdLezDaalptz3EG6Pz3H8KLvb0GXxspiYlH5Swi0D6EPQj+uBc3MNd3DgyHX
+         xhM95emL2cvGV5tTlBK+tMUYiJUwuMjla2ooSmZ6hW/IGOlMbk7qH9twVgYcsIkb4Gq+
+         x7uWN3LbmrLxJg9HVf2LiV4WaxUZUTtP5jA/Bfm4TIzuC+oZrJZce+Sm/UhK8rvpYGM8
+         9Ut3jXX6bdtuWHfjpKcVD3obWhPfEt0WD81cVJdUPeAke0bTzEYO7wz9GN/2DOwljJll
+         HuLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=wrPAflFGNHOXutzM/wry07r42DdisR9sPKXbgj55UKc=;
-        b=eBhTnhqeGOWQ7WPbA/Q5yXOp1zbZtOVsHbGJqac9ZjBRkZFWVrdKWe2Zv9nMpN8PFR
-         Xk+6Ch/e9nyji7KmeLPDvcq2oh0DVjeDnZrYGrblOTUwUCYaRldu1Wvtw9vwuXjKYla6
-         ES79Nqf/5Cu/ZcKmz6+XgORpSuu6YjkwBPwVUiVMwKILObepB+9WzSa0V9gj/wUCHl0Z
-         nCT8b0l/F1/rHvejXwH/UfGvzIGA9gClyG8D6Ml+LYt9hM/KD8XHh2RQ3EUPZf2HH+Jn
-         oLvLjfiDABHriuDwVPY26NVmTj9UTZt3mJ4n/BdwNvkeGjOAMpgmNldMtYANYl7jZHzO
-         NQ7g==
-X-Gm-Message-State: AOAM530INnza6s4mbOJjOd2+8Y15zchBjPwY77kdGhAmDtAckjQrPjzA
-        0PmxWTXZDvQaAah9k/7si8QsvkylP8+w+rJ0Sj3POYaak9Ukc7+wVaiJ0spiaeyHctyeDkRCjm9
-        GF2fsgW19dcWixt1AgTIeWQ==
-X-Received: by 2002:a05:6402:646:: with SMTP id u6mr6302904edx.250.1614886336783;
-        Thu, 04 Mar 2021 11:32:16 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyuucKpF2WrPMi/NcdJCn1dAHIe6ryR+51VfWliz/aifrAH633s+zLkKmPjsJM9f4VsLejYqQ==
-X-Received: by 2002:a05:6402:646:: with SMTP id u6mr6302888edx.250.1614886336593;
-        Thu, 04 Mar 2021 11:32:16 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id u14sm119725ejx.60.2021.03.04.11.32.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Mar 2021 11:32:15 -0800 (PST)
-Subject: Re: [PATCH] gpiolib: acpi: support override broken GPIO number in
- ACPI table
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shawn Guo <shawn.guo@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        bh=GGdJz+F7X0YEt83RQ+ubusZIDW1JVh1grqyHtT5UzMM=;
+        b=LFp7RNDO/ycB6R94Q2uYYjr+UJzSnBr7/QBrUpgyxmnppB0WlgLEthscm40GAIq9A9
+         R5c1DlLXJ0R9WcxNqacPMkMMcuADkG38uc+22s26bQ25od/xZ5d0kPK2gBW7nBxgRs42
+         SEOrZLZtNf/MS16ZXd0676690/3mNMoBoxRQdpABVTLd7Ysf7piKcHVV2wJadpCBEpcK
+         y9f1vQ8ThwPMazGkd2SjuBW3aK+/+xs5ITwP9f/UiJuX11DDkvShqpYXDYbw3tru8VG3
+         qtPP+jkhbX6ZuM14UDJ1ixSHlRS6fat2fcvZtKVizefnkmkpHbtYAZfwpSgXQkqpkTrp
+         1mvQ==
+X-Gm-Message-State: AOAM533XxJScWyO5nc4z3qghaERmWEvxLkhWe9/5AXhp03523ljFGsIa
+        3SH7Fc9oZA1SF8XGXEuWJoBL/A==
+X-Google-Smtp-Source: ABdhPJwXKuTqgQfGdVQj9GpZbfdRvSCkYzjEAzQEqWN+UBGguJj8YzoO+VZRqRPOfUA4GqwKo7FhVQ==
+X-Received: by 2002:a37:6397:: with SMTP id x145mr5479020qkb.358.1614887377405;
+        Thu, 04 Mar 2021 11:49:37 -0800 (PST)
+Received: from localhost.localdomain (modemcable068.184-131-66.mc.videotron.ca. [66.131.184.68])
+        by smtp.gmail.com with ESMTPSA id c22sm392908qtn.74.2021.03.04.11.49.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Mar 2021 11:49:36 -0800 (PST)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20210226033919.8871-1-shawn.guo@linaro.org>
- <YD9bQXBD+9k3Lf/4@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2ed0d4dc-2756-9a55-3f54-1377732e35fc@redhat.com>
-Date:   Thu, 4 Mar 2021 20:32:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        Linus Walleij <linus.walleij@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] pinctrl: qcom: lpass lpi: use default pullup/strength values
+Date:   Thu,  4 Mar 2021 14:48:16 -0500
+Message-Id: <20210304194816.3843-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <YD9bQXBD+9k3Lf/4@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+If these fields are not set in dts, the driver will use these variables
+uninitialized to set the fields. Not only will it set garbage values for
+these fields, but it can overflow into other fields and break those.
 
-On 3/3/21 10:47 AM, Andy Shevchenko wrote:
-> On Fri, Feb 26, 2021 at 11:39:19AM +0800, Shawn Guo wrote:
->> Running kernel with ACPI on Lenovo Flex 5G laptop, touchpad is just
->> not working.  That's because the GpioInt number of TSC2 node in ACPI
->> table is simply wrong, and the number even exceeds the maximum GPIO
->> lines.  As the touchpad works fine with Windows on the same machine,
->> presumably this is something Windows-ism.  Although it's obviously
->> a specification violation, believe of that Microsoft will fix this in
->> the near future is not really realistic.
->>
->> It adds the support of overriding broken GPIO number in ACPI table
->> on particular machines, which are matched using DMI info.  Such
->> mechanism for fixing up broken firmware and ACPI table is not uncommon
->> in kernel.  And hopefully it can be useful for other machines that get
->> broken GPIO number coded in ACPI table.
-> 
-> 
-> +Cc: Hans.
-> 
-> Hans, would appreciate your opinion on this thread. Maybe I'm mistaken in my
-> conclusions.
+In the current sm8250 dts, the dmic01 entries do not have a pullup setting,
+and might not work without this change.
 
-So I've read the entire thread here:
-https://lore.kernel.org/linux-gpio/20210226033919.8871-1-shawn.guo@linaro.org/T/#u
+Fixes: 6e261d1090d6 ("pinctrl: qcom: Add sm8250 lpass lpi pinctrl driver")
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-And I agree wih Andy, this is not something which should be fixed up in the
-generic gpiolib-acpi code.
-
-Note that we have similar things going on on x86 platforms. There are cases
-there where there are e.g. holes in the GPIO ranges advertised by the Intel
-pinctrl drivers. And in the beginning as i2c (and thus GpioIRQ) HID devices
-started to become more common there were also several rounds of work to make
-sure that the GPIO numbering (per ACPI-device / island) exported to the rest
-of the kernel (and thus to gpiolib-acpi) matched with the numbering which
-the ACPI tables expected (so the numbering which the Windows driver use).
-
-It seems to me, esp. in the light that there are a lot of "crazy high" GPIO
-indexes in the DSDT of the Lenovo Flex 5G, that the right thing to do here
-is to fix the qualcom pinctrl/GPIO driver to number its GPIOs in the way
-expected by these ACPI tables. This will break use of existing devicetrees,
-so it will likely need to detect if the main firmware of the system is ACPI
-or DT based and then use 2 different numbering schemes depending on the
-outcome of that check.
-
-Please also do not try ti fix this with some quirks in e.g. the i2c-hid driver,
-I will definitely NACK such attempts. From what we can see now any fix clearly
-should be done inside the qualcom GPIO driver.
-
-Regards,
-
-Hans
+diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+index 369ee20a7ea95..2f19ab4db7208 100644
+--- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+@@ -392,7 +392,7 @@ static int lpi_config_set(struct pinctrl_dev *pctldev, unsigned int group,
+ 			  unsigned long *configs, unsigned int nconfs)
+ {
+ 	struct lpi_pinctrl *pctrl = dev_get_drvdata(pctldev->dev);
+-	unsigned int param, arg, pullup, strength;
++	unsigned int param, arg, pullup = LPI_GPIO_BIAS_DISABLE, strength = 2;
+ 	bool value, output_enabled = false;
+ 	const struct lpi_pingroup *g;
+ 	unsigned long sval;
+-- 
+2.26.1
 
