@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5698832CEFE
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 09:59:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B232332CEFC
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 09:59:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236954AbhCDI6G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S236980AbhCDI6G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 4 Mar 2021 03:58:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47774 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236972AbhCDI55 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 03:57:57 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 696E0C06175F;
-        Thu,  4 Mar 2021 00:57:17 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id i9so7313623wml.0;
-        Thu, 04 Mar 2021 00:57:17 -0800 (PST)
+        with ESMTP id S236977AbhCDI56 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 03:57:58 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB6BC061760;
+        Thu,  4 Mar 2021 00:57:18 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id o7-20020a05600c4fc7b029010a0247d5f0so4116569wmq.1;
+        Thu, 04 Mar 2021 00:57:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=E9tYG5sQpt2PxFnt3/G3HRCcKTojRNxY1UpckrJvdZU=;
-        b=dv5O19c02XYvno7CjRrWVr4T9RKmM6f5XLDVahZm/T+22AVCQGLXd2Etlg3m6j3Ji/
-         Fet04yWwPwMc4vewUcpJQMio/k+4wY3jZyDuEw28TESuwDhbtmXIdJFYd0ylK0B2j8Qx
-         gliSYuh0V/Huu+HPA72TXh7KdnqanRspyhTbEPeFWq84puJXiQftcs7m7eu+pdYsE/2D
-         lIv0A1X/ajoa2zKQIGOyIaeD5JiU+MbbRWGC8qf+YVtnxGatTPrlXFCNwfsirhnme2Fe
-         hvr4jpPfhYWYcvduuVbVikmX4TJZJu4ighX0/CNriObH6hMRTHVACWF9a5UjuqEKG5KB
-         E3Bg==
+        bh=K4XGYh172AgAoiK0Xj/AfoyGhY8lKuqFSlG3DCK5MUA=;
+        b=URKzE73C5jFHPlDjmBD3gTeKZyOKfkGjjtJg7khfmK+Vook8CfW5dIGt7jjIzIJRus
+         1FzcZNjC5Pe3iq9xXIzsAXAOJwp96GRB+aW0Dv0vI6wIKMh5DnKn5e91xtNoqKzPybZd
+         Bjx26zbtXgK1i5d6ek/iYi8mpPcuDj3HLqtXE3h/7ASTZDOYl+6+YM2/FKILWSD8KxR1
+         63ZGei/PGrwG2PpZae6tkG2Y2wzKZcgKIa/cfOZ/lKqR5rJpinPsKGGAtVv/Qb1dbfgI
+         Etd7cZ+ipsJVLfYhvEOe4z8QqtJ2nDhY3fwbNpUugzLCYZ/MIwmqFVXACLxa2odj9aIv
+         QixQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=E9tYG5sQpt2PxFnt3/G3HRCcKTojRNxY1UpckrJvdZU=;
-        b=fgWCx/uNVOxpZcpFsXk9q+RkYUQq2wu7P1orCMUSW64gzPALyGrUPGDrItHlJjPRxN
-         EZAxuDNM1j4PDIWcywxWbW6ErDX7ZlNAGQcKXXqm7hYfhEUHGe/GODpsHW7uOJOr0kAk
-         p0qU7PhHc/XfR+1g7RVzhdeiRklcmwgoZnVgTkiK7FMAUrhSpftVuSlMwhPhrhD0vnuo
-         /oB9oVQKByW0PqzGUsHeeDAqJiDQppRbQKEQ2gfsO05ezKWP1mQ8VlLC91RWUeruO6Qj
-         6f2mCuxyHXJjy0D9bDFGlfxlg05pnH6SYOMH1rbVmzJyKUObJs0aPplZ0Ec9GlpCZAP2
-         UdLg==
-X-Gm-Message-State: AOAM531HTrGSVG/gw4rOqsWy262t7LULfChzyIs2tO4/zKP5oTH2WoWf
-        qJeiVskjPvE00tF99IGCpmE=
-X-Google-Smtp-Source: ABdhPJzXVGVsVnspZcI6+3UBOmTI2LvrmNpSzAeX/D6htwS6MlR3CnIEAaxqi2kaxwl6k76c4fmIug==
-X-Received: by 2002:a05:600c:4f0c:: with SMTP id l12mr2791652wmq.16.1614848236185;
-        Thu, 04 Mar 2021 00:57:16 -0800 (PST)
+        bh=K4XGYh172AgAoiK0Xj/AfoyGhY8lKuqFSlG3DCK5MUA=;
+        b=c2iuP1u0Lt61UbVrl23pmgfq51HZArpcr1J6YXw3nAiaY3IFiX0e7Gx1035XVp746n
+         gMqZg4CJNTX8zT/lGYyiziEYl2Mtse7VifCFUztUXz+3ssSBqyaMX/m9sMRSwLN//7S0
+         UukUgUQrWwYYejqbjoCH72NY96l7iUoDB7d6Fxjf4X4spFeukRKGsdn1Y4vYDvM7kBQe
+         XzWj0J3yZjQv9MdwiV2yHnre2JaO2eZP/E66I2ZhXjS4OtZQSuDXlaY6NRdsWUXlqh9r
+         thyNMBpjhkEi2uJY7aApW/IWY+zAGiy2sG07JlK+p8v20PCnPraevo+IfcRVLa55E9Iu
+         mrXA==
+X-Gm-Message-State: AOAM531q69Eup5LloyIuaPUvn6urX3Za7uQECSgrwgQLtNdqHbtEVhK+
+        Ck/HdsXxFZqT+k0ZG0av4F4=
+X-Google-Smtp-Source: ABdhPJyYYOGKJdlCW927sQxwcLqTb8z28KXW9x/0F8REA6PeaSVebR+qGEbiTFZo+xmR5QAdMQ0MOQ==
+X-Received: by 2002:a1c:dd43:: with SMTP id u64mr2802877wmg.160.1614848237100;
+        Thu, 04 Mar 2021 00:57:17 -0800 (PST)
 Received: from skynet.lan (170.red-88-1-105.dynamicip.rima-tde.net. [88.1.105.170])
-        by smtp.gmail.com with ESMTPSA id q15sm2828976wrx.56.2021.03.04.00.57.15
+        by smtp.gmail.com with ESMTPSA id q15sm2828976wrx.56.2021.03.04.00.57.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Mar 2021 00:57:15 -0800 (PST)
+        Thu, 04 Mar 2021 00:57:16 -0800 (PST)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
@@ -61,9 +61,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 02/15] gpio: regmap: set gpio_chip of_node
-Date:   Thu,  4 Mar 2021 09:56:57 +0100
-Message-Id: <20210304085710.7128-3-noltari@gmail.com>
+Subject: [PATCH v4 03/15] pinctrl: bcm: add bcm63xx base code
+Date:   Thu,  4 Mar 2021 09:56:58 +0100
+Message-Id: <20210304085710.7128-4-noltari@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210304085710.7128-1-noltari@gmail.com>
 References: <20210304085710.7128-1-noltari@gmail.com>
@@ -74,59 +74,224 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This is needed for properly registering gpio regmap as a child of a regmap
-pin controller.
+Add a helper for registering BCM63XX pin controllers.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Reviewed-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 ---
- v4: fix documentation
- v3: introduce patch needed for properly parsing gpio-ranges
+ v4: drop IRQ selects from Kconfig and add missing of_node_put()
+ v3: add new patch with shared code
 
- drivers/gpio/gpio-regmap.c  | 1 +
- include/linux/gpio/regmap.h | 3 +++
- 2 files changed, 4 insertions(+)
+ drivers/pinctrl/bcm/Kconfig           |   7 ++
+ drivers/pinctrl/bcm/Makefile          |   1 +
+ drivers/pinctrl/bcm/pinctrl-bcm63xx.c | 114 ++++++++++++++++++++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm63xx.h |  46 +++++++++++
+ 4 files changed, 168 insertions(+)
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm63xx.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm63xx.h
 
-diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index 5412cb3b0b2a..1a43a90024bb 100644
---- a/drivers/gpio/gpio-regmap.c
-+++ b/drivers/gpio/gpio-regmap.c
-@@ -249,6 +249,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
+index 0ed14de0134c..882f19bdc243 100644
+--- a/drivers/pinctrl/bcm/Kconfig
++++ b/drivers/pinctrl/bcm/Kconfig
+@@ -29,6 +29,13 @@ config PINCTRL_BCM2835
+ 	help
+ 	   Say Y here to enable the Broadcom BCM2835 GPIO driver.
  
- 	chip = &gpio->gpio_chip;
- 	chip->parent = config->parent;
-+	chip->of_node = config->of_node ?: dev_of_node(config->parent);
- 	chip->base = -1;
- 	chip->ngpio = config->ngpio;
- 	chip->names = config->names;
-diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index ad76f3d0a6ba..73105ff830fb 100644
---- a/include/linux/gpio/regmap.h
-+++ b/include/linux/gpio/regmap.h
-@@ -4,6 +4,7 @@
- #define _LINUX_GPIO_REGMAP_H
++config PINCTRL_BCM63XX
++	bool
++	select GENERIC_PINCONF
++	select GPIO_REGMAP
++	select PINCONF
++	select PINMUX
++
+ config PINCTRL_IPROC_GPIO
+ 	bool "Broadcom iProc GPIO (with PINCONF) driver"
+ 	depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
+diff --git a/drivers/pinctrl/bcm/Makefile b/drivers/pinctrl/bcm/Makefile
+index 79d5e49fdd9a..0e3cf9b15c65 100644
+--- a/drivers/pinctrl/bcm/Makefile
++++ b/drivers/pinctrl/bcm/Makefile
+@@ -3,6 +3,7 @@
  
- struct device;
-+struct device_node;
- struct gpio_regmap;
- struct irq_domain;
- struct regmap;
-@@ -16,6 +17,7 @@ struct regmap;
-  * @parent:		The parent device
-  * @regmap:		The regmap used to access the registers
-  *			given, the name of the device is used
-+ * @of_node:		(Optional) The device node
-  * @label:		(Optional) Descriptive name for GPIO controller.
-  *			If not given, the name of the device is used.
-  * @ngpio:		Number of GPIOs
-@@ -57,6 +59,7 @@ struct regmap;
- struct gpio_regmap_config {
- 	struct device *parent;
- 	struct regmap *regmap;
-+	struct device_node *of_node;
- 
- 	const char *label;
- 	int ngpio;
+ obj-$(CONFIG_PINCTRL_BCM281XX)		+= pinctrl-bcm281xx.o
+ obj-$(CONFIG_PINCTRL_BCM2835)		+= pinctrl-bcm2835.o
++obj-$(CONFIG_PINCTRL_BCM63XX)		+= pinctrl-bcm63xx.o
+ obj-$(CONFIG_PINCTRL_IPROC_GPIO)	+= pinctrl-iproc-gpio.o
+ obj-$(CONFIG_PINCTRL_CYGNUS_MUX)	+= pinctrl-cygnus-mux.o
+ obj-$(CONFIG_PINCTRL_NS)		+= pinctrl-ns.o
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm63xx.c b/drivers/pinctrl/bcm/pinctrl-bcm63xx.c
+new file mode 100644
+index 000000000000..9a2d68c1ad26
+--- /dev/null
++++ b/drivers/pinctrl/bcm/pinctrl-bcm63xx.c
+@@ -0,0 +1,114 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Driver for BCM63xx GPIO unit (pinctrl + GPIO)
++ *
++ * Copyright (C) 2021 Álvaro Fernández Rojas <noltari@gmail.com>
++ * Copyright (C) 2016 Jonas Gorski <jonas.gorski@gmail.com>
++ */
++
++#include <linux/gpio/regmap.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++#include "pinctrl-bcm63xx.h"
++
++#define BCM63XX_BANK_SIZE	4
++
++#define BCM63XX_DIROUT_REG	0x04
++#define BCM63XX_DATA_REG	0x0c
++
++static int bcm63xx_reg_mask_xlate(struct gpio_regmap *gpio,
++				  unsigned int base, unsigned int offset,
++				  unsigned int *reg, unsigned int *mask)
++{
++	unsigned int line = offset % BCM63XX_BANK_GPIOS;
++	unsigned int stride = offset / BCM63XX_BANK_GPIOS;
++
++	*reg = base - stride * BCM63XX_BANK_SIZE;
++	*mask = BIT(line);
++
++	return 0;
++}
++
++static const struct of_device_id bcm63xx_gpio_of_match[] = {
++	{ .compatible = "brcm,bcm6318-gpio", },
++	{ .compatible = "brcm,bcm6328-gpio", },
++	{ .compatible = "brcm,bcm6358-gpio", },
++	{ .compatible = "brcm,bcm6362-gpio", },
++	{ .compatible = "brcm,bcm6368-gpio", },
++	{ .compatible = "brcm,bcm63268-gpio", },
++	{ /* sentinel */ },
++};
++
++static int bcm63xx_gpio_probe(struct device *dev, struct device_node *node,
++			      const struct bcm63xx_pinctrl_soc *soc,
++			      struct bcm63xx_pinctrl *pc)
++{
++	struct gpio_regmap_config grc = {0};
++
++	grc.parent = dev;
++	grc.of_node = node;
++	grc.ngpio = soc->ngpios;
++	grc.ngpio_per_reg = BCM63XX_BANK_GPIOS;
++	grc.regmap = pc->regs;
++	grc.reg_mask_xlate = bcm63xx_reg_mask_xlate;
++
++	if (of_property_read_u32(node, "data", &grc.reg_dat_base))
++		grc.reg_dat_base = BCM63XX_DATA_REG;
++	grc.reg_set_base = grc.reg_dat_base;
++
++	if (of_property_read_u32(node, "dirout", &grc.reg_dir_out_base))
++		grc.reg_dir_out_base = BCM63XX_DIROUT_REG;
++
++	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &grc));
++}
++
++int bcm63xx_pinctrl_probe(struct platform_device *pdev,
++			  const struct bcm63xx_pinctrl_soc *soc,
++			  void *driver_data)
++{
++	struct device *dev = &pdev->dev;
++	struct bcm63xx_pinctrl *pc;
++	struct device_node *node;
++	int err;
++
++	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
++	if (!pc)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, pc);
++
++	pc->dev = dev;
++	pc->driver_data = driver_data;
++
++	pc->regs = syscon_node_to_regmap(dev->parent->of_node);
++	if (IS_ERR(pc->regs))
++		return PTR_ERR(pc->regs);
++
++	pc->pctl_desc.name = dev_name(dev);
++	pc->pctl_desc.pins = soc->pins;
++	pc->pctl_desc.npins = soc->npins;
++	pc->pctl_desc.pctlops = soc->pctl_ops;
++	pc->pctl_desc.pmxops = soc->pmx_ops;
++	pc->pctl_desc.owner = THIS_MODULE;
++
++	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
++	if (IS_ERR(pc->pctl_dev))
++		return PTR_ERR(pc->pctl_dev);
++
++	for_each_child_of_node(dev->of_node, node) {
++		if (of_match_node(bcm63xx_gpio_of_match, node)) {
++			err = bcm63xx_gpio_probe(dev, node, soc, pc);
++			if (err) {
++				dev_err(dev, "could not add GPIO chip\n");
++				of_node_put(node);
++				return err;
++			}
++		}
++	}
++
++	dev_info(dev, "registered\n");
++
++	return 0;
++}
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm63xx.h b/drivers/pinctrl/bcm/pinctrl-bcm63xx.h
+new file mode 100644
+index 000000000000..cb2bfca7d174
+--- /dev/null
++++ b/drivers/pinctrl/bcm/pinctrl-bcm63xx.h
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2021 Álvaro Fernández Rojas <noltari@gmail.com>
++ * Copyright (C) 2016 Jonas Gorski <jonas.gorski@gmail.com>
++ */
++
++#ifndef __PINCTRL_BCM63XX_H__
++#define __PINCTRL_BCM63XX_H__
++
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/regmap.h>
++
++#include "../core.h"
++
++#define BCM63XX_BANK_GPIOS 32
++
++struct bcm63xx_pinctrl_soc {
++	struct pinctrl_ops *pctl_ops;
++	struct pinmux_ops *pmx_ops;
++
++	const struct pinctrl_pin_desc *pins;
++	unsigned npins;
++
++	unsigned int ngpios;
++};
++
++struct bcm63xx_pinctrl {
++	struct device *dev;
++	struct regmap *regs;
++
++	struct pinctrl_desc pctl_desc;
++	struct pinctrl_dev *pctl_dev;
++
++	void *driver_data;
++};
++
++static inline unsigned int bcm63xx_bank_pin(unsigned int pin)
++{
++	return pin % BCM63XX_BANK_GPIOS;
++}
++
++int bcm63xx_pinctrl_probe(struct platform_device *pdev,
++			  const struct bcm63xx_pinctrl_soc *soc,
++			  void *driver_data);
++
++#endif /* __PINCTRL_BCM63XX_H__ */
 -- 
 2.20.1
 
