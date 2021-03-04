@@ -2,80 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D877B32D13E
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 11:57:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7962A32D154
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 12:01:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239082AbhCDK4e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 05:56:34 -0500
-Received: from mga09.intel.com ([134.134.136.24]:57040 "EHLO mga09.intel.com"
+        id S239213AbhCDLAP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 06:00:15 -0500
+Received: from mga02.intel.com ([134.134.136.20]:23011 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239104AbhCDK4Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 4 Mar 2021 05:56:25 -0500
-IronPort-SDR: 2b4TZsXRF5MmGfoVZBlVZBPWT2uVwKtAyuzJPFCJVZx2GxNVkTYlpiNPBFcbEfdwolrFS9s62e
- 0sw2TRkqM96w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9912"; a="187502557"
+        id S239212AbhCDLAF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 4 Mar 2021 06:00:05 -0500
+IronPort-SDR: friwKbRkLyQ45Fj+y30t5ibN11MQWqyauzSKbftBuE4GdpwIYY3irEveV8LnZWc6DuuKvBR4ad
+ zfbvgNNC8z8Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9912"; a="174507475"
 X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
-   d="scan'208";a="187502557"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 02:54:39 -0800
-IronPort-SDR: BBjc4ASGZrl9v6kZbw0YBwGuvrIQCG30tqgAv2gDH73ac2+9gjjKz+w/OBYNvsJPBPjZI+wj2j
- qWlugjb0vdRw==
-X-ExtLoop1: 1
+   d="scan'208";a="174507475"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 02:58:19 -0800
+IronPort-SDR: Pz2VyUquBb9azIc1O51nDtKqJMbK0ZToGPO7EKOTYrthZ+lPzlkBYT8ImUhNrPBxaA+ucZGs1M
+ 0CH/yLmzHQeQ==
 X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
-   d="scan'208";a="600483580"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Mar 2021 02:54:38 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id CB5EC1F4; Thu,  4 Mar 2021 12:54:37 +0200 (EET)
+   d="scan'208";a="400557230"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 02:58:17 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lHlgN-009rQ0-4a; Thu, 04 Mar 2021 12:58:15 +0200
+Date:   Thu, 4 Mar 2021 12:58:15 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 1/1] pinctrl: intel: No need to disable IRQs in the handler
-Date:   Thu,  4 Mar 2021 12:54:32 +0200
-Message-Id: <20210304105432.36544-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.1
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v1 2/2] gpio: aggregator: Replace custom get_arg() with a
+ generic next_arg()
+Message-ID: <YEC9R+nSkFNqVyNG@smile.fi.intel.com>
+References: <20210301165932.62352-1-andriy.shevchenko@linux.intel.com>
+ <20210301165932.62352-2-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdXdjN+8DzNOMbs4Xde39sVYjU-7zqPiYLw1iy=cm_-Aeg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXdjN+8DzNOMbs4Xde39sVYjU-7zqPiYLw1iy=cm_-Aeg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In IRQ handler interrupts are already disabled, hence no need
-to repeat it. Even in the threaded case, which is disabled here,
-it is not a problem because IRQ framework serializes descriptor
-handling. Remove disabling IRQ part in the handler.
+On Thu, Mar 04, 2021 at 10:01:46AM +0100, Geert Uytterhoeven wrote:
+> Hi Andy,
+> 
+> On Mon, Mar 1, 2021 at 5:59 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > cmdline library provides next_arg() helper to traverse over parameters
+> > and their values given in command line. Replace custom approach in the driver
+> > by it.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Thanks for your patch!
+> 
+> > --- a/drivers/gpio/gpio-aggregator.c
+> > +++ b/drivers/gpio/gpio-aggregator.c
+> > @@ -93,13 +68,9 @@ static int aggr_parse(struct gpio_aggregator *aggr)
+> >         if (!bitmap)
+> >                 return -ENOMEM;
+> >
+> > -       for (name = get_arg(&args), offsets = get_arg(&args); name;
+> > -            offsets = get_arg(&args)) {
+> > -               if (IS_ERR(name)) {
+> > -                       pr_err("Cannot get GPIO specifier: %pe\n", name);
+> > -                       error = PTR_ERR(name);
+> > -                       goto free_bitmap;
+> > -               }
+> > +       args = next_arg(args, &name, &p);
+> > +       while (*args) {
+> > +               args = next_arg(args, &offsets, &p);
+> 
+> As name and offsets should not contain equal signs (can they?),
+> I guess using next_arg() is fine.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Even though we can use double quotes (AFAICU the next_arg() code).
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 93237d6e4316..268aaad3bb08 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1173,16 +1173,15 @@ static int intel_gpio_community_irq_handler(struct intel_pinctrl *pctrl,
- 	for (gpp = 0; gpp < community->ngpps; gpp++) {
- 		const struct intel_padgroup *padgrp = &community->gpps[gpp];
- 		unsigned long pending, enabled, gpp_offset;
--		unsigned long flags;
- 
--		raw_spin_lock_irqsave(&pctrl->lock, flags);
-+		raw_spin_lock(&pctrl->lock);
- 
- 		pending = readl(community->regs + community->is_offset +
- 				padgrp->reg_num * 4);
- 		enabled = readl(community->regs + community->ie_offset +
- 				padgrp->reg_num * 4);
- 
--		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+		raw_spin_unlock(&pctrl->lock);
- 
- 		/* Only interrupts that are enabled */
- 		pending &= enabled;
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Thanks!
+
 -- 
-2.30.1
+With Best Regards,
+Andy Shevchenko
+
 
