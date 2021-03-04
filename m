@@ -2,163 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D70B432DB07
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 21:17:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62DDD32DB0D
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 21:19:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238659AbhCDUQx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 15:16:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237534AbhCDUQW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 15:16:22 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B078DC061574
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 12:15:41 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id l12so36628317edt.3
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 12:15:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w5jLuTPwmQtRh5LkNxQ0rgOEhjoPWcJ+o8G/ZVzu4EU=;
-        b=RY7ZjM39neNt3ha6ii8uWFcQxr80X5YMwMUA0Ejq7ZGnIXSjRA/JXlAOahRjyCQBIH
-         8XD714pj5JMyrz/3SxcmOxxe6Uy6Q+a0m0782DT4l2BUxpWGRaglT2myg3EU/TnsVVES
-         3MejCu+RDHyUXgOCFczHYp3vNzDaLnEakeyOlGHx17JsOjPkBY1hcwD4acqJVhIapfpJ
-         r2XEV0fGZu284sk++Ba93oXDdnWTXKlvEcInRkMoIKA13kE1jvsewnVdsA+MOQzE6LQM
-         3/lMiG4vUpZ88UWLKA5VQyF4pBMzeR9SgJeMxZPDtdEA9gcSVY3NFf5tHUqORB2IlJR3
-         axBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w5jLuTPwmQtRh5LkNxQ0rgOEhjoPWcJ+o8G/ZVzu4EU=;
-        b=P43KrZ87gxq5JOqon0Au8/s+ZPZX9miyoYwhMAT/JBs+DQClKoVjbGIpFR0PbX27X3
-         wxJpLrZNE7RQGNFj8IlJQaU5prMMhqy+H7ufaTdTP2YP8D9vc27f3Xmxs829vkK4Tvx3
-         ceDh8Ba1ycJzhHMTvFTeMKmiJ1Zs6/v3zBueXFxQH3+efTeGvAGPy9yR/lWSOTumCI4O
-         irS3G83U/t8jNavhyFzXMsXcRJcHXKUxzCjIFu0oF5gr4yic5RwnPcwiWITwqZ+JRVg/
-         K0gJOqpzwMalkADcsHwgQze4y1bQeqdqPhAFhOClyhMzuMPnQz1jOgCnOmh4fv5md/8q
-         q9Nw==
-X-Gm-Message-State: AOAM530AQxw1i3ZddE3fXlXCl9wVhmu+DmNA7wHGItgpX2d6zVfuqf+c
-        exSv/r53vR8OPJVILnZQGN28Mfs8AzPjNAi2yZOR9Q==
-X-Google-Smtp-Source: ABdhPJx2PyGszUmMp+TYoXheeUf4o74MJoSxZjKQywmWIz4lq6/KuKp5DkM8GrPix6AlM3A1T3fpATVU0q+wlP/HQAU=
-X-Received: by 2002:a50:ee05:: with SMTP id g5mr6420181eds.164.1614888940442;
- Thu, 04 Mar 2021 12:15:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20210304102452.21726-1-brgl@bgdev.pl> <20210304102452.21726-10-brgl@bgdev.pl>
- <YEDdbfbM9abHJpIO@smile.fi.intel.com>
-In-Reply-To: <YEDdbfbM9abHJpIO@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 4 Mar 2021 21:15:29 +0100
-Message-ID: <CAMRc=MdRxXzoZuyLs-24dXfOft=OQqDneTHa4-ZKqFE1kMBWcg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/12] gpio: sim: new testing module
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
-        Shuah Khan <shuah@kernel.org>,
+        id S237714AbhCDUS3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 15:18:29 -0500
+Received: from mga07.intel.com ([134.134.136.100]:17424 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238817AbhCDUSG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 4 Mar 2021 15:18:06 -0500
+IronPort-SDR: Y8qO7J2A52c+6vHvGa9J5WoFeizYuTeuqd6iG4utbB4JDiOo8FQCkuuV+0jUXj8J4qbJUf2EbA
+ b/w3dCjaQlBA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9913"; a="251538045"
+X-IronPort-AV: E=Sophos;i="5.81,223,1610438400"; 
+   d="scan'208";a="251538045"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 12:16:20 -0800
+IronPort-SDR: SIRn559Qub6ZACqgq0BtAaso2Y0zsypYoI4nEF4bNQCw94fY4JIddvbzf5JyZWiCiIwF0e9ZJV
+ pgdUTu9zwubw==
+X-IronPort-AV: E=Sophos;i="5.81,223,1610438400"; 
+   d="scan'208";a="384614675"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 12:16:18 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lHuON-009y0Q-C6; Thu, 04 Mar 2021 22:16:15 +0200
+Date:   Thu, 4 Mar 2021 22:16:15 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Shawn Guo <shawn.guo@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: support override broken GPIO number in
+ ACPI table
+Message-ID: <YEFAD1tyocd/IErn@smile.fi.intel.com>
+References: <20210226033919.8871-1-shawn.guo@linaro.org>
+ <YD9bQXBD+9k3Lf/4@smile.fi.intel.com>
+ <2ed0d4dc-2756-9a55-3f54-1377732e35fc@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ed0d4dc-2756-9a55-3f54-1377732e35fc@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 4, 2021 at 2:15 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Mar 04, 2021 at 11:24:49AM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Implement a new, modern GPIO testing module controlled by configfs
-> > attributes instead of module parameters. The goal of this driver is
-> > to provide a replacement for gpio-mockup that will be easily extensible
-> > with new features and doesn't require reloading the module to change
-> > the setup.
->
-> Shall we put a reference to this in the gpio-mockup documentation and mark the
-> latter deprecated?
->
+On Thu, Mar 04, 2021 at 08:32:14PM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 3/3/21 10:47 AM, Andy Shevchenko wrote:
+> > On Fri, Feb 26, 2021 at 11:39:19AM +0800, Shawn Guo wrote:
+> >> Running kernel with ACPI on Lenovo Flex 5G laptop, touchpad is just
+> >> not working.  That's because the GpioInt number of TSC2 node in ACPI
+> >> table is simply wrong, and the number even exceeds the maximum GPIO
+> >> lines.  As the touchpad works fine with Windows on the same machine,
+> >> presumably this is something Windows-ism.  Although it's obviously
+> >> a specification violation, believe of that Microsoft will fix this in
+> >> the near future is not really realistic.
+> >>
+> >> It adds the support of overriding broken GPIO number in ACPI table
+> >> on particular machines, which are matched using DMI info.  Such
+> >> mechanism for fixing up broken firmware and ACPI table is not uncommon
+> >> in kernel.  And hopefully it can be useful for other machines that get
+> >> broken GPIO number coded in ACPI table.
+> > 
+> > 
+> > +Cc: Hans.
+> > 
+> > Hans, would appreciate your opinion on this thread. Maybe I'm mistaken in my
+> > conclusions.
+> 
+> So I've read the entire thread here:
+> https://lore.kernel.org/linux-gpio/20210226033919.8871-1-shawn.guo@linaro.org/T/#u
+> 
+> And I agree wih Andy, this is not something which should be fixed up in the
+> generic gpiolib-acpi code.
+> 
+> Note that we have similar things going on on x86 platforms. There are cases
+> there where there are e.g. holes in the GPIO ranges advertised by the Intel
+> pinctrl drivers. And in the beginning as i2c (and thus GpioIRQ) HID devices
+> started to become more common there were also several rounds of work to make
+> sure that the GPIO numbering (per ACPI-device / island) exported to the rest
+> of the kernel (and thus to gpiolib-acpi) matched with the numbering which
+> the ACPI tables expected (so the numbering which the Windows driver use).
+> 
+> It seems to me, esp. in the light that there are a lot of "crazy high" GPIO
+> indexes in the DSDT of the Lenovo Flex 5G, that the right thing to do here
+> is to fix the qualcom pinctrl/GPIO driver to number its GPIOs in the way
+> expected by these ACPI tables. This will break use of existing devicetrees,
+> so it will likely need to detect if the main firmware of the system is ACPI
+> or DT based and then use 2 different numbering schemes depending on the
+> outcome of that check.
+> 
+> Please also do not try ti fix this with some quirks in e.g. the i2c-hid driver,
+> I will definitely NACK such attempts. From what we can see now any fix clearly
+> should be done inside the qualcom GPIO driver.
 
-I don't think it's necessary right away. Let's phase out gpio-mockup
-once this one gets some attention (for example: after libgpiod
-switches to using it).
+Hans, thank you very much!
 
-[snip]
+-- 
+With Best Regards,
+Andy Shevchenko
 
->
-> > +             dev_attr->attr.name = devm_kasprintf(dev, GFP_KERNEL,
-> > +                                                  "gpio%u", i);
->
-> Reads better as one line.
->
 
-Yeah, so the removal of the 80 characters limit should not be abused
-when there's no need for it - this doesn't look that bad really with a
-broken line. Same elsewhere where the limit is exceeded.
-
-[snip]
-
->
-> > +             ret = sprintf(page + written,
-> > +                     i < config->num_line_names - 1 ?
-> > +                             "\"%s\", " : "\"%s\"\n",
-> > +                     config->line_names[i] ?: "");
->
-> Indentation here looks not the best...
->
-
-So this is the place where it may make sense to go over 80 chars.
-
-[snip]
-
-> > +
-> > +     /*
-> > +      * FIXME If anyone knows a better way to parse that - please let me
-> > +      * know.
-> > +      */
->
-> If comma can be replaced with ' ' (space) then why not to use next_arg() from
-> cmdline.c? I.o.w. do you have strong opinion why should we use comma here?
->
-
-My opinion is not very strong but I wanted to make the list of names
-resemble what we pass to the gpio-line-names property in device tree.
-Doesn't next_arg() react differently to string of the form: "foo=bar"?
-
-[snip]
-
-> > +
-> > +static int gpio_sim_config_uncommit_item(struct config_item *item)
-> > +{
-> > +     struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
-> > +     int id;
-> > +
-> > +     mutex_lock(&config->lock);
-> > +     id = config->pdev->id;
-> > +     platform_device_unregister(config->pdev);
-> > +     config->pdev = NULL;
->
-> > +     ida_free(&gpio_sim_ida, id);
->
-> Isn't it atomic per se? I mean that IDA won't give the same ID until you free
-> it. I.o.w. why is it under the mutex?
->
-
-You're right but if we rapidly create and destroy chips we'll be left
-with holes in the numbering (because new devices would be created
-before the IDA numbers are freed, so the driver would take a larger
-number that's currently free). It doesn't hurt but it would look worse
-IMO. Do you have a strong opinion on this?
-
-[snip]
-
-I'll address issues I didn't comment on.
-
-Thanks for the review!
-Bart
