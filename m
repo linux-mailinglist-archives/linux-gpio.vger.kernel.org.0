@@ -2,127 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9765232DB22
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 21:25:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 835A632DAF1
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Mar 2021 21:16:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231144AbhCDUXt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 15:23:49 -0500
-Received: from polaris.svanheule.net ([84.16.241.116]:33676 "EHLO
-        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229701AbhCDUXk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 15:23:40 -0500
-X-Greylist: delayed 567 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Mar 2021 15:23:40 EST
-Received: from terra.local.svanheule.net (unknown [IPv6:2a02:a03f:eaff:9701:81b5:1a59:96d9:b1e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id 61A7E1D7A84;
-        Thu,  4 Mar 2021 21:13:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1614888812;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Zmq7LhwLXDkC8+O15emRxYgrzslnS0/S4UsDcEdoTvs=;
-        b=UP5NdzAu6Kjeo6x9neIm7USP4HYjuMRdibUeQGC1dy5MFT527844vB6Nnw4d1lbHjJAMWb
-        j8zl5XXpRa5QpL/Kvi/Uv0riDWfGF36witUj2fhv3rzssOnQSQ9fkkMjw3VKiepvQ+MQOu
-        m/mPxL5z0jUQ4wH3kVn5tmWF5eZo9jhXYA3us2J/80fv/2QcBuv2krPEr3yl7H0V3ZRJtz
-        nxBQsv77WoIqMkfdZW4Htc7cj/Q7HP8p5MUx3zjkt93I9o7hzayDJXTXFHS+U3WbNxJnnh
-        pAUtwDSApdBGtr/wWmUSQn2W28if1zoEBlPy67apxc0mRH/EWAppCPydnjD0Lw==
-From:   Sander Vanheule <sander@svanheule.net>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sander Vanheule <sander@svanheule.net>,
-        Gregory Bean <gbean@codeaurora.org>
-Subject: [PATCH] pinctrl: sx150x: support building as module
-Date:   Thu,  4 Mar 2021 21:11:20 +0100
-Message-Id: <20210304201119.702637-1-sander@svanheule.net>
-X-Mailer: git-send-email 2.29.2
+        id S237288AbhCDUPT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 15:15:19 -0500
+Received: from mga05.intel.com ([192.55.52.43]:5834 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231969AbhCDUOt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 4 Mar 2021 15:14:49 -0500
+IronPort-SDR: YO/FLFfDw4tnRZkcQIPLAGvCdKGVJDVTxhd3vztJsTDlPbbfKq68IskTbvYh+LG5WljWjhGBjC
+ NpPj042nO1sQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9913"; a="272503499"
+X-IronPort-AV: E=Sophos;i="5.81,223,1610438400"; 
+   d="scan'208";a="272503499"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 12:13:04 -0800
+IronPort-SDR: H8UOjlVe2VjlElLE3qi1l3wJxlLtg9vCpsu46m3t/Fhog1blthGSx96INfDnUEk2GfTXvthpN4
+ VcF4GZ1vu7tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,223,1610438400"; 
+   d="scan'208";a="384614071"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 04 Mar 2021 12:13:00 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 6D48D236; Thu,  4 Mar 2021 22:13:00 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH v3 0/5] gpiolib: switch to fwnode in the core
+Date:   Thu,  4 Mar 2021 22:12:48 +0200
+Message-Id: <20210304201253.14652-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
+Dpickate: Thu, 4 Mar 2021 22:09:39 +0200
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The SX150x GPIO expander driver, and the subsystems it depends on, have
-seen some development since its initial introduction. Let's add some
-extra bits to enable building it as a module.
+GPIO library uses of_node and fwnode in the core in non-unified way.
+The series cleans this up and improves IRQ domain creation for non-OF cases
+where currently the names of the domain are 'unknown'.
 
-Build tested on 5.12-rc1. Run tested on a MIPS device with OpenWrt,
-kernel version 5.4.101, to confirm unloading/reloading works.
+This has been tested on Intel Galileo Gen 2.
 
-Signed-off-by: Sander Vanheule <sander@svanheule.net>
----
-This is the first time I've attempted to create a driver that can be
-built as a module, so there's a reasonable chance I missed some things.
+In v3:
+- fix subtle bug in gpiod_count
+- make irq_domain_add_simple() static inline (Marc)
 
-As the commit message notes, I've tested loading/unloading on a 5.4
-kernel in OpenWrt, and no obvious regressions were encountered.
+In v2:
+- added a new patch due to functionality in irq_comain_add_simple() (Linus)
+- tagged patches 2-4 (Linus)
+- Cc'ed to Rafael
 
-MODULE_LICENSE/_AUTHOR were copied from the driver's comment header.
+Andy Shevchenko (5):
+  irqdomain: Introduce irq_domain_create_simple() API
+  gpiolib: Unify the checks on fwnode type
+  gpiolib: Move of_node operations to gpiolib-of and correct fwnode use
+  gpiolib: Introduce acpi_gpio_dev_init() and call it from core
+  gpiolib: Reuse device's fwnode to create IRQ domain
 
- drivers/pinctrl/Kconfig          |  2 +-
- drivers/pinctrl/pinctrl-sx150x.c | 13 +++++++------
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ Documentation/core-api/irq/irq-domain.rst | 22 ++++----
+ drivers/gpio/gpiolib-acpi.c               |  7 +++
+ drivers/gpio/gpiolib-acpi.h               |  4 ++
+ drivers/gpio/gpiolib-of.c                 |  6 ++-
+ drivers/gpio/gpiolib.c                    | 66 +++++++++--------------
+ include/linux/irqdomain.h                 | 19 +++++--
+ kernel/irq/irqdomain.c                    | 20 +++----
+ 7 files changed, 77 insertions(+), 67 deletions(-)
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index b7675cce0027..50ce0caf18f0 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -227,7 +227,7 @@ config PINCTRL_SINGLE
- 	  This selects the device tree based generic pinctrl driver.
- 
- config PINCTRL_SX150X
--	bool "Semtech SX150x I2C GPIO expander pinctrl driver"
-+	tristate "Semtech SX150x I2C GPIO expander pinctrl driver"
- 	depends on I2C=y
- 	select PINMUX
- 	select PINCONF
-diff --git a/drivers/pinctrl/pinctrl-sx150x.c b/drivers/pinctrl/pinctrl-sx150x.c
-index 484a3b9e875c..ac589c1e939a 100644
---- a/drivers/pinctrl/pinctrl-sx150x.c
-+++ b/drivers/pinctrl/pinctrl-sx150x.c
-@@ -13,9 +13,9 @@
- 
- #include <linux/regmap.h>
- #include <linux/i2c.h>
--#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-+#include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/of.h>
-@@ -829,6 +829,7 @@ static const struct i2c_device_id sx150x_id[] = {
- 	{"sx1509q", (kernel_ulong_t) &sx1509q_device_data },
- 	{}
- };
-+MODULE_DEVICE_TABLE(i2c, sx150x_id);
- 
- static const struct of_device_id sx150x_of_match[] = {
- 	{ .compatible = "semtech,sx1501q", .data = &sx1501q_device_data },
-@@ -842,6 +843,7 @@ static const struct of_device_id sx150x_of_match[] = {
- 	{ .compatible = "semtech,sx1509q", .data = &sx1509q_device_data },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, sx150x_of_match);
- 
- static int sx150x_reset(struct sx150x_pinctrl *pctl)
- {
-@@ -1258,9 +1260,8 @@ static struct i2c_driver sx150x_driver = {
- 	.probe    = sx150x_probe,
- 	.id_table = sx150x_id,
- };
-+module_i2c_driver(sx150x_driver);
- 
--static int __init sx150x_init(void)
--{
--	return i2c_add_driver(&sx150x_driver);
--}
--subsys_initcall(sx150x_init);
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gregory Bean <gbean@codeaurora.org>");
-+MODULE_DESCRIPTION("Semtech SX150x I2C GPIO expander");
 -- 
-2.29.2
+2.30.1
 
