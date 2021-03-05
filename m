@@ -2,165 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70C4F32E48A
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 10:17:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF92C32E526
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 10:46:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbhCEJQx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Mar 2021 04:16:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51882 "EHLO
+        id S229494AbhCEJpe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Mar 2021 04:45:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbhCEJQY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 04:16:24 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A8F5C061756
-        for <linux-gpio@vger.kernel.org>; Fri,  5 Mar 2021 01:16:22 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id b7so1569801edz.8
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Mar 2021 01:16:22 -0800 (PST)
+        with ESMTP id S229668AbhCEJpG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 04:45:06 -0500
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8ACC061574;
+        Fri,  5 Mar 2021 01:45:04 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id y67so1784287pfb.2;
+        Fri, 05 Mar 2021 01:45:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xIBDWNNi8cOFiM8+evn3aAlmPQp0YRKNZPxj0/XqUWQ=;
-        b=u4Jyn3Q8Pea4kIqitbrUxq9fdmX4drucuJlXzg8S7ph189frPo2kVhUymrtzX5OdAR
-         aAqHuyC22KmTKQUB/uHq6J2eeMU+s/E5bg87cjyv76PXYyxdQ0G7SJ3puqj6TBkwME7y
-         6EpZRyomx+Bc6A7vI4NUJeHN5rDeHXCbqJmS4xnDiJqZIeTJEY1cI+XrTvR7pypf7cnj
-         pNyFdrZrjjszeNDLuG9alPKk+c1tjMEfzjfhSqYvsaTC/RxuzjiKvQNq/lrfDqlAkQNT
-         jGyXKCLuEDbv0EQwlWUbZicRiYnh8fvsF/tLy2s3Hy9Y0tlf+MusWoVKJx7A9tjFrgoC
-         JNyQ==
+         :cc:content-transfer-encoding;
+        bh=/UcxhiEkfccqsDr9yQQr2scZAanKlqasnKIOowcaKCo=;
+        b=Zavc3YVUJ2VHnvMJDlyxudjYrwJv+6yWogOYN+mJW/svEBETf0TnMHYniTCyuG9+Ua
+         pgV1z26C8wwRk3BAgjYAa379mcdvXCqeY4ayvVF21SnPP/QI1Kz2szzLIExRem1A7Llr
+         PLyvcF2fRAJ71XxTD3Pxz11+9Yt7V5Z8ng3ZbmZeRnOxfJO8BZ2obobgXNKiX0eo5jqz
+         v4sD9zPaIdgCAAlcKY9s4CZbPYto1rw7h6v9pD/u5qUiisj/KytJkUms70O96BE2C8OA
+         KM5JsWkikIB2FeF5COy2VpuTtkQ6Sz1oEJRj7bft+WAae33vcg1pp3Xb0eH3ZOVq8qEm
+         J7xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xIBDWNNi8cOFiM8+evn3aAlmPQp0YRKNZPxj0/XqUWQ=;
-        b=TqNrCE54N4M2WPfuaX6Fb51jo+a34T+YERejjGtTeTIWQ2L/ty3OvWeg1NiQ5sUJsn
-         uB1at8BrhmtgLCouyXKfZSH4LN1vVqfq/CCdOqrIquoPZq0FnCS2Ubrcbkasv61Cl9lB
-         Pb5ok8OLK6QU4XqjJW02Z5VmDA73Pu5QuXwOpmRP7RggxwI9rP5O8fXrWK3Ori/EM6oI
-         gze/kO8Vaf3qG0TH4C/wdIOEVHpsyYcv+69QppWXyUBBYOuzVUHJUJ4oFKEgInWoNUEh
-         qd60348/omKTxB3NeyY7QS7ERP1wRxFKjoImGPUL+rFH7SDLYXwN/AiENH2bLLr/JIm+
-         doRg==
-X-Gm-Message-State: AOAM531qAqk0T5jvkzsSwmuX58zCaVU6cdm+D9xnfPHml7kZzlWGUYSm
-        cDgWqADe7Hf6FDecEWoBsZtzApm1lMVRZtBqC559vA==
-X-Google-Smtp-Source: ABdhPJzzmY/G5skM6ldbcpzc8Wq/WaJKmtsBErdrGkLrINycrkkGQm9shCbuidqUqILRCJUAQDgPCiqP7P86geeDyIA=
-X-Received: by 2002:a05:6402:17d6:: with SMTP id s22mr8257787edy.232.1614935780916;
- Fri, 05 Mar 2021 01:16:20 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/UcxhiEkfccqsDr9yQQr2scZAanKlqasnKIOowcaKCo=;
+        b=GhBAcQXuQOSiOT/JScYlTv/ZRRYdrJuSpEWxbiVQu5kMp6TVO4Hp2NxOecLfS0sQkK
+         B2IVLNNMfox+dKgyOaLLeeDkltOpKgyDtLhglzliUbMW4xNzpJTo3FciDaZoIiCVRiJN
+         aHc+JoRyYqBCMKfcH/5KMQ/zBETS0nkUIXzuOGOqjBRrya/e/bGyAdzTgr+kuMpenYlj
+         H8Z+roXgP3uo+y0GcJoqQ8fUpY/YE4Sf/tgLHYvBz/QQotMQA2MLgTRmi5vmctgBX8Yr
+         T0fK3UQzruSG30L4F0jTFctxgwHE1OxZIGmLByKvQaCCaERSEF+Bru065OxTBqbjHFuf
+         2i3g==
+X-Gm-Message-State: AOAM533W088wWihAOdYJzXd4Cl1yPc+OA5lbFpWrNMMBwi7eWtDNFhw7
+        am9eE00RuRGWTeQ5+ejkva29AEb+LKau6lh+0Qb7yv9kefFzUw==
+X-Google-Smtp-Source: ABdhPJx97tw7a65MIzc72su7Bv0bGiXPG8gMCT8Mo4SxkoI98C/0nDR7Tvt3WHExo4l9dKkgsHMeq5cqlXt7b3QSkNM=
+X-Received: by 2002:a65:5ac9:: with SMTP id d9mr7646277pgt.74.1614937504035;
+ Fri, 05 Mar 2021 01:45:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20210304102452.21726-1-brgl@bgdev.pl> <20210304102452.21726-9-brgl@bgdev.pl>
- <CAMuHMdXRK5=w1-Z=EbM60Sf2bLY1EiVaxbZjMP+XyQ3g7nBpZw@mail.gmail.com>
- <YEHs3CxWnusWklME@kroah.com> <CAMRc=MddDb+nakgEM+Xeqm=rMMkkWO2EDekD36EoPJashYP88w@mail.gmail.com>
- <YEHyDUQ3V7Pl6+TU@kroah.com>
-In-Reply-To: <YEHyDUQ3V7Pl6+TU@kroah.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 5 Mar 2021 10:16:10 +0100
-Message-ID: <CAMRc=Md7FeQAd4Syh685+jyZAq2QStBNoo0ACQxrSB=4N6d3dg@mail.gmail.com>
-Subject: Re: [PATCH v2 08/12] drivers: export device_is_bound()
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>, Shuah Khan <shuah@kernel.org>,
+References: <20210304085710.7128-1-noltari@gmail.com> <20210304085710.7128-3-noltari@gmail.com>
+ <CAHp75VcpGNaQDR5puEX3nTGOQC0vHNjCje3MLLynoBHdjEi0_w@mail.gmail.com>
+ <9A8A595D-2556-4493-AA96-41A3C3E39292@gmail.com> <CAHp75VdJGh=Vy=kJr2CemPbSa-amYykNoYd0-jaz0utdC_bkbg@mail.gmail.com>
+ <0504ADC2-0DD5-4E9E-B7DF-353B4EBAB6B4@gmail.com> <CAHp75VdkCxBeh_cWwN9dKRpEMntMp22yVjWRCuYumhMzrWi+SA@mail.gmail.com>
+ <68F60F3F-33DD-4183-84F9-8D62BFA8A8F1@gmail.com> <CAHp75VdJ0=EewuHW2Ja5MQ=e9q0njGun8iN5Q6JWUxe=CLB=MQ@mail.gmail.com>
+ <CAHp75Ve9uW6+kpNmsG2BaaOymoAKXPdebNCfRnxUpAZoQnfZ0Q@mail.gmail.com> <4839e31730b22004f1ebe9510d3823ce@walle.cc>
+In-Reply-To: <4839e31730b22004f1ebe9510d3823ce@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 5 Mar 2021 11:44:47 +0200
+Message-ID: <CAHp75VcQ4H_+A_JrVH+trBzDFctUGoNr7KfgQ-Og_eH3YzxVFg@mail.gmail.com>
+Subject: Re: [PATCH v4 02/15] gpio: regmap: set gpio_chip of_node
+To:     Michael Walle <michael@walle.cc>
+Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 5, 2021 at 9:55 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Mar 05, 2021 at 09:45:41AM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Mar 5, 2021 at 9:34 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Fri, Mar 05, 2021 at 09:18:30AM +0100, Geert Uytterhoeven wrote:
-> > > > CC Greg
-> > > >
-> > > > On Thu, Mar 4, 2021 at 11:30 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > > >
-> > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > >
-> > > > > Export the symbol for device_is_bound() so that we can use it in gpio-sim
-> > > > > to check if the simulated GPIO chip is bound before fetching its driver
-> > > > > data from configfs callbacks in order to retrieve the name of the GPIO
-> > > > > chip device.
-> > > > >
-> > > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > ---
-> > > > >  drivers/base/dd.c | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >
-> > > > > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> > > > > index 9179825ff646..c62c02e3490a 100644
-> > > > > --- a/drivers/base/dd.c
-> > > > > +++ b/drivers/base/dd.c
-> > > > > @@ -353,6 +353,7 @@ bool device_is_bound(struct device *dev)
-> > > > >  {
-> > > > >         return dev->p && klist_node_attached(&dev->p->knode_driver);
-> > > > >  }
-> > > > > +EXPORT_SYMBOL_GPL(device_is_bound);
-> > >
-> > > No.  Please no.  Why is this needed?  Feels like someone is doing
-> > > something really wrong...
-> > >
-> > > NACK.
-> > >
+On Thu, Mar 4, 2021 at 7:24 PM Michael Walle <michael@walle.cc> wrote:
+> Am 2021-03-04 17:46, schrieb Andy Shevchenko:
+> > On Thu, Mar 4, 2021 at 6:33 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> >> On Thu, Mar 4, 2021 at 5:44 PM =C3=81lvaro Fern=C3=A1ndez Rojas
+> >> <noltari@gmail.com> wrote:
 > >
-> > I should have Cc'ed you the entire series, my bad.
+> > Let me summarize what we can do this independently on any of my
+> > patches and be okay with.
 > >
-> > This is the patch that uses this change - it's a new, improved testing
-> > module for GPIO using configfs & sysfs as you (I think) suggested a
-> > while ago:
+> > In the regmap GPIO configuration you supply struct fwnode_handle
+> > *fwnode.
+> > You can you fwnode API in the actual GPIO controller driver.
+> > Inside gpio-regmap simply do this for now
 > >
-> > https://lkml.org/lkml/2021/3/4/355
-> >
-> > The story goes like this: committing the configfs item registers a
-> > platform device.
+> > gc->of_node =3D to_of_node(config->fwnode);
 >
-> Ick, no, stop there, that's not a "real" device, please do not abuse
-> platform devices like that, you all know I hate this :(
->
-> Use the virtbus code instead perhaps?
->
+> If doing so, can we please have a comment saying that config->fwnode
+> might be NULL in which case the fwnode of the parent is used?
 
-I have no idea what virtbus is and grepping for it only returns three
-hits in: ./drivers/pci/iov.c and it's a function argument.
+Good comments are always welcome!
 
-If it stands for virtual bus then for sure it sounds like the right
-thing but I need to find more info on this.
+> > The last part is an amendment I have told about, but it can be done
+> > later on by switching the entire GPIO chip to use fwnode instead of
+> > of_node.
 
-> > As far as I understand - there's no guarantee that
-> > the device will be bound to a driver before the commit callback (or
-> > more specifically platform_device_register_full() in this case)
-> > returns so the user may try to retrieve the name of the device
-> > immediately (normally user-space should wait for the associated uevent
-> > but nobody can force that) by doing:
-> >
-> > mv /sys/kernel/config/gpio-sim/pending/foo /sys/kernel/config/gpio-sim/live/
-> > cat /sys/kernel/config/gpio-sim/live/foo/dev_name
-> >
-> > If the device is not bound at this point, we'll have a crash in the
-> > kernel as opposed to just returning -ENODEV.
->
-> How will the kernel crash?  What has created the dev_name sysfs file
-> before it is possible to be read from?  That feels like the root
-> problem.
->
 
-It's not sysfs - it's in configfs. Each chip has a read-only configfs
-attribute that returns the name of the device - I don't really have a
-better idea to map the configfs items to devices that committing
-creates.
-
-> > Please advise on how to handle it without device_is_bound().
->
-> Please do not create sysfs files before they can be read from :)
->
-
-Don't worry, I don't.
-
-Bartosz
+--=20
+With Best Regards,
+Andy Shevchenko
