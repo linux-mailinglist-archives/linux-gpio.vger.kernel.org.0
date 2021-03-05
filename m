@@ -2,97 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BF5132ECA9
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 14:58:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDB5132ECE9
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 15:16:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbhCEN5x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Mar 2021 08:57:53 -0500
-Received: from mail-vs1-f47.google.com ([209.85.217.47]:44872 "EHLO
-        mail-vs1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbhCEN5m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 08:57:42 -0500
-Received: by mail-vs1-f47.google.com with SMTP id d25so980988vsr.11;
-        Fri, 05 Mar 2021 05:57:42 -0800 (PST)
+        id S230406AbhCEOPq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Mar 2021 09:15:46 -0500
+Received: from mail-oi1-f182.google.com ([209.85.167.182]:33434 "EHLO
+        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231144AbhCEOPi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 09:15:38 -0500
+Received: by mail-oi1-f182.google.com with SMTP id a13so2684602oid.0;
+        Fri, 05 Mar 2021 06:15:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wlv2raXctHckbeXP1zL3FcneicW28YXK69//DrBPOK4=;
-        b=tdtJrAcUbrToxEtM2TRpna6tv9k49Qr/0H9WtkYttdTOYj6CN3dp+UB5Ucetd1bKjk
-         GXFaYQbbqecZdU35Dvyqv+LmI7fTJVAkFOfUANigRmecnyEsfWelVRKHJheGjYf55dOX
-         PyhZ0s2eztf8hwARqLMvAyzOJwMKVw9d+UeNl0bAJaMH217Mu8QL1Z6LABbyY0+T8aiY
-         wB+1mN1OaM9tuHaeQPCPbcd8r5DV1yoZyJMDPc6K3Ur7RRZJo6LdqDrgtrubJYN4URE7
-         N5LN6zMn26rUYmWpZR/EU8yd5XaIp5Ps1YuFEKL16DvjjxDF6PgeanHcgjoon848MmXo
-         DARw==
-X-Gm-Message-State: AOAM5308ati/nniXK1f5EIDApuzGNIPgI61n2jMqKf2iZwqWjw3ugosi
-        heaaV7AZObceHa+BJl9aotSWN254ZcoSUi933V8=
-X-Google-Smtp-Source: ABdhPJw0V2g02eK+sAULP8zrVz/fuz3tVVUfaWr3omUwlkrp6fuCKZw8yaHGFawnjKLWZ05hjvKPz2X/m7/k7/1fOYg=
-X-Received: by 2002:a05:6102:2403:: with SMTP id j3mr5822400vsi.40.1614952661682;
- Fri, 05 Mar 2021 05:57:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-2-brad@pensando.io>
-In-Reply-To: <20210304034141.7062-2-brad@pensando.io>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 5 Mar 2021 14:57:30 +0100
-Message-ID: <CAMuHMdUsFb-qpssVXkxv0gV8qpi6mUNx+3o+ZUhc5UMCKppzrQ@mail.gmail.com>
-Subject: Re: [PATCH 1/8] gpio: Add Elba SoC gpio driver for spi cs control
-To:     Brad Larson <brad@pensando.io>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=TY2WFlvvKzi+Asx6ZLSCbDuaLyq9jcqvoByqP07qDkM=;
+        b=V8UU1LRuVo0L2JE3zNIq47SkBVP2KBX3B3L5j4TFejTbbGSHJuIKejhVPAG+XzZ689
+         d1Fge2oLOpZzX8lMzw2eNTbX7h8HDXLqvHDWyQDoa/Nksv43Jczrrp8FrEeLQmFt3ZkI
+         wV/cDLuQU3BNIxX9vQLkSCqqf8rXqypIMk1icHto0iB3k95SL5mTEQO2yRiMd9YSIvzs
+         FkAv46YPpNhrEEhEPLTdMhonJv5nz7lSZOqZTA2Jzp19IcLQl8AphTds7jbVEI2+JztE
+         P2GRM3NjAfimsvMIU0KNxIe7l31jsgmrsKTi+Icu5uffqBF3v9gVPltNY90IqjNHEl3Y
+         WHaA==
+X-Gm-Message-State: AOAM533nKSlZJpnx2pRrFVF7Rp0okYH7If2kQfjoMi34fM7GcNaN8hTE
+        s2fjvDJ1q0jhI+wC97pWRbCWMlCSZg==
+X-Google-Smtp-Source: ABdhPJxetbETFVSnBrp8x8stRbb4Pkr3ZJTZWPOABSPyCyCBvbNxFitUWeVEPZyr4YkhLVYhF7tp8w==
+X-Received: by 2002:aca:2411:: with SMTP id n17mr6213097oic.40.1614953737997;
+        Fri, 05 Mar 2021 06:15:37 -0800 (PST)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w7sm550451oie.7.2021.03.05.06.15.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Mar 2021 06:15:37 -0800 (PST)
+Received: (nullmailer pid 90443 invoked by uid 1000);
+        Fri, 05 Mar 2021 14:15:34 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     satya priya <skakit@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        kgunda@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+In-Reply-To: <1614925799-3172-3-git-send-email-skakit@codeaurora.org>
+References: <1614925799-3172-1-git-send-email-skakit@codeaurora.org> <1614925799-3172-3-git-send-email-skakit@codeaurora.org>
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: qcom-pmic-gpio: Convert pmic gpio bindings to YAML
+Date:   Fri, 05 Mar 2021 08:15:34 -0600
+Message-Id: <1614953734.197344.90442.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Brad,
+On Fri, 05 Mar 2021 11:59:58 +0530, satya priya wrote:
+> Convert Qualcomm PMIC GPIO bindings from .txt to .yaml format.
+> 
+> Signed-off-by: satya priya <skakit@codeaurora.org>
+> ---
+>  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 272 --------------------
+>  .../bindings/pinctrl/qcom,pmic-gpio.yaml           | 273 +++++++++++++++++++++
+>  2 files changed, 273 insertions(+), 272 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> 
 
-On Thu, Mar 4, 2021 at 4:59 AM Brad Larson <brad@pensando.io> wrote:
-> This GPIO driver is for the Pensando Elba SoC which
-> provides control of four chip selects on two SPI busses.
->
-> Signed-off-by: Brad Larson <brad@pensando.io>
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Thanks for your patch!
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:10:2: [warning] wrong indentation: expected 2 but found 1 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:131:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:136:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:141:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:155:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:190:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:195:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:198:12: [warning] wrong indentation: expected 12 but found 11 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:200:16: [warning] wrong indentation: expected 13 but found 15 (indentation)
 
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -241,6 +241,12 @@ config GPIO_EIC_SPRD
->         help
->           Say yes here to support Spreadtrum EIC device.
->
-> +config GPIO_ELBA_SPICS
-> +       bool "Pensando Elba SPI chip-select"
-> +       depends on ARCH_PENSANDO_ELBA_SOC
+dtschema/dtc warnings/errors:
 
-Any specific reason this can't be "... || COMPILE_TEST"?
+See https://patchwork.ozlabs.org/patch/1447657
 
-> +       help
-> +         Say yes here to support the Pensndo Elba SoC SPI chip-select driver
-> +
->  config GPIO_EM
->         tristate "Emma Mobile GPIO"
->         depends on (ARCH_EMEV2 || COMPILE_TEST) && OF_GPIO
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-Gr{oetje,eeting}s,
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-                        Geert
+pip3 install dtschema --upgrade
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Please check and re-submit.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
