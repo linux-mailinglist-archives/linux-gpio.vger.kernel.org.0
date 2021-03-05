@@ -2,99 +2,195 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83C2B32E31D
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 08:42:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2108432E328
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 08:45:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229559AbhCEHme (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Mar 2021 02:42:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59948 "EHLO
+        id S229500AbhCEHpo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Mar 2021 02:45:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbhCEHme (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 02:42:34 -0500
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DE3C061756
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 23:42:34 -0800 (PST)
-Received: by mail-ej1-x643.google.com with SMTP id w17so1580677ejc.6
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 23:42:33 -0800 (PST)
+        with ESMTP id S229446AbhCEHpo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 02:45:44 -0500
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6313C061574;
+        Thu,  4 Mar 2021 23:45:43 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id u16so1012309wrt.1;
+        Thu, 04 Mar 2021 23:45:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=K9K24QEb7BYAZdR7NguJUJ5i2tFVB3INSVBEDIqY4aE=;
-        b=pAEbbOrEzqEsTqfHbmJj9BKQlSA1+ymkp9dUPTZuq5oNYYZMjVpQLJ9+ilQtXT2+5e
-         N2UUPxc7a6SPzTIUsBVi1NCgvgDEclgandGH0o8o5ep8F4stJlbdCTh1/ZtOTQ6oTBdj
-         WtdbbN4OlcgX6fn8mkX4c8rgonEhVG1whkP3Nt1UHLC2eNVEFw9VoSPLi8AODIwBXrxI
-         I88O+xH4SEGqrJUFBw3q6MF9PWjBlLHbXKDbW3n+0PyaUSH/sVRbrqzgU2xJbkDOZCgO
-         pnXk2SQhDrSzGvl5AsVWQXO/YaJ/JSAcnJPwxz/2S2U+yU359W8cvFLui39FPy+OkaAm
-         lqHw==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=exdJjoCJ2rSvuP4ybnCq/QxIWwOykgPsfHghdEPauo8=;
+        b=gj2EDqBiRmbuYy+mBkYa+Pyi7eKQwqyJ5Jwvb5gf8N++YPW2r+lcxiJmnmFIzVfLHa
+         NYgEt/+CGLJag1DZjiXwanVfQxTnS8Y3xwzJjC/rQorFGMFLG4za2M//UIhL3GTf3DZE
+         +eFI+StU6Ao/xGBpBKO9Ig84L/EHztMT5WBf/h4AkDsfcPXAXhUxE//Lo2DqMdoK1Qet
+         DVxAW1PoShRjXsQJGED2WvfSjOF0rKNREFxAeRRvgMSBkB2cKudJwVZJAy6IFMVs4Xwk
+         CKFkDCT5pbRPeZ584HIf4uA3scewoI+PzGmPDzjNumonl7J/IyNaZS3jm2YrGg/eWS6C
+         pHLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=K9K24QEb7BYAZdR7NguJUJ5i2tFVB3INSVBEDIqY4aE=;
-        b=NI5RxxxNl24rrAOpkF8Y1nohjUMtIH/Q+aEHVBJCz6OUDlhT7XVLwRtiuJWdpmzU/v
-         EhQACr2pXYTCuP8K+IXYg32AGmOme8NA/pCo3WpAS1RWl9v/cFtpVVc+xMbTqnVAm6ow
-         0CJegCEgZCr0A0enjBWrr8SZQW097sv+FahXDYSYr63bzQhdVH/oqdK6mqkogovvuZEp
-         Wyll5jBGWQk3ivIg17z2WahwQYoO8HZ78Sc9RBaUlqM5iiV0D8vfxpEbW+ZSIxadIfkS
-         fNVrytKB7Z1UNXtS7DsqL5mqZhRXbJNmABXwQPmqHh8brFPp0kpi9vweEV2pdztfO01k
-         QHZg==
-X-Gm-Message-State: AOAM530tidtrwtd0UGxGfPxnDRIvysign0qikJChbSnk2PeEHZ6PNrAT
-        1+YTW77Gdh/M3X+t3H8/jfcHQMYmvYxgzQIB0e0=
-X-Google-Smtp-Source: ABdhPJy/CfaNTr7soWCTmnwU0JAAq5YHp1M+ZL3Upz1yDYqj2trMZsMZvz6X85Lv3KKQLqFXcUGP+X4FOWUh23mC1C8=
-X-Received: by 2002:a17:906:abcd:: with SMTP id kq13mr1197763ejb.477.1614930152811;
- Thu, 04 Mar 2021 23:42:32 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a54:2ec9:0:0:0:0:0 with HTTP; Thu, 4 Mar 2021 23:42:32 -0800 (PST)
-Reply-To: ebonysmith938@gmail.com
-From:   "Mrs. Ebony Smith" <garyhoward449@gmail.com>
-Date:   Fri, 5 Mar 2021 08:42:32 +0100
-Message-ID: <CANoosEKkHOHetv0cUOo7mbBOZqiU9OJym+nXgmaYxTEJ4uAjbQ@mail.gmail.com>
-Subject: You Are Blessed My Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=exdJjoCJ2rSvuP4ybnCq/QxIWwOykgPsfHghdEPauo8=;
+        b=mRrHJ05kRhNtBVWKe4mmAN7ypZ5nhIjB2a3FVcvNqrO9X+sY2b7eFvLGvO2QFJ3ZSN
+         HQLqTbDR/MFErC0lV1EYdVhOgs0X7+Q7pM74yUhsitLmB6yKs9AhOvCMyYr3dBkDG1kC
+         9OGlIbchzvtVm4LRe1AqXOgay2vtvwuCNXe4uthFGEAMZY+jcyx+gJHfhflgtINIBAM0
+         12RW3kkDcFw7yiCjIUcTBqwZfE8EUZPUnxz2tMfc+7o+WpquQijb1OmWK1EHhmx360QC
+         15H6F1tu6FHngoqYawCPIrXnpUeJHNBv1JQYmY28GUpVxNFWllCmCMTOKarcHZPTKzSN
+         Eg0A==
+X-Gm-Message-State: AOAM533V9BX0fbA/gMaDJVvd+wEI9Y7uMs1DLKbQgGnsjOHU1qBBxqN7
+        wYSCTAr9yskCP2p6Nl2jvS8=
+X-Google-Smtp-Source: ABdhPJw+hPTEEBhZuA3A26CFHXEimv5pulPVPx92bOBgVUnZcl0k50mD7OUcQF+gCnEgJyMLONFfhw==
+X-Received: by 2002:a5d:430a:: with SMTP id h10mr8219155wrq.162.1614930342625;
+        Thu, 04 Mar 2021 23:45:42 -0800 (PST)
+Received: from macbook-pro-alvaro.lan (170.red-88-1-105.dynamicip.rima-tde.net. [88.1.105.170])
+        by smtp.gmail.com with ESMTPSA id e8sm3320516wme.14.2021.03.04.23.45.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Mar 2021 23:45:42 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.60.0.2.21\))
+Subject: Re: [PATCH v4 02/15] gpio: regmap: set gpio_chip of_node
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <CAHp75VdJ0=EewuHW2Ja5MQ=e9q0njGun8iN5Q6JWUxe=CLB=MQ@mail.gmail.com>
+Date:   Fri, 5 Mar 2021 08:45:40 +0100
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <891B849E-32A0-4115-BCE9-2F0495274404@gmail.com>
+References: <20210304085710.7128-1-noltari@gmail.com>
+ <20210304085710.7128-3-noltari@gmail.com>
+ <CAHp75VcpGNaQDR5puEX3nTGOQC0vHNjCje3MLLynoBHdjEi0_w@mail.gmail.com>
+ <9A8A595D-2556-4493-AA96-41A3C3E39292@gmail.com>
+ <CAHp75VdJGh=Vy=kJr2CemPbSa-amYykNoYd0-jaz0utdC_bkbg@mail.gmail.com>
+ <0504ADC2-0DD5-4E9E-B7DF-353B4EBAB6B4@gmail.com>
+ <CAHp75VdkCxBeh_cWwN9dKRpEMntMp22yVjWRCuYumhMzrWi+SA@mail.gmail.com>
+ <68F60F3F-33DD-4183-84F9-8D62BFA8A8F1@gmail.com>
+ <CAHp75VdJ0=EewuHW2Ja5MQ=e9q0njGun8iN5Q6JWUxe=CLB=MQ@mail.gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+X-Mailer: Apple Mail (2.3654.60.0.2.21)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Good day Dear God's Chosen,
+Hi Andy,
 
-Calvary Greetings in the name of the LORD Almighty and Our LORD JESUS
-CHRIST the giver of every good thing. Good day, i know this letter
-will definitely come to you as a huge surprise, but I implore you to
-take the time to go through it carefully as the decision you make will
-go off a long way to determine my future and continued existence. I am
-Mrs. Ebony Smith aging widow of 79 years old suffering from long time
-illness Cancer. I have some funds I inherited from my late husband,
-The sum of (US$8.5 Million Dollars) and I needed a very honest and God
-fearing who can withdraw this money then use the funds for Charity
-works. I WISH TO GIVE THIS FUNDS TO YOU FOR CHARITY WORKS. I found
-your contact after a honest prayers to the LORD to bring me a helper
-and i decided to contact you if you may be willing and interested to
-handle these trust funds in good faith before anything happens to me.
+> El 4 mar 2021, a las 17:33, Andy Shevchenko =
+<andy.shevchenko@gmail.com> escribi=C3=B3:
+>=20
+> On Thu, Mar 4, 2021 at 5:44 PM =C3=81lvaro Fern=C3=A1ndez Rojas =
+<noltari@gmail.com> wrote:
+>>> El 4 mar 2021, a las 16:28, Andy Shevchenko =
+<andy.shevchenko@gmail.com> escribi=C3=B3:
+>>> On Thu, Mar 4, 2021 at 5:24 PM =C3=81lvaro Fern=C3=A1ndez Rojas =
+<noltari@gmail.com> wrote:
+>>>>> El 4 mar 2021, a las 16:17, Andy Shevchenko =
+<andy.shevchenko@gmail.com> escribi=C3=B3:
+>>>>> On Thu, Mar 4, 2021 at 5:06 PM =C3=81lvaro Fern=C3=A1ndez Rojas =
+<noltari@gmail.com> wrote:
+>>>>>>> El 4 mar 2021, a las 11:35, Andy Shevchenko =
+<andy.shevchenko@gmail.com> escribi=C3=B3:
+>>>>>>> On Thu, Mar 4, 2021 at 10:57 AM =C3=81lvaro Fern=C3=A1ndez Rojas
+>>>>>>> <noltari@gmail.com> wrote:
+>>>>>=20
+>>>>>>>> + * @of_node:           (Optional) The device node
+>>>>>>>=20
+>>>>>>>> +       struct device_node *of_node;
+>>>>>>>=20
+>>>>>>> Can we use fwnode from day 1, please?
+>>>>>>=20
+>>>>>> Could you explain this? I haven=E2=80=99t dealt with fwnode never =
+:$
+>>>>>> BTW, this is done to fix this check when parsing gpio ranges:
+>>>>>> =
+https://github.com/torvalds/linux/blob/f69d02e37a85645aa90d18cacfff36dba37=
+0f797/drivers/gpio/gpiolib-of.c#L933-L934
+>>>>>=20
+>>>>> Use struct fwnode_handle pointer instead of OF-specific one.
+>>>>=20
+>>>> But is that compatible with the current gpiolib-of code? :$
+>>>=20
+>>> Yes (after a bit of amendment I have sent today as v2:
+>>> =
+https://lore.kernel.org/linux-gpio/20210304150215.80652-1-andriy.shevchenk=
+o@linux.intel.com/T/#u).
+>>=20
+>> Well that doesn=E2=80=99t fulfill my definition of =E2=80=9Ccurrent =
+gpiolib-of code=E2=80=9D=E2=80=A6
+>> @Linus what should I do about this?
+>=20
+> Well, fwnode is a generic, and I strongly against spreading
+> OF-specific code when we have fwnode working. But let's hear Linus
+> out, of course!
+>=20
+> But it seems you are right and the library needs a few more =
+amendments.
 
-I accept this decision because I do not have any child who will
-inherit this money after I die. I want your urgent reply to me so that
-I will give you the deposit receipt which the COMPANY issued to me as
-next of king for immediate transfer of the money to your account in
-your country, to start the good work of God, I want you to use the
-40/percent of the total amount to help yourself in doing the project.
+Yes, but I=E2=80=99m trying to do as few amendments as possible since I =
+already have quite a large amount of patches :)
 
-I am desperately in keen need of assistance and I have summoned up
-courage to contact you for this task, you must not fail me and the
-millions of the poor people in our today=E2=80=99s WORLD. This is not stole=
-n
-money and there are no dangers involved,100% RISK FREE with full legal
-proof. Please if you would be able to use the funds for the Charity
-works kindly let me know immediately. I will appreciate your utmost
-confidentiality and trust in this matter to accomplish my heart
-desire, as I don't want anything that will jeopardize my last wish. I
-want you to take 40 percent of the total money for your personal use
-while 60% of the money will go to charity. I will appreciate your
-utmost confidentiality and trust in this matter to accomplish my heart
-desire, as I don't want anything that will jeopardize my last wish as
-i said before please.
+>=20
+>>>>> Also here is the question, why do you need to have that field in =
+the
+>>>>> regmap config structure and can't simply use the parent's fwnode?
+>>>>> Also I'm puzzled why it's not working w/o this patch: GPIO library
+>>>>> effectively assigns parent's fwnode (okay, of_node right now).
+>>>>=20
+>>>> Because gpio regmap a child node of the pin controller, which is =
+the one probed (gpio regmap is probed from the pin controller).
+>>>> Therefore the parent=E2=80=99s fwnode is useless, since the correct =
+gpio_chip node is the child's one (we have pin-ranges declared in the =
+child node, referencing the parent pinctrl node).
+>>>=20
+>>> I see. Can you point me out to the code where we get the node and
+>>> where it's being retrieved / filled?
+>>=20
+>> Sure, this is where the child node is searched: =
+https://github.com/Noltari/linux/blob/6d1ebb8ff26ed54592eef1fcd3b58834acb4=
+8c04/drivers/pinctrl/bcm/pinctrl-bcm63xx.c#L100-L109
+>> Then the gpio child node is probed and assigned here: =
+https://github.com/Noltari/linux/blob/6d1ebb8ff26ed54592eef1fcd3b58834acb4=
+8c04/drivers/pinctrl/bcm/pinctrl-bcm63xx.c#L51
+>=20
+> So, this is not (*yet) in upstream, correct?
 
-Thanks and God bless you.
+No it=E2=80=99s not, but I've already changed the approach several times =
+and I=E2=80=99m starting to get tired about it...
 
-Mrs. Ebony Smith
+>=20
+> So, why not to switch to fwnode API in that driver as well?
+>=20
+> When you do that and supply fwnode thru the regmap configuration, in
+> the gpio-regmap we may assign it to of_node (via to_of_node() API).
+>=20
+>> Basically, I based that part of the code on the ingenic pin =
+controller: =
+https://github.com/torvalds/linux/blob/f69d02e37a85645aa90d18cacfff36dba37=
+0f797/drivers/pinctrl/pinctrl-ingenic.c#L2485-L2491
+>> =
+https://github.com/torvalds/linux/blob/f69d02e37a85645aa90d18cacfff36dba37=
+0f797/Documentation/devicetree/bindings/pinctrl/ingenic%2Cpinctrl.yaml#L15=
+5-L176
+>=20
+> This doesn't use remgap GPIO.
+
+Yes, I know, but there aren=E2=80=99t any pinctrl drivers using regmap =
+GPIO right now, so I couldn=E2=80=99t base my code on anything else :)
+
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
+
+Best regards,
+=C3=81lvaro.=
