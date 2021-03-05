@@ -2,97 +2,351 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B44A432E869
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 13:27:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C22F132E955
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 13:33:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231423AbhCEM0v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Mar 2021 07:26:51 -0500
-Received: from mail-out.m-online.net ([212.18.0.9]:40624 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230148AbhCEM0t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 07:26:49 -0500
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4DsRn34C3Cz1qsZs;
-        Fri,  5 Mar 2021 13:26:47 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4DsRn33TjWz1t6p6;
-        Fri,  5 Mar 2021 13:26:47 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id oKW_NzhLEexk; Fri,  5 Mar 2021 13:26:46 +0100 (CET)
-X-Auth-Info: 7sNqH9INcwCoYmH9P1rkueSRV97XCQQxSO/sSqCJ1pc=
-Received: from [IPv6:::1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri,  5 Mar 2021 13:26:46 +0100 (CET)
-Subject: Re: [PATCH v1 1/1] gpiolib: Read "gpio-line-names" from a firmware
- node
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id S229791AbhCEMcV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Mar 2021 07:32:21 -0500
+Received: from mga01.intel.com ([192.55.52.88]:43068 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232416AbhCEMbt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Mar 2021 07:31:49 -0500
+IronPort-SDR: qRy7HYMHZKMz3wUhCc6l4VRbAfDGFMnRv2+FijcgSq/yl3Azt5dyYOd5+UgnpRfj5M5V9TKl9U
+ HlE3TggdZpDQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9913"; a="207374485"
+X-IronPort-AV: E=Sophos;i="5.81,224,1610438400"; 
+   d="scan'208";a="207374485"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2021 04:31:07 -0800
+IronPort-SDR: Ai3SvDvIGfcsu33J3pM4V3RXVt4yjNGoZg3UTANoQHic+fx9KuitSDXDt8UWDIYl9afAqqVHIZ
+ g1X6LmIY/Evg==
+X-IronPort-AV: E=Sophos;i="5.81,224,1610438400"; 
+   d="scan'208";a="436588132"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2021 04:31:05 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lI9bi-00A7WL-7F; Fri, 05 Mar 2021 14:31:02 +0200
+Date:   Fri, 5 Mar 2021 14:31:02 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     kernel test robot <lkp@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Roman Guskov <rguskov@dh-electronics.com>
-References: <20210305120240.42830-1-andriy.shevchenko@linux.intel.com>
- <506c1e48-c648-69d4-8e4f-b42fe02156f7@denx.de>
- <YEIjGcPF9yNnKdSp@smile.fi.intel.com>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <2f567d44-4aaa-02f7-a60f-d6ad5404373a@denx.de>
-Date:   Fri, 5 Mar 2021 13:26:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [BUILD REGRESSION] LAST PATCH: gpiolib: Reuse device's fwnode to
+ create IRQ domain
+Message-ID: <YEIkhnfEMINzlZHH@smile.fi.intel.com>
+References: <6041a2ff.18V+4AiVF2xWzVE+%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <YEIjGcPF9yNnKdSp@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6041a2ff.18V+4AiVF2xWzVE+%lkp@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3/5/21 1:24 PM, Andy Shevchenko wrote:
-> On Fri, Mar 05, 2021 at 01:11:39PM +0100, Marek Vasut wrote:
->> On 3/5/21 1:02 PM, Andy Shevchenko wrote:
->>> On STM32MP1, the GPIO banks are subnodes of pin-controller@50002000,
->>> see arch/arm/boot/dts/stm32mp151.dtsi. The driver for
->>> pin-controller@50002000 is in drivers/pinctrl/stm32/pinctrl-stm32.c
->>> and iterates over all of its DT subnodes when registering each GPIO
->>> bank gpiochip. Each gpiochip has:
->>>
->>>     - gpio_chip.parent = dev,
->>>       where dev is the device node of the pin controller
->>>     - gpio_chip.of_node = np,
->>>       which is the OF node of the GPIO bank
->>>
->>> Therefore, dev_fwnode(chip->parent) != of_fwnode_handle(chip.of_node),
->>> i.e. pin-controller@50002000 != pin-controller@50002000/gpio@5000*000.
->>>
->>> The original code behaved correctly, as it extracted the "gpio-line-names"
->>> from of_fwnode_handle(chip.of_node) = pin-controller@50002000/gpio@5000*000.
->>>
->>> To achieve the same behaviour, read property from the firmware node.
->>>
->>> Fixes: 7cba1a4d5e162 ("gpiolib: generalize devprop_gpiochip_set_names() for device properties")
->>> Reported-by: Marek Vasut <marex@denx.de>
->>> Reported-by: Roman Guskov <rguskov@dh-electronics.com>
->>> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>
->> Tested-by: Marek Vasut <marex@denx.de>
->> Reviewed-by: Marek Vasut <marex@denx.de>
+On Fri, Mar 05, 2021 at 11:18:23AM +0800, kernel test robot wrote:
+> url:    https://github.com/0day-ci/linux/commits/Andy-Shevchenko/gpiolib-switch-to-fwnode-in-the-core/20210304-230747
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git e749df1bbd23f4472082210650514548d8a39e9b
 > 
-> Thanks!
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
 > 
->> Thanks
->>
->>>    static int devprop_gpiochip_set_names(struct gpio_chip *chip)
->>>    {
->>>    	struct gpio_device *gdev = chip->gpiodev;
->>> -	struct device *dev = chip->parent;
->>> +	struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
->>
->> You could make the order here a reverse xmas tree, but that's a nitpick.
 > 
-> They are dependent, can't be reordered.
+> Error/Warning in current branch:
+> 
+> drivers/gpio/gpiolib.c:3672:24: warning: passing argument 1 of 'is_acpi_node' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+> drivers/gpio/gpiolib.c:3675:24: warning: passing argument 1 of 'is_acpi_node' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+> drivers/gpio/gpiolib.c:3686:24: error: passing 'const struct fwnode_handle *' to parameter of type 'struct fwnode_handle *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+> drivers/gpio/gpiolib.c:3686:24: warning: passing argument 1 of 'is_acpi_node' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
 
-Doh, you're right.
+Yeah, yeah. The fix should be in Rafael's tree.
+
+Rafael, can you submit it as material for v5.12-rcX, please?
+
+> Error/Warning ids grouped by kconfigs:
+> 
+> gcc_recent_errors
+> |-- alpha-allmodconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- alpha-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arc-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arc-randconfig-r016-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arc-randconfig-r026-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arc-randconfig-s031-20210304
+> |   |-- drivers-gpio-gpiolib.c:sparse:sparse:incorrect-type-in-argument-(different-modifiers)-expected-struct-fwnode_handle-fwnode-got-struct-fwnode_handle-const-fwnode
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arm-allmodconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arm-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arm-colibri_pxa270_defconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arm-defconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arm-imx_v4_v5_defconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arm-randconfig-c003-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arm-randconfig-p002-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arm-randconfig-r022-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- arm-randconfig-r025-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- h8300-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- h8300-randconfig-r016-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- h8300-randconfig-s031-20210304
+> |   |-- drivers-gpio-gpiolib.c:sparse:sparse:incorrect-type-in-argument-(different-modifiers)-expected-struct-fwnode_handle-fwnode-got-struct-fwnode_handle-const-fwnode
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- m68k-allmodconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- m68k-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- m68k-randconfig-m031-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- m68k-randconfig-r005-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- microblaze-randconfig-m031-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- microblaze-randconfig-r011-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- microblaze-randconfig-r015-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- microblaze-randconfig-r025-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- microblaze-randconfig-s032-20210304
+> |   |-- drivers-gpio-gpiolib.c:sparse:sparse:incorrect-type-in-argument-(different-modifiers)-expected-struct-fwnode_handle-fwnode-got-struct-fwnode_handle-const-fwnode
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- mips-allmodconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- mips-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- mips-cu1830-neo_defconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- mips-randconfig-m031-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- mips-randconfig-r024-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- nds32-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- nds32-randconfig-m031-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- nds32-randconfig-r024-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- nds32-randconfig-r031-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- nds32-randconfig-r035-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- nios2-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- nios2-randconfig-r013-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- nios2-randconfig-r023-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- openrisc-allmodconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- openrisc-allnoconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- parisc-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- parisc-randconfig-r031-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- parisc-randconfig-r036-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- powerpc-allmodconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- powerpc-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- powerpc-stx_gp3_defconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- powerpc64-randconfig-r032-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- powerpc64-randconfig-r033-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- riscv-allmodconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- riscv-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- riscv-defconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- riscv-nommu_k210_defconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- riscv-nommu_k210_sdcard_defconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- riscv-randconfig-r002-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- s390-allmodconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- s390-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- s390-randconfig-p001-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- s390-randconfig-s032-20210304
+> |   |-- drivers-gpio-gpiolib.c:sparse:sparse:incorrect-type-in-argument-(different-modifiers)-expected-struct-fwnode_handle-fwnode-got-struct-fwnode_handle-const-fwnode
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- sh-allmodconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- sh-magicpanelr2_defconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- sh-randconfig-r013-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- sh-randconfig-r034-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- sparc-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- sparc-randconfig-r003-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- sparc64-randconfig-r033-20210304
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> |-- xtensa-allyesconfig
+> |   `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> `-- xtensa-randconfig-s032-20210304
+>     |-- drivers-gpio-gpiolib.c:sparse:sparse:incorrect-type-in-argument-(different-modifiers)-expected-struct-fwnode_handle-fwnode-got-struct-fwnode_handle-const-fwnode
+>     `-- drivers-gpio-gpiolib.c:warning:passing-argument-of-is_acpi_node-discards-const-qualifier-from-pointer-target-type
+> 
+> clang_recent_errors
+> `-- arm64-randconfig-r022-20210304
+>     `-- drivers-gpio-gpiolib.c:error:passing-const-struct-fwnode_handle-to-parameter-of-type-struct-fwnode_handle-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
+> 
+> elapsed time: 720m
+> 
+> configs tested: 111
+> configs skipped: 2
+> 
+> gcc tested configs:
+> arm                                 defconfig
+> arm64                            allyesconfig
+> arm                              allyesconfig
+> arm                              allmodconfig
+> arm64                               defconfig
+> sh                 kfr2r09-romimage_defconfig
+> xtensa                    xip_kc705_defconfig
+> powerpc                    mvme5100_defconfig
+> m68k                        m5307c3_defconfig
+> sh                ecovec24-romimage_defconfig
+> sparc64                          alldefconfig
+> arm                            dove_defconfig
+> arm                       multi_v4t_defconfig
+> openrisc                         alldefconfig
+> sh                               j2_defconfig
+> m68k                            mac_defconfig
+> powerpc                       maple_defconfig
+> mips                     cu1830-neo_defconfig
+> powerpc                 linkstation_defconfig
+> x86_64                              defconfig
+> arm                  colibri_pxa270_defconfig
+> xtensa                           alldefconfig
+> powerpc                     tqm5200_defconfig
+> openrisc                            defconfig
+> sh                           se7712_defconfig
+> mips                          ath79_defconfig
+> arm                           viper_defconfig
+> arm                       imx_v4_v5_defconfig
+> xtensa                       common_defconfig
+> powerpc                     stx_gp3_defconfig
+> sh                        edosk7705_defconfig
+> sh                     magicpanelr2_defconfig
+> ia64                        generic_defconfig
+> riscv             nommu_k210_sdcard_defconfig
+> mips                      maltasmvp_defconfig
+> xtensa                           allyesconfig
+> powerpc                     pseries_defconfig
+> h8300                               defconfig
+> riscv                          rv32_defconfig
+> powerpc                  iss476-smp_defconfig
+> arm                    vt8500_v6_v7_defconfig
+> sh                           se7750_defconfig
+> sh                          polaris_defconfig
+> powerpc                        fsp2_defconfig
+> ia64                             allmodconfig
+> ia64                                defconfig
+> ia64                             allyesconfig
+> m68k                             allmodconfig
+> m68k                                defconfig
+> m68k                             allyesconfig
+> nios2                               defconfig
+> arc                              allyesconfig
+> nds32                             allnoconfig
+> nds32                               defconfig
+> nios2                            allyesconfig
+> csky                                defconfig
+> alpha                               defconfig
+> alpha                            allyesconfig
+> h8300                            allyesconfig
+> arc                                 defconfig
+> sh                               allmodconfig
+> parisc                              defconfig
+> s390                             allyesconfig
+> s390                             allmodconfig
+> parisc                           allyesconfig
+> s390                                defconfig
+> i386                             allyesconfig
+> sparc                            allyesconfig
+> sparc                               defconfig
+> i386                               tinyconfig
+> i386                                defconfig
+> mips                             allyesconfig
+> mips                             allmodconfig
+> powerpc                          allyesconfig
+> powerpc                          allmodconfig
+> powerpc                           allnoconfig
+> x86_64               randconfig-a006-20210304
+> x86_64               randconfig-a001-20210304
+> x86_64               randconfig-a004-20210304
+> x86_64               randconfig-a005-20210304
+> x86_64               randconfig-a002-20210304
+> x86_64               randconfig-a003-20210304
+> i386                 randconfig-a005-20210304
+> i386                 randconfig-a003-20210304
+> i386                 randconfig-a002-20210304
+> i386                 randconfig-a004-20210304
+> i386                 randconfig-a006-20210304
+> i386                 randconfig-a001-20210304
+> i386                 randconfig-a016-20210304
+> i386                 randconfig-a012-20210304
+> i386                 randconfig-a013-20210304
+> i386                 randconfig-a014-20210304
+> i386                 randconfig-a011-20210304
+> i386                 randconfig-a015-20210304
+> riscv                    nommu_k210_defconfig
+> riscv                            allyesconfig
+> riscv                    nommu_virt_defconfig
+> riscv                             allnoconfig
+> riscv                               defconfig
+> riscv                            allmodconfig
+> x86_64                           allyesconfig
+> x86_64                    rhel-7.6-kselftests
+> x86_64                               rhel-8.3
+> x86_64                      rhel-8.3-kbuiltin
+> x86_64                                  kexec
+> 
+> clang tested configs:
+> x86_64               randconfig-a013-20210304
+> x86_64               randconfig-a016-20210304
+> x86_64               randconfig-a015-20210304
+> x86_64               randconfig-a014-20210304
+> x86_64               randconfig-a012-20210304
+> x86_64               randconfig-a011-20210304
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
