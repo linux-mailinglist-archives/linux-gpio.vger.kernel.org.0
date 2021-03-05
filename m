@@ -2,109 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7817632DE65
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 01:39:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 277A732DEF8
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 02:14:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229465AbhCEAjQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Mar 2021 19:39:16 -0500
-Received: from lucky1.263xmail.com ([211.157.147.130]:51580 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230214AbhCEAjP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 19:39:15 -0500
-Received: from localhost (unknown [192.168.167.224])
-        by lucky1.263xmail.com (Postfix) with ESMTP id AF215D062C;
-        Fri,  5 Mar 2021 08:39:11 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P26158T139991629948672S1614904748986290_;
-        Fri, 05 Mar 2021 08:39:11 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <ead45bf5cea6ce219f086aa68e0a5431>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: linus.walleij@linaro.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     linus.walleij@linaro.org, heiko@sntech.de, catalin.marinas@arm.com,
-        will@kernel.org
-Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 2/2] pinctrl: rockchip: make driver be tristate module
-Date:   Fri,  5 Mar 2021 08:39:07 +0800
-Message-Id: <20210305003907.1692515-3-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210305003907.1692515-1-jay.xu@rock-chips.com>
-References: <20210305003907.1692515-1-jay.xu@rock-chips.com>
+        id S229564AbhCEBOm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Mar 2021 20:14:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229547AbhCEBOj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Mar 2021 20:14:39 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66F6C061574
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Mar 2021 17:14:39 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id u18so487685plc.12
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Mar 2021 17:14:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XiPQ0qbz5NlheKY3OXWnuwygc2sesfubntE23mumebc=;
+        b=MDZgx3TBuJGboGUsWHzFm1tAX4R92paHV0EMX3tKPE9kImpnk/cColwnE0t7QOulVO
+         HDF8jYCjnfyasp0ouU1RClFN4JzVl7KNBUHWw9Rnj8AZKsUhb42D04tJmiIN/PP4yKWM
+         fGsqbCWsal07kMKfu62FdVF1E5m2kK4yX7Wm7xrf+QAAIRTlyMAsr6AFxQnEMZ9DBX4b
+         Gbw/uQfbAKnEu8LYudLbV+ZDhpN7Z+htNgIK/iQX2wp5p6JLi5ARPE96/+2lFPyw5GSA
+         CIOQf01x9voa0BzEMGOUlUxSRpkuus3TGHbvHF1/4j72UXnuDejWN18nN8t28QnoAiwo
+         BCTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XiPQ0qbz5NlheKY3OXWnuwygc2sesfubntE23mumebc=;
+        b=AgyouO9nvl8ZOGyZ42gkI3akZDcfKy+5NAboszb9yKHoTOfFAgwpBmZJ64lpBxLE1z
+         kZiXdMcovYZ9lEqFbeE94RNzzSq0kt+WpDBQ8nbgp06maMEgFWv6aFPJmNcamAjPaD3w
+         P8uP6GvSOpNnG1hKRFlx4IDVsXYGKEy15ckEMPeQHd6aq5iG5aiMj7G+Lxvh7nJTX4Ek
+         eKAsqT26woWWyOM6XMbQFK1auNxK1aPtK9mNd6o3luoxsNxntzeU6AFWxhFg1SZHLHaf
+         3XlPoIo3uKn1CsQqUyIJXI8/bwepl4mdnJAcAR4Ta0qoGioxYhI+M3uU93UQjk71XEc3
+         oGsQ==
+X-Gm-Message-State: AOAM533YM7GOfb1b9uyOL4G2C7IAg7DRAHvQDesMFozKQySY0UKlraE/
+        6gUT+SSDqLOQ8H4QRbX9W6XbFw==
+X-Google-Smtp-Source: ABdhPJxKzmJ2qx6ZJejZ2IsZUNoZiHysTu4Rj/Gfl2KyGVCeQVE3NeF2zuYwPU2DZAES8IaVH5L57A==
+X-Received: by 2002:a17:90a:c389:: with SMTP id h9mr7464794pjt.226.1614906879427;
+        Thu, 04 Mar 2021 17:14:39 -0800 (PST)
+Received: from dragon (80.251.214.228.16clouds.com. [80.251.214.228])
+        by smtp.gmail.com with ESMTPSA id v3sm495603pff.217.2021.03.04.17.14.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Mar 2021 17:14:38 -0800 (PST)
+Date:   Fri, 5 Mar 2021 09:14:32 +0800
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: support override broken GPIO number in
+ ACPI table
+Message-ID: <20210305011429.GH17424@dragon>
+References: <20210226033919.8871-1-shawn.guo@linaro.org>
+ <YD9bQXBD+9k3Lf/4@smile.fi.intel.com>
+ <2ed0d4dc-2756-9a55-3f54-1377732e35fc@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ed0d4dc-2756-9a55-3f54-1377732e35fc@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Make pinctrl-rockchip driver to be tristate module, support to build as
-a module, this is useful for GKI.
+On Thu, Mar 04, 2021 at 08:32:14PM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 3/3/21 10:47 AM, Andy Shevchenko wrote:
+> > On Fri, Feb 26, 2021 at 11:39:19AM +0800, Shawn Guo wrote:
+> >> Running kernel with ACPI on Lenovo Flex 5G laptop, touchpad is just
+> >> not working.  That's because the GpioInt number of TSC2 node in ACPI
+> >> table is simply wrong, and the number even exceeds the maximum GPIO
+> >> lines.  As the touchpad works fine with Windows on the same machine,
+> >> presumably this is something Windows-ism.  Although it's obviously
+> >> a specification violation, believe of that Microsoft will fix this in
+> >> the near future is not really realistic.
+> >>
+> >> It adds the support of overriding broken GPIO number in ACPI table
+> >> on particular machines, which are matched using DMI info.  Such
+> >> mechanism for fixing up broken firmware and ACPI table is not uncommon
+> >> in kernel.  And hopefully it can be useful for other machines that get
+> >> broken GPIO number coded in ACPI table.
+> > 
+> > 
+> > +Cc: Hans.
+> > 
+> > Hans, would appreciate your opinion on this thread. Maybe I'm mistaken in my
+> > conclusions.
+> 
+> So I've read the entire thread here:
+> https://lore.kernel.org/linux-gpio/20210226033919.8871-1-shawn.guo@linaro.org/T/#u
+> 
+> And I agree wih Andy, this is not something which should be fixed up in the
+> generic gpiolib-acpi code.
+> 
+> Note that we have similar things going on on x86 platforms. There are cases
+> there where there are e.g. holes in the GPIO ranges advertised by the Intel
+> pinctrl drivers. And in the beginning as i2c (and thus GpioIRQ) HID devices
+> started to become more common there were also several rounds of work to make
+> sure that the GPIO numbering (per ACPI-device / island) exported to the rest
+> of the kernel (and thus to gpiolib-acpi) matched with the numbering which
+> the ACPI tables expected (so the numbering which the Windows driver use).
+> 
+> It seems to me, esp. in the light that there are a lot of "crazy high" GPIO
+> indexes in the DSDT of the Lenovo Flex 5G, that the right thing to do here
+> is to fix the qualcom pinctrl/GPIO driver to number its GPIOs in the way
+> expected by these ACPI tables. This will break use of existing devicetrees,
+> so it will likely need to detect if the main firmware of the system is ACPI
+> or DT based and then use 2 different numbering schemes depending on the
+> outcome of that check.
+> 
+> Please also do not try ti fix this with some quirks in e.g. the i2c-hid driver,
+> I will definitely NACK such attempts. From what we can see now any fix clearly
+> should be done inside the qualcom GPIO driver.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- drivers/pinctrl/Kconfig            |  2 +-
- drivers/pinctrl/pinctrl-rockchip.c | 13 +++++++++++++
- 2 files changed, 14 insertions(+), 1 deletion(-)
+Thanks for your opinion on this, Hans.  Yeah, with the information from
+Jeffrey, I now agree with Andy that these high GPIO numbers are not
+broken but have some meaning, and we should map them back to real GPIO
+number in Qualcomm GPIO driver.
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index bf88aac7bcc6..04d1bd8b8d83 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -208,7 +208,7 @@ config PINCTRL_OXNAS
- 	select MFD_SYSCON
- 
- config PINCTRL_ROCKCHIP
--	bool
-+	tristate "Rockchip gpio and pinctrl driver"
- 	depends on OF
- 	select GPIOLIB
- 	select PINMUX
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index aa1a1c850d05..70dc03af5699 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -16,10 +16,12 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/io.h>
- #include <linux/bitops.h>
- #include <linux/gpio/driver.h>
-+#include <linux/of_device.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/pinctrl/machine.h>
-@@ -4256,3 +4258,14 @@ static int __init rockchip_pinctrl_drv_register(void)
- 	return platform_driver_register(&rockchip_pinctrl_driver);
- }
- postcore_initcall(rockchip_pinctrl_drv_register);
-+
-+static void __exit rockchip_pinctrl_drv_unregister(void)
-+{
-+	platform_driver_unregister(&rockchip_pinctrl_driver);
-+}
-+module_exit(rockchip_pinctrl_drv_unregister);
-+
-+MODULE_DESCRIPTION("ROCKCHIP Pin Controller Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:pinctrl-rockchip");
-+MODULE_DEVICE_TABLE(of, rockchip_pinctrl_dt_match);
--- 
-2.25.1
+So we reach a consensus that this is not the right solution for Lenovo
+Flex 5G. But what about for Andy's Galileo Gen 2 case, where the GPIO
+number in ACPI is truly broken?
 
+  ba8c90c61847 ("gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2")
 
-
+Shawn
