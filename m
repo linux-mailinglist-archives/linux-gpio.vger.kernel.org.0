@@ -2,92 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDB5132ECE9
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 15:16:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BB8A32ECFA
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 15:21:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230406AbhCEOPq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Mar 2021 09:15:46 -0500
-Received: from mail-oi1-f182.google.com ([209.85.167.182]:33434 "EHLO
-        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231144AbhCEOPi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 09:15:38 -0500
-Received: by mail-oi1-f182.google.com with SMTP id a13so2684602oid.0;
-        Fri, 05 Mar 2021 06:15:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=TY2WFlvvKzi+Asx6ZLSCbDuaLyq9jcqvoByqP07qDkM=;
-        b=V8UU1LRuVo0L2JE3zNIq47SkBVP2KBX3B3L5j4TFejTbbGSHJuIKejhVPAG+XzZ689
-         d1Fge2oLOpZzX8lMzw2eNTbX7h8HDXLqvHDWyQDoa/Nksv43Jczrrp8FrEeLQmFt3ZkI
-         wV/cDLuQU3BNIxX9vQLkSCqqf8rXqypIMk1icHto0iB3k95SL5mTEQO2yRiMd9YSIvzs
-         FkAv46YPpNhrEEhEPLTdMhonJv5nz7lSZOqZTA2Jzp19IcLQl8AphTds7jbVEI2+JztE
-         P2GRM3NjAfimsvMIU0KNxIe7l31jsgmrsKTi+Icu5uffqBF3v9gVPltNY90IqjNHEl3Y
-         WHaA==
-X-Gm-Message-State: AOAM533nKSlZJpnx2pRrFVF7Rp0okYH7If2kQfjoMi34fM7GcNaN8hTE
-        s2fjvDJ1q0jhI+wC97pWRbCWMlCSZg==
-X-Google-Smtp-Source: ABdhPJxetbETFVSnBrp8x8stRbb4Pkr3ZJTZWPOABSPyCyCBvbNxFitUWeVEPZyr4YkhLVYhF7tp8w==
-X-Received: by 2002:aca:2411:: with SMTP id n17mr6213097oic.40.1614953737997;
-        Fri, 05 Mar 2021 06:15:37 -0800 (PST)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w7sm550451oie.7.2021.03.05.06.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Mar 2021 06:15:37 -0800 (PST)
-Received: (nullmailer pid 90443 invoked by uid 1000);
-        Fri, 05 Mar 2021 14:15:34 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     satya priya <skakit@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        kgunda@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-In-Reply-To: <1614925799-3172-3-git-send-email-skakit@codeaurora.org>
-References: <1614925799-3172-1-git-send-email-skakit@codeaurora.org> <1614925799-3172-3-git-send-email-skakit@codeaurora.org>
-Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: qcom-pmic-gpio: Convert pmic gpio bindings to YAML
-Date:   Fri, 05 Mar 2021 08:15:34 -0600
-Message-Id: <1614953734.197344.90442.nullmailer@robh.at.kernel.org>
+        id S229750AbhCEOUk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Mar 2021 09:20:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229551AbhCEOUV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Mar 2021 09:20:21 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0703D6509C;
+        Fri,  5 Mar 2021 14:20:21 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lIBJS-00HV8c-Uy; Fri, 05 Mar 2021 14:20:19 +0000
+Date:   Fri, 05 Mar 2021 14:20:18 +0000
+Message-ID: <87ft19znq5.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v3 1/5] irqdomain: Introduce irq_domain_create_simple() API
+In-Reply-To: <20210304201253.14652-2-andriy.shevchenko@linux.intel.com>
+References: <20210304201253.14652-1-andriy.shevchenko@linux.intel.com>
+        <20210304201253.14652-2-andriy.shevchenko@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linus.walleij@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, corbet@lwn.net, bgolaszewski@baylibre.com, tglx@linutronix.de, rafael@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 05 Mar 2021 11:59:58 +0530, satya priya wrote:
-> Convert Qualcomm PMIC GPIO bindings from .txt to .yaml format.
+On Thu, 04 Mar 2021 20:12:49 +0000,
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> Signed-off-by: satya priya <skakit@codeaurora.org>
+> Linus Walleij pointed out that ird_domain_add_simple() gained
+> additional functionality and can't be anymore replaced with
+> a simple conditional. In preparation to upgrade GPIO library
+> to use fwnode, introduce irq_domain_create_simple() API which is
+> functional equivalent to the existing irq_domain_add_simple(),
+> but takes a pointer to the struct fwnode_handle as a parameter.
+> 
+> While at it, amend documentation to mention irq_domain_create_*()
+> functions where it makes sense.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 272 --------------------
->  .../bindings/pinctrl/qcom,pmic-gpio.yaml           | 273 +++++++++++++++++++++
->  2 files changed, 273 insertions(+), 272 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-> 
+>  Documentation/core-api/irq/irq-domain.rst | 22 ++++++++++++----------
+>  include/linux/irqdomain.h                 | 19 ++++++++++++++-----
+>  kernel/irq/irqdomain.c                    | 20 ++++++++++----------
+>  3 files changed, 36 insertions(+), 25 deletions(-)
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:10:2: [warning] wrong indentation: expected 2 but found 1 (indentation)
-./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:131:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
-./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:136:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
-./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:141:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
-./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:155:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
-./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:190:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
-./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:195:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
-./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:198:12: [warning] wrong indentation: expected 12 but found 11 (indentation)
-./Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml:200:16: [warning] wrong indentation: expected 13 but found 15 (indentation)
+Thanks,
 
-dtschema/dtc warnings/errors:
+	M.
 
-See https://patchwork.ozlabs.org/patch/1447657
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+-- 
+Without deviation from the norm, progress is not possible.
