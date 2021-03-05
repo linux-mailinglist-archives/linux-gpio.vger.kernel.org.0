@@ -2,188 +2,627 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32B8232E6E3
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 11:59:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F27D632E726
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Mar 2021 12:23:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbhCEK67 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Mar 2021 05:58:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229651AbhCEK6a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 05:58:30 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43193C061756
-        for <linux-gpio@vger.kernel.org>; Fri,  5 Mar 2021 02:58:30 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id t1so1961257eds.7
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Mar 2021 02:58:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OOEIFSTrwX0V6Vun3jdALndaWZrqExp3UM68CwiNleQ=;
-        b=LZ3jr38YG9hP82AVjoOd4lA0dQq8BnLwQfrxaMT/JixWq097VLc6ioW7SVMwReHdji
-         FzzCs36qtJEHf8stgdH5UheYfMwHiZ065aS3RaN5EBJg6Mh8MY6dNoBjJFMZO+CnjYHP
-         h4XgysXGLdkdj8Sr+ToIpE5LLrnv8pEYpIRU8FSofUl6d7QfsRRWyqWsUnlv0YgG0uMz
-         KnY0XUm7lD5FQGAt72cBTdOEJMMr7ZRlz2MqcbO3f8AkLuoN5J48YhgCpNBdFgC3VdNp
-         qBKsWeClssOuB20pVqCLp92mxbvvOwRLOKe6qFA2bk/pmwkF/J+IUl7OE12l8xNVCYYV
-         X8Dw==
+        id S229464AbhCELXL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Mar 2021 06:23:11 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:51835 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229562AbhCELWt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 06:22:49 -0500
+Received: from mail-wm1-f71.google.com ([209.85.128.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <krzysztof.kozlowski@canonical.com>)
+        id 1lI8Xg-0002ta-C3
+        for linux-gpio@vger.kernel.org; Fri, 05 Mar 2021 11:22:48 +0000
+Received: by mail-wm1-f71.google.com with SMTP id a65so293185wmh.1
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Mar 2021 03:22:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OOEIFSTrwX0V6Vun3jdALndaWZrqExp3UM68CwiNleQ=;
-        b=pJAhfg6XL+dtMZSiCy3xi+GdQKYWxnI6YtuPcfTmja212/JJoUgEH6Kg7cuvy3Bi2d
-         mPli1WqbdIMDq9UZgO+Q8qQhTjrvOx4naBfPxH06+uMoV0R+iPa86DbbOQ4TfiyNCeFT
-         labLsIn508E/3b5tm2p9czKXWj/D7AksD6youmLJn9aHCrFhwsJbKw/U9OH18mnUvrFW
-         cRYFyohKkPnpahOR7q6BeLabDDcf9AwBcd6tOF6mziHIf1JDfTgX3SYpou9kYFRLGmJT
-         EYeRjuZ/PUomIivHD8s9OmDytchoewUlXkc/hvh7gd2MjjCMPDDHy8vUSFXj060chi32
-         1yXQ==
-X-Gm-Message-State: AOAM532EzbLyTcBy9bINlKW000s48soLbSPDmGPWv1wYZKuCRK4Or8tY
-        aoJ2vZkf3B5eRuQUddeJavhL+AAW/dgMqB/B4RaX/A==
-X-Google-Smtp-Source: ABdhPJwvyQ8n5pWcFzlsm1MGavzkF8SlsLQv23r8wI7E4WGBUlPuvf+Cf6GxyLc7pmVMD3cz7dq2Zsm6D7xpGTNZh2E=
-X-Received: by 2002:a05:6402:17d6:: with SMTP id s22mr8552890edy.232.1614941908962;
- Fri, 05 Mar 2021 02:58:28 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7TyJ6IjNy8g0MfrqFYU5L/dy9iXB/V2HbHxuQNoaGSw=;
+        b=ECr+76tA3zw8MCw7/QWsR4Ce5YV+uFRx/i5Vkgwi8T0xTv4jCibCCsESIFoDwBpuxK
+         QvWi8kB6RxksObQp/35fKpKjNfv4Ux8qHQ3mFpXvC53lRfmHB75zLZphaZ2lXMjvZeZi
+         CKAhbai+cBksfH8r3/KMd/aJQjuna1U33gvEteMgHdVeDkV4xibx72Yig8oWTgJDtK8A
+         bl7rjnhhg45eCjfiDTWwRR3GTRTPtOd6nm+9cEgKbi/PmYoGwN4aestfWjueP/DFS1F+
+         AGUwsHKUM2nryP/ykNMD85D7kv1g1NPZ/dWN7gBilXimYxNXPmGjJ9eQJF8Lk8yauqW8
+         wFVQ==
+X-Gm-Message-State: AOAM530opS3O9VcdQ7XKNmBxp3cSiyhJhtYjxp7tvEeGl6r0/Fa3PBeU
+        XBCBxxB9BlbIsi+yvp9VSbI2sN4x+mx8VJ8aYZxQKnU4HfHCVgJOvhGosLnFuWGJQ9D38wN9ezo
+        S3wMwS4GQ0kqL/623IXvGjgI3a860hHLJkRvkhI8=
+X-Received: by 2002:a5d:50c7:: with SMTP id f7mr9118756wrt.18.1614943367488;
+        Fri, 05 Mar 2021 03:22:47 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx0ihPC1O9pt1NeK7JGmc6KizqYcFdq32cgLLe5WSjtFEuUQTLS2BhQhwjZ+lLojZJV7DBrww==
+X-Received: by 2002:a5d:50c7:: with SMTP id f7mr9118734wrt.18.1614943367274;
+        Fri, 05 Mar 2021 03:22:47 -0800 (PST)
+Received: from [192.168.1.116] (adsl-84-226-167-205.adslplus.ch. [84.226.167.205])
+        by smtp.gmail.com with ESMTPSA id f14sm3791172wmf.7.2021.03.05.03.22.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Mar 2021 03:22:46 -0800 (PST)
+Subject: Re: [PATCH 7/8] arm64: dts: Add Pensando Elba SoC support
+To:     Brad Larson <brad@pensando.io>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     arnd@arndb.de, linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        broonie@kernel.org, fancer.lancer@gmail.com,
+        adrian.hunter@intel.com, ulf.hansson@linaro.org, olof@lixom.net,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210304034141.7062-1-brad@pensando.io>
+ <20210304034141.7062-8-brad@pensando.io>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Message-ID: <41b76da0-1f2a-ae2a-79fc-4ff1c79062f7@canonical.com>
+Date:   Fri, 5 Mar 2021 12:22:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-References: <20210304102452.21726-1-brgl@bgdev.pl> <20210304102452.21726-9-brgl@bgdev.pl>
- <CAMuHMdXRK5=w1-Z=EbM60Sf2bLY1EiVaxbZjMP+XyQ3g7nBpZw@mail.gmail.com>
- <YEHs3CxWnusWklME@kroah.com> <CAMRc=MddDb+nakgEM+Xeqm=rMMkkWO2EDekD36EoPJashYP88w@mail.gmail.com>
- <YEHyDUQ3V7Pl6+TU@kroah.com> <CAMRc=Md7FeQAd4Syh685+jyZAq2QStBNoo0ACQxrSB=4N6d3dg@mail.gmail.com>
- <YEIG0u8Vg3e6ZBhz@kroah.com>
-In-Reply-To: <YEIG0u8Vg3e6ZBhz@kroah.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 5 Mar 2021 11:58:18 +0100
-Message-ID: <CAMRc=Meznt=5m_4OnSRf04xHsUy39hH7S7_8ftZaHq6GD-taEw@mail.gmail.com>
-Subject: Re: [PATCH v2 08/12] drivers: export device_is_bound()
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>, Shuah Khan <shuah@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210304034141.7062-8-brad@pensando.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 5, 2021 at 11:24 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Mar 05, 2021 at 10:16:10AM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Mar 5, 2021 at 9:55 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Fri, Mar 05, 2021 at 09:45:41AM +0100, Bartosz Golaszewski wrote:
-> > > > On Fri, Mar 5, 2021 at 9:34 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Fri, Mar 05, 2021 at 09:18:30AM +0100, Geert Uytterhoeven wrote:
-> > > > > > CC Greg
-> > > > > >
-> > > > > > On Thu, Mar 4, 2021 at 11:30 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > > > > >
-> > > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > > >
-> > > > > > > Export the symbol for device_is_bound() so that we can use it in gpio-sim
-> > > > > > > to check if the simulated GPIO chip is bound before fetching its driver
-> > > > > > > data from configfs callbacks in order to retrieve the name of the GPIO
-> > > > > > > chip device.
-> > > > > > >
-> > > > > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > > > ---
-> > > > > > >  drivers/base/dd.c | 1 +
-> > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> > > > > > > index 9179825ff646..c62c02e3490a 100644
-> > > > > > > --- a/drivers/base/dd.c
-> > > > > > > +++ b/drivers/base/dd.c
-> > > > > > > @@ -353,6 +353,7 @@ bool device_is_bound(struct device *dev)
-> > > > > > >  {
-> > > > > > >         return dev->p && klist_node_attached(&dev->p->knode_driver);
-> > > > > > >  }
-> > > > > > > +EXPORT_SYMBOL_GPL(device_is_bound);
-> > > > >
-> > > > > No.  Please no.  Why is this needed?  Feels like someone is doing
-> > > > > something really wrong...
-> > > > >
-> > > > > NACK.
-> > > > >
-> > > >
-> > > > I should have Cc'ed you the entire series, my bad.
-> > > >
-> > > > This is the patch that uses this change - it's a new, improved testing
-> > > > module for GPIO using configfs & sysfs as you (I think) suggested a
-> > > > while ago:
-> > > >
-> > > > https://lkml.org/lkml/2021/3/4/355
-> > > >
-> > > > The story goes like this: committing the configfs item registers a
-> > > > platform device.
-> > >
-> > > Ick, no, stop there, that's not a "real" device, please do not abuse
-> > > platform devices like that, you all know I hate this :(
-> > >
-> > > Use the virtbus code instead perhaps?
-> > >
-> >
-> > I have no idea what virtbus is and grepping for it only returns three
-> > hits in: ./drivers/pci/iov.c and it's a function argument.
-> >
-> > If it stands for virtual bus then for sure it sounds like the right
-> > thing but I need to find more info on this.
->
-> Sorry, wrong name, see Documentation/driver-api/auxiliary_bus.rst for
-> the details.  "virtbus" was what I think about it as that was my
-> original name for it, but it eventually got merged with a different
-> name.
->
-> > > > As far as I understand - there's no guarantee that
-> > > > the device will be bound to a driver before the commit callback (or
-> > > > more specifically platform_device_register_full() in this case)
-> > > > returns so the user may try to retrieve the name of the device
-> > > > immediately (normally user-space should wait for the associated uevent
-> > > > but nobody can force that) by doing:
-> > > >
-> > > > mv /sys/kernel/config/gpio-sim/pending/foo /sys/kernel/config/gpio-sim/live/
-> > > > cat /sys/kernel/config/gpio-sim/live/foo/dev_name
-> > > >
-> > > > If the device is not bound at this point, we'll have a crash in the
-> > > > kernel as opposed to just returning -ENODEV.
-> > >
-> > > How will the kernel crash?  What has created the dev_name sysfs file
-> > > before it is possible to be read from?  That feels like the root
-> > > problem.
-> > >
-> >
-> > It's not sysfs - it's in configfs. Each chip has a read-only configfs
-> > attribute that returns the name of the device - I don't really have a
-> > better idea to map the configfs items to devices that committing
-> > creates.
->
-> Same question, why are you exporting a configfs attribute that can not
-> be read from?  Only export it when your driver is bound to the device.
->
+On 04/03/2021 04:41, Brad Larson wrote:
+> Add Pensando common and Elba SoC specific device nodes
+> and corresponding binding documentation.
+> 
+> Signed-off-by: Brad Larson <brad@pensando.io>
+> ---
+>  .../bindings/gpio/pensando,elba-spics.txt     |  24 ++
+>  .../devicetree/bindings/mmc/cdns,sdhci.yaml   |   2 +-
+>  .../bindings/spi/cadence-quadspi.txt          |   1 +
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
 
-The device doesn't know anything about configfs. Why would it? The
-configuration of a GPIO chip can't be changed after it's instantiated,
-this is why we have committable items.
+Hi,
 
-We export a directory in configfs: gpio-sim -> user creates a new
-directory (item) in gpio-sim/pending/foo and it's not tied to any
-device yet but exports attributes which we use to configure the device
-(label, number of lines, line names etc.), then we mv
-gpio-sim/pending/foo gpio-sim/live and this is when the device gets
-created and registered with the subsystem. We take all the configured
-attributes and put them into device properties for both the driver and
-gpiolib core (for standard properties) to read - just like we would
-with a regular GPIO driver because this is the goal: test the core
-code.
+dt-bindings go always to separate patches, at beginning of patchset.
 
-Configfs doesn't even allow to dynamically export and unexport attributes.
+>  arch/arm64/boot/dts/Makefile                  |   1 +
+>  arch/arm64/boot/dts/pensando/Makefile         |   6 +
+>  arch/arm64/boot/dts/pensando/elba-16core.dtsi | 171 ++++++++++
+>  .../boot/dts/pensando/elba-asic-common.dtsi   | 113 +++++++
+>  arch/arm64/boot/dts/pensando/elba-asic.dts    |   8 +
+>  .../boot/dts/pensando/elba-flash-parts.dtsi   |  80 +++++
+>  arch/arm64/boot/dts/pensando/elba.dtsi        | 310 ++++++++++++++++++
 
-Bart
+You need the board/vendor YAML file. See:
+Documentation/devicetree/bindings/arm/
+
+>  11 files changed, 717 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/pensando,elba-spics.txt
+>  create mode 100644 arch/arm64/boot/dts/pensando/Makefile
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba-16core.dtsi
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba-asic.dts
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/pensando,elba-spics.txt b/Documentation/devicetree/bindings/gpio/pensando,elba-spics.txt
+> new file mode 100644
+> index 000000000000..30f5f3275238
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/pensando,elba-spics.txt
+> @@ -0,0 +1,24 @@
+> +Pensando Elba SPI Chip Select Driver
+> +
+> +The Pensando Elba ASIC provides four SPI bus chip selects
+> +
+> +Required properties:
+> +- compatible: Should be "pensando,elba-spics"
+> +- reg: Address range of spics controller
+> +- gpio-controller: Marks the device node as gpio controller
+> +- #gpio-cells: Must be 2
+> +
+> +Example:
+> +-------
+> +spics: spics@307c2468 {
+> +        compatible = "pensando,elba-spics";
+> +        reg = <0x0 0x307c2468 0x0 0x4>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +};
+> +
+> +&spi0 {
+> +        num-cs = <4>;
+> +        cs-gpios = <&spics 0 0>, <&spics 1 0>, <&porta 1 0>, <&porta 7 0>;
+> +	...
+> +}
+> diff --git a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+> index af7442f73881..645ae696ba24 100644
+> --- a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+> @@ -122,7 +122,7 @@ unevaluatedProperties: false
+>  examples:
+>    - |
+>      emmc: mmc@5a000000 {
+> -        compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
+> +        compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc", "pensando,elba-emmc";
+
+Why are you doing this?
+
+>          reg = <0x5a000000 0x400>;
+>          interrupts = <0 78 4>;
+>          clocks = <&clk 4>;
+> diff --git a/Documentation/devicetree/bindings/spi/cadence-quadspi.txt b/Documentation/devicetree/bindings/spi/cadence-quadspi.txt
+> index 8ace832a2d80..dbb346b2b1d7 100644
+> --- a/Documentation/devicetree/bindings/spi/cadence-quadspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/cadence-quadspi.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>  	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+>  	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+>  	For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
+> +	For Pensando SoC - "pensando,cdns-qspi".
+>  - reg : Contains two entries, each of which is a tuple consisting of a
+>  	physical address and length. The first entry is the address and
+>  	length of the controller register set. The second entry is the
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index f6064d84a424..9a21d780c5e1 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -850,6 +850,8 @@ patternProperties:
+>      description: Parallax Inc.
+>    "^pda,.*":
+>      description: Precision Design Associates, Inc.
+> +  "^pensando,.*":
+> +    description: Pensando Systems Inc.
+>    "^pericom,.*":
+>      description: Pericom Technology Inc.
+>    "^pervasive,.*":
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index f1173cd93594..c85db0a097fe 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -19,6 +19,7 @@ subdir-y += marvell
+>  subdir-y += mediatek
+>  subdir-y += microchip
+>  subdir-y += nvidia
+> +subdir-y += pensando
+>  subdir-y += qcom
+>  subdir-y += realtek
+>  subdir-y += renesas
+> diff --git a/arch/arm64/boot/dts/pensando/Makefile b/arch/arm64/boot/dts/pensando/Makefile
+> new file mode 100644
+> index 000000000000..0c2c0961e64a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/pensando/Makefile
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_PENSANDO_ELBA_SOC) += elba-asic.dtb
+> +
+> +always-y	:= $(dtb-y)
+> +subdir-y	:= $(dts-dirs)
+> +clean-files	:= *.dtb
+> diff --git a/arch/arm64/boot/dts/pensando/elba-16core.dtsi b/arch/arm64/boot/dts/pensando/elba-16core.dtsi
+> new file mode 100644
+> index 000000000000..b0386864cfec
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/pensando/elba-16core.dtsi
+> @@ -0,0 +1,171 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/ {
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 { cpu = <&cpu0>; };
+> +				core1 { cpu = <&cpu1>; };
+> +				core2 { cpu = <&cpu2>; };
+> +				core3 { cpu = <&cpu3>; };
+> +			};
+> +			cluster1 {
+> +				core0 { cpu = <&cpu4>; };
+> +				core1 { cpu = <&cpu5>; };
+> +				core2 { cpu = <&cpu6>; };
+> +				core3 { cpu = <&cpu7>; };
+> +			};
+> +			cluster2 {
+> +				core0 { cpu = <&cpu8>; };
+> +				core1 { cpu = <&cpu9>; };
+> +				core2 { cpu = <&cpu10>; };
+> +				core3 { cpu = <&cpu11>; };
+> +			};
+> +			cluster3 {
+> +				core0 { cpu = <&cpu12>; };
+> +				core1 { cpu = <&cpu13>; };
+> +				core2 { cpu = <&cpu14>; };
+> +				core3 { cpu = <&cpu15>; };
+> +			};
+> +		};
+> +
+> +		// CLUSTER 0
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x0>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_0>;
+> +		};
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x1>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_0>;
+> +		};
+> +		cpu2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x2>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_0>;
+> +		};
+> +		cpu3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x3>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_0>;
+> +		};
+> +
+> +		l2_0: l2-cache0 {
+> +			compatible = "cache";
+> +		};
+> +
+> +		// CLUSTER 1
+> +		cpu4: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x100>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_1>;
+> +		};
+> +		cpu5: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x101>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_1>;
+> +		};
+> +		cpu6: cpu@102 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x102>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_1>;
+> +		};
+> +		cpu7: cpu@103 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x103>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_1>;
+> +		};
+> +
+> +		l2_1: l2-cache1 {
+> +			compatible = "cache";
+> +		};
+> +
+> +		// CLUSTER 2
+> +		cpu8: cpu@200 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x200>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_2>;
+> +		};
+> +		cpu9: cpu@201 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x201>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_2>;
+> +		};
+> +		cpu10: cpu@202 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x202>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_2>;
+> +		};
+> +		cpu11: cpu@203 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x203>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_2>;
+> +		};
+> +
+> +		l2_2: l2-cache2 {
+> +			compatible = "cache";
+> +		};
+> +
+> +		// CLUSTER 3
+> +		cpu12: cpu@300 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x300>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_3>;
+> +		};
+> +		cpu13: cpu@301 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x301>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_3>;
+> +		};
+> +		cpu14: cpu@302 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x302>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_3>;
+> +		};
+> +		cpu15: cpu@303 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72", "arm,armv8";
+> +			reg = <0 0x303>;
+> +			enable-method = "spin-table";
+> +			next-level-cache = <&l2_3>;
+> +		};
+> +
+> +		l2_3: l2-cache3 {
+> +			compatible = "cache";
+> +		};
+
+Run the dtbs_check and build dtbs with W=1 - no warnings are usually
+expected.
+
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/pensando/elba-asic-common.dtsi b/arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
+> new file mode 100644
+> index 000000000000..9623df208131
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
+> @@ -0,0 +1,113 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/ {
+> +	model = "Elba ASIC Board";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +                spi0 = &spi0;
+> +                spi1 = &qspi;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:19200n8";
+> +	};
+> +};
+> +
+> +&ahb_clk {
+> +	clock-frequency = <400000000>;
+> +};
+> +
+> +&emmc_clk {
+> +	clock-frequency = <200000000>;
+> +};
+> +
+> +&flash_clk {
+> +	clock-frequency = <400000000>;
+> +};
+> +
+> +&ref_clk {
+> +	clock-frequency = <156250000>;
+> +};
+> +
+> +&qspi {
+> +	status = "okay";
+> +	flash0: mt25q@0 {
+> +		compatible = "jdec,spi-nor";
+> +		reg = <0>;
+> +		spi-max-frequency = <40000000>;
+> +		spi-rx-bus-width = <2>;
+> +		m25p,fast-read;
+> +		cdns,read-delay = <0>;
+> +		cdns,tshsl-ns = <0>;
+> +		cdns,tsd2d-ns = <0>;
+> +		cdns,tchsh-ns = <0>;
+> +		cdns,tslch-ns = <0>;
+> +	};
+> +};
+> +
+> +&gpio0 {
+> +	status = "ok";
+> +};
+> +
+> +&emmc {
+> +	bus-width = <8>;
+> +	status = "ok";
+> +};
+> +
+> +&wdt0 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	clock-frequency = <100000>;
+> +	status = "okay";
+> +	tmp451@4c {
+
+Generic node name needed, like in devicetree spec.
+
+> +		compatible = "ti,tmp451";
+> +		reg = <0x4c>;
+> +	};
+
+Here and everywhere else - line break between each node.
+
+> +	tps53659@62 {
+> +		compatible = "ti,tps53659";
+> +		reg = <0x62>;
+> +	};
+> +	pcf85263@51 {
+> +		compatible = "nxp,pcf85263";
+> +		reg = <0x51>;
+> +	};
+> +};
+> +
+> +&spi0 {
+> +	num-cs = <4>;
+> +	cs-gpios = <&spics 0 0>, <&spics 1 0>, <&porta 1 0>, <&porta 7 0>;
+> +	status = "okay";
+> +	spi@0 {
+> +		compatible = "pensando,cpld";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <12000000>;
+> +		reg = <0>;
+> +	};
+> +	spi@1 {
+> +		compatible = "pensando,cpld";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <12000000>;
+> +		reg = <1>;
+> +	};
+> +	spi@2 {
+> +		compatible = "pensando,cpld-rd1173";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <12000000>;
+> +		reg = <2>;
+> +		interrupt-parent = <&porta>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +	spi@3 {
+> +		compatible = "pensando,cpld";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <12000000>;
+> +		reg = <3>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/pensando/elba-asic.dts b/arch/arm64/boot/dts/pensando/elba-asic.dts
+> new file mode 100644
+> index 000000000000..411c48457006
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/pensando/elba-asic.dts
+> @@ -0,0 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/dts-v1/;
+> +
+> +#include "elba.dtsi"
+> +#include "elba-16core.dtsi"
+> +#include "elba-asic-common.dtsi"
+> +#include "elba-flash-parts.dtsi"
+> diff --git a/arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi b/arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi
+> new file mode 100644
+> index 000000000000..1983de1a8403
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi
+> @@ -0,0 +1,80 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +&flash0 {
+> +	partitions {
+> +		compatible = "fixed-partitions";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		partition@0 {
+> +			label = "flash";
+> +			reg = <0x00010000 0x0fff0000>;
+> +		};
+> +		partition@f0000 {
+> +			label = "golduenv";
+> +			reg = <0x000f0000 0x00010000>;
+> +		};
+> +		partition@100000 {
+> +			label = "boot0";
+> +			reg = <0x00100000 0x00080000>;
+> +		};
+> +		partition@180000 {
+> +			label = "golduboot";
+> +			reg = <0x00180000 0x00200000>;
+> +		};
+> +		partition@400000 {
+> +			label = "goldfw";
+> +			reg = <0x00400000 0x03c00000>;
+> +		};
+> +		partition@4010000 {
+> +			label = "fwmap";
+> +			reg = <0x04010000 0x00020000>;
+> +		};
+> +		partition@4030000 {
+> +			label = "fwsel";
+> +			reg = <0x04030000 0x00020000>;
+> +		};
+> +		partition@4090000 {
+> +			label = "bootlog";
+> +			reg = <0x04090000 0x00020000>;
+
+No leading 0 in address and size.
+
+> +		};
+> +		partition@40b0000 {
+> +			label = "panicbuf";
+> +			reg = <0x040b0000 0x00020000>;
+> +		};
+> +		partition@40d0000 {
+> +			label = "uservars";
+> +			reg = <0x040d0000 0x00020000>;
+> +		};
+> +		partition@4200000 {
+> +			label = "uboota";
+> +			reg = <0x04200000 0x00400000>;
+> +		};
+> +		partition@4600000 {
+> +			label = "ubootb";
+> +			reg = <0x04600000 0x00400000>;
+> +		};
+> +		partition@4a00000 {
+> +			label = "mainfwa";
+> +			reg = <0x04a00000 0x01000000>;
+> +		};
+> +		partition@5a00000 {
+> +			label = "mainfwb";
+> +			reg = <0x05a00000 0x01000000>;
+> +		};
+> +		partition@8000000 {
+> +			label = "diagfw";
+> +			reg = <0x08000000 0x07fe0000>;
+> +		};
+> +		partition@ffe0000 {
+> +			label = "ubootenv";
+> +			reg = <0x0ffe0000 0x00010000>;
+> +		};
+> +	};
+> +};
+> +
+> +&soc {
+> +	panicdump@740b0000 {
+> +		compatible = "pensando,capri-crash";
+> +		reg = <0x0 0x740b0000 0x0 0x00020000>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/pensando/elba.dtsi b/arch/arm64/boot/dts/pensando/elba.dtsi
+> new file mode 100644
+> index 000000000000..72245e279483
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/pensando/elba.dtsi
+> @@ -0,0 +1,310 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019-2021, Pensando Systems Inc.
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+
+You have SPDX header. No boiler plate.
+
+OK, I stopped...
+
+Best regards,
+Krzysztof
