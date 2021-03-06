@@ -2,113 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06D5632F666
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Mar 2021 00:10:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C078432F783
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Mar 2021 02:30:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230027AbhCEXJu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Mar 2021 18:09:50 -0500
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:34410 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbhCEXJn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 18:09:43 -0500
-Received: by mail-oi1-f181.google.com with SMTP id x78so4360909oix.1;
-        Fri, 05 Mar 2021 15:09:43 -0800 (PST)
+        id S229597AbhCFB27 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Mar 2021 20:28:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229709AbhCFB2j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Mar 2021 20:28:39 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99ED5C061760
+        for <linux-gpio@vger.kernel.org>; Fri,  5 Mar 2021 17:28:39 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id a22-20020a17090aa516b02900c1215e9b33so65386pjq.5
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Mar 2021 17:28:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aZy+1fA0uSLl+EmuYI0FBIw1FF/OyCRyBw9pat+WqG4=;
+        b=UsioOl5UZABrZVp7ywcWHZJKSWUcTQZYCik30gFZ54bGA471Er1UdDaH20aXQVCGT7
+         lmpYt9HatKmDPs4/te1tXNY1fY1I1zb0uf3lB1q1qouxaVP3FJyHbdq2u2CVbOxLWypo
+         wvEuRRIr1Qm4LZ1VWuSNyuMdPYSfk+mur/EKAR8QogUrunm5V1lAVBOFHWtV+8M60Xpp
+         hRUzM7jJ9S1f5OsEszpn99MQrrCFT3fcU7miEqXj9LpLSP+vIY7oxOq6qpL6cAgyF4pt
+         6+SeIJIj0wmgJ1LrMAC+MbKhEr5M9qTH7yZ8TSzazJiUsVnN+JvpSQTQsBbFkK2jo5lL
+         Xdjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XrYODSIj7UXVI1uCbWVvuJ9MDvf1FusiVZYMMI3JkzE=;
-        b=kQADzgzuKcDKX3ObVS78GFKs6D0iSkgpZX1kKyl1mdlGb6WFPXWp3I+G/u7/q5oG2p
-         NubEgtoH9MQWkTUDinn+LZqfuI52PUnUgOzR5O7fI/awEwiSQ6i6VZK7ndSsxum/xWtv
-         g4yNRw2iK/crQAmunk2UHtSYbqxw1zeFiyhtu3Pg9bqK7uzN61Kay4AtLxeNMo2GHHdh
-         /DB6DeL0aM5niEH4zGSCcN29q/6+d+2ZBBkiAyN9QMBBgvJCrdVn+du4zmF77oB1mKEM
-         4QzzkJJdvyv/HQ+6YyV4GyBdVQOBfJUh9A7wbJNthtlfXUYEYtGk4SMi7N1iLfRe1CQt
-         c5xA==
-X-Gm-Message-State: AOAM532FOqLr9/VPcHqupZYiLxhKMf4aj7BMU7g1rD93ZTU6fCW6cNG9
-        O/IJshhWvOBrJm35sMkgzg==
-X-Google-Smtp-Source: ABdhPJxEV9cNQ+u/FV083e8uupzMrx3E3n1YaYFtT8S202fGkWxSE3FlaHA0lY05b966tc3KmXUmRA==
-X-Received: by 2002:aca:4587:: with SMTP id s129mr8889344oia.133.1614985782649;
-        Fri, 05 Mar 2021 15:09:42 -0800 (PST)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r13sm853187oot.41.2021.03.05.15.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Mar 2021 15:09:41 -0800 (PST)
-Received: (nullmailer pid 813032 invoked by uid 1000);
-        Fri, 05 Mar 2021 23:09:40 -0000
-Date:   Fri, 5 Mar 2021 17:09:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     openipmi-developer@lists.sourceforge.net, openbmc@lists.ozlabs.org,
-        minyard@acm.org, joel@jms.id.au, lee.jones@linaro.org,
-        avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        linus.walleij@linaro.org, chiawei_wang@aspeedtech.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 17/19] dt-bindings: ipmi: Add optional SerIRQ property to
- ASPEED KCS devices
-Message-ID: <20210305230940.GA809870@robh.at.kernel.org>
-References: <20210219142523.3464540-1-andrew@aj.id.au>
- <20210219142523.3464540-18-andrew@aj.id.au>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aZy+1fA0uSLl+EmuYI0FBIw1FF/OyCRyBw9pat+WqG4=;
+        b=YnQ0uDJsjZAlREhTvZH+v+uSmLGus+lZYe72N24gt4RE6qYLU1e7rzfWjecCwnAvRa
+         JRZhtbaP61MNXfPNBK86LS2LhaYUuB+QRDWu0BR2JVsAmfp1BWM+xZzUd9rp0UvHPDt+
+         9olZERHByJApxmVNjj/pHyqIF9gXaDeEgGQbs782aGQ8whAccQmmDmtbC14aPJ3hz0RR
+         z4vFU2hNA6DEtgYb4ldHIkH17UOO7IhaxxMgJEz+JcVY4q3UqFJ1XVzxQ/C3xDfhGh8S
+         9ixirkzB2bXG4GX4X1WWEx+KixLEn2L3+1Cuv8tQHbg3chJMeVMyV84fD93r8u4wG90w
+         Oo9w==
+X-Gm-Message-State: AOAM533pLLRllDZChXYRZS8WCPf0HvRQoFd5WgtE67HNpjJH5gVMO4ft
+        LUiLeZ7Wvt4KUfFBfRRlTjic1w==
+X-Google-Smtp-Source: ABdhPJyZzSWt0feOqDeHGe6Lc2n07bDJWZ4pV+rRgAvmQsbMAx0YmqzNe5LAsowYtvF9MpxciyKI4g==
+X-Received: by 2002:a17:902:8f90:b029:e5:dd6d:f9b3 with SMTP id z16-20020a1709028f90b02900e5dd6df9b3mr8886130plo.43.1614994119098;
+        Fri, 05 Mar 2021 17:28:39 -0800 (PST)
+Received: from dragon (80.251.214.228.16clouds.com. [80.251.214.228])
+        by smtp.gmail.com with ESMTPSA id v2sm3158703pjg.34.2021.03.05.17.28.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Mar 2021 17:28:38 -0800 (PST)
+Date:   Sat, 6 Mar 2021 09:28:33 +0800
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH 1/4] arm64: dts: qcom: sdm845: fix number of pins in
+ 'gpio-ranges'
+Message-ID: <20210306012829.GL17424@dragon>
+References: <20210303033106.549-1-shawn.guo@linaro.org>
+ <20210303033106.549-2-shawn.guo@linaro.org>
+ <YEKl7GbxBhui4eoT@builder.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210219142523.3464540-18-andrew@aj.id.au>
+In-Reply-To: <YEKl7GbxBhui4eoT@builder.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Feb 20, 2021 at 12:55:21AM +1030, Andrew Jeffery wrote:
-> Allocating IO and IRQ resources to LPC devices is in-theory an operation
-> for the host, however ASPEED don't appear to expose this capability
-> outside the BMC (e.g. SuperIO). Instead, we are left with BMC-internal
-> registers for managing these resources, so introduce a devicetree
-> property for KCS devices to describe SerIRQ properties.
+On Fri, Mar 05, 2021 at 03:43:08PM -0600, Bjorn Andersson wrote:
+> On Tue 02 Mar 21:31 CST 2021, Shawn Guo wrote:
 > 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  .../bindings/ipmi/aspeed,ast2400-kcs-bmc.yaml      | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> > The last cell of 'gpio-ranges' should be number of GPIO pins, and in
+> > case of qcom platform it should match msm_pinctrl_soc_data.ngpio rather
+> > than msm_pinctrl_soc_data.ngpio - 1.
+> > 
 > 
-> diff --git a/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-kcs-bmc.yaml b/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-kcs-bmc.yaml
-> index 1c1cc4265948..808475a2c2ca 100644
-> --- a/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-kcs-bmc.yaml
-> +++ b/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-kcs-bmc.yaml
-> @@ -47,6 +47,18 @@ properties:
->        channels the status address is derived from the data address, but the
->        status address may be optionally provided.
->  
-> +  aspeed,lpc-interrupts:
-> +    $ref: "/schemas/types.yaml#/definitions/uint32-matrix"
-> +    minItems: 1
-> +    maxItems: 1
-> +    description: |
-> +      A 2-cell property expressing the LPC SerIRQ number and the interrupt
-> +      level/sense encoding (specified in the standard fashion).
+> This is a historical artifact, SDM845 has 150 GPIO pins. In addition to
+> this there's an output-only pin for UFS, which I exposed as an GPIO as
+> well - but it's only supposed to be used as a reset-gpio for the UFS
+> device.
+> 
+> Perhaps that still mandates that gpio-ranges should cover it?
 
-That would be uint32-array with 'maxItems: 2'.
+I think the number in DT gpio-ranges should match msm_pinctrl_soc_data.ngpio.
+Otherwise, kernel will be confused and be running into the issue like
+below in some case.
 
-> +
-> +      Note that the generated interrupt is issued from the BMC to the host, and
-> +      thus the target interrupt controller is not captured by the BMC's
-> +      devicetree.
-> +
->    kcs_chan:
->      deprecated: true
->      $ref: '/schemas/types.yaml#/definitions/uint32'
-> @@ -84,9 +96,11 @@ allOf:
->  
->  examples:
->    - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
->      kcs3: kcs@24 {
->          compatible = "aspeed,ast2600-kcs-bmc";
->          reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
->          aspeed,lpc-io-reg = <0xca2>;
-> +        aspeed,lpc-interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
->          interrupts = <8>;
->      };
-> -- 
-> 2.27.0
 > 
+> > This fixes the problem that when the last GPIO pin in the range is
+> > configured with the following call sequence, it always fails with
+> > -EPROBE_DEFER.
+> > 
+> >     pinctrl_gpio_set_config()
+> >         pinctrl_get_device_gpio_range()
+> >             pinctrl_match_gpio_range()
+> 
+> When do we hit this sequence? I didn't think operations on the UFS
+> GP(I)O would ever take this code path?
+
+It will, if we have UFS driver booting from ACPI and requesting reset
+GPIO.  And we are hit this sequence with my patch that adds .set_config
+for gpio_chip [1].
+
+Shawn
+
+[1] https://lore.kernel.org/linux-gpio/YEDVMpHyCGbZOrmF@smile.fi.intel.com/
