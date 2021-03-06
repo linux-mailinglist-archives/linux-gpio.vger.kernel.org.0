@@ -2,87 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E84F32FAB8
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Mar 2021 13:52:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68A1632FAEA
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Mar 2021 14:40:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230191AbhCFMvw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 6 Mar 2021 07:51:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
+        id S230390AbhCFNjc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 6 Mar 2021 08:39:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230227AbhCFMvk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Mar 2021 07:51:40 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A827C06174A;
-        Sat,  6 Mar 2021 04:51:40 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id ga23-20020a17090b0397b02900c0b81bbcd4so608056pjb.0;
-        Sat, 06 Mar 2021 04:51:40 -0800 (PST)
+        with ESMTP id S230512AbhCFNjN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Mar 2021 08:39:13 -0500
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E2D6C06174A;
+        Sat,  6 Mar 2021 05:39:13 -0800 (PST)
+Received: by mail-il1-x129.google.com with SMTP id z9so4684464iln.1;
+        Sat, 06 Mar 2021 05:39:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GMqmR5RnBsh7jie/YN1lnXFMmTgGBFqTmdQGM4wGJig=;
-        b=vcS5oJTiNdGDAa9IAmGM60n4ErR4webU9pziPfkSdcNkFRZ7IJaBgs2ct8P9+4MmGz
-         dcrbwCYCiBKHII8WqQXlO9UBEE19BPhnpzr/+TxUd/EB/huyu1vvoAsKhpYObeaooXDr
-         rvDuti9TwzQscMLep8JLxOsTDNBx6B8TAP6uR5epappaB4pj3Loj9MpqRvYW+l9A8Fwy
-         pECpc725zAbV7Hb1CoBVIkCrHsaAXaROrrbJ8ZEo2lALHE/GfpzZDDRlyjorVmMl/2ZN
-         Ps9bFDOoXdGDp8zZ4bSqqj7/ZCI5QbY2/abrlZ71J1XBxcEiSFa0B+BY7tJDXZ4Yif/U
-         5IBQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UUtXX8/HZ0V6MQRHKlsjyuvUd1b9QHwqr/3loxbIPr0=;
+        b=LVnsIhWWvq/e9UQMz17fmPOgkualzCNApWudHFHQxA8iGpdpheK2LgtfHnrJqLhM8F
+         haBfBjTg3EJLyf4pLX4v63BdLQMKu0qF+P+ZMVlD6gI8U1FNeJB4Qu/FWBbiOGaJqfKU
+         Pdnhj9V9ruM0XuT9fdJq65KITijELkSNQo9a8BNRrN5+P8S0/X4tDAoUYxUqfNC3kErW
+         kDY9HgUkG79aY2obKhYb4O8Idg9Y6vHbNRGy99Aek78tHaURS3wYya6fsZPEEPjfbf/J
+         8vXvgdAS8SQ9HycGp9MB9kyQvoiHThXIfAFHmjQZRMZmPIPMt2iBmQ5qFin/1fIjgFRy
+         bAuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GMqmR5RnBsh7jie/YN1lnXFMmTgGBFqTmdQGM4wGJig=;
-        b=ezgKyXpfR3ook1AYJI+WRfMQF6G68BDZ87u+HiQpVY2Hb9XWLK+Mr/jA1kQRToeKfC
-         Jh0i4xAR2GoIBwhyKr/Ii8T91zu+qlHkXMoO5KyaKFOzrj2SWuBBxM2+QYm9738QIG5G
-         39DVSUsiFQgCK3pjYdVv+w3PnfxbY6hNbzqnRngIHVFI/eNx17B3iH4vUICoTZhBLTpZ
-         kPcGZqh3CLnb641x8OumDE0sRZh87zi08a24r0XQM5DwUO22eV3b5Uk+9Da2Bax0S8ON
-         NAvJ+iQJbx4yFiIzsFNBEuI1vCCTCQVWI7MbpquXJR6iJtXG1dZZAHRkL3WBVIz00jtz
-         79Qg==
-X-Gm-Message-State: AOAM5300IfxNYA4vyMAZ3Vnflqpq0zRaHSvCH69Fh8XHx8W7lhMlk5d6
-        acXTfDAHFBgrzI0HEXLko8Y=
-X-Google-Smtp-Source: ABdhPJz35H7kzMetYStuaa8FZUiHrMPVZ4WXzGKCF1Yf8fC+hEA36LuLtJbHdGYzgZMd1eBJG6LoOw==
-X-Received: by 2002:a17:90a:5217:: with SMTP id v23mr15549888pjh.126.1615035099655;
-        Sat, 06 Mar 2021 04:51:39 -0800 (PST)
-Received: from localhost.localdomain ([45.135.186.79])
-        by smtp.gmail.com with ESMTPSA id c24sm2083387pfi.193.2021.03.06.04.51.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Mar 2021 04:51:38 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     linus.walleij@linaro.org, jrdr.linux@gmail.com,
-        zhengyongjun3@huawei.com, grandmaster@al2klimov.de
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] pinctrl: ti: fix error return code of ti_iodelay_probe()
-Date:   Sat,  6 Mar 2021 04:51:22 -0800
-Message-Id: <20210306125122.15043-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UUtXX8/HZ0V6MQRHKlsjyuvUd1b9QHwqr/3loxbIPr0=;
+        b=DZ7f5IjUmseXljTQnfUrtCk7ypjd7IxhKERDehGqvS3AebOly0GNUMrE5D0fd0azFJ
+         7BXAmzUPuwCK7bcDMIxoek7TiwK+ZCpRv+fZsvqGx9L+7Vg2W2DZkLdpTNNKM1XsnPZm
+         Wx4v2i5JqVbXVos31nTnXJmHOaFZh1XEsqI1eqfYLK1cPBfFxsE6V+GTDP2DdEoelpcS
+         ff3OzCBNwXHH7oeuqthyg+7i1W4bnONGs/9GfFLhfISz4OlzJ8Egspfjuk3pVb7AxQys
+         pz1c1211/sbrr4tk4yYPBWLvWAn12n/2vmVfYKFd4TV4TFSrhIHcCfEYgQyUN3OWsO0Z
+         ZULg==
+X-Gm-Message-State: AOAM532WJx2+UwGpY//1RxTRm5JjJd2lrwyfpvtQbTiBfHiklqBwdWpA
+        etL2EUM2MyBSjLIJu5UzHqUlrcEO74SW2XP5mGU=
+X-Google-Smtp-Source: ABdhPJxHu2RjGeqsCKdYOEuGeOlX1kBsXprC1jCl5fML6RgYaPkTtZPueNlHOnznhZQMgvdfftrJupojm09iAk6wNWE=
+X-Received: by 2002:a05:6e02:20e8:: with SMTP id q8mr12395869ilv.205.1615037952694;
+ Sat, 06 Mar 2021 05:39:12 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1613134924.git.syednwaris@gmail.com> <CAMpxmJXWk8YJR6-DHMj3+Dk4-TdE-FuFtxK_MvbsoLVqZA9rLg@mail.gmail.com>
+In-Reply-To: <CAMpxmJXWk8YJR6-DHMj3+Dk4-TdE-FuFtxK_MvbsoLVqZA9rLg@mail.gmail.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Sat, 6 Mar 2021 19:09:01 +0530
+Message-ID: <CACG_h5rjCYxn8F1xipX2tDB193B7Sj-86aGk07pmAtq2ot31Wg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Introduce the for_each_set_clump macro
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robert Richter <rrichter@marvell.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-pm <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When ti_iodelay_pinconf_init_dev() fails, no error return code of
-ti_iodelay_probe() is assigned.
-To fix this bug, ret is assigned with the return value of
-ti_iodelay_pinconf_init_dev(), and then ret is checked.
+On Wed, Mar 3, 2021 at 8:13 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> On Fri, Feb 12, 2021 at 2:19 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> >
+> > Hello Bartosz,
+> >
+> > Since this patchset primarily affects GPIO drivers, would you like
+> > to pick it up through your GPIO tree?
+> >
+>
+> Sure, as soon as you figure out what's wrong with the xilinx patch.
+> Could you also follow William's suggestion and rename the functions?
+>
+> Bart
 
-Reported-by: TOTE Robot <oslab@tsinghua.edu.cn>
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I have incorporated William's suggestions and have also solved the
+build error coming in the xilinx patch.
 
-diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-index 60a67139ff0a..e5848269175a 100644
---- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-+++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-@@ -867,7 +867,8 @@ static int ti_iodelay_probe(struct platform_device *pdev)
- 		goto exit_out;
- 	}
- 
--	if (ti_iodelay_pinconf_init_dev(iod))
-+	ret = ti_iodelay_pinconf_init_dev(iod);
-+	if (ret)
- 		goto exit_out;
- 
- 	ret = ti_iodelay_alloc_pins(dev, iod, res->start);
--- 
-2.17.1
+I am sharing the v3 patchset. Thanks !
 
+Regards
+
+
+Syed Nayyar Waris
