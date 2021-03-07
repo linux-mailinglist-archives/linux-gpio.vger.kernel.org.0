@@ -2,150 +2,265 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E35E53302E1
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Mar 2021 17:15:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4174733041D
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Mar 2021 20:06:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232322AbhCGQPY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Mar 2021 11:15:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53342 "EHLO
+        id S232046AbhCGTFk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Mar 2021 14:05:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232383AbhCGQPH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Mar 2021 11:15:07 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4E8C06174A;
-        Sun,  7 Mar 2021 08:15:06 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id s7so3703930plg.5;
-        Sun, 07 Mar 2021 08:15:06 -0800 (PST)
+        with ESMTP id S231592AbhCGTFg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Mar 2021 14:05:36 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A755C06174A;
+        Sun,  7 Mar 2021 11:05:36 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id t25so4981270pga.2;
+        Sun, 07 Mar 2021 11:05:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dqYPDrvULCWuDLLiROQSM7KZ6r9QBZIFlqyHz32fU3Q=;
-        b=VD2/Om/q53mjKBnvfyCtORYsezDqpSVjzNabmtzRkNe0gCEW8lyX/fSXPzQwhu0vvV
-         djyL/kOUiw/K7J7WttKTNgbx/qwEcYMg5tIqto8+ucHRaXkU3W0Q9Ciwo3am/lxGibHv
-         HXEYTNk41JsGhCH2kB6FcTxfOazrfXz4Z5P49cXanMkm0og8eDK9X+by1Am93iRvkIaI
-         8M/ScwpW+tW40aX+1ecQy38tF14mDnUssrLq4eowwfg1YH5c4MZSUV3Sg3z0Ltqnnf5m
-         VSBqTdvgaB0ItX8blJfzvRUukz8sJj8VWvJxIezjtIIaHtD3K9CovJttMMHO3QIV9iFP
-         11VA==
+         :cc:content-transfer-encoding;
+        bh=6OopSw5D8ep2q2/dbMs+34bXsAVe5qvVqgXWtPVK+p0=;
+        b=isQFK0hiYv6VN2fc5B8j6iJxbMapK7CSFtjIM+VwgPossPH2Wb42Yu6KrMataC0l3m
+         pHK1Nsr5WmCjrw7gKLnW6tmQMGPx8rACcNdd/VdI1P9cwUQh9Hd6C36wYdXEQgJdYjYF
+         Vu/EPblMCm+I4x9TBJhu327DLCjfpAGT6EBj6VpV4dOxVYBZ0pzNZ+hZg5ZoX9PZu2tY
+         vF7WVmp+rgjVvfTWZ906znyrpWWeT/3i3lN/JqcGoWzHzZ7Awn0s68ogeOo/xyUQ/4AK
+         URMDZFd9y4g2KqongEhPW5ELy/hTgWpxlVHgiFSTGPSAjP6lsN2GU7lJDR1zuxySU+nw
+         ulJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dqYPDrvULCWuDLLiROQSM7KZ6r9QBZIFlqyHz32fU3Q=;
-        b=aVqUf/abcTTkCsCUzrxCBU+kV+/3CmGpnDCXy9cc1UF9ualtDiRXhpjkVjD10oH2MG
-         SwoZb2YZ6nU1i+P4uEvIxn+xEqI3iEmuIBASr0wZeY68dlzVMw7g5wxJm/wz4XjwXwew
-         WWYSLltxx0KyED6JHqN2h4g51UZnKS8X+hpTyJSzprL/fdJ9Jh2T7RhdpB6MNGtBdBF/
-         ubGUk+OfW5PAVvFw8il8S+oqlWogVlaX41kwGQEJm5JPQ3X5jECm5rbNkr2cY7MHYttq
-         Lmwsa47q/syjlBah87SJvXVYgDE/+SBYDbOQ0TJiT7RuVHXfKt4ezuBkYV1zh0xdQiYm
-         gtZA==
-X-Gm-Message-State: AOAM533amk5L9J/67jlv2BuQUMITmw5Tm0pweLOmzr/VXVCa3RKm82c4
-        yZCOX9WifoDtBrs3cJ0ZM8QoWjtj3djpMjklsdg=
-X-Google-Smtp-Source: ABdhPJyYa41l/dL3WgoVvX8tlhWsMpU/bevODmkNMSqnbgRBqYLdqQz2bM0YmcqWKsZObwWwBy247BkIRV5ndmoEGBI=
-X-Received: by 2002:a17:90a:4586:: with SMTP id v6mr19645953pjg.129.1615133705330;
- Sun, 07 Mar 2021 08:15:05 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6OopSw5D8ep2q2/dbMs+34bXsAVe5qvVqgXWtPVK+p0=;
+        b=MWSpJftua7vEn/b0Quo5OlEHRqqfnRVBQtpgb6Sd/ns8RgIvAE/5v3p7cEy7frzMEP
+         FDd+w5OH00WNJRo02ZqrBawr35CJJNTnP46Kxj1xYUjc9bpUlg87dSin2bj7vW6ISHh0
+         ZrADoATNT5D3XCu5K+Id2ExtE/tsA0/8P8ZokBfic23ukuYc1gII/RIhOwwMnh2Jg9T/
+         YO7EI2qLZK1VBfUAPHEOZoQNA9w1abdB64W8JWD2Gfn2SDNBPYvKqTDcEPnCF6GL7nJq
+         /7fgvhIxlj7vRiWLKHo8XWTKP3wlwqSW98qWS1eg3WUAxETkVA55IAVR4s2W6yEAfP4U
+         SVdw==
+X-Gm-Message-State: AOAM532riAtNBwnbHWvXOia3hRLeB3gsic6bZ+mhsFfMzmqU3j1vCRPt
+        Y11ON/ylIPDWgRO+jAfx9YLI7v/JEZlToesgPjI=
+X-Google-Smtp-Source: ABdhPJxZugS/AtpXgTFu6XJ6VxJbgAYkkSqb2BomvwTTqEG2l/My8fZS4KbhuaEgVaVIIJpmYra6PYX9yfCCVGnwW3o=
+X-Received: by 2002:a63:ce15:: with SMTP id y21mr17755594pgf.4.1615143936052;
+ Sun, 07 Mar 2021 11:05:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20210305120240.42830-1-andriy.shevchenko@linux.intel.com> <CAMpxmJVjdeW5978U--4KDCVr9gtu603gq04j2Zo0ohRi1rURZg@mail.gmail.com>
-In-Reply-To: <CAMpxmJVjdeW5978U--4KDCVr9gtu603gq04j2Zo0ohRi1rURZg@mail.gmail.com>
+References: <20210306155712.4298-1-noltari@gmail.com> <20210306155712.4298-4-noltari@gmail.com>
+In-Reply-To: <20210306155712.4298-4-noltari@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 7 Mar 2021 18:14:49 +0200
-Message-ID: <CAHp75Vf9XbZ4S-2aqfQafaw8jJrW3oVQYEw06roi3zOBKRMmOA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Read "gpio-line-names" from a firmware node
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marek Vasut <marex@denx.de>,
-        Roman Guskov <rguskov@dh-electronics.com>
+Date:   Sun, 7 Mar 2021 21:05:19 +0200
+Message-ID: <CAHp75VdwqpL0UScR5s+Tf4z7RZQfyo+625uXZtfWV3=xQr6Z2Q@mail.gmail.com>
+Subject: Re: [PATCH v5 03/15] pinctrl: bcm: add bcm63xx base code
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 7, 2021 at 4:22 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
+On Sat, Mar 6, 2021 at 5:57 PM =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gm=
+ail.com> wrote:
 >
-> On Fri, Mar 5, 2021 at 1:02 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On STM32MP1, the GPIO banks are subnodes of pin-controller@50002000,
-> > see arch/arm/boot/dts/stm32mp151.dtsi. The driver for
-> > pin-controller@50002000 is in drivers/pinctrl/stm32/pinctrl-stm32.c
-> > and iterates over all of its DT subnodes when registering each GPIO
-> > bank gpiochip. Each gpiochip has:
-> >
-> >   - gpio_chip.parent = dev,
-> >     where dev is the device node of the pin controller
-> >   - gpio_chip.of_node = np,
-> >     which is the OF node of the GPIO bank
-> >
-> > Therefore, dev_fwnode(chip->parent) != of_fwnode_handle(chip.of_node),
-> > i.e. pin-controller@50002000 != pin-controller@50002000/gpio@5000*000.
-> >
-> > The original code behaved correctly, as it extracted the "gpio-line-names"
-> > from of_fwnode_handle(chip.of_node) = pin-controller@50002000/gpio@5000*000.
-> >
-> > To achieve the same behaviour, read property from the firmware node.
-> >
-> > Fixes: 7cba1a4d5e162 ("gpiolib: generalize devprop_gpiochip_set_names() for device properties")
-> > Reported-by: Marek Vasut <marex@denx.de>
-> > Reported-by: Roman Guskov <rguskov@dh-electronics.com>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  drivers/gpio/gpiolib.c | 12 ++++--------
-> >  1 file changed, 4 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index 3bc25a9c4cd6..ba88011cc79d 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -367,22 +367,18 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
-> >   *
-> >   * Looks for device property "gpio-line-names" and if it exists assigns
-> >   * GPIO line names for the chip. The memory allocated for the assigned
-> > - * names belong to the underlying software node and should not be released
-> > + * names belong to the underlying firmware node and should not be released
-> >   * by the caller.
-> >   */
-> >  static int devprop_gpiochip_set_names(struct gpio_chip *chip)
-> >  {
-> >         struct gpio_device *gdev = chip->gpiodev;
-> > -       struct device *dev = chip->parent;
-> > +       struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
-> >         const char **names;
-> >         int ret, i;
-> >         int count;
-> >
-> > -       /* GPIO chip may not have a parent device whose properties we inspect. */
-> > -       if (!dev)
-> > -               return 0;
-> > -
-> > -       count = device_property_string_array_count(dev, "gpio-line-names");
-> > +       count = fwnode_property_string_array_count(fwnode, "gpio-line-names");
-> >         if (count < 0)
-> >                 return 0;
-> >
-> > @@ -396,7 +392,7 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
-> >         if (!names)
-> >                 return -ENOMEM;
-> >
-> > -       ret = device_property_read_string_array(dev, "gpio-line-names",
-> > +       ret = fwnode_property_read_string_array(fwnode, "gpio-line-names",
-> >                                                 names, count);
-> >         if (ret < 0) {
-> >                 dev_warn(&gdev->dev, "failed to read GPIO line names\n");
-> > --
-> > 2.30.1
-> >
+> Add a helper for registering BCM63XX pin controllers.
+
+Thanks for this, but I think we may use the fwnode API. See below.
+
+...
+
+> +#include <linux/gpio/regmap.h>
+> +#include <linux/mfd/syscon.h>
+
+> +#include <linux/of.h>
+
++ property.h
++ mod_devicetable.h
+
+> +#include <linux/platform_device.h>
+> +
+> +#include "pinctrl-bcm63xx.h"
+
+> +static int bcm63xx_reg_mask_xlate(struct gpio_regmap *gpio,
+> +                                 unsigned int base, unsigned int offset,
+> +                                 unsigned int *reg, unsigned int *mask)
+> +{
+> +       unsigned int line =3D offset % BCM63XX_BANK_GPIOS;
+> +       unsigned int stride =3D offset / BCM63XX_BANK_GPIOS;
+> +
+> +       *reg =3D base - stride * BCM63XX_BANK_SIZE;
+> +       *mask =3D BIT(line);
+> +
+> +       return 0;
+> +}
+
+> +static int bcm63xx_gpio_probe(struct device *dev, struct device_node *no=
+de,
+
+device_node *node -> fwnode_handle *fwnode
+
+> +                             const struct bcm63xx_pinctrl_soc *soc,
+> +                             struct bcm63xx_pinctrl *pc)
+> +{
+> +       struct gpio_regmap_config grc =3D {0};
+> +
+> +       grc.parent =3D dev;
+
+> +       grc.fwnode =3D &node->fwnode;
+
+grc.fwnode =3D fwnode;
+
+> +       grc.ngpio =3D soc->ngpios;
+> +       grc.ngpio_per_reg =3D BCM63XX_BANK_GPIOS;
+> +       grc.regmap =3D pc->regs;
+> +       grc.reg_mask_xlate =3D bcm63xx_reg_mask_xlate;
+
+> +       if (of_property_read_u32(node, "data", &grc.reg_dat_base))
+
+fwnode_property_read_u32()
+
+> +               grc.reg_dat_base =3D BCM63XX_DATA_REG;
+> +       grc.reg_set_base =3D grc.reg_dat_base;
+
+> +       if (of_property_read_u32(node, "dirout", &grc.reg_dir_out_base))
+
+Ditto.
+
+> +               grc.reg_dir_out_base =3D BCM63XX_DIROUT_REG;
+> +
+> +       return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &grc));
+> +}
+> +
+> +int bcm63xx_pinctrl_probe(struct platform_device *pdev,
+> +                         const struct bcm63xx_pinctrl_soc *soc,
+> +                         void *driver_data)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct bcm63xx_pinctrl *pc;
+
+> +       struct device_node *node;
+
+struct fwnode_handle *fwnode;
+
+> +       int err;
+> +
+> +       pc =3D devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+> +       if (!pc)
+> +               return -ENOMEM;
+> +
+> +       platform_set_drvdata(pdev, pc);
+> +
+> +       pc->dev =3D dev;
+> +       pc->driver_data =3D driver_data;
+
+> +       pc->regs =3D syscon_node_to_regmap(dev->parent->of_node);
+> +       if (IS_ERR(pc->regs))
+> +               return PTR_ERR(pc->regs);
+> +
+> +       pc->pctl_desc.name =3D dev_name(dev);
+> +       pc->pctl_desc.pins =3D soc->pins;
+> +       pc->pctl_desc.npins =3D soc->npins;
+> +       pc->pctl_desc.pctlops =3D soc->pctl_ops;
+> +       pc->pctl_desc.pmxops =3D soc->pmx_ops;
+> +       pc->pctl_desc.owner =3D THIS_MODULE;
+> +
+> +       pc->pctl_dev =3D devm_pinctrl_register(dev, &pc->pctl_desc, pc);
+> +       if (IS_ERR(pc->pctl_dev))
+> +               return PTR_ERR(pc->pctl_dev);
+
+> +       for_each_child_of_node(dev->of_node, node) {
+
+device_for_each_child_node(dev, fwnode) {
+
+> +               if (of_match_node(bcm63xx_gpio_of_match, node)) {
+
+// for now, since we have not an analogue (yet)
+node =3D=3D> to_of_node(fwnode)
+
+> +                       err =3D bcm63xx_gpio_probe(dev, node, soc, pc);
+
+...(dev, fwnode, soc, pc);
+
+> +                       if (err) {
+> +                               dev_err(dev, "could not add GPIO chip\n")=
+;
+
+> +                               of_node_put(node);
+
+fwnode_handle_put(fwnode);
+
+> +                               return err;
+> +                       }
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm63xx.h b/drivers/pinctrl/bcm/=
+pinctrl-bcm63xx.h
+> new file mode 100644
+> index 000000000000..3bdb50021f1b
+> --- /dev/null
+> +++ b/drivers/pinctrl/bcm/pinctrl-bcm63xx.h
+> @@ -0,0 +1,43 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2021 =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.co=
+m>
+> + * Copyright (C) 2016 Jonas Gorski <jonas.gorski@gmail.com>
+> + */
+> +
+> +#ifndef __PINCTRL_BCM63XX_H__
+> +#define __PINCTRL_BCM63XX_H__
+> +
+> +#include <linux/pinctrl/pinctrl.h>
+> +
+> +#define BCM63XX_BANK_GPIOS 32
+> +
+> +struct bcm63xx_pinctrl_soc {
+> +       struct pinctrl_ops *pctl_ops;
+> +       struct pinmux_ops *pmx_ops;
+> +
+> +       const struct pinctrl_pin_desc *pins;
+> +       unsigned npins;
+> +
+> +       unsigned int ngpios;
+> +};
+> +
+> +struct bcm63xx_pinctrl {
+> +       struct device *dev;
+> +       struct regmap *regs;
+> +
+> +       struct pinctrl_desc pctl_desc;
+> +       struct pinctrl_dev *pctl_dev;
+> +
+> +       void *driver_data;
+> +};
+> +
+> +static inline unsigned int bcm63xx_bank_pin(unsigned int pin)
+> +{
+> +       return pin % BCM63XX_BANK_GPIOS;
+> +}
+> +
+> +int bcm63xx_pinctrl_probe(struct platform_device *pdev,
+> +                         const struct bcm63xx_pinctrl_soc *soc,
+> +                         void *driver_data);
+> +
+> +#endif /* __PINCTRL_BCM63XX_H__ */
+> --
+> 2.20.1
 >
-> Did you run the OF unit tests on this? The check for the parent dev
-> was added after a bug was reported that was only triggered in unit
-> tests.
-
-Parent is not used anymore. But I can run unittests next week (or if
-you know that they are failing now, can you please show the failure?).
 
 
--- 
+--
 With Best Regards,
 Andy Shevchenko
