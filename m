@@ -2,121 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14686330142
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Mar 2021 14:37:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5532633017C
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Mar 2021 14:56:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231250AbhCGNge (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Mar 2021 08:36:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47332 "EHLO
+        id S231516AbhCGN4D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Mar 2021 08:56:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229929AbhCGNgd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Mar 2021 08:36:33 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFB2C06174A;
-        Sun,  7 Mar 2021 05:36:32 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id l12so8544290wry.2;
-        Sun, 07 Mar 2021 05:36:32 -0800 (PST)
+        with ESMTP id S231497AbhCGNzd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Mar 2021 08:55:33 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774CAC06175F
+        for <linux-gpio@vger.kernel.org>; Sun,  7 Mar 2021 05:55:32 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id mj10so14723575ejb.5
+        for <linux-gpio@vger.kernel.org>; Sun, 07 Mar 2021 05:55:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=yi0ZEk8deovytENaEvDCthUQeLN5wMyV9czNFYkt5v8=;
-        b=TW2g+FuofdVpBTKZbgcw7UKt9/oClRY56f0UVE9xgNtjCBHogr2CzWpaXjjoD05OYh
-         phK5IWT+dSSm3LAgHAX9g20Oz3GAXeRw8Xbae4QR1VSiwyHJYK9yqCRH9+liu1vAiMmw
-         dYbQ3wwWE7gQaXjMQQZt10qiwMdI2syLNxVgxP5o9XipAlb8hfmO6VJHOhvLWpdstCHF
-         gdB2ubkT3mLtZCFCrsVNZn0k794MUwlEtH2DI0MN2BkQYV1mzPsBF8L5uoWXEfp7mxcG
-         0gMRBOkNACZYYQ+SfSW1u1Jcpopa57a30U71lA5co9aEsbrmMmllQbqWOtpO53LB9UaM
-         LENg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3iDxxnNR3mnsvme8OrdmyIpgVltBJYLFEpZIEq3W/BY=;
+        b=HMGL9uyA1WYvmPwePvZwOjonse4xjPNMQvSYILg7rBlWF372ldpwDmpCtFI2HJWGTd
+         FDfA/9jTyBh6lvGGPMHX+wjG3Cbt7zEeDFih6iGgl9cc8NWztoV/0lRGzas42vMFmIvH
+         0/075KsXz+n/zss+rcerbXNH5ivYLPh6vbfGQqZ2S4g38b0oQuWj+pQrYYoyIlyL3Ao5
+         XkuLvyLPZq1xPGx5WtBh+hVSukSG/chJs/7BqanIUANn1hALr8Zec7A3imp22mwBV6vR
+         iyAD+LtYwD0zLcDKU1Q3mA9DQvkdOxYa7CLaTLIMPkxKNtoJZo+HBvx2WVhDzsWD3DAd
+         HK4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=yi0ZEk8deovytENaEvDCthUQeLN5wMyV9czNFYkt5v8=;
-        b=DCcqMqq0f+CYMinqH4aMBwNclvmNpBQei4GKekCm7Ht2i7M5gSxkAYEUwmEO+f2wM9
-         6VZEc3Yjk2IskEVgraQu1GdgtWNifP9Ayl3Z8bhViZamHPiFAEb7AhHPf9M7hInkfAJ1
-         bLNBC6Kblx4EcLA3JJBA5X/Z7GKc/5rzL9V5dqjNwVr0clOK6+oLo/om2XMuuv6oEXam
-         TXQ0JsHovRvcPVuLfQnpOcuThOM8D7ZbwFLB8rBSYa3XurSiICyzYItu8jbd9DIlfRj5
-         aKdSyqkFCpGQN2wca4ZwnFbc0/fI6KaXqNA3rEsqAHQ8Um4SdSk+woCS71dJ2062DRSF
-         YNnQ==
-X-Gm-Message-State: AOAM532X7iA+5C6pnDEMmaf5QitQUiZEixc/el9F8o0yr09gOeD1twzm
-        uWzY4RoYtUqDBNh8ZqFaaZU=
-X-Google-Smtp-Source: ABdhPJwVhpx/6GHUWljlYteLFeB2XDkyHEIXoHp6ywzSmetUGMVD69EzoZpf743suloxyGthWzmtWg==
-X-Received: by 2002:adf:f851:: with SMTP id d17mr18290310wrq.267.1615124191313;
-        Sun, 07 Mar 2021 05:36:31 -0800 (PST)
-Received: from [192.168.1.211] ([2.26.187.30])
-        by smtp.gmail.com with ESMTPSA id v1sm12702800wmj.31.2021.03.07.05.36.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Mar 2021 05:36:30 -0800 (PST)
-Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        kieran.bingham+renesas@ideasonboard.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        devel@acpica.org, "Rafael J . Wysocki" <rafael@kernel.org>
-References: <20210222130735.1313443-1-djrscally@gmail.com>
- <20210222130735.1313443-2-djrscally@gmail.com>
- <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com>
-Date:   Sun, 7 Mar 2021 13:36:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3iDxxnNR3mnsvme8OrdmyIpgVltBJYLFEpZIEq3W/BY=;
+        b=VdXr39At4VFNfyoFZc7ZzHUu2q5kxA28cm3j8T11dmu0HKrvYCBEepRTcVP+wv0N2X
+         GEVCOPQPXXR61RWHoslCyRC1J/1oe7X94S40RuFhNXhNxcfXZBlMvCIlU4YjtFoNYQZW
+         eMi5eb1B1a73PveC4BtdNs9rnLT6oLAV+FLyfHKYKs4AUqVHp5kWFS7Uqc/Ssg+6A6ek
+         pQzsbfIqtYuLalPuDTyNPguPD4/ikpOFHTmil8Dq8V7heZ0Pj1J/JmWryEnPex8TVzUU
+         hqOzi/cV2aWhaPAEPbtFbeb9g4RMuxIVgWLJoCzSv6RPXzi624F1sD2BrSYq2ks7X8B2
+         tsMg==
+X-Gm-Message-State: AOAM531RQ5aQu/1Tv9CXzCuCfozz3MGCXe04j2i8YHP5EF5o9dG2OebB
+        VVsrhT/oYC/h7IdLgCGbTS1wZSGD6Ku1lUR1igoLLw==
+X-Google-Smtp-Source: ABdhPJw8AHqfxc4NR8V1MM+Ud0t6ZG2hdPJ2snSSuHuinI6KbzUzPIu0W3GlJKFNOwoh08XssaMWNKLeL7PhYkvnLEc=
+X-Received: by 2002:a17:907:76c7:: with SMTP id kf7mr10656908ejc.470.1615125331157;
+ Sun, 07 Mar 2021 05:55:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20210305120240.42830-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210305120240.42830-1-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sun, 7 Mar 2021 14:55:20 +0100
+Message-ID: <CAMpxmJVjdeW5978U--4KDCVr9gtu603gq04j2Zo0ohRi1rURZg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Read "gpio-line-names" from a firmware node
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marek Vasut <marex@denx.de>,
+        Roman Guskov <rguskov@dh-electronics.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy
+On Fri, Mar 5, 2021 at 1:02 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On STM32MP1, the GPIO banks are subnodes of pin-controller@50002000,
+> see arch/arm/boot/dts/stm32mp151.dtsi. The driver for
+> pin-controller@50002000 is in drivers/pinctrl/stm32/pinctrl-stm32.c
+> and iterates over all of its DT subnodes when registering each GPIO
+> bank gpiochip. Each gpiochip has:
+>
+>   - gpio_chip.parent = dev,
+>     where dev is the device node of the pin controller
+>   - gpio_chip.of_node = np,
+>     which is the OF node of the GPIO bank
+>
+> Therefore, dev_fwnode(chip->parent) != of_fwnode_handle(chip.of_node),
+> i.e. pin-controller@50002000 != pin-controller@50002000/gpio@5000*000.
+>
+> The original code behaved correctly, as it extracted the "gpio-line-names"
+> from of_fwnode_handle(chip.of_node) = pin-controller@50002000/gpio@5000*000.
+>
+> To achieve the same behaviour, read property from the firmware node.
+>
+> Fixes: 7cba1a4d5e162 ("gpiolib: generalize devprop_gpiochip_set_names() for device properties")
+> Reported-by: Marek Vasut <marex@denx.de>
+> Reported-by: Roman Guskov <rguskov@dh-electronics.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpiolib.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 3bc25a9c4cd6..ba88011cc79d 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -367,22 +367,18 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
+>   *
+>   * Looks for device property "gpio-line-names" and if it exists assigns
+>   * GPIO line names for the chip. The memory allocated for the assigned
+> - * names belong to the underlying software node and should not be released
+> + * names belong to the underlying firmware node and should not be released
+>   * by the caller.
+>   */
+>  static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+>  {
+>         struct gpio_device *gdev = chip->gpiodev;
+> -       struct device *dev = chip->parent;
+> +       struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
+>         const char **names;
+>         int ret, i;
+>         int count;
+>
+> -       /* GPIO chip may not have a parent device whose properties we inspect. */
+> -       if (!dev)
+> -               return 0;
+> -
+> -       count = device_property_string_array_count(dev, "gpio-line-names");
+> +       count = fwnode_property_string_array_count(fwnode, "gpio-line-names");
+>         if (count < 0)
+>                 return 0;
+>
+> @@ -396,7 +392,7 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+>         if (!names)
+>                 return -ENOMEM;
+>
+> -       ret = device_property_read_string_array(dev, "gpio-line-names",
+> +       ret = fwnode_property_read_string_array(fwnode, "gpio-line-names",
+>                                                 names, count);
+>         if (ret < 0) {
+>                 dev_warn(&gdev->dev, "failed to read GPIO line names\n");
+> --
+> 2.30.1
+>
 
-On 22/02/2021 13:34, Andy Shevchenko wrote:
-> On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
->> The acpi_walk_dep_device_list() is not as generalisable as its name
->> implies, serving only to decrement the dependency count for each
->> dependent device of the input. Extend the function to instead accept
->> a callback which can be applied to all the dependencies in acpi_dep_list.
->> Replace all existing calls to the function with calls to a wrapper, passing
->> a callback that applies the same dependency reduction.
-> The code looks okay to me, if it was the initial idea, feel free to add
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Did you run the OF unit tests on this? The check for the parent dev
+was added after a bug was reported that was only triggered in unit
+tests.
 
-
-Thank you!
-
-
->> + */
->> +void acpi_dev_flag_dependency_met(acpi_handle handle)
->> +{
-> Since it's acpi_dev_* namespace, perhaps it should take struct acpi_device here?
-
-
-I can do this, but I avoided it because in most of the uses in the
-kernel currently there's no struct acpi_device, they're just passing
-ACPI_HANDLE(dev) instead, so I'd need to get the adev with
-ACPI_COMPANION() in each place. It didn't seem worth it...but happy to
-do it if you'd prefer it that way?
-
+Bartosz
