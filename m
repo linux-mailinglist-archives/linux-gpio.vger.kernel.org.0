@@ -2,102 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CFAC33043F
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Mar 2021 20:25:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2388E33049D
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Mar 2021 21:40:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbhCGTYy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Mar 2021 14:24:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37436 "EHLO
+        id S232939AbhCGUkN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Mar 2021 15:40:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232091AbhCGTYT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Mar 2021 14:24:19 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E639FC06174A
-        for <linux-gpio@vger.kernel.org>; Sun,  7 Mar 2021 11:24:18 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id l2so5000164pgb.1
-        for <linux-gpio@vger.kernel.org>; Sun, 07 Mar 2021 11:24:18 -0800 (PST)
+        with ESMTP id S231732AbhCGUjg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Mar 2021 15:39:36 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76BCC06174A;
+        Sun,  7 Mar 2021 12:39:35 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id kr3-20020a17090b4903b02900c096fc01deso1928791pjb.4;
+        Sun, 07 Mar 2021 12:39:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UOFHztsb7GNvixK/1TIj8OHF7/yf3wR6h4EXZRdMIks=;
-        b=VaSIJ9N5Nd+/72Bb+FG+/VUhQWjbjCiehtVpOLJGVwe+RKuwlj8/C5lXabC3piCyOd
-         tTDsqDe5DEq5k41tq/c8I3uYRmB52LF7S6/vkm08nUs2oe2EJYzv3vQ74PPnJzE1t+HR
-         PfG55fn6ue2cNWjkqyHa1J/bNpiPY6Q/LHk0ql3iESEOZFkWMzRWsdE5nAH9IvnRzdaN
-         X9axVD1KUOPu3SDvMUejcNcI8xkcFGf+pvnE5QZW4V0RDGaD8u1Yz+oqZhLQw13zcgpt
-         X9XhO2FHdaF35+A6CHDVGaQVh1adDEUIiKYSGhWaBNsqFLUCxPO1TIiez5gJSroYVMdj
-         ZCWA==
+        bh=ksneqLZ9zvuj+Q9Pi6/GCANghUOfFQNIq6D+RQ8519s=;
+        b=gsBwdgKy0qJ/sWj2BknIzEzST332yyHdoW5xYOtq9fWcfHflnhmaGhq2v6q3a4IYmj
+         4m0L+gBQsxS6lqDfeq7qXVpJa/1xFLnOtrpduuYufDMwijEVDsiVCTrifmiuqRHxy4D7
+         hLPkAgOp1xjPHPBPLFjlvyGFa7ikTYDXjMVWzPUK/5feTbTPDv+eJWQhQcsrNEjHQIp6
+         xh2gqgD09F6/3L4HXirWiqukMjWmlgiMFw0TDgmAeTr9NHY8yVNQyppk+HAKOREQHwFZ
+         79dWlj2kWlC85Y2y3L72bZ8CmWcgy+y7cDQG3rf24DBn73gv54r1lQ9diZdY+lzLWWdG
+         BNDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UOFHztsb7GNvixK/1TIj8OHF7/yf3wR6h4EXZRdMIks=;
-        b=bGsiY53I1gkUT4ayhQpOWWDCxzciMfOSx0TnpERLe6xE7OMseVappLdTnUoJKfg0Bk
-         ozQgha7ieyRo56l6NXN5fs4ZAWkZ5/YCvpQ5naeyIcdzK02Uh/iOC+guZTRd1ln/fPxC
-         ykizr9rqBNXjyn1narQSX2nO7pu9JlEHBvsW6vfPrm/8CkXexVB7nIERbAlzBYv/OSHe
-         CFQT7iFTjiLu00eMrJyuyA6oWFgVWgQaO+6Lphzr1JI73MxSgKAzCfQQeOHZc6fwSib3
-         0qHjguJBQIo9J9HY6958qkUJ5S1f+QbdhjiLm3tT/iiEWaA4zOj0DXlVDNSMT9gzp2ku
-         NUdw==
-X-Gm-Message-State: AOAM5303xNnZJpijfZZBxLwbjkJ8zYTUp+MyK6+5gY1M30pmWp+Ifmvn
-        MlyMzCGS3b/YoItbnYIRTwQkDYizxtYDOOrm7Ps=
-X-Google-Smtp-Source: ABdhPJwmYH1CuF5RYvrYWkfE4QulVrwiMmgYoemCtjonHLcoa0RXZK73StEtiNIZBxjgvzm8IMW01/UYwMdi5Q2870Q=
-X-Received: by 2002:a62:528e:0:b029:1f5:c5ee:a487 with SMTP id
- g136-20020a62528e0000b02901f5c5eea487mr2623845pfb.7.1615145058395; Sun, 07
- Mar 2021 11:24:18 -0800 (PST)
+        bh=ksneqLZ9zvuj+Q9Pi6/GCANghUOfFQNIq6D+RQ8519s=;
+        b=sAzzl0ww9gGcTOGzkzgfrv8fsGsVOCkwWkZrsKcPyhU0rrthrEe2vBR2UTi/9MrNEt
+         LuVFOKYGkJ9fbRZIxblBd+l4Veyaq1FFARG9qwX8pl5DzJLLv5pRvBoql++5f0eprRVf
+         kl60x419A8GBrul7HnUvk2RqWoUvDPX2s5GK7z5RU8YbSSp4vZsq49jOj2dDKkNmNxin
+         cW8Lgr7jAxqSdVgSW6yNN9rZMkrdjmqGdHw7Hzb1jv5AXyXyiHHqnkYaJp4rUvj21S/O
+         yjQm6ajHlTF0MUR3CVSrXTA6TKUVKSz2cUdDcSnWHCSa2J4TNC5+sP5Z+pTaEQ/NXIUF
+         uMfg==
+X-Gm-Message-State: AOAM531vpV+zKi/10qhzhHJdy0XPeUo6h/Qq3O0wGIYtDzkDoxOE5K7n
+        AV0MWNrsVgoPEpZHI3vvEy3TQk77hVSeepgGMCw=
+X-Google-Smtp-Source: ABdhPJxlj04alWLqhDKdUE58NU9W7umO8MwZXqbfilTz4/eiKjejZ6M4QMIuwTi82BfFMcr9ywapb7y/aJ9mm6zMO+c=
+X-Received: by 2002:a17:902:d2c1:b029:e5:ccfe:1e93 with SMTP id
+ n1-20020a170902d2c1b02900e5ccfe1e93mr17949404plc.0.1615149575234; Sun, 07 Mar
+ 2021 12:39:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20210304201119.702637-1-sander@svanheule.net>
-In-Reply-To: <20210304201119.702637-1-sander@svanheule.net>
+References: <20210222130735.1313443-1-djrscally@gmail.com> <20210222130735.1313443-2-djrscally@gmail.com>
+ <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com> <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com>
+In-Reply-To: <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 7 Mar 2021 21:24:02 +0200
-Message-ID: <CAHp75VcufEB+Y12ik9Me8TJesnqnN46b-fN-EhQDSeqk2fdEBQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: sx150x: support building as module
-To:     Sander Vanheule <sander@svanheule.net>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Sun, 7 Mar 2021 22:39:18 +0200
+Message-ID: <CAHp75Vc2iwvh1RiYmQDPSvgNvGT_gBcGTK67F+MhWgXyoxqn0A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Gregory Bean <gbean@codeaurora.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        kieran.bingham+renesas@ideasonboard.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        devel@acpica.org, "Rafael J . Wysocki" <rafael@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 5, 2021 at 2:57 AM Sander Vanheule <sander@svanheule.net> wrote:
+On Sun, Mar 7, 2021 at 3:36 PM Daniel Scally <djrscally@gmail.com> wrote:
+> On 22/02/2021 13:34, Andy Shevchenko wrote:
+> > On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
+> >> The acpi_walk_dep_device_list() is not as generalisable as its name
+> >> implies, serving only to decrement the dependency count for each
+> >> dependent device of the input. Extend the function to instead accept
+> >> a callback which can be applied to all the dependencies in acpi_dep_list.
+> >> Replace all existing calls to the function with calls to a wrapper, passing
+> >> a callback that applies the same dependency reduction.
+> > The code looks okay to me, if it was the initial idea, feel free to add
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 >
-> The SX150x GPIO expander driver, and the subsystems it depends on, have
-> seen some development since its initial introduction. Let's add some
-> extra bits to enable building it as a module.
 >
-> Build tested on 5.12-rc1. Run tested on a MIPS device with OpenWrt,
-> kernel version 5.4.101, to confirm unloading/reloading works.
+> Thank you!
 >
-> Signed-off-by: Sander Vanheule <sander@svanheule.net>
-> ---
-> This is the first time I've attempted to create a driver that can be
-> built as a module, so there's a reasonable chance I missed some things.
+>
+> >> + */
+> >> +void acpi_dev_flag_dependency_met(acpi_handle handle)
+> >> +{
+> > Since it's acpi_dev_* namespace, perhaps it should take struct acpi_device here?
+>
+>
+> I can do this, but I avoided it because in most of the uses in the
+> kernel currently there's no struct acpi_device, they're just passing
+> ACPI_HANDLE(dev) instead, so I'd need to get the adev with
+> ACPI_COMPANION() in each place. It didn't seem worth it...but happy to
+> do it if you'd prefer it that way?
 
-Indeed, see below.
-
-...
-
-> -#include <linux/init.h>
-
-Nope, you have to leave it. See more below.
-
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
-> +#include <linux/module.h>
-
-(This is correct)
-
-...
-
-> +module_i2c_driver(sx150x_driver);
-
-Nope. You have to leave below.
-
-> -subsys_initcall(sx150x_init);
-
-subsys_initcall != device_initcall
-
+I see, let Rafael decide then. I'm not pushing here.
 
 -- 
 With Best Regards,
