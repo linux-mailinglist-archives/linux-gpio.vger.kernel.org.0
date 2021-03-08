@@ -2,73 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0920833118D
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 16:01:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B2E633119B
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 16:06:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbhCHPA3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Mar 2021 10:00:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231209AbhCHPAD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 10:00:03 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D106C06174A
-        for <linux-gpio@vger.kernel.org>; Mon,  8 Mar 2021 07:00:03 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id d13so15211160edp.4
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Mar 2021 07:00:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8ekCZMHXgwaHxgHpJfRzLgVCiXSCvlL3z1p/Dj8xOMM=;
-        b=qzhaVpe3MtPhdiVp0l3jqha8NzCFpAiM8aeUsjJRxS3L5KENy1c8yfkqZtl1p/2MT+
-         b2EUtJdpmiZhSML+RIf+lvwpn9EBZxhfN4L/tC/oPHXVHobrzttURJ5Jnh2fCS3sdbGN
-         MRu3iRKcbzq1ROqBQwhbWBTMo4ROam6nUZYAs4apKfOzFfjlS7jDV6eLKRAxkLcw+xkC
-         Y+ze82nFTjLEz6h7cPkOUhz05GUDg7SE0j9nXPLV4jJpm3jjiJARp5f3iE0Z98Z2Wk59
-         1xSmzLDQkg+RQx6FglT7/MEB46zg4tvsWqQwFEZo3h+yV3prOGV9Rd9NzoiIZcfAdUXF
-         utkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8ekCZMHXgwaHxgHpJfRzLgVCiXSCvlL3z1p/Dj8xOMM=;
-        b=R+ojtrJqfZ2Qq1wGaY+Ki3zD2+lz0tFsmK2BK941iM0XH+FJUmNoPRRnui+Q8nddYr
-         J0/JDwrHcR6SVfv+ZtXvTgmyo67JK8G2JkhGVN+zb12h7ijK0dtwrFKZUflMBTurD/W3
-         Cefsa0ok56gN/FV0BIR2Og/a2YGIo17BjluqAMPsbpBwMk9YboJB2ecOeyX18Y7v/Cn/
-         iKZ6FtK/h57ahhppPMT/OWnRX6IlbHamS/swP/XMzo7HtFtw1lDKaMW5sEmo5xxNLJNr
-         uLio2r0bqHtw8qtCu1PZbf3kSWbNy8ZAEAr5Yto2hHghGwGq/24T8bQZMmCh1omg17vz
-         qOwA==
-X-Gm-Message-State: AOAM533DySG0UsHeuFyHfqld3ilflnIQ+0+yZ03fnlt9dj5Xa/2tvBUV
-        zHfw3ZbnIDvpYs7foSCr3axkPyp6aqrNkACh4o6Pfw==
-X-Google-Smtp-Source: ABdhPJxWWk0qilC95RD9gboXObt6v0+Il8uPSlHzJv/u+Uw9jw61553R8rteYXGSKA6iSHJn6QAj39EybIrta2ysEa4=
-X-Received: by 2002:a05:6402:35c8:: with SMTP id z8mr22547852edc.341.1615215601861;
- Mon, 08 Mar 2021 07:00:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20210219223910.1831-1-luca@lucaceresoli.net>
-In-Reply-To: <20210219223910.1831-1-luca@lucaceresoli.net>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 8 Mar 2021 15:59:49 +0100
-Message-ID: <CAMpxmJVzShDO7b1i_KiTdu9DGexNmgR2oA241H9=mht0iYMBqg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] mfd: lp87565: fix typo in define names
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Lee Jones <lee.jones@linaro.org>,
+        id S229627AbhCHPFA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Mar 2021 10:05:00 -0500
+Received: from mga07.intel.com ([134.134.136.100]:15430 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230511AbhCHPEv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Mar 2021 10:04:51 -0500
+IronPort-SDR: rZXrXVlEH8dOYTpNPu2rpQ1mXm9l2LUgSpqJq0Oy68NQxddSdKgYDGSugP07WmRUQEpLI3IoF8
+ mk6qoq20BDAw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9917"; a="252070636"
+X-IronPort-AV: E=Sophos;i="5.81,232,1610438400"; 
+   d="scan'208";a="252070636"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 07:04:50 -0800
+IronPort-SDR: J8GNzHfLKcDEkk426TkXPTJpLuMsSrSi0ZePPgzJPGYWw6fHHNIpqpY8ioVeonKngALCCJk50S
+ Wxqg+2kLC99Q==
+X-IronPort-AV: E=Sophos;i="5.81,232,1610438400"; 
+   d="scan'208";a="519965026"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 07:04:47 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lJHR6-00AqJ3-6h; Mon, 08 Mar 2021 17:04:44 +0200
+Date:   Mon, 8 Mar 2021 17:04:44 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        Shuah Khan <shuah@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 09/12] gpio: sim: new testing module
+Message-ID: <YEY9DFk6NEcnEWGE@smile.fi.intel.com>
+References: <20210304102452.21726-1-brgl@bgdev.pl>
+ <20210304102452.21726-10-brgl@bgdev.pl>
+ <YEDdbfbM9abHJpIO@smile.fi.intel.com>
+ <CAMRc=MdRxXzoZuyLs-24dXfOft=OQqDneTHa4-ZKqFE1kMBWcg@mail.gmail.com>
+ <YEIE1nG8lZ4V2MXq@smile.fi.intel.com>
+ <CAMRc=MekGnK17rYf3Bx_UHumVVrpmJphOnMfO352NB9SaOJCGw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MekGnK17rYf3Bx_UHumVVrpmJphOnMfO352NB9SaOJCGw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 19, 2021 at 11:39 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
->
-> "GOIO" should be "GPIO" here.
->
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
+On Mon, Mar 08, 2021 at 03:23:31PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Mar 5, 2021 at 11:15 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Mar 04, 2021 at 09:15:29PM +0100, Bartosz Golaszewski wrote:
+> > > On Thu, Mar 4, 2021 at 2:15 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Thu, Mar 04, 2021 at 11:24:49AM +0100, Bartosz Golaszewski wrote:
+> > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-For GPIO part:
+> > > > > +
+> > > > > +     /*
+> > > > > +      * FIXME If anyone knows a better way to parse that - please let me
+> > > > > +      * know.
+> > > > > +      */
+> > > >
+> > > > If comma can be replaced with ' ' (space) then why not to use next_arg() from
+> > > > cmdline.c? I.o.w. do you have strong opinion why should we use comma here?
+> > > >
+> > >
+> > > My opinion is not very strong but I wanted to make the list of names
+> > > resemble what we pass to the gpio-line-names property in device tree.
+> > > Doesn't next_arg() react differently to string of the form: "foo=bar"?
+> >
+> > It's ambiguous here.
+> >
+> > So, the strings '"foo=bar"' and 'foo=bar' (w/o single quotes!) are indeed
+> > parsed differently, i.e.
+> >         '"foo=bar"' -> 'foo=bar',
+> > while
+> >         "foo=bar" -> 'foo' + 'bar'.
+> >
+> 
+> IMO '"foo", "bar", "", "foobar"' looks better than '"foo" "bar" ""
+> "foobar"' and I'm also not sure next_arg will understand an empty
+> quote?
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+I guess it understands it. But I agree that comma-separated it would look
+better.
+
+> If you're not objecting strongly, then I would prefer my version.
+
+I have strong opinion not to open code "yet another parser".
+
+So, grepping on 'strsep(.*, ",")' shows a lot of code that wants something like
+this. Interesting are the net/9p cases. This in particular pointed out to
+lib/parser.c which in turn shows promising match_strlcpy() / match_strdup(). I
+haven't looked deeply though.
+
+That said, I agree that next_arg() is not the best here.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
