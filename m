@@ -2,96 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BAC233163F
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 19:38:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10EAF3316A5
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 19:53:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231303AbhCHShd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Mar 2021 13:37:33 -0500
-Received: from mail-io1-f48.google.com ([209.85.166.48]:38028 "EHLO
-        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229972AbhCHShH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 13:37:07 -0500
-Received: by mail-io1-f48.google.com with SMTP id k2so11047439ioh.5;
-        Mon, 08 Mar 2021 10:37:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GZuaYRcTQYr29WcRo++hbhX56RPiFxHTN4yTc4AVz3w=;
-        b=ueNg0eXozQn4GeZW4yb/OAzU/nlETfHF/8IooElZdh57U4/kRZgSa+u5kwvBfoCP9i
-         +39/KKkK2/2IUNSkQr7tRZf4Oal2Ha34IQZC8Uv6Ok4+g9Sc2d3ytiG2akiCWpY1wT0F
-         qIAOCLrlLnWBunHj5svVdxrtX0J0Ijgx9FlISC66DqB/SO3z5q11uhyl+7LYJ93HH4ni
-         rMwLFSqNRpqKkqwfLoE4c1Rvc2+vDH+tw8MsDlOjuWXPNQM1/ukN0ggup6+M4cFP2AOp
-         GtBF1RDu2wLdwGlflRTQ8k3whWOM8S9HuMdhAfTU5wkYaxb54OWWokcqYLr7YYnuhQMH
-         a2NQ==
-X-Gm-Message-State: AOAM531QyGRMqdNbfXJGQXtHe0P+bBWGXtmPqxrxiWmuv99d2qdRSMh3
-        9E2xaoLtCdQD5QYQZ6UhW0lG+NutKg==
-X-Google-Smtp-Source: ABdhPJzJvIobBSjcBQqRLygEjVIi4wqh95GdW3xy8229pOCjpvroGq1otlgfjqRkUCIo0gL3y4TMig==
-X-Received: by 2002:a5d:80d5:: with SMTP id h21mr7273322ior.11.1615228626850;
-        Mon, 08 Mar 2021 10:37:06 -0800 (PST)
-Received: from robh.at.kernel.org ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id h13sm6224496ioe.40.2021.03.08.10.37.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Mar 2021 10:37:05 -0800 (PST)
-Received: (nullmailer pid 2758433 invoked by uid 1000);
-        Mon, 08 Mar 2021 18:37:04 -0000
-Date:   Mon, 8 Mar 2021 11:37:04 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S230116AbhCHSwc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Mar 2021 13:52:32 -0500
+Received: from mga03.intel.com ([134.134.136.65]:14730 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231202AbhCHSwG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Mar 2021 13:52:06 -0500
+IronPort-SDR: EKFJfgfpgmYiSP2kNmeoZsDPHLo/HnKS7NQDv1Z8zeHoo0FLkqZ2cd1Mm8ttXpzGR3Yf9O07bL
+ h6u2OQKab1ng==
+X-IronPort-AV: E=McAfee;i="6000,8403,9917"; a="188137490"
+X-IronPort-AV: E=Sophos;i="5.81,233,1610438400"; 
+   d="scan'208";a="188137490"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 10:52:05 -0800
+IronPort-SDR: saYzE8XzAiPIOo4Iy0T/5YoXHttU6J8tRGgUNkE2jd9QPWaKRODXBD4CJjGgpyKSvDpBm8aL0h
+ EcRnkkrxKVww==
+X-IronPort-AV: E=Sophos;i="5.81,233,1610438400"; 
+   d="scan'208";a="509019540"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 10:52:02 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lJKz2-00At0a-0a; Mon, 08 Mar 2021 20:52:00 +0200
+Date:   Mon, 8 Mar 2021 20:52:00 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio: omap: Honor "aliases" node
-Message-ID: <20210308183704.GA2747088@robh.at.kernel.org>
-References: <20210302011813.2331879-1-alexander.sverdlin@gmail.com>
- <CACRpkdYErJH5RUjL+jPC5vnaqGiOqBwHsr0E42wOWrpBGrpS3w@mail.gmail.com>
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 5/5] gpiolib: Reuse device's fwnode to create IRQ
+ domain
+Message-ID: <YEZyUJcjef5OekkJ@smile.fi.intel.com>
+References: <20210304150215.80652-1-andriy.shevchenko@linux.intel.com>
+ <20210304150215.80652-6-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0juZyx0f9L6erdNdmhFdJQ=Q9hPGatNEJm9v_oija=oiQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYErJH5RUjL+jPC5vnaqGiOqBwHsr0E42wOWrpBGrpS3w@mail.gmail.com>
+In-Reply-To: <CAJZ5v0juZyx0f9L6erdNdmhFdJQ=Q9hPGatNEJm9v_oija=oiQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 02, 2021 at 05:21:23PM +0100, Linus Walleij wrote:
-> On Tue, Mar 2, 2021 at 2:18 AM Alexander Sverdlin
-> <alexander.sverdlin@gmail.com> wrote:
-> 
-> > Currently the naming of the GPIO chips depends on their order in the DT,
-> > but also on the kernel version (I've noticed the change from v5.10.x to
-> > v5.11). Honor the persistent enumeration in the "aliases" node like other
-> > GPIO drivers do.
+On Mon, Mar 08, 2021 at 07:32:47PM +0100, Rafael J. Wysocki wrote:
+> On Thu, Mar 4, 2021 at 4:02 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> > ---
-> > Yes, I noticed checkpatch "WARNING: DT binding docs and includes should be
-> > a separate patch."
-> > However, the parts below are tiny and barely make sense separately.
+> > When IRQ domain is created for an ACPI case, the name of it becomes unknown-%d
+> > since for now it utilizes of_node member only and doesn't consider fwnode case.
+> > Convert IRQ domain creation code to utilize fwnode instead.
+> >
+> > Before/After the change on Intel Galileo Gen 2 with two GPIO (IRQ) controllers:
+> >
+> >   unknown-1     ==>     \_SB.PCI0.GIP0.GPO
+> >   unknown-2     ==>     \_SB.NIO3
+
+Thanks for review!
+
+I'm wondering why you commented against v2 instead of v3... I assume it's just
+a typo while the comments themselves are applicable to v3. Hence my reply
+below.
+
+...
+
+> > -       if (WARN(np && type != IRQ_TYPE_NONE,
+> > -                "%s: Ignoring %u default trigger\n", np->full_name, type))
+> > +       if (WARN(fwnode && type != IRQ_TYPE_NONE,
+> > +                "%pfw: Ignoring %u default trigger\n", fwnode, type))
+> >                 type = IRQ_TYPE_NONE;
+> >
+> > -       if (has_acpi_companion(gc->parent) && type != IRQ_TYPE_NONE) {
+> > -               acpi_handle_warn(ACPI_HANDLE(gc->parent),
+> > -                                "Ignoring %u default trigger\n", type);
+> > -               type = IRQ_TYPE_NONE;
+> > -       }
 > 
-> I've shut it down in the past because the instance ordering is a
-> linuxism and the needs are in the Linux userspace somehow.
-> It is different from a UART for example, which always need to
-> be at the same place on any operating system, hence it has an
-> alias.
+> Why is the above message not worth printing any more?  If there is a
+> good enough reason, it would be good to mention it in the changelog.
+
+The reason is good enough, we drop duplicated printing since we got fwnode in
+either case DT or ACPI. Basically this part is unification and due to nature of
+the whole change it can't be done separately.
+
+I will do in v4.
+
+...
+
+> >                 /* Some drivers provide custom irqdomain ops */
+> > -               if (gc->irq.domain_ops)
+> > -                       ops = gc->irq.domain_ops;
+> > -
+> > -               if (!ops)
+> > -                       ops = &gpiochip_domain_ops;
 > 
-> For kernelspace the instance order should not matter, since
-> all resources are obtained from the device tree anyway
-> by phandle.
+> I'm guessing that the code above is replaced in order to avoid
+> initializing ops to NULL, but IMO that should be a separate patch or
+> at least the extra cleanup should be mentioned in the changelog.
+> 
+> Personally, I would do the essential change first and put all of the
+> tangentially related cleanups into a separate follow-up patch.
 
-Thank you!
+Okay, I will split it to a separate clean up in v4.
 
-Can we remove the ones we have already for GPIO? 
+...
 
-BTW, It's been on my todo list for a while to start requiring 
-documentation of alias names so we can reject new ones and get rid of 
-some of the unused existing ones. Some platforms have numbered 
-everything...
+While at it, can you then provide an immutable tag / branch that Bart and I may
+inject into our repos?
 
-Rob
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
