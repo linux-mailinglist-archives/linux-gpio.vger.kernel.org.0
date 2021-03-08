@@ -2,110 +2,255 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C807330BA3
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 11:46:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 566E2330BDB
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 11:59:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231916AbhCHKqF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Mar 2021 05:46:05 -0500
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:41136 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231128AbhCHKpw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 05:45:52 -0500
-Received: by mail-lf1-f45.google.com with SMTP id q25so20240671lfc.8;
-        Mon, 08 Mar 2021 02:45:51 -0800 (PST)
+        id S230522AbhCHK6h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Mar 2021 05:58:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230047AbhCHK6N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 05:58:13 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71EEC061760
+        for <linux-gpio@vger.kernel.org>; Mon,  8 Mar 2021 02:58:12 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id mm21so19324397ejb.12
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Mar 2021 02:58:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cakLU/eCVibA/iJUsPZ/Q2ABgxzfNfr1tJxKBYGIySk=;
+        b=BTBqBrUFxR1nwyCuWnwC6e1DEERyTpTbaHk6owBxXjbWU8CuECLmKi/NSs11fNl5Y3
+         AIl8cgQMkcD9RjzQdWnPRmKqiHZq3fRxJpmt622AOYG56b2bh0ANSFaWDHLCiy1mX0Wv
+         uXvc7B+2HAr5i12uyVLydPXvt68rQ/I4AolZfgaJ0JoE0q4m6Pv8WYZCg1xahdh/7ndv
+         QWI9fmOHAnEmFdHCE8FuWyhZpmI/HQIn3sHcRu+LXm6nxzspXtR6VYB65duFImKgDdzk
+         1BVaA2tOV8qZEonKP9+uuHoWLleK+dlHk+77+fER0jXob7Wm4To0+KkBfQiFKF/aif8F
+         iicA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=scj6590os1eA48Uwmp8IjLfDALuVaAXiJhdeu5i0Feo=;
-        b=hnTbztR3tzFrBMdaWYfEcmGcK9XMPK4/tNZ3yxGWXy5M+KhbzgObxQkdWKXgrEJNsp
-         fb63CRIekSqPDDfcCLx4e5nw2BLtGhaaSriW3CUFHVvYI5q/p9nJE0fCtmmHMc3afmqk
-         VYR4HUBAqpIBp2XQW1sjQP6wLtUENO4yUV9zdU/RGWYbSxywQMV74K6KoFEqek1Vki9y
-         bA1xiM5xjGoaGSzjyVlqk2BHEBgqLtcz/RmTV/grxLtL6BsUkC4nkYZkME94y6RLpWi+
-         QhLjb39b0w65FkFPuqlQB3yH051xbLzvOoGVqTtvrqUk2/Dy457oM6zD+xuOiqapfxuF
-         yyBg==
-X-Gm-Message-State: AOAM5314T+xDwu1D2M3IivHs9bqa+ZG1z7LNocxJiY8PhNGmKvkJEpN+
-        p+QfClfvDx3IyCtejUsAUdc=
-X-Google-Smtp-Source: ABdhPJx3O+o2xGGkev21iCH55Gk+EjK/5NDUKlb0GrPN9ZlLNYR3hNjQmvCkrauFPWbVHOAFbEtkCQ==
-X-Received: by 2002:a19:6109:: with SMTP id v9mr14466171lfb.546.1615200350696;
-        Mon, 08 Mar 2021 02:45:50 -0800 (PST)
-Received: from localhost.localdomain (dc7vkhyyyyyyyyyyyyycy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::4])
-        by smtp.gmail.com with ESMTPSA id r7sm1349227lfr.230.2021.03.08.02.45.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Mar 2021 02:45:50 -0800 (PST)
-Date:   Mon, 8 Mar 2021 12:45:44 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-power@fi.rohmeurope.com, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v3 15/15] MAINTAINERS: Add ROHM BD71815AGW
-Message-ID: <c73fdf1ef1da3538d93035a75029103fdb87b8c8.1615198094.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1615198094.git.matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cakLU/eCVibA/iJUsPZ/Q2ABgxzfNfr1tJxKBYGIySk=;
+        b=f5us0h7ZSmEZv4mzI7NkNx1Bn6fMChPXNXJ5G/04MCuw349R881HWpsvFTaRsalk9J
+         WoHVjPYCkvgcLotJcQMThO5aSJIk8h10W2hspjnyeuWJp3UThE1qImnVK64LvlIySMVH
+         OjmrcyDiIv4KPS7dja6qwKmWDxXh1XghJm08iWWJm2SzopKIg1/g7rqts1A4VKJlqfrt
+         v/QY6LMDAWSHjp32hDAROODtfJ7COoUIv2FdxP5Pa7MKHJ08NMTBV3QPeJQ6AJf5H2fl
+         K1DUWF8X7ES1kc3ujRACNk/krD6rFjCZVurnsMsV7FCY1YxkCuzL+xREPkHZC8gBQaG/
+         P+pA==
+X-Gm-Message-State: AOAM533zbE4aleigKMNUSD4hqW5/X7P2cD5e0EKgKJHMf6h59e0VPRdW
+        yWrcRWRhktayJ6bOJbAjQSR4XY4vuf1p95ga9oNlFw==
+X-Google-Smtp-Source: ABdhPJyh7cYNblznEQDzmgBCp9FhnkGIWSgzPhPC3Nx9KFcWWRsdhoOzb1arlNSmU6ZCa/pt47xg+BRBvMZeZsH2CFw=
+X-Received: by 2002:a17:906:d938:: with SMTP id rn24mr15092670ejb.87.1615201091145;
+ Mon, 08 Mar 2021 02:58:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1615198094.git.matti.vaittinen@fi.rohmeurope.com>
+References: <20210304102452.21726-9-brgl@bgdev.pl> <CAMuHMdXRK5=w1-Z=EbM60Sf2bLY1EiVaxbZjMP+XyQ3g7nBpZw@mail.gmail.com>
+ <YEHs3CxWnusWklME@kroah.com> <CAMRc=MddDb+nakgEM+Xeqm=rMMkkWO2EDekD36EoPJashYP88w@mail.gmail.com>
+ <YEHyDUQ3V7Pl6+TU@kroah.com> <CAMRc=Md7FeQAd4Syh685+jyZAq2QStBNoo0ACQxrSB=4N6d3dg@mail.gmail.com>
+ <YEIG0u8Vg3e6ZBhz@kroah.com> <CAMRc=Meznt=5m_4OnSRf04xHsUy39hH7S7_8ftZaHq6GD-taEw@mail.gmail.com>
+ <YEIVi8aDSEukrK7E@kroah.com> <CAMRc=MeNBt=J2LkDAYKhd9iQJCfyTvAxBKmJZ7vjVUOmYjexLg@mail.gmail.com>
+ <YEJH0J6czwpNlZAg@kroah.com>
+In-Reply-To: <YEJH0J6czwpNlZAg@kroah.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 8 Mar 2021 11:58:00 +0100
+Message-ID: <CAMRc=McbqH27Xwqhwk0yvN5fhMFhGn=gPHi13QE2+WsWvFDETA@mail.gmail.com>
+Subject: Re: [PATCH v2 08/12] drivers: export device_is_bound()
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>, Shuah Khan <shuah@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add maintainer entries for ROHM BD71815AGW drivers.
-New regulator and GPIO drivers were introduced for these PMICs.
+On Fri, Mar 5, 2021 at 4:01 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, Mar 05, 2021 at 03:20:27PM +0100, Bartosz Golaszewski wrote:
+> > On Fri, Mar 5, 2021 at 12:27 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Fri, Mar 05, 2021 at 11:58:18AM +0100, Bartosz Golaszewski wrote:
+> > > > On Fri, Mar 5, 2021 at 11:24 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Fri, Mar 05, 2021 at 10:16:10AM +0100, Bartosz Golaszewski wrote:
+> > > > > > On Fri, Mar 5, 2021 at 9:55 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > > > >
+> > > > > > > On Fri, Mar 05, 2021 at 09:45:41AM +0100, Bartosz Golaszewski wrote:
+> > > > > > > > On Fri, Mar 5, 2021 at 9:34 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > > > > > >
+> > > > > > > > > On Fri, Mar 05, 2021 at 09:18:30AM +0100, Geert Uytterhoeven wrote:
+> > > > > > > > > > CC Greg
+> > > > > > > > > >
+> > > > > > > > > > On Thu, Mar 4, 2021 at 11:30 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > > > > > > > >
+> > > > > > > > > > > Export the symbol for device_is_bound() so that we can use it in gpio-sim
+> > > > > > > > > > > to check if the simulated GPIO chip is bound before fetching its driver
+> > > > > > > > > > > data from configfs callbacks in order to retrieve the name of the GPIO
+> > > > > > > > > > > chip device.
+> > > > > > > > > > >
+> > > > > > > > > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > > > > > > > > ---
+> > > > > > > > > > >  drivers/base/dd.c | 1 +
+> > > > > > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > > > > > >
+> > > > > > > > > > > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> > > > > > > > > > > index 9179825ff646..c62c02e3490a 100644
+> > > > > > > > > > > --- a/drivers/base/dd.c
+> > > > > > > > > > > +++ b/drivers/base/dd.c
+> > > > > > > > > > > @@ -353,6 +353,7 @@ bool device_is_bound(struct device *dev)
+> > > > > > > > > > >  {
+> > > > > > > > > > >         return dev->p && klist_node_attached(&dev->p->knode_driver);
+> > > > > > > > > > >  }
+> > > > > > > > > > > +EXPORT_SYMBOL_GPL(device_is_bound);
+> > > > > > > > >
+> > > > > > > > > No.  Please no.  Why is this needed?  Feels like someone is doing
+> > > > > > > > > something really wrong...
+> > > > > > > > >
+> > > > > > > > > NACK.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > I should have Cc'ed you the entire series, my bad.
+> > > > > > > >
+> > > > > > > > This is the patch that uses this change - it's a new, improved testing
+> > > > > > > > module for GPIO using configfs & sysfs as you (I think) suggested a
+> > > > > > > > while ago:
+> > > > > > > >
+> > > > > > > > https://lkml.org/lkml/2021/3/4/355
+> > > > > > > >
+> > > > > > > > The story goes like this: committing the configfs item registers a
+> > > > > > > > platform device.
+> > > > > > >
+> > > > > > > Ick, no, stop there, that's not a "real" device, please do not abuse
+> > > > > > > platform devices like that, you all know I hate this :(
+> > > > > > >
+> > > > > > > Use the virtbus code instead perhaps?
+> > > > > > >
+> > > > > >
+> > > > > > I have no idea what virtbus is and grepping for it only returns three
+> > > > > > hits in: ./drivers/pci/iov.c and it's a function argument.
+> > > > > >
+> > > > > > If it stands for virtual bus then for sure it sounds like the right
+> > > > > > thing but I need to find more info on this.
+> > > > >
+> > > > > Sorry, wrong name, see Documentation/driver-api/auxiliary_bus.rst for
+> > > > > the details.  "virtbus" was what I think about it as that was my
+> > > > > original name for it, but it eventually got merged with a different
+> > > > > name.
+> > > > >
+> >
+> > Unless I'm not seeing something - it completely doesn't look like the
+> > right solution. This auxiliary bus sounds like MFD with extra steps.
+> > Its aim seems to be to provide virtual devices for sub-modules of real
+> > devices.
+> >
+> > What I have here really is a dummy device for which no HW exists.
+>
+> Then just use a "normal" virtual device.  We have loads of them.  But if
+> you want to bind a "driver" to it, then use the aux bus please.  Do NOT
+> abuse a platform device for this.
+>
+> > Also: while the preferred way is to use configfs to instantiate these
+> > simulated devices, then can still be registered from device-tree (this
+> > is a feature that was requested and eventually implemented in
+> > gpio-mockup which we want to phase out so we can't just drop it).
+> > AFAIK only platform devices can be populated from DT.
+>
+> If you really are using DT, then ok, a platform device can be used, but
+> you didn't say that :)
+>
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- MAINTAINERS | 3 +++
- 1 file changed, 3 insertions(+)
+My bad. Yes we need to use DT. And platform device does sound like the
+best approach.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d92f85ca831d..ac6eb095ab0c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15452,18 +15452,21 @@ F:	Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
- F:	Documentation/devicetree/bindings/regulator/rohm,bd70528-regulator.txt
- F:	drivers/clk/clk-bd718x7.c
- F:	drivers/gpio/gpio-bd70528.c
-+F:	drivers/gpio/gpio-bd71815.c
- F:	drivers/gpio/gpio-bd71828.c
- F:	drivers/mfd/rohm-bd70528.c
- F:	drivers/mfd/rohm-bd71828.c
- F:	drivers/mfd/rohm-bd718x7.c
- F:	drivers/power/supply/bd70528-charger.c
- F:	drivers/regulator/bd70528-regulator.c
-+F:	drivers/regulator/bd71815-regulator.c
- F:	drivers/regulator/bd71828-regulator.c
- F:	drivers/regulator/bd718x7-regulator.c
- F:	drivers/regulator/rohm-regulator.c
- F:	drivers/rtc/rtc-bd70528.c
- F:	drivers/watchdog/bd70528_wdt.c
- F:	include/linux/mfd/rohm-bd70528.h
-+F:	include/linux/mfd/rohm-bd71815.h
- F:	include/linux/mfd/rohm-bd71828.h
- F:	include/linux/mfd/rohm-bd718x7.h
- F:	include/linux/mfd/rohm-generic.h
--- 
-2.25.4
+> > I guess we could create something like a "virtual bus" that would be
+> > there for devices that don't exist on any physical bus but this would
+> > end up in big part being the same thing as platform devices.
+>
+> That's what the aux bus code is there for.  So maybe you do need to use
+> it.
+>
 
+I'm fine with that if it can be instantiated from DT but it doesn't seem so.
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+> > > > > > > > As far as I understand - there's no guarantee that
+> > > > > > > > the device will be bound to a driver before the commit callback (or
+> > > > > > > > more specifically platform_device_register_full() in this case)
+> > > > > > > > returns so the user may try to retrieve the name of the device
+> > > > > > > > immediately (normally user-space should wait for the associated uevent
+> > > > > > > > but nobody can force that) by doing:
+> > > > > > > >
+> > > > > > > > mv /sys/kernel/config/gpio-sim/pending/foo /sys/kernel/config/gpio-sim/live/
+> > > > > > > > cat /sys/kernel/config/gpio-sim/live/foo/dev_name
+> > > > > > > >
+> > > > > > > > If the device is not bound at this point, we'll have a crash in the
+> > > > > > > > kernel as opposed to just returning -ENODEV.
+> > > > > > >
+> > > > > > > How will the kernel crash?  What has created the dev_name sysfs file
+> > > > > > > before it is possible to be read from?  That feels like the root
+> > > > > > > problem.
+> > > > > > >
+> > > > > >
+> > > > > > It's not sysfs - it's in configfs. Each chip has a read-only configfs
+> > > > > > attribute that returns the name of the device - I don't really have a
+> > > > > > better idea to map the configfs items to devices that committing
+> > > > > > creates.
+> > > > >
+> > > > > Same question, why are you exporting a configfs attribute that can not
+> > > > > be read from?  Only export it when your driver is bound to the device.
+> > > > >
+> > > >
+> > > > The device doesn't know anything about configfs. Why would it? The
+> > > > configuration of a GPIO chip can't be changed after it's instantiated,
+> > > > this is why we have committable items.
+> > > >
+> > > > We export a directory in configfs: gpio-sim -> user creates a new
+> > > > directory (item) in gpio-sim/pending/foo and it's not tied to any
+> > > > device yet but exports attributes which we use to configure the device
+> > > > (label, number of lines, line names etc.), then we mv
+> > > > gpio-sim/pending/foo gpio-sim/live and this is when the device gets
+> > > > created and registered with the subsystem. We take all the configured
+> > > > attributes and put them into device properties for both the driver and
+> > > > gpiolib core (for standard properties) to read - just like we would
+> > > > with a regular GPIO driver because this is the goal: test the core
+> > > > code.
+> > >
+> > > Ok, but they why are you trying to have dev_name be an exported thing?
+> > > I don't understand an attribute here that is visable but can not be read
+> > > from.
+> > >
+> >
+> > Because once the associated configfs item is committed and the device
+> > created, it will become readable. The list of attributes is fixed in
+> > configfs. I'm not sure what the better approach would be - return
+> > "none" if the device handle is NULL?
+>
+> Sounds reasonable, I don't know how configfs works, it's been a decade
+> since I last touched it.
+>
+> > > And why not just use the default device name function: dev_name(), which
+> > > will always return a string that will work no matter if the device is
+> > > bound to a driver or not.
+> > >
+> >
+> > I can do this but then it's possible that user-space gets the name of
+> > the device which doesn't exist in sysfs. I guess we can mention that
+> > in the documentation.
+>
+> Device names can change over time, nothing new there.
+>
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Ok will change in v3. I'll Cc you next time.
+
+Bart
