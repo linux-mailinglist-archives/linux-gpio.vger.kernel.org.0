@@ -2,121 +2,237 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CB3633055C
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 01:33:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 693473308AD
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 08:14:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233396AbhCHAc1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Mar 2021 19:32:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233392AbhCHAcO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Mar 2021 19:32:14 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12CC9C061760
-        for <linux-gpio@vger.kernel.org>; Sun,  7 Mar 2021 16:32:14 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id mz6-20020a17090b3786b02900c16cb41d63so2129122pjb.2
-        for <linux-gpio@vger.kernel.org>; Sun, 07 Mar 2021 16:32:14 -0800 (PST)
+        id S231919AbhCHHN5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Mar 2021 02:13:57 -0500
+Received: from mail-bn7nam10on2049.outbound.protection.outlook.com ([40.107.92.49]:46273
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231805AbhCHHNa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Mar 2021 02:13:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hq3xNrGemXwkaWnG+vSh4haCawCepLt2SvPgwy/YaeePSP3fUXtD1bjtLNeNsswXZz1OPtMztUb6GJIXfOqc/Qe3WhzrGkiSZ4Nn8MqSjDaSkfGCfiThAHJ4ZDlwRqeiN3Oes4yqLrOSq2FEsM4qU2guoBz2U/vi6BKm05jBsD20L8pqXu1XPeMtRxO7Mds21e/kgJLEbdHUE+XEApS0GzkUcDarZPp9U5V7etJwF9ZC90zlX7LksbTARFt1sWTEb+xA+1xp7u0zPGkxMZ77v70Kk06ICLbCMDRjiyNtrQYH+YdWBfrQFmD5QrlUzU/7zUJ3wjSnUY9RWb1xI+tAAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eyQoam767NkKeEqHK1mOh3IVmLsvXX0NixaSASlo72k=;
+ b=ERa7l87UKn4qxhmO8njTEQL2lo2Ac61wEL9DqPgKkGlpinJcxiPxSyFF7KuaslMHDy9nnKnMQYwh2BA574DGmea785VHCh963XkmW6jt4FFbkKBKil3xd96AHrFd2yl5eVE8djxzJ36z3xKsoaQSUgpc/HoPA7ZXikWqZMV5ifIouoosp+Ai+5TD0eMvbB4BpUuZLk0xo3taOLwaIBjTG3rTWIpiuog4hAZfmriXXDqYMx1WcHeyDuGBaEtQtfgiab2zHykkbdzgHPAHtrFlQXJGgHW5KDXPzxm3kFKf3pmRaJnGR6ZS0MnLmx8eNsnK9zEuRGbhASO6i98YmIJA6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=6AB1N2CEv1uO/OWrbLkb4xKVAC6/jBjIAgWr7ep8KF8=;
-        b=VWCy9+1/e5XxIB5MV5Fe6l/NkVtBF4cfC/CBa/LEuWFw3r6BLsS/aDIpIm63a8hPKl
-         aPuvyhRk8mXB8MaILrw+/ZAjQLybx0l6eCHkmT90dUtnX24x26H8L1CZZdILX669T4T8
-         Dm4pnYOeBos6qSeXIKfODtYT24qVqR1LqjwPqhgooxgl8aXGoouPAxklz3y6LtDgIHkr
-         ZkF84qXR7xxR3LphlVxFjGCHnfsppio2JBBHezbkuaQfUNB/02MdAi8nDzNjhAwX0eln
-         tJH/EWF8w+8NYBUjGc0c8peNae4mnpFjUU2EQ85dxcdeRn+NHgID5oneV621X2iII52z
-         9Nbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=6AB1N2CEv1uO/OWrbLkb4xKVAC6/jBjIAgWr7ep8KF8=;
-        b=jbaNe+z+iFlkR6mjhkDTiszV19CGfiBbH2NaaN+qlm58TlaGHJuhM4gsT+hZGlOG5j
-         qPHXyx8Bb/IjcaW2bS1l28XD1YDYZqbDVnN7I3Q8fKFjhAH0Ay1fFTIBI+juCrmSwne+
-         C/etV38+rOShlxW9XCnotLA2YCztgXckq10g4qERv75evZQnKNXD9osXCEYu/BVfq6dn
-         uqXCodjYGLaz1gUqbE4F2o2yO94mLj84BBqAkM6WREA1OvfsgX0wGscn3JzJPsBbio64
-         KN3DVKl1ll2AQfy6j6amiWx9rIkInksTcTcxPv0irqEYCYWA15BzWzdCPbwdsq1fk0uk
-         0iVg==
-X-Gm-Message-State: AOAM533TF4/dAu3amKxt1+tdvuTlw/gcq6Sy8fsKrV1knHEzDOgIA5Qw
-        vPPzDu8LB1f6euDFgKY1shZdIlPIAx6HRecj5rU=
-X-Google-Smtp-Source: ABdhPJzfHsNxLA0ripzLurNnF1DJTwCR3kO75BM4+RaQZg28pSu1AfWDDMA3U6njWVx8/porMrW+mmqltwJR85t5QHU=
-X-Received: by 2002:a17:902:7401:b029:e4:5992:e64a with SMTP id
- g1-20020a1709027401b02900e45992e64amr18449001pll.75.1615163533483; Sun, 07
- Mar 2021 16:32:13 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eyQoam767NkKeEqHK1mOh3IVmLsvXX0NixaSASlo72k=;
+ b=dzDnALWMLbl5VtBA588m9Hi4tvVIA7Y2eVxxVueNPmGvIbJZrWBtrOPReZhGL5mz0Qcn08p8VEyOBMmZjugUvMdtBCn4ES/BR+d77RiMcn5FcVytvS15ETiSspwi29aVTJtuZQJ8iPhprzG0zoKMgiltVC/6WEaB0VZfnkqddL0=
+Received: from BLAPR03CA0090.namprd03.prod.outlook.com (2603:10b6:208:329::35)
+ by BYAPR02MB4311.namprd02.prod.outlook.com (2603:10b6:a03:10::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.28; Mon, 8 Mar
+ 2021 07:13:26 +0000
+Received: from BL2NAM02FT036.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:329:cafe::61) by BLAPR03CA0090.outlook.office365.com
+ (2603:10b6:208:329::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17 via Frontend
+ Transport; Mon, 8 Mar 2021 07:13:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ BL2NAM02FT036.mail.protection.outlook.com (10.152.77.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3912.25 via Frontend Transport; Mon, 8 Mar 2021 07:13:25 +0000
+Received: from xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Sun, 7 Mar 2021 23:13:25 -0800
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server id
+ 15.1.1913.5 via Frontend Transport; Sun, 7 Mar 2021 23:13:25 -0800
+Envelope-to: srinivas.goud@xilinx.com,
+ michal.simek@xilinx.com,
+ srinivas.neeli@xilinx.com,
+ linux-pm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ linux-arch@vger.kernel.org,
+ amit.kucheria@verdurent.com,
+ daniel.lezcano@linaro.org,
+ rui.zhang@intel.com,
+ akpm@linux-foundation.org,
+ yamada.masahiro@socionext.com,
+ linus.walleij@linaro.org,
+ rrichter@marvell.com,
+ arnd@arndb.de,
+ vilhelm.gray@gmail.com,
+ andriy.shevchenko@linux.intel.com,
+ bgolaszewski@baylibre.com,
+ syednwaris@gmail.com
+Received: from [172.30.17.109] (port=43776)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1lJA4y-0007ww-Fq; Sun, 07 Mar 2021 23:13:24 -0800
+Subject: Re: [PATCH v3 3/3] gpio: xilinx: Utilize generic bitmap_get_value and
+ _set_value
+To:     Syed Nayyar Waris <syednwaris@gmail.com>,
+        <bgolaszewski@baylibre.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>
+CC:     <andriy.shevchenko@linux.intel.com>, <vilhelm.gray@gmail.com>,
+        <michal.simek@xilinx.com>, <arnd@arndb.de>, <rrichter@marvell.com>,
+        <linus.walleij@linaro.org>, <yamada.masahiro@socionext.com>,
+        <akpm@linux-foundation.org>, <rui.zhang@intel.com>,
+        <daniel.lezcano@linaro.org>, <amit.kucheria@verdurent.com>,
+        <linux-arch@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        Srinivas Goud <srinivas.goud@xilinx.com>
+References: <cover.1615038553.git.syednwaris@gmail.com>
+ <4c259d34b5943bf384fd3cb0d98eccf798a34f0f.1615038553.git.syednwaris@gmail.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <36db7be3-73b6-c822-02e8-13e3864b0463@xilinx.com>
+Date:   Mon, 8 Mar 2021 08:13:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Sender: mrsnadiaemaan5@gmail.com
-Received: by 2002:a17:90a:1182:0:0:0:0 with HTTP; Sun, 7 Mar 2021 16:32:13
- -0800 (PST)
-From:   Mrs Nadia Emaan <mrsnadiaemaan50@gmail.com>
-Date:   Mon, 8 Mar 2021 00:32:13 +0000
-X-Google-Sender-Auth: JeiXtIsroKRF3y0orwM9kIW__5s
-Message-ID: <CAOg3cV2YyHY=-mumg8bq5owAptO=8grRnQi0hv6Lf+khYHSLGQ@mail.gmail.com>
-Subject: May the peace of Almighty God be with You.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4c259d34b5943bf384fd3cb0d98eccf798a34f0f.1615038553.git.syednwaris@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 30d1e5c9-aa2c-4fa3-208d-08d8e201aa8c
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4311:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB431111C14600E00495D7E2ABC6939@BYAPR02MB4311.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iWPKdN9olhQANAEdWiq41rt2mq4QZ+vYH0yKqhZOrA0dBZuj9yfVfhPO+/j9EBpP7nw+BTJgJIiqyqW2ysZiXGx8LgVv8mBXa0idT3ojbjFjCFeT0fbXnIWNZUJ5xOTW3Mo/k6mgcN0elsy0cO5ahmAsJ4KEwTESZbd/qXcIxYRu/6My9s1GlmLrjo6i6S+C1Q9mMAz+Hs8rW0d5Bq2oqAXbG+6xFAs2RlcNGl6AMKHiC+2O+VeWnXtyyu0c9v+d3ek8oqhAxbnEafXL7yc6GcJX94xuJxLLdL9TwoEBFX3vnJsaKVZ5eacC32DnLRGLmK8QRiz4KG087s/aDdLqmdEkx0wR8vKIyg7xvxzXB/J3U70pPp1wOG7kkZLjATTxk8amvt05OF740vAR/d5XrpPzY+oQesfFfFdYBenw5I0JCCbPwQtj4xnBWldZoVkvBwvTJXz/82Z4X7ZdQc4BqbYNF+Ajv0tTrk7xCBdr6hv6Vozp4CyFjg6+bz6AeOHtbNaVX6i80XzO711VONyWYObVrPAe7uAoA2AiuaZ+kTRslff0ACtshcA1fd066XpjQQnlpLqpQmC7RYX/Mq4lyy+kMupbBsrdWJItMYzNmnUr9fn58S1kX3w/z7NO8aCmGS6mx225plpMO/8/m8tlOZqJPDWz0CB1Y9ea28874hFDbFEh/vXNWHpSoNctGUqQKTKryvGq8sI4FRLmuBCSdVp2mxCV6VnqkWjI3f8g72c=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(346002)(136003)(39850400004)(396003)(376002)(46966006)(36840700001)(316002)(36756003)(53546011)(47076005)(5660300002)(82310400003)(31696002)(2616005)(82740400003)(8676002)(36906005)(44832011)(26005)(356005)(4326008)(336012)(31686004)(83380400001)(107886003)(186003)(7416002)(6666004)(478600001)(6636002)(54906003)(2906002)(110136005)(36860700001)(9786002)(426003)(70206006)(70586007)(7636003)(8936002)(50156003)(41533002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2021 07:13:25.5360
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30d1e5c9-aa2c-4fa3-208d-08d8e201aa8c
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT036.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4311
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-May God Bless you,
-
-I am contacting you through this means because I need your urgent
-assistance and also help me to carry a charity project in your
-country. I found your email address as a true child of God for past
-few days now that I have been praying to know if you are really the
-chosen one for this great charity project, according to God's
-direction, after all prayers I am convinced, and I have decided to
-contact you. Please, i want you use the funds for the Lord's work,
-with confidence, read and respond now.
 
 
-My name is Ms. Nadia Emaan Faroul , a widow, but currently based in West
-Africa since my life with my late husband, who was a businessman in
-this country before dying some years ago. We were married to many
-years without a child. He died after a brief illness that lasted only
-six days and I myself have been suffering from an ovarian cancer
-disease. At this moment I am about to finish the race in this way
-because the disease has reached a very bad stage, without any family
-member and without children. I hope you do not expose or betray this
-trust and I am sure that I am about to trust you for the mutual
-benefit of orphans and the less privileged. I have some funds that I
-inherited from my late husband, the total sum of ($ 12,500,000.00)
-deposited at a bank here in Burkina Faso. After knowing my current
-state of health, I decided to trust you with this fund, believing that
-you will use it in the way I will instruct here.
+On 3/6/21 3:06 PM, Syed Nayyar Waris wrote:
+> This patch reimplements the xgpio_set_multiple() function in
+> drivers/gpio/gpio-xilinx.c to use the new generic functions:
+> bitmap_get_value() and bitmap_set_value(). The code is now simpler
+> to read and understand. Moreover, instead of looping for each bit
+> in xgpio_set_multiple() function, now we can check each channel at
+> a time and save cycles.
+> 
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
+>  drivers/gpio/gpio-xilinx.c | 63 +++++++++++++++++++-------------------
+>  1 file changed, 32 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index be539381fd82..8445e69cf37b 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/slab.h>
+> +#include "gpiolib.h"
+>  
+>  /* Register Offset Definitions */
+>  #define XGPIO_DATA_OFFSET   (0x0)	/* Data register  */
+> @@ -141,37 +142,37 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+>  {
+>  	unsigned long flags;
+>  	struct xgpio_instance *chip = gpiochip_get_data(gc);
+> -	int index = xgpio_index(chip, 0);
+> -	int offset, i;
+> -
+> -	spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> -
+> -	/* Write to GPIO signals */
+> -	for (i = 0; i < gc->ngpio; i++) {
+> -		if (*mask == 0)
+> -			break;
+> -		/* Once finished with an index write it out to the register */
+> -		if (index !=  xgpio_index(chip, i)) {
+> -			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> -				       index * XGPIO_CHANNEL_OFFSET,
+> -				       chip->gpio_state[index]);
+> -			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> -			index =  xgpio_index(chip, i);
+> -			spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> -		}
+> -		if (__test_and_clear_bit(i, mask)) {
+> -			offset =  xgpio_offset(chip, i);
+> -			if (test_bit(i, bits))
+> -				chip->gpio_state[index] |= BIT(offset);
+> -			else
+> -				chip->gpio_state[index] &= ~BIT(offset);
+> -		}
+> -	}
+> -
+> -	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> -		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
+> -
+> -	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> +	u32 *const state = chip->gpio_state;
+> +	unsigned int *const width = chip->gpio_width;
+> +
+> +	DECLARE_BITMAP(old, 64);
+> +	DECLARE_BITMAP(new, 64);
+> +	DECLARE_BITMAP(changed, 64);
+> +
+> +	spin_lock_irqsave(&chip->gpio_lock[0], flags);
+> +	spin_lock(&chip->gpio_lock[1]);
+> +
+> +	bitmap_set_value(old, 64, state[0], width[0], 0);
+> +	bitmap_set_value(old, 64, state[1], width[1], width[0]);
+> +	bitmap_replace(new, old, bits, mask, gc->ngpio);
+> +
+> +	bitmap_set_value(old, 64, state[0], 32, 0);
+> +	bitmap_set_value(old, 64, state[1], 32, 32);
+> +	state[0] = bitmap_get_value(new, 0, width[0]);
+> +	state[1] = bitmap_get_value(new, width[0], width[1]);
+> +	bitmap_set_value(new, 64, state[0], 32, 0);
+> +	bitmap_set_value(new, 64, state[1], 32, 32);
+> +	bitmap_xor(changed, old, new, 64);
+> +
+> +	if (((u32 *)changed)[0])
+> +		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,
+> +				state[0]);
+> +	if (((u32 *)changed)[1])
+> +		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> +				XGPIO_CHANNEL_OFFSET, state[1]);
+> +
+> +	spin_unlock(&chip->gpio_lock[1]);
+> +	spin_unlock_irqrestore(&chip->gpio_lock[0], flags);
+>  }
+>  
+>  /**
+> 
 
+Srinivas N: Can you please test this code?
 
-you will use this $12.5 Million for public benefit as follows;
-
-1. Establish An Orphanage Home To Help The Orphanages Children.
-2. Build A Hospital To Help The Poor.
-3. Build A Nursing Home For Elderly People Need Care & Meal.
-
-You will named them after my late husband.Therefore, I need you to
-help me and claim this money and use it for charities, for orphanages
-and provide justice and help to the poor, needy and to promote the
-words of God and the effort to maintain the house of God, according to
-the bible in the book of. Jeremiah 22: 15-16, without minding our
-different religions.
-
-It will be a pleasure to compensate with 40% percent of the total
-money for your effort in handling the transaction, while 60% of the
-money will go to charity project.
-
-All I need from you is sincerity and ability to complete the task of
-God without any failure. It will be my pleasure to see that the bank
-has finally released and transferred the fund to your bank account in
-the country, even before I die here in the hospital, due to my current
-state of health, everything must be processed as soon as possible.
-
-I am waiting for your immediate response, if you are only interested
-in obtaining more details about the transaction and execution of this
-humanitarian project for the glory and honor of God.
-
-Sorry if you received this letter in your spam, is due to recent
-connection/network error here in the country.
-
-Please I am waiting for your urgent reply now.
-
-May God Bless you,
-Mrs. Nadia Emaan Faroul .
+Thanks,
+Michal
