@@ -2,68 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA0073313A7
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 17:44:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FDC73313A9
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 17:45:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229463AbhCHQn7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Mar 2021 11:43:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
+        id S230075AbhCHQpD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Mar 2021 11:45:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230075AbhCHQne (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 11:43:34 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A41ACC06174A;
-        Mon,  8 Mar 2021 08:43:33 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id v13so15674127edw.9;
-        Mon, 08 Mar 2021 08:43:33 -0800 (PST)
+        with ESMTP id S230002AbhCHQoe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 11:44:34 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03375C06174A;
+        Mon,  8 Mar 2021 08:44:34 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id mm21so21624813ejb.12;
+        Mon, 08 Mar 2021 08:44:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iGxmjsIAakhmO1Hbo5Yb6Y5dOSTb27I2CbUQX1758Ts=;
-        b=Ry1e2Rf3a8g1vzMPXYIQOL1BU6bl/06FtiosR2eBVJYYK5QQY6rQ7fvlCXq0TXLvUR
-         7//Oo2Myji89onUWloaBWZN94O+lgV0bZdybia5Y+dO9BKQQxbgQ+1sBWjFuZqU4xkKe
-         LOzsJqtee1cDZg/k2Df4IfIJkpa6Nwo0/aeZvxpFAGhk2z9jXEt3gi8DAmgoq2BZDWc+
-         L8Ch1vH90jo+ewcYvFKQ6OHqH1zXI1guRj8aGbzCABKYJzwsGNhNxZ5lmK1cmboKTYZD
-         ynIHrDLvmFaV24lAa+tHswN+8plMdXr0x6o4qZp0j7MQeI4/v6TQnKL5X5RQASHMnz2K
-         7odQ==
+        bh=k4yPiipdcGeKd+M/IZAL87Xyy/rETZBOWCxC+IVw9EY=;
+        b=a0MSuRDkaXpy6rJQgBLcag52i53ajjIP2lXtcVG04NGykzbH1mSWchF3n1w0t8KdZF
+         IDvwoHtgnS6ZOsnadl0CH0G6Q9rKjesXBO6sedeYjU2lqkRFzcyI/BtpDSKSN+Gxto+z
+         +QVm5+57l6LEu1PnbXA5tHAwLhOhiO7qZBWMbKyuJ+8QMEKyljX1+20l8BrQqKdx7gZQ
+         lJb/TlN55ZG7In7tsH7wTyXQeC3MLGIyuFlXPBBgHXG8CLJIm7jCIKR85RvfYIIrbcQq
+         noSCfZkDhJW1XN4ti+fgbcnfqUAkxE8OhWqXckaVARVMlrs2VICEhk1gnlOmdy2V8ucO
+         mazA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=iGxmjsIAakhmO1Hbo5Yb6Y5dOSTb27I2CbUQX1758Ts=;
-        b=Sr4xjs2pq2cHhLQsozqgQgU39gvBBd0hsJ3JEtos++yxq8OvdbPBDeIcLmolyapsa4
-         yJA8d8b4ToWEgIYAHlFhEY0zXdRMGjfrWCUyMUUWQIqsMr5StpF1NhcT9XlZv4LZ6ISI
-         xfKCH57a/1tf3jJo5aTwyCdRV8NPR4od15gyeU9lvNd6qRz4xLtTU3TbQJbgvChXDwQ+
-         fs7tgZVe/pBhVrjXDadW5qxqPwTi3ScINol7dLY8SSm2W0n25/u9yFvew3OWUJGjP8ge
-         l9cC3S2YRU4c5KBpUfFBMkCUy1BGFzCZjEMuAhRG+1HuavY4d5YwHDhOIvUboD6/DcST
-         ykOw==
-X-Gm-Message-State: AOAM532Cu0Ezhla4p3z27nVT7P1eg444kZOcYtj+TRqNzepGuDl3xX/0
-        8Gxn7OlCEPQhbp281Rz/KgXIF1UtXKBKvQ==
-X-Google-Smtp-Source: ABdhPJzPXJNaNJrGVmw3pcedTWs6uWQzyEN3nl/3xaol7FjsSWFQOaSjKwpQ0np/X7lCMVBY/Nk5+w==
-X-Received: by 2002:a50:fc94:: with SMTP id f20mr23166663edq.370.1615221812090;
-        Mon, 08 Mar 2021 08:43:32 -0800 (PST)
+        bh=k4yPiipdcGeKd+M/IZAL87Xyy/rETZBOWCxC+IVw9EY=;
+        b=g+p2nmg5z8ib/Wc/+erOOS9IpMFOWhwZcKQHuT6kRpu4Od6Ei/LTfHPnlKuaC0eNrZ
+         E/tjE7Y8WVdZPKy9qvSBvlOyoJ8llfRBuTCD+nnvhjbzbZfeW1lf0N62z3awvcnvDptV
+         EkY+4OX/R11id9RjNMCeuUsBP6GGo98ew0Lj7ZxqwZppx7cKkBVVmtQAzDE8MQ6r+Mur
+         lObY5As5HoeMeqi/lbWhhde+QElHdl5rvivN8G38o15nrrhm+n3JxMwX0fcRj9ubo4Hr
+         hZuIrQrNQ+w2y7v4B8ymwlYqB2rQWGLM7Y51sZ4tZ/dFH11sJJc/VWnI0DnA/LQ5PnuT
+         y3Eg==
+X-Gm-Message-State: AOAM533iwMiUl0woZDXdCvatIJJJmQaCVcYcugEGM1ZdrPstWyDF+TeU
+        CCjWUIeTBDwCFwadN+u+9e/0hnTZz2r87w==
+X-Google-Smtp-Source: ABdhPJwd0EOoQBdIPXD7CX7HAz8i2NRT3+8TLA4QBvP2duKDmuPv8T10eXelR0sSLk166dnfzjLvWQ==
+X-Received: by 2002:a17:906:a44f:: with SMTP id cb15mr15636323ejb.420.1615221872351;
+        Mon, 08 Mar 2021 08:44:32 -0800 (PST)
 Received: from [10.17.0.16] ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id l1sm6764823eje.12.2021.03.08.08.43.31
+        by smtp.gmail.com with ESMTPSA id p3sm6889878ejd.7.2021.03.08.08.44.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Mar 2021 08:43:31 -0800 (PST)
+        Mon, 08 Mar 2021 08:44:31 -0800 (PST)
 Subject: Re: [PATCH] Revert "pinctrl: intel: Split
  intel_pinctrl_add_padgroups() for better maintenance"
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Daniel Scally <djrscally@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 References: <20210308152505.3762055-1-luzmaximilian@gmail.com>
- <YEZEX+BCw21O6rmT@smile.fi.intel.com> <YEZRbO3uJQmsCZO9@smile.fi.intel.com>
+ <YEZEX+BCw21O6rmT@smile.fi.intel.com>
+ <c306b082-f97a-96d8-1291-78ff14c4ea88@gmail.com>
+ <CAHp75Vd9N_U7NobAwpYkqGoOCVNYbBSTkZ1vpgziOfgAf=c0wQ@mail.gmail.com>
 From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <241a8d75-c0d7-0045-49ee-22072e8588b8@gmail.com>
-Date:   Mon, 8 Mar 2021 17:43:30 +0100
+Message-ID: <84a81a3f-cda4-6d0e-ee4d-700b4223b2ee@gmail.com>
+Date:   Mon, 8 Mar 2021 17:44:30 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.0
 MIME-Version: 1.0
-In-Reply-To: <YEZRbO3uJQmsCZO9@smile.fi.intel.com>
+In-Reply-To: <CAHp75Vd9N_U7NobAwpYkqGoOCVNYbBSTkZ1vpgziOfgAf=c0wQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -71,48 +75,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3/8/21 5:31 PM, Andy Shevchenko wrote:
-> On Mon, Mar 08, 2021 at 05:35:59PM +0200, Andy Shevchenko wrote:
->> On Mon, Mar 08, 2021 at 04:25:05PM +0100, Maximilian Luz wrote:
->>> Following commit 036e126c72eb ("pinctrl: intel: Split
->>> intel_pinctrl_add_padgroups() for better maintenance"),
->>> gpiochip_get_desc() is broken on some Kaby Lake R devices (specifically
->>> a Microsoft Surface Book 2), returning -EINVAL for GPIOs that in reality
->>> should be there (they are defined in ACPI and have been accessible
->>> previously). Due to this, gpiod_get() fails with -ENOENT.
+On 3/8/21 5:42 PM, Andy Shevchenko wrote:
+> On Mon, Mar 8, 2021 at 6:34 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>>
+>> On 3/8/21 4:35 PM, Andy Shevchenko wrote:
+>>> On Mon, Mar 08, 2021 at 04:25:05PM +0100, Maximilian Luz wrote:
+>>>> Following commit 036e126c72eb ("pinctrl: intel: Split
+>>>> intel_pinctrl_add_padgroups() for better maintenance"),
+>>>> gpiochip_get_desc() is broken on some Kaby Lake R devices (specifically
+>>>> a Microsoft Surface Book 2), returning -EINVAL for GPIOs that in reality
+>>>> should be there (they are defined in ACPI and have been accessible
+>>>> previously). Due to this, gpiod_get() fails with -ENOENT.
+>>>>
+>>>> Reverting this commit fixes that issue and the GPIOs in question are
+>>>> accessible again.
 >>>
->>> Reverting this commit fixes that issue and the GPIOs in question are
->>> accessible again.
+>>> I would like to have more information.
+>>> Can you enable PINCTRL and GPIO debug options in the kernel, and show dmesg
+>>> output (when kernel command line has 'ignore_loglevel' option) for both working
+>>> and non-working cases?
 >>
->> I would like to have more information.
->> Can you enable PINCTRL and GPIO debug options in the kernel, and show dmesg
->> output (when kernel command line has 'ignore_loglevel' option) for both working
->> and non-working cases?
+>> Sure.
 >>
->> Also if it's possible to have DSDT.dsl of the device in question along with
->> output of `grep -H 15 /sys/bus/acpi/devices/*/status`.
+>> Here are dmesg logs for:
 >>
->>> There is probably a better option than straight up reverting this, so
->>> consider this more of a bug-report.
->>
->> Indeed.
+>>    - Kernel v5.12-rc2 (not working): https://paste.ubuntu.com/p/HVZybcvQDH/
 > 
+> Thanks!
 > 
-> Can you test if the below helps (probably you have to apply it by editing
-> the file manually):
-> 
-> --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> @@ -1392,6 +1392,7 @@ static int intel_pinctrl_add_padgroups_by_size(struct intel_pinctrl *pctrl,
->   	gpps[i].size = min(gpp_size, npins);
->   	npins -= gpps[i].size;
->   
-> +	gpps[i].gpio_base = gpps[i].base;
->   	gpps[i].padown_num = padown_num;
->   
-> 
+> Yeah, yeah... Please, test my patch, I am quite sure it will fix the issue.
 
-That does fix the issue! Thanks for the fast response and fix!
+
+It does indeed, thanks again!
 
 Regards,
 Max
