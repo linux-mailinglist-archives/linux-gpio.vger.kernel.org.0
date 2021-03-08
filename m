@@ -2,99 +2,173 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A60533138E
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 17:38:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 411443313A1
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 17:43:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230412AbhCHQhh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Mar 2021 11:37:37 -0500
-Received: from mga02.intel.com ([134.134.136.20]:15606 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229790AbhCHQhc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 8 Mar 2021 11:37:32 -0500
-IronPort-SDR: WU12QE6EjUqKjz3pgat+RG0uwWTXLlJ7/710uz5dGIbZ+ZU+NxtWgMvPuawVgackwnrQkeU1ns
- 1PiaplggFqBA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9917"; a="175171804"
-X-IronPort-AV: E=Sophos;i="5.81,232,1610438400"; 
-   d="scan'208";a="175171804"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 08:37:31 -0800
-IronPort-SDR: 69g6RyvB8FvUhvlLwsDPayz5oaN+Bb4c3jgDX/TkKx67muWTCJ8ycFuCnuptY82bbL0yS9d4L2
- zQ3hNqQthPRw==
-X-IronPort-AV: E=Sophos;i="5.81,232,1610438400"; 
-   d="scan'208";a="519991117"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 08:37:27 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lJIsm-00ArFe-9N; Mon, 08 Mar 2021 18:37:24 +0200
-Date:   Mon, 8 Mar 2021 18:37:24 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>, Shuah Khan <shuah@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v2 09/12] gpio: sim: new testing module
-Message-ID: <YEZSxDhREd5FBYVE@smile.fi.intel.com>
-References: <20210304102452.21726-1-brgl@bgdev.pl>
- <20210304102452.21726-10-brgl@bgdev.pl>
- <YEDdbfbM9abHJpIO@smile.fi.intel.com>
- <CAMRc=MdRxXzoZuyLs-24dXfOft=OQqDneTHa4-ZKqFE1kMBWcg@mail.gmail.com>
- <YEIE1nG8lZ4V2MXq@smile.fi.intel.com>
- <CAMRc=MekGnK17rYf3Bx_UHumVVrpmJphOnMfO352NB9SaOJCGw@mail.gmail.com>
- <YEY9DFk6NEcnEWGE@smile.fi.intel.com>
- <CAMpxmJVTUfveuaY9yhP5PLXoOdrkYQ2WbE5-P+4XRi3=VdQKjg@mail.gmail.com>
- <YEZDod11xb0LT043@smile.fi.intel.com>
- <CAMRc=Mf4kmDadRgDiX=p2DuKjBXng8FWvouToQMJBNsfX2zckw@mail.gmail.com>
+        id S229690AbhCHQmz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Mar 2021 11:42:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230113AbhCHQmb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 11:42:31 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96B60C06174A;
+        Mon,  8 Mar 2021 08:42:31 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id n9so5789551pgi.7;
+        Mon, 08 Mar 2021 08:42:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=szyMeXcOZPuC9dOSVL+eNNkbXb+YXhRZoKhNYCwWUV4=;
+        b=XACI94yB8Hq4F903l0I4gjuqDGjE8+QVH3SyX55gJPtTcy+JPCKK4Gg/ysPAIuS8Lh
+         Qqh3PfWx2UaE52gL1pWKKtM/5InWAs0btEst8HjDsEj5eIel5ZTEghkLVOazc6AB3qcQ
+         8m+fI4mJj9x0FtdGmrICPHU+k+mkENyz5oqiFtx9a49rxYsGmwmmtQ/YmL4MGKjVKzjj
+         mQ8kze5yhI0JVR4lahPkWiXHgWzFsznBjzWVb/wUVHtCNN4TMkTyjvyqBvc+TbbFbcfS
+         aA414nV+sDB8CvIFwanFdieWV/9DwYz9EcZvdryqR5vXooIVNSWeTK8s/MM3ZL5JxLgY
+         nbLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=szyMeXcOZPuC9dOSVL+eNNkbXb+YXhRZoKhNYCwWUV4=;
+        b=RFlGIhv6lZP1Nwx1rz4DZySfM3a8fW7/uhiFFNJ+TEq8H96YLj/vCb3k1LPAE6Zm05
+         gEZT6wrXLcZEwwee3XfmNfp2PlqEJySOu0Wgx7z9MwJ5Fx0eNy+9b0hAbXJvDeyvb0/R
+         QC/Yc//9FCoEull7r59TElTSKQ3IwsbiPaQDL9f1h00X/5yFz+Dwa70mgNYtpH8pM+uR
+         yKfnkb5nHE0o1NoDsWLI4GtMHRIxJLpdHHjEvYAckwUyc3QZMoUisLpndZ3ifABRR5J1
+         KZdtauQe+xiTiftPw+1BWdDcFcGeHNjc+wHIHPTCnnHNqw1qfxaPQjuWFHOBeLCdYT35
+         VCEQ==
+X-Gm-Message-State: AOAM5323Uvmw3kXtaMQy/cG2cf7YtCmakeEHSeHQbrNRIHOWQgeTw3gg
+        IrdbOqyifr+aldHmNe/XrvlbZ2hO3h8Wg0mCv5Q=
+X-Google-Smtp-Source: ABdhPJyHV/rUkdcHC7NKhrWHQX/swbcv1gpat7thJiURoKv4H3gfBEISNGKgrdmBolENgwwwwvAaVMyHAwhTVBcp0ME=
+X-Received: by 2002:a05:6a00:854:b029:1b7:6233:c5f with SMTP id
+ q20-20020a056a000854b02901b762330c5fmr22141889pfk.73.1615221751139; Mon, 08
+ Mar 2021 08:42:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mf4kmDadRgDiX=p2DuKjBXng8FWvouToQMJBNsfX2zckw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210308152505.3762055-1-luzmaximilian@gmail.com>
+ <YEZEX+BCw21O6rmT@smile.fi.intel.com> <c306b082-f97a-96d8-1291-78ff14c4ea88@gmail.com>
+In-Reply-To: <c306b082-f97a-96d8-1291-78ff14c4ea88@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Mar 2021 18:42:14 +0200
+Message-ID: <CAHp75Vd9N_U7NobAwpYkqGoOCVNYbBSTkZ1vpgziOfgAf=c0wQ@mail.gmail.com>
+Subject: Re: [PATCH] Revert "pinctrl: intel: Split intel_pinctrl_add_padgroups()
+ for better maintenance"
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 08, 2021 at 04:37:10PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Mar 8, 2021 at 4:32 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Mar 8, 2021 at 6:34 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>
+> On 3/8/21 4:35 PM, Andy Shevchenko wrote:
+> > On Mon, Mar 08, 2021 at 04:25:05PM +0100, Maximilian Luz wrote:
+> >> Following commit 036e126c72eb ("pinctrl: intel: Split
+> >> intel_pinctrl_add_padgroups() for better maintenance"),
+> >> gpiochip_get_desc() is broken on some Kaby Lake R devices (specifically
+> >> a Microsoft Surface Book 2), returning -EINVAL for GPIOs that in reality
+> >> should be there (they are defined in ACPI and have been accessible
+> >> previously). Due to this, gpiod_get() fails with -ENOENT.
+> >>
+> >> Reverting this commit fixes that issue and the GPIOs in question are
+> >> accessible again.
 > >
-> > On Mon, Mar 08, 2021 at 04:13:33PM +0100, Bartosz Golaszewski wrote:
-> > > On Mon, Mar 8, 2021 at 4:05 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Mon, Mar 08, 2021 at 03:23:31PM +0100, Bartosz Golaszewski wrote:
-> >
-> > ...
-> >
-> > > > I have strong opinion not to open code "yet another parser".
-> > > >
-> > > > So, grepping on 'strsep(.*, ",")' shows a lot of code that wants something like
-> > > > this. Interesting are the net/9p cases. This in particular pointed out to
-> > > > lib/parser.c which in turn shows promising match_strlcpy() / match_strdup(). I
-> > > > haven't looked deeply though.
-> > > >
-> > > > That said, I agree that next_arg() is not the best here.
-> > >
-> > > Shall we revisit this once it's upstream with a generalization for
-> > > separating comma separated strings?
-> >
-> > How can we guarantee it won't be forgotten?
-> >
-> 
-> I will add a REVISIT comment, so *obviously* it ***will*** be revisited. :)
+> > I would like to have more information.
+> > Can you enable PINCTRL and GPIO debug options in the kernel, and show dmesg
+> > output (when kernel command line has 'ignore_loglevel' option) for both working
+> > and non-working cases?
+>
+> Sure.
+>
+> Here are dmesg logs for:
+>
+>   - Kernel v5.12-rc2 (not working): https://paste.ubuntu.com/p/HVZybcvQDH/
 
-Fine by me!
+Thanks!
+
+Yeah, yeah... Please, test my patch, I am quite sure it will fix the issue.
+
+[    0.335705] gpio gpiochip0: (INT344B:00): created GPIO range 0->23
+==> INT344B:00 PIN 0->23
+[    0.335711] gpio gpiochip0: (INT344B:00): created GPIO range 0->23
+==> INT344B:00 PIN 24->47
+[    0.335716] gpio gpiochip0: (INT344B:00): created GPIO range 0->23
+==> INT344B:00 PIN 48->71
+[    0.335721] gpio gpiochip0: (INT344B:00): created GPIO range 0->23
+==> INT344B:00 PIN 72->95
+[    0.335725] gpio gpiochip0: (INT344B:00): created GPIO range 0->23
+==> INT344B:00 PIN 96->119
+[    0.335730] gpio gpiochip0: (INT344B:00): created GPIO range 0->23
+==> INT344B:00 PIN 120->143
+[    0.335734] gpio gpiochip0: (INT344B:00): created GPIO range 0->7
+==> INT344B:00 PIN 144->151
+
+
+>   - Kernel v5.12-rc2 with 036e126c72eb reverted: https://paste.ubuntu.com/p/hwcXFvhcBd/
+>
+> > Also if it's possible to have DSDT.dsl of the device in question along with
+> > output of `grep -H 15 /sys/bus/acpi/devices/*/status`.
+>
+> You can find the DSDT and a full ACPI dump at [1] and GPIOs that fail at
+> [2] and [3].
+>
+> [1]: https://github.com/linux-surface/acpidumps/tree/master/surface_book_2
+> [2]: https://github.com/linux-surface/acpidumps/blob/62972f0d806cef45ca01341e3cfbabc04c6dd583/surface_book_2/dsdt.dsl#L15274-L15285
+> [3]: https://github.com/linux-surface/acpidumps/blob/62972f0d806cef45ca01341e3cfbabc04c6dd583/surface_book_2/dsdt.dsl#L17947-L17982
+>
+> `grep -H 15 /sys/bus/acpi/devices/*/status` yields
+>
+> /sys/bus/acpi/devices/ACPI0003:00/status:15
+> /sys/bus/acpi/devices/ACPI000C:00/status:15
+> /sys/bus/acpi/devices/ACPI000E:00/status:15
+> /sys/bus/acpi/devices/device:16/status:15
+> /sys/bus/acpi/devices/device:17/status:15
+> /sys/bus/acpi/devices/device:31/status:15
+> /sys/bus/acpi/devices/device:71/status:15
+> /sys/bus/acpi/devices/INT33A1:00/status:15
+> /sys/bus/acpi/devices/INT33BE:00/status:15
+> /sys/bus/acpi/devices/INT3400:00/status:15
+> /sys/bus/acpi/devices/INT3403:01/status:15
+> /sys/bus/acpi/devices/INT3403:02/status:15
+> /sys/bus/acpi/devices/INT3403:06/status:15
+> /sys/bus/acpi/devices/INT3403:07/status:15
+> /sys/bus/acpi/devices/INT3403:08/status:15
+> /sys/bus/acpi/devices/INT3403:09/status:15
+> /sys/bus/acpi/devices/INT3403:11/status:15
+> /sys/bus/acpi/devices/INT3407:00/status:15
+> /sys/bus/acpi/devices/INT344B:00/status:15
+> /sys/bus/acpi/devices/INT3472:00/status:15
+> /sys/bus/acpi/devices/INT3472:01/status:15
+> /sys/bus/acpi/devices/INT3472:02/status:15
+> /sys/bus/acpi/devices/INT347A:00/status:15
+> /sys/bus/acpi/devices/INT347E:00/status:15
+> /sys/bus/acpi/devices/INT3F0D:00/status:15
+> /sys/bus/acpi/devices/LNXPOWER:07/status:15
+> /sys/bus/acpi/devices/MSHW0005:00/status:15
+> /sys/bus/acpi/devices/MSHW0029:00/status:15
+> /sys/bus/acpi/devices/MSHW0036:00/status:15
+> /sys/bus/acpi/devices/MSHW0040:00/status:15
+> /sys/bus/acpi/devices/MSHW0042:00/status:15
+> /sys/bus/acpi/devices/MSHW0045:00/status:15
+> /sys/bus/acpi/devices/MSHW0084:00/status:15
+> /sys/bus/acpi/devices/MSHW0091:00/status:15
+> /sys/bus/acpi/devices/MSHW0107:00/status:15
+> /sys/bus/acpi/devices/MSHW0133:00/status:15
+> /sys/bus/acpi/devices/MSHW0153:00/status:15
+> /sys/bus/acpi/devices/NTC0103:00/status:15
+> /sys/bus/acpi/devices/PNP0103:00/status:15
+> /sys/bus/acpi/devices/PNP0C0D:00/status:15
+>
+> This output is the same for both versions.
+
+It was expected.
 
 -- 
 With Best Regards,
 Andy Shevchenko
-
-
