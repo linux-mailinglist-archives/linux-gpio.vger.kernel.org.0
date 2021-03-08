@@ -2,138 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0567C331273
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 16:45:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE1FA331279
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 16:46:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbhCHPpY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Mar 2021 10:45:24 -0500
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:43707 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229829AbhCHPpX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 10:45:23 -0500
-Received: by mail-ot1-f46.google.com with SMTP id v12so9572523ott.10;
-        Mon, 08 Mar 2021 07:45:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mbsT3/Ouni6Vb8m0SK7QpZ24XnBIwdODUDVR1OBNjiQ=;
-        b=U+ZWC1eKnbbsrZdMotLrIujg6APWVI89ngEuYnHIIkNokj+upzR2POx/LY1jlJyvb9
-         aVFUzVXGnOwIOvG0I7DG49gElIhRAWMGx9PO7yligRjIOENkTJdWkovypGGKBuMYzmdC
-         ZZlUQLazT5HLT0SdHjDVzn788RIGIz4yPB2NnU4jPyyba6PGbvoTdpqPwvzBCiZq+Phy
-         yZYmoiyNHy1Hqb5sP6SRvmfOPW5fTv7uFlUKWxlqRil4JwcSUz69jM7ZSC5q3+NCENio
-         Ex/X5obHfGhIIWYZ9eIqENaqewcuDB8DXkiIm9vdpuVIhlnFEkEpKMtbrvo1U8cXQ/Co
-         cixQ==
-X-Gm-Message-State: AOAM532grdNzwD+nperLfnMN8xtQx1qdMX/rGo5oJDlh77KM/VjO4pxH
-        HyvkmQBdMY89i8LJUyfW3mripsKOpzluGaei4ac5Z/yk49E=
-X-Google-Smtp-Source: ABdhPJyYRGPWxgE1CdRhcwvN59TkRBBYu/cz9uZ2p7vV3ktihFVU1XAMr9A7W3yNtRhrv5M+i/rFQDQrAZWoYS3O4Sg=
-X-Received: by 2002:a05:6830:1e03:: with SMTP id s3mr9783834otr.321.1615218322615;
- Mon, 08 Mar 2021 07:45:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20210222130735.1313443-1-djrscally@gmail.com> <20210222130735.1313443-2-djrscally@gmail.com>
- <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com>
- <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com> <CAHp75Vc2iwvh1RiYmQDPSvgNvGT_gBcGTK67F+MhWgXyoxqn0A@mail.gmail.com>
- <CAJZ5v0ijOhT3PVm6-gqnqycE-YZhD00dGbtK1UEV5nfrOF5Obw@mail.gmail.com> <YEYtME2AxpXBq6iF@smile.fi.intel.com>
-In-Reply-To: <YEYtME2AxpXBq6iF@smile.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 8 Mar 2021 16:45:07 +0100
-Message-ID: <CAJZ5v0i+suMNWhUc=v0pnpabS-Ew-CMeSH945JB0YKnQAbi4Wg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        id S230075AbhCHPp6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Mar 2021 10:45:58 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:47049 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229646AbhCHPp3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 10:45:29 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6D77358076B;
+        Mon,  8 Mar 2021 10:45:28 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 08 Mar 2021 10:45:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=qc3IVkUwpKxiQwYWY9vhXc66NlT
+        4SAHkuz3yHGTAYnA=; b=XYT8/kpBeWXXKwTXdlPxquUxb5651KDDu2Pc/VqJ9Fw
+        BJ9ak9AAI8W5YcJE5p/ertQcBuPT5ioDmhQccf7cA48TdAbvHUxwsukS8VR1TzZO
+        KAcV8A1hMZEwGW7xYXMfd9qjZAV8jbPbTJ3rT9LjbHVYluu6/XwxlaOl3lNsl2zD
+        UuySP+qOwXo64I30k4codE2HZuIMa2E8FgiFZdBeIH40I+desCVzgJU5NaOKfvPo
+        EqF9xgOS8KmkRZWdD7o5RUPlRAhUTB2+ozQQ0pyaTBuFUQ1wLqqBMGpu/O+tkoaE
+        kHRgHF8UL2gxyidoUd45PMqUzEakdrKwS7GIf0Od0bQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=qc3IVk
+        UwpKxiQwYWY9vhXc66NlT4SAHkuz3yHGTAYnA=; b=mSviPQk/oIGtwAAt5aW7bN
+        5A07xKQaoTH7+zG+Qnt7OhLpLLIqroA0D6IkiuLvwby7EwgHxq3xXnZZkpnDhHED
+        mkrdye42tk82Ph1WMFAJb7eXjqDl9SHliuglaREWv8r6kVm0y7QG9bUx6QwPS/wK
+        7KZ9CbVGBZz4b/Kryastn6kGz6HY1vpRSE8WowDcOu4ogKEcF6XnnnF7JDfw1SRL
+        ieMFWNL4nKMe57jObRsv8LP855JD2adGtQI3K4h2WPdqtyeCHZCOEfxstg/ZptN7
+        b+sr1B+ZMZ0zlSEJUXa8EmVgYu4kFtsXRmUfRgYZ+zp+r+AZgJ1cMyMVK8Nh5qhA
+        ==
+X-ME-Sender: <xms:lEZGYNCarRpb21GEn6Eba_NYl7erMBuE15nr56jvJourkbkn3aevfQ>
+    <xme:lEZGYGbUlNpjQHNWbGPR29NgCqna-XD8cHXFUKvAEzi0Oc6eFBxup5FVT5NxVl8cM
+    v4fLAWhSOrOhY9924o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledruddugedgudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:lEZGYAbUaG3Tav7JlxVBh1E8BW-poBzRP3nRth0OxEn7YUrGoaYk0w>
+    <xmx:lEZGYF-4kdsfmSKR32vdk_N1aFudSxE344fHw0XW6D3uTcT1Hd_eSQ>
+    <xmx:lEZGYHjoZJt3BDCkxHiqx6b7j4lrEe4YepGhxFttI5r5yG7gpR7VgA>
+    <xmx:mEZGYOJekUwqy4kmwc3GN0f1vE8zC77HFmKZ7Uy_DK9J-Jz7YuB8Hg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6758224005C;
+        Mon,  8 Mar 2021 10:45:24 -0500 (EST)
+Date:   Mon, 8 Mar 2021 16:45:22 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-Content-Type: text/plain; charset="UTF-8"
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 4/4] arm64: dts: allwinner: h6: Use RSB for AXP805
+ PMIC connection
+Message-ID: <20210308154522.mkbxh3dpxidxhzzs@gilmour>
+References: <20210103100007.32867-1-samuel@sholland.org>
+ <20210103100007.32867-5-samuel@sholland.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wnc5wrbsyokytltm"
+Content-Disposition: inline
+In-Reply-To: <20210103100007.32867-5-samuel@sholland.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 8, 2021 at 2:57 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Mar 08, 2021 at 02:36:27PM +0100, Rafael J. Wysocki wrote:
-> > On Sun, Mar 7, 2021 at 9:39 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Sun, Mar 7, 2021 at 3:36 PM Daniel Scally <djrscally@gmail.com> wrote:
-> > > > On 22/02/2021 13:34, Andy Shevchenko wrote:
-> > > > > On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
-> > > > >> The acpi_walk_dep_device_list() is not as generalisable as its name
-> > > > >> implies, serving only to decrement the dependency count for each
-> > > > >> dependent device of the input. Extend the function to instead accept
-> > > > >> a callback which can be applied to all the dependencies in acpi_dep_list.
-> > > > >> Replace all existing calls to the function with calls to a wrapper, passing
-> > > > >> a callback that applies the same dependency reduction.
-> > > > > The code looks okay to me, if it was the initial idea, feel free to add
-> > > > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
-> ...
->
-> > > > >> +void acpi_dev_flag_dependency_met(acpi_handle handle)
->
-> > > > > Since it's acpi_dev_* namespace, perhaps it should take struct acpi_device here?
-> > > >
-> > > > I can do this, but I avoided it because in most of the uses in the
-> > > > kernel currently there's no struct acpi_device, they're just passing
-> > > > ACPI_HANDLE(dev) instead, so I'd need to get the adev with
-> > > > ACPI_COMPANION() in each place. It didn't seem worth it...
-> >
-> > It may not even be possible sometimes, because that function may be
-> > called before creating all of the struct acpi_device objects (like in
-> > the case of deferred enumeration).
-> >
-> > > > but happy to
-> > > > do it if you'd prefer it that way?
-> > >
-> > > I see, let Rafael decide then. I'm not pushing here.
-> >
-> > Well, it's a matter of correctness.
->
-> Looking at your above comment it is indeed. Thanks for clarification!
 
-Well, actually, the struct device for the object passed to this
-function should be there already, because otherwise it wouldn't make
-sense to update the list.  So my comment above is not really
-applicable to this particular device and the function could take a
-struct acpi_device pointer argument.  Sorry for the confusion.
+--wnc5wrbsyokytltm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> But should we have acpi_dev_*() namespace for this function if it takes handle?
+On Sun, Jan 03, 2021 at 04:00:07AM -0600, Samuel Holland wrote:
+> On boards where the only peripheral connected to PL0/PL1 is an X-Powers
+> PMIC, configure the connection to use the RSB bus rather than the I2C
+> bus. Compared to the I2C controller that shares the pins, the RSB
+> controller allows a higher bus frequency, and it is more CPU-efficient.
+>=20
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-It takes a device object handle.
+Applied, thanks
 
-Anyway, as per the above, it can take a struct acpi_device pointer
-argument in which case the "acpi_dev_" prefix should be fine.
+Maxime
 
-> For time being nothing better than following comes to my mind:
->
-> __acpi_dev_flag_dependency_met() => __acpi_flag_device_dependency_met()
-> acpi_dev_flag_dependency_met() => acpi_flag_device_dependency_met()
+--wnc5wrbsyokytltm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The above said, the name is somewhat confusing overall IMV.
+-----BEGIN PGP SIGNATURE-----
 
-Something like acpi_dev_clear_dependencies() might be better.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYEZGkgAKCRDj7w1vZxhR
+xV1zAP0dY5wXW8BW5mbE+J3SUziA79rXyUNU7WgazhU7htgleAEA3o5GrAotOGGD
+LxGr99nLKfWaa7x2MVKcAgFJOPzIsgM=
+=oxjb
+-----END PGP SIGNATURE-----
 
-So lets make it something like
-
-void acpi_dev_clear_dependencies(struct acpi_device *supplier);
+--wnc5wrbsyokytltm--
