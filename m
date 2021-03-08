@@ -2,98 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B68913311E7
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 16:16:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30375331211
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Mar 2021 16:26:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230458AbhCHPQQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Mar 2021 10:16:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38984 "EHLO
+        id S230522AbhCHPZa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Mar 2021 10:25:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbhCHPQF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 10:16:05 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A983C06174A
-        for <linux-gpio@vger.kernel.org>; Mon,  8 Mar 2021 07:16:05 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id w9so15168911edt.13
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Mar 2021 07:16:05 -0800 (PST)
+        with ESMTP id S230458AbhCHPZM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Mar 2021 10:25:12 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46CD9C06174A;
+        Mon,  8 Mar 2021 07:25:12 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id ox4so5536035ejb.11;
+        Mon, 08 Mar 2021 07:25:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wME0xxypILqfkGLAgLbk6QlOoimfje6iWFu2oEHWfOs=;
-        b=n0RdWFb3wQqQnw/sAXyDL81fOug2MleJFDzS9JHqJa0Xf/qxNoBmnvMYUgDZwTcYF+
-         rYOXffjH/llx/sf/D5I0Gf9zZCatLig7eBUI+6yU1cupnL/YEbHvxJ1BrIrpFOmh9NKM
-         6+R+6zxoYU8hwDNHKyhnCqwmPXpOioanlM5z9Jh/OEu88RIpHdu95lXQ+oyIloNX+zuE
-         ERLhcYqYKlHLSOjifxsIe26Dtx9ZZdWZFQLgOf431yV5Prm0Ri9tmMXTuBRA9V+4rZGD
-         kULkYNbckRRXsNuQBV7HQlKnoAqDcoGkZEWOP0KTZcRsndJXIvXw1mHiiSmYRpLVEgAC
-         QjWw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fb49KXRWPSJi42ztaavXoYPspVtYhsjrcySTJoONhEo=;
+        b=rBsc/nkxlErn6sb8I2v8ZZmrC8Ef58RjQGLt8YHSyQ7AL+kMWfSTbx4rnTr8fGMMth
+         eL/2ZSflVwUdq6b83/XDhGarNt6nwhaQgV+9CmLSpR0kpbPNKCXKuHxxVKT0zhe96pG0
+         NsX2/3jiPvav7hKOGDG+Z7IYcdklTMH8fp0q5ExNDx/pSMf6Ka5rH1NVrucjea+07dJZ
+         +GLn3IuNLkC6GhX5D65SHBOXsgtEFwWYI2k7dUQDQ6+tM2DdxIeDP7nTlfKl3Uc7dO6l
+         TOUemE2NIw9JRxedVq8PCPi/QpItvhU8ly1iTpi2UMfPBzaWyWU86vtNPwlT5PtsdEak
+         5ZTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wME0xxypILqfkGLAgLbk6QlOoimfje6iWFu2oEHWfOs=;
-        b=pcngbPYNFwdi938/0IJ6rK3uLkJrDgxTTkyVbs+Rou1u6alUFj8XYjBJ9rRH1gXfdY
-         3+vTMzfbX4cWY66QlBViLAv+wM1AcPxTuvtuwBwKp/3i3KmgRO4TBl9yniOx1Ej0pUSS
-         /MKsHKlBQVEjZ8dBWFOIpqWRVIY3uP8i1yr2PV1QbYAy0tZtrRjFzoPDOtXgLSg2sN73
-         U0FpxKNfvBf5XXVML6kMSKbPhso7IDAvtYKA4T+C8tPG89ghU8DFUFavW0sVego4Kr53
-         YHOFnVnlZy2vzDiWp+DMSsMR5H7Di0cxLV5NQaW0nsDoaErKbP9L2UgKgQzrylwhgF9E
-         +8fw==
-X-Gm-Message-State: AOAM533m/gY6eR4gysDvp6wd1u0nFXvLagEzls1bUD9EheA6/BcECw8R
-        gvOTXURlk9AfURAVtcOU5oz5chks6ZRggg1HxG5qWE//Bds=
-X-Google-Smtp-Source: ABdhPJxBFaI+hm/G4Y0wTEXCDtli4Oap8zfigY5PX7vLldku4lyAIN75HyumbkvqaFZfvVhuxHIhzsRYSYaQMIP0cKk=
-X-Received: by 2002:a05:6402:b31:: with SMTP id bo17mr22440599edb.113.1615216564092;
- Mon, 08 Mar 2021 07:16:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20210303203444.3140677-1-j.neuschaefer@gmx.net>
-In-Reply-To: <20210303203444.3140677-1-j.neuschaefer@gmx.net>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 8 Mar 2021 16:15:53 +0100
-Message-ID: <CAMpxmJXs+hVS4c7PBfE8U73q15utehRdfZKz70cP3b-4Rb0Nvw@mail.gmail.com>
-Subject: Re: [PATCH] docs: driver-api: gpio: consumer: Mark another line of
- code as such
-To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fb49KXRWPSJi42ztaavXoYPspVtYhsjrcySTJoONhEo=;
+        b=hcTjNPZzX7vsIavJePyVUygqMeRfymBQxzTgU9KWeywQb9ZqxJ2Z52xcJz8DnNNciT
+         xiZAyIlWgN1l0Q7aeQhEoxpKTi1avS+b9E0Jf140kZtzGdCb/RuYJz6mqpXBM3NbxSd/
+         cpA8xJvFsLsj/rpO1Bw4PSALURSsdNKreRv3fd8h0jBHwbcc3mK++p2dNDw1M/hIzywB
+         whj+m/wMpEyTgG0PcStble7wQDRhb/d5UlkCSzg6rsCuVvu6ydB9DBUUoHSPPEaLakGR
+         2bGLuIEmP7UyedoZtf9ap1WOIubg0eGFmdZb4a0IPK54pCiJ6y9ztfdJKcsC/0qcBK6I
+         ySHQ==
+X-Gm-Message-State: AOAM5335O+W2pVGpHO/oQCpcazLk5Oogo6hch/9GK21pzg9o+ZaWKDy8
+        7cNYiQdi/Mr8h/8bbKV58jo=
+X-Google-Smtp-Source: ABdhPJxZ06PwZtWQ2lXfc7pWL5OQxzL7HDR/dJNDiNDBQHTuZtn0D29F62WEYp4HGztEmjLSGpBW1w==
+X-Received: by 2002:a17:906:b6c8:: with SMTP id ec8mr15729105ejb.223.1615217111014;
+        Mon, 08 Mar 2021 07:25:11 -0800 (PST)
+Received: from xws.localdomain ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id u15sm6738227ejy.48.2021.03.08.07.25.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Mar 2021 07:25:10 -0800 (PST)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Daniel Scally <djrscally@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "pinctrl: intel: Split intel_pinctrl_add_padgroups() for better maintenance"
+Date:   Mon,  8 Mar 2021 16:25:05 +0100
+Message-Id: <20210308152505.3762055-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 3, 2021 at 9:43 PM Jonathan Neusch=C3=A4fer
-<j.neuschaefer@gmx.net> wrote:
->
-> Make it so that this #include line is rendered in monospace, like other
-> code blocks.
->
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> ---
->  Documentation/driver-api/gpio/consumer.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/driver-api/gpio/consumer.rst b/Documentation/d=
-river-api/gpio/consumer.rst
-> index 22271c342d923..3366a991b4aa7 100644
-> --- a/Documentation/driver-api/gpio/consumer.rst
-> +++ b/Documentation/driver-api/gpio/consumer.rst
-> @@ -12,7 +12,7 @@ Guidelines for GPIOs consumers
->
->  Drivers that can't work without standard GPIO calls should have Kconfig =
-entries
->  that depend on GPIOLIB or select GPIOLIB. The functions that allow a dri=
-ver to
-> -obtain and use GPIOs are available by including the following file:
-> +obtain and use GPIOs are available by including the following file::
->
->         #include <linux/gpio/consumer.h>
->
-> --
-> 2.30.1
->
+Following commit 036e126c72eb ("pinctrl: intel: Split
+intel_pinctrl_add_padgroups() for better maintenance"),
+gpiochip_get_desc() is broken on some Kaby Lake R devices (specifically
+a Microsoft Surface Book 2), returning -EINVAL for GPIOs that in reality
+should be there (they are defined in ACPI and have been accessible
+previously). Due to this, gpiod_get() fails with -ENOENT.
 
-Patch applied, thanks!
+Reverting this commit fixes that issue and the GPIOs in question are
+accessible again.
 
-Bartosz
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+
+There is probably a better option than straight up reverting this, so
+consider this more of a bug-report.
+
+Regards,
+Max
+
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 60 +++++++++------------------
+ 1 file changed, 20 insertions(+), 40 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 8085782cd8f9..0fe6caf98a8a 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1331,19 +1331,34 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
+ 	return 0;
+ }
+ 
+-static int intel_pinctrl_add_padgroups_by_gpps(struct intel_pinctrl *pctrl,
+-					       struct intel_community *community)
++static int intel_pinctrl_add_padgroups(struct intel_pinctrl *pctrl,
++				       struct intel_community *community)
+ {
+ 	struct intel_padgroup *gpps;
++	unsigned int npins = community->npins;
+ 	unsigned int padown_num = 0;
+-	size_t i, ngpps = community->ngpps;
++	size_t ngpps, i;
++
++	if (community->gpps)
++		ngpps = community->ngpps;
++	else
++		ngpps = DIV_ROUND_UP(community->npins, community->gpp_size);
+ 
+ 	gpps = devm_kcalloc(pctrl->dev, ngpps, sizeof(*gpps), GFP_KERNEL);
+ 	if (!gpps)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < ngpps; i++) {
+-		gpps[i] = community->gpps[i];
++		if (community->gpps) {
++			gpps[i] = community->gpps[i];
++		} else {
++			unsigned int gpp_size = community->gpp_size;
++
++			gpps[i].reg_num = i;
++			gpps[i].base = community->pin_base + i * gpp_size;
++			gpps[i].size = min(gpp_size, npins);
++			npins -= gpps[i].size;
++		}
+ 
+ 		if (gpps[i].size > 32)
+ 			return -EINVAL;
+@@ -1361,38 +1376,6 @@ static int intel_pinctrl_add_padgroups_by_gpps(struct intel_pinctrl *pctrl,
+ 				break;
+ 		}
+ 
+-		gpps[i].padown_num = padown_num;
+-		padown_num += DIV_ROUND_UP(gpps[i].size * 4, 32);
+-	}
+-
+-	community->gpps = gpps;
+-
+-	return 0;
+-}
+-
+-static int intel_pinctrl_add_padgroups_by_size(struct intel_pinctrl *pctrl,
+-					       struct intel_community *community)
+-{
+-	struct intel_padgroup *gpps;
+-	unsigned int npins = community->npins;
+-	unsigned int padown_num = 0;
+-	size_t i, ngpps = DIV_ROUND_UP(npins, community->gpp_size);
+-
+-	if (community->gpp_size > 32)
+-		return -EINVAL;
+-
+-	gpps = devm_kcalloc(pctrl->dev, ngpps, sizeof(*gpps), GFP_KERNEL);
+-	if (!gpps)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < ngpps; i++) {
+-		unsigned int gpp_size = community->gpp_size;
+-
+-		gpps[i].reg_num = i;
+-		gpps[i].base = community->pin_base + i * gpp_size;
+-		gpps[i].size = min(gpp_size, npins);
+-		npins -= gpps[i].size;
+-
+ 		gpps[i].padown_num = padown_num;
+ 
+ 		/*
+@@ -1529,10 +1512,7 @@ static int intel_pinctrl_probe(struct platform_device *pdev,
+ 		community->regs = regs;
+ 		community->pad_regs = regs + offset;
+ 
+-		if (community->gpps)
+-			ret = intel_pinctrl_add_padgroups_by_gpps(pctrl, community);
+-		else
+-			ret = intel_pinctrl_add_padgroups_by_size(pctrl, community);
++		ret = intel_pinctrl_add_padgroups(pctrl, community);
+ 		if (ret)
+ 			return ret;
+ 	}
+-- 
+2.30.1
+
