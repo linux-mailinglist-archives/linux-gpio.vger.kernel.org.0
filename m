@@ -2,107 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C9B9332A6A
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 16:29:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0765332A7C
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 16:32:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231571AbhCIP2e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Mar 2021 10:28:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43224 "EHLO
+        id S231759AbhCIPcY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Mar 2021 10:32:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231410AbhCIP2X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 10:28:23 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0905C06174A
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Mar 2021 07:28:23 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id a4so8997270pgc.11
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 07:28:23 -0800 (PST)
+        with ESMTP id S231571AbhCIPbw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 10:31:52 -0500
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14081C06174A
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Mar 2021 07:31:52 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id v9so27756373lfa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 07:31:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ipCKk9OjzE3SL4cEGjIfn8o5/ZuQlyILAMATKdXh8bs=;
-        b=V/FsPGYgZUReqYrCd2vCmxCPg3ga2NCeORQwlilfVPOjKiKO90+gZxVRRWh0lhkuQh
-         mg61YObUe7u6AnnUZU7Y2CLCj8uLzOxy3bgGJ1pSwto9DihA513zPKL3GGfGIoCt1CRi
-         VNwIoeeeECyBNEh9/pVEoyI9aAcQydSpTJAH74h+OpqtCxP5kkfQCOzGPhosI22Q1y2V
-         jrbrnx0dPNhnuDB9dSpfEFcmz5PRuUXjNlPBgNzxVhBFbwgZGJZKqbY/UpuR19N/BIRu
-         5JN1g+62GMIY79fwBqeCUtmyLvu/86Au5LuvgnaUiyVLvzIPigoJJmwKqOo7VhVLpERu
-         ED8g==
+         :cc;
+        bh=ytPSd3A3o1b3+2MlI23BkWVwBk2Qohz+v6T0uxCz9RU=;
+        b=ZsDiIRRw+LQemQRHuo0zPr0x7lYYY1RnmWzkwLTDWTgoiy/WPSeXg/JaqaTrpgMG3q
+         ikEXZC1G7CHl5BS1bfjXkICij2hiQ6WpSSM+Metl62wF5PagNLwgLpOJJ0GyWXw+7Mq0
+         yZGh8DBCJF4pOgqHWr5Fwp+ga3e5eloGHFvzTJjeok0tMOwbfseR1tixEGwIuy/E2mEO
+         REWCX0BsJOOBHq5W1AlXu+5NKi0y/LPYDmdZ4KJZ4sYnjc9oO3tmpALL7C4AQpar3ng8
+         5dVI2dneZPzIGcGroTAYeGXc8nPkUdXN4CCe30O7y30/+9hokigEsxJTr7Vkhw7VftM8
+         RYSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ipCKk9OjzE3SL4cEGjIfn8o5/ZuQlyILAMATKdXh8bs=;
-        b=SLBYiaPwrIGtjPLKTSS/KcCiilcXn/YsHUsoU1dJqwoCKu31xn1+V+g6glTFKzW2B4
-         aNeumgZ+RT/jILbM85qRXCab1Tk91kuZjqYPAvpV7gAo4cxEUMdyuKN5zLqnxWSEyhnM
-         HUoPRfrS/oPFPYiHgX2xYpAckQDx7MvtSs+c0WFEX/syd707u9lFm9rUa68W/JLGwiE4
-         1ul1TLvPyGEKsdyBGpELML1VUxsWvhH55FnDMD7/2o2RWs06q2XaFpfaVKgpS1Frb0o0
-         FK05e21UpvMbhmO2Fh5m0fN3M+Ag4catwzNe4wNvwR1wb7ZQ3xvaUDIntdIISLWetjrc
-         9lEA==
-X-Gm-Message-State: AOAM533DC7jLVNsJDNQpFIbcU4BcPWJGrAPnArmwD/tw5txLeAccFehZ
-        G/tNa6vPLWjN/MbwROXWSK0w3O0iUrXcBDZNp94=
-X-Google-Smtp-Source: ABdhPJxh3h0545xCYN1Zd6bEEK2nZQtpPu7geEdFm2ZZrsBgHDI2ofo+W8I14jcVRED+dieKsrAEbZaJIHGswLiTAF8=
-X-Received: by 2002:a63:ce15:: with SMTP id y21mr25791648pgf.4.1615303703211;
- Tue, 09 Mar 2021 07:28:23 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=ytPSd3A3o1b3+2MlI23BkWVwBk2Qohz+v6T0uxCz9RU=;
+        b=sgH7bO9tDcPTyoVFF3gkpVim9WP4qynYl1EMNp5qY6Ag17mp31ZyLaF4rO6RMf0eSX
+         +KOAqBSolAbwqBrh3WAmlrNU0SFLtpRZriPjDgMlp88LAc2zSYbEBFU28qQ6fDSNdsZl
+         9oKtTUnQ/xXG76Lek7Ev6P2RNn+HSt3a14QiUhptaH66CdMgoMOtwdvZhAlLjhs2ZLmh
+         xXLxkrK+VPokrqC0+hiqWOQBm6TGWzaee4SHle2TmdVNRvluRjIr8V7Gxugt61xH7DDj
+         +i2UgOjX+RaWsXtSHBiATOQ4MLMd+u+vMpi8Tj+6UYhl9UPYNdRqrStvdJNqi0mvv9FR
+         jAFw==
+X-Gm-Message-State: AOAM531d4lKtoDBV+8QlC/pVjckfZjiWwhrla0XKka9qRWUtWzHrhRuY
+        kaQRedt1ak89YTHg4Bo7tgqoz6HB4iLxKn+1PyUzCg==
+X-Google-Smtp-Source: ABdhPJw06MbLp34uxhYaAr5Kj9oirKrQg5zi5+BhFUpssWilBUXjFuULwcGEpI0qogMy5JAEwzC+K56ofZWkxv+pUqE=
+X-Received: by 2002:a05:6512:10d1:: with SMTP id k17mr17314789lfg.649.1615303910617;
+ Tue, 09 Mar 2021 07:31:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20210309132639.29069-1-brgl@bgdev.pl> <20210309132639.29069-7-brgl@bgdev.pl>
- <YEePMkDDZA2Jxurr@smile.fi.intel.com> <CAMRc=MdmdsQ=gPkOJdcV7OCkvXww6oNx0zgEQM+XYccxpLKLiw@mail.gmail.com>
-In-Reply-To: <CAMRc=MdmdsQ=gPkOJdcV7OCkvXww6oNx0zgEQM+XYccxpLKLiw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 9 Mar 2021 17:28:06 +0200
-Message-ID: <CAHp75VfcS35=xbYLEiyzc1-jz9Jt8_Uk1Vzzv1Dx6DjiwUTcvA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 6/6] core: hide the GPIOD_API symbol
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+References: <20210309093736.67925-1-andriy.shevchenko@linux.intel.com> <20210309093736.67925-7-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210309093736.67925-7-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 9 Mar 2021 16:31:39 +0100
+Message-ID: <CACRpkdZaFv7c-mdxF+0T7ceU7ucjtE9-70nBune1iNj54moHXw@mail.gmail.com>
+Subject: Re: [PATCH v6 6/6] gpiolib: Fold conditionals into a simple ternary operator
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 9, 2021 at 5:20 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Tue, Mar 9, 2021 at 10:37 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+
+> It's quite spread code to initialize IRQ domain options.
+> Let's fold it into a simple oneliner.
 >
-> On Tue, Mar 9, 2021 at 4:07 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Tue, Mar 09, 2021 at 02:26:39PM +0100, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > GPIOD_API is unneccesarily polluting the user-facing headers. There's=
- no
-> > > advantage to having it in public files. Let's make them internal to t=
-he
-> > > library. Upcoming modifications will also make GPIOD_BIT() redundant =
-so
-> > > we'll be able to remove all macros unrelated to the main functionalit=
-y
-> > > from gpiod.h.
-> >
-> > > -libgpiodcxx_la_SOURCES =3D chip.cpp iter.cpp line.cpp line_bulk.cpp
-> > > +libgpiodcxx_la_SOURCES =3D chip.cpp internal.h iter.cpp line.cpp lin=
-e_bulk.cpp
-> >
-> > Don't we have something like _HEADERS ?
-> >
->
-> _HEADERS is for headers that are installed. Headers for internal use
-> should be defined as part of sources in autotools.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-TIL :-)
+Definitely due to my coding style. (Not so fond of the ternary operator.)
+Allright, it is so much more compact.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-"The noinst_HEADERS variable can be used for such headers. However
-when the header actually belongs to a single convenience library or
-program, we recommend listing it in the program=E2=80=99s or library=E2=80=
-=99s
-_SOURCES variable (see Program Sources) instead of in noinst_HEADERS.
-This is clearer for the Makefile.am reader. noinst_HEADERS would be
-the right variable to use in a directory containing only headers and
-no associated library or program."
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
