@@ -2,111 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBE88332A31
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 16:19:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC36F332A53
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 16:25:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231858AbhCIPT1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Mar 2021 10:19:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41172 "EHLO
+        id S231878AbhCIPYt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Mar 2021 10:24:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231996AbhCIPS5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 10:18:57 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E74C06174A
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Mar 2021 07:18:47 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id mj10so28685627ejb.5
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 07:18:47 -0800 (PST)
+        with ESMTP id S231338AbhCIPYU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 10:24:20 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36FA4C06174A
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Mar 2021 07:24:20 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id w9so20820367edt.13
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 07:24:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Uy8hTGwoIlbYzbJguofGBFpclocfOQDOvjuHpZxozsI=;
-        b=ApMs2f3rlZtba3dQK48fjlsgDP9t7Nk63Kp7fahTQqfinEpZpGMucvH0tS471jm2eH
-         acF2ywgsm+ZyNf2BNrrGxDotkX6miLV41Q/TOScIn03Iv0YG9248v8Yv9Kov2VhWyq+e
-         U4j6RzK7KB+p8lqg/MWKd6dedlomQlxc/ZX3V83xB39ecR2wlNcEj3lLFuJzOisgKViH
-         2+NSmxwI0ggot/WR5su4mzRuV9yAXseLdNPef7juvvhxTcKz9m3UwiA0GQCL/HYLV7wa
-         N6lX2EdIouuFV3UtsY+7b8hsZN+R0iviOBW42AVvoQZ3TFf7O3DJFJwfFZqBejH8n/05
-         iivw==
+        bh=GopuZyg5YHEXuIPIU2+0iXZVgjkZyI/sNfxjE+oPyFs=;
+        b=M4YqV58UnS11Q0AEJWjZirDj7bHlekszkgIcvXMQuO7buvLJovDD0mIj7n+pnkCEqT
+         uQOMOagL0Ur92R9emeWHDkYCIqAeU4jCtFQ5GXCJb85AGKaGxx46b595q1Y2i4G+i2j9
+         FiN4eyClFgu0fe55xO3ml5TqkMzBaXajMm99rknRAqVwn0FVCtXT+N5JF39V2aFzdJy/
+         7+NV2mkiX13ireGvZthXXaHDXdpwYtpKXzU1HMkUEGDl7yht0sJT/aSdNouTf0oJVtPa
+         kK/FaW4EUwsks5PyBJLWJlRh720F31lIv50D7FBvIIt+Muqg+ZDL/59ZNBa0imM0c3Wl
+         3aWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Uy8hTGwoIlbYzbJguofGBFpclocfOQDOvjuHpZxozsI=;
-        b=VuDUhWf7R3hjZiMImCM/YYZC87YJnrP8L9Fl287uanS6MIH3XlcEVZ/5bY8cVTF3WA
-         q6JGvMGSnzz64Eo0QVbpqzH9pqdL7fCZTQN8jv8BQ6WwAL0sdaHdk4d6ovOD6olWZZS4
-         kRkkgIG7Id5Rp4S6Zw8jFYUWLjdnnFvoAlHMCqIZN98v18LRRJ6CLOECRJcRHxLDcUwC
-         i3l4yeMP3CrA6w1fxpRTDS+/Ajuak7mnDy5NC0lpQtuUyKmzZ6n76XBy1GdQtxCNH3tg
-         fpb8dSTZVNQ+npawaWG8Fd+C83TFYlBpuvBo3F5llk3HD4SjFbwR5+oHBoov9le30Wol
-         na6A==
-X-Gm-Message-State: AOAM531VVer6ey7iNmAwos2HmUV5u5CWnekU9cPRt8iU6Zb3mikIz1NP
-        bggfthEoiEcNddGX81aKXO/6y8v++Jv9pmWZFtpmcQ==
-X-Google-Smtp-Source: ABdhPJzSNk80lnrBVcuYP4V+w1nHhwz1Ie3L1AtkPrH6ifGh3LGV8SAv6XYOhih3pyXiAA4owq1THkoDpaHusC5K8QY=
-X-Received: by 2002:a17:906:f8d5:: with SMTP id lh21mr20719971ejb.64.1615303125559;
- Tue, 09 Mar 2021 07:18:45 -0800 (PST)
+        bh=GopuZyg5YHEXuIPIU2+0iXZVgjkZyI/sNfxjE+oPyFs=;
+        b=jhodhkVqBlTl6qk5JrkAKRHQWhas0v0sI3OgrcUiS+LGOcMTzCcVjGYhumVQQMDheB
+         wF6PGOKAHOjzP923OwfLONy/0bFnTtTviEE0rbrKDo7mEPU/jG9g4Xj9QjqdttXxUG1H
+         vl9Km7w5TW4Iwj8Dm+ABOPFgCwuCQw6SX8hW4klhmhPPvb9fS9iIOXoBT5mpwMmcTLx3
+         wz0I2Qc9rWtMijkdi/hfnrxfUgpqRbqDDQfAbRqZqcQpOQioGEbr2uZoB6iA57vHR6HT
+         ebj06RlqLuxSqTGbp9+rsA/sqVchTvZ99KHY9FV+f28F0GkjMKfTVWC4wRhSS9K4QY5q
+         rkWA==
+X-Gm-Message-State: AOAM531KljkcVCHRq3AItFmj1aUmA4XpHY9kGOurgAdpgTBKPZDiV9Ly
+        +9cIPvCj4BP2oeWYco/O+hZOWH/cKSOJ9L2pFFalrw==
+X-Google-Smtp-Source: ABdhPJwQvrNCSDqNBqy1qEv7FZmMTyhL+ZdhXQGWT2bGcZYT0Voyo4m7TuW+5Bdt1q3/3Rj9UeQ8S5hfAg4gW23PlYA=
+X-Received: by 2002:a05:6402:3550:: with SMTP id f16mr4700945edd.134.1615303459027;
+ Tue, 09 Mar 2021 07:24:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20210309132639.29069-1-brgl@bgdev.pl> <20210309132639.29069-7-brgl@bgdev.pl>
- <YEePMkDDZA2Jxurr@smile.fi.intel.com>
-In-Reply-To: <YEePMkDDZA2Jxurr@smile.fi.intel.com>
+References: <YD9K8LzSFpuAhDvW@black.fi.intel.com> <CAMRc=Mf1MsRUGJN9Y09yVQ=OO41-kYRo8n3D3tyLpymnJ6_JvQ@mail.gmail.com>
+ <YEX72lTYIwxc0I8O@smile.fi.intel.com>
+In-Reply-To: <YEX72lTYIwxc0I8O@smile.fi.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 9 Mar 2021 16:18:34 +0100
-Message-ID: <CAMRc=MdmdsQ=gPkOJdcV7OCkvXww6oNx0zgEQM+XYccxpLKLiw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 6/6] core: hide the GPIOD_API symbol
+Date:   Tue, 9 Mar 2021 16:24:08 +0100
+Message-ID: <CAMRc=MeWppCHTc5G3wu3MMb0ZvncbaNJfOLU=WFFTbaw7EVnXQ@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 5.12-2
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 9, 2021 at 4:07 PM Andy Shevchenko
+On Mon, Mar 8, 2021 at 11:26 AM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Tue, Mar 09, 2021 at 02:26:39PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > GPIOD_API is unneccesarily polluting the user-facing headers. There's no
-> > advantage to having it in public files. Let's make them internal to the
-> > library. Upcoming modifications will also make GPIOD_BIT() redundant so
-> > we'll be able to remove all macros unrelated to the main functionality
-> > from gpiod.h.
+> On Sat, Mar 06, 2021 at 12:38:33PM +0100, Bartosz Golaszewski wrote:
+> > On Wed, Mar 3, 2021 at 3:09 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > Hi Linux GPIO and ACPI maintainers,
+> > >
+> > > This is material for v5.12-rcX (presumably -rc2). Since it touches ACPI, this
+> > > PR is to both subsystems.
 >
-> > -libgpiodcxx_la_SOURCES = chip.cpp iter.cpp line.cpp line_bulk.cpp
-> > +libgpiodcxx_la_SOURCES = chip.cpp internal.h iter.cpp line.cpp line_bulk.cpp
+> > Pulled, thanks!
 >
-> Don't we have something like _HEADERS ?
->
-
-_HEADERS is for headers that are installed. Headers for internal use
-should be defined as part of sources in autotools.
-
-> ...
->
-> > +#include "internal.hpp"
->
-> I forgot C++ approximately when I tried it first time :-)
-> But I'm confused between this and above file name. Do we have *.h and *.hpp
-> with the same name?
->
-
-Yes, internal.h is used by the core C library and lives in lib/,
-internal.hpp is for C++ (it will grow because we'll have to share some
-symbols between classes in the future with the new API) and lives in
-bindings/cxx/.
-
-Bart
-
-> ...
->
-> > -libgpiod_la_SOURCES = core.c helpers.c misc.c uapi/gpio.h
-> > +libgpiod_la_SOURCES = core.c helpers.c internal.h misc.c uapi/gpio.h
->
-> As above.
+> Thanks! Though I don't see it in your repository.
 >
 > --
 > With Best Regards,
 > Andy Shevchenko
 >
 >
+
+For some reason the merge commit doesn't show up but I do have the
+patches. Strange, I remember seeing the merge commit when I pulled it.
+
+Bart
