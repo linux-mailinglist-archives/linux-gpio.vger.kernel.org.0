@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E51C333271C
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 14:27:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9716E33271F
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 14:27:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230414AbhCIN0r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Mar 2021 08:26:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44808 "EHLO
+        id S230495AbhCIN1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Mar 2021 08:27:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231464AbhCIN0p (ORCPT
+        with ESMTP id S231481AbhCIN0p (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 08:26:45 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009F7C06174A
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B79C06174A
         for <linux-gpio@vger.kernel.org>; Tue,  9 Mar 2021 05:26:45 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id l12so15543460wry.2
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 05:26:44 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id l11so12155715wrp.7
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 05:26:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qEWobHGIY7KquDfwJRWAwRxBYgGjcQ9monRMXSr9aiE=;
-        b=2F6xVDgvUOIb6h/NHrC5zlUd6IixC0XxrtL6uObO7QyNC9Sg7EcYeA2wcaCTN7NZ8C
-         o6hVTa3HJ6odQjLI8Ovf3g6vb5yL8wCFLllP5hQLzaSDNrjynSSSEiClNR8Dvy0KzWGM
-         JVjzMkfeCpx6d/cWhpDJZ6G6KwNgfbrrhs2OZmdnRCs/pkaxQXWQ8HTN4PdOjKYfs0Sv
-         y3kDsm9Lign5cPKiHW4jWeWJwBr0Uyj87Yr8aNxCdFvYlwNR7c1W2OnWv+0rg2k+Ho/B
-         4ZeZmzW+zEkhYq/7Qnktf6HqjzZduN3qVXgRoDU+HkrU7zXkXRCgBi/JBTqpQoTJI8m4
-         XSwA==
+        bh=Gmsp8IZDH53kiko9aSQ4QmCnUqJM7FgPbxSSXJNQk4s=;
+        b=G9CYXz4fiOsmUk423D9in8c2LrqP168RM+D5jDjjiR49E6X8zdF9y6y59EQgXGK8GY
+         Zv9PljtqubthW81T0i6SPXonmunV0df3U0bkthmVQAvmIr5VFgr7RmYIAOV+AMlLJW+q
+         JF92KckmnOViRur2Ug/LumUfp+NZnFqOH3ThYctkaPWSVkfow0IoXCqMz6w8cB3lDGIR
+         XYjBOPJDP0sOuCf1ZXoc4vX5M3IwXOBtaBfLX5DXivRVsyr6VZ2xtKcdwYG0TM1agyOu
+         0ReWNNRsUwiY+CGyzRgml+ZQnh1KIh19+yMINkJ41sdjUZK6EyKmbuAtqqCG0P6QwxC6
+         35oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qEWobHGIY7KquDfwJRWAwRxBYgGjcQ9monRMXSr9aiE=;
-        b=DmscZbnVdwhT7nfOxy89sQOZaKHd4QLEWW/1jaa5j5cGgZqgXt93WJCgxzAqNagWcS
-         TZBhl5C/Mxr3q4BVVuMQeU+Iu9NBaVUmAMmDRlllnsbxwM9kUZJYVJQRjqQVX2cnw2m7
-         9+Q1cIFVejisjMlbc4eNOLeZjmBPGw5pr/qRxOzg269u6UDcAlYiCqBQcyDWNjJYznrI
-         d8c6kUKvcICfS3jeS5572GEAsXaIorRbcx+m+q/V04tixaDZhvOswQm5d7qyaEmKna2s
-         kFR7NMI1h+KtR37HpRIL3tOKOe5pwMDrrDOL4YmO2GHAiDE9VI4sgEZbD2MwN4CV9BLQ
-         Szwg==
-X-Gm-Message-State: AOAM532tCpQ/20VoR4T4MsGf9ek57OV0E93yoWQJqBm0HRmiK2qNY7+0
-        RQLymB3jKedos/9YRcm/CiVSZw==
-X-Google-Smtp-Source: ABdhPJyRmWvt/Bk8lWQWiAnP7XTXUK6V5eOYWyD6pYB1J3EHROv05lMLKClEnDf90y+dJdq3S2HgAg==
-X-Received: by 2002:a5d:534b:: with SMTP id t11mr27666768wrv.186.1615296403744;
-        Tue, 09 Mar 2021 05:26:43 -0800 (PST)
+        bh=Gmsp8IZDH53kiko9aSQ4QmCnUqJM7FgPbxSSXJNQk4s=;
+        b=gkPuS4V3isiDrcS+CQsjo/IkI2m0/FB4RtyEIhG3brmuVrqcASWgNGHX+0Vnej3TD7
+         KfEIE8SeJWYR/P+WVPQoWwm5X+BiwzDfRAdssY8wbvWvNDzJpet9d5oYYOjNHjNhVs41
+         PhSuP8u2iyOZHKlAbBqmxAgsyPbK5D9vdfTV3YSHKmu8Ih4Ip+JQxvpkqR6mI8l6T+hH
+         YcEVgbmItGZSZ6zhkT3bw4U2+ebwKDW4I5kW0mha4CVPkk9uSPqQiBgJRtM4W8k4Ufl2
+         Ql/o6+oD6xlLQXWsLDRCbAci2ttcEcHF6/JdFnjh0LjkGCxX3T2yOnKmu3K00aSMGhYR
+         bI9Q==
+X-Gm-Message-State: AOAM532ZqhyatfbZmMr8H0aANEVF8V4rW+EfnmdiI3jT1Ij/Sua+EvS3
+        zJmhFqYqe7J4nn48nluZ9crC9g==
+X-Google-Smtp-Source: ABdhPJzH/RtUGbBqNh5Is1mIzPBF0pb2i+wHmQUmP4AfVm7YIC51mYcMIVHEYVnGPd6idoyuh70XhQ==
+X-Received: by 2002:a5d:5104:: with SMTP id s4mr29707026wrt.62.1615296404319;
+        Tue, 09 Mar 2021 05:26:44 -0800 (PST)
 Received: from debian-brgl.home (amarseille-656-1-4-167.w90-8.abo.wanadoo.fr. [90.8.158.167])
         by smtp.gmail.com with ESMTPSA id u23sm4123366wmn.26.2021.03.09.05.26.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Mar 2021 05:26:43 -0800 (PST)
+        Tue, 09 Mar 2021 05:26:44 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [libgpiod][PATCH 4/6] treewide: remove is_requested() and is_free()
-Date:   Tue,  9 Mar 2021 14:26:37 +0100
-Message-Id: <20210309132639.29069-5-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH 5/6] treewide: kill line updating
+Date:   Tue,  9 Mar 2021 14:26:38 +0100
+Message-Id: <20210309132639.29069-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210309132639.29069-1-brgl@bgdev.pl>
 References: <20210309132639.29069-1-brgl@bgdev.pl>
@@ -67,368 +67,225 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This removes another two functions from the C API as well as their
-bindings that don't make much sense (since the user should know if
-they have requested the line or not).
+This removes any trace of line updating from the API (C, C++ and Python).
+The line objects will soon disappear entirely so in order to make the
+gradual transition to the new data model easier, remove
+gpiod_line_update().
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- bindings/cxx/gpiod.hpp                 |  6 -----
- bindings/cxx/line.cpp                  |  8 ------
- bindings/cxx/tests/tests-line.cpp      |  9 -------
- bindings/python/gpiodmodule.c          | 23 ----------------
- bindings/python/tests/gpiod_py_test.py | 20 --------------
- include/gpiod.h                        | 15 -----------
- lib/core.c                             | 37 +++++---------------------
- 7 files changed, 7 insertions(+), 111 deletions(-)
+ bindings/cxx/gpiod.hpp                 |  5 -----
+ bindings/cxx/line.cpp                  | 12 ------------
+ bindings/cxx/tests/tests-line.cpp      |  5 -----
+ bindings/python/gpiodmodule.c          | 23 -----------------------
+ bindings/python/tests/gpiod_py_test.py |  5 -----
+ include/gpiod.h                        | 22 ----------------------
+ lib/core.c                             | 12 +++++++-----
+ 7 files changed, 7 insertions(+), 77 deletions(-)
 
 diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-index 3a043a1..189a133 100644
+index 189a133..003acdd 100644
 --- a/bindings/cxx/gpiod.hpp
 +++ b/bindings/cxx/gpiod.hpp
-@@ -342,12 +342,6 @@ public:
+@@ -412,11 +412,6 @@ public:
  	 */
- 	GPIOD_API void release(void) const;
+ 	GPIOD_API const chip get_chip(void) const;
  
 -	/**
--	 * @brief Check if this user has ownership of this line.
--	 * @return True if the user has ownership of this line, false otherwise.
+-	 * @brief Re-read the line info from the kernel.
 -	 */
--	GPIOD_API bool is_requested(void) const;
+-	GPIOD_API void update(void) const;
 -
  	/**
- 	 * @brief Read the line value.
- 	 * @return Current value (0 or 1).
+ 	 * @brief Reset the state of this object.
+ 	 *
 diff --git a/bindings/cxx/line.cpp b/bindings/cxx/line.cpp
-index 1d114ac..058f7ce 100644
+index 058f7ce..bf84867 100644
 --- a/bindings/cxx/line.cpp
 +++ b/bindings/cxx/line.cpp
-@@ -127,14 +127,6 @@ void line::release(void) const
- 	bulk.release();
+@@ -278,18 +278,6 @@ const chip line::get_chip(void) const
+ 	return chip(this->_m_owner);
  }
  
--bool line::is_requested(void) const
+-void line::update(void) const
 -{
 -	this->throw_if_null();
 -	line::chip_guard lock_chip(*this);
 -
--	return ::gpiod_line_is_requested(this->_m_line);
+-	int ret = ::gpiod_line_update(this->_m_line);
+-
+-	if (ret < 0)
+-		throw ::std::system_error(errno, ::std::system_category(),
+-					  "unable to update the line info");
 -}
 -
- /*
-  * REVISIT: Check the performance of get/set_value & event_wait compared to
-  * the C API. Creating a line_bulk object involves a memory allocation every
+ void line::reset(void)
+ {
+ 	this->_m_line = nullptr;
 diff --git a/bindings/cxx/tests/tests-line.cpp b/bindings/cxx/tests/tests-line.cpp
-index 648012a..17fdd89 100644
+index 17fdd89..ababf8b 100644
 --- a/bindings/cxx/tests/tests-line.cpp
 +++ b/bindings/cxx/tests/tests-line.cpp
-@@ -27,7 +27,6 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_INPUT);
- 		REQUIRE_FALSE(line.is_active_low());
- 		REQUIRE(line.consumer().empty());
--		REQUIRE_FALSE(line.is_requested());
- 		REQUIRE_FALSE(line.is_used());
- 		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
- 		REQUIRE(line.bias() == ::gpiod::line::BIAS_UNKNOWN);
-@@ -45,7 +44,6 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.name() == "gpio-mockup-A-4");
- 		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
- 		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(line.is_requested());
- 		REQUIRE(line.is_used());
- 		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
- 		REQUIRE(line.bias() == ::gpiod::line::BIAS_UNKNOWN);
-@@ -65,7 +63,6 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.name() == "gpio-mockup-A-4");
- 		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
- 		REQUIRE(line.is_active_low());
--		REQUIRE(line.is_requested());
- 		REQUIRE(line.is_used());
- 		REQUIRE(line.drive() == ::gpiod::line::DRIVE_OPEN_DRAIN);
- 		REQUIRE(line.bias() == ::gpiod::line::BIAS_UNKNOWN);
-@@ -84,7 +81,6 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.name() == "gpio-mockup-A-4");
- 		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
- 		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(line.is_requested());
- 		REQUIRE(line.is_used());
- 		REQUIRE(line.drive() == ::gpiod::line::DRIVE_OPEN_SOURCE);
- 		REQUIRE(line.bias() == ::gpiod::line::BIAS_UNKNOWN);
-@@ -103,7 +99,6 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.name() == "gpio-mockup-A-4");
- 		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
- 		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(line.is_requested());
- 		REQUIRE(line.is_used());
- 		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
- 		REQUIRE(line.bias() == ::gpiod::line::BIAS_DISABLED);
-@@ -122,7 +117,6 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.name() == "gpio-mockup-A-4");
- 		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
- 		REQUIRE_FALSE(line.is_active_low());;
--		REQUIRE(line.is_requested());
- 		REQUIRE(line.is_used());
- 		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
- 		REQUIRE(line.bias() == ::gpiod::line::BIAS_PULL_DOWN);
-@@ -141,7 +135,6 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
- 		REQUIRE(line.name() == "gpio-mockup-A-4");
- 		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
- 		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(line.is_requested());
- 		REQUIRE(line.is_used());
+@@ -139,11 +139,6 @@ TEST_CASE("Line information can be correctly retrieved", "[line]")
  		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
  		REQUIRE(line.bias() == ::gpiod::line::BIAS_PULL_UP);
-@@ -383,12 +376,10 @@ TEST_CASE("Exported line can be released", "[line]")
- 
- 	line.request(config);
- 
--	REQUIRE(line.is_requested());
- 	REQUIRE(line.get_value() == 0);
- 
- 	line.release();
- 
--	REQUIRE_FALSE(line.is_requested());
- 	REQUIRE_THROWS_AS(line.get_value(), ::std::system_error);
+ 	}
+-
+-	SECTION("update line info")
+-	{
+-		REQUIRE_NOTHROW(line.update());
+-	}
  }
  
+ TEST_CASE("Line values can be set and read", "[line]")
 diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
-index e54c3ad..12a6867 100644
+index 12a6867..8bfb4c4 100644
 --- a/bindings/python/gpiodmodule.c
 +++ b/bindings/python/gpiodmodule.c
-@@ -501,23 +501,6 @@ static PyObject *gpiod_Line_request(gpiod_LineObject *self,
+@@ -721,23 +721,6 @@ static PyObject *gpiod_Line_release(gpiod_LineObject *self,
  	return ret;
  }
  
--PyDoc_STRVAR(gpiod_Line_is_requested_doc,
--"is_requested() -> boolean\n"
+-PyDoc_STRVAR(gpiod_Line_update_doc,
+-"update() -> None\n"
 -"\n"
--"Check if this user has ownership of this line.");
+-"Re-read the line information from the kernel.");
 -
--static PyObject *gpiod_Line_is_requested(gpiod_LineObject *self,
--					 PyObject *Py_UNUSED(ignored))
+-static PyObject *gpiod_Line_update(gpiod_LineObject *self,
+-				   PyObject *Py_UNUSED(ignored))
 -{
--	if (gpiod_ChipIsClosed(self->owner))
--		return NULL;
+-	int ret;
 -
--	if (gpiod_line_is_requested(self->line))
--		Py_RETURN_TRUE;
+-	ret = gpiod_line_update(self->line);
+-	if (ret)
+-		return PyErr_SetFromErrno(PyExc_OSError);
 -
--	Py_RETURN_FALSE;
+-	Py_RETURN_NONE;
 -}
 -
- PyDoc_STRVAR(gpiod_Line_get_value_doc,
- "get_value() -> integer\n"
+ PyDoc_STRVAR(gpiod_Line_event_wait_doc,
+ "event_wait([sec[ ,nsec]]) -> boolean\n"
  "\n"
-@@ -983,12 +966,6 @@ static PyMethodDef gpiod_Line_methods[] = {
- 		.ml_flags = METH_VARARGS | METH_KEYWORDS,
- 		.ml_doc = gpiod_Line_request_doc,
+@@ -1008,12 +991,6 @@ static PyMethodDef gpiod_Line_methods[] = {
+ 		.ml_flags = METH_NOARGS,
+ 		.ml_doc = gpiod_Line_release_doc,
  	},
 -	{
--		.ml_name = "is_requested",
--		.ml_meth = (PyCFunction)gpiod_Line_is_requested,
+-		.ml_name = "update",
+-		.ml_meth = (PyCFunction)gpiod_Line_update,
 -		.ml_flags = METH_NOARGS,
--		.ml_doc = gpiod_Line_is_requested_doc,
+-		.ml_doc = gpiod_Line_update_doc,
 -	},
  	{
- 		.ml_name = "get_value",
- 		.ml_meth = (PyCFunction)gpiod_Line_get_value,
+ 		.ml_name = "event_wait",
+ 		.ml_meth = (PyCFunction)(void (*)(void))gpiod_Line_event_wait,
 diff --git a/bindings/python/tests/gpiod_py_test.py b/bindings/python/tests/gpiod_py_test.py
-index b7c30de..d448776 100755
+index d448776..f93c72c 100755
 --- a/bindings/python/tests/gpiod_py_test.py
 +++ b/bindings/python/tests/gpiod_py_test.py
-@@ -204,7 +204,6 @@ class LineInfo(MockupTestCase):
-             self.assertFalse(line.is_active_low())
-             self.assertEqual(line.consumer(), None)
-             self.assertFalse(line.is_used())
--            self.assertFalse(line.is_requested())
- 
-     def test_exported_line(self):
-         with gpiod.Chip(mockup.chip_path(0)) as chip:
-@@ -218,7 +217,6 @@ class LineInfo(MockupTestCase):
-             self.assertTrue(line.is_active_low())
-             self.assertEqual(line.consumer(), default_consumer)
-             self.assertTrue(line.is_used())
--            self.assertTrue(line.is_requested())
- 
-     def test_exported_line_with_flags(self):
-         with gpiod.Chip(mockup.chip_path(0)) as chip:
-@@ -234,7 +232,6 @@ class LineInfo(MockupTestCase):
-             self.assertTrue(line.is_active_low())
-             self.assertEqual(line.consumer(), default_consumer)
-             self.assertTrue(line.is_used())
--            self.assertTrue(line.is_requested())
-             self.assertEqual(line.drive(), gpiod.Line.DRIVE_OPEN_DRAIN)
-             self.assertEqual(line.bias(), gpiod.Line.BIAS_UNKNOWN)
- 
-@@ -251,7 +248,6 @@ class LineInfo(MockupTestCase):
-             self.assertFalse(line.is_active_low())
-             self.assertEqual(line.consumer(), default_consumer)
-             self.assertTrue(line.is_used())
--            self.assertTrue(line.is_requested())
-             self.assertEqual(line.drive(), gpiod.Line.DRIVE_OPEN_DRAIN)
-             self.assertEqual(line.bias(), gpiod.Line.BIAS_UNKNOWN)
- 
-@@ -268,7 +264,6 @@ class LineInfo(MockupTestCase):
-             self.assertFalse(line.is_active_low())
-             self.assertEqual(line.consumer(), default_consumer)
-             self.assertTrue(line.is_used())
--            self.assertTrue(line.is_requested())
-             self.assertEqual(line.drive(), gpiod.Line.DRIVE_OPEN_SOURCE)
-             self.assertEqual(line.bias(), gpiod.Line.BIAS_UNKNOWN)
- 
-@@ -285,7 +280,6 @@ class LineInfo(MockupTestCase):
-             self.assertFalse(line.is_active_low())
-             self.assertEqual(line.consumer(), default_consumer)
-             self.assertTrue(line.is_used())
--            self.assertTrue(line.is_requested())
-             self.assertEqual(line.drive(), gpiod.Line.DRIVE_PUSH_PULL)
-             self.assertEqual(line.bias(), gpiod.Line.BIAS_DISABLED)
- 
-@@ -302,7 +296,6 @@ class LineInfo(MockupTestCase):
-             self.assertFalse(line.is_active_low())
-             self.assertEqual(line.consumer(), default_consumer)
-             self.assertTrue(line.is_used())
--            self.assertTrue(line.is_requested())
-             self.assertEqual(line.drive(), gpiod.Line.DRIVE_PUSH_PULL)
-             self.assertEqual(line.bias(), gpiod.Line.BIAS_PULL_DOWN)
- 
-@@ -319,7 +312,6 @@ class LineInfo(MockupTestCase):
-             self.assertFalse(line.is_active_low())
-             self.assertEqual(line.consumer(), default_consumer)
-             self.assertTrue(line.is_used())
--            self.assertTrue(line.is_requested())
+@@ -315,11 +315,6 @@ class LineInfo(MockupTestCase):
              self.assertEqual(line.drive(), gpiod.Line.DRIVE_PUSH_PULL)
              self.assertEqual(line.bias(), gpiod.Line.BIAS_PULL_UP)
  
-@@ -605,16 +597,6 @@ class LineRequestBehavior(MockupTestCase):
- 
-     chip_sizes = ( 8, )
- 
--    def test_line_export_release(self):
+-    def test_update_line_info(self):
 -        with gpiod.Chip(mockup.chip_path(0)) as chip:
 -            line = chip.get_line(3)
--            line.request(consumer=default_consumer,
--                         type=gpiod.LINE_REQ_DIR_IN)
--            self.assertTrue(line.is_requested())
--            self.assertEqual(line.get_value(), 0)
--            line.release()
--            self.assertFalse(line.is_requested())
+-            line.update()
 -
-     def test_line_request_twice_two_calls(self):
-         with gpiod.Chip(mockup.chip_path(0)) as chip:
-             line = chip.get_line(3)
-@@ -647,10 +629,8 @@ class LineRequestBehavior(MockupTestCase):
-         with gpiod.Chip(mockup.chip_path(0)) as chip:
-             line = chip.get_line(2)
-             line.request(default_consumer)
--            self.assertTrue(line.is_requested())
-             self.assertEqual(line.direction(), gpiod.Line.DIRECTION_INPUT)
-             line.release()
--            self.assertFalse(line.is_requested())
+ class LineValues(MockupTestCase):
  
- #
- # Iterator test cases
+     chip_sizes = ( 8, )
 diff --git a/include/gpiod.h b/include/gpiod.h
-index 71abb2a..a5e09e2 100644
+index a5e09e2..0ee9778 100644
 --- a/include/gpiod.h
 +++ b/include/gpiod.h
-@@ -700,21 +700,6 @@ void gpiod_line_release(struct gpiod_line *line) GPIOD_API;
+@@ -358,28 +358,6 @@ bool gpiod_line_is_used(struct gpiod_line *line) GPIOD_API;
   */
- void gpiod_line_release_bulk(struct gpiod_line_bulk *bulk) GPIOD_API;
+ int gpiod_line_drive(struct gpiod_line *line) GPIOD_API;
  
 -/**
-- * @brief Check if the calling user has ownership of this line.
+- * @brief Re-read the line info.
 - * @param line GPIO line object.
-- * @return True if given line was requested, false otherwise.
+- * @return 0 if the operation succeeds. In case of an error this routine
+- *         returns -1 and sets the last error number.
+- *
+- * The line info is initially retrieved from the kernel by
+- * gpiod_chip_get_line() and is later re-read after every successful request.
+- * Users can use this function to manually re-read the line info when needed.
+- *
+- * We currently have no mechanism provided by the kernel for keeping the line
+- * info synchronized and for the sake of speed and simplicity of this low-level
+- * library we don't want to re-read the line info automatically everytime
+- * a property is retrieved. Any daemon using this library must track the state
+- * of lines on its own and call this routine if needed.
+- *
+- * The state of requested lines is kept synchronized (or rather cannot be
+- * changed by external agents while the ownership of the line is taken) so
+- * there's no need to call this function in that case.
 - */
--bool gpiod_line_is_requested(struct gpiod_line *line) GPIOD_API;
--
--/**
-- * @brief Check if the calling user has neither requested ownership of this
-- *        line nor configured any event notifications.
-- * @param line GPIO line object.
-- * @return True if given line is free, false otherwise.
-- */
--bool gpiod_line_is_free(struct gpiod_line *line) GPIOD_API;
+-int gpiod_line_update(struct gpiod_line *line) GPIOD_API;
 -
  /**
-  * @}
-  *
+  * @brief Get the handle to the GPIO chip controlling this line.
+  * @param line The GPIO line object.
 diff --git a/lib/core.c b/lib/core.c
-index bab438f..8e3d8a7 100644
+index 8e3d8a7..8fdc503 100644
 --- a/lib/core.c
 +++ b/lib/core.c
-@@ -561,13 +561,19 @@ int gpiod_line_update(struct gpiod_line *line)
- 	return 0;
+@@ -373,6 +373,8 @@ unsigned int gpiod_chip_num_lines(struct gpiod_chip *chip)
+ 	return chip->num_lines;
  }
  
-+static bool line_is_requested(struct gpiod_line *line)
-+{
-+	return (line->state == LINE_REQUESTED_VALUES ||
-+		line->state == LINE_REQUESTED_EVENTS);
-+}
++static int line_update(struct gpiod_line *line);
 +
- static bool line_bulk_all_requested(struct gpiod_line_bulk *bulk)
+ struct gpiod_line *
+ gpiod_chip_get_line(struct gpiod_chip *chip, unsigned int offset)
  {
- 	struct gpiod_line *line;
- 	unsigned int idx;
- 
- 	line_bulk_foreach_line(bulk, line, idx) {
--		if (!gpiod_line_is_requested(line)) {
-+		if (!line_is_requested(line)) {
- 			errno = EPERM;
- 			return false;
- 		}
-@@ -591,21 +597,6 @@ static bool line_bulk_all_requested_values(struct gpiod_line_bulk *bulk)
- 	return true;
- }
- 
--static bool line_bulk_all_free(struct gpiod_line_bulk *bulk)
--{
--	struct gpiod_line *line;
--	unsigned int idx;
--
--	line_bulk_foreach_line(bulk, line, idx) {
--		if (!gpiod_line_is_free(line)) {
--			errno = EBUSY;
--			return false;
--		}
--	}
--
--	return true;
--}
--
- static bool line_request_direction_is_valid(int direction)
- {
- 	if ((direction == GPIOD_LINE_REQUEST_DIRECTION_AS_IS) ||
-@@ -872,9 +863,6 @@ int gpiod_line_request_bulk(struct gpiod_line_bulk *bulk,
- 			    const struct gpiod_line_request_config *config,
- 			    const int *vals)
- {
--	if (!line_bulk_all_free(bulk))
--		return -1;
--
- 	if (line_request_is_direction(config->request_type))
- 		return line_request_values(bulk, config, vals);
- 	else if (line_request_is_events(config->request_type))
-@@ -904,17 +892,6 @@ void gpiod_line_release_bulk(struct gpiod_line_bulk *bulk)
+@@ -406,7 +408,7 @@ gpiod_chip_get_line(struct gpiod_chip *chip, unsigned int offset)
+ 		line = chip->lines[offset];
  	}
+ 
+-	rv = gpiod_line_update(line);
++	rv = line_update(line);
+ 	if (rv < 0)
+ 		return NULL;
+ 
+@@ -535,7 +537,7 @@ static int line_info_v2_to_info_flags(struct gpio_v2_line_info *info)
+ 	return iflags;
  }
  
--bool gpiod_line_is_requested(struct gpiod_line *line)
--{
--	return (line->state == LINE_REQUESTED_VALUES ||
--		line->state == LINE_REQUESTED_EVENTS);
--}
--
--bool gpiod_line_is_free(struct gpiod_line *line)
--{
--	return line->state == LINE_FREE;
--}
--
- int gpiod_line_get_value(struct gpiod_line *line)
+-int gpiod_line_update(struct gpiod_line *line)
++static int line_update(struct gpiod_line *line)
  {
- 	struct gpiod_line_bulk bulk = BULK_SINGLE_LINE_INIT(line);
+ 	struct gpio_v2_line_info info;
+ 	int rv;
+@@ -766,7 +768,7 @@ static int line_request_values(struct gpiod_line_bulk *bulk,
+ 				req.config.attrs[0].attr.values, i);
+ 		line_set_fd(line, line_fd);
+ 
+-		rv = gpiod_line_update(line);
++		rv = line_update(line);
+ 		if (rv) {
+ 			gpiod_line_release_bulk(bulk);
+ 			return rv;
+@@ -805,7 +807,7 @@ static int line_request_event_single(struct gpiod_line *line,
+ 	line->req_flags = config->flags;
+ 	line_set_fd(line, line_fd);
+ 
+-	rv = gpiod_line_update(line);
++	rv = line_update(line);
+ 	if (rv) {
+ 		gpiod_line_release(line);
+ 		return rv;
+@@ -1036,7 +1038,7 @@ int gpiod_line_set_config_bulk(struct gpiod_line_bulk *bulk,
+ 			line->output_value = lines_bitmap_test_bit(
+ 				hcfg.attrs[0].attr.values, i);
+ 
+-		rv = gpiod_line_update(line);
++		rv = line_update(line);
+ 		if (rv < 0)
+ 			return rv;
+ 	}
 -- 
 2.30.1
 
