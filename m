@@ -2,102 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E12E332F9F
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 21:11:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8595332FB2
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 21:16:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbhCIULV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Mar 2021 15:11:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231326AbhCIULV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 15:11:21 -0500
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F18C06174A
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Mar 2021 12:11:21 -0800 (PST)
-Received: by mail-ot1-x32f.google.com with SMTP id r24so7007339otq.13
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 12:11:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nDU8HEaDFt+U/tR130L3pHQ5tc1We6CEmFa3LppbPl4=;
-        b=f4W/TVC9lKb+TyY8+3weZrNji11zh0olJ4lUgfR04OFYGlZtOKh1mXplBhsBSfvw4h
-         lEkK6iRmCSDF1g2xpeflwz+x6Tza25ks2r7D0nPwDeloAqyNnnOmDo6mqSPL5IM9Cdmd
-         XNWEQV+dNjys5OGPkdtiCLUHhek459X99aY+5sFIR6TQBJQaJ6tLx09cza3bT6aoZw1N
-         CCY2YkVZrPJh7usKWLq4bPvAVQRjeQ8/2oX/HqSuQW77B8Uv8ogg6phKRQxmYSoMSOhd
-         1eUYMLnT2btNngVwJVS8Y47VZ3uDxztdk1IiAhvcvaAXmQU9wuM49jbKyRh1Q8bMFrRW
-         TXuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nDU8HEaDFt+U/tR130L3pHQ5tc1We6CEmFa3LppbPl4=;
-        b=ImedsWHxUxkzhnbjpzSEN/U8J1AIAN/HIOlbezicNmi8b3fpz3KEZzKjCyXDNaE89c
-         7UU2LNLLSW8ptYP45nzU/etT0wTAr/YqOBRbk5ZBZoQzWlGnafjxEC/vQXzcgcwdN/yB
-         WckeV5Mh14stAGZjno/4W3C1HIEd0QnuzZyDyYMIlfWVFxWWPX2kdRXU6gkHr5ofbf8B
-         Z557sLTBiOlku453I1RexFwwC9cc0+0gz7p+04xBBAwhb9tR+Fth40BPZik8hJHxazbU
-         8E2dYZNnvvJy1+qs8Nn4Hoh9+q/VuEQy+Ze9rWVEH2uoZAEGNSSTmBEYtKbRHne4eg7Y
-         /cEQ==
-X-Gm-Message-State: AOAM530RR79Q7UeesrXhK7CuONDSsiHyna2qlO8k1z0tDkXNAkMD/TMj
-        OCCaHQoP3y3JuLIomY84RyFq2w==
-X-Google-Smtp-Source: ABdhPJzoFq0F35X7H/P8NnCFd/JH+3u9SL+2b9pd3ZXLXZLantPepyGOiVNA5xWjB3aEmmIMq+Uwyg==
-X-Received: by 2002:a05:6830:2050:: with SMTP id f16mr1100574otp.182.1615320680377;
-        Tue, 09 Mar 2021 12:11:20 -0800 (PST)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id v9sm3068283oon.11.2021.03.09.12.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Mar 2021 12:11:19 -0800 (PST)
-Date:   Tue, 9 Mar 2021 14:11:18 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, linus.walleij@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: qcom: sc7280: Fix SDC1_RCLK configurations
-Message-ID: <YEfWZqZaGElvklTj@builder.lan>
-References: <1614662511-26519-1-git-send-email-rnayak@codeaurora.org>
- <1614662511-26519-2-git-send-email-rnayak@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1614662511-26519-2-git-send-email-rnayak@codeaurora.org>
+        id S231753AbhCIUPl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Mar 2021 15:15:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231387AbhCIUPK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 9 Mar 2021 15:15:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 2861464F64;
+        Tue,  9 Mar 2021 20:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615320910;
+        bh=bCQFVTvbowoHiQJO4CgyE4q1znbQhIwCk4PAWzsp4F0=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=KVEODTaHO4q/8v361GWcf8hHuUu9y9qUKbP8PTpAMzepm426fhAegvJtw/0+0/rze
+         nACveXtB8i5LmGsqMzLm7GIsBo3Y9HLi9OFqhfr2zwaf+45P3H/HQrxX2Jj32MK+A0
+         ZQ493f594aQo45EwLJTWTPWA4L51v2kcIwINnJaZJhpC45/huqaFgo3h2kAE3ET0pM
+         xt+QZstppJ7wpFa2gOG4D9rsZnH69+p1gl5lbCbnVrYahAN0qq5oFE4FR5k9sd7tkW
+         AcDWbG9sTocAOum+eQo+8jAG8D0000ZfXFONJ9RTkWOkYnkof12UjHGOJeEwaOGtTq
+         BQ3HP5nzuXJDw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 1DD2860952;
+        Tue,  9 Mar 2021 20:15:10 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v5.12-rc3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210309153443.16647-1-brgl@bgdev.pl>
+References: <20210309153443.16647-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210309153443.16647-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.12-rc3
+X-PR-Tracked-Commit-Id: b41ba2ec54a70908067034f139aa23d0dd2985ce
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4b3d9f9cf108ebf2c48fbbbf30a8d1346d9cc7d6
+Message-Id: <161532091006.26915.7204180747862496077.pr-tracker-bot@kernel.org>
+Date:   Tue, 09 Mar 2021 20:15:10 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon 01 Mar 23:21 CST 2021, Rajendra Nayak wrote:
+The pull request you sent on Tue,  9 Mar 2021 16:34:43 +0100:
 
-> Fix SDC1_RCLK configurations which are in a different register so fix the
-> offset from 0xb3000 to 0xb3004.
-> 
-> Fixes: ecb454594c43: ("pinctrl: qcom: Add sc7280 pinctrl driver")
-> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.12-rc3
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4b3d9f9cf108ebf2c48fbbbf30a8d1346d9cc7d6
 
-Regards,
-Bjorn
+Thank you!
 
-> Reported-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-sc7280.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280.c b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-> index 49c4347..9d41abf 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sc7280.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-> @@ -1440,7 +1440,7 @@ static const struct msm_pingroup sc7280_groups[] = {
->  	[173] = PINGROUP(173, qdss, _, _, _, _, _, _, _, _),
->  	[174] = PINGROUP(174, qdss, _, _, _, _, _, _, _, _),
->  	[175] = UFS_RESET(ufs_reset, 0xbe000),
-> -	[176] = SDC_QDSD_PINGROUP(sdc1_rclk, 0xb3000, 15, 0),
-> +	[176] = SDC_QDSD_PINGROUP(sdc1_rclk, 0xb3004, 0, 6),
->  	[177] = SDC_QDSD_PINGROUP(sdc1_clk, 0xb3000, 13, 6),
->  	[178] = SDC_QDSD_PINGROUP(sdc1_cmd, 0xb3000, 11, 3),
->  	[179] = SDC_QDSD_PINGROUP(sdc1_data, 0xb3000, 9, 0),
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
