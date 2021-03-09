@@ -2,136 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8205A332C6F
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 17:43:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66155332F8C
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 21:05:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230465AbhCIQmm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Mar 2021 11:42:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59474 "EHLO
+        id S231272AbhCIUFZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Mar 2021 15:05:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230492AbhCIQmi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 11:42:38 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58343C06174A
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Mar 2021 08:42:38 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id 7so16982910wrz.0
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 08:42:38 -0800 (PST)
+        with ESMTP id S231550AbhCIUFS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 15:05:18 -0500
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7558C06174A
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Mar 2021 12:05:17 -0800 (PST)
+Received: by mail-lf1-x136.google.com with SMTP id n16so29357017lfb.4
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 12:05:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bSanhV2eM0+q0PMc4Bed4YDc78eCofTbV84wbIBdvTQ=;
-        b=MdaSfK7UqIcJZx3XtaPeOnw6bNRyNjjsARG28v0bZgYTpkq753rOtazP9z0+YBQYDW
-         1gkcH/YnjhS9s2Q8smfa1hmhr5eCk6QLzxr0dnDAaBKgU+lWavthSYVk/nZG4ONbaud3
-         vZgXwUykJLQhXjp6E3CHaLiiiprb1iNOWgVCfSBcg1ZxgFzctdu39qe7l7Js+V3/X5nW
-         evw/QjPEVSk+VnGw45D9dy4vqRcwEWdLpbgQfjbZtXCKQYqCIOYjmg8AuQoqnI6TNiod
-         eO2qSjCCM5/XLsbd0waXlg46faq34YbeJlPBYXs0aFAS4yG48qxoBq7gUSxDVetL7Lzn
-         QcZw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kohwRGgEQaCo3tkVZ/WeefWjMw7rUpI7M2Guk4ayfeY=;
+        b=S13/iT8hpP3g4wvVRrgM3z+9NAV7Zn2ysUe5VpbU2RnXwT1e/Sw+vKdkSklZmdAUHL
+         f/moaaV4N359aLcYjVPvLeF/igF3xPAQ1mpjjLQ2OabAW2f4RbnjdUEnrNVg3pua6/D7
+         W6MegJ3ZDJ/ebxGGMA69l8lCNgL8k8g3/dMV4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bSanhV2eM0+q0PMc4Bed4YDc78eCofTbV84wbIBdvTQ=;
-        b=UBYflUUBUnGXxx9Dva08L5U+Ebw/beCO1F9SNBvaWH4iOtX7ai5ykkUDUehrJyz7WZ
-         xii07NnkiGHMugBuP6jsdtfqciSL97s8NGaX2Nq6TNQIl49GEErXZ9T0LXvHHJFxdMq9
-         UCSBWsCjBItfogHy+TGme8ipRXLpGFhXXAkUZJehAIf4WkBTgvinYf8saZWAxA2AKtQh
-         DG2A+vPCzROC3Djneek3ENVOaGZm4YHekGIL60Flu7oRUUgEN3/ag1ZOrxsV2uGghUj5
-         KgEl3noVOZj8OaSHOxTRCaErBepCRpIuVK+sl4mUvWdvvl8vlB8PPrqj0QBJYdP+/ZIs
-         bHBQ==
-X-Gm-Message-State: AOAM531k9txv1oQJF59THPZ47QGPsIE1FLWK5DOh4eVQs8IeaiNScuTw
-        pFILqCZ+JdJV2gVLT3iDtX6LwQ==
-X-Google-Smtp-Source: ABdhPJx/jZh5dOJrB2L22G5L2Hpp8bMWxe58wtT1PvpdZhpnqxpZvBm1xeUz6KiiTjwyWKbdbtsxTg==
-X-Received: by 2002:a5d:6342:: with SMTP id b2mr29169833wrw.421.1615308157151;
-        Tue, 09 Mar 2021 08:42:37 -0800 (PST)
-Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
-        by smtp.googlemail.com with ESMTPSA id u3sm24770935wrt.82.2021.03.09.08.42.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Mar 2021 08:42:36 -0800 (PST)
-Subject: Re: [PATCH] gpio: wcd934x: Fix shift-out-of-bounds error
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>, amit.pundir@linaro.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <20210309101908.27688-1-srinivas.kandagatla@linaro.org>
- <CAHp75VcBc_pYVPw6A4tH0fqzWKtCT61a45tfN9ZrhuLee1VBUg@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <aa21e433-b1ee-44ee-8c1b-bfb2e9a04bb5@linaro.org>
-Date:   Tue, 9 Mar 2021 16:42:35 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kohwRGgEQaCo3tkVZ/WeefWjMw7rUpI7M2Guk4ayfeY=;
+        b=NBmNdFUFi8hEbaAdFRROPobBUOgJwDB7jGUg8UqrsOLuJ3iplP5htk2xSqXuoD2/0G
+         Dt5R1NGtEVLtDzaoX4MaJIYrujrxW/YOIzkUbCKr2W6cEmqrmg2GKaBe+1l2iU3NIQrD
+         XwoGnc/6eeyt1P/X7V13ePRmwejwqXmSKSsqFU0owUJNnbFnLlEPMcfU/RlyIP5ynroc
+         dZi/aYE/BQWxxJKaGaBekM3Bs+Mdn5Id1pLnD0CRr7I5kVUXLUHrIrJ33evlBjQ5qrCR
+         boLss5B3vZ3SjbGnOpWzqG4RWbccb/dhPMrFXIaZ56BAmGAN/kTpOAmG9rNQ898jjJLX
+         F/9g==
+X-Gm-Message-State: AOAM531TAg/RoO7m6wPTRgM8GLLB4/g9WA4cwMkG4Zi3dYgGZFESWK1q
+        QgUPX+X6h8UCHNjZOU2KGfUmyG/UgxzvNA==
+X-Google-Smtp-Source: ABdhPJyRpBfYF5Wc+Ru1SH2wRvAGv9JBJf1/kfa0g43wueDhD2HcYSgQWXyI/vGAwq67J52Yj+ZkcA==
+X-Received: by 2002:a19:c7d3:: with SMTP id x202mr18795130lff.638.1615320315838;
+        Tue, 09 Mar 2021 12:05:15 -0800 (PST)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id g26sm2291401lja.10.2021.03.09.12.05.14
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Mar 2021 12:05:14 -0800 (PST)
+Received: by mail-lf1-f51.google.com with SMTP id u4so29386459lfs.0
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 12:05:14 -0800 (PST)
+X-Received: by 2002:a05:6512:2287:: with SMTP id f7mr17726280lfu.40.1615320314276;
+ Tue, 09 Mar 2021 12:05:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcBc_pYVPw6A4tH0fqzWKtCT61a45tfN9ZrhuLee1VBUg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210309153443.16647-1-brgl@bgdev.pl> <CAMRc=MfO7J1z8oGy+OiRR000dJAYg1LTynz33Kh6BMb1hUrg5g@mail.gmail.com>
+In-Reply-To: <CAMRc=MfO7J1z8oGy+OiRR000dJAYg1LTynz33Kh6BMb1hUrg5g@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 9 Mar 2021 12:04:58 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiiuSPZGh1ai_NuV8BHgXO36H_aQ28Bx1u82gE23S1u0g@mail.gmail.com>
+Message-ID: <CAHk-=wiiuSPZGh1ai_NuV8BHgXO36H_aQ28Bx1u82gE23S1u0g@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: fixes for v5.12-rc3
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Mar 9, 2021 at 7:43 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> I realized only after I sent out this PR that I had rebased the branch
+> on top of v5.12-rc2 (because of the v5.12-rc1 situation) without
+> --rebase-merges and this caused git to drop the merge commit for
+> Andy's pull-request. Please let me know if you can pull this as is or
+> if I should rebuild my branch and resend.
 
+This is fine - it's small, it's a one-time pain, and there's that reason for it.
 
-On 09/03/2021 16:31, Andy Shevchenko wrote:
-> On Tue, Mar 9, 2021 at 12:21 PM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->> bit-mask for pins 0 to 4 is BIT(0) to BIT(4) however we ended up with BIT(n - 1)
->> which is not right, and this was caught by below usban check
-> 
-> It would be nice to reduce below to ~2-3 (significant) lines.
+So as long as Andy is aware of how his patches got rebased and don't
+match his branch any more, I think it's not a big deal, and I've
+pulled it as-is.
 
-I agree! Will do that in next version!
-
---srini
-> 
->> UBSAN: shift-out-of-bounds in /workspace/dev/linux/drivers/gpio/gpio-wcd934x.c:34:14
->> qcom-q6v5-mss 4080000.remoteproc: failed to acquire pdc reset
->> remoteproc remoteproc2: releasing 4080000.remoteproc
->> shift exponent 4294967295 is too large for 64-bit type 'long unsigned int'
->> CPU: 6 PID: 155 Comm: kworker/6:2 Not tainted 5.12.0-rc1-00045-g508b7280ec3d-dirty #1396
->> Hardware name: Thundercomm Dragonboard 845c (DT)
->>
->> Call trace:
->>   dump_backtrace+0x0/0x1c0
->>   show_stack+0x18/0x68
->>   dump_stack+0xd8/0x134
->>   ubsan_epilogue+0x10/0x58
->>   __ubsan_handle_shift_out_of_bounds+0xf8/0x168
->>   wcd_gpio_get_direction+0xc8/0xd8
->>   gpiochip_add_data_with_key+0x4ac/0xe78
->>   devm_gpiochip_add_data_with_key+0x30/0x90
->>   wcd_gpio_probe+0xc8/0x118
->>   platform_probe+0x6c/0x118
->>   really_probe+0x24c/0x418
->>   driver_probe_device+0x68/0xf0
->>   __device_attach_driver+0xb4/0x110
-> 
-> After addressing above, FWIW,
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
->> Fixes: 59c324683400 ("gpio: wcd934x: Add support to wcd934x gpio controller")
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/gpio/gpio-wcd934x.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
->> index 1cbce5990855..97e6caedf1f3 100644
->> --- a/drivers/gpio/gpio-wcd934x.c
->> +++ b/drivers/gpio/gpio-wcd934x.c
->> @@ -7,7 +7,7 @@
->>   #include <linux/slab.h>
->>   #include <linux/of_device.h>
->>
->> -#define WCD_PIN_MASK(p) BIT(p - 1)
->> +#define WCD_PIN_MASK(p) BIT(p)
->>   #define WCD_REG_DIR_CTL_OFFSET 0x42
->>   #define WCD_REG_VAL_CTL_OFFSET 0x43
->>   #define WCD934X_NPINS          5
->> --
->> 2.21.0
->>
-> 
-> 
+                    Linus
