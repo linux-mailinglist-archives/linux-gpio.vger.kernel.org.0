@@ -2,58 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5861332AA9
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 16:37:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E255332AB2
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Mar 2021 16:38:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231326AbhCIPhO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Mar 2021 10:37:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
+        id S229851AbhCIPiR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Mar 2021 10:38:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231231AbhCIPgt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 10:36:49 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 080EFC06175F
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Mar 2021 07:36:49 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id w9so20994471edc.11
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Mar 2021 07:36:48 -0800 (PST)
+        with ESMTP id S231591AbhCIPiA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Mar 2021 10:38:00 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5EACC06174A;
+        Tue,  9 Mar 2021 07:38:00 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id c16so6773374ply.0;
+        Tue, 09 Mar 2021 07:38:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KKcarZ2k6Lx/lnZwiK8L/SyUqa/Q4iYnjTfXMDBPoZg=;
-        b=agYiDO1bSAcBw9v1uDAJmiUR3YYiPF8kVgj1iAC10LRQb230SauWwrtY9GswV9dt4J
-         65DXAtgB2OHz4hi5R9HAQKEFt31CvL4AirAsLPn2ImQmPGvkdfuiNf4ZOulPuZGwNEWL
-         saUPy5GxI3m4IDbkky+WoY8iyRTFNRDyUxCOtkOSnR/ZiRTYnzvb8yhhawVD0LdwRPMb
-         GoW1j+RP1jY4TjTggZ74HklZIEXscuA8wT48hq8BH//5GxiJ89rl/GIcYUVNpggsY4u7
-         TFNYZl7uHKkSIQ8E+YsUxcyiqi+KER0HMnt5/vcKto5gvJ5Go6dSBETPKT1oRYOeFDzr
-         CaAQ==
+        bh=rCgDylN9h5YyAnaseTEpuLEiO2u2MBRnHcdV2qbADU8=;
+        b=WIQftWX11GpzIWeG6cBbpnW+ymTLq4JyNHpe0zov6vHyMthS9C6hcqZ5c5i3qWS3Ai
+         eia4Q2QcewY2RboHhqH5Rq5HoCkfzZNvhTBjBpaxEJibOa6GiikrtqYtMCLxVjuJLrXu
+         ICghPwNSE/7pkUfSHZgwdGEV9c4Ky8UNVpKD8VQzju2eDrabsiR3xDpLQZrwHTI6efj7
+         oW023F5+qxTFpy+8c3p/vg6W1KFqdc/B2bEc9MKwYvumPDN+Pvfprmm8CIxsBNKpSfOu
+         KVbXOcfe787T15kB8z1d8Hn4YQaHcqaKfWe9Agl8jee1JO/nER6liHNa3lnfWCebuKlW
+         cRnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KKcarZ2k6Lx/lnZwiK8L/SyUqa/Q4iYnjTfXMDBPoZg=;
-        b=izWEfv0VUnY0qBABUNtpPh37aJ8ueTTy5piiuYCF8y4fLOp0jnvabeLAt3mB/J4/9d
-         Zf3ZRXEVCPX4HTJFTHPXK/s18eXsV+gcVzxNpl9dZw12BGOkI2b2n/0osN3mwKsBmA+u
-         8A6ed/TDv/aATUSH1xAmuz6TqqLFo9hAA3idUoyqOQYdSn3byqfSaLYvDkzk7WdvBxtl
-         x7Vx14FtKhQ1RkRZc0XkD2ERMma6oUTIsn++21PoQkUDWRQuPZAfFBeUu+DxNvDoDRau
-         +fCFkAFcPb1yFCD83rS/XY8B0whdMRKfSJOiie6ShabmfC1iPPgtCNQtxFvnzEZmWqZZ
-         Uobg==
-X-Gm-Message-State: AOAM532y6ifEvszekp/x8Ium9i14yoIOMSovLRYHsBBOA9s0gvsx0+Cn
-        /X8xBPUDsWNKtuD48aVC0mmJoWV1ibRfkH9aPRH8VA==
-X-Google-Smtp-Source: ABdhPJxHDck94uqnY+JMNKZkOg7mR+iDFSn15ZNz91KzTkwKiGGyTnj32npsAExezKG/EDA35JMP5+vA7YaWAZgPyRo=
-X-Received: by 2002:a50:ee05:: with SMTP id g5mr4786047eds.164.1615304207767;
- Tue, 09 Mar 2021 07:36:47 -0800 (PST)
+        bh=rCgDylN9h5YyAnaseTEpuLEiO2u2MBRnHcdV2qbADU8=;
+        b=rhZ+fsqXy1mtidpMfmCfsFu//0y9/KsgOm/VGL+1Pbi3nFW5QTPnMhnsHZ5KUsuIwz
+         FNVSjVw1GcUA2l7hy7YBC55JyyImRYzYT1maUrPaQpGsJcQakRP0MF29Cw53/caORyjD
+         iksuNKaMn6antNdz0vHmD5om0uA57bqIscJjsFzUwCESb/8tmJDrh0FJtF6SvZqNbYvL
+         QJp3fogDMFgukR84potHguFAXHpvUP81d8s+DEn9/mQjPeyYtDMq3YXs/sCEi0Eh1D2k
+         eMMh2xqvJqfzCXZd5bz0EyTH6Ieh6xkT5YmNP64BI7p8g2LXMeRAUCX24K8F8A0X5ifW
+         JvMA==
+X-Gm-Message-State: AOAM530HnOr3HpVAG1fnKcOHESj09QIUzznnPudIZpg/nD9Tp0CtVlTt
+        4RAHk0RQygRUE4j7IRxLOkJNIclDjXtA9dPBkAo=
+X-Google-Smtp-Source: ABdhPJyfL28bIg7FuwHqkfe+lzqzQU/mxfkd8LJvFtYUDiKd7QdGaeAH6t2onha1VecyF/v7IUxH5rDF2BQYrNG6iDk=
+X-Received: by 2002:a17:902:c808:b029:e6:4204:f62f with SMTP id
+ u8-20020a170902c808b02900e64204f62fmr4434162plx.0.1615304280436; Tue, 09 Mar
+ 2021 07:38:00 -0800 (PST)
 MIME-Version: 1.0
 References: <YD9K8LzSFpuAhDvW@black.fi.intel.com> <CAMRc=Mf1MsRUGJN9Y09yVQ=OO41-kYRo8n3D3tyLpymnJ6_JvQ@mail.gmail.com>
  <YEX72lTYIwxc0I8O@smile.fi.intel.com> <CAMRc=MeWppCHTc5G3wu3MMb0ZvncbaNJfOLU=WFFTbaw7EVnXQ@mail.gmail.com>
  <CACRpkdZF2x-mAs3p=d1gx-rfrSGQA4J5v+-6WHOjFwt=62De5w@mail.gmail.com>
 In-Reply-To: <CACRpkdZF2x-mAs3p=d1gx-rfrSGQA4J5v+-6WHOjFwt=62De5w@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 9 Mar 2021 16:36:36 +0100
-Message-ID: <CAMRc=MftNQMNA4riDBkGBo0A1nmO808mux0fWf_inLzy8jfPnA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 9 Mar 2021 17:37:44 +0200
+Message-ID: <CAHp75Vej=CTUgixN6m_=4bhkUoVRZQ6JvsRp63Nj+4hSsO4Ypg@mail.gmail.com>
 Subject: Re: [GIT PULL] intel-gpio for 5.12-2
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linux GPIO <linux-gpio@vger.kernel.org>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -63,8 +65,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 9, 2021 at 4:33 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
+On Tue, Mar 9, 2021 at 5:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 > On Tue, Mar 9, 2021 at 4:24 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 > > On Mon, Mar 8, 2021 at 11:26 AM Andy Shevchenko
 > > <andriy.shevchenko@linux.intel.com> wrote:
@@ -81,13 +82,7 @@ On Tue, Mar 9, 2021 at 4:33 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 > > > > Pulled, thanks!
 > > >
 > > > Thanks! Though I don't see it in your repository.
-> > >
-> > > --
-> > > With Best Regards,
-> > > Andy Shevchenko
-> > >
-> > >
-> >
+
 > > For some reason the merge commit doesn't show up but I do have the
 > > patches. Strange, I remember seeing the merge commit when I pulled it.
 >
@@ -96,14 +91,10 @@ On Tue, Mar 9, 2021 at 4:33 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 > That will drop the merge commit, and will also make linux-next
 > complain that the commiter has not signed off the commits.
 > (I.e. don't rebase a branch where you pulled in something.)
->
-> Yours,
-> Linus Walleij
 
-Ah cr*p I did because of the v5.12-rc1 problem signalled by Linus Torvalds. :(
+Actually one may use --rebase-merges (that's my default option after I
+learn it, okay, I actually learnt its predecessor).
 
-And I already sent a PR to him too...
-
-Anything I can do now to fix that?
-
-Bartosz
+-- 
+With Best Regards,
+Andy Shevchenko
