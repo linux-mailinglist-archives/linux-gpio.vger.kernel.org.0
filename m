@@ -2,79 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA939333F93
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 14:48:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B305333FDA
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 15:02:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233028AbhCJNrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 08:47:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
+        id S231625AbhCJOCK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 09:02:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232887AbhCJNrW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 08:47:22 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D4E0C061760
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 05:47:22 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id u4so33586122lfs.0
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 05:47:22 -0800 (PST)
+        with ESMTP id S232493AbhCJOBr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 09:01:47 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22238C061760;
+        Wed, 10 Mar 2021 06:01:47 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id d23so5310262plq.2;
+        Wed, 10 Mar 2021 06:01:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=++0Z3Sg/MSm5KHd5+AABmEZZ/1QQlMCCQcaKXINPhtc=;
-        b=a/BQ4m2telEhkXuNSNMUhrqEqXEgP2BE9Fw+Oq+MFBR1YdUNxX9VYfeXdIZ8WxSmcA
-         uUtR4oV3ia8Kw+yRGTqvdlWQ2MN4zNdOSr0lapBrs25Km40RrwNh3SZg83VJgD47asxh
-         lwNHTrcaD6AtV0xbiVH5g3KlTIv/dwP7lSKpLG0y0KeXiX04p97neZMU/bzOMQzK35wT
-         eiKNk0rHcrmS2efYicW4EgxaGNljmRbfUHVc1DE/s9Bu9d8Wtlkk1J38bT+hiu5qYYit
-         fdpMIMwNr0Rr0RhWZjZXmV79+aUPKH2XlNI4D7mQs6zN9cgfscV+u1t+rT+5+m1CfLId
-         cKkQ==
+         :cc:content-transfer-encoding;
+        bh=GCVQjWt0AiUSEd6FKWYgmvzWBrd1IhH0M7mcUn/44lQ=;
+        b=Px0uOi0ryjRx6x08IYmQ6kMksj/yHk95AZS1jObIxSWVrOk6XIxq/UhsgFBDROE6NK
+         5tMupwA+SUii8a2B7zCpHiXtJ2ipBz070h1TZToPZO4ZpgHa0Wm/5EQeEznAzjOi+maU
+         0csiXQ9y3QH2/0Fl6oOID3TuSy5br8ERPBHeqmuiYFCkh4P8vxwTJMnAMdcTcu7+K6f7
+         u9VfaVnldMU4RC3T4u0tA2wL/rPCHmZ/bGLVX1cSeeo/gbJ6Va5seL6Q0j4pCtyTzi2+
+         AyiKOAzjASbUo8ZgbLxgWgmGlBUwc6NqPGqKi/rjkGGBT1c0ibOXQxrCJwlMkMVbsZq0
+         gBAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=++0Z3Sg/MSm5KHd5+AABmEZZ/1QQlMCCQcaKXINPhtc=;
-        b=kNKO5ruvxvlZelRbdmPcpfRg5wr8kyPZ3G6o2lO+LY6Cn1LbaZWrmhcmcLCG7QX4Te
-         QvGlkIIgUEZJB7/2s3bhQ9IcJqBVfmrpEHsrnwdAh2pmccR3+SceZntLryU+dMGiUZ14
-         zoAmK53R49Vqwlokx8x0oskS+L7EJ019UPWUBP1T9dbMh1EpidQN983UC9008wHgba3z
-         WQLAl7VKPZo0NMCa224mLt1f+RF1VtKIO+5XFTA6MS0wOGn6UL7VdnqyfK+rN9UI1xIZ
-         Yj8ui97yRurMCD1mzZjEW4NkKvRtHEyjqina9wieOpDoWTWSf467MtRf2O0I+4EROx4c
-         Z/5A==
-X-Gm-Message-State: AOAM530b+l7XApPrNdyDAQ3FXjJmWJjFcR+Sl/W1akgWkiDh+Qx8wQpB
-        JmAg5oPOHiHqyCf38D5illMM3oajmzCU/vHV772Vq2+/lOyRzxpA
-X-Google-Smtp-Source: ABdhPJzjz29zzemwkr7iPlRBsp3xEylhxToWxZp3DxOzmJezKVokzc7l+lwpoq4ivD1nkFV58Cp8XVDLTRflfih+3KE=
-X-Received: by 2002:a05:6512:10d1:: with SMTP id k17mr2003988lfg.649.1615384041023;
- Wed, 10 Mar 2021 05:47:21 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GCVQjWt0AiUSEd6FKWYgmvzWBrd1IhH0M7mcUn/44lQ=;
+        b=tKuWh0aFyeQxwnx7O7r5PLTL/X13rMs69X82rXCzbfqoE1ri46HCo7JpW/VPqSzlVz
+         F9Hj4wzaZhwWSEPINEPRjF+Dla1PvO63JUTjNeg3hAj0G2MYiwP2RgEukxFUMn9LT62X
+         oSNnVoWE9ffWqE+jzeHFGAQZRpshK7InXYoA2sCNqtECi158UJh+0bM/iAC4vpREYSh1
+         Ll449wbG7G1e5a8FtNLnXZmh2wWqQJ07NODyHGcxvmumsyx6FTp8LMB17/oYtPUTcx7w
+         HCTG4bWXXhbwM6cE3sNmSRrmHwkX/e3P/tZwfGLyYUBj/PJeJirTeUtw4PgFJqTi6V84
+         +7tw==
+X-Gm-Message-State: AOAM533wrCWg8uhMrF1V0P7r+ASz+zuJEyWnfzFEG86DLGNa27ujw22I
+        yD7Ne1jRCUYCJWWuTePbeyq0Ho9cA5aV47GTzvU=
+X-Google-Smtp-Source: ABdhPJzKz7o7Q41neFjaiKGbGw1g/ggo7MCvqxNQhETQKoMzACZK76VS/lS0IsB/t4i57E5n23jDy3qbOmh0U2sPIgY=
+X-Received: by 2002:a17:90a:c84:: with SMTP id v4mr3828368pja.228.1615384906581;
+ Wed, 10 Mar 2021 06:01:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20210223064211.120935-1-jay.xu@rock-chips.com>
- <CACRpkdbqkCEMuZdwgfPJAhnZBKW1KV0+1MnXqNvTjm300jaS9Q@mail.gmail.com>
- <CACRpkdYkBD0-AWz6gWrxK_5GjM6_mSoJ4wR64BijsJ8juzuFug@mail.gmail.com> <CAKUh=RxWDyW_cO2nKFLi=x0xDJwLHTb3+-OesTk2B5C=DpGEwg@mail.gmail.com>
-In-Reply-To: <CAKUh=RxWDyW_cO2nKFLi=x0xDJwLHTb3+-OesTk2B5C=DpGEwg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 10 Mar 2021 14:47:10 +0100
-Message-ID: <CACRpkdb-NS5U3-nv6uRCsqo6iOg_CKq1tx8abNT4DuVpGPoqkw@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gcGluY3RybDogcm9ja2NoaXA6IG1ha2UgZHJpdmVyIGJlIHRyaXN0YQ==?=
-        =?UTF-8?B?dGUgbW9kdWxl44CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGludXgtcm9ja2NoaXAtYm91bmNlcytrZXZl?=
-        =?UTF-8?B?ci55YW5nPXJvY2stY2hpcHMuY29tQGxpc3RzLmluZnJhZGVhZC5vcmfku6Plj5HjgJE=?=
-To:     Kever Yang <kever.yang@rock-chips.com>
-Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+References: <20210310125504.31886-1-noltari@gmail.com> <20210310125504.31886-3-noltari@gmail.com>
+In-Reply-To: <20210310125504.31886-3-noltari@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 10 Mar 2021 16:01:30 +0200
+Message-ID: <CAHp75VeAmdkDuJ-rhyunQ+tAbB6=qHLGKzwFg26jgkdYzJLK1A@mail.gmail.com>
+Subject: Re: [PATCH v6 02/15] gpio: regmap: set gpio_chip of_node
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 5, 2021 at 2:02 AM Kever Yang <kever.yang@rock-chips.com> wrote:
+On Wed, Mar 10, 2021 at 2:55 PM =C3=81lvaro Fern=C3=A1ndez Rojas
+<noltari@gmail.com> wrote:
+>
+> This is needed for properly registering GPIO regmap as a child of a regma=
+p
+> pin controller.
 
-> Hi Linus,
->     Is there a place we can see the error report for "x86_64 allmodconfig"?
-> Since we don't have a build environment for architectures other than arm,
-> it would be best if we can get the error without have to setup the build environment.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Thanks!
 
-It comes out from the kernel build robot when I apply the patch, hehe :D
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> Reviewed-by: Michael Walle <michael@walle.cc>
+> ---
+>  v6: add comment and simplify of_node assignment
+>  v5: switch to fwnode
+>  v4: fix documentation
+>  v3: introduce patch needed for properly parsing gpio-range
+>
+>  drivers/gpio/gpio-regmap.c  | 1 +
+>  include/linux/gpio/regmap.h | 4 ++++
+>  2 files changed, 5 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+> index 5412cb3b0b2a..d4fc656e70b0 100644
+> --- a/drivers/gpio/gpio-regmap.c
+> +++ b/drivers/gpio/gpio-regmap.c
+> @@ -249,6 +249,7 @@ struct gpio_regmap *gpio_regmap_register(const struct=
+ gpio_regmap_config *config
+>
+>         chip =3D &gpio->gpio_chip;
+>         chip->parent =3D config->parent;
+> +       chip->of_node =3D to_of_node(config->fwnode);
+>         chip->base =3D -1;
+>         chip->ngpio =3D config->ngpio;
+>         chip->names =3D config->names;
+> diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+> index ad76f3d0a6ba..334dd928042b 100644
+> --- a/include/linux/gpio/regmap.h
+> +++ b/include/linux/gpio/regmap.h
+> @@ -4,6 +4,7 @@
+>  #define _LINUX_GPIO_REGMAP_H
+>
+>  struct device;
+> +struct fwnode_handle;
+>  struct gpio_regmap;
+>  struct irq_domain;
+>  struct regmap;
+> @@ -16,6 +17,8 @@ struct regmap;
+>   * @parent:            The parent device
+>   * @regmap:            The regmap used to access the registers
+>   *                     given, the name of the device is used
+> + * @fwnode:            (Optional) The firmware node.
+> + *                     If not given, the fwnode of the parent is used.
+>   * @label:             (Optional) Descriptive name for GPIO controller.
+>   *                     If not given, the name of the device is used.
+>   * @ngpio:             Number of GPIOs
+> @@ -57,6 +60,7 @@ struct regmap;
+>  struct gpio_regmap_config {
+>         struct device *parent;
+>         struct regmap *regmap;
+> +       struct fwnode_handle *fwnode;
+>
+>         const char *label;
+>         int ngpio;
+> --
+> 2.20.1
+>
 
-But I think the kernel build robot people at Arm can pick any git branch
-for builds, on request.
 
-Yours,
-Linus Walleij
+--=20
+With Best Regards,
+Andy Shevchenko
