@@ -2,271 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AE7733463C
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 19:04:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8B53334656
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 19:12:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233414AbhCJSDg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 13:03:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233386AbhCJSDZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 13:03:25 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6516C061760;
-        Wed, 10 Mar 2021 10:03:24 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id l11so20970051wrp.7;
-        Wed, 10 Mar 2021 10:03:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=E4uiOuXTxitIxLgWp2WTavq5l74uLFIFW+TA7gLmgh0=;
-        b=vAcdt2UG52Rwa6LmtIVDNcORbDPb5/bktA2vPvNOncHGSD9cGNgnEbZwAP5Xu7fY+M
-         hicTJQfVDdLZZKwbFyerzhxfLINBpsFH3WUK+rqjeFiy+Q46i4vv6BnyqMCdPk3An8tq
-         03CNHKkY1U7Pajnv68wIafcxQUygew1vzKREJbLKFaGzP99MuHh59Sg/nKH44A+wtgAC
-         YO7f0RvmZzV0OBPqvp2Z1WjK5FunY+Ze3I9kgeVSYK0GH9F15ITJ/8gt9NIWNvtrtviR
-         1nazkTAnRDiunZ9b0UEtB6j1H+MKq0e227jETRoJq8dc3lCJkLYafqNdu7fEGSmvpPb4
-         0FDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=E4uiOuXTxitIxLgWp2WTavq5l74uLFIFW+TA7gLmgh0=;
-        b=mqBllJjXq9VEBK3hIvzh6sfN1GnY5kdgYu8a3UE/O3/2a45Setw3VgmZOsao5QivEa
-         dOXpXV2+dBB9PxCxaMQg2HOMVJwMRnJ7LS4YEmhsG7P/6+6/XIF5uuIxqTnI2uyGOuiI
-         f6/QBqdyEsHU4gCSkwaGkjjHChHqsVHFmepT+bFyP2dFXKBCgEKRNlHU7vi77DjJvSJ3
-         yL1PxKqw/wCHIg6G9n3KMczEICtmFYiEg54u7BmTu4BiklqiTmtt3FVfUPAv/WT6PLtO
-         GqFsIoFaY8OGenV8BS3Rcz5AoByuwgr55dS4xQGQMlVnLMjq7dxN00kOw52TpLAk0wCe
-         6l/w==
-X-Gm-Message-State: AOAM530wCLK7N6481wZX63DuygBRc3YzBtSekIsen6iHpj6IVh7HOdV8
-        CQemMr4MoAk1ygcS3QY3ZE0l1J+b1MdB+w==
-X-Google-Smtp-Source: ABdhPJwA5IqS/48F81e83HzpaAiXSLgf4skXvAb3hc8mZdCmd61T1U1hWtfOBM7CGr3F8UXM3IdqtA==
-X-Received: by 2002:a5d:4ec5:: with SMTP id s5mr4848023wrv.168.1615399403348;
-        Wed, 10 Mar 2021 10:03:23 -0800 (PST)
-Received: from macbook-pro-alvaro.lan ([80.31.204.166])
-        by smtp.gmail.com with ESMTPSA id f14sm228413wmf.7.2021.03.10.10.03.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Mar 2021 10:03:22 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.60.0.2.21\))
-Subject: Re: [PATCH v6 04/15] dt-bindings: add BCM6328 pincontroller binding
- documentation
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <CAL_JsqK4b+U7cVb04+moB4biGVFC4mr3VGx70KdQKitiCGdtnQ@mail.gmail.com>
-Date:   Wed, 10 Mar 2021 19:03:20 +0100
-Cc:     Michael Walle <michael@walle.cc>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A2B4813E-4177-4969-9119-A40B39A36948@gmail.com>
-References: <20210310125504.31886-1-noltari@gmail.com>
- <20210310125504.31886-5-noltari@gmail.com>
- <CAL_JsqK4b+U7cVb04+moB4biGVFC4mr3VGx70KdQKitiCGdtnQ@mail.gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: Apple Mail (2.3654.60.0.2.21)
+        id S232695AbhCJSMM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 13:12:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233569AbhCJSMK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 10 Mar 2021 13:12:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 22BC164FB5;
+        Wed, 10 Mar 2021 18:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615399930;
+        bh=gfC545zIBa1YDEjWh32i4lCV8kvxln2OQmvfhzAIAuw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sYX+2ueZ5+BBW+3IwDwioMbZQD3zjKwfpEK527va3E6dYpdzjxk4h/yC3f9GdsGdx
+         Pojy5CqR6xScuMhKCeDKyNwb8RTUMmypnJ3ajQzO27mgbqPjFZ6ZV9FXF51+eVWaqt
+         ETPHA4bBErhomAJ4vLxRVO//+bQ/TXKaX22J0lCZqxUZR61HALQhsr0sLGOCISHvqW
+         rSYvbhdBky3jFw2qHnFTmSSQQI2ZWOwYuCqGC+0lfCLNudYej/lXm8baAxzcUspO7J
+         z5ewasZ6p56SXd6Zm8e57rhYAv4nQqWKSav4mmmoQOMZxF4z2kcnWLkAALeu088sy2
+         6COTccxstYU5g==
+Received: by mail-ej1-f51.google.com with SMTP id mj10so40562038ejb.5;
+        Wed, 10 Mar 2021 10:12:10 -0800 (PST)
+X-Gm-Message-State: AOAM530ICtRZ/i7E09b/z7aBxxcUkC30SAxOtfzajQDxo1wrf95jbpDl
+        W29NKI093SrFjzuubEvyapBU2eW2KAuWRqHyrw==
+X-Google-Smtp-Source: ABdhPJwxdSLQjOW6L+TI3np6QegsvPUL5FBbauPuDU3UjA/1Qy9TM9iKBMw0I7xF343nV273xSof46KLVFoHKsX+44o=
+X-Received: by 2002:a17:906:c405:: with SMTP id u5mr4947715ejz.341.1615399928619;
+ Wed, 10 Mar 2021 10:12:08 -0800 (PST)
+MIME-Version: 1.0
+References: <20210309142000.3034451-1-linus.walleij@linaro.org>
+In-Reply-To: <20210309142000.3034451-1-linus.walleij@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 10 Mar 2021 11:11:57 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqJbCPstpx_Q_JUF2UDtMaNz6-VGf+oDP374t0CfEYqtyg@mail.gmail.com>
+Message-ID: <CAL_JsqJbCPstpx_Q_JUF2UDtMaNz6-VGf+oDP374t0CfEYqtyg@mail.gmail.com>
+Subject: Re: [PATCH] ARM/gpio/dt-bindings: Clean out gpio alias from CLPS711X
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Alexander Shiyan <shc_work@mail.ru>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+On Tue, Mar 9, 2021 at 7:20 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> This removes the use of GPIO alias from the CLPS711X GPIO
+> driver.
+>
+> This driver only use it to add quirks to two GPIO blocks
+> for which we can reuse the standard property "ngpios" and
+> define a new Cirrus quirk to do it properly and get rid
+> of the alias.
+>
+> The patch changes the driver, the one DTS file and the
+> bindings in one go: my apologies but this is a lockstep
+> solution to avoid any unclarities or inbetween states.
 
-> El 10 mar 2021, a las 18:45, Rob Herring <robh+dt@kernel.org> =
-escribi=C3=B3:
->=20
-> On Wed, Mar 10, 2021 at 5:55 AM =C3=81lvaro Fern=C3=A1ndez Rojas
-> <noltari@gmail.com> wrote:
->>=20
->> Add binding documentation for the pincontrol core found in BCM6328 =
-SoCs.
->>=20
->> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
->> Co-developed-by: Jonas Gorski <jonas.gorski@gmail.com>
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> ---
->> v6: add changes suggested by Rob Herring
->> v5: change Documentation to dt-bindings in commit title
->> v4: no changes
->> v3: add new gpio node
->> v2: remove interrupts
->>=20
->> .../pinctrl/brcm,bcm6328-pinctrl.yaml         | 174 =
-++++++++++++++++++
->> 1 file changed, 174 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
->>=20
->> diff --git =
-a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml =
-b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
->> new file mode 100644
->> index 000000000000..471f6efa1754
->> --- /dev/null
->> +++ =
-b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
->> @@ -0,0 +1,174 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: =
-http://devicetree.org/schemas/pinctrl/brcm,bcm6328-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Broadcom BCM6328 pin controller
->> +
->> +maintainers:
->> +  - =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> +  - Jonas Gorski <jonas.gorski@gmail.com>
->> +
->> +description: |+
->> +  The pin controller node should be the child of a syscon node.
->> +
->> +  Refer to the the bindings described in
->> +  Documentation/devicetree/bindings/mfd/syscon.yaml
->> +
->> +properties:
->> +  compatible:
->> +    const: brcm,bcm6328-pinctrl
->> +
->> +  gpio:
->> +    type: object
->> +    properties:
->> +      compatible:
->> +        const: brcm,bcm6328-gpio
->> +
->> +      data:
->> +        $ref: /schemas/types.yaml#/definitions/uint32
->> +        description: |
->> +          Offset in the register map for the data register (in =
-bytes).
->> +
->> +      dirout:
->> +        $ref: /schemas/types.yaml#/definitions/uint32
->> +        description: |
->> +          Offset in the register map for the dirout register (in =
-bytes).
->> +
->> +      gpio-controller: true
->> +
->> +      "#gpio-cells":
->> +        const: 2
->> +
->> +      gpio-ranges:
->> +        maxItems: 1
->> +
->> +    required:
->> +      - gpio-controller
->> +      - gpio-ranges
->> +      - '#gpio-cells'
->> +
->> +    additionalProperties: false
->> +
->> +patternProperties:
->> +  '^.*-pins$':
->> +    if:
->> +      type: object
->> +    then:
->> +      properties:
->> +        function:
->> +          $ref: "pinmux-node.yaml#/properties/function"
->> +          enum: [ serial_led_data, serial_led_clk, inet_act_led, =
-pcie_clkreq,
->> +                  led, ephy0_act_led, ephy1_act_led, ephy2_act_led,
->> +                  ephy3_act_led, hsspi_cs1, usb_device_port, =
-usb_host_port ]
->> +
->> +        pins:
->> +          $ref: "pinmux-node.yaml#/properties/pins"
->> +          enum: [ gpio6, gpio7, gpio11, gpio16, gpio17, gpio18, =
-gpio19,
->> +                  gpio20, gpio25, gpio26, gpio27, gpio28, hsspi_cs1,
->> +                  usb_port1 ]
->> +
->> +required:
->> +  - compatible
->> +  - gpio
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    gpio_cntl@10000080 {
->> +      compatible =3D "brcm,bcm6328-gpio-controller", "syscon", =
-"simple-mfd";
->=20
-> You just added "brcm,bcm6328-gpio-controller", it would need to be =
-documented.
+in between
 
-I just added that because you requested me to do it =C2=AF\_(=E3=83=84)_/=C2=
-=AF
-What should I do to document it?
-I still don=E2=80=99t get most of this .yaml stuff...
+I don't think a single patch really buys anything, but okay.
 
->=20
->> +      reg =3D <0x10000080 0x80>;
->> +
->> +      pinctrl: pinctrl {
->> +        compatible =3D "brcm,bcm6328-pinctrl";
->> +
->> +        gpio {
->> +          compatible =3D "brcm,bcm6328-gpio";
->=20
-> I'm still trying to understand why you need 3 levels of nodes here?
-> The gpio controller contains a pin controller plus other undefined
-> functions (because of 'syscon') and the pin controller contains a gpio
-> controller?
+>
+> Old device trees with aliases are supported but will
+> produce a warning in dmesg and new properties will take
+> precedence.
+>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Link: https://lore.kernel.org/linux-gpio/CACRpkda8+Lvz+c=ohXsEDkNSQ63hPo613P4p_90fvKyC_kQ_GA@mail.gmail.com/T/#t
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> This is a result of a discussion with Rob about whether
+> we can get rid of GPIO aliases. I think we can at least
+> get rid of this one.
+> ---
+>  .../bindings/gpio/gpio-clps711x.txt           | 10 +++---
+>  arch/arm/boot/dts/ep7209.dtsi                 |  8 ++---
+>  drivers/gpio/gpio-clps711x.c                  | 36 +++++++++----------
+>  3 files changed, 26 insertions(+), 28 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt b/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
+> index 0a304ad29d81..c1ff20107607 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
+> @@ -11,15 +11,13 @@ Required properties:
+>      0 = active high
+>      1 = active low
+>
+> -Note: Each GPIO port should have an alias correctly numbered in "aliases"
+> -node.
+> +Optional properties:
+> +- cirrus,inverted-polarity: The polarity of the GPIO lines is
+> +  inverted in hardware.
+> +- ngpios: Number of available GPIO lines 0..n-1, see gpio.txt
+>
+>  Example:
+>
+> -aliases {
+> -       gpio0 = &porta;
+> -};
+> -
+>  porta: gpio@80000000 {
+>         compatible = "cirrus,ep7312-gpio","cirrus,ep7209-gpio";
+>         reg = <0x80000000 0x1>, <0x80000040 0x1>;
+> diff --git a/arch/arm/boot/dts/ep7209.dtsi b/arch/arm/boot/dts/ep7209.dtsi
+> index 365931f8b48d..7d0f04959fdd 100644
+> --- a/arch/arm/boot/dts/ep7209.dtsi
+> +++ b/arch/arm/boot/dts/ep7209.dtsi
+> @@ -11,10 +11,6 @@ / {
+>         compatible = "cirrus,ep7209";
+>
+>         aliases {
+> -               gpio0 = &porta;
+> -               gpio1 = &portb;
+> -               gpio3 = &portd;
+> -               gpio4 = &porte;
+>                 serial0 = &uart1;
+>                 serial1 = &uart2;
+>                 spi0 = &spi;
+> @@ -72,6 +68,8 @@ portd: gpio@80000003 {
+>                         reg = <0x80000003 0x1 0x80000043 0x1>;
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+> +                       /* This bank have all lines polarity inverted */
+> +                       cirrus,inverted-polarity;
+>                 };
+>
+>                 porte: gpio@80000083 {
+> @@ -79,6 +77,8 @@ porte: gpio@80000083 {
+>                         reg = <0x80000083 0x1 0x800000c3 0x1>;
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+> +                       /* Only 3 GPIOs available on this bank */
+> +                       ngpios = <3>;
+>                 };
+>
+>                 syscon1: syscon@80000100 {
+> diff --git a/drivers/gpio/gpio-clps711x.c b/drivers/gpio/gpio-clps711x.c
+> index 75f6f8d4323e..d2a20dc8f5d9 100644
+> --- a/drivers/gpio/gpio-clps711x.c
+> +++ b/drivers/gpio/gpio-clps711x.c
+> @@ -16,14 +16,11 @@ static int clps711x_gpio_probe(struct platform_device *pdev)
+>         void __iomem *dat, *dir;
+>         struct gpio_chip *gc;
+>         int err, id;
+> +       u32 ngpios;
+>
+>         if (!np)
+>                 return -ENODEV;
+>
+> -       id = of_alias_get_id(np, "gpio");
+> -       if ((id < 0) || (id > 4))
+> -               return -ENODEV;
+> -
+>         gc = devm_kzalloc(&pdev->dev, sizeof(*gc), GFP_KERNEL);
+>         if (!gc)
+>                 return -ENOMEM;
+> @@ -36,29 +33,32 @@ static int clps711x_gpio_probe(struct platform_device *pdev)
+>         if (IS_ERR(dir))
+>                 return PTR_ERR(dir);
+>
+> -       switch (id) {
+> -       case 3:
+> +       /* This ID will be negative if there is no alias node */
+> +       id = of_alias_get_id(np, "gpio");
+> +
+> +       if (id >= 0)
+> +               dev_info(&pdev->dev,
+> +                        "DT is using deprecated alias, please remove this and "
+> +                        "replace with proper node attributes\n");
+> +
+> +       if (of_property_read_bool(np, "cirrus,inverted-polarity") ||
+> +           id == 3)
+>                 /* PORTD is inverted logic for direction register */
+>                 err = bgpio_init(gc, &pdev->dev, 1, dat, NULL, NULL,
+>                                  NULL, dir, 0);
+> -               break;
+> -       default:
+> +       else
+>                 err = bgpio_init(gc, &pdev->dev, 1, dat, NULL, NULL,
+>                                  dir, NULL, 0);
+> -               break;
+> -       }
+> -
+>         if (err)
+>                 return err;
+>
+> -       switch (id) {
+> -       case 4:
+> -               /* PORTE is 3 lines only */
+> +       if (id == 4)
+> +               /* This is just for compatibility with older device trees */
+>                 gc->ngpio = 3;
+> -               break;
+> -       default:
+> -               break;
+> -       }
+> +
+> +       if (!of_property_read_u32(np, "ngpios", &ngpios))
+> +               /* PORTE is 3 lines only */
+> +               gc->ngpio = ngpios;
 
-In previous versions the gpio controller was registered along with the =
-pin controller, but @Linus requested me to register the gpio pin =
-controller ranges through device tree by using gpio-ranges and I decided =
-to use this approach, which was already used by other pin controllers.
-However, there aren=E2=80=99t any pinctrl drivers using gpio-regmap, so =
-this is kind of new=E2=80=A6
+Just this should work:
 
->=20
-> I think "brcm,bcm6328-gpio-controller" and "brcm,bcm6328-pinctrl"
-> should be a single node.
+of_property_read_u32(np, "ngpios", &gc->ngpio);
 
-I agree, but does it make sense to add gpio-ranges to a pinctrl node =
-referencing itself?
-Something like:
-syscon {
-	pinctrl: pinctrl {
-		compatible =E2=80=A6
+The variable won't be touched on error.
 
-		gpio-controller;
-		gpio-ranges =3D <&pinctrl 0 0 32>;
-		#gpio-cells =3D <2>;
-
-		=E2=80=A6
-	};
-};
-
->=20
->> +          data =3D <0xc>;
->> +          dirout =3D <0x4>;
->=20
-> This looks similar to the brcm,bcm6345-gpio.txt binding which then
-> uses the gpio-mmio driver. Defining addresses with 'reg' is much
-> preferred over custom properties. That binding also captures the bank
-> size.
-
-It=E2=80=99s similar, but Linus requested to use gpio regmap because we =
-had a large amount of registers, so we=E2=80=99re not using it.
-
->=20
-> Rob
-
-Best regards,
-=C3=81lvaro.=
+Rob
