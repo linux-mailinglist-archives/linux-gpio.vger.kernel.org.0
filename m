@@ -2,168 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0608B334337
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 17:39:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B15313343BC
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 17:54:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbhCJQit (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 11:38:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59782 "EHLO
+        id S231645AbhCJQxr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 11:53:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232204AbhCJQid (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 11:38:33 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69587C061763
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 08:38:33 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id r15-20020a05600c35cfb029010e639ca09eso11467459wmq.1
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 08:38:33 -0800 (PST)
+        with ESMTP id S232922AbhCJQxR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 11:53:17 -0500
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFB4C061760
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 08:53:17 -0800 (PST)
+Received: by mail-ot1-x32f.google.com with SMTP id e45so17010754ote.9
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 08:53:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=sVQWlrBBeoHKwdd8D9L9gvXK0pkYdnkCO45O59sXhqE=;
-        b=q0jOQtaYZjQtMu6WQQD9tfAYd5at3q0TEHS1dUCtD72fMVVqkUYR87DPWZHJiDyy+q
-         vFZTNiFX5UjeF3jS2V2FB/TneNRx3Bd7Zx6ln/1DhisKyiOJGCEe6ZKfk2f7qNKfO6AU
-         /aXcMcx9zW3jq26E+kIs9+yMB4spWrO3tfJ465ANnCpKOy9Ov4KIV8x27u7BQdeDygqb
-         9TC6WFH2Gqm1L9KEqiK0qnm8GSII/tKMRmGDsS+l81kV/ZyAGP3Igr4KyD4TJdCVCHRJ
-         0bRf+nadEtziMOPrKBx/ZV+LM1WdQBYKGgQgZSY3klS4OBLzQMbZTf45HjaV/p8KEVPN
-         Fcmg==
+         :content-disposition:in-reply-to;
+        bh=b5OsFLsp7m56spdf12qcM4cWVfhM/nC3ar1492J4bBk=;
+        b=pSY+USRY/5bSpl876jK0iO9ZgJvP3YuC04e8B1CFzOjuqi5+zg4dIcnftxorVCbJFV
+         jLb30qzPKlbmV3hVrYPauzB8OCJmooVeqwQHuqb9QxDiYUQC6Cv3hhnIFOcbKUa05RnO
+         jtha2uWfmW45eX3N2mXn2rq+DnLOL3QP9c4BFq4qlOdwSXSZrbhcU8evktEtoSSpFaLm
+         HN82GR2oTwuu+uS7wiFXxqbozYPM9/LoiWd9Xx4g4nJkEpGS1kzzFlAk6k0Upq1AFob6
+         dFU2Vo9evZsQ1qNCFULuPK37t3BjQmTmvyLvDbtABNstuZi/4b3quV/Nvk7dRaAIEgoI
+         lsEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=sVQWlrBBeoHKwdd8D9L9gvXK0pkYdnkCO45O59sXhqE=;
-        b=PhS3mwvvDa+Qf5/wx1ee+hpx1yfi67+LczBpz1NDE+EpOBKxA0bNqBlmAQZ/w2uoVO
-         Mkv+TNcXnmFIZ/MjHaFdBMKddyWxsbMWtspRylgHFoFwidDxPiigqAxwByfbO3DwSTZ3
-         MqldsIhM+yxt157tvwuIBOg1UA8Bu5DkRq3atkYI/OflEp2bza59HFzObNtOsOYZLQs+
-         u9zsD1MuZXLmgTLqwD2HvgPpQtB4x/TVswR9xuW6uGyAb3VMqmYcOxD2fbt7VctnU3YA
-         VWZng21flJlPmDGJ8uo8230QoIFjNwR56hXJWMcmwL4sovHTN6Ws5kVNWasvtWEr2JbJ
-         Ncng==
-X-Gm-Message-State: AOAM532JXcSXPpiv8l+CFfzgehh49rcobDk6nguu7nAST9PNAMelIaJI
-        5ewiKI6FpwrE267V+Cudl+n4nQ==
-X-Google-Smtp-Source: ABdhPJwDrIR7F7SMof/RHEqmZ96cNOGJ6ObmZEUKOAayqrXrKfrobyIkYN8y7xne+Pl/tcOX6LVXLA==
-X-Received: by 2002:a1c:4c17:: with SMTP id z23mr4242467wmf.17.1615394312049;
-        Wed, 10 Mar 2021 08:38:32 -0800 (PST)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id p12sm8446541wrx.28.2021.03.10.08.38.31
+         :mime-version:content-disposition:in-reply-to;
+        bh=b5OsFLsp7m56spdf12qcM4cWVfhM/nC3ar1492J4bBk=;
+        b=ktOMJaQGZvgUvNKD2p73ke6JK7qF79nNyX6GIbaPjsbdZyPN22p7ZRV/ICyCZp3ZIz
+         FTDV93jNplza16Y49bcfau6MnVZkvh3fwWprCXXe17uPuwmnBBFm3V78KPaDT/syMao9
+         AurE70gNPBFn3NGei3G+jSQbIYL6lGC0lRlkSMhFP7k3rb02uxZqPw2L1GwVLtO4x+Cj
+         6crR/PZGcnxfxfFv2f41jGGSdTOtYEh0kFeI+eF8PUmeP5RCmZwtGSZCMD7F+y7SmW4H
+         VKQOtd8Xm46H8P39+r0djWoeUpD2UW2sPKjl0bdTqnaISPY8RcmxECW9l/FjfmzhNp0c
+         KyBg==
+X-Gm-Message-State: AOAM533WyN7j218r7IGm3dMHjk64syVFkLJ/LvQMRY0PD4bGrVhpqOaE
+        VdzFnibDBwZIU2ZHlVDt5bG4yg==
+X-Google-Smtp-Source: ABdhPJyybtwilEZ80NzuRpbhuS30jVwwphHuM/KGS4ql9S4ZQIB+z+pvLnynfcBC7ti7yN9UJXBnFg==
+X-Received: by 2002:a9d:86c:: with SMTP id 99mr3198096oty.71.1615395195080;
+        Wed, 10 Mar 2021 08:53:15 -0800 (PST)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id l71sm3943136oib.30.2021.03.10.08.53.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 08:38:31 -0800 (PST)
-Date:   Wed, 10 Mar 2021 16:38:29 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     linux-power <linux-power@fi.rohmeurope.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH v3 06/15] mfd: Add ROHM BD71815 ID
-Message-ID: <20210310163829.GS701493@dell>
-References: <cover.1615198094.git.matti.vaittinen@fi.rohmeurope.com>
- <be0e8cd06ed75e799c942e5076ee7b56ad658467.1615198094.git.matti.vaittinen@fi.rohmeurope.com>
- <20210310103639.GG701493@dell>
- <a631bbc3dd3bd0f02693d1c35f9a14dbaec67cc3.camel@fi.rohmeurope.com>
- <20210310111755.GN701493@dell>
- <e7bb00af76de65c60061c58a570d5b6f40961eb0.camel@fi.rohmeurope.com>
- <20210310133136.GQ701493@dell>
- <c1cb760a0bd2cf46dc5d9b21d1a08286a7671d21.camel@fi.rohmeurope.com>
+        Wed, 10 Mar 2021 08:53:14 -0800 (PST)
+Date:   Wed, 10 Mar 2021 10:53:13 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Shawn Guo <shawn.guo@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4] pinctrl: qcom: sc8180x: add ACPI probe support
+Message-ID: <YEj5eXKALP43Cf0F@builder.lan>
+References: <20210310111210.1232-1-shawn.guo@linaro.org>
+ <YEi3D2fCBh/azOnb@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c1cb760a0bd2cf46dc5d9b21d1a08286a7671d21.camel@fi.rohmeurope.com>
+In-Reply-To: <YEi3D2fCBh/azOnb@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 10 Mar 2021, Matti Vaittinen wrote:
+On Wed 10 Mar 06:09 CST 2021, Andy Shevchenko wrote:
 
+> On Wed, Mar 10, 2021 at 07:12:10PM +0800, Shawn Guo wrote:
+> > It adds ACPI probe support for pinctrl-sc8180x driver.  We have one
+> > problem with ACPI table, i.e. GIO0 (TLMM) block has one single memory
+> > resource to cover 3 tiles defined by SC8180X.  To follow the hardware
+> > layout of 3 tiles which is already supported DT probe, it adds one
+> > function to replace the original single memory resource with 3 named
+> > ones for tiles.  With that, We can map memory for ACPI in the same way
+> > as DT.
 > 
-> On Wed, 2021-03-10 at 13:31 +0000, Lee Jones wrote:
-> > On Wed, 10 Mar 2021, Matti Vaittinen wrote:
-> > 
-> > > On Wed, 2021-03-10 at 11:17 +0000, Lee Jones wrote:
-> > > > On Wed, 10 Mar 2021, Vaittinen, Matti wrote:
-> > > > 
-> > > > > Hello Lee,
-> > > > > 
-> > > > > On Wed, 2021-03-10 at 10:36 +0000, Lee Jones wrote:
-> > > > > > On Mon, 08 Mar 2021, Matti Vaittinen wrote:
-> > > > > > 
-> > > > > > > Add chip ID for ROHM BD71815 and PMIC so that drivers can
-> > > > > > > identify
-> > > > > > > this IC.
-> > > > > > > 
-> > > > > > > Signed-off-by: Matti Vaittinen <
-> > > > > > > matti.vaittinen@fi.rohmeurope.com>
-> > > > > > > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > > > > > > ---
-> > > > > > >  include/linux/mfd/rohm-generic.h | 1 +
-> > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > > 
-> > > > > > > diff --git a/include/linux/mfd/rohm-generic.h
-> > > > > > > b/include/linux/mfd/rohm-generic.h
-> > > > > > > index 66f673c35303..e5392bcbc098 100644
-> > > > > > > --- a/include/linux/mfd/rohm-generic.h
-> > > > > > > +++ b/include/linux/mfd/rohm-generic.h
-> > > > > > > @@ -14,6 +14,7 @@ enum rohm_chip_type {
-> > > > > > >  	ROHM_CHIP_TYPE_BD71828,
-> > > > > > >  	ROHM_CHIP_TYPE_BD9571,
-> > > > > > >  	ROHM_CHIP_TYPE_BD9574,
-> > > > > > > +	ROHM_CHIP_TYPE_BD71815,
-> > > > > > 
-> > > > > > Is there a technical reason why these can't be re-ordered?
-> > > > > 
-> > > > > No, I don't think so.
-> > > > > 
-> > > > > BTW. there will probably be a (trivial) conflict here as both
-> > > > > this
-> > > > > series and the BD9576/BD9573 series add an ID here. Let me
-> > > > > guess,
-> > > > > you'd
-> > > > 
-> > > > That's fine.  I will resolve that manually.
-> > > 
-> > > Thanks :)
-> > > 
-> > > > > like to see them sorted?
-> > > > 
-> > > > Wouldn't that be nice? :)
-> > > Aesthetics is not really my cup of tea. OTOH, if amount of IDs
-> > > grow,
-> > > then sorting helps spotting whether some IC has an ID here. So yes,
-> > > it
-> > > kind of makes sense.
-> > 
-> > By 'nice' I don't mean 'pretty'.
-> > 
-> > I mean 'improving readability/maintainability would be nice'.
-> > 
-> > > Can you do sorting while resolving the conflict between series or
-> > > do
-> > > you want me to
-> > > a) do sorting if (when) I re-spin the series
-> > > b) send separate sorting patch as a part of this series
-> > > c) send sepatate sorting patch after all the pending patches
-> > > touching
-> > > these IDs have been merged?
-> > 
-> > I'll let you use your imagination.
-> > 
+> You are reinventing a wheel, i.e. MFD framework. Can you simple utilize
+> devm_mfd_add_devices()?
 > 
-> Right :)
-> 
-> I'll sort the ID enum when I respin a series which is touching it, ok?
-> Or do you want me to resend this even if there were no other changes?
-> 
-> It's just an old habit to add new enums at the bottom to maintain
-> binary compatibility - which does not matter in this case.
 
-I won't let this alone hold up merging of the whole set, but it looks
-like you're still short of quite a few reviews.  I'd be surprised if
-it's this version that gets applied.
+But wouldn't such driver need to do exactly this, and then set up the
+mfd cell and register it? So the new wheel would still be there, just
+wrapped in more code?
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Basically you may write an new pure MFD driver (drivers/mfd) that will
+> instantiate properly the pin control driver.
+> 
+
+In contrast to typical MFDs this would still be a single mfd_cell, just
+with different set of resources, derived from the mfd device itself.
+
+Regards,
+Bjorn
