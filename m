@@ -2,117 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17EFB333B39
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 12:19:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1BED333BCE
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 12:51:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231958AbhCJLSa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 06:18:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46548 "EHLO
+        id S231916AbhCJLvB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 06:51:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbhCJLR7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 06:17:59 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22FE9C06174A
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 03:17:59 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id u14so22874721wri.3
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 03:17:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=8/BvaC/nK4OARL6liXjkIyGeKizu5NW5s37p+jzN3rQ=;
-        b=Psywx4DhVt3ugx3PIxZeB43//KWnVK4bTpb2dRxGAtIDzQ9t/VwoqLeTXFxEuYSBpX
-         CMpuokQ6B+5jaKqmQP0KA4n9ha86S9L55WvCW3bmITc56n2AmeOV+/Z4rhSMpwRBwSEt
-         BTspTOBFMnm6ftya42im4dgEPRLD9KzI83DFx5A0y7gJC6VBeGZgfvBJjBy27oDVk4mz
-         PfKzL72xoDzNzYkkqn55uMjaFBw+jJbIZ8NlM59TxZBQjq18is1nRhjXUGCfFuonFcp7
-         UYCmvR4PeEIxdVeS7RyasXbzymv+eRKk5KAaI4fNR0iEYuzU+tPZih/J5b9KKUJQx+Qo
-         Gipg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8/BvaC/nK4OARL6liXjkIyGeKizu5NW5s37p+jzN3rQ=;
-        b=c97Ez1H4CjokrKdMXzWzCvSrmVdiNktcrIFEUj4mgSaTk1Wg0QQmgSZQQvausTtt5f
-         uSMT6trvfNk1rsmXYUUy33oS448yQNDRa54I52oClP/d3qk0bwSqdamfF4ulR0MN4rQ1
-         72eTuVHds/1oHf5aMxq9c4dwAs2FYB73YPxKHmMpEitYb6raBT1RNxIDXaW1E/HvQRtM
-         KL9eQ+wak6k+jfhMISXMTKFVGqBm/eI9PIOHSzcrlavLJm8O3wu+NObLljaindsOVSVb
-         99Vloj8qrlyKrMcfYqMQC0gIEanwQ343gzilo/Dy5pxpcOungtVstmcuhti6x51peBdh
-         dLbw==
-X-Gm-Message-State: AOAM532Rb4KYQf35so3pA7Gvj3jsW0+RyXINqkyDhJxrMTiG/Ob89eBw
-        2aXCgpV75LEapxMevCeKO6juRw==
-X-Google-Smtp-Source: ABdhPJx3IYKM3QBCdZT4QUUshLK1DxO4Zo6U2/nM97niWViFKQGFICLI7dFD9eafmhr+BAl2HPBtEA==
-X-Received: by 2002:adf:ed12:: with SMTP id a18mr3016460wro.249.1615375077845;
-        Wed, 10 Mar 2021 03:17:57 -0800 (PST)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id h25sm3711077wml.32.2021.03.10.03.17.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 03:17:57 -0800 (PST)
-Date:   Wed, 10 Mar 2021 11:17:55 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     linux-power <linux-power@fi.rohmeurope.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH v3 06/15] mfd: Add ROHM BD71815 ID
-Message-ID: <20210310111755.GN701493@dell>
-References: <cover.1615198094.git.matti.vaittinen@fi.rohmeurope.com>
- <be0e8cd06ed75e799c942e5076ee7b56ad658467.1615198094.git.matti.vaittinen@fi.rohmeurope.com>
- <20210310103639.GG701493@dell>
- <a631bbc3dd3bd0f02693d1c35f9a14dbaec67cc3.camel@fi.rohmeurope.com>
+        with ESMTP id S231382AbhCJLux (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 06:50:53 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CE47C06174A
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 03:50:53 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lJxMS-0000dy-H8; Wed, 10 Mar 2021 12:50:44 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lJxMQ-0001h5-O7; Wed, 10 Mar 2021 12:50:42 +0100
+Date:   Wed, 10 Mar 2021 12:50:41 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        wahrenst@gmx.net, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        linux-clk@vger.kernel.org, sboyd@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
+        andy.shevchenko@gmail.com
+Subject: Re: [PATCH v7 11/11] pwm: Add Raspberry Pi Firmware based PWM bus
+Message-ID: <20210310115041.s7tzvgdpksws6yss@pengutronix.de>
+References: <20210118123244.13669-1-nsaenzjulienne@suse.de>
+ <20210118123244.13669-12-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ul6qbztvwf7nowqu"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a631bbc3dd3bd0f02693d1c35f9a14dbaec67cc3.camel@fi.rohmeurope.com>
+In-Reply-To: <20210118123244.13669-12-nsaenzjulienne@suse.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 10 Mar 2021, Vaittinen, Matti wrote:
 
-> Hello Lee,
-> 
-> On Wed, 2021-03-10 at 10:36 +0000, Lee Jones wrote:
-> > On Mon, 08 Mar 2021, Matti Vaittinen wrote:
-> > 
-> > > Add chip ID for ROHM BD71815 and PMIC so that drivers can identify
-> > > this IC.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  include/linux/mfd/rohm-generic.h | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/include/linux/mfd/rohm-generic.h
-> > > b/include/linux/mfd/rohm-generic.h
-> > > index 66f673c35303..e5392bcbc098 100644
-> > > --- a/include/linux/mfd/rohm-generic.h
-> > > +++ b/include/linux/mfd/rohm-generic.h
-> > > @@ -14,6 +14,7 @@ enum rohm_chip_type {
-> > >  	ROHM_CHIP_TYPE_BD71828,
-> > >  	ROHM_CHIP_TYPE_BD9571,
-> > >  	ROHM_CHIP_TYPE_BD9574,
-> > > +	ROHM_CHIP_TYPE_BD71815,
-> > 
-> > Is there a technical reason why these can't be re-ordered?
-> 
-> No, I don't think so.
-> 
-> BTW. there will probably be a (trivial) conflict here as both this
-> series and the BD9576/BD9573 series add an ID here. Let me guess, you'd
+--ul6qbztvwf7nowqu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's fine.  I will resolve that manually.
+Hello Nicolas,
 
-> like to see them sorted?
+On Mon, Jan 18, 2021 at 01:32:44PM +0100, Nicolas Saenz Julienne wrote:
+> diff --git a/drivers/pwm/pwm-raspberrypi-poe.c b/drivers/pwm/pwm-raspberr=
+ypi-poe.c
+> new file mode 100644
+> index 000000000000..ca845e8fabe6
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-raspberrypi-poe.c
+> @@ -0,0 +1,220 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> + * For more information on Raspberry Pi's PoE hat see:
+> + * https://www.raspberrypi.org/products/poe-hat/
+> + *
+> + * Limitations:
+> + *  - No disable bit, so a disabled PWM is simulated by duty_cycle 0
+> + *  - Only normal polarity
+> + *  - Fixed 12.5 kHz period
+> + *
+> + * The current period is completed when HW is reconfigured.
 
-Wouldn't that be nice? :)
+nice.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> + */
+> +
+> [...]
+> +static int raspberrypi_pwm_apply(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> +				 const struct pwm_state *state)
+> +{
+> +	struct raspberrypi_pwm *rpipwm =3D raspberrypi_pwm_from_chip(chip);
+> +	unsigned int duty_cycle;
+> +	int ret;
+> +
+> +	if (state->period < RPI_PWM_PERIOD_NS ||
+> +	    state->polarity !=3D PWM_POLARITY_NORMAL)
+> +		return -EINVAL;
+> +
+> +	if (!state->enabled)
+> +		duty_cycle =3D 0;
+> +	else if (state->duty_cycle < RPI_PWM_PERIOD_NS)
+> +		duty_cycle =3D DIV_ROUND_DOWN_ULL(state->duty_cycle * RPI_PWM_MAX_DUTY,
+> +						RPI_PWM_PERIOD_NS);
+> +	else
+> +		duty_cycle =3D RPI_PWM_MAX_DUTY;
+> +
+> +	if (duty_cycle =3D=3D rpipwm->duty_cycle)
+> +		return 0;
+> +
+> +	ret =3D raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_CUR_DUTY=
+_REG,
+> +					   duty_cycle);
+> +	if (ret) {
+> +		dev_err(chip->dev, "Failed to set duty cycle: %pe\n",
+> +			ERR_PTR(ret));
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * This sets the default duty cycle after resetting the board, we
+> +	 * updated it every time to mimic Raspberry Pi's downstream's driver
+> +	 * behaviour.
+> +	 */
+> +	ret =3D raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_DEF_DUTY=
+_REG,
+> +					   duty_cycle);
+> +	if (ret) {
+> +		dev_err(chip->dev, "Failed to set default duty cycle: %pe\n",
+> +			ERR_PTR(ret));
+> +		return ret;
+
+This only has an effect for the next reboot, right? If so I wonder if it
+is a good idea in general. (Think: The current PWM setting enables a
+motor that makes a self-driving car move at 100 km/h. Consider the rpi
+crashes, do I want to car to pick up driving 100 km/h at power up even
+before Linux is up again?) And if we agree it's a good idea: Should
+raspberrypi_pwm_apply return 0 if setting the duty cycle succeeded and
+only setting the default didn't?
+
+Other than that the patch looks fine.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ul6qbztvwf7nowqu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBIso0ACgkQwfwUeK3K
+7An3RQgAk7LiLPojRn3qgp/eEHGcY24aQQQnYHXFzwvNNsqfY9q1T6NOjwiJlIBj
+owBPtq8IteT+V4qhiiQuB4MLMbNeaBZ+iR4l7OVDwzwuPrHtZuGFxz7vZumxdIET
+Eqq1G++2nk48ZFJOUnKeWM733IgWZQwaM0XEr04i58ZjnoJ9mZo7g4nC2c8O6F6A
+HQshnIGC2hEIZbpmpQrBOMI92Uh0pt03ScuCXM4o/YUuKxb8oeygwt963lrJwhXp
+Vb1/aPD/lELD/kAAeOa3cje1nAdfEJPzH0kjIMfXNTkX8TeEEA0klNEEOXkVxrTP
+0c+bK2SaxSe/2i1555OooX7x1H2VCg==
+=540n
+-----END PGP SIGNATURE-----
+
+--ul6qbztvwf7nowqu--
