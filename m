@@ -2,149 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D5DA33469B
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 19:23:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C2F73346B2
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 19:28:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229950AbhCJSWy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 13:22:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54060 "EHLO
+        id S233619AbhCJS2T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 13:28:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230522AbhCJSWf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 13:22:35 -0500
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E43FC061760
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 10:22:35 -0800 (PST)
-Received: by mail-oi1-x233.google.com with SMTP id w195so13512306oif.11
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 10:22:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dRPa+MKHXJoax045qmF2GLp0jz/mQE6D5ZmN+LMnrsE=;
-        b=jZrmuBed1foFlgTtPJmKyc7a+CFQse/0jl6E9oSCWFO+UfkNKjcHYohUtuM3a+rVFY
-         bjikQkD9fWxl1iTPlaipplcN7xgj7ltC12aKYqPnxzWR5bO2xAp8/DoKpaeL9/Euge/A
-         WUEQddkfjuTnKHDIUa8JB2BMbvsb0/D4IxaSGPluAKy5M3e5AoWOGBY/c7pbPAZA9qR/
-         GtVFZP6sXUEANKKju6bApguIVDFR9wlunhMPwUFAuVZmuNVAhbfis+fL+aLI81lGTUb5
-         9G2GyCmhuiGFHWA6w/3GR5tsRd6YNpFPAiYXJkUMFzj//Wt3qR3E6TtYAv+kR25gxRni
-         fwiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dRPa+MKHXJoax045qmF2GLp0jz/mQE6D5ZmN+LMnrsE=;
-        b=VnSg05PTqp7NXBZttLJAxBNCjKDturAZJhRpPsG3IMQgdSq0U75iDvE71kl8QF3pwx
-         yOkXU10Lh6vSmuKewwmQz1Yna2vs26W6JqPtODux484lpVQZHJiMQ+JBiWbE0ryiBt/l
-         i5DgxsXfxHT04DyzRJSzvSquzXBxBm4qtVbqvyTp8/p+Dumf98046ZaudnYCsTAXthff
-         Yk5Ha4WJsZPO1yHI+W+pYdCs9pblYkWNP0G5T+tMQ4YMCyUewyj/N0Wn7VgysI/gdXtn
-         SMsP2cFpAyPYmbm2eg1uIgMUaGTwxbWrpyK1ImyLO6+vsVkNARJZ587difyJxfiNFTrr
-         iYuQ==
-X-Gm-Message-State: AOAM532K82EOC7cHXsT6vpor8/tXT+NlSZ8Lek8Mp1iXLkumJtKHC+dn
-        CuaLxcF2AUpEij7aCZBBHN3hAw==
-X-Google-Smtp-Source: ABdhPJzDEwDnms71wcqZ06xpRz9wfUTSjnV7Au3tEFDwobcG35rKOseyZwlWZCyaZqXxlpmCeOq62A==
-X-Received: by 2002:a05:6808:d46:: with SMTP id w6mr3339345oik.47.1615400554532;
-        Wed, 10 Mar 2021 10:22:34 -0800 (PST)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id n1sm29739oig.47.2021.03.10.10.22.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 10:22:33 -0800 (PST)
-Date:   Wed, 10 Mar 2021 12:22:32 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Shawn Guo <shawn.guo@linaro.org>
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH 1/4] arm64: dts: qcom: sdm845: fix number of pins in
- 'gpio-ranges'
-Message-ID: <YEkOaK+UiLy8kSDu@builder.lan>
-References: <20210303033106.549-1-shawn.guo@linaro.org>
- <20210303033106.549-2-shawn.guo@linaro.org>
- <YEKl7GbxBhui4eoT@builder.lan>
- <20210306012829.GL17424@dragon>
- <YELhMmDndOTSSJJO@builder.lan>
- <20210306080049.GM17424@dragon>
+        with ESMTP id S233514AbhCJS1r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 13:27:47 -0500
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58455C061760;
+        Wed, 10 Mar 2021 10:27:47 -0800 (PST)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id DCB7022173;
+        Wed, 10 Mar 2021 19:27:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1615400865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=F8vDNH8421RXKDc4eht9KA1gFC2SxxBRRDukiV+MMMM=;
+        b=CxkAO/k0r91N18hLq9c3RkDcy0oyNTMGFDRDx5ThQEr1MkpWhN6rpju8l7at0IUwvQKiUV
+        wuXhMJjctMculrdUrAqkPCuh8ropI+x19oA8SXNRFjMruo0Lu1Pn2VU5eBWpOCMuZuLpcU
+        Wmv3COHMuaGqqDdfkKrL411UEoS/H1M=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210306080049.GM17424@dragon>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 10 Mar 2021 19:27:44 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 02/15] gpio: regmap: set gpio_chip of_node
+In-Reply-To: <20210310125504.31886-3-noltari@gmail.com>
+References: <20210310125504.31886-1-noltari@gmail.com>
+ <20210310125504.31886-3-noltari@gmail.com>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <7e35bfd395f3ae40029b0f3cb2bc8f70@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat 06 Mar 02:00 CST 2021, Shawn Guo wrote:
-
-> On Fri, Mar 05, 2021 at 07:56:02PM -0600, Bjorn Andersson wrote:
-> > On Fri 05 Mar 19:28 CST 2021, Shawn Guo wrote:
-> > 
-> > > On Fri, Mar 05, 2021 at 03:43:08PM -0600, Bjorn Andersson wrote:
-> > > > On Tue 02 Mar 21:31 CST 2021, Shawn Guo wrote:
-> > > > 
-> > > > > The last cell of 'gpio-ranges' should be number of GPIO pins, and in
-> > > > > case of qcom platform it should match msm_pinctrl_soc_data.ngpio rather
-> > > > > than msm_pinctrl_soc_data.ngpio - 1.
-> > > > > 
-> > > > 
-> > > > This is a historical artifact, SDM845 has 150 GPIO pins. In addition to
-> > > > this there's an output-only pin for UFS, which I exposed as an GPIO as
-> > > > well - but it's only supposed to be used as a reset-gpio for the UFS
-> > > > device.
-> > > > 
-> > > > Perhaps that still mandates that gpio-ranges should cover it?
-> > > 
-> > > I think the number in DT gpio-ranges should match msm_pinctrl_soc_data.ngpio.
-> > > Otherwise, kernel will be confused and be running into the issue like
-> > > below in some case.
-> > > 
-> > > > 
-> > > > > This fixes the problem that when the last GPIO pin in the range is
-> > > > > configured with the following call sequence, it always fails with
-> > > > > -EPROBE_DEFER.
-> > > > > 
-> > > > >     pinctrl_gpio_set_config()
-> > > > >         pinctrl_get_device_gpio_range()
-> > > > >             pinctrl_match_gpio_range()
-> > > > 
-> > > > When do we hit this sequence? I didn't think operations on the UFS
-> > > > GP(I)O would ever take this code path?
-> > > 
-> > > It will, if we have UFS driver booting from ACPI and requesting reset
-> > > GPIO.
-> > 
-> > But does the UFS driver somehow request GPIO 190 on SC8180x?
-> > 
-> > I made up the idea that this is a GPIO, there really only is 190 (0-189)
-> > GPIOs on thie SoC.
-> > 
-> > Downstream they use a pinconf node with "output-high"/"output-low" to
-> > toggle the reset pin and I don't find any references in the Flex 5G
-> > DSDT.
+Am 2021-03-10 13:54, schrieb Álvaro Fernández Rojas:
+> This is needed for properly registering GPIO regmap as a child of a 
+> regmap
+> pin controller.
 > 
-> Right now, I do not have to request and configure this UFS GPIO for
-> getting UFS work with ACPI kernel.  And the immediate problem we have is
-> that with gpio_chip .set_config patch, devm_gpiod_get_optional() call
-> from UFS driver always gets -EPROBE_DEFER.
-> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Reviewed-by: Michael Walle <michael@walle.cc>
+> ---
+>  v6: add comment and simplify of_node assignment
 
-But we don't have a "reset" GPIO specified in the ACPI node, or you mean
-with the introduction of .set_config DT no longer works?
+Ah, I see you add the comment for the documentation. Nice. But I'd
+like to see it in the code, too. See below.
 
-Regards,
-Bjorn
+>  v5: switch to fwnode
+>  v4: fix documentation
+>  v3: introduce patch needed for properly parsing gpio-range
+> 
+>  drivers/gpio/gpio-regmap.c  | 1 +
+>  include/linux/gpio/regmap.h | 4 ++++
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+> index 5412cb3b0b2a..d4fc656e70b0 100644
+> --- a/drivers/gpio/gpio-regmap.c
+> +++ b/drivers/gpio/gpio-regmap.c
+> @@ -249,6 +249,7 @@ struct gpio_regmap *gpio_regmap_register(const
+> struct gpio_regmap_config *config
+> 
+>  	chip = &gpio->gpio_chip;
+>  	chip->parent = config->parent;
 
-> > 
-> > > And we are hit this sequence with my patch that adds .set_config
-> > > for gpio_chip [1].
-> > > 
-> > 
-> > What's calling pinctrl_gpio_set_config() in this case?
+If there will be a new version, please add the following comment:
+
+/* gpiolib will use of_node of the parent if chip->of_node is NULL */
+
+>> +       chip->of_node = to_of_node(config->fwnode);
+
+Otherwise, it is not obvious that config->fwnode is optional.
+
+-michael
+
+> +	chip->of_node = to_of_node(config->fwnode);
+>  	chip->base = -1;
+>  	chip->ngpio = config->ngpio;
+>  	chip->names = config->names;
+> diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+> index ad76f3d0a6ba..334dd928042b 100644
+> --- a/include/linux/gpio/regmap.h
+> +++ b/include/linux/gpio/regmap.h
+> @@ -4,6 +4,7 @@
+>  #define _LINUX_GPIO_REGMAP_H
 > 
->   ufs_qcom_probe
->     ufshcd_pltfrm_init
->       ufshcd_init
->         ufs_qcom_init
->           devm_gpiod_get_optional
->             devm_gpiod_get_index
->               gpiod_get_index
->                 gpiod_configure_flags
->                   gpiod_direction_output
->                     gpiochip_generic_config
+>  struct device;
+> +struct fwnode_handle;
+>  struct gpio_regmap;
+>  struct irq_domain;
+>  struct regmap;
+> @@ -16,6 +17,8 @@ struct regmap;
+>   * @parent:		The parent device
+>   * @regmap:		The regmap used to access the registers
+>   *			given, the name of the device is used
+> + * @fwnode:		(Optional) The firmware node.
+> + *			If not given, the fwnode of the parent is used.
+>   * @label:		(Optional) Descriptive name for GPIO controller.
+>   *			If not given, the name of the device is used.
+>   * @ngpio:		Number of GPIOs
+> @@ -57,6 +60,7 @@ struct regmap;
+>  struct gpio_regmap_config {
+>  	struct device *parent;
+>  	struct regmap *regmap;
+> +	struct fwnode_handle *fwnode;
 > 
-> Shawn
+>  	const char *label;
+>  	int ngpio;
