@@ -2,588 +2,286 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12F4B3347B2
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 20:15:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEA033347DD
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 20:25:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbhCJTO6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 14:14:58 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42892 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S233587AbhCJTOo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 14:14:44 -0500
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from asmaa@mellanox.com)
-        with SMTP; 10 Mar 2021 21:14:40 +0200
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id 12AJEchk006655;
-        Wed, 10 Mar 2021 14:14:38 -0500
-Received: (from asmaa@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id 12AJEaUF014783;
-        Wed, 10 Mar 2021 14:14:36 -0500
-From:   Asmaa Mnebhi <Asmaa@mellanox.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     Asmaa Mnebhi <asmaa@nvidia.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] gpio: Support interrupts in gpio-mlxbf2.c
-Date:   Wed, 10 Mar 2021 14:14:32 -0500
-Message-Id: <4d45ea382c7a74f7e351b7e1e1f670ce41bd65ab.1615403091.git.asmaa@nvidia.com>
-X-Mailer: git-send-email 2.1.2
+        id S231126AbhCJTZT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 14:25:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232676AbhCJTYw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 14:24:52 -0500
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA799C061760
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 11:24:51 -0800 (PST)
+Received: by mail-ot1-x332.google.com with SMTP id j8so17554385otc.0
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 11:24:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CjpbMJJc7Jhsth7Nu5mOMRezmaAnho+/4H+iLJ3/HtY=;
+        b=VlnyGp7qUhW/33R6cuJrj6mgiQMnZRA17mvizMG2yMlc3yUBIja5P1h7yiUHpaeYEu
+         xIgifDNKjUiooRGX1Rpbpcj5LAfaOcHx03vMU4Pj2q/d6a1+yabJ5+HYlSavXYDMpJzK
+         ZPJhH6fxBIbvZSLj1PyJv2SN0WVJh1gWG+/IrPl4yN5AjGPzsL38paaCwUZprKTiVslV
+         mo50Fdu8/b2g4ZwmF5b9r2MLhMzv539HzLogSgjkSiVTvD+WQiK5vLp5uPAdwNnDK19l
+         WI42TFJn2oslEHso6eH2MczSDN7HnlTFzqb2sfXVc7I2SdbszBn042P7CzC8TSdsrtXX
+         lvxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CjpbMJJc7Jhsth7Nu5mOMRezmaAnho+/4H+iLJ3/HtY=;
+        b=Du68meDrew18K0skVAlfjITcnLsXxeIRQnPB5Z7YjBkgWzskzcDmWb76C3J0jXgMzx
+         1lD3vgs9au7dJ4ZqQHUDqMpJ+Zs5pad+4DCz6Larse3dhAgZ+WHDJhNKbEE5MweMm6VN
+         CVW3DZm1czQ59RtDj4Jzu60Z9N7GQjxYi4zCiaUOKf3fnVS9IrrpSC4rEd0mXVH/hNKm
+         2krrWUX85/2oxwOFxBBHSdh4bgoePetkALj8XJI5BwNbttE/729SiAFIHDtTJmgaj1bm
+         tlkC1hLtNyC7/yH8CIRIkd2nBGNcPey/RfYLmBCJ70LhadQhTNXmdCXX2Zwx2gmoyzEs
+         NqFA==
+X-Gm-Message-State: AOAM533OSV2PBnt21+UyI15zG5p7HVDr1RoFDWkB7RSzDJ47GZN8T8/H
+        /LQz3Yp1Wzsw2LJM8NAdvDsOLg==
+X-Google-Smtp-Source: ABdhPJxFXMVY3AdGBMsBB8ZTFarimJuHh6xluUGp/x/AUbiAHb8l2XoQfTNPuY1aRRtKhiRa2ZvPTQ==
+X-Received: by 2002:a9d:23a1:: with SMTP id t30mr3709295otb.65.1615404291144;
+        Wed, 10 Mar 2021 11:24:51 -0800 (PST)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id e82sm34220oob.37.2021.03.10.11.24.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Mar 2021 11:24:50 -0800 (PST)
+Date:   Wed, 10 Mar 2021 13:24:49 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Shawn Guo <shawn.guo@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4] pinctrl: qcom: sc8180x: add ACPI probe support
+Message-ID: <YEkdAbWC8/Vszvba@builder.lan>
+References: <20210310111210.1232-1-shawn.guo@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210310111210.1232-1-shawn.guo@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Asmaa Mnebhi <asmaa@nvidia.com>
+On Wed 10 Mar 05:12 CST 2021, Shawn Guo wrote:
 
-There are 3 possible GPIO interrupts which can be
-supported on BlueField-2 boards. Some BlueField boards support:
-1) PHY interrupt only
-2) PHY interrupt and Reset interrupt
-3) Low power interrupt only
+> It adds ACPI probe support for pinctrl-sc8180x driver.  We have one
+> problem with ACPI table, i.e. GIO0 (TLMM) block has one single memory
+> resource to cover 3 tiles defined by SC8180X.  To follow the hardware
+> layout of 3 tiles which is already supported DT probe, it adds one
+> function to replace the original single memory resource with 3 named
+> ones for tiles.  With that, We can map memory for ACPI in the same way
+> as DT.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> ---
+> Changes for 4:
+>  - Add sc8180x_pinctrl_add_tile_resources() to massage memory resource
+>    for ACPI probe.
+> 
+> Changes for v3:
+> - Remove the use of tiles completely.
+> - Drop unneed include of acpi.h.
+> 
+> Changes for v2:
+> - Pass soc_data pointer via .driver_data.
+> - Drop use of CONFIG_ACPI and ACPI_PTR().
+> - Add comment for sc8180x_acpi_reserved_gpios[] terminator.
+> 
+>  drivers/pinctrl/qcom/Kconfig           |   2 +-
+>  drivers/pinctrl/qcom/pinctrl-sc8180x.c | 119 ++++++++++++++++++++++++-
+>  2 files changed, 118 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> index 6853a896c476..9f0218c4f9b3 100644
+> --- a/drivers/pinctrl/qcom/Kconfig
+> +++ b/drivers/pinctrl/qcom/Kconfig
+> @@ -222,7 +222,7 @@ config PINCTRL_SC7280
+>  
+>  config PINCTRL_SC8180X
+>  	tristate "Qualcomm Technologies Inc SC8180x pin controller driver"
+> -	depends on GPIOLIB && OF
+> +	depends on GPIOLIB && (OF || ACPI)
+>  	select PINCTRL_MSM
+>  	help
+>  	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+> index b765bf667574..4ff80a7a1221 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+> @@ -23,6 +23,21 @@ enum {
+>  	WEST
+>  };
+>  
+> +/*
+> + * ACPI DSDT has one single memory resource for TLMM.  The offsets below are
+> + * used to locate different tiles for ACPI probe.
+> + */
+> +struct tile_info {
+> +	u32 offset;
+> +	u32 size;
+> +};
+> +
+> +static const struct tile_info sc8180x_tile_info[] = {
+> +	{ 0x00d00000, 0x00300000, },
+> +	{ 0x00500000, 0x00700000, },
+> +	{ 0x00100000, 0x00300000, },
+> +};
+> +
+>  #define FUNCTION(fname)					\
+>  	[msm_mux_##fname] = {				\
+>  		.name = #fname,				\
+> @@ -1557,6 +1572,13 @@ static const struct msm_pingroup sc8180x_groups[] = {
+>  	[193] = SDC_QDSD_PINGROUP(sdc2_data, 0x4b2000, 9, 0),
+>  };
+>  
+> +static const int sc8180x_acpi_reserved_gpios[] = {
+> +	0, 1, 2, 3,
+> +	47, 48, 49, 50,
+> +	126, 127, 128, 129,
+> +	-1 /* terminator */
+> +};
+> +
+>  static const struct msm_gpio_wakeirq_map sc8180x_pdc_map[] = {
+>  	{ 3, 31 }, { 5, 32 }, { 8, 33 }, { 9, 34 }, { 10, 100 }, { 12, 104 },
+>  	{ 24, 37 }, { 26, 38 }, { 27, 41 }, { 28, 42 }, { 30, 39 }, { 36, 43 },
+> @@ -1588,13 +1610,105 @@ static struct msm_pinctrl_soc_data sc8180x_pinctrl = {
+>  	.nwakeirq_map = ARRAY_SIZE(sc8180x_pdc_map),
+>  };
+>  
+> +static const struct msm_pinctrl_soc_data sc8180x_acpi_pinctrl = {
+> +	.tiles = sc8180x_tiles,
+> +	.ntiles = ARRAY_SIZE(sc8180x_tiles),
+> +	.pins = sc8180x_pins,
+> +	.npins = ARRAY_SIZE(sc8180x_pins),
+> +	.groups = sc8180x_groups,
+> +	.ngroups = ARRAY_SIZE(sc8180x_groups),
+> +	.reserved_gpios = sc8180x_acpi_reserved_gpios,
+> +	.ngpios = 191,
 
-There is one hardware line shared among all GPIOs, I2C and
-MDIO. So the interrupt controller checks whether the
-hardware interrupt is from a GPIO first. Then it checks which
-GPIO block it is for. And within the GPIO block, it checks
-which GPIO pin it is for.
+As I said before, there really only is 190 things called "GPIO" on this
+platform - the 191 thing is a hack of mine, but it's inclusion here
+should depend on how the ACPI system would reset the UFS device - if it
+does so at all.
 
-The "reset interrupt" and "low power interrupt" trigger a
-user space program.
-The PHY interrupt is mapped to a linux IRQ and the latter is
-passed down to a PHY driver, because the PHY driver interrupt
-should not be triggered based on the shared HW interrupt.
+> +};
+> +
 
-The GPIO pin responsible for these interrupts changes across
-different boards. These GPIO interrupts are not supported
-on all boards.
-So the ACPI table contains a property which is assigned a valid
-GPIO pin number if the interrupt is supported on a particular
-BlueField-2 board. The bootloader will change that property
-based on the board id.
+A comment describing the purpose of this function (to split the
+IORESOURCE_MEM into three) would be in its place.
 
-These interrupts are enforced based on the board and should
-not be configurable by the user.
+> +static int sc8180x_pinctrl_add_tile_resources(struct platform_device *pdev)
+> +{
+> +	int nres_num = pdev->num_resources + ARRAY_SIZE(sc8180x_tiles) - 1;
+> +	struct resource *mres, *nres, *res;
+> +	int i, ret;
+> +
+> +	/*
+> +	 * DT already has tiles defined properly, so nothing needs to be done
+> +	 * for DT probe.
+> +	 */
+> +	if (pdev->dev.of_node)
+> +		return 0;
+> +
+> +	/* Allocate for new resources */
+> +	nres = devm_kzalloc(&pdev->dev, sizeof(*nres) * nres_num, GFP_KERNEL);
+> +	if (!nres)
+> +		return -ENOMEM;
+> +
+> +	res = nres;
+> +
+> +	for (i = 0; i < pdev->num_resources; i++) {
+> +		struct resource *r = &pdev->resource[i];
+> +
+> +		/* Save memory resource and copy others */
+> +		if (resource_type(r) == IORESOURCE_MEM)
+> +			mres = r;
+> +		else
+> +			*res++ = *r;
+> +	}
+> +
+> +	/* Append tile memory resources */
+> +	for (i = 0; i < ARRAY_SIZE(sc8180x_tiles); i++, res++) {
+> +		const struct tile_info *info = &sc8180x_tile_info[i];
+> +
+> +		res->start = mres->start + info->offset;
+> +		res->end = mres->start + info->offset + info->size - 1;
+> +		res->flags = mres->flags;
+> +		res->name = sc8180x_tiles[i];
+> +
+> +		/* Add new MEM to resource tree */
+> +		insert_resource(mres->parent, res);
+> +	}
+> +
+> +	/* Remove old MEM from resource tree */
+> +	remove_resource(mres);
+> +
+> +	/* Free old resources and install new ones */
+> +	ret = platform_device_add_resources(pdev, nres, nres_num);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to add new resources: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int sc8180x_pinctrl_probe(struct platform_device *pdev)
+>  {
+> -	return msm_pinctrl_probe(pdev, &sc8180x_pinctrl);
+> +	const struct msm_pinctrl_soc_data *soc_data;
+> +	int ret;
+> +
+> +	soc_data = device_get_match_data(&pdev->dev);
+> +	if (!soc_data)
+> +		return -EINVAL;
+> +
+> +	ret = sc8180x_pinctrl_add_tile_resources(pdev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to add tile resources: %d\n", ret);
 
-This patch also fixes the logic to set the GPIO direction
-as output. There are couple of registers that allow software
-to change the direction of the GPIO. Otherwise, hardware
-controls that by default.
+sc8180x_pinctrl_add_tile_resources() already printed an error when we
+get here, so no need to print another one.
 
-Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
----
- drivers/gpio/gpio-mlxbf2.c | 375 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 367 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
-index befa5e1..55876fa 100644
---- a/drivers/gpio/gpio-mlxbf2.c
-+++ b/drivers/gpio/gpio-mlxbf2.c
-@@ -1,9 +1,14 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only or BSD-3-Clause
-+
-+/*
-+ *  Copyright (c) 2020-2021 NVIDIA Corporation.
-+ */
- 
- #include <linux/acpi.h>
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/device.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
-@@ -15,14 +20,24 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- 
-+#define DRV_VERSION "1.2"
-+
- /*
-  * There are 3 YU GPIO blocks:
-- * gpio[0]: HOST_GPIO0->HOST_GPIO31
-- * gpio[1]: HOST_GPIO32->HOST_GPIO63
-- * gpio[2]: HOST_GPIO64->HOST_GPIO69
-+ * yu.gpio[0]: HOST_GPIO0->HOST_GPIO31
-+ * yu.gpio[1]: HOST_GPIO32->HOST_GPIO63
-+ * yu.gpio[2]: HOST_GPIO64->HOST_GPIO69
-+ * yu.gpio[16]: HOST_GPIO70
-  */
- #define MLXBF2_GPIO_MAX_PINS_PER_BLOCK 32
- 
-+typedef enum {
-+	GPIO_BLOCK0 = 0,
-+	GPIO_BLOCK1 = 1,
-+	GPIO_BLOCK2 = 2,
-+	GPIO_BLOCK16 = 16
-+} yu_gpio_block;
-+
- /*
-  * arm_gpio_lock register:
-  * bit[31]	lock status: active if set
-@@ -35,6 +50,9 @@
- #define YU_ARM_GPIO_LOCK_ACQUIRE	0xd42f
- #define YU_ARM_GPIO_LOCK_RELEASE	0x0
- 
-+#define YU_CAUSE_GPIO_ADDR		0x2801530
-+#define YU_CAUSE_GPIO_ADDR_SIZE		0x4
-+
- /*
-  * gpio[x] block registers and their offset
-  */
-@@ -43,10 +61,18 @@
- #define YU_GPIO_MODE0			0x0c
- #define YU_GPIO_DATASET			0x14
- #define YU_GPIO_DATACLEAR		0x18
-+#define YU_GPIO_FUNCTIONAL_ENABLE1	0x24
-+#define YU_GPIO_FUNCTIONAL_ENABLE0	0x28
-+#define YU_GPIO_CAUSE_RISE_EN		0x44
-+#define YU_GPIO_CAUSE_FALL_EN		0x48
- #define YU_GPIO_MODE1_CLEAR		0x50
- #define YU_GPIO_MODE0_SET		0x54
- #define YU_GPIO_MODE0_CLEAR		0x58
- 
-+#define YU_GPIO_CAUSE_OR_CAUSE_EVTEN0	0x80
-+#define YU_GPIO_CAUSE_OR_EVTEN0		0x94
-+#define YU_GPIO_CAUSE_OR_CLRCAUSE	0x98
-+
- #ifdef CONFIG_PM
- struct mlxbf2_gpio_context_save_regs {
- 	u32 gpio_mode0;
-@@ -57,10 +83,29 @@ struct mlxbf2_gpio_context_save_regs {
- /* BlueField-2 gpio block context structure. */
- struct mlxbf2_gpio_context {
- 	struct gpio_chip gc;
-+	struct irq_chip irq_chip;
- 
- 	/* YU GPIO blocks address */
- 	void __iomem *gpio_io;
- 
-+	/* YU cause gpio arm coalesce0 address */
-+	void __iomem *cause_gpio_arm_coalesce0_io;
-+
-+	/* YU GPIO pin responsible for low power mode */
-+	unsigned long low_pwr_pin;
-+
-+	/* YU GPIO pin responsible for soft reset */
-+	unsigned long rst_pin;
-+
-+	/* YU GPIO pin connected to PHY INT_N signal */
-+	unsigned long phy_int_pin;
-+
-+	/* YU GPIO block interrupt mask */
-+	u32 gpio_int_mask;
-+
-+	/* Worker function */
-+	struct work_struct send_work;
-+
- #ifdef CONFIG_PM
- 	struct mlxbf2_gpio_context_save_regs *csave_regs;
- #endif
-@@ -86,6 +131,19 @@ static struct mlxbf2_gpio_param yu_arm_gpio_lock_param = {
- 	.lock = &yu_arm_gpio_lock_mutex,
- };
- 
-+static struct resource yu_cause_gpio_res = {
-+	.start = YU_CAUSE_GPIO_ADDR,
-+	.end   = YU_CAUSE_GPIO_ADDR + YU_CAUSE_GPIO_ADDR_SIZE - 1,
-+	.name  = "YU_CAUSE_GPIO",
-+};
-+
-+static DEFINE_MUTEX(yu_cause_gpio_mutex);
-+
-+static struct mlxbf2_gpio_param yu_cause_gpio_param = {
-+	.res = &yu_cause_gpio_res,
-+	.lock = &yu_cause_gpio_mutex,
-+};
-+
- /* Request memory region and map yu_arm_gpio_lock resource */
- static int mlxbf2_gpio_get_lock_res(struct platform_device *pdev)
- {
-@@ -118,6 +176,38 @@ static int mlxbf2_gpio_get_lock_res(struct platform_device *pdev)
- 	return ret;
- }
- 
-+/* Request memory region and map yu cause_gpio_arm.coalesce0 resource */
-+static int mlxbf2_gpio_get_yu_cause_gpio_res(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	resource_size_t size;
-+	int ret = 0;
-+
-+	mutex_lock(yu_cause_gpio_param.lock);
-+
-+	/* Check if the memory map already exists */
-+	if (yu_cause_gpio_param.io)
-+		goto exit;
-+
-+	res = yu_cause_gpio_param.res;
-+	size = resource_size(res);
-+
-+	if (!devm_request_mem_region(dev, res->start, size, res->name)) {
-+		ret = -EFAULT;
-+		goto exit;
-+	}
-+
-+	yu_cause_gpio_param.io = devm_ioremap(dev, res->start, size);
-+	if (!yu_cause_gpio_param.io)
-+		ret = -ENOMEM;
-+
-+exit:
-+	mutex_unlock(yu_cause_gpio_param.lock);
-+
-+	return ret;
-+}
-+
- /*
-  * Acquire the YU arm_gpio_lock to be able to change the direction
-  * mode. If the lock_active bit is already set, return an error.
-@@ -207,6 +297,7 @@ static int mlxbf2_gpio_direction_output(struct gpio_chip *chip,
- {
- 	struct mlxbf2_gpio_context *gs = gpiochip_get_data(chip);
- 	int ret = 0;
-+	u32 val;
- 
- 	/*
- 	 * Although the arm_gpio_lock was set in the probe function,
-@@ -220,26 +311,203 @@ static int mlxbf2_gpio_direction_output(struct gpio_chip *chip,
- 	writel(BIT(offset), gs->gpio_io + YU_GPIO_MODE1_CLEAR);
- 	writel(BIT(offset), gs->gpio_io + YU_GPIO_MODE0_SET);
- 
-+	/*
-+	 * Set {functional_enable1,functional_enable0}={0,0}
-+	 * to give control to software over these GPIOs.
-+	 */
-+	val = readl(gs->gpio_io + YU_GPIO_FUNCTIONAL_ENABLE1);
-+	val &= ~BIT(offset);
-+	writel(val, gs->gpio_io + YU_GPIO_FUNCTIONAL_ENABLE1);
-+	val = readl(gs->gpio_io + YU_GPIO_FUNCTIONAL_ENABLE0);
-+	val &= ~BIT(offset);
-+	writel(val, gs->gpio_io + YU_GPIO_FUNCTIONAL_ENABLE0);
-+
- 	mlxbf2_gpio_lock_release(gs);
- 
- 	return ret;
- }
- 
-+static void mlxbf2_gpio_send_work(struct work_struct *work)
-+{
-+	struct mlxbf2_gpio_context *gs;
-+
-+	gs = container_of(work, struct mlxbf2_gpio_context, send_work);
-+
-+	acpi_bus_generate_netlink_event("button/power.*", "Power Button",
-+					0x80, 1);
-+}
-+
-+static u32 mlxbf2_gpio_get_int_mask(struct mlxbf2_gpio_context *gs)
-+{
-+	u32 gpio_int_mask = 0;
-+
-+	/*
-+	 * Determine bit mask within the yu gpio block.
-+	 */
-+	if (gs->phy_int_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK)
-+		gpio_int_mask = BIT(gs->phy_int_pin);
-+	if (gs->rst_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK)
-+		gpio_int_mask |= BIT(gs->rst_pin);
-+	if (gs->low_pwr_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK)
-+		gpio_int_mask = BIT(gs->low_pwr_pin);
-+
-+	return gpio_int_mask;
-+}
-+
-+static bool mlxbf2_gpio_is_acpi_event(u32 gpio_block, unsigned long gpio_pin,
-+			  struct mlxbf2_gpio_context *gs)
-+{
-+	if (gpio_block & BIT(GPIO_BLOCK0)) {
-+		if (gpio_pin & BIT(gs->rst_pin))
-+			return true;
-+	}
-+	if (gpio_block & BIT(GPIO_BLOCK16)) {
-+		if (gpio_pin & BIT(gs->low_pwr_pin))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static irqreturn_t mlxbf2_gpio_irq_handler(int irq, void *ptr)
-+{
-+	struct mlxbf2_gpio_context *gs = ptr;
-+	unsigned long gpio_pin;
-+	u32 gpio_block, val;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-+
-+	/*
-+	 * Determine which yu gpio block this interrupt is for.
-+	 * Return if the interrupt is not for gpio block 0 or
-+	 * gpio block 16.
-+	 */
-+	gpio_block = readl(yu_cause_gpio_param.io);
-+	if (!(gpio_block & BIT(GPIO_BLOCK0)) &&
-+	    !(gpio_block & BIT(GPIO_BLOCK16))) {
-+		spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-+		return IRQ_NONE;
-+	}
-+
-+	/*
-+	 * Check if the interrupt signaled by this yu gpio block is supported.
-+	 */
-+	gpio_pin = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_CAUSE_EVTEN0);
-+	if (!(gpio_pin & gs->gpio_int_mask)) {
-+		spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-+		return IRQ_NONE;
-+	}
-+
-+	/*
-+	 * Clear interrupt when done, otherwise, no further interrupt
-+	 * will be triggered.
-+	 */
-+	val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
-+	val |= gpio_pin;
-+	writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
-+
-+	if ((gpio_block & BIT(GPIO_BLOCK0)) && (gpio_pin & BIT(gs->phy_int_pin)))
-+		generic_handle_irq(irq_find_mapping(gs->gc.irq.domain, gs->phy_int_pin));
-+
-+	spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-+
-+	if (mlxbf2_gpio_is_acpi_event(gpio_block, gpio_pin, gs))
-+		schedule_work(&gs->send_work);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void mlxbf2_gpio_irq_unmask(struct irq_data *data)
-+{
-+}
-+
-+static void mlxbf2_gpio_irq_mask(struct irq_data *data)
-+{
-+}
-+
-+static int mlxbf2_gpio_init_hw(struct gpio_chip *gc)
-+{
-+	struct mlxbf2_gpio_context *gs = gpiochip_get_data(gc);
-+	unsigned long flags;
-+	u32 val;
-+
-+	spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-+
-+	/* Clear all interrupts */
-+	val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
-+	val |= gs->gpio_int_mask;
-+	writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
-+
-+	if (gs->low_pwr_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK) {
-+		val = readl(gs->gpio_io + YU_GPIO_CAUSE_RISE_EN);
-+		val |= gs->gpio_int_mask;
-+		writel(val, gs->gpio_io + YU_GPIO_CAUSE_RISE_EN);
-+	}
-+
-+	val = readl(gs->gpio_io + YU_GPIO_CAUSE_FALL_EN);
-+	val |= gs->gpio_int_mask;
-+	writel(val, gs->gpio_io + YU_GPIO_CAUSE_FALL_EN);
-+
-+	/*
-+	 * Setting the priority for the GPIO interrupt enables the
-+	 * interrupt as well
-+	 */
-+	val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-+	val |= gs->gpio_int_mask;
-+	writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-+
-+	spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+static void mlxbf2_gpio_disable_int(struct mlxbf2_gpio_context *gs)
-+{
-+	unsigned long flags;
-+	u32 val;
-+
-+	spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-+	val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-+	val &= ~gs->gpio_int_mask;
-+	writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-+	spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-+}
-+
-+static int mlxbf2_gpio_to_irq(struct gpio_chip *chip, unsigned gpio)
-+{
-+	struct mlxbf2_gpio_context *gs;
-+
-+	gs = gpiochip_get_data(chip);
-+
-+	return irq_create_mapping(gs->gc.irq.domain, gpio);
-+}
-+
- /* BlueField-2 GPIO driver initialization routine. */
- static int
- mlxbf2_gpio_probe(struct platform_device *pdev)
- {
- 	struct mlxbf2_gpio_context *gs;
- 	struct device *dev = &pdev->dev;
-+	struct gpio_irq_chip *girq;
-+	unsigned int low_pwr_pin;
-+	unsigned int phy_int_pin;
-+	unsigned int rst_pin;
- 	struct gpio_chip *gc;
- 	struct resource *res;
- 	unsigned int npins;
--	int ret;
-+	const char *name;
-+	int ret, irq;
-+
-+	name = dev_name(dev);
- 
- 	gs = devm_kzalloc(dev, sizeof(*gs), GFP_KERNEL);
- 	if (!gs)
- 		return -ENOMEM;
- 
-+	spin_lock_init(&gs->gc.bgpio_lock);
-+	INIT_WORK(&gs->send_work, mlxbf2_gpio_send_work);
-+
- 	/* YU GPIO block address */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res)
-@@ -255,6 +523,12 @@ mlxbf2_gpio_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ret = mlxbf2_gpio_get_yu_cause_gpio_res(pdev);
-+	if (ret) {
-+		dev_err(dev, "Failed to get yu cause_gpio_arm.coalesce0 resource\n");
-+		return ret;
-+	}
-+
- 	if (device_property_read_u32(dev, "npins", &npins))
- 		npins = MLXBF2_GPIO_MAX_PINS_PER_BLOCK;
- 
-@@ -268,18 +542,101 @@ mlxbf2_gpio_probe(struct platform_device *pdev)
- 			NULL,
- 			0);
- 
-+	if (ret) {
-+		dev_err(dev, "bgpio_init failed\n");
-+		return ret;
-+	}
-+
- 	gc->direction_input = mlxbf2_gpio_direction_input;
- 	gc->direction_output = mlxbf2_gpio_direction_output;
- 	gc->ngpio = npins;
- 	gc->owner = THIS_MODULE;
-+	gc->to_irq = mlxbf2_gpio_to_irq;
- 
--	platform_set_drvdata(pdev, gs);
-+	/*
-+	 * PHY interrupt
-+	 */
-+	ret = device_property_read_u32(dev, "phy-int-pin", &phy_int_pin);
-+	if (ret < 0)
-+		phy_int_pin = MLXBF2_GPIO_MAX_PINS_PER_BLOCK;
-+
-+	/*
-+	 * OCP3.0 supports the low power mode interrupt.
-+	 */
-+	ret = device_property_read_u32(dev, "low-pwr-pin", &low_pwr_pin);
-+	if (ret < 0)
-+		low_pwr_pin = MLXBF2_GPIO_MAX_PINS_PER_BLOCK;
-+
-+	/*
-+	 * BlueSphere and the PRIS boards support the reset interrupt.
-+	 */
-+	ret = device_property_read_u32(dev, "rst-pin", &rst_pin);
-+	if (ret < 0)
-+		rst_pin = MLXBF2_GPIO_MAX_PINS_PER_BLOCK;
-+
-+	gs->phy_int_pin = phy_int_pin;
-+	gs->low_pwr_pin = low_pwr_pin;
-+	gs->rst_pin = rst_pin;
-+	gs->gpio_int_mask = mlxbf2_gpio_get_int_mask(gs);
-+
-+	if (gs->gpio_int_mask) {
-+		gs->irq_chip.name = name;
-+		gs->irq_chip.irq_mask = mlxbf2_gpio_irq_mask;
-+		gs->irq_chip.irq_unmask = mlxbf2_gpio_irq_unmask;
-+
-+		girq = &gs->gc.irq;
-+		girq->chip = &gs->irq_chip;
-+		/* This will let us handle the parent IRQ in the driver */
-+		girq->parent_handler = NULL;
-+		girq->num_parents = 0;
-+		girq->parents = NULL;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->handler = handle_simple_irq;
-+		girq->init_hw = mlxbf2_gpio_init_hw;
-+
-+		irq = platform_get_irq(pdev, 0);
-+		ret = devm_request_irq(dev, irq, mlxbf2_gpio_irq_handler,
-+				       IRQF_ONESHOT | IRQF_SHARED, name, gs);
-+		if (ret) {
-+			dev_err(dev, "failed to request IRQ");
-+			return ret;
-+		}
-+	}
- 
- 	ret = devm_gpiochip_add_data(dev, &gs->gc, gs);
- 	if (ret) {
- 		dev_err(dev, "Failed adding memory mapped gpiochip\n");
- 		return ret;
- 	}
-+	platform_set_drvdata(pdev, gs);
-+
-+	if (phy_int_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK) {
-+		/* Create phy irq mapping */
-+		mlxbf2_gpio_to_irq(&gs->gc, phy_int_pin);
-+		/* Enable sharing the irq domain with the PHY driver */
-+		irq_set_default_host(gs->gc.irq.domain);
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+mlxbf2_gpio_remove(struct platform_device *pdev)
-+{
-+	struct mlxbf2_gpio_context *gs;
-+
-+	gs = platform_get_drvdata(pdev);
-+
-+	if ((gs->phy_int_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK) ||
-+	    (gs->low_pwr_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK) ||
-+	    (gs->rst_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK)) {
-+		mlxbf2_gpio_disable_int(gs);
-+	}
-+
-+	if ((gs->low_pwr_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK) ||
-+	    (gs->rst_pin != MLXBF2_GPIO_MAX_PINS_PER_BLOCK)) {
-+		flush_work(&gs->send_work);
-+	}
- 
- 	return 0;
- }
-@@ -323,6 +680,7 @@ static struct platform_driver mlxbf2_gpio_driver = {
- 		.acpi_match_table = ACPI_PTR(mlxbf2_gpio_acpi_match),
- 	},
- 	.probe    = mlxbf2_gpio_probe,
-+	.remove   = mlxbf2_gpio_remove,
- #ifdef CONFIG_PM
- 	.suspend  = mlxbf2_gpio_suspend,
- 	.resume   = mlxbf2_gpio_resume,
-@@ -332,5 +690,6 @@ static struct platform_driver mlxbf2_gpio_driver = {
- module_platform_driver(mlxbf2_gpio_driver);
- 
- MODULE_DESCRIPTION("Mellanox BlueField-2 GPIO Driver");
--MODULE_AUTHOR("Mellanox Technologies");
--MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Asmaa Mnebhi <asmaa@nvidia.com>");
-+MODULE_LICENSE("Dual BSD/GPL");
-+MODULE_VERSION(DRV_VERSION);
--- 
-2.1.2
+Other than that, I think this looks good!
 
+Regards,
+Bjorn
+
+> +		return ret;
+> +	}
+> +
+> +	return msm_pinctrl_probe(pdev, soc_data);
+>  }
+>  
+> +static const struct acpi_device_id sc8180x_pinctrl_acpi_match[] = {
+> +	{
+> +		.id = "QCOM040D",
+> +		.driver_data = (kernel_ulong_t) &sc8180x_acpi_pinctrl,
+> +	},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, sc8180x_pinctrl_acpi_match);
+> +
+>  static const struct of_device_id sc8180x_pinctrl_of_match[] = {
+> -	{ .compatible = "qcom,sc8180x-tlmm", },
+> +	{
+> +		.compatible = "qcom,sc8180x-tlmm",
+> +		.data = &sc8180x_pinctrl,
+> +	},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, sc8180x_pinctrl_of_match);
+> @@ -1603,6 +1717,7 @@ static struct platform_driver sc8180x_pinctrl_driver = {
+>  	.driver = {
+>  		.name = "sc8180x-pinctrl",
+>  		.of_match_table = sc8180x_pinctrl_of_match,
+> +		.acpi_match_table = sc8180x_pinctrl_acpi_match,
+>  	},
+>  	.probe = sc8180x_pinctrl_probe,
+>  	.remove = msm_pinctrl_remove,
+> -- 
+> 2.17.1
+> 
