@@ -2,149 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 158D7333F4E
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 14:38:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4817A333F5F
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 14:38:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234784AbhCJNc3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 08:32:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234467AbhCJNbk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 08:31:40 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED8AC061764
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 05:31:40 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id 124-20020a1c00820000b029010b871409cfso11009251wma.4
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 05:31:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bMOvPe8N8rGJXOLjCxzS5gSb/gTvdEZoEOlGF4GuSFs=;
-        b=NLPCffky6G7GzaObhllkOllIgtNjBeMsGjkEMASPl+1pYHywRsMYpm2dtlcyg8Mib8
-         KwVVv4nAqkmnzcogt078Dvez0a507CpBKA+tJqKRJBcxaYDNWIi7zlQV2h4gZ9wKz3L6
-         j3kQgf/A+1u4o9qE7lMpQ7EEJOiZI6/9tl0x/oaILLtId4rQGq0DiqT9WTLHIMixEUWJ
-         Osd21hXPUX+hEuewL193hn1+YN+pQznzUc5B9A/MJ13U8ort3kQ35MparokcriCZU9YH
-         hwDXRCPg/vCK/Lthwuf6UThwdLUGaK/BxDJ9Azo/RtJUMNwP/L+WSKFIGnylkhmpWbmH
-         OAFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bMOvPe8N8rGJXOLjCxzS5gSb/gTvdEZoEOlGF4GuSFs=;
-        b=F3B6T36OXEaXWP1S5CxzuMEpXH1SAu+Uv3MA+5/nJ/LfRvAsnSSbdlLiENT3WKI6r6
-         EV03c2bEllHL0uS26eDunt9fi/mqyN/e7RES22g1tXekXTbyVvkvBSISQV2NVnNQnpOX
-         liFU97CfMMi+AMJFz73B3926w3rcQmfJMMt6AIzlczrfbDfb+n32zQX5keXTYWNBTl93
-         dD+ePfbVEyqNNxUcYrdpPpLXQkIdbvAP8S+0hPK8c5ctH4+gaNiISvykWfHIR/VRL4nt
-         126r4i1S7Lu8ddS9wshNtdeEoMOegWkL0to86DhzPbo3gmZy/mZsXEOLKxfuHr+M3h6x
-         XhHQ==
-X-Gm-Message-State: AOAM533VQamJCgoCsIdh6IJYd7BEN7pnt3DgLY5djbSW6xIQ2U0PuZIv
-        2Kk0uB5AbYCqHq+xs+g55l29Sw==
-X-Google-Smtp-Source: ABdhPJyfXWtzHaUWQl/M4ZEr0SSi/Fz8xcU7IHooODBN0RLT7MhUmViUHHQQEekoUzXnBL6YUKMhJQ==
-X-Received: by 2002:a05:600c:4a06:: with SMTP id c6mr3384475wmp.35.1615383098982;
-        Wed, 10 Mar 2021 05:31:38 -0800 (PST)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id j13sm13409331wrt.29.2021.03.10.05.31.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 05:31:38 -0800 (PST)
-Date:   Wed, 10 Mar 2021 13:31:36 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     linux-power <linux-power@fi.rohmeurope.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH v3 06/15] mfd: Add ROHM BD71815 ID
-Message-ID: <20210310133136.GQ701493@dell>
-References: <cover.1615198094.git.matti.vaittinen@fi.rohmeurope.com>
- <be0e8cd06ed75e799c942e5076ee7b56ad658467.1615198094.git.matti.vaittinen@fi.rohmeurope.com>
- <20210310103639.GG701493@dell>
- <a631bbc3dd3bd0f02693d1c35f9a14dbaec67cc3.camel@fi.rohmeurope.com>
- <20210310111755.GN701493@dell>
- <e7bb00af76de65c60061c58a570d5b6f40961eb0.camel@fi.rohmeurope.com>
+        id S233410AbhCJNgo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 08:36:44 -0500
+Received: from mail-eopbgr80089.outbound.protection.outlook.com ([40.107.8.89]:34272
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233374AbhCJNgg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 10 Mar 2021 08:36:36 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lbu4SmUsG3SJN6eYbkHdw9yIea1vtefDxnsLY+o80gtiSnT1x2hH+5zJvqGvDfYEfrGJEiqounTkLOfus88wUNDfCnxHKO33MPQo7FbDkY2UUg2zAffOw2qcz0VZ82yZ1LutzFNcdhdx84mT/8s5s54lnw9izhOmh7yM1FI6e9EopC9KEvBsDz8YMImxMhzfYn7dOkVTR2UXs/w3beQ74Ut1qxkuRMW1fSTdIMBFQtDuDF+u+tJimsrb/S+b/Ks8qZ/CQDW5odwlYYQZjczgKOg7bv2whSQkQzTUHwYssr5bU17P/XN6OCKTd1ezQR2FlAArwiifFu3NTVS071QjwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WgHTKHc9LfunL4YoMQVRahtl8os9OMadTOsjabm6+PI=;
+ b=b5eHfjAJjthE8jjh6lhIaz9v6Btg/gpRNusMwNnsQ2QVhSVU3CxscI5gQcv6+/PNvEbKR/pzCLQViPCfiRBHbTmsWuvK6HKgxzfaVgEGBmWqaFfBNvbBT7GupeR58P6XQFDQS245LtdQrVk13yJSSNTIvIlJNYJn801EtEoeQOA8Hxciv97ahdr0dtlgw2fnEiK0qRgahxYEIuOv8G1g8EbmyY48MCoie/7XrYwoqt/j6jd9sEVvgEwYHtVWeJVnZsoonJsW5Q80Ai56mdaZ4Y6fGBQ7paa9v21mv2PhMCwThkHH0QMGhKc3Wpi6rSMAYRpxgQRd6ZRqIx5W+JwiVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vaisala.com; dmarc=pass action=none header.from=vaisala.com;
+ dkim=pass header.d=vaisala.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WgHTKHc9LfunL4YoMQVRahtl8os9OMadTOsjabm6+PI=;
+ b=sc23WzGyh+hyfDpbocVWeGeROOWFOH5kY1Xw5ZsOJ8h56184iB14iMpMxmjX550EQ/UXA5vEfAAL3wxwr4bfJOHnXNNOuvc2MG1rvuaNwrzD3Z7A+Vi2vRn15MDjr3jUzmCibMxiOiTroboVJ5Na7zPsO5yxuVsrmEdJI+FZ2sYQOSUYQR8ibJha5Q7tvEQnblkBkPoOfhNxhfH+9myHbGr+NN08O+OnDT7q/6q30gvdnmuZlTRNNJu2hAfkMpUuZQoc+8nmR/QrerHvq6iCeAKR3Yalw0We+zWp4BeYS9qFI7MdpsPTFQ6LYEXh5KA8oFP+3Hwx5TX4iMb3Zma4yQ==
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=vaisala.com;
+Received: from VI1PR0602MB3568.eurprd06.prod.outlook.com
+ (2603:10a6:803:10::31) by VI1PR06MB5567.eurprd06.prod.outlook.com
+ (2603:10a6:803:cd::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17; Wed, 10 Mar
+ 2021 13:36:34 +0000
+Received: from VI1PR0602MB3568.eurprd06.prod.outlook.com
+ ([fe80::c471:1848:5f45:95a4]) by VI1PR0602MB3568.eurprd06.prod.outlook.com
+ ([fe80::c471:1848:5f45:95a4%7]) with mapi id 15.20.3912.027; Wed, 10 Mar 2021
+ 13:36:34 +0000
+To:     linux-gpio@vger.kernel.org
+From:   Tomas Melin <tomas.melin@vaisala.com>
+Subject: Shared access to gpio pin
+Message-ID: <fd30cc89-8048-700d-edc1-95bf38184b0b@vaisala.com>
+Date:   Wed, 10 Mar 2021 15:36:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [85.156.166.133]
+X-ClientProxiedBy: AM0PR06CA0141.eurprd06.prod.outlook.com
+ (2603:10a6:208:ab::46) To VI1PR0602MB3568.eurprd06.prod.outlook.com
+ (2603:10a6:803:10::31)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e7bb00af76de65c60061c58a570d5b6f40961eb0.camel@fi.rohmeurope.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [85.156.166.133] (85.156.166.133) by AM0PR06CA0141.eurprd06.prod.outlook.com (2603:10a6:208:ab::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17 via Frontend Transport; Wed, 10 Mar 2021 13:36:34 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8a223393-555e-46fb-f84b-08d8e3c985c1
+X-MS-TrafficTypeDiagnostic: VI1PR06MB5567:
+X-Microsoft-Antispam-PRVS: <VI1PR06MB5567D677DC140D4952702E34FD919@VI1PR06MB5567.eurprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JiBTHPsKMVWbLDCZ3fNwKuaIyS1NlsXVVqBtwYzri3rO2UMP09tWYuTVMCElyty/Md6g2PtbDBN+qBP5Znmk/XCT3XHwYBLW6GLvOvEpyEilM0Str7k05pbtwLCxco6VuogkwxZtfZBcQLdngpsSkNqJjEoEzU5vd1hzKN5IalEua2MXRJU5fTxMteHlFwfvbZzqWXQSqWeFpW9EsbQHkG/h6eqs02YgFYoGOVMUAT8mSiOVbS2gqI/GoN4ogNMPhTpvCfb8Dz1DDhAHI+4J1btVfZrSbV2WuwK9fRQ1JkK+28YXCmME0sR+1ranWhY1M6b76wWfIMglGNjKTuYgl9/BBWzNNnt2yreUKbZSIagOkwA5fRfjJkyydGEDYgJkj9TvqSNmwe596CZMSb9PL1PLnci/kKZByz7dF97ggMNMW40XN7G45lMtwuelfDroTESNdvS2CH/SK4FkfBsq+M3HYRsz/y8VCx9q4WWUOiKBZmvltlPhsj7a0PF8vSpMSrDwLbkS90bEEFIG4P1MMzZK43lFwZKvxRRSUzZg6239xfNymlcgFLZi1YDGbpLhAuv7VtToCR0RKfVhwv1HHmLrzu7BnEY29ttia1WVsG5F7NLlKswBj6aAA6yO0cmiHgwU8kX0f6Ipi7rhU7XgyQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0602MB3568.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(39850400004)(346002)(366004)(376002)(44832011)(478600001)(31686004)(31696002)(956004)(6706004)(2616005)(86362001)(6916009)(316002)(2906002)(16576012)(8936002)(6486002)(52116002)(16526019)(66556008)(26005)(186003)(4744005)(66946007)(83380400001)(66476007)(5660300002)(8676002)(36756003)(3940600001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?Q3lwZ0ZmQThFYVluSjhtNlRrT25NT243Y09FT3JXR2tWMXVkVE16TW5aWXBH?=
+ =?utf-8?B?d2JRWmlyRWtZZm8vb3VjYUQ0OUNzUFllYjBUTmRvd1AzQk5BVkRQTDBBVnhk?=
+ =?utf-8?B?dVh3cHE5TmF4UldDdlBJUEFvM1FBNzU3V0UvVnRCU1grSUxjNTI5KzRTcXlY?=
+ =?utf-8?B?SE54aFRRbVpDTVRBVXkyTzc0bDk5K0VYejhBdUpCRkN1RVRaWkpxWFEwS29k?=
+ =?utf-8?B?TDhOSGFwUjVwMGpkcVFGR01GYXo0RWpWdDFQUURELzUzMnlnYm9xUmdtcjBK?=
+ =?utf-8?B?OHNzWitQckVJTW5FblVVdEpadHdvUVJYSE10MEJEV3hUbTdDNDEyL2tjQmlY?=
+ =?utf-8?B?TiszamYxQTFpcjVvZUxlVGtBVVJVUXhCUjlmVHhSVHdkVTNBY1IyZ1ZYSm9R?=
+ =?utf-8?B?d1hsM1BWMk9rTGtBWGFJVFdZbGloWlZpZmNVcW4zRkwzVlpKTzRRbVlaQ3hH?=
+ =?utf-8?B?cVFER1MrcmtTditkNnBnVWxZK1RaQ3R3N3Rzdnc2YVM5cEJPTHZhMU1TSGlp?=
+ =?utf-8?B?T3g5WEFmbHFNN0RVNit5Y2hlV1dzNDA1bnV6TzZ3RjBaUjlFK1kwajF0TzR0?=
+ =?utf-8?B?QmVQaVowWkdCcGlLWVBzN2VtWml4SitZcitaU1djQ3VOSU5EV1gyaVE2V1Vq?=
+ =?utf-8?B?b0lHZGk5Sm9NTEgvMDJHMWw1OEJ4ZTIrQkdUZTFuMlhSb2RQRlMvWmtRZlZZ?=
+ =?utf-8?B?MTFSekVQelJTMUs1TXFqZXFlak9lcWxUTWRFd0h2NUtzTXR4b3NXcGpwUzNv?=
+ =?utf-8?B?U3VZRUp4K2wydDFIdXZoZUh4aDdCVmFnSFdmaVBFMEJIZTZaOVhxdjJSWEE2?=
+ =?utf-8?B?dzJ0ZzVQd3M1RUZtK2txdHRwMG51YlFMWktDYnZCS1RPMTVuMURMOFZsbVFz?=
+ =?utf-8?B?cnlBR3BlTVNMNlZtREhlSVlZRmFXV1hRdHpObTdqSjI2R2FidTZyRHdJRmdR?=
+ =?utf-8?B?Y2h6ck81N1NtV3RrN0NXNlRKdmwwUHZGRlExSmJtZTB1TWM1V2hTZG4vQ0Zr?=
+ =?utf-8?B?T2YxMVJQZjE1UTY5djRSSnR5WWYydXJOWFpxbTZDd2lTTUZxWUVpYjl3ZVRZ?=
+ =?utf-8?B?U0hlTFRNZnk2SXhYalJnMTl2dnpCQmxpZXd4QmFaTlljei80TnlhMitQNSt1?=
+ =?utf-8?B?dGtpd0xEY1JrL2g2RHFRN21sMkJVOTI0V1FpcDBjVFFraEVBY1VHMzl4M3h0?=
+ =?utf-8?B?RVNMNTEyc1lBd2VrTEhBSEpKNE9URkpROFFVOERkRzQ2NWYrWTl4TzhIYWtD?=
+ =?utf-8?B?NDlFdDJ4TGZ4eEhIOWdteThGc1NSWXp2MnhFSXhidlg4TnovQTNmYnpLZHJy?=
+ =?utf-8?B?MmlodzFYOC9lQU1xQ1dldzVYZFliVS9xaUJkYWNUZmdib2JwdEttTVpqdEh2?=
+ =?utf-8?B?bmFwMCt1a0VUcE9TSG9rQWpiZ1EwMHdMT3lickN4U1lISVNsZDBoQyt6V1gw?=
+ =?utf-8?B?ZWNXamp6aVppRXlwTWFGaXRWNzA5cnNhcElyb2VsTjM2aElBSEFhaTl2NFdl?=
+ =?utf-8?B?VmlGV2kyRSt0WU9yQzdlUmJ2UlpuaXcrZ1daaGl0OTJqcXA1ZmdHeUkrTDB2?=
+ =?utf-8?B?Ri92Z3VGZVRkbjFMUFA5RmpNdkpQOThzY3haM2Jqb1c4bGpmVFMzdTFOR0l3?=
+ =?utf-8?B?ZTJMS1hzUTRzRS9xOTJKaW9tR1Y0ZWFmOU5KakZCR1NQSlBsMHUyakwwanFJ?=
+ =?utf-8?B?WjQ5S3pEd3RvMmxxRFl4UHdON1Z3ZHpYMTZvZjFoWnVMTVVlb3VwS3MydVQx?=
+ =?utf-8?Q?jMHLQGHSlLYR6nm9L9haRmPsRlYSVTBRSLfiSKs?=
+X-OriginatorOrg: vaisala.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a223393-555e-46fb-f84b-08d8e3c985c1
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0602MB3568.eurprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2021 13:36:34.6357
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2ZcU9LD9HnhjrGb33dE52jnfAOb5z6I+M8Ri8DPAJCo6smRApz8s/OcQreTL/bzYK2WDEhVHaqpNzREKpA3ugA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR06MB5567
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 10 Mar 2021, Matti Vaittinen wrote:
+Hello,
 
-> On Wed, 2021-03-10 at 11:17 +0000, Lee Jones wrote:
-> > On Wed, 10 Mar 2021, Vaittinen, Matti wrote:
-> > 
-> > > Hello Lee,
-> > > 
-> > > On Wed, 2021-03-10 at 10:36 +0000, Lee Jones wrote:
-> > > > On Mon, 08 Mar 2021, Matti Vaittinen wrote:
-> > > > 
-> > > > > Add chip ID for ROHM BD71815 and PMIC so that drivers can
-> > > > > identify
-> > > > > this IC.
-> > > > > 
-> > > > > Signed-off-by: Matti Vaittinen <
-> > > > > matti.vaittinen@fi.rohmeurope.com>
-> > > > > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > > > > ---
-> > > > >  include/linux/mfd/rohm-generic.h | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > > 
-> > > > > diff --git a/include/linux/mfd/rohm-generic.h
-> > > > > b/include/linux/mfd/rohm-generic.h
-> > > > > index 66f673c35303..e5392bcbc098 100644
-> > > > > --- a/include/linux/mfd/rohm-generic.h
-> > > > > +++ b/include/linux/mfd/rohm-generic.h
-> > > > > @@ -14,6 +14,7 @@ enum rohm_chip_type {
-> > > > >  	ROHM_CHIP_TYPE_BD71828,
-> > > > >  	ROHM_CHIP_TYPE_BD9571,
-> > > > >  	ROHM_CHIP_TYPE_BD9574,
-> > > > > +	ROHM_CHIP_TYPE_BD71815,
-> > > > 
-> > > > Is there a technical reason why these can't be re-ordered?
-> > > 
-> > > No, I don't think so.
-> > > 
-> > > BTW. there will probably be a (trivial) conflict here as both this
-> > > series and the BD9576/BD9573 series add an ID here. Let me guess,
-> > > you'd
-> > 
-> > That's fine.  I will resolve that manually.
-> 
-> Thanks :)
-> 
-> > 
-> > > like to see them sorted?
-> > 
-> > Wouldn't that be nice? :)
-> Aesthetics is not really my cup of tea. OTOH, if amount of IDs grow,
-> then sorting helps spotting whether some IC has an ID here. So yes, it
-> kind of makes sense.
+Is there a preferred way of providing shared access to a gpio pin?
 
-By 'nice' I don't mean 'pretty'.
+Use case is such that there is one application which only monitors the 
+state of gpio pins, while another
 
-I mean 'improving readability/maintainability would be nice'.
+actually controls those pins. It would be enough if the monitoring 
+application could read the state of those pins regularly.
 
-> Can you do sorting while resolving the conflict between series or do
-> you want me to
-> a) do sorting if (when) I re-spin the series
-> b) send separate sorting patch as a part of this series
-> c) send sepatate sorting patch after all the pending patches touching
-> these IDs have been merged?
+With the old sysfs approach, it was rather easy to share read/writes to 
+a certain pin, but is there a
 
-I'll let you use your imagination.
+way to provide similar functionality with gpio character devices?
 
-I just noticed that the latest entry did not fit well inside the
-current list.  Why don't you start by putting that in the list where
-it makes the most sense i.e. somewhere near ROHM_CHIP_TYPE_BD71828,
-and see how you get on.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Tomas
+
