@@ -2,86 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12B47333F87
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 14:46:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA939333F93
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 14:48:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232803AbhCJNqF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 08:46:05 -0500
-Received: from mga03.intel.com ([134.134.136.65]:19874 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232733AbhCJNp5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 10 Mar 2021 08:45:57 -0500
-IronPort-SDR: IKOOnvVmUlPSuRNpMHXnYXbNeX5Hui0kwP5I5c1PmtMb8oNgBq+L7sVxAB5u8PZia0U8enESKZ
- ouAH7hMKjwMQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9917"; a="188504655"
-X-IronPort-AV: E=Sophos;i="5.81,237,1610438400"; 
-   d="scan'208";a="188504655"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2021 05:45:12 -0800
-IronPort-SDR: KI7RX4mZPreIMw9YRoyX6chlsvi9krd/0gKT1Fl2s2eYrVLo2t0aEsOEINsGn2t6ZEfZvXMvl0
- vvwBwr3D3HCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,237,1610438400"; 
-   d="scan'208";a="409086131"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 10 Mar 2021 05:45:10 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 706B7F4; Wed, 10 Mar 2021 15:45:22 +0200 (EET)
-Date:   Wed, 10 Mar 2021 15:45:22 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux pin control <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 5.12-2
-Message-ID: <YEjNcinYomwjyBdE@black.fi.intel.com>
+        id S233028AbhCJNrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 08:47:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232887AbhCJNrW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 08:47:22 -0500
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D4E0C061760
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 05:47:22 -0800 (PST)
+Received: by mail-lf1-x129.google.com with SMTP id u4so33586122lfs.0
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 05:47:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=++0Z3Sg/MSm5KHd5+AABmEZZ/1QQlMCCQcaKXINPhtc=;
+        b=a/BQ4m2telEhkXuNSNMUhrqEqXEgP2BE9Fw+Oq+MFBR1YdUNxX9VYfeXdIZ8WxSmcA
+         uUtR4oV3ia8Kw+yRGTqvdlWQ2MN4zNdOSr0lapBrs25Km40RrwNh3SZg83VJgD47asxh
+         lwNHTrcaD6AtV0xbiVH5g3KlTIv/dwP7lSKpLG0y0KeXiX04p97neZMU/bzOMQzK35wT
+         eiKNk0rHcrmS2efYicW4EgxaGNljmRbfUHVc1DE/s9Bu9d8Wtlkk1J38bT+hiu5qYYit
+         fdpMIMwNr0Rr0RhWZjZXmV79+aUPKH2XlNI4D7mQs6zN9cgfscV+u1t+rT+5+m1CfLId
+         cKkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=++0Z3Sg/MSm5KHd5+AABmEZZ/1QQlMCCQcaKXINPhtc=;
+        b=kNKO5ruvxvlZelRbdmPcpfRg5wr8kyPZ3G6o2lO+LY6Cn1LbaZWrmhcmcLCG7QX4Te
+         QvGlkIIgUEZJB7/2s3bhQ9IcJqBVfmrpEHsrnwdAh2pmccR3+SceZntLryU+dMGiUZ14
+         zoAmK53R49Vqwlokx8x0oskS+L7EJ019UPWUBP1T9dbMh1EpidQN983UC9008wHgba3z
+         WQLAl7VKPZo0NMCa224mLt1f+RF1VtKIO+5XFTA6MS0wOGn6UL7VdnqyfK+rN9UI1xIZ
+         Yj8ui97yRurMCD1mzZjEW4NkKvRtHEyjqina9wieOpDoWTWSf467MtRf2O0I+4EROx4c
+         Z/5A==
+X-Gm-Message-State: AOAM530b+l7XApPrNdyDAQ3FXjJmWJjFcR+Sl/W1akgWkiDh+Qx8wQpB
+        JmAg5oPOHiHqyCf38D5illMM3oajmzCU/vHV772Vq2+/lOyRzxpA
+X-Google-Smtp-Source: ABdhPJzjz29zzemwkr7iPlRBsp3xEylhxToWxZp3DxOzmJezKVokzc7l+lwpoq4ivD1nkFV58Cp8XVDLTRflfih+3KE=
+X-Received: by 2002:a05:6512:10d1:: with SMTP id k17mr2003988lfg.649.1615384041023;
+ Wed, 10 Mar 2021 05:47:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20210223064211.120935-1-jay.xu@rock-chips.com>
+ <CACRpkdbqkCEMuZdwgfPJAhnZBKW1KV0+1MnXqNvTjm300jaS9Q@mail.gmail.com>
+ <CACRpkdYkBD0-AWz6gWrxK_5GjM6_mSoJ4wR64BijsJ8juzuFug@mail.gmail.com> <CAKUh=RxWDyW_cO2nKFLi=x0xDJwLHTb3+-OesTk2B5C=DpGEwg@mail.gmail.com>
+In-Reply-To: <CAKUh=RxWDyW_cO2nKFLi=x0xDJwLHTb3+-OesTk2B5C=DpGEwg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Mar 2021 14:47:10 +0100
+Message-ID: <CACRpkdb-NS5U3-nv6uRCsqo6iOg_CKq1tx8abNT4DuVpGPoqkw@mail.gmail.com>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gcGluY3RybDogcm9ja2NoaXA6IG1ha2UgZHJpdmVyIGJlIHRyaXN0YQ==?=
+        =?UTF-8?B?dGUgbW9kdWxl44CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGludXgtcm9ja2NoaXAtYm91bmNlcytrZXZl?=
+        =?UTF-8?B?ci55YW5nPXJvY2stY2hpcHMuY29tQGxpc3RzLmluZnJhZGVhZC5vcmfku6Plj5HjgJE=?=
+To:     Kever Yang <kever.yang@rock-chips.com>
+Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux pin control  maintainers,
+On Fri, Mar 5, 2021 at 2:02 AM Kever Yang <kever.yang@rock-chips.com> wrote:
 
-One fix so far. I based my branch on v5.12-rc2 as Linus T. suggested.
+> Hi Linus,
+>     Is there a place we can see the error report for "x86_64 allmodconfig"?
+> Since we don't have a build environment for architectures other than arm,
+> it would be best if we can get the error without have to setup the build environment.
 
-Thanks,
+It comes out from the kernel build robot when I apply the patch, hehe :D
 
-With Best Regards,
-Andy Shevchenko
+But I think the kernel build robot people at Arm can pick any git branch
+for builds, on request.
 
-The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
-
-  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.12-2
-
-for you to fetch changes up to 77e141266c8e72e4a586fe42eaab1b4b047655ed:
-
-  pinctrl: intel: Show the GPIO base calculation explicitly (2021-03-08 19:07:48 +0200)
-
-----------------------------------------------------------------
-intel-pinctrl for v5.12-2
-
-* Fix regression in GPIO numbering in size based Intel pin control drivers
-
-The following is an automated git shortlog grouped by driver:
-
-intel:
- -  Show the GPIO base calculation explicitly
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      pinctrl: intel: Show the GPIO base calculation explicitly
-
- drivers/pinctrl/intel/pinctrl-intel.c | 2 ++
- 1 file changed, 2 insertions(+)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
