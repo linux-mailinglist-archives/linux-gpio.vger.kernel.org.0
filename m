@@ -2,104 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3364334C98
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 00:33:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92CD1336810
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 00:48:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232133AbhCJXcj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 18:32:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36332 "EHLO
+        id S233894AbhCJXsS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 18:48:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233606AbhCJXcg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 18:32:36 -0500
-Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01628C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 15:32:36 -0800 (PST)
-Received: by mail-oo1-xc2b.google.com with SMTP id q127-20020a4a33850000b02901b646aa81b1so235326ooq.8
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 15:32:35 -0800 (PST)
+        with ESMTP id S234066AbhCJXsB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 18:48:01 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E1EC061762
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 15:48:00 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id f1so36622223lfu.3
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 15:48:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Lki+LVhGY+TJZZ9vEzSlPJrcvDWEcfN6Jpmqx+Vkc24=;
-        b=WHmSoVbHh0YkRmMo2QkKPvnLh2xh+r/kgYySk2lnq2vG4xor5o+igOn03hUpYvpVBx
-         Cj6aaQgizEcqr8CXULTsoaxHSpIKkRRaLd0Rv9vRvU8A23vLDpve1vRbo007jQ+e6TTd
-         HzprnhA9Rryqjr3VV/OUNm5CtVEiqAUMPU7o936XEtYMWboozJSfELXfmflB2O9ct5Up
-         ZRvc24kZqej2HDIH2QvABB+dFqoCRFRe1SjZQJxOYqp489zTUoN+0O2TtyJ2CbtFn2Nl
-         SMxDWL5g3SLl31M1Ft3ZcRcXo0DRjEne9qv3WBi1GDCO8LIAEMnKsU6RaN8eFQ7oRsWz
-         naRA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kRvHS9o5dMLT6f5yfgrvrgY38oLudE/U5A4iFNm6Au8=;
+        b=iNrRn08C6u6wm9/NWOjycwj9HSvpAmM5+og002MFmZagOZwJW/7mrsRDnTGETT1tW6
+         ofpe9swHZzRRGPwfWFG/pgGOlBDYcFDnyxi9fHhJ3SS6ghK+w/ham9nZWPqLc18RH4lD
+         tRWZSiEut1qDfamOLDJam2Rn2B+gIUwvVOtq1zGIPnSpYgTYNYlN6e6Yxz7eMGVqRnro
+         Ox2Sof2CKCiSwyXXXiEWIzRseCm6nB/7WoEi4mIGNqG1w8Wi2/HBAPf5Ym7+GCX5VY+n
+         aIL7DuV6/sbDWbA4uUhog1FBJXkWHaVbpursDstZGbIUdX1ov+MH3m4vmrXgmTYqJqD3
+         O1Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Lki+LVhGY+TJZZ9vEzSlPJrcvDWEcfN6Jpmqx+Vkc24=;
-        b=HejoufczlXyuAPyKXPG0L4tPeLnNsoZItJsU5ekURm4MzCeybNnWhXd8PdcAlQ1Sn3
-         3K8gpIYzrW8dECJT4K6Tjm9m1coqOU9GuRFhL07LBIHZQV/xLOKE0+BTF7Ue3Er6zSI4
-         vnmKSV5MY22jOzCe/kTvheHNN3WviTHebzYlGDjJJuOkupToJ/rMg/pU8QbnNXZu4zGL
-         X5fvX8Yel3eQVhhgECGjOP76zQceEh2H2MgnSJIC3kms3Bi3FzPhKZhH6auIeRaVwyiq
-         fUObggpNG0NPjfootakPjmKsImiFIEP7rBMT0HlV/WK6Z/VxFSj/PHuWhOqOYRit78hz
-         x05w==
-X-Gm-Message-State: AOAM533O+mZJ/JY/c3oVpk9zQQr68iWcS2hYDa2TncFRfQjo4bZ44IeE
-        TK1JY2h4aomY2fqfBX0sbOFObw==
-X-Google-Smtp-Source: ABdhPJyHwvVzHT4WfwD/MTxFLXkw2JPAOy7xnkyabLGfWPvokC5X5Ar5OGn9ENIkzukawxDBvIfySQ==
-X-Received: by 2002:a4a:d48b:: with SMTP id o11mr4262670oos.2.1615419155407;
-        Wed, 10 Mar 2021 15:32:35 -0800 (PST)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id z3sm202269oix.2.2021.03.10.15.32.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 15:32:35 -0800 (PST)
-Date:   Wed, 10 Mar 2021 17:32:33 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, john.stultz@linaro.org,
-        amit.pundir@linaro.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] gpio: wcd934x: Fix shift-out-of-bounds error
-Message-ID: <YElXEVBFkoLd2FSy@builder.lan>
-References: <20210310174304.22176-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kRvHS9o5dMLT6f5yfgrvrgY38oLudE/U5A4iFNm6Au8=;
+        b=qGajWgyJ9PIE8+creBMaX0sVeF+iqQ5YnQbU1Hq5G/qBAxFGAmUdrDa+Kn8ReI55FZ
+         Qj/6AV3Tc8F/1ZqkjSuVFy8CZ/I95lzomWMBly4b9NRlE77VqzNHxGWgMa8EntrCQT0s
+         24jiQRcf6EtK8A4BpHBRQFuW6DAAndnsdqRAQr9+MfHsj/gcxxX99O6qOhV/o4n5wzEJ
+         lv358yjC8tXilxtFEWQAXUHRQ1BMZws/8s69njqMSZF58xS1Hp5y1iQkvkMJIa4V9f5A
+         tAtziIf+fM8phuNRiq/utHpAiagNWAl2WkGmkf/Tt5kc6Dd86DetOtub9Q3mNCtnX9jh
+         92uQ==
+X-Gm-Message-State: AOAM532EiB5p/sZyPpwGLhj9ybjbX3XYVXaTY1N7WcKVjVPqyrjt+IJn
+        7I+61lPnGcxdZx547N7uRmv5Xsjk9+s1b9jIDqIeDw==
+X-Google-Smtp-Source: ABdhPJz0squ0Ye3e/PiQIDYAcOJXAgc8W4xsitrsSru2AMgkDx47v8y6PLZPozsGXf40w2FsskuwPuAGjhSxg9qCrgc=
+X-Received: by 2002:a05:6512:74a:: with SMTP id c10mr571356lfs.586.1615420079060;
+ Wed, 10 Mar 2021 15:47:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210310174304.22176-1-srinivas.kandagatla@linaro.org>
+References: <20210308164845.3210393-1-vkoul@kernel.org>
+In-Reply-To: <20210308164845.3210393-1-vkoul@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 11 Mar 2021 00:47:48 +0100
+Message-ID: <CACRpkdbOY_ZuL4YwkQy1dCDn_USEDy1+F1EUooNTtkXDU0zBDw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm8350 and friends
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed 10 Mar 11:43 CST 2021, Srinivas Kandagatla wrote:
+On Mon, Mar 8, 2021 at 5:48 PM Vinod Koul <vkoul@kernel.org> wrote:
 
-> bit-mask for pins 0 to 4 is BIT(0) to BIT(4) however we ended up with BIT(n - 1)
-> which is not right, and this was caught by below usban check
-> 
-> UBSAN: shift-out-of-bounds in drivers/gpio/gpio-wcd934x.c:34:14
-> 
-> Fixes: 59c324683400 ("gpio: wcd934x: Add support to wcd934x gpio controller")
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Add support for the PM8350, PM8350B, PM8350C, PMK8350, PMR735A and
+> PMR735B GPIO support to the Qualcomm PMIC GPIO binding.
+>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Both patches applied!
 
-Regards,
-Bjorn
-
-> ---
-> changes since v1:
-> 	- removed unnecessary dump stack from log
-> 
->  drivers/gpio/gpio-wcd934x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
-> index 1cbce5990855..97e6caedf1f3 100644
-> --- a/drivers/gpio/gpio-wcd934x.c
-> +++ b/drivers/gpio/gpio-wcd934x.c
-> @@ -7,7 +7,7 @@
->  #include <linux/slab.h>
->  #include <linux/of_device.h>
->  
-> -#define WCD_PIN_MASK(p) BIT(p - 1)
-> +#define WCD_PIN_MASK(p) BIT(p)
->  #define WCD_REG_DIR_CTL_OFFSET 0x42
->  #define WCD_REG_VAL_CTL_OFFSET 0x43
->  #define WCD934X_NPINS		5
-> -- 
-> 2.21.0
-> 
+Thanks Vinod,
+Linus Walleij
