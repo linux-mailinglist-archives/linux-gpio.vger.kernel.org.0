@@ -2,216 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8B53334656
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 19:12:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFA5433465B
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Mar 2021 19:13:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232695AbhCJSMM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 13:12:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233569AbhCJSMK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 10 Mar 2021 13:12:10 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 22BC164FB5;
-        Wed, 10 Mar 2021 18:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615399930;
-        bh=gfC545zIBa1YDEjWh32i4lCV8kvxln2OQmvfhzAIAuw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sYX+2ueZ5+BBW+3IwDwioMbZQD3zjKwfpEK527va3E6dYpdzjxk4h/yC3f9GdsGdx
-         Pojy5CqR6xScuMhKCeDKyNwb8RTUMmypnJ3ajQzO27mgbqPjFZ6ZV9FXF51+eVWaqt
-         ETPHA4bBErhomAJ4vLxRVO//+bQ/TXKaX22J0lCZqxUZR61HALQhsr0sLGOCISHvqW
-         rSYvbhdBky3jFw2qHnFTmSSQQI2ZWOwYuCqGC+0lfCLNudYej/lXm8baAxzcUspO7J
-         z5ewasZ6p56SXd6Zm8e57rhYAv4nQqWKSav4mmmoQOMZxF4z2kcnWLkAALeu088sy2
-         6COTccxstYU5g==
-Received: by mail-ej1-f51.google.com with SMTP id mj10so40562038ejb.5;
-        Wed, 10 Mar 2021 10:12:10 -0800 (PST)
-X-Gm-Message-State: AOAM530ICtRZ/i7E09b/z7aBxxcUkC30SAxOtfzajQDxo1wrf95jbpDl
-        W29NKI093SrFjzuubEvyapBU2eW2KAuWRqHyrw==
-X-Google-Smtp-Source: ABdhPJwxdSLQjOW6L+TI3np6QegsvPUL5FBbauPuDU3UjA/1Qy9TM9iKBMw0I7xF343nV273xSof46KLVFoHKsX+44o=
-X-Received: by 2002:a17:906:c405:: with SMTP id u5mr4947715ejz.341.1615399928619;
- Wed, 10 Mar 2021 10:12:08 -0800 (PST)
+        id S232915AbhCJSNQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 13:13:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232330AbhCJSNH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 13:13:07 -0500
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3BD6C061760
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 10:13:06 -0800 (PST)
+Received: by mail-ot1-x32a.google.com with SMTP id v12so17268770ott.10
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 10:13:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pHWXTwbw9p9uf8ft6VKP7REHTpiAGXpesgcV8HDhEdc=;
+        b=rQ4z0maaHQrOGoltyEtGi+HBeho+EyAB0vE97faSaA9m8+shVlUUHmeeozrjMXp9su
+         BuPo2Bh4A/fvXda9mixvifOAV9qCKZs9EsjR1//Nn4sZBA9b8Q8TSMopxHpeCfZqCELn
+         EKab7qBAIFfWf6JkcV+PmvtG4oWmw3FBKijBkqgZd0sqkp3Q1M57pVD/Q1pw7DUTkaCU
+         qzWzWUETOIYecznvO/oN9cobPvIXL4whx1UWIMK2o/OSlyIerx/+lJeUw29yiXiU48X3
+         mwwz9dKYTyQJ6wDFziYUKbZe8qoI8QXnGCHCtJ3erjdmnDcMKn6Ny2+mgQH1vdhiGQx4
+         Ahxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pHWXTwbw9p9uf8ft6VKP7REHTpiAGXpesgcV8HDhEdc=;
+        b=KY3sXTofyFHa6d6gW6NBx06nTb+NZYgUA/ZsRYgFcW47//gxoeGXBzIV2meW5fIZRV
+         +x7UFLXEsJXiLeAhEpS4RY0XvHRLALbv94mXGWm1/EQ8OOrnktkogzmsio3E7Pnraw+9
+         dfgIkvA5tehJdpTFXKAPZTb8xqbgnrBBOiuXwnsSKFAnLtZb3uFlE2cviZg/LRKnGKLr
+         TY9MagJUonqv8kkgaP8a1NJtbye15qA2nwMiG3mggXqWhBudvnMKSe3jgVEqNT49+Em8
+         7Mnio+C7sk7h8RgCkdfZ9aJwmFHXnT6sT1iR9ghRSwnd+liTb6mHTrGB6fNuZj9zEu7s
+         9E4Q==
+X-Gm-Message-State: AOAM530G1O9arPrNTguF5CIMCpMPvugL04ADRf42LMyI1id8HCn8+JW8
+        DEKyxdkPTbCgtKJrjN9yPlgpFg==
+X-Google-Smtp-Source: ABdhPJzdjuvepmnxQb7O5JaPX1+qMlv8VGrocqBj0XnMpha7kZXxtTo+hL1f1I+OtfGYaMriPDcLqQ==
+X-Received: by 2002:a9d:3f6:: with SMTP id f109mr3471150otf.187.1615399986315;
+        Wed, 10 Mar 2021 10:13:06 -0800 (PST)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id v7sm70768otq.62.2021.03.10.10.13.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Mar 2021 10:13:05 -0800 (PST)
+Date:   Wed, 10 Mar 2021 12:13:04 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Shawn Guo <shawn.guo@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: qcom: support gpio_chip .set_config call
+Message-ID: <YEkMMIkSAe1yA7KN@builder.lan>
+References: <20210303131858.3976-1-shawn.guo@linaro.org>
 MIME-Version: 1.0
-References: <20210309142000.3034451-1-linus.walleij@linaro.org>
-In-Reply-To: <20210309142000.3034451-1-linus.walleij@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 10 Mar 2021 11:11:57 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqJbCPstpx_Q_JUF2UDtMaNz6-VGf+oDP374t0CfEYqtyg@mail.gmail.com>
-Message-ID: <CAL_JsqJbCPstpx_Q_JUF2UDtMaNz6-VGf+oDP374t0CfEYqtyg@mail.gmail.com>
-Subject: Re: [PATCH] ARM/gpio/dt-bindings: Clean out gpio alias from CLPS711X
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Alexander Shiyan <shc_work@mail.ru>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210303131858.3976-1-shawn.guo@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 9, 2021 at 7:20 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> This removes the use of GPIO alias from the CLPS711X GPIO
-> driver.
->
-> This driver only use it to add quirks to two GPIO blocks
-> for which we can reuse the standard property "ngpios" and
-> define a new Cirrus quirk to do it properly and get rid
-> of the alias.
->
-> The patch changes the driver, the one DTS file and the
-> bindings in one go: my apologies but this is a lockstep
-> solution to avoid any unclarities or inbetween states.
+On Wed 03 Mar 07:18 CST 2021, Shawn Guo wrote:
 
-in between
+> In case of ACPI boot, GPIO core does the right thing to parse GPIO pin
+> configs from ACPI table, and call into gpio_chip's .set_config hook for
+> setting them up.  It enables such support on qcom platform by using
+> generic config function, which in turn calls into .pin_config_set of
+> pinconf for setting up hardware.  For qcom platform, it's possible to
+> reuse pin group config functions for pin config hooks, because every pin
+> is maintained as a single group.
+> 
+> This change fixes the problem that Touchpad of Lenovo Flex 5G laptop
+> doesn't work with ACPI boot, because PullUp config of Touchpad GpioInt
+> pin is not set up by the kernel.
+> 
 
-I don't think a single patch really buys anything, but okay.
+Per Linus comment that this is how others are doing it, I guess we can
+do it too...
 
->
-> Old device trees with aliases are supported but will
-> produce a warning in dmesg and new properties will take
-> precedence.
->
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Link: https://lore.kernel.org/linux-gpio/CACRpkda8+Lvz+c=ohXsEDkNSQ63hPo613P4p_90fvKyC_kQ_GA@mail.gmail.com/T/#t
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 > ---
-> This is a result of a discussion with Rob about whether
-> we can get rid of GPIO aliases. I think we can at least
-> get rid of this one.
-> ---
->  .../bindings/gpio/gpio-clps711x.txt           | 10 +++---
->  arch/arm/boot/dts/ep7209.dtsi                 |  8 ++---
->  drivers/gpio/gpio-clps711x.c                  | 36 +++++++++----------
->  3 files changed, 26 insertions(+), 28 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt b/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
-> index 0a304ad29d81..c1ff20107607 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
-> @@ -11,15 +11,13 @@ Required properties:
->      0 = active high
->      1 = active low
->
-> -Note: Each GPIO port should have an alias correctly numbered in "aliases"
-> -node.
-> +Optional properties:
-> +- cirrus,inverted-polarity: The polarity of the GPIO lines is
-> +  inverted in hardware.
-> +- ngpios: Number of available GPIO lines 0..n-1, see gpio.txt
->
->  Example:
->
-> -aliases {
-> -       gpio0 = &porta;
-> -};
-> -
->  porta: gpio@80000000 {
->         compatible = "cirrus,ep7312-gpio","cirrus,ep7209-gpio";
->         reg = <0x80000000 0x1>, <0x80000040 0x1>;
-> diff --git a/arch/arm/boot/dts/ep7209.dtsi b/arch/arm/boot/dts/ep7209.dtsi
-> index 365931f8b48d..7d0f04959fdd 100644
-> --- a/arch/arm/boot/dts/ep7209.dtsi
-> +++ b/arch/arm/boot/dts/ep7209.dtsi
-> @@ -11,10 +11,6 @@ / {
->         compatible = "cirrus,ep7209";
->
->         aliases {
-> -               gpio0 = &porta;
-> -               gpio1 = &portb;
-> -               gpio3 = &portd;
-> -               gpio4 = &porte;
->                 serial0 = &uart1;
->                 serial1 = &uart2;
->                 spi0 = &spi;
-> @@ -72,6 +68,8 @@ portd: gpio@80000003 {
->                         reg = <0x80000003 0x1 0x80000043 0x1>;
->                         gpio-controller;
->                         #gpio-cells = <2>;
-> +                       /* This bank have all lines polarity inverted */
-> +                       cirrus,inverted-polarity;
->                 };
->
->                 porte: gpio@80000083 {
-> @@ -79,6 +77,8 @@ porte: gpio@80000083 {
->                         reg = <0x80000083 0x1 0x800000c3 0x1>;
->                         gpio-controller;
->                         #gpio-cells = <2>;
-> +                       /* Only 3 GPIOs available on this bank */
-> +                       ngpios = <3>;
->                 };
->
->                 syscon1: syscon@80000100 {
-> diff --git a/drivers/gpio/gpio-clps711x.c b/drivers/gpio/gpio-clps711x.c
-> index 75f6f8d4323e..d2a20dc8f5d9 100644
-> --- a/drivers/gpio/gpio-clps711x.c
-> +++ b/drivers/gpio/gpio-clps711x.c
-> @@ -16,14 +16,11 @@ static int clps711x_gpio_probe(struct platform_device *pdev)
->         void __iomem *dat, *dir;
->         struct gpio_chip *gc;
->         int err, id;
-> +       u32 ngpios;
->
->         if (!np)
->                 return -ENODEV;
->
-> -       id = of_alias_get_id(np, "gpio");
-> -       if ((id < 0) || (id > 4))
-> -               return -ENODEV;
-> -
->         gc = devm_kzalloc(&pdev->dev, sizeof(*gc), GFP_KERNEL);
->         if (!gc)
->                 return -ENOMEM;
-> @@ -36,29 +33,32 @@ static int clps711x_gpio_probe(struct platform_device *pdev)
->         if (IS_ERR(dir))
->                 return PTR_ERR(dir);
->
-> -       switch (id) {
-> -       case 3:
-> +       /* This ID will be negative if there is no alias node */
-> +       id = of_alias_get_id(np, "gpio");
+> Changes for v2:
+> - Add pin config functions that simply call into group config ones.
+> 
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index af6ed7f43058..a59bb4cbd97e 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -489,10 +489,24 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
+>  	return 0;
+>  }
+>  
+> +static int msm_config_pin_get(struct pinctrl_dev *pctldev, unsigned int pin,
+> +			      unsigned long *config)
+> +{
+> +	return msm_config_group_get(pctldev, pin, config);
+> +}
 > +
-> +       if (id >= 0)
-> +               dev_info(&pdev->dev,
-> +                        "DT is using deprecated alias, please remove this and "
-> +                        "replace with proper node attributes\n");
+> +static int msm_config_pin_set(struct pinctrl_dev *pctldev, unsigned pin,
+> +			      unsigned long *configs, unsigned num_configs)
+> +{
+> +	return msm_config_group_set(pctldev, pin, configs, num_configs);
+> +}
 > +
-> +       if (of_property_read_bool(np, "cirrus,inverted-polarity") ||
-> +           id == 3)
->                 /* PORTD is inverted logic for direction register */
->                 err = bgpio_init(gc, &pdev->dev, 1, dat, NULL, NULL,
->                                  NULL, dir, 0);
-> -               break;
-> -       default:
-> +       else
->                 err = bgpio_init(gc, &pdev->dev, 1, dat, NULL, NULL,
->                                  dir, NULL, 0);
-> -               break;
-> -       }
-> -
->         if (err)
->                 return err;
->
-> -       switch (id) {
-> -       case 4:
-> -               /* PORTE is 3 lines only */
-> +       if (id == 4)
-> +               /* This is just for compatibility with older device trees */
->                 gc->ngpio = 3;
-> -               break;
-> -       default:
-> -               break;
-> -       }
-> +
-> +       if (!of_property_read_u32(np, "ngpios", &ngpios))
-> +               /* PORTE is 3 lines only */
-> +               gc->ngpio = ngpios;
-
-Just this should work:
-
-of_property_read_u32(np, "ngpios", &gc->ngpio);
-
-The variable won't be touched on error.
-
-Rob
+>  static const struct pinconf_ops msm_pinconf_ops = {
+>  	.is_generic		= true,
+>  	.pin_config_group_get	= msm_config_group_get,
+>  	.pin_config_group_set	= msm_config_group_set,
+> +	.pin_config_get		= msm_config_pin_get,
+> +	.pin_config_set		= msm_config_pin_set,
+>  };
+>  
+>  static int msm_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+> @@ -717,6 +731,7 @@ static const struct gpio_chip msm_gpio_template = {
+>  	.get_direction    = msm_gpio_get_direction,
+>  	.get              = msm_gpio_get,
+>  	.set              = msm_gpio_set,
+> +	.set_config       = gpiochip_generic_config,
+>  	.request          = gpiochip_generic_request,
+>  	.free             = gpiochip_generic_free,
+>  	.dbg_show         = msm_gpio_dbg_show,
+> -- 
+> 2.17.1
+> 
