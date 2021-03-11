@@ -2,81 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 302DD3370A5
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 11:57:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B7FD3370A9
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 11:58:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232509AbhCKK5F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Mar 2021 05:57:05 -0500
-Received: from mga09.intel.com ([134.134.136.24]:12909 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232349AbhCKK4y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 11 Mar 2021 05:56:54 -0500
-IronPort-SDR: dyFnvM5/RCqe6Ojvj0BoaplBtttKoriBjQp9Nf4YmctSwH5L3r+QIBa9EP2kIkKfTf2LS3aqtv
- 0Aa4hCTzSNOA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9919"; a="188746727"
-X-IronPort-AV: E=Sophos;i="5.81,240,1610438400"; 
-   d="scan'208";a="188746727"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2021 02:56:53 -0800
-IronPort-SDR: w1koGQl49zidT8+B5C2zg7sqXrdTN5ZtvAQkKV451pyGewyHi9U2zvOgfCt+l6ayWpdFNll3TO
- sXRyENlWn37Q==
-X-IronPort-AV: E=Sophos;i="5.81,240,1610438400"; 
-   d="scan'208";a="386977414"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2021 02:56:50 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lKIzn-00BYkk-Db; Thu, 11 Mar 2021 12:56:47 +0200
-Date:   Thu, 11 Mar 2021 12:56:47 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 1/5] irqdomain: Introduce irq_domain_create_simple()
- API
-Message-ID: <YEn3b4fVolkcrWXq@smile.fi.intel.com>
-References: <20210304201253.14652-1-andriy.shevchenko@linux.intel.com>
- <20210304201253.14652-2-andriy.shevchenko@linux.intel.com>
- <CACRpkdbA+Q24JV3Uct2dHtGfBb1AaF4uHwCbzcrOFAxoGQ4wXQ@mail.gmail.com>
+        id S232493AbhCKK5h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Mar 2021 05:57:37 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54251 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232349AbhCKK5c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Mar 2021 05:57:32 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1lKJ0U-0000MN-Ub; Thu, 11 Mar 2021 10:57:31 +0000
+To:     Michal Simek <michal.simek@xilinx.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Subject: re: pinctrl: core: Handling pinmux and pinconf separately
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <d66e78e3-2000-611b-cd74-8a61461153e8@canonical.com>
+Date:   Thu, 11 Mar 2021 10:57:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbA+Q24JV3Uct2dHtGfBb1AaF4uHwCbzcrOFAxoGQ4wXQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 12:15:29AM +0100, Linus Walleij wrote:
-> On Thu, Mar 4, 2021 at 9:13 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Linus Walleij pointed out that ird_domain_add_simple() gained
-> > additional functionality and can't be anymore replaced with
-> > a simple conditional. In preparation to upgrade GPIO library
-> > to use fwnode, introduce irq_domain_create_simple() API which is
-> > functional equivalent to the existing irq_domain_add_simple(),
-> > but takes a pointer to the struct fwnode_handle as a parameter.
-> >
-> > While at it, amend documentation to mention irq_domain_create_*()
-> > functions where it makes sense.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Hi,
 
-Thanks! It's v6 now :-)
+Static analysis on linux-next with Coverity has found a potential issue
+in drivers/pinctrl/core.c with the following commit:
 
--- 
-With Best Regards,
-Andy Shevchenko
+commit 0952b7ec1614abf232e921aac0cc2bca8e60e162
+Author: Michal Simek <michal.simek@xilinx.com>
+Date:   Wed Mar 10 09:16:54 2021 +0100
 
+    pinctrl: core: Handling pinmux and pinconf separately
 
+The analysis is as follows:
+
+1234 /**
+1235  * pinctrl_commit_state() - select/activate/program a pinctrl state
+to HW
+1236  * @p: the pinctrl handle for the device that requests configuration
+1237  * @state: the state handle to select/activate/program
+1238  */
+1239 static int pinctrl_commit_state(struct pinctrl *p, struct
+pinctrl_state *state)
+1240 {
+1241        struct pinctrl_setting *setting, *setting2;
+1242        struct pinctrl_state *old_state = p->state;
+
+    1. var_decl: Declaring variable ret without initializer.
+
+1243        int ret;
+1244
+
+    2. Condition p->state, taking true branch.
+
+1245        if (p->state) {
+1246                /*
+1247                 * For each pinmux setting in the old state, forget
+SW's record
+1248                 * of mux owner for that pingroup. Any pingroups
+which are
+1249                 * still owned by the new state will be re-acquired
+by the call
+1250                 * to pinmux_enable_setting() in the loop below.
+1251                 */
+
+    3. Condition 0 /* !!(!__builtin_types_compatible_p() &&
+!__builtin_types_compatible_p()) */, taking false branch.
+    4. Condition !(&setting->node == &p->state->settings), taking true
+branch.
+    7. Condition 0 /* !!(!__builtin_types_compatible_p() &&
+!__builtin_types_compatible_p()) */, taking false branch.
+    8. Condition !(&setting->node == &p->state->settings), taking true
+branch.
+    11. Condition 0 /* !!(!__builtin_types_compatible_p() &&
+!__builtin_types_compatible_p()) */, taking false branch.
+    12. Condition !(&setting->node == &p->state->settings), taking false
+branch.
+
+1252                list_for_each_entry(setting, &p->state->settings,
+node) {
+
+    5. Condition setting->type != PIN_MAP_TYPE_MUX_GROUP, taking true
+branch.
+    9. Condition setting->type != PIN_MAP_TYPE_MUX_GROUP, taking true
+branch.
+1253                        if (setting->type != PIN_MAP_TYPE_MUX_GROUP)
+    6. Continuing loop.
+    10. Continuing loop.
+
+1254                                continue;
+1255                        pinmux_disable_setting(setting);
+1256                }
+1257        }
+1258
+1259        p->state = NULL;
+1260
+1261        /* Apply all the settings for the new state - pinmux first */
+
+    13. Condition 0 /* !!(!__builtin_types_compatible_p() &&
+!__builtin_types_compatible_p()) */, taking false branch.
+    14. Condition !(&setting->node == &state->settings), taking true branch.
+1262        list_for_each_entry(setting, &state->settings, node) {
+    15. Switch case value PIN_MAP_TYPE_CONFIGS_PIN.
+
+1263                switch (setting->type) {
+1264                case PIN_MAP_TYPE_MUX_GROUP:
+1265                        ret = pinmux_enable_setting(setting);
+1266                        break;
+1267                case PIN_MAP_TYPE_CONFIGS_PIN:
+1268                case PIN_MAP_TYPE_CONFIGS_GROUP:
+
+    16. Breaking from switch.
+
+1269                        break;
+1270                default:
+1271                        ret = -EINVAL;
+1272                        break;
+1273                }
+1274
+
+    Uninitialized scalar variable (UNINIT)
+    17. uninit_use: Using uninitialized value ret.
+
+1275                if (ret < 0)
+1276                        goto unapply_new_state;
+
+For the PIN_MAP_TYPE_CONFIGS_PIN and PIN_MAP_TYPE_CONFIGS_GROUP
+setting->type cases the loop can break out with ret not being set. Since
+ret has not been initialized it the ret < 0 check is checking against an
+uninitialized value.
+
+I was not sure if the PIN_MAP_TYPE_CONFIGS_PIN and
+PIN_MAP_TYPE_CONFIGS_GROUP cases should be setting ret and if so, what
+the value of ret should be set to (is it an error condition or not?). Or
+should ret be initialized to 0 or a default error value at the start of
+the function.
+
+Hence I'm reporting this issue.
+
+Colin
