@@ -2,80 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4246336848
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 01:02:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C44CE33685C
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 01:08:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbhCKABj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Mar 2021 19:01:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42566 "EHLO
+        id S229689AbhCKAIE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Mar 2021 19:08:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbhCKAB1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 19:01:27 -0500
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F57BC061760
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 16:01:26 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id u4so36701117lfs.0
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 16:01:26 -0800 (PST)
+        with ESMTP id S229632AbhCKAHz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Mar 2021 19:07:55 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A53C061760
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 16:07:54 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id k9so36647503lfo.12
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Mar 2021 16:07:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IeMuJLlNvvieU0nCoF0p261OzcOR4TpS4BUALfVQCNY=;
-        b=kJNJOvaqf6DPbPBxzU9Ajx7SFKSyoKyAYC+Fbk35khhT7WK1YasoIjCfB67rcGcPR4
-         2NgaI5oZfZmKwvvemvZ8p91tcZOQKMFE+/HEBI4AsrJI7psGfOJlFOwzLHrzzK7Q6Z+P
-         134Z9oLIN32BDXi5Nx0CpllyOMX+MZGthLGHqp5u78TYN9MOgP9Alfid8M/CUZSJjuox
-         GXevOlZIijEwgFZne+7Evm8PyjK4qlkIzUl+qwDB/dtQv+JpljgsLbiFvYTioVfEYKiN
-         blE4rIBxoHr0pOG5mqehx0zBMd24Ja3N+nhe0L1Htf5sdGgVJ+mCo+RwskCI6ZSuZtVw
-         0LYw==
+        bh=kgq4Y5PHhYdVA57Cks4DEvoLb2HPLnl2GjvjQyQnhTE=;
+        b=BJAs+tLZlJi11RsuQGLvzja6T+eulKzxor3UQfPfxutgav9ImPpdFrWrSDP9yKsl19
+         CexOX3SackIZzgCPwC1QJVVO4agnzUBfiz2YcfW3X+Cpf5UJkNZm3AXKJ+IM+ywtdCDQ
+         Vz+XpPv93qc/UVOsqTQGOi4pTmWzXAdyx3s2omaCbkCBKIqR3tZyDZtJw+99zLh8gwjG
+         5qREnabnzZFLMnYmaP1/nTWAE+/ixA6REu8T69DBNI8lB2SVoVrXVnFL0JFsBObaDhlx
+         ndm3ARMdXji28awuXA7o0K4H6H5J4Q67WH5JQgIotEziPVv4Dgbq63bLgC+eBgrrsjhh
+         hMWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IeMuJLlNvvieU0nCoF0p261OzcOR4TpS4BUALfVQCNY=;
-        b=DCKpIsKW+vzPfM70csbtwCGChHkfvAS+HN8m7dciV8+r3oKyEgYNTkIui7C2hnzwii
-         uBc3WpdOGsmUKaQqO1VbW9Y+cdQmG478FK7aKNj9lSSXWq+WM6AafNc4OECMNzTcYlIc
-         yBBcVkM6OYcQNKCd9LMDZYEJCvPI3aN6jKf9WXOhOdncex0WX1uul1jt6aI2NxTbl8++
-         cNrO7nKTXXXK75Rrp/MM8Ji7gT/qpDW+7QkauGvaz4wMmdrZ3CjATmY42Nj9TpVtvn3R
-         j/HSii7zKYZ04kcT5tTC88wyhxcKZptpXeERKSya6mHpv9Wyf4OtR7NxsUiFuCRH6eUz
-         SBOg==
-X-Gm-Message-State: AOAM5303egFHo2kxOdYaPMhL1sQpUzoDTuTK5fqtEcKzzfMC0OZImy51
-        /ciNCT/CWiHhhVBYv6JrbQFcFmxT0rcILSgdrT/rZA==
-X-Google-Smtp-Source: ABdhPJz0s3K8XD8e9qmL+DuSQtu5mE1rFISHURIsYyg1KDlueFtfiI8jH4iW67GeAbcmuuFK0b1J2cbC7jHLqG3+pxw=
-X-Received: by 2002:a05:6512:10d1:: with SMTP id k17mr544816lfg.649.1615420884885;
- Wed, 10 Mar 2021 16:01:24 -0800 (PST)
+        bh=kgq4Y5PHhYdVA57Cks4DEvoLb2HPLnl2GjvjQyQnhTE=;
+        b=Rio1SpzeCzdIRvN/CyibVt4FpfOw+zGMerRUvXZhVeQqkSfMFRLwvaaGQEX8q7F5zm
+         rSgZmE+AdNuMPa3Au17MruznGaz6+mDUXfOOcm7h5KR8DULO4uUtXKs8GmiZaTysze6w
+         /oKFgEo5jS8hr8UDlZt2dXanNTFGE7kzX54l/zojhF26ENq0XQyqvwEMbxFHW7MWhHcB
+         3DfRs1jAnFJZKJtXjK50b1G1zm0TlCwRLxmsH6xBYDSdNK5pbNyLgn1e2eRVsqlHWaxZ
+         VL5Zz88ETFalF8Duk5tZp7nBM8Gz7fx4U1NBRv0DZTDFuSvreBcDOaSRNNS7m1YQ0E+3
+         manA==
+X-Gm-Message-State: AOAM532xNZdcM+4nh98aPdqXb3RC+y80LdX+WcL5GAC4jImdExm+I+ba
+        JhJMVgJhNzSQUxoaTeL4h1cwTwEOtTbUKknlz2+KNA==
+X-Google-Smtp-Source: ABdhPJwUappJtdm8yRMVifYLvbx0dllat4gXBrBmitf8oYZjjQAAkBgV6Ie6yTsSfetKd2qgPAzfg549AzQnJ2grqTA=
+X-Received: by 2002:a19:4c08:: with SMTP id z8mr579121lfa.157.1615421273415;
+ Wed, 10 Mar 2021 16:07:53 -0800 (PST)
 MIME-Version: 1.0
-References: <cfbe01f791c2dd42a596cbda57e15599969b57aa.1615364211.git.michal.simek@xilinx.com>
-In-Reply-To: <cfbe01f791c2dd42a596cbda57e15599969b57aa.1615364211.git.michal.simek@xilinx.com>
+References: <20210309205921.15992-1-brgl@bgdev.pl> <20210309205921.15992-9-brgl@bgdev.pl>
+In-Reply-To: <20210309205921.15992-9-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 11 Mar 2021 01:01:14 +0100
-Message-ID: <CACRpkdZMW1NQxvzQv3uDDoC4uxGpDUFocfP5i+Ya+n5RyQp69A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: core: Handling pinmux and pinconf separately
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Thu, 11 Mar 2021 01:07:42 +0100
+Message-ID: <CACRpkdbdRrcTfhzvAMbBxyrvUQMJfc3FWJhgtLLGH1+W796Dgw@mail.gmail.com>
+Subject: Re: [PATCH v3 08/11] gpio: sim: new testing module
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 9:16 AM Michal Simek <michal.simek@xilinx.com> wrote:
+On Tue, Mar 9, 2021 at 9:59 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> Right now the handling order depends on how entries are coming which is
-> corresponding with order in DT. We have reached the case with DT overlays
-> where conf and mux descriptions are exchanged which ends up in sequence
-> that firmware has been asked to perform configuration before requesting the
-> pin.
-> The patch is enforcing the order that pin is requested all the time first
-> followed by pin configuration. This change will ensure that firmware gets
-> requests in the right order.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Implement a new, modern GPIO testing module controlled by configfs
+> attributes instead of module parameters. The goal of this driver is
+> to provide a replacement for gpio-mockup that will be easily extensible
+> with new features and doesn't require reloading the module to change
+> the setup.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This looks right to me so I simply applied the patch so it  gets some
-testing in linux-next.
-
-If there are problems on some platform(s) we will get to know.
+This looks really useful and helpful and clean to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
