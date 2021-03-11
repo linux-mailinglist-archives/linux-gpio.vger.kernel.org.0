@@ -2,171 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDC9733750C
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 15:06:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA0D43375E4
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 15:40:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233722AbhCKOGO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Mar 2021 09:06:14 -0500
-Received: from mga18.intel.com ([134.134.136.126]:1767 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233919AbhCKOF4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 11 Mar 2021 09:05:56 -0500
-IronPort-SDR: LLOlWeqJ2R6IWeE6qFcuO0Lt0LZWC3ba+jwDSds4+2vw6eqjOezJ3UoFOTUn5/AGrKnax0uYXD
- +Fjl+pLVlCow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9920"; a="176264401"
-X-IronPort-AV: E=Sophos;i="5.81,240,1610438400"; 
-   d="scan'208";a="176264401"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2021 06:05:55 -0800
-IronPort-SDR: beH41DaIkSTPgZ7fkZKgWgj7OcFihBIjBALE2++fLjM009HKYLXx9z/+WuzvSec3YCx1CW0QFD
- KfpD8vXaKsFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,240,1610438400"; 
-   d="scan'208";a="387020267"
-Received: from lkp-server02.sh.intel.com (HELO ce64c092ff93) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2021 06:05:54 -0800
-Received: from kbuild by ce64c092ff93 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lKLwn-0000nk-Aq; Thu, 11 Mar 2021 14:05:53 +0000
-Date:   Thu, 11 Mar 2021 22:05:09 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:fixes] BUILD SUCCESS
- 5739ffc10d047d190bf53a6dddbf5e5a9c94c373
-Message-ID: <604a2395.oFVn1xKqk1EMHVMD%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S233065AbhCKOj6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Mar 2021 09:39:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233583AbhCKOjk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Mar 2021 09:39:40 -0500
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19DDC061574
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Mar 2021 06:39:39 -0800 (PST)
+Received: by mail-lf1-x12d.google.com with SMTP id k9so40119004lfo.12
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Mar 2021 06:39:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aRX3JxL9ArLTMgxvg9Vap8aqfjFmbYdIVVaZ27whFws=;
+        b=o6Zm2K0Fr8q5q9PtKQteoTYia0u2gqkf/Nfpmd9Ysmr6n38jRx+78XcJwzjUSg91Rb
+         A23aGhbCJa6L8HeF1S/Ub9dRlfL8ykT8HfDZAX5H3/HFAhJqrC/ojzdfTLH0krNFL2bX
+         x/gzA5b10kGzYV9MXCZLGuO5Z/OEXlqmEovymnceQermlW1yLXtN5LuFqTn0/NOEmyBm
+         BwPrIhPxh8DdzHbxYrItrFOBf14Et4bQuvVQjid9zzJU3DTdCqTvkt3GVRSdohDBMOc2
+         9VBO5DPPpJ1mIrqzdNVTxHA40GFPoXACkldx1qnJfxKFuy1RmZce7QNkb7ytkPZfFdjc
+         EsVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aRX3JxL9ArLTMgxvg9Vap8aqfjFmbYdIVVaZ27whFws=;
+        b=Q8Xh2UA/B9PuzbIc83zNr9h1Ge/fWimzSjgdtA/Se7ZhA0VDC+PzlztXo8we5QNeNu
+         fPzBKD9I0ygha32iZvXv7ClnbyHXJWNiK1rIOSMGvFjqc5Db9X3S+IYy5oFW3bl0CGG5
+         o4hTpQQIf32OIR3RVingsXeXjlwYGzsQEV9fBpFhoPdW8aOIQxlr9K45S3F6yB9nHuh7
+         gQYS/kWU++vK2W7BMUyVoLMZKMvzGi9GOYcOA8oPgXYixr9Edbd1NWCSZoulWyBLTGk7
+         weWQK+9pttuURBk4Tp8HfnA2hxfZI8Ywap8plGp6hiw6HNKh2YrsMRk7O5g22DsrEYIw
+         ZdAw==
+X-Gm-Message-State: AOAM533Svm8kFvdVWTtMa3sBdNg0RstD8Wax4gy9PeqP8/vw0ucD+hD9
+        GFSKA+3KTO+jTs4iqPQjjNTFdsZ7uu/UspISqenhDw==
+X-Google-Smtp-Source: ABdhPJzL7b1QCjpPuDvu5hMDtVElSv+oLOTPmam9LzLVeTqzRxH6pQkh+F02MtmXCazZCgtaLEU618wN5tWM9Pdnu3Q=
+X-Received: by 2002:ac2:4d95:: with SMTP id g21mr2608064lfe.29.1615473578223;
+ Thu, 11 Mar 2021 06:39:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <d66e78e3-2000-611b-cd74-8a61461153e8@canonical.com>
+ <5c08bd61-688f-e95b-5fa3-584f190ed4bf@xilinx.com> <bf508c29-4a51-5f97-8459-06c1fe74b60f@canonical.com>
+ <f6cd3eb3-c8ce-9b40-e5dc-82b6748d4084@xilinx.com>
+In-Reply-To: <f6cd3eb3-c8ce-9b40-e5dc-82b6748d4084@xilinx.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 11 Mar 2021 15:39:27 +0100
+Message-ID: <CACRpkdazxVZCwLK6sJb7-hqhzuWs-HJ=2yiVr-UX4+AoEAWAZw@mail.gmail.com>
+Subject: Re: pinctrl: core: Handling pinmux and pinconf separately
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 5739ffc10d047d190bf53a6dddbf5e5a9c94c373  Merge tag 'intel-pinctrl-v5.12-2' of gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
+On Thu, Mar 11, 2021 at 12:28 PM Michal Simek <michal.simek@xilinx.com> wrote:
 
-elapsed time: 721m
+> > It will take me 2 hours to re-run the analysis, but from eyeballing the
+> > code I think the assignments will fix this.
+>
+> would be good if you can rerun it and get back to us on this.
+> I will wait if something else will pop up and then will send v2 with
+> this that Linus can apply this one instead.
 
-configs tested: 109
-configs skipped: 2
+Just send an incremental patch, that reflects the issues found
+in a nice way in the development history.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                 mpc836x_rdk_defconfig
-sh                           se7724_defconfig
-mips                        omega2p_defconfig
-arm                        oxnas_v6_defconfig
-arm                       versatile_defconfig
-sh                           sh2007_defconfig
-arm                           viper_defconfig
-mips                        vocore2_defconfig
-arc                          axs103_defconfig
-sh                          lboxre2_defconfig
-sh                          rsk7203_defconfig
-openrisc                         alldefconfig
-powerpc                      obs600_defconfig
-sparc                               defconfig
-ia64                         bigsur_defconfig
-arm                       imx_v4_v5_defconfig
-mips                           ip28_defconfig
-m68k                             alldefconfig
-arm                          moxart_defconfig
-powerpc                      ppc6xx_defconfig
-sh                         ecovec24_defconfig
-arm                            zeus_defconfig
-m68k                          sun3x_defconfig
-powerpc                    gamecube_defconfig
-powerpc                     tqm8548_defconfig
-sh                     magicpanelr2_defconfig
-arm                  colibri_pxa300_defconfig
-powerpc                  mpc866_ads_defconfig
-m68k                        m5307c3_defconfig
-mips                          malta_defconfig
-arm                          badge4_defconfig
-mips                      pic32mzda_defconfig
-powerpc                          allmodconfig
-sh                             shx3_defconfig
-powerpc                        cell_defconfig
-arm                            mps2_defconfig
-arm                         hackkit_defconfig
-powerpc                 mpc8272_ads_defconfig
-powerpc                     pseries_defconfig
-arm                            xcep_defconfig
-sh                              ul2_defconfig
-mips                      maltaaprp_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                               tinyconfig
-i386                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20210311
-i386                 randconfig-a005-20210311
-i386                 randconfig-a003-20210311
-i386                 randconfig-a002-20210311
-i386                 randconfig-a004-20210311
-i386                 randconfig-a006-20210311
-i386                 randconfig-a013-20210311
-i386                 randconfig-a016-20210311
-i386                 randconfig-a011-20210311
-i386                 randconfig-a014-20210311
-i386                 randconfig-a015-20210311
-i386                 randconfig-a012-20210311
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a011-20210311
-x86_64               randconfig-a016-20210311
-x86_64               randconfig-a013-20210311
-x86_64               randconfig-a015-20210311
-x86_64               randconfig-a014-20210311
-x86_64               randconfig-a012-20210311
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Yours,
+Linus Walleij
