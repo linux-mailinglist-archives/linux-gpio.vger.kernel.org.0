@@ -2,87 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93A59337050
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 11:43:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 302DD3370A5
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 11:57:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232227AbhCKKnN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Mar 2021 05:43:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232224AbhCKKml (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Mar 2021 05:42:41 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE623C061574;
-        Thu, 11 Mar 2021 02:42:40 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id d23so6793267plq.2;
-        Thu, 11 Mar 2021 02:42:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gIYOMYOKVo+mGI0uXGsSplZ/o4gRCgxMr3FfOW9mCVo=;
-        b=tFGfT19FBFVyyK3VQA4Wq7SpOr38r2IGnV+qwMcK4MsVW4cU7+StpniuRufqxRD4lt
-         FlHYF6oNxGEmCPZ33aEbzkOgGsL6UVmvvQSDNB+utQ60/RUrWSePFy5+tVzPgWrQNN8x
-         euwzsttAPS6k0b7vebnjOCwpC2ffNox5S8TEyyJWpTHwQurDCZsey3QvCUD7bM70RM0B
-         8xYgtwE3b7VBEpGMD/32n0gKK0dw+lSvJ0qPxlibrMnuruBg8cZXgziweSPtkefDHsC1
-         gOu70GU7hzLtqtMBCk/zB6J8J1HQr82JeJelXPCc7AzNC6SwyhVRqUm9LLvKhSGNzwMB
-         r8wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gIYOMYOKVo+mGI0uXGsSplZ/o4gRCgxMr3FfOW9mCVo=;
-        b=ONAv1r+uNvliR66LKk/R92XReP+xicU4y0Xb8iaPcSRFK3DSqR4x76BmZcFeHiFh6j
-         lRcKgZZAQ9WmIUtwuNrL2U4JfrrrUMsBMQ3c00WHUGS6VTbwAKWxIANitSZwh9N7yomV
-         Qkgf45YvizVXpyjM+sIt0p7Lo8AgzMJi7+0Kw7zYHl4W6upghB40T1m1Qc6lnKRZ2u+y
-         LJ2lVD2XakWHaESCx8x0z+KTsZiA/mK/Q+xOdujFZv86rfpyP6y1Yb+uaF1a8Nw3dp2q
-         JaVvhP6/O6WxAX1Ah7SiyUnZTT551WqkmYXNFxNrIBNemXyvNT1vrjtnXfWsJssDrkoP
-         +bGg==
-X-Gm-Message-State: AOAM531sNJ8UMvIpgqX+Tz1Et9Q1SLUFzclszvxcbT88CHAbFS6P/6aj
-        oI9Xp3VJaB2JCiMLcG75xO2K5PjIcv9ZRvBy+Wg=
-X-Google-Smtp-Source: ABdhPJzWoP6XUS/TeIQwbRQ3c0qtQADY6wEUfpkbZ9HBzQWiD0PdI2WY+R/Tq2+whLln3VZBvC8NB6PQb3ClOlNb/X0=
-X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr1271593pjr.228.1615459360370;
- Thu, 11 Mar 2021 02:42:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20210208222203.22335-1-info@metux.net> <20210208222203.22335-8-info@metux.net>
- <CACRpkdb5R+VQrv0QuKa+EYmAMkodRpyv4fV1QCWQ+vcEyd0sZQ@mail.gmail.com> <acae5f9a-1cc8-46e1-2b3b-c806679ef062@metux.net>
-In-Reply-To: <acae5f9a-1cc8-46e1-2b3b-c806679ef062@metux.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 11 Mar 2021 12:42:24 +0200
-Message-ID: <CAHp75VeWW__18hwK+-uEibpzLpehD4h=QCnTbKOc-2GbkMB0TA@mail.gmail.com>
-Subject: Re: [RFC PATCH 07/12] gpio: amd-fch: add oftree probing support
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S232509AbhCKK5F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Mar 2021 05:57:05 -0500
+Received: from mga09.intel.com ([134.134.136.24]:12909 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232349AbhCKK4y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 11 Mar 2021 05:56:54 -0500
+IronPort-SDR: dyFnvM5/RCqe6Ojvj0BoaplBtttKoriBjQp9Nf4YmctSwH5L3r+QIBa9EP2kIkKfTf2LS3aqtv
+ 0Aa4hCTzSNOA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9919"; a="188746727"
+X-IronPort-AV: E=Sophos;i="5.81,240,1610438400"; 
+   d="scan'208";a="188746727"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2021 02:56:53 -0800
+IronPort-SDR: w1koGQl49zidT8+B5C2zg7sqXrdTN5ZtvAQkKV451pyGewyHi9U2zvOgfCt+l6ayWpdFNll3TO
+ sXRyENlWn37Q==
+X-IronPort-AV: E=Sophos;i="5.81,240,1610438400"; 
+   d="scan'208";a="386977414"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2021 02:56:50 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lKIzn-00BYkk-Db; Thu, 11 Mar 2021 12:56:47 +0200
+Date:   Thu, 11 Mar 2021 12:56:47 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v3 1/5] irqdomain: Introduce irq_domain_create_simple()
+ API
+Message-ID: <YEn3b4fVolkcrWXq@smile.fi.intel.com>
+References: <20210304201253.14652-1-andriy.shevchenko@linux.intel.com>
+ <20210304201253.14652-2-andriy.shevchenko@linux.intel.com>
+ <CACRpkdbA+Q24JV3Uct2dHtGfBb1AaF4uHwCbzcrOFAxoGQ4wXQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbA+Q24JV3Uct2dHtGfBb1AaF4uHwCbzcrOFAxoGQ4wXQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 12:20 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
-> On 01.03.21 15:51, Linus Walleij wrote:
+On Thu, Mar 11, 2021 at 12:15:29AM +0100, Linus Walleij wrote:
+> On Thu, Mar 4, 2021 at 9:13 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Linus Walleij pointed out that ird_domain_add_simple() gained
+> > additional functionality and can't be anymore replaced with
+> > a simple conditional. In preparation to upgrade GPIO library
+> > to use fwnode, introduce irq_domain_create_simple() API which is
+> > functional equivalent to the existing irq_domain_add_simple(),
+> > but takes a pointer to the struct fwnode_handle as a parameter.
+> >
+> > While at it, amend documentation to mention irq_domain_create_*()
+> > functions where it makes sense.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> > I don't know what the idea is with this but register are not normally defined
-> > in the DTS files. The registers are determined from the compatible value.
->
-> The idea is basically replacing the pdata struct by oftree node.
-> (subsequent patches in this queue use this by doing the board setup via
-> compiled-in dtb, instead of the currently hardcoded tables).
-
-You are a bit late. We have built-in device properties (and
-corresponding API, which recently becomes swnode) which aims exactly
-this.
-
+Thanks! It's v6 now :-)
 
 -- 
 With Best Regards,
 Andy Shevchenko
+
+
