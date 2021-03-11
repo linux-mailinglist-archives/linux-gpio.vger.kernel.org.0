@@ -2,84 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24C533375EA
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 15:41:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8433A337650
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Mar 2021 15:59:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233368AbhCKOlD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Mar 2021 09:41:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233662AbhCKOkf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Mar 2021 09:40:35 -0500
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87A3C061760
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Mar 2021 06:40:34 -0800 (PST)
-Received: by mail-lj1-x235.google.com with SMTP id 9so2446720ljd.7
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Mar 2021 06:40:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QUcPBtm4+ilX7IBeJadFRWzG939sRFv09Bop/EMXhUY=;
-        b=yzKXuQ3/J/SngJyDaDCqNeri/gXS4XJWy9PGK29BknE5n8hlBYKVG2AP0tFbpzzRvh
-         qRzIHKSH0+lp8gvcvpnZbSA2GOt/c9NTPj2P/cbQ2AGEePywpgOI/bMoqn103jP8nbcn
-         tiNNT5LvfVqIyeSXi9XzYPQxqxdYx+XPsSHvtZyqjQuPQiEOnhSLJipei/VMmNbf+oea
-         hj1BdmBVbF4aznJ3tcjLNy14oPzYudLFWS9UTWLdGRoGWJtzt1J+XZhdbKWIQBqpR1cu
-         W8O2Iw5DyMb/Auca+F7iDUxVKfSrNoKa9GcjIHW0/fFf0WqjfbkVxSDytu+k1hErvF1r
-         90zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QUcPBtm4+ilX7IBeJadFRWzG939sRFv09Bop/EMXhUY=;
-        b=Mw8tV3KtLGtzz4RY97fcaZyMqxzJiqyI1PtrnI17fR0jDrryauXdW4d//jnNoRJda1
-         dgeyOt5v7Fafv298dmhgJCggabC8dDMgxpGZA9AfBUNIJ7SsKS7NHnEkf81/gjUEh8uO
-         fnOUb/aI35bHwdT2iNiE3FzALg18WqlMfp2UumlbviEak2GG1OFXQ5JYxP6fqO7H1qxn
-         Al6ZVlpIYqd+yXatihw9naFQ4Ka+HQXw+h7SMGdvB16ToQQ0JatDVvV7ZH/mtMsUMObG
-         cQUYpy+h4z29qwS1m8yZU3xHnTLJ9UTZw9BL5kQi9JUEpqevt6VgVKxe2YGM7jJHAcKg
-         fpbg==
-X-Gm-Message-State: AOAM532e++Ku/OTDI275coku4GZ/M2R8e14g9poNdJJbwVLhHzf2nvoX
-        LXkqjyA2qqoHG1WpVn9sEUSDj6GrpBXiWTX2pwKrgua9C/oypo7b
-X-Google-Smtp-Source: ABdhPJz7z1I5EjMIdfchrJWVpNJGEAzcCu9hBl7SZv7vwujVov2KiUn6Gr/KhKzHePJwvP9MU8jwUqNOOVTmdmBQUeM=
-X-Received: by 2002:a2e:864a:: with SMTP id i10mr4833356ljj.467.1615473633384;
- Thu, 11 Mar 2021 06:40:33 -0800 (PST)
+        id S233959AbhCKO6k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Mar 2021 09:58:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233892AbhCKO6K (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 11 Mar 2021 09:58:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A5BF365004;
+        Thu, 11 Mar 2021 14:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615474689;
+        bh=aR7DpbxtFxIv6MnyvAR0dkFIyBYC2zBruNgZfrrgUNA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TgEMAJIlEbN2J5HLzWhN9/87u5D4Q0nZ6RZbTEg/JMV78EZ6Q1dGV+t0Ku8GqGKgU
+         YqvyR4Gv3ESqThUbYirxvMipBX6NVoJwelDws2D0Udx6zPLVo14kcR8np1mTjEgZ7U
+         5Ot/ttH5KBt1pofDogLL926DQ+gCFxl4D6t4ysZuecfcTxsIGgPmBHLtBG+CFN/SZ7
+         ZdR/9mOR7wjOLUoSZsjSwzOgceYilLKBp8uE9etyQztpnk1JV9DJSc/eVxD7wEwivk
+         sVYQ4wAXwIKWE82G8X/rmsC35TSRhUzTLNpxiWOxGfP/X803VSB4EUmjychQdZbBjC
+         GNA6CGoEXEqvA==
+Received: by mail-ej1-f54.google.com with SMTP id lr13so46827837ejb.8;
+        Thu, 11 Mar 2021 06:58:09 -0800 (PST)
+X-Gm-Message-State: AOAM531TgpRiwRyGEs8L+PTkuadOVNWfQo3rclC7KAtTRPFV884rq6zj
+        kFgFEXZUJUcAQlh6qq4d0CUwXCteqCnZqW5Xrg==
+X-Google-Smtp-Source: ABdhPJwmSElZbRkcCnb9ZIBKPYqZtpmKLVr22hQeCKoWIRKJZm1MtHyWE2xBEn1f56xsjbunT+wQbtX3GPFTYkhU+us=
+X-Received: by 2002:a17:906:25c4:: with SMTP id n4mr3463796ejb.359.1615474687893;
+ Thu, 11 Mar 2021 06:58:07 -0800 (PST)
 MIME-Version: 1.0
-References: <1614662511-26519-1-git-send-email-rnayak@codeaurora.org> <CAHp75VfJqXQM+L4NnoN8p_iLpdc1SWFkBwFZAq5sHengPKnwJw@mail.gmail.com>
-In-Reply-To: <CAHp75VfJqXQM+L4NnoN8p_iLpdc1SWFkBwFZAq5sHengPKnwJw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 11 Mar 2021 15:40:22 +0100
-Message-ID: <CACRpkdYUvxQ+SoVKPCCiQk0aa4kYeRktw9vA3yt=rnJOCYZ0iQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: qcom: sc7280: Fix SDC_QDSD_PINGROUP and
- UFS_RESET offsets
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+References: <20210310125504.31886-1-noltari@gmail.com> <20210310125504.31886-4-noltari@gmail.com>
+ <CAL_JsqKZA-j2iXvVTXWtiuyKPOWeOUP0r+x-bV6QP6=_moy2VA@mail.gmail.com> <CACRpkda=isBSW8BwYJ2pCaPcByRoo2GFNVoZCxhaCbEKk9iNsg@mail.gmail.com>
+In-Reply-To: <CACRpkda=isBSW8BwYJ2pCaPcByRoo2GFNVoZCxhaCbEKk9iNsg@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 11 Mar 2021 07:57:55 -0700
+X-Gmail-Original-Message-ID: <CAL_Jsq+FfYE2SrzwB_A=d-LMut-JrqdivKz6x8EQhkc3Zh5NAA@mail.gmail.com>
+Message-ID: <CAL_Jsq+FfYE2SrzwB_A=d-LMut-JrqdivKz6x8EQhkc3Zh5NAA@mail.gmail.com>
+Subject: Re: [PATCH v6 03/15] pinctrl: bcm: add bcm63xx base code
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
+        Michael Walle <michael@walle.cc>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 11:41 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Mar 2, 2021 at 9:32 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> >
-> > The offsets for SDC_QDSD_PINGROUP and UFS_RESET were off by 0x100000
-> > due to an issue in the scripts generating the data.
+On Wed, Mar 10, 2021 at 6:09 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> > Fixes: ecb454594c43: ("pinctrl: qcom: Add sc7280 pinctrl driver")
-> >
-> > Reported-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> On Wed, Mar 10, 2021 at 6:51 PM Rob Herring <robh+dt@kernel.org> wrote:
 >
-> Should be no blank lines in the tag block.
+> > > +static const struct of_device_id bcm63xx_gpio_of_match[] = {
+> > > +       { .compatible = "brcm,bcm6318-gpio", },
+> > > +       { .compatible = "brcm,bcm6328-gpio", },
+> > > +       { .compatible = "brcm,bcm6358-gpio", },
+> > > +       { .compatible = "brcm,bcm6362-gpio", },
+> > > +       { .compatible = "brcm,bcm6368-gpio", },
+> > > +       { .compatible = "brcm,bcm63268-gpio", },
+> >
+> > All these would be moved to gpio-mmio.c (or maybe that can have a
+> > fallback compatible?).
+>
+> This is gpio-regmap.c and it can only be used as a library
+> by a certain driver. gpio-mmio.c can be used stand-alone
+> for certain really simple hardware (though most use that
+> as a library as well).
 
-Yeah I fixed it up when applying.
+I don't really care which one is used, but the problem is that this
+choice is leaking into the binding design. The primary problem here is
+once someone uses regmap, then they think they must have a syscon and
+can abandon using 'reg' and normal address properties as Linux happens
+to not use them (currently). I think we really need some better regmap
+vs. mmio handling to eliminate this duplication of foo-mmio and
+foo-regmap drivers and difference in binding design. Not sure exactly
+what that looks like, but basically some sort of 'reg' property to
+regmap creation.
 
-Just one of these maintainer perks I offer free of charge ;)
+Given we already have a Broadcom GPIO binding for what looks to be
+similar to this one, I'm left wondering what's the real difference
+here?
 
-Yours,
-Linus Walleij
+Rob
