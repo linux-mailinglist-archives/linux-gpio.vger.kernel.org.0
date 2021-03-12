@@ -2,88 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1848A338F3F
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 14:58:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12B5E339164
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 16:35:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbhCLN6Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Mar 2021 08:58:24 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:53617 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230389AbhCLN6P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Mar 2021 08:58:15 -0500
-Received: from [192.168.1.155] ([95.118.12.1]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MMoXC-1l49Lt0w5c-00IiLB; Fri, 12 Mar 2021 14:57:57 +0100
-Subject: Re: [PATCH v9 2/4] pinctrl: pinmux: Add pinmux-select debugfs file
-To:     Drew Fustini <drew@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>
-References: <20210302053059.1049035-1-drew@beagleboard.org>
- <20210302053059.1049035-3-drew@beagleboard.org>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <349b09f8-fe99-d0d4-dd11-c288bf66cb4d@metux.net>
-Date:   Fri, 12 Mar 2021 14:57:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S231216AbhCLPez (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Mar 2021 10:34:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232343AbhCLPeh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Mar 2021 10:34:37 -0500
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C93C061574;
+        Fri, 12 Mar 2021 07:34:37 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id b23so2087279pfo.8;
+        Fri, 12 Mar 2021 07:34:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IMlB5WRb/6LYe66SQ3A66bzr1N8mWxVpXGv0FndsikQ=;
+        b=muhrLMxp/uhE6jH7vYF+83nHcyO0KVTdqDJuVyASfzrwNi8lq1s/ZIOZHbyEsHQxJf
+         k98hS/4nfRZR1u4xTbDadvAqekIrCuF8NXRqVwnCLuKka1Jej74JNdLDbIbmJXZPAg+P
+         ck5EMD9D3uKVSFX4T6GdvDXcf8vL0I4l3vsyzf7TYD8glKZ1ABmX/4kl0DgdOeB/orNt
+         xgpvFtaMYceWhE424xf3nLjH5cSc7yRFBy3oy3d/HUgf8M1QyiwzYJsctzESvcQCRocp
+         NS9k3c2Z+EZ1rzGrTUxnuB3N1+CsdKRPvoOAL0PvfwLVP0RvMlCM9jNuTBupbGVEBZVx
+         CjNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IMlB5WRb/6LYe66SQ3A66bzr1N8mWxVpXGv0FndsikQ=;
+        b=IYM10SX29ZhsvaLeCqV/hadSxds82yL0b8wtpO3/3Wn8bs/Si1K7xkRXMC6tCniHJY
+         REVDyKzYuttbl1MaKiirYyv6HGHkXTJOd26vicZfwWW7Jfazo3s8zABg5pXehcTrOQBB
+         nsv3uCDxqHGwbmr2vJSjRjlqAgNqVGM2wX7N2nFFPe6zq1OWwqetjqSvYXnoNXZrAxXT
+         NW9Xdy5xBZgXBwgHGOBG6OcXOFVmeb8lJL6/Hi4FPTq14ojxupb5RjEmLs9pBDKscr7b
+         HPa22d7BicRkFd2qKG8hHrHSP8a/pZiCSV8KSYfIELCDnqzFu5MPdc9Cf8Iu3GgimnYG
+         1Uww==
+X-Gm-Message-State: AOAM532h55Tbio9QmAKsmuH8EniBi12/l3k/aRgFFCgjFHtTqnHg4ksq
+        ZJI4+5mNJvH7Vwh2+hRkb7HNURON3mLuk00BQ/I=
+X-Google-Smtp-Source: ABdhPJzjDWG88EO20WB2WDa3XuyhugX6rwbSGpAoIxt+2i+AgxXkbWt/XdIl3kTfrvHcZXJlVrZ4GrNx5PBhfweiv/E=
+X-Received: by 2002:a62:528e:0:b029:1f5:c5ee:a487 with SMTP id
+ g136-20020a62528e0000b02901f5c5eea487mr12812604pfb.7.1615563276638; Fri, 12
+ Mar 2021 07:34:36 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210302053059.1049035-3-drew@beagleboard.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8ouLmTGxmNJb/9DZK0LMfylhb+4A+kAAhh6ENb1fZ6+C7/h4IKF
- E6DCKPOlrNN+AA/IbOYmLBqlTV/+ZfDiziYPN5p6JZ/qlDYs7sxuFWRI37Wp2N8HVXAuSJT
- ++P6d4gSA6QE/vIqpWMoX3Vk0PZN0yPZCxbkHzGNGq04vbMUcfElGpWZF9EtA1VI5FZeiyO
- 9B3UhYTRBK7ZYuJqgpK9w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ze2qBLvxJDM=:bAJuMgYNRkoGgA6RxQFVfP
- WbWPWpetI34/SJxX11w/t3KfCfUBQ1Z92b9qqVHfPzYpP6lERTAE8T9n/zERHjvYKQOYigBju
- RT8LW03A4RlYJc16WYmNNJCkAy+2wMhYJ5V1GKdtOQIN1slsWpVkD0sVoNjYzSgilA/zXVJl6
- JcONcJHviSC+MIJL50BQPC5lgmfC9LYgAOR0KlVtzmcybVq+qpgXc6Wp2dsQhLUkPcPXn1dy4
- r86VPKXRSJCpqsIt+cmaH5tAM2Qjw+uCrQ/COLDFdrcCMidAuy1aXnJMonv75la3/K0b57+Xj
- /aJ4KhKCrPIrW1pT4Dbw/dsd9O5JF/NV7V0JEYuok2sNGDb+Tvwhi5jr0Ozsx4k2yYOnj6wPh
- j8DihRZSk2lQeCaaJqCz4vOxrCMsjlJxJxeC/I5VyyDESQlPnsqhdrZ7oPVvk
+References: <CA+G9fYvXBk8njCeodicbtc72LLwSGvODLqqBTjfEHthjvUH7AQ@mail.gmail.com>
+ <YEtuo59GNHSGZ5eK@kroah.com>
+In-Reply-To: <YEtuo59GNHSGZ5eK@kroah.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 12 Mar 2021 17:34:20 +0200
+Message-ID: <CAHp75VcM-UtzxE84cD+fCYCNNgQZTSy7R5C9gRnR7TgaP6Tktg@mail.gmail.com>
+Subject: Re: drivers/gpio/gpio-pca953x.c:117:40: error: 'ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER'
+ undeclared here (not in a function)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-stable <stable@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 02.03.21 06:30, Drew Fustini wrote:
+On Fri, Mar 12, 2021 at 3:39 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Fri, Mar 12, 2021 at 06:57:51PM +0530, Naresh Kamboju wrote:
+> > While building stable rc 5.4 for arm and arm64 the following warnings / errors
+> > were noticed.
 
-Hi folks,
+> Should now be fixed up, sorry about that.
 
-> Add "pinmux-select" to debugfs which will activate a pin function for a
-> given pin group:
-> 
->    echo "<group-name function-name>" > pinmux-select
-> 
-> The write operation pinmux_select() handles this by checking that the
-> names map to valid selectors and then calling ops->set_mux().
-
-I've already been playing with similar idea, but for external muxes.
-For example, some boards have multiple SIM slots that can be switched
-via some gpio pin.
-
-Not sure whether traditional pinmux would be a good match for that.
-
-
---mtx
+Right, thank you, Greg, for fixing this mess up!
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+With Best Regards,
+Andy Shevchenko
