@@ -2,140 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A46E338EC7
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 14:29:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CBB4338ED4
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 14:32:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229995AbhCLN2b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Mar 2021 08:28:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231201AbhCLN2E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Mar 2021 08:28:04 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00ECC061761
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Mar 2021 05:28:03 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id mj10so53339316ejb.5
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Mar 2021 05:28:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=b+5LL81NTCNgfBYQfEPL7kybqyqdg+vaL/Zty0afB6Y=;
-        b=esIoD+GqtcUfJ/C5j41XoF+ISrbAZg9gkze2zEdn5COb4YI9WMtWu9zlPPHug2qUYd
-         vl+NbB1Eq40lhlJeJt0fABQLH3pnnmS8/HsbdlbUZ05U85XbJ0aRAjbuC99n9b7+P00w
-         rSHSTpRAsN5OMMKsguud8YI+DaFZ618k4wj7McwHcLAnOpwZDW9YI+j440S2K/0X7IZl
-         pX+49pna7djUw0KjeVdxyGVsAg0IgCgrNg9jbrAnxNgl9wkY2IL4UicYVOEZkvIiTL+N
-         uS+Vj/O8bDKd0PnK5/gRoKfhOGkLl6wowBjsTm5mfoFWWHtzqiWfFiTPCcS2c2f97eeG
-         nHUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=b+5LL81NTCNgfBYQfEPL7kybqyqdg+vaL/Zty0afB6Y=;
-        b=c12XPhBCeJJFHd1M9YCpX5YApZR95zTPsLykOy8yDLPsKUMZpOm6WD8X9xe3L/PP9H
-         SVqKLK1eKoUrB1T5wbtFeRQ6/E9dmKmeJmeaH4+BitnsWdbnOaHOV5dpBobaOkDYA3Qw
-         DUOSiqDKNVWE8TYD9L0TcY/14HVTEkZVWQR+nvs1+qHqFWIxUoeN5sOmh8JEnXE/VO/5
-         cBDd37Vb/VTilbAsLpoKyuHUL1LDeuEg64Dp3KCBbjS2PJlKBa8bhVE6G0AjZpRBz9BS
-         TYuwqJCWuv11C8vCH4dFaPPTFupUyyE6+PY4lfRGkVVoSbTp2/+XAucMyVgDXfqpsup7
-         +Q+w==
-X-Gm-Message-State: AOAM532z3+aYBr2qDUoARhDBkYiazAT7XlOV0c94Cc857dP68X3FHZ2t
-        rrV13hbrYC1yNk8vzMr26VIMn6o0MNyrD+CnDzlzoQ==
-X-Google-Smtp-Source: ABdhPJy+RXN4DcvEaJGj3C9Kz5xGxvFyJiu+MssGsIOUkDxSMm9oS/NOn3mYmXyZdVoWm2gvLd36Ygf/1nz1AmXazho=
-X-Received: by 2002:a17:906:229b:: with SMTP id p27mr8826996eja.287.1615555682331;
- Fri, 12 Mar 2021 05:28:02 -0800 (PST)
+        id S229913AbhCLNcR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 12 Mar 2021 08:32:17 -0500
+Received: from aposti.net ([89.234.176.197]:43472 "EHLO aposti.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231201AbhCLNcB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 12 Mar 2021 08:32:01 -0500
+Date:   Fri, 12 Mar 2021 13:31:45 +0000
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 2/6] pinctrl: Ingenic: Add support for read the pin
+ configuration of X1830.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        hns@goldelico.com, paul@boddie.org.uk, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, sernia.zhou@foxmail.com
+Message-Id: <XWYUPQ.9202CFTWWMJ6@crapouillou.net>
+In-Reply-To: <1615476112-113101-3-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1615476112-113101-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1615476112-113101-3-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 12 Mar 2021 18:57:51 +0530
-Message-ID: <CA+G9fYvXBk8njCeodicbtc72LLwSGvODLqqBTjfEHthjvUH7AQ@mail.gmail.com>
-Subject: drivers/gpio/gpio-pca953x.c:117:40: error: 'ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER'
- undeclared here (not in a function)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-stable <stable@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, lkft-triage@lists.linaro.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-While building stable rc 5.4 for arm and arm64 the following warnings / errors
-were noticed.
+Hi Zhou,
 
-make --silent --keep-going --jobs=8
-O=/home/tuxbuild/.cache/tuxmake/builds/1/tmp ARCH=arm64
-CROSS_COMPILE=aarch64-linux-gnu- 'CC=sccache aarch64-linux-gnu-gcc'
-'HOSTCC=sccache gcc' olddefconfig
-.config:7570:warning: override: TRANSPARENT_HUGEPAGE_MADVISE changes
-choice state
-make --silent --keep-going --jobs=8
-O=/home/tuxbuild/.cache/tuxmake/builds/1/tmp ARCH=arm64
-CROSS_COMPILE=aarch64-linux-gnu- 'CC=sccache aarch64-linux-gnu-gcc'
-'HOSTCC=sccache gcc'
+Le jeu. 11 mars 2021 à 23:21, 周琰杰 (Zhou Yanjie) 
+<zhouyanjie@wanyeetech.com> a écrit :
+> Add X1830 support in "ingenic_pinconf_get()", so that it can read the
+> configuration of X1830 SoC correctly.
+> 
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 
-arch/arm64/boot/dts/exynos/exynos5433.dtsi:254.3-29: Warning
-(reg_format): /gpu@14ac0000:reg: property has invalid length (8 bytes)
-(#address-cells == 2, #size-cells == 2)
-arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb: Warning
-(pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb: Warning (i2c_bus_reg):
-Failed prerequisite 'reg_format'
-arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb: Warning (spi_bus_reg):
-Failed prerequisite 'reg_format'
-arch/arm64/boot/dts/exynos/exynos5433.dtsi:254.3-29: Warning
-(reg_format): /gpu@14ac0000:reg: property has invalid length (8 bytes)
-(#address-cells == 2, #size-cells == 2)
-arch/arm64/boot/dts/exynos/exynos5433-tm2e.dtb: Warning
-(pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm64/boot/dts/exynos/exynos5433-tm2e.dtb: Warning (i2c_bus_reg):
-Failed prerequisite 'reg_format'
-arch/arm64/boot/dts/exynos/exynos5433-tm2e.dtb: Warning (spi_bus_reg):
-Failed prerequisite 'reg_format'
-arch/arm64/boot/dts/exynos/exynos7.dtsi:83.3-29: Warning (reg_format):
-/gpu@14ac0000:reg: property has invalid length (8 bytes)
-(#address-cells == 2, #size-cells == 2)
-arch/arm64/boot/dts/exynos/exynos7-espresso.dtb: Warning
-(pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm64/boot/dts/exynos/exynos7-espresso.dtb: Warning
-(i2c_bus_reg): Failed prerequisite 'reg_format'
-arch/arm64/boot/dts/exynos/exynos7-espresso.dtb: Warning
-(spi_bus_reg): Failed prerequisite 'reg_format'
-drivers/gpio/gpio-pca953x.c:117:40: error:
-'ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER' undeclared here (not in a function)
-  117 |  { "irq-gpios", &pca953x_irq_gpios, 1,
-ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER },
-      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-make[3]: *** [scripts/Makefile.build:262: drivers/gpio/gpio-pca953x.o] Error 1
-make[3]: Target '__build' not remade because of errors.
+This is a fix, so it needs a Fixes: tag, and you need to Cc 
+linux-stable.
+
+> ---
+> 
+> Notes:
+>     v2:
+>     New patch.
+> 
+>  drivers/pinctrl/pinctrl-ingenic.c | 76 
+> +++++++++++++++++++++++++++++----------
+>  1 file changed, 57 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
+> b/drivers/pinctrl/pinctrl-ingenic.c
+> index 05dfa0a..0a88aab 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -2109,31 +2109,69 @@ static int ingenic_pinconf_get(struct 
+> pinctrl_dev *pctldev,
+>  	enum pin_config_param param = pinconf_to_config_param(*config);
+>  	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
+>  	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
+> +	unsigned int bias;
+>  	bool pull;
+> 
+> -	if (jzpc->info->version >= ID_JZ4770)
+> -		pull = !ingenic_get_pin_config(jzpc, pin, JZ4770_GPIO_PEN);
+> -	else
+> -		pull = !ingenic_get_pin_config(jzpc, pin, JZ4740_GPIO_PULL_DIS);
+> +	if (jzpc->info->version >= ID_X1830) {
+> +		unsigned int half = PINS_PER_GPIO_CHIP / 2;
+> +		unsigned int idxh = pin % half * 2;
+> 
+> -	switch (param) {
+> -	case PIN_CONFIG_BIAS_DISABLE:
+> -		if (pull)
+> -			return -EINVAL;
+> -		break;
+> +		if (idx < half)
+> +			regmap_read(jzpc->map, offt * jzpc->info->reg_offset +
+> +					X1830_GPIO_PEL, &bias);
+> +		else
+> +			regmap_read(jzpc->map, offt * jzpc->info->reg_offset +
+> +					X1830_GPIO_PEH, &bias);
+> 
+> -	case PIN_CONFIG_BIAS_PULL_UP:
+> -		if (!pull || !(jzpc->info->pull_ups[offt] & BIT(idx)))
+> -			return -EINVAL;
+> -		break;
+> +		bias = (bias >> idxh) & 3;
+
+You can do:
+
+u32 mask = GENMASK(idxh + 1, idxh);
+
+bias = FIELD_GET(mask, bias);
+
+(macros in <linux/bitfield.h>)
+
+> 
+> -	case PIN_CONFIG_BIAS_PULL_DOWN:
+> -		if (!pull || !(jzpc->info->pull_downs[offt] & BIT(idx)))
+> -			return -EINVAL;
+> -		break;
+> +		switch (param) {
+> +		case PIN_CONFIG_BIAS_DISABLE:
+> +			if (bias)
+> +				return -EINVAL;
+> +			break;
+> 
+> -	default:
+> -		return -ENOTSUPP;
+> +		case PIN_CONFIG_BIAS_PULL_UP:
+> +			if ((bias != PIN_CONFIG_BIAS_PULL_UP) ||
+> +					!(jzpc->info->pull_ups[offt] & BIT(idx)))
+
+"bias" is a 2-bit value (because of the & 3 mask), and 
+PIN_CONFIG_BIAS_PULL_UP == 5.
+
+So this clearly won't work. You are comparing hardware values with 
+public API enums.
+
+> +				return -EINVAL;
+> +			break;
+> +
+> +		case PIN_CONFIG_BIAS_PULL_DOWN:
+> +			if ((bias != PIN_CONFIG_BIAS_PULL_DOWN) ||
+> +					!(jzpc->info->pull_downs[offt] & BIT(idx)))
+> +				return -EINVAL;
+> +			break;
+> +
+> +		default:
+> +			return -ENOTSUPP;
+> +		}
+> +
+> +	} else {
+> +		if (jzpc->info->version >= ID_JZ4770)
+> +			pull = !ingenic_get_pin_config(jzpc, pin, JZ4770_GPIO_PEN);
+> +		else
+> +			pull = !ingenic_get_pin_config(jzpc, pin, JZ4740_GPIO_PULL_DIS);
+
+I think you can keep the switch outside the if/else block, if you use 
+pullup/pulldown variables.
+
+These can be initialized (in the non-X1830 case) to:
+
+pullup = pull && (jzpc->info->pull_ups[offt] & BIT(idx));
+pulldown = pull && (jzpc->info->pull_downs[offt] & BIT(idx));
+
+In the X1830 case you'd initialize these variables from 'bias'.
+
+> +
+> +		switch (param) {
+> +		case PIN_CONFIG_BIAS_DISABLE:
+> +			if (pull)
+
+Here would change to if (pullup || pulldown)
+
+> +				return -EINVAL;
+> +			break;
+> +
+> +		case PIN_CONFIG_BIAS_PULL_UP:
+> +			if (!pull || !(jzpc->info->pull_ups[offt] & BIT(idx)))
+
+if (!pullup)
+
+> +				return -EINVAL;
+> +			break;
+> +
+> +		case PIN_CONFIG_BIAS_PULL_DOWN:
+> +			if (!pull || !(jzpc->info->pull_downs[offt] & BIT(idx)))
+
+if (!pulldown)
+
+Cheers,
+-Paul
+
+> +				return -EINVAL;
+> +			break;
+> +
+> +		default:
+> +			return -ENOTSUPP;
+> +		}
+>  	}
+> 
+>  	*config = pinconf_to_config_packed(param, 1);
+> --
+> 2.7.4
+> 
 
 
-Reported-by:  Linux Kernel Functional Testing <lkft@linaro.org>
-
-Build link,
-https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc/-/jobs/1091050853#L375
-
-steps to reproduce:
----------------------------
-
-# TuxMake is a command line tool and Python library that provides
-# portable and repeatable Linux kernel builds across a variety of
-# architectures, toolchains, kernel configurations, and make targets.
-#
-# TuxMake supports the concept of runtimes.
-# See https://docs.tuxmake.org/runtimes/, for that to work it requires
-# that you install podman or docker on your system.
-#
-# To install tuxmake on your system globally:
-# sudo pip3 install -U tuxmake
-#
-# See https://docs.tuxmake.org/ for complete documentation.
-
-
-tuxmake --runtime podman --target-arch arm64 --toolchain gcc-9
---kconfig defconfig --kconfig-add
-https://builds.tuxbuild.com/1pcgZ6HCDYD6pGG5Xn1ammT72EM/config
-
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
