@@ -2,168 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14BE233863C
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 07:52:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DBD2338691
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 08:32:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230175AbhCLGwF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Mar 2021 01:52:05 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:54644 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230383AbhCLGvq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 12 Mar 2021 01:51:46 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 81A321A05A3;
-        Fri, 12 Mar 2021 07:51:41 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 54A301A0585;
-        Fri, 12 Mar 2021 07:51:38 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A93994029B;
-        Fri, 12 Mar 2021 07:51:34 +0100 (CET)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH] gpio: mpc8xxx: Add ACPI support
-Date:   Fri, 12 Mar 2021 14:58:55 +0800
-Message-Id: <20210312065855.37072-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S229688AbhCLHbw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Mar 2021 02:31:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231613AbhCLHbl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Mar 2021 02:31:41 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F4AC061574
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Mar 2021 23:31:40 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id bx7so6542234edb.12
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Mar 2021 23:31:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=85FTr8CtWZi7ZTbKGT7x0/typLYu/sxAfnMblivg5KA=;
+        b=his6owhZa67rd6+8ImNixx8KFUBCqUHledGahWGFtejo2HliAv4AwHeShz619wuPSa
+         PPXwLSeBYsnD7NNHganXwlqztk8SIKPl+UU0sw7YFh1ehUy6p6y+T+IXxCBvtFHxhYfN
+         px6B93b/Lk2lVNAI1kIlEhXxRVgrdPwWfiWZBvIXNF0FBwoPWD/YY3UhtBwXAdzErc3P
+         MK93j0pL6zaChQRp19UQ8n4CTFM9SjduSsQ/lmvDU0erVUsfCC9jCC9jqL4VNW/9r4Gs
+         QAQ7ltWBzWeOFQSR0vrcpTHHnWtcSUtxTKGFzN+0+YiZwsPadphR0emWYbmQOEVEDAUO
+         jcaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=85FTr8CtWZi7ZTbKGT7x0/typLYu/sxAfnMblivg5KA=;
+        b=MiI/hW6ImuL4VuMNyfygjJxT6mV5ezEMHeiDra4OrZqnIu1/XZMkbln6RseNb9yKLu
+         fIII4Ce1QBJJBPe47mZal8dOr6E/3CIflgFZhFzhsLvGqvgfPG676cYJfRVdDDrGGOLH
+         /HIxYAeoAfemCEYAJycsekJT/OlJ7XtoT4Tz2ipCV5qHUjTz70iMp24VDyWLxg+maDb4
+         3+SlT+YsQeGry7JQL10bTsnEMr6ruIMCPY0Z46qxHP5nEKRgp6na3Aluqkwgf/oUdLob
+         5iEIN9pPknbbKWm7VfL+hhhIlo4N2xfZ1z6AbRA9P+nUf9bbIh40Zs9x7by1v08UCT1m
+         MADQ==
+X-Gm-Message-State: AOAM532l8HRbUcZz2p5Wy0az9mYxWqdkj3OB1EFaKeSzrphC/pgFVMR3
+        s+25IUoFECdFQEoKqeJAguEs9Uz785XzXw9o
+X-Google-Smtp-Source: ABdhPJw98Ym+p9UPqE9aBe2e/cvMX9+FBoTewDHD+AIzg1CYVml7UPcdtDFkJYG/Rv2lAhWI9i/uhA==
+X-Received: by 2002:aa7:cd0e:: with SMTP id b14mr12862709edw.354.1615534298928;
+        Thu, 11 Mar 2021 23:31:38 -0800 (PST)
+Received: from localhost ([2a02:768:2307:40d6::45a])
+        by smtp.gmail.com with ESMTPSA id l18sm2326832ejk.86.2021.03.11.23.31.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Mar 2021 23:31:38 -0800 (PST)
+Sender: Michal Simek <monstr@monstr.eu>
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     colin.king@canonical.com, dan.carpenter@oracle.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH] pinctrl: core: Set ret to 0 when group is skipped
+Date:   Fri, 12 Mar 2021 08:31:34 +0100
+Message-Id: <e5203bae68eb94b4b8b4e67e5e7b4d86bb989724.1615534291.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Current implementation only supports DT, now add ACPI support.
+Static analyzer tool found that the ret variable is not initialized but
+code expects ret value >=0 when pinconf is skipped in the first pinmux
+loop. The same expectation is for pinmux in a pinconf loop.
+That's why initialize ret to 0 to avoid uninitialized ret value in first
+loop or reusing ret value from first loop in second.
 
-Note that compared to device of 'fsl,qoriq-gpio', LS1028A and
-LS1088A's GPIO have no extra programming, so simplify related checking.
-
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Addresses-Coverity: ("Uninitialized variables")
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+CC: Colin Ian King <colin.king@canonical.com>
+CC: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/gpio/gpio-mpc8xxx.c | 50 +++++++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 6dfca83bcd90..de5b7e17cde3 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -9,6 +9,7 @@
-  * kind, whether express or implied.
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/spinlock.h>
-@@ -292,8 +293,6 @@ static const struct of_device_id mpc8xxx_gpio_ids[] = {
- 	{ .compatible = "fsl,mpc5121-gpio", .data = &mpc512x_gpio_devtype, },
- 	{ .compatible = "fsl,mpc5125-gpio", .data = &mpc5125_gpio_devtype, },
- 	{ .compatible = "fsl,pq3-gpio",     },
--	{ .compatible = "fsl,ls1028a-gpio", },
--	{ .compatible = "fsl,ls1088a-gpio", },
- 	{ .compatible = "fsl,qoriq-gpio",   },
- 	{}
- };
-@@ -303,10 +302,19 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mpc8xxx_gpio_chip *mpc8xxx_gc;
- 	struct gpio_chip	*gc;
--	const struct mpc8xxx_gpio_devtype *devtype =
--		of_device_get_match_data(&pdev->dev);
-+	const struct mpc8xxx_gpio_devtype *devtype;
-+	const struct acpi_device_id *acpi_id;
- 	int ret;
- 
-+	if (pdev->dev.of_node) {
-+		devtype = of_device_get_match_data(&pdev->dev);
-+	} else {
-+		acpi_id = acpi_match_device(pdev->dev.driver->acpi_match_table,
-+						&pdev->dev);
-+		if (acpi_id)
-+			devtype = (struct mpc8xxx_gpio_devtype *) acpi_id->driver_data;
-+	}
-+
- 	mpc8xxx_gc = devm_kzalloc(&pdev->dev, sizeof(*mpc8xxx_gc), GFP_KERNEL);
- 	if (!mpc8xxx_gc)
- 		return -ENOMEM;
-@@ -315,14 +323,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	raw_spin_lock_init(&mpc8xxx_gc->lock);
- 
--	mpc8xxx_gc->regs = of_iomap(np, 0);
-+	mpc8xxx_gc->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (!mpc8xxx_gc->regs)
- 		return -ENOMEM;
- 
- 	gc = &mpc8xxx_gc->gc;
- 	gc->parent = &pdev->dev;
- 
--	if (of_property_read_bool(np, "little-endian")) {
-+	if (device_property_read_bool(&pdev->dev, "little-endian")) {
- 		ret = bgpio_init(gc, &pdev->dev, 4,
- 				 mpc8xxx_gc->regs + GPIO_DAT,
- 				 NULL, NULL,
-@@ -369,10 +377,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	 * associated input enable must be set (GPIOxGPIE[IEn]=1) to propagate
- 	 * the port value to the GPIO Data Register.
- 	 */
--	if (of_device_is_compatible(np, "fsl,qoriq-gpio") ||
--	    of_device_is_compatible(np, "fsl,ls1028a-gpio") ||
--	    of_device_is_compatible(np, "fsl,ls1088a-gpio"))
--		gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
-+	if (pdev->dev.of_node) {
-+		if (of_device_is_compatible(np, "fsl,qoriq-gpio"))
-+			gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
-+	} else {
-+		if (acpi_match_device(pdev->dev.driver->acpi_match_table,
-+					&pdev->dev))
-+			gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
-+	}
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
-@@ -381,12 +393,15 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	mpc8xxx_gc->irqn = irq_of_parse_and_map(np, 0);
-+	mpc8xxx_gc->irqn = platform_get_irq(pdev, 0);
- 	if (!mpc8xxx_gc->irqn)
- 		return 0;
- 
--	mpc8xxx_gc->irq = irq_domain_add_linear(np, MPC8XXX_GPIO_PINS,
--					&mpc8xxx_gpio_irq_ops, mpc8xxx_gc);
-+	mpc8xxx_gc->irq = irq_domain_create_linear(dev_fwnode(&pdev->dev),
-+						   MPC8XXX_GPIO_PINS,
-+						   &mpc8xxx_gpio_irq_ops,
-+						   mpc8xxx_gc);
-+
- 	if (!mpc8xxx_gc->irq)
- 		return 0;
- 
-@@ -425,12 +440,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id gpio_acpi_ids[] = {
-+	{"NXP0031",},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, gpio_acpi_ids);
-+#endif
-+
- static struct platform_driver mpc8xxx_plat_driver = {
- 	.probe		= mpc8xxx_probe,
- 	.remove		= mpc8xxx_remove,
- 	.driver		= {
- 		.name = "gpio-mpc8xxx",
- 		.of_match_table	= mpc8xxx_gpio_ids,
-+		.acpi_match_table = ACPI_PTR(gpio_acpi_ids),
- 	},
- };
- 
+ drivers/pinctrl/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index f5c32d2a3c91..136c323d855e 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1266,6 +1266,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ 			break;
+ 		case PIN_MAP_TYPE_CONFIGS_PIN:
+ 		case PIN_MAP_TYPE_CONFIGS_GROUP:
++			ret = 0;
+ 			break;
+ 		default:
+ 			ret = -EINVAL;
+@@ -1284,6 +1285,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ 	list_for_each_entry(setting, &state->settings, node) {
+ 		switch (setting->type) {
+ 		case PIN_MAP_TYPE_MUX_GROUP:
++			ret = 0;
+ 			break;
+ 		case PIN_MAP_TYPE_CONFIGS_PIN:
+ 		case PIN_MAP_TYPE_CONFIGS_GROUP:
 -- 
-2.25.1
+2.30.1
 
