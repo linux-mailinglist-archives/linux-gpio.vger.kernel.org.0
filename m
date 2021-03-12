@@ -2,159 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF39338EE9
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 14:34:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 217EF338EF4
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 14:38:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231330AbhCLNeZ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 12 Mar 2021 08:34:25 -0500
-Received: from aposti.net ([89.234.176.197]:43602 "EHLO aposti.net"
+        id S229487AbhCLNiN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Mar 2021 08:38:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231252AbhCLNeC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 12 Mar 2021 08:34:02 -0500
-Date:   Fri, 12 Mar 2021 13:33:49 +0000
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 4/6] pinctrl: Ingenic: Reformat the code.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        hns@goldelico.com, paul@boddie.org.uk, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, sernia.zhou@foxmail.com
-Message-Id: <D0ZUPQ.4DV5ZD2DP7S2@crapouillou.net>
-In-Reply-To: <1615476112-113101-5-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1615476112-113101-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1615476112-113101-5-git-send-email-zhouyanjie@wanyeetech.com>
+        id S229567AbhCLNhm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 12 Mar 2021 08:37:42 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B2CAB64FB5;
+        Fri, 12 Mar 2021 13:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1615556262;
+        bh=tSgA+9USDFlx+ELVk0gskxJOB6P9QjauHHTRco8jc/0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wkQTU2TD8jBmK/9C/yrHbshr+jab/CN77XiXE2UGJsMmZ77BII9ZMGpW6RGPGznbm
+         Us3Q8CAe0bZGuuRCdXS7JPklfzcz7HM/H5SORTcNW4WjyJ1+CSVzxtPa7qu3+3tWnN
+         CoJW+xgeAu8WOkXUfv2IlFug61dMh1YDNJOWaZ48=
+Date:   Fri, 12 Mar 2021 14:37:39 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-stable <stable@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, lkft-triage@lists.linaro.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: drivers/gpio/gpio-pca953x.c:117:40: error:
+ 'ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER' undeclared here (not in a function)
+Message-ID: <YEtuo59GNHSGZ5eK@kroah.com>
+References: <CA+G9fYvXBk8njCeodicbtc72LLwSGvODLqqBTjfEHthjvUH7AQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvXBk8njCeodicbtc72LLwSGvODLqqBTjfEHthjvUH7AQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Mar 12, 2021 at 06:57:51PM +0530, Naresh Kamboju wrote:
+> While building stable rc 5.4 for arm and arm64 the following warnings / errors
+> were noticed.
+> 
+> make --silent --keep-going --jobs=8
+> O=/home/tuxbuild/.cache/tuxmake/builds/1/tmp ARCH=arm64
+> CROSS_COMPILE=aarch64-linux-gnu- 'CC=sccache aarch64-linux-gnu-gcc'
+> 'HOSTCC=sccache gcc' olddefconfig
+> .config:7570:warning: override: TRANSPARENT_HUGEPAGE_MADVISE changes
+> choice state
+> make --silent --keep-going --jobs=8
+> O=/home/tuxbuild/.cache/tuxmake/builds/1/tmp ARCH=arm64
+> CROSS_COMPILE=aarch64-linux-gnu- 'CC=sccache aarch64-linux-gnu-gcc'
+> 'HOSTCC=sccache gcc'
+> 
+> arch/arm64/boot/dts/exynos/exynos5433.dtsi:254.3-29: Warning
+> (reg_format): /gpu@14ac0000:reg: property has invalid length (8 bytes)
+> (#address-cells == 2, #size-cells == 2)
+> arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb: Warning
+> (pci_device_bus_num): Failed prerequisite 'reg_format'
+> arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb: Warning (i2c_bus_reg):
+> Failed prerequisite 'reg_format'
+> arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb: Warning (spi_bus_reg):
+> Failed prerequisite 'reg_format'
+> arch/arm64/boot/dts/exynos/exynos5433.dtsi:254.3-29: Warning
+> (reg_format): /gpu@14ac0000:reg: property has invalid length (8 bytes)
+> (#address-cells == 2, #size-cells == 2)
+> arch/arm64/boot/dts/exynos/exynos5433-tm2e.dtb: Warning
+> (pci_device_bus_num): Failed prerequisite 'reg_format'
+> arch/arm64/boot/dts/exynos/exynos5433-tm2e.dtb: Warning (i2c_bus_reg):
+> Failed prerequisite 'reg_format'
+> arch/arm64/boot/dts/exynos/exynos5433-tm2e.dtb: Warning (spi_bus_reg):
+> Failed prerequisite 'reg_format'
+> arch/arm64/boot/dts/exynos/exynos7.dtsi:83.3-29: Warning (reg_format):
+> /gpu@14ac0000:reg: property has invalid length (8 bytes)
+> (#address-cells == 2, #size-cells == 2)
+> arch/arm64/boot/dts/exynos/exynos7-espresso.dtb: Warning
+> (pci_device_bus_num): Failed prerequisite 'reg_format'
+> arch/arm64/boot/dts/exynos/exynos7-espresso.dtb: Warning
+> (i2c_bus_reg): Failed prerequisite 'reg_format'
+> arch/arm64/boot/dts/exynos/exynos7-espresso.dtb: Warning
+> (spi_bus_reg): Failed prerequisite 'reg_format'
+> drivers/gpio/gpio-pca953x.c:117:40: error:
+> 'ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER' undeclared here (not in a function)
+>   117 |  { "irq-gpios", &pca953x_irq_gpios, 1,
+> ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER },
+>       |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> make[3]: *** [scripts/Makefile.build:262: drivers/gpio/gpio-pca953x.o] Error 1
+> make[3]: Target '__build' not remade because of errors.
+> 
+> 
+> Reported-by:  Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Build link,
+> https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc/-/jobs/1091050853#L375
+> 
+> steps to reproduce:
+> ---------------------------
+> 
+> # TuxMake is a command line tool and Python library that provides
+> # portable and repeatable Linux kernel builds across a variety of
+> # architectures, toolchains, kernel configurations, and make targets.
+> #
+> # TuxMake supports the concept of runtimes.
+> # See https://docs.tuxmake.org/runtimes/, for that to work it requires
+> # that you install podman or docker on your system.
+> #
+> # To install tuxmake on your system globally:
+> # sudo pip3 install -U tuxmake
+> #
+> # See https://docs.tuxmake.org/ for complete documentation.
+> 
+> 
+> tuxmake --runtime podman --target-arch arm64 --toolchain gcc-9
+> --kconfig defconfig --kconfig-add
+> https://builds.tuxbuild.com/1pcgZ6HCDYD6pGG5Xn1ammT72EM/config
 
+Should now be fixed up, sorry about that.
 
-Le jeu. 11 mars 2021 à 23:21, 周琰杰 (Zhou Yanjie) 
-<zhouyanjie@wanyeetech.com> a écrit :
-> 1.Move the "INGENIC_PIN_GROUP_FUNCS" to the macro definition section.
-> 2.Add tabs before values to align the code in the macro definition 
-> section.
-> 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-
-Cheers,
--Paul
-
-> ---
-> 
-> Notes:
->     v2:
->     New patch.
-> 
->  drivers/pinctrl/pinctrl-ingenic.c | 71 
-> +++++++++++++++++++--------------------
->  1 file changed, 35 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index 607ba0b..ac5ad8a 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -26,37 +26,48 @@
->  #include "pinconf.h"
->  #include "pinmux.h"
-> 
-> -#define GPIO_PIN	0x00
-> -#define GPIO_MSK	0x20
-> +#define GPIO_PIN					0x00
-> +#define GPIO_MSK					0x20
-> 
-> -#define JZ4740_GPIO_DATA	0x10
-> -#define JZ4740_GPIO_PULL_DIS	0x30
-> -#define JZ4740_GPIO_FUNC	0x40
-> -#define JZ4740_GPIO_SELECT	0x50
-> -#define JZ4740_GPIO_DIR		0x60
-> -#define JZ4740_GPIO_TRIG	0x70
-> -#define JZ4740_GPIO_FLAG	0x80
-> +#define JZ4740_GPIO_DATA			0x10
-> +#define JZ4740_GPIO_PULL_DIS		0x30
-> +#define JZ4740_GPIO_FUNC			0x40
-> +#define JZ4740_GPIO_SELECT			0x50
-> +#define JZ4740_GPIO_DIR				0x60
-> +#define JZ4740_GPIO_TRIG			0x70
-> +#define JZ4740_GPIO_FLAG			0x80
-> 
-> -#define JZ4770_GPIO_INT		0x10
-> -#define JZ4770_GPIO_PAT1	0x30
-> -#define JZ4770_GPIO_PAT0	0x40
-> -#define JZ4770_GPIO_FLAG	0x50
-> -#define JZ4770_GPIO_PEN		0x70
-> +#define JZ4770_GPIO_INT				0x10
-> +#define JZ4770_GPIO_PAT1			0x30
-> +#define JZ4770_GPIO_PAT0			0x40
-> +#define JZ4770_GPIO_FLAG			0x50
-> +#define JZ4770_GPIO_PEN				0x70
-> 
-> -#define X1830_GPIO_PEL			0x110
-> -#define X1830_GPIO_PEH			0x120
-> +#define X1830_GPIO_PEL				0x110
-> +#define X1830_GPIO_PEH				0x120
-> 
-> -#define REG_SET(x) ((x) + 0x4)
-> -#define REG_CLEAR(x) ((x) + 0x8)
-> +#define REG_SET(x)					((x) + 0x4)
-> +#define REG_CLEAR(x)				((x) + 0x8)
-> 
-> -#define REG_PZ_BASE(x) ((x) * 7)
-> -#define REG_PZ_GID2LD(x) ((x) * 7 + 0xf0)
-> +#define REG_PZ_BASE(x)				((x) * 7)
-> +#define REG_PZ_GID2LD(x)			((x) * 7 + 0xf0)
-> 
-> -#define GPIO_PULL_DIS	0
-> -#define GPIO_PULL_UP	1
-> -#define GPIO_PULL_DOWN	2
-> +#define GPIO_PULL_DIS				0
-> +#define GPIO_PULL_UP				1
-> +#define GPIO_PULL_DOWN				2
-> 
-> -#define PINS_PER_GPIO_CHIP 32
-> +#define PINS_PER_GPIO_CHIP			32
-> +
-> +#define INGENIC_PIN_GROUP_FUNCS(name, id, funcs)		\
-> +	{						\
-> +		name,					\
-> +		id##_pins,				\
-> +		ARRAY_SIZE(id##_pins),			\
-> +		funcs,					\
-> +	}
-> +
-> +#define INGENIC_PIN_GROUP(name, id, func)		\
-> +	INGENIC_PIN_GROUP_FUNCS(name, id, (void *)(func))
-> 
->  enum jz_version {
->  	ID_JZ4740,
-> @@ -134,18 +145,6 @@ static int jz4740_pwm_pwm5_pins[] = { 0x7c, };
->  static int jz4740_pwm_pwm6_pins[] = { 0x7e, };
->  static int jz4740_pwm_pwm7_pins[] = { 0x7f, };
-> 
-> -
-> -#define INGENIC_PIN_GROUP_FUNCS(name, id, funcs)		\
-> -	{						\
-> -		name,					\
-> -		id##_pins,				\
-> -		ARRAY_SIZE(id##_pins),			\
-> -		funcs,					\
-> -	}
-> -
-> -#define INGENIC_PIN_GROUP(name, id, func)		\
-> -	INGENIC_PIN_GROUP_FUNCS(name, id, (void *)(func))
-> -
->  static const struct group_desc jz4740_groups[] = {
->  	INGENIC_PIN_GROUP("mmc-1bit", jz4740_mmc_1bit, 0),
->  	INGENIC_PIN_GROUP("mmc-4bit", jz4740_mmc_4bit, 0),
-> --
-> 2.7.4
-> 
-
-
+greg k-h
