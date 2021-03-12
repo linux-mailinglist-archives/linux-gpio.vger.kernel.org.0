@@ -2,81 +2,192 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12B5E339164
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 16:35:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8729E33980B
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 21:13:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231216AbhCLPez (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Mar 2021 10:34:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
+        id S234664AbhCLUMo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Mar 2021 15:12:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232343AbhCLPeh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Mar 2021 10:34:37 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C93C061574;
-        Fri, 12 Mar 2021 07:34:37 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id b23so2087279pfo.8;
-        Fri, 12 Mar 2021 07:34:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IMlB5WRb/6LYe66SQ3A66bzr1N8mWxVpXGv0FndsikQ=;
-        b=muhrLMxp/uhE6jH7vYF+83nHcyO0KVTdqDJuVyASfzrwNi8lq1s/ZIOZHbyEsHQxJf
-         k98hS/4nfRZR1u4xTbDadvAqekIrCuF8NXRqVwnCLuKka1Jej74JNdLDbIbmJXZPAg+P
-         ck5EMD9D3uKVSFX4T6GdvDXcf8vL0I4l3vsyzf7TYD8glKZ1ABmX/4kl0DgdOeB/orNt
-         xgpvFtaMYceWhE424xf3nLjH5cSc7yRFBy3oy3d/HUgf8M1QyiwzYJsctzESvcQCRocp
-         NS9k3c2Z+EZ1rzGrTUxnuB3N1+CsdKRPvoOAL0PvfwLVP0RvMlCM9jNuTBupbGVEBZVx
-         CjNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IMlB5WRb/6LYe66SQ3A66bzr1N8mWxVpXGv0FndsikQ=;
-        b=IYM10SX29ZhsvaLeCqV/hadSxds82yL0b8wtpO3/3Wn8bs/Si1K7xkRXMC6tCniHJY
-         REVDyKzYuttbl1MaKiirYyv6HGHkXTJOd26vicZfwWW7Jfazo3s8zABg5pXehcTrOQBB
-         nsv3uCDxqHGwbmr2vJSjRjlqAgNqVGM2wX7N2nFFPe6zq1OWwqetjqSvYXnoNXZrAxXT
-         NW9Xdy5xBZgXBwgHGOBG6OcXOFVmeb8lJL6/Hi4FPTq14ojxupb5RjEmLs9pBDKscr7b
-         HPa22d7BicRkFd2qKG8hHrHSP8a/pZiCSV8KSYfIELCDnqzFu5MPdc9Cf8Iu3GgimnYG
-         1Uww==
-X-Gm-Message-State: AOAM532h55Tbio9QmAKsmuH8EniBi12/l3k/aRgFFCgjFHtTqnHg4ksq
-        ZJI4+5mNJvH7Vwh2+hRkb7HNURON3mLuk00BQ/I=
-X-Google-Smtp-Source: ABdhPJzjDWG88EO20WB2WDa3XuyhugX6rwbSGpAoIxt+2i+AgxXkbWt/XdIl3kTfrvHcZXJlVrZ4GrNx5PBhfweiv/E=
-X-Received: by 2002:a62:528e:0:b029:1f5:c5ee:a487 with SMTP id
- g136-20020a62528e0000b02901f5c5eea487mr12812604pfb.7.1615563276638; Fri, 12
- Mar 2021 07:34:36 -0800 (PST)
+        with ESMTP id S234645AbhCLUMj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Mar 2021 15:12:39 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4957AC061761
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Mar 2021 12:12:39 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lKo8y-0004RE-Cj; Fri, 12 Mar 2021 21:12:20 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lKo8w-00089j-Gb; Fri, 12 Mar 2021 21:12:18 +0100
+Date:   Fri, 12 Mar 2021 21:12:17 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        wahrenst@gmx.net, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        linux-clk@vger.kernel.org, sboyd@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
+        andy.shevchenko@gmail.com
+Subject: Re: [PATCH v8 11/11] pwm: Add Raspberry Pi Firmware based PWM bus
+Message-ID: <20210312201217.n2sav23swy7ii4uo@pengutronix.de>
+References: <20210312122454.24480-1-nsaenzjulienne@suse.de>
+ <20210312122454.24480-12-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-References: <CA+G9fYvXBk8njCeodicbtc72LLwSGvODLqqBTjfEHthjvUH7AQ@mail.gmail.com>
- <YEtuo59GNHSGZ5eK@kroah.com>
-In-Reply-To: <YEtuo59GNHSGZ5eK@kroah.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 12 Mar 2021 17:34:20 +0200
-Message-ID: <CAHp75VcM-UtzxE84cD+fCYCNNgQZTSy7R5C9gRnR7TgaP6Tktg@mail.gmail.com>
-Subject: Re: drivers/gpio/gpio-pca953x.c:117:40: error: 'ACPI_GPIO_QUIRK_ABSOLUTE_NUMBER'
- undeclared here (not in a function)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-stable <stable@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="e6h2cu7dk3om4cg7"
+Content-Disposition: inline
+In-Reply-To: <20210312122454.24480-12-nsaenzjulienne@suse.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 12, 2021 at 3:39 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Fri, Mar 12, 2021 at 06:57:51PM +0530, Naresh Kamboju wrote:
-> > While building stable rc 5.4 for arm and arm64 the following warnings / errors
-> > were noticed.
 
-> Should now be fixed up, sorry about that.
+--e6h2cu7dk3om4cg7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right, thank you, Greg, for fixing this mess up!
+Hello Nicolas,
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Fri, Mar 12, 2021 at 01:24:54PM +0100, Nicolas Saenz Julienne wrote:
+> Adds support to control the PWM bus available in official Raspberry Pi
+> PoE HAT. Only RPi's co-processor has access to it, so commands have to
+> be sent through RPi's firmware mailbox interface.
+>=20
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>=20
+> ---
+>=20
+> Changes since v7:
+>  - Remove unwarranted RPI_PWM_DEF_DUTY_REG usage
+>=20
+>  Changes since v6:
+> - Use %pe
+> - Round divisions properly
+> - Use dev_err_probe()
+> - Pass check_patch
+>=20
+> Changes since v3:
+>  - Rename compatible string to be more explicit WRT to bus's limitations
+>=20
+> Changes since v2:
+>  - Use devm_rpi_firmware_get()
+>  - Rename driver
+>  - Small cleanups
+>=20
+> Changes since v1:
+>  - Use default pwm bindings and get rid of xlate() function
+>  - Correct spelling errors
+>  - Correct apply() function
+>  - Round values
+>  - Fix divisions in arm32 mode
+>  - Small cleanups
+>=20
+>  drivers/pwm/Kconfig               |   9 ++
+>  drivers/pwm/Makefile              |   1 +
+>  drivers/pwm/pwm-raspberrypi-poe.c | 206 ++++++++++++++++++++++++++++++
+>  3 files changed, 216 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-raspberrypi-poe.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index a7a7a9f26aef..d3371ac7b871 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -431,6 +431,15 @@ config PWM_PXA
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-pxa.
+> =20
+> +config PWM_RASPBERRYPI_POE
+> +	tristate "Raspberry Pi Firwmware PoE Hat PWM support"
+> +	# Make sure not 'y' when RASPBERRYPI_FIRMWARE is 'm'. This can only
+> +	# happen when COMPILE_TEST=3Dy, hence the added !RASPBERRYPI_FIRMWARE.
+> +	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWA=
+RE)
+> +	help
+> +	  Enable Raspberry Pi firmware controller PWM bus used to control the
+> +	  official RPI PoE hat
+> +
+>  config PWM_RCAR
+>  	tristate "Renesas R-Car PWM support"
+>  	depends on ARCH_RENESAS || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 4e35a55fa7b6..d3879619bd76 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -39,6 +39,7 @@ obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
+>  obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
+>  obj-$(CONFIG_PWM_PCA9685)	+=3D pwm-pca9685.o
+>  obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
+> +obj-$(CONFIG_PWM_RASPBERRYPI_POE)	+=3D pwm-raspberrypi-poe.o
+>  obj-$(CONFIG_PWM_RCAR)		+=3D pwm-rcar.o
+>  obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
+>  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
+> diff --git a/drivers/pwm/pwm-raspberrypi-poe.c b/drivers/pwm/pwm-raspberr=
+ypi-poe.c
+> new file mode 100644
+> index 000000000000..71ade5e55069
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-raspberrypi-poe.c
+> @@ -0,0 +1,206 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+2021?
+
+> + * For more information on Raspberry Pi's PoE hat see:
+> + * https://www.raspberrypi.org/products/poe-hat/
+
+Out of personal interest: Is this hat also able to power a RPi CM4?
+
+> + * Limitations:
+> + *  - No disable bit, so a disabled PWM is simulated by duty_cycle 0
+> + *  - Only normal polarity
+> + *  - Fixed 12.5 kHz period
+> + *
+> + * The current period is completed when HW is reconfigured.
+> + */
+
+Other than that as mentioned in the previous round: This looks good,
+
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+What is your thought about how to get this series merged? At least
+input, staging, armsoc, clk, reset anf firmware are touched. Do you
+prepare a branch for merging in the relevant trees (once you have all
+the necessary Acks)?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--e6h2cu7dk3om4cg7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBLyx0ACgkQwfwUeK3K
+7Ak+VQf+I16Pur4J8v1VK5J08zAGFG+/Lgxk4CBXKIV1Hs8zZ+Xj6Y7sobqkPmiG
+/75gKqcFB43BHDrOAwWVMNlE9OChTTrI9grjBHBTGl+46cJkuu5qus/xptp3mxQu
+zdTcmzfkrLYPdw3AQaofaLHg5IL0RZkvovBmiUa+JaN89EtjvuLRIFL8wtipt/0J
+rE8baVUKZd1ttRm+eotIk3iknzxFUe3xAVFJ8YRlNBwyGlEQQBsZFku3+rP2p47w
+6K30Tnft0JKiK+4fuMFhQ5xw3ugSSWThr6/kDYQnTk/BagTPeUyftRmh4/JNkc8X
+7OhSbf8srKbZC8859TEqJZ5M48RRxw==
+=bnOj
+-----END PGP SIGNATURE-----
+
+--e6h2cu7dk3om4cg7--
