@@ -2,98 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E2B7338AEF
+	by mail.lfdr.de (Postfix) with ESMTP id A0300338AF1
 	for <lists+linux-gpio@lfdr.de>; Fri, 12 Mar 2021 12:05:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233898AbhCLLEa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Mar 2021 06:04:30 -0500
-Received: from mga02.intel.com ([134.134.136.20]:5499 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233554AbhCLLEA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 12 Mar 2021 06:04:00 -0500
-IronPort-SDR: Mz/uavYLg1nriw4SDf7sOW10LDGJs9/+ZuAZT6qKGKbt6WBOEuWtTXOMEAKRfqZvh92rdtbeIY
- ZnKIoa24iBOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9920"; a="175939530"
-X-IronPort-AV: E=Sophos;i="5.81,243,1610438400"; 
-   d="scan'208";a="175939530"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2021 03:03:58 -0800
-IronPort-SDR: /6TpBsSEM7T8QD3s4i9cejjiudGvvwuwTdPHMSBWm5BAzAXBnCnAaOftdYr8trlo9hlgCVfEBG
- uvC4xBrDbpzQ==
-X-IronPort-AV: E=Sophos;i="5.81,243,1610438400"; 
-   d="scan'208";a="521392591"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2021 03:03:55 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lKfaB-00BpeO-JN; Fri, 12 Mar 2021 13:03:51 +0200
-Date:   Fri, 12 Mar 2021 13:03:51 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3 08/11] gpio: sim: new testing module
-Message-ID: <YEtKlyV13h2fbwJR@smile.fi.intel.com>
-References: <20210309205921.15992-1-brgl@bgdev.pl>
- <20210309205921.15992-9-brgl@bgdev.pl>
- <YEi7fth6sZWgKd+q@smile.fi.intel.com>
- <CAMRc=MfeCWNnXwqBBu3CcdHXQ5QnNPBh8EJRTCtyZau+RqE-0w@mail.gmail.com>
+        id S233885AbhCLLEb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Mar 2021 06:04:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233533AbhCLLEK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Mar 2021 06:04:10 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289C7C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Mar 2021 03:04:04 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id j3so7355406edp.11
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Mar 2021 03:04:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dt1Jconi7vhAXPLDEe/e1ikNWrargx4HIeN2mZt6shg=;
+        b=U02CQYuzNT/l5o6a/iFgp2H4ACVS/b+TN/O0uL1cd4UBtIp0WQ0EsAGvtC2ZOcUugh
+         ghcDh9kMZI2Idg4P6slc6OQvJaLTNzQmtWIyU/9fBKVEwn4mUt5xNMgHY7Awtxb7Wddn
+         HKNyHcsJQztT51BYpOcHVwRPdD2LRMgXGHMoJBjfie+7nzL0O2vbGAWhw8ynfh8yUz00
+         pGdPxQ+4oyrrN2DSjaQVjUhCT9xAu9O0xyukBv8DGf821bH+1eEYIUuYGHYtJxZgfazZ
+         BqNgLEyi08RvJnAh/Ufwpiz1HXOe5Kji0/X/DuBw2NJNaHWWGYf+JDVFSeyO9UqTWbAR
+         F/qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dt1Jconi7vhAXPLDEe/e1ikNWrargx4HIeN2mZt6shg=;
+        b=TDuLrgyekqhy7JhzigaRQIwY0wRTdjqmklcWOaGqsezMai1XR0/iHtCKlqpi7ePWPX
+         7fOEnvAaV+3zTKTpmhfDKVPi6PJcDJrhsapLP7LVZYIk2BZtfjF2rjT2kkBemFxCBjxL
+         n9mW0EnuIjGzIM9kjP/3mcXG5vClsBNnpmboKoJKZ8G7IvFoDnJwPyEubLFW9TzQHmJu
+         Vh3+KtvYZ0zXO1F8ET5c0H7j4lBlgq/NymTg5B22OuoMjWWw7LiWuRHyhfSlvORlPJ1T
+         Ux27ecG+tho7jTsxKjWOAmbU7uadUmER+LCns9gdU1oY+eekM6Zar/pjGg9UhTrdcRlN
+         zYkQ==
+X-Gm-Message-State: AOAM532PX8TnLboa+GZAAiHeoIwYGI2juSOp4JMfCQBhnm7O3lGqRCKn
+        35f7t+gOFTz/ahpNoNutGk9PHtrFZpgHZppxdGbL8g==
+X-Google-Smtp-Source: ABdhPJwyuDg0uPHrInwoHv+S7M2QS7kHn756G9nstinMUDgFBc+SLZLj6r4DwwZrkMRYbyl3B+drWHkN49y6k5RYcn0=
+X-Received: by 2002:aa7:d813:: with SMTP id v19mr802661edq.213.1615547042864;
+ Fri, 12 Mar 2021 03:04:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfeCWNnXwqBBu3CcdHXQ5QnNPBh8EJRTCtyZau+RqE-0w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210312080423.278094-1-weiyongjun1@huawei.com>
+In-Reply-To: <20210312080423.278094-1-weiyongjun1@huawei.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 12 Mar 2021 12:03:52 +0100
+Message-ID: <CAMpxmJXxdTSoWYwRR2o2XwRh4aToPBEsE+C5hNaFvGiYAjkHNw@mail.gmail.com>
+Subject: Re: [PATCH -next] gpiolib: Fix error return code in gpiolib_dev_init()
+To:     "'Wei Yongjun" <weiyongjun1@huawei.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 12, 2021 at 09:54:58AM +0100, Bartosz Golaszewski wrote:
-> On Wed, Mar 10, 2021 at 1:28 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Mar 12, 2021 at 8:55 AM 'Wei Yongjun <weiyongjun1@huawei.com> wrote:
+>
+> From: Wei Yongjun <weiyongjun1@huawei.com>
+>
+> Fix to return a negative error code from the error handling
+> case instead of 0, as done elsewhere in this function.
+>
+> Fixes: 4731210c09f5 ("gpiolib: Bind gpio_device to a driver to enable fw_devlink=on by default")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> ---
+>  drivers/gpio/gpiolib.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index cee4333f8ac7..18086262dd48 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -4242,7 +4242,8 @@ static int __init gpiolib_dev_init(void)
+>                 return ret;
+>         }
+>
+> -       if (driver_register(&gpio_stub_drv) < 0) {
+> +       ret = driver_register(&gpio_stub_drv);
+> +       if (ret < 0) {
+>                 pr_err("gpiolib: could not register GPIO stub driver\n");
+>                 bus_unregister(&gpio_bus_type);
+>                 return ret;
+>
 
-...
+Applied to fixes, thanks!
 
-> > > +             ret = sprintf(page, "n/a\n");
-> >
-> > I dunno '/' (slash) is a good character to be handled in a shell.
-> > I would prefer 'none' or 'not available' (I think space is easier,
-> > because the rules to escape much simpler: need just to take it into
-> > quotes, while / needs to be escaped separately).
-> >
-> 
-> My test cases work fine with 'n/a' but I can change it to 'none' if
-> it's less controversial.
-
-
-% git grep -n -w '"none"' -- drivers/ arch/ | wc -l
-371
-
-% git grep -n -w '"n/a"' -- drivers/ arch/ | wc -l
-15
-
-% git grep -n -w '"not available"' -- drivers/ arch/ | wc -l
-5
-
-...
-
-> But I would be creating empty properties for nothing. Better to just
-> not have them at all.
-
-Up to you.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bartosz
