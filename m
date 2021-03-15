@@ -2,108 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A336D33BFC2
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 16:32:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD2F133BFC7
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 16:33:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230226AbhCOPbn convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 15 Mar 2021 11:31:43 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:31963 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231777AbhCOPbh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 15 Mar 2021 11:31:37 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-267-YYshquLuNiyLYx0KEZ2_ng-1; Mon, 15 Mar 2021 15:31:34 +0000
-X-MC-Unique: YYshquLuNiyLYx0KEZ2_ng-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.2; Mon, 15 Mar 2021 15:31:27 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.012; Mon, 15 Mar 2021 15:31:27 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Bartosz Golaszewski' <brgl@bgdev.pl>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>, Shuah Khan <shuah@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: RE: [PATCH v5 02/11] configfs: use (1UL << bit) for internal flags
-Thread-Topic: [PATCH v5 02/11] configfs: use (1UL << bit) for internal flags
-Thread-Index: AQHXGXuz8CFTZTXyV0K3e3EZ1vnDeKqFLTtg
-Date:   Mon, 15 Mar 2021 15:31:27 +0000
-Message-ID: <6bc83972093a4be4ad163069a437ec25@AcuMS.aculab.com>
-References: <20210315091400.13772-1-brgl@bgdev.pl>
- <20210315091400.13772-3-brgl@bgdev.pl>
-In-Reply-To: <20210315091400.13772-3-brgl@bgdev.pl>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S231860AbhCOPdT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Mar 2021 11:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229808AbhCOPcs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 11:32:48 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D58C06174A
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:32:47 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id z8so16743783ljm.12
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u4mfgg1DIUGlXI6xo6QY7f2Figp4+tXtMVg/4l0zfRQ=;
+        b=BlZKt2JOJ3qgNgj0raT2+uZA/qUkIWMlqrm2M+aX6bHHfX3i11JrEg14J+LmgyfKlm
+         hlv5qWWIppwBes/z3o8TRayhMEDfoRD7wDs/s/70xXzU0Fp2VRToNojrk7W/Xegn0ZFx
+         XVRSgCYezE3pnaKTYGWDxS8JIfp8IPRrjv6Fs8roOe6g1Btkp5h00wT27asoxCp5hoKF
+         V7ZFDy997e6i61sDg4XS5CNeSgHlhg29kM24P0LkEfJubU+L+3r9bsAHykmIk6RqD6LP
+         9s99JD2sokPfM8m4ZAZMgyMqoAkwC/WCC0JGwqfqkCoEaCfrJeOOuUHFJjwCfC8nWCdk
+         m5Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u4mfgg1DIUGlXI6xo6QY7f2Figp4+tXtMVg/4l0zfRQ=;
+        b=rOH+l8lbiPmc9rD0LG1rz3pFEZnKNdnsE81BoXZIHKo2kZeNlbvTrk0JyO9WNE5R0Z
+         FIsiMWzpTnHqA0c66+4QBu8yempx0Im+AkVc5KvB5LAueDRs0ERNU3/xAoDXDj15uqFQ
+         ROAI7OMcmKOMfA0nEefAeJrCfa1fo7hHvpZLM2q5b5J2HCBFfnS/w+m1kqCKTGdkiWs3
+         imQm/KP4AY0ek34rF/ZCUJTXrfAVDQO5jpnjDacK6xrQ7MLwlVyo9BifOCtkWiVBoO4l
+         fwapilMoJ9/pPOBzr3yUW7ryIf4F7yBuETUEUhXhd+H/tH5fHlIB1rJnShpm0y5D1eyu
+         +hXA==
+X-Gm-Message-State: AOAM5314ZtqFhOjKCy/2xwf5kw2KYwQcJC/umvfpFwkRG7pv/trh9NfP
+        tVaY8wEVbSdsz7aJmWw5yCYsojU1Ij3oF3PRIxyKEvbe/it0U9eS
+X-Google-Smtp-Source: ABdhPJx7bQdMlV7qNayDIZJ4LIK/NhHoHaOaRFmne1Lui34RFwaVgtIahs6g02YLw46XTH+5paM8kjQz2UswgbyTke0=
+X-Received: by 2002:a2e:1649:: with SMTP id 9mr11340184ljw.74.1615822366345;
+ Mon, 15 Mar 2021 08:32:46 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20210305003907.1692515-1-jay.xu@rock-chips.com>
+In-Reply-To: <20210305003907.1692515-1-jay.xu@rock-chips.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 15 Mar 2021 16:32:35 +0100
+Message-ID: <CACRpkdaAL4U_ymEJTnP9SFV4P0EVLkRGsyVNY9PPqNPFPVxf+A@mail.gmail.com>
+Subject: Re: [PATCH 0/2] make rockchip pinctrl module able
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski
-> Sent: 15 March 2021 09:14
-> 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> For better readability and maintenance: use the (1UL << bit) for flag
-> definitions.
+On Fri, Mar 5, 2021 at 1:39 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
 
-If the values ever get printed in hex the hex definitions are
-actually more useful.
+> Make the rockchip pinctrl driver able to be module by unselect
+> PINCTRL_ROCKCHIP from ARCH_ROCKCHIP, then modify driver module define.
 
-	David
+Applied this again with the irqchip patch under, let's see how this
+works!
 
-...
-> -#define CONFIGFS_ROOT		0x0001
-> -#define CONFIGFS_DIR		0x0002
-> -#define CONFIGFS_ITEM_ATTR	0x0004
-> -#define CONFIGFS_ITEM_BIN_ATTR	0x0008
-> -#define CONFIGFS_ITEM_LINK	0x0020
-> -#define CONFIGFS_USET_DIR	0x0040
-> -#define CONFIGFS_USET_DEFAULT	0x0080
-> -#define CONFIGFS_USET_DROPPING	0x0100
-> -#define CONFIGFS_USET_IN_MKDIR	0x0200
-> -#define CONFIGFS_USET_CREATING	0x0400
-> +#define CONFIGFS_ROOT			(1UL << 0)
-> +#define CONFIGFS_DIR			(1UL << 1)
-> +#define CONFIGFS_ITEM_ATTR		(1UL << 2)
-> +#define CONFIGFS_ITEM_BIN_ATTR		(1UL << 3)
-> +#define CONFIGFS_ITEM_LINK		(1UL << 5)
-> +#define CONFIGFS_USET_DIR		(1UL << 6)
-> +#define CONFIGFS_USET_DEFAULT		(1UL << 7)
-> +#define CONFIGFS_USET_DROPPING		(1UL << 8)
-> +#define CONFIGFS_USET_IN_MKDIR		(1UL << 9)
-> +#define CONFIGFS_USET_CREATING		(1UL << 10)
->  #define CONFIGFS_NOT_PINNED	(CONFIGFS_ITEM_ATTR | CONFIGFS_ITEM_BIN_ATTR)
-> 
->  extern struct mutex configfs_symlink_mutex;
-> --
-> 2.30.1
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Yours,
+Linus Walleij
