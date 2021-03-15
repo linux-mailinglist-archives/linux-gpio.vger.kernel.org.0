@@ -2,89 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2183733C356
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 18:07:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F170833C39D
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 18:10:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234788AbhCORGt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Mar 2021 13:06:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57378 "EHLO
+        id S235556AbhCORJ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Mar 2021 13:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234773AbhCORGT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 13:06:19 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139F9C06175F;
-        Mon, 15 Mar 2021 10:06:18 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id a22-20020a17090aa516b02900c1215e9b33so14737723pjq.5;
-        Mon, 15 Mar 2021 10:06:18 -0700 (PDT)
+        with ESMTP id S235536AbhCORJw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 13:09:52 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F331C0613DB
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 10:09:52 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id g5so4426190uan.8
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 10:09:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V7IMmjZ2ome4sKp2EWacQS62zqJ+CHMpQY1RgLXOEn8=;
-        b=RWstzBctQjzNlskjf25HMDG8FuSbPRmreqUDL8nLvOZqOShocJCmVa5j2lJuWoQEvm
-         cVPaJOu+o9x4duK9xCpJjRJu7+EEPmAZQb41FuwNa9BzpA2zQVR1F3T8u1PHNomoK2yY
-         rNWtzOaFFZAETSjiNAiFrKNkfCAoRZx8Rd3yRVq6XBrJWmzNu9q3u6AXm7MZaeEQJbBw
-         6eVU9cqu/OPB8tXk5zPTyU+dKYNuYkXsTHqHahDYPjOoGMXleMYkSNvjSNSJbJL2p8jg
-         tSxjUWUGgZ66EzQNQ4LOOZUpWds2YEY9Kkm+aAo9dnBm4lvvg5s44umWo9uOCUxQZYxN
-         zffQ==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=7Vrbe4gpVhb7cfcmpNanXi5E+OCzidx3VGMrGNR2bC4=;
+        b=aXgMsfvJxS8rnPrkFXfXe2FXnX4z8Cqcu/QhnL5Qn1DjMCuOtoNVfGi4EBSS9Iknwn
+         vlNLqDk2YbQyiCk670OLjQr7loetNG1u4FZO8UCDQ2J04lVrlvZVYZ8kX/m2f/vpT8RG
+         ZS2Q72l+5VWjpF0FapEgmyk86Q2RyIYtBwW0g+Kv5gwmZmeSODXVZRu5TrncT2JBKVWl
+         0T4REScA9GLg4vUJnQBLz/6DT44uKbQMn8TCECFL0QnRbFsF40mm5TjkcPcIZSc0whXV
+         T2AgYFv8Od1V+OxvkOJjvUw7wQyrmJeMqbP2Cwhn97vz8cjryp78SHO5Uey9b3DA2nH3
+         +UTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V7IMmjZ2ome4sKp2EWacQS62zqJ+CHMpQY1RgLXOEn8=;
-        b=nRBxT20pcbBNbJivfCTvK0A1BvDcjwEO17YYyuy9P2iEf8x2Q3qaGNkv/E7/aphfcX
-         ph5+2B4q1QE+PeLl+ltgjpiskd0FV8Wzgj6c0LN6ta1PSeLLFknSlgBbEb+bUcZoLnk+
-         7GlYRCnRWkDF8rAzmTS1d9JpTWyWHH1YuN0PLDYQ4N0J7AS+YE+0Ziz+EHEsmHjf7miE
-         1UuSoqMDpd+32Q3T1EYGwgSBHwgRVDG5+8ZBoZTsDk24CG/mNGbs1YX7s4TbpB9CCFYF
-         J9gjDOIG6PHqVaUEd02OMSv/yr4HDzXzDI4W9Jsb7oA/f18luH7mb7eSiUccWdPwr8jy
-         RnLQ==
-X-Gm-Message-State: AOAM532Rc+nCxx7XMGBt8gxndO/NYPaHig2p6LiGk/zqVOxdsiK/9GA6
-        G+xjSFCFDLbWTsfu5aHtB2V5oPrYZuJjiDu5A4r62/db2rWKOA==
-X-Google-Smtp-Source: ABdhPJwokREzA5Kz3WMcEdCsj14E7nTUPnlAIe9WUeNdjUp5oJiT1aycDnGrpWKlL3l2x3i9SAWaR5c/bEbQniz+r0A=
-X-Received: by 2002:a17:902:ee02:b029:e6:5397:d79c with SMTP id
- z2-20020a170902ee02b02900e65397d79cmr12525321plb.21.1615827977610; Mon, 15
- Mar 2021 10:06:17 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=7Vrbe4gpVhb7cfcmpNanXi5E+OCzidx3VGMrGNR2bC4=;
+        b=Kb4Jwg5xigsoxdqa5kq/L7sM1uqq8ZZnuVQIIOmRZNRdX4Ahftz5fVT8llXD8vzreS
+         BHjHAUXJIjAHahDa4S7UpOPCAnNwZpVKcAZ7Quze9oEV7o0pgogbNGcNojEnYglEW4j1
+         5OgzIfHRSt1MnPB2FDO++wGBNCP3f3WsFSWJm6byIY9UcfaSyljpQH9fwX9wFZ+YAJAQ
+         JvVoHq+NqZA+a7T6XYhIrRcHPbtIgohtMeY4T/DJV/uYBGEPUU3Q9uGxxfiKdMtHLEc0
+         6QLl0PKhM1w7KekebFHDEk8f8SLY4D+Q3L9ftURX25oobTyHz5RFhAz5h02d8VWSTAyD
+         yLBg==
+X-Gm-Message-State: AOAM530S0nVojbzjLAJuS994zks3TBi2Tzmxx2FOSJqns+9aPWmllja2
+        peZmBoZOaR27gY+dQOFRvjl5YoosVOFK30siehQ=
+X-Google-Smtp-Source: ABdhPJz279ChG9se2R56+CgC4LM1QaXLH3vfcRaBnVrWnTQpeUm6AYsXRAqStDe2E32gf/IZJ47H7xYnUK1rrffxr7c=
+X-Received: by 2002:ab0:4129:: with SMTP id j38mr5247512uad.39.1615828191432;
+ Mon, 15 Mar 2021 10:09:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210315165940.90055-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210315165940.90055-1-andriy.shevchenko@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 15 Mar 2021 19:06:01 +0200
-Message-ID: <CAHp75Vcr86EPO2MX3z7z_mpiE=RrMHVN=1YCfzoYUh9Kcfnxzw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: mockup: Adjust documentation to the code
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>
+Received: by 2002:ab0:2e8f:0:0:0:0:0 with HTTP; Mon, 15 Mar 2021 10:09:50
+ -0700 (PDT)
+Reply-To: ezbtg22@gmail.com
+From:   "Mrs.E.Glenn" <mrganuserge654@gmail.com>
+Date:   Mon, 15 Mar 2021 10:09:50 -0700
+Message-ID: <CAH16wSNYh7NNhzrypnhaAQBv8EfF3vGrQ=w1tsAkdJyEQZxf=A@mail.gmail.com>
+Subject: From Mrs.Glenn
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 7:01 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> First of all one of the parameter missed 'mockup' in its name,
-> Second, the semantics of the integer pairs depends on the sign
-> of the base (the first value in the pair).
-
->          This parameter takes an argument in the form of an array of integer
-> -        pairs. Each pair defines the base GPIO number (if any) and the number
-> -        of lines exposed by the chip. If the base GPIO is -1, the gpiolib
-> -        will assign it automatically.
-> +        pairs. Each pair defines the base GPIO number (non-negative integer)
-> +        and the first number after the last of this chip. If the base GPIO
-> +        is -1, the gpiolib will assign it automatically. while the following
-> +        parameter is the number of lines exposed by the chip.
->
-> -        Example: gpio_mockup_ranges=-1,8,-1,16,405,4
-> +        Example: gpio_mockup_ranges=-1,8,-1,16,405,409
-
-Just a side note: it was always like this (I've checked the initial
-gpio-mockup.c code). I think you have to add more test cases.
-
 -- 
-With Best Regards,
-Andy Shevchenko
+Dear Beloved,
+
+I am Mrs Elizabet Glenn from Israel. I am a missionary but right now
+in a hospital bed in Israel. I am 59 years and childless; my husband
+is dead. I was diagnosed with terminal cancer. And my doctor just
+predicted that I have but very limited time to live due to damages in
+my system and as a result of that I decided to dispose my 10.5 million
+US dollars to a God-fearing one for the continuation of charitable
+work. This is why I located you.
+
+My guess about you may not be accurate because I came across your
+contact at the humanitarian calendar event of the year but I believe
+in God who divinely directed me to you for this solemn proposal of
+charitable work.
+
+Therefore I wholeheartedly wish to bequeath my fortune to you as a
+God-fearing person for the continuation of charitable work anywhere
+around the world.
+
+I shall be going in for a surgery operations soonest and desire this
+money to be transferred to you as I do not wish to leave this money in
+the bank because bankers might misuse it for their own interest after
+my death.
+
+As soon as I receive your quick reply assuring me that you will
+utilize the money as I instructed you for the benefit of the less
+privilege, I shall give you more details and also instruct my bank to
+release the money to you for the charity project. I hope you receive
+this mail in good health.
+
+Please contact me on this E-mail (ezbtg22@gmail.com) because I don t
+know what will be my situation in next minute,
+
+I am waiting for your reply.
+
+Yours sincerely,
+Mrs Elizabet Glenn.
