@@ -2,196 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F063033BF4B
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 16:01:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9A5D33BF55
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 16:03:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237237AbhCOPAb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Mar 2021 11:00:31 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:43129 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231939AbhCOPAX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 11:00:23 -0400
+        id S231659AbhCOPCT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Mar 2021 11:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232356AbhCOPB6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 11:01:58 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84582C061762
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:01:57 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id f16so16615230ljm.1
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:01:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1615820423; x=1647356423;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=vz8bh1TIcb8YUPIQ707G/A5kNUPOqo9Buwx7hhjsjfk=;
-  b=qFQThFgX71IhWzkTAGBSKlDbs3843PGPTf4raUk+rR70gT/QSTwvYs4V
-   hgprsu09gzC8HHiCgUgM9xZm1mZilAGCxweihQnPS914FzilPIqz41Bd/
-   XpZlK6C8ZnxN/jylx84eXlGz9REFfLcjDoTON2Zr2w8ugDiD0/CeHvGnx
-   A=;
-IronPort-HdrOrdr: A9a23:WObm/qwYfTeu5U7EMhOkKrPw1r1zdoIgy1knxilNYDZSddGVkN
- 3roeQD2XbP+VUscVwphNzoAsO9aFzG85od2+QsFJODeCWjh2eyNoFl6uLZowHIPyHl7OZS2e
- NBXsFFZuHYK0N1hcH78wGkE9AmqeP3lZyAvuvVw3dzQQwCUcgJhDtRMQqDF10zeQ8uP/YEPa
- CB7clKrSfIQxUqR/m8b0NrY8Hz4+TRlJT8YQMXbiRXijWzsQ==
-X-IronPort-AV: E=Sophos;i="5.81,249,1610409600"; 
-   d="scan'208";a="97431294"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 15 Mar 2021 15:00:22 +0000
-Received: from EX13D19EUB003.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 87D9DA069E;
-        Mon, 15 Mar 2021 15:00:19 +0000 (UTC)
-Received: from u8a88181e7b2355.ant.amazon.com (10.43.160.180) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 15 Mar 2021 15:00:12 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <tony@atomide.com>, <haojian.zhuang@linaro.org>,
-        <linus.walleij@linaro.org>
-CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <tgershi@amazon.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <hhhawa@amazon.com>
-Subject: [PATCH 2/2] pinctrl: pinctrl-single: fix pcs_pin_dbg_show() when bits_per_mux != 0
-Date:   Mon, 15 Mar 2021 16:59:44 +0200
-Message-ID: <20210315145944.20412-3-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210315145944.20412-1-hhhawa@amazon.com>
-References: <20210315145944.20412-1-hhhawa@amazon.com>
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QY8lIY0wxDgjqhgPmR3oqSAPcN+dZmRIxyhsDWmg3HE=;
+        b=Io+vwQyhFwf30Na7AhtJxt53GPCBbtg62y2TwdWdMNjM6KJHi/7kxKQS7ge1bA+zJn
+         Trt078pvA1u0Qm7++Mg7fQHpKdrms9AD1Nw3Zyfm2VmP2wEojPp8CEyfXnoFJaxn7PUf
+         czGO2GiJ3r/cA2fzh/2UwzGIln6QxrS2/TC01NOw9o+Co//fWDEiWUov8lTjmnm0gWyn
+         V6M6GrKL2tox7PEkYVhzD4jpoUw3b5fkn1iHQIE73LYw8phL5Z/wz5SmugLLAjP6WmHp
+         PvroLKge91aTFFf34SbIB3Ajw8sGQgl+kadqQUhN3tU3dCXlSn4LSx6S12n0F868n1eN
+         5BSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QY8lIY0wxDgjqhgPmR3oqSAPcN+dZmRIxyhsDWmg3HE=;
+        b=TsJ7TbnGIl0QI8BGZQUfmbSabhroLz21bYBHwjBrIoSMd2tASnGT9Cb4kS+tloAork
+         28Q8kj1wkuFG7deO8Yi1T4coSLee7Fxzl5vSuTN1bcA+86wDwAyhQK6LbmA1xuHMT7Tg
+         F1SjfX6jGBRokLqG+8vAog2HZwbrKf5CkkMyaT0BU5yyijB01PuyKTP3IDV3WqhlCk81
+         gQf78r3TY2/MVg08il9ATn7pkFtUH0rQ6LyY9SBeazouthrAGEHCAOf6Y+R29dJckm33
+         zzCAt91mzLgep9o51Se0/DE5YxQViJ6ddQi7X1vsUxGccHZkczIPP9JeuClXk2zjyrum
+         aVhQ==
+X-Gm-Message-State: AOAM533KCLpPMWJZG6fGhHNC4brY0nxhLEryp10bZql7jTU1h4Q2PT4h
+        sqGsJhz+Ur+q2mTwF3c1uDoxHlee1wOB+FhJFHG5gQ==
+X-Google-Smtp-Source: ABdhPJwP6M2BeuNg8Wl4Yd9JENqV2ZJU28IrnZD6iJXkjXemqM1ldlbsPmX/3Gt7T14qrLuDJGcF1XxDoGSF2iS48Mw=
+X-Received: by 2002:a2e:864a:: with SMTP id i10mr10389516ljj.467.1615820515887;
+ Mon, 15 Mar 2021 08:01:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.180]
-X-ClientProxiedBy: EX13D32UWB002.ant.amazon.com (10.43.161.139) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+References: <20210315082339.9787-1-sander@svanheule.net> <20210315082339.9787-2-sander@svanheule.net>
+In-Reply-To: <20210315082339.9787-2-sander@svanheule.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 15 Mar 2021 16:01:44 +0100
+Message-ID: <CACRpkdafRzWdue=iGBqO5nze-j46RcmeEy4g8NWHeUdcDB1ySQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: Binding for Realtek Otto GPIO
+To:     Sander Vanheule <sander@svanheule.net>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bert Vermeulen <bert@biot.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-An SError was detected when trying to print the supported pins in a
-pinctrl device which supports multiple pins per register. This change
-fixes the pcs_pin_dbg_show() in pinctrl-single driver when
-bits_per_mux != 0. In addition move offset calculation and pin offset in
-register to common function.
+On Mon, Mar 15, 2021 at 9:25 AM Sander Vanheule <sander@svanheule.net> wrote:
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
----
- drivers/pinctrl/pinctrl-single.c | 66 ++++++++++++++++++++++----------
- 1 file changed, 45 insertions(+), 21 deletions(-)
+> Add a binding description for Realtek's GPIO controller found on several
+> of their MIPS-based SoCs (codenamed Otto), such as the RTL838x and
+> RTL839x series of switch SoCs.
+>
+> A fallback binding 'realtek,otto-gpio' is provided for cases where the
+> actual port ordering is not known yet, and enabling the interrupt
+> controller may result in uncaught interrupts.
+>
+> Signed-off-by: Sander Vanheule <sander@svanheule.net>
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index 8a7922459896..0288bf430916 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -270,20 +270,53 @@ static void __maybe_unused pcs_writel(unsigned val, void __iomem *reg)
- 	writel(val, reg);
- }
- 
-+static unsigned int pcs_pin_reg_offset_get(struct pcs_device *pcs,
-+					   unsigned int pin)
-+{
-+	unsigned int offset, mux_bytes;
-+
-+	mux_bytes = pcs->width / BITS_PER_BYTE;
-+
-+	if (pcs->bits_per_mux) {
-+		unsigned int pin_offset_bytes;
-+
-+		pin_offset_bytes = (pcs->bits_per_pin * pin) / BITS_PER_BYTE;
-+		offset = (pin_offset_bytes / mux_bytes) * mux_bytes;
-+	} else {
-+		offset = pin * mux_bytes;
-+	}
-+
-+	return offset;
-+}
-+
-+static unsigned int pcs_pin_shift_reg_get(struct pcs_device *pcs,
-+					  unsigned int pin)
-+{
-+	return ((pin % (pcs->width / pcs->bits_per_pin)) * pcs->bits_per_pin);
-+}
-+
- static void pcs_pin_dbg_show(struct pinctrl_dev *pctldev,
- 					struct seq_file *s,
- 					unsigned pin)
- {
- 	struct pcs_device *pcs;
--	unsigned val, mux_bytes;
-+	unsigned int val;
- 	unsigned long offset;
- 	size_t pa;
- 
- 	pcs = pinctrl_dev_get_drvdata(pctldev);
- 
--	mux_bytes = pcs->width / BITS_PER_BYTE;
--	offset = pin * mux_bytes;
--	val = pcs->read(pcs->base + offset);
-+	offset = pcs_pin_reg_offset_get(pcs, pin);
-+
-+	if (pcs->bits_per_mux) {
-+		unsigned int pin_shift_in_reg = pcs_pin_shift_reg_get(pcs, pin);
-+
-+		val = pcs->read(pcs->base + offset)
-+			& (pcs->fmask << pin_shift_in_reg);
-+	} else {
-+		val = pcs->read(pcs->base + offset);
-+	}
-+
- 	pa = pcs->res->start + offset;
- 
- 	seq_printf(s, "%zx %08x %s ", pa, val, DRIVER_NAME);
-@@ -384,7 +417,6 @@ static int pcs_request_gpio(struct pinctrl_dev *pctldev,
- 	struct pcs_device *pcs = pinctrl_dev_get_drvdata(pctldev);
- 	struct pcs_gpiofunc_range *frange = NULL;
- 	struct list_head *pos, *tmp;
--	int mux_bytes = 0;
- 	unsigned data;
- 
- 	/* If function mask is null, return directly. */
-@@ -392,29 +424,27 @@ static int pcs_request_gpio(struct pinctrl_dev *pctldev,
- 		return -ENOTSUPP;
- 
- 	list_for_each_safe(pos, tmp, &pcs->gpiofuncs) {
-+		u32 offset;
-+
- 		frange = list_entry(pos, struct pcs_gpiofunc_range, node);
- 		if (pin >= frange->offset + frange->npins
- 			|| pin < frange->offset)
- 			continue;
--		mux_bytes = pcs->width / BITS_PER_BYTE;
- 
--		if (pcs->bits_per_mux) {
--			int byte_num, offset, pin_shift;
-+		offset = pcs_pin_reg_offset_get(pcs, pin);
- 
--			byte_num = (pcs->bits_per_pin * pin) / BITS_PER_BYTE;
--			offset = (byte_num / mux_bytes) * mux_bytes;
--			pin_shift = pin % (pcs->width / pcs->bits_per_pin) *
--				    pcs->bits_per_pin;
-+		if (pcs->bits_per_mux) {
-+			int pin_shift = pcs_pin_shift_reg_get(pcs, pin);
- 
- 			data = pcs->read(pcs->base + offset);
- 			data &= ~(pcs->fmask << pin_shift);
- 			data |= frange->gpiofunc << pin_shift;
- 			pcs->write(data, pcs->base + offset);
- 		} else {
--			data = pcs->read(pcs->base + pin * mux_bytes);
-+			data = pcs->read(pcs->base + offset);
- 			data &= ~pcs->fmask;
- 			data |= frange->gpiofunc;
--			pcs->write(data, pcs->base + pin * mux_bytes);
-+			pcs->write(data, pcs->base + offset);
- 		}
- 		break;
- 	}
-@@ -726,14 +756,8 @@ static int pcs_allocate_pin_table(struct pcs_device *pcs)
- 	for (i = 0; i < pcs->desc.npins; i++) {
- 		unsigned offset;
- 		int res;
--		int byte_num;
- 
--		if (pcs->bits_per_mux) {
--			byte_num = (pcs->bits_per_pin * i) / BITS_PER_BYTE;
--			offset = (byte_num / mux_bytes) * mux_bytes;
--		} else {
--			offset = i * mux_bytes;
--		}
-+		offset = pcs_pin_reg_offset_get(pcs, i);
- 		res = pcs_add_pin(pcs, offset);
- 		if (res < 0) {
- 			dev_err(pcs->dev, "error adding pins: %i\n", res);
--- 
-2.17.1
+These bindings look good to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
