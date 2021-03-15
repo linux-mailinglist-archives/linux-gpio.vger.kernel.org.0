@@ -2,72 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD2F133BFC7
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 16:33:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 442D633BFF0
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 16:35:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231860AbhCOPdT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Mar 2021 11:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36488 "EHLO
+        id S232557AbhCOPe4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Mar 2021 11:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbhCOPcs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 11:32:48 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D58C06174A
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:32:47 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id z8so16743783ljm.12
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:32:47 -0700 (PDT)
+        with ESMTP id S229900AbhCOPe1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 11:34:27 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D03FEC06175F
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:34:26 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id 18so57488039lff.6
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=u4mfgg1DIUGlXI6xo6QY7f2Figp4+tXtMVg/4l0zfRQ=;
-        b=BlZKt2JOJ3qgNgj0raT2+uZA/qUkIWMlqrm2M+aX6bHHfX3i11JrEg14J+LmgyfKlm
-         hlv5qWWIppwBes/z3o8TRayhMEDfoRD7wDs/s/70xXzU0Fp2VRToNojrk7W/Xegn0ZFx
-         XVRSgCYezE3pnaKTYGWDxS8JIfp8IPRrjv6Fs8roOe6g1Btkp5h00wT27asoxCp5hoKF
-         V7ZFDy997e6i61sDg4XS5CNeSgHlhg29kM24P0LkEfJubU+L+3r9bsAHykmIk6RqD6LP
-         9s99JD2sokPfM8m4ZAZMgyMqoAkwC/WCC0JGwqfqkCoEaCfrJeOOuUHFJjwCfC8nWCdk
-         m5Ug==
+        bh=DJFHgQj3Rz5NWDR4XSLYMVinHkl1IuvWsJnnQR1mi3o=;
+        b=J/c5I95b0Hba1H+HkbeBYx+R2Rk7dFsvCoVzEzi3+2GnM3eyQu3OpehyaAz+HW9hQe
+         Ldn06hcbwYPP0+HMNIrrA1Dwdf5sS8vIWDJoDuw3QLvYFZLZT4LHlXcAwpdpLyt6ofD2
+         jOktV+J4PoWD/g19bu5zgmCRZW6oqbDRwW8sw7w12XO5kZnMnG5qCCT+mubiCdHspL4a
+         Q8JFZJuKLz4G/SuT3FdBtjMrF3feGMs4gOYvdNHhpN+gNizyWDDz+aJP1bbmWjCLzD1g
+         EOsDiK7OlGGWVJhfYstvNy4xkocD0V6Cc75qOQN8FeDVp6zY3k4Ki2ZO+KobFthjaJtv
+         8moA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=u4mfgg1DIUGlXI6xo6QY7f2Figp4+tXtMVg/4l0zfRQ=;
-        b=rOH+l8lbiPmc9rD0LG1rz3pFEZnKNdnsE81BoXZIHKo2kZeNlbvTrk0JyO9WNE5R0Z
-         FIsiMWzpTnHqA0c66+4QBu8yempx0Im+AkVc5KvB5LAueDRs0ERNU3/xAoDXDj15uqFQ
-         ROAI7OMcmKOMfA0nEefAeJrCfa1fo7hHvpZLM2q5b5J2HCBFfnS/w+m1kqCKTGdkiWs3
-         imQm/KP4AY0ek34rF/ZCUJTXrfAVDQO5jpnjDacK6xrQ7MLwlVyo9BifOCtkWiVBoO4l
-         fwapilMoJ9/pPOBzr3yUW7ryIf4F7yBuETUEUhXhd+H/tH5fHlIB1rJnShpm0y5D1eyu
-         +hXA==
-X-Gm-Message-State: AOAM5314ZtqFhOjKCy/2xwf5kw2KYwQcJC/umvfpFwkRG7pv/trh9NfP
-        tVaY8wEVbSdsz7aJmWw5yCYsojU1Ij3oF3PRIxyKEvbe/it0U9eS
-X-Google-Smtp-Source: ABdhPJx7bQdMlV7qNayDIZJ4LIK/NhHoHaOaRFmne1Lui34RFwaVgtIahs6g02YLw46XTH+5paM8kjQz2UswgbyTke0=
-X-Received: by 2002:a2e:1649:: with SMTP id 9mr11340184ljw.74.1615822366345;
- Mon, 15 Mar 2021 08:32:46 -0700 (PDT)
+        bh=DJFHgQj3Rz5NWDR4XSLYMVinHkl1IuvWsJnnQR1mi3o=;
+        b=A/5hsBEZgsg2WuDMCepVmPr3nXfhVKWV0ll4gHBID3iCrTVIOBFNZazfQ1kfJ6mND2
+         DyyuimAmLzDeSR9R6yWvtP5cyR7Xbt6mW/QRIQRMv2tCkt7rOq4ox1vqK1SwR5Tq/24F
+         A2T8Yelg6cW278IP5Y7nSPrAmUkNw89ccWladHaqehmavBmA4VM5V//FibQoFvCz9OqR
+         +qVENOm3KH55Ff+bjhCJwU6lOBfz0yNV3Kkz8F+D+kxtg7KWfVNnVGkgBj80JlHWQceD
+         yrxQatFBp3gGbJcahuV91JY6AYwk4t19hla3VsNmsEfJdxR6C2ayIyl9bRvBF+Qa1KNY
+         M/CA==
+X-Gm-Message-State: AOAM531qyGM18oONxM32nEupNcaO9mBPCF9/jCMUHA/OrBNUcfBNYWpT
+        1OdubGVqatoke4uZxM9WTJ1Qj78HpHarvrt1lfbk5A==
+X-Google-Smtp-Source: ABdhPJyjJ697DuzYBqPKGfRJQy1wCGsisSNBPedw8isfy+DeNQi4QyEJS57Qs7aQBPxaqr20Enm6gNFFos+br2ql1YU=
+X-Received: by 2002:a19:548:: with SMTP id 69mr8249366lff.465.1615822465329;
+ Mon, 15 Mar 2021 08:34:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210305003907.1692515-1-jay.xu@rock-chips.com>
-In-Reply-To: <20210305003907.1692515-1-jay.xu@rock-chips.com>
+References: <20210306125122.15043-1-baijiaju1990@gmail.com>
+In-Reply-To: <20210306125122.15043-1-baijiaju1990@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 15 Mar 2021 16:32:35 +0100
-Message-ID: <CACRpkdaAL4U_ymEJTnP9SFV4P0EVLkRGsyVNY9PPqNPFPVxf+A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] make rockchip pinctrl module able
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+Date:   Mon, 15 Mar 2021 16:34:14 +0100
+Message-ID: <CACRpkdajavmT20-w0Bahj_AvJRXQnfSiwkY-Vevm_dXD6VLaaw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ti: fix error return code of ti_iodelay_probe()
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Zheng Yongjun <zhengyongjun3@huawei.com>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 5, 2021 at 1:39 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+On Sat, Mar 6, 2021 at 1:51 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
 
-> Make the rockchip pinctrl driver able to be module by unselect
-> PINCTRL_ROCKCHIP from ARCH_ROCKCHIP, then modify driver module define.
+> When ti_iodelay_pinconf_init_dev() fails, no error return code of
+> ti_iodelay_probe() is assigned.
+> To fix this bug, ret is assigned with the return value of
+> ti_iodelay_pinconf_init_dev(), and then ret is checked.
+>
+> Reported-by: TOTE Robot <oslab@tsinghua.edu.cn>
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-Applied this again with the irqchip patch under, let's see how this
-works!
+Patch applied!
 
 Yours,
 Linus Walleij
