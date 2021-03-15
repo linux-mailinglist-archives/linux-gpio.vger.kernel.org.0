@@ -2,85 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47CB233C1F7
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 17:33:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9570C33C23C
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 17:38:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232328AbhCOQdI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Mar 2021 12:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49846 "EHLO
+        id S234233AbhCOQhZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Mar 2021 12:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233873AbhCOQck (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 12:32:40 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20448C06175F
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 09:32:40 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id y1so16996000ljm.10
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 09:32:40 -0700 (PDT)
+        with ESMTP id S233454AbhCOQhM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 12:37:12 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB1CC06174A;
+        Mon, 15 Mar 2021 09:37:11 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id kk2-20020a17090b4a02b02900c777aa746fso15079728pjb.3;
+        Mon, 15 Mar 2021 09:37:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9x36cr7sfYTbtX9K9YpSG1gMw2te24dVSovNQkqAfNY=;
-        b=ypIWuPXz4w1n/1s1mLqibXK95L3fsuPf8Ey3O+EZn37oTglyTgr/ChphFNV/FxNk6+
-         HcZo7wZ51e7zo1wiumftIpbdHEaQHJ7CunqU8jkJLFQZ/lTXrVN117tR10WCGpr3bbd2
-         XXmD2E1pLgGYf9RhtcCtWcJwFHDJR3hJDioMc2FJxe7/uyDJipemOVDifLutmaklZMzm
-         xAWC9CY2zzTnuzVVd3EKkf+JW3Z0u6sazi8xCcZHEAg67Mocp9v8vdx1uzlj34jlUjLE
-         9MFFxflGIr11JgzzpWikNaj6Wl4mQ6JgKCvkwSpOcDyOUvJzU6uanI2mieygBKqlinLo
-         IPlw==
+        bh=hxTr+jCjNOdK/SRs3Tz7jJtcDFSQzLPh/SdXv7CFTJg=;
+        b=JHodpzXGHG28Jf7mWc3g/MgAtc320RuyEet1UCcaWQyK7ZZuuQwfPATnMaaDu3UZ6g
+         rfSKVM9y1Cr2jQHWZ3puucVOcr3BEdF/82IRcLQpmMac6pXzmSwKeVsHJKj39o4z5iaj
+         5RK4yk/8FJtIL8tKGtaxR87ThL2p6796IsY3aCSCYqweaI7SU5IYz30cJ7CF6Ep2zaXI
+         6V+GeqBOtftcGES3z677GDgAVpkObIjjPV5fd1KbBpQoEqvLCR+Cbwns5YotzYe0qGV6
+         yqKklX7LkN3/XQmjYwYxg63j2XS/mjqnZEiZBQGR+8+G2lPWn/74mfxMELRmmUnVuX4N
+         +9qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9x36cr7sfYTbtX9K9YpSG1gMw2te24dVSovNQkqAfNY=;
-        b=RzDbU1qNOHqxs9lTJ5I2k93nkcGipqBaXZyDnNKGhHcPFm+iTloYYC5r18Kmpjdlcf
-         Tl0NdCwUOLJA0d8wh181c4S9fLn9Ni46AKdrGGppNvSp/yr3nHw87t2KOEEJHyZG2ZG1
-         kU/GKDr9rstKQj0/4RhKxipibouNCK5jUHg3LG9ueaze0EMrk9KjkEOYCpjr4lJfNfC+
-         wJE+YpfiBVIK4t4wiHCkkAY09x9eeYizey71dnacNvfzmB+R/Vy7RuQ5uKsSYmXcxsGG
-         P/VUvU1yHKTD/m4CdDEQBbnK1gYU9VBmYm1/XkVl2Q91r0uOZE/Grz9cvphY9TDVgB0e
-         NfBQ==
-X-Gm-Message-State: AOAM533VZdoawMBjMivv723xnH0zTO/Yvmv0AV5mW4RXjCSBj+3+CROZ
-        0JA7DPPGgh6eUGGnco5N5h+5GUx34MUIk8IDbFL1UA==
-X-Google-Smtp-Source: ABdhPJxL6hEsF+7OqsUsZkHySTZyK3uwo5RHhA6dChnV53dav/IKHTYB6GIVaJo9OFJivkN6tv2e3nPh/02h8b22jzg=
-X-Received: by 2002:a2e:700a:: with SMTP id l10mr11130205ljc.368.1615825958642;
- Mon, 15 Mar 2021 09:32:38 -0700 (PDT)
+        bh=hxTr+jCjNOdK/SRs3Tz7jJtcDFSQzLPh/SdXv7CFTJg=;
+        b=WNgvFgkPGipVhjlJO1Rs7Z9fnKev7EBdLUxKmCj4pF5hKUZ3R/6k5AKEwYdtNtpsyo
+         0yBqCq/lJKE3RCqZDTQtbSb62N/Bfr3x3ldbUjPgwZzUSLwLinLMZnphx5OvOS1YxCOv
+         vdMpclm7eST9bWC1WGSq+yUJAUNbnNgI76E2SUA2sTjWYe8lwZaeBHCY4X8T1RgGJpjB
+         0ak7vGkZ7y7sgZ+cseB99Mj3nwRpKDl2nnLAIZyH2PdJ1gHd/4Q3vQNzpK3PP4sAUrbT
+         JFjupJ/fO6N8w5vhjBevfuuVYEf/2UzAdmU88rTw3XBHvda2MFiMUduQkHRm1BwJFuJO
+         LjsA==
+X-Gm-Message-State: AOAM530tnw+VRyTikVv1YEEHHNPOsNc75h2ZaOnk8MtJfNso3YmtrIqK
+        UyNaGjarW/10abnXL6U+bYWO0HdXArJMy2zI9h8=
+X-Google-Smtp-Source: ABdhPJzmD16eNSoHlg+ME0sV5oDSP8McG43pWnGy+W7nRmQ+OXh1nwhgopO1tf+cpxtFevI+9RbX/bEtq6FbXbhrpH0=
+X-Received: by 2002:a17:90a:db49:: with SMTP id u9mr14249289pjx.181.1615826230873;
+ Mon, 15 Mar 2021 09:37:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210311024102.15450-1-shawn.guo@linaro.org>
-In-Reply-To: <20210311024102.15450-1-shawn.guo@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 15 Mar 2021 17:32:27 +0100
-Message-ID: <CACRpkdanRjuErV17ZsSTOX8VpKQZuWge9b_vuKtgjyG9h6XV9g@mail.gmail.com>
-Subject: Re: [PATCH v5] pinctrl: qcom: sc8180x: add ACPI probe support
-To:     Shawn Guo <shawn.guo@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>
+References: <20210315091400.13772-1-brgl@bgdev.pl> <20210315091400.13772-3-brgl@bgdev.pl>
+ <6bc83972093a4be4ad163069a437ec25@AcuMS.aculab.com>
+In-Reply-To: <6bc83972093a4be4ad163069a437ec25@AcuMS.aculab.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 15 Mar 2021 18:36:54 +0200
+Message-ID: <CAHp75Vc3Fr3Ysv0p7-W1Bf5y1Em17psZ=eCgVNewdVF=AjPm-g@mail.gmail.com>
+Subject: Re: [PATCH v5 02/11] configfs: use (1UL << bit) for internal flags
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>, Shuah Khan <shuah@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 3:41 AM Shawn Guo <shawn.guo@linaro.org> wrote:
-
-> It adds ACPI probe support for pinctrl-sc8180x driver.  We have one
-> problem with ACPI table, i.e. GIO0 (TLMM) block has one single memory
-> resource to cover 3 tiles defined by SC8180X.  To follow the hardware
-> layout of 3 tiles which is already supported DT probe, it adds one
-> function to replace the original single memory resource with 3 named
-> ones for tiles.  With that, We can map memory for ACPI in the same way
-> as DT.
+On Mon, Mar 15, 2021 at 5:33 PM David Laight <David.Laight@aculab.com> wrote:
+> From: Bartosz Golaszewski
+> > Sent: 15 March 2021 09:14
+> >
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > For better readability and maintenance: use the (1UL << bit) for flag
+> > definitions.
 >
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> ---
-> Changes for v5:
-> - Keep .ngpios number as 190 to match SoC spec.
-> - Add comments for sc8180x_pinctrl_add_tile_resources().
-> - Drop redundant error message.
+> If the values ever get printed in hex the hex definitions are
+> actually more useful.
 
-This v5 version applied!
-Thanks for your perseverance and excellent work as always Shawn!
+Huh?!
 
-Special thanks to Andy for helping out in getting all ACPI details right!
 
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
