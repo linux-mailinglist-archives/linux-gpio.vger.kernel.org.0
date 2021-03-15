@@ -2,105 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D496A33B1A8
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 12:47:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D52DF33B311
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 13:51:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbhCOLqc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Mar 2021 07:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229901AbhCOLqM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 07:46:12 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB9E3C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 04:46:11 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id dx17so65660937ejb.2
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 04:46:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=pt0EGAnDHhFHYFRpEvKDIjX9c073joEzdDXcF/hq1hM=;
-        b=IdBw87/SNifRk6QDeEiHwzGCevi1QUxkzSmF7R4HkFJ+kUMzmJiUf9tjcFbmYXD0O1
-         9rF1ewjybxxV35yJl6kmANIAnJMug6+TeETL6vEAOTlmYYc+DN/EZn39B0Jp0RmXV+zY
-         BFGsOrU5glhbIV2cnydChCN1ZqCIurMiLbaCc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=pt0EGAnDHhFHYFRpEvKDIjX9c073joEzdDXcF/hq1hM=;
-        b=gtaN1W7OH67GyzlvJdpIHKm0dSaxvQC+uGzpNeax2NgniDrmNsIkWFm4TUFLJHO3AA
-         d4ljSrDtDGC7O9eWCq6zafpoqXo2csec4XWMW4y9UiBG+dBas69dsY9ES5qtPYkj1crr
-         X2JRd4bQcEfjjf4SgqdhtyysjUVhqfzZB6C2fvGOaFH3a7w/6Tz23ppnRwscberlMtCQ
-         IJXK+pZB0DkI5CqSQYCKvHw3yQ+juAkbzIiODvLtskaxWNJt3E3vsQno8YdqeP9y/Epz
-         s5K1nbpix0jya+W6ygiDCk9vfDaLjDFKpBDyc3WkQFtWx8QVQZigTRSSIsFKBX6hrIQX
-         k0GA==
-X-Gm-Message-State: AOAM531VjPGY/oyyJoFI7CZG+LHWAF8Xg1l8cdg74mOc7CS0A1lpNGe6
-        oOj5Ph9pdBismh5CPf+WdDSmZ6W5rKHchw==
-X-Google-Smtp-Source: ABdhPJx7Y/lgtPUn9ulh4n9tuMN98kEALmpkzEfqNgNL2pA9JXb3f+MIvF/ICmKxsU5Em7l3aczS3w==
-X-Received: by 2002:a17:907:20c7:: with SMTP id qq7mr22389336ejb.528.1615808770083;
-        Mon, 15 Mar 2021 04:46:10 -0700 (PDT)
-Received: from [192.168.1.149] ([80.208.71.248])
-        by smtp.gmail.com with ESMTPSA id b12sm7699215eds.94.2021.03.15.04.46.08
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Mar 2021 04:46:09 -0700 (PDT)
-To:     linux-gpio@vger.kernel.org
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: replacement for persistence of values written to sysfs files
-Message-ID: <af518806-f473-8979-6d32-38c94a29b762@rasmusvillemoes.dk>
-Date:   Mon, 15 Mar 2021 12:46:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S229681AbhCOMuw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Mar 2021 08:50:52 -0400
+Received: from mga18.intel.com ([134.134.136.126]:22548 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229703AbhCOMui (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Mar 2021 08:50:38 -0400
+IronPort-SDR: pP0tAGJLaFZFEB/N7t1b0+h3IW/+SX7tSTKMrS3NPGrCHy6pjbF8S1HcLCVWMIGN74Drb0natm
+ tRZLmgXVhodw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9923"; a="176674480"
+X-IronPort-AV: E=Sophos;i="5.81,249,1610438400"; 
+   d="scan'208";a="176674480"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2021 05:50:36 -0700
+IronPort-SDR: g/R/Dq5gGR6hM1qKL2p3YOCWWXbGCRbjXmDdbPgLRKqwjhnevWJ27efpXhWDwkunU4gtMvonah
+ GvV3A6xBHkow==
+X-IronPort-AV: E=Sophos;i="5.81,249,1610438400"; 
+   d="scan'208";a="511013126"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2021 05:50:35 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lLmg4-00Cg6W-2c; Mon, 15 Mar 2021 14:50:32 +0200
+Date:   Mon, 15 Mar 2021 14:50:32 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Marek Vasut <marex@denx.de>,
+        Roman Guskov <rguskov@dh-electronics.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Read "gpio-line-names" from a firmware
+ node
+Message-ID: <YE9YGGB+k7CsCNDI@smile.fi.intel.com>
+References: <20210305120240.42830-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Mfye=O4mMiK01Q6Ok+ztSfMwMcrfaZSs+LhRxi=AM+C2w@mail.gmail.com>
+ <YE8z+ohM9abBs9SD@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YE8z+ohM9abBs9SD@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Mon, Mar 15, 2021 at 12:16:26PM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 15, 2021 at 10:01:47AM +0100, Bartosz Golaszewski wrote:
+> > On Fri, Mar 5, 2021 at 1:03 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Unfortunately while this may fix the particular use-case on STM32, it
+> > breaks all other users as the 'gpio-line-names' property doesn't live
+> > on dev_fwnode(&gdev->dev) but on dev_fwnode(chip->parent).
+> > 
+> > How about we first look for this property on the latter and only if
+> > it's not present descend down to the former fwnode?
+> 
+> Oops, I have tested on x86 and it worked the same way.
+> 
+> Lemme check this, but I think the issue rather in ordering when we apply fwnode
+> to the newly created device and when we actually retrieve gpio-line-names
+> property.
 
-I'm sure this has been asked before, so please just refer to me any old
-thread(s) where this has been discussed.
+Hmm... I can't see how it's possible can be. Can you provide a platform name
+and pointers to the DTS that has been broken by the change?
 
-In the bad old sysfs days, the value assigned to the gpio via the
-/sys/class/... interface was persistent. So it was easy to use in shell
-scripts etc. But gpioset very clearly states
 
-Note: the state of a GPIO line controlled over the character device
-reverts to default
-when the last process referencing the file descriptor representing the
-device file exits.
-This means that it's wrong to run gpioset, have it exit and expect the
-line to continue
-being driven high or low. It may happen if given pin is floating but it
-must be interpreted
-as undefined behavior.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-and I don't see anything in v2 of the uapi changing that.
 
-So how is one supposed to get the kernel to set and maintain a value for
-a gpio, without having to keep a dummy process around? Also, with the
-sysfs interface, another process can later change the gpio value; I
-don't think that's possible with a dummy process hanging onto it.
-
-So, for example, one init script we have first configures a temperature
-sensor with a high-temp alert threshold, and after that value has been
-written, sets a gpio that will make such an alert trigger a reset of the
-board. That gpio must of course stay set, but it cannot be set before
-the threshold has been programmed. Then the init script starts a simple
-service that periodically logs the temperature reading. A human being
-working on the board can temporarily disable the alert-triggered reset
-by just writing 0 to the gpio.
-
-The README says
-
-Additionally this project contains a set of command-line tools that should
-allow an easy conversion of user scripts to using the character device.
-
-but I don't see how to achieve the persistence (or ability by
-third-party to temporarily change the value) provided by sysfs.
-
-Rasmus
