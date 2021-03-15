@@ -2,91 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEF5B33C082
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 16:50:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F292933C0A2
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 16:58:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230246AbhCOPu0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Mar 2021 11:50:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40354 "EHLO
+        id S229880AbhCOP5y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Mar 2021 11:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbhCOPt7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 11:49:59 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 549A5C06174A
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:49:59 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id w195so28302515oif.11
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:49:59 -0700 (PDT)
+        with ESMTP id S232445AbhCOP5q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 11:57:46 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD348C06175F
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:57:45 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id v9so57674589lfa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 08:57:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ctH1m+B27aFfYUzrTEwqyuu/kBv+C5+MsoOTttkG5pY=;
-        b=kjoa8CVftEnpQBfY0r0ElELXcyCG/FUSMEJxwrLkNX8azzW64FUGfc8B9xGgDXB7PI
-         3wJjwD0Cv0GTGkgh8MF0WVZLFwjVG+rIbRVt+tpwygSUNfesixjx6KgJJJ3SnyKjM2RG
-         uHyUnxv9yA9hyUK1+aUeCjsv+ePxt05jHB54x7QhSB8VXUrRY8qhtZJOGwmIE+qhMZmf
-         fXVa4KlK7vJpddIkZFByOdZEhrPBO/y8QE0ddDMj/EJGcT/v+MIme+NnS05zjmE1dmAH
-         MBXRjfJbtU21KUhUVVGc+tC0c7q7FGnw/UUvcRx+AFCq4/WzT/Gj7vN4BUHhPwhCk4b0
-         Lh0w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y05LxKqxHARRJz9b41KUmPJQO8MgmeiKWNfuMrL5SJk=;
+        b=sg+CBQyG0EjOu0RLfrShAXMw/eoMGUCyFdU3ApyPzUZVu1ZoUxTbmz/aGui6ivYpXH
+         kvuF8su3Y4ap3MPR3845uPRC9oASkjOYntE5efRPKCwArsq1lC02nJEyQpC/3isyQgr0
+         5tgBmSz/41MgYy+cPQB6z1GWEv5ltp+lMmGj6QMmJVJSPFnV3y8IY4S8hdJkMEHccjD0
+         KxLbqpfobp9IGnahjh1O/qkoqsimBu61rQWnWo4iHOPmxfk0QgyQVD81jDbdUHJRqKHN
+         Sbv0uJJnNq0QyR6kR93rH6ylHh6X//AGKnrCt3UTJuSffK7yNbT1xQ0FBT/p997oWOFF
+         o+qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ctH1m+B27aFfYUzrTEwqyuu/kBv+C5+MsoOTttkG5pY=;
-        b=rbMTm/7TBPkc4FJ5IX2eH9weUuD7LlQ94wP5q33PTaj5j1wfnNxrlqYI5XO9p1GCTW
-         79cu0/lnVUa19jaqYj6N2h4iBLriqsDAZLIfpa357/I3ZtooiiEqU15ByrZa0SzXkvn1
-         I/IO6afPoOdKPV0APaeXdXwFIaPBCU/CBVPZiNOF8Xpt5plY2eyG1dRW5ycrUb4ggRij
-         CM0g/C+xiO/AhcecKzQZgchFibKMVInM7OpbGd3K8+hQAjSx+6i59GGr+UMFiUQdVXdE
-         5YLwmOeraby0oR0UC2crAFYS/XLsmuBxqPfzNy+AFNjRe5TASVGO97De2P+pTOPPfp7O
-         f8OA==
-X-Gm-Message-State: AOAM530xfUAkHTtljrN4weRsv2k/DYj1mSJhHr4GJhz+2KXvypBx9Vu1
-        IsUJ0GkCIntdRS7Zi3Yy/Kgp4Q==
-X-Google-Smtp-Source: ABdhPJx6QASLPk+TYXWrCWUllPrJPQ7sm6fWkTd4y+xYOPmBT0UCBRntzlhqs2CtwJizFQawAlAcoA==
-X-Received: by 2002:aca:cf10:: with SMTP id f16mr12640016oig.70.1615823398759;
-        Mon, 15 Mar 2021 08:49:58 -0700 (PDT)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id h17sm7071740otj.38.2021.03.15.08.49.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Mar 2021 08:49:58 -0700 (PDT)
-Date:   Mon, 15 Mar 2021 10:49:56 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Shawn Guo <shawn.guo@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH v2] pinctrl: qcom: support gpio_chip .set_config call
-Message-ID: <YE+CJH9Mgar5eE/k@builder.lan>
-References: <20210303131858.3976-1-shawn.guo@linaro.org>
- <CACRpkdZp7m0s+6Fgzq4ScftAr-CtEPtAbz3jGCvKTzdqXJtfAA@mail.gmail.com>
- <YEqmTUXbn0T2dqla@builder.lan>
- <CACRpkdaQ_p1n6+cu5f2p6gWui-eDMF_MEmC0ZQM50oyb3CcZUg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y05LxKqxHARRJz9b41KUmPJQO8MgmeiKWNfuMrL5SJk=;
+        b=mXQ9vdyWo601NM+V//d/L3dTS/pVmPwnDtqzAKO6U0uODNO3ayqOyF8IwBm/KFK9sj
+         hYshR658Zu544cqpao1QrGGEBEPzJ5fJNh6qh3JcGWp3lW1rb01wALCl17ptHUKRGHOK
+         SjDyUZmuqhWXk44ZzKp4FT/UJBK/nRBzAYGW2cnKsc7FNh2IA9oBIsigpl/NWtYM5ppL
+         8E0UfZ8ii4dmjyYtlqFJWQ+VYVU/FihtVdelEWZjUdxbXiJqnO9MnIaPqtkqhx5KYOkI
+         wlPpE3iALT3iAYnaed6hlcaw35jdbZ5l+E/ZifEUEZT04EolbUfRLSUIjitdYldg5x61
+         6d7A==
+X-Gm-Message-State: AOAM5316QTDDAhhfXYyW6prXKigj3Bf/HSoAMMaeOBqOlg0ONNPe39S3
+        E026qkdeJW1d5alfPtm3zqDHe7XqtZ99IemAxxqWhQ==
+X-Google-Smtp-Source: ABdhPJxRhR8dLQ9brlpYFBH8NsT25ShjMtXNo8KXS6U7zOznqlJQR3PVgtOqbNDaDQFjsxiQnxKHDxYzuKLrzXEmuS8=
+X-Received: by 2002:a05:6512:74a:: with SMTP id c10mr8496071lfs.586.1615823864353;
+ Mon, 15 Mar 2021 08:57:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaQ_p1n6+cu5f2p6gWui-eDMF_MEmC0ZQM50oyb3CcZUg@mail.gmail.com>
+References: <20210310125504.31886-1-noltari@gmail.com> <20210310125504.31886-5-noltari@gmail.com>
+ <CAL_JsqK4b+U7cVb04+moB4biGVFC4mr3VGx70KdQKitiCGdtnQ@mail.gmail.com>
+ <A2B4813E-4177-4969-9119-A40B39A36948@gmail.com> <CAL_JsqL+CwnhKY4bijnp7eGfYLwRpDUK+iFharVW=DWipsvZbg@mail.gmail.com>
+ <693A763C-14D1-47A2-A87E-2358E69DC993@gmail.com> <CAL_JsqJzDj6bKwEfWzoa_m8HjP2VbZH21wYXXEUUEmLwHjrY_A@mail.gmail.com>
+ <90994df6-9d7d-686f-8668-a1cf5267aa16@gmail.com> <CAL_JsqK_00BQ4DkO8KUF1+TzxwCfU-=9tck7gdFL3Fh6mktHMg@mail.gmail.com>
+In-Reply-To: <CAL_JsqK_00BQ4DkO8KUF1+TzxwCfU-=9tck7gdFL3Fh6mktHMg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 15 Mar 2021 16:57:33 +0100
+Message-ID: <CACRpkdYDRHkwfgefWzzU781EPWg3Caw8wFTCtud81UAE0QuE7g@mail.gmail.com>
+Subject: Re: [PATCH v6 04/15] dt-bindings: add BCM6328 pincontroller binding documentation
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
+        Michael Walle <michael@walle.cc>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon 15 Mar 10:36 CDT 2021, Linus Walleij wrote:
+On Thu, Mar 11, 2021 at 7:14 PM Rob Herring <robh+dt@kernel.org> wrote:
 
-> On Fri, Mar 12, 2021 at 12:22 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> 
-> > I don't know how to make the transition, but can you please revert this
-> > patch, to avoid breaking compatibility with DTBs out there?
-> 
-> OK reverted for now. Does this imply I cannot apply Shawn's ACPI
-> support patch either? I.e. is this a prerequisite?
-> 
+> > Or this way (2):
+> > syscon {
+> >         compatible = "brcm,bcm6328-gpio-regs", "syscon", "simple-mfd";
+> >         reg = <0x10000080 0x80>;
+> >         ranges = <0 0x10000080 0x80>;
+> >
+> >         pinctrl: pinctrl@18 {
+> >                 compatible = "brcm,bcm6328-pinctrl";
+> >                 reg = <0x0 0x28>;
+> >
+> >                 gpio: gpio@0 {
+>
+> This doesn't make sense IMO because GPIO is not a sub-function of the
+> pinctrl h/w. They are peers.
 
-I presume you're referring to [1], which should be fine to merge.
+This becomes an ontological discussion, as in "what does the world
+consist of and what are the proper definitions of the
+things in it".
 
-Iiuc the problem that this (.set_config) patch resolves is that
-definitions of gpios as interrupts will trickle down to a .set_config
-call, which is necessary to get appropriate bias.
+A couple of years back I had this presentation:
+https://dflund.se/~triad/papers/pincontrol.pdf
+where I try to investigate how hardware engineers build
+these blocks.
 
-[1] https://lore.kernel.org/linux-arm-msm/20210311024102.15450-1-shawn.guo@linaro.org/
+TL;DR: it depends on what the hardware engineer
+did.
 
-Regards,
-Bjorn
+A HW block can be pin controller, GPIO controller
+and interrupt chip at the same time, that case is
+straight-forward. One compatible, lots of
+properties.
+.
+A second case is when the pin controller and the
+GPIO+irqchip are two completely different HW
+entities, and then they also get two different
+device nodes on the same level in the device tree.
+(We usually see this when the different blocks
+live in totally different memory locations.)
+
+However in the third case HW can also be bolted
+with a front-end pin controller (facing the pins) with
+several GPIO+interrupt controller back-ends.
+Then it gets the structure in this patch,
+subnodes for each GPIO controller.
+
+Our current bindings have all three examples
+and it simply reflects the different ways HW
+engineers have chosen to integrate their stuff.
+
+Yours,
+Linus Walleij
