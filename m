@@ -2,146 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66A9C33AE28
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 10:03:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 893BA33AE4D
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Mar 2021 10:15:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbhCOJCb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Mar 2021 05:02:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36882 "EHLO
+        id S229721AbhCOJOd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Mar 2021 05:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbhCOJCA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 05:02:00 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95945C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 02:01:59 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id p8so64798173ejb.10
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 02:01:59 -0700 (PDT)
+        with ESMTP id S229603AbhCOJOF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Mar 2021 05:14:05 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A3FC06175F
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 02:14:05 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id m20-20020a7bcb940000b029010cab7e5a9fso19757796wmi.3
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Mar 2021 02:14:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e2sBs6NiXFEBjEW5EKicEDQG80m64//Jqveh+rRtB44=;
-        b=rtOek8t/l0dOFFYOaAgvr/GxPcxuWGJZDn1GUtVOmCnYNUEjbeIDDtNAvDjHMuWvj4
-         iPaiy7rj0s+kAhnC2BwwiCXA4AUT91cSe+/mCEKTfMvdiDQ1c6UHCuQdvKYAwg4i2Nn0
-         6RXR/u4y5Lgs3qGqKT6ARrPDCUsNDKf2TAFDKPY7YeIphqhVK9n+sdM7W+YXa79QRYfU
-         9M3beg7L32c1HbTaLBGIfBQjrXbqmtjmYHYilpzLQLBC0AQ82Gxh8qeBUk04kM5NCX6B
-         UkKWX3WdGNQhgjfw+IchlH/1lymmAq6s0Aa859kmVkqIdgd8pcb4/+u/oiQFvn/lu1bs
-         qKPA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7q9frKRyQfRE4B6MTRBlCEP/Flnqnclwy9pdxxLTvwI=;
+        b=bzk3LhhcHOkhreIRdFUAb3eBRe5iFe9hp/x+X9PdLSDk3QlvrAQycVu4LhZ9enxjMt
+         u7ZaPqtUEzdXkE/mRtbps3BdhM2iluXj/UwIiX4fbjhXwZ9sQBAZrqnKTu4O8e0XdZap
+         rnlJBdwI/4/yuzaH10B3AauzX9xALmpEV2D7nw6QfJ49KWqqQLAbq0w1m2tlFwVTacnb
+         q1Rca1wUD54C6CmfDLwwDiq+AMhFDK4Di1MmCKgrItgZfSCLtIvAiWnlVKEtNLks4iDs
+         602nvN+TN3hAZBH+CtY0h06MdrUROgmfJ/130GLxNHtSiWyM3zpEcSMcoxxXkZwa0ycW
+         IuHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e2sBs6NiXFEBjEW5EKicEDQG80m64//Jqveh+rRtB44=;
-        b=Wqr+UvZeBLs6purS/szo5lA5rJXgasePoVmhXS2Z7y0vgV3M3Uhf7e4eFI/Lwse9ZN
-         KnIaezc7f9eGGWHoHWWnkNv4u8toj+uVRXIcjEjIiu+8PpiqroK1eFY1yra921Ix1XHI
-         /mx9e4WTdFCpfVk1lOW7YljwoK3k8E74gIy+I7U1pKaT4tzUvojTBZvP8tj4+18/XytR
-         fwIvNIRgukd6Dfb+wKuuECQkjDgy/UI7bkx1q9jHPL3dTbM1Qn7uuC0X2oOFgILZI1iC
-         V59sJE7FtjhSSJo5Gi70oOvJm8qmezW2dekx/MpRkQJHvkAosYefWjscNFOBOF6htLS7
-         Dg/g==
-X-Gm-Message-State: AOAM530/G8T/rBB1nL1qbN7GU1hlYPuzOLyUA3FSIW+8p3dEgw9UKFjM
-        6zDi55N9PXknGsiOKL5+O3i0BGa0JGDQO11FmNdJHw==
-X-Google-Smtp-Source: ABdhPJz+l2yQBZkd11UpA8i0+HaQV8ndMsfdW4Wo6PIKv963xVVZSLZsZViialetAI1yDKjwcuZU/GXtejH5Mu3dAgI=
-X-Received: by 2002:a17:906:7842:: with SMTP id p2mr2450233ejm.87.1615798918325;
- Mon, 15 Mar 2021 02:01:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210305120240.42830-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210305120240.42830-1-andriy.shevchenko@linux.intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7q9frKRyQfRE4B6MTRBlCEP/Flnqnclwy9pdxxLTvwI=;
+        b=rnPX7Hnt3fwPNCYYDwRJ4Jghi0jBVcPoAa9FdknBKDfcApde6TkLRtgfk1ZGlfclnt
+         39qPbDJCjFmgOb3r+ZwilBUyqsY94N/UEgppJLZmZnrchLcHxU/jaI6iKWurju2nifsM
+         2cOiu0VI1btyYqV1nyGju7uI2B/2W6JHVFbvZbHrCAjWk5kzot55o/024yPuVHsh82+q
+         lWTdiwTl/q3sLdZo/mcCiC0meQb6/mpaQRkvssGoMENpB5qRos5FGq7iOBHk/UzNysjK
+         oYf+NRg7hFEHbu1+yk3lji4Cf+saWGruDdQcovP3dwPkPXMLub8WdwKysGIUTdKz6pgp
+         8KDw==
+X-Gm-Message-State: AOAM531daXUT5iBAglZpeAhIubEOhnyDDF/sMaQp89Mna0bgbmH0L7BS
+        bs/JjTwrKSKeztOYkZjjz2QMnQ==
+X-Google-Smtp-Source: ABdhPJxWj/OPcRAt0JL7G9FO0RU0kAhusdVeP7JKPaNGFKhZ1Img5B6pk44bPzlWF7FR7FW/WbDydg==
+X-Received: by 2002:a05:600c:35c1:: with SMTP id r1mr25370863wmq.143.1615799644012;
+        Mon, 15 Mar 2021 02:14:04 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-149-6.w2-15.abo.wanadoo.fr. [2.15.231.6])
+        by smtp.gmail.com with ESMTPSA id z3sm17978822wrw.96.2021.03.15.02.14.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Mar 2021 02:14:03 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 15 Mar 2021 10:01:47 +0100
-Message-ID: <CAMRc=Mfye=O4mMiK01Q6Ok+ztSfMwMcrfaZSs+LhRxi=AM+C2w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Read "gpio-line-names" from a firmware node
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        Shuah Khan <shuah@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marek Vasut <marex@denx.de>,
-        Roman Guskov <rguskov@dh-electronics.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v5 00/11] gpio: implement the configfs testing module
+Date:   Mon, 15 Mar 2021 10:13:49 +0100
+Message-Id: <20210315091400.13772-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 5, 2021 at 1:03 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On STM32MP1, the GPIO banks are subnodes of pin-controller@50002000,
-> see arch/arm/boot/dts/stm32mp151.dtsi. The driver for
-> pin-controller@50002000 is in drivers/pinctrl/stm32/pinctrl-stm32.c
-> and iterates over all of its DT subnodes when registering each GPIO
-> bank gpiochip. Each gpiochip has:
->
->   - gpio_chip.parent = dev,
->     where dev is the device node of the pin controller
->   - gpio_chip.of_node = np,
->     which is the OF node of the GPIO bank
->
-> Therefore, dev_fwnode(chip->parent) != of_fwnode_handle(chip.of_node),
-> i.e. pin-controller@50002000 != pin-controller@50002000/gpio@5000*000.
->
-> The original code behaved correctly, as it extracted the "gpio-line-names"
-> from of_fwnode_handle(chip.of_node) = pin-controller@50002000/gpio@5000*000.
->
-> To achieve the same behaviour, read property from the firmware node.
->
-> Fixes: 7cba1a4d5e162 ("gpiolib: generalize devprop_gpiochip_set_names() for device properties")
-> Reported-by: Marek Vasut <marex@denx.de>
-> Reported-by: Roman Guskov <rguskov@dh-electronics.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 3bc25a9c4cd6..ba88011cc79d 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -367,22 +367,18 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
->   *
->   * Looks for device property "gpio-line-names" and if it exists assigns
->   * GPIO line names for the chip. The memory allocated for the assigned
-> - * names belong to the underlying software node and should not be released
-> + * names belong to the underlying firmware node and should not be released
->   * by the caller.
->   */
->  static int devprop_gpiochip_set_names(struct gpio_chip *chip)
->  {
->         struct gpio_device *gdev = chip->gpiodev;
-> -       struct device *dev = chip->parent;
-> +       struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
->         const char **names;
->         int ret, i;
->         int count;
->
-> -       /* GPIO chip may not have a parent device whose properties we inspect. */
-> -       if (!dev)
-> -               return 0;
-> -
-> -       count = device_property_string_array_count(dev, "gpio-line-names");
-> +       count = fwnode_property_string_array_count(fwnode, "gpio-line-names");
->         if (count < 0)
->                 return 0;
->
-> @@ -396,7 +392,7 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
->         if (!names)
->                 return -ENOMEM;
->
-> -       ret = device_property_read_string_array(dev, "gpio-line-names",
-> +       ret = fwnode_property_read_string_array(fwnode, "gpio-line-names",
->                                                 names, count);
->         if (ret < 0) {
->                 dev_warn(&gdev->dev, "failed to read GPIO line names\n");
-> --
-> 2.30.1
->
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Hi Andy!
+This series adds a new GPIO testing module based on configfs committable items
+and sysfs. The goal is to provide a testing driver that will be configurable
+at runtime (won't need module reload) and easily extensible. The control over
+the attributes is also much more fine-grained than in gpio-mockup.
 
-Unfortunately while this may fix the particular use-case on STM32, it
-breaks all other users as the 'gpio-line-names' property doesn't live
-on dev_fwnode(&gdev->dev) but on dev_fwnode(chip->parent).
+This series also contains a respin of the patches I sent separately to the
+configfs maintainers - these patches implement the concept of committable
+items that was well defined for a long time but never actually completed.
 
-How about we first look for this property on the latter and only if
-it's not present descend down to the former fwnode?
+Apart from the new driver itself, its selftests and the configfs patches, this
+series contains some changes to the bitmap API - most importantly: it adds
+devres managed variants of bitmap_alloc() and bitmap_zalloc().
 
-Bart
+v1 -> v2:
+- add selftests for gpio-sim
+- add helper programs for selftests
+- update the configfs rename callback to work with the new API introduced in
+  v5.11
+- fix a missing quote in the documentation
+- use !! whenever using bits operation that are required to return 0 or 1
+- use provided bitmap API instead of reimplementing copy or fill operations
+- fix a deadlock in gpio_sim_direction_output()
+- add new read-only configfs attributes for mapping of configfs items to GPIO
+  device names
+- and address other minor issues pointed out in reviews of v1
+
+v2 -> v3:
+- use devm_bitmap_alloc() instead of the zalloc variant if we're initializing
+  the bitmap with 1s
+- drop the patch exporting device_is_bound()
+- don't return -ENODEV from dev_nam and chip_name configfs attributes, return
+  a string indicating that the device is not available yet ('n/a')
+- fix indentation where it makes sense
+- don't protect IDA functions which use their own locking and where it's not
+  needed
+- use kmemdup() instead of kzalloc() + memcpy()
+- collected review tags
+- minor coding style fixes
+
+v3 -> v4:
+- return 'none' instead of 'n/a' from dev_name and chip_name before the device
+  is registered
+- use sysfs_emit() instead of s*printf()
+- drop GPIO_SIM_MAX_PROP as it's only used in an array's definition where it's
+  fine to hardcode the value
+
+v4 -> v5:
+- export devm bitmap functions with EXPORT_SYMBOL_GPL() instead of a simple
+  EXPORT_SYMBOL()
+
+Bartosz Golaszewski (11):
+  configfs: increase the item name length
+  configfs: use (1UL << bit) for internal flags
+  configfs: implement committable items
+  samples: configfs: add a committable group
+  lib: bitmap: remove the 'extern' keyword from function declarations
+  lib: bitmap: order includes alphabetically
+  lib: bitmap: provide devm_bitmap_alloc() and devm_bitmap_zalloc()
+  gpio: sim: new testing module
+  selftests: gpio: provide a helper for reading chip info
+  selftests: gpio: add a helper for reading GPIO line names
+  selftests: gpio: add test cases for gpio-sim
+
+ Documentation/admin-guide/gpio/gpio-sim.rst   |  72 ++
+ Documentation/filesystems/configfs.rst        |   6 +-
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sim.c                       | 874 ++++++++++++++++++
+ fs/configfs/configfs_internal.h               |  22 +-
+ fs/configfs/dir.c                             | 245 ++++-
+ include/linux/bitmap.h                        | 127 +--
+ include/linux/configfs.h                      |   3 +-
+ lib/bitmap.c                                  |  42 +-
+ samples/configfs/configfs_sample.c            | 153 +++
+ tools/testing/selftests/gpio/.gitignore       |   2 +
+ tools/testing/selftests/gpio/Makefile         |   4 +-
+ tools/testing/selftests/gpio/config           |   1 +
+ tools/testing/selftests/gpio/gpio-chip-info.c |  57 ++
+ tools/testing/selftests/gpio/gpio-line-name.c |  55 ++
+ tools/testing/selftests/gpio/gpio-sim.sh      | 229 +++++
+ 17 files changed, 1815 insertions(+), 86 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
+ create mode 100644 drivers/gpio/gpio-sim.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
+ create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
+
+-- 
+2.30.1
+
