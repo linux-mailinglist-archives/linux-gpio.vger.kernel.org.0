@@ -2,179 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDB5C33CCA2
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 05:40:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5319233CCE3
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 06:06:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235054AbhCPEkU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Mar 2021 00:40:20 -0400
-Received: from mga11.intel.com ([192.55.52.93]:63016 "EHLO mga11.intel.com"
+        id S235173AbhCPFGO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Mar 2021 01:06:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235050AbhCPEkC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 16 Mar 2021 00:40:02 -0400
-IronPort-SDR: 44zBl6myCKCN24RCem6KDBHvJxWdlGB1JNvhYt205ylh9hHIlHeIwE+372TMWvBYlnn3ITZUly
- rDTAKGKFBFXw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9924"; a="185837859"
-X-IronPort-AV: E=Sophos;i="5.81,251,1610438400"; 
-   d="scan'208";a="185837859"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2021 21:40:01 -0700
-IronPort-SDR: DB4mxf6wAISPgPNICKxYKR+vw8VKaBg9NSgh3+JTnzk2dUM4Kfa6A6i3c4LTmBeAmJXcxu2uFv
- OnUjRsdnduqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,251,1610438400"; 
-   d="scan'208";a="373662776"
-Received: from lkp-server02.sh.intel.com (HELO 1dc5e1a854f4) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 15 Mar 2021 21:40:00 -0700
-Received: from kbuild by 1dc5e1a854f4 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lM1Ut-0000mQ-5W; Tue, 16 Mar 2021 04:39:59 +0000
-Date:   Tue, 16 Mar 2021 12:39:27 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- a5d5c33246eb60ba3a04af571ee59449ea7f794b
-Message-ID: <6050367f.qW5QOPGqrAXOVp0+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S235171AbhCPFF5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 16 Mar 2021 01:05:57 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D1CFD65142;
+        Tue, 16 Mar 2021 05:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615871157;
+        bh=cVbmNCunkCaS+UAXYbKdMGWrvOK5rfRn967P5BV1mvA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SZ7Qqv3k+z2lfXwJh0IzauQzRLnEreEAVuM+XCb0RdV0tQF43Wc8vp53HfcDlCpFn
+         yG0XIbtCPqJjzn4yGQDvX51s7TEP5IA530a7znIQma4Nvrqc+jWIVywDjXSbgXX842
+         kyFN068A9+RSluiQWses1QdyAY4VUeAoIgxyI15Cb5qZ6B2hwrmxEFk7s5cfoJyx+m
+         IvgbYioMWjAmlGvrWxcEFr5HJY/B11ebvtT3mQeiW5suHU8iWgGs8ZYV/9AaEWM2pU
+         Nr/hOQJFZmzvBbA43CloONeZ5l7ulqVYYsdmgZHaMX/G+GHieD1oxNoRXf86iJI+tz
+         r6jDwZhxnCsig==
+Received: by mail-ed1-f42.google.com with SMTP id bx7so19946176edb.12;
+        Mon, 15 Mar 2021 22:05:56 -0700 (PDT)
+X-Gm-Message-State: AOAM530LkpbQb6LuBPOsXGuvxybe9C/880bL/QUkMd9mLGvTtcqs5ddI
+        nXJ6E2d5DIIb6S/BRiKc9ieJOlxJFK3KA2gJGUw=
+X-Google-Smtp-Source: ABdhPJzK79FmgJ0C57g+KUn1bwdww1LQ8aLQZI1QQ9/6Bf3ST4MJLgWngCooLHXFbLFO/wbHLPrOHtDkOhlc+tqhAiI=
+X-Received: by 2002:aa7:d792:: with SMTP id s18mr33267634edq.176.1615871155305;
+ Mon, 15 Mar 2021 22:05:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20210312063502.3685-1-zhiyong.tao@mediatek.com> <20210312063502.3685-2-zhiyong.tao@mediatek.com>
+In-Reply-To: <20210312063502.3685-2-zhiyong.tao@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Tue, 16 Mar 2021 13:05:44 +0800
+X-Gmail-Original-Message-ID: <CAGp9Lzq+NQhguSoc5DE4kyUgi2uSNOkURuAeAFpGuizcaXUXew@mail.gmail.com>
+Message-ID: <CAGp9Lzq+NQhguSoc5DE4kyUgi2uSNOkURuAeAFpGuizcaXUXew@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: add lock in mtk_rmw function.
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        hui.liu@mediatek.com,
+        =?UTF-8?B?RWRkaWUgSHVhbmcgKOm7g+aZuuWCkSk=?= 
+        <eddie.huang@mediatek.com>, jg_poxu@mediatek.com,
+        Biao Huang <biao.huang@mediatek.com>,
+        Hongzhou Yang <hongzhou.yang@mediatek.com>,
+        =?UTF-8?B?RXJpbiBMbyAo576F6ZuF6b2hKQ==?= <erin.lo@mediatek.com>,
+        =?UTF-8?B?U2VhbiBXYW5nICjnjovlv5fkupgp?= <sean.wang@mediatek.com>,
+        seiya.wang@mediatek.com, sj.huang@mediatek.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: a5d5c33246eb60ba3a04af571ee59449ea7f794b  Merge branch 'devel' into for-next
+Hi Zhiyong,
 
-elapsed time: 721m
+On Fri, Mar 12, 2021 at 2:35 PM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+>
+> When multiple threads operate on the same register resource
+> which include multiple pin, It will make the register resource
+> wrong to control. So we add lock to avoid the case.
+>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 4 ++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h | 2 ++
+>  drivers/pinctrl/mediatek/pinctrl-paris.c         | 2 ++
+>  3 files changed, 8 insertions(+)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index 72f17f26acd8..fcf7c3eeee4a 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -58,10 +58,14 @@ void mtk_rmw(struct mtk_pinctrl *pctl, u8 i, u32 reg, u32 mask, u32 set)
+>  {
+>         u32 val;
+>
+> +       mutex_lock(&pctl->lock);
+> +
+>         val = mtk_r32(pctl, i, reg);
+>         val &= ~mask;
+>         val |= set;
+>         mtk_w32(pctl, i, reg, val);
+> +
+> +       mutex_unlock(&pctl->lock);
+>  }
+>
+>  static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> index e2aae285b5fc..65eac708a3b3 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> @@ -251,6 +251,8 @@ struct mtk_pinctrl {
+>         struct mtk_eint                 *eint;
+>         struct mtk_pinctrl_group        *groups;
+>         const char          **grp_names;
+> +       /* lock pin's register resource to avoid multiple threads issue*/
+> +       struct mutex lock;
+>  };
+>
+>  void mtk_rmw(struct mtk_pinctrl *pctl, u8 i, u32 reg, u32 mask, u32 set);
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index da1f19288aa6..48e823f6d293 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -970,6 +970,8 @@ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
+>
+>         hw->nbase = hw->soc->nbase_names;
+>
+> +       mutex_init(&hw->lock);
+> +
 
-configs tested: 117
-configs skipped: 2
+Could you help add the mutex initialization into pinctrl-moore.c too?
+and then the patch would look good to me.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-x86_64                           allyesconfig
-h8300                     edosk2674_defconfig
-powerpc                    amigaone_defconfig
-powerpc                 linkstation_defconfig
-m68k                        m5407c3_defconfig
-arc                 nsimosci_hs_smp_defconfig
-openrisc                 simple_smp_defconfig
-mips                      malta_kvm_defconfig
-arm                          exynos_defconfig
-ia64                         bigsur_defconfig
-arm                            dove_defconfig
-arm                       mainstone_defconfig
-m68k                        mvme16x_defconfig
-arm                         mv78xx0_defconfig
-mips                       rbtx49xx_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                               defconfig
-ia64                      gensparse_defconfig
-arm                       spear13xx_defconfig
-powerpc                     skiroot_defconfig
-sh                         ecovec24_defconfig
-powerpc                  iss476-smp_defconfig
-powerpc                      chrp32_defconfig
-openrisc                         alldefconfig
-arm                     am200epdkit_defconfig
-arm                         palmz72_defconfig
-arm                       versatile_defconfig
-mips                         rt305x_defconfig
-mips                           xway_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                     tqm8555_defconfig
-parisc                           alldefconfig
-arm                         lubbock_defconfig
-x86_64                              defconfig
-sh                   rts7751r2dplus_defconfig
-arc                     haps_hs_smp_defconfig
-powerpc                     mpc512x_defconfig
-ia64                             alldefconfig
-powerpc                      arches_defconfig
-sh                           se7712_defconfig
-arm                          pcm027_defconfig
-xtensa                           alldefconfig
-mips                          ath79_defconfig
-mips                       lemote2f_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20210315
-x86_64               randconfig-a001-20210315
-x86_64               randconfig-a005-20210315
-x86_64               randconfig-a004-20210315
-x86_64               randconfig-a002-20210315
-x86_64               randconfig-a003-20210315
-i386                 randconfig-a001-20210315
-i386                 randconfig-a005-20210315
-i386                 randconfig-a003-20210315
-i386                 randconfig-a002-20210315
-i386                 randconfig-a004-20210315
-i386                 randconfig-a006-20210315
-i386                 randconfig-a013-20210315
-i386                 randconfig-a016-20210315
-i386                 randconfig-a011-20210315
-i386                 randconfig-a012-20210315
-i386                 randconfig-a014-20210315
-i386                 randconfig-a015-20210315
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a011-20210315
-x86_64               randconfig-a016-20210315
-x86_64               randconfig-a013-20210315
-x86_64               randconfig-a015-20210315
-x86_64               randconfig-a014-20210315
-x86_64               randconfig-a012-20210315
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>         err = mtk_pctrl_build_state(pdev);
+>         if (err) {
+>                 dev_err(&pdev->dev, "build state failed: %d\n", err);
+> --
+> 2.18.0
+>
