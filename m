@@ -2,98 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1D3933DA3D
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 18:06:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BFE033DD4C
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 20:22:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239008AbhCPRGT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Mar 2021 13:06:19 -0400
-Received: from mga17.intel.com ([192.55.52.151]:32050 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239014AbhCPRFz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 16 Mar 2021 13:05:55 -0400
-IronPort-SDR: Qn0wfbxoMZUatrpKtYDN4yobilay2fQFalwfaqCl+510QvKtsyTygHV93UBpY0Z7Yvc0HFJY75
- HL8sAHKO3hRg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9925"; a="169213788"
-X-IronPort-AV: E=Sophos;i="5.81,254,1610438400"; 
-   d="scan'208";a="169213788"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2021 10:05:53 -0700
-IronPort-SDR: FA3KiXXjyqZfFiLvNVY1Ehj/bzd5P2bj8V8My5izYkm9lIoSrtSDYT6GG4DsKtdhkrzeu/HMB6
- pCbIZDHxzcLg==
-X-IronPort-AV: E=Sophos;i="5.81,254,1610438400"; 
-   d="scan'208";a="405605306"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2021 10:05:51 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lMD8e-00D0vn-MK; Tue, 16 Mar 2021 19:05:48 +0200
-Date:   Tue, 16 Mar 2021 19:05:48 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v4 2/2] gpio: sch: Hook into ACPI SCI handler to catch
- GPIO edge events
-Message-ID: <YFDlbKD4Q13lDmM3@smile.fi.intel.com>
-References: <20210316162613.87710-1-andriy.shevchenko@linux.intel.com>
- <20210316162613.87710-3-andriy.shevchenko@linux.intel.com>
+        id S236688AbhCPTUl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Mar 2021 15:20:41 -0400
+Received: from wilbur.contactoffice.com ([212.3.242.68]:42930 "EHLO
+        wilbur.contactoffice.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240347AbhCPTUF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Mar 2021 15:20:05 -0400
+Received: from ichabod.co-bxl (ichabod.co-bxl [10.2.0.36])
+        by wilbur.contactoffice.com (Postfix) with ESMTP id DA4FAF9B
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 20:19:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1615922390;
+        s=20210208-e7xh; d=mailfence.com; i=sandberg@mailfence.com;
+        h=Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:Reply-To:From:To;
+        l=1543; bh=2gGj5NOSb+REYiRX0Fq5ZNPVzvSzaXqeYGucNszRHcI=;
+        b=uNRHubix+GNuwbsNldf3YvZGNLvr4UXkQ0dvNXeEX7lHSaRzYvuv4hf/oDlWi7s+
+        UYIcODKmZMxsfyPWHVdG2t59aZQNx1uRcnp4YxhJ99RhecEXl5U8xLLnkHQ1l51dMjX
+        9o79vGVhPpFOlQbjLtTA5ld5eDvIPNIwz15m8pCSGK9Qv8hCaWRFKZeXYtJj0KwYxB/
+        tzzRH2tEG4bJY066xHLBU9piqhdbnd5WKQA7bWeOjQmfeKxdzKGV4OZQV+ZpX7Lz2ga
+        8LiKp+xDtRRpkdIC/jpMuTdCJ0UGb1exQCGDtp1npXZEPVKNvZTJ8icFNmPETt8Vb7C
+        hCspNfENVw==
+Date:   Tue, 16 Mar 2021 20:19:48 +0100 (CET)
+Message-ID: <545111184.50061.1615922388276@ichabod.co-bxl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210316162613.87710-3-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Subject: RFC for a GPIO input muxer
+X-Priority: 3
+Reply-To: Mauri Sandberg <sandberg@mailfence.com>
+From:   Mauri Sandberg <sandberg@mailfence.com>
+To:     Linux GPIO <linux-gpio@vger.kernel.org>
+X-Mailer: ContactOffice Mail
+X-ContactOffice-Account: com:250217426
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 16, 2021 at 06:26:13PM +0200, Andy Shevchenko wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
-> 
-> Neither the ACPI description on the Quark platform provides the required
-> information is to do establish generic handling nor hardware capable of
-> doing it. According to the datasheet the hardware can generate SCI events.
-> Therefore, we need to hook from the driver directly into SCI handler of
-> the ACPI subsystem in order to catch and report GPIO-related events.
+I am writing to you to ask for comments on the preferred way of implementing a 4-way GPIO multiplexer in the most generic way. The situation is that there is a dual 4-way multiplexer on my device and its select pins a controlled with GPIOs. The output pins of the multiplexer are connected to two other GPIOs. The datasheet of the multiplexer is here: https://assets.nexperia.com/documents/data-sheet/74HC_HCT153.pdf
 
-> Validated on the Quark-based IOT2000 platform.
+This is what I have been contemplating on but I am not aware if the same could be achieved with existing pinctrl or gpio driver or combination of those. 
 
-This depends on the test by Jan or somebody with the same hardware available.
+The 'key-mux1' below implements a gpio-controller that drives the multiplexer and provides gpios for reading device key presses. At the moment it has to be polled as interrupts are not being generated by the key presses. I tried looking around but software interrupts did not give me any hits.
 
-> +static u32 sch_gpio_sci_handler(void *context)
-> +{
-> +	struct sch_gpio *sch = context;
-> +	struct gpio_chip *gc = &sch->chip;
-> +	unsigned long core_status, resume_status;
-> +	unsigned long pending;
-> +	int offset;
+I have omitted 'key-mux2' from this for clarity.
 
-> +	core_status = inl(sch->iobase + GTS + 0x00);
-> +	resume_status = inl(sch->iobase + GTS + 0x20);
-> +
-> +	pending = (resume_status << sch->resume_base) | core_status;
-> +
-> +	for_each_set_bit(offset, &pending, sch->chip.ngpio)
-> +		generic_handle_irq(irq_find_mapping(gc->irq.domain, offset));
-> +
-> +	outl(core_status, sch->iobase + GTS + 0x00);
-> +	outl(resume_status, sch->iobase + GTS + 0x20);
+mux: mux-controller {
+	compatible = "gpio-mux";
+	#mux-control-cells = <0>;
 
-I guess this still needs to be protected by spin_lock.
+	mux-gpios = <&gpio 9 GPIO_ACTIVE_HIGH>,		/* s0 */
+		    <&gpio 11 GPIO_ACTIVE_HIGH>;	/* s1 */
+};
 
-> +	return pending ? ACPI_INTERRUPT_HANDLED : ACPI_INTERRUPT_NOT_HANDLED;
-> +}
+gpio2: key-mux1 {
+	compatible = "gpio-mux-input";
+	mux-controls = <&mux>;
 
-...
+	gpio-controller;
+	#gpio-cells = <2>;
 
-Also I am in doubt that we need to instantiate an IRQ chip if the ACPI SCI
-handler registration fails. But I don't know what is better approach here, to
-NULL the pointer, or try to register handler before we will have an IRQ chip in
-place. Any recommendations?
+	// GPIOs used by this node, mux pin
+	pin-gpios = <&gpio 12 GPIO_ACTIVE_HIGH>;	/* 1y */
+};
 
--- 
-With Best Regards,
-Andy Shevchenko
+keys {
+	compatible = "gpio-keys-polled";
+	poll-interval = <20>;
 
+	aoss {
+		label = "aoss";
+		linux,code = <KEY_WPS_BUTTON>;
+		gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+		debounce-interval = <60>;
+	};
+}
 
+Sincerely,
+Mauri
