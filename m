@@ -2,192 +2,372 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A349333DEA4
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 21:26:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3A0633DEB0
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 21:27:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230139AbhCPUZk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Mar 2021 16:25:40 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:12984 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbhCPUZS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Mar 2021 16:25:18 -0400
+        id S231142AbhCPU1J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Mar 2021 16:27:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229994AbhCPU0I (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Mar 2021 16:26:08 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6C2EC061763
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 13:26:07 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id w11so12870771iol.13
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 13:26:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1615926319; x=1647462319;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=xPHHLCf7ZvBUG+y5LNfWWLREmAHRu22m1USDWCJuPBU=;
-  b=eUtZ9c+tZLbeX/fq1LyPw7fUtg6tEfL94wOi9QD+eaUBa/m8fhvkRADM
-   xwU4QWtKzIGO1E4sJ4ewCkEAGzqIsbvAUxLhB886d01tCbmLs5Zq0kvJ7
-   l3t9RlNgm0VwvxFj/yZ7/mwAVQpgofc93Hu2ryP1CMbV0hjarrLaSO448
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.81,254,1610409600"; 
-   d="scan'208";a="99356089"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 16 Mar 2021 20:25:16 +0000
-Received: from EX13D19EUB003.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id 1BB2AA1C59;
-        Tue, 16 Mar 2021 20:25:15 +0000 (UTC)
-Received: from u8a88181e7b2355.ant.amazon.com (10.43.160.48) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 16 Mar 2021 20:25:08 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <tony@atomide.com>, <haojian.zhuang@linaro.org>,
-        <linus.walleij@linaro.org>
-CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <tgershi@amazon.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <hhhawa@amazon.com>
-Subject: [PATCH v2 3/3] pinctrl: pinctrl-single: fix pcs_pin_dbg_show() when bits_per_mux != 0
-Date:   Tue, 16 Mar 2021 22:24:34 +0200
-Message-ID: <20210316202434.27555-4-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210316202434.27555-1-hhhawa@amazon.com>
-References: <20210316202434.27555-1-hhhawa@amazon.com>
+        d=ieee.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bvkqNr1q78jgqt9ME2KjhcsSH1MGlZ3R4wsxExVXRtc=;
+        b=aQI+a21P3/jQfp2XBCLpKA2XaF4d5h3u1dOHvC7XfJmy4Pv2OZk9eXfxC3Ka9vZNLg
+         EO21aV6GaVbMhwaByQY77Pz3lOGWZjsBh3Dtk919+/lWVtXwxYwuLSv2mdgmQ6lqIupI
+         nBE5rQzNd5O5jMR29ufLhcU7SA4WqArxE/PD8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bvkqNr1q78jgqt9ME2KjhcsSH1MGlZ3R4wsxExVXRtc=;
+        b=pUOiUA9UVvbwVUajftVlB8nh4NyaaAnfRsiGy1B7C2RmijZjNUqWT1Zzu62mpNe0jV
+         I+Bi51aXloZ3XL3eZNCv0B3UJOJ/5LfD1IngOoN1E7JApiNtZj6zWc2Q3Y6CZ9PIIkUg
+         x+6L7sV81hfo793lAOMHd8Y1MiOkdTyuoOczPgC/D7nOYb159n/4batQUrYlaCl79kLB
+         QNTWBR8kZ6cnDHO5gSgJanwXnEtTBcAgofjR5gp+bAuWcjUpjR3PRA+9RqjOcZkGN5Pk
+         EHaomuQygW8Bbi/Y4I1dCrvx3pYr+GmwCvRfbt4phpid6F23gKvSKwq4AqdP8777lKe4
+         +ZqA==
+X-Gm-Message-State: AOAM531HafMH9cKixGXQ1lqqg2N8fCZ1DMcGU9rcBhtcs3t+c3PxxOHv
+        Us2aFVgThTgusdyU/y4xngctAQ==
+X-Google-Smtp-Source: ABdhPJzy4mGSz2YUBoXl8UAsu2NnVceuM4ynQkpHc0OrhVOY9bLUogPf0mJ7kYjy/ReSLuG6SxRI0Q==
+X-Received: by 2002:a05:6638:140e:: with SMTP id k14mr376382jad.31.1615926367038;
+        Tue, 16 Mar 2021 13:26:07 -0700 (PDT)
+Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id v4sm9907370ilo.26.2021.03.16.13.26.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Mar 2021 13:26:06 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: Drop type references on common properties
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mark Brown <broonie@kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        Alex Elder <elder@kernel.org>, Suman Anna <s-anna@ti.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-usb@vger.kernel.org
+References: <20210316194858.3527845-1-robh@kernel.org>
+From:   Alex Elder <elder@ieee.org>
+Message-ID: <b7599ef5-899f-5c38-d3e4-8ac8cfe06c56@ieee.org>
+Date:   Tue, 16 Mar 2021 15:26:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.48]
-X-ClientProxiedBy: EX13D02UWB003.ant.amazon.com (10.43.161.48) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+In-Reply-To: <20210316194858.3527845-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-An SError was detected when trying to print the supported pins in a
-pinctrl device which supports multiple pins per register. This change
-fixes the pcs_pin_dbg_show() in pinctrl-single driver when
-bits_per_mux != 0. In addition move offset calculation and pin offset in
-register to common function.
+On 3/16/21 2:48 PM, Rob Herring wrote:
+> Users of common properties shouldn't have a type definition as the
+> common schemas already have one. Drop all the unnecessary type
+> references in the tree.
+> 
+> A meta-schema update to catch these is pending.
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
----
- drivers/pinctrl/pinctrl-single.c | 66 ++++++++++++++++++++++----------
- 1 file changed, 45 insertions(+), 21 deletions(-)
+For net/qcom,ipa.yaml:
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index f3394517cb2e..434f90c8b1b3 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -270,20 +270,53 @@ static void __maybe_unused pcs_writel(unsigned val, void __iomem *reg)
- 	writel(val, reg);
- }
- 
-+static unsigned int pcs_pin_reg_offset_get(struct pcs_device *pcs,
-+					   unsigned int pin)
-+{
-+	unsigned int offset, mux_bytes;
-+
-+	mux_bytes = pcs->width / BITS_PER_BYTE;
-+
-+	if (pcs->bits_per_mux) {
-+		unsigned int pin_offset_bytes;
-+
-+		pin_offset_bytes = (pcs->bits_per_pin * pin) / BITS_PER_BYTE;
-+		offset = (pin_offset_bytes / mux_bytes) * mux_bytes;
-+	} else {
-+		offset = pin * mux_bytes;
-+	}
-+
-+	return offset;
-+}
-+
-+static unsigned int pcs_pin_shift_reg_get(struct pcs_device *pcs,
-+					  unsigned int pin)
-+{
-+	return ((pin % (pcs->width / pcs->bits_per_pin)) * pcs->bits_per_pin);
-+}
-+
- static void pcs_pin_dbg_show(struct pinctrl_dev *pctldev,
- 					struct seq_file *s,
- 					unsigned pin)
- {
- 	struct pcs_device *pcs;
--	unsigned val, mux_bytes;
-+	unsigned int val;
- 	unsigned long offset;
- 	size_t pa;
- 
- 	pcs = pinctrl_dev_get_drvdata(pctldev);
- 
--	mux_bytes = pcs->width / BITS_PER_BYTE;
--	offset = pin * mux_bytes;
--	val = pcs->read(pcs->base + offset);
-+	offset = pcs_pin_reg_offset_get(pcs, pin);
-+
-+	if (pcs->bits_per_mux) {
-+		unsigned int pin_shift_in_reg = pcs_pin_shift_reg_get(pcs, pin);
-+
-+		val = pcs->read(pcs->base + offset)
-+			& (pcs->fmask << pin_shift_in_reg);
-+	} else {
-+		val = pcs->read(pcs->base + offset);
-+	}
-+
- 	pa = pcs->res->start + offset;
- 
- 	seq_printf(s, "%zx %08x %s ", pa, val, DRIVER_NAME);
-@@ -384,7 +417,6 @@ static int pcs_request_gpio(struct pinctrl_dev *pctldev,
- 	struct pcs_device *pcs = pinctrl_dev_get_drvdata(pctldev);
- 	struct pcs_gpiofunc_range *frange = NULL;
- 	struct list_head *pos, *tmp;
--	int mux_bytes = 0;
- 	unsigned data;
- 
- 	/* If function mask is null, return directly. */
-@@ -392,29 +424,27 @@ static int pcs_request_gpio(struct pinctrl_dev *pctldev,
- 		return -ENOTSUPP;
- 
- 	list_for_each_safe(pos, tmp, &pcs->gpiofuncs) {
-+		u32 offset;
-+
- 		frange = list_entry(pos, struct pcs_gpiofunc_range, node);
- 		if (pin >= frange->offset + frange->npins
- 			|| pin < frange->offset)
- 			continue;
--		mux_bytes = pcs->width / BITS_PER_BYTE;
- 
--		if (pcs->bits_per_mux) {
--			int byte_num, offset, pin_shift;
-+		offset = pcs_pin_reg_offset_get(pcs, pin);
- 
--			byte_num = (pcs->bits_per_pin * pin) / BITS_PER_BYTE;
--			offset = (byte_num / mux_bytes) * mux_bytes;
--			pin_shift = pin % (pcs->width / pcs->bits_per_pin) *
--				    pcs->bits_per_pin;
-+		if (pcs->bits_per_mux) {
-+			int pin_shift = pcs_pin_shift_reg_get(pcs, pin);
- 
- 			data = pcs->read(pcs->base + offset);
- 			data &= ~(pcs->fmask << pin_shift);
- 			data |= frange->gpiofunc << pin_shift;
- 			pcs->write(data, pcs->base + offset);
- 		} else {
--			data = pcs->read(pcs->base + pin * mux_bytes);
-+			data = pcs->read(pcs->base + offset);
- 			data &= ~pcs->fmask;
- 			data |= frange->gpiofunc;
--			pcs->write(data, pcs->base + pin * mux_bytes);
-+			pcs->write(data, pcs->base + offset);
- 		}
- 		break;
- 	}
-@@ -724,14 +754,8 @@ static int pcs_allocate_pin_table(struct pcs_device *pcs)
- 	for (i = 0; i < pcs->desc.npins; i++) {
- 		unsigned offset;
- 		int res;
--		int byte_num;
- 
--		if (pcs->bits_per_mux) {
--			byte_num = (pcs->bits_per_pin * i) / BITS_PER_BYTE;
--			offset = (byte_num / mux_bytes) * mux_bytes;
--		} else {
--			offset = i * mux_bytes;
--		}
-+		offset = pcs_pin_reg_offset_get(pcs, i);
- 		res = pcs_add_pin(pcs, offset);
- 		if (res < 0) {
- 			dev_err(pcs->dev, "error adding pins: %i\n", res);
--- 
-2.17.1
+Acked-by: Alex Elder <elder@linaro.org>
+
+> 
+> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Ohad Ben-Cohen <ohad@wizery.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Cheng-Yi Chiang <cychiang@chromium.org>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Stefan Wahren <wahrenst@gmx.net>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Odelu Kukatla <okukatla@codeaurora.org>
+> Cc: Alex Elder <elder@kernel.org>
+> Cc: Suman Anna <s-anna@ti.com>
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-can@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-remoteproc@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-usb@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>   .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml       | 5 +----
+>   Documentation/devicetree/bindings/arm/cpus.yaml              | 2 --
+>   .../bindings/display/allwinner,sun4i-a10-tcon.yaml           | 1 -
+>   .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml    | 3 +--
+>   .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml      | 1 -
+>   .../devicetree/bindings/interconnect/qcom,rpmh.yaml          | 1 -
+>   .../bindings/memory-controllers/nvidia,tegra210-emc.yaml     | 2 +-
+>   Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml   | 1 -
+>   Documentation/devicetree/bindings/net/qcom,ipa.yaml          | 1 -
+>   Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml  | 2 --
+>   .../devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml   | 2 +-
+>   Documentation/devicetree/bindings/sound/ak4642.yaml          | 2 --
+>   .../devicetree/bindings/sound/google,cros-ec-codec.yaml      | 2 +-
+>   Documentation/devicetree/bindings/sound/renesas,rsnd.yaml    | 1 -
+>   .../devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml       | 1 -
+>   Documentation/devicetree/bindings/usb/usb.yaml               | 1 -
+>   16 files changed, 5 insertions(+), 23 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> index a2c63c8b1d10..c6144c8421fa 100644
+> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> @@ -26,10 +26,7 @@ properties:
+>         - const: simple-mfd
+>   
+>     mboxes:
+> -    $ref: '/schemas/types.yaml#/definitions/phandle'
+> -    description: |
+> -      Phandle to the firmware device's Mailbox.
+> -      (See: ../mailbox/mailbox.txt for more information)
+> +    maxItems: 1
+>   
+>     clocks:
+>       type: object
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index 26b886b20b27..6be4a8852ee5 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -256,13 +256,11 @@ properties:
+>         where voltage is in V, frequency is in MHz.
+>   
+>     power-domains:
+> -    $ref: '/schemas/types.yaml#/definitions/phandle-array'
+>       description:
+>         List of phandles and PM domain specifiers, as defined by bindings of the
+>         PM domain provider (see also ../power_domain.txt).
+>   
+>     power-domain-names:
+> -    $ref: '/schemas/types.yaml#/definitions/string-array'
+>       description:
+>         A list of power domain name strings sorted in the same order as the
+>         power-domains property.
+> diff --git a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+> index c13faf3e6581..3a7d5d731712 100644
+> --- a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+> +++ b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+> @@ -73,7 +73,6 @@ properties:
+>     clock-output-names:
+>       description:
+>         Name of the LCD pixel clock created.
+> -    $ref: /schemas/types.yaml#/definitions/string-array
+>       maxItems: 1
+>   
+>     dmas:
+> diff --git a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+> index 1a54db04f29d..bcafa494ed7a 100644
+> --- a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+> @@ -43,8 +43,7 @@ properties:
+>   
+>     gpio-ranges: true
+>   
+> -  gpio-ranges-group-names:
+> -    $ref: /schemas/types.yaml#/definitions/string-array
+> +  gpio-ranges-group-names: true
+>   
+>     socionext,interrupt-ranges:
+>       description: |
+> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
+> index 6f2398cdc82d..1e7894e524f9 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
+> @@ -102,7 +102,6 @@ patternProperties:
+>   
+>         st,adc-channel-names:
+>           description: List of single-ended channel names.
+> -        $ref: /schemas/types.yaml#/definitions/string-array
+>   
+>         st,filter-order:
+>           description: |
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+> index 799e73cdb90b..13da7b29c707 100644
+> --- a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+> @@ -82,7 +82,6 @@ properties:
+>         this interconnect to send RPMh commands.
+>   
+>     qcom,bcm-voter-names:
+> -    $ref: /schemas/types.yaml#/definitions/string-array
+>       description: |
+>         Names for each of the qcom,bcm-voters specified.
+>   
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml
+> index 49ab09252e52..bc8477e7ab19 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml
+> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml
+> @@ -34,7 +34,7 @@ properties:
+>         - description: EMC general interrupt
+>   
+>     memory-region:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> +    maxItems: 1
+>       description:
+>         phandle to a reserved memory region describing the table of EMC
+>         frequencies trained by the firmware
+> diff --git a/Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml b/Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml
+> index fe6a949a2eab..55bff1586b6f 100644
+> --- a/Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml
+> +++ b/Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml
+> @@ -57,7 +57,6 @@ properties:
+>         - const: per
+>   
+>     clock-frequency:
+> -    $ref: /schemas/types.yaml#/definitions/uint32
+>       description: |
+>         The oscillator frequency driving the flexcan device, filled in by the
+>         boot loader. This property should only be used the used operating system
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+> index 8f86084bf12e..4e8dee4aa90d 100644
+> --- a/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+> @@ -100,7 +100,6 @@ properties:
+>         - description: Whether the IPA clock is enabled (if valid)
+>   
+>     qcom,smem-state-names:
+> -    $ref: /schemas/types.yaml#/definitions/string-array
+>       description: The names of the state bits used for SMP2P output
+>       items:
+>         - const: ipa-clock-enabled-valid
+> diff --git a/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml b/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+> index d5d7f113bade..828e4a1ece41 100644
+> --- a/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+> +++ b/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+> @@ -23,12 +23,10 @@ properties:
+>         List of phandle to the nvmem data cells.
+>   
+>     nvmem-names:
+> -    $ref: /schemas/types.yaml#/definitions/string-array
+>       description:
+>         Names for the each nvmem provider.
+>   
+>     nvmem-cell-names:
+> -    $ref: /schemas/types.yaml#/definitions/string-array
+>       description:
+>         Names for each nvmem-cells specified.
+>   
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> index 1a1159097a2a..73400bc6e91d 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> @@ -93,7 +93,7 @@ properties:
+>   # The following are the optional properties:
+>   
+>     memory-region:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> +    maxItems: 1
+>       description: |
+>         phandle to the reserved memory node to be associated
+>         with the remoteproc device. The reserved memory node
+> diff --git a/Documentation/devicetree/bindings/sound/ak4642.yaml b/Documentation/devicetree/bindings/sound/ak4642.yaml
+> index 6cd213be2266..1e2caa29790e 100644
+> --- a/Documentation/devicetree/bindings/sound/ak4642.yaml
+> +++ b/Documentation/devicetree/bindings/sound/ak4642.yaml
+> @@ -29,11 +29,9 @@ properties:
+>   
+>     clock-frequency:
+>       description: common clock binding; frequency of MCKO
+> -    $ref: /schemas/types.yaml#/definitions/uint32
+>   
+>     clock-output-names:
+>       description: common clock name
+> -    $ref: /schemas/types.yaml#/definitions/string
+>   
+>   required:
+>     - compatible
+> diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> index acfb9db021dc..77adbebed824 100644
+> --- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> +++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> @@ -32,7 +32,7 @@ properties:
+>             The last one integer is the length of the shared memory.
+>   
+>     memory-region:
+> -    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +    maxItems: 1
+>       description: |
+>         Shared memory region to EC.  A "shared-dma-pool".
+>         See ../reserved-memory/reserved-memory.txt for details.
+> diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml b/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
+> index 2e1046513603..e494a0416748 100644
+> --- a/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
+> +++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
+> @@ -78,7 +78,6 @@ properties:
+>   
+>     clock-frequency:
+>       description: for audio_clkout0/1/2/3
+> -    $ref: /schemas/types.yaml#/definitions/uint32-array
+>   
+>     clkout-lr-asynchronous:
+>       description: audio_clkoutn is asynchronizes with lr-clock.
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml b/Documentation/devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml
+> index 95a728f4d333..3ea8c0c1f45f 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml
+> @@ -59,7 +59,6 @@ patternProperties:
+>   
+>       properties:
+>         reg:
+> -        $ref: /schemas/types.yaml#/definitions/uint32
+>           description: Specify the sensor channel. There are 8 channels in PMIC5's ADC TM
+>           minimum: 0
+>           maximum: 7
+> diff --git a/Documentation/devicetree/bindings/usb/usb.yaml b/Documentation/devicetree/bindings/usb/usb.yaml
+> index 78491e66ed24..939f217b8c7b 100644
+> --- a/Documentation/devicetree/bindings/usb/usb.yaml
+> +++ b/Documentation/devicetree/bindings/usb/usb.yaml
+> @@ -16,7 +16,6 @@ properties:
+>       pattern: "^usb(@.*)?"
+>   
+>     phys:
+> -    $ref: /schemas/types.yaml#/definitions/phandle-array
+>       description:
+>         List of all the USB PHYs on this HCD
+>   
+> 
 
