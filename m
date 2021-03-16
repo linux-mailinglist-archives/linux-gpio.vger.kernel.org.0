@@ -2,112 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E998533D3DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 13:30:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBA5033D4A8
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 14:15:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231709AbhCPMaK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Mar 2021 08:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231562AbhCPM3l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Mar 2021 08:29:41 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34872C06175F
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 05:29:40 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id j3so21282865edp.11
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 05:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=frS6cCLPOhoy6WT0w0VG2Zdhbvi3Fgut+iQRwiWciZM=;
-        b=YbgzcrArNyGLlL04bYdE/q4fB1g3O2g7a5l713GEu5fNEryQecu/1Z3UxakkDw8ojo
-         ZVzeZA05ZZ6ZEqaEnGW3Q1EEyENRD/4B8laSjyqDLfiTJMTh2ZsTljIJt4zbb535pV/l
-         dXJ+j+FWboYJoDHWX2gJZu5BXn9qmnyzzViwQ2vSClrpOZ5Jzj0yDxhyXFyd+VWI9198
-         gdZn+d4RVXwYT3MeiYteW3OfwFZMhU/U+Q6gpBVeON/EchAg97u7QfUkoe872zC2af3o
-         4a4aK62qhCGgYfOTpKviLHonayFBEIellXQ/T8AWs+rD0qtxkRG9LQWax41QP0RQIUe5
-         Sm1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=frS6cCLPOhoy6WT0w0VG2Zdhbvi3Fgut+iQRwiWciZM=;
-        b=f0hATwGZOstLrSKQjARmeQzkHTLO1UosjStKBHKmaoisIs4U1jCWWXxCiXrmE5Q6Ad
-         rtIyAwm/Q3xWecL70VxC2/MsTv9ZlUeAFda9TqLlZlmCyNILwFxQZ1RsUATg2RK9jwEM
-         fF2afjolrtlrQZlT0tFJTqATWSurElNezE4KxM/yPad6/XUQgH71iGAbiCLirZY4pE7E
-         7/OnRmhQGBQvb3qVQ7AdtW0SUb6z1Tm3Kv53bp17ICjSkmDdS7ZTj/Um8dwB+iA9Bf+h
-         p+2O/iWbRGVPnA9xO3T8sTgw9ZIPj7vuM08oH2bHmxg+upPAag8gaFwpw1cU81Q17zbx
-         yNpA==
-X-Gm-Message-State: AOAM531XjCs8ZZ4WWGVn8FzA627sqrAOeELgaxwKt0MTZnR3+4/9++Cv
-        Ck6eDo4QIaBogC79icKj0QwMhQho/NPRdkrDwxb/+LBJ0Eo=
-X-Google-Smtp-Source: ABdhPJx2Ejcwpp4xgO5liW2B5NUm/mY2puj2eqrCQhl327oaZ05ACdKJVa5h+tRxPhEvirjf9wez1kpAGiQdHt4b01Y=
-X-Received: by 2002:a05:6402:b31:: with SMTP id bo17mr35716883edb.113.1615897778669;
- Tue, 16 Mar 2021 05:29:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210315165940.90055-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210315165940.90055-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 16 Mar 2021 13:29:28 +0100
-Message-ID: <CAMpxmJVZVD9mRGSkpVKV2jJdWUVOKtQfquuHo7toi2TWqf+ddQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: mockup: Adjust documentation to the code
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+        id S229505AbhCPNPN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Mar 2021 09:15:13 -0400
+Received: from mail.thorsis.com ([92.198.35.195]:35214 "EHLO mail.thorsis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230112AbhCPNO4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 16 Mar 2021 09:14:56 -0400
+X-Greylist: delayed 407 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Mar 2021 09:14:56 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.thorsis.com (Postfix) with ESMTP id 237E3CFA
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 14:08:07 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
+Received: from mail.thorsis.com ([127.0.0.1])
+        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Hirh5aakN55u for <linux-gpio@vger.kernel.org>;
+        Tue, 16 Mar 2021 14:08:02 +0100 (CET)
+Received: by mail.thorsis.com (Postfix, from userid 109)
+        id AC3561C8A; Tue, 16 Mar 2021 14:08:02 +0100 (CET)
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS autolearn=ham autolearn_force=no version=3.4.2
+Date:   Tue, 16 Mar 2021 14:07:59 +0100 (CET)
+From:   Alexander Dahl <ada@thorsis.com>
+To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Message-ID: <946021874.11132.1615900079722@seven.thorsis.com>
+Subject: setting gpio-line-names in dts for sama5d2 SoC
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Priority: 3
+Importance: Normal
+X-Originating-Client: open-xchange-appsuite
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 5:59 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> First of all one of the parameter missed 'mockup' in its name,
-> Second, the semantics of the integer pairs depends on the sign
-> of the base (the first value in the pair).
->
-> Update documentation to reflect the real code behaviour.
->
-> Fixes: 2fd1abe99e5f ("Documentation: gpio: add documentation for gpio-mockup")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/admin-guide/gpio/gpio-mockup.rst | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/admin-guide/gpio/gpio-mockup.rst b/Documentation/admin-guide/gpio/gpio-mockup.rst
-> index 9fa1618b3adc..493071da1738 100644
-> --- a/Documentation/admin-guide/gpio/gpio-mockup.rst
-> +++ b/Documentation/admin-guide/gpio/gpio-mockup.rst
-> @@ -17,17 +17,18 @@ module.
->      gpio_mockup_ranges
->
->          This parameter takes an argument in the form of an array of integer
-> -        pairs. Each pair defines the base GPIO number (if any) and the number
-> -        of lines exposed by the chip. If the base GPIO is -1, the gpiolib
-> -        will assign it automatically.
-> +        pairs. Each pair defines the base GPIO number (non-negative integer)
-> +        and the first number after the last of this chip. If the base GPIO
-> +        is -1, the gpiolib will assign it automatically. while the following
-> +        parameter is the number of lines exposed by the chip.
->
-> -        Example: gpio_mockup_ranges=-1,8,-1,16,405,4
-> +        Example: gpio_mockup_ranges=-1,8,-1,16,405,409
->
->          The line above creates three chips. The first one will expose 8 lines,
->          the second 16 and the third 4. The base GPIO for the third chip is set
->          to 405 while for two first chips it will be assigned automatically.
->
-> -    gpio_named_lines
-> +    gpio_mockup_named_lines
->
->          This parameter doesn't take any arguments. It lets the driver know that
->          GPIO lines exposed by it should be named.
-> --
-> 2.30.2
->
+Hei hei,
 
-Applied, thanks!
+for a Microchip SAMA5D2 SoC based device I try to set gpio-line-names in .d=
+ts file like this:
 
-Bartosz
+257 &pioA {                                                                =
+=20
+258         gpio-line-names =3D "",                   /* PA0  */           =
+  =20
+259                           "",                   /* PA1  */             =
+=20
+260                           "",                   /* PA2  */             =
+=20
+261                           "FOO",                /* PA3  */             =
+=20
+262                           "BAR",                /* PA4  */             =
+=20
+263                           "",                   /* PA5  */             =
+=20
+
+=E2=80=A6 and so on for all 4 * 32 GPIO Pins. However when calling `gpioinf=
+o` in userspace, I always get this:
+
+$ gpioinfo=20
+gpiochip0 - 128 lines:
+        line   0:        "PA0"       unused   input  active-high=20
+        line   1:        "PA1"       unused   input  active-high=20
+        line   2:        "PA2"       unused   input  active-high=20
+        line   3:        "PA3"       unused   input  active-high=20
+        line   4:        "PA4"       unused   input  active-high=20
+        line   5:        "PA5"       unused   input  active-high=20
+
+=E2=80=A6 and so on. Those "PA0" line names are set by the pinctrl driver i=
+n drivers/pinctrl/pinctrl-at91-pio4.c before calling gpiochip_add_data() an=
+d from reading the code in drivers/gpio/gpiolib.c I suspect devprop_gpiochi=
+p_set_names() is never called then, so those names in .dts are simply ignor=
+ed.
+
+Those default names from the at91 pio4 pinctrl driver are certainly correct=
+ speaking of pin names, but from a userspace point of view it would be bett=
+er if I could override those from dts, so an application using libgpiod cou=
+ld look for a name like e.g. "VALVE7_EN" without caring to which pin that's=
+ actually connected. Can I override those with a currently present kernel? =
+Or is it a problem in either the at91 pio4 driver or the gpiolib core? Or i=
+s that no real usecase and should I do it differently?
+
+Greets
+Alex
