@@ -2,101 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50CC333D0B2
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 10:24:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C12DA33D198
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Mar 2021 11:14:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236046AbhCPJXb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Mar 2021 05:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        id S236375AbhCPKOT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Mar 2021 06:14:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236062AbhCPJXD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Mar 2021 05:23:03 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C57CEC061756
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 02:23:02 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id ox4so55286354ejb.11
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 02:23:02 -0700 (PDT)
+        with ESMTP id S236596AbhCPKOP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Mar 2021 06:14:15 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1CD0C06174A
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 03:14:13 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id r3so53353390lfc.13
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Mar 2021 03:14:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/IXhW1O63bmJ8Yd0S7dPhigetZgdpUG2XeBEZKEoOTk=;
-        b=UBceE/SRPgNInEgr1e11s95rOpMzM2O0jAasYVdA1+zDUwLsSJJV5qTVQb3ZGitrtc
-         i2014J51k8OMFvFsEQkmZZ67kycqGpkDu/6F2hLbyjgSXYi3cFNGbX/A1ByyWM7+ZpoM
-         ++SdsHTuNUfognYkuXKo6pnAMCuTgr27vUVLVgycxx5Jf4DD9iJAljX0wlmIjl8jtIif
-         2vlpovJcZq1i1wBQicpzin7jnUN9aQ+rX0RPRlgq9KnUD6oxljr8TxV8Tuwi05F4p32d
-         nmqZ01mh1diT89Qx8Bvu3F4LMWZhwdRFbv8qXzefgPkH/z8rR5p7Kr29kB1XkgOLFa4z
-         ozaQ==
+         :cc:content-transfer-encoding;
+        bh=YJKD72vt5FV7DwVK+YUDOq6k8g/9YfYFf+v/N3upG7k=;
+        b=tR0nY/naZGr34RAqDmw6UWXsMezp6Zrd1WRBSSenBeRrRU/YsdqnARW0V7OLLikPi6
+         f2M6jHv7hmJHpbFtuQi4yiDzYO/kb29ZTa3U9OmjZvL+2eqQR4UY2Defs3Mp8KDfzDiJ
+         zD0AqbUfs9zPxolgDv3WnHD8vQkW1h0+NUvodocNpIiaeF5FN0J1cdF3aQRukkhqCrYK
+         KYJOg6vZuQWP9APiFev1VmSaXjpSgtJ7EisjVmq3XfSUXyXSKVcw9ymFVoLLMEZkqOjv
+         cY6dVMNU+FG8Ji1WPyg4gWWDhhxcsacYKw+Dem5jt+Y5L9MeAqiIpLVDKqug+qnMIoC4
+         HA/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/IXhW1O63bmJ8Yd0S7dPhigetZgdpUG2XeBEZKEoOTk=;
-        b=YYu6yl9vZc2AY4Bd46yUj/pqHRwR9+zROrOYP2d8lSL85fX0jYgPBdriXv8iRuFzv8
-         PSL7HvKtCyaVkEiMs+IEGcx4lG/oXots1fVexAE4t8ie6TGkkBVzIey0/Y67Xtej7HNI
-         gNhOosbjJlHEIFHd1FV+s5yQkvj/71PQqnIsqjjrb/s5MUMklEJcZfWVQ+zzelE1As6E
-         11NEVvFwp7ZBTGvCrZWp0xwpmFeOzTb0of9C9PIwb6HjNmqwSqshMa3r7b5U/NJByDH+
-         N2huikww26WS1gNZ1Rw3qUqEyPkBWmH50Cjvp/giwmvXM1Dr5IevNg5Rlj4mLoH4uoHH
-         08Hg==
-X-Gm-Message-State: AOAM531Z2nD/ynMNj6rQQIqzidwsA9zAS5D7WtQCgSi6F0nKrRheglJg
-        a7QrCUPOLjmDljAYWp1MoBKaexl4vcb1vIG1fmTDUw==
-X-Google-Smtp-Source: ABdhPJx58TefNTCARrYlDvqMTau3fnzMU3RG+L1/JXTagjaemGGfsmD89Dj1Lvs3d9ajASHalOeUuGNkYfcWyI9ZhOo=
-X-Received: by 2002:a17:906:c0c8:: with SMTP id bn8mr28225514ejb.445.1615886581573;
- Tue, 16 Mar 2021 02:23:01 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YJKD72vt5FV7DwVK+YUDOq6k8g/9YfYFf+v/N3upG7k=;
+        b=EPZKprmj7BZTL0CuwxDjbWXGqw3+JLIRBPclqMn+dViyPGJbDZAYs3qthIL+KxM29m
+         1QD0QXblbivQGyYRSsExpi+1EA+lXJuujSgq9y2Z0pgqrN4KCh+ahySHRZyjrxw6jb1u
+         1T0uJxrMcd99laZ32pbSV5ZJwkhxsWdNR0qdKCeCjhR5xYOFGVuxNWQa27d72rb+ltSd
+         tJqpRiIFOP7t+KqrvmU4M66js8o0WzD1jNAgjU30ouCJYgcHCFIZfYjWwFeMqR2QB+CX
+         HjxZ9DxlSCupxwmpPt10vK1PGLrVk8g/UuXAnwKbKoHz/b8Rvfawy469JSWZBG/WI1sT
+         Y94g==
+X-Gm-Message-State: AOAM532vdjkrmJFbxrkVJ2uhO272aU362j72sl+QgMMOO941ODRBeeD5
+        o8u2aIHL8NLg7ILNLOGV7Csy6hCurHa+rWxeAPfv8w==
+X-Google-Smtp-Source: ABdhPJylfYIq/0t5C4hzWRaf/GHKoyycqwEWbpLfy9ABUE63ItR41bRWEMtlAzGCRqQxSThgIAjb+iLfcQL4/XQtnbc=
+X-Received: by 2002:ac2:4d95:: with SMTP id g21mr11367282lfe.29.1615889647025;
+ Tue, 16 Mar 2021 03:14:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210315185141.18013-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210315185141.18013-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 16 Mar 2021 10:22:50 +0100
-Message-ID: <CAMpxmJWtuH6JAQxbkqeAJeR99A8N4+RJF=AABK7HfrJ19WJMqA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: mockup: Drop duplicate NULL check in gpio_mockup_unregister_pdevs()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
+References: <20210315114214.3096-1-noltari@gmail.com>
+In-Reply-To: <20210315114214.3096-1-noltari@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 16 Mar 2021 11:13:56 +0100
+Message-ID: <CACRpkdYdHgP7QNWco4aN1G-GaRjOd2Y=_fkxv4zOKsQtXtpqfg@mail.gmail.com>
+Subject: Re: [PATCH v7 00/22] pinctrl: add BCM63XX pincontrol support
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 7:51 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Since platform_device_unregister() is NULL-aware, we don't need to duplicate
-> this check. Remove it and fold the rest of the code.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpio-mockup.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 28b757d34046..d7e73876a3b9 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -479,15 +479,10 @@ static struct platform_device *gpio_mockup_pdevs[GPIO_MOCKUP_MAX_GC];
->
->  static void gpio_mockup_unregister_pdevs(void)
->  {
-> -       struct platform_device *pdev;
->         int i;
->
-> -       for (i = 0; i < GPIO_MOCKUP_MAX_GC; i++) {
-> -               pdev = gpio_mockup_pdevs[i];
-> -
-> -               if (pdev)
-> -                       platform_device_unregister(pdev);
-> -       }
-> +       for (i = 0; i < GPIO_MOCKUP_MAX_GC; i++)
-> +               platform_device_unregister(gpio_mockup_pdevs[i]);
->  }
->
->  static __init char **gpio_mockup_make_line_names(const char *label,
-> --
-> 2.30.2
->
+On Mon, Mar 15, 2021 at 12:42 PM =C3=81lvaro Fern=C3=A1ndez Rojas
+<noltari@gmail.com> wrote:
 
-Applied, thanks!
+> v7: introduce changes suggested by Rob Herring.
 
-Bartosz
+If Rob is happy with the bindings like this (GPIO as parallel node rathern
+than subnode) I am ready to merge this.
+
+As long as the bindings are OK I am pretty sure any remaining nits can
+be fixed in-tree.
+
+Yours,
+Linus Walleij
