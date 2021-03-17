@@ -2,23 +2,23 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADC3F33F4D8
+	by mail.lfdr.de (Postfix) with ESMTP id 3873133F4D6
 	for <lists+linux-gpio@lfdr.de>; Wed, 17 Mar 2021 17:00:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232133AbhCQQAA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Mar 2021 12:00:00 -0400
-Received: from mail-eopbgr40106.outbound.protection.outlook.com ([40.107.4.106]:1795
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        id S232049AbhCQP77 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Mar 2021 11:59:59 -0400
+Received: from mail-eopbgr00111.outbound.protection.outlook.com ([40.107.0.111]:23936
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232031AbhCQP7t (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Mar 2021 11:59:49 -0400
+        id S232118AbhCQP7d (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 17 Mar 2021 11:59:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WbzhuQPxCP1M8hBLS4BIGRHL+JBchvoTzqIdhbHg5+N46oCjlomy6KtaFceTMKrKQ06BqD4j+5MeAupVvdgI36/RY3J5NlGZ0/Tw7VjGhtTChxKiJIEw4Vl058S4q2Sxc1/YEWO4eMLrFxA7zIzFDJFuv83aWSZ8CF0ZGkDDMKxxjN6kcDPCLSQjixcVArD1Mo8GPxv5UjmD/Bur38IYpn4wD1CeBSQBL0yInPbivzuchqvRfshbsdlAX5+p7R6sJvO4Q56AECh2PwOe3AWm1TeOms3KwZbrnZPbG7g5p3BOX8bUvOtTqC2RT7kBKVoE/dfDyOL0UJ7PMUQg91QDcA==
+ b=cFDjHf8bwBG4UuJBst0Ek3NoKQHQ2ROf0WqtQoeKplnzWlvdiX8ayH6H3AYNvuX70c9cFwHrlSzX6b51rohzvMdj03WYBNBCQ/OVAPAT/DWGILmn0zpzLzUQNga/FLQk0mn5AJO04JsWds4GImrZCnFkvopqvep0gs9u2snvTJ0AdtLKKVQMwYXO/IbAzpl/ClK9M6cjQPvcjR5+FyTpN7tBW/sUlxtmCkihYu2U5fw3nOgHl74kWglEvdDkflY5+s+8paRXts27e0eiHMcHKkP1fgfsu+0oo9f/P6/aiBHr4xOVr5NhiJTiOUM22hAvVgMuWghcXA7SNZb9CJF8HQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z4QkgTT+YoXuLnl3ujgVCE9utNOgpVzfH8kQkXDG/LI=;
- b=U2UmV9JZ41QtJ+dr8VCIf7r/NqEvEvLQuXpHxCLe7w/4Jn+D+dpBWtvFDjkvaipT5XDUIxy1BCWuKi21VY6+EUyvx54MHFwq+LQwQLipwb+geL+C+bfWet8BWU6IudhKvOclPRya2kh5w8umrnVKqDtYoYEyoAAda87A77+XXsb4ilH+q6LrufMmroYkgO6w3Hy7cN03qidVtrLkniOMVWfLaMZynn37C82kHwNhsRJgU4ssmni8YPCQpnasy87aGML8ozeJJi1AIvXqvr0nyG8qgFR7OB62WhTeqPzGZyWxH0GBFa9+5HFB0RM2bL51YkdXeOaIRd9ficQrAleCzw==
+ bh=MhaeGqroqamQbhxdh9RtApPKBe08FECchRCMDMkPRL0=;
+ b=eP2EoAzu0/mKWhBPRX2Ezcs97zFSVzrX/TXK2gpfEV3yA5HXtmoO7RsjqCNFvvXhvCJ6JYYdWsitNGyEVs1A1vJ1HVoO1KvMQ5OQ88nUX7PwfM7duLE781uHF8fcZ1HLP6SJ7OrWINjvYOF1uu+MtDNCrDLoo0kzHOPp+F+N2TZCoVNBIK72oxCBxbooy/Ja6BtCBC5G8vdb8Lm/ycydmPJRqWPIERRYwVbmH94/h//5eo75AL+za3vKavxUnng8vXyQi5uBwAEV/nvCYy278Z32NR2Z7jaAIqdi/2sS4525R29Ojpx/TQTKHi7S1eDrD2db7tMmDGiLZ9ckh1271Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  131.228.2.8) smtp.rcpttodomain=baylibre.com smtp.mailfrom=nokia.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=nokia.com;
@@ -26,18 +26,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
  s=selector1-nokia-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z4QkgTT+YoXuLnl3ujgVCE9utNOgpVzfH8kQkXDG/LI=;
- b=qpGmjDU4BsEidvb3GwbgpYADHZtMdQqzKR5kR1yaWyx4yMjn5pj2wUqTO8uGI86gZHJUBt47aN8UQdPINGnKwf/tnN/CXeSMRUkL3P0E2TQlSqGJa+1xR5fPf+hkzvBiY1O/UzSzQpva4sPFBGf5Aw/rDFMe/pKZApX9DnCwWJ4=
-Received: from DB7PR05CA0037.eurprd05.prod.outlook.com (2603:10a6:10:2e::14)
- by AM7PR07MB6328.eurprd07.prod.outlook.com (2603:10a6:20b:135::9) with
+ bh=MhaeGqroqamQbhxdh9RtApPKBe08FECchRCMDMkPRL0=;
+ b=mYfY1PeJ+oi4RgXU2nkVTtm4QfTWBAvxWyevwnED3j79+wMRmJdt0F2lhnEYSsFN1BMQZnL6852mKp2S+W4Kpd1d2wct4ZG2y9/li44K+57hbpCR+w63CmiwEr+/75wA+8VCdoemKLFT3vwUzcls5hv/FVBqwmKMXOiRZVw+/CM=
+Received: from DB6PR0802CA0028.eurprd08.prod.outlook.com (2603:10a6:4:a3::14)
+ by AS8PR07MB7768.eurprd07.prod.outlook.com (2603:10a6:20b:351::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.13; Wed, 17 Mar
- 2021 15:59:31 +0000
-Received: from DB5EUR03FT038.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:10:2e:cafe::28) by DB7PR05CA0037.outlook.office365.com
- (2603:10a6:10:2e::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.10; Wed, 17 Mar
+ 2021 15:59:32 +0000
+Received: from DB5EUR03FT004.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:a3:cafe::a5) by DB6PR0802CA0028.outlook.office365.com
+ (2603:10a6:4:a3::14) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18 via Frontend
- Transport; Wed, 17 Mar 2021 15:59:31 +0000
+ Transport; Wed, 17 Mar 2021 15:59:32 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 131.228.2.8)
  smtp.mailfrom=nokia.com; baylibre.com; dkim=none (message not signed)
  header.d=none;baylibre.com; dmarc=pass action=none header.from=nokia.com;
@@ -45,20 +45,20 @@ Received-SPF: Pass (protection.outlook.com: domain of nokia.com designates
  131.228.2.8 as permitted sender) receiver=protection.outlook.com;
  client-ip=131.228.2.8; helo=fihe3nok0734.emea.nsn-net.net;
 Received: from fihe3nok0734.emea.nsn-net.net (131.228.2.8) by
- DB5EUR03FT038.mail.protection.outlook.com (10.152.21.84) with Microsoft SMTP
+ DB5EUR03FT004.mail.protection.outlook.com (10.152.20.128) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3933.31 via Frontend Transport; Wed, 17 Mar 2021 15:59:31 +0000
+ 15.20.3955.18 via Frontend Transport; Wed, 17 Mar 2021 15:59:32 +0000
 Received: from ulegcparamis.emea.nsn-net.net (ulegcparamis.emea.nsn-net.net [10.151.74.146])
-        by fihe3nok0734.emea.nsn-net.net (GMO) with ESMTP id 12HFxRUS016614;
-        Wed, 17 Mar 2021 15:59:29 GMT
+        by fihe3nok0734.emea.nsn-net.net (GMO) with ESMTP id 12HFxRUT016614;
+        Wed, 17 Mar 2021 15:59:30 GMT
 From:   Alexander A Sverdlin <alexander.sverdlin@nokia.com>
 To:     linux-gpio@vger.kernel.org
 Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] gpio: pl061: Support implementations without GPIOINTR line
-Date:   Wed, 17 Mar 2021 16:59:18 +0100
-Message-Id: <20210317155919.41450-2-alexander.sverdlin@nokia.com>
+Subject: [PATCH] gpio: pl061: Warn when IRQ line has not been configured
+Date:   Wed, 17 Mar 2021 16:59:19 +0100
+Message-Id: <20210317155919.41450-3-alexander.sverdlin@nokia.com>
 X-Mailer: git-send-email 2.10.2
 In-Reply-To: <20210317155919.41450-1-alexander.sverdlin@nokia.com>
 References: <20210317155919.41450-1-alexander.sverdlin@nokia.com>
@@ -67,125 +67,60 @@ X-MS-Office365-Filtering-HT: Tenant
 X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: ad334787-3866-4264-7d01-08d8e95da6fb
-X-MS-TrafficTypeDiagnostic: AM7PR07MB6328:
-X-Microsoft-Antispam-PRVS: <AM7PR07MB6328DC09938C69D3D8476DC6886A9@AM7PR07MB6328.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Office365-Filtering-Correlation-Id: 9d05d5e5-f074-4493-8b93-08d8e95da74c
+X-MS-TrafficTypeDiagnostic: AS8PR07MB7768:
+X-Microsoft-Antispam-PRVS: <AS8PR07MB77685A2D22353531E7AB7F6B886A9@AS8PR07MB7768.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: koWhWXOp988YefkuMkfB3wB3A7QUW2qHaJkqm+DTvo/k8pf6CUOxriYwo22h5o5VBEcUD2xZEx/Sao85qeH4J1qLQvJYLxcAe7IlsEmvZhcj/D8FK9AUx3WYNEm56dUCAizXeBfFD7Vt19rOsAq1NNHUjgZGk9rDUyMJYWgy935GQqVocLrfgVqj4luVDqulz9a/qXc69MKezip0cKO1n9IvXs91ouw4Kg6xC5K8qD+GcJQXZM1VZ8HVug1nzuBaguPI7kYdtRa18QLkjgTB/ODAvy8HvxMUB/l2RXb7PTmKt8P9Bery2lXgHsXY7Jjy/WObzfa6Wqx/Wj3GIHIOn52aW+ndItbHL4Nd+SyLvq/uhWTtjJ8/PFM58jnN0pR7bol3Chqxlyk+6Xl/dsir0Mxf3TSGcxqWPgGVQcm/zd10DR1OiNMb663DXYrlR+uSCIg6GUT59DqJ8q6tdtERFA7mCldJPpWO3zSNynGblf4vVajwOYdT30ls9A6L3r/DsSKwShmXVSffZ3qEI1ya4FINF4cYsktz+x4XgHm5HE7vmAdIf1Sww+LQueWGRvXSBccQuAQDfQ/Za/IIDAoReCCixcS+v+uCcjA8YrMwShxoNeEjKODQACnnHnUj4GRlyN0TEbW4YqTjMlAyY+IpD4DYTx6WJyU59mCDhiu+tmQaafacLYKIhxD4G1krNYnFzfMmIkQkLXOpV/Sq+9bvb1tDIkqR0qsb6NsIhFt0IMPlpv5ZJra5XubRIUq7C7ZQ7KRHToEWWVtOten6kbVweA==
-X-Forefront-Antispam-Report: CIP:131.228.2.8;CTRY:FI;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:fihe3nok0734.emea.nsn-net.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(396003)(136003)(346002)(39860400002)(376002)(46966006)(36840700001)(8936002)(86362001)(70586007)(6916009)(5660300002)(2906002)(83380400001)(81166007)(36756003)(70206006)(54906003)(2616005)(26005)(316002)(356005)(186003)(336012)(82310400003)(4326008)(1076003)(6666004)(82740400003)(478600001)(36860700001)(966005)(8676002)(47076005)(36900700001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: GIWuZ5U2BzRpxbiuLKK1wl3pieqJGYZABC+n3+c62eY0I+uTWFPiDwNdRnhhY17z1/dd6/GLHPizBNsKqb9epQ2QyaHpFttb2qHi2miW3p6LO3yYhqfp4QfLeGrhT4eDJz/CkhSQpRxWwglrhPS6C+ul1hE4sX85RdIJhU9QINUIOXs2Kf9GECUsiT0OLtupXuJzUotNXiaQ6wZ21PeSNHfGTAV2uvaOFpwqjOqxOpS85A9bXih4JMCuAE4PojMCIuYWtd5yxDIXP8VuAwyzNzSwFFULdqv3kPZWNI36nXEh3LqlzGo3tJ8UyKuUW44FbF8Z6VBlN46p/RVQFCf85S5uP8gC1wklRFv2g671N8M3AmJlX1PJsxCc9crWtXZXcZ7c8j9U/LE5FUnZthTfGbxBpOEEORp19HiwFysiwfeLmbN0jRrNJOyTXjQYekQURerO2qRM9NGlIyyiwhvSsV3tPlNOao4+2mjnu01hdOuBPrWrToPd4BPgxc7NyVxWsWoX/8c0OugjNOX+CKw4zy+NgIddqTC4f6dzzWtYa23TTIArADkQoKYZHU6pQNCxniwkPhU1qLFUD+9doeXLNqgC875PTWSxKpT8bS3+c4F5IxLwUNA/AskhAF772sW5TTJZd7aQ3/G34fPKn2+Q9rHjk5VwfHpVaA7/W2Tgy6XcvE41FYTm8ty7afPEIxWZ
+X-Forefront-Antispam-Report: CIP:131.228.2.8;CTRY:FI;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:fihe3nok0734.emea.nsn-net.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(39860400002)(376002)(346002)(136003)(396003)(46966006)(36840700001)(86362001)(36860700001)(6666004)(5660300002)(82310400003)(47076005)(4326008)(8676002)(1076003)(316002)(70586007)(81166007)(356005)(54906003)(336012)(8936002)(36756003)(82740400003)(2906002)(83380400001)(186003)(70206006)(26005)(6916009)(2616005)(478600001)(36900700001);DIR:OUT;SFP:1102;
 X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2021 15:59:31.4715
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2021 15:59:32.0087
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad334787-3866-4264-7d01-08d8e95da6fb
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d05d5e5-f074-4493-8b93-08d8e95da74c
 X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5d471751-9675-428d-917b-70f44f9630b0;Ip=[131.228.2.8];Helo=[fihe3nok0734.emea.nsn-net.net]
-X-MS-Exchange-CrossTenant-AuthSource: DB5EUR03FT038.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: DB5EUR03FT004.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR07MB6328
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR07MB7768
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-There are several implementations of PL061 which lack GPIOINTR signal in
-hardware and only have individual GPIOMIS[7:0] interrupts. Use the
-hierarchical interrupt support of the gpiolib in these cases (if at least 8
-IRQs are configured for the PL061).
+Existing (irq < 0) condition is always false because adev->irq has unsigned
+type and contains 0 in case of failed irq_of_parse_and_map(). Up to now all
+the mapping errors were silently ignored.
 
-One in-tree example is arch/arm/boot/dts/axm55xx.dtsi, PL061 instances have
-8 IRQs defined, but current driver supports only the first one, so only one
-pin would work as IRQ trigger.
+Seems that repairing this check would be backwards-incompatible and might
+break the probe() for the implementations without IRQ support. Therefore
+warn the user instead.
 
-Link: https://lore.kernel.org/linux-gpio/CACRpkdZpYzpMDWqJobSYH=JHgB74HbCQihOtexs+sVyo6SRJdA@mail.gmail.com/
 Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 ---
- drivers/gpio/Kconfig      |  1 +
- drivers/gpio/gpio-pl061.c | 46 +++++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 40 insertions(+), 7 deletions(-)
+ drivers/gpio/gpio-pl061.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b8013cf..6601758 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -426,6 +426,7 @@ config GPIO_PL061
- 	depends on ARM_AMBA
- 	select IRQ_DOMAIN
- 	select GPIOLIB_IRQCHIP
-+	select IRQ_DOMAIN_HIERARCHY
- 	help
- 	  Say yes here to support the PrimeCell PL061 GPIO device
- 
 diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-index 3439120..3c70386 100644
+index 5df7782..3439120 100644
 --- a/drivers/gpio/gpio-pl061.c
 +++ b/drivers/gpio/gpio-pl061.c
-@@ -282,6 +282,23 @@ static int pl061_irq_set_wake(struct irq_data *d, unsigned int state)
- 	return irq_set_irq_wake(pl061->parent_irq, state);
- }
+@@ -326,10 +326,8 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
  
-+static int pl061_child_to_parent_hwirq(struct gpio_chip *gc, unsigned int child,
-+				       unsigned int child_type,
-+				       unsigned int *parent,
-+				       unsigned int *parent_type)
-+{
-+	struct amba_device *adev = to_amba_device(gc->parent);
-+	unsigned int irq = adev->irq[child];
-+	struct irq_data *d = irq_get_irq_data(irq);
-+
-+	if (!d)
-+		return -EINVAL;
-+
-+	*parent_type = irqd_get_trigger_type(d);
-+	*parent = irqd_to_hwirq(d);
-+	return 0;
-+}
-+
- static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
- {
- 	struct device *dev = &adev->dev;
-@@ -332,16 +349,31 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
+ 	writeb(0, pl061->base + GPIOIE); /* disable irqs */
+ 	irq = adev->irq[0];
+-	if (irq < 0) {
+-		dev_err(&adev->dev, "invalid IRQ\n");
+-		return -ENODEV;
+-	}
++	if (!irq)
++		dev_warn(&adev->dev, "IRQ support disabled\n");
+ 	pl061->parent_irq = irq;
  
  	girq = &pl061->gc.irq;
- 	girq->chip = &pl061->irq_chip;
--	girq->parent_handler = pl061_irq_handler;
--	girq->num_parents = 1;
--	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
--				     GFP_KERNEL);
--	if (!girq->parents)
--		return -ENOMEM;
--	girq->parents[0] = irq;
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_bad_irq;
- 
-+	/*
-+	 * There are some PL061 implementations which lack GPIOINTR in hardware
-+	 * and only have individual GPIOMIS[7:0] signals. We distinguish them by
-+	 * the number of IRQs assigned to the AMBA device.
-+	 */
-+	if (!adev->irq[PL061_GPIO_NR - 1]) {
-+		WARN_ON(adev->irq[1]);
-+
-+		girq->parent_handler = pl061_irq_handler;
-+		girq->num_parents = 1;
-+		girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
-+					     GFP_KERNEL);
-+		if (!girq->parents)
-+			return -ENOMEM;
-+		girq->parents[0] = irq;
-+	} else {
-+		girq->fwnode = dev->fwnode;
-+		girq->parent_domain =
-+			irq_get_irq_data(adev->irq[PL061_GPIO_NR - 1])->domain;
-+		girq->child_to_parent_hwirq = pl061_child_to_parent_hwirq;
-+	}
-+
- 	ret = devm_gpiochip_add_data(dev, &pl061->gc, pl061);
- 	if (ret)
- 		return ret;
 -- 
 2.4.6
 
