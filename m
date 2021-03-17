@@ -2,95 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D2DE33EE49
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Mar 2021 11:27:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF4C533EE40
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Mar 2021 11:26:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbhCQK1V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Mar 2021 06:27:21 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:40387 "EHLO gecko.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229996AbhCQK1L (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Mar 2021 06:27:11 -0400
-X-Greylist: delayed 1162 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Mar 2021 06:27:11 EDT
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 12HA7fur024269
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Mar 2021 11:07:41 +0100
-Received: from [167.87.41.130] ([167.87.41.130])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 12H9vdCQ006344;
-        Wed, 17 Mar 2021 10:57:40 +0100
-Subject: Re: [PATCH v4 2/2] gpio: sch: Hook into ACPI SCI handler to catch
- GPIO edge events
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20210316162613.87710-1-andriy.shevchenko@linux.intel.com>
- <20210316162613.87710-3-andriy.shevchenko@linux.intel.com>
- <YFEZ6GYuXGaX/LP2@smile.fi.intel.com>
- <a3a6c80a-724c-e2fb-9597-b14a302c5ff4@siemens.com>
- <YFHRWm6YIh9NU1I/@smile.fi.intel.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <86f3a770-3b90-5fdb-7811-789118dad375@siemens.com>
-Date:   Wed, 17 Mar 2021 10:57:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S229622AbhCQKZo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Mar 2021 06:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229526AbhCQKZX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Mar 2021 06:25:23 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361F3C06174A
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Mar 2021 03:25:23 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id bm21so1716615ejb.4
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Mar 2021 03:25:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dqPWZVXLmFy02PuOKcULDEk9+uDMlOTgp4Uc7OBSurA=;
+        b=hWUUnb7+cCjXnVlBzK0QLHokiQOWBbbmJu4agdXGiTve1kMkf8a6XITT2KQnhQY2kQ
+         k2wLQM0vvH49oND41Tu8ZfBVJey/0tQAiBEk/DJk0j7js7zMjNbNhwPy5i4y+QCjX6fD
+         tgKbGpxvveOVSoJN/5riUxFQM9WbVBrmu1oDo3aqIr9tlrDuKM76Zp7tp7CWCQwkMqkA
+         i203Z0mMDjJXKiExh885/CpIVEyTjyWUGicFnaIn/3vD2l1A/yRV7ximEwWFmbe/q+EJ
+         3Fx7Qpcc848N3GZZFppUWa6XYgtZ1/ZE/4yn7hvqtJ62x+amRkfRIYatNpG1D99YGIL/
+         0I3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dqPWZVXLmFy02PuOKcULDEk9+uDMlOTgp4Uc7OBSurA=;
+        b=OkkssprQwTva3YyAgNaH0f9mfzOHaT/jPBYsmmaGJWaGQ+ncnywRHKkHGg4y+wEaor
+         3P2igVQLwUK9htkfj46fCsLLg2nlcpLJJoGZNCSrcb+G1GiXzXYwwe+muUmwc4Vr1MGz
+         /6QwxqRaENgtzzcu50SwA0AZpJ4/1UbO3hGF23pXJnUChqb3bcM8CSriGDz4gee0VWuq
+         8NIlfJjleCOPMRQanq4ZYFkZZj7NWCJ8uEWRcDEauVS7DY9xtxsFNhW6yw9mIkkqbrrn
+         oQap/ujkwb4EGvrfwrXJbzucc9xz+UslIiaYKXf02jAruYDeFyx6U2ijvFPAIAgbprxb
+         7xIQ==
+X-Gm-Message-State: AOAM532zDcPxwJigJTWWdEppNtOSHGuv57tUA6w5q5jOK+3AMtgJ03vk
+        6DvZ3SxLEZnUNjQ0oSjX7q3vBJMtDgQbZ5AD2eStKCBOoR0=
+X-Google-Smtp-Source: ABdhPJyKIZPTVzkxMiMNoxAqWZGq4tcAWnCUa98Zk0no6NFVWiYzT0ioHaLAdDdxmPMU44SAkhn290seL0cGAYXlnnA=
+X-Received: by 2002:a17:906:c0c8:: with SMTP id bn8mr34153553ejb.445.1615976721983;
+ Wed, 17 Mar 2021 03:25:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <YFHRWm6YIh9NU1I/@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210309132639.29069-1-brgl@bgdev.pl>
+In-Reply-To: <20210309132639.29069-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 17 Mar 2021 11:25:11 +0100
+Message-ID: <CAMRc=MesUk9cssFRhrftwwa49hW3rQObLuTBo9pUe_ed6xtj8A@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 0/6] treewide: another bunch of cleanups for v2.0
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17.03.21 10:52, Andy Shevchenko wrote:
-> On Wed, Mar 17, 2021 at 07:57:44AM +0100, Jan Kiszka wrote:
->> On 16.03.21 21:49, Andy Shevchenko wrote:
->>> On Tue, Mar 16, 2021 at 06:26:13PM +0200, Andy Shevchenko wrote:
->>>> From: Jan Kiszka <jan.kiszka@siemens.com>
->>>>
->>>> Neither the ACPI description on the Quark platform provides the required
->>>> information is to do establish generic handling nor hardware capable of
->>>> doing it. According to the datasheet the hardware can generate SCI events.
->>>> Therefore, we need to hook from the driver directly into SCI handler of
->>>> the ACPI subsystem in order to catch and report GPIO-related events.
->>>>
->>>> Validated on the Quark-based IOT2000 platform.
->>>
->>> This patch must be dropped completely. SCI handler is not correct way to do
->>> this. The proper way (and we have already few examples in the kernel) is to
->>> register GPE event.
->>
->> As explained above, this is not supported by the preexisting firmware,
->> and there won't be any updates to it anymore.
->>
->> This platform is history, the SoC was discontinued by Intel long ago,
->> and our devices reaching their support end as well. The race to upstream
->> was lost in this case - backlog too long, we being too slow.
-> 
-> So you have no device to test and there is actually no device which has this
-> capability in the wild.
-> 
-> Am I reading this correct?
+On Tue, Mar 9, 2021 at 2:26 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Kent suggested I send the patches for v2.0 API in smaller batches for earlier
+> review instead of dropping a huge patch bomb that will require more work from
+> my side and may later be negatively reviewed so here's a hopefully the last
+> part of cleanups that can go into master already before first patches with the
+> new C API will drop.
+>
+> The idea for the new C API is this: all objects are opaque and refcounted. This
+> is why the chip was converted to reference counting. Lines were removed and
+> their functionality split into line_info and line_request, this is why I'm
+> reworking line lookup to return the HW offset within a chip and not the line
+> object. Other patches are mostly cleanups and cruft shave-off.
+>
+> Bartosz Golaszewski (6):
+>   treewide: simplify line lookup
+>   tests: remove line bulk test cases
+>   core: switch to reference counting for gpio chip objects
+>   treewide: remove is_requested() and is_free()
+>   treewide: kill line updating
+>   core: hide the GPIOD_API symbol
+>
 
-No. We do have devices but we don't have the time to invest further into
-bringing missing features upstream - not to speak of changing the
-firmware in order to support cleaner upstream integration.
+If there are no objections, I will apply those soon.
 
-For the remaining lifetime of the devices, we are stuck on 4.4.y-cip
-with a few additional patches, including this one.
-
-> 
-> In any case, we have platforms in the wild that actually support GPEs and this
-> makes sense for them.
-
-Sure, I don't want to judge for them. Just our original target of this
-patch is no longer relevant for upstream.
-
-Jan
-
--- 
-Siemens AG, T RDA IOT
-Corporate Competence Center Embedded Linux
+Bart
