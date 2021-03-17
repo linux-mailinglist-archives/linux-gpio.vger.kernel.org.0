@@ -2,131 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BC1533F063
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Mar 2021 13:32:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3345633F06D
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Mar 2021 13:35:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbhCQMba (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Mar 2021 08:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57786 "EHLO
+        id S229809AbhCQMep (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Mar 2021 08:34:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230036AbhCQMbS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Mar 2021 08:31:18 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72660C06174A
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Mar 2021 05:31:07 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id j6so709749plx.6
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Mar 2021 05:31:07 -0700 (PDT)
+        with ESMTP id S229703AbhCQMeO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Mar 2021 08:34:14 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB889C06174A
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Mar 2021 05:34:14 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id u18so701209plc.12
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Mar 2021 05:34:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=uCehQM5n09baGDMb5XhUk5RLtfCd8CSNDzQDNtr8gqA=;
-        b=AkluZnfEnHQChAEldVi8VWw4eemWw4+337YuJwWqDxuW5aetwlBzqe8W0YZgy4iye4
-         LUArg80InQoLCDoctD9eJ0vg8pHiuNZIS/MO4v85p0MXnfvRJISaeG7PS4F5YZuWCIKX
-         /Ogdy2HAmI7Y+2PLBfYHU4nXVJn+M6R32JNt40htiu14C3W2rj06wr982Lcv0s7ogCsB
-         uSwAjLD7lRKu0qKwpEBbIqP1XJgCPmXkAEVmHL+kLpL5GsXTIt6JsySfgr1F8sOpMWPE
-         RfF2P6SaaNJoi98MNZF+1cNEugozbJ19UNtzG4B89aykt/RUr3cU0/dh5zKDVMnRkasP
-         IPaA==
+        bh=tTv/bvmRIG0DZp/nod73E0fUI/jwpB7NVJIWj7h1tTc=;
+        b=Z0qW57MMAJEZAD13nK/hCfZXkDQ9oqQiQJ+scLEAbX0M9qWd2v+AjwcnRGGq+0GYHu
+         lqG31g8h9lJCr8C85sMl7jsIPzDNLMFeyF5xxBtB+CjA/+1ZqAia1mJiuYCGIciUaz5W
+         2j1VRxOB1toDj9xj6UV5a+PE5R7QBuCWmXJ4FkUtvLBOkqJjIWMQEP4XchbN1LnQAxQj
+         iMDjnFPPBFfkVP08bDOPoqmqvFYOAc8IdrwTnD5jiLmzF4rDYobnXJxc8RwIMWd5zxXg
+         EzcknUXXWUTIXbIt5nrycPjcJ96IgHmj23vSVnPTvC8ELrWuynpr9o5kobitR7uMaTAa
+         z01Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uCehQM5n09baGDMb5XhUk5RLtfCd8CSNDzQDNtr8gqA=;
-        b=Hmu02ecMIocosLhbMwIVm3XtG3bvUer5fd0PxpVYz4CCeAWI237tGOZEKMZtN8L60H
-         vNr4IgWV6V69kq04eI5F3Uky9m1fiB3Ryah5jR2nsMFujNMw2EkDf7fDgR7gyBq0wqa8
-         aVjGjgMu+aQxulImMUj3SK8umx7U/TqWBO/gtLIh4KortTFrjw3em4dMXzcWKbCNI+VI
-         9hCw5Zk0Leir49BLl8AilXVbheVZss40dfpczWAVP6WT11leurotADdJX1IaHUOCsmwd
-         c4tZgxpNa3AZMUPzok9xUw2wjmmy06Gu0PzsVU4RNTQ2kl1UCNJU+p8WpZdPjAfMcyfE
-         znAg==
-X-Gm-Message-State: AOAM530WlEyZgjt8WNfsAlJH5YDA3qe8uqOLR0Fv7TqS6KM3py4O+sx1
-        bTrtoLzCEaEQnkjjP9XsvZU0z3OV/+277uU5e5g=
-X-Google-Smtp-Source: ABdhPJxKLg8qfZTAA98u5c3OzjNb8Eh86gXCCpzQ491nFLhsqUCWMM5YsNe/+MFJvAN1olibAGdNbSVV6csa7/KoMUk=
-X-Received: by 2002:a17:90a:db49:: with SMTP id u9mr4631907pjx.181.1615984266821;
- Wed, 17 Mar 2021 05:31:06 -0700 (PDT)
+        bh=tTv/bvmRIG0DZp/nod73E0fUI/jwpB7NVJIWj7h1tTc=;
+        b=dB3qet6OuAf8vcZohezLH2f0xa3JxgwkMf4+Hjt5AlJmd/MdN7CD7P9kFgdDVhhCqJ
+         k7jECLF9WKtsYWl/WPwSeAMunu47x7qhKUdKTxxjDl/YggC/Y4LN2C5zFBOK5V5sX32G
+         FUN51KtOP2H7GoUnbz6dyY6hxttRcmaEg6yf1cdbnjVENdliXD1DbFlZ/4tclKsHujJ8
+         Lc6CvLtbcfcdW/TwTcz3p+c5u4PSSKzEcoAf4qw4YZRVlRzMGvnbA+iRWw2dY4IJOmy/
+         GZrYjOktWVYqq1DrHYO5/tt1QcPlZMcZ7SMLdKMl6vGv3U0fW7gqeuOMXI5VBE6wEPwp
+         1Q/w==
+X-Gm-Message-State: AOAM530ptVN6Nv7dNGjE0xLh6DSjvMXpN0zarVO89l8bWvUk17fDGM99
+        t+SKVskAfV8oFq8CFKfWBcatp3/hpM6HBfGbjhU=
+X-Google-Smtp-Source: ABdhPJzwyskjErrkGFo5lBzyhSvfK2mnD0YdnQHx1LzCygvahKblPdbUay/yEEUt8RAnuQw4Yh/5I423FUdJ4zL1cTk=
+X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr4575345pjr.228.1615984454276;
+ Wed, 17 Mar 2021 05:34:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <545111184.50061.1615922388276@ichabod.co-bxl> <CAHp75VdhX1iC_JKyDigFrwzn7mUvvk0PGC-fgVUvJtYS+Dz6Hw@mail.gmail.com>
-In-Reply-To: <CAHp75VdhX1iC_JKyDigFrwzn7mUvvk0PGC-fgVUvJtYS+Dz6Hw@mail.gmail.com>
+References: <946021874.11132.1615900079722@seven.thorsis.com> <CAHp75Vf05NN0dXUrMSOXBRuYRnQRHO_92itZ3ndOyX1oERWt=g@mail.gmail.com>
+In-Reply-To: <CAHp75Vf05NN0dXUrMSOXBRuYRnQRHO_92itZ3ndOyX1oERWt=g@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 17 Mar 2021 14:30:50 +0200
-Message-ID: <CAHp75Vd-OT7SVBKMjhZNbVdo24Ep5Jv6_xMY39JDRLTrB0pi-A@mail.gmail.com>
-Subject: Re: RFC for a GPIO input muxer
-To:     Mauri Sandberg <sandberg@mailfence.com>,
-        Drew Fustini <drew@beagleboard.org>
-Cc:     Linux GPIO <linux-gpio@vger.kernel.org>
+Date:   Wed, 17 Mar 2021 14:33:58 +0200
+Message-ID: <CAHp75VczovYQB70HVEmDA=xfTBcNuSm2f8x9Mnbj0P0Z4UHRMQ@mail.gmail.com>
+Subject: Re: setting gpio-line-names in dts for sama5d2 SoC
+To:     Alexander Dahl <ada@thorsis.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-+Cc: Drew, I believe he has some thoughts about.
++Cc: Bart, Linus
 
-On Wed, Mar 17, 2021 at 1:17 AM Andy Shevchenko
+On Wed, Mar 17, 2021 at 1:22 AM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
 >
 >
 >
-> On Tuesday, March 16, 2021, Mauri Sandberg <sandberg@mailfence.com> wrote=
-:
+> On Tuesday, March 16, 2021, Alexander Dahl <ada@thorsis.com> wrote:
 >>
->> I am writing to you to ask for comments on the preferred way of implemen=
-ting a 4-way GPIO multiplexer in the most generic way. The situation is tha=
-t there is a dual 4-way multiplexer on my device and its select pins a cont=
-rolled with GPIOs. The output pins of the multiplexer are connected to two =
-other GPIOs. The datasheet of the multiplexer is here: https://assets.nexpe=
-ria.com/documents/data-sheet/74HC_HCT153.pdf
+>> Hei hei,
 >>
->> This is what I have been contemplating on but I am not aware if the same=
- could be achieved with existing pinctrl or gpio driver or combination of t=
-hose.
+>> for a Microchip SAMA5D2 SoC based device I try to set gpio-line-names in=
+ .dts file like this:
+>>
+>> 257 &pioA {
+>> 258         gpio-line-names =3D "",                   /* PA0  */
+>> 259                           "",                   /* PA1  */
+>> 260                           "",                   /* PA2  */
+>> 261                           "FOO",                /* PA3  */
+>> 262                           "BAR",                /* PA4  */
+>> 263                           "",                   /* PA5  */
+>>
+>> =E2=80=A6 and so on for all 4 * 32 GPIO Pins. However when calling `gpio=
+info` in userspace, I always get this:
+>>
+>> $ gpioinfo
+>> gpiochip0 - 128 lines:
+>>         line   0:        "PA0"       unused   input  active-high
+>>         line   1:        "PA1"       unused   input  active-high
+>>         line   2:        "PA2"       unused   input  active-high
+>>         line   3:        "PA3"       unused   input  active-high
+>>         line   4:        "PA4"       unused   input  active-high
+>>         line   5:        "PA5"       unused   input  active-high
+>>
+>> =E2=80=A6 and so on. Those "PA0" line names are set by the pinctrl drive=
+r in drivers/pinctrl/pinctrl-at91-pio4.c before calling gpiochip_add_data()=
+ and from reading the code in drivers/gpio/gpiolib.c I suspect devprop_gpio=
+chip_set_names() is never called then, so those names in .dts are simply ig=
+nored.
+>>
+>> Those default names from the at91 pio4 pinctrl driver are certainly corr=
+ect speaking of pin names, but from a userspace point of view it would be b=
+etter if I could override those from dts, so an application using libgpiod =
+could look for a name like e.g. "VALVE7_EN" without caring to which pin tha=
+t's actually connected. Can I override those with a currently present kerne=
+l? Or is it a problem in either the at91 pio4 driver or the gpiolib core? O=
+r is that no real usecase and should I do it differently?
 >
 >
-> To me looks like a typical pinmux. Dunno if pinctrl supports pure pinmux =
-and how it can handle that at runtime.
+> I would like to know the consequences if allow this, but to me it sounds =
+like a bug in the gpiolib.c.
 >
->  That said, I would consider what has been done in pinctrl for that.
 >>
->>
->> The 'key-mux1' below implements a gpio-controller that drives the multip=
-lexer and provides gpios for reading device key presses. At the moment it h=
-as to be polled as interrupts are not being generated by the key presses. I=
- tried looking around but software interrupts did not give me any hits.
->>
->> I have omitted 'key-mux2' from this for clarity.
->>
->> mux: mux-controller {
->>         compatible =3D "gpio-mux";
->>         #mux-control-cells =3D <0>;
->>
->>         mux-gpios =3D <&gpio 9 GPIO_ACTIVE_HIGH>,         /* s0 */
->>                     <&gpio 11 GPIO_ACTIVE_HIGH>;        /* s1 */
->> };
->>
->> gpio2: key-mux1 {
->>         compatible =3D "gpio-mux-input";
->>         mux-controls =3D <&mux>;
->>
->>         gpio-controller;
->>         #gpio-cells =3D <2>;
->>
->>         // GPIOs used by this node, mux pin
->>         pin-gpios =3D <&gpio 12 GPIO_ACTIVE_HIGH>;        /* 1y */
->> };
->>
->> keys {
->>         compatible =3D "gpio-keys-polled";
->>         poll-interval =3D <20>;
->>
->>         aoss {
->>                 label =3D "aoss";
->>                 linux,code =3D <KEY_WPS_BUTTON>;
->>                 gpios =3D <&gpio2 0 GPIO_ACTIVE_LOW>;
->>                 debounce-interval =3D <60>;
->>         };
->> }
->>
->> Sincerely,
->> Mauri
+>> Greets
+>> Alex
 >
 >
 >
