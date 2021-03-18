@@ -2,225 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D39E340545
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 13:17:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01975340560
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 13:20:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbhCRMQ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Mar 2021 08:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53826 "EHLO
+        id S230204AbhCRMUN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Mar 2021 08:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230473AbhCRMQH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Mar 2021 08:16:07 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70864C06174A;
-        Thu, 18 Mar 2021 05:16:07 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id gb6so2842259pjb.0;
-        Thu, 18 Mar 2021 05:16:07 -0700 (PDT)
+        with ESMTP id S229703AbhCRMTo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Mar 2021 08:19:44 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55769C06174A
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Mar 2021 05:19:44 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id s21so2833426pjq.1
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Mar 2021 05:19:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=q4sV6DKYtTchSAlvek9WgOLwv2yXCQyX4WUNYJQUt6U=;
-        b=q6K0Ehmnucne2FlF77MU7fLBc/Qp2dly7iOe/u96Fred+R8fok8UMsvdiZl5GL7yg4
-         qrRu3rkGLXfMlQORs8eSFqrqBSO6JmhgbpNFQNkoWeNFSx5ioE7SOuaS2ZP5yNBAdidl
-         lMdMn8ndxPp20Ss9Xw3/txZzumU3tr/Q3YKjypyPyDAjtQU+QnRxON7iqNDMMAbMImeW
-         VhI3vkMVkvO8xDd7FblS0VMdib0BjMc5YDG6rFRCRoIy1Hp5As4e2YS78HquzdGivcNZ
-         mIGF3W5TO8MYuc6824GiuAagJ3J35GKDM5F/SxzA26cFRV85fXZxn47TPHDNxIp3ohol
-         x81g==
+        bh=aDG9Bii2Xas8rDgw+X9mgW07mvKzyg5CgIFoPZ/13b0=;
+        b=b662D+RxmviRXZPQq9s3lruIsESnW8mg2j4TcKlwZ0IibL71GLt8QiL9CaLqsDK+9w
+         MCcF9tFxB9iVnz2n1bp1ofvxWtmHvUXFwJA6oouMYqB7KZWT1cN/NkWVPq1UnduQ82ML
+         je+HHz7vpg807luAA7LaEy3P57l0MNA4B8QiWzUF7o0627+eI4f12GtfDEG7eGeEhY8p
+         g6CE4go5OFE+m0CLR2805rUw5L33HHYoAGHkUMoBGMdmW35Ij4oy2t+T6ijf6kbBNMoo
+         l12Y23UDZbzbk2KcUaRd1x6HqblYoBOiEcfsShrnTUoNf8KeHvTBpCwcM4b3b0vilePM
+         AmlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=q4sV6DKYtTchSAlvek9WgOLwv2yXCQyX4WUNYJQUt6U=;
-        b=k9sgM40HbzwxEEg+W7tkq4O+Xm0K0cwpmJ3gA5UglQT6sIrfjrcw5c5SX+4fQ195Kg
-         LdGGgOU6a0Tp3phU5EMSDjZ4fSgF584qQuYYygWADsKUMt2duRirW//V168CDz54RlT/
-         Hn2dJx94rERqFfHSvCqJf7699NoEzWt0eMT4rJ3LFN2wVkhhxzOadplkXbULOggm90mX
-         1XnHTQfWFwBy6HHPiEL+jfHNFS+fg+UFZsxAraZRPUxqgH1MwZKit6+2anPeKzOoCun0
-         CIquNfgyjsNQDRWPA21OAX1toj3k8eLe3PuZEiCqNFSXyl+enS2isUHu2gVlCGAIRZQ0
-         WzZQ==
-X-Gm-Message-State: AOAM533tLaX8IyKSflyGziS5d5HxsPu71wduqh4F4VM3lcFnsD7HZdzk
-        5+7jah67Ya5bzckTUucdu8yRMu9zBImy7ZSff/0=
-X-Google-Smtp-Source: ABdhPJx9CynEv9MyWrBPlTnnvHMW/9FuiSkz+dtjqaQE7YaaLdDEg2W+F3kf5WbbNCHQsX6lLMLuXgn4KHN6t8saUNQ=
-X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr4194138pjr.228.1616069766877;
- Thu, 18 Mar 2021 05:16:06 -0700 (PDT)
+        bh=aDG9Bii2Xas8rDgw+X9mgW07mvKzyg5CgIFoPZ/13b0=;
+        b=PqZHmQ/IbZVMqGcAddS38Yzp0D0ygUgK67pkBloPgIRCi8h8LP8WpsD9/cWTCrsDwN
+         ZSKiMSvH1w26dqERL/vguTZaSuPqJysjUM5tkaGiFzlJUs9EcvXwsC2Vo5tjhQeMGuQ9
+         EuDhHCjLXTU0tYAJyI231F0f/mree+zIjPGTJ56ctMR8dGwydAFpBrYnOyAEcZ8+jG2I
+         iCO1uifuMLf8KYxcuIrArQlGEOhRCGW62aFYyKTnHt0GCwME/5pvVRjHLGVDS47TZUtH
+         9aNmJy0gdjypiR1+UipQAoDJlykvyQHgfrG1XALoudr9pIi/sNYLqgwTR4pscmN88oeQ
+         /mbQ==
+X-Gm-Message-State: AOAM530NPmeK3itd6d6EoSdaT1RD0y4Lcwj6RowXVkk8XgzPQI88kvIC
+        Hqow9ePNUaiHwojMJtuBl7hX1trc799ssxKHe9A=
+X-Google-Smtp-Source: ABdhPJxM9GYht4w+jqvO6w+nO2+O25K0eRA4WEcjctozmff2u9uRvcMWaprJSSfC3Qf66NUEUXsLfIHp++9fDncLNWw=
+X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr4212531pjr.228.1616069983743;
+ Thu, 18 Mar 2021 05:19:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210317214149.20833-1-hhhawa@amazon.com> <20210317214149.20833-4-hhhawa@amazon.com>
-In-Reply-To: <20210317214149.20833-4-hhhawa@amazon.com>
+References: <20210317155919.41450-1-alexander.sverdlin@nokia.com>
+ <20210317155919.41450-3-alexander.sverdlin@nokia.com> <CAHp75Vd-iUzEyo5X5LtKJ+66512i5-tKC+kkpPYJwG7L2qrvdw@mail.gmail.com>
+ <23bb681e-1918-e84c-58e5-c4c711f87daa@nokia.com>
+In-Reply-To: <23bb681e-1918-e84c-58e5-c4c711f87daa@nokia.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 18 Mar 2021 14:15:50 +0200
-Message-ID: <CAHp75VdYeVOHu5T37EBEjL5xfgjevzb-ErZb2QMy7defXDS5fg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] pinctrl: pinctrl-single: fix pcs_pin_dbg_show()
- when bits_per_mux is not zero
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
+Date:   Thu, 18 Mar 2021 14:19:27 +0200
+Message-ID: <CAHp75VeVQ0S36oOOQApw5ZJyiOv2zwRondwiCc3uqVRmLc2DRA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pl061: Warn when IRQ line has not been configured
+To:     Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        David Woodhouse <dwmw@amazon.co.uk>, benh@amazon.com,
-        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com, tgershi@amazon.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 17, 2021 at 11:42 PM Hanna Hawa <hhhawa@amazon.com> wrote:
+On Thu, Mar 18, 2021 at 1:12 PM Alexander Sverdlin
+<alexander.sverdlin@nokia.com> wrote:
+> On 18/03/2021 11:51, Andy Shevchenko wrote:
+> > On Wednesday, March 17, 2021, Alexander A Sverdlin <alexander.sverdlin@nokia.com <mailto:alexander.sverdlin@nokia.com>> wrote:
+
+...
+
+> >     Existing (irq < 0) condition is always false because adev->irq has unsigned
+> >     type and contains 0 in case of failed irq_of_parse_and_map(). Up to now all
+> >     the mapping errors were silently ignored.
+> >
+> >     Seems that repairing this check would be backwards-incompatible and might
+> >     break the probe() for the implementations without IRQ support. Therefore
+> >     warn the user instead.
+
+...
+
+> >     -       if (irq < 0) {
+> >     -               dev_err(&adev->dev, "invalid IRQ\n");
+> >     -               return -ENODEV;
+> >     -       }
+> >     +       if (!irq)
+> >     +               dev_warn(&adev->dev, "IRQ support disabled\n");
+> >
+> >
+> >
+> > I guess you need to preserve bailing out. Seems nobody hit this error path.
 >
-
-> An SError was detected when trying to print the supported pins in a
-
-What is SError? Yes, I have read a discussion, but here is the hint:
-if a person sees this as a first text due to, for example, bisecting
-an issue, what she/he can get from this cryptic name?
-
-> pinctrl device which supports multiple pins per register. This change
-> fixes the pcs_pin_dbg_show() in pinctrl-single driver when bits_per_mux
-> is not zero. In addition move offset calculation and pin offset in
-> register to common function.
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Fixes: 4e7e8017a80e ("pinctrl: pinctrl-single: enhance to configure multiple pins of different modules")
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> ---
->  drivers/pinctrl/pinctrl-single.c | 57 +++++++++++++++++++++-----------
->  1 file changed, 37 insertions(+), 20 deletions(-)
+> Do you mean preserve "return -ENODEV;"?
+> This never ever happened, because the "if" is "always false", irqs coming from irq[] cannot be
+> negative.
+> And there is another use-case actually: there are legal PL061 configurations without IRQs at all,
+> which simply work even trying to instantiate irq chip, but as devm_gpiochip_add_data() doesn't
+> fail with irq==0, this goes completely unnoticed and such a gpio bank works fine.
 >
-> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-> index f3394517cb2e..4595acf6545e 100644
-> --- a/drivers/pinctrl/pinctrl-single.c
-> +++ b/drivers/pinctrl/pinctrl-single.c
-> @@ -270,20 +270,46 @@ static void __maybe_unused pcs_writel(unsigned val, void __iomem *reg)
->         writel(val, reg);
->  }
->
-> +static unsigned int pcs_pin_reg_offset_get(struct pcs_device *pcs,
-> +                                          unsigned int pin)
-> +{
+> The proper way would be not even try to instantiate any irq chip in such case.
+> Let me know if I shall rework the patch this way.
 
-> +       unsigned int mux_bytes;
-> +
-> +       mux_bytes = pcs->width / BITS_PER_BYTE;
-
-Can be folded to one line.
-
-> +       if (pcs->bits_per_mux) {
-> +               unsigned int pin_offset_bytes;
-> +
-> +               pin_offset_bytes = (pcs->bits_per_pin * pin) / BITS_PER_BYTE;
-> +               return (pin_offset_bytes / mux_bytes) * mux_bytes;
-
-Side note for the further improvements (in a separate change, because
-I see that you just copied an original code, and after all this is
-just a fix patch): this can be replaced by round down APIs (one which
-works for arbitrary divisors).
-
-> +       }
-> +
-> +       return pin * mux_bytes;
-> +}
-> +
-> +static unsigned int pcs_pin_shift_reg_get(struct pcs_device *pcs,
-> +                                         unsigned int pin)
-> +{
-> +       return (pin % (pcs->width / pcs->bits_per_pin)) * pcs->bits_per_pin;
-
-Also a side note: I'm wondering if this can be optimized to have less divisions.
-
-> +}
-> +
->  static void pcs_pin_dbg_show(struct pinctrl_dev *pctldev,
->                                         struct seq_file *s,
->                                         unsigned pin)
->  {
->         struct pcs_device *pcs;
-> -       unsigned val, mux_bytes;
-> +       unsigned int val;
->         unsigned long offset;
->         size_t pa;
->
->         pcs = pinctrl_dev_get_drvdata(pctldev);
->
-> -       mux_bytes = pcs->width / BITS_PER_BYTE;
-> -       offset = pin * mux_bytes;
-> +       offset = pcs_pin_reg_offset_get(pcs, pin);
->         val = pcs->read(pcs->base + offset);
-> +
-> +       if (pcs->bits_per_mux)
-> +               val &= pcs->fmask << pcs_pin_shift_reg_get(pcs, pin);
-> +
->         pa = pcs->res->start + offset;
->
->         seq_printf(s, "%zx %08x %s ", pa, val, DRIVER_NAME);
-> @@ -384,7 +410,6 @@ static int pcs_request_gpio(struct pinctrl_dev *pctldev,
->         struct pcs_device *pcs = pinctrl_dev_get_drvdata(pctldev);
->         struct pcs_gpiofunc_range *frange = NULL;
->         struct list_head *pos, *tmp;
-> -       int mux_bytes = 0;
->         unsigned data;
->
->         /* If function mask is null, return directly. */
-> @@ -392,29 +417,27 @@ static int pcs_request_gpio(struct pinctrl_dev *pctldev,
->                 return -ENOTSUPP;
->
->         list_for_each_safe(pos, tmp, &pcs->gpiofuncs) {
-> +               u32 offset;
-> +
->                 frange = list_entry(pos, struct pcs_gpiofunc_range, node);
->                 if (pin >= frange->offset + frange->npins
->                         || pin < frange->offset)
->                         continue;
-> -               mux_bytes = pcs->width / BITS_PER_BYTE;
->
-> -               if (pcs->bits_per_mux) {
-> -                       int byte_num, offset, pin_shift;
-> +               offset = pcs_pin_reg_offset_get(pcs, pin);
->
-> -                       byte_num = (pcs->bits_per_pin * pin) / BITS_PER_BYTE;
-> -                       offset = (byte_num / mux_bytes) * mux_bytes;
-> -                       pin_shift = pin % (pcs->width / pcs->bits_per_pin) *
-> -                                   pcs->bits_per_pin;
-> +               if (pcs->bits_per_mux) {
-> +                       int pin_shift = pcs_pin_shift_reg_get(pcs, pin);
->
->                         data = pcs->read(pcs->base + offset);
->                         data &= ~(pcs->fmask << pin_shift);
->                         data |= frange->gpiofunc << pin_shift;
->                         pcs->write(data, pcs->base + offset);
->                 } else {
-> -                       data = pcs->read(pcs->base + pin * mux_bytes);
-> +                       data = pcs->read(pcs->base + offset);
->                         data &= ~pcs->fmask;
->                         data |= frange->gpiofunc;
-> -                       pcs->write(data, pcs->base + pin * mux_bytes);
-> +                       pcs->write(data, pcs->base + offset);
->                 }
->                 break;
->         }
-> @@ -724,14 +747,8 @@ static int pcs_allocate_pin_table(struct pcs_device *pcs)
->         for (i = 0; i < pcs->desc.npins; i++) {
->                 unsigned offset;
->                 int res;
-> -               int byte_num;
->
-> -               if (pcs->bits_per_mux) {
-> -                       byte_num = (pcs->bits_per_pin * i) / BITS_PER_BYTE;
-> -                       offset = (byte_num / mux_bytes) * mux_bytes;
-> -               } else {
-> -                       offset = i * mux_bytes;
-> -               }
-> +               offset = pcs_pin_reg_offset_get(pcs, i);
->                 res = pcs_add_pin(pcs, offset);
->                 if (res < 0) {
->                         dev_err(pcs->dev, "error adding pins: %i\n", res);
-> --
-> 2.17.1
->
-
-
--- 
+Yes, please, rewrite it like
+if (irq > 0) {
+ ... instantiate an IRQ chip ...
+} else {
+ // nothing. No warning is needed (as it wasn't ever before), perhaps
+just a debug message
+}
+--
 With Best Regards,
 Andy Shevchenko
