@@ -2,110 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01975340560
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 13:20:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 108D634057A
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 13:27:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbhCRMUN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Mar 2021 08:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbhCRMTo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Mar 2021 08:19:44 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55769C06174A
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Mar 2021 05:19:44 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id s21so2833426pjq.1
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Mar 2021 05:19:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aDG9Bii2Xas8rDgw+X9mgW07mvKzyg5CgIFoPZ/13b0=;
-        b=b662D+RxmviRXZPQq9s3lruIsESnW8mg2j4TcKlwZ0IibL71GLt8QiL9CaLqsDK+9w
-         MCcF9tFxB9iVnz2n1bp1ofvxWtmHvUXFwJA6oouMYqB7KZWT1cN/NkWVPq1UnduQ82ML
-         je+HHz7vpg807luAA7LaEy3P57l0MNA4B8QiWzUF7o0627+eI4f12GtfDEG7eGeEhY8p
-         g6CE4go5OFE+m0CLR2805rUw5L33HHYoAGHkUMoBGMdmW35Ij4oy2t+T6ijf6kbBNMoo
-         l12Y23UDZbzbk2KcUaRd1x6HqblYoBOiEcfsShrnTUoNf8KeHvTBpCwcM4b3b0vilePM
-         AmlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aDG9Bii2Xas8rDgw+X9mgW07mvKzyg5CgIFoPZ/13b0=;
-        b=PqZHmQ/IbZVMqGcAddS38Yzp0D0ygUgK67pkBloPgIRCi8h8LP8WpsD9/cWTCrsDwN
-         ZSKiMSvH1w26dqERL/vguTZaSuPqJysjUM5tkaGiFzlJUs9EcvXwsC2Vo5tjhQeMGuQ9
-         EuDhHCjLXTU0tYAJyI231F0f/mree+zIjPGTJ56ctMR8dGwydAFpBrYnOyAEcZ8+jG2I
-         iCO1uifuMLf8KYxcuIrArQlGEOhRCGW62aFYyKTnHt0GCwME/5pvVRjHLGVDS47TZUtH
-         9aNmJy0gdjypiR1+UipQAoDJlykvyQHgfrG1XALoudr9pIi/sNYLqgwTR4pscmN88oeQ
-         /mbQ==
-X-Gm-Message-State: AOAM530NPmeK3itd6d6EoSdaT1RD0y4Lcwj6RowXVkk8XgzPQI88kvIC
-        Hqow9ePNUaiHwojMJtuBl7hX1trc799ssxKHe9A=
-X-Google-Smtp-Source: ABdhPJxM9GYht4w+jqvO6w+nO2+O25K0eRA4WEcjctozmff2u9uRvcMWaprJSSfC3Qf66NUEUXsLfIHp++9fDncLNWw=
-X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr4212531pjr.228.1616069983743;
- Thu, 18 Mar 2021 05:19:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210317155919.41450-1-alexander.sverdlin@nokia.com>
- <20210317155919.41450-3-alexander.sverdlin@nokia.com> <CAHp75Vd-iUzEyo5X5LtKJ+66512i5-tKC+kkpPYJwG7L2qrvdw@mail.gmail.com>
- <23bb681e-1918-e84c-58e5-c4c711f87daa@nokia.com>
-In-Reply-To: <23bb681e-1918-e84c-58e5-c4c711f87daa@nokia.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 18 Mar 2021 14:19:27 +0200
-Message-ID: <CAHp75VeVQ0S36oOOQApw5ZJyiOv2zwRondwiCc3uqVRmLc2DRA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pl061: Warn when IRQ line has not been configured
-To:     Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        id S231126AbhCRM07 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Mar 2021 08:26:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:61366 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230335AbhCRM0c (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 18 Mar 2021 08:26:32 -0400
+IronPort-SDR: 1byFGz/+qa/08Wlu4FMYtqMkd0utZDTZd1UtYElZ/bXqNeZtVdCmB7ZMS/1eAMVsjP0KnVil+0
+ P5Q0MLfvYqOQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9926"; a="253675488"
+X-IronPort-AV: E=Sophos;i="5.81,258,1610438400"; 
+   d="scan'208";a="253675488"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2021 05:26:31 -0700
+IronPort-SDR: q6+TVo21t8aK9xYdbt/+bHI1bK7pr/OfVL5p5E1l2HBv7zbHzWheDlvsaGrmw2FXsk2HEQkFnn
+ rXTNQbXkK5rA==
+X-IronPort-AV: E=Sophos;i="5.81,258,1610438400"; 
+   d="scan'208";a="372691124"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2021 05:26:30 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lMrjP-00DZ69-Ht; Thu, 18 Mar 2021 14:26:27 +0200
+Date:   Thu, 18 Mar 2021 14:26:27 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v5 0/2] gpio: sch: Interrupt support
+Message-ID: <YFNG8+sdIj6Orbjq@smile.fi.intel.com>
+References: <20210317151928.41544-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210317151928.41544-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 1:12 PM Alexander Sverdlin
-<alexander.sverdlin@nokia.com> wrote:
-> On 18/03/2021 11:51, Andy Shevchenko wrote:
-> > On Wednesday, March 17, 2021, Alexander A Sverdlin <alexander.sverdlin@nokia.com <mailto:alexander.sverdlin@nokia.com>> wrote:
+On Wed, Mar 17, 2021 at 05:19:26PM +0200, Andy Shevchenko wrote:
+> The series adds event support to the Intel GPIO SCH driver. The hardware
+> routes all events through GPE0 GPIO event.
+> 
+> I validated this on Intel Minnowboard (v1).
+> 
+> If somebody has different hardware with the same GPIO controller, I would
+> appreciate additional testing.
 
-...
+I've applied this to my review and testing queue, thanks!
 
-> >     Existing (irq < 0) condition is always false because adev->irq has unsigned
-> >     type and contains 0 in case of failed irq_of_parse_and_map(). Up to now all
-> >     the mapping errors were silently ignored.
-> >
-> >     Seems that repairing this check would be backwards-incompatible and might
-> >     break the probe() for the implementations without IRQ support. Therefore
-> >     warn the user instead.
+> Changes in v5:
+> - added missed IRQ acknowledge callback (hence kernel Oops)
+> - rewrite patch 2 completely from SCI to GPE hook
+> 
+> Changes in v4 (https://lore.kernel.org/linux-gpio/20210316162613.87710-1-andriy.shevchenko@linux.intel.com/T/#u):
+> - turned to GPIO core infrastructure of IRQ chip instantiation (Linus)
+> - converted IRQ callbacks to use better APIs
+> - use handle_bad_irq() as default handler and now I know why, see
+>   eb441337c714 ("gpio: pca953x: Set IRQ type when handle Intel Galileo Gen 2")
+>     for the real example what happens if it's preset to something meaningful
+> - fixed remove stage (we have to remove SCI handler, which wasn't done in v3)
+> 
+> Changes in v3 (https://lore.kernel.org/linux-gpio/cover.1574277614.git.jan.kiszka@siemens.com/T/#u):
+> - split-up of the irq enabling patch as requested by Andy
+> 
+> Andy Shevchenko (1):
+>   gpio: sch: Hook into ACPI GPE handler to catch GPIO edge events
+> 
+> Jan Kiszka (1):
+>   gpio: sch: Add edge event support
+> 
+>  drivers/gpio/gpio-sch.c | 196 ++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 188 insertions(+), 8 deletions(-)
+> 
+> -- 
+> 2.30.2
+> 
 
-...
-
-> >     -       if (irq < 0) {
-> >     -               dev_err(&adev->dev, "invalid IRQ\n");
-> >     -               return -ENODEV;
-> >     -       }
-> >     +       if (!irq)
-> >     +               dev_warn(&adev->dev, "IRQ support disabled\n");
-> >
-> >
-> >
-> > I guess you need to preserve bailing out. Seems nobody hit this error path.
->
-> Do you mean preserve "return -ENODEV;"?
-> This never ever happened, because the "if" is "always false", irqs coming from irq[] cannot be
-> negative.
-> And there is another use-case actually: there are legal PL061 configurations without IRQs at all,
-> which simply work even trying to instantiate irq chip, but as devm_gpiochip_add_data() doesn't
-> fail with irq==0, this goes completely unnoticed and such a gpio bank works fine.
->
-> The proper way would be not even try to instantiate any irq chip in such case.
-> Let me know if I shall rework the patch this way.
-
-Yes, please, rewrite it like
-if (irq > 0) {
- ... instantiate an IRQ chip ...
-} else {
- // nothing. No warning is needed (as it wasn't ever before), perhaps
-just a debug message
-}
---
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
