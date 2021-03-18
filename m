@@ -2,84 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52626340451
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 12:12:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C3B1340516
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 13:04:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231161AbhCRLMU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Mar 2021 07:12:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:34993 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230525AbhCRLMB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Mar 2021 07:12:01 -0400
-Received: from [192.168.1.155] ([77.4.36.33]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MZCvh-1l9O8s3yIz-00V96z; Thu, 18 Mar 2021 12:12:00 +0100
-Subject: Re: replacement for persistence of values written to sysfs files
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-gpio@vger.kernel.org
-References: <af518806-f473-8979-6d32-38c94a29b762@rasmusvillemoes.dk>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <0d35c328-600e-60ed-1bc2-a65ba4530509@metux.net>
-Date:   Thu, 18 Mar 2021 12:11:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S230284AbhCRMDs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Mar 2021 08:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229745AbhCRMDY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Mar 2021 08:03:24 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDC1DC06174A;
+        Thu, 18 Mar 2021 05:03:23 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id ot17-20020a17090b3b51b0290109c9ac3c34so2619761pjb.4;
+        Thu, 18 Mar 2021 05:03:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=O18RE2ihq2VzB80oeThlToJ8TPq6RnBWqHK+hxtzy2Q=;
+        b=ZiAKpXyKoBPo1oe3D6dZZ8NUACbmvvlCFdwLQ9lexMoaxaO8/4U1HLEPcJZl+2TAMH
+         nmtEuMVsxrvRbgC/7T8S0lDZOh1KMOwFLEYAHhsHVMtW2Jkt8MPrSmambVy6oMqwrPve
+         rAyBKm+fVs5ph1KuZr0k/1wpjfuat/c1IvUulaUPYNmRfPH+Gxbqu8PuyMLA6Jv1jW4R
+         iGp3lOeT2n9TS+UPmTJmFd9EuPOwV4d3LcphXxHud4SRFd7GrXVTGVKrVHORasJgv24u
+         TIR0vwxX+E/d911luWP38Uh4Q5NwAnMhV2Bo9sn1YILkXUlGBs3f5VEgqzRob1497Y94
+         oCwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O18RE2ihq2VzB80oeThlToJ8TPq6RnBWqHK+hxtzy2Q=;
+        b=gkmM7EQGuecw5/RGGgoi16RBcx8otPx0A9wJylghYajxFQmKDP8oPb4FgogSy9ElTS
+         BBAiN0V8UCE8eDo/I0IJJeONYEVpJTJL+tkdWslje707oe4NXtPv7jHPQ+hSgI02rB4B
+         pwYJKDzmS+bnHYVS4bwa2+iJZI6QLoQ13Bn6U/tx9Av2O/CdJF5KGsIsnOO0zRsDU+sv
+         ojsmH3SN3FlatUEeiicNwk0JTvPjRKtLsa6s3UUvk3BlW5VxcX/Y6qMRfeHnpdhm7tf8
+         NhDNgJXcZ2JERkzLyuKihrQDZSOAL78bwB6y+2hfAN3RmKrrU3XbyAwYCW7cMRs3aO3L
+         Tf+w==
+X-Gm-Message-State: AOAM531FZxwWnNEgQxGeWD+qe9x84jCTq+ZyDKyaZlZSZJAhXXdzPZnN
+        HcVgHUnls5aVg1Jq0h5WoKEZ0dGmsQiR4OR/V74Eimti58p4NA==
+X-Google-Smtp-Source: ABdhPJxeHE4GSY7N6rN3OrhmXTJlz+p+cMMDS45o+vmCpwO0Q49pyq6EEXYEdYI2asdmuM+cySoMNtIc9WRbFiPpLFI=
+X-Received: by 2002:a17:90a:e454:: with SMTP id jp20mr4190971pjb.129.1616069002455;
+ Thu, 18 Mar 2021 05:03:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <af518806-f473-8979-6d32-38c94a29b762@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:uDCg/8NdDMoanGecnZkL5eUPdYREjascbO4kQdzPih27yBAhUII
- W1QnVqQmq+bvqnqVHcu94ZxztbR7/i4UyHUqbocZ9eQTwlHuuJ6dGht1oiNqiMCtSVxgOlR
- iZchdpQ5bPIWe8AClAdEYpzGziO/LsLYq2j0HuaPmby4UnfJFeSGK0UL4XtdgVAVJ11NmFA
- VI9QXYNHEClWe4u04sQuw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dfOXJPGbA+U=:pgHrFm6Dvx53sWUxE9eA/S
- 3f4eBJzggRkmMfCFZOZWYh1V4sp8iTnOSDYDZHwNmSwu3hthDBnGjarqCiz+ZQ4eNE532YbhZ
- e1UrqD8LftBy9qEiRmwD+NgKgqyI8L8jfB4kCHI03wMfdInun57A7274R1NvIBy02RegAnM96
- IM+cQgi5XyceQsuHssfySIX+I+9flEFk2KlqHbcfYM/pHbOC443NKknpgNvwNI3Z8FsoNP5ej
- PbSYsp5Vp/N+nuw65oDrHeo2lPPncBz2vD9Gn6tOrY4P0X6qvly6SirZCnhomNBmoaEBgbDsA
- AJwT4j1fGbcxpdwLGIbvtA7EsG0b6s9yT3RjI+t7I6aWjqcCopr6ScxRzocs3fuj2NG2lUqaj
- R0/oRwItZSG1q5tCIae4JvirTAORq14I/K4v0lNpkjaI6TVTUiuwCdxzCeBK5
+References: <20210317143803.26127-1-noltari@gmail.com> <20210317143803.26127-3-noltari@gmail.com>
+In-Reply-To: <20210317143803.26127-3-noltari@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 18 Mar 2021 14:03:06 +0200
+Message-ID: <CAHp75VeKwLn1VyG30LoPhLHDxiMZDfnBDwy6t1Ka_rVP224eyw@mail.gmail.com>
+Subject: Re: [PATCH v8 02/22] gpio: regmap: set gpio_chip of_node
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15.03.21 12:46, Rasmus Villemoes wrote:
+On Wed, Mar 17, 2021 at 4:38 PM =C3=81lvaro Fern=C3=A1ndez Rojas
+<noltari@gmail.com> wrote:
+>
+> This is needed for properly registering GPIO regmap as a child of a regma=
+p
+> pin controller.
 
-Hi,
+...
 
-> So how is one supposed to get the kernel to set and maintain a value for
-> a gpio, without having to keep a dummy process around? Also, with the
-> sysfs interface, another process can later change the gpio value; I
-> don't think that's possible with a dummy process hanging onto it.
+> +       /* gpiolib will use of_node of the parent if chip->of_node is NUL=
+L */
+> +       chip->of_node =3D to_of_node(config->fwnode);
 
-I've got a few remaining legacy systems in the field, where I still use
-the classic sysfs interface for exactly that reason: separate 
-short-running programs (shell scripts) do certain things on the gpio and 
-then
-exit.
+As the kernel bot rightfully noticed this should be under ifdeffery (OF_GPI=
+O?).
 
-For newer applications, I don't use raw gpios anymore (except for rare
-things like generic PLCs, where I have no influence on the actual
-workloads)
-
-> So, for example, one init script we have first configures a temperature
-> sensor with a high-temp alert threshold, and after that value has been
-> written, sets a gpio that will make such an alert trigger a reset of the
-> board.
-
-Bind a proper driver to it. Either IIO or hwmon (depending on what that
-sensor is actually for).
-
-
---mtx
-
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+--=20
+With Best Regards,
+Andy Shevchenko
