@@ -2,113 +2,245 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D174934084C
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 16:00:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4826F340DE3
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 20:11:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231305AbhCRPAL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Mar 2021 11:00:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230477AbhCRPAH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Mar 2021 11:00:07 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4EBC06174A
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Mar 2021 08:00:07 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id ga23-20020a17090b0397b02900c0b81bbcd4so5181724pjb.0
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Mar 2021 08:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GP8HqtdLDQbACAGPUeBLgHbEvptdN7Zz3SPYMzgtiQM=;
-        b=ekZArmL6/lP6JlxNRohk2L0ArP+EBUaVAJZPm6d+/ZQqqk/CCCodngggsiw2LOcDDy
-         4KeLCXn/UQ4Efsk5RdtAqOiBaPj1TZj1TGAae+/01fl/HA47OZkaR9513+vtkN9lnhxe
-         eZGQKv9WvLvOtJ11tnb3vYVmg0JZ/l0/qbfFOQbu231MPTEhmSt62jhFYPzNH7Ra8Q5M
-         HTCnFD0E9pRPG5biA95HjnhYToxhigdXIwbbsjG4XwQZbli3LdO/9teQsUtLyLOgMx7w
-         1CrZZHRmgrP/UjkHC73IB5ynl3AUSlgfBp0ekbr8NjUPL6/hyoAghnAgTC8/sNwqbAnp
-         /qcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GP8HqtdLDQbACAGPUeBLgHbEvptdN7Zz3SPYMzgtiQM=;
-        b=SKT4RmxCNZWfMvKak1OhyeygCksHpJxK0ptOxQdT/IeQUX4TWuMNKDHLDO42RhfLAT
-         gOrV1rOgwJWnZfIqx46HBMxXQwKIQAZ+mvVaci22P2FowFvq/0YgECArcyuYua3Y7UBR
-         Xg10zT3LpX86fJyLCsv+nT0eTDEO0AK8gwLQnTo8JCc9oBzZTusjysh4GFQT4aei1kul
-         6koJpvhqUzRmsEuO58ghhuch8PZYOzMdtLcRCysLnQySoxC1L/Uuk2MrtM8mBbGCFczd
-         OikoT7qYtaIKhvlGpqqTiG/N1g7khdHcNhcJrSolXlMq54Cj8z2vGyREarS4T7oB/UEP
-         h4aA==
-X-Gm-Message-State: AOAM531Z9qvwQjt/KtqIUU475uaVOILzD9Ikgzlfz5YnSPgenBQiP5sM
-        vyv6jH3uzRz4D69626aHNbxrXHVhml+rZKE12At2eMJ8DplCGQ==
-X-Google-Smtp-Source: ABdhPJy53x4oM+Sm/oh/UpV/3qLf+WVixYkYMt7qXuo7Djf3/tQjwTjJNMmTKVUMp6lrNaAcwnRq1RGFPvI8SLAepVE=
-X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr4945079pjr.228.1616079606934;
- Thu, 18 Mar 2021 08:00:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <946021874.11132.1615900079722@seven.thorsis.com>
- <CAHp75Vf05NN0dXUrMSOXBRuYRnQRHO_92itZ3ndOyX1oERWt=g@mail.gmail.com>
- <CAHp75VczovYQB70HVEmDA=xfTBcNuSm2f8x9Mnbj0P0Z4UHRMQ@mail.gmail.com>
- <854891727.11376.1616061014891@seven.thorsis.com> <CAHp75Vftrq66SweYKYprWBoi9X8csxe9ROaMorRFUjGSD8gNSQ@mail.gmail.com>
- <1236506597.11463.1616075798037@seven.thorsis.com>
-In-Reply-To: <1236506597.11463.1616075798037@seven.thorsis.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 18 Mar 2021 16:59:50 +0200
-Message-ID: <CAHp75Vd-+rSgG08TV0P3ocCQjUdPkNypxGncJmT5K62SEuwXog@mail.gmail.com>
-Subject: Re: setting gpio-line-names in dts for sama5d2 SoC
-To:     Alexander Dahl <ada@thorsis.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        id S232654AbhCRTLM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Mar 2021 15:11:12 -0400
+Received: from mail-db8eur05on2125.outbound.protection.outlook.com ([40.107.20.125]:61697
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232719AbhCRTKw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 18 Mar 2021 15:10:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CZdg/T1bkM3HtlRUbpk4TMHpfxivypI7lFoueNFIsg6nz1ejZuOLyFDJozCuEOu0UbzXSdr4RpgeJrTJAYLP58t1YfJexU2NKbGDthXgPXnk9TLrbFtANqMkGVtFb2cqJ6mLxt0Ac+DH6ooUerYD6NOWTRzc+UyDOLGgwZgasPZdbRszkU7bcTsdIXOAsEucniiWxk9JFEc2rOTqvXgyZ8t9OrFxOGQKlCopZ7qGhv7mKY557/H24LWv7tu9lv5QbwG2JZLNaq+0wcQWngppkYIYulaPq9/Ff02rfdmjScR10CKOoD6aE+iL3mYa4gZABPl21xKFxMRzeLWuDePXAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lPQNA9LKxzOcI9j4jxaL+0JpZGs5iUwJANWh3DMongc=;
+ b=ELOek8cu5UZYHBk7xMFnFyk7Q/TvooF+ZzroFg69WLyC9wK8uu7QOokq+jqdKr+R+/GO2n4cI9EiVsFK3oMbpvj06bKW+b3hLsmFZvSRC+UH6I50ayUq1ST9wFAckOeGGULerfzbDj0/9FYPO4WxdWA34s0jR6+W3DFv6fqkQMHSL26EvUdy8lI8qIXIHTuBtxUQuRaDtkXpOJzz10d4Cuzo5/4DYS6yLsrY6s6a7uCVn5WZVSd7myDU7DkA2rxLcxyiwJ4KinXt11amdKL8qFDdTIONzh1jUTnHvGKSRn3Uzcg/FeNAWBDEVno0ymANdVtNGbRjuMU/5nfylDjueg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 131.228.2.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=nokia.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=nokia.com; dkim=none
+ (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lPQNA9LKxzOcI9j4jxaL+0JpZGs5iUwJANWh3DMongc=;
+ b=c2vn/5FaZai9NPDLlfBy/EWnLC94oc1aWzOZL5uz2giBAAUJweyruHnC7z9JEfxLUpUo2ZlUYaIf/cb4wmyA9TFjXatcpia4LaFasRQAMRYUzNv/Kla0J60BCwOwJwCGv54vR/mIHm6S/ohPwH/zvCeqPQc8fJMFWiWFkOlRIFk=
+Received: from DB6PR0201CA0028.eurprd02.prod.outlook.com (2603:10a6:4:3f::38)
+ by AM0PR07MB4739.eurprd07.prod.outlook.com (2603:10a6:208:72::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.10; Thu, 18 Mar
+ 2021 19:10:50 +0000
+Received: from DB5EUR03FT007.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:3f:cafe::5a) by DB6PR0201CA0028.outlook.office365.com
+ (2603:10a6:4:3f::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18 via Frontend
+ Transport; Thu, 18 Mar 2021 19:10:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 131.228.2.17)
+ smtp.mailfrom=nokia.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=pass action=none header.from=nokia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nokia.com designates
+ 131.228.2.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=131.228.2.17; helo=fihe3nok0735.emea.nsn-net.net;
+Received: from fihe3nok0735.emea.nsn-net.net (131.228.2.17) by
+ DB5EUR03FT007.mail.protection.outlook.com (10.152.20.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3955.18 via Frontend Transport; Thu, 18 Mar 2021 19:10:50 +0000
+Received: from ulegcparamis.emea.nsn-net.net (ulegcparamis.emea.nsn-net.net [10.151.74.146])
+        by fihe3nok0735.emea.nsn-net.net (GMO) with ESMTP id 12IJAhbX002267;
+        Thu, 18 Mar 2021 19:10:44 GMT
+From:   Alexander A Sverdlin <alexander.sverdlin@nokia.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v2] gpio: pl061: Support implementations without GPIOINTR line
+Date:   Thu, 18 Mar 2021 20:10:40 +0100
+Message-Id: <20210318191040.48575-1-alexander.sverdlin@nokia.com>
+X-Mailer: git-send-email 2.10.2
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 701218ce-eb49-478a-0c43-08d8ea418b32
+X-MS-TrafficTypeDiagnostic: AM0PR07MB4739:
+X-Microsoft-Antispam-PRVS: <AM0PR07MB4739A43F2D431B1CD6C860D288699@AM0PR07MB4739.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FmsCP3srjuRoqXg2Fq4MRVYlDtN3Ur/dLI+EmDFgis9engBZ33GucZZFzmNOLVwjBlVPjXu45TSD/b5ouiISisBRfTOKBqZ90EOLQlJ9kTJUbB/o1OERwEcdiiQz3ll3XxTvoT5KO7m/3+/+yrjwaHPJczyhARigTehxd/O/yLDWTzWpzov7C687epXnaZvFq8JP2+VDYD7AU8/T5wD6Iqx2sh8qkaAhoGvCCf+Vxal6HVMwBhz9YeZo67bIS3qsRI0FZo2G9vQ3Q5C7/WPDW+Ia6f4jiHfSAlM2oEcbYQlSC3n6ZdVBbTRRvIBhNbh3tn0BultoJqgW75ZDCrIB93CbmzZ4O0ZSf/zcG4V3PpPylgSbHNTYbMzKBEtcxV/CTmsdtyaUthL/0933RfCr/odClWELBelITU1WY45m0zC+ha8kOZKh/M5wToim+d+IMo1S4Wwd43wLL4AFIesXE8rBWdpdoIST87RAdL9VYnawUqT5jC2uk8ehhCtTuLUxHNscoIVdtPmbfT7lsk+XQlQx7MZEeXU7g87Ge8p+qdXm9abkWB57UmexywlQjKXK7nHM0WXkuVAAwnTGqVS/b/CLSuxCjo5LMllvtMkcPxpI7+UDoDXUj6OJUybUHN+H7FuNOm4q+G50Cm4/PHcais5Mk7mGhLGYS3nmsXZj8K+RjP6x+vUgZI6zY8VqsJGSCahV3Y1OydvN34TCH0BYxTaBbrhITSdbxviBRrtTbUEr8QYRhfFsQcs1t0lac47l5D+gQle5SjzNLlpTgydQBw==
+X-Forefront-Antispam-Report: CIP:131.228.2.17;CTRY:FI;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:fihe3nok0735.emea.nsn-net.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(396003)(136003)(376002)(346002)(39860400002)(36840700001)(46966006)(8936002)(47076005)(6666004)(4326008)(356005)(336012)(2616005)(36756003)(966005)(70206006)(6916009)(86362001)(5660300002)(36860700001)(1076003)(8676002)(186003)(82740400003)(316002)(81166007)(83380400001)(2906002)(70586007)(478600001)(54906003)(26005)(82310400003)(36900700001);DIR:OUT;SFP:1102;
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2021 19:10:50.1049
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 701218ce-eb49-478a-0c43-08d8ea418b32
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5d471751-9675-428d-917b-70f44f9630b0;Ip=[131.228.2.17];Helo=[fihe3nok0735.emea.nsn-net.net]
+X-MS-Exchange-CrossTenant-AuthSource: DB5EUR03FT007.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR07MB4739
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 3:56 PM Alexander Dahl <ada@thorsis.com> wrote:
-> > Andy Shevchenko <andy.shevchenko@gmail.com> hat am 18.03.2021 13:40 ges=
-chrieben:
-> > You may look into the commit
-> > 7cba1a4d5e16 ("gpiolib: generalize devprop_gpiochip_set_names() for
-> > device properties")
-> > which unifies the logic, but at the same time removed one comment:
-> >
-> > -       /* If the chip defines names itself, these take precedence */
->
-> Well, that could be added again. And if that precedence stays as is, it s=
-hould be documented in the gpio devicetree bindings to not cause further co=
-nfusion?
->
-> > So, logic was that for a long time. And unfortunately I don't see how
-> > we may change this without breakage. This backs us to the discussion
-> > if the name of the line is ABI or not.
->
-> I want to point out one point for consideration. There's usually a differ=
-ence between the SoC and the boards using that SoC. So those pins are all t=
-he same from the chips point of view and the default names are set in a dri=
-ver related to the chip (family).  However the line names set in device tre=
-e are probably related to a board.  Obviously different boards may have dif=
-ferent line names, even when using the same SoC.
->
-> In other words: if I design a new board, there's no interface I would bre=
-ak, at least not from the userspace point of view just looking at the line =
-names, or is there?
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-I understand that  names are platform specific and I'm on your side as
-an IoT specialist, but on the Linux side we may not blindly do changes
-like this due to ABI concerns. You see the problem here: you can't fix
-all (legacy) DTSs in the world which do not have GPIO line names
-listed, and for those users we effectively break their tools and
-scripts which relies on the hard coded naming scheme.
+There are several implementations of PL061 which lack GPIOINTR signal in
+hardware and only have individual GPIOMIS[7:0] interrupts. Use the
+hierarchical interrupt support of the gpiolib in these cases (if at least 8
+IRQs are configured for the PL061).
 
-So, we may change if and only if the names of the lines are not an ABI!
+One in-tree example is arch/arm/boot/dts/axm55xx.dtsi, PL061 instances have
+8 IRQs defined, but current driver supports only the first one, so only one
+pin would work as IRQ trigger.
 
-What we can do as a workaround is to reverse the partsing order, and
-if somebody complains, it will be their DTS issues, whoever not the
-best solution either.
+Link: https://lore.kernel.org/linux-gpio/CACRpkdZpYzpMDWqJobSYH=JHgB74HbCQihOtexs+sVyo6SRJdA@mail.gmail.com/
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+---
+Changelog:
+v2: Add pl061_populate_parent_fwspec()
 
-+Cc: Rob to hear his opinion.
+ drivers/gpio/Kconfig      |  1 +
+ drivers/gpio/gpio-pl061.c | 91 +++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 85 insertions(+), 7 deletions(-)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index e3607ec..456c0a5 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -469,6 +469,7 @@ config GPIO_PL061
+ 	depends on ARM_AMBA
+ 	select IRQ_DOMAIN
+ 	select GPIOLIB_IRQCHIP
++	select IRQ_DOMAIN_HIERARCHY
+ 	help
+ 	  Say yes here to support the PrimeCell PL061 GPIO device
+ 
+diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
+index f1b53dd..e95714a 100644
+--- a/drivers/gpio/gpio-pl061.c
++++ b/drivers/gpio/gpio-pl061.c
+@@ -24,6 +24,7 @@
+ #include <linux/slab.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/pm.h>
++#include <linux/of_irq.h>
+ 
+ #define GPIODIR 0x400
+ #define GPIOIS  0x404
+@@ -283,6 +284,64 @@ static int pl061_irq_set_wake(struct irq_data *d, unsigned int state)
+ 	return irq_set_irq_wake(pl061->parent_irq, state);
+ }
+ 
++static int pl061_child_to_parent_hwirq(struct gpio_chip *gc, unsigned int child,
++				       unsigned int child_type,
++				       unsigned int *parent,
++				       unsigned int *parent_type)
++{
++	struct amba_device *adev = to_amba_device(gc->parent);
++	unsigned int irq = adev->irq[child];
++	struct irq_data *d = irq_get_irq_data(irq);
++
++	if (!d)
++		return -EINVAL;
++
++	*parent_type = irqd_get_trigger_type(d);
++	*parent = irqd_to_hwirq(d);
++	return 0;
++}
++
++#ifdef CONFIG_OF
++void pl061_populate_parent_fwspec(struct gpio_chip *gc,
++				  struct irq_fwspec *fwspec,
++				  unsigned int parent_hwirq,
++				  unsigned int parent_type)
++{
++	struct device_node *dn = to_of_node(gc->irq.fwnode);
++	struct of_phandle_args pha;
++	int i;
++
++	fwspec->param_count = 0;
++
++	if (WARN_ON(!dn))
++		return;
++
++	/*
++	 * This brute-force here is because of the fact PL061 is often paired
++	 * with GIC-v3, which has 3-cell IRQ specifier (SPI/PPI selection), and
++	 * unexpected range shifts in hwirq mapping (SPI IRQs are shifted by
++	 * 32). So this is about reversing of gic_irq_domain_translate().
++	 */
++	for (i = 0; i < PL061_GPIO_NR; i++) {
++		unsigned int p, pt;
++
++		if (pl061_child_to_parent_hwirq(gc, i, parent_type, &p, &pt))
++			continue;
++		if (p == parent_hwirq)
++			break;
++	}
++	if (WARN_ON(i == PL061_GPIO_NR))
++		return;
++
++	if (WARN_ON(of_irq_parse_one(dn, i, &pha)))
++		return;
++
++	fwspec->param_count = pha.args_count;
++	for (i = 0; i < pha.args_count; i++)
++		fwspec->param[i] = pha.args[i];
++}
++#endif
++
+ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+ 	struct device *dev = &adev->dev;
+@@ -330,16 +389,34 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
+ 
+ 	girq = &pl061->gc.irq;
+ 	girq->chip = &pl061->irq_chip;
+-	girq->parent_handler = pl061_irq_handler;
+-	girq->num_parents = 1;
+-	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+-				     GFP_KERNEL);
+-	if (!girq->parents)
+-		return -ENOMEM;
+-	girq->parents[0] = irq;
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 	girq->handler = handle_bad_irq;
+ 
++	/*
++	 * There are some PL061 implementations which lack GPIOINTR in hardware
++	 * and only have individual GPIOMIS[7:0] signals. We distinguish them by
++	 * the number of IRQs assigned to the AMBA device.
++	 */
++	if (!adev->irq[PL061_GPIO_NR - 1]) {
++		WARN_ON(adev->irq[1]);
++
++		girq->parent_handler = pl061_irq_handler;
++		girq->num_parents = 1;
++		girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
++					     GFP_KERNEL);
++		if (!girq->parents)
++			return -ENOMEM;
++		girq->parents[0] = irq;
++	} else {
++		girq->fwnode = dev->fwnode;
++		girq->parent_domain =
++			irq_get_irq_data(adev->irq[PL061_GPIO_NR - 1])->domain;
++		girq->child_to_parent_hwirq = pl061_child_to_parent_hwirq;
++#ifdef CONFIG_OF
++		girq->populate_parent_fwspec = pl061_populate_parent_fwspec;
++#endif
++	}
++
+ 	ret = devm_gpiochip_add_data(dev, &pl061->gc, pl061);
+ 	if (ret)
+ 		return ret;
+-- 
+2.10.2
+
