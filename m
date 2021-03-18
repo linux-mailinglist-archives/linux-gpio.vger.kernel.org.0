@@ -2,133 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9336C3401B0
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 10:16:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A917340276
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Mar 2021 10:51:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbhCRJQQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Mar 2021 05:16:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50548 "EHLO mx2.suse.de"
+        id S229844AbhCRJum (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Mar 2021 05:50:42 -0400
+Received: from mail.thorsis.com ([92.198.35.195]:55708 "EHLO mail.thorsis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229813AbhCRJQP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 18 Mar 2021 05:16:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id F0AC2AC1E;
-        Thu, 18 Mar 2021 09:16:12 +0000 (UTC)
-Message-ID: <13fafc4dbbb8b4e9c68c71aabcff08751123b0b2.camel@suse.de>
-Subject: Re: [PATCH] dt-bindings: Drop type references on common properties
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S229896AbhCRJuW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 18 Mar 2021 05:50:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.thorsis.com (Postfix) with ESMTP id 43A0FCFA
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Mar 2021 10:50:21 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
+Received: from mail.thorsis.com ([127.0.0.1])
+        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id o7qCYSbmDQ5G for <linux-gpio@vger.kernel.org>;
+        Thu, 18 Mar 2021 10:50:21 +0100 (CET)
+Received: by mail.thorsis.com (Postfix, from userid 109)
+        id 21EA22A82; Thu, 18 Mar 2021 10:50:21 +0100 (CET)
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+        version=3.4.2
+Date:   Thu, 18 Mar 2021 10:50:14 +0100 (CET)
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mark Brown <broonie@kernel.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Odelu Kukatla <okukatla@codeaurora.org>,
-        Alex Elder <elder@kernel.org>, Suman Anna <s-anna@ti.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org
-Date:   Thu, 18 Mar 2021 10:16:10 +0100
-In-Reply-To: <20210316194858.3527845-1-robh@kernel.org>
-References: <20210316194858.3527845-1-robh@kernel.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-09POy/eeqAoG7Dif8JG1"
-User-Agent: Evolution 3.38.4 
-MIME-Version: 1.0
+        Linus Walleij <linus.walleij@linaro.org>
+Message-ID: <854891727.11376.1616061014891@seven.thorsis.com>
+In-Reply-To: <CAHp75VczovYQB70HVEmDA=xfTBcNuSm2f8x9Mnbj0P0Z4UHRMQ@mail.gmail.com>
+References: <946021874.11132.1615900079722@seven.thorsis.com>
+ <CAHp75Vf05NN0dXUrMSOXBRuYRnQRHO_92itZ3ndOyX1oERWt=g@mail.gmail.com>
+ <CAHp75VczovYQB70HVEmDA=xfTBcNuSm2f8x9Mnbj0P0Z4UHRMQ@mail.gmail.com>
+Subject: Re: setting gpio-line-names in dts for sama5d2 SoC
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Priority: 3
+Importance: Normal
+X-Originating-Client: open-xchange-appsuite
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hei hei,
 
---=-09POy/eeqAoG7Dif8JG1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+meanwhile I tried to proof my hypothesis. See below.
 
-On Tue, 2021-03-16 at 13:48 -0600, Rob Herring wrote:
-> Users of common properties shouldn't have a type definition as the
-> common schemas already have one. Drop all the unnecessary type
-> references in the tree.
+> Andy Shevchenko <andy.shevchenko@gmail.com> hat am 17.03.2021 13:33 gesch=
+rieben:
 >=20
-> A meta-schema update to catch these is pending.
+> =20
+> +Cc: Bart, Linus
 >=20
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Ohad Ben-Cohen <ohad@wizery.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Cheng-Yi Chiang <cychiang@chromium.org>
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Stefan Wahren <wahrenst@gmx.net>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Odelu Kukatla <okukatla@codeaurora.org>
-> Cc: Alex Elder <elder@kernel.org>
-> Cc: Suman Anna <s-anna@ti.com>
-> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-can@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-remoteproc@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> =C2=A0.../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml       | 5 +-=
----
+> On Wed, Mar 17, 2021 at 1:22 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> >
+> >
+> > On Tuesday, March 16, 2021, Alexander Dahl <ada@thorsis.com> wrote:
+> >>
+> >> Hei hei,
+> >>
+> >> for a Microchip SAMA5D2 SoC based device I try to set gpio-line-names =
+in .dts file like this:
+> >>
+> >> 257 &pioA {
+> >> 258         gpio-line-names =3D "",                   /* PA0  */
+> >> 259                           "",                   /* PA1  */
+> >> 260                           "",                   /* PA2  */
+> >> 261                           "FOO",                /* PA3  */
+> >> 262                           "BAR",                /* PA4  */
+> >> 263                           "",                   /* PA5  */
+> >>
+> >> =E2=80=A6 and so on for all 4 * 32 GPIO Pins. However when calling `gp=
+ioinfo` in userspace, I always get this:
+> >>
+> >> $ gpioinfo
+> >> gpiochip0 - 128 lines:
+> >>         line   0:        "PA0"       unused   input  active-high
+> >>         line   1:        "PA1"       unused   input  active-high
+> >>         line   2:        "PA2"       unused   input  active-high
+> >>         line   3:        "PA3"       unused   input  active-high
+> >>         line   4:        "PA4"       unused   input  active-high
+> >>         line   5:        "PA5"       unused   input  active-high
+> >>
+> >> =E2=80=A6 and so on. Those "PA0" line names are set by the pinctrl dri=
+ver in drivers/pinctrl/pinctrl-at91-pio4.c before calling gpiochip_add_data=
+() and from reading the code in drivers/gpio/gpiolib.c I suspect devprop_gp=
+iochip_set_names() is never called then, so those names in .dts are simply =
+ignored.
+> >>
+> >> Those default names from the at91 pio4 pinctrl driver are certainly co=
+rrect speaking of pin names, but from a userspace point of view it would be=
+ better if I could override those from dts, so an application using libgpio=
+d could look for a name like e.g. "VALVE7_EN" without caring to which pin t=
+hat's actually connected. Can I override those with a currently present ker=
+nel?=20
 
-				^
-				|
+I don't think I can override with a recent kernel.
 
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>> Or is it a problem in either the at91 pio4 driver or the gpiolib core? =
+Or is that no real usecase and should I do it differently?
 
-Regards,
-Nicolas
+If I disable the name assignment in the pinctrl-at91-pio4 driver, I get the=
+ line names from the dts. I used the following diff:
 
 
---=-09POy/eeqAoG7Dif8JG1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-=
+at91-pio4.c
+index 578b387100d9..f994a2468cc3 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -1095,7 +1095,9 @@ static int atmel_pinctrl_probe(struct platform_device=
+ *pdev)
+        atmel_pioctrl->gpio_chip->ngpio =3D atmel_pioctrl->npins;
+        atmel_pioctrl->gpio_chip->label =3D dev_name(dev);
+        atmel_pioctrl->gpio_chip->parent =3D dev;
++#if 0
+        atmel_pioctrl->gpio_chip->names =3D atmel_pioctrl->group_names;
++#endif
+=20
+        atmel_pioctrl->pm_wakeup_sources =3D devm_kcalloc(dev,
+                        atmel_pioctrl->nbanks,
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAmBTGloACgkQlfZmHno8
-x/7QBgf/X2Of8KHkQ7koHtulAqLWqHAwLmJ4UDf2ZhAm+Zpb3naXS4ZTQoQtZBv1
-7M+tRcB2B9eLSvYEYeWk9b3ainWXmwZA6NoAdda2c+KtEhEBlD1o2ZwHJ6Tt2RRW
-QbunvwfPBhoO3zNadU6v3x6sm5rw+lt/H1nSl8VnuujI1xI2+g0gjZPoeDbhQpVm
-FJLknBJjqlla9y1V90oh+tQ3b4R5HaHrxNEjEG/8OYFEL7GFFk282vTcrHhbGayu
-GN4wW0M04rFTlJ/GdO36Vr7zUUfU+/YqbbkglcoUh2UE2LButL3/31k/x6NetOws
-Ac1+8c7ZkXpssyBFvebQ4A/csN88Dw==
-=87aF
------END PGP SIGNATURE-----
+Now gpioinfo shows what I set in dts, more or less similar to this:
 
---=-09POy/eeqAoG7Dif8JG1--
+gpiochip0 - 128 lines:
+        line   0:      unnamed       unused   input  active-high=20
+        line   1:      unnamed       unused   input  active-high=20
+        line   2:      unnamed       unused   input  active-high=20
+        line   3:        "FOO"       unused   input  active-high=20
+        line   4:        "BAR"       unused   input  active-high=20
+        line   5:      unnamed       unused   input  active-high=20
 
+> >
+> >
+> > I would like to know the consequences if allow this, but to me it sound=
+s like a bug in the gpiolib.c.
+
+At least the documentation recommends to not use pin names: https://www.ker=
+nel.org/doc/Documentation/devicetree/bindings/gpio/gpio.txt
+
+If anyone has an idea how to fix this, let me know. I can try to make a pat=
+ch then. Currently however, I'm not familiar enough with the gpio subsystem=
+ to just start that.
+
+Greets
+Alex
