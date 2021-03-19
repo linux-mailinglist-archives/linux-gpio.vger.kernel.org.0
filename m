@@ -2,93 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D45E8342122
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 16:45:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F208134213A
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 16:52:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230177AbhCSPo7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Mar 2021 11:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230154AbhCSPoh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Mar 2021 11:44:37 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2ACC06174A;
-        Fri, 19 Mar 2021 08:44:37 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id f2-20020a17090a4a82b02900c67bf8dc69so6923355pjh.1;
-        Fri, 19 Mar 2021 08:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GCZHlMVbKbX32874y5u+F3c4bj2Tk2XhYaf8cu3E8HE=;
-        b=l+O0jQxlTczTV3nNthVLdfWmQXIB3gKHaG4yeFD4Ch3O5eEVQ2ZT5M+KgYfraDLYN8
-         c5NLJVa3eEsVNUjCwBPswPDo6cFwecwIQWZ2Vx4oWuUCx98qX+lu5wG7GKzi42Xhm1j7
-         Uq2VMC/o4X0JZeFMW9w4qdT9l2KJqas7nixIERCSLSmzAVBEhesVNQr4CWi1eRZS2tRE
-         kEzNr5EW2nGKbcBQBUb3g+JVLVhdqO6uySnrRoaRmif99WN8Y49tW6meh3OYsSHHbqAE
-         kuUNCT5qng+A0irhlEvZFPzD9OoHfIJx6ekguEsGNRLofLuwBJN5wOjnRabxcHWRE2l4
-         z/1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GCZHlMVbKbX32874y5u+F3c4bj2Tk2XhYaf8cu3E8HE=;
-        b=mBza0SSgLHj/UA+dfy1rL92WHp5VvLdshAW/Vi2nhGXv4Y2A740RZz5N3JVN+1jfn8
-         k7MtTgxyH5hAPnyqwKH2+AKYU2IY9SDpUp18nT/Nwj6k3NToiuUW7qkTPpfU58jvAqhv
-         /PZ2dkGcqCEvKiQGKBIelcg6ga+njQ1/ePzW9yg/Sgl1T3ICByoqLAsTeInULTm0zVLr
-         OV+7OAcKE8FNA/ZyuXSTQCeBZDZ6FcanrlXZERE02iwtwU0J/OhwjOO/ntO/XkGBkCaP
-         +OL0CrmTv1d2Bj/tuPN226uTJWW/EFAT8ilZiIn78dHBmE2GJVv9epnbVJref8YtkAiy
-         +1nA==
-X-Gm-Message-State: AOAM533wp0lurqYlbMju7xmcbniumGag++CtxUwyBxcFCpItQbt+xhjv
-        e6PnqOsdJMoDPhOBbHyetxAS79XeosHp9PB/JtI=
-X-Google-Smtp-Source: ABdhPJx/Lc6VFUnAZ5NXQDKS/FWEF+xKnRUgsjH1fwb9DAfFXqtKB4lG4veFgsiRirwW7QNWRapG3lWVPPF1ZmmQJDM=
-X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr10586290pjr.228.1616168676916;
- Fri, 19 Mar 2021 08:44:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <1614120685-7452-1-git-send-email-Asmaa@mellanox.com>
- <1614120685-7452-2-git-send-email-Asmaa@mellanox.com> <CH2PR12MB38958655696585998CFDF67BD7919@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CH2PR12MB3895A0BC2910997D8B64896BD7689@CH2PR12MB3895.namprd12.prod.outlook.com>
- <YFSl0Vrh04etK28J@lunn.ch>
-In-Reply-To: <YFSl0Vrh04etK28J@lunn.ch>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 19 Mar 2021 17:44:20 +0200
-Message-ID: <CAHp75VePjNR8NcvHiDPuryzmxvntenUDa3OgHchoxu_4k+Nc=g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: Support interrupts in gpio-mlxbf2.c
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Asmaa Mnebhi <asmaa@nvidia.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        David Thompson <davthompson@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+        id S230142AbhCSPwJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Mar 2021 11:52:09 -0400
+Received: from polaris.svanheule.net ([84.16.241.116]:43286 "EHLO
+        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230288AbhCSPvl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Mar 2021 11:51:41 -0400
+Received: from [IPv6:2a02:a03f:eaff:9f01:ffbc:9626:10f7:ec57] (unknown [IPv6:2a02:a03f:eaff:9f01:ffbc:9626:10f7:ec57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 2D2EA1E028B;
+        Fri, 19 Mar 2021 16:51:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1616169093;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KHu/bWBDWcOGFH8ElI16GIvRT2i23adhxH7rfaQXLL8=;
+        b=EENJK7v3+SqmUS7WP2PHlCZn3urahuvIqWEuIZ8MrDbrqGm4tLYU7iGQaSFV+pI2pxmlTp
+        +MHscDEmJyk8mwSM/MGWGRcNUVlhpH7lm32NtT2s9AK0krjQ7Si8cTti4rfAAVa0cOO2Ab
+        dKEtKmqvDG1mmsPu7ByX/KzVeBh4YtO3yh8XXTpBaOO5REjE6KtrdsSzxoVaKwmDeb1neB
+        InbPYzqywzXEDWul8fL9WZY0hVsduG8Dqmq3O5eBX+S+rXZzWIhzwGR6BqQy9gGfFavGNw
+        /xA1LSP5N2/2xhFB6VcM4NXA5feN6jOaLpugx2gUDBbtDaXNFe8iaS4E0xxfJg==
+Message-ID: <a7d410216d35ed2b3015bfdd8e21dafd9c42d9d4.camel@svanheule.net>
+Subject: Re: [PATCH v2 2/2] gpio: Add Realtek Otto GPIO support
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bert Vermeulen <bert@biot.com>
+Date:   Fri, 19 Mar 2021 16:51:31 +0100
+In-Reply-To: <CAHp75Vc6aaDhVN7LzvLNQjuOPguz+nbfmfpZ7TZHK=fNjCRz8w@mail.gmail.com>
+References: <20210315082339.9787-1-sander@svanheule.net>
+         <20210315190806.66762-1-sander@svanheule.net>
+         <20210315190806.66762-3-sander@svanheule.net>
+         <CAHp75Vc6aaDhVN7LzvLNQjuOPguz+nbfmfpZ7TZHK=fNjCRz8w@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 3:24 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > We cannot really pass it through the ACPI table because the ACPI
-> > table is common to all BlueField-2 boards.  And each board may have
-> > a different GPIO pin associated with a particular function. This is
-> > why we use ACPI properties instead of GpioInt(). So that the
-> > bootloader can change the GPIO pin value based on the board id
-> > detected at boot time.
->
-> That sounds very broken.
->
-> ACPI describes the hardware. If the hardware is different, you need
-> different ACPI. And i assume the ACPI spec says GpioInt() is the
-> correct way to do this, and does not say you can hack around
-> limitations of your bootloader using properties?
+Hi Andy,
 
-It seems my reply didn't make the mailing list, but I'm on the same
-page with you.
+Thanks for the review. I'll address the style comments in a v3. Some
+further comments and discussion below.
 
-On x86 boards the difference is usually provided by firmware via NVS
-and corresponding macro(s).
-One may google for any DSDT for x86 and check for, for instance,
-GNUM() macro and Co.
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Wed, 2021-03-17 at 15:08 +0200, Andy Shevchenko wrote:
+> On Mon, Mar 15, 2021 at 11:11 PM Sander Vanheule < 
+> sander@svanheule.net> wrote:
+> > +       depends on OF_GPIO
+> 
+> Don't see how it's used.
+
+It isn't, so I'll remove it.
+
+
+> > +#include <linux/of_irq.h>
+> 
+> Why?
+> Perhaps what you need is property.h and mod_devicetable.h. See below.
+
+With you suggestions, I was able to drop most explicit OF references.
+Only of_device_id remains, for which I'll include mod_devicetable.h.
+
+
+> > +#include <linux/swab.h>
+> 
+> Not sure why you need this? See below.
+
+[snip]
+
+> 
+> > +
+> > +static inline u32 realtek_gpio_isr_read(struct realtek_gpio_ctrl
+> > *ctrl)
+> > +{
+> > +       return swab32(readl(ctrl->base + REALTEK_GPIO_REG_ISR));
+> 
+> Why swab?! How is this supposed to work on BE CPUs?
+> Ditto for all swabXX() usage.
+
+My use of swab32/swahw32 has little to do with the CPU being BE or LE,
+but more with the register packing in the GPIO peripheral.
+
+The supported SoCs have port layout A-B-C-D in the registers, where
+firmware built with Realtek's SDK always denotes A0 as the first GPIO
+line. So bit 24 in a register has the value for A0 (with the exception
+of the IMR register).
+
+I wrote these wrapper functions to be able to use the BIT() macro with
+the GPIO line number, similar to how gpio-mmio uses ioread32be() when
+the BGPIOF_BIG_ENDIAN_BYTE_ORDER flag is used.
+
+For the IMR register, port A again comes first, but is now 16 bits wide
+instead of 8, with A0 at bits 16:17. That's why swahw32 is used for
+this register.
+
+On the currently unsupported RTL9300-series, the port layout is
+reversed: D-C-B-A. GPIO line A0 is then at bit 0, so the swapping
+functions won't be required. When support for this alternate port
+layout is added, some code will need to be added to differentiate
+between the two cases.
+
+
+> > +}
+> > +
+> > +static inline void realtek_gpio_isr_clear(struct realtek_gpio_ctrl
+> > *ctrl,
+> > +       unsigned int pin_mask)
+> > +{
+> > +       writel(swab32(pin_mask), ctrl->base +
+> > REALTEK_GPIO_REG_ISR);
+> > +}
+> > +
+> > +static inline void realtek_gpio_update_imr(struct
+> > realtek_gpio_ctrl *ctrl,
+> > +       unsigned int imr_offset, u32 type, u32 mask)
+> > +{
+> > +       unsigned int reg;
+> > +
+> > +       if (imr_offset == 0)
+> > +               reg = REALTEK_GPIO_REG_IMR_AB;
+> > +       else
+> > +               reg = REALTEK_GPIO_REG_IMR_CD;
+> > +       writel(swahw32(type & mask), ctrl->base + reg);
+> > +}
+
+[snip]
+
+> > +       switch (flow_type & IRQ_TYPE_SENSE_MASK) {
+> 
+> > +       case IRQ_TYPE_NONE:
+> > +               type = 0;
+> > +               handler = handle_bad_irq;
+> > +               break;
+> 
+> Why is it here? Make it default like many other GPIO drivers do.
+> 
+> > +       case IRQ_TYPE_EDGE_FALLING:
+> > +               type = REALTEK_GPIO_IRQ_EDGE_FALLING;
+> > +               handler = handle_edge_irq;
+> > +               break;
+> > +       case IRQ_TYPE_EDGE_RISING:
+> > +               type = REALTEK_GPIO_IRQ_EDGE_RISING;
+> > +               handler = handle_edge_irq;
+> > +               break;
+> > +       case IRQ_TYPE_EDGE_BOTH:
+> > +               type = REALTEK_GPIO_IRQ_EDGE_BOTH;
+> > +               handler = handle_edge_irq;
+> > +               break;
+> > +       default:
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       irq_set_handler_locked(data, handler);
+> 
+> handler is always the same. Use it directly here.
+
+I'll drop the IRQ_TYPE_NONE case. Do I understand it correctly, that
+IRQ_TYPE_NONE should never be used as the new value, but only as the
+default initial value?
+
+
+Best,
+Sander
+
+
+
+
