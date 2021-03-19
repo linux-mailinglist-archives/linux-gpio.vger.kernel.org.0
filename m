@@ -2,135 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92BBA3423DC
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 18:58:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DC963426BD
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 21:23:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229974AbhCSR6I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Mar 2021 13:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43896 "EHLO
+        id S230142AbhCSUWm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Mar 2021 16:22:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230367AbhCSR5p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Mar 2021 13:57:45 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A02DC06174A;
-        Fri, 19 Mar 2021 10:57:45 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id q5so6431466pfh.10;
-        Fri, 19 Mar 2021 10:57:45 -0700 (PDT)
+        with ESMTP id S230096AbhCSUWk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Mar 2021 16:22:40 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D67C06175F
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Mar 2021 13:22:28 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id x13so10340765wrs.9
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Mar 2021 13:22:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2mOuHKD0JWNPyTnS6xCqcxhUtEeEE1ODpShZbCe3d/U=;
-        b=nfpZ0TcD94lEBjcu726Cfru/DoQOzFy7PylCdjgur1T/Hfl+p7xP4vxYGlunzXHoRe
-         IpkPlcmeVP225Ss7tLkdzQIor3rk1OvPbTXiTumQCuCXh1Z0fS3IBYEWQzzEn1sj3Ih4
-         XVZBs3HSoP1Un6Px4ODwyFVJGtmpla463XvC3/wQCd/oe8RKBlJUzbcPq43rcBO3exxf
-         06ycQS23jgAkpU4y+zENZWY8PEqlhZC+enfEHBWIcIaoYtnbZj4TX4hyy5DtFms1mFbX
-         jWuRADZxMPeTYuVyjkZ1sbq78SyPUI3A/nq6L+uPCs9FOHPSHh/spVXHA6RbTl9+oiP4
-         7c8w==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iXySPiFeBqFNXOlBA8Hlxv7UAlSpBEE41vijCE3djrc=;
+        b=vSv6oPxmtEU9z27sFTxMUsx3Z+3ox6KRRCkclzbqS2s/HHe4v3Xe6kho9eJx7zSVA4
+         7oOxtrNuvFjdYuRCS3H7wBSBgh7/fhQJsHK9p7ba/1VInwBA72Ml2ZRt/kniLI8jR2Pa
+         rMB3H4/vxHt3HIWxQudgHZN0qG4CwEwcmR/l2le6Ze9yCsbDs7gbI+g9yGUBR3+Bsoka
+         2dvku831OhbcCSvQ4pfx4QXD5XQTy5UbZ3mDQI2zmNQ4Q1ngWx8Em6R02c1fpPKf+KIf
+         KlAHX6A+MMgMevjHQcZeubY6I19x3MSCHMtct/mjXBsLgxn5rFz7trJZbq9iT2nFMUUa
+         F+Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2mOuHKD0JWNPyTnS6xCqcxhUtEeEE1ODpShZbCe3d/U=;
-        b=J+D8E6lPKVQUetNdEG07T/8y6RbEuOmSUJ9Oci1WOyhjyXcb/VBJ8oGkurIt+k1/zV
-         rXhABoxhcgzg0AEPoLOZK+laC4Nev4cT+vMdJf4l3ZmLxqHb72DLV+CKvXb7kohGq1/k
-         M3bTJ2X1RU0NCXtKKWEKC2fdsHY3GobAaYpMxXnJLrQLKlX9RMITEmkHgR/KkhGmenyE
-         WA0C2gz8FI0uME7YEpW1aN4g2jc51W/m/9DCA5rcl8l2/wyZaVkxwCPTBCnEdUVmS8YC
-         GotSkNnVMlfXi/gsRN4fVXXt+fvTuFMEtSpQQz9BM4o5G0FzVGJPowlioVbBPb6Cwt+d
-         F79g==
-X-Gm-Message-State: AOAM532y6kNbSvdt82MzS8+2nnP2salE+jh/1P6HH3cIaKQoQLN5kbcA
-        Vri8npdXJIkq4jjj0/HIC+Hhucqdmo04pGb5YPI=
-X-Google-Smtp-Source: ABdhPJxHw/1t8tXyIfGGvo/j9gXzEeKGwGR2258hjHISoO/K+/IK8SZCvQFGurRuO9IuvoSnnBVfcruTROTMSK30cro=
-X-Received: by 2002:a63:ce15:: with SMTP id y21mr12520886pgf.4.1616176664463;
- Fri, 19 Mar 2021 10:57:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210315082339.9787-1-sander@svanheule.net> <20210315190806.66762-1-sander@svanheule.net>
- <20210315190806.66762-3-sander@svanheule.net> <CAHp75Vc6aaDhVN7LzvLNQjuOPguz+nbfmfpZ7TZHK=fNjCRz8w@mail.gmail.com>
- <a7d410216d35ed2b3015bfdd8e21dafd9c42d9d4.camel@svanheule.net>
-In-Reply-To: <a7d410216d35ed2b3015bfdd8e21dafd9c42d9d4.camel@svanheule.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 19 Mar 2021 19:57:28 +0200
-Message-ID: <CAHp75VdrqE0kBwzK9Jk7pZGjyfFnhatfa8UY0z-3T1w1PrbAbw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: Add Realtek Otto GPIO support
-To:     Sander Vanheule <sander@svanheule.net>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iXySPiFeBqFNXOlBA8Hlxv7UAlSpBEE41vijCE3djrc=;
+        b=HlGdFRwlMKGbv96hllVtt2+KX+hJWqLD+s3wXajfSVTvqGRBJ1KKzgZ6Y707vqOnqs
+         urWZTLCKu5dtRcG/UYwhWhVzPgpqnJbZyXHns8oZyzqtmUQeEJoMFpwKWWed3Qp8ylhs
+         K5G2LpODBv/buLog5mUZFvHk0v0uGYNXK0FzQRDrH2fONyahH8AqzOXeGU93kcVQCrXU
+         LxiBlbWAuwPxOJQ9jvL87b9VzOZhyRXTFiI3/FrgYzmq6EifFSuzMWOEuwn0JosoAYcQ
+         9Ocrp2JmTb+dkFtNWovcS4aIMuKAWDms4QkfhgZ3VtAm97jjx2mZhm7rIdEom76EQt06
+         6hNQ==
+X-Gm-Message-State: AOAM533EH5okxTwrCC62oOLnL0MXgcabu05c1O6hympDP7WbagUs0Rti
+        DFOcMUZXrf+WdN7HIVVY6Dn/mA==
+X-Google-Smtp-Source: ABdhPJzGION6z8rZr2vfIt19sANVKEW0E7BDXy1V7/Eydzx0QdLTqnardKLbFa4fucQPbJTAXBfCEQ==
+X-Received: by 2002:a5d:4e52:: with SMTP id r18mr6615711wrt.28.1616185347689;
+        Fri, 19 Mar 2021 13:22:27 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-149-6.w2-15.abo.wanadoo.fr. [2.15.231.6])
+        by smtp.gmail.com with ESMTPSA id p17sm7225865wmq.47.2021.03.19.13.22.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Mar 2021 13:22:27 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bert Vermeulen <bert@biot.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.12-rc4
+Date:   Fri, 19 Mar 2021 21:22:26 +0100
+Message-Id: <20210319202226.24590-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 5:51 PM Sander Vanheule <sander@svanheule.net> wrote:
-> On Wed, 2021-03-17 at 15:08 +0200, Andy Shevchenko wrote:
-> > On Mon, Mar 15, 2021 at 11:11 PM Sander Vanheule <
-> > sander@svanheule.net> wrote:
+Linus,
 
-...
+Please pull the following two fixes for the GPIO subsystem. Both address issues
+in the core GPIO code.
 
-> > > +#include <linux/swab.h>
-> >
-> > Not sure why you need this? See below.
+Best Regards,
+Bartosz Golaszewski
 
-> > > +       return swab32(readl(ctrl->base + REALTEK_GPIO_REG_ISR));
-> >
-> > Why swab?! How is this supposed to work on BE CPUs?
-> > Ditto for all swabXX() usage.
->
-> My use of swab32/swahw32 has little to do with the CPU being BE or LE,
-> but more with the register packing in the GPIO peripheral.
->
-> The supported SoCs have port layout A-B-C-D in the registers, where
-> firmware built with Realtek's SDK always denotes A0 as the first GPIO
-> line. So bit 24 in a register has the value for A0 (with the exception
-> of the IMR register).
->
-> I wrote these wrapper functions to be able to use the BIT() macro with
-> the GPIO line number, similar to how gpio-mmio uses ioread32be() when
-> the BGPIOF_BIG_ENDIAN_BYTE_ORDER flag is used.
->
-> For the IMR register, port A again comes first, but is now 16 bits wide
-> instead of 8, with A0 at bits 16:17. That's why swahw32 is used for
-> this register.
->
-> On the currently unsupported RTL9300-series, the port layout is
-> reversed: D-C-B-A. GPIO line A0 is then at bit 0, so the swapping
-> functions won't be required. When support for this alternate port
-> layout is added, some code will need to be added to differentiate
-> between the two cases.
+The following changes since commit b41ba2ec54a70908067034f139aa23d0dd2985ce:
 
-Yes, you have different endianess on the hardware level, why not to
-use the proper accessors (with or without utilization of the above
-mentioned BGPIOF_BIG_ENDIAN_BYTE_ORDER)?
+  gpiolib: Read "gpio-line-names" from a firmware node (2021-03-08 11:59:17 +0100)
 
-...
+are available in the Git repository at:
 
-> > > +       case IRQ_TYPE_NONE:
-> > > +               type = 0;
-> > > +               handler = handle_bad_irq;
-> > > +               break;
-> >
-> > Why is it here? Make it default like many other GPIO drivers do.
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.12-rc4
 
-> > > +       irq_set_handler_locked(data, handler);
-> >
-> > handler is always the same. Use it directly here.
->
-> I'll drop the IRQ_TYPE_NONE case. Do I understand it correctly, that
-> IRQ_TYPE_NONE should never be used as the new value, but only as the
-> default initial value?
+for you to fetch changes up to 6cb59afe9e5b45a035bd6b97da6593743feefc72:
 
-Initially you initialize the default handler to be "bad" (in order to
-easily catch up issues with IRQ configurations).
-When ->irq_set_type() is called, if everything is okay it will lock
-the handler to the proper one.
+  gpiolib: Assign fwnode to parent's if no primary one provided (2021-03-16 10:18:08 +0100)
 
--- 
-With Best Regards,
-Andy Shevchenko
+----------------------------------------------------------------
+gpio fixes for v5.12-rc4
+
+- fix the return value in error path in gpiolib_dev_init()
+- fix the "gpio-line-names" property handling correctly this time
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      gpiolib: Assign fwnode to parent's if no primary one provided
+
+Wei Yongjun (1):
+      gpiolib: Fix error return code in gpiolib_dev_init()
+
+ drivers/gpio/gpiolib.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
