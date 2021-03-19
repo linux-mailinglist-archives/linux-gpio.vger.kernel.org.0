@@ -2,28 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40AEF341729
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 09:13:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F46F34172D
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 09:15:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234102AbhCSIM3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Mar 2021 04:12:29 -0400
-Received: from lucky1.263xmail.com ([211.157.147.135]:40838 "EHLO
+        id S234219AbhCSIPN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Mar 2021 04:15:13 -0400
+Received: from lucky1.263xmail.com ([211.157.147.131]:50224 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234340AbhCSIMI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Mar 2021 04:12:08 -0400
-Received: from localhost (unknown [192.168.167.225])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 1ADB8A880D;
-        Fri, 19 Mar 2021 16:11:46 +0800 (CST)
+        with ESMTP id S234102AbhCSIOr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Mar 2021 04:14:47 -0400
+Received: from localhost (unknown [192.168.167.16])
+        by lucky1.263xmail.com (Postfix) with ESMTP id DCE82B9C86;
+        Fri, 19 Mar 2021 16:14:44 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
 X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P2276T140461391996672S1616141505172675_;
-        Fri, 19 Mar 2021 16:11:46 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P13109T139929653327616S1616141684234242_;
+        Fri, 19 Mar 2021 16:14:45 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <ce73b056d4ecfca26568c009de0d880e>
+X-UNIQUE-TAG: <b4fc76202e7e426faa080cc9ffe48171>
 X-RL-SENDER: jay.xu@rock-chips.com
 X-SENDER: xjq@rock-chips.com
 X-LOGIN-NAME: jay.xu@rock-chips.com
@@ -36,9 +36,9 @@ To:     linus.walleij@linaro.org, heiko@sntech.de, catalin.marinas@arm.com,
         will@kernel.org
 Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
         Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH v3] pinctrl: rockchip: add support for rk3568
-Date:   Fri, 19 Mar 2021 16:11:43 +0800
-Message-Id: <20210319081144.368238-1-jay.xu@rock-chips.com>
+Subject: [PATCH v4] pinctrl: rockchip: add support for rk3568
+Date:   Fri, 19 Mar 2021 16:14:41 +0800
+Message-Id: <20210319081441.368358-1-jay.xu@rock-chips.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210304013342.1106361-1-jay.xu@rock-chips.com>
 References: <20210304013342.1106361-1-jay.xu@rock-chips.com>
@@ -49,26 +49,28 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 RK3568 SoCs have 5 gpio controllers, each gpio has 32 pins. GPIO supports
-set iomux, pull, drive strength, schmitt and slew rate.
+set iomux, pull, drive strength and schmitt.
 
 Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 ---
-changes since v2:
+v3:
+- fix route_type to route_location, compile error fix
+- remove slewrate option
+v2:
 - fix mux route grf base for gpio bank 0
-changes since v1:
-  suggested by Heiko, thank for heiko
+v1:
 - modify _GENMASK to WRITE_MASK_VAL, and add comment for the define
 - modify MR_GRF to RK_MUXROUTE_GRF, also for MR_SAME and MR_PMU
 - add comment for pull setting for GPIO0_D0-D6
 
- drivers/pinctrl/pinctrl-rockchip.c | 319 ++++++++++++++++++++++++++++-
- 1 file changed, 317 insertions(+), 2 deletions(-)
+ drivers/pinctrl/pinctrl-rockchip.c | 292 ++++++++++++++++++++++++++++-
+ 1 file changed, 290 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index aa1a1c850d05..99e1ec7fd7b4 100644
+index deabfbc74a01..2eb51ddfca02 100644
 --- a/drivers/pinctrl/pinctrl-rockchip.c
 +++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -61,8 +61,17 @@ enum rockchip_pinctrl_type {
+@@ -63,8 +63,17 @@ enum rockchip_pinctrl_type {
  	RK3308,
  	RK3368,
  	RK3399,
@@ -86,7 +88,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  /*
   * Encode variants of iomux registers into a type variable
   */
-@@ -290,6 +299,25 @@ struct rockchip_pin_bank {
+@@ -292,6 +301,25 @@ struct rockchip_pin_bank {
  		.pull_type[3] = pull3,					\
  	}
  
@@ -97,7 +99,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
 +		.func		= FUNC,					\
 +		.route_offset	= REG,					\
 +		.route_val	= VAL,					\
-+		.route_type	= FLAG,					\
++		.route_location	= FLAG,					\
 +	}
 +
 +#define RK_MUXROUTE_SAME(ID, PIN, FUNC, REG, VAL)	\
@@ -112,7 +114,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  /**
   * struct rockchip_mux_recalced_data: represent a pin iomux data.
   * @num: bank number.
-@@ -1394,6 +1422,102 @@ static struct rockchip_mux_route_data rk3399_mux_route_data[] = {
+@@ -1396,6 +1424,102 @@ static struct rockchip_mux_route_data rk3399_mux_route_data[] = {
  	},
  };
  
@@ -215,36 +217,10 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  static bool rockchip_get_mux_route(struct rockchip_pin_bank *bank, int pin,
  				   int mux, u32 *loc, u32 *reg, u32 *value)
  {
-@@ -2102,6 +2226,94 @@ static void rk3399_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
+@@ -2104,6 +2228,68 @@ static void rk3399_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
  		*bit = (pin_num % 8) * 2;
  }
  
-+#define RK3568_SR_PMU_OFFSET		0x60
-+#define RK3568_SR_GRF_OFFSET		0x0180
-+#define RK3568_SR_BANK_STRIDE		0x10
-+#define RK3568_SR_PINS_PER_REG		16
-+
-+static int rk3568_calc_slew_rate_reg_and_bit(struct rockchip_pin_bank *bank,
-+					     int pin_num,
-+					     struct regmap **regmap,
-+					     int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	if (bank->bank_num == 0) {
-+		*regmap = info->regmap_pmu;
-+		*reg = RK3568_SR_PMU_OFFSET;
-+	} else {
-+		*regmap = info->regmap_base;
-+		*reg = RK3568_SR_GRF_OFFSET;
-+		*reg += (bank->bank_num  - 1) * RK3568_SR_BANK_STRIDE;
-+	}
-+	*reg += ((pin_num / RK3568_SR_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3568_SR_PINS_PER_REG;
-+
-+	return 0;
-+}
-+
 +#define RK3568_PULL_PMU_OFFSET		0x20
 +#define RK3568_PULL_GRF_OFFSET		0x80
 +#define RK3568_PULL_BITS_PER_PIN	2
@@ -310,7 +286,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  static int rockchip_perpin_drv_list[DRV_TYPE_MAX][8] = {
  	{ 2, 4, 8, 12, -1, -1, -1, -1 },
  	{ 3, 6, 9, 12, -1, -1, -1, -1 },
-@@ -2202,6 +2414,11 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
+@@ -2204,6 +2390,11 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
  		bank->bank_num, pin_num, strength);
  
  	ctrl->drv_calc_reg(bank, pin_num, &regmap, &reg, &bit);
@@ -322,7 +298,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  
  	ret = -EINVAL;
  	for (i = 0; i < ARRAY_SIZE(rockchip_perpin_drv_list[drv_type]); i++) {
-@@ -2271,6 +2488,7 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
+@@ -2273,6 +2464,7 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
  		return -EINVAL;
  	}
  
@@ -330,7 +306,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  	/* enable the write to the equivalent lower bits */
  	data = ((1 << rmask_bits) - 1) << (bit + 16);
  	rmask = data | (data >> 16);
-@@ -2373,6 +2591,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
+@@ -2375,6 +2567,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
  	case RK3308:
  	case RK3368:
  	case RK3399:
@@ -338,7 +314,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  		pull_type = bank->pull_type[pin_num / 8];
  		ret = -EINVAL;
  		for (i = 0; i < ARRAY_SIZE(rockchip_pull_list[pull_type]);
-@@ -2382,6 +2601,14 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
+@@ -2384,6 +2577,14 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
  				break;
  			}
  		}
@@ -353,7 +329,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  
  		if (ret < 0) {
  			dev_err(info->dev, "unsupported pull setting %d\n",
-@@ -2426,6 +2653,35 @@ static int rk3328_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
+@@ -2428,6 +2629,35 @@ static int rk3328_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
  	return 0;
  }
  
@@ -389,7 +365,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  static int rockchip_get_schmitt(struct rockchip_pin_bank *bank, int pin_num)
  {
  	struct rockchip_pinctrl *info = bank->drvdata;
-@@ -2444,6 +2700,13 @@ static int rockchip_get_schmitt(struct rockchip_pin_bank *bank, int pin_num)
+@@ -2446,6 +2676,13 @@ static int rockchip_get_schmitt(struct rockchip_pin_bank *bank, int pin_num)
  		return ret;
  
  	data >>= bit;
@@ -403,7 +379,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  	return data & 0x1;
  }
  
-@@ -2465,8 +2728,17 @@ static int rockchip_set_schmitt(struct rockchip_pin_bank *bank,
+@@ -2467,8 +2704,17 @@ static int rockchip_set_schmitt(struct rockchip_pin_bank *bank,
  		return ret;
  
  	/* enable the write to the equivalent lower bits */
@@ -423,7 +399,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  
  	return regmap_update_bits(regmap, reg, rmask, data);
  }
-@@ -2640,6 +2912,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
+@@ -2642,6 +2888,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
  	case RK3308:
  	case RK3368:
  	case RK3399:
@@ -431,7 +407,7 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
  		return (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT);
  	}
  
-@@ -4210,6 +4483,46 @@ static struct rockchip_pin_ctrl rk3399_pin_ctrl = {
+@@ -4216,6 +4463,45 @@ static struct rockchip_pin_ctrl rk3399_pin_ctrl = {
  		.drv_calc_reg		= rk3399_calc_drv_reg_and_bit,
  };
  
@@ -471,14 +447,13 @@ index aa1a1c850d05..99e1ec7fd7b4 100644
 +	.niomux_routes		= ARRAY_SIZE(rk3568_mux_route_data),
 +	.pull_calc_reg		= rk3568_calc_pull_reg_and_bit,
 +	.drv_calc_reg		= rk3568_calc_drv_reg_and_bit,
-+	.slew_rate_calc_reg	= rk3568_calc_slew_rate_reg_and_bit,
 +	.schmitt_calc_reg	= rk3568_calc_schmitt_reg_and_bit,
 +};
 +
  static const struct of_device_id rockchip_pinctrl_dt_match[] = {
  	{ .compatible = "rockchip,px30-pinctrl",
  		.data = &px30_pin_ctrl },
-@@ -4239,6 +4552,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+@@ -4245,6 +4531,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
  		.data = &rk3368_pin_ctrl },
  	{ .compatible = "rockchip,rk3399-pinctrl",
  		.data = &rk3399_pin_ctrl },
