@@ -2,165 +2,227 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1690341331
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 03:47:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BFBC341555
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 07:21:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233354AbhCSCrM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Mar 2021 22:47:12 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55074 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229736AbhCSCqk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 18 Mar 2021 22:46:40 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 65D59202418;
-        Fri, 19 Mar 2021 03:46:39 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3CD5C20241E;
-        Fri, 19 Mar 2021 03:46:35 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B0F524029B;
-        Fri, 19 Mar 2021 03:46:29 +0100 (CET)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v2] gpio: mpc8xxx: Add ACPI support
-Date:   Fri, 19 Mar 2021 10:53:32 +0800
-Message-Id: <20210319025332.36659-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S233994AbhCSGVF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Mar 2021 02:21:05 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:56531 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232992AbhCSGUj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 19 Mar 2021 02:20:39 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 9C2E3580A7A;
+        Fri, 19 Mar 2021 02:20:38 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 19 Mar 2021 02:20:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=DQ0e988igZ7sIe0ymg68c1lDju
+        Q6xtIxXzAGPLSh1nI=; b=iUz/zNDta8Y4JVXEyCbmxRcBFb5BonujfrZcF74o1l
+        Lq9sUqDmc7QhyS25xjwdSc17BL7nsG8FJ4BqoJw+cVF9k/Bs6A4Y2pSY+mpRdzd8
+        uDzMOQCJgIixT0HWC947AfbzNVGU9TXK1fJoIHykU9K/neeKvT2/V55RjotrPW3f
+        0bdAYas6+ipiflJbLSUZmDhU3tm4wBe22TJKRzLjUIfgoEqNIX6SMmA+bw6KHLWQ
+        ViwTslmqAoZFFa54qdeXE6XEVlD6bGKBhFv2lAr8lGBUkUU09vn0CQ8xApEzHE8K
+        xImiHcEUDKCI5mJDACqyPD5b7ZnF5SV9V8CCgXxdloww==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DQ0e988igZ7sIe0ym
+        g68c1lDjuQ6xtIxXzAGPLSh1nI=; b=p9WxThGyse3NLP1n85Tefdn9wRP9DroOd
+        Wt4kI5kWTS9qWGNJ6qXYJiCqAu1jViYKt6ai6060xTok9QaR6A2uG41/j3n6XWei
+        KwmirTXI9Fs8k2iLrMqeORuUb/qm9poyfrkF2CJgatKUpHa2lVCaguTZCQQnaB5J
+        dlg+6OAztW+KgVz0QhCOjn7XkihFW7ZTO38WqYp80YrpKWcyWbyinNAMZ6zcY27y
+        GjqYzHpI7jZ9UYJx1sdBtBpfnXt9NMjm26cJWiT3CwhOALYTwSd70Ai3L8tyrIfg
+        XLDPhVc00BNGyJsWvdwZf84J43/u+LFALGXA/tJ4HUXpHq1Vl4zkg==
+X-ME-Sender: <xms:tEJUYKrEAw83XIPwBr00WxFhp2WZ5d-BLl6z3o_LC1ngenwJsl8i9w>
+    <xme:tEJUYIqU-cfA8GFwKefHDBOiqY2fT6E3oc5TJ-SFBUh1js33ec0n1ZYnPXJTrLztR
+    ZYMn5DRwXIFH6DPDg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrudefjedgleegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuggftrfgrthhtvghrnhepieelfedtfeetveffgeetteetveeitefhke
+    etvdefteevledvheekveeihfekffefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdp
+    ihhnthgvlhdrtghomhdpghhithhhuhgsrdgtohhmpdgumhhtfhdrohhrghenucfkphepud
+    dukedrvddutddrudekuddrheehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:tEJUYPOSUPMwivbIyWS38m-BJhaItSyeFld-Wx5cogxEeh1WiUkorA>
+    <xmx:tEJUYJ5PPHRMmBGYzM-2rEZsrOVsOtPxT2ZI7YgQu6OQT5WkuFXiTQ>
+    <xmx:tEJUYJ6eIVNBF6GlxfKCVkaUi-NiLfOELpLPCIJJw01JAijIfOQfdg>
+    <xmx:tkJUYNr0HfU6wBe_dLUJAnGFkWxAV5APce1QEPqn88fUpE8Wv0FuNw>
+Received: from localhost.localdomain (ppp118-210-181-55.adl-adc-lon-bras34.tpg.internode.on.net [118.210.181.55])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3FD8C1080057;
+        Fri, 19 Mar 2021 02:20:31 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     openipmi-developer@lists.sourceforge.net, openbmc@lists.ozlabs.org,
+        minyard@acm.org
+Cc:     joel@jms.id.au, ryan_chen@aspeedtech.com,
+        devicetree@vger.kernel.org, tmaimon77@gmail.com,
+        linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        avifishman70@gmail.com, venture@google.com,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        tali.perry1@gmail.com, robh+dt@kernel.org, lee.jones@linaro.org,
+        chiawei_wang@aspeedtech.com, linux-arm-kernel@lists.infradead.org,
+        benjaminfair@google.com
+Subject: [PATCH v2 00/21] ipmi: Allow raw access to KCS devices
+Date:   Fri, 19 Mar 2021 16:49:30 +1030
+Message-Id: <20210319061952.145040-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Current implementation only supports DT, now add ACPI support.
+Hello,
 
-Note that compared to device of 'fsl,qoriq-gpio', LS1028A and
-LS1088A's GPIO have no extra programming, so simplify related checking.
+This series is a bit of a mix of things, but its primary purpose is to
+expose BMC KCS IPMI devices to userspace in a way that enables userspace
+to talk to host firmware using protocols that are not IPMI.
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
-Change in v2:
- - Initialize devtype with NULL to fix compile warning.
- - Replace of_device_get_match_data() and acpi_match_device with device_get_match_data().
- - Replace acpi_match_device() with simpler checking logic per Andy's suggestion.
+v1 can be found here:
 
- drivers/gpio/gpio-mpc8xxx.c | 34 +++++++++++++++++++++++-----------
- 1 file changed, 23 insertions(+), 11 deletions(-)
+https://lore.kernel.org/openbmc/20210219142523.3464540-1-andrew@aj.id.au/
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 6dfca83bcd90..646225fa3e73 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -9,6 +9,7 @@
-  * kind, whether express or implied.
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/spinlock.h>
-@@ -292,8 +293,6 @@ static const struct of_device_id mpc8xxx_gpio_ids[] = {
- 	{ .compatible = "fsl,mpc5121-gpio", .data = &mpc512x_gpio_devtype, },
- 	{ .compatible = "fsl,mpc5125-gpio", .data = &mpc5125_gpio_devtype, },
- 	{ .compatible = "fsl,pq3-gpio",     },
--	{ .compatible = "fsl,ls1028a-gpio", },
--	{ .compatible = "fsl,ls1088a-gpio", },
- 	{ .compatible = "fsl,qoriq-gpio",   },
- 	{}
- };
-@@ -303,8 +302,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mpc8xxx_gpio_chip *mpc8xxx_gc;
- 	struct gpio_chip	*gc;
--	const struct mpc8xxx_gpio_devtype *devtype =
--		of_device_get_match_data(&pdev->dev);
-+	const struct mpc8xxx_gpio_devtype *devtype = NULL;
-+	struct fwnode_handle *fwnode;
- 	int ret;
- 
- 	mpc8xxx_gc = devm_kzalloc(&pdev->dev, sizeof(*mpc8xxx_gc), GFP_KERNEL);
-@@ -315,14 +314,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	raw_spin_lock_init(&mpc8xxx_gc->lock);
- 
--	mpc8xxx_gc->regs = of_iomap(np, 0);
-+	mpc8xxx_gc->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (!mpc8xxx_gc->regs)
- 		return -ENOMEM;
- 
- 	gc = &mpc8xxx_gc->gc;
- 	gc->parent = &pdev->dev;
- 
--	if (of_property_read_bool(np, "little-endian")) {
-+	if (device_property_read_bool(&pdev->dev, "little-endian")) {
- 		ret = bgpio_init(gc, &pdev->dev, 4,
- 				 mpc8xxx_gc->regs + GPIO_DAT,
- 				 NULL, NULL,
-@@ -345,6 +344,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	mpc8xxx_gc->direction_output = gc->direction_output;
- 
-+	devtype = device_get_match_data(&pdev->dev);
- 	if (!devtype)
- 		devtype = &mpc8xxx_gpio_devtype_default;
- 
-@@ -369,9 +369,9 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	 * associated input enable must be set (GPIOxGPIE[IEn]=1) to propagate
- 	 * the port value to the GPIO Data Register.
- 	 */
-+	fwnode = dev_fwnode(&pdev->dev);
- 	if (of_device_is_compatible(np, "fsl,qoriq-gpio") ||
--	    of_device_is_compatible(np, "fsl,ls1028a-gpio") ||
--	    of_device_is_compatible(np, "fsl,ls1088a-gpio"))
-+	    !(IS_ERR_OR_NULL(fwnode) || is_of_node(fwnode)))
- 		gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
-@@ -381,12 +381,15 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	mpc8xxx_gc->irqn = irq_of_parse_and_map(np, 0);
-+	mpc8xxx_gc->irqn = platform_get_irq(pdev, 0);
- 	if (!mpc8xxx_gc->irqn)
- 		return 0;
- 
--	mpc8xxx_gc->irq = irq_domain_add_linear(np, MPC8XXX_GPIO_PINS,
--					&mpc8xxx_gpio_irq_ops, mpc8xxx_gc);
-+	mpc8xxx_gc->irq = irq_domain_create_linear(fwnode,
-+						   MPC8XXX_GPIO_PINS,
-+						   &mpc8xxx_gpio_irq_ops,
-+						   mpc8xxx_gc);
-+
- 	if (!mpc8xxx_gc->irq)
- 		return 0;
- 
-@@ -425,12 +428,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id gpio_acpi_ids[] = {
-+	{"NXP0031",},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, gpio_acpi_ids);
-+#endif
-+
- static struct platform_driver mpc8xxx_plat_driver = {
- 	.probe		= mpc8xxx_probe,
- 	.remove		= mpc8xxx_remove,
- 	.driver		= {
- 		.name = "gpio-mpc8xxx",
- 		.of_match_table	= mpc8xxx_gpio_ids,
-+		.acpi_match_table = ACPI_PTR(gpio_acpi_ids),
- 	},
- };
- 
+Changes in v2 include:
+
+* A rebase onto v5.12-rc2
+* Incorporation of off-list feedback on SerIRQ configuration from
+  Chiawei
+* Further validation on hardware for ASPEED KCS devices 2, 3 and 4
+* Lifting the existing single-open constraint of the IPMI chardev
+* Fixes addressing Rob's feedback on the conversion of the ASPEED KCS
+  binding to dt-schema
+* Fixes addressing Rob's feedback on the new aspeed,lpc-interrupts
+  property definition for the ASPEED KCS binding
+
+A new chardev device is added whose implementation exposes the Input
+Data Register (IDR), Output Data Register (ODR) and Status Register
+(STR) via read() and write(), and implements poll() for event
+monitoring.
+
+The existing /dev/ipmi-kcs* chardev interface exposes the KCS devices in
+a way which encoded the IPMI protocol in its behaviour. However, as
+LPC[0] KCS devices give us bi-directional interrupts between the host
+and a BMC with both a data and status byte, they are useful for purposes
+beyond IPMI.
+
+As a concrete example, libmctp[1] implements a vendor-defined MCTP[2]
+binding using a combination of LPC Firmware cycles for bulk data
+transfer and a KCS device via LPC IO cycles for out-of-band protocol
+control messages[3]. This gives a throughput improvement over the
+standard KCS binding[4] while continuing to exploit the ease of setup of
+the LPC bus for early boot firmware on the host processor.
+
+The series takes a bit of a winding path to achieve its aim:
+
+1. It begins with patches 1-5 put together by Chia-Wei, which I've
+rebased on v5.12-rc2. These fix the ASPEED LPC bindings and other
+non-KCS LPC-related ASPEED device drivers in a way that enables the
+SerIRQ patches at the end of the series. With Joel's review I'm hoping
+these 5 can go through the aspeed tree, and that the rest can go through
+the IPMI tree.
+
+2. Next, patches 6-13 fairly heavily refactor the KCS support in the
+IPMI part of the tree, re-architecting things such that it's possible to
+support multiple chardev implementations sitting on top of the ASPEED
+and Nuvoton device drivers. However, the KCS code didn't really have
+great separation of concerns as it stood, so even if we disregard the
+multiple-chardev support I think the cleanups are worthwhile.
+
+3. Patch 14 adds some interrupt management capabilities to the KCS
+device drivers in preparation for patch 16, which introduces the new
+"raw" KCS device interface. I'm not stoked about the device name/path,
+so if people are looking to bikeshed something then feel free to lay
+into that.
+
+4. The remaining patches switch the ASPEED KCS devicetree binding to
+dt-schema, add a new interrupt property to describe the SerIRQ behaviour
+of the device and finally clean up Serial IRQ support in the ASPEED KCS
+driver.
+
+Rob: The dt-binding patches still come before the relevant driver
+changes, I tried to keep the two close together in the series, hence the
+bindings changes not being patches 1 and 2.
+
+I've exercised the series under qemu with the rainier-bmc machine plus
+additional patches for KCS support[5]. I've also substituted this series in
+place of a hacky out-of-tree driver that we've been using for the
+libmctp stack and successfully booted the host processor under our
+internal full-platform simulation tools for a Rainier system.
+
+Note that this work touches the Nuvoton driver as well as ASPEED's, but
+I don't have the capability to test those changes or the IPMI chardev
+path. Tested-by tags would be much appreciated if you can exercise one
+or both.
+
+Please review!
+
+Andrew
+
+[0] https://www.intel.com/content/dam/www/program/design/us/en/documents/low-pin-count-interface-specification.pdf
+[1] https://github.com/openbmc/libmctp/
+[2] https://www.dmtf.org/sites/default/files/standards/documents/DSP0236_1.3.1.pdf
+[3] https://github.com/openbmc/libmctp/blob/master/docs/bindings/vendor-astlpc.md
+[4] https://www.dmtf.org/sites/default/files/standards/documents/DSP0254_1.0.0.pdf
+[5] https://lore.kernel.org/qemu-devel/20210309131641.2709380-1-clg@kaod.org/
+
+Andrew Jeffery (16):
+  ipmi: kcs_bmc_aspeed: Use of match data to extract KCS properties
+  ipmi: kcs_bmc: Make status update atomic
+  ipmi: kcs_bmc: Rename {read,write}_{status,data}() functions
+  ipmi: kcs_bmc: Split out kcs_bmc_cdev_ipmi
+  ipmi: kcs_bmc: Turn the driver data-structures inside-out
+  ipmi: kcs_bmc: Split headers into device and client
+  ipmi: kcs_bmc: Strip private client data from struct kcs_bmc
+  ipmi: kcs_bmc: Decouple the IPMI chardev from the core
+  ipmi: kcs_bmc: Allow clients to control KCS IRQ state
+  ipmi: kcs_bmc: Don't enforce single-open policy in the kernel
+  ipmi: kcs_bmc: Add a "raw" character device interface
+  dt-bindings: ipmi: Convert ASPEED KCS binding to schema
+  dt-bindings: ipmi: Add optional SerIRQ property to ASPEED KCS devices
+  ipmi: kcs_bmc_aspeed: Implement KCS SerIRQ configuration
+  ipmi: kcs_bmc_aspeed: Fix IBFIE typo from datasheet
+  ipmi: kcs_bmc_aspeed: Optionally apply status address
+
+Chia-Wei, Wang (5):
+  dt-bindings: aspeed-lpc: Remove LPC partitioning
+  ARM: dts: Remove LPC BMC and Host partitions
+  ipmi: kcs: aspeed: Adapt to new LPC DTS layout
+  pinctrl: aspeed-g5: Adapt to new LPC device tree layout
+  soc: aspeed: Adapt to new LPC device tree layout
+
+ Documentation/ABI/testing/dev-raw-kcs         |  25 +
+ .../bindings/ipmi/aspeed,ast2400-kcs-bmc.yaml | 106 +++
+ .../bindings/ipmi/aspeed-kcs-bmc.txt          |  33 -
+ .../devicetree/bindings/mfd/aspeed-lpc.txt    | 100 +--
+ arch/arm/boot/dts/aspeed-g4.dtsi              |  70 +-
+ arch/arm/boot/dts/aspeed-g5.dtsi              | 121 ++--
+ arch/arm/boot/dts/aspeed-g6.dtsi              | 123 ++--
+ drivers/char/ipmi/Kconfig                     |  30 +
+ drivers/char/ipmi/Makefile                    |   2 +
+ drivers/char/ipmi/kcs_bmc.c                   | 534 ++++----------
+ drivers/char/ipmi/kcs_bmc.h                   |  94 +--
+ drivers/char/ipmi/kcs_bmc_aspeed.c            | 663 +++++++++++++-----
+ drivers/char/ipmi/kcs_bmc_cdev_ipmi.c         | 570 +++++++++++++++
+ drivers/char/ipmi/kcs_bmc_cdev_raw.c          | 443 ++++++++++++
+ drivers/char/ipmi/kcs_bmc_client.h            |  47 ++
+ drivers/char/ipmi/kcs_bmc_device.h            |  20 +
+ drivers/char/ipmi/kcs_bmc_npcm7xx.c           |  97 ++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c    |  17 +-
+ drivers/soc/aspeed/aspeed-lpc-ctrl.c          |  20 +-
+ drivers/soc/aspeed/aspeed-lpc-snoop.c         |  23 +-
+ 20 files changed, 2132 insertions(+), 1006 deletions(-)
+ create mode 100644 Documentation/ABI/testing/dev-raw-kcs
+ create mode 100644 Documentation/devicetree/bindings/ipmi/aspeed,ast2400-kcs-bmc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt
+ create mode 100644 drivers/char/ipmi/kcs_bmc_cdev_ipmi.c
+ create mode 100644 drivers/char/ipmi/kcs_bmc_cdev_raw.c
+ create mode 100644 drivers/char/ipmi/kcs_bmc_client.h
+ create mode 100644 drivers/char/ipmi/kcs_bmc_device.h
+
 -- 
-2.25.1
+2.27.0
 
