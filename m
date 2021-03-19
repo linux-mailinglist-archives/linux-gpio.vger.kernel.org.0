@@ -2,217 +2,493 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6BEA3416EE
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 08:57:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40AEF341729
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Mar 2021 09:13:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234181AbhCSH4v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Mar 2021 03:56:51 -0400
-Received: from mail-eopbgr80052.outbound.protection.outlook.com ([40.107.8.52]:8101
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234219AbhCSH4h (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 19 Mar 2021 03:56:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WWiktmY6u/V2H24stgQ1X0BmdDQ56hsvCQmKnRvRymj2X5y+2UJf04kudFCHdu28vgyr52nduQo2TBBB/L/c9dK0LhxVs02YJXuhYAZLwl4KyjXFFmSaDEaA98yusIFadJOQp9N9iEYouhZ66LkX8VmTn8KsGJ5r4eUIt+cn3SaM+7d5/ZvRgVcnDcAHSll6+jZErim2sii6xDyZwugrdIil07uKiGL3eWvuZKmAVD1Yu6DkLmic57jgqLGmZhv8yBN3rDD5KarUlRgz+kBBsNjUgdYDb0eWjUyE2qQA0Ac6nz3zurUKNBw5onNcuRxZWzv5x28Yy/73kVMoqBxnJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h1ztl8+QHxCyTUNCquVG36qmshdN3HiSHSu71q4UDbg=;
- b=Upi4s0sJ23gYEPvFXrOOos3jMinE2UCq8LdHxVy+myTE0fGCoykPJFCHvV36E+pas4KsZG913L7rgyscBmeX4eWNDviHlygk+7orA6X3DQXQLmCinIGjm1QjX0yBl9KLnAg92M83+62KKExgx1NjGfvAbtWrSnsV86INE+C9bNzE8MMMlKUEUYTvvzHxawa+T57T6S+B36udFXWQreLk29GYUiwRchUq4nVh2/aZFcYiQRhzqospvzIsmUT9a+ctZirBaSwx6WgHdAaCaz/miNomhK019VdzWyyIASSf+FSku6LSNB9Jy7wK/+u5yrhLFeXOWUF9Oi7CET9tRR9Mkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h1ztl8+QHxCyTUNCquVG36qmshdN3HiSHSu71q4UDbg=;
- b=kA4ewxzaam11CBQbDKFIA8kqXnlsy+UP9Ilsr72hPxCmchR8uU52mGA3NOeWMmhz5YRNfncHB0XExWbw62lvPUMQohDx17nIzdsyIuJWFlZxmenSJa3wv5MfCXfF04MtN8say21HuBNv3pzxnrOib6YETYJxtePn7fdtVG7KEWY=
-Received: from AM6PR04MB5413.eurprd04.prod.outlook.com (2603:10a6:20b:96::28)
- by AM6PR04MB6293.eurprd04.prod.outlook.com (2603:10a6:20b:71::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Fri, 19 Mar
- 2021 07:56:35 +0000
-Received: from AM6PR04MB5413.eurprd04.prod.outlook.com
- ([fe80::b4f2:d00e:93a1:8685]) by AM6PR04MB5413.eurprd04.prod.outlook.com
- ([fe80::b4f2:d00e:93a1:8685%3]) with mapi id 15.20.3955.018; Fri, 19 Mar 2021
- 07:56:35 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Michael Walle <michael@walle.cc>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] gpio: mpc8xxx: Add ACPI support
-Thread-Topic: [PATCH v2] gpio: mpc8xxx: Add ACPI support
-Thread-Index: AQHXHGoX3ImMIOC4Y0GVVlL7LtAO2qqK8IyAgAAAknA=
-Date:   Fri, 19 Mar 2021 07:56:35 +0000
-Message-ID: <AM6PR04MB54136819BA7C627BCB569C8DF1689@AM6PR04MB5413.eurprd04.prod.outlook.com>
-References: <20210319025332.36659-1-ran.wang_1@nxp.com>
- <ab9cca747b83ab1083b86d3aef9156ef@walle.cc>
-In-Reply-To: <ab9cca747b83ab1083b86d3aef9156ef@walle.cc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: walle.cc; dkim=none (message not signed)
- header.d=none;walle.cc; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 62de8cc8-9a30-48a5-6bae-08d8eaac84bd
-x-ms-traffictypediagnostic: AM6PR04MB6293:
-x-microsoft-antispam-prvs: <AM6PR04MB6293DF3A757009043DBB4F30F1689@AM6PR04MB6293.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CL91oCjnH+fN52tNo8mjjToZ+nwWdbUmSW3cMnN8DlnuCiLm2Z1RLQEGk7lxOiPeAzkFahCVWdzMixkz+vMWAlIExfAF8rdtASoCuMPhcqeFPB6DeBQfuzp5bajUH67GqBfion5/F4mUN+arFUuhprLLVsL9UCSX39wH1wUm4+dr+2dM4ruO30oO8qhYodssj/EHzc43XgMu+PsSKrtno/Pzr+e2WidwIdTs3jbcqqMOAKquglEs1v7Tq3vDmexoQoXz02ZfUcX3lOil+6vynP6+PMRyXnQ8u+2jUEA98cwPr/TlZXcCB4TgSn7J7ZCIye9MZ4HLGC+FsDs/0BpOa7Mfdl4DHXPCdiHiekN3yNkDQWDdXo7YX25Tr9ujlxMHNBYAe+W3Pk/f8y5HjhwSM3L19sw+mJtzAmBvLWJhvsHoZJUmEjElz0HVsbC4lvUjIXAAvKUD3ItkJApQYXfBWsvX6zyid6kjJNe9YfMjHpcNvKkybo/3Zbyt3yBlZuVVf4ovhAON6iqTp9Qly/QJaJ5/4Hl6vV51xfFAiwySddlHQNgd6XZCF4xbWbA1Nd8vcyA1HLbUueN4+AccRIEfUXIsbMOJ4kjPwFpO4q5uE+KfpnwjcqZyghOP9R37g2EKU9E4FUOmGeimMl253W3nIVNV/amyoHTfrQAj7d6kU0gf3zcHqByETe1/bUFC/zwL
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5413.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(4326008)(478600001)(9686003)(83380400001)(33656002)(5660300002)(54906003)(8936002)(7696005)(6506007)(71200400001)(2906002)(38100700001)(55016002)(6916009)(26005)(186003)(66476007)(64756008)(52536014)(86362001)(66946007)(76116006)(66556008)(66446008)(8676002)(53546011)(316002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?wGeieHf7SBPcr/SqR12kFt4AJzj1SZWB2zDW9AsejEObOLcW14F26oQrZTjL?=
- =?us-ascii?Q?/uiJ/BRnnaJL+hMGNjsrw5+cv2FdOF9BNHLDwRBGvzkRcgk4mMCIrcF8Lj+D?=
- =?us-ascii?Q?8w2Zwejd4WVdsI+DzF4ThrNvY11/6L4yLOd7BqHLNHDQVKopoRTewknBXX7K?=
- =?us-ascii?Q?WTcuiN9qdxlhphSKPd15F7cVnKYQsszDzgG98cR691CSETBMD6RUa9QSWFb3?=
- =?us-ascii?Q?JIAYFPQCYC5l1Eq+DPaU5E43eI0hE8cs42IrEGrGRwDQDJbySSy0tzJ8qUmO?=
- =?us-ascii?Q?J1J5zl5uHB0uZGrNOdt7h+mLGkXsnnLL2WmJ03svZndYC24VF7dK4jUp7tXX?=
- =?us-ascii?Q?GgSF/F/p3GdJjwfvrBuMlJsVxKSvuBAfkKF9eqkhMrYYfSTlAwwCEm+eUMLh?=
- =?us-ascii?Q?pMYSKcB8YM5obEFIByqXPtYm3+gcpnZK/CMHXtP1qeJam/0TnsXj73KW6NkS?=
- =?us-ascii?Q?B0RxuI1C6E8Rq8S0lR65Y9xHI5q5W05D1heSjFAIII8Y3d/90vl9l7LYkUZR?=
- =?us-ascii?Q?BN3CzL4XWuhyg1dBxBdtzsnuv3mb3UZ4BcuBrGaAtnEsSTMUTbZ9iFtBDqir?=
- =?us-ascii?Q?SLMiZhf52Xw02rBELR7viftV2LK7xYGNqKXQ/4SFWdrfFWTIuZLiCzDyXMed?=
- =?us-ascii?Q?do8+bKZH4LSte6eojtByn/oH41l7ojmnx6yNV36adWVAEk+NO8NUcr+8o/t4?=
- =?us-ascii?Q?EqfxQPatoStdW8ORf6O+3ypb/j33rxfytpik9EHLY7zDc0F1AzWzGuZdEcHW?=
- =?us-ascii?Q?+YJuKDX1dEkCEhlIK4DNiKQk6BATzzKzGp8bgSYNprPHorXBpNkrXmBbsotF?=
- =?us-ascii?Q?vaGMWAUJMhmGv4ibkuyIEkEPG80YU1VrnYmQNiPNmc+3FBJIdUJdD8woO3ja?=
- =?us-ascii?Q?Da1i+zfiaKKc61iyr4agsN+E9hVGMpgYE3hJCW2mV1q5SlgGnUBfpB2T0NuA?=
- =?us-ascii?Q?lm/vOuJwzxF28Jb7QNZASo9Wg47tPBCbPMOoDuydLQEyCBmtIXFt/xztFM35?=
- =?us-ascii?Q?DtagvZ5bpET+0cbHknKg/pJ1ubW++2qexOqt7WBmBHq/NFa0UQslMAKxRC+f?=
- =?us-ascii?Q?NzsNR7liTpzGmzN+JhCqMuIFPcYXeegteKdX53CHGKKGF+Kuhq6cnVNR2CwZ?=
- =?us-ascii?Q?SfHmdt7UUz6l/RvK3nISA4wB8+NHyUcyQnBL0PZKXmlhWac8tIbnCrIAVzxU?=
- =?us-ascii?Q?IwlA97txESKstjOyFfC6shMOmZ90p73dXorVg9IXPVqdWmk+XOzCJWfSnmAp?=
- =?us-ascii?Q?C9C9QoLzy61+y9TAfwLOLOAFGKTxmgqJ2xY8mlSBvFnXxnlIpcH9Yh+LsYcD?=
- =?us-ascii?Q?E/rf3rdfH6xCoNoJPLbnH8O7?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S234102AbhCSIM3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Mar 2021 04:12:29 -0400
+Received: from lucky1.263xmail.com ([211.157.147.135]:40838 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234340AbhCSIMI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Mar 2021 04:12:08 -0400
+Received: from localhost (unknown [192.168.167.225])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 1ADB8A880D;
+        Fri, 19 Mar 2021 16:11:46 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P2276T140461391996672S1616141505172675_;
+        Fri, 19 Mar 2021 16:11:46 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <ce73b056d4ecfca26568c009de0d880e>
+X-RL-SENDER: jay.xu@rock-chips.com
+X-SENDER: xjq@rock-chips.com
+X-LOGIN-NAME: jay.xu@rock-chips.com
+X-FST-TO: linus.walleij@linaro.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-System-Flag: 0
+From:   Jianqun Xu <jay.xu@rock-chips.com>
+To:     linus.walleij@linaro.org, heiko@sntech.de, catalin.marinas@arm.com,
+        will@kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH v3] pinctrl: rockchip: add support for rk3568
+Date:   Fri, 19 Mar 2021 16:11:43 +0800
+Message-Id: <20210319081144.368238-1-jay.xu@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210304013342.1106361-1-jay.xu@rock-chips.com>
+References: <20210304013342.1106361-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5413.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62de8cc8-9a30-48a5-6bae-08d8eaac84bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2021 07:56:35.4576
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7DEj3IwTnQk4Q5KdHARfNRg1UpuHfQPfeLhm8thA0dB48A48lfRGaHTcK2bkhT03Tt/kGlB8jZbaHbj8QB4svQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6293
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Michael,
+RK3568 SoCs have 5 gpio controllers, each gpio has 32 pins. GPIO supports
+set iomux, pull, drive strength, schmitt and slew rate.
 
-On Friday, March 19, 2021 3:52 PM, Michael Walle wrote:
->=20
-> Am 2021-03-19 03:53, schrieb Ran Wang:
-> > Current implementation only supports DT, now add ACPI support.
-> >
-> > Note that compared to device of 'fsl,qoriq-gpio', LS1028A and
-> > LS1088A's GPIO have no extra programming, so simplify related checking.
-> >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > ---
-> > Change in v2:
-> >  - Initialize devtype with NULL to fix compile warning.
-> >  - Replace of_device_get_match_data() and acpi_match_device with
-> > device_get_match_data().
-> >  - Replace acpi_match_device() with simpler checking logic per Andy's
-> > suggestion.
-> >
-> >  drivers/gpio/gpio-mpc8xxx.c | 34 +++++++++++++++++++++++-----------
-> >  1 file changed, 23 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> > index 6dfca83bcd90..646225fa3e73 100644
-> > --- a/drivers/gpio/gpio-mpc8xxx.c
-> > +++ b/drivers/gpio/gpio-mpc8xxx.c
-> > @@ -9,6 +9,7 @@
-> >   * kind, whether express or implied.
-> >   */
-> >
-> > +#include <linux/acpi.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/init.h>
-> >  #include <linux/spinlock.h>
-> > @@ -292,8 +293,6 @@ static const struct of_device_id
-> > mpc8xxx_gpio_ids[] =3D {
-> >  	{ .compatible =3D "fsl,mpc5121-gpio", .data =3D &mpc512x_gpio_devtype=
-, },
-> >  	{ .compatible =3D "fsl,mpc5125-gpio", .data =3D &mpc5125_gpio_devtype=
-, },
-> >  	{ .compatible =3D "fsl,pq3-gpio",     },
-> > -	{ .compatible =3D "fsl,ls1028a-gpio", },
-> > -	{ .compatible =3D "fsl,ls1088a-gpio", },
-> >  	{ .compatible =3D "fsl,qoriq-gpio",   },
-> >  	{}
-> >  };
-> > @@ -303,8 +302,8 @@ static int mpc8xxx_probe(struct platform_device
-> > *pdev)
-> >  	struct device_node *np =3D pdev->dev.of_node;
-> >  	struct mpc8xxx_gpio_chip *mpc8xxx_gc;
-> >  	struct gpio_chip	*gc;
-> > -	const struct mpc8xxx_gpio_devtype *devtype =3D
-> > -		of_device_get_match_data(&pdev->dev);
-> > +	const struct mpc8xxx_gpio_devtype *devtype =3D NULL;
-> > +	struct fwnode_handle *fwnode;
-> >  	int ret;
-> >
-> >  	mpc8xxx_gc =3D devm_kzalloc(&pdev->dev, sizeof(*mpc8xxx_gc),
-> > GFP_KERNEL); @@ -315,14 +314,14 @@ static int mpc8xxx_probe(struct
-> > platform_device
-> > *pdev)
-> >
-> >  	raw_spin_lock_init(&mpc8xxx_gc->lock);
-> >
-> > -	mpc8xxx_gc->regs =3D of_iomap(np, 0);
-> > +	mpc8xxx_gc->regs =3D devm_platform_ioremap_resource(pdev, 0);
-> >  	if (!mpc8xxx_gc->regs)
-> >  		return -ENOMEM;
-> >
-> >  	gc =3D &mpc8xxx_gc->gc;
-> >  	gc->parent =3D &pdev->dev;
-> >
-> > -	if (of_property_read_bool(np, "little-endian")) {
-> > +	if (device_property_read_bool(&pdev->dev, "little-endian")) {
-> >  		ret =3D bgpio_init(gc, &pdev->dev, 4,
-> >  				 mpc8xxx_gc->regs + GPIO_DAT,
-> >  				 NULL, NULL,
-> > @@ -345,6 +344,7 @@ static int mpc8xxx_probe(struct platform_device
-> > *pdev)
-> >
-> >  	mpc8xxx_gc->direction_output =3D gc->direction_output;
-> >
-> > +	devtype =3D device_get_match_data(&pdev->dev);
-> >  	if (!devtype)
-> >  		devtype =3D &mpc8xxx_gpio_devtype_default;
-> >
-> > @@ -369,9 +369,9 @@ static int mpc8xxx_probe(struct platform_device
-> > *pdev)
-> >  	 * associated input enable must be set (GPIOxGPIE[IEn]=3D1) to
-> > propagate
-> >  	 * the port value to the GPIO Data Register.
-> >  	 */
-> > +	fwnode =3D dev_fwnode(&pdev->dev);
-> >  	if (of_device_is_compatible(np, "fsl,qoriq-gpio") ||
-> > -	    of_device_is_compatible(np, "fsl,ls1028a-gpio") ||
-> > -	    of_device_is_compatible(np, "fsl,ls1088a-gpio"))
->=20
-> Again, please keep this. The DT bindings don't mention "fsl,qoriq-gpio"
-> is required. Alternatively, change the binding (ideally convert it to
-> YAML) and get an ack by Rob.
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+---
+changes since v2:
+- fix mux route grf base for gpio bank 0
+changes since v1:
+  suggested by Heiko, thank for heiko
+- modify _GENMASK to WRITE_MASK_VAL, and add comment for the define
+- modify MR_GRF to RK_MUXROUTE_GRF, also for MR_SAME and MR_PMU
+- add comment for pull setting for GPIO0_D0-D6
 
-OK, I will keep this in next version
+ drivers/pinctrl/pinctrl-rockchip.c | 319 ++++++++++++++++++++++++++++-
+ 1 file changed, 317 insertions(+), 2 deletions(-)
 
-Regards,
-Ran
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index aa1a1c850d05..99e1ec7fd7b4 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -61,8 +61,17 @@ enum rockchip_pinctrl_type {
+ 	RK3308,
+ 	RK3368,
+ 	RK3399,
++	RK3568,
+ };
+ 
++
++/**
++ * Generate a bitmask for setting a value (v) with a write mask bit in hiword
++ * register 31:16 area.
++ */
++#define WRITE_MASK_VAL(h, l, v) \
++	(GENMASK(((h) + 16), ((l) + 16)) | (((v) << (l)) & GENMASK((h), (l))))
++
+ /*
+  * Encode variants of iomux registers into a type variable
+  */
+@@ -290,6 +299,25 @@ struct rockchip_pin_bank {
+ 		.pull_type[3] = pull3,					\
+ 	}
+ 
++#define PIN_BANK_MUX_ROUTE_FLAGS(ID, PIN, FUNC, REG, VAL, FLAG)		\
++	{								\
++		.bank_num	= ID,					\
++		.pin		= PIN,					\
++		.func		= FUNC,					\
++		.route_offset	= REG,					\
++		.route_val	= VAL,					\
++		.route_type	= FLAG,					\
++	}
++
++#define RK_MUXROUTE_SAME(ID, PIN, FUNC, REG, VAL)	\
++	PIN_BANK_MUX_ROUTE_FLAGS(ID, PIN, FUNC, REG, VAL, ROCKCHIP_ROUTE_SAME)
++
++#define RK_MUXROUTE_GRF(ID, PIN, FUNC, REG, VAL)	\
++	PIN_BANK_MUX_ROUTE_FLAGS(ID, PIN, FUNC, REG, VAL, ROCKCHIP_ROUTE_GRF)
++
++#define RK_MUXROUTE_PMU(ID, PIN, FUNC, REG, VAL)	\
++	PIN_BANK_MUX_ROUTE_FLAGS(ID, PIN, FUNC, REG, VAL, ROCKCHIP_ROUTE_PMU)
++
+ /**
+  * struct rockchip_mux_recalced_data: represent a pin iomux data.
+  * @num: bank number.
+@@ -1394,6 +1422,102 @@ static struct rockchip_mux_route_data rk3399_mux_route_data[] = {
+ 	},
+ };
+ 
++static struct rockchip_mux_route_data rk3568_mux_route_data[] = {
++	RK_MUXROUTE_PMU(0, RK_PB7, 1, 0x0110, WRITE_MASK_VAL(1, 0, 0)), /* PWM0 IO mux M0 */
++	RK_MUXROUTE_PMU(0, RK_PC7, 2, 0x0110, WRITE_MASK_VAL(1, 0, 1)), /* PWM0 IO mux M1 */
++	RK_MUXROUTE_PMU(0, RK_PC0, 1, 0x0110, WRITE_MASK_VAL(3, 2, 0)), /* PWM1 IO mux M0 */
++	RK_MUXROUTE_PMU(0, RK_PB5, 4, 0x0110, WRITE_MASK_VAL(3, 2, 1)), /* PWM1 IO mux M1 */
++	RK_MUXROUTE_PMU(0, RK_PC1, 1, 0x0110, WRITE_MASK_VAL(5, 4, 0)), /* PWM2 IO mux M0 */
++	RK_MUXROUTE_PMU(0, RK_PB6, 4, 0x0110, WRITE_MASK_VAL(5, 4, 1)), /* PWM2 IO mux M1 */
++	RK_MUXROUTE_PMU(0, RK_PB3, 2, 0x0300, WRITE_MASK_VAL(0, 0, 0)), /* CAN0 IO mux M0 */
++	RK_MUXROUTE_GRF(2, RK_PA1, 4, 0x0300, WRITE_MASK_VAL(0, 0, 1)), /* CAN0 IO mux M1 */
++	RK_MUXROUTE_GRF(1, RK_PA1, 3, 0x0300, WRITE_MASK_VAL(2, 2, 0)), /* CAN1 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PC3, 3, 0x0300, WRITE_MASK_VAL(2, 2, 1)), /* CAN1 IO mux M1 */
++	RK_MUXROUTE_GRF(4, RK_PB5, 3, 0x0300, WRITE_MASK_VAL(4, 4, 0)), /* CAN2 IO mux M0 */
++	RK_MUXROUTE_GRF(2, RK_PB2, 4, 0x0300, WRITE_MASK_VAL(4, 4, 1)), /* CAN2 IO mux M1 */
++	RK_MUXROUTE_GRF(4, RK_PC4, 1, 0x0300, WRITE_MASK_VAL(6, 6, 0)), /* HPDIN IO mux M0 */
++	RK_MUXROUTE_PMU(0, RK_PC2, 2, 0x0300, WRITE_MASK_VAL(6, 6, 1)), /* HPDIN IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PB1, 3, 0x0300, WRITE_MASK_VAL(8, 8, 0)), /* GMAC1 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PA7, 3, 0x0300, WRITE_MASK_VAL(8, 8, 1)), /* GMAC1 IO mux M1 */
++	RK_MUXROUTE_GRF(4, RK_PD1, 1, 0x0300, WRITE_MASK_VAL(10, 10, 0)), /* HDMITX IO mux M0 */
++	RK_MUXROUTE_PMU(0, RK_PC7, 1, 0x0300, WRITE_MASK_VAL(10, 10, 1)), /* HDMITX IO mux M1 */
++	RK_MUXROUTE_PMU(0, RK_PB6, 1, 0x0300, WRITE_MASK_VAL(14, 14, 0)), /* I2C2 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PB4, 1, 0x0300, WRITE_MASK_VAL(14, 14, 1)), /* I2C2 IO mux M1 */
++	RK_MUXROUTE_GRF(1, RK_PA0, 1, 0x0304, WRITE_MASK_VAL(0, 0, 0)), /* I2C3 IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PB6, 4, 0x0304, WRITE_MASK_VAL(0, 0, 1)), /* I2C3 IO mux M1 */
++	RK_MUXROUTE_GRF(4, RK_PB2, 1, 0x0304, WRITE_MASK_VAL(2, 2, 0)), /* I2C4 IO mux M0 */
++	RK_MUXROUTE_GRF(2, RK_PB1, 2, 0x0304, WRITE_MASK_VAL(2, 2, 1)), /* I2C4 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PB4, 4, 0x0304, WRITE_MASK_VAL(4, 4, 0)), /* I2C5 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PD0, 2, 0x0304, WRITE_MASK_VAL(4, 4, 1)), /* I2C5 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PB1, 5, 0x0304, WRITE_MASK_VAL(14, 14, 0)), /* PWM8 IO mux M0 */
++	RK_MUXROUTE_GRF(1, RK_PD5, 4, 0x0304, WRITE_MASK_VAL(14, 14, 1)), /* PWM8 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PB2, 5, 0x0308, WRITE_MASK_VAL(0, 0, 0)), /* PWM9 IO mux M0 */
++	RK_MUXROUTE_GRF(1, RK_PD6, 4, 0x0308, WRITE_MASK_VAL(0, 0, 1)), /* PWM9 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PB5, 5, 0x0308, WRITE_MASK_VAL(2, 2, 0)), /* PWM10 IO mux M0 */
++	RK_MUXROUTE_GRF(2, RK_PA1, 2, 0x0308, WRITE_MASK_VAL(2, 2, 1)), /* PWM10 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PB6, 5, 0x0308, WRITE_MASK_VAL(4, 4, 0)), /* PWM11 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PC0, 3, 0x0308, WRITE_MASK_VAL(4, 4, 1)), /* PWM11 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PB7, 2, 0x0308, WRITE_MASK_VAL(6, 6, 0)), /* PWM12 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PC5, 1, 0x0308, WRITE_MASK_VAL(6, 6, 1)), /* PWM12 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PC0, 2, 0x0308, WRITE_MASK_VAL(8, 8, 0)), /* PWM13 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PC6, 1, 0x0308, WRITE_MASK_VAL(8, 8, 1)), /* PWM13 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PC4, 1, 0x0308, WRITE_MASK_VAL(10, 10, 0)), /* PWM14 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PC2, 1, 0x0308, WRITE_MASK_VAL(10, 10, 1)), /* PWM14 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PC5, 1, 0x0308, WRITE_MASK_VAL(12, 12, 0)), /* PWM15 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PC3, 1, 0x0308, WRITE_MASK_VAL(12, 12, 1)), /* PWM15 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PD2, 3, 0x0308, WRITE_MASK_VAL(14, 14, 0)), /* SDMMC2 IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PA5, 5, 0x0308, WRITE_MASK_VAL(14, 14, 1)), /* SDMMC2 IO mux M1 */
++	RK_MUXROUTE_PMU(0, RK_PB5, 2, 0x030c, WRITE_MASK_VAL(0, 0, 0)), /* SPI0 IO mux M0 */
++	RK_MUXROUTE_GRF(2, RK_PD3, 3, 0x030c, WRITE_MASK_VAL(0, 0, 1)), /* SPI0 IO mux M1 */
++	RK_MUXROUTE_GRF(2, RK_PB5, 3, 0x030c, WRITE_MASK_VAL(2, 2, 0)), /* SPI1 IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PC3, 3, 0x030c, WRITE_MASK_VAL(2, 2, 1)), /* SPI1 IO mux M1 */
++	RK_MUXROUTE_GRF(2, RK_PC1, 4, 0x030c, WRITE_MASK_VAL(4, 4, 0)), /* SPI2 IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PA0, 3, 0x030c, WRITE_MASK_VAL(4, 4, 1)), /* SPI2 IO mux M1 */
++	RK_MUXROUTE_GRF(4, RK_PB3, 4, 0x030c, WRITE_MASK_VAL(6, 6, 0)), /* SPI3 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PC2, 2, 0x030c, WRITE_MASK_VAL(6, 6, 1)), /* SPI3 IO mux M1 */
++	RK_MUXROUTE_GRF(2, RK_PB4, 2, 0x030c, WRITE_MASK_VAL(8, 8, 0)), /* UART1 IO mux M0 */
++	RK_MUXROUTE_PMU(0, RK_PD1, 1, 0x030c, WRITE_MASK_VAL(8, 8, 1)), /* UART1 IO mux M1 */
++	RK_MUXROUTE_PMU(0, RK_PD1, 1, 0x030c, WRITE_MASK_VAL(10, 10, 0)), /* UART2 IO mux M0 */
++	RK_MUXROUTE_GRF(1, RK_PD5, 2, 0x030c, WRITE_MASK_VAL(10, 10, 1)), /* UART2 IO mux M1 */
++	RK_MUXROUTE_GRF(1, RK_PA1, 2, 0x030c, WRITE_MASK_VAL(12, 12, 0)), /* UART3 IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PB7, 4, 0x030c, WRITE_MASK_VAL(12, 12, 1)), /* UART3 IO mux M1 */
++	RK_MUXROUTE_GRF(1, RK_PA6, 2, 0x030c, WRITE_MASK_VAL(14, 14, 0)), /* UART4 IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PB2, 4, 0x030c, WRITE_MASK_VAL(14, 14, 1)), /* UART4 IO mux M1 */
++	RK_MUXROUTE_GRF(2, RK_PA2, 3, 0x0310, WRITE_MASK_VAL(0, 0, 0)), /* UART5 IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PC2, 4, 0x0310, WRITE_MASK_VAL(0, 0, 1)), /* UART5 IO mux M1 */
++	RK_MUXROUTE_GRF(2, RK_PA4, 3, 0x0310, WRITE_MASK_VAL(2, 2, 0)), /* UART6 IO mux M0 */
++	RK_MUXROUTE_GRF(1, RK_PD5, 3, 0x0310, WRITE_MASK_VAL(2, 2, 1)), /* UART6 IO mux M1 */
++	RK_MUXROUTE_GRF(2, RK_PA6, 3, 0x0310, WRITE_MASK_VAL(5, 4, 0)), /* UART7 IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PC4, 4, 0x0310, WRITE_MASK_VAL(5, 4, 1)), /* UART7 IO mux M1 */
++	RK_MUXROUTE_GRF(4, RK_PA2, 4, 0x0310, WRITE_MASK_VAL(5, 4, 2)), /* UART7 IO mux M2 */
++	RK_MUXROUTE_GRF(2, RK_PC5, 3, 0x0310, WRITE_MASK_VAL(6, 6, 0)), /* UART8 IO mux M0 */
++	RK_MUXROUTE_GRF(2, RK_PD7, 4, 0x0310, WRITE_MASK_VAL(6, 6, 1)), /* UART8 IO mux M1 */
++	RK_MUXROUTE_GRF(2, RK_PB0, 3, 0x0310, WRITE_MASK_VAL(9, 8, 0)), /* UART9 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PC5, 4, 0x0310, WRITE_MASK_VAL(9, 8, 1)), /* UART9 IO mux M1 */
++	RK_MUXROUTE_GRF(4, RK_PA4, 4, 0x0310, WRITE_MASK_VAL(9, 8, 2)), /* UART9 IO mux M2 */
++	RK_MUXROUTE_GRF(1, RK_PA2, 1, 0x0310, WRITE_MASK_VAL(11, 10, 0)), /* I2S1 IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PC6, 4, 0x0310, WRITE_MASK_VAL(11, 10, 1)), /* I2S1 IO mux M1 */
++	RK_MUXROUTE_GRF(2, RK_PD0, 5, 0x0310, WRITE_MASK_VAL(11, 10, 2)), /* I2S1 IO mux M2 */
++	RK_MUXROUTE_GRF(2, RK_PC1, 1, 0x0310, WRITE_MASK_VAL(12, 12, 0)), /* I2S2 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PB6, 5, 0x0310, WRITE_MASK_VAL(12, 12, 1)), /* I2S2 IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PA2, 4, 0x0310, WRITE_MASK_VAL(14, 14, 0)), /* I2S3 IO mux M0 */
++	RK_MUXROUTE_GRF(4, RK_PC2, 5, 0x0310, WRITE_MASK_VAL(14, 14, 1)), /* I2S3 IO mux M1 */
++	RK_MUXROUTE_GRF(1, RK_PA4, 3, 0x0314, WRITE_MASK_VAL(1, 0, 0)), /* PDM IO mux M0 */
++	RK_MUXROUTE_GRF(1, RK_PA6, 3, 0x0314, WRITE_MASK_VAL(1, 0, 0)), /* PDM IO mux M0 */
++	RK_MUXROUTE_GRF(3, RK_PD6, 5, 0x0314, WRITE_MASK_VAL(1, 0, 1)), /* PDM IO mux M1 */
++	RK_MUXROUTE_GRF(4, RK_PA0, 4, 0x0314, WRITE_MASK_VAL(1, 0, 1)), /* PDM IO mux M1 */
++	RK_MUXROUTE_GRF(3, RK_PC4, 5, 0x0314, WRITE_MASK_VAL(1, 0, 2)), /* PDM IO mux M2 */
++	RK_MUXROUTE_PMU(0, RK_PA5, 3, 0x0314, WRITE_MASK_VAL(3, 2, 0)), /* PCIE20 IO mux M0 */
++	RK_MUXROUTE_GRF(2, RK_PD0, 4, 0x0314, WRITE_MASK_VAL(3, 2, 1)), /* PCIE20 IO mux M1 */
++	RK_MUXROUTE_GRF(1, RK_PB0, 4, 0x0314, WRITE_MASK_VAL(3, 2, 2)), /* PCIE20 IO mux M2 */
++	RK_MUXROUTE_PMU(0, RK_PA4, 3, 0x0314, WRITE_MASK_VAL(5, 4, 0)), /* PCIE30X1 IO mux M0 */
++	RK_MUXROUTE_GRF(2, RK_PD2, 4, 0x0314, WRITE_MASK_VAL(5, 4, 1)), /* PCIE30X1 IO mux M1 */
++	RK_MUXROUTE_GRF(1, RK_PA5, 4, 0x0314, WRITE_MASK_VAL(5, 4, 2)), /* PCIE30X1 IO mux M2 */
++	RK_MUXROUTE_PMU(0, RK_PA6, 2, 0x0314, WRITE_MASK_VAL(7, 6, 0)), /* PCIE30X2 IO mux M0 */
++	RK_MUXROUTE_GRF(2, RK_PD4, 4, 0x0314, WRITE_MASK_VAL(7, 6, 1)), /* PCIE30X2 IO mux M1 */
++	RK_MUXROUTE_GRF(4, RK_PC2, 4, 0x0314, WRITE_MASK_VAL(7, 6, 2)), /* PCIE30X2 IO mux M2 */
++};
++
+ static bool rockchip_get_mux_route(struct rockchip_pin_bank *bank, int pin,
+ 				   int mux, u32 *loc, u32 *reg, u32 *value)
+ {
+@@ -2102,6 +2226,94 @@ static void rk3399_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
+ 		*bit = (pin_num % 8) * 2;
+ }
+ 
++#define RK3568_SR_PMU_OFFSET		0x60
++#define RK3568_SR_GRF_OFFSET		0x0180
++#define RK3568_SR_BANK_STRIDE		0x10
++#define RK3568_SR_PINS_PER_REG		16
++
++static int rk3568_calc_slew_rate_reg_and_bit(struct rockchip_pin_bank *bank,
++					     int pin_num,
++					     struct regmap **regmap,
++					     int *reg, u8 *bit)
++{
++	struct rockchip_pinctrl *info = bank->drvdata;
++
++	if (bank->bank_num == 0) {
++		*regmap = info->regmap_pmu;
++		*reg = RK3568_SR_PMU_OFFSET;
++	} else {
++		*regmap = info->regmap_base;
++		*reg = RK3568_SR_GRF_OFFSET;
++		*reg += (bank->bank_num  - 1) * RK3568_SR_BANK_STRIDE;
++	}
++	*reg += ((pin_num / RK3568_SR_PINS_PER_REG) * 4);
++	*bit = pin_num % RK3568_SR_PINS_PER_REG;
++
++	return 0;
++}
++
++#define RK3568_PULL_PMU_OFFSET		0x20
++#define RK3568_PULL_GRF_OFFSET		0x80
++#define RK3568_PULL_BITS_PER_PIN	2
++#define RK3568_PULL_PINS_PER_REG	8
++#define RK3568_PULL_BANK_STRIDE		0x10
++
++static void rk3568_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
++					 int pin_num, struct regmap **regmap,
++					 int *reg, u8 *bit)
++{
++	struct rockchip_pinctrl *info = bank->drvdata;
++
++	if (bank->bank_num == 0) {
++		*regmap = info->regmap_pmu;
++		*reg = RK3568_PULL_PMU_OFFSET;
++		*reg += bank->bank_num * RK3568_PULL_BANK_STRIDE;
++		*reg += ((pin_num / RK3568_PULL_PINS_PER_REG) * 4);
++
++		*bit = pin_num % RK3568_PULL_PINS_PER_REG;
++		*bit *= RK3568_PULL_BITS_PER_PIN;
++	} else {
++		*regmap = info->regmap_base;
++		*reg = RK3568_PULL_GRF_OFFSET;
++		*reg += (bank->bank_num - 1) * RK3568_PULL_BANK_STRIDE;
++		*reg += ((pin_num / RK3568_PULL_PINS_PER_REG) * 4);
++
++		*bit = (pin_num % RK3568_PULL_PINS_PER_REG);
++		*bit *= RK3568_PULL_BITS_PER_PIN;
++	}
++}
++
++#define RK3568_DRV_PMU_OFFSET		0x70
++#define RK3568_DRV_GRF_OFFSET		0x200
++#define RK3568_DRV_BITS_PER_PIN		8
++#define RK3568_DRV_PINS_PER_REG		2
++#define RK3568_DRV_BANK_STRIDE		0x40
++
++static void rk3568_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
++					int pin_num, struct regmap **regmap,
++					int *reg, u8 *bit)
++{
++	struct rockchip_pinctrl *info = bank->drvdata;
++
++	/* The first 32 pins of the first bank are located in PMU */
++	if (bank->bank_num == 0) {
++		*regmap = info->regmap_pmu;
++		*reg = RK3568_DRV_PMU_OFFSET;
++		*reg += ((pin_num / RK3568_DRV_PINS_PER_REG) * 4);
++
++		*bit = pin_num % RK3568_DRV_PINS_PER_REG;
++		*bit *= RK3568_DRV_BITS_PER_PIN;
++	} else {
++		*regmap = info->regmap_base;
++		*reg = RK3568_DRV_GRF_OFFSET;
++		*reg += (bank->bank_num - 1) * RK3568_DRV_BANK_STRIDE;
++		*reg += ((pin_num / RK3568_DRV_PINS_PER_REG) * 4);
++
++		*bit = (pin_num % RK3568_DRV_PINS_PER_REG);
++		*bit *= RK3568_DRV_BITS_PER_PIN;
++	}
++}
++
+ static int rockchip_perpin_drv_list[DRV_TYPE_MAX][8] = {
+ 	{ 2, 4, 8, 12, -1, -1, -1, -1 },
+ 	{ 3, 6, 9, 12, -1, -1, -1, -1 },
+@@ -2202,6 +2414,11 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
+ 		bank->bank_num, pin_num, strength);
+ 
+ 	ctrl->drv_calc_reg(bank, pin_num, &regmap, &reg, &bit);
++	if (ctrl->type == RK3568) {
++		rmask_bits = RK3568_DRV_BITS_PER_PIN;
++		ret = (1 << (strength + 1)) - 1;
++		goto config;
++	}
+ 
+ 	ret = -EINVAL;
+ 	for (i = 0; i < ARRAY_SIZE(rockchip_perpin_drv_list[drv_type]); i++) {
+@@ -2271,6 +2488,7 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
+ 		return -EINVAL;
+ 	}
+ 
++config:
+ 	/* enable the write to the equivalent lower bits */
+ 	data = ((1 << rmask_bits) - 1) << (bit + 16);
+ 	rmask = data | (data >> 16);
+@@ -2373,6 +2591,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
+ 	case RK3308:
+ 	case RK3368:
+ 	case RK3399:
++	case RK3568:
+ 		pull_type = bank->pull_type[pin_num / 8];
+ 		ret = -EINVAL;
+ 		for (i = 0; i < ARRAY_SIZE(rockchip_pull_list[pull_type]);
+@@ -2382,6 +2601,14 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
+ 				break;
+ 			}
+ 		}
++		/*
++		 * In the TRM, pull-up being 1 for everything except the GPIO0_D0-D6,
++		 * where that pull up value becomes 3.
++		 */
++		if (ctrl->type == RK3568 && bank->bank_num == 0 && pin_num >= 27 && pin_num <= 30) {
++			if (ret == 1)
++				ret = 3;
++		}
+ 
+ 		if (ret < 0) {
+ 			dev_err(info->dev, "unsupported pull setting %d\n",
+@@ -2426,6 +2653,35 @@ static int rk3328_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
+ 	return 0;
+ }
+ 
++#define RK3568_SCHMITT_BITS_PER_PIN		2
++#define RK3568_SCHMITT_PINS_PER_REG		8
++#define RK3568_SCHMITT_BANK_STRIDE		0x10
++#define RK3568_SCHMITT_GRF_OFFSET		0xc0
++#define RK3568_SCHMITT_PMUGRF_OFFSET		0x30
++
++static int rk3568_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
++					   int pin_num,
++					   struct regmap **regmap,
++					   int *reg, u8 *bit)
++{
++	struct rockchip_pinctrl *info = bank->drvdata;
++
++	if (bank->bank_num == 0) {
++		*regmap = info->regmap_pmu;
++		*reg = RK3568_SCHMITT_PMUGRF_OFFSET;
++	} else {
++		*regmap = info->regmap_base;
++		*reg = RK3568_SCHMITT_GRF_OFFSET;
++		*reg += (bank->bank_num - 1) * RK3568_SCHMITT_BANK_STRIDE;
++	}
++
++	*reg += ((pin_num / RK3568_SCHMITT_PINS_PER_REG) * 4);
++	*bit = pin_num % RK3568_SCHMITT_PINS_PER_REG;
++	*bit *= RK3568_SCHMITT_BITS_PER_PIN;
++
++	return 0;
++}
++
+ static int rockchip_get_schmitt(struct rockchip_pin_bank *bank, int pin_num)
+ {
+ 	struct rockchip_pinctrl *info = bank->drvdata;
+@@ -2444,6 +2700,13 @@ static int rockchip_get_schmitt(struct rockchip_pin_bank *bank, int pin_num)
+ 		return ret;
+ 
+ 	data >>= bit;
++	switch (ctrl->type) {
++	case RK3568:
++		return data & ((1 << RK3568_SCHMITT_BITS_PER_PIN) - 1);
++	default:
++		break;
++	}
++
+ 	return data & 0x1;
+ }
+ 
+@@ -2465,8 +2728,17 @@ static int rockchip_set_schmitt(struct rockchip_pin_bank *bank,
+ 		return ret;
+ 
+ 	/* enable the write to the equivalent lower bits */
+-	data = BIT(bit + 16) | (enable << bit);
+-	rmask = BIT(bit + 16) | BIT(bit);
++	switch (ctrl->type) {
++	case RK3568:
++		data = ((1 << RK3568_SCHMITT_BITS_PER_PIN) - 1) << (bit + 16);
++		rmask = data | (data >> 16);
++		data |= ((enable ? 0x2 : 0x1) << bit);
++		break;
++	default:
++		data = BIT(bit + 16) | (enable << bit);
++		rmask = BIT(bit + 16) | BIT(bit);
++		break;
++	}
+ 
+ 	return regmap_update_bits(regmap, reg, rmask, data);
+ }
+@@ -2640,6 +2912,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
+ 	case RK3308:
+ 	case RK3368:
+ 	case RK3399:
++	case RK3568:
+ 		return (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT);
+ 	}
+ 
+@@ -4210,6 +4483,46 @@ static struct rockchip_pin_ctrl rk3399_pin_ctrl = {
+ 		.drv_calc_reg		= rk3399_calc_drv_reg_and_bit,
+ };
+ 
++static struct rockchip_pin_bank rk3568_pin_banks[] = {
++	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_SOURCE_PMU | IOMUX_WIDTH_4BIT,
++					     IOMUX_SOURCE_PMU | IOMUX_WIDTH_4BIT,
++					     IOMUX_SOURCE_PMU | IOMUX_WIDTH_4BIT,
++					     IOMUX_SOURCE_PMU | IOMUX_WIDTH_4BIT),
++	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT),
++	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT),
++	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3", IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT),
++	PIN_BANK_IOMUX_FLAGS(4, 32, "gpio4", IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT,
++					     IOMUX_WIDTH_4BIT),
++};
++
++static struct rockchip_pin_ctrl rk3568_pin_ctrl = {
++	.pin_banks		= rk3568_pin_banks,
++	.nr_banks		= ARRAY_SIZE(rk3568_pin_banks),
++	.label			= "RK3568-GPIO",
++	.type			= RK3568,
++	.grf_mux_offset		= 0x0,
++	.pmu_mux_offset		= 0x0,
++	.grf_drv_offset		= 0x0200,
++	.pmu_drv_offset		= 0x0070,
++	.iomux_routes		= rk3568_mux_route_data,
++	.niomux_routes		= ARRAY_SIZE(rk3568_mux_route_data),
++	.pull_calc_reg		= rk3568_calc_pull_reg_and_bit,
++	.drv_calc_reg		= rk3568_calc_drv_reg_and_bit,
++	.slew_rate_calc_reg	= rk3568_calc_slew_rate_reg_and_bit,
++	.schmitt_calc_reg	= rk3568_calc_schmitt_reg_and_bit,
++};
++
+ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+ 	{ .compatible = "rockchip,px30-pinctrl",
+ 		.data = &px30_pin_ctrl },
+@@ -4239,6 +4552,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+ 		.data = &rk3368_pin_ctrl },
+ 	{ .compatible = "rockchip,rk3399-pinctrl",
+ 		.data = &rk3399_pin_ctrl },
++	{ .compatible = "rockchip,rk3568-pinctrl",
++		.data = &rk3568_pin_ctrl },
+ 	{},
+ };
+ 
+-- 
+2.25.1
 
-> -michael
+
+
