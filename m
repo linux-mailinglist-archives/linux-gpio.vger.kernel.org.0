@@ -2,102 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82E10342C50
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Mar 2021 12:38:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BB37342C9B
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Mar 2021 12:57:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229732AbhCTLiV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Mar 2021 07:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45036 "EHLO
+        id S229780AbhCTL5H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Mar 2021 07:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbhCTLiQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Mar 2021 07:38:16 -0400
+        with ESMTP id S229564AbhCTL4t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Mar 2021 07:56:49 -0400
 Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65CD0C0613EE
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Mar 2021 04:38:16 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 184so15076907ljf.9
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Mar 2021 04:38:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C13ABC061764
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Mar 2021 04:56:48 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 16so15097139ljc.11
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Mar 2021 04:56:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kpNq+4pzC9q8PqJhkJv2XRb1wrmskPmzcnX1wwKvIT4=;
-        b=usugGJstphxXID2U3mOQ0opUCwdg/eCHLAtS59XDR8tr3xP4kZJtMMR0DrqiFbW6mZ
-         BbckAuDWNuz4KbRLDestCcqT8Uez7tzJLs3cwOfMLdwRXZsl7SibDBzirk2IQpxekq61
-         /1QsQsXGlPQCx2dOSloA4aUDIYozO+iw6KrlI5M8yeiFs7qryv3HcqriKXyrq/4EumRg
-         l/+GL0zfhGgQtURUrW75R1gFnJPspwWqYqyt9UVBfhyO4nJMyX/Sv27EqiGlzWull2St
-         yuH9eYED9+/Acl2/IA4GACeD2tlkq04pmCkJl+RObkCDqUMklXKnGJGd+VyRHyzvZcko
-         jpUg==
+         :cc;
+        bh=iW6uEND/ee4z9nsY45Ct1nMMtCxhIAfu1tQ3+1cotts=;
+        b=wLwkmsu6NNP9mQmkjv7ejqH3OpzE5jvfSZulXF8H1sT0nER01jIDIk0grBkN7izpfg
+         MHgQQW7XPoLPZBFD8vBlF7SW1DvimWMx1aX66Md7W2VStJr4obJPegLzrZw6lX/nP6Kq
+         cdCoYEUXKjzGSLe9DEtRGU+k2Iu8PlwWEJa7KbXCzi4hl1IhIk44mWa0CalP++vSFhY+
+         /tUpBFYE9GQfcGcGtVkj+zxeJxGNcNn6VyaQJL7ShZ6o+ch1zrbkAoAsmjU4UXLpW16L
+         KL8YI0PwwwdOMV7OwMtMLsgr2F7RgXpuGAXFQ/xT4jXCpvn/zdJwyqyGe21LaZ5c7b7x
+         x4sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kpNq+4pzC9q8PqJhkJv2XRb1wrmskPmzcnX1wwKvIT4=;
-        b=reC8TPTy0unFmvmyI2sA3uDb7IYWjoC63E+UIqGBwtrtbovPOwvf3Bjvh411i0C19p
-         coJXtjNFhMazCcUHyYklu3ix3uxa4w6FqkOg4LMYIfDTY2fBmOfb5Asm7I/J51RctnIa
-         tM0rsZs9MyDlE+/gsQeVL8l0nqc/iH+vbTN30Ss1ZInz35FthWbfHyj3RTN5jRtRTIye
-         LcG6KRQAOfdOYb/8TcceyWz1vzZyibJWQvM0gNZ0ycx4wZKeONXH70kyzI2J798YGC4S
-         DJOWzTzn5NwCAz5Hfm5BTiYFfQfrzOW5ROOXk4rSEzd/KKVv6i7EK/yn/FJQY16CU+Zi
-         Xj5w==
-X-Gm-Message-State: AOAM533jGGjmwQnF6iCLNQauxDwxFglajMeR84ZmsYsuwezBZ59seATY
-        vqK2q0nnzaA9aHHO8liarSQ1YAHhAiStlqb4iw9k4Q==
-X-Google-Smtp-Source: ABdhPJyph+35e/m+iaGdkuTx9JEupeD2nzqVohDvenngcwRbROO6Pk1TaZAWccwtj4OtmgFGBBO29aVwIAewWbg4Yhc=
-X-Received: by 2002:a2e:700a:: with SMTP id l10mr3571819ljc.368.1616240294278;
- Sat, 20 Mar 2021 04:38:14 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=iW6uEND/ee4z9nsY45Ct1nMMtCxhIAfu1tQ3+1cotts=;
+        b=C5fgPS3VG3+rZWJz2Yk5YNVN8Tdi+zhCVedlmwIeLy7PN2wts3/ik+Hv09/7nk/1bm
+         7sbTw/rPuP2vD/sNpFhUWGvxuaEDJUFUqI9t87gcQ1boUJkegxeTRmWir5a/6N0dWdg2
+         We9mqOtTP4g30bS0JCRntdcet3AfYemfooM/Jzot8LEZom7zS/1bbpruC4onUFx1C8sT
+         F6oCgzM15lsVySZh22JMsD6g4eHnseMRfaArBwKZWgSMNt1TaywpNGEQi/+yaXJ1Kr8h
+         qqg0giOwGz/InbT8wJaeqnZHvWntHGtbkYOcFiAzljm2PIJfYFwYxDXly5cu3QoUK2CA
+         +Ydg==
+X-Gm-Message-State: AOAM530lpSUcO7Jeac57GiUDsCZqvfJgFMkz7GMYjns0Ps43pWw/T5JB
+        k3FA5kIQ7R8yeiiSwwUMZ3CE1P2fL9LSjP7Fzo9iMA==
+X-Google-Smtp-Source: ABdhPJwdjVzdoOUIJtObxXpHfomqNMu4Yq3LhqEj2HbyPDWAppADtpsaQ5K2UAmEFo0J18YzoWQIissduevPOMwXjSM=
+X-Received: by 2002:a2e:864a:: with SMTP id i10mr3444104ljj.467.1616241407174;
+ Sat, 20 Mar 2021 04:56:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210315114214.3096-1-noltari@gmail.com> <CACRpkdYdHgP7QNWco4aN1G-GaRjOd2Y=_fkxv4zOKsQtXtpqfg@mail.gmail.com>
- <34672AEE-B28E-4B07-BFDA-8DF2F20FD410@gmail.com>
-In-Reply-To: <34672AEE-B28E-4B07-BFDA-8DF2F20FD410@gmail.com>
+References: <4c46726d-fa35-1a95-4295-bca37c8b6fe3@nvidia.com>
+In-Reply-To: <4c46726d-fa35-1a95-4295-bca37c8b6fe3@nvidia.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Mar 2021 12:38:03 +0100
-Message-ID: <CACRpkdbKtjNjC57_m9+3BTex6XmjUrsYN8NkMiCxPt37s3pv-A@mail.gmail.com>
-Subject: Re: [PATCH v7 00/22] pinctrl: add BCM63XX pincontrol support
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+Date:   Sat, 20 Mar 2021 12:56:36 +0100
+Message-ID: <CACRpkdbmqww6UQ8CFYo=+bCtVYBJwjMxVixc4vS6D3B+dUHScw@mail.gmail.com>
+Subject: Re: GTE - The hardware timestamping engine
+To:     Dipen Patel <dipenp@nvidia.com>, Kent Gibson <warthog618@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 17, 2021 at 12:20 PM =C3=81lvaro Fern=C3=A1ndez Rojas
-<noltari@gmail.com> wrote:
+Hi Dipen,
 
-> I appreciate that, but I=E2=80=99m having a hard time in understanding wh=
-at
-> Rob wants and since there are no examples available on most of the
-> stuff he=E2=80=99s requesting this is really frustrating...
+thanks for your mail!
 
-I am sorry that the situation can be stressful.
+I involved some other kernel people to get some discussion.
+I think Kent Gibson can be of great help because he is using
+GPIOs with high precision.
 
-This is not Rob's fault, at least it's also mine.
+We actually discussed this a bit when adding support for
+realtime timestamps.
 
-The real problem we have is lack of hardware people
-reviewing hardware descriptions, to put it simple.
-As reviewers we get a bit confused, then we try to make
-a mind map of the hardware as most driver developers do,
-but as we are not chip designers we will make
-mistakes and get confused and there will be a bit
-of back-and-forth and inconsistencies.
+On Wed, Mar 17, 2021 at 11:29 PM Dipen Patel <dipenp@nvidia.com> wrote:
 
-The bindings have very high ambitions (to describe all
-hardware) but it's a bit like food: the less you know
-about how it's produced, the better the taste.
-In fact it is a best effort and involves a bit of guesswork
-and group effort and you are part of the group effort
-now :)
+> Nvidia Tegra SoCs have generic timestamping engine (GTE) hardware module which
+> can monitor SoC signals like IRQ lines and GPIO lines for state change, upon
+> detecting the change, it can timestamp and store in its internal hardware FIFO.
+> The advantage of the GTE module can be realized in applications like robotics
+> or autonomous vehicle where it can help record events with precise timestamp.
+
+That sounds very useful.
+
+Certainly the kernel shall be able to handle this.
+
+> ============
+> For GPIO:
+> ============
+> 1.  GPIO has to be configured as input and IRQ must be enabled.
+> 2.  Ask GPIO controller driver to set corresponding timestamp bit in the
+>     specified GPIO config register.
+> 3.  Translate GPIO specified by the client to its internal bitmap.
+> 3.a For example, If client specifies GPIO line 31, it could be bit 13 of GTE
+>     register.
+> 4.  Set internal bits to enable monitoring in GTE module
+> 5.  Additionally GTE driver can open up lanes for the user space application
+>     as a client and can send timestamping events directly to the application.
+
+I have some concerns:
+
+1. GPIO should for all professional applications be used with the character
+device /dev/gpiochipN, under no circumstances shall the old sysfs
+ABI be used for this. In this case it is necessary because the
+character device provides events in a FIFO to userspace, which is
+what we need.
+
+The timestamp provided to userspace is an opaque 64bit
+unsigned value. I suppose we assume it is monotonic but
+you can actually augment the semantics for your specific
+stamp, as long as 64 bits is gonna work.
+
+2. The timestamp for the chardev is currently obtained in
+drivers/gpio/gpiolib-cdev.c like this:
+
+static u64 line_event_timestamp(struct line *line)
+{
+        if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &line->desc->flags))
+                return ktime_get_real_ns();
+
+        return ktime_get_ns();
+}
+
+What you want to do is to add a new flag for hardware timestamps
+and use that if available. FLAG_EVENT_CLOCK_HARDWARE?
+FLAG_EVENT_CLOCK_NATIVE?
+
+Then you need to figure out a mechanism so we can obtain
+the right timestamp from the hardware event right here,
+you can hook into the GPIO driver if need be, we can
+figure out the gpio_chip for a certain line for sure.
+
+So you first need to augment the userspace
+ABI and the character device code to add this. See
+commit 26d060e47e25f2c715a1b2c48fea391f67907a30
+"gpiolib: cdev: allow edge event timestamps to be configured as REALTIME"
+by Kent Gibson to see what needs to be done.
+
+3. Also patch tools/gpio/gpio-event-mon.c to support this flag and use that
+for prototyping and proof of concept.
+
+> ============
+> For IRQ:
+> ============
+
+Marc Zyngier and/or Thomas Gleixner know this stuff.
+
+It does make sense to add some infrastructure so that GPIO events
+and IRQs can use the same timestamping hardware.
+
+And certainly you will also want to use this timestamp for
+IIO devices? If it is just GPIOs and IRQs today, it will be
+gyroscopes and accelerometers tomorrow, am I right?
 
 Yours,
 Linus Walleij
