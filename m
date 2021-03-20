@@ -2,107 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1421342C24
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Mar 2021 12:29:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82E10342C50
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Mar 2021 12:38:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbhCTL2o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Mar 2021 07:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42896 "EHLO
+        id S229732AbhCTLiV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Mar 2021 07:38:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbhCTL2Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Mar 2021 07:28:24 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E36C5C0613E7
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Mar 2021 04:28:23 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id z25so15073983lja.3
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Mar 2021 04:28:23 -0700 (PDT)
+        with ESMTP id S229886AbhCTLiQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Mar 2021 07:38:16 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65CD0C0613EE
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Mar 2021 04:38:16 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 184so15076907ljf.9
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Mar 2021 04:38:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0w09L7XhqnFc+8seajXonOz7xvdKa2+DDWi/c1I9HBI=;
-        b=xLCpH+NfGlYkQhSeyN9OzqVZQ3+5dHm93UrfxQgQPJnfZHk0bA6yJ8NlhKiMGzXA4D
-         Mx44DvkvPj4SWQ7Mkx46xc38AdrD8/NL3+WPOCYdEzIBf1MBKkHtG1Lr49KHh3DLXBs6
-         KdXO/hLFqi6ebmG6e7aYnH5nX3SSC5LImhV9seAI386bKeVEGCeac5uVrfvwkOYrcOtp
-         gtDAsfzegEHlwwVXwUR7bj+H/kkVnYn/RgwYlAey0WBJWkklxlVTfd1dzbGIuvg+M1QP
-         IPiOmbsCgbFHz3XOMn2E7iaHFHFF94JvQcJaVYxYtEhPRRb+CAO1S+r2pkgxWGGPht1O
-         NkEQ==
+         :cc:content-transfer-encoding;
+        bh=kpNq+4pzC9q8PqJhkJv2XRb1wrmskPmzcnX1wwKvIT4=;
+        b=usugGJstphxXID2U3mOQ0opUCwdg/eCHLAtS59XDR8tr3xP4kZJtMMR0DrqiFbW6mZ
+         BbckAuDWNuz4KbRLDestCcqT8Uez7tzJLs3cwOfMLdwRXZsl7SibDBzirk2IQpxekq61
+         /1QsQsXGlPQCx2dOSloA4aUDIYozO+iw6KrlI5M8yeiFs7qryv3HcqriKXyrq/4EumRg
+         l/+GL0zfhGgQtURUrW75R1gFnJPspwWqYqyt9UVBfhyO4nJMyX/Sv27EqiGlzWull2St
+         yuH9eYED9+/Acl2/IA4GACeD2tlkq04pmCkJl+RObkCDqUMklXKnGJGd+VyRHyzvZcko
+         jpUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0w09L7XhqnFc+8seajXonOz7xvdKa2+DDWi/c1I9HBI=;
-        b=HnEuuVkKqV+n4I4yyEIyCJ/1ERGFKoJUKNCS14cyzJ5fVoIdh3yso268/GnHZs8gR8
-         crTa4I/V2xlQvUNKxns6nyNQZ9kTjON/26LmuYCWeba48533ibgLowObveHUPS1zvB21
-         IUHAUwg8iTxmqGRJFW5366/kcADPHm3wbMzuvctzjfv0h/gCQPFsc61WQvLIuL4p0MtX
-         0DSpDfq6dyMo2890UYrAqt7Qz5/kwAOSyuX6yo3TGw9XXz6OYdki2na0CBI6H6zfaDVy
-         DGoTfep3mVexbFcUy71FpX26/BWZagfrDOFc0r7exBxZRot87Rft7333G8hn1Em14KAx
-         7F7g==
-X-Gm-Message-State: AOAM53059wP39g8r0Dji53mNyYaFjyADJ3WLj2o70DimeetOvrI+bjs2
-        EVHTQOHDkJkhwn5DsX4enkbbINIHFJ515fRTfk2t+w==
-X-Google-Smtp-Source: ABdhPJxID5BOvMyKcUTdzzzoBdce6W7LXQZyHrQfqkjba2Pelo4aCYr9rIuCu1OJyTWjU++zhbAmS1u+sE0JlNcoNuE=
-X-Received: by 2002:a2e:864a:: with SMTP id i10mr3384218ljj.467.1616239702444;
- Sat, 20 Mar 2021 04:28:22 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kpNq+4pzC9q8PqJhkJv2XRb1wrmskPmzcnX1wwKvIT4=;
+        b=reC8TPTy0unFmvmyI2sA3uDb7IYWjoC63E+UIqGBwtrtbovPOwvf3Bjvh411i0C19p
+         coJXtjNFhMazCcUHyYklu3ix3uxa4w6FqkOg4LMYIfDTY2fBmOfb5Asm7I/J51RctnIa
+         tM0rsZs9MyDlE+/gsQeVL8l0nqc/iH+vbTN30Ss1ZInz35FthWbfHyj3RTN5jRtRTIye
+         LcG6KRQAOfdOYb/8TcceyWz1vzZyibJWQvM0gNZ0ycx4wZKeONXH70kyzI2J798YGC4S
+         DJOWzTzn5NwCAz5Hfm5BTiYFfQfrzOW5ROOXk4rSEzd/KKVv6i7EK/yn/FJQY16CU+Zi
+         Xj5w==
+X-Gm-Message-State: AOAM533jGGjmwQnF6iCLNQauxDwxFglajMeR84ZmsYsuwezBZ59seATY
+        vqK2q0nnzaA9aHHO8liarSQ1YAHhAiStlqb4iw9k4Q==
+X-Google-Smtp-Source: ABdhPJyph+35e/m+iaGdkuTx9JEupeD2nzqVohDvenngcwRbROO6Pk1TaZAWccwtj4OtmgFGBBO29aVwIAewWbg4Yhc=
+X-Received: by 2002:a2e:700a:: with SMTP id l10mr3571819ljc.368.1616240294278;
+ Sat, 20 Mar 2021 04:38:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210317155919.41450-1-alexander.sverdlin@nokia.com> <20210317155919.41450-2-alexander.sverdlin@nokia.com>
-In-Reply-To: <20210317155919.41450-2-alexander.sverdlin@nokia.com>
+References: <20210315114214.3096-1-noltari@gmail.com> <CACRpkdYdHgP7QNWco4aN1G-GaRjOd2Y=_fkxv4zOKsQtXtpqfg@mail.gmail.com>
+ <34672AEE-B28E-4B07-BFDA-8DF2F20FD410@gmail.com>
+In-Reply-To: <34672AEE-B28E-4B07-BFDA-8DF2F20FD410@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Mar 2021 12:28:11 +0100
-Message-ID: <CACRpkdbnc2UHM8w85DjsoMKoim-pSX7-7c2YOUnUDdthNc9Vpw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pl061: Support implementations without GPIOINTR line
-To:     Alexander A Sverdlin <alexander.sverdlin@nokia.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sat, 20 Mar 2021 12:38:03 +0100
+Message-ID: <CACRpkdbKtjNjC57_m9+3BTex6XmjUrsYN8NkMiCxPt37s3pv-A@mail.gmail.com>
+Subject: Re: [PATCH v7 00/22] pinctrl: add BCM63XX pincontrol support
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Alexander,
+On Wed, Mar 17, 2021 at 12:20 PM =C3=81lvaro Fern=C3=A1ndez Rojas
+<noltari@gmail.com> wrote:
 
-I think I answered some stuff around this patch in my previous
-mail but just reiterating so it's clear:
+> I appreciate that, but I=E2=80=99m having a hard time in understanding wh=
+at
+> Rob wants and since there are no examples available on most of the
+> stuff he=E2=80=99s requesting this is really frustrating...
 
-On Wed, Mar 17, 2021 at 4:59 PM Alexander A Sverdlin
-<alexander.sverdlin@nokia.com> wrote:
+I am sorry that the situation can be stressful.
 
-> @@ -426,6 +426,7 @@ config GPIO_PL061
->         depends on ARM_AMBA
->         select IRQ_DOMAIN
->         select GPIOLIB_IRQCHIP
-> +       select IRQ_DOMAIN_HIERARCHY
+This is not Rob's fault, at least it's also mine.
 
-I think this needs to be optional otherwise you activate hierarchical
-IRQs on a lot of systems that don't have it.
+The real problem we have is lack of hardware people
+reviewing hardware descriptions, to put it simple.
+As reviewers we get a bit confused, then we try to make
+a mind map of the hardware as most driver developers do,
+but as we are not chip designers we will make
+mistakes and get confused and there will be a bit
+of back-and-forth and inconsistencies.
 
-select IRQ_DOMAIN_HIERARCHY if ARCH_OMAP_...
-
-This leads to having to use some if IS_ENABLED and
-maybe even ifdef to make it compile without hierarchies.
-
-> +       if (!adev->irq[PL061_GPIO_NR - 1]) {
-> +               WARN_ON(adev->irq[1]);
-> +
-> +               girq->parent_handler = pl061_irq_handler;
-> +               girq->num_parents = 1;
-> +               girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
-> +                                            GFP_KERNEL);
-> +               if (!girq->parents)
-> +                       return -ENOMEM;
-> +               girq->parents[0] = irq;
-> +       } else {
-> +               girq->fwnode = dev->fwnode;
-> +               girq->parent_domain =
-> +                       irq_get_irq_data(adev->irq[PL061_GPIO_NR - 1])->domain;
-> +               girq->child_to_parent_hwirq = pl061_child_to_parent_hwirq;
-> +       }
-
-This is starting to look right :)
-
-But use the top-level board DT compatible to determine that
-hiearchy is needed, and implement a per-soc child_to_parent_hwirq()
-and do not attempt to get the IRQs from the device tree.
+The bindings have very high ambitions (to describe all
+hardware) but it's a bit like food: the less you know
+about how it's produced, the better the taste.
+In fact it is a best effort and involves a bit of guesswork
+and group effort and you are part of the group effort
+now :)
 
 Yours,
 Linus Walleij
