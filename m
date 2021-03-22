@@ -2,129 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0569B3440AA
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Mar 2021 13:18:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9C503440EA
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Mar 2021 13:27:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230039AbhCVMSE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Mar 2021 08:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48910 "EHLO
+        id S229951AbhCVM1O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Mar 2021 08:27:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbhCVMRj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Mar 2021 08:17:39 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9459AC061574
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Mar 2021 05:17:38 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id f16so20800632ljm.1
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Mar 2021 05:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LHJdSqMJsAMLhWC6ZVJQV8NXmp+oAmJkXXQd26aDoiE=;
-        b=h3NcVGiCg2wo98bvXiJ0lMcVh5njwSc1Xi8m6u7tmaEYPqdmxi83dAutZkV+QyZvIB
-         zpReLX3GyZwoPcKHpRps1q1qzqtIIhn+9K5nxnXIAS+y/TfsyWQ0yODdHWfdmMT/pdsV
-         HjT6CVtsIMzgGTNqqg6ijCeO+I121yQAUPz4mIOrZiX72X6PJmoo+5loGjFZoGkHU5k0
-         QEUr+fGnrtvGn/uGpjzTecvbRMrN3O1FW7SJWYbTcD5HqZjIlI07aHxbSsrFoWsIXc3W
-         V5f7iJj4PMwXpqhXNCbJG86p0PTEpo/NLRUHPY62gdLWWx2mTJY/ibZMpreOKU62HFMo
-         3QuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LHJdSqMJsAMLhWC6ZVJQV8NXmp+oAmJkXXQd26aDoiE=;
-        b=Yaf9rxBztfikjrNdyPKCrwYmzBoFftG9jNP4pcgtMKEGsbP5z74HOJgYRAqteucxYc
-         /rYYdsF8Kxu51r8PtX/jV3umxHC5K2C51YBmb3ZwxcCzY/36sk5xwOa+P48P4BEC1EYL
-         5SxUay+vukL9/z1GMooLEpm+e0S2CArCZ4Dh6w9NmtaWFYC5YEIb0gFrpetybs7HCI53
-         Sisz1lOnLnQUgexVO1W/obvzCSpk5xcWzlokGjYljUMJWtnrMdITJl6a+KvwLZ6nk07y
-         oiFberSX7jpDBDhMSWJTK99KM5M/RcZuTfqLma2zrRVNMpyVe8OP5/EKjfY8FPz3FmGe
-         Y9Bw==
-X-Gm-Message-State: AOAM531kdyPPV1P57DyxYCcz/aFPYe2ULYRGALxgcr3pxxlTdGE/6yFe
-        rjkycovpyhsXgesWwy4b0CmHTp5VGUXkr2ojsTL22A==
-X-Google-Smtp-Source: ABdhPJwL/fBiStggm4HK4L8KFT8+MpOV109yIULqWwKA14grJh36M71RZErLfkRWe7YsbLo5Isti53ifQckF8sBwPQc=
-X-Received: by 2002:a2e:9004:: with SMTP id h4mr9618443ljg.326.1616415457130;
- Mon, 22 Mar 2021 05:17:37 -0700 (PDT)
+        with ESMTP id S229933AbhCVM0q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Mar 2021 08:26:46 -0400
+X-Greylist: delayed 426 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 22 Mar 2021 05:26:45 PDT
+Received: from forward104p.mail.yandex.net (forward104p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:107])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEEB7C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Mar 2021 05:26:45 -0700 (PDT)
+Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
+        by forward104p.mail.yandex.net (Yandex) with ESMTP id 007244B0093A;
+        Mon, 22 Mar 2021 15:19:36 +0300 (MSK)
+Received: from vla1-d53b4f396d89.qloud-c.yandex.net (vla1-d53b4f396d89.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:b8c:0:640:d53b:4f39])
+        by forward100q.mail.yandex.net (Yandex) with ESMTP id EFA297080004;
+        Mon, 22 Mar 2021 15:19:35 +0300 (MSK)
+Received: from mail.yandex.ru (mail.yandex.ru [37.139.80.9])
+        by vla1-d53b4f396d89.qloud-c.yandex.net (mxback/Yandex) with HTTP id WJfrn00TC4Y1-JYTSwi3t;
+        Mon, 22 Mar 2021 15:19:35 +0300
+Authentication-Results: vla1-d53b4f396d89.qloud-c.yandex.net; dkim=pass
+Received: by vla5-f98fea902492.qloud-c.yandex.net with HTTP;
+        Mon, 22 Mar 2021 15:19:34 +0300
+From:   nikita.shubin@maquefel.me
+To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        hsweeten@visionengravers.com,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        bgolaszewski@baylibre.com
+Subject: RFC Need advice on reworking gpio-ep93xx.c to DT support
 MIME-Version: 1.0
-References: <20210317155919.41450-1-alexander.sverdlin@nokia.com>
- <20210317155919.41450-2-alexander.sverdlin@nokia.com> <CACRpkdbnc2UHM8w85DjsoMKoim-pSX7-7c2YOUnUDdthNc9Vpw@mail.gmail.com>
- <5a163661-ec37-c8d0-24ce-440336e32c33@nokia.com> <CACRpkdYoK03nYRYCHS-0Fj=i3pTuN1-EyrVW2jaG92AyVogYJw@mail.gmail.com>
- <ee619663-80e7-f6c0-9f73-d3ff7438773f@nokia.com> <CACRpkdYnxfb1wQDxpLOs7H9-3cTm+dtQRpNxmQBGLce_TYwOCg@mail.gmail.com>
-In-Reply-To: <CACRpkdYnxfb1wQDxpLOs7H9-3cTm+dtQRpNxmQBGLce_TYwOCg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 22 Mar 2021 13:17:26 +0100
-Message-ID: <CACRpkdZn9EHTH+MJtph3MUF1WxuTZzbTqRmtec=XgVUoy5VZsg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pl061: Support implementations without GPIOINTR line
-To:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Mon, 22 Mar 2021 15:19:34 +0300
+Message-Id: <1042421616413081@mail.yandex.ru>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 22, 2021 at 1:04 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+Dear all, after studying the question i've came up with the following suggestion:
 
-> The thing is that hierarchical interrupts are supposed to
-> connect the lines by absolute offsets that are *not* coming
-> from the device tree. This is the pattern taken by other
-> in-tree hierarchical GPIO controllers. We have repeatedly
-> NACKed patches adding all the IRQs to hierarchical
-> GPIO interrupt controllers, in favor of using hardcoded
-> offsets in the driver.
->
-> Do you have some good idea of how we can achieve that?
+- split ep93xx_gpio_resource into per port platform device:
 
-One way would be to stack more compatible strings:
-
-compatible = "lsi,axm5516-primary-gpio", "arm,pl061", "arm,primecell";
-
-Going from more to less specific. We see that this is a
-PL061 and that it is a primecell, but we also see that
-it is a version specifically integrated into the axm5516.
-
-I do see that today it looks like this
-arch/arm/boot/dts/axm55xx.dtsi:
-
-gpio0: gpio@2010092000 {
-    #gpio-cells = <2>;
-    compatible = "arm,pl061", "arm,primecell";
-    gpio-controller;
-    reg = <0x20 0x10092000 0x00 0x1000>;
-    interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-        <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-        <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-        <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-        <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-        <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-        <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-        <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-    clocks = <&clks AXXIA_CLK_PER>;
-    clock-names = "apb_pclk";
-    status = "disabled";
+So instead of:
+```
+static struct resource ep93xx_gpio_resource[] = {
+DEFINE_RES_MEM(EP93XX_GPIO_PHYS_BASE, 0xcc),
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO_AB),
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO0MUX),
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO1MUX),
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO2MUX),
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO3MUX),
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO4MUX),
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO5MUX),
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO6MUX),
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO7MUX),
 };
 
-(Indeed this doesn't currently work with Linux, thus this
-patch.)
+static struct platform_device ep93xx_gpio_device = {
+.name = "gpio-ep93xx",
+.id = -1,
+.num_resources = ARRAY_SIZE(ep93xx_gpio_resource),
+.resource = ep93xx_gpio_resource,
+};
+```
 
-It is indeed specified in the schema right now as:
+We will have something like this for each port:
+```
+static struct resource ep93xx_gpio_A_resource[] = {
+DEFINE_RES_MEM(EP93XX_GPIO_PHYS_BASE + DATA, 0x04),
+DEFINE_RES_MEM(EP93XX_GPIO_PHYS_BASE + DIRECTION, 0x04),
+DEFINE_RES_MEM(EP93XX_GPIO_PHYS_BASE + INTERRUPT, 0x2c), /** only port A/B/F*/
+DEFINE_RES_IRQ(IRQ_EP93XX_GPIO_AB), /** only port A/B*/
+... /* IRQS only for port F*/
+};
 
-  interrupts:
-    oneOf:
-      - maxItems: 1
-      - maxItems: 8
+static struct platform_device ep93xx_gpio_A_device = {
+.name = "gpio-ep93xx",
+.id = -1,
+.num_resources = ARRAY_SIZE(ep93xx_gpio_A_resource),
+.resource = ep93xx_gpio_A_resource,
+};
+```
 
-So from a devicetree PoV all is good. But it is not the
-way hierarchical IRQs are supposed to be done IIUC.
-The preferred solution is to use a specific compatible
-string and hardcoded offsets.
+And they will registered separately.
 
-It'd be nice if the interrupt or DT binding people would say
-something about how they expect these hierarchical IRQs
-to be specified from the device tree. I'm just representing
-earlier review comments here, maybe they've changed
-their mind.
+I think this will allow more transparent transition to DT
 
-Yours,
-Linus Walleij
+- rework gpio-ep93xx.c to handle each platform device instance separately
+- add processing for the following device tree (example):
+
+Showing only ports A, F and no interrupt capable C:
+```
+gpio0: gpio@80840000 {
+compatible = "cirrus,ep93xx-gpio-a", "cirrus,ep93xx-gpio";
+label = "A";
+reg = <0x80840000 0x04>,
+<0x80840010 0x04>,
+<0x80840090 0x1c>;
+reg-names = "data", "dir", "int";
+gpio-controller;
+interrupt-controller;
+interrupt-parent = <&vic1>;
+interrupts = <27>;
+};
+
+gpio2: gpio@80840008 {
+compatible = "cirrus,ep93xx-gpio";
+label = "C";
+reg = <0x80840008 0x04>,
+<0x80840018 0x04>;
+reg-names = "data", "dir";
+gpio-controller;
+};
+
+gpio5: gpio@80840030 {
+compatible = "cirrus,ep93xx-gpio-f", "cirrus,ep93xx-gpio";
+label = "F";
+reg = <0x80840030 0x04>,
+<0x80840034 0x04>,
+<0x8084004C 0x1c>;
+reg-names = "data", "dir", "int";
+gpio-controller;
+interrupt-controller;
+interrupts-extended= <&vic0 19 20 21 22>,
+<&vic1 15 16 17 18>;
+};
+```
+
+So the work will be split into 2 stages:
+- breaking gpio platform data into pieces, adapting gpio-ep93xx.c
+- adding DT support for gpio-ep93xx.c
+
+Please advise me on this issue.
