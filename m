@@ -2,176 +2,273 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06219344745
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Mar 2021 15:33:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D92A234476E
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Mar 2021 15:36:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230447AbhCVOcp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Mar 2021 10:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50116 "EHLO
+        id S230469AbhCVOf4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Mar 2021 10:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230481AbhCVOch (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Mar 2021 10:32:37 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC105C061762
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Mar 2021 07:32:36 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id x21so19611200eds.4
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Mar 2021 07:32:36 -0700 (PDT)
+        with ESMTP id S230039AbhCVOff (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Mar 2021 10:35:35 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA6E5C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Mar 2021 07:35:34 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id f3so13300036lfu.5
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Mar 2021 07:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=chWlvvM+R8+Nda51a8aii3oOtn9NRHzXgHWY/tWJNes=;
-        b=05P7zw0tsPCH0lkJ4IJWK6rQhq0iLu6STD9jyRTbwyhVhZmqY4InkSeFh37+emrYYw
-         wr+8HIFPwHEyiFrnZO4OyYvntZCN+eM8GP07HOelEq4xNS4oPiZeML8W89f1n04NUVpL
-         7Fl5hRXg6UwkyofR+jUZWed9M7WzxZVcAudOsL9B5YnDxY5qZDNYaA2ch1lxKFlhz7GT
-         i/xarewa/2rMudBLAosj/p9RNJDtM2SNArMRxkAXy4+GPBOrMsWm9HqPiqhOQ0AfFM49
-         l47SLVzefAIGGeKk5h/uFBLhZeHjdM9Jk/1qDi7SeoziApYdbNmYZKFTojxjrEl8PVJl
-         9kNw==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=YjlKmZb0s9KeFtkpofY+AVeket3z7Q8G6E/vgeQdu+I=;
+        b=QGiWBCT8B4LTjSjdwn2GkSnX67Nr7PuYXkUqXn0/kiRs6mDRDiuQlFc3eg55V2lI2y
+         r5bKjMud3AIwxQlpYgLXzCBXxMUndHagnhEJPSABaoCb7S986Rcs2gt1cgBGvoF+JilJ
+         nxNgRXP6MwRBzmfeYjfs0gljFweiga6EfpI1urd1+013tx8S/8Ubwyl9oPBBQ1IrRRlS
+         rVylzusz/amiDxtz3PjGjcCKkfl7a2fsDm2aFez+lThwKfjX+R6OWQYLWSIfYHTsJSzx
+         hq3Z/8bYtoJFoN0gHSX/ZVwIuNPa2X9L84xspWELWR/GdxMR8mo7Jh9VrgfJMmdVKJ15
+         IhqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=chWlvvM+R8+Nda51a8aii3oOtn9NRHzXgHWY/tWJNes=;
-        b=Vd5QQF8rrKFGla+dH136ijqrUdHC6AcEiQxUjIyVaPbdA+RI68HJoDpf+0ntUrQgHz
-         jbmJuWv2BD3cGhtnDyMZjWTLKykLzRKi9IekLLsbmqpdcE6JMhwax8OsZJHsAWdYI6F+
-         jQ5L0NvYYzpcr2flUVEVNoEmFwypiF+pz8W7HK8zn38f31BSTtIlJ4wG5TMmQR2KbNRH
-         /DNCByzJ2r4QPyd4YBqaF4NR0U4i2gSB4xhSRsatUEhQsQjh6Wk8RlY9/q1DNm4A9TyW
-         uRhW05nVWngR5UpjlFbRzADAsfihNXPCNqZdvD0VPOuCEFa01omWP0YsBYluPu4ZGlaU
-         pebg==
-X-Gm-Message-State: AOAM531GPJtw++GAa9w/pMt8rk8AYlQCVchs18GF6v4nKSHv/qP+EzDv
-        K9DHwKyhv5Q7wBDM3usIPpsLiOvkn0eMvbqfUrKYsA==
-X-Google-Smtp-Source: ABdhPJw/qkhZqdtkjOclpC5fJbhhHCbMBE7GUaaaOreGNmjMwpYaceJ/cmgop4G0BQNlEFUtPoQIUhipTBCnhOKseCY=
-X-Received: by 2002:a05:6402:4309:: with SMTP id m9mr27072328edc.25.1616423555361;
- Mon, 22 Mar 2021 07:32:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YjlKmZb0s9KeFtkpofY+AVeket3z7Q8G6E/vgeQdu+I=;
+        b=D0jehiA1woNr2joHKe1tCgg5cDH2/BSgk1+3bSEZSoSsQ+GPcqnshNx0XWjFM1GGq8
+         SUGY6BdfCk0nARYU3pws9gz/Tc9gTMa9KVfX/+jrOxMBGLLtaDhMatsqnjCOO60BgUqw
+         Wf9VIC8zdd+JqCyX5w9EHz7nkLXicqcuN1rh5PXMUJV6sNXN80+D6FgG5PK6odSrSBc4
+         yw1oPpSK1SqQuSAFpTCAGlizvRs9/AjUbKokkHbzpvzIsr9t0FUH7fLwSKUmHDa+3NFk
+         zIkwwUyNR2/nKOMEsNXIKRJM9RFC/mSPAIEZiuOcCgSNmKsa0BDD3Q4c4c8Lw8zWSeTb
+         wP4g==
+X-Gm-Message-State: AOAM531R+O7Gsxp/nJ3O/h0NOzK2aBbZHLeg2tix4KGv4/rUEPasZ3JR
+        8o3ERAd3YY2o0Sl7qHu8vhaazs8Dh5ZLqg==
+X-Google-Smtp-Source: ABdhPJz+V/nKgds6t/0+UrPOT43G+ZPsbZYkU8QST8m9AqDU/D1oYbyrnVnSx0CG89GyOC2iVnhwRQ==
+X-Received: by 2002:a19:ad06:: with SMTP id t6mr9446057lfc.8.1616423733317;
+        Mon, 22 Mar 2021 07:35:33 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id e9sm1968444ljj.52.2021.03.22.07.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Mar 2021 07:35:31 -0700 (PDT)
+Date:   Mon, 22 Mar 2021 15:35:30 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/6] pinctrl: renesas: Move R-Car bias helpers to sh_pfc.h
+Message-ID: <YFirMvd5jvGN0QDR@oden.dyn.berto.se>
+References: <20210303132619.3938128-1-geert+renesas@glider.be>
+ <20210303132619.3938128-3-geert+renesas@glider.be>
 MIME-Version: 1.0
-References: <20210315091400.13772-1-brgl@bgdev.pl>
-In-Reply-To: <20210315091400.13772-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 22 Mar 2021 15:32:24 +0100
-Message-ID: <CAMRc=MfQnofWQKz9tbnTA_1M8BkN37FcxbJpK4hs0RoRebWWkw@mail.gmail.com>
-Subject: Re: [PATCH v5 00/11] gpio: implement the configfs testing module
-To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210303132619.3938128-3-geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 10:14 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> This series adds a new GPIO testing module based on configfs committable items
-> and sysfs. The goal is to provide a testing driver that will be configurable
-> at runtime (won't need module reload) and easily extensible. The control over
-> the attributes is also much more fine-grained than in gpio-mockup.
->
-> This series also contains a respin of the patches I sent separately to the
-> configfs maintainers - these patches implement the concept of committable
-> items that was well defined for a long time but never actually completed.
->
-> Apart from the new driver itself, its selftests and the configfs patches, this
-> series contains some changes to the bitmap API - most importantly: it adds
-> devres managed variants of bitmap_alloc() and bitmap_zalloc().
->
-> v1 -> v2:
-> - add selftests for gpio-sim
-> - add helper programs for selftests
-> - update the configfs rename callback to work with the new API introduced in
->   v5.11
-> - fix a missing quote in the documentation
-> - use !! whenever using bits operation that are required to return 0 or 1
-> - use provided bitmap API instead of reimplementing copy or fill operations
-> - fix a deadlock in gpio_sim_direction_output()
-> - add new read-only configfs attributes for mapping of configfs items to GPIO
->   device names
-> - and address other minor issues pointed out in reviews of v1
->
-> v2 -> v3:
-> - use devm_bitmap_alloc() instead of the zalloc variant if we're initializing
->   the bitmap with 1s
-> - drop the patch exporting device_is_bound()
-> - don't return -ENODEV from dev_nam and chip_name configfs attributes, return
->   a string indicating that the device is not available yet ('n/a')
-> - fix indentation where it makes sense
-> - don't protect IDA functions which use their own locking and where it's not
->   needed
-> - use kmemdup() instead of kzalloc() + memcpy()
-> - collected review tags
-> - minor coding style fixes
->
-> v3 -> v4:
-> - return 'none' instead of 'n/a' from dev_name and chip_name before the device
->   is registered
-> - use sysfs_emit() instead of s*printf()
-> - drop GPIO_SIM_MAX_PROP as it's only used in an array's definition where it's
->   fine to hardcode the value
->
-> v4 -> v5:
-> - export devm bitmap functions with EXPORT_SYMBOL_GPL() instead of a simple
->   EXPORT_SYMBOL()
->
-> Bartosz Golaszewski (11):
->   configfs: increase the item name length
->   configfs: use (1UL << bit) for internal flags
->   configfs: implement committable items
->   samples: configfs: add a committable group
->   lib: bitmap: remove the 'extern' keyword from function declarations
->   lib: bitmap: order includes alphabetically
->   lib: bitmap: provide devm_bitmap_alloc() and devm_bitmap_zalloc()
->   gpio: sim: new testing module
->   selftests: gpio: provide a helper for reading chip info
->   selftests: gpio: add a helper for reading GPIO line names
->   selftests: gpio: add test cases for gpio-sim
->
->  Documentation/admin-guide/gpio/gpio-sim.rst   |  72 ++
->  Documentation/filesystems/configfs.rst        |   6 +-
->  drivers/gpio/Kconfig                          |   8 +
->  drivers/gpio/Makefile                         |   1 +
->  drivers/gpio/gpio-sim.c                       | 874 ++++++++++++++++++
->  fs/configfs/configfs_internal.h               |  22 +-
->  fs/configfs/dir.c                             | 245 ++++-
->  include/linux/bitmap.h                        | 127 +--
->  include/linux/configfs.h                      |   3 +-
->  lib/bitmap.c                                  |  42 +-
->  samples/configfs/configfs_sample.c            | 153 +++
->  tools/testing/selftests/gpio/.gitignore       |   2 +
->  tools/testing/selftests/gpio/Makefile         |   4 +-
->  tools/testing/selftests/gpio/config           |   1 +
->  tools/testing/selftests/gpio/gpio-chip-info.c |  57 ++
->  tools/testing/selftests/gpio/gpio-line-name.c |  55 ++
->  tools/testing/selftests/gpio/gpio-sim.sh      | 229 +++++
->  17 files changed, 1815 insertions(+), 86 deletions(-)
->  create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
->  create mode 100644 drivers/gpio/gpio-sim.c
->  create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
->  create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
->  create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
->
-> --
-> 2.30.1
->
+Hi Geert,
 
-Hi Joel, Christoph,
+Thanks for your work.
 
-FYI The configfs patches from this series have been on the mailing
-list for months (long before the GPIO part) and have been re-sent
-several times. You have neither acked or opposed these changes. I
-don't want to delay the new testing driver anymore so I intend to
-apply the entire series and take it upstream through the GPIO tree by
-the end of this week.
+On 2021-03-03 14:26:15 +0100, Geert Uytterhoeven wrote:
+> The Renesas Pin Function Controller driver uses two header files:
+>   - sh_pfc.h, for use by both core code and SoC-specific drivers,
+>   - core.h, for internal use by the core code only.
+> 
+> Hence move the R-Car bias helper declarations from core.h to sh_pfc.h,
+> and drop the inclusion of core.h from SoC-specific drivers that no
+> longer need it.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Best Regards,
-Bartosz Golaszewski
+Nice cleanup.
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+>  drivers/pinctrl/renesas/core.h         | 4 ----
+>  drivers/pinctrl/renesas/pfc-r8a7778.c  | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a7792.c  | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a77950.c | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a77951.c | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a7796.c  | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a77965.c | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a77970.c | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a77980.c | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a77990.c | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a77995.c | 1 -
+>  drivers/pinctrl/renesas/pfc-r8a779a0.c | 1 -
+>  drivers/pinctrl/renesas/sh_pfc.h       | 7 +++++++
+>  13 files changed, 7 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/renesas/core.h b/drivers/pinctrl/renesas/core.h
+> index 19f7b4308fac7a8f..51f391e9713ae9bc 100644
+> --- a/drivers/pinctrl/renesas/core.h
+> +++ b/drivers/pinctrl/renesas/core.h
+> @@ -29,8 +29,4 @@ void sh_pfc_write(struct sh_pfc *pfc, u32 reg, u32 data);
+>  int sh_pfc_get_pin_index(struct sh_pfc *pfc, unsigned int pin);
+>  int sh_pfc_config_mux(struct sh_pfc *pfc, unsigned mark, int pinmux_type);
+>  
+> -unsigned int rcar_pinmux_get_bias(struct sh_pfc *pfc, unsigned int pin);
+> -void rcar_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
+> -			  unsigned int bias);
+> -
+>  #endif /* __SH_PFC_CORE_H__ */
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a7778.c b/drivers/pinctrl/renesas/pfc-r8a7778.c
+> index 75f52b1798c3c5c9..6185af9c499006e7 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a7778.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a7778.c
+> @@ -16,7 +16,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/pinctrl/pinconf-generic.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define PORT_GP_PUP_1(bank, pin, fn, sfx)	\
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a7792.c b/drivers/pinctrl/renesas/pfc-r8a7792.c
+> index 258f82fb31c0ec10..f54a7c81005d0a78 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a7792.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a7792.c
+> @@ -8,7 +8,6 @@
+>  
+>  #include <linux/kernel.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CPU_ALL_GP(fn, sfx)						\
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a77950.c b/drivers/pinctrl/renesas/pfc-r8a77950.c
+> index 32fe8caca70a119e..ee4ce9349aae2654 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a77950.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a77950.c
+> @@ -8,7 +8,6 @@
+>  #include <linux/errno.h>
+>  #include <linux/kernel.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CFG_FLAGS (SH_PFC_PIN_CFG_DRIVE_STRENGTH | SH_PFC_PIN_CFG_PULL_UP_DOWN)
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a77951.c b/drivers/pinctrl/renesas/pfc-r8a77951.c
+> index bdd605e41303bf3a..1c14a3925bef909b 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a77951.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a77951.c
+> @@ -9,7 +9,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sys_soc.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CFG_FLAGS (SH_PFC_PIN_CFG_DRIVE_STRENGTH | SH_PFC_PIN_CFG_PULL_UP_DOWN)
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a7796.c b/drivers/pinctrl/renesas/pfc-r8a7796.c
+> index 96b5b1509bb70d16..71e69f2a431e05d4 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a7796.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a7796.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/errno.h>
+>  #include <linux/kernel.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CFG_FLAGS (SH_PFC_PIN_CFG_DRIVE_STRENGTH | SH_PFC_PIN_CFG_PULL_UP_DOWN)
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a77965.c b/drivers/pinctrl/renesas/pfc-r8a77965.c
+> index f15e29383d9b54fe..a5db0168fb86418e 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a77965.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a77965.c
+> @@ -15,7 +15,6 @@
+>  #include <linux/errno.h>
+>  #include <linux/kernel.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CFG_FLAGS (SH_PFC_PIN_CFG_DRIVE_STRENGTH | SH_PFC_PIN_CFG_PULL_UP_DOWN)
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a77970.c b/drivers/pinctrl/renesas/pfc-r8a77970.c
+> index e8a0fc468eb260c6..7935826cfae7c9a3 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a77970.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a77970.c
+> @@ -16,7 +16,6 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CPU_ALL_GP(fn, sfx)						\
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a77980.c b/drivers/pinctrl/renesas/pfc-r8a77980.c
+> index ebd07bebaeebca07..20cff93a2a13ca17 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a77980.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a77980.c
+> @@ -16,7 +16,6 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CPU_ALL_GP(fn, sfx)	\
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a77990.c b/drivers/pinctrl/renesas/pfc-r8a77990.c
+> index 0a32e3c317c1a0c5..04a74b5d08e16f4c 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a77990.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a77990.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/errno.h>
+>  #include <linux/kernel.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CFG_FLAGS (SH_PFC_PIN_CFG_PULL_UP_DOWN)
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a77995.c b/drivers/pinctrl/renesas/pfc-r8a77995.c
+> index 672251d86c2de3cd..b479f87a3b23f0f1 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a77995.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a77995.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/errno.h>
+>  #include <linux/kernel.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CPU_ALL_GP(fn, sfx)			\
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a779a0.c b/drivers/pinctrl/renesas/pfc-r8a779a0.c
+> index 2250ccd0470aa504..ad6532443a785b13 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a779a0.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a779a0.c
+> @@ -11,7 +11,6 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  
+> -#include "core.h"
+>  #include "sh_pfc.h"
+>  
+>  #define CFG_FLAGS (SH_PFC_PIN_CFG_DRIVE_STRENGTH | SH_PFC_PIN_CFG_PULL_UP_DOWN)
+> diff --git a/drivers/pinctrl/renesas/sh_pfc.h b/drivers/pinctrl/renesas/sh_pfc.h
+> index 5934faeb23d756d8..2d511c7280fa49e3 100644
+> --- a/drivers/pinctrl/renesas/sh_pfc.h
+> +++ b/drivers/pinctrl/renesas/sh_pfc.h
+> @@ -773,4 +773,11 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
+>   */
+>  #define RCAR_GP_PIN(bank, pin)		(((bank) * 32) + (pin))
+>  
+> +/*
+> + * Bias helpers
+> + */
+> +unsigned int rcar_pinmux_get_bias(struct sh_pfc *pfc, unsigned int pin);
+> +void rcar_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
+> +			  unsigned int bias);
+> +
+>  #endif /* __SH_PFC_H */
+> -- 
+> 2.25.1
+> 
+
+-- 
+Regards,
+Niklas Söderlund
