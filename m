@@ -2,713 +2,303 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B280344EAD
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Mar 2021 19:40:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C510345094
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Mar 2021 21:17:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231557AbhCVSkO convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 22 Mar 2021 14:40:14 -0400
-Received: from aposti.net ([89.234.176.197]:34306 "EHLO aposti.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230332AbhCVSj7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 22 Mar 2021 14:39:59 -0400
-Date:   Mon, 22 Mar 2021 18:39:42 +0000
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 10/10] pinctrl: Ingenic: Add pinctrl driver for X2000.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        hns@goldelico.com, paul@boddie.org.uk, andy.shevchenko@gmail.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        sernia.zhou@foxmail.com
-Message-Id: <6UVDQQ.U3HDKVEJU8JA3@crapouillou.net>
-In-Reply-To: <1615975084-68203-11-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1615975084-68203-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1615975084-68203-11-git-send-email-zhouyanjie@wanyeetech.com>
+        id S231429AbhCVURY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Mar 2021 16:17:24 -0400
+Received: from mail-mw2nam10on2049.outbound.protection.outlook.com ([40.107.94.49]:1761
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231621AbhCVURV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Mar 2021 16:17:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mRnzWsOB6Gav8sFM0ZxUMBulRy4MsjyhTG//vafvs77MmpLP3ZjiCEbqOvNqw2AEJm4GNdMqYDEtK2/i8z/iVU0FTLQjIP5TbDBqPR3NaRQv+A6D9bWREyYaztbztWwJ8A0wnWp6wwKHUJuYW2BkvloTljwfzj5V8ggXf9R1YJrNckbke/G6kQMUymcAkzn27SgWsGoueeyHh3jKzRnBOBhBFJqhA4vK3QnVFdNd7/tjYSD9tKHOBa3QCMoT1H/iTlwbp3VcPi/DzkjByenSLk8S/82iv/rOyN9d1udfSwH6ajL0NBcNxbzuot2MzdPpski+8PJP2H9SDwbiQApm3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0eldhIbBAzXfncmFFIL1vnPV3D+sGaLaPodyPIpdxM0=;
+ b=nU30G9LUW8cJ7UmaYSWFTa8OIGXyqZPS5VqzhF8huKMancnaRxMqsoUwy5Ulp9GTfzvbuuIxp6ZXZ82mTOR0UqA+slooKR4s6MvPiyq5P4PRdzJfUZOB45WQPb1kcFkGCVNgoPeiYBJgUt/SoujbsvTOwoHW8YX0iKwZA8n2ZrAJxeDh8jgLkz67AEfF6Ej9QhORSNU3gqcURp12B7AAI8tgiBB9cZPArbKKxf5vGS976H1JZHf0Ci8qrFaTKIsEPpDh3ewp8/4xKcslaqIQRsQEgf8TaRFqjyj4MSdruupjVvIQGdpJMmfMhjAcoBvgOGwyxPCfWripD1w4G6o8hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.36) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0eldhIbBAzXfncmFFIL1vnPV3D+sGaLaPodyPIpdxM0=;
+ b=sVMS46kPM92jReTktxlzhccbHWqfoQBbXr86pGNb7LQH/VXgsdekZuwu1ENch0bsvhSev42KzIMGggfhVgfVZ4LY7JW+6MSfuUx80P1TXzrkRQ2hmRP4jxFrdP0PFj2sipLGTH2xcDbDdUMyArCizO8H+W3QZEdxDBzdN3tqQJ1EM/lfx+EqbZ/rugT4ZqCe7MKbKqCUNqSb7Vkftjb4oNRh7eyJtyiESDwyNxu2LwB7WqR/gUre3poi0stwCLbxZfcwOkd1zSZTUcRuRCG2N1AaXleG8bZlaTC6lq/MKfMnNu3DbeTVOEH04JoPlJfuCVAZuB++OiMawVL9qpbJtA==
+Received: from DM6PR02CA0037.namprd02.prod.outlook.com (2603:10b6:5:177::14)
+ by CH0PR12MB5314.namprd12.prod.outlook.com (2603:10b6:610:d5::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Mon, 22 Mar
+ 2021 20:17:19 +0000
+Received: from DM6NAM11FT027.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:177:cafe::c1) by DM6PR02CA0037.outlook.office365.com
+ (2603:10b6:5:177::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18 via Frontend
+ Transport; Mon, 22 Mar 2021 20:17:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
+ smtp.mailfrom=nvidia.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.36; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.36) by
+ DM6NAM11FT027.mail.protection.outlook.com (10.13.172.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3955.18 via Frontend Transport; Mon, 22 Mar 2021 20:17:19 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 22 Mar
+ 2021 20:17:18 +0000
+Received: from [172.17.173.69] (172.20.145.6) by mail.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2 via Frontend
+ Transport; Mon, 22 Mar 2021 20:17:18 +0000
+Subject: Re: GTE - The hardware timestamping engine
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        Richard Cochran <richardcochran@gmail.com>
+References: <4c46726d-fa35-1a95-4295-bca37c8b6fe3@nvidia.com>
+ <CACRpkdbmqww6UQ8CFYo=+bCtVYBJwjMxVixc4vS6D3B+dUHScw@mail.gmail.com>
+ <20210322060047.GA226745@sol>
+X-Nvconfidentiality: public
+From:   Dipen Patel <dipenp@nvidia.com>
+Message-ID: <d48fa7b5-8c17-c3d7-10a9-a9811c410a39@nvidia.com>
+Date:   Mon, 22 Mar 2021 13:21:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20210322060047.GA226745@sol>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8bd37d45-715f-4fad-d026-08d8ed6f7ead
+X-MS-TrafficTypeDiagnostic: CH0PR12MB5314:
+X-Microsoft-Antispam-PRVS: <CH0PR12MB53148E1372DC077B2F84A616AE659@CH0PR12MB5314.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jqLsAOyO5Ga/FjNQpbWAHRejZg7gj1v7LXb4oXBZRPF0zHWM0q7s/W8kC0Qxo2mw0lE6paDVH144N9ctZj6wPaOEo+gZtVi6XoxZu0192Bq4W1g+bBZH/idbJH1wT/4lFiFlpwkmEBMErjJadfvYV/1j0KvBwro1tJJtxb0gO/2pUyAXTdYUAur7vJtc51xf+bi/LFdVVb8AyI/ozgOZIcgol2wWdUvy4N254WiGY8cB+6pPGJzP5/YcoYwmfW0ZLWzTB9On3/rfBXAby/lTf6iB4/ZmfLnAUTrapgbU6uq1WLKb3mgn95D7ZhdkEIhUe0lScsiBbJQ5FDSYCaJCms2srLfz1eY/1BQY+roJ2H7FAOxeBrODuMBzBXwSl9TuJ0gUMyEdITlahJOLHB8x3OecmeIwC7m4S5HOoWOy8IPCecjPQNQn8BCku/nji7DbJ0uPj/z+aFWBeXEYkuPLcOWtzyYi0XjmKcpmyoZYk5zF6qGmfTDrLilhkb+0SIHlnj8CNgCkSWgmcQOG5NbONp6sd4rfpT3HDhOWontT/7e+hSvceOqTMzUOISoeCo69AtAOZjjvl7DLLuO6sjRjSFm748WNfegCymK87yMn038oeQzZ7YaTAEHDlHoti9Tn4C/aRUG7yIY8ts2bQWmGgEJEq27xc7b5KUqx7fnaM50Rlvv8AKBDQzZj2XtAdqqe
+X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(396003)(39860400002)(46966006)(36840700001)(82740400003)(54906003)(110136005)(7416002)(16576012)(36756003)(83380400001)(6666004)(53546011)(31686004)(36860700001)(478600001)(7636003)(70586007)(356005)(47076005)(36906005)(2616005)(4326008)(86362001)(8676002)(316002)(2906002)(26005)(186003)(336012)(426003)(5660300002)(82310400003)(8936002)(70206006)(31696002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2021 20:17:19.4318
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bd37d45-715f-4fad-d026-08d8ed6f7ead
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT027.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5314
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Linus and Kent,
 
+Thanks you so much for your valuable inputs and time, Please see below, my follow ups.
 
-Le mer. 17 mars 2021 à 17:58, 周琰杰 (Zhou Yanjie) 
-<zhouyanjie@wanyeetech.com> a écrit :
-> Add support for probing the pinctrl-ingenic driver on the
-> X2000 SoC from Ingenic.
+On 3/21/21 11:00 PM, Kent Gibson wrote:
+> On Sat, Mar 20, 2021 at 12:56:36PM +0100, Linus Walleij wrote:
+>> Hi Dipen,
+>>
+>> thanks for your mail!
+>>
+>> I involved some other kernel people to get some discussion.
+>> I think Kent Gibson can be of great help because he is using
+>> GPIOs with high precision.
+>>
 > 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
+> Actually I just extended the cdev uAPI to provide the REALTIME option,
+> which was the event clock until we changed to MONOTONIC in Linux 5.7,
+> as there were some users that were requiring the REALTIME clock.
 > 
-> Notes:
->     v3:
->     New patch.
+>> We actually discussed this a bit when adding support for
+>> realtime timestamps.
+>>
+>> On Wed, Mar 17, 2021 at 11:29 PM Dipen Patel <dipenp@nvidia.com> wrote:
+>>
+>>> Nvidia Tegra SoCs have generic timestamping engine (GTE) hardware module which
+>>> can monitor SoC signals like IRQ lines and GPIO lines for state change, upon
+>>> detecting the change, it can timestamp and store in its internal hardware FIFO.
+>>> The advantage of the GTE module can be realized in applications like robotics
+>>> or autonomous vehicle where it can help record events with precise timestamp.
+>>
+>> That sounds very useful.
+>>
 > 
->  drivers/pinctrl/pinctrl-ingenic.c | 502 
-> +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 493 insertions(+), 9 deletions(-)
+> Indeed - it could remove the latency and jitter that results from
+> timestamping events in the IRQ handler.
 > 
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index eb4912d..538d1b5 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -57,6 +57,10 @@
->  #define X1830_GPIO_PEL				0x110
->  #define X1830_GPIO_PEH				0x120
+>> Certainly the kernel shall be able to handle this.
+>>
+>>> ============
+>>> For GPIO:
+>>> ============
+>>> 1.  GPIO has to be configured as input and IRQ must be enabled.
+>>> 2.  Ask GPIO controller driver to set corresponding timestamp bit in the
+>>>     specified GPIO config register.
+>>> 3.  Translate GPIO specified by the client to its internal bitmap.
+>>> 3.a For example, If client specifies GPIO line 31, it could be bit 13 of GTE
+>>>     register.
+>>> 4.  Set internal bits to enable monitoring in GTE module
+>>> 5.  Additionally GTE driver can open up lanes for the user space application
+>>>     as a client and can send timestamping events directly to the application.
+>>
+>> I have some concerns:
+>>
+>> 1. GPIO should for all professional applications be used with the character
+>> device /dev/gpiochipN, under no circumstances shall the old sysfs
+>> ABI be used for this. In this case it is necessary because the
+>> character device provides events in a FIFO to userspace, which is
+>> what we need.
+>>
 > 
-> +#define X2000_GPIO_EDG				0x70
-> +#define X2000_GPIO_PEPU				0x80
-> +#define X2000_GPIO_PEPD				0x90
-> +
->  #define REG_SET(x)					((x) + 0x4)
->  #define REG_CLEAR(x)				((x) + 0x8)
+> The cdev uAPI would certainly be the most sensible place to expose
+> this to userspace - its line events being a direct analog to what the GTE
+> provides.
 > 
-> @@ -94,6 +98,7 @@ enum jz_version {
->  	ID_X1000,
->  	ID_X1500,
->  	ID_X1830,
-> +	ID_X2000,
->  };
+>> The timestamp provided to userspace is an opaque 64bit
+>> unsigned value. I suppose we assume it is monotonic but
+>> you can actually augment the semantics for your specific
+>> stamp, as long as 64 bits is gonna work.
+>>
+>> 2. The timestamp for the chardev is currently obtained in
+>> drivers/gpio/gpiolib-cdev.c like this:
+>>
+>> static u64 line_event_timestamp(struct line *line)
+>> {
+>>         if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &line->desc->flags))
+>>                 return ktime_get_real_ns();
+>>
+>>         return ktime_get_ns();
+>> }
+>>
+>> What you want to do is to add a new flag for hardware timestamps
+>> and use that if available. FLAG_EVENT_CLOCK_HARDWARE?
+>> FLAG_EVENT_CLOCK_NATIVE?
+>>
 > 
->  struct ingenic_chip_info {
-> @@ -2273,6 +2278,439 @@ static const struct ingenic_chip_info 
-> x1830_chip_info = {
->  	.pull_downs = x1830_pull_downs,
->  };
+> HARDWARE looks better to me, as NATIVE is more vague.
 > 
-> +static const u32 x2000_pull_ups[5] = {
-> +	0x0003ffff, 0xffffffff, 0x1ff0ffff, 0xc7fe3f3f, 0x8fff003f,
-> +};
-> +
-> +static const u32 x2000_pull_downs[5] = {
-> +	0x0003ffff, 0xffffffff, 0x1ff0ffff, 0x00000000, 0x8fff003f,
-> +};
-> +
-> +static int x2000_uart0_data_pins[] = { 0x77, 0x78, };
-> +static int x2000_uart0_hwflow_pins[] = { 0x79, 0x7a, };
-> +static int x2000_uart1_data_pins[] = { 0x57, 0x58, };
-> +static int x2000_uart1_hwflow_pins[] = { 0x55, 0x56, };
-> +static int x2000_uart2_data_pins[] = { 0x7e, 0x7f, };
-> +static int x2000_uart3_data_c_pins[] = { 0x59, 0x5a, };
-> +static int x2000_uart3_data_d_pins[] = { 0x62, 0x63, };
-> +static int x2000_uart3_hwflow_c_pins[] = { 0x5b, 0x5c, };
-> +static int x2000_uart3_hwflow_d_pins[] = { 0x60, 0x61, };
-> +static int x2000_uart4_data_a_pins[] = { 0x02, 0x03, };
-> +static int x2000_uart4_data_c_pins[] = { 0x4b, 0x4c, };
-> +static int x2000_uart4_hwflow_a_pins[] = { 0x00, 0x01, };
-> +static int x2000_uart4_hwflow_c_pins[] = { 0x49, 0x4a, };
-> +static int x2000_uart5_data_a_pins[] = { 0x04, 0x05, };
-> +static int x2000_uart5_data_c_pins[] = { 0x45, 0x46, };
-> +static int x2000_uart6_data_a_pins[] = { 0x06, 0x07, };
-> +static int x2000_uart6_data_c_pins[] = { 0x47, 0x48, };
-> +static int x2000_uart7_data_a_pins[] = { 0x08, 0x09, };
-> +static int x2000_uart7_data_c_pins[] = { 0x41, 0x42, };
-> +static int x2000_uart8_data_pins[] = { 0x3c, 0x3d, };
-> +static int x2000_uart9_data_pins[] = { 0x3e, 0x3f, };
-> +static int x2000_sfc0_d_pins[] = { 0x73, 0x74, 0x75, 0x76, 0x71, 
-> 0x72, };
-> +static int x2000_sfc0_e_pins[] = { 0x92, 0x93, 0x94, 0x95, 0x90, 
-> 0x91, };
-> +static int x2000_sfc1_pins[] = { 0x77, 0x78, 0x79, 0x7a, };
-> +static int x2000_ssi0_dt_b_pins[] = { 0x3e, };
-> +static int x2000_ssi0_dt_d_pins[] = { 0x69, };
-> +static int x2000_ssi0_dr_b_pins[] = { 0x3d, };
-> +static int x2000_ssi0_dr_d_pins[] = { 0x6a, };
-> +static int x2000_ssi0_clk_b_pins[] = { 0x3f, };
-> +static int x2000_ssi0_clk_d_pins[] = { 0x68, };
-> +static int x2000_ssi0_ce0_b_pins[] = { 0x3c, };
-> +static int x2000_ssi0_ce0_d_pins[] = { 0x6d, };
-> +static int x2000_ssi1_dt_c_pins[] = { 0x4b, };
-> +static int x2000_ssi1_dt_d_pins[] = { 0x72, };
-> +static int x2000_ssi1_dt_e_pins[] = { 0x91, };
-> +static int x2000_ssi1_dr_c_pins[] = { 0x4a, };
-> +static int x2000_ssi1_dr_d_pins[] = { 0x73, };
-> +static int x2000_ssi1_dr_e_pins[] = { 0x92, };
-> +static int x2000_ssi1_clk_c_pins[] = { 0x4c, };
-> +static int x2000_ssi1_clk_d_pins[] = { 0x71, };
-> +static int x2000_ssi1_clk_e_pins[] = { 0x90, };
-> +static int x2000_ssi1_ce0_c_pins[] = { 0x49, };
-> +static int x2000_ssi1_ce0_d_pins[] = { 0x76, };
-> +static int x2000_ssi1_ce0_e_pins[] = { 0x95, };
-> +static int x2000_mmc0_1bit_pins[] = { 0x71, 0x72, 0x73, };
-> +static int x2000_mmc0_4bit_pins[] = { 0x74, 0x75, 0x75, };
-> +static int x2000_mmc0_8bit_pins[] = { 0x77, 0x78, 0x79, 0x7a, };
-> +static int x2000_mmc1_1bit_pins[] = { 0x68, 0x69, 0x6a, };
-> +static int x2000_mmc1_4bit_pins[] = { 0x6b, 0x6c, 0x6d, };
-> +static int x2000_mmc2_1bit_pins[] = { 0x80, 0x81, 0x82, };
-> +static int x2000_mmc2_4bit_pins[] = { 0x83, 0x84, 0x85, };
-> +static int x2000_emc_8bit_data_pins[] = {
-> +	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
-> +};
-> +static int x2000_emc_16bit_data_pins[] = {
-> +	0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f,
-> +};
-> +static int x2000_emc_addr_pins[] = {
-> +	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
-> +	0x28, 0x29, 0x2a, 0x2b, 0x2c,
-> +};
-> +static int x2000_emc_rd_we_pins[] = { 0x2d, 0x2e, };
-> +static int x2000_emc_wait_pins[] = { 0x2f, };
-> +static int x2000_emc_cs1_pins[] = { 0x57, };
-> +static int x2000_emc_cs2_pins[] = { 0x58, };
-> +static int x2000_i2c0_pins[] = { 0x4e, 0x4d, };
-> +static int x2000_i2c1_c_pins[] = { 0x58, 0x57, };
-> +static int x2000_i2c1_d_pins[] = { 0x6c, 0x6b, };
-> +static int x2000_i2c2_b_pins[] = { 0x37, 0x36, };
-> +static int x2000_i2c2_d_pins[] = { 0x75, 0x74, };
-> +static int x2000_i2c2_e_pins[] = { 0x94, 0x93, };
-> +static int x2000_i2c3_a_pins[] = { 0x11, 0x10, };
-> +static int x2000_i2c3_d_pins[] = { 0x7f, 0x7e, };
-> +static int x2000_i2c4_c_pins[] = { 0x5a, 0x59, };
-> +static int x2000_i2c4_d_pins[] = { 0x61, 0x60, };
-> +static int x2000_i2c5_c_pins[] = { 0x5c, 0x5b, };
-> +static int x2000_i2c5_d_pins[] = { 0x65, 0x64, };
-> +static int x2000_i2s1_data_tx_pins[] = { 0x47, };
-> +static int x2000_i2s1_data_rx_pins[] = { 0x44, };
-> +static int x2000_i2s1_clk_tx_pins[] = { 0x45, 0x46, };
-> +static int x2000_i2s1_clk_rx_pins[] = { 0x42, 0x43, };
-> +static int x2000_i2s1_sysclk_tx_pins[] = { 0x48, };
-> +static int x2000_i2s1_sysclk_rx_pins[] = { 0x41, };
-> +static int x2000_i2s2_data_rx0_pins[] = { 0x0a, };
-> +static int x2000_i2s2_data_rx1_pins[] = { 0x0b, };
-> +static int x2000_i2s2_data_rx2_pins[] = { 0x0c, };
-> +static int x2000_i2s2_data_rx3_pins[] = { 0x0d, };
-> +static int x2000_i2s2_clk_rx_pins[] = { 0x11, 0x09, };
-> +static int x2000_i2s2_sysclk_rx_pins[] = { 0x07, };
-> +static int x2000_i2s3_data_tx0_pins[] = { 0x03, };
-> +static int x2000_i2s3_data_tx1_pins[] = { 0x04, };
-> +static int x2000_i2s3_data_tx2_pins[] = { 0x05, };
-> +static int x2000_i2s3_data_tx3_pins[] = { 0x06, };
-> +static int x2000_i2s3_clk_tx_pins[] = { 0x10, 0x02, };
-> +static int x2000_i2s3_sysclk_tx_pins[] = { 0x00, };
-> +static int x2000_cim_8bit_pins[] = {
-> +	0x0e, 0x0c, 0x0d, 0x4f,
-> +	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-> +};
-> +static int x2000_cim_12bit_pins[] = { 0x08, 0x09, 0x0a, 0x0b, };
-> +static int x2000_lcd_rgb_24bit_pins[] = {
-> +	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
-> +	0x38, 0x3b, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d,
-> +	0x2e, 0x2f, 0x3a, 0x39, 0x30, 0x31, 0x32, 0x33,
-> +	0x34, 0x35, 0x36, 0x37,
-> +};
-> +static int x2000_lcd_slcd_8bit_pins[] = {
-> +	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
-> +	0x3a, 0x38, 0x3b, 0x30, 0x39,
-> +};
-> +static int x2000_lcd_slcd_16bit_pins[] = {
-> +	0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
-> +};
-
-Your LCD groups shouldn't overlap. See how it's done for the JZ4725B.
-
-> +static int x2000_pwm_pwm0_c_pins[] = { 0x40, };
-> +static int x2000_pwm_pwm0_d_pins[] = { 0x7e, };
-> +static int x2000_pwm_pwm1_c_pins[] = { 0x41, };
-> +static int x2000_pwm_pwm1_d_pins[] = { 0x7f, };
-> +static int x2000_pwm_pwm2_c_pins[] = { 0x42, };
-> +static int x2000_pwm_pwm2_e_pins[] = { 0x80, };
-> +static int x2000_pwm_pwm3_c_pins[] = { 0x43, };
-> +static int x2000_pwm_pwm3_e_pins[] = { 0x81, };
-> +static int x2000_pwm_pwm4_c_pins[] = { 0x44, };
-> +static int x2000_pwm_pwm4_e_pins[] = { 0x82, };
-> +static int x2000_pwm_pwm5_c_pins[] = { 0x45, };
-> +static int x2000_pwm_pwm5_e_pins[] = { 0x83, };
-> +static int x2000_pwm_pwm6_c_pins[] = { 0x46, };
-> +static int x2000_pwm_pwm6_e_pins[] = { 0x84, };
-> +static int x2000_pwm_pwm7_c_pins[] = { 0x47, };
-> +static int x2000_pwm_pwm7_e_pins[] = { 0x85, };
-> +static int x2000_pwm_pwm8_pins[] = { 0x48, };
-> +static int x2000_pwm_pwm9_pins[] = { 0x49, };
-> +static int x2000_pwm_pwm10_pins[] = { 0x4a, };
-> +static int x2000_pwm_pwm11_pins[] = { 0x4b, };
-> +static int x2000_pwm_pwm12_pins[] = { 0x4c, };
-> +static int x2000_pwm_pwm13_pins[] = { 0x4d, };
-> +static int x2000_pwm_pwm14_pins[] = { 0x4e, };
-> +static int x2000_pwm_pwm15_pins[] = { 0x4f, };
-> +static int x2000_mac0_rmii_pins[] = {
-> +	0x4b, 0x47, 0x46, 0x4a, 0x43, 0x42, 0x4c, 0x4d, 0x4e, 0x41,
-> +};
-> +static int x2000_mac0_rgmii_pins[] = {
-> +	0x4b, 0x49, 0x48, 0x47, 0x46, 0x4a, 0x45, 0x44, 0x43, 0x42,
-> +	0x4c, 0x4d, 0x4f, 0x4e, 0x41,
-> +};
-> +static int x2000_mac1_rmii_pins[] = {
-> +	0x32, 0x2d, 0x2c, 0x31, 0x29, 0x28, 0x33, 0x34, 0x35, 0x37,
-> +};
-> +static int x2000_mac1_rgmii_pins[] = {
-> +	0x32, 0x2f, 0x2e, 0x2d, 0x2c, 0x31, 0x2b, 0x2a, 0x29, 0x28,
-> +	0x33, 0x34, 0x36, 0x35, 0x37,
-> +};
-> +static int x2000_otg_pins[] = { 0x96, };
-> +
-> +static u8 x2000_cim_8bit_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-> 0, 2, };
-> +
-> +static const struct group_desc x2000_groups[] = {
-> +	INGENIC_PIN_GROUP("uart0-data", x2000_uart0_data, 2),
-> +	INGENIC_PIN_GROUP("uart0-hwflow", x2000_uart0_hwflow, 2),
-> +	INGENIC_PIN_GROUP("uart1-data", x2000_uart1_data, 1),
-> +	INGENIC_PIN_GROUP("uart1-hwflow", x2000_uart1_hwflow, 1),
-> +	INGENIC_PIN_GROUP("uart2-data", x2000_uart2_data, 0),
-> +	INGENIC_PIN_GROUP("uart3-data-c", x2000_uart3_data_c, 0),
-> +	INGENIC_PIN_GROUP("uart3-data-d", x2000_uart3_data_d, 1),
-> +	INGENIC_PIN_GROUP("uart3-hwflow-c", x2000_uart3_hwflow_c, 0),
-> +	INGENIC_PIN_GROUP("uart3-hwflow-d", x2000_uart3_hwflow_d, 1),
-> +	INGENIC_PIN_GROUP("uart4-data-a", x2000_uart4_data_a, 1),
-> +	INGENIC_PIN_GROUP("uart4-data-c", x2000_uart4_data_c, 3),
-> +	INGENIC_PIN_GROUP("uart4-hwflow-a", x2000_uart4_hwflow_a, 1),
-> +	INGENIC_PIN_GROUP("uart4-hwflow-c", x2000_uart4_hwflow_c, 3),
-> +	INGENIC_PIN_GROUP("uart5-data-a", x2000_uart5_data_a, 1),
-> +	INGENIC_PIN_GROUP("uart5-data-c", x2000_uart5_data_c, 3),
-> +	INGENIC_PIN_GROUP("uart6-data-a", x2000_uart6_data_a, 1),
-> +	INGENIC_PIN_GROUP("uart6-data-c", x2000_uart6_data_c, 3),
-> +	INGENIC_PIN_GROUP("uart7-data-a", x2000_uart7_data_a, 1),
-> +	INGENIC_PIN_GROUP("uart7-data-c", x2000_uart7_data_c, 3),
-> +	INGENIC_PIN_GROUP("uart8-data", x2000_uart8_data, 3),
-> +	INGENIC_PIN_GROUP("uart9-data", x2000_uart9_data, 3),
-> +	INGENIC_PIN_GROUP("sfc0-d", x2000_sfc0_d, 1),
-> +	INGENIC_PIN_GROUP("sfc0-e", x2000_sfc0_e, 0),
-> +	INGENIC_PIN_GROUP("sfc1", x2000_sfc1, 1),
-> +	INGENIC_PIN_GROUP("ssi0-dt-b", x2000_ssi0_dt_b, 1),
-> +	INGENIC_PIN_GROUP("ssi0-dt-d", x2000_ssi0_dt_d, 1),
-> +	INGENIC_PIN_GROUP("ssi0-dr-b", x2000_ssi0_dr_b, 1),
-> +	INGENIC_PIN_GROUP("ssi0-dr-d", x2000_ssi0_dr_d, 1),
-> +	INGENIC_PIN_GROUP("ssi0-clk-b", x2000_ssi0_clk_b, 1),
-> +	INGENIC_PIN_GROUP("ssi0-clk-d", x2000_ssi0_clk_d, 1),
-> +	INGENIC_PIN_GROUP("ssi0-ce0-b", x2000_ssi0_ce0_b, 1),
-> +	INGENIC_PIN_GROUP("ssi0-ce0-d", x2000_ssi0_ce0_d, 1),
-> +	INGENIC_PIN_GROUP("ssi1-dt-c", x2000_ssi1_dt_c, 2),
-> +	INGENIC_PIN_GROUP("ssi1-dt-d", x2000_ssi1_dt_d, 2),
-> +	INGENIC_PIN_GROUP("ssi1-dt-e", x2000_ssi1_dt_e, 1),
-> +	INGENIC_PIN_GROUP("ssi1-dr-c", x2000_ssi1_dr_c, 2),
-> +	INGENIC_PIN_GROUP("ssi1-dr-d", x2000_ssi1_dr_d, 2),
-> +	INGENIC_PIN_GROUP("ssi1-dr-e", x2000_ssi1_dr_e, 1),
-> +	INGENIC_PIN_GROUP("ssi1-clk-c", x2000_ssi1_clk_c, 2),
-> +	INGENIC_PIN_GROUP("ssi1-clk-d", x2000_ssi1_clk_d, 2),
-> +	INGENIC_PIN_GROUP("ssi1-clk-e", x2000_ssi1_clk_e, 1),
-> +	INGENIC_PIN_GROUP("ssi1-ce0-c", x2000_ssi1_ce0_c, 2),
-> +	INGENIC_PIN_GROUP("ssi1-ce0-d", x2000_ssi1_ce0_d, 2),
-> +	INGENIC_PIN_GROUP("ssi1-ce0-e", x2000_ssi1_ce0_e, 1),
-> +	INGENIC_PIN_GROUP("mmc0-1bit", x2000_mmc0_1bit, 0),
-> +	INGENIC_PIN_GROUP("mmc0-4bit", x2000_mmc0_4bit, 0),
-> +	INGENIC_PIN_GROUP("mmc0-8bit", x2000_mmc0_8bit, 0),
-> +	INGENIC_PIN_GROUP("mmc1-1bit", x2000_mmc1_1bit, 0),
-> +	INGENIC_PIN_GROUP("mmc1-4bit", x2000_mmc1_4bit, 0),
-> +	INGENIC_PIN_GROUP("mmc2-1bit", x2000_mmc2_1bit, 0),
-> +	INGENIC_PIN_GROUP("mmc2-4bit", x2000_mmc2_4bit, 0),
-> +	INGENIC_PIN_GROUP("emc-8bit-data", x2000_emc_8bit_data, 0),
-> +	INGENIC_PIN_GROUP("emc-16bit-data", x2000_emc_16bit_data, 0),
-> +	INGENIC_PIN_GROUP("emc-addr", x2000_emc_addr, 0),
-> +	INGENIC_PIN_GROUP("emc-rd-we", x2000_emc_rd_we, 0),
-> +	INGENIC_PIN_GROUP("emc-wait", x2000_emc_wait, 0),
-> +	INGENIC_PIN_GROUP("emc-cs1", x2000_emc_cs1, 3),
-> +	INGENIC_PIN_GROUP("emc-cs2", x2000_emc_cs2, 3),
-> +	INGENIC_PIN_GROUP("i2c0-data", x2000_i2c0, 3),
-> +	INGENIC_PIN_GROUP("i2c1-data-c", x2000_i2c1_c, 2),
-> +	INGENIC_PIN_GROUP("i2c1-data-d", x2000_i2c1_d, 1),
-> +	INGENIC_PIN_GROUP("i2c2-data-b", x2000_i2c2_b, 2),
-> +	INGENIC_PIN_GROUP("i2c2-data-d", x2000_i2c2_d, 2),
-> +	INGENIC_PIN_GROUP("i2c2-data-e", x2000_i2c2_e, 1),
-> +	INGENIC_PIN_GROUP("i2c3-data-a", x2000_i2c3_a, 0),
-> +	INGENIC_PIN_GROUP("i2c3-data-d", x2000_i2c3_d, 1),
-> +	INGENIC_PIN_GROUP("i2c4-data-c", x2000_i2c4_c, 1),
-> +	INGENIC_PIN_GROUP("i2c4-data-d", x2000_i2c4_d, 2),
-> +	INGENIC_PIN_GROUP("i2c5-data-c", x2000_i2c5_c, 1),
-> +	INGENIC_PIN_GROUP("i2c5-data-d", x2000_i2c5_d, 1),
-> +	INGENIC_PIN_GROUP("i2s1-data-tx", x2000_i2s1_data_tx, 2),
-> +	INGENIC_PIN_GROUP("i2s1-data-rx", x2000_i2s1_data_rx, 2),
-> +	INGENIC_PIN_GROUP("i2s1-clk-tx", x2000_i2s1_clk_tx, 2),
-> +	INGENIC_PIN_GROUP("i2s1-clk-rx", x2000_i2s1_clk_rx, 2),
-> +	INGENIC_PIN_GROUP("i2s1-sysclk-tx", x2000_i2s1_sysclk_tx, 2),
-> +	INGENIC_PIN_GROUP("i2s1-sysclk-rx", x2000_i2s1_sysclk_rx, 2),
-> +	INGENIC_PIN_GROUP("i2s2-data-rx0", x2000_i2s2_data_rx0, 2),
-> +	INGENIC_PIN_GROUP("i2s2-data-rx1", x2000_i2s2_data_rx1, 2),
-> +	INGENIC_PIN_GROUP("i2s2-data-rx2", x2000_i2s2_data_rx2, 2),
-> +	INGENIC_PIN_GROUP("i2s2-data-rx3", x2000_i2s2_data_rx3, 2),
-> +	INGENIC_PIN_GROUP("i2s2-clk-rx", x2000_i2s2_clk_rx, 2),
-> +	INGENIC_PIN_GROUP("i2s2-sysclk-rx", x2000_i2s2_sysclk_rx, 2),
-> +	INGENIC_PIN_GROUP("i2s3-data-tx0", x2000_i2s3_data_tx0, 2),
-> +	INGENIC_PIN_GROUP("i2s3-data-tx1", x2000_i2s3_data_tx1, 2),
-> +	INGENIC_PIN_GROUP("i2s3-data-tx2", x2000_i2s3_data_tx2, 2),
-> +	INGENIC_PIN_GROUP("i2s3-data-tx3", x2000_i2s3_data_tx3, 2),
-> +	INGENIC_PIN_GROUP("i2s3-clk-tx", x2000_i2s3_clk_tx, 2),
-> +	INGENIC_PIN_GROUP("i2s3-sysclk-tx", x2000_i2s3_sysclk_tx, 2),
-> +	INGENIC_PIN_GROUP_FUNCS("cim-data-8bit", x2000_cim_8bit,
-> +				x2000_cim_8bit_funcs),
-> +	INGENIC_PIN_GROUP("cim-data-12bit", x2000_cim_12bit, 0),
-> +	INGENIC_PIN_GROUP("lcd-rgb-24bit", x2000_lcd_rgb_24bit, 1),
-> +	INGENIC_PIN_GROUP("lcd-slcd-8bit", x2000_lcd_slcd_8bit, 2),
-> +	INGENIC_PIN_GROUP("lcd-slcd-16bit", x2000_lcd_slcd_16bit, 2),
-
-You should have these groups: lcd-8bit, lcd-16bit, lcd-18bit, 
-lcd-24bit, lcd-generic, lcd-special.
-
-Your lcd-slcd-16bit would then be lcd-8bit + lcd-16bit. (non-SLCD 
-panels would need lcd-generic as well).
-
-> +	{ "lcd-no-pins", },
-
-Like on the other patches, please drop this.
-
-Cheers,
--Paul
-
-> +	INGENIC_PIN_GROUP("pwm0-c", x2000_pwm_pwm0_c, 0),
-> +	INGENIC_PIN_GROUP("pwm0-d", x2000_pwm_pwm0_d, 2),
-> +	INGENIC_PIN_GROUP("pwm1-c", x2000_pwm_pwm1_c, 0),
-> +	INGENIC_PIN_GROUP("pwm1-d", x2000_pwm_pwm1_d, 2),
-> +	INGENIC_PIN_GROUP("pwm2-c", x2000_pwm_pwm2_c, 0),
-> +	INGENIC_PIN_GROUP("pwm2-e", x2000_pwm_pwm2_e, 1),
-> +	INGENIC_PIN_GROUP("pwm3-c", x2000_pwm_pwm3_c, 0),
-> +	INGENIC_PIN_GROUP("pwm3-e", x2000_pwm_pwm3_e, 1),
-> +	INGENIC_PIN_GROUP("pwm4-c", x2000_pwm_pwm4_c, 0),
-> +	INGENIC_PIN_GROUP("pwm4-e", x2000_pwm_pwm4_e, 1),
-> +	INGENIC_PIN_GROUP("pwm5-c", x2000_pwm_pwm5_c, 0),
-> +	INGENIC_PIN_GROUP("pwm5-e", x2000_pwm_pwm5_e, 1),
-> +	INGENIC_PIN_GROUP("pwm6-c", x2000_pwm_pwm6_c, 0),
-> +	INGENIC_PIN_GROUP("pwm6-e", x2000_pwm_pwm6_e, 1),
-> +	INGENIC_PIN_GROUP("pwm7-c", x2000_pwm_pwm7_c, 0),
-> +	INGENIC_PIN_GROUP("pwm7-e", x2000_pwm_pwm7_e, 1),
-> +	INGENIC_PIN_GROUP("pwm8", x2000_pwm_pwm8, 0),
-> +	INGENIC_PIN_GROUP("pwm9", x2000_pwm_pwm9, 0),
-> +	INGENIC_PIN_GROUP("pwm10", x2000_pwm_pwm10, 0),
-> +	INGENIC_PIN_GROUP("pwm11", x2000_pwm_pwm11, 0),
-> +	INGENIC_PIN_GROUP("pwm12", x2000_pwm_pwm12, 0),
-> +	INGENIC_PIN_GROUP("pwm13", x2000_pwm_pwm13, 0),
-> +	INGENIC_PIN_GROUP("pwm14", x2000_pwm_pwm14, 0),
-> +	INGENIC_PIN_GROUP("pwm15", x2000_pwm_pwm15, 0),
-> +	INGENIC_PIN_GROUP("mac0-rmii", x2000_mac0_rmii, 1),
-> +	INGENIC_PIN_GROUP("mac0-rgmii", x2000_mac0_rgmii, 1),
-> +	INGENIC_PIN_GROUP("mac1-rmii", x2000_mac1_rmii, 3),
-> +	INGENIC_PIN_GROUP("mac1-rgmii", x2000_mac1_rgmii, 3),
-> +	INGENIC_PIN_GROUP("otg-vbus", x2000_otg, 0),
-> +};
-> +
-> +static const char *x2000_uart0_groups[] = { "uart0-data", 
-> "uart0-hwflow", };
-> +static const char *x2000_uart1_groups[] = { "uart1-data", 
-> "uart1-hwflow", };
-> +static const char *x2000_uart2_groups[] = { "uart2-data", };
-> +static const char *x2000_uart3_groups[] = {
-> +	"uart3-data-c", "uart3-data-d", "uart3-hwflow-c", "uart3-hwflow-d",
-> +};
-> +static const char *x2000_uart4_groups[] = {
-> +	"uart4-data-a", "uart4-data-c", "uart4-hwflow-a", "uart4-hwflow-c",
-> +};
-> +static const char *x2000_uart5_groups[] = { "uart5-data-a", 
-> "uart5-data-c", };
-> +static const char *x2000_uart6_groups[] = { "uart6-data-a", 
-> "uart6-data-c", };
-> +static const char *x2000_uart7_groups[] = { "uart7-data-a", 
-> "uart7-data-c", };
-> +static const char *x2000_uart8_groups[] = { "uart8-data", };
-> +static const char *x2000_uart9_groups[] = { "uart9-data", };
-> +static const char *x2000_sfc_groups[] = { "sfc0-d", "sfc0-e", 
-> "sfc1", };
-> +static const char *x2000_ssi0_groups[] = {
-> +	"ssi0-dt-b", "ssi0-dt-d",
-> +	"ssi0-dr-b", "ssi0-dr-d",
-> +	"ssi0-clk-b", "ssi0-clk-d",
-> +	"ssi0-ce0-b", "ssi0-ce0-d",
-> +};
-> +static const char *x2000_ssi1_groups[] = {
-> +	"ssi1-dt-c", "ssi1-dt-d", "ssi1-dt-e",
-> +	"ssi1-dr-c", "ssi1-dr-d", "ssi1-dr-e",
-> +	"ssi1-clk-c", "ssi1-clk-d", "ssi1-clk-e",
-> +	"ssi1-ce0-c", "ssi1-ce0-d", "ssi1-ce0-e",
-> +};
-> +static const char *x2000_mmc0_groups[] = { "mmc0-1bit", "mmc0-4bit", 
-> "mmc0-8bit", };
-> +static const char *x2000_mmc1_groups[] = { "mmc1-1bit", "mmc1-4bit", 
-> };
-> +static const char *x2000_mmc2_groups[] = { "mmc2-1bit", "mmc2-4bit", 
-> };
-> +static const char *x2000_emc_groups[] = {
-> +	"emc-8bit-data", "emc-16bit-data",
-> +	"emc-addr", "emc-rd-we", "emc-wait",
-> +};
-> +static const char *x2000_cs1_groups[] = { "emc-cs1", };
-> +static const char *x2000_cs2_groups[] = { "emc-cs2", };
-> +static const char *x2000_i2c0_groups[] = { "i2c0-data", };
-> +static const char *x2000_i2c1_groups[] = { "i2c1-data-c", 
-> "i2c1-data-d", };
-> +static const char *x2000_i2c2_groups[] = { "i2c2-data-b", 
-> "i2c2-data-d", };
-> +static const char *x2000_i2c3_groups[] = { "i2c3-data-a", 
-> "i2c3-data-d", };
-> +static const char *x2000_i2c4_groups[] = { "i2c4-data-c", 
-> "i2c4-data-d", };
-> +static const char *x2000_i2c5_groups[] = { "i2c5-data-c", 
-> "i2c5-data-d", };
-> +static const char *x2000_i2s1_groups[] = {
-> +	"i2s1-data-tx", "i2s1-data-rx",
-> +	"i2s1-clk-tx", "i2s1-clk-rx",
-> +	"i2s1-sysclk-tx", "i2s1-sysclk-rx",
-> +};
-> +static const char *x2000_i2s2_groups[] = {
-> +	"i2s2-data-rx0", "i2s2-data-rx1", "i2s2-data-rx2", "i2s2-data-rx3",
-> +	"i2s2-clk-rx", "i2s2-sysclk-rx",
-> +};
-> +static const char *x2000_i2s3_groups[] = {
-> +	"i2s3-data-tx0", "i2s3-data-tx1", "i2s3-data-tx2", "i2s3-data-tx3",
-> +	"i2s3-clk-tx", "i2s3-sysclk-tx",
-> +};
-> +static const char *x2000_cim_groups[] = { "cim-data-8bit", 
-> "cim-data-12bit", };
-> +static const char *x2000_lcd_groups[] = {
-> +	"lcd-rgb-24bit", "lcd-slcd-8bit", "lcd-slcd-16bit", "lcd-no-pins",
-> +};
-> +static const char *x2000_pwm0_groups[] = { "pwm0-c", "pwm0-d", };
-> +static const char *x2000_pwm1_groups[] = { "pwm1-c", "pwm1-d", };
-> +static const char *x2000_pwm2_groups[] = { "pwm2-c", "pwm2-e", };
-> +static const char *x2000_pwm3_groups[] = { "pwm3-c", "pwm3-r", };
-> +static const char *x2000_pwm4_groups[] = { "pwm4-c", "pwm4-e", };
-> +static const char *x2000_pwm5_groups[] = { "pwm5-c", "pwm5-e", };
-> +static const char *x2000_pwm6_groups[] = { "pwm6-c", "pwm6-e", };
-> +static const char *x2000_pwm7_groups[] = { "pwm7-c", "pwm7-e", };
-> +static const char *x2000_pwm8_groups[] = { "pwm8", };
-> +static const char *x2000_pwm9_groups[] = { "pwm9", };
-> +static const char *x2000_pwm10_groups[] = { "pwm10", };
-> +static const char *x2000_pwm11_groups[] = { "pwm11", };
-> +static const char *x2000_pwm12_groups[] = { "pwm12", };
-> +static const char *x2000_pwm13_groups[] = { "pwm13", };
-> +static const char *x2000_pwm14_groups[] = { "pwm14", };
-> +static const char *x2000_pwm15_groups[] = { "pwm15", };
-> +static const char *x2000_mac0_groups[] = { "mac0-rmii", 
-> "mac0-rgmii", };
-> +static const char *x2000_mac1_groups[] = { "mac1-rmii", 
-> "mac1-rgmii", };
-> +static const char *x2000_otg_groups[] = { "otg-vbus", };
-> +
-> +static const struct function_desc x2000_functions[] = {
-> +	{ "uart0", x2000_uart0_groups, ARRAY_SIZE(x2000_uart0_groups), },
-> +	{ "uart1", x2000_uart1_groups, ARRAY_SIZE(x2000_uart1_groups), },
-> +	{ "uart2", x2000_uart2_groups, ARRAY_SIZE(x2000_uart2_groups), },
-> +	{ "uart3", x2000_uart3_groups, ARRAY_SIZE(x2000_uart3_groups), },
-> +	{ "uart4", x2000_uart4_groups, ARRAY_SIZE(x2000_uart4_groups), },
-> +	{ "uart5", x2000_uart5_groups, ARRAY_SIZE(x2000_uart5_groups), },
-> +	{ "uart6", x2000_uart6_groups, ARRAY_SIZE(x2000_uart6_groups), },
-> +	{ "uart7", x2000_uart7_groups, ARRAY_SIZE(x2000_uart7_groups), },
-> +	{ "uart8", x2000_uart8_groups, ARRAY_SIZE(x2000_uart8_groups), },
-> +	{ "uart9", x2000_uart9_groups, ARRAY_SIZE(x2000_uart9_groups), },
-> +	{ "sfc", x2000_sfc_groups, ARRAY_SIZE(x2000_sfc_groups), },
-> +	{ "ssi0", x2000_ssi0_groups, ARRAY_SIZE(x2000_ssi0_groups), },
-> +	{ "ssi1", x2000_ssi1_groups, ARRAY_SIZE(x2000_ssi1_groups), },
-> +	{ "mmc0", x2000_mmc0_groups, ARRAY_SIZE(x2000_mmc0_groups), },
-> +	{ "mmc1", x2000_mmc1_groups, ARRAY_SIZE(x2000_mmc1_groups), },
-> +	{ "mmc2", x2000_mmc2_groups, ARRAY_SIZE(x2000_mmc2_groups), },
-> +	{ "emc", x2000_emc_groups, ARRAY_SIZE(x2000_emc_groups), },
-> +	{ "emc-cs1", x2000_cs1_groups, ARRAY_SIZE(x2000_cs1_groups), },
-> +	{ "emc-cs2", x2000_cs2_groups, ARRAY_SIZE(x2000_cs2_groups), },
-> +	{ "i2c0", x2000_i2c0_groups, ARRAY_SIZE(x2000_i2c0_groups), },
-> +	{ "i2c1", x2000_i2c1_groups, ARRAY_SIZE(x2000_i2c1_groups), },
-> +	{ "i2c2", x2000_i2c2_groups, ARRAY_SIZE(x2000_i2c2_groups), },
-> +	{ "i2c3", x2000_i2c3_groups, ARRAY_SIZE(x2000_i2c3_groups), },
-> +	{ "i2c4", x2000_i2c4_groups, ARRAY_SIZE(x2000_i2c4_groups), },
-> +	{ "i2c5", x2000_i2c5_groups, ARRAY_SIZE(x2000_i2c5_groups), },
-> +	{ "i2s1", x2000_i2s1_groups, ARRAY_SIZE(x2000_i2s1_groups), },
-> +	{ "i2s2", x2000_i2s2_groups, ARRAY_SIZE(x2000_i2s2_groups), },
-> +	{ "i2s3", x2000_i2s3_groups, ARRAY_SIZE(x2000_i2s3_groups), },
-> +	{ "cim", x2000_cim_groups, ARRAY_SIZE(x2000_cim_groups), },
-> +	{ "lcd", x2000_lcd_groups, ARRAY_SIZE(x2000_lcd_groups), },
-> +	{ "pwm0", x2000_pwm0_groups, ARRAY_SIZE(x2000_pwm0_groups), },
-> +	{ "pwm1", x2000_pwm1_groups, ARRAY_SIZE(x2000_pwm1_groups), },
-> +	{ "pwm2", x2000_pwm2_groups, ARRAY_SIZE(x2000_pwm2_groups), },
-> +	{ "pwm3", x2000_pwm3_groups, ARRAY_SIZE(x2000_pwm3_groups), },
-> +	{ "pwm4", x2000_pwm4_groups, ARRAY_SIZE(x2000_pwm4_groups), },
-> +	{ "pwm5", x2000_pwm5_groups, ARRAY_SIZE(x2000_pwm5_groups), },
-> +	{ "pwm6", x2000_pwm6_groups, ARRAY_SIZE(x2000_pwm6_groups), },
-> +	{ "pwm7", x2000_pwm7_groups, ARRAY_SIZE(x2000_pwm7_groups), },
-> +	{ "pwm8", x2000_pwm8_groups, ARRAY_SIZE(x2000_pwm8_groups), },
-> +	{ "pwm9", x2000_pwm9_groups, ARRAY_SIZE(x2000_pwm9_groups), },
-> +	{ "pwm10", x2000_pwm10_groups, ARRAY_SIZE(x2000_pwm10_groups), },
-> +	{ "pwm11", x2000_pwm11_groups, ARRAY_SIZE(x2000_pwm11_groups), },
-> +	{ "pwm12", x2000_pwm12_groups, ARRAY_SIZE(x2000_pwm12_groups), },
-> +	{ "pwm13", x2000_pwm13_groups, ARRAY_SIZE(x2000_pwm13_groups), },
-> +	{ "pwm14", x2000_pwm14_groups, ARRAY_SIZE(x2000_pwm14_groups), },
-> +	{ "pwm15", x2000_pwm15_groups, ARRAY_SIZE(x2000_pwm15_groups), },
-> +	{ "mac0", x2000_mac0_groups, ARRAY_SIZE(x2000_mac0_groups), },
-> +	{ "mac1", x2000_mac1_groups, ARRAY_SIZE(x2000_mac1_groups), },
-> +	{ "otg", x2000_otg_groups, ARRAY_SIZE(x2000_otg_groups), },
-> +};
-> +
-> +static const struct ingenic_chip_info x2000_chip_info = {
-> +	.num_chips = 5,
-> +	.reg_offset = 0x100,
-> +	.version = ID_X2000,
-> +	.groups = x2000_groups,
-> +	.num_groups = ARRAY_SIZE(x2000_groups),
-> +	.functions = x2000_functions,
-> +	.num_functions = ARRAY_SIZE(x2000_functions),
-> +	.pull_ups = x2000_pull_ups,
-> +	.pull_downs = x2000_pull_downs,
-> +};
-> +
->  static u32 ingenic_gpio_read_reg(struct ingenic_gpio_chip *jzgc, u8 
-> reg)
->  {
->  	unsigned int val;
-> @@ -2355,23 +2793,28 @@ static void irq_set_type(struct 
-> ingenic_gpio_chip *jzgc,
->  		u8 offset, unsigned int type)
->  {
->  	u8 reg1, reg2;
-> -	bool val1, val2;
-> +	bool val1, val2, val3;
-
-val3 = type == IRQ_TYPE_EDGE_BOTH;
-
-then you don't need to initialize val3 on each case of the switch.
-
+>> Then you need to figure out a mechanism so we can obtain
+>> the right timestamp from the hardware event right here,
+>> you can hook into the GPIO driver if need be, we can
+>> figure out the gpio_chip for a certain line for sure.
+>>
 > 
->  	switch (type) {
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +		val1 = val2 = false;
-> +		val3 = true;
-> +		break;
->  	case IRQ_TYPE_EDGE_RISING:
->  		val1 = val2 = true;
-> +		val3 = false;
->  		break;
->  	case IRQ_TYPE_EDGE_FALLING:
-> -		val1 = false;
-> +		val1 = val3 = false;
->  		val2 = true;
->  		break;
->  	case IRQ_TYPE_LEVEL_HIGH:
->  		val1 = true;
-> -		val2 = false;
-> +		val2 = val3 = false;
->  		break;
->  	case IRQ_TYPE_LEVEL_LOW:
->  	default:
-> -		val1 = val2 = false;
-> +		val1 = val2 = val3 = false;
->  		break;
->  	}
-> 
-> @@ -2389,7 +2832,12 @@ static void irq_set_type(struct 
-> ingenic_gpio_chip *jzgc,
->  		return;
->  	}
-> 
-> -	if (jzgc->jzpc->info->version >= ID_X1000) {
-> +	if (jzgc->jzpc->info->version >= ID_X2000) {
-> +		ingenic_gpio_shadow_set_bit(jzgc, reg2, offset, val1);
-> +		ingenic_gpio_shadow_set_bit(jzgc, reg1, offset, val2);
-> +		ingenic_gpio_shadow_set_bit_load(jzgc);
-> +		ingenic_gpio_set_bit(jzgc, X2000_GPIO_EDG, offset, val3);
-> +	} else if (jzgc->jzpc->info->version >= ID_X1000) {
->  		ingenic_gpio_shadow_set_bit(jzgc, reg2, offset, val1);
->  		ingenic_gpio_shadow_set_bit(jzgc, reg1, offset, val2);
->  		ingenic_gpio_shadow_set_bit_load(jzgc);
-> @@ -2462,7 +2910,8 @@ static void ingenic_gpio_irq_ack(struct 
-> irq_data *irqd)
->  	int irq = irqd->hwirq;
->  	bool high;
-> 
-> -	if (irqd_get_trigger_type(irqd) == IRQ_TYPE_EDGE_BOTH) {
-> +	if ((irqd_get_trigger_type(irqd) == IRQ_TYPE_EDGE_BOTH) &&
-> +		(jzgc->jzpc->info->version < ID_X2000)) {
->  		/*
->  		 * Switch to an interrupt for the opposite edge to the one that
->  		 * triggered the interrupt being ACKed.
-> @@ -2501,7 +2950,7 @@ static int ingenic_gpio_irq_set_type(struct 
-> irq_data *irqd, unsigned int type)
->  		irq_set_handler_locked(irqd, handle_bad_irq);
->  	}
-> 
-> -	if (type == IRQ_TYPE_EDGE_BOTH) {
-> +	if ((type == IRQ_TYPE_EDGE_BOTH) && (jzgc->jzpc->info->version < 
-> ID_X2000)) {
->  		/*
->  		 * The hardware does not support interrupts on both edges. The
->  		 * best we can do is to set up a single-edge interrupt and then
-> @@ -2803,7 +3252,15 @@ static int ingenic_pinconf_get(struct 
-> pinctrl_dev *pctldev,
->  	unsigned int bias;
->  	bool pull, pullup, pulldown;
-> 
-> -	if (jzpc->info->version >= ID_X1830) {
-> +	if (jzpc->info->version >= ID_X2000) {
-> +		pullup = ingenic_get_pin_config(jzpc, pin, X2000_GPIO_PEPU) &&
-> +				!ingenic_get_pin_config(jzpc, pin, X2000_GPIO_PEPD) &&
-> +				(jzpc->info->pull_ups[offt] & BIT(idx));
-> +		pulldown = ingenic_get_pin_config(jzpc, pin, X2000_GPIO_PEPD) &&
-> +				!ingenic_get_pin_config(jzpc, pin, X2000_GPIO_PEPU) &&
-> +				(jzpc->info->pull_downs[offt] & BIT(idx));
-> +
-> +	} else if (jzpc->info->version >= ID_X1830) {
->  		unsigned int half = PINS_PER_GPIO_CHIP / 2;
->  		unsigned int idxh = pin % half * 2;
-> 
-> @@ -2858,7 +3315,25 @@ static int ingenic_pinconf_get(struct 
-> pinctrl_dev *pctldev,
->  static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
->  		unsigned int pin, unsigned int bias)
->  {
-> -	if (jzpc->info->version >= ID_X1830) {
-> +	if (jzpc->info->version >= ID_X2000) {
-> +		switch (bias) {
-> +		case PIN_CONFIG_BIAS_PULL_UP:
-
-Was that even tested? Your "bias" value is one of GPIO_PULL_DIS, 
-GPIO_PULL_UP or GPIO_PULL_DOWN, you can't match it against values of 
-the pin_config_param enum and expect it to work.
-
-Cheers,
--Paul
-
-> +			ingenic_config_pin(jzpc, pin, X2000_GPIO_PEPD, false);
-> +			ingenic_config_pin(jzpc, pin, X2000_GPIO_PEPU, true);
-> +			break;
-> +
-> +		case PIN_CONFIG_BIAS_PULL_DOWN:
-> +			ingenic_config_pin(jzpc, pin, X2000_GPIO_PEPU, false);
-> +			ingenic_config_pin(jzpc, pin, X2000_GPIO_PEPD, true);
-> +			break;
-> +
-> +		case PIN_CONFIG_BIAS_DISABLE:
-> +		default:
-> +			ingenic_config_pin(jzpc, pin, X2000_GPIO_PEPU, false);
-> +			ingenic_config_pin(jzpc, pin, X2000_GPIO_PEPD, false);
-> +		}
-> +
-> +	} else if (jzpc->info->version >= ID_X1830) {
->  		unsigned int idx = pin % PINS_PER_GPIO_CHIP;
->  		unsigned int half = PINS_PER_GPIO_CHIP / 2;
->  		unsigned int idxh = pin % half * 2;
-> @@ -3033,6 +3508,7 @@ static const struct of_device_id 
-> ingenic_gpio_of_match[] __initconst = {
->  	{ .compatible = "ingenic,jz4780-gpio", },
->  	{ .compatible = "ingenic,x1000-gpio", },
->  	{ .compatible = "ingenic,x1830-gpio", },
-> +	{ .compatible = "ingenic,x2000-gpio", },
->  	{},
->  };
-> 
-> @@ -3275,6 +3751,14 @@ static const struct of_device_id 
-> ingenic_pinctrl_of_match[] = {
->  		.compatible = "ingenic,x1830-pinctrl",
->  		.data = IF_ENABLED(CONFIG_MACH_X1830, &x1830_chip_info)
->  	},
-> +	{
-> +		.compatible = "ingenic,x2000-pinctrl",
-> +		.data = IF_ENABLED(CONFIG_MACH_X2000, &x2000_chip_info)
-> +	},
-> +	{
-> +		.compatible = "ingenic,x2000e-pinctrl",
-> +		.data = IF_ENABLED(CONFIG_MACH_X2000, &x2000_chip_info)
-> +	},
->  	{ /* sentinel */ },
->  };
-> 
-> --
-> 2.7.4
+> Firstly, line_event_timestamp() is called from the IRQ handler context.
+> That is obviously more constraining than if it were only called from the
+> IRQ thread. If the GTE is providing the timestamp then that could be
+> put off until the IRQ thread.
+> So you probably want to refactor line_event_timestamp() into two flavours
+> - one for IRQ handler that returns 0 if HARDWARE is set, and the other for
+> IRQ thread, where there is already a fallback call to
+> line_event_timestamp() for the nested threaded interrupt case, that gets
+> the timestamp from the GTE.
 > 
 
+My follow-up concerns on both Linus's and Kent's feedback:
 
+1.  Please correct me if I am wrong, lineevent in the gpiolib* is only
+    serves the userspace clients.
+1.a What about kernel drivers wanting to use this feature for monitoring its
+    GPIO lines, see gyroscope example somewhere below. In that regards,
+    lineevent implementation is not sufficient.
+1.b Are you also implying to extend lineevent implementation to kernel
+    drivers?
+2.  For both above cases 1.a and 1.b, gpiolib* then would become holder
+    of all the GTE related datastructures per userspace or kernel clients,
+    is this acceptable? In another words, gpilib-cdev framework will become
+    client to GTE framework on behalf of those drivers. I believe we
+    can embed gte related data to per lineevent structures.
+3.  I believe Kent touched on this, but double confirming, there will be a
+    use-case or scenario where in-kernel clients will want to block until
+    the next timestaming event. We need to cover that scenario as well.   
+4.  What about kernel drivers wanting monitor certain IRQ lines? For example,
+    gycroscope drivers wants to monitor i2c IRQ line for transaction complete.
+4.a Or you are suggesting all the GPIOs related requests will go through
+    gpiolib-cdev --> gte framework ---> gte driver and for the rests, it
+    it will be "some kernel driver" ---> gte framework --> gte driver.
+
+I am assuming there will be gte framework/infrastructure for all above cases.
+
+> But my primary concern here would be keeping the two event FIFOs (GTE and
+> cdev) in sync.  Masking and unmasking in hardware and the kernel needs to
+> be coordinated to prevent races that would result in sync loss.
+> So this probably needs to be configured in the GTE driver via the irq
+> path, rather than pinctrl?
+> 
+> Is every event detected by the GTE guaranteed to trigger an interrupt in
+> the kernel?
+
+GTE interrupt will be triggered when its internal FIFO meets configurable
+thresholds, which could be set to 1 for example, in that case will trigger
+interrupt for every event detected.
+
+Can you elaborate more on pinctrl part?
+
+> 
+> How to handle GTE FIFO overflows?  Can they be detected or prevented?
+> 
+Currently, there is no hardware support to detect the overflow, it can be
+done certainly through software.
+
+>> So you first need to augment the userspace
+>> ABI and the character device code to add this. See
+>> commit 26d060e47e25f2c715a1b2c48fea391f67907a30
+>> "gpiolib: cdev: allow edge event timestamps to be configured as REALTIME"
+>> by Kent Gibson to see what needs to be done.
+>>
+> 
+> You should also extend gpio_v2_line_flags_validate() to disallow setting
+> of multiple event clock flags, similar to the bias flag checks.
+> Currently there is only the one event clock flag, so no need to check.
+> 
+>> 3. Also patch tools/gpio/gpio-event-mon.c to support this flag and use that
+>> for prototyping and proof of concept.
+>>
+> 
+> The corresponding commit for the REALTIME option is
+> commit e0822cf9b892ed051830daaf57896aca48c8567b
+> "tools: gpio: add option to report wall-clock time to gpio-event-mon"
+> 
+> Cheers,
+> Kent.
+> 
+>>> ============
+>>> For IRQ:
+>>> ============
+>>
+>> Marc Zyngier and/or Thomas Gleixner know this stuff.
+>>
+>> It does make sense to add some infrastructure so that GPIO events
+>> and IRQs can use the same timestamping hardware.
+>>
+>> And certainly you will also want to use this timestamp for
+>> IIO devices? If it is just GPIOs and IRQs today, it will be
+>> gyroscopes and accelerometers tomorrow, am I right?
+>>
+
+Gyroscope, accelerometers or any IIO are built on top of i2c/spi and/or GPIOs.
+So they are covered as long as they serve as client to GTE framework, For
+example, if gyroscope uses GPIO as an interrupt to indicate frame
+ready, GTE could timestamp that GPIO as well any IRQs like i2c transaction
+complete IRQ. To this to happen, gycroscope then register itself with
+GTE framework and enable required signals that it interfaces/interested with.
+
+>> Yours,
+>> Linus Walleij
+
+Best Regards,
+Dipen Patel
