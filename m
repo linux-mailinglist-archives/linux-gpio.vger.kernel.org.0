@@ -2,191 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EF3C343777
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Mar 2021 04:32:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CA073438E7
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Mar 2021 06:57:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbhCVDcW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Mar 2021 23:32:22 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49192 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229731AbhCVDby (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 21 Mar 2021 23:31:54 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AE4CA1A44C3;
-        Mon, 22 Mar 2021 04:31:52 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6F3151A44B7;
-        Mon, 22 Mar 2021 04:31:49 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3A37D4030B;
-        Mon, 22 Mar 2021 04:31:45 +0100 (CET)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v4] gpio: mpc8xxx: Add ACPI support
-Date:   Mon, 22 Mar 2021 11:38:46 +0800
-Message-Id: <20210322033846.39882-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S229696AbhCVF5C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Mar 2021 01:57:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229614AbhCVF4e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Mar 2021 01:56:34 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728D6C061762
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Mar 2021 22:56:34 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id e33so7915136pgm.13
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Mar 2021 22:56:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6R/wNYFYL96Z+W2s9fNrnXnmsOpLl/kcJR1fGSVoiEE=;
+        b=kM9YBllT/tpxQ5AJXgkZE9dXlxkqQ8pj1Bypm9bDNdAj4gMOA2VjzOKIbP9gb67NWT
+         Rv8mh0S7FL0PD6EyQBhZGtAptOBRPwWgB0SE3VMrxV08EXACUWyDmpgIEPnd+Ou79uk4
+         P8fFmtn2SWBeDxPj+8yaRQDra6q5l49j6pHZ0L2TRFXCEO0xcdMXsxKW6GBLRvAU1RAa
+         9bdVT4MDKxNDkljMnFO3XPjmEOqVhQ8il4eKMneqbdIsPVpu0mn04pASD4Yp/Gd4X/wK
+         bYLRAO+DwCW4YZNpr7+1tRSytQlmc4X1zlQQXrBwWPlynA3jo0SoY4z7WJPvr9dcpETR
+         Z6Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6R/wNYFYL96Z+W2s9fNrnXnmsOpLl/kcJR1fGSVoiEE=;
+        b=MhGxPxbnzlVA1Af7sTdV2tM2TojH0/4corrzLufy3H503eyY3RVTxKrJgCImg3gsx6
+         GfgDtJngRWG5K2paMXhSBXSKq5RgsA+J3Iho1aD2ntgNnZP8m9qEaN0+y05n7M4YlGCr
+         vsIND56WNlk2oaQ4o4NANhVGrBua+S6MhhVhGRrVB/A442SE8G7/uIFhkDaTeAGgoCur
+         jmUS/AJ2OAGR6SecGv6DqZVzjG/WR6gdLXGU8tU6lS2e8/j2CRAQlyxYy2OwSn8/w/K5
+         R5Zy+vYmGl/cXWr2hWd3//vSCYsC7EwK9f7td7g06eZrOcmEsL9tY7EEYsoaNDTxYpS3
+         QLZg==
+X-Gm-Message-State: AOAM531eyQ4K1gGcP+fswY+bqqrE1gi5DZSqlAkQdsd/m4KkKW3GsD4n
+        TD1IUQHrcNf3Uvo7O3fM4TSmA4W5RKAKOXp6
+X-Google-Smtp-Source: ABdhPJxKPdwcHLkk2BXaAkgeR/I9gBqO0bAm+q641P1HXjHdb70nXU62Q5IG3INGo0Ws0CuSdraeQg==
+X-Received: by 2002:a65:4288:: with SMTP id j8mr21082631pgp.231.1616392593821;
+        Sun, 21 Mar 2021 22:56:33 -0700 (PDT)
+Received: from x1 ([2601:1c0:4701:ae70:f583:1360:2cc8:3c30])
+        by smtp.gmail.com with ESMTPSA id l22sm13200080pfd.145.2021.03.21.22.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Mar 2021 22:56:33 -0700 (PDT)
+Date:   Sun, 21 Mar 2021 22:56:31 -0700
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     andy.shevchenko@gmail.com, tony@atomide.com,
+        haojian.zhuang@linaro.org, linus.walleij@linaro.org,
+        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
+        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+        tgershi@amazon.com, linux-arm-kernel@lists.infradead.org,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] Fix pinctrl-single pcs_pin_dbg_show()
+Message-ID: <20210322055631.GB392062@x1>
+References: <20210319152133.28705-1-hhhawa@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210319152133.28705-1-hhhawa@amazon.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Current implementation only supports DT, now add ACPI support.
+On Fri, Mar 19, 2021 at 05:21:30PM +0200, Hanna Hawa wrote:
+> These patches fix the pcs_pin_dbg_show() function for the scenario where
+> a single register controls multiple pins (i.e. bits_per_mux is not zero)
+> Additionally, the common formula is moved to a separate function to
+> allow reuse.
+> 
+> Changes since v3:
+> -----------------
+> - define and set variable 'mux_bytes' in one line
+> - update commit message
+> 
+> Changes since v2:
+> -----------------
+> - move read() register to be outside of if condition (as it common
+>   read()).
+> - Remove extra parentheses
+> - replace offset variable by direct return statements
+> 
+> Changes since v1:
+> -----------------
+> - remove unused variable in In function 'pcs_allocate_pin_table'
+>   (Reported-by: kernel test robot <lkp@intel.com>)
+> 
+> Hanna Hawa (3):
+>   pinctrl: pinctrl-single: remove unused variable
+>   pinctrl: pinctrl-single: remove unused parameter
+>   pinctrl: pinctrl-single: fix pcs_pin_dbg_show() when bits_per_mux is
+>     not zero
+> 
+>  drivers/pinctrl/pinctrl-single.c | 65 ++++++++++++++++++--------------
+>  1 file changed, 37 insertions(+), 28 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
-Change in v4:
- - Update error print for gpiochip_add_data() to fix wrong info. in ACPI case.
- - Update error print for devm_request_irq() to fix panic in ACPI case.
- - Add include property.h and mod_devicetable.h.
- - Correct error handling for mpc8xxx_gc->regs.
- - Replace "!(IS_ERR_OR_NULL(fwnode) || is_of_node(fwnode)))" with "is_acpi_node(fwnode)"
+I'm curious what SoC are you using?
 
-Change in v3:
- - Recover ls1028a and ls1088a compatilbe checking logic
+It's good to know who has hardware to test bits_per_mux in the future.
 
-Change in v2:
- - Initialize devtype with NULL to fix compile warning.
- - Replace of_device_get_match_data() and acpi_match_device with device_get_match_data().
- - Replace acpi_match_device() with simpler checking logic per Andy's suggestion.
+I pay attention to pinctrl-single as that is the driver used for the TI
+AM3358 SoC used in a variety of BeagleBone boards.  It does not use 
+bits_per_mux, but I can verify that this does not cause any regression
+for the AM3358 SoC:
 
- drivers/gpio/gpio-mpc8xxx.c | 47 ++++++++++++++++++++++++++-----------
- 1 file changed, 33 insertions(+), 14 deletions(-)
+  /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single# cat pins
+  registered pins: 142
+  pin 0 (PIN0) 0:? 44e10800 00000027 pinctrl-single
+  pin 1 (PIN1) 0:? 44e10804 00000027 pinctrl-single
+  pin 2 (PIN2) 0:? 44e10808 00000027 pinctrl-single
+  pin 3 (PIN3) 0:? 44e1080c 00000027 pinctrl-single
+  pin 4 (PIN4) 0:? 44e10810 00000027 pinctrl-single
+  pin 5 (PIN5) 0:? 44e10814 00000027 pinctrl-single
+  pin 6 (PIN6) 0:? 44e10818 00000027 pinctrl-single
+  pin 7 (PIN7) 0:? 44e1081c 00000027 pinctrl-single
+  pin 8 (PIN8) 22:gpio-96-127 44e10820 00000027 pinctrl-single
+  pin 9 (PIN9) 23:gpio-96-127 44e10824 00000037 pinctrl-single
+  pin 10 (PIN10) 26:gpio-96-127 44e10828 00000037 pinctrl-single
+  pin 11 (PIN11) 27:gpio-96-127 44e1082c 00000037 pinctrl-single
+  pin 12 (PIN12) 0:? 44e10830 00000037 pinctrl-single
+  <snip>
+  pin 140 (PIN140) 0:? 44e10a30 00000028 pinctrl-single
+  pin 141 (PIN141) 13:gpio-64-95 44e10a34 00000020 pinctrl-single
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 6dfca83bcd90..4b9157a69fca 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -9,6 +9,7 @@
-  * kind, whether express or implied.
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/spinlock.h>
-@@ -18,6 +19,8 @@
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-+#include <linux/property.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/slab.h>
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
-@@ -303,8 +306,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mpc8xxx_gpio_chip *mpc8xxx_gc;
- 	struct gpio_chip	*gc;
--	const struct mpc8xxx_gpio_devtype *devtype =
--		of_device_get_match_data(&pdev->dev);
-+	const struct mpc8xxx_gpio_devtype *devtype = NULL;
-+	struct fwnode_handle *fwnode;
- 	int ret;
- 
- 	mpc8xxx_gc = devm_kzalloc(&pdev->dev, sizeof(*mpc8xxx_gc), GFP_KERNEL);
-@@ -315,14 +318,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	raw_spin_lock_init(&mpc8xxx_gc->lock);
- 
--	mpc8xxx_gc->regs = of_iomap(np, 0);
--	if (!mpc8xxx_gc->regs)
--		return -ENOMEM;
-+	mpc8xxx_gc->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(mpc8xxx_gc->regs))
-+		return PTR_ERR(mpc8xxx_gc->regs);
- 
- 	gc = &mpc8xxx_gc->gc;
- 	gc->parent = &pdev->dev;
- 
--	if (of_property_read_bool(np, "little-endian")) {
-+	if (device_property_read_bool(&pdev->dev, "little-endian")) {
- 		ret = bgpio_init(gc, &pdev->dev, 4,
- 				 mpc8xxx_gc->regs + GPIO_DAT,
- 				 NULL, NULL,
-@@ -345,6 +348,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	mpc8xxx_gc->direction_output = gc->direction_output;
- 
-+	devtype = device_get_match_data(&pdev->dev);
- 	if (!devtype)
- 		devtype = &mpc8xxx_gpio_devtype_default;
- 
-@@ -369,24 +373,29 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	 * associated input enable must be set (GPIOxGPIE[IEn]=1) to propagate
- 	 * the port value to the GPIO Data Register.
- 	 */
-+	fwnode = dev_fwnode(&pdev->dev);
- 	if (of_device_is_compatible(np, "fsl,qoriq-gpio") ||
- 	    of_device_is_compatible(np, "fsl,ls1028a-gpio") ||
--	    of_device_is_compatible(np, "fsl,ls1088a-gpio"))
-+	    of_device_is_compatible(np, "fsl,ls1088a-gpio") ||
-+	    is_acpi_node(fwnode))
- 		gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
--		pr_err("%pOF: GPIO chip registration failed with status %d\n",
--		       np, ret);
-+		dev_err(&pdev->dev,
-+			"GPIO chip registration failed with status %d\n", ret);
- 		goto err;
- 	}
- 
--	mpc8xxx_gc->irqn = irq_of_parse_and_map(np, 0);
-+	mpc8xxx_gc->irqn = platform_get_irq(pdev, 0);
- 	if (!mpc8xxx_gc->irqn)
- 		return 0;
- 
--	mpc8xxx_gc->irq = irq_domain_add_linear(np, MPC8XXX_GPIO_PINS,
--					&mpc8xxx_gpio_irq_ops, mpc8xxx_gc);
-+	mpc8xxx_gc->irq = irq_domain_create_linear(fwnode,
-+						   MPC8XXX_GPIO_PINS,
-+						   &mpc8xxx_gpio_irq_ops,
-+						   mpc8xxx_gc);
-+
- 	if (!mpc8xxx_gc->irq)
- 		return 0;
- 
-@@ -399,8 +408,9 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 			       IRQF_SHARED, "gpio-cascade",
- 			       mpc8xxx_gc);
- 	if (ret) {
--		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
--			np->full_name, mpc8xxx_gc->irqn, ret);
-+		dev_err(&pdev->dev,
-+			"failed to devm_request_irq(%d), ret = %d\n",
-+			mpc8xxx_gc->irqn, ret);
- 		goto err;
- 	}
- 
-@@ -425,12 +435,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id gpio_acpi_ids[] = {
-+	{"NXP0031",},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, gpio_acpi_ids);
-+#endif
-+
- static struct platform_driver mpc8xxx_plat_driver = {
- 	.probe		= mpc8xxx_probe,
- 	.remove		= mpc8xxx_remove,
- 	.driver		= {
- 		.name = "gpio-mpc8xxx",
- 		.of_match_table	= mpc8xxx_gpio_ids,
-+		.acpi_match_table = ACPI_PTR(gpio_acpi_ids),
- 	},
- };
- 
--- 
-2.25.1
+Reviewed-by: Drew Fustini <drew@beagleboard.org>
 
+Thanks,
+Drew
