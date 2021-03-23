@@ -2,202 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17618345726
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Mar 2021 06:23:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95D6834580F
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Mar 2021 07:58:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229670AbhCWFW3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Mar 2021 01:22:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43856 "EHLO
+        id S229994AbhCWG5k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Mar 2021 02:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbhCWFW2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Mar 2021 01:22:28 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5944EC061574;
-        Mon, 22 Mar 2021 22:22:28 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id j6-20020a17090adc86b02900cbfe6f2c96so9630091pjv.1;
-        Mon, 22 Mar 2021 22:22:28 -0700 (PDT)
+        with ESMTP id S229670AbhCWG5G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Mar 2021 02:57:06 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D44FC061574
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Mar 2021 23:57:06 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id t5-20020a1c77050000b029010e62cea9deso10203984wmi.0
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Mar 2021 23:57:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5d7kvVVMy7MELuXc/Wt0jPV+HQWi2++qw/bDdyFDozc=;
-        b=UTq3ORBpzauifc2KeA5bYrxQCCyVAHGrX3PIqU5Z4vxASCKZofFg1gNJIokQ8chrJj
-         D99rLpekYw/KoVBuRiUNwSYasysjwwj+qjzrCSDOlM3apBKM2ibwpYHssQ74SS8XwRVU
-         hroINNHsHVxI60G5R18zLp48RpgFpNUg/VTOZKRo4wor5spWBkcLb6ce0QyXmXjtGUbY
-         tCmb7nYRkaLGgwlijHKlDaQwzbNnjZpg6yGIDbbIyVlxmS3eYRzIeDRr61OFLXFtvCuN
-         RcRRlBblqHg4s0892MKX3aKl4ENNXPYpbtMWHJyZpiAd06KS2VyPHlugQ8kd09YM5kor
-         mW2A==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=5ZMjc9VXo9ubTn31PzCPvTM8mI49yM+c9RTAVxtpnpw=;
+        b=AfPaVGk8GV8XMUonuzx6QfTnVqBvCdBO9LvGBuguQraZRnkc6XnJ0Q95dIR7cFTVBc
+         N8Ig+WftiCnBV4pq2NbzARBIJWtRwG5DG5z8AS0Kl3yHlXNtEzrvStjTyRIoWfUBLbm+
+         7UjbjsMM4YztwLL63EjzVDLZ2Ltx+XF7bO6h5tfRXi+LFNZZsLcXrsPexN+By4bYJo88
+         whuPM2lHejNnbg/vyl5+kUxYUtlAW9/ZQu9jBis0pNRcyuG4OVwXYh10qXNxE7n0OB5v
+         ZG2VmVXVpVaiyKeoYbyGLYUmSs6Dl0t1E5G+nMy1b2KR4vtxQpc1KXWnug9bMzFYL4X7
+         uX1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5d7kvVVMy7MELuXc/Wt0jPV+HQWi2++qw/bDdyFDozc=;
-        b=dT2eWRwl2GX6rPVMeI1rZtmuRKsCB7YPkWjgD0AOUWZn88dljmT64QjafjfUZoY1K/
-         sVkcMZA2s2sMlj2LjZEcQ9B8rPSItYrLahr7iop3H17+McO7+GavR1VJ7lk7r/pMxxbw
-         A0jYAHLHt1RfB1fWQORyxIE8M/E8LTIkmslVE4oCQXsrf+c/TwLpZRJIO+wYGMdUZmgI
-         0oqOnBjiwzql8957F8k5BJc661g8sh9Q5BqSx77jKn1n9cSbUmc5iRX1loXZfYHw4MmC
-         FA6e5x+Sbr55d3uELkJ5vZRLwYCwxd42YWhM2cYwj5QPTFgECeCHdqR8FKHY/2V4tnw1
-         /rOw==
-X-Gm-Message-State: AOAM5300RU7LY79mddBAh5JiqQcqdypoyV8Vq8B9FAt8uXBUzUZNF73r
-        W59KSu1CJ738MGz1LITCMn+DdlpDu+I=
-X-Google-Smtp-Source: ABdhPJxC60lZNnwamgzDnnvFWeFHZ2S0ra37zsHYq7IHGN90MF4l+DgBFac8G49BoxebHd1SvCFxfQ==
-X-Received: by 2002:a17:90a:7a8b:: with SMTP id q11mr2746084pjf.215.1616476947874;
-        Mon, 22 Mar 2021 22:22:27 -0700 (PDT)
-Received: from sol (106-69-186-212.dyn.iinet.net.au. [106.69.186.212])
-        by smtp.gmail.com with ESMTPSA id q10sm15707995pfc.190.2021.03.22.22.22.23
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=5ZMjc9VXo9ubTn31PzCPvTM8mI49yM+c9RTAVxtpnpw=;
+        b=LFPuKAMX9soVKWLPDQJGW2lVz0/10+gMkXIDlQOXhbUBTrf50u9KEf+FE1oye9lDMb
+         xDPU2pLT7ffDR9cSrlcrIYvgPSQnA1YECbVispGSY0ZKMNKuMBhJHjovi0GBVxkAf3f7
+         gWy388vgw/Dmcc/zkvuemKAB4/kqZjxGtZaeqTFyYkYtJv/xOZBvTVgi2bCxJCvpep2s
+         j2ZjyjT2NRP4yPx/9RM9607Ebkgdb95WaWDylxnPlS5wdrinnczjaQ4Ry5vCAU8OPL/D
+         Ifx4GXwBEUvIuBkC+TPNpSHgtucfwAiyLTDsm1nTVNTm9/F85xTQ4rRWXhzI2606fo41
+         wZiA==
+X-Gm-Message-State: AOAM530uDzrBuHnRPomGWwZ3K5Y/ASZ6T9DRl6kJMxoghn5gOunloTCi
+        aXo1dBWMLIybBog/p3eg8dJ1QYTdp22b9g==
+X-Google-Smtp-Source: ABdhPJz3+iV4FIBX4EKi4hgYNJtSbL0JsqeV154oIhUtr38a2kux3bYq5RyP/AdQx3H88cipHuuNpQ==
+X-Received: by 2002:a05:600c:21d2:: with SMTP id x18mr1785482wmj.175.1616482624927;
+        Mon, 22 Mar 2021 23:57:04 -0700 (PDT)
+Received: from [192.168.1.21] ([195.245.23.48])
+        by smtp.gmail.com with ESMTPSA id n6sm25776205wrw.63.2021.03.22.23.57.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 22:22:27 -0700 (PDT)
-Date:   Tue, 23 Mar 2021 13:22:21 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: GTE - The hardware timestamping engine
-Message-ID: <20210323052221.GA36246@sol>
-References: <4c46726d-fa35-1a95-4295-bca37c8b6fe3@nvidia.com>
- <CACRpkdbmqww6UQ8CFYo=+bCtVYBJwjMxVixc4vS6D3B+dUHScw@mail.gmail.com>
- <20210322060047.GA226745@sol>
- <d48fa7b5-8c17-c3d7-10a9-a9811c410a39@nvidia.com>
- <20210323003208.GA6105@sol>
- <7961d9df-4120-e37c-d042-528655bd0270@nvidia.com>
- <20210323025933.GA10669@sol>
- <16ff9b8a-15d9-f2fd-24f4-817a7078c40e@nvidia.com>
+        Mon, 22 Mar 2021 23:57:04 -0700 (PDT)
+Message-ID: <854f1b96be2e2bf3daa9b8f2d8d00560f11fdfd3.camel@gmail.com>
+Subject: Re: RFC Need advice on reworking gpio-ep93xx.c to DT support
+From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "nikita.shubin@maquefel.me" <nikita.shubin@maquefel.me>,
+        Hartley Sweeten <hartleys@visionengravers.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd.bergmann@linaro.org>
+Date:   Tue, 23 Mar 2021 07:57:03 +0100
+In-Reply-To: <CAK8P3a0nvComAVhUSK9NgnakLjqqVvnFJRx6oVciuG4deK7VDQ@mail.gmail.com>
+References: <1042421616413081@mail.yandex.ru>
+         <BYAPR01MB5621E8956FDBF8F194ABB598D0659@BYAPR01MB5621.prod.exchangelabs.com>
+         <01b4dedd0f7efba749ebf598925886a6a69d5b41.camel@gmail.com>
+         <BYAPR01MB5621066B411F68EF840B8417D0659@BYAPR01MB5621.prod.exchangelabs.com>
+         <36281616430257@mail.yandex.ru>
+         <d7685a8561d9be5ce6269bbf5d600f8f3f5f743b.camel@gmail.com>
+         <CAK8P3a0nvComAVhUSK9NgnakLjqqVvnFJRx6oVciuG4deK7VDQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16ff9b8a-15d9-f2fd-24f4-817a7078c40e@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 22, 2021 at 09:09:50PM -0700, Dipen Patel wrote:
+Hello Arnd!
+
+On Mon, 2021-03-22 at 23:31 +0100, Arnd Bergmann wrote:
+> Unfortunately, building a multiplatform kernel makes the kernel image
+> somewhat larger because it includes the code for CONFIG_OF, though
+> it does not have the runtime overhead for the DT data structures that you
+> get when running a DT-enabled kernel. Enabling CONFIG_USE_OF
+> increased the ep93xx_defconfig build for me by 128KB, replacing
+> the private clk driver with CONFIG_COMMON_CLOCK (and no driver)
+> on top added another 50KB, and finally enabling multiplatform added
+> another 2KB. In total, that is 2.7% total bloat in just the kernel image
+
+This doesn't sound so bad as I expected. I still had no chance to figure out
+much bigger increase from 5.4 to 5.12 ;)
+
+>    text    data     bss     dec     hex filename
+> 5677321 1119704   90556 6887581 69189d build/tmp/vmlinux
+> 5782854 1143720   92188 7018762 6b190a build/tmp/vmlinux-use_of
+> 5830020 1153408   89396 7072824 6bec38 build/tmp/vmlinux-of+clk
+> 5829320 1153920   91308 7074548 6bf2f4 build/tmp/vmlinux-multi
 > 
-> 
-> On 3/22/21 7:59 PM, Kent Gibson wrote:
-> > On Mon, Mar 22, 2021 at 06:53:10PM -0700, Dipen Patel wrote:
-> >>
-> >>
-> >> On 3/22/21 5:32 PM, Kent Gibson wrote:
-> >>> On Mon, Mar 22, 2021 at 01:21:46PM -0700, Dipen Patel wrote:
-> >>>> Hi Linus and Kent,
-> >>>>
-> > 
-> > [snip]
-> > 
-> >>> In response to all your comments above...
-> >>>
-> >>> Firstly, I'm not suggesting that other kernel modules would use the
-> >>> cdev lineevents, only that they would use the same mechanism that
-> >>> gpiolib-cdev would use to timestamp the lineevents for userspace.
-> >>>
-> >> Sure, I just wanted to mention the different scenarios and wanted to know
-> >> how can we fit all those together. Having said that, shouldn't this serve
-> >> an opportunity to extend the linevent framework to accommodate kernel
-> >> drivers as a clients?
-> >>
-> >> If we can't, then there is a risk of duplicating lineevent mechanism in all
-> >> of those kernel drivers or at least in GTE framework/infrastructure as far
-> >> as GPIO related GTE part is concerned.
-> >>  
-> > 
-> > In-kernel the lineevents are just IRQs so anything needing a "lineevent"
-> > can request the IRQ directly.  Or am I missing something?
-> > 
-> 
-> In the GPIO context, I meant we can extend line_event_timestamp to kernel
-> drivers as well in that way, both userspace and kernel drivers requesting
-> particular GPIO for the hardware timestamp would be managed by same
-> lineevent_* infrastructure from the gpiolib. Something like lineevent_create
-> version of the kernel drivers, so if they need hardware timestamp on the
-> GPIO line, they can request with some flags. In that way, GTE can leverage
-> linevent* codes from gpiolib to cover its both the GPIO related use cases i.e.
-> userspace app and kernel drivers.
-> 
+> I also think at some point in the distant future we will require DT boot for
+> everything, but that probably comes after most ARMv4T and earlier machines
+> have fallen out of use. I'd like to get a feeling for how EP93xx fits in there,
+> can you say what memory configurations are widely deployed and how
 
-I still don't see what that gives you that is better than an IRQ and a
-function to provide the timestamp for that IRQ.  What specific features
-of a lineevent are you after?
+The systems I know have 32MB RAM and 16MB Flash (but only 2MB was reserved for
+compressed kernel back then).
 
-The gpiolib-cdev code is there to provide a palettable API for userspace,
-and the bulk of that code is specific to the userspace API.
-Reusing that code for clients within the kernel is just introducing
-pointless overhead when they can get what they need more directly.
+> long you expect them to receive kernel upgrades in the future? Are these
+> systems that will definitely get put out of use at a particular time (e.g.
+> mobile phone infrastructure for older networks or fixed-time support
+> contracts), or are these systems that you expect to keep patching until
+> the hardware dies?
 
-There may be a case for some additional gpiolib/irq helper functions, but
-I don't see gpiolib-cdev as a good fit for that role.
+Yes, I expect them to work (and be patched) until they die and this
+may take another decade ;)
 
-> >>> As to that mechanism, my current thinking is that the approach of
-> >>> associating GTE event FIFO entries with particular physical IRQ events is
-> >>> problematic, as keeping the two in sync would be difficult, if not
-> >>> impossible.
-> >>>
-> >>> A more robust approach is to ignore the physical IRQs and instead service
-> >>> the GTE event FIFO, generating IRQs from those events in software -
-> >>> essentially a pre-timestamped IRQ.  The IRQ framework could provide the
-> >>> timestamping functionality, equivalent to line_event_timestamp(), for
-> >>> the IRQ handler/thread and in this case provide the timestamp from the GTE
-> >>> event.
-> >>>
-> >>
-> >> I have not fully understood above two paragraphs (except about
-> >> lineevent_event_timestamp related part).
-> >>
-> >> I have no idea what it means to "ignore the physical IRQs and service the
-> >> GTE event FIFO". Just like GPIO clients, there could be IRQ clients which
-> >> want to monitor certain IRQ line, like ethernet driver wanted to retrieve
-> >> timestamp for its IRQ line and so on.
-> >>
-> > 
-> > I mean that in the IRQ framework, rather than enabling the physical IRQ
-> > line it would leave that masked and would instead enable the FIFO line to
-> > service the FIFO, configure the GTE to generate the events for that
-> > line, and then generate IRQs in response to the FIFO events.
-> > That way the client requesting the IRQ is guaranteed to only receive an
-> > IRQ that corresponds to a GTE FIFO event and the timestamp stored in the
-> > IRQ framework would match.
-> > 
-> 
-> I do not think we need to do such things, for example, below is
-> the rough sequence how GTE can notify its clients be it GPIO or IRQ
-> lines. I believe this will also help understand better ongoing GPIO
-> discussions.
-> 
-> 1. Configure GTE FIFO watermark or threshold, lets assume 1, i.e
->    generate GTE interrupt when FIFO depth is 1.
-> 2. In the GTE ISR or ISR thread, drain internal FIFO entries
-> 3. Through GTE driver's internal mapping, identify which IRQ or
->    GPIO number this entry belongs to. (This is possible as GTE
->    has predefined bits for each supported signals, for example GTE
->    supports 40 GPIOs and 352 IRQ lines, and it has multliple GTE instances
->    which can take care all of them)
-> 4. GTE driver pushes the event data (in this case it will be timestamp and
->    direction of the event ie.rising or falling) to the GTE generic framework
-> 5. GTE framework will store per event data to its per client/event sw FIFO
-> 6. wake up any sleeping client thread
-> 7. Points 3 to 6 are happening in GTE ISR context. 
-> 8. gte_retrieve_event (which can block if no event) at later convenient
->    time do whatever it wants with it. We can extend it to non blocking
->    version where some sort of client callbacks can be implemented.
-> 
+-- 
+Alexander Sverdlin.
 
-Don't see where that conflicts with my suggestion except that I moved
-everything, other than the hardware specific configuration, under the IRQ
-umbrella as a lot of the functionality, in the abstract, aligns with IRQ.
-
-If you want to reduce duplication shouldn't GTE be integrated into IRQ
-rather than providing a new service?
-
-As I see it, GTE is just another event source for IRQ, and I'd be
-exploring that path. But that is just my view.
-
-Cheers,
-Kent.
 
