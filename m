@@ -2,109 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EF05345A0C
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Mar 2021 09:47:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 652A8345A46
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Mar 2021 10:03:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229590AbhCWIqd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Mar 2021 04:46:33 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:33503 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229993AbhCWIqB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Mar 2021 04:46:01 -0400
-Received: from mail-oi1-f171.google.com ([209.85.167.171]) by
- mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MwgKC-1la6ov1SA6-00y8lk for <linux-gpio@vger.kernel.org>; Tue, 23 Mar
- 2021 09:45:59 +0100
-Received: by mail-oi1-f171.google.com with SMTP id a8so16207728oic.11
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Mar 2021 01:45:59 -0700 (PDT)
-X-Gm-Message-State: AOAM533wlZkaynqfBn1ZgUdtrFzrni96W/KOe8apbTTxG4QMhuIqjMSS
-        qstazNCy/BSkhqR6BRFiHlBOj8N7KImJ/7Jkeqo=
-X-Google-Smtp-Source: ABdhPJzQmGw011UXILN2BDEwMXKlw26sEgLPVU/W+wyViwEWMAMef5SrGii2NY9fB4wchYEotnl8jy5sY0sFnrDkF9k=
-X-Received: by 2002:aca:5945:: with SMTP id n66mr2477821oib.11.1616489158136;
- Tue, 23 Mar 2021 01:45:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <1042421616413081@mail.yandex.ru> <BYAPR01MB5621E8956FDBF8F194ABB598D0659@BYAPR01MB5621.prod.exchangelabs.com>
- <01b4dedd0f7efba749ebf598925886a6a69d5b41.camel@gmail.com>
- <BYAPR01MB5621066B411F68EF840B8417D0659@BYAPR01MB5621.prod.exchangelabs.com>
- <36281616430257@mail.yandex.ru> <d7685a8561d9be5ce6269bbf5d600f8f3f5f743b.camel@gmail.com>
- <CAK8P3a0nvComAVhUSK9NgnakLjqqVvnFJRx6oVciuG4deK7VDQ@mail.gmail.com> <854f1b96be2e2bf3daa9b8f2d8d00560f11fdfd3.camel@gmail.com>
-In-Reply-To: <854f1b96be2e2bf3daa9b8f2d8d00560f11fdfd3.camel@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 23 Mar 2021 09:45:41 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a25wfLQQ=VumEffAwef-e5Hkq2ipLst9ZMssM5Yd1tJsA@mail.gmail.com>
-Message-ID: <CAK8P3a25wfLQQ=VumEffAwef-e5Hkq2ipLst9ZMssM5Yd1tJsA@mail.gmail.com>
-Subject: Re: RFC Need advice on reworking gpio-ep93xx.c to DT support
-To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc:     "nikita.shubin@maquefel.me" <nikita.shubin@maquefel.me>,
-        Hartley Sweeten <hartleys@visionengravers.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        id S229865AbhCWJDU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Mar 2021 05:03:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229693AbhCWJDB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Mar 2021 05:03:01 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABA8C061574;
+        Tue, 23 Mar 2021 02:03:00 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id u9so25799799ejj.7;
+        Tue, 23 Mar 2021 02:03:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tdkSK+R1riQKAoCpREZVcTjh4HWnayDQqvtAktxgMDQ=;
+        b=VBkq4ob4KJSX3ViPZ0rZdhA/Hvcw2VvW98tqWIhHLLnDUNZ2NHuaav0yI2eS4xNMW9
+         2RGg8r9rWVYI8RoWeeka+DInmLyUTFpxCzXmwnyRK697Rcq0fZf7LRnCsGV6muo9JUZF
+         3Sw68Nn/sKcj7NFsJ+tZ6wFGYdsIhBIzWDVzdG56r5xmZXLp2p7ZnUTZogj1cuZEyUYq
+         evuQD04LvhcKWIoI8MB6Jyyn5if7eNVMZdFSgVFCyN+RRS5lmqrYPsgFGFcamsdu4k9U
+         oBDcWX5a5GdJYr2SXnaRjfs3pEcwzS/1gcBpBXx6SGPPohWupSMyVpFAdE5LfaP0mh1y
+         aF/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tdkSK+R1riQKAoCpREZVcTjh4HWnayDQqvtAktxgMDQ=;
+        b=F8DEf76Ua0ZkvUOwAV/EbzuYKFWEm76bnoZhIfDaJL8OfpWW4F7Dha9gofU/2TEiHj
+         u0qoyq+AjqvWMRdht6d+ep2UsJ9L4z3iOsqgzsJBseJhAnyiufDMfy3PYzgRVrdowNvg
+         ly3hawbXSmaQspSXCTt11vbgqg3TKMmwpc7XDhnSsB2Qc/1Pn4BF/tf0MUTj1N2FhuPy
+         3Clx9EnyFisU1oNxllPGjADUlQV5BfveRhkJR6oA3oLzrlJomX1bEwczVKBUmPuo4Whz
+         gLf4yNVWeVVLBidDWNjTFrPed/+ZuTNsMARKDEscp7JZ4ZUBoaVZFqWyiY8prD1EReLp
+         uInQ==
+X-Gm-Message-State: AOAM533CAZLpSRF7OwJRvKKWovtc48vRU014pKLCGxW+m/ppcW871XyN
+        o3CyYK5FFhvE+GI1ppMzNcI=
+X-Google-Smtp-Source: ABdhPJxXF2ES5+RcmlzvZXYOhpDpMvgFn72V9MOebicNv3SXsWBckUzFLI2S3FI9OZcURhq/orFosQ==
+X-Received: by 2002:a17:906:f10c:: with SMTP id gv12mr3937407ejb.53.1616490179676;
+        Tue, 23 Mar 2021 02:02:59 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id q12sm10930976ejy.91.2021.03.23.02.02.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Mar 2021 02:02:58 -0700 (PDT)
+Date:   Tue, 23 Mar 2021 10:03:18 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     Richard Cochran <richardcochran@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd.bergmann@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:p8bFY54JN52T/3xWGKDs7y1Y27pgxa+HZ0HgsIaltUJUyqLFFnN
- TT0GQsa6BQlD4QBcpJd/pKrxNHKMfTLoTAQdraBOvcz7f3u24pXeZ7RE+BB8xKGOjassyT5
- Hd7FsmxPXtKhsbHv4NEEqNtLF9HDHHyGVAX0vp73gipQ72pfCFFLERKhQUpgsHCfKlKWEm9
- TEK3CKvSHZ4w2cm6JYb0w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NiD2UeFdOvI=:4cFS879ZvGoO1tKOI7Y8dC
- wJbJr0LJCofO23+iCMSkF6w6o7P3mXgpRyc++2x9WZsQ467zC0pLruK2kfCGxpj8hM4mHs2A4
- BpuK+vOuJ0Ss6w0qZ/a/d0TWMWQMGF5BAubJ4UmpEDEpy5tmtSocmTiu2vVdDRxWnJG0GxaGq
- szB1xr+OZnpvFZxJ59cJzCTz2abiDx98s8fxf9RdFSL0TM2PWOeAIN/HOROETucIgNJ+EYHxK
- YQ3X6lGU/l0dFhlrg3CzRV4W075jTMuyLf15efeF+JdZLeaZOnqAczlLzohI/L1a9tm8eqjTx
- BX1uRMBqXX1/SNYURSrAgHYnhvwa7jn0JZxDNLIyjvTdMVXIrF4oEFmnjMkd0ICTETR2PyR/d
- k3rNpum+30l9jv3tFz2eK97lVlAT6p4wT+uzqIjp1gcUzZBYUNFbdFWywKG0h
+        Kent Gibson <warthog618@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Networking <netdev@vger.kernel.org>
+Subject: Re: GTE - The hardware timestamping engine
+Message-ID: <YFmu1pptAFQLABe3@orome.fritz.box>
+References: <4c46726d-fa35-1a95-4295-bca37c8b6fe3@nvidia.com>
+ <CACRpkdbmqww6UQ8CFYo=+bCtVYBJwjMxVixc4vS6D3B+dUHScw@mail.gmail.com>
+ <CAK8P3a30CdRKGe++MyBVDLW=p9E1oS+C7d7W4jLE01TAA4k+GA@mail.gmail.com>
+ <20210320153855.GA29456@hoboy.vegasvil.org>
+ <a58a0ec2-9da8-92bc-c08e-38b1bed6f757@nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bVTvMWO8mJlbNrI0"
+Content-Disposition: inline
+In-Reply-To: <a58a0ec2-9da8-92bc-c08e-38b1bed6f757@nvidia.com>
+User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 7:57 AM Alexander Sverdlin
-<alexander.sverdlin@gmail.com> wrote:
-> On Mon, 2021-03-22 at 23:31 +0100, Arnd Bergmann wrote:
->
-> This doesn't sound so bad as I expected. I still had no chance to figure out
-> much bigger increase from 5.4 to 5.12 ;)
->
-> >    text    data     bss     dec     hex filename
-> > 5677321 1119704   90556 6887581 69189d build/tmp/vmlinux
-> > 5782854 1143720   92188 7018762 6b190a build/tmp/vmlinux-use_of
-> > 5830020 1153408   89396 7072824 6bec38 build/tmp/vmlinux-of+clk
-> > 5829320 1153920   91308 7074548 6bf2f4 build/tmp/vmlinux-multi
-> >
-> > I also think at some point in the distant future we will require DT boot for
-> > everything, but that probably comes after most ARMv4T and earlier machines
-> > have fallen out of use. I'd like to get a feeling for how EP93xx fits in there,
-> > can you say what memory configurations are widely deployed and how
->
-> The systems I know have 32MB RAM and 16MB Flash (but only 2MB was reserved for
-> compressed kernel back then).
 
-I see, so with 32MB/2MB you are hitting both limits already and are using a
-rather customized user space, and 200KB is both significant and in the
-within range of the bloat you can expect from the other updates over one
-or two years.
+--bVTvMWO8mJlbNrI0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I expect the bloat problem to gradually get worse over time, as fewer
-developers care about the sub-256MB machines than they used to.
+On Mon, Mar 22, 2021 at 01:33:38PM -0700, Dipen Patel wrote:
+> Hi Richard,
+>=20
+> Thanks for your input and time. Please see below follow up.
+>=20
+> On 3/20/21 8:38 AM, Richard Cochran wrote:
+> > On Sat, Mar 20, 2021 at 01:44:20PM +0100, Arnd Bergmann wrote:
+> >> Adding Richard Cochran as well, for drivers/ptp/, he may be able to
+> >> identify whether this should be integrated into that framework in some
+> >> form.
+> >=20
+> > I'm not familiar with the GTE, but it sounds like it is a (free
+> > running?) clock with time stamping inputs.  If so, then it could
+> > expose a PHC.  That gets you functionality:
+> >=20
+> > - clock_gettime() and friends
+> > - comparison ioctl between GTE clock and CLOCK_REALTIME
+> > - time stamping channels with programmable input selection
+> >=20
+> GTE gets or rather records the timestamps from the TSC
+> (timestamp system coutner) so its not attached to GTE as any
+> one can access TSC, so not sure if we really need to implement PHC
+> and/or clock_* and friends for the GTE. I believe burden to find correlat=
+ion
+> between various clock domains should be on the clients, consider below
+> example.
 
-On the plus side, there should be some gains in enabling
-CONFIG_LD_DEAD_CODE_DATA_ELIMINATION in the future, and
-as long as we support machines without DT, you can probably add
-a trivial local patch to turn off CONFIG_OF even for machines that
-are multiplatform-enabled, though I would prefer not to allow that
-configuration in mainline kernels.
+I agree. My understanding is the the TSC is basically an SoC-wide clock
+that can be (and is) used by several hardware blocks. There's an
+interface for software to read out the value, but it's part of a block
+called TKE (time-keeping engine, if I recall correctly) that implements
+various clock sources and watchdog functionality.
 
-> > long you expect them to receive kernel upgrades in the future? Are these
-> > systems that will definitely get put out of use at a particular time (e.g.
-> > mobile phone infrastructure for older networks or fixed-time support
-> > contracts), or are these systems that you expect to keep patching until
-> > the hardware dies?
->
-> Yes, I expect them to work (and be patched) until they die and this
-> may take another decade ;)
+As a matter of fact, I recall typing up a driver for that at some point
+but I don't recall if I ever sent it out or what became of it. I can't
+find it upstream at least.
 
-Ok, makes sense. I suppose once you get to the end of that time, you
-can consider permanently moving to an LTS kernel, but that only gives
-you two (at most six) years of updates.
+Anyway, I think given that the GTE doesn't provide that clock itself but
+rather just a means of taking a snapshot of that clock and stamping
+certain events with that, it makes more sense to provide that clock from
+the TKE driver.
 
-       Arnd
+Thierry
+
+--bVTvMWO8mJlbNrI0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBZrtYACgkQ3SOs138+
+s6HbFg/9G7X90pqDEW3JLgijJ69+zOPxjnEtd7Y38eusl2F11qEb74F8Kmk3+CWr
+MPM/iRekB4+INhuzDih0zkNK8a8vvKSuQI9PelFHM2ZQhlHgtD6Sh8otjrx6qRxP
+JmqeOPFxmHkeZ2y5ddHYnP/4OTMOsQJNK8xxGF1OaJ8thhsQmh7f9SKQ1CX5v0Yd
+JgDbbB0FqvoMLmmhyFbz14lfVN9O364X7Ji7EgpSGU1bPo5/VObQTc4gZLkSNXbC
+IStd/kQ9V6Mu5zZeAoNSteQMWnX75PS50p+m4jotH6tysVxIYKFUYp4VnnpEojIq
+UBE1KPE53IhNVgOAom95sDATD6KO4/wfvGSf6iqQFBw/ictceHEh/MsQ2YtzaVC1
+/S4pinQ5vf60WqtSCIUBuc5BdsX/YnbPD8y6+s/Nx35/+7JVA63l3AmKEBBZ8nHo
+sRxveUV/dkwuR4yPyAwIh2G7K7viXb4SkgPLZJ1bl3ooQFeGdOXiiVJYJ//NJ16z
++gjJ6wp7m/mzSqFbd/P5eTo6Pc+5866tOSrmePJ2TYnRFDcI3ytBawUHexz8RJlL
+Wo20Q3av8w8Xpg01aNvg5nqnPfGq5sZXTKE58utV4k1NJcGSfx0zrgDCj+q+x9IM
+xckpjOkqyFAK1KcPvvk0E0roZJNc8AEMOVWcWrLZ3SLR6uUm4os=
+=8TIr
+-----END PGP SIGNATURE-----
+
+--bVTvMWO8mJlbNrI0--
