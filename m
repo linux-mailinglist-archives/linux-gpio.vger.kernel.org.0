@@ -2,83 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCECF34673F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Mar 2021 19:09:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8ED6346774
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Mar 2021 19:22:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231394AbhCWSJD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Mar 2021 14:09:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
+        id S231461AbhCWSVm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Mar 2021 14:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230370AbhCWSIs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 23 Mar 2021 14:08:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F37676192B;
-        Tue, 23 Mar 2021 18:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616522928;
-        bh=dg/v7I9osNgCOwDkoypjMc9FZHS9w25d2q6433j6+kI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gIpvHBF3RaO/d533nR7vktfT6Z5dJlqeqaihaU//0GuM9AiyaPuDqLpgPeJUjZq3j
-         TRfAQAjndJ6OiSJfSsBe99nd2ZXVFNbdt/OILxBI+ypUC2dOavE7lBIMggaAQ+ofJl
-         5hILbGAtwz60tnY/U9bL1ZTwFoea0fTFC+qk2PnhsSHFGRgApK1vjMaOK4Y3qxGej2
-         IOQpE79NROFOn0ouMJEpVSYQgN3A3EBcD+dji45jFv24N0uY/l6jif7VdjMApZCj6S
-         P+STiRXe0DlRZROXyJFoLZpOKqylillnLF7ShNNFuuwmR2h1TeJU4bIHV+E+H0zj46
-         bfei4ohK42x5Q==
-Date:   Tue, 23 Mar 2021 11:08:42 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jeevan Shriram <jshriram@codeaurora.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] pinctrl: qcom: fix unintentional string concatenation
-Message-ID: <20210323180842.ecpb5yza6bgjdl5n@archlinux-ax161>
-References: <20210323131728.2702789-1-arnd@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210323131728.2702789-1-arnd@kernel.org>
+        id S231146AbhCWSVN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 23 Mar 2021 14:21:13 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C9BF619C2;
+        Tue, 23 Mar 2021 18:21:12 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lOleQ-003Mfl-52; Tue, 23 Mar 2021 18:21:10 +0000
+Date:   Tue, 23 Mar 2021 18:21:09 +0000
+Message-ID: <87h7l1k9yi.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: GTE - The hardware timestamping engine
+In-Reply-To: <YFm9r/tFkzVlYDEp@orome.fritz.box>
+References: <4c46726d-fa35-1a95-4295-bca37c8b6fe3@nvidia.com>
+        <CACRpkdbmqww6UQ8CFYo=+bCtVYBJwjMxVixc4vS6D3B+dUHScw@mail.gmail.com>
+        <20210322060047.GA226745@sol>
+        <d48fa7b5-8c17-c3d7-10a9-a9811c410a39@nvidia.com>
+        <CACRpkdbkmwuAJzD-CpWKqmL3_n1xkvv_2M_DsNs+ZquiaRkKgA@mail.gmail.com>
+        <YFm9r/tFkzVlYDEp@orome.fritz.box>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: thierry.reding@gmail.com, linus.walleij@linaro.org, dipenp@nvidia.com, warthog618@gmail.com, linux-kernel@vger.kernel.org, jonathanh@nvidia.com, bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, tglx@linutronix.de, arnd@arndb.de, richardcochran@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 02:17:13PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> clang is clearly correct to point out a typo in a silly
-> array of strings:
-> 
-> drivers/pinctrl/qcom/pinctrl-sdx55.c:426:61: error: suspicious concatenation of string literals in an array initialization; did you mean to separate the elements with a comma? [-Werror,-Wstring-concatenation]
->         "gpio14", "gpio15", "gpio16", "gpio17", "gpio18", "gpio19" "gpio20", "gpio21", "gpio22",
->                                                                    ^
-> Add the missing comma that must have accidentally been removed.
-> 
-> Fixes: ac43c44a7a37 ("pinctrl: qcom: Add SDX55 pincontrol driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Tue, 23 Mar 2021 10:06:39 +0000,
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+[...]
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-sdx55.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Obviously if we don't integrate this with IRQs directly, it becomes a
+> bit more difficult to relate the captured timestamps to the events
+> across subsystem boundaries. I'm not sure how this would be solved
+> properly. If the events are sufficiently rare, and it's certain that
+> none will be missed, then it should be possible to just pull a timestamp
+> from the timestamp FIFO for each event.
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sdx55.c b/drivers/pinctrl/qcom/pinctrl-sdx55.c
-> index 2b5b0e2b03ad..5aaf57b40407 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sdx55.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sdx55.c
-> @@ -423,7 +423,7 @@ static const char * const gpio_groups[] = {
->  
->  static const char * const qdss_stm_groups[] = {
->  	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7", "gpio12", "gpio13",
-> -	"gpio14", "gpio15", "gpio16", "gpio17", "gpio18", "gpio19" "gpio20", "gpio21", "gpio22",
-> +	"gpio14", "gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21", "gpio22",
->  	"gpio23", "gpio44", "gpio45", "gpio52", "gpio53", "gpio56", "gpio57", "gpio61", "gpio62",
->  	"gpio63", "gpio64", "gpio65", "gpio66",
->  };
-> -- 
-> 2.29.2
+> All of that said, I wonder if perhaps hierarchical IRQ domains can
+> somehow be used for this. We did something similar on Tegra not too long
+> ago for wake events, which are basically IRQs exposed by a parent IRQ
+> chip that allows waking up from system sleep. There are some
+> similarities between that and GTE in that the wake events also map to a
+> subset of GPIOs and IRQs and provide additional functionalities on top.
 > 
+> I managed to mess up the implementation and Marc stepped in to clean
+> things up, so Cc'ing him since he's clearly more familiar with the topic
+> than I am.
+
+Sure, but I'm pretty clueless when it comes to what this GTE thing
+does (it has a fast car ring to it, which isn't a selling point for
+me... ;-).
+
+If, as I understand it, it is supposed to collect timestamps on
+signalling of IRQs, you could make it part of the kernel's view of the
+interrupt path by "pushing" a domain on top of the IRQ stack,
+triggering the configuration/timestamping of this interrupt.
+
+What is completely unclear to me is how you extract information from
+it. The IRQ doesn't really give you an interface to extract a lot of
+information aside from an interrupt count and what is defined as the
+interrupt state. A timestamp doesn't really count as state, so you'd
+need to invent something new here.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
