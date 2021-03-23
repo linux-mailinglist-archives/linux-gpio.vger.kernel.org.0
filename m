@@ -2,103 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86851346C44
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Mar 2021 23:21:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACB1C346C5B
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Mar 2021 23:22:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233977AbhCWWU4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Mar 2021 18:20:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233931AbhCWWTO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Mar 2021 18:19:14 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018F2C061764;
-        Tue, 23 Mar 2021 15:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-        :Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=BH8l4rhqM3j+tO6C1MABX7MjnINoZWw3fSlsoKWejbk=; b=CKCciv/I0u+Qfnd5B1gRD0tTiW
-        TIpbeMTbmRB3cySGrns8wOsyxr5bd4CffbtAc69cJZONuueAlFSzz6USI8syCBPltEd0jZr8uwYvu
-        zDdghVKxUqvJYqOX3/+wU+2pCqioS4dg3rUAzd7jljOpf1kD/c5OWGt0FbGf8W/NcXmbgWmJ+MyZo
-        OSHQOXSeq6iWKdMLs9hkIhhLHH+6C/+pkLAQ1NRXuSY+ZmIe9iWqPzD+ppAQM/ZQn9bFKpanZQO6N
-        eIrQlN4XWqEXamYdCRb70VO/l078T7uFcybq+y+4sTWkTjCadsNbmZoPQYvdBfd+kr4TzwV8zuGei
-        2z3X+EvQ==;
-Received: from [2601:1c0:6280:3f0::3ba4] (helo=smtpauth.infradead.org)
-        by desiato.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lOpMi-00Fq9a-KZ; Tue, 23 Mar 2021 22:19:09 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S234032AbhCWWVl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Mar 2021 18:21:41 -0400
+Received: from mail-il1-f173.google.com ([209.85.166.173]:35405 "EHLO
+        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234009AbhCWWT3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Mar 2021 18:19:29 -0400
+Received: by mail-il1-f173.google.com with SMTP id 19so19621027ilj.2;
+        Tue, 23 Mar 2021 15:19:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=56R6uQ+eEGuXAKBtCegxzcu/omDRIGKn0PIoANxTJY0=;
+        b=NOiVHpW5U1DLWxWhaGgrTKPgVjMoudxrQfAntds4xSIJBB1MaTlR2IabfIXLTuHd1F
+         avEYoCKUf/FZtsLyodK2RI4K1XB1YiiE3ma2r1+Nxtc1IsJBfh3Oc4yzhort0L8Po8uk
+         RMb5Lr3vfNNsRpHZT8y6nXdEQiqiikgPiEcMFhSmXn3WGbkfmAWHVfhfRLYWxXjOdAYg
+         RTQ4Dq39ovE4VDMS/phjzS5Q+OQJF3fWkW/2XUpxcwqKM2fyzMS5+XK9cJ/SI7ETxBK+
+         Rj7ylDcd6PecR22j64X8w3QwNXJKTTzrimCM8YWTM9xj5ORV9KNOjSOGXhMb6IS7vDUC
+         ur9A==
+X-Gm-Message-State: AOAM530rJeEUu0C9c0Rig/zQ3z0QN51YgOWlLyxMWjTEBord4ZOaZZEI
+        juYt38Ne7fGlELz3ZGij3A==
+X-Google-Smtp-Source: ABdhPJzrywiDMsymFI9TWW8n1IA4IxULfT29lZ7Kyp30BvF3+Pvw4RaygbqwmahMRdXgQmjjpXRffA==
+X-Received: by 2002:a92:dc49:: with SMTP id x9mr285399ilq.281.1616537967323;
+        Tue, 23 Mar 2021 15:19:27 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id n11sm88739ioa.34.2021.03.23.15.19.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Mar 2021 15:19:26 -0700 (PDT)
+Received: (nullmailer pid 1444136 invoked by uid 1000);
+        Tue, 23 Mar 2021 22:19:23 -0000
+Date:   Tue, 23 Mar 2021 16:19:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH] linux/gpio/driver.h: some edits for clarity
-Date:   Tue, 23 Mar 2021 15:19:05 -0700
-Message-Id: <20210323221905.19529-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 06/22] dt-bindings: add BCM6328 GPIO sysctl binding
+ documentation
+Message-ID: <20210323221923.GA1434856@robh.at.kernel.org>
+References: <20210317143803.26127-1-noltari@gmail.com>
+ <20210317143803.26127-7-noltari@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210317143803.26127-7-noltari@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix a few typos and some punctuation.
-Also, change CONFIG_OF to CONFIG_OF_GPIO in one comment.
+On Wed, Mar 17, 2021 at 03:37:47PM +0100, Álvaro Fernández Rojas wrote:
+> Add binding documentation for the GPIO sysctl found in BCM6328 SoCs.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
+>  v8: add changes suggested by Rob Herring
+>  v7: add changes suggested by Rob Herring
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-gpio@vger.kernel.org
----
- include/linux/gpio/driver.h |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+For future reference, not a useful changelog other than reminding me I 
+looked at previously. Assume the reviewer doesn't remember what they 
+said and give a hint as to what needs to be looked at again. Unlike the 
+commit log (because I can read the diff for 'what'), here you should 
+describe what changed.
 
---- linux-next-20210323.orig/include/linux/gpio/driver.h
-+++ linux-next-20210323/include/linux/gpio/driver.h
-@@ -227,7 +227,7 @@ struct gpio_irq_chip {
- 	/**
- 	 * @valid_mask:
- 	 *
--	 * If not %NULL holds bitmask of GPIOs which are valid to be included
-+	 * If not %NULL, holds bitmask of GPIOs which are valid to be included
- 	 * in IRQ domain of the chip.
- 	 */
- 	unsigned long *valid_mask;
-@@ -346,7 +346,7 @@ struct gpio_irq_chip {
-  *	output.
-  *
-  * A gpio_chip can help platforms abstract various sources of GPIOs so
-- * they can all be accessed through a common programing interface.
-+ * they can all be accessed through a common programming interface.
-  * Example sources would be SOC controllers, FPGAs, multifunction
-  * chips, dedicated GPIO expanders, and so on.
-  *
-@@ -435,15 +435,15 @@ struct gpio_chip {
- 	/**
- 	 * @valid_mask:
- 	 *
--	 * If not %NULL holds bitmask of GPIOs which are valid to be used
-+	 * If not %NULL, holds bitmask of GPIOs which are valid to be used
- 	 * from the chip.
- 	 */
- 	unsigned long *valid_mask;
- 
- #if defined(CONFIG_OF_GPIO)
- 	/*
--	 * If CONFIG_OF is enabled, then all GPIO controllers described in the
--	 * device tree automatically may have an OF translation
-+	 * If CONFIG_OF_GPIO is enabled, then all GPIO controllers described in
-+	 * the device tree automatically may have an OF translation
- 	 */
- 
- 	/**
-@@ -508,7 +508,7 @@ extern int gpiochip_add_data_with_key(st
-  * for GPIOs will fail rudely.
-  *
-  * gpiochip_add_data() must only be called after gpiolib initialization,
-- * ie after core_initcall().
-+ * i.e. after core_initcall().
-  *
-  * If gc->base is negative, this requests dynamic assignment of
-  * a range of valid GPIOs.
+> 
+>  .../mfd/brcm,bcm6328-gpio-sysctl.yaml         | 162 ++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/brcm,bcm6328-gpio-sysctl.yaml
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
