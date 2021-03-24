@@ -2,82 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C340D3471D7
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 07:48:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 350773471E2
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 07:52:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235593AbhCXGr5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Mar 2021 02:47:57 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:38090 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235642AbhCXGrf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 02:47:35 -0400
+        id S231783AbhCXGvq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Mar 2021 02:51:46 -0400
+Received: from regular1.263xmail.com ([211.150.70.204]:59058 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231663AbhCXGvW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 02:51:22 -0400
 Received: from localhost (unknown [192.168.167.235])
-        by lucky1.263xmail.com (Postfix) with ESMTP id A6A71C7C32;
-        Wed, 24 Mar 2021 14:47:32 +0800 (CST)
+        by regular1.263xmail.com (Postfix) with ESMTP id C248C556;
+        Wed, 24 Mar 2021 14:50:30 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
 X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P24306T139685303748352S1616568451588231_;
-        Wed, 24 Mar 2021 14:47:32 +0800 (CST)
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from desktop-sg5v5ea (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P24304T139684921460480S1616568629027815_;
+        Wed, 24 Mar 2021 14:50:29 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <dd30de153a8503bb2f4ea4cac913b5f3>
+X-UNIQUE-TAG: <4364d0d3bd60dc464c6010413030266f>
 X-RL-SENDER: jay.xu@rock-chips.com
 X-SENDER: xjq@rock-chips.com
 X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: huangtao@rock-chips.com
+X-FST-TO: jay.xu@rock-chips.com
 X-SENDER-IP: 58.22.7.114
 X-ATTACHMENT-NUM: 0
 X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     huangtao@rock-chips.com, kever.yang@rock-chips.com,
-        linus.walleij@linaro.org, heiko@sntech.de
-Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 7/7] gpio/rockchip: drop irq_gc_lock/irq_gc_unlock for irq set type
-Date:   Wed, 24 Mar 2021 14:47:30 +0800
-Message-Id: <20210324064730.950335-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210324064541.949630-1-jay.xu@rock-chips.com>
+Date:   Wed, 24 Mar 2021 14:50:29 +0800
+From:   "jay.xu@rock-chips.com" <jay.xu@rock-chips.com>
+To:     =?utf-8?B?6K645YmR576k?= <jay.xu@rock-chips.com>,
+        "Tao Huang" <huangtao@rock-chips.com>,
+        =?utf-8?B?5p2o5Yev?= <kever.yang@rock-chips.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        =?utf-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>,
+        bgolaszewski <bgolaszewski@baylibre.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND 0/7] gpio-rockchip driver
 References: <20210324064541.949630-1-jay.xu@rock-chips.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Priority: 3
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.19.158[cn]
+Mime-Version: 1.0
+Message-ID: <202103241450286417142@rock-chips.com>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There has spin lock for irq set type already, so drop irq_gc_lock and
-irq_gc_unlock.
-
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- drivers/gpio/gpio-rockchip.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 048e7eecddba..c9c55614bbef 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -406,7 +406,6 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 		irq_set_handler_locked(d, handle_level_irq);
- 
- 	raw_spin_lock_irqsave(&bank->slock, flags);
--	irq_gc_lock(gc);
- 
- 	level = rockchip_gpio_readl(bank, bank->gpio_regs->int_type);
- 	polarity = rockchip_gpio_readl(bank, bank->gpio_regs->int_polarity);
-@@ -461,7 +460,6 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 	rockchip_gpio_writel(bank, level, bank->gpio_regs->int_type);
- 	rockchip_gpio_writel(bank, polarity, bank->gpio_regs->int_polarity);
- out:
--	irq_gc_unlock(gc);
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
- 
- 	return ret;
--- 
-2.25.1
+SSdtIGZvcmdldCB0byBzZW5kLXRvIGluY2x1ZGUgQmFydG9zeiwgSSdsbCByZW1lbWJlciBpbiBu
+ZXh0IHZlcnNpb24KCi0tLS0tLS0tLS0tLS0tCmpheS54dUByb2NrLWNoaXBzLmNvbQo+U2VwYXJh
+dGUgZ3BpbyBkcml2ZXIgZnJvbSBwaW5jdHJsIGRyaXZlciwgYW5kIHN1cHBvcnQgdjIgY29udHJv
+bGxlci4KPgo+SmlhbnF1biBYdSAoNyk6Cj7CoCBwaW5jdHJsL3JvY2tjaGlwOiBzZXBhcmF0ZSBz
+dHJ1Y3Qgcm9ja2NoaXBfcGluX2JhbmsgdG8gYSBoZWFkIGZpbGUKPsKgIHBpbmN0cmwvcGluY3Ry
+bC1yb2NrY2hpcC5oOiBhZGQgcGluY3RybCBkZXZpY2UgdG8gZ3BpbyBiYW5rIHN0cnVjdAo+wqAg
+Z3Bpbzogc2VwYXJhdGUgZ3BpbyBkcml2ZXIgZnJvbSBwaW5jdHJsLXJvY2tjaGlwIGRyaXZlcgo+
+wqAgZ3Bpby9yb2NrY2hpcDogdXNlIHN0cnVjdCByb2NrY2hpcF9ncGlvX3JlZ3MgZm9yIGdwaW8g
+Y29udHJvbGxlcgo+wqAgZ3Bpby9yb2NrY2hpcDogc3VwcG9ydCBuZXh0IHZlcnNpb24gZ3BpbyBj
+b250cm9sbGVyCj7CoCBncGlvL3JvY2tjaGlwOiBhbHdheXMgZW5hYmxlIGNsb2NrIGZvciBncGlv
+IGNvbnRyb2xsZXIKPsKgIGdwaW8vcm9ja2NoaXA6IGRyb3AgaXJxX2djX2xvY2svaXJxX2djX3Vu
+bG9jayBmb3IgaXJxIHNldCB0eXBlCj4KPiBkcml2ZXJzL2dwaW8vS2NvbmZpZ8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgOCArCj4gZHJpdmVycy9ncGlvL01ha2VmaWxlwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMSArCj4gZHJpdmVycy9ncGlvL2dwaW8tcm9ja2No
+aXAuY8KgwqDCoMKgwqDCoCB8IDc1OCArKysrKysrKysrKysrKysrKysrKysrKysKPiBkcml2ZXJz
+L3BpbmN0cmwvcGluY3RybC1yb2NrY2hpcC5jIHwgOTA5ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tCj4gZHJpdmVycy9waW5jdHJsL3BpbmN0cmwtcm9ja2NoaXAuaCB8IDI4NiArKysrKysr
+KysKPiA1IGZpbGVzIGNoYW5nZWQsIDEwNzIgaW5zZXJ0aW9ucygrKSwgODkwIGRlbGV0aW9ucygt
+KQo+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwaW8vZ3Bpby1yb2NrY2hpcC5jCj4gY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9waW5jdHJsLXJvY2tjaGlwLmgKPgo+LS0K
+PjIuMjUuMQo+Cj4KPg==
 
 
 
