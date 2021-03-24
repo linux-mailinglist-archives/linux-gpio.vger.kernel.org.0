@@ -2,96 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E4023484AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 23:34:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E1EB348516
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 00:12:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235298AbhCXWdk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Mar 2021 18:33:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232896AbhCXWdZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 18:33:25 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8081DC06174A
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Mar 2021 15:33:24 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id 11so18587441pfn.9
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Mar 2021 15:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gMuqnDgSpNCh2h8C7b5QZCwmk0iyduRMzQro9wOXU88=;
-        b=xWKncwZP5sLJs7JuH2peX+2wKQH5R54M3+ruEprqyEZofEtfngksh39/G4dG8DRMfh
-         EBE04QiioMqqgGuW2qTH5X8osgkk/3BlcBVABuTsytTYLrsv91X4NrKygA3WkLGF8YOU
-         b4vHOrfh3pAK+DG/ObX7+aDNtaIWfFLUvuMvzkUSQOhDlSeGtyG0dmRBovD0WttCqFWB
-         rFfDvTdy2W6zIuv6aoIvwtWaB98RELlWNwacCO5oxYpU3F/nJKEW6owFTWzjRRyJo2si
-         /1KzQcKOaMiLhN2W2lGUbzErv749BMd9hrOM/aJcgHLKp7361EUmBvQirU8/r14mOUq8
-         nWNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gMuqnDgSpNCh2h8C7b5QZCwmk0iyduRMzQro9wOXU88=;
-        b=e7iFqsBun1TFCYlk4jDZzz8LaA0hrQrT09FCbPvRpDlakTt0SD9VXr+mh9unCgIHMQ
-         gAow/FMVx34Ao7cVh4peBk1cK79qnhMTyN4Y+ZORdYah8+lVOdg0pFVHsVO/YZ4SryON
-         oOqSGYSXlhSX9zV7H0SLN4MXUuMEBXOnfgDz7G0zjPc32HPne2eWnvKzhQ9qFTgA4bQs
-         aOTIrJvlsgPWvHpJ3pTydZBaenUvr4ZobohAw5JnjHZxQaA+vhUsZYwcySPrRgJychg4
-         dk28/1t54hqJBMeIXG3c05+3MnqqJ3VUo812qS2Urr5w3IBrHb9TN0p6tVMFX+6INY+C
-         w+Cw==
-X-Gm-Message-State: AOAM531mERswQ98IXNHokYFIhgdPmJRvoHPuxUNr8LKFtkqpRjwM1Lk4
-        WuH5tsCAXPmfRGxBrDhq0RK2DQ==
-X-Google-Smtp-Source: ABdhPJxGqI1cC2uhinIMyQb37k1dVPRqSxTOQieitXf9RFUWKhjN7wx7BtEHARrjgqBLNAqFyupn7g==
-X-Received: by 2002:a17:903:31c6:b029:e5:d0a4:97cc with SMTP id v6-20020a17090331c6b02900e5d0a497ccmr5876204ple.52.1616625203829;
-        Wed, 24 Mar 2021 15:33:23 -0700 (PDT)
-Received: from x1 ([2601:1c0:4701:ae70:2535:883:67bb:5fbf])
-        by smtp.gmail.com with ESMTPSA id j26sm3488615pfa.35.2021.03.24.15.33.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Mar 2021 15:33:22 -0700 (PDT)
-Date:   Wed, 24 Mar 2021 15:33:20 -0700
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     bcousson@baylibre.com, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
+        id S238957AbhCXXL5 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 24 Mar 2021 19:11:57 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:20147 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231544AbhCXXLg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 24 Mar 2021 19:11:36 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-57-ByNutTSLPryHL587jqF9Ew-1; Wed, 24 Mar 2021 23:11:31 +0000
+X-MC-Unique: ByNutTSLPryHL587jqF9Ew-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Wed, 24 Mar 2021 23:11:30 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.012; Wed, 24 Mar 2021 23:11:30 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Arnd Bergmann' <arnd@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] ARM: dts: am335x-pocketbeagle: unique gpio-line-names
-Message-ID: <20210324223320.GA672059@x1>
-References: <20210127000303.436595-1-drew@beagleboard.org>
- <YFsp9B8Vo/Jr8nif@atomide.com>
+        Nathan Chancellor <nathan@kernel.org>,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        Jeevan Shriram <jshriram@codeaurora.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        "Vinod Koul" <vkoul@kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: RE: [PATCH] pinctrl: qcom: fix unintentional string concatenation
+Thread-Topic: [PATCH] pinctrl: qcom: fix unintentional string concatenation
+Thread-Index: AQHXH+cnzD0REIZ51kmEV+qVFS5oLKqTxYmg
+Date:   Wed, 24 Mar 2021 23:11:30 +0000
+Message-ID: <787a3368942c4be98d29d5b00cad6b7d@AcuMS.aculab.com>
+References: <20210323131728.2702789-1-arnd@kernel.org>
+In-Reply-To: <20210323131728.2702789-1-arnd@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YFsp9B8Vo/Jr8nif@atomide.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 02:00:52PM +0200, Tony Lindgren wrote:
-> Hi,
+From: Arnd Bergmann
+> Sent: 23 March 2021 13:17
+> clang is clearly correct to point out a typo in a silly
+> array of strings:
 > 
-> * Drew Fustini <drew@beagleboard.org> [210127 02:04]:
-> > Based on linux-gpio discussion [1], it is best practice to make the
-> > gpio-line-names unique. Generic names like "[ethernet]" are replaced
-> > with the name of the unique signal on the AM3358 SoC ball corresponding
-> > to the gpio line. "[NC]" is also renamed to the standard "NC" name to
-> > represent "not connected".
+> drivers/pinctrl/qcom/pinctrl-sdx55.c:426:61: error: suspicious concatenation of string literals in an
+> array initialization; did you mean to separate the elements with a comma? [-Werror,-Wstring-
+> concatenation]
+>         "gpio14", "gpio15", "gpio16", "gpio17", "gpio18", "gpio19" "gpio20", "gpio21", "gpio22",
+>                                                                    ^
+> Add the missing comma that must have accidentally been removed.
 > 
-> Applying this one into omap-for-v5.13/dt thanks. However the second patch
-> does not apply against v5.12-rc2, Drew can you please repost the second
-> patch?
+> Fixes: ac43c44a7a37 ("pinctrl: qcom: Add SDX55 pincontrol driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sdx55.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Regards,
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sdx55.c b/drivers/pinctrl/qcom/pinctrl-sdx55.c
+> index 2b5b0e2b03ad..5aaf57b40407 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sdx55.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sdx55.c
+> @@ -423,7 +423,7 @@ static const char * const gpio_groups[] = {
 > 
-> Tony
+>  static const char * const qdss_stm_groups[] = {
+>  	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7", "gpio12", "gpio13",
+> -	"gpio14", "gpio15", "gpio16", "gpio17", "gpio18", "gpio19" "gpio20", "gpio21", "gpio22",
+> +	"gpio14", "gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21", "gpio22",
+>  	"gpio23", "gpio44", "gpio45", "gpio52", "gpio53", "gpio56", "gpio57", "gpio61", "gpio62",
+>  	"gpio63", "gpio64", "gpio65", "gpio66",
 
-Hi Tony, I have posted a new patch that applies okay to mainline.
 
-Thanks,
-Drew
+That may be replaceable with:
+static const char qdss_stm_groups[][8] = { .... };
 
-[1] https://lore.kernel.org/linux-gpio/20210324222201.674905-1-drew@beagleboard.org/T/#u
+For a code and data size reduction.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
