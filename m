@@ -2,173 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21C22347BDC
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 16:14:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20B7A347CE3
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 16:44:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236553AbhCXPOU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Mar 2021 11:14:20 -0400
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:42788 "EHLO
+        id S236717AbhCXPn6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Mar 2021 11:43:58 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:44605 "EHLO
         esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236549AbhCXPOJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 11:14:09 -0400
+        with ESMTP id S236730AbhCXPnj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 11:43:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1616598848;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=wG4im1BTW2ovd2UN98LBR1DeI+7tH225IUFzOgweV5g=;
-  b=GKzyobrbu4toPJC/MhSEu7XXfmm61vOL2vs6Pr8JyGc7jnzOUFBRUKKY
-   s9vRNtnixTzCL6pw67nDGNOyk+V9CIjk/uHcVMVnAmApDYc7J/bAvf94Q
-   GWv/wwPRmD6OD+mpG+8gr3XL2AuxNXV0/jx0lAa2+D9EMC8uftY/zhKXL
-   I=;
+  d=citrix.com; s=securemail; t=1616600618;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=4t8h/V5VL/2YLVJYxqD1SyLsO/NLKW39GY5oNhNfJew=;
+  b=ZMhTjuY2nJnID8vUW9OUkGxCzzEHBqdZjdVRyCPEeRQHWxTK5umtb8yj
+   260JlibIMMNNJ99G4wTgFamXkQbEy5UA4PCUn0vU8oGcoiTWpD3ZXWVRV
+   FNPU9vM72xlf+5XSRxleAkg6tRqhEHNVdPnpQ9c27kE/UpMpxnARIF5jS
+   c=;
 Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=pass (signature verified) header.i=@citrix.onmicrosoft.com
-IronPort-SDR: WPgl8n6C1t9qqptT2KlYIcusDPet5S6aMpDU2n8dy3iid03VuoyjBToIx4kDSopOuQvyFDwxF3
- 1AxeTRbFgHlolX61kz1IsHfkEzbwXkoDCDbc3UbO+G3q6cnbURy0iPgfjqZoPkf1OkGMfB5CcZ
- ERcpJLiHGEz6LPrx9QeI7dv9PbWmTe9PcailXEMCHyZ6o0SQPFzqH16+xypp6HbPSp3qczFtRn
- DoWP/WcfjQhuDQuR+Uue3CWfW6elF0ZIhJ1lPsTQ+ob5hTFwRuRPlcPbVqvJQuJD8gCofZhf/s
- 3nM=
+IronPort-SDR: jTeEk/lbNR9qEfHw84rDBy5E3ddNzhCj1EvIfD12oB1OwAfQcGHQTqXoihpnNsjmbqyjdwFAqR
+ w6O46a73e1o3HcN3OfDkgFlx+lhpIClKOdtNhTH7I4qN96lLSZxObqMLkgIF2DuUFGrffy/xdQ
+ bDqKK1L/MWnFCNc5OkL9QW13euWjODcBknRONke5575Pe6o1lpn1BX9mi96QBHPYzeriqS+Zzs
+ vqbNw0IqJ5NxOqaSS+hS91S12AoC+qqL9D5zb6udkST3rDssTRFGNWMO7V1mgtjQuOrbbmzb/Q
+ sYI=
 X-SBRS: 5.2
-X-MesageID: 40034394
+X-MesageID: 40038641
 X-Ironport-Server: esa2.hc3370-68.iphmx.com
 X-Remote-IP: 162.221.156.83
 X-Policy: $RELAYED
-IronPort-HdrOrdr: A9a23:yc9NWqNChxiPE8BcTxP155DYdL4zR+YMi2QD/1xtSBBTb8yTn9
- 2vmvNe7hPvlDMNQhgb9OyoEqPoexPh3LRy5pQcOqrnYRn+tAKTXeVfxKbB4xmlIS3x8eZByb
- xtGpIVNPTcBUV35PyU3CCWCNAlqePozImNpcPzi0hgVhtrbaYI1XYdNi++HldtTAdLQboVfa
- DshfZvnDardXQJYsnTPBBsM9TrnNHXiIngJScPGh9P0mKzpAm14733GQXw5GZ9bxpzx94ZkF
- TtokjCyYiI99q6zRLd0GG71eUqpPLRjuFtKebJpswcKjDHghulaoJ7S9S5zUwIidDq0nkGup
- 3hpAohItRS5hrqDx6IiCqo4SbM+nIP7GLv0lCRi3eLm72GeBsKT/BvqKgcVzmx0TtGgPhMlJ
- hl8kjcir9sSTTHpyj578igbWAQqmOE5UAMvMRWs2ZSSuIlGdlshL1axmx5OrEaEhn37Yg2ed
- Medv301bJtfVSWY2uxhBgX/PWcGnA6HhKxSkMfoMCi0z9PgHBjz0cDrfZv5ks9yA==
-X-IronPort-AV: E=Sophos;i="5.81,274,1610427600"; 
-   d="scan'208";a="40034394"
+IronPort-HdrOrdr: A9a23:O+q+y6gZKQOfU4iYmmZMhp/t1XBQX31w3DAbvn1ZSRFFG/Gwv/
+ uF2NwGyB75jysQUnk8mdaGfJKNW2/Y6IQd2+QsFJ+Ydk3DtHGzJI9vqbHjzTrpBjHk+odmv5
+ tIW5NVTOf9BV0St63HySGzGdo43Z2j+Kenme/Rwx5WPHlXQotn6Bp0DRveN0VwShVPC5ZRLu
+ vm2uNsoT28dXMLKvmqH3VtZZmPm/TntrLDJSQHCRku9RWUgVqThILSPhCE0n4lIldy6Jg492
+ ytqW3Ez4Wl98q20xrNk1LUhq4m4efJ7vtmKIiyhtMOKjPq4zzYKLhJf7GZpjg6rKWOxT8R4b
+ 7xiiwtNchy9H/dF1vdyXSC5yDa3Dkj8HPkw1OD6EGTx/DRfi4wCMZKmOtiA3jkwncgp9113e
+ Zq2G+UpvNsfHb9tRn9/NTBWlVWkFO1qxMZ4IwupkFYOLF/VJZh6agkuG9FGpYJGyz3rKo9Fv
+ N1Mc3a7PFKNXuHcnHwpABUsZKRd0V2Oi3DblkJu8ST3TQTtmt+1VEkyMsWmWpF3I4hSqND+/
+ /PPs1T5fBzZ/5TSZg4KPYKQMOxBGCIawnLKniuLVPuE7xCHH7RtZjt4vEQ6PuxcJIFiLs+8a
+ 6xEG9whCoXQQbDGMeO1JpE/lTmW2OmRwngzclY+tx3obv5SL33MTCSSVwnnse6ys9vQPHzar
+ KWAtZ7EvXjJWzhFcJixAvlQaRfLnEYTYkUt78AKhezi/OODrevmv3Qcf7VKraoOy0jQHnDDn
+ wKWyW2IM1B60usS2LpmRS5YQKoRmXPubZLVITK9ekaz4YAcqdWtBIOtFi/7saXbTtYsqI3e0
+ N6KKj9kryyoHS3+Wqg1RQrBjNtSmJupJnwWXJDogEHd2nud6wYhtmZcWdOmGecKgRnVMPQGg
+ 5Hr1Fx8aa6RqbgghwKOpaCCCa3nnETrHWFQ9MggaWF/97iYY59JI0hQrZNGQLCEAFVlQ5mpH
+ xYUhINQlbSG1rV+OOYpa1RINuaVtFnxC+3PMZfqBvkxD+hjPBqYkFeYhmDfoq8hx00Sz9dm1
+ trmpVv/YaoqHKIMmswgOMxLVtWTn+YaYg2QzitbJlIm7ztZQF7RXqLgzvfkB0oZm/27Swp9x
+ DcBDzRdvfRDlVHvHdElq7s7VNvb22YO1l9c3ZgrORGZC/7k2c21e+Afayo1WSNLlME3+EGKT
+ nACAFiaz9G1pSy1BSPniyFGmhjzpIyPvbFBLBmd73IwHuiJMmJkq4BdsUktKpNJZTrsuURV/
+ iYdBLQJDTkC/kx0wjQv207IkBP2QwZuOKt3Aeg4Hmz3XY5D/aXKFN6R6sDK9XZ62T/Xf6H3J
+ hwkNpdh5r7DkzhLtqdja3HZT9KLR3e5XS7SOwlsphYt6M/vrkbJeisbRLYkHVcmBkuJsb9k0
+ 0TBLlh6LfaI4l1YogcfTla8ldBrqX8EGI79gjtRukwclEmgyWFY5eH47/UpaEuBUPErg3qIl
+ Wb+zBc+fCAXybr789rN4sgZWBNLE4y53Rp8LncK8neCAC2e/pC+1T/M2LVSs4tdIGVXbEL6h
+ B96JWUmuXScSzy0gXZpyF6LaJD6HzPe7LEPCucXepTt8WnMlGNiLaw6MG9jD3rWSK2An5o+7
+ FtZAgVdIBfkTEsg408zziqRqH2qkwjlUFC4TsPrC+f5qG2pGHBHU9HNgXFgpJZGTlLW0L48v
+ jt4KyG3HH87TBZ1d3JFkhLF+s+b+Qtcg==
+X-IronPort-AV: E=Sophos;i="5.81,275,1610427600"; 
+   d="scan'208";a="40038641"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RN40r+sN9kfv344l5vSEJ6OaOYPkby1+i+EDj9/SpDEyDl3kTIx8tSeqreKf5Ho+ne0pB13I0/fnBNkgvcpvV8OkoW48rNRMh4svK1flHMavv43Z6Ce6rdyAoUC+WvAAhHpeetVcYgdsKPi88Ed1jgMwTAueAGuFfDvOIe0FXugXp347EXxHJP8odlyoc0O6aGeudaDHFC11404LjJRqPaNMudMMNJhcdXmsyVM6XrNA81chTuQqsRhl9Vp06JZeUtWLsFzp0fYwOdKasWs+mrcahtDBLi3imJ7v44uHocLnvZPC6NhIICH6dObY3EHi0AhYXzUXKkHPvEQL6lucrQ==
+ b=SnZtZ31uyTy8GgIBhWrpw+0uZhdA18obqrEszjxVp9xMACjwuwu4I0Qq0XiwCnNgi7x41JxF3ScEvCJrjQjkpb8Tmq2NphUaaoy8E6osLM6WiqxFbe79DY3KL4RMUPJVtbf7pF1Vt6UcUh6WG8w+/OL+xs5hQHCboSt5ci52LvdQk8I2uMyK6fW2iEbRdR0jH0es0p0lg/WkpecoPY4jZOnqlR0JSf0s5y2e7J9NFv55+3i1E5caN22bSyqtNlLJYDEmKaKpL4/YKGYI5G5jubDWpA7DRVyjMOVsJjrcWPyKZXq8tgyWkpY9beFf1VFb6+OTglSSKd7U3dBGRla+2w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XrReSzt1viFtrrmsZHR21zzYTBDhjfiA/E7QWNDYML0=;
- b=MA6gjzc9keGC+CQZkFTD3Ds+G4T4q0LsCSXT71w8VfltAkVU/Y+DM+saIwhSDB1ETQ6ozDHqY+JhKoziRP08wC5A1FHQPYhTdmyjpgQWmiL/kerj+N1YbtR/cvWU6yWGdNgkPSAu05b6y0g6VAmXfHvBwyO9X3GG4Xxp0CEU52b412lxnddO5/wPHNhvdRyzUCQdk0ZdWsvx8Ecah4Lez2vh5WMx22hpJ+R4yANxomJyHkxT/vUXhwlWYJab/ID58bsYcgmJTZgHjflfrdhsTGfllpW3hMqysLC09kUVjyqL8WlfYn3/OCnFsMk6feOEPmIoXCXRhHklmewAO1lfQg==
+ bh=rli26qDOxYcb4kpE5ga12+P45RCsjyWASRzYmRxUWtc=;
+ b=LYWlBPaUBt75BNtkqYaCpviAOCvjE+zNge2Ei6HML0RGjnOxCe78uMeDCxLDSOhV1HAJGFsbBsvz+OL5DCerZIXf4/LrNIBu3B2yscs/N3lb1sxHkLornFsrNj23chSdOkHLvKDJu008JzbWc2WXd4upxWBeC1d79sF1dtdyHTCDnNLivFx0QLt78yU/ddI0r3qqrnOLe2He7lsFY7ss50yM822l2+1copqN7FZkcwulr0bkOg9bgXTlsr4jgCmxni7AX7qXaQbUQQaLTC1t6aPpzMOqI3QdCfkUSRk+ApSDoKVzqdQU3ZKLz+yV2qO7+b88FgVL5t+AhPfnAIk1wg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
  dkim=pass header.d=citrix.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=citrix.onmicrosoft.com; s=selector2-citrix-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XrReSzt1viFtrrmsZHR21zzYTBDhjfiA/E7QWNDYML0=;
- b=giu/EzXcUXgOTKUAkbxGRoHbGbKetEMrQvRNDZHd4EyOPxhpIaVfAyIRXDVTyf+Md0EZXllteM/AjNogcOKu2Nbp+RYn+flTKTSg1uwqUZHkK5OomSv7BN0/eF9VNvKR2p9EfDIine1b4E7DjCa197pNFGN03YtNHf/DK630DD8=
-Date:   Wed, 24 Mar 2021 16:13:59 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
+ bh=rli26qDOxYcb4kpE5ga12+P45RCsjyWASRzYmRxUWtc=;
+ b=U6Ln8Jl4RB7FCTcYj5OT537APEnBExNj9J5Lzc6ByRgr8JH7bIQqNmbyPM10EKHe0vPYfu5Gvp0rOHqeATdfmBzJguLAjf8zc3HTZokglO2F1Yc4m4Yy0HaYe8WsS+y3yCLEwgyXAp5/OwO4dHHdtL8CM0YDCjnPCocxHoErNKg=
+From:   Roger Pau Monne <roger.pau@citrix.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     <xen-devel@lists.xenproject.org>,
+        Roger Pau Monne <roger.pau@citrix.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH RESEND] intel/pinctrl: check capability offset is between
- MMIO region
-Message-ID: <YFtXNw8ZKkp82EIH@Air-de-Roger>
-References: <20210324123118.58865-1-roger.pau@citrix.com>
- <YFs3XwOBRGAFyASY@smile.fi.intel.com> <YFtEw7qHQKE/4p8t@Air-de-Roger>
- <YFtLNLTrR9wTO41W@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: [PATCH v2 0/2] intel/pinctrl: check some registers reads
+Date:   Wed, 24 Mar 2021 16:43:10 +0100
+Message-ID: <20210324154312.61878-1-roger.pau@citrix.com>
+X-Mailer: git-send-email 2.30.1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YFtLNLTrR9wTO41W@smile.fi.intel.com>
-X-ClientProxiedBy: MR2P264CA0174.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501::13)
+X-ClientProxiedBy: MR2P264CA0048.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500::36)
  To DS7PR03MB5608.namprd03.prod.outlook.com (2603:10b6:5:2c9::18)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7e662c5f-0f50-42d4-021b-08d8eed77690
-X-MS-TrafficTypeDiagnostic: DS7PR03MB5590:
-X-Microsoft-Antispam-PRVS: <DS7PR03MB55906D9F17705CFB2D1B96F88F639@DS7PR03MB5590.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Office365-Filtering-Correlation-Id: 75109aae-d4fa-42cc-ca9b-08d8eedb957f
+X-MS-TrafficTypeDiagnostic: DM6PR03MB4763:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR03MB47634E087B53E5572CF731198F639@DM6PR03MB4763.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SnnrdxuX5UCIOgYv80Hp35pCGLqC2enbOnbTOj6l66gFin8iIn4N/v/gHxWG54aBO6hkYy69wzMt4Ro72sUwyYNknu9mPX+BWd7NJksJKW8L4jOf+uJqYEBYeuoJ26y5GuUUJ1sCTccTg6/Hn6jIpnj8qWiqL1PqKoynHBylUBbv4tNCIN/YLKdhMxI/Lff2s8K3aW7ZjqO74S/teZ4ZRhx7s4cyVutYLrm4VIDVNq+6xPtyGusb9a+ntX75DsxHpitYOChpfhKPaIN9pGD761nGQtgUJRb2L35olA6uM19PRPg52YIjg3eIdTovHP3nxRZC6QqTTjArnrTAHbKXJJbKMJhamhgCmdxKS0UpmKcmUwlqwysdZ5/lCdzaKojRQkeLe/XPYlGVUcG/Z5dM9YESYQyY55KQH2kIx5ItybCm8e35m1Nxdg9ga0TRQHEoImXSPc0aOPZdGIFr5QfsSkIcK8q8s2amZkTo+cPOLHIqwdwju/f/wYxFRCc205ea01KJR0dFtP77cd58ilFMnJcTDJJhZ4dRH48M3yI3bU5fuXj7tq9z99QCDUTfMNebkbURgGVtXoBdrc5knfqt29ACCQExzJA8N2ziWIiHRs723VKRLp/VGzSzKyQUJb0eytILX7jEkO8Zs0B8lLWVo+eJkP5LIjuCiqYA4BQhqGQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR03MB5608.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(7916004)(136003)(39860400002)(376002)(366004)(346002)(396003)(8676002)(26005)(956004)(8936002)(83380400001)(85182001)(6666004)(478600001)(186003)(16526019)(6486002)(54906003)(6496006)(4326008)(66946007)(2906002)(66556008)(66476007)(33716001)(6916009)(38100700001)(9686003)(5660300002)(86362001)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?cC8yaGlzQkFOclhZMzY5YlhObDd5WnJoZ0s1VnZVdnVZdjJqaFhCdDNOOHFu?=
- =?utf-8?B?a3ZyWEVZV3MzbjRVSlhaUnladys1M3gvdnk1ZmZrVUdYUXZ1UWFCZ2dzL2ZT?=
- =?utf-8?B?NktROVpLdjF4cUx0b0pVYVRrWE9KMitVRStsc05Jc0dmUmpxNldLNHZIc3Fs?=
- =?utf-8?B?bjBEc1dYdDVxdWRFUXIxcXlyK0VZeXNaM2JkL3JIdDhIV0pPY3BnWlhvaVZv?=
- =?utf-8?B?MVE4K3R5bFd2anlYWmZLdzl4N3VOMGprcklMRUdVWmVkazc1RHdjaHczRTNs?=
- =?utf-8?B?T2JHdDRRREI4Ky9iR1hwS3hLMEFvVzlpcCs0QytDcWRVMFpGSEhaWkdDN1Zz?=
- =?utf-8?B?YVJOZ1FKZDQxVXdRcnRDZ2JXZGVpUzkvSSsxZDZRTlNxK29COER1bUpyNnls?=
- =?utf-8?B?ajBYcXVlQVl3MzRLdHAxM21CRnBWb0pmV2JKekpWdTlYUmZ6ZDZMOFdzQThq?=
- =?utf-8?B?U1lBRDIvNU5IMDlLUkxDdndtTmgveVhCdThNck1UL1k0SlFtMkdrb21TNS9Z?=
- =?utf-8?B?TWJFWHc4MWJoOEVnSjVxazZ4VXljNVdXdXlHRGNubENadjI4NDI0dTVraFRt?=
- =?utf-8?B?Z3EyVVo3QlF1eWFBNWJkSHRJak53OVlFV3laaVc3Mzdib3lJOWpsMnFjTDg3?=
- =?utf-8?B?QmFEUVFNS2VsYUoxZU5ybWhTdXdLMU05SDVHZzVCd3JEazVlanhTRFdUeXR2?=
- =?utf-8?B?bXJiV3ZVSDE4cjdTaHZMZnZvM2xDdnVwdnRCQzRmNTBCb21sQVJ4dUFacC85?=
- =?utf-8?B?SjFtc201VldZWitTV3dxelh6czZaRHRQd0FNa2RpclVJWS9RNXE0SXJJbzVY?=
- =?utf-8?B?RElsSG1vYjNZTjNQR0ppcUJicXRtbDgvMUx2WnJ6NzR1eDIzR1hsTVV6bkRy?=
- =?utf-8?B?dFpGVGdSOXJzQXYrb1EvcUcrRTRvM2ZzOGE5Q3ZtUGpMb2s5d2dpazNqMEd4?=
- =?utf-8?B?TmlVS04yWFNBUzFFeVB5U1hLMnh5OThYeis4WTA4VFV0Z1JLV09TTnl5ZkVW?=
- =?utf-8?B?SnVEMnFoWHVxYWttQUF4cmJoSWtzN2xZUGIvaUhycXVQQjN3cGgrb3llTzB2?=
- =?utf-8?B?WmtYRzNBenZuVzNmSTRQK3ltenVDbnNZTFY1SDVna21lL3Q2R0pocDR0V2t1?=
- =?utf-8?B?aXNubWRxYVdEZm5YUXZRY3l1aHFlNFQweDJmTHBsbFo3Ny82clhzbHNWb0VN?=
- =?utf-8?B?a2tKR0xOQkZBSU1KclYreXFVUlh0ZW5SSUxxd25FOWV3WEkxSmZ6MktzTDd1?=
- =?utf-8?B?Z25HQUs1NkpyV3FJU2psTlRtNGU5cXBHTGFucHAxdUluTXpHcWYvcVllMDRE?=
- =?utf-8?B?MmdMOUlXNEVxbXFKVHlkK2d2Ly9lRGhENWFsTWZkSkthYTVFc1BaaTFBZGJG?=
- =?utf-8?B?cWZNeXl3MGFaQXFaVkQ1T3hTS0FqSG9DbHRSL1FWQjY1RGVxbCswc0NQM2JV?=
- =?utf-8?B?NVdHNy9OSmJJM2d4RjN0MUhjMDhtVklXeE54WEQ3V0MrcjJLNXg2Y2pNRnV6?=
- =?utf-8?B?TXl1a1ZocUZaemhteVdMcnFhN1ZaSTByYU9RWHBmcHBIM1NkTEhPZzZRcWlV?=
- =?utf-8?B?QkxRb2pmbUpONkFGeTVlUjIzZWhEVzVjZGNWQ1BrdWN3eVRqTXNmejlYSzVT?=
- =?utf-8?B?eFlKaHJJV0ZKOTBlWWxaMWtRd3RzdGY0cVBWZTdob1BiMlBra1ZtTlRxY3ZB?=
- =?utf-8?B?Q2N6OXliaGZkYVpIbUZqczJQZkZqK0d1NkNiMTRGNDdFc0NXdDBlQktHQW1v?=
- =?utf-8?Q?aeONHDALkbqRBbgucE+I4ocbqhbcVFA6MCibX60?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e662c5f-0f50-42d4-021b-08d8eed77690
+X-Microsoft-Antispam-Message-Info: FqjHesKsUuAe5wbEP/a8iH7UTAwoNpecjDpDA8MB1IDwSE1TgFQsv5Y/DIfrYlH1WUipOQ1i2y82ALcqmOEXJ6OggCzSA7EnQOPeME/iabM/PaVVcAFiNjp83QWKNlHgJp6lug4dlRGKP6YTKbZHvtbiTCAV4wGISP4yRr4JRbsyD/JP1JUnTHrSqOTWmOsh3kiWfJ3wF4ZU7FFJSsCE3O3HtfTnBD27IPeo//fZQlSM3csf3NordgewwDJtHHYT+pXaXp9t4wdXWf/wspQqNcpEByZyjjJwFcGppRkzdFxzGx0UE8nYjcgdQE0NKcQSJbWue9G6VX173JERstZ+FFVwjJEEwow4bJBQF+ijb8NcF1soXlNKCEk/pWN3Kh7nlbq0WiGQPZdIKIuJk00Z+1RpI8Ws5OHYEOLb77iB5pb6m8MY2vu/fA8NCH2kDTybj0fTA+jtZGpcGDOp3+bL/TFKIAXef3JmJjvOKciu/xGm8nqA1SGzRchy9/qZpehZrVRMHw4uUyZltx9MZfMTSsIilIWAgOAy0swEX7JaTX4NPf1ILiUX5JbrpdwPxNBjys7M66uhy+tydUiOAC4h/fELbDIEZSu/4CNgE9uR0eWgYm+SYd1gABGUFqbb/Cw53NUMBDjWsVHex3nZXV+rZc3vam5VSjlNzTgoaapDJtI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR03MB5608.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(366004)(39860400002)(136003)(396003)(956004)(478600001)(8676002)(186003)(6666004)(4326008)(86362001)(36756003)(16526019)(54906003)(26005)(4744005)(8936002)(38100700001)(6486002)(316002)(6496006)(2906002)(6916009)(66556008)(66476007)(83380400001)(66946007)(1076003)(2616005)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?ZFNzNWxGaWRZT2VKMkIvRHZiVU85ay91L000ckZWdS9aTkcvcmVWRUFWQnhr?=
+ =?utf-8?B?RzE0VjZlLzVObG5laDB0eGNaa1ZkTHZaa1d3U2pNaUEvUm5PczRlTUljU1hD?=
+ =?utf-8?B?bmh5NXJYOUxZbmtTeXN0c3Y2VjlWRy9Nd1ZOaWl2c3c1WlQ1VG90VGlCTExI?=
+ =?utf-8?B?Z29BVXZYTC9ha01zK1dGckp5NVdPa1pvWFpyUVgrRUNQcTdNQ0lpOXkvRkVF?=
+ =?utf-8?B?bWY3MXRncVo0dkpIY0VnOFg0TmhyV1NGemJ2VVVWOFFZQ1crWTdPTjFpNGpi?=
+ =?utf-8?B?WmtEb0hneDZXaXYxblNieGxnUGt5V0dMRGVBNWU5dFNQT293U3FtUllYQjh5?=
+ =?utf-8?B?VEhnQ3lDKzhsQVk2Ly9TeUtRNnJLSzZFeENxL3pnajdCNXBNakkveDZ6czBq?=
+ =?utf-8?B?SURuaHBvSmxaQVBPL2pvdmJaajJNUWs4TTFiMXUyRm54aTJoQjJtQ3pldzlH?=
+ =?utf-8?B?RndsazhTempLK0dhTjllRlFJUlRIcW9vM0tRSy9ET1ZnREMvbnZNaXBzWGxV?=
+ =?utf-8?B?RTJabGhSdUdKOE0rY2UzMWdIa0hHUU43OE9hTHYyTzlJUFNCbVMwYk8rR2pJ?=
+ =?utf-8?B?UmpBK1FXSHRnUmQxeStHZHBzRHRXc0pZdFFTeVNSUDhEYjhWWkk1QlpOU0J0?=
+ =?utf-8?B?cnRySVBoLytxY2JCNXREM1hGMGdBYXM2ZkVFSzE0UkMvRUkrc0pkME93dDhk?=
+ =?utf-8?B?WUkzdzYxWUV3aGlwQ1krRm5TRmwrK2x0aG5jZzRxZkZsSVBQdmpIeFhoMzVO?=
+ =?utf-8?B?U3lJNnVHbExlaENvemRFSDJWdDdRVjZJYVE4SjVaM1hqV3hSN2pQYVpKSXRu?=
+ =?utf-8?B?SGJpZmsvUjdaRU43eWdFYnI4eTQxaDIybCtldXJyK3Z2bmZvUVJ2YlZNMFhG?=
+ =?utf-8?B?RERoeWkrTjBxWE4zY3N0VEdwY2p2SEJLNEJrTDYvSmJLWVhRb1JKWVVsRTNL?=
+ =?utf-8?B?c1RpL2xEMFkvTVFZckJlWVE1Q1h4d00zT3ltc1NtTGhaOXlnL3llWVlxZ1VF?=
+ =?utf-8?B?QTY1YUpRSjhGRkswaHF2ZE1qQW9ZdGRoZnBIZERubDBQRTdRc3kwVHNhczYw?=
+ =?utf-8?B?OHRaMis3RjRDOW1VdDRpZGlhRjE2OW5sdTM1emU4YytaZlR4UEJiVVlybHhV?=
+ =?utf-8?B?STFOb1IweFNTYUk3d0JhN1hnbFdLSzVxOXg3alVQeEhNNzY2VXJraUI0M2FT?=
+ =?utf-8?B?dGo4YVFMLzZVSnNaeVU0Vy9GdC9KQlcrZHJ4dGh4VXNJYnFUbE1oT2F2MGRq?=
+ =?utf-8?B?SUxRektSTFNVSHhCd1Z4UHkyRm8wdEU1Z3pYbzVOVGNNb2d0TGVxZEp3R0o5?=
+ =?utf-8?B?VEdpRHRYUFJnSHhFVGdqWVFoR0N2TStFbEJWa01nZ25HOGZ4ZldKcy9ZcjNL?=
+ =?utf-8?B?dEEzSy8xUGNDWFZHZHF6M1l0Ungrc1FlOFIwWXU5Q204YXgwTWhMWndtSFNS?=
+ =?utf-8?B?NzlOWVIzcFEvdCtzMWlUSG4yWGN1eFZBd1p3ZTJIdVJYRGowSDd6THdDcHZX?=
+ =?utf-8?B?SGJra2pwd1Y1eUxFL09wcEkrWXpFWnlzRVVyallmNnJCNzZCMGJBWXBuNjlY?=
+ =?utf-8?B?QUw2MCt6VzJEbllMbGtsMnhxL0VEa1JoZjZIZDNaYU1MK0pSS0xOTDRPVXRY?=
+ =?utf-8?B?N25DQW5hWDJIVktMWjB2dkdycENNTU41YlB3bUw2VzArY2VSdkVIeURDUHJu?=
+ =?utf-8?B?S2JVZTdaRVFXR0p4Qit2YTdnMnIxcE1DdEdnYkRHajQ1T1BtSFdJS3pzZFNJ?=
+ =?utf-8?Q?xWs71vojz9tCfzu4FVErbJuUPKdDQJHw3SwvLuc?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75109aae-d4fa-42cc-ca9b-08d8eedb957f
 X-MS-Exchange-CrossTenant-AuthSource: DS7PR03MB5608.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2021 15:14:04.9514
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2021 15:43:34.7160
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LJfOFZxQ0N+3KqUI5VQh2IA/rpmg7T8i23m0Y0j5eolRcVLBc9EVuS8ec7hjqmwaHy9HvA+7RsUwKILgCpT9lw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR03MB5590
+X-MS-Exchange-CrossTenant-UserPrincipalName: QyRlHSEHw19c3Odstel2gRWs3PBsvC/DiZyOJPcBHvavDQzq0QaxYIknhXk4Iu+UdnNTodjuNRS4tGh4clk0Ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4763
 X-OriginatorOrg: citrix.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 04:22:44PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 24, 2021 at 02:55:15PM +0100, Roger Pau Monné wrote:
-> > On Wed, Mar 24, 2021 at 02:58:07PM +0200, Andy Shevchenko wrote:
-> > > On Wed, Mar 24, 2021 at 01:31:18PM +0100, Roger Pau Monne wrote:
-> > > Moreover, it seems you are bailing out and basically denying driver to load.
-> > > This does look that capability is simply the first register that blows the setup.
-> > > I think you have to fix something into Xen to avoid loading these drivers or
-> > > check with something like pci_device_is_present() approach.
-> > 
-> > Is there a backing PCI device BAR for those MMIO regions that the
-> > pinctrl driver is trying to access? AFAICT those regions are only
-> > reported in the ACPI DSDT table on the _CRS method of the object (at
-> > least on my system).
-> 
-> Unfortunately it does not expose PCI configuration space.
+Hello,
 
-Are those regions supposed to be marked as reserved in the memory map,
-or that's left to the discretion of the hardware vendor?
+The following series adds some consistency checks to the values returned
+by some of the MMIO registers of the Intel pinctrl device.
 
-> > Doing something like pci_device_is_present would require a register
-> > that we know will never return ~0 unless the device is not present. As
-> > said above, maybe we could use REVID to that end?
-> 
-> Yes, that's good, see above.
-> 
-> WRT capabilities, if we crash we will see the report immediately on the
-> hardware which has such an issue. (It's quite unlikely we will ever have one,
-> that's why I consider it's not critical)
-
-I would rather prefer to not crash, because I think the kernel should
-only resort to crashing when there's no alternative, and here it's
-perfectly fine to just print an error message and don't load the
-driver. IMO I would rather boot without pinctrl than get a panic if
-it turns out pinctrl capabilities list is somehow corrupted. It's a
-long shot, but the check added in order to prevent this scenario is
-minimal.
-
-In any case I will send a new version with the REVID check and this
-current patch.
+That done to avoid a crash when running as a PVH dom0. See patch #1 for
+more details.
 
 Thanks, Roger.
+
+Roger Pau Monne (2):
+  intel/pinctrl: check REVID register value for device presence
+  intel/pinctrl: check capability offset is between MMIO region
+
+ drivers/pinctrl/intel/pinctrl-intel.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+-- 
+2.30.1
+
