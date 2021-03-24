@@ -2,51 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBEBA347275
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 08:23:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D4F7347285
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 08:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235980AbhCXHXU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Mar 2021 03:23:20 -0400
-Received: from mail-lf1-f52.google.com ([209.85.167.52]:46741 "EHLO
-        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235946AbhCXHXL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 03:23:11 -0400
-Received: by mail-lf1-f52.google.com with SMTP id w37so30428874lfu.13;
-        Wed, 24 Mar 2021 00:23:10 -0700 (PDT)
+        id S230084AbhCXHZ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Mar 2021 03:25:57 -0400
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:33292 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230138AbhCXHZc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 03:25:32 -0400
+Received: by mail-lf1-f45.google.com with SMTP id o126so20961781lfa.0;
+        Wed, 24 Mar 2021 00:25:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=eHCRAP6XuwyucOiKsJ2lUJcU0/0jNVJWqtNu+2ue+X4=;
-        b=jg8cfmdcnyciPt6pxtka5S5rM8udGtDBcuSlAEvioiofto85l/cSNMYSNYeHOIM1iw
-         Gjexjz2I5RSUfuxSwz1TMtK0DaBFiE0vts+xbXYKG9bx7fvCOVcXlFg9qHH61PhC01VC
-         FQ37LwCS/e1ybud6HQyAMVNwiWaXMoOOP1XSCdYhDKq9oOsbKEnt/7SRAp08Tt7eL8F7
-         3Fbbe1r9VrUALEQJG1ij8V/z1RCk696xvtdSAXybU+2tVMUFbx+lWHNOmt8TQC/5mVpf
-         nZSiaUDpQn40L/9QvXGIMemYPM3EcGcgM/kBKdaZja4pgP2yY3UevtC7GPUCnbvrPHlD
-         xv7g==
-X-Gm-Message-State: AOAM532ezRU15KcR1rzVcptONiPAR9zrSYQrUOJRJN102QpoPp4apxa1
-        lFIZ0vmCdYkaN9KhXG3/huGP00Xm6wo=
-X-Google-Smtp-Source: ABdhPJyvaw1hcka4ItlGhoNDPV/z0xfXjU8UWSudVaRsrAJZq7dqCpL98+o1mbVLeJ8BAxUsjnPK1A==
-X-Received: by 2002:a05:6512:3202:: with SMTP id d2mr1117735lfe.484.1616570590120;
-        Wed, 24 Mar 2021 00:23:10 -0700 (PDT)
+        bh=6kmnlP2QnGoCPb0gD4i0nK1AFMHh6O90Yj7j+hOpTBg=;
+        b=haSZwX/FnnUZirJ3TFAuUZljcgxHIuXhJrzINT/bO40J/e0jXrXjF/9myOeNMA10jY
+         OeaZ69dLY0LGGLBkd+G7kwUnNx1iqkg0u4X4ec+F6kJreDWRAYr9e1QPY0xYq/VIOYsS
+         JGI8tzPKvhjpbcGJ1vRdSSbSVjQdyCBkREidjXI8d/ik9UFfwOTc1J9F49bFnABd+OKZ
+         SW2FiRNt0KFOR8BpxeiDAIy2XSeA+/nZLb1Abx2m/UFbZC+SbvuOCl7nW2nd3J11Vgcv
+         UhY3TdO18E10IgW8crLTXoHGckVPMjhYy1pivwLXcVBz9ABa3nbeUUet8s6hIuvWW3Bc
+         38fA==
+X-Gm-Message-State: AOAM532Vg0AfUH4FiE/PgF1wAPCwjHeuepbZQ/yCZWl8YYeiHG/p3SPk
+        OrCSp51n6M0Ca6l9qwFrKHU=
+X-Google-Smtp-Source: ABdhPJwnRvqP3LtxA/P603zkfWgvi858pqOZBcn4yssJGlhxtt7SMMGbO4orxMDLc5oUyNdsr5wZAw==
+X-Received: by 2002:a05:6512:b1a:: with SMTP id w26mr1156751lfu.206.1616570730929;
+        Wed, 24 Mar 2021 00:25:30 -0700 (PDT)
 Received: from localhost.localdomain (dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::2])
-        by smtp.gmail.com with ESMTPSA id h9sm197952ljh.58.2021.03.24.00.23.08
+        by smtp.gmail.com with ESMTPSA id v9sm146203lfa.32.2021.03.24.00.25.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Mar 2021 00:23:09 -0700 (PDT)
-Date:   Wed, 24 Mar 2021 09:23:03 +0200
+        Wed, 24 Mar 2021 00:25:30 -0700 (PDT)
+Date:   Wed, 24 Mar 2021 09:25:24 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Matti Vaittinen <mazziesaccount@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-power@fi.rohmeurope.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v4 03/16] dt_bindings: bd71828: Add clock output mode
-Message-ID: <2b26725f576f7c64ed507511d9459688d8c90a06.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        matti.vaittinen@fi.rohmeurope.com, linux-kernel@vger.kernel.org,
+        linux-power@fi.rohmeurope.com, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v4 06/16] mfd: Add ROHM BD71815 ID
+Message-ID: <334c2fdfb79e8082144b11b18c976bcf86202f4f.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -56,33 +52,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The BD71828 allows configuring the clk32kout pin mode to CMOS or
-open-drain. Add device-tree property for specifying the preferred mode.
+Add chip ID for ROHM BD71815 and PMIC so that drivers can identify
+this IC.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 ---
-No changes since v3
- .../devicetree/bindings/mfd/rohm,bd71828-pmic.yaml          | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes since v3:
+  - ID added to middle of the list and not to the bottom
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-index 3a6a1a26e2b3..8380166d176c 100644
---- a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-@@ -44,6 +44,12 @@ properties:
-   clock-output-names:
-     const: bd71828-32k-out
- 
-+  rohm,clkout-open-drain:
-+    description: clk32kout mode. Set to 1 for "open-drain" or 0 for "cmos".
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    minimum: 0
-+    maximum: 1
-+
-   rohm,charger-sense-resistor-ohms:
-     minimum: 10000000
-     maximum: 50000000
+Please note, this patch is likely to cause (trivial) conflict with
+the BD9576/BD9573 series.
+
+ include/linux/mfd/rohm-generic.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
+index 66f673c35303..e107b4769101 100644
+--- a/include/linux/mfd/rohm-generic.h
++++ b/include/linux/mfd/rohm-generic.h
+@@ -11,6 +11,7 @@ enum rohm_chip_type {
+ 	ROHM_CHIP_TYPE_BD71837 = 0,
+ 	ROHM_CHIP_TYPE_BD71847,
+ 	ROHM_CHIP_TYPE_BD70528,
++	ROHM_CHIP_TYPE_BD71815,
+ 	ROHM_CHIP_TYPE_BD71828,
+ 	ROHM_CHIP_TYPE_BD9571,
+ 	ROHM_CHIP_TYPE_BD9574,
 -- 
 2.25.4
 
