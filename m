@@ -2,108 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC847347A26
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 15:04:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7E5B347A9C
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 15:23:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235592AbhCXOEV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Mar 2021 10:04:21 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:30210 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230044AbhCXOD5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 10:03:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1616594637; x=1648130637;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=wBInpsFLZS8A1IIEXgvAg26d+AexU/0HeDXfGLeqcu8=;
-  b=rmJigHHB9MFp9TAv+ln7k2ZeZ08Pwn8ZYn7m3TMFWc6bkWqcTNbY3Z77
-   UpYRTudsKm9MuNqEEwEoZRAvc6tQc1VXYw+X3V27iLDaCpzgy0/2ssFYw
-   x3bO1AXkMFxzEr/T1o/LohNvxfTz/3cKZ0Gjf0Q/UQtTuQp9z0Wv4t3q0
-   A=;
-X-IronPort-AV: E=Sophos;i="5.81,274,1610409600"; 
-   d="scan'208";a="95933423"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 24 Mar 2021 14:03:47 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 6F6C0A2626;
-        Wed, 24 Mar 2021 14:03:46 +0000 (UTC)
-Received: from EX13D21UWB001.ant.amazon.com (10.43.161.108) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 24 Mar 2021 14:03:46 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D21UWB001.ant.amazon.com (10.43.161.108) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 24 Mar 2021 14:03:46 +0000
-Received: from [192.168.12.56] (10.1.212.27) by mail-relay.amazon.com
- (10.43.160.118) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 24 Mar 2021 14:03:42 +0000
-Subject: Re: [PATCH v4 0/3] Fix pinctrl-single pcs_pin_dbg_show()
-To:     Drew Fustini <drew@beagleboard.org>
-CC:     <andy.shevchenko@gmail.com>, <tony@atomide.com>,
-        <haojian.zhuang@linaro.org>, <linus.walleij@linaro.org>,
-        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <tgershi@amazon.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20210319152133.28705-1-hhhawa@amazon.com>
- <20210322055631.GB392062@x1>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <ecaae08b-a8b7-ad36-1f71-af08c0cc6a88@amazon.com>
-Date:   Wed, 24 Mar 2021 16:03:41 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S236200AbhCXOXK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Mar 2021 10:23:10 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60473 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236180AbhCXOWt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 24 Mar 2021 10:22:49 -0400
+IronPort-SDR: OH1ARNGAGYmbAWQxwoGX2xQgNKbFgSEn2iulsJC4eACZcuaV970A/XXW/HwlnsKA0AxFbx8Lf/
+ wtYjWPTgXGpg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9933"; a="178269164"
+X-IronPort-AV: E=Sophos;i="5.81,274,1610438400"; 
+   d="scan'208";a="178269164"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 07:22:49 -0700
+IronPort-SDR: VwrKILIj/QZQwCX9DSJSCDYw53ud/1y/6178HuzK5RgnLGH3tp2RGzmj30o19mEzRgutOVgMQp
+ I1vu/hV9te2A==
+X-IronPort-AV: E=Sophos;i="5.81,274,1610438400"; 
+   d="scan'208";a="391317293"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 07:22:47 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1lP4PE-00FiD8-Q7; Wed, 24 Mar 2021 16:22:44 +0200
+Date:   Wed, 24 Mar 2021 16:22:44 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH RESEND] intel/pinctrl: check capability offset is between
+ MMIO region
+Message-ID: <YFtLNLTrR9wTO41W@smile.fi.intel.com>
+References: <20210324123118.58865-1-roger.pau@citrix.com>
+ <YFs3XwOBRGAFyASY@smile.fi.intel.com>
+ <YFtEw7qHQKE/4p8t@Air-de-Roger>
 MIME-Version: 1.0
-In-Reply-To: <20210322055631.GB392062@x1>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YFtEw7qHQKE/4p8t@Air-de-Roger>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Mar 24, 2021 at 02:55:15PM +0100, Roger Pau Monné wrote:
+> On Wed, Mar 24, 2021 at 02:58:07PM +0200, Andy Shevchenko wrote:
+> > On Wed, Mar 24, 2021 at 01:31:18PM +0100, Roger Pau Monne wrote:
 
+...
 
-On 3/22/2021 7:56 AM, Drew Fustini wrote:
-> I'm curious what SoC are you using?
+> What could be done is check whether reading REVID returns ~0 and exit
+> at that point, if ~0 will never be a valid value returned by that
+> register. I think that should be a separate patch however.
 
-I'm working on Amazon Annapurna Labs SoCs (based on ARM cortex 
-processors). That include multiple pins controlled with same register.
+Sounds good to me.
 
+> > Moreover, it seems you are bailing out and basically denying driver to load.
+> > This does look that capability is simply the first register that blows the setup.
+> > I think you have to fix something into Xen to avoid loading these drivers or
+> > check with something like pci_device_is_present() approach.
 > 
-> It's good to know who has hardware to test bits_per_mux in the future.
-> 
-> I pay attention to pinctrl-single as that is the driver used for the TI
-> AM3358 SoC used in a variety of BeagleBone boards.  It does not use
-> bits_per_mux, but I can verify that this does not cause any regression
-> for the AM3358 SoC:
-> 
->    /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single# cat pins
->    registered pins: 142
->    pin 0 (PIN0) 0:? 44e10800 00000027 pinctrl-single
->    pin 1 (PIN1) 0:? 44e10804 00000027 pinctrl-single
->    pin 2 (PIN2) 0:? 44e10808 00000027 pinctrl-single
->    pin 3 (PIN3) 0:? 44e1080c 00000027 pinctrl-single
->    pin 4 (PIN4) 0:? 44e10810 00000027 pinctrl-single
->    pin 5 (PIN5) 0:? 44e10814 00000027 pinctrl-single
->    pin 6 (PIN6) 0:? 44e10818 00000027 pinctrl-single
->    pin 7 (PIN7) 0:? 44e1081c 00000027 pinctrl-single
->    pin 8 (PIN8) 22:gpio-96-127 44e10820 00000027 pinctrl-single
->    pin 9 (PIN9) 23:gpio-96-127 44e10824 00000037 pinctrl-single
->    pin 10 (PIN10) 26:gpio-96-127 44e10828 00000037 pinctrl-single
->    pin 11 (PIN11) 27:gpio-96-127 44e1082c 00000037 pinctrl-single
->    pin 12 (PIN12) 0:? 44e10830 00000037 pinctrl-single
->    <snip>
->    pin 140 (PIN140) 0:? 44e10a30 00000028 pinctrl-single
->    pin 141 (PIN141) 13:gpio-64-95 44e10a34 00000020 pinctrl-single
-> 
-> Reviewed-by: Drew Fustini<drew@beagleboard.org>
+> Is there a backing PCI device BAR for those MMIO regions that the
+> pinctrl driver is trying to access? AFAICT those regions are only
+> reported in the ACPI DSDT table on the _CRS method of the object (at
+> least on my system).
 
-Thanks for review and verify the change.
+Unfortunately it does not expose PCI configuration space.
 
-Thanks,
-Hanna
+> Doing something like pci_device_is_present would require a register
+> that we know will never return ~0 unless the device is not present. As
+> said above, maybe we could use REVID to that end?
 
-> 
-> Thanks,
-> Drew
+Yes, that's good, see above.
+
+WRT capabilities, if we crash we will see the report immediately on the
+hardware which has such an issue. (It's quite unlikely we will ever have one,
+that's why I consider it's not critical)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
