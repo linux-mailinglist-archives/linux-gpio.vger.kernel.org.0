@@ -2,28 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE2223471CE
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 07:47:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32E733471D3
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Mar 2021 07:47:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235581AbhCXGqy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Mar 2021 02:46:54 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:37378 "EHLO
+        id S235586AbhCXGrZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Mar 2021 02:47:25 -0400
+Received: from lucky1.263xmail.com ([211.157.147.133]:38336 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235564AbhCXGqW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 02:46:22 -0400
-Received: from localhost (unknown [192.168.167.235])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 74C59CC301;
-        Wed, 24 Mar 2021 14:46:05 +0800 (CST)
+        with ESMTP id S235631AbhCXGrK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Mar 2021 02:47:10 -0400
+Received: from localhost (unknown [192.168.167.16])
+        by lucky1.263xmail.com (Postfix) with ESMTP id AB8D2CCAC0;
+        Wed, 24 Mar 2021 14:47:07 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
 X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P24306T139685112297216S1616568346904525_;
-        Wed, 24 Mar 2021 14:46:05 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P13109T139928841201408S1616568426921374_;
+        Wed, 24 Mar 2021 14:47:08 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <6725ce3e5a3142726a202e9cff8238ae>
+X-UNIQUE-TAG: <74a1195104370c16f0622a4757ae3566>
 X-RL-SENDER: jay.xu@rock-chips.com
 X-SENDER: xjq@rock-chips.com
 X-LOGIN-NAME: jay.xu@rock-chips.com
@@ -36,9 +36,9 @@ To:     huangtao@rock-chips.com, kever.yang@rock-chips.com,
         linus.walleij@linaro.org, heiko@sntech.de
 Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 4/7] gpio/rockchip: use struct rockchip_gpio_regs for gpio controller
-Date:   Wed, 24 Mar 2021 14:45:38 +0800
-Message-Id: <20210324064541.949630-5-jay.xu@rock-chips.com>
+Subject: [PATCH 5/7] gpio/rockchip: support next version gpio controller
+Date:   Wed, 24 Mar 2021 14:47:04 +0800
+Message-Id: <20210324064704.950104-1-jay.xu@rock-chips.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210324064541.949630-1-jay.xu@rock-chips.com>
 References: <20210324064541.949630-1-jay.xu@rock-chips.com>
@@ -48,299 +48,440 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Store register offsets in the struct rockchip_gpio_regs, this patch
-prepare for the driver update for new gpio controller.
+The next version gpio controller on SoCs like rk3568 have more write
+mask bits for registers.
 
 Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 ---
- drivers/gpio/gpio-rockchip.c       | 85 ++++++++++++++++--------------
- drivers/pinctrl/pinctrl-rockchip.h | 38 +++++++++++++
- 2 files changed, 84 insertions(+), 39 deletions(-)
+ drivers/gpio/gpio-rockchip.c       | 280 ++++++++++++++++++++++-------
+ drivers/pinctrl/pinctrl-rockchip.h |   2 +
+ 2 files changed, 215 insertions(+), 67 deletions(-)
 
 diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 03a3d251faae..b12db3a523d0 100644
+index b12db3a523d0..92aaf1848449 100644
 --- a/drivers/gpio/gpio-rockchip.c
 +++ b/drivers/gpio/gpio-rockchip.c
-@@ -24,19 +24,21 @@
- #include "../pinctrl/core.h"
+@@ -25,6 +25,7 @@
  #include "../pinctrl/pinctrl-rockchip.h"
  
--/* GPIO control registers */
--#define GPIO_SWPORT_DR		0x00
--#define GPIO_SWPORT_DDR		0x04
--#define GPIO_INTEN		0x30
--#define GPIO_INTMASK		0x34
--#define GPIO_INTTYPE_LEVEL	0x38
--#define GPIO_INT_POLARITY	0x3c
--#define GPIO_INT_STATUS		0x40
--#define GPIO_INT_RAWSTATUS	0x44
--#define GPIO_DEBOUNCE		0x48
--#define GPIO_PORTS_EOI		0x4c
--#define GPIO_EXT_PORT		0x50
--#define GPIO_LS_SYNC		0x60
-+#define GPIO_TYPE_V1		(0)           /* GPIO Version ID reserved */
-+
-+static const struct rockchip_gpio_regs gpio_regs_v1 = {
-+	.port_dr = 0x00,
-+	.port_ddr = 0x04,
-+	.int_en = 0x30,
-+	.int_mask = 0x34,
-+	.int_type = 0x38,
-+	.int_polarity = 0x3c,
-+	.int_status = 0x40,
-+	.int_rawstatus = 0x44,
-+	.debounce = 0x48,
-+	.port_eoi = 0x4c,
-+	.ext_port = 0x50,
-+};
+ #define GPIO_TYPE_V1		(0)           /* GPIO Version ID reserved */
++#define GPIO_TYPE_V2		(0x01000C2B)  /* GPIO Version ID 0x01000C2B */
  
+ static const struct rockchip_gpio_regs gpio_regs_v1 = {
+ 	.port_dr = 0x00,
+@@ -40,6 +41,99 @@ static const struct rockchip_gpio_regs gpio_regs_v1 = {
+ 	.ext_port = 0x50,
+ };
+ 
++static const struct rockchip_gpio_regs gpio_regs_v2 = {
++	.port_dr = 0x00,
++	.port_ddr = 0x08,
++	.int_en = 0x10,
++	.int_mask = 0x18,
++	.int_type = 0x20,
++	.int_polarity = 0x28,
++	.int_bothedge = 0x30,
++	.int_status = 0x50,
++	.int_rawstatus = 0x58,
++	.debounce = 0x38,
++	.dbclk_div_en = 0x40,
++	.dbclk_div_con = 0x48,
++	.port_eoi = 0x60,
++	.ext_port = 0x70,
++	.version_id = 0x78,
++};
++
++static inline void gpio_writel_v2(u32 val, void __iomem *reg)
++{
++	writel((val & 0xffff) | 0xffff0000, reg);
++	writel((val >> 16) | 0xffff0000, reg + 0x4);
++}
++
++static inline u32 gpio_readl_v2(void __iomem *reg)
++{
++	return readl(reg + 0x4) << 16 | readl(reg);
++}
++
++static inline void rockchip_gpio_writel(struct rockchip_pin_bank *bank,
++					u32 value, unsigned int offset)
++{
++	void __iomem *reg = bank->reg_base + offset;
++
++	if (bank->gpio_type == GPIO_TYPE_V2)
++		gpio_writel_v2(value, reg);
++	else
++		writel(value, reg);
++}
++
++static inline u32 rockchip_gpio_readl(struct rockchip_pin_bank *bank,
++				      unsigned int offset)
++{
++	void __iomem *reg = bank->reg_base + offset;
++	u32 value;
++
++	if (bank->gpio_type == GPIO_TYPE_V2)
++		value = gpio_readl_v2(reg);
++	else
++		value = readl(reg);
++
++	return value;
++}
++
++static inline void rockchip_gpio_writel_bit(struct rockchip_pin_bank *bank,
++					    u32 bit, u32 value,
++					    unsigned int offset)
++{
++	void __iomem *reg = bank->reg_base + offset;
++	u32 data;
++
++	if (bank->gpio_type == GPIO_TYPE_V2) {
++		if (value)
++			data = BIT(bit % 16) | BIT(bit % 16 + 16);
++		else
++			data = BIT(bit % 16 + 16);
++		writel(data, bit >= 16 ? reg + 0x4 : reg);
++	} else {
++		data = readl(reg);
++		data &= ~BIT(bit);
++		if (value)
++			data |= BIT(bit);
++		writel(data, reg);
++	}
++}
++
++static inline u32 rockchip_gpio_readl_bit(struct rockchip_pin_bank *bank,
++					  u32 bit, unsigned int offset)
++{
++	void __iomem *reg = bank->reg_base + offset;
++	u32 data;
++
++	if (bank->gpio_type == GPIO_TYPE_V2) {
++		data = readl(bit >= 16 ? reg + 0x4 : reg);
++		data >>= bit % 16;
++	} else {
++		data = readl(reg);
++		data >>= bit;
++	}
++
++	return data & (0x1);
++}
++
  static int rockchip_gpio_get_direction(struct gpio_chip *chip,
  				       unsigned int offset)
-@@ -51,7 +53,7 @@ static int rockchip_gpio_get_direction(struct gpio_chip *chip,
+ {
+@@ -53,7 +147,7 @@ static int rockchip_gpio_get_direction(struct gpio_chip *chip,
  			"failed to enable clock for bank %s\n", bank->name);
  		return ret;
  	}
--	data = readl_relaxed(bank->reg_base + GPIO_SWPORT_DDR);
-+	data = readl_relaxed(bank->reg_base + bank->gpio_regs->port_ddr);
+-	data = readl_relaxed(bank->reg_base + bank->gpio_regs->port_ddr);
++	data = rockchip_gpio_readl_bit(bank, offset, bank->gpio_regs->port_ddr);
  	clk_disable(bank->clk);
  
  	if (data & BIT(offset))
-@@ -70,13 +72,13 @@ static int rockchip_gpio_set_direction(struct gpio_chip *chip,
+@@ -67,19 +161,11 @@ static int rockchip_gpio_set_direction(struct gpio_chip *chip,
+ {
+ 	struct rockchip_pin_bank *bank = gpiochip_get_data(chip);
+ 	unsigned long flags;
+-	u32 data;
++	u32 data = input ? 0 : 1;
+ 
  	clk_enable(bank->clk);
  	raw_spin_lock_irqsave(&bank->slock, flags);
- 
--	data = readl_relaxed(bank->reg_base + GPIO_SWPORT_DDR);
-+	data = readl_relaxed(bank->reg_base + bank->gpio_regs->port_ddr);
- 	/* set bit to 1 for output, 0 for input */
- 	if (!input)
- 		data |= BIT(offset);
- 	else
- 		data &= ~BIT(offset);
--	writel_relaxed(data, bank->reg_base + GPIO_SWPORT_DDR);
-+	writel_relaxed(data, bank->reg_base + bank->gpio_regs->port_ddr);
- 
+-
+-	data = readl_relaxed(bank->reg_base + bank->gpio_regs->port_ddr);
+-	/* set bit to 1 for output, 0 for input */
+-	if (!input)
+-		data |= BIT(offset);
+-	else
+-		data &= ~BIT(offset);
+-	writel_relaxed(data, bank->reg_base + bank->gpio_regs->port_ddr);
+-
++	rockchip_gpio_writel_bit(bank, offset, data, bank->gpio_regs->port_ddr);
  	raw_spin_unlock_irqrestore(&bank->slock, flags);
  	clk_disable(bank->clk);
-@@ -88,7 +90,7 @@ static void rockchip_gpio_set(struct gpio_chip *gc, unsigned int offset,
+ 
+@@ -90,19 +176,11 @@ static void rockchip_gpio_set(struct gpio_chip *gc, unsigned int offset,
  			      int value)
  {
  	struct rockchip_pin_bank *bank = gpiochip_get_data(gc);
--	void __iomem *reg = bank->reg_base + GPIO_SWPORT_DR;
-+	void __iomem *reg = bank->reg_base + bank->gpio_regs->port_dr;
+-	void __iomem *reg = bank->reg_base + bank->gpio_regs->port_dr;
  	unsigned long flags;
- 	u32 data;
- 
-@@ -111,7 +113,7 @@ static int rockchip_gpio_get(struct gpio_chip *gc, unsigned int offset)
- 	u32 data;
+-	u32 data;
  
  	clk_enable(bank->clk);
--	data = readl(bank->reg_base + GPIO_EXT_PORT);
-+	data = readl(bank->reg_base + bank->gpio_regs->ext_port);
+ 	raw_spin_lock_irqsave(&bank->slock, flags);
+-
+-	data = readl(reg);
+-	data &= ~BIT(offset);
+-	if (value)
+-		data |= BIT(offset);
+-	writel(data, reg);
+-
++	rockchip_gpio_writel_bit(bank, offset, value, bank->gpio_regs->port_dr);
+ 	raw_spin_unlock_irqrestore(&bank->slock, flags);
  	clk_disable(bank->clk);
- 	data >>= offset;
- 	data &= 1;
-@@ -122,7 +124,7 @@ static void rockchip_gpio_set_debounce(struct gpio_chip *gc,
- 				       unsigned int offset, bool enable)
+ }
+@@ -120,26 +198,65 @@ static int rockchip_gpio_get(struct gpio_chip *gc, unsigned int offset)
+ 	return data;
+ }
+ 
+-static void rockchip_gpio_set_debounce(struct gpio_chip *gc,
+-				       unsigned int offset, bool enable)
++static int rockchip_gpio_set_debounce(struct gpio_chip *gc,
++				      unsigned int offset,
++				      unsigned int debounce)
  {
  	struct rockchip_pin_bank *bank = gpiochip_get_data(gc);
--	void __iomem *reg = bank->reg_base + GPIO_DEBOUNCE;
-+	void __iomem *reg = bank->reg_base + bank->gpio_regs->debounce;
- 	unsigned long flags;
+-	void __iomem *reg = bank->reg_base + bank->gpio_regs->debounce;
+-	unsigned long flags;
+-	u32 data;
++	const struct rockchip_gpio_regs	*reg = bank->gpio_regs;
++	unsigned long flags, div_reg, freq, max_debounce;
++	bool div_debounce_support;
++	unsigned int cur_div_reg;
++	u64 div;
++
++	if (!IS_ERR(bank->db_clk)) {
++		div_debounce_support = true;
++		freq = clk_get_rate(bank->db_clk);
++		max_debounce = (GENMASK(23, 0) + 1) * 2 * 1000000 / freq;
++		if (debounce > max_debounce)
++			return -EINVAL;
++
++		div = debounce * freq;
++		div_reg = DIV_ROUND_CLOSEST_ULL(div, 2 * USEC_PER_SEC) - 1;
++	} else {
++		div_debounce_support = false;
++	}
+ 
+-	clk_enable(bank->clk);
+ 	raw_spin_lock_irqsave(&bank->slock, flags);
+ 
+-	data = readl(reg);
+-	if (enable)
+-		data |= BIT(offset);
+-	else
+-		data &= ~BIT(offset);
+-	writel(data, reg);
++	/* Only the v1 needs to configure div_en and div_con for dbclk */
++	if (debounce) {
++		if (div_debounce_support) {
++			/* Configure the max debounce from consumers */
++			cur_div_reg = readl(bank->reg_base +
++					    reg->dbclk_div_con);
++			if (cur_div_reg < div_reg)
++				writel(div_reg, bank->reg_base +
++				       reg->dbclk_div_con);
++			rockchip_gpio_writel_bit(bank, offset, 1,
++						 reg->dbclk_div_en);
++		}
++
++		rockchip_gpio_writel_bit(bank, offset, 1, reg->debounce);
++	} else {
++		if (div_debounce_support)
++			rockchip_gpio_writel_bit(bank, offset, 0,
++						 reg->dbclk_div_en);
++
++		rockchip_gpio_writel_bit(bank, offset, 0, reg->debounce);
++	}
+ 
+ 	raw_spin_unlock_irqrestore(&bank->slock, flags);
+-	clk_disable(bank->clk);
++
++	/* Enable or disable dbclk at last */
++	if (div_debounce_support) {
++		if (debounce)
++			clk_prepare_enable(bank->db_clk);
++		else
++			clk_disable_unprepare(bank->db_clk);
++	}
++
++	return 0;
+ }
+ 
+ static int rockchip_gpio_direction_input(struct gpio_chip *gc,
+@@ -290,13 +407,13 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
+ 	u32 level;
  	u32 data;
+ 	unsigned long flags;
++	int ret = 0;
  
-@@ -226,7 +228,7 @@ static void rockchip_irq_demux(struct irq_desc *desc)
- 
- 	chained_irq_enter(chip, desc);
- 
--	pend = readl_relaxed(bank->reg_base + GPIO_INT_STATUS);
-+	pend = readl_relaxed(bank->reg_base + bank->gpio_regs->int_status);
- 
- 	while (pend) {
- 		unsigned int irq, virq;
-@@ -250,24 +252,26 @@ static void rockchip_irq_demux(struct irq_desc *desc)
- 			u32 data, data_old, polarity;
- 			unsigned long flags;
- 
--			data = readl_relaxed(bank->reg_base + GPIO_EXT_PORT);
-+			data = readl_relaxed(bank->reg_base +
-+					     bank->gpio_regs->ext_port);
- 			do {
- 				raw_spin_lock_irqsave(&bank->slock, flags);
- 
- 				polarity = readl_relaxed(bank->reg_base +
--							 GPIO_INT_POLARITY);
-+							 bank->gpio_regs->int_polarity);
- 				if (data & BIT(irq))
- 					polarity &= ~BIT(irq);
- 				else
- 					polarity |= BIT(irq);
- 				writel(polarity,
--				       bank->reg_base + GPIO_INT_POLARITY);
-+				       bank->reg_base +
-+				       bank->gpio_regs->int_polarity);
- 
- 				raw_spin_unlock_irqrestore(&bank->slock, flags);
- 
- 				data_old = data;
- 				data = readl_relaxed(bank->reg_base +
--						     GPIO_EXT_PORT);
-+						     bank->gpio_regs->ext_port);
- 			} while ((data & BIT(irq)) != (data_old & BIT(irq)));
- 		}
- 
-@@ -290,9 +294,9 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
  	clk_enable(bank->clk);
  	raw_spin_lock_irqsave(&bank->slock, flags);
  
--	data = readl_relaxed(bank->reg_base + GPIO_SWPORT_DDR);
-+	data = readl_relaxed(bank->reg_base + bank->gpio_regs->port_ddr);
- 	data &= ~mask;
--	writel_relaxed(data, bank->reg_base + GPIO_SWPORT_DDR);
-+	writel_relaxed(data, bank->reg_base + bank->gpio_regs->port_ddr);
+-	data = readl_relaxed(bank->reg_base + bank->gpio_regs->port_ddr);
+-	data &= ~mask;
+-	writel_relaxed(data, bank->reg_base + bank->gpio_regs->port_ddr);
++	rockchip_gpio_writel_bit(bank, d->hwirq, 0,
++				 bank->gpio_regs->port_ddr);
  
  	raw_spin_unlock_irqrestore(&bank->slock, flags);
  
-@@ -304,8 +308,8 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
+@@ -308,23 +425,30 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
  	raw_spin_lock_irqsave(&bank->slock, flags);
  	irq_gc_lock(gc);
  
--	level = readl_relaxed(gc->reg_base + GPIO_INTTYPE_LEVEL);
--	polarity = readl_relaxed(gc->reg_base + GPIO_INT_POLARITY);
-+	level = readl_relaxed(gc->reg_base + bank->gpio_regs->int_type);
-+	polarity = readl_relaxed(gc->reg_base + bank->gpio_regs->int_polarity);
+-	level = readl_relaxed(gc->reg_base + bank->gpio_regs->int_type);
+-	polarity = readl_relaxed(gc->reg_base + bank->gpio_regs->int_polarity);
++	level = rockchip_gpio_readl(bank, bank->gpio_regs->int_type);
++	polarity = rockchip_gpio_readl(bank, bank->gpio_regs->int_polarity);
  
  	switch (type) {
  	case IRQ_TYPE_EDGE_BOTH:
-@@ -316,7 +320,7 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 		 * Determine gpio state. If 1 next interrupt should be falling
- 		 * otherwise rising.
- 		 */
--		data = readl(bank->reg_base + GPIO_EXT_PORT);
-+		data = readl(bank->reg_base + bank->gpio_regs->ext_port);
- 		if (data & mask)
- 			polarity &= ~mask;
- 		else
-@@ -349,8 +353,8 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 		return -EINVAL;
+-		bank->toggle_edge_mode |= mask;
+-		level |= mask;
+-
+-		/*
+-		 * Determine gpio state. If 1 next interrupt should be falling
+-		 * otherwise rising.
+-		 */
+-		data = readl(bank->reg_base + bank->gpio_regs->ext_port);
+-		if (data & mask)
+-			polarity &= ~mask;
+-		else
+-			polarity |= mask;
++		if (bank->gpio_type == GPIO_TYPE_V2) {
++			bank->toggle_edge_mode &= ~mask;
++			rockchip_gpio_writel_bit(bank, d->hwirq, 1,
++						 bank->gpio_regs->int_bothedge);
++			goto out;
++		} else {
++			bank->toggle_edge_mode |= mask;
++			level |= mask;
++
++			/*
++			 * Determine gpio state. If 1 next interrupt should be
++			 * falling otherwise rising.
++			 */
++			data = readl(bank->reg_base + bank->gpio_regs->ext_port);
++			if (data & mask)
++				polarity &= ~mask;
++			else
++				polarity |= mask;
++		}
+ 		break;
+ 	case IRQ_TYPE_EDGE_RISING:
+ 		bank->toggle_edge_mode &= ~mask;
+@@ -347,20 +471,18 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
+ 		polarity &= ~mask;
+ 		break;
+ 	default:
+-		irq_gc_unlock(gc);
+-		raw_spin_unlock_irqrestore(&bank->slock, flags);
+-		clk_disable(bank->clk);
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto out;
  	}
  
--	writel_relaxed(level, gc->reg_base + GPIO_INTTYPE_LEVEL);
--	writel_relaxed(polarity, gc->reg_base + GPIO_INT_POLARITY);
-+	writel_relaxed(level, gc->reg_base + bank->gpio_regs->int_type);
-+	writel_relaxed(polarity, gc->reg_base + bank->gpio_regs->int_polarity);
- 
+-	writel_relaxed(level, gc->reg_base + bank->gpio_regs->int_type);
+-	writel_relaxed(polarity, gc->reg_base + bank->gpio_regs->int_polarity);
+-
++	rockchip_gpio_writel(bank, level, bank->gpio_regs->int_type);
++	rockchip_gpio_writel(bank, polarity, bank->gpio_regs->int_polarity);
++out:
  	irq_gc_unlock(gc);
  	raw_spin_unlock_irqrestore(&bank->slock, flags);
-@@ -365,8 +369,8 @@ static void rockchip_irq_suspend(struct irq_data *d)
- 	struct rockchip_pin_bank *bank = gc->private;
- 
- 	clk_enable(bank->clk);
--	bank->saved_masks = irq_reg_readl(gc, GPIO_INTMASK);
--	irq_reg_writel(gc, ~gc->wake_active, GPIO_INTMASK);
-+	bank->saved_masks = irq_reg_readl(gc, bank->gpio_regs->int_mask);
-+	irq_reg_writel(gc, ~gc->wake_active, bank->gpio_regs->int_mask);
  	clk_disable(bank->clk);
+ 
+-	return 0;
++	return ret;
  }
  
-@@ -376,7 +380,7 @@ static void rockchip_irq_resume(struct irq_data *d)
- 	struct rockchip_pin_bank *bank = gc->private;
+ static void rockchip_irq_suspend(struct irq_data *d)
+@@ -437,6 +559,11 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
+ 	}
  
- 	clk_enable(bank->clk);
--	irq_reg_writel(gc, bank->saved_masks, GPIO_INTMASK);
-+	irq_reg_writel(gc, bank->saved_masks, bank->gpio_regs->int_mask);
- 	clk_disable(bank->clk);
- }
- 
-@@ -435,8 +439,8 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
  	gc = irq_get_domain_generic_chip(bank->domain, 0);
++	if (bank->gpio_type == GPIO_TYPE_V2) {
++		gc->reg_writel = gpio_writel_v2;
++		gc->reg_readl = gpio_readl_v2;
++	}
++
  	gc->reg_base = bank->reg_base;
  	gc->private = bank;
--	gc->chip_types[0].regs.mask = GPIO_INTMASK;
--	gc->chip_types[0].regs.ack = GPIO_PORTS_EOI;
-+	gc->chip_types[0].regs.mask = bank->gpio_regs->int_mask;
-+	gc->chip_types[0].regs.ack = bank->gpio_regs->port_eoi;
- 	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
- 	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
- 	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
-@@ -453,9 +457,9 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
+ 	gc->chip_types[0].regs.mask = bank->gpio_regs->int_mask;
+@@ -457,9 +584,9 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
  	 * Our driver only uses the concept of masked and always keeps
  	 * things enabled, so for us that's all masked and all enabled.
  	 */
--	writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
--	writel_relaxed(0xffffffff, bank->reg_base + GPIO_PORTS_EOI);
--	writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
-+	writel_relaxed(0xffffffff, bank->reg_base + bank->gpio_regs->int_mask);
-+	writel_relaxed(0xffffffff, bank->reg_base + bank->gpio_regs->port_eoi);
-+	writel_relaxed(0xffffffff, bank->reg_base + bank->gpio_regs->int_en);
+-	writel_relaxed(0xffffffff, bank->reg_base + bank->gpio_regs->int_mask);
+-	writel_relaxed(0xffffffff, bank->reg_base + bank->gpio_regs->port_eoi);
+-	writel_relaxed(0xffffffff, bank->reg_base + bank->gpio_regs->int_en);
++	rockchip_gpio_writel(bank, 0xffffffff, bank->gpio_regs->int_mask);
++	rockchip_gpio_writel(bank, 0xffffffff, bank->gpio_regs->port_eoi);
++	rockchip_gpio_writel(bank, 0xffffffff, bank->gpio_regs->int_en);
  	gc->mask_cache = 0xffffffff;
  
  	irq_set_chained_handler_and_data(bank->irq,
-@@ -546,6 +550,9 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
+@@ -538,6 +665,7 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
+ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
+ {
+ 	struct resource res;
++	int id = 0;
+ 
+ 	if (of_address_to_resource(bank->of_node, 0, &res)) {
+ 		dev_err(bank->dev, "cannot find IO resource for bank\n");
+@@ -549,15 +677,33 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
+ 		return PTR_ERR(bank->reg_base);
  
  	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
+-
+-	bank->gpio_regs = &gpio_regs_v1;
+-	bank->gpio_type = GPIO_TYPE_V1;
++	if (!bank->irq)
++		return -EINVAL;
  
-+	bank->gpio_regs = &gpio_regs_v1;
-+	bank->gpio_type = GPIO_TYPE_V1;
-+
  	bank->clk = of_clk_get(bank->of_node, 0);
- 	if (!IS_ERR(bank->clk))
- 		return clk_prepare(bank->clk);
+-	if (!IS_ERR(bank->clk))
+-		return clk_prepare(bank->clk);
++	if (IS_ERR(bank->clk))
++		return PTR_ERR(bank->clk);
++
++	clk_prepare_enable(bank->clk);
++	id = readl(bank->reg_base + gpio_regs_v2.version_id);
++
++	/* If not gpio v2, that is default to v1. */
++	if (id == GPIO_TYPE_V2) {
++		bank->gpio_regs = &gpio_regs_v2;
++		bank->gpio_type = GPIO_TYPE_V2;
++		bank->db_clk = of_clk_get(bank->of_node, 1);
++		if (IS_ERR(bank->db_clk)) {
++			dev_err(bank->dev, "cannot find debounce clk\n");
++			bank->db_clk = NULL;
++			clk_disable(bank->clk);
++			return -EINVAL;
++		}
++	} else {
++		bank->gpio_regs = &gpio_regs_v1;
++		bank->gpio_type = GPIO_TYPE_V1;
++	}
+ 
+-	bank->clk = NULL;
++	clk_disable(bank->clk);
+ 	return 0;
+ }
+ 
 diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl-rockchip.h
-index 20f734ce3933..9b8f653627ac 100644
+index 9b8f653627ac..c0ec929350c7 100644
 --- a/drivers/pinctrl/pinctrl-rockchip.h
 +++ b/drivers/pinctrl/pinctrl-rockchip.h
-@@ -31,6 +31,42 @@ enum rockchip_pinctrl_type {
- 	RK3399,
- };
- 
-+/**
-+ * struct rockchip_gpio_regs
-+ * @port_dr: data register
-+ * @port_ddr: data direction register
-+ * @int_en: interrupt enable
-+ * @int_mask: interrupt mask
-+ * @int_type: interrupt trigger type, such as high, low, edge trriger type.
-+ * @int_polarity: interrupt polarity enable register
-+ * @int_bothedge: interrupt bothedge enable register
-+ * @int_status: interrupt status register
-+ * @int_rawstatus: int_status = int_rawstatus & int_mask
-+ * @debounce: enable debounce for interrupt signal
-+ * @dbclk_div_en: enable divider for debounce clock
-+ * @dbclk_div_con: setting for divider of debounce clock
-+ * @port_eoi: end of interrupt of the port
-+ * @ext_port: port data from external
-+ * @version_id: controller version register
-+ */
-+struct rockchip_gpio_regs {
-+	u32 port_dr;
-+	u32 port_ddr;
-+	u32 int_en;
-+	u32 int_mask;
-+	u32 int_type;
-+	u32 int_polarity;
-+	u32 int_bothedge;
-+	u32 int_status;
-+	u32 int_rawstatus;
-+	u32 debounce;
-+	u32 dbclk_div_en;
-+	u32 dbclk_div_con;
-+	u32 port_eoi;
-+	u32 ext_port;
-+	u32 version_id;
-+};
-+
- /**
-  * struct rockchip_iomux
-  * @type: iomux variant using IOMUX_* constants
-@@ -125,6 +161,8 @@ struct rockchip_pin_bank {
- 	struct gpio_chip		gpio_chip;
- 	struct pinctrl_gpio_range	grange;
- 	raw_spinlock_t			slock;
-+	const struct rockchip_gpio_regs	*gpio_regs;
-+	u32				gpio_type;
- 	u32				toggle_edge_mode;
- 	u32				recalced_mask;
- 	u32				route_mask;
+@@ -120,6 +120,7 @@ struct rockchip_drv {
+  * @reg_base: register base of the gpio bank
+  * @regmap_pull: optional separate register for additional pull settings
+  * @clk: clock of the gpio bank
++ * @db_clk: clock of the gpio debounce
+  * @irq: interrupt of the gpio bank
+  * @saved_masks: Saved content of GPIO_INTEN at suspend time.
+  * @pin_base: first pin number
+@@ -145,6 +146,7 @@ struct rockchip_pin_bank {
+ 	void __iomem			*reg_base;
+ 	struct regmap			*regmap_pull;
+ 	struct clk			*clk;
++	struct clk			*db_clk;
+ 	int				irq;
+ 	u32				saved_masks;
+ 	u32				pin_base;
 -- 
 2.25.1
 
