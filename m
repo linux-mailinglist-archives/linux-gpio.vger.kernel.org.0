@@ -2,107 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4388B3490DC
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 12:41:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40CB2349187
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 13:07:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbhCYLkS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Mar 2021 07:40:18 -0400
-Received: from mga03.intel.com ([134.134.136.65]:60381 "EHLO mga03.intel.com"
+        id S230281AbhCYMHC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Mar 2021 08:07:02 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63255 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231636AbhCYLit (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 25 Mar 2021 07:38:49 -0400
-IronPort-SDR: X0q+9dqjm5A5FdU4eM9tqoYXuxOyTeRDXfM5Ydzm2vxFx+mYSNs2NzSCEBO+AhoF5M8R5Jvoun
- 4YQCf8D9qNBQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9933"; a="190936665"
+        id S230041AbhCYMGw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 25 Mar 2021 08:06:52 -0400
+IronPort-SDR: E74aiGxIJlmpsHASX1O/8rwYe9rDi9BsCYr8cb7176MkQRMyu7dxVFl9IRN8DpcqndUlP1r63q
+ Pzc30g0ZOV9g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9933"; a="190941883"
 X-IronPort-AV: E=Sophos;i="5.81,277,1610438400"; 
-   d="scan'208";a="190936665"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2021 04:33:09 -0700
-IronPort-SDR: eLMdjmGZ172nWUnoqly9ZhCsQoTv+M6+yM9bp3kzkPfHuTW890qD5wcu0X14ZptIkYxHlF98O4
- yIb3JfV2M07w==
+   d="scan'208";a="190941883"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2021 05:06:49 -0700
+IronPort-SDR: nXQRT8F2j/iOtbKgmkvi3bw9pPw6+AvGS9dShY8ox4/rl8Xhc1dwyVW2A5twvUdrvugohHK+tI
+ GYJ6k1bpX1lw==
 X-IronPort-AV: E=Sophos;i="5.81,277,1610438400"; 
-   d="scan'208";a="409332136"
+   d="scan'208";a="436437388"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2021 04:33:07 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2021 05:06:46 -0700
 Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lPOEa-00G1lh-TT; Thu, 25 Mar 2021 13:33:04 +0200
-Date:   Thu, 25 Mar 2021 13:33:04 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Subject: Re: [PATCH v5 1/2] gpio: sch: Add edge event support
-Message-ID: <YFx08OhkBbyXBdZo@smile.fi.intel.com>
-References: <20210317151928.41544-1-andriy.shevchenko@linux.intel.com>
- <20210317151928.41544-2-andriy.shevchenko@linux.intel.com>
- <CACRpkdaZwAg4X9QT4QMR2GSH6Cekc7Xuk+-pqhCyON-Y3cnCrA@mail.gmail.com>
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1lPOl9-00G2C7-Nk; Thu, 25 Mar 2021 14:06:43 +0200
+Date:   Thu, 25 Mar 2021 14:06:43 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH RESEND] intel/pinctrl: check capability offset is between
+ MMIO region
+Message-ID: <YFx80wYt/KcHanC7@smile.fi.intel.com>
+References: <20210324123118.58865-1-roger.pau@citrix.com>
+ <YFs3XwOBRGAFyASY@smile.fi.intel.com>
+ <YFtEw7qHQKE/4p8t@Air-de-Roger>
+ <YFtLNLTrR9wTO41W@smile.fi.intel.com>
+ <YFtXNw8ZKkp82EIH@Air-de-Roger>
+ <YFtvaBmnu0GF/7il@smile.fi.intel.com>
+ <YFxN9hlt0FbOVqML@Air-de-Roger>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CACRpkdaZwAg4X9QT4QMR2GSH6Cekc7Xuk+-pqhCyON-Y3cnCrA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YFxN9hlt0FbOVqML@Air-de-Roger>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 09:13:51AM +0100, Linus Walleij wrote:
-> On Wed, Mar 17, 2021 at 4:19 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > From: Jan Kiszka <jan.kiszka@siemens.com>
-> >
-> > Add the required infrastructure to enable and report edge events
-> > of the pins to the GPIO core. The actual hook-up of the event interrupt
-> > will happen separately.
-> >
-> > Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> > Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> I can't believe it that nobody added irq support to this driver for 10
-> years given how widely deployed it is! (Good work.)
-> 
-> Don't you need to add
-> 
-> select GPIOLIB_IRQCHIP
-> 
-> to Kconfig? So the gpio_chip contains the .irq member you're using.
+On Thu, Mar 25, 2021 at 09:46:46AM +0100, Roger Pau Monné wrote:
+> On Wed, Mar 24, 2021 at 06:57:12PM +0200, Andy Shevchenko wrote:
+> > On Wed, Mar 24, 2021 at 04:13:59PM +0100, Roger Pau Monné wrote:
+> > > On Wed, Mar 24, 2021 at 04:22:44PM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Mar 24, 2021 at 02:55:15PM +0100, Roger Pau Monné wrote:
+> > > > > On Wed, Mar 24, 2021 at 02:58:07PM +0200, Andy Shevchenko wrote:
 
-Seems legit, thanks!
+...
 
-> > +       sch->irqchip.name = "sch_gpio";
-> > +       sch->irqchip.irq_ack = sch_irq_ack;
-> > +       sch->irqchip.irq_mask = sch_irq_mask;
-> > +       sch->irqchip.irq_unmask = sch_irq_unmask;
-> > +       sch->irqchip.irq_set_type = sch_irq_type;
-> > +
-> > +       sch->chip.irq.chip = &sch->irqchip;
-> > +       sch->chip.irq.num_parents = 0;
-> > +       sch->chip.irq.parents = NULL;
-> > +       sch->chip.irq.parent_handler = NULL;
-> > +       sch->chip.irq.default_type = IRQ_TYPE_NONE;
-> > +       sch->chip.irq.handler = handle_bad_irq;
+> > > > Unfortunately it does not expose PCI configuration space.
+> > > 
+> > > Are those regions supposed to be marked as reserved in the memory map,
+> > > or that's left to the discretion of the hardware vendor?
+> > 
+> > I didn't get. The OS doesn't see them and an internal backbone simply drops any
+> > IO access to that region.
 > 
-> I always add a local variable like:
-> 
-> struct gpio_irq_chip *girq;
-> 
-> And assign with the arrow, so as to make it easier to read:
-> 
-> girq->parent_handler = NULL
-> 
-> etc.
+> I'm not sure I understand the above reply. My question was whether the
+> MMIO regions used by the pinctrl device (as fetched from the ACPI DSDT
+> table) are supposed belong to regions marked as RESERVED in the
+> firmware memory map (ie: either the e820 or the EFI one).
 
-OK!
+I don't actually know. I guess it should be done in order to have ACPI device
+a possibility to claim the resource.
 
-> +/- the above:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > > > > Doing something like pci_device_is_present would require a register
+> > > > > that we know will never return ~0 unless the device is not present. As
+> > > > > said above, maybe we could use REVID to that end?
+> > > > 
+> > > > Yes, that's good, see above.
+> > > > 
+> > > > WRT capabilities, if we crash we will see the report immediately on the
+> > > > hardware which has such an issue. (It's quite unlikely we will ever have one,
+> > > > that's why I consider it's not critical)
+> > > 
+> > > I would rather prefer to not crash, because I think the kernel should
+> > > only resort to crashing when there's no alternative, and here it's
+> > > perfectly fine to just print an error message and don't load the
+> > > driver.
+> > 
+> > Are we speaking about real hardware that has an issue? I eagerly want to know
+> > what is that beast.
+> 
+> OK, I'm not going to resend this anymore. I'm happy with just getting
+> the first patch in.
+> 
+> I think you trust the hardware more that I would do, and I also think
+> the check added here is very minimal an unintrusive and serves as a
+> way to sanitize the data fetched from the hardware in order to prevent
+> a kernel page fault if such data turns out to be wrong.
+> 
+> Taking a reactive approach of requiring a broken piece of hardware to
+> exist in order to sanitize a fetched value seems too risky. I could
+> add a WARN_ON or similar if you want some kind of splat that's very
+> noticeable when this goes wrong but that doesn't end up in a fatal
+> kernel page fault.
 
-Thanks!
+You found the issue anyway as long as you had a crash, so current code already
+proved that it does it work perfectly.
+
+Since I know what hardware this driver is for, I can assure you, that it will
+be quite unlikely to have wrong data in the capability register. The data sheet
+is crystal clear about the register's contents: on real hardware it must be
+present and be set to a sane value.
 
 -- 
 With Best Regards,
