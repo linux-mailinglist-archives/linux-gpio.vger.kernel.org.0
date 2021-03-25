@@ -2,74 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF68F348B06
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 09:04:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20917348B30
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 09:08:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbhCYIDs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Mar 2021 04:03:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51802 "EHLO
+        id S229695AbhCYIHe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Mar 2021 04:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229659AbhCYIDP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 04:03:15 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF75C06175F
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 01:03:14 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id q29so1189794lfb.4
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 01:03:14 -0700 (PDT)
+        with ESMTP id S229986AbhCYIHQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 04:07:16 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2CC3C06175F
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 01:07:15 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id a1so1999023ljp.2
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 01:07:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RUQQ17pfF98h7CsMopKhBpalX6SwViYZJyiCT0Dk6fk=;
-        b=engkWQ7VAcLaLe+W/hLSlbhd27mHjU+Abo/v5CfcsmDbaEWOwBjQA9KsuBnRKc9A1p
-         nfqTD2MdCPq10qveGeDsI5+OYOHJjzpa9HsUesPSdOI1YatKQYKIaJK9f4GgJmKRCXZp
-         gleZYIEzE+zATlNgenryame7GnrkcNxLHDmkCrkUwePr6vwepgZfEBVzZDbh6j+SfJrj
-         mgv49NUJx2IYYfN4fed5XGJrBLR7BO+BONb0zH7ZJ9Be6lA1U7QX7CMd55FjC+kfawK9
-         u7WsWEahi1PS6VRhaRHE4PNEJIiz30AlhOD1teEfd6xgxrKJ6SP+bwhoPr2wlenmNgBh
-         UHPg==
+        bh=0wB5lQya3fiuyoxrh9PPyJyATOmdemC/qwgZIh3MLq4=;
+        b=aM6TFeKy/Sr4tGz1N1EnSXdfLU3vaY2kFJX6BdJBgbN8xVtCGXpCEg9Z45lrOPNDGK
+         DURl7B5z2+X1tLD7URoxhT3zym1TUIu3Rbenz0WDKPOBKjrQ5ayWbVYIg2fEWptAdn5N
+         fvIOtx72uXurYiOV39DZbqWVzh3c7FaXh3q1WnDlyPBbNFRVA9i35GNIX9MZJOg4kwfv
+         UK017DDdxjchn8spNPBYnfKmRpNh1wJqpCVMiE32xJE72FgUXXcTKTjSGV7VROCKwnvr
+         xhNWS1SxFiwkDbplB1uJeM1x2b4R1+q6eZLAjNHK84mWQjb96MTxlqKWwrT/j0l+oYtK
+         uzvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RUQQ17pfF98h7CsMopKhBpalX6SwViYZJyiCT0Dk6fk=;
-        b=TJdKR0KziiISI8s247VV9EuhCAuN34eh6AEiRSk7ef0k5TOaccuDs7qI+qxWzo6MqF
-         UW3nKj05YzrDimKCiZLYoYbagPqW2x535uxiLhaYsf+esmXfFfYE84GssdWX/c45BvHJ
-         9Eu7TTAw16xmsrj22AdyQdLXo9US0QjSBZWhEla94dUtH9iyIHoiCMoe1J2kJ1kAfF7q
-         0wh21ZhPA+UAXmXcik8rXPIWnj3XlkUojlwd8tuK6m5AqSTfSqh81aNy5+z3pvUfG6zr
-         Wrh/pYs9ZUsTd/A51knhHxfehtJBv5DOYw2aaxpawFYGTd0zt+lcBeOsk0Is8uxuvU7w
-         k5og==
-X-Gm-Message-State: AOAM533ledB3aGBZq9Rqxf0HIXNbYm4z5VvTFaoToUuzEl3QS+MlaFTQ
-        NKOX3bSQIUiz85eXEqp9555q3tKl3nZ03A05Hj0Hqw==
-X-Google-Smtp-Source: ABdhPJwDfUh2m/FklwRPWs5IDoLHRwfoEvLvH70YnfgRuIL/9f344F4xGYJbD9HfvZUuGO5HcxBGYL1MR5lww1MI2Qo=
-X-Received: by 2002:a19:4c08:: with SMTP id z8mr4095968lfa.157.1616659393242;
- Thu, 25 Mar 2021 01:03:13 -0700 (PDT)
+        bh=0wB5lQya3fiuyoxrh9PPyJyATOmdemC/qwgZIh3MLq4=;
+        b=U0O4iA1jfF8MQWO7fFbqmDrtRS3UsPLdt/0ZbG4XaBgqfYMWMmE/fS6xYWp53CcNky
+         +gfd/VySlGsS0GNWwuVK2SWHTMo014sRbVPJL336rxOtg45tFb628XSd8GmnVj8UjdLM
+         BWKRg3GOBQUIImfqnFy7UOVfdXtTNHfhSiSRKPV467LFLJO7C7hR256JUVkBJe8bWiV7
+         VX0WwAbMTdt04isriMBDneGjlafLTSgJjJv9WuwhWlzhBK/vOmOfGFcMFci2CHWaqE1Q
+         1vnI1iIB1wYuYd6l0k2jCeuPMUrNuSdFyyZjHd6xqpiVfsGgimE4rz7jZYRKT4JLYsss
+         iH4w==
+X-Gm-Message-State: AOAM531pga6PHGKpbC/yvlvakmfXH9VNl4naVs3N/GdPHNfJEPHtBz70
+        su6N0a35OVnHgaqu8DaNH6R2UeoL399JrtU6WS9Fpg==
+X-Google-Smtp-Source: ABdhPJyEjmj0S3oXWHBTy1EHddL0x3XbQxu8mxutybTuakd3pMAfgd9Z1tNfs50pgymJMyN0PvQ3nb3gnIjf7aoNSkE=
+X-Received: by 2002:a2e:1649:: with SMTP id 9mr5011080ljw.74.1616659634275;
+ Thu, 25 Mar 2021 01:07:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210323221905.19529-1-rdunlap@infradead.org>
-In-Reply-To: <20210323221905.19529-1-rdunlap@infradead.org>
+References: <20210319152133.28705-1-hhhawa@amazon.com>
+In-Reply-To: <20210319152133.28705-1-hhhawa@amazon.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 25 Mar 2021 09:03:02 +0100
-Message-ID: <CACRpkdZjz2_BVWD3eD38jPy8Q5A0YO9AvkYhff7bM0_3aa0mew@mail.gmail.com>
-Subject: Re: [PATCH] linux/gpio/driver.h: some edits for clarity
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Thu, 25 Mar 2021 09:07:03 +0100
+Message-ID: <CACRpkdbMiW=P49kyxvy1PqgpZ8BAGaZ8wyrWSdTJmu+oD4dV=Q@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Fix pinctrl-single pcs_pin_dbg_show()
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        ext Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>, dwmw@amazon.co.uk,
+        Benjamin Herrenschmidt <benh@amazon.com>, ronenk@amazon.com,
+        Talel Shenhar <talel@amazon.com>,
+        Jonathan Chocron <jonnyc@amazon.com>, hanochu@amazon.com,
+        tgershi@amazon.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 11:19 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+On Fri, Mar 19, 2021 at 4:22 PM Hanna Hawa <hhhawa@amazon.com> wrote:
 
-> Fix a few typos and some punctuation.
-> Also, change CONFIG_OF to CONFIG_OF_GPIO in one comment.
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: linux-gpio@vger.kernel.org
+> These patches fix the pcs_pin_dbg_show() function for the scenario where
+> a single register controls multiple pins (i.e. bits_per_mux is not zero)
+> Additionally, the common formula is moved to a separate function to
+> allow reuse.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+This v4 patch set applied!
 
 Yours,
 Linus Walleij
