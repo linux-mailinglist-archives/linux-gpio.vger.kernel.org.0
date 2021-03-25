@@ -2,73 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB095348CCC
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 10:28:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D568348CD0
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 10:29:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229833AbhCYJ16 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Mar 2021 05:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41878 "EHLO
+        id S229979AbhCYJ2a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Mar 2021 05:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229693AbhCYJ1m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 05:27:42 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD075C06175F
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 02:27:41 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id 184so2209545ljf.9
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 02:27:41 -0700 (PDT)
+        with ESMTP id S229923AbhCYJ2V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 05:28:21 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2CAC06175F
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 02:28:20 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id o126so1560906lfa.0
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 02:28:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IsHdTvG/QnL/RMsV0A6gUhCQmyonTHg1LR33V9IaQI0=;
-        b=hnSnZtQTEM48kP52tFUl98D3BvVRhgU+MU+zZy0+v5+cLblLERQsxgffOKscuDuk3m
-         0Olwlf6QAEJgAgmNI9vqkN6ZmW4k52se0TtUIyCNlQiR06axgKo8KrRN06ogsVz9yfGo
-         vErqgGYdxq3ToQ/mnevJUK2wgkY/AQOiKYbh4/k2EtHxX0/kTORXR/YqvQs1C9J6xusO
-         9Z9PYmAFK2nM50gF+mkQyZXUp8APc7f5AcyGt0wGAxa8fBew7cpPxKHNA6rynpToGkag
-         muZy2GHLB50nZ9TVpuOPOxloKLVCLGqcsBoggfGm6fDCke5Qc1d/k62mEqw8Q3mqVXPS
-         t0kQ==
+        bh=gYI+PuLtimhXH77xMKx0d9cmeN1WTmp9BxMwwXCReuc=;
+        b=vkzZ2N2UrRZK5RBwQrQvsfRbVolmmcIiwHGBhARupxqNSDLeSev5dOC8UG/dIL2rf4
+         yMuWSVyBRtrQdgtoazo9ipzP1CYUQvSfFuMRAHBCb5L5wngj9mwiuSxdSwcBO/tyqxgy
+         MenwoiIXh96QhrN/0K7wklslZj0ue96gv/4dyDUrUl9ze2rsSqdGCuAQ/mQkETIMfWDc
+         tJaVq9+8YyARo4Y7YBqdzP5XKqLqs7PnHgG+D6nt/WClVwbGDCJ7OtYGpCsV+uG85gTn
+         T/tsQ6lxBa02bW/g29IbIKCgrIr0gLI7QFlTAQ5zL+kZuZKIQrSnDpnPn2XjkYacbRxX
+         Luyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IsHdTvG/QnL/RMsV0A6gUhCQmyonTHg1LR33V9IaQI0=;
-        b=Q0KOB+4S6/TlTvnaeLONxV0jc2oaBDB46/3Vo51b++06DwPTi+mkeQVzDMcvNjrVez
-         hnbPBnHNM+R4enZ1wp2k2hTR8mPhEgKDIE06g8V1EamCNV1Hqipasr2Zq4tRgEeolfYJ
-         sm5f480RUtQ4fsPkRjrAYGbGSWFDqjCH8a94wI8kkilstsSAM+UgXf6euA0Vg5XOrI4w
-         BCLC57MfDLKi+8dtnnzXQYymI5gUQhu97md5qxBz99uQfqm35mpPI3jUEAC1uMZcVGz+
-         +4/LNbfqqRuBJxShv18RQ0/YSEEtG6oFCLBe5boBlm9kvWCVvgEm6A4s4tHzxpt27hy3
-         aTQQ==
-X-Gm-Message-State: AOAM530ZEVmzJ2pTaaimqTACGm+IiAN6Jq9glw6PQC9D1aDFYvI2sG6S
-        FuJFO1Hwip2ErZqwAAByEsIaS7tohcdZbugXflvglQ==
-X-Google-Smtp-Source: ABdhPJxa8BhcHz0FA2PXr6I2mYN+MNsgGHXLC5Ew+Y/aWPtsb3Ri0CK0CzggWptQnMrGEMid2pK+Ky60HOeRIbawnLc=
-X-Received: by 2002:a2e:7001:: with SMTP id l1mr4931647ljc.200.1616664460376;
- Thu, 25 Mar 2021 02:27:40 -0700 (PDT)
+        bh=gYI+PuLtimhXH77xMKx0d9cmeN1WTmp9BxMwwXCReuc=;
+        b=an6K72B2Pvr+iOCNsHLUstCBybYYikUN1hRJzvwEPJx0Qcc9hLNpf/t5y5Y/GQ66XH
+         EUA5bSrKrDvhXeFlyJas7JBIeZnCbb8yJxvK36RDr673Z0txfQ15PJIxEsC5OPPM+Th3
+         R0mpMKej5k289T5tuuJLllM7yy71qx+S/1xw79TB4qujbWVdYRZWfmpnp1dIoJVQiT8b
+         IUiX+CEGchKsAOSfGQm1kTlf45DxwVS4WkCZ/u7bOJMJ/BpoDMoonxd30MRZNF4dosE/
+         9XK3LPq8r6VLuSzYs4j5uo6bsC0DXgQuv2pgU7SNrd4/tQykNbld9QKtEoLAK+yCtN6p
+         G4QQ==
+X-Gm-Message-State: AOAM533XRvj26z6Q/5i1zxz5UGuVRf09ShYKGU8AcRFZViR9JOj2ERXD
+        2GeuqVSmEk7dTSXS1M0JL3eGizvVzeYT4oZO0GTiLQ==
+X-Google-Smtp-Source: ABdhPJy2Z4Gos2vxj/iljbGSCtdK0ftBcKclmf8nmtikeFu0/ui1OQLJdrfnXCEhSNQC1St0TY+IoxAm8bt9VLy7J7M=
+X-Received: by 2002:ac2:4d95:: with SMTP id g21mr4757768lfe.29.1616664499245;
+ Thu, 25 Mar 2021 02:28:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210323013727.135571-1-wanjiabing@vivo.com>
-In-Reply-To: <20210323013727.135571-1-wanjiabing@vivo.com>
+References: <20210323145509.139393-1-hello@bryanbrattlof.com>
+In-Reply-To: <20210323145509.139393-1-hello@bryanbrattlof.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 25 Mar 2021 10:27:29 +0100
-Message-ID: <CACRpkdaMpSDQduyTHPGvyo4NC07uvfTBcmhPiodOsJ929QxMfg@mail.gmail.com>
-Subject: Re: [PATCH] drivers: pinctrl: Remove duplicate include of io.h
-To:     Wan Jiabing <wanjiabing@vivo.com>
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
+Date:   Thu, 25 Mar 2021 10:28:08 +0100
+Message-ID: <CACRpkdYYV8HLf+HCXbkiRPZFZww+1L_mq3VcqJ5Jse4hY9TkDQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: chip should be plural
+To:     Bryan Brattlof <hello@bryanbrattlof.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kael_w@yeah.net
+        Jiri Kosina <trivial@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 2:37 AM Wan Jiabing <wanjiabing@vivo.com> wrote:
+On Tue, Mar 23, 2021 at 3:56 PM Bryan Brattlof <hello@bryanbrattlof.com> wrote:
 
-> linux/io.h has been included at line 6, so remove the
-> duplicate include at line 18.
->
-> Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+> Signed-off-by: Bryan Brattlof <hello@bryanbrattlof.com>
 
-Patch applied!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
