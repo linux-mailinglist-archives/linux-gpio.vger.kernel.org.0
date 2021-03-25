@@ -2,80 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 873D7348B5D
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 09:17:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FC80348B73
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 09:24:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbhCYIRP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Mar 2021 04:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54758 "EHLO
+        id S229716AbhCYIXp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Mar 2021 04:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229738AbhCYIQx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 04:16:53 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B3C1C06175F
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 01:16:53 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id b14so1216565lfv.8
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 01:16:53 -0700 (PDT)
+        with ESMTP id S229624AbhCYIXa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 04:23:30 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B499C06174A
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 01:23:30 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id u9so1982745ljd.11
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 01:23:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wqv+mJd/yA9gAXhianZae/dsnbx6UuOD+QrLDaMhtRk=;
-        b=fVq82e+VWVzuGVVEGkCzUGHT10kKogZLvz9mlxXuyz5cQcPYIib7iG2c7FdCja7v/4
-         r2rd7mOX3oBmGg1WjXu1cknJCAAA3U9AlqitM+7O7IeQhgEm2kYJvPQ8wJ5X67u4DIuf
-         SOW+ERR1q2/R9NOwJJeG6atcgul0j0CuRsXidF4fHbxWdJGuVtNJ0GJ4N/tcbCw6LV3I
-         2/tDO88d9O0sn2dApl1OCRmFqHB/nDejKALf0t7xqt2adzUlEJj/AtdMwMeTFnw4y9hd
-         KEbVum9jA5nIpYe8YcY7vW2zvMYq4kwnB9gdBTHz2J/W/shQ/GbBCJVNB4R3pBPhumb4
-         VKlA==
+        bh=Ce7LpCeUk4u/Lr/myV2Vh63PxnUfhw6GN4OhmfXRnzg=;
+        b=zsV+lebHjyipfGaat1TqNPhmWClDlhZUwCs4Kyo2ie0Lh9GV1CEGE7Ug5oRYTnq4/i
+         s+q5TcwmYim9J01dh4mweEl0ockmTBmP81EpvHYnTh7g3DIIQZvAih3NjUK8IVLQnlxi
+         v0tEtjEmp/p56xo16QWRt+cImgx8P0SdI4nu4nub7ASPULQJFLkpFVmaIPsWgDjgpGWd
+         uEHqb8NYlOGa6h+eItRRRBOj3b5pvlt/3Pj/PhNw4vd4K8Gud/9VpqfU7q/gr/cRCpGW
+         jrvh/wX337NEaBiYZEduO+02jXhtmksSL49EVf7CdnvU3wOAwTvBv6fNU0YJjTKKfVE4
+         N9Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wqv+mJd/yA9gAXhianZae/dsnbx6UuOD+QrLDaMhtRk=;
-        b=KWTj1OndmRjI+YYz4e0jyzs8IGH2ipFukmg8G8zvg3uyS8sgnXrdxbWNvIm+ZpfFeP
-         0bo6yG238+oZAxb6qZWlqyukD1a0It9SLivHeumF3gcZthTRl6pA619YH/gar7qt76cO
-         rM2VwQyn/37D94wf9uRrVXAumdZbuBTJ1qtsL7WrBydnkIxEdBgBdgHhN1kPzUuM4Z0s
-         cRwznUPfX0RXpfdu2I3rMuWje3AuCkEj9Fp4lB3Vpn7ZOM77TKv2YB6ubiv1FargQZLs
-         p64v5RK+Zj9FmJyo9Mmk3LmrDGHerDwBijxkm+Y19CnZfC52ybp7h5Se+I3npclROfml
-         rczg==
-X-Gm-Message-State: AOAM533JIWzojzlhS9anOVpuL4a/XtrhWHSKmHA3kEkKHbq4AFQKErTU
-        0b2C45QxX17CONvC8Fltl+BL5w+FSDN39GY6/8WsSQ==
-X-Google-Smtp-Source: ABdhPJxvVeJgUu0O3xhLewVEaOBUd+mzRH+XmTPBOaLaRtuACuj0BDLPQ04xdBJmn9JFYlMmFTQ0rI4/j3gVXTbD4tE=
-X-Received: by 2002:a19:6b13:: with SMTP id d19mr4163840lfa.291.1616660211621;
- Thu, 25 Mar 2021 01:16:51 -0700 (PDT)
+        bh=Ce7LpCeUk4u/Lr/myV2Vh63PxnUfhw6GN4OhmfXRnzg=;
+        b=jU2wjXq0yWV2hPtE52lifH9CTbgFYX45mIShtR2yrOWyWb4g+6MHiT+OeBYatEnWA3
+         10VB1mj/lcKUx9rI13ZZj0+HRhXE9txicgdjF2h2woDd0/CFgFBC2GUmiDlsvmLEWiP4
+         VP3XxKiGZ/lcUoowx9Szmbe98gLEiN+gKhk73wLNoSwL6JVj5tDDQlxh+x3gAZqYc+q/
+         3XoW8IX+b7PSG4Mi19XrzqJbUdMMChM9RHD4ipPJBjf1cvSSBkyVW9MR4GuzpabgCLok
+         EKu23E6XFvwyVMhLibMZOULw5MoY9xXBTPMLWg7+ge7PEIQFGDp5AyVDgMO+P6+4zEp1
+         hdHA==
+X-Gm-Message-State: AOAM531KtTJ3vBpQocGJZIVn+ara9ovR0x0s7tDIXbWammhzqiqd4YSQ
+        umls8X5aQlWBQLFuf0JMdBsp+/DDQ8PKGH/iYr8sYw==
+X-Google-Smtp-Source: ABdhPJzY1ZX+lRbLqPgIjbf2RUgpvgYiGJFSxmNxdtke3ygR3XHgb3Bl8QP0hPP88rGdtwlxyPrfVhPYJ5Ab+s8KD80=
+X-Received: by 2002:a2e:7001:: with SMTP id l1mr4759522ljc.200.1616660608748;
+ Thu, 25 Mar 2021 01:23:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210317151928.41544-1-andriy.shevchenko@linux.intel.com> <20210317151928.41544-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210317151928.41544-3-andriy.shevchenko@linux.intel.com>
+References: <77f71974-541e-7e06-d37d-c52b9623ed25@pignat.org>
+ <CACRpkdbfOFCWQsytnf0f2ZvBsvHqQ85nk-aKK-zXpr8F=uJ3UQ@mail.gmail.com>
+ <20170222210420.GA15290@sophia> <b1834c0a-52bb-56a4-5c52-dbf7a5a02dec@pignat.org>
+In-Reply-To: <b1834c0a-52bb-56a4-5c52-dbf7a5a02dec@pignat.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 25 Mar 2021 09:16:40 +0100
-Message-ID: <CACRpkdZNuu9h4aRsV5rSyxbS-4aN0BqbGJ=oYnDLAZT0D+csFA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] gpio: sch: Hook into ACPI GPE handler to catch
- GPIO edge events
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 25 Mar 2021 09:23:17 +0100
+Message-ID: <CACRpkdZpCAGTfmn51rfUO-uhmrZB-nK8Ni_R8=wHiLikEBNsxA@mail.gmail.com>
+Subject: Re: [PATCH,v2 0/1] gpio: add NCT5104D gpio driver
+To:     Marc Pignat <marc@pignat.org>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alexandre Courbot <gnurou@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 17, 2021 at 4:19 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Feb 28, 2017 at 9:14 AM Marc Pignat <marc@pignat.org> wrote:
+> On 02/22/2017 10:04 PM, William Breathitt Gray wrote:
+> > On Wed, Feb 22, 2017 at 03:52:05PM +0100, Linus Walleij wrote:
+> >> On Thu, Feb 9, 2017 at 11:54 AM, Marc Pignat <marc@pignat.org> wrote:
 
-> Neither the ACPI description on Intel Minnowboard (v1) platform provides
-> the required information to establish a generic handling nor the hardware
-> capable of doing it. According to the data sheet the hardware can generate
-> SCI events. Therefore, we need to hook from the driver into GPE handler of
-> the ACPI subsystem in order to catch and report GPIO-related events.
+> >> I'm not thrilled by this "plug-and-play" that seems very far from autodetection.
 >
-> Validated on the Inlel Minnowboard (v1) platform.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Sure ISA driver seems a little more clean, but it seems recent kernel are
+> not compiled with CONFIG_ISA_BUS_API.
 
-Looks good to me:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Has this changed these days so we can get this driver in using
+the proper ISA abstractions?
 
 Yours,
 Linus Walleij
