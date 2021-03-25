@@ -2,86 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02AF0348C85
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 10:16:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDDEC348C9B
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 10:18:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbhCYJPp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Mar 2021 05:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39212 "EHLO
+        id S229548AbhCYJRq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Mar 2021 05:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229839AbhCYJPb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 05:15:31 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CCACC061760
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 02:15:31 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id o10so1431323lfb.9
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 02:15:31 -0700 (PDT)
+        with ESMTP id S229951AbhCYJRV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 05:17:21 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77629C06174A
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 02:17:21 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id 15so2276351ljj.0
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 02:17:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jQSUS0sWefxNSCHEC1KdchHT6ruHmXruWSe0jguDBe4=;
-        b=o57KpS/SVqgB4aa8+prMDX4/0f/sQZGpgBQ8t5UkMLPn5Qn3CNlhP1s7Y7cH4Uk0Yt
-         5+aTgDlMtpj8VahIttojhrrqsMz/i3HQcvat2q+Z9IlJEJlzy4HXE35AMDJMbCm+Fwag
-         qFIWd7dGn1Dkpw/9bBN+AjxUmjgcMmvYPGwu96VWRx3Jk3pOWVzsmR2MflpGxpsR/+zI
-         214Nl9OF95l2M2We75WAIh54bzfBMQE0D8P4KtGSM+lKlRhSnbRTreADGhK5Iq5E6anG
-         Hinv7XgoNn7ofg5sU3fNhh/jDogg7F6goe/WLIVqPG5zG3KvOj4ZK71BAHaib2103KXC
-         sl4Q==
+        bh=xtgWxHl1jBWFbgD+kv6AqSAbbwppmDLPyH8H5SEmUxY=;
+        b=WYB7Cc3r/N8toO5HEXS4WvgZdy7e4DisDnlKJSVDlcwRznNZr3R/C2SKilRf8Rq4gj
+         XHXoF+BOQkpgxnV2TcAs34RQwe1fA8xFgqxIpMXhF1+dsrccNXqaAz7GzmHsHMqSuDy3
+         IXW8OETtw3Ehwes1LhfsJ1pwTAGJMfokwcUPGs2r4AoSlCaNeP7qxiXwSyUZ977FKt14
+         SnqDCSgG3EDkOi51SUY8P3o6l2L4JU9POOt3xCt0GpVmKeJhSjh7XbSP41jy75enhdr0
+         k1oVi8IQoNFyb7OQVJ61YCvuwnuO1P9bmHBFL7i0EbBDWR9UTS/lw7+hy0kdy5U5A8jq
+         TcAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jQSUS0sWefxNSCHEC1KdchHT6ruHmXruWSe0jguDBe4=;
-        b=MCWHv7W30p4fHtbCnm0HsDAw4hlwT8ZNLXuFfcA6gdiU5HnDtuldeUyt9P6i++7lPC
-         aAX7DtMY67qIwwduFLY5ek2JDfeHH5wreCU39anT5ouAU58aghm0BqhV++5Gj+KV1Hn/
-         p16pS3kge5RDmp5WALXu9fRhNwbt6h/5yqXLwJ6DWhB9pT2OQE46TKGrWSSGhOXuJnSI
-         /mqltDPBYCHpPAttyRgas01g5cF6sTt9n8aOclW4Vfgd62ox1uBbWpJT6oh24rnUyfaW
-         nKP9i75+z4bCCnob+pltdTMwfujK7qpOgZmW6YdYW97kzulXvsE9EQVPtGCF1NidmrIJ
-         490w==
-X-Gm-Message-State: AOAM530nFtVPVFRZvOZbAAcC3r0sygmm5u3KjVnbVgaZgE6/VC8JlpvR
-        IsgnHU2FkblPDjpmiL5dqw+CHMXIAe+uEJvW9Kc5Fg==
-X-Google-Smtp-Source: ABdhPJwItH2xIo9/hQ0G/Dsu3MfocBFrbbbYJg+8rqc4pz2dbpv/HCAoF4I48/Ib6niSpMgouHHNNiCfW6MgVKURop4=
-X-Received: by 2002:a19:548:: with SMTP id 69mr4426509lff.465.1616663729558;
- Thu, 25 Mar 2021 02:15:29 -0700 (PDT)
+        bh=xtgWxHl1jBWFbgD+kv6AqSAbbwppmDLPyH8H5SEmUxY=;
+        b=S/xTey9aG/cFo+cAEM7581zuZkWsvYVdAUJ6+8h/l18fgSTP2yQPr5Ynw4gIzlsdLP
+         AxtTT6wYlU1x66cmJnDa5MdjZZE3L27qpgPlwr/CVS0ABSzV1pGE7ZEXrudOcX2y+Ij0
+         rUJXvuL3vYbUTgqMqD8onSb/HRdem7FoE47OPnpu8BPjSfTGnrBvhTaIWwHMfqdbMfvh
+         EfzgIaYk8j4UB4R7FKoL/F3rzqYeOl6I//kSPs6RJene1ZWtoARBy0y1N5n2X2Me+FHy
+         n6jIl1mu0juCTigS24aJpO5jtGZnSd8PrDfQ9SRWKGZFw2/RQPHAC60h/q8QtabPwQpI
+         yr+Q==
+X-Gm-Message-State: AOAM5310UiQOT7J51fIzp3yPkKaH0ewTAGNEys5PVYmW/yiDV5jceuGk
+        3MCpMDD8+j2beH0S5CI1XsYYD8lPHLwNVQs4olpDMOEbfbWYVLHL
+X-Google-Smtp-Source: ABdhPJztjGrwBtJbNrrNxBR/yEEBoi4BB8Tjr78VRoOeWtyAz1JU3+GYgpMwR4+Idq17mB80FNZQyb4r6pcliq6jXLo=
+X-Received: by 2002:a2e:1649:: with SMTP id 9mr5210204ljw.74.1616663840040;
+ Thu, 25 Mar 2021 02:17:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210321033150.15380-1-zhiyong.tao@mediatek.com> <20210321033150.15380-2-zhiyong.tao@mediatek.com>
-In-Reply-To: <20210321033150.15380-2-zhiyong.tao@mediatek.com>
+References: <20210316134059.2377081-1-geert+renesas@glider.be>
+In-Reply-To: <20210316134059.2377081-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 25 Mar 2021 10:15:18 +0100
-Message-ID: <CACRpkdaO8YEBo53uUuUpegjFTwaZbtWtbKTUynAX_55p89Dfvg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: add lock in mtk_rmw function.
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>, srv_heupstream@mediatek.com,
-        hui.liu@mediatek.com, huang eddie <eddie.huang@mediatek.com>,
-        jg_poxu@mediatek.com, Biao Huang <biao.huang@mediatek.com>,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>, seiya.wang@mediatek.com,
-        sj.huang@mediatek.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+Date:   Thu, 25 Mar 2021 10:17:09 +0100
+Message-ID: <CACRpkdZFqQd=g9u907LndbqNMYLnnAN-M5HRotbw5CU0EG0NDg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: PINCTRL_ROCKCHIP should depend on ARCH_ROCKCHIP
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 21, 2021 at 4:32 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+On Tue, Mar 16, 2021 at 2:41 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> When multiple threads operate on the same register resource
-> which include multiple pin, It will make the register resource
-> wrong to control. So we add lock to avoid the case.
+> The Rockchip GPIO and pin control modules are only present on Rockchip
+> SoCs.  Hence add a dependency on ARCH_ROCKCHIP, to prevent asking the
+> user about this driver when configuring a kernel without Rockchip
+> platform support.
 >
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> Note that before, the PINCTRL_ROCKCHIP symbol was not visible, and
+> automatically selected when needed.  By making it tristate and
+> user-selectable, it became visible for everyone.
+>
+> Fixes: be786ac5a6c4bf4e ("pinctrl: rockchip: make driver be tristate module")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Patch applied!
+Patch applied.
+
+I saw this was causing issues on S390.
 
 Yours,
 Linus Walleij
