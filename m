@@ -2,381 +2,213 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E76DD348BB3
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 09:40:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACCFC348BDC
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 09:47:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbhCYIjz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Mar 2021 04:39:55 -0400
-Received: from out28-217.mail.aliyun.com ([115.124.28.217]:45700 "EHLO
-        out28-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbhCYIjj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 04:39:39 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.422888-0.000285545-0.576826;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047188;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.Jq0nLNT_1616661574;
-Received: from 192.168.88.129(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Jq0nLNT_1616661574)
-          by smtp.aliyun-inc.com(10.147.40.26);
-          Thu, 25 Mar 2021 16:39:35 +0800
-Subject: Re: [PATCH v3 09/10] pinctrl: Ingenic: Add pinctrl driver for JZ4775.
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        hns@goldelico.com, paul@boddie.org.uk, andy.shevchenko@gmail.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        sernia.zhou@foxmail.com
-References: <1615975084-68203-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1615975084-68203-10-git-send-email-zhouyanjie@wanyeetech.com>
- <W5VDQQ.VB9HP582KGC7@crapouillou.net>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <7d3f12a8-6e6a-fc1e-d92e-99f3bff1a844@wanyeetech.com>
-Date:   Thu, 25 Mar 2021 16:39:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <W5VDQQ.VB9HP582KGC7@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S229873AbhCYIr1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Mar 2021 04:47:27 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:39193 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229866AbhCYIq4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 04:46:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1616662015;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=yVaihSFmEKkBrt/xp2nkaRY8swI2njLN4ZHUuUyec2E=;
+  b=ApapTdMP1vVNp25E5QYbZEYMAfm648CU8LkxrJQ5FogIl2f+Cv1M9Ee7
+   lM8lpZd9xTq847zXO1PKVDvNCJGlbu1veQUetzES6zYty4e+ycQEJuMQ4
+   U3FXmhv1Ptwpbeqo2ur2MgEJMT18VUvBHbBIr2fqgh0Io1cGW+63AylQ/
+   s=;
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=pass (signature verified) header.i=@citrix.onmicrosoft.com
+IronPort-SDR: B0DCIHX4wm/iYDzV/HeLei4AD0v3qrW068QO0jSjNH8BL+PFxCFbBT1R68pJW6s/tJu6gQYziL
+ CMmU7lqjEm1BNzEGlBYheDFKNdiwTsdXJEKIkeHSpbgMUt3MKzJm6woRUlBIWD0e3fAvISXrl6
+ iO/XKgHYv5VcqB0zlB6gUeXu3NXwgT30cmXvVBdTTYk56P/uB/eLOMVKueo2elSrolg+esut26
+ kG+x6EkNoeI0/gm49hveJt3WBTpS3XRh4m9DpIJPe0FkUre5caaZpJd5oca0sLeLbWvRuQRC8h
+ sCg=
+X-SBRS: 5.2
+X-MesageID: 40102134
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.156.83
+X-Policy: $RELAYED
+IronPort-HdrOrdr: A9a23:nTa9GK87CfnSfeyz1Rhuk+FGcL1zdoIgy1knxilNYDRvWIixi9
+ 2ukPMH1RX9lTYWXzUalcqdPbSbKEmzybdc2qNUGbu5RgHptC+TLI9k5Zb/2DGIIULD38Zn/+
+ Nbf6B6YeedMXFTkdv67A6kE9wp3dmA9+SSif3Dymp2JDsLV4hLxW5Ce2CmO2dxQxRLAod8OZ
+ qH/8xcpyehf3N/VLXHOlAuWe/fq9rX0K/8aRkdCBI9rCWIhzWk6Ln1eiLoois2eTVJ3Lsk7C
+ z5gxX0j5/Tyc2T5z398yvo75pQkMb80dcrPq2xo+UcNzmEsHfMWK1PQLuH1QpFxN2HyFFvq9
+ XUpgdlAsIb0QKvQkiQgT/Anzbtyywv7XiK8y7qvVLGrdbiTDw3T+pt7LgpCifx0EYrsNFi3K
+ 8j5Qvw3PA7fHCw/lWJ2/HyWx5njUayq3Y5+NRj9EB3aocCdKRX6bUW4UI9KuZxIAvB9IslHO
+ NyZfusncp+TFXyVQG/gkBfhPaoXng1Ay6cRFkDtsG/w1Ft7QFE5npd68oFknga8pUhD7FC+u
+ TfK6xt0IpDV8kMcMtGdas8aPryLlaIbQPHMWqUL1iiPKYbO0jVo5qyxLku/umldLEB0ZNaou
+ WPbHpo8UoJP27+A8yH25NGtjrXRn+mYDjrwsZCo7Bkp7zVXtPQQG2+YWFrt/Hlj+QUA8XdVf
+ r2EolRGeXfIWznHpsM9xHiWqNVNWIVXKQuy5cGcmPLhviOBpzht+TdfvqWDqHqCywYVmT2BW
+ ZGcyP0IOlG80C3Sl71iBXcQBrWCw7C1KM1NJKf0/kYyYALOIEJmBMSk06F6saCLiAHkqFeRj
+ o6HJrX1oeA4UWm92fB6GtkfjBHCFxO3bnmW3RW4SsDM0b+d6c/q8ySEFoimEevF1tadYf7AQ
+ Rfr1N49eacNJqL3x0vDNqhLya8g2YMommJC7MRgLeK68ugWp5QNOdpZIVBUSHwUzBlkwdjr2
+ lOLCUeQFXEKz/ogaK5yLoOBO/ecNF4qByxIdFdrE/esUn0n7BtelIrGxqVFeKHiwcnQDRZwn
+ dr9bUEvbaGkTGzbVckjP8AK11KYmSPCLdgBACIDb8k3YzDSUVVdyOnlDaagxY8di7P+18Jjm
+ LsFyGSZMrGG0FQoHxez6bs/m5lb2n1RTMDVllK9alGUUjWsHd61uGGIpC+1GaccXMu6OAQOj
+ OtW0pYHipeg/SMkDKFkjeLEnsrgqg0NuvGFbI5bvX4wXW2MrCFkqkAAt5Z9JtoL8rVr+cOSO
+ 6TEjXlag/QOqcM4UiyqXkkMiUv9yVhvvPsxRH/7G+3mFQ4GuHfJVx6R7cdZ/GQhlKUMMqg4d
+ Fct5YSu+D1D0DaLvih4ovTZyRYKhzSrXWtJttY4ax8jOYXjv9LA5LfUTH0z3lJ0xU1EdfsmC
+ olMdBGyYGEHrUqQtcbdC1Y9Gc4jdijLEMktQrtH+81FGtd+UPzDpes47DSr6AoDVDEjAzsOU
+ OH+yk1xYaOYwKzkZobAbk3O2JYdQwV72lj5vqLc8n1BB+xf+9OuHq8PXnVSs4RdIG1XZERpA
+ 19+deGgqu+cDf5whnZuX9DGZ11mlzXCP+aMUarAu5H89uzJFSKjO+L2aeI/UnKYAr+TV8Zi4
+ 1DfVEXdeJZhFAZ/dQK7hQ=
+X-IronPort-AV: E=Sophos;i="5.81,277,1610427600"; 
+   d="scan'208";a="40102134"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bca2mcanGMyjtolbW8lqvr8hpakZjxlfxJ2qmNrXruNEsXkI/n5suJ5RNVfKLxpah9ewiezl9pKn0wLTvZXse9nu4ucqUfAn5H1Ie9qh/vc3AwFWXAUuJg20g3lk6GGVUx4lzvm2gFp9G5CPYOWYER57FVu+cA5po/JBilVXDXgk/SHwgs5K26BdiZhssluV4Jr8NGHzZ3zOKREwHg/aout/ZIKP4pyH5b5JIKzMLN5qWHOQPChi1YIBYOCgCR350Tl3U/Bx/5gjL+CIjZRLo9qQ0NSTAPKmjLznHkOCjNVDPodCHliCbFloD7ieVqiJd5vsjc0A4A4e398PXhDXVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1pH94whoYKNlTpf6SIE/WeL/oLwmFP7iUQ7oN3PBZKI=;
+ b=SNIgD8WZdxzuP4v8DoNDSgIOat9T7gq64VfeBlauPjDbRm2d/TJYs3/pJ/kXiOXq4EsXSmfGmMomxsolNUkHX9bob0HHfGKxXRYjowYxGGoqOap4ImPNjCBi2PWDupuL5EAhgo2mYTtv9gmoDsI5ywUENQzwyyXwQULCU5V1XBkr8soCn+36AitesX13wBzvQqU8hDKgPNvRX7iWGvxOvPnbhPkKfT30ak5gY1mWobqiQDfl7GN5XOyGvnsWq4WRnPFBQmzIhFtCYaKJHlH5v7MKPeDNUuNCj4G2f00VtQr4rxmTLagDNv4QjJeoIT7T6lL81INk8gatzyWSLn2U7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
+ dkim=pass header.d=citrix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=citrix.onmicrosoft.com; s=selector2-citrix-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1pH94whoYKNlTpf6SIE/WeL/oLwmFP7iUQ7oN3PBZKI=;
+ b=XPJLPJJP5fAruTVqXdB9x1jGSS38YntXBzsSH1ccGJLqNEd8qINnUISdotB1STHzX11F7eOhSVvQIqMSOwmCkeHAJrZJSe/dupXejaSWiu7XjNzwQXNmG74CtdNeSIFEaycGoAc7QNJUgJvZAS4REXp3ozN5wguGF9Rwae8Hp4k=
+Date:   Thu, 25 Mar 2021 09:46:46 +0100
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
+        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH RESEND] intel/pinctrl: check capability offset is between
+ MMIO region
+Message-ID: <YFxN9hlt0FbOVqML@Air-de-Roger>
+References: <20210324123118.58865-1-roger.pau@citrix.com>
+ <YFs3XwOBRGAFyASY@smile.fi.intel.com> <YFtEw7qHQKE/4p8t@Air-de-Roger>
+ <YFtLNLTrR9wTO41W@smile.fi.intel.com> <YFtXNw8ZKkp82EIH@Air-de-Roger>
+ <YFtvaBmnu0GF/7il@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <YFtvaBmnu0GF/7il@smile.fi.intel.com>
+X-ClientProxiedBy: MR2P264CA0095.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:500:32::35) To DS7PR03MB5608.namprd03.prod.outlook.com
+ (2603:10b6:5:2c9::18)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d5db2cb2-4f26-4c63-8015-08d8ef6a88ee
+X-MS-TrafficTypeDiagnostic: DS7PR03MB5445:
+X-Microsoft-Antispam-PRVS: <DS7PR03MB5445196B270269B9840339198F629@DS7PR03MB5445.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EmP9yoJf4qkPCdtsMyFTmQk24KY7KTMKg35EVyMfVidAwKrOdp9CLkhNTaaiZ2qF/8qyoUlkXClYI9k5I9W7GUmYku3Zamim4yQ4bcb7NbHZ/lZ236eiAPwA6EfbZ9fqpm7GZxhPuEdBiCX+b9HWZ8P2VL/sh+JDegUTb26PK/hJXIvACQ7z6TvQgKIHFIYsLSATZJMMM1KHHeD4qDkZxCN42Sc1omQcJD2XS8Uq+edLJhFfs91JQtYRWpws1JoyuO7iU34HswRvEN9h5phpMm3JVAEDVAZIYRja1b0P+q72SsxVdV+VlU5gaXR0Pfb4w31YuwIsiSr2QV2jDJr+w+vB38eiVi6ixN7xlgrwTxNNYuWqatoXOulTDrFPPVZVbh/KiLjEpG7vfyoTOhPZnYNeePRWAfXW11E7N3d3hIjcbWkouf/x4TOGWu587H7m/49AnccssNlrqub7VtKj9Eh/er8XNoLwI4lrBKiNO7etfwzHIu+4rFlTHqYPU63HJNSXdCPVgUPxHADnn3pafjdp34Lpi+TVVftAZw9B+2hBuZcsIycDQyMARxxgFE722HIUkxAIJ2uESZZpLCKBycT/x5IMM+f3SI8feWkFOpS9zUfy8O9BTQwSrUyS1bh4z/UoxdPILYcHP5ZfccJVjN/k/JU6iDmDkehq4G6/sB4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR03MB5608.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(4636009)(136003)(396003)(376002)(366004)(346002)(39860400002)(6496006)(66946007)(85182001)(16526019)(26005)(4326008)(186003)(33716001)(38100700001)(2906002)(6486002)(8936002)(66556008)(66476007)(316002)(6666004)(5660300002)(86362001)(8676002)(83380400001)(9686003)(6916009)(54906003)(478600001)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?aUJ1UGR1d1ZIM3hDSmhtTDdpWVpTaWR1U001VEVTVnRGQXpiUlJOZVc5SzRV?=
+ =?utf-8?B?ZC9LYXVnaEpPeTFtc0U5eit2c05EOXc4TklNQjlRdUlDTVVpb25ZK2xNYVBk?=
+ =?utf-8?B?Y1g0dGpPK0ZiNVNUbUp6YmVYd3VkTjhCdndoRTAvcmFzaTV3cml3MEkvZDNB?=
+ =?utf-8?B?eW5tOTNEV21RTWQ3a0xzSHF0TVRtOWZEdmdwNjZWNHFsNDgxTXNWaFZVb3o1?=
+ =?utf-8?B?NW5nanZETWRIWXYxMHUrSjNNU1VrWTZpVWN3T0daaVFaMGljMm11ZTRTcXFO?=
+ =?utf-8?B?QjBvUUFydWJYcDJ6T011WXYrdWY1Y0FUV1M5ZzY0TXhQek9scjlBWE9hak1s?=
+ =?utf-8?B?Z2RkNnFzOExiWnRwcEQ1U3cvOEtRd3E5U0RGWHlkcHB6QUpiaVY0MWQrb0xp?=
+ =?utf-8?B?bHdaMmszM04rdEd6Z0NPU254MU83V1A5SHVPdHNQd00zM3Z5VndSVnorV1Qy?=
+ =?utf-8?B?dy9kR0hJcEMwcEVTQm1hT3NGSklwSzVHTUVTRHcxWmV2RUZyNDZGbm9ZdC80?=
+ =?utf-8?B?ZXVMNm5FMGUrdDFTOEEya052OXlja2RrUmxmMnVqYjFaR1VGbkIyeHpKanhV?=
+ =?utf-8?B?L0daa25GMWpOWU5kQ2Z2YnFCVkNzL3pNT0VvTHBqRUp0RDhidEw3Y1NTeWI3?=
+ =?utf-8?B?MnBTYmphRG1nNndOaTl6WHp3M2I5S2UrSUdtTU55VGVBN3E2aXRnbGdESXBq?=
+ =?utf-8?B?QlFramZEblhtalpma3F3U3JQUHFMOTNiSm15UXdGSDREWVo5NGdlMHZvNDNH?=
+ =?utf-8?B?S0tPZjRyTlcyZjZ5bmYwdzRydHZYaXBUcWJIbHhZU0VUVUM1S1dzdWhGWWdh?=
+ =?utf-8?B?QmNkVTZ2Q3AxV3hCMStubWpwT3F1blQvRUZRNTlobTk1RmtYSjNSNG03anpC?=
+ =?utf-8?B?RnNIZ2JYSTBkV1l4ZDdJK2t6ODYwdVNIUjJSQ3JJaE01Q2s1Q0REQ2hSb0k1?=
+ =?utf-8?B?OHpNRU9zQUdua1FFZkJML3ZwaDh2TndRZkVvQVFnWFNhVmcwb3dSaHBrcngx?=
+ =?utf-8?B?S1NhYS9TSXBJRnkvMFM1RnI2N0FQMVpxY0lXOHdFanBnWStqOXljVElrWWo2?=
+ =?utf-8?B?dHRHRlYyNDVBUXlZT09VSEpEM3FmY0lIYURLMHBnaUdpMkl0ejdkbEhWSWpX?=
+ =?utf-8?B?QU13NjNRUHoxb0FiVHkyYnZ5NGVnSEpnYlhIOFB6V0RHSDYzK2ZGYnZBZ1Iy?=
+ =?utf-8?B?NTM4Wk00ZVdXT1dhZTEzcVVtZXZMenFwNkxRS1Q2NjVWQ0dxQmtTMXBHODhx?=
+ =?utf-8?B?KzZnbE02MGMwc05WQ3NWa3pLbFluTmN6N3BVeURaaVdKVWlGRUhQTkNNQm5E?=
+ =?utf-8?B?aEI1YzB2RmlvSkVXV0NUN2NVeUJCWmN1WVhOY0tXZkdzQWVWdC9VSG51NHZs?=
+ =?utf-8?B?QUVXMFdPQU9hTlQ0RnRscHRCUjZsYVVNTFFqZGthaDBXbHdkbWlsbVVrcm5U?=
+ =?utf-8?B?OWVWRjdEU3Baa3l0eHNOeTVnSHhQdDdYdkhiL2N2MzFlUDY4STl4RGsvRlhq?=
+ =?utf-8?B?Uy9vQnd5SUh3OGRlQXdVbEc0VncxR0M0OVZVRkJGSnEvNm5sTU9GaXZpZ3Ix?=
+ =?utf-8?B?OS9kN043WHBqWnFWa0dSUnplcTZxd1hvOTBSTlJCNTlJNW5DVTZnN3RoMkx2?=
+ =?utf-8?B?S2xOWVN5aU9lblRnMFVCVEY3dlJ6S0oxU3RLMlRBdG1vYlBxUDZMam9LU1dG?=
+ =?utf-8?B?Mlp2eVFCMEtBNlFoZUxDN0N1Wng4Rm9SdmN5K29neUU4VGl0V1ZjM0RpeVoy?=
+ =?utf-8?B?THRaMmUyUWhQUnlFUmtvWSsyc0pTUVdRanVTV1I0TGVlSHpXeWFLeDB2ZllV?=
+ =?utf-8?B?Rk5TOU9GeW9FcDlLT21LQT09?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5db2cb2-4f26-4c63-8015-08d8ef6a88ee
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR03MB5608.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2021 08:46:51.7740
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KqEslvq9wy190VfcF8f39BROYygq1F0IVXTkcLcZcYVYjDJA8TSEu2kDGRyC6nB8F19FljOqOgUabTFAAJ0reQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR03MB5445
+X-OriginatorOrg: citrix.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Mar 24, 2021 at 06:57:12PM +0200, Andy Shevchenko wrote:
+> On Wed, Mar 24, 2021 at 04:13:59PM +0100, Roger Pau Monné wrote:
+> > On Wed, Mar 24, 2021 at 04:22:44PM +0200, Andy Shevchenko wrote:
+> > > On Wed, Mar 24, 2021 at 02:55:15PM +0100, Roger Pau Monné wrote:
+> > > > On Wed, Mar 24, 2021 at 02:58:07PM +0200, Andy Shevchenko wrote:
+> > > > > On Wed, Mar 24, 2021 at 01:31:18PM +0100, Roger Pau Monne wrote:
+> > > > > Moreover, it seems you are bailing out and basically denying driver to load.
+> > > > > This does look that capability is simply the first register that blows the setup.
+> > > > > I think you have to fix something into Xen to avoid loading these drivers or
+> > > > > check with something like pci_device_is_present() approach.
+> > > > 
+> > > > Is there a backing PCI device BAR for those MMIO regions that the
+> > > > pinctrl driver is trying to access? AFAICT those regions are only
+> > > > reported in the ACPI DSDT table on the _CRS method of the object (at
+> > > > least on my system).
+> > > 
+> > > Unfortunately it does not expose PCI configuration space.
+> > 
+> > Are those regions supposed to be marked as reserved in the memory map,
+> > or that's left to the discretion of the hardware vendor?
+> 
+> I didn't get. The OS doesn't see them and an internal backbone simply drops any
+> IO access to that region.
 
-On 2021/3/23 上午2:25, Paul Cercueil wrote:
->
->
-> Le mer. 17 mars 2021 à 17:58, 周琰杰 (Zhou Yanjie) 
-> <zhouyanjie@wanyeetech.com> a écrit :
->> Add support for probing the pinctrl-ingenic driver on the
->> JZ4775 SoC from Ingenic.
->>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> ---
->>
->> Notes:
->>     v3:
->>     New patch.
->>
->>  drivers/pinctrl/pinctrl-ingenic.c | 259 
->> ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 259 insertions(+)
->>
->> diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
->> b/drivers/pinctrl/pinctrl-ingenic.c
->> index d8b37fa..eb4912d 100644
->> --- a/drivers/pinctrl/pinctrl-ingenic.c
->> +++ b/drivers/pinctrl/pinctrl-ingenic.c
->> @@ -89,6 +89,7 @@ enum jz_version {
->>      ID_JZ4755,
->>      ID_JZ4760,
->>      ID_JZ4770,
->> +    ID_JZ4775,
->>      ID_JZ4780,
->>      ID_X1000,
->>      ID_X1500,
->> @@ -1237,6 +1238,259 @@ static const struct ingenic_chip_info 
->> jz4770_chip_info = {
->>      .pull_downs = jz4770_pull_downs,
->>  };
->>
->> +static const u32 jz4775_pull_ups[7] = {
->> +    0x28ff00ff, 0xf030f3fc, 0x0fffffff, 0xfffe4000, 0xf0f0000c, 
->> 0x0000f00f, 0x0000f3c0,
->> +};
->> +
->> +static const u32 jz4775_pull_downs[7] = {
->> +    0x00000000, 0x00030c03, 0x00000000, 0x00008000, 0x00000403, 
->> 0x00000ff0, 0x00030c00,
->> +};
->> +
->> +static int jz4775_uart0_data_pins[] = { 0xa0, 0xa3, };
->> +static int jz4775_uart0_hwflow_pins[] = { 0xa1, 0xa2, };
->> +static int jz4775_uart1_data_pins[] = { 0x7a, 0x7c, };
->> +static int jz4775_uart1_hwflow_pins[] = { 0x7b, 0x7d, };
->> +static int jz4775_uart2_data_c_pins[] = { 0x54, 0x4a, };
->> +static int jz4775_uart2_data_f_pins[] = { 0xa5, 0xa4, };
->> +static int jz4775_uart3_data_pins[] = { 0x1e, 0x1f, };
->> +static int jz4775_ssi_dt_a_pins[] = { 0x13, };
->> +static int jz4775_ssi_dt_d_pins[] = { 0x75, };
->> +static int jz4775_ssi_dr_a_pins[] = { 0x14, };
->> +static int jz4775_ssi_dr_d_pins[] = { 0x74, };
->> +static int jz4775_ssi_clk_a_pins[] = { 0x12, };
->> +static int jz4775_ssi_clk_d_pins[] = { 0x78, };
->> +static int jz4775_ssi_gpc_pins[] = { 0x76, };
->> +static int jz4775_ssi_ce0_a_pins[] = { 0x17, };
->> +static int jz4775_ssi_ce0_d_pins[] = { 0x79, };
->> +static int jz4775_ssi_ce1_pins[] = { 0x77, };
->> +static int jz4775_mmc0_1bit_a_pins[] = { 0x12, 0x13, 0x14, };
->> +static int jz4775_mmc0_4bit_a_pins[] = { 0x15, 0x16, 0x17, };
->> +static int jz4775_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, };
->> +static int jz4775_mmc0_1bit_e_pins[] = { 0x9c, 0x9d, 0x94, };
->> +static int jz4775_mmc0_4bit_e_pins[] = { 0x95, 0x96, 0x97, };
->> +static int jz4775_mmc1_1bit_d_pins[] = { 0x78, 0x79, 0x74, };
->> +static int jz4775_mmc1_4bit_d_pins[] = { 0x75, 0x76, 0x77, };
->> +static int jz4775_mmc1_1bit_e_pins[] = { 0x9c, 0x9d, 0x94, };
->> +static int jz4775_mmc1_4bit_e_pins[] = { 0x95, 0x96, 0x97, };
->> +static int jz4775_mmc2_1bit_b_pins[] = { 0x3c, 0x3d, 0x34, };
->> +static int jz4775_mmc2_4bit_b_pins[] = { 0x35, 0x3e, 0x3f, };
->> +static int jz4775_mmc2_1bit_e_pins[] = { 0x9c, 0x9d, 0x94, };
->> +static int jz4775_mmc2_4bit_e_pins[] = { 0x95, 0x96, 0x97, };
->> +static int jz4775_nemc_8bit_data_pins[] = {
->> +    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
->> +};
->> +static int jz4775_nemc_16bit_data_pins[] = {
->> +    0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1,
->> +};
->> +static int jz4775_nemc_cle_ale_pins[] = { 0x20, 0x21, };
->> +static int jz4775_nemc_addr_pins[] = { 0x22, 0x23, 0x24, 0x25, };
->> +static int jz4775_nemc_rd_we_pins[] = { 0x10, 0x11, };
->> +static int jz4775_nemc_frd_fwe_pins[] = { 0x12, 0x13, };
->> +static int jz4775_nemc_wait_pins[] = { 0x1b, };
->> +static int jz4775_nemc_cs1_pins[] = { 0x15, };
->> +static int jz4775_nemc_cs2_pins[] = { 0x16, };
->> +static int jz4775_nemc_cs3_pins[] = { 0x17, };
->> +static int jz4775_i2c0_pins[] = { 0x7e, 0x7f, };
->> +static int jz4775_i2c1_pins[] = { 0x9e, 0x9f, };
->> +static int jz4775_i2c2_pins[] = { 0x80, 0x83, };
->> +static int jz4775_i2s_data_tx_pins[] = { 0xa3, };
->> +static int jz4775_i2s_data_rx_pins[] = { 0xa2, };
->> +static int jz4775_i2s_clk_txrx_pins[] = { 0xa0, 0xa1, };
->> +static int jz4775_i2s_sysclk_pins[] = { 0x83, };
->> +static int jz4775_cim_pins[] = {
->> +    0x26, 0x27, 0x28, 0x29,
->> +    0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31,
->> +};
->> +static int jz4775_lcd_24bit_pins[] = {
->> +    0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47,
->> +    0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
->> +    0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57,
->> +    0x58, 0x59, 0x5a, 0x5b,
->> +};
->> +static int jz4775_pwm_pwm0_pins[] = { 0x80, };
->> +static int jz4775_pwm_pwm1_pins[] = { 0x81, };
->> +static int jz4775_pwm_pwm2_pins[] = { 0x82, };
->> +static int jz4775_pwm_pwm3_pins[] = { 0x83, };
->> +static int jz4775_mac_rmii_pins[] = {
->> +    0xa9, 0xab, 0xaa, 0xac, 0xa5, 0xa4, 0xad, 0xae, 0xa6, 0xa8,
->> +};
->> +static int jz4775_mac_mii_pins[] = {
->> +    0x7b, 0x7a, 0x7d, 0x7c, 0xa7, 0x24, 0xaf,
->> +};
->> +static int jz4775_mac_rgmii_pins[] = {
->> +    0xa9, 0x7b, 0x7a, 0xab, 0xaa, 0xac, 0x7d, 0x7c, 0xa5, 0xa4,
->> +    0xad, 0xae, 0xa7, 0xa6,
->> +};
->> +static int jz4775_mac_gmii_pins[] = {
->> +    0x31, 0x30, 0x2f, 0x2e, 0x2d, 0x2c, 0x2b, 0x2a,
->> +    0xa8, 0x28, 0x24, 0xaf,
->> +};
->> +static int jz4775_otg_pins[] = { 0x8a, };
->> +
->> +static u8 jz4775_uart3_data_funcs[] = { 0, 1, };
->> +static u8 jz4775_mac_mii_funcs[] = { 1, 1, 1, 1, 0, 1, 0, };
->> +static u8 jz4775_mac_rgmii_funcs[] = {
->> +    0, 1, 1, 0, 0, 0, 1, 1, 0, 0,
->> +    0, 0, 0, 0,
->> +};
->> +static u8 jz4775_mac_gmii_funcs[] = {
->> +    1, 1, 1, 1, 1, 1, 1, 1,
->> +    0, 1, 1, 0,
->> +};
->> +
->> +static const struct group_desc jz4775_groups[] = {
->> +    INGENIC_PIN_GROUP("uart0-data", jz4775_uart0_data, 0),
->> +    INGENIC_PIN_GROUP("uart0-hwflow", jz4775_uart0_hwflow, 0),
->> +    INGENIC_PIN_GROUP("uart1-data", jz4775_uart1_data, 0),
->> +    INGENIC_PIN_GROUP("uart1-hwflow", jz4775_uart1_hwflow, 0),
->> +    INGENIC_PIN_GROUP("uart2-data-c", jz4775_uart2_data_c, 2),
->> +    INGENIC_PIN_GROUP("uart2-data-f", jz4775_uart2_data_f, 1),
->> +    INGENIC_PIN_GROUP_FUNCS("uart3-data", jz4775_uart3_data,
->> +                jz4775_uart3_data_funcs),
->> +    INGENIC_PIN_GROUP("ssi-dt-a", jz4775_ssi_dt_a, 2),
->> +    INGENIC_PIN_GROUP("ssi-dt-d", jz4775_ssi_dt_d, 1),
->> +    INGENIC_PIN_GROUP("ssi-dr-a", jz4775_ssi_dr_a, 2),
->> +    INGENIC_PIN_GROUP("ssi-dr-d", jz4775_ssi_dr_d, 1),
->> +    INGENIC_PIN_GROUP("ssi-clk-a", jz4775_ssi_clk_a, 2),
->> +    INGENIC_PIN_GROUP("ssi-clk-d", jz4775_ssi_clk_d, 1),
->> +    INGENIC_PIN_GROUP("ssi-gpc", jz4775_ssi_gpc, 1),
->> +    INGENIC_PIN_GROUP("ssi-ce0-a", jz4775_ssi_ce0_a, 2),
->> +    INGENIC_PIN_GROUP("ssi-ce0-d", jz4775_ssi_ce0_d, 1),
->> +    INGENIC_PIN_GROUP("ssi-ce1", jz4775_ssi_ce1, 1),
->> +    INGENIC_PIN_GROUP("mmc0-1bit-a", jz4775_mmc0_1bit_a, 1),
->> +    INGENIC_PIN_GROUP("mmc0-4bit-a", jz4775_mmc0_4bit_a, 1),
->> +    INGENIC_PIN_GROUP("mmc0-8bit-a", jz4775_mmc0_8bit_a, 1),
->> +    INGENIC_PIN_GROUP("mmc0-1bit-e", jz4775_mmc0_1bit_e, 0),
->> +    INGENIC_PIN_GROUP("mmc0-4bit-e", jz4775_mmc0_4bit_e, 0),
->> +    INGENIC_PIN_GROUP("mmc1-1bit-d", jz4775_mmc1_1bit_d, 0),
->> +    INGENIC_PIN_GROUP("mmc1-4bit-d", jz4775_mmc1_4bit_d, 0),
->> +    INGENIC_PIN_GROUP("mmc1-1bit-e", jz4775_mmc1_1bit_e, 1),
->> +    INGENIC_PIN_GROUP("mmc1-4bit-e", jz4775_mmc1_4bit_e, 1),
->> +    INGENIC_PIN_GROUP("mmc2-1bit-b", jz4775_mmc2_1bit_b, 0),
->> +    INGENIC_PIN_GROUP("mmc2-4bit-b", jz4775_mmc2_4bit_b, 0),
->> +    INGENIC_PIN_GROUP("mmc2-1bit-e", jz4775_mmc2_1bit_e, 2),
->> +    INGENIC_PIN_GROUP("mmc2-4bit-e", jz4775_mmc2_4bit_e, 2),
->> +    INGENIC_PIN_GROUP("nemc-8bit-data", jz4775_nemc_8bit_data, 0),
->> +    INGENIC_PIN_GROUP("nemc-16bit-data", jz4775_nemc_16bit_data, 1),
->> +    INGENIC_PIN_GROUP("nemc-cle-ale", jz4775_nemc_cle_ale, 0),
->> +    INGENIC_PIN_GROUP("nemc-addr", jz4775_nemc_addr, 0),
->> +    INGENIC_PIN_GROUP("nemc-rd-we", jz4775_nemc_rd_we, 0),
->> +    INGENIC_PIN_GROUP("nemc-frd-fwe", jz4775_nemc_frd_fwe, 0),
->> +    INGENIC_PIN_GROUP("nemc-wait", jz4775_nemc_wait, 0),
->> +    INGENIC_PIN_GROUP("nemc-cs1", jz4775_nemc_cs1, 0),
->> +    INGENIC_PIN_GROUP("nemc-cs2", jz4775_nemc_cs2, 0),
->> +    INGENIC_PIN_GROUP("nemc-cs3", jz4775_nemc_cs3, 0),
->> +    INGENIC_PIN_GROUP("i2c0-data", jz4775_i2c0, 0),
->> +    INGENIC_PIN_GROUP("i2c1-data", jz4775_i2c1, 0),
->> +    INGENIC_PIN_GROUP("i2c2-data", jz4775_i2c2, 1),
->> +    INGENIC_PIN_GROUP("i2s-data-tx", jz4775_i2s_data_tx, 1),
->> +    INGENIC_PIN_GROUP("i2s-data-rx", jz4775_i2s_data_rx, 1),
->> +    INGENIC_PIN_GROUP("i2s-clk-txrx", jz4775_i2s_clk_txrx, 1),
->> +    INGENIC_PIN_GROUP("i2s-sysclk", jz4775_i2s_sysclk, 2),
->> +    INGENIC_PIN_GROUP("cim-data", jz4775_cim, 0),
->> +    INGENIC_PIN_GROUP("lcd-24bit", jz4775_lcd_24bit, 0),
->
-> Same comments as the previous patch.
+I'm not sure I understand the above reply. My question was whether the
+MMIO regions used by the pinctrl device (as fetched from the ACPI DSDT
+table) are supposed belong to regions marked as RESERVED in the
+firmware memory map (ie: either the e820 or the EFI one).
 
+> > > > Doing something like pci_device_is_present would require a register
+> > > > that we know will never return ~0 unless the device is not present. As
+> > > > said above, maybe we could use REVID to that end?
+> > > 
+> > > Yes, that's good, see above.
+> > > 
+> > > WRT capabilities, if we crash we will see the report immediately on the
+> > > hardware which has such an issue. (It's quite unlikely we will ever have one,
+> > > that's why I consider it's not critical)
+> > 
+> > I would rather prefer to not crash, because I think the kernel should
+> > only resort to crashing when there's no alternative, and here it's
+> > perfectly fine to just print an error message and don't load the
+> > driver.
+> 
+> Are we speaking about real hardware that has an issue? I eagerly want to know
+> what is that beast.
 
-Sure.
+OK, I'm not going to resend this anymore. I'm happy with just getting
+the first patch in.
 
+I think you trust the hardware more that I would do, and I also think
+the check added here is very minimal an unintrusive and serves as a
+way to sanitize the data fetched from the hardware in order to prevent
+a kernel page fault if such data turns out to be wrong.
 
->
->> +    { "lcd-no-pins", },
->
-> And here too.
->
-> Cheers,
-> -Paul
->
->> +    INGENIC_PIN_GROUP("pwm0", jz4775_pwm_pwm0, 0),
->> +    INGENIC_PIN_GROUP("pwm1", jz4775_pwm_pwm1, 0),
->> +    INGENIC_PIN_GROUP("pwm2", jz4775_pwm_pwm2, 0),
->> +    INGENIC_PIN_GROUP("pwm3", jz4775_pwm_pwm3, 0),
->> +    INGENIC_PIN_GROUP("mac-rmii", jz4775_mac_rmii, 0),
->> +    INGENIC_PIN_GROUP_FUNCS("mac-mii", jz4775_mac_mii,
->> +                jz4775_mac_mii_funcs),
->> +    INGENIC_PIN_GROUP_FUNCS("mac-rgmii", jz4775_mac_rgmii,
->> +                jz4775_mac_rgmii_funcs),
->> +    INGENIC_PIN_GROUP_FUNCS("mac-gmii", jz4775_mac_gmii,
->> +                jz4775_mac_gmii_funcs),
->> +    INGENIC_PIN_GROUP("otg-vbus", jz4775_otg, 0),
->> +};
->> +
->> +static const char *jz4775_uart0_groups[] = { "uart0-data", 
->> "uart0-hwflow", };
->> +static const char *jz4775_uart1_groups[] = { "uart1-data", 
->> "uart1-hwflow", };
->> +static const char *jz4775_uart2_groups[] = { "uart2-data-c", 
->> "uart2-data-f", };
->> +static const char *jz4775_uart3_groups[] = { "uart3-data", };
->> +static const char *jz4775_ssi_groups[] = {
->> +    "ssi-dt-a", "ssi-dt-d",
->> +    "ssi-dr-a", "ssi-dr-d",
->> +    "ssi-clk-a", "ssi-clk-d",
->> +    "ssi-gpc",
->> +    "ssi-ce0-a", "ssi-ce0-d",
->> +    "ssi-ce1",
->> +};
->> +static const char *jz4775_mmc0_groups[] = {
->> +    "mmc0-1bit-a", "mmc0-4bit-a", "mmc0-8bit-a",
->> +    "mmc0-1bit-e", "mmc0-4bit-e",
->> +};
->> +static const char *jz4775_mmc1_groups[] = {
->> +    "mmc1-1bit-d", "mmc1-4bit-d",
->> +    "mmc1-1bit-e", "mmc1-4bit-e",
->> +};
->> +static const char *jz4775_mmc2_groups[] = {
->> +    "mmc2-1bit-b", "mmc2-4bit-b",
->> +    "mmc2-1bit-e", "mmc2-4bit-e",
->> +};
->> +static const char *jz4775_nemc_groups[] = {
->> +    "nemc-8bit-data", "nemc-16bit-data", "nemc-cle-ale",
->> +    "nemc-addr", "nemc-rd-we", "nemc-frd-fwe", "nemc-wait",
->> +};
->> +static const char *jz4775_cs1_groups[] = { "nemc-cs1", };
->> +static const char *jz4775_cs2_groups[] = { "nemc-cs2", };
->> +static const char *jz4775_cs3_groups[] = { "nemc-cs3", };
->> +static const char *jz4775_i2c0_groups[] = { "i2c0-data", };
->> +static const char *jz4775_i2c1_groups[] = { "i2c1-data", };
->> +static const char *jz4775_i2c2_groups[] = { "i2c2-data", };
->> +static const char *jz4775_i2s_groups[] = {
->> +    "i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
->> +};
->> +static const char *jz4775_cim_groups[] = { "cim-data", };
->> +static const char *jz4775_lcd_groups[] = { "lcd-24bit", 
->> "lcd-no-pins", };
->> +static const char *jz4775_pwm0_groups[] = { "pwm0", };
->> +static const char *jz4775_pwm1_groups[] = { "pwm1", };
->> +static const char *jz4775_pwm2_groups[] = { "pwm2", };
->> +static const char *jz4775_pwm3_groups[] = { "pwm3", };
->> +static const char *jz4775_mac_groups[] = {
->> +    "mac-rmii", "mac-mii", "mac-rgmii", "mac-gmii",
->> +};
->> +static const char *jz4775_otg_groups[] = { "otg-vbus", };
->> +
->> +static const struct function_desc jz4775_functions[] = {
->> +    { "uart0", jz4775_uart0_groups, ARRAY_SIZE(jz4775_uart0_groups), },
->> +    { "uart1", jz4775_uart1_groups, ARRAY_SIZE(jz4775_uart1_groups), },
->> +    { "uart2", jz4775_uart2_groups, ARRAY_SIZE(jz4775_uart2_groups), },
->> +    { "uart3", jz4775_uart3_groups, ARRAY_SIZE(jz4775_uart3_groups), },
->> +    { "ssi", jz4775_ssi_groups, ARRAY_SIZE(jz4775_ssi_groups), },
->> +    { "mmc0", jz4775_mmc0_groups, ARRAY_SIZE(jz4775_mmc0_groups), },
->> +    { "mmc1", jz4775_mmc1_groups, ARRAY_SIZE(jz4775_mmc1_groups), },
->> +    { "mmc2", jz4775_mmc2_groups, ARRAY_SIZE(jz4775_mmc2_groups), },
->> +    { "nemc", jz4775_nemc_groups, ARRAY_SIZE(jz4775_nemc_groups), },
->> +    { "nemc-cs1", jz4775_cs1_groups, ARRAY_SIZE(jz4775_cs1_groups), },
->> +    { "nemc-cs2", jz4775_cs2_groups, ARRAY_SIZE(jz4775_cs2_groups), },
->> +    { "nemc-cs3", jz4775_cs3_groups, ARRAY_SIZE(jz4775_cs3_groups), },
->> +    { "i2c0", jz4775_i2c0_groups, ARRAY_SIZE(jz4775_i2c0_groups), },
->> +    { "i2c1", jz4775_i2c1_groups, ARRAY_SIZE(jz4775_i2c1_groups), },
->> +    { "i2c2", jz4775_i2c2_groups, ARRAY_SIZE(jz4775_i2c2_groups), },
->> +    { "i2s", jz4775_i2s_groups, ARRAY_SIZE(jz4775_i2s_groups), },
->> +    { "cim", jz4775_cim_groups, ARRAY_SIZE(jz4775_cim_groups), },
->> +    { "lcd", jz4775_lcd_groups, ARRAY_SIZE(jz4775_lcd_groups), },
->> +    { "pwm0", jz4775_pwm0_groups, ARRAY_SIZE(jz4775_pwm0_groups), },
->> +    { "pwm1", jz4775_pwm1_groups, ARRAY_SIZE(jz4775_pwm1_groups), },
->> +    { "pwm2", jz4775_pwm2_groups, ARRAY_SIZE(jz4775_pwm2_groups), },
->> +    { "pwm3", jz4775_pwm3_groups, ARRAY_SIZE(jz4775_pwm3_groups), },
->> +    { "mac", jz4775_mac_groups, ARRAY_SIZE(jz4775_mac_groups), },
->> +    { "otg", jz4775_otg_groups, ARRAY_SIZE(jz4775_otg_groups), },
->> +};
->> +
->> +static const struct ingenic_chip_info jz4775_chip_info = {
->> +    .num_chips = 7,
->> +    .reg_offset = 0x100,
->> +    .version = ID_JZ4775,
->> +    .groups = jz4775_groups,
->> +    .num_groups = ARRAY_SIZE(jz4775_groups),
->> +    .functions = jz4775_functions,
->> +    .num_functions = ARRAY_SIZE(jz4775_functions),
->> +    .pull_ups = jz4775_pull_ups,
->> +    .pull_downs = jz4775_pull_downs,
->> +};
->> +
->>  static const u32 jz4780_pull_ups[6] = {
->>      0x3fffffff, 0xfff0f3fc, 0x0fffffff, 0xffff4fff, 0xfffffb7c, 
->> 0x7fa7f00f,
->>  };
->> @@ -2775,6 +3029,7 @@ static const struct of_device_id 
->> ingenic_gpio_of_match[] __initconst = {
->>      { .compatible = "ingenic,jz4755-gpio", },
->>      { .compatible = "ingenic,jz4760-gpio", },
->>      { .compatible = "ingenic,jz4770-gpio", },
->> +    { .compatible = "ingenic,jz4775-gpio", },
->>      { .compatible = "ingenic,jz4780-gpio", },
->>      { .compatible = "ingenic,x1000-gpio", },
->>      { .compatible = "ingenic,x1830-gpio", },
->> @@ -2997,6 +3252,10 @@ static const struct of_device_id 
->> ingenic_pinctrl_of_match[] = {
->>          .data = IF_ENABLED(CONFIG_MACH_JZ4770, &jz4770_chip_info)
->>      },
->>      {
->> +        .compatible = "ingenic,jz4775-pinctrl",
->> +        .data = IF_ENABLED(CONFIG_MACH_JZ4775, &jz4775_chip_info)
->> +    },
->> +    {
->>          .compatible = "ingenic,jz4780-pinctrl",
->>          .data = IF_ENABLED(CONFIG_MACH_JZ4780, &jz4780_chip_info)
->>      },
->> -- 
->> 2.7.4
->>
->
+Taking a reactive approach of requiring a broken piece of hardware to
+exist in order to sanitize a fetched value seems too risky. I could
+add a WARN_ON or similar if you want some kind of splat that's very
+noticeable when this goes wrong but that doesn't end up in a fatal
+kernel page fault.
+
+Thanks, Roger.
