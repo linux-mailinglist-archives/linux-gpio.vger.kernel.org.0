@@ -2,249 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF11D3491F1
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 13:30:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82E26349279
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Mar 2021 13:55:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230155AbhCYM3f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Mar 2021 08:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230204AbhCYM3Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 08:29:24 -0400
-Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE5AC06174A
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 05:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-         s=20161220; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=To/IbCmae+7r3GZ+mwza5PKigW3IoMiD3wBa9D4YBzY=; b=blHc6JqEFKfNjefr9PYdzFC9oP
-        y4cJxCyPPgH61q/9OllneSNc8W7P9Y0YZ0UwbPDOu61moLK+8kr6GvOj6C20vScjNosWRF4/KSLkt
-        qUY72JIVA9ZfnM6+BKy3UtNbGQaeLSJ6+QUns7vd3PehjXnUB2OQj4DJZcuW1n+bfMlj1Gjyyok1y
-        Qugehexv+btevveu9Jbao9V0q4GxfuQP4Sq6mrTZi8cuZLs+tF1r2mrfZbE/HYZ7KSDpA36BOFGjw
-        kSRuZIiKPn/oxebAMU+Zun9pOemuyNwgmKdAIkaHNUbjnTFddP+W5W1j0gCIcKzWC1kn1Ya48IEgI
-        KcudNzxA==;
-Received: from 97-173-191-90.dyn.estpak.ee ([90.191.173.97] helo=ubuntu)
-        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <sandberg@mailfence.com>)
-        id 1lPP73-00036j-Fa; Thu, 25 Mar 2021 14:29:22 +0200
-Received: by ubuntu (sSMTP sendmail emulation); Thu, 25 Mar 2021 14:29:20 +0200
-From:   Mauri Sandberg <sandberg@mailfence.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     andy.shevchenko@gmail.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, geert+renesas@glider.be,
-        Mauri Sandberg <sandberg@mailfence.com>
-Subject: [RFC gpio/for-next 2/2] gpio: gpio-mux-input: add generic gpio input multiplexer
-Date:   Thu, 25 Mar 2021 14:28:32 +0200
-Message-Id: <20210325122832.119147-3-sandberg@mailfence.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210325122832.119147-1-sandberg@mailfence.com>
-References: <20210325122832.119147-1-sandberg@mailfence.com>
+        id S230182AbhCYMyd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Mar 2021 08:54:33 -0400
+Received: from mga17.intel.com ([192.55.52.151]:32934 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230377AbhCYMyR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 25 Mar 2021 08:54:17 -0400
+IronPort-SDR: Sx7xwz8KGMAlYuDKOd+DCtUxEW6VtALRBJ24th0Absde/zChsQzCRTIEknvtrjK31Qz0uWQ4PO
+ teDr40wZrytQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9933"; a="170899352"
+X-IronPort-AV: E=Sophos;i="5.81,277,1610438400"; 
+   d="scan'208";a="170899352"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2021 05:54:17 -0700
+IronPort-SDR: 0UZcZSDDN+4EZ6NdZE6wdeQVxlVSZPThBvSUsY1Z0jpTq41Ef7NW/naabCdg2U6qVoUzWm2rBJ
+ jJr85sXM+nUA==
+X-IronPort-AV: E=Sophos;i="5.81,277,1610438400"; 
+   d="scan'208";a="375057264"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2021 05:54:15 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lPPV6-00G2tJ-5t; Thu, 25 Mar 2021 14:54:12 +0200
+Date:   Thu, 25 Mar 2021 14:54:12 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Roger Pau Monne <roger.pau@citrix.com>
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3] intel/pinctrl: check REVID register value for device
+ presence
+Message-ID: <YFyH9Fk5d+289/f/@smile.fi.intel.com>
+References: <20210325090947.73729-1-roger.pau@citrix.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 90.191.173.97
-X-SA-Exim-Mail-From: sandberg@mailfence.com
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+In-Reply-To: <20210325090947.73729-1-roger.pau@citrix.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Suppport for a general GPIO multiplexer. To drive the multiplexer a
-mux-controller is needed. The output pin of the multiplexer is a GPIO
-pin.
+On Thu, Mar 25, 2021 at 10:09:47AM +0100, Roger Pau Monne wrote:
+> Use the value read from the REVID register in order to check for the
+> presence of the device. A read of all ones is treated as if the device
+> is not present, and hence probing is ended.
+> 
+> This fixes an issue when running as a Xen PVH dom0, where the ACPI
+> DSDT table is provided unmodified to dom0 and hence contains the
+> pinctrl devices, but the MMIO region(s) containing the device
+> registers might not be mapped in the guest physical memory map if such
+> region(s) are not exposed on a PCI device BAR or marked as reserved in
+> the host memory map.
 
-Signed-off-by: Mauri Sandberg <sandberg@mailfence.com>
----
- drivers/gpio/Kconfig          |  11 +++
- drivers/gpio/Makefile         |   1 +
- drivers/gpio/gpio-mux-input.c | 143 ++++++++++++++++++++++++++++++++++
- 3 files changed, 155 insertions(+)
- create mode 100644 drivers/gpio/gpio-mux-input.c
+Applied for fixes, thanks!
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c70f46e80a3b..41062d8f7d93 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1641,4 +1641,15 @@ config GPIO_MOCKUP
- 
- endmenu
- 
-+comment "Other GPIO expanders"
-+
-+config GPIO_MUX_INPUT
-+	tristate "General GPIO input multiplexer"
-+	select MULTIPLEXER
-+	select MUX_GPIO
-+	depends on OF_GPIO
-+	help
-+	  Say yes here to enable support for generic GPIO input multiplexer. This
-+	  needs a multiplexer controller to drive the select pins.
-+
- endif
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 35e3b6026665..00f7576ce23f 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -105,6 +105,7 @@ obj-$(CONFIG_GPIO_MPC8XXX)		+= gpio-mpc8xxx.o
- obj-$(CONFIG_GPIO_MSC313)		+= gpio-msc313.o
- obj-$(CONFIG_GPIO_MSIC)			+= gpio-msic.o
- obj-$(CONFIG_GPIO_MT7621)		+= gpio-mt7621.o
-+obj-$(CONFIG_GPIO_MUX_INPUT)		+= gpio-mux-input.o
- obj-$(CONFIG_GPIO_MVEBU)		+= gpio-mvebu.o
- obj-$(CONFIG_GPIO_MXC)			+= gpio-mxc.o
- obj-$(CONFIG_GPIO_MXS)			+= gpio-mxs.o
-diff --git a/drivers/gpio/gpio-mux-input.c b/drivers/gpio/gpio-mux-input.c
-new file mode 100644
-index 000000000000..ec0c7acbab2f
---- /dev/null
-+++ b/drivers/gpio/gpio-mux-input.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *  A generic GPIO input multiplexer driver
-+ *
-+ *  Copyright (C) 2021 Mauri Sandberg <sandberg@mailfence.com>
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/mux/consumer.h>
-+
-+struct gpio_mux_input {
-+	struct device		*parent;
-+	struct gpio_chip	gpio_chip;
-+	struct mux_control	*mux_control;
-+	struct gpio_desc	*mux_pin;
-+};
-+
-+static struct gpio_mux_input *gpio_to_mux(struct gpio_chip *gc)
-+{
-+	return container_of(gc, struct gpio_mux_input, gpio_chip);
-+}
-+
-+static int gpio_mux_input_direction_input(struct gpio_chip *gc,
-+				       unsigned int offset)
-+{
-+	return 0;
-+}
-+
-+static int gpio_mux_input_direction_output(struct gpio_chip *gc,
-+					unsigned int offset, int val)
-+{
-+	return -EINVAL;
-+}
-+
-+static int gpio_mux_input_get_value(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct gpio_mux_input *mux;
-+	int ret;
-+
-+	mux = gpio_to_mux(gc);
-+	ret = mux_control_select(mux->mux_control, offset);
-+	if (ret)
-+		return ret;
-+
-+	ret = gpiod_get_value(mux->mux_pin);
-+	mux_control_deselect(mux->mux_control);
-+	return ret;
-+}
-+
-+static void gpio_mux_input_set_value(struct gpio_chip *gc,
-+				  unsigned int offset, int val)
-+{
-+	/* not supported */
-+}
-+
-+static int gpio_mux_input_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct gpio_mux_input *mux;
-+	struct gpio_chip *gc;
-+	struct mux_control *mc;
-+	struct gpio_desc *pin;
-+	int err;
-+
-+	mux = kzalloc(sizeof(struct gpio_mux_input), GFP_KERNEL);
-+	if (mux == NULL)
-+		return -ENOMEM;
-+
-+	mc = mux_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(mc)) {
-+		err = (int) PTR_ERR(mc);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "unable to get mux-control: %d\n",
-+				err);
-+		goto err_free_mux;
-+	}
-+
-+	mux->mux_control = mc;
-+	pin = gpiod_get(&pdev->dev, "pin",  GPIOD_IN);
-+	if (IS_ERR(pin)) {
-+		err = (int) PTR_ERR(pin);
-+		dev_err(&pdev->dev, "unable to claim pin GPIOs: %d\n", err);
-+		goto err_free_mc;
-+	}
-+
-+	mux->mux_pin = pin;
-+	mux->parent = &pdev->dev;
-+
-+	gc = &mux->gpio_chip;
-+	gc->direction_input  = gpio_mux_input_direction_input;
-+	gc->direction_output = gpio_mux_input_direction_output;
-+	gc->get = gpio_mux_input_get_value;
-+	gc->set = gpio_mux_input_set_value;
-+	gc->can_sleep = 1;
-+
-+	gc->base = -1;
-+	gc->ngpio = mux_control_states(mc);
-+	gc->label = dev_name(mux->parent);
-+	gc->parent = mux->parent;
-+	gc->owner = THIS_MODULE;
-+	gc->of_node = np;
-+
-+	err = gpiochip_add(&mux->gpio_chip);
-+	if (err) {
-+		dev_err(&pdev->dev, "unable to add gpio chip, err=%d\n", err);
-+		goto err_free_pin;
-+	}
-+
-+	platform_set_drvdata(pdev, mux);
-+	return 0;
-+
-+err_free_pin:
-+	gpiod_put(pin);
-+err_free_mc:
-+	mux_control_put(mc);
-+err_free_mux:
-+	kfree(mux);
-+	return err;
-+}
-+
-+static const struct of_device_id gpio_mux_input_id[] = {
-+	{
-+		.compatible = "gpio-mux-input",
-+		.data = NULL,
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_mux_input_id);
-+
-+static struct platform_driver gpio_mux_input_driver = {
-+	.driver	= {
-+		.name		= "gpio-mux-input",
-+		.owner		= THIS_MODULE,
-+		.of_match_table = gpio_mux_input_id,
-+	},
-+	.probe	= gpio_mux_input_probe,
-+};
-+module_platform_driver(gpio_mux_input_driver);
+> 91d898e51e60 ('pinctrl: intel: Convert capability list to features')
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> ---
+> Changes since v2:
+>  - Return ENODEV.
+>  - Adjust code comment.
+> 
+> Changes since v1:
+>  - New in this version.
+> ---
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> ---
+>  drivers/pinctrl/intel/pinctrl-intel.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index 8085782cd8f9..9fc5bba514ea 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -1491,8 +1491,13 @@ static int intel_pinctrl_probe(struct platform_device *pdev,
+>  		if (IS_ERR(regs))
+>  			return PTR_ERR(regs);
+>  
+> -		/* Determine community features based on the revision */
+> +		/*
+> +		 * Determine community features based on the revision.
+> +		 * A value of all ones means the device is not present.
+> +		 */
+>  		value = readl(regs + REVID);
+> +		if (value == ~0u)
+> +			return -ENODEV;
+>  		if (((value & REVID_MASK) >> REVID_SHIFT) >= 0x94) {
+>  			community->features |= PINCTRL_FEATURE_DEBOUNCE;
+>  			community->features |= PINCTRL_FEATURE_1K_PD;
+> -- 
+> 2.30.1
+> 
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
