@@ -2,187 +2,230 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC94C34AD51
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 18:28:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47DAC34ADED
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 18:52:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbhCZR1t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Mar 2021 13:27:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33904 "EHLO
+        id S230236AbhCZRwN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Mar 2021 13:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230252AbhCZR1q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Mar 2021 13:27:46 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658BBC0613B2
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Mar 2021 10:27:45 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id a7so9590748ejs.3
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Mar 2021 10:27:45 -0700 (PDT)
+        with ESMTP id S230204AbhCZRwC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Mar 2021 13:52:02 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1564C0613AA;
+        Fri, 26 Mar 2021 10:52:01 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id kr3-20020a17090b4903b02900c096fc01deso2820777pjb.4;
+        Fri, 26 Mar 2021 10:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1JrvGVjvnU4OleZHvZNBHn3IUwN+tQcLM7GpfSmRkZk=;
-        b=cwpkHyQrULLTxS7hyIyPePeFi/FNtWZ3wrU8DFAd6e74G1o94qmH7Z5PjWR8yr5z1r
-         sgpyKyCURNT2pAZYYtT4o1xIv830XPuXSi07uQQ+jqPykxJW/tfNNu1GDRVqbAXCl4Hz
-         nBRpS61VfXySqkW2Bx1fZJC4qhxNH9f04jCpVCDUd1Brf9Ko4JlEUr1S5u+1WhMo9n/Z
-         GkzwtQ0CYVWe4DfIsGLtfv6b+/ocnK8JELWYGPm57NUUs4U0GaouCUQWF/T81DrMcXuq
-         Z6tLBq2cU/VsK4UcPMjLnxwxXN++4BJ+LINlfni/VXPu6o1YOZnpxfeGHVfUjnDUYY1l
-         hhRQ==
+        bh=0cdEld9Fs/fX6vTf9NEn8mSkHQmLdx/ookPyltaK1vM=;
+        b=s+qm+ByPyucHOa7HZmw5TU47A2OBjmkfqRE3NOS87xn8aiJjFmz63qeVE5cvWbEelO
+         xubtJpthF4mWwPp5JoFHca5IjTPxWmA8Gt/O5MnEpUhihrIzL60voLjxKSBRfS6iTrDk
+         4aq79D9fvq9MYA2+MlzdgJg56FqOXYPqPCsAxXHn9+sxyOWjk5rawXE9r897qX2rQBfl
+         eLjAND67lz2TywMWvNnPRA+RV8J2QU2hhbpE6EfvgNyN8j7QPfSwOagQhyNyPyEVshec
+         QfYKOqPFaQCQkTxRq2q/EPJisCuYIE+oigmKX6GxHYRMnAPjbFZsSiuo3GQCplt2xFQx
+         0f4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1JrvGVjvnU4OleZHvZNBHn3IUwN+tQcLM7GpfSmRkZk=;
-        b=S9k9iEShHpop9sb2clROtdSR3EZMy8JwgWkMY9MldrOVfHts/82kJpe2ywmm5sZPnW
-         R6r5xZE+yzh7PpA1aS8j7AGbfL7pBwUkN/wU+XqQwJ+jOsH7gyxBJEel0OXJbIB0Wwcf
-         APMTvVJawpKx8BC6jMeO88f4TVHxsYZ+SKeZ+qpRJoEuayzoJIbi5GkDQsxKwyBdjU/q
-         Xtnoq1TknI/Y2dIrbT6HhIxta3UXBSP21N4lG8wRgQ0rkbr2edjAZwPOIjvvzMEocks0
-         1CCKQWRfoR81+b/yK/Eow6HTLQAoc4gGjux5pFlX7MsHT3JE45PWmqZmei3Z2k2E/5lC
-         t65A==
-X-Gm-Message-State: AOAM5307Cjyw2/IA9yve+Mc5cCvcQ6ThgMPqF1LxFH3iwSxmOjFVz8ig
-        ihsDiXDaKR1PhNRr0yPEcgjeCO6YG8DjDtSiABPKhw==
-X-Google-Smtp-Source: ABdhPJwkzOGb6kE59IAEyH6N7nsGGo1eTapaAq2lAelIByUXV1mPNIRkTEVwayCCs+LsYnVuKETqP2Nuv9zd7ozrBwM=
-X-Received: by 2002:a17:906:c0c8:: with SMTP id bn8mr16475296ejb.445.1616779663961;
- Fri, 26 Mar 2021 10:27:43 -0700 (PDT)
+        bh=0cdEld9Fs/fX6vTf9NEn8mSkHQmLdx/ookPyltaK1vM=;
+        b=TcdPwmQX+czNC/URGVDnpRxWBoyWjoYi5ZvJ+o/HjFtOCphXs/Cr9WXD9Mlj3JY6Lt
+         92Z9ENx83xOurbvB7BDp8pxNMPwOCCsSxDYcGhh2bfZRIQoFDehBKy1oqgVmeHlfUdQ0
+         BbVJXhJCDDqvlZ3/mSRzK20lI12BCdZt+J0EhoSrQ9FA/U0A8WtFdJdsCaMm+n/tTt2B
+         Mmo7Lg0pMs3khkHnvzD1jPLboojvRLC4lJ87SKio7jOaY8bLU3u0HgBug13zFBAcwGuH
+         CsGMTT/rsdD6ichRQhYvAxvrJ8v/vHgPBtqhzzMfWRxrxVO7aaqUOBKDl+niI8eP30yy
+         xq2A==
+X-Gm-Message-State: AOAM530BOpJWuwsDK9Wo80EmuJdlC/OIAj2ZKJHNBIjV7JFZCwu7Uf8l
+        494ysjGhj0mUv+tONtbxAnMylaix8GwXGFZsg2s=
+X-Google-Smtp-Source: ABdhPJzzLWlQqFwoFzaa6TACjnbhWYMSrEbU3ydQunvU0I+lg8vTEcgn7/os+rXvJPJgPh8hGrXsoAhRWf3D0yLHXKg=
+X-Received: by 2002:a17:902:ee02:b029:e6:5397:d79c with SMTP id
+ z2-20020a170902ee02b02900e65397d79cmr16408696plb.21.1616781121242; Fri, 26
+ Mar 2021 10:52:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1615038553.git.syednwaris@gmail.com> <4c259d34b5943bf384fd3cb0d98eccf798a34f0f.1615038553.git.syednwaris@gmail.com>
- <36db7be3-73b6-c822-02e8-13e3864b0463@xilinx.com>
-In-Reply-To: <36db7be3-73b6-c822-02e8-13e3864b0463@xilinx.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 26 Mar 2021 18:27:33 +0100
-Message-ID: <CAMpxmJUv0iU0Ntmks1f6ThDAG6x_eJLYYCaDSjy+1Syedzc5dQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] gpio: xilinx: Utilize generic bitmap_get_value and _set_value
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robert Richter <rrichter@marvell.com>,
+References: <cover.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
+ <b2164e5965218f270e17bf29e00ad5c5a0b54bcf.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAHp75VdxRkX15Ts+L1UJdXbpoaTu3Ue6o9o=Yh2cRCXCEi1jwA@mail.gmail.com> <8853471c798ce3dbbbd939c05a58fa5ce40be605.camel@fi.rohmeurope.com>
+In-Reply-To: <8853471c798ce3dbbbd939c05a58fa5ce40be605.camel@fi.rohmeurope.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 26 Mar 2021 19:51:45 +0200
+Message-ID: <CAHp75VcXoTpKmT9qW61Ua=1KcN7GU_QeJU6ciFPGOetB0hQ3ZQ@mail.gmail.com>
+Subject: Re: [PATCH v4 09/16] gpio: support ROHM BD71815 GPOs
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        Srinivas Goud <srinivas.goud@xilinx.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 8, 2021 at 8:13 AM Michal Simek <michal.simek@xilinx.com> wrote:
->
->
->
-> On 3/6/21 3:06 PM, Syed Nayyar Waris wrote:
-> > This patch reimplements the xgpio_set_multiple() function in
-> > drivers/gpio/gpio-xilinx.c to use the new generic functions:
-> > bitmap_get_value() and bitmap_set_value(). The code is now simpler
-> > to read and understand. Moreover, instead of looping for each bit
-> > in xgpio_set_multiple() function, now we can check each channel at
-> > a time and save cycles.
-> >
-> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Cc: Michal Simek <michal.simek@xilinx.com>
-> > Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-> > Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> > ---
-> >  drivers/gpio/gpio-xilinx.c | 63 +++++++++++++++++++-------------------
-> >  1 file changed, 32 insertions(+), 31 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> > index be539381fd82..8445e69cf37b 100644
-> > --- a/drivers/gpio/gpio-xilinx.c
-> > +++ b/drivers/gpio/gpio-xilinx.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/of_device.h>
-> >  #include <linux/of_platform.h>
-> >  #include <linux/slab.h>
-> > +#include "gpiolib.h"
-> >
-> >  /* Register Offset Definitions */
-> >  #define XGPIO_DATA_OFFSET   (0x0)    /* Data register  */
-> > @@ -141,37 +142,37 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
-> >  {
-> >       unsigned long flags;
-> >       struct xgpio_instance *chip = gpiochip_get_data(gc);
-> > -     int index = xgpio_index(chip, 0);
-> > -     int offset, i;
-> > -
-> > -     spin_lock_irqsave(&chip->gpio_lock[index], flags);
-> > -
-> > -     /* Write to GPIO signals */
-> > -     for (i = 0; i < gc->ngpio; i++) {
-> > -             if (*mask == 0)
-> > -                     break;
-> > -             /* Once finished with an index write it out to the register */
-> > -             if (index !=  xgpio_index(chip, i)) {
-> > -                     xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
-> > -                                    index * XGPIO_CHANNEL_OFFSET,
-> > -                                    chip->gpio_state[index]);
-> > -                     spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-> > -                     index =  xgpio_index(chip, i);
-> > -                     spin_lock_irqsave(&chip->gpio_lock[index], flags);
-> > -             }
-> > -             if (__test_and_clear_bit(i, mask)) {
-> > -                     offset =  xgpio_offset(chip, i);
-> > -                     if (test_bit(i, bits))
-> > -                             chip->gpio_state[index] |= BIT(offset);
-> > -                     else
-> > -                             chip->gpio_state[index] &= ~BIT(offset);
-> > -             }
-> > -     }
-> > -
-> > -     xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
-> > -                    index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
-> > -
-> > -     spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-> > +     u32 *const state = chip->gpio_state;
-> > +     unsigned int *const width = chip->gpio_width;
-> > +
-> > +     DECLARE_BITMAP(old, 64);
-> > +     DECLARE_BITMAP(new, 64);
-> > +     DECLARE_BITMAP(changed, 64);
-> > +
-> > +     spin_lock_irqsave(&chip->gpio_lock[0], flags);
-> > +     spin_lock(&chip->gpio_lock[1]);
-> > +
-> > +     bitmap_set_value(old, 64, state[0], width[0], 0);
-> > +     bitmap_set_value(old, 64, state[1], width[1], width[0]);
-> > +     bitmap_replace(new, old, bits, mask, gc->ngpio);
-> > +
-> > +     bitmap_set_value(old, 64, state[0], 32, 0);
-> > +     bitmap_set_value(old, 64, state[1], 32, 32);
-> > +     state[0] = bitmap_get_value(new, 0, width[0]);
-> > +     state[1] = bitmap_get_value(new, width[0], width[1]);
-> > +     bitmap_set_value(new, 64, state[0], 32, 0);
-> > +     bitmap_set_value(new, 64, state[1], 32, 32);
-> > +     bitmap_xor(changed, old, new, 64);
-> > +
-> > +     if (((u32 *)changed)[0])
-> > +             xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,
-> > +                             state[0]);
-> > +     if (((u32 *)changed)[1])
-> > +             xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
-> > +                             XGPIO_CHANNEL_OFFSET, state[1]);
-> > +
-> > +     spin_unlock(&chip->gpio_lock[1]);
-> > +     spin_unlock_irqrestore(&chip->gpio_lock[0], flags);
-> >  }
-> >
-> >  /**
-> >
->
-> Srinivas N: Can you please test this code?
->
-> Thanks,
-> Michal
+On Fri, Mar 26, 2021 at 3:33 PM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+> On Fri, 2021-03-26 at 13:26 +0200, Andy Shevchenko wrote:
+> > On Wed, Mar 24, 2021 at 12:20 PM Matti Vaittinen
+> > <matti.vaittinen@fi.rohmeurope.com> wrote:
 
-Hey, any chance of getting that Tested-by?
+...
 
-Bart
+> > > +       return (val >> offset) & 1;
+> >
+> > !!(val & BIT(offset)) can also work and be in alignment with the
+> > below code.
+>
+> This is an opinion, but to me !!(val & BIT(offset)) looks more
+> confusing. I don't see the benefit from the change.
+
+I always try to find a compromise between two: your own style and
+common practice used in the subsystem in question. AFAIR my proposal
+is (recommended?) style for new code.
+
+...
+
+> > > +       if (!bd71815->e5_pin_is_gpo && offset)
+> > > +               return;
+> >
+> > I wonder if you can use valid_mask instead of this.
+>
+> Do you mean re-naming the e5_pin_is_gpo to valid_mask? Or do you mean
+> some GPIO framework internal feature allowing to define valid pins? (If
+> my memory serves me right one can set invalid pins from DT - but by
+> default all pins are valid and here we want to invalidate a pin by
+> default). For renaming I don't see the value - if internal feature can
+> be used then there may be value. Thanks for the pointer, I'll look what
+> I find.
+
+I mean to utilize internal valid_mask bitmap. Yes, you may fill it as
+valid at the start of the driver and then simply call __clear_bit() /
+clear_bit() against one you wanted to disable. Then core will take
+care of the rest (AFAIR).
+
+...
+
+> > > +       bit = BIT(offset);
+> >
+> > Can be moved to the definition block.
+>
+> I don't like doing the assignment before we check if the operation is
+> valid. And, making assignments which are not plain constants in
+> declaration make reading the declaration much harder.
+
+OK.
+
+...
+
+> > > +       default:
+> > > +               break;
+> > > +       }
+> > > +       return -EOPNOTSUPP;
+> >
+> > You may return directly from default.
+>
+> I think there used to be compilers which didn't like having the return
+> inside a block - even if the block was a default. I also prefer seeing
+> return at the end of function which should return a value.
+
+I prefer less LOCs in the file when it makes sense. And here you seem
+appealing to compilers from last century.
+
+...
+
+> > > +       int ret;
+> > > +       struct bd71815_gpio *g;
+> > > +       struct device *dev;
+> > > +       struct device *parent;
+> >
+> > Reversed xmas tree order.
+>
+> What is the added value here? I understand alphabetical sorting - it
+> helps looking if particular entry is included. I also understand type-
+> based sorting. But reverse Xmas tree? I thin I have heard it eases
+> reading declarations - which is questionable in this case. Double so
+> when you also suggest moving assignments to declaration block which
+> makes it _much_ harder to read? I won't change this unless it is
+> mandated by the maintainers.
+
+Compare to:
+
+       struct bd71815_gpio *g;
+       struct device *parent;
+       struct device *dev;
+       int ret;
+
+It's easier to read, esp. taking into account that ret is going last.
+It seems to me more natural, so we have a disagreement here, but I'm
+not a maintainer, it's up to them.
+
+...
+
+> > > +       parent = dev->parent;
+>
+> It is not always obvious (especially for someone not reading MFD driver
+> code frequently) why we use parent device for some things and the
+> device being probed to some other stuff. Typically this is not needed
+> if the device is not MFD sub-device. And again, the comments in the
+> middle of declaration block look confusing to me. I think removing
+> comments and moving these to declaration make readability _much_ worse.
+
+I disagree with you here again. To me it's like completely unneeded churn.
+
+...
+
+> > > +       g->e5_pin_is_gpo = of_property_read_bool(parent->of_node,
+> > > +                                                "rohm,enable-
+> > > hidden-gpo");
+> >
+> > You may use device_property_read_bool().
+>
+> Out of the curiosity - is there any other reason but ACPI?
+
+We might have another property provider (by the fact we already have
+the third one, but it's a specific one, called software nodes).
+
+>  ACPI support
+> can be added later if needed.
+
+Yes, but doing something OF centric which might have been used on
+non-OF platforms is to do double effort and waste time and resources.
+
+> I still think you're correct. This is
+> definitely one of the points that fall in the category of things "I
+> must consider as a good practice for (my) new contribution". So I try
+> to keep this in mind in the future.
+
+...
+
+> > > +       g->chip.of_node = parent->of_node;
+> >
+> > Redundant. GPIO library does it for you and even better.
+>
+> So I can nowadays just omit this? Thanks!
+
+For a long time. I haven't checked the date when it started like this,
+but couple of years sounds like a good approximation.
+
+...
+
+> > > +MODULE_DEVICE_TABLE(platform, bd7181x_gpo_id);
+> >
+> > Why do you need this ID table exactly?
+> > You have the same name as in the platform driver structure below.
+>
+> This driver was also supporting another IC (BD71817) - but as far as I
+> know the BD71817 is no longer used too much so I dropped it. The ID
+> table was left with this one entry only. I will see if this is any more
+> needed. Thanks.
+
+Yes, but in that case you have to have driver data to differentiate
+the chips, right? Otherwise for platform drivers this makes a little
+sense b/c it effectively repeats .name from gpo_bd71815_driver.
+
+-- 
+With Best Regards,
+Andy Shevchenko
