@@ -2,75 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56F6D349F0F
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 02:50:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C400334A217
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 07:43:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbhCZBt6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Mar 2021 21:49:58 -0400
-Received: from mail-io1-f41.google.com ([209.85.166.41]:40643 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230311AbhCZBt4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Mar 2021 21:49:56 -0400
-Received: by mail-io1-f41.google.com with SMTP id n21so3888346ioa.7;
-        Thu, 25 Mar 2021 18:49:56 -0700 (PDT)
+        id S230317AbhCZGma (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Mar 2021 02:42:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230444AbhCZGmI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Mar 2021 02:42:08 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA7BC0613AA
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 23:42:07 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id h3so4196800pfr.12
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Mar 2021 23:42:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CiZdufWmsX43zn76kK4I0LUgTAWtJ0UEvoLTWSFDpmM=;
+        b=NU1kY/edz0gOiDswVwgfK35qxSFz7IzVTMj8UGXOrbVB/CxdrS86+DbWc8E3mnZNms
+         G34QuPs17zYi2XMNJL42CF1p4Tm4Lq214OfgofUDkh+i7ptZ1lRbt93f0z5+BRPa97EL
+         tYOMBmJ95fENxqjtLyAVjQe8iKJ4J2Zp1J0Qd8tGYlq0Gd9webw9oItM4PohTr3EudcJ
+         XuaOkiiuBTyva6BNtExVPMKD1BkiCpFq84eX+j1Csf93i0Ofq4qSGCHc5Wf/c1e2SmIB
+         m5fv9InBGyZpqZoqB8aoiK4gp8XWcRaBEuaEq8S6JKaRoWsdz70N2BCln5kx1KlgFPkx
+         FnOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=N9Te2GQTu4UomMNR5C1yrVqQ8Ms/2vbp9BYJ7j0G8SY=;
-        b=Xk2/sUavNcmDqB0E6AhW/FpBZniUmqgfMwBP/tXDVJRImh9eC3YlAvZZBR/XwMi7Vr
-         q7xhqlfKyWVxYvq6UXXIxA6Xfk3NVbwV+oqnhFKdWnFrfBxE+o/v/Jsav1SUG9sswL5k
-         7GTugXdPuztsD5Tuh7ZNhsAbYNM/vKgQqumk/v8u/FnWIu+YYShdhMXzsjYO7QZG4SzU
-         O/2DCznYwIYmS0Mw0hq/fyezP8T/dh+TWjd5Z42nb5SQRjnJKks5VJQstG/v5miF6ml0
-         nD0e3j0kxY2PyyVPBWJhW+1wG2/pdunvBQzzeOASJ9UwGwOPIBtBIAq+0RD8sg6kXrA9
-         2CLA==
-X-Gm-Message-State: AOAM5304DO5lZaKdAseKojS/jpIEtmuqPj8dAh4rVGKctr+XthDdepMF
-        GFEMYwSnbpgvIN0jiKxIfA==
-X-Google-Smtp-Source: ABdhPJzoTwDGhGHQRCjyGQmKg+KE2sK/7QlyDCM2mrD6AWIkiUxBHRzesApHsW7lgBo9JGVADjnmEg==
-X-Received: by 2002:a6b:ea04:: with SMTP id m4mr8486022ioc.160.1616723396206;
-        Thu, 25 Mar 2021 18:49:56 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id g8sm3140676ile.44.2021.03.25.18.49.53
+        bh=CiZdufWmsX43zn76kK4I0LUgTAWtJ0UEvoLTWSFDpmM=;
+        b=T40m25wSaVR+0PppXnxtOT/SZc/zC1NWVAaSvenkWdc8wpJB5LRY6XCBkr35AXoTCB
+         Cm/mu4wKN7Z2QW6kehTR3JVdqSwDfu/55ClRzF5QHS3ViapwwJlPyD5wfcVVT+gH61fh
+         2CvAO8COobgTRNMaeXOZqLMb3crpm1/nMhqm2pzIR3s1Hzr6+2Vd5M+kW48Ti5a5GrjR
+         Ccp0wjfVN+xMjTUPOui8l2McgTIHBM8TLkOYk/yLVJ5430RP6+lU3N2sP7IG7f3ADtrc
+         F2gQRBV0K+TnfMniTllsFYi/IFtikJjb3IeeC8hGloKsbdvbAZMEeouGeIKh+18IClgh
+         ZAkw==
+X-Gm-Message-State: AOAM5329cG2Efo7c/Gf11pfaWW6hlIfnt4pxPNSsMumsto8tSwvRC8fy
+        k71TkUZaYwoLaRX/jnVIyZY=
+X-Google-Smtp-Source: ABdhPJyuhVNjJAXKj69qJyoYZEvTtFXHog59l1V9+Sr6ZyfDufZhcUZjviNearfIWWhGb3WP15a0sg==
+X-Received: by 2002:a63:cc05:: with SMTP id x5mr10522971pgf.254.1616740927195;
+        Thu, 25 Mar 2021 23:42:07 -0700 (PDT)
+Received: from shinobu ([156.146.35.76])
+        by smtp.gmail.com with ESMTPSA id gz4sm7206388pjb.0.2021.03.25.23.42.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Mar 2021 18:49:55 -0700 (PDT)
-Received: (nullmailer pid 2160116 invoked by uid 1000);
-        Fri, 26 Mar 2021 01:49:47 -0000
-Date:   Thu, 25 Mar 2021 19:49:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-gpio@vger.kernel.org, joel@jms.id.au,
-        openbmc@lists.ozlabs.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        avifishman70@gmail.com, lee.jones@linaro.org,
-        ryan_chen@aspeedtech.com, devicetree@vger.kernel.org,
-        tali.perry1@gmail.com, robh+dt@kernel.org, venture@google.com,
-        benjaminfair@google.com, linux-aspeed@lists.ozlabs.org,
-        minyard@acm.org, openipmi-developer@lists.sourceforge.net,
-        chiawei_wang@aspeedtech.com, tmaimon77@gmail.com
-Subject: Re: [PATCH v2 18/21] dt-bindings: ipmi: Add optional SerIRQ property
- to ASPEED KCS devices
-Message-ID: <20210326014947.GA2160061@robh.at.kernel.org>
-References: <20210319062752.145730-1-andrew@aj.id.au>
- <20210319062752.145730-18-andrew@aj.id.au>
+        Thu, 25 Mar 2021 23:42:06 -0700 (PDT)
+Date:   Fri, 26 Mar 2021 15:42:01 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marc Pignat <marc@pignat.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Alexandre Courbot <gnurou@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH,v2 0/1] gpio: add NCT5104D gpio driver
+Message-ID: <YF2COe1ye2xk0GOG@shinobu>
+References: <77f71974-541e-7e06-d37d-c52b9623ed25@pignat.org>
+ <CACRpkdbfOFCWQsytnf0f2ZvBsvHqQ85nk-aKK-zXpr8F=uJ3UQ@mail.gmail.com>
+ <20170222210420.GA15290@sophia>
+ <b1834c0a-52bb-56a4-5c52-dbf7a5a02dec@pignat.org>
+ <CACRpkdZpCAGTfmn51rfUO-uhmrZB-nK8Ni_R8=wHiLikEBNsxA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3EiaT/+c6V9Q6NBq"
 Content-Disposition: inline
-In-Reply-To: <20210319062752.145730-18-andrew@aj.id.au>
+In-Reply-To: <CACRpkdZpCAGTfmn51rfUO-uhmrZB-nK8Ni_R8=wHiLikEBNsxA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 19 Mar 2021 16:57:49 +1030, Andrew Jeffery wrote:
-> Allocating IO and IRQ resources to LPC devices is in-theory an operation
-> for the host, however ASPEED don't appear to expose this capability
-> outside the BMC (e.g. SuperIO). Instead, we are left with BMC-internal
-> registers for managing these resources, so introduce a devicetree
-> property for KCS devices to describe SerIRQ properties.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  .../bindings/ipmi/aspeed,ast2400-kcs-bmc.yaml      | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--3EiaT/+c6V9Q6NBq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 25, 2021 at 09:23:17AM +0100, Linus Walleij wrote:
+> On Tue, Feb 28, 2017 at 9:14 AM Marc Pignat <marc@pignat.org> wrote:
+> > On 02/22/2017 10:04 PM, William Breathitt Gray wrote:
+> > > On Wed, Feb 22, 2017 at 03:52:05PM +0100, Linus Walleij wrote:
+> > >> On Thu, Feb 9, 2017 at 11:54 AM, Marc Pignat <marc@pignat.org> wrote:
+>=20
+> > >> I'm not thrilled by this "plug-and-play" that seems very far from au=
+todetection.
+> >
+> > Sure ISA driver seems a little more clean, but it seems recent kernel a=
+re
+> > not compiled with CONFIG_ISA_BUS_API.
+>=20
+> Has this changed these days so we can get this driver in using
+> the proper ISA abstractions?
+>=20
+> Yours,
+> Linus Walleij
+
+It's been some years so I don't quite remember how we had things back
+then, but at least nowadays we typically have a "select ISA_BUS_API"
+line for the driver's Kconfig block. I suspect this is no longer an
+issue then because CONFIG_ISA_BUS_API will be compiled along with the
+drivers that select it.
+
+William Breathitt Gray
+
+--3EiaT/+c6V9Q6NBq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAmBdgiYACgkQhvpINdm7
+VJIY4BAA6h0bI2fblhbHCYEUJkokxLzw8aNxmO6ntpsSdoEPyGbYQJGxjSm7j8yn
+Oq+RoJ2P5KPVxOplzgbHoHEVLBntGAj06Z2wnoszL5/E8U5h3zsQYxz3xZXN8kRJ
+huu6TZMGUMbvANJ7CYbGUhoNKXznVu/5YE+/th5wivoYAAxYnlE/OuUKB5kzXOKF
+0WVjODuT5tSuAPisrvOA+PN2Xjj5/UnaX+Pghel+4MKnLFwFjE6Rk9OF95uKqeDa
+TWSTw+b0Ldlp3bLSR/wuSVxnW9/I7VcdHirFvy7u11OsJt4W93dmGDhRktGxqBMo
+ZzXR+CZoqUbwnvquGQgg0Cj4kehadjtJUn+Di3+ehX4oOYc08PeX1TXcOw6h1QS2
+1bQesWXrGbmZcpWHqKRpBN/kmF/si3Y/uW4DqHpI0VeWFU8erSbSqKIdBzzvQi3h
+w4ud/kZqbZcbi5/TnYehOlouEBUy+uTmKt/z6r7UtJdk9OYn6u+pcUbYLfkM6MO5
+Koikmrn2lswWMJ/lP84AgmMRAqWH1WRMZeJJ81XXNPppvrP331UwdnGsSjFwS67S
+FeAfBVx7ypYTd05/ROZmmD7guKa/9btlmqnzMwBWbJCIFoZ3JvMojkyhHHh+5/E9
+2F6KFGkt3DUegn6U2cF8uofDRlD0J66maz8SZyUcX/7gsZc1KJU=
+=pywk
+-----END PGP SIGNATURE-----
+
+--3EiaT/+c6V9Q6NBq--
