@@ -2,90 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C204B34A30C
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 09:16:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CA3034A5A9
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 11:33:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbhCZIQH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Mar 2021 04:16:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbhCZIPk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Mar 2021 04:15:40 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D982C0613AA
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Mar 2021 01:15:40 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id 15so6466710ljj.0
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Mar 2021 01:15:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w9N1329UZmS+6nXYreX7M8TWALnQ3fNu1nppI5AsscM=;
-        b=jS6eVx849dxmWICSBs3aac97aluTFE0Ahc9aYiPclV37rl0l10z2MOtK8NzFPba3/g
-         vRpIcbAz5kSYvwwt/Bj8b+Q8NR1DijRaxx5RLxjd71eQ2acgTLvXhADu9q9VvnKeiOGY
-         WFwqvu1sS1Ifd1IHOzpCvx62gtNjYoP4B3o8FtURYJLnwRKU3YSfrTr+QLSbqS5Lnyjb
-         Yspkb2V4EsU8fCQ2TyQelnnuBPeG+gm/8aDlnoRZA9AvTS0C/3FQ9IcMZjSOaA16KsXx
-         +ml/n74ODxRUepMgpDMvbed82IqeKlgFyzyzFiFf+HSTbu+Wh7O6ysr7Q6ydpqGOnPny
-         M1MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w9N1329UZmS+6nXYreX7M8TWALnQ3fNu1nppI5AsscM=;
-        b=Ibp2o45Uk2LyOOp6U1w80l2/pdJIrOF3FdlLgnboxvLbRTx+sVElhu/qCKUKH15yDm
-         YzCeRieqxwEIEYIbP6d2ZTeVN/OHcRIdmptVSpDhRt5JMQBTPUcEnhO1KrmAczpIA+B9
-         cveLHYpBsK1lyH7rpjG2CTTON7COlApU41q9BuelTaIvu02yOGN5Qr5R79NYu+E1ZU0B
-         r0kBawstGP6t6R/xdpIQ2oiL30HhMb6d+enuUrJ567gW1AD6HrADged22t8hnt368AgK
-         EW3krIFuwD5+93ZWNHWV4g2li1kd47NOgXPjC68pXVwNgRPfxHV8bheHGcv3rMNfIG4v
-         3yIw==
-X-Gm-Message-State: AOAM530qiaQIlO5eJ0Wi8WlbfEzwHjqN4b2rSPR0YlTI4rlZRlcs/ecl
-        3NIwAmqGU1teMYY+PE9B7vJhqHn+j/LLy+12nq4=
-X-Google-Smtp-Source: ABdhPJzBdI1L//YoRq4kZ5aBctUxYORuCZqMF4QeSoDO5MQfHINZaf7S/wyOeiJCo6vIYbXpLKC/cA==
-X-Received: by 2002:a05:651c:339:: with SMTP id b25mr8209738ljp.406.1616746538377;
-        Fri, 26 Mar 2021 01:15:38 -0700 (PDT)
-Received: from localhost.localdomain (c-14cb225c.014-348-6c756e10.bbcust.telenor.se. [92.34.203.20])
-        by smtp.gmail.com with ESMTPSA id f9sm787100lft.242.2021.03.26.01.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Mar 2021 01:15:37 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: Mention GPIO MUX in docs
-Date:   Fri, 26 Mar 2021 09:15:35 +0100
-Message-Id: <20210326081535.1679507-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.29.2
+        id S229904AbhCZKcv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Mar 2021 06:32:51 -0400
+Received: from wilbur.contactoffice.com ([212.3.242.68]:47110 "EHLO
+        wilbur.contactoffice.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229893AbhCZKce (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Mar 2021 06:32:34 -0400
+Received: from ichabod.co-bxl (ichabod.co-bxl [10.2.0.36])
+        by wilbur.contactoffice.com (Postfix) with ESMTP id 604547D5;
+        Fri, 26 Mar 2021 11:32:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1616754751;
+        s=20210208-e7xh; d=mailfence.com; i=sandberg@mailfence.com;
+        h=Date:From:Reply-To:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        l=2652; bh=D6oQOoAa2KTgDaR6HzGhTwRHmU1KR/wjumbcZVoylGc=;
+        b=ceJkfRYLkIRWpl04D+yXU+n/WJoOF/UtyAOlycKrw8XhGtcQFFZPf4KClR0vSUyd
+        y1y/D50+7CBLxTnQCekYGZevPpRamqx4a6cOYoZFk9lkqZGv5e2kPswE56JShLyyflf
+        26+l10MbzU3Fl8NJMOU3G0zroyR4F29gjjaC90BJL7hhone+YG410BEt4GODITGr+3Q
+        RsdU3O/+3J+t6S36kXz89lVlK8Ab5rDiRV321wq0I0JYmVY1oau5Pwk0PGPNpw87M6k
+        TvEDBKT6w+o9XXQhcNo0TapBu3vzWOAW4gIeUVKQ7Bm0IwkUtl0lgDWDrMVVeuYjCX3
+        iQgKoPpo+Q==
+Date:   Fri, 26 Mar 2021 11:32:27 +0100 (CET)
+From:   Mauri Sandberg <sandberg@mailfence.com>
+Reply-To: Mauri Sandberg <sandberg@mailfence.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, andy.shevchenko@gmail.com,
+        geert+renesas@glider.be
+Message-ID: <235418388.107167.1616754747569@ichabod.co-bxl>
+In-Reply-To: <20210326065944.GA834818@x1>
+References: <20210325122832.119147-1-sandberg@mailfence.com> <20210325122832.119147-3-sandberg@mailfence.com> <20210326065944.GA834818@x1>
+Subject: Re: [RFC gpio/for-next 2/2] gpio: gpio-mux-input: add generic gpio
+ input multiplexer
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-Mailer: ContactOffice Mail
+X-ContactOffice-Account: com:250217426
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There is now a GPIO multiplexer, so mention this in the document
-about drivers using GPIO as backend.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- Documentation/driver-api/gpio/drivers-on-gpio.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
+> ----------------------------------------
+> From: Drew Fustini <drew@beagleboard.org>
+> Sent: Fri Mar 26 07:59:44 CET 2021
+> To: Mauri Sandberg <sandberg@mailfence.com>
+> > diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> > index 35e3b6026665..00f7576ce23f 100644
+> > --- a/drivers/gpio/Makefile
+> > +++ b/drivers/gpio/Makefile
+> > @@ -105,6 +105,7 @@ obj-$(CONFIG_GPIO_MPC8XXX)		+= gpio-mpc8xxx.o
+> >  obj-$(CONFIG_GPIO_MSC313)		+= gpio-msc313.o
+> >  obj-$(CONFIG_GPIO_MSIC)			+= gpio-msic.o
+> >  obj-$(CONFIG_GPIO_MT7621)		+= gpio-mt7621.o
+> > +obj-$(CONFIG_GPIO_MUX_INPUT)		+= gpio-mux-input.o
+> >  obj-$(CONFIG_GPIO_MVEBU)		+= gpio-mvebu.o
+> >  obj-$(CONFIG_GPIO_MXC)			+= gpio-mxc.o
+> >  obj-$(CONFIG_GPIO_MXS)			+= gpio-mxs.o
+> 
+> This does not apply to mainline. I've added it manually to my
+> drivers/gpio/Makefile but something to fix in v2.
 
-diff --git a/Documentation/driver-api/gpio/drivers-on-gpio.rst b/Documentation/driver-api/gpio/drivers-on-gpio.rst
-index 41ec3cc72d32..af632d764ac6 100644
---- a/Documentation/driver-api/gpio/drivers-on-gpio.rst
-+++ b/Documentation/driver-api/gpio/drivers-on-gpio.rst
-@@ -96,6 +96,12 @@ hardware descriptions such as device tree or ACPI:
-   way to pass the charging parameters from hardware descriptions such as the
-   device tree.
+I was developing against gpio tree's [1] 'for-next' branch but should I go against mainline?
+
+> > diff --git a/drivers/gpio/gpio-mux-input.c b/drivers/gpio/gpio-mux-input.c
+> > +static int gpio_mux_input_get_value(struct gpio_chip *gc, unsigned int offset)
+> > +{
+> > +	struct gpio_mux_input *mux;
+> > +	int ret;
+> > +
+> > +	mux = gpio_to_mux(gc);
+> > +	ret = mux_control_select(mux->mux_control, offset);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = gpiod_get_value(mux->mux_pin);
+> 
+> I'm not too familiar with how mux_control works but does there need to
+> be locking here?
+> 
+> Or is not possible for mux_pin to change to another offset before if
+> gpiod_get_value() if gpio_mux_input_get_value() runs concurrently?
+
+According to mux documentation [2] successfully selecting a state locks the mux
+until it is deselected. So I reckon no extra locking is needed.
+
+> > +
+> > +static void gpio_mux_input_set_value(struct gpio_chip *gc,
+> > +				  unsigned int offset, int val)
+> > +{
+> > +	/* not supported */
+> 
+> I'm not sure but maybe it is better not to define gc->set in the probe?
+
+I will give it a go.
  
-+- gpio-mux: drivers/mux/gpio.c is used for controlling a multiplexer using
-+  n GPIO lines such that you can mux in 2^n different devices by activating
-+  different GPIO lines. Often the GPIOs are on a SoC and the devices are
-+  some SoC-external entities, such as different components on a PCB that
-+  can be selectively enabled.
-+
- Apart from this there are special GPIO drivers in subsystems like MMC/SD to
- read card detect and write protect GPIO lines, and in the TTY serial subsystem
- to emulate MCTRL (modem control) signals CTS/RTS by using two GPIO lines. The
--- 
-2.29.2
+> I believe you need to add:
+> 
+>   MODULE_AUTHOR("...");
+>   MODULE_DESCRIPTION("...");
+>   MODULE_LICENSE("GPL");
+> 
+> My build failed with:
+> 
+>   ERROR: modpost: missing MODULE_LICENSE() in drivers/gpio/gpio-mux-input.o
 
+I will add them, thanks.
+
+ How do you do your build? Mine does not complain pretty much about anything. Also a bot gave me a warning and
+I would like to run those tests manually before submitting anything for review.
+
+Cheers,
+Mauri
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/mux/core.c#n322
