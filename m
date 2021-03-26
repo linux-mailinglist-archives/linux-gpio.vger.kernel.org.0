@@ -2,84 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9447534A672
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 12:28:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B43334A6CE
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 13:05:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbhCZL2V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Mar 2021 07:28:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229915AbhCZL15 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Mar 2021 07:27:57 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B45EAC0613AA;
-        Fri, 26 Mar 2021 04:27:57 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id h20so758826plr.4;
-        Fri, 26 Mar 2021 04:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QO3NLPPJwyOqpOimxVpVmrZArbAwjmokGvw4OSoT19w=;
-        b=bBvND3I/A8EzQPVZH7o0EfaI2nfjgdtBCSlD/1S/zMc56dA4tAkUbfwiEIDtjenZrV
-         IxknWdPswzJKc1MYKflpsQy9WNmhLz0RfGf3X5gdUrHLNIVSuWh6Uu2pSuChhK3/6rVg
-         EyfihvEtoK0OhgjoluUaXHBJsfR3BmOQzIWphw3p0JH5AY70v5oPAYV6lTCbztth6NiR
-         qvC0kToYlnDxz1knIlcfiGL0RG/jgAlybbUK/YUQZfn3nGFQtvWTFgpW0PICJryt8t9y
-         fEdaJK4vKUd+WGPtXjAUJy8KT+04ZaSjaCVFpKJKVBpTbpb1/Bd/PwOUNTa/OXEScbny
-         2zdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QO3NLPPJwyOqpOimxVpVmrZArbAwjmokGvw4OSoT19w=;
-        b=ox7sWf/8wn3c9aUjGjYR/tuDdndq7a82KVJzV7Qxk+qR5PVosKtnf/ctY9Q8HqWSV+
-         Q+cnaXVGAP1M92JXBoXfGjS3W707qoaXbSz17fYubsPOOeefvcXjOoRJoGa4nY4Shnnp
-         7tAijYITqpOuerZGSTkCPQNuLcqGyxFKU0a91psm11GzL1eUg2ZEvUGGd8SVD3ptIFp1
-         AZ1wOaN0k+naEBY/vtY+FLRYBwahrqGxHFcCP7d7i0riASLYrZobnAJUF2gDJspb3O4c
-         mpo40V0sQQso7IAmKenAGNphm2dP7gMb1qAwiuaLiPFLnAiuwNxYqmp0Z72pXup5ghzQ
-         t3rg==
-X-Gm-Message-State: AOAM532V3KEz0yn0gueWoRIZvXYQcOB5ThyoRxTMJWwv1axnO5RE8szb
-        D3f5qmvI9i/IkPUXQrQ+HjaQxx3XAkzVbaB/wqY=
-X-Google-Smtp-Source: ABdhPJzFCCHR/5hD2t+5lnAN5w6WbfW2UzKfFRx6yhSELTcI7rsccE1WGTHiU0OUSYTfaspCW7NNITUrLlbGGJN3CJk=
-X-Received: by 2002:a17:90a:e454:: with SMTP id jp20mr13868397pjb.129.1616758077348;
- Fri, 26 Mar 2021 04:27:57 -0700 (PDT)
+        id S229904AbhCZMEh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Mar 2021 08:04:37 -0400
+Received: from polaris.svanheule.net ([84.16.241.116]:53686 "EHLO
+        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229931AbhCZMEP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Mar 2021 08:04:15 -0400
+Received: from terra.local.svanheule.net (unknown [IPv6:2a02:a03f:eaff:9f01:cce8:c5ff:8b8d:f8cb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 77EAA1E5E51;
+        Fri, 26 Mar 2021 13:04:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1616760247;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EVsmFVeEo1wlLuqCsgNHIjMoIql8i6Dle436XRDTZaE=;
+        b=vRIrMGipd8yncEKpB5+KGmKkXgxgtYl2Aj6NzdMff5AjFI+UtrCJK7IxS+l7nNjPZjqLWN
+        ZpNgSXmTWW2BLdfvfpDMNqffzAHK6Q4JnNOFzB7oh4EgWOjlxBe8XqXkVNyW4tMmpheyOf
+        8tPJkxBfV0g5Hmp7QBR7BhHSY4fqddhaSuk7VfbV/Qp5a4+zfnSqb+J7LaJO18nhJca4F5
+        gr86Qc+Af50USjkx5S6p0bzVSMAzEUlOPnFeVjF3LLo+xEaR+iJEnw07TG/qpyNKxf9NsW
+        Jbs+/EsdMrJJ2U8DbtkaBy48lNZoD3ZYSULeHj8NoaiF0cO20eFy8k8CZdCkWg==
+From:   Sander Vanheule <sander@svanheule.net>
+To:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     bert@biot.com, bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, maz@kernel.org, robh+dt@kernel.org,
+        tglx@linutronix.de, andy.shevchenko@gmail.com,
+        Sander Vanheule <sander@svanheule.net>
+Subject: [PATCH v4 0/2] Add Realtek Otto GPIO support
+Date:   Fri, 26 Mar 2021 13:03:44 +0100
+Message-Id: <cover.1616760183.git.sander@svanheule.net>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210315082339.9787-1-sander@svanheule.net>
+References: <20210315082339.9787-1-sander@svanheule.net>
 MIME-Version: 1.0
-References: <cover.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
- <b2164e5965218f270e17bf29e00ad5c5a0b54bcf.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
- <CAHp75VdxRkX15Ts+L1UJdXbpoaTu3Ue6o9o=Yh2cRCXCEi1jwA@mail.gmail.com>
-In-Reply-To: <CAHp75VdxRkX15Ts+L1UJdXbpoaTu3Ue6o9o=Yh2cRCXCEi1jwA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 26 Mar 2021 13:27:41 +0200
-Message-ID: <CAHp75VfazasTLAotZ+T_xCoFiq-D0vcKqQAosopNMeJXP93nng@mail.gmail.com>
-Subject: Re: [PATCH v4 09/16] gpio: support ROHM BD71815 GPOs
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 26, 2021 at 1:26 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Mar 24, 2021 at 12:20 PM Matti Vaittinen
-> <matti.vaittinen@fi.rohmeurope.com> wrote:
+Add support for the GPIO controller employed by Realtek in multiple series of
+MIPS SoCs. These include the supported RTL838x and RTL839x. The register layout
+also matches the one found in the GPIO controller of other (Lexra-based) SoCs
+such as RTL8196E, RTL8197D, and RTL8197F.
 
+For the platform name 'otto', I am not aware of any official resources as to
+what hardware this specifically applies to. However, in all of the GPL archives
+we've received, from vendors using compatible SoCs in their design, the
+platform under the MIPS architecture is referred to by this name.
 
-> > +#include <linux/of.h>
->
-> You may do better than be OF-centric. See below.
+The GPIO ports have been tested on a Zyxel GS1900-8 (RTL8380), and Zyxel
+GS1900-48 (RTL8393). Furthermore, the GPIO ports and interrupt controller have
+been tested on a Netgear GS110TPPv1 (RTL8381).
 
-Ah, yep, when you switch to unified device property API, you would
-need property.h and mod_devicetable.h instead of this.
+Changes in v4:
+- Fix pointer notation style
+- Drop unused read_u16_reg() function
+- Drop 'inline' specifier from functions
+
+Changes in v3:
+- Remove OF dependencies in driver probe
+- Don't accept IRQ_TYPE_NONE as a valid interrupt type
+- Remove (now unused) dev property from control structure
+- Use u8/u16 port registers, instead of raw u32 registers
+- Use 'line' name for gpiochip, 'port' and 'pin' names for hardware
+- Renamed DT bindings file
+- Dropped fallback-only DT compatible
+- Various code style clean-ups
+
+Changes in v2:
+- Clarify structure and usage of IMR registers
+- Added Linus' Reviewed-by tags
+
+Sander Vanheule (2):
+  dt-bindings: gpio: Binding for Realtek Otto GPIO
+  gpio: Add Realtek Otto GPIO support
+
+ .../bindings/gpio/realtek,otto-gpio.yaml      |  78 +++++
+ drivers/gpio/Kconfig                          |  11 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-realtek-otto.c              | 330 ++++++++++++++++++
+ 4 files changed, 420 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/realtek,otto-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-realtek-otto.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.30.2
+
