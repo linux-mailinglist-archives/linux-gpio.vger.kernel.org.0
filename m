@@ -2,113 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 147E534AA5F
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 15:45:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC94C34AD51
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Mar 2021 18:28:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230209AbhCZOoz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Mar 2021 10:44:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54798 "EHLO
+        id S230236AbhCZR1t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Mar 2021 13:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230163AbhCZOou (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Mar 2021 10:44:50 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00182C0613B2
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Mar 2021 07:44:49 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id b16so6604656eds.7
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Mar 2021 07:44:49 -0700 (PDT)
+        with ESMTP id S230252AbhCZR1q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Mar 2021 13:27:46 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658BBC0613B2
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Mar 2021 10:27:45 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id a7so9590748ejs.3
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Mar 2021 10:27:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rIvv+tA1LMtQGGiDuq1c1q8EFA36Pgjy5WH53f7HNx4=;
-        b=iYunu1vYc+nYwytgwT0664RyXaLgIIwSfKZuAagqasIYu9jy9foMpyWg8GYSfAPoSl
-         7gXmommvATo5YilSMCWKppg6LleO/43CCNHA5B/ru6Jk9NMhwzLrSDFzr+PaGarm07W7
-         mBEkYdqmxjgNwwSk3y9oMCN94y3a4cOYuEb01nuzMH/0mqtLNYzzrVRIT/+ZbQBty8W9
-         DoeDDyGU2UhxKa2OOCRbp8rXwfrOEd5I+reszDYXU/CDUOhm55Da+3J7D9UXrfsMjDCR
-         LtmDAYZ2TfiSrOTrb9+jife+nA0bQs7GxtgJWytM/0bTimRuWkn57mcH3yp8a70YHvQP
-         WdBQ==
+        bh=1JrvGVjvnU4OleZHvZNBHn3IUwN+tQcLM7GpfSmRkZk=;
+        b=cwpkHyQrULLTxS7hyIyPePeFi/FNtWZ3wrU8DFAd6e74G1o94qmH7Z5PjWR8yr5z1r
+         sgpyKyCURNT2pAZYYtT4o1xIv830XPuXSi07uQQ+jqPykxJW/tfNNu1GDRVqbAXCl4Hz
+         nBRpS61VfXySqkW2Bx1fZJC4qhxNH9f04jCpVCDUd1Brf9Ko4JlEUr1S5u+1WhMo9n/Z
+         GkzwtQ0CYVWe4DfIsGLtfv6b+/ocnK8JELWYGPm57NUUs4U0GaouCUQWF/T81DrMcXuq
+         Z6tLBq2cU/VsK4UcPMjLnxwxXN++4BJ+LINlfni/VXPu6o1YOZnpxfeGHVfUjnDUYY1l
+         hhRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rIvv+tA1LMtQGGiDuq1c1q8EFA36Pgjy5WH53f7HNx4=;
-        b=O+qaMCQK8IDJBxGkMaN+tm11wEwHuNTZfCd++b5v6liCSXzV5BDxDFtbfx2BGSx9rx
-         gg+1bd07eub6EZ+jkRr2+ipFTac2pyfDeez12z4qHFBoIkmZCYRp6C8jB6GHTIK9D6EL
-         nX1u3acuFh0gEqWe6qgnOsh3++QjECzxep02tN5xLxRa2BWkXFY8DQ0SdJKQgn38Tlqz
-         7Ekfmc4S80zElF0rY+GHYuFyc2njYNjQU33lDpvNYez4/XC2CwU0l0oqv3+dNsUD5dB3
-         4has9ADkpTZ8Iy2hpyT24RyENvxea6Xj5X5aVsOHQ0v3Q6Ika2Nvp2woWo0OhElOB1Sc
-         GN3w==
-X-Gm-Message-State: AOAM531k2qjegnihDLbHuT3AyPLSbOPcBv99y3Lb+bGMj+Q45lm3RlLC
-        J0m0OCe2Hj2Zt7R4gATVoW7q3m+4cWzS2v2rVuJG+Q==
-X-Google-Smtp-Source: ABdhPJyu4ZYMKthWiIfIsLH5cJYN/YmYPXtv3Hl6Hl6YxrLqty3+4cM/fQnPI6E5xbB/otdrwsE35jlQjEFjqhXSpzo=
-X-Received: by 2002:a05:6402:17d6:: with SMTP id s22mr15385463edy.232.1616769888652;
- Fri, 26 Mar 2021 07:44:48 -0700 (PDT)
+        bh=1JrvGVjvnU4OleZHvZNBHn3IUwN+tQcLM7GpfSmRkZk=;
+        b=S9k9iEShHpop9sb2clROtdSR3EZMy8JwgWkMY9MldrOVfHts/82kJpe2ywmm5sZPnW
+         R6r5xZE+yzh7PpA1aS8j7AGbfL7pBwUkN/wU+XqQwJ+jOsH7gyxBJEel0OXJbIB0Wwcf
+         APMTvVJawpKx8BC6jMeO88f4TVHxsYZ+SKeZ+qpRJoEuayzoJIbi5GkDQsxKwyBdjU/q
+         Xtnoq1TknI/Y2dIrbT6HhIxta3UXBSP21N4lG8wRgQ0rkbr2edjAZwPOIjvvzMEocks0
+         1CCKQWRfoR81+b/yK/Eow6HTLQAoc4gGjux5pFlX7MsHT3JE45PWmqZmei3Z2k2E/5lC
+         t65A==
+X-Gm-Message-State: AOAM5307Cjyw2/IA9yve+Mc5cCvcQ6ThgMPqF1LxFH3iwSxmOjFVz8ig
+        ihsDiXDaKR1PhNRr0yPEcgjeCO6YG8DjDtSiABPKhw==
+X-Google-Smtp-Source: ABdhPJwkzOGb6kE59IAEyH6N7nsGGo1eTapaAq2lAelIByUXV1mPNIRkTEVwayCCs+LsYnVuKETqP2Nuv9zd7ozrBwM=
+X-Received: by 2002:a17:906:c0c8:: with SMTP id bn8mr16475296ejb.445.1616779663961;
+ Fri, 26 Mar 2021 10:27:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
- <50f72f1f7f28e969a1e0353712fcc530bce9dd06.1611037866.git.matti.vaittinen@fi.rohmeurope.com>
- <CAMpxmJVjnAMig16qWkjpaHwQ+4Ld9yEc-gg-CGv28QQYBB6gNg@mail.gmail.com> <afaff71f75cd476c828671779acd1a3f8b66b62c.camel@fi.rohmeurope.com>
-In-Reply-To: <afaff71f75cd476c828671779acd1a3f8b66b62c.camel@fi.rohmeurope.com>
+References: <cover.1615038553.git.syednwaris@gmail.com> <4c259d34b5943bf384fd3cb0d98eccf798a34f0f.1615038553.git.syednwaris@gmail.com>
+ <36db7be3-73b6-c822-02e8-13e3864b0463@xilinx.com>
+In-Reply-To: <36db7be3-73b6-c822-02e8-13e3864b0463@xilinx.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 26 Mar 2021 15:44:38 +0100
-Message-ID: <CAMpxmJXe9EVaDooPYphRV_500Dd9fU7WQHAFFL_-2-usxZG9kA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/17] gpio: support ROHM BD71815 GPOs
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Date:   Fri, 26 Mar 2021 18:27:33 +0100
+Message-ID: <CAMpxmJUv0iU0Ntmks1f6ThDAG6x_eJLYYCaDSjy+1Syedzc5dQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] gpio: xilinx: Utilize generic bitmap_get_value and _set_value
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robert Richter <rrichter@marvell.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        Srinivas Goud <srinivas.goud@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 10:57 AM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+On Mon, Mar 8, 2021 at 8:13 AM Michal Simek <michal.simek@xilinx.com> wrote:
 >
 >
-> On Tue, 2021-01-19 at 12:07 +0100, Bartosz Golaszewski wrote:
-> > On Tue, Jan 19, 2021 at 8:23 AM Matti Vaittinen
-> > <matti.vaittinen@fi.rohmeurope.com> wrote:
-> > > Support GPO(s) found from ROHM BD71815 power management IC. The IC
-> > > has two
-> > > GPO pins but only one is properly documented in data-sheet. The
-> > > driver
-> > > exposes by default only the documented GPO. The second GPO is
-> > > connected to
-> > > E5 pin and is marked as GND in data-sheet. Control for this
-> > > undocumented
-> > > pin can be enabled using a special DT property.
-> > >
-> > > This driver is derived from work by Peter Yang <
-> > > yanglsh@embest-tech.com>
-> > > although not so much of original is left.
-> > >
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+>
+> On 3/6/21 3:06 PM, Syed Nayyar Waris wrote:
+> > This patch reimplements the xgpio_set_multiple() function in
+> > drivers/gpio/gpio-xilinx.c to use the new generic functions:
+> > bitmap_get_value() and bitmap_set_value(). The code is now simpler
+> > to read and understand. Moreover, instead of looping for each bit
+> > in xgpio_set_multiple() function, now we can check each channel at
+> > a time and save cycles.
 > >
-> > Hi Matti,
+> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Cc: Michal Simek <michal.simek@xilinx.com>
+> > Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> > Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > ---
+> >  drivers/gpio/gpio-xilinx.c | 63 +++++++++++++++++++-------------------
+> >  1 file changed, 32 insertions(+), 31 deletions(-)
 > >
-> > looks great, just a couple nits.
+> > diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> > index be539381fd82..8445e69cf37b 100644
+> > --- a/drivers/gpio/gpio-xilinx.c
+> > +++ b/drivers/gpio/gpio-xilinx.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/of_device.h>
+> >  #include <linux/of_platform.h>
+> >  #include <linux/slab.h>
+> > +#include "gpiolib.h"
+> >
+> >  /* Register Offset Definitions */
+> >  #define XGPIO_DATA_OFFSET   (0x0)    /* Data register  */
+> > @@ -141,37 +142,37 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+> >  {
+> >       unsigned long flags;
+> >       struct xgpio_instance *chip = gpiochip_get_data(gc);
+> > -     int index = xgpio_index(chip, 0);
+> > -     int offset, i;
+> > -
+> > -     spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> > -
+> > -     /* Write to GPIO signals */
+> > -     for (i = 0; i < gc->ngpio; i++) {
+> > -             if (*mask == 0)
+> > -                     break;
+> > -             /* Once finished with an index write it out to the register */
+> > -             if (index !=  xgpio_index(chip, i)) {
+> > -                     xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> > -                                    index * XGPIO_CHANNEL_OFFSET,
+> > -                                    chip->gpio_state[index]);
+> > -                     spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> > -                     index =  xgpio_index(chip, i);
+> > -                     spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> > -             }
+> > -             if (__test_and_clear_bit(i, mask)) {
+> > -                     offset =  xgpio_offset(chip, i);
+> > -                     if (test_bit(i, bits))
+> > -                             chip->gpio_state[index] |= BIT(offset);
+> > -                     else
+> > -                             chip->gpio_state[index] &= ~BIT(offset);
+> > -             }
+> > -     }
+> > -
+> > -     xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> > -                    index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
+> > -
+> > -     spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> > +     u32 *const state = chip->gpio_state;
+> > +     unsigned int *const width = chip->gpio_width;
+> > +
+> > +     DECLARE_BITMAP(old, 64);
+> > +     DECLARE_BITMAP(new, 64);
+> > +     DECLARE_BITMAP(changed, 64);
+> > +
+> > +     spin_lock_irqsave(&chip->gpio_lock[0], flags);
+> > +     spin_lock(&chip->gpio_lock[1]);
+> > +
+> > +     bitmap_set_value(old, 64, state[0], width[0], 0);
+> > +     bitmap_set_value(old, 64, state[1], width[1], width[0]);
+> > +     bitmap_replace(new, old, bits, mask, gc->ngpio);
+> > +
+> > +     bitmap_set_value(old, 64, state[0], 32, 0);
+> > +     bitmap_set_value(old, 64, state[1], 32, 32);
+> > +     state[0] = bitmap_get_value(new, 0, width[0]);
+> > +     state[1] = bitmap_get_value(new, width[0], width[1]);
+> > +     bitmap_set_value(new, 64, state[0], 32, 0);
+> > +     bitmap_set_value(new, 64, state[1], 32, 32);
+> > +     bitmap_xor(changed, old, new, 64);
+> > +
+> > +     if (((u32 *)changed)[0])
+> > +             xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,
+> > +                             state[0]);
+> > +     if (((u32 *)changed)[1])
+> > +             xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> > +                             XGPIO_CHANNEL_OFFSET, state[1]);
+> > +
+> > +     spin_unlock(&chip->gpio_lock[1]);
+> > +     spin_unlock_irqrestore(&chip->gpio_lock[0], flags);
+> >  }
+> >
+> >  /**
+> >
 >
-> Hello Bartosz,
+> Srinivas N: Can you please test this code?
 >
-> I think fixed all the nits to v3. Can I translate this to an ack? (I
-> will respin the series as I guess the regulator part may have fallen
-> through the cracks so I'd like to add the relevant acks :] )
->
-> Best Regards
->         Matti Vaittinen
+> Thanks,
+> Michal
 
-Yes:
+Hey, any chance of getting that Tested-by?
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Bart
