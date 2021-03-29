@@ -2,80 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 910A034D46B
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 18:01:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9994034D657
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 19:54:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230212AbhC2QB0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Mar 2021 12:01:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229689AbhC2QBD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 29 Mar 2021 12:01:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 70E3661924;
-        Mon, 29 Mar 2021 16:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617033663;
-        bh=rQV5AbU1TqIJq6Dn7PUWlS4xbiMTRSbnOLaIFDxk4nM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FSXbHPt6NDGPFALaopcViJuplIgega19/+JH6uN7YehWFjUqeDYA/0IrQWXZYcxC4
-         txQzhbBvZbk1xhf5gsLR9gdG8PtYfTgjuWsNEFdiDeRKkqLFWlq0LDWGQ5e5nuEkZh
-         /tACcSZeGG7clWAflLOGC2Hi1C2V2j3e1C/v25pPpHviun19XgJrEEOe5PmxQVwOBX
-         Lc6lZCGG7EeApG3ofs0HjxlrYcTjB+ndNr58XQzcoFYXIs33xBYmnlHjIOgmoGYVLZ
-         PKQVWpF6PvgxkkP6U1NprtAvjzXPYUipW7nxlN54InRTOfyV0LcID8gwG97666IVa/
-         0T35oFCFhtLDQ==
-Date:   Mon, 29 Mar 2021 17:00:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Brad Larson <brad@pensando.io>
-Cc:     linux-arm-kernel@lists.infradead.org, arnd@arndb.de,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        fancer.lancer@gmail.com, adrian.hunter@intel.com,
-        ulf.hansson@linaro.org, olof@lixom.net, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/13] dt-bindings: spi: cadence-qspi: Add support for
- Pensando Elba SoC
-Message-ID: <20210329160052.GE5166@sirena.org.uk>
-References: <20210329015938.20316-1-brad@pensando.io>
- <20210329015938.20316-11-brad@pensando.io>
+        id S230039AbhC2Rxn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Mar 2021 13:53:43 -0400
+Received: from mail.hanoi.gov.vn ([113.160.32.33]:11748 "EHLO
+        mx01.hanoi.gov.vn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230143AbhC2Rx1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Mar 2021 13:53:27 -0400
+X-Greylist: delayed 1512 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Mar 2021 13:53:27 EDT
+Received: from mx01.hanoi.gov.vn (localhost [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27A921209FC;
+        Tue, 30 Mar 2021 00:27:48 +0700 (+07)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hanoi.gov.vn;
+        s=default; t=1617038869;
+        bh=FuW10Z6fSdeNlf/0u/BQ1jcwkjYBw0uHUPQgn0LGo7I=; h=Date:From:To;
+        b=T+UcutRsdd3gC+brklrrPMrBzqGVV8UundOTDxSk9FdCC8lji6qXZzMgUCz0te/ii
+         7MjbZ49V8WLHSrcJ46eMNh3EVSMrni25timUna6j+QkP0ni0l6pJSE9HxA0KTGosry
+         k9msf8DOnys+Bebq0j5oA/Vx41bCkfLFbYFSBU8I=
+X-IMSS-DKIM-Authentication-Result: mx01.hanoi.gov.vn; sigcount=0
+Received: from mx01.hanoi.gov.vn (localhost [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4DC3F1209D8;
+        Tue, 30 Mar 2021 00:27:46 +0700 (+07)
+Received: from mail.hanoi.gov.vn (mail.hanoi.gov.vn [10.1.1.25])
+        by mx01.hanoi.gov.vn (Postfix) with ESMTPS;
+        Tue, 30 Mar 2021 00:27:46 +0700 (+07)
+Received: from mail.hanoi.gov.vn (localhost [127.0.0.1])
+        by mail.hanoi.gov.vn (Postfix) with ESMTPS id 178A27F41B68;
+        Tue, 30 Mar 2021 00:27:39 +0700 (+07)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.hanoi.gov.vn (Postfix) with ESMTP id DFF5E7F41B5D;
+        Tue, 30 Mar 2021 00:27:35 +0700 (+07)
+Received: from mail.hanoi.gov.vn ([127.0.0.1])
+        by localhost (mail.hanoi.gov.vn [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 2I_XInYHs8vx; Tue, 30 Mar 2021 00:27:31 +0700 (+07)
+Received: from mail.hanoi.gov.vn (mail.hanoi.gov.vn [10.1.1.25])
+        by mail.hanoi.gov.vn (Postfix) with ESMTP id AB8587F41B6C;
+        Tue, 30 Mar 2021 00:27:25 +0700 (+07)
+Date:   Tue, 30 Mar 2021 00:27:25 +0700 (ICT)
+From:   Mackenzie Scott <truongphong_ldtbxh_caugiay@hanoi.gov.vn>
+Reply-To: Mackenzie Scott <propack@propck.net>
+Message-ID: <1976823524.26818856.1617038845616.JavaMail.zimbra@hanoi.gov.vn>
+Subject: Congratulations ($ 100,800,000.00)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZInfyf7laFu/Kiw7"
-Content-Disposition: inline
-In-Reply-To: <20210329015938.20316-11-brad@pensando.io>
-X-Cookie: Never give an inch!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [193.148.18.78]
+X-Mailer: Zimbra 8.8.15_GA_3894 (zclient/8.8.15_GA_3894)
+Thread-Index: QVWvhw8MBAG1XzngcEAXViuETywIjw==
+Thread-Topic: Congratulations ($ 100,800,000.00)
+To:     undisclosed-recipients:;
+X-TM-AS-GCONF: 00
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---ZInfyf7laFu/Kiw7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Sun, Mar 28, 2021 at 06:59:35PM -0700, Brad Larson wrote:
-> Add new vendor Pensando Systems Elba SoC compatible
-> string and convert to json-schema.
-
-These are two unrelated changes and should be separate patches, again as
-covered in submitting-patches.rst.  It is generally better to do the
-changes adding new stuff first and then convert to YAML as the final
-patches as the series since there is often a delay on reviews of YAML
-conversions.
-
---ZInfyf7laFu/Kiw7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBh+bMACgkQJNaLcl1U
-h9CDbAf+L5QvrNeIedpULkACeq0jhTxi0Y/E94XfZCTThCINeFIpwUVDK0V7kt2a
-7PJs3B5yElvcuw01MD/9GfQECCB4F85Sms98L0hKXeylxUEc28OOx4FLqc3MtXVD
-OxhFuGu5WD4acijFRarcUdRw4rg330n9CaEMCW9O6xSMaGVgb8wyrTBnFxTlj+Iz
-MqCsVF0o2XMc+v+e0eycS0JN1mhjPgk94mWfoQyBevJfQN/KCBFUcR39y2K8f3AK
-q9PDB46BgqVrx88Oqf+txM+0BsWLeiHND8WhwL6pDkHhzvVpol7A5vLkZNSC2K62
-UExFTAl9MFU1sVTB9r55dHrJ4mrtjA==
-=P4y3
------END PGP SIGNATURE-----
-
---ZInfyf7laFu/Kiw7--
+Hello,i&#39;m Mackenzie Scott,Ex-wife of Amazon founder i&#39;m donating $4 billion to charities,individuals,universities across the Globe from my divorce funds,i&#39;m donating part of it to provide immediate support to people suffering economically during the COVID-19 pandemic,i have a donation worth $100,800,000.00 Dollars for you,you can contact me for more information if you&#39;re interested.
