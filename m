@@ -2,79 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E80034D3BA
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 17:26:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42A9434D3C7
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 17:28:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230323AbhC2PZF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Mar 2021 11:25:05 -0400
-Received: from mga01.intel.com ([192.55.52.88]:12677 "EHLO mga01.intel.com"
+        id S230516AbhC2P0K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Mar 2021 11:26:10 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48469 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229502AbhC2PYn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 29 Mar 2021 11:24:43 -0400
-IronPort-SDR: YVscrSSmhap16pLG+zKabDcKBTygoNDypzHLJTM+KwJjzcFJ8dnhG1ik+488GbdOXQ/alQkDvK
- LKlVM+M4zhkQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="211767564"
+        id S231346AbhC2PZx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 29 Mar 2021 11:25:53 -0400
+IronPort-SDR: OWG3aUqDZXmGmp0RhPPtLvjohN+t5qIajUeeRotdhuuQRLS1yALSpXptkf4BdwcViJ8y7r8kaH
+ U9wWdlJHCPkg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="255565714"
 X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
-   d="scan'208";a="211767564"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 08:24:43 -0700
-IronPort-SDR: 4eVELRd9pZsPnZNimTuGuxMOd9iNPeuOxgA4FtQTcj7L3pfqpUVHF2LA55K8olLS3KTzG9awJ8
- lLSCJwsi/2BA==
+   d="scan'208";a="255565714"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 08:25:52 -0700
+IronPort-SDR: rq1xC6B+ZNCfNwvKuTjI3Ukn5oSNFgV8aADsVbnNANwb9n0N8pt6HOBTo7QeKYM1Sj+NXdP4wx
+ scvTUSMC6FqQ==
 X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
-   d="scan'208";a="444813722"
+   d="scan'208";a="606413062"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 08:24:39 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 08:25:49 -0700
 Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lQtkq-00H3Y5-8r; Mon, 29 Mar 2021 18:24:36 +0300
-Date:   Mon, 29 Mar 2021 18:24:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     bgolaszewski@baylibre.com, vilhelm.gray@gmail.com,
-        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
-        linus.walleij@linaro.org, yamada.masahiro@socionext.com,
-        akpm@linux-foundation.org, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] gpio: xilinx: Utilize generic bitmap_get_value
- and _set_value
-Message-ID: <YGHxNFXAjcg4PfnE@smile.fi.intel.com>
-References: <cover.1615038553.git.syednwaris@gmail.com>
- <4c259d34b5943bf384fd3cb0d98eccf798a34f0f.1615038553.git.syednwaris@gmail.com>
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1lQtly-00H3Yz-VK; Mon, 29 Mar 2021 18:25:46 +0300
+Date:   Mon, 29 Mar 2021 18:25:46 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] gpiolib: Allow drivers to return EOPNOTSUPP from
+ config
+Message-ID: <YGHxejGI2x4X3EEe@smile.fi.intel.com>
+References: <cover.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
+ <d2c8b7f9a3b420c2764f645da531a57db16905f3.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAHp75VdXa2bkJ+ej+HNYstLeK4TF+L5H3wTgm0CgJ9hYQeU+ZQ@mail.gmail.com>
+ <1ceb7dc5c2fa376470ab9274020fddf1c2f1584f.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c259d34b5943bf384fd3cb0d98eccf798a34f0f.1615038553.git.syednwaris@gmail.com>
+In-Reply-To: <1ceb7dc5c2fa376470ab9274020fddf1c2f1584f.camel@perches.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Mar 06, 2021 at 07:36:30PM +0530, Syed Nayyar Waris wrote:
-> This patch reimplements the xgpio_set_multiple() function in
-> drivers/gpio/gpio-xilinx.c to use the new generic functions:
-> bitmap_get_value() and bitmap_set_value(). The code is now simpler
-> to read and understand. Moreover, instead of looping for each bit
-> in xgpio_set_multiple() function, now we can check each channel at
-> a time and save cycles.
+On Mon, Mar 29, 2021 at 08:08:52AM -0700, Joe Perches wrote:
+> On Mon, 2021-03-29 at 14:59 +0300, Andy Shevchenko wrote:
+> > On Mon, Mar 29, 2021 at 2:43 PM Matti Vaittinen
+> > <matti.vaittinen@fi.rohmeurope.com> wrote:
+> > > 
+> > > The checkpacth instructs to switch from ENOSUPP to EOPNOTSUPP.
+> > > > WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
+> > > 
+> > > Make the gpiolib allow drivers to return both so driver developers
+> > > can avoid one of the checkpatch complaints.
+> > 
+> > Internally we are fine to use the ENOTSUPP.
+> > Checkpatch false positives there.
+> > 
+> > I doubt we need this change. Rather checkpatch should rephrase this to
+> > point out that this is only applicable to _user-visible_ error path.
+> > Cc'ed Joe.
+> 
+> Adding CC for Jakub Kicinski who added that particular rule/test.
+> 
+> And the output message report of the rule is merely a suggestion indicating
+> a preference.  It's always up to an individual to accept/reject.
+> 
+> At best, perhaps wordsmithing the checkpatch message might be an OK option.
 
-...
+Thanks, Joe!
 
-> +	u32 *const state = chip->gpio_state;
-
-Looking at this... What's the point of the const here?
-
-Am I right that this tells: pointer is a const, while the data underneath
-can be modified?
-
-> +	unsigned int *const width = chip->gpio_width;
-
-Ditto.
-
-Putting const:s here and there for sake of the const is not good practice.
-It makes code harder to read.
+Jakub, what do you think?
 
 -- 
 With Best Regards,
