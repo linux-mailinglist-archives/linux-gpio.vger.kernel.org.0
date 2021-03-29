@@ -2,112 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33A3A34D127
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 15:31:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7FE034D130
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 15:32:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231404AbhC2Nad (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Mar 2021 09:30:33 -0400
-Received: from mga14.intel.com ([192.55.52.115]:18356 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231400AbhC2Na3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 29 Mar 2021 09:30:29 -0400
-IronPort-SDR: Zn+ZsNnqt5xQ4ySmQmSR5t+qzEl0vgn5VjKSsKEvpp/lpHsChEsiSQ1s5kpetu0KrYe/TUuUdh
- lxLuFQHuhdPw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="191015707"
-X-IronPort-AV: E=Sophos;i="5.81,287,1610438400"; 
-   d="scan'208";a="191015707"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 06:30:29 -0700
-IronPort-SDR: d7m3p5eGyttly682WkWwYRQzCcNFEXrxmD4Q1Qo72xX6SMqqZ5RP5r01fkQkwRCPs5ULeK9OHO
- JQu5IhgVUjcQ==
-X-IronPort-AV: E=Sophos;i="5.81,287,1610438400"; 
-   d="scan'208";a="526958426"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 06:30:26 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1lQryA-00H20D-Cq; Mon, 29 Mar 2021 16:30:14 +0300
-Date:   Mon, 29 Mar 2021 16:30:14 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] gpiolib: Allow drivers to return EOPNOTSUPP from
- config
-Message-ID: <YGHWZuNfbSDe+B6y@smile.fi.intel.com>
-References: <cover.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
- <d2c8b7f9a3b420c2764f645da531a57db16905f3.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
- <CAHp75VdXa2bkJ+ej+HNYstLeK4TF+L5H3wTgm0CgJ9hYQeU+ZQ@mail.gmail.com>
- <bf12f668db2f0dce7dfc09351780e295da30714c.camel@fi.rohmeurope.com>
+        id S230247AbhC2NcI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Mar 2021 09:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231698AbhC2Nbf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Mar 2021 09:31:35 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D158C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Mar 2021 06:31:32 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id u20so15878871lja.13
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Mar 2021 06:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fABBEBfgzCM6Xpyhqln1sFUYj0t8EK//3zJf01k+0dI=;
+        b=OIOvaTy4M4D9/+YS66E3WdcE9/viLaKJ+3Dd3TuHd8mzUoBEJXneRoMaL8RZI5oQAm
+         Bffl9vocbAcXtvijBUHfrxjt/szHQPp/y+eKexxGcuD3qEEdQDctJeia+lRZBnB/0/NZ
+         CtrFFbgi5PwfF+okzDECgm0eHtMtViloXDA/Y3mt9X99WV4StED8Q0LMsVZvDorPwzT8
+         RH3Kgl/nsoEW7QCAeZw2ULBHffEBw/Nz9uEoPSTxNSr99tW1W5/WamN/G8CcFeLZxYYQ
+         XIFBbWSepQYI8fgeRdR2/YzNDuLY+T/ZS1spbeQyYOe9sYdSlNIDhYG8xNc7l91RulwG
+         tN7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fABBEBfgzCM6Xpyhqln1sFUYj0t8EK//3zJf01k+0dI=;
+        b=b2zgqskP2awGt2zhszPscGTQ3eBmVVXze5ATKzllOPXXFbDXUE+t69LQhNQ7sCVUbo
+         Z0oOn9YFKlnK0fCZpJvFQrwo/EHy5YmRYVTuLFyyRlOX1jcOUaX4eKf6Z+4Ux0eRsLhO
+         ve1B5qg347XGBSCfIW+UenqtbbyrQcpQyZhmuRZW8wrtMAwcbV5lvoxPGsy6RDBJw1uQ
+         DUDP0a/m7WdTRCvuoTp59L5p+fl/2SKn79q5Sgb/59wGQ2L/iRPW7pf/dI6+8//I1YcZ
+         JcItJ+wWRfAVk+QUDZnP9JQ3dK505ddGlvYg0G8N9G9mnNMV+9ipnZp2FnVQoMo9dneK
+         wiqg==
+X-Gm-Message-State: AOAM533QoEj6iyfhUGrh2rQOklxRzLMCnDxU1EMiyTXRooCqGqW3EaBy
+        HYtJdBBwqp/wblKfYFwdB78oN35QH9X06dWkhJpOUeQRaXAg6entqi0=
+X-Google-Smtp-Source: ABdhPJzGYPBpk3+eTyTLF9a0Y6PLFQenLlx5lE1v6AkFvnDF/xbneNPs3lldU/vL1/kQYJVYmCDMbVCxJX0sxdITqtE=
+X-Received: by 2002:a2e:1649:: with SMTP id 9mr18789027ljw.74.1617024691097;
+ Mon, 29 Mar 2021 06:31:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf12f668db2f0dce7dfc09351780e295da30714c.camel@fi.rohmeurope.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CAHp75VfFfJ8g-mHSneNbk4ujDdTbfu3CypSY_e106+3jhS6SWA@mail.gmail.com>
+In-Reply-To: <CAHp75VfFfJ8g-mHSneNbk4ujDdTbfu3CypSY_e106+3jhS6SWA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 29 Mar 2021 15:31:19 +0200
+Message-ID: <CACRpkdY_uNpeg9Y6k0NeKPxV14Nd3rJ1faFtrKs-16PZ8=boGg@mail.gmail.com>
+Subject: Re: gpio_is_valid()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 29, 2021 at 03:20:07PM +0300, Matti Vaittinen wrote:
-> On Mon, 2021-03-29 at 14:59 +0300, Andy Shevchenko wrote:
-> > On Mon, Mar 29, 2021 at 2:43 PM Matti Vaittinen
-> > <matti.vaittinen@fi.rohmeurope.com> wrote:
-> > > The checkpacth instructs to switch from ENOSUPP to EOPNOTSUPP.
-> > > > WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
-> > > 
-> > > Make the gpiolib allow drivers to return both so driver developers
-> > > can avoid one of the checkpatch complaints.
-> > 
-> > Internally we are fine to use the ENOTSUPP.
-> > Checkpatch false positives there.
-> 
-> I agree. OTOH, the checkpatch check makes sense to user-visible stuff.
-> Yet, the checkpatch has hard time guessing what is user-visible - so it
-> probably is easiest to nag about all ENOTSUPP uses as it does now.
-> 
-> > I doubt we need this change. Rather checkpatch should rephrase this
-> > to
-> > point out that this is only applicable to _user-visible_ error path.
-> > Cc'ed Joe.
-> 
-> Yes, thanks for pulling Joe in.
-> 
-> Anyways, no matter what the warning says, all false positives are
-> annoying. I don't see why we should stay with ENOTSUPP in gpiolib?
-> (other than the burden of changing it).
+On Mon, Mar 29, 2021 at 12:50 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 
-For sake of the changing we are not changing the code.
+> Anybody to shed a light why we have two stubs of gpio_is_valid() and
+> one actual declaration?
+> % git grep -n -w gpio_is_valid -- include/
+> include/asm-generic/gpio.h:44:static inline bool gpio_is_valid(int number)
+> include/asm-generic/gpio.h:143:static inline bool gpio_is_valid(int number)
+> include/linux/gpio.h:109:static inline bool gpio_is_valid(int number)
 
-> But I have no strong opinion on this. All options I see have downsides.
-> 
-> Accepting both ENOTSUPP and EOPNOTSUPP is the easy way to avoid
-> allowing checkpatch warnings - but I admit it isn't stylish.
+Remnants from "generic GPIO" where some custom platform would have
+a custom implementation (and semantic!) while using the same
+API.
 
-I think the error code which is Linux kernel internal is for a reason.
+include/linux/gpio.h:109 - this is just a stub !CONFIG_GPIOLIB
 
-> Converting all ENOTSUPP cases inside gpiolib to EOPNOTSUPP is teodious
-> although end result might be nicer.
+include/asm-generic/gpio.h:44 - this one is used if CONFIG_GPIOLIB
 
-Why? You still missed the justification except satisfying some tool that gives
-you false positives. We don't do that. It's the tool that has to be fixed /
-amended.
+This is for all "normal" GPIO providers and consumers, end of
+story.
 
-> Leaving it as is gives annoying false-positives to driver developers.
-> 
-> My personal preference was this patch - others can have other view like
-> Andy does. I'll leave this to community/maintainers to evaluate :)
+include/asm-generic/gpio.h:143 - this one is used of !CONFIG_GPIOLIB
+but only <asm/gpio.h> is included, meaning the system has a
+private implementation of the symbols, not those from GPIOLIB.
 
-This patch misses documentation fixes, for example.
+It makes sense if you realize there are GPIO drivers that only include
+<asm/gpio.h> and does not include <linux/gpio.h>. But I wonder if
+there still are? (Unfortunately I think so, used to be some weird archs
+and some minor ARM systems.)
 
-Also, do you suggest that we have to do the same in entire pin control
-subsystem?
+Generic GPIO was probably not a very good idea, I think at the time
+it was a compromise for making custom implementations migrate
+to the generic implementation over time.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I think it is actually gone now! We can probably delete:
+arch/arm/include/asm/gpio.h
+include/asm-generic/gpio.h
 
+And just move the remaining stubs into <linux/gpio.h>.
 
+Interested in the job or should I take a stab at it? :D
+
+Yours,
+Linus Walleij
