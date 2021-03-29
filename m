@@ -2,84 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 180FA34D63A
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 19:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAACB34D804
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 21:22:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231124AbhC2RrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Mar 2021 13:47:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230298AbhC2Rqu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 29 Mar 2021 13:46:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EA1F56192E;
-        Mon, 29 Mar 2021 17:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617040010;
-        bh=hFsIuqdNEm7bApfHZANY05w0cyfllwS7fRcgazdqxuk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tqijS85JKL5wU3IwLk9aSl12pvJ3r1NEP2/tNswDK3Ai2GJUD1tpUMQxPaD8HlCeh
-         W6MIjurh5VU6Ue2uCglMsFqs6ltUDJyPLjnOnth22E+IgKHErySaluHdKW4t34PSqe
-         qUfPisRlh5YV70y9NNgN4EHGaUtrGwxcsjtnw4OLuaaROLcOHV3vOO3lz0mfRtMPAv
-         PjchE9qcOmH+nj/3kUdj/sDkpaXEgbUpd+UxzM65+p4Hp2TIyJYKV8eu6NANgOCLMA
-         FL+UvM5HLDiXSkut2uhwfQoIDS6TmSukvimgOCeDoDvwMpoWkPFg0mMcna66Nr07Un
-         DG3Cu9Mr5mkZw==
-Date:   Mon, 29 Mar 2021 10:46:49 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] gpiolib: Allow drivers to return EOPNOTSUPP from
- config
-Message-ID: <20210329104649.6e2ca6c7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <YGHxejGI2x4X3EEe@smile.fi.intel.com>
-References: <cover.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
-        <d2c8b7f9a3b420c2764f645da531a57db16905f3.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
-        <CAHp75VdXa2bkJ+ej+HNYstLeK4TF+L5H3wTgm0CgJ9hYQeU+ZQ@mail.gmail.com>
-        <1ceb7dc5c2fa376470ab9274020fddf1c2f1584f.camel@perches.com>
-        <YGHxejGI2x4X3EEe@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S231358AbhC2TWA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Mar 2021 15:22:00 -0400
+Received: from mail-ot1-f51.google.com ([209.85.210.51]:46613 "EHLO
+        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231151AbhC2TV2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Mar 2021 15:21:28 -0400
+Received: by mail-ot1-f51.google.com with SMTP id 68-20020a9d0f4a0000b02901b663e6258dso13296198ott.13;
+        Mon, 29 Mar 2021 12:21:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=ABMvZ9iUvOdLCSBOVI1wNxuXeT7prS5xQHqqnwlqeLM=;
+        b=TxyKCN2b+IFpN6zYa+COtUl78u8LNQBTHAy8Esp0vC5NM/uS6PH68HGLI8Ig2tQT2o
+         eM84hnWc/NOzsq2YLFM+SDu39nwNx+EBTXN7WmIHRrHYSA6fffNUP5iCMZgBV9LEimMn
+         9jDCEBaXppfk206ZCrnDe7xlE5v99mgYH2MIqhL1LWHH4ZlZnAK9olAE+Cd1bjEUTLWL
+         JR4895GGrSk2jMeLt0ZEn6HfCFB7U/TDzgfzOhipgy9ekyXsvj1QRyx09s+wNcxCXOr7
+         rGyrE+IHmhnTA9/+Jp6bXT0F+wCA02rOlNjdvLvtCWkGAyqkf2mV5qOZZKOQZk11VqGA
+         PqkA==
+X-Gm-Message-State: AOAM531nsh9QFumJo5vvNSWS39JZFBgrR5/YZ3/NS2W4zKjYpB5Qujf1
+        Zv/49Mpk4WcXyGmMGXrO5H+UirtnOA==
+X-Google-Smtp-Source: ABdhPJwIFStn32vLNg0UX/TXSmm7jOFuFdUm4TdNpso1A3DPY9K9j909OAzRLcWQUCadrY2Pf09EsQ==
+X-Received: by 2002:a9d:1c7:: with SMTP id e65mr23811411ote.259.1617045687465;
+        Mon, 29 Mar 2021 12:21:27 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f2sm3949995oos.16.2021.03.29.12.21.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Mar 2021 12:21:26 -0700 (PDT)
+Received: (nullmailer pid 2905696 invoked by uid 1000);
+        Mon, 29 Mar 2021 19:21:24 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        biao.huang@mediatek.com, linus.walleij@linaro.org,
+        hongzhou.yang@mediatek.com, srv_heupstream@mediatek.com,
+        jg_poxu@mediatek.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        matthias.bgg@gmail.com, sean.wang@mediatek.com,
+        linux-gpio@vger.kernel.org, erin.lo@mediatek.com,
+        hui.liu@mediatek.com, sean.wang@kernel.org, sj.huang@mediatek.com,
+        eddie.huang@mediatek.com, linux-mediatek@lists.infradead.org,
+        seiya.wang@mediatek.com
+In-Reply-To: <20210329113103.11003-3-zhiyong.tao@mediatek.com>
+References: <20210329113103.11003-1-zhiyong.tao@mediatek.com> <20210329113103.11003-3-zhiyong.tao@mediatek.com>
+Subject: Re: [PATCH Resend v0 2/6] dt-bindings: pinctrl: mt8195: add binding document
+Date:   Mon, 29 Mar 2021 14:21:24 -0500
+Message-Id: <1617045684.216718.2905695.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 29 Mar 2021 18:25:46 +0300 Andy Shevchenko wrote:
-> On Mon, Mar 29, 2021 at 08:08:52AM -0700, Joe Perches wrote:
-> > On Mon, 2021-03-29 at 14:59 +0300, Andy Shevchenko wrote:  
-> > > On Mon, Mar 29, 2021 at 2:43 PM Matti Vaittinen
-> > > <matti.vaittinen@fi.rohmeurope.com> wrote:  
-> > > > 
-> > > > The checkpacth instructs to switch from ENOSUPP to EOPNOTSUPP.  
-> > > > > WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP  
-> > > > 
-> > > > Make the gpiolib allow drivers to return both so driver developers
-> > > > can avoid one of the checkpatch complaints.  
-> > > 
-> > > Internally we are fine to use the ENOTSUPP.
-> > > Checkpatch false positives there.
-> > > 
-> > > I doubt we need this change. Rather checkpatch should rephrase this to
-> > > point out that this is only applicable to _user-visible_ error path.
-> > > Cc'ed Joe.  
-> > 
-> > Adding CC for Jakub Kicinski who added that particular rule/test.
-> > 
-> > And the output message report of the rule is merely a suggestion indicating
-> > a preference.  It's always up to an individual to accept/reject.
-> > 
-> > At best, perhaps wordsmithing the checkpatch message might be an OK option.  
+On Mon, 29 Mar 2021 19:30:59 +0800, Zhiyong Tao wrote:
+> The commit adds mt8195 compatible node in binding document.
 > 
-> Thanks, Joe!
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  .../bindings/pinctrl/pinctrl-mt8195.yaml      | 152 ++++++++++++++++++
+>  1 file changed, 152 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
 > 
-> Jakub, what do you think?
 
-Agreed, weaving into the message that ENOTSUPP is okay internally
-sounds good. Perhaps we should append "if error may be returned to 
-user space"?
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.example.dts:19:18: fatal error: dt-bindings/pinctrl/mt8195-pinfunc.h: No such file or directory
+   19 |         #include <dt-bindings/pinctrl/mt8195-pinfunc.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:349: Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1380: dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1459558
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
