@@ -2,92 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F247134CF42
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 13:42:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DA5B34CF5E
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Mar 2021 13:50:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231317AbhC2LmG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Mar 2021 07:42:06 -0400
-Received: from mail-lj1-f177.google.com ([209.85.208.177]:41691 "EHLO
-        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231219AbhC2Llj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Mar 2021 07:41:39 -0400
-Received: by mail-lj1-f177.google.com with SMTP id f26so15526705ljp.8;
-        Mon, 29 Mar 2021 04:41:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uzzBZzKSh0uKl45q2UqHsjLSh2lEI+XdSkO4BJlUPus=;
-        b=CntSlwy+2CwPDmM+89ZJNmfQz/tJjpp6z+1pS5km9BOW9IajVj3VpRrp48rSi3Zh73
-         WIbMB2jLDpsSKP21p5jp1Zz65nEj4xdjmZbDFYCKusmm39qHrpKHmYEdfQcWGj4RgnQp
-         I40rBBqFeZstHKkP/pwAo/Ce6i2JN6o6vbDJQxUqkUaWsh4En/bwll5diZPAUNfSzIyh
-         rONjHvfg9ininLaY0mu+XoXDFZuCYhxqYpIBwnNREcSBDic8cPpc57FEqVUrpS3w6oI5
-         puYXluUQWmfnZMjhcUuvlvJxxVcHV8jSAjimG+K8GM0S1+bmjDLVzfAbNIQ8+ZkSIyU+
-         +/SQ==
-X-Gm-Message-State: AOAM53003s1qpwO534a4YWU8SaQ2MzlLYxcfwXWGB+5ov8QVaiqEawKq
-        ld2kp4+SVFVAH8j2r6vqquyOqMrp5DTeiQ==
-X-Google-Smtp-Source: ABdhPJwBzTv/bSfcMTTjPl3RbfBy5JY0KZf+i3hKzVc/blLmEU44IQq/kRyZsQnQRLWoSJ4K13qucg==
-X-Received: by 2002:a2e:7a11:: with SMTP id v17mr18071884ljc.403.1617018097908;
-        Mon, 29 Mar 2021 04:41:37 -0700 (PDT)
-Received: from dc7vkhyh15000m40t6jht-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::2])
-        by smtp.gmail.com with ESMTPSA id z13sm1809648lfh.144.2021.03.29.04.41.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Mar 2021 04:41:37 -0700 (PDT)
-Date:   Mon, 29 Mar 2021 14:41:31 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] gpiolib: Allow drivers to return EOPNOTSUPP from config
-Message-ID: <d2c8b7f9a3b420c2764f645da531a57db16905f3.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
+        id S231196AbhC2LuF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Mar 2021 07:50:05 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:37458 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S230388AbhC2Ltw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Mar 2021 07:49:52 -0400
+X-UUID: ddbdf52e650846288a9a09d2c4d7041d-20210329
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=700zl6YmFxv75lk34/wx0WtvqnKIf4i7bpRRlFphdnI=;
+        b=AHzPNTFUi/evXpq/pyNIGpnxTSTLWtQ62edJtxYxuTpgVIC3HfFTJz+c0rzCpSXSYyfhCyMsDl4f7zJcFdDLfWRC6Ulq5o32nOQW0ZFzO2FeQivLP1IDjwCAyt1bKChKB2UCZOh7Y9j5vQ3nuDEKXegbou/IfgIE8jtce5f3sXY=;
+X-UUID: ddbdf52e650846288a9a09d2c4d7041d-20210329
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 200071948; Mon, 29 Mar 2021 19:49:48 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Mar
+ 2021 19:49:46 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 29 Mar 2021 19:49:45 +0800
+Message-ID: <1617018585.10316.9.camel@mhfsdcap03>
+Subject: Re: [PATCH Resend v0 0/6] Mediatek pinctrl patch on mt8195
+From:   zhiyong tao <zhiyong.tao@mediatek.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        <hui.liu@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>,
+        <jg_poxu@mediatek.com>, <biao.huang@mediatek.com>,
+        <hongzhou.yang@mediatek.com>, <erin.lo@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>, <seiya.wang@mediatek.com>,
+        Sj Huang <sj.huang@mediatek.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Mon, 29 Mar 2021 19:49:45 +0800
+In-Reply-To: <CAHp75Vc7x=VoNqQKXOyxhkixR3SivQn3yGkejTkZ8bO0Tv6bDA@mail.gmail.com>
+References: <20210329113103.11003-1-zhiyong.tao@mediatek.com>
+         <CAHp75Vc7x=VoNqQKXOyxhkixR3SivQn3yGkejTkZ8bO0Tv6bDA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
+X-TM-SNTS-SMTP: AABB6345A8775AA73C4B49EF96DF27E08E9473E30D95DB3D672079749D6477F42000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The checkpacth instructs to switch from ENOSUPP to EOPNOTSUPP.
-> WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
+T24gTW9uLCAyMDIxLTAzLTI5IGF0IDE0OjM1ICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
+DQo+IE9uIE1vbiwgTWFyIDI5LCAyMDIxIGF0IDI6MzIgUE0gWmhpeW9uZyBUYW8gPHpoaXlvbmcu
+dGFvQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBUaGlzIHNlcmllcyBpbmNsdWRlcyA2
+IHBhdGNoZXM6DQo+ID4gMS5hZGQgcGluY3RybCBmaWxlIG9uIG10ODE5NS4NCj4gPiAyLmFkZCBw
+aW5jdHJsIGJpbmRpbmcgZG9jdW1lbnQgb24gbXQ4MTk1Lg0KPiA+IDMuYWRkIHBpbmN0cmwgZGV2
+aWNlIG5vZGUgb24gbXQ4MTk1Lg0KPiA+IDQuYWRkIHBpbmN0cmwgZHJpdmVyIG9uIE1UODE5NS4N
+Cj4gPiA1LmFkZCBwaW5jdHJsIGRyaXZlIGZvciBJMkMgcmVsYXRlZCBwaW5zIG9uIE1UODE5NS4N
+Cj4gPiA2LmFkZCBwaW5jdHJsIHJzZWwgc2V0dGluZyBvbiBNVDgxOTUuDQo+IA0KPiBQYXRjaCBz
+ZXJpZXMgdy9vIHZlcnNpb24gaXMgZGUgZmFjdG8gdjEuDQo+IERyb3BwaW5nIHRvIHYwIHNlZW1z
+IG5vdCByaWdodC4NCj4gWW91IG1pc3NlZCBjaGFuZ2Vsb2cuDQo+IA0KPiBTbywgc2VuZCB2MiBw
+cm9wZXJseS4NCj4gDQo+IE1hdGVyaWFsIHRvIHN0dWR5Og0KPiBodHRwczovL3d3dy5rZXJuZWwu
+b3JnL2RvYy9odG1sL2xhdGVzdC9wcm9jZXNzL3N1Ym1pdHRpbmctcGF0Y2hlcy5odG1sDQo+IA0K
+DQpIaSBBbmR5LA0KDQpUaGVyZSBpcyBub3QgYW55IGNoYW5nZSBiZXR3ZWVuIHYwIGFuZCB2MS4g
+c28gd2Ugc2VuZCAiUmVzZW5kIHYwIiBhcyB2Mg0KaW4gdGhpcyB0aW1lLklzIGl0IGFsc28gcHJv
+cGVybHk/IGFuZCB3ZSBzZW5kIHRoZSB2ZXJzaW9uIHdoaWNoIGlzIHYzIGluDQpuZXh0IHRpbWUu
+IA0KDQpUaGFua3MuDQo=
 
-Make the gpiolib allow drivers to return both so driver developers
-can avoid one of the checkpatch complaints.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 6367646dce83..60d61a6314b0 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2134,7 +2134,7 @@ static int gpio_set_config_with_argument_optional(struct gpio_desc *desc,
- 	int ret;
- 
- 	ret = gpio_set_config_with_argument(desc, mode, argument);
--	if (ret != -ENOTSUPP)
-+	if (ret != -ENOTSUPP && ret != -EOPNOTSUPP)
- 		return ret;
- 
- 	switch (mode) {
--- 
-2.25.4
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
