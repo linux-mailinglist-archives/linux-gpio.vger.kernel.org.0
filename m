@@ -2,116 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 759AC34E3A0
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 10:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1F9334E3DF
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 11:06:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231602AbhC3I5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 04:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58026 "EHLO
+        id S231138AbhC3JFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 05:05:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231614AbhC3I5Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 04:57:25 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C1EC061762;
-        Tue, 30 Mar 2021 01:57:25 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id t5-20020a1c77050000b029010e62cea9deso7981656wmi.0;
-        Tue, 30 Mar 2021 01:57:25 -0700 (PDT)
+        with ESMTP id S229816AbhC3JFE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 05:05:04 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8959DC061762
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Mar 2021 02:05:03 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id w28so1708292lfn.2
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Mar 2021 02:05:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MVk3x6ly3uTfXv9OyHlmA2lht7ASwMRy2yMGeaAU04s=;
-        b=PCZ0Bt4HUBMbaIE4ap2fsbPrFjmMEw7kqtUHhEqR3rh1xtZFns+5FEcLcDsY/ygtMX
-         ifwQt0i2MRHu+orfHe/1QEqvxvuWYp6Qo9d1KpHeWUgb/BdeYOt70GbBxnHEBbpd0SRC
-         xZiHlF4C3SmeqfGPQs9yctsZ00+HxkoT4UITpjGd9s6Dly0+aDzkZxgqtZbuLCvdqGXe
-         72wyvZiFTwK/IuwyQcHEqxurnyKCC8DRmVLm/coYZqgxRMcFbRzfI/c9cmg0/QftRHFv
-         /BNTfQC1xzLmak16Zp/7kXBBhhzOEh3xaKBwFB6/r3P8PH2a82l+82Wgz3UXvCH+RSYj
-         eLfQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bhMwS+KZWoNSuCH0L/B/6kxRevZq3yjRIpEofoQe3h4=;
+        b=s0rdgisKhyiiIQzZ2gTtOTAZR6nj/1KZy8XQdmRB0M2uDqRzLTDtpe3EJZAUnzknfT
+         3yqi+zZddfkwUlPdrETqfL+D371di91JdWPTxT+xkW003tAr3DQthoaJGl9rNniY3m6o
+         i4Pw4h1JPWaPkTclVI3MjnF2D+rf0ZK0VSzD4lPpNAg7SRCWPWrmToDZ1E/Eo/YGF/4T
+         GAM+6gDQZRlWAbiM/cszUg6zLObsCEaI1zziCuv830RyQc1jsvXtzT4yNfyVx5QbwsN2
+         1CbkAUM3AoHNEv+mnCgneiA/WuYAeBudhggpD32st0xhvCkES4FhYfb8+mIhdhdoSAmb
+         aQ8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MVk3x6ly3uTfXv9OyHlmA2lht7ASwMRy2yMGeaAU04s=;
-        b=SLQbKFW2F0Uw0PbTzOS2Bi3/bGe/J4l/zRJK2HrNOUe6f8awERkYK4hVFRvPcPzP52
-         LuLt9EspBC/vl3WxPj+gOJAq2f5mvm0j9TBfqGcA6TlPJx3JRyQdtAWFMnOgVZ322X69
-         r8XA6D3GAmCZ5W6MQy/dPcXEVE8xatuZFDW1Gnpx1NXPoDedMt7dH/SQ409+6iCbsqTN
-         Cc+zavJT4STvhPHY0BzrLUvtdG4JoLAt/cugYWzDPcMRY6cOqZoZBVh+Yw/fOek99g9h
-         K4AmdttAzDgjt0Hs6zLKvnDflbJUhAnM4vtvpOeBp916RB/KAV1PnblttSBEFc9uiXFM
-         wS6g==
-X-Gm-Message-State: AOAM530LhpCLzMzERfvBBRM17MiysWfelEKd1tU8xqMc5RG6g3rhWRlU
-        m8LdV1PieIIsTHw76KC1mx5oi31HheIRow==
-X-Google-Smtp-Source: ABdhPJy+NVavPPoVso7DUmLFx9qjpMJ8wh5HMbnY+yuGrAD54aoYMEamo2kTfTK2ef9pGXb93JGTUA==
-X-Received: by 2002:a7b:ce91:: with SMTP id q17mr3051502wmj.28.1617094643995;
-        Tue, 30 Mar 2021 01:57:23 -0700 (PDT)
-Received: from [192.168.1.10] (176.red-79-148-190.dynamicip.rima-tde.net. [79.148.190.176])
-        by smtp.gmail.com with ESMTPSA id w6sm33352228wrl.49.2021.03.30.01.57.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Mar 2021 01:57:23 -0700 (PDT)
-Subject: Re: [PATCH v9 00/22] pinctrl: add BCM63XX pincontrol support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20210324081923.20379-1-noltari@gmail.com>
- <CACRpkdZE55ixxSp6H1SKx19trGE_uVGgkLttzAVQuLzw4=Jutw@mail.gmail.com>
-From:   =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>
-Message-ID: <609f038d-3037-5cda-b489-f0816eb95658@gmail.com>
-Date:   Tue, 30 Mar 2021 10:57:23 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bhMwS+KZWoNSuCH0L/B/6kxRevZq3yjRIpEofoQe3h4=;
+        b=Tc6s510Ga1cYbuf2lTkB64CDkiS7IDVK6wzzLYQhE5a2XFIjMLr3Z0jq0Y3v3M1HA9
+         rbXC8wP8cvr9kx8NEeaphFGwqzl1123eWrB3JsGXvWCSgwP/9sOi+DlUNLjr8udevjrK
+         cNKHM3Fr8u3LPyPfHgmnEi5GfVfwYMwjbPiXEuwVWdDth78jAwNUNYcZgToZKLE6TDJj
+         GRm4CHvg/y+KHuOp7PRpFjUlJ/uU6nbS3tor7sHJvM54WHP6r35m18xdn0sWAYQhC7M2
+         peXSc51Cdo+skmw/hj0jNDkLeTGuZLnSXj4D4l3Eoh/mijygy6lRkhMXwgpDNGlnKBUy
+         4+sw==
+X-Gm-Message-State: AOAM533+8aysmnliDAZ09Qo2Mk5a/gQR0+toqTYch7aNqEpkAlche24d
+        kr1BG/plxtCK2dsUNejaEeRmLx1aSUr7GkdOVMStXznHkLejuw==
+X-Google-Smtp-Source: ABdhPJzRbd1RN2J3WUlFr0OfVin8j7Josbjf5a0gQmr90oSSAfFmhl1buHeXzgZIQblIfHU1CVezrvqr2hTViQVqUbo=
+X-Received: by 2002:a19:4c08:: with SMTP id z8mr18246243lfa.157.1617095102073;
+ Tue, 30 Mar 2021 02:05:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdZE55ixxSp6H1SKx19trGE_uVGgkLttzAVQuLzw4=Jutw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: es-ES
-Content-Transfer-Encoding: 8bit
+References: <20210323131002.2418896-1-arnd@kernel.org> <CACRpkdZjh+z66XAxg4-Cj_Mz7iVkgpyY65nNTvUdOXV6yTknEQ@mail.gmail.com>
+ <87h7kv5h9b.fsf@microchip.com>
+In-Reply-To: <87h7kv5h9b.fsf@microchip.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 30 Mar 2021 11:04:50 +0200
+Message-ID: <CACRpkdbksmk=qzie3TES5TSSA34eMKjqSvQmgQN5_Ba-BEufCw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: microchip: fix array overflow
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Arnd Bergmann <arnd@arndb.de>, Zou Wei <zou_wei@huawei.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Sun, Mar 28, 2021 at 7:18 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+> Linus Walleij writes:
+>
+> > On Tue, Mar 23, 2021 at 2:10 PM Arnd Bergmann <arnd@kernel.org> wrote:
+> >
+> >> From: Arnd Bergmann <arnd@arndb.de>
+> >>
+> >> Building with 'make W=1' shows an array overflow:
+> >>
+> >> drivers/pinctrl/pinctrl-microchip-sgpio.c: In function 'microchip_sgpio_irq_settype':
+> >> drivers/pinctrl/pinctrl-microchip-sgpio.c:154:39: error: array subscript 10 is above array bounds of 'const u8[10]' {aka 'const unsigned char[10]'} [-Werror=array-bounds]
+> >>   154 |  u32 regoff = priv->properties->regoff[rno] + off;
+> >>       |               ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+> >> drivers/pinctrl/pinctrl-microchip-sgpio.c:55:5: note: while referencing 'regoff'
+> >>    55 |  u8 regoff[MAXREG];
+> >>       |     ^~~~~~
+> >>
+> >> It's not clear to me what was meant here, my best guess is that the
+> >> offset should have been applied to the third argument instead of the
+> >> second.
+> >>
+> >> Fixes: be2dc859abd4 ("pinctrl: pinctrl-microchip-sgpio: Add irq support (for sparx5)")
+> >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Patch applied.
+> >
+> > Yours,
+> > Linus Walleij
+>
+> I don't understand - I submitted a fix for this already in February
+> (reported by Gustavo). It took some time for you to get it ack'ed - but
+> you did (Feb 1st).
+>
+> Did it end up getting dropped?
 
-El 29/03/2021 a las 12:19, Linus Walleij escribió:
-> On Wed, Mar 24, 2021 at 9:19 AM Álvaro Fernández Rojas
-> <noltari@gmail.com> wrote:
-> 
->> This patchset adds appropriate binding documentation and drivers for
->> pin controller cores found in the BCM63XX MIPS SoCs currently supported.
-> 
-> I have applied and pushed the v9 patch series with all the ACKs
-> to the "devel" branch so the build servers can churn at it! Later
-> today I will integrate it into linux-next.
-> 
-> Any remaining issues can certainly be fixed in-tree.
-> 
-> Thanks for your perseverance in cleaning up these SoCs!!
+No I ended up with your fix in fixes, then forgot about it and applied
+Arnds fix to devel (for-next) and ended up getting a conflict in my
+face.
 
-Many thanks for your support! :D
+Last night I rebased devel, dropped Arnds patch and thus solved
+the conflict.
 
-> 
-> Now, what about a patch set for the IRQ support? :)
-
-If you could give me some guidance on that matter it would be much 
-appreciated, because your comments [1] are now outdated since I switched 
-to GPIO_REGMAP
-[1] 
-http://patchwork.ozlabs.org/project/linux-gpio/patch/20210225164216.21124-3-noltari@gmail.com/
-
-> 
-> Yours,
-> Linus Walleij
-> 
-
-Best regards,
-Álvaro.
+Yours,
+Linus Walleij
