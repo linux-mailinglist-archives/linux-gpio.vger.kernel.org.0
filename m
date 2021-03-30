@@ -2,103 +2,259 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A81434E580
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 12:33:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0B1434E5A6
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 12:44:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231621AbhC3Kco (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 06:32:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231220AbhC3Kc2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 06:32:28 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3883AC061574;
-        Tue, 30 Mar 2021 03:32:28 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id k128so8085904wmk.4;
-        Tue, 30 Mar 2021 03:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wG9Tv+sZw7JZg3oKUGs5WBTRAb2kiz3YDEa15xfTHkk=;
-        b=Pt5O6GDhNFbK+rZn/grFaQ8WMAUSNHtVSCBlKvaCuEDypGHmbAToButWLY3qpYthHQ
-         kAPP6Z1bSrJfGmErn8qI9MZ707QAPwMVpPWfQKhqVdccIKV7XWlalgfREaquqLjSeQCc
-         5ubIj39UTHuVtFSY96am/wyHqSrTkcISjlRonSwzAI7lPN7M9I5UGjjfOw+HlPB+pjbC
-         4Bb/guoAdc/SuyXHkj5DGUOUcriZDptGWllg4cGYdn3Wl9cmFODYJmD1FAApLRxtr/5n
-         xKd3sg/tC/SAs4J5MXi0lppFo8lJb7Sl0ecuw7xCB0trHjbfstZjycP78ZsJPYNSOVfy
-         hbSA==
+        id S229693AbhC3KoJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 06:44:09 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:41639 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231799AbhC3Knp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 06:43:45 -0400
+Received: by mail-lj1-f181.google.com with SMTP id f26so19325952ljp.8;
+        Tue, 30 Mar 2021 03:43:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
+         :in-reply-to:references:mime-version:date:user-agent
          :content-transfer-encoding;
-        bh=wG9Tv+sZw7JZg3oKUGs5WBTRAb2kiz3YDEa15xfTHkk=;
-        b=R1Tu1y4bSRPGnBxW5miSAwSLeucogGMb9M+vTbZ2fLzNrWldKyNjXYRnPPfMTWdAno
-         MNrtsnAhcD9NuNk8liM6z2cSuByjdN1nUBk+skxWT5Vyhl3d4jGekCRL6D9nKTo7BY7M
-         VGHlDsdY1JWhQYBqNkXJbYDMQFAsvILDdDk+Ad6SDyfLJyfKHNZqYP99ch0VtwSBVwrP
-         P7lGdqiIVCkX5ZBJPCSY5MzDOJlzMSlQCdJLTRpPMo11pWT5fvSleR8MOcc8wWaFRqIh
-         mxL1M77kMazSbGQGbHs3kkNfy78JNg8Lv8kn7pOgA5Jw3iD4R94wDCWwBWvw/ibd6dDH
-         vwyQ==
-X-Gm-Message-State: AOAM532Xl2qDMN60QOc/fTlrq0/RhY0OAVZzBTuaOTPzVDnUX5p06l1n
-        PoPYB/rZwbACDTDOo8RtzQybbs41SJghjw==
-X-Google-Smtp-Source: ABdhPJyTY1ofh5OgSo5ShcDZFAeYAOCv6BMMWj/kycT0+wF9yLBL9jfJ1GppUZE6Uizsbr4xW36R8g==
-X-Received: by 2002:a7b:cf2f:: with SMTP id m15mr3293421wmg.177.1617100346933;
-        Tue, 30 Mar 2021 03:32:26 -0700 (PDT)
-Received: from skynet.lan (176.red-79-148-190.dynamicip.rima-tde.net. [79.148.190.176])
-        by smtp.gmail.com with ESMTPSA id o2sm2853818wme.19.2021.03.30.03.32.26
+        bh=HqTyV9XHBTv3QvRJDRFCOrDcx5XVNhZVXJeUt2BzmEI=;
+        b=j4oRRg66IVldA9GYY64pcz+xFC9trmXDztNaMzNmFuAT6WmQUfTAo6uNIqyxqRRt4g
+         gnFCRL6d/QDbJlcHKZUTMXhmmzwZDm1XS6anYrTnmbp6Sl0yCQ6h8saiH285s3PeYXgv
+         OMaGRkubsYrr/AyvqCZwB6Z1lTxpcre03HLdSYOnKYXmkC7w8CqV8WOHE+FJcSsvqfuw
+         5+mHtRj1sqOUCEVw8OkPUP/O5NmsctbdbKibfLeXAAal2Sc7U0ITwh+IC84ctBd0wxz1
+         sxDsZ96dCln+dAh5XAm03Rl7dWgDTLvVHzzxVRxPfwmfl8vD8QE89OVbFqsE4vgcDHzs
+         G6Cw==
+X-Gm-Message-State: AOAM530eAWOo/E12DkRCxXETs11Tgc3wGx5P9AoC4IRBevDL+7E4lvpY
+        sZkWTGtZzUog/Z0lCRTBuT0=
+X-Google-Smtp-Source: ABdhPJz8bIm9ChCGHvliotntoZpXjKgHYjcpRUuUGu4jj2VZvDhRcW5QHWe4lw4TJ3iYFCfuq5Gwkg==
+X-Received: by 2002:a2e:3016:: with SMTP id w22mr21370133ljw.354.1617101023402;
+        Tue, 30 Mar 2021 03:43:43 -0700 (PDT)
+Received: from dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::2])
+        by smtp.gmail.com with ESMTPSA id t13sm2753426ljk.47.2021.03.30.03.43.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Mar 2021 03:32:26 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     sfr@canb.auug.org.au, Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pinctrl: bcm: bcm6362: fix warning
-Date:   Tue, 30 Mar 2021 12:32:25 +0200
-Message-Id: <20210330103225.3949-1-noltari@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 30 Mar 2021 03:43:42 -0700 (PDT)
+Message-ID: <d4e78b93a62d2882492b46942a927293bad81d66.camel@fi.rohmeurope.com>
+Subject: Re: [PATCH v5 09/19] gpio: support ROHM BD71815 GPOs
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reply-To: matti.vaittinen@fi.rohmeurope.com
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+In-Reply-To: <CAHp75VdRobc6jpFzAkd3U65BhiiNPLrF4qsnCKmsQBKMYbG4sg@mail.gmail.com>
+References: <cover.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
+         <118a6160880a212d20d0251f763cad295c741b4d.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
+         <CAHp75VdRobc6jpFzAkd3U65BhiiNPLrF4qsnCKmsQBKMYbG4sg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date:   Tue, 30 Mar 2021 13:43:38 +0300
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The current implementation of bcm6362_set_gpio() produces the following
-warning on x86_64:
-drivers/pinctrl/bcm/pinctrl-bcm6362.c: In function 'bcm6362_set_gpio':
-drivers/pinctrl/bcm/pinctrl-bcm6362.c:503:8: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-  503 |        (uint32_t) desc->drv_data, 0);
-      |        ^
+Hi Andy,
 
-Modify the code to make it similar to bcm63268_set_gpio() in order to fix
-the warning.
+On Tue, 2021-03-30 at 13:11 +0300, Andy Shevchenko wrote:
+> On Mon, Mar 29, 2021 at 3:58 PM Matti Vaittinen
+> <matti.vaittinen@fi.rohmeurope.com> wrote:
+> > Support GPO(s) found from ROHM BD71815 power management IC. The IC
+> > has two
+> > GPO pins but only one is properly documented in data-sheet. The
+> > driver
+> 
+> in the datasheet
+> 
+> > exposes by default only the documented GPO. The second GPO is
+> > connected to
+> > E5 pin and is marked as GND in data-sheet. Control for this
+> > undocumented
+> 
+> in the datasheet
+> 
+> > pin can be enabled using a special DT property.
+> > 
+> > This driver is derived from work by Peter Yang <
+> > yanglsh@embest-tech.com>
+> > although not so much of original is left.
+> 
+> of the original
+> 
+> It seems you ignored my comments about the commit message. :-(
 
-Fixes: 705791e23ecd ("pinctrl: add a pincontrol driver for BCM6362")
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- drivers/pinctrl/bcm/pinctrl-bcm6362.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Sorry. I didn't do that by purpose. I forgot to reword commit.
+Completely my bad.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm6362.c b/drivers/pinctrl/bcm/pinctrl-bcm6362.c
-index eb7ec80353e9..40ef495b6301 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm6362.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm6362.c
-@@ -496,11 +496,11 @@ static int bcm6362_pinctrl_get_groups(struct pinctrl_dev *pctldev,
- static void bcm6362_set_gpio(struct bcm63xx_pinctrl *pc, unsigned pin)
- {
- 	const struct pinctrl_pin_desc *desc = &bcm6362_pins[pin];
-+	unsigned int basemode = (uintptr_t)desc->drv_data;
- 	unsigned int mask = bcm63xx_bank_pin(pin);
- 
--	if (desc->drv_data)
--		regmap_update_bits(pc->regs, BCM6362_BASEMODE_REG,
--				   (uint32_t) desc->drv_data, 0);
-+	if (basemode)
-+		regmap_update_bits(pc->regs, BCM6362_BASEMODE_REG, basemode, 0);
- 
- 	if (pin < BCM63XX_BANK_GPIOS) {
- 		/* base mode 0 => gpio 1 => mux function */
--- 
-2.20.1
+> > +struct bd71815_gpio {
+> > +       struct gpio_chip chip;
+> > +       struct device *dev;
+> 
+> Wondering why you need this. Is it the same as chip.parent?
+> 
+> > +       struct regmap *regmap;
+> > +};
+> 
+> ...
+> 
+> > +       int ret, bit;
+> > +
+> > +       bit = BIT(offset);
+> 
+> I prefer
+>   int bit = BIT(offset);
+>   int ret;
+> but I think we already discussed that. OK.
+
+Yes, we did.
+
+> ...
+> 
+> > +       default:
+> > +               break;
+> > +       }
+> > +       return -ENOTSUPP;
+> 
+> Here is a waste of line. Why break instead of direct return?
+
+As we discussed last time, I do prefer functions which are supposed to
+return a value, do so at the end of function. It's easier to read and
+does not cause issues if someone changes switch to if-else or does
+other modifications. IMO original is safer, reads better and does not
+cause issues even with old compilers.
+
+> ...
+> 
+> > +/* Template for GPIO chip */
+> > +static const struct gpio_chip bd71815gpo_chip = {
+> > +       .label                  = "bd71815",
+> > +       .owner                  = THIS_MODULE,
+> > +       .get                    = bd71815gpo_get,
+> > +       .get_direction          = bd71815gpo_direction_get,
+> > +       .set                    = bd71815gpo_set,
+> > +       .set_config             = bd71815_gpio_set_config,
+> > +       .can_sleep              = 1,
+> 
+> Strictly speaking this should be true (boolean type value).
+
+true.
+
+> 
+> > +};
+> 
+> ...
+> 
+> > +#define BD71815_TWO_GPIOS      0x3UL
+> > +#define BD71815_ONE_GPIO       0x1UL
+> 
+> Are they masks? Can you use BIT() and GENMASK()?
+
+Yes and yes. I personally prefer 0x3 over GENMASK() as for me the value
+3 as bitmask is perfectly readable. But I know others may prefer using
+GENMASK(). So yes, your comment is valid.
+
+> > +/*
+> > + * Sigh. The BD71815 and BD71817 were originally designed to
+> > support two GPO
+> > + * pins. At some point it was noticed the second GPO pin which is
+> > the E5 pin
+> > + * located at the center of IC is hard to use on PCB (due to the
+> > location). It
+> > + * was decided to not promote this second GPO and pin is marked as
+> > GND in the
+> 
+> and the pin
+> 
+> > + * datasheet. The functionality is still there though! I guess
+> > driving a GPO
+> > + * connected to the ground is a bad idea. Thus we do not support
+> > it by default.
+> > + * OTOH - the original driver written by colleagues at Embest did
+> > support
+> > + * controlling this second GPO. It is thus possible this is used
+> > in some of the
+> > + * products.
+> > + *
+> > + * This driver does not by default support configuring this second
+> > GPO
+> > + * but allows using it by providing the DT property
+> > + * "rohm,enable-hidden-gpo".
+> > + */
+> 
+
+I am sorry. I think I missed this one too.
+
+> ...
+> 
+> > +       /*
+> > +        * As writing of this the sysfs interface for GPIO control
+> > does not
+> > +        * respect the valid_mask. Do not trust it but rather set
+> > the ngpios
+> > +        * to 1 if "rohm,enable-hidden-gpo" is not given.
+> > +        *
+> > +        * This check can be removed later if the sysfs export is
+> > fixed and
+> > +        * if the fix is backported.
+> 
+> So, mark this comment with the TODO/FIXME keyword?
+
+I haven't used to use keywords like TODO/FIXME. Now that I think of it
+I've seen a few FIXME comments in sources so perhaps I should start
+using them where appropriate. I don't think it makes a big difference
+here though as I expect to be reworking this in near future (I'll
+revise ROHM PMIC GPIO drivers for regmap_gpio usage during this
+spring). I added this comment so I can revise this at that point.
+
+> 
+> > +        *
+> > +        * For now it is safest to just set the ngpios though.
+> > +        */
+> 
+> ...
+> 
+> > +       ret = devm_gpiochip_add_data(dev, &g->chip, g);
+> > +       if (ret < 0) {
+> > +               dev_err(dev, "could not register gpiochip, %d\n",
+> > ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       return ret;
+> 
+> 
+
+Sorry again. I somehow overlooked this comment as well.
+
+> ...
+> 
+> > +static struct platform_driver gpo_bd71815_driver = {
+> > +       .driver = {
+> > +               .name   = "bd71815-gpo",
+> > +               .owner  = THIS_MODULE,
+> 
+> Seems I commented on this. The module_*_driver() macro(s) will take
+> care of it.
+
+Yes you did. I missed this too. Sorry.
+
+Andy, how fatal do you think these issues are? I did put these comments
+on my 'things to clean-up' list.
+
+If you don't see them as fatal, then I rather not resend whole series
+of 19 patches just for these. I am anyway going to rework the ROHM PMIC
+GPIO drivers which I have authored during the next couple of months for
+regmap_gpio usage. This series has most of the acks except for the
+regulator part - so I was about to suggest to Lee that perhaps he could
+apply other but regulator stuff to MFD so I could squeeze the recipient
+list and amount of patches in series. 
+
+Best Regards
+	Matti Vaittinen
+
 
