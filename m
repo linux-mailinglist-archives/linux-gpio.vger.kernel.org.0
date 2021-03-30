@@ -2,449 +2,209 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5767B34EC5B
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 17:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 353EE34ECC7
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 17:42:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232263AbhC3P10 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 11:27:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232464AbhC3P1M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 11:27:12 -0400
-Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86793C0613D9
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Mar 2021 08:27:11 -0700 (PDT)
-Received: from terra.local.svanheule.net (47.118-244-81.adsl-dyn.isp.belgacom.be [81.244.118.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id EF8381E7DD3;
-        Tue, 30 Mar 2021 17:27:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1617118030;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yXUGSEsV9rgJrXYMS4YS0GmJgwUDskpNmdSgzzcjVQY=;
-        b=sz39GxJVLLT6clh9lPdTB6ejW2SpNT9yTwIv2I45wGHvOhEFCCwXonfTFi1pKjw/NH3Dd/
-        eF3Mj6b146xekyn/e+xInlsm2hmC5sGqv17rYlvovqLPk5muIWcTwsWxqEr0e3ASd5Fcol
-        KU94iqdUt5hrYguOsNe7+73tQbDpLdEcgemlpaXOnrAXiGVraLDhAwZdA6pTWfRWZUF1DN
-        VzgMmEnHSITE+BsuU/+U7ZDBojNBpWOb/cNT2FcFg5xz39AW+nH7XB69uXyxhIVIPBLFMA
-        sVHvopkPKVHrbdzbfklO5KVKSqGK/0dzsC0vNBzJKpuIyEIXq2HqWPhz7MAOdg==
-From:   Sander Vanheule <sander@svanheule.net>
-To:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     andy.shevchenko@gmail.com, bert@biot.com,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, maz@kernel.org, robh+dt@kernel.org,
-        Sander Vanheule <sander@svanheule.net>
-Subject: [PATCH v5 2/2] gpio: Add Realtek Otto GPIO support
-Date:   Tue, 30 Mar 2021 17:26:52 +0200
-Message-Id: <a41b04f4f92eacc98f51549f5ef35ecc28485255.1617117762.git.sander@svanheule.net>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <cover.1617117762.git.sander@svanheule.net>
-References: <cover.1617117762.git.sander@svanheule.net>
+        id S231929AbhC3Pl6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 11:41:58 -0400
+Received: from www.zeus03.de ([194.117.254.33]:38068 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232333AbhC3Plf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 30 Mar 2021 11:41:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=CP+IfNo9+f1PCqAYKWcxOqfgqs12
+        5/VzJBpx4GQ54Kw=; b=PVNdo2xA2zJgoRbMS2T6DIA9i77S+9aSGK6fcYhOrOdf
+        AwC1i3dJe8sRwFlVQ1gcAj7FxYeU1YsgN5Rr126svhktnDFg/dJiOVSHvs20ED6P
+        nWgKTY97DS9CoqsgfqER19nI/E16Izk6JDDS/8LR/bEU9EpJXXSOmckXRPwICDE=
+Received: (qmail 257484 invoked from network); 30 Mar 2021 17:41:33 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Mar 2021 17:41:33 +0200
+X-UD-Smtp-Session: l3s3148p1@Zi8V1cK+KIkgARa4RV5TAXqFgB02ZUaY
+Date:   Tue, 30 Mar 2021 17:41:31 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH RFC/RFT 1/1] misc: add simple logic analyzer using polling
+Message-ID: <20210330154131.GA991@ninjato>
+References: <20210330085655.12615-1-wsa+renesas@sang-engineering.com>
+ <20210330085655.12615-2-wsa+renesas@sang-engineering.com>
+ <CAHp75VcVQJ6ezyHUc8TMd0qp453QgLL42N5GqWOy5oxrp5_qnQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcVQJ6ezyHUc8TMd0qp453QgLL42N5GqWOy5oxrp5_qnQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Realtek MIPS SoCs (platform name Otto) have GPIO controllers with up to
-64 GPIOs, divided over two banks. Each bank has a set of registers for
-32 GPIOs, with support for edge-triggered interrupts.
 
-Each GPIO bank consists of four 8-bit GPIO ports (ABCD and EFGH). Most
-registers pack one bit per GPIO, except for the IMR register, which
-packs two bits per GPIO (AB-CD).
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Although the byte order is currently assumed to have port A..D at offset
-0x0..0x3, this has been observed to be reversed on other, Lexra-based,
-SoCs (e.g. RTL8196E/97D/97F).
+Hi Andy,
 
-Interrupt support is disabled for the fallback devicetree-compatible
-'realtek,otto-gpio'. This allows for quick support of GPIO banks in
-which the byte order would be unknown. In this case, the port ordering
-in the IMR registers may not match the reversed order in the other
-registers (DCBA, and BA-DC or DC-BA).
+> I would like to look at it closer, but don't have time right now. So,
+> some kind of a shallow review.
 
-Signed-off-by: Sander Vanheule <sander@svanheule.net>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/Kconfig             |  13 ++
- drivers/gpio/Makefile            |   1 +
- drivers/gpio/gpio-realtek-otto.c | 326 +++++++++++++++++++++++++++++++
- 3 files changed, 340 insertions(+)
- create mode 100644 drivers/gpio/gpio-realtek-otto.c
+Still, thanks for that!
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index e3607ec4c2e8..6fb13d6507db 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -502,6 +502,19 @@ config GPIO_RDA
- 	help
- 	  Say Y here to support RDA Micro GPIO controller.
- 
-+config GPIO_REALTEK_OTTO
-+	tristate "Realtek Otto GPIO support"
-+	depends on MACH_REALTEK_RTL
-+	default MACH_REALTEK_RTL
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  The GPIO controller on the Otto MIPS platform supports up to two
-+	  banks of 32 GPIOs, with edge triggered interrupts. The 32 GPIOs
-+	  are grouped in four 8-bit wide ports.
-+
-+	  When built as a module, the module will be called realtek_otto_gpio.
-+
- config GPIO_REG
- 	bool
- 	help
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index c58a90a3c3b1..8ace5934e3c3 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -124,6 +124,7 @@ obj-$(CONFIG_GPIO_RC5T583)		+= gpio-rc5t583.o
- obj-$(CONFIG_GPIO_RCAR)			+= gpio-rcar.o
- obj-$(CONFIG_GPIO_RDA)			+= gpio-rda.o
- obj-$(CONFIG_GPIO_RDC321X)		+= gpio-rdc321x.o
-+obj-$(CONFIG_GPIO_REALTEK_OTTO)		+= gpio-realtek-otto.o
- obj-$(CONFIG_GPIO_REG)			+= gpio-reg.o
- obj-$(CONFIG_ARCH_SA1100)		+= gpio-sa1100.o
- obj-$(CONFIG_GPIO_SAMA5D2_PIOBU)	+= gpio-sama5d2-piobu.o
-diff --git a/drivers/gpio/gpio-realtek-otto.c b/drivers/gpio/gpio-realtek-otto.c
-new file mode 100644
-index 000000000000..05ce5d48e121
---- /dev/null
-+++ b/drivers/gpio/gpio-realtek-otto.c
-@@ -0,0 +1,326 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/irq.h>
-+#include <linux/minmax.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+/*
-+ * Total register block size is 0x1C for one bank of four ports (A, B, C, D).
-+ * An optional second bank, with ports E, F, G, and H, may be present, starting
-+ * at register offset 0x1C.
-+ */
-+
-+/*
-+ * Pin select: (0) "normal", (1) "dedicate peripheral"
-+ * Not used on RTL8380/RTL8390, peripheral selection is managed by control bits
-+ * in the peripheral registers.
-+ */
-+#define REALTEK_GPIO_REG_CNR		0x00
-+/* Clear bit (0) for input, set bit (1) for output */
-+#define REALTEK_GPIO_REG_DIR		0x08
-+#define REALTEK_GPIO_REG_DATA		0x0C
-+/* Read bit for IRQ status, write 1 to clear IRQ */
-+#define REALTEK_GPIO_REG_ISR		0x10
-+/* Two bits per GPIO in IMR registers */
-+#define REALTEK_GPIO_REG_IMR		0x14
-+#define REALTEK_GPIO_REG_IMR_AB		0x14
-+#define REALTEK_GPIO_REG_IMR_CD		0x18
-+#define REALTEK_GPIO_IMR_LINE_MASK	GENMASK(1, 0)
-+#define REALTEK_GPIO_IRQ_EDGE_FALLING	1
-+#define REALTEK_GPIO_IRQ_EDGE_RISING	2
-+#define REALTEK_GPIO_IRQ_EDGE_BOTH	3
-+
-+#define REALTEK_GPIO_MAX		32
-+#define REALTEK_GPIO_PORTS_PER_BANK	4
-+
-+/**
-+ * realtek_gpio_ctrl - Realtek Otto GPIO driver data
-+ *
-+ * @gc: Associated gpio_chip instance
-+ * @base: Base address of the register block for a GPIO bank
-+ * @lock: Lock for accessing the IRQ registers and values
-+ * @intr_mask: Mask for interrupts lines
-+ * @intr_type: Interrupt type selection
-+ *
-+ * Because the interrupt mask register (IMR) combines the function of IRQ type
-+ * selection and masking, two extra values are stored. @intr_mask is used to
-+ * mask/unmask the interrupts for a GPIO port, and @intr_type is used to store
-+ * the selected interrupt types. The logical AND of these values is written to
-+ * IMR on changes.
-+ */
-+struct realtek_gpio_ctrl {
-+	struct gpio_chip gc;
-+	void __iomem *base;
-+	raw_spinlock_t lock;
-+	u16 intr_mask[REALTEK_GPIO_PORTS_PER_BANK];
-+	u16 intr_type[REALTEK_GPIO_PORTS_PER_BANK];
-+};
-+
-+/* Expand with more flags as devices with other quirks are added */
-+enum realtek_gpio_flags {
-+	/*
-+	 * Allow disabling interrupts, for cases where the port order is
-+	 * unknown. This may result in a port mismatch between ISR and IMR.
-+	 * An interrupt would appear to come from a different line than the
-+	 * line the IRQ handler was assigned to, causing uncaught interrupts.
-+	 */
-+	GPIO_INTERRUPTS_DISABLED = BIT(0),
-+};
-+
-+static struct realtek_gpio_ctrl *irq_data_to_ctrl(struct irq_data *data)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+
-+	return container_of(gc, struct realtek_gpio_ctrl, gc);
-+}
-+
-+/*
-+ * Normal port order register access
-+ *
-+ * Port information is stored with the first port at offset 0, followed by the
-+ * second, etc. Most registers store one bit per GPIO and use a u8 value per
-+ * port. The two interrupt mask registers store two bits per GPIO, so use u16
-+ * values.
-+ */
-+static void realtek_gpio_write_imr(struct realtek_gpio_ctrl *ctrl,
-+	unsigned int port, u16 irq_type, u16 irq_mask)
-+{
-+	iowrite16(irq_type & irq_mask, ctrl->base + REALTEK_GPIO_REG_IMR + 2 * port);
-+}
-+
-+static void realtek_gpio_clear_isr(struct realtek_gpio_ctrl *ctrl,
-+	unsigned int port, u8 mask)
-+{
-+	iowrite8(mask, ctrl->base + REALTEK_GPIO_REG_ISR + port);
-+}
-+
-+static u8 realtek_gpio_read_isr(struct realtek_gpio_ctrl *ctrl,
-+	unsigned int port)
-+{
-+	return ioread8(ctrl->base + REALTEK_GPIO_REG_ISR + port);
-+}
-+
-+/* Set the rising and falling edge mask bits for a GPIO port pin */
-+static u16 realtek_gpio_imr_bits(unsigned int pin, u16 value)
-+{
-+	return (value & REALTEK_GPIO_IMR_LINE_MASK) << 2 * pin;
-+}
-+
-+static void realtek_gpio_irq_ack(struct irq_data *data)
-+{
-+	struct realtek_gpio_ctrl *ctrl = irq_data_to_ctrl(data);
-+	irq_hw_number_t line = irqd_to_hwirq(data);
-+	unsigned int port = line / 8;
-+	unsigned int port_pin = line % 8;
-+
-+	realtek_gpio_clear_isr(ctrl, port, BIT(port_pin));
-+}
-+
-+static void realtek_gpio_irq_unmask(struct irq_data *data)
-+{
-+	struct realtek_gpio_ctrl *ctrl = irq_data_to_ctrl(data);
-+	unsigned int line = irqd_to_hwirq(data);
-+	unsigned int port = line / 8;
-+	unsigned int port_pin = line % 8;
-+	unsigned long flags;
-+	u16 m;
-+
-+	raw_spin_lock_irqsave(&ctrl->lock, flags);
-+	m = ctrl->intr_mask[port];
-+	m |= realtek_gpio_imr_bits(port_pin, REALTEK_GPIO_IMR_LINE_MASK);
-+	ctrl->intr_mask[port] = m;
-+	realtek_gpio_write_imr(ctrl, port, ctrl->intr_type[port], m);
-+	raw_spin_unlock_irqrestore(&ctrl->lock, flags);
-+}
-+
-+static void realtek_gpio_irq_mask(struct irq_data *data)
-+{
-+	struct realtek_gpio_ctrl *ctrl = irq_data_to_ctrl(data);
-+	unsigned int line = irqd_to_hwirq(data);
-+	unsigned int port = line / 8;
-+	unsigned int port_pin = line % 8;
-+	unsigned long flags;
-+	u16 m;
-+
-+	raw_spin_lock_irqsave(&ctrl->lock, flags);
-+	m = ctrl->intr_mask[port];
-+	m &= ~realtek_gpio_imr_bits(port_pin, REALTEK_GPIO_IMR_LINE_MASK);
-+	ctrl->intr_mask[port] = m;
-+	realtek_gpio_write_imr(ctrl, port, ctrl->intr_type[port], m);
-+	raw_spin_unlock_irqrestore(&ctrl->lock, flags);
-+}
-+
-+static int realtek_gpio_irq_set_type(struct irq_data *data, unsigned int flow_type)
-+{
-+	struct realtek_gpio_ctrl *ctrl = irq_data_to_ctrl(data);
-+	unsigned int line = irqd_to_hwirq(data);
-+	unsigned int port = line / 8;
-+	unsigned int port_pin = line % 8;
-+	unsigned long flags;
-+	u16 type, t;
-+
-+	switch (flow_type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_FALLING:
-+		type = REALTEK_GPIO_IRQ_EDGE_FALLING;
-+		break;
-+	case IRQ_TYPE_EDGE_RISING:
-+		type = REALTEK_GPIO_IRQ_EDGE_RISING;
-+		break;
-+	case IRQ_TYPE_EDGE_BOTH:
-+		type = REALTEK_GPIO_IRQ_EDGE_BOTH;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	irq_set_handler_locked(data, handle_edge_irq);
-+
-+	raw_spin_lock_irqsave(&ctrl->lock, flags);
-+	t = ctrl->intr_type[port];
-+	t &= ~realtek_gpio_imr_bits(port_pin, REALTEK_GPIO_IMR_LINE_MASK);
-+	t |= realtek_gpio_imr_bits(port_pin, type);
-+	ctrl->intr_type[port] = t;
-+	realtek_gpio_write_imr(ctrl, port, t, ctrl->intr_mask[port]);
-+	raw_spin_unlock_irqrestore(&ctrl->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void realtek_gpio_irq_handler(struct irq_desc *desc)
-+{
-+	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-+	struct realtek_gpio_ctrl *ctrl = gpiochip_get_data(gc);
-+	struct irq_chip *irq_chip = irq_desc_get_chip(desc);
-+	unsigned int lines_done;
-+	unsigned int port_pin_count;
-+	unsigned int irq;
-+	unsigned long status;
-+	int offset;
-+
-+	chained_irq_enter(irq_chip, desc);
-+
-+	for (lines_done = 0; lines_done < gc->ngpio; lines_done += 8) {
-+		status = realtek_gpio_read_isr(ctrl, lines_done / 8);
-+		port_pin_count = min(gc->ngpio - lines_done, 8U);
-+		for_each_set_bit(offset, &status, port_pin_count) {
-+			irq = irq_find_mapping(gc->irq.domain, offset);
-+			generic_handle_irq(irq);
-+		}
-+	}
-+
-+	chained_irq_exit(irq_chip, desc);
-+}
-+
-+static int realtek_gpio_irq_init(struct gpio_chip *gc)
-+{
-+	struct realtek_gpio_ctrl *ctrl = gpiochip_get_data(gc);
-+	unsigned int port;
-+
-+	for (port = 0; (port * 8) < gc->ngpio; port++) {
-+		realtek_gpio_write_imr(ctrl, port, 0, 0);
-+		realtek_gpio_clear_isr(ctrl, port, GENMASK(7, 0));
-+	}
-+
-+	return 0;
-+}
-+
-+static struct irq_chip realtek_gpio_irq_chip = {
-+	.name = "realtek-otto-gpio",
-+	.irq_ack = realtek_gpio_irq_ack,
-+	.irq_mask = realtek_gpio_irq_mask,
-+	.irq_unmask = realtek_gpio_irq_unmask,
-+	.irq_set_type = realtek_gpio_irq_set_type,
-+};
-+
-+static const struct of_device_id realtek_gpio_of_match[] = {
-+	{
-+		.compatible = "realtek,otto-gpio",
-+		.data = (void *)GPIO_INTERRUPTS_DISABLED,
-+	},
-+	{
-+		.compatible = "realtek,rtl8380-gpio",
-+	},
-+	{
-+		.compatible = "realtek,rtl8390-gpio",
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, realtek_gpio_of_match);
-+
-+static int realtek_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	unsigned int dev_flags;
-+	struct gpio_irq_chip *girq;
-+	struct realtek_gpio_ctrl *ctrl;
-+	u32 ngpios;
-+	int err, irq;
-+
-+	ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
-+	if (!ctrl)
-+		return -ENOMEM;
-+
-+	dev_flags = (unsigned int) device_get_match_data(dev);
-+
-+	if (device_property_read_u32(dev, "ngpios", &ngpios))
-+		ngpios = REALTEK_GPIO_MAX;
-+
-+	if (ngpios > REALTEK_GPIO_MAX) {
-+		dev_err(&pdev->dev, "invalid ngpios (max. %d)\n",
-+			REALTEK_GPIO_MAX);
-+		return -EINVAL;
-+	}
-+
-+	ctrl->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(ctrl->base))
-+		return PTR_ERR(ctrl->base);
-+
-+	raw_spin_lock_init(&ctrl->lock);
-+
-+	err = bgpio_init(&ctrl->gc, dev, 4,
-+		ctrl->base + REALTEK_GPIO_REG_DATA, NULL, NULL,
-+		ctrl->base + REALTEK_GPIO_REG_DIR, NULL,
-+		BGPIOF_BIG_ENDIAN_BYTE_ORDER);
-+	if (err) {
-+		dev_err(dev, "unable to init generic GPIO");
-+		return err;
-+	}
-+
-+	ctrl->gc.ngpio = ngpios;
-+	ctrl->gc.owner = THIS_MODULE;
-+
-+	irq = platform_get_irq_optional(pdev, 0);
-+	if (!(dev_flags & GPIO_INTERRUPTS_DISABLED) && irq > 0) {
-+		girq = &ctrl->gc.irq;
-+		girq->chip = &realtek_gpio_irq_chip;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->handler = handle_bad_irq;
-+		girq->parent_handler = realtek_gpio_irq_handler;
-+		girq->num_parents = 1;
-+		girq->parents = devm_kcalloc(dev, girq->num_parents,
-+					sizeof(*girq->parents),	GFP_KERNEL);
-+		if (!girq->parents)
-+			return -ENOMEM;
-+		girq->parents[0] = irq;
-+		girq->init_hw = realtek_gpio_irq_init;
-+	}
-+
-+	return gpiochip_add_data(&ctrl->gc, ctrl);
-+}
-+
-+static struct platform_driver realtek_gpio_driver = {
-+	.driver = {
-+		.name = "realtek-otto-gpio",
-+		.of_match_table	= realtek_gpio_of_match,
-+	},
-+	.probe = realtek_gpio_probe,
-+};
-+module_platform_driver(realtek_gpio_driver);
-+
-+MODULE_DESCRIPTION("Realtek Otto GPIO support");
-+MODULE_AUTHOR("Sander Vanheule <sander@svanheule.net>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.30.2
+> But the idea is, let's say, interesting.
 
+:)
+
+> > +The binding documentation is in the ``misc`` folder of the Kernel bind=
+ing
+> > +documentation.
+>=20
+> Can't you give a reference in terms of reST format?
+
+Sure. Still need to practice reST.
+
+> > +config GPIO_LOGIC_ANALYZER
+> > +       tristate "Simple GPIO logic analyzer"
+> > +       depends on GPIOLIB || COMPILE_TEST
+> > +       help
+> > +         This option enables support for a simple logic analyzer using=
+ polled
+> > +         GPIOs. Use the 'tools/debugging/gpio-logic-analyzer' script w=
+ith this
+> > +         driver. The script will make using it easier and can also iso=
+late a
+> > +         CPU for the polling task. Note that this is still a last reso=
+rt
+> > +         analyzer which can be affected by latencies and non-determina=
+nt code
+> > +         paths. However, for e.g. remote development, it may be useful=
+ to get
+> > +         a first view and aid further debugging.
+>=20
+> Module name?
+
+Yup, willl add.
+
+> > +#include <linux/of.h>
+>=20
+> Can you switch to use device property API?
+
+IIRC I checked that and I couldn't find a replacement for
+of_property_read_string_index().
+
+> > +/* can be increased if needed */
+> > +#define GPIO_LA_MAX_PROBES 8
+> > +#define GPIO_LA_PROBES_MASK 7
+>=20
+> Does this assume the power-of-two number of probes?
+> Perhaps using BIT(x) and (BIT(x) - 1) will clarify that.
+
+The arbitrary limit of 8 probes is solely to get this out now for
+initial review, to check if this is upstreamable at all. If this is
+considered acceptable, I can also update this to 64 probes and can get
+rid of some more hackish code (e.g. fallback names of probes), too.
+
+> > +struct gpio_la_poll_priv {
+> > +       unsigned long ndelay;
+> > +       u32 buf_idx;
+> > +       struct mutex lock;
+> > +       struct debugfs_blob_wrapper blob;
+> > +       struct gpio_descs *descs;
+> > +       struct dentry *debug_dir, *blob_dent;
+> > +       struct debugfs_blob_wrapper meta;
+> > +       unsigned long gpio_delay;
+> > +       unsigned int trigger_len;
+>=20
+> > +       u8 trigger_data[PAGE_SIZE];
+>=20
+> This is not good for fragmentation (basically you make your struct to
+> occupy 2 pages, one of which will be almost wasted). Better to have a
+> pointer here and allocate one page by get_zero_page() or so.
+
+Point taken. I will have a look.
+
+> > +       if (val) {
+>=20
+> if (!val)
+>   return 0;
+>=20
+> makes your life easier.
+
+Yeah, it is cruft from an earlier version
+
+> > +               if (ret)
+>=20
+> > +                       pr_err("%s: couldn't read GPIOs: %d\n", __func_=
+_, ret);
+>=20
+> Haven't noticed if you are using pr_fmt(). It may be better than using __=
+func__.
+>=20
+> Btw, it seems you have a struct device for that or so. Why don't you
+> use dev_err()?
+
+Will check.
+
+> > +               if (buf[i] < '1' || buf[i] > '0' + GPIO_LA_MAX_PROBES)
+>=20
+> So, you can't increase the amount of probes without breaking this
+> entire parser (it will go somewhere to symbols and letters...).
+
+Yeah. This is why I put GPIO_LA_MAX_PROBES there. When I upgrade the
+number of probes, I need to have a look at all place using this define.
+This code is ugly, I know.
+
+> Shouldn't you return OVERFLOW here or something like that?
+
+I could. But 4K of trigger data is also invalid. It is an academic
+discussion, though.=20
+
+> I'm not a fan of yet another parser in the kernel. Can you provide a
+> bit of description of the format?
+
+It is in the help of the script. I could maybe add it to the docs, too.
+
+> > +       if (IS_ERR(priv->debug_dir))
+> > +               return PTR_ERR(priv->debug_dir);
+>=20
+> Shouldn't be checked AFAIU.
+
+Oh, really? Will check.
+
+> > +static const struct of_device_id gpio_la_poll_of_match[] =3D {
+> > +       { .compatible =3D GPIO_LA_NAME, },
+>=20
+> > +       { },
+>=20
+> No comma needed.
+
+OK.
+
+Thanks for your time!
+
+   Wolfram
+
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmBjRqcACgkQFA3kzBSg
+KbZEcw//fVqGcbp/ilQlTdgAH01uX9tT7gIpmvlcW+XZJCFL2sO0+L0jklNMKFTu
+Hzek6EvaQKKlM5+nxANh2iCieCPR9Olb6GEaPipkbO1ROrssL4p18kqnMXTun7gK
+mto/nY6yVHH23Dd9HTcLf0AJkgGvhx3eLRlzdEhVxyNoPhaWLDy/tmuM3UzCnH+x
+1mpCpMhvo9hwVo3FsIPEJz9o6dDxSLJvdjnuaKqi+H7tiof0waJIuuLkKmIoXad6
+qpxxzZnekrShZRwyzQmEapIiEVtnuxiOpwYSzZpdRZl8Kue0YbXroLhw4R6//mee
+QqehLiN12R215JGR+TJV8au9Pn/LAvFL1f8hLDVH8Iq2wUMiap3N0DIjlpwUH5do
+sB/x6d+eQ/lMQtv5ll4uNg6Aw0rf1d0bdavKcyR71mCDSc1RSOJ3MQPMMcUeNoV5
+llGYTRaOtW14/MvaBCh1b2iE4C6Uf/JdDr2sgpPDT35Xczef8xk2jv9bsMFzPcRU
+D7pAGsknCtslp26Nb+CAIoC5Md2v/8vygcFQx/XY/7OOyGXuBMsE9I2LK4cp4hqQ
+NGGPh8xQPncaNN0VZ7daDvGFXR4woaaPyN2NP7nGI6f1qe7QfPVS1S3OwmX2IBdj
+nXQ96uKLxdUpPM+TyM+ln+C1dsUxUVUG/xABPakMi+PkkwZU0ug=
+=0kbW
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
