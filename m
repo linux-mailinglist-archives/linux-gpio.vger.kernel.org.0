@@ -2,92 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE5E934E5D7
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 12:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 419CB34E5DB
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 12:56:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231537AbhC3Kyv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 06:54:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55216 "EHLO
+        id S231154AbhC3Kz7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 06:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231154AbhC3Kyf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 06:54:35 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5EBC061574;
-        Tue, 30 Mar 2021 03:54:35 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id h25so11461081pgm.3;
-        Tue, 30 Mar 2021 03:54:35 -0700 (PDT)
+        with ESMTP id S231793AbhC3Kzg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 06:55:36 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DE3C061574;
+        Tue, 30 Mar 2021 03:55:36 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id f3so2237020pgv.0;
+        Tue, 30 Mar 2021 03:55:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GfTXsCc8VwOCrzz5IdVCXT4sti0I4o6ulUxkv8FeK7g=;
-        b=YJAH/noyJneTpA0X43ErEz/UFsFEgkwZ3ukM7fGy4VRntqNAUK46Ay8zaGC6HZFdFe
-         bLJjJwhtq6sieA9mutlfAU5p8c+v2REPkBDgqjFSSnIMsw8O4jf2P2BteogNq6PDB2nK
-         7DWMWUCZ7pKisRqqAOgh/TsEC2S28DuvUmdShd4rFGmFMvB83NfLa7iz41JKIHEI1aGN
-         LHky3qSLnQL2CS90SYvVtaHCEvgQZfvx9W//ENYy6aDEdYdP6Nv7jUuCd3hbm2WwrUlV
-         JzTMUkC6SCO5CPbF9d+yYRxRbtOPTtHUedrx2YLDT1EyJDr3SCWl+CBKfrvDTztU6gxO
-         GMcA==
+         :cc:content-transfer-encoding;
+        bh=O0YD9xf83jFGgqYS1T0c6p91ad9dPXXOQ3N3xh5E1ak=;
+        b=mbFTEhvz+vHmmp4K3JDx1Xi7lifD4tZiIorBU2FpgGZ5OZbQpyefDCeQK8Z/Tx+3IF
+         b74t2vH7xeJfLvKTuiL/1BzcRdjLXxmmFzt2bDny1IUQLsRcv6hH0FCioICT67TeKrCf
+         /Wn6hzB5a7REUMntEko6Zn+K7rD+0Mcvm8PyWlDwS4pYxzjmlTqKnDSMLhibBFLI+S6v
+         vd/TUzCzMn0oYbBVj3mKTxp8Ic9+4lI0ah0qGN+FShMK+81XUtVskHU+TZ7NPzAxDKXv
+         2ZUv3eyWV/fyZwVV/lMqdfYyjnAtvhbQEFHleW0I3res5Zuv5rN1/b1BrqStJCnPLBGZ
+         z9OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GfTXsCc8VwOCrzz5IdVCXT4sti0I4o6ulUxkv8FeK7g=;
-        b=CzpyyWVbQja/1Pjps6/RmR7p066nkwhWgskii4gR8x03woeRLaNpzNl3aaPUCrYj4G
-         9Gz+wvukI55ar/9Hw7gofZiA3LKEGsdLT214MPe1wy60Hgf/B9QHmjY5PpawgdMpIMHe
-         +3TdX2AptJTdYhBEbCtaHvrIYKaoX+jZEK/vf/7uAY5ALakdXPthF1XKIgUDt7TB30wH
-         kT1+7x2JhSRfpTxPgCRS7K4zzB0eldgge9Q/i5Jx2XRBJ3/KxmyC/TpdQfE77zlUKLGP
-         bmU4DtnaBYDz9c69tbn/W8ACDQkiBGOn7nppSoli6o4jthLInKxNSYZazfqCSXMpFevs
-         AFGg==
-X-Gm-Message-State: AOAM5332FOp+x0+NmN7c3EWmsMAh+Ygrc7fSBkPSieD3Ko7NHEcW6kXF
-        gb63mv9MWt72deUd5acatCduo7Q09aKusmMKfLk=
-X-Google-Smtp-Source: ABdhPJyYjv0zrkk92HwCcZoSJd1Qt05pjq4R9mTJrwEJ6hv3FeLZ0+qIgtMm4U7QFaRNmO5DhyiNwMiZi7sLoxYeXGw=
-X-Received: by 2002:a63:c48:: with SMTP id 8mr5797418pgm.74.1617101675189;
- Tue, 30 Mar 2021 03:54:35 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O0YD9xf83jFGgqYS1T0c6p91ad9dPXXOQ3N3xh5E1ak=;
+        b=K52m5R3hdsYB78OZNzP8mZuxCpb4Uw55yZTmrNWHIRwPRmo1gO0jHBj9HmM7aqqHra
+         IfsXI2Vy2TpYoj1ukTpk0IGvNYIbXLVGJIkA04YbGDp/TcLkw9y+1BKjapn0Q9q7DTNQ
+         dUtYcXpD7BRDmT/c9CoDkmYz+wt4Tjkd7lnxSnZ4ofTTAx6nplWMxKxMq3lZsT6TznWY
+         bqzJuabIKyZVo06IbImh4so2/WvHrR8p63atEWJhme70d6hJqxLPpbwH21wKCylc4j6u
+         /6wpF4kYOycrPZ0oY4TfwTJt5d/7ZmgcqcgtDDp+2/9Er5nH7eWqA/oyGEkJpsSGw0Gv
+         FGpw==
+X-Gm-Message-State: AOAM532+oP7Q638FUj4CyGO2ZMejTcKc0TYknwvF/mYys7FfMbvqMWbV
+        q9FoR4iK6dcR0w/ij0B4II+tJr2P5BWUKyDtflg=
+X-Google-Smtp-Source: ABdhPJyYVOtJwGeqioL7Y0RCNhwClzK47F9hp/08LJ4eUXuTrXRump61CTb6aqcu3ECVHG26ujOfB3ylvoqBLHqEwvc=
+X-Received: by 2002:a62:7c43:0:b029:1ef:20ce:ba36 with SMTP id
+ x64-20020a627c430000b02901ef20ceba36mr29793664pfc.40.1617101735610; Tue, 30
+ Mar 2021 03:55:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
- <118a6160880a212d20d0251f763cad295c741b4d.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
- <CAHp75VdRobc6jpFzAkd3U65BhiiNPLrF4qsnCKmsQBKMYbG4sg@mail.gmail.com> <d4e78b93a62d2882492b46942a927293bad81d66.camel@fi.rohmeurope.com>
-In-Reply-To: <d4e78b93a62d2882492b46942a927293bad81d66.camel@fi.rohmeurope.com>
+References: <20210330103225.3949-1-noltari@gmail.com>
+In-Reply-To: <20210330103225.3949-1-noltari@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 30 Mar 2021 13:54:19 +0300
-Message-ID: <CAHp75Vce8sUsVz0YgHLDFbVMEmbYzaUZ-nRwgOeEfDHowEnxrw@mail.gmail.com>
-Subject: Re: [PATCH v5 09/19] gpio: support ROHM BD71815 GPOs
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+Date:   Tue, 30 Mar 2021 13:55:18 +0300
+Message-ID: <CAHp75VdCLuS-0YL6+_vz5GqJC9N0AOiuYazkB1VNvbsPD78NAA@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: bcm: bcm6362: fix warning
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 30, 2021 at 1:43 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
-> On Tue, 2021-03-30 at 13:11 +0300, Andy Shevchenko wrote:
-
-...
-
-> Andy, how fatal do you think these issues are? I did put these comments
-> on my 'things to clean-up' list.
+On Tue, Mar 30, 2021 at 1:33 PM =C3=81lvaro Fern=C3=A1ndez Rojas
+<noltari@gmail.com> wrote:
 >
-> If you don't see them as fatal, then I rather not resend whole series
-> of 19 patches just for these. I am anyway going to rework the ROHM PMIC
-> GPIO drivers which I have authored during the next couple of months for
-> regmap_gpio usage. This series has most of the acks except for the
-> regulator part - so I was about to suggest to Lee that perhaps he could
-> apply other but regulator stuff to MFD so I could squeeze the recipient
-> list and amount of patches in series.
+> The current implementation of bcm6362_set_gpio() produces the following
+> warning on x86_64:
+> drivers/pinctrl/bcm/pinctrl-bcm6362.c: In function 'bcm6362_set_gpio':
+> drivers/pinctrl/bcm/pinctrl-bcm6362.c:503:8: warning: cast from pointer t=
+o integer of different size [-Wpointer-to-int-cast]
+>   503 |        (uint32_t) desc->drv_data, 0);
+>       |        ^
+>
+> Modify the code to make it similar to bcm63268_set_gpio() in order to fix
+> the warning.
 
-I understand that. I'm not a maintainer, but my personal view is that
-it can be fixed in follow ups.
-The problem as usual here is that people often forget to cook / send
-follow up. That's why lately I'm more insisting on changes to be done
-as soon as possible.
+Seems good to me, thanks!
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
--- 
+> Fixes: 705791e23ecd ("pinctrl: add a pincontrol driver for BCM6362")
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> ---
+
+Missed changelog here.
+
+>  drivers/pinctrl/bcm/pinctrl-bcm6362.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm6362.c b/drivers/pinctrl/bcm/=
+pinctrl-bcm6362.c
+> index eb7ec80353e9..40ef495b6301 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-bcm6362.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-bcm6362.c
+> @@ -496,11 +496,11 @@ static int bcm6362_pinctrl_get_groups(struct pinctr=
+l_dev *pctldev,
+>  static void bcm6362_set_gpio(struct bcm63xx_pinctrl *pc, unsigned pin)
+>  {
+>         const struct pinctrl_pin_desc *desc =3D &bcm6362_pins[pin];
+> +       unsigned int basemode =3D (uintptr_t)desc->drv_data;
+>         unsigned int mask =3D bcm63xx_bank_pin(pin);
+>
+> -       if (desc->drv_data)
+> -               regmap_update_bits(pc->regs, BCM6362_BASEMODE_REG,
+> -                                  (uint32_t) desc->drv_data, 0);
+> +       if (basemode)
+> +               regmap_update_bits(pc->regs, BCM6362_BASEMODE_REG, basemo=
+de, 0);
+>
+>         if (pin < BCM63XX_BANK_GPIOS) {
+>                 /* base mode 0 =3D> gpio 1 =3D> mux function */
+> --
+> 2.20.1
+>
+
+
+--=20
 With Best Regards,
 Andy Shevchenko
