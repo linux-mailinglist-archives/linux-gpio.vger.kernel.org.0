@@ -2,108 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ADFA34E532
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 12:15:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B3DE34E546
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 12:21:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231701AbhC3KPN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 06:15:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46590 "EHLO
+        id S231561AbhC3KUj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 06:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231674AbhC3KOx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 06:14:53 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7167FC061574;
-        Tue, 30 Mar 2021 03:14:53 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id a12so2946003pfc.7;
-        Tue, 30 Mar 2021 03:14:53 -0700 (PDT)
+        with ESMTP id S230248AbhC3KUK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 06:20:10 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB11CC061574;
+        Tue, 30 Mar 2021 03:20:10 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id w8so7500305pjf.4;
+        Tue, 30 Mar 2021 03:20:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=V/FqWFnSs67qGcCEFGqG7am98bSaZbZjUwLFj3yQgog=;
-        b=khDuF+e2UuYu/nyY2Zxsnbnqhv47jLx34uo/yRN4QK2H6t+ttXEZhOrBD8rUGxgQtH
-         yGaa30NkbMvGs7tilcrtRgVmGNZtb2fXsrO0LiFioYnmhiNY92+a93ZfOMGBFc0uQhbe
-         B3QeVycVRAiHR5qa995KHYutnxDgvCI04oBHsg3YARBKMkBVOgObzGrsf7HL5gv2TzFl
-         oqUREAwz6TxMW4gyD/1ws7/t/GK+p7nVHM1BYpHz6+RaWfu9y4beFl5HN6VKsobi7zzX
-         UIOlPUBcmUSL+AF9sgOgqkIlKMVoadcsB0mPzBEjBZDcHDqFcWej0V29G37M/TaXhGpK
-         m65Q==
+        bh=apAgZvbfdBeJeBhXYDfeacjBnyJ1xcC6uDlNLXeRT88=;
+        b=PFzZhzr1m78y4x/1LZdpGOFMeyr/NOWkgUL+Svn19EwA1Ywx8yq6FIptnzLGcIDNsU
+         kAafxZ6S6cUwos8cDsR0cX0dmtvw2mqBn9DeSGnkAqVYx/71kW0HX4atPqdBf00HLv+P
+         Grii6RKF7HVVLAkNw7tP3kFlMsVP/sd0js8FLmAT5pHtbNDXNWMCQDd+QK3/VO3V+ExM
+         xBESdQsEyNqZ0klcgmgkP9BTLheIHJA6zI/5TZl9K4eR6Q+KQmSY0V0v2Z5NfdBpVopu
+         VyO6lustlQY8UlbD3FN6GNgmvooCeCR5Jc2Vh+lWY7otlfKM72bhVKdsOZZ+YuCjamKb
+         ihjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=V/FqWFnSs67qGcCEFGqG7am98bSaZbZjUwLFj3yQgog=;
-        b=XxkkbYdhc7wm8zDyWp8xr6EsnhGzEwNdzYREQ37JaLsAcBRhvFwePOaLK9YDhuLfXe
-         Kj04BrI1TqJXLGUZhiUoEepvyVqhV1+CiYUKJikde0J27mAxuMVTlIaegId8MlFtHka0
-         Y2RK7H+ypwPD8ABDuphPKIetmECVp8RR+v1JTNehWL20l927BuzMK4UNC0/Gr1N0aEPM
-         nkvCLh9c3WdVYiTQ4kEZpZVZAmu/RZou4I/6PKxnnkHLJMh4uc8yZtakOf942ExNvHFL
-         jDhVjwEilUQvfo2nzsMCizvGEhBWIh4CCwC55hd/8OS0ZgpZTFKdTb+r/F6zJh56TbQN
-         TB8w==
-X-Gm-Message-State: AOAM531wjIVvBHygL2xB0/wGX4M17a5kJMxFMrFs2hBMn/nj7HdL1Z/S
-        eP+2Vn5R9YHB0kRH8fLgq9Bmge0SH6AoP/e9HpI=
-X-Google-Smtp-Source: ABdhPJyILHEmzrLjVBkkaRHNJz9cY8t9hh5ubDELOkuJG/yLxLPEh9xv1zX8Yy2xEfobxgdNbHsAiXwFdw/fwQk6l9A=
-X-Received: by 2002:a63:c48:: with SMTP id 8mr5652768pgm.74.1617099292871;
- Tue, 30 Mar 2021 03:14:52 -0700 (PDT)
+        bh=apAgZvbfdBeJeBhXYDfeacjBnyJ1xcC6uDlNLXeRT88=;
+        b=CkCg4uI/mKlAI5MHiEdoY3D/CKSNN/P5Z6ZuzlIZWe/LT+arUhTsbWLT96S4VCZCU9
+         SA9UN1kpLLDqv1/+UOma2UxINXmkyPs96thURc/KngjW3XJcHLsxYnbME/Kxml37O+1K
+         KdAOqrJsRCmFzHS8nKuZ44EEVMxM7OcsDlhBmCI9gQrbutjGyi45Sd3r7KBqn9HvtFQD
+         RN8nCkuApMu7oqrpaKHJUchO24Bvha6U7db+TEpuhpFDPxHpm/ovtfkAJKgnILNy5NO/
+         JxnTymuDIuaUkPBxdgddyFgbg0aX7DvTorlXx6+GZURGX5qIszHpgnlPE4CoeRXvNSMl
+         5nDQ==
+X-Gm-Message-State: AOAM531uU0/SDsnO92eIEyeGsi8Uzn1ibhUwgplT3Q0rp2cpJuwgU6kY
+        ekgyZ9AzRnIg9uOkIMPGMoPp1yFZ3tVrrh0LvhOXklpQUPE3gw==
+X-Google-Smtp-Source: ABdhPJz/L3AANQrNCOwj5j5Zfq475VfMNDmexqeW+DJqikKjnrSmndxc4mF4geLvLCnfEu/cjBIE22WG7Rn6Mh8JUZM=
+X-Received: by 2002:a17:902:a406:b029:e6:78c4:71c8 with SMTP id
+ p6-20020a170902a406b02900e678c471c8mr32350643plq.17.1617099610374; Tue, 30
+ Mar 2021 03:20:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1616760183.git.sander@svanheule.net> <31e5a5aeb833c43c07daafcf939864497ff1c349.1616760183.git.sander@svanheule.net>
- <CAHp75Vdi06dLxJNCo4f1CA=cS1MuPwG0nEAnVqt8BRrz9bnOtw@mail.gmail.com>
- <f5059092c1d4f3a23683a2eebfa37cb739881a8a.camel@svanheule.net>
- <CAHp75VfTkfBqHc1S1aUm0Pr-=L_FNDUqkoH_x+KJgkXdZ33VAA@mail.gmail.com> <537a2becc81360f314a4293f7bb619ed2a377cb6.camel@svanheule.net>
-In-Reply-To: <537a2becc81360f314a4293f7bb619ed2a377cb6.camel@svanheule.net>
+References: <cover.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
+ <d2c8b7f9a3b420c2764f645da531a57db16905f3.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAHp75VdXa2bkJ+ej+HNYstLeK4TF+L5H3wTgm0CgJ9hYQeU+ZQ@mail.gmail.com>
+ <bf12f668db2f0dce7dfc09351780e295da30714c.camel@fi.rohmeurope.com>
+ <YGHWZuNfbSDe+B6y@smile.fi.intel.com> <92243c7b428d2025c1a9f3beb8db46995c9376d0.camel@fi.rohmeurope.com>
+In-Reply-To: <92243c7b428d2025c1a9f3beb8db46995c9376d0.camel@fi.rohmeurope.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 30 Mar 2021 13:14:36 +0300
-Message-ID: <CAHp75VftETTkOGx6AUvQi5s-ngo73WBdHnqsX84pCM6GAaHMyQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] gpio: Add Realtek Otto GPIO support
-To:     Sander Vanheule <sander@svanheule.net>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bert Vermeulen <bert@biot.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Tue, 30 Mar 2021 13:19:54 +0300
+Message-ID: <CAHp75VftvsHR3bKJQrCSSS6KnTUod86T7XRdTSZ4EgmbbsU=eg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpiolib: Allow drivers to return EOPNOTSUPP from config
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Joe Perches <joe@perches.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 29, 2021 at 8:28 PM Sander Vanheule <sander@svanheule.net> wrote:
-> On Mon, 2021-03-29 at 13:26 +0300, Andy Shevchenko wrote:
-> > On Fri, Mar 26, 2021 at 11:11 PM Sander Vanheule <
-> > sander@svanheule.net> wrote:
+On Tue, Mar 30, 2021 at 7:32 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+> On Mon, 2021-03-29 at 16:30 +0300, Andy Shevchenko wrote:
+> > On Mon, Mar 29, 2021 at 03:20:07PM +0300, Matti Vaittinen wrote:
 
 ...
 
-> > AFAICS all, except one have this flag, I suggest you to do other way
-> > around, i.e. check compatible string in the code. Or do something more
-> > clever. What happens if you have this flag enabled for the fallback
-> > node?
-> >
-> > If two people ask the same, it might be a smoking gun.
-> >
+> > I think the error code which is Linux kernel internal is for a
+> > reason.
 >
-> Testing for the fallback wouldn't work, since of_device_is_compatible()
-> would always match. Setting the (inverse) flag only on the fallback
-> would indeed reduce the clutter.
->
-> If the port order is reversed w.r.t. to the current implementation,
-> enabling a GPIO+IRQ would enable the same pin on a different port. I
-> don't think the result would be catastrophical, but it would result in
-> unexpected behaviour. When A0 and C0 are then enabled, A0 interrupts
-> would actually come from C0, and vice versa.
->
->    Intended port | A | B | C | D
-> -----------------+---+---+---+---
-> Actual GPIO port | D | C | B | A
->  Actual IRQ port | B | A | D | C
->
-> If only the actual GPIO ports change, at least you can still use a
-> modified GPIO line number and polling. The user could just leave out
-> the optional irq-controller from the devicetree, but I would rather
-> have it enforced in some way.
+> not all of us thinks the same. So maybe I just don't get it? :)
 
-OK! Thanks for clarification.
+Thanks for following me now, appreciate.
 
 -- 
 With Best Regards,
