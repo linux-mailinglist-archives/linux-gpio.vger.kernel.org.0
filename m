@@ -2,170 +2,250 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 262C734E02E
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 06:33:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D20F734E0EC
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 07:58:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbhC3Ecs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 00:32:48 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:41923 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbhC3Ecl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 00:32:41 -0400
-Received: by mail-lf1-f53.google.com with SMTP id b14so21717018lfv.8;
-        Mon, 29 Mar 2021 21:32:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
-         :in-reply-to:references:mime-version:date:user-agent
-         :content-transfer-encoding;
-        bh=RNVWpTsR1EU4/n7h7Ur5fWeNrn3CLUmS+LFxH0dWKP0=;
-        b=BcM9Fq9A8h7WhasyuuU1qHBn1sC+hkVdTbakXCd0SdB3gUq08l75adu1zut/vPTU17
-         CrgYgsf0L68R/yA4c8g0BDgfp/e8zEG1pBvNA8Ym/nNkvryTUswjB7RjnUpZnwvZAtLi
-         6qsSEaH1fOG1tmVua1le8JvZIUNifcI8wleqUvtMK0e4lR+DhSHzoBtzbteprxpdAzoH
-         IXdWr6wjieY31oztUt2cb54KdmddtiHmXp7Evoa/u+A59NElarI4m/TDfTUZok02ugRr
-         iHaYVlHlT3qdxZdZwEEFy0J6XGq+hhg5ZpRYV2qX7DyfYUoNZkkZMsg+iT7SVqKazjAm
-         ymJg==
-X-Gm-Message-State: AOAM532nuU7EwcczOUR2MKyk8dMjgmZqZyFGfiRhG0/OAJJmyqAW1fl7
-        m/HSsc58jlA4YhhI1VxsHEY=
-X-Google-Smtp-Source: ABdhPJxv09qQWoRgXLBttaTMtsa808i7c1tUSkRC6nXhlDV/KiDJ/fbxRUsHTYen7LhDM1jjY4YKaA==
-X-Received: by 2002:a05:6512:714:: with SMTP id b20mr17536838lfs.370.1617078760349;
-        Mon, 29 Mar 2021 21:32:40 -0700 (PDT)
-Received: from dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::2])
-        by smtp.gmail.com with ESMTPSA id g24sm2029548lfv.257.2021.03.29.21.32.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Mar 2021 21:32:39 -0700 (PDT)
-Message-ID: <92243c7b428d2025c1a9f3beb8db46995c9376d0.camel@fi.rohmeurope.com>
-Subject: Re: [PATCH 2/2] gpiolib: Allow drivers to return EOPNOTSUPP from
- config
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reply-To: matti.vaittinen@fi.rohmeurope.com
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <YGHWZuNfbSDe+B6y@smile.fi.intel.com>
-References: <cover.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
-         <d2c8b7f9a3b420c2764f645da531a57db16905f3.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
-         <CAHp75VdXa2bkJ+ej+HNYstLeK4TF+L5H3wTgm0CgJ9hYQeU+ZQ@mail.gmail.com>
-         <bf12f668db2f0dce7dfc09351780e295da30714c.camel@fi.rohmeurope.com>
-         <YGHWZuNfbSDe+B6y@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S230280AbhC3F50 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 01:57:26 -0400
+Received: from mga05.intel.com ([192.55.52.43]:57890 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229468AbhC3F5Q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 30 Mar 2021 01:57:16 -0400
+IronPort-SDR: LvrjzlhBELn1NiLmGj6PAvTDmAiMuya/bNF6Ny+cwWLS3Pt8Ftdo+/vfaMPN6jrluotcDk/EAv
+ M8C2w5kqsXGw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="276862244"
+X-IronPort-AV: E=Sophos;i="5.81,289,1610438400"; 
+   d="scan'208";a="276862244"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 22:57:15 -0700
+IronPort-SDR: hPUKH4TLttzFkiPoetA1WGY27dt6qRbcbMb5Uln6yiT1IcLmpNi8jsw/vtRJoGuSOP1cy1vWt2
+ tHB30cV6c5Qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,289,1610438400"; 
+   d="scan'208";a="595347033"
+Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 29 Mar 2021 22:57:14 -0700
+Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lR7NJ-00054n-Cp; Tue, 30 Mar 2021 05:57:13 +0000
+Date:   Tue, 30 Mar 2021 13:56:30 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:ib-bcm63xx] BUILD SUCCESS
+ d28039fccf948a407de69106465caa465b1dcf32
+Message-ID: <6062bd8e.u8Jo0+pOjjGmYQ/v%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Date:   Tue, 30 Mar 2021 07:32:33 +0300
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Morning Folks,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-bcm63xx
+branch HEAD: d28039fccf948a407de69106465caa465b1dcf32  pinctrl: add a pincontrol driver for BCM6318
 
-On Mon, 2021-03-29 at 16:30 +0300, Andy Shevchenko wrote:
-> On Mon, Mar 29, 2021 at 03:20:07PM +0300, Matti Vaittinen wrote:
-> > On Mon, 2021-03-29 at 14:59 +0300, Andy Shevchenko wrote:
-> > > On Mon, Mar 29, 2021 at 2:43 PM Matti Vaittinen
-> > > <matti.vaittinen@fi.rohmeurope.com> wrote:
-> > > > The checkpacth instructs to switch from ENOSUPP to EOPNOTSUPP.
-> > > > > WARNING: ENOTSUPP is not a SUSV4 error code, prefer
-> > > > > EOPNOTSUPP
-> > > > 
-> > > > Make the gpiolib allow drivers to return both so driver
-> > > > developers
-> > > > can avoid one of the checkpatch complaints.
-> > > 
-> > > Internally we are fine to use the ENOTSUPP.
-> > > Checkpatch false positives there.
-> > 
-> > I agree. OTOH, the checkpatch check makes sense to user-visible
-> > stuff.
-> > Yet, the checkpatch has hard time guessing what is user-visible -
-> > so it
-> > probably is easiest to nag about all ENOTSUPP uses as it does now.
-> > 
-> > > I doubt we need this change. Rather checkpatch should rephrase
-> > > this
-> > > to
-> > > point out that this is only applicable to _user-visible_ error
-> > > path.
-> > > Cc'ed Joe.
-> > 
-> > Yes, thanks for pulling Joe in.
-> > 
-> > Anyways, no matter what the warning says, all false positives are
-> > annoying. I don't see why we should stay with ENOTSUPP in gpiolib?
-> > (other than the burden of changing it).
-> 
-> For sake of the changing we are not changing the code.
-No. But for the sake of making it better / more consistent :)
+elapsed time: 1155m
 
-Anyway - after giving this second thought (thanks Andy for provoking me
-to thinking this further) - I do agree with Andy that this particular
-change is bad. More I think of this, less I like the idea of having two
-separate return values to indicate the same thing. So we should support
-only one which makes my patch terrible.
+configs tested: 188
+configs skipped: 2
 
-For the sake of consistency it would be cleaner to use same, single
-value, for same error both inside the gpiolib and at user-interface.
-That would be EOPNOTSUPP. As I said, having two separate error codes to
-indicate same thing is confusing. Now the confusion is at the boundary
-of gpiolib and user-land. Please educate me - is there difference in
-the meaning of ENOTSUPP and EOPNOTSUPP or are they really indicating
-the same thing? If yes, then yes - correct fix would be to use only one
-and ditch the other. Whether the amount of work is such it is
-practically worth is another topic - but that would be the right thing
-to do (tm).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> > But I have no strong opinion on this. All options I see have
-> > downsides.
-> > 
-> > Accepting both ENOTSUPP and EOPNOTSUPP is the easy way to avoid
-> > allowing checkpatch warnings - but I admit it isn't stylish.
-> 
-> I think the error code which is Linux kernel internal is for a
-> reason.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+x86_64                           allyesconfig
+riscv                            allmodconfig
+i386                             allyesconfig
+riscv                            allyesconfig
+arm64                            alldefconfig
+xtensa                              defconfig
+powerpc                 mpc837x_rdb_defconfig
+powerpc                      pcm030_defconfig
+powerpc                    socrates_defconfig
+mips                       lemote2f_defconfig
+powerpc                      ppc44x_defconfig
+powerpc               mpc834x_itxgp_defconfig
+arc                            hsdk_defconfig
+sh                            hp6xx_defconfig
+powerpc                      makalu_defconfig
+powerpc                      walnut_defconfig
+parisc                generic-32bit_defconfig
+sh                         ecovec24_defconfig
+powerpc                    sam440ep_defconfig
+powerpc                  storcenter_defconfig
+parisc                           allyesconfig
+arm                          simpad_defconfig
+m68k                        stmark2_defconfig
+arm                          pxa3xx_defconfig
+mips                       capcella_defconfig
+arm                          exynos_defconfig
+sh                        dreamcast_defconfig
+powerpc                     tqm8540_defconfig
+xtensa                generic_kc705_defconfig
+powerpc                 mpc8540_ads_defconfig
+m68k                        mvme16x_defconfig
+mips                    maltaup_xpa_defconfig
+powerpc                      ppc40x_defconfig
+sh                   rts7751r2dplus_defconfig
+powerpc                 mpc834x_itx_defconfig
+mips                         tb0219_defconfig
+mips                            ar7_defconfig
+arm                     am200epdkit_defconfig
+arm                          pxa910_defconfig
+arm                          collie_defconfig
+sh                           se7722_defconfig
+parisc                generic-64bit_defconfig
+m68k                        mvme147_defconfig
+h8300                    h8300h-sim_defconfig
+m68k                       m5475evb_defconfig
+sh                ecovec24-romimage_defconfig
+m68k                          atari_defconfig
+sh                            titan_defconfig
+powerpc                        cell_defconfig
+riscv                    nommu_virt_defconfig
+powerpc                   motionpro_defconfig
+mips                           gcw0_defconfig
+arm                          gemini_defconfig
+nios2                            allyesconfig
+powerpc                     ppa8548_defconfig
+mips                         cobalt_defconfig
+powerpc                  mpc885_ads_defconfig
+arm                       aspeed_g4_defconfig
+arm                       cns3420vb_defconfig
+sh                           sh2007_defconfig
+arm                      tct_hammer_defconfig
+powerpc                       holly_defconfig
+m68k                            mac_defconfig
+powerpc64                        alldefconfig
+arm                         hackkit_defconfig
+m68k                             alldefconfig
+alpha                               defconfig
+xtensa                  cadence_csp_defconfig
+powerpc                     tqm8541_defconfig
+i386                             alldefconfig
+sparc                       sparc64_defconfig
+arm                  colibri_pxa300_defconfig
+arm                        vexpress_defconfig
+powerpc                 mpc85xx_cds_defconfig
+arc                          axs101_defconfig
+powerpc                      chrp32_defconfig
+mips                           xway_defconfig
+arm                      pxa255-idp_defconfig
+powerpc                 canyonlands_defconfig
+sh                           se7724_defconfig
+m68k                        m5407c3_defconfig
+arm                          pcm027_defconfig
+mips                           rs90_defconfig
+arm                        clps711x_defconfig
+arm                  colibri_pxa270_defconfig
+powerpc                 mpc837x_mds_defconfig
+powerpc                 mpc836x_mds_defconfig
+arm                        mini2440_defconfig
+arm                           tegra_defconfig
+mips                      pistachio_defconfig
+openrisc                 simple_smp_defconfig
+mips                        nlm_xlp_defconfig
+powerpc                     mpc5200_defconfig
+mips                     loongson1b_defconfig
+mips                     decstation_defconfig
+sh                         apsh4a3a_defconfig
+arm                         assabet_defconfig
+sh                               alldefconfig
+arm                         s3c6400_defconfig
+xtensa                       common_defconfig
+powerpc                 mpc834x_mds_defconfig
+powerpc                       ebony_defconfig
+powerpc                      bamboo_defconfig
+powerpc                        warp_defconfig
+powerpc                 mpc8315_rdb_defconfig
+mips                         bigsur_defconfig
+csky                             alldefconfig
+powerpc                         ps3_defconfig
+arm                       mainstone_defconfig
+arm                           omap1_defconfig
+arc                      axs103_smp_defconfig
+powerpc                      ppc6xx_defconfig
+arm                           spitz_defconfig
+arm                         s3c2410_defconfig
+arm                      jornada720_defconfig
+mips                      pic32mzda_defconfig
+mips                        jmr3927_defconfig
+m68k                       m5275evb_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a002-20210329
+x86_64               randconfig-a003-20210329
+x86_64               randconfig-a006-20210329
+x86_64               randconfig-a001-20210329
+x86_64               randconfig-a005-20210329
+x86_64               randconfig-a004-20210329
+i386                 randconfig-a003-20210329
+i386                 randconfig-a004-20210329
+i386                 randconfig-a001-20210329
+i386                 randconfig-a002-20210329
+i386                 randconfig-a006-20210329
+i386                 randconfig-a005-20210329
+i386                 randconfig-a014-20210329
+i386                 randconfig-a011-20210329
+i386                 randconfig-a015-20210329
+i386                 randconfig-a016-20210329
+i386                 randconfig-a013-20210329
+i386                 randconfig-a012-20210329
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-If so, then the current checkpatch warning is even more questionable.
+clang tested configs:
+x86_64               randconfig-a015-20210329
+x86_64               randconfig-a012-20210329
+x86_64               randconfig-a013-20210329
+x86_64               randconfig-a014-20210329
+x86_64               randconfig-a011-20210329
+x86_64               randconfig-a016-20210329
 
-> 
-> > Converting all ENOTSUPP cases inside gpiolib to EOPNOTSUPP is
-> > teodious
-> > although end result might be nicer.
-> 
-> Why? You still missed the justification except satisfying some tool
-> that gives
-> you false positives. We don't do that. It's the tool that has to be
-> fixed /
-> amended.
-> 
-> > Leaving it as is gives annoying false-positives to driver
-> > developers.
-> > 
-> > My personal preference was this patch - others can have other view
-> > like
-> > Andy does. I'll leave this to community/maintainers to evaluate :)
-> 
-> This patch misses documentation fixes, for example.
-
-Valid point.
-
-> Also, do you suggest that we have to do the same in entire pin
-> control
-> subsystem?
-
-After reading/writing this, I am unsure. This is why the discussion is
-good :) I don't see why we should have two separate error codes for
-same thing - but as you put it:
-
-> I think the error code which is Linux kernel internal is for a
-> reason.
-
-not all of us thinks the same. So maybe I just don't get it? :)
-
-Best Regards
-	Matti Vaittinen
-
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
