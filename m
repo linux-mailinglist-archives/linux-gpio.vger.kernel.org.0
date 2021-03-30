@@ -2,97 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF32A34E72C
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 14:11:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BE5B34E963
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 15:40:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231761AbhC3MKd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 08:10:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231838AbhC3MK2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 08:10:28 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07EE8C061574;
-        Tue, 30 Mar 2021 05:10:28 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id ha17so7650315pjb.2;
-        Tue, 30 Mar 2021 05:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/jnJaAgpyhjiwbq4U7p1677gg1DviXnXWcp+6L/6OLo=;
-        b=bAae/I4PJspRugS6/zShUM6AMXW++tKUKvjh9L5iYrgWBXIfa0sqIwmYDcNP6mUSnb
-         Nu2aEOPEVah+JLqnlH5bi5x/3dgjKxF9kTsYMwIST2QYdRvhxnBvCbwdVYDdZuCRdXhr
-         YnKn22BuIzI8FaUMl1MFqPo5zJesTUWeZ3mVuoQOYFrSwVMWn92jljJ+cstDZWV6SfZQ
-         KDzSwGrVFQ99pObA0xEphGJ/toq9Yn3qLLR7vbsa97Qe6lHvDPbdRuVJihRzEihsp+5P
-         brAzvrHst01H887amyZbwwwRl6c0BINidScq+u/38rJjPQXLk+ssuSQ2Gzkz89jnb+ag
-         qBbQ==
+        id S232192AbhC3Njt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 09:39:49 -0400
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:46883 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231574AbhC3NjR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 09:39:17 -0400
+Received: by mail-ot1-f54.google.com with SMTP id 68-20020a9d0f4a0000b02901b663e6258dso15552609ott.13;
+        Tue, 30 Mar 2021 06:39:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/jnJaAgpyhjiwbq4U7p1677gg1DviXnXWcp+6L/6OLo=;
-        b=FkBZzm132ZnBpiunZa/bTAf7AsmRwEPE25sXYicIlj6eOgZw67DQDF2AJCfpQud23l
-         JU4kGBwtetjALFZPAuMMfwcn8If1JV42znUnsunBnNk051GIPKi6xZQhEAqsBqr3vo7a
-         M0O86w6oOmd3Y2kSRcyedkveoPGcPCNK9oOI3obIxtyQRMhz/ONCKVQXYt54+WP1V/wQ
-         ITYFy88iN2GOP3QcYubpKdLYWxdsr1tI05xsuF0qEu9iI28uJ8O3QdPSl0gG0ozeUIqo
-         vCs9XPbwDztcl0ZtnJLQyEescJzXyaR3/h11l2nVzC57qFYe2CmzK2VyEhBOced5frhu
-         Mdlg==
-X-Gm-Message-State: AOAM532Z6Vi/w5TbGNDpzx6vgJPvniV7xa5N46jfPDTlgh4M+H/KC/md
-        /ebpqj35bbczTki6cfR2NWaun0K9L+rKEThRYPc=
-X-Google-Smtp-Source: ABdhPJzy3oicuUg028toUXily4Is/nE7NidUJLa0WZYfUuxCCww1CHlSuZil3E3cnWoZzBWGbUH2IH9JCZEn9Ddzs+I=
-X-Received: by 2002:a17:902:7883:b029:e7:32bd:6b97 with SMTP id
- q3-20020a1709027883b02900e732bd6b97mr20940802pll.0.1617106227535; Tue, 30 Mar
- 2021 05:10:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lqijnVOuWfbRRkSa+v/huuzx4aTqy+55BzNMNQYQOmw=;
+        b=dQLEPjMjkbV/gT+v90b9bqYExX9l5kDJ9Z+p9o7CdC/dagiTdNi765aFDgeQB6kkoe
+         0aqLxX71/zvMbuAkR+B2EpTu1eK5IgjE1mV08IHiJC7nploZvO1gdzo0mYtUiI5N5j6S
+         q+9s7G5kdzgBIyU9AHQjoy7ISrgY1VsZLnHEks5oWLb4ixLQMtjK+pSt+0gqzQ2HzneA
+         sNZKdokpQ/t/HqnGtF355GqmMFGaTa9vhIkPnfcjBZvN75FV4ayheav0TctauDEaqEIn
+         WUILp2ofh6b+bzujweWljkyBPS+2uxo2comGVQo0CmXScU+UEFbc0vA1GwDgouj4FveG
+         70OQ==
+X-Gm-Message-State: AOAM533oxcmGp0HEz4jjueOaM3/LCtbrvqxK72HU8aqIKFHfWUaIc65t
+        DU67HIQgVtnwiqsuBD4vEw==
+X-Google-Smtp-Source: ABdhPJwxbZu8AQOzk0/3hMyaBD5iHVfWxjEtg8coy9Y5Y7UZGJOiPS0TYB4uByeZgog5mUBaiuue9A==
+X-Received: by 2002:a05:6830:4121:: with SMTP id w33mr11854225ott.153.1617111556881;
+        Tue, 30 Mar 2021 06:39:16 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 62sm3360563oto.60.2021.03.30.06.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Mar 2021 06:39:15 -0700 (PDT)
+Received: (nullmailer pid 213349 invoked by uid 1000);
+        Tue, 30 Mar 2021 13:39:13 -0000
+Date:   Tue, 30 Mar 2021 08:39:13 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     zhiyong tao <zhiyong.tao@mediatek.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        biao.huang@mediatek.com, linus.walleij@linaro.org,
+        hongzhou.yang@mediatek.com, srv_heupstream@mediatek.com,
+        jg_poxu@mediatek.com, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com,
+        sean.wang@mediatek.com, linux-gpio@vger.kernel.org,
+        erin.lo@mediatek.com, hui.liu@mediatek.com, sean.wang@kernel.org,
+        sj.huang@mediatek.com, eddie.huang@mediatek.com,
+        linux-mediatek@lists.infradead.org, seiya.wang@mediatek.com
+Subject: Re: [PATCH Resend v0 2/6] dt-bindings: pinctrl: mt8195: add binding
+ document
+Message-ID: <20210330133913.GA212608@robh.at.kernel.org>
+References: <20210329113103.11003-1-zhiyong.tao@mediatek.com>
+ <20210329113103.11003-3-zhiyong.tao@mediatek.com>
+ <1617045684.216718.2905695.nullmailer@robh.at.kernel.org>
+ <1617095128.10316.14.camel@mhfsdcap03>
 MIME-Version: 1.0
-References: <cover.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
- <118a6160880a212d20d0251f763cad295c741b4d.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
- <CAHp75VdRobc6jpFzAkd3U65BhiiNPLrF4qsnCKmsQBKMYbG4sg@mail.gmail.com> <e388002df6dd121b238918724f3b43637831d2cc.camel@fi.rohmeurope.com>
-In-Reply-To: <e388002df6dd121b238918724f3b43637831d2cc.camel@fi.rohmeurope.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 30 Mar 2021 15:10:11 +0300
-Message-ID: <CAHp75VcfovXsU9J6Dn5kR_zf9g5wUGndiC5OBPci=XaGUosgBQ@mail.gmail.com>
-Subject: Re: [PATCH v5 09/19] gpio: support ROHM BD71815 GPOs
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     linux-power <linux-power@fi.rohmeurope.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1617095128.10316.14.camel@mhfsdcap03>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 30, 2021 at 3:06 PM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
-> On Tue, 2021-03-30 at 13:11 +0300, Andy Shevchenko wrote:
-> > On Mon, Mar 29, 2021 at 3:58 PM Matti Vaittinen
-> > <matti.vaittinen@fi.rohmeurope.com> wrote:
-> > >
-> > > +struct bd71815_gpio {
-> > > +       struct gpio_chip chip;
-> > > +       struct device *dev;
-> >
-> > Wondering why you need this. Is it the same as chip.parent?
-> >
->
-> This is exactly the reason why I had the comments you objected in the
-> probe. dev is pointer to the platform device - which should be used for
-> prints and any potential devm stuff.
->
-> chip.parent is the MFD device which provides the regmap access and DT
-> node.
+On Tue, Mar 30, 2021 at 05:05:28PM +0800, zhiyong tao wrote:
+> On Mon, 2021-03-29 at 14:21 -0500, Rob Herring wrote:
+> > On Mon, 29 Mar 2021 19:30:59 +0800, Zhiyong Tao wrote:
+> > > The commit adds mt8195 compatible node in binding document.
+> > > 
+> > > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > > ---
+> > >  .../bindings/pinctrl/pinctrl-mt8195.yaml      | 152 ++++++++++++++++++
+> > >  1 file changed, 152 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> > > 
+> > 
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> > 
+> > yamllint warnings/errors:
+> > 
+> > dtschema/dtc warnings/errors:
+> > Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.example.dts:19:18: fatal error: dt-bindings/pinctrl/mt8195-pinfunc.h: No such file or directory
+> >    19 |         #include <dt-bindings/pinctrl/mt8195-pinfunc.h>
+> >       |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > compilation terminated.
+> > make[1]: *** [scripts/Makefile.lib:349: Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.example.dt.yaml] Error 1
+> > make[1]: *** Waiting for unfinished jobs....
+> > make: *** [Makefile:1380: dt_binding_check] Error 2
+> > 
+> > See https://patchwork.ozlabs.org/patch/1459558
+> > 
+> > This check can fail if there are any dependencies. The base for a patch
+> > series is generally the most recent rc1.
+> > 
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> > date:
+> > 
+> > pip3 install dtschema --upgrade
+> > 
+> > Please check and re-submit.
+> > 
+> 
+> ==> I set the patch file "mt8195-pinfunc.h" patch in "4/6". so we should
+> add the file "mt8195-pinfunc.h" in this patch ? or we should put it
+> before this patch(2/6)?
 
-We have a kernel doc for such things. If you commented it in the first
-place around this structure, it will be obvious. Now you have dangling
-comment somewhere and no clue for reader why you have struct device
-pointer here.
+It is part of the binding, so it belongs in this patch.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Rob
