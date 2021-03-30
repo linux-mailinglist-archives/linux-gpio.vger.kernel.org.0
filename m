@@ -2,230 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7232C34EB23
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 16:53:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FC1134EC5A
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 17:27:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231735AbhC3OxP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 10:53:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:31065 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231998AbhC3Owu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 30 Mar 2021 10:52:50 -0400
-IronPort-SDR: 2RG1taShuCt7K1KZxPEySdTOFPEuPZh2eS1BNvNQtoD4w2MQ+z569iyBCfW2w6IhTdUOzji99h
- oZqRgeBGOLmg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="191812667"
-X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="191812667"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 07:52:49 -0700
-IronPort-SDR: 4DNewzWfWK9kDsaOIUz2HOJIW9cuWpywNALLMZczsOQ0u3BQwRr3Ek/m06FgKH7XF2udeGVeFj
- 4/0LkS5siBnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="527364774"
-Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 30 Mar 2021 07:52:48 -0700
-Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lRFjb-0005KU-LF; Tue, 30 Mar 2021 14:52:47 +0000
-Date:   Tue, 30 Mar 2021 22:52:45 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 762bee3e3e9f42cafdb3ead64b7aee37f9b7369f
-Message-ID: <60633b3d.uXLzQHbGSL2ji2hb%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S232240AbhC3P1Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 11:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232449AbhC3P1L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 11:27:11 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A74C061574
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Mar 2021 08:27:06 -0700 (PDT)
+Received: from terra.local.svanheule.net (47.118-244-81.adsl-dyn.isp.belgacom.be [81.244.118.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 6BCC81E7DD1;
+        Tue, 30 Mar 2021 17:27:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1617118024;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3ACTtDwLrd6MhIlUOxZYT4FyKfrTiQy/cUhDCuM0ixc=;
+        b=nPv7Ax2plVIYUVUntMblYQZiJSg0v471Mohhw4UZALHK5lm8ZzHpBgWLGqujYwA2b5mG4i
+        BAd5MnLCM8IYb31aqv+6qthnMaXVvfiXUWkcRVi8L0a21ikNzs9MmOL+0gYQejUU7wuSYv
+        AhvFVCRWsBKsHjtZVN82y+dLtTj5wQEDBW2aBiHvUxfYe+DoK76+la/2tiFVUd1HYNnCAR
+        +6213IF1JPHeHkwplj2eGNIAZwj4uUCt1QLjJpy0z8Wf9GylS0yCgeF7icg8IpbvoFqoFV
+        YdKsmUy/MEEUdzhjhJxiHUA6aS/fr7Fe0KOIW1PzXHpBkH4twTqAxplyhxDcHQ==
+From:   Sander Vanheule <sander@svanheule.net>
+To:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     andy.shevchenko@gmail.com, bert@biot.com,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, maz@kernel.org, robh+dt@kernel.org,
+        Sander Vanheule <sander@svanheule.net>
+Subject: [PATCH v5 0/2] Add Realtek Otto GPIO support
+Date:   Tue, 30 Mar 2021 17:26:50 +0200
+Message-Id: <cover.1617117762.git.sander@svanheule.net>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210315082339.9787-1-sander@svanheule.net>
+References: <20210315082339.9787-1-sander@svanheule.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 762bee3e3e9f42cafdb3ead64b7aee37f9b7369f  Merge branch 'ib-bcm63xx' into devel
+Add support for the GPIO controller employed by Realtek in multiple series of
+MIPS SoCs. These include the supported RTL838x and RTL839x. The register layout
+also matches the one found in the GPIO controller of other (Lexra-based) SoCs
+such as RTL8196E, RTL8197D, and RTL8197F.
 
-elapsed time: 947m
+For the platform name 'otto', I am not aware of any official resources as to
+what hardware this specifically applies to. However, in all of the GPL archives
+we've received, from vendors using compatible SoCs in their design, the
+platform under the MIPS architecture is referred to by this name.
 
-configs tested: 168
-configs skipped: 2
+The GPIO ports have been tested on a Zyxel GS1900-8 (RTL8380), and Zyxel
+GS1900-48 (RTL8393). Furthermore, the GPIO ports and interrupt controller have
+been tested on a Netgear GS110TPPv1 (RTL8381).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Changes in v5:
+- Edited code comments
+- Fold functions that were used only once or twice (ISR/IMR accessors)
+- Drop trivial functions for line to port/pin calculations
+- Use gpio_irq_chip->init_hw() to initialise IRQ registers
+- Invert GPIO_INTERRUPTS flag to GPIO_INTERRUPTS_DISABLED
+- Support building as module
+- Add Rob's Reviewed-by tag
 
-gcc tested configs:
-arm                                 defconfig
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm                              allmodconfig
-x86_64                           allyesconfig
-riscv                            allmodconfig
-i386                             allyesconfig
-powerpc               mpc834x_itxgp_defconfig
-mips                         bigsur_defconfig
-parisc                generic-64bit_defconfig
-sh                   secureedge5410_defconfig
-m68k                            q40_defconfig
-mips                     loongson1c_defconfig
-sh                   sh7770_generic_defconfig
-powerpc                mpc7448_hpc2_defconfig
-sh                            migor_defconfig
-mips                         cobalt_defconfig
-m68k                       m5208evb_defconfig
-powerpc                 mpc832x_mds_defconfig
-arm                         vf610m4_defconfig
-arm                        cerfcube_defconfig
-arm                          lpd270_defconfig
-m68k                        stmark2_defconfig
-powerpc                      pasemi_defconfig
-xtensa                  audio_kc705_defconfig
-arm                        magician_defconfig
-arm                       spear13xx_defconfig
-powerpc                           allnoconfig
-nios2                         3c120_defconfig
-sh                          polaris_defconfig
-sh                 kfr2r09-romimage_defconfig
-mips                        maltaup_defconfig
-arc                     nsimosci_hs_defconfig
-mips                   sb1250_swarm_defconfig
-arc                        vdk_hs38_defconfig
-mips                       capcella_defconfig
-arm                         lubbock_defconfig
-powerpc                       ppc64_defconfig
-arm                           h5000_defconfig
-arm                         orion5x_defconfig
-powerpc                    klondike_defconfig
-mips                      loongson3_defconfig
-xtensa                  cadence_csp_defconfig
-powerpc                 mpc836x_mds_defconfig
-mips                             allyesconfig
-arm                         shannon_defconfig
-powerpc                     akebono_defconfig
-arm                         socfpga_defconfig
-m68k                          atari_defconfig
-arc                    vdk_hs38_smp_defconfig
-sparc64                             defconfig
-arm                         hackkit_defconfig
-m68k                             alldefconfig
-riscv                    nommu_virt_defconfig
-alpha                               defconfig
-arc                          axs101_defconfig
-powerpc                      chrp32_defconfig
-mips                           xway_defconfig
-arm                      pxa255-idp_defconfig
-powerpc                 canyonlands_defconfig
-arm                       omap2plus_defconfig
-arm                          gemini_defconfig
-arm                          exynos_defconfig
-sh                            shmin_defconfig
-sh                        edosk7705_defconfig
-sh                               alldefconfig
-sh                          r7780mp_defconfig
-arm                        spear6xx_defconfig
-arc                         haps_hs_defconfig
-mips                          malta_defconfig
-arm                         cm_x300_defconfig
-arm                      footbridge_defconfig
-arm                          iop32x_defconfig
-mips                      pistachio_defconfig
-s390                       zfcpdump_defconfig
-arm                      tct_hammer_defconfig
-x86_64                           alldefconfig
-m68k                        mvme147_defconfig
-powerpc                      ppc64e_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                         wii_defconfig
-arc                        nsimosci_defconfig
-powerpc                 mpc836x_rdk_defconfig
-nios2                            alldefconfig
-arm                          collie_defconfig
-arm                             pxa_defconfig
-arm                       mainstone_defconfig
-sh                         ap325rxa_defconfig
-sh                           se7724_defconfig
-arm                            lart_defconfig
-arm                         lpc32xx_defconfig
-sh                     magicpanelr2_defconfig
-sparc64                          alldefconfig
-openrisc                 simple_smp_defconfig
-mips                        nlm_xlp_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                            allyesconfig
-nios2                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-parisc                              defconfig
-s390                             allmodconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a004-20210330
-x86_64               randconfig-a003-20210330
-x86_64               randconfig-a002-20210330
-x86_64               randconfig-a001-20210330
-x86_64               randconfig-a005-20210330
-x86_64               randconfig-a006-20210330
-i386                 randconfig-a004-20210330
-i386                 randconfig-a006-20210330
-i386                 randconfig-a003-20210330
-i386                 randconfig-a002-20210330
-i386                 randconfig-a001-20210330
-i386                 randconfig-a005-20210330
-i386                 randconfig-a003-20210329
-i386                 randconfig-a004-20210329
-i386                 randconfig-a002-20210329
-i386                 randconfig-a006-20210329
-i386                 randconfig-a005-20210329
-i386                 randconfig-a001-20210329
-i386                 randconfig-a015-20210330
-i386                 randconfig-a011-20210330
-i386                 randconfig-a014-20210330
-i386                 randconfig-a013-20210330
-i386                 randconfig-a016-20210330
-i386                 randconfig-a012-20210330
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+Changes in v4:
+- Fix pointer notation style
+- Drop unused read_u16_reg() function
+- Drop 'inline' specifier from functions
 
-clang tested configs:
-x86_64               randconfig-a012-20210330
-x86_64               randconfig-a015-20210330
-x86_64               randconfig-a014-20210330
-x86_64               randconfig-a016-20210330
-x86_64               randconfig-a013-20210330
-x86_64               randconfig-a011-20210330
+Changes in v3:
+- Remove OF dependencies in driver probe
+- Don't accept IRQ_TYPE_NONE as a valid interrupt type
+- Remove (now unused) dev property from control structure
+- Use u8/u16 port registers, instead of raw u32 registers
+- Use 'line' name for gpiochip, 'port' and 'pin' names for hardware
+- Renamed DT bindings file
+- Dropped fallback-only DT compatible
+- Various code style clean-ups
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Changes in v2:
+- Clarify structure and usage of IMR registers
+- Added Linus' Reviewed-by tags
+
+Sander Vanheule (2):
+  dt-bindings: gpio: Binding for Realtek Otto GPIO
+  gpio: Add Realtek Otto GPIO support
+
+ .../bindings/gpio/realtek,otto-gpio.yaml      |  78 +++++
+ drivers/gpio/Kconfig                          |  13 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-realtek-otto.c              | 326 ++++++++++++++++++
+ 4 files changed, 418 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/realtek,otto-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-realtek-otto.c
+
+-- 
+2.30.2
+
