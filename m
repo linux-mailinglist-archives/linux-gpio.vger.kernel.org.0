@@ -2,120 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 419CB34E5DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 12:56:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A73A634E602
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 13:03:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231154AbhC3Kz7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 06:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231793AbhC3Kzg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 06:55:36 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DE3C061574;
-        Tue, 30 Mar 2021 03:55:36 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id f3so2237020pgv.0;
-        Tue, 30 Mar 2021 03:55:36 -0700 (PDT)
+        id S231880AbhC3LDF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 07:03:05 -0400
+Received: from mail-vi1eur05on2049.outbound.protection.outlook.com ([40.107.21.49]:45470
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231872AbhC3LCk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 30 Mar 2021 07:02:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lKJ/G/qmruJb/zmi5K0u8DnRJBvIuN+9xUJoDgOkT428HIx1pz7e1wWmfnFivtEMCh8z+tQoNrF7cspJeLFmx6vruHmV7Xqo0qog7+yWAr9a2f/sLYNFfBD9FxLtVr0bed4NpfCOxjrAeg2o/u8CcNce41YIo82Kpg1EsHFenXD3u9u6iiGgySoJHEQc1+X3Mhqxu2cwGT0HDDyCZSPzJH7qUDlofUpvf+lawy2Mx8oyalX0HfqSVhWn/PUcNVk9F5HwmEFZrDFOMoXyUJRAdihiTtX0CJUqw2Lf6q15Yrn+vbzLz3ZTKZWIU78NgYouCWtqZR1RNgxBUqZei3zJwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+NVghAHHkaVufr1JGM7PM3zMSgxfT1Zf+czadhYusv4=;
+ b=O49nranNIpPebDO6nVswo1F1XK0Ac5w+jLehRjZ/CrU2kE79oXp9wNZkOByPgEHs01LmlivhrZorDMjCCdJi995lQgQTsFIY0WzYwLD//JriS6KlZrIgSqeW2whYvQDccUxuEWdXkGHaX0Yas1KTYma2bab81Mxi/iKsGbwy8gO8WPejwT7PuMXNvPj+FyG62guRu/YCeJfZTMNlE9Esf8QC4jhDSIcGoVAnZfkzOy4kAUghRnzZHs7bFRv+h3Kj73JNDfdgYSTiIAAzRFslWfXxp6SCa9ZVHBklqOl0LlK2KGJS91Wc3Pbxk7QIstVItNG/Ptvy2gYxsTQ4GdVS+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fi.rohmeurope.com; dmarc=pass action=none
+ header.from=fi.rohmeurope.com; dkim=pass header.d=fi.rohmeurope.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=O0YD9xf83jFGgqYS1T0c6p91ad9dPXXOQ3N3xh5E1ak=;
-        b=mbFTEhvz+vHmmp4K3JDx1Xi7lifD4tZiIorBU2FpgGZ5OZbQpyefDCeQK8Z/Tx+3IF
-         b74t2vH7xeJfLvKTuiL/1BzcRdjLXxmmFzt2bDny1IUQLsRcv6hH0FCioICT67TeKrCf
-         /Wn6hzB5a7REUMntEko6Zn+K7rD+0Mcvm8PyWlDwS4pYxzjmlTqKnDSMLhibBFLI+S6v
-         vd/TUzCzMn0oYbBVj3mKTxp8Ic9+4lI0ah0qGN+FShMK+81XUtVskHU+TZ7NPzAxDKXv
-         2ZUv3eyWV/fyZwVV/lMqdfYyjnAtvhbQEFHleW0I3res5Zuv5rN1/b1BrqStJCnPLBGZ
-         z9OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=O0YD9xf83jFGgqYS1T0c6p91ad9dPXXOQ3N3xh5E1ak=;
-        b=K52m5R3hdsYB78OZNzP8mZuxCpb4Uw55yZTmrNWHIRwPRmo1gO0jHBj9HmM7aqqHra
-         IfsXI2Vy2TpYoj1ukTpk0IGvNYIbXLVGJIkA04YbGDp/TcLkw9y+1BKjapn0Q9q7DTNQ
-         dUtYcXpD7BRDmT/c9CoDkmYz+wt4Tjkd7lnxSnZ4ofTTAx6nplWMxKxMq3lZsT6TznWY
-         bqzJuabIKyZVo06IbImh4so2/WvHrR8p63atEWJhme70d6hJqxLPpbwH21wKCylc4j6u
-         /6wpF4kYOycrPZ0oY4TfwTJt5d/7ZmgcqcgtDDp+2/9Er5nH7eWqA/oyGEkJpsSGw0Gv
-         FGpw==
-X-Gm-Message-State: AOAM532+oP7Q638FUj4CyGO2ZMejTcKc0TYknwvF/mYys7FfMbvqMWbV
-        q9FoR4iK6dcR0w/ij0B4II+tJr2P5BWUKyDtflg=
-X-Google-Smtp-Source: ABdhPJyYVOtJwGeqioL7Y0RCNhwClzK47F9hp/08LJ4eUXuTrXRump61CTb6aqcu3ECVHG26ujOfB3ylvoqBLHqEwvc=
-X-Received: by 2002:a62:7c43:0:b029:1ef:20ce:ba36 with SMTP id
- x64-20020a627c430000b02901ef20ceba36mr29793664pfc.40.1617101735610; Tue, 30
- Mar 2021 03:55:35 -0700 (PDT)
+ d=rohmsemiconductoreurope.onmicrosoft.com;
+ s=selector1-rohmsemiconductoreurope-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+NVghAHHkaVufr1JGM7PM3zMSgxfT1Zf+czadhYusv4=;
+ b=VljOvMsaxHVYSrjZ8AaxTaMo4RcLgqmgh8K/vtQh8FDZZ9/05PUNShqnHWmW+tvF8K2uYmmw1JQFEuwO3P0+rbpk4d/EEpQEB2gp5mz6lGZ6zypZy1nUHVj+BBUsgNf4+fIkesX74ERyx31JSWS2vFH8WwKxESZeK0L/kkn6WSs=
+Received: from HE1PR03MB3162.eurprd03.prod.outlook.com (2603:10a6:7:55::20) by
+ HE1PR03MB3067.eurprd03.prod.outlook.com (2603:10a6:7:5e::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3933.32; Tue, 30 Mar 2021 11:02:35 +0000
+Received: from HE1PR03MB3162.eurprd03.prod.outlook.com
+ ([fe80::f4d0:ee66:d5fb:9cdd]) by HE1PR03MB3162.eurprd03.prod.outlook.com
+ ([fe80::f4d0:ee66:d5fb:9cdd%3]) with mapi id 15.20.3977.033; Tue, 30 Mar 2021
+ 11:02:35 +0000
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+CC:     linux-power <linux-power@fi.rohmeurope.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH v5 09/19] gpio: support ROHM BD71815 GPOs
+Thread-Topic: [PATCH v5 09/19] gpio: support ROHM BD71815 GPOs
+Thread-Index: AQHXJJsGjHVvEbwzhkqZmf3zCM/hD6qcUO+AgAAMBN+AAAI1gA==
+Date:   Tue, 30 Mar 2021 11:02:34 +0000
+Message-ID: <1d44856fc20e3b5821848ee32ea968c3ea79aa3c.camel@fi.rohmeurope.com>
+References: <cover.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
+         <118a6160880a212d20d0251f763cad295c741b4d.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
+         <CAHp75VdRobc6jpFzAkd3U65BhiiNPLrF4qsnCKmsQBKMYbG4sg@mail.gmail.com>
+         <d4e78b93a62d2882492b46942a927293bad81d66.camel@fi.rohmeurope.com>
+         <CAHp75Vce8sUsVz0YgHLDFbVMEmbYzaUZ-nRwgOeEfDHowEnxrw@mail.gmail.com>
+In-Reply-To: <CAHp75Vce8sUsVz0YgHLDFbVMEmbYzaUZ-nRwgOeEfDHowEnxrw@mail.gmail.com>
+Reply-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Accept-Language: fi-FI, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none
+ header.from=fi.rohmeurope.com;
+x-originating-ip: [2001:14ba:16e2:8300::2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0bd75b1f-7c0a-4813-5be1-08d8f36b5303
+x-ms-traffictypediagnostic: HE1PR03MB3067:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HE1PR03MB3067B79B9A7C2FED1754227EAD7D9@HE1PR03MB3067.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oQ64pgoi9R4P4ElntqIDNJyzG1ihnmN9UnZhtUdOTh07KylQpG01+qysiY7wAemShJ9teKqXYMLvbzNulw5sJGrSa6eoyIPOJgemml5z04jlVYBXBtDsgD6bq07ijGF84sQ02hTbPxcnD2gsbp3mqIbfvx9/hukx7y3DNNMayQvEEaXArNsXrqKwS+54siFec2lagG+tttTBUZIpY4WSsfbd6Zx1UJDOxbHux41akOQm+bH3EC8L6xOPaXiN1+ohuX/Ozxf+s9AgGoAdqAZ0/55ZlbPtX/7SY11bQFINRmcB0P7GzPqHszhjP4B/owM7SQ5SaeC/GGTJyD66RpFjRcks49OuB/PFB72UMQViARUzTmQ7C0UHMRwEaImBn6KoXD6Ud93N4P6Xsj7tQ5DhC7MS7p+Mr8FZfroQzGnB57fEC2Av/WX6QUpc3Qi8Rz9g2WZQmNKtRixVwWnd2f8S3n/R2/3M9r/qM5xyX7Nppt1k4f5zCb16wTdEHbeb8sQ/MelauGIcG0cIavt1MPAH0TyzPpeEizp4kwbED2unkAlMVoYtU0oWRq6Q9ZrkEchokSKKIrWdPO6wTwr8PG1BWtvvmODIQDQ2oTZOP4WOh9iz/567f/Q8/E+F9hq9IxmRqCB/VTTcufl4RqJnyBku1h5R6P9mE/eMlNzaHcjSRUg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR03MB3162.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39850400004)(396003)(136003)(376002)(366004)(346002)(2616005)(6486002)(38100700001)(6916009)(186003)(76116006)(66946007)(66476007)(64756008)(66446008)(66556008)(316002)(53546011)(6506007)(54906003)(5660300002)(4326008)(8936002)(8676002)(71200400001)(478600001)(6512007)(3450700001)(86362001)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?VFg4cWo3S0tHL0l1WnI1RGt1bC81clI2VGQ0MjhZa0dEc253aUZCTGJidnpW?=
+ =?utf-8?B?S2pVbkJhSlVmY3JwSGJxV1FZVXBhWmxRQTZiUDFlcVgwNGc1bVkzdm9qYXNU?=
+ =?utf-8?B?NDFtMmZzRmJCVENzMGZpK2dPaGpqNi8xQ2FsY1BMaXA3anZudjgvc2ZsbS8v?=
+ =?utf-8?B?bkMyVVZDQlNmZ0RBRGYwTWhKbnl5N1lCem5MUGlYZFVJNmxpYmdveHFuRVdC?=
+ =?utf-8?B?RlRYUUttOE5oV1lmYWphRllKcTVObUNIK3FTd09sNUN6cEFHTFpNR3M5TXIz?=
+ =?utf-8?B?bWlZYU81eGxPVm1OMUF0emU3T0ROUlFkQW93ZTNPVG9pdC82OTA3TktNK3BZ?=
+ =?utf-8?B?R3E0TnlYUXVvbTYyK3ZubVNMT0RZMG16dU1KU21vU1BVT1pKUGJSVDlxK1Zv?=
+ =?utf-8?B?dHh2bHNZYzdwSlozeEwzNVQ5eUs0OUM5MEwyWTBvL1RQT1F4eEllOElYTGVO?=
+ =?utf-8?B?emFSWlRSVzdDR29GSXNHY1F4eXdRVjM1MlFPTjdNVTJ1emRqQklwdDdubTBN?=
+ =?utf-8?B?REFsSW9hZndiaGhvY0QvLzdqY0QrQVM2RUJVUU1BcHByUEo4djZPSjQ3ZnIr?=
+ =?utf-8?B?RjlJRlVLUWxteTE2M0FVTk5QdUtkWGFxYlZNVE5MTlRoSzBPTUxyajk0TUdz?=
+ =?utf-8?B?WUJGRmREZUdJbnRvY2l5bjF0YjFZT0k0R3ZwTHpObDllZmlxNkg1dWJDNjdC?=
+ =?utf-8?B?RkQ4bmd1VXFCT1dUOVEzZEduR3V1UzBkOWJRQ3lDbWQ1b3VuYm4xVTlyVTFF?=
+ =?utf-8?B?ZFZnTTQyMmFCdTNQalRuK0Y1aTd2Nmt2bWlQb3RIT3N4aDkvN1JHWWdqSlRu?=
+ =?utf-8?B?NlpES3U2VU05ZGk3L0dJcjgzcGdoSXVvVzRyR3ZLWk51OXdsOWlPemQwZGpx?=
+ =?utf-8?B?aSs1L21XWE5UdzVwUUpGVXJIYjBKM2FnaVdUaEhzaThYTHZyT1NNem9sM2hh?=
+ =?utf-8?B?YTQyT2NxeWVwdjlVNURrUHArdXpzWlMwQ1MvdjFPL1dvSmRKeUxOSmQ3Q0pt?=
+ =?utf-8?B?SldCVVdJYzJCNS8vRXBuOFVtd2dZekpJMTZjaHR4Y0VMSTV4OEdVK3BWRzg5?=
+ =?utf-8?B?SHBOL0FNQm9kcFV4b2ZCQVpGbVlmVWVQY0U2TXZXditnTTFFWVo0bzlBVjgz?=
+ =?utf-8?B?WlREbzF3THFaWFFkalFac2pLdVFSMzg4YUQva040d21CZlpZZi9WM2hybnpr?=
+ =?utf-8?B?U0hXYjRXZUp4ZnJXSXVkb3FGR1pSODRwNGRaa21nbG5abjVrWXBoWG9IWGhz?=
+ =?utf-8?B?SEpUT2R5T0VQZjh4ZStFK1BWSU1jcXcxVFpMNXc1RXBYenlNUitkRFk0cXBq?=
+ =?utf-8?B?WUtLbmRWMW03TWV6SUpUZXE3MzZzamw5L0xtQmFoREdBbzFpYXcxT3BKenJY?=
+ =?utf-8?B?Y09peWhqaVB2YndtVnhDWnlSNHR0MEhCV2FzTEQ4T0dIRVU5OUw2U3RubTJ1?=
+ =?utf-8?B?eTlmQkpqdTZiVFkwbVFqZDR4eVpKUXlFMm5sZXJTMHh1T25YNTU5VkQvN2lD?=
+ =?utf-8?B?dG1vQ3ZDdmhvSHJhdWMzNFlGcDMrMlp0NHBUb3JFNWR1SzhOc3ZxZm5RcWEw?=
+ =?utf-8?B?MVFNRmUyYmQ0aWgxQkFHOUdBdHptRkRQLzFubmN0empGTFN6MmtjdmtUS1Uy?=
+ =?utf-8?B?OVk2NVBHdEozNVowZVVJMGxuSmdnSnU1VFB0RlJ6dTVzRWQzTTA2N0dab2xr?=
+ =?utf-8?B?NS9uZ0grRUdEb0h6WUFzbEU1dndsUENSaWJJWENYUW1iNUxhd29RVFpuSlVx?=
+ =?utf-8?B?Y0FEV0c3dXQ3ZTNyN0NoUUNXV0Y2Y2tBSUVKampBRkNRK016Yy9RZldoUHVr?=
+ =?utf-8?Q?d2JBBAZHjQSET/0eSU4A0lM0ZCyHQjdhs5Ld4=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1BFABFB9ED8CBE499515BC27B7AFC1D0@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20210330103225.3949-1-noltari@gmail.com>
-In-Reply-To: <20210330103225.3949-1-noltari@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 30 Mar 2021 13:55:18 +0300
-Message-ID: <CAHp75VdCLuS-0YL6+_vz5GqJC9N0AOiuYazkB1VNvbsPD78NAA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: bcm: bcm6362: fix warning
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: fi.rohmeurope.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR03MB3162.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bd75b1f-7c0a-4813-5be1-08d8f36b5303
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2021 11:02:35.1345
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 94f2c475-a538-4112-b5dd-63f17273d67a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g4lU1gC3DTYo4I9zz3kjcB4WciwinM0/nMIto0MsyDl1/OXuNn6qyIiyztE7zHj972t/5w6o3OrNg0/0sqF/7+2QcL2dznLWy6wckrvn5tKi8bBAJ10R/FiV4Crc4RN1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR03MB3067
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 30, 2021 at 1:33 PM =C3=81lvaro Fern=C3=A1ndez Rojas
-<noltari@gmail.com> wrote:
->
-> The current implementation of bcm6362_set_gpio() produces the following
-> warning on x86_64:
-> drivers/pinctrl/bcm/pinctrl-bcm6362.c: In function 'bcm6362_set_gpio':
-> drivers/pinctrl/bcm/pinctrl-bcm6362.c:503:8: warning: cast from pointer t=
-o integer of different size [-Wpointer-to-int-cast]
->   503 |        (uint32_t) desc->drv_data, 0);
->       |        ^
->
-> Modify the code to make it similar to bcm63268_set_gpio() in order to fix
-> the warning.
-
-Seems good to me, thanks!
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Fixes: 705791e23ecd ("pinctrl: add a pincontrol driver for BCM6362")
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> ---
-
-Missed changelog here.
-
->  drivers/pinctrl/bcm/pinctrl-bcm6362.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm6362.c b/drivers/pinctrl/bcm/=
-pinctrl-bcm6362.c
-> index eb7ec80353e9..40ef495b6301 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-bcm6362.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-bcm6362.c
-> @@ -496,11 +496,11 @@ static int bcm6362_pinctrl_get_groups(struct pinctr=
-l_dev *pctldev,
->  static void bcm6362_set_gpio(struct bcm63xx_pinctrl *pc, unsigned pin)
->  {
->         const struct pinctrl_pin_desc *desc =3D &bcm6362_pins[pin];
-> +       unsigned int basemode =3D (uintptr_t)desc->drv_data;
->         unsigned int mask =3D bcm63xx_bank_pin(pin);
->
-> -       if (desc->drv_data)
-> -               regmap_update_bits(pc->regs, BCM6362_BASEMODE_REG,
-> -                                  (uint32_t) desc->drv_data, 0);
-> +       if (basemode)
-> +               regmap_update_bits(pc->regs, BCM6362_BASEMODE_REG, basemo=
-de, 0);
->
->         if (pin < BCM63XX_BANK_GPIOS) {
->                 /* base mode 0 =3D> gpio 1 =3D> mux function */
-> --
-> 2.20.1
->
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+DQpPbiBUdWUsIDIwMjEtMDMtMzAgYXQgMTM6NTQgKzAzMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90
+ZToNCj4gT24gVHVlLCBNYXIgMzAsIDIwMjEgYXQgMTo0MyBQTSBNYXR0aSBWYWl0dGluZW4NCj4g
+PG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4gd3JvdGU6DQo+ID4gT24gVHVlLCAy
+MDIxLTAzLTMwIGF0IDEzOjExICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6DQo+IA0KPiAu
+Li4NCj4gDQo+ID4gQW5keSwgaG93IGZhdGFsIGRvIHlvdSB0aGluayB0aGVzZSBpc3N1ZXMgYXJl
+PyBJIGRpZCBwdXQgdGhlc2UNCj4gPiBjb21tZW50cw0KPiA+IG9uIG15ICd0aGluZ3MgdG8gY2xl
+YW4tdXAnIGxpc3QuDQo+ID4gDQo+ID4gSWYgeW91IGRvbid0IHNlZSB0aGVtIGFzIGZhdGFsLCB0
+aGVuIEkgcmF0aGVyIG5vdCByZXNlbmQgd2hvbGUNCj4gPiBzZXJpZXMNCj4gPiBvZiAxOSBwYXRj
+aGVzIGp1c3QgZm9yIHRoZXNlLiBJIGFtIGFueXdheSBnb2luZyB0byByZXdvcmsgdGhlIFJPSE0N
+Cj4gPiBQTUlDDQo+ID4gR1BJTyBkcml2ZXJzIHdoaWNoIEkgaGF2ZSBhdXRob3JlZCBkdXJpbmcg
+dGhlIG5leHQgY291cGxlIG9mIG1vbnRocw0KPiA+IGZvcg0KPiA+IHJlZ21hcF9ncGlvIHVzYWdl
+LiBUaGlzIHNlcmllcyBoYXMgbW9zdCBvZiB0aGUgYWNrcyBleGNlcHQgZm9yIHRoZQ0KPiA+IHJl
+Z3VsYXRvciBwYXJ0IC0gc28gSSB3YXMgYWJvdXQgdG8gc3VnZ2VzdCB0byBMZWUgdGhhdCBwZXJo
+YXBzIGhlDQo+ID4gY291bGQNCj4gPiBhcHBseSBvdGhlciBidXQgcmVndWxhdG9yIHN0dWZmIHRv
+IE1GRCBzbyBJIGNvdWxkIHNxdWVlemUgdGhlDQo+ID4gcmVjaXBpZW50DQo+ID4gbGlzdCBhbmQg
+YW1vdW50IG9mIHBhdGNoZXMgaW4gc2VyaWVzLg0KPiANCj4gSSB1bmRlcnN0YW5kIHRoYXQuIEkn
+bSBub3QgYSBtYWludGFpbmVyLCBidXQgbXkgcGVyc29uYWwgdmlldyBpcyB0aGF0DQo+IGl0IGNh
+biBiZSBmaXhlZCBpbiBmb2xsb3cgdXBzLg0KDQpUaGFua3MgQW5keS4gVGhlIHNlcmllcyBhbHJl
+YWR5IGhhZCBhY2tzIGZyb20gQmFydG9zeiBhbmQgTGludXMgc28gSQ0KaG9wZSB0aGV5IGFyZSBh
+bHNvIE9rIHdpdGggZml4aW5nIHRoZXNlIHdoZW4gcmV3b3JraW5nIGZvciByZWdtYXBfZ3Bpbw0K
+KEkgaW50ZW5kIHRvIGRvIHRoYXQgZHVyaW5nIDUuMTMtcmMgY3ljbGUpLg0KDQpCZXN0IFJlZ2Fy
+ZHMNCglNYXR0aSBWYWl0dGluZW4NCg==
