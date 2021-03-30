@@ -2,167 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D81534E410
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 11:10:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB46F34E528
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 12:13:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231716AbhC3JJw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 05:09:52 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:30946 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231715AbhC3JJV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 05:09:21 -0400
-X-UUID: 42acd5ada24b46eeb3ce53e19b7ea87e-20210330
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=i1/OIW3DFnVb6T2Bw+aIaM0dlMXr76tD+3aVyI2dypg=;
-        b=Iib4xRStjModyW0BE7h0ghxMTv17LNNds5mBpQ/3q2n7LkcnoUQr9ZVdmN2eX9lRZm/DLCApeB5zIjARSAJ16CgOt0NQek8iuRuHbDVm+H35wxw9Qlms0xUkHWaMDuRj5IgR+jV+kMJ1UP/aRfTEOUXt65nBn0oAdhV3TSlVl1w=;
-X-UUID: 42acd5ada24b46eeb3ce53e19b7ea87e-20210330
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <zhiyong.tao@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 633605428; Tue, 30 Mar 2021 17:09:18 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 30 Mar
- 2021 17:09:16 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 30 Mar 2021 17:09:15 +0800
-Message-ID: <1617095355.10316.16.camel@mhfsdcap03>
-Subject: Re: [PATCH 2/6] dt-bindings: pinctrl: mt8195: add binding document
-From:   zhiyong tao <zhiyong.tao@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <linus.walleij@linaro.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <sean.wang@kernel.org>,
-        <srv_heupstream@mediatek.com>, <hui.liu@mediatek.com>,
-        <eddie.huang@mediatek.com>, <jg_poxu@mediatek.com>,
-        <biao.huang@mediatek.com>, <hongzhou.yang@mediatek.com>,
-        <erin.lo@mediatek.com>, <sean.wang@mediatek.com>,
-        <seiya.wang@mediatek.com>, <sj.huang@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
-Date:   Tue, 30 Mar 2021 17:09:15 +0800
-In-Reply-To: <20210329135838.GA2473026@robh.at.kernel.org>
-References: <20210329065047.8388-1-zhiyong.tao@mediatek.com>
-         <20210329065047.8388-3-zhiyong.tao@mediatek.com>
-         <20210329135838.GA2473026@robh.at.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S231637AbhC3KMc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 06:12:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231579AbhC3KL4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 06:11:56 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89CDDC061574;
+        Tue, 30 Mar 2021 03:11:56 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id y32so10225486pga.11;
+        Tue, 30 Mar 2021 03:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D64Z0ipiSGjIBRscBt7Hj8JlFiWyuPUHxNwLeCeVO14=;
+        b=pme7hRVQQ62mCdj/DJ8yYIZZwvljFEGqajaoqH2E0JKLyslpvRPinagWmsIb5R5VGn
+         j4TJmvArUzdFno47WEKPprN2+CPJE6ZX4b7bUDbRXRx7qHJNIxCClgRQrOvBg2gUX425
+         QHrH/9usLgf1GP8kdVzm5mapzgDlm7AeK4qYGBf10OqHZ0NbTB370kdZEAe7hjHO6f+J
+         xPwj3jZu1dR3NwhL7r9RcAhyhNgpZLC9R138Uf8yolgIRyN4U0Y3MwAhkY1BdKYr+9Q8
+         lzUCw3cGbdXWCAdgPlpCTiUSoWyT4m9pAKOpw1B/elmHMxSxDAIR6JoXxq4ip6MCDIBM
+         TLIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D64Z0ipiSGjIBRscBt7Hj8JlFiWyuPUHxNwLeCeVO14=;
+        b=uhsfyCmM3bBHhh2jtKFGHBYDNBQUqB//hI0ddWjLGHllzbPEAIhfWCgBUZS5mawRqX
+         WjeOwn0syAVqTPRZY9ad0J443czvx126XyLu95nsCB6B3P6UjnIw75lRi5mtqolWlT00
+         lsioT+PWluylVWTEh8tW9rl0OLZH9B98N5M4UebHjtWCWxMioL5k9IM6VaGZIxzQab5O
+         4x0B2+ZVRb1aQJTnNFIK0T60avzOrYwE26jFw6cqh3zzEakD3e6Zj1WozCZUtN0kUGRm
+         dwaN2OW6xAFpp3o6SdTtwR8I3sZ7q+hln074eZIneAcrf8NYM1v4vBh0XFgOf8CRKwGi
+         UxnQ==
+X-Gm-Message-State: AOAM533sgliVzr9oIFAmsAZjtp8X3dpfSyPNcJgg4JEOfHx4hBOg6NI5
+        XbG3Ji5CKB8YnB26GgjGuEBYC9aSk/2B72XOMHA=
+X-Google-Smtp-Source: ABdhPJyot5Mzdi+RZAdXsFR/oJ2wQd6fBrsoSnwBTwFD4jBvm8DtkP3JFA6R7w+tnluGW4uFfYU0N1p60KSrgUjY7Rw=
+X-Received: by 2002:a63:3e4b:: with SMTP id l72mr6674506pga.203.1617099116029;
+ Tue, 30 Mar 2021 03:11:56 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 3FD66D291D2BC45023DE2CBBCC4D14A9C361AF56CEC22E8C97DE9A5CC461BF122000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <cover.1617020713.git.matti.vaittinen@fi.rohmeurope.com> <118a6160880a212d20d0251f763cad295c741b4d.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <118a6160880a212d20d0251f763cad295c741b4d.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 30 Mar 2021 13:11:39 +0300
+Message-ID: <CAHp75VdRobc6jpFzAkd3U65BhiiNPLrF4qsnCKmsQBKMYbG4sg@mail.gmail.com>
+Subject: Re: [PATCH v5 09/19] gpio: support ROHM BD71815 GPOs
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gTW9uLCAyMDIxLTAzLTI5IGF0IDA4OjU4IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gTW9uLCBNYXIgMjksIDIwMjEgYXQgMDI6NTA6NDNQTSArMDgwMCwgWmhpeW9uZyBUYW8gd3Jv
-dGU6DQo+ID4gVGhlIGNvbW1pdCBhZGRzIG10ODE5NSBjb21wYXRpYmxlIG5vZGUgaW4gYmluZGlu
-ZyBkb2N1bWVudC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBaaGl5b25nIFRhbyA8emhpeW9u
-Zy50YW9AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGluY3RybC9w
-aW5jdHJsLW10ODE5NS55YW1sICAgICAgfCAxNTIgKysrKysrKysrKysrKysrKysrDQo+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCAxNTIgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTUu
-eWFtbA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGluY3RybC9waW5jdHJsLW10ODE5NS55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTUueWFtbA0KPiA+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi43OTE1Yjk1NjhjMjkNCj4gPiAtLS0g
-L2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bp
-bmN0cmwvcGluY3RybC1tdDgxOTUueWFtbA0KPiA+IEBAIC0wLDAgKzEsMTUyIEBADQo+ID4gKyMg
-U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0K
-PiA+ICslWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3Jn
-L3NjaGVtYXMvcGluY3RybC9waW5jdHJsLW10ODE5NS55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRw
-Oi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3Rp
-dGxlOiBNZWRpYXRlayBNVDgxOTUgUGluIENvbnRyb2xsZXINCj4gPiArDQo+ID4gK21haW50YWlu
-ZXJzOg0KPiA+ICsgIC0gU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+ICsN
-Cj4gPiArZGVzY3JpcHRpb246IHwNCj4gPiArICBUaGUgTWVkaWF0ZWsncyBQaW4gY29udHJvbGxl
-ciBpcyB1c2VkIHRvIGNvbnRyb2wgU29DIHBpbnMuDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0K
-PiA+ICsgIGNvbXBhdGlibGU6DQo+ID4gKyAgICBjb25zdDogbWVkaWF0ZWssbXQ4MTk1LXBpbmN0
-cmwNCj4gPiArDQo+ID4gKyAgZ3Bpby1jb250cm9sbGVyOiB0cnVlDQo+ID4gKw0KPiA+ICsgICcj
-Z3Bpby1jZWxscyc6DQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICBOdW1iZXIg
-b2YgY2VsbHMgaW4gR1BJTyBzcGVjaWZpZXIuIFNpbmNlIHRoZSBnZW5lcmljIEdQSU8gYmluZGlu
-ZyBpcyB1c2VkLA0KPiA+ICsgICAgICB0aGUgYW1vdW50IG9mIGNlbGxzIG11c3QgYmUgc3BlY2lm
-aWVkIGFzIDIuIFNlZSB0aGUgYmVsb3cNCj4gPiArICAgICAgbWVudGlvbmVkIGdwaW8gYmluZGlu
-ZyByZXByZXNlbnRhdGlvbiBmb3IgZGVzY3JpcHRpb24gb2YgcGFydGljdWxhciBjZWxscy4NCj4g
-PiArICAgIGNvbnN0OiAyDQo+ID4gKw0KPiA+ICsgIGdwaW8tcmFuZ2VzOg0KPiA+ICsgICAgZGVz
-Y3JpcHRpb246IGdwaW8gdmFsaWQgbnVtYmVyIHJhbmdlLg0KPiA+ICsgICAgbWF4SXRlbXM6IDEN
-Cj4gPiArDQo+ID4gKyAgcmVnOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAg
-UGh5c2ljYWwgYWRkcmVzcyBiYXNlIGZvciBncGlvIGJhc2UgcmVnaXN0ZXJzLiBUaGVyZSBhcmUg
-OCBHUElPDQo+ID4gKyAgICAgIHBoeXNpY2FsIGFkZHJlc3MgYmFzZSBpbiBtdDgxOTUuDQo+ID4g
-KyAgICBtYXhJdGVtczogOA0KPiA+ICsNCj4gPiArICByZWctbmFtZXM6DQo+ID4gKyAgICBkZXNj
-cmlwdGlvbjogfA0KPiA+ICsgICAgICBHcGlvIGJhc2UgcmVnaXN0ZXIgbmFtZXMuDQo+ID4gKyAg
-ICBtYXhJdGVtczogOA0KPiA+ICsNCj4gPiArICBpbnRlcnJ1cHQtY29udHJvbGxlcjogdHJ1ZQ0K
-PiA+ICsNCj4gPiArICAnI2ludGVycnVwdC1jZWxscyc6DQo+ID4gKyAgICBjb25zdDogMg0KPiA+
-ICsNCj4gPiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IFRoZSBpbnRlcnJ1
-cHQgb3V0cHV0cyB0byBzeXNpcnEuDQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiAr
-I1BJTiBDT05GSUdVUkFUSU9OIE5PREVTDQo+ID4gK3BhdHRlcm5Qcm9wZXJ0aWVzOg0KPiA+ICsg
-ICdecGlucyc6DQo+IA0KPiBOb3JtYWxseSB3ZSdyZSBkb2luZyAnLXBpbnMkJy4NCg0KPT0+IFRo
-YW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uLiB3ZSB3aWxsIGNoYW5nZSBpdCBpbiBuZXh0IHZlcnNp
-b24uDQo+IA0KPiA+ICsgICAgdHlwZTogb2JqZWN0DQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0K
-PiA+ICsgICAgICBBIHBpbmN0cmwgbm9kZSBzaG91bGQgY29udGFpbiBhdCBsZWFzdCBvbmUgc3Vi
-bm9kZXMgcmVwcmVzZW50aW5nIHRoZQ0KPiA+ICsgICAgICBwaW5jdHJsIGdyb3VwcyBhdmFpbGFi
-bGUgb24gdGhlIG1hY2hpbmUuIEVhY2ggc3Vibm9kZSB3aWxsIGxpc3QgdGhlDQo+ID4gKyAgICAg
-IHBpbnMgaXQgbmVlZHMsIGFuZCBob3cgdGhleSBzaG91bGQgYmUgY29uZmlndXJlZCwgd2l0aCBy
-ZWdhcmQgdG8gbXV4ZXINCj4gPiArICAgICAgY29uZmlndXJhdGlvbiwgcHVsbHVwcywgZHJpdmUg
-c3RyZW5ndGgsIGlucHV0IGVuYWJsZS9kaXNhYmxlIGFuZA0KPiA+ICsgICAgICBpbnB1dCBzY2ht
-aXR0Lg0KPiA+ICsgICAgICBBbiBleGFtcGxlIG9mIHVzaW5nIG1hY3JvOg0KPiA+ICsgICAgICBw
-aW5jb250cm9sbGVyIHsNCj4gPiArICAgICAgICAvKiBHUElPMCBzZXQgYXMgbXVsdGlmdW5jdGlv
-biBHUElPMCAqLw0KPiA+ICsgICAgICAgIHN0YXRlXzBfbm9kZV9hIHsNCj4gDQo+IFVzZSB0aGUg
-bm9kZSBuYW1lIHBhdHRlcm4gZGVmaW5lZC4NCg0KPT0+IFRoYW5rcyBmb3IgeW91ciBzdWdnZXN0
-aW9uLiB3ZSB3aWxsIGNoYW5nZSBpdCBpbiBuZXh0IHZlcnNpb24uDQo+IA0KPiA+ICsgICAgICAg
-ICAgcGlubXV4ID0gPFBJTk1VWF9HUElPMF9fRlVOQ19HUElPMD47DQo+ID4gKyAgICAgICAgfTsN
-Cj4gPiArICAgICAgICAvKiBHUElPMSBzZXQgYXMgbXVsdGlmdW5jdGlvbiBDTEtNMSAqLw0KPiA+
-ICsgICAgICAgIHN0YXRlXzBfbm9kZV9iIHsNCj4gPiArICAgICAgICAgIHBpbm11eCA9IDxQSU5N
-VVhfR1BJTzFfX0ZVTkNfQ0xLTTE+Ow0KPiA+ICsgICAgICAgIH07DQo+ID4gKyAgICAgIH07DQo+
-ID4gKyAgICAkcmVmOiAicGlubXV4LW5vZGUueWFtbCINCj4gPiArDQo+ID4gKyAgICBwcm9wZXJ0
-aWVzOg0KPiA+ICsgICAgICBwaW5tdXg6DQo+ID4gKyAgICAgICAgZGVzY3JpcHRpb246IHwNCj4g
-PiArICAgICAgICAgIEludGVnZXIgYXJyYXksIHJlcHJlc2VudHMgZ3BpbyBwaW4gbnVtYmVyIGFu
-ZCBtdXggc2V0dGluZy4NCj4gPiArICAgICAgICAgIFN1cHBvcnRlZCBwaW4gbnVtYmVyIGFuZCBt
-dXggdmFyaWVzIGZvciBkaWZmZXJlbnQgU29DcywgYW5kIGFyZSBkZWZpbmVkDQo+ID4gKyAgICAg
-ICAgICBhcyBtYWNyb3MgaW4gZHQtYmluZGluZ3MvcGluY3RybC88c29jPi1waW5mdW5jLmggZGly
-ZWN0bHkuDQo+ID4gKw0KPiA+ICsgICAgICBkcml2ZS1zdHJlbmd0aDoNCj4gPiArICAgICAgICBk
-ZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICAgICAgSXQgY2FuIHN1cHBvcnQgc29tZSBhcmd1bWVu
-dHMsIHN1Y2ggYXMgTVRLX0RSSVZFXzRtQSwgTVRLX0RSSVZFXzZtQSwgZXRjLiBTZWUNCj4gPiAr
-ICAgICAgICAgIGR0LWJpbmRpbmdzL3BpbmN0cmwvbXQ2NXh4LmguIEl0IGNhbiBvbmx5IHN1cHBv
-cnQgMi80LzYvOC8xMC8xMi8xNC8xNm1BIGluIG10ODE5NS4NCj4gPiArICAgICAgICBlbnVtOiBb
-MiwgNCwgNiwgOCwgMTAsIDEyLCAxNCwgMTZdDQo+ID4gKw0KPiA+ICsgICAgICBiaWFzLXB1bGwt
-ZG93bjogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgYmlhcy1wdWxsLXVwOiB0cnVlDQo+ID4gKw0K
-PiA+ICsgICAgICBiaWFzLWRpc2FibGU6IHRydWUNCj4gPiArDQo+ID4gKyAgICAgIG91dHB1dC1o
-aWdoOiB0cnVlDQo+ID4gKw0KPiA+ICsgICAgICBvdXRwdXQtbG93OiB0cnVlDQo+ID4gKw0KPiA+
-ICsgICAgICBpbnB1dC1lbmFibGU6IHRydWUNCj4gPiArDQo+ID4gKyAgICAgIGlucHV0LWRpc2Fi
-bGU6IHRydWUNCj4gPiArDQo+ID4gKyAgICAgIGlucHV0LXNjaG1pdHQtZW5hYmxlOiB0cnVlDQo+
-ID4gKw0KPiA+ICsgICAgICBpbnB1dC1zY2htaXR0LWRpc2FibGU6IHRydWUNCj4gPiArDQo+ID4g
-KyAgICByZXF1aXJlZDoNCj4gPiArICAgICAgLSBwaW5tdXgNCj4gPiArDQo+ID4gKyAgICBhZGRp
-dGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPiArDQo+ID4gK3JlcXVpcmVkOg0KPiA+ICsgIC0g
-Y29tcGF0aWJsZQ0KPiA+ICsgIC0gcmVnDQo+ID4gKyAgLSBpbnRlcnJ1cHRzDQo+ID4gKyAgLSBp
-bnRlcnJ1cHQtY29udHJvbGxlcg0KPiA+ICsgIC0gJyNpbnRlcnJ1cHQtY2VsbHMnDQo+ID4gKyAg
-LSBncGlvLWNvbnRyb2xsZXINCj4gPiArICAtICcjZ3Bpby1jZWxscycNCj4gPiArICAtIGdwaW8t
-cmFuZ2VzDQo+ID4gKw0KPiA+ICthZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPiArDQo+
-ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+ICsgICAgICAgICAgICAjaW5jbHVkZSA8ZHQt
-YmluZGluZ3MvcGluY3RybC9tdDgxOTUtcGluZnVuYy5oPg0KPiA+ICsgICAgICAgICAgICAjaW5j
-bHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiA+ICsg
-ICAgICAgICAgICBwaW86IHBpbmN0cmxAMTAwMDUwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTk1LXBpbmN0cmwiOw0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgIHJlZyA9IDwweDEwMDA1MDAwIDB4MTAwMD4sDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgPDB4MTFkMTAwMDAgMHgxMDAwPiwNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICA8MHgxMWQzMDAwMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDwweDExZDQwMDAwIDB4MTAwMD4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgPDB4MTFlMjAwMDAgMHgxMDAwPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICA8
-MHgxMWUyMDAwMCAweDEwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDEx
-ZWIwMDAwIDB4MTAwMD4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MTFmNDAw
-MDAgMHgxMDAwPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICA8MHgxMDAwYjAwMCAw
-eDEwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJpb2NmZzAiLCAi
-aW9jZmdfYm0iLCAiaW9jZmdfYmwiLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICJp
-b2NmZ19iciIsICJpb2NmZ19sbSIsICJpb2NmZ19yYiIsDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgImlvY2ZnX3RsIiwgImVpbnQiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgIGdw
-aW8tY29udHJvbGxlcjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAjZ3Bpby1jZWxscyA9IDwy
-PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICBncGlvLXJhbmdlcyA9IDwmcGlvIDAgMCAxNDQ+
-Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1jb250cm9sbGVyOw0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAyMjUgSVJRX1RZUEVfTEVW
-RUxfSElHSCAwPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAjaW50ZXJydXB0LWNlbGxzID0g
-PDI+Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICBwaW5zIHsNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgIHBpbm11eCA9IDxQSU5NVVhfR1BJTzBfX0ZVTkNfR1BJTzA+Ow0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgb3V0cHV0LWxvdzsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICB9Ow0KPiA+ICsgICAgICAgICAgICB9Ow0KPiA+IC0tIA0KPiA+IDIuMTguMA0KPiA+IA0K
-DQo=
+On Mon, Mar 29, 2021 at 3:58 PM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+>
+> Support GPO(s) found from ROHM BD71815 power management IC. The IC has two
+> GPO pins but only one is properly documented in data-sheet. The driver
 
+in the datasheet
+
+> exposes by default only the documented GPO. The second GPO is connected to
+> E5 pin and is marked as GND in data-sheet. Control for this undocumented
+
+in the datasheet
+
+> pin can be enabled using a special DT property.
+>
+> This driver is derived from work by Peter Yang <yanglsh@embest-tech.com>
+> although not so much of original is left.
+
+of the original
+
+It seems you ignored my comments about the commit message. :-(
+
+
+
+> +struct bd71815_gpio {
+> +       struct gpio_chip chip;
+
+> +       struct device *dev;
+
+Wondering why you need this. Is it the same as chip.parent?
+
+> +       struct regmap *regmap;
+> +};
+
+...
+
+> +       int ret, bit;
+> +
+> +       bit = BIT(offset);
+
+I prefer
+  int bit = BIT(offset);
+  int ret;
+but I think we already discussed that. OK.
+
+...
+
+> +       default:
+> +               break;
+> +       }
+> +       return -ENOTSUPP;
+
+Here is a waste of line. Why break instead of direct return?
+
+...
+
+> +/* Template for GPIO chip */
+> +static const struct gpio_chip bd71815gpo_chip = {
+> +       .label                  = "bd71815",
+> +       .owner                  = THIS_MODULE,
+> +       .get                    = bd71815gpo_get,
+> +       .get_direction          = bd71815gpo_direction_get,
+> +       .set                    = bd71815gpo_set,
+> +       .set_config             = bd71815_gpio_set_config,
+
+> +       .can_sleep              = 1,
+
+Strictly speaking this should be true (boolean type value).
+
+> +};
+
+...
+
+> +#define BD71815_TWO_GPIOS      0x3UL
+> +#define BD71815_ONE_GPIO       0x1UL
+
+Are they masks? Can you use BIT() and GENMASK()?
+
+...
+
+> +/*
+> + * Sigh. The BD71815 and BD71817 were originally designed to support two GPO
+> + * pins. At some point it was noticed the second GPO pin which is the E5 pin
+> + * located at the center of IC is hard to use on PCB (due to the location). It
+> + * was decided to not promote this second GPO and pin is marked as GND in the
+
+and the pin
+
+> + * datasheet. The functionality is still there though! I guess driving a GPO
+> + * connected to the ground is a bad idea. Thus we do not support it by default.
+> + * OTOH - the original driver written by colleagues at Embest did support
+> + * controlling this second GPO. It is thus possible this is used in some of the
+> + * products.
+> + *
+> + * This driver does not by default support configuring this second GPO
+> + * but allows using it by providing the DT property
+> + * "rohm,enable-hidden-gpo".
+> + */
+
+...
+
+> +       /*
+> +        * As writing of this the sysfs interface for GPIO control does not
+> +        * respect the valid_mask. Do not trust it but rather set the ngpios
+> +        * to 1 if "rohm,enable-hidden-gpo" is not given.
+> +        *
+> +        * This check can be removed later if the sysfs export is fixed and
+> +        * if the fix is backported.
+
+So, mark this comment with the TODO/FIXME keyword?
+
+> +        *
+> +        * For now it is safest to just set the ngpios though.
+> +        */
+
+...
+
+> +       ret = devm_gpiochip_add_data(dev, &g->chip, g);
+> +       if (ret < 0) {
+> +               dev_err(dev, "could not register gpiochip, %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       return ret;
+
+This entire piece can be simplified by
+
+return devm_gpiochip_add_data(...);
+
+...
+
+> +static struct platform_driver gpo_bd71815_driver = {
+> +       .driver = {
+> +               .name   = "bd71815-gpo",
+
+> +               .owner  = THIS_MODULE,
+
+Seems I commented on this. The module_*_driver() macro(s) will take care of it.
+
+> +       },
+> +       .probe          = gpo_bd71815_probe,
+> +};
+
+> +
+
+Extra blank line. Drop it.
+
+> +module_platform_driver(gpo_bd71815_driver);
+
+-- 
+With Best Regards,
+Andy Shevchenko
