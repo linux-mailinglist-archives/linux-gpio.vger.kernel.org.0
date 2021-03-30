@@ -2,108 +2,170 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4871B34DF48
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 05:29:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 262C734E02E
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Mar 2021 06:33:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230432AbhC3D2B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Mar 2021 23:28:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbhC3D1x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Mar 2021 23:27:53 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CE60C061764
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Mar 2021 20:27:52 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id w3so22601320ejc.4
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Mar 2021 20:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X1Mep0NDTZqgj41CwSzTV/L+FLNZGsP0ABu2o9b8U30=;
-        b=3iJ6rnxNoJ1aTUrQb8MBityRh32IAoO48UjECVfi4BfI7/zw8eIa5QZsOXEdPj0Ult
-         Ty+5a/+z0tH9MGN4pMs0E1CwVUioqhcepi7Lu84N7r0PBy5kF9ickSommc4x+k/a2Q7B
-         5E293VfrAtZ/le8pjgcG94Y36E9PUx/WExrGl7fcifPHy0mLzvlaUp7FheK3iZx4EuNi
-         xLS+LonWNrdG4ZdbOnJAxJSrspZk93opFaXsRh4zZX/Fj+TzE1GWOpuunFDm3ojdS1fg
-         kI34Wh6qDZgX/BJt7lnSbqWQ9Hr7UdJ4czc18A6HG2VK+wbwPnHSNukupFvn+R7FyiIC
-         4ApA==
+        id S229630AbhC3Ecs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Mar 2021 00:32:48 -0400
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:41923 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229483AbhC3Ecl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 00:32:41 -0400
+Received: by mail-lf1-f53.google.com with SMTP id b14so21717018lfv.8;
+        Mon, 29 Mar 2021 21:32:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X1Mep0NDTZqgj41CwSzTV/L+FLNZGsP0ABu2o9b8U30=;
-        b=DDzqIb8M7vEj2ArYSs2DUJOZM1HVV8HpYsi7U215GwXVSCQezbJ5d6tV7THOIR9CHA
-         cj5xblIc/RU6fqoLo/uvQdQzLaQTpGqpV2HX7SYWHpWmIhyQd8S/ZUvEvXlYYWccOLfs
-         XFuCeLf87+w9eLu1sOepcQ+HUo7Z131Qh4pdsmGMJ5x+ZJ63I5rxCQXm0mJSCLTMPWPz
-         AugkBKcoWD0azci2EQM+d7rIIpxDD40KjoEjKPE4QDREbJIiRiQYvWBG4+M3FEmEfe8g
-         gSZSHqVuCNwn61AWgZsm99HcL2+2jIXK8NW3DK/x0ih60sBts3veKSrBZY/jkdfeZSi5
-         sO6w==
-X-Gm-Message-State: AOAM532TbBDH7YYYJ6XfQE9bAhU6YqhI7zBu/Ti4535rJvp8dLuNgX2P
-        6Qs0tvM8mNgP5+CnRH/PY0tTtGpcI9BclyMmuJMbzQ==
-X-Google-Smtp-Source: ABdhPJxJVT4ikpn8Ll3+BLlxrg5DXp62plos3RcvXhSBKDJOAEk7g5/fDnEiJIF4vigHrmnSsJ9PwiqWINiWEhcCWS8=
-X-Received: by 2002:a17:906:e0d6:: with SMTP id gl22mr30956801ejb.444.1617074870919;
- Mon, 29 Mar 2021 20:27:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210329015938.20316-1-brad@pensando.io> <20210329015938.20316-5-brad@pensando.io>
- <CAHp75VeQmc5ZyQV9AHcq2wm0xxBXb7by7RhidrRyCzmtRkXBAg@mail.gmail.com>
-In-Reply-To: <CAHp75VeQmc5ZyQV9AHcq2wm0xxBXb7by7RhidrRyCzmtRkXBAg@mail.gmail.com>
-From:   Brad Larson <brad@pensando.io>
-Date:   Mon, 29 Mar 2021 20:27:40 -0700
-Message-ID: <CAK9rFnxO6AUjjihZ3Y+tspUZqCWhNa5BH5EhK2x4mk8FJv0k7w@mail.gmail.com>
-Subject: Re: [PATCH v2 04/13] spidev: Add Pensando CPLD compatible
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
+         :in-reply-to:references:mime-version:date:user-agent
+         :content-transfer-encoding;
+        bh=RNVWpTsR1EU4/n7h7Ur5fWeNrn3CLUmS+LFxH0dWKP0=;
+        b=BcM9Fq9A8h7WhasyuuU1qHBn1sC+hkVdTbakXCd0SdB3gUq08l75adu1zut/vPTU17
+         CrgYgsf0L68R/yA4c8g0BDgfp/e8zEG1pBvNA8Ym/nNkvryTUswjB7RjnUpZnwvZAtLi
+         6qsSEaH1fOG1tmVua1le8JvZIUNifcI8wleqUvtMK0e4lR+DhSHzoBtzbteprxpdAzoH
+         IXdWr6wjieY31oztUt2cb54KdmddtiHmXp7Evoa/u+A59NElarI4m/TDfTUZok02ugRr
+         iHaYVlHlT3qdxZdZwEEFy0J6XGq+hhg5ZpRYV2qX7DyfYUoNZkkZMsg+iT7SVqKazjAm
+         ymJg==
+X-Gm-Message-State: AOAM532nuU7EwcczOUR2MKyk8dMjgmZqZyFGfiRhG0/OAJJmyqAW1fl7
+        m/HSsc58jlA4YhhI1VxsHEY=
+X-Google-Smtp-Source: ABdhPJxv09qQWoRgXLBttaTMtsa808i7c1tUSkRC6nXhlDV/KiDJ/fbxRUsHTYen7LhDM1jjY4YKaA==
+X-Received: by 2002:a05:6512:714:: with SMTP id b20mr17536838lfs.370.1617078760349;
+        Mon, 29 Mar 2021 21:32:40 -0700 (PDT)
+Received: from dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::2])
+        by smtp.gmail.com with ESMTPSA id g24sm2029548lfv.257.2021.03.29.21.32.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Mar 2021 21:32:39 -0700 (PDT)
+Message-ID: <92243c7b428d2025c1a9f3beb8db46995c9376d0.camel@fi.rohmeurope.com>
+Subject: Re: [PATCH 2/2] gpiolib: Allow drivers to return EOPNOTSUPP from
+ config
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reply-To: matti.vaittinen@fi.rohmeurope.com
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+Cc:     Joe Perches <joe@perches.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
+        Stephen Boyd <sboyd@codeaurora.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <YGHWZuNfbSDe+B6y@smile.fi.intel.com>
+References: <cover.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
+         <d2c8b7f9a3b420c2764f645da531a57db16905f3.1617017060.git.matti.vaittinen@fi.rohmeurope.com>
+         <CAHp75VdXa2bkJ+ej+HNYstLeK4TF+L5H3wTgm0CgJ9hYQeU+ZQ@mail.gmail.com>
+         <bf12f668db2f0dce7dfc09351780e295da30714c.camel@fi.rohmeurope.com>
+         <YGHWZuNfbSDe+B6y@smile.fi.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Date:   Tue, 30 Mar 2021 07:32:33 +0300
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 29, 2021 at 3:45 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Mar 29, 2021 at 5:01 AM Brad Larson <brad@pensando.io> wrote:
-> >
-> > Pensando Elba SoC platforms have a SPI connected CPLD
-> > for platform management.
->
-> And? It's not a good justification to spread the (debugging only)
-> spidev interface.
->
-> What tool is going to use it? Why can't you have a driver for that in
-> the kernel?
+Morning Folks,
 
-The driver is in userspace and we need to instantiate /dev/spi0.N
-in the /dev directory.  The CPLD includes a device id and version
-id that userspace applications use to differentiate functionality on
-different boards.  It wouldn't really be appropriate to use one of
-the existing entries.
+On Mon, 2021-03-29 at 16:30 +0300, Andy Shevchenko wrote:
+> On Mon, Mar 29, 2021 at 03:20:07PM +0300, Matti Vaittinen wrote:
+> > On Mon, 2021-03-29 at 14:59 +0300, Andy Shevchenko wrote:
+> > > On Mon, Mar 29, 2021 at 2:43 PM Matti Vaittinen
+> > > <matti.vaittinen@fi.rohmeurope.com> wrote:
+> > > > The checkpacth instructs to switch from ENOSUPP to EOPNOTSUPP.
+> > > > > WARNING: ENOTSUPP is not a SUSV4 error code, prefer
+> > > > > EOPNOTSUPP
+> > > > 
+> > > > Make the gpiolib allow drivers to return both so driver
+> > > > developers
+> > > > can avoid one of the checkpatch complaints.
+> > > 
+> > > Internally we are fine to use the ENOTSUPP.
+> > > Checkpatch false positives there.
+> > 
+> > I agree. OTOH, the checkpatch check makes sense to user-visible
+> > stuff.
+> > Yet, the checkpatch has hard time guessing what is user-visible -
+> > so it
+> > probably is easiest to nag about all ENOTSUPP uses as it does now.
+> > 
+> > > I doubt we need this change. Rather checkpatch should rephrase
+> > > this
+> > > to
+> > > point out that this is only applicable to _user-visible_ error
+> > > path.
+> > > Cc'ed Joe.
+> > 
+> > Yes, thanks for pulling Joe in.
+> > 
+> > Anyways, no matter what the warning says, all false positives are
+> > annoying. I don't see why we should stay with ENOTSUPP in gpiolib?
+> > (other than the burden of changing it).
+> 
+> For sake of the changing we are not changing the code.
+No. But for the sake of making it better / more consistent :)
 
-For example even with high pin count SoCs we are offloading
-low speed functionality into the CPLD connected over SPI.  The
-elba-asic-common.dtsi file shows a compatible string of
-"pensando,cpld-rd1173" which does have a kernel driver we
-intend to contribute later if there is interest.  This IP in the CPLD
-is readily available from Lattice which provides two I2C Masters
-which in our case we use for access to the network port transceivers.
-What was missing in the kernel was a bridge driver that exposes
-what looks like a standard I2C device to userspace where the
-drivers/i2c/busses/i2c-rd1173.c handles the spi transfers to the
-Lattice IP in the CPLD.
+Anyway - after giving this second thought (thanks Andy for provoking me
+to thinking this further) - I do agree with Andy that this particular
+change is bad. More I think of this, less I like the idea of having two
+separate return values to indicate the same thing. So we should support
+only one which makes my patch terrible.
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+For the sake of consistency it would be cleaner to use same, single
+value, for same error both inside the gpiolib and at user-interface.
+That would be EOPNOTSUPP. As I said, having two separate error codes to
+indicate same thing is confusing. Now the confusion is at the boundary
+of gpiolib and user-land. Please educate me - is there difference in
+the meaning of ENOTSUPP and EOPNOTSUPP or are they really indicating
+the same thing? If yes, then yes - correct fix would be to use only one
+and ditch the other. Whether the amount of work is such it is
+practically worth is another topic - but that would be the right thing
+to do (tm).
+
+> 
+> > But I have no strong opinion on this. All options I see have
+> > downsides.
+> > 
+> > Accepting both ENOTSUPP and EOPNOTSUPP is the easy way to avoid
+> > allowing checkpatch warnings - but I admit it isn't stylish.
+> 
+> I think the error code which is Linux kernel internal is for a
+> reason.
+
+If so, then the current checkpatch warning is even more questionable.
+
+> 
+> > Converting all ENOTSUPP cases inside gpiolib to EOPNOTSUPP is
+> > teodious
+> > although end result might be nicer.
+> 
+> Why? You still missed the justification except satisfying some tool
+> that gives
+> you false positives. We don't do that. It's the tool that has to be
+> fixed /
+> amended.
+> 
+> > Leaving it as is gives annoying false-positives to driver
+> > developers.
+> > 
+> > My personal preference was this patch - others can have other view
+> > like
+> > Andy does. I'll leave this to community/maintainers to evaluate :)
+> 
+> This patch misses documentation fixes, for example.
+
+Valid point.
+
+> Also, do you suggest that we have to do the same in entire pin
+> control
+> subsystem?
+
+After reading/writing this, I am unsure. This is why the discussion is
+good :) I don't see why we should have two separate error codes for
+same thing - but as you put it:
+
+> I think the error code which is Linux kernel internal is for a
+> reason.
+
+not all of us thinks the same. So maybe I just don't get it? :)
+
+Best Regards
+	Matti Vaittinen
+
+
