@@ -2,100 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0CD43500A6
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 14:50:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B13E23500B4
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 14:54:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235506AbhCaMtp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Mar 2021 08:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235470AbhCaMtm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Mar 2021 08:49:42 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EDABC061574
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Mar 2021 05:49:41 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id u4so23718535ljo.6
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Mar 2021 05:49:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7ulErVBvInkOJe7cRGIy9V1u53MlKrZJX75o8Yw4nPc=;
-        b=x/aep+x8b+Alhu8B2lTTV2tNf1Ykms1BqDiePg9M0bKlGil6HDRU/0atlIHZoPafJq
-         SV5176iXvapJf/QnVYMRbmDpXiHbZsTWuDi2OpS4JCu+XismJI+Clgu6HywFNtTnqt1U
-         CQO4t+7S/NT/Etlsd8vC8FNxkbs0xQEwa7IJ9B0aP1X5XVikXSTCWFsqVcMrvD1m9+j8
-         o7+6Di860jaTLZdetCx/gk6Wf3nNU84ZlOlFKgF2r4GVExEUIe3NF3vwte+bMK7gPYc8
-         fcTsgYadu8uIUBhn9g2+Exk15B8CNSlVCa1gvDlCQoBCm/4BHNiLDGDzMNgz/TfYrc6N
-         Tu6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7ulErVBvInkOJe7cRGIy9V1u53MlKrZJX75o8Yw4nPc=;
-        b=cd+7D53rusjvvTNHPEpjLIXhhtwDAG0SbHUw07OAxV+FsnCtlp0zSIb3iZt5xeD8HF
-         qGBCrFGV+tUnlI/H+1iJVzdCBhNXHItn56qlDwHlMEgCvtHkivKtr+WMYGBFOhd1B1Su
-         ZpZpbIIneuxZRSp8/4GyO/7HZvuHGWrMUy7mlbda76SZZlKjpZhg69p+md1eXx4D9bHl
-         tWN5yyPWpqysmn9yjcTEWrT0k7rElzzNILEFtR3bUOfCWvf5guDsMPp5qXpAiB/lWqKG
-         p8mxXGrCaBV0cQrxQ9HNI+R2HTID4gE3X3QmcJ4tR0/qV6VWio1Ykip2LlClLRBzzXHf
-         a1fA==
-X-Gm-Message-State: AOAM531bFCl3Ru0RHjZL+dcyZOoTxcFQGc33h0t4U/i9cxc5PtfEjns2
-        1yIO5bIEKTpsp/6We+W6GpUEru7uC6QiBfGJ
-X-Google-Smtp-Source: ABdhPJxFcHP3HcYkWYMWDvUdftL4jDo12SqDm9hcWO+pbis89rpW+5cBbm5GYI7ZxR8azGDSD+7VuA==
-X-Received: by 2002:a2e:8e34:: with SMTP id r20mr2067646ljk.114.1617194980297;
-        Wed, 31 Mar 2021 05:49:40 -0700 (PDT)
-Received: from localhost.localdomain (c-14cb225c.014-348-6c756e10.bbcust.telenor.se. [92.34.203.20])
-        by smtp.gmail.com with ESMTPSA id b25sm228109lfo.72.2021.03.31.05.49.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Mar 2021 05:49:40 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH] pinctrl: bcm63xx: Fix dependencies
-Date:   Wed, 31 Mar 2021 14:47:33 +0200
-Message-Id: <20210331124733.2059013-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.29.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S235450AbhCaMyK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Mar 2021 08:54:10 -0400
+Received: from mail.thorsis.com ([92.198.35.195]:59344 "EHLO mail.thorsis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235654AbhCaMyB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 31 Mar 2021 08:54:01 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.thorsis.com (Postfix) with ESMTP id 885F93970;
+        Wed, 31 Mar 2021 14:53:59 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
+Received: from mail.thorsis.com ([127.0.0.1])
+        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ddy8e7D0VyZZ; Wed, 31 Mar 2021 14:53:59 +0200 (CEST)
+Received: by mail.thorsis.com (Postfix, from userid 109)
+        id 53D3D390B; Wed, 31 Mar 2021 14:53:59 +0200 (CEST)
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+        version=3.4.2
+X-Spam-Report: * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+        *      [score: 0.0000]
+        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: thorsis.com]
+        * -0.0 NO_RELAYS Informational: message was not relayed via SMTP
+        * -0.0 NO_RECEIVED Informational: message has no Received headers
+Date:   Wed, 31 Mar 2021 14:53:48 +0200
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Alexander Dahl <ada@thorsis.com>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 1/3] docs: gpio: mockup: Fix parameter name
+Message-ID: <YGRw3PlLBYCPvPn1@ada-deb-carambola.ifak-system.com>
+Mail-Followup-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20210329111648.7969-1-ada@thorsis.com>
+ <20210329111648.7969-2-ada@thorsis.com>
+ <CAHp75VdqtWS15YPvaPvy4yj5TdW7DDgFB+_bbavFqPBp1zm6eg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdqtWS15YPvaPvy4yj5TdW7DDgFB+_bbavFqPBp1zm6eg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add depends on OF so we don't get weird build errors on
-randconfig.
+Hello Andy,
 
-Also order selects the same as the other drivers for
-pure aestetic reasons.
+Am Wed, Mar 31, 2021 at 03:27:05PM +0300 schrieb Andy Shevchenko:
+> On Mon, Mar 29, 2021 at 2:18 PM Alexander Dahl <ada@thorsis.com> wrote:
+> >
+> > Module probing with the parameter documented yielded this in kernel log:
+> >
+> >         gpio_mockup: unknown parameter 'gpio_named_lines' ignored
+> >
+> > The parameter documented did not match the parameter actually
+> > implemented with commit 8a68ea00a62e ("gpio: mockup: implement naming
+> > the lines") long before introducing the documentation.
+> >
+> > Fixes: commit 2fd1abe99e5f ("Documentation: gpio: add documentation for gpio-mockup")
+> 
+> Alexander, in the entire series you are using the wrong format for the
+> Fixes tag.
+> I highly recommend to add in your .gitconfig file an alias:
+>         one = show -s --pretty='format:%h (\"%s\")'
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Álvaro Fernández Rojas <noltari@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/bcm/Kconfig | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+You're right. Sorry, I messed things up. I first had that line without
+the additional "commit", and added it because I thought checkpatch
+complained (which it probably did not).
 
-diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-index 33660e8fec05..17615674ac1a 100644
---- a/drivers/pinctrl/bcm/Kconfig
-+++ b/drivers/pinctrl/bcm/Kconfig
-@@ -31,10 +31,12 @@ config PINCTRL_BCM2835
- 
- config PINCTRL_BCM63XX
- 	bool
-+	depends on OF
-+	select PINMUX
-+	select PINCONF
- 	select GENERIC_PINCONF
-+	select GPIOLIB
- 	select GPIO_REGMAP
--	select PINCONF
--	select PINMUX
- 
- config PINCTRL_BCM6318
- 	bool "Broadcom BCM6318 GPIO driver"
--- 
-2.29.2
+The actual format is documented of course:
 
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
+
+I actually have a slightly different setting for pretty.fixes in my
+~/.gitconfig for other demands. I'll go and make that project
+dependent now.
+
+Thanks for pointing this out.
+
+Greets
+Alex
+
+> 
+> `git one <commit ID>` will give you proper value to refer to the
+> commit in question.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
