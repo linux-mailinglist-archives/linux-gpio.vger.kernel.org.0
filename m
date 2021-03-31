@@ -2,138 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 064A9350064
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 14:32:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AEB5350072
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 14:35:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235513AbhCaMb5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Mar 2021 08:31:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48588 "EHLO
+        id S235537AbhCaMfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Mar 2021 08:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235536AbhCaMbs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Mar 2021 08:31:48 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F5EC061574
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Mar 2021 05:31:48 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id b14so28872224lfv.8
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Mar 2021 05:31:48 -0700 (PDT)
+        with ESMTP id S235289AbhCaMex (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Mar 2021 08:34:53 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7996DC061574
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Mar 2021 05:34:53 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id z8so23574357ljm.12
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Mar 2021 05:34:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=S6EU2YnOpdkBtjQGKeotICcap66rhKHJa003CpMwvsc=;
-        b=NMSrUSVupyaOh9cd4emHPeGipu/j7X2gWfOhsL2kEl3GrOaQM4rCxOQ/ZFBZPyKsmP
-         vHt69Jn4kH51ZPYe+xRKlgpSkP6R5K2aeGQZ86f9VHFD3VQFy3caHGLvwkRDEEHBfBod
-         qbyEo+efvrJKTfLanB1l/C++xwcZwLlKAYwurbth4ymdQVpqxd6CyMJivGs7+8JOnAUx
-         oKw+QKpcDVqbTRc/RB9DvIam0CUllJPYrLHPRW/zIPGrxdmWJVRk3lt67RbQM4eC/uWs
-         fbUPXWAOeNo5w49l/gPSjOdmwszwVGNgB+w0dEj59Ck5VztiLhc8BEWFbcvQmSS62BNT
-         w/sw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dFqjU9npbfAiJPjQLmI+M+RybtJ5vhGUyhsF6doSqyI=;
+        b=h0SNS0Wa7EhYwbikHHJIVisUd4LFJSO2Nz44p7BadySlsBJ62fo0hFepZxl2aWHIqK
+         dtMieivVFKi0ZKeVvHhSYJ1B6nzORdk3MAD15n/jaqdllb/no7mRu/qagqBhg9yKUjf/
+         VaakvGRVrFeVQKcEAironzNCOcgn9/2etFkRpKRP1Bw/2vNJ9ngzhXQdFxE72eFBzbdd
+         e/myUoCdhWzGEPhS2L7DrFmwfpxL55vnBS1zNaJeI1305MQXwr65h5QldndkhgxkDLAe
+         mpCvzXTVsGA7Tb2YbJFGg2NVxKN+aylib2XHPy1vLeU96imgAEOd8jMz5TsM4DxZS7Zf
+         YC2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=S6EU2YnOpdkBtjQGKeotICcap66rhKHJa003CpMwvsc=;
-        b=bKoeuAVqpt5DopTfdFRzpSXfDwF6bze37r39fTXzNxiqvJx4OjNm3joOlwI3zI7uv3
-         R5JPnFhUD9Rq40rNLit9Pz0oTa0/nSS8i3Bhvdm28doeQWpPsyak3yog5NIngJg/mxgJ
-         SCfm/fg7cj1XQEUZYMo/ASGbwfYnWmEyhJ65NBBSC3CrmGvIR9CBviaFVVSE7mlyfZ3C
-         /2E7slORLX3hrBK7A1zTBILtp1s3STSUGgLM/RbEx10NAWpYpyR3IElaC5snJSrCon/C
-         pxY9r4P4i3J3ZWLRn7mgbtsdo8XkCn+LspoEzKlx9kXx4BBaL9hrFnrCrXXyuCCaTChA
-         /Mdg==
-X-Gm-Message-State: AOAM531s7H/wCpybbmf7Q03IQEzYWq4t/eVpezM0Kba9rIZ/cbrue+Ry
-        JapHZ8hSfZSIwhiiUqb1P720dRq9sk3J13IJjFQ4Ig==
-X-Google-Smtp-Source: ABdhPJzgNGDqwWJ0zqQx8Ru8esLLNouGO90hnzko0scZwHQnRkLnOlZhCOMa/zz2I7pmU7SzXhXxRPZ7oh17nTDgH6c=
-X-Received: by 2002:a19:4c08:: with SMTP id z8mr1996596lfa.157.1617193906617;
- Wed, 31 Mar 2021 05:31:46 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dFqjU9npbfAiJPjQLmI+M+RybtJ5vhGUyhsF6doSqyI=;
+        b=JnyD+LfZ1NpRHSonlv11bXzn7R41qQWlCTEuAWOwqlRlyR2FtRVcxVSnDDqM4pcGbP
+         7VWv3czasv5aKXkGoDJDux5nKrTF95fGIVOYb2pb589PfQ4zWcemo6quqTrPNxTzw9pa
+         w4Dd/mYVg2K5ZhWDBLOFHge7C9OvJttUBnbECHLUUlTELnY/Hj+F8XBzungWPVtySzgQ
+         RFLBu3+RzdadPCG0PrShzTZMqdTDogt/ejcDFKhFVZ6fuQeUJho4UingEtbxVRo5e9Yr
+         E2wWePcCkBDV88DEntQECxPXFXK6Zb3zaYQq//OpuuDbWbs7p3phsL7FRbnPhCL/ssu1
+         wokw==
+X-Gm-Message-State: AOAM531jWl0LYbEAfEJRwJpLsGGI3Uit7RLQKyKf/dls8X05CtkA5V9d
+        Ul9j4oK6FLriUnvzF5vZpQ4rspQnE7MymWmc5+nzL1dxBRgzfw==
+X-Google-Smtp-Source: ABdhPJw3cme6kjK0vmUWk+gv2oZ2HGJXaQ1HG6k80Zij8UVamoe61YuHvdLVzeCEM/kTpX91grpKC/ENa+Lxb8pR6sc=
+X-Received: by 2002:a2e:864a:: with SMTP id i10mr1866248ljj.467.1617194092044;
+ Wed, 31 Mar 2021 05:34:52 -0700 (PDT)
 MIME-Version: 1.0
+References: <20210330103225.3949-1-noltari@gmail.com>
+In-Reply-To: <20210330103225.3949-1-noltari@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 31 Mar 2021 14:31:36 +0200
-Message-ID: <CACRpkdazjQ0jPdXYPNsC6BmYEHZgf7_zUObHTEa+B9LZCmaT8g@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for the v5.12 kernel
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+Date:   Wed, 31 Mar 2021 14:34:40 +0200
+Message-ID: <CACRpkdYMSy-gmcmFKsj2fKzFbrb29RLyU=ah4Qa4c4gdXwnCnA@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: bcm: bcm6362: fix warning
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Tue, Mar 30, 2021 at 12:32 PM =C3=81lvaro Fern=C3=A1ndez Rojas
+<noltari@gmail.com> wrote:
 
-here are some overly ripe fixes for the v5.12 kernel. I should
-have sent earlier but had my head stuck in GDB.
+> The current implementation of bcm6362_set_gpio() produces the following
+> warning on x86_64:
+> drivers/pinctrl/bcm/pinctrl-bcm6362.c: In function 'bcm6362_set_gpio':
+> drivers/pinctrl/bcm/pinctrl-bcm6362.c:503:8: warning: cast from pointer t=
+o integer of different size [-Wpointer-to-int-cast]
+>   503 |        (uint32_t) desc->drv_data, 0);
+>       |        ^
+>
+> Modify the code to make it similar to bcm63268_set_gpio() in order to fix
+> the warning.
+>
+> Fixes: 705791e23ecd ("pinctrl: add a pincontrol driver for BCM6362")
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
 
-All are driver fixes. Details in the signed tag.
-
-Please pull it in!
+Patch applied! Thanks!
 
 Yours,
 Linus Walleij
-
-The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
-
-  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.12-2
-
-for you to fetch changes up to ba845907b23a6584e5944f6fbffda3efb010c28b:
-
-  Merge tag 'intel-pinctrl-v5.12-3' of
-gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
-(2021-03-30 00:46:49 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for the v5.12 kernel cycle:
-
-- Fix up some Intel GPIO base calculations.
-- Fix a register offset in the Microchip driver.
-- Fix suspend/resume bug in the Rockchip driver.
-- Default pull up strength in the Qualcomm LPASS
-  driver.
-- Fix two pingroup offsets in the Qualcomm SC7280
-  driver.
-- Fix SDC1 register offset in the Qualcomm SC7280
-  driver.
-- Fix a nasty string concatenation in the
-  Qualcomm SDX55 driver.
-- Check the REVID register to see if the device is
-  real or virtualized during virtualization in the
-  Intel driver.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      pinctrl: intel: Show the GPIO base calculation explicitly
-
-Arnd Bergmann (1):
-      pinctrl: qcom: fix unintentional string concatenation
-
-Jonathan Marek (1):
-      pinctrl: qcom: lpass lpi: use default pullup/strength values
-
-Lars Povlsen (1):
-      pinctrl: microchip-sgpio: Fix wrong register offset for IRQ trigger
-
-Linus Walleij (2):
-      Merge tag 'intel-pinctrl-v5.12-2' of
-gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
-      Merge tag 'intel-pinctrl-v5.12-3' of
-gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
-
-Rajendra Nayak (2):
-      pinctrl: qcom: sc7280: Fix SDC_QDSD_PINGROUP and UFS_RESET offsets
-      pinctrl: qcom: sc7280: Fix SDC1_RCLK configurations
-
-Roger Pau Monne (1):
-      pinctrl: intel: check REVID register value for device presence
-
-Wang Panzhenzhuan (1):
-      pinctrl: rockchip: fix restore error in resume
-
- drivers/pinctrl/intel/pinctrl-intel.c     |  9 ++++++++-
- drivers/pinctrl/pinctrl-microchip-sgpio.c |  2 +-
- drivers/pinctrl/pinctrl-rockchip.c        | 13 ++++++++-----
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c  |  2 +-
- drivers/pinctrl/qcom/pinctrl-sc7280.c     | 16 ++++++++--------
- drivers/pinctrl/qcom/pinctrl-sdx55.c      |  2 +-
- 6 files changed, 27 insertions(+), 17 deletions(-)
