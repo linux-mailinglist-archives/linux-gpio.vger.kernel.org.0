@@ -2,54 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01A9C35007B
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 14:38:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A88F350085
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 14:41:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235534AbhCaMhz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Mar 2021 08:37:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49856 "EHLO
+        id S235551AbhCaMkf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Mar 2021 08:40:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235454AbhCaMhn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Mar 2021 08:37:43 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA5CC061574;
-        Wed, 31 Mar 2021 05:37:43 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id l123so14439851pfl.8;
-        Wed, 31 Mar 2021 05:37:43 -0700 (PDT)
+        with ESMTP id S235506AbhCaMkI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Mar 2021 08:40:08 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59526C061574;
+        Wed, 31 Mar 2021 05:40:08 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id x126so14417497pfc.13;
+        Wed, 31 Mar 2021 05:40:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GShH3kQrnRMf0b2uqJ73S0gCwVnnyAi3nGPppvV8rRc=;
-        b=L8KCTZ21CX1o/NJul1TS7q9AjCMHp9H5b/LEkF1FN+PlSOfsrRja7YCVfjZGD4tK8j
-         wBAFfzIgdf5+CcWSbxeCuaw7sVAVtEOQJQY0Ooicg9gGSSijo7LC681W4s+PeitV7nLu
-         /RTXd5LwEXbAzSL0TDukvHiIFyq/EbajNIaerdqj4ajl55oYBd6A59Kg3mcCpmbr5rU6
-         V/LtlCv4ie8Ir1gvOoIcx5T15wu+QywxAR+EG+QFohcODJ1+CpGWfVIc9pP2tgYeUL2W
-         hMO28U9cJQa2LdYIxEWWBLNKDTonHopHRHl0OQg47pUDn5B4EF6NlkWcYB/4yRhm6I1f
-         RdQg==
+        bh=n5asSzSMlsy/IJZzODnlLHF4/c6NSbP5Xn/BE7oQWnA=;
+        b=SygpZcKiL+DOu+eqMwZDoTk0yxjQ0ThJvSXaqWP3bxzedWk3biiknUZg4cDp/at4FR
+         oUNQlsmPyIcmrzClkm6XA3NxzWpQuNC9Ur+sNIq/jzlxHNmBoOGxGS0s6ZP4y2xXnr4u
+         kbyJQtkbCcnuVWGZmA/mCOTVzGPdfxQCxF3Mc94UlPqxxrmZH+t/aBh88QOqgWWHm2T0
+         T/F53OiOkY9JVokhXrdgq2aMRRfxvNdiigMCOwU7vZIWZ7HgJP4feP8lEjdKyt+ciAR0
+         RTNMs/VKssSMetfBusuHf0u38Mqx63Hj7B2oyd3jBBxaHxaRbFxmFkCQebKz1oveA9Xw
+         CsuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GShH3kQrnRMf0b2uqJ73S0gCwVnnyAi3nGPppvV8rRc=;
-        b=alMil0yaqCaHoM1DGcBK1fVHCwXbeck0z7hew+Y1gHdGU0A15hLm1GMOVM2OkHUqG9
-         08qXy3IKGFYuS1uUOoEd8Pt4OU1u9+D5iVxAlG7CS9IUtmKXsABHv8cnZvZBgbLdB8Cf
-         bjZ/vyHBkCr5tpkYcKngxrUtgcRdlHDjIDJAbWy98otpGapVPAbCRS/AQxm92Rc2qlqW
-         miRjQ3SkBepvnooALcyNQXZRW1yhEuOByAFwMyjrdPB03WjzbTeOHU7GplDkh2MoEyqJ
-         J7/8Rdta9zBCY2FIpr46wSgBTTru9YZZtOTr+aGvO1xm8aNsdKirPfGH2yMQd180/V8L
-         49Ew==
-X-Gm-Message-State: AOAM530MiS+d49xwUWU2UxyGwL2w6YWwY3FNTVv3KfX0HPo6h41sZT5q
-        ADji0TIKijHgLF7k59lYNmGMedQxRMUiyJL1CCo=
-X-Google-Smtp-Source: ABdhPJxCac/ehMc6eK8HGYgViF7DcnJIOPloIfTVQi7jSyOiQ7Q+gFKJVnxp3k1bMcusI72RhpQxhPc16OMmfwA3yu4=
-X-Received: by 2002:a63:c48:: with SMTP id 8mr3071744pgm.74.1617194263310;
- Wed, 31 Mar 2021 05:37:43 -0700 (PDT)
+        bh=n5asSzSMlsy/IJZzODnlLHF4/c6NSbP5Xn/BE7oQWnA=;
+        b=ZD9H6I8WsopafEcOj40yMng6cVH4YQLmfTJ/RB0xXFcAVIzsxJsAf6cXXK2/x6Oi61
+         RD36z8cfUXxJlaMNT3fUQEwAQVyUdsDD4RN+Q4mu/q/1WmahPm4zFLIl1r5YOqmTko4S
+         Oo8bHvfGlLeAVzijRHnPxuEGfF69gvd7B7jrVZEUV/v7FAnFrLmWTeAOuDfjyVdwkczn
+         3MWFGQLptNX+gjxk6cQNROzC5Zy24upSldelTeChpJos9XUzpYheV6RudPVrN5RTLudG
+         0leRxLgJzVcbYC8AKYsxEm8DFP1fipZKQVAdi0+mQPvDOvkWqhUtWDlLKG/VKkPJ/yJm
+         tp5g==
+X-Gm-Message-State: AOAM5328Ei+EIhobu1sbaoORjy+vZnHUeq/qLnee+Yl7qwB9lboNxNK5
+        d/uSq9ghjI1jxulzrydrhewSJ3nVU+cM0vwhwRY=
+X-Google-Smtp-Source: ABdhPJysAcf9ww34OwUMFjvv2sKfsgiSglYJHpdZfYIVvwFYvIlLYSIu+qus6O2TQdO7WRRnTtXL2FdKyxOpQExC/hk=
+X-Received: by 2002:a63:cb44:: with SMTP id m4mr3137446pgi.4.1617194407960;
+ Wed, 31 Mar 2021 05:40:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1617189926.git.matthias.schiffer@ew.tq-group.com> <3c19d714645f788913956223097adc360ceb6203.1617189926.git.matthias.schiffer@ew.tq-group.com>
-In-Reply-To: <3c19d714645f788913956223097adc360ceb6203.1617189926.git.matthias.schiffer@ew.tq-group.com>
+References: <cover.1617189926.git.matthias.schiffer@ew.tq-group.com>
+ <11a8323c249ae6ea7584402ab0fb74551b6a4b7d.1617189926.git.matthias.schiffer@ew.tq-group.com>
+ <CAHp75Vcc3CNXguMK-ZhRfvfjVBQBbcGEYK_+WQAmb_Sw5-Derw@mail.gmail.com> <4c143c8ee65fe52840ccbb4e1b422b6e473563d9.camel@ew.tq-group.com>
+In-Reply-To: <4c143c8ee65fe52840ccbb4e1b422b6e473563d9.camel@ew.tq-group.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 31 Mar 2021 15:37:27 +0300
-Message-ID: <CAHp75Vdk4rxiD_nm8Cb53oTYNvMqkAOM4U5zEn5tchtptQZEBw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] mfd: tqmx86: add support for TQMxE40M
+Date:   Wed, 31 Mar 2021 15:39:51 +0300
+Message-ID: <CAHp75VfVCTj170S_4Lh9JyDYFfUQLjTtnU=O-iXgUVXcycLxwg@mail.gmail.com>
+Subject: Re: (EXT) Re: [PATCH 1/3] gpio: tqmx86: really make IRQ optional
 To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -61,42 +63,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 31, 2021 at 2:38 PM Matthias Schiffer
+On Wed, Mar 31, 2021 at 3:37 PM Matthias Schiffer
 <matthias.schiffer@ew.tq-group.com> wrote:
->
-> All future TQMx86 SoMs will use a 24MHz LPC clock, so we can use that as
-> a default instead of listing each new module individually.
+> On Wed, 2021-03-31 at 15:29 +0300, Andy Shevchenko wrote:
+> > On Wed, Mar 31, 2021 at 2:37 PM Matthias Schiffer
+> > <matthias.schiffer@ew.tq-group.com> wrote:
 
 ...
 
->         case TQMX86_REG_BOARD_ID_90UC:
->                 return "TQMx90UC";
-> +       case TQMX86_REG_BOARD_ID_E40M:
-> +               return "TQMxE40M";
->         default:
->                 return "Unknown";
->         }
-> @@ -138,12 +141,6 @@ static const char *tqmx86_board_id_to_name(u8 board_id)
->  static int tqmx86_board_id_to_clk_rate(u8 board_id)
->  {
->         switch (board_id) {
-> -       case TQMX86_REG_BOARD_ID_50UC:
-> -       case TQMX86_REG_BOARD_ID_60EB:
-> -       case TQMX86_REG_BOARD_ID_70EB:
-> -       case TQMX86_REG_BOARD_ID_80UC:
-> -       case TQMX86_REG_BOARD_ID_90UC:
-> -               return 24000;
->         case TQMX86_REG_BOARD_ID_E39M:
->         case TQMX86_REG_BOARD_ID_E39C:
->         case TQMX86_REG_BOARD_ID_E39x:
-> @@ -152,7 +149,7 @@ static int tqmx86_board_id_to_clk_rate(u8 board_id)
->         case TQMX86_REG_BOARD_ID_E38C:
->                 return 33000;
->         default:
-> -               return 0;
-> +               return 24000;
+> > > -       irq = platform_get_irq(pdev, 0);
+> > > -       if (irq < 0)
+> > > +       irq = platform_get_irq_optional(pdev, 0);
+> > > +       if (irq < 0 && irq != -ENXIO)
+> > >                 return irq;
+> >
+> > This is a dead code now. I suggest you to do the opposite, i.e.
+> > if (irq < 0)
+> >   irq = 0;
+>
+> I don't understand which part of the code is dead now. I assume the
+> `return irq` case is still useful for unexpected errors, or things like
+> EPROBE_DEFER? I'm not sure if EPROBE_DEFER is relevant for this driver,
+> but just ignoring the error code completely doesn't seem right to me.
 
-AFAICS it will return 24 MHz for "Unknown" board. Is it okay to be so brave?
+platform_get_irq() AFAIK won't ever return such a code.
+So, basically your conditional is always false.
+
+I would like to see the code path which makes my comment wrong.
+
 
 -- 
 With Best Regards,
