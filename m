@@ -2,138 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7669D34FFA6
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 13:44:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36B6135000D
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 14:19:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235273AbhCaLnb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Mar 2021 07:43:31 -0400
-Received: from mx1.tq-group.com ([93.104.207.81]:12578 "EHLO mx1.tq-group.com"
+        id S235321AbhCaMTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Mar 2021 08:19:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27840 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229486AbhCaLnZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 31 Mar 2021 07:43:25 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Wed, 31 Mar 2021 07:43:19 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1617191005; x=1648727005;
-  h=from:to:cc:subject:date:message-id;
-  bh=RyAG+h56ey2LjdS2mss2T21PdnG5lqMEuStAcVDgc7c=;
-  b=NHbB5WUE0awtzRm5gYo0QDdDDjj+vKeAUv1CsHIONEF9IbUzWGRg3Dxj
-   ONEYHzvBq4C6QZhVIji8kXl7rW1DDFZoYMgcP5zaCZt0HtA2z9Hp+vDNJ
-   FckcurdfJ2m3QlL8fVZCuShYWhgIHSZjg2VPA8eicroGskpXy57nX3r8s
-   cJLuhjnuhaVkMPyzP4BKxkhyYlumcAwr//1x+owJnaN08XVPyAwVRh2jk
-   SqB3IlP2GLodw03MhsAIOMNYe/tLymWtTfGU+dJRqu2qxan35MRaQxaQB
-   DdwRgtmlk4O+B5QMMZjNcOnxnOsgxVRtSMizkWvNW4GNwPWhEi1B4VfA1
-   A==;
-IronPort-SDR: 4wDyZXTtRA/8gC37vnHhSRfN5aL6Wkdu1JOFvS2+cBRNuN4dPLH3ZPRS9P+trPD6wxCzEML7+o
- aJ4DzyEwb6hyH4oAIFDStaPT8baxR7RiQdOzWKWmpylzfLPc7CvLdpNjgMoMHH9T87EQDuilSl
- n53bqcFYpQgPjoL7Ufi3ITOe7xVJT/c+Nraf/G/TpfKhPU+GMknDHuVUOzZifizy3NY3NpYhAp
- +OIp7Gx2G7/EZ8xti6FtJWpjFB5RqOhG0XdttZ19Q7jGenlNSY4os+CNDZtQvIQdBFPCUKbl11
- pcs=
-X-IronPort-AV: E=Sophos;i="5.81,293,1610406000"; 
-   d="scan'208";a="16742382"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 31 Mar 2021 13:36:11 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 31 Mar 2021 13:36:11 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 31 Mar 2021 13:36:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1617190571; x=1648726571;
-  h=from:to:cc:subject:date:message-id;
-  bh=RyAG+h56ey2LjdS2mss2T21PdnG5lqMEuStAcVDgc7c=;
-  b=hhKLVkh1IdzcVQ05A/h3KcQtCYl6AhmOJPfpQyRbwTZucb3EOkKE3SD5
-   pTGwCnuA538BuaMuBTaiTKCsARdjJLBS/f6R6iINBZlwqWirwd7csu5dJ
-   cAarjsjorNH+WCOGk+1MXuIrjD86qynv0hwzer8E0SLgFZcbXr6MYqjlY
-   s6FCDuCDaRML+8E856zmv86VLaM/P2KgWGYXJYQHVHvRQVm6xgUNcoJJW
-   cQSEn0txd1UZEUfRCSazp+kgTtFKAX+RFIa/1YM+s6cm8gmsm7Bse6jdw
-   KAUN4b5vAOHJyMAZF2tHW7BP6kskS1a9FixTPY/Po3qOSd0QHYMJtTgp7
-   Q==;
-IronPort-SDR: y8A4fCzFjxCsYE1Uqh0VUTFXRItvQ7Le6BELmpX1Azk8nznZh9Tuz7Hh45uFwiFZgvf+Ymi0Mq
- eHruoQg4MAl+/GKbvVGquE72oys4JeI3koF+bqlG3RRLv0BihqrntRf+r++WIFnet4s1iI/tZr
- 4mi5U73yNJGmHxRaNO/nv2RpDREzdnmb836VgbThkqhZYv2sIxNbMOeilWtr+XlwjTG9Yqyq/r
- XoKa4QqvpkzAjDE9DZ067/I1cBw5jBeqPS7zBtH1RLjp7CYhTGMnC8DTHTS5xBtDl4jr8iSqu6
- O1E=
-X-IronPort-AV: E=Sophos;i="5.81,293,1610406000"; 
-   d="scan'208";a="16742381"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 31 Mar 2021 13:36:11 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.121.48.12])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 23AA0280075;
-        Wed, 31 Mar 2021 13:36:11 +0200 (CEST)
-X-CheckPoint: {60645E92-3-486672D-C0FA7804}
-X-MAIL-CPID: 00FEFC02EA55698BA82460F2CACBA22A_2
-X-Control-Analysis: str=0001.0A782F29.60645EAB.004C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S235317AbhCaMTD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 31 Mar 2021 08:19:03 -0400
+IronPort-SDR: kwy2amS+hSM3ZNORopxylCFtyqZfgxokFgfXYrM6EW8ZUgZX4j+TktExE/XN95Q/v0wiH9L7fp
+ X+YBnKNsY4jg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="179530433"
+X-IronPort-AV: E=Sophos;i="5.81,293,1610438400"; 
+   d="scan'208";a="179530433"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2021 05:19:02 -0700
+IronPort-SDR: 6EXU4U+SwW6oR+3zp/iIycc7OQ1NNJn/fel7IcUWVHUJqRel2ffxzp4Sgpz8iA9ZWQ46lN088n
+ /dIjf3OnAhbQ==
+X-IronPort-AV: E=Sophos;i="5.81,293,1610438400"; 
+   d="scan'208";a="377243340"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2021 05:19:01 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lRZoI-00Hb39-9S; Wed, 31 Mar 2021 15:18:58 +0300
+Date:   Wed, 31 Mar 2021 15:18:58 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linux GPIO <linux-gpio@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH 3/3] mfd: tqmx86: add support for TQMxE40M
-Date:   Wed, 31 Mar 2021 13:35:45 +0200
-Message-Id: <3c19d714645f788913956223097adc360ceb6203.1617189926.git.matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1617189926.git.matthias.schiffer@ew.tq-group.com>
-References: <cover.1617189926.git.matthias.schiffer@ew.tq-group.com>
-In-Reply-To: <cover.1617189926.git.matthias.schiffer@ew.tq-group.com>
-References: <cover.1617189926.git.matthias.schiffer@ew.tq-group.com>
+Subject: Re: [GIT PULL] intel-gpio for 5.13-1
+Message-ID: <YGRosmEYNj7v3chV@smile.fi.intel.com>
+References: <YGHhPlK5Ej4QywNH@black.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YGHhPlK5Ej4QywNH@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-All future TQMx86 SoMs will use a 24MHz LPC clock, so we can use that as
-a default instead of listing each new module individually.
+On Mon, Mar 29, 2021 at 05:16:30PM +0300, Andy Shevchenko wrote:
+> Hi Linux GPIO  maintainers,
+> 
+> So far collected stuff for Intel GPIO drivers (including aggregator clean up).
+> No conflicts are expected.
 
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- drivers/mfd/tqmx86.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+Bart, please tell me if I need to redone this.
 
-diff --git a/drivers/mfd/tqmx86.c b/drivers/mfd/tqmx86.c
-index 732013f40e4e..1d5cebc4e72b 100644
---- a/drivers/mfd/tqmx86.c
-+++ b/drivers/mfd/tqmx86.c
-@@ -36,6 +36,7 @@
- #define TQMX86_REG_BOARD_ID_70EB	8
- #define TQMX86_REG_BOARD_ID_80UC	9
- #define TQMX86_REG_BOARD_ID_90UC	10
-+#define TQMX86_REG_BOARD_ID_E40M	12
- #define TQMX86_REG_BOARD_REV	0x21
- #define TQMX86_REG_IO_EXT_INT	0x26
- #define TQMX86_REG_IO_EXT_INT_NONE		0
-@@ -130,6 +131,8 @@ static const char *tqmx86_board_id_to_name(u8 board_id)
- 		return "TQMx80UC";
- 	case TQMX86_REG_BOARD_ID_90UC:
- 		return "TQMx90UC";
-+	case TQMX86_REG_BOARD_ID_E40M:
-+		return "TQMxE40M";
- 	default:
- 		return "Unknown";
- 	}
-@@ -138,12 +141,6 @@ static const char *tqmx86_board_id_to_name(u8 board_id)
- static int tqmx86_board_id_to_clk_rate(u8 board_id)
- {
- 	switch (board_id) {
--	case TQMX86_REG_BOARD_ID_50UC:
--	case TQMX86_REG_BOARD_ID_60EB:
--	case TQMX86_REG_BOARD_ID_70EB:
--	case TQMX86_REG_BOARD_ID_80UC:
--	case TQMX86_REG_BOARD_ID_90UC:
--		return 24000;
- 	case TQMX86_REG_BOARD_ID_E39M:
- 	case TQMX86_REG_BOARD_ID_E39C:
- 	case TQMX86_REG_BOARD_ID_E39x:
-@@ -152,7 +149,7 @@ static int tqmx86_board_id_to_clk_rate(u8 board_id)
- 	case TQMX86_REG_BOARD_ID_E38C:
- 		return 33000;
- 	default:
--		return 0;
-+		return 24000;
- 	}
- }
- 
+> Thanks,
+> 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> The following changes since commit b41ba2ec54a70908067034f139aa23d0dd2985ce:
+> 
+>   gpiolib: Read "gpio-line-names" from a firmware node (2021-03-08 11:59:17 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.13-1
+> 
+> for you to fetch changes up to 6c46215d6b626cb0981f8332da506b69b98c4b49:
+> 
+>   gpio: sch: Hook into ACPI GPE handler to catch GPIO edge events (2021-03-27 23:48:55 +0200)
+> 
+> ----------------------------------------------------------------
+> intel-gpio for v5.13-1
+> 
+> * Implement event support (GPE) in Intel SCH GPIO driver
+> * Clean up GPIO aggregator driver to use more of the generic code
+> 
+> The following is an automated git shortlog grouped by driver:
+> 
+> aggregator:
+>  -  Replace custom get_arg() with a generic next_arg()
+> 
+> lib/cmdline:
+>  -  Export next_arg() for being used in modules
+> 
+> sch:
+>  -  Hook into ACPI GPE handler to catch GPIO edge events
+>  -  Add edge event support
+> 
+> ----------------------------------------------------------------
+> Andy Shevchenko (3):
+>       lib/cmdline: Export next_arg() for being used in modules
+>       gpio: aggregator: Replace custom get_arg() with a generic next_arg()
+>       gpio: sch: Hook into ACPI GPE handler to catch GPIO edge events
+> 
+> Jan Kiszka (1):
+>       gpio: sch: Add edge event support
+> 
+>  drivers/gpio/Kconfig           |   3 +-
+>  drivers/gpio/gpio-aggregator.c |  39 ++------
+>  drivers/gpio/gpio-sch.c        | 198 +++++++++++++++++++++++++++++++++++++++--
+>  lib/cmdline.c                  |   1 +
+>  4 files changed, 198 insertions(+), 43 deletions(-)
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
