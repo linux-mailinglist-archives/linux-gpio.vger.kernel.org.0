@@ -2,67 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E371634F70B
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 04:57:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DCA834F867
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 07:57:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233360AbhCaC4c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Mar 2021 22:56:32 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:15111 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233291AbhCaC4S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Mar 2021 22:56:18 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4F99rL6xMWz1BFQv;
-        Wed, 31 Mar 2021 10:54:10 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.498.0; Wed, 31 Mar 2021 10:56:10 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <grygorii.strashko@ti.com>, <ssantosh@kernel.org>,
-        <khilman@kernel.org>, <linus.walleij@linaro.org>,
-        <bgolaszewski@baylibre.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: [PATCH] gpio: omap: Use device_get_match_data() helper
-Date:   Wed, 31 Mar 2021 10:56:40 +0800
-Message-ID: <1617159400-19775-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        id S232805AbhCaF4e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Mar 2021 01:56:34 -0400
+Received: from muru.com ([72.249.23.125]:49068 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233473AbhCaF4S (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 31 Mar 2021 01:56:18 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6F13D80C3;
+        Wed, 31 Mar 2021 05:57:19 +0000 (UTC)
+Date:   Wed, 31 Mar 2021 08:56:13 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     bcousson@baylibre.com, Rob Herring <robh+dt@kernel.org>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack.dts: unique gpio-line-names
+Message-ID: <YGQO/YdTGLiMBXKh@atomide.com>
+References: <20210324222201.674905-1-drew@beagleboard.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210324222201.674905-1-drew@beagleboard.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use the device_get_match_data() helper instead of open coding.
+* Drew Fustini <drew@beagleboard.org> [210325 00:25]:
+> Based on linux-gpio discussion [1], it is best practice to make the
+> gpio-line-names unique. Generic names like "[ethernet]" are replaced
+> with the name of the unique signal on the AM3358 SoC ball corresponding
+> to the gpio line. "[NC]" is also renamed to the standard "NC" name to
+> represent "not connected".
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
----
- drivers/gpio/gpio-omap.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Thanks applying into omap-for-v5.13/dt-v2.
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 41952bb..9d94486 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1364,15 +1364,14 @@ static int omap_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
--	const struct of_device_id *match;
- 	const struct omap_gpio_platform_data *pdata;
- 	struct gpio_bank *bank;
- 	struct irq_chip *irqc;
- 	int ret;
- 
--	match = of_match_device(of_match_ptr(omap_gpio_match), dev);
-+	pdata = device_get_match_data(dev);
- 
--	pdata = match ? match->data : dev_get_platdata(dev);
-+	pdata = pdata ? : dev_get_platdata(dev);
- 	if (!pdata)
- 		return -EINVAL;
- 
--- 
-2.7.4
-
+Tony
