@@ -2,147 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4A263505E7
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 20:01:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA23A3505F8
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 20:06:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233867AbhCaSAa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Mar 2021 14:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234641AbhCaSAX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Mar 2021 14:00:23 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68507C061574;
-        Wed, 31 Mar 2021 11:00:22 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id d13so9401433lfg.7;
-        Wed, 31 Mar 2021 11:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4Q9oxhnKEAurSYSJEH9M9Sm61COtmi4Ok3DH92mW23E=;
-        b=h2lTTlH/+QWKj7wZpU0g5C99CDE6tQqaQ5ztaODdS8rmC29fLr6Zzr0goXM/KHuhl2
-         SyVQ7j0mH5NIPXKNx6/lMvjcpwv9brWlhMmZCkgWeEPXfzylyXH7h+bqw3mni+t4PMl0
-         fG5AJpoRqAasJFzkXcgOcKut8TxjqccYSPsxyw53RBMo0IElOIw/QV3nDuf5TnFw0BLL
-         jpK+4Tfixv6ijT1wIiBcEBuTco47NCIs2vvcz6cNgSBarbfQG1U0PtXcScq8AWk0Jq3c
-         TWrxaGq+WkHSH6yozer04Gx2dLaam2idQPQ5uzQ67bZ//KQJXqJid6tuQYIipJCBxGzH
-         ijYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4Q9oxhnKEAurSYSJEH9M9Sm61COtmi4Ok3DH92mW23E=;
-        b=d2317/cLyDk/FScYCr60ImsEEGY1vLEGHdTyLgjFOfQxoaLLyo2s+Mgm436EQq3Kep
-         QGlMJ/A8w9QN3NmIdys9MWRbRHY0g4FxBuUVp7Itv77VD5KRii8vU2caz9ph10zEFTjV
-         NwwVZaf7qpu8xkxme9vcf1J8A+PwfZWI+mVJfKNuYRjIIwVuJJ+YvERXxuevkJF3ghwj
-         ZfvRAe/Ykd1YRWolZbo3v6Rz2wIKYoP7yMUCosfc7wVgKfvQqPOiom+otTeq4qWI0HXr
-         xu/UafPoc3638QPf4yjmGTeSWr/9CtTA5rGK9jCt3BQnNTzfLql8/FcRp6J3Y2fzJC7Q
-         WIgg==
-X-Gm-Message-State: AOAM531NN/zMFqDVZ4IJZZFV23YwYCRrBTjvFtNfuzjNcnnuiuPp8YRO
-        7qnQHqPTxXBIpUfsIL+lmA8=
-X-Google-Smtp-Source: ABdhPJyx4lAT+sVVFl5m4Yt0LNsve3Yt3vkYiD3cRMaY6C0bvxtOaE1jK6wf74B0uUteMcXor6j0Kg==
-X-Received: by 2002:a19:e0d:: with SMTP id 13mr2907573lfo.549.1617213620975;
-        Wed, 31 Mar 2021 11:00:20 -0700 (PDT)
-Received: from mobilestation ([95.79.127.110])
-        by smtp.gmail.com with ESMTPSA id q8sm292564lfc.223.2021.03.31.11.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Mar 2021 11:00:20 -0700 (PDT)
-Date:   Wed, 31 Mar 2021 21:00:18 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Brad Larson <brad@pensando.io>
-Cc:     linux-arm-kernel@lists.infradead.org, arnd@arndb.de,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        broonie@kernel.org, adrian.hunter@intel.com,
-        ulf.hansson@linaro.org, olof@lixom.net, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/13] spi: dw: Add support for Pensando Elba SoC SPI
-Message-ID: <20210331180018.jir2vusuf3sbare5@mobilestation>
-References: <20210329015938.20316-1-brad@pensando.io>
- <20210329015938.20316-4-brad@pensando.io>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210329015938.20316-4-brad@pensando.io>
+        id S234618AbhCaSF6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Mar 2021 14:05:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234623AbhCaSF2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 31 Mar 2021 14:05:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 05A3C60FE8;
+        Wed, 31 Mar 2021 18:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617213928;
+        bh=7sFe7JUaOWsgEkdbJcdCFAa7nDG0CyBIMGHomgVjqZE=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=CPNQWZVsiioUfaM7BTl8L0E23Xk0LgBswOkPsp3vzidsErPibxFjTe+3CdQUeNQMB
+         rNX9BYLDKjBXZen3W7t5+7e1R2dJ69kJW3HpUDLF9tbM317+W3OCg/KYWPEhcgYbh+
+         Q5H0AdH3e5iZQeZ0O4TyC9UCJ7ewSrVcOME9+nIG3jzivPMtHoRk0d774jRPciYuv5
+         Rs81/SzIlbZTDxMS5asheGQbliOW3x/s3LegaFPe3Ib0PF9GMv0v5dqCQI0tAZZlXJ
+         487VhnJhZen40pzzMyysD1Gy7VsUiPgiwVewDJh5fph5ShLLs/1Nx7gkufQBAmZAa8
+         O1lZuP+AAlvrA==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id EA15C60283;
+        Wed, 31 Mar 2021 18:05:27 +0000 (UTC)
+Subject: Re: [GIT PULL] pin control fixes for the v5.12 kernel
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdazjQ0jPdXYPNsC6BmYEHZgf7_zUObHTEa+B9LZCmaT8g@mail.gmail.com>
+References: <CACRpkdazjQ0jPdXYPNsC6BmYEHZgf7_zUObHTEa+B9LZCmaT8g@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdazjQ0jPdXYPNsC6BmYEHZgf7_zUObHTEa+B9LZCmaT8g@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.12-2
+X-PR-Tracked-Commit-Id: ba845907b23a6584e5944f6fbffda3efb010c28b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 39192106d4efd482f96a0be8b7aaae7ec150d9ee
+Message-Id: <161721392790.28439.7257359589804558368.pr-tracker-bot@kernel.org>
+Date:   Wed, 31 Mar 2021 18:05:27 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 28, 2021 at 06:59:28PM -0700, Brad Larson wrote:
-> The Pensando Elba SoC uses a GPIO based chip select
-> for two DW SPI busses with each bus having two
-> chip selects.
-> 
-> Signed-off-by: Brad Larson <brad@pensando.io>
-> ---
->  drivers/spi/spi-dw-mmio.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-> index 17c06039a74d..c323a5ceecb8 100644
-> --- a/drivers/spi/spi-dw-mmio.c
-> +++ b/drivers/spi/spi-dw-mmio.c
-> @@ -56,7 +56,7 @@ struct dw_spi_mscc {
->  /*
->   * The Designware SPI controller (referred to as master in the documentation)
->   * automatically deasserts chip select when the tx fifo is empty. The chip
-> - * selects then needs to be either driven as GPIOs or, for the first 4 using the
-> + * selects then needs to be either driven as GPIOs or, for the first 4 using
->   * the SPI boot controller registers. the final chip select is an OR gate
->   * between the Designware SPI controller and the SPI boot controller.
->   */
-> @@ -237,6 +237,31 @@ static int dw_spi_canaan_k210_init(struct platform_device *pdev,
->  	return 0;
->  }
->  
-> +static void dw_spi_elba_set_cs(struct spi_device *spi, bool enable)
-> +{
-> +	struct dw_spi *dws = spi_master_get_devdata(spi->master);
-> +
+The pull request you sent on Wed, 31 Mar 2021 14:31:36 +0200:
 
-> +	if (!enable) {
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.12-2
 
-Please, be more attentive to the review-comments given to you before
-resending a new patchset. One more time. This version of set_cs won't
-work for Active-high CS. Each SPI controller working with GPIO-based
-chip-select is marked as supporting that feature. So your DW
-SPI controller won't be able to work correctly with SPI-devices
-activated by active-high chip-select signal. Note default
-dw_spi_set_cs() callback supports that.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/39192106d4efd482f96a0be8b7aaae7ec150d9ee
 
--Sergey
+Thank you!
 
-> +		/*
-> +		 * Using a GPIO-based chip-select, the DW SPI
-> +		 * controller still needs its own CS bit selected
-> +		 * to start the serial engine.  On Elba the specific
-> +		 * CS doesn't matter to start the serial engine,
-> +		 * so using CS0.
-> +		 */
-> +		dw_writel(dws, DW_SPI_SER, BIT(0));
-> +	} else {
-> +		dw_writel(dws, DW_SPI_SER, 0);
-> +	}
-> +}
-> +
-> +static int dw_spi_elba_init(struct platform_device *pdev,
-> +			    struct dw_spi_mmio *dwsmmio)
-> +{
-> +	dwsmmio->dws.set_cs = dw_spi_elba_set_cs;
-> +	return 0;
-> +}
-> +
->  static int dw_spi_mmio_probe(struct platform_device *pdev)
->  {
->  	int (*init_func)(struct platform_device *pdev,
-> @@ -351,6 +376,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
->  	{ .compatible = "intel,keembay-ssi", .data = dw_spi_keembay_init},
->  	{ .compatible = "microchip,sparx5-spi", dw_spi_mscc_sparx5_init},
->  	{ .compatible = "canaan,k210-spi", dw_spi_canaan_k210_init},
-> +	{ .compatible = "pensando,elba-spi", .data = dw_spi_elba_init},
->  	{ /* end of table */}
->  };
->  MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
-> -- 
-> 2.17.1
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
