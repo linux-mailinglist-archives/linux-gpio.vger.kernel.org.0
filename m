@@ -2,107 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B13E23500B4
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 14:54:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AABDA35012F
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 15:25:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235450AbhCaMyK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Mar 2021 08:54:10 -0400
-Received: from mail.thorsis.com ([92.198.35.195]:59344 "EHLO mail.thorsis.com"
+        id S235797AbhCaNYc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Mar 2021 09:24:32 -0400
+Received: from mx1.tq-group.com ([93.104.207.81]:40963 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235654AbhCaMyB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 31 Mar 2021 08:54:01 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.thorsis.com (Postfix) with ESMTP id 885F93970;
-        Wed, 31 Mar 2021 14:53:59 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
-Received: from mail.thorsis.com ([127.0.0.1])
-        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ddy8e7D0VyZZ; Wed, 31 Mar 2021 14:53:59 +0200 (CEST)
-Received: by mail.thorsis.com (Postfix, from userid 109)
-        id 53D3D390B; Wed, 31 Mar 2021 14:53:59 +0200 (CEST)
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-        version=3.4.2
-X-Spam-Report: * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
-        *      blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [URIs: thorsis.com]
-        * -0.0 NO_RELAYS Informational: message was not relayed via SMTP
-        * -0.0 NO_RECEIVED Informational: message has no Received headers
-Date:   Wed, 31 Mar 2021 14:53:48 +0200
-From:   Alexander Dahl <ada@thorsis.com>
+        id S235789AbhCaNYY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 31 Mar 2021 09:24:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1617197064; x=1648733064;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HmgP3Yli7Tth3loHHid+iLrNhrFcOSrcV55jhKjEoKo=;
+  b=B55volFmUIV3dGoIUWsfsJwT+8oRgRzPNWyztKnB6Yk6SubJZFeb2Y8l
+   y/GlqPiEOyCWnWGoWAI2PpdQzvSbYDStDbugoe+TG0ZxByO4f3zZd3wS7
+   rblGdepy3Ddm+DEkjRa1otnn7f9Ira4sxBNZWKRE0ZBHI4wRYODYb7WUy
+   qyN28AQkyUudp38wBYcDXc4reaANIRtqNuqUdcF7ANoLjrvQSFtz88Ytp
+   b4K1QPpxonYSMEWvqB2FHqSPtaAO/UsuoLg0NfnBIPRL7nAj7X1djyJ3I
+   1ueeXjJZdydhRwBpTKdemImK9gYfjtZEQ4ScE4lPP3qtpehMtoY19HESq
+   g==;
+IronPort-SDR: Gvty9VKIQGeyXZgzeykyVahp8tOPvgqn7DtFanDSaX8uXPe2XXtxOHOzwYurdT7+kft+QMLsX4
+ yPlO7pB75n/Bmf16GivXuz2Om3Dh/WX45SQVuvyirlHB8y9PhJN+NxEXvkfEtseEhDCu1yx7QA
+ gwOsIgc93/bZ+CpnOHDgwQyjGpbYuMiFej8BuB4KeSwhoxImw1w9cyA+SmbESOwnAJrVdPr5Rg
+ zaCRlHefQEKQ0WjJ3YC6bJ7T3/iGTTIDj6LDG5Az4DMj5ueKdfJ0YFjt9cyIoe1/Bz59mtYxU7
+ 2DM=
+X-IronPort-AV: E=Sophos;i="5.81,293,1610406000"; 
+   d="scan'208";a="16745274"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 31 Mar 2021 15:24:23 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 31 Mar 2021 15:24:23 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 31 Mar 2021 15:24:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1617197063; x=1648733063;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HmgP3Yli7Tth3loHHid+iLrNhrFcOSrcV55jhKjEoKo=;
+  b=IbUfjLJLrXT2pR/smtNDprtqxlZkTXrny0zmQizSU1Qxpwste4RaU7Je
+   e3oKw+9BWzhvcNeS/PmKPuKzx/udu2kS2AyCNiZkZNwVJolejjN/t5h9K
+   cis5nhZFK6NHIC+Vbun2cdIr3DPLFclf1Q+llEzeCc8xFhsDoHKlBOpLs
+   pXoa7HkXAZd9nBLGu0u5gxUNpEyqOaXcmUc/NDAk3jreRj92HpLaFr4N8
+   iJhNCG25fbiCkAXtWkOPOaCQanbNJYvWGvQEeG3ddvrriM7dZT4MCYf+N
+   2Gq6a9WlQr74NyTQoo8OwSQRtD3RNCTXPkPStePbYQDyXREvtSKMrbLjd
+   g==;
+IronPort-SDR: g+4TVZ2uDU92PjAG+UGLDVNGfOB1JfMoyzMvCbx10XuQvK1b0eDj4nFXeFUPzpsIG2Kv+VfVYb
+ b+4mLhsOWvBP4zLYYh6CbGPVWLY3M6RxbWAKeDNP/D9gq1CFrgH2ALM7LKjgb99NHWaBoD3YDE
+ bjCL9c6gauPbKj1Ch4qmTcNfbcJE8/36gk6b05lqsgVSxmxy+Csg4QDm61UZOI34J9ZbBrWKJd
+ wEl5ml1UWIB5ZIeDACrb5vO0+a6dXDnOzoSuEwbiAMky9+nyts5vuIAldpsxHLSwj1FUsmThmL
+ cSI=
+X-IronPort-AV: E=Sophos;i="5.81,293,1610406000"; 
+   d="scan'208";a="16745273"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 31 Mar 2021 15:24:23 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.121.48.12])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id C0043280070;
+        Wed, 31 Mar 2021 15:24:22 +0200 (CEST)
+X-CheckPoint: {60647806-F-C3D5825A-FBADBBC7}
+X-MAIL-CPID: 01143EE542A86B6CCBF2B55EA702DDFA_3
+X-Control-Analysis: str=0001.0A782F1A.60647807.000C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Message-ID: <5e80dc9aeddd46d837e1c317a008e237bf0b4f8f.camel@ew.tq-group.com>
+Subject: Re: [PATCH 2/3] mfd: tqmx86: clear GPIO IRQ resource when no IRQ is
+ set
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Alexander Dahl <ada@thorsis.com>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 1/3] docs: gpio: mockup: Fix parameter name
-Message-ID: <YGRw3PlLBYCPvPn1@ada-deb-carambola.ifak-system.com>
-Mail-Followup-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20210329111648.7969-1-ada@thorsis.com>
- <20210329111648.7969-2-ada@thorsis.com>
- <CAHp75VdqtWS15YPvaPvy4yj5TdW7DDgFB+_bbavFqPBp1zm6eg@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdqtWS15YPvaPvy4yj5TdW7DDgFB+_bbavFqPBp1zm6eg@mail.gmail.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 31 Mar 2021 15:24:22 +0200
+In-Reply-To: <CAHp75VeCGHUBtfZ7b+m7eA01KukWkL0n01kmv-Q00m9+6FTWQg@mail.gmail.com>
+References: <cover.1617189926.git.matthias.schiffer@ew.tq-group.com>
+         <f38e80b6b439e4a9cc349a090923207865b3d3ed.1617189926.git.matthias.schiffer@ew.tq-group.com>
+         <CAHp75VeCGHUBtfZ7b+m7eA01KukWkL0n01kmv-Q00m9+6FTWQg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Andy,
-
-Am Wed, Mar 31, 2021 at 03:27:05PM +0300 schrieb Andy Shevchenko:
-> On Mon, Mar 29, 2021 at 2:18 PM Alexander Dahl <ada@thorsis.com> wrote:
-> >
-> > Module probing with the parameter documented yielded this in kernel log:
-> >
-> >         gpio_mockup: unknown parameter 'gpio_named_lines' ignored
-> >
-> > The parameter documented did not match the parameter actually
-> > implemented with commit 8a68ea00a62e ("gpio: mockup: implement naming
-> > the lines") long before introducing the documentation.
-> >
-> > Fixes: commit 2fd1abe99e5f ("Documentation: gpio: add documentation for gpio-mockup")
+On Wed, 2021-03-31 at 15:35 +0300, Andy Shevchenko wrote:
+> On Wed, Mar 31, 2021 at 2:39 PM Matthias Schiffer
+> <matthias.schiffer@ew.tq-group.com> wrote:
+> > 
+> > The driver was registering IRQ 0 when no IRQ was set. This leads to
+> > warnings with newer kernels.
+> > 
+> > Clear the resource flags, so no resource is registered at all in this
+> > case.
 > 
-> Alexander, in the entire series you are using the wrong format for the
-> Fixes tag.
-> I highly recommend to add in your .gitconfig file an alias:
->         one = show -s --pretty='format:%h (\"%s\")'
+> ...
+> 
+> >                 /* Assumes the IRQ resource is first. */
+> >                 tqmx_gpio_resources[0].start = gpio_irq;
+> > +       } else {
+> > +               tqmx_gpio_resources[0].flags = 0;
+> 
+> Please set IORESOURCE_DISABLED flag in the initial structure instead.
 
-You're right. Sorry, I messed things up. I first had that line without
-the additional "commit", and added it because I thought checkpatch
-complained (which it probably did not).
+Is there any documentation for the correct usage of this flag? I think
+I tried IORESOURCE_DISABLED originally, but it didn't have any effect
+(platform_get_irq() ignored the flag and returned the resource
+anyways). I might misremember though, I originally wrote the series
+some time ago.
 
-The actual format is documented of course:
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
-
-I actually have a slightly different setting for pretty.fixes in my
-~/.gitconfig for other demands. I'll go and make that project
-dependent now.
-
-Thanks for pointing this out.
-
-Greets
-Alex
 
 > 
-> `git one <commit ID>` will give you proper value to refer to the
-> commit in question.
+> >         }
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> 
+
