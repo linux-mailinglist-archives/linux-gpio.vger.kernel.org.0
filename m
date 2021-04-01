@@ -2,130 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02750351F1C
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 20:56:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 096FB351C1C
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 20:45:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236102AbhDASxi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Apr 2021 14:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240508AbhDASvo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Apr 2021 14:51:44 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66509C061793;
-        Thu,  1 Apr 2021 10:50:31 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id h7so2733823ilj.8;
-        Thu, 01 Apr 2021 10:50:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+XaU3R90qixaVV7aW+rUvI7mZW0sgqPkaDVLLZSANpk=;
-        b=PAOXjaNp3KR9wkaqwzGajUV+bY15zWzlA+x/vHCeUTnxF2zu1Fe2viAmSmIB7UJ3km
-         c3MirZ6IcUQH/AU93wLX+XRldUcJznMOZksUvqClnSPh2zMf7QzNRNen5iAhTA2iAvQx
-         +uCXc64hqKPVmXXWLUZx7NNiOkaaO6LuB1AHrvI1qB4c2wIZbXLt8BWASpzpQod59IWQ
-         UPMMUaMA5OkGaeCztLQukKuWJL2sdH7uijreieUDBAu+O8aStfDW9wLyJFDLaefvLL96
-         kEH1/vjzh2KmRxFH52PKsfxCeij4a6x/bbRWimLfVxFmdPlXDlGRdSxbrN9MJY1v4waV
-         mPWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+XaU3R90qixaVV7aW+rUvI7mZW0sgqPkaDVLLZSANpk=;
-        b=gPzNhUnFOvuG9NaoEb98icE06z27rBgw+jNI6Qq2o5aTbHM5+BD420OdNVQ2pdVRal
-         asauFsGuz5nRZYSv4Op8wCydxezz4ttsHRZdCeNYZ4i7mOQNkNRhIPgPAytI7cEqG+Ug
-         RgRY76TGoZLxC+VC5srVyfpJkHQA1FKChfmdK6uw2vxqPrFlK6TodFFGPayVdbgDcGnj
-         zdBlEAiiJLsOu5kuBG4LEOqL3elqJvyOcVRV/XZcXWdTjNdna31DnG2MKvtm1FHA4fs5
-         Cm33wygJhZJ6Q851knxCwpxsdyDqwpd9SEkKlQjQePbKpTd+HgQUK6szmsH45f7D2FLa
-         U7sg==
-X-Gm-Message-State: AOAM533a4knUpQdDGqtlPf9adG7nhxhrydx602gnaMENSZXOMrHuJZ3R
-        WIn+45a6nPLZJ4iHNb1TXzJ4rIYUmexkiJHpOho=
-X-Google-Smtp-Source: ABdhPJypdKxpeEkzgLCokUxyMCMz480lSKKdcgSUnSJMv1uQm0VHIbMAqvXRye1H8rAFcLAtk2dSHPm1P2RfBItEowg=
-X-Received: by 2002:a05:6e02:8:: with SMTP id h8mr7415793ilr.164.1617299430937;
- Thu, 01 Apr 2021 10:50:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1615038553.git.syednwaris@gmail.com> <4c259d34b5943bf384fd3cb0d98eccf798a34f0f.1615038553.git.syednwaris@gmail.com>
- <CAHp75VfJ5bGaPkai_adsBoT6=7nS2K8ze0ka3gzZkQARkM5evA@mail.gmail.com>
- <CACG_h5pb0pA+cTNPGircAM3UrV5BGmqgk45LF_9phU_J4FaRyw@mail.gmail.com>
- <CAHp75VfDZbJjCOEGdHc=-D6W8_7m2=CinXj-itwn6hvoVqdWYQ@mail.gmail.com>
- <YF8evJTkiBYjnDON@shinobu> <CAHp75VektkxSH7S3qTkYd1De613HGrBDvXn36FFex_p1n9BDng@mail.gmail.com>
-In-Reply-To: <CAHp75VektkxSH7S3qTkYd1De613HGrBDvXn36FFex_p1n9BDng@mail.gmail.com>
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-Date:   Thu, 1 Apr 2021 23:20:19 +0530
-Message-ID: <CACG_h5pox5CCmhy7+itc7cpjCSYtzSXGA85ow14nPrAThyNTDA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] gpio: xilinx: Utilize generic bitmap_get_value and _set_value
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        id S234788AbhDASNU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Apr 2021 14:13:20 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47208 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238578AbhDASJi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 1 Apr 2021 14:09:38 -0400
+IronPort-SDR: offd/N88rhCbvf/9fmdqvQ6Rf3DeJzh0Ms2aTAnkFEdlGYjSS5dlPQWlC0Tt5MnxvMYNS038ts
+ Nvx03cojV+0Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="212564704"
+X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
+   d="scan'208";a="212564704"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 11:01:23 -0700
+IronPort-SDR: IDBDKz+I8V6htBKuc+Do0PO0b9eaBU67Dz/wppZo6sdncBWX8vwnIH5Ut5bFjv9Ee3ZaEHgfdE
+ bZZCsJ8K8+uQ==
+X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
+   d="scan'208";a="456086447"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 11:01:20 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lS1d7-000Jzm-VO; Thu, 01 Apr 2021 21:01:17 +0300
+Date:   Thu, 1 Apr 2021 21:01:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robert Richter <rrichter@marvell.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Add quirk to ignore EC wakeups on Dell
+ Venue 10 Pro 5055
+Message-ID: <YGYKbXDu1QlYCXew@smile.fi.intel.com>
+References: <20210401162740.4602-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210401162740.4602-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Mar 27, 2021 at 10:05 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sat, Mar 27, 2021 at 2:02 PM William Breathitt Gray
-> <vilhelm.gray@gmail.com> wrote:
-> > On Sat, Mar 27, 2021 at 09:29:26AM +0200, Andy Shevchenko wrote:
-> > > On Saturday, March 27, 2021, Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> > > > On Fri, Mar 26, 2021 at 11:32 PM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > On Sat, Mar 6, 2021 at 4:08 PM Syed Nayyar Waris <syednwaris@gmail.com>
-> > > > wrote:
-> > > > >
-> > > > > > +       bitmap_set_value(old, 64, state[0], 32, 0);
-> > > > > > +       bitmap_set_value(old, 64, state[1], 32, 32);
-> > > > >
-> > > > > Isn't it effectively bitnap_from_arr32() ?
-> > > > >
-> > > > > > +       bitmap_set_value(new, 64, state[0], 32, 0);
-> > > > > > +       bitmap_set_value(new, 64, state[1], 32, 32);
-> > > > >
-> > > > > Ditto.
->
-> > > > With bitmap_set_value() we are also specifying the offset (or start)
-> > > > position too. so that the remainder of the array remains unaffected. I
-> > > > think it would not be feasible to use bitmap_from/to_arr32()  here.
-> > >
-> > >
-> > > You have hard coded start and nbits parameters to 32. How is it not the
-> > > same?
-> >
-> > Would these four lines become something like this:
-> >
-> >         bitmap_from_arr32(old, state, 64);
-> >         ...
-> >         bitmap_from_arr32(new, state, 64);
->
-> This is my understanding, but I might miss something. I mean driver
-> specifics that make my proposal incorrect.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+On Thu, Apr 01, 2021 at 06:27:40PM +0200, Hans de Goede wrote:
+> Like some other Bay and Cherry Trail SoC based devices the Dell Venue
+> 10 Pro 5055 has an embedded-controller which uses ACPI GPIO events to
+> report events instead of using the standard ACPI EC interface for this.
+> 
+> The EC interrupt is only used to report battery-level changes and
+> it keeps doing this while the system is suspended, causing the system
+> to not stay suspended.
+> 
+> Add an ignore-wake quirk for the GPIO pin used by the EC to fix the
+> spurious wakeups from suspend.
 
-I initially (incorrectly) thought that all of the bitmap_set_value()
-statements have to be replaced. But now I realised, only those
-specific bitmap_set_value() calls containing 32 bits width have to
-replaced.
+Fine by me,
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I will incorporate the above review comments in my next v4 submission.
+I have sent my PR to Bart few days ago and today he applied it.
+So, since I'm not expecting much going on in this cycle, I assume
+it's okay to go directly to Bart's tree.
 
-Regards
-Syed Nayyar Waris
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/gpio/gpiolib-acpi.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 1aacd2a5a1fd..174839f3772f 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -1438,6 +1438,20 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>  			.no_edge_events_on_boot = true,
+>  		},
+>  	},
+> +	{
+> +		/*
+> +		 * The Dell Venue 10 Pro 5055, with Bay Trail SoC + TI PMIC uses an
+> +		 * external embedded-controller connected via I2C + an ACPI GPIO
+> +		 * event handler on INT33FFC:02 pin 12, causing spurious wakeups.
+> +		 */
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Venue 10 Pro 5055"),
+> +		},
+> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> +			.ignore_wake = "INT33FC:02@12",
+> +		},
+> +	},
+>  	{
+>  		/*
+>  		 * HP X2 10 models with Cherry Trail SoC + TI PMIC use an
+> -- 
+> 2.30.2
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
