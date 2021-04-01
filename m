@@ -2,101 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4BD835108F
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 10:06:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF166351093
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 10:07:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbhDAIE5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Apr 2021 04:04:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233445AbhDAIEl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Apr 2021 04:04:41 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE41EC061788
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Apr 2021 01:04:40 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id n11-20020a05600c4f8bb029010e5cf86347so3429282wmq.1
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Apr 2021 01:04:40 -0700 (PDT)
+        id S233491AbhDAIHH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Apr 2021 04:07:07 -0400
+Received: from mx1.tq-group.com ([93.104.207.81]:12465 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230291AbhDAIGz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 1 Apr 2021 04:06:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=QM7rCia0E0f24qsTX0VNJrlQHlXgwo18P09kK6//nHk=;
-        b=yhSocdsAAbgIsDtLEU0fY/HIso3rH7inzjIXLFT2uUqVzWbWlqxWe4DTcnH5D5bIVc
-         pbOX6dPSSUEH0L3M80PSVZ2QeODWtGPyWeG/XcxOG3pti3etGR6X7WK4/bHgQKZnZAqo
-         r83ckH4EUrq7Sz2TFI/+tHy/5ZmpTKrqS5mwYwlDzhjRr0Y9+1nEUgTkHj6aeFPWGB3H
-         Ki0ciNfnUmMeOcHicDFUuILl2Y4l+hIeh448kEqVE2yxnoTL6XlA2sFvmt1LgNXw4IdY
-         nrOQXR2DSdT6OXeV47OHU3h5Wa9hKX6zzPfpGJJqqQyRAXeX+IH0zjwNUHL6zgXq8J/q
-         Yagg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QM7rCia0E0f24qsTX0VNJrlQHlXgwo18P09kK6//nHk=;
-        b=cQKRHohD6+682f5TXWkl1AcLUWQHh+0kqaju9Jf0bEcWixQmiileu4ib9ec2k9+JOP
-         nKvZGvEz+Tyr01AGKSh0Pz9rNIvo2PbZwmO2Lm+eqPCJP+q41yd0D/fN1hlRYV1AaX0C
-         YlvRDTappPzdBBfwmddtj6ezkzLx/BxpKA4mBRxQGh3pvXPDRLyJXbPk3iyYngNpKDR7
-         KBBFxEIFY6gsoGib0VyhJg9s812kQ8uYSrxc5cq3ZajCvupw5Za2iuyZoF55+Ua9JwK5
-         tdA6Ety4q/I2DC9DiSB8aKCvzjYkLcIqXoiUgtzQI9VY94fSOyFS32kx4yrZ0TybIWND
-         YHeg==
-X-Gm-Message-State: AOAM530ortDA0GY/7oG+BCLiAJRTeUuqt2trtGTbVTWjjONIKPnCT17Z
-        d6lTw9MncFisLRbQjpqti8+GKg==
-X-Google-Smtp-Source: ABdhPJx6dwsz9577eN4J57oOfqxH2Zwh01VL6NnAsjhSyoT7F4fPApt2JbXPDy0SkMUZQSINwXOEgw==
-X-Received: by 2002:a05:600c:203:: with SMTP id 3mr6755143wmi.88.1617264279366;
-        Thu, 01 Apr 2021 01:04:39 -0700 (PDT)
-Received: from dell ([91.110.221.182])
-        by smtp.gmail.com with ESMTPSA id r14sm8741396wrw.91.2021.04.01.01.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Apr 2021 01:04:38 -0700 (PDT)
-Date:   Thu, 1 Apr 2021 09:04:37 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1617264415; x=1648800415;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JvK38X2egqiefDWRwDTzm+i6MajAYS5riqwtUmLVTBQ=;
+  b=AJEFl7Sn0ZYlklsNW1UEDFlswI9GpYwmPuVYtocwGEH/X1vfK9honvZU
+   nz5CjGjJXQfMee9ojWJ37zSEC8XfyEPaL5fJBq5mi+Robd9HTNo89x90w
+   Qu3t14C2hL8eG+ciM5xOnhdDZE9gsztCXlBcftW6hLZHswxSkGPA4BJ+S
+   83wGnA63LE9Eo8LXj9wzJ9IuW91HOAFsBMRwYjWcHSqmYCdrBVY8+giRY
+   dNrhSXfQmYZgLIMEWCO6Km3lqMQQrcXEdUQ9kq8lfSK+xo76N2oUIhKuu
+   CmwmaxMgpSDe5p9yOnQ7dQlB6p5mAcm+UtVXUBF1pC7Fb6g/ktIAkpNtC
+   w==;
+IronPort-SDR: Kx60w8r8TnJMRw+yDMmJZFd11On0RZCLb4LPX7V7kP320tUgcKrrmzJdVmInHxMuG9v8KKBBmu
+ EgFPaUftGi0s6nHx0OxOPWRXiYp2KT1pua8CCoMMjmfFGCUe1YsT8lewD3PcZWtNCGSPK+aMmN
+ z5WrO/+iUkP6BhiI0Ii5QbU8wc6iiGe7xeo4Gv86vkwRmYUd7cnoNRqkOWM3vcT3RxWiXi6YHC
+ JMQ7TraGS1Ht1x+jgIjzzG61OMxOyIqBUUu5nPtvvxa0AHsAfsOwPotRgJ8vRuKbPYzBpk4IHl
+ S8E=
+X-IronPort-AV: E=Sophos;i="5.81,296,1610406000"; 
+   d="scan'208";a="16758882"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 01 Apr 2021 10:06:50 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 01 Apr 2021 10:06:50 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 01 Apr 2021 10:06:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1617264410; x=1648800410;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JvK38X2egqiefDWRwDTzm+i6MajAYS5riqwtUmLVTBQ=;
+  b=EgZES/zMRuCIf/LSH5FFipGT7TSAQ1I3e0+V+wzbR80m4qFf50XM1JZl
+   YTFRdVtM8cHiNvXy24WcgSsBrmYx7zYlEOmcAfNCLQ6bv6FkJVQJWkmyF
+   SHWqA6lSX/d7ynFb4CLZWljyCfhqvmCEl85sVWpZ6vsa+BKX05GwC1ubt
+   tymI0Iy4emx23g/3cl7gkm6g/z9YP6kmgQEicMGBi2aMpEBihw08J6t+m
+   SAw2E2SuAaO+ZykSU2XDfiK1442qh52mefcYJS65lrfTWrCiLM2B6l5v+
+   QVEl7hkTSVS0VSII1qntPjBzTRciDQv67fF3M1tLffTkWR+bJfQ8kRnm8
+   g==;
+IronPort-SDR: GNwTxHPp0HjhOq+w7b8gURPaEtsTZa/Wv2HW63XfMaiLRZgOk6pZQAjh91FKGnw9CFawcsadol
+ L8HJ4jEYT1liO7BLgcomj/wxOavrGqsE8A/ciKJkMHYqACbn1AhWZnEBbE4PJLvaoH0DIWv4+E
+ GL6pT0UL2cUqjJZsuV5xfD8o1dXrGEHaqcnAY8caK8X4L2Q/bWKfRXTktJXGbViOA0QBSJ6vIS
+ mea6CY2tpzMqvE0X5UMN738CsRJ/4RuptWh2nqdOaaWL6U5rtKEsAKCr6/LPnWks93Itz0YAD1
+ 5g0=
+X-IronPort-AV: E=Sophos;i="5.81,296,1610406000"; 
+   d="scan'208";a="16758881"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 01 Apr 2021 10:06:50 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.121.48.12])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 26F8D280070;
+        Thu,  1 Apr 2021 10:06:50 +0200 (CEST)
+X-CheckPoint: {60657F17-10-B70C521D-D627A946}
+X-MAIL-CPID: 7A1E7E5013B3DDF7CDC4AAEFACC49D7A_0
+X-Control-Analysis: str=0001.0A782F27.60657F1A.0056,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Message-ID: <35e8c3ce5d4265b4e7294b4296c60484aab6adbc.camel@ew.tq-group.com>
+Subject: Re: [PATCH 3/3] mfd: tqmx86: add support for TQMxE40M
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] mfd: tqmx86: add support for TQMxE40M
-Message-ID: <20210401080437.GM2916463@dell>
+Date:   Thu, 01 Apr 2021 10:06:47 +0200
+In-Reply-To: <20210401080437.GM2916463@dell>
 References: <cover.1617189926.git.matthias.schiffer@ew.tq-group.com>
- <3c19d714645f788913956223097adc360ceb6203.1617189926.git.matthias.schiffer@ew.tq-group.com>
- <CAHp75Vdk4rxiD_nm8Cb53oTYNvMqkAOM4U5zEn5tchtptQZEBw@mail.gmail.com>
- <83d7ea27b27225727fec7b077efe1a67ba1184a9.camel@ew.tq-group.com>
- <CAHp75Vc5Nw+GJ4tFeciYZQhJ_NbRZMJjJNcWeFq7nOuAOe0=jQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vc5Nw+GJ4tFeciYZQhJ_NbRZMJjJNcWeFq7nOuAOe0=jQ@mail.gmail.com>
+         <3c19d714645f788913956223097adc360ceb6203.1617189926.git.matthias.schiffer@ew.tq-group.com>
+         <CAHp75Vdk4rxiD_nm8Cb53oTYNvMqkAOM4U5zEn5tchtptQZEBw@mail.gmail.com>
+         <83d7ea27b27225727fec7b077efe1a67ba1184a9.camel@ew.tq-group.com>
+         <CAHp75Vc5Nw+GJ4tFeciYZQhJ_NbRZMJjJNcWeFq7nOuAOe0=jQ@mail.gmail.com>
+         <20210401080437.GM2916463@dell>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 31 Mar 2021, Andy Shevchenko wrote:
-
-> On Wed, Mar 31, 2021 at 4:33 PM Matthias Schiffer
-> <matthias.schiffer@ew.tq-group.com> wrote:
-> > On Wed, 2021-03-31 at 15:37 +0300, Andy Shevchenko wrote:
-> > > On Wed, Mar 31, 2021 at 2:38 PM Matthias Schiffer
-> > > <matthias.schiffer@ew.tq-group.com> wrote:
+On Thu, 2021-04-01 at 09:04 +0100, Lee Jones wrote:
+> On Wed, 31 Mar 2021, Andy Shevchenko wrote:
 > 
-> ...
+> > On Wed, Mar 31, 2021 at 4:33 PM Matthias Schiffer
+> > <matthias.schiffer@ew.tq-group.com> wrote:
+> > > On Wed, 2021-03-31 at 15:37 +0300, Andy Shevchenko wrote:
+> > > > On Wed, Mar 31, 2021 at 2:38 PM Matthias Schiffer
+> > > > <matthias.schiffer@ew.tq-group.com> wrote:
+> > 
+> > ...
+> > 
+> > > > > +               return 24000;
+> > > > 
+> > > > AFAICS it will return 24 MHz for "Unknown" board. Is it okay to be so brave?
+> > > 
+> > > As noted in the commit message, our hardware developers intend to use
+> > > 24 MHz for all future x86 SoMs.
+> > 
+> > What may go wrong in the future?.. (rhetorical question, obviously)
 > 
-> > > > +               return 24000;
-> > >
-> > > AFAICS it will return 24 MHz for "Unknown" board. Is it okay to be so brave?
-> >
-> > As noted in the commit message, our hardware developers intend to use
-> > 24 MHz for all future x86 SoMs.
+> My preference would be to be explicit.
 > 
-> What may go wrong in the future?.. (rhetorical question, obviously)
+> Rather than support boards implicitly i.e. by accident.
+> 
 
-My preference would be to be explicit.
+How about logging a warning for unknown boards, but still returning
+24 MHz?
 
-Rather than support boards implicitly i.e. by accident.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
