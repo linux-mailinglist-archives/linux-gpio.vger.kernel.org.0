@@ -2,161 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEB3D3512B3
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 11:49:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEA563512FA
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 12:05:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229612AbhDAJsw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Apr 2021 05:48:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42388 "EHLO
+        id S233780AbhDAKEl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Apr 2021 06:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233841AbhDAJsk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Apr 2021 05:48:40 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3962CC0613E6
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Apr 2021 02:48:40 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id e14so759892plj.2
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Apr 2021 02:48:40 -0700 (PDT)
+        with ESMTP id S233616AbhDAKET (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Apr 2021 06:04:19 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBE7C0613E6
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Apr 2021 03:04:19 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id u5so2010203ejn.8
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Apr 2021 03:04:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5erOAyvwJPN2bUhm/NBgsrWlD5lVMrDpDeN1dDRK8es=;
-        b=URsTW2m52dbfp1cSY5EqzUlkR+kM+SNRsJVivyzqTvgFcaE/ZTfffwZRo6BKnFNnrA
-         2AQgAyULFVn3dS3BHS0RdFVOvHeooEB4mF8fq6a1AdjJkjuU0aQzSJ1JTunzBuXc4YyZ
-         BZ2Kl/jUc0coGM9h+sLKSxSFcFH50rpMQUr7OB3Ucz4SQJk+Si0la8pSI75/aby4MTzg
-         q9j3exEwL8G8xdZnUillq1zpKhitNjDUPGB+eJpq0AaJKDl60uiRk6ChBM937cyOaaXt
-         tX5gt/fJLRDPaQ67P9G+bHx3RvuOMeSdUE8M5OgwaXjJcIRNMvyV6gCC9kFPIjwNJrED
-         9VTw==
+        bh=tdJu4NzPjRKxf7IHGvtWzEypzz/sgqEq/MXKxQfclPc=;
+        b=AKT0Kecm1iHwnk7ipLWshLWGG0F6hYxwTeRpDgr9kkfIe8SY/IHl8nVr8DfungkOyw
+         mcaPb3Hh47Hb1JiFanSC0l5ZoMlU7ofH1xIY/XOkBN0sxiP16cnDnav+TnVJMv+4uj64
+         bmyoXOXY6pJkMM2xwMx+cOKsUNQwoAXFIAURcZk+lRaVEvgLNGyXlFP4g89Q1tXJ7cXz
+         wpqv7jZHH4Z8wBbAbqpNTiWtSBLJpXf8R1ppDS2jXesK6sMTG//LjQtPVDEcZfOUYuS8
+         tlG3JmXQj6cgC3RTd3PBQ6HrlPejMSLv8t68eyAJCQfAEEI9ecdmRqhNn2xfQ4O0zZAe
+         mCfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5erOAyvwJPN2bUhm/NBgsrWlD5lVMrDpDeN1dDRK8es=;
-        b=BpFHaPser0zI+8azH8PuU7zY02mQonZYhNNq0YUMZQuZrwAdI14IyTlwnHfEBP2ZdR
-         O36taFOORLnbRW7khmSlvrF6zbKqejwtuR2b4+/8unNII1ygocseUbPHwvji2yz1lya6
-         tU/fjyoC476I8KsGrce3+uMcss1kGBdVKzUG3O9nNLc+7Y6T0BvL1lTcl8VE2BJvkKHa
-         1NwY9K5gKUM0njAY8ziUps4tN2QkFp9bWK9zmh7butWHlMliLurkh+ZAfQC7j9j5eYsV
-         RJyANeeTeWqMuBluya9WgO7PkiH0xcZsHwLZOlU5QkcyqFzJugj375h1hxkGSE/q64vN
-         gc/g==
-X-Gm-Message-State: AOAM530JkVIO3jxFhRh2eAfCk7/nprxVLiZ0jB8h86vAU91gWFwl1vSn
-        0TRSrcR+baoF34iw1azRci0GaMGl9To+HWnVULU=
-X-Google-Smtp-Source: ABdhPJyRcSEVl/i5H0boH0ZNgbhMRbigeUpFj71iSe5zliXB4cMWJKLMw/vzFpfpoqkOHRR8T2rugUomZmIrt961WYU=
-X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr8203376pjr.228.1617270519749;
- Thu, 01 Apr 2021 02:48:39 -0700 (PDT)
+        bh=tdJu4NzPjRKxf7IHGvtWzEypzz/sgqEq/MXKxQfclPc=;
+        b=tbVkjUbmrSu34QO1P/mnjkOa0bXMfPENOmxcbKmcH0damunkJB+lgC0tZnpcLVRzwt
+         z+Od9yU8EeFAfvmDbGG+wwoIGUBNSMRij3dGiPYkZ3loY/tSq/9Me9icaQVFprYLYhgH
+         rOeA9sYKparo/gzZzl5WR1pp9YIfN3jAkz7rDkv9g6adgFApqUvHNVfhZV0ATu4yTBQC
+         ybOcnDmky1cLIlkoVdLHiGUa4Jbrm4vLIJbw8Pvt9Pj7beBhmTCw/T/thUtrr6klyNGE
+         gVXKh3VJSL6PKXkBpPVGmboyWN9Cmz1GnzgNXwNdjPHOgEbGmdA1ObtoXwmjLJzO6ddk
+         bDlg==
+X-Gm-Message-State: AOAM531oOvXCn7/x7A4P2yDUoWYOljaxci5gq3L0XJQzFX2hiwx4jXd9
+        jWmHmEEkcuCbCShNCmRI5RC3P0ZlGoPEiZAlx4OGxg==
+X-Google-Smtp-Source: ABdhPJzHdvylMX6Bu6zBm9RnvurGoOQTywfu4c1iZpW+Dom2fsBqXYVajD2pWqqZHTQ9qVJm9X08DbYyYFfsmbbKN4I=
+X-Received: by 2002:a17:906:3b48:: with SMTP id h8mr8129952ejf.261.1617271458228;
+ Thu, 01 Apr 2021 03:04:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210401091546.5509-1-brgl@bgdev.pl>
-In-Reply-To: <20210401091546.5509-1-brgl@bgdev.pl>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 1 Apr 2021 12:48:23 +0300
-Message-ID: <CAHp75VfdTeYY2i2_kBkD2zWvOhhuzgKhkU0-bQ0ER9Bs52fFJw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] core: relax gpiod_is_gpiochip_device() even more
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+References: <YGHhPlK5Ej4QywNH@black.fi.intel.com>
+In-Reply-To: <YGHhPlK5Ej4QywNH@black.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 1 Apr 2021 12:04:07 +0200
+Message-ID: <CAMRc=MfWiqUKq82M-9dCVKRO=RFKGJ+ARTTfhEy9Pbog2Txk1g@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 5.13-1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 1, 2021 at 12:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Mon, Mar 29, 2021 at 4:17 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Currently libgpiod requires that the GPIO chip character device be named
-> 'gpiochip%u' in devfs. However it's a perfectly valid use-case to have
-> the device file renamed by udev (or equivalent) to anything else.
+> Hi Linux GPIO  maintainers,
 >
-> Modify gpiod_is_gpiochip_device() to check the major and minor device
-> numbers first and then ensure that the device in question is associated
-> with the GPIO subsystem. No longer check the name.
-
-As long as it passes all tests and nicely handles symlinks, I'm
-completely fine with it
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-P.S. /offtopic/ gentle reminder about my PR, can we proceed with it?
-
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
->  lib/core.c | 41 ++++++++---------------------------------
->  1 file changed, 8 insertions(+), 33 deletions(-)
+> So far collected stuff for Intel GPIO drivers (including aggregator clean up).
+> No conflicts are expected.
 >
-> diff --git a/lib/core.c b/lib/core.c
-> index c1fb8ec..32c4238 100644
-> --- a/lib/core.c
-> +++ b/lib/core.c
-> @@ -182,11 +182,10 @@ GPIOD_API void gpiod_line_bulk_foreach_line(struct gpiod_line_bulk *bulk,
+> Thanks,
 >
->  GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
->  {
-> -       char *name, *realname, *sysfsp, sysfsdev[16], devstr[16];
-> +       char *realname, *sysfsp, devpath[64];
->         struct stat statbuf;
->         bool ret = false;
-> -       int rv, fd;
-> -       ssize_t rd;
-> +       int rv;
+> With Best Regards,
+> Andy Shevchenko
 >
->         rv = lstat(path, &statbuf);
->         if (rv)
-> @@ -217,15 +216,15 @@ GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
->                 goto out_free_realname;
->         }
+> The following changes since commit b41ba2ec54a70908067034f139aa23d0dd2985ce:
 >
-> -       /* Get the basename. */
-> -       name = basename(realname);
-> +       /* Is the device associated with the GPIO subsystem? */
-> +       snprintf(devpath, sizeof(devpath), "/sys/dev/char/%u:%u/subsystem",
-> +                major(statbuf.st_rdev), minor(statbuf.st_rdev));
+>   gpiolib: Read "gpio-line-names" from a firmware node (2021-03-08 11:59:17 +0100)
 >
-> -       /* Do we have a corresponding sysfs attribute? */
-> -       rv = asprintf(&sysfsp, "/sys/bus/gpio/devices/%s/dev", name);
-> -       if (rv < 0)
-> +       sysfsp = realpath(devpath, NULL);
-> +       if (!sysfsp)
->                 goto out_free_realname;
+> are available in the Git repository at:
 >
-> -       if (access(sysfsp, R_OK) != 0) {
-> +       if (strcmp(sysfsp, "/sys/bus/gpio") != 0) {
->                 /*
->                  * This is a character device but not the one we're after.
->                  * Before the introduction of this function, we'd fail with
-> @@ -237,30 +236,6 @@ GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
->                 goto out_free_sysfsp;
->         }
+>   git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.13-1
 >
-> -       /*
-> -        * Make sure the major and minor numbers of the character device
-> -        * correspond to the ones in the dev attribute in sysfs.
-> -        */
-> -       snprintf(devstr, sizeof(devstr), "%u:%u",
-> -                major(statbuf.st_rdev), minor(statbuf.st_rdev));
-> -
-> -       fd = open(sysfsp, O_RDONLY);
-> -       if (fd < 0)
-> -               goto out_free_sysfsp;
-> -
-> -       memset(sysfsdev, 0, sizeof(sysfsdev));
-> -       rd = read(fd, sysfsdev, sizeof(sysfsdev) - 1);
-> -       close(fd);
-> -       if (rd < 0)
-> -               goto out_free_sysfsp;
-> -
-> -       rd--; /* Ignore trailing newline. */
-> -       if ((size_t)rd != strlen(devstr) ||
-> -           strncmp(sysfsdev, devstr, rd) != 0) {
-> -               errno = ENODEV;
-> -               goto out_free_sysfsp;
-> -       }
-> -
->         ret = true;
+> for you to fetch changes up to 6c46215d6b626cb0981f8332da506b69b98c4b49:
 >
->  out_free_sysfsp:
+>   gpio: sch: Hook into ACPI GPE handler to catch GPIO edge events (2021-03-27 23:48:55 +0200)
+>
+> ----------------------------------------------------------------
+> intel-gpio for v5.13-1
+>
+> * Implement event support (GPE) in Intel SCH GPIO driver
+> * Clean up GPIO aggregator driver to use more of the generic code
+>
+> The following is an automated git shortlog grouped by driver:
+>
+> aggregator:
+>  -  Replace custom get_arg() with a generic next_arg()
+>
+> lib/cmdline:
+>  -  Export next_arg() for being used in modules
+>
+> sch:
+>  -  Hook into ACPI GPE handler to catch GPIO edge events
+>  -  Add edge event support
+>
+> ----------------------------------------------------------------
+> Andy Shevchenko (3):
+>       lib/cmdline: Export next_arg() for being used in modules
+>       gpio: aggregator: Replace custom get_arg() with a generic next_arg()
+>       gpio: sch: Hook into ACPI GPE handler to catch GPIO edge events
+>
+> Jan Kiszka (1):
+>       gpio: sch: Add edge event support
+>
+>  drivers/gpio/Kconfig           |   3 +-
+>  drivers/gpio/gpio-aggregator.c |  39 ++------
+>  drivers/gpio/gpio-sch.c        | 198 +++++++++++++++++++++++++++++++++++++++--
+>  lib/cmdline.c                  |   1 +
+>  4 files changed, 198 insertions(+), 43 deletions(-)
+>
 > --
-> 2.30.1
+> With Best Regards,
+> Andy Shevchenko
+>
 >
 
+Pulled, thanks!
 
--- 
-With Best Regards,
-Andy Shevchenko
+Bartosz
