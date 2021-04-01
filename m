@@ -2,107 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F28CC3506B2
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Mar 2021 20:49:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A705350BF3
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 03:27:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234913AbhCaSso (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Mar 2021 14:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233934AbhCaSsh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Mar 2021 14:48:37 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55766C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Mar 2021 11:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-        :In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=zsEOZ77JXlGERX+lYA3LDuc7h5Fmf9rwgsEBTk1dE3w=; b=nhtAZtV+4tsGAVHWj+NyWucwkP
-        lpysjfGPg40zg/w3mCew36EJNCFSxKubjQTv9leMlTCxEK338Tj1qmsSmdibjBQxyzeHkIKLq9YWc
-        /Ayp5AnXOAZ04tXEhOCfWnkj2wLo3gDv2YAPz3M05wfX1+lELhRDTA1bbm0Bro580W8Q3a1svagN9
-        JD+4dk6PabWzl4JK3CJfrmT9ZDA8a8wDn2511mTCLYvJS5yXs3utdY6yvGvQq4eZqlPVbZgkWmuz/
-        e7e1ApIeW4UTdUorqdRSxQtshHgsbyU4hr3Xz4sKdP24AeWBE0nnwF4ca9xhfijfaa557+R0uAzhe
-        6UlyNJsQ==;
-Received: from [2601:1c0:6280:3f0::e0e1]
-        by desiato.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lRftL-007JMQ-50; Wed, 31 Mar 2021 18:48:35 +0000
-Subject: Re: [PATCH] pinctrl: bcm63xx: Fix dependencies
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>
-References: <20210331124733.2059013-1-linus.walleij@linaro.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1a2033f5-dff4-ef2f-82c4-26c1f2fbd785@infradead.org>
-Date:   Wed, 31 Mar 2021 11:48:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S230248AbhDAB0o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Mar 2021 21:26:44 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62043 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230073AbhDAB0N (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 31 Mar 2021 21:26:13 -0400
+IronPort-SDR: 40a5FJQmZRnxaoiXbHahHVl9v4ch/dOv9JmFXyYq+8luyT1va6xdJYMldnF2OPu7ub3R2PnbpU
+ ln8XDqpekraw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9940"; a="256112013"
+X-IronPort-AV: E=Sophos;i="5.81,295,1610438400"; 
+   d="scan'208";a="256112013"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2021 18:26:12 -0700
+IronPort-SDR: BbsEryPMnknVDPOk2wOCrcGkPGKWqdLlXEcbZLfsNdQwkor7+Ho/TgsNGN9psnfv1Z2aGNXvIg
+ WvdYnu1B0q2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,295,1610438400"; 
+   d="scan'208";a="379107956"
+Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 31 Mar 2021 18:26:11 -0700
+Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lRm66-0006Dx-PN; Thu, 01 Apr 2021 01:26:10 +0000
+Date:   Thu, 01 Apr 2021 09:25:41 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ 26ea7ac92836ba616f75a1ab57e64ffc21da7758
+Message-ID: <60652115.YNK8tHSoreYTa8iG%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20210331124733.2059013-1-linus.walleij@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3/31/21 5:47 AM, Linus Walleij wrote:
-> Add depends on OF so we don't get weird build errors on
-> randconfig.
-> 
-> Also order selects the same as the other drivers for
-> pure aestetic reasons.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Álvaro Fernández Rojas <noltari@gmail.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/pinctrl/bcm/Kconfig | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-> index 33660e8fec05..17615674ac1a 100644
-> --- a/drivers/pinctrl/bcm/Kconfig
-> +++ b/drivers/pinctrl/bcm/Kconfig
-> @@ -31,10 +31,12 @@ config PINCTRL_BCM2835
->  
->  config PINCTRL_BCM63XX
->  	bool
-> +	depends on OF
-> +	select PINMUX
-> +	select PINCONF
->  	select GENERIC_PINCONF
-> +	select GPIOLIB
->  	select GPIO_REGMAP
-> -	select PINCONF
-> -	select PINMUX
->  
->  config PINCTRL_BCM6318
->  	bool "Broadcom BCM6318 GPIO driver"
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 26ea7ac92836ba616f75a1ab57e64ffc21da7758  pinctrl: bcm63xx: Fix dependencies
 
-That gives me:
+elapsed time: 725m
 
-WARNING: unmet direct dependencies detected for PINCTRL_BCM63XX
-  Depends on [n]: PINCTRL [=y] && OF [=n]
-  Selected by [y]:
-  - PINCTRL_BCM6328 [=y] && PINCTRL [=y] && (BMIPS_GENERIC || COMPILE_TEST [=y])
-  - PINCTRL_BCM6358 [=y] && PINCTRL [=y] && (BMIPS_GENERIC || COMPILE_TEST [=y])
-  - PINCTRL_BCM6362 [=y] && PINCTRL [=y] && (BMIPS_GENERIC || COMPILE_TEST [=y])
-  - PINCTRL_BCM63268 [=y] && PINCTRL [=y] && (BMIPS_GENERIC || COMPILE_TEST [=y])
+configs tested: 80
+configs skipped: 2
 
-and
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-ld: drivers/pinctrl/bcm/pinctrl-bcm6328.o: in function `pinconf_generic_dt_node_to_map_pin':
-pinctrl-bcm6328.c:(.text+0xe7): undefined reference to `pinconf_generic_dt_node_to_map'
-ld: drivers/pinctrl/bcm/pinctrl-bcm6358.o: in function `pinconf_generic_dt_node_to_map_pin':
-pinctrl-bcm6358.c:(.text+0x207): undefined reference to `pinconf_generic_dt_node_to_map'
-ld: drivers/pinctrl/bcm/pinctrl-bcm6362.o: in function `pinconf_generic_dt_node_to_map_pin':
-pinctrl-bcm6362.c:(.text+0xe7): undefined reference to `pinconf_generic_dt_node_to_map'
-ld: drivers/pinctrl/bcm/pinctrl-bcm63268.o: in function `pinconf_generic_dt_node_to_map_pin':
-pinctrl-bcm63268.c:(.text+0xe7): undefined reference to `pinconf_generic_dt_node_to_map'
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                             allyesconfig
+riscv                            allyesconfig
+m68k                        m5307c3_defconfig
+mips                            gpr_defconfig
+mips                        nlm_xlp_defconfig
+mips                        workpad_defconfig
+sh                           se7722_defconfig
+arm                         lpc32xx_defconfig
+xtensa                       common_defconfig
+sh                        sh7757lcr_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a004-20210330
+i386                 randconfig-a006-20210330
+i386                 randconfig-a003-20210330
+i386                 randconfig-a002-20210330
+i386                 randconfig-a001-20210330
+i386                 randconfig-a005-20210330
+i386                 randconfig-a015-20210330
+i386                 randconfig-a011-20210330
+i386                 randconfig-a014-20210330
+i386                 randconfig-a013-20210330
+i386                 randconfig-a016-20210330
+i386                 randconfig-a012-20210330
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
+clang tested configs:
+x86_64               randconfig-a012-20210330
+x86_64               randconfig-a015-20210330
+x86_64               randconfig-a014-20210330
+x86_64               randconfig-a016-20210330
+x86_64               randconfig-a013-20210330
+x86_64               randconfig-a011-20210330
 
--- 
-~Randy
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
