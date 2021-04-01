@@ -2,59 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E855E351D08
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 20:48:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EC17351D0A
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 20:48:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237150AbhDASXa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Apr 2021 14:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45700 "EHLO mail.kernel.org"
+        id S235271AbhDASXb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Apr 2021 14:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239627AbhDASQn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 1 Apr 2021 14:16:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0169F6113E;
-        Thu,  1 Apr 2021 12:17:55 +0000 (UTC)
+        id S239674AbhDASQp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 1 Apr 2021 14:16:45 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C419E6121D;
+        Thu,  1 Apr 2021 12:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1617279476;
-        bh=wRad7N84rWD9dSoio69a4lZ1e70YET8Y/U4ELbCnnho=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Q1xGCX8CjWBXtQC1pgo9/9vi4nDHYsR9ze0Q3GiyebU0GCkZVF2x7Dm68maSFFiUb
-         aYhFb4Mtsxe3dwyRk1InCmoNe+43BkSOmz3+yXmoJlqQon680CoD7Fu0OV/kMatoKB
-         POCl1bXAfQ85z4s39lkLH+3JCvV54zR+CeAxccTEvavGiJh0qGmRlyOcVNt9cvXxRq
-         kYRsUf12VYN3g12XZxM/SAQ9Jf1Po6QForEFkcVk/jW0b2lIFgc1wXKAcg30pF7BC8
-         U8xRKFjOp2o3cBdsuc5vEOD8ftGdy/B8MUbxDoRdCuirrnPb1300SCFtXBNU1EX6Km
-         N9eYgXDgwnnkA==
+        bh=9PoexKn9B5sUWryT4Sa8hCkGzVDwIievA60/TyPSyHs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iFRlkOcszOpL6rWYIXnLOz+v6RhlW0xR5evg1Ll2AA62ktfi/CR1Z40nb9/3TKtyM
+         Ij7WycN2aDV9Vte8hYEs2IKLipd7tYAbRADCjP8Z6vVtwZ0AJ07X9qR7Zaso83jQwH
+         /lGiwH1uRCD8wPDNkTGZ+Mrx+ndm+ArqMweiUnE5+9AyevgTCc05fvQjhEL5XTLJ0j
+         IobUl/1sEL+cdG45cX0iGS7jIff4q243+Cs0tKiMGa3dP3qvS3L9XyHJIRmxDTOj5c
+         mKGDsjiQlwnMMIbmmmtIrloOb85ZpfgMyVHQVMbBakxVk40r4CETe1quWzCI7L3ozn
+         hyLHuE4zBYZXg==
 Received: by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1lRwGn-001c2K-FQ; Thu, 01 Apr 2021 14:17:53 +0200
+        id 1lRwGo-001c3n-OB; Thu, 01 Apr 2021 14:17:54 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?Przemys=C5=82aw=20Gaj?= <pgaj@cadence.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vitor Soares <vitor.soares@synopsys.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-i3c@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-pm@vger.kernel.org, patches@opensource.cirrus.com
-Subject: [PATCH 00/32] Fix broken documentation file references
-Date:   Thu,  1 Apr 2021 14:17:20 +0200
-Message-Id: <cover.1617279355.git.mchehab+huawei@kernel.org>
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Subject: [PATCH 32/32] pinctrl: update pin-control.rst references
+Date:   Thu,  1 Apr 2021 14:17:52 +0200
+Message-Id: <f056e1e16adff1df42416f0033fdb730169edf44.1617279356.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <cover.1617279355.git.mchehab+huawei@kernel.org>
+References: <cover.1617279355.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
@@ -62,68 +50,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Each patch on this series can be applied independently. They fix broken
-file references.
+Changeset 5513b411ea5b ("Documentation: rename pinctl to pin-control")
+renamed: Documentation/driver-api/pinctl.rst
+to: Documentation/driver-api/pin-control.rst.
 
-Most of them are due to DT binding renames, but there are also other
-unrelated changes.
+Update the cross-references accordingly.
 
-This series is based on next-20210401.
+Fixes: 5513b411ea5b ("Documentation: rename pinctl to pin-control")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ include/linux/device.h                  | 2 +-
+ include/linux/mfd/madera/pdata.h        | 2 +-
+ include/linux/pinctrl/pinconf-generic.h | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Mauro Carvalho Chehab (32):
-  MAINTAINERS: update adi,ad5758.yaml reference
-  MAINTAINERS: update ste,mcde.yaml reference
-  MAINTAINERS: update brcm,bcm-v3d.yaml reference
-  MAINTAINERS: update fsl,dpaa2-console.yaml reference
-  MAINTAINERS: update st,hts221.yaml reference
-  MAINTAINERS: update dpot-dac.yaml reference
-  MAINTAINERS: update envelope-detector.yaml reference
-  MAINTAINERS: update current-sense-amplifier.yaml reference
-  MAINTAINERS: update current-sense-shunt.yaml reference
-  MAINTAINERS: update voltage-divider.yaml reference
-  MAINTAINERS: update invensense,mpu3050.yaml reference
-  MAINTAINERS: update lego,ev3-battery.yaml reference
-  MAINTAINERS: update marvell,armada-3700-utmi-phy.yaml reference
-  MAINTAINERS: update mtk-sd.yaml reference
-  MAINTAINERS: update atmel,sama5d2-adc.yaml reference
-  MAINTAINERS: update pni,rm3100.yaml reference
-  MAINTAINERS: update renesas,rcar-gyroadc.yaml reference
-  MAINTAINERS: update st,lsm6dsx.yaml reference
-  MAINTAINERS: update st,vl53l0x.yaml reference
-  MAINTAINERS: update snps,dw-axi-dmac.yaml reference
-  MAINTAINERS: update ti,dac7612.yaml reference
-  MAINTAINERS: update nxp,imx8-jpeg.yaml reference
-  MAINTAINERS: update ovti,ov2680.yaml reference
-  MAINTAINERS: update imi,rdacm2x-gmsl.yaml reference
-  dt-bindings:iio:dac: update microchip,mcp4725.yaml reference
-  dt-bindings: iommu: mediatek: update mediatek,iommu.yaml references
-  dt-bindings: i3c: update i3c.yaml references
-  dt-bindings: power: update battery.yaml reference
-  docs: dt: update writing-schema.rst references
-  Documentation: net: dsa: update configuration.rst reference
-  Documentation: update sysfs-platform_profile.rst reference
-  pinctrl: update pin-control.rst references
-
- .../display/mediatek/mediatek,disp.txt        |  2 +-
- .../bindings/i3c/cdns,i3c-master.txt          |  6 +--
- .../bindings/i3c/snps,dw-i3c-master.txt       |  6 +--
- .../bindings/media/mediatek-jpeg-decoder.txt  |  2 +-
- .../bindings/media/mediatek-jpeg-encoder.txt  |  2 +-
- .../bindings/media/mediatek-mdp.txt           |  2 +-
- .../bindings/media/mediatek-vcodec.txt        |  2 +-
- .../bindings/submitting-patches.rst           |  2 +-
- Documentation/filesystems/cifs/cifsd.rst      |  2 +-
- Documentation/power/power_supply_class.rst    |  2 +-
- MAINTAINERS                                   | 48 +++++++++----------
- include/linux/device.h                        |  2 +-
- include/linux/iio/dac/mcp4725.h               |  2 +-
- include/linux/mfd/madera/pdata.h              |  2 +-
- include/linux/pinctrl/pinconf-generic.h       |  2 +-
- include/linux/platform_profile.h              |  2 +-
- scripts/checkpatch.pl                         |  2 +-
- 17 files changed, 44 insertions(+), 44 deletions(-)
-
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 38a2071cf776..d1183cfdc8fb 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -399,7 +399,7 @@ struct dev_links_info {
+  * 		along with subsystem-level and driver-level callbacks.
+  * @em_pd:	device's energy model performance domain
+  * @pins:	For device pin management.
+- *		See Documentation/driver-api/pinctl.rst for details.
++ *		See Documentation/driver-api/pin-control.rst for details.
+  * @msi_list:	Hosts MSI descriptors
+  * @msi_domain: The generic MSI domain this device is using.
+  * @numa_node:	NUMA node this device is close to.
+diff --git a/include/linux/mfd/madera/pdata.h b/include/linux/mfd/madera/pdata.h
+index 601cbbc10370..32e3470708ed 100644
+--- a/include/linux/mfd/madera/pdata.h
++++ b/include/linux/mfd/madera/pdata.h
+@@ -31,7 +31,7 @@ struct pinctrl_map;
+  * @irq_flags:	    Mode for primary IRQ (defaults to active low)
+  * @gpio_base:	    Base GPIO number
+  * @gpio_configs:   Array of GPIO configurations (See
+- *		    Documentation/driver-api/pinctl.rst)
++ *		    Documentation/driver-api/pin-control.rst)
+  * @n_gpio_configs: Number of entries in gpio_configs
+  * @gpsw:	    General purpose switch mode setting. Depends on the external
+  *		    hardware connected to the switch. (See the SW1_MODE field
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index 6aeb711f7cd1..fdcd773adba3 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -88,7 +88,7 @@ struct pinctrl_map;
+  * 	it.
+  * @PIN_CONFIG_OUTPUT: this will configure the pin as an output and drive a
+  * 	value on the line. Use argument 1 to indicate high level, argument 0 to
+- *	indicate low level. (Please see Documentation/driver-api/pinctl.rst,
++ *	indicate low level. (Please see Documentation/driver-api/pin-control.rst,
+  *	section "GPIO mode pitfalls" for a discussion around this parameter.)
+  * @PIN_CONFIG_POWER_SOURCE: if the pin can select between different power
+  *	supplies, the argument to this parameter (on a custom format) tells
 -- 
 2.30.2
-
 
