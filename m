@@ -2,84 +2,237 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1219B351889
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 19:49:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A5E735187E
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 19:48:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234694AbhDARqA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Apr 2021 13:46:00 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:20746 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S234950AbhDARlj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Apr 2021 13:41:39 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 131CQciw030126;
-        Thu, 1 Apr 2021 07:40:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=ykBmYInzEvGFT1JMPiXc1lkaeT/jxWDhFNP9Q/A6/08=;
- b=JBN2pNqg6a9pM8wgveEEAANKekva129o80Za/JlxEa8yD9XTaahdQCrZWxWqWjBwfcYA
- 0XYzN9+i9q1Ss9rGlQnUB195BidXC4ru+YqBxESdQ4N7OZLyoJecSdcAkjJpuyEvnTvt
- FNJaZW69K+/zJ8SgI/MnMCZ50GOWsh0fhKFwGI5udmLIsQlczCRU/3VhYx97IEAzXf1k
- LYUXLt17d7ZQyRHP+iKYdWEtgulGMPeNxam5CdJ2GKWfv803Y1Sz7l19l4npFT2ajTIH
- 1saSDKNKacvdUPxwIl2wJKSfGee1JrZJWiO+bDuNW66PDn2kQr8QOI45ayj7ASVEpdWS JA== 
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 37n2948wfu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 01 Apr 2021 07:40:16 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Thu, 1 Apr 2021
- 13:40:14 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.2176.2 via Frontend
- Transport; Thu, 1 Apr 2021 13:40:14 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 7C81E11D6;
-        Thu,  1 Apr 2021 12:40:13 +0000 (UTC)
-Date:   Thu, 1 Apr 2021 12:40:13 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-CC:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Drew Fustini <drew@beagleboard.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        <alsa-devel@alsa-project.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: Re: [PATCH 32/32] pinctrl: update pin-control.rst references
-Message-ID: <20210401124013.GT106851@ediswmail.ad.cirrus.com>
-References: <cover.1617279355.git.mchehab+huawei@kernel.org>
- <f056e1e16adff1df42416f0033fdb730169edf44.1617279356.git.mchehab+huawei@kernel.org>
+        id S235555AbhDARpy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Apr 2021 13:45:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234637AbhDARii (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Apr 2021 13:38:38 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84755C05BD10
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Apr 2021 05:51:48 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id o66so1645402ybg.10
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Apr 2021 05:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M1VB1ralBR7+e/H7JqA/6mMiYo3JOylCfFNbfyvT27M=;
+        b=C8Z1fGmD0ugXE9aGQpDEEcbJPwy2biu89w6Y8hjTLRV+uZ6Y+fa5ayeevztvzJk+dU
+         PX2Rwh+sIiRbjGzRPRKXUXZk7IfGSsgtMCvqlVkz2WF9P4XXjC9JtmvDJGd8cQp5iUEW
+         7h6YWHc3ZAchF/U59kTlgfc/r1dtfTFNnoFrMgOKzlAVOcb3zHPu9VtojLYbJwtLFk/6
+         +oKvoicUnGd7b8+54QGsxVhMEFiJZjn8JHAoY4jACV/jFQTp8R152wz4eg52V/LGZfJp
+         JojHcn5GNEp6DijbKwabno/N5j2/fkHlrKTeccFq0wC3lrmyC7nKB0xUN6+/ttzTnaXt
+         bEpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M1VB1ralBR7+e/H7JqA/6mMiYo3JOylCfFNbfyvT27M=;
+        b=mwCIOHO1N48cKBYuDu9ZAjk8KOQMsAFCn9n04pilrd1ni+ZWPnhR314idXj6jVwSPt
+         WBvbYw/CXZ23Rqzyequa/+TEIdPbZAgbF9eYAgztC55jgRU/bwIS1DmpFlEfPZWWUl0k
+         vXI6NHt4OwAgoCOGPT71TrjtDudbqt8+EIUWjVhLUhwhmurWZ+PivGK2EqP2SL/L5CK6
+         SWQGUQlU9pYeUA4QgSr92/l7i7tlK4lSzLFhZVZaZiVj7ReYTBef01oAjW8SHXPXnP+2
+         LXBTuStDTcQF0vTUKyqfyURBJDaxdJxgBJb6vRlzNzNXzoAIZe6iBATLWorxqT3Bvvbr
+         2RsA==
+X-Gm-Message-State: AOAM53075+C9oufZQaSy48thw8r5Zu6NdDXUaG8VSjtIHSHrAkP/X4pC
+        Rf2A9pjNSWGX+1FgEXnhwQq+AJEL60I5NoAezHik6A==
+X-Google-Smtp-Source: ABdhPJzvynb+mFT6Mi7hEx6IXLxnNBonNu1ObAo/1/4cv6eeRaXfFt+HU09XZQgNU5/AQabX6bp6nFyK8dybNvj64T8=
+X-Received: by 2002:a25:d2d3:: with SMTP id j202mr11341988ybg.157.1617281507590;
+ Thu, 01 Apr 2021 05:51:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f056e1e16adff1df42416f0033fdb730169edf44.1617279356.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-GUID: Io7iL6F3WDP7ZvGws1tN_zCpZy0zXWMf
-X-Proofpoint-ORIG-GUID: Io7iL6F3WDP7ZvGws1tN_zCpZy0zXWMf
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=979 phishscore=0
- bulkscore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
- malwarescore=0 clxscore=1011 adultscore=0 impostorscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103310000
- definitions=main-2104010088
+References: <cover.1615038553.git.syednwaris@gmail.com> <4c259d34b5943bf384fd3cb0d98eccf798a34f0f.1615038553.git.syednwaris@gmail.com>
+ <36db7be3-73b6-c822-02e8-13e3864b0463@xilinx.com> <CAMpxmJUv0iU0Ntmks1f6ThDAG6x_eJLYYCaDSjy+1Syedzc5dQ@mail.gmail.com>
+ <DM6PR02MB53863852A28F782B0942ECD8AF7C9@DM6PR02MB5386.namprd02.prod.outlook.com>
+ <CACG_h5q6P5NiNByttQ-NZvq8x3GCTKfSU=Yyywk7PcO6_=i2Mw@mail.gmail.com>
+In-Reply-To: <CACG_h5q6P5NiNByttQ-NZvq8x3GCTKfSU=Yyywk7PcO6_=i2Mw@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 1 Apr 2021 14:51:36 +0200
+Message-ID: <CAMpxmJUO48Aor0zSofOPJgtKJPL-DKe01a=FOd-Aqz-OHYeZOg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] gpio: xilinx: Utilize generic bitmap_get_value and _set_value
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     Michal Simek <michals@xilinx.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robert Richter <rrichter@marvell.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        Srinivas Goud <sgoud@xilinx.com>,
+        Srinivas Neeli <sneeli@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 02:17:52PM +0200, Mauro Carvalho Chehab wrote:
-> Changeset 5513b411ea5b ("Documentation: rename pinctl to pin-control")
-> renamed: Documentation/driver-api/pinctl.rst
-> to: Documentation/driver-api/pin-control.rst.
-> 
-> Update the cross-references accordingly.
-> 
-> Fixes: 5513b411ea5b ("Documentation: rename pinctl to pin-control")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
+On Thu, Apr 1, 2021 at 1:16 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+>
+> On Wed, Mar 31, 2021 at 8:56 PM Srinivas Neeli <sneeli@xilinx.com> wrote:
+> >
+> > Hi,
+> >
+> > > -----Original Message-----
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > Sent: Friday, March 26, 2021 10:58 PM
+> > > To: Michal Simek <michals@xilinx.com>
+> > > Cc: Syed Nayyar Waris <syednwaris@gmail.com>; Srinivas Neeli
+> > > <sneeli@xilinx.com>; Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com>; William Breathitt Gray
+> > > <vilhelm.gray@gmail.com>; Arnd Bergmann <arnd@arndb.de>; Robert
+> > > Richter <rrichter@marvell.com>; Linus Walleij <linus.walleij@linaro.org>;
+> > > Masahiro Yamada <yamada.masahiro@socionext.com>; Andrew Morton
+> > > <akpm@linux-foundation.org>; Zhang Rui <rui.zhang@intel.com>; Daniel
+> > > Lezcano <daniel.lezcano@linaro.org>; Amit Kucheria
+> > > <amit.kucheria@verdurent.com>; Linux-Arch <linux-arch@vger.kernel.org>;
+> > > linux-gpio <linux-gpio@vger.kernel.org>; LKML <linux-
+> > > kernel@vger.kernel.org>; arm-soc <linux-arm-kernel@lists.infradead.org>;
+> > > linux-pm <linux-pm@vger.kernel.org>; Srinivas Goud <sgoud@xilinx.com>
+> > > Subject: Re: [PATCH v3 3/3] gpio: xilinx: Utilize generic bitmap_get_value and
+> > > _set_value
+> > >
+> > > On Mon, Mar 8, 2021 at 8:13 AM Michal Simek <michal.simek@xilinx.com>
+> > > wrote:
+> > > >
+> > > >
+> > > >
+> > > > On 3/6/21 3:06 PM, Syed Nayyar Waris wrote:
+> > > > > This patch reimplements the xgpio_set_multiple() function in
+> > > > > drivers/gpio/gpio-xilinx.c to use the new generic functions:
+> > > > > bitmap_get_value() and bitmap_set_value(). The code is now simpler
+> > > > > to read and understand. Moreover, instead of looping for each bit in
+> > > > > xgpio_set_multiple() function, now we can check each channel at a
+> > > > > time and save cycles.
+> > > > >
+> > > > > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > > Cc: Michal Simek <michal.simek@xilinx.com>
+> > > > > Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> > > > > Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > > > > ---
+> > > > >  drivers/gpio/gpio-xilinx.c | 63
+> > > > > +++++++++++++++++++-------------------
+> > > > >  1 file changed, 32 insertions(+), 31 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> > > > > index be539381fd82..8445e69cf37b 100644
+> > > > > --- a/drivers/gpio/gpio-xilinx.c
+> > > > > +++ b/drivers/gpio/gpio-xilinx.c
+> > > > > @@ -15,6 +15,7 @@
+> > > > >  #include <linux/of_device.h>
+> > > > >  #include <linux/of_platform.h>
+> > > > >  #include <linux/slab.h>
+> > > > > +#include "gpiolib.h"
+> > > > >
+> > > > >  /* Register Offset Definitions */
+> > > > >  #define XGPIO_DATA_OFFSET   (0x0)    /* Data register  */
+> > > > > @@ -141,37 +142,37 @@ static void xgpio_set_multiple(struct
+> > > > > gpio_chip *gc, unsigned long *mask,  {
+> > > > >       unsigned long flags;
+> > > > >       struct xgpio_instance *chip = gpiochip_get_data(gc);
+> > > > > -     int index = xgpio_index(chip, 0);
+> > > > > -     int offset, i;
+> > > > > -
+> > > > > -     spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> > > > > -
+> > > > > -     /* Write to GPIO signals */
+> > > > > -     for (i = 0; i < gc->ngpio; i++) {
+> > > > > -             if (*mask == 0)
+> > > > > -                     break;
+> > > > > -             /* Once finished with an index write it out to the register */
+> > > > > -             if (index !=  xgpio_index(chip, i)) {
+> > > > > -                     xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> > > > > -                                    index * XGPIO_CHANNEL_OFFSET,
+> > > > > -                                    chip->gpio_state[index]);
+> > > > > -                     spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> > > > > -                     index =  xgpio_index(chip, i);
+> > > > > -                     spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> > > > > -             }
+> > > > > -             if (__test_and_clear_bit(i, mask)) {
+> > > > > -                     offset =  xgpio_offset(chip, i);
+> > > > > -                     if (test_bit(i, bits))
+> > > > > -                             chip->gpio_state[index] |= BIT(offset);
+> > > > > -                     else
+> > > > > -                             chip->gpio_state[index] &= ~BIT(offset);
+> > > > > -             }
+> > > > > -     }
+> > > > > -
+> > > > > -     xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> > > > > -                    index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
+> > > > > -
+> > > > > -     spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> > > > > +     u32 *const state = chip->gpio_state;
+> > > > > +     unsigned int *const width = chip->gpio_width;
+> > > > > +
+> > > > > +     DECLARE_BITMAP(old, 64);
+> > > > > +     DECLARE_BITMAP(new, 64);
+> > > > > +     DECLARE_BITMAP(changed, 64);
+> > > > > +
+> > > > > +     spin_lock_irqsave(&chip->gpio_lock[0], flags);
+> > > > > +     spin_lock(&chip->gpio_lock[1]);
+> > > > > +
+> > > > > +     bitmap_set_value(old, 64, state[0], width[0], 0);
+> > > > > +     bitmap_set_value(old, 64, state[1], width[1], width[0]);
+> > > > > +     bitmap_replace(new, old, bits, mask, gc->ngpio);
+> > > > > +
+> > > > > +     bitmap_set_value(old, 64, state[0], 32, 0);
+> > > > > +     bitmap_set_value(old, 64, state[1], 32, 32);
+> > > > > +     state[0] = bitmap_get_value(new, 0, width[0]);
+> > > > > +     state[1] = bitmap_get_value(new, width[0], width[1]);
+> > > > > +     bitmap_set_value(new, 64, state[0], 32, 0);
+> > > > > +     bitmap_set_value(new, 64, state[1], 32, 32);
+> > > > > +     bitmap_xor(changed, old, new, 64);
+> > > > > +
+> > > > > +     if (((u32 *)changed)[0])
+> > > > > +             xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,
+> > > > > +                             state[0]);
+> > > > > +     if (((u32 *)changed)[1])
+> > > > > +             xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> > > > > +                             XGPIO_CHANNEL_OFFSET, state[1]);
+> > > > > +
+> > > > > +     spin_unlock(&chip->gpio_lock[1]);
+> > > > > +     spin_unlock_irqrestore(&chip->gpio_lock[0], flags);
+> > > > >  }
+> > > > >
+> > > > >  /**
+> > > > >
+> > > >
+> > > > Srinivas N: Can you please test this code?
+> > > >
+> > > > Thanks,
+> > > > Michal
+> > >
+> > > Hey, any chance of getting that Tested-by?
+> > I tested patches with few modifications in code (spin_lock handling and merge conflict).
+> > functionality wise it's working fine.
+> >
+> > >
+> > > Bart
+>
+> Hi Bartosz,
+>
+> May I please know the URL of the tree that you are using. I had been
+> using the tree below for submitting this patchset on GPIO to you.
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+>
+> I think I am using the wrong tree. On which tree should I base my
+> patches on for my next  (v4) submission? Should I use the tree below?
+> :
+> https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+>
+> Regards
+> Syed Nayyar Waris
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Yes this is the one. Please address new issues raised by reviewers.
 
-Thanks,
-Charles
+Bart
