@@ -2,90 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB328351C1B
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 20:45:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0AAD351DFD
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 20:52:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236064AbhDASNT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Apr 2021 14:13:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236521AbhDASH0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Apr 2021 14:07:26 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E76C02FE83
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Apr 2021 08:57:08 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id a23so1467754vsd.1
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Apr 2021 08:57:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=V/ewdtxvjEIynrdD+5prDy+5Kxvi/wNjyCWxkkzCg5g=;
-        b=kjp38OJA1bvj6QU8x5QSnkuxdDJxkqU8Nb9E2QtS1cka6fjmSMcwocwo0n+irZ+NL1
-         gnu6St6Lf/yMmZ80aP9iXpxocrBImXCvpIuD+PPs5KOs4S3+I6pTWkZceYpZlnZ77jeQ
-         5Mnljc3UxRNzzYGA6xIGRTRC6IQc9okVz48D95+3KHgUFRNPQQDptLO2HyQ4iIybN3jX
-         eIBZWWs74OROGtvztO5c50FHupGBXYOxw1ShAJZXMOlsClCFZ1qRURw21/gkppGjvYfC
-         TmUU+S2N5FRqxpl4l8siyvHn+dBKptkODuA2FSpj7LXhK13In2eXbCTlrdQyx07G0Zcj
-         sEUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=V/ewdtxvjEIynrdD+5prDy+5Kxvi/wNjyCWxkkzCg5g=;
-        b=nt58fA9mVO5sGTWoRSTDEwuRzBo3aqpgQE5d0qyIGJVUZA8vFcAjsBl794y5pTO9IJ
-         1rx4Qy0tiOYfNwFT1wLyxu4Cn1xYCHAtrVDflLso9rIu45oPYwVZIw4eVogA+tfheYjv
-         ovj/fuAM0T2+OzJJJAsysE3BG0fJ8SGAbFgqmU6wBZm0tS/39/09wKFtyYe9pYzT5eA7
-         QTvUJJqgsja8M9C06kBHLbhPBqmEp4v7H2ZQ451iAw4X0mkB3u0DrLHruZaTceepks4A
-         mhusYdappE2LPOvDT8r/IgvTk7LVIzOWI+GNIUWdwb6oZFQ75TT0VbszXxuUoXdCjn0O
-         XuQw==
-X-Gm-Message-State: AOAM530Xja11p/5Mnil1HR6h5aXSCkPJFj4HxKuXI4h3H5+kwJGs9bCh
-        oU1ebsF2+DcxXaOlXU+ESkN6xXZhvoTowWoEls/9subt8hFa1IBA
-X-Google-Smtp-Source: ABdhPJxTVFiFcBsgMrl/zKcKyJdP809XHrnAAVFHxuXFOB1RGZUC2VewYlGvRQqT6FQApoa1qBpufsxM/7VPpWloTnE=
-X-Received: by 2002:ad4:410d:: with SMTP id i13mr8631483qvp.44.1617292205161;
- Thu, 01 Apr 2021 08:50:05 -0700 (PDT)
+        id S237592AbhDASdl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Apr 2021 14:33:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25297 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240306AbhDASaC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Apr 2021 14:30:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617301802;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BYqcPFvd7erxJJQksdxDiamrI2D3JHsuC1F2bJEaarg=;
+        b=N7a7d+h9Wh+JtGP5gAlbib4fomLJLF/DDXYj2taiBobbrzhxIo9qjx6SSJ4Rm0lvEAI+/X
+        RkW1atvlBk1oqkywnb07ofFy/ZL9BujwB3FHjDXc9CTbp97SYLsjsQ4NprdF7hd+qY1Vq0
+        QyAWKAQGC9YvsEzs2dydaLGTimt2lSs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-577-yFeNfdZDMlazm9Y6sTUXBg-1; Thu, 01 Apr 2021 12:27:44 -0400
+X-MC-Unique: yFeNfdZDMlazm9Y6sTUXBg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B1EBA0CA0;
+        Thu,  1 Apr 2021 16:27:42 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-79.ams2.redhat.com [10.36.112.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BD5517BB6;
+        Thu,  1 Apr 2021 16:27:40 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH] gpiolib: acpi: Add quirk to ignore EC wakeups on Dell Venue 10 Pro 5055
+Date:   Thu,  1 Apr 2021 18:27:40 +0200
+Message-Id: <20210401162740.4602-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:ac8:4748:0:0:0:0:0 with HTTP; Thu, 1 Apr 2021 08:50:04 -0700 (PDT)
-Reply-To: mrahmedibrahim13333@gmail.com
-From:   Mr Ahmed Ibrahim <sarahlaboso701@gmail.com>
-Date:   Thu, 1 Apr 2021 08:50:04 -0700
-Message-ID: <CABYFKgUo9GzU50+5OcxpvWHTsp-LgRyzx6iu-Cy6=SGXo=nNRA@mail.gmail.com>
-Subject: My Good Friend
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=20
-My Good Friend
+Like some other Bay and Cherry Trail SoC based devices the Dell Venue
+10 Pro 5055 has an embedded-controller which uses ACPI GPIO events to
+report events instead of using the standard ACPI EC interface for this.
 
-I'm deeply sorry to berg into your privacy as we haven't met before,
-as a matter of fact, I will be very brief since I'm in urgent need of
-a trust person to help move out a valuable funds deposit by later
-Libyan leader Muammar Gaddafi into a foreign bank account which will
-later be used for any profitable joint investment between me and you,
+The EC interrupt is only used to report battery-level changes and
+it keeps doing this while the system is suspended, causing the system
+to not stay suspended.
 
-as a civil servant i cannot do this alone, The Libya=E2=80=99s sovereign
-wealth fund said five EU countries paid out money from frozen accounts
-in Europe that once belonged to Muammar Qaddafi despite international
-sanctions, according to POLITICO.
+Add an ignore-wake quirk for the GPIO pin used by the EC to fix the
+spurious wakeups from suspend.
 
-But no one are aware of this Total Amount is $19.5 Million us Dollars
-that currently available under QNB Fineness bank Turkey and placed in
-an ESCROW CALL ACCOUNT without a beneficiary, it will be of advantage
-for me to solicit for a foreigner on my behalf since the funds origin
-is from a genuine source. Total Amount is $19.5 Million us Dollars.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-https://english.alarabiya.net/en/features/2018/11/18/Where-are-Libya-s-bill=
-ions-under-Qaddafi-abroad-and-who-benefits-from-them-
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 1aacd2a5a1fd..174839f3772f 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -1438,6 +1438,20 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+ 			.no_edge_events_on_boot = true,
+ 		},
+ 	},
++	{
++		/*
++		 * The Dell Venue 10 Pro 5055, with Bay Trail SoC + TI PMIC uses an
++		 * external embedded-controller connected via I2C + an ACPI GPIO
++		 * event handler on INT33FFC:02 pin 12, causing spurious wakeups.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Venue 10 Pro 5055"),
++		},
++		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
++			.ignore_wake = "INT33FC:02@12",
++		},
++	},
+ 	{
+ 		/*
+ 		 * HP X2 10 models with Cherry Trail SoC + TI PMIC use an
+-- 
+2.30.2
 
-https://www.politico.eu/article/muammar-gaddafi-frozen-funds-belgium-unknow=
-n-beneficiaries/
-
-For more details kindly indicate your willingness by responding via my
-private email id below=3D=3D=3D=3D
-mrahmedibrahim13333@gmail.com
-
-Best regards,
-From Mr Ahmed Ibrahim
