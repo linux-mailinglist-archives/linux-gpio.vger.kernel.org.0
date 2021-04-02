@@ -2,181 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03055352A95
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 14:20:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CF06352D8F
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 18:11:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234628AbhDBMUI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Apr 2021 08:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46308 "EHLO
+        id S234516AbhDBQLn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Apr 2021 12:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbhDBMUH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Apr 2021 08:20:07 -0400
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A22C061788
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Apr 2021 05:20:04 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:7c3c:adbc:7a1a:b85f])
-        by laurent.telenet-ops.be with bizsmtp
-        id noL32400E4A7w6i01oL3c1; Fri, 02 Apr 2021 14:20:03 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lSImQ-00CS2B-O6; Fri, 02 Apr 2021 14:20:02 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lSImQ-004M46-BZ; Fri, 02 Apr 2021 14:20:02 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S229605AbhDBQLm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Apr 2021 12:11:42 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45EC3C0613E6;
+        Fri,  2 Apr 2021 09:11:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Np2JCwfDCdo/ra8gFfhhpsJDI0A0gGoHyahJ9Xf1jxU=; b=BkBTNKrMj0VOK8BWlcfjicpB1B
+        zTWNurmyc+F8WctnN09Qh06JS7/QzwxgALtYkOCZPMy917M0g8tW/x0ZMJ8dM1iNecM4O/ksuXxQS
+        v6VWMZnlGbF5GDLEa0Vz/OyGIjMP38Pfn0r1/y5YlSaGjvADSEwuU+H3AAsCYuAn9ZMcSGuCWY2iP
+        eA/3W47wEF4k9fGifoxZ5YVVh4yha4oV9IbP8zR145Tdv4w9YVWA9dBMa9eRwgP5aw8VHqBHvEN/D
+        GKs9vogWKD3KJxXvwgyR8lACPsSRe4rw5tor+OsTZCYl1Tv5nCO/6DKn69dJgJvJuvlRH5LRp4a5M
+        fYYnjouQ==;
+Received: from [2601:1c0:6280:3f0::e0e1]
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1lSMOF-007qgY-ES; Fri, 02 Apr 2021 16:11:22 +0000
+Subject: Re: [PATCH -next] gpio: GPIO_SCH: depends on PCI same as LPC_SCH
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: gpio: fairchild,74hc595: Convert to json-schema
-Date:   Fri,  2 Apr 2021 14:19:58 +0200
-Message-Id: <df145e77bd124721f28cbc58fb3c58c138f13d86.1617365710.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        Denis Turischev <denis@compulab.co.il>
+References: <20210402002124.17207-1-rdunlap@infradead.org>
+ <CAHp75VfqFde+uBHfYe5tZDgwcy3z_yME6MmQea5rydVOfFVkhQ@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <72016dea-515d-e254-cda5-adc097635e19@infradead.org>
+Date:   Fri, 2 Apr 2021 09:11:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
+In-Reply-To: <CAHp75VfqFde+uBHfYe5tZDgwcy3z_yME6MmQea5rydVOfFVkhQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the Generic 8-bit shift register Device Tree binding
-documentation to json-schema.
+On 4/2/21 2:00 AM, Andy Shevchenko wrote:
+> On Friday, April 2, 2021, Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+>> Since LPC_SCH depends on PCI, GPIO_SCH must also depend on PCI
+>> to prevent kconfig warning and build errors:
+>>
+>> WARNING: unmet direct dependencies detected for LPC_SCH
+>>   Depends on [n]: HAS_IOMEM [=y] && PCI [=n]
+>>   Selected by [y]:
+>>   - GPIO_SCH [=y] && GPIOLIB [=y] && X86 [=y] && (X86 [=y] || COMPILE_TEST
+>> [=n]) && ACPI [=y]
+>>
+>> and
+>>
+>> ../drivers/mfd/lpc_sch.c:204:1: warning: data definition has no type or
+>> storage class
+>>  module_pci_driver(lpc_sch_driver);
+>>  ^~~~~~~~~~~~~~~~~
+>> ../drivers/mfd/lpc_sch.c:204:1: error: type defaults to ‘int’ in
+>> declaration of ‘module_pci_driver’ [-Werror=implicit-int]
+>> ../drivers/mfd/lpc_sch.c:204:1: warning: parameter names (without types)
+>> in function declaration
+>> ../drivers/mfd/lpc_sch.c:197:26: warning: ‘lpc_sch_driver’ defined but
+>> not used [-Wunused-variable]
+>>  static struct pci_driver lpc_sch_driver = {
+>>                           ^~~~~~~~~~~~~~
+>>
+>>
+> Thanks for catching this!
+> But I am wondering if this actually should be fixed by switching to depends
+> on LPC_SCH. What do you think?
+> 
 
-Rename from gpio-74x164 to fairchild,74hc595, as the former refers to
-the Linux driver, and not to a hardware name.
-Add the missing hog description.
+Sounds good to me. I'll send v2 like that.
+Thanks.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-The original file did not contain license information, so I used the
-most popular/recommended one for DT bindings.
-I listed the original author of the bindings as maintainer.
----
- .../bindings/gpio/fairchild,74hc595.yaml      | 77 +++++++++++++++++++
- .../devicetree/bindings/gpio/gpio-74x164.txt  | 27 -------
- 2 files changed, 77 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-74x164.txt
+> 
+> 
+>> Fixes: 6c46215d6b62 ("gpio: sch: Hook into ACPI GPE handler to catch GPIO
+>> edge events")
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: linux-gpio@vger.kernel.org
+>> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>> Cc: Denis Turischev <denis@compulab.co.il>
+>> ---
+>>  drivers/gpio/Kconfig |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> --- linux-next-20210401.orig/drivers/gpio/Kconfig
+>> +++ linux-next-20210401/drivers/gpio/Kconfig
+>> @@ -860,7 +860,7 @@ config GPIO_IT87
+>>
+>>  config GPIO_SCH
+>>         tristate "Intel SCH/TunnelCreek/Centerton/Quark X1000 GPIO"
+>> -       depends on (X86 || COMPILE_TEST) && ACPI
+>> +       depends on (X86 || COMPILE_TEST) && ACPI && PCI
+>>         select GPIOLIB_IRQCHIP
+>>         select MFD_CORE
+>>         select LPC_SCH
+>>
+> 
+> 
 
-diff --git a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
-new file mode 100644
-index 0000000000000000..5fe19fa5f67c551f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/fairchild,74hc595.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic 8-bit shift register
-+
-+maintainers:
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fairchild,74hc595
-+      - nxp,74lvc594
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    description:
-+      The second cell is only used to specify the GPIO polarity.
-+    const: 2
-+
-+  registers-number:
-+    description: Number of daisy-chained shift registers
-+
-+  enable-gpios:
-+    description: GPIO connected to the OE (Output Enable) pin.
-+    maxItems: 1
-+
-+  spi-max-frequency: true
-+
-+patternProperties:
-+  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
-+    type: object
-+
-+    properties:
-+      gpio-hog: true
-+      gpios: true
-+      output-high: true
-+      output-low: true
-+      line-name: true
-+
-+    required:
-+      - gpio-hog
-+      - gpios
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - registers-number
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spi {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            gpio5: gpio5@0 {
-+                    compatible = "fairchild,74hc595";
-+                    reg = <0>;
-+                    gpio-controller;
-+                    #gpio-cells = <2>;
-+                    registers-number = <4>;
-+                    spi-max-frequency = <100000>;
-+            };
-+    };
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-deleted file mode 100644
-index 2a97553d8d76d9f5..0000000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Generic 8-bits shift register GPIO driver
--
--Required properties:
--- compatible: Should contain one of the following:
--    "fairchild,74hc595"
--    "nxp,74lvc594"
--- reg : chip select number
--- gpio-controller : Marks the device node as a gpio controller.
--- #gpio-cells : Should be two.  The first cell is the pin number and
--  the second cell is used to specify the gpio polarity:
--      0 = active high
--      1 = active low
--- registers-number: Number of daisy-chained shift registers
--
--Optional properties:
--- enable-gpios: GPIO connected to the OE (Output Enable) pin.
--
--Example:
--
--gpio5: gpio5@0 {
--	compatible = "fairchild,74hc595";
--	reg = <0>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	registers-number = <4>;
--	spi-max-frequency = <100000>;
--};
+
 -- 
-2.25.1
+~Randy
 
