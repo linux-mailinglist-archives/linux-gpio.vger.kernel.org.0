@@ -2,74 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D79CD352EFF
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 20:14:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B01B352F01
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 20:15:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229722AbhDBSOZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Apr 2021 14:14:25 -0400
-Received: from mga09.intel.com ([134.134.136.24]:33925 "EHLO mga09.intel.com"
+        id S229553AbhDBSPJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Apr 2021 14:15:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:33970 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229553AbhDBSOZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 2 Apr 2021 14:14:25 -0400
-IronPort-SDR: TbJvnhgZzzeYEbEiWIEf3nPXu0R7tM142vYDjsI5dv+VHs9+kPEyhFifTP14HcgV0mey/u5jgA
- f79QgceihGcg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9942"; a="192618411"
+        id S231406AbhDBSPJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 2 Apr 2021 14:15:09 -0400
+IronPort-SDR: j560koXwRwp7Lw4GBijcSOBw7Nzytja8PaTw9+IO3QD2/l3yJ9E83lBhhi+8NJ6pRKaj2W5l9o
+ 5IOlB5K5Rkgw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9942"; a="192618478"
 X-IronPort-AV: E=Sophos;i="5.81,300,1610438400"; 
-   d="scan'208";a="192618411"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 11:14:23 -0700
-IronPort-SDR: yfwH1boSOqBYCjorz72RchoXUMXON4isp4KzLaL4bqd9USlaRmo0xQ426ixwrqATKZrBbAFcmv
- TczkoPZPXYqg==
+   d="scan'208";a="192618478"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 11:15:07 -0700
+IronPort-SDR: w+2GUbQGVAzLrPUAfXSqu6v0TCddOQGVNY8NtLwOBOUjWh5IjgpScQbFXzpW773TgQmc2HXJqR
+ 7ijlGVOtbJfA==
 X-IronPort-AV: E=Sophos;i="5.81,300,1610438400"; 
-   d="scan'208";a="456511596"
+   d="scan'208";a="446895013"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 11:14:22 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 11:15:06 -0700
 Received: from andy by smile with local (Exim 4.94)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lSOJH-000cJd-Aj; Fri, 02 Apr 2021 21:14:19 +0300
-Date:   Fri, 2 Apr 2021 21:14:19 +0300
+        id 1lSOJz-000cKD-8x; Fri, 02 Apr 2021 21:15:03 +0300
+Date:   Fri, 2 Apr 2021 21:15:03 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Add quirk to ignore EC wakeups on Dell
- Venue 10 Pro 5055
-Message-ID: <YGde+w35hC7bM7Hr@smile.fi.intel.com>
-References: <20210401162740.4602-1-hdegoede@redhat.com>
- <YGYKbXDu1QlYCXew@smile.fi.intel.com>
+        Denis Turischev <denis@compulab.co.il>
+Subject: Re: [PATCH -next v2] gpio: GPIO_SCH: depends on LPC_SCH
+Message-ID: <YGdfJwbWEEd02IsD@smile.fi.intel.com>
+References: <20210402161751.7683-1-rdunlap@infradead.org>
+ <CAHp75VeARca4PzLkd+1SFr72AP=KWx3sAONPfwVSmHzjL9U+LA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YGYKbXDu1QlYCXew@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VeARca4PzLkd+1SFr72AP=KWx3sAONPfwVSmHzjL9U+LA@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 09:01:17PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 01, 2021 at 06:27:40PM +0200, Hans de Goede wrote:
-> > Like some other Bay and Cherry Trail SoC based devices the Dell Venue
-> > 10 Pro 5055 has an embedded-controller which uses ACPI GPIO events to
-> > report events instead of using the standard ACPI EC interface for this.
-> > 
-> > The EC interrupt is only used to report battery-level changes and
-> > it keeps doing this while the system is suspended, causing the system
-> > to not stay suspended.
-> > 
-> > Add an ignore-wake quirk for the GPIO pin used by the EC to fix the
-> > spurious wakeups from suspend.
+On Fri, Apr 02, 2021 at 07:38:41PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 2, 2021 at 7:18 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> >
+> > Since LPC_SCH provides GPIO functionality, GPIO_SCH should depend on
+> > LPC_SCH to prevent kconfig warning and build errors:
+> >
+> > WARNING: unmet direct dependencies detected for LPC_SCH
+> >   Depends on [n]: HAS_IOMEM [=y] && PCI [=n]
+> >   Selected by [y]:
+> >   - GPIO_SCH [=y] && GPIOLIB [=y] && X86 [=y] && (X86 [=y] || COMPILE_TEST [=n]) && ACPI [=y]
+> >
+> > and
+> >
+> > ../drivers/mfd/lpc_sch.c:204:1: warning: data definition has no type or storage class
+> >  module_pci_driver(lpc_sch_driver);
+> >  ^~~~~~~~~~~~~~~~~
+> > ../drivers/mfd/lpc_sch.c:204:1: error: type defaults to ‘int’ in declaration of ‘module_pci_driver’ [-Werror=implicit-int]
+> > ../drivers/mfd/lpc_sch.c:204:1: warning: parameter names (without types) in function declaration
+> > ../drivers/mfd/lpc_sch.c:197:26: warning: ‘lpc_sch_driver’ defined but not used [-Wunused-variable]
+> >  static struct pci_driver lpc_sch_driver = {
+> >                           ^~~~~~~~~~~~~~
 > 
-> Fine by me,
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Thanks!
 > 
-> I have sent my PR to Bart few days ago and today he applied it.
-> So, since I'm not expecting much going on in this cycle, I assume
-> it's okay to go directly to Bart's tree.
+> Bart, please, take it in your tree directly, or if you wish I may
+> collect this one together with Hans' one and send a PR.
 
-Bart, nevermind, I'll take it thru my tree. It seems we have two and perhaps
-even three patches, so it will be easier to handle together.
+Bart, nevermind. Same answer as to Hans' patch: I'll take care as usual.
 
 -- 
 With Best Regards,
