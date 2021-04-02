@@ -2,120 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 875DD352F9F
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 21:20:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA4F5352FC8
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 21:33:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236457AbhDBTUG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Apr 2021 15:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35558 "EHLO mail.kernel.org"
+        id S235946AbhDBTdY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Apr 2021 15:33:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229553AbhDBTUF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 2 Apr 2021 15:20:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A737A6115A;
-        Fri,  2 Apr 2021 19:20:03 +0000 (UTC)
+        id S235256AbhDBTdY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 2 Apr 2021 15:33:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3F2A861106;
+        Fri,  2 Apr 2021 19:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617391204;
-        bh=PRpSTE+uCYtRFa0lZsZ+bpij6OkbE/yPXMysib3so3k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=friQo4yO67kYFvDFxkgZfH9Lx1H71ACkbqEVS4OPgHsAG7/MzDCvZ6YY1E6SWWAnh
-         5cRwKaYG2/GofZz4fnvfQGUdUF2NxNkY7I/nT+BsLv9scUlkmdDw7D6xPAE3g7udc/
-         WncWAPWD2z09HdbRJ2bNymXcYIy4zNWJ8grNtjIemIOx6k+qUU5sb1/nB4LC600prC
-         R8evLQxp+MIFz75/uTPzQJUyMTx5nGew5Bbg6+DMaE9Cz4LD4SOQ6581BDiOZOenNi
-         pf0/d1TMFNUOlv7qb129ustqmdJnob5OAgjoWCA5t/Yh4PebvAEnhEsHJJ54cgWxTH
-         9lmheeWdBrRVw==
-Date:   Fri, 2 Apr 2021 20:19:50 +0100
+        s=k20201202; t=1617392002;
+        bh=UKGAA0KBznLokaitUNDSSQOOPLiOQ/AEbThL2/Z8hG0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nFpYVWCKV2mtdWoynoI6+acnvex5sthViPUax7CahWdrIHhxcjFvYIAAXDB5KehOB
+         tFPeSoIkpJMyU/clwlFL3o41g4Kmd1Ube8MC/lzl7BZstGY7DDehbLXBRun3u0T0eC
+         Y271m3LDOmp00w1RtsvColrfF4r3Pg3b6OvhdliRMw4TrUegsnyDZHm3eMOTFGnc9D
+         +g1C97eYWVmSVIuyTmg2r497zC2p39vCwda4MUZrZLb9Dyk86PMH9V/n9AzEYcImnt
+         caM/Jn8D3sNCPx7IklNgxJ9EorOVYv1z3xWAheLtpCVnjoQSRkQwL0yVQf1o4H13w/
+         oz/xqM0VIQP4A==
 From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 00/19] Support ROHM BD71815 PMIC
-Message-ID: <20210402191950.GK5402@sirena.org.uk>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-power@fi.rohmeurope.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-rtc@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: (subset) [PATCH v5 00/19] Support ROHM BD71815 PMIC
+Date:   Fri,  2 Apr 2021 20:33:08 +0100
+Message-Id: <161739191157.32055.17669953847894989465.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
- <303b164aaa3d36cf8c9d03ee9b3863635be4073d.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EVcIhgQsEzAXu06J"
-Content-Disposition: inline
-In-Reply-To: <303b164aaa3d36cf8c9d03ee9b3863635be4073d.camel@fi.rohmeurope.com>
-X-Cookie: Dammit Jim, I'm an actor, not a doctor.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, 29 Mar 2021 15:52:38 +0300, Matti Vaittinen wrote:
+> Patch series introducing support for ROHM BD71815 PMIC
+> 
+> ROHM BD71815 is a power management IC used in some battery powered
+> systems. It contains regulators, GPO(s), charger + coulomb counter, RTC
+> and a clock gate.
+> 
+> All regulators can be controlled via I2C. LDO4 can additionally be set to
+> be enabled/disabled by a GPIO. LDO3 voltage could be selected from two
+> voltages written into separate VSEL reisters using GPIO but this mode is
+> not supported by driver. On top of that the PMIC has the typical HW
+> state machine which is present also on many other ROHM PMICs.
+> 
+> [...]
 
---EVcIhgQsEzAXu06J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to
 
-On Tue, Mar 30, 2021 at 11:06:53AM +0000, Vaittinen, Matti wrote:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-> Do you think Lee could merge other but the regulator parts to MFD if
-> Mark is busy? I'd like to be able to squeeze the amount of patches and
-> recipients for future iterations. It might be easier to work directly
-> on regulator tree if regulator part gets delayed to next cycle. (I do
-> also plan further working with the GPIO part during 5.13-rc cycle to
-> utilize the regmap_gpio. That could be done in the GPIO tree then). I
-> think the other portions are in a pretty stable shape now.
+Thanks!
 
-This wouldn't be a bad idea in general for these serieses, especially
-the bigger ones or the ones that get a lot of review comments on some
-patches.
+[10/19] regulator: helpers: Export helper voltage listing
+        commit: e3baacf54275647a018ee35bff3bc775a8a2a01a
+[13/19] regulator: Add regmap helper for ramp-delay setting
+        commit: fb8fee9efdcf084d9e31ba14cc4734d97e5dd972
 
-In any case, here's a pull request for the helpers that are added
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-The following changes since commit 0d02ec6b3136c73c09e7859f0d0e4e2c4c07b49b:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-  Linux 5.12-rc4 (2021-03-21 14:56:43 -0700)
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-are available in the Git repository at:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-list-ramp-helpers
-
-for you to fetch changes up to fb8fee9efdcf084d9e31ba14cc4734d97e5dd972:
-
-  regulator: Add regmap helper for ramp-delay setting (2021-04-02 18:33:59 +0100)
-
-----------------------------------------------------------------
-regulator: Add a new helper and export an existing one
-
-For new drivers.
-
-----------------------------------------------------------------
-Matti Vaittinen (2):
-      regulator: helpers: Export helper voltage listing
-      regulator: Add regmap helper for ramp-delay setting
-
- drivers/regulator/helpers.c      | 101 +++++++++++++++++++++++++++++++++++----
- include/linux/regulator/driver.h |   7 +++
- 2 files changed, 100 insertions(+), 8 deletions(-)
-
---EVcIhgQsEzAXu06J
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBnblUACgkQJNaLcl1U
-h9BQEwf/RuI3X5ibi67PgHKtZBl58wGqUZfH+2oBTHq1nRZle8r/3i2I+o+Ifvd8
-BHC7PcWUW7ieEwXgntZnt9jTe2rQCdYsBHK1+VUJ43BDOH0wocz+/9voeVpoLQgu
-THWJLSayS9+jjv0knBuG8evSH4ddiRrnBJXq9fHHRYwqQukAXaAZLFYfF5N1cTnd
-b2oZoGeom7DBtrBh75tV8ZmrtvafigjoaZFOh+euYstYfjoNK4ZBmDxYtwX7qTfl
-yYOikVjMXeLCWLKmuR8rdjZ8NNnuduPl7ct8vx7DbkdIDt3ajwj+EkCs29mLc3RB
-JxucX6EF4NI4inJqd3+NVzpze3hU5A==
-=RfZr
------END PGP SIGNATURE-----
-
---EVcIhgQsEzAXu06J--
+Thanks,
+Mark
