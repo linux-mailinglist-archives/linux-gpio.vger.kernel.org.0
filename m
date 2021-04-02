@@ -2,117 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CDA03521D6
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Apr 2021 23:45:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E61BA35246C
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 02:22:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235020AbhDAVph (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Apr 2021 17:45:37 -0400
-Received: from www.zeus03.de ([194.117.254.33]:54030 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234978AbhDAVpg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 1 Apr 2021 17:45:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=0re/4MhL/HVSNQlJ26P2awZytOoB
-        TZt9SWkXNDLXpXg=; b=UelA4teuQjS5OAMHUdyUHY0u1WQXlz7ul/8OSE9VS99a
-        1p0kZlVayGtboNEwx/aiKMa9yeocX2V5VRkRHqkB4RwKFXk971XeVPXjiu2iAMM/
-        q7eZZ38+3keT5NMMUH/nofj4WTd3a3wlA+eMiCnXwxBykKVLNaOFha8U21X0am8=
-Received: (qmail 1102382 invoked from network); 1 Apr 2021 23:45:33 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 Apr 2021 23:45:33 +0200
-X-UD-Smtp-Session: l3s3148p1@msp2JvC+HI0gAwDPXw1NAMt9GTaBIvNo
-Date:   Thu, 1 Apr 2021 23:45:28 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH RFC/RFT 1/1] misc: add simple logic analyzer using polling
-Message-ID: <20210401214528.GA892@kunai>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        id S235754AbhDBAVt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Apr 2021 20:21:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233677AbhDBAVs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Apr 2021 20:21:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D645C0613E6;
+        Thu,  1 Apr 2021 17:21:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=tK9RRSfqusQgz1icEOJWsLA3SmIH83lmC2fpYvSB7vo=; b=QAjP6bAQ9Hq+lEU0VSIQIUO1Cs
+        Epjo3LNjWvaRuAh6ijqjM65onjn5vEFdC0hMRj2UsUPKlbJkzkX0zueq1sLr6R1+XnZpfLQ6HAF4b
+        cdbGSklvqN9VjKExUNzjg+g61I7GTC/ViTNNqESoZ6QiLmVV0FNHeGj0+KP/drlyTn7VZnPsHvm+V
+        Ed4ETCBtqzSQLqNKThMTM5bDg7ykQHOC2vPK74OrAiAgpuBgEDkp5CVYnto2Sq12zEEGslROuJ0f4
+        U4+d+gjYUtO9keXXjSHp9r4R6EK53fk+45eNNV/I5y8fOAUVoOy0+6kRw/e7Ez8QFeDs2UQkyCF3M
+        NxiUOMIA==;
+Received: from [2601:1c0:6280:3f0::e0e1] (helo=smtpauth.infradead.org)
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1lS7Z3-006xwF-Tu; Fri, 02 Apr 2021 00:21:35 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20210330085655.12615-1-wsa+renesas@sang-engineering.com>
- <20210330085655.12615-2-wsa+renesas@sang-engineering.com>
- <CACRpkdbABbvxRLGhzmiQ8kTmwHsRqevvmDpfLKv-dUhEHVpF6g@mail.gmail.com>
+        Denis Turischev <denis@compulab.co.il>
+Subject: [PATCH -next] gpio: GPIO_SCH: depends on PCI same as LPC_SCH
+Date:   Thu,  1 Apr 2021 17:21:24 -0700
+Message-Id: <20210402002124.17207-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbABbvxRLGhzmiQ8kTmwHsRqevvmDpfLKv-dUhEHVpF6g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Since LPC_SCH depends on PCI, GPIO_SCH must also depend on PCI
+to prevent kconfig warning and build errors:
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+WARNING: unmet direct dependencies detected for LPC_SCH
+  Depends on [n]: HAS_IOMEM [=y] && PCI [=n]
+  Selected by [y]:
+  - GPIO_SCH [=y] && GPIOLIB [=y] && X86 [=y] && (X86 [=y] || COMPILE_TEST [=n]) && ACPI [=y]
 
-Hi Linus,
+and
 
-> I am a great supporter of this idea.
+../drivers/mfd/lpc_sch.c:204:1: warning: data definition has no type or storage class
+ module_pci_driver(lpc_sch_driver);
+ ^~~~~~~~~~~~~~~~~
+../drivers/mfd/lpc_sch.c:204:1: error: type defaults to ‘int’ in declaration of ‘module_pci_driver’ [-Werror=implicit-int]
+../drivers/mfd/lpc_sch.c:204:1: warning: parameter names (without types) in function declaration
+../drivers/mfd/lpc_sch.c:197:26: warning: ‘lpc_sch_driver’ defined but not used [-Wunused-variable]
+ static struct pci_driver lpc_sch_driver = {
+                          ^~~~~~~~~~~~~~
 
-Great, thanks!
+Fixes: 6c46215d6b62 ("gpio: sch: Hook into ACPI GPE handler to catch GPIO edge events")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Denis Turischev <denis@compulab.co.il>
+---
+ drivers/gpio/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> When other debugging tools for GPIO got DT bindings it was concluded that
-> it is possible to create bindings like this for debugging without even
-> specifying
-> any formal bindings. They are just for debugging after all.
-
-So, I remove the yaml file and add the bindings to the documenation,
-then? Makes sense to me because it is for debugging and not really
-official.
-
-> I would consider housing this tool under drivers/gpio actually.
-> We have other funky things like gpio-sim and gpio-aggregator
-> so why not.
-
-Heh, my first draft was placed in drivers/gpio. I'd be happy to have it
-there.
-
-> I would create a Kconfig menu with "GPIO hardware hacking tools".
->=20
-> But Bartosz would need to agree on that idea.
-
-Since he agreed, I'll update this in v2.
-
-> > +config GPIO_LOGIC_ANALYZER
-> > +       tristate "Simple GPIO logic analyzer"
-> > +       depends on GPIOLIB || COMPILE_TEST
-> > +       help
->=20
-> depends on EXPERT
-
-Yes, good point!
-
-All the best,
-
-   Wolfram
-
-
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmBmPvMACgkQFA3kzBSg
-KbYdLA/+IU2QMANxwSFRdg2A9RK83WiwfbmbESqKoyLf/8u/F0JwkANKUW11ECxO
-whmec/QfqCFWNQxyJEA50B+M5/hRfl4cRJFfzXR8tXJrRjA06hw9NAibzlHtOLoX
-y5dq89MeMwnkJi0oZAE4s+CobDvuHLRU0XHW5IaQDKoai4TK+WTla5dmqbUmGvXK
-zo0jLm+EPS8lWBxZBLTd0jYqQMFJKhNUQ+1nQmDVc6t4H9lpHMeDow3wCcXqUgpI
-10Lydp0sqX7gaMJ0O/x3W/X0/XzuRwS9kgNLeTx6qJbkJCN9uarfOaUa4ho5jneW
-PCWxE0AB9YEyKLlvRS9NptlOpeLo1pz+kqvwnymk9FTciKi7+ei7JKCtN6LH+X6K
-TUtfg9/iYQtW4i55CCWsGs+4JYnlrmFkzFKlv2d62kJ+TFh3tPa6iKYOAMoWJISs
-oyFKLLfWZ5y98i5qifaVaa8PCwdTzQW7l52VlR/XOCFXVc4lET77UveFrMNe/5ZB
-5vzgNhQVzYgIWDQHO2bz445oUp5ZEvOKTaT98FrZnjfSSpW9CX29v2ej6bJEH8aG
-WpThl2pNgZaR7PewhLPMETS+q9ixNhkwGqlPDLTP3ftDYdC03nNDM4wChFpQV5d/
-b1yFsmOAwIRUd+xhf8EZO39Vgx7pqf0FG3Iq+D0nysRwq/Mrq4c=
-=9CKg
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
+--- linux-next-20210401.orig/drivers/gpio/Kconfig
++++ linux-next-20210401/drivers/gpio/Kconfig
+@@ -860,7 +860,7 @@ config GPIO_IT87
+ 
+ config GPIO_SCH
+ 	tristate "Intel SCH/TunnelCreek/Centerton/Quark X1000 GPIO"
+-	depends on (X86 || COMPILE_TEST) && ACPI
++	depends on (X86 || COMPILE_TEST) && ACPI && PCI
+ 	select GPIOLIB_IRQCHIP
+ 	select MFD_CORE
+ 	select LPC_SCH
