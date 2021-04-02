@@ -2,80 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B01B352F01
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 20:15:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53AE8352F03
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 20:16:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbhDBSPJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Apr 2021 14:15:09 -0400
-Received: from mga09.intel.com ([134.134.136.24]:33970 "EHLO mga09.intel.com"
+        id S234207AbhDBSQ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Apr 2021 14:16:27 -0400
+Received: from mga18.intel.com ([134.134.136.126]:56090 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231406AbhDBSPJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 2 Apr 2021 14:15:09 -0400
-IronPort-SDR: j560koXwRwp7Lw4GBijcSOBw7Nzytja8PaTw9+IO3QD2/l3yJ9E83lBhhi+8NJ6pRKaj2W5l9o
- 5IOlB5K5Rkgw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9942"; a="192618478"
+        id S231406AbhDBSQ1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 2 Apr 2021 14:16:27 -0400
+IronPort-SDR: /UY3rCDSU1TIPpds8WUOnlzCb+6pcY/Y1px0igz/RIzPl8YXRGty3M902VPhkuhjj6tz2dHwh6
+ +2j1ZICKN14w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9942"; a="180043120"
 X-IronPort-AV: E=Sophos;i="5.81,300,1610438400"; 
-   d="scan'208";a="192618478"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 11:15:07 -0700
-IronPort-SDR: w+2GUbQGVAzLrPUAfXSqu6v0TCddOQGVNY8NtLwOBOUjWh5IjgpScQbFXzpW773TgQmc2HXJqR
- 7ijlGVOtbJfA==
+   d="scan'208";a="180043120"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 11:16:25 -0700
+IronPort-SDR: E9D5nghHO25Ra5z1Y/MYY9/N+2Q4ocRMDq321Gc8m5yW1sD3guQ9oXCN/1+UKMTZI4mNZBYU/f
+ 0IJ36XMHqKJw==
 X-IronPort-AV: E=Sophos;i="5.81,300,1610438400"; 
-   d="scan'208";a="446895013"
+   d="scan'208";a="596821250"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 11:15:06 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 11:16:23 -0700
 Received: from andy by smile with local (Exim 4.94)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lSOJz-000cKD-8x; Fri, 02 Apr 2021 21:15:03 +0300
-Date:   Fri, 2 Apr 2021 21:15:03 +0300
+        id 1lSOLE-000cL9-Ow; Fri, 02 Apr 2021 21:16:20 +0300
+Date:   Fri, 2 Apr 2021 21:16:20 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Denis Turischev <denis@compulab.co.il>
-Subject: Re: [PATCH -next v2] gpio: GPIO_SCH: depends on LPC_SCH
-Message-ID: <YGdfJwbWEEd02IsD@smile.fi.intel.com>
-References: <20210402161751.7683-1-rdunlap@infradead.org>
- <CAHp75VeARca4PzLkd+1SFr72AP=KWx3sAONPfwVSmHzjL9U+LA@mail.gmail.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Add quirk to ignore EC wakeups on Dell
+ Venue 10 Pro 5055
+Message-ID: <YGdfdPn7FMfHXYOC@smile.fi.intel.com>
+References: <20210401162740.4602-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeARca4PzLkd+1SFr72AP=KWx3sAONPfwVSmHzjL9U+LA@mail.gmail.com>
+In-Reply-To: <20210401162740.4602-1-hdegoede@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 02, 2021 at 07:38:41PM +0300, Andy Shevchenko wrote:
-> On Fri, Apr 2, 2021 at 7:18 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> >
-> > Since LPC_SCH provides GPIO functionality, GPIO_SCH should depend on
-> > LPC_SCH to prevent kconfig warning and build errors:
-> >
-> > WARNING: unmet direct dependencies detected for LPC_SCH
-> >   Depends on [n]: HAS_IOMEM [=y] && PCI [=n]
-> >   Selected by [y]:
-> >   - GPIO_SCH [=y] && GPIOLIB [=y] && X86 [=y] && (X86 [=y] || COMPILE_TEST [=n]) && ACPI [=y]
-> >
-> > and
-> >
-> > ../drivers/mfd/lpc_sch.c:204:1: warning: data definition has no type or storage class
-> >  module_pci_driver(lpc_sch_driver);
-> >  ^~~~~~~~~~~~~~~~~
-> > ../drivers/mfd/lpc_sch.c:204:1: error: type defaults to ‘int’ in declaration of ‘module_pci_driver’ [-Werror=implicit-int]
-> > ../drivers/mfd/lpc_sch.c:204:1: warning: parameter names (without types) in function declaration
-> > ../drivers/mfd/lpc_sch.c:197:26: warning: ‘lpc_sch_driver’ defined but not used [-Wunused-variable]
-> >  static struct pci_driver lpc_sch_driver = {
-> >                           ^~~~~~~~~~~~~~
+On Thu, Apr 01, 2021 at 06:27:40PM +0200, Hans de Goede wrote:
+> Like some other Bay and Cherry Trail SoC based devices the Dell Venue
+> 10 Pro 5055 has an embedded-controller which uses ACPI GPIO events to
+> report events instead of using the standard ACPI EC interface for this.
 > 
-> Thanks!
+> The EC interrupt is only used to report battery-level changes and
+> it keeps doing this while the system is suspended, causing the system
+> to not stay suspended.
 > 
-> Bart, please, take it in your tree directly, or if you wish I may
-> collect this one together with Hans' one and send a PR.
+> Add an ignore-wake quirk for the GPIO pin used by the EC to fix the
+> spurious wakeups from suspend.
 
-Bart, nevermind. Same answer as to Hans' patch: I'll take care as usual.
+Pushed to my review and testing queue, thanks!
+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/gpio/gpiolib-acpi.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 1aacd2a5a1fd..174839f3772f 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -1438,6 +1438,20 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>  			.no_edge_events_on_boot = true,
+>  		},
+>  	},
+> +	{
+> +		/*
+> +		 * The Dell Venue 10 Pro 5055, with Bay Trail SoC + TI PMIC uses an
+> +		 * external embedded-controller connected via I2C + an ACPI GPIO
+> +		 * event handler on INT33FFC:02 pin 12, causing spurious wakeups.
+> +		 */
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Venue 10 Pro 5055"),
+> +		},
+> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> +			.ignore_wake = "INT33FC:02@12",
+> +		},
+> +	},
+>  	{
+>  		/*
+>  		 * HP X2 10 models with Cherry Trail SoC + TI PMIC use an
+> -- 
+> 2.30.2
+> 
 
 -- 
 With Best Regards,
