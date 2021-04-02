@@ -2,169 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A3E3352997
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 12:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2221352A58
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Apr 2021 13:46:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbhDBKM7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Apr 2021 06:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47132 "EHLO
+        id S234902AbhDBLq0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Apr 2021 07:46:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbhDBKM7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Apr 2021 06:12:59 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D64C0613E6;
-        Fri,  2 Apr 2021 03:12:58 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id t18so2494086pjs.3;
-        Fri, 02 Apr 2021 03:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=elvUwGrM418CXLIilNL/fwznJq0Mnf7UxWCgH8HJ9kg=;
-        b=bxdBUcsc7T9mo2Lnd8uMQDUsshtUfkbRETbQsHPYB42RrNZ/m6ZOlhgozDLroTZYrN
-         eON3MNfx2OHeuXOJ9Y0YosiPoGZ4eTRY0qPUvRXgcO2YAm64TkPJGRpj/ZP+IcFsKeHD
-         hdYliySd+aDZPAVFw13NX0eJV4O8AR8edPEiM56usn6f5njihh4NOYdzH/AQprkH5VfK
-         +9oDbjJEVymVdL03W10jK2IQtcd3wRhPVZdHwqbzwhbSE7wcJFaamH2iaB+U8agkvHuU
-         SA94JWSWRiQKj+r0Hp1lRaU7pRxo1w36l3v6UFmsUfDBaeMO9Afp/l10N45s+Un3G9bX
-         NZiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=elvUwGrM418CXLIilNL/fwznJq0Mnf7UxWCgH8HJ9kg=;
-        b=JhmSIrunidrbZt5lLp/uV7/W+IiYdDCjlGVQegADCeTvs1/Uzluoj3AYQlLsu67b5k
-         nk6vbywCsD5b+VPjxlQJYNmvqIQZZ/zUPvmof9hJl7TaM//6z0TE1zubcV+H+JgjZr6r
-         mX3qGYfW8FdS43Oj7s4rJ5VRd6PftDz1OLRgq0cQPGco/UmWU7J3D6jsIepC2kX/G1Ks
-         vu3Ua46zjM8ILCJSYJW7f1GeXJsCTH1ABg75R/Gg5kh1u+Bl+8yWOKRqvYkcc8jQjGYI
-         uP292bFhjEtSAIar0jHHylRUKuKPZs0GHM8P1TP1BGMg9WZzjM1NePB8CdgWVzVQ1nvw
-         hMLw==
-X-Gm-Message-State: AOAM531V9+2rXLstK5ikPZO/1U668BYwxwUewAJQnjtvId8jQYImADvK
-        zO3ShhXqP1p42bx/sAPhR54=
-X-Google-Smtp-Source: ABdhPJylA1WmAAVPuY/l/zHcqiwsL0HAoW7BKAkydfxcDxaVE/yXGSiIi6gPAbUvQDDTz+K36uZDUg==
-X-Received: by 2002:a17:902:b602:b029:e6:cabb:10b9 with SMTP id b2-20020a170902b602b02900e6cabb10b9mr11967011pls.47.1617358378281;
-        Fri, 02 Apr 2021 03:12:58 -0700 (PDT)
-Received: from syed ([223.225.111.29])
-        by smtp.gmail.com with ESMTPSA id a18sm8419755pfa.18.2021.04.02.03.12.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Apr 2021 03:12:58 -0700 (PDT)
-Date:   Fri, 2 Apr 2021 15:42:40 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     bgolaszewski@baylibre.com
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        yamada.masahiro@socionext.com, akpm@linux-foundation.org,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, linux-arch@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: [PATCH v4 3/3] gpio: xilinx: Utilize generic bitmap_get_value and
- _set_value
-Message-ID: <00d085d4068be651c58a61564926d4f3d495ab80.1617357235.git.syednwaris@gmail.com>
-References: <cover.1617357235.git.syednwaris@gmail.com>
+        with ESMTP id S229722AbhDBLq0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Apr 2021 07:46:26 -0400
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1634FC061788
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Apr 2021 04:46:24 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:7c3c:adbc:7a1a:b85f])
+        by andre.telenet-ops.be with bizsmtp
+        id nnmP240034A7w6i01nmPNi; Fri, 02 Apr 2021 13:46:23 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lSIFq-00CRbQ-Mr; Fri, 02 Apr 2021 13:46:22 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lSIFq-004Cfe-2N; Fri, 02 Apr 2021 13:46:22 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: sh-pfc: Updates for v5.13 (take two)
+Date:   Fri,  2 Apr 2021 13:46:19 +0200
+Message-Id: <cover.1617363828.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1617357235.git.syednwaris@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch reimplements the xgpio_set_multiple() function in
-drivers/gpio/gpio-xilinx.c to use the new generic functions:
-bitmap_get_value() and bitmap_set_value(). The code is now simpler
-to read and understand. Moreover, instead of looping for each bit
-in xgpio_set_multiple() function, now we can check each channel at
-a time and save cycles.
+	Hi Linus,
 
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- drivers/gpio/gpio-xilinx.c | 60 +++++++++++++++++++-------------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
+The following changes since commit f7adcca27edf05fc1f061a9e5de059fe179f0e1c:
 
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index b411d3156e0b..e0ad3a81f216 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -18,6 +18,7 @@
- #include <linux/of_platform.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-+#include "gpiolib.h"
- 
- /* Register Offset Definitions */
- #define XGPIO_DATA_OFFSET   (0x0)	/* Data register  */
-@@ -161,37 +162,36 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- {
- 	unsigned long flags;
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
--	int index = xgpio_index(chip, 0);
--	int offset, i;
- 
--	spin_lock_irqsave(&chip->gpio_lock, flags);
--
--	/* Write to GPIO signals */
--	for (i = 0; i < gc->ngpio; i++) {
--		if (*mask == 0)
--			break;
--		/* Once finished with an index write it out to the register */
--		if (index !=  xgpio_index(chip, i)) {
--			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--				       index * XGPIO_CHANNEL_OFFSET,
--				       chip->gpio_state[index]);
--			spin_unlock_irqrestore(&chip->gpio_lock, flags);
--			index =  xgpio_index(chip, i);
--			spin_lock_irqsave(&chip->gpio_lock, flags);
--		}
--		if (__test_and_clear_bit(i, mask)) {
--			offset =  xgpio_offset(chip, i);
--			if (test_bit(i, bits))
--				chip->gpio_state[index] |= BIT(offset);
--			else
--				chip->gpio_state[index] &= ~BIT(offset);
--		}
--	}
--
--	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
--
--	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+    u32 *state = chip->gpio_state;
-+    unsigned int *width = chip->gpio_width;
-+    DECLARE_BITMAP(old, 64);
-+    DECLARE_BITMAP(new, 64);
-+    DECLARE_BITMAP(changed, 64);
-+
-+    spin_lock_irqsave(&chip->gpio_lock, flags);
-+
-+    /* Copy initial value of state bits into 'old' bit-wise */
-+    bitmap_set_value(old, 64, state[0], width[0], 0);
-+    bitmap_set_value(old, 64, state[1], width[1], width[0]);
-+    /* Copy value from 'old' into 'new' with mask applied */
-+    bitmap_replace(new, old, bits, mask, gc->ngpio);
-+
-+    bitmap_from_arr32(old, state, 64);
-+    /* Update 'state' */
-+    state[0] = bitmap_get_value(new, 0, width[0]);
-+    state[1] = bitmap_get_value(new, width[0], width[1]);
-+    bitmap_from_arr32(new, state, 64);
-+    /* XOR operation sets only changed bits */
-+    bitmap_xor(changed, old, new, 64);
-+
-+    if (((u32 *)changed)[0])
-+        xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET, state[0]);
-+    if (((u32 *)changed)[1])
-+        xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
-+                XGPIO_CHANNEL_OFFSET, state[1]);
-+
-+    spin_unlock_irqrestore(&chip->gpio_lock, flags);
- }
- 
- /**
--- 
-2.29.0
+  pinctrl: renesas: r8a77965: Add vin4_g8 and vin5_high8 pins (2021-03-10 10:50:26 +0100)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.13-tag2
+
+for you to fetch changes up to 61232cd6efca6e4d2705993850d014343ba604c4:
+
+  pinctrl: renesas: r8a7791: Add bias pinconf support (2021-03-24 10:38:29 +0100)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v5.13 (take two)
+
+  - Add bias support for the R-Car M2-W and M2-N, and RZ/G1M and RZ/G1N
+    SoCs,
+  - Miscellaneous cleanups and improvements.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Geert Uytterhoeven (6):
+      pinctrl: renesas: Make sh_pfc_pin_to_bias_reg() static
+      pinctrl: renesas: Move R-Car bias helpers to sh_pfc.h
+      pinctrl: renesas: Factor out common R-Mobile bias handling
+      pinctrl: renesas: Add PORT_GP_CFG_7 macros
+      pinctrl: renesas: Add support for R-Car SoCs with pull-down only pins
+      pinctrl: renesas: r8a7791: Add bias pinconf support
+
+ drivers/pinctrl/renesas/core.c         |  20 --
+ drivers/pinctrl/renesas/core.h         |   8 -
+ drivers/pinctrl/renesas/pfc-r8a73a4.c  |  48 +---
+ drivers/pinctrl/renesas/pfc-r8a7740.c  |  46 +---
+ drivers/pinctrl/renesas/pfc-r8a7778.c  |   1 -
+ drivers/pinctrl/renesas/pfc-r8a7791.c  | 387 +++++++++++++++++++++++++++++++--
+ drivers/pinctrl/renesas/pfc-r8a7792.c  |   1 -
+ drivers/pinctrl/renesas/pfc-r8a77950.c |   1 -
+ drivers/pinctrl/renesas/pfc-r8a77951.c |   1 -
+ drivers/pinctrl/renesas/pfc-r8a7796.c  |   1 -
+ drivers/pinctrl/renesas/pfc-r8a77965.c |   1 -
+ drivers/pinctrl/renesas/pfc-r8a77970.c |   1 -
+ drivers/pinctrl/renesas/pfc-r8a77980.c |   1 -
+ drivers/pinctrl/renesas/pfc-r8a77990.c |   1 -
+ drivers/pinctrl/renesas/pfc-r8a77995.c |   1 -
+ drivers/pinctrl/renesas/pfc-r8a779a0.c |   1 -
+ drivers/pinctrl/renesas/pfc-sh73a0.c   |  46 +---
+ drivers/pinctrl/renesas/pinctrl.c      | 109 ++++++++--
+ drivers/pinctrl/renesas/sh_pfc.h       |  24 +-
+ 19 files changed, 497 insertions(+), 202 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
