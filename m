@@ -2,62 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E1FF354DB5
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Apr 2021 09:20:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A415D354E6B
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Apr 2021 10:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244231AbhDFHU5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Apr 2021 03:20:57 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:51822 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232943AbhDFHU5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Apr 2021 03:20:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0UUfxBqa_1617693641;
-Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0UUfxBqa_1617693641)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 06 Apr 2021 15:20:48 +0800
-From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To:     linus.walleij@linaro.org
-Cc:     bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Subject: [PATCH] gpio: gpio-it87: remove unused code
-Date:   Tue,  6 Apr 2021 15:20:39 +0800
-Message-Id: <1617693639-49182-1-git-send-email-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S238616AbhDFIVC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Apr 2021 04:21:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:15485 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234590AbhDFIVB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Apr 2021 04:21:01 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FF0m30HJQzwRN0;
+        Tue,  6 Apr 2021 16:18:43 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.179.202) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.498.0; Tue, 6 Apr 2021 16:20:43 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v2 0/1] bus: bt1-apb: Remove duplicated header file inclusion
+Date:   Tue, 6 Apr 2021 16:20:33 +0800
+Message-ID: <20210406082034.2371-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.179.202]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix the following clang warning:
+v1 --> v2:
+Arrange all included header files in alphabetical order.
 
-drivers/gpio/gpio-it87.c:128:20: warning: unused function 'superio_outw'
-[-Wunused-function].
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- drivers/gpio/gpio-it87.c | 8 --------
- 1 file changed, 8 deletions(-)
+Zhen Lei (1):
+  bus: bt1-apb: Remove duplicated header file inclusion
 
-diff --git a/drivers/gpio/gpio-it87.c b/drivers/gpio/gpio-it87.c
-index 8f1be34..f332341 100644
---- a/drivers/gpio/gpio-it87.c
-+++ b/drivers/gpio/gpio-it87.c
-@@ -125,14 +125,6 @@ static inline int superio_inw(int reg)
- 	return val;
- }
- 
--static inline void superio_outw(int val, int reg)
--{
--	outb(reg++, REG);
--	outb(val >> 8, VAL);
--	outb(reg, REG);
--	outb(val, VAL);
--}
--
- static inline void superio_set_mask(int mask, int reg)
- {
- 	u8 curr_val = superio_inb(reg);
+ drivers/bus/bt1-apb.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
 -- 
-1.8.3.1
+1.8.3
+
 
