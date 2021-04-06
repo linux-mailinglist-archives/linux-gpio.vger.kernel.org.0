@@ -2,824 +2,390 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FD0B354B0C
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Apr 2021 04:54:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2E07354C86
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Apr 2021 08:07:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243491AbhDFCyY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Apr 2021 22:54:24 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:36982 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233030AbhDFCyX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Apr 2021 22:54:23 -0400
-Received: from localhost (unknown [192.168.167.172])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 07673CD307;
-        Tue,  6 Apr 2021 10:53:59 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P25594T139883981444864S1617677637292371_;
-        Tue, 06 Apr 2021 10:53:58 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <523125eacacdcfc1f53b485faa6e2b92>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     heiko@sntech.de, linus.walleij@linaro.org
-Cc:     huangtao@rock-chips.com, linux-gpio@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH] pinctrl: rockchip: do coding style for mux route struct
-Date:   Tue,  6 Apr 2021 10:53:56 +0800
-Message-Id: <20210406025356.534876-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+        id S232411AbhDFGHM convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 6 Apr 2021 02:07:12 -0400
+Received: from mail-eopbgr1320102.outbound.protection.outlook.com ([40.107.132.102]:41952
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230160AbhDFGHM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 6 Apr 2021 02:07:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AKb8RVXA6DLXqi1md4dymoF4U/otofLyv5+iLrQR54YNOEpvKfMIEvaS1Ef2tkSGZA/Iv9sG4HxHIrM0HUOfsjhcOmaYsrPpakGtdUbh6pB6N5XPQ8SAsjUZKVbOoCA2uSPIb8pD3ueGNytYl9CiJw/uybIuTy9KRx77N0t2L5eGs0va9l6+ADwBc/gnpddAh/ub86s1Ks3xt+1/BvutmJ5GgvtL/phwi50ifshHMIKRNxbAV6uEcbET+UW0Z8dWfSY7sfyKeRnEMk8qHJRFylANQNXTchiCYaYXJdj75Rjl2WXFWGJKD47dC18+xcLB5KNs0zZ7bxlKiv9X1S9T+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FWjrxTc89Offw0ZXa+xEErXQu1aEaRleTwD0yfnmhFs=;
+ b=YxRPL+LRl8vXKSV8iQ0HUUkJp7X7wpFZcwW74nTO+jw3faDXfontt+hIZ+3rsD6gVqkDtX1dcyRtbbMtcWMJcksbI3tVoXA0FKg7PEOJM5NsidaF1QLhbPwrkRbWiGxxwu36tcl0JetNaG50HMXCYba+1Pv5L8x0O+DdQo00lRTVdjXEZnkPSrFmZJiA3bjTlQ3MmlXoW2b/GBNUj8A8+owmEWj9/tpO4T3YKL9QGw1sxsjGI3NYKJJDJDv6/ZoHYrjWiemahPFl/jRS7UBJluHwGH2oZBR7zVpAKOveLF5BPqu+T/SQETs0470Ltqt4Np0F6Tu455iNCQTYwAMlbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+Received: from HK0PR06MB3779.apcprd06.prod.outlook.com (2603:1096:203:b8::10)
+ by HK2PR0601MB1907.apcprd06.prod.outlook.com (2603:1096:202:a::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.32; Tue, 6 Apr
+ 2021 06:07:01 +0000
+Received: from HK0PR06MB3779.apcprd06.prod.outlook.com
+ ([fe80::20c8:80da:5b1d:fc06]) by HK0PR06MB3779.apcprd06.prod.outlook.com
+ ([fe80::20c8:80da:5b1d:fc06%4]) with mapi id 15.20.3999.032; Tue, 6 Apr 2021
+ 06:07:01 +0000
+From:   ChiaWei Wang <chiawei_wang@aspeedtech.com>
+To:     Andrew Jeffery <andrew@aj.id.au>,
+        "openipmi-developer@lists.sourceforge.net" 
+        <openipmi-developer@lists.sourceforge.net>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        "minyard@acm.org" <minyard@acm.org>
+CC:     "joel@jms.id.au" <joel@jms.id.au>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "tmaimon77@gmail.com" <tmaimon77@gmail.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "avifishman70@gmail.com" <avifishman70@gmail.com>,
+        "venture@google.com" <venture@google.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tali.perry1@gmail.com" <tali.perry1@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "benjaminfair@google.com" <benjaminfair@google.com>
+Subject: RE: [PATCH v2 06/21] ipmi: kcs_bmc_aspeed: Use of match data to
+ extract KCS properties
+Thread-Topic: [PATCH v2 06/21] ipmi: kcs_bmc_aspeed: Use of match data to
+ extract KCS properties
+Thread-Index: AQHXHIklK1hXYE3/6UilkWA9iCynRKqnHCCw
+Date:   Tue, 6 Apr 2021 06:07:00 +0000
+Message-ID: <HK0PR06MB377918E87DEFAC54F8C00D8C91769@HK0PR06MB3779.apcprd06.prod.outlook.com>
+References: <20210319062752.145730-1-andrew@aj.id.au>
+ <20210319062752.145730-6-andrew@aj.id.au>
+In-Reply-To: <20210319062752.145730-6-andrew@aj.id.au>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: aj.id.au; dkim=none (message not signed)
+ header.d=none;aj.id.au; dmarc=none action=none header.from=aspeedtech.com;
+x-originating-ip: [211.20.114.70]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 39db4913-7007-42e8-719c-08d8f8c23192
+x-ms-traffictypediagnostic: HK2PR0601MB1907:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK2PR0601MB19079902AE772104EEAA392A91769@HK2PR0601MB1907.apcprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kcSIcpv326F/OweXceZHQGBJ+MvNQY4wo1ozIvJevebmQEXQS4RdBTwueUlxLioNNmOSygCHD3CuR/RJGY3YzcW6mgABws0YTqxU1AtdAAhWx9L3U387rTZsa4S77mL2OTcMfPob22iSfhX13B3s/RxXTyAURXQJOMw0W4BeNab3r8iw3wActpQ9ShJaj81qk6OiARi/Zeeq7fQDoyR1z8PRj+msKD5d59LrBb9THJ4p67XTFM0dFh30tS+z+uuVAruIkBuPW9giFRoeP/ErQ9WsIZcy91x0cBqmuuREBhNtgP+ZEuV8+n9Aet48xxbzqAjsAPCUeqbl/UJ/sgHnPhsqCRjWr331iObbDZQDmBycEMGzOC9BXq3yZCGBEEDEpiJb6n3WFQpD1xR/DQgoQqUYIUBZp8DnNiSCIzS1Si7LwnN6fd4SBNGbiYh6PYmCuXNCJG8Cv17JdJzQ/vbC4StlYW1iMdFlas4wGF/ilK3e61zljdBASBB6j77Ajgy4+ou/swCF+6msDQH8YyK7MOobCGup6SZc6o4JT0KUC8Xekdm6yzxjU+PTUo5vqJpgA29AoiCgqTp7BoAMU3mleV2DSynooOrIg3VIZ+tvAF/hJ3unGqu+TNXdJugFeUYBPyCV2zba7HCb0RqiwFln1kHQ1dW6/9jf8MHgZcCCxlw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0PR06MB3779.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(376002)(366004)(396003)(39840400004)(136003)(6506007)(66946007)(66446008)(38100700001)(52536014)(55016002)(55236004)(76116006)(9686003)(4326008)(8676002)(7416002)(8936002)(33656002)(86362001)(316002)(5660300002)(71200400001)(7696005)(478600001)(110136005)(186003)(54906003)(83380400001)(66476007)(26005)(66556008)(2906002)(64756008)(53546011);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?nLXZ4Bq0fRNDp4Zmz71lKW8wp5Ujlmvem0gdTFHnnUzEtSFwLRRJy5fLhTFd?=
+ =?us-ascii?Q?ThZNg7HUOq5yV4q4HYum00IEZM4OLeD43GXooZjLGaPvy28cRsaRS9eXW9dm?=
+ =?us-ascii?Q?UTzfQRd88V+08097vnX2UvZ+6WlGOKMlP2wuP0UMP1woJXl853luo00LXAvu?=
+ =?us-ascii?Q?q2AMy3G93izBoxflVNLQ5tp7hwqXvOytXRGFlUkfGOoiTzv9EvgFmGbpAdTn?=
+ =?us-ascii?Q?3OaC+hQk11SBgOOddxpzx65C4kVd3IfjjCaifLT1JWuOnILdqj3MjHP5jQI0?=
+ =?us-ascii?Q?W8xGWPmJlA6WbNR+jxJNJMBmAVGTvutCEmyEtF1y7riWY59syZAbitqTuoBy?=
+ =?us-ascii?Q?EYZAcd4rl74bG7bh8CcnEs9IgVFAeXhtv0VA3oqK+ovQVPFqCPoPyDPN1a1g?=
+ =?us-ascii?Q?5Zo1ZwaumhPzODxo32A+HdBm6qJvHBT4w+az4JRFdHSOSvHjoPQDHp0C0wBw?=
+ =?us-ascii?Q?jJVzDQDy9ma2C74OlumMTPyuRF4kBYOPTStVEFjLyVd7kdndhEKTP4g+l4AG?=
+ =?us-ascii?Q?tTHCdHHi/XHuKjS4h+ab5e7cG381jCTrcIXQ89g8Duxy/khlGLpFBhFAI6ph?=
+ =?us-ascii?Q?9akeZxrIQzvn+tGXZzgNWRmd6tttdgppygTiYVarKs6q5RK53lWtGWBXypwn?=
+ =?us-ascii?Q?oyhSvzzJT3R0Q6ZEK+7C3h2Fa6Lh3fxVJeaILGT+Nk0GX2l6LMOl9N1qlMUx?=
+ =?us-ascii?Q?XoxqK/A58lZ+YHrYy2fdINy16U7lpvaqqztX2AzpB/WKQaFMNb/p3pcIBd8m?=
+ =?us-ascii?Q?PPT8tZEsftk/2ZXEz9mioQbyn2KwMkmVSbq9Eu/MfY4srEzAphZ3rsOR3Sxa?=
+ =?us-ascii?Q?c4aZgI29QaobhOWUQ5gow92DcWlwq6YOjYO+B8e9iCMGZNIOENse/p8vbhez?=
+ =?us-ascii?Q?XCZ66z1BQkP0REXY2RW4OeZ+TpfnsHoDr387YCNll+qsyY8SPUnY1TTTqmMx?=
+ =?us-ascii?Q?Q641QYm9pgSgubhi7zdX8Xn0Y291QlFk0MlgTva0oNeCfymMvFIdxukzvj86?=
+ =?us-ascii?Q?pS2dSujY0tFywoMHYXKo2N+qV5M8iLbQj/LttWiZb4KPZm9d7RzYg2xBtmLX?=
+ =?us-ascii?Q?PkN2QKVbqTjeVud0TprJMlkgq0tyt3VdHGJDTQoWHqTMBs7sp8Vtfwp9UKD0?=
+ =?us-ascii?Q?0JVg15lWTYKp+W0hTfbZ/myWrod/uLnym4fXahuA0fntopAE5prAj9ll0g2f?=
+ =?us-ascii?Q?1ZSfyiizI3Dkg8k3BmpmI9nSog4oruvBzBkuSAwIQPp97Z6DZcM7fUrdMC1O?=
+ =?us-ascii?Q?RmKEmTrPYXgrXLFBvDHGWTAXCG5zdJQ0ugW1aGWstJS4VbKcbmRCwIC7S53n?=
+ =?us-ascii?Q?Wr7r7xVjIDM/uSuNtGPgbKTD?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK0PR06MB3779.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39db4913-7007-42e8-719c-08d8f8c23192
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2021 06:07:01.0410
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7Q9XqE/i7cF4LS5PVSI4FmkbGuxSqt0JBI2Ve7XZxYJIn0NKChfJJJh8/GKIrNXQJyJAeSszSdLBjz2OegGqLVK1ePQ9UwG2vs7p3LZ+Uw8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2PR0601MB1907
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The mux route tables take many lines for each SoC, and it will be more
-instances for newly SoC, that makes the file size increase larger.
+I have tried this patch on Intel EGS CRB with AST2600 A1 as the BMC.
+Chiawei
 
-This patch only do coding style for mux route struct, by adding a new
-definition and replace the structs by script which supplied by
-huangtao@rock-chips.com
+Tested-by: Chia-Wei Wang <chiawei_wang@aspeedtech.com>
 
-sed -i -e "
-/static struct rockchip_mux_route_data /bcheck
-b
-:append-next-line
-N
-:check
-/^[^;]*$/bappend-next-line
-s/[[:blank:]]*.bank_num = \([[:digit:]]*,\)\n/\tRK_MUXROUTE_SAME(\1/g
-s/[[:blank:]]*.pin =[[:blank:]]*0,\n/ RK_PA0,/g
-s/[[:blank:]]*.pin =[[:blank:]]*1,\n/ RK_PA1,/g
-s/[[:blank:]]*.pin =[[:blank:]]*2,\n/ RK_PA2,/g
-s/[[:blank:]]*.pin =[[:blank:]]*3,\n/ RK_PA3,/g
-s/[[:blank:]]*.pin =[[:blank:]]*4,\n/ RK_PA4,/g
-s/[[:blank:]]*.pin =[[:blank:]]*5,\n/ RK_PA5,/g
-s/[[:blank:]]*.pin =[[:blank:]]*6,\n/ RK_PA6,/g
-s/[[:blank:]]*.pin =[[:blank:]]*7,\n/ RK_PA7,/g
-s/[[:blank:]]*.pin =[[:blank:]]*8,\n/ RK_PB0,/g
-s/[[:blank:]]*.pin =[[:blank:]]*9,\n/ RK_PB1,/g
-s/[[:blank:]]*.pin =[[:blank:]]*10,\n/ RK_PB2,/g
-s/[[:blank:]]*.pin =[[:blank:]]*11,\n/ RK_PB3,/g
-s/[[:blank:]]*.pin =[[:blank:]]*12,\n/ RK_PB4,/g
-s/[[:blank:]]*.pin =[[:blank:]]*13,\n/ RK_PB5,/g
-s/[[:blank:]]*.pin =[[:blank:]]*14,\n/ RK_PB6,/g
-s/[[:blank:]]*.pin =[[:blank:]]*15,\n/ RK_PB7,/g
-s/[[:blank:]]*.pin =[[:blank:]]*16,\n/ RK_PC0,/g
-s/[[:blank:]]*.pin =[[:blank:]]*17,\n/ RK_PC1,/g
-s/[[:blank:]]*.pin =[[:blank:]]*18,\n/ RK_PC2,/g
-s/[[:blank:]]*.pin =[[:blank:]]*19,\n/ RK_PC3,/g
-s/[[:blank:]]*.pin =[[:blank:]]*20,\n/ RK_PC4,/g
-s/[[:blank:]]*.pin =[[:blank:]]*21,\n/ RK_PC5,/g
-s/[[:blank:]]*.pin =[[:blank:]]*22,\n/ RK_PC6,/g
-s/[[:blank:]]*.pin =[[:blank:]]*23,\n/ RK_PC7,/g
-s/[[:blank:]]*.pin =[[:blank:]]*24,\n/ RK_PD0,/g
-s/[[:blank:]]*.pin =[[:blank:]]*25,\n/ RK_PD1,/g
-s/[[:blank:]]*.pin =[[:blank:]]*26,\n/ RK_PD2,/g
-s/[[:blank:]]*.pin =[[:blank:]]*27,\n/ RK_PD3,/g
-s/[[:blank:]]*.pin =[[:blank:]]*28,\n/ RK_PD4,/g
-s/[[:blank:]]*.pin =[[:blank:]]*29,\n/ RK_PD5,/g
-s/[[:blank:]]*.pin =[[:blank:]]*30,\n/ RK_PD6,/g
-s/[[:blank:]]*.pin =[[:blank:]]*31,\n/ RK_PD7,/g
-s/[[:blank:]]*.func = \([[:digit:]]*,\)\n/ \1/g
-s/[[:blank:]]*.route_location =[[:blank:]]*\([[:print:]]*,\)\n//g
-s/[[:blank:]]*.route_offset = \(0x[[:xdigit:]]*,\)\n/ \1/g
-s/[[:blank:]]*.route_val =[[:blank:]]*\([[:print:]]*\),\n/ \1),/g
-s/\t{\n//g
-s/\t}, {\n//g
-s/\t},//g
-s/[[:blank:]]*\(\/\*[[:print:]]*\*\/\)\n[[:blank:]]*RK_MUXROUTE_SAME(\([[:print:]]*\)),\n/\tRK_MUXROUTE_SAME(\2), \1\n/g
-s/[[:blank:]]*\(\/\*[[:print:]]*\*\/\)\n[[:blank:]]*RK_MUXROUTE_SAME(\([[:print:]]*\)),/\tRK_MUXROUTE_SAME(\2), \1\n/g
-" drivers/pinctrl/pinctrl-rockchip.c
-
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-Change-Id: Ifc823d9557605b9dfcc9c0455a739f04f3fce5be
----
- drivers/pinctrl/pinctrl-rockchip.c | 669 +++++------------------------
- 1 file changed, 99 insertions(+), 570 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index deabfbc74a01..6ba31c66ef8b 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -292,6 +292,25 @@ struct rockchip_pin_bank {
- 		.pull_type[3] = pull3,					\
- 	}
- 
-+#define PIN_BANK_MUX_ROUTE_FLAGS(ID, PIN, FUNC, REG, VAL, FLAG)		\
-+	{								\
-+		.bank_num	= ID,					\
-+		.pin		= PIN,					\
-+		.func		= FUNC,					\
-+		.route_offset	= REG,					\
-+		.route_val	= VAL,					\
-+		.route_location	= FLAG,					\
-+	}
-+
-+#define RK_MUXROUTE_SAME(ID, PIN, FUNC, REG, VAL)	\
-+	PIN_BANK_MUX_ROUTE_FLAGS(ID, PIN, FUNC, REG, VAL, ROCKCHIP_ROUTE_SAME)
-+
-+#define RK_MUXROUTE_GRF(ID, PIN, FUNC, REG, VAL)	\
-+	PIN_BANK_MUX_ROUTE_FLAGS(ID, PIN, FUNC, REG, VAL, ROCKCHIP_ROUTE_GRF)
-+
-+#define RK_MUXROUTE_PMU(ID, PIN, FUNC, REG, VAL)	\
-+	PIN_BANK_MUX_ROUTE_FLAGS(ID, PIN, FUNC, REG, VAL, ROCKCHIP_ROUTE_PMU)
-+
- /**
-  * struct rockchip_mux_recalced_data: represent a pin iomux data.
-  * @num: bank number.
-@@ -803,597 +822,107 @@ static void rockchip_get_recalced_mux(struct rockchip_pin_bank *bank, int pin,
- }
- 
- static struct rockchip_mux_route_data px30_mux_route_data[] = {
--	{
--		/* cif-d2m0 */
--		.bank_num = 2,
--		.pin = 0,
--		.func = 1,
--		.route_offset = 0x184,
--		.route_val = BIT(16 + 7),
--	}, {
--		/* cif-d2m1 */
--		.bank_num = 3,
--		.pin = 3,
--		.func = 3,
--		.route_offset = 0x184,
--		.route_val = BIT(16 + 7) | BIT(7),
--	}, {
--		/* pdm-m0 */
--		.bank_num = 3,
--		.pin = 22,
--		.func = 2,
--		.route_offset = 0x184,
--		.route_val = BIT(16 + 8),
--	}, {
--		/* pdm-m1 */
--		.bank_num = 2,
--		.pin = 22,
--		.func = 1,
--		.route_offset = 0x184,
--		.route_val = BIT(16 + 8) | BIT(8),
--	}, {
--		/* uart2-rxm0 */
--		.bank_num = 1,
--		.pin = 27,
--		.func = 2,
--		.route_offset = 0x184,
--		.route_val = BIT(16 + 10),
--	}, {
--		/* uart2-rxm1 */
--		.bank_num = 2,
--		.pin = 14,
--		.func = 2,
--		.route_offset = 0x184,
--		.route_val = BIT(16 + 10) | BIT(10),
--	}, {
--		/* uart3-rxm0 */
--		.bank_num = 0,
--		.pin = 17,
--		.func = 2,
--		.route_offset = 0x184,
--		.route_val = BIT(16 + 9),
--	}, {
--		/* uart3-rxm1 */
--		.bank_num = 1,
--		.pin = 15,
--		.func = 2,
--		.route_offset = 0x184,
--		.route_val = BIT(16 + 9) | BIT(9),
--	},
-+	RK_MUXROUTE_SAME(2, RK_PA0, 1, 0x184, BIT(16 + 7)), /* cif-d2m0 */
-+	RK_MUXROUTE_SAME(3, RK_PA3, 3, 0x184, BIT(16 + 7) | BIT(7)), /* cif-d2m1 */
-+	RK_MUXROUTE_SAME(3, RK_PC6, 2, 0x184, BIT(16 + 8)), /* pdm-m0 */
-+	RK_MUXROUTE_SAME(2, RK_PC6, 1, 0x184, BIT(16 + 8) | BIT(8)), /* pdm-m1 */
-+	RK_MUXROUTE_SAME(1, RK_PD3, 2, 0x184, BIT(16 + 10)), /* uart2-rxm0 */
-+	RK_MUXROUTE_SAME(2, RK_PB6, 2, 0x184, BIT(16 + 10) | BIT(10)), /* uart2-rxm1 */
-+	RK_MUXROUTE_SAME(0, RK_PC1, 2, 0x184, BIT(16 + 9)), /* uart3-rxm0 */
-+	RK_MUXROUTE_SAME(1, RK_PB7, 2, 0x184, BIT(16 + 9) | BIT(9)), /* uart3-rxm1 */
- };
- 
- static struct rockchip_mux_route_data rk3128_mux_route_data[] = {
--	{
--		/* spi-0 */
--		.bank_num = 1,
--		.pin = 10,
--		.func = 1,
--		.route_offset = 0x144,
--		.route_val = BIT(16 + 3) | BIT(16 + 4),
--	}, {
--		/* spi-1 */
--		.bank_num = 1,
--		.pin = 27,
--		.func = 3,
--		.route_offset = 0x144,
--		.route_val = BIT(16 + 3) | BIT(16 + 4) | BIT(3),
--	}, {
--		/* spi-2 */
--		.bank_num = 0,
--		.pin = 13,
--		.func = 2,
--		.route_offset = 0x144,
--		.route_val = BIT(16 + 3) | BIT(16 + 4) | BIT(4),
--	}, {
--		/* i2s-0 */
--		.bank_num = 1,
--		.pin = 5,
--		.func = 1,
--		.route_offset = 0x144,
--		.route_val = BIT(16 + 5),
--	}, {
--		/* i2s-1 */
--		.bank_num = 0,
--		.pin = 14,
--		.func = 1,
--		.route_offset = 0x144,
--		.route_val = BIT(16 + 5) | BIT(5),
--	}, {
--		/* emmc-0 */
--		.bank_num = 1,
--		.pin = 22,
--		.func = 2,
--		.route_offset = 0x144,
--		.route_val = BIT(16 + 6),
--	}, {
--		/* emmc-1 */
--		.bank_num = 2,
--		.pin = 4,
--		.func = 2,
--		.route_offset = 0x144,
--		.route_val = BIT(16 + 6) | BIT(6),
--	},
-+	RK_MUXROUTE_SAME(1, RK_PB2, 1, 0x144, BIT(16 + 3) | BIT(16 + 4)), /* spi-0 */
-+	RK_MUXROUTE_SAME(1, RK_PD3, 3, 0x144, BIT(16 + 3) | BIT(16 + 4) | BIT(3)), /* spi-1 */
-+	RK_MUXROUTE_SAME(0, RK_PB5, 2, 0x144, BIT(16 + 3) | BIT(16 + 4) | BIT(4)), /* spi-2 */
-+	RK_MUXROUTE_SAME(1, RK_PA5, 1, 0x144, BIT(16 + 5)), /* i2s-0 */
-+	RK_MUXROUTE_SAME(0, RK_PB6, 1, 0x144, BIT(16 + 5) | BIT(5)), /* i2s-1 */
-+	RK_MUXROUTE_SAME(1, RK_PC6, 2, 0x144, BIT(16 + 6)), /* emmc-0 */
-+	RK_MUXROUTE_SAME(2, RK_PA4, 2, 0x144, BIT(16 + 6) | BIT(6)), /* emmc-1 */
- };
- 
- static struct rockchip_mux_route_data rk3188_mux_route_data[] = {
--	{
--		/* non-iomuxed emmc/flash pins on flash-dqs */
--		.bank_num = 0,
--		.pin = 24,
--		.func = 1,
--		.route_location = ROCKCHIP_ROUTE_GRF,
--		.route_offset = 0xa0,
--		.route_val = BIT(16 + 11),
--	}, {
--		/* non-iomuxed emmc/flash pins on emmc-clk */
--		.bank_num = 0,
--		.pin = 24,
--		.func = 2,
--		.route_location = ROCKCHIP_ROUTE_GRF,
--		.route_offset = 0xa0,
--		.route_val = BIT(16 + 11) | BIT(11),
--	},
-+	RK_MUXROUTE_SAME(0, RK_PD0, 1, 0xa0, BIT(16 + 11)), /* non-iomuxed emmc/flash pins on flash-dqs */
-+	RK_MUXROUTE_SAME(0, RK_PD0, 2, 0xa0, BIT(16 + 11) | BIT(11)), /* non-iomuxed emmc/flash pins on emmc-clk */
- };
- 
- static struct rockchip_mux_route_data rk3228_mux_route_data[] = {
--	{
--		/* pwm0-0 */
--		.bank_num = 0,
--		.pin = 26,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16),
--	}, {
--		/* pwm0-1 */
--		.bank_num = 3,
--		.pin = 21,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16) | BIT(0),
--	}, {
--		/* pwm1-0 */
--		.bank_num = 0,
--		.pin = 27,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 1),
--	}, {
--		/* pwm1-1 */
--		.bank_num = 0,
--		.pin = 30,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 1) | BIT(1),
--	}, {
--		/* pwm2-0 */
--		.bank_num = 0,
--		.pin = 28,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 2),
--	}, {
--		/* pwm2-1 */
--		.bank_num = 1,
--		.pin = 12,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 2) | BIT(2),
--	}, {
--		/* pwm3-0 */
--		.bank_num = 3,
--		.pin = 26,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 3),
--	}, {
--		/* pwm3-1 */
--		.bank_num = 1,
--		.pin = 11,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 3) | BIT(3),
--	}, {
--		/* sdio-0_d0 */
--		.bank_num = 1,
--		.pin = 1,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 4),
--	}, {
--		/* sdio-1_d0 */
--		.bank_num = 3,
--		.pin = 2,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 4) | BIT(4),
--	}, {
--		/* spi-0_rx */
--		.bank_num = 0,
--		.pin = 13,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 5),
--	}, {
--		/* spi-1_rx */
--		.bank_num = 2,
--		.pin = 0,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 5) | BIT(5),
--	}, {
--		/* emmc-0_cmd */
--		.bank_num = 1,
--		.pin = 22,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 7),
--	}, {
--		/* emmc-1_cmd */
--		.bank_num = 2,
--		.pin = 4,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 7) | BIT(7),
--	}, {
--		/* uart2-0_rx */
--		.bank_num = 1,
--		.pin = 19,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 8),
--	}, {
--		/* uart2-1_rx */
--		.bank_num = 1,
--		.pin = 10,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 8) | BIT(8),
--	}, {
--		/* uart1-0_rx */
--		.bank_num = 1,
--		.pin = 10,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 11),
--	}, {
--		/* uart1-1_rx */
--		.bank_num = 3,
--		.pin = 13,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 11) | BIT(11),
--	},
-+	RK_MUXROUTE_SAME(0, RK_PD2, 1, 0x50, BIT(16)), /* pwm0-0 */
-+	RK_MUXROUTE_SAME(3, RK_PC5, 1, 0x50, BIT(16) | BIT(0)), /* pwm0-1 */
-+	RK_MUXROUTE_SAME(0, RK_PD3, 1, 0x50, BIT(16 + 1)), /* pwm1-0 */
-+	RK_MUXROUTE_SAME(0, RK_PD6, 2, 0x50, BIT(16 + 1) | BIT(1)), /* pwm1-1 */
-+	RK_MUXROUTE_SAME(0, RK_PD4, 1, 0x50, BIT(16 + 2)), /* pwm2-0 */
-+	RK_MUXROUTE_SAME(1, RK_PB4, 2, 0x50, BIT(16 + 2) | BIT(2)), /* pwm2-1 */
-+	RK_MUXROUTE_SAME(3, RK_PD2, 1, 0x50, BIT(16 + 3)), /* pwm3-0 */
-+	RK_MUXROUTE_SAME(1, RK_PB3, 2, 0x50, BIT(16 + 3) | BIT(3)), /* pwm3-1 */
-+	RK_MUXROUTE_SAME(1, RK_PA1, 1, 0x50, BIT(16 + 4)), /* sdio-0_d0 */
-+	RK_MUXROUTE_SAME(3, RK_PA2, 1, 0x50, BIT(16 + 4) | BIT(4)), /* sdio-1_d0 */
-+	RK_MUXROUTE_SAME(0, RK_PB5, 2, 0x50, BIT(16 + 5)), /* spi-0_rx */
-+	RK_MUXROUTE_SAME(2, RK_PA0, 2, 0x50, BIT(16 + 5) | BIT(5)), /* spi-1_rx */
-+	RK_MUXROUTE_SAME(1, RK_PC6, 2, 0x50, BIT(16 + 7)), /* emmc-0_cmd */
-+	RK_MUXROUTE_SAME(2, RK_PA4, 2, 0x50, BIT(16 + 7) | BIT(7)), /* emmc-1_cmd */
-+	RK_MUXROUTE_SAME(1, RK_PC3, 2, 0x50, BIT(16 + 8)), /* uart2-0_rx */
-+	RK_MUXROUTE_SAME(1, RK_PB2, 2, 0x50, BIT(16 + 8) | BIT(8)), /* uart2-1_rx */
-+	RK_MUXROUTE_SAME(1, RK_PB2, 1, 0x50, BIT(16 + 11)), /* uart1-0_rx */
-+	RK_MUXROUTE_SAME(3, RK_PB5, 1, 0x50, BIT(16 + 11) | BIT(11)), /* uart1-1_rx */
- };
- 
- static struct rockchip_mux_route_data rk3288_mux_route_data[] = {
--	{
--		/* edphdmi_cecinoutt1 */
--		.bank_num = 7,
--		.pin = 16,
--		.func = 2,
--		.route_offset = 0x264,
--		.route_val = BIT(16 + 12) | BIT(12),
--	}, {
--		/* edphdmi_cecinout */
--		.bank_num = 7,
--		.pin = 23,
--		.func = 4,
--		.route_offset = 0x264,
--		.route_val = BIT(16 + 12),
--	},
-+	RK_MUXROUTE_SAME(7, RK_PC0, 2, 0x264, BIT(16 + 12) | BIT(12)), /* edphdmi_cecinoutt1 */
-+	RK_MUXROUTE_SAME(7, RK_PC7, 4, 0x264, BIT(16 + 12)), /* edphdmi_cecinout */
- };
- 
- static struct rockchip_mux_route_data rk3308_mux_route_data[] = {
--	{
--		/* rtc_clk */
--		.bank_num = 0,
--		.pin = 19,
--		.func = 1,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 0) | BIT(0),
--	}, {
--		/* uart2_rxm0 */
--		.bank_num = 1,
--		.pin = 22,
--		.func = 2,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 2) | BIT(16 + 3),
--	}, {
--		/* uart2_rxm1 */
--		.bank_num = 4,
--		.pin = 26,
--		.func = 2,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 2) | BIT(16 + 3) | BIT(2),
--	}, {
--		/* i2c3_sdam0 */
--		.bank_num = 0,
--		.pin = 15,
--		.func = 2,
--		.route_offset = 0x608,
--		.route_val = BIT(16 + 8) | BIT(16 + 9),
--	}, {
--		/* i2c3_sdam1 */
--		.bank_num = 3,
--		.pin = 12,
--		.func = 2,
--		.route_offset = 0x608,
--		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(8),
--	}, {
--		/* i2c3_sdam2 */
--		.bank_num = 2,
--		.pin = 0,
--		.func = 3,
--		.route_offset = 0x608,
--		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(9),
--	}, {
--		/* i2s-8ch-1-sclktxm0 */
--		.bank_num = 1,
--		.pin = 3,
--		.func = 2,
--		.route_offset = 0x308,
--		.route_val = BIT(16 + 3),
--	}, {
--		/* i2s-8ch-1-sclkrxm0 */
--		.bank_num = 1,
--		.pin = 4,
--		.func = 2,
--		.route_offset = 0x308,
--		.route_val = BIT(16 + 3),
--	}, {
--		/* i2s-8ch-1-sclktxm1 */
--		.bank_num = 1,
--		.pin = 13,
--		.func = 2,
--		.route_offset = 0x308,
--		.route_val = BIT(16 + 3) | BIT(3),
--	}, {
--		/* i2s-8ch-1-sclkrxm1 */
--		.bank_num = 1,
--		.pin = 14,
--		.func = 2,
--		.route_offset = 0x308,
--		.route_val = BIT(16 + 3) | BIT(3),
--	}, {
--		/* pdm-clkm0 */
--		.bank_num = 1,
--		.pin = 4,
--		.func = 3,
--		.route_offset = 0x308,
--		.route_val =  BIT(16 + 12) | BIT(16 + 13),
--	}, {
--		/* pdm-clkm1 */
--		.bank_num = 1,
--		.pin = 14,
--		.func = 4,
--		.route_offset = 0x308,
--		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
--	}, {
--		/* pdm-clkm2 */
--		.bank_num = 2,
--		.pin = 6,
--		.func = 2,
--		.route_offset = 0x308,
--		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
--	}, {
--		/* pdm-clkm-m2 */
--		.bank_num = 2,
--		.pin = 4,
--		.func = 3,
--		.route_offset = 0x600,
--		.route_val = BIT(16 + 2) | BIT(2),
--	}, {
--		/* spi1_miso */
--		.bank_num = 3,
--		.pin = 10,
--		.func = 3,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 9),
--	}, {
--		/* spi1_miso_m1 */
--		.bank_num = 2,
--		.pin = 4,
--		.func = 2,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 9) | BIT(9),
--	}, {
--		/* owire_m0 */
--		.bank_num = 0,
--		.pin = 11,
--		.func = 3,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 10) | BIT(16 + 11),
--	}, {
--		/* owire_m1 */
--		.bank_num = 1,
--		.pin = 22,
--		.func = 7,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(10),
--	}, {
--		/* owire_m2 */
--		.bank_num = 2,
--		.pin = 2,
--		.func = 5,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(11),
--	}, {
--		/* can_rxd_m0 */
--		.bank_num = 0,
--		.pin = 11,
--		.func = 2,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 12) | BIT(16 + 13),
--	}, {
--		/* can_rxd_m1 */
--		.bank_num = 1,
--		.pin = 22,
--		.func = 5,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
--	}, {
--		/* can_rxd_m2 */
--		.bank_num = 2,
--		.pin = 2,
--		.func = 4,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
--	}, {
--		/* mac_rxd0_m0 */
--		.bank_num = 1,
--		.pin = 20,
--		.func = 3,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 14),
--	}, {
--		/* mac_rxd0_m1 */
--		.bank_num = 4,
--		.pin = 2,
--		.func = 2,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 14) | BIT(14),
--	}, {
--		/* uart3_rx */
--		.bank_num = 3,
--		.pin = 12,
--		.func = 4,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 15),
--	}, {
--		/* uart3_rx_m1 */
--		.bank_num = 0,
--		.pin = 17,
--		.func = 3,
--		.route_offset = 0x314,
--		.route_val = BIT(16 + 15) | BIT(15),
--	},
-+	RK_MUXROUTE_SAME(0, RK_PC3, 1, 0x314, BIT(16 + 0) | BIT(0)), /* rtc_clk */
-+	RK_MUXROUTE_SAME(1, RK_PC6, 2, 0x314, BIT(16 + 2) | BIT(16 + 3)), /* uart2_rxm0 */
-+	RK_MUXROUTE_SAME(4, RK_PD2, 2, 0x314, BIT(16 + 2) | BIT(16 + 3) | BIT(2)), /* uart2_rxm1 */
-+	RK_MUXROUTE_SAME(0, RK_PB7, 2, 0x608, BIT(16 + 8) | BIT(16 + 9)), /* i2c3_sdam0 */
-+	RK_MUXROUTE_SAME(3, RK_PB4, 2, 0x608, BIT(16 + 8) | BIT(16 + 9) | BIT(8)), /* i2c3_sdam1 */
-+	RK_MUXROUTE_SAME(2, RK_PA0, 3, 0x608, BIT(16 + 8) | BIT(16 + 9) | BIT(9)), /* i2c3_sdam2 */
-+	RK_MUXROUTE_SAME(1, RK_PA3, 2, 0x308, BIT(16 + 3)), /* i2s-8ch-1-sclktxm0 */
-+	RK_MUXROUTE_SAME(1, RK_PA4, 2, 0x308, BIT(16 + 3)), /* i2s-8ch-1-sclkrxm0 */
-+	RK_MUXROUTE_SAME(1, RK_PB5, 2, 0x308, BIT(16 + 3) | BIT(3)), /* i2s-8ch-1-sclktxm1 */
-+	RK_MUXROUTE_SAME(1, RK_PB6, 2, 0x308, BIT(16 + 3) | BIT(3)), /* i2s-8ch-1-sclkrxm1 */
-+	RK_MUXROUTE_SAME(1, RK_PA4, 3, 0x308, BIT(16 + 12) | BIT(16 + 13)), /* pdm-clkm0 */
-+	RK_MUXROUTE_SAME(1, RK_PB6, 4, 0x308, BIT(16 + 12) | BIT(16 + 13) | BIT(12)), /* pdm-clkm1 */
-+	RK_MUXROUTE_SAME(2, RK_PA6, 2, 0x308, BIT(16 + 12) | BIT(16 + 13) | BIT(13)), /* pdm-clkm2 */
-+	RK_MUXROUTE_SAME(2, RK_PA4, 3, 0x600, BIT(16 + 2) | BIT(2)), /* pdm-clkm-m2 */
-+	RK_MUXROUTE_SAME(3, RK_PB2, 3, 0x314, BIT(16 + 9)), /* spi1_miso */
-+	RK_MUXROUTE_SAME(2, RK_PA4, 2, 0x314, BIT(16 + 9) | BIT(9)), /* spi1_miso_m1 */
-+	RK_MUXROUTE_SAME(0, RK_PB3, 3, 0x314, BIT(16 + 10) | BIT(16 + 11)), /* owire_m0 */
-+	RK_MUXROUTE_SAME(1, RK_PC6, 7, 0x314, BIT(16 + 10) | BIT(16 + 11) | BIT(10)), /* owire_m1 */
-+	RK_MUXROUTE_SAME(2, RK_PA2, 5, 0x314, BIT(16 + 10) | BIT(16 + 11) | BIT(11)), /* owire_m2 */
-+	RK_MUXROUTE_SAME(0, RK_PB3, 2, 0x314, BIT(16 + 12) | BIT(16 + 13)), /* can_rxd_m0 */
-+	RK_MUXROUTE_SAME(1, RK_PC6, 5, 0x314, BIT(16 + 12) | BIT(16 + 13) | BIT(12)), /* can_rxd_m1 */
-+	RK_MUXROUTE_SAME(2, RK_PA2, 4, 0x314, BIT(16 + 12) | BIT(16 + 13) | BIT(13)), /* can_rxd_m2 */
-+	RK_MUXROUTE_SAME(1, RK_PC4, 3, 0x314, BIT(16 + 14)), /* mac_rxd0_m0 */
-+	RK_MUXROUTE_SAME(4, RK_PA2, 2, 0x314, BIT(16 + 14) | BIT(14)), /* mac_rxd0_m1 */
-+	RK_MUXROUTE_SAME(3, RK_PB4, 4, 0x314, BIT(16 + 15)), /* uart3_rx */
-+	RK_MUXROUTE_SAME(0, RK_PC1, 3, 0x314, BIT(16 + 15) | BIT(15)), /* uart3_rx_m1 */
- };
- 
- static struct rockchip_mux_route_data rk3328_mux_route_data[] = {
--	{
--		/* uart2dbg_rxm0 */
--		.bank_num = 1,
--		.pin = 1,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16) | BIT(16 + 1),
--	}, {
--		/* uart2dbg_rxm1 */
--		.bank_num = 2,
--		.pin = 1,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16) | BIT(16 + 1) | BIT(0),
--	}, {
--		/* gmac-m1_rxd0 */
--		.bank_num = 1,
--		.pin = 11,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 2) | BIT(2),
--	}, {
--		/* gmac-m1-optimized_rxd3 */
--		.bank_num = 1,
--		.pin = 14,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 10) | BIT(10),
--	}, {
--		/* pdm_sdi0m0 */
--		.bank_num = 2,
--		.pin = 19,
--		.func = 2,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 3),
--	}, {
--		/* pdm_sdi0m1 */
--		.bank_num = 1,
--		.pin = 23,
--		.func = 3,
--		.route_offset = 0x50,
--		.route_val =  BIT(16 + 3) | BIT(3),
--	}, {
--		/* spi_rxdm2 */
--		.bank_num = 3,
--		.pin = 2,
--		.func = 4,
--		.route_offset = 0x50,
--		.route_val =  BIT(16 + 4) | BIT(16 + 5) | BIT(5),
--	}, {
--		/* i2s2_sdim0 */
--		.bank_num = 1,
--		.pin = 24,
--		.func = 1,
--		.route_offset = 0x50,
--		.route_val = BIT(16 + 6),
--	}, {
--		/* i2s2_sdim1 */
--		.bank_num = 3,
--		.pin = 2,
--		.func = 6,
--		.route_offset = 0x50,
--		.route_val =  BIT(16 + 6) | BIT(6),
--	}, {
--		/* card_iom1 */
--		.bank_num = 2,
--		.pin = 22,
--		.func = 3,
--		.route_offset = 0x50,
--		.route_val =  BIT(16 + 7) | BIT(7),
--	}, {
--		/* tsp_d5m1 */
--		.bank_num = 2,
--		.pin = 16,
--		.func = 3,
--		.route_offset = 0x50,
--		.route_val =  BIT(16 + 8) | BIT(8),
--	}, {
--		/* cif_data5m1 */
--		.bank_num = 2,
--		.pin = 16,
--		.func = 4,
--		.route_offset = 0x50,
--		.route_val =  BIT(16 + 9) | BIT(9),
--	},
-+	RK_MUXROUTE_SAME(1, RK_PA1, 2, 0x50, BIT(16) | BIT(16 + 1)), /* uart2dbg_rxm0 */
-+	RK_MUXROUTE_SAME(2, RK_PA1, 1, 0x50, BIT(16) | BIT(16 + 1) | BIT(0)), /* uart2dbg_rxm1 */
-+	RK_MUXROUTE_SAME(1, RK_PB3, 2, 0x50, BIT(16 + 2) | BIT(2)), /* gmac-m1_rxd0 */
-+	RK_MUXROUTE_SAME(1, RK_PB6, 2, 0x50, BIT(16 + 10) | BIT(10)), /* gmac-m1-optimized_rxd3 */
-+	RK_MUXROUTE_SAME(2, RK_PC3, 2, 0x50, BIT(16 + 3)), /* pdm_sdi0m0 */
-+	RK_MUXROUTE_SAME(1, RK_PC7, 3, 0x50, BIT(16 + 3) | BIT(3)), /* pdm_sdi0m1 */
-+	RK_MUXROUTE_SAME(3, RK_PA2, 4, 0x50, BIT(16 + 4) | BIT(16 + 5) | BIT(5)), /* spi_rxdm2 */
-+	RK_MUXROUTE_SAME(1, RK_PD0, 1, 0x50, BIT(16 + 6)), /* i2s2_sdim0 */
-+	RK_MUXROUTE_SAME(3, RK_PA2, 6, 0x50, BIT(16 + 6) | BIT(6)), /* i2s2_sdim1 */
-+	RK_MUXROUTE_SAME(2, RK_PC6, 3, 0x50, BIT(16 + 7) | BIT(7)), /* card_iom1 */
-+	RK_MUXROUTE_SAME(2, RK_PC0, 3, 0x50, BIT(16 + 8) | BIT(8)), /* tsp_d5m1 */
-+	RK_MUXROUTE_SAME(2, RK_PC0, 4, 0x50, BIT(16 + 9) | BIT(9)), /* cif_data5m1 */
- };
- 
- static struct rockchip_mux_route_data rk3399_mux_route_data[] = {
--	{
--		/* uart2dbga_rx */
--		.bank_num = 4,
--		.pin = 8,
--		.func = 2,
--		.route_offset = 0xe21c,
--		.route_val = BIT(16 + 10) | BIT(16 + 11),
--	}, {
--		/* uart2dbgb_rx */
--		.bank_num = 4,
--		.pin = 16,
--		.func = 2,
--		.route_offset = 0xe21c,
--		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(10),
--	}, {
--		/* uart2dbgc_rx */
--		.bank_num = 4,
--		.pin = 19,
--		.func = 1,
--		.route_offset = 0xe21c,
--		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(11),
--	}, {
--		/* pcie_clkreqn */
--		.bank_num = 2,
--		.pin = 26,
--		.func = 2,
--		.route_offset = 0xe21c,
--		.route_val = BIT(16 + 14),
--	}, {
--		/* pcie_clkreqnb */
--		.bank_num = 4,
--		.pin = 24,
--		.func = 1,
--		.route_offset = 0xe21c,
--		.route_val = BIT(16 + 14) | BIT(14),
--	},
-+	RK_MUXROUTE_SAME(4, RK_PB0, 2, 0xe21c, BIT(16 + 10) | BIT(16 + 11)), /* uart2dbga_rx */
-+	RK_MUXROUTE_SAME(4, RK_PC0, 2, 0xe21c, BIT(16 + 10) | BIT(16 + 11) | BIT(10)), /* uart2dbgb_rx */
-+	RK_MUXROUTE_SAME(4, RK_PC3, 1, 0xe21c, BIT(16 + 10) | BIT(16 + 11) | BIT(11)), /* uart2dbgc_rx */
-+	RK_MUXROUTE_SAME(2, RK_PD2, 2, 0xe21c, BIT(16 + 14)), /* pcie_clkreqn */
-+	RK_MUXROUTE_SAME(4, RK_PD0, 1, 0xe21c, BIT(16 + 14) | BIT(14)), /* pcie_clkreqnb */
- };
- 
- static bool rockchip_get_mux_route(struct rockchip_pin_bank *bank, int pin,
--- 
-2.25.1
-
-
+> -----Original Message-----
+> From: Andrew Jeffery <andrew@aj.id.au>
+> Sent: Friday, March 19, 2021 2:28 PM
+> To: openipmi-developer@lists.sourceforge.net; openbmc@lists.ozlabs.org;
+> minyard@acm.org
+> 
+> Unpack and remove the aspeed_kcs_probe_of_v[12]() functions to aid
+> rearranging how the private device-driver memory is allocated.
+> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  drivers/char/ipmi/kcs_bmc_aspeed.c | 146 ++++++++++++++---------------
+>  1 file changed, 68 insertions(+), 78 deletions(-)
+> 
+> diff --git a/drivers/char/ipmi/kcs_bmc_aspeed.c
+> b/drivers/char/ipmi/kcs_bmc_aspeed.c
+> index eefe362f65f0..061f53676206 100644
+> --- a/drivers/char/ipmi/kcs_bmc_aspeed.c
+> +++ b/drivers/char/ipmi/kcs_bmc_aspeed.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/poll.h>
+>  #include <linux/regmap.h>
+> @@ -63,6 +64,10 @@ struct aspeed_kcs_bmc {
+>  	struct regmap *map;
+>  };
+> 
+> +struct aspeed_kcs_of_ops {
+> +	int (*get_channel)(struct platform_device *pdev);
+> +	int (*get_io_address)(struct platform_device *pdev); };
+> 
+>  static u8 aspeed_kcs_inb(struct kcs_bmc *kcs_bmc, u32 reg)  { @@ -231,13
+> +236,10 @@ static const struct kcs_ioreg
+> ast_kcs_bmc_ioregs[KCS_CHANNEL_MAX] = {
+>  	{ .idr = LPC_IDR4, .odr = LPC_ODR4, .str = LPC_STR4 },  };
+> 
+> -static struct kcs_bmc *aspeed_kcs_probe_of_v1(struct platform_device
+> *pdev)
+> +static int aspeed_kcs_of_v1_get_channel(struct platform_device *pdev)
+>  {
+> -	struct aspeed_kcs_bmc *priv;
+>  	struct device_node *np;
+> -	struct kcs_bmc *kcs;
+>  	u32 channel;
+> -	u32 slave;
+>  	int rc;
+> 
+>  	np = pdev->dev.of_node;
+> @@ -245,105 +247,78 @@ static struct kcs_bmc
+> *aspeed_kcs_probe_of_v1(struct platform_device *pdev)
+>  	rc = of_property_read_u32(np, "kcs_chan", &channel);
+>  	if ((rc != 0) || (channel == 0 || channel > KCS_CHANNEL_MAX)) {
+>  		dev_err(&pdev->dev, "no valid 'kcs_chan' configured\n");
+> -		return ERR_PTR(-EINVAL);
+> +		return -EINVAL;
+>  	}
+> 
+> -	kcs = kcs_bmc_alloc(&pdev->dev, sizeof(struct aspeed_kcs_bmc),
+> channel);
+> -	if (!kcs)
+> -		return ERR_PTR(-ENOMEM);
+> +	return channel;
+> +}
+> 
+> -	priv = kcs_bmc_priv(kcs);
+> -	priv->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> -	if (IS_ERR(priv->map)) {
+> -		dev_err(&pdev->dev, "Couldn't get regmap\n");
+> -		return ERR_PTR(-ENODEV);
+> -	}
+> +static int aspeed_kcs_of_v1_get_io_address(struct platform_device
+> +*pdev) {
+> +	u32 slave;
+> +	int rc;
+> 
+> -	rc = of_property_read_u32(np, "kcs_addr", &slave);
+> -	if (rc) {
+> +	rc = of_property_read_u32(pdev->dev.of_node, "kcs_addr", &slave);
+> +	if (rc || slave > 0xffff) {
+>  		dev_err(&pdev->dev, "no valid 'kcs_addr' configured\n");
+> -		return ERR_PTR(-EINVAL);
+> +		return -EINVAL;
+>  	}
+> 
+> -	kcs->ioreg = ast_kcs_bmc_ioregs[channel - 1];
+> -	aspeed_kcs_set_address(kcs, slave);
+> -
+> -	return kcs;
+> -}
+> -
+> -static int aspeed_kcs_calculate_channel(const struct kcs_ioreg *regs) -{
+> -	int i;
+> -
+> -	for (i = 0; i < ARRAY_SIZE(ast_kcs_bmc_ioregs); i++) {
+> -		if (!memcmp(&ast_kcs_bmc_ioregs[i], regs, sizeof(*regs)))
+> -			return i + 1;
+> -	}
+> -
+> -	return -EINVAL;
+> +	return slave;
+>  }
+> 
+> -static struct kcs_bmc *aspeed_kcs_probe_of_v2(struct platform_device
+> *pdev)
+> +static int aspeed_kcs_of_v2_get_channel(struct platform_device *pdev)
+>  {
+> -	struct aspeed_kcs_bmc *priv;
+>  	struct device_node *np;
+>  	struct kcs_ioreg ioreg;
+> -	struct kcs_bmc *kcs;
+>  	const __be32 *reg;
+> -	int channel;
+> -	u32 slave;
+> -	int rc;
+> +	int i;
+> 
+>  	np = pdev->dev.of_node;
+> 
+>  	/* Don't translate addresses, we want offsets for the regmaps */
+>  	reg = of_get_address(np, 0, NULL, NULL);
+>  	if (!reg)
+> -		return ERR_PTR(-EINVAL);
+> +		return -EINVAL;
+>  	ioreg.idr = be32_to_cpup(reg);
+> 
+>  	reg = of_get_address(np, 1, NULL, NULL);
+>  	if (!reg)
+> -		return ERR_PTR(-EINVAL);
+> +		return -EINVAL;
+>  	ioreg.odr = be32_to_cpup(reg);
+> 
+>  	reg = of_get_address(np, 2, NULL, NULL);
+>  	if (!reg)
+> -		return ERR_PTR(-EINVAL);
+> +		return -EINVAL;
+>  	ioreg.str = be32_to_cpup(reg);
+> 
+> -	channel = aspeed_kcs_calculate_channel(&ioreg);
+> -	if (channel < 0)
+> -		return ERR_PTR(channel);
+> -
+> -	kcs = kcs_bmc_alloc(&pdev->dev, sizeof(struct aspeed_kcs_bmc),
+> channel);
+> -	if (!kcs)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -	kcs->ioreg = ioreg;
+> -
+> -	priv = kcs_bmc_priv(kcs);
+> -	priv->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> -	if (IS_ERR(priv->map)) {
+> -		dev_err(&pdev->dev, "Couldn't get regmap\n");
+> -		return ERR_PTR(-ENODEV);
+> +	for (i = 0; i < ARRAY_SIZE(ast_kcs_bmc_ioregs); i++) {
+> +		if (!memcmp(&ast_kcs_bmc_ioregs[i], &ioreg, sizeof(ioreg)))
+> +			return i + 1;
+>  	}
+> 
+> -	rc = of_property_read_u32(np, "aspeed,lpc-io-reg", &slave);
+> -	if (rc)
+> -		return ERR_PTR(rc);
+> +	return -EINVAL;
+> +}
+> 
+> -	aspeed_kcs_set_address(kcs, slave);
+> +static int aspeed_kcs_of_v2_get_io_address(struct platform_device
+> +*pdev) {
+> +	uint32_t slave;
+> +	int rc;
+> 
+> -	return kcs;
+> +	rc = of_property_read_u32(pdev->dev.of_node, "aspeed,lpc-io-reg",
+> &slave);
+> +	if (rc || slave > 0xffff)
+> +		return -EINVAL;
+> +
+> +	return slave;
+>  }
+> 
+>  static int aspeed_kcs_probe(struct platform_device *pdev)  {
+> +	const struct aspeed_kcs_of_ops *ops;
+>  	struct device *dev = &pdev->dev;
+>  	struct kcs_bmc *kcs_bmc;
+>  	struct device_node *np;
+> -	int rc;
+> +	int rc, channel, addr;
+> 
+>  	np = dev->of_node->parent;
+>  	if (!of_device_is_compatible(np, "aspeed,ast2400-lpc-v2") && @@
+> -352,23 +327,28 @@ static int aspeed_kcs_probe(struct platform_device
+> *pdev)
+>  		dev_err(dev, "unsupported LPC device binding\n");
+>  		return -ENODEV;
+>  	}
+> -
+> -	np = dev->of_node;
+> -	if (of_device_is_compatible(np, "aspeed,ast2400-kcs-bmc") ||
+> -	    of_device_is_compatible(np, "aspeed,ast2500-kcs-bmc"))
+> -		kcs_bmc = aspeed_kcs_probe_of_v1(pdev);
+> -	else if (of_device_is_compatible(np, "aspeed,ast2400-kcs-bmc-v2") ||
+> -		 of_device_is_compatible(np, "aspeed,ast2500-kcs-bmc-v2"))
+> -		kcs_bmc = aspeed_kcs_probe_of_v2(pdev);
+> -	else
+> +	ops = of_device_get_match_data(&pdev->dev);
+> +	if (!ops)
+>  		return -EINVAL;
+> 
+> -	if (IS_ERR(kcs_bmc))
+> -		return PTR_ERR(kcs_bmc);
+> +	channel = ops->get_channel(pdev);
+> +	if (channel < 0)
+> +		return channel;
+> 
+> +	kcs_bmc = kcs_bmc_alloc(&pdev->dev, sizeof(struct aspeed_kcs_bmc),
+> channel);
+> +	if (!kcs_bmc)
+> +		return -ENOMEM;
+> +
+> +	kcs_bmc->ioreg = ast_kcs_bmc_ioregs[channel - 1];
+>  	kcs_bmc->io_inputb = aspeed_kcs_inb;
+>  	kcs_bmc->io_outputb = aspeed_kcs_outb;
+> 
+> +	addr = ops->get_io_address(pdev);
+> +	if (addr < 0)
+> +		return addr;
+> +
+> +	aspeed_kcs_set_address(kcs_bmc, addr);
+> +
+>  	rc = aspeed_kcs_config_irq(kcs_bmc, pdev);
+>  	if (rc)
+>  		return rc;
+> @@ -400,11 +380,21 @@ static int aspeed_kcs_remove(struct
+> platform_device *pdev)
+>  	return 0;
+>  }
+> 
+> +static const struct aspeed_kcs_of_ops of_v1_ops = {
+> +	.get_channel = aspeed_kcs_of_v1_get_channel,
+> +	.get_io_address = aspeed_kcs_of_v1_get_io_address, };
+> +
+> +static const struct aspeed_kcs_of_ops of_v2_ops = {
+> +	.get_channel = aspeed_kcs_of_v2_get_channel,
+> +	.get_io_address = aspeed_kcs_of_v2_get_io_address, };
+> +
+>  static const struct of_device_id ast_kcs_bmc_match[] = {
+> -	{ .compatible = "aspeed,ast2400-kcs-bmc" },
+> -	{ .compatible = "aspeed,ast2500-kcs-bmc" },
+> -	{ .compatible = "aspeed,ast2400-kcs-bmc-v2" },
+> -	{ .compatible = "aspeed,ast2500-kcs-bmc-v2" },
+> +	{ .compatible = "aspeed,ast2400-kcs-bmc", .data = &of_v1_ops },
+> +	{ .compatible = "aspeed,ast2500-kcs-bmc", .data = &of_v1_ops },
+> +	{ .compatible = "aspeed,ast2400-kcs-bmc-v2", .data = &of_v2_ops },
+> +	{ .compatible = "aspeed,ast2500-kcs-bmc-v2", .data = &of_v2_ops },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, ast_kcs_bmc_match);
+> --
+> 2.27.0
 
