@@ -2,94 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 698EE35517E
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Apr 2021 13:04:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 632F335528B
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Apr 2021 13:43:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232493AbhDFLEz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Apr 2021 07:04:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        id S239014AbhDFLnY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Apr 2021 07:43:24 -0400
+Received: from mga03.intel.com ([134.134.136.65]:39974 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231650AbhDFLEz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 6 Apr 2021 07:04:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 150BD613C7;
-        Tue,  6 Apr 2021 11:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617707087;
-        bh=j0qsL8ZhRgxgUfLEkGnISsjLMn2+Fbcco5QjwWwQSXE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GqTZLOyW2VyULQBFS9BxNlyfxWpXdw88hZPxg9c3afs1QPqMNdzh+rKGKGbOl3XrZ
-         IGnpMhOUwyH69P3KyQUiFTEwzFBS+J2ar+dsE2EHZHNaTRYZFFh9JwhMzcQMLtGUoY
-         n3Fan8Qr1ny5jI9TrPTqZ8A+88ItN46XTRnYYtyG+Jiuk5tJLmyPmnzXKBn1KEVO7b
-         0ShlhvnTuJWlsDaQhC2Nvnu1FHcu17N0mpv1NB9Oj8VQsJVg2y4X4BTXrnZfv6B8V0
-         WmzZ0CD8ZwcHD+sG54Uhl17vZrYBMkQhInQIR8NDEm/7MIdHxcFdJqxtSa27n4t/4e
-         QXF/qwteOCeXg==
-Date:   Tue, 6 Apr 2021 12:04:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH v5 00/19] Support ROHM BD71815 PMIC
-Message-ID: <20210406110430.GB6443@sirena.org.uk>
-References: <cover.1617020713.git.matti.vaittinen@fi.rohmeurope.com>
- <303b164aaa3d36cf8c9d03ee9b3863635be4073d.camel@fi.rohmeurope.com>
- <20210402191950.GK5402@sirena.org.uk>
- <e0b83eee4417e4e267b15a8c22bbc7f70df919e9.camel@fi.rohmeurope.com>
+        id S239082AbhDFLnY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 6 Apr 2021 07:43:24 -0400
+IronPort-SDR: bAV9cxAMb8zJIt7rQv2uARib2f7c9d0x8sMeHRrnVg4J4HT9htlYY0lZfacWulEenMzZzZpU03
+ /7Xow4nVfbyw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9945"; a="193086709"
+X-IronPort-AV: E=Sophos;i="5.81,309,1610438400"; 
+   d="scan'208";a="193086709"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2021 04:43:15 -0700
+IronPort-SDR: +niDUAocI2lTqQwKZYQit/UA5C5Ac9sZmrxjgsZAuFFEGx8Rpr6WUJI1+RmTCRnYwc495KFtWp
+ vG0jTboSahJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,309,1610438400"; 
+   d="scan'208";a="597917022"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 06 Apr 2021 04:43:13 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id F29FE29D; Tue,  6 Apr 2021 14:43:28 +0300 (EEST)
+Date:   Tue, 6 Apr 2021 14:43:28 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linux GPIO <linux-gpio@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-gpio for 5.13-2
+Message-ID: <YGxJYL70rkzrZQ0t@black.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e0b83eee4417e4e267b15a8c22bbc7f70df919e9.camel@fi.rohmeurope.com>
-X-Cookie: BARBARA STANWYCK makes me nervous!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Linux GPIO  maintainers,
 
---cmJC7u66zC7hs+87
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+More stuff for v5.13 cycle. PR has been done against gpio/for-next branch
+of Bart's tree.
 
-On Mon, Apr 05, 2021 at 05:23:41AM +0000, Vaittinen, Matti wrote:
-> On Fri, 2021-04-02 at 20:19 +0100, Mark Brown wrote:
+Thanks,
 
-> > Matti Vaittinen (2):
-> >       regulator: helpers: Export helper voltage listing
-> >       regulator: Add regmap helper for ramp-delay setting
+With Best Regards,
+Andy Shevchenko
 
-> If I understand this correctly, the idea is that Lee could pull these
-> changes to his tree? So, I will drop these two patches from the series
-> when I resend it. Helpers are needed for the regulator part of the
-> series to apply. Lee, Mark, please let me know if I misunderstood.
+The following changes since commit b41ba2ec54a70908067034f139aa23d0dd2985ce:
 
-Yes.
+  gpiolib: Read "gpio-line-names" from a firmware node (2021-03-08 11:59:17 +0100)
 
---cmJC7u66zC7hs+87
-Content-Type: application/pgp-signature; name="signature.asc"
+are available in the Git repository at:
 
------BEGIN PGP SIGNATURE-----
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.13-2
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBsQD4ACgkQJNaLcl1U
-h9AFswf9Hokgv/qlc9tx7qtUsLTFz/Bqr7r6bGw937a0dA9PyYBNsN1ZDH/ZaU6k
-TgoMBbFwnyVsL82XwHsLOrGih0+XaeYNkKXm5/I+qd86ryl1My8CLkAt6iXQqWY/
-3rP8/gueg4zqniWchALAYejIhz910A69Qsz7XOwVWj0XKoUpyiZpq7NUtF2ueNyH
-4I0p/K57R/NeYmfn0FFwsQgpik9stmtrqXpOEhAGay7e4TDDiDuG9qagMEMPCDDr
-r/FPpCgWodDPB/INLfYcUygjA9b/7yrgm4JaDy9d3H9UlxsNbIZIPDt5lgqcwcia
-3M1X7F8fSG//t5VsyflAsJg/ToeT0g==
-=+Bcj
------END PGP SIGNATURE-----
+for you to fetch changes up to 058459043e71b5c1703194ea71aab576c0ff4f4d:
 
---cmJC7u66zC7hs+87--
+  gpio: ich: Switch to be dependent on LPC_ICH (2021-04-02 21:44:56 +0300)
+
+----------------------------------------------------------------
+intel-gpio for v5.13-2
+
+* ACPI quirk to ignore EC events on Dell Venue 10 Pro 5055
+* Kconfig fixes for GPIO ICH and SCH drivers
+
+The following is an automated git shortlog grouped by driver:
+
+gpiolib:
+ -  acpi: Add quirk to ignore EC wakeups on Dell Venue 10 Pro 5055
+
+ich:
+ -  Switch to be dependent on LPC_ICH
+
+sch:
+ -  Drop MFD_CORE selection
+ -  depends on LPC_SCH
+
+----------------------------------------------------------------
+Andy Shevchenko (5):
+      lib/cmdline: Export next_arg() for being used in modules
+      gpio: aggregator: Replace custom get_arg() with a generic next_arg()
+      gpio: sch: Hook into ACPI GPE handler to catch GPIO edge events
+      gpio: sch: Drop MFD_CORE selection
+      gpio: ich: Switch to be dependent on LPC_ICH
+
+Hans de Goede (1):
+      gpiolib: acpi: Add quirk to ignore EC wakeups on Dell Venue 10 Pro 5055
+
+Jan Kiszka (1):
+      gpio: sch: Add edge event support
+
+Randy Dunlap (1):
+      gpio: sch: depends on LPC_SCH
+
+ drivers/gpio/Kconfig           |  11 ++-
+ drivers/gpio/gpio-aggregator.c |  39 ++------
+ drivers/gpio/gpio-ich.c        |   2 -
+ drivers/gpio/gpio-sch.c        | 198 +++++++++++++++++++++++++++++++++++++++--
+ drivers/gpio/gpiolib-acpi.c    |  14 +++
+ lib/cmdline.c                  |   1 +
+ 6 files changed, 215 insertions(+), 50 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
