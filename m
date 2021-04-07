@@ -2,78 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45554356C7C
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Apr 2021 14:46:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDF63356CA2
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Apr 2021 14:51:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235499AbhDGMqk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Apr 2021 08:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
+        id S240277AbhDGMvW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Apr 2021 08:51:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235035AbhDGMqk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Apr 2021 08:46:40 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22F8C06175F
-        for <linux-gpio@vger.kernel.org>; Wed,  7 Apr 2021 05:46:29 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id z8so20469275ljm.12
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Apr 2021 05:46:29 -0700 (PDT)
+        with ESMTP id S230234AbhDGMvW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Apr 2021 08:51:22 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F868C061756
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Apr 2021 05:51:11 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id n138so28347526lfa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Apr 2021 05:51:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9fEidbG2mkH1AcECygNcp3MNB9ZfpqzIVMUEPrbQPzc=;
-        b=BepU5eueKnJ1sfHKHWdyeTo+Ezij/ITEIe0XBuV+fOTdy3UU9S1jA+T5LgGRqXfZ7n
-         5s3vYtpts12q8rprpifg9HGt4Io3N1jnAwd8RGSKZSqTxHTQ2zIiTbcCRwvmGtFiGa7I
-         XW7xXC8VoWng7oLtV+NGPq+xTJ71c6T4HmllZAgZuFd3P5BQCvObMIUV5nmhuhnC+QA+
-         swlyKTMG/UIWCUUaICtRtZBkTk6pvweClo/sDNfO2zh3pZvft8D3KcJmKen806weQzfl
-         uka0MQCuibP3Z9zloNGhe/bv0teNSlLiCGTMQ9+Ga+yOs59KkCkmICqqSsCmE8RMDBDQ
-         K3aQ==
+        bh=21PYniXvfQevYDt2LqUVPqF+blkV7WW7UmwNbAtAyYE=;
+        b=SKLeNtLCloj3EXjblEOYq2alS4B615/buEGe1OC6ziEVEgroRrEfmyqcS9muQnROVN
+         MjMm5iMLUkRRWNXi+ELfYLXxRbuybFoXvaQLPHPIPDWZxDEr/yF0WD6aSsI8HalneP3C
+         m2rx6wXEqNQT9dn5FIjmPdk2jw7IeEUXsQCGm09ZACl1FVzM+I5fen5b6j0zlkyKjBcb
+         TrPaCfV8mCGWx3a6khS0RdmbSWenPyxBQUv17epKvvZTGuQE9QWW6bSeJtxy1/ExCLUm
+         cnCST4Q1XsIX2RY3YlunfPiX3HudklnzbHz36oPexKuKNFXdjv7gdG+t8Ar7+5P+PJSn
+         SWjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9fEidbG2mkH1AcECygNcp3MNB9ZfpqzIVMUEPrbQPzc=;
-        b=iyzkakRQe/aMl1I9ZxhgzhWOKQMChIukFKHnzZfcZ1hXtopaTt/UPkNSV/3yy7of3K
-         cnpExQhalNIu4fqRlISXFHnlYpGGILQI+Rni1DYyXwgHKPD6+dZvf9+wPwBGjlW9RHd/
-         0If6OURcUXPByZ4f1881tG5wP3gyiCPpOB3mXM+Eh00OZG3lQ97zUpD2I8eEeIraysCB
-         fGqa0TLhvpdMOCIOE+AusW/Sfqjqu0yEod+FxaCFqDhcdk+g92ePfBTZEqPiPFOqSuTI
-         PtA5rrdIIOZgGC/MH3z3hGxy1LZQM5WpdvLCfPrpkwc9gaSN5b0ThK/WdbSob8LnScEP
-         4fMw==
-X-Gm-Message-State: AOAM531VJ3hqp+X2B4srEnaj0ghGq/jqwe8oKEi2baBCsAooOAvn2/c6
-        RN3Gox0kTnMNRdNmqGqEMoFq610rmA07y5RvYURypA==
-X-Google-Smtp-Source: ABdhPJyjxbqkrseOVwt1d8gFHppZQCb8Bovuc1UQ5ikzaPez+dbs8HtS5kKTqLUF+M+6+plEUrE8QHk0MQKX6Elnsjs=
-X-Received: by 2002:a2e:9004:: with SMTP id h4mr2084192ljg.326.1617799587838;
- Wed, 07 Apr 2021 05:46:27 -0700 (PDT)
+        bh=21PYniXvfQevYDt2LqUVPqF+blkV7WW7UmwNbAtAyYE=;
+        b=YS+5al3GTy0IevgG06YNX8X7lYdXYEpoSUXbqL/4hreXray/xx7xFtgS7mb0zkhXob
+         rbiCzC4jYoCkHgMhdS3uZsjYicBXJB+qGyY6R4s6Z06f8Tej5iDbE+pQwu+FIHZAognN
+         t6aqasHzC0jY52c99TdY0FJNsLWiXziWwgXxXzAG5/JmSlh3aIUxBmh/2qmeZ+Jx8Eha
+         ialAocuy8aKQEWjwbvbQ7JFs6wFl+XPTHpRXmz1/YxOU2mNQJDFv5+jj3+dUfTGZFaMe
+         vRcTns9j3cYlxqTuD/m2Rq3/+86U+jm8cmiUkTZll6ld/t+WLrmesgX9a0N2bK7x2fDb
+         550g==
+X-Gm-Message-State: AOAM533uW7M9khIf4/UgMN0CVYWOudSniyNOtj64jE/QMDlT0CWBgJcf
+        fZQfaFnmZUvV/wJktfS+38XywgjC5le4AbqPTzAt7W1UqgVBEg==
+X-Google-Smtp-Source: ABdhPJwvsJVtXk3vkL3CrbfITetQgHXGm5hNvOAan62p9wJPBjI+BMzBVPm21pnHwxF1yDG28BKT/SGqSePlzhFw+AQ=
+X-Received: by 2002:a19:4c08:: with SMTP id z8mr2226571lfa.157.1617799869912;
+ Wed, 07 Apr 2021 05:51:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1617363828.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1617363828.git.geert+renesas@glider.be>
+References: <20210331124733.2059013-1-linus.walleij@linaro.org>
+ <1a2033f5-dff4-ef2f-82c4-26c1f2fbd785@infradead.org> <9e1cec76-1c0a-9203-7995-4c2d09b711d8@infradead.org>
+In-Reply-To: <9e1cec76-1c0a-9203-7995-4c2d09b711d8@infradead.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 7 Apr 2021 14:46:17 +0200
-Message-ID: <CACRpkdadBnrxbCr9Pe=aHD08Ouz3=Qa-WZruv=vpVBSZtFEDoA@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: sh-pfc: Updates for v5.13 (take two)
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Wed, 7 Apr 2021 14:50:59 +0200
+Message-ID: <CACRpkdaqwpbACVYz5+d5HuwRO=W5J-f93W+1N=mp9UhO_Wz5rg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: bcm63xx: Fix More dependencies
+To:     Randy Dunlap <rdunlap@infradead.org>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+        =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 2, 2021 at 1:46 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Thu, Apr 1, 2021 at 7:47 PM Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> The following changes since commit f7adcca27edf05fc1f061a9e5de059fe179f0e1c:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> Subject: [PATCH -next] pinctrl: bcm: fix bcx63xx build errors
 >
->   pinctrl: renesas: r8a77965: Add vin4_g8 and vin5_high8 pins (2021-03-10 10:50:26 +0100)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.13-tag2
->
-> for you to fetch changes up to 61232cd6efca6e4d2705993850d014343ba604c4:
->
->   pinctrl: renesas: r8a7791: Add bias pinconf support (2021-03-24 10:38:29 +0100)
+> All of the drivers that select PINCTRL_BCM63XX also should depend on
+> OF since 'select' does not follow any dependency chains and there
+> can still be kconfig warnings and build errors without this.
 
-Pulled in! Sorry for the delay.
+I applied a version of this patch where I also drop the depend on OF
+from the BCM63xx Kconfig, it is better to depend on OF for each
+driver.
 
 Yours,
 Linus Walleij
