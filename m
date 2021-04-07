@@ -2,63 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 575FC3577C9
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 00:35:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C6B53577FD
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 00:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230408AbhDGWfR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Apr 2021 18:35:17 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:34865 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230291AbhDGWfQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Apr 2021 18:35:16 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 07 Apr 2021 15:35:06 -0700
-X-QCInternal: smtphost
-Received: from gurus-linux.qualcomm.com (HELO gurus-linux.localdomain) ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 07 Apr 2021 15:35:01 -0700
-Received: by gurus-linux.localdomain (Postfix, from userid 383780)
-        id 661CA18D9; Wed,  7 Apr 2021 15:35:01 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH 2/2] pinctrl: qcom-pmic-gpio: Add support for pm8008
-Date:   Wed,  7 Apr 2021 15:35:00 -0700
-Message-Id: <67ce531c58ba5663ec74021b01617e3d5cd106c7.1617834404.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568107824b071265b5fc3a195a1d91089ad617a.1617834404.git.gurus@codeaurora.org>
-References: <1568107824b071265b5fc3a195a1d91089ad617a.1617834404.git.gurus@codeaurora.org>
-In-Reply-To: <1568107824b071265b5fc3a195a1d91089ad617a.1617834404.git.gurus@codeaurora.org>
-References: <1568107824b071265b5fc3a195a1d91089ad617a.1617834404.git.gurus@codeaurora.org>
+        id S229484AbhDGWv5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Apr 2021 18:51:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229459AbhDGWv5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Apr 2021 18:51:57 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53CA5C061760;
+        Wed,  7 Apr 2021 15:51:47 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id lr1-20020a17090b4b81b02900ea0a3f38c1so3798967pjb.0;
+        Wed, 07 Apr 2021 15:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FgPfAhHXqMoy6vJnPfG5IIOlPZRwNfuNehQ3+fiErZg=;
+        b=WBPzgtBaGILmG5MWe1cdPTLspW1zWPgzBxOHeRFyI9oNgTBRoOzxlnCjHPxfxsOC1/
+         m5xMiCcbeIlSQhSeBCZvi3j1iz8OwIZbuVA9308Nzf8lh3p9CtlaneD4kLEtFK5QISVF
+         etkA/4s5UMX0nod2rmWZCCNOvfHlIjnSs8wLjHDMGht5idehxHRlvY4Yo7yCssj68Q6G
+         sCnbxhLo+tydgph4Pt3/NWPmoez+FUc0fayrCVydlixpjkCV8/1cnDr45HwexuOHTEKM
+         mVNFyAz6Nk8SxoTYEnwavg9uAqYm7mxdcper0f3ut4YLX0d9+sma51NWlKp/uQ3uqfZe
+         IMHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FgPfAhHXqMoy6vJnPfG5IIOlPZRwNfuNehQ3+fiErZg=;
+        b=YlHnMRcT5G6Ft52FucN7M+hJ3MNoIeCH16Hxa6mBY0YdtlFXUiJlfFEtXHyci417AZ
+         qK52UKedcWe1D91dihapKSGCdM3bNISiY0Q8ehPlBfuLM9EDcLEamZyS6v0Bx1JUvjt1
+         vPt2bp8aKt2n6P+oj86QjqtjVDX3v7hX4pVM1n28mry+PGQY301s7PHwDjFn6SN0gLxl
+         A48O4wEoxQphugl2Ls7HY1Dge7dZhaUcGT/i6H3Sc3oK7OTiL3LmZI3aV77UBC70tvtO
+         26xEesFrbLgR3k5WngT8qIX/spmbLL93goqaicyJJDFWysJNeQth1xZvxHUsKM186xnx
+         WYzQ==
+X-Gm-Message-State: AOAM53332I/ySdXlQQDrvY+Phx9eiD9IdMxpeoHdTvpd+GCGdpzJGRQU
+        lbruDVTDB1ZNKzpA91p5PwQvgGS1sK1PBYsr5BM=
+X-Google-Smtp-Source: ABdhPJy9stg3QYcMaqURxTma45eWavwwq9g44GznI2BjzG6qp/K16EWCe6Sb/5WyxsV3R7ja14c87YL720P9Ph2eWzU=
+X-Received: by 2002:a17:90a:5407:: with SMTP id z7mr5559293pjh.228.1617835906867;
+ Wed, 07 Apr 2021 15:51:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+G9fYsiRYaE+y44ApDkvPvbDCdiJ+nnCMhiiaPVsg6p8m4+1Q@mail.gmail.com>
+In-Reply-To: <CA+G9fYsiRYaE+y44ApDkvPvbDCdiJ+nnCMhiiaPVsg6p8m4+1Q@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 8 Apr 2021 01:51:28 +0300
+Message-ID: <CAHp75VdJ7kGXN6sk8HTeSfAKQtHDGSmtdVPn7CSkK5=yfDizuA@mail.gmail.com>
+Subject: Re: [next] [arm64] [gpio] BUG: key has not been registered! DEBUG_LOCKS_WARN_ON:
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Colin King <colin.king@canonical.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for the two GPIOs present on PM8008.
+On Thu, Apr 8, 2021 at 12:38 AM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> While running kselftest recently added gpio gpio-sim.sh test case the following
+> warning was triggered on Linux next tag 20210330 tag running on arm64 juno
+> and hikey devices.
+>
+> GOOD: next-20210326
+> BAD: next-20210330
+>
+> This is still happening today on Linux next tag 20210407.
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 +
- 1 file changed, 1 insertion(+)
+Can you add the following
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index c2b9f2e..76e997a 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1137,6 +1137,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pm6150l-gpio", .data = (void *) 12 },
- 	/* pmx55 has 11 GPIOs with holes on 3, 7, 10, 11 */
- 	{ .compatible = "qcom,pmx55-gpio", .data = (void *) 11 },
-+	{ .compatible = "qcom,pm8008-gpio", .data = (void *) 2 },
- 	{ },
- };
- 
+  sysfs_attr_init(attrs[i]);
+
+to the end of the loop in gpio_sim_setup_sysfs()?
+
+If it fixes an issue I'll send a formal patch.
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+With Best Regards,
+Andy Shevchenko
