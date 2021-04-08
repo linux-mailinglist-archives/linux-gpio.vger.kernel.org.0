@@ -2,77 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D6A4358568
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 15:58:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE42B35857B
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 16:01:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231195AbhDHN6T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Apr 2021 09:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45262 "EHLO
+        id S231534AbhDHOBt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Apr 2021 10:01:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230467AbhDHN6S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 09:58:18 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40A8EC061761
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Apr 2021 06:58:07 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 12so4115033lfq.13
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Apr 2021 06:58:07 -0700 (PDT)
+        with ESMTP id S231474AbhDHOBt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 10:01:49 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA20C061760
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Apr 2021 07:01:38 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id o16so2409307ljp.3
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Apr 2021 07:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6tbn1tI2G3tBIgRayZS9aXICGu6KDbVjOAf0j/hQNiQ=;
-        b=CS/ErZC0v4wrWQNQ5hzG01iDbDSinO80SXg7GXfUcN2dF55XM/+XlP3IoAV6A0brt+
-         Sf7Fz5g7s0FLWq7zvH/koSgO4OpVStfDNd5GVg5Mdwk+gdmA6nCLivuQbyOzn60ZIZ4f
-         GjVrGRi9S/cCfDrbooUQA249kIWaU886GZZKS6wB2RKnLShV3gwjuMYwJEcRv35QHvR6
-         d7a521VUbO2ZQtZUxZ5lysGLrx1ZbZEo9H6BnGpCW8UTMFeS3uoHORCA6mGKWKCTn0Em
-         3IrCWCrecKOWmHd5vBOlrfxMOx3tsf23OLwDjRNzGfWCyE4GZ4Ft1YS9GmZCQD77i3wy
-         hkSg==
+        bh=xhqQfgoly9avn7XXhZhaK1N8yEQXzkHQX6Bo2sMn7Fs=;
+        b=WNnTzsHoP+dFlWiqTjjqJyglMxEZZjjMBarB/ZDvorEla1DQUxj+0thphNRODKA6Y7
+         0eqOUJKpdzFNYXgAs6TmhHIVnDL3/TgGxC6PMrfloeTpjyV1TXt2aI8HOhJWSEQKdkAx
+         S0TXbkUEpSE455nWX4wCS0VTeTlCkMTDIKhHx8v47++0d6OEjqBaojCAqvJTO8nNdNF9
+         NmJuU0dvKOQkUk0ghOiyfwbAL8tQGGVBUDASFSOMEP+zfYJfI4kj7hIugcivIVD5tPgB
+         w4H4kKvSJXYnXIcTY72BhiOVP5IjzsOcZbmQy4TH1AguMr9Qrw7u4tGandLJZayjYXaR
+         4HmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6tbn1tI2G3tBIgRayZS9aXICGu6KDbVjOAf0j/hQNiQ=;
-        b=Ub2FRqnZVzMcavP3c8Vwg6dDx/u6iVxDd02fUHqrKwpavGQiJjcJJVpWiFuz5la9WW
-         VL86A7EKf6eP16yZDhDm3amo8TkeD1ot1CML8nEfm6PC54loo2Rn3u1lmT8IbSxS9PRS
-         DzOaksEJ/KeL8fek0t+7lzHB5g6YdObmsNKnnLEqZxm9BgCOKN32O4aTbXRBk9MGBdbb
-         4CUDpiaffO9aE05271fXb4KSTAKr6/HHDxEYFk8EqHAgrCuVZEBQa3dqCQryLwGiJsk2
-         5H6vo+IU+xwzdZcUVCp+uuUMGjTd0MoAl10GfZbRj8ikHffsF/cA5WBCRYemMD1gEPyG
-         2DzA==
-X-Gm-Message-State: AOAM530UouKu3b7hSSLjqYJFQMUxPHO8rSsGjJQjsoBbM86ZxnYKjHYx
-        bCtTnrKWdi11gNJdRdqHq8ya8SFpSPAcdL/BKVf8vQ==
-X-Google-Smtp-Source: ABdhPJw1fFR7RAMMEQXftCBL2C/BR9NOHS4C5Noa0+fVfEGGST5YGXcioIWRzTYte6GP8x3fWB5YzK4bkVuDprX3Eeg=
-X-Received: by 2002:a19:4c08:: with SMTP id z8mr6083018lfa.157.1617890285813;
- Thu, 08 Apr 2021 06:58:05 -0700 (PDT)
+        bh=xhqQfgoly9avn7XXhZhaK1N8yEQXzkHQX6Bo2sMn7Fs=;
+        b=jG7GmiuxOMECPsANd69X40w7KJfN4/qPRUnYE7suvhDf9+dRjNUukGjjGi9dRUEguw
+         8Z7szvmrbaoIcmHRT70L3nYmLdBSlWVpO1r4Sk9LnSf9g8YeazH62cl1dwAO88K1nv7/
+         XH7PGeKRVC7MOdFZ/ksGbreMUCkfWNuHYF9HR2LoqOnF3837TGlRaccYl7l8Dg5l7xI9
+         w9jnnWwvfBknoYyR8icAT6kGyyTzjQCjOLPiEqFGhb/XDsVEwqfv7dnD4w6ApdF/Y744
+         F5kLhJyA7oDCI+fCjn8VqUvTTLbXD0rVWtBWQhVnwGtsWTwlSapD9KvBt/OJp82o1hdM
+         BlyQ==
+X-Gm-Message-State: AOAM53094dlFnw4ALbGkZ6i7L+NtE9r3RAgBpKfhhDhQj3GKt6/B5MWu
+        pWhe4tVe0sEho8Iiz+uLFb53Qa9tDWGJJFbSKYKVsA==
+X-Google-Smtp-Source: ABdhPJxU9DTkaWJ+YnuAoa4IEImpBXyOrNFaZoalC6kRmQO4nYfnK6k+1wBIw/KC7izS1V/Jx34MpoRJrsKl98O/dtg=
+X-Received: by 2002:a2e:700a:: with SMTP id l10mr5793077ljc.368.1617890494649;
+ Thu, 08 Apr 2021 07:01:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210330062655.1027-1-angkery@163.com>
-In-Reply-To: <20210330062655.1027-1-angkery@163.com>
+References: <20210328183034.555702-1-festevam@gmail.com>
+In-Reply-To: <20210328183034.555702-1-festevam@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Apr 2021 15:57:54 +0200
-Message-ID: <CACRpkdYs3m_OCF-JaLFwnSO-Zh6n41tjdjvwV3Ye1E8MYbwBDw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: ti: fix error return code of ti_iodelay_dt_node_to_map()
-To:     angkery <angkery@163.com>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Zheng Yongjun <zhengyongjun3@huawei.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
+Date:   Thu, 8 Apr 2021 16:01:23 +0200
+Message-ID: <CACRpkdbh59VH0eAWXP3dAiCN9hBDCY_TmMTzp_70G8pZpYmJDA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: imx: Remove unneeded of_match_ptr()
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Junlin Yang <yangjunlin@yulong.com>
+        Sascha Hauer <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 30, 2021 at 10:39 AM angkery <angkery@163.com> wrote:
+On Sun, Mar 28, 2021 at 8:31 PM Fabio Estevam <festevam@gmail.com> wrote:
 
-> From: Junlin Yang <yangjunlin@yulong.com>
+> i.MX is a DT-only platform, so of_match_ptr() can be safely
+> removed.
 >
-> when devm_kcalloc fails, use -ENOMEM instead of -EINVAL,
-> and consistent with other devm_kcalloc return values.
+> Remove the unneeded of_match_ptr().
 >
-> Signed-off-by: Junlin Yang <yangjunlin@yulong.com>
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
 
-Patch applied.
+Patches applied!
 
 Yours,
 Linus Walleij
