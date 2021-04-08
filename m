@@ -2,131 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3D1E358DBA
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 21:50:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31008358EBF
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 22:53:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232388AbhDHTut (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Apr 2021 15:50:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41551 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231940AbhDHTus (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 15:50:48 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <krzysztof.kozlowski@canonical.com>)
-        id 1lUafk-00042f-9A
-        for linux-gpio@vger.kernel.org; Thu, 08 Apr 2021 19:50:36 +0000
-Received: by mail-wr1-f71.google.com with SMTP id z12so1399753wro.22
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Apr 2021 12:50:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/I3rxjojN2v/kK7LxnxTnuoS/24IOjJzT+k5Y2qcQ58=;
-        b=OEVhefQ04F7QekHblx9Hb2pXRw1ipiheg+koNSoG7HfHCc9GeSn2youLIsEk8nAygy
-         U2Wp5aJnb5vgg3Zl7Ydbp5PO1Hzmw/FXtItmROtS29uZjgEJZxFax0NNco2U0Nzj4Jsx
-         MdFpNgh1hb+EiPgLQRWYQmmfMpyZ1xPq1KmMM4WEH3iPf4uBT1y7X0+7/SgjrB0GQ3OH
-         zUrjnARvXBFM6IXkwGhbyyoU74ECaUg3TJaJZfqSXDw/Shola67/oPeE2xg5C6jMA13o
-         pvZV1OHoKhSmSTie4ItrBHNIn0ICm99LYTMHxauqlRgXo8cqgS4XXTdixBNtSpt7Qi5/
-         ojeQ==
-X-Gm-Message-State: AOAM531BpDkQSoCErRFLBLli7HmWZId7Om22g0/vjps4ogH64w22enSb
-        ejar4UXgn+Z+FDfgY9uT6nXIBzvx0u1YSwPjKNcldLGyyWA+bMYeMoiggLTdm46nbfvnCSUW7dT
-        K36PigoCya/gtR9mX4Ljv59mV3V0xUGDv73E+Ij8=
-X-Received: by 2002:adf:ea46:: with SMTP id j6mr13632655wrn.34.1617911436043;
-        Thu, 08 Apr 2021 12:50:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzylv5JuU33P7EpPdff1gvFG44EL00KZzjjJZBKpQNPh3ZDEbsa5BmwCFBD7BAoFjC2rPb72g==
-X-Received: by 2002:adf:ea46:: with SMTP id j6mr13632640wrn.34.1617911435854;
-        Thu, 08 Apr 2021 12:50:35 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-192-147.adslplus.ch. [188.155.192.147])
-        by smtp.gmail.com with ESMTPSA id f20sm312022wmg.36.2021.04.08.12.50.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Apr 2021 12:50:35 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-To:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] pinctrl: samsung: use 'int' for register masks in Exynos
-Date:   Thu,  8 Apr 2021 21:50:29 +0200
-Message-Id: <20210408195029.69974-1-krzysztof.kozlowski@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        id S231676AbhDHUw7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Apr 2021 16:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232156AbhDHUw7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 16:52:59 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F45C061762
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Apr 2021 13:52:47 -0700 (PDT)
+Received: from terra.local.svanheule.net (unknown [IPv6:2a02:a03f:eaff:9f01:6fea:16c6:2e86:c69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id D173F1ECD38;
+        Thu,  8 Apr 2021 22:52:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1617915165;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=sG03pRQrsSv16JasG5fXBdpoORWxuYvG5/eb22d+2KY=;
+        b=p66tD7p82IwvsJh81iGfIwzdgVgsz0HbrvfkXoojdsFWA/nxpYSTSsOaJ6xs1iRQt8z52v
+        00AKQFOkaOwxZNKgMon+nxrCvpcIpERTUG1N/OhGpcc3yY7DdcOJjghOmMQe+cTzBfCe5L
+        N/CNnVHwpl1wWpzeXFZxOD4masedh5KryAqXO6h1KhbSpHPFjVSCHGzzAPBoWjssjBNHoO
+        CwjeZ1JgEBC5G9/Yxq7xPHgsyljVPirjKyDFNINsaRPKblN8J9oSPWKzF3FhiTtIj1+NGG
+        /N61FFXRbyvCXjg9i7U7JziZEWib7HYxPvuGLDnKLsI8qfaNKhhLrKufhFxCeA==
+From:   Sander Vanheule <sander@svanheule.net>
+To:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     bert@biot.com, Sander Vanheule <sander@svanheule.net>
+Subject: [RFC PATCH 0/2] MIIM regmap and RTL8231 GPIO expander support
+Date:   Thu,  8 Apr 2021 22:52:33 +0200
+Message-Id: <cover.1617914861.git.sander@svanheule.net>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Special Function Registers on all Exynos SoC, including ARM64, are
-32-bit wide, so entire driver uses matching functions like readl() or
-writel().  On 64-bit ARM using unsigned long for register masks:
-1. makes little sense as immediately after bitwise operation it will be
-   cast to 32-bit value when calling writel(),
-2. is actually error-prone because it might promote other operands to
-   64-bit.
+The RTL8231 GPIO and LED expander can be configured for use as an MIIM or I2C
+bus device. To provide uniform data access between these two modes, the regmap
+interface is used. Since no regmap interface exists for MIIM busses, a basic
+implementation is provided.
 
-Addresses-Coverity: Unintentional integer overflow
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Currently outstanding questions:
+- The REGMAP_MIIM symbol should depend on MDIO_DEVICE (or a better suited,
+  related symbol), but this results in circular Kconfig dependencies:
+    drivers/of/Kconfig:69:error: recursive dependency detected!
+    drivers/of/Kconfig:69:	symbol OF_IRQ depends on IRQ_DOMAIN
+    kernel/irq/Kconfig:59:	symbol IRQ_DOMAIN is selected by REGMAP
+    drivers/base/regmap/Kconfig:7:	symbol REGMAP default is visible depending on REGMAP_MIIM
+    drivers/base/regmap/Kconfig:39:	symbol REGMAP_MIIM depends on MDIO_DEVICE
+    drivers/net/mdio/Kconfig:6:	symbol MDIO_DEVICE is selected by PHYLIB
+    drivers/net/phy/Kconfig:16:	symbol PHYLIB is selected by ARC_EMAC_CORE
+    drivers/net/ethernet/arc/Kconfig:19:	symbol ARC_EMAC_CORE is selected by ARC_EMAC
+    drivers/net/ethernet/arc/Kconfig:25:	symbol ARC_EMAC depends on OF_IRQ
+  Suggestions on how to resolve this are welcome.
 
----
+- Providing no compatible for an MDIO child node is considered to be equivalent
+  to a c22 ethernet phy, so one must be provided. However, this node is then
+  not automatically probed. Is it okay to provide a binding without a driver?
+  If some code is required, where should this be put?
+  Current devicetree structure:
+    mdio-bus {
+        compatible = "vendor,mdio";
+        ...
 
-Not tested on ARM64.
+        expander0: expander@0 {
+            /*
+             * Provide compatible for working registration of mdio device.
+             * Device probing happens in gpio1 node.
+             */
+            compatible = "realtek,rtl8231-expander";
+            reg = <0>;
+        };
 
-Dear Linus,
+    };
+    gpio1 : ext_gpio {
+        compatible = "realtek,rtl8231-mdio";
+        gpio-controller;
+        ...
+    };
 
-Please apply it directly, I don't have any patches for Samsung pinctrl
-in my tree.
----
- drivers/pinctrl/samsung/pinctrl-exynos.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+- MFD driver:
+  The RTL8231 is not just a GPIO expander, but also a pin controller and LED
+  matrix controller. Regmap initialisation could probably be moved to a parent
+  MFD, with gpio, led, and pinctrl cells. Is this a hard requirement if only a
+  GPIO controller is provided?
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index 0cd7f33cdf25..2b99f4130e1e 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -55,7 +55,7 @@ static void exynos_irq_mask(struct irq_data *irqd)
- 	struct exynos_irq_chip *our_chip = to_exynos_irq_chip(chip);
- 	struct samsung_pin_bank *bank = irq_data_get_irq_chip_data(irqd);
- 	unsigned long reg_mask = our_chip->eint_mask + bank->eint_offset;
--	unsigned long mask;
-+	unsigned int mask;
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&bank->slock, flags);
-@@ -83,7 +83,7 @@ static void exynos_irq_unmask(struct irq_data *irqd)
- 	struct exynos_irq_chip *our_chip = to_exynos_irq_chip(chip);
- 	struct samsung_pin_bank *bank = irq_data_get_irq_chip_data(irqd);
- 	unsigned long reg_mask = our_chip->eint_mask + bank->eint_offset;
--	unsigned long mask;
-+	unsigned int mask;
- 	unsigned long flags;
- 
- 	/*
-@@ -483,7 +483,7 @@ static void exynos_irq_eint0_15(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
- 
--static inline void exynos_irq_demux_eint(unsigned long pend,
-+static inline void exynos_irq_demux_eint(unsigned int pend,
- 						struct irq_domain *domain)
- {
- 	unsigned int irq;
-@@ -500,8 +500,8 @@ static void exynos_irq_demux_eint16_31(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct exynos_muxed_weint_data *eintd = irq_desc_get_handler_data(desc);
--	unsigned long pend;
--	unsigned long mask;
-+	unsigned int pend;
-+	unsigned int mask;
- 	int i;
- 
- 	chained_irq_enter(chip, desc);
+Sander Vanheule (2):
+  regmap: add miim bus support
+  gpio: Add Realtek RTL8231 support
+
+ drivers/base/regmap/Kconfig       |   6 +-
+ drivers/base/regmap/Makefile      |   1 +
+ drivers/base/regmap/regmap-miim.c |  58 +++++
+ drivers/gpio/Kconfig              |   9 +
+ drivers/gpio/Makefile             |   1 +
+ drivers/gpio/gpio-rtl8231.c       | 404 ++++++++++++++++++++++++++++++
+ include/linux/regmap.h            |  36 +++
+ 7 files changed, 514 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/base/regmap/regmap-miim.c
+ create mode 100644 drivers/gpio/gpio-rtl8231.c
+
 -- 
-2.25.1
+2.30.2
 
