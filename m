@@ -2,189 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16921358304
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 14:14:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A9483583FC
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 14:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230449AbhDHMPA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Apr 2021 08:15:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
+        id S231509AbhDHM7j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Apr 2021 08:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229921AbhDHMO6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 08:14:58 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49327C061760;
-        Thu,  8 Apr 2021 05:14:46 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id w21-20020a9d63950000b02901ce7b8c45b4so2041664otk.5;
-        Thu, 08 Apr 2021 05:14:46 -0700 (PDT)
+        with ESMTP id S231537AbhDHM7i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 08:59:38 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD38C061762
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Apr 2021 05:59:24 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id a25so2930128ejk.0
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Apr 2021 05:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6XAhQ7UcLowTOFuknmiiz3l9yHn53zqLA0X1TJ7OGFM=;
-        b=mKGwQVrjFhmAB1xVjWpDfDHvVCxz8zBcI9Nzk2DmvUC97kddZ6S+BZuwAQGgkLMulE
-         g5QIXRlV4u8flJRfwrogbYN5VFo6RJexvfAbfIv3zOzMKr8fcoC1BPZ5vgWt8kt84jFZ
-         pkfb3FnpcNMVFUVORgkVwB3rLmLV5yT1DWV1A/ybaxgRxp4LlYCOTKpD4LijQcRgtxhS
-         eX8fkbH10jbMyDqtKx1jB74bCqges5HBEdRQRCqnu0wWiICKJrl/08cLLZHqIV3nMWjT
-         yQQGpTg8Ke/sk1nMnFjSezraTnGt/ReG2opUmDd6jFgq44Ez5av/n91g6qLapLHSlcYs
-         MjKA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bXaNApsUJBQRijtom4CaAhgB0kqvpHWQ8lB5126OVbU=;
+        b=GqDXqGZU3WOMP1JWd2baxuE3IyzrOvNzhGrIswRLTHGuF9mrtmJwVpIrBpcgr7FlcN
+         WEcSKNIIFX/CsruJLWPGL2QL7ImMGOnkcsp4u/azNm0XV4gUEXVOaiUWAJdALRQxfC/e
+         EBl1xxE1z3cTgnbymFn8WDpltPG/z1561B8cpvBdOK2NrfwBWW86pRBXFqXGMUUZEfsF
+         8NCZsV7VxOUJR/cqDBjxlkxe+o5yjfu0cflXxhoV5dOUDikes/YYz9H0NNJf5yThfhQx
+         9EbztooxPKJYpQmslI9JtPWXV8AMOJpwrD+Aq24gNXE2nQsLfZ2Eoaj5iHTaz1dnA8kC
+         XhxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to;
-        bh=6XAhQ7UcLowTOFuknmiiz3l9yHn53zqLA0X1TJ7OGFM=;
-        b=r0WXkYc/0sNgpmu1bROVB22ER9gdFPhKNsnMEiVGrsM96/voTAzvSdBKLRIL8cggKI
-         RWttDkvNlu1+ZYEEtFUWD7A64ohMkUyE9diY4+tM894r/AfXkPh/KcrZ9NG9ofG11m9k
-         ieBml0MYYk31FB0afYyVYBwTZ/kHei7I1cJDR8mY5TSf/i6fsLoKPBXcelODZurcNVv0
-         +nV7OTomDVYjElno8IA1n6ix2oesgpcbHE5jjCID9LroIMPcgUZTJlealpEE4FIaM4sK
-         V7DvqUsByDar0YuY4mX7Kb0lGgV41Cx9+9JopkFtxj0RuIMsQgiFeSRIitXb0zcr5A2R
-         +3Eg==
-X-Gm-Message-State: AOAM530DAUvcX5fVO0KrRURkh+m9TKDrnvDjZGibimp8A6uv/rj70yaO
-        MsPIy35zTVjoOnqOQiyrww==
-X-Google-Smtp-Source: ABdhPJyxCdHxEFJ2vM9wKL7LXeV6po7ehyIYkmmdKbv3giqugax0r44l+zBeui3PyxG1sSWb/xMbQA==
-X-Received: by 2002:a9d:d0d:: with SMTP id 13mr7004431oti.134.1617884085495;
-        Thu, 08 Apr 2021 05:14:45 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id h20sm5225748oor.8.2021.04.08.05.14.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Apr 2021 05:14:44 -0700 (PDT)
-Sender: Corey Minyard <tcminyard@gmail.com>
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:f036:ecd9:2bd0:ef09])
-        by serve.minyard.net (Postfix) with ESMTPSA id C877C180053;
-        Thu,  8 Apr 2021 12:14:42 +0000 (UTC)
-Date:   Thu, 8 Apr 2021 07:14:41 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     openipmi-developer@lists.sourceforge.net, openbmc@lists.ozlabs.org,
-        Joel Stanley <joel@jms.id.au>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>,
-        linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        Avi Fishman <avifishman70@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Benjamin Fair <benjaminfair@google.com>
-Subject: Re: [PATCH v2 00/21] ipmi: Allow raw access to KCS devices
-Message-ID: <20210408121441.GG7166@minyard.net>
-Reply-To: minyard@acm.org
-References: <20210319061952.145040-1-andrew@aj.id.au>
- <2db77e16-3f44-4c02-a7ba-a4fac8141ae3@www.fastmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bXaNApsUJBQRijtom4CaAhgB0kqvpHWQ8lB5126OVbU=;
+        b=tcAwxdF3I0Ch8idyPRjYjmDQEal9wQeFJ4r44ZtO0hrqSX9YdEtoFOTSAA7r9njJkc
+         OLzcSAbRuCaS2NpyM4ARoPXXuQBh8Pvw2gcc2scrD016+JikhEo4D0NCEVkPm5jimPZT
+         SQlAyVmigHRZB3fOK/yvZFoCtw3U49QPd+IpKD7sQgVF/J1PbVDCotU18nEirEC+uI8f
+         OHcbo74plmBSswSNyt1RQQyKw9tGtgZ6lV+j+qRat4TbRzVNfuAOZMlWqaXjxC5ICKxC
+         NZY3IKobGhydm5PmxKrjzOJ8lWZvbkkrAVeeQj7yjmwWs/fmaqxsJBKcEAdYzVZjwTui
+         53Yw==
+X-Gm-Message-State: AOAM530ZdXF8H4hrpBK+TvQs2KqiB9Fv7u1a0wMmCtatkE6NvoYnzMFz
+        UTeAUoj5qrFGI8hrlJfQGcI9txH9mE9dMlFVU8HkLQ==
+X-Google-Smtp-Source: ABdhPJzT52+7fhpzyGdEPpFOaQHm0H5K5N9slJdZWOCE0StJyTV8DY7tAOulhTQU/LlU+EEkYf+hetlLkRsAW1D8TBw=
+X-Received: by 2002:a17:907:7785:: with SMTP id ky5mr10011936ejc.133.1617886762806;
+ Thu, 08 Apr 2021 05:59:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2db77e16-3f44-4c02-a7ba-a4fac8141ae3@www.fastmail.com>
+References: <CA+G9fYsiRYaE+y44ApDkvPvbDCdiJ+nnCMhiiaPVsg6p8m4+1Q@mail.gmail.com>
+ <CAHp75VdJ7kGXN6sk8HTeSfAKQtHDGSmtdVPn7CSkK5=yfDizuA@mail.gmail.com>
+ <CA+G9fYuG12WaC6QAdx1k80v8-As7a7oVVkhaUDxqgV=BaunfxQ@mail.gmail.com> <CAHp75Vf1S5Ra4fdkV=faw4tCXbeNiifC3y8MF0_bCqHGfDBLsQ@mail.gmail.com>
+In-Reply-To: <CAHp75Vf1S5Ra4fdkV=faw4tCXbeNiifC3y8MF0_bCqHGfDBLsQ@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 8 Apr 2021 18:29:11 +0530
+Message-ID: <CA+G9fYuYC3QK2Zi8pbud0ebai4d4YgB0A4DXg5XWaE1pLWP5tw@mail.gmail.com>
+Subject: Re: [next] [arm64] [gpio] BUG: key has not been registered! DEBUG_LOCKS_WARN_ON:
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Colin King <colin.king@canonical.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 10:27:46AM +0930, Andrew Jeffery wrote:
-> Hi Corey,
-> 
-> On Fri, 19 Mar 2021, at 16:49, Andrew Jeffery wrote:
-> > Hello,
-> > 
-> > This series is a bit of a mix of things, but its primary purpose is to
-> > expose BMC KCS IPMI devices to userspace in a way that enables userspace
-> > to talk to host firmware using protocols that are not IPMI.
-> > 
-> > v1 can be found here:
-> > 
-> > https://lore.kernel.org/openbmc/20210219142523.3464540-1-andrew@aj.id.au/
-> > 
-> > Changes in v2 include:
-> > 
-> > * A rebase onto v5.12-rc2
-> > * Incorporation of off-list feedback on SerIRQ configuration from
-> >   Chiawei
-> > * Further validation on hardware for ASPEED KCS devices 2, 3 and 4
-> > * Lifting the existing single-open constraint of the IPMI chardev
-> > * Fixes addressing Rob's feedback on the conversion of the ASPEED KCS
-> >   binding to dt-schema
-> > * Fixes addressing Rob's feedback on the new aspeed,lpc-interrupts
-> >   property definition for the ASPEED KCS binding
-> > 
-> > A new chardev device is added whose implementation exposes the Input
-> > Data Register (IDR), Output Data Register (ODR) and Status Register
-> > (STR) via read() and write(), and implements poll() for event
-> > monitoring.
-> > 
-> > The existing /dev/ipmi-kcs* chardev interface exposes the KCS devices in
-> > a way which encoded the IPMI protocol in its behaviour. However, as
-> > LPC[0] KCS devices give us bi-directional interrupts between the host
-> > and a BMC with both a data and status byte, they are useful for purposes
-> > beyond IPMI.
-> > 
-> > As a concrete example, libmctp[1] implements a vendor-defined MCTP[2]
-> > binding using a combination of LPC Firmware cycles for bulk data
-> > transfer and a KCS device via LPC IO cycles for out-of-band protocol
-> > control messages[3]. This gives a throughput improvement over the
-> > standard KCS binding[4] while continuing to exploit the ease of setup of
-> > the LPC bus for early boot firmware on the host processor.
-> > 
-> > The series takes a bit of a winding path to achieve its aim:
-> > 
-> > 1. It begins with patches 1-5 put together by Chia-Wei, which I've
-> > rebased on v5.12-rc2. These fix the ASPEED LPC bindings and other
-> > non-KCS LPC-related ASPEED device drivers in a way that enables the
-> > SerIRQ patches at the end of the series. With Joel's review I'm hoping
-> > these 5 can go through the aspeed tree, and that the rest can go through
-> > the IPMI tree.
-> > 
-> > 2. Next, patches 6-13 fairly heavily refactor the KCS support in the
-> > IPMI part of the tree, re-architecting things such that it's possible to
-> > support multiple chardev implementations sitting on top of the ASPEED
-> > and Nuvoton device drivers. However, the KCS code didn't really have
-> > great separation of concerns as it stood, so even if we disregard the
-> > multiple-chardev support I think the cleanups are worthwhile.
-> > 
-> > 3. Patch 14 adds some interrupt management capabilities to the KCS
-> > device drivers in preparation for patch 16, which introduces the new
-> > "raw" KCS device interface. I'm not stoked about the device name/path,
-> > so if people are looking to bikeshed something then feel free to lay
-> > into that.
-> > 
-> > 4. The remaining patches switch the ASPEED KCS devicetree binding to
-> > dt-schema, add a new interrupt property to describe the SerIRQ behaviour
-> > of the device and finally clean up Serial IRQ support in the ASPEED KCS
-> > driver.
-> > 
-> > Rob: The dt-binding patches still come before the relevant driver
-> > changes, I tried to keep the two close together in the series, hence the
-> > bindings changes not being patches 1 and 2.
-> > 
-> > I've exercised the series under qemu with the rainier-bmc machine plus
-> > additional patches for KCS support[5]. I've also substituted this series in
-> > place of a hacky out-of-tree driver that we've been using for the
-> > libmctp stack and successfully booted the host processor under our
-> > internal full-platform simulation tools for a Rainier system.
-> > 
-> > Note that this work touches the Nuvoton driver as well as ASPEED's, but
-> > I don't have the capability to test those changes or the IPMI chardev
-> > path. Tested-by tags would be much appreciated if you can exercise one
-> > or both.
-> > 
-> > Please review!
-> 
-> Unfortunately the cover letter got detached from the rest of the series.
-> 
-> Any chance you can take a look at the patches?
+On Thu, 8 Apr 2021 at 15:17, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Apr 8, 2021 at 11:33 AM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> > On Thu, 8 Apr 2021 at 04:21, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > On Thu, Apr 8, 2021 at 12:38 AM Naresh Kamboju
+> > > <naresh.kamboju@linaro.org> wrote:
+> > > >
+> > > > While running kselftest recently added gpio gpio-sim.sh test case the following
+> > > > warning was triggered on Linux next tag 20210330 tag running on arm64 juno
+> > > > and hikey devices.
+> > > >
+> > > > GOOD: next-20210326
+> > > > BAD: next-20210330
+> > > >
+> > > > This is still happening today on Linux next tag 20210407.
+> > >
+> > > Can you add the following
+> > >
+> > >   sysfs_attr_init(attrs[i]);
+> > >
+> > > to the end of the loop in gpio_sim_setup_sysfs()?
+> >
+> > Do you mean like this,
+> >
+> > diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> > index ea17289a869c..5fe67ccf45f7 100644
+> > --- a/drivers/gpio/gpio-sim.c
+> > +++ b/drivers/gpio/gpio-sim.c
+> > @@ -296,6 +296,7 @@ static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
+> >                 dev_attr->store = gpio_sim_sysfs_line_store;
+> >
+> >                 attrs[i] = &dev_attr->attr;
+> > +               sysfs_attr_init(attrs[i]);
+> >         }
+> >
+> >         chip->attr_group.name = "line-ctrl";
+>
+> Precisely.
 
-There were some minor concerns that were unanswered, and there really
-was no review by others for many of the patches.
+As per your suggestions the above line added and build tested
+the reported issue is fixed now.
 
-I would like this patch set, it makes some good cleanups.  But I would
-like some more review and testing by others, if possible.  I'm fairly
-sure it has already been done, it just needs to be documented.
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
--corey
+>
+> > > If it fixes an issue I'll send a formal patch.
+> >
+> > I will build and test this and report here.
 
-> 
-> https://lore.kernel.org/linux-arm-kernel/20210319062752.145730-1-andrew@aj.id.au/
-> 
-> Cheers,
-> 
-> Andrew
+OTOH,
+LKFT builds kernel and rootfs on host and runs tests on various target
+devices. While doing this process "make install" is not installing required
+test files like gpio-mockup-cdev and gpio-line-name.
+
+# ./gpio-mockup.sh: line 106: ./gpio-mockup-cdev: No such file or directory
+# ./gpio-sim.sh: line 100: ./gpio-line-name: No such file or directory
+
+Test run log:
+------------------
+# selftests: gpio: gpio-mockup.sh
+# 1.  Module load tests
+# 1.1.  dynamic allocation of gpio
+# ./gpio-mockup.sh: line 106: ./gpio-mockup-cdev: No such file or directory
+# test failed: line value is 127 when 1 was expected
+# GPIO gpio-mockup test FAIL
+not ok 1 selftests: gpio: gpio-mockup.sh # exit=1
+# selftests: gpio: gpio-sim.sh
+# 1. chip_name and dev_name attributes
+# 1.1. Chip name is communicated to user
+# 1.2. chip_name returns 'none' if the chip is still pending
+# 1.3. Device name is communicated to user
+# 1.4. dev_name returns 'none' if chip is still pending
+# 2. Creating simulated chips
+# 2.1. Default number of lines is 1
+# 2.2. Number of lines can be specified
+# 2.3. Label can be set
+# 2.4. Label can be left empty
+# 2.5. Line names can be configured
+# ./gpio-sim.sh: line 100: ./gpio-line-name: No such file or directory
+# line name is incorrect
+# GPIO gpio-sim test FAIL
+not ok 2 selftests: gpio: gpio-sim.sh # exit=1
+
+- Naresh
