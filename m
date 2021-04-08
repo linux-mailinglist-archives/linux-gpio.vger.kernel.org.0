@@ -2,159 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A9483583FC
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 14:59:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFF393584F9
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 15:41:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231509AbhDHM7j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Apr 2021 08:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60270 "EHLO
+        id S231818AbhDHNlV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Apr 2021 09:41:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231537AbhDHM7i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 08:59:38 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD38C061762
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Apr 2021 05:59:24 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a25so2930128ejk.0
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Apr 2021 05:59:24 -0700 (PDT)
+        with ESMTP id S231720AbhDHNlT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 09:41:19 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A749C061762
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Apr 2021 06:41:04 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id r20so2322319ljk.4
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Apr 2021 06:41:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bXaNApsUJBQRijtom4CaAhgB0kqvpHWQ8lB5126OVbU=;
-        b=GqDXqGZU3WOMP1JWd2baxuE3IyzrOvNzhGrIswRLTHGuF9mrtmJwVpIrBpcgr7FlcN
-         WEcSKNIIFX/CsruJLWPGL2QL7ImMGOnkcsp4u/azNm0XV4gUEXVOaiUWAJdALRQxfC/e
-         EBl1xxE1z3cTgnbymFn8WDpltPG/z1561B8cpvBdOK2NrfwBWW86pRBXFqXGMUUZEfsF
-         8NCZsV7VxOUJR/cqDBjxlkxe+o5yjfu0cflXxhoV5dOUDikes/YYz9H0NNJf5yThfhQx
-         9EbztooxPKJYpQmslI9JtPWXV8AMOJpwrD+Aq24gNXE2nQsLfZ2Eoaj5iHTaz1dnA8kC
-         XhxA==
+        bh=GtXbzBdE0M1Nm+ar4q3BvNUevDQ17mjgYSKVolqwxG0=;
+        b=UAXlRZwWzqDqVm+TVZLuG/9aX2jJ4Wl3yNdGBz3MdsdIwKK1frRrTbyyOFFzbj3iuc
+         d2oaovoBG3OctPJdpjfc6tdJGohJKMAKusRTTV2a7+SUa+2yn+iDEuUsiWXmmvdKFKPN
+         jq1VgZS5HRf4oXWVOteZJe1li79bLJFEZYK6FKaJGGSpI9tyZv2ZlPvXnfYj9hSLD8HX
+         by5xFZolG0/MunXe5+yAuDUjXu7tvNkwYzS0xBotgy2sk6B11Ey42Pr6SA1vsAcLJKPN
+         7ztxfKUjam1lmK6jQy3pXzmPHUgrl0/8WCGd84Llu5YZF/AahBjrgt23yJP8xSDAb10W
+         ZDjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bXaNApsUJBQRijtom4CaAhgB0kqvpHWQ8lB5126OVbU=;
-        b=tcAwxdF3I0Ch8idyPRjYjmDQEal9wQeFJ4r44ZtO0hrqSX9YdEtoFOTSAA7r9njJkc
-         OLzcSAbRuCaS2NpyM4ARoPXXuQBh8Pvw2gcc2scrD016+JikhEo4D0NCEVkPm5jimPZT
-         SQlAyVmigHRZB3fOK/yvZFoCtw3U49QPd+IpKD7sQgVF/J1PbVDCotU18nEirEC+uI8f
-         OHcbo74plmBSswSNyt1RQQyKw9tGtgZ6lV+j+qRat4TbRzVNfuAOZMlWqaXjxC5ICKxC
-         NZY3IKobGhydm5PmxKrjzOJ8lWZvbkkrAVeeQj7yjmwWs/fmaqxsJBKcEAdYzVZjwTui
-         53Yw==
-X-Gm-Message-State: AOAM530ZdXF8H4hrpBK+TvQs2KqiB9Fv7u1a0wMmCtatkE6NvoYnzMFz
-        UTeAUoj5qrFGI8hrlJfQGcI9txH9mE9dMlFVU8HkLQ==
-X-Google-Smtp-Source: ABdhPJzT52+7fhpzyGdEPpFOaQHm0H5K5N9slJdZWOCE0StJyTV8DY7tAOulhTQU/LlU+EEkYf+hetlLkRsAW1D8TBw=
-X-Received: by 2002:a17:907:7785:: with SMTP id ky5mr10011936ejc.133.1617886762806;
- Thu, 08 Apr 2021 05:59:22 -0700 (PDT)
+        bh=GtXbzBdE0M1Nm+ar4q3BvNUevDQ17mjgYSKVolqwxG0=;
+        b=C2nvYTw3ebsJdgb8vjil8Z8Hjzy/gmDm1AAh5mJzA1LMdaOw8DruBWg4ewjM/8zV2W
+         N4SWEb14Q5d1M+KOuWS3dRkJZvotRYmMPaHwwo8IXU0bgj6TrT/Nk7XahIkTKBaSQQxB
+         nDvqcFyq8OilofY9JyO0leeCLpmEuahQcJ8/EWdNyPO8Amllg8VdcNUZOQ8Gip5UDMP2
+         TRGQ9CEWeeSZvme0VW8tnrUdhss8q8aMu9M4xZ0WU/MvPn0PcXitFviahxqTOtRwX9gf
+         TXqVMGPikrYKj/yUnlZ+G3AWmhCpWMyOvK/rnJ5kJvmlCZRJMEoNzbqt4Wx5aACGvgUg
+         NMDQ==
+X-Gm-Message-State: AOAM53251cYSqnuwgijJxxBvlFmEE7Ol12w5AVYMmHOIboRTCj6gBEG6
+        7HNPs1vGmBHsJdXmxruvGrWuDivdapr7ZWTnFvRNjA==
+X-Google-Smtp-Source: ABdhPJyTMHU0TlT4KAzDlrvO6EJpbswl5uNFx3547wf9kdRUSms7wWxsib6LTdrfRUvi7kIRYamP2OBW/7Rh1Qli2yw=
+X-Received: by 2002:a2e:9004:: with SMTP id h4mr5845223ljg.326.1617889262784;
+ Thu, 08 Apr 2021 06:41:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <CA+G9fYsiRYaE+y44ApDkvPvbDCdiJ+nnCMhiiaPVsg6p8m4+1Q@mail.gmail.com>
- <CAHp75VdJ7kGXN6sk8HTeSfAKQtHDGSmtdVPn7CSkK5=yfDizuA@mail.gmail.com>
- <CA+G9fYuG12WaC6QAdx1k80v8-As7a7oVVkhaUDxqgV=BaunfxQ@mail.gmail.com> <CAHp75Vf1S5Ra4fdkV=faw4tCXbeNiifC3y8MF0_bCqHGfDBLsQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vf1S5Ra4fdkV=faw4tCXbeNiifC3y8MF0_bCqHGfDBLsQ@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 8 Apr 2021 18:29:11 +0530
-Message-ID: <CA+G9fYuYC3QK2Zi8pbud0ebai4d4YgB0A4DXg5XWaE1pLWP5tw@mail.gmail.com>
-Subject: Re: [next] [arm64] [gpio] BUG: key has not been registered! DEBUG_LOCKS_WARN_ON:
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Colin King <colin.king@canonical.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20210304013342.1106361-1-jay.xu@rock-chips.com> <20210319081441.368358-1-jay.xu@rock-chips.com>
+In-Reply-To: <20210319081441.368358-1-jay.xu@rock-chips.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 8 Apr 2021 15:40:51 +0200
+Message-ID: <CACRpkdY+A4bsW28yXRGeGVnK_UcR70sMeX3jpABGVJc49A-xcg@mail.gmail.com>
+Subject: Re: [PATCH v4] pinctrl: rockchip: add support for rk3568
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 8 Apr 2021 at 15:17, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Fri, Mar 19, 2021 at 9:14 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+
+> RK3568 SoCs have 5 gpio controllers, each gpio has 32 pins. GPIO supports
+> set iomux, pull, drive strength and schmitt.
 >
-> On Thu, Apr 8, 2021 at 11:33 AM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
-> > On Thu, 8 Apr 2021 at 04:21, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, Apr 8, 2021 at 12:38 AM Naresh Kamboju
-> > > <naresh.kamboju@linaro.org> wrote:
-> > > >
-> > > > While running kselftest recently added gpio gpio-sim.sh test case the following
-> > > > warning was triggered on Linux next tag 20210330 tag running on arm64 juno
-> > > > and hikey devices.
-> > > >
-> > > > GOOD: next-20210326
-> > > > BAD: next-20210330
-> > > >
-> > > > This is still happening today on Linux next tag 20210407.
-> > >
-> > > Can you add the following
-> > >
-> > >   sysfs_attr_init(attrs[i]);
-> > >
-> > > to the end of the loop in gpio_sim_setup_sysfs()?
-> >
-> > Do you mean like this,
-> >
-> > diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> > index ea17289a869c..5fe67ccf45f7 100644
-> > --- a/drivers/gpio/gpio-sim.c
-> > +++ b/drivers/gpio/gpio-sim.c
-> > @@ -296,6 +296,7 @@ static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
-> >                 dev_attr->store = gpio_sim_sysfs_line_store;
-> >
-> >                 attrs[i] = &dev_attr->attr;
-> > +               sysfs_attr_init(attrs[i]);
-> >         }
-> >
-> >         chip->attr_group.name = "line-ctrl";
->
-> Precisely.
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+> v3:
+> - fix route_type to route_location, compile error fix
+> - remove slewrate option
 
-As per your suggestions the above line added and build tested
-the reported issue is fixed now.
+This v3 applied. Any additional review comments can be fixed in follow-up
+patches.
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-
->
-> > > If it fixes an issue I'll send a formal patch.
-> >
-> > I will build and test this and report here.
-
-OTOH,
-LKFT builds kernel and rootfs on host and runs tests on various target
-devices. While doing this process "make install" is not installing required
-test files like gpio-mockup-cdev and gpio-line-name.
-
-# ./gpio-mockup.sh: line 106: ./gpio-mockup-cdev: No such file or directory
-# ./gpio-sim.sh: line 100: ./gpio-line-name: No such file or directory
-
-Test run log:
-------------------
-# selftests: gpio: gpio-mockup.sh
-# 1.  Module load tests
-# 1.1.  dynamic allocation of gpio
-# ./gpio-mockup.sh: line 106: ./gpio-mockup-cdev: No such file or directory
-# test failed: line value is 127 when 1 was expected
-# GPIO gpio-mockup test FAIL
-not ok 1 selftests: gpio: gpio-mockup.sh # exit=1
-# selftests: gpio: gpio-sim.sh
-# 1. chip_name and dev_name attributes
-# 1.1. Chip name is communicated to user
-# 1.2. chip_name returns 'none' if the chip is still pending
-# 1.3. Device name is communicated to user
-# 1.4. dev_name returns 'none' if chip is still pending
-# 2. Creating simulated chips
-# 2.1. Default number of lines is 1
-# 2.2. Number of lines can be specified
-# 2.3. Label can be set
-# 2.4. Label can be left empty
-# 2.5. Line names can be configured
-# ./gpio-sim.sh: line 100: ./gpio-line-name: No such file or directory
-# line name is incorrect
-# GPIO gpio-sim test FAIL
-not ok 2 selftests: gpio: gpio-sim.sh # exit=1
-
-- Naresh
+Yours,
+Linus Walleij
