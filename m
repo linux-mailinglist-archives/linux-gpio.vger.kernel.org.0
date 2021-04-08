@@ -2,179 +2,272 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2598357935
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 02:58:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7260357A34
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 04:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbhDHA6V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Apr 2021 20:58:21 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:57061 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229492AbhDHA6U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Apr 2021 20:58:20 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E52E8580811;
-        Wed,  7 Apr 2021 20:58:09 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Wed, 07 Apr 2021 20:58:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=JPUdlKMQjHPtG1cD72DyTfbFE4O/cJI
-        Usrpufhou+vk=; b=pAHIJEIcH7Nr+ehc+Sz8Juhx576O7heog4hPquD1narYRlz
-        oE2Pd5vl2RYPp4LMhshkQ/ca6vx4WC54FnRC7G93rMYibebQTX6T70ctYI9EkXHd
-        bh5aftI2qvf1LQAQ1qYOR0Vz/ikWJMEklcTe9gl5T1vSXbKECBG8f/q/e0z6DOMA
-        +3lIVwgrkLfweOcAaShMZxEc95oMj7ot55UydCRDistFiM618K4H2M/rOcOmAmFm
-        xIM1NUbjJ+wHhqs56TwUrvm5R7iagaISvI+X3MOYzPpqQiwa3y7HnH7EvMd5/buH
-        jqMWcr6kBHuLdxX+DkTdCfY5epLP1g3KPBEbcEg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=JPUdlK
-        MQjHPtG1cD72DyTfbFE4O/cJIUsrpufhou+vk=; b=jE7y9ZhewMvo/hKQD/7Xg+
-        /EJzRhGjpBM6OLpqLsJefcSqYTwokbCW90vOFQbiFOruU1/JGjTTlsEz6go9nHaz
-        DKMLsjBi+gUzCHGukZ1CsK9XNWzxkrlrMY2TvyrqINwqWn9vGJWER1DMbP5waf0o
-        rcNHGAifLEQ/eECtdrn97hJ6h92RYySd3MtYFMpWMSpW0uM0jTi/tVeAj7kN2s0V
-        oJQ4xbG27ISH8QUshCASJEjjWyxfZG6J/RUDpMbgsNsaxJTeAZsW6BzM+6lYxObE
-        CeLRnDTJgdXUGL0wSstMguTa90W4akIh+YtGNs4Q2vljuy+qlt5czWdm89gAAAUA
-        ==
-X-ME-Sender: <xms:H1VuYKSWbh_ppt2SwGYRTdci_zQysYvS-7qOG0rLJKrtuy3FjsiPqQ>
-    <xme:H1VuYPyXkxzlp9i8p2RsOC5gdrbuKuPNIakNsfPhd2aKsXtNO2OXn91jqxYhsqKug
-    BtVleAeTtC_zHHkww>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrudejkedggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
-    grthhtvghrnhepudfftddvveekfffgteffffeuveegjeelgefhffejtdehtdfhlefgkeef
-    hfefkeeinecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:H1VuYH12FGFZNoaScZzJQuoQy7UHEGCXTE3aXDv1GhoKj30HwETQVA>
-    <xmx:H1VuYGAtSp6-VHwWbzIWptPh62dQBvpyI3ipV727CR1rc9kp6Wollg>
-    <xmx:H1VuYDhWHVs5RVxqO97fhfVOOmaVx9Pj4JFgrjC5-X_mZmSwV1GLaA>
-    <xmx:IVVuYCRGg20FAF4k2MLWf4ZyJFHNhFoZLSXMf_UdTOeRrujnU-KMGQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 6DDDFA00079; Wed,  7 Apr 2021 20:58:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-273-g8500d2492d-fm-20210323.002-g8500d249
-Mime-Version: 1.0
-Message-Id: <2db77e16-3f44-4c02-a7ba-a4fac8141ae3@www.fastmail.com>
-In-Reply-To: <20210319061952.145040-1-andrew@aj.id.au>
-References: <20210319061952.145040-1-andrew@aj.id.au>
-Date:   Thu, 08 Apr 2021 10:27:46 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Corey Minyard" <minyard@acm.org>
-Cc:     openipmi-developer@lists.sourceforge.net, openbmc@lists.ozlabs.org,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Ryan Chen" <ryan_chen@aspeedtech.com>, devicetree@vger.kernel.org,
-        "Tomer Maimon" <tmaimon77@gmail.com>,
-        linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        "Avi Fishman" <avifishman70@gmail.com>,
-        "Patrick Venture" <venture@google.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, "Tali Perry" <tali.perry1@gmail.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Lee Jones" <lee.jones@linaro.org>,
-        "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "Benjamin Fair" <benjaminfair@google.com>
-Subject: Re: [PATCH v2 00/21] ipmi: Allow raw access to KCS devices
-Content-Type: text/plain
+        id S229688AbhDHCOk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Apr 2021 22:14:40 -0400
+Received: from mga11.intel.com ([192.55.52.93]:26589 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229505AbhDHCOj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 7 Apr 2021 22:14:39 -0400
+IronPort-SDR: zpw+lIB3Xl6H/Qs1eHiEngvFvfcqf2XMADhrRYAiuT5kf0FvvQVM6nDMGpX/SqxF7mLiBhW12q
+ wOTW1Pwskl+Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9947"; a="190233728"
+X-IronPort-AV: E=Sophos;i="5.82,205,1613462400"; 
+   d="scan'208";a="190233728"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2021 19:14:29 -0700
+IronPort-SDR: wzo6bi+Gn0Glk1IlsO9TRpY6D9felht2tRiONm8AGw8eXCOvEVWcro6i5NleZdayIAMJPdFF8i
+ y2eUCqVMTnkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,205,1613462400"; 
+   d="scan'208";a="415538527"
+Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Apr 2021 19:14:28 -0700
+Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lUKBd-000E64-6O; Thu, 08 Apr 2021 02:14:25 +0000
+Date:   Thu, 08 Apr 2021 10:13:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ 4f838411c98b7102b0d7cbece1cee554c05209f9
+Message-ID: <606e66dd.FEk+EuyQCuhHcnlh%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Corey,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 4f838411c98b7102b0d7cbece1cee554c05209f9  pinctrl: bcm63xx: Fix More dependencies
 
-On Fri, 19 Mar 2021, at 16:49, Andrew Jeffery wrote:
-> Hello,
-> 
-> This series is a bit of a mix of things, but its primary purpose is to
-> expose BMC KCS IPMI devices to userspace in a way that enables userspace
-> to talk to host firmware using protocols that are not IPMI.
-> 
-> v1 can be found here:
-> 
-> https://lore.kernel.org/openbmc/20210219142523.3464540-1-andrew@aj.id.au/
-> 
-> Changes in v2 include:
-> 
-> * A rebase onto v5.12-rc2
-> * Incorporation of off-list feedback on SerIRQ configuration from
->   Chiawei
-> * Further validation on hardware for ASPEED KCS devices 2, 3 and 4
-> * Lifting the existing single-open constraint of the IPMI chardev
-> * Fixes addressing Rob's feedback on the conversion of the ASPEED KCS
->   binding to dt-schema
-> * Fixes addressing Rob's feedback on the new aspeed,lpc-interrupts
->   property definition for the ASPEED KCS binding
-> 
-> A new chardev device is added whose implementation exposes the Input
-> Data Register (IDR), Output Data Register (ODR) and Status Register
-> (STR) via read() and write(), and implements poll() for event
-> monitoring.
-> 
-> The existing /dev/ipmi-kcs* chardev interface exposes the KCS devices in
-> a way which encoded the IPMI protocol in its behaviour. However, as
-> LPC[0] KCS devices give us bi-directional interrupts between the host
-> and a BMC with both a data and status byte, they are useful for purposes
-> beyond IPMI.
-> 
-> As a concrete example, libmctp[1] implements a vendor-defined MCTP[2]
-> binding using a combination of LPC Firmware cycles for bulk data
-> transfer and a KCS device via LPC IO cycles for out-of-band protocol
-> control messages[3]. This gives a throughput improvement over the
-> standard KCS binding[4] while continuing to exploit the ease of setup of
-> the LPC bus for early boot firmware on the host processor.
-> 
-> The series takes a bit of a winding path to achieve its aim:
-> 
-> 1. It begins with patches 1-5 put together by Chia-Wei, which I've
-> rebased on v5.12-rc2. These fix the ASPEED LPC bindings and other
-> non-KCS LPC-related ASPEED device drivers in a way that enables the
-> SerIRQ patches at the end of the series. With Joel's review I'm hoping
-> these 5 can go through the aspeed tree, and that the rest can go through
-> the IPMI tree.
-> 
-> 2. Next, patches 6-13 fairly heavily refactor the KCS support in the
-> IPMI part of the tree, re-architecting things such that it's possible to
-> support multiple chardev implementations sitting on top of the ASPEED
-> and Nuvoton device drivers. However, the KCS code didn't really have
-> great separation of concerns as it stood, so even if we disregard the
-> multiple-chardev support I think the cleanups are worthwhile.
-> 
-> 3. Patch 14 adds some interrupt management capabilities to the KCS
-> device drivers in preparation for patch 16, which introduces the new
-> "raw" KCS device interface. I'm not stoked about the device name/path,
-> so if people are looking to bikeshed something then feel free to lay
-> into that.
-> 
-> 4. The remaining patches switch the ASPEED KCS devicetree binding to
-> dt-schema, add a new interrupt property to describe the SerIRQ behaviour
-> of the device and finally clean up Serial IRQ support in the ASPEED KCS
-> driver.
-> 
-> Rob: The dt-binding patches still come before the relevant driver
-> changes, I tried to keep the two close together in the series, hence the
-> bindings changes not being patches 1 and 2.
-> 
-> I've exercised the series under qemu with the rainier-bmc machine plus
-> additional patches for KCS support[5]. I've also substituted this series in
-> place of a hacky out-of-tree driver that we've been using for the
-> libmctp stack and successfully booted the host processor under our
-> internal full-platform simulation tools for a Rainier system.
-> 
-> Note that this work touches the Nuvoton driver as well as ASPEED's, but
-> I don't have the capability to test those changes or the IPMI chardev
-> path. Tested-by tags would be much appreciated if you can exercise one
-> or both.
-> 
-> Please review!
+elapsed time: 736m
 
-Unfortunately the cover letter got detached from the rest of the series.
+configs tested: 212
+configs skipped: 4
 
-Any chance you can take a look at the patches?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-https://lore.kernel.org/linux-arm-kernel/20210319062752.145730-1-andrew@aj.id.au/
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+x86_64                           allyesconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+i386                             allyesconfig
+arm                         hackkit_defconfig
+arm                           u8500_defconfig
+mips                       bmips_be_defconfig
+arm                           h5000_defconfig
+mips                      loongson3_defconfig
+ia64                             allyesconfig
+nios2                               defconfig
+arc                          axs101_defconfig
+alpha                            alldefconfig
+s390                                defconfig
+mips                        nlm_xlp_defconfig
+m68k                                defconfig
+powerpc                    amigaone_defconfig
+arc                      axs103_smp_defconfig
+mips                             allyesconfig
+mips                        bcm47xx_defconfig
+powerpc                 mpc834x_itx_defconfig
+mips                  maltasmvp_eva_defconfig
+arm                       netwinder_defconfig
+arm                     am200epdkit_defconfig
+mips                          rb532_defconfig
+powerpc                      chrp32_defconfig
+arm                        keystone_defconfig
+alpha                            allyesconfig
+sh                            shmin_defconfig
+mips                           ci20_defconfig
+xtensa                         virt_defconfig
+arm                         lubbock_defconfig
+powerpc                     tqm8555_defconfig
+s390                             alldefconfig
+sh                           se7619_defconfig
+powerpc                 mpc836x_mds_defconfig
+mips                           ip28_defconfig
+arm                         lpc18xx_defconfig
+sh                               alldefconfig
+powerpc               mpc834x_itxgp_defconfig
+sh                             espt_defconfig
+powerpc64                           defconfig
+powerpc                    mvme5100_defconfig
+m68k                          sun3x_defconfig
+arm                         mv78xx0_defconfig
+m68k                         amcore_defconfig
+powerpc                   currituck_defconfig
+sh                            hp6xx_defconfig
+arc                     nsimosci_hs_defconfig
+powerpc                   motionpro_defconfig
+arm                             pxa_defconfig
+mips                           ip27_defconfig
+arm                          iop32x_defconfig
+sh                           sh2007_defconfig
+powerpc                 mpc836x_rdk_defconfig
+arm                         socfpga_defconfig
+mips                      malta_kvm_defconfig
+i386                                defconfig
+s390                       zfcpdump_defconfig
+nios2                         3c120_defconfig
+m68k                        m5407c3_defconfig
+powerpc                    klondike_defconfig
+powerpc                      ppc44x_defconfig
+arm                         at91_dt_defconfig
+powerpc                 mpc8272_ads_defconfig
+sh                   sh7770_generic_defconfig
+arm                          collie_defconfig
+arm                     eseries_pxa_defconfig
+arm                           sama5_defconfig
+xtensa                           alldefconfig
+sh                          sdk7780_defconfig
+powerpc                      arches_defconfig
+csky                             alldefconfig
+powerpc                           allnoconfig
+sh                          urquell_defconfig
+sh                          kfr2r09_defconfig
+m68k                        mvme16x_defconfig
+xtensa                  audio_kc705_defconfig
+xtensa                          iss_defconfig
+arm                        spear3xx_defconfig
+powerpc                     pq2fads_defconfig
+mips                           rs90_defconfig
+sh                             shx3_defconfig
+m68k                        stmark2_defconfig
+arm                  colibri_pxa300_defconfig
+arm                         axm55xx_defconfig
+arm                      footbridge_defconfig
+arm                            zeus_defconfig
+openrisc                  or1klitex_defconfig
+sh                   rts7751r2dplus_defconfig
+h8300                     edosk2674_defconfig
+arm                       versatile_defconfig
+mips                      pistachio_defconfig
+sh                          rsk7201_defconfig
+mips                      fuloong2e_defconfig
+arm                            pleb_defconfig
+sh                        sh7757lcr_defconfig
+powerpc                       maple_defconfig
+arm                        shmobile_defconfig
+mips                        maltaup_defconfig
+riscv             nommu_k210_sdcard_defconfig
+m68k                            q40_defconfig
+sparc                       sparc32_defconfig
+mips                        nlm_xlr_defconfig
+arm                             rpc_defconfig
+arm                        vexpress_defconfig
+powerpc                          allmodconfig
+powerpc                 mpc834x_mds_defconfig
+sh                           se7721_defconfig
+arm                         cm_x300_defconfig
+arm                         bcm2835_defconfig
+m68k                        m5307c3_defconfig
+arm                      tct_hammer_defconfig
+mips                     loongson1c_defconfig
+powerpc                        warp_defconfig
+sh                              ul2_defconfig
+mips                           gcw0_defconfig
+m68k                       m5249evb_defconfig
+sh                        sh7763rdp_defconfig
+h8300                               defconfig
+arm                    vt8500_v6_v7_defconfig
+powerpc                  mpc866_ads_defconfig
+mips                     cu1830-neo_defconfig
+mips                           ip32_defconfig
+powerpc                         ps3_defconfig
+x86_64                           alldefconfig
+arm                            xcep_defconfig
+arm                     davinci_all_defconfig
+sh                      rts7751r2d1_defconfig
+powerpc                      mgcoge_defconfig
+powerpc                         wii_defconfig
+powerpc                     stx_gp3_defconfig
+sh                          rsk7203_defconfig
+powerpc                      pcm030_defconfig
+arm                       multi_v4t_defconfig
+arm                       spear13xx_defconfig
+powerpc                      tqm8xx_defconfig
+powerpc                     tqm8541_defconfig
+mips                            ar7_defconfig
+powerpc                        fsp2_defconfig
+um                               allyesconfig
+parisc                              defconfig
+um                             i386_defconfig
+arm                        mini2440_defconfig
+powerpc                     ksi8560_defconfig
+sh                         ap325rxa_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                      bamboo_defconfig
+arm                        trizeps4_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+i386                 randconfig-a006-20210407
+i386                 randconfig-a003-20210407
+i386                 randconfig-a001-20210407
+i386                 randconfig-a004-20210407
+i386                 randconfig-a002-20210407
+i386                 randconfig-a005-20210407
+i386                 randconfig-a006-20210408
+i386                 randconfig-a003-20210408
+i386                 randconfig-a001-20210408
+i386                 randconfig-a004-20210408
+i386                 randconfig-a005-20210408
+i386                 randconfig-a002-20210408
+x86_64               randconfig-a014-20210407
+x86_64               randconfig-a015-20210407
+x86_64               randconfig-a013-20210407
+x86_64               randconfig-a011-20210407
+x86_64               randconfig-a012-20210407
+x86_64               randconfig-a016-20210407
+i386                 randconfig-a014-20210407
+i386                 randconfig-a011-20210407
+i386                 randconfig-a016-20210407
+i386                 randconfig-a012-20210407
+i386                 randconfig-a015-20210407
+i386                 randconfig-a013-20210407
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                               allmodconfig
+um                                allnoconfig
+um                                  defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-Cheers,
-
-Andrew
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
