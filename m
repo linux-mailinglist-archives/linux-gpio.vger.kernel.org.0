@@ -2,78 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45D17358F71
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 23:49:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FFD6358FBA
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 00:18:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231862AbhDHVtg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Apr 2021 17:49:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232158AbhDHVte (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 17:49:34 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2CCAC061761
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Apr 2021 14:49:22 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id 12so6336157lfq.13
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Apr 2021 14:49:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gSwI2lrbGQqYSE+wLPKWCV1qT/p0lT6GqXHXDIlQOJc=;
-        b=quFQWgR1m8YOd3BwXP4FP8AeaPoqjQcIb4O1u3MDQbNvRUfn+H2tc0pVusbqMAAsKC
-         PfpIQMPUHmPKevmIGluYPYdCBdNv7u9SKbkfoqa6pIghBIGA432zJt/BREBZM9r/dvhc
-         S80vE7f3xs1PC0GFADzcKR6cf/mBiAVpdt3/7+RV2+Rjv+70x9ZGkORvzHxcUXPwKimP
-         hKQSjt8uwNhKFRiBSL+yYzlsKsF182Ji2bCKF4vYO3lW7tvyVy0qcJkuVt/JA68jS74O
-         1UeYOufBGbK7VV5t48UK8d0+wI9mHNHNoqluS9Cyv+qvbhnxAMzHKu9+FfdstQ64YTUD
-         KOyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gSwI2lrbGQqYSE+wLPKWCV1qT/p0lT6GqXHXDIlQOJc=;
-        b=mJIEiTqoW8e4Ss/cZY6DJdTo9U2hpMVkr1LuqRwgE7f4fpcuknxYM3ZQdvghKq17bD
-         lcl0Ep6xs9QI0VjjVpq4sU6EKARR9MPIlhfKjiVs6SWsnux3BNJLOphzY6JYiwbrUWZw
-         Bn01/6793sQpNjLwqYowtYCXfimcaZGDCl0vtuLCebCfNst9vtuoAeO/SdsIUwyi6jW/
-         P+i7Ua4aGza71a7glk7RdIz45E747/VOaAg3aZ5k0vs/cUehzGrPSuHl7iF93qUhJC6y
-         Ux5Ka0RWy47SDGJIO8QbUyDh06hFyC3iUlfaOfU6u2U7Z9ZXhrThjQFWSKJVo69tcM4m
-         1ySQ==
-X-Gm-Message-State: AOAM531jMyAmaIQRIU11Bpi7+uT1gO1alsCDMVJ6jIUzP9RJDp8dwXWV
-        1xm9szBNtM9hy2/uyZLCQlBRFgK5bakUW78G8ehMNA==
-X-Google-Smtp-Source: ABdhPJw5wsKEEQOsjg/2rKjxW5QNKY8BRxjWlBSbKGQGw3XZ34NjyVYzkj0g0ldiHhLS3mQQdOsxgtpqCEicxcIReaQ=
-X-Received: by 2002:a05:6512:c0b:: with SMTP id z11mr8492618lfu.586.1617918561398;
- Thu, 08 Apr 2021 14:49:21 -0700 (PDT)
+        id S232560AbhDHWSs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Apr 2021 18:18:48 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41416 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232265AbhDHWSr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 8 Apr 2021 18:18:47 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1lUcyv-00Fc6F-3w; Fri, 09 Apr 2021 00:18:33 +0200
+Date:   Fri, 9 Apr 2021 00:18:33 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sander Vanheule <sander@svanheule.net>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, bert@biot.com
+Subject: Re: [RFC PATCH 0/2] MIIM regmap and RTL8231 GPIO expander support
+Message-ID: <YG+BObnBEOZnoJ1K@lunn.ch>
+References: <cover.1617914861.git.sander@svanheule.net>
 MIME-Version: 1.0
-References: <2be34cc205ae96d40b04a9efdcf9287d5da9d1c0.1617901945.git.gurus@codeaurora.org>
-In-Reply-To: <2be34cc205ae96d40b04a9efdcf9287d5da9d1c0.1617901945.git.gurus@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Apr 2021 23:49:10 +0200
-Message-ID: <CACRpkdaOj_fdRTqjbYnL7EJo2CKSmw_8k8A_URWVyCs0iSGTmw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm8008 support
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1617914861.git.sander@svanheule.net>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 8, 2021 at 7:25 PM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+> - Providing no compatible for an MDIO child node is considered to be equivalent
+>   to a c22 ethernet phy, so one must be provided. However, this node is then
+>   not automatically probed.
 
-> Add support for the 2 GPIOs present on Qualcomm Technologies, Inc.
-> PM8008.
->
-> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+It cannot be automatically probed, since register 2 and 3 do not
+contain an ID, which PHYs do. So you need to explicitly list in on the
+MDIO bus, and when the of_mdiobus_register() is called, the device
+will be instantiated.
 
-Patches applied.
+Is it okay to provide a binding without a driver?
+>   If some code is required, where should this be put?
+>   Current devicetree structure:
+>     mdio-bus {
+>         compatible = "vendor,mdio";
+>         ...
+> 
+>         expander0: expander@0 {
+>             /*
+>              * Provide compatible for working registration of mdio device.
+>              * Device probing happens in gpio1 node.
+>              */
+>             compatible = "realtek,rtl8231-expander";
+>             reg = <0>;
+>         };
+> 
+>     };
+>     gpio1 : ext_gpio {
+>         compatible = "realtek,rtl8231-mdio";
+>         gpio-controller;
+>         ...
+>     };
 
-Yours,
-Linus Walleij
+I don't understand this split. Why not
+
+     mdio-bus {
+         compatible = "vendor,mdio";
+         ...
+ 
+         expander0: expander@0 {
+             /*
+              * Provide compatible for working registration of mdio device.
+              * Device probing happens in gpio1 node.
+              */
+             compatible = "realtek,rtl8231-expander";
+             reg = <0>;
+	     gpio-controller;
+         };
+     };
+
+You can list whatever properties you need in the node. Ethernet
+switches have interrupt-controller, embedded MDIO busses with PHYs on
+them etc.
+
+> - MFD driver:
+>   The RTL8231 is not just a GPIO expander, but also a pin controller and LED
+>   matrix controller. Regmap initialisation could probably be moved to a parent
+>   MFD, with gpio, led, and pinctrl cells. Is this a hard requirement if only a
+>   GPIO controller is provided?
+
+You need to think about forward/backwards compatibility. You are
+defining a binding now, which you need to keep. Do you see how an MFD
+could be added without breaking backwards compatibility?
+
+      Andrew
