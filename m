@@ -2,72 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79CB2357D36
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 09:20:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 651A3357E23
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 10:33:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbhDHHUT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Apr 2021 03:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42246 "EHLO
+        id S230033AbhDHIdq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Apr 2021 04:33:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230329AbhDHHUQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 03:20:16 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFBE2C061761
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Apr 2021 00:20:05 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id d12so2221507lfv.11
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Apr 2021 00:20:05 -0700 (PDT)
+        with ESMTP id S229803AbhDHIdp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 04:33:45 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C564BC061761
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Apr 2021 01:33:32 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id r12so1615633ejr.5
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Apr 2021 01:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WlfKPAVS7s8q2gU837mzcoVOQnjvsEoF10bHzfLXmJI=;
-        b=eOLrgTB7YGCxrq2IJntsH0BiX0my6ojbHNgaKR1WLjXrtRQqRgl7AxFIO7ljS/XJsc
-         qDGjixKpbSUb01qme7Vuj6+B0Wt/X/97C0BWeVwkY6keatJtXskQDFpfOF+OC10k7c77
-         IV8aII8UvUta4yAhawJCYVgrwDEq0JdFzd/KgmJ62ntqi6kGEc1IGBdzVbJG6EqXhMjL
-         yf+t9OEIttseT7VqfjidrgcZgeAnb+P4XWwhXQRHQUpjT78v3q+LH9zKETFp4l5oPT7z
-         ct/T+vx8OsmzJuuVl+QAHrSibAMVWeCltBdCnIrPD59vcQSEC7QyD6CnmF5YCOMGu/A1
-         boDA==
+        bh=5yCCjiWkAwqATqPSjIjQNyLbmG/huiKlevGSmwkEyR8=;
+        b=IILPK87co6cRB30SBUD84s8jNEWHphYGfXu/trBxCn+HYZUD6LJxbIvbuvoFnHEIkJ
+         8pT9+YwIxsWGPJRTvxmuhYnpdDMWE7ehCgXLZT0USf+os5lIdDr2/icw83jnnqMaPnDJ
+         xXGMlpCnW+2Bu77aPYpaluIWMrDqKvl0b4qJ+jfLyt0aqMRftlIA69uuWYb5OSO+DKwb
+         4bGlRcnt0chwis+3AaomfayoRZ6xkjTia6ZhRGhXeGDRVC2/knn8LJ4eYbjKQEIthRZr
+         ela4zkCP9xWbLI0gWkQc5AW86VMw5RLYQeftE2A7cyrwz4VxXYWsVzKjDOPL7iBUiTGz
+         7W1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WlfKPAVS7s8q2gU837mzcoVOQnjvsEoF10bHzfLXmJI=;
-        b=KEwSaT4jOfkUwRfIehX9zCAaCe1XG5gL2R41MTyf6NbSd5a5xbG3hRoLyykM6LwP4t
-         mEwM+QiQ4BagoL01bAl9JFDcxJGtE4kKqYVj8l9I+icQOM/7UcXyraN8Bpx3SejhzZhi
-         lgHgdkoNgWhfJy05P81DPCMZvyAgW8jLpiP9Sy/PIxoLRKhLwPvE91gGBh6jvsQBGtse
-         nkObz9TB6KNeyzMvxynr7tLkFMUbqMaBzoAUW4XM8x1fKg/x5VFbBSeoRd1Mq8GTr2+J
-         GoXQaC5gYlQT2eXamyNzxZ4upw2FDp4AE9slFOn8bbETNu7zxQcqkvJNn0NvCBrsJt/E
-         nlhw==
-X-Gm-Message-State: AOAM532OgwBpMAWoG5FAEDcLvB19ykx+F7Augej2iBtZUBAuear+NFiG
-        6msi7sBJ2C9ofcFwpN0aQcoI44JKc1CHRDP6NC3jpA==
-X-Google-Smtp-Source: ABdhPJwUEMQdSsTxINxDceo8FqB3wCgw7y0bCNTtLfBWCoOlVcvIuy+iIW9x2E2dlo8fmxCrN/0WCtgHovBessU+sDk=
-X-Received: by 2002:a05:6512:243:: with SMTP id b3mr5381799lfo.529.1617866404340;
- Thu, 08 Apr 2021 00:20:04 -0700 (PDT)
+        bh=5yCCjiWkAwqATqPSjIjQNyLbmG/huiKlevGSmwkEyR8=;
+        b=ioTY+WBsACnqZIWoMDguOYE283t4oXmGSt6ghbNnOd7WW/tkgYiJeV7Y+PhGRA7iTf
+         VJxspBOrSIc9rv0jLYRirYesrko0tjvqU0SVLIjslAknkaI3SZKfj4NCDFAQ7x515dCe
+         fk6VAp7bc+dQpnOb2tYkHaIbhq5EyBwSaBZ6Mvk/Xk2YX01JvktRAW6wYbJOBz4C2dDT
+         AcOi+zqv+Eg3bWq9x4+fDja4um7Ij5Y5OrZ8VmjWBdTXmHoUjFPxNL7VqjsKIO90S0Ut
+         yU0qLdR5aIzszw8wLpdKZCNMojH4jM3mCipcMS8svWoVu9p+z1jX8KSWPn78tsLbCqoP
+         6zsg==
+X-Gm-Message-State: AOAM532hViZQcwE38YMNSto+wJ/ZNcZQ9vzlhA+h1uEez0ouTHaipEmt
+        jMFr2QzyHBMgSMvpz5yQWQjFhQIpgwURnIKFGJKALg==
+X-Google-Smtp-Source: ABdhPJyu6/8vxWkUZcupdWZS44/FuHmo3e72vR0EqZhptpOKA0zGOzhX+uQpSlk8g3+BrTRTBir+tAGqYdWiAxlxXLk=
+X-Received: by 2002:a17:906:9605:: with SMTP id s5mr8993580ejx.287.1617870811400;
+ Thu, 08 Apr 2021 01:33:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210322033846.39882-1-ran.wang_1@nxp.com> <AM6PR04MB54134144991AB746382FCC0BF1769@AM6PR04MB5413.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB54134144991AB746382FCC0BF1769@AM6PR04MB5413.eurprd04.prod.outlook.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Apr 2021 09:19:53 +0200
-Message-ID: <CACRpkdbh_kn9SjjSqS32m5VNy5k=j6eLCVJDJxmiWVQnYC0ZJA@mail.gmail.com>
-Subject: Re: [PATCH v4] gpio: mpc8xxx: Add ACPI support
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Walle <michael@walle.cc>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CA+G9fYsiRYaE+y44ApDkvPvbDCdiJ+nnCMhiiaPVsg6p8m4+1Q@mail.gmail.com>
+ <CAHp75VdJ7kGXN6sk8HTeSfAKQtHDGSmtdVPn7CSkK5=yfDizuA@mail.gmail.com>
+In-Reply-To: <CAHp75VdJ7kGXN6sk8HTeSfAKQtHDGSmtdVPn7CSkK5=yfDizuA@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 8 Apr 2021 14:03:20 +0530
+Message-ID: <CA+G9fYuG12WaC6QAdx1k80v8-As7a7oVVkhaUDxqgV=BaunfxQ@mail.gmail.com>
+Subject: Re: [next] [arm64] [gpio] BUG: key has not been registered! DEBUG_LOCKS_WARN_ON:
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Colin King <colin.king@canonical.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 3:49 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+On Thu, 8 Apr 2021 at 04:21, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Apr 8, 2021 at 12:38 AM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> >
+> > While running kselftest recently added gpio gpio-sim.sh test case the following
+> > warning was triggered on Linux next tag 20210330 tag running on arm64 juno
+> > and hikey devices.
+> >
+> > GOOD: next-20210326
+> > BAD: next-20210330
+> >
+> > This is still happening today on Linux next tag 20210407.
+>
+> Can you add the following
+>
+>   sysfs_attr_init(attrs[i]);
+>
+> to the end of the loop in gpio_sim_setup_sysfs()?
 
-> Could this version be accepted, or any comment/suggestion?
+Do you mean like this,
 
-Andy says yes, then it is a yes :)
-FWIW
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index ea17289a869c..5fe67ccf45f7 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -296,6 +296,7 @@ static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
+                dev_attr->store = gpio_sim_sysfs_line_store;
 
-Yours,
-Linus Walleij
+                attrs[i] = &dev_attr->attr;
++               sysfs_attr_init(attrs[i]);
+        }
+
+        chip->attr_group.name = "line-ctrl";
+
+
+>
+> If it fixes an issue I'll send a formal patch.
+
+I will build and test this and report here.
+
+- Naresh
