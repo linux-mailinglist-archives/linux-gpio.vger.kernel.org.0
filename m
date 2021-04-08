@@ -2,119 +2,254 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CF69357FCC
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 11:47:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B87903581AB
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Apr 2021 13:25:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231255AbhDHJrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Apr 2021 05:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46416 "EHLO
+        id S229964AbhDHLZS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Apr 2021 07:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230291AbhDHJrm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 05:47:42 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173FDC061760;
-        Thu,  8 Apr 2021 02:47:30 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id t20so730072plr.13;
-        Thu, 08 Apr 2021 02:47:30 -0700 (PDT)
+        with ESMTP id S229721AbhDHLZR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 07:25:17 -0400
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FEEEC061760;
+        Thu,  8 Apr 2021 04:25:05 -0700 (PDT)
+Received: by mail-ua1-x933.google.com with SMTP id u11so592624uaw.2;
+        Thu, 08 Apr 2021 04:25:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PnV0J8nT4j9vAMnnAhfzCebkcqE6zUO4OM97+q9ZYAo=;
-        b=jG6sR68hkJd2v0SpFbAi4EkdDo37+pdAoRVaP9nRyzLun0VHwdC4rd9/3+xOM/FRQZ
-         Q/Ogc7aMDu1VEwHg1vhDN4CAzEVZoA3EXVCE5Ic9CMscyAFORtYmxTnW7aNsKN76VdKG
-         uPDSFnWyCkNVl/um6qVY9O7PC1Ri/Mdm7EbFUFm16b+C1Z9ro5PRNz1BtR8zi0/ZumhP
-         jFJhKL+K9xPqUrlIxydZv/iEj9AegtQG7M3NOh+oX4m7ncjmoDKG7LLSrBYwGbc3Nebf
-         PvdmGle4FC1+9+4agYNvw3ny2kmRKFwpOs29dcHCVtZng4zwhVDSNEsmPgbBfYGmxAUR
-         hPjw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Oh5VckWZohfZEK8mPjwjs9T2uitl8EFFlzRM7bu3+mg=;
+        b=I4lR3jhWA0Czc6cSB5v20+wc/ik1NdQPC8ptPryV3b8E2W4aNS3bwr12cQcTYZHHdr
+         0ctJY/6vpUAWknljrJYDtSzvRruCVhoudQKt95BJHsb7VuXxMEb9uIxcSfMPDuv+///i
+         2boWlU3JhJcrDZKa4dyeLWP7f7UTALYifsPV/4UylQhqOC/iheusL8boSOxFw9dRVnl0
+         U6JEtgLPuARfW/RI7giG0zMSv+xpfzIQPXNo+5hT8wxiEZuhOh3MnS2H6Nqitd0VBGNT
+         grPmG7Ppz9Kgy8rQaCoQjNSXROnS/GO5JSNN4Y++m33plvN+251VGhwnq2I5XpiYSL7t
+         yoyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PnV0J8nT4j9vAMnnAhfzCebkcqE6zUO4OM97+q9ZYAo=;
-        b=NLOEUhjOnQVSkhXxql0B05GygrF8dSlf8kju0jhfY0pw0Ipt/Aaq4yMsDjVokrnZop
-         PFzgMYtlDa2u84SZCZZGTr7IzDbTzncxcrLTjIWZA7kI/xwQVGF7aHFPeF74hUw+2lSC
-         Bf0+1jV3O+qmGRk4YCqQgOx32IC+mQRoqMJrPYthW2ScHcaLdVDMeX4KwOKLJPknDLm+
-         RghyX43w2ys1G90TksQBT2ovusA+K+bIVIZZd+GgykBzRuAuiXwTZNyVHOkWePv2zbjV
-         kRzYzrF5gGMvAtALmFoNJatgrE9ohoQQDTChzThc4lHzTnktZwOvq1Y+HGFz1mFP4hlc
-         /LEw==
-X-Gm-Message-State: AOAM533JqM02yzOGDZzMvv3FVfUYYKRpiltvoFu0WSIoAmshQb75lX5q
-        tDloLPO6DGOAR5upOp8MEkkudkVvbE5xDyVLW2U=
-X-Google-Smtp-Source: ABdhPJzONwCYTjNR9XF+/k3EFvV70hIKqAUs3+4MK2GVkd0ZfVW3JG4nQrVzkOHbs0w5xrv/TzTRM3yWg1v5W/GeDoo=
-X-Received: by 2002:a17:90a:156:: with SMTP id z22mr7815188pje.181.1617875249307;
- Thu, 08 Apr 2021 02:47:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Oh5VckWZohfZEK8mPjwjs9T2uitl8EFFlzRM7bu3+mg=;
+        b=uLJqOvoXHYcx76QPbrB5hEzIwEhl7qYV6W9iqKG7RRvlKhuSriTtRBivlIQ0/1h0Mi
+         1QL+Wda7XUXN+7DSgkHqS9FVbkYQADERhGnMZaqkLMixX+wFuBqqz4s9XOk9/Ghr7+7Z
+         UzXU8a0J1VMcJbJT8ED8GovBWZTETLuTa1dIiyQOSTdCZmyJydrP0oTE6DLfuoIHCP/M
+         fdf0+l9kDROY6MjhDLgKv6ikNlp3QObL56/Uz/VN7e8wN9UQzeK+8nkB0QB5lBzLNbze
+         laeS8FaX/8vjO+kPOduO6GZ2KQ/QZ5Lxa3LMCaQBOgaw2kXWl13jNFSoSvEqJO/0lo+2
+         TN3Q==
+X-Gm-Message-State: AOAM530yinXatssM9KOsqDHHWuWJbxg7ySEwC37sdU3BOrwRnsG/e/d7
+        h2jiGjirXj+KsmOCKYdNGgEfkhKdL8zsEw==
+X-Google-Smtp-Source: ABdhPJyhbo/1XaZ/O4QLbWNt7kOq/vd9sFx9kz0vwkh4KPW5Mk5IGKCiuag8f4bn5xgOJu06ho6rfA==
+X-Received: by 2002:ab0:2104:: with SMTP id d4mr5114601ual.105.1617881104746;
+        Thu, 08 Apr 2021 04:25:04 -0700 (PDT)
+Received: from shinobu ([193.27.12.133])
+        by smtp.gmail.com with ESMTPSA id n14sm2697240vkk.14.2021.04.08.04.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Apr 2021 04:25:03 -0700 (PDT)
+Date:   Thu, 8 Apr 2021 20:24:48 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Barney Goette <barneygoette@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: gpio-104-dio-48e: Fixed coding style issues
+Message-ID: <YG7oAA5UljjPE/Gf@shinobu>
+References: <20210408024900.1937-1-barneygoette@gmail.com>
 MIME-Version: 1.0
-References: <CA+G9fYsiRYaE+y44ApDkvPvbDCdiJ+nnCMhiiaPVsg6p8m4+1Q@mail.gmail.com>
- <CAHp75VdJ7kGXN6sk8HTeSfAKQtHDGSmtdVPn7CSkK5=yfDizuA@mail.gmail.com> <CA+G9fYuG12WaC6QAdx1k80v8-As7a7oVVkhaUDxqgV=BaunfxQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYuG12WaC6QAdx1k80v8-As7a7oVVkhaUDxqgV=BaunfxQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 8 Apr 2021 12:47:13 +0300
-Message-ID: <CAHp75Vf1S5Ra4fdkV=faw4tCXbeNiifC3y8MF0_bCqHGfDBLsQ@mail.gmail.com>
-Subject: Re: [next] [arm64] [gpio] BUG: key has not been registered! DEBUG_LOCKS_WARN_ON:
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Colin King <colin.king@canonical.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/3NjGEMkKFEtIs/h"
+Content-Disposition: inline
+In-Reply-To: <20210408024900.1937-1-barneygoette@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 8, 2021 at 11:33 AM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
-> On Thu, 8 Apr 2021 at 04:21, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Apr 8, 2021 at 12:38 AM Naresh Kamboju
-> > <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > While running kselftest recently added gpio gpio-sim.sh test case the following
-> > > warning was triggered on Linux next tag 20210330 tag running on arm64 juno
-> > > and hikey devices.
-> > >
-> > > GOOD: next-20210326
-> > > BAD: next-20210330
-> > >
-> > > This is still happening today on Linux next tag 20210407.
-> >
-> > Can you add the following
-> >
-> >   sysfs_attr_init(attrs[i]);
-> >
-> > to the end of the loop in gpio_sim_setup_sysfs()?
->
-> Do you mean like this,
->
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index ea17289a869c..5fe67ccf45f7 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -296,6 +296,7 @@ static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
->                 dev_attr->store = gpio_sim_sysfs_line_store;
->
->                 attrs[i] = &dev_attr->attr;
-> +               sysfs_attr_init(attrs[i]);
->         }
->
->         chip->attr_group.name = "line-ctrl";
 
-Precisely.
+--/3NjGEMkKFEtIs/h
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > If it fixes an issue I'll send a formal patch.
->
-> I will build and test this and report here.
+On Wed, Apr 07, 2021 at 09:49:00PM -0500, Barney Goette wrote:
+> Fixed multiple bare uses of 'unsigned' without 'int'.
+> Fixed space around '*' operator.
+> Fixed function parameter alignment to opening parenthesis.
+> Reported by checkpatch.
+>=20
+> Signed-off-by: Barney Goette <barneygoette@gmail.com>
 
-Thanks!
+Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+I am all right with this cleanup in order to pacify the checkpatch
+warnings, so you may add my Acked-by line to this commit; however, I do
+have a couple comments inline below.
+
+> ---
+>  drivers/gpio/gpio-104-dio-48e.c | 53 +++++++++++++++++----------------
+>  1 file changed, 27 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-104-dio-48e.c b/drivers/gpio/gpio-104-dio-=
+48e.c
+> index 7a9021c4fa48..38badc421c32 100644
+> --- a/drivers/gpio/gpio-104-dio-48e.c
+> +++ b/drivers/gpio/gpio-104-dio-48e.c
+> @@ -49,15 +49,15 @@ struct dio48e_gpio {
+>  	unsigned char out_state[6];
+>  	unsigned char control[2];
+>  	raw_spinlock_t lock;
+> -	unsigned base;
+> +	unsigned int base;
+>  	unsigned char irq_mask;
+>  };
+> =20
+> -static int dio48e_gpio_get_direction(struct gpio_chip *chip, unsigned of=
+fset)
+> +static int dio48e_gpio_get_direction(struct gpio_chip *chip, unsigned in=
+t offset)
+>  {
+>  	struct dio48e_gpio *const dio48egpio =3D gpiochip_get_data(chip);
+> -	const unsigned port =3D offset / 8;
+> -	const unsigned mask =3D BIT(offset % 8);
+> +	const unsigned int port =3D offset / 8;
+> +	const unsigned int mask =3D BIT(offset % 8);
+> =20
+>  	if (dio48egpio->io_state[port] & mask)
+>  		return  GPIO_LINE_DIRECTION_IN;
+> @@ -65,14 +65,15 @@ static int dio48e_gpio_get_direction(struct gpio_chip=
+ *chip, unsigned offset)
+>  	return GPIO_LINE_DIRECTION_OUT;
+>  }
+> =20
+> -static int dio48e_gpio_direction_input(struct gpio_chip *chip, unsigned =
+offset)
+> +static int dio48e_gpio_direction_input(struct gpio_chip *chip, unsigned =
+int offset)
+>  {
+>  	struct dio48e_gpio *const dio48egpio =3D gpiochip_get_data(chip);
+> -	const unsigned io_port =3D offset / 8;
+> +	const unsigned int io_port =3D offset / 8;
+>  	const unsigned int control_port =3D io_port / 3;
+> -	const unsigned control_addr =3D dio48egpio->base + 3 + control_port*4;
+> -	unsigned long flags;
+> -	unsigned control;
+> +	const unsigned int control_addr =3D dio48egpio->base + 3 + control_port=
+ * 4;
+> +
+
+This empty line is not necessary and can be removed.
+
+> +	unsigned int long flags;
+
+This is "unsigned long" so I don't think there is a need to change it.
+
+William Breathitt Gray
+
+> +	unsigned int control;
+> =20
+>  	raw_spin_lock_irqsave(&dio48egpio->lock, flags);
+> =20
+> @@ -104,17 +105,17 @@ static int dio48e_gpio_direction_input(struct gpio_=
+chip *chip, unsigned offset)
+>  	return 0;
+>  }
+> =20
+> -static int dio48e_gpio_direction_output(struct gpio_chip *chip, unsigned=
+ offset,
+> -	int value)
+> +static int dio48e_gpio_direction_output(struct gpio_chip *chip, unsigned=
+ int offset,
+> +					int value)
+>  {
+>  	struct dio48e_gpio *const dio48egpio =3D gpiochip_get_data(chip);
+> -	const unsigned io_port =3D offset / 8;
+> +	const unsigned int io_port =3D offset / 8;
+>  	const unsigned int control_port =3D io_port / 3;
+> -	const unsigned mask =3D BIT(offset % 8);
+> -	const unsigned control_addr =3D dio48egpio->base + 3 + control_port*4;
+> -	const unsigned out_port =3D (io_port > 2) ? io_port + 1 : io_port;
+> +	const unsigned int mask =3D BIT(offset % 8);
+> +	const unsigned int control_addr =3D dio48egpio->base + 3 + control_port=
+ * 4;
+> +	const unsigned int out_port =3D (io_port > 2) ? io_port + 1 : io_port;
+>  	unsigned long flags;
+> -	unsigned control;
+> +	unsigned int control;
+> =20
+>  	raw_spin_lock_irqsave(&dio48egpio->lock, flags);
+> =20
+> @@ -154,14 +155,14 @@ static int dio48e_gpio_direction_output(struct gpio=
+_chip *chip, unsigned offset,
+>  	return 0;
+>  }
+> =20
+> -static int dio48e_gpio_get(struct gpio_chip *chip, unsigned offset)
+> +static int dio48e_gpio_get(struct gpio_chip *chip, unsigned int offset)
+>  {
+>  	struct dio48e_gpio *const dio48egpio =3D gpiochip_get_data(chip);
+> -	const unsigned port =3D offset / 8;
+> -	const unsigned mask =3D BIT(offset % 8);
+> -	const unsigned in_port =3D (port > 2) ? port + 1 : port;
+> +	const unsigned int port =3D offset / 8;
+> +	const unsigned int mask =3D BIT(offset % 8);
+> +	const unsigned int in_port =3D (port > 2) ? port + 1 : port;
+>  	unsigned long flags;
+> -	unsigned port_state;
+> +	unsigned int port_state;
+> =20
+>  	raw_spin_lock_irqsave(&dio48egpio->lock, flags);
+> =20
+> @@ -202,12 +203,12 @@ static int dio48e_gpio_get_multiple(struct gpio_chi=
+p *chip, unsigned long *mask,
+>  	return 0;
+>  }
+> =20
+> -static void dio48e_gpio_set(struct gpio_chip *chip, unsigned offset, int=
+ value)
+> +static void dio48e_gpio_set(struct gpio_chip *chip, unsigned int offset,=
+ int value)
+>  {
+>  	struct dio48e_gpio *const dio48egpio =3D gpiochip_get_data(chip);
+> -	const unsigned port =3D offset / 8;
+> -	const unsigned mask =3D BIT(offset % 8);
+> -	const unsigned out_port =3D (port > 2) ? port + 1 : port;
+> +	const unsigned int port =3D offset / 8;
+> +	const unsigned int mask =3D BIT(offset % 8);
+> +	const unsigned int out_port =3D (port > 2) ? port + 1 : port;
+>  	unsigned long flags;
+> =20
+>  	raw_spin_lock_irqsave(&dio48egpio->lock, flags);
+> @@ -306,7 +307,7 @@ static void dio48e_irq_unmask(struct irq_data *data)
+>  	raw_spin_unlock_irqrestore(&dio48egpio->lock, flags);
+>  }
+> =20
+> -static int dio48e_irq_set_type(struct irq_data *data, unsigned flow_type)
+> +static int dio48e_irq_set_type(struct irq_data *data, unsigned int flow_=
+type)
+>  {
+>  	const unsigned long offset =3D irqd_to_hwirq(data);
+> =20
+> --=20
+> 2.25.1
+>=20
+
+--/3NjGEMkKFEtIs/h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAmBu5/YACgkQhvpINdm7
+VJK5lA/+PARqvDPVR3XIR4CACnXlAu03T6XEIwXreM98u2kOF7AmL6DeMx6UCvhJ
+WDspMPot/eGYuhUZfmlIplcZAFDs8wYksQIqhsvtDmDSJLfWO5Ozvv6HdtCGbbDM
+aphg6mdYfKOiDNwvoSeiQaUYwMgqIxWntGfqHoZQlWNfB5SyieSS/iMpl9H7Xbcg
+cKe4cNbxoyYgteYKTLEpEUsfS7zrfi6h8DZAA35Xb6LUH3w0cWUFCYdS0IGSXQCI
+Vbn+AbV2GVtmQWOEafR5rKsEECko+WbnYBIaBIQrEYKJPkvtZ/R7pqSzO9Ek+Lrq
+ChyHSIko/9toUg+TeeyAd5v8m+SP10kn5ZUOtezXEubrorgCZnkI/JPWnKz2LwrI
+gi7GADc4Y1UNkSCd//3Bk2MdjUZDFrHMFhOSljJeHakBaPsk4fICKXGc3UBKJW5X
+NM/mNND7Lle77EhXUT1ittUT3HHszABSjFTg4EwvQjrfW4OZzSHDwHBbuvn/nAC2
+7qol9uDSYv2s08bSsMV2mLfXCGtQyCQmUYcjBco5XM9F9cXyD7P9FPXXiU6SGkwn
+mNJo08KFrOyr4JpmbXciq3dSBuS6JGao+fy8V5ab3SAxYKzScWa9E5MIVKrp2SWr
+XJU/ayDpS0NeGNvaD6edBY1hhKxG0JOFNEuu3QmEcRDRZMrHufI=
+=K8Pm
+-----END PGP SIGNATURE-----
+
+--/3NjGEMkKFEtIs/h--
