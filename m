@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 317FA35931B
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 05:38:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73147359329
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 05:38:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233174AbhDIDiL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Apr 2021 23:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54708 "EHLO
+        id S233137AbhDIDjB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Apr 2021 23:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233203AbhDIDiL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 23:38:11 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2FA9C061760;
-        Thu,  8 Apr 2021 20:37:09 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id 1so3269988qtb.0;
-        Thu, 08 Apr 2021 20:37:09 -0700 (PDT)
+        with ESMTP id S233070AbhDIDjB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Apr 2021 23:39:01 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E8AC061760;
+        Thu,  8 Apr 2021 20:38:49 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id y2so3218622qtw.13;
+        Thu, 08 Apr 2021 20:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8BgGBrR3Xwqw+MMg1YnlfMAUK+I10lyWE+xZkXB1ujs=;
-        b=Heia25TgE2vtvJwk4Mye9wUNtKT4LCXFpu3RTd7Litn4l6XDwm58yNf5Xo72WKG1Cb
-         Pnh29PYykNQ0Leb0AVytW69/DSGu2rRRdSyPucL7QrMDZjkSbhFQ0sXFxG9k3cGgza9V
-         mXSNHoDmBuqB2Dq6N7NZp/gT1iFd9YrggQtWs=
+        bh=zWYrgmgXBOXRjVrzdgXfjhYpQ0FoUCzYmeLXCLSnYFE=;
+        b=jcSmnDiUo1MMc6Q3MSiXiyB7AXqJBpPE3e98RkysCl8SPty3nDcOvOcRler+dmur5d
+         aMg54JUXZxIhZg03ZAR8c4WicszsfYamOPqGCL3/D+KRBdvKzAB4CjehLG05aGaqWbqE
+         rpwrfWYwUuXjd2oNzh9mCifoRsFoJ+gnmN5pc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8BgGBrR3Xwqw+MMg1YnlfMAUK+I10lyWE+xZkXB1ujs=;
-        b=jw6ukamSWVotwCXQrCi9tZaelPWAx/Y/SjK5CiZS4roGgR5IADFLCING9taiHeBMSi
-         aAsvGnNP1OI3GRghZccdZULiSFI5Tdhm1VN/yMbtmQCNj/6/cW0gTcGypd6O+/3jmaTf
-         X7Mbx6IgE2By+jFWbKcav5F/Ez3hZSfsUkYY9sGL5I8twSIb+/9qFVqyPDxt3OlrfEsM
-         2JoZFxF3now+PvznEUfFuGnVIeP0Jdv4XFsZQCnxlt6pSsiT0PqstqNXgKxVUGMAM3Y7
-         76BO4EBj1GUP0Alr0oDInj7H66k8iuHXwLJIO8mTml7pL+WmV1z74GVb56yZDPQfsJZm
-         /SUw==
-X-Gm-Message-State: AOAM533Fqd6UVvNEFKS2uayXq0bzCGkvkZ/tPStRQIDAt2AJMzhdIARr
-        apszigu9QX9XuuGeQpW/sXksKLX693guRhVX7d0=
-X-Google-Smtp-Source: ABdhPJxpEB1iiCw0U43cwWPFxVnBP2huZ7QxGaGC6NeOvjxLXRAa+ssU2jFErOgTTQKad2+gM3ZDkIo4Ri3biTi/Bas=
-X-Received: by 2002:ac8:5f87:: with SMTP id j7mr10494309qta.135.1617939429154;
- Thu, 08 Apr 2021 20:37:09 -0700 (PDT)
+        bh=zWYrgmgXBOXRjVrzdgXfjhYpQ0FoUCzYmeLXCLSnYFE=;
+        b=HN+LJqdNVvn/hi1ZUhgkWd/3pef68l833nkO/AdW9Vc5mXv+jafLT40GCm0NZwiSFq
+         vNySFZ0jss9vLCsDfwcNFXcgoI/TAG7B5GO7PF9nHCz0UA4n3eKSOwrlUNxBRd1oyb+0
+         8AExkBxwGhsA+lhUJKc41lEzYPh1JkU/6QY49aFFTmcFKGw196Hg7Cy5ltqh2KYHZceF
+         43seJy+vhlt3sQzX4TWKa0h2jyK7j9/67dQlz/eHwENtxpIcZX5jyaMmSdtnE3N9lZvu
+         yV+OE+Pik194ISQwP3DJ8aytiLKMFLBAF3OTH9eNv/NNc89eyulHnwWxyGYRqXBkrkl/
+         qBvg==
+X-Gm-Message-State: AOAM530hV4Vxgq9k5Esb1bi9Ui1Vt7W6Sha5EnmDgil6fFiTc8R1Y4JU
+        j5iBAN9ySdw7v3xjUUm37pNcugbgmsM2F5tF7O4=
+X-Google-Smtp-Source: ABdhPJy3ab4kwwpcl+l+Ds70eJmyq2Cr6Wy6ME4tEKA06FjzEJMtXRy47zcwt64rNz+2wEnTaXI69wecrdATFzf/+XE=
+X-Received: by 2002:ac8:7547:: with SMTP id b7mr11274286qtr.176.1617939528484;
+ Thu, 08 Apr 2021 20:38:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210319062752.145730-1-andrew@aj.id.au> <20210319062752.145730-4-andrew@aj.id.au>
-In-Reply-To: <20210319062752.145730-4-andrew@aj.id.au>
+References: <20210319062752.145730-1-andrew@aj.id.au> <20210319062752.145730-5-andrew@aj.id.au>
+In-Reply-To: <20210319062752.145730-5-andrew@aj.id.au>
 From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 9 Apr 2021 03:36:57 +0000
-Message-ID: <CACPK8Xfre_HriZXa10GVRvzxM51_6jkxCrXi-Ofto6cCKcLw4g@mail.gmail.com>
-Subject: Re: [PATCH v2 04/21] pinctrl: aspeed-g5: Adapt to new LPC device tree layout
+Date:   Fri, 9 Apr 2021 03:38:36 +0000
+Message-ID: <CACPK8XcFX9Ljo8K9XzhtCnTXKS0muknzrV6=SU6Wh5jJSPdNAg@mail.gmail.com>
+Subject: Re: [PATCH v2 05/21] soc: aspeed: Adapt to new LPC device tree layout
 To:     Andrew Jeffery <andrew@aj.id.au>
 Cc:     openipmi-developer@lists.sourceforge.net,
         OpenBMC Maillist <openbmc@lists.ozlabs.org>,
@@ -81,6 +81,5 @@ On Fri, 19 Mar 2021 at 06:28, Andrew Jeffery <andrew@aj.id.au> wrote:
 >
 > Signed-off-by: Chia-Wei Wang <chiawei_wang@aspeedtech.com>
 > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Reviewed-by: Joel Stanley <joel@jms.id.au>
