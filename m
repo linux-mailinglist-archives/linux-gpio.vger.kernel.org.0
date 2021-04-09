@@ -2,97 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82DCB359757
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 10:13:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EF85359772
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 10:15:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231699AbhDIIOJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 04:14:09 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:44861 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231611AbhDIIOI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 04:14:08 -0400
-Received: from mail-oi1-f181.google.com ([209.85.167.181]) by
- mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1Md6AP-1m4wN83xZr-00aHea; Fri, 09 Apr 2021 10:13:54 +0200
-Received: by mail-oi1-f181.google.com with SMTP id a8so4968109oic.11;
-        Fri, 09 Apr 2021 01:13:53 -0700 (PDT)
-X-Gm-Message-State: AOAM532Sdy+ZNBgdv6wrkbDzI2fZ15v/hCuQwkAN3jHkPWsy8ll0lISq
-        lTjBAciO6uy0n93ESmRa2Qh1ykjpqfUQrGDoZo0=
-X-Google-Smtp-Source: ABdhPJzFdzRK0Fr9sttYZU00DkmHPob2Ue763VfCmKuqxE8AuUxCM9nJfgP3QwCQkKhUcqhD2rg86m1268AEXjhhEyo=
-X-Received: by 2002:aca:5945:: with SMTP id n66mr8949399oib.11.1617956032510;
- Fri, 09 Apr 2021 01:13:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210319061952.145040-1-andrew@aj.id.au> <2db77e16-3f44-4c02-a7ba-a4fac8141ae3@www.fastmail.com>
- <20210408121441.GG7166@minyard.net> <6ff29d26-543a-4790-abb4-ebaa3f8d0265@www.fastmail.com>
- <CACPK8Xc5HC7TZ6cUDH6+uHQO1LQCZE0YeENua1sE8nDXs0R2mg@mail.gmail.com>
-In-Reply-To: <CACPK8Xc5HC7TZ6cUDH6+uHQO1LQCZE0YeENua1sE8nDXs0R2mg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 9 Apr 2021 10:13:36 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2ch82=QccNZboa-e1tVaotyJfGFTfqDuQCO0xPVitXgA@mail.gmail.com>
-Message-ID: <CAK8P3a2ch82=QccNZboa-e1tVaotyJfGFTfqDuQCO0xPVitXgA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/21] ipmi: Allow raw access to KCS devices
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Corey Minyard <minyard@acm.org>,
-        openipmi-developer@lists.sourceforge.net,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Patrick Venture <venture@google.com>,
+        id S229829AbhDIIQC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 9 Apr 2021 04:16:02 -0400
+Received: from aposti.net ([89.234.176.197]:56432 "EHLO aposti.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229696AbhDIIQC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Apr 2021 04:16:02 -0400
+Date:   Fri, 09 Apr 2021 09:15:34 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/2] linux/kconfig.h: replace IF_ENABLED() with PTR_IF()
+ in <linux/kernel.h>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Benjamin Fair <benjaminfair@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:obuQBkum3EouSx9gNWnc6EUZJhkkzkYTe8fASl4y2ztTxESDC8h
- RDjTogYZcoHKrQqo36EGcSeTcMBRopdtlVaFyluu6ZpVW7x1MOj5XeHw2YL7xCOnZZS+D+a
- nTFbVa4aIG/eBZRAFlAR9bXBcEKyo6i9pSkRRyD7DJN1+RluCza7xnxouY6hO+TNLau1vpX
- C2pIu7LmK3rFgsJX4u0ww==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LcPuQrOkFEI=:EqPZz1a+cgsfMSxbv6lCji
- YTTWcwkPGWTUJWAJEwgY0JoNcChVDmWNtJkodIRrt1KMfRThIyRh5AwEsrzviwd3fd3evU4/+
- 23QoHHQDhAR6ikY33dPeBGLloeWXTiaCOYvDKqPhig1QNJ4VcGGm/peDi35KLIDjaJYfQktu3
- pY6YjLB7n9eaj6f5OqDTm3NCEx1wF2QbIyPXh8Kxilj5lDmOARij6f+dHY3TlRd9gtfAa0GDS
- Ug3z6on/X+V1cpkQkVoaGSuh+GVKGetHQZc1Z6a++SZiORbRiKeaxAZkdFaWbQNDIEFm/FIDp
- YhUUaMUQjljGuKeY/B6Cfm96dittrc/nD7gQjL2p7jRA47B4gX203wHqip1lJj2m8uEFH1YzG
- kXpm5bRYvQCnWMNEqxBf/9wtfxzuxgkoVC0IP/5fAuas4/b49Kg5T17vHb1rPYHmgWA68pJqa
- bwpAjUrDNF5scEEr+WPSQp/yQSd2HnMYoiEkp12L/WS8JBnoahJ12Fz4n4DbU0jyIR6tMWczq
- ql0TtEgTuOVT9ISzW2ABexoRei2dKTWljhIp9YspLewuZjNGFrqC1YGYZ1PXHSUcXcQO8JPi5
- /SvgvgnhfT91IbFRwOYYz2cwbM62fGSSS0
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Message-Id: <YXEARQ.LGKNU44HTZP01@crapouillou.net>
+In-Reply-To: <20210408205858.51751-2-masahiroy@kernel.org>
+References: <20210408205858.51751-1-masahiroy@kernel.org>
+        <20210408205858.51751-2-masahiroy@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 9, 2021 at 6:09 AM Joel Stanley <joel@jms.id.au> wrote:
-> On Thu, 8 Apr 2021 at 23:47, Andrew Jeffery <andrew@aj.id.au> wrote:
-> > On Thu, 8 Apr 2021, at 21:44, Corey Minyard wrote:
-> > > On Thu, Apr 08, 2021 at 10:27:46AM +0930, Andrew Jeffery wrote:
-> > > There were some minor concerns that were unanswered, and there really
-> > > was no review by others for many of the patches.
-> >
-> > Right; I was planning to clean up the minor concerns once I'd received
-> > some more feedback. I could have done a better job of communicating
-> > that :)
->
-> I'll merge the first five through the aspeed tree this coming merge
-> window. We have acks from the relevant maintainers.
->
-> Arnd: would you prefer that this come as it's own pull request, or as
-> part of the device tree branch?
+Hi Masahiro,
 
-When you are unsure, it's almost never wrong to go for a separate
-branch, which gives you a chance to have a concise description
-of the contents in the tag. This would be particularly helpful if there
-are incompatible changes to the DT binding that require a justification.
+Le ven. 9 avril 2021 à 5:58, Masahiro Yamada <masahiroy@kernel.org> a 
+écrit :
+> <linux/kconfig.h> is included from all the kernel-space source files,
+> including C, assembly, linker scripts. It is intended to contain 
+> minimal
+> set of macros to evaluate CONFIG options.
+> 
+> IF_ENABLED() is an intruder here because (x ? y : z) is C code, which
+> should not be included from assembly files or linker scripts.
+> 
+> Also, <linux/kconfig.h> is no longer self-contained because NULL is
+> defined in <linux/stddef.h>.
+> 
+> Move IF_ENABLED() out to <linux/kernel.h> as PTR_IF().
+> 
+> PTR_IF(IS_ENABLED(CONFIG_FOO), ...) is slightly longer than
+> IF_ENABLED(CONFIG_FOO, ...), but it is not a big deal because
+> sub-systems often define dedicated macros such as of_match_ptr(),
+> pm_ptr() etc. for common use-cases.
 
-If you are only adding a few DT nodes to existing files, then merging
-these through the regular branch is probably easier.
+What's the idea behind changing IF_ENABLED() to PTR_IF()? You didn't 
+explain that. What's wrong with IF_ENABLED()?
 
-       Arnd
+Cheers,
+-Paul
+
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  drivers/pinctrl/pinctrl-ingenic.c | 20 ++++++++++----------
+>  include/linux/kconfig.h           |  6 ------
+>  include/linux/kernel.h            |  2 ++
+>  3 files changed, 12 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
+> b/drivers/pinctrl/pinctrl-ingenic.c
+> index f2746125b077..b21e2ae4528d 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -2496,43 +2496,43 @@ static int __init 
+> ingenic_pinctrl_probe(struct platform_device *pdev)
+>  static const struct of_device_id ingenic_pinctrl_of_match[] = {
+>  	{
+>  		.compatible = "ingenic,jz4740-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_JZ4740, &jz4740_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4740), &jz4740_chip_info)
+>  	},
+>  	{
+>  		.compatible = "ingenic,jz4725b-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_JZ4725B, &jz4725b_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4725B), &jz4725b_chip_info)
+>  	},
+>  	{
+>  		.compatible = "ingenic,jz4760-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_JZ4760, &jz4760_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4760), &jz4760_chip_info)
+>  	},
+>  	{
+>  		.compatible = "ingenic,jz4760b-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_JZ4760, &jz4760_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4760), &jz4760_chip_info)
+>  	},
+>  	{
+>  		.compatible = "ingenic,jz4770-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_JZ4770, &jz4770_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4770), &jz4770_chip_info)
+>  	},
+>  	{
+>  		.compatible = "ingenic,jz4780-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_JZ4780, &jz4780_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4780), &jz4780_chip_info)
+>  	},
+>  	{
+>  		.compatible = "ingenic,x1000-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_X1000, &x1000_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_X1000), &x1000_chip_info)
+>  	},
+>  	{
+>  		.compatible = "ingenic,x1000e-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_X1000, &x1000_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_X1000), &x1000_chip_info)
+>  	},
+>  	{
+>  		.compatible = "ingenic,x1500-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_X1500, &x1500_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_X1500), &x1500_chip_info)
+>  	},
+>  	{
+>  		.compatible = "ingenic,x1830-pinctrl",
+> -		.data = IF_ENABLED(CONFIG_MACH_X1830, &x1830_chip_info)
+> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_X1830), &x1830_chip_info)
+>  	},
+>  	{ /* sentinel */ },
+>  };
+> diff --git a/include/linux/kconfig.h b/include/linux/kconfig.h
+> index 24a59cb06963..cc8fa109cfa3 100644
+> --- a/include/linux/kconfig.h
+> +++ b/include/linux/kconfig.h
+> @@ -70,10 +70,4 @@
+>   */
+>  #define IS_ENABLED(option) __or(IS_BUILTIN(option), 
+> IS_MODULE(option))
+> 
+> -/*
+> - * IF_ENABLED(CONFIG_FOO, ptr) evaluates to (ptr) if CONFIG_FOO is 
+> set to 'y'
+> - * or 'm', NULL otherwise.
+> - */
+> -#define IF_ENABLED(option, ptr) (IS_ENABLED(option) ? (ptr) : NULL)
+> -
+>  #endif /* __LINUX_KCONFIG_H */
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 5b7ed6dc99ac..8685ca4cf287 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -38,6 +38,8 @@
+>  #define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned 
+> long)(p), (a)))
+>  #define IS_ALIGNED(x, a)		(((x) & ((typeof(x))(a) - 1)) == 0)
+> 
+> +#define PTR_IF(cond, ptr)	((cond) ? (ptr) : NULL)
+> +
+>  /* generic data direction definitions */
+>  #define READ			0
+>  #define WRITE			1
+> --
+> 2.27.0
+> 
+
+
