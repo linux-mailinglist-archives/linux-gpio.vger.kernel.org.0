@@ -2,149 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 974B23594D9
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 07:42:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFDE23594DD
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 07:42:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233316AbhDIFm2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 01:42:28 -0400
-Received: from mx0a-00268f01.pphosted.com ([148.163.148.236]:19018 "EHLO
-        mx0a-00268f01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233312AbhDIFmZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 01:42:25 -0400
-Received: from pps.filterd (m0165119.ppops.net [127.0.0.1])
-        by mx0a-00268f01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1395XX8a017230;
-        Fri, 9 Apr 2021 05:40:08 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
-        by mx0a-00268f01.pphosted.com with ESMTP id 37t8pf1c4h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Apr 2021 05:40:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LGcBFysM8hEWateRzO/PbDnPSYFo6AnQv1QkxH5ctjCms2h71hLJRKCSLrPTGUiCOT4IagZvKnrahax7YLoo38G/DEgvsqfVjJaiiXEEvyuvK/y/K+b23lSeCggicoLeKXky+r+yamCUqsnHqvWDmbnvIVa6MktFv5hRnxrNKHd6yJN8U03pWLTw3ilSzLVETcorERX5d6snZ1Vdj9fiO2S6rQJrtQXt/+sL0vrCZ9rNrA0a9OfPMuN8xVr6U4PvzWtBD8tLVj8UXx8zSHdIuHX0xI3t2DpzBSJQDya2cVJf9zce7jq5ol55khZBCJWmy41Dqc1/XPdesVBwQ8lWaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zwF0PXHvnKbMGAQs213iPHi1mM+9f3XVtCVAM7hrpyI=;
- b=MG0hkS88/n39RQS7vs9Qszz7xSjmZhMbnFQ659fYRqUPRabSpCqOc707Snc1XNStucxeCVLWm7pfRwHLfjZ5f/3qEYJj5REhfExr8xrNUyq1qOeKTa4SyddECSPDZ/rn8GVCh6NSjxl1CI8ILLU6Olj5gI5Wjjl24DWyXJtafAeDqRfyLq4mfC3b1EyKupy0BbPnGU1b5+4a/JtZdcRg5kVR0lEdl81ltF5jVisRYJl6YVIzT9HSgyoCTBANDI+siIIA+LWJUxgOL0lHmiF8h1qX9TgKaLLC3Wx13rRUV9J0jcrkhalyXrDNou+d8JFqA4lQfncFbF+WgXGYXbbFdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=equinix.com; dmarc=pass action=none header.from=equinix.com;
- dkim=pass header.d=equinix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=equinixinc.onmicrosoft.com; s=selector2-equinixinc-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zwF0PXHvnKbMGAQs213iPHi1mM+9f3XVtCVAM7hrpyI=;
- b=iCbd8IZbApc5lt73soAvetcYIgIEyygaAv9SEIuGxAc2r7Dg/tZjdwN2aNaJM9RhovpWvc12zxRgKzq73ko2x85U6gX4s13jt2nMVDcmyJB0MnLP1xyCk2Bquhf9j6jRyh4Ebfx12/WfSP/T1kIrftFAu/DaLAVa9a6yKhrrJh4=
-Received: from DM5PR04MB0762.namprd04.prod.outlook.com (2603:10b6:3:f3::13) by
- DM6PR04MB6428.namprd04.prod.outlook.com (2603:10b6:5:1e1::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4020.18; Fri, 9 Apr 2021 05:40:06 +0000
-Received: from DM5PR04MB0762.namprd04.prod.outlook.com
- ([fe80::4c98:aeb:87a8:13ad]) by DM5PR04MB0762.namprd04.prod.outlook.com
- ([fe80::4c98:aeb:87a8:13ad%5]) with mapi id 15.20.4020.017; Fri, 9 Apr 2021
- 05:40:06 +0000
-From:   Zev Weiss <zweiss@equinix.com>
-To:     Andrew Jeffery <andrew@aj.id.au>
-CC:     "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "minyard@acm.org" <minyard@acm.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "ryan_chen@aspeedtech.com" <ryan_chen@aspeedtech.com>,
-        "tmaimon77@gmail.com" <tmaimon77@gmail.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "avifishman70@gmail.com" <avifishman70@gmail.com>,
-        "venture@google.com" <venture@google.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tali.perry1@gmail.com" <tali.perry1@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "chiawei_wang@aspeedtech.com" <chiawei_wang@aspeedtech.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "benjaminfair@google.com" <benjaminfair@google.com>
-Subject: Re: [PATCH v2 20/21] ipmi: kcs_bmc_aspeed: Fix IBFIE typo from
- datasheet
-Thread-Topic: [PATCH v2 20/21] ipmi: kcs_bmc_aspeed: Fix IBFIE typo from
- datasheet
-Thread-Index: AQHXLQLLVPEmXeRF2kWhLB2fQs7OrQ==
-Date:   Fri, 9 Apr 2021 05:40:06 +0000
-Message-ID: <YG/otW6XwZFT6fPy@packtop>
-References: <20210319062752.145730-1-andrew@aj.id.au>
- <20210319062752.145730-20-andrew@aj.id.au>
-In-Reply-To: <20210319062752.145730-20-andrew@aj.id.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: aj.id.au; dkim=none (message not signed)
- header.d=none;aj.id.au; dmarc=none action=none header.from=equinix.com;
-x-originating-ip: [24.181.166.149]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 46095030-31b2-41e4-70d1-08d8fb19ee50
-x-ms-traffictypediagnostic: DM6PR04MB6428:
-x-microsoft-antispam-prvs: <DM6PR04MB642826F9A0FC89577B56FD83C3739@DM6PR04MB6428.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xoaQ4Q/ZSxX2ZF7YNCOp5elxpiydzf5En5WUCpj/uA4HErlW2kaAPFlxDkK/GXZCodwLQRBiZE4YADlglXmR9aqYU+R3ERIaFtwtgh90WmsfbvB9XDgOvl9lkGaq2pj6tlZsoX7CYGpJvMDi5lVz66GzvmrOrBZwc3YUB4KO7b3YDEGtiCYcnMdZ2RQfxGP79OSteUKbRfmNGtJN22CjgufsUnRvSohGWGMHP9ck3rf00XVUYQyhil5eisRQLlo/876cw/yqtCZDx2O/35Z4r5dp3FXpbuzCkNCu/s846KtO73RoJakyjWhNLHzF5nl8lBX0KpipurJvp9Lxpi5YpeA1F+kpUcGWPb3zXqYM3QwJt48HtTbixLtxLTmBgioXNIQ5jCJrXdT79Nk07N/TrLBLeDG/hWUa2pxf2arZJQlJqmqlUrapOUXrmtu6sSijcrlp/2IbtiXI/XXY5pcAdcYgM52EZTxiCmIpYMRaaC8O18Q8UrCscj7VKypbupRwd3xE1Ivoe80AA1nlnRv7YUsA0+hmbNP6zLZOvKFB/yDj6jjdIzAw++HZnx1Jdw4Ddi0ncCq+ak7ZdbS/xwk83fMmABJOWwBtKgtF6S2Q4Lj6Qk7MqWOH6YvirGBJLOhvO/x9NP3/88v8WBAaxRgRUUzNysVHlew/AGVU6/RkROs=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR04MB0762.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(4636009)(136003)(39860400002)(376002)(366004)(396003)(346002)(26005)(6512007)(5660300002)(186003)(6916009)(6506007)(71200400001)(66446008)(86362001)(66556008)(2906002)(7416002)(64756008)(66946007)(316002)(76116006)(33716001)(6486002)(9686003)(66476007)(478600001)(4326008)(8936002)(54906003)(8676002)(558084003)(38100700001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?1NNQb0aqf6C/SvvlYAEi9pALH/F1fT51PUblxmffxjdR0laKAYoOJX0qtVve?=
- =?us-ascii?Q?j4Rw+OUKUSNUPhks9clibqsFYc8pR4T8oC/2l5kbw8l1x6lLGNOZsf0YGe9F?=
- =?us-ascii?Q?rnJW2EBe3waYgLKfKZMCvRqH1KuW/pIuLW3kLim4qIp+8zJxp8kyizs2BCko?=
- =?us-ascii?Q?Osrh1cx4rX5ImWjzjNhkxJyoIZXH0bBmPW4+t4kRy+TKMFTYSo1l7pgbjYBf?=
- =?us-ascii?Q?0LvOiD7C3HL/hAOoFALMCzqor8d06aAdi9pnK/+JaAKh6FzOd3HW+DW6bQwt?=
- =?us-ascii?Q?vkc47H92QjfscfCtJ0uL2+dElPJcITDNpX3Y9R48dxNUZ9owE3/LJeaC8iTQ?=
- =?us-ascii?Q?BLsU9GePHLjMB6fg9EPfGslSXG2eRyVIdnr58D3d7dMZvge8X0yVBA5OG2lK?=
- =?us-ascii?Q?FBlmTwhhMeYjaAtFvK4LbhE6b/aVl+Vg5uR+5xS2usmhKtbL2vbogcZWbF+0?=
- =?us-ascii?Q?nDMTC65ogpQxf1s3slVLQ7HPCL38sGzbQ8EQXZ8H1torh9QEu6pSn3YBzbI1?=
- =?us-ascii?Q?htOgL4bkAH+Pjeq/rGBuiVsRXrPUY9B2NQou2Fv2EtSBeBKq4qLIpQZrBFxl?=
- =?us-ascii?Q?jEL8S4bstMJN6r7cRolcGqAvat3psj5z+6j4s12WS1PDxmorfLMFY7Lpsr1k?=
- =?us-ascii?Q?l8AaEZtjkkQLrAdgHQWPFeyyWXliEOwyT9TfHBUjFjbh8qyR94sKF8hVA0gy?=
- =?us-ascii?Q?mZl22Q6U/a7x4JAfIoR6ZyCqF6JazRpUU1Orbq4uvOeYLsmdMaYgx6+qQJEN?=
- =?us-ascii?Q?YlgwE2I+hyTBdAusi4T+cB5IxzRtQ7Hi2djbBMaAdqFMK64AUSc42s/6Qopn?=
- =?us-ascii?Q?kDjFrGFHOSXs3O2g95f6THkJMF7VwogCqZ1PONs83odlAkCA5madkM/ouyNB?=
- =?us-ascii?Q?kPgwbImVYB8CG3EFaz54MVtTIe+w0kiEbGNIzdZKus7blRyef0M6GFggtxYT?=
- =?us-ascii?Q?yjY7pNXzMvjuIMIiz2wgksuv7tril6ScfzMTwt/sowrmnvzAOrKMQXPapE1y?=
- =?us-ascii?Q?bRwcYdO6/7AJtZIeU8+kvmdRCZE5Ue/PVg5jIAaR1IP44ILVwXi+ngqZylzI?=
- =?us-ascii?Q?As7TFE+rEshKhxzuMZnEawFerjPwtHRQUGr8T3y7r+eOhysYxTFujM9xZM7B?=
- =?us-ascii?Q?tPCmD7URhtPj1jE7a+0E8WTH5Mw3C7tZ4y57AlS/qxTPAFMU5krjXt/7i3iN?=
- =?us-ascii?Q?KF/EXvrlaQDUI5X8uT4AeHxppdd2dR1zrr9B8rdGIzyfgbDkhMq+W3F6tKCD?=
- =?us-ascii?Q?Kid1GO54CG0qvzdlsWwBTsnMNsDlyWUrLAFQl7El7Gh7EHZ+p15FN7q76+FK?=
- =?us-ascii?Q?Ypjxz4eqnh5jnFgYXPnFn5ALIEszEyfDFh24WGeYgjDLjA=3D=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7C004BC1A1D7F942BE25F8B30FCE28F9@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S233300AbhDIFms (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 01:42:48 -0400
+Received: from polaris.svanheule.net ([84.16.241.116]:41256 "EHLO
+        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233296AbhDIFmr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 01:42:47 -0400
+Received: from [IPv6:2a02:a03f:eaff:9f01:d655:559e:db93:11ac] (unknown [IPv6:2a02:a03f:eaff:9f01:d655:559e:db93:11ac])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id D7DA51ED083;
+        Fri,  9 Apr 2021 07:42:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1617946954;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6H1fBx+Q041v69ku9nTDNJB1L4reFirfk9JrDv8gQ5U=;
+        b=O5I0n81KleKChxtNGM8oIzXHHxlZMsMB+cvt+zkmMfyFTdwK5ILkGtbozctyXLpD5AgwXw
+        JiVUqqKh4++HY6Ms/PftF9hy8GyqzdVRWkCWTXR0Qj5UUkutBDOc4qeL4P0CDgrTrg2dai
+        lSrLsbIeAsZz2e/ylL5i1YtzOb0iksQoyDspp9j13Q3mgBvl4b9T16VRiTKWn9lU519ZIT
+        L9Zr8Kz3lBEukjj0ArhXDKwAdQdHUbZWCeRirlUnEoYE4lkB77nDrQX0Lh06wCH/FePJsY
+        jJjrPC1K9XSNn9RbMvY0TMyYEGbqxtH0Q0/RAUsLHlMlWeQHbq4YFPmszJlakQ==
+Message-ID: <d73a44809c96abd0397474c63219a41e28f78235.camel@svanheule.net>
+Subject: Re: [RFC PATCH 0/2] MIIM regmap and RTL8231 GPIO expander support
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, bert@biot.com
+Date:   Fri, 09 Apr 2021 07:42:32 +0200
+In-Reply-To: <YG+BObnBEOZnoJ1K@lunn.ch>
+References: <cover.1617914861.git.sander@svanheule.net>
+         <YG+BObnBEOZnoJ1K@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-X-OriginatorOrg: equinix.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR04MB0762.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46095030-31b2-41e4-70d1-08d8fb19ee50
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2021 05:40:06.3068
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72adb271-2fc7-4afe-a5ee-9de6a59f6bfb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7X/ntuX39f2nLPd6CGJhEhRdanMrZ6YOBjT0IQLmoA1DujGMoSxVEtqN3J1c50ZZ7Y0quMkilMLFaaLT2oFOjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6428
-X-Proofpoint-GUID: ZEuDvwPHhsa97t_DQojy5twMiqQfJ9JD
-X-Proofpoint-ORIG-GUID: ZEuDvwPHhsa97t_DQojy5twMiqQfJ9JD
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-09_03:2021-04-08,2021-04-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 impostorscore=0 suspectscore=0
- malwarescore=0 bulkscore=0 adultscore=0 mlxlogscore=728 mlxscore=0
- spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104090041
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 01:27:51AM CDT, Andrew Jeffery wrote:
->Input Buffer Full Interrupt Enable (IBFIE) is typoed as IBFIF for some
->registers in the datasheet. Fix the driver to use the sensible acronym.
->
->Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Hi Andrew,
 
-Reviewed-by: Zev Weiss <zweiss@equinix.com>
+Thank you for the feedback. You can find a (leaked) datasheet at:
+https://github.com/libc0607/Realtek_switch_hacking/blob/files/RTL8231_Datasheet_1.2.pdf
+
+On Fri, 2021-04-09 at 00:18 +0200, Andrew Lunn wrote:
+> > - Providing no compatible for an MDIO child node is considered to
+> > be equivalent
+> >   to a c22 ethernet phy, so one must be provided. However, this
+> > node is then
+> >   not automatically probed.
+> 
+> It cannot be automatically probed, since register 2 and 3 do not
+> contain an ID, which PHYs do. So you need to explicitly list in on
+> the
+> MDIO bus, and when the of_mdiobus_register() is called, the device
+> will be instantiated.
+> 
+> Is it okay to provide a binding without a driver?
+> >   If some code is required, where should this be put?
+> >   Current devicetree structure:
+> >     mdio-bus {
+> >         compatible = "vendor,mdio";
+> >         ...
+> > 
+> >         expander0: expander@0 {
+> >             /*
+> >              * Provide compatible for working registration of mdio
+> > device.
+> >              * Device probing happens in gpio1 node.
+> >              */
+> >             compatible = "realtek,rtl8231-expander";
+> >             reg = <0>;
+> >         };
+> > 
+> >     };
+> >     gpio1 : ext_gpio {
+> >         compatible = "realtek,rtl8231-mdio";
+> >         gpio-controller;
+> >         ...
+> >     };
+> 
+> I don't understand this split. Why not
+> 
+>      mdio-bus {
+>          compatible = "vendor,mdio";
+>          ...
+>  
+>          expander0: expander@0 {
+>              /*
+>               * Provide compatible for working registration of mdio
+> device.
+>               * Device probing happens in gpio1 node.
+>               */
+>              compatible = "realtek,rtl8231-expander";
+>              reg = <0>;
+>              gpio-controller;
+>          };
+>      };
+> 
+> You can list whatever properties you need in the node. Ethernet
+> switches have interrupt-controller, embedded MDIO busses with PHYs on
+> them etc.
+
+This is what I tried initially, but it doesn't seem to work. The node
+is probably still added as an MDIO device, but rtl8231_gpio_probe()
+doesn't appear to get called at all. I do agree it would be preferable
+over the split specification.
+
+Having another look, I see mdio_device_id is used for ethernet phys,
+but like you said this requires and ID in registers 2 & 3. These
+registers contain pin configuration on the RTL8231, so this can't be
+used.
+Registering as a phy_driver appears to have the same issue, although it
+looks like I could use a custom match_phy_device(). I do feel like this
+would be stretching the meaning of what a PHY is.
+
+
+> > - MFD driver:
+> >   The RTL8231 is not just a GPIO expander, but also a pin
+> > controller and LED
+> >   matrix controller. Regmap initialisation could probably be moved
+> > to a parent
+> >   MFD, with gpio, led, and pinctrl cells. Is this a hard
+> > requirement if only a
+> >   GPIO controller is provided?
+> 
+> You need to think about forward/backwards compatibility. You are
+> defining a binding now, which you need to keep. Do you see how an MFD
+> could be added without breaking backwards compatibility?
+
+There are pin-/gpio-controllers that have the gpio and pinctrl nodes in
+the device's root node. So I think adding pinctrl later shouldn't be an
+issue. The LED matrix description would probably need a dedicated sub-
+node. I'll see if I can write some preliminary bindings later today or
+this weekend.
+
+Best,
+Sander
+
+
