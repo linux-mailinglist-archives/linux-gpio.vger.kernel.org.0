@@ -2,46 +2,45 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 669F23593FA
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 06:36:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D63AF359402
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 06:37:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229999AbhDIEg0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 00:36:26 -0400
-Received: from mx0b-00268f01.pphosted.com ([148.163.159.192]:41328 "EHLO
+        id S231497AbhDIEhV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 00:37:21 -0400
+Received: from mx0b-00268f01.pphosted.com ([148.163.159.192]:45332 "EHLO
         mx0b-00268f01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229526AbhDIEgZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 00:36:25 -0400
-X-Greylist: delayed 2281 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Apr 2021 00:36:25 EDT
-Received: from pps.filterd (m0165120.ppops.net [127.0.0.1])
-        by mx0b-00268f01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1393m8b2001076;
-        Fri, 9 Apr 2021 03:57:14 GMT
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2051.outbound.protection.outlook.com [104.47.44.51])
-        by mx0b-00268f01.pphosted.com with ESMTP id 37t83g18cv-1
+        by vger.kernel.org with ESMTP id S229526AbhDIEhT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 00:37:19 -0400
+Received: from pps.filterd (m0105197.ppops.net [127.0.0.1])
+        by mx0a-00268f01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1394YFpU020213;
+        Fri, 9 Apr 2021 04:35:33 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2108.outbound.protection.outlook.com [104.47.55.108])
+        by mx0a-00268f01.pphosted.com with ESMTP id 37te7hg87x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Apr 2021 03:57:14 +0000
+        Fri, 09 Apr 2021 04:35:33 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fysGYu7D9nmiMj91/k/MsCyR+OTY62C8wi2OP39n6E+EkLDrXD8GFV3hQrR+5QZxU8ef+PoYJaLDLOvB5aUDmNTN3T9yq5UGMV1GtceKscVGlwxOUIxMRgkzpWsYJqySL93/g/ENh5jUimtjTWypZ8IhY2OFT9tKgO0V8cy60TaukyUHDbBFQTpmUtxs+ufhibjHItdtm48zEmYzKZtFhCoplCamy5yOWbAnGwRIaOMHXElyOrdfW2A7H6cRwpzO2+3GU92p1e9TqN+ruRJ7oIQ6tYbG3yfiixrxsK2bkBbSOW0E05p8LRLlJWMN57yO/3tCmjn4luBqh0wwstl1SQ==
+ b=oIYbSEOTQ8Mc7CXvJR0kh1HEf405Kzdo15e91KQ5mvaHyGZCxUCp050IGpzrSqehDaCfa4uhREk3j/9ce+4i0sAKpahh2evnd4zbnk+r0GAUQobGdmUROrQ76yfM3ZZiEiPSak01PCSipwSlWzzS89NArRMYZL2U9mkKhKeAqLBPezX+FCyQwBy+NIDcON3xOZDAm93zygvtNgPLKPXPNGihpEFeqBYhxKPv+X+suR71WunPZJmrqVqp2OpFnqryz0o62BO66EpeCALdNoZc47NIStY5w2vzK/qF1v9dC7hHmq5dLN9gYYx3wwetO3ssWKBV8ytEi2hO65y8RoMrUA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bF4vdBsNOQphiRqkwoI7wN5jLlg0bEEC1WgwSwwHgtU=;
- b=AdcPbt1FAGvkTJBy9xQ+KNyQSm/I9q+sCNkCjZMrW506jKJxEouNnCC8cDkI3ECMVIHfUvxQ+nAfj3FDMBBQoPPAn55OdbdhVnOHt43/+uLuQ8FY1ih5MjSB5bA6X6bJWL3LzI3BaqXXJ8iCWyLIhIoKkt4QqlEUkYIOgBXkTizgUtM163RqjmbIxUEPw3pB9jeczMfpjkw33l8UM72QmtvNYO8cFDEaqKXHYXPrIfrxJunSa2pVHzLhghAfX9zu4d4h6HDEMocUC+fhpg7wvSChP9Bp2Xgl8A/9GMCX2Fbj+eEiwGykcF3pvlLMhQmkmVVuvn96y0XmGoLN/aTp+A==
+ bh=t8enUxkv9576dfL8WOpXWiwwclKCfVQNvd45RtiNPPc=;
+ b=PH2FztBU+aAN0ECIjRZgIEvueMkHX9nxx4NTacoEOjZR4twaJixUg2vTdsAZE0PIL5MM2bPgHyKn9yg4q6NqEW9Y6CzooiUlJE+7l7hdzIN/pHEZ+47/s4FoICvGPXmSvnRioPwkkd6jOQ9wiYlhTty/WyrBQIf96xvbXcjJHA6/YHs4sA+GimR5yzsKzpR5zUUa0N9iZoqTGXn2cKpiRnf6YTbhe/yrdOTFOgH7TJFg/KSZEkuH0GOAn8SWdYmWBM0GGY7VWpqogxI3hCCC0HdBbLNmvKLmrqfLe914M5q1S2Luin0fdDyhSjxgfdsn2UGIf9hLp1EMjFWLAp+4AA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=equinix.com; dmarc=pass action=none header.from=equinix.com;
  dkim=pass header.d=equinix.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=equinixinc.onmicrosoft.com; s=selector2-equinixinc-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bF4vdBsNOQphiRqkwoI7wN5jLlg0bEEC1WgwSwwHgtU=;
- b=F0nFChJ+CzojOmPG6ecPW8tNkzik/H0AKuzEH/zFGrKLYIyRcc18niWsS3VG9TTIUTQcAUzruiSBMWBQFBvvHGSOnkGUHyqZjHtg0hB2uHGg7w8yY79Dz3MxexQVsH2rBqDzfSp5rcnkfFLw4vf5jIkb97COz46RXMlCNRO9JX4=
+ bh=t8enUxkv9576dfL8WOpXWiwwclKCfVQNvd45RtiNPPc=;
+ b=DqHCA2XAP5zPbmmNTrG3cGYlUEaaSRlZnW3P7y5R5C9byKs5KtpPykyRhb5gUyy5GFgz5e38548b7ANcSYZ7v2LhuswxgQxjRfYmg7BiPWgcGLF+vHfNjkHg+znhW9VQjdgjGJ7EhEdaHn6+JhZzCwZfzYYVQZJqWrPiF9nE/j8=
 Received: from DM5PR04MB0762.namprd04.prod.outlook.com (2603:10b6:3:f3::13) by
- DM6PR04MB6281.namprd04.prod.outlook.com (2603:10b6:5:1e8::21) with Microsoft
+ DM6PR04MB3929.namprd04.prod.outlook.com (2603:10b6:5:ac::30) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3999.28; Fri, 9 Apr 2021 03:57:12 +0000
+ 15.20.4020.17; Fri, 9 Apr 2021 04:35:31 +0000
 Received: from DM5PR04MB0762.namprd04.prod.outlook.com
  ([fe80::4c98:aeb:87a8:13ad]) by DM5PR04MB0762.namprd04.prod.outlook.com
  ([fe80::4c98:aeb:87a8:13ad%5]) with mapi id 15.20.4020.017; Fri, 9 Apr 2021
- 03:57:12 +0000
+ 04:35:30 +0000
 From:   Zev Weiss <zweiss@equinix.com>
 To:     Andrew Jeffery <andrew@aj.id.au>
 CC:     "openipmi-developer@lists.sourceforge.net" 
@@ -64,16 +63,16 @@ CC:     "openipmi-developer@lists.sourceforge.net"
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "benjaminfair@google.com" <benjaminfair@google.com>
-Subject: Re: [PATCH v2 10/21] ipmi: kcs_bmc: Turn the driver data-structures
- inside-out
-Thread-Topic: [PATCH v2 10/21] ipmi: kcs_bmc: Turn the driver data-structures
- inside-out
-Thread-Index: AQHXLPRrPdVC3RFcvUCHtDapr0x+sg==
-Date:   Fri, 9 Apr 2021 03:57:12 +0000
-Message-ID: <YG/Ql9z9X/mtOSvl@packtop>
+Subject: Re: [PATCH v2 13/21] ipmi: kcs_bmc: Decouple the IPMI chardev from
+ the core
+Thread-Topic: [PATCH v2 13/21] ipmi: kcs_bmc: Decouple the IPMI chardev from
+ the core
+Thread-Index: AQHXLPnFQEyxqSF8jUWs1YYelcFYYg==
+Date:   Fri, 9 Apr 2021 04:35:30 +0000
+Message-ID: <YG/ZkanVAypmjCba@packtop>
 References: <20210319062752.145730-1-andrew@aj.id.au>
- <20210319062752.145730-10-andrew@aj.id.au>
-In-Reply-To: <20210319062752.145730-10-andrew@aj.id.au>
+ <20210319062752.145730-13-andrew@aj.id.au>
+In-Reply-To: <20210319062752.145730-13-andrew@aj.id.au>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -82,582 +81,366 @@ authentication-results: aj.id.au; dkim=none (message not signed)
  header.d=none;aj.id.au; dmarc=none action=none header.from=equinix.com;
 x-originating-ip: [24.181.166.149]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4db0e9de-949d-4d8e-79a4-08d8fb0b8e65
-x-ms-traffictypediagnostic: DM6PR04MB6281:
-x-microsoft-antispam-prvs: <DM6PR04MB6281E34E9EBE16C7CF016E01C3739@DM6PR04MB6281.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-ms-office365-filtering-correlation-id: d145adf1-d759-4231-7004-08d8fb10e85a
+x-ms-traffictypediagnostic: DM6PR04MB3929:
+x-microsoft-antispam-prvs: <DM6PR04MB39296E1954C441A9C6284AC1C3739@DM6PR04MB3929.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KRWU46Wlp5ZC8rAArxvv+mJrUjw6mDKZnAGeAVUdZQUM4MbuCoyVl4MEGiU7DVQri9JnMEpJOSyiWVWDuKRxxc0cBCc7C6GwKo/W41qRRecqGIzlnWu5PcxWj3TBc6hRYbrD6K4MmeuRWmYVdflzezGVpcs/ZvUjobW6mrskLpIXByOdvFdSW7yG4JY73azqUlrJZpkDaPBG/SR8Umzc3/iqQeL+QFn142gDHESW777Jbsc/5LOSCjkby0iQGkeP3jbvpevFu7dTggAWHzGAh8qyHaG8qks5B20W2MchPFPhYrWTalXphj6jkWYtOB+KmYl1NAWDw56lokJNzXPe3PamTNmaSMCv6FLm1d/tOtkUQk0AolRMNbH0xBnQXJfuEhUtkwaLJO9VI5KWn1f07yICWOd6IFZR8nH84FEYZ9iT0C+yQANki1AIcIlWl9BdQRH0wxCa1H9j0uEPI9RIskRKm3ov11gU7rPX2rKeQd7jgojbnWliTjab+W3M1kXlk65ZsOfeauaT6FYvN3xIMSGHw1FIhenivVntVQNswAh50ECgCj4EYHv8DGcnx+3RJARpoTuaKX5+aReTPvTQ9JUaMAzQIiwrx+O+XiRUtgrTPNj7XSM9IY2gPFMtueY2WhN3QIVRTXGsmyWIiKyxjUwiobVh7Vxmb4PYfUbX8bY=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR04MB0762.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(4636009)(346002)(136003)(366004)(39860400002)(376002)(396003)(4326008)(8676002)(66476007)(66946007)(64756008)(26005)(6916009)(86362001)(7416002)(186003)(33716001)(2906002)(6512007)(8936002)(9686003)(38100700001)(76116006)(83380400001)(71200400001)(66446008)(66556008)(5660300002)(6506007)(6486002)(478600001)(316002)(54906003)(30864003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?86jGy93V8im5Nbn4PGhZjVm7NbiCoWsx23eIylCEDH/rNL/AVxTvEMIsD+yt?=
- =?us-ascii?Q?J5f188UNOtXoo6ncBMmDG74Ee+zLm1OMTWdXjPK7Bqm+55jMMHws0xQzv9os?=
- =?us-ascii?Q?r/gtvjAgebI2g7zWVLBAIKwjiUte9Hk0cjzHAzqFehRUOEWsXIwOxcFJxUWS?=
- =?us-ascii?Q?QDoODR2LM6iZPgZ0a290UIylPtdYKyLbIc7NMUyrQBgi8QcfZn0A9EBdlgdv?=
- =?us-ascii?Q?VO3iZos2Zp7pGkumisykW5C+nOJ+YEa9VUnP5O5m+R2xYnGhGVFDWN1EuyYT?=
- =?us-ascii?Q?ovcO5nM3xjUxcUOypUwRA2W5rO7Hq1N2HtuMAd1aaXJXhhCx4YDaP80TZrBJ?=
- =?us-ascii?Q?KwF8L0oVTcbtm5V5RHBsz78VtW0EsrFPS7QyutTBOYG9HnMEZnUdCifaiXH8?=
- =?us-ascii?Q?z7hhVjNNqAbM8r5TV7AJJ05TUNgMV+rYLyQwATNMXdUfdQf3oq16Vk7exL6W?=
- =?us-ascii?Q?86ZU0b0Az8M1u+IkOYBthhlx8MoxC9y+4XKDqDpa07aeJPpiAo21HuAhZgs/?=
- =?us-ascii?Q?am05tal1Xy+70/gVLiS1TxljJFYn7CKYrWM5mgAB3LDPJggxNI11+da+HHpV?=
- =?us-ascii?Q?3qlsDooULm3PmOJP67RyWzx0e/+52dMh6Avtj8DbLe4K09THm0kjfdeXXNsY?=
- =?us-ascii?Q?701/YhcMsOUassk9u6TH4hiY6joSTQUwumRTtNsMhecG/vSjRLTy9Pta9ZxN?=
- =?us-ascii?Q?nUOGC58PnhF4NYWz9Qd7LbnMSmHBbFezF2KTU537EwP0/D2AQl1UsOGa8Y5S?=
- =?us-ascii?Q?H7zmQ9YQ5Cjp/Aihtf5vFU6BJVIzsTQ7FDlxJ83E5wXOTYW0oeEcv4ZlFlGE?=
- =?us-ascii?Q?j5hvwAQayT2N6u8hrF8DaYCSzxTgTiWkhJ89Nlgf3X+SmK3HAv2XJ/J+tJLX?=
- =?us-ascii?Q?GfZorL93KcBpWcL3nyLNL1izRhU7gQHbCt12gPU/fCmZPRkPYpBuo8cbjmDE?=
- =?us-ascii?Q?/Mr00iCIYoBaM+H+Vyq3Xnrg9zBcSzKrIcG6WpJ78msCbts6/XMTYdJzxZXg?=
- =?us-ascii?Q?SIVncsYBouF0viMF5q/Fc+0OB5ObNKS0ML3eQhcFinzRCjE44I16caZ/ZO3E?=
- =?us-ascii?Q?sw6UCVbQXS+JhPPtdBGcNDQ9zNQfURT7iVsYI9WX0WDH0FbL5XGJUfvbd/9+?=
- =?us-ascii?Q?BS4GR4W4+158gOzElbYE4rSwdYIruuAoS1PKtd60rdPQVu92x29V9ai/tnOo?=
- =?us-ascii?Q?SigEkdhsUvb7uFoAV9FdfT3C8sw8unqU3h87Y0X0jPa8zdWnWhtTpWcn4Li5?=
- =?us-ascii?Q?gqUmQ/FDQmRtbUSsMaINJXgEFgcMiS8Tzsw1fPXQVmEimqUii/FGcTcs4V2D?=
- =?us-ascii?Q?rGp9Xv4RwpKEuHYwfzloDMyO8Lo0L2GKsNW9keAVZnZmTA=3D=3D?=
+x-microsoft-antispam-message-info: xwUF7zaDdLndD6FsjHU0irzbj8Fk4ygxWidhOBE4Kb1Dg1/I3kYxOL7SDoCKneENxQ+qxNOpoylh/Um899psulkRL7RC3gUy1P7f3/NzeiCBkP7Mmzyp9fuLl5yQHMGt8SCZ7tOyn9kS6QO/LImXHRqTTjF2JHXCDSKq5YJXqwynuj3swHUXyMF4T3aYdD9OQh9EKDOip+ZfWN5qY0fQXo78VesTTUG4tSuy8OdYVIQkRa7/9gFufmC1H2AJUU9MwnXrOolRDhHE1ejNr0vrQfb4/8n2zjWyLzUYSLWGvJGl30aH4uOADgiFP8lmX27B9g4ui2IIIQPCV2eaBrKLCSJTS72a4n+J5eJL5KLuNK3sQ1tK/vnFNtb+Nk2FI5twcplLlLyQEAbs8uCIYPr3kzMUdoxuWmt4hpenzTNIG8+JhcwwuEvuPJNiRqGYluGEUFao86MbZIHtPjuqBcznEjw2UpAycoJ0/FDGaU+4kwaVjZo+7VU8/sooW+r+KYqUi8DlvWWyFB2NU4VijyfdpvnEDpB646iUfLyYKXUYVTVGOwSlm1y2mNuvN9s4l3c/n9s+coYa7v+TapS/SMfYODpP9oULoKRyFGB6kI/L9tZ+8wEEdfjC3YPuJSrnSo2M+j00n1M5WUrzAx584AUabQr/Jcb5p8HkS3uG/JGJDaI=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR04MB0762.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(4636009)(346002)(366004)(136003)(396003)(39860400002)(376002)(6916009)(38100700001)(186003)(2906002)(7416002)(91956017)(6486002)(26005)(6506007)(478600001)(6512007)(4326008)(9686003)(71200400001)(54906003)(83380400001)(316002)(66946007)(8936002)(8676002)(66446008)(64756008)(86362001)(76116006)(66476007)(66556008)(5660300002)(33716001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?K+VirYjecySypYT1boZQahHAdPdd+tU3QG9FNs3u+ZdZ5PcYMGE/sQ+Nk5hu?=
+ =?us-ascii?Q?cIdsSlWhgJAiTU+11c6Jg+ocb0gVGJnFKdfLSYxubbsZSw0qOmZbZrpnju7Q?=
+ =?us-ascii?Q?dIj/jbgMdjTFxAve77whgBn8n3zszVsEtLbsFpfhhD2AXOvcSkVGM/f1V9aq?=
+ =?us-ascii?Q?4TTW2EOgyNa11Pqj3eexcO8TSjfPA4b9CRDJpuXkig4vST3UrpNuJNNNwDXM?=
+ =?us-ascii?Q?7FSnHXW3bXfekQ/BoZ0WrWDr5z/xW/uIa5tuFBStT4ROKmhVPHin4eRsc2hg?=
+ =?us-ascii?Q?EAWty1zsPKF0d8EPIiKkj6ULsrilfzP4sawFsx8Z24ln9UV6nsvfHmzmlk4m?=
+ =?us-ascii?Q?vfIaPj+BFwgZxFFeW41R4TjxtcVjkesdF2Hlnqigyev8LD3UWVMwfo8K2laI?=
+ =?us-ascii?Q?NmIWlOeAhXKidQbKElvrf7iqaFSTlh/IPGpYzORhm709q/LkyvFf+4uT/Olu?=
+ =?us-ascii?Q?onPIBist7srMMpdEnUCUVlJjpuNLw425pHvGlZaeKlMNYKtnIlWBqMFfXPOy?=
+ =?us-ascii?Q?fypkp/8Ou9lkSpHKIMeg3we2w+NjoWRw9nxHc34zbWH4or1ArqtPwWV0RY+m?=
+ =?us-ascii?Q?ZfZ4KleTCnFskO6lP7ab3s/RAgNPBVRWy2/tSjiq8rIRXIpu3xJH8dOXledT?=
+ =?us-ascii?Q?+bCo2/oTWGLp+wrwAKuMDhpuiCX6YnnVtCMwY1WOj6w8isA2IYCUEc0EPx2z?=
+ =?us-ascii?Q?jRu5Xf+s9klqyiVqDJo+cWPvS0pcldaAZf6l/4ZCshH+j76j8nNCmJoNS8m9?=
+ =?us-ascii?Q?84K0Q8OBWQ8NHBzi4YmH/xlzefevzAU1ycBqqGBD2AmEMAcQ1NJYb+LNDAxG?=
+ =?us-ascii?Q?Bp8tgMADoaKC5hJh2lYTCeGtRaf6ztmAv0ppbo7/KuDxCsgb1FCYjGS6Cejp?=
+ =?us-ascii?Q?DvkQotq0jeHMoq7/2b6NoAnO0p1c3dZ6Iud00l7XDmCFZmhvE+lcqwRj2FFy?=
+ =?us-ascii?Q?i4+QB46W1oaGK72M9nQG5dnCenxdYMOQTdX77/6ci61aDJflyts3AjahSGB2?=
+ =?us-ascii?Q?E4CfRQ8WffzYYgPr3kdJBCxXI33gagFzix3hkdIdgOioLXcUoDycwFL6fl1P?=
+ =?us-ascii?Q?8DY9g35I0R2HV2bWpJce3f+XUHk7h4zMJ+aoLcf0v4BDO2LvVqKJI66+s8Lj?=
+ =?us-ascii?Q?Pt3pss9PLf+Z4T2YWawG0suZZkv+fM9zJoyk0wfRnX7puXgf2sE12MnKrt0M?=
+ =?us-ascii?Q?GnMQVVKVq6RFwgIeLHRdbXGTuRlWRIvzRHGKzeWhaFOzfaCw/l2Nqj235Hvn?=
+ =?us-ascii?Q?0/s8p83J7K8amp8+//pKJa6WrikncYXCbHzDJdL/69D2iL6zMe4x2McqwwFg?=
+ =?us-ascii?Q?Fwjad3fYXGgf4DEdFUVVGw88ZHyQud+E0pLVauspaZFxCw=3D=3D?=
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <17439EB88E9CC84BBF52D18548986FCE@namprd04.prod.outlook.com>
+Content-ID: <451798C445515348AE8682B544D05EFC@namprd04.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: equinix.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: DM5PR04MB0762.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4db0e9de-949d-4d8e-79a4-08d8fb0b8e65
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2021 03:57:12.3213
+X-MS-Exchange-CrossTenant-Network-Message-Id: d145adf1-d759-4231-7004-08d8fb10e85a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2021 04:35:30.7325
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72adb271-2fc7-4afe-a5ee-9de6a59f6bfb
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Xjx4kOtZI4OzpvNzQUEsOAxn6wlcclUL9B/cLQowyU9tx3kEXOcGxC0/Ak8VcR6yBeYUSXiT5u7ds3qpsdWmSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6281
-X-Proofpoint-ORIG-GUID: JUEQpJoPCEqPaQMqpmz7kWtbMW6fmDEw
-X-Proofpoint-GUID: JUEQpJoPCEqPaQMqpmz7kWtbMW6fmDEw
+X-MS-Exchange-CrossTenant-userprincipalname: EpqZx4qXPcMBAJ2cFQTuyZNfMORu6Epe02CuwVGU7uGOdH0vKxtjm0DkHR03Km4kZXdiTLXrbI6zm2jbvmukcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB3929
+X-Proofpoint-GUID: xZ4TW2q5kiPrWIIQmBij_Hb34bBv53NQ
+X-Proofpoint-ORIG-GUID: xZ4TW2q5kiPrWIIQmBij_Hb34bBv53NQ
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
  definitions=2021-04-09_03:2021-04-08,2021-04-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- suspectscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104090025
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ spamscore=0 mlxscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1015 bulkscore=0 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
+ definitions=main-2104090032
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 01:27:41AM CDT, Andrew Jeffery wrote:
->Make the KCS device drivers responsible for allocating their own memory.
->
->Until now the private data for the device driver was allocated internal
->to the private data for the chardev interface. This coupling required
->the slightly awkward API of passing through the struct size for the
->driver private data to the chardev constructor, and then retrieving a
->pointer to the driver private data from the allocated chardev memory.
->
->In addition to being awkward, the arrangement prevents the
->implementation of alternative userspace interfaces as the device driver
->private data is not independent.
->
->Peel a layer off the onion and turn the data-structures inside out by
->exploiting container_of() and embedding `struct kcs_device` in the
->driver private data.
+On Fri, Mar 19, 2021 at 01:27:44AM CDT, Andrew Jeffery wrote:
+>Now that we have untangled the data-structures, split the userspace
+>interface out into its own module. Userspace interfaces and drivers are
+>registered to the KCS BMC core to support arbitrary binding of either.
 >
 >Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 >---
-> drivers/char/ipmi/kcs_bmc.c           | 15 +++++--
-> drivers/char/ipmi/kcs_bmc.h           | 12 ++----
-> drivers/char/ipmi/kcs_bmc_aspeed.c    | 60 ++++++++++++++++-----------
-> drivers/char/ipmi/kcs_bmc_cdev_ipmi.c | 60 ++++++++++++++++++---------
-> drivers/char/ipmi/kcs_bmc_npcm7xx.c   | 37 ++++++++++-------
-> 5 files changed, 113 insertions(+), 71 deletions(-)
+> drivers/char/ipmi/Kconfig             | 13 +++++
+> drivers/char/ipmi/Makefile            |  3 +-
+> drivers/char/ipmi/kcs_bmc.c           | 78 ++++++++++++++++++++++++++-
+> drivers/char/ipmi/kcs_bmc.h           |  4 --
+> drivers/char/ipmi/kcs_bmc_cdev_ipmi.c | 33 +++++++++---
+> drivers/char/ipmi/kcs_bmc_client.h    | 14 +++++
+> 6 files changed, 132 insertions(+), 13 deletions(-)
 >
+>diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
+>index 07847d9a459a..bc5f81899b62 100644
+>--- a/drivers/char/ipmi/Kconfig
+>+++ b/drivers/char/ipmi/Kconfig
+>@@ -124,6 +124,19 @@ config NPCM7XX_KCS_IPMI_BMC
+> 	  This support is also available as a module.  If so, the module
+> 	  will be called kcs_bmc_npcm7xx.
+>
+>+config IPMI_KCS_BMC_CDEV_IPMI
+>+	depends on IPMI_KCS_BMC
+>+	tristate "IPMI character device interface for BMC KCS devices"
+>+	help
+>+	  Provides a BMC-side character device implementing IPMI
+>+	  semantics for KCS IPMI devices.
+>+
+>+	  Say YES if you wish to expose KCS devices on the BMC for IPMI
+>+	  purposes.
+>+
+>+	  This support is also available as a module. The module will be
+>+	  called kcs_bmc_cdev_ipmi.
+>+
+> config ASPEED_BT_IPMI_BMC
+> 	depends on ARCH_ASPEED || COMPILE_TEST
+> 	depends on REGMAP && REGMAP_MMIO && MFD_SYSCON
+>diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
+>index a302bc865370..fcfa676afddb 100644
+>--- a/drivers/char/ipmi/Makefile
+>+++ b/drivers/char/ipmi/Makefile
+>@@ -22,7 +22,8 @@ obj-$(CONFIG_IPMI_SSIF) +=3D ipmi_ssif.o
+> obj-$(CONFIG_IPMI_POWERNV) +=3D ipmi_powernv.o
+> obj-$(CONFIG_IPMI_WATCHDOG) +=3D ipmi_watchdog.o
+> obj-$(CONFIG_IPMI_POWEROFF) +=3D ipmi_poweroff.o
+>-obj-$(CONFIG_IPMI_KCS_BMC) +=3D kcs_bmc.o kcs_bmc_cdev_ipmi.o
+>+obj-$(CONFIG_IPMI_KCS_BMC) +=3D kcs_bmc.o
+>+obj-$(CONFIG_IPMI_KCS_BMC_CDEV_IPMI) +=3D kcs_bmc_cdev_ipmi.o
+> obj-$(CONFIG_ASPEED_BT_IPMI_BMC) +=3D bt-bmc.o
+> obj-$(CONFIG_ASPEED_KCS_IPMI_BMC) +=3D kcs_bmc_aspeed.o
+> obj-$(CONFIG_NPCM7XX_KCS_IPMI_BMC) +=3D kcs_bmc_npcm7xx.o
 >diff --git a/drivers/char/ipmi/kcs_bmc.c b/drivers/char/ipmi/kcs_bmc.c
->index ef5c48ffe74a..709b6bdec165 100644
+>index 266ebec71d6f..694db6ee2a92 100644
 >--- a/drivers/char/ipmi/kcs_bmc.c
 >+++ b/drivers/char/ipmi/kcs_bmc.c
->@@ -44,12 +44,19 @@ int kcs_bmc_handle_event(struct kcs_bmc *kcs_bmc)
-> }
-> EXPORT_SYMBOL(kcs_bmc_handle_event);
+>@@ -5,7 +5,9 @@
+>  */
 >
->-struct kcs_bmc *kcs_bmc_ipmi_alloc(struct device *dev, int sizeof_priv, u=
-32 channel);
->-struct kcs_bmc *kcs_bmc_alloc(struct device *dev, int sizeof_priv, u32 ch=
-annel)
->+int kcs_bmc_ipmi_attach_cdev(struct kcs_bmc *kcs_bmc);
-
-Another declaration perhaps intended for kcs_bmc.h?
-
->+int kcs_bmc_add_device(struct kcs_bmc *kcs_bmc)
-> {
->-	return kcs_bmc_ipmi_alloc(dev, sizeof_priv, channel);
->+	return kcs_bmc_ipmi_attach_cdev(kcs_bmc);
-> }
->-EXPORT_SYMBOL(kcs_bmc_alloc);
->+EXPORT_SYMBOL(kcs_bmc_add_device);
+> #include <linux/device.h>
+>+#include <linux/list.h>
+> #include <linux/module.h>
+>+#include <linux/mutex.h>
+>
+> #include "kcs_bmc.h"
+>
+>@@ -13,6 +15,11 @@
+> #include "kcs_bmc_device.h"
+> #include "kcs_bmc_client.h"
+>
+>+/* Record probed devices and cdevs */
+>+static DEFINE_MUTEX(kcs_bmc_lock);
+>+static LIST_HEAD(kcs_bmc_devices);
+>+static LIST_HEAD(kcs_bmc_cdevs);
 >+
->+int kcs_bmc_ipmi_detach_cdev(struct kcs_bmc *kcs_bmc);
-
-Here too.
-
->+int kcs_bmc_remove_device(struct kcs_bmc *kcs_bmc)
->+{
->+	return kcs_bmc_ipmi_detach_cdev(kcs_bmc);
->+}
->+EXPORT_SYMBOL(kcs_bmc_remove_device);
+> /* Consumer data access */
 >
+> u8 kcs_bmc_read_data(struct kcs_bmc_device *kcs_bmc)
+>@@ -100,16 +107,83 @@ EXPORT_SYMBOL(kcs_bmc_disable_device);
+>
+> int kcs_bmc_add_device(struct kcs_bmc_device *kcs_bmc)
+> {
+>-	return kcs_bmc_ipmi_attach_cdev(kcs_bmc);
+>+	struct kcs_bmc_cdev *cdev;
+>+	int rc;
+>+
+>+	spin_lock_init(&kcs_bmc->lock);
+>+	kcs_bmc->client =3D NULL;
+>+
+>+	mutex_lock(&kcs_bmc_lock);
+>+	list_add(&kcs_bmc->entry, &kcs_bmc_devices);
+>+	list_for_each_entry(cdev, &kcs_bmc_cdevs, entry) {
+>+		rc =3D cdev->ops->add_device(kcs_bmc);
+>+		if (rc)
+>+			dev_err(kcs_bmc->dev, "Failed to add chardev for KCS channel %d: %d",
+>+				kcs_bmc->channel, rc);
+>+	}
+>+	mutex_unlock(&kcs_bmc_lock);
+>+
+>+	return 0;
+
+We're ignoring failed ->add_device() calls here?
+
+> }
+> EXPORT_SYMBOL(kcs_bmc_add_device);
+>
+> int kcs_bmc_remove_device(struct kcs_bmc_device *kcs_bmc)
+> {
+>-	return kcs_bmc_ipmi_detach_cdev(kcs_bmc);
+>+	struct kcs_bmc_cdev *cdev;
+>+	int rc;
+>+
+>+	mutex_lock(&kcs_bmc_lock);
+>+	list_del(&kcs_bmc->entry);
+>+	list_for_each_entry(cdev, &kcs_bmc_cdevs, entry) {
+>+		rc =3D cdev->ops->remove_device(kcs_bmc);
+>+		if (rc)
+>+			dev_err(kcs_bmc->dev, "Failed to remove chardev for KCS channel %d: %d=
+",
+>+				kcs_bmc->channel, rc);
+>+	}
+>+	mutex_unlock(&kcs_bmc_lock);
+>+
+>+	return 0;
+
+Similarly with the return value here...
+
+> }
+> EXPORT_SYMBOL(kcs_bmc_remove_device);
+>
+>+int kcs_bmc_register_cdev(struct kcs_bmc_cdev *cdev)
+>+{
+>+	struct kcs_bmc_device *kcs_bmc;
+>+	int rc;
+>+
+>+	mutex_lock(&kcs_bmc_lock);
+>+	list_add(&cdev->entry, &kcs_bmc_cdevs);
+>+	list_for_each_entry(kcs_bmc, &kcs_bmc_devices, entry) {
+>+		rc =3D cdev->ops->add_device(kcs_bmc);
+>+		if (rc)
+>+			dev_err(kcs_bmc->dev, "Failed to add chardev for KCS channel %d: %d",
+>+				kcs_bmc->channel, rc);
+>+	}
+>+	mutex_unlock(&kcs_bmc_lock);
+>+
+>+	return 0;
+
+...return value again here...
+
+>+}
+>+EXPORT_SYMBOL(kcs_bmc_register_cdev);
+>+
+>+int kcs_bmc_unregister_cdev(struct kcs_bmc_cdev *cdev)
+>+{
+>+	struct kcs_bmc_device *kcs_bmc;
+>+	int rc;
+>+
+>+	mutex_lock(&kcs_bmc_lock);
+>+	list_del(&cdev->entry);
+>+	list_for_each_entry(kcs_bmc, &kcs_bmc_devices, entry) {
+>+		rc =3D cdev->ops->remove_device(kcs_bmc);
+>+		if (rc)
+>+			dev_err(kcs_bmc->dev, "Failed to add chardev for KCS channel %d: %d",
+
+s/add/remove/
+
+Might also want to differentiate the *_device() error messages from the
+*_cdev() ones a bit more?
+
+>+				kcs_bmc->channel, rc);
+>+	}
+>+	mutex_unlock(&kcs_bmc_lock);
+>+
+>+	return rc;
+
+...but this one is a bit incongruous, propagating the return value of
+only the last ->remove_device() call.
+
+(I'd have expected this to trigger a warning about returning a
+potentially uninitialized 'rc', but in some manual testing it doesn't
+seem to do so for me...not certain why.)
+
+>+}
+>+EXPORT_SYMBOL(kcs_bmc_unregister_cdev);
+>+
 > MODULE_LICENSE("GPL v2");
 > MODULE_AUTHOR("Haiyue Wang <haiyue.wang@linux.intel.com>");
+> MODULE_AUTHOR("Andrew Jeffery <andrew@aj.id.au>");
 >diff --git a/drivers/char/ipmi/kcs_bmc.h b/drivers/char/ipmi/kcs_bmc.h
->index febea0c8deb4..bf0ae327997f 100644
+>index 3f266740c759..5deb9a0b8e60 100644
 >--- a/drivers/char/ipmi/kcs_bmc.h
 >+++ b/drivers/char/ipmi/kcs_bmc.h
->@@ -67,6 +67,8 @@ struct kcs_ioreg {
-> };
->
-> struct kcs_bmc {
->+	struct device *dev;
->+
+>@@ -42,8 +42,4 @@ struct kcs_bmc_device {
 > 	spinlock_t lock;
->
-> 	u32 channel;
->@@ -94,17 +96,11 @@ struct kcs_bmc {
-> 	u8 *kbuffer;
->
-> 	struct miscdevice miscdev;
+> 	struct kcs_bmc_client *client;
+> };
 >-
->-	unsigned long priv[];
-> };
->
->-static inline void *kcs_bmc_priv(struct kcs_bmc *kcs_bmc)
->-{
->-	return kcs_bmc->priv;
->-}
->-
-> int kcs_bmc_handle_event(struct kcs_bmc *kcs_bmc);
->-struct kcs_bmc *kcs_bmc_alloc(struct device *dev, int sizeof_priv, u32 ch=
-annel);
->+int kcs_bmc_add_device(struct kcs_bmc *kcs_bmc);
->+int kcs_bmc_remove_device(struct kcs_bmc *kcs_bmc);
->
-> u8 kcs_bmc_read_data(struct kcs_bmc *kcs_bmc);
-> void kcs_bmc_write_data(struct kcs_bmc *kcs_bmc, u8 data);
->diff --git a/drivers/char/ipmi/kcs_bmc_aspeed.c b/drivers/char/ipmi/kcs_bm=
-c_aspeed.c
->index 630cf095560e..0416ac78ce68 100644
->--- a/drivers/char/ipmi/kcs_bmc_aspeed.c
->+++ b/drivers/char/ipmi/kcs_bmc_aspeed.c
->@@ -61,6 +61,8 @@
-> #define LPC_STR4             0x11C
->
-> struct aspeed_kcs_bmc {
->+	struct kcs_bmc kcs_bmc;
->+
-> 	struct regmap *map;
-> };
->
->@@ -69,9 +71,14 @@ struct aspeed_kcs_of_ops {
-> 	int (*get_io_address)(struct platform_device *pdev);
-> };
->
->+static inline struct aspeed_kcs_bmc *to_aspeed_kcs_bmc(struct kcs_bmc *kc=
-s_bmc)
->+{
->+	return container_of(kcs_bmc, struct aspeed_kcs_bmc, kcs_bmc);
->+}
->+
-> static u8 aspeed_kcs_inb(struct kcs_bmc *kcs_bmc, u32 reg)
-> {
->-	struct aspeed_kcs_bmc *priv =3D kcs_bmc_priv(kcs_bmc);
->+	struct aspeed_kcs_bmc *priv =3D to_aspeed_kcs_bmc(kcs_bmc);
-> 	u32 val =3D 0;
-> 	int rc;
->
->@@ -83,7 +90,7 @@ static u8 aspeed_kcs_inb(struct kcs_bmc *kcs_bmc, u32 re=
-g)
->
-> static void aspeed_kcs_outb(struct kcs_bmc *kcs_bmc, u32 reg, u8 data)
-> {
->-	struct aspeed_kcs_bmc *priv =3D kcs_bmc_priv(kcs_bmc);
->+	struct aspeed_kcs_bmc *priv =3D to_aspeed_kcs_bmc(kcs_bmc);
-> 	int rc;
->
-> 	rc =3D regmap_write(priv->map, reg, data);
->@@ -92,7 +99,7 @@ static void aspeed_kcs_outb(struct kcs_bmc *kcs_bmc, u32=
- reg, u8 data)
->
-> static void aspeed_kcs_updateb(struct kcs_bmc *kcs_bmc, u32 reg, u8 mask,=
- u8 val)
-> {
->-	struct aspeed_kcs_bmc *priv =3D kcs_bmc_priv(kcs_bmc);
->+	struct aspeed_kcs_bmc *priv =3D to_aspeed_kcs_bmc(kcs_bmc);
-> 	int rc;
->
-> 	rc =3D regmap_update_bits(priv->map, reg, mask, val);
->@@ -114,7 +121,7 @@ static void aspeed_kcs_updateb(struct kcs_bmc *kcs_bmc=
-, u32 reg, u8 mask, u8 val
->  */
-> static void aspeed_kcs_set_address(struct kcs_bmc *kcs_bmc, u16 addr)
-> {
->-	struct aspeed_kcs_bmc *priv =3D kcs_bmc_priv(kcs_bmc);
->+	struct aspeed_kcs_bmc *priv =3D to_aspeed_kcs_bmc(kcs_bmc);
->
-> 	switch (kcs_bmc->channel) {
-> 	case 1:
->@@ -148,7 +155,7 @@ static void aspeed_kcs_set_address(struct kcs_bmc *kcs=
-_bmc, u16 addr)
->
-> static void aspeed_kcs_enable_channel(struct kcs_bmc *kcs_bmc, bool enabl=
-e)
-> {
->-	struct aspeed_kcs_bmc *priv =3D kcs_bmc_priv(kcs_bmc);
->+	struct aspeed_kcs_bmc *priv =3D to_aspeed_kcs_bmc(kcs_bmc);
->
-> 	switch (kcs_bmc->channel) {
-> 	case 1:
->@@ -323,16 +330,16 @@ static int aspeed_kcs_of_v2_get_io_address(struct pl=
-atform_device *pdev)
-> static int aspeed_kcs_probe(struct platform_device *pdev)
-> {
-> 	const struct aspeed_kcs_of_ops *ops;
->-	struct device *dev =3D &pdev->dev;
->+	struct aspeed_kcs_bmc *priv;
-> 	struct kcs_bmc *kcs_bmc;
-> 	struct device_node *np;
-> 	int rc, channel, addr;
->
->-	np =3D dev->of_node->parent;
->+	np =3D pdev->dev.of_node->parent;
-> 	if (!of_device_is_compatible(np, "aspeed,ast2400-lpc-v2") &&
-> 	    !of_device_is_compatible(np, "aspeed,ast2500-lpc-v2") &&
-> 	    !of_device_is_compatible(np, "aspeed,ast2600-lpc-v2")) {
->-		dev_err(dev, "unsupported LPC device binding\n");
->+		dev_err(&pdev->dev, "unsupported LPC device binding\n");
-> 		return -ENODEV;
-> 	}
-> 	ops =3D of_device_get_match_data(&pdev->dev);
->@@ -343,18 +350,27 @@ static int aspeed_kcs_probe(struct platform_device *=
-pdev)
-> 	if (channel < 0)
-> 		return channel;
->
->-	kcs_bmc =3D kcs_bmc_alloc(&pdev->dev, sizeof(struct aspeed_kcs_bmc), cha=
-nnel);
->-	if (!kcs_bmc)
->+	addr =3D ops->get_io_address(pdev);
->+	if (addr < 0)
->+		return addr;
->+
->+	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->+	if (!priv)
-> 		return -ENOMEM;
->
->+	kcs_bmc =3D &priv->kcs_bmc;
->+	kcs_bmc->dev =3D &pdev->dev;
->+	kcs_bmc->channel =3D channel;
-> 	kcs_bmc->ioreg =3D ast_kcs_bmc_ioregs[channel - 1];
-> 	kcs_bmc->io_inputb =3D aspeed_kcs_inb;
-> 	kcs_bmc->io_outputb =3D aspeed_kcs_outb;
-> 	kcs_bmc->io_updateb =3D aspeed_kcs_updateb;
->
->-	addr =3D ops->get_io_address(pdev);
->-	if (addr < 0)
->-		return addr;
->+	priv->map =3D syscon_node_to_regmap(pdev->dev.parent->of_node);
->+	if (IS_ERR(priv->map)) {
->+		dev_err(&pdev->dev, "Couldn't get regmap\n");
->+		return -ENODEV;
->+	}
-
-The reanimated priv->map initialization I suspect wasn't meant to
-have been removed in the first place...
-
->
-> 	aspeed_kcs_set_address(kcs_bmc, addr);
->
->@@ -362,29 +378,25 @@ static int aspeed_kcs_probe(struct platform_device *=
-pdev)
-> 	if (rc)
-> 		return rc;
->
->-	dev_set_drvdata(dev, kcs_bmc);
->+	platform_set_drvdata(pdev, priv);
->
-> 	aspeed_kcs_enable_channel(kcs_bmc, true);
->
->-	rc =3D misc_register(&kcs_bmc->miscdev);
->-	if (rc) {
->-		dev_err(dev, "Unable to register device\n");
->+	rc =3D kcs_bmc_add_device(&priv->kcs_bmc);
->+	if (rc < 0)
-> 		return rc;
->-	}
->
->-	dev_dbg(&pdev->dev,
->-		"Probed KCS device %d (IDR=3D0x%x, ODR=3D0x%x, STR=3D0x%x)\n",
->-		kcs_bmc->channel, kcs_bmc->ioreg.idr, kcs_bmc->ioreg.odr,
->-		kcs_bmc->ioreg.str);
->+	dev_info(&pdev->dev, "Initialised channel %d at 0x%x\n", kcs_bmc->channe=
-l, addr);
-
-Is the dbg->info change here intentional?  (I have no particular
-objection if so, but it's often a change I make myself during
-testing/debugging and then forget to revert...)
-
->
-> 	return 0;
-> }
->
-> static int aspeed_kcs_remove(struct platform_device *pdev)
-> {
->-	struct kcs_bmc *kcs_bmc =3D dev_get_drvdata(&pdev->dev);
->+	struct aspeed_kcs_bmc *priv =3D platform_get_drvdata(pdev);
->+	struct kcs_bmc *kcs_bmc =3D &priv->kcs_bmc;
->
->-	misc_deregister(&kcs_bmc->miscdev);
->+	kcs_bmc_remove_device(kcs_bmc);
-
-Should we propagate the return value outward here?
-
->
-> 	return 0;
-> }
+>-/* Temporary exports while refactoring */
+>-int kcs_bmc_ipmi_attach_cdev(struct kcs_bmc_device *kcs_bmc);
+>-int kcs_bmc_ipmi_detach_cdev(struct kcs_bmc_device *kcs_bmc);
+> #endif /* __KCS_BMC_H__ */
 >diff --git a/drivers/char/ipmi/kcs_bmc_cdev_ipmi.c b/drivers/char/ipmi/kcs=
 _bmc_cdev_ipmi.c
->index 82c77994e481..0ca71c135a1a 100644
+>index 58c42e76483d..df83d67851ac 100644
 >--- a/drivers/char/ipmi/kcs_bmc_cdev_ipmi.c
 >+++ b/drivers/char/ipmi/kcs_bmc_cdev_ipmi.c
->@@ -382,7 +382,7 @@ static int kcs_bmc_ipmi_release(struct inode *inode, s=
-truct file *filp)
+>@@ -469,8 +469,7 @@ static const struct file_operations kcs_bmc_ipmi_fops =
+=3D {
+> static DEFINE_SPINLOCK(kcs_bmc_ipmi_instances_lock);
+> static LIST_HEAD(kcs_bmc_ipmi_instances);
+>
+>-int kcs_bmc_ipmi_attach_cdev(struct kcs_bmc_device *kcs_bmc);
+>-int kcs_bmc_ipmi_attach_cdev(struct kcs_bmc_device *kcs_bmc)
+>+static int kcs_bmc_ipmi_attach_cdev(struct kcs_bmc_device *kcs_bmc)
+> {
+> 	struct kcs_bmc_ipmi *priv;
+> 	int rc;
+>@@ -512,10 +511,8 @@ int kcs_bmc_ipmi_attach_cdev(struct kcs_bmc_device *k=
+cs_bmc)
+>
 > 	return 0;
 > }
+>-EXPORT_SYMBOL(kcs_bmc_ipmi_attach_cdev);
 >
->-static const struct file_operations kcs_bmc_fops =3D {
->+static const struct file_operations kcs_bmc_ipmi_fops =3D {
-> 	.owner          =3D THIS_MODULE,
-> 	.open           =3D kcs_bmc_ipmi_open,
-> 	.read           =3D kcs_bmc_ipmi_read,
->@@ -392,36 +392,58 @@ static const struct file_operations kcs_bmc_fops =3D=
- {
-> 	.unlocked_ioctl =3D kcs_bmc_ipmi_ioctl,
-> };
->
->-struct kcs_bmc *kcs_bmc_ipmi_alloc(struct device *dev, int sizeof_priv, u=
-32 channel);
->-struct kcs_bmc *kcs_bmc_ipmi_alloc(struct device *dev, int sizeof_priv, u=
-32 channel)
->+int kcs_bmc_ipmi_attach_cdev(struct kcs_bmc *kcs_bmc);
-
-Errant declaration again?
-
->+int kcs_bmc_ipmi_attach_cdev(struct kcs_bmc *kcs_bmc)
+>-int kcs_bmc_ipmi_detach_cdev(struct kcs_bmc_device *kcs_bmc);
+>-int kcs_bmc_ipmi_detach_cdev(struct kcs_bmc_device *kcs_bmc)
+>+static int kcs_bmc_ipmi_detach_cdev(struct kcs_bmc_device *kcs_bmc)
 > {
->-	struct kcs_bmc *kcs_bmc;
->-
->-	kcs_bmc =3D devm_kzalloc(dev, sizeof(*kcs_bmc) + sizeof_priv, GFP_KERNEL=
-);
->-	if (!kcs_bmc)
->-		return NULL;
->+	int rc;
+> 	struct kcs_bmc_ipmi *priv =3D NULL, *pos;
 >
-> 	spin_lock_init(&kcs_bmc->lock);
->-	kcs_bmc->channel =3D channel;
->-
-> 	mutex_init(&kcs_bmc->mutex);
-> 	init_waitqueue_head(&kcs_bmc->queue);
+>@@ -541,7 +538,31 @@ int kcs_bmc_ipmi_detach_cdev(struct kcs_bmc_device *k=
+cs_bmc)
 >
->-	kcs_bmc->data_in =3D devm_kmalloc(dev, KCS_MSG_BUFSIZ, GFP_KERNEL);
->-	kcs_bmc->data_out =3D devm_kmalloc(dev, KCS_MSG_BUFSIZ, GFP_KERNEL);
->-	kcs_bmc->kbuffer =3D devm_kmalloc(dev, KCS_MSG_BUFSIZ, GFP_KERNEL);
->+	kcs_bmc->data_in =3D devm_kmalloc(kcs_bmc->dev, KCS_MSG_BUFSIZ, GFP_KERN=
-EL);
->+	kcs_bmc->data_out =3D devm_kmalloc(kcs_bmc->dev, KCS_MSG_BUFSIZ, GFP_KER=
-NEL);
->+	kcs_bmc->kbuffer =3D devm_kmalloc(kcs_bmc->dev, KCS_MSG_BUFSIZ, GFP_KERN=
-EL);
->
-> 	kcs_bmc->miscdev.minor =3D MISC_DYNAMIC_MINOR;
->-	kcs_bmc->miscdev.name =3D devm_kasprintf(dev, GFP_KERNEL, "%s%u",
->-					       DEVICE_NAME, channel);
->+	kcs_bmc->miscdev.name =3D devm_kasprintf(kcs_bmc->dev, GFP_KERNEL, "%s%u=
-",
->+					       DEVICE_NAME, kcs_bmc->channel);
-> 	if (!kcs_bmc->data_in || !kcs_bmc->data_out || !kcs_bmc->kbuffer ||
-> 	    !kcs_bmc->miscdev.name)
->-		return NULL;
->-	kcs_bmc->miscdev.fops =3D &kcs_bmc_fops;
->+		return -ENOMEM;
->
->-	return kcs_bmc;
->+	kcs_bmc->miscdev.fops =3D &kcs_bmc_ipmi_fops;
->+
->+	rc =3D misc_register(&kcs_bmc->miscdev);
->+	if (rc) {
->+		dev_err(kcs_bmc->dev, "Unable to register device: %d\n", rc);
->+		return rc;
->+	}
->+
->+	dev_info(kcs_bmc->dev, "Initialised IPMI client for channel %d", kcs_bmc=
-->channel);
->+
->+	return 0;
->+}
->+EXPORT_SYMBOL(kcs_bmc_ipmi_attach_cdev);
->+
->+int kcs_bmc_ipmi_detach_cdev(struct kcs_bmc *kcs_bmc);
-
-Same here.
-
->+int kcs_bmc_ipmi_detach_cdev(struct kcs_bmc *kcs_bmc)
->+{
->+	misc_deregister(&kcs_bmc->miscdev);
->+
->+	spin_lock_irq(&kcs_bmc->lock);
->+	kcs_bmc->running =3D 0;
->+	kcs_bmc_ipmi_force_abort(kcs_bmc);
->+	spin_unlock_irq(&kcs_bmc->lock);
->+
->+	devm_kfree(kcs_bmc->dev, kcs_bmc->kbuffer);
->+	devm_kfree(kcs_bmc->dev, kcs_bmc->data_out);
->+	devm_kfree(kcs_bmc->dev, kcs_bmc->data_in);
->+	devm_kfree(kcs_bmc->dev, kcs_bmc);
->+
->+	return 0;
+> 	return 0;
 > }
->-EXPORT_SYMBOL(kcs_bmc_ipmi_alloc);
->+EXPORT_SYMBOL(kcs_bmc_ipmi_detach_cdev);
+>-EXPORT_SYMBOL(kcs_bmc_ipmi_detach_cdev);
+>+
+>+static const struct kcs_bmc_cdev_ops kcs_bmc_ipmi_cdev_ops =3D {
+>+	.add_device =3D kcs_bmc_ipmi_attach_cdev,
+>+	.remove_device =3D kcs_bmc_ipmi_detach_cdev,
+>+};
+>+
+>+static struct kcs_bmc_cdev kcs_bmc_ipmi_cdev =3D {
+>+	.ops =3D &kcs_bmc_ipmi_cdev_ops,
+>+};
+>+
+>+static int kcs_bmc_ipmi_init(void)
+>+{
+>+	return kcs_bmc_register_cdev(&kcs_bmc_ipmi_cdev);
+>+}
+>+module_init(kcs_bmc_ipmi_init);
+>+
+>+static void kcs_bmc_ipmi_exit(void)
+>+{
+>+	int rc;
+>+
+>+	rc =3D kcs_bmc_unregister_cdev(&kcs_bmc_ipmi_cdev);
+>+	if (rc)
+>+		pr_warn("Failed to remove KCS BMC client: %d", rc);
+>+}
+>+module_exit(kcs_bmc_ipmi_exit);
 >
 > MODULE_LICENSE("GPL v2");
 > MODULE_AUTHOR("Haiyue Wang <haiyue.wang@linux.intel.com>");
->diff --git a/drivers/char/ipmi/kcs_bmc_npcm7xx.c b/drivers/char/ipmi/kcs_b=
-mc_npcm7xx.c
->index 1f44aadec9e8..5d017498dc69 100644
->--- a/drivers/char/ipmi/kcs_bmc_npcm7xx.c
->+++ b/drivers/char/ipmi/kcs_bmc_npcm7xx.c
->@@ -65,6 +65,8 @@ struct npcm7xx_kcs_reg {
+>diff --git a/drivers/char/ipmi/kcs_bmc_client.h b/drivers/char/ipmi/kcs_bm=
+c_client.h
+>index 2dd710f4b4aa..d0a7404ff584 100644
+>--- a/drivers/char/ipmi/kcs_bmc_client.h
+>+++ b/drivers/char/ipmi/kcs_bmc_client.h
+>@@ -10,6 +10,17 @@
+>
+> #include "kcs_bmc.h"
+>
+>+struct kcs_bmc_cdev_ops {
+>+	int (*add_device)(struct kcs_bmc_device *kcs_bmc);
+>+	int (*remove_device)(struct kcs_bmc_device *kcs_bmc);
+>+};
+>+
+>+struct kcs_bmc_cdev {
+>+	struct list_head entry;
+>+
+>+	const struct kcs_bmc_cdev_ops *ops;
+>+};
+>+
+> struct kcs_bmc_client_ops {
+> 	int (*event)(struct kcs_bmc_client *client);
+> };
+>@@ -20,6 +31,9 @@ struct kcs_bmc_client {
+> 	struct kcs_bmc_device *dev;
 > };
 >
-> struct npcm7xx_kcs_bmc {
->+	struct kcs_bmc kcs_bmc;
+>+int kcs_bmc_register_cdev(struct kcs_bmc_cdev *cdev);
+>+int kcs_bmc_unregister_cdev(struct kcs_bmc_cdev *cdev);
 >+
-> 	struct regmap *map;
+> int kcs_bmc_enable_device(struct kcs_bmc_device *kcs_bmc, struct kcs_bmc_=
+client *client);
+> void kcs_bmc_disable_device(struct kcs_bmc_device *kcs_bmc, struct kcs_bm=
+c_client *client);
 >
-> 	const struct npcm7xx_kcs_reg *reg;
->@@ -76,9 +78,14 @@ static const struct npcm7xx_kcs_reg npcm7xx_kcs_reg_tbl=
-[KCS_CHANNEL_MAX] =3D {
-> 	{ .sts =3D KCS3ST, .dob =3D KCS3DO, .dib =3D KCS3DI, .ctl =3D KCS3CTL, .=
-ie =3D KCS3IE },
-> };
->
->+static inline struct npcm7xx_kcs_bmc *to_npcm7xx_kcs_bmc(struct kcs_bmc *=
-kcs_bmc)
->+{
->+	return container_of(kcs_bmc, struct npcm7xx_kcs_bmc, kcs_bmc);
->+}
->+
-> static u8 npcm7xx_kcs_inb(struct kcs_bmc *kcs_bmc, u32 reg)
-> {
->-	struct npcm7xx_kcs_bmc *priv =3D kcs_bmc_priv(kcs_bmc);
->+	struct npcm7xx_kcs_bmc *priv =3D to_npcm7xx_kcs_bmc(kcs_bmc);
-> 	u32 val =3D 0;
-> 	int rc;
->
->@@ -90,7 +97,7 @@ static u8 npcm7xx_kcs_inb(struct kcs_bmc *kcs_bmc, u32 r=
-eg)
->
-> static void npcm7xx_kcs_outb(struct kcs_bmc *kcs_bmc, u32 reg, u8 data)
-> {
->-	struct npcm7xx_kcs_bmc *priv =3D kcs_bmc_priv(kcs_bmc);
->+	struct npcm7xx_kcs_bmc *priv =3D to_npcm7xx_kcs_bmc(kcs_bmc);
-> 	int rc;
->
-> 	rc =3D regmap_write(priv->map, reg, data);
->@@ -99,7 +106,7 @@ static void npcm7xx_kcs_outb(struct kcs_bmc *kcs_bmc, u=
-32 reg, u8 data)
->
-> static void npcm7xx_kcs_updateb(struct kcs_bmc *kcs_bmc, u32 reg, u8 mask=
-, u8 data)
-> {
->-	struct npcm7xx_kcs_bmc *priv =3D kcs_bmc_priv(kcs_bmc);
->+	struct npcm7xx_kcs_bmc *priv =3D to_npcm7xx_kcs_bmc(kcs_bmc);
-> 	int rc;
->
-> 	rc =3D regmap_update_bits(priv->map, reg, mask, data);
->@@ -108,7 +115,7 @@ static void npcm7xx_kcs_updateb(struct kcs_bmc *kcs_bm=
-c, u32 reg, u8 mask, u8 da
->
-> static void npcm7xx_kcs_enable_channel(struct kcs_bmc *kcs_bmc, bool enab=
-le)
-> {
->-	struct npcm7xx_kcs_bmc *priv =3D kcs_bmc_priv(kcs_bmc);
->+	struct npcm7xx_kcs_bmc *priv =3D to_npcm7xx_kcs_bmc(kcs_bmc);
->
-> 	regmap_update_bits(priv->map, priv->reg->ctl, KCS_CTL_IBFIE,
-> 			   enable ? KCS_CTL_IBFIE : 0);
->@@ -155,11 +162,10 @@ static int npcm7xx_kcs_probe(struct platform_device =
-*pdev)
-> 		return -ENODEV;
-> 	}
->
->-	kcs_bmc =3D kcs_bmc_alloc(dev, sizeof(*priv), chan);
->-	if (!kcs_bmc)
->+	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->+	if (!priv)
-> 		return -ENOMEM;
->
->-	priv =3D kcs_bmc_priv(kcs_bmc);
-> 	priv->map =3D syscon_node_to_regmap(dev->parent->of_node);
-> 	if (IS_ERR(priv->map)) {
-> 		dev_err(dev, "Couldn't get regmap\n");
->@@ -167,6 +173,9 @@ static int npcm7xx_kcs_probe(struct platform_device *p=
-dev)
-> 	}
-> 	priv->reg =3D &npcm7xx_kcs_reg_tbl[chan - 1];
->
->+	kcs_bmc =3D &priv->kcs_bmc;
->+	kcs_bmc->dev =3D &pdev->dev;
->+	kcs_bmc->channel =3D chan;
-> 	kcs_bmc->ioreg.idr =3D priv->reg->dib;
-> 	kcs_bmc->ioreg.odr =3D priv->reg->dob;
-> 	kcs_bmc->ioreg.str =3D priv->reg->sts;
->@@ -174,31 +183,27 @@ static int npcm7xx_kcs_probe(struct platform_device =
-*pdev)
-> 	kcs_bmc->io_outputb =3D npcm7xx_kcs_outb;
-> 	kcs_bmc->io_updateb =3D npcm7xx_kcs_updateb;
->
->-	dev_set_drvdata(dev, kcs_bmc);
->+	platform_set_drvdata(pdev, priv);
->
-> 	npcm7xx_kcs_enable_channel(kcs_bmc, true);
-> 	rc =3D npcm7xx_kcs_config_irq(kcs_bmc, pdev);
-> 	if (rc)
-> 		return rc;
->
->-	rc =3D misc_register(&kcs_bmc->miscdev);
->-	if (rc) {
->-		dev_err(dev, "Unable to register device\n");
->-		return rc;
->-	}
->
-> 	pr_info("channel=3D%u idr=3D0x%x odr=3D0x%x str=3D0x%x\n",
-> 		chan,
-> 		kcs_bmc->ioreg.idr, kcs_bmc->ioreg.odr, kcs_bmc->ioreg.str);
->
->-	return 0;
->+	return kcs_bmc_add_device(kcs_bmc);
-> }
->
-> static int npcm7xx_kcs_remove(struct platform_device *pdev)
-> {
->-	struct kcs_bmc *kcs_bmc =3D dev_get_drvdata(&pdev->dev);
->+	struct npcm7xx_kcs_bmc *priv =3D platform_get_drvdata(pdev);
->+	struct kcs_bmc *kcs_bmc =3D &priv->kcs_bmc;
->
->-	misc_deregister(&kcs_bmc->miscdev);
->+	kcs_bmc_remove_device(kcs_bmc);
-
-As with the corresponding aspeed code, should we propagate the return
-value here?
-
->
-> 	return 0;
-> }
 >--=20
 >2.27.0
 >=
