@@ -2,101 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 334BE359913
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 11:24:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60D8D35993B
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 11:30:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231668AbhDIJY6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 05:24:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
+        id S232387AbhDIJal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 05:30:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230181AbhDIJYy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 05:24:54 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA48C061760;
-        Fri,  9 Apr 2021 02:24:40 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id w8so369770pfn.9;
-        Fri, 09 Apr 2021 02:24:40 -0700 (PDT)
+        with ESMTP id S232087AbhDIJal (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 05:30:41 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4F8C061760
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Apr 2021 02:30:27 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id u5-20020a7bcb050000b029010e9316b9d5so2620151wmj.2
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Apr 2021 02:30:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eqDORfVYih3KdHWf8wh+CjrsEDSV3l8FMtBY017n5ac=;
-        b=FPkpy4xo3U7lSI+b72CXor5mLB4WB7xRgrIC0e0/E9Ur2Gf3DvbtTf+SqoeONPSEA5
-         bKXSuA0P7DABvV2z3CroS6el/a5QRlj0uMVckp+iIWTh6YigSod5lK5iSoUrJQvJpo3/
-         5ATuYBxcuoT1fE1ofiz7cc/IJFZ6QvovLQDLqvshPFFHUeyhbGUMfI0UoidpQ8oBXe9i
-         l+g4cYbzzH9Lvon0cSTFS6JsTf4jrnJ4LtPlfZwjkXB35EQK1/q9Em9WgELFFLbYoR8u
-         zcXJ/3ItrKMmHTar3w0mMyLRJI3vX+x1Ntm1lkfeRt2LQGGAXfoiVOM3xwptzAR+xZ8z
-         VwQQ==
+        bh=Gwj+s9/MPNGp8MyMcCfWHYTaJSXA15w26uCI/hDpxBM=;
+        b=mCgAQow5OJ0Sz5LtItrljl/dRuo0GhxDgW8vOV20Cns3k7Je7i7ezOpUuhKhis0AWa
+         7h6b/tTSjVNsgfj2H+YfLGrL6aMLqqHa1rWbhUGUTmCgjgIwfbwrHlMJ1bruahwDta94
+         0y5rZheWJkn2BkdZpX40R2fLjNqjexiA61O9LHdmy5/LFcVR2NB8uWRCOki9ZrNzZwld
+         boN8RsPkEgJKkjIrBhhgZ8EvN30mAGvS5P2DeK33HvhpdC6pVbK4xIor5r4Djs+IcaEy
+         79LQ/mbvcpFI7kzLaLUUjq7NiYBd6M9qWOEsJUZMPmQ1zZ5EU49xHjCkJJ5doXa7hUVT
+         Rq8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eqDORfVYih3KdHWf8wh+CjrsEDSV3l8FMtBY017n5ac=;
-        b=UrdnLmC4wseX6/7y0Dc46G61bPUWdyapWcKX7BPdhEAyjbMMLL3KNfWTSvp1INlJZi
-         DgKa9jXKqe9+FfbaajNKboiFsQ8kjZx5hu7O7FT4qFdPM0zI/VS7NMg8BnLUVhiVTbOU
-         9leGPf2zcgp9funrZDzDkO38xteLR0gvMDCtYyflUMJ+nooDGPL5oUKtq4VvyEkaCpKO
-         Dt6wjALK0llEEWzytEaGZFWr9cUebEWMypENZ+Mrya7RZOALVAcbosigmEP0PvfrexSB
-         UPv1IR3z9iu1f/NVMsi8ctS7p4jOx9Gd4wGi47DNpOH4ofDyUwsdSQbz2luqM7TO80Ib
-         avkw==
-X-Gm-Message-State: AOAM532ZCwfUUO4zITA7/cQbgEDxbGaNaNz/UsEOiglkGNweZiKZVTCT
-        duI68V2IHJlyxM/4S4wcHE8Lmg8+NvF3n/4Ivq4=
-X-Google-Smtp-Source: ABdhPJyyVY6OveNJsRaLQ77/g3WxhETPEL2Tr0wIxsYjLWDeGaWxTKJuY8IwV2ZN2+DTEION8vYAHDLN6Gye3w+Yp9M=
-X-Received: by 2002:a63:3e4b:: with SMTP id l72mr12053286pga.203.1617960279766;
- Fri, 09 Apr 2021 02:24:39 -0700 (PDT)
+        bh=Gwj+s9/MPNGp8MyMcCfWHYTaJSXA15w26uCI/hDpxBM=;
+        b=CZtcuQpG5e0I1cqjO7OOIUxFyiQeE9vPTgjJdOVoUd96pkBRsA0dBgiwmBeqB4WkLG
+         0ZsJvvlZsF56wLwAggOeNfGo4kusuggzW5ulUinz7ihtmd29FWKgN+RKS626RoG8Y/CS
+         PIpKr9jX44NFKGyHebfle5KkhSQrWikvGm3kHChwrxQ4kmeXnURoRLc80IG0J8gF8TUr
+         THoDj5hg/G7FJ+vVjm9wHTic0ay+zEHmHZDxO4RHKS2tkkyts8PyPnt/7b8mZLzkUUvJ
+         quNB0uDVZnNvIyzAM0a/nJGzO6QgOmLugia1/+rzBw1Y4oVe7gk1K0UDTds53s92j+vY
+         5xtA==
+X-Gm-Message-State: AOAM533JQTAb2smOcAhqtn4ND0doYEabeLVnK5GtLgH2DKkuXzCE3oR1
+        cDA0ZFZbnCUDuCmBnQmj5LVBibF5Fos4JghzTZA+cA==
+X-Google-Smtp-Source: ABdhPJxY/dbUau5gJK6sjVl79ezv4EXih8jmN1JP2io5GiR4irv6U1mhos/W8Q5QZ8IeGUfVz8paN0/3nF50HsgvJ44=
+X-Received: by 2002:a1c:1b86:: with SMTP id b128mr12990048wmb.22.1617960625778;
+ Fri, 09 Apr 2021 02:30:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210408205858.51751-1-masahiroy@kernel.org> <20210408205858.51751-2-masahiroy@kernel.org>
-In-Reply-To: <20210408205858.51751-2-masahiroy@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 9 Apr 2021 12:24:23 +0300
-Message-ID: <CAHp75VdZ67Tab2jOU0NSys_P1rU_GicJw_ADd1w9JY4rEG5g1w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] linux/kconfig.h: replace IF_ENABLED() with PTR_IF()
- in <linux/kernel.h>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Paul Cercueil <paul@crapouillou.net>,
+References: <20210408155334.12919-1-barneygoette@gmail.com>
+In-Reply-To: <20210408155334.12919-1-barneygoette@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 9 Apr 2021 11:30:14 +0200
+Message-ID: <CAMpxmJVHJt4p7KVwqQHoWu+WbS8pUm8VDuj0NeWzzzwubRwGhg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: gpio-104-dio-48e: Fixed coding style issues (revised)
+To:     Barney Goette <barneygoette@gmail.com>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 9, 2021 at 12:00 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Thu, Apr 8, 2021 at 5:54 PM Barney Goette <barneygoette@gmail.com> wrote:
 >
-> <linux/kconfig.h> is included from all the kernel-space source files,
-> including C, assembly, linker scripts. It is intended to contain minimal
-
-a minimal
-
-> set of macros to evaluate CONFIG options.
+> Fixed multiple bare uses of 'unsigned' without 'int'.
+> Fixed space around "*" operator.
+> Fixed function parameter alignment to opening parenthesis.
+> Reported by checkpatch.
 >
-> IF_ENABLED() is an intruder here because (x ? y : z) is C code, which
-> should not be included from assembly files or linker scripts.
->
-> Also, <linux/kconfig.h> is no longer self-contained because NULL is
-> defined in <linux/stddef.h>.
->
-> Move IF_ENABLED() out to <linux/kernel.h> as PTR_IF().
->
-> PTR_IF(IS_ENABLED(CONFIG_FOO), ...) is slightly longer than
-> IF_ENABLED(CONFIG_FOO, ...), but it is not a big deal because
-> sub-systems often define dedicated macros such as of_match_ptr(),
-> pm_ptr() etc. for common use-cases.
+> Signed-off-by: Barney Goette <barneygoette@gmail.com>
+> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
 
->  include/linux/kernel.h            |  2 ++
+Changed the commit message to `gpio: 104-dio-48e: Fix coding style
+issues` and applied, thanks!
 
-Why kernel.h? Shouldn't it belong to a particular domain with a
-respective header file?
-
-Really what we have in the kernel.h right now is a complete train
-wreck of something.
-We have to define what exactly is kernel.h for?
-
-Arnd? Others? Shall we start a wider discussion on the topic?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Bartosz
