@@ -2,79 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 818AE359755
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 10:13:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82DCB359757
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 10:13:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229751AbhDIINu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 04:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229467AbhDIINt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 04:13:49 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C77C061760
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Apr 2021 01:13:37 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id e34so494283wmp.0
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Apr 2021 01:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+DnCibJ7jXF/NmEn+QdQ6xpNdxPjEP53xLfmAcIWLsE=;
-        b=XY6duv67QcyAzpBJZrAT0PTK2f2SmqNQDBccPIsyYoBGN7SCb7B2oLG1OGFyRS0ME9
-         cCyPNhh6cEokGPohy2fSCbqXlC6TRVshmNMx3lvwQ95r2Fz7WsVYreaRnqnb0/2u7xcd
-         S1fXAFx77qhG2jgcJxZQDwNjJkxTtWvgrcTJ3j6fIHXiDQZi59mwX4fjLEstPXl/eRxa
-         BtDQU2hiVika1Cdnc1o/y+e9h5lEBRBnS2ZUC7pUZHAoxjTNybvRvMgUkEXFPa1gOBB6
-         4fn0DP3wNedUwjx317Ji42ZLYI4ykBb5/nF/oDKxhG4BthJSE8DR7YlvTlL1hy3nfjGk
-         TX9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+DnCibJ7jXF/NmEn+QdQ6xpNdxPjEP53xLfmAcIWLsE=;
-        b=nno5Ynt5IycTiqxuPwoUNZu+ISm5jx5SbmtxZBPpc8/kNAa8edGevOvBy9G64XsqGK
-         vVFbQsDGLUepwCO1ZZRzahrK6jlqqOgeNv89JH1yDRf3nVqgfYFW1Qrggx3GT0QCtPYu
-         fRWfEF3eaCcI5VaFG7hSTRxI7q2WBu0MulJnk9Z/hYty65MXPXabyv8vAyHv5jZzAXW/
-         18pPeEcmDFtLge7c9sNNQ5L3huGcYbBo10Qz9K8JgGVRa0FtmqxtZcX0vH8kif65vgqc
-         qMimCu799iu3LTY7yxf55BouXjnxqyaARcN7qKgbi5ViejloCsijLEoq81uMZfy6Ax+h
-         tiaA==
-X-Gm-Message-State: AOAM532YepBshndxzPmQZLy8SrkpubYrwYJ7kDerBfPr1ta0s7X4SDm4
-        rfJDWfKcQXOxn3jdEtrauM0aAayvMPLQ8gVFTPSl9TLGnCE=
-X-Google-Smtp-Source: ABdhPJyDugk7+S1C/TussRC1Mhp2lpGfMHdDokyuY8GLs6M9zv3fcILHus+BpUyxAxo2Ydy064KEK2HauWmszijcV0o=
-X-Received: by 2002:a1c:e912:: with SMTP id q18mr12679195wmc.59.1617956016200;
- Fri, 09 Apr 2021 01:13:36 -0700 (PDT)
+        id S231699AbhDIIOJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 04:14:09 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:44861 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231611AbhDIIOI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 04:14:08 -0400
+Received: from mail-oi1-f181.google.com ([209.85.167.181]) by
+ mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1Md6AP-1m4wN83xZr-00aHea; Fri, 09 Apr 2021 10:13:54 +0200
+Received: by mail-oi1-f181.google.com with SMTP id a8so4968109oic.11;
+        Fri, 09 Apr 2021 01:13:53 -0700 (PDT)
+X-Gm-Message-State: AOAM532Sdy+ZNBgdv6wrkbDzI2fZ15v/hCuQwkAN3jHkPWsy8ll0lISq
+        lTjBAciO6uy0n93ESmRa2Qh1ykjpqfUQrGDoZo0=
+X-Google-Smtp-Source: ABdhPJzFdzRK0Fr9sttYZU00DkmHPob2Ue763VfCmKuqxE8AuUxCM9nJfgP3QwCQkKhUcqhD2rg86m1268AEXjhhEyo=
+X-Received: by 2002:aca:5945:: with SMTP id n66mr8949399oib.11.1617956032510;
+ Fri, 09 Apr 2021 01:13:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210322033846.39882-1-ran.wang_1@nxp.com> <AM6PR04MB54134144991AB746382FCC0BF1769@AM6PR04MB5413.eurprd04.prod.outlook.com>
- <CACRpkdbh_kn9SjjSqS32m5VNy5k=j6eLCVJDJxmiWVQnYC0ZJA@mail.gmail.com>
-In-Reply-To: <CACRpkdbh_kn9SjjSqS32m5VNy5k=j6eLCVJDJxmiWVQnYC0ZJA@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 9 Apr 2021 10:13:25 +0200
-Message-ID: <CAMpxmJXqAZBXEsvGfonG8bbTnk+LW0-0kEhh8zLR_4QAY283fw@mail.gmail.com>
-Subject: Re: [PATCH v4] gpio: mpc8xxx: Add ACPI support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Ran Wang <ran.wang_1@nxp.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Michael Walle <michael@walle.cc>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20210319061952.145040-1-andrew@aj.id.au> <2db77e16-3f44-4c02-a7ba-a4fac8141ae3@www.fastmail.com>
+ <20210408121441.GG7166@minyard.net> <6ff29d26-543a-4790-abb4-ebaa3f8d0265@www.fastmail.com>
+ <CACPK8Xc5HC7TZ6cUDH6+uHQO1LQCZE0YeENua1sE8nDXs0R2mg@mail.gmail.com>
+In-Reply-To: <CACPK8Xc5HC7TZ6cUDH6+uHQO1LQCZE0YeENua1sE8nDXs0R2mg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 9 Apr 2021 10:13:36 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2ch82=QccNZboa-e1tVaotyJfGFTfqDuQCO0xPVitXgA@mail.gmail.com>
+Message-ID: <CAK8P3a2ch82=QccNZboa-e1tVaotyJfGFTfqDuQCO0xPVitXgA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/21] ipmi: Allow raw access to KCS devices
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Andrew Jeffery <andrew@aj.id.au>, Corey Minyard <minyard@acm.org>,
+        openipmi-developer@lists.sourceforge.net,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Benjamin Fair <benjaminfair@google.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:obuQBkum3EouSx9gNWnc6EUZJhkkzkYTe8fASl4y2ztTxESDC8h
+ RDjTogYZcoHKrQqo36EGcSeTcMBRopdtlVaFyluu6ZpVW7x1MOj5XeHw2YL7xCOnZZS+D+a
+ nTFbVa4aIG/eBZRAFlAR9bXBcEKyo6i9pSkRRyD7DJN1+RluCza7xnxouY6hO+TNLau1vpX
+ C2pIu7LmK3rFgsJX4u0ww==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LcPuQrOkFEI=:EqPZz1a+cgsfMSxbv6lCji
+ YTTWcwkPGWTUJWAJEwgY0JoNcChVDmWNtJkodIRrt1KMfRThIyRh5AwEsrzviwd3fd3evU4/+
+ 23QoHHQDhAR6ikY33dPeBGLloeWXTiaCOYvDKqPhig1QNJ4VcGGm/peDi35KLIDjaJYfQktu3
+ pY6YjLB7n9eaj6f5OqDTm3NCEx1wF2QbIyPXh8Kxilj5lDmOARij6f+dHY3TlRd9gtfAa0GDS
+ Ug3z6on/X+V1cpkQkVoaGSuh+GVKGetHQZc1Z6a++SZiORbRiKeaxAZkdFaWbQNDIEFm/FIDp
+ YhUUaMUQjljGuKeY/B6Cfm96dittrc/nD7gQjL2p7jRA47B4gX203wHqip1lJj2m8uEFH1YzG
+ kXpm5bRYvQCnWMNEqxBf/9wtfxzuxgkoVC0IP/5fAuas4/b49Kg5T17vHb1rPYHmgWA68pJqa
+ bwpAjUrDNF5scEEr+WPSQp/yQSd2HnMYoiEkp12L/WS8JBnoahJ12Fz4n4DbU0jyIR6tMWczq
+ ql0TtEgTuOVT9ISzW2ABexoRei2dKTWljhIp9YspLewuZjNGFrqC1YGYZ1PXHSUcXcQO8JPi5
+ /SvgvgnhfT91IbFRwOYYz2cwbM62fGSSS0
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 8, 2021 at 9:20 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Fri, Apr 9, 2021 at 6:09 AM Joel Stanley <joel@jms.id.au> wrote:
+> On Thu, 8 Apr 2021 at 23:47, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > On Thu, 8 Apr 2021, at 21:44, Corey Minyard wrote:
+> > > On Thu, Apr 08, 2021 at 10:27:46AM +0930, Andrew Jeffery wrote:
+> > > There were some minor concerns that were unanswered, and there really
+> > > was no review by others for many of the patches.
+> >
+> > Right; I was planning to clean up the minor concerns once I'd received
+> > some more feedback. I could have done a better job of communicating
+> > that :)
 >
-> On Tue, Apr 6, 2021 at 3:49 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+> I'll merge the first five through the aspeed tree this coming merge
+> window. We have acks from the relevant maintainers.
 >
-> > Could this version be accepted, or any comment/suggestion?
->
-> Andy says yes, then it is a yes :)
-> FWIW
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Yours,
-> Linus Walleij
+> Arnd: would you prefer that this come as it's own pull request, or as
+> part of the device tree branch?
 
-Applied, thanks!
+When you are unsure, it's almost never wrong to go for a separate
+branch, which gives you a chance to have a concise description
+of the contents in the tag. This would be particularly helpful if there
+are incompatible changes to the DT binding that require a justification.
 
-Bartosz
+If you are only adding a few DT nodes to existing files, then merging
+these through the regular branch is probably easier.
+
+       Arnd
