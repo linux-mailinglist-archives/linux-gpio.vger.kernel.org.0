@@ -2,77 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D593435A186
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 16:53:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B69C35A2AB
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 18:08:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233687AbhDIOxc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 10:53:32 -0400
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:46003 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233019AbhDIOxa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 10:53:30 -0400
-Received: by mail-ot1-f43.google.com with SMTP id f75-20020a9d03d10000b0290280def9ab76so822163otf.12;
-        Fri, 09 Apr 2021 07:53:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wEUFq75l0cPqrW8PpOEi09xtkWWpE4+uw14yF7Xi3VI=;
-        b=TuL4x5lSETn/wcnrLuH3u/uH4eCIT61fY3M9bRH22HbJd9jb2N7EC3deIBFXMhviV+
-         SBdRo4xtNV5f7IpU2vlFVAa/zBPiwezcpSqqPE4XZZtt2gx1nAi4TUVok4GF3QFMeTq1
-         cHc0XtXMJ1o6K2y56QCZDkIlN9BD3BjFkq2Gcb5BfXQNNTHMlyf1aTCeckV8kcl65Q1J
-         Llypivl4f0G8sk+dz0BxisyyJV9pKjRLZuZkqXToeiibsZ0HjKt8xOfOpspNPUdWm2bn
-         VSW5byC6d/TK53XDYppcwttUTVV8tfyp0oKJRsbv3pSSEn+S070GRFJhmgI4KjFjDNZ9
-         HbMw==
-X-Gm-Message-State: AOAM5339zkMYGfz/V2FdkD/S/wn/fGjX428PSGBoNKBxnESwMYR/hRZZ
-        PE5eSlLcazdKsKURJYgE6A==
-X-Google-Smtp-Source: ABdhPJwYlry7cBcHl3An98IkFAakpdZGXr7d89QYyHIEr/PdgViXwKc3NwNCFvhCD4zPLEKK4EAqIA==
-X-Received: by 2002:a9d:d0d:: with SMTP id 13mr12066019oti.134.1617979997370;
-        Fri, 09 Apr 2021 07:53:17 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m14sm658418otn.69.2021.04.09.07.53.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Apr 2021 07:53:16 -0700 (PDT)
-Received: (nullmailer pid 3635689 invoked by uid 1000);
-        Fri, 09 Apr 2021 14:53:15 -0000
-Date:   Fri, 9 Apr 2021 09:53:15 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] dt-bindings: gpio: fairchild,74hc595: Convert to
- json-schema
-Message-ID: <20210409145315.GA3635654@robh.at.kernel.org>
-References: <df145e77bd124721f28cbc58fb3c58c138f13d86.1617365710.git.geert+renesas@glider.be>
+        id S233884AbhDIQIY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 12:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233657AbhDIQIW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Apr 2021 12:08:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A98A3601FC;
+        Fri,  9 Apr 2021 16:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617984489;
+        bh=PULqMndYVkQ6GkmnOOQSw0zg0mec7exTRm08KyyKi4w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=apeJtpAtgHUq3Iz7+rcv9WzLS5HqcM+CLDyueF+iqCIO/U+onpxBuCFF9dpQo1m5J
+         XYwqmSBcQYe9sQCNIhTwYsi6LK0rzcbk5oq+fI5/y0RDFOv6auKw4OBdqE3NrsNOJO
+         KcE4SEi3gTx2qIxMMWaohFTOpFy4BNC/wZnG2Ct+1CQlooArpVzksr59kyI4H2c0rj
+         1g3PM809poFJpdETY4f6xIdDi1jEgaLd9n+mE935huH2qAhhqJsD4iAYYp/Q9S5iJt
+         zuf1CAeP41iC3xAtducX6yX44H0NDNFkhNW6rwabeaT7HnM4r9+RJPqKCVB5u6WaQo
+         Zq05PwKFI7iDQ==
+Date:   Fri, 9 Apr 2021 17:07:50 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sander Vanheule <sander@svanheule.net>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, bert@biot.com
+Subject: Re: [RFC PATCH 1/2] regmap: add miim bus support
+Message-ID: <20210409160750.GD4436@sirena.org.uk>
+References: <cover.1617914861.git.sander@svanheule.net>
+ <489e8a2d22dc8a5aaa3600289669c3bf0a15ba19.1617914861.git.sander@svanheule.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J5MfuwkIyy7RmF4Q"
 Content-Disposition: inline
-In-Reply-To: <df145e77bd124721f28cbc58fb3c58c138f13d86.1617365710.git.geert+renesas@glider.be>
+In-Reply-To: <489e8a2d22dc8a5aaa3600289669c3bf0a15ba19.1617914861.git.sander@svanheule.net>
+X-Cookie: I'm shaving!!  I'M SHAVING!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 02 Apr 2021 14:19:58 +0200, Geert Uytterhoeven wrote:
-> Convert the Generic 8-bit shift register Device Tree binding
-> documentation to json-schema.
-> 
-> Rename from gpio-74x164 to fairchild,74hc595, as the former refers to
-> the Linux driver, and not to a hardware name.
-> Add the missing hog description.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> The original file did not contain license information, so I used the
-> most popular/recommended one for DT bindings.
-> I listed the original author of the bindings as maintainer.
-> ---
->  .../bindings/gpio/fairchild,74hc595.yaml      | 77 +++++++++++++++++++
->  .../devicetree/bindings/gpio/gpio-74x164.txt  | 27 -------
->  2 files changed, 77 insertions(+), 27 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--J5MfuwkIyy7RmF4Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Apr 08, 2021 at 10:52:34PM +0200, Sander Vanheule wrote:
+> Basic support for MIIM bus access. Support only includes clause-22
+> register access, with 5-bit addresses, and 16-bit wide registers.
+
+What is "MIIM"?  A quick search isn't showing up useful hits for that.
+Why not just call this MDIO like the rest of the kernel is doing, it
+seems like using something else is at best going to make it harder to
+discover this code?  If MIIM is some subset or something it's not
+obvious how we're limited to that.
+
+--J5MfuwkIyy7RmF4Q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBwe9YACgkQJNaLcl1U
+h9CGLQf9EBRj6sYahOtMiNq61Anrqx80NYXUbskhcEDD83AyuDH7fClBSFu5a/Rj
+RorpF69jhF+/VIj9ZdoG2+BKlGWCmOetkaAzbTsLOdAHh+2mpyQuy5TKBticSbRA
+EzPQQwuJUCFtdKLrV++r2LGG91Kdlext30VgVpljY62jw7dOvTUAdt2g9vydgnTy
+wQDGmg6tSBLiH3IiJwT4jyx/xMXEwsfAXBgitFDcW3Ft15xVkqWidI4FV8QWQSlX
+xmxyMf1tGGygOGJSbFhLfkBNdWlT2u49dHaVSqq48nN6qCoxqfpRue5W0c6KmqGR
+77t5cLgRnvKqqPSbrElY73I7WkjASw==
+=6qSC
+-----END PGP SIGNATURE-----
+
+--J5MfuwkIyy7RmF4Q--
