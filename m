@@ -2,79 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B7EB35A57F
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 20:15:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 920ED35A597
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 20:17:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234578AbhDISOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 14:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234679AbhDISOk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 14:14:40 -0400
-Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44D5C061763
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Apr 2021 11:14:26 -0700 (PDT)
-Received: from [IPv6:2a02:a03f:eaff:9f01:16d1:68eb:7ab8:2bc3] (unknown [IPv6:2a02:a03f:eaff:9f01:16d1:68eb:7ab8:2bc3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id 264EC1ED3FB;
-        Fri,  9 Apr 2021 20:14:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1617992065;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hcu30fXGAr7gHk4i20arIo7AuPzPhaCCgZCP5EeYFOM=;
-        b=qlwXqOJE7j27k1eDu/ednXmVtCfbxkVH5gj//lV753KNLarSmxIy5UtJBzgfGml/ac2p5X
-        VOIHp+DcXg9k0glbiuGPPgfOE0CTcjfrgG4iLHmbM+pnoDQnsWRoxcP8rTafcNQgi83o6i
-        G6TfYfrhXRvXPPCct1yIp7Crh11FbCNpGZemLQzstSMpaLsnvy5q+Xn+24JklRZn9uxkj0
-        YL4CgTNMeitYpdchRTyHI6zlfA1sZ4AIyQja/7JAZn5qvMbNOMWavX5D/e6KSgVe9f1UKH
-        PNeH5cNpQ6Yg7oxtAP7Q9dhKnjvZ59Qa/rxnXLRtV5mz3MOEWKRipa5k7Ro/Dw==
-Message-ID: <8af840c5565343334954979948cadf7576b23916.camel@svanheule.net>
-Subject: Re: [RFC PATCH 1/2] regmap: add miim bus support
-From:   Sander Vanheule <sander@svanheule.net>
-To:     Mark Brown <broonie@kernel.org>
+        id S234378AbhDISRP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 14:17:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233332AbhDISRP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Apr 2021 14:17:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BA3346100B;
+        Fri,  9 Apr 2021 18:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617992222;
+        bh=0jPzMEGM0f8cnlSy+snpfA8H7Bl20KBPP6k1D4APmQU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fv+IdUwvlWRD4p/GB2s4mSpdf2EHhnfCR56c0QNSrcJ5uNdgaSZeuq9jFsG+mUeOt
+         Mv8YznDKJGR4QCwutft7ziLexiEC7rRozuNvfpufgLhkd1Dn00YL5Znj3QeBZZI0CW
+         kXY/UPpQPzTZJGCk+01Vjga4rPkQGHsMJSNWNuEkZVnxCjdJs+g/8dW7jEejDhQl2S
+         gVoDfpIH352HWOTT56XFs6gscsJj5VoPAS6TsvJZXL2grbvzITE+/0hfPc8oeEESv2
+         o3nkipl1i4YwNw5cD6/cIb7u4yRK7JI1/usniYivfTZ0ijY1Qb6BgSqIuwQvCbyF9P
+         tPS5T9fOFrXTw==
+Date:   Fri, 9 Apr 2021 19:16:42 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sander Vanheule <sander@svanheule.net>
 Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-gpio@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>, bert@biot.com
-Date:   Fri, 09 Apr 2021 20:14:22 +0200
-In-Reply-To: <20210409160750.GD4436@sirena.org.uk>
-References: <cover.1617914861.git.sander@svanheule.net>
-         <489e8a2d22dc8a5aaa3600289669c3bf0a15ba19.1617914861.git.sander@svanheule.net>
-         <20210409160750.GD4436@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+Subject: Re: [RFC PATCH 1/2] regmap: add miim bus support
+Message-ID: <20210409181642.GG4436@sirena.org.uk>
+References: <8af840c5565343334954979948cadf7576b23916.camel@svanheule.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7lMq7vMTJT4tNk0a"
+Content-Disposition: inline
+In-Reply-To: <8af840c5565343334954979948cadf7576b23916.camel@svanheule.net>
+X-Cookie: I'm shaving!!  I'M SHAVING!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mark,
 
-On Fri, 2021-04-09 at 17:07 +0100, Mark Brown wrote:
-> On Thu, Apr 08, 2021 at 10:52:34PM +0200, Sander Vanheule wrote:
-> > Basic support for MIIM bus access. Support only includes clause-22
-> > register access, with 5-bit addresses, and 16-bit wide registers.
-> 
-> What is "MIIM"?  A quick search isn't showing up useful hits for that.
-> Why not just call this MDIO like the rest of the kernel is doing, it
-> seems like using something else is at best going to make it harder to
-> discover this code?  If MIIM is some subset or something it's not
-> obvious how we're limited to that.
+--7lMq7vMTJT4tNk0a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-MIIM stands for "MII management", i.e. the management bus for devices
-with some form of MII interface. MDIO is also frequently used to refer
-to the data pin of the bus (there's also MDC: the clock pin), so I
-wanted to make the distinction.
+On Fri, Apr 09, 2021 at 08:14:22PM +0200, Sander Vanheule wrote:
 
-The kernel has the mii_bus struct to describe the bus master, but like
-you noted the bus is generaly refered to as an MDIO interface. I'm fine
-with naming it MDIO to make it easier to spot.
+> The kernel has the mii_bus struct to describe the bus master, but like
+> you noted the bus is generaly refered to as an MDIO interface. I'm fine
+> with naming it MDIO to make it easier to spot.
 
-Best,
-Sander
+Either mii_bus or mdio seem like an improvement - something matching
+existing kernel terminology, I guess mdio is consistent with the API it
+works with so...
 
+--7lMq7vMTJT4tNk0a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBwmgoACgkQJNaLcl1U
+h9DmFQf/T45AVkUo1q5KLZbUs2WVXsi4M+PcQ9H60g5E6IDG4Bg+BqZ9FUcjejVB
+cGctze0AXuA3bWHbrNpRi2f2Wi4ui2HXsJZBUq1i1ECtH+hA4x6A1DQLcfzk/z0x
+SLeEwwmlRFmtv5p0l3ZEt5kDYRIlKgKqxJspaixVGbp5YDTQROTvGO5tMqqLFeXr
+HVK6bZSfgjCWj0ccrBU6weP6QwyyPSohedX6F27SPhkRDVAx535Q1gRQGUnbij5q
+fViGDiei456YrJ9ZZVlg55XDyA54ZpaxxLJ5VvQ3yam4fS5HkBM3rCXTf+E/6kwQ
+VBr7Rkk0nbi9utZLfwMl7sL0oZcspA==
+=UK/C
+-----END PGP SIGNATURE-----
+
+--7lMq7vMTJT4tNk0a--
