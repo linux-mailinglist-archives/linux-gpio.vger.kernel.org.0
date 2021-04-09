@@ -2,50 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9082F35A749
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 21:44:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B88235A7A4
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 22:10:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234325AbhDITod (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 15:44:33 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43180 "EHLO vps0.lunn.ch"
+        id S233777AbhDIUKx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 16:10:53 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:43232 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234142AbhDIToc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 9 Apr 2021 15:44:32 -0400
+        id S229665AbhDIUKx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Apr 2021 16:10:53 -0400
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
         (envelope-from <andrew@lunn.ch>)
-        id 1lUx3B-00Fr40-GU; Fri, 09 Apr 2021 21:44:17 +0200
-Date:   Fri, 9 Apr 2021 21:44:17 +0200
+        id 1lUxSg-00FrJK-EK; Fri, 09 Apr 2021 22:10:38 +0200
+Date:   Fri, 9 Apr 2021 22:10:38 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Sander Vanheule <sander@svanheule.net>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+To:     Sander Vanheule <sander@svanheule.net>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>, bert@biot.com
-Subject: Re: [RFC PATCH 1/2] regmap: add miim bus support
-Message-ID: <YHCukeU8idIciNq9@lunn.ch>
-References: <8af840c5565343334954979948cadf7576b23916.camel@svanheule.net>
- <20210409181642.GG4436@sirena.org.uk>
+Subject: Re: [RFC PATCH 0/2] MIIM regmap and RTL8231 GPIO expander support
+Message-ID: <YHC0vh/4O5Zm9+vO@lunn.ch>
+References: <cover.1617914861.git.sander@svanheule.net>
+ <YG+BObnBEOZnoJ1K@lunn.ch>
+ <d73a44809c96abd0397474c63219a41e28f78235.camel@svanheule.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210409181642.GG4436@sirena.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d73a44809c96abd0397474c63219a41e28f78235.camel@svanheule.net>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 09, 2021 at 07:16:42PM +0100, Mark Brown wrote:
-> On Fri, Apr 09, 2021 at 08:14:22PM +0200, Sander Vanheule wrote:
+On Fri, Apr 09, 2021 at 07:42:32AM +0200, Sander Vanheule wrote:
+> Hi Andrew,
 > 
-> > The kernel has the mii_bus struct to describe the bus master, but like
-> > you noted the bus is generaly refered to as an MDIO interface. I'm fine
-> > with naming it MDIO to make it easier to spot.
-> 
-> Either mii_bus or mdio seem like an improvement - something matching
-> existing kernel terminology, I guess mdio is consistent with the API it
-> works with so...
+> Thank you for the feedback. You can find a (leaked) datasheet at:
+> https://github.com/libc0607/Realtek_switch_hacking/blob/files/RTL8231_Datasheet_1.2.pdf
 
-I would also suggest mdio. The mii_bus code is an old framework which
-does not see any work done to it.
+So this is not really an MFD. It has different ways of making use of
+pins, which could be used for GPIO, but can also be used for LEDs. You
+could look if it better fits in drivers/leds. But you can also use
+GPIO drivers for LEDs via led-gpio.
+
+> > I don't understand this split. Why not
+> > 
+> >      mdio-bus {
+> >          compatible = "vendor,mdio";
+> >          ...
+> >  
+> >          expander0: expander@0 {
+> >              /*
+> >               * Provide compatible for working registration of mdio
+> > device.
+> >               * Device probing happens in gpio1 node.
+> >               */
+> >              compatible = "realtek,rtl8231-expander";
+> >              reg = <0>;
+> >              gpio-controller;
+> >          };
+> >      };
+> > 
+> > You can list whatever properties you need in the node. Ethernet
+> > switches have interrupt-controller, embedded MDIO busses with PHYs on
+> > them etc.
+> 
+> This is what I tried initially, but it doesn't seem to work. The node
+> is probably still added as an MDIO device, but rtl8231_gpio_probe()
+> doesn't appear to get called at all. I do agree it would be preferable
+> over the split specification.
+
+Look at drivers/net/dsa/mv88e6xxx/chip.c for how to register an mdio
+driver. If you still cannot get it to work, post your code and i will
+take a look.
 
      Andrew
-
