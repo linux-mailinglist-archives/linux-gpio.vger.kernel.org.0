@@ -2,221 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A181D35983A
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 10:47:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 334BE359913
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 11:24:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231280AbhDIIrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 04:47:42 -0400
-Received: from mx0a-00268f01.pphosted.com ([148.163.148.236]:62590 "EHLO
-        mx0a-00268f01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229846AbhDIIrm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 04:47:42 -0400
-Received: from pps.filterd (m0165118.ppops.net [127.0.0.1])
-        by mx0a-00268f01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1398bOPt032448;
-        Fri, 9 Apr 2021 08:46:40 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2107.outbound.protection.outlook.com [104.47.58.107])
-        by mx0a-00268f01.pphosted.com with ESMTP id 37t1u23er9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Apr 2021 08:46:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W6M/8ryatV8iao+90s3IPjXi+wVzaskuD8rIOjrPilsnkfqCLJFfvHzAj862kbqYYmLoKxc0ZcZeOltHv72WoZ5Gx2+8UvlpNBHTIye+UqHG+o3tzC9fXO2HcKf5WV23l/UTqsEzOhLXifKPKG+UJwJswjfmPpqXqEU3cHga3FQAtzKrHi2kwNHB/W1RaJLKjRXp6zaAvs7IUgwI+iTewFRbst5GkJk5KFmKV2zXzA2TeaXl/e2H+OkIHc28ZnWqGLC9MXSUKnECN4C/C4w7rtixTBYHcq5OL6CC4MS9JL5cbDHw62abEVbu5ma/yKwRYd5h/2kYxsnirHDCZZtffg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ECL1mqiAm4FqsMWIHs2/+MCggk6RqmCsH0IKPsEzANw=;
- b=MGVE6bR8RyPGYpMY4tmG6DlMf52JutjrjtTeX1GeBnrbDurfHHo19qar/AZJpkHyKIt9VDHXJJNIGNIuuwh4GUxu8Y1X33WCD4xrvCl9wjrP8K2Ql3Et7GFkme+NV+BcP3tsnh7hyHI2qeaNSIHBi4V3cmXlT94wwetWyraT+TxotJDiqgFwmZuJFrZVzcF4BPjX1br82S53jNjZA8tso4VC4CHDC3kukwRxKM1avubz5napNip1xQLsYu7MbdumuvoC4Z0VCUNKrvxB2W6vNyS0HERr7UfeJ61QlAg/eC5xwpQ46jEA4A5omTmWdhR/3y2haLs01DcIr6ynckeTaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=equinix.com; dmarc=pass action=none header.from=equinix.com;
- dkim=pass header.d=equinix.com; arc=none
+        id S231668AbhDIJY6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 05:24:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230181AbhDIJYy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 05:24:54 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA48C061760;
+        Fri,  9 Apr 2021 02:24:40 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id w8so369770pfn.9;
+        Fri, 09 Apr 2021 02:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=equinixinc.onmicrosoft.com; s=selector2-equinixinc-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ECL1mqiAm4FqsMWIHs2/+MCggk6RqmCsH0IKPsEzANw=;
- b=ZE3D+P4JnoB5E2bbQiq0jyJ6L2wWCZzmhLB16hFhKRKr/MXxqdnGFjnXwRISaVBQXmrLIHROfjw9mOQpnhW8+Y82jTMDECx2/7JIWyLujXmmcaBvi3CytiyZ5cznrYbYMFlnhZ1OjKNVP3o72MrMTOG6n8CD/Dv0YIdUf92jZ8U=
-Received: from DM5PR04MB0762.namprd04.prod.outlook.com (2603:10b6:3:f3::13) by
- DM5PR04MB0765.namprd04.prod.outlook.com (2603:10b6:3:f8::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4020.17; Fri, 9 Apr 2021 08:46:38 +0000
-Received: from DM5PR04MB0762.namprd04.prod.outlook.com
- ([fe80::4c98:aeb:87a8:13ad]) by DM5PR04MB0762.namprd04.prod.outlook.com
- ([fe80::4c98:aeb:87a8:13ad%5]) with mapi id 15.20.4020.017; Fri, 9 Apr 2021
- 08:46:38 +0000
-From:   Zev Weiss <zweiss@equinix.com>
-To:     Andrew Jeffery <andrew@aj.id.au>, "g@packtop" <g@packtop>
-CC:     "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        Corey Minyard <minyard@acm.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tali Perry <tali.perry1@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Benjamin Fair <benjaminfair@google.com>
-Subject: Re: [PATCH v2 17/21] dt-bindings: ipmi: Convert ASPEED KCS binding to
- schema
-Thread-Topic: [PATCH v2 17/21] dt-bindings: ipmi: Convert ASPEED KCS binding
- to schema
-Thread-Index: AQHXLQNa/Br1rKNdC02YFyK1SqJv1Kqr362A
-Date:   Fri, 9 Apr 2021 08:46:38 +0000
-Message-ID: <YHAUbTeoxRFBUjMi@packtop>
-References: <20210319062752.145730-1-andrew@aj.id.au>
- <20210319062752.145730-17-andrew@aj.id.au> <YG/i9lSxxCMIzkRs@packtop>
- <29937129-3a17-4a32-a723-191b693a1e0c@www.fastmail.com>
- <YG/ppKEAs5EBUao3@packtop>
-In-Reply-To: <YG/ppKEAs5EBUao3@packtop>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: aj.id.au; dkim=none (message not signed)
- header.d=none;aj.id.au; dmarc=none action=none header.from=equinix.com;
-x-originating-ip: [24.181.166.149]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c3d99d31-110f-46e2-349d-08d8fb33fd35
-x-ms-traffictypediagnostic: DM5PR04MB0765:
-x-microsoft-antispam-prvs: <DM5PR04MB07658C21D9D86AEA1B2887A9C3739@DM5PR04MB0765.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7idMIY3i2UCSDF2JptTW5xoEbk1smmMf8B5f6ai6agQpdB2zLrqESAK+iD17uTLCx/F53EFfPeDm5fEGgOyFMS3wf4cHcEpm/0VCMqOC+8BsCt8qrQk2kcA5UIzMLjr5RTSYNVYaas22zOfqUGUt7BW4zZInnRBQOER0zKxbXVAIebpekFVbg3slvKos6gtBQ2UxOwccvgdVQqD7jzvy4eIzqS1bblrRdI21F3K6YgwndDZpWcUMukgDo1OWpd+2IRDBrziP1vKAv6NdcqaPBl9aj5f8uVp/E5kc3jW8ZLmbF6V8NdlSJaWMYGGI3Cj8mBZz0RooHAarGiclrl/Xh9WBW0xIUbHb4yc/33DXKGgfKKHseAO4VxG6vjW9rAsg9WgbGUyGMHKqEZJzI4xsF12uI1vtmQGKm1yPvZtcCKv/7S3tZBZUi/bOAlwtBBuvtmxY/cbWbSdxbJstgc371hZEU2aG1P4lJhHiognATZeCX0v0Ql81JWYl3PaKO91yrGJUC/d7NY6NIoX8222WjXliBdNdIHpRiG0hrnZv/qjbGq/7OL4s0DOKVhs+t499X2JQx6TRDEs28YZWi4hJFuqFhVUoEk+LQXYAU0UwpiQ//svvQ6FIR/Q1o8F0tPal5u3IgeAxQG/P1Fao+r5Vlxs/sFxWc8ZsM4dpwZsZfhWqRn9WTwQ+WvSp6Yy0ExpxCkoNRoW2TwAyQY8SRmrVNQmahyFfQJhy6gq6GxqO1t7grL2Sbtm+GAZ1IgoDC32o
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR04MB0762.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(7916004)(376002)(39860400002)(346002)(136003)(366004)(396003)(54906003)(6506007)(66946007)(186003)(2906002)(5660300002)(316002)(76116006)(66446008)(66476007)(64756008)(86362001)(33716001)(8676002)(66556008)(8936002)(6486002)(7416002)(478600001)(966005)(6512007)(9686003)(4326008)(71200400001)(83380400001)(26005)(38100700001)(781001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?7ZxoGTa/NLqZt9FG1q+7o1CcYfWYWCdDucXj+Npl2ttO9roUQoobEpTNmAaD?=
- =?us-ascii?Q?yDOAxguZuhJlyvCY9yfSD5ne36wl2YiQK2bSIjSZkTAW0vjsmKsf2GvIFdHY?=
- =?us-ascii?Q?CX4OGrHK4zZeWv4g89XIb+5xGvz0eD7fvqWp+X7EZgVEn7EZ6myLwLyB/nEg?=
- =?us-ascii?Q?vAEx0eNDq5c29tko487MfdJjzES08TxM+zRaW06C4BbP/ejXNiE4K6Xu9axC?=
- =?us-ascii?Q?8TT54U61Zo//PysWIEJdDimph7eLofKrjN+5XH7QitMufbcp+14AvIujpbtz?=
- =?us-ascii?Q?QaNHu1i51HdCufLgdYJBPzaFn/Qx/j4RH6JRdJ7mEmnSNxYVWvJU36r0e4fV?=
- =?us-ascii?Q?ToJUruIWNwtzuCzX0s0agbYXc10ZBglz7z6mSLiyqNkyEXE1Hu1Ly8h/0O6p?=
- =?us-ascii?Q?4YTp1XjKQ1/glOVnWts41oV6oXi92wFx6T74AL/aFNWpqMvIDU30Et5EBpav?=
- =?us-ascii?Q?hqDOf8bnaQ0ee841Lxcl53YngSE2cs0CD303GvpJfjOoVwnFRX+cSCja3DLJ?=
- =?us-ascii?Q?jDNbF49jqW9QwTFTroHRiq4ajgOkei8Uc7p2MGyDx1LG2kWrrzlwSrMJl7g4?=
- =?us-ascii?Q?pyrRaL5CsDMDpILdphZz0nXGNkpua5EQlNc79r9XXVk4R0xxXY8SU2d85EUH?=
- =?us-ascii?Q?lK0Jkwq8FAiVJEuwGGapU1ZALDRlOH/jtyG+3QzvD47uqYajQOcF7fTOu5pL?=
- =?us-ascii?Q?ZiMDI1oTbQ+mSUt4n0TuFBflJftR3FfCS5zWpBl3Bm0vK5a6Ro1JGTLfupho?=
- =?us-ascii?Q?IU2gcsUXR6/wuSKtu5RcHpCI+VQyRs6yHzPzLK/aHmCIjT7qnPBGy6ntSlkS?=
- =?us-ascii?Q?JCd7pWo1eHXXhbjqEqxJbqUzEM4SPLoNUYP3T345zw7fpHsDxEsIMvplR2SP?=
- =?us-ascii?Q?qAchB6EnuIR0Dd5xIh0QaHelPjdFFd44gzV1L/SH8FnOVriV4U2GwCVze8pD?=
- =?us-ascii?Q?VO7H30JkcDp2ZVrkvgSFORBkghwRORGfscfsBeduWTbiG/DEh0PmNt/Z2NFK?=
- =?us-ascii?Q?gMa6Ww96UyEmZp2oFEYjWKG3lwAyItqYJcjfQuyn7QjXwZQmsiYlFthyRJhk?=
- =?us-ascii?Q?vJ1c4DQUqMaYHT9873VOc4KDITybKJ1y65bv8ATzCKKKR4Mul3dia0kfIvDA?=
- =?us-ascii?Q?9XWHaF0gJUGg5pylTph7vvpICNxY8RuivWc5musSYdiFlySlkuEY9p57G/pT?=
- =?us-ascii?Q?4w1kxYOlyxXcUbexh7uRmrIBfmIlROPzZMOhbQMPZB5lIzriioLG5F9cW2mE?=
- =?us-ascii?Q?3v7NE3MyF8jNu6DX6oJNtwE0IJtas377BkQSw026hVuHRinKRNWG/3xXRbVA?=
- =?us-ascii?Q?a+My1YYs4sN1Jx+YPcSWgAaO93a0myhfrWkqRSQPxIcGww=3D=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2CE63F17A1E32544907C8F607C4FC4BE@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eqDORfVYih3KdHWf8wh+CjrsEDSV3l8FMtBY017n5ac=;
+        b=FPkpy4xo3U7lSI+b72CXor5mLB4WB7xRgrIC0e0/E9Ur2Gf3DvbtTf+SqoeONPSEA5
+         bKXSuA0P7DABvV2z3CroS6el/a5QRlj0uMVckp+iIWTh6YigSod5lK5iSoUrJQvJpo3/
+         5ATuYBxcuoT1fE1ofiz7cc/IJFZ6QvovLQDLqvshPFFHUeyhbGUMfI0UoidpQ8oBXe9i
+         l+g4cYbzzH9Lvon0cSTFS6JsTf4jrnJ4LtPlfZwjkXB35EQK1/q9Em9WgELFFLbYoR8u
+         zcXJ/3ItrKMmHTar3w0mMyLRJI3vX+x1Ntm1lkfeRt2LQGGAXfoiVOM3xwptzAR+xZ8z
+         VwQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eqDORfVYih3KdHWf8wh+CjrsEDSV3l8FMtBY017n5ac=;
+        b=UrdnLmC4wseX6/7y0Dc46G61bPUWdyapWcKX7BPdhEAyjbMMLL3KNfWTSvp1INlJZi
+         DgKa9jXKqe9+FfbaajNKboiFsQ8kjZx5hu7O7FT4qFdPM0zI/VS7NMg8BnLUVhiVTbOU
+         9leGPf2zcgp9funrZDzDkO38xteLR0gvMDCtYyflUMJ+nooDGPL5oUKtq4VvyEkaCpKO
+         Dt6wjALK0llEEWzytEaGZFWr9cUebEWMypENZ+Mrya7RZOALVAcbosigmEP0PvfrexSB
+         UPv1IR3z9iu1f/NVMsi8ctS7p4jOx9Gd4wGi47DNpOH4ofDyUwsdSQbz2luqM7TO80Ib
+         avkw==
+X-Gm-Message-State: AOAM532ZCwfUUO4zITA7/cQbgEDxbGaNaNz/UsEOiglkGNweZiKZVTCT
+        duI68V2IHJlyxM/4S4wcHE8Lmg8+NvF3n/4Ivq4=
+X-Google-Smtp-Source: ABdhPJyyVY6OveNJsRaLQ77/g3WxhETPEL2Tr0wIxsYjLWDeGaWxTKJuY8IwV2ZN2+DTEION8vYAHDLN6Gye3w+Yp9M=
+X-Received: by 2002:a63:3e4b:: with SMTP id l72mr12053286pga.203.1617960279766;
+ Fri, 09 Apr 2021 02:24:39 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: equinix.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR04MB0762.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3d99d31-110f-46e2-349d-08d8fb33fd35
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2021 08:46:38.1292
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72adb271-2fc7-4afe-a5ee-9de6a59f6bfb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FOW1l4yBsp0C2oqWWAKI2bQ1zzQJPmwvUzrno07oP+0X/08IeplRQuV3XxRqu24oM7Sxaf/R91+xPYAadRC15A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR04MB0765
-X-Proofpoint-ORIG-GUID: s46Yv14xlTe9gbJ8Og13FLJupGY7__pt
-X-Proofpoint-GUID: s46Yv14xlTe9gbJ8Og13FLJupGY7__pt
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-09_04:2021-04-09,2021-04-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 clxscore=1015 phishscore=0
- bulkscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
- definitions=main-2104090064
+References: <20210408205858.51751-1-masahiroy@kernel.org> <20210408205858.51751-2-masahiroy@kernel.org>
+In-Reply-To: <20210408205858.51751-2-masahiroy@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 9 Apr 2021 12:24:23 +0300
+Message-ID: <CAHp75VdZ67Tab2jOU0NSys_P1rU_GicJw_ADd1w9JY4rEG5g1w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] linux/kconfig.h: replace IF_ENABLED() with PTR_IF()
+ in <linux/kernel.h>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 09, 2021 at 12:44:04AM CDT, Zev Weiss wrote:
->On Fri, Apr 09, 2021 at 12:33:10AM CDT, Andrew Jeffery wrote:
->>
->>
->>On Fri, 9 Apr 2021, at 14:45, Zev Weiss wrote:
->>>On Fri, Mar 19, 2021 at 01:27:48AM CDT, Andrew Jeffery wrote:
->>>>Given the deprecated binding, improve the ability to detect issues in
->>>>the platform devicetrees. Further, a subsequent patch will introduce a
->>>>new interrupts property for specifying SerIRQ behaviour, so convert
->>>>before we do any further additions.
->>>>
->>>>Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
->>>>---
->>>> .../bindings/ipmi/aspeed,ast2400-kcs-bmc.yaml | 92 +++++++++++++++++++
->>>> .../bindings/ipmi/aspeed-kcs-bmc.txt          | 33 -------
->>>> 2 files changed, 92 insertions(+), 33 deletions(-)
->>>> create mode 100644 Documentation/devicetree/bindings/ipmi/aspeed,ast24=
-00-kcs-bmc.yaml
->>>> delete mode 100644 Documentation/devicetree/bindings/ipmi/aspeed-kcs-b=
-mc.txt
->>>>
->>>>diff --git a/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-kcs-=
-bmc.yaml b/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-kcs-bmc.ya=
-ml
->>>>new file mode 100644
->>>>index 000000000000..697ca575454f
->>>>--- /dev/null
->>>>+++ b/Documentation/devicetree/bindings/ipmi/aspeed,ast2400-kcs-bmc.yam=
-l
->>>>@@ -0,0 +1,92 @@
->>>>+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>+%YAML 1.2
->>>>+---
->>>>+$id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml
->>>>+$schema: http://devicetree.org/meta-schemas/core.yaml
->>>>+
->>>>+title: ASPEED BMC KCS Devices
->>>>+
->>>>+maintainers:
->>>>+  - Andrew Jeffery <andrew@aj.id.au>
->>>>+
->>>>+description: |
->>>>+  The Aspeed BMC SoCs typically use the Keyboard-Controller-Style (KCS=
-)
->>>>+  interfaces on the LPC bus for in-band IPMI communication with their =
-host.
->>>>+
->>>>+properties:
->>>>+  compatible:
->>>>+    oneOf:
->>>>+      - description: Channel ID derived from reg
->>>>+        items:
->>>>+          enum:
->>>>+            - aspeed,ast2400-kcs-bmc-v2
->>>>+            - aspeed,ast2500-kcs-bmc-v2
->>>>+            - aspeed,ast2600-kcs-bmc
->>>
->>>Should this have a "-v2" suffix?
->>
->>Well, that was kind of a matter of perspective. The 2600 compatible was
->>added after we'd done the v2 of the binding for the 2400 and 2500 so it
->>never needed correcting. But it is a case of "don't use the deprecated
->>properties with the 2600 compatible".
->>
->>I don't think a change is necessary?
->>
+On Fri, Apr 9, 2021 at 12:00 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
->It just looked inconsistent with the corresponding string in the
->ast_kcs_bmc_match[] table; perhaps that should be changed instead then?
+> <linux/kconfig.h> is included from all the kernel-space source files,
+> including C, assembly, linker scripts. It is intended to contain minimal
+
+a minimal
+
+> set of macros to evaluate CONFIG options.
 >
+> IF_ENABLED() is an intruder here because (x ? y : z) is C code, which
+> should not be included from assembly files or linker scripts.
+>
+> Also, <linux/kconfig.h> is no longer self-contained because NULL is
+> defined in <linux/stddef.h>.
+>
+> Move IF_ENABLED() out to <linux/kernel.h> as PTR_IF().
+>
+> PTR_IF(IS_ENABLED(CONFIG_FOO), ...) is slightly longer than
+> IF_ENABLED(CONFIG_FOO, ...), but it is not a big deal because
+> sub-systems often define dedicated macros such as of_match_ptr(),
+> pm_ptr() etc. for common use-cases.
 
-...except I realize now I only saw the 2600 v2 string in the match table
-because I put it there myself in the process of resolving a conflict
-when applying your series to the openbmc dev-5.10 branch for testing
-purposes.  So nevermind on this.
+>  include/linux/kernel.h            |  2 ++
 
-Reviewed-by: Zev Weiss <zweiss@equinix.com>
+Why kernel.h? Shouldn't it belong to a particular domain with a
+respective header file?
+
+Really what we have in the kernel.h right now is a complete train
+wreck of something.
+We have to define what exactly is kernel.h for?
+
+Arnd? Others? Shall we start a wider discussion on the topic?
+
+-- 
+With Best Regards,
+Andy Shevchenko
