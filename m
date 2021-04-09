@@ -2,164 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EF85359772
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 10:15:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2E76359794
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Apr 2021 10:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229829AbhDIIQC convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 9 Apr 2021 04:16:02 -0400
-Received: from aposti.net ([89.234.176.197]:56432 "EHLO aposti.net"
+        id S232544AbhDIIUl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 04:20:41 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:64347 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229696AbhDIIQC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 9 Apr 2021 04:16:02 -0400
-Date:   Fri, 09 Apr 2021 09:15:34 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/2] linux/kconfig.h: replace IF_ENABLED() with PTR_IF()
- in <linux/kernel.h>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Message-Id: <YXEARQ.LGKNU44HTZP01@crapouillou.net>
-In-Reply-To: <20210408205858.51751-2-masahiroy@kernel.org>
-References: <20210408205858.51751-1-masahiroy@kernel.org>
-        <20210408205858.51751-2-masahiroy@kernel.org>
+        id S232454AbhDIIUk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Apr 2021 04:20:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1617956428; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=w6dPhZf528MpJVmtXWaO9JlPwrAlz6eGv9cUCZJ3hDk=;
+ b=rJ9k8+6jqjTzrPBUK4zf0q2maaK40rWskEWN67Fq8DRwraSNh9ZLA6bbKu9D/DpYOF7YV0X7
+ C97Ia5mrfP9kYz9L0YkOSyyhMEtidgK6fGuMGiQLTyB9UJGaFLWg+Xerj2FuwMTJ6+AC5X3V
+ nIi4ARXjKVPLeFNKx3hj/q19OvM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 60700e488166b7eff7157e61 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 09 Apr 2021 08:20:24
+ GMT
+Sender: skakit=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 60EE1C43461; Fri,  9 Apr 2021 08:20:23 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: skakit)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8D67C433CA;
+        Fri,  9 Apr 2021 08:20:22 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 09 Apr 2021 13:50:22 +0530
+From:   skakit@codeaurora.org
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH V2 0/3] Add GPIO support for PM7325, PM8350c, PMK8350 and
+ PMR735A
+In-Reply-To: <CACRpkdbD6E3PY_JCEbwNiVfb8LoT6F5DzV7x71Us3Z7U3BaX=Q@mail.gmail.com>
+References: <1617280546-9583-1-git-send-email-skakit@codeaurora.org>
+ <CACRpkdbD6E3PY_JCEbwNiVfb8LoT6F5DzV7x71Us3Z7U3BaX=Q@mail.gmail.com>
+Message-ID: <f035f30845abdc45363c30348ac5cae8@codeaurora.org>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Masahiro,
-
-Le ven. 9 avril 2021 à 5:58, Masahiro Yamada <masahiroy@kernel.org> a 
-écrit :
-> <linux/kconfig.h> is included from all the kernel-space source files,
-> including C, assembly, linker scripts. It is intended to contain 
-> minimal
-> set of macros to evaluate CONFIG options.
+On 2021-04-08 19:18, Linus Walleij wrote:
+> On Thu, Apr 1, 2021 at 2:36 PM satya priya <skakit@codeaurora.org> 
+> wrote:
 > 
-> IF_ENABLED() is an intruder here because (x ? y : z) is C code, which
-> should not be included from assembly files or linker scripts.
+>> satya priya (3):
+>>   pinctrl: qcom: spmi-gpio: Add support for four variants
+>>   dt-bindings: pinctrl: qcom-pmic-gpio: Update the binding to add four
+>>     new variants
+>>   dt-bindings: pinctrl: qcom-pmic-gpio: Convert qcom pmic gpio 
+>> bindings
+>>     to YAML
 > 
-> Also, <linux/kconfig.h> is no longer self-contained because NULL is
-> defined in <linux/stddef.h>.
-> 
-> Move IF_ENABLED() out to <linux/kernel.h> as PTR_IF().
-> 
-> PTR_IF(IS_ENABLED(CONFIG_FOO), ...) is slightly longer than
-> IF_ENABLED(CONFIG_FOO, ...), but it is not a big deal because
-> sub-systems often define dedicated macros such as of_match_ptr(),
-> pm_ptr() etc. for common use-cases.
-
-What's the idea behind changing IF_ENABLED() to PTR_IF()? You didn't 
-explain that. What's wrong with IF_ENABLED()?
-
-Cheers,
--Paul
-
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  drivers/pinctrl/pinctrl-ingenic.c | 20 ++++++++++----------
->  include/linux/kconfig.h           |  6 ------
->  include/linux/kernel.h            |  2 ++
->  3 files changed, 12 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index f2746125b077..b21e2ae4528d 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -2496,43 +2496,43 @@ static int __init 
-> ingenic_pinctrl_probe(struct platform_device *pdev)
->  static const struct of_device_id ingenic_pinctrl_of_match[] = {
->  	{
->  		.compatible = "ingenic,jz4740-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_JZ4740, &jz4740_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4740), &jz4740_chip_info)
->  	},
->  	{
->  		.compatible = "ingenic,jz4725b-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_JZ4725B, &jz4725b_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4725B), &jz4725b_chip_info)
->  	},
->  	{
->  		.compatible = "ingenic,jz4760-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_JZ4760, &jz4760_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4760), &jz4760_chip_info)
->  	},
->  	{
->  		.compatible = "ingenic,jz4760b-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_JZ4760, &jz4760_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4760), &jz4760_chip_info)
->  	},
->  	{
->  		.compatible = "ingenic,jz4770-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_JZ4770, &jz4770_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4770), &jz4770_chip_info)
->  	},
->  	{
->  		.compatible = "ingenic,jz4780-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_JZ4780, &jz4780_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_JZ4780), &jz4780_chip_info)
->  	},
->  	{
->  		.compatible = "ingenic,x1000-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_X1000, &x1000_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_X1000), &x1000_chip_info)
->  	},
->  	{
->  		.compatible = "ingenic,x1000e-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_X1000, &x1000_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_X1000), &x1000_chip_info)
->  	},
->  	{
->  		.compatible = "ingenic,x1500-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_X1500, &x1500_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_X1500), &x1500_chip_info)
->  	},
->  	{
->  		.compatible = "ingenic,x1830-pinctrl",
-> -		.data = IF_ENABLED(CONFIG_MACH_X1830, &x1830_chip_info)
-> +		.data = PTR_IF(IS_ENABLED(CONFIG_MACH_X1830), &x1830_chip_info)
->  	},
->  	{ /* sentinel */ },
->  };
-> diff --git a/include/linux/kconfig.h b/include/linux/kconfig.h
-> index 24a59cb06963..cc8fa109cfa3 100644
-> --- a/include/linux/kconfig.h
-> +++ b/include/linux/kconfig.h
-> @@ -70,10 +70,4 @@
->   */
->  #define IS_ENABLED(option) __or(IS_BUILTIN(option), 
-> IS_MODULE(option))
-> 
-> -/*
-> - * IF_ENABLED(CONFIG_FOO, ptr) evaluates to (ptr) if CONFIG_FOO is 
-> set to 'y'
-> - * or 'm', NULL otherwise.
-> - */
-> -#define IF_ENABLED(option, ptr) (IS_ENABLED(option) ? (ptr) : NULL)
-> -
->  #endif /* __LINUX_KCONFIG_H */
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 5b7ed6dc99ac..8685ca4cf287 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -38,6 +38,8 @@
->  #define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned 
-> long)(p), (a)))
->  #define IS_ALIGNED(x, a)		(((x) & ((typeof(x))(a) - 1)) == 0)
-> 
-> +#define PTR_IF(cond, ptr)	((cond) ? (ptr) : NULL)
-> +
->  /* generic data direction definitions */
->  #define READ			0
->  #define WRITE			1
-> --
-> 2.27.0
+> Please collect the ACKs and rebase like BjÃ¶rn says, sort stuff 
+> alphabetically
+> and resend so I can try to apply it! The YAML conversion may need a nod 
+> from
+> the DT people as well.
 > 
 
+Sure, will address the comments and resend.
 
+> Yours,
+> Linus Walleij
+
+Thanks,
+Satya Priya
