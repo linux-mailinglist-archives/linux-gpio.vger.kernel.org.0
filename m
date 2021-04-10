@@ -2,85 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B280435AD2B
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 14:07:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E09C35AD59
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 14:40:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234262AbhDJMIF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Apr 2021 08:08:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
+        id S234091AbhDJMkj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Apr 2021 08:40:39 -0400
+Received: from mga03.intel.com ([134.134.136.65]:41735 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231279AbhDJMIE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 10 Apr 2021 08:08:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 88C0661165;
-        Sat, 10 Apr 2021 12:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1618056470;
-        bh=TOGFWa9Nn+4J9hISS6++HsfYZalNKWKelOxu1CZ9JKc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XeX6B1Wg1409bUXGrRz+W/5iV3gdA2dVbOF7KHXy+lzXYaOmYWK0hgL4Mma+PnYKk
-         zdaPSYSdFXcrLzsLvGuxh6SHUgp2XT0s2DkSzQss2/8A2Co5Z+SoqWtvcXg4cmim7j
-         Nm6MekC8iMXLpIxiQc/2Nsoo4r/Q3PHhMrQsUAHs=
-Date:   Sat, 10 Apr 2021 14:07:47 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        Roman Guskov <rguskov@dh-electronics.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH stable] gpiolib: Read "gpio-line-names" from a firmware
- node
-Message-ID: <YHGVE1hMDUiK0P2A@kroah.com>
-References: <20210410090919.3157-1-brgl@bgdev.pl>
+        id S234587AbhDJMkg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 10 Apr 2021 08:40:36 -0400
+IronPort-SDR: /l+t+/HB0Hbc4GK9xQqQV9w9It0b+D5txjlc/rjntHk1QqJTc6wsACe0G4jMe9KIW/BO7mSXAe
+ uCaoPYMcHnww==
+X-IronPort-AV: E=McAfee;i="6000,8403,9950"; a="193956397"
+X-IronPort-AV: E=Sophos;i="5.82,210,1613462400"; 
+   d="scan'208";a="193956397"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2021 05:40:20 -0700
+IronPort-SDR: sT1LiTBtRG2R0DpLDz428Y+03oGHVS8EWa9cxNq16MadWi66B70LqlP2qaN50K/28s1IIC1rba
+ 5uGpSsXq74og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,210,1613462400"; 
+   d="scan'208";a="397788186"
+Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 10 Apr 2021 05:40:18 -0700
+Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lVCuQ-000IMT-2D; Sat, 10 Apr 2021 12:40:18 +0000
+Date:   Sat, 10 Apr 2021 20:40:06 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ 2cfebcb2a22f4b41726e6a134fbd66e74ed0f49f
+Message-ID: <60719ca6.yfyQdCEpxGR+Fohk%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210410090919.3157-1-brgl@bgdev.pl>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Apr 10, 2021 at 11:09:19AM +0200, Bartosz Golaszewski wrote:
-> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> On STM32MP1, the GPIO banks are subnodes of pin-controller@50002000,
-> see arch/arm/boot/dts/stm32mp151.dtsi. The driver for
-> pin-controller@50002000 is in drivers/pinctrl/stm32/pinctrl-stm32.c
-> and iterates over all of its DT subnodes when registering each GPIO
-> bank gpiochip. Each gpiochip has:
-> 
->   - gpio_chip.parent = dev,
->     where dev is the device node of the pin controller
->   - gpio_chip.of_node = np,
->     which is the OF node of the GPIO bank
-> 
-> Therefore, dev_fwnode(chip->parent) != of_fwnode_handle(chip.of_node),
-> i.e. pin-controller@50002000 != pin-controller@50002000/gpio@5000*000.
-> 
-> The original code behaved correctly, as it extracted the "gpio-line-names"
-> from of_fwnode_handle(chip.of_node) = pin-controller@50002000/gpio@5000*000.
-> 
-> To achieve the same behaviour, read property from the firmware node.
-> 
-> Fixes: 7cba1a4d5e162 ("gpiolib: generalize devprop_gpiochip_set_names() for device properties")
-> Cc: stable@vger.kernel.org
-> Reported-by: Marek Vasut <marex@denx.de>
-> Reported-by: Roman Guskov <rguskov@dh-electronics.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Tested-by: Marek Vasut <marex@denx.de>
-> Reviewed-by: Marek Vasut <marex@denx.de>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
-> Hi Greg,
-> 
-> This patch somehow got lost and never made its way into stable. Could you
-> please apply it?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 2cfebcb2a22f4b41726e6a134fbd66e74ed0f49f  pinctrl: at91-pio4: Fix slew rate disablement
 
-This has been added and removed more times than I can remember already.
+elapsed time: 722m
 
-Are you all _SURE_ this is safe for a stable kernel release?  Look in
-the archives for complaints when we added this in the past.
+configs tested: 115
+configs skipped: 4
 
-thanks,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-greg k-h
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+x86_64                           allyesconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+i386                             allyesconfig
+sh                           se7750_defconfig
+powerpc                       ebony_defconfig
+mips                           xway_defconfig
+powerpc                     mpc83xx_defconfig
+ia64                      gensparse_defconfig
+arm                          simpad_defconfig
+arm                          gemini_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                    socrates_defconfig
+sh                           se7751_defconfig
+arm                         s3c6400_defconfig
+sh                         apsh4a3a_defconfig
+mips                        bcm63xx_defconfig
+arc                     haps_hs_smp_defconfig
+arm                             mxs_defconfig
+powerpc                      arches_defconfig
+sh                        dreamcast_defconfig
+mips                        workpad_defconfig
+mips                       bmips_be_defconfig
+sh                            shmin_defconfig
+arm                        multi_v7_defconfig
+arm                             pxa_defconfig
+arc                                 defconfig
+powerpc                      walnut_defconfig
+mips                      loongson3_defconfig
+mips                       lemote2f_defconfig
+arm                         shannon_defconfig
+arm                        multi_v5_defconfig
+sh                           se7619_defconfig
+sh                          r7785rp_defconfig
+powerpc                     asp8347_defconfig
+powerpc                     sbc8548_defconfig
+powerpc                     tqm8540_defconfig
+powerpc                 mpc837x_rdb_defconfig
+powerpc                      mgcoge_defconfig
+m68k                        m5407c3_defconfig
+csky                                defconfig
+i386                                defconfig
+arm                        vexpress_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20210409
+i386                 randconfig-a003-20210409
+i386                 randconfig-a001-20210409
+i386                 randconfig-a004-20210409
+i386                 randconfig-a002-20210409
+i386                 randconfig-a005-20210409
+x86_64               randconfig-a014-20210409
+x86_64               randconfig-a015-20210409
+x86_64               randconfig-a012-20210409
+x86_64               randconfig-a011-20210409
+x86_64               randconfig-a013-20210409
+x86_64               randconfig-a016-20210409
+i386                 randconfig-a014-20210409
+i386                 randconfig-a011-20210409
+i386                 randconfig-a016-20210409
+i386                 randconfig-a012-20210409
+i386                 randconfig-a013-20210409
+i386                 randconfig-a015-20210409
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a004-20210409
+x86_64               randconfig-a005-20210409
+x86_64               randconfig-a003-20210409
+x86_64               randconfig-a001-20210409
+x86_64               randconfig-a002-20210409
+x86_64               randconfig-a006-20210409
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
