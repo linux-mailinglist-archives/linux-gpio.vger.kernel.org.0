@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA1B335AE89
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 16:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41AD935AE8A
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 16:52:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234823AbhDJOw1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Apr 2021 10:52:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
+        id S234806AbhDJOw3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Apr 2021 10:52:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234806AbhDJOw1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Apr 2021 10:52:27 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B0EEC06138A
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 07:52:12 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id a4so8424163wrr.2
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 07:52:12 -0700 (PDT)
+        with ESMTP id S234708AbhDJOw2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Apr 2021 10:52:28 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A1C9C06138A
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 07:52:14 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id b9so8428340wrs.1
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 07:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MZs3J/WcRafThUPdEYQTBq1qLGFGoq4SDnhhmkyfytY=;
-        b=Z8N9/vZj9MlXk5JzgrLbaKg3KjTNqpWNw5miBMwoA2L5Hh/MbWN957RrwbEasJnPwh
-         9j9AcKLCm3jenGGNh1WxCGiCqtIuGMLxBZCYMoNHEKqBoIaCzI3w85L0PhRAgxK5Gf/G
-         2GMai53NCHzTpPWkFsZEEbcSZKcKflbvkfY6ZiR/9R6AOoKSh5ehH7RcUodgRxhxP0Cn
-         HJGGJFqnyhJRpb5u/vE3AMb/yEQnPDjc0tq6ccmNHaSr8QNgVmY5KAmxgPZTShLljfid
-         wE/NRAisFqio6KyFNJN5Xlm9k50EXEyJoMgiM2yYDk+RbGHPlrRHPtS0kS00S5aLXw1x
-         jCAg==
+        bh=l4Lcquf98dVExz2H3KzzF8vSQl1JBIL4fU7X36zzT0o=;
+        b=dqvgCUAZxe7vJOIGetRYlN5cPZ+R5/zjMTt9j+2X4/u5hjVi18qjTp1HgtHroo/DMr
+         IqhSyh7bwJN7r4knDwAGNftrJM1zagQImA0fEHS1mMF0n9Z3kxrd1tY8feog/JVBVbCU
+         rvieSmDUKbzbcxdin3zeJx6hYjlZFBSWuG4tYn13+Sys/GFIBKjlJRM0OppcAucjPm7E
+         zOklJVX7tWuDv67BFOfr9YV7ncM/H31MTX/tW3Gmdh9klk4ciR8PyX9ywvvBS7Qd1Gbg
+         rwju6FfLtKDmuuwJIzgp1k3PQ//q1IXOGhi1p89WFNrbJC5P+GfjwchsKJehIKKB+2nb
+         7myA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MZs3J/WcRafThUPdEYQTBq1qLGFGoq4SDnhhmkyfytY=;
-        b=mPY4+niqaM4TDGKVwQM8wdORprnCg+by98yX+3AgOmhxdAVBHfmowTKpseI7B4ri34
-         UnzpKNqWjTcLAzj4h/c60+Mq8GJ3pQ3YVKWTF+ZCigmL1R3bR5xlkweAq4w1j90YWmVf
-         /gKyKMHCjxiNHUhR1ipr1FkATxeh22iD0rfvqh3sPhbaZbDLgx8djo1omNc6PBC/DFok
-         dVHIEm1NiWAPjWZNTxV2E39gj8skksCZ1dhjVnfC6wQtCHu5A8R0Asw3RI25yUCr2pRZ
-         tthmqWxAeTKkkxNOjakN/+4cCNsLM4UdCe1Hqt3wPW8X+VdDvvODd/8v6B2DpdUJ0tgl
-         pd3w==
-X-Gm-Message-State: AOAM5332x/3iw7wtLxQopU1grfmmlaXQBZxq+SoetEH48cY/kD2Suu4k
-        fB5e3cVsg+eIhPxcYJbRgq6xj6KHUe8RoQ==
-X-Google-Smtp-Source: ABdhPJxgJJX1RFLUALD0wQRk9UhvKvCKo0eeHcqv9zSqqkuIqBbtQ5hdTVLgzv0+cfUAo59w6IamzQ==
-X-Received: by 2002:a5d:4443:: with SMTP id x3mr6036011wrr.319.1618066331345;
-        Sat, 10 Apr 2021 07:52:11 -0700 (PDT)
+        bh=l4Lcquf98dVExz2H3KzzF8vSQl1JBIL4fU7X36zzT0o=;
+        b=Z5upKbhqkd79qOttGW4CQbE0RJlWVu5jgxBRfvvkzLH5V24OPqBqzdvfTJGYIgZTMf
+         0gLSPc5F2P6pvOB1pld15X98HpKMJlLoVx+NiD6AMkVgMWa1oUvP+9iCJE7lBR8fTAoZ
+         m+12jVLyBoxCnR4dbOPFd76o9MceO2M/tFdmMc9ipN92jpMfk4d8frurgJa3pj7hmoxo
+         vI2CDB1iUC3oY+69+sjMabmklzqI5QI6/VXtBeeWCeSbWiO3MzapztB6LRFJYlrqItVY
+         867a8bp3Rsg9fXsfhZWa6pBZCz+I+QfvzxeCMRWZdNHiVX7ti079n85RetH0BdEQDYJr
+         Jb+Q==
+X-Gm-Message-State: AOAM533omO05tOjqfpdfRVEY+3lV625+8AnVRPUv97KYyjf/ZU0Ht2NR
+        nC+QVZUgrpxfDOpMtxOex9+Fxg==
+X-Google-Smtp-Source: ABdhPJwE9NpmaYAYog+JIj4WOHYhHVgWAFffvg5ZpYFOH1CFUJ9VMchj0B3/dy3t7HoQ1U0KJtK6ZQ==
+X-Received: by 2002:a05:6000:24e:: with SMTP id m14mr22943159wrz.199.1618066332859;
+        Sat, 10 Apr 2021 07:52:12 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-149-6.w2-15.abo.wanadoo.fr. [2.15.231.6])
-        by smtp.gmail.com with ESMTPSA id a15sm9167083wrr.53.2021.04.10.07.52.10
+        by smtp.gmail.com with ESMTPSA id a15sm9167083wrr.53.2021.04.10.07.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Apr 2021 07:52:11 -0700 (PDT)
+        Sat, 10 Apr 2021 07:52:12 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [libgpiod][RFC 1/6] treewide: rename chip property accessors
-Date:   Sat, 10 Apr 2021 16:51:52 +0200
-Message-Id: <20210410145157.30718-2-brgl@bgdev.pl>
+Subject: [libgpiod][RFC 2/6] core: add refcounting helpers
+Date:   Sat, 10 Apr 2021 16:51:53 +0200
+Message-Id: <20210410145157.30718-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210410145157.30718-1-brgl@bgdev.pl>
 References: <20210410145157.30718-1-brgl@bgdev.pl>
@@ -64,284 +64,180 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In v2 API all getters will be called using the following pattern:
-
-    gpiod_<object>_get_<what>
-
-Apply this to already existing getters for gpiod_chip.
+In v2.0 all objects will be opaque and refcounted. Add a set of helper
+functions and data structures for refcounting.
 
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 ---
- bindings/cxx/chip.cpp         |  6 +++---
- bindings/python/gpiodmodule.c | 14 +++++++-------
- include/gpiod.h               |  6 +++---
- lib/core.c                    |  6 +++---
- lib/helpers.c                 |  6 +++---
- tests/tests-chip.c            | 25 ++++++++++++++-----------
- tools/gpiodetect.c            |  6 +++---
- tools/gpiofind.c              |  2 +-
- tools/gpioinfo.c              |  4 ++--
- 9 files changed, 39 insertions(+), 36 deletions(-)
+ lib/Makefile.am |  2 +-
+ lib/core.c      | 52 ++++++++++++++++++++++++++-----------------------
+ lib/internal.c  | 22 +++++++++++++++++++++
+ lib/internal.h  | 19 ++++++++++++++++++
+ 4 files changed, 70 insertions(+), 25 deletions(-)
+ create mode 100644 lib/internal.c
 
-diff --git a/bindings/cxx/chip.cpp b/bindings/cxx/chip.cpp
-index d5a9837..ee6ab6f 100644
---- a/bindings/cxx/chip.cpp
-+++ b/bindings/cxx/chip.cpp
-@@ -62,21 +62,21 @@ GPIOD_CXX_API ::std::string chip::name(void) const
- {
- 	this->throw_if_noref();
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 8441584..5c7f353 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -2,7 +2,7 @@
+ # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
  
--	return ::std::string(::gpiod_chip_name(this->_m_chip.get()));
-+	return ::std::string(::gpiod_chip_get_name(this->_m_chip.get()));
- }
- 
- GPIOD_CXX_API ::std::string chip::label(void) const
- {
- 	this->throw_if_noref();
- 
--	return ::std::string(::gpiod_chip_label(this->_m_chip.get()));
-+	return ::std::string(::gpiod_chip_get_label(this->_m_chip.get()));
- }
- 
- GPIOD_CXX_API unsigned int chip::num_lines(void) const
- {
- 	this->throw_if_noref();
- 
--	return ::gpiod_chip_num_lines(this->_m_chip.get());
-+	return ::gpiod_chip_get_num_lines(this->_m_chip.get());
- }
- 
- GPIOD_CXX_API line chip::get_line(unsigned int offset) const
-diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.c
-index 8bfb4c4..ed039e4 100644
---- a/bindings/python/gpiodmodule.c
-+++ b/bindings/python/gpiodmodule.c
-@@ -1918,9 +1918,9 @@ static PyObject *gpiod_Chip_repr(gpiod_ChipObject *self)
- 		return NULL;
- 
- 	return PyUnicode_FromFormat("'%s /%s/ %u lines'",
--				    gpiod_chip_name(self->chip),
--				    gpiod_chip_label(self->chip),
--				    gpiod_chip_num_lines(self->chip));
-+				    gpiod_chip_get_name(self->chip),
-+				    gpiod_chip_get_label(self->chip),
-+				    gpiod_chip_get_num_lines(self->chip));
- }
- 
- PyDoc_STRVAR(gpiod_Chip_close_doc,
-@@ -1971,7 +1971,7 @@ static PyObject *gpiod_Chip_name(gpiod_ChipObject *self,
- 	if (gpiod_ChipIsClosed(self))
- 		return NULL;
- 
--	return PyUnicode_FromFormat("%s", gpiod_chip_name(self->chip));
-+	return PyUnicode_FromFormat("%s", gpiod_chip_get_name(self->chip));
- }
- 
- PyDoc_STRVAR(gpiod_Chip_label_doc,
-@@ -1985,7 +1985,7 @@ static PyObject *gpiod_Chip_label(gpiod_ChipObject *self,
- 	if (gpiod_ChipIsClosed(self))
- 		return NULL;
- 
--	return PyUnicode_FromFormat("%s", gpiod_chip_label(self->chip));
-+	return PyUnicode_FromFormat("%s", gpiod_chip_get_label(self->chip));
- }
- 
- PyDoc_STRVAR(gpiod_Chip_num_lines_doc,
-@@ -1999,7 +1999,7 @@ static PyObject *gpiod_Chip_num_lines(gpiod_ChipObject *self,
- 	if (gpiod_ChipIsClosed(self))
- 		return NULL;
- 
--	return Py_BuildValue("I", gpiod_chip_num_lines(self->chip));
-+	return Py_BuildValue("I", gpiod_chip_get_num_lines(self->chip));
- }
- 
- static gpiod_LineObject *
-@@ -2381,7 +2381,7 @@ static gpiod_LineObject *gpiod_LineIter_next(gpiod_LineIterObject *self)
- {
- 	struct gpiod_line *line;
- 
--	if (self->offset == gpiod_chip_num_lines(self->owner->chip))
-+	if (self->offset == gpiod_chip_get_num_lines(self->owner->chip))
- 		return NULL; /* Last element. */
- 
- 	line = gpiod_chip_get_line(self->owner->chip, self->offset++);
-diff --git a/include/gpiod.h b/include/gpiod.h
-index 5aea01f..a4ce01f 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -94,21 +94,21 @@ void gpiod_chip_unref(struct gpiod_chip *chip);
-  * @param chip The GPIO chip object.
-  * @return Pointer to a human-readable string containing the chip name.
-  */
--const char *gpiod_chip_name(struct gpiod_chip *chip);
-+const char *gpiod_chip_get_name(struct gpiod_chip *chip);
- 
- /**
-  * @brief Get the GPIO chip label as represented in the kernel.
-  * @param chip The GPIO chip object.
-  * @return Pointer to a human-readable string containing the chip label.
-  */
--const char *gpiod_chip_label(struct gpiod_chip *chip);
-+const char *gpiod_chip_get_label(struct gpiod_chip *chip);
- 
- /**
-  * @brief Get the number of GPIO lines exposed by this chip.
-  * @param chip The GPIO chip object.
-  * @return Number of GPIO lines.
-  */
--unsigned int gpiod_chip_num_lines(struct gpiod_chip *chip);
-+unsigned int gpiod_chip_get_num_lines(struct gpiod_chip *chip);
- 
- /**
-  * @brief Get the handle to the GPIO line at given offset.
+ lib_LTLIBRARIES = libgpiod.la
+-libgpiod_la_SOURCES = core.c helpers.c internal.h misc.c uapi/gpio.h
++libgpiod_la_SOURCES = core.c helpers.c internal.c internal.h misc.c uapi/gpio.h
+ libgpiod_la_CFLAGS = -Wall -Wextra -g -std=gnu89
+ libgpiod_la_CFLAGS += -fvisibility=hidden -I$(top_srcdir)/include/
+ libgpiod_la_CFLAGS += -include $(top_builddir)/config.h
 diff --git a/lib/core.c b/lib/core.c
-index 32c4238..2e7ee4b 100644
+index 2e7ee4b..0f3937b 100644
 --- a/lib/core.c
 +++ b/lib/core.c
-@@ -335,17 +335,17 @@ GPIOD_API void gpiod_chip_unref(struct gpiod_chip *chip)
- 	free(chip);
+@@ -65,7 +65,7 @@ struct gpiod_line {
+ };
+ 
+ struct gpiod_chip {
+-	int refcount;
++	struct gpiod_refcount refcount;
+ 
+ 	struct gpiod_line **lines;
+ 	unsigned int num_lines;
+@@ -246,6 +246,30 @@ out:
+ 	return ret;
  }
  
--GPIOD_API const char *gpiod_chip_name(struct gpiod_chip *chip)
-+GPIOD_API const char *gpiod_chip_get_name(struct gpiod_chip *chip)
++static void chip_release(struct gpiod_refcount *refcount)
++{
++	struct gpiod_chip *chip;
++	struct gpiod_line *line;
++	unsigned int i;
++
++	chip = gpiod_container_of(refcount, struct gpiod_chip, refcount);
++
++	if (chip->lines) {
++		for (i = 0; i < chip->num_lines; i++) {
++			line = chip->lines[i];
++			if (line) {
++				gpiod_line_release(line);
++				free(line);
++			}
++		}
++
++		free(chip->lines);
++	}
++
++	close(chip->fd);
++	free(chip);
++}
++
+ GPIOD_API struct gpiod_chip *gpiod_chip_open(const char *path)
  {
- 	return chip->name;
- }
+ 	struct gpiochip_info info;
+@@ -276,7 +300,7 @@ GPIOD_API struct gpiod_chip *gpiod_chip_open(const char *path)
  
--GPIOD_API const char *gpiod_chip_label(struct gpiod_chip *chip)
-+GPIOD_API const char *gpiod_chip_get_label(struct gpiod_chip *chip)
+ 	chip->fd = fd;
+ 	chip->num_lines = info.lines;
+-	chip->refcount = 1;
++	gpiod_refcount_init(&chip->refcount, chip_release);
+ 
+ 	/*
+ 	 * GPIO device must have a name - don't bother checking this field. In
+@@ -306,33 +330,13 @@ err_close_fd:
+ 
+ GPIOD_API struct gpiod_chip *gpiod_chip_ref(struct gpiod_chip *chip)
  {
- 	return chip->label;
+-	chip->refcount++;
++	gpiod_refcount_ref(&chip->refcount);
+ 	return chip;
  }
  
--GPIOD_API unsigned int gpiod_chip_num_lines(struct gpiod_chip *chip)
-+GPIOD_API unsigned int gpiod_chip_get_num_lines(struct gpiod_chip *chip)
+ GPIOD_API void gpiod_chip_unref(struct gpiod_chip *chip)
  {
- 	return chip->num_lines;
- }
-diff --git a/lib/helpers.c b/lib/helpers.c
-index 9c4b28e..fb53518 100644
---- a/lib/helpers.c
-+++ b/lib/helpers.c
-@@ -45,11 +45,11 @@ gpiod_chip_get_all_lines(struct gpiod_chip *chip)
- 	struct gpiod_line *line;
- 	unsigned int offset;
- 
--	bulk = gpiod_line_bulk_new(gpiod_chip_num_lines(chip));
-+	bulk = gpiod_line_bulk_new(gpiod_chip_get_num_lines(chip));
- 	if (!bulk)
- 		return NULL;
- 
--	for (offset = 0; offset < gpiod_chip_num_lines(chip); offset++) {
-+	for (offset = 0; offset < gpiod_chip_get_num_lines(chip); offset++) {
- 		line = gpiod_chip_get_line(chip, offset);
- 		if (!line) {
- 			gpiod_line_bulk_free(bulk);
-@@ -68,7 +68,7 @@ GPIOD_API int gpiod_chip_find_line(struct gpiod_chip *chip, const char *name)
- 	struct gpiod_line *line;
- 	const char *tmp;
- 
--	num_lines = gpiod_chip_num_lines(chip);
-+	num_lines = gpiod_chip_get_num_lines(chip);
- 
- 	for (offset = 0; offset < num_lines; offset++) {
- 		line = gpiod_chip_get_line(chip, offset);
-diff --git a/tests/tests-chip.c b/tests/tests-chip.c
-index a87dc9a..46fb8d2 100644
---- a/tests/tests-chip.c
-+++ b/tests/tests-chip.c
-@@ -63,9 +63,12 @@ GPIOD_TEST_CASE(get_name, 0, { 8, 8, 8})
- 	g_assert_nonnull(chip2);
- 	gpiod_test_return_if_failed();
- 
--	g_assert_cmpstr(gpiod_chip_name(chip0), ==, gpiod_test_chip_name(0));
--	g_assert_cmpstr(gpiod_chip_name(chip1), ==, gpiod_test_chip_name(1));
--	g_assert_cmpstr(gpiod_chip_name(chip2), ==, gpiod_test_chip_name(2));
-+	g_assert_cmpstr(gpiod_chip_get_name(chip0), ==,
-+			gpiod_test_chip_name(0));
-+	g_assert_cmpstr(gpiod_chip_get_name(chip1), ==,
-+			gpiod_test_chip_name(1));
-+	g_assert_cmpstr(gpiod_chip_get_name(chip2), ==,
-+			gpiod_test_chip_name(2));
+-	struct gpiod_line *line;
+-	unsigned int i;
+-
+-	chip->refcount--;
+-	if (chip->refcount > 0)
+-		return;
+-
+-	if (chip->lines) {
+-		for (i = 0; i < chip->num_lines; i++) {
+-			line = chip->lines[i];
+-			if (line) {
+-				gpiod_line_release(line);
+-				free(line);
+-			}
+-		}
+-
+-		free(chip->lines);
+-	}
+-
+-	close(chip->fd);
+-	free(chip);
++	gpiod_refcount_unref(&chip->refcount);
  }
  
- GPIOD_TEST_CASE(get_label, 0, { 8, 8, 8})
-@@ -83,9 +86,9 @@ GPIOD_TEST_CASE(get_label, 0, { 8, 8, 8})
- 	g_assert_nonnull(chip2);
- 	gpiod_test_return_if_failed();
+ GPIOD_API const char *gpiod_chip_get_name(struct gpiod_chip *chip)
+diff --git a/lib/internal.c b/lib/internal.c
+new file mode 100644
+index 0000000..52b9461
+--- /dev/null
++++ b/lib/internal.c
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: LGPL-2.1-or-later
++// SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include "internal.h"
++
++void gpiod_refcount_init(struct gpiod_refcount *refcount,
++			 gpiod_refcount_release release)
++{
++	refcount->refcnt = 1;
++	refcount->release = release;
++}
++
++void gpiod_refcount_ref(struct gpiod_refcount *refcount)
++{
++	refcount->refcnt++;
++}
++
++void gpiod_refcount_unref(struct gpiod_refcount *refcount)
++{
++	if (--refcount->refcnt == 0)
++		refcount->release(refcount);
++}
+diff --git a/lib/internal.h b/lib/internal.h
+index 8b3f69a..a652879 100644
+--- a/lib/internal.h
++++ b/lib/internal.h
+@@ -4,8 +4,27 @@
+ #ifndef __LIBGPIOD_GPIOD_INTERNAL_H__
+ #define __LIBGPIOD_GPIOD_INTERNAL_H__
  
--	g_assert_cmpstr(gpiod_chip_label(chip0), ==, "gpio-mockup-A");
--	g_assert_cmpstr(gpiod_chip_label(chip1), ==, "gpio-mockup-B");
--	g_assert_cmpstr(gpiod_chip_label(chip2), ==, "gpio-mockup-C");
-+	g_assert_cmpstr(gpiod_chip_get_label(chip0), ==, "gpio-mockup-A");
-+	g_assert_cmpstr(gpiod_chip_get_label(chip1), ==, "gpio-mockup-B");
-+	g_assert_cmpstr(gpiod_chip_get_label(chip2), ==, "gpio-mockup-C");
- }
++#include <stddef.h>
++
+ /* For internal library use only. */
  
- GPIOD_TEST_CASE(num_lines, 0, { 1, 4, 8, 16, 32 })
-@@ -109,11 +112,11 @@ GPIOD_TEST_CASE(num_lines, 0, { 1, 4, 8, 16, 32 })
- 	g_assert_nonnull(chip4);
- 	gpiod_test_return_if_failed();
+ #define GPIOD_API __attribute__((visibility("default")))
  
--	g_assert_cmpuint(gpiod_chip_num_lines(chip0), ==, 1);
--	g_assert_cmpuint(gpiod_chip_num_lines(chip1), ==, 4);
--	g_assert_cmpuint(gpiod_chip_num_lines(chip2), ==, 8);
--	g_assert_cmpuint(gpiod_chip_num_lines(chip3), ==, 16);
--	g_assert_cmpuint(gpiod_chip_num_lines(chip4), ==, 32);
-+	g_assert_cmpuint(gpiod_chip_get_num_lines(chip0), ==, 1);
-+	g_assert_cmpuint(gpiod_chip_get_num_lines(chip1), ==, 4);
-+	g_assert_cmpuint(gpiod_chip_get_num_lines(chip2), ==, 8);
-+	g_assert_cmpuint(gpiod_chip_get_num_lines(chip3), ==, 16);
-+	g_assert_cmpuint(gpiod_chip_get_num_lines(chip4), ==, 32);
- }
- 
- GPIOD_TEST_CASE(get_line, 0, { 16 })
-diff --git a/tools/gpiodetect.c b/tools/gpiodetect.c
-index 9f4c28c..10706e2 100644
---- a/tools/gpiodetect.c
-+++ b/tools/gpiodetect.c
-@@ -76,9 +76,9 @@ int main(int argc, char **argv)
- 		}
- 
- 		printf("%s [%s] (%u lines)\n",
--		       gpiod_chip_name(chip),
--		       gpiod_chip_label(chip),
--		       gpiod_chip_num_lines(chip));
-+		       gpiod_chip_get_name(chip),
-+		       gpiod_chip_get_label(chip),
-+		       gpiod_chip_get_num_lines(chip));
- 
- 		gpiod_chip_unref(chip);
- 		free(entries[i]);
-diff --git a/tools/gpiofind.c b/tools/gpiofind.c
-index 83af76b..32b7852 100644
---- a/tools/gpiofind.c
-+++ b/tools/gpiofind.c
-@@ -76,7 +76,7 @@ int main(int argc, char **argv)
- 		offset = gpiod_chip_find_line(chip, argv[0]);
- 		if (offset >= 0) {
- 			printf("%s %u\n",
--			       gpiod_chip_name(chip), offset);
-+			       gpiod_chip_get_name(chip), offset);
- 			gpiod_chip_unref(chip);
- 			return EXIT_SUCCESS;
- 		}
-diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
-index eba8c72..3d89111 100644
---- a/tools/gpioinfo.c
-+++ b/tools/gpioinfo.c
-@@ -130,9 +130,9 @@ static void list_lines(struct gpiod_chip *chip)
- 	int direction;
- 
- 	printf("%s - %u lines:\n",
--	       gpiod_chip_name(chip), gpiod_chip_num_lines(chip));
-+	       gpiod_chip_get_name(chip), gpiod_chip_get_num_lines(chip));
- 
--	for (offset = 0; offset < gpiod_chip_num_lines(chip); offset++) {
-+	for (offset = 0; offset < gpiod_chip_get_num_lines(chip); offset++) {
- 		line = gpiod_chip_get_line(chip, offset);
- 		if (!line)
- 			die_perror("unable to retrieve the line object from chip");
++#define gpiod_container_of(ptr, type, member) ({			\
++	void *__mptr = (void *)(ptr);					\
++	((type *)(__mptr - offsetof(type, member))); })
++
++struct gpiod_refcount;
++typedef void (*gpiod_refcount_release)(struct gpiod_refcount *);
++
++struct gpiod_refcount {
++	unsigned int refcnt;
++	gpiod_refcount_release release;
++};
++
++void gpiod_refcount_init(struct gpiod_refcount *refcount,
++			 gpiod_refcount_release release);
++void gpiod_refcount_ref(struct gpiod_refcount *refcount);
++void gpiod_refcount_unref(struct gpiod_refcount *refcount);
++
+ #endif /* __LIBGPIOD_GPIOD_INTERNAL_H__ */
 -- 
 2.30.1
 
