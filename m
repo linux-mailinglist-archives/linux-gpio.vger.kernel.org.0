@@ -2,123 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC41335A9A7
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 02:46:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 017A035AAA2
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 05:53:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235249AbhDJAqR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Apr 2021 20:46:17 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:57531 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235215AbhDJAqQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 20:46:16 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4FHGWs3MPcz1qsZw;
-        Sat, 10 Apr 2021 02:46:01 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4FHGWs2Sqvz1qv9m;
-        Sat, 10 Apr 2021 02:46:01 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id ft4RUmY19NIy; Sat, 10 Apr 2021 02:45:59 +0200 (CEST)
-X-Auth-Info: 02cJJmK9oi9Ch2YwxC/UUroig4FOelDkpBm1NGpcWzY=
-Received: from [IPv6:::1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Sat, 10 Apr 2021 02:45:59 +0200 (CEST)
-Subject: Re: [PATCH v1 1/1] gpiolib: Read "gpio-line-names" from a firmware
- node
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Roman Guskov <rguskov@dh-electronics.com>
-References: <20210305120240.42830-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=Mfye=O4mMiK01Q6Ok+ztSfMwMcrfaZSs+LhRxi=AM+C2w@mail.gmail.com>
- <YE8z+ohM9abBs9SD@smile.fi.intel.com> <YE9YGGB+k7CsCNDI@smile.fi.intel.com>
- <CAMRc=McLsamBwe8hSob11ustk2GUzOfYh7CcqNtxsM+6vgPENw@mail.gmail.com>
- <YE9whHhaa2XavKfj@smile.fi.intel.com>
- <CAMpxmJVUVhpcNOVQCB3p8tNpac5e5c7vRQS=-avA6Cuaag9eRw@mail.gmail.com>
- <CAHp75VfsGn=dTo+f2MtssqWpuj_Sm+LHtTaM=7oW9g8riz4xTg@mail.gmail.com>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <5bf6771d-5783-0a40-5a72-7ddbb9c694aa@denx.de>
-Date:   Sat, 10 Apr 2021 02:45:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        id S234208AbhDJDxi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Apr 2021 23:53:38 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:60867 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234059AbhDJDxh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Apr 2021 23:53:37 -0400
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 13A3r9jS001599;
+        Sat, 10 Apr 2021 12:53:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 13A3r9jS001599
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1618026789;
+        bh=EtSDB0y/XnwBbN1kwTKUYAQTMsWSf9iv2ItFBGvpsfc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tyYPoya1RM58+3y9zYQL8gCoMvUg+2Np04CQ3OlwQk1EbUp3zns68o/X/FUuAlNbh
+         8DgBA7RlftkBwC1uAI9zXURhjuXbE50lkttdHHpLXHJqnNImUOI0ktxdBhmvZBA91f
+         LS5xRezwa28hxLQRSqQCwCG1hmnrA0Oa864D5dcbYFpUz5XqpiPT/p0/yKuBENu+R7
+         DJqZ/2UgxIicFMsykMK9Yh47MUZr1AkkdYsNrb7G8E7/wkmEHJNA8yiDkx7LVAqWT5
+         cvqnAF6zsIicf4yFgtWBNhfRMkHTe5YnkkHUhbVXsLKyJCHrY4XNUaXiBiXuqKW2kY
+         wBwk46KWTJX6Q==
+X-Nifty-SrcIP: [209.85.216.45]
+Received: by mail-pj1-f45.google.com with SMTP id cu16so1835030pjb.4;
+        Fri, 09 Apr 2021 20:53:09 -0700 (PDT)
+X-Gm-Message-State: AOAM532/fbllSARnNsHy3A+sm7dOlEbqJFzIppSHR5qLvI+tclEv5/dk
+        RCUsrn5dQrxlYsVS73Qc/BbvcFSkmsqrLSIUWIE=
+X-Google-Smtp-Source: ABdhPJy+iSbOs/ixV9GvgnZ0PfpOqbetO79thY7Xta3JdTXH/HExBrLMLyFFhPri7Ie5dhOgukVQD03Z7EGKJZ4aS+A=
+X-Received: by 2002:a17:90a:28a1:: with SMTP id f30mr17297064pjd.198.1618026788821;
+ Fri, 09 Apr 2021 20:53:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfsGn=dTo+f2MtssqWpuj_Sm+LHtTaM=7oW9g8riz4xTg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210408205858.51751-1-masahiroy@kernel.org> <20210408205858.51751-2-masahiroy@kernel.org>
+ <CAHp75VdZ67Tab2jOU0NSys_P1rU_GicJw_ADd1w9JY4rEG5g1w@mail.gmail.com>
+In-Reply-To: <CAHp75VdZ67Tab2jOU0NSys_P1rU_GicJw_ADd1w9JY4rEG5g1w@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 10 Apr 2021 12:52:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATPWG883hydsfdJyULr9-ued3QR6M9q52XtVYQ81R5__Q@mail.gmail.com>
+Message-ID: <CAK7LNATPWG883hydsfdJyULr9-ued3QR6M9q52XtVYQ81R5__Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] linux/kconfig.h: replace IF_ENABLED() with PTR_IF()
+ in <linux/kernel.h>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3/15/21 6:04 PM, Andy Shevchenko wrote:
-> On Mon, Mar 15, 2021 at 6:49 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
->>
->> On Mon, Mar 15, 2021 at 3:34 PM Andy Shevchenko
->> <andriy.shevchenko@linux.intel.com> wrote:
->>>
->>> On Mon, Mar 15, 2021 at 03:04:37PM +0100, Bartosz Golaszewski wrote:
->>>> On Mon, Mar 15, 2021 at 1:50 PM Andy Shevchenko
->>>> <andriy.shevchenko@linux.intel.com> wrote:
->>>>>
->>>>> On Mon, Mar 15, 2021 at 12:16:26PM +0200, Andy Shevchenko wrote:
->>>>>> On Mon, Mar 15, 2021 at 10:01:47AM +0100, Bartosz Golaszewski wrote:
->>>>>>> On Fri, Mar 5, 2021 at 1:03 PM Andy Shevchenko
->>>>>>> <andriy.shevchenko@linux.intel.com> wrote:
->>>>>>
->>>>>>> Unfortunately while this may fix the particular use-case on STM32, it
->>>>>>> breaks all other users as the 'gpio-line-names' property doesn't live
->>>>>>> on dev_fwnode(&gdev->dev) but on dev_fwnode(chip->parent).
->>>>>>>
->>>>>>> How about we first look for this property on the latter and only if
->>>>>>> it's not present descend down to the former fwnode?
->>>>>>
->>>>>> Oops, I have tested on x86 and it worked the same way.
->>>>>>
->>>>>> Lemme check this, but I think the issue rather in ordering when we apply fwnode
->>>>>> to the newly created device and when we actually retrieve gpio-line-names
->>>>>> property.
->>>>>
->>>>> Hmm... I can't see how it's possible can be. Can you provide a platform name
->>>>> and pointers to the DTS that has been broken by the change?
->>>>>
->>>>
->>>> I noticed it with gpio-mockup (libgpiod tests failed on v5.12-rc3) and
->>>> the WiP gpio-sim - but it's the same on most DT platforms. The node
->>>> that contains the `gpio-line-names` is the one associated with the
->>>> platform device passed to the GPIO driver. The gpiolib then creates
->>>> another struct device that becomes the child of that node but it
->>>> doesn't copy the parent's properties to it (nor should it).
->>>>
->>>> Every driver that reads device properties does it from the parent
->>>> device, not the one in gdev - whether it uses of_, fwnode_ or generic
->>>> device_ properties.
->>>
->>> What you are telling contradicts with the idea of copying parent's fwnode
->>> (or OF node) in the current code.
->>>
->>
->> Ha! While the OF node of the parent device is indeed assigned to the
->> gdev's dev, the same isn't done in the core code for fwnodes and
->> simulated chips don't have an associated OF node, so this is the
->> culprit I suppose.
-> 
-> Close, but not fully correct.
-> First of all it depends on the OF / ACPI / platform enumeration.
-> Second, we are talking about secondary fwnode in the case where it happens.
-> 
-> I'm in the middle of debugging this, I'll come up with something soon I believe.
+On Fri, Apr 9, 2021 at 6:24 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, Apr 9, 2021 at 12:00 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > <linux/kconfig.h> is included from all the kernel-space source files,
+> > including C, assembly, linker scripts. It is intended to contain minimal
+>
+> a minimal
+>
+> > set of macros to evaluate CONFIG options.
+> >
+> > IF_ENABLED() is an intruder here because (x ? y : z) is C code, which
+> > should not be included from assembly files or linker scripts.
+> >
+> > Also, <linux/kconfig.h> is no longer self-contained because NULL is
+> > defined in <linux/stddef.h>.
+> >
+> > Move IF_ENABLED() out to <linux/kernel.h> as PTR_IF().
+> >
+> > PTR_IF(IS_ENABLED(CONFIG_FOO), ...) is slightly longer than
+> > IF_ENABLED(CONFIG_FOO, ...), but it is not a big deal because
+> > sub-systems often define dedicated macros such as of_match_ptr(),
+> > pm_ptr() etc. for common use-cases.
+>
+> >  include/linux/kernel.h            |  2 ++
+>
+> Why kernel.h? Shouldn't it belong to a particular domain with a
+> respective header file?
+>
+> Really what we have in the kernel.h right now is a complete train
+> wreck of something.
+> We have to define what exactly is kernel.h for?
 
-Was there ever any follow up on this ?
 
-I would like to point out that on STM32MP1 in Linux 5.10.y, the 
-gpio-line-names are still broken, and a revert of "gpiolib: generalize 
-devprop_gpiochip_set_names() for device properties" is still necessary.
+<linux/kernel.h> contains random utility macros.
+
+I did not find a good header to put it in otherwise.
+
+
+>
+> Arnd? Others? Shall we start a wider discussion on the topic?
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+
+--
+Best Regards
+Masahiro Yamada
