@@ -2,141 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41FFC35AC1B
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 11:07:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 205CF35AC20
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 11:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231279AbhDJJHW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Apr 2021 05:07:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
+        id S232254AbhDJJJz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Apr 2021 05:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbhDJJHV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Apr 2021 05:07:21 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A6BC061763
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 02:07:07 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id sd23so3619822ejb.12
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 02:07:07 -0700 (PDT)
+        with ESMTP id S229632AbhDJJJz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Apr 2021 05:09:55 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24649C061764
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 02:09:41 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id n11-20020a05600c4f8bb029010e5cf86347so6236224wmq.1
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 02:09:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hy+D3/ugFm1KkPPIMlbprnQ9KcfX248Ahg/C6irnkTY=;
-        b=nF7C+vMIJPKBKEkRT0Sk6mQuo0/73O3fTO2I9RReSOmP3Yn/u3/aIXpBTrfQxisOeQ
-         sgE+WvoIidVWit4bowRRoL+UlTBD8lk8Spfsc1eTOty2M9JRDE+EDsdNgAHvrHVIEZrT
-         wArfqz4GWCHfgvOWXypAdzNBWj+A7Ux4BqA1QKxuczZueoladA3/SxhTibwrK4XUDv+j
-         ItIzSA9ut6Ht3GJfwfEKySVEdKMXg7ZcRBnngg8ySB0PpHhUMoxcK0U2ZNYzhsk3SoGP
-         978O+/tYWQeDPMJj81HQrsYXEazL96EmHJU47wAbcmxVrkAujKHu3cRfXwA1jvVeMFP1
-         URdw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p8aPX/yhyDURpzd9he2oFVc3UD257yU7cZPkDvSNwmA=;
+        b=j8zUr5y1aGMOckYxnzgWhcFZvHUB26DkBP3lqp4GNu50qv1KWM/VV+68cxPaQgL5Je
+         Ju8UEj1Dnxb7sMT+qdfe1RgzE3k3mgb53UPIE5wutbGvwaJf5IiLh70HeZuuLOUWqKPh
+         bRvnMalO6C+CfsyYJm9+ZxkC0G9A7YGlY0vdOPz31DNLVbBFmzjjxUQ4yH2cD1vwtrUz
+         BpGm8tkC50O9w4bBSzzvJj+t1PryGF1Wew3hJ+ttv4uuA+jIHQVbccRpwRMKQOUHbvW4
+         zcx/iaxMPZ9Tlqt/wKG7V/X1FGIoBh3oX54O8iV/pgt2P5ttwEexvjncFmUDLTlUUQqb
+         L7wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hy+D3/ugFm1KkPPIMlbprnQ9KcfX248Ahg/C6irnkTY=;
-        b=QkRKq1nR/l/Y0EsZkcPYiIC+vDKVhY4I2kQCtH9rg05azKXntIQpcRTbaNyuH1ImZ7
-         PmYdMDZcRrpmke362TmG9bn0gljbdpDteYmXRfeGFb4yU1+IXyCcsN55/n1YBAN4L81a
-         rCx3o+LvaLanohkmk3uiCDUHvagrmdOFHVaegoDkWWlS4Hm7kx8LroOlTxaHI4a3yEcC
-         OHXsYm6CG2PiwoNogT7JYf4vk9ebT0ZkRAZp3Tkd7aCqxOQaq/BhzoiBtLPUP3190hI7
-         aCfndhmdPKOTPYb3wQ7gNWVdT0qWcCwGGHaFJQAY5rID1YZj8CgjQgPuhywfwJr/NqLc
-         Rl8Q==
-X-Gm-Message-State: AOAM530FMb5ImAeQdsNZxyz0nfCvZnR9eb9xAV73Xq5Ycsv8Q/fsUOlq
-        JCizxvisfBBurnVax47DZ6UOA25fYrZnvMIPuQjiIg==
-X-Google-Smtp-Source: ABdhPJxQL97e3eOy8ciUalzfu+CKlZpF68BngVVKjK0HdtGzdfE9vkWo5rY8Cm3NeFIW3Hk7NerBQwBC9hXMEPnyMKM=
-X-Received: by 2002:a17:907:294f:: with SMTP id et15mr4890236ejc.14.1618045625884;
- Sat, 10 Apr 2021 02:07:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210305120240.42830-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=Mfye=O4mMiK01Q6Ok+ztSfMwMcrfaZSs+LhRxi=AM+C2w@mail.gmail.com>
- <YE8z+ohM9abBs9SD@smile.fi.intel.com> <YE9YGGB+k7CsCNDI@smile.fi.intel.com>
- <CAMRc=McLsamBwe8hSob11ustk2GUzOfYh7CcqNtxsM+6vgPENw@mail.gmail.com>
- <YE9whHhaa2XavKfj@smile.fi.intel.com> <CAMpxmJVUVhpcNOVQCB3p8tNpac5e5c7vRQS=-avA6Cuaag9eRw@mail.gmail.com>
- <CAHp75VfsGn=dTo+f2MtssqWpuj_Sm+LHtTaM=7oW9g8riz4xTg@mail.gmail.com> <5bf6771d-5783-0a40-5a72-7ddbb9c694aa@denx.de>
-In-Reply-To: <5bf6771d-5783-0a40-5a72-7ddbb9c694aa@denx.de>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p8aPX/yhyDURpzd9he2oFVc3UD257yU7cZPkDvSNwmA=;
+        b=c2YcdJfWNoAw5m6qT07Eb0WR5Nq4XWHn4T9wP/aSoClMrb/PhNEMsF5QzaOnoaOUAD
+         ksDFNoen0JJIp0ZxljwTiHOsPr6iCBiRxpHOoy0s94UTwWRyb2P3eLvqLDLxNLgN8H1r
+         eKNtJOt0Fu3X3MOFI23NVI5VLI7ljuIVZu64kemhTAM61sZg2ALXjOK6zY4aQbGEmijt
+         yBlb9f0bRQhE8+6erBY6uP9PbwD8fF6edqnXRXqsBpQARaR0YOqzjcsymcb7P0LTQXZq
+         uClYncL4S/OZv3vJZa9ufmfZe02a/jReKUY1mp+x4FRpyGuAt3BPm3jO25/Bram3n6aI
+         crhQ==
+X-Gm-Message-State: AOAM530fD26O0wxudpe+2bjiF/BpMnt10Ek/Eo/c/OJ+2HLnPFfyLntg
+        W6Ph99DKUnJZwyx8ZtGTp6agpQ==
+X-Google-Smtp-Source: ABdhPJzMBdIAblvC8n15zoDbPzu6FnmiqaZWX7oEBVLEDZDBMRYWZrZCqK7Dtk92kopeMxP789R1Cg==
+X-Received: by 2002:a1c:a502:: with SMTP id o2mr12057387wme.16.1618045779784;
+        Sat, 10 Apr 2021 02:09:39 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-149-6.w2-15.abo.wanadoo.fr. [2.15.231.6])
+        by smtp.gmail.com with ESMTPSA id h63sm6986094wmh.13.2021.04.10.02.09.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Apr 2021 02:09:39 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 10 Apr 2021 11:06:55 +0200
-Message-ID: <CAMRc=Mf+syGC92=UBXjX96wrx5oVUyo8NhOj-zGu9CAPsPTbMQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Read "gpio-line-names" from a firmware node
-To:     Marek Vasut <marex@denx.de>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Roman Guskov <rguskov@dh-electronics.com>
-Content-Type: text/plain; charset="UTF-8"
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        Roman Guskov <rguskov@dh-electronics.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH stable] gpiolib: Read "gpio-line-names" from a firmware node
+Date:   Sat, 10 Apr 2021 11:09:19 +0200
+Message-Id: <20210410090919.3157-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Apr 10, 2021 at 2:46 AM Marek Vasut <marex@denx.de> wrote:
->
-> On 3/15/21 6:04 PM, Andy Shevchenko wrote:
-> > On Mon, Mar 15, 2021 at 6:49 PM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> >>
-> >> On Mon, Mar 15, 2021 at 3:34 PM Andy Shevchenko
-> >> <andriy.shevchenko@linux.intel.com> wrote:
-> >>>
-> >>> On Mon, Mar 15, 2021 at 03:04:37PM +0100, Bartosz Golaszewski wrote:
-> >>>> On Mon, Mar 15, 2021 at 1:50 PM Andy Shevchenko
-> >>>> <andriy.shevchenko@linux.intel.com> wrote:
-> >>>>>
-> >>>>> On Mon, Mar 15, 2021 at 12:16:26PM +0200, Andy Shevchenko wrote:
-> >>>>>> On Mon, Mar 15, 2021 at 10:01:47AM +0100, Bartosz Golaszewski wrote:
-> >>>>>>> On Fri, Mar 5, 2021 at 1:03 PM Andy Shevchenko
-> >>>>>>> <andriy.shevchenko@linux.intel.com> wrote:
-> >>>>>>
-> >>>>>>> Unfortunately while this may fix the particular use-case on STM32, it
-> >>>>>>> breaks all other users as the 'gpio-line-names' property doesn't live
-> >>>>>>> on dev_fwnode(&gdev->dev) but on dev_fwnode(chip->parent).
-> >>>>>>>
-> >>>>>>> How about we first look for this property on the latter and only if
-> >>>>>>> it's not present descend down to the former fwnode?
-> >>>>>>
-> >>>>>> Oops, I have tested on x86 and it worked the same way.
-> >>>>>>
-> >>>>>> Lemme check this, but I think the issue rather in ordering when we apply fwnode
-> >>>>>> to the newly created device and when we actually retrieve gpio-line-names
-> >>>>>> property.
-> >>>>>
-> >>>>> Hmm... I can't see how it's possible can be. Can you provide a platform name
-> >>>>> and pointers to the DTS that has been broken by the change?
-> >>>>>
-> >>>>
-> >>>> I noticed it with gpio-mockup (libgpiod tests failed on v5.12-rc3) and
-> >>>> the WiP gpio-sim - but it's the same on most DT platforms. The node
-> >>>> that contains the `gpio-line-names` is the one associated with the
-> >>>> platform device passed to the GPIO driver. The gpiolib then creates
-> >>>> another struct device that becomes the child of that node but it
-> >>>> doesn't copy the parent's properties to it (nor should it).
-> >>>>
-> >>>> Every driver that reads device properties does it from the parent
-> >>>> device, not the one in gdev - whether it uses of_, fwnode_ or generic
-> >>>> device_ properties.
-> >>>
-> >>> What you are telling contradicts with the idea of copying parent's fwnode
-> >>> (or OF node) in the current code.
-> >>>
-> >>
-> >> Ha! While the OF node of the parent device is indeed assigned to the
-> >> gdev's dev, the same isn't done in the core code for fwnodes and
-> >> simulated chips don't have an associated OF node, so this is the
-> >> culprit I suppose.
-> >
-> > Close, but not fully correct.
-> > First of all it depends on the OF / ACPI / platform enumeration.
-> > Second, we are talking about secondary fwnode in the case where it happens.
-> >
-> > I'm in the middle of debugging this, I'll come up with something soon I believe.
->
-> Was there ever any follow up on this ?
->
-> I would like to point out that on STM32MP1 in Linux 5.10.y, the
-> gpio-line-names are still broken, and a revert of "gpiolib: generalize
-> devprop_gpiochip_set_names() for device properties" is still necessary.
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Yes, Andy has fixed that in commit b41ba2ec54a7 ("gpiolib: Read
-"gpio-line-names" from a firmware node") but for some reason this has
-never made its way into stable. I'll resend it.
+On STM32MP1, the GPIO banks are subnodes of pin-controller@50002000,
+see arch/arm/boot/dts/stm32mp151.dtsi. The driver for
+pin-controller@50002000 is in drivers/pinctrl/stm32/pinctrl-stm32.c
+and iterates over all of its DT subnodes when registering each GPIO
+bank gpiochip. Each gpiochip has:
 
+  - gpio_chip.parent = dev,
+    where dev is the device node of the pin controller
+  - gpio_chip.of_node = np,
+    which is the OF node of the GPIO bank
+
+Therefore, dev_fwnode(chip->parent) != of_fwnode_handle(chip.of_node),
+i.e. pin-controller@50002000 != pin-controller@50002000/gpio@5000*000.
+
+The original code behaved correctly, as it extracted the "gpio-line-names"
+from of_fwnode_handle(chip.of_node) = pin-controller@50002000/gpio@5000*000.
+
+To achieve the same behaviour, read property from the firmware node.
+
+Fixes: 7cba1a4d5e162 ("gpiolib: generalize devprop_gpiochip_set_names() for device properties")
+Cc: stable@vger.kernel.org
+Reported-by: Marek Vasut <marex@denx.de>
+Reported-by: Roman Guskov <rguskov@dh-electronics.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Marek Vasut <marex@denx.de>
+Reviewed-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+Hi Greg,
+
+This patch somehow got lost and never made its way into stable. Could you
+please apply it?
+
+Thanks,
 Bartosz
+
+ drivers/gpio/gpiolib.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 4253837f870b..7ec0822c0505 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -367,22 +367,18 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
+  *
+  * Looks for device property "gpio-line-names" and if it exists assigns
+  * GPIO line names for the chip. The memory allocated for the assigned
+- * names belong to the underlying software node and should not be released
++ * names belong to the underlying firmware node and should not be released
+  * by the caller.
+  */
+ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+ {
+ 	struct gpio_device *gdev = chip->gpiodev;
+-	struct device *dev = chip->parent;
++	struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
+ 	const char **names;
+ 	int ret, i;
+ 	int count;
+ 
+-	/* GPIO chip may not have a parent device whose properties we inspect. */
+-	if (!dev)
+-		return 0;
+-
+-	count = device_property_string_array_count(dev, "gpio-line-names");
++	count = fwnode_property_string_array_count(fwnode, "gpio-line-names");
+ 	if (count < 0)
+ 		return 0;
+ 
+@@ -396,7 +392,7 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+ 	if (!names)
+ 		return -ENOMEM;
+ 
+-	ret = device_property_read_string_array(dev, "gpio-line-names",
++	ret = fwnode_property_read_string_array(fwnode, "gpio-line-names",
+ 						names, count);
+ 	if (ret < 0) {
+ 		dev_warn(&gdev->dev, "failed to read GPIO line names\n");
+-- 
+2.30.1
+
