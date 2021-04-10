@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2A6335AE8B
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 16:52:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 302EC35AE8C
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Apr 2021 16:52:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234831AbhDJOwa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Apr 2021 10:52:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33258 "EHLO
+        id S234754AbhDJOwf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Apr 2021 10:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234708AbhDJOwa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Apr 2021 10:52:30 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DD04C06138A
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 07:52:15 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id x7so8400857wrw.10
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 07:52:15 -0700 (PDT)
+        with ESMTP id S234708AbhDJOwf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Apr 2021 10:52:35 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CBFAC06138A
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 07:52:20 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id w4so4677824wrt.5
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Apr 2021 07:52:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Hr/D5ZXVckh+SbZJpuYVUZEbGI+l8ZWgusGtHiZ7I+c=;
-        b=ih+2v0ArFjkAxMIGSPr7+IuxXF4Vkmh9U1CLGR8lb0KXJCB0Ny0yF3TAMzwDt/Q1IY
-         BxE10WzbNAWmy/r92zVw4tSZs36Iw0PqgNpL28wAHkPhGIs0s4ogNm3HurzgNZJL5swv
-         vBd3Xlu2o+iptfYtEZ4sPnGPD2nymW4xx0gBT+6DDmjQ7OsXy44VEWXcNUkPIgEBGQkK
-         tYWtrPziHT9KyIN0+i1hVIoxtI1aR4CqPtzopn49rVLnNHFmXkJ1fWZLlIOgEhAXfUuc
-         5j2lrhuooOhwlInFe1VdZ2lHZuC5Juaj/9N0joeInJ4oJS1hiEuS/oBHTjKwxkb6JhjR
-         lfhA==
+        bh=gww/julcMQ0AcjRgiAUqG+COB5fdS769tKh6lfjtJ0A=;
+        b=irHpS6LajtqjNekinx+bTW/iE3FWHdPrBZsph/9K7v+0vy9Z5DXWcIZ4WfU8yBP+KM
+         /zneD52VoEt9sK90JYZ6Lw91JXuK77g/dXxZDXN85ouFkQ5/t6MwAeVIoHlrhKn4ShcH
+         mEflUf3vYi9XrRw4+84/z2IsjHGtdlHHbn3G8XSyxC7V/BImEue4OFafG97q89RyYMc0
+         zzzMZWHWIwZNSzbrVev3cBxP38Uuxf92mrG8SDyn3ndz3wx/JE1c954eCLR4axMeY82L
+         3O896vkaMNy0a9xxUihUnxtX7/bQhERSEwMyDqlJsq2d4D/KPz77Qd6Yux1UA1HAxLqe
+         fp9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Hr/D5ZXVckh+SbZJpuYVUZEbGI+l8ZWgusGtHiZ7I+c=;
-        b=jE1/3Z9mALf/TN70cBZvWheSUyeV362mn2bWg/1d4jBjOmwle3IIl13WLyb1ji8Ued
-         5jrePHQjFbVDSeGsGmZuSVmqSw7ZLqUI4TBl4fmDI26/6LND0wUXvFT/JOj9wbvfZrS2
-         eOf/NFbLzMnfA2cT5a5PNb9TQdpJ+5o6rapZqgDH5NFda37Um9PtukqBomoLwMFm+fWr
-         dLwGrPqurEUaufkm9jQFmwW99aLhKj03HpRDiDgL4eMVE/IqtyQvZwygWqrZgqXar9se
-         Br28Za6oLQRcW+PiMdMfHKXJtrMGM0o7S5gvcviKNM1X00XO1C5rm89Dt8CCPgAl/brz
-         zEOg==
-X-Gm-Message-State: AOAM532rM6XrFd/CvebrahQe04NfN2h3utXX6eLxN9Dy5034jHDvG2NW
-        WtC0EC6rG1qdh79RUMkM5+s4Gg==
-X-Google-Smtp-Source: ABdhPJwNPEuQGPuUKafLFY6BOPL7XAGUMQSuJ4iSnQhGE8ipN7KmDgFHPouXkuKoMRKhX9Xkl9ueqA==
-X-Received: by 2002:a5d:4b81:: with SMTP id b1mr23299713wrt.243.1618066333816;
-        Sat, 10 Apr 2021 07:52:13 -0700 (PDT)
+        bh=gww/julcMQ0AcjRgiAUqG+COB5fdS769tKh6lfjtJ0A=;
+        b=mGgtgS79TryUDLlwkx/uH3HF+2aAzxKWU09672awTy3ZtZNz3wXn3Ir+6SPKWzc1m8
+         5X7u7pw5ZF2KSupiSlHlM0pSchMuGpRNEyTJ/2Nomli34qWyvST2ILse1dym8YnW0+hS
+         aq6npEtN/TRz0JDQjLeh9nAg5QldUT0c308+cTqycCarNiK5tt48yGjliB4UdiCRDqzc
+         JoE+lQOLY089YNtRjmybLE8QyBnXmqkPylmnh9NCmknrjw1ZM7ynxJGC8tcTi5JvD9wu
+         WOu5nzVyVRUr8tns8lIWwNCgkTQ3tnrjMPlQ4QhUNO8ce+SlTvxMwEEczEI6zJopVMPs
+         QOLQ==
+X-Gm-Message-State: AOAM532Kn9mHzCs5SbNqzdcWRNVJj+OQqTJLd6XuwzbyU5NRaqa2LIMu
+        7YgWYFfR63LxCbM9/4a8KGRZKw==
+X-Google-Smtp-Source: ABdhPJxaAQaEqqqAfTOkIrzI3SniMe9G2bZKBwJ1EgAL96tii2Ir0NZDCjgKtkhbBPVXrcPimejFkQ==
+X-Received: by 2002:adf:f543:: with SMTP id j3mr22376774wrp.259.1618066338837;
+        Sat, 10 Apr 2021 07:52:18 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-149-6.w2-15.abo.wanadoo.fr. [2.15.231.6])
-        by smtp.gmail.com with ESMTPSA id a15sm9167083wrr.53.2021.04.10.07.52.13
+        by smtp.gmail.com with ESMTPSA id a15sm9167083wrr.53.2021.04.10.07.52.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Apr 2021 07:52:13 -0700 (PDT)
+        Sat, 10 Apr 2021 07:52:18 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [libgpiod][RFC 3/6] core: implement line_info objects
-Date:   Sat, 10 Apr 2021 16:51:54 +0200
-Message-Id: <20210410145157.30718-4-brgl@bgdev.pl>
+Subject: [libgpiod][RFC 4/6] core: rework line events
+Date:   Sat, 10 Apr 2021 16:51:55 +0200
+Message-Id: <20210410145157.30718-5-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210410145157.30718-1-brgl@bgdev.pl>
 References: <20210410145157.30718-1-brgl@bgdev.pl>
@@ -64,1468 +64,1703 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Implement an opaque object storing a snapshot of a GPIO line's status
-info and add functions for accessing its fields.
+Introduce opaque event objects: gpiod_line_event and
+gpiod_line_event_buffer. The latter serves as a container into which
+multiple events can be read without having to dynamically allocate memory
+for each one as reading line events should be as fast as possible.
 
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 ---
- include/gpiod.h    | 119 ++++++++++---
- lib/Makefile.am    |   2 +-
- lib/core.c         |  63 ++-----
- lib/helpers.c      |  16 +-
- lib/info.c         | 170 ++++++++++++++++++
- lib/internal.h     |   6 +
- tests/gpiod-test.h |   2 +
- tests/tests-chip.c |   8 +-
- tests/tests-line.c | 425 ++++++++++++++++++++++++++++++++++++---------
- tools/gpioinfo.c   |  42 ++---
- 10 files changed, 672 insertions(+), 181 deletions(-)
- create mode 100644 lib/info.c
+ include/gpiod.h     |  65 +++---
+ lib/Makefile.am     |   9 +-
+ lib/core.c          |  98 +--------
+ lib/event.c         | 250 +++++++++++++++++++++++
+ lib/misc.c          |   5 +
+ tests/gpiod-test.h  |   3 +
+ tests/tests-event.c | 470 ++++++++++++++++++++++++++++++++------------
+ tools/gpiomon.c     |  45 +++--
+ 8 files changed, 690 insertions(+), 255 deletions(-)
+ create mode 100644 lib/event.c
 
 diff --git a/include/gpiod.h b/include/gpiod.h
-index a4ce01f..7da9ff4 100644
+index 7da9ff4..e99233b 100644
 --- a/include/gpiod.h
 +++ b/include/gpiod.h
-@@ -35,6 +35,7 @@ extern "C" {
+@@ -6,7 +6,7 @@
  
- struct gpiod_chip;
+ #include <stdbool.h>
+ #include <stdlib.h>
+-#include <time.h>
++#include <stdint.h>
+ 
+ #ifdef __cplusplus
+ extern "C" {
+@@ -37,6 +37,8 @@ struct gpiod_chip;
  struct gpiod_line;
-+struct gpiod_line_info;
+ struct gpiod_line_info;
  struct gpiod_line_bulk;
++struct gpiod_line_event;
++struct gpiod_line_event_buffer;
  
  /**
-@@ -110,6 +111,17 @@ const char *gpiod_chip_get_label(struct gpiod_chip *chip);
-  */
- unsigned int gpiod_chip_get_num_lines(struct gpiod_chip *chip);
- 
-+/**
-+ * @brief Get the current snapshot of information about the line at given
-+ *        offset.
-+ * @param chip The GPIO chip object.
-+ * @param offset The offset of the GPIO line.
-+ * @return New GPIO line info object that must be freed using
-+ *         ::gpiod_line_info_free or NULL if an error occurred.
-+ */
-+struct gpiod_line_info *gpiod_chip_get_line_info(struct gpiod_chip *chip,
-+						 unsigned int offset);
-+
- /**
-  * @brief Get the handle to the GPIO line at given offset.
-  * @param chip The GPIO chip object.
-@@ -286,6 +298,20 @@ enum {
- 	/**< The internal pull-down bias is enabled. */
+  * @defgroup common Common helper macros
+@@ -928,17 +930,35 @@ enum {
+ 	/**< Falling edge event. */
  };
  
-+/**
-+ * @brief Possible edge detection settings.
-+ */
-+enum {
-+	GPIOD_LINE_EDGE_NONE = 1,
-+	/**< Line edge detection is disabled. */
-+	GPIOD_LINE_EDGE_RISING,
-+	/**< Line detects rising edge events. */
-+	GPIOD_LINE_EDGE_FALLING,
-+	/**< Line detect falling edge events. */
-+	GPIOD_LINE_EDGE_BOTH,
-+	/**< Line detects both rising and falling edge events. */
-+};
-+
- /**
-  * @brief Read the GPIO line offset.
-  * @param line GPIO line object.
-@@ -293,64 +319,111 @@ enum {
-  */
- unsigned int gpiod_line_offset(struct gpiod_line *line);
- 
-+/**
-+ * @brief Increase the reference count for this line info object.
-+ * @param info GPIO line info object.
-+ * @return Passed reference to the line info object.
-+ */
-+struct gpiod_line_info *
-+gpiod_line_info_ref(struct gpiod_line_info *info);
-+
-+/**
-+ * @brief Decrease the reference count on this line info object. If it reaches
-+ *        0, then free all associated resources.
-+ * @param info GPIO line info object.
-+ */
-+void gpiod_line_info_unref(struct gpiod_line_info *info);
-+
-+/**
-+ * @brief Get the hardware offset of the line.
-+ * @param info GPIO line info object.
-+ * @return Offset of the line within the parent chip.
-+ */
-+unsigned int gpiod_line_info_get_offset(struct gpiod_line_info *info);
-+
- /**
-  * @brief Read the GPIO line name.
-- * @param line GPIO line object.
-+ * @param info GPIO line info object.
-  * @return Name of the GPIO line as it is represented in the kernel. This
-  *         routine returns a pointer to a null-terminated string or NULL if
-  *         the line is unnamed.
-  */
--const char *gpiod_line_name(struct gpiod_line *line);
-+const char *gpiod_line_get_name(struct gpiod_line_info *info);
-+
-+/**
-+ * @brief Check if the line is currently in use.
-+ * @param info GPIO line object.
-+ * @return True if the line is in use, false otherwise.
-+ *
-+ * The user space can't know exactly why a line is busy. It may have been
-+ * requested by another process or hogged by the kernel. It only matters that
-+ * the line is used and we can't request it.
-+ */
-+bool gpiod_line_is_used(struct gpiod_line_info *info);
- 
- /**
-  * @brief Read the GPIO line consumer name.
-- * @param line GPIO line object.
-+ * @param info GPIO line info object.
-  * @return Name of the GPIO consumer name as it is represented in the
-  *         kernel. This routine returns a pointer to a null-terminated string
-  *         or NULL if the line is not used.
-  */
--const char *gpiod_line_consumer(struct gpiod_line *line);
-+const char *gpiod_line_get_consumer(struct gpiod_line_info *info);
- 
- /**
-  * @brief Read the GPIO line direction setting.
-- * @param line GPIO line object.
-+ * @param info GPIO line info object.
-  * @return Returns GPIOD_LINE_DIRECTION_INPUT or GPIOD_LINE_DIRECTION_OUTPUT.
-  */
--int gpiod_line_direction(struct gpiod_line *line);
-+int gpiod_line_get_direction(struct gpiod_line_info *info);
- 
- /**
-  * @brief Check if the signal of this line is inverted.
-- * @param line GPIO line object.
-+ * @param info GPIO line object.
-  * @return True if this line is "active-low", false otherwise.
-  */
--bool gpiod_line_is_active_low(struct gpiod_line *line);
-+bool gpiod_line_is_active_low(struct gpiod_line_info *info);
- 
- /**
-  * @brief Read the GPIO line bias setting.
-- * @param line GPIO line object.
-+ * @param info GPIO line object.
-  * @return Returns GPIOD_LINE_BIAS_PULL_UP, GPIOD_LINE_BIAS_PULL_DOWN,
-  *         GPIOD_LINE_BIAS_DISABLE or GPIOD_LINE_BIAS_UNKNOWN.
-  */
--int gpiod_line_bias(struct gpiod_line *line);
--
 -/**
-- * @brief Check if the line is currently in use.
-- * @param line GPIO line object.
-- * @return True if the line is in use, false otherwise.
-- *
-- * The user space can't know exactly why a line is busy. It may have been
-- * requested by another process or hogged by the kernel. It only matters that
-- * the line is used and we can't request it.
+- * @brief Structure holding event info.
 - */
--bool gpiod_line_is_used(struct gpiod_line *line);
-+int gpiod_line_get_bias(struct gpiod_line_info *info);
+-struct gpiod_line_event {
+-	struct timespec ts;
+-	/**< Best estimate of time of event occurrence. */
+-	int event_type;
+-	/**< Type of the event that occurred. */
+-	int offset;
+-	/**< Offset of line on which the event occurred. */
+-};
++struct gpiod_line_event *gpiod_line_event_ref(struct gpiod_line_event *event);
++
++void gpiod_line_event_unref(struct gpiod_line_event *event);
++
++int gpiod_line_event_get_event_type(struct gpiod_line_event *event);
++
++uint64_t gpiod_line_event_get_timestamp(struct gpiod_line_event *event);
++
++unsigned int gpiod_line_event_get_line_offset(struct gpiod_line_event *event);
++
++unsigned int gpiod_line_event_get_global_seqno(struct gpiod_line_event *event);
++
++unsigned int gpiod_line_event_get_line_seqno(struct gpiod_line_event *event);
++
++struct gpiod_line_event_buffer *
++gpiod_line_event_buffer_new(unsigned int capacity);
++
++struct gpiod_line_event_buffer *
++gpiod_line_event_buffer_ref(struct gpiod_line_event_buffer *buf);
++
++void gpiod_line_event_buffer_unref(struct gpiod_line_event_buffer *buf);
++
++struct gpiod_line_event *
++gpiod_line_event_buffer_get_event(struct gpiod_line_event_buffer *buf,
++				  unsigned long index);
++
++struct gpiod_line_event *
++gpiod_line_event_buffer_copy_event(struct gpiod_line_event_buffer *buf,
++				   unsigned long index);
  
  /**
-  * @brief Read the GPIO line drive setting.
-- * @param line GPIO line object.
-+ * @param info GPIO line info object.
-  * @return Returns GPIOD_LINE_DRIVE_PUSH_PULL, GPIOD_LINE_DRIVE_OPEN_DRAIN or
-  *         GPIOD_LINE_DRIVE_OPEN_SOURCE.
+  * @brief Wait for an event on a single line.
+@@ -947,8 +967,7 @@ struct gpiod_line_event {
+  * @return 0 if wait timed out, -1 if an error occurred, 1 if an event
+  *         occurred.
   */
--int gpiod_line_drive(struct gpiod_line *line);
-+int gpiod_line_get_drive(struct gpiod_line_info *info);
-+
-+/**
-+ * @brief Read the current edge detection setting of this line.
-+ * @param info GPIO line info object.
-+ * @return Returns GPIOD_LINE_EDGE_NONE, GPIOD_LINE_EDGE_RISING,
-+ *         GPIOD_LINE_EDGE_FALLING or GPIOD_LINE_EDGE_BOTH.
-+ */
-+int gpiod_line_get_edge_detection(struct gpiod_line_info *info);
-+
-+/**
-+ * @brief Check if this line is debounced (either by hardware or by the kernel
-+ *        software debouncer).
-+ * @param info GPIO line info object.
-+ * @return True if the line is debounced, false otherwise.
-+ */
-+bool gpiod_line_is_debounced(struct gpiod_line_info *info);
-+
-+/**
-+ * @brief Read the current debounce period in microseconds.
-+ * @param info GPIO line info object.
-+ * @return Current debounce period in microseconds, 0 if the line is not
-+ *         debounced.
-+ */
-+unsigned long
-+gpiod_line_get_debounce_period(struct gpiod_line_info *info);
+-int gpiod_line_event_wait(struct gpiod_line *line,
+-			  const struct timespec *timeout);
++int gpiod_line_event_wait(struct gpiod_line *line, uint64_t timeout);
  
  /**
-  * @brief Get the handle to the GPIO chip controlling this line.
+  * @brief Wait for events on a set of lines.
+@@ -959,8 +978,7 @@ int gpiod_line_event_wait(struct gpiod_line *line,
+  * @return 0 if wait timed out, -1 if an error occurred, 1 if at least one
+  *         event occurred.
+  */
+-int gpiod_line_event_wait_bulk(struct gpiod_line_bulk *bulk,
+-			       const struct timespec *timeout,
++int gpiod_line_event_wait_bulk(struct gpiod_line_bulk *bulk, uint64_t timeout,
+ 			       struct gpiod_line_bulk *event_bulk);
+ 
+ /**
+@@ -971,7 +989,7 @@ int gpiod_line_event_wait_bulk(struct gpiod_line_bulk *bulk,
+  * @note This function will block if no event was queued for this line.
+  */
+ int gpiod_line_event_read(struct gpiod_line *line,
+-			  struct gpiod_line_event *event);
++			  struct gpiod_line_event_buffer *buf);
+ 
+ /**
+  * @brief Read up to a certain number of events from the GPIO line.
+@@ -983,7 +1001,7 @@ int gpiod_line_event_read(struct gpiod_line *line,
+  *         failure -1 is returned.
+  */
+ int gpiod_line_event_read_multiple(struct gpiod_line *line,
+-				   struct gpiod_line_event *events,
++				   struct gpiod_line_event_buffer *buf,
+ 				   unsigned int num_events);
+ 
+ /**
+@@ -1008,19 +1026,20 @@ int gpiod_line_event_get_fd(struct gpiod_line *line);
+  * directly read the event data from it using this routine. This function
+  * translates the kernel representation of the event to the libgpiod format.
+  */
+-int gpiod_line_event_read_fd(int fd, struct gpiod_line_event *event);
++int gpiod_line_event_read_fd(int fd, struct gpiod_line_event_buffer *buf);
+ 
+ /**
+  * @brief Read up to a certain number of events directly from a file descriptor.
+  * @param fd File descriptor.
+  * @param events Buffer to which the event data will be copied. Must hold at
+  *               least the amount of events specified in num_events.
+- * @param num_events Specifies how many events can be stored in the buffer.
++ * @param max_events Specifies the maximum number of events to read.
+  * @return On success returns the number of events stored in the buffer, on
+  *         failure -1 is returned.
+  */
+-int gpiod_line_event_read_fd_multiple(int fd, struct gpiod_line_event *events,
+-				      unsigned int num_events);
++int gpiod_line_event_read_fd_multiple(int fd,
++				      struct gpiod_line_event_buffer *buf,
++				      unsigned int max_events);
+ 
+ /**
+  * @}
+@@ -1033,6 +1052,8 @@ int gpiod_line_event_read_fd_multiple(int fd, struct gpiod_line_event *events,
+  * Various libgpiod-related functions.
+  */
+ 
++uint64_t gpiod_sec_to_nsec(uint64_t sec);
++
+ /**
+  * @brief Get the API version of the library as a human-readable string.
+  * @return Human-readable string containing the library version.
 diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 5c7f353..c5d6070 100644
+index c5d6070..0f19eec 100644
 --- a/lib/Makefile.am
 +++ b/lib/Makefile.am
-@@ -2,7 +2,7 @@
+@@ -2,7 +2,14 @@
  # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
  
  lib_LTLIBRARIES = libgpiod.la
--libgpiod_la_SOURCES = core.c helpers.c internal.c internal.h misc.c uapi/gpio.h
-+libgpiod_la_SOURCES = core.c helpers.c internal.c internal.h info.c misc.c uapi/gpio.h
+-libgpiod_la_SOURCES = core.c helpers.c internal.c internal.h info.c misc.c uapi/gpio.h
++libgpiod_la_SOURCES =	core.c \
++			event.c \
++			helpers.c \
++			internal.h \
++			internal.c \
++			info.c \
++			misc.c \
++			uapi/gpio.h
  libgpiod_la_CFLAGS = -Wall -Wextra -g -std=gnu89
  libgpiod_la_CFLAGS += -fvisibility=hidden -I$(top_srcdir)/include/
  libgpiod_la_CFLAGS += -include $(top_builddir)/config.h
 diff --git a/lib/core.c b/lib/core.c
-index 0f3937b..526dcaa 100644
+index 526dcaa..ed65653 100644
 --- a/lib/core.c
 +++ b/lib/core.c
-@@ -180,6 +180,22 @@ GPIOD_API void gpiod_line_bulk_foreach_line(struct gpiod_line_bulk *bulk,
- 	     (index) < (bulk)->num_lines;				\
- 	     (index)++, (line) = (bulk)->lines[(index)])
+@@ -15,6 +15,7 @@
+ #include <sys/stat.h>
+ #include <sys/sysmacros.h>
+ #include <sys/types.h>
++#include <time.h>
+ #include <unistd.h>
  
-+GPIOD_API struct gpiod_line_info *
-+gpiod_chip_get_line_info(struct gpiod_chip *chip, unsigned int offset)
-+{
-+	struct gpio_v2_line_info infobuf;
-+	int ret;
-+
-+	memset(&infobuf, 0, sizeof(infobuf));
-+	infobuf.offset = offset;
-+
-+	ret = ioctl(chip->fd, GPIO_V2_GET_LINEINFO_IOCTL, &infobuf);
-+	if (ret < 0)
-+		return NULL;
-+
-+	return gpiod_line_info_from_kernel(&infobuf);
-+}
-+
- GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
- {
- 	char *realname, *sysfsp, devpath[64];
-@@ -449,53 +465,6 @@ GPIOD_API unsigned int gpiod_line_offset(struct gpiod_line *line)
- 	return line->offset;
+ #include "internal.h"
+@@ -1060,8 +1061,7 @@ GPIOD_API int gpiod_line_set_direction_output_bulk(struct gpiod_line_bulk *bulk,
+ 					  line->req_flags, values);
  }
  
--GPIOD_API const char *gpiod_line_name(struct gpiod_line *line)
--{
--	return line->name[0] == '\0' ? NULL : line->name;
--}
--
--GPIOD_API const char *gpiod_line_consumer(struct gpiod_line *line)
--{
--	return line->consumer[0] == '\0' ? NULL : line->consumer;
--}
--
--GPIOD_API int gpiod_line_direction(struct gpiod_line *line)
--{
--	return line->direction;
--}
--
--GPIOD_API bool gpiod_line_is_active_low(struct gpiod_line *line)
--{
--	return line->active_low;
--}
--
--GPIOD_API int gpiod_line_bias(struct gpiod_line *line)
--{
--	if (line->info_flags & GPIOLINE_FLAG_BIAS_DISABLE)
--		return GPIOD_LINE_BIAS_DISABLED;
--	if (line->info_flags & GPIOLINE_FLAG_BIAS_PULL_UP)
--		return GPIOD_LINE_BIAS_PULL_UP;
--	if (line->info_flags & GPIOLINE_FLAG_BIAS_PULL_DOWN)
--		return GPIOD_LINE_BIAS_PULL_DOWN;
--
--	return GPIOD_LINE_BIAS_UNKNOWN;
--}
--
--GPIOD_API bool gpiod_line_is_used(struct gpiod_line *line)
--{
--	return line->info_flags & GPIOLINE_FLAG_KERNEL;
--}
--
--GPIOD_API int gpiod_line_drive(struct gpiod_line *line)
--{
--	if (line->info_flags & GPIOLINE_FLAG_OPEN_DRAIN)
--		return GPIOD_LINE_DRIVE_OPEN_DRAIN;
--	if (line->info_flags & GPIOLINE_FLAG_OPEN_SOURCE)
--		return GPIOD_LINE_DRIVE_OPEN_SOURCE;
--
--	return GPIOD_LINE_DRIVE_PUSH_PULL;
--}
--
- static int line_info_v2_to_info_flags(struct gpio_v2_line_info *info)
+-GPIOD_API int gpiod_line_event_wait(struct gpiod_line *line,
+-				    const struct timespec *timeout)
++GPIOD_API int gpiod_line_event_wait(struct gpiod_line *line, uint64_t timeout)
  {
- 	int iflags = 0;
-diff --git a/lib/helpers.c b/lib/helpers.c
-index fb53518..6e15dcf 100644
---- a/lib/helpers.c
-+++ b/lib/helpers.c
-@@ -65,19 +65,23 @@ gpiod_chip_get_all_lines(struct gpiod_chip *chip)
- GPIOD_API int gpiod_chip_find_line(struct gpiod_chip *chip, const char *name)
+ 	struct gpiod_line_bulk bulk = BULK_SINGLE_LINE_INIT(line);
+ 
+@@ -1069,12 +1069,13 @@ GPIOD_API int gpiod_line_event_wait(struct gpiod_line *line,
+ }
+ 
+ GPIOD_API int gpiod_line_event_wait_bulk(struct gpiod_line_bulk *bulk,
+-					 const struct timespec *timeout,
++					 uint64_t timeout,
+ 					 struct gpiod_line_bulk *event_bulk)
  {
- 	unsigned int offset, num_lines;
--	struct gpiod_line *line;
-+	struct gpiod_line_info *info;
- 	const char *tmp;
+ 	struct pollfd fds[LINE_REQUEST_MAX_LINES];
+ 	unsigned int off, num_lines;
+ 	struct gpiod_line *line;
++	struct timespec ts;
+ 	int rv;
  
- 	num_lines = gpiod_chip_get_num_lines(chip);
- 
- 	for (offset = 0; offset < num_lines; offset++) {
--		line = gpiod_chip_get_line(chip, offset);
--		if (!line)
-+		info = gpiod_chip_get_line_info(chip, offset);
-+		if (!info)
- 			return -1;
- 
--		tmp = gpiod_line_name(line);
--		if (tmp && strcmp(tmp, name) == 0)
--			return gpiod_line_offset(line);
-+		tmp = gpiod_line_get_name(info);
-+		if (tmp && strcmp(tmp, name) == 0) {
-+			gpiod_line_info_unref(info);
-+			return offset;
-+		}
-+
-+		gpiod_line_info_unref(info);
+ 	if (!line_bulk_all_requested(bulk))
+@@ -1088,7 +1089,10 @@ GPIOD_API int gpiod_line_event_wait_bulk(struct gpiod_line_bulk *bulk,
+ 		fds[off].events = POLLIN | POLLPRI;
  	}
  
- 	errno = ENOENT;
-diff --git a/lib/info.c b/lib/info.c
+-	rv = ppoll(fds, num_lines, timeout, NULL);
++	ts.tv_sec = timeout / 1000000000ULL;
++	ts.tv_nsec = timeout % 1000000000ULL;
++
++	rv = ppoll(fds, num_lines, &ts, NULL);
+ 	if (rv < 0)
+ 		return -1;
+ 	else if (rv == 0)
+@@ -1116,31 +1120,6 @@ GPIOD_API int gpiod_line_event_wait_bulk(struct gpiod_line_bulk *bulk,
+ 	return 1;
+ }
+ 
+-GPIOD_API int gpiod_line_event_read(struct gpiod_line *line,
+-				    struct gpiod_line_event *event)
+-{
+-	int ret;
+-
+-	ret = gpiod_line_event_read_multiple(line, event, 1);
+-	if (ret < 0)
+-		return -1;
+-
+-	return 0;
+-}
+-
+-GPIOD_API int gpiod_line_event_read_multiple(struct gpiod_line *line,
+-					     struct gpiod_line_event *events,
+-					     unsigned int num_events)
+-{
+-	int fd;
+-
+-	fd = gpiod_line_event_get_fd(line);
+-	if (fd < 0)
+-		return -1;
+-
+-	return gpiod_line_event_read_fd_multiple(fd, events, num_events);
+-}
+-
+ GPIOD_API int gpiod_line_event_get_fd(struct gpiod_line *line)
+ {
+ 	if (line->state != LINE_REQUESTED_EVENTS) {
+@@ -1150,64 +1129,3 @@ GPIOD_API int gpiod_line_event_get_fd(struct gpiod_line *line)
+ 
+ 	return line_get_fd(line);
+ }
+-
+-GPIOD_API int gpiod_line_event_read_fd(int fd, struct gpiod_line_event *event)
+-{
+-	int ret;
+-
+-	ret = gpiod_line_event_read_fd_multiple(fd, event, 1);
+-	if (ret < 0)
+-		return -1;
+-
+-	return 0;
+-}
+-
+-GPIOD_API int gpiod_line_event_read_fd_multiple(int fd,
+-						struct gpiod_line_event *events,
+-						unsigned int num_events)
+-{
+-	/*
+-	 * 16 is the maximum number of events the kernel can store in the FIFO
+-	 * so we can allocate the buffer on the stack.
+-	 *
+-	 * NOTE: This is no longer strictly true for uAPI v2.  While 16 is
+-	 * the default for single line, a request with multiple lines will
+-	 * have a larger buffer.  So need to rethink the allocation here,
+-	 * or at least the comment above...
+-	 */
+-	struct gpio_v2_line_event evdata[16], *curr;
+-	struct gpiod_line_event *event;
+-	unsigned int events_read, i;
+-	ssize_t rd;
+-
+-	memset(evdata, 0, sizeof(evdata));
+-
+-	if (num_events > 16)
+-		num_events = 16;
+-
+-	rd = read(fd, evdata, num_events * sizeof(*evdata));
+-	if (rd < 0) {
+-		return -1;
+-	} else if ((unsigned int)rd < sizeof(*evdata)) {
+-		errno = EIO;
+-		return -1;
+-	}
+-
+-	events_read = rd / sizeof(*evdata);
+-	if (events_read < num_events)
+-		num_events = events_read;
+-
+-	for (i = 0; i < num_events; i++) {
+-		curr = &evdata[i];
+-		event = &events[i];
+-
+-		event->offset = curr->offset;
+-		event->event_type = curr->id == GPIO_V2_LINE_EVENT_RISING_EDGE
+-					? GPIOD_LINE_EVENT_RISING_EDGE
+-					: GPIOD_LINE_EVENT_FALLING_EDGE;
+-		event->ts.tv_sec = curr->timestamp_ns / 1000000000ULL;
+-		event->ts.tv_nsec = curr->timestamp_ns % 1000000000ULL;
+-	}
+-
+-	return i;
+-}
+diff --git a/lib/event.c b/lib/event.c
 new file mode 100644
-index 0000000..5f7c463
+index 0000000..f4dfce8
 --- /dev/null
-+++ b/lib/info.c
-@@ -0,0 +1,170 @@
++++ b/lib/event.c
+@@ -0,0 +1,250 @@
 +// SPDX-License-Identifier: LGPL-2.1-or-later
 +// SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl>
 +
++#include <errno.h>
 +#include <gpiod.h>
 +#include <string.h>
++#include <unistd.h>
 +
 +#include "internal.h"
 +#include "uapi/gpio.h"
 +
-+struct gpiod_line_info {
++/* As defined in the kernel. */
++#define EVENT_BUFFER_MAX_CAPACITY	(GPIO_V2_LINES_MAX * 16)
++
++struct gpiod_line_event {
 +	struct gpiod_refcount refcount;
-+	unsigned int offset;
-+	char name[GPIO_MAX_NAME_SIZE];
-+	bool used;
-+	char consumer[GPIO_MAX_NAME_SIZE];
-+	int direction;
-+	bool active_low;
-+	int bias;
-+	int drive;
-+	int edge;
-+	bool debounced;
-+	unsigned long debounce_period;
++	int event_type;
++	uint64_t timestamp;
++	unsigned int line_offset;
++	unsigned int global_seqno;
++	unsigned int line_seqno;
 +};
 +
-+GPIOD_API struct gpiod_line_info *
-+gpiod_line_info_ref(struct gpiod_line_info *info)
++struct gpiod_line_event_buffer {
++	struct gpiod_refcount refcount;
++	unsigned int capacity;
++	unsigned int num_events;
++	struct gpiod_line_event *events;
++	struct gpio_v2_line_event *event_data;
++};
++
++static void line_event_release(struct gpiod_refcount *refcount)
 +{
-+	gpiod_refcount_ref(&info->refcount);
-+	return info;
++	struct gpiod_line_event *event;
++
++	event = gpiod_container_of(refcount, struct gpiod_line_event, refcount);
++
++	free(event);
 +}
 +
-+static void line_info_release(struct gpiod_refcount *refcount)
++GPIOD_API struct gpiod_line_event *
++gpiod_line_event_ref(struct gpiod_line_event *event)
 +{
-+	struct gpiod_line_info *info;
-+
-+	info = gpiod_container_of(refcount, struct gpiod_line_info, refcount);
-+
-+	free(info);
++	gpiod_refcount_ref(&event->refcount);
++	return event;
 +}
 +
-+GPIOD_API void gpiod_line_info_unref(struct gpiod_line_info *info)
++GPIOD_API void gpiod_line_event_unref(struct gpiod_line_event *event)
 +{
-+	gpiod_refcount_unref(&info->refcount);
++	gpiod_refcount_unref(&event->refcount);
 +}
 +
-+GPIOD_API unsigned int gpiod_line_info_get_offset(struct gpiod_line_info *info)
++GPIOD_API int gpiod_line_event_get_event_type(struct gpiod_line_event *event)
 +{
-+	return info->offset;
++	return event->event_type;
 +}
 +
-+GPIOD_API const char *gpiod_line_get_name(struct gpiod_line_info *info)
++GPIOD_API uint64_t
++gpiod_line_event_get_timestamp(struct gpiod_line_event *event)
 +{
-+	return info->name[0] == '\0' ? NULL : info->name;
++	return event->timestamp;
 +}
 +
-+GPIOD_API bool gpiod_line_is_used(struct gpiod_line_info *info)
++GPIOD_API unsigned int
++gpiod_line_event_get_line_offset(struct gpiod_line_event *event)
 +{
-+	return info->used;
++	return event->line_offset;
 +}
 +
-+GPIOD_API const char *gpiod_line_get_consumer(struct gpiod_line_info *info)
++GPIOD_API unsigned int
++gpiod_line_event_get_global_seqno(struct gpiod_line_event *event)
 +{
-+	return info->consumer[0] == '\0' ? NULL : info->consumer;
++	return event->global_seqno;
 +}
 +
-+GPIOD_API int gpiod_line_get_direction(struct gpiod_line_info *info)
++GPIOD_API unsigned int
++gpiod_line_event_get_line_seqno(struct gpiod_line_event *event)
 +{
-+	return info->direction;
++	return event->line_seqno;
 +}
 +
-+GPIOD_API bool gpiod_line_is_active_low(struct gpiod_line_info *info)
++static void line_event_buffer_release(struct gpiod_refcount *refcount)
 +{
-+	return info->active_low;
++	struct gpiod_line_event_buffer *buf;
++
++	buf = gpiod_container_of(refcount,
++				 struct gpiod_line_event_buffer, refcount);
++
++	free(buf);
 +}
 +
-+GPIOD_API int gpiod_line_get_bias(struct gpiod_line_info *info)
++GPIOD_API struct gpiod_line_event_buffer *
++gpiod_line_event_buffer_new(unsigned int capacity)
 +{
-+	return info->bias;
-+}
++	struct gpiod_line_event_buffer *buf;
 +
-+GPIOD_API int gpiod_line_get_drive(struct gpiod_line_info *info)
-+{
-+	return info->drive;
-+}
-+
-+GPIOD_API int gpiod_line_get_edge_detection(struct gpiod_line_info *info)
-+{
-+	return info->edge;
-+}
-+
-+GPIOD_API bool gpiod_line_is_debounced(struct gpiod_line_info *info)
-+{
-+	return info->debounced;
-+}
-+
-+GPIOD_API unsigned long
-+gpiod_line_get_debounce_period(struct gpiod_line_info *info)
-+{
-+	return info->debounce_period;
-+}
-+
-+struct gpiod_line_info *
-+gpiod_line_info_from_kernel(struct gpio_v2_line_info *infobuf)
-+{
-+	struct gpio_v2_line_attribute *attr;
-+	struct gpiod_line_info *info;
-+	unsigned int i;
-+
-+	info = malloc(sizeof(*info));
-+	if (!info)
++	if (capacity == 0 || capacity > EVENT_BUFFER_MAX_CAPACITY) {
++		errno = EINVAL;
 +		return NULL;
-+
-+	memset(info, 0, sizeof(*info));
-+
-+	gpiod_refcount_init(&info->refcount, line_info_release);
-+	info->offset = infobuf->offset;
-+	strncpy(info->name, infobuf->name, GPIO_MAX_NAME_SIZE);
-+
-+	info->used = !!(infobuf->flags & GPIO_V2_LINE_FLAG_USED);
-+	strncpy(info->consumer, infobuf->consumer, GPIO_MAX_NAME_SIZE);
-+
-+	if (infobuf->flags & GPIO_V2_LINE_FLAG_OUTPUT)
-+		info->direction = GPIOD_LINE_DIRECTION_OUTPUT;
-+	else
-+		info->direction = GPIOD_LINE_DIRECTION_INPUT;
-+
-+	if (infobuf->flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW)
-+		info->active_low = true;
-+
-+	if (infobuf->flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP)
-+		info->bias = GPIOD_LINE_BIAS_PULL_UP;
-+	else if (infobuf->flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN)
-+		info->bias = GPIOD_LINE_BIAS_PULL_DOWN;
-+	else if (infobuf->flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED)
-+		info->bias = GPIOD_LINE_BIAS_DISABLED;
-+	else
-+		info->bias = GPIOD_LINE_BIAS_UNKNOWN;
-+
-+	if (infobuf->flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN)
-+		info->drive = GPIOD_LINE_DRIVE_OPEN_DRAIN;
-+	else if (infobuf->flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE)
-+		info->drive = GPIOD_LINE_DRIVE_OPEN_SOURCE;
-+	else
-+		info->drive = GPIOD_LINE_DRIVE_PUSH_PULL;
-+
-+	if ((infobuf->flags & GPIO_V2_LINE_FLAG_EDGE_RISING) &&
-+	    (infobuf->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING))
-+		info->edge = GPIOD_LINE_EDGE_BOTH;
-+	else if (infobuf->flags & GPIO_V2_LINE_FLAG_EDGE_RISING)
-+		info->edge = GPIOD_LINE_EDGE_RISING;
-+	else if (infobuf->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
-+		info->edge = GPIOD_LINE_EDGE_FALLING;
-+	else
-+		info->edge = GPIOD_LINE_EDGE_NONE;
-+
-+	/*
-+	 * We assume that the kernel returns correct configuration and that no
-+	 * attributes repeat.
-+	 */
-+	for (i = 0; i < infobuf->num_attrs; i++) {
-+		attr = &infobuf->attrs[i];
-+
-+		if (attr->id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE) {
-+			info->debounced = true;
-+			info->debounce_period = attr->debounce_period_us;
-+		}
 +	}
 +
-+	return info;
++	buf = malloc(sizeof(*buf));
++	if (!buf)
++		return NULL;
++
++	memset(buf, 0, sizeof(*buf));
++	gpiod_refcount_init(&buf->refcount, line_event_buffer_release);
++	buf->capacity = capacity;
++
++	buf->events = calloc(capacity, sizeof(*buf->events));
++	if (!buf->events) {
++		free(buf);
++		return NULL;
++	}
++
++	buf->event_data = calloc(capacity, sizeof(*buf->event_data));
++	if (!buf->event_data) {
++		free(buf->events);
++		free(buf);
++		return NULL;
++	}
++
++	return buf;
 +}
-diff --git a/lib/internal.h b/lib/internal.h
-index a652879..2d1627d 100644
---- a/lib/internal.h
-+++ b/lib/internal.h
-@@ -4,8 +4,11 @@
- #ifndef __LIBGPIOD_GPIOD_INTERNAL_H__
- #define __LIBGPIOD_GPIOD_INTERNAL_H__
- 
-+#include <gpiod.h>
- #include <stddef.h>
- 
-+#include "uapi/gpio.h"
 +
- /* For internal library use only. */
- 
- #define GPIOD_API __attribute__((visibility("default")))
-@@ -27,4 +30,7 @@ void gpiod_refcount_init(struct gpiod_refcount *refcount,
- void gpiod_refcount_ref(struct gpiod_refcount *refcount);
- void gpiod_refcount_unref(struct gpiod_refcount *refcount);
- 
-+struct gpiod_line_info *
-+gpiod_line_info_from_kernel(struct gpio_v2_line_info *infobuf);
++GPIOD_API struct gpiod_line_event_buffer *
++gpiod_line_event_buffer_ref(struct gpiod_line_event_buffer *buf)
++{
++	gpiod_refcount_ref(&buf->refcount);
++	return buf;
++}
 +
- #endif /* __LIBGPIOD_GPIOD_INTERNAL_H__ */
++GPIOD_API void
++gpiod_line_event_buffer_unref(struct gpiod_line_event_buffer *buf)
++{
++	gpiod_refcount_unref(&buf->refcount);
++}
++
++GPIOD_API struct gpiod_line_event *
++gpiod_line_event_buffer_get_event(struct gpiod_line_event_buffer *buf,
++				  unsigned long index)
++{
++	if (index >= buf->num_events) {
++		errno = EINVAL;
++		return NULL;
++	}
++
++	return &buf->events[index];
++}
++
++GPIOD_API struct gpiod_line_event *
++gpiod_line_event_buffer_copy_event(struct gpiod_line_event_buffer *buf,
++                                   unsigned long index)
++{
++	struct gpiod_line_event *event;
++
++	if (index >= buf->num_events) {
++		errno = EINVAL;
++		return NULL;
++	}
++
++	event = malloc(sizeof(*event));
++	if (!event)
++		return NULL;
++
++	memcpy(event, &buf->events[index], sizeof(*event));
++	gpiod_refcount_init(&event->refcount, line_event_release);
++
++	return event;
++}
++
++GPIOD_API int gpiod_line_event_read(struct gpiod_line *line,
++				    struct gpiod_line_event_buffer *buf)
++{
++	int ret;
++
++	ret = gpiod_line_event_read_multiple(line, buf, 1);
++	if (ret < 0)
++		return -1;
++
++	return 0;
++}
++
++GPIOD_API int
++gpiod_line_event_read_multiple(struct gpiod_line *line,
++			       struct gpiod_line_event_buffer *buf,
++			       unsigned int num_events)
++{
++	int fd;
++
++	fd = gpiod_line_event_get_fd(line);
++	if (fd < 0)
++		return -1;
++
++	return gpiod_line_event_read_fd_multiple(fd, buf, num_events);
++}
++
++GPIOD_API int gpiod_line_event_read_fd(int fd,
++				       struct gpiod_line_event_buffer *buf)
++{
++	int ret;
++
++	ret = gpiod_line_event_read_fd_multiple(fd, buf, 1);
++	if (ret < 0)
++		return -1;
++
++	return 0;
++}
++
++GPIOD_API int
++gpiod_line_event_read_fd_multiple(int fd,
++				  struct gpiod_line_event_buffer *buf,
++				  unsigned int max_events)
++{
++	struct gpio_v2_line_event *curr;
++	struct gpiod_line_event *event;
++	unsigned int i;
++	ssize_t rd;
++
++	memset(buf->event_data, 0, sizeof(*buf->event_data) * buf->capacity);
++	memset(buf->events, 0, sizeof(*buf->events) * buf->capacity);
++
++	if (max_events > buf->capacity)
++		max_events = buf->capacity;
++
++	rd = read(fd, buf->event_data, max_events * sizeof(*buf->event_data));
++	if (rd < 0) {
++		return -1;
++	} else if ((unsigned int)rd < sizeof(*buf->event_data)) {
++		errno = EIO;
++		return -1;
++	}
++
++	buf->num_events = rd / sizeof(*buf->event_data);
++
++	for (i = 0; i < buf->num_events; i++) {
++		curr = &buf->event_data[i];
++		event = &buf->events[i];
++
++		event->line_offset = curr->offset;
++		event->event_type = curr->id == GPIO_V2_LINE_EVENT_RISING_EDGE
++					? GPIOD_LINE_EVENT_RISING_EDGE
++					: GPIOD_LINE_EVENT_FALLING_EDGE;
++		event->timestamp = curr->timestamp_ns;
++		event->global_seqno = curr->seqno;
++		event->line_seqno = curr->line_seqno;
++	}
++
++	return i;
++}
+diff --git a/lib/misc.c b/lib/misc.c
+index 984405b..67654f9 100644
+--- a/lib/misc.c
++++ b/lib/misc.c
+@@ -7,6 +7,11 @@
+ 
+ #include "internal.h"
+ 
++GPIOD_API uint64_t gpiod_sec_to_nsec(uint64_t sec)
++{
++	return sec * 1000000000ULL;
++}
++
+ GPIOD_API const char *gpiod_version_string(void)
+ {
+ 	return GPIOD_VERSION_STR;
 diff --git a/tests/gpiod-test.h b/tests/gpiod-test.h
-index a093f83..6b93a96 100644
+index 6b93a96..236cb16 100644
 --- a/tests/gpiod-test.h
 +++ b/tests/gpiod-test.h
-@@ -21,9 +21,11 @@
-  */
+@@ -22,10 +22,13 @@
  typedef struct gpiod_chip gpiod_chip_struct;
  typedef struct gpiod_line_bulk gpiod_line_bulk_struct;
-+typedef struct gpiod_line_info gpiod_line_info_struct;
+ typedef struct gpiod_line_info gpiod_line_info_struct;
++typedef struct gpiod_line_event_buffer gpiod_line_event_buffer_struct;
  
  G_DEFINE_AUTOPTR_CLEANUP_FUNC(gpiod_chip_struct, gpiod_chip_unref);
  G_DEFINE_AUTOPTR_CLEANUP_FUNC(gpiod_line_bulk_struct, gpiod_line_bulk_free);
-+G_DEFINE_AUTOPTR_CLEANUP_FUNC(gpiod_line_info_struct, gpiod_line_info_unref);
+ G_DEFINE_AUTOPTR_CLEANUP_FUNC(gpiod_line_info_struct, gpiod_line_info_unref);
++G_DEFINE_AUTOPTR_CLEANUP_FUNC(gpiod_line_event_buffer_struct,
++			      gpiod_line_event_buffer_unref);
  
  /* These are private definitions and should not be used directly. */
  typedef void (*_gpiod_test_func)(void);
-diff --git a/tests/tests-chip.c b/tests/tests-chip.c
-index 46fb8d2..cad440a 100644
---- a/tests/tests-chip.c
-+++ b/tests/tests-chip.c
-@@ -195,8 +195,8 @@ GPIOD_TEST_CASE(get_all_lines, 0, { 4 })
+diff --git a/tests/tests-event.c b/tests/tests-event.c
+index 53d3e8c..cb4aac4 100644
+--- a/tests/tests-event.c
++++ b/tests/tests-event.c
+@@ -10,10 +10,11 @@
  
- GPIOD_TEST_CASE(find_line_good, GPIOD_TEST_FLAG_NAMED_LINES, { 8, 8, 8 })
+ GPIOD_TEST_CASE(rising_edge_good, 0, { 8 })
  {
-+	g_autoptr(gpiod_line_info_struct) info = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
  	g_autoptr(gpiod_chip_struct) chip = NULL;
--	struct gpiod_line *line;
- 	int offset;
- 
- 	chip = gpiod_chip_open(gpiod_test_chip_path(1));
-@@ -207,11 +207,11 @@ GPIOD_TEST_CASE(find_line_good, GPIOD_TEST_FLAG_NAMED_LINES, { 8, 8, 8 })
- 	g_assert_cmpint(offset, ==, 4);
- 	gpiod_test_return_if_failed();
- 
--	line = gpiod_chip_get_line(chip, 4);
--	g_assert_nonnull(line);
-+	info = gpiod_chip_get_line_info(chip, 4);
-+	g_assert_nonnull(info);
- 	gpiod_test_return_if_failed();
- 
--	g_assert_cmpstr(gpiod_line_name(line), ==, "gpio-mockup-B-4");
-+	g_assert_cmpstr(gpiod_line_get_name(info), ==, "gpio-mockup-B-4");
- }
- 
- GPIOD_TEST_CASE(find_line_unique_not_found,
-diff --git a/tests/tests-line.c b/tests/tests-line.c
-index 3985990..5fa1fd5 100644
---- a/tests/tests-line.c
-+++ b/tests/tests-line.c
-@@ -58,8 +58,43 @@ GPIOD_TEST_CASE(request_already_requested, 0, { 8 })
- 	g_assert_cmpint(errno, ==, EBUSY);
- }
- 
-+GPIOD_TEST_CASE(line_name, GPIOD_TEST_FLAG_NAMED_LINES, { 8 })
-+{
-+	g_autoptr(gpiod_line_info_struct) info = NULL;
-+	g_autoptr(gpiod_chip_struct) chip = NULL;
-+
-+	chip = gpiod_chip_open(gpiod_test_chip_path(0));
-+	g_assert_nonnull(chip);
-+	gpiod_test_return_if_failed();
-+
-+	info = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_nonnull(gpiod_line_get_name(info));
-+	g_assert_cmpstr(gpiod_line_get_name(info), ==, "gpio-mockup-A-2");
-+}
-+
-+GPIOD_TEST_CASE(line_name_unnamed, 0, { 8 })
-+{
-+	g_autoptr(gpiod_line_info_struct) info = NULL;
-+	g_autoptr(gpiod_chip_struct) chip = NULL;
-+
-+	chip = gpiod_chip_open(gpiod_test_chip_path(0));
-+	g_assert_nonnull(chip);
-+	gpiod_test_return_if_failed();
-+
-+	info = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_null(gpiod_line_get_name(info));
-+}
-+
- GPIOD_TEST_CASE(consumer, 0, { 8 })
- {
-+	g_autoptr(gpiod_line_info_struct) info_before = NULL;
-+	g_autoptr(gpiod_line_info_struct) info_after = NULL;
- 	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
  	struct gpiod_line *line;
  	gint ret;
-@@ -72,15 +107,25 @@ GPIOD_TEST_CASE(consumer, 0, { 8 })
+ 
+@@ -21,6 +22,10 @@ GPIOD_TEST_CASE(rising_edge_good, 0, { 8 })
+ 	g_assert_nonnull(chip);
+ 	gpiod_test_return_if_failed();
+ 
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
++	gpiod_test_return_if_failed();
++
+ 	line = gpiod_chip_get_line(chip, 7);
  	g_assert_nonnull(line);
  	gpiod_test_return_if_failed();
+@@ -31,21 +36,27 @@ GPIOD_TEST_CASE(rising_edge_good, 0, { 8 })
  
--	g_assert_null(gpiod_line_consumer(line));
-+	info_before = gpiod_chip_get_line_info(chip, 0);
-+	g_assert_nonnull(info_before);
-+	gpiod_test_return_if_failed();
-+	g_assert_null(gpiod_line_get_consumer(info_before));
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
  
- 	ret = gpiod_line_request_input(line, GPIOD_TEST_CONSUMER);
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
  	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpstr(gpiod_line_consumer(line), ==, GPIOD_TEST_CONSUMER);
-+
-+	info_after = gpiod_chip_get_line_info(chip, 0);
-+	g_assert_nonnull(info_after);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
 +	gpiod_test_return_if_failed();
-+	g_assert_cmpstr(gpiod_line_get_consumer(info_after),
-+			==, GPIOD_TEST_CONSUMER);
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
  }
  
- GPIOD_TEST_CASE(consumer_long_string, 0, { 8 })
+ GPIOD_TEST_CASE(falling_edge_good, 0, { 8 })
  {
-+	g_autoptr(gpiod_line_info_struct) info_before = NULL;
-+	g_autoptr(gpiod_line_info_struct) info_after = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
  	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
  	struct gpiod_line *line;
  	gint ret;
-@@ -93,15 +138,22 @@ GPIOD_TEST_CASE(consumer_long_string, 0, { 8 })
+ 
+@@ -53,6 +64,10 @@ GPIOD_TEST_CASE(falling_edge_good, 0, { 8 })
+ 	g_assert_nonnull(chip);
+ 	gpiod_test_return_if_failed();
+ 
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
++	gpiod_test_return_if_failed();
++
+ 	line = gpiod_chip_get_line(chip, 7);
  	g_assert_nonnull(line);
  	gpiod_test_return_if_failed();
+@@ -64,21 +79,29 @@ GPIOD_TEST_CASE(falling_edge_good, 0, { 8 })
  
--	g_assert_null(gpiod_line_consumer(line));
-+	info_before = gpiod_chip_get_line_info(chip, 0);
-+	g_assert_nonnull(info_before);
-+	gpiod_test_return_if_failed();
-+	g_assert_null(gpiod_line_get_consumer(info_before));
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
  
- 	ret = gpiod_line_request_input(line,
- 			"consumer string over 32 characters long");
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
  	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
--	g_assert_cmpstr(gpiod_line_consumer(line), ==,
-+
-+	info_after = gpiod_chip_get_line_info(chip, 0);
-+	g_assert_nonnull(info_after);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
 +	gpiod_test_return_if_failed();
-+	g_assert_cmpstr(gpiod_line_get_consumer(info_after), ==,
- 			"consumer string over 32 charact");
--	g_assert_cmpuint(strlen(gpiod_line_consumer(line)), ==, 31);
-+	g_assert_cmpuint(strlen(gpiod_line_get_consumer(info_after)), ==, 31);
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
  }
  
- GPIOD_TEST_CASE(request_bulk_output, 0, { 8, 8 })
-@@ -336,9 +388,6 @@ GPIOD_TEST_CASE(set_config_bulk_null_values, 0, { 8 })
- 	ret = gpiod_line_request_bulk_output(bulk, GPIOD_TEST_CONSUMER, 0);
- 	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
--	g_assert_false(gpiod_line_is_active_low(line0));
--	g_assert_false(gpiod_line_is_active_low(line1));
--	g_assert_false(gpiod_line_is_active_low(line2));
- 
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 0);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 0);
-@@ -348,9 +397,7 @@ GPIOD_TEST_CASE(set_config_bulk_null_values, 0, { 8 })
- 			GPIOD_LINE_REQUEST_DIRECTION_OUTPUT,
- 			GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW, NULL);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_true(gpiod_line_is_active_low(line0));
--	g_assert_true(gpiod_line_is_active_low(line1));
--	g_assert_true(gpiod_line_is_active_low(line2));
-+
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 1);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 1);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-@@ -358,9 +405,7 @@ GPIOD_TEST_CASE(set_config_bulk_null_values, 0, { 8 })
- 	ret = gpiod_line_set_config_bulk(bulk,
- 			GPIOD_LINE_REQUEST_DIRECTION_OUTPUT, 0, NULL);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_false(gpiod_line_is_active_low(line0));
--	g_assert_false(gpiod_line_is_active_low(line1));
--	g_assert_false(gpiod_line_is_active_low(line2));
-+
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 0);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 0);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-@@ -368,6 +413,9 @@ GPIOD_TEST_CASE(set_config_bulk_null_values, 0, { 8 })
- 
- GPIOD_TEST_CASE(set_flags_active_state, 0, { 8 })
+ GPIOD_TEST_CASE(rising_edge_ignore_falling, 0, { 8 })
  {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2 = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf0 = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf1 = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf2 = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
  	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev[3];
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *events[3];
  	struct gpiod_line *line;
  	gint ret;
-@@ -383,22 +431,41 @@ GPIOD_TEST_CASE(set_flags_active_state, 0, { 8 })
- 	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 1);
- 	g_assert_cmpint(ret, ==, 0);
+ 
+@@ -86,6 +109,14 @@ GPIOD_TEST_CASE(rising_edge_ignore_falling, 0, { 8 })
+ 	g_assert_nonnull(chip);
  	gpiod_test_return_if_failed();
--	g_assert_false(gpiod_line_is_active_low(line));
-+
-+	info0 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info0);
-+	gpiod_test_return_if_failed();
-+	g_assert_false(gpiod_line_is_active_low(info0));
-+
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
  
- 	ret = gpiod_line_set_flags(line, GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_true(gpiod_line_is_active_low(line));
-+
-+	info1 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info1);
++	event_buf0 = gpiod_line_event_buffer_new(1);
++	event_buf1 = gpiod_line_event_buffer_new(1);
++	event_buf2 = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf0);
++	g_assert_nonnull(event_buf1);
++	g_assert_nonnull(event_buf2);
 +	gpiod_test_return_if_failed();
-+	g_assert_true(gpiod_line_is_active_low(info1));
 +
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
+ 	line = gpiod_chip_get_line(chip, 7);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -96,32 +127,44 @@ GPIOD_TEST_CASE(rising_edge_ignore_falling, 0, { 8 })
  
- 	ret = gpiod_line_set_flags(line, 0);
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+-	ret = gpiod_line_event_read(line, &ev[0]);
++	ret = gpiod_line_event_read(line, event_buf0);
  	g_assert_cmpint(ret, ==, 0);
--	g_assert_false(gpiod_line_is_active_low(line));
-+
-+	info2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info2);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+-	ret = gpiod_line_event_read(line, &ev[1]);
++	ret = gpiod_line_event_read(line, event_buf1);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+-	ret = gpiod_line_event_read(line, &ev[2]);
++	ret = gpiod_line_event_read(line, event_buf2);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev[0].event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
+-	g_assert_cmpint(ev[1].event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
+-	g_assert_cmpint(ev[2].event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
++	events[0] = gpiod_line_event_buffer_get_event(event_buf0, 0);
++	events[1] = gpiod_line_event_buffer_get_event(event_buf1, 0);
++	events[2] = gpiod_line_event_buffer_get_event(event_buf2, 0);
++	g_assert_nonnull(events[0]);
++	g_assert_nonnull(events[1]);
++	g_assert_nonnull(events[2]);
 +	gpiod_test_return_if_failed();
-+	g_assert_false(gpiod_line_is_active_low(info2));
 +
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[0]), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[1]), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[2]), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
  }
  
- GPIOD_TEST_CASE(set_flags_bias, 0, { 8 })
+ GPIOD_TEST_CASE(both_edges, 0, { 8 })
  {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info3 = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
  	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
  	struct gpiod_line *line;
  	gint ret;
-@@ -414,28 +481,50 @@ GPIOD_TEST_CASE(set_flags_bias, 0, { 8 })
- 	ret = gpiod_line_request_input(line, GPIOD_TEST_CONSUMER);
- 	g_assert_cmpint(ret, ==, 0);
+ 
+@@ -129,6 +172,10 @@ GPIOD_TEST_CASE(both_edges, 0, { 8 })
+ 	g_assert_nonnull(chip);
  	gpiod_test_return_if_failed();
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_UNKNOWN);
-+
-+	info0 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info0);
-+	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_bias(info0), ==,
-+			GPIOD_LINE_BIAS_UNKNOWN);
  
- 	ret = gpiod_line_set_flags(line,
- 		GPIOD_LINE_REQUEST_FLAG_BIAS_DISABLED);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_DISABLED);
-+
-+	info1 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info1);
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
 +	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_bias(info1), ==,
-+			GPIOD_LINE_BIAS_DISABLED);
++
+ 	line = gpiod_chip_get_line(chip, 7);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -139,29 +186,40 @@ GPIOD_TEST_CASE(both_edges, 0, { 8 })
  
- 	ret = gpiod_line_set_flags(line,
- 		GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_PULL_UP);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
  
-+	info2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info2);
-+	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_bias(info2), ==,
-+			GPIOD_LINE_BIAS_PULL_UP);
-+
- 	ret = gpiod_line_set_flags(line,
- 		GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN);
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
  	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_PULL_DOWN);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-+
-+	info3 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info3);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
 +	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_bias(info3), ==, GPIOD_LINE_BIAS_PULL_DOWN);
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
  }
  
- GPIOD_TEST_CASE(set_flags_drive, 0, { 8 })
+ GPIOD_TEST_CASE(both_edges_active_low, 0, { 8 })
  {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2 = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
  	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
  	struct gpiod_line *line;
  	gint ret;
-@@ -451,23 +540,39 @@ GPIOD_TEST_CASE(set_flags_drive, 0, { 8 })
- 	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 0);
- 	g_assert_cmpint(ret, ==, 0);
+ 
+@@ -169,6 +227,10 @@ GPIOD_TEST_CASE(both_edges_active_low, 0, { 8 })
+ 	g_assert_nonnull(chip);
  	gpiod_test_return_if_failed();
--	g_assert_cmpint(gpiod_line_drive(line), ==, GPIOD_LINE_DRIVE_PUSH_PULL);
-+
-+	info0 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info0);
-+	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_drive(info0), ==,
-+			GPIOD_LINE_DRIVE_PUSH_PULL);
  
- 	ret = gpiod_line_set_flags(line,
- 		GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_drive(line), ==,
-+
-+	info1 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info1);
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
 +	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_drive(info1), ==,
- 			GPIOD_LINE_DRIVE_OPEN_DRAIN);
++
+ 	line = gpiod_chip_get_line(chip, 7);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -180,29 +242,40 @@ GPIOD_TEST_CASE(both_edges_active_low, 0, { 8 })
  
- 	ret = gpiod_line_set_flags(line,
- 		GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE);
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
  	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_drive(line), ==,
-+
-+	info2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info2);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
 +	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_drive(info2), ==,
- 			GPIOD_LINE_DRIVE_OPEN_SOURCE);
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
  }
  
- GPIOD_TEST_CASE(set_direction, 0, { 8 })
+ GPIOD_TEST_CASE(both_edges_bias_disable, 0, { 8 })
  {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2 = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
  	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
  	struct gpiod_line *line;
  	gint ret;
-@@ -483,24 +588,49 @@ GPIOD_TEST_CASE(set_direction, 0, { 8 })
- 	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 0);
- 	g_assert_cmpint(ret, ==, 0);
+ 
+@@ -210,6 +283,10 @@ GPIOD_TEST_CASE(both_edges_bias_disable, 0, { 8 })
+ 	g_assert_nonnull(chip);
  	gpiod_test_return_if_failed();
--	g_assert_cmpint(gpiod_line_direction(line), ==,
--			GPIOD_LINE_DIRECTION_OUTPUT);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
  
-+	info0 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info0);
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
 +	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_direction(info0), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
 +
- 	ret = gpiod_line_set_direction_input(line);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+
-+	info1 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info1);
-+	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_direction(info1), ==,
- 			GPIOD_LINE_DIRECTION_INPUT);
+ 	line = gpiod_chip_get_line(chip, 7);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -221,29 +298,40 @@ GPIOD_TEST_CASE(both_edges_bias_disable, 0, { 8 })
  
- 	ret = gpiod_line_set_direction_output(line, 1);
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
  	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
-+
-+	info2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info2);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
 +	gpiod_test_return_if_failed();
-+	g_assert_cmpint(gpiod_line_get_direction(info2), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
  }
  
- GPIOD_TEST_CASE(set_direction_bulk, 0, { 8 })
+ GPIOD_TEST_CASE(both_edges_bias_pull_down, 0, { 8 })
  {
-+	g_autoptr(gpiod_line_info_struct) info0_0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info0_1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info0_2 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1_0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1_1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1_2 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2_0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2_1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2_2 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info3_0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info3_1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info3_2 = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
+ 	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
+ 	struct gpiod_line *line;
+ 	gint ret;
+ 
+@@ -251,6 +339,10 @@ GPIOD_TEST_CASE(both_edges_bias_pull_down, 0, { 8 })
+ 	g_assert_nonnull(chip);
+ 	gpiod_test_return_if_failed();
+ 
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
++	gpiod_test_return_if_failed();
++
+ 	line = gpiod_chip_get_line(chip, 7);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -262,29 +354,40 @@ GPIOD_TEST_CASE(both_edges_bias_pull_down, 0, { 8 })
+ 
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
+ }
+ 
+ GPIOD_TEST_CASE(both_edges_bias_pull_up, 0, { 8 })
+ {
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
+ 	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
+ 	struct gpiod_line *line;
+ 	gint ret;
+ 
+@@ -292,6 +395,10 @@ GPIOD_TEST_CASE(both_edges_bias_pull_up, 0, { 8 })
+ 	g_assert_nonnull(chip);
+ 	gpiod_test_return_if_failed();
+ 
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
++	gpiod_test_return_if_failed();
++
+ 	line = gpiod_chip_get_line(chip, 7);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -303,29 +410,40 @@ GPIOD_TEST_CASE(both_edges_bias_pull_up, 0, { 8 })
+ 
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
+ }
+ 
+ GPIOD_TEST_CASE(falling_edge_active_low, 0, { 8 })
+ {
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
+ 	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
+ 	struct gpiod_line *line;
+ 	gint ret;
+ 
+@@ -333,6 +451,10 @@ GPIOD_TEST_CASE(falling_edge_active_low, 0, { 8 })
+ 	g_assert_nonnull(chip);
+ 	gpiod_test_return_if_failed();
+ 
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
++	gpiod_test_return_if_failed();
++
+ 	line = gpiod_chip_get_line(chip, 7);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -344,21 +466,27 @@ GPIOD_TEST_CASE(falling_edge_active_low, 0, { 8 })
+ 
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
+ }
+ 
+ GPIOD_TEST_CASE(get_value, 0, { 8 })
+ {
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
+ 	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
+ 	struct gpiod_line *line;
+ 	gint ret;
+ 
+@@ -366,6 +494,10 @@ GPIOD_TEST_CASE(get_value, 0, { 8 })
+ 	g_assert_nonnull(chip);
+ 	gpiod_test_return_if_failed();
+ 
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
++	gpiod_test_return_if_failed();
++
+ 	line = gpiod_chip_get_line(chip, 7);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -381,21 +513,27 @@ GPIOD_TEST_CASE(get_value, 0, { 8 })
+ 
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
+ }
+ 
+ GPIOD_TEST_CASE(get_value_active_low, 0, { 8 })
+ {
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
+ 	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
+ 	struct gpiod_line *line;
+ 	gint ret;
+ 
+@@ -403,6 +541,10 @@ GPIOD_TEST_CASE(get_value_active_low, 0, { 8 })
+ 	g_assert_nonnull(chip);
+ 	gpiod_test_return_if_failed();
+ 
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
++	gpiod_test_return_if_failed();
++
+ 	line = gpiod_chip_get_line(chip, 7);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -419,13 +561,18 @@ GPIOD_TEST_CASE(get_value_active_low, 0, { 8 })
+ 
+ 	ev_thread = gpiod_test_start_event_thread(0, 7, 100);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
+ 	g_assert_cmpint(ret, ==, 0);
+ 
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
++	gpiod_test_return_if_failed();
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
+ }
+ 
+ GPIOD_TEST_CASE(get_values, 0, { 8 })
+@@ -548,12 +695,13 @@ GPIOD_TEST_CASE(get_values_active_low, 0, { 8 })
+ 
+ GPIOD_TEST_CASE(wait_multiple, 0, { 8 })
+ {
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(GpiodTestEventThread) ev_thread = NULL;
+ 	g_autoptr(gpiod_line_bulk_struct) ev_bulk = NULL;
  	g_autoptr(gpiod_line_bulk_struct) bulk = NULL;
  	g_autoptr(gpiod_chip_struct) chip = NULL;
- 	struct gpiod_line *line0, *line1, *line2;
-@@ -536,23 +666,42 @@ GPIOD_TEST_CASE(set_direction_bulk, 0, { 8 })
- 			GPIOD_TEST_CONSUMER, values);
- 	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
--	g_assert_cmpint(gpiod_line_direction(line0), ==,
-+
-+	info0_0 = gpiod_chip_get_line_info(chip, 0);
-+	info0_1 = gpiod_chip_get_line_info(chip, 1);
-+	info0_2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info0_0);
-+	g_assert_nonnull(info0_1);
-+	g_assert_nonnull(info0_2);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_cmpint(gpiod_line_get_direction(info0_0), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
--	g_assert_cmpint(gpiod_line_direction(line1), ==,
-+	g_assert_cmpint(gpiod_line_get_direction(info0_1), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
--	g_assert_cmpint(gpiod_line_direction(line2), ==,
-+	g_assert_cmpint(gpiod_line_get_direction(info0_2), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
-+
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 0);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 1);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 1);
- 
- 	ret = gpiod_line_set_direction_input_bulk(bulk);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_direction(line0), ==,
-+
-+	info1_0 = gpiod_chip_get_line_info(chip, 0);
-+	info1_1 = gpiod_chip_get_line_info(chip, 1);
-+	info1_2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info1_0);
-+	g_assert_nonnull(info1_1);
-+	g_assert_nonnull(info1_2);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_cmpint(gpiod_line_get_direction(info1_0), ==,
- 			GPIOD_LINE_DIRECTION_INPUT);
--	g_assert_cmpint(gpiod_line_direction(line1), ==,
-+	g_assert_cmpint(gpiod_line_get_direction(info1_1), ==,
- 			GPIOD_LINE_DIRECTION_INPUT);
--	g_assert_cmpint(gpiod_line_direction(line2), ==,
-+	g_assert_cmpint(gpiod_line_get_direction(info1_2), ==,
- 			GPIOD_LINE_DIRECTION_INPUT);
- 
- 	values[0] = 2;
-@@ -561,24 +710,44 @@ GPIOD_TEST_CASE(set_direction_bulk, 0, { 8 })
- 
- 	ret = gpiod_line_set_direction_output_bulk(bulk, values);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_direction(line0), ==,
-+
-+	info2_0 = gpiod_chip_get_line_info(chip, 0);
-+	info2_1 = gpiod_chip_get_line_info(chip, 1);
-+	info2_2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info2_0);
-+	g_assert_nonnull(info2_1);
-+	g_assert_nonnull(info2_2);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_cmpint(gpiod_line_get_direction(info2_0), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
--	g_assert_cmpint(gpiod_line_direction(line1), ==,
-+	g_assert_cmpint(gpiod_line_get_direction(info2_1), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
--	g_assert_cmpint(gpiod_line_direction(line2), ==,
-+	g_assert_cmpint(gpiod_line_get_direction(info2_2), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
-+
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 1);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 1);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
- 
- 	ret = gpiod_line_set_direction_output_bulk(bulk, NULL);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_direction(line0), ==,
-+
-+	info3_0 = gpiod_chip_get_line_info(chip, 0);
-+	info3_1 = gpiod_chip_get_line_info(chip, 1);
-+	info3_2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info3_0);
-+	g_assert_nonnull(info3_1);
-+	g_assert_nonnull(info3_2);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_cmpint(gpiod_line_get_direction(info3_0), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
--	g_assert_cmpint(gpiod_line_direction(line1), ==,
-+	g_assert_cmpint(gpiod_line_get_direction(info3_1), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
--	g_assert_cmpint(gpiod_line_direction(line2), ==,
-+	g_assert_cmpint(gpiod_line_get_direction(info3_2), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
-+
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 0), ==, 0);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 1), ==, 0);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 2), ==, 0);
-@@ -658,6 +827,8 @@ GPIOD_TEST_CASE(output_value_caching, 0, { 8 })
- 
- GPIOD_TEST_CASE(direction, 0, { 8 })
- {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
- 	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
  	struct gpiod_line *line;
- 	gint ret;
-@@ -673,7 +844,12 @@ GPIOD_TEST_CASE(direction, 0, { 8 })
- 	ret = gpiod_line_request_output(line, GPIOD_TEST_CONSUMER, 1);
- 	g_assert_cmpint(ret, ==, 0);
+ 	gint ret, i;
+ 
+@@ -561,6 +709,10 @@ GPIOD_TEST_CASE(wait_multiple, 0, { 8 })
+ 	g_assert_nonnull(chip);
  	gpiod_test_return_if_failed();
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+
-+	info0 = gpiod_chip_get_line_info(chip, 5);
-+	g_assert_nonnull(info0);
+ 
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
 +	gpiod_test_return_if_failed();
 +
-+	g_assert_cmpint(gpiod_line_get_direction(info0), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 5), ==, 1);
+ 	bulk = gpiod_line_bulk_new(8);
+ 	ev_bulk = gpiod_line_bulk_new(8);
+ 	g_assert_nonnull(bulk);
+@@ -582,17 +734,23 @@ GPIOD_TEST_CASE(wait_multiple, 0, { 8 })
  
-@@ -681,12 +857,21 @@ GPIOD_TEST_CASE(direction, 0, { 8 })
+ 	ev_thread = gpiod_test_start_event_thread(0, 4, 100);
  
- 	ret = gpiod_line_request_input(line, GPIOD_TEST_CONSUMER);
+-	ret = gpiod_line_event_wait_bulk(bulk, &ts, ev_bulk);
++	ret = gpiod_line_event_wait_bulk(bulk, timeout, ev_bulk);
+ 	g_assert_cmpint(ret, ==, 1);
+ 
+ 	g_assert_cmpuint(gpiod_line_bulk_num_lines(ev_bulk), ==, 1);
+ 	line = gpiod_line_bulk_get_line(ev_bulk, 0);
+ 	g_assert_cmpuint(gpiod_line_offset(line), ==, 4);
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
  	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpint(gpiod_line_direction(line), ==,
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
+-	g_assert_cmpint(ev.offset, ==, 4);
 +
-+	info1 = gpiod_chip_get_line_info(chip, 5);
-+	g_assert_nonnull(info1);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
 +	gpiod_test_return_if_failed();
 +
-+	g_assert_cmpint(gpiod_line_get_direction(info1), ==,
- 			GPIOD_LINE_DIRECTION_INPUT);
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
++	g_assert_cmpint(gpiod_line_event_get_line_offset(event), ==, 4);
  }
  
- GPIOD_TEST_CASE(active_state, 0, { 8 })
- {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info3 = NULL;
+ GPIOD_TEST_CASE(get_fd_when_values_requested, 0, { 8 })
+@@ -659,7 +817,7 @@ GPIOD_TEST_CASE(invalid_fd, 0, { 8 })
+ 	g_autoptr(gpiod_line_bulk_struct) ev_bulk = NULL;
+ 	g_autoptr(gpiod_line_bulk_struct) bulk = NULL;
  	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
++	uint64_t timeout = gpiod_sec_to_nsec(1);
+ 	struct gpiod_line *line;
+ 	gint ret, fd;
+ 
+@@ -678,7 +836,7 @@ GPIOD_TEST_CASE(invalid_fd, 0, { 8 })
+ 	fd = gpiod_line_event_get_fd(line);
+ 	close(fd);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, -1);
+ 	g_assert_cmpint(errno, ==, EINVAL);
+ 
+@@ -693,16 +851,17 @@ GPIOD_TEST_CASE(invalid_fd, 0, { 8 })
+ 	 * as well.
+ 	 */
+ 	gpiod_line_bulk_add_line(bulk, line);
+-	ret = gpiod_line_event_wait_bulk(bulk, &ts, ev_bulk);
++	ret = gpiod_line_event_wait_bulk(bulk, timeout, ev_bulk);
+ 	g_assert_cmpint(ret, ==, -1);
+ 	g_assert_cmpint(errno, ==, EINVAL);
+ }
+ 
+ GPIOD_TEST_CASE(read_events_individually, 0, { 8 })
+ {
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct timespec ts = { 1, 0 };
+-	struct gpiod_line_event ev;
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *event;
  	struct gpiod_line *line;
  	gint ret;
-@@ -703,7 +888,11 @@ GPIOD_TEST_CASE(active_state, 0, { 8 })
- 	g_assert_cmpint(ret, ==, 0);
+ 	guint i;
+@@ -711,6 +870,10 @@ GPIOD_TEST_CASE(read_events_individually, 0, { 8 })
+ 	g_assert_nonnull(chip);
  	gpiod_test_return_if_failed();
  
--	g_assert_false(gpiod_line_is_active_low(line));
-+	info0 = gpiod_chip_get_line_info(chip, 5);
-+	g_assert_nonnull(info0);
++	event_buf = gpiod_line_event_buffer_new(1);
++	g_assert_nonnull(event_buf);
 +	gpiod_test_return_if_failed();
 +
-+	g_assert_false(gpiod_line_is_active_low(info0));
- 
- 	gpiod_line_release(line);
- 
-@@ -712,7 +901,11 @@ GPIOD_TEST_CASE(active_state, 0, { 8 })
- 	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
- 
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+	info1 = gpiod_chip_get_line_info(chip, 5);
-+	g_assert_nonnull(info1);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_cmpint(gpiod_line_get_direction(info1), ==,
- 			GPIOD_LINE_DIRECTION_INPUT);
- 
- 	gpiod_line_release(line);
-@@ -722,7 +915,11 @@ GPIOD_TEST_CASE(active_state, 0, { 8 })
- 	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
- 
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+	info2 = gpiod_chip_get_line_info(chip, 5);
-+	g_assert_nonnull(info2);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_cmpint(gpiod_line_get_direction(info2), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 5), ==, 1);
- 
-@@ -733,7 +930,11 @@ GPIOD_TEST_CASE(active_state, 0, { 8 })
- 	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
- 
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+	info3 = gpiod_chip_get_line_info(chip, 5);
-+	g_assert_nonnull(info3);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_cmpint(gpiod_line_get_direction(info3), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
- 	g_assert_cmpint(gpiod_test_chip_get_value(0, 5), ==, 0);
- 
-@@ -741,6 +942,9 @@ GPIOD_TEST_CASE(active_state, 0, { 8 })
- 
- GPIOD_TEST_CASE(misc_flags, 0, { 8 })
- {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2 = NULL;
- 	g_autoptr(gpiod_chip_struct) chip = NULL;
- 	struct gpiod_line_request_config config;
- 	struct gpiod_line *line;
-@@ -754,9 +958,15 @@ GPIOD_TEST_CASE(misc_flags, 0, { 8 })
+ 	line = gpiod_chip_get_line(chip, 7);
  	g_assert_nonnull(line);
  	gpiod_test_return_if_failed();
+@@ -727,45 +890,61 @@ GPIOD_TEST_CASE(read_events_individually, 0, { 8 })
+ 	}
  
--	g_assert_false(gpiod_line_is_used(line));
--	g_assert_cmpint(gpiod_line_drive(line), ==, GPIOD_LINE_DRIVE_PUSH_PULL);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_UNKNOWN);
-+	info0 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info0);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_false(gpiod_line_is_used(info0));
-+	g_assert_cmpint(gpiod_line_get_drive(info0), ==,
-+			GPIOD_LINE_DRIVE_PUSH_PULL);
-+	g_assert_cmpint(gpiod_line_get_bias(info0), ==,
-+			GPIOD_LINE_BIAS_UNKNOWN);
+ 	/* read them individually... */
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 	if (!ret)
+ 		return;
  
- 	config.request_type = GPIOD_LINE_REQUEST_DIRECTION_OUTPUT;
- 	config.consumer = GPIOD_TEST_CONSUMER;
-@@ -766,11 +976,16 @@ GPIOD_TEST_CASE(misc_flags, 0, { 8 })
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
  	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
  
--	g_assert_true(gpiod_line_is_used(line));
--	g_assert_cmpint(gpiod_line_drive(line), ==,
-+	info1 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info1);
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
 +	gpiod_test_return_if_failed();
 +
-+	g_assert_true(gpiod_line_is_used(info1));
-+	g_assert_cmpint(gpiod_line_get_drive(info1), ==,
- 			GPIOD_LINE_DRIVE_OPEN_DRAIN);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_UNKNOWN);
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+	g_assert_cmpint(gpiod_line_get_bias(info1), ==,
-+			GPIOD_LINE_BIAS_UNKNOWN);
-+	g_assert_cmpint(gpiod_line_get_direction(info1), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
  
- 	gpiod_line_release(line);
-@@ -781,11 +996,16 @@ GPIOD_TEST_CASE(misc_flags, 0, { 8 })
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 	if (!ret)
+ 		return;
+ 
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
  	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
  
--	g_assert_true(gpiod_line_is_used(line));
--	g_assert_cmpint(gpiod_line_drive(line), ==,
-+	info2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info2);
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_RISING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
 +	gpiod_test_return_if_failed();
 +
-+	g_assert_true(gpiod_line_is_used(info2));
-+	g_assert_cmpint(gpiod_line_get_drive(info2), ==,
- 			GPIOD_LINE_DRIVE_OPEN_SOURCE);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_UNKNOWN);
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+	g_assert_cmpint(gpiod_line_get_bias(info2), ==,
-+			GPIOD_LINE_BIAS_UNKNOWN);
-+	g_assert_cmpint(gpiod_line_get_direction(info2), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_RISING_EDGE);
  
- 	gpiod_line_release(line);
-@@ -793,6 +1013,10 @@ GPIOD_TEST_CASE(misc_flags, 0, { 8 })
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 	if (!ret)
+ 		return;
  
- GPIOD_TEST_CASE(misc_flags_work_together, 0, { 8 })
- {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info2 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info3 = NULL;
- 	g_autoptr(gpiod_chip_struct) chip = NULL;
- 	struct gpiod_line_request_config config;
- 	struct gpiod_line *line;
-@@ -820,12 +1044,16 @@ GPIOD_TEST_CASE(misc_flags_work_together, 0, { 8 })
+-	ret = gpiod_line_event_read(line, &ev);
++	ret = gpiod_line_event_read(line, event_buf);
  	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
  
--	g_assert_true(gpiod_line_is_used(line));
--	g_assert_cmpint(gpiod_line_drive(line), ==,
-+	info0 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info0);
+-	g_assert_cmpint(ev.event_type, ==, GPIOD_LINE_EVENT_FALLING_EDGE);
++	event = gpiod_line_event_buffer_get_event(event_buf, 0);
++	g_assert_nonnull(event);
 +	gpiod_test_return_if_failed();
 +
-+	g_assert_true(gpiod_line_is_used(info0));
-+	g_assert_cmpint(gpiod_line_get_drive(info0), ==,
- 			GPIOD_LINE_DRIVE_OPEN_DRAIN);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_UNKNOWN);
--	g_assert_true(gpiod_line_is_active_low(line));
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+	g_assert_cmpint(gpiod_line_get_bias(info0), ==, GPIOD_LINE_BIAS_UNKNOWN);
-+	g_assert_true(gpiod_line_is_active_low(info0));
-+	g_assert_cmpint(gpiod_line_get_direction(info0), ==,
- 			GPIOD_LINE_DIRECTION_OUTPUT);
++	g_assert_cmpint(gpiod_line_event_get_event_type(event), ==,
++			GPIOD_LINE_EVENT_FALLING_EDGE);
  
- 	gpiod_line_release(line);
-@@ -837,11 +1065,16 @@ GPIOD_TEST_CASE(misc_flags_work_together, 0, { 8 })
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
  	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
- 
--	g_assert_true(gpiod_line_is_used(line));
--	g_assert_cmpint(gpiod_line_drive(line), ==,
-+	info1 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info1);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_true(gpiod_line_is_used(info1));
-+	g_assert_cmpint(gpiod_line_get_drive(info1), ==,
- 			GPIOD_LINE_DRIVE_OPEN_SOURCE);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_UNKNOWN);
--	g_assert_true(gpiod_line_is_active_low(line));
-+	g_assert_cmpint(gpiod_line_get_bias(info1), ==,
-+			GPIOD_LINE_BIAS_UNKNOWN);
-+	g_assert_true(gpiod_line_is_active_low(info1));
- 
- 	gpiod_line_release(line);
- 
-@@ -858,11 +1091,17 @@ GPIOD_TEST_CASE(misc_flags_work_together, 0, { 8 })
- 	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
- 
--	g_assert_true(gpiod_line_is_used(line));
--	g_assert_cmpint(gpiod_line_drive(line), ==, GPIOD_LINE_DRIVE_PUSH_PULL);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_PULL_DOWN);
--	g_assert_true(gpiod_line_is_active_low(line));
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+	info2 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info2);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_true(gpiod_line_is_used(info2));
-+	g_assert_cmpint(gpiod_line_get_drive(info2), ==,
-+			GPIOD_LINE_DRIVE_PUSH_PULL);
-+	g_assert_cmpint(gpiod_line_get_bias(info2), ==,
-+			GPIOD_LINE_BIAS_PULL_DOWN);
-+	g_assert_true(gpiod_line_is_active_low(info2));
-+	g_assert_cmpint(gpiod_line_get_direction(info2), ==,
- 			GPIOD_LINE_DIRECTION_INPUT);
- 
- 	ret = gpiod_line_get_value(line);
-@@ -877,11 +1116,17 @@ GPIOD_TEST_CASE(misc_flags_work_together, 0, { 8 })
- 	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
- 
--	g_assert_true(gpiod_line_is_used(line));
--	g_assert_cmpint(gpiod_line_drive(line), ==, GPIOD_LINE_DRIVE_PUSH_PULL);
--	g_assert_cmpint(gpiod_line_bias(line), ==, GPIOD_LINE_BIAS_PULL_UP);
--	g_assert_true(gpiod_line_is_active_low(line));
--	g_assert_cmpint(gpiod_line_direction(line), ==,
-+	info3 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info3);
-+	gpiod_test_return_if_failed();
-+
-+	g_assert_true(gpiod_line_is_used(info3));
-+	g_assert_cmpint(gpiod_line_get_drive(info3), ==,
-+			GPIOD_LINE_DRIVE_PUSH_PULL);
-+	g_assert_cmpint(gpiod_line_get_bias(info3), ==,
-+			GPIOD_LINE_BIAS_PULL_UP);
-+	g_assert_true(gpiod_line_is_active_low(info3));
-+	g_assert_cmpint(gpiod_line_get_direction(info3), ==,
- 			GPIOD_LINE_DIRECTION_INPUT);
- 
- 	ret = gpiod_line_get_value(line);
-@@ -1018,6 +1263,8 @@ GPIOD_TEST_CASE(release_one_use_another, 0, { 8 })
- 
- GPIOD_TEST_CASE(null_consumer, 0, { 8 })
- {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
- 	g_autoptr(gpiod_chip_struct) chip = NULL;
- 	struct gpiod_line_request_config config;
- 	struct gpiod_line *line;
-@@ -1038,7 +1285,11 @@ GPIOD_TEST_CASE(null_consumer, 0, { 8 })
- 	ret = gpiod_line_request(line, &config, 0);
- 	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
--	g_assert_cmpstr(gpiod_line_consumer(line), ==, "?");
-+
-+	info0 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info0);
-+	gpiod_test_return_if_failed();
-+	g_assert_cmpstr(gpiod_line_get_consumer(info0), ==, "?");
- 
- 	gpiod_line_release(line);
- 
-@@ -1050,11 +1301,17 @@ GPIOD_TEST_CASE(null_consumer, 0, { 8 })
- 
- 	ret = gpiod_line_request(line, &config, 0);
- 	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpstr(gpiod_line_consumer(line), ==, "?");
-+
-+	info1 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info1);
-+	gpiod_test_return_if_failed();
-+	g_assert_cmpstr(gpiod_line_get_consumer(info1), ==, "?");
  }
  
- GPIOD_TEST_CASE(empty_consumer, 0, { 8 })
+ GPIOD_TEST_CASE(read_multiple_events, 0, { 8 })
  {
-+	g_autoptr(gpiod_line_info_struct) info0 = NULL;
-+	g_autoptr(gpiod_line_info_struct) info1 = NULL;
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
  	g_autoptr(gpiod_chip_struct) chip = NULL;
- 	struct gpiod_line_request_config config;
+-	struct gpiod_line_event events[5];
+-	struct timespec ts = { 1, 0 };
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *events[4];
  	struct gpiod_line *line;
-@@ -1075,7 +1332,11 @@ GPIOD_TEST_CASE(empty_consumer, 0, { 8 })
- 	ret = gpiod_line_request(line, &config, 0);
- 	g_assert_cmpint(ret, ==, 0);
+ 	gint ret;
+ 	guint i;
+@@ -774,6 +953,10 @@ GPIOD_TEST_CASE(read_multiple_events, 0, { 8 })
+ 	g_assert_nonnull(chip);
  	gpiod_test_return_if_failed();
--	g_assert_cmpstr(gpiod_line_consumer(line), ==, "?");
-+
-+	info0 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info0);
+ 
++	event_buf = gpiod_line_event_buffer_new(5);
++	g_assert_nonnull(event_buf);
 +	gpiod_test_return_if_failed();
-+	g_assert_cmpstr(gpiod_line_get_consumer(info0), ==, "?");
++
+ 	line = gpiod_chip_get_line(chip, 4);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -795,23 +978,30 @@ GPIOD_TEST_CASE(read_multiple_events, 0, { 8 })
+ 		usleep(10000);
+ 	}
  
- 	gpiod_line_release(line);
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 	if (!ret)
+ 		return;
  
-@@ -1087,5 +1348,9 @@ GPIOD_TEST_CASE(empty_consumer, 0, { 8 })
+ 	/* read a chunk */
+-	ret = gpiod_line_event_read_multiple(line, events, 3);
++	ret = gpiod_line_event_read_multiple(line, event_buf, 3);
+ 	g_assert_cmpint(ret, ==, 3);
  
- 	ret = gpiod_line_request(line, &config, 0);
+-	g_assert_cmpint(events[0].event_type, ==,
++	events[0] = gpiod_line_event_buffer_get_event(event_buf, 0);
++	events[1] = gpiod_line_event_buffer_get_event(event_buf, 1);
++	events[2] = gpiod_line_event_buffer_get_event(event_buf, 2);
++	g_assert_nonnull(events[0]);
++	g_assert_nonnull(events[1]);
++	g_assert_nonnull(events[2]);
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[0]), ==,
+ 			GPIOD_LINE_EVENT_RISING_EDGE);
+-	g_assert_cmpint(events[1].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[1]), ==,
+ 			GPIOD_LINE_EVENT_FALLING_EDGE);
+-	g_assert_cmpint(events[2].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[2]), ==,
+ 			GPIOD_LINE_EVENT_RISING_EDGE);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 	if (!ret)
+ 		return;
+@@ -820,27 +1010,37 @@ GPIOD_TEST_CASE(read_multiple_events, 0, { 8 })
+ 	 * read the remainder
+ 	 * - note the attempt to read more than are available
+ 	 */
+-	ret = gpiod_line_event_read_multiple(line, events, 5);
++	ret = gpiod_line_event_read_multiple(line, event_buf, 5);
+ 	g_assert_cmpint(ret, ==, 4);
+ 
+-	g_assert_cmpint(events[0].event_type, ==,
++	events[0] = gpiod_line_event_buffer_get_event(event_buf, 0);
++	events[1] = gpiod_line_event_buffer_get_event(event_buf, 1);
++	events[2] = gpiod_line_event_buffer_get_event(event_buf, 2);
++	events[3] = gpiod_line_event_buffer_get_event(event_buf, 3);
++	g_assert_nonnull(events[0]);
++	g_assert_nonnull(events[1]);
++	g_assert_nonnull(events[2]);
++	g_assert_nonnull(events[3]);
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[0]), ==,
+ 			GPIOD_LINE_EVENT_FALLING_EDGE);
+-	g_assert_cmpint(events[1].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[1]), ==,
+ 			GPIOD_LINE_EVENT_RISING_EDGE);
+-	g_assert_cmpint(events[2].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[2]), ==,
+ 			GPIOD_LINE_EVENT_FALLING_EDGE);
+-	g_assert_cmpint(events[3].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[3]), ==,
+ 			GPIOD_LINE_EVENT_RISING_EDGE);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
  	g_assert_cmpint(ret, ==, 0);
--	g_assert_cmpstr(gpiod_line_consumer(line), ==, "?");
-+
-+	info1 = gpiod_chip_get_line_info(chip, 2);
-+	g_assert_nonnull(info1);
-+	gpiod_test_return_if_failed();
-+	g_assert_cmpstr(gpiod_line_get_consumer(info1), ==, "?");
  }
-diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
-index 3d89111..7901036 100644
---- a/tools/gpioinfo.c
-+++ b/tools/gpioinfo.c
-@@ -11,36 +11,36 @@
+ 
+ GPIOD_TEST_CASE(read_multiple_events_fd, 0, { 8 })
+ {
++	g_autoptr(gpiod_line_event_buffer_struct) event_buf = NULL;
+ 	g_autoptr(gpiod_chip_struct) chip = NULL;
+-	struct gpiod_line_event events[5];
+-	struct timespec ts = { 1, 0 };
++	uint64_t timeout = gpiod_sec_to_nsec(1);
++	struct gpiod_line_event *events[4];
+ 	struct gpiod_line *line;
+ 	gint ret, fd;
+ 	guint i;
+@@ -849,6 +1049,10 @@ GPIOD_TEST_CASE(read_multiple_events_fd, 0, { 8 })
+ 	g_assert_nonnull(chip);
+ 	gpiod_test_return_if_failed();
+ 
++	event_buf = gpiod_line_event_buffer_new(5);
++	g_assert_nonnull(event_buf);
++	gpiod_test_return_if_failed();
++
+ 	line = gpiod_chip_get_line(chip, 4);
+ 	g_assert_nonnull(line);
+ 	gpiod_test_return_if_failed();
+@@ -863,7 +1067,7 @@ GPIOD_TEST_CASE(read_multiple_events_fd, 0, { 8 })
+ 		usleep(10000);
+ 	}
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 	if (!ret)
+ 		return;
+@@ -872,17 +1076,24 @@ GPIOD_TEST_CASE(read_multiple_events_fd, 0, { 8 })
+ 	g_assert_cmpint(fd, >=, 0);
+ 
+ 	/* read a chunk */
+-	ret = gpiod_line_event_read_fd_multiple(fd, events, 3);
++	ret = gpiod_line_event_read_fd_multiple(fd, event_buf, 3);
+ 	g_assert_cmpint(ret, ==, 3);
+ 
+-	g_assert_cmpint(events[0].event_type, ==,
++	events[0] = gpiod_line_event_buffer_get_event(event_buf, 0);
++	events[1] = gpiod_line_event_buffer_get_event(event_buf, 1);
++	events[2] = gpiod_line_event_buffer_get_event(event_buf, 2);
++	g_assert_nonnull(events[0]);
++	g_assert_nonnull(events[1]);
++	g_assert_nonnull(events[2]);
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[0]), ==,
+ 			GPIOD_LINE_EVENT_RISING_EDGE);
+-	g_assert_cmpint(events[1].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[1]), ==,
+ 			GPIOD_LINE_EVENT_FALLING_EDGE);
+-	g_assert_cmpint(events[2].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[2]), ==,
+ 			GPIOD_LINE_EVENT_RISING_EDGE);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 1);
+ 	if (!ret)
+ 		return;
+@@ -891,18 +1102,27 @@ GPIOD_TEST_CASE(read_multiple_events_fd, 0, { 8 })
+ 	 * read the remainder
+ 	 * - note the attempt to read more than are available
+ 	 */
+-	ret = gpiod_line_event_read_fd_multiple(fd, events, 5);
++	ret = gpiod_line_event_read_fd_multiple(fd, event_buf, 5);
+ 	g_assert_cmpint(ret, ==, 4);
+ 
+-	g_assert_cmpint(events[0].event_type, ==,
++	events[0] = gpiod_line_event_buffer_get_event(event_buf, 0);
++	events[1] = gpiod_line_event_buffer_get_event(event_buf, 1);
++	events[2] = gpiod_line_event_buffer_get_event(event_buf, 2);
++	events[3] = gpiod_line_event_buffer_get_event(event_buf, 3);
++	g_assert_nonnull(events[0]);
++	g_assert_nonnull(events[1]);
++	g_assert_nonnull(events[2]);
++	g_assert_nonnull(events[3]);
++
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[0]), ==,
+ 			GPIOD_LINE_EVENT_FALLING_EDGE);
+-	g_assert_cmpint(events[1].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[1]), ==,
+ 			GPIOD_LINE_EVENT_RISING_EDGE);
+-	g_assert_cmpint(events[2].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[2]), ==,
+ 			GPIOD_LINE_EVENT_FALLING_EDGE);
+-	g_assert_cmpint(events[3].event_type, ==,
++	g_assert_cmpint(gpiod_line_event_get_event_type(events[3]), ==,
+ 			GPIOD_LINE_EVENT_RISING_EDGE);
+ 
+-	ret = gpiod_line_event_wait(line, &ts);
++	ret = gpiod_line_event_wait(line, timeout);
+ 	g_assert_cmpint(ret, ==, 0);
+ }
+diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+index dda9f6f..3e6b715 100644
+--- a/tools/gpiomon.c
++++ b/tools/gpiomon.c
+@@ -13,6 +13,8 @@
  
  #include "tools-common.h"
  
--typedef bool (*is_set_func)(struct gpiod_line *);
-+typedef bool (*is_set_func)(struct gpiod_line_info *);
- 
- struct flag {
- 	const char *name;
- 	is_set_func is_set;
++#define EVENT_BUF_SIZE 32
++
+ static const struct option longopts[] = {
+ 	{ "help",		no_argument,		NULL,	'h' },
+ 	{ "version",		no_argument,		NULL,	'v' },
+@@ -64,10 +66,8 @@ struct mon_ctx {
+ 	char *fmt;
  };
  
--static bool line_bias_is_pullup(struct gpiod_line *line)
-+static bool line_bias_is_pullup(struct gpiod_line_info *info)
+-static void event_print_custom(unsigned int offset,
+-			       const struct timespec *ts,
+-			       int event_type,
+-			       struct mon_ctx *ctx)
++static void event_print_custom(unsigned int offset, uint64_t timeout,
++			       int event_type, struct mon_ctx *ctx)
  {
--	return gpiod_line_bias(line) == GPIOD_LINE_BIAS_PULL_UP;
-+	return gpiod_line_get_bias(info) == GPIOD_LINE_BIAS_PULL_UP;
+ 	char *prev, *curr, fmt;
+ 
+@@ -94,10 +94,10 @@ static void event_print_custom(unsigned int offset,
+ 				fputc('0', stdout);
+ 			break;
+ 		case 's':
+-			printf("%ld", ts->tv_sec);
++			printf("%ld", timeout / 1000000000);
+ 			break;
+ 		case 'n':
+-			printf("%ld", ts->tv_nsec);
++			printf("%ld", timeout % 1000000000);
+ 			break;
+ 		case '%':
+ 			fputc('%', stdout);
+@@ -119,8 +119,7 @@ end:
  }
  
--static bool line_bias_is_pulldown(struct gpiod_line *line)
-+static bool line_bias_is_pulldown(struct gpiod_line_info *info)
+ static void event_print_human_readable(unsigned int offset,
+-				       const struct timespec *ts,
+-				       int event_type)
++				       uint64_t timeout, int event_type)
  {
--	return gpiod_line_bias(line) == GPIOD_LINE_BIAS_PULL_DOWN;
-+	return gpiod_line_get_bias(info) == GPIOD_LINE_BIAS_PULL_DOWN;
+ 	char *evname;
+ 
+@@ -130,11 +129,11 @@ static void event_print_human_readable(unsigned int offset,
+ 		evname = "FALLING EDGE";
+ 
+ 	printf("event: %s offset: %u timestamp: [%8ld.%09ld]\n",
+-	       evname, offset, ts->tv_sec, ts->tv_nsec);
++	       evname, offset, timeout / 1000000000, timeout % 1000000000);
  }
  
--static bool line_bias_is_disabled(struct gpiod_line *line)
-+static bool line_bias_is_disabled(struct gpiod_line_info *info)
+ static void handle_event(unsigned int line_offset, unsigned int event_type,
+-			 struct timespec *timestamp, struct mon_ctx *ctx)
++			 uint64_t timestamp, struct mon_ctx *ctx)
  {
--	return gpiod_line_bias(line) == GPIOD_LINE_BIAS_DISABLED;
-+	return gpiod_line_get_bias(info) == GPIOD_LINE_BIAS_DISABLED;
- }
+ 	if (!ctx->silent) {
+ 		if (ctx->fmt)
+@@ -156,8 +155,8 @@ int main(int argc, char **argv)
+ 	unsigned int offsets[64], num_lines = 0, offset,
+ 		     events_wanted = 0, events_done = 0, x;
+ 	bool watch_rising = false, watch_falling = false;
++	uint64_t timeout = gpiod_sec_to_nsec(10);
+ 	int flags = 0;
+-	struct timespec timeout = { 10, 0 };
+ 	int optc, opti, rv, i, y, event_type;
+ 	struct mon_ctx ctx;
+ 	struct gpiod_chip *chip;
+@@ -165,7 +164,8 @@ int main(int argc, char **argv)
+ 	char *end;
+ 	struct gpiod_line_request_config config;
+ 	struct gpiod_line *line;
+-	struct gpiod_line_event events[16];
++	struct gpiod_line_event_buffer *event_buffer;
++	struct gpiod_line_event *event;
  
--static bool line_drive_is_open_drain(struct gpiod_line *line)
-+static bool line_drive_is_open_drain(struct gpiod_line_info *info)
- {
--	return gpiod_line_drive(line) == GPIOD_LINE_DRIVE_OPEN_DRAIN;
-+	return gpiod_line_get_drive(info) == GPIOD_LINE_DRIVE_OPEN_DRAIN;
- }
+ 	/*
+ 	 * FIXME: use signalfd once the API has been converted to using a single file
+@@ -271,9 +271,13 @@ int main(int argc, char **argv)
+ 	if (!evlines)
+ 		die("out of memory");
  
--static bool line_drive_is_open_source(struct gpiod_line *line)
-+static bool line_drive_is_open_source(struct gpiod_line_info *info)
- {
--	return gpiod_line_drive(line) == GPIOD_LINE_DRIVE_OPEN_SOURCE;
-+	return gpiod_line_get_drive(info) == GPIOD_LINE_DRIVE_OPEN_SOURCE;
- }
- 
- static const struct flag flags[] = {
-@@ -124,8 +124,8 @@ static PRINTF(3, 4) void prinfo(bool *of,
- static void list_lines(struct gpiod_chip *chip)
- {
- 	bool flag_printed, of, active_low;
-+	struct gpiod_line_info *info;
- 	const char *name, *consumer;
--	struct gpiod_line *line;
- 	unsigned int i, offset;
- 	int direction;
- 
-@@ -133,14 +133,14 @@ static void list_lines(struct gpiod_chip *chip)
- 	       gpiod_chip_get_name(chip), gpiod_chip_get_num_lines(chip));
- 
- 	for (offset = 0; offset < gpiod_chip_get_num_lines(chip); offset++) {
--		line = gpiod_chip_get_line(chip, offset);
--		if (!line)
-+		info = gpiod_chip_get_line_info(chip, offset);
-+		if (!info)
- 			die_perror("unable to retrieve the line object from chip");
- 
--		name = gpiod_line_name(line);
--		consumer = gpiod_line_consumer(line);
--		direction = gpiod_line_direction(line);
--		active_low = gpiod_line_is_active_low(line);
-+		name = gpiod_line_get_name(info);
-+		consumer = gpiod_line_get_consumer(info);
-+		direction = gpiod_line_get_direction(info);
-+		active_low = gpiod_line_is_active_low(info);
- 
- 		of = false;
- 
-@@ -152,7 +152,7 @@ static void list_lines(struct gpiod_chip *chip)
- 		     : prinfo(&of, 12, "unnamed");
- 		printf(" ");
- 
--		if (!gpiod_line_is_used(line))
-+		if (!gpiod_line_is_used(info))
- 			prinfo(&of, 12, "unused");
- 		else
- 			consumer ? prinfo(&of, 12, "\"%s\"", consumer)
-@@ -167,7 +167,7 @@ static void list_lines(struct gpiod_chip *chip)
- 
- 		flag_printed = false;
- 		for (i = 0; i < ARRAY_SIZE(flags); i++) {
--			if (flags[i].is_set(line)) {
-+			if (flags[i].is_set(info)) {
- 				if (flag_printed)
- 					printf(" ");
- 				else
-@@ -180,6 +180,8 @@ static void list_lines(struct gpiod_chip *chip)
- 			printf("]");
- 
- 		printf("\n");
++	event_buffer = gpiod_line_event_buffer_new(EVENT_BUF_SIZE);
++	if (!event_buffer)
++		die_perror("unable to allocate the line event buffer");
 +
-+		gpiod_line_info_unref(info);
- 	}
- }
+ 	for (;;) {
+ 		gpiod_line_bulk_reset(evlines);
+-		rv = gpiod_line_event_wait_bulk(lines, &timeout, evlines);
++		rv = gpiod_line_event_wait_bulk(lines, timeout, evlines);
+ 		if (rv < 0)
+ 			die_perror("error waiting for events");
+ 		if (rv == 0)
+@@ -284,15 +288,22 @@ int main(int argc, char **argv)
+ 		for (x = 0; x < num_lines; x++) {
+ 			line = gpiod_line_bulk_get_line(evlines, x);
  
+-			rv = gpiod_line_event_read_multiple(line, events,
+-							    ARRAY_SIZE(events));
++			rv = gpiod_line_event_read_multiple(line, event_buffer,
++							    EVENT_BUF_SIZE);
+ 			if (rv < 0)
+ 				die_perror("error reading line events");
+ 
+ 			for (y = 0; y < rv; y++) {
++				event = gpiod_line_event_buffer_get_event(
++							event_buffer, y);
++				if (!event)
++					die_perror("unable to retrieve the event");
++
+ 				handle_event(gpiod_line_offset(line),
+-					     events[y].event_type,
+-					     &events[y].ts, &ctx);
++					gpiod_line_event_get_event_type(event),
++					gpiod_line_event_get_timestamp(event),
++					&ctx);
++
+ 				events_done++;
+ 
+ 				if (events_wanted &&
 -- 
 2.30.1
 
