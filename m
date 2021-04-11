@@ -2,98 +2,236 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0766735B664
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Apr 2021 19:51:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B54A35B66B
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Apr 2021 19:55:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236026AbhDKRwN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Apr 2021 13:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40608 "EHLO
+        id S235420AbhDKRzA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Apr 2021 13:55:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233822AbhDKRwN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Apr 2021 13:52:13 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D3BC061574;
-        Sun, 11 Apr 2021 10:51:56 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id u21so16456100ejo.13;
-        Sun, 11 Apr 2021 10:51:56 -0700 (PDT)
+        with ESMTP id S235388AbhDKRzA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Apr 2021 13:55:00 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0092EC061574;
+        Sun, 11 Apr 2021 10:54:43 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id r9so16503367ejj.3;
+        Sun, 11 Apr 2021 10:54:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oNOTBqeY9jtjLSAON3lVQ6MLW31wXxn5D9F9gYPVVu4=;
-        b=XHkxF3IQa/hR8xLpG2YUvfZc8NOXCs1YKaI9qeXyRLrQbwabZW+AeoRcZzMeik7Uha
-         b1xoSzpM9bRFnRsVfEIV1wRWBZBzOyQ7rpX1tjdmfiNFFe9ikeB60lQfxD7I0UBopWRJ
-         3hRC5dN1aNZOZ+Jn1jP+r5h5fRIzgarYNn7TAccS7d/ELSZBr+zUZfYYxq0vmrUV2DKh
-         k8sU4l1KATHkG6wI9BU9djA5cVd5LpW2dxYG60z8XUcdchTzbhzniF2dDh2akL8+clAB
-         w2PtuyxrDPNUI2yTXo3cBcT/r2smPtVC4R/QcE6tIlZ+gGiFxxmM/gl2FZ5IXcJiwLEL
-         xPEA==
+        h=from:to:cc:subject:date:message-id;
+        bh=nI53kziyfbKnEvjuBZ+bfWn5m7mWLDh7ze9LttdxKG8=;
+        b=e+k+gtKZE9MsFc07l1+sdWdw/nfatox4OuF07RPrRCnXMpkKd+8wTn62uTEiOcR0SP
+         oXbt4DPmBn4rrf019iBr4TZMaSarwevpSrnpf97Yt6xYYzdV6RiIdetdvo0Xn27rtL64
+         jwJYL3JXYydEufEuG3V15GZnNhBMlo5hdPXCgE6L8Ja9nodynWKjUULSrL4J5H21J4KI
+         QN0urQCcePII0gQw4EhtwQIJFpsMef28dMupU56JF1fTsn7SXXFjkOA6rDc3AKYq4UjZ
+         IxJokMUYk7Mnr4/bnSJ8zmGNw+WBGDJuD+mZNoCLi2NM9vZaB9ewElfsHBbm3yD/zANc
+         OJeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oNOTBqeY9jtjLSAON3lVQ6MLW31wXxn5D9F9gYPVVu4=;
-        b=nLHINOwsJK+ohPlXl7/skNv49KqIl0JNbugEsc9mnfbfXOVITMp/cVr5qBGbMUIwFs
-         +4YLG3zBOmocpIdDn7jY7pPZuE9vsc4V0XoHYoNtyH1KAA8vVfNkIwKeeUzwvcunYoZf
-         x/9IBPpQS6axldH1w2B+3wQGB8RESdtrMOWZgP8/eM9GVLFbC2VByEeU52GffaZx5s/f
-         qYkUuroH0eymgaYvmpoDgSDLSxe6MpL1VH/ViIM3DW/d30oLzF+JmeAemROsQqGQbiml
-         cKC+LR7pS955MDCP9UUuOElLkEuuxFfFEZ5fsD+E+PxDaEOle8z6qTD4mrAZhYqN1gg9
-         vZ6g==
-X-Gm-Message-State: AOAM531itKqTVBAu2pFoB5p2IFkxPBgarlYIQSYyCM9+oKatUJq7Cn/X
-        o1HuPRifIWwODyTe7RbZrZGt11nEKFRvtA==
-X-Google-Smtp-Source: ABdhPJz+72LDgeAexpDAcDks/cfETt22UrJuQG/bU2n3vf+A/D03Pw3IZkiQ5GXMql63ZZZJyuHLDQ==
-X-Received: by 2002:a17:906:4407:: with SMTP id x7mr23873759ejo.546.1618163515532;
-        Sun, 11 Apr 2021 10:51:55 -0700 (PDT)
-Received: from [192.168.2.2] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id n5sm4351187ejj.73.2021.04.11.10.51.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 Apr 2021 10:51:55 -0700 (PDT)
-Subject: Re: [PATCH v2 3/7] gpio: separate gpio driver from pinctrl-rockchip
- driver
-To:     Peter Geis <pgwipeout@gmail.com>,
-        Jianqun Xu <jay.xu@rock-chips.com>, huangtao@rock-chips.com,
-        kever.yang@rock-chips.com, linus.walleij@linaro.org,
-        heiko@sntech.de
-Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20210411133030.1663936-1-pgwipeout@gmail.com>
- <20210411133030.1663936-4-pgwipeout@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nI53kziyfbKnEvjuBZ+bfWn5m7mWLDh7ze9LttdxKG8=;
+        b=FOWocAtbpaks/W/1AslREgRZPM/RaPqI8O6HenXug3kVS9G38Lghb80hmlGW+ev0FT
+         XEK7+cCwuD6DvqhYu+yhOCtHXuAMP2lv/aGWqIm7HTcY68goPzmXq7RTEtlC2j9o9ipi
+         GXq0Jqn8+1HRoKArORw9npEj0pQT5kBL8/YcMngZJSzH8SxdYrOtqLPShOzVBKcMPdce
+         loOS3BuxyAfciiRRXjJ8wUaxFYV8JW7BwlIABk66e0U4y1zUkDz6bBNZB4IrI3z1dB75
+         44DkFOQUEf0JUI6SCt20eEiXT5EIhAEE6fF6uPGj5/Cl/YkYZNWDVyUo+MV03KlINZwh
+         HN4w==
+X-Gm-Message-State: AOAM532riFKJAgjuub78UeqAWEwuNROwYdzjdhZOKVLzDyW6R2nRorlX
+        BuXcPQTgG4GBgeXDCxroMjaN1jYTwhlwSA==
+X-Google-Smtp-Source: ABdhPJx+so6mjMmxaxstEpIv2+fsU54/IXGjC6HocAs37FoIfmVuxcP1+ymTH6ybMtRG+YTcpyxITA==
+X-Received: by 2002:a17:906:a1c8:: with SMTP id bx8mr23568241ejb.381.1618163682737;
+        Sun, 11 Apr 2021 10:54:42 -0700 (PDT)
+Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id h15sm5021738edb.74.2021.04.11.10.54.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Apr 2021 10:54:42 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <5308a59c-29e9-75a4-2c9a-4aeb3d37bf6e@gmail.com>
-Date:   Sun, 11 Apr 2021 19:51:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20210411133030.1663936-4-pgwipeout@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dt-bindings: gpio: add YAML description for rockchip,gpio-bank
+Date:   Sun, 11 Apr 2021 19:54:35 +0200
+Message-Id: <20210411175435.807-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Current dts files with "rockchip,gpio-bank" subnodes
+are manually verified. In order to automate this process
+the text that describes the compatible in rockchip,pinctrl.txt
+is removed and converted to YAML in rockchip,gpio-bank.yaml.
 
-When I check "rockchip,gpio-bank" with YAML it turns out that
-rk3288-veyron-XXX has 'gpio-line-names' as 'extra' property.
-It is not defined in the "rockchip,pinctrl.txt" document, but in
-~/.local/lib/python3.5/site-packages/dtschema/schemas/gpio/gpio.yaml
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ .../bindings/gpio/rockchip,gpio-bank.yaml          | 82 ++++++++++++++++++++++
+ .../bindings/pinctrl/rockchip,pinctrl.txt          | 58 +--------------
+ 2 files changed, 83 insertions(+), 57 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
 
-Where is that in use?
-In this driver or external?
-Can it be removed from mainline dts?
+diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+new file mode 100644
+index 000000000..ac2479732
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/rockchip,gpio-bank.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip GPIO bank
++
++maintainers:
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    enum:
++      - rockchip,gpio-bank
++      - rockchip,rk3188-gpio-bank0
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - gpio-controller
++  - "#gpio-cells"
++  - interrupt-controller
++  - "#interrupt-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    pinctrl: pinctrl {
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges;
++
++      gpio0: gpio0@2000a000 {
++        compatible = "rockchip,rk3188-gpio-bank0";
++        reg = <0x2000a000 0x100>;
++        interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clk_gates8 9>;
++
++        gpio-controller;
++        #gpio-cells = <2>;
++
++        interrupt-controller;
++        #interrupt-cells = <2>;
++      };
++
++      gpio1: gpio1@2003c000 {
++        compatible = "rockchip,gpio-bank";
++        reg = <0x2003c000 0x100>;
++        interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clk_gates8 10>;
++
++        gpio-controller;
++        #gpio-cells = <2>;
++
++        interrupt-controller;
++        #interrupt-cells = <2>;
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+index d3eae61a3..4719a6a07 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+@@ -50,23 +50,7 @@ Deprecated properties for iomux controller:
+ 	 Use rockchip,grf and rockchip,pmu described above instead.
+ 
+ Required properties for gpio sub nodes:
+-  - compatible: "rockchip,gpio-bank"
+-  - reg: register of the gpio bank (different than the iomux registerset)
+-  - interrupts: base interrupt of the gpio bank in the interrupt controller
+-  - clocks: clock that drives this bank
+-  - gpio-controller: identifies the node as a gpio controller and pin bank.
+-  - #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+-    binding is used, the amount of cells must be specified as 2. See generic
+-    GPIO binding documentation for description of particular cells.
+-  - interrupt-controller: identifies the controller node as interrupt-parent.
+-  - #interrupt-cells: the value of this property should be 2 and the interrupt
+-    cells should use the standard two-cell scheme described in
+-    bindings/interrupt-controller/interrupts.txt
+-
+-Deprecated properties for gpio sub nodes:
+-  - compatible: "rockchip,rk3188-gpio-bank0"
+-  - reg: second element: separate pull register for rk3188 bank0, use
+-	 rockchip,pmu described above instead
++See rockchip,gpio-bank.yaml
+ 
+ Required properties for pin configuration node:
+   - rockchip,pins: 3 integers array, represents a group of pins mux and config
+@@ -127,43 +111,3 @@ uart2: serial@20064000 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart2_xfer>;
+ };
+-
+-Example for rk3188:
+-
+-	pinctrl@20008000 {
+-		compatible = "rockchip,rk3188-pinctrl";
+-		rockchip,grf = <&grf>;
+-		rockchip,pmu = <&pmu>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		gpio0: gpio0@2000a000 {
+-			compatible = "rockchip,rk3188-gpio-bank0";
+-			reg = <0x2000a000 0x100>;
+-			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk_gates8 9>;
+-
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-
+-			interrupt-controller;
+-			#interrupt-cells = <2>;
+-		};
+-
+-		gpio1: gpio1@2003c000 {
+-			compatible = "rockchip,gpio-bank";
+-			reg = <0x2003c000 0x100>;
+-			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk_gates8 10>;
+-
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-
+-			interrupt-controller;
+-			#interrupt-cells = <2>;
+-		};
+-
+-		...
+-
+-	};
+-- 
+2.11.0
 
-Johan
-
-/arch/arm/boot/dts/rk3288-veyron-fievel.dt.yaml: gpio7@ff7e0000:
-'gpio-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
-	From schema:
-/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-
-On 4/11/21 3:30 PM, Peter Geis wrote:
-> From: Jianqun Xu <jay.xu@rock-chips.com>
-> 
-> Separate the gpio driver from the pinctrl driver.
-> 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
