@@ -2,101 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97FDB35B243
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Apr 2021 09:55:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CBF635B2A4
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Apr 2021 11:27:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230498AbhDKHzg convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Sun, 11 Apr 2021 03:55:36 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:40232 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229792AbhDKHzf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 11 Apr 2021 03:55:35 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1lVUw3-0003jc-Rs; Sun, 11 Apr 2021 09:55:11 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH v4] pinctrl: rockchip: add support for rk3568
-Date:   Sun, 11 Apr 2021 09:55:11 +0200
-Message-ID: <6488150.4vTCxPXJkl@diego>
-In-Reply-To: <CAMdYzYp80DdEp8LM7YkEUqmu-7WwhyTvFU4QAfGu9uimsE6rYg@mail.gmail.com>
-References: <20210304013342.1106361-1-jay.xu@rock-chips.com> <CACRpkdZeZuHe9kFywrdQxcNMfAcBCJVAhJjfyD6ahLinT0hvmg@mail.gmail.com> <CAMdYzYp80DdEp8LM7YkEUqmu-7WwhyTvFU4QAfGu9uimsE6rYg@mail.gmail.com>
+        id S235005AbhDKJ1a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Apr 2021 05:27:30 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:38063 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S230103AbhDKJ1a (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Apr 2021 05:27:30 -0400
+X-UUID: 2aa1696d9cdd46fc9247484d894d73d4-20210411
+X-UUID: 2aa1696d9cdd46fc9247484d894d73d4-20210411
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1021508204; Sun, 11 Apr 2021 17:27:10 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sun, 11 Apr 2021 17:27:08 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sun, 11 Apr 2021 17:27:00 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
+        <jg_poxu@mediatek.com>, <biao.huang@mediatek.com>,
+        <hongzhou.yang@mediatek.com>, <erin.lo@mediatek.com>,
+        <sean.wang@mediatek.com>, <seiya.wang@mediatek.com>,
+        <sj.huang@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Subject: [PATCH v3 0/5] Mediatek pinctrl patch on mt8195 
+Date:   Sun, 11 Apr 2021 17:26:54 +0800
+Message-ID: <20210411092659.22838-1-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 8763930F8ABD6FD9D5F4CE88446A048F7706056405D0011918180CF2D4816D8D2000:8
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Peter,
+This series includes 5 patches:
+1.add pinctrl file and inding document on mt8195.
+2.add pinctrl device node on mt8195.
+3.add pinctrl driver on MT8195.
+4.add pinctrl drive for I2C related pins on MT8195.
+5.add pinctrl rsel setting on MT8195.
 
-Am Sonntag, 11. April 2021, 05:40:05 CEST schrieb Peter Geis:
-> On Sat, Apr 10, 2021 at 8:40 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >
-> > On Sat, Apr 10, 2021 at 11:10 PM Heiko Stübner <heiko@sntech.de> wrote:
-> > > Am Samstag, 10. April 2021, 20:30:52 CEST schrieb Peter Geis:
-> > > > Good Afternoon,
-> > > >
-> > > > I'm currently working on the rk3566 early bringup support in mainline
-> > > > and encountered an issue with this patch set.
-> > > > Unfortunately in the rk3568/rk3566 the gpio registers switched to the
-> > > > (16 bits write enable / 16 bits config) register format that other
-> > > > rockchip registers use.
-> > > > This differs from previous chips where all 32 bits were used for gpio
-> > > > configuration.
-> > > > The patch fails to account for this, which causes all gpios to fail to function.
-> > > >
-> > > > For clarity, this only affects GPIO_SWPORT_DR and GPIO_SWPORT_DDR.
-> > > >
-> > > > I'm currently working on a patch to fix this issue, but I know that
-> > > > you are planning on breaking out the gpio functions into a separate
-> > > > driver and wanted to make you aware of this immediately.
-> > >
-> > > just pointing to Jianqun's series providing the gpio controller support:
-> > >
-> > > https://lore.kernel.org/r/20210324064704.950104-1-jay.xu@rock-chips.com
-> > >
-> > > which introduces the necessary writemask-handling but seems to need an
-> > > update, judging by Ezequiel's reply to it.
-> >
-> > Does this mean that if we get a speedy and nice looking respin of the
-> > GPIO series we probably got this problem covered?
-> >
-> > The merge window is getting close but it would be nice to get this in.
-> 
-> Thank you for the responses!
-> With a bit of effort and a quick build fix, I've successfully rebased
-> the gpio patch set to the latest linux-next.
-> I now have functional gpio control on the rk3566.
-> I haven't tested them on older devices yet though.
-> 
-> With your blessing I can send in the rebased patches in the morning,
-> unless Jianqun wants to handle it.
+Changes in patch v3:
+1)change '^pins' to '-pins$'.
+2)change 'state_0_node_a' to 'gpio_pin' which is defined in dts.
+3)change 'state_0_node_b' to 'i2c0_pin' which is defined in dts.
+4)reorder this series patches. change pinctrl file and binding document
+together in one patch.
 
-I don't know which blessing you need, but from my POV - please do that :-D
-Especially as Jianqun already submitted where he wants to go with that
-and you just rebased it there shouldn't be any opposing directions here.
+There are no changes in v1 & v2.
 
-I can give it a test on other platforms when you submit if needed.
+Zhiyong Tao (5):
+  dt-bindings: pinctrl: mt8195: add pinctrl file and binding document
+  arm64: dts: mt8195: add pinctrl device node
+  pinctrl: add pinctrl driver on mt8195
+  pinctrl: add drive for I2C related pins on MT8195
+  pinctrl: add rsel setting on MT8195
 
+ .../bindings/pinctrl/pinctrl-mt8195.yaml      |  152 ++
+ arch/arm64/boot/dts/mediatek/mt8195.dtsi      |   21 +
+ drivers/pinctrl/mediatek/Kconfig              |    6 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8195.c     |  872 +++++++++
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  |   28 +
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |   15 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8195.h | 1669 +++++++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |   16 +
+ include/dt-bindings/pinctrl/mt8195-pinfunc.h  |  962 ++++++++++
+ 10 files changed, 3742 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8195.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8195.h
+ create mode 100644 include/dt-bindings/pinctrl/mt8195-pinfunc.h
 
-Heiko
-
-> 
-> >
-> > Yours,
-> > Linus Walleij
-> 
-
-
+--
+2.18.0 
 
 
