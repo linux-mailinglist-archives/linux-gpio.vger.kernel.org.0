@@ -2,92 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC84F35C769
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Apr 2021 15:20:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEFCE35C7A9
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Apr 2021 15:30:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239477AbhDLNU0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Apr 2021 09:20:26 -0400
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:40715 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239388AbhDLNUY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Apr 2021 09:20:24 -0400
-Received: by mail-oi1-f173.google.com with SMTP id i3so13367893oik.7;
-        Mon, 12 Apr 2021 06:20:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=hzHfZu8e65Sn1btLVYGzu7cBqxLKTQVgEFz+j4avFdk=;
-        b=J4Vcseh1ICbvph5Wtm45e5pe8FJq+BBC23VU03JZy0DFL+sjqZDsVDHe6xsERmqJkf
-         V0ER9wBmRVM/pSlLoO4BqJyf3ytrP/2cGo3bQaytDEnV9RNzD1Tuaz+grwyVLl79cFaA
-         +AOBcVoPy9sQk/H2DjDg8i/iv7pYvL2yT6pJ6JyS1Vu6XIlT89weThHc/lQVu7OYqLzz
-         eR7o+x2UiskbiqvHSmhcPHgQuyodH44+kHQPvvmhZdHcIl5T1W+z0gV+0cbx6hKBqZq4
-         +CUKWWTZpIfS116HHqXxRsmv/drjGoet5R7MqKHP6WgE1k5eILe6iJeE6CC3Iv29zAL+
-         YZgw==
-X-Gm-Message-State: AOAM532meCCdrbL0Xlj7P0sjqkl/NFo7VgnM7CSet5MjLSHb/Y2QI6yw
-        osU6RVYvzNTOFCZt3KJ8Yw==
-X-Google-Smtp-Source: ABdhPJyvWr8wbNAJq9fl9Tt+VaEYca5cgXsgpQzh5o8vHIS3waTqr6/xnHfjZAEI2jymUcrCseE9eA==
-X-Received: by 2002:aca:c34d:: with SMTP id t74mr20271983oif.131.1618233606225;
-        Mon, 12 Apr 2021 06:20:06 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t14sm2634140otj.50.2021.04.12.06.20.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Apr 2021 06:20:05 -0700 (PDT)
-Received: (nullmailer pid 3757974 invoked by uid 1000);
-        Mon, 12 Apr 2021 13:20:00 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, srv_heupstream@mediatek.com,
-        linux-mediatek@lists.infradead.org, hongzhou.yang@mediatek.com,
-        seiya.wang@mediatek.com, sj.huang@mediatek.com,
-        jg_poxu@mediatek.com, sean.wang@mediatek.com, mark.rutland@arm.com,
-        eddie.huang@mediatek.com, sean.wang@kernel.org,
-        biao.huang@mediatek.com, linus.walleij@linaro.org,
-        matthias.bgg@gmail.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, hui.liu@mediatek.com,
-        erin.lo@mediatek.com
-In-Reply-To: <20210411092659.22838-2-zhiyong.tao@mediatek.com>
-References: <20210411092659.22838-1-zhiyong.tao@mediatek.com> <20210411092659.22838-2-zhiyong.tao@mediatek.com>
-Subject: Re: [PATCH v3 1/5] dt-bindings: pinctrl: mt8195: add pinctrl file and binding document
-Date:   Mon, 12 Apr 2021 08:20:00 -0500
-Message-Id: <1618233600.191242.3757973.nullmailer@robh.at.kernel.org>
+        id S241756AbhDLNbF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Apr 2021 09:31:05 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:48306 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241807AbhDLNbA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Apr 2021 09:31:00 -0400
+Received: from [95.90.166.74] (helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1lVwe5-0002K0-Lw; Mon, 12 Apr 2021 15:30:29 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Peter Geis <pgwipeout@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
+        Tao Huang <huangtao@rock-chips.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rockchip@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] gpio-rockchip driver
+Date:   Mon, 12 Apr 2021 15:30:28 +0200
+Message-ID: <2004066.IobQ9Gjlxr@diego>
+In-Reply-To: <CAHp75Ve=1EbJ1qOjnTLKOwvv-UKLfxMHS-UUp=ET0zoJ9fV=ng@mail.gmail.com>
+References: <20210411133030.1663936-1-pgwipeout@gmail.com> <CAHp75Ve=1EbJ1qOjnTLKOwvv-UKLfxMHS-UUp=ET0zoJ9fV=ng@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 11 Apr 2021 17:26:55 +0800, Zhiyong Tao wrote:
-> 1. This patch adds pinctrl file for mt8195.
-> 2. This patch adds mt8195 compatible node in binding document.
+Am Montag, 12. April 2021, 14:13:37 CEST schrieb Andy Shevchenko:
+> On Sun, Apr 11, 2021 at 4:35 PM Peter Geis <pgwipeout@gmail.com> wrote:
+> >
+> > Separate gpio driver from pinctrl driver, and support v2 controller.
+> >
+> > Tested on rk3566-quartz64 prototype board.
 > 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  .../bindings/pinctrl/pinctrl-mt8195.yaml      | 152 +++
->  include/dt-bindings/pinctrl/mt8195-pinfunc.h  | 962 ++++++++++++++++++
->  2 files changed, 1114 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
->  create mode 100644 include/dt-bindings/pinctrl/mt8195-pinfunc.h
+> Can you give a bit more context?
+> Usually separation means that hardware is represented by two different
+> IP blocks that are (almost) independent to each other. Was it the case
+> on the original platforms? Do you have different pin controller (or
+> it's absent completely) on some new / old platform?
+
+They are separate on all Rockchip SoCs.
+
+I.e. the pinconfig (muxing, pulls, etc) is done via some registers inside
+the "General Register Files" [area for misc registers]
+and control for the gpio functionality is done in separate blocks
+for each bank.
+
+Lumping that stuff together into one driver, was a design-mistake
+from younger-me back in 2013 ;-)
+
+
+Heiko
+
+> >
+> > Patch History:
+> > V2 - Rebase to latest linux-next.
+> >
+> > Tested-by: Peter Geis <pgwipeout@gmail.com>
+> >
+> > Jianqun Xu (7):
+> >   pinctrl/rockchip: separate struct rockchip_pin_bank to a head file
+> >   pinctrl/pinctrl-rockchip.h: add pinctrl device to gpio bank struct
+> >   gpio: separate gpio driver from pinctrl-rockchip driver
+> >   gpio/rockchip: use struct rockchip_gpio_regs for gpio controller
+> >   gpio/rockchip: support next version gpio controller
+> >   gpio/rockchip: always enable clock for gpio controller
+> >   gpio/rockchip: drop irq_gc_lock/irq_gc_unlock for irq set type
+> >
+> >  drivers/gpio/Kconfig               |   8 +
+> >  drivers/gpio/Makefile              |   1 +
+> >  drivers/gpio/gpio-rockchip.c       | 758 ++++++++++++++++++++++++
+> >  drivers/pinctrl/pinctrl-rockchip.c | 911 +----------------------------
+> >  drivers/pinctrl/pinctrl-rockchip.h | 287 +++++++++
+> >  5 files changed, 1073 insertions(+), 892 deletions(-)
+> >  create mode 100644 drivers/gpio/gpio-rockchip.c
+> >  create mode 100644 drivers/pinctrl/pinctrl-rockchip.h
+> >
+> > --
+> > 2.25.1
+> >
+> 
+> 
 > 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-yamllint warnings/errors:
 
-dtschema/dtc warnings/errors:
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.example.dt.yaml: pinctrl@10005000: reg: [[268455936, 4096], [298909696, 4096], [299040768, 4096], [299106304, 4096], [300023808, 4096], [300023808, 4096], [300613632, 4096], [301203456, 4096], [268480512, 4096]] is too long
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-
-See https://patchwork.ozlabs.org/patch/1464777
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
 
