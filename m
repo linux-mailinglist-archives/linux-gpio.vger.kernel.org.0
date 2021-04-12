@@ -2,99 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82C4135C7B9
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Apr 2021 15:34:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46FF735C848
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Apr 2021 16:07:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240002AbhDLNeX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Apr 2021 09:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238002AbhDLNeX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Apr 2021 09:34:23 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3305EC061574;
-        Mon, 12 Apr 2021 06:34:05 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id s14so1812516pjl.5;
-        Mon, 12 Apr 2021 06:34:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pjHW4XTRsl1wYF4qZYdcelMTAy0IBBCksHH1WS+omlE=;
-        b=MnPALWznjnz/cu8jMvdqHAG0Up0fYcBUaRQSpUsWkhQbKEfoZUd9ATvHUIK5gA0NVu
-         HmyIYWad0CWwaMS7EsQsJThFbwSacdbHQeMV1i20DxBWW6B9QTKq3zQmzjgybOooxKnP
-         htvxPXSnRoPsHFlE0BOi9V83y/vob1iQ72VkZVpzKfKToikl/zLGlL0G9Wqf0/18grS1
-         KjxwGmp7tBcHU0PTOZ8dBAmHL6khTTS8hVhG3xXZ0PdaDlrxCvPXFspzLx2QhSgqGcK3
-         HMBEnCk2w8ggM2Q4RzX6Eam1Sw/7eltdSteLn8j2S7cl3m4/3TvARSwYfwUV5qIrBE+t
-         uw2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pjHW4XTRsl1wYF4qZYdcelMTAy0IBBCksHH1WS+omlE=;
-        b=ReaZ/s4F+nav9OeVQ5T1CjVRriuzGFcUt6bjEC/pt1Vb8xjHAeSdpK728cLNQp23lq
-         XoPohnAj/DNOjQY36LIn92F7RY31EQr84PKDyJHa14qdDdT8y1ySaaBb1UaMRuEnQJSH
-         AghQTb1bzPr0irPXOGl16SnkEWZuhfn5JKt99YycAsYAsTeeoqXe3Kesly+LSRyTrPbG
-         93WcfDpNqeMLVZ8UBHNhAB+lhbc7vLkLVSMIUaphI/7syIll+xRH/cQ2JY+LSaGbGh+6
-         13r++oKP74mZ9FWSaMmj5IqMoAi9EqXcuZ2WGlDOM69OfNDTsaVGPH1wh92ofKK6/GDA
-         Torw==
-X-Gm-Message-State: AOAM533KGpFEFCvoHhFnLfU9LoFxQeq3LZiE/L9v9i2t7xVUHRvugadh
-        SEIIIv0k9mCu5WlEXYR2yBUT8AE/UWpQz1NwCYo=
-X-Google-Smtp-Source: ABdhPJypL6Sgp40ZheF9duG6Z/2tCTtJ9JDjKbwColpcsDzH1Okztn7XqqAbB9SliJcoyjFRqfRUEjPgvwzgWkVA9pg=
-X-Received: by 2002:a17:90a:5407:: with SMTP id z7mr29801094pjh.228.1618234444625;
- Mon, 12 Apr 2021 06:34:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210411133030.1663936-1-pgwipeout@gmail.com> <CAHp75Ve=1EbJ1qOjnTLKOwvv-UKLfxMHS-UUp=ET0zoJ9fV=ng@mail.gmail.com>
- <2004066.IobQ9Gjlxr@diego>
-In-Reply-To: <2004066.IobQ9Gjlxr@diego>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 12 Apr 2021 16:33:48 +0300
-Message-ID: <CAHp75VdWES51UPiKayYZ15Mr7pS-Aaz51hKNFmyhbv2JqwPwPA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] gpio-rockchip driver
-To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Peter Geis <pgwipeout@gmail.com>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Tao Huang <huangtao@rock-chips.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
+        id S238727AbhDLOH5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Apr 2021 10:07:57 -0400
+Received: from mga05.intel.com ([192.55.52.43]:33978 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238015AbhDLOH4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Apr 2021 10:07:56 -0400
+IronPort-SDR: l2mWL90mY2042G82W3E6yK+L9W9Ba3UaQkmU4rIIxkK8chO+/4KIRAHQhG+ACVQnc3vzKCxxIp
+ ebuN1p5lW1Xw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9952"; a="279498533"
+X-IronPort-AV: E=Sophos;i="5.82,216,1613462400"; 
+   d="scan'208";a="279498533"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2021 07:07:38 -0700
+IronPort-SDR: Uo/sEmcUcwbPsjlWzDghuO/w6fR1yobrChD3JGkkh4PQQTm523NkKotcnWb1LpjrcLtol4DiNp
+ g7tRSdUb1GaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,216,1613462400"; 
+   d="scan'208";a="531890655"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 12 Apr 2021 07:07:33 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DC02512A; Mon, 12 Apr 2021 17:07:49 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thierry Reding <treding@nvidia.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: [PATCH v1 1/3] pinctrl: Keep enum pin_config_param ordered by name
+Date:   Mon, 12 Apr 2021 17:07:39 +0300
+Message-Id: <20210412140741.39946-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 12, 2021 at 4:30 PM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
-> Am Montag, 12. April 2021, 14:13:37 CEST schrieb Andy Shevchenko:
-> > On Sun, Apr 11, 2021 at 4:35 PM Peter Geis <pgwipeout@gmail.com> wrote:
-> > >
-> > > Separate gpio driver from pinctrl driver, and support v2 controller.
-> > >
-> > > Tested on rk3566-quartz64 prototype board.
-> >
-> > Can you give a bit more context?
-> > Usually separation means that hardware is represented by two different
-> > IP blocks that are (almost) independent to each other. Was it the case
-> > on the original platforms? Do you have different pin controller (or
-> > it's absent completely) on some new / old platform?
->
-> They are separate on all Rockchip SoCs.
->
-> I.e. the pinconfig (muxing, pulls, etc) is done via some registers inside
-> the "General Register Files" [area for misc registers]
-> and control for the gpio functionality is done in separate blocks
-> for each bank.
->
-> Lumping that stuff together into one driver, was a design-mistake
-> from younger-me back in 2013 ;-)
+It seems the ordering is by name. Keep it that way.
 
-Thanks!
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/pinctrl/pinconf-generic.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-To the submitter: Just for the future, please elaborate such things in
-the cover letter.
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index 6aeb711f7cd1..188db8d84162 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -90,6 +90,7 @@ struct pinctrl_map;
+  * 	value on the line. Use argument 1 to indicate high level, argument 0 to
+  *	indicate low level. (Please see Documentation/driver-api/pinctl.rst,
+  *	section "GPIO mode pitfalls" for a discussion around this parameter.)
++ * @PIN_CONFIG_PERSIST_STATE: retain pin state across sleep or controller reset
+  * @PIN_CONFIG_POWER_SOURCE: if the pin can select between different power
+  *	supplies, the argument to this parameter (on a custom format) tells
+  *	the driver which alternative power source to use.
+@@ -101,7 +102,6 @@ struct pinctrl_map;
+  *	or latch delay (on outputs) this parameter (in a custom format)
+  *	specifies the clock skew or latch delay. It typically controls how
+  *	many double inverters are put in front of the line.
+- * @PIN_CONFIG_PERSIST_STATE: retain pin state across sleep or controller reset
+  * @PIN_CONFIG_END: this is the last enumerator for pin configurations, if
+  *	you need to pass in custom configurations to the pin controller, use
+  *	PIN_CONFIG_END+1 as the base offset.
+@@ -127,11 +127,11 @@ enum pin_config_param {
+ 	PIN_CONFIG_LOW_POWER_MODE,
+ 	PIN_CONFIG_OUTPUT_ENABLE,
+ 	PIN_CONFIG_OUTPUT,
++	PIN_CONFIG_PERSIST_STATE,
+ 	PIN_CONFIG_POWER_SOURCE,
+ 	PIN_CONFIG_SLEEP_HARDWARE_STATE,
+ 	PIN_CONFIG_SLEW_RATE,
+ 	PIN_CONFIG_SKEW_DELAY,
+-	PIN_CONFIG_PERSIST_STATE,
+ 	PIN_CONFIG_END = 0x7F,
+ 	PIN_CONFIG_MAX = 0xFF,
+ };
+-- 
+2.30.2
 
---=20
-With Best Regards,
-Andy Shevchenko
