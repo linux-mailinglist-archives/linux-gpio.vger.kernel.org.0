@@ -2,117 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C98D35DCA0
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Apr 2021 12:44:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 088B735DD8B
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Apr 2021 13:14:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343638AbhDMKoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Apr 2021 06:44:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37500 "EHLO
+        id S1345308AbhDMLOQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Apr 2021 07:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343539AbhDMKoT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Apr 2021 06:44:19 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA0EC061574
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Apr 2021 03:43:59 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id l14so11361030ybf.11
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Apr 2021 03:43:59 -0700 (PDT)
+        with ESMTP id S1345300AbhDMLOP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Apr 2021 07:14:15 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D638C061574
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Apr 2021 04:13:54 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id j5so15056611wrn.4
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Apr 2021 04:13:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ofMEg8rv+pKPXoMYWJfZuMSoaHQfPurW7rv78Elym1g=;
-        b=T4ehIf9EYTEgcw6LNW7hIhfOrIYn21tK4+JDzP8gY0zjqewX2yID8aWTpK6Fw+gsIK
-         YgpWOAdmzlajJxemylLiZaHR+eUGjC5DUvFFn2pHTAInVlUVBMl/Q0YaOcUc/ku4Jwtf
-         8ikiLmqHVecKPhTDqJXsD0VntQXoQyJUFdL6iMK7i2i8YxavNj1hjyA2ra/hCI6IeLOI
-         BiLLbvTnQuGOXDvTyf6VrSlZtON6DhL5GifvpOZc4mi68htOtc4nKk2byBO0W11OuP4t
-         kX7D2IomWQoOg1D9aIUWK96L1lg1BwXA6Nv01GnltBy8wNorb8HZApmwP3P9EErPVksQ
-         Lr4g==
+        d=linaro.org; s=google;
+        h=references:user-agent:from:to:cc:subject:date:in-reply-to
+         :message-id:mime-version:content-transfer-encoding;
+        bh=Cu3neruluoSCQXicI1kgn+ehmqNJHkuNyetxZuBFmfY=;
+        b=hfiiqOLquAbv0Zo8WwVW2P07q1yK3rArOdZiB3bFdqqgKEY4lhM+0k9N7CEc6B7dmD
+         //pm3E0tK9HCL2QxUb6/PVLhUGdQc10kea72DZarCyaqCO0WxxJqcCLQmwn7hJEkjfoH
+         2Iiqt6IqBtzKI9PfTgrsHx2BGKb2PpShkXb0fjnkpqqjDf78j39yJlk3ZbEDkvgPa93c
+         2/cJipB4xQ+mHSaKtRMPfX/Lxs8cPxa8S+O7QT1OJ0UHk1/ZbjFuQ8awzP/0P8bG1Q6w
+         hzU5VD/Pn9vta+7UKZmMtV44h1AS9WC2Ii173EYi71sMGuGasWPvDVwjcwUHvycImZde
+         gRSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ofMEg8rv+pKPXoMYWJfZuMSoaHQfPurW7rv78Elym1g=;
-        b=hbrCdiX0iFAlEhILDKwV/xsxNwCj50MXRoH5rftTieueWKYWb3zKXRfw1jVQbS3+2I
-         VaONF2VOk7W36rvxUBLFoVgZl6i1VNgg11K6zhNUF73shEeOznA+Zm3cI126WBhQbHsR
-         hjCGklGzt1z1xP61aWqbkWCIXD7cQjMgyFW74lvKNAqjE0bH0kKLEljukIRcCnl7kpgp
-         SIemZiASpuSVnpDjHjqogJyYISkwHjydUR98SvidGgJdJrlav38GourHSTcyPJwgKoBd
-         JJewjq7rMNk+fhfH+VUkNsSFasWbWSTm6Ymj5tM7Z8qnE8Dev5ZeGKJDsz12WWvTjePH
-         ui0w==
-X-Gm-Message-State: AOAM532QnRy2NiR1zsrSD0COrfAIzzlif3ngPc+2L3yZ+/nJQxxUCFvX
-        B0Id2Obqgeu8Crv8uBCQ5VJlSArDk+P7CFfjnYikWQ==
-X-Google-Smtp-Source: ABdhPJwxTRPFSADOuvrXeqzsYv1i7IsnlryBCVMraRG7Gf38jktjIDWGtBxokWM80IHU/g/5E3+ChsgR596COR7mFHk=
-X-Received: by 2002:a25:ac52:: with SMTP id r18mr41442127ybd.25.1618310638808;
- Tue, 13 Apr 2021 03:43:58 -0700 (PDT)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
+         :in-reply-to:message-id:mime-version:content-transfer-encoding;
+        bh=Cu3neruluoSCQXicI1kgn+ehmqNJHkuNyetxZuBFmfY=;
+        b=U+dzeiJr7LpccsxkhD+7Ggykwx3yGu6gv6GXgGqyqgqM/SoRpIYA4B4/FcYYQAeawp
+         GpwY/FiObdTlHUDRBcwMD5/KHbts3BvI6wphYNTgQxSAIiKWIhXcgpDEQjGcHxRdkWw1
+         c7hLPBBFV8HssR3CzvQujxf+3sjXuYW9IygHFcjpLVQHwDYynDgYmVRAuOkoIbcMm90V
+         hmn8o01cUK8FxPGhvGdnaSd4YMiztl5n1bhicpvDGv7fM7PQoTCHdt3R1XNRWCRm63CX
+         sbE6umx+oEuksiBm8Tb3ca0FKnz9VgtxeY4WlEImeHT6X1lvkY2g9kHtpep61aDWSvzs
+         PU6g==
+X-Gm-Message-State: AOAM531iEX4TUb3HyhF+udlqHqhgYewZ4tiQQ1ADsxEAJBBAErmHulff
+        N/x42kdLCGRVItm86LHp8eBKEw==
+X-Google-Smtp-Source: ABdhPJzY9shCczKjSRW6Y2rpwOvSTMSuxueUgRqhkgPrE9aInqm3+aebb0vYVhHDuo9TmXBtfSBYUQ==
+X-Received: by 2002:a5d:43c1:: with SMTP id v1mr11267064wrr.419.1618312432810;
+        Tue, 13 Apr 2021 04:13:52 -0700 (PDT)
+Received: from zen.linaroharston ([51.148.130.216])
+        by smtp.gmail.com with ESMTPSA id j6sm2130276wmq.16.2021.04.13.04.13.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Apr 2021 04:13:51 -0700 (PDT)
+Received: from zen (localhost [127.0.0.1])
+        by zen.linaroharston (Postfix) with ESMTP id 012321FF7E;
+        Tue, 13 Apr 2021 12:13:50 +0100 (BST)
+References: <20201203191135.21576-1-info@metux.net>
+ <20201203191135.21576-2-info@metux.net>
+ <8209ce55-a4aa-f256-b9b9-f7eb3cac877b@redhat.com>
+ <43f1ee89-89f3-95a3-58f1-7a0a12c2b92f@metux.net>
+User-agent: mu4e 1.5.11; emacs 28.0.50
+From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, mst@redhat.com,
+        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-riscv@lists.infradead.org,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
+Date:   Tue, 13 Apr 2021 12:07:58 +0100
+In-reply-to: <43f1ee89-89f3-95a3-58f1-7a0a12c2b92f@metux.net>
+Message-ID: <87lf9mmo7l.fsf@linaro.org>
 MIME-Version: 1.0
-References: <20210409140806.31824-1-srinivas.neeli@xilinx.com>
- <20210409140806.31824-2-srinivas.neeli@xilinx.com> <CAHp75Vddd6ygr4mJ9Z+SuGZmfLcgDLWLZaxby2XE2mX8War-qQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vddd6ygr4mJ9Z+SuGZmfLcgDLWLZaxby2XE2mX8War-qQ@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 13 Apr 2021 12:43:48 +0200
-Message-ID: <CAMpxmJW=HWf_NxGpfBkX=utgOTs4+6RtypxnKGtpuYnX=t8rGQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: zynq: use module_platform_driver to simplify
- the code
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "shubhrajyoti.datta@xilinx.com" <shubhrajyoti.datta@xilinx.com>,
-        "sgoud@xilinx.com" <sgoud@xilinx.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "git@xilinx.com" <git@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Apr 10, 2021 at 12:08 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
->
->
-> On Friday, April 9, 2021, Srinivas Neeli <srinivas.neeli@xilinx.com> wrot=
-e:
->>
->> module_platform_driver() makes the code simpler by eliminating
->> boilerplate code.
->>
->> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
->> ---
->>  drivers/gpio/gpio-zynq.c | 17 +----------------
->>  1 file changed, 1 insertion(+), 16 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
->> index 3521c1dc3ac0..bb1ac0c5cf26 100644
->> --- a/drivers/gpio/gpio-zynq.c
->> +++ b/drivers/gpio/gpio-zynq.c
->> @@ -1020,22 +1020,7 @@ static struct platform_driver zynq_gpio_driver =
-=3D {
->>         .remove =3D zynq_gpio_remove,
->>  };
->>
->> -/**
->> - * zynq_gpio_init - Initial driver registration call
->> - *
->> - * Return: value from platform_driver_register
->> - */
->> -static int __init zynq_gpio_init(void)
->> -{
->> -       return platform_driver_register(&zynq_gpio_driver);
->> -}
->> -postcore_initcall(zynq_gpio_init);
->
->
->
-> It=E2=80=99s not an equivalent. Have you tested on actual hardware? If no=
-, there is no go for this change.
->
 
-Yep, this has been like this since the initial introduction of this
-driver. Unfortunately there's no documented reason so unless we can
-test it, it has to stay this way.
+"Enrico Weigelt, metux IT consult" <info@metux.net> writes:
 
-Bartosz
+> On 04.12.20 04:35, Jason Wang wrote:
+>
+> Hi,
+>
+>> Is the plan to keep this doc synced with the one in the virtio
+>> specification?
+>
+> Yes, of course. I'm still in progress of doing the beaurocratic stuff w/
+> virtio-tc folks (ID registration, ...) - yet have to see whether they
+> wanna add it to their spec documents ...
+>
+> BTW: if you feel, sometings not good w/ the current spec, please raise
+> your voice now.
+>
+>> I think it's better to use u8 ot uint8_t here.Git grep told me the
+>> former is more popular under Documentation/.
+>
+> thx, I'll fix that
+>
+>>> +- for version field currently only value 1 supported.
+>>> +- the line names block holds a stream of zero-terminated strings,
+>>> +=C2=A0 holding the individual line names.
+>>=20
+>> I'm not sure but does this mean we don't have a fixed length of config
+>> space? Need to check whether it can bring any trouble to
+>> migration(compatibility).
+>
+> Yes, it depends on how many gpio lines are present and how much space
+> their names take up.
+>
+> A fixed size would either put unpleasent limits on the max number of
+> lines or waste a lot space when only few lines present.
+>
+> Not that virtio-gpio is also meant for small embedded workloads running
+> under some hypervisor.
+>
+>>> +- unspecified fields are reserved for future use and should be zero.
+>>> +
+>>> +------------------------
+>>> +Virtqueues and messages:
+>>> +------------------------
+>>> +
+>>> +- Queue #0: transmission from host to guest
+>>> +- Queue #1: transmission from guest to host
+>>=20
+>>=20
+>> Virtio became more a popular in the area without virtualization. So I
+>> think it's better to use "device/driver" instead of "host/guest" here.
+>
+> Good point. But I'd prefer "cpu" instead of "driver" in that case.
+
+I think you are going to tie yourself up in knots if you don't move this
+to the OASIS spec. The reason being the VirtIO spec has definitions for
+what a "Device" and a "Driver" is that are clear and unambiguous. The
+upstream spec should be considered the canonical source of truth for any
+implementation (Linux or otherwise).
+
+By all means have the distilled documentation for the driver in the
+kernel source tree but trying to upstream an implementation before
+starting the definition in the standard is a little back to front IMHO*.
+
+* that's not to say these things can't be done in parallel as the spec
+  is reviewed and worked on and the kinks worked out but you want the
+  final order of upstreaming to start with the spec.
+
+--=20
+Alex Benn=C3=A9e
