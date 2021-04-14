@@ -2,160 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAE4F35F605
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Apr 2021 16:22:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF86335F670
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Apr 2021 16:46:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344641AbhDNOQC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Apr 2021 10:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344214AbhDNOQA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Apr 2021 10:16:00 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC7CC061574
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Apr 2021 07:15:39 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id j7so5087795pgi.3
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Apr 2021 07:15:39 -0700 (PDT)
+        id S1351888AbhDNOqW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Apr 2021 10:46:22 -0400
+Received: from mail-bn8nam11on2046.outbound.protection.outlook.com ([40.107.236.46]:22785
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1349956AbhDNOqV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 14 Apr 2021 10:46:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NhQy0+jSuNYK0X/XiqKjNKbwCZxBpY4ZzvcTTclTSg6No3tdd54u244wHDlSx+xr/ev2DLrtu42qf4x3uQ8r+PhNt1PluELagCVY+6twi7VsaLuFsMB8Jge4A+zEMn3A6uj1EBTJJAysFwBUESa7/jTIqRTJtzffSHoNMFPg/sEIw5tvfme+euZegV+fkzXfwDLzBqqipnYNMLF51LrUjtzojIWIvY6pYjtS/Tj2tDwifir7oSPXbPvlls1UbA0Y5lzVEzgC1Z8l6AVvoLmo6FCVMoBZNzXDavA1MKki/03+RHMtr54DUd8vBd4Ebz7ccEU4GMIfJzKaaSru0ruluA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NSTYy3wMGU23sEAR+Q1DjtbTfft56R5xP4bMB4ppWUE=;
+ b=Ight/PYvNN0Qkq7Vc/TcJSnHhdVSFzVqE5nBZDEb7jUA+k3s96Iwvqx/xDG/Gl7C98iaKAzt6TsqFWoZRwEO0JbBFm0OvbkpuR1gwDxUOr7b7XYw5PmJz4K+S5dmKxGcKzjefeiaUgIQ/HumBHlDnLD5JvsO7Esz3HtU3Ez7yOFLK28RbgN6AO9BRtj626lKdgMGC134yQ6vh39UfmLvNmXsAZ4ov6btitzzmSZGpvYWajyWxAUXbCGGtbahXfETKv7xN7jMaWmkPF8HrPKiWfnTiX2Fiq8m1lNZP9QrMmutbS18iYUq5FyXk5NcNC6v5fVbMDfoXC/0O87PHDG/Ug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tdFA6HRSXZI0qLHRxH3v9jIVq/32bUptpzL6TS7shvg=;
-        b=bJKUrS6mNRfc4XAZ9Aj1joJCInMY6eKRjb0oL4Fpv8UQLLpBz6WLnRXjdthiB+4a36
-         I3j90Hm0TWXt5HZLO7VnZ9QOaoUy0/oDziP25gGwg5OlXvpquizx52/d/ztM+nwema7E
-         U3mFrI/7/jsHWyOBiJ1ganii8+LfyfXDn5nVaaDmF7CwOZWm5BTJFJ4cWejjwKj10Z+D
-         d+pNEcSMzH3NUi7bswvfcLqm3/ZakCNl6BOq25KKNXvoQ+vW/JZTtmnCgVUj0DAM9SG4
-         71UYwEUj73XFm/zmKQLZlCNbJtuYHqvRSlfM4u4xbLoC9igsQTVjrI0R7lhm3Ikpkyhv
-         tCdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tdFA6HRSXZI0qLHRxH3v9jIVq/32bUptpzL6TS7shvg=;
-        b=UdienJhf2EzBcgy9E7D1/fbkp3m9CmrpY4D6yW7dNoWinAxUUfNyOqFMPoHdYnY8/+
-         Q8wpyDFrjyUg4SS+FqTGwV7B+klW6BoLz6AmMv5iO3tlx3ybDwk+92AMdccB5LhJq83y
-         5gfG26w8nzPFgo/0VT22Odrf56PzU7aS4e7MYIyjHxtKMRd+v3OGLyJGhBQRsD9FJUCt
-         T6H9S2cbAWAPv1bDG5K9w5nBNCntA1ku7jx8ppd7sucuWjjPh8c1CTk/u9wtrRxm48Wy
-         P4NW5XBJkjRFnUUOHuXLbtUUIY2fVIq4Y6Ac6Dotn2pJniGng7FpB/5CaORjjnH9bwWE
-         SNTg==
-X-Gm-Message-State: AOAM531x9DIl0ONg+b8dV11lu/kmf2S68z0AUeaIBX3IdacoxAMmkuJZ
-        fXpGsrg4uINB9lfIStKFCoY=
-X-Google-Smtp-Source: ABdhPJzkmFZIUAgm22gk1UTIhvuh2vx9JM/tF2XTPor2gt904WpXZ8bw/cjohSV9KJk/HANZgB/nyg==
-X-Received: by 2002:aa7:8e0d:0:b029:214:a511:d88b with SMTP id c13-20020aa78e0d0000b0290214a511d88bmr35185911pfr.2.1618409739010;
-        Wed, 14 Apr 2021 07:15:39 -0700 (PDT)
-Received: from sol (106-69-169-198.dyn.iinet.net.au. [106.69.169.198])
-        by smtp.gmail.com with ESMTPSA id i22sm12567649pfq.170.2021.04.14.07.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Apr 2021 07:15:38 -0700 (PDT)
-Date:   Wed, 14 Apr 2021 22:15:34 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod][RFC 0/6] first draft of libgpiod v2.0 API
-Message-ID: <20210414141534.GA20266@sol>
-References: <20210410145157.30718-1-brgl@bgdev.pl>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NSTYy3wMGU23sEAR+Q1DjtbTfft56R5xP4bMB4ppWUE=;
+ b=sMhwSmh+1Bl5BJp3mge8H7B7H7nMEOKJEbHs4exLVxyIPMuxCJCtDFKjCpaSCm1FleIo16gQfAZn8J0zlwVcFJURJgN64V2Dj+YR8c4RGGsrcT+4ReIvHuY2uxkm7vve/W87v5Dxc36w/UTREiVyeXYGMuLJI5axxKBTcGWHReE=
+Received: from DM6PR02MB5386.namprd02.prod.outlook.com (2603:10b6:5:75::25) by
+ DM6PR02MB4044.namprd02.prod.outlook.com (2603:10b6:5:9e::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4020.22; Wed, 14 Apr 2021 14:45:55 +0000
+Received: from DM6PR02MB5386.namprd02.prod.outlook.com
+ ([fe80::bdf8:e364:ff76:5a5a]) by DM6PR02MB5386.namprd02.prod.outlook.com
+ ([fe80::bdf8:e364:ff76:5a5a%7]) with mapi id 15.20.4042.016; Wed, 14 Apr 2021
+ 14:45:55 +0000
+From:   Srinivas Neeli <sneeli@xilinx.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        Michal Simek <michals@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        Srinivas Goud <sgoud@xilinx.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>
+Subject: RE: [PATCH 1/3] gpio: zynq: use module_platform_driver to simplify
+ the code
+Thread-Topic: [PATCH 1/3] gpio: zynq: use module_platform_driver to simplify
+ the code
+Thread-Index: AQHXLUnQ5yxYlAncvUSZ3jc0NDWaD6qsvx6AgAWKEwCAAdR/wA==
+Date:   Wed, 14 Apr 2021 14:45:55 +0000
+Message-ID: <DM6PR02MB5386CADF5A10EF28A640AD76AF4E9@DM6PR02MB5386.namprd02.prod.outlook.com>
+References: <20210409140806.31824-1-srinivas.neeli@xilinx.com>
+ <20210409140806.31824-2-srinivas.neeli@xilinx.com>
+ <CAHp75Vddd6ygr4mJ9Z+SuGZmfLcgDLWLZaxby2XE2mX8War-qQ@mail.gmail.com>
+ <CAMpxmJW=HWf_NxGpfBkX=utgOTs4+6RtypxnKGtpuYnX=t8rGQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJW=HWf_NxGpfBkX=utgOTs4+6RtypxnKGtpuYnX=t8rGQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: baylibre.com; dkim=none (message not signed)
+ header.d=none;baylibre.com; dmarc=none action=none header.from=xilinx.com;
+x-originating-ip: [149.199.50.130]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 96451518-943f-4422-8f78-08d8ff54025e
+x-ms-traffictypediagnostic: DM6PR02MB4044:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR02MB4044719432BAA44870BBF69FAF4E9@DM6PR02MB4044.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FxRzoSNk+NNpDHObgi1Q1DMX9tH0Ih1fpTj+CgJkFAXJ8R5bRnY7YDZO2Q4zBSyXmTrWjsHFdrZU/j4y9kZ0y3DIOsuRUReAaQAlHPJt8/6KP7oDyquZUCSlXLXUhDBbL2QwwS5BusSXutA9h/BuVJb5H3jTrI5jcSy/nfL3QNytkSPxrA7O/NPnrqrPOWP6ZcHMwrbeu8wiPcqiw9fsxrxXQA2v5KB1zeCutBYioNpOYKZTM2mkc/SbQHM6/V8XC/cB5cniUuYX1TwYK4ifB06YDwKx0Xjz35JUk7YzIWSr2CWyUHt5xm23aVXzRaYGDgU0QochbmG5l+S5gNWPI7kmlXQ+WnegwIlIJfoIFl1FCMDvy4m/KF+eKHlVhTuwa4lwQCZccBWesfFgxJ6x5c/2ozcZz3EXxvM46p/9myAQxJ9GmoarFMtb7X5h4k9c7xB3qyfxaEwtXIIztKKJMIham4tDIench8m3Fuf27PG1Vrn2uzGz2sfWnG7ERYZmtd3np82NE8B8NYpO7YRdl1kPpDBu6np0hcVlPKc22Ixc17c1wgYpbKuVH1nOfWmj9egBNJdz+KkeYKSzLwtm+vsWU0gEqFAx2pA7xnlfJGzRR6LRoQuryzbhfzh4ltTK9Lk9w3VNjuZAfdIpeYkZfVVPF1j4MwBYm9pBQ7Rxim9R2TO6vMdrOfbg9v+QVV/w
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR02MB5386.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(366004)(136003)(39850400004)(346002)(71200400001)(316002)(6506007)(33656002)(53546011)(186003)(110136005)(52536014)(7696005)(83380400001)(122000001)(86362001)(38100700002)(9686003)(55016002)(54906003)(5660300002)(66476007)(66946007)(76116006)(66556008)(66446008)(4326008)(2906002)(64756008)(8676002)(8936002)(966005)(107886003)(478600001)(26005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?U2xRSlFKSUVXTUJrMUZCOWJhdzArVmNsWDVDeG1wMXV4UVkxaGY4c0NOdEo5?=
+ =?utf-8?B?QmZCc0ZvbTFuSXdzTmhpeWVnSklFcUN1TlhIOGt4dGFaNE44ZjNKSmJSMjYr?=
+ =?utf-8?B?Zkd3RXl0anBZdmI3TU1sUXJKMDJpVkVXajdRbW9EY2VvT0JqTFR2V012R3Qw?=
+ =?utf-8?B?NzltR21kaDdDWlZSekZQa0s2V05MWlQwSWhxZ1hLM1dkaUxieDRVSENjNG5X?=
+ =?utf-8?B?RVo4Uk9jbmlVdnhlaTdJQnFnZnBKV3hrRitTZXJzc2hVcnVhSm9MMlV0WnNC?=
+ =?utf-8?B?RDhTVXpQbDEvVDNtWldPM2RDa0U3S2RkNFlzbzZnME1CejBFckFiQkRvcnIy?=
+ =?utf-8?B?THA0cXpCSGUyYWdZSU9IMFpRdm1CY1ZTUTkxdjlwd0g3WDNBSit0L1laa25H?=
+ =?utf-8?B?SmQ3eHFXODFyU3p6L0QzQlFpeG9iQ05sVWxvMkxVV29pakJ5RGlndk54L2FG?=
+ =?utf-8?B?bUJvR0Q0UG9YT1llNzl2bzNrM2M3T0tDclVRc2RLTmdTV0IrU2hvNFp2ekVN?=
+ =?utf-8?B?UVBjRzgvNzg5Mk5LZmVqWVZaRXZHYWYyL0E4bGxMcWtoU0E4c2NvR0VpbnMx?=
+ =?utf-8?B?WCtHcnBFdnB2SEdkT0liZTZhb0s1UjBrWHhyVWg4QnR1UW5KT29qNWFBSHBP?=
+ =?utf-8?B?dG1TUml2Rm9xb2l3VHlIVGgyWTB0OC9xRkxOS1FlRjRiYkpZbUpsRUpoSmRr?=
+ =?utf-8?B?OTJWQUpoUlBtTW5wVWdYOTBZYjNHVlZ3RVcvNG14bW1MYTRDeDF3N1pYaDhP?=
+ =?utf-8?B?MUVRb2JtZXFmZ2NnSWplTnVxTXJPQVhIc1ZmN1JOaFdJZXV5UGZUd1N2T24r?=
+ =?utf-8?B?Q0FCRG56WnRaa3dhMEJpbHQwaFJlNlR1Nm9vOEdLOHBkQ1o3WlEvZFkxZUxR?=
+ =?utf-8?B?Sm84Zk5ReFZ1WTF6SFpmQi91eGlnK25PREF0RkxkaDBvUGZBQzNBQ0IwNkhP?=
+ =?utf-8?B?MStkNStqVWNUUWpxd0hETkJZSzRxL1BCemlPQzdnVTVncFhRZFRCcHRSa0Na?=
+ =?utf-8?B?OW5qUlJDYk1rdUdhdEZ0VXUzUTNvSlExYVdnd2ZQUmFZUzhZc0NadUZYMTV3?=
+ =?utf-8?B?bVh6dGJWWm9XNUtNUGN1NU4veTd2bmU5MlA1LzVQK2hTVmxJT1NmcnpYU0FG?=
+ =?utf-8?B?bEJCNU9vYzB6R08yTExHdmFDUUVjWC9NQ3JDa2E3eVF0K3hsK3I1eVo3dUtZ?=
+ =?utf-8?B?WVRSV1I3Q2tIUC9oS1greXFUWllnUFF1bDIxaHk5YklQclF3UTl5RkpEOEVq?=
+ =?utf-8?B?eXBNLzhNUWV0dm9rRzhxQkRqZFdoVnVrVjduZ3hKOVRGd2FXa2szOVNnbWlq?=
+ =?utf-8?B?ajlDMEJBN1RiTjNvZGRyTzBWRFJNa2dWRHVHYmc1RHVKQ3VXSVVmWWtTREdL?=
+ =?utf-8?B?dW5pcDE4RTArTGtEajlIMEMwdkN6bjdLQmtOL3lFZkxPOE5JSnFpRU1tZ0Nj?=
+ =?utf-8?B?djdkQWtjYTFlN3dqbmJIc3RHQTRjT3E1NlZ2b1dubHE0eFgwMnNUNWZIUzB0?=
+ =?utf-8?B?Z1hvdXRoYnpDTytlSm1JSnBBbXZ2Um5ycTVUYmJFS3dGaUQ2M1Q4c3JMQzhM?=
+ =?utf-8?B?eGdnTm93VjJGN2d1RWdnQ0x0bi8rckJhWjVpdnBjWUVOYS9kUlBkQnZGWlZU?=
+ =?utf-8?B?R0FGbVJxdzhpd1ZnNDBFRnJiTXZ3Rnl0a3E4eTlCVW4zYVM5QWlGTWJRSmln?=
+ =?utf-8?B?aGdUQ25BUk43NVdxaWx0RjVOUmNxa2FzTWN6TUdUS2M2Nlo5ZUdnREtQOTZC?=
+ =?utf-8?Q?AcbwqcHeRJ9qmRbTYP3wiiGYqhgF9T2Zk7vxygJ?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210410145157.30718-1-brgl@bgdev.pl>
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR02MB5386.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96451518-943f-4422-8f78-08d8ff54025e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2021 14:45:55.3493
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LkSlZfN7HoiVlm4AVXWt76xVNKWkvZfrMYh6FMhW1t4CMNpvq7jFG3DPsmRmm4Qj56c6wIFwCHo3HXk13Qb4kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4044
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Apr 10, 2021 at 04:51:51PM +0200, Bartosz Golaszewski wrote:
-> This series introduces an entirely reworked API for the core C part of
-> libgpiod. It's not fully functional as the bindings are not modified,
-> and starting from patch 5, even the tests stop working. This is on
-> purpose as I'd like to reach an agreement on the interface before
-> spending time on reworking the tests.
-> 
-> My plan for the development of v2.0 is to keep the changes in a separate
-> branch until all bits & pieces are complete and then rearrange them into
-> a bisectable series that will be merged into the master branch.
-> 
-> A couple points regarding the design of the new API:
-> - all objects have become opaque and can only be accessed using dedicated
->   functions
-> - line objects as well as bulk containers have been removed
-> - line requests are now configured using three types of structures: attributes,
->   line config and request config structures, which follows the kernel API
-> - line request handles have now a lifetime separate from the parent chips to
->   leverage the separation of chip and request file descriptors
-> - line events are now opaque but they can be stored in a dedicated container
->   so that memory allocations are not necessary everytime an event is read from
->   the kernel
-> - the library code has been split into several compilation units for easier
->   maintenance
-> 
-> The new API is completely documented in include/gpiod.h doxygen comments.
-> 
-> Please let me know what you think. I am aware that these patches are huge and
-> difficult to review but I'm really only expecting a general API review - all
-> other implementation details can be improved later.
-> 
-
-In that vein, I'll lump my comments here, rather than scattering them
-throughout the patches...
-
-Overall it feels much tighter and clearer than the old API, though that
-could just be personal bias, as it is also closer to the new uAPI.
-
-I find the ownership and lifetime of objects confusing.  I presume you
-want to use the reference counting to simplify the object lifecycle, but
-that just formalises the possibility that objects are shared - further
-confusing the ownership issue.
-e.g. gpiod_line_config_add_attribute()
-- who owns the attr after the call?  What happens if it is subsequently
-modified? Is the attr copied or does ownership pass to the config?
-As written it is neither - the attr becomes shared.  How is that
-preferable?
-Similarly gpiod_line_get_consumer() - who owns the returned pointer and
-what is it's lifetime?
-I would prefer the opaque objects to be able to be free()d normally, and
-for any calls that involve a change of ownership to explicitly document
-that fact.
-For objects that require additional setup/cleanup, try to make use of 
-open()/close() or request()/release() function name pairings.
-So gpiod_chip would have open()/close(), gpiod_request_handle would have
-request()/release(), and the others would all be new()/free()d.
-
-Conceptually the config for each line can be considered to be independent
-- the uAPI encoding using attributes and masks is only there to keep the
-uAPI structs to a manageable size. 
-At this level you can model it as config per line, and only map
-between the uAPI structures when calling the ioctl()s.
-So I would drop the gpiod_line_attr, and instead provide accessors and
-mutators on the gpiod_line_config for each attr type.
-That removes the whole lifecycle issue for attributes, and allows you to
-provide a simpler abstraction of the config than that provided in the
-uAPI.
-For the mutators there can be two flavours, one that sets the config for
-the whole set, and another that accepts a subset of applicable lines.
-Accessors would provide the config attr for a particular line.
-Both accessor and mutator would use chip offsets to identify the lines.
-
-Not sure I like merging the direction and edge into the request_type.
-I would tend to keep those separate, with set_direction and
-set_edge_detection functions, with the latter forcing input direction.
-
-I would rename gpiod_request_config to gpiod_request_options.  Config
-is long lived and can be modified, whereas options are one-off.
-And it would reduce any chance of confusion with gpiod_line_config.
-
-gpiod_line_mask should highlight that the bits correspond to lines on
-the request, in the order provided to gpiod_request_config_set_offsets(),
-not line offsets on the chip.  Perhaps the gpiod_request_config or the
-gpiod_request_handle should provide the mask functions for a given a
-qchip offset, rather than require the user to track the mapping?
-Then the gpiod_line_mask can be opaque as well.
-
-I would rename gpiod_request_handle to gpiod_line_request.
-And request.c to options.c, and handle.c to request.c.
-
-gpiod_line_attr_set_debounce() can use a zero period to identify
-disabling debounce, so the debounce flag is redundant.
-
-Cheers,
-Kent.
+SEkgYmFyYXRvc3ogYW5kIEFuZHksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+RnJvbTogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4NCj4g
+U2VudDogVHVlc2RheSwgQXByaWwgMTMsIDIwMjEgNDoxNCBQTQ0KPiBUbzogQW5keSBTaGV2Y2hl
+bmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBDYzogU3Jpbml2YXMgTmVlbGkgPHNu
+ZWVsaUB4aWxpbnguY29tPjsgbGludXMud2FsbGVpakBsaW5hcm8ub3JnOyBNaWNoYWwgU2ltZWsN
+Cj4gPG1pY2hhbHNAeGlsaW54LmNvbT47IFNodWJocmFqeW90aSBEYXR0YSA8c2h1YmhyYWpAeGls
+aW54LmNvbT47IFNyaW5pdmFzDQo+IEdvdWQgPHNnb3VkQHhpbGlueC5jb20+OyBsaW51eC1ncGlv
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZ2l0DQo+IDxnaXRAeGlsaW54LmNvbT4N
+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIGdwaW86IHp5bnE6IHVzZSBtb2R1bGVfcGxhdGZv
+cm1fZHJpdmVyIHRvIHNpbXBsaWZ5DQo+IHRoZSBjb2RlDQo+IA0KPiBPbiBTYXQsIEFwciAxMCwg
+MjAyMSBhdCAxMjowOCBBTSBBbmR5IFNoZXZjaGVua28NCj4gPGFuZHkuc2hldmNoZW5rb0BnbWFp
+bC5jb20+IHdyb3RlOg0KPiA+DQo+ID4NCj4gPg0KPiA+IE9uIEZyaWRheSwgQXByaWwgOSwgMjAy
+MSwgU3Jpbml2YXMgTmVlbGkgPHNyaW5pdmFzLm5lZWxpQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+
+Pg0KPiA+PiBtb2R1bGVfcGxhdGZvcm1fZHJpdmVyKCkgbWFrZXMgdGhlIGNvZGUgc2ltcGxlciBi
+eSBlbGltaW5hdGluZw0KPiA+PiBib2lsZXJwbGF0ZSBjb2RlLg0KPiA+Pg0KPiA+PiBTaWduZWQt
+b2ZmLWJ5OiBTcmluaXZhcyBOZWVsaSA8c3Jpbml2YXMubmVlbGlAeGlsaW54LmNvbT4NCj4gPj4g
+LS0tDQo+ID4+ICBkcml2ZXJzL2dwaW8vZ3Bpby16eW5xLmMgfCAxNyArLS0tLS0tLS0tLS0tLS0t
+LQ0KPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxNiBkZWxldGlvbnMoLSkN
+Cj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bpby9ncGlvLXp5bnEuYyBiL2RyaXZl
+cnMvZ3Bpby9ncGlvLXp5bnEuYw0KPiA+PiBpbmRleCAzNTIxYzFkYzNhYzAuLmJiMWFjMGM1Y2Yy
+NiAxMDA2NDQNCj4gPj4gLS0tIGEvZHJpdmVycy9ncGlvL2dwaW8tenlucS5jDQo+ID4+ICsrKyBi
+L2RyaXZlcnMvZ3Bpby9ncGlvLXp5bnEuYw0KPiA+PiBAQCAtMTAyMCwyMiArMTAyMCw3IEBAIHN0
+YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIHp5bnFfZ3Bpb19kcml2ZXINCj4gPSB7DQo+ID4+
+ICAgICAgICAgLnJlbW92ZSA9IHp5bnFfZ3Bpb19yZW1vdmUsDQo+ID4+ICB9Ow0KPiA+Pg0KPiA+
+PiAtLyoqDQo+ID4+IC0gKiB6eW5xX2dwaW9faW5pdCAtIEluaXRpYWwgZHJpdmVyIHJlZ2lzdHJh
+dGlvbiBjYWxsDQo+ID4+IC0gKg0KPiA+PiAtICogUmV0dXJuOiB2YWx1ZSBmcm9tIHBsYXRmb3Jt
+X2RyaXZlcl9yZWdpc3Rlcg0KPiA+PiAtICovDQo+ID4+IC1zdGF0aWMgaW50IF9faW5pdCB6eW5x
+X2dwaW9faW5pdCh2b2lkKSAtew0KPiA+PiAtICAgICAgIHJldHVybiBwbGF0Zm9ybV9kcml2ZXJf
+cmVnaXN0ZXIoJnp5bnFfZ3Bpb19kcml2ZXIpOw0KPiA+PiAtfQ0KPiA+PiAtcG9zdGNvcmVfaW5p
+dGNhbGwoenlucV9ncGlvX2luaXQpOw0KPiA+DQo+ID4NCj4gPg0KPiA+IEl04oCZcyBub3QgYW4g
+ZXF1aXZhbGVudC4gSGF2ZSB5b3UgdGVzdGVkIG9uIGFjdHVhbCBoYXJkd2FyZT8gSWYgbm8sIHRo
+ZXJlIGlzDQo+IG5vIGdvIGZvciB0aGlzIGNoYW5nZS4NCj4gPg0KPiANCj4gWWVwLCB0aGlzIGhh
+cyBiZWVuIGxpa2UgdGhpcyBzaW5jZSB0aGUgaW5pdGlhbCBpbnRyb2R1Y3Rpb24gb2YgdGhpcyBk
+cml2ZXIuDQo+IFVuZm9ydHVuYXRlbHkgdGhlcmUncyBubyBkb2N1bWVudGVkIHJlYXNvbiBzbyB1
+bmxlc3Mgd2UgY2FuIHRlc3QgaXQsIGl0IGhhcw0KPiB0byBzdGF5IHRoaXMgd2F5Lg0KPiANCkkg
+dGVzdGVkIGRyaXZlciwgZnVuY3Rpb25hbGl0eSB3aXNlIGV2ZXJ5dGhpbmcgd29ya2luZyBmaW5l
+Lg0KQmFzZWQgb24gYmVsb3cgY29udmVyc2F0aW9uLCBJIG1vdmVkIGRyaXZlciB0byBtb2R1bGUg
+ZHJpdmVyLg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzgxODIwMi8N
+Cg0KVGhhbmtzDQpTcmluaXZhcyBOZWVsaQ0KDQo+IEJhcnRvc3oNCg==
