@@ -2,154 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 070C535F9A1
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Apr 2021 19:20:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20CE13604E7
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Apr 2021 10:53:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348850AbhDNRPp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Apr 2021 13:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348642AbhDNRPo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Apr 2021 13:15:44 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A0BC06175F
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Apr 2021 10:15:23 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id h10so24593245edt.13
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Apr 2021 10:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=UXvQGOPGMiIBh+TNB+TuJqTHlXvXGuBCSN0JQwAe2RQ=;
-        b=PWwEvYYJje0y3hO9Tl1LpDzu7QSF9xAeVKMVaYsWQZrwkc7nZjup6LaFcS/lfjD4cs
-         U3RG3b+S0Ul3QZJC7Rahky+ypsws8OJFNWgcA/uATSo/kIWbttCAdlLjnFhau8ieQOdi
-         lnZoUpHjTPV1fOkCJ3QGdk1ZDi10Do4z5CbIpvZiR6P5jMXr0qAflAIqifK5T8ybVR3s
-         DRNGrAOLqXYnH/lFkKF2u6vDCp1NHUPLZ6iwjPQaYSd3VF/lGxM3wJJgqXvYrChs7Z+T
-         R2y9g/F6WEvR4q6w7JpydKRIExcO4e8E6By3YV3o4tE6XP0k/AeXUqxynt4rjyLMpLtB
-         nSZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=UXvQGOPGMiIBh+TNB+TuJqTHlXvXGuBCSN0JQwAe2RQ=;
-        b=SC+YjBDTImwjqoeqW4a3/TVMour5nleAlDpylcqj8BO/7pIrn6LSnFpudd8a4A2uat
-         omGf+HKPItwP0rTpXC/H4P0DtMcG1dBy956Hb/kNnfJ3wCOdqX3KR655eVV8BnLjGOPG
-         TNoRSr5j5TqyIhD8jce4426fpZPHe+PJIz57k7fAen0NA6w1A7SHkSIgO52Qxwljsrj7
-         esONl8p7VMYNOGbcBUvc4a/Lw5+eoQwk0p8UZMCMHCeR9TGvteNKqZ3sG1MXOYn0YIz+
-         iCLeL2mLyPIEkMhag5YH88i92GJ5XDJKmQQQlYC3EiCKqyg4hy2VXeqedFZ8ILB5NZpr
-         fdzg==
-X-Gm-Message-State: AOAM530J+fXhiw/QEOFqnUXwKvE8bj9fkfpjWNYWcdb3clbhWBWbrDeG
-        Aj5H15R2AbHTgtZZwSB6RIf3/g==
-X-Google-Smtp-Source: ABdhPJxsbziy4uMsB6zVMu3xcsr6bls0vIOO6rGwapNBI/ohN+5CrAvAeMvtWBDqkfAGseaP3jUKjQ==
-X-Received: by 2002:a05:6402:1b1c:: with SMTP id by28mr42149129edb.62.1618420521771;
-        Wed, 14 Apr 2021 10:15:21 -0700 (PDT)
-Received: from dell ([91.110.221.215])
-        by smtp.gmail.com with ESMTPSA id p24sm180643edt.5.2021.04.14.10.15.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Apr 2021 10:15:21 -0700 (PDT)
-Date:   Wed, 14 Apr 2021 18:15:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, Clock, GPIO, Regulator
- and RTC due for the v5.13 merge window
-Message-ID: <20210414171519.GR4869@dell>
-References: <cover.1617616855.git.matti.vaittinen@fi.rohmeurope.com>
- <20210414131158.GN4869@dell>
- <20210414145345.GO4869@dell>
- <43131cbebdd04a3abc51e05de5170c583006e2d2.camel@fi.rohmeurope.com>
+        id S231808AbhDOIxi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Apr 2021 04:53:38 -0400
+Received: from muru.com ([72.249.23.125]:54676 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231251AbhDOIxh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 15 Apr 2021 04:53:37 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 1AAA780CF;
+        Thu, 15 Apr 2021 08:54:29 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Subject: [PATCH] gpio: omap: Save and restore sysconfig
+Date:   Thu, 15 Apr 2021 11:53:05 +0300
+Message-Id: <20210415085305.56413-1-tony@atomide.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <43131cbebdd04a3abc51e05de5170c583006e2d2.camel@fi.rohmeurope.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 14 Apr 2021, Vaittinen, Matti wrote:
+As we are using cpu_pm to save and restore context, we must also save and
+restore the timer sysconfig register TIOCP_CFG. This is needed because
+we are not calling PM runtime functions at all with cpu_pm.
 
-> Hello Lee, Mark, Stephen, Linus, Alexandre,
-> 
-> On Wed, 2021-04-14 at 15:53 +0100, Lee Jones wrote:
-> > On Wed, 14 Apr 2021, Lee Jones wrote:
-> > 
-> > > Please note that this PR will break your build unless you have the
-> > > required Regulator API update.
-> > > 
-> > >  fb8fee9efdcf0 regulator: Add regmap helper for ramp-delay setting
-> > >  e3baacf542756 regulator: helpers: Export helper voltage listing
-> > 
-> > Looks like Mark has these:
-> > 
-> >  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator
-> > regulator-list-ramp-helpers
-> >  
-> > > Pull at your peril! :)
-> > > 
-> > > The following changes since commit
-> > > a38fd8748464831584a19438cbb3082b5a2dab15:
-> > > 
-> > >   Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
-> > > 
-> > > are available in the Git repository at:
-> > > 
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git
-> > > tags/ib-mfd-clk-gpio-regulator-rtc-v5.13
-> > > 
-> > > for you to fetch changes up to
-> > > 5a8a64d9a38b9d3794f9f5e153fc0358b858cc24:
-> > > 
-> > >   MAINTAINERS: Add ROHM BD71815AGW (2021-04-14 10:21:43 +0100)
-> > > 
-> > > ----------------------------------------------------------------
-> > > Immutable branch between MFD, Clock, GPIO, Regulator and RTC due
-> > > for the v5.13 merge window
-> > > 
-> > > ----------------------------------------------------------------
-> > > Matti Vaittinen (16):
-> > >       rtc: bd70528: Do not require parent data
-> > >       mfd: bd718x7: simplify by cleaning unnecessary device data
-> > >       dt_bindings: bd71828: Add clock output mode
-> > >       dt_bindings: regulator: Add ROHM BD71815 PMIC regulators
-> > >       dt_bindings: mfd: Add ROHM BD71815 PMIC
-> > >       mfd: Add ROHM BD71815 ID
-> > >       mfd: Sort ROHM chip ID list for better readability
-> > >       mfd: Support for ROHM BD71815 PMIC core
-> > >       gpio: Support ROHM BD71815 GPOs
-> > >       regulator: rohm-regulator: linear voltage support
-> > >       regulator: rohm-regulator: Support SNVS HW state.
-> > >       regulator: bd718x7, bd71828: Use ramp-delay helper
-> > >       regulator: Support ROHM BD71815 regulators
-> > >       clk: bd718x7: Add support for clk gate on ROHM BD71815 PMIC
-> > >       rtc: bd70528: Support RTC on ROHM BD71815
-> > >       MAINTAINERS: Add ROHM BD71815AGW
-> 
-> I think the original idea was that Lee could get the Tag from Mark and
-> then get all the changes in via MFD tree. I can't say what would be the
-> best way to get these in. I'm open to all suggestions :)
+We need to save the sysconfig on idle as it's value can get reconfigured by
+PM runtime and can be different from the init time value. Device specific
+flags like "ti,no-idle-on-init" can affect the init value.
 
-It's done now.  Anyone who wishes to pull (and test) this branch
-should also pull in the regulator-list-ramp-helpers tag from Mark's
-Regulator tree.
+Fixes: b764a5863fd8 ("gpio: omap: Remove custom PM calls and use cpu_pm instead")
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Adam Ford <aford173@gmail.com>
+Cc: Andreas Kemnade <andreas@kemnade.info>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/gpio/gpio-omap.c                | 9 +++++++++
+ include/linux/platform_data/gpio-omap.h | 3 +++
+ 2 files changed, 12 insertions(+)
 
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -29,6 +29,7 @@
+ #define OMAP4_GPIO_DEBOUNCINGTIME_MASK 0xFF
+ 
+ struct gpio_regs {
++	u32 sysconfig;
+ 	u32 irqenable1;
+ 	u32 irqenable2;
+ 	u32 wake_en;
+@@ -1069,6 +1070,7 @@ static void omap_gpio_init_context(struct gpio_bank *p)
+ 	const struct omap_gpio_reg_offs *regs = p->regs;
+ 	void __iomem *base = p->base;
+ 
++	p->context.sysconfig	= readl_relaxed(base + regs->sysconfig);
+ 	p->context.ctrl		= readl_relaxed(base + regs->ctrl);
+ 	p->context.oe		= readl_relaxed(base + regs->direction);
+ 	p->context.wake_en	= readl_relaxed(base + regs->wkup_en);
+@@ -1088,6 +1090,7 @@ static void omap_gpio_restore_context(struct gpio_bank *bank)
+ 	const struct omap_gpio_reg_offs *regs = bank->regs;
+ 	void __iomem *base = bank->base;
+ 
++	writel_relaxed(bank->context.sysconfig, base + regs->sysconfig);
+ 	writel_relaxed(bank->context.wake_en, base + regs->wkup_en);
+ 	writel_relaxed(bank->context.ctrl, base + regs->ctrl);
+ 	writel_relaxed(bank->context.leveldetect0, base + regs->leveldetect0);
+@@ -1115,6 +1118,10 @@ static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
+ 
+ 	bank->saved_datain = readl_relaxed(base + bank->regs->datain);
+ 
++	/* Save syconfig, it's runtime value can be different from init value */
++	if (bank->loses_context)
++		bank->context.sysconfig = readl_relaxed(base + bank->regs->sysconfig);
++
+ 	if (!bank->enabled_non_wakeup_gpios)
+ 		goto update_gpio_context_count;
+ 
+@@ -1279,6 +1286,7 @@ static int gpio_omap_cpu_notifier(struct notifier_block *nb,
+ 
+ static const struct omap_gpio_reg_offs omap2_gpio_regs = {
+ 	.revision =		OMAP24XX_GPIO_REVISION,
++	.sysconfig =		OMAP24XX_GPIO_SYSCONFIG,
+ 	.direction =		OMAP24XX_GPIO_OE,
+ 	.datain =		OMAP24XX_GPIO_DATAIN,
+ 	.dataout =		OMAP24XX_GPIO_DATAOUT,
+@@ -1302,6 +1310,7 @@ static const struct omap_gpio_reg_offs omap2_gpio_regs = {
+ 
+ static const struct omap_gpio_reg_offs omap4_gpio_regs = {
+ 	.revision =		OMAP4_GPIO_REVISION,
++	.sysconfig =		OMAP4_GPIO_SYSCONFIG,
+ 	.direction =		OMAP4_GPIO_OE,
+ 	.datain =		OMAP4_GPIO_DATAIN,
+ 	.dataout =		OMAP4_GPIO_DATAOUT,
+diff --git a/include/linux/platform_data/gpio-omap.h b/include/linux/platform_data/gpio-omap.h
+--- a/include/linux/platform_data/gpio-omap.h
++++ b/include/linux/platform_data/gpio-omap.h
+@@ -85,6 +85,7 @@
+  * omap2+ specific GPIO registers
+  */
+ #define OMAP24XX_GPIO_REVISION		0x0000
++#define OMAP24XX_GPIO_SYSCONFIG		0x0010
+ #define OMAP24XX_GPIO_IRQSTATUS1	0x0018
+ #define OMAP24XX_GPIO_IRQSTATUS2	0x0028
+ #define OMAP24XX_GPIO_IRQENABLE2	0x002c
+@@ -108,6 +109,7 @@
+ #define OMAP24XX_GPIO_SETDATAOUT	0x0094
+ 
+ #define OMAP4_GPIO_REVISION		0x0000
++#define OMAP4_GPIO_SYSCONFIG		0x0010
+ #define OMAP4_GPIO_EOI			0x0020
+ #define OMAP4_GPIO_IRQSTATUSRAW0	0x0024
+ #define OMAP4_GPIO_IRQSTATUSRAW1	0x0028
+@@ -148,6 +150,7 @@
+ #ifndef __ASSEMBLER__
+ struct omap_gpio_reg_offs {
+ 	u16 revision;
++	u16 sysconfig;
+ 	u16 direction;
+ 	u16 datain;
+ 	u16 dataout;
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.31.1
