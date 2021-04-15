@@ -2,99 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D68FC360A0F
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Apr 2021 15:05:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 547A8360B31
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Apr 2021 15:59:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233085AbhDONGJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Apr 2021 09:06:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:21249 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232655AbhDONGI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 15 Apr 2021 09:06:08 -0400
-IronPort-SDR: rUP6X/kABhgez+RKMWlW1a/O1Lb1ho87CmvdjEKI/rrYPe6Wo/5OU/OZ+xQP3tJ+Fz0+YW0y5O
- ru53mbR7se6Q==
-X-IronPort-AV: E=McAfee;i="6200,9189,9955"; a="280162400"
-X-IronPort-AV: E=Sophos;i="5.82,225,1613462400"; 
-   d="scan'208";a="280162400"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 06:03:43 -0700
-IronPort-SDR: a1xlUfAK+Z4zpZkF642clCxXpiHmGJoPMBivoYCT1xBwK7GoljWI7xPHhHVZQ9yIGfX3M1YFmE
- c8+fZDCnB50w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,225,1613462400"; 
-   d="scan'208";a="452904048"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Apr 2021 06:03:41 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 7C1A612A; Thu, 15 Apr 2021 16:03:58 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S233201AbhDON7W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Apr 2021 09:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231549AbhDON7V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Apr 2021 09:59:21 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE17C061756
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Apr 2021 06:58:58 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id s7so23306846wru.6
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Apr 2021 06:58:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XVGfVGRf2lqFdi9u95Ww6kE/ExzJlYdE+7z23VB8v3A=;
+        b=Z0jka7QMeObS2sH3XYnKMtcZ4M+L2HZkoTx+uQNaVYN+nTnBXgs0fEYg6T78vU3LFV
+         qDZpyIW8TOta+/kYslVbnTPjvmjtqpXiDY1XCMyqpMbiwVqdXAj5vDjeadNyS7e+NZGa
+         jLq5NZNngaZTTrcFqDuHveX3Q+DiMr977bfSZOiK3aAsuKsaS+hfmclUOcEncXJUY4/W
+         MQ1Fb5QnEPB71KFqwhlkQXi5XFVOX0qdj6dKiTvlnrC+sCnCauNVpAo3tukc4z8M/03v
+         lU/nq216h5ALBhFThVMbM/Om0t7BSMcjGKX5NWdu2+tUpggoHAtggXK9IY0oKiGKyy8k
+         gkZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XVGfVGRf2lqFdi9u95Ww6kE/ExzJlYdE+7z23VB8v3A=;
+        b=R8XZILMIMyFRVwcNZUxSdaQff4tqdqmlX3CcBudqJ48FF08dKAOKqUDdLThhynSXfF
+         VZCIJZBKYeWiHT9QcPrFn7NUokbxzU4/kCC+yfN8QMYSQZTh6kKxhIlE8Y0O9EM/HmH+
+         B+8VwjQ3xoo+IPVGvRJPcSYlmpzoXbrK0c0FyI0AgZRV7tmQpGg/8ZkKANzPCXffQegL
+         pI5z6prh86cZEpKc8I43w65Ulsc5gxYsdOJkt6yHf9qZDZ3LHV9ekJgzZqyziqNP3Qmj
+         Dbji1lxXR5eDMwr9gljNrZrDOZfZTODKUbzYXyd/o3a6zbt6bKophtb56KjTb0PZ4DKH
+         l4EQ==
+X-Gm-Message-State: AOAM530eAN3DgEXp5oGbGvLJh2M9d9qgke4iCSxfLiD8NDiZPxUlwCpm
+        ACvr1kWyTPAQwM31kT2s4+Ye/w==
+X-Google-Smtp-Source: ABdhPJznICyWykrJyWx5i+dcomhTZnr4iAs69us/lf2jyAxWRzIkRsbO6Uykej8p9dT1E5Eg7kN5XA==
+X-Received: by 2002:a05:6000:18cd:: with SMTP id w13mr3650522wrq.20.1618495137577;
+        Thu, 15 Apr 2021 06:58:57 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-286-103.w109-210.abo.wanadoo.fr. [109.210.101.103])
+        by smtp.gmail.com with ESMTPSA id e10sm3105582wrw.14.2021.04.15.06.58.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Apr 2021 06:58:57 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v1 1/1] pinctrl: core: Show pin numbers for the controllers with base = 0
-Date:   Thu, 15 Apr 2021 16:03:56 +0300
-Message-Id: <20210415130356.15885-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.12-rc8
+Date:   Thu, 15 Apr 2021 15:58:51 +0200
+Message-Id: <20210415135851.27595-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The commit f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs file")
-enabled GPIO pin number and label in debugfs for pin controller. However,
-it limited that feature to the chips where base is positive number. This,
-in particular, excluded chips where base is 0 for the historical or backward
-compatibility reasons. Refactor the code to include the latter as well.
+Linus,
 
-Fixes: f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs file")
-Cc: Drew Fustini <drew@beagleboard.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/core.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+I waited until late with this non-urgent one hoping we'd get more fixes for this
+release cycle to go with it but nothing's coming up so please pull this single
+fix for an older problem with the sysfs interface.
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index df7f5f049139..8ef24af88b75 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1604,8 +1604,8 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
- 	unsigned i, pin;
- #ifdef CONFIG_GPIOLIB
- 	struct pinctrl_gpio_range *range;
--	unsigned int gpio_num;
- 	struct gpio_chip *chip;
-+	int gpio_num;
- #endif
- 
- 	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
-@@ -1625,7 +1625,7 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
- 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
- 
- #ifdef CONFIG_GPIOLIB
--		gpio_num = 0;
-+		gpio_num = -1;
- 		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
- 			if ((pin >= range->pin_base) &&
- 			    (pin < (range->pin_base + range->npins))) {
-@@ -1633,10 +1633,12 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
- 				break;
- 			}
- 		}
--		chip = gpio_to_chip(gpio_num);
--		if (chip && chip->gpiodev && chip->gpiodev->base)
--			seq_printf(s, "%u:%s ", gpio_num -
--				chip->gpiodev->base, chip->label);
-+		if (gpio_num >= 0)
-+			chip = gpio_to_chip(gpio_num);
-+		else
-+			chip = NULL;
-+		if (chip)
-+			seq_printf(s, "%u:%s ", gpio_num - chip->gpiodev->base, chip->label);
- 		else
- 			seq_puts(s, "0:? ");
- #endif
--- 
-2.30.2
+Bartosz
 
+The following changes since commit 6cb59afe9e5b45a035bd6b97da6593743feefc72:
+
+  gpiolib: Assign fwnode to parent's if no primary one provided (2021-03-16 10:18:08 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.12-rc8
+
+for you to fetch changes up to 23cf00ddd2e1aacf1873e43f5e0c519c120daf7a:
+
+  gpio: sysfs: Obey valid_mask (2021-03-31 20:32:38 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v5.12-rc8
+
+- do not allow exporting GPIO lines which were marked invalid by the driver
+
+----------------------------------------------------------------
+Matti Vaittinen (1):
+      gpio: sysfs: Obey valid_mask
+
+ drivers/gpio/gpiolib-sysfs.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
