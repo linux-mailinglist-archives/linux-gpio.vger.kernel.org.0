@@ -2,95 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 547A8360B31
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Apr 2021 15:59:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B09D3611D4
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Apr 2021 20:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233201AbhDON7W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Apr 2021 09:59:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231549AbhDON7V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Apr 2021 09:59:21 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE17C061756
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Apr 2021 06:58:58 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id s7so23306846wru.6
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Apr 2021 06:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XVGfVGRf2lqFdi9u95Ww6kE/ExzJlYdE+7z23VB8v3A=;
-        b=Z0jka7QMeObS2sH3XYnKMtcZ4M+L2HZkoTx+uQNaVYN+nTnBXgs0fEYg6T78vU3LFV
-         qDZpyIW8TOta+/kYslVbnTPjvmjtqpXiDY1XCMyqpMbiwVqdXAj5vDjeadNyS7e+NZGa
-         jLq5NZNngaZTTrcFqDuHveX3Q+DiMr977bfSZOiK3aAsuKsaS+hfmclUOcEncXJUY4/W
-         MQ1Fb5QnEPB71KFqwhlkQXi5XFVOX0qdj6dKiTvlnrC+sCnCauNVpAo3tukc4z8M/03v
-         lU/nq216h5ALBhFThVMbM/Om0t7BSMcjGKX5NWdu2+tUpggoHAtggXK9IY0oKiGKyy8k
-         gkZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XVGfVGRf2lqFdi9u95Ww6kE/ExzJlYdE+7z23VB8v3A=;
-        b=R8XZILMIMyFRVwcNZUxSdaQff4tqdqmlX3CcBudqJ48FF08dKAOKqUDdLThhynSXfF
-         VZCIJZBKYeWiHT9QcPrFn7NUokbxzU4/kCC+yfN8QMYSQZTh6kKxhIlE8Y0O9EM/HmH+
-         B+8VwjQ3xoo+IPVGvRJPcSYlmpzoXbrK0c0FyI0AgZRV7tmQpGg/8ZkKANzPCXffQegL
-         pI5z6prh86cZEpKc8I43w65Ulsc5gxYsdOJkt6yHf9qZDZ3LHV9ekJgzZqyziqNP3Qmj
-         Dbji1lxXR5eDMwr9gljNrZrDOZfZTODKUbzYXyd/o3a6zbt6bKophtb56KjTb0PZ4DKH
-         l4EQ==
-X-Gm-Message-State: AOAM530eAN3DgEXp5oGbGvLJh2M9d9qgke4iCSxfLiD8NDiZPxUlwCpm
-        ACvr1kWyTPAQwM31kT2s4+Ye/w==
-X-Google-Smtp-Source: ABdhPJznICyWykrJyWx5i+dcomhTZnr4iAs69us/lf2jyAxWRzIkRsbO6Uykej8p9dT1E5Eg7kN5XA==
-X-Received: by 2002:a05:6000:18cd:: with SMTP id w13mr3650522wrq.20.1618495137577;
-        Thu, 15 Apr 2021 06:58:57 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-286-103.w109-210.abo.wanadoo.fr. [109.210.101.103])
-        by smtp.gmail.com with ESMTPSA id e10sm3105582wrw.14.2021.04.15.06.58.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Apr 2021 06:58:57 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S234603AbhDOSPZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Apr 2021 14:15:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234447AbhDOSPY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 15 Apr 2021 14:15:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 60E5C6137D;
+        Thu, 15 Apr 2021 18:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618510501;
+        bh=MEHqghrpLfxM2WugD2PWRHabB04JRDBC1VesLPoKEEo=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=IiZUEhFUH1YpomlzNKED13Zo/Ng0Z6OqdKj65AI2+ORQtlqFx/WweEAhkENSG1KHu
+         vhhk6MpGISoYhhUYc+QzzZvXrrs2yjjmmdtgRWdXkennWdQyBi9fBYSrhGifUA/XxP
+         2K4m+3XSs6lWnyu11YYxG+XkXM+Jz4TpPJRPM/bnspg9uCQ7NbuwjB9qeuiOPtKJv3
+         nMRoj7G36LxY2We9ElZhEPKpAGrC/bLHH9DjmZaqElZya2fegzoy24p4SF1xCvuIrS
+         JefzQdmN1tATWg323mMGtC5he0/XbDth6wz/26pkYv2gwhALMegXizzMiTIw0XYxiN
+         xEI1CP8NJZFrQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 5A93E609AF;
+        Thu, 15 Apr 2021 18:15:01 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v5.12-rc8
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210415135851.27595-1-brgl@bgdev.pl>
+References: <20210415135851.27595-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210415135851.27595-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.12-rc8
+X-PR-Tracked-Commit-Id: 23cf00ddd2e1aacf1873e43f5e0c519c120daf7a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 33f0d9d94a0ef0814d23320c2536c4135d230114
+Message-Id: <161851050136.16434.17611793206155054724.pr-tracker-bot@kernel.org>
+Date:   Thu, 15 Apr 2021 18:15:01 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.12-rc8
-Date:   Thu, 15 Apr 2021 15:58:51 +0200
-Message-Id: <20210415135851.27595-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+The pull request you sent on Thu, 15 Apr 2021 15:58:51 +0200:
 
-I waited until late with this non-urgent one hoping we'd get more fixes for this
-release cycle to go with it but nothing's coming up so please pull this single
-fix for an older problem with the sysfs interface.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.12-rc8
 
-Bartosz
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/33f0d9d94a0ef0814d23320c2536c4135d230114
 
-The following changes since commit 6cb59afe9e5b45a035bd6b97da6593743feefc72:
+Thank you!
 
-  gpiolib: Assign fwnode to parent's if no primary one provided (2021-03-16 10:18:08 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.12-rc8
-
-for you to fetch changes up to 23cf00ddd2e1aacf1873e43f5e0c519c120daf7a:
-
-  gpio: sysfs: Obey valid_mask (2021-03-31 20:32:38 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v5.12-rc8
-
-- do not allow exporting GPIO lines which were marked invalid by the driver
-
-----------------------------------------------------------------
-Matti Vaittinen (1):
-      gpio: sysfs: Obey valid_mask
-
- drivers/gpio/gpiolib-sysfs.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
