@@ -2,80 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E06B3648AB
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Apr 2021 18:58:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95095364ED0
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Apr 2021 01:43:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239432AbhDSQ7G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Apr 2021 12:59:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239283AbhDSQ7G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Apr 2021 12:59:06 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6AEEC061761
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Apr 2021 09:58:36 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id n140so36081739oig.9
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Apr 2021 09:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FgaZOWwxCgbBr8FV3M4A5B8r9XqZOZTqmUgzyfoA1fs=;
-        b=JKYpV6aVoUfBcP0DtNgR2LMxzzmo7snB0v00NENmC1ubAJ+5bcPkWEIehJUCf3V/Uu
-         qmdzhEgWKcBPFn61R6fuUhEWeBC43sIqXzKK6RBgggcwxu6T6os8V3Gk7PUVItEU0phj
-         7xu0K43EEohZ93TnJy7pDldmj/xRvjEJHiJWMCxaXnbNPwJ0hllbnsRBbxN0NSGR/yDv
-         s42MdZiel7TJm2BTepOkWKOJavnMQaS7q9/+oTbO5vq9b408zHcCAyZJs0un1sCXQAZs
-         NqgcIMprf2fj3sdtyAZ7bIKX68KA9QvWJoHaPfcb8KGBkfVeU0rsL6GmMPIZWcULrv4E
-         l3PA==
+        id S232415AbhDSXnu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Apr 2021 19:43:50 -0400
+Received: from gw.atmark-techno.com ([13.115.124.170]:42770 "EHLO
+        gw.atmark-techno.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229695AbhDSXnp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Apr 2021 19:43:45 -0400
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com [209.85.210.70])
+        by gw.atmark-techno.com (Postfix) with ESMTPS id 1F7D4804A6
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Apr 2021 08:43:09 +0900 (JST)
+Received: by mail-ot1-f70.google.com with SMTP id h22-20020a9d6f960000b029029e185197c1so486023otq.0
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Apr 2021 16:43:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FgaZOWwxCgbBr8FV3M4A5B8r9XqZOZTqmUgzyfoA1fs=;
-        b=njczRg3sbJBobVKpv6zTmYxav7Fy8QwvAMlkp2mORB96vHNPfVYv73YkQAe6+aMEfL
-         /1GX/HgfAMSnOgDGeRN3rYQ3uwQPuFCpVgNomW8bFYSlGlEwBz1DbXu4GhSaykxN0PhZ
-         inu6tjjHBDim8KGx6gAeC3G3E2jhXTNxT4m4UfZzX9Jtk5sVt0Fu7ZONYHMLq5/w4VLn
-         O0eWwq6vdYVnmSxaY1133OsAjuka0asCH6SA/P+EFkhdgYy48bw3AvjRnqzfers4wH+u
-         CvIHqUa9V4y7uF7zIlzH5iVSdkciyTED6wZ2kZ8mWxtGpqjU6vR3TCI+EoGMw1zuy7nW
-         htFg==
-X-Gm-Message-State: AOAM532Z33ZTNMAfxBCiBOgfNTKXW/cOg7lAsGYLY6j17ms7AycvHzZc
-        E2nlo+d0YWHbbqigM10SqbbpSaYgdnXIxNqjdHooAg==
-X-Google-Smtp-Source: ABdhPJwbP4UlnjeTZRe1BOf4jiW5ncoxnVFIFgqdWoXRNBXNPgn0G6P55obzgyUNPOR2YRre1j0cEFH1dJPxoNEH/og=
-X-Received: by 2002:a54:4482:: with SMTP id v2mr13818oiv.75.1618851516169;
- Mon, 19 Apr 2021 09:58:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210415130356.15885-1-andriy.shevchenko@linux.intel.com> <CAHp75VcVBELiTk3C79jHUtxG5xBDoa-wpFYPPXiTUfV-J0PqRQ@mail.gmail.com>
-In-Reply-To: <CAHp75VcVBELiTk3C79jHUtxG5xBDoa-wpFYPPXiTUfV-J0PqRQ@mail.gmail.com>
-From:   Drew Fustini <drew@beagleboard.org>
-Date:   Mon, 19 Apr 2021 09:58:25 -0700
-Message-ID: <CAPgEAj5yc_RKt5t=Wt5nBzXFSN0ztPbC=6HXXivmxcH1QMi66w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: core: Show pin numbers for the
- controllers with base = 0
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YfTDNxUjME1kzwn4ONpBlmaWp5uEs0PGjlewRbiJ8O0=;
+        b=H/WEMkISq019MGMtJAooXxd4zNNjH81qbGbU1XebRhedCLnHnKOBd00BJVC+Vt8T7A
+         JVZpNUhanGOsM7n3UdSVUD7AGzE7VXFGZgbmHiS5VPF771OYqrYQ05jtBPKdoxlJ0Fp+
+         CuiXLesvPzpWype6JhzzWbhhaPuD/8WDXr/bjjDl1cXqJVHhvMrAjBJ0sdFlEKm1mdko
+         tgxk3sIPotvxHdW9r5KjPdGWDVW0+Rht+kuPNiX+KWwWqTEqOVhPybDmPE0Ti79uABlc
+         8KvTirn2sEbNwy71cI4eRAptmR1RFKAT/obQu9mkOT5c1CzwuLdZH85Ph3mg3sIqOneD
+         1Bbg==
+X-Gm-Message-State: AOAM532oY/X1E34sc8kNIA0uB8tt/+A4cuBfGV0SyOacu1aMYf/UvrG3
+        dGnnHgSAQuwUW2BobYB9aN3qqNj0UnISxUNwOo9S/YVNZCykDNwB74+TuazMs6xqFa9qO6PU50O
+        7O/c0oxOvMXpfpbzGP8VJHEXc6g==
+X-Received: by 2002:a17:90a:1c1:: with SMTP id 1mr1708194pjd.190.1618875776934;
+        Mon, 19 Apr 2021 16:42:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzRGNIqy2AO5m9iOwuC4N09BxordE8LmUXYTIIeyniOtbCQKfA0MKaQl391n1ZLV3YIJOra8w==
+X-Received: by 2002:a17:90a:1c1:: with SMTP id 1mr1708139pjd.190.1618875776711;
+        Mon, 19 Apr 2021 16:42:56 -0700 (PDT)
+Received: from pc-0115 (76.125.194.35.bc.googleusercontent.com. [35.194.125.76])
+        by smtp.gmail.com with ESMTPSA id r3sm8384971pgn.82.2021.04.19.16.42.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Apr 2021 16:42:55 -0700 (PDT)
+Received: from martinet by pc-0115 with local (Exim 4.94)
+        (envelope-from <martinet@pc-0115>)
+        id 1lYdXa-002mPj-58; Tue, 20 Apr 2021 08:42:54 +0900
+Date:   Tue, 20 Apr 2021 08:42:44 +0900
+From:   Dominique MARTINET <dominique.martinet@atmark-techno.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Alice Guo (OSS)" <alice.guo@oss.nxp.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        aymen.sghaier@nxp.com, Herbert Xu <herbert@gondor.apana.org.au>,
+        David Miller <davem@davemloft.net>,
+        Tony Lindgren <tony@atomide.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        peter.ujfalusi@gmail.com, Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Robert Foss <robert.foss@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kevin Hilman <khilman@baylibre.com>, tomba@kernel.org,
+        jyri.sarha@iki.fi, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kishon <kishon@ti.com>, Jakub Kicinski <kuba@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Roy Pledge <Roy.Pledge@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Felipe Balbi <balbi@kernel.org>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, dmaengine@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:ARM/Amlogic Meson SoC support" 
+        <linux-amlogic@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-phy@lists.infradead.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-staging@lists.linux.dev,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Subject: Re: [RFC v1 PATCH 3/3] driver: update all the code that use
+ soc_device_match
+Message-ID: <YH4VdPNO9cdzc5MD@atmark-techno.com>
+References: <20210419042722.27554-1-alice.guo@oss.nxp.com>
+ <20210419042722.27554-4-alice.guo@oss.nxp.com>
+ <YH0O907dfGY9jQRZ@atmark-techno.com>
+ <CAMuHMdVY1SLZ0K30T2pimyrR6Mm=VoSTO=L-xxCy2Bj7_kostw@mail.gmail.com>
+ <YH1OeFy+SepIYYG0@atmark-techno.com>
+ <CAK8P3a1Mu2F0irDDCL-50HiHth29iYFL5b7WHZ=UX6W7zzoxAg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1Mu2F0irDDCL-50HiHth29iYFL5b7WHZ=UX6W7zzoxAg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 19, 2021 at 3:04 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Apr 15, 2021 at 4:07 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+Arnd Bergmann wrote on Mon, Apr 19, 2021 at 02:16:36PM +0200:
+> In some cases, you can use the device_link infrastructure to deal
+> with dependencies between devices. Not sure if this would help
+> in your case, but have a look at device_link_add() etc in drivers/base/core.c
+
+I'll need to actually try to convince myself but if creating the link
+forces driver registration then it should be workable.
+
+> > In this particular case the problem is that since 7d981405d0fd ("soc:
+> > imx8m: change to use platform driver") the soc probe tries to use the
+> > nvmem driver for ocotp fuses for imx8m devices, which isn't ready yet.
+> > So soc loading gets pushed back to the end of the list because it gets
+> > defered and other drivers relying on soc_device_match get confused
+> > because they wrongly think a device doesn't match a quirk when it
+> > actually does.
 > >
-> > The commit f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs file")
-> > enabled GPIO pin number and label in debugfs for pin controller. However,
-> > it limited that feature to the chips where the base is a positive number. This,
-> > in particular, excluded chips where base is 0 for the historical or backward
-> > compatibility reasons. Refactor the code to include the latter as well.
->
-> Linus, since we got one more week, can you consider applying this one
-> and the other one against kernel doc for the final release?
+> > If there is a way to ensure the nvmem driver gets loaded before the soc,
+> > that would also solve the problem nicely, and avoid the need to mess
+> > with all the ~50 drivers which use it.
+> >
+> > Is there a way to control in what order drivers get loaded? Something in
+> > the dtb perhaps?
+> 
+> For built-in drivers, load order depends on the initcall level and
+> link order (how things are lined listed in the Makefile hierarchy).
+> 
+> For loadable modules, this is up to user space in the end.
+> 
+> Which of the drivers in this scenario are loadable modules?
 
-Thank you for the reminder.  I will test today.
+All the drivers involved in my case are built-in (nvmem, soc and final
+soc_device_match consumer e.g. caam_jr that crashes the kernel if soc is
+not identified properly).
 
--Drew
+I frankly don't like the idea of moving nvmem/ above soc/ in
+drivers/Makefile as a "solution" to this (especially as there is one
+that seems to care about what soc they run on...), so I'll have a look
+at links first, hopefully that will work out.
+
+
+Thanks,
+-- 
+Dominique
