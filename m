@@ -2,477 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 317503637C5
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 Apr 2021 23:12:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E493363907
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Apr 2021 03:17:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbhDRVNG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 18 Apr 2021 17:13:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46130 "EHLO
+        id S233117AbhDSBS0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 18 Apr 2021 21:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230457AbhDRVNF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Apr 2021 17:13:05 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D9BC06174A
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Apr 2021 14:12:36 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id n2so49811009ejy.7
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Apr 2021 14:12:36 -0700 (PDT)
+        with ESMTP id S236929AbhDSBSX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Apr 2021 21:18:23 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E27DC06174A
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Apr 2021 18:17:51 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id s20so998722plr.13
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Apr 2021 18:17:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zs7Rz8HLlBT6C9meJCxM3RhK2BH7dlrNLleJngnGeOE=;
-        b=YF5VbP+SZlPf8Js4TDfoouXxfWBu/omcYRVk2gNqoMQHJDCOG3BxpVmqybh1Zf27Wr
-         4qEU68nN9rYtEe7NEpXhvhBEXkOfzfq5h1JCh/pGT9HdlcoSsP6eNwaI0U1Ypt3SEq8j
-         QOz7L8ecLN2XBLGe4f8K23WOMpP3ucI6W1qWI+nVaHqF/ftT6M1uRsZ41IFjJytDnvFP
-         YGwm9kkGiuA2a7E0H0xLsgJoHoQSXdd0zxxa9Y9CBpUHfiSm7oTxrpHirAcLOS6tLA1l
-         hw5JraC8hAFjF8/JFaIhKBn6OrZQ4tEfS1/Ym5Na1x7n6oNRcCoN1RY/5E95UNGdsecd
-         ucUg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yrr1FZoyEEy3BR5xL6NBYsMzEmqJU/Se4Ax5U+fXQZg=;
+        b=BFKM2YWdFvO9yF1/wrrKhsDkDgTxeIKM42F8QF/ei4f4R9ZbsCEnTCcZbfAnm3FqOK
+         K3yYIcA/3As11cHr9g5UACHHRz02ko/bzRtYazrtZ3lvIj073Vn+2UoJfVfAO0NS0FJ5
+         S8bAR9ICzvqnrKDkGas7fQzOJTcej207vrye5SL0y+93QKXJs8JBAityLwQ+u6KMbDhE
+         PJYVfpfYUMJuiC8V9NjMQHVjVJA/WoXNlGR/GQBXqm/bCRoTJkLrWw0yF/SY9B79eZZ3
+         S1Zs4f1ioc1Z0fTK5scya8ve6fkasVhMeHJ4PjqBCyWymLqchJ4V6MUyeGXc4LvjCr6k
+         Cwmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zs7Rz8HLlBT6C9meJCxM3RhK2BH7dlrNLleJngnGeOE=;
-        b=GT39O3wQiK+Yj6tCQ9ilVOtarMnUihI0oZsSsc22t9BWbvjMSVvIZgyeAVi9l5Rdqy
-         QB4vGPSX/ik5yCc7ORcbg+YYO5d0Z6LhCcwPi2kk5qEa1kmezcA0PjrH8OSff1BdDziw
-         HeRILNRFkEFGrz12v+MG5gDxEv6Y8EkyQx1Yg7X7dKCUhUgQr4p0+7FaC1BcJTy7dsnV
-         E04n/18ALI+B0SrLy1lXcnvQN6xA1qf9MleH8snbP99iV1fwezf2JmJiSHQzqxgZZvur
-         uWhYX7DvyugV50/AWbu2FT6Yhxr0fPgctuZA2GJIgDkGqiyiehM7eJjPltPnTPYD37+s
-         bnQA==
-X-Gm-Message-State: AOAM530xwQ6NQkJ+wac4brtbbMkYf9FRSa/S0yzDST6TdyKln7utohMR
-        KQODnG3+qSWQ7c3zNQtLbPzg7kS9gi8J1nZNSHXVVw==
-X-Google-Smtp-Source: ABdhPJwLDIeS47ArPocYH/ItzXc36Jt5ovsS9XL9iTAvbpZgQ3Wi165SH5XfqOlddZ/wRua9JJS2qEv4ZJ6KrLb/JJI=
-X-Received: by 2002:a17:906:4bce:: with SMTP id x14mr18250179ejv.383.1618780355066;
- Sun, 18 Apr 2021 14:12:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210410145157.30718-1-brgl@bgdev.pl> <20210414141534.GA20266@sol>
- <CAMRc=MeUR=9oohM29ZX_HPdBubd0ERn6KvoFfWZGg+r_u5WsYg@mail.gmail.com>
- <20210417072326.GA12853@sol> <CAMRc=McOiBo9ENieObtF8fy93PZBoQSYBLFgnM_ST=j5_SzoyA@mail.gmail.com>
- <20210418034810.GA9261@sol>
-In-Reply-To: <20210418034810.GA9261@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sun, 18 Apr 2021 23:12:24 +0200
-Message-ID: <CAMRc=Md8S=CayttjiEVw7f6LYUZzUO9EE-kv6iyUkDqi_5GE3w@mail.gmail.com>
-Subject: Re: [libgpiod][RFC 0/6] first draft of libgpiod v2.0 API
-To:     Kent Gibson <warthog618@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yrr1FZoyEEy3BR5xL6NBYsMzEmqJU/Se4Ax5U+fXQZg=;
+        b=QpwrfY9qVSzNYmKqvAG0+/UK1phP3PsBUnKhiwvJm5rk1ED9Ei+4fddTiOjQv5i0L8
+         wNTUbWq22p4XoSAXueBTifqUNw0j17eIp3ws2ECiW+JUO8mUJFNNrt81mf1Ti7tDT0pW
+         nN/GNfHi1eqkO/xo/ys1BIORSYuMKiegECgbVLIuZDbY+hQZGvi6EtypTZrBl9gOupLz
+         AqpMGwah/Drpj1C+cxwPFCkDIh8rVJQIAhCZxJ4cwv4gkpEiLAMiHl3T/FMJ8UFQmton
+         ifWQaLsEuLrqAd3rqR34JfZIEXJUkcUVkL5RApLkAEqREqY36rlgP3Z2ak4awKYUeM5a
+         mXRw==
+X-Gm-Message-State: AOAM530gVa32f/acBG9Mz0mShiyG5uVTOyM9UEvZhn57xE6ajnAYvICx
+        mzTWLyMK3ShSytjLFQMugHfmvl6Hg6g=
+X-Google-Smtp-Source: ABdhPJxzXi8AkkQO5Dl8q+NMgt8JRV71YFQ/6X7OU9ChvRZK1fGyAlYvr11OCfz2sml/t9iHXmbE9A==
+X-Received: by 2002:a17:90a:f2c7:: with SMTP id gt7mr22934034pjb.157.1618795070829;
+        Sun, 18 Apr 2021 18:17:50 -0700 (PDT)
+Received: from sol (106-69-169-198.dyn.iinet.net.au. [106.69.169.198])
+        by smtp.gmail.com with ESMTPSA id i22sm11756002pgj.90.2021.04.18.18.17.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Apr 2021 18:17:49 -0700 (PDT)
+Date:   Mon, 19 Apr 2021 09:17:46 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [libgpiod][RFC 0/6] first draft of libgpiod v2.0 API
+Message-ID: <20210419011746.GA4766@sol>
+References: <20210410145157.30718-1-brgl@bgdev.pl>
+ <20210414141534.GA20266@sol>
+ <CAMRc=MeUR=9oohM29ZX_HPdBubd0ERn6KvoFfWZGg+r_u5WsYg@mail.gmail.com>
+ <20210417072326.GA12853@sol>
+ <CAMRc=McOiBo9ENieObtF8fy93PZBoQSYBLFgnM_ST=j5_SzoyA@mail.gmail.com>
+ <20210418034810.GA9261@sol>
+ <CAMRc=Md8S=CayttjiEVw7f6LYUZzUO9EE-kv6iyUkDqi_5GE3w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Md8S=CayttjiEVw7f6LYUZzUO9EE-kv6iyUkDqi_5GE3w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 18, 2021 at 5:48 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Sat, Apr 17, 2021 at 01:31:01PM +0200, Bartosz Golaszewski wrote:
-> > On Sat, Apr 17, 2021 at 9:23 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > On Fri, Apr 16, 2021 at 11:36:08AM +0200, Bartosz Golaszewski wrote:
-> > > > Hi Kent!
-> > > >
-> > > > Thanks a lot for looking at this.
-> > > >
-> > > > On Wed, Apr 14, 2021 at 4:15 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > > >
-> > > > > On Sat, Apr 10, 2021 at 04:51:51PM +0200, Bartosz Golaszewski wrote:
-> > > > > > This series introduces an entirely reworked API for the core C part of
-> > > > > > libgpiod. It's not fully functional as the bindings are not modified,
-> > > > > > and starting from patch 5, even the tests stop working. This is on
-> > > > > > purpose as I'd like to reach an agreement on the interface before
-> > > > > > spending time on reworking the tests.
-> > > > > >
-> > > > > > My plan for the development of v2.0 is to keep the changes in a separate
-> > > > > > branch until all bits & pieces are complete and then rearrange them into
-> > > > > > a bisectable series that will be merged into the master branch.
-> > > > > >
-> > > > > > A couple points regarding the design of the new API:
-> > > > > > - all objects have become opaque and can only be accessed using dedicated
-> > > > > >   functions
-> > > > > > - line objects as well as bulk containers have been removed
-> > > > > > - line requests are now configured using three types of structures: attributes,
-> > > > > >   line config and request config structures, which follows the kernel API
-> > > > > > - line request handles have now a lifetime separate from the parent chips to
-> > > > > >   leverage the separation of chip and request file descriptors
-> > > > > > - line events are now opaque but they can be stored in a dedicated container
-> > > > > >   so that memory allocations are not necessary everytime an event is read from
-> > > > > >   the kernel
-> > > > > > - the library code has been split into several compilation units for easier
-> > > > > >   maintenance
-> > > > > >
-> > > > > > The new API is completely documented in include/gpiod.h doxygen comments.
-> > > > > >
-> > > > > > Please let me know what you think. I am aware that these patches are huge and
-> > > > > > difficult to review but I'm really only expecting a general API review - all
-> > > > > > other implementation details can be improved later.
-> > > > > >
-> > > > >
-> > > >
-> > > > Just to clarify why I did certain things the way I did: there are
-> > > > certain semi-standardized guidelines to creating low-level C libraries
-> > > > for linux user-space interfaces. They are gathered in a sample project
-> > > > called libabc[1][2][3]. Most plumbing-layer libraries follow these
-> > > > guidelines more or less rigorously. Many low-level programmers will
-> > > > make certain assumptions based on their previous experiences when
-> > > > working with libraries and it's good to be as little confusing as
-> > > > possible.
-> > > >
-> > >
-> > > Fair enough, though I don't see anything in libabc that conflicts with
-> > > my suggestions, nor that require some of your design choices.
-> > >
-> > > > > In that vein, I'll lump my comments here, rather than scattering them
-> > > > > throughout the patches...
-> > > > >
-> > > > > Overall it feels much tighter and clearer than the old API, though that
-> > > > > could just be personal bias, as it is also closer to the new uAPI.
-> > > > >
-> > > > > I find the ownership and lifetime of objects confusing.  I presume you
-> > > > > want to use the reference counting to simplify the object lifecycle, but
-> > > > > that just formalises the possibility that objects are shared - further
-> > > > > confusing the ownership issue.
-> > > >
-> > > > Interesting because in my mind reference counting actually simplifies
-> > > > the life-time of objects - everytime someone (the caller or another
-> > > > object) stores the address of the object, the reference count is
-> > > > increased.
-> > > >
-> > > > Reference counting is a de-facto standard in C libraries. Look at
-> > > > libkmod, libudev, libpulse, all the systemd libraries, the whole of
-> > > > GLib.
-> > > >
-> > >
-> > > I don't doubt that reference counting is out there, I question whether
-> > > it is necessary here.
-> > >
-> > > In my mind reference counting is a tool to be used when you need to
-> > > share objects and it isn't clear who is responsible for freeing
-> > > them.  I don't see any need for sharing here at all - for all objects
-> > > (excluding the gpiod_line_attr that I would remove) it is pretty clear
-> > > who is responsible for them at all times.
-> > >
-> > > > Reference counting makes higher-level programming easier. An object
-> > > > lives as long as there's at least one user. In C++ bindings the
-> > > > objects were refcounted using shared_ptr which causes some issues. Now
-> > > > with refcounting implemented at the C library level, we'll be able to
-> > > > use the PImpl pattern with unique_ptr and still keep the objects
-> > > > copyable.
-> > > >
-> > >
-> > > That still sounds to me like you are sharing objects that shouldn't be
-> > > shared. Or copied.
-> > >
-> > > > To summarize: I don't see many disadvantages to using reference
-> > > > counting other than the fact that my documentation is not yet very
-> > > > detailed and lacks some general information about how reference
-> > > > counting works in libgpiod and needs some clarification.
-> > > >
-> > >
-> > > I understand your argument - which is exactly what I had presumed.
-> > > But I still find the idea of having _unref() acting as the universal free
-> > > function to be distasteful.
-> > >
-> > > > > e.g. gpiod_line_config_add_attribute()
-> > > > > - who owns the attr after the call?  What happens if it is subsequently
-> > > > > modified? Is the attr copied or does ownership pass to the config?
-> > > > > As written it is neither - the attr becomes shared.  How is that
-> > > > > preferable?
-> > > >
-> > > > Yes, it becomes shared. Its reference count is now 2. If the user
-> > > > modifies it, the config will use a modified value at the time of the
-> > > > request. To give you a real-life example of such behavior: in GLib
-> > > > where all GObjects are reference counted, if you pass a reference to a
-> > > > GFile to another user, then set its (GFile's) attribute, they'll be
-> > > > changed for the user sharing the object too. Same with how Python or
-> > > > Java handle references, except you don't need to manage them yourself.
-> > > >
-> > >
-> > > This is all mute if you drop gpiod_line_attr, but I still don't see why
-> > > sharing is preferable in this case.  It feels like the worst of both
-> > > worlds - I need to alloc an attr for every add, and I need to unref them
-> > > as well.
-> > >
-> > > > > Similarly gpiod_line_get_consumer() - who owns the returned pointer and
-> > > > > what is it's lifetime?
-> > > >
-> > > > Since simple strings can't be refcounted and this function returns a
-> > > > pointer to a constant string, the life-time of the string is obviously
-> > > > tied to that of the line_info object. The doc should probably say:
-> > > > Returns a pointer to the string stored in the line_info object.
-> > > >
-> > >
-> > > I would dispute the "obviously", particularly since you seem to expect
-> > > everything else to be unref()ed.
+On Sun, Apr 18, 2021 at 11:12:24PM +0200, Bartosz Golaszewski wrote:
+> On Sun, Apr 18, 2021 at 5:48 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+
+[snip!]
+
+> >
+> > I forgot to add that wrt the config mutators, you need to allow
+> > overriding of existing config, rather than returning an error on
+> > conflict, so that you can change config for the set_config ioctl().
+> > Hence the last-in-wins approach.  And as a consequence the mutator is
+> > always right and so needs no return code.
+> >
+> 
+> This sounds good in theory but how do we handle a situation that
+> requires more than 10 attributes? Override the first one? The last
+> one? What if the line offsets passed to the request config repeat
+> themselves? I think some sanitization of input is in order.
+> 
+
+Repeating of lines is equivalent to repeatedly setting a bit, so the
+subsequent instances are ignored. In practice I don't even need to check
+- if the user includes the line multiple times then it gets set multiple
+times - to the same thing.
+
+The case where a complex config can't be mapped to the uAPI, e.g. due to
+too many attributes on too many lines, is handled at the time of the
+request_lines() or set_config() itself when that mapping is performed.
+Those will return an "overly complex config" error.
+
+> Regarding offsets: I was thinking about how to approach referring to
+> lines in configs and requests by offsets only (in order to hide the
+> whole masking logic) and while for a request (for example: when
+> setting/reading line) this is straightforward (as long as we make sure
+> the offsets are never duplicated), the line config structure doesn't
+> really know the concept of offsets. So when we set a config option for
+> a specific line, we need to carry the offset information somehow in
+> the structure until the request is actually made. How do you deal with
+> this in your library? Did you expose any of the bitmap details in your
+> API? Can we really avoid dealing with indexing of lines in a request?
+> 
+
+In the request config I use a map of offset to line config to avoid 
+duplication. A config change that alters any existing setting just
+overwrites the old.
+
+The line config is similar to your struct gpiod_line_config.
+The line config for a particular line is only created and added to the
+map if there is a config change specific to that line.
+Each attribute has a "not set" value, in which case the request-wide
+default is used.
+
+The request-wide default config is stored separately from the map.
+And there is a function to reset a line config back to the default,
+i.e. drop that line config from the map.
+
+The request_lines() and set_config(), that accept the config, also have
+the list of offsets available (provided to the request_lines() and
+subsequently stored as part of the request struct for the set_config())
+and so can map from offsets to indices to build the bitmap.
+The bitmap and indices themselves are never exposed.
+
+That is a high level description - the details are actually a little
+different as the Go implementation uses functional options, so the
+initial config settings become parameters to the request, and bundles
+the config into the request object itself.
+
+> > And you might want to add a copy() for config to allow the user to
+> > easily create two slightly different configurations.
+> >
+> > > I was on the fence wrt reference counting but then realized that in
+> > > C++ or Python we still need to provide a mechanism for unconditional
+> > > closing of chips and releasing of requests. For the former it's
+> > > because otherwise we'd need to make the object go out of scope
+> > > manually (probably by storing it in another object that would be
+> > > "closed" -> pointless abstraction) and in the latter case: Python
+> > > doesn't even guarantee that the destructor will be called at any
+> > > specific point.
 > > >
 > >
-> > No, the ref/unref mechanism is customary for opaque structures. Const
-> > string pointers are always stored in some other object because passing
-> > const char * to free will result in a warning. In libc all functions
-> > that return a malloc()'ed string return char *.
+> > Hmmm, ok, I was assuming the C++ bindings would wrap the C objects in C++
+> > objects, and the C++ destructor would release any associated resources.
 > >
-> > > > > I would prefer the opaque objects to be able to be free()d normally, and
-> > > > > for any calls that involve a change of ownership to explicitly document
-> > > > > that fact.
-> > > > > For objects that require additional setup/cleanup, try to make use of
-> > > > > open()/close() or request()/release() function name pairings.
-> > > > > So gpiod_chip would have open()/close(), gpiod_request_handle would have
-> > > > > request()/release(), and the others would all be new()/free()d.
-> > > > >
-> > > >
-> > > > This makes you use a different set of resource management functions
-> > > > depending on the object. Additionally some objects can't be created -
-> > > > only retrieved from other objects.
-> > > >
-> > >
-> > > Yup, different objects have different lifecycles - even your way.
-> > >
-> > > > Having a simple ref/unref pair for all opaque data types looks more
-> > > > elegant to me. Another real-life example from yesterday: I'm working
-> > > > on a small library to go with the new gpio-sim module (meant as a
-> > > > replacement for libgpio-mockup) and when I tried to use libmount (to
-> > > > verify if configfs is mounted and where) I was super confused by its
-> > > > resource management which is similar to what you suggest but also some
-> > > > resources need to be freed and some transfer their ownership to other
-> > > > objects (without reference counting) and while it's all documented and
-> > > > you can find info on that eventually, I still spent time debugging
-> > > > strange double-free and other corruptions before I got things right. I
-> > > > find libudev and libkmod with their consistent reference counting much
-> > > > more instinctive to use.
-> > > >
-> > >
-> > > I find dealing with repeated frees preferable to dealing with issues
-> > > related to unexpected side-effects when ownership is unclear.
-> > >
-> > > > > Conceptually the config for each line can be considered to be independent
-> > > > > - the uAPI encoding using attributes and masks is only there to keep the
-> > > > > uAPI structs to a manageable size.
-> > > > > At this level you can model it as config per line, and only map
-> > > > > between the uAPI structures when calling the ioctl()s.
-> > > > > So I would drop the gpiod_line_attr, and instead provide accessors and
-> > > > > mutators on the gpiod_line_config for each attr type.
-> > > > > That removes the whole lifecycle issue for attributes, and allows you to
-> > > > > provide a simpler abstraction of the config than that provided in the
-> > > > > uAPI.
-> > > > > For the mutators there can be two flavours, one that sets the config for
-> > > > > the whole set, and another that accepts a subset of applicable lines.
-> > > > > Accessors would provide the config attr for a particular line.
-> > > > > Both accessor and mutator would use chip offsets to identify the lines.
-> > > > >
-> > > >
-> > > > I had exactly this in mind initially but couldn't find an elegant interface.
-> > > >
-> > > > There are two options I see:
-> > > >
-> > > > gpiod_line_config_set_drive(cfg, drive);
-> > > > gpiod_line_config_set_drive_index(cfg, drive, index);
-> > > >
-> > > > or:
-> > > >
-> > > > gpiod_line_config_set_drive(cfg, drive);
-> > > > unsigned int indices[] = { 0, 3, 4, 6 };
-> > > > gpiod_line_config_set_drive_index(cfg, drive, indices);
-> > > >
-> > > > The former would require a separate function call for each line, the
-> > > > former needs a lot of boilerplate code because we'll usually have to
-> > > > alloc & fill the indices array. Eventually I decided to go with
-> > > > attributes but if you have some ideas/suggestions for that, they're
-> > > > welcome!
-> > > >
-> > >
-> > > I generally avoid variadic functions, but this might be an application
-> > > where they make sense.  i.e. make your indices variadic.
-> > > Oh, and make them offsets ;-).
-> > >
-> > > > > Not sure I like merging the direction and edge into the request_type.
-> > > > > I would tend to keep those separate, with set_direction and
-> > > > > set_edge_detection functions, with the latter forcing input direction.
-> > > > >
-> > > >
-> > > > If there's no way we can use output with edge detection, why even
-> > > > bother with allowing the user to try to set output mode for
-> > > > edge_detection or vice-versa? It's just more error checking for no
-> > > > benefit, right? The user will still find out that the line is in input
-> > > > mode with the line_info.
-> > > >
-> > >
-> > > You are adding another concept for the user to grok - the request_type.
-> > > They will need to understand direction and edge detection anyway, why
-> > > add a new concept to the mix?
-> > >
-> > > Oh, and wrt error checking, in my Go library, and as I suggest above,
-> > > setting edge detection overrides any previous direction setting and
-> > > forces input.  Similarly setting output direction cancels any edge
-> > > detection.  So the config presented to the kernel will always be
-> > > consistent and never trigger an EINVAL.  And that is all documented in
-> > > the corresponding config functions.
-> > >
-> > > Similarly the drive settings.
-> > >
-> > > The library policy is last-in-wins, which it can be as there are
-> > > distinct calls for each attribute, whereas at the uAPI they are merged
-> > > into flags.
-> > >
-> > > > > I would rename gpiod_request_config to gpiod_request_options.  Config
-> > > > > is long lived and can be modified, whereas options are one-off.
-> > > > > And it would reduce any chance of confusion with gpiod_line_config.
-> > > > >
-> > > >
-> > > > Not sure about this one. With the current naming, it's being made
-> > > > clear that we have two separate things to configure, the line(s) and
-> > > > the request itself. Naming both "_config" makes a clear distinction.
-> > > > Also: the request config can be reused too for separate requests.
-> > > >
-> > >
-> > > I meant one-off wrt a single request.  i.e. changing the options after
-> > > the lines have been requested can never impact the request, whereas a
-> > > changed config can be applied with the set_config().
-> > >
-> > > > > gpiod_line_mask should highlight that the bits correspond to lines on
-> > > > > the request, in the order provided to gpiod_request_config_set_offsets(),
-> > > > > not line offsets on the chip.  Perhaps the gpiod_request_config or the
-> > > > > gpiod_request_handle should provide the mask functions for a given a
-> > > > > qchip offset, rather than require the user to track the mapping?
-> > > > > Then the gpiod_line_mask can be opaque as well.
-> > > > >
-> > > >
-> > > > Yes, this is one of those things I struggled with. I wasn't sure which
-> > > > one's better because if the user wants to request 64 lines, then set a
-> > > > separate config for 20 of them, it's a lot of function calls if we
-> > > > allow to set line config by offset of a single line, or we get a
-> > > > complicated API with allowing arrays of offsets.
-> > > >
-> > > > Agreed for the line map functions, it's probably the most confusing
-> > > > element of this new API. I'll come up with something.
-> > > >
-> > >
-> > > Ideally I would like to avoid the gpiod_line_mask totally, and always
-> > > deal in chip offsets.
-> > >
-> > > The API should be simplest for the most common use cases.
-> > > Those far corner cases can be a pain to use, but must still be possible.
-> > > I would put the priority on handling the most common cases:
-> > > A. all lines
-> > > B. one line
-> > > C. a subset of lines
-> > >
-> > > I would expect A to be the most common by far - that was all that the
-> > > previous API supported, then B and then C.
-> > > I had suggested providing A and C, with B being a special case of C.
-> > > But I could live with C being implemented as multiple calls to B.
-> > >
-> > > A variadic function could manage all three, with no offsets meaning all
-> > > lines?  Though in practice I would probably provide distinct functions
-> > > for A and B, and reserve the variadic for C.
-> > >
-> > > Cheers,
-> > > Kent.
-> > >
-> >
-> > Thank you for your insight and suggestions. You are right about how
-> > the config should be handled and the example with priorities is
-> > spot-on. I'm still not sure about the naming for config structures but
-> > that's a minor detail.
-> >
->
-> I forgot to add that wrt the config mutators, you need to allow
-> overriding of existing config, rather than returning an error on
-> conflict, so that you can change config for the set_config ioctl().
-> Hence the last-in-wins approach.  And as a consequence the mutator is
-> always right and so needs no return code.
->
+> 
+> Yes, but what if the user wants to close the chip or release the
+> request without the underlying object going out of scope? I think we
+> need to keep that possibility.
+> 
 
-This sounds good in theory but how do we handle a situation that
-requires more than 10 attributes? Override the first one? The last
-one? What if the line offsets passed to the request config repeat
-themselves? I think some sanitization of input is in order.
+Then you also provide a close() method.  They aren't mutually exclusive.
 
-Regarding offsets: I was thinking about how to approach referring to
-lines in configs and requests by offsets only (in order to hide the
-whole masking logic) and while for a request (for example: when
-setting/reading line) this is straightforward (as long as we make sure
-the offsets are never duplicated), the line config structure doesn't
-really know the concept of offsets. So when we set a config option for
-a specific line, we need to carry the offset information somehow in
-the structure until the request is actually made. How do you deal with
-this in your library? Did you expose any of the bitmap details in your
-API? Can we really avoid dealing with indexing of lines in a request?
+Cheers,
+Kent.
 
-> And you might want to add a copy() for config to allow the user to
-> easily create two slightly different configurations.
->
-> > I was on the fence wrt reference counting but then realized that in
-> > C++ or Python we still need to provide a mechanism for unconditional
-> > closing of chips and releasing of requests. For the former it's
-> > because otherwise we'd need to make the object go out of scope
-> > manually (probably by storing it in another object that would be
-> > "closed" -> pointless abstraction) and in the latter case: Python
-> > doesn't even guarantee that the destructor will be called at any
-> > specific point.
-> >
->
-> Hmmm, ok, I was assuming the C++ bindings would wrap the C objects in C++
-> objects, and the C++ destructor would release any associated resources.
->
-
-Yes, but what if the user wants to close the chip or release the
-request without the underlying object going out of scope? I think we
-need to keep that possibility.
-
-> For Python I would probably go with an explicit close() or equivalent.
-> My Go library has to use that approach as there are no destructors in Go.
->
-> > So it seems that it is the right way to go after all and these objects
-> > simply will not be shared. In C++ this will be addressed by providing
-> > move constructors and operators, in Python reference counting is
-> > natural so there's no problem. Same for GLib bindings I want to
-> > implement before providing the dbus API.
-> >
-> > You haven't commented on the line & watch events. I would love to hear
-> > your opinion on that too.
-> >
->
-> Didn't have any major problems with them on the first pass - nothing
-> worth commenting on anyway.
->
-> I presume that the info events don't get a buffer as they are
-> expected to be low rate.
->
-
-Indeed.
-
-> A zero timeout in the wait() will not block, and just return the event
-> availability?
->
-
-Yes.
-
-> Perhaps the wait() and read() should be strictly orthogonal, i.e. the
-> read() should never block (blocking functions are bad, as per libabc).
-> At least the wait() will eventually timeout (assuming a zero timeout
-> doesn't block forever).
-> Or the two could be combined?
->
-
-Good point, but I'd prefer to keep that logic separate. I've never
-seen a combined poll()/read() in any lib. I will see about that
-non-blocking read() though.
-
-Bart
-
-> Oh, and in the @return for gpiod_line_event_buffer_copy_event(),
-> "decreases" should be "decreased".
->
-> > For v2 I intend to apply the renaming of chip accessors to master and
-> > then squash all patches adding the new API into one because splitting
-> > them doesn't make the reviewing any easier. Except maybe for the line
-> > watch patch which is logically separate.
-> >
->
-> Fair enough. In this case I applied all the patches and looked at the
-> resulting gpiod.h, as I wasn't terribly interested in the changes - only
-> the final result.
->
-> Cheers,
-> Kent.
->
-> > Best regards,
-> > Bartosz Golaszewski
