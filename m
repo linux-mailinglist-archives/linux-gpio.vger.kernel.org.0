@@ -2,190 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 370C7363ADC
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Apr 2021 07:03:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1219A363AFC
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Apr 2021 07:22:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233588AbhDSFDp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Apr 2021 01:03:45 -0400
-Received: from gw.atmark-techno.com ([13.115.124.170]:56558 "EHLO
-        gw.atmark-techno.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233231AbhDSFDo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Apr 2021 01:03:44 -0400
-Received: from mail-vk1-f198.google.com (mail-vk1-f198.google.com [209.85.221.198])
-        by gw.atmark-techno.com (Postfix) with ESMTPS id 6933F804A1
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Apr 2021 14:03:11 +0900 (JST)
-Received: by mail-vk1-f198.google.com with SMTP id l185-20020a1f57c20000b02901d909b5e911so4695106vkb.15
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Apr 2021 22:03:11 -0700 (PDT)
+        id S230022AbhDSFW2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Apr 2021 01:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229473AbhDSFW2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Apr 2021 01:22:28 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740F1C06174A
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Apr 2021 22:21:59 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id x9-20020a056a000bc9b02902599e77f7afso3036919pfu.3
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Apr 2021 22:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=1jlzay7NrHhIzm+rkAGcTage5tjUJRiEa0qA/fxcnjY=;
+        b=Pphg5mXOZuX6oJxCRM8EBukui/4NuJxx07jOJDaZz1oq1vh72/E4kIv/Afhn6yyAcR
+         EfMdqJvIT67EtmxeEPcppHNgvSaIQPOIWJEKuAvixPXl6NcyUGtSYF2ZOumOjk2NKp7e
+         /gPLjB7hfPzcBXywKFCqzY+pgCwsh4yuzTFPt4gBvldEG0jf2Eg5ZjUF4azjaFlsZbtQ
+         xqnx/wTz86t8j22AGehRmp06JWUlH0D8OubZVltZ2Jq+ZUyDzdm9SsUffrads5P6bSb7
+         zJbv6Ewjm3nbOqwseOVLNuIztevd8+pl8nABP/jwcrxuT2ucfO4javgEgVWTw29tqmMx
+         YWzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bLr973ENjFZQNNz5/z+BmoCFuTDVovYaAYguOO0YOc4=;
-        b=o53b8eff7ZS3WHFxNxb2UVw9fDaIaT6/FT0CcVA2ajeb2+tIbOSaTiQ3QvCr+ODj37
-         wgKdvu3XL+JL3bAgtrl5uVdtoTmyjkboo307vCLvS7yxWO/X2lx8aRUbAf4CYR5yeNgu
-         3BaEhI7IRqXCxyZ1BsctG13f5tXRG1hlKDF0g7L7ozZTW5lhHwHTvDj9fNhDXgMYbUxg
-         6VVfhYNiFBE0w74fLfrtdc8Pwa2hsUK9rLHtT6KxI0/OWfrgqyntFW9AecMxGz4UqSSo
-         ik+4lTz8gE8+tmMr8/q0IHeO+wguvqyNtcgNTFuX6vR7oPPKcVeO0qO/OLAOSrZ4muY1
-         5kyQ==
-X-Gm-Message-State: AOAM532hM37LqwxhOIwSgRnYM9tZdeummydpE63jHflXjkRFV12ff/C2
-        hAMZup9J76NmgTtjUpwgJ6+FQA7b+zQ7O7W0SDpM7qCJtDSuTcdbQsfBGvUAvdO5H/pzmGXfVDp
-        mTP1TeMWaoIIlavhVo68qKFvllQ==
-X-Received: by 2002:a17:902:d645:b029:e8:ec90:d097 with SMTP id y5-20020a170902d645b02900e8ec90d097mr21074840plh.47.1618808579513;
-        Sun, 18 Apr 2021 22:02:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyI1MeNQhpXnytM5xmVsw3ZCkrTxMPyrxhKroAVtmGUaPe01xpWL31HOX4hl1pxmvtORo+KDQ==
-X-Received: by 2002:a17:902:d645:b029:e8:ec90:d097 with SMTP id y5-20020a170902d645b02900e8ec90d097mr21074765plh.47.1618808579243;
-        Sun, 18 Apr 2021 22:02:59 -0700 (PDT)
-Received: from pc-0115 (103.131.189.35.bc.googleusercontent.com. [35.189.131.103])
-        by smtp.gmail.com with ESMTPSA id ga21sm2553351pjb.5.2021.04.18.22.02.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 18 Apr 2021 22:02:58 -0700 (PDT)
-Received: from martinet by pc-0115 with local (Exim 4.94)
-        (envelope-from <martinet@pc-0115>)
-        id 1lYM3l-0016Ra-6N; Mon, 19 Apr 2021 14:02:57 +0900
-Date:   Mon, 19 Apr 2021 14:02:47 +0900
-From:   Dominique MARTINET <dominique.martinet@atmark-techno.com>
-To:     "Alice Guo (OSS)" <alice.guo@oss.nxp.com>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        horia.geanta@nxp.com, aymen.sghaier@nxp.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net, tony@atomide.com,
-        geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
-        vkoul@kernel.org, peter.ujfalusi@gmail.com, a.hajda@samsung.com,
-        narmstrong@baylibre.com, robert.foss@linaro.org, airlied@linux.ie,
-        daniel@ffwll.ch, khilman@baylibre.com, tomba@kernel.org,
-        jyri.sarha@iki.fi, joro@8bytes.org, will@kernel.org,
-        mchehab@kernel.org, ulf.hansson@linaro.org,
-        adrian.hunter@intel.com, kishon@ti.com, kuba@kernel.org,
-        linus.walleij@linaro.org, Roy.Pledge@nxp.com, leoyang.li@nxp.com,
-        ssantosh@kernel.org, matthias.bgg@gmail.com, edubezval@gmail.com,
-        j-keerthy@ti.com, balbi@kernel.org, linux@prisktech.co.nz,
-        stern@rowland.harvard.edu, wim@linux-watchdog.org,
-        linux@roeck-us.net, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-staging@lists.linux.dev,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [RFC v1 PATCH 3/3] driver: update all the code that use
- soc_device_match
-Message-ID: <YH0O907dfGY9jQRZ@atmark-techno.com>
-References: <20210419042722.27554-1-alice.guo@oss.nxp.com>
- <20210419042722.27554-4-alice.guo@oss.nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210419042722.27554-4-alice.guo@oss.nxp.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=1jlzay7NrHhIzm+rkAGcTage5tjUJRiEa0qA/fxcnjY=;
+        b=SLA4Y9kVv+xIcCXfLG6PB1bowrce4VVd0dEHQI4iNWlE8xDzz+7gmS/mHyuLhC5VLN
+         xgqNC/FCBsKKAaz4+enDIWMbHQSgouYiuFSVBiI+t76GcyYb3jr9ObXCV1WiRwZ9wHa8
+         3gBznlvlSeHL/x7TgOBuTlxLz0JxxPcYb2uCsDJiKzEwzZQxX+PH1El4k02boaAgwykY
+         XAXevT+T/JIu70K5aLPPfRZi5gIqoVtLj7zlUZbF0hQ6d5Z4w1z9l18t0oVr89lx9apQ
+         Enl349qZiyzZf0bw36OvqsTnhjHJ30m8/3BH8/U0LqIQZHYQ1hve/w7j9RZC/MkzwRko
+         AuqA==
+X-Gm-Message-State: AOAM533p8AK2g6/hKqo+dG0q7ADaIx5WGs57MQVlYrFFJGaQaT9XuBvd
+        yNdu360rks9I5U8aKW7leSf4bhmRFc/c
+X-Google-Smtp-Source: ABdhPJzi09lEATgb9ztaNjHZI+V7lwptJqTFm+vZoxp1DMfaZ2W5dklVTK8P6wG5Z0mHX0ArfOEsBq9To+nA
+X-Received: from tzungbi-z840.tpe.corp.google.com ([2401:fa00:1:b:b01e:e82b:cf1:a8ce])
+ (user=tzungbi job=sendgmr) by 2002:a17:90a:e2d7:: with SMTP id
+ fr23mr22096275pjb.29.1618809718810; Sun, 18 Apr 2021 22:21:58 -0700 (PDT)
+Date:   Mon, 19 Apr 2021 13:21:36 +0800
+Message-Id: <20210419052136.2475373-1-tzungbi@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.31.1.368.gbe11c130af-goog
+Subject: [RESEND PATCH] pinctrl: mediatek: use spin lock in mtk_rmw
+From:   Tzung-Bi Shih <tzungbi@google.com>
+To:     sean.wang@kernel.org, linus.walleij@linaro.org,
+        matthias.bgg@gmail.com, zhiyong.tao@mediatek.com,
+        broonie@kernel.org
+Cc:     linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        tzungbi@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Alice Guo (OSS) wrote on Mon, Apr 19, 2021 at 12:27:22PM +0800:
-> From: Alice Guo <alice.guo@nxp.com>
-> 
-> Update all the code that use soc_device_match
+Commit 42a46434e9b1 ("pinctrl: add lock in mtk_rmw function.") uses
+mutex lock in mtk_rmw.  However the function is possible called from
+atomic context.
 
-A single patch might be difficult to accept for all components, a each
-maintainer will probably want to have a say on their subsystem?
+For example call trace:
+  mutex_lock+0x28/0x64
+  mtk_rmw+0x38/0x80
+  mtk_hw_set_value+0x100/0x138
+  mtk_gpio_set+0x48/0x58
+  gpiod_set_raw_value_commit+0xf4/0x110
+  gpiod_set_value_nocheck+0x4c/0x80
+  gpiod_set_value+0x4c/0x6c
+  max98357a_daiops_trigger+0x8c/0x9c
+  soc_pcm_trigger+0x5c/0x10c
 
-I would suggest to split these for a non-RFC version; a this will really
-need to be case-by-case handling.
+The max98357a_daiops_trigger() could run in either atomic or non-atomic
+context.  As a result, dmesg shows some similar messages: "BUG: sleeping
+function called from invalid context at kernel/locking/mutex.c:254".
 
-> because add support for soc_device_match returning -EPROBE_DEFER.
+Uses spin lock in mtk_rmw instead.
 
-(English does not parse here for me)
+Fixes: 42a46434e9b1 ("pinctrl: add lock in mtk_rmw function.")
+Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+---
+ drivers/pinctrl/mediatek/pinctrl-moore.c         | 2 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 4 ++--
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h | 2 +-
+ drivers/pinctrl/mediatek/pinctrl-paris.c         | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-I've only commented a couple of places in the code itself, but this
-doesn't seem to add much support for errors, just sweep the problem
-under the rug.
-
-> Signed-off-by: Alice Guo <alice.guo@nxp.com>
-> ---
-> 
-> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-> index 5fae60f8c135..00c59aa217c1 100644
-> --- a/drivers/bus/ti-sysc.c
-> +++ b/drivers/bus/ti-sysc.c
-> @@ -2909,7 +2909,7 @@ static int sysc_init_soc(struct sysc *ddata)
->  	}
->  
->  	match = soc_device_match(sysc_soc_feat_match);
-> -	if (!match)
-> +	if (!match || IS_ERR(match))
->  		return 0;
-
-This function handles errors, I would recommend returning the error as
-is if soc_device_match returned one so the probe can be retried later.
-
->  
->  	if (match->data)
-> diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-> index c32d2c678046..90a18336a4c3 100644
-> --- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
-> +++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-> @@ -439,6 +439,7 @@ static const unsigned int r8a7795es2_mod_nullify[] __initconst = {
->  
->  static int __init r8a7795_cpg_mssr_init(struct device *dev)
->  {
-> +	const struct soc_device_attribute *match;
->  	const struct rcar_gen3_cpg_pll_config *cpg_pll_config;
->  	u32 cpg_mode;
->  	int error;
-> @@ -453,7 +454,8 @@ static int __init r8a7795_cpg_mssr_init(struct device *dev)
->  		return -EINVAL;
->  	}
->  
-> -	if (soc_device_match(r8a7795es1)) {
-> +	match = soc_device_match(r8a7795es1);
-> +	if (!IS_ERR(match) && match) {
-
-Same, return the error.
-Assuming an error means no match will just lead to hard to debug
-problems because the driver potentially assumed the wrong device when
-it's just not ready yet.
-
->  		cpg_core_nullify_range(r8a7795_core_clks,
->  				       ARRAY_SIZE(r8a7795_core_clks),
->  				       R8A7795_CLK_S0D2, R8A7795_CLK_S0D12);
-> [...]
-> diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-> index eaaec0a55cc6..13a06b613379 100644
-> --- a/drivers/iommu/ipmmu-vmsa.c
-> +++ b/drivers/iommu/ipmmu-vmsa.c
-> @@ -757,17 +757,20 @@ static const char * const devices_allowlist[] = {
->  
->  static bool ipmmu_device_is_allowed(struct device *dev)
->  {
-> +	const struct soc_device_attribute *match1, *match2;
->  	unsigned int i;
->  
->  	/*
->  	 * R-Car Gen3 and RZ/G2 use the allow list to opt-in devices.
->  	 * For Other SoCs, this returns true anyway.
->  	 */
-> -	if (!soc_device_match(soc_needs_opt_in))
-> +	match1 = soc_device_match(soc_needs_opt_in);
-> +	if (!IS_ERR(match1) && !match1)
-
-I'm not sure what you intended to do, but !match1 already means there is
-no error so the original code is identical.
-
-In this case ipmmu_device_is_allowed does not allow errors so this is
-one of the "difficult" drivers that require slightly more thinking.
-It is only called in ipmmu_of_xlate which does return errors properly,
-so in this case the most straightforward approach would be to make
-ipmmu_device_is_allowed return an int and forward errors as well.
-
-
-
-...
-This is going to need quite some more work to be acceptable, in my
-opinion, but I think it should be possible.
-
-Thanks,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-moore.c b/drivers/pinctrl/mediatek/pinctrl-moore.c
+index f77921957f15..3a4a23c40a71 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-moore.c
++++ b/drivers/pinctrl/mediatek/pinctrl-moore.c
+@@ -619,7 +619,7 @@ int mtk_moore_pinctrl_probe(struct platform_device *pdev,
+ 
+ 	hw->nbase = hw->soc->nbase_names;
+ 
+-	mutex_init(&hw->lock);
++	spin_lock_init(&hw->lock);
+ 
+ 	/* Copy from internal struct mtk_pin_desc to register to the core */
+ 	pins = devm_kmalloc_array(&pdev->dev, hw->soc->npins, sizeof(*pins),
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index fcf7c3eeee4a..9ffe01a8ceca 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -58,14 +58,14 @@ void mtk_rmw(struct mtk_pinctrl *pctl, u8 i, u32 reg, u32 mask, u32 set)
+ {
+ 	u32 val;
+ 
+-	mutex_lock(&pctl->lock);
++	spin_lock(&pctl->lock);
+ 
+ 	val = mtk_r32(pctl, i, reg);
+ 	val &= ~mask;
+ 	val |= set;
+ 	mtk_w32(pctl, i, reg, val);
+ 
+-	mutex_unlock(&pctl->lock);
++	spin_unlock(&pctl->lock);
+ }
+ 
+ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+index 65eac708a3b3..13836bb188b7 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+@@ -252,7 +252,7 @@ struct mtk_pinctrl {
+ 	struct mtk_pinctrl_group	*groups;
+ 	const char          **grp_names;
+ 	/* lock pin's register resource to avoid multiple threads issue*/
+-	struct mutex lock;
++	spinlock_t lock;
+ };
+ 
+ void mtk_rmw(struct mtk_pinctrl *pctl, u8 i, u32 reg, u32 mask, u32 set);
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index 48e823f6d293..85db2e4377f0 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -970,7 +970,7 @@ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
+ 
+ 	hw->nbase = hw->soc->nbase_names;
+ 
+-	mutex_init(&hw->lock);
++	spin_lock_init(&hw->lock);
+ 
+ 	err = mtk_pctrl_build_state(pdev);
+ 	if (err) {
 -- 
-Dominique
+2.31.1.368.gbe11c130af-goog
+
