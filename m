@@ -2,118 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D53483655EC
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Apr 2021 12:10:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD5CB3656E2
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Apr 2021 12:52:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231476AbhDTKKz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Apr 2021 06:10:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:24035 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231473AbhDTKKz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 20 Apr 2021 06:10:55 -0400
-IronPort-SDR: 3Bl+dZ9KPOLTXM6zF9x+8yDN/wRw6UjCLP6a5INHJn7YBTfDppsUcNqGMHk9pdklsgPGKa1AQU
- 1VLgex0msjrQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9959"; a="193357362"
-X-IronPort-AV: E=Sophos;i="5.82,236,1613462400"; 
-   d="scan'208";a="193357362"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2021 03:10:23 -0700
-IronPort-SDR: brXzidotN5p9Cuw5GT/+6EGUxreE8R6aVzKz5tPw0OOL1/Uu053sGaMkKhd/c0cyuRb/6YQMJo
- bYF6QVa7KQqw==
-X-IronPort-AV: E=Sophos;i="5.82,236,1613462400"; 
-   d="scan'208";a="400949744"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2021 03:10:22 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lYnKm-005i9d-0h; Tue, 20 Apr 2021 13:10:20 +0300
-Date:   Tue, 20 Apr 2021 13:10:20 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] pinctrl: core: Show pin numbers for the
- controllers with base = 0
-Message-ID: <YH6ojEvp6m3g2Ihx@smile.fi.intel.com>
-References: <20210415130356.15885-1-andriy.shevchenko@linux.intel.com>
- <20210420073218.GA2538877@x1>
+        id S231745AbhDTKvo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Apr 2021 06:51:44 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48002 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231770AbhDTKvg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Apr 2021 06:51:36 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 13KAoclu116545;
+        Tue, 20 Apr 2021 05:50:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1618915838;
+        bh=8hesSIuaVW5SB0Ri36onn983dne0vGQewCTk3OCyRXU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PK964GQY7zQ+pMmHWS1eykT0Ix1g1QSIQSy+uevo+nsT7sfkbEs6nJhy3+vDTRTHj
+         Clj2FhTZLFBFK6VfKJI66CJsAPTIo1CTYb/8rxFjJIL0NxPxPPfkdS39wVG8Nqj/1t
+         P+CTo6R1Le63axYT/Ph6DRnyQ7qj1vW/pGJ3ttnk=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 13KAockw015459
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 20 Apr 2021 05:50:38 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 20
+ Apr 2021 05:50:38 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Tue, 20 Apr 2021 05:50:38 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 13KAoZq6028986;
+        Tue, 20 Apr 2021 05:50:36 -0500
+Subject: Re: [PATCHv2] gpio: omap: Save and restore sysconfig
+To:     Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>
+References: <20210417083839.46985-1-tony@atomide.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <7679127b-3642-bca2-2c6c-86b60779d815@ti.com>
+Date:   Tue, 20 Apr 2021 13:50:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210420073218.GA2538877@x1>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20210417083839.46985-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 20, 2021 at 12:32:18AM -0700, Drew Fustini wrote:
-> On Thu, Apr 15, 2021 at 04:03:56PM +0300, Andy Shevchenko wrote:
-> > The commit f1b206cf7c57 ("pinctrl: core: print gpio in pins debugfs file")
-> > enabled GPIO pin number and label in debugfs for pin controller. However,
-> > it limited that feature to the chips where base is positive number. This,
-> > in particular, excluded chips where base is 0 for the historical or backward
-> > compatibility reasons. Refactor the code to include the latter as well.
+hi Tony,
 
-...
-
-> > -		chip = gpio_to_chip(gpio_num);
-> > -		if (chip && chip->gpiodev && chip->gpiodev->base)
-> > -			seq_printf(s, "%u:%s ", gpio_num -
-> > -				chip->gpiodev->base, chip->label);
-> > +		if (gpio_num >= 0)
-> > +			chip = gpio_to_chip(gpio_num);
-> > +		else
-> > +			chip = NULL;
-> > +		if (chip)
-> > +			seq_printf(s, "%u:%s ", gpio_num - chip->gpiodev->base, chip->label);
-> >  		else
-> >  			seq_puts(s, "0:? ");
-
-> Thank you, this makes sense to me. I had failed to consider what would
-> happen when chip->gpiodev->base == 0.
-
-If gpiodev->base == 0 it can happen only when
-1) either base is 0 by the driver request
-2) or it's a GPIO device which fits the (last) free slot in the number space
-
-It can't be negative at all. So, it means whatever value is there it is always
-valid.
-
-> I have tested on the BeagleBone
-> (AM3358) and the output works as expected.
-
-Cool!
-
-> /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single# more pins
-> registered pins: 142
-> pin 0 (PIN0) 0:gpio-0-31 44e10800 00000027 pinctrl-single
-> pin 1 (PIN1) 1:gpio-0-31 44e10804 00000027 pinctrl-single
-> pin 2 (PIN2) 2:gpio-0-31 44e10808 00000027 pinctrl-single
-> pin 3 (PIN3) 3:gpio-0-31 44e1080c 00000027 pinctrl-single
-> pin 4 (PIN4) 4:gpio-0-31 44e10810 00000027 pinctrl-single
-> pin 5 (PIN5) 5:gpio-0-31 44e10814 00000027 pinctrl-single
-> pin 6 (PIN6) 6:gpio-0-31 44e10818 00000027 pinctrl-single
-> pin 7 (PIN7) 7:gpio-0-31 44e1081c 00000027 pinctrl-single
-> pin 8 (PIN8) 22:gpio-96-127 44e10820 00000027 pinctrl-single
-> pin 9 (PIN9) 23:gpio-96-127 44e10824 00000037 pinctrl-single
-> pin 10 (PIN10) 26:gpio-96-127 44e10828 00000037 pinctrl-single
-> pin 11 (PIN11) 27:gpio-96-127 44e1082c 00000037 pinctrl-single
-> pin 12 (PIN12) 12:gpio-0-31 44e10830 00000037 pinctrl-single
-> pin 13 (PIN13) 13:gpio-0-31 44e10834 00000037 pinctrl-single
-> pin 14 (PIN14) 14:gpio-0-31 44e10838 00000037 pinctrl-single
-> pin 15 (PIN15) 15:gpio-0-31 44e1083c 00000037 pinctrl-single
-> pin 16 (PIN16) 16:gpio-0-31 44e10840 00000027 pinctrl-single
-> <snip>
+On 17/04/2021 11:38, Tony Lindgren wrote:
+> As we are using cpu_pm to save and restore context, we must also save and
+> restore the GPIO sysconfig register. This is needed because we are not
+> calling PM runtime functions at all with cpu_pm.
 > 
-> Tested-by: Drew Fustini <drew@beagleboard.org>
-> Reviewed-by: Drew Fustini <drew@beagleboard.org>
+> We need to save the sysconfig on idle as it's value can get reconfigured by
+> PM runtime and can be different from the init time value. Device specific
+> flags like "ti,no-idle-on-init" can affect the init value.
+> 
+> Fixes: b764a5863fd8 ("gpio: omap: Remove custom PM calls and use cpu_pm instead")
+> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: Andreas Kemnade <andreas@kemnade.info>
+> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+> Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>   drivers/gpio/gpio-omap.c                | 9 +++++++++
+>   include/linux/platform_data/gpio-omap.h | 3 +++
+>   2 files changed, 12 insertions(+)
+> 
 
-Thank you!
-
-Linus, can it be applied now?
+Thank you.
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best regards,
+grygorii
