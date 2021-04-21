@@ -2,250 +2,290 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E536366EE1
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Apr 2021 17:13:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A0BF366FF1
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Apr 2021 18:21:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240539AbhDUPO1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Apr 2021 11:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234469AbhDUPO0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Apr 2021 11:14:26 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8608C06174A
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 08:13:52 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id p3so26958093ybk.0
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 08:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bXPVXy/1jXKrltuMJNC38xdPZ2uBC+6lqk1pZ76QL1U=;
-        b=BW3+XWMr5mN2mKApFiwj7vayhL5WXOHJvcgip9ht9GaAcZdgUv/6PY5VNfWU+sop5B
-         O6kvK+Yy7L4hTiyo++b3bkXmTltJVKq7NFOCzUPHL2iYebSazwLh6GNh1+g/1T+cc41i
-         Yj5f1a3+egNr3reEx6rS2ujUvgVOBCx+YhCtcGep6hTK4fFgjWVOq76bVE+rvPGlPMvn
-         xYS1x+sMMWsUOTZzV9tB83Cl3zMJXsVl+K+Cwb1i115/Mga08utgzW7uUS42k5I9FjwB
-         +KWDXoXV+PS0KJBNXunt2Ll3Epd6yioqTrWMU88+2tV9wwuCLhYvussofDhhsheZPPXu
-         S0vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bXPVXy/1jXKrltuMJNC38xdPZ2uBC+6lqk1pZ76QL1U=;
-        b=k+s0dy9llz+iYFYWGZPI7hBsrSU5Er5nlO4ArdV7ZWKoXKt0SJm2FGKGpda+2ncsbu
-         yGuEi02gAJeFjuvbdSQw6w+PPJmT5HYhXlQqKEbxBDHQlwkjIUaEx0ahy0Kk0Lx5DnzI
-         KxwK6kYDR8vjyCWH3nljeAHEOQoPttyxQC1SX3K9KzHLf7VJgEDgnfoWzqfgkDK2pYTh
-         Y3mgdQJK6P2GqX1ylsFaSpnkixv1SVSKJGOlk7uw7CDu11JFI5NpoxrsdKlDJoapTmE7
-         A8kjuGsl0uy2I1a2t6mpTmwV0WQMn/FXEjFjfsQDMySkt6TQLCN4/PyTAaonbB0h+jEB
-         PiAw==
-X-Gm-Message-State: AOAM531M4/T3YXt5ApqnjkXj0EX255eqSqmdmSPpgeqIxwEaTd35JTvb
-        CcrFF/VH4NpmgstaRjfEYHHGCMED8Ex4lBGJvy/jxtekzHU8oQ==
-X-Google-Smtp-Source: ABdhPJyTdWO6d+q9fhd07IL8nMwHUj2gsRujzQ7X0vesq+RzLMGAAF5jMlqXYtBOrbLZuoSHBig0sSqGcEuhxpz0/H4=
-X-Received: by 2002:a25:1905:: with SMTP id 5mr32679392ybz.302.1619018032125;
- Wed, 21 Apr 2021 08:13:52 -0700 (PDT)
+        id S244289AbhDUQVL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Apr 2021 12:21:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33654 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244322AbhDUQVC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 21 Apr 2021 12:21:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C439EB2E5;
+        Wed, 21 Apr 2021 16:20:27 +0000 (UTC)
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v2 1/2] gpio: Add support for IDT 79RC3243x GPIO controller
+Date:   Wed, 21 Apr 2021 18:20:25 +0200
+Message-Id: <20210421162026.41978-1-tsbogend@alpha.franken.de>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <20210412223617.8634-1-jbx6244@gmail.com>
-In-Reply-To: <20210412223617.8634-1-jbx6244@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 21 Apr 2021 17:13:41 +0200
-Message-ID: <CAMpxmJX7=A++ubOr3xQ3_Taau2G1-k0q5Xj3k8Hd14tH_762Fg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: gpio: add YAML description for rockchip,gpio-bank
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 13, 2021 at 12:36 AM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Current dts files with "rockchip,gpio-bank" subnodes
-> are manually verified. In order to automate this process
-> the text that describes the compatible in rockchip,pinctrl.txt
-> is removed and converted to YAML in rockchip,gpio-bank.yaml.
->
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
-> Changed V2:
->   changed example gpio nodename
-> ---
->  .../bindings/gpio/rockchip,gpio-bank.yaml          | 82 ++++++++++++++++++++++
->  .../bindings/pinctrl/rockchip,pinctrl.txt          | 58 +--------------
->  2 files changed, 83 insertions(+), 57 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
->
-> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> new file mode 100644
-> index 000000000..d993e002c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/rockchip,gpio-bank.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip GPIO bank
-> +
-> +maintainers:
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - rockchip,gpio-bank
-> +      - rockchip,rk3188-gpio-bank0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    pinctrl: pinctrl {
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      ranges;
-> +
-> +      gpio0: gpio@2000a000 {
-> +        compatible = "rockchip,rk3188-gpio-bank0";
-> +        reg = <0x2000a000 0x100>;
-> +        interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clk_gates8 9>;
-> +
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +      };
-> +
-> +      gpio1: gpio@2003c000 {
-> +        compatible = "rockchip,gpio-bank";
-> +        reg = <0x2003c000 0x100>;
-> +        interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clk_gates8 10>;
-> +
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> index d3eae61a3..4719a6a07 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> @@ -50,23 +50,7 @@ Deprecated properties for iomux controller:
->          Use rockchip,grf and rockchip,pmu described above instead.
->
->  Required properties for gpio sub nodes:
-> -  - compatible: "rockchip,gpio-bank"
-> -  - reg: register of the gpio bank (different than the iomux registerset)
-> -  - interrupts: base interrupt of the gpio bank in the interrupt controller
-> -  - clocks: clock that drives this bank
-> -  - gpio-controller: identifies the node as a gpio controller and pin bank.
-> -  - #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
-> -    binding is used, the amount of cells must be specified as 2. See generic
-> -    GPIO binding documentation for description of particular cells.
-> -  - interrupt-controller: identifies the controller node as interrupt-parent.
-> -  - #interrupt-cells: the value of this property should be 2 and the interrupt
-> -    cells should use the standard two-cell scheme described in
-> -    bindings/interrupt-controller/interrupts.txt
-> -
-> -Deprecated properties for gpio sub nodes:
-> -  - compatible: "rockchip,rk3188-gpio-bank0"
-> -  - reg: second element: separate pull register for rk3188 bank0, use
-> -        rockchip,pmu described above instead
-> +See rockchip,gpio-bank.yaml
->
->  Required properties for pin configuration node:
->    - rockchip,pins: 3 integers array, represents a group of pins mux and config
-> @@ -127,43 +111,3 @@ uart2: serial@20064000 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&uart2_xfer>;
->  };
-> -
-> -Example for rk3188:
-> -
-> -       pinctrl@20008000 {
-> -               compatible = "rockchip,rk3188-pinctrl";
-> -               rockchip,grf = <&grf>;
-> -               rockchip,pmu = <&pmu>;
-> -               #address-cells = <1>;
-> -               #size-cells = <1>;
-> -               ranges;
-> -
-> -               gpio0: gpio0@2000a000 {
-> -                       compatible = "rockchip,rk3188-gpio-bank0";
-> -                       reg = <0x2000a000 0x100>;
-> -                       interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-> -                       clocks = <&clk_gates8 9>;
-> -
-> -                       gpio-controller;
-> -                       #gpio-cells = <2>;
-> -
-> -                       interrupt-controller;
-> -                       #interrupt-cells = <2>;
-> -               };
-> -
-> -               gpio1: gpio1@2003c000 {
-> -                       compatible = "rockchip,gpio-bank";
-> -                       reg = <0x2003c000 0x100>;
-> -                       interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-> -                       clocks = <&clk_gates8 10>;
-> -
-> -                       gpio-controller;
-> -                       #gpio-cells = <2>;
-> -
-> -                       interrupt-controller;
-> -                       #interrupt-cells = <2>;
-> -               };
-> -
-> -               ...
-> -
-> -       };
-> --
-> 2.11.0
->
+IDT 79RC3243x SoCs integrated a gpio controller, which handles up
+to 32 gpios. All gpios could be used as interrupt source.
 
-Applied, thanks!
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+Changes in v2:
+ - made driver buildable as module
+ - use for_each_set_bit() in irq dispatch handler
+ - use gpiochip_get_data instead of own container_of helper
+ - use module_platform_driver() instead of arch_initcall
+ - don't default y for Mikrotik RB532
 
-Bartosz
+ drivers/gpio/Kconfig         |  12 +++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-idt3243x.c | 198 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 211 insertions(+)
+ create mode 100644 drivers/gpio/gpio-idt3243x.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index e3607ec4c2e8..2948eb4ab8a5 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -770,6 +770,18 @@ config GPIO_MSC313
+ 	  Say Y here to support the main GPIO block on MStar/SigmaStar
+ 	  ARMv7 based SoCs.
+ 
++config GPIO_IDT3243X
++	tristate "IDT 79RC3243X GPIO support"
++	depends on MIKROTIK_RB532 || COMPILE_TEST
++	select GPIO_GENERIC
++	select GPIOLIB_IRQCHIP
++	help
++	  Select this option to enable GPIO driver for
++	  IDT 79RC3243X SoC devices.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called gpio-idt3243x.
++
+ endmenu
+ 
+ menu "Port-mapped I/O GPIO drivers"
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index c58a90a3c3b1..75dd9c5665c5 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -67,6 +67,7 @@ obj-$(CONFIG_GPIO_HISI)                 += gpio-hisi.o
+ obj-$(CONFIG_GPIO_HLWD)			+= gpio-hlwd.o
+ obj-$(CONFIG_HTC_EGPIO)			+= gpio-htc-egpio.o
+ obj-$(CONFIG_GPIO_ICH)			+= gpio-ich.o
++obj-$(CONFIG_GPIO_IDT3243X)		+= gpio-idt3243x.o
+ obj-$(CONFIG_GPIO_IOP)			+= gpio-iop.o
+ obj-$(CONFIG_GPIO_IT87)			+= gpio-it87.o
+ obj-$(CONFIG_GPIO_IXP4XX)		+= gpio-ixp4xx.o
+diff --git a/drivers/gpio/gpio-idt3243x.c b/drivers/gpio/gpio-idt3243x.c
+new file mode 100644
+index 000000000000..50e132cb3d47
+--- /dev/null
++++ b/drivers/gpio/gpio-idt3243x.c
+@@ -0,0 +1,198 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Driver for IDT/Renesas 79RC3243x Interrupt Controller.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/gpio/driver.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/irqdomain.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++#define IDT_PIC_IRQ_PEND	0x00
++#define IDT_PIC_IRQ_MASK	0x08
++
++#define IDT_GPIO_DIR		0x04
++#define IDT_GPIO_DATA		0x08
++#define IDT_GPIO_ILEVEL		0x0C
++#define IDT_GPIO_ISTAT		0x10
++
++struct idt_gpio_ctrl {
++	struct gpio_chip gc;
++	void __iomem *pic;
++	void __iomem *gpio;
++	u32 mask_cache;
++};
++
++static void idt_gpio_dispatch(struct irq_desc *desc)
++{
++	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++	struct irq_chip *host_chip = irq_desc_get_chip(desc);
++	unsigned int bit, virq;
++	unsigned long pending;
++
++	chained_irq_enter(host_chip, desc);
++
++	pending = readl(ctrl->pic + IDT_PIC_IRQ_PEND);
++	pending &= ~ctrl->mask_cache;
++	for_each_set_bit(bit, &pending, gc->ngpio) {
++		virq = irq_linear_revmap(gc->irq.domain, bit);
++		if (virq)
++			generic_handle_irq(virq);
++	}
++
++	chained_irq_exit(host_chip, desc);
++}
++
++static int idt_gpio_irq_set_type(struct irq_data *d, unsigned int flow_type)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++	unsigned int sense = flow_type & IRQ_TYPE_SENSE_MASK;
++	u32 ilevel;
++
++	if (sense & ~(IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
++		return -EINVAL;
++
++	ilevel = readl(ctrl->gpio + IDT_GPIO_ILEVEL);
++	if (sense & IRQ_TYPE_LEVEL_HIGH)
++		ilevel |= BIT(d->hwirq);
++	else if (sense & IRQ_TYPE_LEVEL_LOW)
++		ilevel &= ~BIT(d->hwirq);
++	else
++		return -EINVAL;
++
++	writel(ilevel, ctrl->gpio + IDT_GPIO_ILEVEL);
++	return 0;
++}
++
++static void idt_gpio_ack(struct irq_data *d)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++
++	writel(~BIT(d->hwirq), ctrl->gpio + IDT_GPIO_ISTAT);
++}
++
++static void idt_gpio_mask(struct irq_data *d)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++
++	ctrl->mask_cache |= BIT(d->hwirq);
++	writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
++}
++
++static void idt_gpio_unmask(struct irq_data *d)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++
++	ctrl->mask_cache &= ~BIT(d->hwirq);
++	writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
++}
++
++static struct irq_chip idt_gpio_irqchip = {
++	.name = "IDTGPIO",
++	.irq_mask = idt_gpio_mask,
++	.irq_ack = idt_gpio_ack,
++	.irq_unmask = idt_gpio_unmask,
++	.irq_set_type = idt_gpio_irq_set_type
++};
++
++static int idt_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct gpio_irq_chip *girq;
++	struct idt_gpio_ctrl *ctrl;
++	unsigned int parent_irq;
++	int ngpios;
++	int ret;
++
++	ret = device_property_read_u32(dev, "ngpios", &ngpios);
++	if (ret) {
++		dev_err(dev, "ngpios property is not valid\n");
++		return ret;
++	}
++
++	ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
++	if (!ctrl)
++		return -ENOMEM;
++
++	ctrl->gpio = devm_platform_ioremap_resource_byname(pdev, "gpio");
++	if (!ctrl->gpio)
++		return -ENOMEM;
++
++	ctrl->gc.parent = dev;
++
++	ret = bgpio_init(&ctrl->gc, &pdev->dev, 4, ctrl->gpio + IDT_GPIO_DATA,
++			 NULL, NULL, ctrl->gpio + IDT_GPIO_DIR, NULL, 0);
++	if (ret) {
++		dev_err(dev, "bgpio_init failed\n");
++		return ret;
++	}
++	ctrl->gc.ngpio = ngpios;
++
++	ctrl->pic = devm_platform_ioremap_resource_byname(pdev, "pic");
++	if (!ctrl->pic)
++		return -ENOMEM;
++
++	parent_irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
++	if (!parent_irq) {
++		dev_err(&pdev->dev, "Failed to map parent IRQ!\n");
++		return -EINVAL;
++	}
++
++	/* Mask interrupts. */
++	ctrl->mask_cache = 0xffffffff;
++	writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
++
++	girq = &ctrl->gc.irq;
++	girq->chip = &idt_gpio_irqchip;
++	girq->parent_handler = idt_gpio_dispatch;
++	girq->num_parents = 1;
++	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
++				     GFP_KERNEL);
++	if (!girq->parents) {
++		ret = -ENOMEM;
++		goto out_unmap_irq;
++	}
++	girq->parents[0] = parent_irq;
++	girq->default_type = IRQ_TYPE_NONE;
++	girq->handler = handle_level_irq;
++
++	ret = devm_gpiochip_add_data(&pdev->dev, &ctrl->gc, ctrl);
++	if (ret)
++		goto out_unmap_irq;
++
++	return 0;
++
++out_unmap_irq:
++	irq_dispose_mapping(parent_irq);
++	return ret;
++}
++
++static const struct of_device_id idt_gpio_of_match[] = {
++	{ .compatible = "idt,3243x-gpio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, idt_gpio_of_match);
++
++static struct platform_driver idt_gpio_driver = {
++	.probe = idt_gpio_probe,
++	.driver = {
++		.name = "idt3243x-gpio",
++		.of_match_table = idt_gpio_of_match,
++	},
++};
++module_platform_driver(idt_gpio_driver);
++
++MODULE_DESCRIPTION("IDT 79RC3243x GPIO/PIC Driver");
++MODULE_AUTHOR("Thomas Bogendoerfer <tsbogend@alpha.franken.de>");
++MODULE_LICENSE("GPL");
+-- 
+2.29.2
+
