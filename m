@@ -2,96 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE56836759A
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Apr 2021 01:12:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C74623675A4
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Apr 2021 01:16:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239521AbhDUXNW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Apr 2021 19:13:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60466 "EHLO
+        id S1343697AbhDUXQx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Apr 2021 19:16:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244043AbhDUXNW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Apr 2021 19:13:22 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EAC8C06174A
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 16:12:48 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id y4so29042274lfl.10
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 16:12:47 -0700 (PDT)
+        with ESMTP id S1343694AbhDUXQx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Apr 2021 19:16:53 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D993C06138C
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 16:16:19 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id o16so49633317ljp.3
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 16:16:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T7eHNIfHcU7QtcVVbnaCiYXMcfZmZGOpkKzfQHUQy5g=;
-        b=grk9mpKC8n8Dl77wltDy3n2lpygqgROQ3Mfnf88x9+Sa8TqR3b5ZNHeiAz1CjAJ3fP
-         XzHOf2+7s4RuzjlwjvGEgYufA8CVegzBB8517t0TS3DSqhAZLpi8BNkccULsh8nQetJs
-         J9HgfKzcVgG4iZgJOlnAe3fsTvlz6TXBuOJR1VSCkq2sSB24IVeZzFmijlH5cLvjPl5/
-         orezBpfRF0Y2RfnaJQ64eK5ROK1LunlreSLPMP7FuB/aQBTOs54Ca0EK9/qEzxL9Gsfe
-         ZN0J1SSUyLL0loKgpaUOjU5cyiyDv6jkG87zZ/klg/rS/lhdxK+JMD0wekExZJv4xcte
-         fapw==
+         :cc:content-transfer-encoding;
+        bh=lH3rmBSxRK/l04xfD0njXYt4qzsg1pEDjz8I4N9RkzQ=;
+        b=Zocw/BTbuTjrT92BAEtq7SuWLurIX0T8F12U4/fVnRIl1jEcV8f5c9c4PCalvRqx6K
+         vaVdBUqssEGLbpMkHaXHJhOS+SgOJCf9ECqQga8vjVrPtTjeT4rZXqSTd5zV/G5f/B+5
+         xqGIym/ALNn/owhudKff05t108R9fAPHniNklgI0y6II5DoeAGk6o2C8J0dxA4YwfrVM
+         j6yWIuEW1hiATESq7POYe+5TOCXF5wpMOOjxMsgqhtvbYGz8lSCe5vZGhK771XHgbKXI
+         Bxmv91kplzedqOS/WSRRP63HVL1+Yp3kWfGg68MHcMWOGe4t3ojlaiIirntXPormNVmy
+         CaVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T7eHNIfHcU7QtcVVbnaCiYXMcfZmZGOpkKzfQHUQy5g=;
-        b=Stqpi3fCN+dHD2I4ZSdmEWpiib1Kuf8Wf//Kyhoi3jWoHgLuqTuih6f3/AN9vidId7
-         U0L+K0a2195TgJRwQRYln/FIKtxzh9qbHYj0hhorY48RsL5QA2b+6DOXPyW9dNmo0K/R
-         IbXAcLIcXVmWqQROSyfL7HAsrnMub39mPjUhMwfW1wFodNrIHb+v/s+WjsRAOG9u4Lim
-         64h9ipM5K+eBQOxmzW0dOmVz7YjC1lRHoVG+a4cZvcE7Y+3LoDDIwpJrrsCF6CFWTbIB
-         Gb0ol4RoT3HM7mL1kANtoaWcqH5V8v8GEPt1XgX0P4CYCvCLK+BLjJuju8gO4osCvYl6
-         NvjA==
-X-Gm-Message-State: AOAM530so1qH8gem/2THFGyfW7n9qaeqZlkNVNoc6mbUQ6KVPAmxk4LE
-        YKHO2K3o/ZqYPPEdS6rWH6w8rNNpsB7H1SS6k6puig==
-X-Google-Smtp-Source: ABdhPJydFVuqJYzV7C5StXPaUPnHeDYzd1nUo4VCkoodIL0HJhtA7Mjd3Cre/972KXMc6uNGUvXpB82qHb9d8pPRf90=
-X-Received: by 2002:a19:ec13:: with SMTP id b19mr359877lfa.649.1619046766609;
- Wed, 21 Apr 2021 16:12:46 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lH3rmBSxRK/l04xfD0njXYt4qzsg1pEDjz8I4N9RkzQ=;
+        b=Nci+irn28EgC1LHelbgk9lTCpFxAkcHETJVcfOkdZbCLKKZi+QIkT+XiqX3cqW7tBW
+         Q1mMRgKw2aerF0n8sxKTY5oWDYsxDJnHao1+tU6miNsoC+MlplqjJMjjAZlohk9m6hgk
+         9wNz3c0F1pB8fbbRK32dZEt9CkvSBroGhS4tloievVPHFdzb98ULoGHAEAGSDQUNvvIi
+         vBcU+7Z9B8ETgN1mAGbFjbxCM1pEt1V6y6opCyRawMJ2S3KD/NIjzJ6bPqafTxjSHTqP
+         aW67ShT/8bEnzBWMw03xykWw65a0M5vDYJZ/FYdWKv4ZPFwLYJIhiqZuz3IV4DPPdadg
+         6ZNw==
+X-Gm-Message-State: AOAM530R9clq09Vq54GCjRTdN1/RpvOUEmqfVw0v8w8sNFYp7iJcetfd
+        FtHOsVlxuv/760cPRiCikggl4l1jij3yvo+Mquc9oA==
+X-Google-Smtp-Source: ABdhPJxEwXEHm3CH9HRLD5IBuDLDMcjgjNd506UvXOl5v00ZCuM1qdTq1sWoS1YTy+0tCNhVk1dcE+lbFgJfGH90Z30=
+X-Received: by 2002:a2e:555:: with SMTP id 82mr439242ljf.200.1619046977716;
+ Wed, 21 Apr 2021 16:16:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210406144540.3467756-1-tzungbi@google.com>
-In-Reply-To: <20210406144540.3467756-1-tzungbi@google.com>
+References: <1618757073-1724-1-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To: <1618757073-1724-1-git-send-email-zhouyanjie@wanyeetech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 22 Apr 2021 01:12:35 +0200
-Message-ID: <CACRpkdb6KM-smFQ9BdVQgWCNOu-4_t=g8k3_NUZ8HH0Pjr=LGg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: use spin lock in mtk_rmw
-To:     Tzung-Bi Shih <tzungbi@google.com>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
+Date:   Thu, 22 Apr 2021 01:16:06 +0200
+Message-ID: <CACRpkdY348FQM0TUqmczV96j29WvX4p6QUWajN34N=YF98aLBQ@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] Fix bugs and add support for new Ingenic SoCs.
+To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        linux-mips@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, paul@boddie.org.uk,
+        andy.shevchenko@gmail.com, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        sernia.zhou@foxmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 4:46 PM Tzung-Bi Shih <tzungbi@google.com> wrote:
+On Sun, Apr 18, 2021 at 4:44 PM =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)
+<zhouyanjie@wanyeetech.com> wrote:
 
-> Commit 42a46434e9b1 ("pinctrl: add lock in mtk_rmw function.") uses
-> mutex lock in mtk_rmw.  However the function is possible called from
-> atomic context.
->
-> For example call trace:
->   mutex_lock+0x28/0x64
->   mtk_rmw+0x38/0x80
->   mtk_hw_set_value+0x100/0x138
->   mtk_gpio_set+0x48/0x58
->   gpiod_set_raw_value_commit+0xf4/0x110
->   gpiod_set_value_nocheck+0x4c/0x80
->   gpiod_set_value+0x4c/0x6c
->   max98357a_daiops_trigger+0x8c/0x9c
->   soc_pcm_trigger+0x5c/0x10c
->
-> The max98357a_daiops_trigger() could run in either atomic or non-atomic
-> context.  As a result, dmesg shows some similar messages: "BUG: sleeping
-> function called from invalid context at kernel/locking/mutex.c:254".
->
-> Uses spin lock in mtk_rmw instead.
->
-> Fixes: 42a46434e9b1 ("pinctrl: add lock in mtk_rmw function.")
-> Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+> v5->v6:
+> 1.Add the missing lcd-24bit group.
+> 2.Add DMIC pins support for Ingenic SoCs.
+> 3.Adjust and simplify the code.
 
-Patch applied.
+This v6 patch set applied!
+
+Thanks a lot for your hard work on this Zhou!
 
 Yours,
 Linus Walleij
