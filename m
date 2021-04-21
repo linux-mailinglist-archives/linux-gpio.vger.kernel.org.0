@@ -2,81 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F0B93669C4
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Apr 2021 13:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E60A4366B38
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Apr 2021 14:52:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235951AbhDULRT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Apr 2021 07:17:19 -0400
-Received: from elvis.franken.de ([193.175.24.41]:35032 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235052AbhDULRS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 21 Apr 2021 07:17:18 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1lZAqa-0003QQ-00; Wed, 21 Apr 2021 13:16:44 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 491B7C07F1; Wed, 21 Apr 2021 13:15:24 +0200 (CEST)
-Date:   Wed, 21 Apr 2021 13:15:24 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 1/2] gpio: Add support for IDT 79RC3243x GPIO controller
-Message-ID: <20210421111524.GA8043@alpha.franken.de>
-References: <20210420123932.24634-1-tsbogend@alpha.franken.de>
- <CAHp75VcQ4WXm3uS2r=uDpA4+0vPWdKjev6=vV_JDxMLPzpHDRw@mail.gmail.com>
- <20210421083214.GA5694@alpha.franken.de>
- <CAHp75VeeWTdYjSgyjgzmFSpO=Zc+Q6SCS-06LVcVoghuF9vNgA@mail.gmail.com>
- <20210421091843.GA6174@alpha.franken.de>
- <CAHp75Vf921iQUR=VgMXTD-M_Ah+8UeAmKXXqgvB8WFz58pQ5Qg@mail.gmail.com>
- <20210421103720.GA7390@alpha.franken.de>
- <CAHp75VdgUus64zbbaD5enV0-sof4jYSs3soORqyBTkxVhM4b6A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdgUus64zbbaD5enV0-sof4jYSs3soORqyBTkxVhM4b6A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S239988AbhDUMwa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Apr 2021 08:52:30 -0400
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:35779 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239981AbhDUMwa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Apr 2021 08:52:30 -0400
+Received: by mail-ot1-f53.google.com with SMTP id 35-20020a9d05260000b029029c82502d7bso7413604otw.2;
+        Wed, 21 Apr 2021 05:51:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=kzUnia443FDp3cfEpVSUaMEUxbjwIzwp2k+x6o1CFGs=;
+        b=NoO8URHb2TfbcDVRf6ADSjFtl64hSe4JiWJfJyyxU+4mZ1dZfG4a/Cd9now4j/AnWJ
+         +XpZmTDJ6XTkiUR2djn5X2wHiyhifFqAoJaNJ1hbA/CI9HubvXptw6/VB/P7rRajRe3c
+         +0c1eKhZSr1cOBxxFbbZztWk874rxousxMsGotAHwir8tHNA/e7p2eLYU5P3MAZYkkt5
+         oNbrAYTYN418Y2o6rT8e5gWZCH9op0Jqv7jVY5bgR48+jHFwxDwpNiDA+1OfAw4LO/YM
+         ftv9zoOWfn1rAsHNUIrqeLvFrqRoE44duW46BYb1xlMkPj5bpfLNiy6qSfDZxElyx4/B
+         TEqA==
+X-Gm-Message-State: AOAM5311wCPfkEypCHkAosGNSuWfQnnZQqTCa/K8Sz6Q+qqHph83li0L
+        B6goMMz442i7xlzwtNRZDQ==
+X-Google-Smtp-Source: ABdhPJy7u0Na1Gm17gGUotWoc87lsCS2jMB18HY7U6qv2ub6C2qYplKSuDIf2TVhkPBN+CVB/uD/Gg==
+X-Received: by 2002:a05:6830:1bf6:: with SMTP id k22mr2522066otb.112.1619009515853;
+        Wed, 21 Apr 2021 05:51:55 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u195sm440184oif.55.2021.04.21.05.51.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Apr 2021 05:51:54 -0700 (PDT)
+Received: (nullmailer pid 967212 invoked by uid 1000);
+        Wed, 21 Apr 2021 12:51:48 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     =?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20210421082928.26869-1-zajec5@gmail.com>
+References: <20210421082928.26869-1-zajec5@gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: convert Broadcom Northstar to the json-schema
+Date:   Wed, 21 Apr 2021 07:51:48 -0500
+Message-Id: <1619009508.524210.967211.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 21, 2021 at 01:46:43PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 21, 2021 at 1:37 PM Thomas Bogendoerfer
-> <tsbogend@alpha.franken.de> wrote:
-> >
-> > On Wed, Apr 21, 2021 at 12:54:53PM +0300, Andy Shevchenko wrote:
-> > > As I promised you, I will do a deep review later on, I'm giving you
-> > > time to find issues yourself. That's how you may actually learn the
-> > > things. It's solely your choice to follow or not, my promise will be
-> > > kept and you will get an answer anyway.
-> >
-> > so let's make it a challenge ;-)
-> >
-> > I see I could use gpiochip_get_data() in few place.
-> >
-> > Is there more you see ?
+On Wed, 21 Apr 2021 10:29:28 +0200, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
 > 
-> Good.
+> Important: this change converts the binding as it is. It includes
+> dependency on undocumented CRU that must be refactored. That will be
+> handled once every CRU MFD subdevice gets documented properly (including
+> pinmux).
 > 
-> For now:
-> - dead code due to driver not being compiled as module
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> ---
+>  .../bindings/pinctrl/brcm,bcm4708-pinmux.txt  | 55 -----------
+>  .../bindings/pinctrl/brcm,ns-pinmux.yaml      | 98 +++++++++++++++++++
+>  2 files changed, 98 insertions(+), 55 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm4708-pinmux.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+> 
 
-Can you explain, why it's dead code, if it's not compilable as module ?
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> - too verbose Kconfig machinery (it's not about the "help" part!)
+yamllint warnings/errors:
 
-the default y part ? Well I'm converting the MIPS rb532 platform to
-device tree. So I'm trying to make the whole process as bisectable
-as possible. And this would help, but I've no problem dropping that.
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.example.dt.yaml: dmu@1800c000: $nodename:0: 'dmu@1800c000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/simple-bus.yaml
 
-> - open coded stuff in IRQ handler
+See https://patchwork.ozlabs.org/patch/1468632
 
-done.
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-Thomas.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
