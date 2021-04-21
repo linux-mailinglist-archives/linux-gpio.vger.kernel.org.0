@@ -2,258 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 884AE36726F
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Apr 2021 20:20:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ED9E3673F7
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Apr 2021 22:04:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240967AbhDUSV1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Apr 2021 14:21:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53140 "EHLO
+        id S243879AbhDUUEx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Apr 2021 16:04:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235518AbhDUSV0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Apr 2021 14:21:26 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DABEC06174A;
-        Wed, 21 Apr 2021 11:20:52 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 12so67997742lfq.13;
-        Wed, 21 Apr 2021 11:20:52 -0700 (PDT)
+        with ESMTP id S242586AbhDUUEw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Apr 2021 16:04:52 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48BAC06174A
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 13:04:16 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id w23so49495545ejb.9
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 13:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1MvOvCWVlNgN6KTtB16t9zKjKmupdN9ndBAOleCWIhs=;
-        b=dyYogmV6j0Qsx2sMzON4dBfZWsIboPAnN1RG9tCC1K3jD9OgxFvzsbExmJWwop0oJ2
-         bOJhFBROZk1KBWeRi9UW9l6lrL40V5bnVmIMcjhC1cEIk/TXR+N5xnXEKvDI8AqVmtIh
-         uwd+QHalJ5vQuR/pDxybqkkDe65kIETBU1K2N74OR/R7EjUCVWLncal751wkRD5fLwU5
-         m+Y6UB13x4jGSdOIgxaFK4k6kGC/9qZvDCeca5oI7CFqgRJaU+gxyjnpUYbZ5pdEcdjR
-         3ddKELPp23smSWfQmM2kFPb3Cl7sm/N4K3eKGxwFEXAjC/2RW3WRnOjnDoM0YWgbxPj0
-         Bcxw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZxQ9Rmg2CRYf990xn/8jN5uRSsvWxDe1bFhlNUC8sC4=;
+        b=PsxhZhuP7I7gq+PC2dfO1PfmB7gJpZsv3C6IimwhHbNnJyL3cI5vt2Z8Nt3zY2Eml1
+         Xg2r2yj06Cjtd8PLRyvk1eTOV1lKnrHdaEzcSqQnaskNIPP0VTT8zHs/xy1GUraSTYMK
+         LB11SciOs9mPFAats0/8cwURwlSAeTppFRbelkL0q6/ztfikONEEZBJGR0avi3U2ZCqp
+         NgBCCoJVKbujrLl8/4wyueDedO5ExKawWcYPDCa7j/KvA1tdrbnv606D6jUdxlVpr8Oj
+         fBZI0J6A2PavfSPfT/TxGJmHrMU3+G/PjT6HZv54TK2NYDBFcj77q9PoKgJTHsPzlZu/
+         L4bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1MvOvCWVlNgN6KTtB16t9zKjKmupdN9ndBAOleCWIhs=;
-        b=FK7RMdNxaz4BpPXRoJVgeX73E7xTdugNkJzxa0Mf+2XnAzE2qzNjMenPLpDHmlWEwm
-         do41hPQLfhxuUR73CnfEEVj8QYZhLABsOM87k60ZUcgm3V8G5/1AQfN+8BJ/d2WpzkEF
-         nhiVLWd26i+eH42dZuhcksh5wlHz1S2lHP17JQqQhWL7BFk8h3mSYxQyGMAX56tXo2h6
-         E4wVyuZtXHD9nzVEc7AG/KxqKrIVat80ndJIzDbySY2FMeO03CBTIyrnXweDsa4Ajl/1
-         tuyfKIDeVTG0XmtYYNKtEiiZVfjIn26E1yggE6mEV4ED6IjwrQ5e6DC3rHiHjzJI9wuM
-         gAlw==
-X-Gm-Message-State: AOAM531dhw9X6O6glBwvHRW+x3BBviNgDmsL6Abcnp+6cxhnxi1yEO3C
-        Z+2epHZHRQQIXGiDQb3PKBA=
-X-Google-Smtp-Source: ABdhPJyUzdzNt10pPuw2Kz7EJErej7ujpXrzHI6SeNSbfnzptuejT1zJK+kGcM4K5Ovs7ySR5KhMUg==
-X-Received: by 2002:ac2:57db:: with SMTP id k27mr7611681lfo.304.1619029250162;
-        Wed, 21 Apr 2021 11:20:50 -0700 (PDT)
-Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id s21sm30254lfs.261.2021.04.21.11.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Apr 2021 11:20:49 -0700 (PDT)
-From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V2] dt-bindings: pinctrl: convert Broadcom Northstar to the json-schema
-Date:   Wed, 21 Apr 2021 20:20:41 +0200
-Message-Id: <20210421182041.22636-1-zajec5@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210421082928.26869-1-zajec5@gmail.com>
-References: <20210421082928.26869-1-zajec5@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZxQ9Rmg2CRYf990xn/8jN5uRSsvWxDe1bFhlNUC8sC4=;
+        b=eVYiuv+mkxZuKgTUozhgnPAmKyGzvfVxsJY1MQotQMg1KZ3IgZd+wenFdYABw/jYhf
+         QXR+DRY3gwuIw5vYCUahDN6s0IG6DR+UWvQCIUJAKRp6v+SeC6e6ZhH8M0xd2SfNrN5T
+         iGgPGiBVH+GY/iUPKTJK+1RGBJORAXvupo1v89Ec3cZd66N1V6DUcMSSVv+2qetu43nN
+         wrxxnwiUjUmvbjUlw1sGJxBOBrKdZW8IbKnxn3PjGEs8MHJeUrKghw4kjuv+FcrWxbxp
+         luKTETjEtLMSnEB9LH6fOTIWBV1595NX1+VAi1ENEgTds7FFtl20vsyClgYlkrEQ6y3h
+         a6ZQ==
+X-Gm-Message-State: AOAM531ur55AHuLWWRi18cBhCet3CH+2l0V2inCUi3AfBTPhG0pCS69P
+        m7KpNUbFUDkFpRJNX5pE+YC6aiU51e8tGLGQoVXjgA==
+X-Google-Smtp-Source: ABdhPJwe2t7hCI+Svu6of8uZUjHKlrf+DVm+5cwXmKfDN3jhWaccJvD2Zgo1MEohPfj09IPUEBnlpdy/gO0+mxo0Zbc=
+X-Received: by 2002:a17:906:1d10:: with SMTP id n16mr34009341ejh.445.1619035455312;
+ Wed, 21 Apr 2021 13:04:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20210410145157.30718-1-brgl@bgdev.pl> <20210414141534.GA20266@sol>
+ <CAMRc=MeUR=9oohM29ZX_HPdBubd0ERn6KvoFfWZGg+r_u5WsYg@mail.gmail.com>
+ <20210417072326.GA12853@sol> <CAMRc=McOiBo9ENieObtF8fy93PZBoQSYBLFgnM_ST=j5_SzoyA@mail.gmail.com>
+ <20210418034810.GA9261@sol> <CAMRc=Md8S=CayttjiEVw7f6LYUZzUO9EE-kv6iyUkDqi_5GE3w@mail.gmail.com>
+ <20210419011746.GA4766@sol>
+In-Reply-To: <20210419011746.GA4766@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 21 Apr 2021 22:04:04 +0200
+Message-ID: <CAMRc=McnJbb50Q_7HjB5mDth0DKtmtmGQaXi9M4qLG4DbpONfQ@mail.gmail.com>
+Subject: Re: [libgpiod][RFC 0/6] first draft of libgpiod v2.0 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Mon, Apr 19, 2021 at 3:17 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
 
-Important: this change converts the binding as it is. It includes
-dependency on undocumented CRU that must be refactored. CRU must get
-documented and offset property has to be reworked.
+[snip -> long discussion on the libgpiod C API]
 
-Above can (and will be) be handled once every CRU MFD subdevice gets
-documented properly (including the pinmux).
+Hi Kent,
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-V2: Add "maxItems" to the "offset"
-    Add "minItems" & "maxItems" to the "groups"
-    Drop "DMU" simple-bus node from the example
-    Improve commit description (mention ugly "offset" property)
+I was working on the next iteration of the code and I'm struggling
+with the implementation of some elements without the concept of
+attributes.
 
-CRU ("Clock and Reset Unit" or "Central Resource Unit") binding is being
-worked on, for details see:
-[PATCH robh dt/next] dt-bindings: mfd: add Broadcom CRU
-https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20210415062839.11713-1-zajec5@gmail.com/
----
- .../bindings/pinctrl/brcm,bcm4708-pinmux.txt  | 55 -----------
- .../bindings/pinctrl/brcm,ns-pinmux.yaml      | 94 +++++++++++++++++++
- 2 files changed, 94 insertions(+), 55 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm4708-pinmux.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+So I initially liked the idea of variadic functions but they won't
+work for language bindings so that's a no go. On that note: I wanted
+to get some inspiration from your go library but your elegant API
+makes use of go features (like interfaces) we don't have in C.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm4708-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm4708-pinmux.txt
-deleted file mode 100644
-index 8ab2d468dbdb..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm4708-pinmux.txt
-+++ /dev/null
-@@ -1,55 +0,0 @@
--Broadcom Northstar pins mux controller
--
--Some of Northstar SoCs's pins can be used for various purposes thanks to the mux
--controller. This binding allows describing mux controller and listing available
--functions. They can be referenced later by other bindings to let system
--configure controller correctly.
--
--A list of pins varies across chipsets so few bindings are available.
--
--Node of the pinmux must be nested in the CRU (Central Resource Unit) "syscon"
--noce.
--
--Required properties:
--- compatible: must be one of:
--	"brcm,bcm4708-pinmux"
--	"brcm,bcm4709-pinmux"
--	"brcm,bcm53012-pinmux"
--- offset: offset of pin registers in the CRU block
--
--Functions and their groups available for all chipsets:
--- "spi": "spi_grp"
--- "i2c": "i2c_grp"
--- "pwm": "pwm0_grp", "pwm1_grp", "pwm2_grp", "pwm3_grp"
--- "uart1": "uart1_grp"
--
--Additionally available on BCM4709 and BCM53012:
--- "mdio": "mdio_grp"
--- "uart2": "uart2_grp"
--- "sdio": "sdio_pwr_grp", "sdio_1p8v_grp"
--
--For documentation of subnodes see:
--Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
--
--Example:
--	dmu@1800c000 {
--		compatible = "simple-bus";
--		ranges = <0 0x1800c000 0x1000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		cru@100 {
--			compatible = "syscon", "simple-mfd";
--			reg = <0x100 0x1a4>;
--
--			pinctrl {
--				compatible = "brcm,bcm4708-pinmux";
--				offset = <0xc0>;
--
--				spi-pins {
--					function = "spi";
--					groups = "spi_grp";
--				};
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-new file mode 100644
-index 000000000000..470aff599c27
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-@@ -0,0 +1,94 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/brcm,ns-pinmux.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom Northstar pins mux controller
-+
-+maintainers:
-+  - Rafał Miłecki <rafal@milecki.pl>
-+
-+description:
-+  Some of Northstar SoCs's pins can be used for various purposes thanks to the
-+  mux controller. This binding allows describing mux controller and listing
-+  available functions. They can be referenced later by other bindings to let
-+  system configure controller correctly.
-+
-+  A list of pins varies across chipsets so few bindings are available.
-+
-+  Node of the pinmux must be nested in the CRU (Central Resource Unit) "syscon"
-+  node.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - brcm,bcm4708-pinmux
-+      - brcm,bcm4709-pinmux
-+      - brcm,bcm53012-pinmux
-+
-+  offset:
-+    description: offset of pin registers in the CRU block
-+    maxItems: 1
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description: pin node
-+    $ref: pinmux-node.yaml#
-+
-+    properties:
-+      function:
-+        enum: [ spi, i2c, pwm, uart1, mdio, uart2, sdio ]
-+      groups:
-+        minItems: 1
-+        maxItems: 4
-+        items:
-+          enum: [ spi_grp, i2c_grp, pwm0_grp, pwm1_grp, pwm2_grp, pwm3_grp,
-+                  uart1_grp, mdio_grp, uart2_grp, sdio_pwr_grp, sdio_1p8v_grp ]
-+
-+    required:
-+      - function
-+      - groups
-+
-+    additionalProperties: false
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: brcm,bcm4708-pinmux
-+    then:
-+      patternProperties:
-+        '-pins$':
-+          properties:
-+            function:
-+              enum: [ spi, i2c, pwm, uart1 ]
-+            groups:
-+              items:
-+                enum: [ spi_grp, i2c_grp, pwm0_grp, pwm1_grp, pwm2_grp, pwm3_grp,
-+                        uart1_grp ]
-+
-+required:
-+  - offset
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    cru@1800c100 {
-+        compatible = "syscon", "simple-mfd";
-+        reg = <0x1800c100 0x1a4>;
-+
-+        pinctrl {
-+            compatible = "brcm,bcm4708-pinmux";
-+            offset = <0xc0>;
-+
-+            spi-pins {
-+                function = "spi";
-+                groups = "spi_grp";
-+            };
-+        };
-+    };
--- 
-2.26.2
+The problem we have is basically about implementing primary and
+secondary line configuration objects - where the primary contains the
+default config for all requested lines and the secondary can override
+certain config options (should zeroed values for enumerated types mean
+- don't override?) for certain lines.
 
+The basic line config structure (let's call it struct
+gpiod_line_config) can be very simple and have the following mutators:
+
+struct gpiod_line_config *cfg = gpiod_line_config_new();
+
+gpiod_line_config_set_direction(cfg, GPIOD_LINE_CONFIG_DIRECTION_OUTPUT);
+gpiod_line_config_set_active_low(cfg, true);
+
+and so on for for drive, bias, edge, debounce, realtime clock.
+
+Output values would be set like this:
+
+unsigned int values[] = { 0, 1, 1, 0 }, num_lines = 4;
+gpiod_line_config_set_output_values(cfg, num_lines, values);
+
+One can imagine a simple request with the same config for all lines as:
+
+gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+
+Where req_cfg configures request-specific options, and line_cfg
+contains the above line config. I'm still not convinced that
+gpiod_request_options is the better name, I think I prefer the
+juxtaposition of the two names: line_config and request_config.
+
+Now how do we pass a composite line config with overridden values in C
+without interfaces etc.?
+
+One idea I have is to add a new object called struct
+gpiod_line_config_ext (for extended) that would take one primary
+config and an arbitrary number of secondary configs with the following
+example use-case:
+
+struct gpiod_line_config_ext *ext_cfg = gpiod_line_config_ext_new();
+unsigned int offsets[] = { 2, 3 };
+
+/* Add the default config for this request. */
+gpiod_line_config_ext_set_primary_config(ext_cfg, line_cfg);
+/* Add a secondary config for 2 lines with offsets: 2 and 3. */
+gpiod_line_config_ext_add_secondary_config(ext_cfg, other_line_cfg, 2, offsets);
+
+gpiod_chip_request_lines_ext(chip, req_cfg, ext_cfg);
+
+Does this make sense? I'm worried about the resource management here.
+Who should be responsible for freeing the config structures? Should
+the extended config take ownership? Should the user remain
+responsible? Back to reference counting for these objects? Is this
+even a good idea?
+
+Please let me know what you think, I could use some advice.
+
+Best Regards,
+Bartosz
