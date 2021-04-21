@@ -2,73 +2,258 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E80A36705D
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Apr 2021 18:41:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D3723670BF
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Apr 2021 18:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234841AbhDUQmT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Apr 2021 12:42:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242474AbhDUQmS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Apr 2021 12:42:18 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 276E7C06138C
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 09:41:45 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id m11so29391877pfc.11
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Apr 2021 09:41:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=GEiqTcwIYygHUUwapLNNYA1FZwL2ut2yHDf7Ce3qLZs=;
-        b=BSzSaPsjSzmYbizPE8rTqWbkgM8baz0/6+lycnEoI1Qahw0RMU2EmDUxyCVZ/8wzXh
-         hcSAI7Dv01IZh5tQ4CRvYvmcQu+r1SpYhSfFP1nYZp14hYGPpWiIzKvWgHRhV4om1+Lr
-         /GIsEo87wLSBAxknclhdmw99LJ+rHAdtPgcu9cbtAsxnddvMTOsPN1DA7n1YNxtfZQcb
-         RVh+Xj/Dms4Ev9/jcalWmDmYx27E69BHXv5qMH8KLTLiINb92Y0r4/wdW75o9DcFv2uu
-         C9aTpbnSaSaW3lwDIvpx3GhmLKxDtMuhXHxtBNxm6yOTImoFVU2LqJmAyo512JttJ6Vv
-         AP1w==
+        id S240315AbhDUQ6U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Apr 2021 12:58:20 -0400
+Received: from mail-oi1-f182.google.com ([209.85.167.182]:36614 "EHLO
+        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241333AbhDUQ6S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Apr 2021 12:58:18 -0400
+Received: by mail-oi1-f182.google.com with SMTP id v6so15240738oiv.3;
+        Wed, 21 Apr 2021 09:57:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=GEiqTcwIYygHUUwapLNNYA1FZwL2ut2yHDf7Ce3qLZs=;
-        b=gBhFrZNjBK4Tydxko8YcUdqK8TZWVx1SZ2OGyH/z0XNf0i1R6SABpLnG6beNaqr38g
-         Nes+AwDlWZGyhfh1yRaJ4pz/6iq5DrsWi1hG3fzR96DQeAzWuN+NlLyynKnrD/yJ1F8O
-         UH7Mn1vlNGAfTFRwnHO8MfP0l7LT0dea4DSWz3vDiKue/f9BdxHMARdxzzAgFtbBiRlE
-         ob3cd4Eg44zrf2Xckf1R0Y+0GNRNfHXeQU0lEDt4HT1vqrvJGWYobLlqxZpCuwewwSK6
-         pq3H6ZiNUah5HqKryBTXNCQ9xmC/DDli3R5p5zpyUy/zNWOf9e9t6Rg5r1Pd/Ymkw4oJ
-         Vyig==
-X-Gm-Message-State: AOAM531r3r//NCx11Ny+2m+GiXa/sQXS3k+k5P14A3bC0XrmGe2AdR2l
-        obgJJ1xUtwXooS/sA0iVpXRcccWpH3dJsRT9+Wg=
-X-Google-Smtp-Source: ABdhPJwDYf41xfoSdu/lZoEIMN+yk/9ZVLqOVs1xZ0rGaMvOsdRfU51+pvKuMEVCZphMEpLRH/koIKUHAaMg7Jh7Gbg=
-X-Received: by 2002:a65:4485:: with SMTP id l5mr5940476pgq.209.1619023304237;
- Wed, 21 Apr 2021 09:41:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=dj2Qh7xMKJFcrmCxu5nCBfLMViTrmBXGJolx8Z1PHiY=;
+        b=OxN1OVtJTAbsBxMUCF0UfcYuviVZBp7IYt3JhOjXf0tue87x9sGa0qVh3Mi7ldfptG
+         hmEzwctz+3hKolGhum2wHqym0Eeo6ngoxslPyYADQHPxsyuIBbZqCwZa1UexPkEmGjXR
+         RCYnPM1kQhMCfWHn7wdO5NwDJoSblCdnt08xha4SwhgChqqA4kaNqBV+vMr/iRHN5iEx
+         dpUcjeaPIJPr8EUd6X3IPhNW6USR+maYNyvKyfNKfHaIdYOQKg07lUC0piVYkom0NdPq
+         gdEVJqoPpNE/POtXhIw2dsDsRf4gaZXldp439W/9klfhvlqp5fQZw3W1VGRw2cRHem4g
+         GrnQ==
+X-Gm-Message-State: AOAM5310hAtTGVUNWN+eS+tEGuSfIoUI1na7LJAzwmlCzOMDeL6N+6tL
+        UC8uGTxLO7UDyNVOYlX1yQ==
+X-Google-Smtp-Source: ABdhPJxmZP0jvFq1Lbd/6/YBHYNFZmruff1uFOT1sHcSZMAkZnvwms4oIxdDs2Ve9JMt5SkNTtDcYA==
+X-Received: by 2002:aca:4806:: with SMTP id v6mr7315520oia.90.1619024264525;
+        Wed, 21 Apr 2021 09:57:44 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o2sm619998oti.30.2021.04.21.09.57.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Apr 2021 09:57:43 -0700 (PDT)
+Received: (nullmailer pid 1286564 invoked by uid 1000);
+        Wed, 21 Apr 2021 16:57:42 -0000
+Date:   Wed, 21 Apr 2021 11:57:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH] dt-bindings: pinctrl: convert Broadcom Northstar to the
+ json-schema
+Message-ID: <20210421165742.GA1278985@robh.at.kernel.org>
+References: <20210421082928.26869-1-zajec5@gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a05:7300:c0f:b029:7:75f9:547d with HTTP; Wed, 21 Apr 2021
- 09:41:43 -0700 (PDT)
-Reply-To: sroomf70@gmail.com
-From:   "Mr. Pierre Eldaher" <pierre.eldaher57@gmail.com>
-Date:   Wed, 21 Apr 2021 09:41:43 -0700
-Message-ID: <CAGZKiwr_RYzzdKgWMjFzCdzjDrnBAPfNF==ebM7HiJJrXDaHJA@mail.gmail.com>
-Subject: Greetings,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210421082928.26869-1-zajec5@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-Greetings,
-From Mr. Pierre Herald, we notify you through our official mail but no
-respond from you before sending you with this private email hope you
-Received the Fund that was paid to your account? do not hesitate to
-keep us notice as soon as possible to enable us make the balance
-transfer into your nominated account. awaiting your urgent
-notification.
+On Wed, Apr 21, 2021 at 10:29:28AM +0200, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> Important: this change converts the binding as it is. It includes
+> dependency on undocumented CRU that must be refactored. That will be
+> handled once every CRU MFD subdevice gets documented properly (including
+> pinmux).
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> ---
+>  .../bindings/pinctrl/brcm,bcm4708-pinmux.txt  | 55 -----------
+>  .../bindings/pinctrl/brcm,ns-pinmux.yaml      | 98 +++++++++++++++++++
+>  2 files changed, 98 insertions(+), 55 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm4708-pinmux.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm4708-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm4708-pinmux.txt
+> deleted file mode 100644
+> index 8ab2d468dbdb..000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm4708-pinmux.txt
+> +++ /dev/null
+> @@ -1,55 +0,0 @@
+> -Broadcom Northstar pins mux controller
+> -
+> -Some of Northstar SoCs's pins can be used for various purposes thanks to the mux
+> -controller. This binding allows describing mux controller and listing available
+> -functions. They can be referenced later by other bindings to let system
+> -configure controller correctly.
+> -
+> -A list of pins varies across chipsets so few bindings are available.
+> -
+> -Node of the pinmux must be nested in the CRU (Central Resource Unit) "syscon"
+> -noce.
+> -
+> -Required properties:
+> -- compatible: must be one of:
+> -	"brcm,bcm4708-pinmux"
+> -	"brcm,bcm4709-pinmux"
+> -	"brcm,bcm53012-pinmux"
+> -- offset: offset of pin registers in the CRU block
+> -
+> -Functions and their groups available for all chipsets:
+> -- "spi": "spi_grp"
+> -- "i2c": "i2c_grp"
+> -- "pwm": "pwm0_grp", "pwm1_grp", "pwm2_grp", "pwm3_grp"
+> -- "uart1": "uart1_grp"
+> -
+> -Additionally available on BCM4709 and BCM53012:
+> -- "mdio": "mdio_grp"
+> -- "uart2": "uart2_grp"
+> -- "sdio": "sdio_pwr_grp", "sdio_1p8v_grp"
+> -
+> -For documentation of subnodes see:
+> -Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> -
+> -Example:
+> -	dmu@1800c000 {
+> -		compatible = "simple-bus";
+> -		ranges = <0 0x1800c000 0x1000>;
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -
+> -		cru@100 {
+> -			compatible = "syscon", "simple-mfd";
+> -			reg = <0x100 0x1a4>;
+> -
+> -			pinctrl {
+> -				compatible = "brcm,bcm4708-pinmux";
+> -				offset = <0xc0>;
+> -
+> -				spi-pins {
+> -					function = "spi";
+> -					groups = "spi_grp";
+> -				};
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+> new file mode 100644
+> index 000000000000..1cba8f0db5c1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+> @@ -0,0 +1,98 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/brcm,ns-pinmux.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom Northstar pins mux controller
+> +
+> +maintainers:
+> +  - Rafał Miłecki <rafal@milecki.pl>
+> +
+> +description:
+> +  Some of Northstar SoCs's pins can be used for various purposes thanks to the
+> +  mux controller. This binding allows describing mux controller and listing
+> +  available functions. They can be referenced later by other bindings to let
+> +  system configure controller correctly.
+> +
+> +  A list of pins varies across chipsets so few bindings are available.
+> +
+> +  Node of the pinmux must be nested in the CRU (Central Resource Unit) "syscon"
+> +  node.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - brcm,bcm4708-pinmux
+> +      - brcm,bcm4709-pinmux
+> +      - brcm,bcm53012-pinmux
+> +
+> +  offset:
+> +    description: offset of pin registers in the CRU block
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
 
-Thanks
-Mr. Pierre Eldaher,
-Foreign Remittance
+How many entries are valid?
 
-Best regards
-Prof. Dr Diane
-Head of Foreign Operation
+Really, this should have been just 'reg'.
+
+> +
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +    description: pin node
+> +    $ref: pinmux-node.yaml#
+> +
+> +    properties:
+> +      function:
+> +        enum: [ spi, i2c, pwm, uart1, mdio, uart2, sdio ]
+> +      groups:
+> +        items:
+> +          enum: [ spi_grp, i2c_grp, pwm0_grp, pwm1_grp, pwm2_grp, pwm3_grp,
+> +                  uart1_grp, mdio_grp, uart2_grp, sdio_pwr_grp, sdio_1p8v_grp ]
+
+How many items are valid?
+
+I thought I made the meta-schema require an 'items' schema to also have 
+minItems/maxItems. I'll have to check...
+
+> +
+> +    required:
+> +      - function
+> +      - groups
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: brcm,bcm4708-pinmux
+> +    then:
+> +      patternProperties:
+> +        '-pins$':
+> +          properties:
+> +            function:
+> +              enum: [ spi, i2c, pwm, uart1 ]
+> +            groups:
+> +              items:
+> +                enum: [ spi_grp, i2c_grp, pwm0_grp, pwm1_grp, pwm2_grp, pwm3_grp,
+> +                        uart1_grp ]
+> +
+> +required:
+> +  - offset
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    dmu@1800c000 {
+> +        compatible = "simple-bus";
+
+No need to show this node in examples.
+
+> +        ranges = <0 0x1800c000 0x1000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        cru@100 {
+> +            compatible = "syscon", "simple-mfd";
+
+Is this the same CRU as your other patch?
+
+> +            reg = <0x100 0x1a4>;
+> +
+> +            pinctrl {
+> +                compatible = "brcm,bcm4708-pinmux";
+> +                offset = <0xc0>;
+> +
+> +                spi-pins {
+> +                    function = "spi";
+> +                    groups = "spi_grp";
+> +                };
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.26.2
+> 
