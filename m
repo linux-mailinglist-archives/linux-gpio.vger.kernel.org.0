@@ -2,224 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A355C367805
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Apr 2021 05:36:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE183367C88
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Apr 2021 10:30:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234240AbhDVDgs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Apr 2021 23:36:48 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:48728 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S234716AbhDVDgr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Apr 2021 23:36:47 -0400
-X-UUID: 6c61a8f8a36f4d48b3aa977653ea8851-20210422
-X-UUID: 6c61a8f8a36f4d48b3aa977653ea8851-20210422
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <zhiyong.tao@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 2146847449; Thu, 22 Apr 2021 11:36:09 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 22 Apr 2021 11:36:07 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 22 Apr 2021 11:36:06 +0800
-From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
-To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
-        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
-        <sean.wang@kernel.org>
-CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
-        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
-        <jg_poxu@mediatek.com>, <biao.huang@mediatek.com>,
-        <hongzhou.yang@mediatek.com>, <sean.wang@mediatek.com>,
-        <seiya.wang@mediatek.com>, <sj.huang@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
-Subject: [PATCH v5] pinctrl: add rsel setting on MT8195
-Date:   Thu, 22 Apr 2021 11:35:59 +0800
-Message-ID: <20210422033559.29700-2-zhiyong.tao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20210422033559.29700-1-zhiyong.tao@mediatek.com>
-References: <20210422033559.29700-1-zhiyong.tao@mediatek.com>
+        id S235232AbhDVIbE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Apr 2021 04:31:04 -0400
+Received: from mail-eopbgr690088.outbound.protection.outlook.com ([40.107.69.88]:15010
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S235306AbhDVIbA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 22 Apr 2021 04:31:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FkTTHhc7PN+w0X6+9MY202rdxb4GKl5nH/Ej5GWKlNN8V9WRCr+KV9UEeoTEQ4qpkEZqNlHUb9cofmk/XOpKFjR4uwTrnF9OuMnCFhPdoSYqgXKUjw9g2Xifk5cBykLlkJGhkosIj3d2yvlCYJ/b4C/ZkkngEEq6H6pE0ghiVXGJBJDgFQaVcPjWABUzRM68FvxFroYVtOVP81pkPLY/BI4kUPO4/7e9LuMVbLc/7CM/hJ800LxpAZvCpWsBQH//zYDTY5dWgpcwFQJvVMOXo5GT7TzGkPxg6e+wZNveUSdyko5BEYSbisSDwjFdDz0oJNzTmslXW6xOtIlLdbD2TA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g587Nr98S0fdn+dAyuMlRNOL9j1vgtV4bVSwZod26sw=;
+ b=WCwNZoovG24Jf5rTGdTiHSBWggwmWZ3hPhZYwf1MD/q+u0fSObUKLAJTRZGyorV36tzPyWlQ6/3Q5DYYJ2BITQ5W/jRnrBMqxRyo8wpkI149QfVgCyHsnu9rXQe/+d7d70gsfBIkvX7Lfr0QPtK8omCsFhECRLtvItS5sV4jNnuKsfbOoqvv6VePHl3zeuBUuLklwGWnonX5FuSAQH7cqvyWoFyyvft5PJAxiHqWk6ou//kKz+aIG5ifKKv00K1mgWrxGrxPaSEzAwrvm7iHcIcCarEOoDPwSuNkHxEpV+WxnjDSigp1lyWGMDqWsvcLDK0k4+r2JbTWjTJPsVIrKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g587Nr98S0fdn+dAyuMlRNOL9j1vgtV4bVSwZod26sw=;
+ b=F4gTcKRTGhvIMigd9oGNvumMFzTbpA0XFItZbdqBop7J64+0azWMLVCAvA/4WqtwRFQF8QfOjcZlg8BalZ829fLN52rvPjnAR6Gf/YWp0scpCJZgQk+KYyEKlRdXA0jead8YY8M9MmBebGeMBPF9Xym6od61ghXtL/oJxB+AcOs=
+Received: from SA0PR13CA0029.namprd13.prod.outlook.com (2603:10b6:806:130::34)
+ by DM6PR02MB6889.namprd02.prod.outlook.com (2603:10b6:5:258::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16; Thu, 22 Apr
+ 2021 08:30:24 +0000
+Received: from SN1NAM02FT003.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:806:130:cafe::99) by SA0PR13CA0029.outlook.office365.com
+ (2603:10b6:806:130::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.15 via Frontend
+ Transport; Thu, 22 Apr 2021 08:30:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ SN1NAM02FT003.mail.protection.outlook.com (10.152.73.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4065.21 via Frontend Transport; Thu, 22 Apr 2021 08:30:24 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Thu, 22 Apr 2021 01:30:13 -0700
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2106.2 via Frontend Transport; Thu, 22 Apr 2021 01:30:13 -0700
+Envelope-to: git@xilinx.com,
+ saikrishna12468@gmail.com,
+ robh+dt@kernel.org,
+ linus.walleij@linaro.org,
+ gregkh@linuxfoundation.org,
+ linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Received: from [172.23.64.106] (port=49354 helo=xhdvnc125.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <lakshmi.sai.krishna.potthuri@xilinx.com>)
+        id 1lZUix-0005AK-Do; Thu, 22 Apr 2021 01:30:12 -0700
+Received: by xhdvnc125.xilinx.com (Postfix, from userid 14964)
+        id A2D15121134; Thu, 22 Apr 2021 14:00:10 +0530 (IST)
+From:   Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <git@xilinx.com>,
+        <saikrishna12468@gmail.com>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Subject: [PATCH v6 0/3] Add ZynqMP pinctrl driver
+Date:   Thu, 22 Apr 2021 13:59:59 +0530
+Message-ID: <1619080202-31924-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+X-Mailer: git-send-email 2.1.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 4751D653B100337B4670D9DA71444D5CC62E43A955A1B1D0D0D2B03C28ED45912000:8
-X-MTK:  N
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bd4fdca6-ace9-4efc-b830-08d90568e02f
+X-MS-TrafficTypeDiagnostic: DM6PR02MB6889:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB6889136F2EE5212EF7D36275BD469@DM6PR02MB6889.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:773;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8cQ2b0E9JG8tr6SVkI0SSTSY80c3G3TV2g1m23bd+DIPuhMVsAkF03U1tIW0W3AdD22Fm6+5uUYHY/PC8RZNRiBxGnEzwzOpvOCW2oaGyLE1qxFrGWzcsFtcHjcmJ+/7+kB38QJeLyC63AcRY/LluHRHYVVYfhCUGa088V3BOkDhHyRoiBGS4asyIKwHvYR5TN5P/+4FfpNrrKgv6dnTT9ZFP1TpiOdTzOlN4jx5BCAUowJM6aKIZs4D0+FvLzjdGGbhmh4tdazIzA53v3PmOV56DGir2FBwMRH9lerKwcd8z1fiFbCvljunfudnFLa07bGtCx5ftMEh73ioVtZS9Qu8hiAarxNzjelCQK3F9fbVeQfBPyOM7yQ9BYYRx4dHdMvaZVIyz32wRuhJxfLnyVeGBZOoLVmBWOqDs8B7h94cXf//wP2cqT/N5kQbJXnUL9w4RWMg8zj+x+vBPguD3pT8kh/3IROkopez3u1iiv+BBB88x8Ijt2SyI0aO38wMkg5Z7zJxgaLwFyToDO6gGT2tE8joj7dTo9rmPCdIlVY4tJ55SLOS/7phiSV2QTAbiO2iLnwuNB8AxW3Z9sNLalNBGdKFNx68FsEgUl1/3nL8CBgipYjxogM2OvsxVlh0Xk7GdVsh8CAVdrxMrjUKGKxw0lb+NTIm26WqVng9l5GBnPlt3XhfpTnIuWdAMVp7
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(396003)(346002)(39860400002)(376002)(136003)(46966006)(36840700001)(82740400003)(478600001)(5660300002)(26005)(6266002)(36756003)(2906002)(186003)(336012)(6666004)(7636003)(36860700001)(70586007)(4326008)(82310400003)(356005)(107886003)(83380400001)(316002)(36906005)(110136005)(8936002)(426003)(8676002)(2616005)(70206006)(54906003)(47076005)(42186006)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2021 08:30:24.4807
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd4fdca6-ace9-4efc-b830-08d90568e02f
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT003.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6889
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch provides rsel setting on MT8195.
+Add support for Xilinx ZynqMP pinctrl driver and also update
+the Xilinx firmware driver to support pinctrl functionality.
+This driver queries the pin information from the firmware and
+allow configuring the pins as per the request.
 
-Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
----
- drivers/pinctrl/mediatek/pinctrl-mt8195.c     | 22 +++++++++++++++++++
- .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 14 ++++++++++++
- .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  | 10 +++++++++
- drivers/pinctrl/mediatek/pinctrl-paris.c      | 16 ++++++++++++++
- 4 files changed, 62 insertions(+)
+Note:
+Patch#2 is already applied but sending in this series for
+completeness.
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8195.c b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-index a7500e18bb1d..66608b8d346a 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-@@ -779,6 +779,25 @@ static const struct mtk_pin_field_calc mt8195_pin_drv_adv_range[] = {
- 	PIN_FIELD_BASE(45, 45, 1, 0x040, 0x10, 9, 3),
- };
+changes in v6:
+- Rebased the patche series on 'devel' branch in pinctrl tree and no
+functional changes.
  
-+static const struct mtk_pin_field_calc mt8195_pin_rsel_range[] = {
-+	PIN_FIELD_BASE(8, 8, 4, 0x0c0, 0x10, 15, 3),
-+	PIN_FIELD_BASE(9, 9, 4, 0x0c0, 0x10, 0, 3),
-+	PIN_FIELD_BASE(10, 10, 4, 0x0c0, 0x10, 18, 3),
-+	PIN_FIELD_BASE(11, 11, 4, 0x0c0, 0x10, 3, 3),
-+	PIN_FIELD_BASE(12, 12, 4, 0x0c0, 0x10, 21, 3),
-+	PIN_FIELD_BASE(13, 13, 4, 0x0c0, 0x10, 6, 3),
-+	PIN_FIELD_BASE(14, 14, 4, 0x0c0, 0x10, 24, 3),
-+	PIN_FIELD_BASE(15, 15, 4, 0x0c0, 0x10, 9, 3),
-+	PIN_FIELD_BASE(16, 16, 4, 0x0c0, 0x10, 27, 3),
-+	PIN_FIELD_BASE(17, 17, 4, 0x0c0, 0x10, 12, 3),
-+	PIN_FIELD_BASE(29, 29, 2, 0x080, 0x10, 0, 3),
-+	PIN_FIELD_BASE(30, 30, 2, 0x080, 0x10, 3, 3),
-+	PIN_FIELD_BASE(34, 34, 1, 0x0e0, 0x10, 0, 3),
-+	PIN_FIELD_BASE(35, 35, 1, 0x0e0, 0x10, 3, 3),
-+	PIN_FIELD_BASE(44, 44, 1, 0x0e0, 0x10, 6, 3),
-+	PIN_FIELD_BASE(45, 45, 1, 0x0e0, 0x10, 9, 3),
-+};
-+
- static const struct mtk_pin_reg_calc mt8195_reg_cals[PINCTRL_PIN_REG_MAX] = {
- 	[PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt8195_pin_mode_range),
- 	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8195_pin_dir_range),
-@@ -793,6 +812,7 @@ static const struct mtk_pin_reg_calc mt8195_reg_cals[PINCTRL_PIN_REG_MAX] = {
- 	[PINCTRL_PIN_REG_R0] = MTK_RANGE(mt8195_pin_r0_range),
- 	[PINCTRL_PIN_REG_R1] = MTK_RANGE(mt8195_pin_r1_range),
- 	[PINCTRL_PIN_REG_DRV_ADV] = MTK_RANGE(mt8195_pin_drv_adv_range),
-+	[PINCTRL_PIN_REG_RSEL] = MTK_RANGE(mt8195_pin_rsel_range),
- };
- 
- static const char * const mt8195_pinctrl_register_base_names[] = {
-@@ -823,6 +843,8 @@ static const struct mtk_pin_soc mt8195_data = {
- 	.drive_get = mtk_pinconf_drive_get_rev1,
- 	.adv_drive_get = mtk_pinconf_adv_drive_get_raw,
- 	.adv_drive_set = mtk_pinconf_adv_drive_set_raw,
-+	.rsel_set = mtk_pinconf_rsel_set,
-+	.rsel_get = mtk_pinconf_rsel_get,
- };
- 
- static const struct of_device_id mt8195_pinctrl_of_match[] = {
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index 2b51f4a9b860..d1526d0c6248 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -1041,6 +1041,20 @@ int mtk_pinconf_adv_drive_get_raw(struct mtk_pinctrl *hw,
- }
- EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_get_raw);
- 
-+int mtk_pinconf_rsel_set(struct mtk_pinctrl *hw,
-+			 const struct mtk_pin_desc *desc, u32 arg)
-+{
-+	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_RSEL, arg);
-+}
-+EXPORT_SYMBOL_GPL(mtk_pinconf_rsel_set);
-+
-+int mtk_pinconf_rsel_get(struct mtk_pinctrl *hw,
-+			 const struct mtk_pin_desc *desc, u32 *val)
-+{
-+	return mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_RSEL, val);
-+}
-+EXPORT_SYMBOL_GPL(mtk_pinconf_rsel_get);
-+
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
- MODULE_DESCRIPTION("Pin configuration library module for mediatek SoCs");
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-index fd5ce9c5dcbd..570e8da7bf38 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-@@ -67,6 +67,7 @@ enum {
- 	PINCTRL_PIN_REG_DRV_E0,
- 	PINCTRL_PIN_REG_DRV_E1,
- 	PINCTRL_PIN_REG_DRV_ADV,
-+	PINCTRL_PIN_REG_RSEL,
- 	PINCTRL_PIN_REG_MAX,
- };
- 
-@@ -237,6 +238,10 @@ struct mtk_pin_soc {
- 			     const struct mtk_pin_desc *desc, u32 arg);
- 	int (*adv_drive_get)(struct mtk_pinctrl *hw,
- 			     const struct mtk_pin_desc *desc, u32 *val);
-+	int (*rsel_set)(struct mtk_pinctrl *hw,
-+			const struct mtk_pin_desc *desc, u32 arg);
-+	int (*rsel_get)(struct mtk_pinctrl *hw,
-+			const struct mtk_pin_desc *desc, u32 *val);
- 
- 	/* Specific driver data */
- 	void				*driver_data;
-@@ -320,5 +325,10 @@ int mtk_pinconf_adv_drive_set_raw(struct mtk_pinctrl *hw,
- int mtk_pinconf_adv_drive_get_raw(struct mtk_pinctrl *hw,
- 				  const struct mtk_pin_desc *desc, u32 *val);
- 
-+int mtk_pinconf_rsel_set(struct mtk_pinctrl *hw,
-+			 const struct mtk_pin_desc *desc, u32 arg);
-+int mtk_pinconf_rsel_get(struct mtk_pinctrl *hw,
-+			 const struct mtk_pin_desc *desc, u32 *val);
-+
- bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n);
- #endif /* __PINCTRL_MTK_COMMON_V2_H */
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index da1f19288aa6..392fdfcb5b87 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -22,6 +22,8 @@
- #define MTK_PIN_CONFIG_PU_ADV	(PIN_CONFIG_END + 3)
- #define MTK_PIN_CONFIG_PD_ADV	(PIN_CONFIG_END + 4)
- #define MTK_PIN_CONFIG_DRV_ADV	(PIN_CONFIG_END + 5)
-+#define MTK_PIN_CONFIG_RSEL	(PIN_CONFIG_END + 6)
-+
- 
- static const struct pinconf_generic_params mtk_custom_bindings[] = {
- 	{"mediatek,tdsel",	MTK_PIN_CONFIG_TDSEL,		0},
-@@ -29,6 +31,7 @@ static const struct pinconf_generic_params mtk_custom_bindings[] = {
- 	{"mediatek,pull-up-adv", MTK_PIN_CONFIG_PU_ADV,		1},
- 	{"mediatek,pull-down-adv", MTK_PIN_CONFIG_PD_ADV,	1},
- 	{"mediatek,drive-strength-adv", MTK_PIN_CONFIG_DRV_ADV,	2},
-+	{"mediatek,rsel",		MTK_PIN_CONFIG_RSEL,	2},
- };
- 
- #ifdef CONFIG_DEBUG_FS
-@@ -38,6 +41,7 @@ static const struct pin_config_item mtk_conf_items[] = {
- 	PCONFDUMP(MTK_PIN_CONFIG_PU_ADV, "pu-adv", NULL, true),
- 	PCONFDUMP(MTK_PIN_CONFIG_PD_ADV, "pd-adv", NULL, true),
- 	PCONFDUMP(MTK_PIN_CONFIG_DRV_ADV, "drive-strength-adv", NULL, true),
-+	PCONFDUMP(MTK_PIN_CONFIG_RSEL, "rsel", NULL, true),
- };
- #endif
- 
-@@ -176,6 +180,12 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
- 		else
- 			err = -ENOTSUPP;
- 		break;
-+	case MTK_PIN_CONFIG_RSEL:
-+		if (hw->soc->rsel_get)
-+			err = hw->soc->rsel_get(hw, desc, &ret);
-+		else
-+			err = -ENOTSUPP;
-+		break;
- 	default:
- 		err = -ENOTSUPP;
- 	}
-@@ -295,6 +305,12 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 		else
- 			err = -ENOTSUPP;
- 		break;
-+	case MTK_PIN_CONFIG_RSEL:
-+		if (hw->soc->rsel_set)
-+			err = hw->soc->rsel_set(hw, desc, arg);
-+		else
-+			err = -ENOTSUPP;
-+		break;
- 	default:
- 		err = -ENOTSUPP;
- 	}
+changes in v5:
+- Used generic property 'power-source' instead of driver specific for
+configuring the IO voltages, updated the same in dt-binding.
+- Added support to build driver as a module.
+- Used error codes returned by the Xilinx firmware instead of shadowing the
+error codes in the driver.
+- Fixed comments from Andy related to spell checks, NULL checks, explicit
+typecast, header inclusion ordering, removing kernel docs for the
+obvious ones.
+
+changes in v4:
+- Added comment for ignoring the return value for GET_FUNCTION_NAME qid.
+- Updated the zynqmp_pinctrl_get_function_name() API prototype to void as
+it always returns zero.
+
+changes in v3:
+- Fixed binding doc comments from Rob.
+- Used 'maxItems' for groups and pins properties.
+- Updated commit subject and description to have present tense statements.
+
+changes in v2:
+- Use pattern for pin names in yaml file.
+- Updated to support multiple groups and pins.
+- Added type ref for the vendor specific properties.
+- Removed 'schmitt-cmos', instead used common properties.
+- Removed macros for drive-strength property.
+
+Sai Krishna Potthuri (3):
+  firmware: xilinx: Add pinctrl support
+  dt-bindings: pinctrl: Add binding for ZynqMP pinctrl driver
+  pinctrl: Add Xilinx ZynqMP pinctrl driver support
+
+ .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml | 336 +++++++
+ drivers/firmware/xilinx/zynqmp.c              | 114 +++
+ drivers/pinctrl/Kconfig                       |  14 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-zynqmp.c              | 906 ++++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-zynqmp.h  |  19 +
+ include/linux/firmware/xlnx-zynqmp.h          |  90 ++
+ 7 files changed, 1480 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-zynqmp.c
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-zynqmp.h
+
 -- 
-2.18.0
+2.17.1
 
