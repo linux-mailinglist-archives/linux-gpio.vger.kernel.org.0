@@ -2,106 +2,295 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 495233681BE
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Apr 2021 15:47:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB0D1368335
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Apr 2021 17:20:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236663AbhDVNqT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Apr 2021 09:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37866 "EHLO mail.kernel.org"
+        id S236548AbhDVPVc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Apr 2021 11:21:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35484 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236630AbhDVNqO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 22 Apr 2021 09:46:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0D67961474;
-        Thu, 22 Apr 2021 13:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619099140;
-        bh=QC3KXdIOSNGgOkLCWo6id3fbWhn2ss9tO650jBq63qw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OUbbidoWGeMGpfyc2ufUGAuQwe0SiS+syanVdru5ACXVf9WARPL0JbAgIaThNGT4m
-         mzn/EMcd7KFdezBnTtEkqc9PzIdKJKtuz9GW8AQtqUUB7NcErtqNNR7gG5LFgaUK/v
-         w10al5zOIjVCJ5Tks8MK1cwf1oxZ14iweBChy23hYAkiIyigUbA8oJYE/7X8fCm3xV
-         vuUa7sgneFZqYYZ+mwJr82CSkkGY2FqaWGUQxC7Nc8dA3XG2XbeSFZDpEj3Q5BldtL
-         gCaQKfjy3Sm1tKsw15JzIQAxpG2R/DNRHMOjfi0cyNlUy7I+liUMl0qCVLhc8TvZwv
-         dOcwGyyDUipMw==
-Received: by mail-ej1-f51.google.com with SMTP id n2so68844338ejy.7;
-        Thu, 22 Apr 2021 06:45:39 -0700 (PDT)
-X-Gm-Message-State: AOAM5321hrdtVN+geJm4p8mixZIwkO3HR5M3bJrzMzeG69I273OtsEJv
-        P+Ec//mpN8K6Uxamd9wVGnYpnbJIozlxMthBdA==
-X-Google-Smtp-Source: ABdhPJxIlMzmWBvc+z6zFDoc9ubJY2LolnfwvLV7lxx8HXJUVpYJphrB8gnVMSg12DRcl7Uk7hOw6eTurfA9jo8tYHA=
-X-Received: by 2002:a17:906:7806:: with SMTP id u6mr3321658ejm.130.1619099138450;
- Thu, 22 Apr 2021 06:45:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210421162026.41978-1-tsbogend@alpha.franken.de>
- <20210421162026.41978-2-tsbogend@alpha.franken.de> <20210421171727.GA1310436@robh.at.kernel.org>
- <20210421173924.GA15599@alpha.franken.de>
-In-Reply-To: <20210421173924.GA15599@alpha.franken.de>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 22 Apr 2021 08:45:26 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLPCUni0tSybpGzqo7GRh5pfc4iUx=bWkygq+GnSDGo2A@mail.gmail.com>
-Message-ID: <CAL_JsqLPCUni0tSybpGzqo7GRh5pfc4iUx=bWkygq+GnSDGo2A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: Add devicetree binding for IDT
- 79RC3243x GPIO controller
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S236397AbhDVPVc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 22 Apr 2021 11:21:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A034DB172;
+        Thu, 22 Apr 2021 15:20:56 +0000 (UTC)
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v3 1/2] gpio: Add support for IDT 79RC3243x GPIO controller
+Date:   Thu, 22 Apr 2021 17:20:53 +0200
+Message-Id: <20210422152055.85544-1-tsbogend@alpha.franken.de>
+X-Mailer: git-send-email 2.29.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 21, 2021 at 12:40 PM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
->
-> On Wed, Apr 21, 2021 at 12:17:27PM -0500, Rob Herring wrote:
-> > On Wed, Apr 21, 2021 at 06:20:26PM +0200, Thomas Bogendoerfer wrote:
-> > > Add YAML devicetree binding for IDT 79RC3243x GPIO controller
-> > >
-> > > Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > ---
-> > >  .../bindings/gpio/gpio-idt3243x.yaml          | 73 +++++++++++++++++++
-> >
-> > Use compatible string for filename.
->
-> ok
->
-> > >  1 file changed, 73 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-idt3243x.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/gpio/gpio-idt3243x.yaml b/Documentation/devicetree/bindings/gpio/gpio-idt3243x.yaml
-> > > new file mode 100644
-> > > index 000000000000..346a57ef8298
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/gpio/gpio-idt3243x.yaml
-> > > @@ -0,0 +1,73 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/gpio/gpio-idt3243x.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: IDT 79RC32434x GPIO controller
-> > > +
-> > > +maintainers:
-> > > +  - Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: idt,3243x-gpio
-> >
-> > What's the 'x'? Generally, we don't do wildcards for compatible strings.
->
-> there are 3 different SoCs 79rc32434, 79rc32435 and 79rc32438. So should
-> I add 3 compatible strings and use the first as filename ?
+IDT 79RC3243x SoCs integrated a gpio controller, which handles up
+to 32 gpios. All gpios could be used as interrupt source.
 
-Kind of depends on the differences. If it is just fuse or packaging
-differences between them, then probably okay to use the same
-compatible. If the block is maybe the same, but not certain, then then
-you can make the oldest a fallback (e.g. compatible =
-"idt,32435-gpio", "idt,32434-gpio").
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+Changes in v3:
+ - changed compatible string to idt,32434-gpio
+ - registers now start with gpio direction register and leaves
+   out alternate function register for pinmux/pinctrl driver
 
-Either the first/oldest or a wildcard is fine for the filename.
+Changes in v2:
+ - made driver buildable as module
+ - use for_each_set_bit() in irq dispatch handler
+ - use gpiochip_get_data instead of own container_of helper
+ - use module_platform_driver() instead of arch_initcall
+ - don't default y for Mikrotik RB532
 
-Rob
+ drivers/gpio/Kconfig         |  12 +++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-idt3243x.c | 198 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 211 insertions(+)
+ create mode 100644 drivers/gpio/gpio-idt3243x.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index e3607ec4c2e8..2948eb4ab8a5 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -770,6 +770,18 @@ config GPIO_MSC313
+ 	  Say Y here to support the main GPIO block on MStar/SigmaStar
+ 	  ARMv7 based SoCs.
+ 
++config GPIO_IDT3243X
++	tristate "IDT 79RC3243X GPIO support"
++	depends on MIKROTIK_RB532 || COMPILE_TEST
++	select GPIO_GENERIC
++	select GPIOLIB_IRQCHIP
++	help
++	  Select this option to enable GPIO driver for
++	  IDT 79RC3243X SoC devices.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called gpio-idt3243x.
++
+ endmenu
+ 
+ menu "Port-mapped I/O GPIO drivers"
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index c58a90a3c3b1..75dd9c5665c5 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -67,6 +67,7 @@ obj-$(CONFIG_GPIO_HISI)                 += gpio-hisi.o
+ obj-$(CONFIG_GPIO_HLWD)			+= gpio-hlwd.o
+ obj-$(CONFIG_HTC_EGPIO)			+= gpio-htc-egpio.o
+ obj-$(CONFIG_GPIO_ICH)			+= gpio-ich.o
++obj-$(CONFIG_GPIO_IDT3243X)		+= gpio-idt3243x.o
+ obj-$(CONFIG_GPIO_IOP)			+= gpio-iop.o
+ obj-$(CONFIG_GPIO_IT87)			+= gpio-it87.o
+ obj-$(CONFIG_GPIO_IXP4XX)		+= gpio-ixp4xx.o
+diff --git a/drivers/gpio/gpio-idt3243x.c b/drivers/gpio/gpio-idt3243x.c
+new file mode 100644
+index 000000000000..1e609bc4d839
+--- /dev/null
++++ b/drivers/gpio/gpio-idt3243x.c
+@@ -0,0 +1,198 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Driver for IDT/Renesas 79RC3243x Interrupt Controller.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/gpio/driver.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/irqdomain.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++#define IDT_PIC_IRQ_PEND	0x00
++#define IDT_PIC_IRQ_MASK	0x08
++
++#define IDT_GPIO_DIR		0x00
++#define IDT_GPIO_DATA		0x04
++#define IDT_GPIO_ILEVEL		0x08
++#define IDT_GPIO_ISTAT		0x0C
++
++struct idt_gpio_ctrl {
++	struct gpio_chip gc;
++	void __iomem *pic;
++	void __iomem *gpio;
++	u32 mask_cache;
++};
++
++static void idt_gpio_dispatch(struct irq_desc *desc)
++{
++	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++	struct irq_chip *host_chip = irq_desc_get_chip(desc);
++	unsigned int bit, virq;
++	unsigned long pending;
++
++	chained_irq_enter(host_chip, desc);
++
++	pending = readl(ctrl->pic + IDT_PIC_IRQ_PEND);
++	pending &= ~ctrl->mask_cache;
++	for_each_set_bit(bit, &pending, gc->ngpio) {
++		virq = irq_linear_revmap(gc->irq.domain, bit);
++		if (virq)
++			generic_handle_irq(virq);
++	}
++
++	chained_irq_exit(host_chip, desc);
++}
++
++static int idt_gpio_irq_set_type(struct irq_data *d, unsigned int flow_type)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++	unsigned int sense = flow_type & IRQ_TYPE_SENSE_MASK;
++	u32 ilevel;
++
++	if (sense & ~(IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
++		return -EINVAL;
++
++	ilevel = readl(ctrl->gpio + IDT_GPIO_ILEVEL);
++	if (sense & IRQ_TYPE_LEVEL_HIGH)
++		ilevel |= BIT(d->hwirq);
++	else if (sense & IRQ_TYPE_LEVEL_LOW)
++		ilevel &= ~BIT(d->hwirq);
++	else
++		return -EINVAL;
++
++	writel(ilevel, ctrl->gpio + IDT_GPIO_ILEVEL);
++	return 0;
++}
++
++static void idt_gpio_ack(struct irq_data *d)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++
++	writel(~BIT(d->hwirq), ctrl->gpio + IDT_GPIO_ISTAT);
++}
++
++static void idt_gpio_mask(struct irq_data *d)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++
++	ctrl->mask_cache |= BIT(d->hwirq);
++	writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
++}
++
++static void idt_gpio_unmask(struct irq_data *d)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
++
++	ctrl->mask_cache &= ~BIT(d->hwirq);
++	writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
++}
++
++static struct irq_chip idt_gpio_irqchip = {
++	.name = "IDTGPIO",
++	.irq_mask = idt_gpio_mask,
++	.irq_ack = idt_gpio_ack,
++	.irq_unmask = idt_gpio_unmask,
++	.irq_set_type = idt_gpio_irq_set_type
++};
++
++static int idt_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct gpio_irq_chip *girq;
++	struct idt_gpio_ctrl *ctrl;
++	unsigned int parent_irq;
++	int ngpios;
++	int ret;
++
++	ret = device_property_read_u32(dev, "ngpios", &ngpios);
++	if (ret) {
++		dev_err(dev, "ngpios property is not valid\n");
++		return ret;
++	}
++
++	ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
++	if (!ctrl)
++		return -ENOMEM;
++
++	ctrl->gpio = devm_platform_ioremap_resource_byname(pdev, "gpio");
++	if (!ctrl->gpio)
++		return -ENOMEM;
++
++	ctrl->gc.parent = dev;
++
++	ret = bgpio_init(&ctrl->gc, &pdev->dev, 4, ctrl->gpio + IDT_GPIO_DATA,
++			 NULL, NULL, ctrl->gpio + IDT_GPIO_DIR, NULL, 0);
++	if (ret) {
++		dev_err(dev, "bgpio_init failed\n");
++		return ret;
++	}
++	ctrl->gc.ngpio = ngpios;
++
++	ctrl->pic = devm_platform_ioremap_resource_byname(pdev, "pic");
++	if (!ctrl->pic)
++		return -ENOMEM;
++
++	parent_irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
++	if (!parent_irq) {
++		dev_err(&pdev->dev, "Failed to map parent IRQ!\n");
++		return -EINVAL;
++	}
++
++	/* Mask interrupts. */
++	ctrl->mask_cache = 0xffffffff;
++	writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
++
++	girq = &ctrl->gc.irq;
++	girq->chip = &idt_gpio_irqchip;
++	girq->parent_handler = idt_gpio_dispatch;
++	girq->num_parents = 1;
++	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
++				     GFP_KERNEL);
++	if (!girq->parents) {
++		ret = -ENOMEM;
++		goto out_unmap_irq;
++	}
++	girq->parents[0] = parent_irq;
++	girq->default_type = IRQ_TYPE_NONE;
++	girq->handler = handle_level_irq;
++
++	ret = devm_gpiochip_add_data(&pdev->dev, &ctrl->gc, ctrl);
++	if (ret)
++		goto out_unmap_irq;
++
++	return 0;
++
++out_unmap_irq:
++	irq_dispose_mapping(parent_irq);
++	return ret;
++}
++
++static const struct of_device_id idt_gpio_of_match[] = {
++	{ .compatible = "idt,32434-gpio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, idt_gpio_of_match);
++
++static struct platform_driver idt_gpio_driver = {
++	.probe = idt_gpio_probe,
++	.driver = {
++		.name = "idt3243x-gpio",
++		.of_match_table = idt_gpio_of_match,
++	},
++};
++module_platform_driver(idt_gpio_driver);
++
++MODULE_DESCRIPTION("IDT 79RC3243x GPIO/PIC Driver");
++MODULE_AUTHOR("Thomas Bogendoerfer <tsbogend@alpha.franken.de>");
++MODULE_LICENSE("GPL");
+-- 
+2.29.2
+
