@@ -2,177 +2,376 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACD06369651
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Apr 2021 17:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE54836966E
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Apr 2021 17:54:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231437AbhDWPlM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Apr 2021 11:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
+        id S243089AbhDWPyw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Apr 2021 11:54:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242895AbhDWPlL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Apr 2021 11:41:11 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE81C061574;
-        Fri, 23 Apr 2021 08:40:33 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id j7so26039481pgi.3;
-        Fri, 23 Apr 2021 08:40:33 -0700 (PDT)
+        with ESMTP id S231560AbhDWPyw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Apr 2021 11:54:52 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD63C06174A;
+        Fri, 23 Apr 2021 08:54:15 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id gq23-20020a17090b1057b0290151869af68bso1408404pjb.4;
+        Fri, 23 Apr 2021 08:54:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YWiMdIvIJTgEdS/toi4P5fn1mH/h8UEOSVIoZ/iPl0A=;
-        b=TG6BH8I3MB2RG2/vbj70hkQ6Q0PHjFRcRg/x4C/Gd7/W/7a1IlHo2fP+Zv8gLem5uh
-         88qRrNKxlRU0XfNez5j8dhr7FKPai3Ui2RiRr2z396NSatUgxKqR1JkLKNZP9tmTDl4Q
-         XyvZxkjnoKJb4SeNTWeyuXhzFndtQahOn63PR/ZGYZICx1PE7yWwEMK3RIWGUj2O40li
-         GjMUWB6CUYlF5i6rCr2Fqk5HYGNb426ilPx6282xryllzyJMfQpt4kkCpUL4LzdIJiyZ
-         rQ7mZJX9KI3EDlZORwREb9feLuZhFt2/+cC0lMzgsCw4dz7buOtCke0DDvGp1TLEzGOT
-         f17w==
+        bh=RliIAXFCU9asMSBrZ8w3BSRXx3maI5qdZESjLk6dJ0E=;
+        b=a4QyjaKpyaPXe1EWmHlGOPWHdP7jGyhgo5N079g99Y6rnwUzjDCMnHIy04+rKHla+1
+         iMPpmA0VnND06euz7iCw25WKMHiTyBc1APsu1Ykof5Nr2WQHzdZAeOa9gk0KZUb1hSaI
+         qOAzklGuQ70wZuoBbjJJPNVQT41Aa9+eT2vBOrLnkxAfc8GL9wLtGso++JRoAAFHvyY2
+         nfAwnFnQjFKhDWCyB9uuNC+BxM93p78vuCj/R6pYNTh0rPLXMDO9adtdZMUpq+aNFtw6
+         UkY+O9rx7y5HIYhgKeQ7C4IT+es/hsfHBjU94uFzTbgiWFUcm2IhZAJjWFWIZE/wYEY3
+         pPvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YWiMdIvIJTgEdS/toi4P5fn1mH/h8UEOSVIoZ/iPl0A=;
-        b=aPl+yvsruNEP0w9AwMKwHxyy3HC/tT72J1CvntSRueFEyEArdiI9/ApVUXteij+Ft8
-         NFcgDca7nrmNEZgnK+QpvakXHkeDLO3VEDL6/8544J3vvBS3Zg+CiRv4NR+tqBwgIqTN
-         ENsuN2HwMkgDLvJrWL54wfxOxCDsye/PPIlKNp5xRc4eNt+oc/atckOINrjozp0hER6b
-         e7LrVeTYpqMYgUCxKKs3oe4PKfTKPNRIpU1TmDcLbHjMqMl1lW3tUIlsPNcChOHyOSXj
-         Zb5an++YDBSKVUMs8f3o+cqKxWCLhww+9uo9+lGaQVEjuBMpP0MTVfHnswizrHs+vmu7
-         v3KQ==
-X-Gm-Message-State: AOAM530Jz7SFh1oWGoOEspSqMvZ9dJbpf16WFt1c5E3NqDEB+EU38xga
-        yYcx2jMPMWrntexp4nI7n5lsHNltFzLg40MG1aM=
-X-Google-Smtp-Source: ABdhPJy9MQfjhX9tXSAuJ2nZG3KkkXoEHLisMRFwPUBhbDsIgJqvlHg31bZow1IfzXoS/QP85TP3b/mFHsP4x6CM1pY=
-X-Received: by 2002:a62:5c6:0:b029:24d:e97f:1b1d with SMTP id
- 189-20020a6205c60000b029024de97f1b1dmr4523754pff.40.1619192432762; Fri, 23
- Apr 2021 08:40:32 -0700 (PDT)
+        bh=RliIAXFCU9asMSBrZ8w3BSRXx3maI5qdZESjLk6dJ0E=;
+        b=GHjLZCXCOwHoCvVd1+z3Qikz9q032CTcB2KVl1u/maVI2+EPpmerzXxaZQkI3brVDN
+         eowonHpLeYet4gPCucSV/mscNHk0p0C5PjD3wfedMOvg5JLifu3SN67pQRCPOC63fp5h
+         JekY3gmw1hu3ruto1P65BCqi9vzadpZizZGhTDuaMev8XZU6f9S8Pf0w+8kozoDTjSBe
+         OLMEmi3mPnm6DXL9lJe0LElBq0MnEdpd5yuFOa38yRpNc/EXgDIInplNZO7RJPozPRyL
+         Fiw2ciwtQGD5ZB1zCaqFr3HKKMmkFWQ//HER46W4eLbVrVLWmOoX4GV71QnaSMJHZAhU
+         yZfA==
+X-Gm-Message-State: AOAM530a0emccHc/VLtlVF7c40jXJTAiMtefn6fGGEK+6SyPSKJLn8CJ
+        SLm0ixHs+WXyZEZpSGDn3Q5dE+TgmUVSrPjwEsOomPHTPrU=
+X-Google-Smtp-Source: ABdhPJxRCmdPoAuqjKESpPNTps/Dmo/gjmnFeFGA61bNP3hse1uW5GFs672AASu6tRHG8PyFZ60K9buGFwzU6aCI9Q8=
+X-Received: by 2002:a17:90b:1c0f:: with SMTP id oc15mr5337369pjb.228.1619193254802;
+ Fri, 23 Apr 2021 08:54:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210423152333.6299-1-brgl@bgdev.pl>
-In-Reply-To: <20210423152333.6299-1-brgl@bgdev.pl>
+References: <1619080202-31924-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <1619080202-31924-4-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+In-Reply-To: <1619080202-31924-4-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 23 Apr 2021 18:40:16 +0300
-Message-ID: <CAHp75VcprveU4UiCeezJrnR5n3gWoP5dM1x6E7G1tE2HqOo8Rg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: allocate IDA numbers earlier
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Fri, 23 Apr 2021 18:53:58 +0300
+Message-ID: <CAHp75VfCbbnN-TBJiYFb=6Rhf30jA-Hz1p1UORsubF7UG6-ATw@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] pinctrl: Add Xilinx ZynqMP pinctrl driver support
+To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        git <git@xilinx.com>, saikrishna12468@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 23, 2021 at 6:24 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Thu, Apr 22, 2021 at 11:31 AM Sai Krishna Potthuri
+<lakshmi.sai.krishna.potthuri@xilinx.com> wrote:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Adding pinctrl driver for Xilinx ZynqMP platform.
+> This driver queries pin information from firmware and registers
+> pin control accordingly.
 >
-> Instead of allocating the device ID number for gpio-sim platform devices
-> when the associated configfs item is committed, do it already when the
-> item is created. This way we can display the device name even when the
-> chip is still pending. Once it's committed the user can easily identify
-> the chip by its real device name. This will allow launching concurrent
-> user-space test suites with gpio-sim.
+> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
 
-Thanks!
-With or without below comment addressed:
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+You may reduce the number of LOCs by joining some lines. See below.
 
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
-> Hi all! This is a late one for which I'm sorry but I realized that this
-> change will allow us to launch test-suites concurrently if we allow the
-> user-space to read the device name before the device is created and then
-> wait for this specific name to appear in a udev add event.
->
->  drivers/gpio/gpio-sim.c | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index 92493b98c51b..2e2e6399e453 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -409,6 +409,7 @@ struct gpio_sim_chip_config {
->          * item is 'live'.
->          */
->         struct platform_device *pdev;
-> +       int id;
->
->         /*
->          * Each configfs filesystem operation is protected with the subsystem
-> @@ -442,7 +443,7 @@ static ssize_t gpio_sim_config_dev_name_show(struct config_item *item,
->         if (pdev)
->                 ret = sprintf(page, "%s\n", dev_name(&pdev->dev));
->         else
-> -               ret = sprintf(page, "none\n");
-> +               ret = sprintf(page, "gpio-sim.%d\n", config->id);
+...
 
-Wondering if you need to have one place of definition, i.e. "gpio-sim" part.
+> +config PINCTRL_ZYNQMP
+> +       tristate "Pinctrl driver for Xilinx ZynqMP"
+> +       depends on ZYNQMP_FIRMWARE
+> +       select PINMUX
+> +       select GENERIC_PINCONF
+> +       default ZYNQMP_FIRMWARE
+> +       help
+> +         This selects the pinctrl driver for Xilinx ZynqMP platform.
+> +         This driver will query the pin information from the firmware
+> +         and allow configuring the pins.
+> +         Configuration can include the mux function to select on those
+> +         pin(s)/group(s), and various pin configuration parameters
+> +         such as pull-up, slew rate, etc.
 
->         mutex_unlock(&config->lock);
->
->         return ret;
-> @@ -724,6 +725,7 @@ static void gpio_sim_chip_config_release(struct config_item *item)
->         struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
->
->         mutex_destroy(&config->lock);
-> +       ida_free(&gpio_sim_ida, config->id);
->         kfree_strarray(config->line_names, config->num_line_names);
->         kfree(config);
->  }
-> @@ -747,6 +749,12 @@ gpio_sim_config_make_item(struct config_group *group, const char *name)
->         if (!config)
->                 return ERR_PTR(-ENOMEM);
->
-> +       config->id = ida_alloc(&gpio_sim_ida, GFP_KERNEL);
-> +       if (config->id < 0) {
-> +               kfree(config);
-> +               return ERR_PTR(config->id);
+Missed module name.
+
+...
+
+> +/*
+> + * ZynqMP pin controller
+> + *
+> + * Copyright (C) 2020 Xilinx, Inc.
+
+2021?
+
+> + *
+> + * Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+> + * Rajan Vaja <rajan.vaja@xilinx.com>
+> + */
+
+...
+
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/firmware/xlnx-zynqmp.h>
+
+...
+
+> +static int zynqmp_pinconf_cfg_get(struct pinctrl_dev *pctldev,
+> +                                 unsigned int pin,
+> +                                 unsigned long *config)
+> +{
+> +       unsigned int arg, param = pinconf_to_config_param(*config);
+> +       int ret;
+
+> +       if (pin >= zynqmp_desc.npins)
+> +               return -EOPNOTSUPP;
+
+Is it possible?
+
+> +       switch (param) {
+> +       case PIN_CONFIG_SLEW_RATE:
+> +               param = PM_PINCTRL_CONFIG_SLEW_RATE;
+> +               ret = zynqmp_pm_pinctrl_get_config(pin, param, &arg);
+> +               break;
+> +       case PIN_CONFIG_BIAS_PULL_UP:
+> +               param = PM_PINCTRL_CONFIG_PULL_CTRL;
+
+> +               ret = zynqmp_pm_pinctrl_get_config(pin, param, &arg);
+> +               if (arg != PM_PINCTRL_BIAS_PULL_UP)
+> +                       return -EINVAL;
+
+Error code being shadowed. Instead check it here properly.
+
+> +               arg = 1;
+> +               break;
+> +       case PIN_CONFIG_BIAS_PULL_DOWN:
+> +               param = PM_PINCTRL_CONFIG_PULL_CTRL;
+> +               ret = zynqmp_pm_pinctrl_get_config(pin, param, &arg);
+> +               if (arg != PM_PINCTRL_BIAS_PULL_DOWN)
+> +                       return -EINVAL;
+
+Ditto.
+
+> +               arg = 1;
+> +               break;
+> +       case PIN_CONFIG_BIAS_DISABLE:
+> +               param = PM_PINCTRL_CONFIG_BIAS_STATUS;
+> +               ret = zynqmp_pm_pinctrl_get_config(pin, param, &arg);
+> +               if (arg != PM_PINCTRL_BIAS_DISABLE)
+> +                       return -EINVAL;
+
+Ditto.
+
+> +               arg = 1;
+> +               break;
+> +       case PIN_CONFIG_POWER_SOURCE:
+> +               param = PM_PINCTRL_CONFIG_VOLTAGE_STATUS;
+> +               ret = zynqmp_pm_pinctrl_get_config(pin, param, &arg);
+> +               break;
+> +       case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> +               param = PM_PINCTRL_CONFIG_SCHMITT_CMOS;
+> +               ret = zynqmp_pm_pinctrl_get_config(pin, param, &arg);
+> +               break;
+> +       case PIN_CONFIG_DRIVE_STRENGTH:
+> +               param = PM_PINCTRL_CONFIG_DRIVE_STRENGTH;
+> +               ret = zynqmp_pm_pinctrl_get_config(pin, param, &arg);
+> +               switch (arg) {
+> +               case PM_PINCTRL_DRIVE_STRENGTH_2MA:
+> +                       arg = DRIVE_STRENGTH_2MA;
+> +                       break;
+> +               case PM_PINCTRL_DRIVE_STRENGTH_4MA:
+> +                       arg = DRIVE_STRENGTH_4MA;
+> +                       break;
+> +               case PM_PINCTRL_DRIVE_STRENGTH_8MA:
+> +                       arg = DRIVE_STRENGTH_8MA;
+> +                       break;
+> +               case PM_PINCTRL_DRIVE_STRENGTH_12MA:
+> +                       arg = DRIVE_STRENGTH_12MA;
+> +                       break;
+> +               default:
+> +                       /* Invalid drive strength */
+> +                       dev_warn(pctldev->dev,
+> +                                "Invalid drive strength for pin %d\n",
+> +                                pin);
+> +                       return -EINVAL;
+> +               }
+> +               break;
+> +       default:
+> +               ret = -EOPNOTSUPP;
+> +               break;
 > +       }
 > +
->         config_item_init_type_name(&config->item, name,
->                                    &gpio_sim_chip_config_type);
->         config->num_lines = 1;
-> @@ -781,18 +789,12 @@ static int gpio_sim_config_commit_item(struct config_item *item)
->                                                 config->line_names,
->                                                 config->num_line_names);
->
-> -       pdevinfo.id = ida_alloc(&gpio_sim_ida, GFP_KERNEL);
-> -       if (pdevinfo.id < 0) {
-> -               mutex_unlock(&config->lock);
-> -               return pdevinfo.id;
-> -       }
-> -
->         pdevinfo.name = "gpio-sim";
->         pdevinfo.properties = properties;
-> +       pdevinfo.id = config->id;
->
->         pdev = platform_device_register_full(&pdevinfo);
->         if (IS_ERR(pdev)) {
-> -               ida_free(&gpio_sim_ida, pdevinfo.id);
->                 mutex_unlock(&config->lock);
->                 return PTR_ERR(pdev);
->         }
-> @@ -806,15 +808,12 @@ static int gpio_sim_config_commit_item(struct config_item *item)
->  static int gpio_sim_config_uncommit_item(struct config_item *item)
->  {
->         struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
-> -       int id;
->
->         mutex_lock(&config->lock);
-> -       id = config->pdev->id;
->         platform_device_unregister(config->pdev);
->         config->pdev = NULL;
->         mutex_unlock(&config->lock);
->
-> -       ida_free(&gpio_sim_ida, id);
->         return 0;
->  }
->
-> --
-> 2.30.1
->
+> +       if (ret)
+> +               return ret;
+> +
+> +       param = pinconf_to_config_param(*config);
+> +       *config = pinconf_to_config_packed(param, arg);
+> +
+> +       return 0;
+> +}
 
+...
+
+> +                       ret = -EOPNOTSUPP;
+
+Isn't it ENOTSUP for all cases here?
+
+...
+
+> +       ret = zynqmp_pm_query_data(qdata, payload);
+> +       if (ret)
+> +               return ret;
+> +
+> +       *ngroups = payload[1];
+> +
+
+> +       return ret;
+
+return 0;
+
+...
+
+> + * Query firmware to get group IDs for each function. Firmware returns
+> + * group IDs. Based on group index for the function, group names in
+
+on the group
+
+> + * the function are stored. For example, the first group in "eth0" function
+> + * is named as "eth0_0" and second group as "eth0_1" and so on.
+
+and the second
+
+> + *
+> + * Based on the group ID received from the firmware, function stores name of
+> + * the group for that group ID. For example, if "eth0" first group ID
+> + * is x, groups[x] name will be stored as "eth0_0".
+> + *
+> + * Once done for each function, each function would have its group names
+> + * and each groups would also have their names.
+
+each group
+
+...
+
+> +done:
+> +       func->groups = fgroups;
+> +
+> +       return ret;
+
+return 0; ?
+
+...
+
+> +       *nfuncs = payload[1];
+> +
+> +       return ret;
+
+Ditto.
+
+...
+
+> +       ret = zynqmp_pm_query_data(qdata, payload);
+> +       if (ret)
+> +               return ret;
+> +
+> +       memcpy(groups, &payload[1], PINCTRL_GET_PIN_GROUPS_RESP_LEN);
+> +
+> +       return ret;
+
+Ditto.
+
+...
+
+> + * Query firmware to get groups available for the given pin.
+> + * Based on the firmware response(group IDs for the pin), add
+> + * pin number to the respective group's pin array.
+> + *
+> + * Once all pins are queries, each groups would have its number
+
+each group
+
+> + * of pins and pin numbers data.
+
+...
+
+> +       return ret;
+
+return 0;
+
+...
+
+> + * Query number of functions and number of function groups (number
+> + * of groups in given function) to allocate required memory buffers
+
+in the given
+
+> + * for functions and groups. Once buffers are allocated to store
+> + * functions and groups data, query and store required information
+> + * (number of groups and group names for each function, number of
+> + * pins and pin numbers for each group).
+
+...
+
+> +       pctrl->funcs = funcs;
+> +       pctrl->groups = groups;
+> +
+> +       return ret;
+
+return 0;
+
+...
+
+> +       *npins = payload[1];
+> +
+> +       return ret;
+
+Ditto.
+
+...
+
+> +               dev_err(&pdev->dev, "pin desc prepare fail with %d\n",
+> +                       ret);
+
+One line.
+
+...
+
+> +               dev_err(&pdev->dev, "function info prepare fail with %d\n",
+> +                       ret);
+
+Ditto.
+
+...
+
+> +       pctrl->pctrl = pinctrl_register(&zynqmp_desc, &pdev->dev, pctrl);
+
+devm_pinctrl_register()
+
+> +       if (IS_ERR(pctrl->pctrl))
+> +               return PTR_ERR(pctrl->pctrl);
+
+...
+
+> +};
+
+> +
+
+Extra blank line.
+
+> +MODULE_DEVICE_TABLE(of, zynqmp_pinctrl_of_match);
+
+...
+
+> +};
+
+> +
+
+Ditto.
+
+> +module_platform_driver(zynqmp_pinctrl_driver);
 
 -- 
 With Best Regards,
