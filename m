@@ -2,232 +2,326 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C251368887
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Apr 2021 23:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C557368A75
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Apr 2021 03:39:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239582AbhDVVZA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Apr 2021 17:25:00 -0400
-Received: from mga14.intel.com ([192.55.52.115]:28428 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239359AbhDVVY7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 22 Apr 2021 17:24:59 -0400
-IronPort-SDR: wUkDmGRFEVgoSYwvXWJKVc0dFkgetOBiXI4wEl9uNKzoNwtG11AyMKvgqBIZlEt7WzukxtvlGm
- 4PqyaVBvBR9A==
-X-IronPort-AV: E=McAfee;i="6200,9189,9962"; a="195532508"
-X-IronPort-AV: E=Sophos;i="5.82,243,1613462400"; 
-   d="scan'208";a="195532508"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2021 14:24:24 -0700
-IronPort-SDR: syHkMT4tS8P87ugjsEJMAWdr6OOCS+ABANbY2zeOPXA8QNidfPqJCC69taFAiRGPnA7V+4W/qb
- MB9lfIEqAWBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,243,1613462400"; 
-   d="scan'208";a="424022672"
-Received: from lkp-server01.sh.intel.com (HELO a48ff7ddd223) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 22 Apr 2021 14:24:22 -0700
-Received: from kbuild by a48ff7ddd223 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lZgo9-0004Le-UL; Thu, 22 Apr 2021 21:24:21 +0000
-Date:   Fri, 23 Apr 2021 05:23:21 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- 835109266494b5b5661676a53efa5ea8f77a8c70
-Message-ID: <6081e949.CZ+rnvL+QfVxDeyx%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S235302AbhDWBjh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Apr 2021 21:39:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231261AbhDWBjh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Apr 2021 21:39:37 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E326FC061574
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Apr 2021 18:39:01 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id t22so2671436pgu.0
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Apr 2021 18:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CFlNqCGTtUi0KjM5bulY8b6ykoC5eFaTQy5K/Y8W3l8=;
+        b=c7tbUtjw1k3e7chjFVIDz56/Pp5qGyE0bFqEipLwT9Ih4GXFUkDO3QYsdE1fb0L+7n
+         NPY0TE4FskETqdZ0BKo/gm+AXbOUU91kT7MBMFiYUk4lJZkpIeiN5XZQggnDBIPXqjgV
+         IIljMafl4o5XajEIaNIoowskOYSRBeovo0Prjc5vpQhlW+WUUYZl31O9b7H/ihdgatC/
+         Qoj7p7pOC88+oK0YWp822OnxSB5yqDu6x6uGXfI5Mq2FN+mXvz6PHr/cHcUXcwDq5xiQ
+         1J/EYy9UUXvXAhiq36Oh2HzQzXnnd6j55EDd3GEIzQTvS6nWP27IScsiWIhqw1+bNnxf
+         2IHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CFlNqCGTtUi0KjM5bulY8b6ykoC5eFaTQy5K/Y8W3l8=;
+        b=O2trSpDtHrEFnN9V26CAYbcpSD93m7tpxWOKGPWTFadhqjsGhvySLapAJ24FtXp6LJ
+         WTWc3g4AJTtZE6irNaWukC7Ar3aY1DpbuiwRNsUE2jkPq9wU5gn+jHbIuhiPEk5iw1zc
+         xxo3rkqzGLwv2YjtVEDA0eRd5mHeFLg+5pBIuNh6Doz29VeViC3cKBifd0iQnaIyRogu
+         ob2ab9JRj2MXEzF1BiUSBloBcb7enrl1Ac99M7JxMLNdApEGqTKRX6ZB5a5XRYpNt5oD
+         x/HzT+HndzYNvd6mPfESOcPDaNUim/s1b5URVxATuM5yOqZUGSeD+Pi55IBt1/f9zQO6
+         Gmzg==
+X-Gm-Message-State: AOAM530WwD/jwU7vnS0A5gIBaTWMSfo9hcrUar7HaIVaf24zwwMVrOcX
+        znihHfogL77swFVSYlSdkGU=
+X-Google-Smtp-Source: ABdhPJwF3pv+CZrcbdbaajVJ7hK/1BD51D/+piJ//SUmRmtM7XUn9bgM2NmETLw2TVyQClsfWJH2KQ==
+X-Received: by 2002:a62:7642:0:b029:25c:7cdd:3cf4 with SMTP id r63-20020a6276420000b029025c7cdd3cf4mr1674677pfc.9.1619141940420;
+        Thu, 22 Apr 2021 18:39:00 -0700 (PDT)
+Received: from sol (106-69-187-97.dyn.iinet.net.au. [106.69.187.97])
+        by smtp.gmail.com with ESMTPSA id r127sm3140911pfr.163.2021.04.22.18.38.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Apr 2021 18:38:59 -0700 (PDT)
+Date:   Fri, 23 Apr 2021 09:38:55 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod][RFC 0/6] first draft of libgpiod v2.0 API
+Message-ID: <20210423013855.GA7321@sol>
+References: <20210414141534.GA20266@sol>
+ <CAMRc=MeUR=9oohM29ZX_HPdBubd0ERn6KvoFfWZGg+r_u5WsYg@mail.gmail.com>
+ <20210417072326.GA12853@sol>
+ <CAMRc=McOiBo9ENieObtF8fy93PZBoQSYBLFgnM_ST=j5_SzoyA@mail.gmail.com>
+ <20210418034810.GA9261@sol>
+ <CAMRc=Md8S=CayttjiEVw7f6LYUZzUO9EE-kv6iyUkDqi_5GE3w@mail.gmail.com>
+ <20210419011746.GA4766@sol>
+ <CAMRc=McnJbb50Q_7HjB5mDth0DKtmtmGQaXi9M4qLG4DbpONfQ@mail.gmail.com>
+ <20210422023206.GA4994@sol>
+ <CAMRc=Mfa2BbQx+C59vzeZ_JSLonFYVvfJhA8SuQbV2aGuvR9Ow@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mfa2BbQx+C59vzeZ_JSLonFYVvfJhA8SuQbV2aGuvR9Ow@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 835109266494b5b5661676a53efa5ea8f77a8c70  Merge branch 'devel' into for-next
+On Thu, Apr 22, 2021 at 11:24:34AM +0200, Bartosz Golaszewski wrote:
+> On Thu, Apr 22, 2021 at 4:32 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Wed, Apr 21, 2021 at 10:04:04PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Apr 19, 2021 at 3:17 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > >
+> > > [snip -> long discussion on the libgpiod C API]
+> > >
+> > > Hi Kent,
+> > >
+> > > I was working on the next iteration of the code and I'm struggling
+> > > with the implementation of some elements without the concept of
+> > > attributes.
+> > >
+> > > So I initially liked the idea of variadic functions but they won't
+> > > work for language bindings so that's a no go. On that note: I wanted
+> > > to get some inspiration from your go library but your elegant API
+> > > makes use of go features (like interfaces) we don't have in C.
+> > >
+> >
+> > It is the functional options that is the big difference between my Go
+> > implementation and what I would do in C.  I happen to use interfaces to
+> > implement those options.  You could do something similar in C (cos what
+> > can't you do in C) but it would be weird, so lets not go there.
+> >
+> > You can still provide the variadic forms for C users.
+> > And couldn't the language bindings use the "v" variant, as libabc
+> > suggests?:
+> >
+> > "Be careful with variadic functions
+> >   - It's great if you provide them, but you must accompany them with
+> >     "v" variants (i.e. functions taking a va_arg object), and provide
+> >     non-variadic variants as well. This is important to get language
+> >     wrappers right."
+> >
+> 
+> The "v" functions do nothing for language bindings - you can't
+> construct the required va_list out of thin air. What you do usually is
+> this (example taken from GLib):
+> 
 
-elapsed time: 723m
+You are right - I was thinking you could build and pass in the the va_list
+like Python args and kwargs, but you can only use it to decode an
+existing call stack :-|.
 
-configs tested: 170
-configs skipped: 2
+[snip]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > So it should require the list of lines that you are setting the values
+> > for. i.e. it is the mutator for a subset of lines, so the C case.
+> >
+> > And it implicitly sets those lines to outputs, so it can be more clearly
+> > named set_output(value) (that is the A case, btw).
+> >
+> 
+> I can imagine the B case like:
+> 
+> gpiod_line_config_set_output_value(config, offset, value);
+> 
+> But how would exactly the call for the A case look like? Two arrays
+> with offset -> value mapping?
+> 
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-x86_64                           allyesconfig
-riscv                            allmodconfig
-i386                             allyesconfig
-riscv                            allyesconfig
-arm                            lart_defconfig
-mips                malta_qemu_32r6_defconfig
-mips                          malta_defconfig
-sh                             shx3_defconfig
-powerpc                      ppc44x_defconfig
-arm                      footbridge_defconfig
-h8300                    h8300h-sim_defconfig
-xtensa                              defconfig
-powerpc                  iss476-smp_defconfig
-alpha                               defconfig
-powerpc                      ep88xc_defconfig
-arc                      axs103_smp_defconfig
-powerpc                 linkstation_defconfig
-arm                         s5pv210_defconfig
-sparc                       sparc32_defconfig
-sh                              ul2_defconfig
-powerpc                     asp8347_defconfig
-ia64                          tiger_defconfig
-mips                        nlm_xlr_defconfig
-mips                  decstation_64_defconfig
-m68k                         apollo_defconfig
-sh                   sh7770_generic_defconfig
-mips                            e55_defconfig
-sh                        sh7757lcr_defconfig
-sh                          lboxre2_defconfig
-powerpc                  mpc885_ads_defconfig
-mips                          rm200_defconfig
-arc                           tb10x_defconfig
-powerpc                      acadia_defconfig
-sh                                  defconfig
-powerpc                       eiger_defconfig
-arm                           h5000_defconfig
-s390                          debug_defconfig
-x86_64                           alldefconfig
-m68k                         amcore_defconfig
-mips                       capcella_defconfig
-um                            kunit_defconfig
-arm                        oxnas_v6_defconfig
-mips                         rt305x_defconfig
-powerpc                      chrp32_defconfig
-arm                         mv78xx0_defconfig
-arc                              alldefconfig
-powerpc                      ppc40x_defconfig
-xtensa                  cadence_csp_defconfig
-mips                        maltaup_defconfig
-mips                        bcm47xx_defconfig
-powerpc                 canyonlands_defconfig
-arm                     eseries_pxa_defconfig
-mips                     decstation_defconfig
-sh                         microdev_defconfig
-powerpc                        fsp2_defconfig
-powerpc                      ppc64e_defconfig
-arm                          badge4_defconfig
-arc                        vdk_hs38_defconfig
-powerpc                     tqm5200_defconfig
-powerpc               mpc834x_itxgp_defconfig
-mips                     loongson1b_defconfig
-arc                              allyesconfig
-mips                      pistachio_defconfig
-arm                          pxa910_defconfig
-mips                      maltasmvp_defconfig
-mips                         tb0287_defconfig
-arm                          pcm027_defconfig
-um                             i386_defconfig
-arm                           spitz_defconfig
-powerpc                     kmeter1_defconfig
-arm                         nhk8815_defconfig
-powerpc                      walnut_defconfig
-powerpc                     rainier_defconfig
-arm                           stm32_defconfig
-powerpc                     mpc83xx_defconfig
-arm                        trizeps4_defconfig
-powerpc                         ps3_defconfig
-arm                    vt8500_v6_v7_defconfig
-nios2                         3c120_defconfig
-arm                          gemini_defconfig
-arm                            dove_defconfig
-arm                        neponset_defconfig
-nds32                             allnoconfig
-mips                 decstation_r4k_defconfig
-mips                      maltaaprp_defconfig
-arm                       omap2plus_defconfig
-arm                      tct_hammer_defconfig
-m68k                        mvme16x_defconfig
-sh                           se7722_defconfig
-openrisc                         alldefconfig
-sh                            migor_defconfig
-um                           x86_64_defconfig
-arm                           u8500_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20210421
-x86_64               randconfig-a002-20210421
-x86_64               randconfig-a001-20210421
-x86_64               randconfig-a005-20210421
-x86_64               randconfig-a006-20210421
-x86_64               randconfig-a003-20210421
-i386                 randconfig-a005-20210421
-i386                 randconfig-a002-20210421
-i386                 randconfig-a001-20210421
-i386                 randconfig-a006-20210421
-i386                 randconfig-a004-20210421
-i386                 randconfig-a003-20210421
-x86_64               randconfig-a015-20210422
-x86_64               randconfig-a016-20210422
-x86_64               randconfig-a011-20210422
-x86_64               randconfig-a014-20210422
-x86_64               randconfig-a012-20210422
-x86_64               randconfig-a013-20210422
-i386                 randconfig-a012-20210421
-i386                 randconfig-a014-20210421
-i386                 randconfig-a011-20210421
-i386                 randconfig-a013-20210421
-i386                 randconfig-a015-20210421
-i386                 randconfig-a016-20210421
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+No - the A case sets ALL lines to one value.
+B is one line to one value.
+C is a set of lines to one value.
 
-clang tested configs:
-x86_64               randconfig-a015-20210421
-x86_64               randconfig-a016-20210421
-x86_64               randconfig-a011-20210421
-x86_64               randconfig-a014-20210421
-x86_64               randconfig-a013-20210421
-x86_64               randconfig-a012-20210421
+A set of lines to a set of values is a new case.
+And yes - two arrays as per your set_values() below.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> unsigned int offsets[] = { 0, 2, 5 }, values[] = { 0, 1 ,1 };
+> gpiod_line_config_set_output_values_offsets(config, 3, offsets, values);
+> 
+> ?
+> 
+> > > One can imagine a simple request with the same config for all lines as:
+> > >
+> > > gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+> > >
+> > > Where req_cfg configures request-specific options, and line_cfg
+> > > contains the above line config. I'm still not convinced that
+> > > gpiod_request_options is the better name, I think I prefer the
+> > > juxtaposition of the two names: line_config and request_config.
+> > >
+> >
+> > That's ok - I'm pretty sure you'll get there eventually ;-).
+> >
+> > > Now how do we pass a composite line config with overridden values in C
+> > > without interfaces etc.?
+> > >
+> >
+> > As above, the req_cfg is the composite line config, so
+> >
+> > req = gpiod_chip_request_lines(chip, req_options, req_cfg);
+> >
+> > Or if you were to merge the request config, and even the options, into the
+> > request:
+> >
+> > unsigned int lines[] = { 0, 4, 12, 54 }, num_lines = 4;
+> > req = gpiod_line_request_new(num_lines, lines); // also variadic forms??
+> > // call req option and config mutators here...
+> > gpiod_line_request_set_active_low(req);
+> > gpiod_line_request_set_output(req, 1);
+> > gpiod_line_request_set_line_input(req, 12);
+> > gpiod_line_request_set_event_buffer_size(req, 42);
+> > ...
+> > // then actually request the lines...
+> > err = gpiod_chip_request_lines(chip, req);
+> >
+> > which may error for various reasons, such as lines already being
+> > requested or overly complex config.
+> >
+> > Merging everything into the request means fewer opaque objects and
+> > interactions for the user to have to deal with, which is always a good
+> > thing.
+> > The downside is that changes to options and config, such as the
+> > gpiod_line_request_set_active_low() etc here, are not applied until
+> > either the gpiod_chip_request_lines() or the set_config() call, which
+> > could be confusing.  Though the more I think about it the more I think
+> > the resulting simplification of the API wins out.  i.e. these objects:
+> >
+> > struct gpiod_line_attr;
+> > struct gpiod_line_config;
+> > struct gpiod_request_config;
+> > struct gpiod_request_handle;
+> >
+> > all get collapsed into:
+> >
+> > struct gpiod_line_request;
+> >
+> > which significantly reduces the cognitive load on the user.
+> >
+> > The set_config() would probably be called something like:
+> >
+> > err = gpiod_line_request_reconfigure(req)
+> >
+> 
+> This lack of splitting of options into configurable and constant ones
+> visually suggests that you can change all request options later on
+> which is not true.
+
+Yup, as I said, the semantics for the unified object are more confusing.
+
+In the Go implementation, the request options can be passed to the
+request_lines(), but not the set_config(), cos interfaces.
+
+There is no good way to flag that in C at compile time. For a runtime
+check you could add a return code to the option mutators and return an
+error if the lines have already been requested.
+
+> I think that at least for the C API, we should
+> split the responsibilities of objects and keep the division into
+> request config, line config *and* the line handle whose lifetime is
+> from the moment the lines get requested until they're released.
+> 
+> > to distinguish it from the mutators which use the _set_ naming.
+> > (and it would also align with my Go library ;-)
+> >
+> > > One idea I have is to add a new object called struct
+> > > gpiod_line_config_ext (for extended) that would take one primary
+> > > config and an arbitrary number of secondary configs with the following
+> > > example use-case:
+> > >
+> > > struct gpiod_line_config_ext *ext_cfg = gpiod_line_config_ext_new();
+> > > unsigned int offsets[] = { 2, 3 };
+> > >
+> > > /* Add the default config for this request. */
+> > > gpiod_line_config_ext_set_primary_config(ext_cfg, line_cfg);
+> > > /* Add a secondary config for 2 lines with offsets: 2 and 3. */
+> > > gpiod_line_config_ext_add_secondary_config(ext_cfg, other_line_cfg, 2, offsets);
+> > >
+> > > gpiod_chip_request_lines_ext(chip, req_cfg, ext_cfg);
+> > >
+> >
+> > Please, no _ext objects - that is an admission of failure right there.
+> >
+> 
+> I wanted to protest but then realized that if you need _ext interfaces
+> then it means your non-extended, initial design is already flawed. :)
+> 
+> Ok so let's try again.
+> 
+> How about:
+> 
+> Three structs:
+> 
+> struct gpiod_line_config;
+> struct gpiod_request_config;
+> struct gpiod_line_request;
+> 
+
+The user manages the lifecycle of all three?
+
+I can live with that, though I would probably still lean towards the
+unified object approach - with the option mutators getting return codes.
+
+> The first one holds the composite of primary and secondary configs and
+> is modified using mutators according to this scheme:
+> 
+
+Which is why it should be called request_config, not line_config.
+line_config is misleading - it says line but its scope is request.
+
+And of course request_config should be request_options ;-).
+
+> gpiod_line_config_set_<attr>(config, attr);
+> gpiod_line_config_set_<attr>_offset(config, attr, offset);
+> gpiod_line_config_set_<attr>_offsets(config, attr, num_offsets, offsets);
+> 
+
+I personally prefer the _set_line_<attr> style as it reads better, but I
+can live with this - I know you prefer suffixes for variants.
+
+> With notable exceptions for:
+> 
+> gpiod_line_config_set_[input|active_low|active_high](config);
+> gpiod_line_config_set_[input|active_low|active_high]_offset(config, offset);
+> gpiod_line_config_set_[input|active_low|active_high]_offsets(config,
+> num_offsets, offsets);
+> 
+> and:
+> 
+> gpiod_line_config_set_output(config, num_lines, offsets, values);
+> gpiod_line_config_set_output_offset(config, offset, value);
+> 
+> The request function takes a single line config and a request config
+> and returns a new gpiod_line_request like in the first iteration.
+> 
+
+Where are the set of requested lines specified?
+
+Do null config ptrs result in something useful, but guaranteed harmless,
+such as requesting lines as input?  Or are they required non-null?
+
+> Then the lines can be set like this:
+> 
+> // num_lines refers to the number of lines to set, not the number of
+> // lines in the request
+> gpiod_line_request_set_values(req, num_lines, offsets, values);
+> 
+
+At first glance that feels a bit odd, being on the request while the
+others all operate on the config, but it maps to the SET_VALUES ioctl(),
+not the SET_CONFIG, so that makes sense.
+
+There is a corresponding get_values(req, num_lines, offsets, values)?
+
+And a reconfigure(req, cfg)?
+
+Cheers,
+Kent.
+
