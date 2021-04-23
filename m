@@ -2,254 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B6B1369648
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Apr 2021 17:38:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACD06369651
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Apr 2021 17:40:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237271AbhDWPif (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Apr 2021 11:38:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57750 "EHLO
+        id S231437AbhDWPlM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Apr 2021 11:41:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242623AbhDWPif (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Apr 2021 11:38:35 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7FFC06174A;
-        Fri, 23 Apr 2021 08:37:58 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id em21-20020a17090b0155b029014e204a81e6so4653313pjb.1;
-        Fri, 23 Apr 2021 08:37:58 -0700 (PDT)
+        with ESMTP id S242895AbhDWPlL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Apr 2021 11:41:11 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE81C061574;
+        Fri, 23 Apr 2021 08:40:33 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id j7so26039481pgi.3;
+        Fri, 23 Apr 2021 08:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=e6LvPN5k/e6aeDrQflzhvIspluilkhQHg67ojXCyOBs=;
-        b=Tk3OglU8G2AJv4SGZhCyFCJjt8fgdTjSTqcMopPgywdvcv13dBwJCXoIW3bWqIRbQ1
-         wRlRnUrUw+avpWjLlwHgPFM/Ey8AhILNMmdrPrBcA1P5wGDcIQPgJtJHoKvnM2WTv0SF
-         xhEoGKaFpCa4pS+6Iv1YFcxCIDyOXes/n0CjKoB38qQA28Rh0i+v1V3fgaDzRzLllX8Q
-         xP43XXMaV50fn1GoCbd1JG+SBD7dE1kJ7j3eeP6el2R6ma28LoSxxrV4RpqPD470G3go
-         uPFUaQVaHfwrR5yunBlVCWFrOHyLzNP1fpMRjClvRAzmjQnklZ8J5Y/iX4KtC6u85mtv
-         SgZA==
+        bh=YWiMdIvIJTgEdS/toi4P5fn1mH/h8UEOSVIoZ/iPl0A=;
+        b=TG6BH8I3MB2RG2/vbj70hkQ6Q0PHjFRcRg/x4C/Gd7/W/7a1IlHo2fP+Zv8gLem5uh
+         88qRrNKxlRU0XfNez5j8dhr7FKPai3Ui2RiRr2z396NSatUgxKqR1JkLKNZP9tmTDl4Q
+         XyvZxkjnoKJb4SeNTWeyuXhzFndtQahOn63PR/ZGYZICx1PE7yWwEMK3RIWGUj2O40li
+         GjMUWB6CUYlF5i6rCr2Fqk5HYGNb426ilPx6282xryllzyJMfQpt4kkCpUL4LzdIJiyZ
+         rQ7mZJX9KI3EDlZORwREb9feLuZhFt2/+cC0lMzgsCw4dz7buOtCke0DDvGp1TLEzGOT
+         f17w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=e6LvPN5k/e6aeDrQflzhvIspluilkhQHg67ojXCyOBs=;
-        b=Wpi/AbayBATn6RKi6g4IGEC5QWr9d/x62PWXaQNttLqudkImo9kZLzNRAltELRTMgK
-         bdzUSeooFq4NrK/RwFY5jnIHkDNEg0p63DdiOZN6tosJO0Ci5LZgdQDO7OL2kCxAVXEB
-         G5Jfj8KSU6X1YwjnGSm5haZDK148tV9BSrSO4lOhjwLbk0xNHJ4Zoh3v/W+cX0bzFl3s
-         r7jADm32xvJ2ajZfEgwH19Bw5NVvg9LH5bjzrcigJG0wf56bnlY1tKVoA2VpSQLjepnx
-         HNYpEuSPNRn/aN2LM+/X1leI1pZe52c/3INO3De+YQPUQAPUPNavjCnJIDuASDNw73XB
-         lfkQ==
-X-Gm-Message-State: AOAM531SOtLbjvQUDR5abxlsoP/Um8eSDjLtKJ9t2bRySw70P1SoFKng
-        hzhdicXSVJHLyE1XPnqUG5QxRRRzCDm7Y6IfeiQ=
-X-Google-Smtp-Source: ABdhPJzTza+5jyGlQ2j+ywWd9ns17382C+/TZwys5DJ6aS783eNyYPuvy6ta8sD/mKk4RVE6ZofvLiB08h7zeJijrec=
-X-Received: by 2002:a17:90b:1c0f:: with SMTP id oc15mr5263860pjb.228.1619192277759;
- Fri, 23 Apr 2021 08:37:57 -0700 (PDT)
+        bh=YWiMdIvIJTgEdS/toi4P5fn1mH/h8UEOSVIoZ/iPl0A=;
+        b=aPl+yvsruNEP0w9AwMKwHxyy3HC/tT72J1CvntSRueFEyEArdiI9/ApVUXteij+Ft8
+         NFcgDca7nrmNEZgnK+QpvakXHkeDLO3VEDL6/8544J3vvBS3Zg+CiRv4NR+tqBwgIqTN
+         ENsuN2HwMkgDLvJrWL54wfxOxCDsye/PPIlKNp5xRc4eNt+oc/atckOINrjozp0hER6b
+         e7LrVeTYpqMYgUCxKKs3oe4PKfTKPNRIpU1TmDcLbHjMqMl1lW3tUIlsPNcChOHyOSXj
+         Zb5an++YDBSKVUMs8f3o+cqKxWCLhww+9uo9+lGaQVEjuBMpP0MTVfHnswizrHs+vmu7
+         v3KQ==
+X-Gm-Message-State: AOAM530Jz7SFh1oWGoOEspSqMvZ9dJbpf16WFt1c5E3NqDEB+EU38xga
+        yYcx2jMPMWrntexp4nI7n5lsHNltFzLg40MG1aM=
+X-Google-Smtp-Source: ABdhPJy9MQfjhX9tXSAuJ2nZG3KkkXoEHLisMRFwPUBhbDsIgJqvlHg31bZow1IfzXoS/QP85TP3b/mFHsP4x6CM1pY=
+X-Received: by 2002:a62:5c6:0:b029:24d:e97f:1b1d with SMTP id
+ 189-20020a6205c60000b029024de97f1b1dmr4523754pff.40.1619192432762; Fri, 23
+ Apr 2021 08:40:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210422152055.85544-1-tsbogend@alpha.franken.de>
-In-Reply-To: <20210422152055.85544-1-tsbogend@alpha.franken.de>
+References: <20210423152333.6299-1-brgl@bgdev.pl>
+In-Reply-To: <20210423152333.6299-1-brgl@bgdev.pl>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 23 Apr 2021 18:37:41 +0300
-Message-ID: <CAHp75Ve6PEr5TFGRgALPCbi-T5Y5yNPV+-fJHC7C2mU+ms30uw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] gpio: Add support for IDT 79RC3243x GPIO controller
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Fri, 23 Apr 2021 18:40:16 +0300
+Message-ID: <CAHp75VcprveU4UiCeezJrnR5n3gWoP5dM1x6E7G1tE2HqOo8Rg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: allocate IDA numbers earlier
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 22, 2021 at 6:21 PM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
+On Fri, Apr 23, 2021 at 6:24 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> IDT 79RC3243x SoCs integrated a gpio controller, which handles up
-> to 32 gpios. All gpios could be used as interrupt source.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Instead of allocating the device ID number for gpio-sim platform devices
+> when the associated configfs item is committed, do it already when the
+> item is created. This way we can display the device name even when the
+> chip is still pending. Once it's committed the user can easily identify
+> the chip by its real device name. This will allow launching concurrent
+> user-space test suites with gpio-sim.
 
-as an interrupt
+Thanks!
+With or without below comment addressed:
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Thanks for an update, my comments below (minus that you already figured out).
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
+> Hi all! This is a late one for which I'm sorry but I realized that this
+> change will allow us to launch test-suites concurrently if we allow the
+> user-space to read the device name before the device is created and then
+> wait for this specific name to appear in a udev add event.
+>
+>  drivers/gpio/gpio-sim.c | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> index 92493b98c51b..2e2e6399e453 100644
+> --- a/drivers/gpio/gpio-sim.c
+> +++ b/drivers/gpio/gpio-sim.c
+> @@ -409,6 +409,7 @@ struct gpio_sim_chip_config {
+>          * item is 'live'.
+>          */
+>         struct platform_device *pdev;
+> +       int id;
+>
+>         /*
+>          * Each configfs filesystem operation is protected with the subsystem
+> @@ -442,7 +443,7 @@ static ssize_t gpio_sim_config_dev_name_show(struct config_item *item,
+>         if (pdev)
+>                 ret = sprintf(page, "%s\n", dev_name(&pdev->dev));
+>         else
+> -               ret = sprintf(page, "none\n");
+> +               ret = sprintf(page, "gpio-sim.%d\n", config->id);
 
-...
+Wondering if you need to have one place of definition, i.e. "gpio-sim" part.
 
-> +config GPIO_IDT3243X
-> +       tristate "IDT 79RC3243X GPIO support"
-> +       depends on MIKROTIK_RB532 || COMPILE_TEST
-
-Right.
-
-But if MikroTik is dependent on this you may return default in a form of
-
-  default MIKROTIK_RB532
-
-Up to you. (What I meant previously is the unnecessary ' y if' part).
-
-> +       select GPIO_GENERIC
-> +       select GPIOLIB_IRQCHIP
-> +       help
-> +         Select this option to enable GPIO driver for
-> +         IDT 79RC3243X SoC devices.
-
-Seems like you may elaborate a bit more here, what kind of the
-devices, list one or couple of examples, etc.
-
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called gpio-idt3243x.
-
-...
-
-> +/*
-> + * Driver for IDT/Renesas 79RC3243x Interrupt Controller.
-> + */
-
-One line?
-
-...
-
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-
-Why is this?
-
-...
-
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-
-> +#include <linux/irqchip.h>
-> +#include <linux/irqchip/chained_irq.h>
-
-Aren't those guaranteed to be included by irq.h?
-
-> +#include <linux/irqdomain.h>
-
-Missed mod_devicetable.h
-module.h
-
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-
-Do you use them anyhow? (See below as well)
-
-Missed types.h
-
-...
-
-> +static void idt_gpio_dispatch(struct irq_desc *desc)
-> +{
-> +       struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> +       struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
-> +       struct irq_chip *host_chip = irq_desc_get_chip(desc);
-> +       unsigned int bit, virq;
-> +       unsigned long pending;
-> +
-> +       chained_irq_enter(host_chip, desc);
-> +
-> +       pending = readl(ctrl->pic + IDT_PIC_IRQ_PEND);
-> +       pending &= ~ctrl->mask_cache;
-> +       for_each_set_bit(bit, &pending, gc->ngpio) {
-
-> +               virq = irq_linear_revmap(gc->irq.domain, bit);
-
-Is it guaranteed to be linear always?
-
-> +               if (virq)
-> +                       generic_handle_irq(virq);
+>         mutex_unlock(&config->lock);
+>
+>         return ret;
+> @@ -724,6 +725,7 @@ static void gpio_sim_chip_config_release(struct config_item *item)
+>         struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
+>
+>         mutex_destroy(&config->lock);
+> +       ida_free(&gpio_sim_ida, config->id);
+>         kfree_strarray(config->line_names, config->num_line_names);
+>         kfree(config);
+>  }
+> @@ -747,6 +749,12 @@ gpio_sim_config_make_item(struct config_group *group, const char *name)
+>         if (!config)
+>                 return ERR_PTR(-ENOMEM);
+>
+> +       config->id = ida_alloc(&gpio_sim_ida, GFP_KERNEL);
+> +       if (config->id < 0) {
+> +               kfree(config);
+> +               return ERR_PTR(config->id);
 > +       }
 > +
-> +       chained_irq_exit(host_chip, desc);
-> +}
+>         config_item_init_type_name(&config->item, name,
+>                                    &gpio_sim_chip_config_type);
+>         config->num_lines = 1;
+> @@ -781,18 +789,12 @@ static int gpio_sim_config_commit_item(struct config_item *item)
+>                                                 config->line_names,
+>                                                 config->num_line_names);
+>
+> -       pdevinfo.id = ida_alloc(&gpio_sim_ida, GFP_KERNEL);
+> -       if (pdevinfo.id < 0) {
+> -               mutex_unlock(&config->lock);
+> -               return pdevinfo.id;
+> -       }
+> -
+>         pdevinfo.name = "gpio-sim";
+>         pdevinfo.properties = properties;
+> +       pdevinfo.id = config->id;
+>
+>         pdev = platform_device_register_full(&pdevinfo);
+>         if (IS_ERR(pdev)) {
+> -               ida_free(&gpio_sim_ida, pdevinfo.id);
+>                 mutex_unlock(&config->lock);
+>                 return PTR_ERR(pdev);
+>         }
+> @@ -806,15 +808,12 @@ static int gpio_sim_config_commit_item(struct config_item *item)
+>  static int gpio_sim_config_uncommit_item(struct config_item *item)
+>  {
+>         struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
+> -       int id;
+>
+>         mutex_lock(&config->lock);
+> -       id = config->pdev->id;
+>         platform_device_unregister(config->pdev);
+>         config->pdev = NULL;
+>         mutex_unlock(&config->lock);
+>
+> -       ida_free(&gpio_sim_ida, id);
+>         return 0;
+>  }
+>
+> --
+> 2.30.1
+>
 
-...
-
-> +       if (sense & ~(IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
-
-There is a _BOTH variant.
-
-> +               return -EINVAL;
-
-> +       ilevel = readl(ctrl->gpio + IDT_GPIO_ILEVEL);
-> +       if (sense & IRQ_TYPE_LEVEL_HIGH)
-> +               ilevel |= BIT(d->hwirq);
-> +       else if (sense & IRQ_TYPE_LEVEL_LOW)
-> +               ilevel &= ~BIT(d->hwirq);
-
-> +       else
-> +               return -EINVAL;
-
-Is it a double check of the above?
-
-...
-
-> +       ctrl->gc.parent = dev;
-
-Wondering if it's already done by GPIO library.
-
-...
-
-> +       ctrl->gc.ngpio = ngpios;
-
-Shouldn't you do this before calling for bgpio_init()?
-
-...
-
-> +       parent_irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-
-platform_get_irq() ?..
-
-> +       if (!parent_irq) {
-
-> +               dev_err(&pdev->dev, "Failed to map parent IRQ!\n");
-
-...and drop this, since it will be taken care of.
-
-> +               return -EINVAL;
-> +       }
-
-...
-
-> +       /* Mask interrupts. */
-> +       ctrl->mask_cache = 0xffffffff;
-> +       writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
-
-What about using ->init_hw() call back?
-
-...
-
-> +       girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
-
-1 -> girq->num_parents
-
-> +                                    GFP_KERNEL);
-> +       if (!girq->parents) {
-> +               ret = -ENOMEM;
-> +               goto out_unmap_irq;
-> +       }
-
-...
-
-> +       girq->handler = handle_level_irq;
-
-handle_bad_irq()
-
-...
-
-> +       ret = devm_gpiochip_add_data(&pdev->dev, &ctrl->gc, ctrl);
-> +       if (ret)
-> +               goto out_unmap_irq;
-> +
-> +       return 0;
-
-return devm_...;
-
-...
-
-> +out_unmap_irq:
-> +       irq_dispose_mapping(parent_irq);
-> +       return ret;
-> +}
-
-No need.
 
 -- 
 With Best Regards,
