@@ -2,231 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8BF1368A7A
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Apr 2021 03:44:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED075368C25
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Apr 2021 06:26:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235569AbhDWBoz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Apr 2021 21:44:55 -0400
-Received: from lucky1.263xmail.com ([211.157.147.131]:43930 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235302AbhDWBoy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Apr 2021 21:44:54 -0400
-Received: from localhost (unknown [192.168.167.16])
-        by lucky1.263xmail.com (Postfix) with ESMTP id DE00DBA143;
-        Fri, 23 Apr 2021 09:44:03 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P31919T139684250371840S1619142242534325_;
-        Fri, 23 Apr 2021 09:44:03 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <1992614d86c6477ffb7c4ec9c31cbe71>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-RCPT-COUNT: 8
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     heiko@sntech.de, linus.walleij@linaro.org, robh+dt@kernel.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH] dt-bindings: pinctrl: rockchip: Convert to json-schema
-Date:   Fri, 23 Apr 2021 09:44:00 +0800
-Message-Id: <20210423014400.1433347-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+        id S229454AbhDWE1G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Apr 2021 00:27:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229456AbhDWE1F (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 23 Apr 2021 00:27:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C01F761209;
+        Fri, 23 Apr 2021 04:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619151989;
+        bh=558kdhrpDEbvLspTxLwIBCC63e6vd0HtrJuvMY2HIPU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bDi16M67X4iX+mbvIDox+HW5nGhX42ou6wQiJ2ANIbTwtoIWlSCRVLqmklc7bBYsA
+         8LSJhy0InMfv17D4hA/wPYuJo/yFe60qNRlKkeMb45n08ErbVkSKfsQWAhnk6bE/E0
+         vAKctRe3cZ8K/C/jhZXx9VRG6QSF+CJcjXqCeay4hT/35mmxwRfyUtHmBRmH/NDR1I
+         +vZR1T04asAf6v5jQVSQnXeGDyL6Hr3u7mpd+KlUxmIAxOdcMdsSu+8hO0scZhJxR0
+         BcAWSyQs0znJxf6XFH4zmD6ciTgWsEjab7HS92ncwnCsaM4/HA2IQHmxWD4O/Mv7vK
+         ZNv2cPsq6k9qg==
+Received: by mail-ej1-f45.google.com with SMTP id mh2so50402945ejb.8;
+        Thu, 22 Apr 2021 21:26:29 -0700 (PDT)
+X-Gm-Message-State: AOAM531KI7tqF2Ib2ERklSs/pmjF2oNxOHdeAmnVi9VJS5Md+sAgKmHO
+        FTJnHP55nTKYoczQy9Emp2T6zw0V87dOHJbCfAs=
+X-Google-Smtp-Source: ABdhPJwrp2WZp93WF7sn6a4jsARVI9yFWaZqYQT3ZabJv6Vvb4rZ45BPrknhQoO89VEgZCGMB/a8J8P7icMRRRLq0N8=
+X-Received: by 2002:a17:906:5248:: with SMTP id y8mr2047850ejm.150.1619151988351;
+ Thu, 22 Apr 2021 21:26:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210422033559.29700-1-zhiyong.tao@mediatek.com> <20210422033559.29700-2-zhiyong.tao@mediatek.com>
+In-Reply-To: <20210422033559.29700-2-zhiyong.tao@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Thu, 22 Apr 2021 21:26:16 -0700
+X-Gmail-Original-Message-ID: <CAGp9Lzof434sM0amt7q5wqJz79VpUJQchn64wrEX2wXM_zg8CA@mail.gmail.com>
+Message-ID: <CAGp9Lzof434sM0amt7q5wqJz79VpUJQchn64wrEX2wXM_zg8CA@mail.gmail.com>
+Subject: Re: [PATCH v5] pinctrl: add rsel setting on MT8195
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        hui.liu@mediatek.com,
+        =?UTF-8?B?RWRkaWUgSHVhbmcgKOm7g+aZuuWCkSk=?= 
+        <eddie.huang@mediatek.com>, jg_poxu@mediatek.com,
+        Biao Huang <biao.huang@mediatek.com>,
+        Hongzhou Yang <hongzhou.yang@mediatek.com>,
+        =?UTF-8?B?U2VhbiBXYW5nICjnjovlv5fkupgp?= <sean.wang@mediatek.com>,
+        seiya.wang@mediatek.com, sj.huang@mediatek.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the pinctrl/rockchip,pinctrl.txt binding document to
-json-schema.
+HI Zhiyong,
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- .../bindings/pinctrl/rockchip,pinctrl.yaml    | 163 ++++++++++++++++++
- 1 file changed, 163 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+We should insist on using "pinctrl: mediatek" as the prefix.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-new file mode 100644
-index 000000000000..59cddcd30dbc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-@@ -0,0 +1,163 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/rockchip,rockchip-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip Pinmux Controller
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+description: |
-+  The Rockchip Pinmux Controller, enables the IC
-+  to share one PAD to several functional blocks. The sharing is done by
-+  multiplexing the PAD input/output signals. For each PAD there are several
-+  muxing options with option 0 being the use as a GPIO.
-+
-+  Please refer to pinctrl-bindings.txt in this directory for details of the
-+  common pinctrl bindings used by client devices, including the meaning of the
-+  phrase "pin configuration node".
-+
-+  The Rockchip pin configuration node is a node of a group of pins which can be
-+  used for a specific device or function. This node represents both mux and
-+  config of the pins in that group. The 'pins' selects the function mode(also
-+  named pin mode) this pin can work on and the 'config' configures various pad
-+  settings such as pull-up, etc.
-+
-+  The pins are grouped into up to 5 individual pin banks which need to be
-+  defined as gpio sub-nodes of the pinmux controller.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,px30-pinctrl
-+      - rockchip,rv1108-pinctrl
-+      - rockchip,rk2928-pinctrl
-+      - rockchip,rk3066a-pinctrl
-+      - rockchip,rk3066b-pinctrl
-+      - rockchip,rk3128-pinctrl
-+      - rockchip,rk3188-pinctrl
-+      - rockchip,rk3228-pinctrl
-+      - rockchip,rk3288-pinctrl
-+      - rockchip,rk3308-pinctrl
-+      - rockchip,rk3328-pinctrl
-+      - rockchip,rk3368-pinctrl
-+      - rockchip,rk3399-pinctrl
-+      - rockchip,rk3568-pinctrl
-+
-+  rockchip,grf:
-+    description: |
-+      phandle referencing a syscon providing the "general register files"
-+    maxItems: 1
-+
-+  rockchip,pmu:
-+    description: |
-+      Optional. Phandle referencing a syscon providing the pmu registers
-+      as some SoCs carry parts of the iomux controller registers there.
-+      Required for at least rk3188 and rk3288. On the rk3368 this should
-+      point to the PMUGRF syscon.
-+    maxItems: 1
-+
-+  ranges: true
-+
-+patternProperties:
-+  "^gpio[0-9]@[0-9a-f]":
-+    type: object
-+    description: gpio sub node
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - rockchip,gpio-bank
-+          - rockchip,rk3188-gpio-bank0
-+
-+      reg:
-+        maxItems: 2
-+
-+      interrupts:
-+        description: Specifies the Rockchip summary IRQ
-+        maxItems: 1
-+
-+      interrupt-controller: true
-+
-+      '#interrupt-cells':
-+        description:
-+          Specifies the PIN numbers and Flags, as defined in defined in
-+          include/dt-bindings/interrupt-controller/irq.h
-+        const: 2
-+
-+      gpio-controller: true
-+
-+      '#gpio-cells':
-+        const: 2
-+
-+      clocks:
-+        description: clock that drives this gpio bank
-+        minItems: 1
-+        maxItems: 2
-+
-+      required:
-+        - compatible
-+        - reg
-+        - interrupts
-+        - interrupt-controller
-+        - '#interrupt-cells'
-+        - gpio-controller
-+        - '#gpio-cells'
-+        - clocks
-+
-+      additionalProperties: false
-+
-+required:
-+  - compatible
-+  - rockchip,grf
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+additionalProperties: true
-+
-+examples:
-+  - |
-+        #include <dt-bindings/pinctrl/rockchip.h>
-+        pcfg_pull_default: pcfg_pull_default {
-+            bias-pull-pin-default
-+        };
-+
-+        pinctrl@20008000 {
-+            compatible = "rockchip,rk3066a-pinctrl";
-+            rockchip,grf = <&grf>;
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            ranges;
-+
-+            gpio0: gpio0@20034000 {
-+                compatible = "rockchip,gpio-bank";
-+                reg = <0x20034000 0x100>;
-+                interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                clocks = <&clk_gates8 9>;
-+            };
-+
-+            uart2 {
-+                uart2_xfer: uart2-xfer {
-+                    rockchip,pins = <1 RK_PB0 1 &pcfg_pull_default>,
-+                                    <1 RK_PB1 1 &pcfg_pull_default>;
-+                };
-+            };
-+        };
-+
-+        uart2: serial@20064000 {
-+            compatible = "snps,dw-apb-uart";
-+                reg = <0x20064000 0x400>;
-+                interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+                clocks = <&mux_uart2>;
-+                pinctrl-0 = <&uart2_xfer>;
-+                pinctrl-names = "default";
-+                reg-shift = <2>;
-+                reg-io-width = <1>;
-+        };
--- 
-2.25.1
-
-
-
+On Wed, Apr 21, 2021 at 8:36 PM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+>
+> This patch provides rsel setting on MT8195.
+>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mt8195.c     | 22 +++++++++++++++++++
+>  .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 14 ++++++++++++
+>  .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  | 10 +++++++++
+>  drivers/pinctrl/mediatek/pinctrl-paris.c      | 16 ++++++++++++++
+>  4 files changed, 62 insertions(+)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8195.c b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
+> index a7500e18bb1d..66608b8d346a 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mt8195.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
+> @@ -779,6 +779,25 @@ static const struct mtk_pin_field_calc mt8195_pin_drv_adv_range[] = {
+>         PIN_FIELD_BASE(45, 45, 1, 0x040, 0x10, 9, 3),
+>  };
+>
+<snip>
