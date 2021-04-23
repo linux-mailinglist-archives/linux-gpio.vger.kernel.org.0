@@ -2,102 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36DD5369B6F
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Apr 2021 22:41:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7A90369D3F
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 01:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232255AbhDWUmR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Apr 2021 16:42:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40030 "EHLO
+        id S232283AbhDWXX0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Apr 2021 19:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232636AbhDWUmQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Apr 2021 16:42:16 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4FFC06174A
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Apr 2021 13:41:38 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id p126so3469270yba.1
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Apr 2021 13:41:38 -0700 (PDT)
+        with ESMTP id S229548AbhDWXX0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Apr 2021 19:23:26 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B60C1C06174A
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Apr 2021 16:22:48 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id r9so76104780ejj.3
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Apr 2021 16:22:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=auJU3BRtz8kLnSrkdZgLf2c5wwbEssldt+ZbJ4Y83DY=;
-        b=V4e94mJarnBEEIzbTmeknPQb4WEQU9nbwxE46iVepOvs7S5EBupaX0AJOIo4y8DXCa
-         S5pCjGa6dmpzFPoP5FFGiBM38e8RAiMsmx3gOwDetea2Vk0yEDkkHoN0KUPFrqG8OYfp
-         fmOUPAuQxpin12R7ajv5hzfSeCE4STpYf+/Edsnxn19P0zYHn6eQwGsGUtcW/MlIYCcQ
-         j2SvC2tgwe/KEA2996W5fxcE/FAcVCiB7rLxT4yED3pOZBb410NE1clT60yLSLfasaf1
-         4deSGCXZ+cFLmjNhY86mTRESl3jG9CcYOjDp72yt9XIuq4GRxLyeKZacLNgsZ34No8LG
-         Pkbw==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=9KdCYVYjsxm43pdzjAW7S0Q2+F1LcWUUXR0r+zmo39s=;
+        b=e3t/dADON64hxvBTxTkoSr3n+kMdchKnreD351DeJmixuumfC7fIkQSUbls7LMo8Ds
+         7nADt0soBN11Td+VpBE8KUqzbkifFvV0cdfJ6OnHLLbxCDnV8KuU1VruL1PcMjrn2mRt
+         6RkZJu5o1mUNUGh4GFb0m26TsBsqoyAjSYv0bmE13zeCjVb98qVCjX/bFRIRmQ2TZsqk
+         OLyTxfQIsV4Ys5DLujQfjIPLekO2nsOTlVAu8Z21jdI493Nk/mfjVustBiVCpx8x2QsT
+         jza1EFUhLL7hi+sl+ZoqTZ21Z60xLm51AlHXKET0RuN+8VzyuGy3Csh8GVKlmgUcrpcN
+         94MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=auJU3BRtz8kLnSrkdZgLf2c5wwbEssldt+ZbJ4Y83DY=;
-        b=riiAIJleAn9RExu3gMd86e/fkqhHeyqyojy3/LWWLHkdzmaTT1srn9UQZqxT6JV1VA
-         LuY4D1AvX16vmYRu8xMIayxR1aUzzH/IzH8Bv/f1RAuEVRGmKZDkThBby/Un30TfA5lY
-         2cJGdt9mTGquaM99d7b3+B2TRmJq5+QAXCPii4qatRgBpFaoQHeFqNA3mLziNvkPA9ZR
-         izjM1IpF5n8Rf8EpyHxrelkQ0u62A1OlTu3DQf/HdyNrJVoyqklxnbjDp1EeUipQpx0V
-         nCqvOBoMPdB47l3FQ1ZmZ0mz89WqFwpaSxTRg2m+yRgXXkO5BPhPNuKks7BjLmIyFuwb
-         zafg==
-X-Gm-Message-State: AOAM533pB8QcjD0RHB3DmlRQBSpqlML1WC4Jmm6EcyspIKCfE2m/j9fp
-        C6eqWedA/V/yH62KhtStoj2PgJJ0Wt1O6Prg8wRq5A==
-X-Google-Smtp-Source: ABdhPJyBfGhsBB9FRsWEcCk5aBWchkNLQ3kIla3VhXZl/IDTn5cdSQFvFWFK5sRrGTzUs/EI8DxxZ65rJmeIVOoyZ7Q=
-X-Received: by 2002:a25:1905:: with SMTP id 5mr8390620ybz.302.1619210497639;
- Fri, 23 Apr 2021 13:41:37 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=9KdCYVYjsxm43pdzjAW7S0Q2+F1LcWUUXR0r+zmo39s=;
+        b=Fwc6+fiSXm4+KAb9V3nvSmF7Tc+iGMjijEX0VTEl8tTrwkT6QT+G2HU7UbU+s1LKQo
+         NvVt7ZUY6ox57/XxFP3rIWFjMl+F8Fy6l3MjwltQZk0g4Y2b8bsBEDlo5h3UMAiF4lxI
+         NrHkpsspoqdxLwwj97VOK2su3wDJ3rr/HiveKwiLLOKb8hUXItFIjbLVAklfpm7ZePlY
+         T0rqM2ENlKdaWymtgsPAYFZyATvz8CZ7lP95MqY9QwImVvs7KYb9d8optT1K6keBjuQd
+         EG3Ske5P/ygAyrOTa0Kxbzae99GTrOU+dCmWvgOuIAFUl9mo9THvNDHqBTDD8OCmypIR
+         onGw==
+X-Gm-Message-State: AOAM5326V/KFc07dpDjb7Rby21kXzmBkUM38+NZyrTc+zssuum4P7W5U
+        lJWd6CkN94UKJ1Qe3gfpBYatBLOHT9Dd3V1hUiC94g==
+X-Google-Smtp-Source: ABdhPJyRYx8qR/OoKBcHt47tR0XtriE/q6Xr5yh5O4DmKN830KcuvaeeFVJPK4RVxsSfReNGrQ95KPpulby28bOjrro=
+X-Received: by 2002:a17:906:f285:: with SMTP id gu5mr6736919ejb.226.1619220167200;
+ Fri, 23 Apr 2021 16:22:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210408145601.68651-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210408145601.68651-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 23 Apr 2021 22:41:26 +0200
-Message-ID: <CAMpxmJU+K6C_xbQPT=9QKtLLTnajJQbgJH0A2QqbGjCV+b9Z_g@mail.gmail.com>
-Subject: Re: [RFT, PATCH v1 0/5] gpio: xilinx: convert to use bitmap API
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 24 Apr 2021 01:22:36 +0200
+Message-ID: <CACRpkdY6g7eoqyJ-OHijbR_Gw2W7uoNF5Z6+-at5OBvaH9_kqw@mail.gmail.com>
+Subject: [GIT PULL] final pin control fixes for v5.12
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 8, 2021 at 4:55 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> The change in the series has been inspired by [1], which, I think,
-> can be improved. Here I present the view how it can be done.
->
-> The series marked as RFT since I have no hardware and I perform
-> compile test only.
->
-> The patches 1 and 2 can be (independently) applied for v5.13, but I'm not in
-> hurry with the series, due to above (lack of real testing). So I'm flexible in
-> a way how it can be proceed.
->
-> [1]: cover.1617380819.git.syednwaris@gmail.com
->
-> Andy Shevchenko (5):
->   bitmap: Make bitmap_remap() and bitmap_bitremap() available to users
->   gpio: xilinx: Correct kernel doc for xgpio_probe()
->   gpio: xilinx: Introduce xgpio_read_chan() / xgpio_write_chan()
->   gpio: xilinx: Switch to use bitmap APIs
->   gpio: xilinx: No need to disable IRQs in the handler
->
->  drivers/gpio/gpio-xilinx.c | 377 ++++++++++++++++++-------------------
->  lib/bitmap.c               |   5 +-
->  2 files changed, 190 insertions(+), 192 deletions(-)
->
-> --
-> 2.30.2
->
+Hi Linus,
 
-I usually trust Andy with his work but is there any chance we can get
-a Tested-by before the merge window?
+some late pin control fixes, would have been in the main pull request
+normally but hey I got lucky and we got another week to polish up v5.12
+so here we go.
 
-Bart
+One driver fix and one making the core debugfs work.
+
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit e49d033bddf5b565044e2abe4241353959bc9120:
+
+  Linux 5.12-rc6 (2021-04-04 14:15:36 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.12-3
+
+for you to fetch changes up to 482715ff0601c836152b792f06c353464d826b9b:
+
+  pinctrl: core: Show pin numbers for the controllers with base = 0
+(2021-04-22 02:13:42 +0200)
+
+----------------------------------------------------------------
+Late pin control fixes for v5.12:
+
+- Fix the number of pins in the community of the Intel
+  Lewisburg SoC.
+
+- Show pin numbers for controllers with base = 0 in the
+  new debugfs feature.
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      pinctrl: core: Show pin numbers for the controllers with base = 0
+
+Linus Walleij (1):
+      Merge tag 'intel-pinctrl-v5.12-4' of
+gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
+
+Yuanyuan Zhong (1):
+      pinctrl: lewisburg: Update number of pins in community
+
+ drivers/pinctrl/core.c                    | 14 ++++++++------
+ drivers/pinctrl/intel/pinctrl-lewisburg.c |  6 +++---
+ 2 files changed, 11 insertions(+), 9 deletions(-)
