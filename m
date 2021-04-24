@@ -2,81 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6D0E369F09
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 08:21:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD7F636A0AF
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 12:47:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbhDXGWU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Apr 2021 02:22:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229702AbhDXGWP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Apr 2021 02:22:15 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96E5C061574
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Apr 2021 23:21:37 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id z16so36642543pga.1
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Apr 2021 23:21:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cKXei1xdQ+fu4f+TurzziSylf1siKskarIOy2DJy2qI=;
-        b=PFyEeD0fM3AWJAq1JeqcNZ5c9R7IA8GwOxdpymg8IFAdzlLif3FxZ4qAKuKjJKEUDd
-         wPMTx0+PTKmvEcgDB2o7p8CBpq2jzopKTruq0zavYWj9QnJwQmR0HURnDaWL2jEJ8laP
-         F6kd8BvMvNgvsKIf4hoUxrCBY7ggU/dRFc/GlqNjYv3M9VhzueicSzGfqfDYkRM9o+Lj
-         Px88M9JgQR/MIY2SPFno4LKCQmKOTNM/5MBUdvAUyxOAqYibpHS9t4dw/r1Fxx7rn+t4
-         foDdOT3v5PJE4MYA8o0mxCZzaRi/lBwkKr5Bef+wdXgxmjQ/ay6Mbkw86XU85Epo/0/W
-         9dbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cKXei1xdQ+fu4f+TurzziSylf1siKskarIOy2DJy2qI=;
-        b=BXvkefYfbmv5vmXF9WV5xzvQsoOaRceJ9zIzYqziR3VeowSdAvMLiYl1bSG8yCd4cw
-         SYf2qqwRJKZvdlXiUzM/M8Q2tIjrTFgLT5wvDXAkXzZEnGMGy99Mqi1HihZJ4nL1Ojvd
-         dLXZ5kN4rZA1+hssOcETCOpzzWaMhWH6qBwv0X5l6cdAFEOLCxXeGRKsIwx6RkPhZSyb
-         D0SbSYBgcC3/Du37LbEXKiz024q18kqHNGk90CJ+BgYMzgOzCdFye9h8SD/1q8xI4RVG
-         Re1vpyI0DdDzb1IvTsuLfRRTqPzSfs6dhz8zej6mhnyGY6g8b84GRaVMSzlEs/j9hNAy
-         MobQ==
-X-Gm-Message-State: AOAM531LAtWMzG4UhnqIyI08liwATekK9k7NHoyV6EYN6PPTrS4KkLmV
-        knl9sPAkO71N/fhZv28tWFuyKKSYvcc=
-X-Google-Smtp-Source: ABdhPJz17kudDx0S84Jybdj2oyi98+9STMfOcnWEh6KylgVeQGDt+sY/6uHFF8GPKKFV6cb1nttrlA==
-X-Received: by 2002:a63:b09:: with SMTP id 9mr7204477pgl.107.1619245297339;
-        Fri, 23 Apr 2021 23:21:37 -0700 (PDT)
-Received: from sol (106-69-187-97.dyn.iinet.net.au. [106.69.187.97])
-        by smtp.gmail.com with ESMTPSA id l18sm8654853pjq.33.2021.04.23.23.21.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Apr 2021 23:21:36 -0700 (PDT)
-Date:   Sat, 24 Apr 2021 14:21:32 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] Request an output line, without modifying the value
-Message-ID: <20210424062132.GA14885@sol>
-References: <6e26b4e5-277b-459f-29e7-7eb7e949e6a5@axentia.se>
+        id S229848AbhDXKs2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Apr 2021 06:48:28 -0400
+Received: from elvis.franken.de ([193.175.24.41]:39959 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231203AbhDXKs1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 24 Apr 2021 06:48:27 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1laFpE-0004gz-00; Sat, 24 Apr 2021 12:47:48 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 5367AC0B47; Sat, 24 Apr 2021 12:35:44 +0200 (CEST)
+Date:   Sat, 24 Apr 2021 12:35:44 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] gpio: Add support for IDT 79RC3243x GPIO
+ controller
+Message-ID: <20210424103544.GA4353@alpha.franken.de>
+References: <20210422152055.85544-1-tsbogend@alpha.franken.de>
+ <CAHp75Ve6PEr5TFGRgALPCbi-T5Y5yNPV+-fJHC7C2mU+ms30uw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6e26b4e5-277b-459f-29e7-7eb7e949e6a5@axentia.se>
+In-Reply-To: <CAHp75Ve6PEr5TFGRgALPCbi-T5Y5yNPV+-fJHC7C2mU+ms30uw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 23, 2021 at 05:32:15PM +0200, Peter Rosin wrote:
-> Hi!
+On Fri, Apr 23, 2021 at 06:37:41PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 22, 2021 at 6:21 PM Thomas Bogendoerfer
+> <tsbogend@alpha.franken.de> wrote:
+> > +static void idt_gpio_dispatch(struct irq_desc *desc)
+> > +{
+> > +       struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+> > +       struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
+> > +       struct irq_chip *host_chip = irq_desc_get_chip(desc);
+> > +       unsigned int bit, virq;
+> > +       unsigned long pending;
+> > +
+> > +       chained_irq_enter(host_chip, desc);
+> > +
+> > +       pending = readl(ctrl->pic + IDT_PIC_IRQ_PEND);
+> > +       pending &= ~ctrl->mask_cache;
+> > +       for_each_set_bit(bit, &pending, gc->ngpio) {
 > 
-> I'm wondering if there is a way to request an output line using
-> libgpiod without clobbering the previous value. I would like for
-> an application to take a peek at this previous value of an output
-> gpio and behave slightly different for 0/1.
+> > +               virq = irq_linear_revmap(gc->irq.domain, bit);
 > 
-> Cheers,
-> Peter
+> Is it guaranteed to be linear always?
 
-Assuming it is still an output then GPIOD_LINE_REQUEST_DIRECTION_AS_IS
-should do what you are after.
-But there is no guarantee that the line state is preserved across
-requests, so YMMV.
+yes
 
-Cheers,
-Kent.
+> > +               if (virq)
+> > +                       generic_handle_irq(virq);
+> > +       }
+> > +
+> > +       chained_irq_exit(host_chip, desc);
+> > +}
+> 
+> ...
+> 
+> > +       if (sense & ~(IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
+> 
+> There is a _BOTH variant.
+
+that's IRQ_TYPE_EDGE_BOTH. LEVEL_BOTH would be an interesing concept.
+
+> > +       ilevel = readl(ctrl->gpio + IDT_GPIO_ILEVEL);
+> > +       if (sense & IRQ_TYPE_LEVEL_HIGH)
+> > +               ilevel |= BIT(d->hwirq);
+> > +       else if (sense & IRQ_TYPE_LEVEL_LOW)
+> > +               ilevel &= ~BIT(d->hwirq);
+> 
+> > +       else
+> > +               return -EINVAL;
+> 
+> Is it a double check of the above?
+
+no, the above test is for anything not LEVEL and this now takes care
+to be at least LEVEL_LOW or LEVEL_HIGH. This doesn't check for LOW|HIGH,
+which I assumed nobody tries to set...
+
+> > +       ctrl->gc.parent = dev;
+> 
+> Wondering if it's already done by GPIO library.
+
+no it uses it:
+
+        if (gc->parent) {
+                gdev->dev.parent = gc->parent;
+                gdev->dev.of_node = gc->parent->of_node;
+        }
+
+> ...
+> 
+> > +       ctrl->gc.ngpio = ngpios;
+> 
+> Shouldn't you do this before calling for bgpio_init()?
+
+no, bgpio_init() initializes ngpios to size of register width, which is
+32 for this hardware. And this statement restricts it to the real available
+number of gpios.
+
+> ...
+> 
+> > +       parent_irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+> 
+> platform_get_irq() ?..
+
+yes, looks better :-)
+
+> > +       /* Mask interrupts. */
+> > +       ctrl->mask_cache = 0xffffffff;
+> > +       writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
+> 
+> What about using ->init_hw() call back?
+
+sure, doesn't look like it's worth the effort, but I changed it.
+
+> > +       girq->handler = handle_level_irq;
+> 
+> handle_bad_irq()
+
+the hardware only supports level interrupts. That's also why there is
+no handler change in idt_gpio_irq_set_type.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
