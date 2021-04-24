@@ -2,83 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A077B36A0CD
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 13:14:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E018236A0D9
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 13:22:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231387AbhDXLPP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Apr 2021 07:15:15 -0400
-Received: from mga02.intel.com ([134.134.136.20]:35603 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231203AbhDXLPO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 24 Apr 2021 07:15:14 -0400
-IronPort-SDR: S13mW18+cSUIDnLJ9ODiLK73tSr2YaVykZZYiFcUrmhXZFnHjL3VofrQ2Xg4fdnnxpr1oC6MZw
- sFCDWs7VmHMg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9963"; a="183304092"
-X-IronPort-AV: E=Sophos;i="5.82,248,1613462400"; 
-   d="scan'208";a="183304092"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2021 04:14:36 -0700
-IronPort-SDR: RlYoDBKcO4fEiCXNuBpmsJZuNUxTc/o6rIXFz6YvEh9Fqdw53uvqaIzZ9vd70ctiO8BAa6uigh
- ciko9hHUUnWA==
-X-IronPort-AV: E=Sophos;i="5.82,248,1613462400"; 
-   d="scan'208";a="386603881"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2021 04:14:33 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1laGF4-006ozO-7I; Sat, 24 Apr 2021 14:14:30 +0300
-Date:   Sat, 24 Apr 2021 14:14:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: Re: [RFT, PATCH v1 0/5] gpio: xilinx: convert to use bitmap API
-Message-ID: <YIP9ltcdf7mNtYRd@smile.fi.intel.com>
-References: <20210408145601.68651-1-andriy.shevchenko@linux.intel.com>
- <CAMpxmJU+K6C_xbQPT=9QKtLLTnajJQbgJH0A2QqbGjCV+b9Z_g@mail.gmail.com>
+        id S231836AbhDXLXP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Apr 2021 07:23:15 -0400
+Received: from out28-99.mail.aliyun.com ([115.124.28.99]:45245 "EHLO
+        out28-99.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229630AbhDXLXP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Apr 2021 07:23:15 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1138952|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.00821303-0.00137538-0.990412;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047193;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.K3KkmOM_1619263351;
+Received: from 192.168.88.128(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.K3KkmOM_1619263351)
+          by smtp.aliyun-inc.com(10.147.43.230);
+          Sat, 24 Apr 2021 19:22:32 +0800
+Subject: Re: [PATCH v6 00/12] Fix bugs and add support for new Ingenic SoCs.
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, paul@boddie.org.uk,
+        andy.shevchenko@gmail.com, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        sernia.zhou@foxmail.com
+References: <1618757073-1724-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <CACRpkdY348FQM0TUqmczV96j29WvX4p6QUWajN34N=YF98aLBQ@mail.gmail.com>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <664d8b46-02fd-fca5-e454-968c72ce81a9@wanyeetech.com>
+Date:   Sat, 24 Apr 2021 19:22:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJU+K6C_xbQPT=9QKtLLTnajJQbgJH0A2QqbGjCV+b9Z_g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CACRpkdY348FQM0TUqmczV96j29WvX4p6QUWajN34N=YF98aLBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 23, 2021 at 10:41:26PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Apr 8, 2021 at 4:55 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > The change in the series has been inspired by [1], which, I think,
-> > can be improved. Here I present the view how it can be done.
-> >
-> > The series marked as RFT since I have no hardware and I perform
-> > compile test only.
-> >
-> > The patches 1 and 2 can be (independently) applied for v5.13, but I'm not in
-> > hurry with the series, due to above (lack of real testing). So I'm flexible in
-> > a way how it can be proceed.
+Hi Linus,
 
-> >   bitmap: Make bitmap_remap() and bitmap_bitremap() available to users
-> >   gpio: xilinx: Correct kernel doc for xgpio_probe()
-
-Bart, thanks for the warm words, just pointing out that patches 1 and 2 has
-been reviewed and may be applied for v5.13 cycle. Up to you.
-
-> I usually trust Andy with his work but is there any chance we can get
-> a Tested-by before the merge window?
-
--- 
-With Best Regards,
-Andy Shevchenko
+On 2021/4/22 上午7:16, Linus Walleij wrote:
+> On Sun, Apr 18, 2021 at 4:44 PM 周琰杰 (Zhou Yanjie)
+> <zhouyanjie@wanyeetech.com> wrote:
+>
+>> v5->v6:
+>> 1.Add the missing lcd-24bit group.
+>> 2.Add DMIC pins support for Ingenic SoCs.
+>> 3.Adjust and simplify the code.
+> This v6 patch set applied!
+>
+> Thanks a lot for your hard work on this Zhou!
 
 
+Thank you! It's my honor!
+
+
+Best regards!
+
+
+>
+> Yours,
+> Linus Walleij
