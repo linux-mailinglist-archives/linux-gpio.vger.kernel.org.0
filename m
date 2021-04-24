@@ -2,69 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E018236A0D9
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 13:22:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E0AE36A0F1
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 13:35:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231836AbhDXLXP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Apr 2021 07:23:15 -0400
-Received: from out28-99.mail.aliyun.com ([115.124.28.99]:45245 "EHLO
-        out28-99.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbhDXLXP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Apr 2021 07:23:15 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1138952|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.00821303-0.00137538-0.990412;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047193;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.K3KkmOM_1619263351;
-Received: from 192.168.88.128(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.K3KkmOM_1619263351)
-          by smtp.aliyun-inc.com(10.147.43.230);
-          Sat, 24 Apr 2021 19:22:32 +0800
-Subject: Re: [PATCH v6 00/12] Fix bugs and add support for new Ingenic SoCs.
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, paul@boddie.org.uk,
-        andy.shevchenko@gmail.com, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        sernia.zhou@foxmail.com
-References: <1618757073-1724-1-git-send-email-zhouyanjie@wanyeetech.com>
- <CACRpkdY348FQM0TUqmczV96j29WvX4p6QUWajN34N=YF98aLBQ@mail.gmail.com>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <664d8b46-02fd-fca5-e454-968c72ce81a9@wanyeetech.com>
-Date:   Sat, 24 Apr 2021 19:22:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S231387AbhDXLgc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Apr 2021 07:36:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231203AbhDXLgc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Apr 2021 07:36:32 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F608C061574;
+        Sat, 24 Apr 2021 04:35:54 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d124so35731888pfa.13;
+        Sat, 24 Apr 2021 04:35:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hEyQImcqllWtQ0CiGFfszj6lYsOKAVrxqiWhsQ184Gg=;
+        b=Hrq7aVJKpnqILSVnLLuBjl0ff4hjFDTTQmegWEvI2orOBudKjM3zqWNJJ2mP4IwgtI
+         XpBEDVz2LFvFUy47FdOZAg2I6S9UaxXXjZY+cCsNDoZCmtTsaYZexGdkoXbFxII2Of4c
+         f2R2tOpn4wPEqtVK/+T/eOMDRvaOM6p/wX0rj/4IxRsgkUYMuLQl4WoAoTThKqu/Z/lM
+         Qgh3cBMqOHPlh+nJ2f73Rz+UJ1XmfWSjksuZetloSN8gnXP66eX1EM6kRhxUL2iLY24S
+         JwXFyIELbzwrmx44xnhGzgua+MJcUWu7pJfUSLdy3ljEdZ/UbtY5R9As4hcOBFJKFz6H
+         Es7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hEyQImcqllWtQ0CiGFfszj6lYsOKAVrxqiWhsQ184Gg=;
+        b=oOXMd9fWeFEgUasgPZrkwr7qFuP+ELxLn9RHLfdnjdqipFItcDg+EHZ0cRqv48fiNd
+         Pk2StD0JoNp0aqeMYBVffNK+fXHQlWhrttTkdRds/svtwu466nGTo1tgRg7FDjSFkQ1v
+         NdSCp2BWNyP3AUC6hmI5aV333QC5OqMDd2tKyDMmte6cCBLUnaWannsAMmM9i+RdBVtj
+         y20i8hfRrAUgmxI0886EXbc3tU70QYhhhdKLArdjSkKKw5hj/i/kVW6RvyMzt2LbGLTa
+         iklMTRQjbdw0QgImezNpcPTBbEiNqwWHIaTBpAWRsuPUat7cWHyd3QnwKpbohgvH2TpI
+         qn1A==
+X-Gm-Message-State: AOAM531LMJyKa5ZzKTT3cOHYJpPiiQQ5zWSMupMhBKFN9t4ocuh/dofy
+        QhnlnoS5vd65ZEeNT7F1RD9p+Wb2I7SV3RNOpJM=
+X-Google-Smtp-Source: ABdhPJw3AEIGZ8h1ev3dWzLcg5SvLKBB3MLMrmFiXoj0Q4zuXVlOGBqshuibySUti4RQ0Xr9HA7bbbqghzLHT3T++p8=
+X-Received: by 2002:a63:cd11:: with SMTP id i17mr7975564pgg.74.1619264153816;
+ Sat, 24 Apr 2021 04:35:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdY348FQM0TUqmczV96j29WvX4p6QUWajN34N=YF98aLBQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20210422152055.85544-1-tsbogend@alpha.franken.de>
+ <CAHp75Ve6PEr5TFGRgALPCbi-T5Y5yNPV+-fJHC7C2mU+ms30uw@mail.gmail.com> <20210424103544.GA4353@alpha.franken.de>
+In-Reply-To: <20210424103544.GA4353@alpha.franken.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 24 Apr 2021 14:35:37 +0300
+Message-ID: <CAHp75VeZK+wyWBfwr9K7sQY=mET7DxcpE7OYxdAN_hJQodBtdg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] gpio: Add support for IDT 79RC3243x GPIO controller
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Sat, Apr 24, 2021 at 1:47 PM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
+> On Fri, Apr 23, 2021 at 06:37:41PM +0300, Andy Shevchenko wrote:
+> > On Thu, Apr 22, 2021 at 6:21 PM Thomas Bogendoerfer
+> > <tsbogend@alpha.franken.de> wrote:
 
-On 2021/4/22 上午7:16, Linus Walleij wrote:
-> On Sun, Apr 18, 2021 at 4:44 PM 周琰杰 (Zhou Yanjie)
-> <zhouyanjie@wanyeetech.com> wrote:
+...
+
+> > > +               virq = irq_linear_revmap(gc->irq.domain, bit);
+> >
+> > Is it guaranteed to be linear always?
 >
->> v5->v6:
->> 1.Add the missing lcd-24bit group.
->> 2.Add DMIC pins support for Ingenic SoCs.
->> 3.Adjust and simplify the code.
-> This v6 patch set applied!
+> yes
+
+OK.
+
+...
+
+> > > +       if (sense & ~(IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
+> >
+> > There is a _BOTH variant.
 >
-> Thanks a lot for your hard work on this Zhou!
+> that's IRQ_TYPE_EDGE_BOTH. LEVEL_BOTH would be an interesing concept.
 
+Sorry, I meant _MASK in case of level. No need to open code the
+existing definition.
 
-Thank you! It's my honor!
-
-
-Best regards!
-
-
+> > > +       ilevel = readl(ctrl->gpio + IDT_GPIO_ILEVEL);
+> > > +       if (sense & IRQ_TYPE_LEVEL_HIGH)
+> > > +               ilevel |= BIT(d->hwirq);
+> > > +       else if (sense & IRQ_TYPE_LEVEL_LOW)
+> > > +               ilevel &= ~BIT(d->hwirq);
+> >
+> > > +       else
+> > > +               return -EINVAL;
+> >
+> > Is it a double check of the above?
 >
-> Yours,
-> Linus Walleij
+> no, the above test is for anything not LEVEL and this now takes care
+> to be at least LEVEL_LOW or LEVEL_HIGH. This doesn't check for LOW|HIGH,
+> which I assumed nobody tries to set...
+
+And? Seems you have it as a dead code.
+In your case HIGH is the winner anyway.
+
+...
+
+> > > +       /* Mask interrupts. */
+> > > +       ctrl->mask_cache = 0xffffffff;
+> > > +       writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
+> >
+> > What about using ->init_hw() call back?
+>
+> sure, doesn't look like it's worth the effort, but I changed it.
+
+The problem here (which you may not notice from day 1) is the
+ordering. We carefully put the ->init_hw() call in the proper place
+and time.
+
+...
+
+> > > +       girq->handler = handle_level_irq;
+> >
+> > handle_bad_irq()
+>
+> the hardware only supports level interrupts. That's also why there is
+> no handler change in idt_gpio_irq_set_type.
+
+After I fixed a nasty issue in the pca953x related to Intel Galileo
+platform, I may tell that setting the handler here is equal to putting
+a mine for the future blown. When you set it in BAD here it will
+reveal issues, if any, sooner than later.
+
+-- 
+With Best Regards,
+Andy Shevchenko
