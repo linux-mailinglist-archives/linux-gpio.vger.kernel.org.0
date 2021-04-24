@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5885A36A0C7
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 13:08:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A077B36A0CD
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 13:14:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbhDXLJ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Apr 2021 07:09:28 -0400
-Received: from mga18.intel.com ([134.134.136.126]:6342 "EHLO mga18.intel.com"
+        id S231387AbhDXLPP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Apr 2021 07:15:15 -0400
+Received: from mga02.intel.com ([134.134.136.20]:35603 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232004AbhDXLJ1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 24 Apr 2021 07:09:27 -0400
-IronPort-SDR: NDnWR2hcNMZjSk2H9MjGWOC+nIaOuPlmcW483dUfYnOTL+l+eg0eBQqMYJdvVgyC2e5BegMfmD
- 7l++0TO71ffw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9963"; a="183658133"
+        id S231203AbhDXLPO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 24 Apr 2021 07:15:14 -0400
+IronPort-SDR: S13mW18+cSUIDnLJ9ODiLK73tSr2YaVykZZYiFcUrmhXZFnHjL3VofrQ2Xg4fdnnxpr1oC6MZw
+ sFCDWs7VmHMg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9963"; a="183304092"
 X-IronPort-AV: E=Sophos;i="5.82,248,1613462400"; 
-   d="scan'208";a="183658133"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2021 04:08:48 -0700
-IronPort-SDR: 2DvsZH/jB4k6QoHuotJmnDzYDmCf2+3Tx1gBihus2AZuiSaizdxtcress5mIceoE2H6pUi8HP1
- vLYZEnTpwi7w==
+   d="scan'208";a="183304092"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2021 04:14:36 -0700
+IronPort-SDR: RlYoDBKcO4fEiCXNuBpmsJZuNUxTc/o6rIXFz6YvEh9Fqdw53uvqaIzZ9vd70ctiO8BAa6uigh
+ ciko9hHUUnWA==
 X-IronPort-AV: E=Sophos;i="5.82,248,1613462400"; 
-   d="scan'208";a="402426064"
+   d="scan'208";a="386603881"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2021 04:08:45 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2021 04:14:33 -0700
 Received: from andy by smile with local (Exim 4.94)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1laG9S-006ovQ-TO; Sat, 24 Apr 2021 14:08:42 +0300
-Date:   Sat, 24 Apr 2021 14:08:42 +0300
+        id 1laGF4-006ozO-7I; Sat, 24 Apr 2021 14:14:30 +0300
+Date:   Sat, 24 Apr 2021 14:14:30 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
@@ -42,7 +42,7 @@ Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
         Syed Nayyar Waris <syednwaris@gmail.com>,
         William Breathitt Gray <vilhelm.gray@gmail.com>
 Subject: Re: [RFT, PATCH v1 0/5] gpio: xilinx: convert to use bitmap API
-Message-ID: <YIP8OsHSpEi1/RJg@smile.fi.intel.com>
+Message-ID: <YIP9ltcdf7mNtYRd@smile.fi.intel.com>
 References: <20210408145601.68651-1-andriy.shevchenko@linux.intel.com>
  <CAMpxmJU+K6C_xbQPT=9QKtLLTnajJQbgJH0A2QqbGjCV+b9Z_g@mail.gmail.com>
 MIME-Version: 1.0
@@ -67,17 +67,15 @@ On Fri, Apr 23, 2021 at 10:41:26PM +0200, Bartosz Golaszewski wrote:
 > > The patches 1 and 2 can be (independently) applied for v5.13, but I'm not in
 > > hurry with the series, due to above (lack of real testing). So I'm flexible in
 > > a way how it can be proceed.
-> >
-> > [1]: cover.1617380819.git.syednwaris@gmail.com
+
+> >   bitmap: Make bitmap_remap() and bitmap_bitremap() available to users
+> >   gpio: xilinx: Correct kernel doc for xgpio_probe()
+
+Bart, thanks for the warm words, just pointing out that patches 1 and 2 has
+been reviewed and may be applied for v5.13 cycle. Up to you.
 
 > I usually trust Andy with his work but is there any chance we can get
 > a Tested-by before the merge window?
-
-I'm not in hurry with this and I really want to have a confirmation on this
-before we proceed. I may send a v2 RFT after v5.13-rc1 is out.
-
-Note TWIMC that the series has an additional followup fix that I sent
-separately (it's properly linked to the thread nevertheless).
 
 -- 
 With Best Regards,
