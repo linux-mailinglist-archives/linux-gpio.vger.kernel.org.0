@@ -2,140 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD7F636A0AF
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 12:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5885A36A0C7
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 13:08:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbhDXKs2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Apr 2021 06:48:28 -0400
-Received: from elvis.franken.de ([193.175.24.41]:39959 "EHLO elvis.franken.de"
+        id S229848AbhDXLJ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Apr 2021 07:09:28 -0400
+Received: from mga18.intel.com ([134.134.136.126]:6342 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231203AbhDXKs1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 24 Apr 2021 06:48:27 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1laFpE-0004gz-00; Sat, 24 Apr 2021 12:47:48 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 5367AC0B47; Sat, 24 Apr 2021 12:35:44 +0200 (CEST)
-Date:   Sat, 24 Apr 2021 12:35:44 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] gpio: Add support for IDT 79RC3243x GPIO
- controller
-Message-ID: <20210424103544.GA4353@alpha.franken.de>
-References: <20210422152055.85544-1-tsbogend@alpha.franken.de>
- <CAHp75Ve6PEr5TFGRgALPCbi-T5Y5yNPV+-fJHC7C2mU+ms30uw@mail.gmail.com>
+        id S232004AbhDXLJ1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 24 Apr 2021 07:09:27 -0400
+IronPort-SDR: NDnWR2hcNMZjSk2H9MjGWOC+nIaOuPlmcW483dUfYnOTL+l+eg0eBQqMYJdvVgyC2e5BegMfmD
+ 7l++0TO71ffw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9963"; a="183658133"
+X-IronPort-AV: E=Sophos;i="5.82,248,1613462400"; 
+   d="scan'208";a="183658133"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2021 04:08:48 -0700
+IronPort-SDR: 2DvsZH/jB4k6QoHuotJmnDzYDmCf2+3Tx1gBihus2AZuiSaizdxtcress5mIceoE2H6pUi8HP1
+ vLYZEnTpwi7w==
+X-IronPort-AV: E=Sophos;i="5.82,248,1613462400"; 
+   d="scan'208";a="402426064"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2021 04:08:45 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1laG9S-006ovQ-TO; Sat, 24 Apr 2021 14:08:42 +0300
+Date:   Sat, 24 Apr 2021 14:08:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: Re: [RFT, PATCH v1 0/5] gpio: xilinx: convert to use bitmap API
+Message-ID: <YIP8OsHSpEi1/RJg@smile.fi.intel.com>
+References: <20210408145601.68651-1-andriy.shevchenko@linux.intel.com>
+ <CAMpxmJU+K6C_xbQPT=9QKtLLTnajJQbgJH0A2QqbGjCV+b9Z_g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Ve6PEr5TFGRgALPCbi-T5Y5yNPV+-fJHC7C2mU+ms30uw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMpxmJU+K6C_xbQPT=9QKtLLTnajJQbgJH0A2QqbGjCV+b9Z_g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 23, 2021 at 06:37:41PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 22, 2021 at 6:21 PM Thomas Bogendoerfer
-> <tsbogend@alpha.franken.de> wrote:
-> > +static void idt_gpio_dispatch(struct irq_desc *desc)
-> > +{
-> > +       struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> > +       struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
-> > +       struct irq_chip *host_chip = irq_desc_get_chip(desc);
-> > +       unsigned int bit, virq;
-> > +       unsigned long pending;
-> > +
-> > +       chained_irq_enter(host_chip, desc);
-> > +
-> > +       pending = readl(ctrl->pic + IDT_PIC_IRQ_PEND);
-> > +       pending &= ~ctrl->mask_cache;
-> > +       for_each_set_bit(bit, &pending, gc->ngpio) {
-> 
-> > +               virq = irq_linear_revmap(gc->irq.domain, bit);
-> 
-> Is it guaranteed to be linear always?
+On Fri, Apr 23, 2021 at 10:41:26PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Apr 8, 2021 at 4:55 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > The change in the series has been inspired by [1], which, I think,
+> > can be improved. Here I present the view how it can be done.
+> >
+> > The series marked as RFT since I have no hardware and I perform
+> > compile test only.
+> >
+> > The patches 1 and 2 can be (independently) applied for v5.13, but I'm not in
+> > hurry with the series, due to above (lack of real testing). So I'm flexible in
+> > a way how it can be proceed.
+> >
+> > [1]: cover.1617380819.git.syednwaris@gmail.com
 
-yes
+> I usually trust Andy with his work but is there any chance we can get
+> a Tested-by before the merge window?
 
-> > +               if (virq)
-> > +                       generic_handle_irq(virq);
-> > +       }
-> > +
-> > +       chained_irq_exit(host_chip, desc);
-> > +}
-> 
-> ...
-> 
-> > +       if (sense & ~(IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
-> 
-> There is a _BOTH variant.
+I'm not in hurry with this and I really want to have a confirmation on this
+before we proceed. I may send a v2 RFT after v5.13-rc1 is out.
 
-that's IRQ_TYPE_EDGE_BOTH. LEVEL_BOTH would be an interesing concept.
-
-> > +       ilevel = readl(ctrl->gpio + IDT_GPIO_ILEVEL);
-> > +       if (sense & IRQ_TYPE_LEVEL_HIGH)
-> > +               ilevel |= BIT(d->hwirq);
-> > +       else if (sense & IRQ_TYPE_LEVEL_LOW)
-> > +               ilevel &= ~BIT(d->hwirq);
-> 
-> > +       else
-> > +               return -EINVAL;
-> 
-> Is it a double check of the above?
-
-no, the above test is for anything not LEVEL and this now takes care
-to be at least LEVEL_LOW or LEVEL_HIGH. This doesn't check for LOW|HIGH,
-which I assumed nobody tries to set...
-
-> > +       ctrl->gc.parent = dev;
-> 
-> Wondering if it's already done by GPIO library.
-
-no it uses it:
-
-        if (gc->parent) {
-                gdev->dev.parent = gc->parent;
-                gdev->dev.of_node = gc->parent->of_node;
-        }
-
-> ...
-> 
-> > +       ctrl->gc.ngpio = ngpios;
-> 
-> Shouldn't you do this before calling for bgpio_init()?
-
-no, bgpio_init() initializes ngpios to size of register width, which is
-32 for this hardware. And this statement restricts it to the real available
-number of gpios.
-
-> ...
-> 
-> > +       parent_irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-> 
-> platform_get_irq() ?..
-
-yes, looks better :-)
-
-> > +       /* Mask interrupts. */
-> > +       ctrl->mask_cache = 0xffffffff;
-> > +       writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
-> 
-> What about using ->init_hw() call back?
-
-sure, doesn't look like it's worth the effort, but I changed it.
-
-> > +       girq->handler = handle_level_irq;
-> 
-> handle_bad_irq()
-
-the hardware only supports level interrupts. That's also why there is
-no handler change in idt_gpio_irq_set_type.
-
-Thomas.
+Note TWIMC that the series has an additional followup fix that I sent
+separately (it's properly linked to the thread nevertheless).
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+With Best Regards,
+Andy Shevchenko
+
+
