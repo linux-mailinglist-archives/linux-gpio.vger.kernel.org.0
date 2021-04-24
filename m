@@ -2,60 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EB36369DE4
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 02:46:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6D0E369F09
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Apr 2021 08:21:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231386AbhDXAql (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Apr 2021 20:46:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229957AbhDXAqk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 23 Apr 2021 20:46:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 2C8BD6144A;
-        Sat, 24 Apr 2021 00:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619225163;
-        bh=HFH/c8ZLE+PdHTtTGzoN88oMkZgiqLWX4VOXwSYg/vo=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=bWzpj3rIZ2TBFvpAyJiWTnOTHVWuyxwFgCPWHLYgT3Ap0VkPuI91sts/h1l8iCEGp
-         MDg3NTWVfCk30DYJxfuqrfGG97PxtcmoOHN4jNQloiYSh1hhYgisu6LlpN95rc7JEQ
-         LAEd2uOcgRnNvqwtXAkZCy3MYk0R+tFQIF4++iQ5rsVrmAW4qmtNyXTaYc4DSVOgLg
-         luBeKFWxYpe4LyZhz+wQ/URve5MWdCd9HOdXDonYkn8J73oaUlugcmOuLX+d9cvoDj
-         gOnIF+6hHOZs0F6mnvsrV5SQIcIHV2xFu6uPNX/kzeX8I5ScHExoN6eHS1pBm7saRF
-         3Cko5ZAVocD+A==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 2304660A52;
-        Sat, 24 Apr 2021 00:46:03 +0000 (UTC)
-Subject: Re: [GIT PULL] final pin control fixes for v5.12
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdY6g7eoqyJ-OHijbR_Gw2W7uoNF5Z6+-at5OBvaH9_kqw@mail.gmail.com>
-References: <CACRpkdY6g7eoqyJ-OHijbR_Gw2W7uoNF5Z6+-at5OBvaH9_kqw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdY6g7eoqyJ-OHijbR_Gw2W7uoNF5Z6+-at5OBvaH9_kqw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.12-3
-X-PR-Tracked-Commit-Id: 482715ff0601c836152b792f06c353464d826b9b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8db5efb83fa99e81c3f8dee92a6589b251f117f3
-Message-Id: <161922516308.16732.9291408720338397856.pr-tracker-bot@kernel.org>
-Date:   Sat, 24 Apr 2021 00:46:03 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        id S229704AbhDXGWU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Apr 2021 02:22:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229702AbhDXGWP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Apr 2021 02:22:15 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96E5C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Apr 2021 23:21:37 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id z16so36642543pga.1
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Apr 2021 23:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cKXei1xdQ+fu4f+TurzziSylf1siKskarIOy2DJy2qI=;
+        b=PFyEeD0fM3AWJAq1JeqcNZ5c9R7IA8GwOxdpymg8IFAdzlLif3FxZ4qAKuKjJKEUDd
+         wPMTx0+PTKmvEcgDB2o7p8CBpq2jzopKTruq0zavYWj9QnJwQmR0HURnDaWL2jEJ8laP
+         F6kd8BvMvNgvsKIf4hoUxrCBY7ggU/dRFc/GlqNjYv3M9VhzueicSzGfqfDYkRM9o+Lj
+         Px88M9JgQR/MIY2SPFno4LKCQmKOTNM/5MBUdvAUyxOAqYibpHS9t4dw/r1Fxx7rn+t4
+         foDdOT3v5PJE4MYA8o0mxCZzaRi/lBwkKr5Bef+wdXgxmjQ/ay6Mbkw86XU85Epo/0/W
+         9dbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cKXei1xdQ+fu4f+TurzziSylf1siKskarIOy2DJy2qI=;
+        b=BXvkefYfbmv5vmXF9WV5xzvQsoOaRceJ9zIzYqziR3VeowSdAvMLiYl1bSG8yCd4cw
+         SYf2qqwRJKZvdlXiUzM/M8Q2tIjrTFgLT5wvDXAkXzZEnGMGy99Mqi1HihZJ4nL1Ojvd
+         dLXZ5kN4rZA1+hssOcETCOpzzWaMhWH6qBwv0X5l6cdAFEOLCxXeGRKsIwx6RkPhZSyb
+         D0SbSYBgcC3/Du37LbEXKiz024q18kqHNGk90CJ+BgYMzgOzCdFye9h8SD/1q8xI4RVG
+         Re1vpyI0DdDzb1IvTsuLfRRTqPzSfs6dhz8zej6mhnyGY6g8b84GRaVMSzlEs/j9hNAy
+         MobQ==
+X-Gm-Message-State: AOAM531LAtWMzG4UhnqIyI08liwATekK9k7NHoyV6EYN6PPTrS4KkLmV
+        knl9sPAkO71N/fhZv28tWFuyKKSYvcc=
+X-Google-Smtp-Source: ABdhPJz17kudDx0S84Jybdj2oyi98+9STMfOcnWEh6KylgVeQGDt+sY/6uHFF8GPKKFV6cb1nttrlA==
+X-Received: by 2002:a63:b09:: with SMTP id 9mr7204477pgl.107.1619245297339;
+        Fri, 23 Apr 2021 23:21:37 -0700 (PDT)
+Received: from sol (106-69-187-97.dyn.iinet.net.au. [106.69.187.97])
+        by smtp.gmail.com with ESMTPSA id l18sm8654853pjq.33.2021.04.23.23.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Apr 2021 23:21:36 -0700 (PDT)
+Date:   Sat, 24 Apr 2021 14:21:32 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod] Request an output line, without modifying the value
+Message-ID: <20210424062132.GA14885@sol>
+References: <6e26b4e5-277b-459f-29e7-7eb7e949e6a5@axentia.se>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e26b4e5-277b-459f-29e7-7eb7e949e6a5@axentia.se>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Sat, 24 Apr 2021 01:22:36 +0200:
+On Fri, Apr 23, 2021 at 05:32:15PM +0200, Peter Rosin wrote:
+> Hi!
+> 
+> I'm wondering if there is a way to request an output line using
+> libgpiod without clobbering the previous value. I would like for
+> an application to take a peek at this previous value of an output
+> gpio and behave slightly different for 0/1.
+> 
+> Cheers,
+> Peter
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.12-3
+Assuming it is still an output then GPIOD_LINE_REQUEST_DIRECTION_AS_IS
+should do what you are after.
+But there is no guarantee that the line state is preserved across
+requests, so YMMV.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8db5efb83fa99e81c3f8dee92a6589b251f117f3
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Cheers,
+Kent.
