@@ -2,222 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3371A36AABE
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Apr 2021 04:45:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E71536ABAC
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Apr 2021 06:34:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231550AbhDZCqV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 25 Apr 2021 22:46:21 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:33603 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231502AbhDZCqV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 25 Apr 2021 22:46:21 -0400
-X-UUID: b7ca71ebd67645f19152bc396427ec68-20210426
-X-UUID: b7ca71ebd67645f19152bc396427ec68-20210426
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
-        (envelope-from <zhiyong.tao@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 405022291; Mon, 26 Apr 2021 10:45:38 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 26 Apr 2021 10:45:36 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 26 Apr 2021 10:45:35 +0800
-From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
-To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
-        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
-        <sean.wang@kernel.org>
-CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
-        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
-        <biao.huang@mediatek.com>, <hongzhou.yang@mediatek.com>,
-        <sean.wang@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
-Subject: [PATCH v7] pinctrl: mediatek: add rsel setting on MT8195
-Date:   Mon, 26 Apr 2021 10:45:33 +0800
-Message-ID: <20210426024533.20840-2-zhiyong.tao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20210426024533.20840-1-zhiyong.tao@mediatek.com>
-References: <20210426024533.20840-1-zhiyong.tao@mediatek.com>
+        id S231667AbhDZEfE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Apr 2021 00:35:04 -0400
+Received: from mail-eopbgr30130.outbound.protection.outlook.com ([40.107.3.130]:37653
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229469AbhDZEe7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 26 Apr 2021 00:34:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YfOCyHvhqS2pOOGhYeNGbkjTU8FV5PRBYLM6+2qzT0NUqFLBW3pxymcww0ktTAAIsIs+awhyFXisKhcgIQ+60Noa4bA078qPizTIM0Rl/P6JvHJ+zHUV/XbidOgfzVRT/w638ydPFHJR2qJ28d3TuCWuGo4ZA+XzfIQeiZSuPOjKWpkO10aew12stlfAF/nLAWoZqIYpxkbPpwtVKGcG3QhXDYfHH4WyWDegIj3DzZ34InTMUOXErl5ZCwfmWkZT4e+SFxesLSnTz5cH5HkDviK1VQhDZ1zNaSi8GvxSKHHqkn9hEKXbVGJ37NdDKQ85yfdRmWHcbSCPBvbAAsUCPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IGqF/lpSoQskkOnt7MAit3sKQ443fnktX16c8pRviPI=;
+ b=kmVeCtKEugz00H1PnsRqVYlImP2uvhM8U9HeP5aZG5pzobyGiNIsSy8x6bGVLHR5kwQnxvvXBegFlpkBI86N1MT7vHfyxhFI/0f0xpKsh7VYI9O+ToZKZDmbEHbd6uX8ENbuDGLreElqDdiWQh1tHz8nxQ729pweveBPk1LCKvIKA1B3lwHkxaA/PybkWvGojaBKoDQO4qt/zHLRzGuAzXkfAy9Z35HF6fxWh2QCKBPZJTgNhoR6gHO/qsU3TS2k0cLcgbB2teeN1FYVvF7SN1uY33j5kF+WnVTVNyaFkj6A4K0PiP8IetDdK8lLM8AQ2zLypsy/dyVnVoB31cDsGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IGqF/lpSoQskkOnt7MAit3sKQ443fnktX16c8pRviPI=;
+ b=f1Vr4xDytU8Oy2DEMopKldYF6oVg65BGzkyAHPsTBqxjb0nwa+hRlNpHw0seBk7f66We0PxFVbsF5srl08ElyojtVyAnpWu2mdcHuRv6G1Z3xFlSafGxbuvlBmv1VlpWSlSHOkADMfFsisQZDrl7UXQmlRH60GmtM1KMNvpPckg=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=axentia.se;
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
+ by DB8PR02MB5849.eurprd02.prod.outlook.com (2603:10a6:10:f8::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.21; Mon, 26 Apr
+ 2021 04:34:15 +0000
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::d47d:ca8c:4fe6:3908]) by DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::d47d:ca8c:4fe6:3908%3]) with mapi id 15.20.4065.026; Mon, 26 Apr 2021
+ 04:34:15 +0000
+Subject: Re: [libgpiod] Request an output line, without modifying the value
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <6e26b4e5-277b-459f-29e7-7eb7e949e6a5@axentia.se>
+ <20210424062132.GA14885@sol>
+From:   Peter Rosin <peda@axentia.se>
+Organization: Axentia Technologies AB
+Message-ID: <ba9021bc-6558-910b-47ce-c2effb821fee@axentia.se>
+Date:   Mon, 26 Apr 2021 06:34:12 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
+In-Reply-To: <20210424062132.GA14885@sol>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [85.229.94.233]
+X-ClientProxiedBy: HE1PR09CA0051.eurprd09.prod.outlook.com
+ (2603:10a6:7:3c::19) To DB8PR02MB5482.eurprd02.prod.outlook.com
+ (2603:10a6:10:eb::29)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.13.3] (85.229.94.233) by HE1PR09CA0051.eurprd09.prod.outlook.com (2603:10a6:7:3c::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.21 via Frontend Transport; Mon, 26 Apr 2021 04:34:15 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0d821ff7-040c-44ab-94c2-08d9086c8c69
+X-MS-TrafficTypeDiagnostic: DB8PR02MB5849:
+X-Microsoft-Antispam-PRVS: <DB8PR02MB584955584FC919E8B5D8F499BC429@DB8PR02MB5849.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EbKWMofio8NMGrdXXG/EixZYolRca6GyReAGzBtylJJqQz3NuMmEFP8bYfxQcDeRpTJ9pXjU3MRTkqChocAEqNQsK6eZGUmrfYjhc740s+GDx20rV8WgrOabbTsH1KW6qDUm+lGIiZGoeKWElVCUiojgn8lfX3ZS9jrCyRFNHw5qQPsy5iJh4H7UA25oVHSnUZ+jHlQBXJFtypOL4C5f0BggKZfejANPLfnfW9Ms4r30Rt0UbsGV6yfIgW215ARNuPrlYU4H+SuVkIDpB6nseA4QcV4dOWu61f4xqtgXPYMsjaNwikSzNwyova5ElepQprye3vI7y2nPQiDkBgF9yHU1TPYqgR9hsNCaTtoFmpPgwsRBCbVU9w0kte2RGZDySkrwaXt0FZ6RIYwaIUtnR5dxp4FyyIw/Vm8LIMH7qdMYXS49E/xxKEwvMhrHA0aC3Q73GR+PletU2GY0Ko4PxpvsTVf30gn0uaE6qHA0UuKKQ/pmI8Q7xIIqedkA/VzqCm8IMUkGXo5K11MSpwUjlc+rV6u+5ATpNfI7keV9oj0Q4vvNwahZT3q236/HGfgHfjiiguBu1meVnqBIFF26lPdvEcxAv1PtkfT+MeNbluSy6+ctgk2D5MBc1s/G3EJy3vC/8/jNE1+X+rebeDhyZSyrApRiZ9pqOMNAF3SIc3yXo2wBnVmF0cagyrx+nYjP
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(366004)(346002)(39830400003)(136003)(396003)(316002)(8936002)(16576012)(4326008)(8676002)(86362001)(83380400001)(31696002)(478600001)(6486002)(6666004)(186003)(16526019)(6916009)(53546011)(26005)(66946007)(66476007)(38100700002)(31686004)(36756003)(66556008)(4744005)(956004)(2616005)(36916002)(5660300002)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?ODM5bXc5M1Q3a0NtTHg3b29DN0NaYzFYZ0Vqai9rTDFwbTZKN3ovNWVTWUM0?=
+ =?utf-8?B?c2hENkFEZVBHVC9zdDE1NFZrdEJBYXcwNHkwVzJFbk0zb01KUVBuSnhqcllz?=
+ =?utf-8?B?UzNGcWJmVDJnUjJjOWhNLzdDTnBWV2hxSE96aUhKYkhoYVM2MmtETjRnK21E?=
+ =?utf-8?B?VFgyc3ZOUzBmRTZ6RTNwUW00VE1uVjdobTRneDRac3RON0FBeVBsYklsNGFW?=
+ =?utf-8?B?ZnhOR3A4Q0MxNUIwUWZvRStsUFprQm5PTk1NemVvUFB2T2E1MWg2cGs4Z2J1?=
+ =?utf-8?B?enFCS3ZuZ0tQejVDbHJCMWM2ZWpleit6UjkwcU94UjNadU1EZmhGT3E1d0dG?=
+ =?utf-8?B?WnVmRk45U1p6YUtYcW8wa0s5VEtMa0xPZVVobSt4Um5lYTZhcEJFcnNxVENH?=
+ =?utf-8?B?WGF4Yi9xTzJleG9mN0k4K0pYZ2l0REFwc1N1eFNvUG0vQ0JKZ3Q5Q3lCdGtB?=
+ =?utf-8?B?cFpPdGdwMnRiSGgwb1UwblZWVEV3dWw4K0RpcGx5NHJlVml4RnJ0bmhhWnZY?=
+ =?utf-8?B?L2w0SlB5UXFFMkFBSzl0eUNWUFhleWV3SytyeU9qMlBneHR6cDVSMnVSNmMy?=
+ =?utf-8?B?Y0lTcHk5Tlp0TUNPdXlSRjFya0hKM3lMcnpiV3k4ZmJyN2toa2NUU1FlZmhu?=
+ =?utf-8?B?Z0VhQ3VzVWo3eDMzdEg2N2NQVzdsWVp1RkZ0ZDJ4WHpIVkQrQjkyaUtSck53?=
+ =?utf-8?B?OWxSVVE4ZkVJOEhCek1LMk5Za3l6amJ0STlJVzZ1dFJKd2lobEhMcDc0ZzRR?=
+ =?utf-8?B?M3dwV0ZOa0V0cUNJV2VGWk11TzZWcE1Eak5kSDk2TWM4SFJrQURqUjRSNVFK?=
+ =?utf-8?B?SVQrOHpSVVFjNHdVNGRuTFBCOTQyQWdIa0o2U1ZWbFIyMmt6Z1VQU2MzU3JD?=
+ =?utf-8?B?RlQ5UE5EWlI4YmVGNXNZck4vUW5MYnJMTkhCMEZsdENuTDVwWTEzbGZ6KzUz?=
+ =?utf-8?B?MGlBdCtmc1N0dm5nUDREWFBiNnJpR1BHbVdqM2lEcHBjRGlZMEEwUUUxMHY0?=
+ =?utf-8?B?aWZadU1HNjl2SDVUbmJyelVMclZ5bVR2bDlVS2JSU3pGUStOWllYMkZhNVl4?=
+ =?utf-8?B?dmt3QXIwd0gxTE82MGpXWkRzN1o1LzJHSTJXYmxBRTJiek1aNHorSE1KVnhl?=
+ =?utf-8?B?d0NIYWU4U3FmeU8xWVhtdGlGZWtYb1QwK1p6YllYa2NwNkQ0UUE4dHBlUEhP?=
+ =?utf-8?B?QlNydXlJL2kyNjNid3Nsc1dRSXVWZG90U3R6Q3BrelpBQ1dTWndMSGt2amYy?=
+ =?utf-8?B?QitpQVhqK0FtNkZ1RHlqa0xicHErUnlFNWN4dDJUWFNOOTRpTXR0anZKOXNi?=
+ =?utf-8?B?aUh3S0RXMnBTeWcyNUdleGNXZ210ZVg5dENIUmZyZVBKS3lEWVQ2bWtneVY4?=
+ =?utf-8?B?ZEYyM3oyK3hYYmZSSXNVTk1Kc2owUXNscThVajdzRitMSWRxdlM4Si9EVXIz?=
+ =?utf-8?B?Z0F4RmZDMU53WDZYRnIxM0J4SjBOeDM0RDdqbkhnZm1wYWpVc1BNTTMvQVlC?=
+ =?utf-8?B?NTJqbG94VnRvZmJEeVJ2RnptbjZITEVBTkF4aDFNVjRXU1N6T2h1VXYrb1Fr?=
+ =?utf-8?B?N0MzNkR3ZVVQMzJtVmFiYVlkanFSMDlNWE4zM3FrOTFDSVc0eUN1SERUMXRo?=
+ =?utf-8?B?b0RtL2NvMXV4T1FFN2tMdTZNTDEvb3ZzQ3BlMFZpTmdKNWJLZ2N1VHhjZXBN?=
+ =?utf-8?B?ZHI2ZTM0VzI1NzJBdkppbjhveDRjTlVTUVYwc2pxMTI5dGkyb3NweURKdWdw?=
+ =?utf-8?Q?TtpOtS38Tlve8I5Vx+17kEoAkJWEgCtZuWoiW3w?=
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d821ff7-040c-44ab-94c2-08d9086c8c69
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5482.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2021 04:34:15.6874
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CW7hIdGJuwQ4qlVIXBds3vo9/bBlmgrIDEdX5DIVPaQws8KSTS/8TD8vRiz5Ch/H
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5849
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch provides rsel setting on MT8195.
+On 2021-04-24 08:21, Kent Gibson wrote:
+> On Fri, Apr 23, 2021 at 05:32:15PM +0200, Peter Rosin wrote:
+>> Hi!
+>>
+>> I'm wondering if there is a way to request an output line using
+>> libgpiod without clobbering the previous value. I would like for
+>> an application to take a peek at this previous value of an output
+>> gpio and behave slightly different for 0/1.
+>>
+>> Cheers,
+>> Peter
+> 
+> Assuming it is still an output then GPIOD_LINE_REQUEST_DIRECTION_AS_IS
+> should do what you are after.
+> But there is no guarantee that the line state is preserved across
+> requests, so YMMV.
 
-Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
----
- drivers/pinctrl/mediatek/pinctrl-mt8195.c     | 22 +++++++++++++++++++
- .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 14 ++++++++++++
- .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  | 10 +++++++++
- drivers/pinctrl/mediatek/pinctrl-paris.c      | 16 ++++++++++++++
- 4 files changed, 62 insertions(+)
+Excellent suggestion, I'll try that. And now I of course feel silly for
+not seeing it myself, it's so obvious...
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8195.c b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-index a7500e18bb1d..66608b8d346a 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-@@ -779,6 +779,25 @@ static const struct mtk_pin_field_calc mt8195_pin_drv_adv_range[] = {
- 	PIN_FIELD_BASE(45, 45, 1, 0x040, 0x10, 9, 3),
- };
- 
-+static const struct mtk_pin_field_calc mt8195_pin_rsel_range[] = {
-+	PIN_FIELD_BASE(8, 8, 4, 0x0c0, 0x10, 15, 3),
-+	PIN_FIELD_BASE(9, 9, 4, 0x0c0, 0x10, 0, 3),
-+	PIN_FIELD_BASE(10, 10, 4, 0x0c0, 0x10, 18, 3),
-+	PIN_FIELD_BASE(11, 11, 4, 0x0c0, 0x10, 3, 3),
-+	PIN_FIELD_BASE(12, 12, 4, 0x0c0, 0x10, 21, 3),
-+	PIN_FIELD_BASE(13, 13, 4, 0x0c0, 0x10, 6, 3),
-+	PIN_FIELD_BASE(14, 14, 4, 0x0c0, 0x10, 24, 3),
-+	PIN_FIELD_BASE(15, 15, 4, 0x0c0, 0x10, 9, 3),
-+	PIN_FIELD_BASE(16, 16, 4, 0x0c0, 0x10, 27, 3),
-+	PIN_FIELD_BASE(17, 17, 4, 0x0c0, 0x10, 12, 3),
-+	PIN_FIELD_BASE(29, 29, 2, 0x080, 0x10, 0, 3),
-+	PIN_FIELD_BASE(30, 30, 2, 0x080, 0x10, 3, 3),
-+	PIN_FIELD_BASE(34, 34, 1, 0x0e0, 0x10, 0, 3),
-+	PIN_FIELD_BASE(35, 35, 1, 0x0e0, 0x10, 3, 3),
-+	PIN_FIELD_BASE(44, 44, 1, 0x0e0, 0x10, 6, 3),
-+	PIN_FIELD_BASE(45, 45, 1, 0x0e0, 0x10, 9, 3),
-+};
-+
- static const struct mtk_pin_reg_calc mt8195_reg_cals[PINCTRL_PIN_REG_MAX] = {
- 	[PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt8195_pin_mode_range),
- 	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8195_pin_dir_range),
-@@ -793,6 +812,7 @@ static const struct mtk_pin_reg_calc mt8195_reg_cals[PINCTRL_PIN_REG_MAX] = {
- 	[PINCTRL_PIN_REG_R0] = MTK_RANGE(mt8195_pin_r0_range),
- 	[PINCTRL_PIN_REG_R1] = MTK_RANGE(mt8195_pin_r1_range),
- 	[PINCTRL_PIN_REG_DRV_ADV] = MTK_RANGE(mt8195_pin_drv_adv_range),
-+	[PINCTRL_PIN_REG_RSEL] = MTK_RANGE(mt8195_pin_rsel_range),
- };
- 
- static const char * const mt8195_pinctrl_register_base_names[] = {
-@@ -823,6 +843,8 @@ static const struct mtk_pin_soc mt8195_data = {
- 	.drive_get = mtk_pinconf_drive_get_rev1,
- 	.adv_drive_get = mtk_pinconf_adv_drive_get_raw,
- 	.adv_drive_set = mtk_pinconf_adv_drive_set_raw,
-+	.rsel_set = mtk_pinconf_rsel_set,
-+	.rsel_get = mtk_pinconf_rsel_get,
- };
- 
- static const struct of_device_id mt8195_pinctrl_of_match[] = {
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index 2b51f4a9b860..d1526d0c6248 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -1041,6 +1041,20 @@ int mtk_pinconf_adv_drive_get_raw(struct mtk_pinctrl *hw,
- }
- EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_get_raw);
- 
-+int mtk_pinconf_rsel_set(struct mtk_pinctrl *hw,
-+			 const struct mtk_pin_desc *desc, u32 arg)
-+{
-+	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_RSEL, arg);
-+}
-+EXPORT_SYMBOL_GPL(mtk_pinconf_rsel_set);
-+
-+int mtk_pinconf_rsel_get(struct mtk_pinctrl *hw,
-+			 const struct mtk_pin_desc *desc, u32 *val)
-+{
-+	return mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_RSEL, val);
-+}
-+EXPORT_SYMBOL_GPL(mtk_pinconf_rsel_get);
-+
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
- MODULE_DESCRIPTION("Pin configuration library module for mediatek SoCs");
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-index fd5ce9c5dcbd..570e8da7bf38 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-@@ -67,6 +67,7 @@ enum {
- 	PINCTRL_PIN_REG_DRV_E0,
- 	PINCTRL_PIN_REG_DRV_E1,
- 	PINCTRL_PIN_REG_DRV_ADV,
-+	PINCTRL_PIN_REG_RSEL,
- 	PINCTRL_PIN_REG_MAX,
- };
- 
-@@ -237,6 +238,10 @@ struct mtk_pin_soc {
- 			     const struct mtk_pin_desc *desc, u32 arg);
- 	int (*adv_drive_get)(struct mtk_pinctrl *hw,
- 			     const struct mtk_pin_desc *desc, u32 *val);
-+	int (*rsel_set)(struct mtk_pinctrl *hw,
-+			const struct mtk_pin_desc *desc, u32 arg);
-+	int (*rsel_get)(struct mtk_pinctrl *hw,
-+			const struct mtk_pin_desc *desc, u32 *val);
- 
- 	/* Specific driver data */
- 	void				*driver_data;
-@@ -320,5 +325,10 @@ int mtk_pinconf_adv_drive_set_raw(struct mtk_pinctrl *hw,
- int mtk_pinconf_adv_drive_get_raw(struct mtk_pinctrl *hw,
- 				  const struct mtk_pin_desc *desc, u32 *val);
- 
-+int mtk_pinconf_rsel_set(struct mtk_pinctrl *hw,
-+			 const struct mtk_pin_desc *desc, u32 arg);
-+int mtk_pinconf_rsel_get(struct mtk_pinctrl *hw,
-+			 const struct mtk_pin_desc *desc, u32 *val);
-+
- bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n);
- #endif /* __PINCTRL_MTK_COMMON_V2_H */
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index da1f19288aa6..392fdfcb5b87 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -22,6 +22,8 @@
- #define MTK_PIN_CONFIG_PU_ADV	(PIN_CONFIG_END + 3)
- #define MTK_PIN_CONFIG_PD_ADV	(PIN_CONFIG_END + 4)
- #define MTK_PIN_CONFIG_DRV_ADV	(PIN_CONFIG_END + 5)
-+#define MTK_PIN_CONFIG_RSEL	(PIN_CONFIG_END + 6)
-+
- 
- static const struct pinconf_generic_params mtk_custom_bindings[] = {
- 	{"mediatek,tdsel",	MTK_PIN_CONFIG_TDSEL,		0},
-@@ -29,6 +31,7 @@ static const struct pinconf_generic_params mtk_custom_bindings[] = {
- 	{"mediatek,pull-up-adv", MTK_PIN_CONFIG_PU_ADV,		1},
- 	{"mediatek,pull-down-adv", MTK_PIN_CONFIG_PD_ADV,	1},
- 	{"mediatek,drive-strength-adv", MTK_PIN_CONFIG_DRV_ADV,	2},
-+	{"mediatek,rsel",		MTK_PIN_CONFIG_RSEL,	2},
- };
- 
- #ifdef CONFIG_DEBUG_FS
-@@ -38,6 +41,7 @@ static const struct pin_config_item mtk_conf_items[] = {
- 	PCONFDUMP(MTK_PIN_CONFIG_PU_ADV, "pu-adv", NULL, true),
- 	PCONFDUMP(MTK_PIN_CONFIG_PD_ADV, "pd-adv", NULL, true),
- 	PCONFDUMP(MTK_PIN_CONFIG_DRV_ADV, "drive-strength-adv", NULL, true),
-+	PCONFDUMP(MTK_PIN_CONFIG_RSEL, "rsel", NULL, true),
- };
- #endif
- 
-@@ -176,6 +180,12 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
- 		else
- 			err = -ENOTSUPP;
- 		break;
-+	case MTK_PIN_CONFIG_RSEL:
-+		if (hw->soc->rsel_get)
-+			err = hw->soc->rsel_get(hw, desc, &ret);
-+		else
-+			err = -ENOTSUPP;
-+		break;
- 	default:
- 		err = -ENOTSUPP;
- 	}
-@@ -295,6 +305,12 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 		else
- 			err = -ENOTSUPP;
- 		break;
-+	case MTK_PIN_CONFIG_RSEL:
-+		if (hw->soc->rsel_set)
-+			err = hw->soc->rsel_set(hw, desc, arg);
-+		else
-+			err = -ENOTSUPP;
-+		break;
- 	default:
- 		err = -ENOTSUPP;
- 	}
--- 
-2.18.0
+Thanks a bunch!
 
+Cheers,
+Peter
