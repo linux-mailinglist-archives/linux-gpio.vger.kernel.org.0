@@ -2,139 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E71536ABAC
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Apr 2021 06:34:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AA5C36ACC2
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Apr 2021 09:17:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231667AbhDZEfE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Apr 2021 00:35:04 -0400
-Received: from mail-eopbgr30130.outbound.protection.outlook.com ([40.107.3.130]:37653
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229469AbhDZEe7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Apr 2021 00:34:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YfOCyHvhqS2pOOGhYeNGbkjTU8FV5PRBYLM6+2qzT0NUqFLBW3pxymcww0ktTAAIsIs+awhyFXisKhcgIQ+60Noa4bA078qPizTIM0Rl/P6JvHJ+zHUV/XbidOgfzVRT/w638ydPFHJR2qJ28d3TuCWuGo4ZA+XzfIQeiZSuPOjKWpkO10aew12stlfAF/nLAWoZqIYpxkbPpwtVKGcG3QhXDYfHH4WyWDegIj3DzZ34InTMUOXErl5ZCwfmWkZT4e+SFxesLSnTz5cH5HkDviK1VQhDZ1zNaSi8GvxSKHHqkn9hEKXbVGJ37NdDKQ85yfdRmWHcbSCPBvbAAsUCPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IGqF/lpSoQskkOnt7MAit3sKQ443fnktX16c8pRviPI=;
- b=kmVeCtKEugz00H1PnsRqVYlImP2uvhM8U9HeP5aZG5pzobyGiNIsSy8x6bGVLHR5kwQnxvvXBegFlpkBI86N1MT7vHfyxhFI/0f0xpKsh7VYI9O+ToZKZDmbEHbd6uX8ENbuDGLreElqDdiWQh1tHz8nxQ729pweveBPk1LCKvIKA1B3lwHkxaA/PybkWvGojaBKoDQO4qt/zHLRzGuAzXkfAy9Z35HF6fxWh2QCKBPZJTgNhoR6gHO/qsU3TS2k0cLcgbB2teeN1FYVvF7SN1uY33j5kF+WnVTVNyaFkj6A4K0PiP8IetDdK8lLM8AQ2zLypsy/dyVnVoB31cDsGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IGqF/lpSoQskkOnt7MAit3sKQ443fnktX16c8pRviPI=;
- b=f1Vr4xDytU8Oy2DEMopKldYF6oVg65BGzkyAHPsTBqxjb0nwa+hRlNpHw0seBk7f66We0PxFVbsF5srl08ElyojtVyAnpWu2mdcHuRv6G1Z3xFlSafGxbuvlBmv1VlpWSlSHOkADMfFsisQZDrl7UXQmlRH60GmtM1KMNvpPckg=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=axentia.se;
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
- by DB8PR02MB5849.eurprd02.prod.outlook.com (2603:10a6:10:f8::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.21; Mon, 26 Apr
- 2021 04:34:15 +0000
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::d47d:ca8c:4fe6:3908]) by DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::d47d:ca8c:4fe6:3908%3]) with mapi id 15.20.4065.026; Mon, 26 Apr 2021
- 04:34:15 +0000
-Subject: Re: [libgpiod] Request an output line, without modifying the value
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <6e26b4e5-277b-459f-29e7-7eb7e949e6a5@axentia.se>
- <20210424062132.GA14885@sol>
-From:   Peter Rosin <peda@axentia.se>
-Organization: Axentia Technologies AB
-Message-ID: <ba9021bc-6558-910b-47ce-c2effb821fee@axentia.se>
-Date:   Mon, 26 Apr 2021 06:34:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.1
-In-Reply-To: <20210424062132.GA14885@sol>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [85.229.94.233]
-X-ClientProxiedBy: HE1PR09CA0051.eurprd09.prod.outlook.com
- (2603:10a6:7:3c::19) To DB8PR02MB5482.eurprd02.prod.outlook.com
- (2603:10a6:10:eb::29)
+        id S231816AbhDZHRy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Apr 2021 03:17:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232062AbhDZHRy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Apr 2021 03:17:54 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9BAC061756
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Apr 2021 00:17:00 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id n21so6657460eji.1
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Apr 2021 00:17:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MH933JiX/H5vIrqO4AxOURlaNcW6gFjmPwklzI1FH0I=;
+        b=0jMzRzgE2kkoPMhWjrzPZDGwEhuG4SrR2M46DjrE2hcFtECln0zCGdsFIHAIk+lU8J
+         C/ofDwawrfFnQsRbEVwFk2oJrIP6NNtECIKxLOBg3Jx0IQ8xmfuO5qbrGHnTKWcxG3BP
+         jv7VSQzCLqlFGYxl5IGbDEetukm4DVndeNrr0BFKM4Qus5NMmL8pI/E7DGUYKkV/Ud08
+         WlXJcmsc7rFzz+o4bqXvppOaBCYe3OmISqDDKo+2clXRPnwjV3BKWWhIsb980vzfjnAU
+         InP8KodM2gBESaSibTvil3tI/5R7S7vyW72mElKABVS3PhGDvt2DH1GqIMlw0Op9PgQk
+         fvcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MH933JiX/H5vIrqO4AxOURlaNcW6gFjmPwklzI1FH0I=;
+        b=SaWzcy3XkaWFI5BhFY8vDx0vIEDVGVHfYgQCokmtypxvpzLpGhtvPNFODyoOhQP5bP
+         o6H9R3rPQ/ibd86rWkvV5QvXvmFEK6gnjWYm2aLRfJ3EgP2fH1Nltlm3ktQNBCi1dmFS
+         KRD+ln6dZf7dkEOuT34N9pQO7BMRXtHTJ+KE5iq2JPWdndZimYsZvXVuKJ3z7lNGXov0
+         zDdTO0GvxB9t2pGCpW8fA6RBAnkvr+KaJBEr3eHlv1oB3PEFIbO0542l0cN67I5m7OQQ
+         c989Oy7JiU8O5JY7kyEWWeBGhpjKpkqzHdPGEAT8BSxa3wclEExT1OEBknCDhWZqkwMD
+         kqiw==
+X-Gm-Message-State: AOAM532gfcQCN0XZDfTsMlsRjkbJTST5TdYiOurpxRttKxiZI5aqosRQ
+        4Lq56Hkpq70nYdtmtdcCB8OhB07m7MlXSH31WZ3ulw==
+X-Google-Smtp-Source: ABdhPJxY8aQGlMeoZmTW3iZo4yxpbbqK8ctIDP9CUlsJ2+2Kgs9avQ0jY3hRJX2eCaEU3f5jCMkHZHFKbTM+mlpys2M=
+X-Received: by 2002:a17:906:7842:: with SMTP id p2mr17682145ejm.87.1619421419222;
+ Mon, 26 Apr 2021 00:16:59 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.13.3] (85.229.94.233) by HE1PR09CA0051.eurprd09.prod.outlook.com (2603:10a6:7:3c::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.21 via Frontend Transport; Mon, 26 Apr 2021 04:34:15 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0d821ff7-040c-44ab-94c2-08d9086c8c69
-X-MS-TrafficTypeDiagnostic: DB8PR02MB5849:
-X-Microsoft-Antispam-PRVS: <DB8PR02MB584955584FC919E8B5D8F499BC429@DB8PR02MB5849.eurprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EbKWMofio8NMGrdXXG/EixZYolRca6GyReAGzBtylJJqQz3NuMmEFP8bYfxQcDeRpTJ9pXjU3MRTkqChocAEqNQsK6eZGUmrfYjhc740s+GDx20rV8WgrOabbTsH1KW6qDUm+lGIiZGoeKWElVCUiojgn8lfX3ZS9jrCyRFNHw5qQPsy5iJh4H7UA25oVHSnUZ+jHlQBXJFtypOL4C5f0BggKZfejANPLfnfW9Ms4r30Rt0UbsGV6yfIgW215ARNuPrlYU4H+SuVkIDpB6nseA4QcV4dOWu61f4xqtgXPYMsjaNwikSzNwyova5ElepQprye3vI7y2nPQiDkBgF9yHU1TPYqgR9hsNCaTtoFmpPgwsRBCbVU9w0kte2RGZDySkrwaXt0FZ6RIYwaIUtnR5dxp4FyyIw/Vm8LIMH7qdMYXS49E/xxKEwvMhrHA0aC3Q73GR+PletU2GY0Ko4PxpvsTVf30gn0uaE6qHA0UuKKQ/pmI8Q7xIIqedkA/VzqCm8IMUkGXo5K11MSpwUjlc+rV6u+5ATpNfI7keV9oj0Q4vvNwahZT3q236/HGfgHfjiiguBu1meVnqBIFF26lPdvEcxAv1PtkfT+MeNbluSy6+ctgk2D5MBc1s/G3EJy3vC/8/jNE1+X+rebeDhyZSyrApRiZ9pqOMNAF3SIc3yXo2wBnVmF0cagyrx+nYjP
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(366004)(346002)(39830400003)(136003)(396003)(316002)(8936002)(16576012)(4326008)(8676002)(86362001)(83380400001)(31696002)(478600001)(6486002)(6666004)(186003)(16526019)(6916009)(53546011)(26005)(66946007)(66476007)(38100700002)(31686004)(36756003)(66556008)(4744005)(956004)(2616005)(36916002)(5660300002)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?ODM5bXc5M1Q3a0NtTHg3b29DN0NaYzFYZ0Vqai9rTDFwbTZKN3ovNWVTWUM0?=
- =?utf-8?B?c2hENkFEZVBHVC9zdDE1NFZrdEJBYXcwNHkwVzJFbk0zb01KUVBuSnhqcllz?=
- =?utf-8?B?UzNGcWJmVDJnUjJjOWhNLzdDTnBWV2hxSE96aUhKYkhoYVM2MmtETjRnK21E?=
- =?utf-8?B?VFgyc3ZOUzBmRTZ6RTNwUW00VE1uVjdobTRneDRac3RON0FBeVBsYklsNGFW?=
- =?utf-8?B?ZnhOR3A4Q0MxNUIwUWZvRStsUFprQm5PTk1NemVvUFB2T2E1MWg2cGs4Z2J1?=
- =?utf-8?B?enFCS3ZuZ0tQejVDbHJCMWM2ZWpleit6UjkwcU94UjNadU1EZmhGT3E1d0dG?=
- =?utf-8?B?WnVmRk45U1p6YUtYcW8wa0s5VEtMa0xPZVVobSt4Um5lYTZhcEJFcnNxVENH?=
- =?utf-8?B?WGF4Yi9xTzJleG9mN0k4K0pYZ2l0REFwc1N1eFNvUG0vQ0JKZ3Q5Q3lCdGtB?=
- =?utf-8?B?cFpPdGdwMnRiSGgwb1UwblZWVEV3dWw4K0RpcGx5NHJlVml4RnJ0bmhhWnZY?=
- =?utf-8?B?L2w0SlB5UXFFMkFBSzl0eUNWUFhleWV3SytyeU9qMlBneHR6cDVSMnVSNmMy?=
- =?utf-8?B?Y0lTcHk5Tlp0TUNPdXlSRjFya0hKM3lMcnpiV3k4ZmJyN2toa2NUU1FlZmhu?=
- =?utf-8?B?Z0VhQ3VzVWo3eDMzdEg2N2NQVzdsWVp1RkZ0ZDJ4WHpIVkQrQjkyaUtSck53?=
- =?utf-8?B?OWxSVVE4ZkVJOEhCek1LMk5Za3l6amJ0STlJVzZ1dFJKd2lobEhMcDc0ZzRR?=
- =?utf-8?B?M3dwV0ZOa0V0cUNJV2VGWk11TzZWcE1Eak5kSDk2TWM4SFJrQURqUjRSNVFK?=
- =?utf-8?B?SVQrOHpSVVFjNHdVNGRuTFBCOTQyQWdIa0o2U1ZWbFIyMmt6Z1VQU2MzU3JD?=
- =?utf-8?B?RlQ5UE5EWlI4YmVGNXNZck4vUW5MYnJMTkhCMEZsdENuTDVwWTEzbGZ6KzUz?=
- =?utf-8?B?MGlBdCtmc1N0dm5nUDREWFBiNnJpR1BHbVdqM2lEcHBjRGlZMEEwUUUxMHY0?=
- =?utf-8?B?aWZadU1HNjl2SDVUbmJyelVMclZ5bVR2bDlVS2JSU3pGUStOWllYMkZhNVl4?=
- =?utf-8?B?dmt3QXIwd0gxTE82MGpXWkRzN1o1LzJHSTJXYmxBRTJiek1aNHorSE1KVnhl?=
- =?utf-8?B?d0NIYWU4U3FmeU8xWVhtdGlGZWtYb1QwK1p6YllYa2NwNkQ0UUE4dHBlUEhP?=
- =?utf-8?B?QlNydXlJL2kyNjNid3Nsc1dRSXVWZG90U3R6Q3BrelpBQ1dTWndMSGt2amYy?=
- =?utf-8?B?QitpQVhqK0FtNkZ1RHlqa0xicHErUnlFNWN4dDJUWFNOOTRpTXR0anZKOXNi?=
- =?utf-8?B?aUh3S0RXMnBTeWcyNUdleGNXZ210ZVg5dENIUmZyZVBKS3lEWVQ2bWtneVY4?=
- =?utf-8?B?ZEYyM3oyK3hYYmZSSXNVTk1Kc2owUXNscThVajdzRitMSWRxdlM4Si9EVXIz?=
- =?utf-8?B?Z0F4RmZDMU53WDZYRnIxM0J4SjBOeDM0RDdqbkhnZm1wYWpVc1BNTTMvQVlC?=
- =?utf-8?B?NTJqbG94VnRvZmJEeVJ2RnptbjZITEVBTkF4aDFNVjRXU1N6T2h1VXYrb1Fr?=
- =?utf-8?B?N0MzNkR3ZVVQMzJtVmFiYVlkanFSMDlNWE4zM3FrOTFDSVc0eUN1SERUMXRo?=
- =?utf-8?B?b0RtL2NvMXV4T1FFN2tMdTZNTDEvb3ZzQ3BlMFZpTmdKNWJLZ2N1VHhjZXBN?=
- =?utf-8?B?ZHI2ZTM0VzI1NzJBdkppbjhveDRjTlVTUVYwc2pxMTI5dGkyb3NweURKdWdw?=
- =?utf-8?Q?TtpOtS38Tlve8I5Vx+17kEoAkJWEgCtZuWoiW3w?=
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d821ff7-040c-44ab-94c2-08d9086c8c69
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5482.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2021 04:34:15.6874
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CW7hIdGJuwQ4qlVIXBds3vo9/bBlmgrIDEdX5DIVPaQws8KSTS/8TD8vRiz5Ch/H
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5849
+References: <20210423152333.6299-1-brgl@bgdev.pl> <CAHp75VcprveU4UiCeezJrnR5n3gWoP5dM1x6E7G1tE2HqOo8Rg@mail.gmail.com>
+In-Reply-To: <CAHp75VcprveU4UiCeezJrnR5n3gWoP5dM1x6E7G1tE2HqOo8Rg@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 26 Apr 2021 09:16:48 +0200
+Message-ID: <CAMRc=MdTYEyw_0Dmq_6fgtmwvKXS-bWe=VQGPDnOqw8L-S=5cA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: allocate IDA numbers earlier
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2021-04-24 08:21, Kent Gibson wrote:
-> On Fri, Apr 23, 2021 at 05:32:15PM +0200, Peter Rosin wrote:
->> Hi!
->>
->> I'm wondering if there is a way to request an output line using
->> libgpiod without clobbering the previous value. I would like for
->> an application to take a peek at this previous value of an output
->> gpio and behave slightly different for 0/1.
->>
->> Cheers,
->> Peter
-> 
-> Assuming it is still an output then GPIOD_LINE_REQUEST_DIRECTION_AS_IS
-> should do what you are after.
-> But there is no guarantee that the line state is preserved across
-> requests, so YMMV.
+On Fri, Apr 23, 2021 at 5:40 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, Apr 23, 2021 at 6:24 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Instead of allocating the device ID number for gpio-sim platform devices
+> > when the associated configfs item is committed, do it already when the
+> > item is created. This way we can display the device name even when the
+> > chip is still pending. Once it's committed the user can easily identify
+> > the chip by its real device name. This will allow launching concurrent
+> > user-space test suites with gpio-sim.
+>
+> Thanks!
+> With or without below comment addressed:
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> > ---
+> > Hi all! This is a late one for which I'm sorry but I realized that this
+> > change will allow us to launch test-suites concurrently if we allow the
+> > user-space to read the device name before the device is created and then
+> > wait for this specific name to appear in a udev add event.
+> >
+> >  drivers/gpio/gpio-sim.c | 21 ++++++++++-----------
+> >  1 file changed, 10 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> > index 92493b98c51b..2e2e6399e453 100644
+> > --- a/drivers/gpio/gpio-sim.c
+> > +++ b/drivers/gpio/gpio-sim.c
+> > @@ -409,6 +409,7 @@ struct gpio_sim_chip_config {
+> >          * item is 'live'.
+> >          */
+> >         struct platform_device *pdev;
+> > +       int id;
+> >
+> >         /*
+> >          * Each configfs filesystem operation is protected with the subsystem
+> > @@ -442,7 +443,7 @@ static ssize_t gpio_sim_config_dev_name_show(struct config_item *item,
+> >         if (pdev)
+> >                 ret = sprintf(page, "%s\n", dev_name(&pdev->dev));
+> >         else
+> > -               ret = sprintf(page, "none\n");
+> > +               ret = sprintf(page, "gpio-sim.%d\n", config->id);
+>
+> Wondering if you need to have one place of definition, i.e. "gpio-sim" part.
+>
 
-Excellent suggestion, I'll try that. And now I of course feel silly for
-not seeing it myself, it's so obvious...
+I applied it as is for 5.13. Feel free to submit a patch if you think
+this is useful.
 
-Thanks a bunch!
+Bart
 
-Cheers,
-Peter
+> >         mutex_unlock(&config->lock);
+> >
+> >         return ret;
+> > @@ -724,6 +725,7 @@ static void gpio_sim_chip_config_release(struct config_item *item)
+> >         struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
+> >
+> >         mutex_destroy(&config->lock);
+> > +       ida_free(&gpio_sim_ida, config->id);
+> >         kfree_strarray(config->line_names, config->num_line_names);
+> >         kfree(config);
+> >  }
+> > @@ -747,6 +749,12 @@ gpio_sim_config_make_item(struct config_group *group, const char *name)
+> >         if (!config)
+> >                 return ERR_PTR(-ENOMEM);
+> >
+> > +       config->id = ida_alloc(&gpio_sim_ida, GFP_KERNEL);
+> > +       if (config->id < 0) {
+> > +               kfree(config);
+> > +               return ERR_PTR(config->id);
+> > +       }
+> > +
+> >         config_item_init_type_name(&config->item, name,
+> >                                    &gpio_sim_chip_config_type);
+> >         config->num_lines = 1;
+> > @@ -781,18 +789,12 @@ static int gpio_sim_config_commit_item(struct config_item *item)
+> >                                                 config->line_names,
+> >                                                 config->num_line_names);
+> >
+> > -       pdevinfo.id = ida_alloc(&gpio_sim_ida, GFP_KERNEL);
+> > -       if (pdevinfo.id < 0) {
+> > -               mutex_unlock(&config->lock);
+> > -               return pdevinfo.id;
+> > -       }
+> > -
+> >         pdevinfo.name = "gpio-sim";
+> >         pdevinfo.properties = properties;
+> > +       pdevinfo.id = config->id;
+> >
+> >         pdev = platform_device_register_full(&pdevinfo);
+> >         if (IS_ERR(pdev)) {
+> > -               ida_free(&gpio_sim_ida, pdevinfo.id);
+> >                 mutex_unlock(&config->lock);
+> >                 return PTR_ERR(pdev);
+> >         }
+> > @@ -806,15 +808,12 @@ static int gpio_sim_config_commit_item(struct config_item *item)
+> >  static int gpio_sim_config_uncommit_item(struct config_item *item)
+> >  {
+> >         struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
+> > -       int id;
+> >
+> >         mutex_lock(&config->lock);
+> > -       id = config->pdev->id;
+> >         platform_device_unregister(config->pdev);
+> >         config->pdev = NULL;
+> >         mutex_unlock(&config->lock);
+> >
+> > -       ida_free(&gpio_sim_ida, id);
+> >         return 0;
+> >  }
+> >
+> > --
+> > 2.30.1
+> >
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
