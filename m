@@ -2,80 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E69636BB6A
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Apr 2021 00:04:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C0D036BCE6
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Apr 2021 03:17:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232235AbhDZWEm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Apr 2021 18:04:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232161AbhDZWEl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Apr 2021 18:04:41 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3F5C061574;
-        Mon, 26 Apr 2021 15:03:59 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f074a0077269aa007748515.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:4a00:7726:9aa0:774:8515])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B21B51EC04DF;
-        Tue, 27 Apr 2021 00:03:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1619474637;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=aU/hJRqHjZ8F7n1hURshobS7X/zE5zCFv6/C95FzEbw=;
-        b=U1ps3Y0Sj6VYOlvPSfq/53HIzURWgyV9z3Wnpp5EBLgS89nWaXE5cZIFqggv/K0GXDcexN
-        T+SJLGukwIq3YnOiCuc0nI7uxROIrhlXmqxN04fHXvqF98O6dQGmSw704mmgTAIumr5PaD
-        2H3G9g43D4wGv7gMKxfAMarZrwcUplU=
-Date:   Tue, 27 Apr 2021 00:04:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     vectorflaredesigns@gmail.com,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug 212379] AMD GPIO chip IRQs stops working (ELN4690,
- WCOM51C7, BMA250E)
-Message-ID: <YIc40YXZh4plkhnc@zn.tnic>
-References: <bug-212379-6385@https.bugzilla.kernel.org/>
- <bug-212379-6385-VMOjMpWM97@https.bugzilla.kernel.org/>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <bug-212379-6385-VMOjMpWM97@https.bugzilla.kernel.org/>
+        id S234598AbhD0BSN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Apr 2021 21:18:13 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:35929 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233916AbhD0BSN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 26 Apr 2021 21:18:13 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 23BC75C019F;
+        Mon, 26 Apr 2021 21:17:30 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Mon, 26 Apr 2021 21:17:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=EqlXC5QCJVyxuYSkaKuNoI5/S7ZixI8
+        WET/kD4zMQE4=; b=t67BWMxBZ017WFGgFfktYcx8B7O3DWtPM/56AW+b1bGd5pw
+        DqWs6NObelbDErvGiu3zSwLhp6Qz4CNnQNSzTE0Y/Ds+IjCg6JQ2y0FhH3aC9Gng
+        8gCXF+FSCoTblmZ5FTReBJTpxfys0bubU5u2Sp/nMXAz9xgh9Q/SrJC3V3g+p4Yv
+        xTzr5UQa9OihhGz3EtYYKsYleYuNbF9BKWrRMtY6UsF+Cy+AbqAnG15InBg1J89a
+        DkXsC2XrNCemgv+XKexDLVyyWLPygkYezyG263QbPalc0WwYufm6AAcAFPMX0auh
+        NC9VcTSvrgP2H3BnSDr76b1egBJexusxLovXDMQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=EqlXC5
+        QCJVyxuYSkaKuNoI5/S7ZixI8WET/kD4zMQE4=; b=jov++051zpecKsRF+8iRbE
+        Uq2IQ9hZ7LKJ42RakyYDE2XxH8pivmDVPWZNZPkhEHkHdgA9uG//MDAeXPO3N0Yd
+        5glFu6E6ftzt6Ks31ofV4H9/JfZBQTjv3/Lr7lYkHrIiI8IokocmH9CRzncFGM4P
+        aDIlH0UR9JJBfKfLb90bZd99zU3CYQQm5W+tNERwS5ZjrUlQ2+nglU0M5lQ399Wa
+        H2or/VqRkXYamzeNPSguiX9HOvhNH5cKBoErFNfBokFcyzmVOv7jgJYjElHTaspo
+        vwezyUkU2BNereIwif52uXwrGkinbasmu4yfV1oRypsE240bqZaR+8YPuxzeweBg
+        ==
+X-ME-Sender: <xms:KWaHYGfeHH6dLgi9rDU1YggPko1zFQLTnLQRh4VnPFuAf6GksPSJ2A>
+    <xme:KWaHYANYBUOvE9mOg4pm1beDhujfwO5e9QUU8SRuEnin9_zO1Ol1dyVX7iwJcR-L_
+    UNAp63Zk6Ae93vn9Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdduledgjeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhephefhfeekgfekudevheffheeihedujeefjeevjeefudfgfeeutdeuvdeh
+    hfevueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:KWaHYHiDfQrZvxWOqR0rfIkENTlzx5N91sTXn8rvlUVlfte79WHvWg>
+    <xmx:KWaHYD82EsPVpynUiGR45s0UjrIJQjxP8bMXSLXo_Uu2EPb78LEshg>
+    <xmx:KWaHYCt31Ushe1kXvbPdZ6Yj5UxR6jmMA_oAaPZeMXr2gxBvMptHBQ>
+    <xmx:KmaHYGirKlGQujUPf47_1n5CNkjLlnmdNBvOv2EyfbYJrvvf1ar8bQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 57E85A00079; Mon, 26 Apr 2021 21:17:29 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-403-gbc3c488b23-fm-20210419.005-gbc3c488b
+Mime-Version: 1.0
+Message-Id: <3cb5cc18-fc03-46d7-be3d-3d132b42c82b@www.fastmail.com>
+In-Reply-To: <1619353584-8196-1-git-send-email-jrdr.linux@gmail.com>
+References: <1619353584-8196-1-git-send-email-jrdr.linux@gmail.com>
+Date:   Tue, 27 Apr 2021 10:47:09 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Souptick Joarder" <jrdr.linux@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Joel Stanley" <joel@jms.id.au>
+Cc:     linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        "Randy Dunlap" <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] pinctrl: aspeed: Fix minor documentation error
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Switching to mail...
 
-On Mon, Apr 26, 2021 at 09:04:38PM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=212379
+
+On Sun, 25 Apr 2021, at 21:56, Souptick Joarder wrote:
+> Kernel test robot throws below warning ->
 > 
-> --- Comment #15 from Austin Kilgore (vectorflaredesigns@gmail.com) ---
-> Is this ever going to get looked at?
+> drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c:2705: warning: This comment
+> starts with '/**', but isn't a kernel-doc comment. Refer
+> Documentation/doc-guide/kernel-doc.rst
+> drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c:2614: warning: This comment
+> starts with '/**', but isn't a kernel-doc comment. Refer
+> Documentation/doc-guide/kernel-doc.rst
+> drivers/pinctrl/aspeed/pinctrl-aspeed.c:111: warning: This comment
+> starts with '/**', but isn't a kernel-doc comment. Refer
+> Documentation/doc-guide/kernel-doc.rst
+> drivers/pinctrl/aspeed/pinmux-aspeed.c:24: warning: This comment starts
+> with '/**', but isn't a kernel-doc comment. Refer
+> Documentation/doc-guide/kernel-doc.rst
 > 
-> Did I need to @ mention someone? Honestly asking since I don't know what to do.
-> I don't even know who needs to be told to take a look at this.
+> Fix minor documentation error.
 > 
-> Like I said, if this bug report is lacking information just let me know and
-> I'll test, check, or upload whatever is needed. It's really important to me
-> that this gets fixed.
-> 
-> -- 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
 
-Grepping through the tree, "amd_gpio" sounds like
-drivers/pinctrl/pinctrl-amd.c so maybe Linus might have an idea, CCed.
-
-@Linus, the bugzilla entry has some more info on what happens.
-
-@Austin: in the future, please do not CC everyone including the
-postmaster on your bug. Now you're mass-spamming 50+ people
-unnecessarily.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
