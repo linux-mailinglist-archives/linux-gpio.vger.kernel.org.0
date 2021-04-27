@@ -2,112 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 774E736C7B2
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Apr 2021 16:25:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FBBD36C8D6
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Apr 2021 17:42:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236461AbhD0O0i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Apr 2021 10:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53988 "EHLO
+        id S230091AbhD0PnV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Apr 2021 11:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236358AbhD0O0i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Apr 2021 10:26:38 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E1E2C061574;
-        Tue, 27 Apr 2021 07:25:55 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id a12so1650301pfc.7;
-        Tue, 27 Apr 2021 07:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XmqaGzesN0SmjSrY2Dk2eAML4vSg4n/rnT2eDpt7oE8=;
-        b=gyoHtAVkWeSljBk3I4Fm/iWJ1oEDShb2O6IQZuvtpuEIotkDCihu0N0ry1Dly1xbWk
-         WysUQmGz8yyKtrb3YNV5Iu9AWue5dk7/MjeVx7pvshB2ePojDSqzT2SfRja6mbDxP9b7
-         dhNr6gixva6IQTiAyAw075WxrJTbPWuK4bNa8215fygmo0UXXGxmVqU5V+JSO7SzCC39
-         B7tXOpLgm/GS/4Wvy674FNxQr5W0i/8JQnSphkOMQntE3DLzv8rNZKnTnzrrZXwAtHvq
-         DA8a3NM+xyGDWdFDBAqhZJimeB6CJEhZwi0639MlG4vuouClefRpWDti3gCkpSFMX+WQ
-         d9/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XmqaGzesN0SmjSrY2Dk2eAML4vSg4n/rnT2eDpt7oE8=;
-        b=KQIPSdpQoX7bsOUn6yggyRjB6HIwKsh1mcWplyIIstWnIaTE7Udqh8ekneQtYqmaCy
-         xBr3l45JsoIky6zgiUYnSFzBsgmMCB6Dy1dcb0ZhNGMoFQ5h+pXCCxs5ZoFI0eB78ziS
-         d/GQg4KIEjgD2oGQsMd3j9VAuxyTt/6rJjL+krsw5wVG76fKF4jT5cm5owALWrJtGoeg
-         csNasy5zNnRrp/inMRv7XVBrqlG7DCIPyrOPMgaM/WSUy+1AblHr37n4q61ccaH1Pm+7
-         hwe51GThywlPsohiFb4gpK5qFHSEvDshzfv3Qq5o5Wa9UJgnTKP4Nr0NWvjZKdGKpH8L
-         gNUA==
-X-Gm-Message-State: AOAM5336HkiS9ktYCe8KhIM415hRsKJXeqvYYHpGU63Kl0efhVBWILEf
-        G7ElRKPNuiMulKGCA7xTlQ19pkntYzJ6qpfVhJo=
-X-Google-Smtp-Source: ABdhPJyDSass2cwQdgjSYcJZZ8XxP7imOdvRKXttGEUgkWl2Jnc6Pdlnlq3Hs6f3TgzXXhKR47PECohr3AF1CtMUrsU=
-X-Received: by 2002:a63:a847:: with SMTP id i7mr21790345pgp.203.1619533554990;
- Tue, 27 Apr 2021 07:25:54 -0700 (PDT)
+        with ESMTP id S236398AbhD0PnP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Apr 2021 11:43:15 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E01C061574
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Apr 2021 08:42:29 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1lbPr1-0004O9-8w; Tue, 27 Apr 2021 17:42:27 +0200
+Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1lbPr0-0007uh-Lt; Tue, 27 Apr 2021 17:42:26 +0200
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Cc:     kernel@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>
+Subject: [libgpiod][PATCH] tools: gpioget: add new --dir-as-is option for GPO read-back
+Date:   Tue, 27 Apr 2021 17:42:24 +0200
+Message-Id: <20210427154224.30372-1-a.fatoum@pengutronix.de>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <bug-212379-6385@https.bugzilla.kernel.org/> <bug-212379-6385-VMOjMpWM97@https.bugzilla.kernel.org/>
- <YIc40YXZh4plkhnc@zn.tnic> <CAHp75VfYKcYjiafFRmb8nBLeJ3VOs0wu6OxhysE31UStQNroiw@mail.gmail.com>
-In-Reply-To: <CAHp75VfYKcYjiafFRmb8nBLeJ3VOs0wu6OxhysE31UStQNroiw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 27 Apr 2021 17:25:39 +0300
-Message-ID: <CAHp75VfMfghCWo_47FhtUGU_qt+Jzaz1kqY4+=oZgbzazyfPUA@mail.gmail.com>
-Subject: Re: [Bug 212379] AMD GPIO chip IRQs stops working (ELN4690, WCOM51C7, BMA250E)
-To:     Borislav Petkov <bp@alien8.de>, Coiby Xu <coiby.xu@gmail.com>,
-        Ken Xue <Ken.Xue@amd.com>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Daniel Drake <drake@endlessm.com>
-Cc:     vectorflaredesigns@gmail.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: afa@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 27, 2021 at 5:10 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> +Cc: authors and contents per driver source code along with Coiby who
-> fixed touchpad issues in the past in the same driver.
->
-> On Tue, Apr 27, 2021 at 1:04 AM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > Switching to mail...
-> >
-> > On Mon, Apr 26, 2021 at 09:04:38PM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=212379
-> > >
-> > > --- Comment #15 from Austin Kilgore (vectorflaredesigns@gmail.com) ---
-> > > Is this ever going to get looked at?
-> > >
-> > > Did I need to @ mention someone? Honestly asking since I don't know what to do.
-> > > I don't even know who needs to be told to take a look at this.
-> > >
-> > > Like I said, if this bug report is lacking information just let me know and
-> > > I'll test, check, or upload whatever is needed. It's really important to me
-> > > that this gets fixed.
-> > >
-> > > --
-> >
-> > Grepping through the tree, "amd_gpio" sounds like
-> > drivers/pinctrl/pinctrl-amd.c so maybe Linus might have an idea, CCed.
-> >
-> > @Linus, the bugzilla entry has some more info on what happens.
-> >
-> > @Austin: in the future, please do not CC everyone including the
-> > postmaster on your bug. Now you're mass-spamming 50+ people
-> > unnecessarily.
+Both legacy sysfs and new character device API support querying line
+state of a GPIO configured as output. But while sysfs /value can
+be read for these output GPIOs, gpioget unconditionally muxes the
+line as input. To ease migration to the new user API, add a new
+--dir-as-is parameter that doesn't force the line to input.
 
-Looking into history of changes it might be related to (Cc Daniel as well):
+This is especially useful for GPIO controllers that maintain their
+last configured output state.
 
-commit d21b8adbd475dba19ac2086d3306327b4a297418
-Author: Daniel Drake <drake@endlessm.com>
-Date:   Wed Aug 14 17:05:40 2019 +0800
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+---
+-n is chosen for the short option because it's the customary short
+option for dry runs, which sounds similar to what a gpio get without
+line state configuration is doing.
+---
+ tools/gpioget.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-   pinctrl: amd: disable spurious-firing GPIO IRQs
-
-
+diff --git a/tools/gpioget.c b/tools/gpioget.c
+index ceeec566683a..bfbf5ea748be 100644
+--- a/tools/gpioget.c
++++ b/tools/gpioget.c
+@@ -13,11 +13,12 @@ static const struct option longopts[] = {
+ 	{ "help",	no_argument,		NULL,	'h' },
+ 	{ "version",	no_argument,		NULL,	'v' },
+ 	{ "active-low",	no_argument,		NULL,	'l' },
++	{ "dir-as-is",	no_argument,		NULL,	'n' },
+ 	{ "bias",	required_argument,	NULL,	'B' },
+ 	{ GETOPT_NULL_LONGOPT },
+ };
+ 
+-static const char *const shortopts = "+hvlB:";
++static const char *const shortopts = "+hvlnB:";
+ 
+ static void print_help(void)
+ {
+@@ -30,6 +31,7 @@ static void print_help(void)
+ 	printf("  -h, --help:\t\tdisplay this message and exit\n");
+ 	printf("  -v, --version:\tdisplay the version and exit\n");
+ 	printf("  -l, --active-low:\tset the line active state to low\n");
++	printf("  -n, --dir-as-is:\tdon't force-reconfigure line direction\n");
+ 	printf("  -B, --bias=[as-is|disable|pull-down|pull-up] (defaults to 'as-is'):\n");
+ 	printf("		set the line bias\n");
+ 	printf("\n");
+@@ -40,6 +42,7 @@ int main(int argc, char **argv)
+ {
+ 	struct gpiod_line_request_config config;
+ 	int *values, optc, opti, rv, flags = 0;
++	int request_type = GPIOD_LINE_REQUEST_DIRECTION_INPUT;
+ 	unsigned int *offsets, i, num_lines;
+ 	struct gpiod_line_bulk *lines;
+ 	struct gpiod_chip *chip;
+@@ -60,6 +63,9 @@ int main(int argc, char **argv)
+ 		case 'l':
+ 			flags |= GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW;
+ 			break;
++		case 'n':
++			request_type = GPIOD_LINE_REQUEST_DIRECTION_AS_IS;
++			break;
+ 		case 'B':
+ 			flags |= bias_flags(optarg);
+ 			break;
+@@ -104,7 +110,7 @@ int main(int argc, char **argv)
+ 	memset(&config, 0, sizeof(config));
+ 
+ 	config.consumer = "gpioget";
+-	config.request_type = GPIOD_LINE_REQUEST_DIRECTION_INPUT;
++	config.request_type = request_type;
+ 	config.flags = flags;
+ 
+ 	rv = gpiod_line_request_bulk(lines, &config, NULL);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.29.2
+
