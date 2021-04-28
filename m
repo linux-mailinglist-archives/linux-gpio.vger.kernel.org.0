@@ -2,212 +2,332 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8300A36D1A5
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Apr 2021 07:34:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73DFE36D4A6
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Apr 2021 11:19:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbhD1Feg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Apr 2021 01:34:36 -0400
-Received: from mail-dm6nam11on2046.outbound.protection.outlook.com ([40.107.223.46]:4321
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229437AbhD1Fef (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 28 Apr 2021 01:34:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mivegehPyTWyczVs6rwceSn14x6YBYSRgY3aiWk2E7cMncDIbSPIPKEqbb7GcQfdwf4wc1DWQvP9whVCvY0zfbotpRpTZoLfE0gGA3UOomottF1zZZ4luFwPnZ6l4UfzBJCbcAwXyKvzNFjLkOC7n/DJB4A1AKqL+lcNiH5PXamCvUPg2Ye3PzG5AQ3kledONkhRh3Sdx66Ut7b8pq3MbW5d9DLdBzvuiFsj0uC4vJO4A6yWgMe9ELoAXYQ0mu/eK2QJlCcPdlbeJZ7naGwnNjDXTvHE2NnE3NJHkhPkL1SM5Vc7KZb1mmREP9npk/vto1hF13ODVbNIhRG3HISrWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OP0LJTUx+HAt1n/KPCCbJWe3c1J/gkPDtgAZzaIQWAo=;
- b=NpbxQ+gHhWQOMo1D5H+kvXnP6KY81w34zboPgS8rQSYYL4izUJ2U5AGDORPIfr/JstVsNIVXJlSkx9T3j4ZYoNvtBsYAQtRiLhE7dSp+bbERZ5lLzJ7EPqtgKN1kpgM5P9MDc7un/W1PfmapUGSdqbnjGnGDtNvmUJrOjasT4gPVV1thsVEWQ+a24ItddTFKCnvEN910gAHivu7+eGieJ3ifG0doPD5DRzMT8VNT06m8qQYdUaOoP2ZnrA+Gn+VpyakhviMhQMCoMSeJBrdzaR5LTw1eqmYdh68JtEk8+QtQpEHszk7LcAHGnMSSbqOmYOV1BQJyBDgorbwd3OTgLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        id S237685AbhD1JUD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Apr 2021 05:20:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230113AbhD1JUC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Apr 2021 05:20:02 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1898C061574
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Apr 2021 02:19:17 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id h10so73310761edt.13
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Apr 2021 02:19:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OP0LJTUx+HAt1n/KPCCbJWe3c1J/gkPDtgAZzaIQWAo=;
- b=fFINx/k8Q+VpRCMEu3RI31T0L4Ilz/heDWiGd30rO2OjCW0598VbnaldiFgvqOcu9FAN2pfmAan58R7R0BgJopymjZvrcKtgchicS6tP5ZPKojgcmOirI/pSsvxv/aUGfnRjXl2eCstJO23DFy8BxYxhUB11cYCqOW1FGxfS2uo=
-Received: from DM5PR02MB3877.namprd02.prod.outlook.com (2603:10b6:4:b9::34) by
- DM5PR02MB2185.namprd02.prod.outlook.com (2603:10b6:3:53::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4065.25; Wed, 28 Apr 2021 05:33:47 +0000
-Received: from DM5PR02MB3877.namprd02.prod.outlook.com
- ([fe80::943b:e0c1:3e2b:4327]) by DM5PR02MB3877.namprd02.prod.outlook.com
- ([fe80::943b:e0c1:3e2b:4327%3]) with mapi id 15.20.4042.024; Wed, 28 Apr 2021
- 05:33:47 +0000
-From:   Sai Krishna Potthuri <lakshmis@xilinx.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        git <git@xilinx.com>,
-        "saikrishna12468@gmail.com" <saikrishna12468@gmail.com>
-Subject: RE: [PATCH v6 3/3] pinctrl: Add Xilinx ZynqMP pinctrl driver support
-Thread-Topic: [PATCH v6 3/3] pinctrl: Add Xilinx ZynqMP pinctrl driver support
-Thread-Index: AQHXN1HnJ1dD/z2380CasZDNOXc+DarCQxoAgAQix4CAAHWwAIAAH53g
-Date:   Wed, 28 Apr 2021 05:33:46 +0000
-Message-ID: <DM5PR02MB387726AB4144F0DB28105007BD409@DM5PR02MB3877.namprd02.prod.outlook.com>
-References: <1619080202-31924-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <1619080202-31924-4-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <CAHp75VfCbbnN-TBJiYFb=6Rhf30jA-Hz1p1UORsubF7UG6-ATw@mail.gmail.com>
- <DM5PR02MB3877B234F85F3B4887DF3A95BD429@DM5PR02MB3877.namprd02.prod.outlook.com>
- <CAHp75VfugGqLNU8LKJ_K3dPr=-eh6LHx75eV=33jH9OnryBoGA@mail.gmail.com>
-In-Reply-To: <CAHp75VfugGqLNU8LKJ_K3dPr=-eh6LHx75eV=33jH9OnryBoGA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [149.199.50.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b646e9f9-4690-4aaf-1a2d-08d90a07320a
-x-ms-traffictypediagnostic: DM5PR02MB2185:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR02MB2185E55D573B5DF008AAB53CBD409@DM5PR02MB2185.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UPG66ZrRLpVo8CssdnLLNpsRcho3EFJjMROjN0l7CP288dWiUj4akw7GomCZ0f+HFpc6rWcLkvkawm9HuxbEPOyE6nOFNZHZs75ZjJ0Jk3HtHTLbjkazqkz9g49SzfLYCaVtGUnWCSaZgHQNr3nGQZlGOKTEEYAnYmJlDUXG0aCAdFUDTvyGzxHG3wjvdIy8bMA43KAtlHk5IUti5iGOo73JX50e5PNJ3NnH0/hIroimwenJeFrtIHtIoXguKeAWIoL2gMi2hUc6vyvZGogSXPNTtqe6ENI5bEwNTjL328N+TtoP1/UlKkiNXaMEkTTOd4DPTYp19iemqF7yXDCk3ctvFyPnn4Koh+20KotbKJMLXjMtPGjobXRksCAqI8LImL4zB05q+xFsOqy2nGEy+j6x3nrRXQDTFHrLkW++HHWct1tN2yuKio0K0mbOV04Y8eVKRGM+OGx4XiczbnTmGy4ZQauua3zjuSFcK+f6mTdf8cx6Cl3KYj36aP1FhLJTf2h6kn/s0eSW7OeJPjniA7K5uzf/QbMW/sEc4wu+5ts0o2FDx840KRLQE4bMWWwcrzxqJUHEm5VkB787gcNVKC4WiL0m/8mOsA+r4UzTskk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR02MB3877.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(71200400001)(6916009)(2906002)(8936002)(66476007)(66946007)(9686003)(33656002)(38100700002)(316002)(66446008)(4326008)(53546011)(54906003)(66556008)(64756008)(7416002)(7696005)(5660300002)(478600001)(76116006)(186003)(83380400001)(26005)(122000001)(8676002)(6506007)(52536014)(55016002)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?eXRpR3FyelphU0xxbGRJNi8xUTFaaFVBNkpUSkRsZmwxajMxZWdxNmZHeDFS?=
- =?utf-8?B?ZURoajUzTDR3Q09wNzBrUnRHQ0g1UVdpUG9jOVRGeCsxNXJVU2Z1V3hDTVBC?=
- =?utf-8?B?MnRkWEM3L2JxemhId3ZyMXlqL3lLRFpZcVcxaDR1bjVZWWlXbjFOU1A3YmI1?=
- =?utf-8?B?alJKMDUvRmZCS1hnTXZobEJ0RCtTTzRtUnVvRW9SWXdscW5qMVpIcXM5WXgw?=
- =?utf-8?B?cmdhSDJXQ1VJaXhPcUpQK2VTNHhDUlAvUHVVcmNFcjViWlNabFNjcExzQkFa?=
- =?utf-8?B?azFLOUdsci9KOUFEYnJrUTNpQ1ZkMUhrTzJTbDc4NC9wdGpKSlUra0ZkQjVS?=
- =?utf-8?B?cDdvWG1DTjVDM2ZlUms4R1p5bkdKUkFjejlHZ1J2YUdLK2ZyeEtiK0dXakxx?=
- =?utf-8?B?RThSeXlJVXhtQnJ4NUwwczBhNnpaNFBjVk9QcDJqSjBOTExJNDFZQnMyVEpP?=
- =?utf-8?B?eHF4Y0N6RUQ3YnZtRFhuemRlWUNYbTdRNDV5M1RDWnBZamdITG50cmZrN0lQ?=
- =?utf-8?B?WlBmSzRaR2pkcWc4RWtRZytKa3J1WEZWMkJzYmdmVFRJWjNJUHNTRXlnK2hB?=
- =?utf-8?B?eUh5cWYrOEVYV04xWDErZXViMHhobWJSRFRQODJ6QWJzVjJNSzUzTHEvUDhw?=
- =?utf-8?B?cldxaEVkajVORTJFdTdmSXhPUVpXQnhUZklkTUtxT1JRcVVRQ3h3N1UwcWp5?=
- =?utf-8?B?R0tDVk9yaTcxK1JZNkpQWjVXYTZPUGFDU1Vrc2JMRHBKNWtCcWlPK1pmK0sy?=
- =?utf-8?B?WmNWV0l0dVRsa0Y2S3NicFNUN3JYYVZVVGNGNHZrSFZjSXFGNzY2TThZT2lz?=
- =?utf-8?B?Mk5rNDVZZDVxU1BiY3QxRk03Z2pscWlNQmM2QnRCUjBNV1BNUEV4eWxUSzVC?=
- =?utf-8?B?L0FrUnVJTzZVaW12S2drZkxFYnJlcXJSakwzYk51TjZLcEpLeE9ubURFeXND?=
- =?utf-8?B?dW56WnRkL0V3bWJXaWlUTU9hZi9KUk1DbEc3VHFhOVgzYU9sbTFrNDByc0gr?=
- =?utf-8?B?THFaWUtQUnA3bEg5RzUzWDJHOFYxNXRwL0JJdWRSSWtJMVp1RjM4d1hNUHBQ?=
- =?utf-8?B?V1JoTklNQ3J1Q2pNU2hUV1ZoSmFma3lSYitXS3FoOGpmclhEeFRmMWM5K2Fi?=
- =?utf-8?B?Z3pBaDR4T0k4RHQwcVN1aVV4amtENXBoSnFrNFdpTENBc3F3L3ZVcC90ZHVR?=
- =?utf-8?B?aExBOHVOZkJNK1gzM0ZOWFczNXBGRERTRDY5TDN2VUdoUEsrWlYyR1dqNFln?=
- =?utf-8?B?NmZUNDN0NEFGRU9KYS83cEkvUEtHOXNxWEdNMXpEMWJIQVM3SENHQms0T0Rp?=
- =?utf-8?B?U0l2Vi9vVjB2ZVJFTmZkUmJ3NW5yblkrbmhBNlhSaW1HZVk5SnJEMU51L3ov?=
- =?utf-8?B?Z2RBQkcwbzZ5ZEgwcDVmL1hLeGJlOVNSSVhMM3BWT216TCtpalQxK2lmMVNF?=
- =?utf-8?B?QzBWa3NRTkthWlpkSkZUeTZGNnkvbkVFN1E1eFZiL1NUNUIrS3ZkbXNlR1Fw?=
- =?utf-8?B?dXZqSWFiaHhYa1RNUjkvV2U0UTFNZDZ6Zzl3ajRCRytxOHpacTIvL2RSdWJu?=
- =?utf-8?B?bnpLckptRHI0UjVxVkZPYXhpendvNWRzREFBRkgxMTJaR21OcmpaUzBBeGhx?=
- =?utf-8?B?c3FKZDFZL1creE1aVGtLNzNqL0VyamlYdHJzMTR0WEh6SVRwYXd6dDhvYWpl?=
- =?utf-8?B?bnE4a1VkK1ZQdlU3NzBldlJ3MFZ4Q1gzaDJiZm9iN2ZqbWdCQ1N5SWg0S25V?=
- =?utf-8?Q?XF9MxET8434Pt5vPWN2y9p1zYkuSUDezM1s7iud?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ainBN4NoEbxjWR/87fxy5DFTHYrIGA8yKNuZfwdF5Dk=;
+        b=ChNEBhYXa60xuaBUGpZAx4wmJQ/lJVyWCPRnNQqJq7+SVDkOHFLFezI8z2yQu++y1n
+         imCgAkLCyb495MIEYZR04LZQuTDwJw0ovCRkNx1Jw5UirDYJi4Vc0ag7zJ2VasZNPEHC
+         uNYRegW81EztrJbH7H2yLoJLriIK+KQ7dhNIP9QrOx86yY6t8xuio7omPKcr5Lk4NvCc
+         kDIgWn01iTkjvo/yRJdGnb9RI3S9/twSi8nFhmJ2Ne67rW0LAXo1NrzX0/wGDJ/riFBu
+         ZpDVgGZ4k0clCwNd9WzTBkSCbzNarwJZr6cxWHCCNuJMogWIYHqjIVEeSitFi0oDF1CD
+         LWmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ainBN4NoEbxjWR/87fxy5DFTHYrIGA8yKNuZfwdF5Dk=;
+        b=WZrrlbswNIL6jWzUeryXnljFdoSgKtbs4m5JeiIkzOM9CLbWGGOtTfjq4w7f9CFqhk
+         rLGRGhYiCFDVlU0URc7B8V7t6+UNWAJ9bkRA9Plf1uN7h9jXrqdeVds2oVRDLS6TTqWu
+         OEGsS3rK2haISEZMwQb7NeURwvLnhQksWG1LeR2I90M//yyOUmgpyGfpcq4bF/YDqQuU
+         7oDot91shdqT6X3mVtw8dtO1YH8a0uZLVIDEjFDW0qBVYbfqKo29gNoqli/caG6HRvKQ
+         3qwr7uKlMEtjx5/elujm52CY32J1Y0j2MAVenAI7aPs522/8RJ2JVnjMSwYSlPxGSSud
+         NjNQ==
+X-Gm-Message-State: AOAM532m44IuQI18h1B+5Gz8mBsNFSFlcAZ1i1w2NR5F4Hit829V/RYt
+        n5cbSWCetPKfjYlexb8n1FwRY/HU4Qy8AOMarcin7Wkyns4=
+X-Google-Smtp-Source: ABdhPJxO+yFWNH3yGegDEJlbAhYyh4LqFKuUgpfzHbelyVEfpsgHWnEM4GnBTbZVv2pCSZaLSUCIBK0lyCPwI5ZJp5c=
+X-Received: by 2002:aa7:d14e:: with SMTP id r14mr9688603edo.119.1619601556387;
+ Wed, 28 Apr 2021 02:19:16 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR02MB3877.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b646e9f9-4690-4aaf-1a2d-08d90a07320a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2021 05:33:46.8278
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PdWx4tIT8aR9JcUsX89eOO/WRpNwW3GDV6SMdZ0e7XmUlVhDGJgFz2d2Q5LpKHv4jfbFuKtKyF0eR6Lr4BuYFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2185
+References: <20210414141534.GA20266@sol> <CAMRc=MeUR=9oohM29ZX_HPdBubd0ERn6KvoFfWZGg+r_u5WsYg@mail.gmail.com>
+ <20210417072326.GA12853@sol> <CAMRc=McOiBo9ENieObtF8fy93PZBoQSYBLFgnM_ST=j5_SzoyA@mail.gmail.com>
+ <20210418034810.GA9261@sol> <CAMRc=Md8S=CayttjiEVw7f6LYUZzUO9EE-kv6iyUkDqi_5GE3w@mail.gmail.com>
+ <20210419011746.GA4766@sol> <CAMRc=McnJbb50Q_7HjB5mDth0DKtmtmGQaXi9M4qLG4DbpONfQ@mail.gmail.com>
+ <20210422023206.GA4994@sol> <CAMRc=Mfa2BbQx+C59vzeZ_JSLonFYVvfJhA8SuQbV2aGuvR9Ow@mail.gmail.com>
+ <20210423013855.GA7321@sol>
+In-Reply-To: <20210423013855.GA7321@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 28 Apr 2021 11:19:05 +0200
+Message-ID: <CAMRc=MfqshaNAZ653rOX1egyaiyC_LJhenskA8Zvq0YQSFOjYA@mail.gmail.com>
+Subject: Re: [libgpiod][RFC 0/6] first draft of libgpiod v2.0 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgQW5keSBTaGV2Y2hlbmtvLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
-b206IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4gU2VudDog
-TW9uZGF5LCBBcHJpbCAyNiwgMjAyMSA3OjM1IFBNDQo+IFRvOiBTYWkgS3Jpc2huYSBQb3R0aHVy
-aSA8bGFrc2htaXNAeGlsaW54LmNvbT4NCj4gQ2M6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxl
-aWpAbGluYXJvLm9yZz47IFJvYiBIZXJyaW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNaWNo
-YWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IEdyZWcgS3JvYWgtDQo+IEhhcnRtYW4gPGdy
-ZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgbGludXgtYXJtIE1haWxpbmcgTGlzdCA8bGludXgt
-YXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5n
-IExpc3QgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgZGV2aWNldHJlZSA8ZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBvcGVuDQo+IGxpc3Q6R1BJTyBTVUJTWVNURU0gPGxp
-bnV4LWdwaW9Admdlci5rZXJuZWwub3JnPjsgZ2l0IDxnaXRAeGlsaW54LmNvbT47DQo+IHNhaWty
-aXNobmExMjQ2OEBnbWFpbC5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NiAzLzNdIHBpbmN0
-cmw6IEFkZCBYaWxpbnggWnlucU1QIHBpbmN0cmwgZHJpdmVyIHN1cHBvcnQNCj4gDQo+IE9uIE1v
-biwgQXByIDI2LCAyMDIxIGF0IDQ6MjAgUE0gU2FpIEtyaXNobmEgUG90dGh1cmkNCj4gPGxha3No
-bWlzQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+ID4gRnJvbTogQW5keSBTaGV2Y2hlbmtvIDxhbmR5
-LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiA+ID4gU2VudDogRnJpZGF5LCBBcHJpbCAyMywgMjAy
-MSA5OjI0IFBNDQo+ID4gPiBPbiBUaHUsIEFwciAyMiwgMjAyMSBhdCAxMTozMSBBTSBTYWkgS3Jp
-c2huYSBQb3R0aHVyaQ0KPiA+ID4gPGxha3NobWkuc2FpLmtyaXNobmEucG90dGh1cmlAeGlsaW54
-LmNvbT4gd3JvdGU6DQo+IA0KPiAuLi4NCj4gDQo+ID4gPiA+ICtjb25maWcgUElOQ1RSTF9aWU5R
-TVANCj4gPiA+ID4gKyAgICAgICB0cmlzdGF0ZSAiUGluY3RybCBkcml2ZXIgZm9yIFhpbGlueCBa
-eW5xTVAiDQo+ID4gPiA+ICsgICAgICAgZGVwZW5kcyBvbiBaWU5RTVBfRklSTVdBUkUNCj4gPiA+
-ID4gKyAgICAgICBzZWxlY3QgUElOTVVYDQo+ID4gPiA+ICsgICAgICAgc2VsZWN0IEdFTkVSSUNf
-UElOQ09ORg0KPiA+ID4gPiArICAgICAgIGRlZmF1bHQgWllOUU1QX0ZJUk1XQVJFDQo+ID4gPiA+
-ICsgICAgICAgaGVscA0KPiA+ID4gPiArICAgICAgICAgVGhpcyBzZWxlY3RzIHRoZSBwaW5jdHJs
-IGRyaXZlciBmb3IgWGlsaW54IFp5bnFNUCBwbGF0Zm9ybS4NCj4gPiA+ID4gKyAgICAgICAgIFRo
-aXMgZHJpdmVyIHdpbGwgcXVlcnkgdGhlIHBpbiBpbmZvcm1hdGlvbiBmcm9tIHRoZSBmaXJtd2Fy
-ZQ0KPiA+ID4gPiArICAgICAgICAgYW5kIGFsbG93IGNvbmZpZ3VyaW5nIHRoZSBwaW5zLg0KPiA+
-ID4gPiArICAgICAgICAgQ29uZmlndXJhdGlvbiBjYW4gaW5jbHVkZSB0aGUgbXV4IGZ1bmN0aW9u
-IHRvIHNlbGVjdCBvbiB0aG9zZQ0KPiA+ID4gPiArICAgICAgICAgcGluKHMpL2dyb3VwKHMpLCBh
-bmQgdmFyaW91cyBwaW4gY29uZmlndXJhdGlvbiBwYXJhbWV0ZXJzDQo+ID4gPiA+ICsgICAgICAg
-ICBzdWNoIGFzIHB1bGwtdXAsIHNsZXcgcmF0ZSwgZXRjLg0KPiA+ID4NCj4gPiA+IE1pc3NlZCBt
-b2R1bGUgbmFtZS4NCj4gPiBJcyB0aGlzIChtb2R1bGUgbmFtZSkgYSBjb25maWd1cmF0aW9uIG9w
-dGlvbiBpbiBLY29uZmlnPw0KPiANCj4gSXQncyBhIHRleHQgaW4gYSBmcmVlIGZvcm0gdGhhdCBz
-aGVkcyBsaWdodCBvbiBob3cgdGhlIG1vZHVsZSB3aWxsIGJlDQo+IG5hbWVkIGluIGNhc2UgdGhl
-IHVzZXIgd2lsbCBjaG9vc2UgIm0iLg0KT2ssIEkgd2lsbCBhZGQuDQo+IA0KPiAuLi4NCj4gDQo+
-ID4gPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMjAgWGlsaW54LCBJbmMuDQo+ID4gPg0KPiA+ID4g
-MjAyMT8NCj4gPiBDb3VwbGUgb2YgdmVyc2lvbnMgZm9yIHRoaXMgcGF0Y2ggc2VyaWVzIHNlbnQg
-aW4gMjAyMCwgaGVuY2UgbWFpbnRhaW5pbmcNCj4gPiB0aGUgc2FtZS4NCj4gPiBJcyBpdCBsaWtl
-IHdlIG1haW50YWluIHRoZSB5ZWFyIHdoZW4gdGhpcyBwYXRjaCBzZXJpZXMgaXMgYXBwbGllZCwg
-d2hpY2ggaXMNCj4gPiAyMDIxPw0KPiANCj4gMjAyMCwgMjAyMSBzb3VuZHMgb2theSBhcyB3ZWxs
-Lg0KT2ssIEkgd2lsbCB1cGRhdGUuDQo+IA0KPiAuLi4NCj4gDQo+ID4gPiA+ICsgICAgICAgaWYg
-KHBpbiA+PSB6eW5xbXBfZGVzYy5ucGlucykNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVy
-biAtRU9QTk9UU1VQUDsNCj4gPiA+DQo+ID4gPiBJcyBpdCBwb3NzaWJsZT8NCj4gPiBUaGlzIGlz
-IGEgc2FmZSBjaGVjay4NCj4gDQo+IEkuby53LiBkZWFkIGNvZGUsIHJpZ2h0Pw0KPiANCj4gPiBQ
-aW4gaW5mb3JtYXRpb24gd2lsbCBnZXQgZnJvbSBkdCBmaWxlcy9YaWxpbnggZmlybXdhcmUgKHF1
-ZXJ5IHBpbiBpbmZvcm1hdGlvbg0KPiA+IGZvciBhIGdyb3VwKS91c2VyIGFwcGxpY2F0aW9uIGFu
-ZCB0aGVyZSBhcmUgY2hhbmNlcyBvZiBnZXR0aW5nIHdyb25nIHBpbi4NCj4gDQo+IEknbSBub3Qg
-c3VyZSBJIHVuZGVyc3RhbmQgdGhpcy4gSG93IGNvbWVzIHRoYXQgcGluIGNvbnRyb2wgY29yZSB3
-aWxsDQo+IGFzayBmb3IgYSBwaW4gaGlnaGVyIHRoYW4gbnBpbnM/DQpPaywgSSBnb3QgeW91ciBw
-b2ludC4NCkl0IGlzIGR1cGxpY2F0ZSBhbmQgd2lsbCByZW1vdmUgdGhpcyBjaGVjay4NCj4gDQo+
-IC4uLg0KPiANCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldCA9IHp5bnFtcF9wbV9waW5jdHJs
-X2dldF9jb25maWcocGluLCBwYXJhbSwgJmFyZyk7DQo+ID4gPiA+ICsgICAgICAgICAgICAgICBp
-ZiAoYXJnICE9IFBNX1BJTkNUUkxfQklBU19QVUxMX1VQKQ0KPiA+ID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiA+DQo+ID4gPiBFcnJvciBjb2RlIGJlaW5n
-IHNoYWRvd2VkLiBJbnN0ZWFkIGNoZWNrIGl0IGhlcmUgcHJvcGVybHkuDQo+IA0KPiA+IEFyZSB5
-b3UgbWVudGlvbmluZyB0aGUgY2FzZSB3aGVyZSByZXQgaXMgYWxzbyBhIG5vbi16ZXJvPw0KPiA+
-IElmIHllcywgdGhlbiBJIHdpbGwgdXBkYXRlIHRoaXMgY2hlY2sgdG8NCj4gPiBpZiAoIXJldCAm
-JiBhcmcgIT0gUE1fUElOQ1RSTF9CSUFTX1BVTExfVVApDQo+ID4gICAgICAgICByZXR1cm4gLUVJ
-TlZBTDsNCj4gDQo+IE5vLCB0aGlzIGlzIHdyb25nIGluIHRoZSBzYW1lIHdheS4NCj4gDQo+ID4g
-cmV0IG5vbi16ZXJvIGNhc2UsIHdlIGFyZSBoYW5kbGluZyBhdCB0aGUgZW5kIG9mIHN3aXRjaCBj
-YXNlLg0KPiANCj4gSSBtZWFudCB0aGF0IHlvdSBuZWVkIHRvIHBhc3MgdGhlIHJlYWwgcmV0dXJu
-IGNvZGUgdG8gdGhlICh1cHBlcikgY2FsbGVyLg0KSGVyZSB3ZSBhcmUgY2hlY2tpbmcgZm9yIHZh
-bGlkIGFyZ3VtZW50IGFuZCBub3QgdGhlIHJldHVybiB2YWx1ZSBvZiB0aGUgQVBJLg0KSWYgdGhl
-IHJlYWQgdmFsdWUoYXJndW1lbnQpIGlzIG5vdCB2YWxpZCBhbmQgcmV0dXJuIHZhbHVlIG9mIHRo
-ZSBBUEkgaXMNCnplcm8gKFNVQ0NFU1MpIHRoZW4gZnJhbWV3b3JrIGV4cGVjdHMgZHJpdmVyIHRv
-IGJlIHJldHVybmVkIHdpdGgNCictRUlOVkFMJyBhbmQgaXQgaXMgYSBsZWdhbCBlcnJvciBjb2Rl
-IGluIHRoaXMgY2FzZS4NCj4gRGl0dG8gZm9yIGFsbCBvdGhlciBjYXNlcyAobWVudGlvbmVkIGFu
-ZCBub3QgbWVudGlvbmVkKQ0KPiANCj4gLi4uDQo+IA0KPiA+ID4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICByZXQgPSAtRU9QTk9UU1VQUDsNCj4gPiA+DQo+ID4gPiBJc24ndCBpdCBFTk9UU1VQ
-IGZvciBhbGwgY2FzZXMgaGVyZT8NCj4gPiBHaXZpbmcgJ09wZXJhdGlvbiBOb3QgU3VwcG9ydGVk
-IChFT1BOT1RTVVBQKScgZXJyb3IsIHdoZW4NCj4gPiBkcml2ZXIgZ2V0cyBhIHJlcXVlc3QgZm9y
-IHVuc3VwcG9ydGVkIHBpbiBvciBjb25maWd1cmF0aW9uLg0KPiA+IENhbiB5b3UgcGxlYXNlIGVs
-YWJvcmF0ZSB5b3VyIHF1ZXN0aW9uIGlmIEkgZGlkbid0IGFuc3dlciBwcm9wZXJseS4NCj4gDQo+
-IFRoZSBwaW4gY29udHJvbCBzdWJzeXN0ZW0gYWxvbmcgd2l0aCB0aGUgR1BJTyBsaWJyYXJ5IGFy
-ZSB1c2luZw0KPiAtRU5PVFNVUFAgZXJyb3IgY29kZSBmb3IgaW50ZXJuYWwgb3BlcmF0aW9ucy4N
-Cj4gRU9QTk9UU1VQUCBpcyB0aGUgb25lIHRoYXQgc2hvdWxkIGJlIHJldHVybmVkIHRvIHVzZXIg
-c3BhY2UuIElzIGl0IHRoZQ0KPiBjYXNlIGhlcmU/DQpHb3QgeW91ciBwb2ludCwgSSB3aWxsIHVw
-ZGF0ZSBlcnJvciBjb2RlIHdpdGggRU5PVFNVUFAuDQo+IA0KPiAuLi4NCj4gDQo+ID4gPiA+ICt9
-Ow0KPiA+ID4NCj4gPiA+ID4gKw0KPiA+ID4NCj4gPiA+IERpdHRvLg0KPiA+IEkgc2VlIHNvbWUg
-ZHJpdmVycyBhcmUgbWFpbnRhaW5pbmcgdGhlIGV4dHJhIGxpbmUgaW4gYWJvdmUgdHdvIGNhc2Vz
-Lg0KPiA+IFdlIHNob3VsZG4ndCBtYWludGFpbiBleHRyYSBsaW5lIGFmdGVyIHN0cnVjdCBkZWNs
-YXJhdGlvbj8NCj4gDQo+IFdoYXQncyB0aGUgcG9pbnQgdG8gYWRkIG1vcmUgYmxhbmsgbGluZXMg
-d2hlcmUgdGhleSB3b24ndCBhZGQgYW55IHZhbHVlPw0KSSB3aWxsIHJlbW92ZS4NCg0KUmVnYXJk
-cw0KU2FpIEtyaXNobmENCj4gDQo+ID4gPiA+ICttb2R1bGVfcGxhdGZvcm1fZHJpdmVyKHp5bnFt
-cF9waW5jdHJsX2RyaXZlcik7DQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4gQW5k
-eSBTaGV2Y2hlbmtvDQo=
+On Fri, Apr 23, 2021 at 3:39 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+
+[snip]
+
+>
+> > > So it should require the list of lines that you are setting the values
+> > > for. i.e. it is the mutator for a subset of lines, so the C case.
+> > >
+> > > And it implicitly sets those lines to outputs, so it can be more clearly
+> > > named set_output(value) (that is the A case, btw).
+> > >
+> >
+> > I can imagine the B case like:
+> >
+> > gpiod_line_config_set_output_value(config, offset, value);
+> >
+> > But how would exactly the call for the A case look like? Two arrays
+> > with offset -> value mapping?
+> >
+>
+> No - the A case sets ALL lines to one value.
+
+Apart from a single line request - what could possibly be the use-case for that?
+
+> B is one line to one value.
+> C is a set of lines to one value.
+
+This makes a bit more sense but ...
+
+>
+> A set of lines to a set of values is a new case.
+> And yes - two arrays as per your set_values() below.
+>
+
+... to me this and B are the most sensible options. Do we really need
+A & C for line reading and setting? Do you find use for that in your
+Go lib?
+
+> > unsigned int offsets[] = { 0, 2, 5 }, values[] = { 0, 1 ,1 };
+> > gpiod_line_config_set_output_values_offsets(config, 3, offsets, values);
+> >
+> > ?
+> >
+> > > > One can imagine a simple request with the same config for all lines as:
+> > > >
+> > > > gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+> > > >
+> > > > Where req_cfg configures request-specific options, and line_cfg
+> > > > contains the above line config. I'm still not convinced that
+> > > > gpiod_request_options is the better name, I think I prefer the
+> > > > juxtaposition of the two names: line_config and request_config.
+> > > >
+> > >
+> > > That's ok - I'm pretty sure you'll get there eventually ;-).
+> > >
+> > > > Now how do we pass a composite line config with overridden values in C
+> > > > without interfaces etc.?
+> > > >
+> > >
+> > > As above, the req_cfg is the composite line config, so
+> > >
+> > > req = gpiod_chip_request_lines(chip, req_options, req_cfg);
+> > >
+> > > Or if you were to merge the request config, and even the options, into the
+> > > request:
+> > >
+> > > unsigned int lines[] = { 0, 4, 12, 54 }, num_lines = 4;
+> > > req = gpiod_line_request_new(num_lines, lines); // also variadic forms??
+> > > // call req option and config mutators here...
+> > > gpiod_line_request_set_active_low(req);
+> > > gpiod_line_request_set_output(req, 1);
+> > > gpiod_line_request_set_line_input(req, 12);
+> > > gpiod_line_request_set_event_buffer_size(req, 42);
+> > > ...
+> > > // then actually request the lines...
+> > > err = gpiod_chip_request_lines(chip, req);
+> > >
+> > > which may error for various reasons, such as lines already being
+> > > requested or overly complex config.
+> > >
+> > > Merging everything into the request means fewer opaque objects and
+> > > interactions for the user to have to deal with, which is always a good
+> > > thing.
+> > > The downside is that changes to options and config, such as the
+> > > gpiod_line_request_set_active_low() etc here, are not applied until
+> > > either the gpiod_chip_request_lines() or the set_config() call, which
+> > > could be confusing.  Though the more I think about it the more I think
+> > > the resulting simplification of the API wins out.  i.e. these objects:
+> > >
+> > > struct gpiod_line_attr;
+> > > struct gpiod_line_config;
+> > > struct gpiod_request_config;
+> > > struct gpiod_request_handle;
+> > >
+> > > all get collapsed into:
+> > >
+> > > struct gpiod_line_request;
+> > >
+> > > which significantly reduces the cognitive load on the user.
+> > >
+> > > The set_config() would probably be called something like:
+> > >
+> > > err = gpiod_line_request_reconfigure(req)
+> > >
+> >
+> > This lack of splitting of options into configurable and constant ones
+> > visually suggests that you can change all request options later on
+> > which is not true.
+>
+> Yup, as I said, the semantics for the unified object are more confusing.
+>
+> In the Go implementation, the request options can be passed to the
+> request_lines(), but not the set_config(), cos interfaces.
+>
+> There is no good way to flag that in C at compile time. For a runtime
+> check you could add a return code to the option mutators and return an
+> error if the lines have already been requested.
+>
+
+I agree that it doesn't map well to C and this is why I think it would
+be less confusing if we went with two structs instead.
+
+> > I think that at least for the C API, we should
+> > split the responsibilities of objects and keep the division into
+> > request config, line config *and* the line handle whose lifetime is
+> > from the moment the lines get requested until they're released.
+> >
+> > > to distinguish it from the mutators which use the _set_ naming.
+> > > (and it would also align with my Go library ;-)
+> > >
+> > > > One idea I have is to add a new object called struct
+> > > > gpiod_line_config_ext (for extended) that would take one primary
+> > > > config and an arbitrary number of secondary configs with the following
+> > > > example use-case:
+> > > >
+> > > > struct gpiod_line_config_ext *ext_cfg = gpiod_line_config_ext_new();
+> > > > unsigned int offsets[] = { 2, 3 };
+> > > >
+> > > > /* Add the default config for this request. */
+> > > > gpiod_line_config_ext_set_primary_config(ext_cfg, line_cfg);
+> > > > /* Add a secondary config for 2 lines with offsets: 2 and 3. */
+> > > > gpiod_line_config_ext_add_secondary_config(ext_cfg, other_line_cfg, 2, offsets);
+> > > >
+> > > > gpiod_chip_request_lines_ext(chip, req_cfg, ext_cfg);
+> > > >
+> > >
+> > > Please, no _ext objects - that is an admission of failure right there.
+> > >
+> >
+> > I wanted to protest but then realized that if you need _ext interfaces
+> > then it means your non-extended, initial design is already flawed. :)
+> >
+> > Ok so let's try again.
+> >
+> > How about:
+> >
+> > Three structs:
+> >
+> > struct gpiod_line_config;
+> > struct gpiod_request_config;
+> > struct gpiod_line_request;
+> >
+>
+> The user manages the lifecycle of all three?
+
+Yes.
+
+>
+> I can live with that, though I would probably still lean towards the
+> unified object approach - with the option mutators getting return codes.
+>
+> > The first one holds the composite of primary and secondary configs and
+> > is modified using mutators according to this scheme:
+> >
+>
+> Which is why it should be called request_config, not line_config.
+> line_config is misleading - it says line but its scope is request.
+>
+
+It depends on how you look at it really. Its scope are *the lines* in
+the request, not the request itself (unlike the event buffer size or
+line offsets). It says line because gpiod_lines_config would look
+bizarre.
+
+> And of course request_config should be request_options ;-).
+
+I'm still not there yet.
+
+>
+> > gpiod_line_config_set_<attr>(config, attr);
+> > gpiod_line_config_set_<attr>_offset(config, attr, offset);
+> > gpiod_line_config_set_<attr>_offsets(config, attr, num_offsets, offsets);
+> >
+>
+> I personally prefer the _set_line_<attr> style as it reads better, but I
+> can live with this - I know you prefer suffixes for variants.
+>
+> > With notable exceptions for:
+> >
+> > gpiod_line_config_set_[input|active_low|active_high](config);
+> > gpiod_line_config_set_[input|active_low|active_high]_offset(config, offset);
+> > gpiod_line_config_set_[input|active_low|active_high]_offsets(config,
+> > num_offsets, offsets);
+> >
+> > and:
+> >
+> > gpiod_line_config_set_output(config, num_lines, offsets, values);
+> > gpiod_line_config_set_output_offset(config, offset, value);
+> >
+> > The request function takes a single line config and a request config
+> > and returns a new gpiod_line_request like in the first iteration.
+> >
+>
+> Where are the set of requested lines specified?
+>
+
+They map the uAPI in that the offsets are set in struct gpiod_request_config:
+
+gpiod_request_config_set_line_offsets(config, num_lines, offsets); :)
+
+or
+
+gpiod_request_options_set_line_offsets(config, num_lines, offsets); :(
+
+> Do null config ptrs result in something useful, but guaranteed harmless,
+> such as requesting lines as input?  Or are they required non-null?
+>
+
+I normally expect users to pass a valid pointer and don't make the
+functions null aware. In this case - it's a good question. I'm
+wondering if it is useful at all? The user should IMO specify what
+they want to do with the lines? I would lean towards non-null line
+configfs.
+
+> > Then the lines can be set like this:
+> >
+> > // num_lines refers to the number of lines to set, not the number of
+> > // lines in the request
+> > gpiod_line_request_set_values(req, num_lines, offsets, values);
+> >
+>
+> At first glance that feels a bit odd, being on the request while the
+> others all operate on the config, but it maps to the SET_VALUES ioctl(),
+> not the SET_CONFIG, so that makes sense.
+>
+> There is a corresponding get_values(req, num_lines, offsets, values)?
+>
+
+Sure, just didn't include it in the example.
+
+> And a reconfigure(req, cfg)?
+>
+
+Sure, just haven't decided on the name yet.
+gpiod_line_request_reconfigure() would be what you're suggesting but
+it sounds like it would reconfigure the request and not modify the
+line configuration. I would prefer something closer to
+gpiod_line_request_set_line_config() which is as verbose as it gets.
+Maybe even gpiod_line_request_change_line_config()? Or
+gpiod_line_request_modify_line_config()?
+
+Bartosz
+
+> Cheers,
+> Kent.
+>
