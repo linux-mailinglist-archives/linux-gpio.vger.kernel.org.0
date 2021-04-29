@@ -2,86 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B973536DDF4
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Apr 2021 19:12:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BCDE36E2AA
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Apr 2021 02:46:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236923AbhD1RNi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Apr 2021 13:13:38 -0400
-Received: from mail-ot1-f45.google.com ([209.85.210.45]:46913 "EHLO
-        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236856AbhD1RNi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Apr 2021 13:13:38 -0400
-Received: by mail-ot1-f45.google.com with SMTP id d3-20020a9d29030000b029027e8019067fso57124902otb.13;
-        Wed, 28 Apr 2021 10:12:53 -0700 (PDT)
+        id S232402AbhD2Aid (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Apr 2021 20:38:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231874AbhD2Aic (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Apr 2021 20:38:32 -0400
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6528AC06138B
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Apr 2021 17:37:47 -0700 (PDT)
+Received: by mail-ot1-x32f.google.com with SMTP id z20-20020a0568301294b02902a52ecbaf18so7649224otp.8
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Apr 2021 17:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rzVBAT7fLNBdUBZLJQxVK1ZVpLgca3IdfSpNyGEzsn0=;
+        b=K0KwdJty6MIrAKG+FegIYHm0zfWgr1uKyaUrSLhlh/tDnJMEA2u06pRNJxSe3nflmF
+         3/BIhzdwil+l1pDc4/cpnFAoFXp1JbkJBXVXLvAD5s43u0wHo6jbveH5OyeilDC2Y384
+         XJbDU6s93q1BtIg7pVuTrew4U1I8Jrwdp13+8ioBhE4CNDKd6fX34brZ5KCSWndJ5y8h
+         n8Gy/rJT2Q58MN3032BjCoVissGrJFh9ZxjTh0R4z1E+cI/SGC8eqqBfVMf37WkL0EBk
+         /WHIioDg2u9HjdDLbchAe5LuQaWXl2hGyCVQEx9MU9wcVBlbcRUChI/gjJThvugLwLK9
+         0YFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gwBsMZjQrdBeAvFqjLZ8N/H0W29YinbtR6he8HHKExo=;
-        b=SxtikG5GkgB3NI0MKE28g6HnC9J2R4AxSAKbm9qJUu/uyQLyZMahoHDNCI+WMm9gDh
-         mms5EM9cHmIJ7PpMJ6T3rsHIRPVRkO4rnWP3/rDPwn94QvWO+iKWg1lCgBBd1RNYCUwV
-         m2FPm8roUuErHryZOzBvWdLWCtmOKJ++2NTfaWw+DytZf3OlcQOinWIqpTPogEjqL4fQ
-         9tK46uQeJFmy55ulzdBA0TyBFAycWd+PTcUb9bgeC6RaXq51Ddsdv5vuWsFntMZEa31q
-         8bHsMdNxzixoxFiTmdUtWef0OqiLHeDkBKEA3iL1lSz6WcvXZ5Tdm6nkgwJ4EGX4pj9w
-         TVPg==
-X-Gm-Message-State: AOAM532gSrWINiill8WjRDq4I855yqgg2Hbqhf/pF0owynmBsJCj9Qts
-        RqL41xZaxuDnwGewW7+ltjnuJj/frrDlHYMhgaA=
-X-Google-Smtp-Source: ABdhPJy0IkzcQIURbfJMwbrLJqU+1qmGGghbHLLtYLFgJRgdOP/zTnh50uNBLY+gYq3MfWfBnn+n7RvtAg3y6w5hDcQ=
-X-Received: by 2002:a05:6830:55b:: with SMTP id l27mr24636567otb.260.1619629972930;
- Wed, 28 Apr 2021 10:12:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rzVBAT7fLNBdUBZLJQxVK1ZVpLgca3IdfSpNyGEzsn0=;
+        b=tMfxelLkSyV/vVxHD+GbxmGfnhmekcEQ+G4Yf8FOMGDgyS5m6jXAh8tlJj2GXx7C+r
+         Zk1p7Pi/buYDv7ZJoBAJp8S0jl8sVHYUEGC31ZG77XgQSzjV4/cT3lANtpZPgwk95L6z
+         T4FDtLBAacj/RyJWkt/s/NIM9I0qGrjjesisJXS8k1mvQfz8UIrxwh0Ffrhq14rpezYK
+         Sxo/LlOkb4LHMCmyvth8ZNQ92q/WUfLEaQcoovHcEQFUMSkS31mxJOBp5rNCfpu8iEl6
+         as396s8YdooxuYt10uWVVyIQoxAwl4akdw4aFY00Wm8HR11ntUHQMPL/Fr1wFnr4hDc9
+         uzjg==
+X-Gm-Message-State: AOAM530UPzrm71R21nSnsIRrV9JElygIRijdIz8To/HB7pG1D3rPU6EN
+        /SzI68kksEtbS8p0y56ILEh0yGFeD3x+Qw==
+X-Google-Smtp-Source: ABdhPJyqMG44KHGTxh7hXcyD116UD+IX6SFca2bhJAL4JzBdZXEePILZGpGFFp8CFrGMcVVTJOqMaw==
+X-Received: by 2002:a9d:bc3:: with SMTP id 61mr25494742oth.7.1619656666762;
+        Wed, 28 Apr 2021 17:37:46 -0700 (PDT)
+Received: from localhost.localdomain (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id o64sm314893oif.50.2021.04.28.17.37.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Apr 2021 17:37:46 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: qcom: spmi-mpp: Add compatible for pmi8994
+Date:   Wed, 28 Apr 2021 17:37:51 -0700
+Message-Id: <20210429003751.224232-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <20210424143935.69487-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210424143935.69487-1-andriy.shevchenko@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 28 Apr 2021 19:12:41 +0200
-Message-ID: <CAJZ5v0jLZUn7V=7mHRR17=SuOwxP4LAH755gEhzSERNyNq3HNw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] Documentation: firmware-guide: gpio-properties:
- Add note to SPI CS case
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Apr 24, 2021 at 4:39 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Historically ACPI has no means of the GPIO polarity and thus
-> the SPISerialBus() resource defines it on the per-chip basis.
-> In order to avoid an ambiguity, the GPIO polarity is considered
-> being always Active High.
->
-> Add note about this to the respective documentation file.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/firmware-guide/acpi/gpio-properties.rst | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
-> index 4e264c16ddff..df4b711053ee 100644
-> --- a/Documentation/firmware-guide/acpi/gpio-properties.rst
-> +++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
-> @@ -99,6 +99,12 @@ native::
->        }
->    }
->
-> +Note, that historically ACPI has no means of the GPIO polarity and thus
-> +the SPISerialBus() resource defines it on the per-chip basis. In order
-> +to avoid a chain of negations, the GPIO polarity is considered being
-> +Active High. Even for the cases when _DSD() is involved (see the example
-> +above) the GPIO CS polarity must be defined Active High to avoid ambiguity.
-> +
->  Other supported properties
->  ==========================
->
-> --
+The PMI8994 has 4 multi-purpose-pins, add a compatible for this hardware
+block to the MPP driver.
 
-Applied as 5.13-rc material, thanks!
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+PS. I see that while the related gpio driver was converted to hierarchical IRQ
+chips the mpp driver didn't get the same treatment. We should fix this at some
+point...
+
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt | 1 +
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c                     | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+index 0ba07bc96c55..5363d44cbb74 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+@@ -21,6 +21,7 @@ of PMIC's from Qualcomm.
+ 		    "qcom,pmi8950-mpp",
+ 		    "qcom,pm8994-mpp",
+ 		    "qcom,pma8084-mpp",
++		    "qcom,pmi8994-mpp",
+ 
+ 		    And must contain either "qcom,spmi-mpp" or "qcom,ssbi-mpp"
+ 		    if the device is on an spmi bus or an ssbi bus respectively.
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+index 3c213f799feb..2da9b5f68f3f 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+@@ -920,6 +920,7 @@ static const struct of_device_id pmic_mpp_of_match[] = {
+ 	{ .compatible = "qcom,pmi8950-mpp" },	/* 4 MPP's */
+ 	{ .compatible = "qcom,pm8994-mpp" },	/* 8 MPP's */
+ 	{ .compatible = "qcom,pma8084-mpp" },	/* 8 MPP's */
++	{ .compatible = "qcom,pmi8994-mpp" },	/* 4 MPP's */
+ 	{ .compatible = "qcom,spmi-mpp" },	/* Generic */
+ 	{ },
+ };
+-- 
+2.29.2
+
