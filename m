@@ -2,76 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E198E36ECDB
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Apr 2021 16:58:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57C2036EE7C
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Apr 2021 19:00:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240689AbhD2O7U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Apr 2021 10:59:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240602AbhD2O7N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Apr 2021 10:59:13 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB80C06138B;
-        Thu, 29 Apr 2021 07:58:25 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0a4f00261a50588b71a803.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:4f00:261a:5058:8b71:a803])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5864C1EC03E4;
-        Thu, 29 Apr 2021 16:58:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1619708303;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=UOMzazNCqY0ZYhxDicYo52FwGKwZCLG/iQJdgVevypg=;
-        b=LVq7RaEVIeIhg6rv8l+6bepN2dcJmR8xZFoFpWpBpZBN7eLogDxqowowHS0CR+rHVOLuME
-        AC7FMCE+ug+vPISc1mG6CbHlzWvevGZWosIpq1aivq4DP4b1VFa/gVtLOAbBvnZWn8FvZi
-        ohv4IY1sqThCV4hHclQNc9yqNCOkCys=
-Date:   Thu, 29 Apr 2021 16:58:20 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Coiby Xu <coiby.xu@gmail.com>, Ken Xue <Ken.Xue@amd.com>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Daniel Drake <drake@endlessm.com>,
-        vectorflaredesigns@gmail.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [Bug 212379] AMD GPIO chip IRQs stops working (ELN4690,
- WCOM51C7, BMA250E)
-Message-ID: <YIrJjDggcPs5cRmA@zn.tnic>
-References: <bug-212379-6385@https.bugzilla.kernel.org/>
- <bug-212379-6385-VMOjMpWM97@https.bugzilla.kernel.org/>
- <YIc40YXZh4plkhnc@zn.tnic>
- <CAHp75VfYKcYjiafFRmb8nBLeJ3VOs0wu6OxhysE31UStQNroiw@mail.gmail.com>
- <CAHp75VfMfghCWo_47FhtUGU_qt+Jzaz1kqY4+=oZgbzazyfPUA@mail.gmail.com>
- <CACRpkdbT-GD=45ViysGpNSXWN+i9QA9=J8zgtPDkxCRyLKxm3g@mail.gmail.com>
+        id S240893AbhD2RBH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Apr 2021 13:01:07 -0400
+Received: from mga06.intel.com ([134.134.136.31]:56680 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233302AbhD2RBG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 29 Apr 2021 13:01:06 -0400
+IronPort-SDR: gBTLXNvyzLhruyqLUDzwFuych7UBmg6N+CD6erB+cUPxqXqZc2Gd0Q2Fg+ZXDkMVZz+NY6Vaog
+ tKr1DwbtHdTQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9969"; a="258340398"
+X-IronPort-AV: E=Sophos;i="5.82,259,1613462400"; 
+   d="scan'208";a="258340398"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2021 10:00:18 -0700
+IronPort-SDR: sPMnJ7iYBKZ20TQo60hrEApkUvzma7NPBCj0POW5iwjRF52DANpT6gnviwZzDqPU3m773p/Z2M
+ ZWbIxyPnWe5g==
+X-IronPort-AV: E=Sophos;i="5.82,259,1613462400"; 
+   d="scan'208";a="387016290"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2021 10:00:17 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lcA1O-008C6C-Gy; Thu, 29 Apr 2021 20:00:14 +0300
+Date:   Thu, 29 Apr 2021 20:00:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod][PATCH 2/3] libgpiosim: new library for controlling
+ the gpio-sim module
+Message-ID: <YIrmHkaKnrr4IdCT@smile.fi.intel.com>
+References: <20210429094734.9585-1-brgl@bgdev.pl>
+ <20210429094734.9585-3-brgl@bgdev.pl>
+ <YIqXHXU/tqxXjaKA@smile.fi.intel.com>
+ <CAMRc=MeKciVDxdFvq6_d8mN8M08tqDSc1qDqmywswF2gbUa=Dg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbT-GD=45ViysGpNSXWN+i9QA9=J8zgtPDkxCRyLKxm3g@mail.gmail.com>
+In-Reply-To: <CAMRc=MeKciVDxdFvq6_d8mN8M08tqDSc1qDqmywswF2gbUa=Dg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 29, 2021 at 04:31:18PM +0200, Linus Walleij wrote:
-> I have no clue, someone with deeper understanding of AMDs bridges
-> and stuff need to look at this. Since it dies after a while I would
-> suspect power management by the BIOS. (Off the top of my head.)
-> SInce I guess these systems use BIOS ACPI for all PM.
+On Thu, Apr 29, 2021 at 03:07:49PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Apr 29, 2021 at 1:23 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Apr 29, 2021 at 11:47:33AM +0200, Bartosz Golaszewski wrote:
+
+...
+
+> > > +/* We don't have mkdtempat()... :( */
+> >
+> > But we have tmpnam() / tmpnam_r(), why to reinvent it below?
+> >
 > 
-> If someone from AMD could pick up this bug, that would be great.
+> Because of this:
+> 
+> $man tmpnam_r
+> ...
+> The created pathname has a directory prefix P_tmpdir.
+> ...
+> 
+> And this:
+> 
+> ./stdio.h:120:# define P_tmpdir "/tmp"
 
-Thanks for looking. I have it on a good authority that something like
-that is happening now.
+Still you may advance the pointer by the length of P_tmpdir + 1.
 
-:-)
+...
+
+> > > +     for (i = 0; i < num_names; i++)
+> > > +             written += snprintf(buf + written, size - written,
+> > > +                                 "\"%s\", ", names[i] ?: "");
+> > > +     buf[size - 2] = '\0';
+> >
+> > Dunno if you can use asprintf() and actually replace NULL by "" in the original
+> > array. Ah, see you already using it somewhere else, why not here?
+> >
+> 
+> Not sure what you mean, we can't use asprintf() to create a composite
+> string like what is needed here. Can you give me an example?
+
+I have got this after sending. Either you need to create a format string with
+va_args, or do it manually.
+
 
 -- 
-Regards/Gruss,
-    Boris.
+With Best Regards,
+Andy Shevchenko
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
