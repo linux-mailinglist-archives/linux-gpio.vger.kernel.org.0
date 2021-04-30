@@ -2,85 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7C0D36F983
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Apr 2021 13:41:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E38336FA2C
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Apr 2021 14:31:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229981AbhD3Lmq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Apr 2021 07:42:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:31963 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229875AbhD3Lmp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 30 Apr 2021 07:42:45 -0400
-IronPort-SDR: 7mS4ACEa1gs4Wd0pqunRGk+iDI+qZJG4l5WjS0fSGqgxSwEuUZgpxK5Rg0PRX074cDv+fr3qxG
- y5vuLlTfArSA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9969"; a="261203264"
-X-IronPort-AV: E=Sophos;i="5.82,262,1613462400"; 
-   d="scan'208";a="261203264"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2021 04:41:56 -0700
-IronPort-SDR: SklqaXO4qHXyNK7OS66vpOzZsMO4cllONuXfDI1piJ6BYCfarsWlRk4W/Ai5I1bBN74T8PBzfr
- e8ikdvNSUIVw==
-X-IronPort-AV: E=Sophos;i="5.82,262,1613462400"; 
-   d="scan'208";a="424961633"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2021 04:41:54 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lcRWq-008P3B-51; Fri, 30 Apr 2021 14:41:52 +0300
-Date:   Fri, 30 Apr 2021 14:41:52 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod][PATCH 2/3] libgpiosim: new library for controlling
- the gpio-sim module
-Message-ID: <YIvtACUK779d6J/I@smile.fi.intel.com>
-References: <20210429094734.9585-1-brgl@bgdev.pl>
- <20210429094734.9585-3-brgl@bgdev.pl>
- <YIqXHXU/tqxXjaKA@smile.fi.intel.com>
- <CAMRc=MeKciVDxdFvq6_d8mN8M08tqDSc1qDqmywswF2gbUa=Dg@mail.gmail.com>
- <YIrmHkaKnrr4IdCT@smile.fi.intel.com>
- <YIrmxckO0P1Z4w/a@smile.fi.intel.com>
- <YIrnK105JB0vNVva@smile.fi.intel.com>
- <CAMRc=Mcf_wpBx6z3p=cEvFitnv+eSiNPp6w7Uus4K2CZLR-G4A@mail.gmail.com>
+        id S230048AbhD3McC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Apr 2021 08:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229911AbhD3McB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Apr 2021 08:32:01 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430F2C06174A
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Apr 2021 05:31:13 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:d4dd:70b4:3264:8d97])
+        by baptiste.telenet-ops.be with bizsmtp
+        id z0X92400C4p6Y38010X9HE; Fri, 30 Apr 2021 14:31:09 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lcSIX-001ec7-14; Fri, 30 Apr 2021 14:31:09 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lcSIW-00BdbL-KL; Fri, 30 Apr 2021 14:31:08 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 00/12] pinctrl: renesas: Add more bias pinconf support
+Date:   Fri, 30 Apr 2021 14:30:54 +0200
+Message-Id: <cover.1619785375.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mcf_wpBx6z3p=cEvFitnv+eSiNPp6w7Uus4K2CZLR-G4A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 30, 2021 at 11:29:59AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Apr 29, 2021 at 7:04 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Thu, Apr 29, 2021 at 08:03:01PM +0300, Andy Shevchenko wrote:
-> > > On Thu, Apr 29, 2021 at 08:00:14PM +0300, Andy Shevchenko wrote:
-> > > > On Thu, Apr 29, 2021 at 03:07:49PM +0200, Bartosz Golaszewski wrote:
-> >
-> > ...
-> >
-> > > > Still you may advance the pointer by the length of P_tmpdir + 1.
-> > >
-> > > There is also tempnam().
-> >
-> > Scratch it. It seems legacy one that actually tries to create file...
-> 
-> And also this:
-> 
-> libgpiod/tests/gpiosim/gpiosim.c:331: warning: the use of `tmpnam_r'
-> is dangerous, better use `mkstemp'
-> 
-> So I'll go with my solution.
+	Hi all,
 
-My gosh, we so much legacy stuff here and there...
+This patch series add bias pinconf support to the R-Car Gen2, R-Car
+Gen3, RZ/G1, and RZ/G2 SoCs that do not have it yet, preceded by a two
+fixes and three cleanups.
 
+This has not been formally tested in the field, but did pass my
+work-in-progress bias registers checks in the Renesas pinctrl checker,
+which I hope to post soon.
+
+I hope to queue this in renesas-pinctrl for v5.14.
+
+Thanks for your comments!
+
+Geert Uytterhoeven (12):
+  pinctrl: renesas: r8a7796: Add missing bias for PRESET# pin
+  pinctrl: renesas: r8a77990: JTAG pins do not have pull-down
+    capabilities
+  pinctrl: renesas: r8a77990: Drop bogus PUEN_ prefixes in comments
+  pinctrl: renesas: r8a7778: Remove unused PORT_GP_PUP_1() macro
+  pinctrl: renesas: r8a779{51,6,65}: Reduce non-functional differences
+  pinctrl: renesas: r8a77470: Add bias pinconf support
+  pinctrl: renesas: r8a7790: Add bias pinconf support
+  pinctrl: renesas: r8a7792: Add bias pinconf support
+  pinctrl: renesas: r8a7794: Add bias pinconf support
+  pinctrl: renesas: r8a77970: Add bias pinconf support
+  pinctrl: renesas: r8a77980: Add bias pinconf support
+  pinctrl: renesas: r8a77995: Add bias pinconf support
+
+ drivers/pinctrl/renesas/pfc-r8a77470.c | 346 ++++++++++++++--
+ drivers/pinctrl/renesas/pfc-r8a7778.c  |   3 -
+ drivers/pinctrl/renesas/pfc-r8a7790.c  | 301 +++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a7792.c  | 533 ++++++++++++++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a7794.c  | 360 ++++++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a77951.c |   4 +-
+ drivers/pinctrl/renesas/pfc-r8a7796.c  |  10 +-
+ drivers/pinctrl/renesas/pfc-r8a77965.c |  79 ++--
+ drivers/pinctrl/renesas/pfc-r8a77970.c | 175 +++++++-
+ drivers/pinctrl/renesas/pfc-r8a77980.c | 209 +++++++++-
+ drivers/pinctrl/renesas/pfc-r8a77990.c |  16 +-
+ drivers/pinctrl/renesas/pfc-r8a77995.c | 246 +++++++++++-
+ 12 files changed, 2138 insertions(+), 144 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
 
+Gr{oetje,eeting}s,
 
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
