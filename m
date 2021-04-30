@@ -2,103 +2,260 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2306E36FF77
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Apr 2021 19:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 371D0370003
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Apr 2021 19:52:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230356AbhD3R1Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Apr 2021 13:27:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229750AbhD3R1Y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 30 Apr 2021 13:27:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A9F40613E1;
-        Fri, 30 Apr 2021 17:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619803596;
-        bh=1rUgNSN7FcJQXauj0ZsJ1XOjvcnWQfWVkDhofbK+0ig=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ugms4PpvNVoSYYXSKuM73dyHM9jSuiQetkar6RaGMVfECdYSwGLamjK5G8hlwg/Pj
-         Zs3eoN8E2hsha6DUV9c7XWxSJEBDtimdT3r5lye60orZ4tXNRDLNv8jGsvJHSj5j0l
-         qFpeEgZBX3pvY8EgjEbZpIAPt4Aqas/60oWgwH1j/c4mg8J5lOcpY3rSDfLvudBJCk
-         IFRFp0Cd5etrGrlLI2a75ioFOGFxSTKdyO5vlCVSBP0ScgggnZ3zvgmOGHiprYLJ7U
-         UzUS0m+LJ1geyZuo5dszDXCQORKatENtmucUxEqNkde9E/KQ4DvsekgTJBHWhTf8A/
-         DvPa1XgIWLoHQ==
-Date:   Fri, 30 Apr 2021 18:26:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] regmap: add regmap_might_sleep()
-Message-ID: <20210430172603.GE5981@sirena.org.uk>
-References: <20210430130645.31562-1-michael@walle.cc>
- <20210430151908.GC5981@sirena.org.uk>
- <df27a6508e9edcd8b56058ac4834fd56@walle.cc>
+        id S230093AbhD3RxG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Apr 2021 13:53:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229954AbhD3RxG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Apr 2021 13:53:06 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670B4C06174A
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Apr 2021 10:52:17 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id j28so19580169edy.9
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Apr 2021 10:52:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Q/ObjJ04rS9N38sD7hDAvKkdcNclOZWSIkdfCaYrYU=;
+        b=VPOSg1YAaO8y5TZyWuyoF++G84y6Oak7wHy3X8RpmY4ZUbW28A+TNO799ytASd1sCA
+         U/P5uhNoxwKvE1QjoCikt2/nRT22iVtoQsr98Q5vFlr32gtNN75zL1TIHJcduuD0f7am
+         svy4hXRat5I/3l6yzEVZrGB3T2hPOfxRoLqsWyOgS4pPD2eJBWkU0c8/SgnPDeH/VcgU
+         8fhxZzx8h7JoTdk/gmQogiqeQkIUt4PjOML27Rd8k6ZzuwGYDslVKB/qpw1Ftj3X0UE7
+         Y81VrqVyPw/vYwGVVqJAi2S0RczHBNp5EOGlJpWgrFDmSzR2ZiujYGhq3YPIP5S7M7mg
+         Od4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Q/ObjJ04rS9N38sD7hDAvKkdcNclOZWSIkdfCaYrYU=;
+        b=uUDVrYaKi3hxlExqxH9vkEhjFHA1v3bMQtq8ARhzQW9BZIx0Le8CaR2xBciEQ9EGue
+         VSYnjM66CFXhEVw7s2/0qqOYi0CwhvsNzEDtIrniGaCqP74JyQ+lXhZJo4aa1tnbbJqZ
+         SeSri7dp1sFCdpyhdA1GgqBw1ITFL7hpCgr4Fb7BrBrzO3fCJf/MSCrR7xE8WQKE4uAT
+         wuw+Hq1x5ZZYBJJJyn5pFQPs0H6C2BPpDmtMpl2HuMh8XF+f7FwUsSufambpnWnVnixq
+         /EIYOsbg94PrVxZ65NhoPc14fBDr9P2M+mKicEaiCn5SpjX7rRjdDYXTXbhJSx0zsigB
+         4dOw==
+X-Gm-Message-State: AOAM53064f0TWVBxm7jpDntZLyDl5gl0xWo+ZBVufUdy1LE8oSu7pbiR
+        ev4UdfeEcRyYx3r1NTDS3Oumu1SjtG6S7mcaOAcjMg==
+X-Google-Smtp-Source: ABdhPJxKx9M52u2RjOYpHJZQnJAh5PSbV5aec7i4oyvtYTsMkGmSgY9r3ys6vxIF3jZRasC+QdIfiqk2uE0ofyAN5xM=
+X-Received: by 2002:aa7:d14e:: with SMTP id r14mr7351632edo.119.1619805136080;
+ Fri, 30 Apr 2021 10:52:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VUDLurXRWRKrGuMn"
-Content-Disposition: inline
-In-Reply-To: <df27a6508e9edcd8b56058ac4834fd56@walle.cc>
-X-Cookie: QOTD:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20210417072326.GA12853@sol> <CAMRc=McOiBo9ENieObtF8fy93PZBoQSYBLFgnM_ST=j5_SzoyA@mail.gmail.com>
+ <20210418034810.GA9261@sol> <CAMRc=Md8S=CayttjiEVw7f6LYUZzUO9EE-kv6iyUkDqi_5GE3w@mail.gmail.com>
+ <20210419011746.GA4766@sol> <CAMRc=McnJbb50Q_7HjB5mDth0DKtmtmGQaXi9M4qLG4DbpONfQ@mail.gmail.com>
+ <20210422023206.GA4994@sol> <CAMRc=Mfa2BbQx+C59vzeZ_JSLonFYVvfJhA8SuQbV2aGuvR9Ow@mail.gmail.com>
+ <20210423013855.GA7321@sol> <CAMRc=MfqshaNAZ653rOX1egyaiyC_LJhenskA8Zvq0YQSFOjYA@mail.gmail.com>
+ <20210428103449.GA22814@sol>
+In-Reply-To: <20210428103449.GA22814@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 30 Apr 2021 19:52:05 +0200
+Message-ID: <CAMRc=Mdg2+02CU3fhtzpG4wCVeFM9RK2tKovVKzct1JTTnewoA@mail.gmail.com>
+Subject: Re: [libgpiod][RFC 0/6] first draft of libgpiod v2.0 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Apr 28, 2021 at 12:34 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Wed, Apr 28, 2021 at 11:19:05AM +0200, Bartosz Golaszewski wrote:
+> > On Fri, Apr 23, 2021 at 3:39 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> >
+> > [snip]
+> >
+> > >
+> > > > > So it should require the list of lines that you are setting the values
+> > > > > for. i.e. it is the mutator for a subset of lines, so the C case.
+> > > > >
+> > > > > And it implicitly sets those lines to outputs, so it can be more clearly
+> > > > > named set_output(value) (that is the A case, btw).
+> > > > >
+> > > >
+> > > > I can imagine the B case like:
+> > > >
+> > > > gpiod_line_config_set_output_value(config, offset, value);
+> > > >
+> > > > But how would exactly the call for the A case look like? Two arrays
+> > > > with offset -> value mapping?
+> > > >
+> > >
+> > > No - the A case sets ALL lines to one value.
+> >
+> > Apart from a single line request - what could possibly be the use-case for that?
+> >
+>
+> The A, B, C nomenclature originated for attributes, for which blanket
+> sets (A) make more sense.
+>
+> The case for using A for outputs would be if the vast majority of your
+> lines default to one value.  You would then only have to use the other
+> (B, C or whatever) for the non-default lines.
+>
+> > > B is one line to one value.
+> > > C is a set of lines to one value.
+> >
+> > This makes a bit more sense but ...
+> >
+> > >
+> > > A set of lines to a set of values is a new case.
+> > > And yes - two arrays as per your set_values() below.
+> > >
+>
+> For future reference, lets call this case D.
+>
+> >
+> > ... to me this and B are the most sensible options. Do we really need
+> > A & C for line reading and setting? Do you find use for that in your
+> > Go lib?
+> >
+>
+> No need for all four - two would be sufficient - probably B and D as you
+> suggest.
+>
 
---VUDLurXRWRKrGuMn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Agreed.
 
-On Fri, Apr 30, 2021 at 06:01:49PM +0200, Michael Walle wrote:
-> Am 2021-04-30 17:19, schrieb Mark Brown:
+[snip]
 
-> > Whatever is creating the regmap really ought to know what device it's
-> > dealing with...
+> > > >
+> > > > This lack of splitting of options into configurable and constant ones
+> > > > visually suggests that you can change all request options later on
+> > > > which is not true.
+> > >
+> > > Yup, as I said, the semantics for the unified object are more confusing.
+> > >
+> > > In the Go implementation, the request options can be passed to the
+> > > request_lines(), but not the set_config(), cos interfaces.
+> > >
+> > > There is no good way to flag that in C at compile time. For a runtime
+> > > check you could add a return code to the option mutators and return an
+> > > error if the lines have already been requested.
+> > >
+> >
+> > I agree that it doesn't map well to C and this is why I think it would
+> > be less confusing if we went with two structs instead.
+> >
+>
+> I know.
+>
+> My concern is that the simplest get use case is 7 function calls:
+> 1. create request_config
+> 2. create line_config
+> 3. request lines
+> 4. do the actual work
+> 5. release request
+> 6. free line_config
+> 7. free request_config
+>
+> And that is ignoring the chip open/close functions.
+>
 
-> But creating and using the regmap are two seperate things, no? Consider
-> the gpio-sl28cpld. It will just use whatever regmap the parent has created.
-> How would it know what type of regmap it is?
+This doesn't bother me all that much. This is the low-level C API.
+It's supposed to be a bit clunky. It'll get way simpler in the
+high-level bindings.
 
-But that's a driver for a specific device AFAICT which looks like it's
-only got an I2C binding on the MFD so the driver knows that it's for a
-device that's on a bus that's going to sleep and doesn't need to infer
-anything?  This looks like the common case I'd expect where there's no
-variation.
+In Python a simple case would look something like this:
 
-> > > It might be possible to pass this information via the
-> > > gpio_regmap_config, but this has the following drawbacks. First, that
-> > > property is redundant and both places might contratict each other. And
-> > > secondly, the driver might not even know the type of the regmap
-> > > because
-> > > it just gets an opaque pointer by querying the device tree.
+with gpiod.Chip("/dev/gpiochip0") as chip:
+    with chip.request_lines(gpiod.RequestConfig(offsets=( 0, 2, 3 )),
 
-> > If it's a generic GPIO driver from a code correctness point of view it's
-> > always got a risk of sleeping...
+gpiod.LineConfig(direction=gpiod.DIRECTION_INPUT)) as req:
+        values = req.get_values() # Read all values
+        values = req.get_values(offsets=( 2, 3)) # Read values of specific lines
 
-> I can't follow you here.
+[snip]
 
-If users happen to end up with a map flagged as fast they can work on
-the whatever driver uses this stuff and not realise they're breaking
-other users of the same driver that end up with slow I/O.  The whole
-point of the flag in GPIO is AIUI warnings to help with that case.
+> > >
+> > > Where are the set of requested lines specified?
+> > >
+> >
+> > They map the uAPI in that the offsets are set in struct gpiod_request_config:
+> >
+> > gpiod_request_config_set_line_offsets(config, num_lines, offsets); :)
+> >
+> > or
+> >
+> > gpiod_request_options_set_line_offsets(config, num_lines, offsets); :(
+> >
+>
+> Alternatively it could be in one of the constructors -
+> gpiod_request_config_new(), gpiod_line_config_new() or
+> gpiod_chip_request_lines()?
+>
 
---VUDLurXRWRKrGuMn
-Content-Type: application/pgp-signature; name="signature.asc"
+I want to make the struct reusable/modifiable so setting it only in
+the constructor would disallow it and having both would be redundant.
+And the last one: the less function arguments the better IMO. So I'm
+for having it in the request_config.
 
------BEGIN PGP SIGNATURE-----
+> > > Do null config ptrs result in something useful, but guaranteed harmless,
+> > > such as requesting lines as input?  Or are they required non-null?
+> > >
+> >
+> > I normally expect users to pass a valid pointer and don't make the
+> > functions null aware. In this case - it's a good question. I'm
+> > wondering if it is useful at all? The user should IMO specify what
+> > they want to do with the lines? I would lean towards non-null line
+> > configfs.
+> >
+>
+> Sure doesn't if you have to set the offsets in the config.
+> But might do if you provide them to the gpiod_chip_request_lines().
+>
+> The null case could then request the lines as-is?
+>
+> There seems to be a bit of interest in as-is of late, and the simplest
+> case would then be three function calls.
+>
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmCMPasACgkQJNaLcl1U
-h9CnCAf/UXniZtyrlKutaOFYFv/DIS5vgZNPX9TKPSpuf7OSIdu3/Su5BCBIdz8U
-607bHT20bfXcATQf0VqNm7mJ5+mQA4GcDa+z0SggpsBB1PqkMXqsGHgMEpxe9/yR
-DzRAm+aaQFWkp4MWQh7AYkNcN0ctgP+IWH1eV8e5dv8c+6eDH2h8Dp90JtfsYU7q
-wUUxm4xco031Oz1ciiNjDqlZxV7d5KJpVbWd8hgGqmtABAIzcva6DaPw1MwCnEpF
-c+JX0FRUlI0hPiDDbt07QJbaNwbAA4X9WVZz8e6soFjr5O/kjiiSmTy9qudB3UE3
-5w5PxpCBVGXSrSDBPl5EKFHjgtBKFA==
-=UiNe
------END PGP SIGNATURE-----
+Ok, makes sense. Null line-config -> request lines as is.
 
---VUDLurXRWRKrGuMn--
+> > > > Then the lines can be set like this:
+> > > >
+> > > > // num_lines refers to the number of lines to set, not the number of
+> > > > // lines in the request
+> > > > gpiod_line_request_set_values(req, num_lines, offsets, values);
+> > > >
+> > >
+> > > At first glance that feels a bit odd, being on the request while the
+> > > others all operate on the config, but it maps to the SET_VALUES ioctl(),
+> > > not the SET_CONFIG, so that makes sense.
+> > >
+> > > There is a corresponding get_values(req, num_lines, offsets, values)?
+> > >
+> >
+> > Sure, just didn't include it in the example.
+> >
+> > > And a reconfigure(req, cfg)?
+> > >
+> >
+> > Sure, just haven't decided on the name yet.
+> > gpiod_line_request_reconfigure() would be what you're suggesting but
+> > it sounds like it would reconfigure the request and not modify the
+> > line configuration. I would prefer something closer to
+> > gpiod_line_request_set_line_config() which is as verbose as it gets.
+> > Maybe even gpiod_line_request_change_line_config()? Or
+> > gpiod_line_request_modify_line_config()?
+> >
+>
+> gpiod_line_request_reconfigure(req, cfg) is not modifying the line_config
+> - it is modifying the request WITH the modified config.
+>
+> If gpiod_line_request_<splat>_line_config(req, cfg) works better for you
+> then I'd prefer something along the lines of _apply_ or _commit_, as it is
+> taking the line_config, modified by sets, and applying it to the
+> requested lines.
+>
+
+How about gpiod_line_request_reconfigure_lines()?
+
+Bart
