@@ -2,76 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAA483701FB
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Apr 2021 22:19:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FCCB370356
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 May 2021 00:10:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235914AbhD3UUp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Apr 2021 16:20:45 -0400
-Received: from mail-oi1-f178.google.com ([209.85.167.178]:40836 "EHLO
-        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234441AbhD3UUo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Apr 2021 16:20:44 -0400
-Received: by mail-oi1-f178.google.com with SMTP id u16so53903327oiu.7;
-        Fri, 30 Apr 2021 13:19:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Aw2YFdMeRBDtOUpE+/zM3s478RUBDTvqUKeVTeNhzu4=;
-        b=HITzMcOnECqWxZgKktzXuor87i3jlPxrzdJ7D+q8hcvhPnw/y/EuPVgqqwpG1rxeTx
-         6EjHL2yUxLe1UIHkRPQoIme+o0K6JJIYQ0u9cTp/ynGtNrCvVe6PpS8Hv+ZscMWaaWrq
-         hYeV1PJ+RanrE4VRGLWmxta7PWOxuBHEVnQPyHaGvdTKXU+W0hTe/hsvo8qT8YMUW0Zf
-         KrVDbCdYbOeNJ2mHmIGV6DvxirzGgFKFIWClebBKb3mI4C1ZkitdcTzmXa4OcRmA6gmQ
-         KhQ3DpZqUUmvmj1NrWM0RiiT3mt5zKc4wEAcOauJpMGNHU1Xe0fN58n21b5nyW+rUklb
-         /u6Q==
-X-Gm-Message-State: AOAM531ySzIKFmTa6eg9UVimUrgaWvBNkjnKu70/5lQPqD2ZnRdywDyw
-        Zh0In9u4GQ2h+ofcSg0bdg==
-X-Google-Smtp-Source: ABdhPJy3JfUBvKEvMp0Fz+v/JfK2sB72f0Ebp7ReItbPDYXLhqBmUUPy/7BUPI1CpfPLI8inv/mtGQ==
-X-Received: by 2002:a05:6808:54c:: with SMTP id i12mr2955972oig.110.1619813995298;
-        Fri, 30 Apr 2021 13:19:55 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p65sm1011106oia.46.2021.04.30.13.19.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Apr 2021 13:19:54 -0700 (PDT)
-Received: (nullmailer pid 3819633 invoked by uid 1000);
-        Fri, 30 Apr 2021 20:19:53 -0000
-Date:   Fri, 30 Apr 2021 15:19:53 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: gpio: Add devicetree binding for IDT
- 79RC32434 GPIO controller
-Message-ID: <20210430201953.GA3819580@robh.at.kernel.org>
-References: <20210426095426.118356-1-tsbogend@alpha.franken.de>
- <20210426095426.118356-2-tsbogend@alpha.franken.de>
+        id S231313AbhD3WLH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Apr 2021 18:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229997AbhD3WLH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Apr 2021 18:11:07 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B00C06174A;
+        Fri, 30 Apr 2021 15:10:18 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3997B22178;
+        Sat,  1 May 2021 00:10:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1619820616;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Sx5P6k+8J/SUNrmoKJuM+QdjCHUJpgp7+KBx8Lr7+hc=;
+        b=icmY8TemC3wby6JVli35xO2PTsPqnQCgT3Ietxq42FQF2sqTO4M/6k/w0Lxg5OCWDoLjh1
+        ZMkyug9nzqlcGabpNdSg7sVUHhRAAYrQRbSSWVjtqmI1a1DSkO5O28j1yKLxQ1czDzTme+
+        KIuYNTPeZQ3nVvHThUI+F8YKvl0J4Ac=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210426095426.118356-2-tsbogend@alpha.franken.de>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 01 May 2021 00:10:16 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/2] regmap: add regmap_might_sleep()
+In-Reply-To: <20210430172603.GE5981@sirena.org.uk>
+References: <20210430130645.31562-1-michael@walle.cc>
+ <20210430151908.GC5981@sirena.org.uk>
+ <df27a6508e9edcd8b56058ac4834fd56@walle.cc>
+ <20210430172603.GE5981@sirena.org.uk>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <128a6d51af1b7c9ed24a5848347c66b9@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 26 Apr 2021 11:54:26 +0200, Thomas Bogendoerfer wrote:
-> Add YAML devicetree binding for IDT 79RC32434 GPIO controller
+Am 2021-04-30 19:26, schrieb Mark Brown:
+> On Fri, Apr 30, 2021 at 06:01:49PM +0200, Michael Walle wrote:
+>> Am 2021-04-30 17:19, schrieb Mark Brown:
 > 
-> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> ---
-> Changes in v4:
->  - renamed to idt,32434-gpio this time for real
+>> > Whatever is creating the regmap really ought to know what device it's
+>> > dealing with...
 > 
-> Changes in v3:
->  - renamed to idt,32434-gpio
->  - drop ngpio description
->  - use gpio0: gpio@50004 in example
+>> But creating and using the regmap are two seperate things, no? 
+>> Consider
+>> the gpio-sl28cpld. It will just use whatever regmap the parent has 
+>> created.
+>> How would it know what type of regmap it is?
 > 
->  .../bindings/gpio/idt,32434-gpio.yaml         | 71 +++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/idt,32434-gpio.yaml
-> 
+> But that's a driver for a specific device AFAICT which looks like it's
+> only got an I2C binding on the MFD so the driver knows that it's for a
+> device that's on a bus that's going to sleep and doesn't need to infer
+> anything?  This looks like the common case I'd expect where there's no
+> variation.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+You are right, at the moment this driver only has an I2C binding. But
+the idea was that this IP block and driver can be reused behind any
+kind of bridge; I2C, SPI or MMIO. Actually, I had the impression
+that all you need to do to convert it to MMIO is to replace the
+"kontron,sl28cpld" compatible with a "syscon" compatible. But it isn't
+that easy. Anyway, the idea is that you don't need to change anything
+in the gpio-sl28cpld driver, just change the parent. But if we can't
+ask the regmap what type it is, then we'll have to modify the
+gpio-sl28cpld driver and we will have to figure it out by some other
+means.
+
+>> > > It might be possible to pass this information via the
+>> > > gpio_regmap_config, but this has the following drawbacks. First, that
+>> > > property is redundant and both places might contratict each other. And
+>> > > secondly, the driver might not even know the type of the regmap
+>> > > because
+>> > > it just gets an opaque pointer by querying the device tree.
+> 
+>> > If it's a generic GPIO driver from a code correctness point of view it's
+>> > always got a risk of sleeping...
+> 
+>> I can't follow you here.
+> 
+> If users happen to end up with a map flagged as fast they can work on
+> the whatever driver uses this stuff and not realise they're breaking
+> other users of the same driver that end up with slow I/O.  The whole
+> point of the flag in GPIO is AIUI warnings to help with that case.
+
+Hm, but as of now, the only thing which makes the gpio-regmap driver
+slow i/o is the regmap itself.
+
+-michael
