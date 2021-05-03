@@ -2,81 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ADE5371FAD
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 May 2021 20:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E103C37207B
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 May 2021 21:32:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229703AbhECSbC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 May 2021 14:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbhECSbB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 May 2021 14:31:01 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C92EEC061761
-        for <linux-gpio@vger.kernel.org>; Mon,  3 May 2021 11:30:07 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id j10so9454181lfb.12
-        for <linux-gpio@vger.kernel.org>; Mon, 03 May 2021 11:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xXjFgK8N0pszf3rbmmQcSMO5oH15ejleZvx8EyiEDM0=;
-        b=NbuS7r4kwjOrWTgmAA+cqs4QlDOAlxmBdqomM+5iiCWU2Aigr1NJtZphJTm+5jDLR/
-         UPJgc8VwjZ/Vl1p5u1UTo5uAyAMfo21q4RwCB/3gd4uaqXyBE8snbAqhsy6g24Do0DSz
-         B9UIW1YUcBUU1B6X6wsy+Khde3EekF5bq2qPY=
+        id S229520AbhECTcs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 May 2021 15:32:48 -0400
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:36673 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229472AbhECTcs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 May 2021 15:32:48 -0400
+Received: by mail-ot1-f53.google.com with SMTP id n32-20020a9d1ea30000b02902a53d6ad4bdso6144647otn.3;
+        Mon, 03 May 2021 12:31:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xXjFgK8N0pszf3rbmmQcSMO5oH15ejleZvx8EyiEDM0=;
-        b=WT+oDD3RAYqPYnWEGWRmNi6p4ASRkGyP4Zv/4p0RhM2Y6oEV9m01jeGkEDZRl8SQiq
-         ofxOes/5ewPuq4h5VsFbjt6Tvm1YHKVTrRfPDfGcFP+inMg/STbKCnjX2uWlWTjREvcz
-         +J4cIjp154VW9EkGLnYPC9l3qS7ADG1Q1bsNxJ22r3DuJFxmHhfesXk1emodUf0GFuWT
-         1wRDiGMobh0N50ET8dcLZ0MWU0tD9zn8SAP0jG1ZFujnWTuUuA1J5/bEKLRwlZDDzXLH
-         rf7yynk9625AtMJte7H0PUppNB8Kxh9ThiGHoBB6Yg34AMWhAp946IE9gmo+/bCnoHvY
-         Dlcw==
-X-Gm-Message-State: AOAM533fR8VSHQpw5isH4NhkvVRzrzaBTl8kV6XCufUHHwWj07JtwX7X
-        IdMkv3oeD8weT9UJeFj+Y4Di5to2qmqrgdZNpNA=
-X-Google-Smtp-Source: ABdhPJxoRY9A+jEJ+HJ8yDOnEcfLa1B9UoUaas4OXbtofRt1k6DlQ2eCW6ii2csKwsjc6nY8ccbNBg==
-X-Received: by 2002:a05:6512:3e27:: with SMTP id i39mr14564623lfv.581.1620066605503;
-        Mon, 03 May 2021 11:30:05 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id q127sm1171992ljq.88.2021.05.03.11.30.04
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 May 2021 11:30:04 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id j10so9454044lfb.12
-        for <linux-gpio@vger.kernel.org>; Mon, 03 May 2021 11:30:04 -0700 (PDT)
-X-Received: by 2002:a05:6512:3763:: with SMTP id z3mr13487207lft.487.1620066603979;
- Mon, 03 May 2021 11:30:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210502193216.24872-1-brgl@bgdev.pl> <CAHk-=whSWp3exv8tZ2th5im_P7HF=c6iuOOVb9iSrNrd6405WA@mail.gmail.com>
- <YJBA1iYK7npit9vn@zeniv-ca.linux.org.uk>
-In-Reply-To: <YJBA1iYK7npit9vn@zeniv-ca.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 3 May 2021 11:29:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wis-uAQcSsu+OELg3atsdFvMNVjzjvg4X3U1z=MeaA8Yw@mail.gmail.com>
-Message-ID: <CAHk-=wis-uAQcSsu+OELg3atsdFvMNVjzjvg4X3U1z=MeaA8Yw@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.13
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aia+4VUMLHBzhQRL5fgqbL1YLrL8gOZPDsCa5uOnqc0=;
+        b=hTN272mQ0/2AskUNhlksHKeOiPrcnQ0bzimTJcI+EPFogb0HdvgEcKzgTK2CUFGCYx
+         i0SX0khoG9mNbjsCUrO3K1/IR8MSIMIK9igG8Q7s1dVbQK/FlnrMuzoj4CEgk3HVz11Z
+         PTok+qx3bq9beS0HLioRtyAavOlIj/3dBacRi547qvxjs8P2fcyKHidVLoy5H6pgmFZ9
+         FIseLLxU3phLw6u9DG6E5Xf43J/Fzlf3HdNlu5hWLsDuEIM30HxksRXhrgwOpinjCu6K
+         PFKc9ecff/+LyoLjjj8QYj2O0Oj+Q0g8Z7CU/fqA7gIgFn0FT3w9oVkSUcb/tzAMHxGk
+         M2jA==
+X-Gm-Message-State: AOAM532Ev+p+RvnNHI94eMAi4ELnG95jRu4EPjYQFpH3vH7jeyrGSZOt
+        ThdgDyT33Ct4vBv4bdaCgQNh4A9SjA==
+X-Google-Smtp-Source: ABdhPJyAJfaKyrbIHXdP4+C8h+0LFr3i9ZUvTi1nUCD1zHPUDUziKewEYnclJLXl8kE+lZu5xTwuZA==
+X-Received: by 2002:a9d:1b4d:: with SMTP id l71mr16211817otl.241.1620070314104;
+        Mon, 03 May 2021 12:31:54 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x141sm174033oif.13.2021.05.03.12.31.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 May 2021 12:31:53 -0700 (PDT)
+Received: (nullmailer pid 2247620 invoked by uid 1000);
+        Mon, 03 May 2021 19:31:52 -0000
+Date:   Mon, 3 May 2021 14:31:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: spmi-mpp: Add compatible for pmi8994
+Message-ID: <20210503193152.GA2247516@robh.at.kernel.org>
+References: <20210429003751.224232-1-bjorn.andersson@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210429003751.224232-1-bjorn.andersson@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 3, 2021 at 11:28 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> Give me a few hours; configfs is playing silly buggers with a lot of
-> structures when creating/tearing down subtrees, and I'd actually
-> expect more trouble with configfs data structures than with VFS ones.
->
-> I'll take a look.
+On Wed, 28 Apr 2021 17:37:51 -0700, Bjorn Andersson wrote:
+> The PMI8994 has 4 multi-purpose-pins, add a compatible for this hardware
+> block to the MPP driver.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> PS. I see that while the related gpio driver was converted to hierarchical IRQ
+> chips the mpp driver didn't get the same treatment. We should fix this at some
+> point...
+> 
+>  Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt | 1 +
+>  drivers/pinctrl/qcom/pinctrl-spmi-mpp.c                     | 1 +
+>  2 files changed, 2 insertions(+)
+> 
 
-Thanks, appreciated,
-
-              Linus
+Acked-by: Rob Herring <robh@kernel.org>
