@@ -2,97 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F3A6371672
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 May 2021 16:12:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E31D371881
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 May 2021 17:53:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234208AbhECONg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 May 2021 10:13:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45500 "EHLO
+        id S230525AbhECPyf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 May 2021 11:54:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234157AbhECONd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 May 2021 10:13:33 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9BFC06174A
-        for <linux-gpio@vger.kernel.org>; Mon,  3 May 2021 07:12:39 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id h20so2886016plr.4
-        for <linux-gpio@vger.kernel.org>; Mon, 03 May 2021 07:12:39 -0700 (PDT)
+        with ESMTP id S230470AbhECPyf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 May 2021 11:54:35 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A079AC061761
+        for <linux-gpio@vger.kernel.org>; Mon,  3 May 2021 08:53:41 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id i24so6831198edy.8
+        for <linux-gpio@vger.kernel.org>; Mon, 03 May 2021 08:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=M2gyDkn118E7K6GOWCXQpDffZmJF+ep7Ld2ShsWZQHo=;
-        b=URcZhgqz0N5hkyRRjnWjFyBRcp8ubopw/R/eD+m+oAZOg33Vbmsq9FxEcQxFY08BQQ
-         ft06QXATqnTO6vNvMJeDKA/bE44D/97fqq1Eki7KzepiooPQ4aM/lOw+L1eG/+AsFYZ5
-         S43UjziQbCurNJNvVSGc4ZBvPch6zfBWePgYMoRWKN5kiwsHd817OUMzJC3c+bcY9dWb
-         Ng0THzoghXH4NVI4akOEyf7pnUHAjDmqQIXcOHnpZjxquiAozSk11Fi5hgECpBNIlmE8
-         5f6QtBCIgKPmdxKmYwUgZa3DMhcVOtXKxi+Y10X2xHjtaxQdkYFPebeRmbu8mjCecXXs
-         2lmg==
+        bh=LYI/2ah7JvMucDSue7SPKjYm0sw5/1few+c9gAtWPDo=;
+        b=Jfl41ILUGA3qDyj+Gpt2YVFBF1d0fIKWUoKVxWvDKYCa1yxUV1P3vTFqczSFBdJqHY
+         NBUGuqwSV6Ms8BftAABAXVdmqEDU0KSsK2XDjLG3HazyiVQrvmb5Wmy4uF6JEDHXdTWQ
+         ZLUvNJTcg16RddN2DshMvJ4P8fGk5eFao26rc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M2gyDkn118E7K6GOWCXQpDffZmJF+ep7Ld2ShsWZQHo=;
-        b=AJcKnD4H8+B2qg4piuEr3CxgVd1HSKSvbn2Th4TUMHD36bInw7wAfPMNJbTdO6aCPA
-         dKuH1jcUAz6rBsar6NQERAnyFvouLcgy59+k1MLvYfzNZqVgIBqkJGidLwGp55iOy+DS
-         zMAC9SAoqNqNUOBgLA2eUgd1QhwmIxntJU0mbFrLVjSj2tVJ/B9arG+m40QEjnZaQhcJ
-         cC5GpTCqgKDek60kUuXwMPFLhQoX73wLqfZYmPuVeuxPvoVpWmUR/8xf969/tt/dBFts
-         6WTxCbF+udZtvzGoPE6phvJtKftaJC+Cz1yGBPWzO94kXYrNI+AVwFFnFAPFQUH21E8G
-         kJig==
-X-Gm-Message-State: AOAM530/newSRFG1WGAbsphtuFN+1OfUQfqU0RkMs8BBLcVSTIx2+w6m
-        VWBKnGmNjQSyDZXy0XCAXxi/sxlAhTrfqswJ6omWymDfezU=
-X-Google-Smtp-Source: ABdhPJwY5z0p+DT5YQTwYu+dbREqGkeY/BHDnt4JUnhx0qi08ZsJi+KmK9PADeeh6yhx7QDCZK80wVZQG8FA/Ilyf3I=
-X-Received: by 2002:a17:90a:246:: with SMTP id t6mr6450706pje.228.1620051159487;
- Mon, 03 May 2021 07:12:39 -0700 (PDT)
+        bh=LYI/2ah7JvMucDSue7SPKjYm0sw5/1few+c9gAtWPDo=;
+        b=L8BmRZ/EjIdLTWNIC/ZSagEoqjIFHhlDK1VnFQxlWJoGgrSYUcB58ew+J/YoiDLR5P
+         jC/3RO/jeAJp9+LTrF/nDzKVFXLiqobrftvrHqjD8r+i8nUhhoMLDosE+VkAQlKhloNr
+         p6JLpEbC7a0jm4y8eBiE8xdjEpscQUP7nMrWVjpvquLeq4caqeozup6XV6dVqPR1habS
+         8XGfuQXRe1SvYLb2C2z+NDUvCNzepg9aZix2e/bxa5oT4ixnKvbmFuOwplQSQI8M33vC
+         PZeneaO0rxKt3AocSCtbeNxZ+sUS15ALZ3Hm60Omt6imw1/Z3Pu898QRkjGGAs6tqLB8
+         wOfA==
+X-Gm-Message-State: AOAM532PgoCmEH01qmiPW26jObI2iGICbdr7tJADoxOX/40zAIRJ/xNj
+        QHuTuSf0QuMswUhPRIaS85/4+uVFkSdjBA==
+X-Google-Smtp-Source: ABdhPJzunc2Z5B2KuHHcTVVmf6E2V4Xpz+ABl9/0tybCk7Nmt4sAWu7TwywyROP30IfDdMUjkP4sWg==
+X-Received: by 2002:aa7:d843:: with SMTP id f3mr11288337eds.270.1620057219697;
+        Mon, 03 May 2021 08:53:39 -0700 (PDT)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id g22sm50070ejz.46.2021.05.03.08.53.38
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 May 2021 08:53:38 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id i24so6831021edy.8
+        for <linux-gpio@vger.kernel.org>; Mon, 03 May 2021 08:53:38 -0700 (PDT)
+X-Received: by 2002:aa7:c7cc:: with SMTP id o12mr20986933eds.291.1620057217782;
+ Mon, 03 May 2021 08:53:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHp75VcV+a1hLyZZH95is187OOZg1oDO9pk=+1xcUJ3Tj9gmrQ@mail.gmail.com>
- <CACRpkdaZ1-y8bvcTBmHcKqYcx3N+ULrW6t-+7SCnwgswWpYoYg@mail.gmail.com>
-In-Reply-To: <CACRpkdaZ1-y8bvcTBmHcKqYcx3N+ULrW6t-+7SCnwgswWpYoYg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 May 2021 17:12:23 +0300
-Message-ID: <CAHp75Vei4qQ8wxSEk0Z0yqmCX0Ff8uiNt018UvPED9+je7TXZg@mail.gmail.com>
-Subject: Re: gpio_chip::ngpio vs. gpio_dev::ngpio
-To:     Linus Walleij <linus.walleij@linaro.org>
+References: <20210429163341.1.I7631534622233689dd81410525e0dd617b9b2012@changeid>
+ <CAHp75Vfvknn6O2cc4XYUuo4U_C1nguMHjJPxmRQapf8h0QjGFw@mail.gmail.com>
+In-Reply-To: <CAHp75Vfvknn6O2cc4XYUuo4U_C1nguMHjJPxmRQapf8h0QjGFw@mail.gmail.com>
+From:   Raul Rangel <rrangel@chromium.org>
+Date:   Mon, 3 May 2021 09:53:26 -0600
+X-Gmail-Original-Message-ID: <CAHQZ30B7-0EJst0h26JzRKb15n+RKnv=FSpkngLTAcU4UChDjg@mail.gmail.com>
+Message-ID: <CAHQZ30B7-0EJst0h26JzRKb15n+RKnv=FSpkngLTAcU4UChDjg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: amd: Implement irq_set_wake
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        kramasub@chromium.org, Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 3, 2021 at 5:03 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, May 3, 2021 at 3:20 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On Fri, Apr 30, 2021 at 3:22 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> > Any shed of light what the difference is (between gpio_chip::ngpio and
-> > gpio_dev::ngpio)?
+> On Fri, Apr 30, 2021 at 1:34 AM Raul E Rangel <rrangel@chromium.org> wrote:
+> >
+> > This allows the OS to control which devices produce wake events.
+> >
+> > $ grep enabled /sys/kernel/irq/*/wakeup
+> > /sys/kernel/irq/24/wakeup:enabled
 >
-> The one in gpio_dev::ngpio is used when referring to that struct
-> so it could be renamed ndesc to clarify the usecase.
-
-It would be nice to have it renamed and better described in the kernel doc.
-Esp. taking into account the lifetime of each of them.
-
-(Sounds like a new item to somebody's, yours?, TODO list, after
-cleaning that gpio_is_valid() thingy :-)
-
-> The gpiochip ngpio i.e. gdev->chip->ngpio cannot be used, because
-> sometimes the gpio_chip goes away but not the gpio_dev.
+> Is it a bug fix of [1]?
 >
-> A typical case when this happens is when a gpio_chip and
-> corresponding gpio_dev is created by plugging in a USB-based
-> gpio device such as FTDI. Then the user start some gpio-event-mon
-> or gpio-hammer on that gpio_dev, flickering a LED or something.
->
-> If the user unplugs the USB device, the gpio_chip will disappear
-> and get "numbed" so that no operations reach the hardware, but
-> the userspace program will not end or crash.
->
-> When the user finals terminates the program with e.g. ctrl+C
-> the character device is closed and gpio_dev goes away and
-> for that the ngpio field is needed.
+> If so, add a BugLink: tag here.
 
-Thanks! It all makes sense to me.
+No bug, just implementing a missing feature. This allows the use of
+the ACPI _AEI object.
+>
+> > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+>
+> [1]:
+>
+> ...
+>
+> irq_hw_number_t hw = irqd_to_hwirq(d);
+>
+> > +       pin_reg = readl(gpio_dev->base + (d->hwirq)*4);
+>
+> > +       writel(pin_reg, gpio_dev->base + (d->hwirq)*4);
+>
+> Too many parentheses and missed spaces
 
--- 
-With Best Regards,
-Andy Shevchenko
+I copy/pasted the exact format used in all the other functions:
+amd_gpio_irq_{enable,disable,mask,unmask}. I can send a CL to reformat
+everything if you want. Or I can just change this specific function.
+Let me know.
+
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+Thanks for the review!
