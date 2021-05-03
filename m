@@ -2,55 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39AB1371661
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 May 2021 16:03:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F3A6371672
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 May 2021 16:12:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233923AbhECOEm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 May 2021 10:04:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43506 "EHLO
+        id S234208AbhECONg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 May 2021 10:13:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233989AbhECOE3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 May 2021 10:04:29 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44BC1C06138D
-        for <linux-gpio@vger.kernel.org>; Mon,  3 May 2021 07:03:34 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 124so8227334lff.5
-        for <linux-gpio@vger.kernel.org>; Mon, 03 May 2021 07:03:34 -0700 (PDT)
+        with ESMTP id S234157AbhECONd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 May 2021 10:13:33 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9BFC06174A
+        for <linux-gpio@vger.kernel.org>; Mon,  3 May 2021 07:12:39 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id h20so2886016plr.4
+        for <linux-gpio@vger.kernel.org>; Mon, 03 May 2021 07:12:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Xiwm3JcV02oNR9lHvZnffdlsD5wFpSBR++IXOiysPv8=;
-        b=uT63KtOa/kgZ4tnhQt5Hr9qkRmPrD32jF1zSlgDXmodo9anJAK7UzlcotJV4Uzx0ew
-         tgqqxbWhlxC5zi1AQr+pJPX9t9T0J/hEnXF6S8OjiE2mGZ4QqrtP5Xv+fdXysqbXidwY
-         0VEkk5xm461MmsEaPvukZiPH87hhTleMnPajXQLVTBp3id65AyvrhwZyheTQE0CFK9kP
-         bpnaPUyZcRhQqAdlfEHpuqmzvBV1Ng0CPwj8wcZBw+jhkpHtkY1ajzmHGb7s8lNllzOa
-         t9wBnkZtyDunqPSiYBD0k/YNeks7+uLay+EUrei+5Q8ZH10d65SKlTywqg1n3GP0pBhG
-         zkTA==
+        bh=M2gyDkn118E7K6GOWCXQpDffZmJF+ep7Ld2ShsWZQHo=;
+        b=URcZhgqz0N5hkyRRjnWjFyBRcp8ubopw/R/eD+m+oAZOg33Vbmsq9FxEcQxFY08BQQ
+         ft06QXATqnTO6vNvMJeDKA/bE44D/97fqq1Eki7KzepiooPQ4aM/lOw+L1eG/+AsFYZ5
+         S43UjziQbCurNJNvVSGc4ZBvPch6zfBWePgYMoRWKN5kiwsHd817OUMzJC3c+bcY9dWb
+         Ng0THzoghXH4NVI4akOEyf7pnUHAjDmqQIXcOHnpZjxquiAozSk11Fi5hgECpBNIlmE8
+         5f6QtBCIgKPmdxKmYwUgZa3DMhcVOtXKxi+Y10X2xHjtaxQdkYFPebeRmbu8mjCecXXs
+         2lmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Xiwm3JcV02oNR9lHvZnffdlsD5wFpSBR++IXOiysPv8=;
-        b=NGv4l0zRFNiFYiVdKhQ+clcYcTwgDQkeFdBf1W7u+rzVso6cd0xbFF5oKFSd9aa30t
-         ziegNXbwdOS0QRxriEQ393sHXPFKisDynSSNTAWpt4YF+bqBu7tdZfhTwFTgb00Hr7pV
-         JnlMacxUxkTI8AWFNAfA9OO/S7B300Gsc97AHKA8OodrG7dmBAGvPZPBkZNy/1ngejPW
-         naOr2Za5LPBa2qzGRQNucKGuJFiJgZ5SDC1MVXIIQncnO0d7poWQr3a/l68m/6C9D1O6
-         2F9IZFr8x/YkBUvvgGkUr0NIfGC1DWHaNoeNoZp/tU47vOUGWoJiEohk64VA+Cxqpx91
-         BF1w==
-X-Gm-Message-State: AOAM533sW7Z2MFX3hOanSMu8U81Rp4Um3wBh+6zHGF2dQgViHDsJjtRe
-        8OqTBzrZKhQ9VitIihkqiiiiW9EGYiBKuvxWBrXF0w==
-X-Google-Smtp-Source: ABdhPJxSQW7I3x8iH4I3+QuAAa5ApVILorvaymuJj7SEuC65bzWJ2o7hpukPDkbD5IrsX00cCJAGZJdDFQi2RW5HDcc=
-X-Received: by 2002:a19:b0b:: with SMTP id 11mr13068039lfl.291.1620050613478;
- Mon, 03 May 2021 07:03:33 -0700 (PDT)
+        bh=M2gyDkn118E7K6GOWCXQpDffZmJF+ep7Ld2ShsWZQHo=;
+        b=AJcKnD4H8+B2qg4piuEr3CxgVd1HSKSvbn2Th4TUMHD36bInw7wAfPMNJbTdO6aCPA
+         dKuH1jcUAz6rBsar6NQERAnyFvouLcgy59+k1MLvYfzNZqVgIBqkJGidLwGp55iOy+DS
+         zMAC9SAoqNqNUOBgLA2eUgd1QhwmIxntJU0mbFrLVjSj2tVJ/B9arG+m40QEjnZaQhcJ
+         cC5GpTCqgKDek60kUuXwMPFLhQoX73wLqfZYmPuVeuxPvoVpWmUR/8xf969/tt/dBFts
+         6WTxCbF+udZtvzGoPE6phvJtKftaJC+Cz1yGBPWzO94kXYrNI+AVwFFnFAPFQUH21E8G
+         kJig==
+X-Gm-Message-State: AOAM530/newSRFG1WGAbsphtuFN+1OfUQfqU0RkMs8BBLcVSTIx2+w6m
+        VWBKnGmNjQSyDZXy0XCAXxi/sxlAhTrfqswJ6omWymDfezU=
+X-Google-Smtp-Source: ABdhPJwY5z0p+DT5YQTwYu+dbREqGkeY/BHDnt4JUnhx0qi08ZsJi+KmK9PADeeh6yhx7QDCZK80wVZQG8FA/Ilyf3I=
+X-Received: by 2002:a17:90a:246:: with SMTP id t6mr6450706pje.228.1620051159487;
+ Mon, 03 May 2021 07:12:39 -0700 (PDT)
 MIME-Version: 1.0
 References: <CAHp75VcV+a1hLyZZH95is187OOZg1oDO9pk=+1xcUJ3Tj9gmrQ@mail.gmail.com>
-In-Reply-To: <CAHp75VcV+a1hLyZZH95is187OOZg1oDO9pk=+1xcUJ3Tj9gmrQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 3 May 2021 16:03:22 +0200
-Message-ID: <CACRpkdaZ1-y8bvcTBmHcKqYcx3N+ULrW6t-+7SCnwgswWpYoYg@mail.gmail.com>
+ <CACRpkdaZ1-y8bvcTBmHcKqYcx3N+ULrW6t-+7SCnwgswWpYoYg@mail.gmail.com>
+In-Reply-To: <CACRpkdaZ1-y8bvcTBmHcKqYcx3N+ULrW6t-+7SCnwgswWpYoYg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 3 May 2021 17:12:23 +0300
+Message-ID: <CAHp75Vei4qQ8wxSEk0Z0yqmCX0Ff8uiNt018UvPED9+je7TXZg@mail.gmail.com>
 Subject: Re: gpio_chip::ngpio vs. gpio_dev::ngpio
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -58,30 +59,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 3, 2021 at 3:20 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Mon, May 3, 2021 at 5:03 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, May 3, 2021 at 3:20 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>
+> > Any shed of light what the difference is (between gpio_chip::ngpio and
+> > gpio_dev::ngpio)?
+>
+> The one in gpio_dev::ngpio is used when referring to that struct
+> so it could be renamed ndesc to clarify the usecase.
 
-> Any shed of light what the difference is (between gpio_chip::ngpio and
-> gpio_dev::ngpio)?
+It would be nice to have it renamed and better described in the kernel doc.
+Esp. taking into account the lifetime of each of them.
 
-The one in gpio_dev::ngpio is used when referring to that struct
-so it could be renamed ndesc to clarify the usecase.
+(Sounds like a new item to somebody's, yours?, TODO list, after
+cleaning that gpio_is_valid() thingy :-)
 
-The gpiochip ngpio i.e. gdev->chip->ngpio cannot be used, because
-sometimes the gpio_chip goes away but not the gpio_dev.
+> The gpiochip ngpio i.e. gdev->chip->ngpio cannot be used, because
+> sometimes the gpio_chip goes away but not the gpio_dev.
+>
+> A typical case when this happens is when a gpio_chip and
+> corresponding gpio_dev is created by plugging in a USB-based
+> gpio device such as FTDI. Then the user start some gpio-event-mon
+> or gpio-hammer on that gpio_dev, flickering a LED or something.
+>
+> If the user unplugs the USB device, the gpio_chip will disappear
+> and get "numbed" so that no operations reach the hardware, but
+> the userspace program will not end or crash.
+>
+> When the user finals terminates the program with e.g. ctrl+C
+> the character device is closed and gpio_dev goes away and
+> for that the ngpio field is needed.
 
-A typical case when this happens is when a gpio_chip and
-corresponding gpio_dev is created by plugging in a USB-based
-gpio device such as FTDI. Then the user start some gpio-event-mon
-or gpio-hammer on that gpio_dev, flickering a LED or something.
+Thanks! It all makes sense to me.
 
-If the user unplugs the USB device, the gpio_chip will disappear
-and get "numbed" so that no operations reach the hardware, but
-the userspace program will not end or crash.
-
-When the user finals terminates the program with e.g. ctrl+C
-the character device is closed and gpio_dev goes away and
-for that the ngpio field is needed.
-
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
