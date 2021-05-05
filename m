@@ -2,122 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFF0D37472D
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 19:53:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 196DD3749AB
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 22:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234247AbhEERuL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 May 2021 13:50:11 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:37716 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234638AbhEERsY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 May 2021 13:48:24 -0400
-Received: from localhost.localdomain (133-32-232-101.west.xps.vectant.ne.jp [133.32.232.101]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 145HjRDo032362;
-        Thu, 6 May 2021 02:45:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 145HjRDo032362
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1620236728;
-        bh=ZwtjVnWqo8TSSCO4VBrdF2kvET+waOjAzWk0GOoIa3U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PY+gVRPOuxsBtXAAbnAinwvlMA5ksgejiITtbcGRcTKhbmO+Z35c+X1zArMi1MxvI
-         QcUUOMbuFVxkHnZSVPU/vRIff9Gy+RJq2aZUZKDismP4tNMROFiG12UVywcDkHlkAE
-         Zy1vxqPVXyUvoRvHpVQL7Lo3yKf3jPxiLyq924aIsHVAEB5yH7A7mMieG0gZxA4zMf
-         mrg9PGe1kPi84IME7JHc9RwpfeFTYrOMconrBYDHSbRxg8xQV9cilBV+I0L/xmpgOP
-         zItdvCjFmKdhpKT5dF1l0RFqsolCId+AGwzvoihp71dlZ91LeTH+bCMIWMVEOt+RXm
-         6Y2+VpLwb2Lfw==
-X-Nifty-SrcIP: [133.32.232.101]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        id S230042AbhEEUuT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 May 2021 16:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229993AbhEEUuP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 5 May 2021 16:50:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 87BEE613E3;
+        Wed,  5 May 2021 20:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620247758;
+        bh=aShAKlU8qUUb7iVky2gEcSGE9fi34vy0ZF5uwES9/0I=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=ZR6/ZT3GQkoc+QnJAoYHVkqDmw/37H14Xs1qt4gYe3oOpDSZBjnWAPmIg7KKoHn/i
+         X64bwhVw1YeTdDw5dyW8zDWU5kwKktl9D4vE2EwKQ77BajmX1jf/GDW5Rk7qIVuHn8
+         mnUqgI6CjL8uJO58mWsruAXDdxCVgs62IARGIQJqV8RumHoZj0Jn5hj7694cJB1WOP
+         mahfaGFxH+G4FU6LaDjSeLeBl1ofuuUOJK6d1NLE/93f6T2zZhy6/4R59K+Bw2ZR1a
+         hGFpKnyPenyZ5doZiUAPCu5rsVZaW3kCnLQOatewjZ50gFo7eL/JZbbRptlmGAeR+/
+         8Ayi9p4g7xMuQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 82207609E8;
+        Wed,  5 May 2021 20:49:18 +0000 (UTC)
+Subject: Re: [GIT PULL v2] gpio: updates for v5.13
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210505141358.6065-1-brgl@bgdev.pl>
+References: <20210505141358.6065-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210505141358.6065-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-updates-for-v5.13-v2
+X-PR-Tracked-Commit-Id: 444952956f34a5de935159561d56a34276ffffd6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5d6a1b84e07607bc282ed2ed8e2f128c73697d5c
+Message-Id: <162024775852.12235.13061174933319420795.pr-tracker-bot@kernel.org>
+Date:   Wed, 05 May 2021 20:49:18 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        Kars Mulder <kerneldev@karsmulder.nl>,
-        Kees Cook <keescook@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, chao <chao@eero.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH v2] linux/kconfig.h: replace IF_ENABLED() with PTR_IF() in <linux/kernel.h>
-Date:   Thu,  6 May 2021 02:45:15 +0900
-Message-Id: <20210505174515.87565-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Al Viro <viro@zeniv.linux.org.uk>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-<linux/kconfig.h> is included from all the kernel-space source files,
-including C, assembly, linker scripts. It is intended to contain a
-minimal set of macros to evaluate CONFIG options.
+The pull request you sent on Wed,  5 May 2021 16:13:58 +0200:
 
-IF_ENABLED() is an intruder here because (x ? y : z) is C code, which
-should not be included from assembly files or linker scripts.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-updates-for-v5.13-v2
 
-Also, <linux/kconfig.h> is no longer self-contained because NULL is
-defined in <linux/stddef.h>.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5d6a1b84e07607bc282ed2ed8e2f128c73697d5c
 
-Move IF_ENABLED() out to <linux/kernel.h> as PTR_IF(). PTF_IF()
-takes the general boolean expression instead of a CONFIG option
-so that it fits better in <linux/kernel.h>.
+Thank you!
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
-Changes in v2:
-  - Keep PTF_IF macro in pinctrl-ingenic.c
-
- drivers/pinctrl/pinctrl-ingenic.c | 2 ++
- include/linux/kconfig.h           | 6 ------
- include/linux/kernel.h            | 2 ++
- 3 files changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 651a36b9dcc0..0ee69f8e20b2 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -3854,6 +3854,8 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#define IF_ENABLED(cfg, ptr)	PTR_IF(IS_ENABLED(cfg), (ptr))
-+
- static const struct of_device_id ingenic_pinctrl_of_match[] = {
- 	{
- 		.compatible = "ingenic,jz4730-pinctrl",
-diff --git a/include/linux/kconfig.h b/include/linux/kconfig.h
-index 24a59cb06963..cc8fa109cfa3 100644
---- a/include/linux/kconfig.h
-+++ b/include/linux/kconfig.h
-@@ -70,10 +70,4 @@
-  */
- #define IS_ENABLED(option) __or(IS_BUILTIN(option), IS_MODULE(option))
- 
--/*
-- * IF_ENABLED(CONFIG_FOO, ptr) evaluates to (ptr) if CONFIG_FOO is set to 'y'
-- * or 'm', NULL otherwise.
-- */
--#define IF_ENABLED(option, ptr) (IS_ENABLED(option) ? (ptr) : NULL)
--
- #endif /* __LINUX_KCONFIG_H */
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 5b7ed6dc99ac..8685ca4cf287 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -38,6 +38,8 @@
- #define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned long)(p), (a)))
- #define IS_ALIGNED(x, a)		(((x) & ((typeof(x))(a) - 1)) == 0)
- 
-+#define PTR_IF(cond, ptr)	((cond) ? (ptr) : NULL)
-+
- /* generic data direction definitions */
- #define READ			0
- #define WRITE			1
 -- 
-2.27.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
