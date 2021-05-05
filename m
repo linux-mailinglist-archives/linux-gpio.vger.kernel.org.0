@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96DC9374448
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 19:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E8DA374626
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 19:51:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236626AbhEEQ4D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 May 2021 12:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59044 "EHLO mail.kernel.org"
+        id S237240AbhEERMZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 May 2021 13:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234790AbhEEQvD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 5 May 2021 12:51:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0B11A61966;
-        Wed,  5 May 2021 16:37:44 +0000 (UTC)
+        id S237121AbhEEQ5U (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 5 May 2021 12:57:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BF90D619A5;
+        Wed,  5 May 2021 16:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620232666;
-        bh=bXR9zrYF/jS7VUoMPXUgazrfG/zyt/AibQaEBDojonw=;
+        s=k20201202; t=1620232765;
+        bh=diepQ4xIh+5/x+btqUtYJL380QapuwxQy0qfdc/3hc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QdRK/XSPmnhU0j+bMEbAai8fsx5sqIrHcOBv9LxcBXJLrZAfw0lSuLwnUZ0130G5V
-         LIkeCm1UnKt09/3C7uTyQXSKCgQbr9L0Diyl+1+6hOkAwNOX/ZApnNfzuOAgCdNsjE
-         BimVwOJhmwSrXn7ka4zxMydDg5X211JosNaGX6QhT82Ezm6fbZ/+StLAbL/tLp3lVd
-         QazXihuAJHxaJlOdcZGNWrImRqBoqQJBMjly5V3lj0LBxN8fg+8HkYprWfq2p++hz/
-         ZIIHUvL7EtAqqiFUbcSAGCNP8fj0b9y+fS7PkrwpqUMh5BiZFcegzxiUgSv36jkmxZ
-         Pjmz8ykUFPNdQ==
+        b=IvT7X6Icxk+LTDQvWtHp1Wl091VmhEM9JGzNTN0golsrJTEr/GZCG6RHVx8SnkR+4
+         6UFoxSN8qgvnGBHEjY+qkgIRNNMKfhcnM1mmi86oX1fRjqEMH5jFZCDBIwRQs+sa/3
+         nUn9depesSkEswprwpZZYYVSJzNZPdqxSt4eJvR8i+WB5uYKbMciE+vEbI8JC7RWgi
+         yO3UTDK0TxIfFnGlIgsmamqiWolgkECqDopIwRifN3W4IX5ZkZ2Sl+jTLxd+DM4pJu
+         CyDMgFEkcNjkXP1ph1rdVhwMbBMuaqKDazrN/TwEy411C8BJfBbLuEfnaxLfba7yfb
+         hIwjAJjUo3sIg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
@@ -31,12 +31,12 @@ Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 39/85] pinctrl: samsung: use 'int' for register masks in Exynos
-Date:   Wed,  5 May 2021 12:36:02 -0400
-Message-Id: <20210505163648.3462507-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 20/46] pinctrl: samsung: use 'int' for register masks in Exynos
+Date:   Wed,  5 May 2021 12:38:30 -0400
+Message-Id: <20210505163856.3463279-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210505163648.3462507-1-sashal@kernel.org>
-References: <20210505163648.3462507-1-sashal@kernel.org>
+In-Reply-To: <20210505163856.3463279-1-sashal@kernel.org>
+References: <20210505163856.3463279-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,7 +68,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index b9ea09fabf84..493079a47d05 100644
+index 84501c785473..1cf31fe2674d 100644
 --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
 +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
 @@ -55,7 +55,7 @@ static void exynos_irq_mask(struct irq_data *irqd)
@@ -89,7 +89,7 @@ index b9ea09fabf84..493079a47d05 100644
  	unsigned long flags;
  
  	/*
-@@ -483,7 +483,7 @@ static void exynos_irq_eint0_15(struct irq_desc *desc)
+@@ -474,7 +474,7 @@ static void exynos_irq_eint0_15(struct irq_desc *desc)
  	chained_irq_exit(chip, desc);
  }
  
@@ -98,7 +98,7 @@ index b9ea09fabf84..493079a47d05 100644
  						struct irq_domain *domain)
  {
  	unsigned int irq;
-@@ -500,8 +500,8 @@ static void exynos_irq_demux_eint16_31(struct irq_desc *desc)
+@@ -491,8 +491,8 @@ static void exynos_irq_demux_eint16_31(struct irq_desc *desc)
  {
  	struct irq_chip *chip = irq_desc_get_chip(desc);
  	struct exynos_muxed_weint_data *eintd = irq_desc_get_handler_data(desc);
