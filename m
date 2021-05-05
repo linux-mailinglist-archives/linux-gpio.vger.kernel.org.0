@@ -2,113 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75C6137462F
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 19:51:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFF0D37472D
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 19:53:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237304AbhEERMr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 May 2021 13:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237078AbhEERBp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 5 May 2021 13:01:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D45CC61613;
-        Wed,  5 May 2021 16:41:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620232872;
-        bh=6Y5i4m5xCXTHXcjcTm1/tQMuYDcrC7o+ggBgjbU9qFg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkYwLMkSrCINW6bmUb3KsmZDr9Ei4FMDkgdgF19292O5lSKthH9ag8tlgECvj4AT/
-         DVtQ+CpDbgjaRhH4ephUrv3zZE/s+JvtG/AU5OocVEB+NbdfEgauzCoQfhm/AvYrD5
-         BXSS8qR3Qsdxnxv7InLgV7Gv6dNTd/PI73OhocSYfV+0EwpoMH+Lo0KRYixNW2cIY/
-         cqfWWsIGZzBP4YLiTpgqqbcm1p3JLiWi/MKJWb1KFqoCugzAHIv24s9XhCUSSnp12S
-         Z+dCCkO4ViZ+L0RsLqsnU5auL30v3seLLhbwd6MiKlJz6c5eNlA5ufoLWgPu8uFqsI
-         lnDMWgKoQNgKQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        id S234247AbhEERuL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 May 2021 13:50:11 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:37716 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234638AbhEERsY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 May 2021 13:48:24 -0400
+Received: from localhost.localdomain (133-32-232-101.west.xps.vectant.ne.jp [133.32.232.101]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 145HjRDo032362;
+        Thu, 6 May 2021 02:45:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 145HjRDo032362
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1620236728;
+        bh=ZwtjVnWqo8TSSCO4VBrdF2kvET+waOjAzWk0GOoIa3U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PY+gVRPOuxsBtXAAbnAinwvlMA5ksgejiITtbcGRcTKhbmO+Z35c+X1zArMi1MxvI
+         QcUUOMbuFVxkHnZSVPU/vRIff9Gy+RJq2aZUZKDismP4tNMROFiG12UVywcDkHlkAE
+         Zy1vxqPVXyUvoRvHpVQL7Lo3yKf3jPxiLyq924aIsHVAEB5yH7A7mMieG0gZxA4zMf
+         mrg9PGe1kPi84IME7JHc9RwpfeFTYrOMconrBYDHSbRxg8xQV9cilBV+I0L/xmpgOP
+         zItdvCjFmKdhpKT5dF1l0RFqsolCId+AGwzvoihp71dlZ91LeTH+bCMIWMVEOt+RXm
+         6Y2+VpLwb2Lfw==
+X-Nifty-SrcIP: [133.32.232.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Kars Mulder <kerneldev@karsmulder.nl>,
+        Kees Cook <keescook@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/25] pinctrl: samsung: use 'int' for register masks in Exynos
-Date:   Wed,  5 May 2021 12:40:39 -0400
-Message-Id: <20210505164051.3464020-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210505164051.3464020-1-sashal@kernel.org>
-References: <20210505164051.3464020-1-sashal@kernel.org>
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, chao <chao@eero.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH v2] linux/kconfig.h: replace IF_ENABLED() with PTR_IF() in <linux/kernel.h>
+Date:   Thu,  6 May 2021 02:45:15 +0900
+Message-Id: <20210505174515.87565-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+<linux/kconfig.h> is included from all the kernel-space source files,
+including C, assembly, linker scripts. It is intended to contain a
+minimal set of macros to evaluate CONFIG options.
 
-[ Upstream commit fa0c10a5f3a49130dd11281aa27e7e1c8654abc7 ]
+IF_ENABLED() is an intruder here because (x ? y : z) is C code, which
+should not be included from assembly files or linker scripts.
 
-The Special Function Registers on all Exynos SoC, including ARM64, are
-32-bit wide, so entire driver uses matching functions like readl() or
-writel().  On 64-bit ARM using unsigned long for register masks:
-1. makes little sense as immediately after bitwise operation it will be
-   cast to 32-bit value when calling writel(),
-2. is actually error-prone because it might promote other operands to
-   64-bit.
+Also, <linux/kconfig.h> is no longer self-contained because NULL is
+defined in <linux/stddef.h>.
 
-Addresses-Coverity: Unintentional integer overflow
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Link: https://lore.kernel.org/r/20210408195029.69974-1-krzysztof.kozlowski@canonical.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Move IF_ENABLED() out to <linux/kernel.h> as PTR_IF(). PTF_IF()
+takes the general boolean expression instead of a CONFIG option
+so that it fits better in <linux/kernel.h>.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- drivers/pinctrl/samsung/pinctrl-exynos.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index 6925a3d969e2..13d6a50ca96c 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -55,7 +55,7 @@ static void exynos_irq_mask(struct irq_data *irqd)
- 	struct exynos_irq_chip *our_chip = to_exynos_irq_chip(chip);
- 	struct samsung_pin_bank *bank = irq_data_get_irq_chip_data(irqd);
- 	unsigned long reg_mask = our_chip->eint_mask + bank->eint_offset;
--	unsigned long mask;
-+	unsigned int mask;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&bank->slock, flags);
-@@ -83,7 +83,7 @@ static void exynos_irq_unmask(struct irq_data *irqd)
- 	struct exynos_irq_chip *our_chip = to_exynos_irq_chip(chip);
- 	struct samsung_pin_bank *bank = irq_data_get_irq_chip_data(irqd);
- 	unsigned long reg_mask = our_chip->eint_mask + bank->eint_offset;
--	unsigned long mask;
-+	unsigned int mask;
- 	unsigned long flags;
- 
- 	/*
-@@ -409,7 +409,7 @@ static void exynos_irq_eint0_15(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
+Changes in v2:
+  - Keep PTF_IF macro in pinctrl-ingenic.c
+
+ drivers/pinctrl/pinctrl-ingenic.c | 2 ++
+ include/linux/kconfig.h           | 6 ------
+ include/linux/kernel.h            | 2 ++
+ 3 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 651a36b9dcc0..0ee69f8e20b2 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -3854,6 +3854,8 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
+ 	return 0;
  }
  
--static inline void exynos_irq_demux_eint(unsigned long pend,
-+static inline void exynos_irq_demux_eint(unsigned int pend,
- 						struct irq_domain *domain)
- {
- 	unsigned int irq;
-@@ -426,8 +426,8 @@ static void exynos_irq_demux_eint16_31(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct exynos_muxed_weint_data *eintd = irq_desc_get_handler_data(desc);
--	unsigned long pend;
--	unsigned long mask;
-+	unsigned int pend;
-+	unsigned int mask;
- 	int i;
++#define IF_ENABLED(cfg, ptr)	PTR_IF(IS_ENABLED(cfg), (ptr))
++
+ static const struct of_device_id ingenic_pinctrl_of_match[] = {
+ 	{
+ 		.compatible = "ingenic,jz4730-pinctrl",
+diff --git a/include/linux/kconfig.h b/include/linux/kconfig.h
+index 24a59cb06963..cc8fa109cfa3 100644
+--- a/include/linux/kconfig.h
++++ b/include/linux/kconfig.h
+@@ -70,10 +70,4 @@
+  */
+ #define IS_ENABLED(option) __or(IS_BUILTIN(option), IS_MODULE(option))
  
- 	chained_irq_enter(chip, desc);
+-/*
+- * IF_ENABLED(CONFIG_FOO, ptr) evaluates to (ptr) if CONFIG_FOO is set to 'y'
+- * or 'm', NULL otherwise.
+- */
+-#define IF_ENABLED(option, ptr) (IS_ENABLED(option) ? (ptr) : NULL)
+-
+ #endif /* __LINUX_KCONFIG_H */
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 5b7ed6dc99ac..8685ca4cf287 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -38,6 +38,8 @@
+ #define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned long)(p), (a)))
+ #define IS_ALIGNED(x, a)		(((x) & ((typeof(x))(a) - 1)) == 0)
+ 
++#define PTR_IF(cond, ptr)	((cond) ? (ptr) : NULL)
++
+ /* generic data direction definitions */
+ #define READ			0
+ #define WRITE			1
 -- 
-2.30.2
+2.27.0
 
