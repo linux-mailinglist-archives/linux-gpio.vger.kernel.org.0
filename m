@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3DAA37428F
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 18:47:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96DC9374448
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 19:47:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235710AbhEEQrJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 May 2021 12:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50342 "EHLO mail.kernel.org"
+        id S236626AbhEEQ4D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 May 2021 12:56:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235646AbhEEQoY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 5 May 2021 12:44:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 270696188B;
-        Wed,  5 May 2021 16:35:23 +0000 (UTC)
+        id S234790AbhEEQvD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 5 May 2021 12:51:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0B11A61966;
+        Wed,  5 May 2021 16:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620232524;
+        s=k20201202; t=1620232666;
         bh=bXR9zrYF/jS7VUoMPXUgazrfG/zyt/AibQaEBDojonw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZOnmyzjC7oLyKbRENMB1KnxYOVo8wHyQChPS9KkbPySfxNcjot0enARJkIZ+f8mU
-         SRYD2amaFr4oAwb7HjWU6nPuW4cY7v62l6/HccUbKIRMacD57vweDnamyiPajVUZ0P
-         NRX/vchW5CdVd6RsRqX0esPImowfvs9RJDro6YLag6O/rJtkyPukiNH870xIcvzI2X
-         e3f0gklFsdwK0BMrSn7GV+2Yvd2a5rHa5dTIge5uCpaM9dZTVEZJsYB5VLmOxodhwL
-         dR6VMq1RHAvR4LRjh3KdIUt20UAzYBcl9xOFzWmNuImq6jDNYf9JOdL1H8xePkap6o
-         jXCLylvkDyURw==
+        b=QdRK/XSPmnhU0j+bMEbAai8fsx5sqIrHcOBv9LxcBXJLrZAfw0lSuLwnUZ0130G5V
+         LIkeCm1UnKt09/3C7uTyQXSKCgQbr9L0Diyl+1+6hOkAwNOX/ZApnNfzuOAgCdNsjE
+         BimVwOJhmwSrXn7ka4zxMydDg5X211JosNaGX6QhT82Ezm6fbZ/+StLAbL/tLp3lVd
+         QazXihuAJHxaJlOdcZGNWrImRqBoqQJBMjly5V3lj0LBxN8fg+8HkYprWfq2p++hz/
+         ZIIHUvL7EtAqqiFUbcSAGCNP8fj0b9y+fS7PkrwpqUMh5BiZFcegzxiUgSv36jkmxZ
+         Pjmz8ykUFPNdQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
@@ -31,12 +31,12 @@ Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.11 049/104] pinctrl: samsung: use 'int' for register masks in Exynos
-Date:   Wed,  5 May 2021 12:33:18 -0400
-Message-Id: <20210505163413.3461611-49-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 39/85] pinctrl: samsung: use 'int' for register masks in Exynos
+Date:   Wed,  5 May 2021 12:36:02 -0400
+Message-Id: <20210505163648.3462507-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210505163413.3461611-1-sashal@kernel.org>
-References: <20210505163413.3461611-1-sashal@kernel.org>
+In-Reply-To: <20210505163648.3462507-1-sashal@kernel.org>
+References: <20210505163648.3462507-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
