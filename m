@@ -2,207 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15236373D68
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 16:14:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A1B3373D85
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 May 2021 16:20:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232262AbhEEOPG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 May 2021 10:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34758 "EHLO
+        id S231792AbhEEOVE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 May 2021 10:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231783AbhEEOPG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 May 2021 10:15:06 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B37C061574
-        for <linux-gpio@vger.kernel.org>; Wed,  5 May 2021 07:14:09 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id h4so2010306wrt.12
-        for <linux-gpio@vger.kernel.org>; Wed, 05 May 2021 07:14:09 -0700 (PDT)
+        with ESMTP id S232122AbhEEOVB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 May 2021 10:21:01 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DDF6C061574
+        for <linux-gpio@vger.kernel.org>; Wed,  5 May 2021 07:20:04 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id b25so3134383eju.5
+        for <linux-gpio@vger.kernel.org>; Wed, 05 May 2021 07:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/LGCdpREbfD/YWDwLyE6sY9IYpJiH6j7QDDmk3lJWP4=;
-        b=GF8D9UTF/OquU+sEsnG0z7NaYJthuGzMV88GlGqAut2nI4qKuXvJGQaO+g+G/4uj5K
-         H+B4OSx3A3J9qdI5FaIWheVi7FsOkExLA3xFuiBKoWzVF7+G8I6h3I5vllLPseZCafFv
-         SjIyAjjJU8/4NhRzGJ/lVnMxxw51hQo2+cCAXHmTMuyiFLW090pQr+HkILMmhtACIhgn
-         1tIId31dJ/zBmuHgJPPtBrEBpXiK0At1sdIelT+mNOtgPA3ZCeJfkyetkI3ReffL9Mzj
-         sPg7NN4hDP0hV7CBExIMnq/adxvfXYjwek9AuLCYaDH5OYdvptXlCAtofBokpz/HO/CA
-         9y0Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tgBFW77w+tqXgd2qEhzNM+pBbVN0PtVs2ChlIQlnPok=;
+        b=E0/0eSBIRoJ31aC+hu8b8fyOZgaiGRtak/6pzAv0VlIcRqBObMCPzEZaXsK/R085SU
+         QNqZCv7io+8+UpPtOsLN9Gw4rXmi0D9EryZsIa2vA1H90I/J8J5ndJHnj0tDseLlGO6M
+         O3b/XsVsGpaZUM6vXwEn/H7Tv2knupaQNUjSDhScaGZ1PsXZDRA0Tj/ytUmnqMSU1DKn
+         l3ObaZV7lco5NHEOmSEZCUBEgEk0nWC/300ypBZFaZyfp10kT6K9l7563hSgWEBdYycE
+         jezfZRst235bIHUGmfQyrgMJAUcbYZ5LLabv2eroQrm4eCZ9uDM/4RMX3n2kBNMVthZW
+         iihw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/LGCdpREbfD/YWDwLyE6sY9IYpJiH6j7QDDmk3lJWP4=;
-        b=gO5UyoC5xefzJm3OhaRHO2A/IY96DcaG14zIKPWZvMxbJJfL0NLPMi3CeXG49dli7P
-         S5CDkcqZ7BxhrM4KAcxG2ETk+hV8WnfAi58tOUB2/uskQCmcvA5BGdjS/OofJJNldcSm
-         cPvso+b4ZYAXpcH2Xa0laIYp3yhrXL63m8xaRR1pnmk+iULpKH6TWUjkDtHyhOl65AnM
-         7C+xRo9rwwaePVXDy/qoDDgBhT5WD5BlXYh8F7cvAOnyPEmZqtc7ZbxhLSCy8QvV0rSl
-         Ry1s7fjW4j2w8bYKhgKiILNjri7JISuVG/DGdpFT+LycoDTWpjMBzRvFjwzhPy437LG7
-         DlQA==
-X-Gm-Message-State: AOAM533/xBM1exavdVoLMaoZ4wMFTN8Zt90f1VWkQI80Xs/MJwtuje4m
-        nC36zRbHmmdMrrU0CD4n/MZwEg==
-X-Google-Smtp-Source: ABdhPJwbUzl2duqqXXrePhzv2T0owX8HSUZiNTe+9J4croOVrST04Ov0Az+JEMoEvq3r7WBhKAch/Q==
-X-Received: by 2002:adf:e611:: with SMTP id p17mr12298279wrm.161.1620224048047;
-        Wed, 05 May 2021 07:14:08 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-149-6.w2-15.abo.wanadoo.fr. [2.15.231.6])
-        by smtp.gmail.com with ESMTPSA id s6sm5969750wms.0.2021.05.05.07.14.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 May 2021 07:14:07 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL v2] gpio: updates for v5.13
-Date:   Wed,  5 May 2021 16:13:58 +0200
-Message-Id: <20210505141358.6065-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tgBFW77w+tqXgd2qEhzNM+pBbVN0PtVs2ChlIQlnPok=;
+        b=ReYX1zJODmOSeg7eQWZu3WrM0/xel7u5I4D8Lu/6fpp98kl/bht0QJowNratQDUl/m
+         2tbjleHsqVFXOvcS/YW8zD943Rb5kgoQrrf3QCYp0kPaiXQbfAr3oiDVIRrzVCYlF73F
+         vZ8uDw2jxg2GW5pMio3WjbOKtmapGUDH+1hr9XUbWt/YRFGpwJH3GAFxBZCpxfCcg6Mv
+         qypDAppuOi8U/aTdOV0Isk8OOwixsFuvE8Bp29pVFlXMMA16W4luuITA3hxzZRAfFfxw
+         0eLy/bcG3ftH06SQDGCdE6ur+G6VtXgthRFgSArOyu3IVI4jQ4XE6SqEv0EMuCpLBg2Q
+         3VLQ==
+X-Gm-Message-State: AOAM532PJVqNr/n+CSq/ypzIw7eyI5dbfgJfYXtNJ5MjCoNdl5+2CI6U
+        AC8ouJwfbDVISMZ8jttycB18bKm7FeORwbRFrCSw0A==
+X-Google-Smtp-Source: ABdhPJyzLudiIQ/dpybDA57vC74JzVw449WHxrJNYfxwFjrKij9jEbD6z+ZLr4L2liSwFhoiYlSvyXGVP4cmweokm9k=
+X-Received: by 2002:a17:907:78c4:: with SMTP id kv4mr27335251ejc.445.1620224402914;
+ Wed, 05 May 2021 07:20:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20210502193216.24872-1-brgl@bgdev.pl> <CAHk-=whSWp3exv8tZ2th5im_P7HF=c6iuOOVb9iSrNrd6405WA@mail.gmail.com>
+ <YJBA1iYK7npit9vn@zeniv-ca.linux.org.uk> <YJCpnvKUNx+Tc+vg@zeniv-ca.linux.org.uk>
+ <CAMRc=Mdh9LvUQCxcyt7ZBjitDB2noVnOptft_VORDhffxJaeCA@mail.gmail.com> <YJGFsrPBoQsKj+JZ@zeniv-ca.linux.org.uk>
+In-Reply-To: <YJGFsrPBoQsKj+JZ@zeniv-ca.linux.org.uk>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 5 May 2021 16:19:52 +0200
+Message-ID: <CAMRc=Mf1N1iL4b5KvVFbPsvKDMy_geXkd8LjmCu5r=bih-N7_w@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: updates for v5.13
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+On Tue, May 4, 2021 at 7:34 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Tue, May 04, 2021 at 04:17:02PM +0200, Bartosz Golaszewski wrote:
+> > >     Incidentally, if your code critically depends upon some field
+> > > being first in such-and-such structure, you should either get rid of
+> > > the dependency or at least bother to document that.
+> > > That
+> > > +               /*
+> > > +                * Free memory allocated for the pending and live
+> > > directories
+> > > +                * of committable groups.
+> > > +                */
+> > > +               if (sd->s_type & (CONFIGFS_GROUP_PENDING |
+> > > CONFIGFS_GROUP_LIVE))
+> > > +                       kfree(sd->s_element);
+> > > +
+> > > is asking for trouble down the road.
+> > >
+> >
+> > I'm not sure if this is a hard NAK for these changes or if you
+> > consider this something that can be ironed out post v5.13-rc1?
+>
+> Rename implementation is simply bogus.  You are, for some reason, attaching
+> stuff to *destination*, which won't be seen by anyone not currently using
+> it.  It's the old_dentry that will be seen from that point on - you are
+> moving it to new location by that d_move().  So I rather wonder how much
+> had that thing been tested.  And I'm pretty much certain that you are
+> mishandling the refcounts on configfs-internal objects, with everything
+> that entails in terms of UAF and leaks.
+>
 
-This is the big pull-request for GPIO for this release cycle minus the configfs
-changes and the gpio-sim driver that was based on it as these will have to sit
-one more release out.
+The interface's stability in user-space has been tested a lot with the
+test-suite for libgpiod[1] but I didn't look for leaks indeed.
 
-The resulting pull-request is even smaller than before and there's nothing
-controversial left. The details are in the signed tag. Please pull!
+> FWIW, I'm not happy about the userland API of that thing (what is supposed
+> to happen if you create, move to live, then create another with the same
+> name and try to move it to live or original back from live?), but
+> Documentation/filesystems/configfs.rst is too sparse on such details.
+> So I would like to see the specifics on that as well.  _Before_ signing
+> up on anything, including "we can fix it up after merge".
 
+Understood. I've sent out a new PR without these changes. I'll start
+another thread asking for your help on the correct approach and maybe
+some better ideas for the user interface.
+
+Thanks,
 Bartosz
 
-The following changes since commit 0d02ec6b3136c73c09e7859f0d0e4e2c4c07b49b:
-
-  Linux 5.12-rc4 (2021-03-21 14:56:43 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-updates-for-v5.13-v2
-
-for you to fetch changes up to 444952956f34a5de935159561d56a34276ffffd6:
-
-  dt-bindings: gpio: add YAML description for rockchip,gpio-bank (2021-05-05 16:07:41 +0200)
-
-----------------------------------------------------------------
-gpio updates for v5.13
-
-- new driver for the Realtek Otto GPIO controller
-- ACPI support for gpio-mpc8xxx
-- edge event support for gpio-sch (+ Kconfig fixes)
-- Kconfig improvements in gpio-ich
-- fixes to older issues in gpio-mockup
-- ACPI quirk for ignoring EC wakeups on Dell Venue 10 Pro 5055
-- improve the GPIO aggregator code by using more generic interfaces instead of
-  reimplementing them in the driver
-- convert the DT bindings for gpio-74x164 to yaml
-- documentation improvements
-- a slew of other minor fixes and improvements to GPIO drivers
-
-----------------------------------------------------------------
-Alexander Dahl (2):
-      docs: kernel-parameters: Move gpio-mockup for alphabetic order
-      docs: kernel-parameters: Add gpio_mockup_named_lines
-
-Andy Shevchenko (13):
-      irqdomain: Introduce irq_domain_create_simple() API
-      gpiolib: Unify the checks on fwnode type
-      gpiolib: Move of_node operations to gpiolib-of and correct fwnode use
-      gpiolib: Introduce acpi_gpio_dev_init() and call it from core
-      gpiolib: Reuse device's fwnode to create IRQ domain
-      gpiolib: Fold conditionals into a simple ternary operator
-      gpio: mockup: Drop duplicate NULL check in gpio_mockup_unregister_pdevs()
-      gpio: mockup: Adjust documentation to the code
-      lib/cmdline: Export next_arg() for being used in modules
-      gpio: aggregator: Replace custom get_arg() with a generic next_arg()
-      gpio: sch: Hook into ACPI GPE handler to catch GPIO edge events
-      gpio: sch: Drop MFD_CORE selection
-      gpio: ich: Switch to be dependent on LPC_ICH
-
-Barney Goette (1):
-      gpio: 104-dio-48e: Fix coding style issues
-
-Bartosz Golaszewski (3):
-      lib: bitmap: remove the 'extern' keyword from function declarations
-      lib: bitmap: order includes alphabetically
-      lib: bitmap: provide devm_bitmap_alloc() and devm_bitmap_zalloc()
-
-Geert Uytterhoeven (1):
-      dt-bindings: gpio: fairchild,74hc595: Convert to json-schema
-
-Hans de Goede (1):
-      gpiolib: acpi: Add quirk to ignore EC wakeups on Dell Venue 10 Pro 5055
-
-Jan Kiszka (1):
-      gpio: sch: Add edge event support
-
-Jiapeng Chong (2):
-      gpio: it87: remove unused code
-      gpio: mxs: remove useless function
-
-Johan Jonker (1):
-      dt-bindings: gpio: add YAML description for rockchip,gpio-bank
-
-Jonathan Neuschäfer (1):
-      docs: driver-api: gpio: consumer: Mark another line of code as such
-
-Linus Walleij (1):
-      gpio: Mention GPIO MUX in docs
-
-Ran Wang (1):
-      gpio: mpc8xxx: Add ACPI support
-
-Randy Dunlap (3):
-      tools: gpio-utils: fix various kernel-doc warnings
-      gpiolib: some edits of kernel docs for clarity
-      gpio: sch: depends on LPC_SCH
-
-Sander Vanheule (2):
-      dt-bindings: gpio: Binding for Realtek Otto GPIO
-      gpio: Add Realtek Otto GPIO support
-
-Tian Tao (1):
-      gpio: omap: Use device_get_match_data() helper
-
- Documentation/admin-guide/gpio/gpio-mockup.rst     |  11 +-
- Documentation/admin-guide/kernel-parameters.txt    |  10 +-
- Documentation/core-api/irq/irq-domain.rst          |  22 +-
- .../bindings/gpio/fairchild,74hc595.yaml           |  77 +++++
- .../devicetree/bindings/gpio/gpio-74x164.txt       |  27 --
- .../bindings/gpio/realtek,otto-gpio.yaml           |  78 +++++
- .../bindings/gpio/rockchip,gpio-bank.yaml          |  82 ++++++
- .../bindings/pinctrl/rockchip,pinctrl.txt          |  58 +---
- Documentation/driver-api/gpio/consumer.rst         |   2 +-
- Documentation/driver-api/gpio/drivers-on-gpio.rst  |   6 +
- drivers/gpio/Kconfig                               |  24 +-
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-104-dio-48e.c                    |  50 ++--
- drivers/gpio/gpio-aggregator.c                     |  39 +--
- drivers/gpio/gpio-ich.c                            |   2 -
- drivers/gpio/gpio-it87.c                           |   8 -
- drivers/gpio/gpio-mockup.c                         |   9 +-
- drivers/gpio/gpio-mpc8xxx.c                        |  47 ++-
- drivers/gpio/gpio-mxs.c                            |   5 -
- drivers/gpio/gpio-omap.c                           |   5 +-
- drivers/gpio/gpio-realtek-otto.c                   | 325 +++++++++++++++++++++
- drivers/gpio/gpio-sch.c                            | 198 ++++++++++++-
- drivers/gpio/gpiolib-acpi.c                        |  21 ++
- drivers/gpio/gpiolib-acpi.h                        |   4 +
- drivers/gpio/gpiolib-of.c                          |   6 +-
- drivers/gpio/gpiolib.c                             |  62 ++--
- include/linux/bitmap.h                             | 127 ++++----
- include/linux/gpio/driver.h                        |  12 +-
- include/linux/irqdomain.h                          |  19 +-
- kernel/irq/irqdomain.c                             |  20 +-
- lib/bitmap.c                                       |  42 ++-
- lib/cmdline.c                                      |   1 +
- tools/gpio/gpio-utils.c                            |  18 +-
- 33 files changed, 1068 insertions(+), 350 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-74x164.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/realtek,otto-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
- create mode 100644 drivers/gpio/gpio-realtek-otto.c
+[1] https://patchwork.ozlabs.org/project/linux-gpio/patch/20210429094734.9585-3-brgl@bgdev.pl/
