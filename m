@@ -2,101 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 643EE375792
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 17:38:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4BAD3757F6
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 17:54:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236094AbhEFPh6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 May 2021 11:37:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235322AbhEFPgT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 May 2021 11:36:19 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 919ABC061574;
-        Thu,  6 May 2021 08:35:03 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id gq14-20020a17090b104eb029015be008ab0fso3663893pjb.1;
-        Thu, 06 May 2021 08:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3NED5lo/rXFGpEGb8DptKrlq06sGttfFpAnJ0c6aeAQ=;
-        b=C3L8OhSIKS4AyfnITR1mwMRums+qT0AnNFqd1TGPc9f+ACdHA68SUtm8PuDffp3pd4
-         BwPMCSIBAcs8WpOJ6QGOgroezqC1ii+bfMT9XzGkDvccO605lcDhjkT72R1ZaR1m+Glc
-         BgCxQNGSoyb5BhIG7PaifqOJC00hvcZl9wx/+tgLQcTp6R20qpvCFYRiyUT9GJBnOKib
-         XEFDP/yvGWK/UplrVIWn9f5H1Ck2NW1qXYNR97T5Ha0HnJIpXKEZxX/1zymVmK5cy3Q2
-         eOViCD/uP7MS4kqwjOU441QOyC6MWFaXCPRL2EmYpGWYBV1aVDlBhGZACtHVkwexZCEv
-         AoaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=3NED5lo/rXFGpEGb8DptKrlq06sGttfFpAnJ0c6aeAQ=;
-        b=NELks2tvtUhcFwqDD5MoIHWnGaH3ydBf1P/0u21A2pHV3E4L4acrd7sjnNodDE/Cph
-         DDmbHKt29vdZSzGJ4ooIx0M6waULfqDpXSzYUqL2RgWfnpM5AXWPo3Z3XxagG3d8r/J2
-         J8Nz3TCcgu6+887MV9ASjdFFGBAqwJLHiFEcZKskHUG4oNbU7ff3IaYhFGwjN0YIUTl8
-         OaZSO0rRhu+83kUo9iHwxYDzl960uGlyWJpVJkvweABrl9QcRWVoFMAzNSQ9KcJSbF0/
-         XVi6kI8YpAB4Eu6cSC/qzSWjP8oybAoOzjCtHXsmJ+ikl7QIqFL1gMlHqvwUyWI6sQy0
-         /eAA==
-X-Gm-Message-State: AOAM5306tvL+qxPYtwb/xVe6b5NLD2GdzhgYHtwkwUEUvJbOJo0YqhJe
-        hVi3cv0g756fFZ2RkAzX/XE=
-X-Google-Smtp-Source: ABdhPJz4oQPhZjLRo6W4Tj+yGyUT/9cAPKv9LDJkaYg5cmIWIUN92lW78jqGHFylMfVtNp4cCp7zgA==
-X-Received: by 2002:a17:902:e812:b029:ee:ff2f:da28 with SMTP id u18-20020a170902e812b02900eeff2fda28mr1995436plg.15.1620315303005;
-        Thu, 06 May 2021 08:35:03 -0700 (PDT)
-Received: from sol (106-69-187-97.dyn.iinet.net.au. [106.69.187.97])
-        by smtp.gmail.com with ESMTPSA id l64sm2441107pgd.20.2021.05.06.08.34.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 May 2021 08:35:02 -0700 (PDT)
-Date:   Thu, 6 May 2021 23:34:57 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S235231AbhEFPzM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 May 2021 11:55:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235136AbhEFPzL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 6 May 2021 11:55:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C6B55610A0;
+        Thu,  6 May 2021 15:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620316452;
+        bh=3cDNvuD9KU1PpzpUQmY9KlttPCy/ZUYq/znJ1YRrs7s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uZBGfJvrZwdAAGt3rnHXrQWzCrcdkBZT0JRJZrSkWeS7qwPCRf+meTV7trBvdmeh7
+         mLEwC4LndCFSiqO67bjR3QIbommxma/nXXWj+u5JyugK4VBg5QCIIHuQmikvRdPsKR
+         CsfvYkbovQDDa19ucwU4vuh5dnPgTEH6hI63u04udKsPXFugggwKJSUAjWG6tkcdGn
+         HCz/4riZTEdumAs0rpTOCu28+u/O0RUzDYvabs6Sc6+hynUsr+pMkukj+JqEAdt+Up
+         c2F+vqmZ0nXK5Te0BcGeMq73NdIwAlJc8gUCAGi66Phkt503luWGaWtZatj5lkGegn
+         7tvOJBVBVNVYQ==
+Date:   Thu, 6 May 2021 16:53:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: introduce hog properties with
- less ambiguity
-Message-ID: <20210506153457.GA29243@sol>
-References: <20210503210526.43455-1-u.kleine-koenig@pengutronix.de>
- <20210504025546.GA13356@sol>
- <20210504091459.clb5nkwgrgg43ixq@pengutronix.de>
- <20210504102454.GA21266@sol>
- <20210504105653.bfhtqd7ildoipcqu@pengutronix.de>
- <CACRpkdZvZKR5g-=YRHWEgtEJyzd9NUoMsV-VH6dvPxACTXNGJQ@mail.gmail.com>
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/2] regmap: add regmap_might_sleep()
+Message-ID: <20210506155335.GC3377@sirena.org.uk>
+References: <20210430130645.31562-1-michael@walle.cc>
+ <20210430151908.GC5981@sirena.org.uk>
+ <df27a6508e9edcd8b56058ac4834fd56@walle.cc>
+ <20210430172603.GE5981@sirena.org.uk>
+ <128a6d51af1b7c9ed24a5848347c66b9@walle.cc>
+ <20210506124342.GC4642@sirena.org.uk>
+ <5921b32058d00a1bffda82b72286db09@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdZvZKR5g-=YRHWEgtEJyzd9NUoMsV-VH6dvPxACTXNGJQ@mail.gmail.com>
+In-Reply-To: <5921b32058d00a1bffda82b72286db09@walle.cc>
+X-Cookie: Is this really happening?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 06, 2021 at 02:35:41PM +0200, Linus Walleij wrote:
-> On Tue, May 4, 2021 at 12:56 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> but not active
-> > > know if there is a good reason not to go with active/inactive.
-> >
-> > Linus: So we're already 3 out of 3 who would like active/inactive better
-> > than asserted/deasserted. I'm curious about your preference, too.
-> 
-> I suppose it depends on where you come from. In electronics
-> the terms asserted/deasserted is commonly used and
-> that is where I'm coming from. Maybe just the materials
-> I've been subjected to, who knows.
-> 
 
-I also come from electronics and, depending on context, deasserted can
-also mean the line is set to high impedance. Here we are trying to
-indicate that the line is actively driven to the inactive state, so
-using output-deasserted would be more open to misinterpretation than
-output-inactive, no?
+--QRj9sO5tAVLaXnSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cheers,
-Kent.
+On Thu, May 06, 2021 at 03:35:26PM +0200, Michael Walle wrote:
+> Am 2021-05-06 14:43, schrieb Mark Brown:
+
+> > Surely it's just a case of the device that's creating the gpio regmap
+> > setting a flag when it instantiates it?  It's just one more thing that
+> > the parent knows about the device.  This doesn't seem insurmountable.
+
+> No its not. It just seemed like it is way easier to just ask the regmap.
+
+I'd rather cause a small amount of hoop jumping for one or two users
+than open up an API that feels like it's going to encourage dodgy usage,
+there's already enough problems with things like regulator_get_optional()
+and this feels like it's going down similar roads.
+
+--QRj9sO5tAVLaXnSD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmCUEP4ACgkQJNaLcl1U
+h9A1Swf8C0PxLVkatS4C5F0XnBrEZICyePH1nDUAKWLrCPB1AHvxbvV6zjtjpi9v
+ooZtjHPHPuHyvqwKe7VCVk8RFeAvKAAbnCScqLM4mz/DfVrdd05rkEw2f8kkw+eE
+eT3zQVe7ghB5oJcaZwR5ngGK6zI/ErnDGFAynhNoQeX7uEDUDgqasuvsm75KvsSp
+89uF38y35FBpiEF0EPt9zPR/FUZPy79fBZ+7Ug/OJO5MlvwHf4Kc49hlhp4A07hx
+afwUV3BfbRU5/m3iV8FFsnzkczN1SGcKlQw7rESbjMPqV4UCYvqTNzrif0/SWuVe
+kA2O66f8RjLZjKp5Ke02e8UZitFMjg==
+=+iA1
+-----END PGP SIGNATURE-----
+
+--QRj9sO5tAVLaXnSD--
