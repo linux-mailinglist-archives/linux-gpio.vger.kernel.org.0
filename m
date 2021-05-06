@@ -2,91 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85F693752C2
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 13:06:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EBA63752CB
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 13:11:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234580AbhEFLHe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 May 2021 07:07:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58032 "EHLO
+        id S234685AbhEFLMT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 May 2021 07:12:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234569AbhEFLHe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 May 2021 07:07:34 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4217C061761
-        for <linux-gpio@vger.kernel.org>; Thu,  6 May 2021 04:06:35 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id b7so6527648ljr.4
-        for <linux-gpio@vger.kernel.org>; Thu, 06 May 2021 04:06:35 -0700 (PDT)
+        with ESMTP id S234672AbhEFLMS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 May 2021 07:12:18 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6E4C061761
+        for <linux-gpio@vger.kernel.org>; Thu,  6 May 2021 04:11:19 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id n138so7224377lfa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 06 May 2021 04:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UWmNHmfjUj3qc0B9aWn4OMmxqOepf+LhF996RVo1X60=;
-        b=WczG4xLQR7UX5zXs+PCspWWBZa2nW+o0uVdGeKYdZX1ZRPKWmy7+9O6TuPKIjOk5UE
-         8iGD6bjNDA6v5q6DjkXH8MI+mmZRDieUzkf8IyHORdIeQs1NU2WrOqyaUX9nnydQn8+g
-         lQMYJlI4j6qT2uq5x9dCKW+2nWSvHPiYoI6wkD5A6ItEzsCZ5yPZeVCd9hitOAje/dvE
-         pi6fMK2DuydpBQAMWzSCZE0ZxHBHrPqrGpb3wqXDOekmL0Bl13n9KptqSxjz7jMXQtgg
-         rBlY32yuCSW1nYAbWyPtztxHUkAFuf1g9Ww1vxrIXWxr0KjSoGV8h4EfijzcfS7dtuF/
-         E3mw==
+        bh=wMFathXdbsaDkowJoU81vrWO0kU+VvQ+Tmhu/CZVPVI=;
+        b=bgCNsJYhW0+tuUuY3mc+Rp83PxkwaudgTpOEyZ7upVhDySB2D+rc0FjXEhxn2DdYy/
+         CIHPZc1OG++JyD0ctna/+pypf3gxLlTy1g36xtiduhIJPcyQO+8Zrv7FFmw5/9laIfb0
+         23F180/6IUwOMm8T+mR02+NBnKmPpS8hhqappwFgu+CXBQTiup0B2I3iKnrk7GVcOlOL
+         OeNIyeW/43hcqYCVCWFKV6iq0xDT/ww+n1y279tcnLP7qY6uZiUOCeS82HfxM3YCrbOC
+         vgXdLbW1f3qju1XR38L1nYKCv8TFZsVLcZVlbD5MedkNm3r9Oig9N2txhap5M6a2up2L
+         U6UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UWmNHmfjUj3qc0B9aWn4OMmxqOepf+LhF996RVo1X60=;
-        b=hbnq4E2R9efBF/CApZ+YjzKFHFTrFBRNeEx7aDVhv25CJSED5hc4+Pbe3HWVsQLz1u
-         GKFfeeE2TSa4K8agvM/YcrXcsK17p5zpRR49u15soEj2L3yRO6AFXTO7dnYkJLqo2md6
-         EGOKKIRItyiM6qK4i7CjQSYFQIr68sQBT5sRDnYp3GRRHuuOcxACNRmzToTBdp/grCI9
-         0GyuTo+vxy6EsPaUXHN+tbBToIY5J7jkcsF9uSCtBkP6Pzva7eI3LWHZF4GHHUz9MCSF
-         t2rhBW/5kt81oKL+1oT6VPhBYktURp7O8F6py5EEOXGlSngGfm0JJEeP6Ofkw4RDfnBQ
-         bmng==
-X-Gm-Message-State: AOAM533hOwNVLbkSKOvG0GyxT7HIOAE3sWYqvP+aEjt2Ot1x3WMchLxg
-        gTVxO3+B+NB/m5Zm5/lYES9b90PkRhE+0ow80BnXaw==
-X-Google-Smtp-Source: ABdhPJwQ27yDfXTygjDihF/g76lDPnA2/XVNACTIBpf5xL9Jwg2ij7sQtPwwUBUJxYWPzxKFNM1xetdugOHn9rZFbxY=
-X-Received: by 2002:a2e:2e12:: with SMTP id u18mr2842452lju.200.1620299194178;
- Thu, 06 May 2021 04:06:34 -0700 (PDT)
+        bh=wMFathXdbsaDkowJoU81vrWO0kU+VvQ+Tmhu/CZVPVI=;
+        b=IH/4VzMXNYvletr/yoit2HLNBmbUiIlOOSrnWtqnHxNMGdnYyJXtupP82SvQWD8ahU
+         v+pBvOm7CJsgvreVCvMcOmgnU2NAFRk/dak8+644vNIXhaVB6WlCH/XNqyEnXFwLIz8P
+         HhWGPPIqb7rbjBjC6IyV1hs9YBGLOfiuEZO1B1yjiczEJNN5vWq1SAQ1PGEquPeuypfO
+         4uq+amFCEqTKRK87KZ1wpTJJcc3gmnvZyehXbhR4bjHKMtZssIydfZYmNn/+v3QKlRGu
+         EivQgjxKBtdzkjgCMcPXiZo0t4dQb+okiKAnIxjAr6DQA5w4dH/dks759M+xSf9vzAyk
+         MlWw==
+X-Gm-Message-State: AOAM530TS2A4vEQ17GpTTS+AbkKRpeKYlJ+OhPjC6rVL9i1GXyoyx3CC
+        ZmKMOYfmHYQW2SeHxVLDinvZdm7ICjLB9OjAvQ2ldA==
+X-Google-Smtp-Source: ABdhPJzsuJP2WMZqZGx1KzuR34RFZ6qLuUWvvsfN2huPdEnPjyrItMtfHwqU/4mFSa/5hfhmJLQ+2fWn1Peuqhxn52A=
+X-Received: by 2002:ac2:544f:: with SMTP id d15mr2482110lfn.465.1620299478030;
+ Thu, 06 May 2021 04:11:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <1620270017-52643-1-git-send-email-f.fangjian@huawei.com>
- <CAHp75Vfr8t9UVqVn6hLSN6Mi3=iNAn612eE-qKq9HfrwNhpg3Q@mail.gmail.com>
- <CAHp75Vei0QGaKiq5Nai7Gsa=jcMSipaXV_6qZbBy=f0OrN=DHQ@mail.gmail.com>
- <e919da77-a664-d78b-2c47-cc9ba8745a72@huawei.com> <CAHp75VdPYGLmDkmKETBHWLOQVHwZAdbk4wBtzMjXcX223eH1-w@mail.gmail.com>
-In-Reply-To: <CAHp75VdPYGLmDkmKETBHWLOQVHwZAdbk4wBtzMjXcX223eH1-w@mail.gmail.com>
+References: <20210426095426.118356-1-tsbogend@alpha.franken.de>
+ <20210426095426.118356-2-tsbogend@alpha.franken.de> <CACRpkda7n3VL-EpwdXDxt47azFo8Wkp67-urUy7--3D6TJs7iA@mail.gmail.com>
+ <CAL_Jsq+48xVScx87WYD85Ty5CxqO3L8taMeQ7S9QwHew1+TjKA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+48xVScx87WYD85Ty5CxqO3L8taMeQ7S9QwHew1+TjKA@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 6 May 2021 13:06:23 +0200
-Message-ID: <CACRpkdYR99SRgDJEK6e-eT86hBOxz-Ym5pf8Zn+0k4u+i=nfOA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] spi: Correct CS GPIOs polarity when using GPIO descriptors
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jay Fang <f.fangjian@huawei.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "huangdaode@huawei.com" <huangdaode@huawei.com>,
-        "tangzihao1@hisilicon.com" <tangzihao1@hisilicon.com>
+Date:   Thu, 6 May 2021 13:11:07 +0200
+Message-ID: <CACRpkdaftBRUw_m9GjrqMreAF98iNTF4807LwkY9Mt7Ceh6k=w@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: gpio: Add devicetree binding for IDT
+ 79RC32434 GPIO controller
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 6, 2021 at 11:45 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Tue, May 4, 2021 at 3:44 PM Rob Herring <robh+dt@kernel.org> wrote:
+> On Sat, May 1, 2021 at 7:13 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-> > Thanks. Has the Fix patch been merged ? Commit Id ?
+> > Why can't interrupt support be made optional?
+(...)
 >
-> Not yet. I'm planning to send it next week (after v5.13-rc1 is out) as a fix.
-> For your convenience the whole story is available in my publick branch:
->
-> https://gitlab.com/andy-shev/next/-/tree/topic/spi/reload
->
-> and yes, I have tested it on real hardware.
+> If the hardware has interrupts, then we should describe that. It's the
+> OS driver that may or may not support interrupts.
 
-Oh what a nightmare you got into there.
-
-Curious that ACPI has SPI CS as always active high,
-but that just underscore that we *really* need to
-abstract this out to avoid really complex specialcasing.
-
-Interesting that the PXA2xx XScale lives in Merrifield,
-I didn't know. Reminds med of how the Samsung
-hardware is alive and well in the recent Apple M1 laptops.
+You're right of course. What was I thinking.
 
 Yours,
 Linus Walleij
