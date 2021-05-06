@@ -2,93 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7A3E3753AC
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 14:17:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1833D3753EB
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 14:35:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230376AbhEFMSU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 May 2021 08:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45650 "EHLO
+        id S231628AbhEFMgw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 May 2021 08:36:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbhEFMST (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 May 2021 08:18:19 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8142CC061574;
-        Thu,  6 May 2021 05:17:20 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id q2so4930823pfh.13;
-        Thu, 06 May 2021 05:17:20 -0700 (PDT)
+        with ESMTP id S229777AbhEFMgw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 May 2021 08:36:52 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252FEC061574
+        for <linux-gpio@vger.kernel.org>; Thu,  6 May 2021 05:35:54 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id x20so7561261lfu.6
+        for <linux-gpio@vger.kernel.org>; Thu, 06 May 2021 05:35:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=9qGhux9uV3p7YMDVV2UIEYRyjKzHm/Qxkdk6B58HDWg=;
-        b=aChKhmiqNG3NNR32W5zS2h3BhcyuqE+9Ofsi0fG14MUCWv95sbpBDqvzphTdxeb4lb
-         Ss0/rTbTLq2mNmCw39St2yYBZtQsss4/1whVE+KV87UkVJSy8hlUkkvpS8hvX5Kw5mRi
-         5kkMQwOr0XfBvimZPelelTEl+dW1usTyanvHziwmC418xp2mL5vv/OBqGa34YN9WO7Jb
-         vJIcFX3tKF7Io2jrdXNMah33mQo4bRG7MQ4sPV9lbW/yO4iivc8ILbdwVci2jPJ061OV
-         axgu2UwFIdhisooup1lzWsJT17WsJYs0bkubzdTJqn+6s4mkNxW27ny/jVzzSZKq1l86
-         kTcA==
+        bh=2/ZmLbtrYVGn+DSAZJpx6aR2WIjOEoDo2T5mjjYPzTs=;
+        b=mRjXV2LTKDkUHdBoHDPBOo0SIk1NqnE8T4eNXjd80NFYKUcSi8w0+5CGLa/ewy/HLR
+         B5UceZ7jPLNnMte5P/bakSnDGw0AAdTWxnKMu7OGINKHfIa88jaBIZmt1Ygumu/9Az4r
+         wSYsXMXFQSSe+x5TwljS6YpUtRjxh5awk91LAO/1tsUzo361MplCr6r/w7StDzgqGgjF
+         0DlmHHXMZZ02dwN1xc+CY/E+8hkqPRzVmhKTABKyJ3BZQczo63rywBFs9MiR/4H5f7H1
+         t1W+I7RQ5NO3Fq9SUUO4TsYagecqD4eIlOrokYSkdqG7Pot27GsDX5ebGnsGjIHY2r4B
+         D6DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9qGhux9uV3p7YMDVV2UIEYRyjKzHm/Qxkdk6B58HDWg=;
-        b=igWAc4ZnaIgrztyC9wKYYoz9CBd61YljtWTCjiWjDWOEqvUToD07+3PiMEI+FlJ2Le
-         T5ZC+3MQDbo0WDdRRahI4EpDNvlwgf0e3ZeUrqmggRNdYf2LGWiFyArl7NBhBeN77axr
-         3C3Np33VjmXh41Njiec2+y8pPpFanRmBhpjIB5Qgz15okq++GHhHG/uoByONCOVfO4Po
-         ouIY/eD+Ufe5bQqzxPhakPfPXLIT+oLSjVv7Vo5EEjsxamRAPrmp06tUdGP3Dv+ja5iO
-         Ne0DoggpzbST999vYOLJNTsVoSvNxkZSd1pPn+D+HS1PARnmA3BaCNpgjnBHhufZMD3Z
-         XEFw==
-X-Gm-Message-State: AOAM5330eS6B//6d0zT8zwZdh1BOVTB45/oXT545c6nFeb6zZfNzib3M
-        IwbxjiLSvBGZm1Gr4I6li2dJQMXOZ/3qPLeDdxI=
-X-Google-Smtp-Source: ABdhPJyEGAXFCv+6stiNkyCv3dEt2Sc/MfHoaTQBq/p4OKTwVdeyKK/lizfKvSlagkQREd7x0kwaFaLZOGL5Ryzekhw=
-X-Received: by 2002:aa7:8e85:0:b029:28f:2620:957e with SMTP id
- a5-20020aa78e850000b029028f2620957emr4292467pfr.40.1620303439937; Thu, 06 May
- 2021 05:17:19 -0700 (PDT)
+        bh=2/ZmLbtrYVGn+DSAZJpx6aR2WIjOEoDo2T5mjjYPzTs=;
+        b=grwoq3ZR1pLR48tMrml5yd67kV3GTIHjvXooVCqbN6uLolYoJNIHsTL7RWXa9qpAuN
+         VrvpCQD5xGc6HMqGDSwRcKHh8HJrehxSMNaaEhSonba8KRPw4Yg5IgT8ZJx1MFUjdmyD
+         8cO7JTWRgXfWvpxYtzYjXlLEGjzAsHKzdk5S/88AunpyDgiWEU5KmaInZ6lS2eoUUS64
+         gpFxhssMpxCVUQk1YKXxTzFFX8XXFHSE0WGmKd9zTNcCS5oa+FUBMNGHhXq+wuvhK3vO
+         7HpwTP5AN3zAjc9JmqDUlkt7npPSCg1kmdr7v/fMkS7xWO2Vrd+ZIgm5HGw6533yZqNo
+         z4yQ==
+X-Gm-Message-State: AOAM531ISalFT7NQMnl2hp39x7kaUbrQy0AHLnZbRnAKvRo+Y4AVbati
+        pwiNkSn2nk1z9KJ9pb3YTEhUvPAzDIwMI0/YVh7LkA==
+X-Google-Smtp-Source: ABdhPJwjEiT3esgblNl5oL8PYhIDR+bfD6j0Y8+/+akNo7N2Tsc8Fq2BFSNap3ZLzp3tCQ/FCTsiBkzaFSI05AQ33EU=
+X-Received: by 2002:ac2:5e36:: with SMTP id o22mr2807016lfg.529.1620304552671;
+ Thu, 06 May 2021 05:35:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <1620270017-52643-1-git-send-email-f.fangjian@huawei.com>
- <CAHp75Vfr8t9UVqVn6hLSN6Mi3=iNAn612eE-qKq9HfrwNhpg3Q@mail.gmail.com>
- <CAHp75Vei0QGaKiq5Nai7Gsa=jcMSipaXV_6qZbBy=f0OrN=DHQ@mail.gmail.com>
- <e919da77-a664-d78b-2c47-cc9ba8745a72@huawei.com> <CAHp75VdPYGLmDkmKETBHWLOQVHwZAdbk4wBtzMjXcX223eH1-w@mail.gmail.com>
- <CACRpkdYR99SRgDJEK6e-eT86hBOxz-Ym5pf8Zn+0k4u+i=nfOA@mail.gmail.com>
- <CAHp75Veoqnd3Hgzq8DAz-_=QxMt-+r608dkzPp67YA5eitLJNw@mail.gmail.com> <20210506113430.GB4642@sirena.org.uk>
-In-Reply-To: <20210506113430.GB4642@sirena.org.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 6 May 2021 15:17:03 +0300
-Message-ID: <CAHp75Vf3yvSJUcmugjs8mcbnRa=PPviqqSrgB+Yyq6QV+J+Sbg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] spi: Correct CS GPIOs polarity when using GPIO descriptors
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jay Fang <f.fangjian@huawei.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "huangdaode@huawei.com" <huangdaode@huawei.com>,
-        "tangzihao1@hisilicon.com" <tangzihao1@hisilicon.com>
+References: <20210503210526.43455-1-u.kleine-koenig@pengutronix.de>
+ <20210504025546.GA13356@sol> <20210504091459.clb5nkwgrgg43ixq@pengutronix.de>
+ <20210504102454.GA21266@sol> <20210504105653.bfhtqd7ildoipcqu@pengutronix.de>
+In-Reply-To: <20210504105653.bfhtqd7ildoipcqu@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 6 May 2021 14:35:41 +0200
+Message-ID: <CACRpkdZvZKR5g-=YRHWEgtEJyzd9NUoMsV-VH6dvPxACTXNGJQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: introduce hog properties with less ambiguity
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 6, 2021 at 2:35 PM Mark Brown <broonie@kernel.org> wrote:
-> On Thu, May 06, 2021 at 02:24:17PM +0300, Andy Shevchenko wrote:
-> > On Thursday, May 6, 2021, Linus Walleij <linus.walleij@linaro.org> wrot=
-e:
+On Tue, May 4, 2021 at 12:56 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+but not active
+> > know if there is a good reason not to go with active/inactive.
 >
-> > > Curious that ACPI has SPI CS as always active high,
->
-> > Here I didn=E2=80=99t get what exactly you are pointing out. GPIOs are =
-active high,
-> > due to historical reasons. Otherwise SPI CS depends on the actual hardw=
-are
-> > and may be (most of the cases?) active low.
->
-> SPI chip selects are almost always active low - the signal is often
-> written nCS or /CS for that reason.
+> Linus: So we're already 3 out of 3 who would like active/inactive better
+> than asserted/deasserted. I'm curious about your preference, too.
 
-Exactly, and it's not altered with ACPI. That's the whole point of
-keeping it active high for _GPIO_ CS case.
+I suppose it depends on where you come from. In electronics
+the terms asserted/deasserted is commonly used and
+that is where I'm coming from. Maybe just the materials
+I've been subjected to, who knows.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
