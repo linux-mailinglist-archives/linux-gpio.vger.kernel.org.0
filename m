@@ -2,103 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B999A3754CE
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 15:35:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51D84375535
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 15:57:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233461AbhEFNg0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 May 2021 09:36:26 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:52663 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232992AbhEFNg0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 May 2021 09:36:26 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id DB2ED2224B;
-        Thu,  6 May 2021 15:35:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1620308127;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CmDntFODvjLgdXN3wFi4anvzO+7I/PTtPR0QlpBa/lc=;
-        b=ZB3ENoRhzOZBXkOrrv0FWa5XdDbCE1JABsyK3NBQohAb4Hkt7HYk/4p0oKveXP8ef5EhKP
-        WfKsvr8t+8tYFrtPmX7Xh5fWeVwK+2MoPvdogJzl6ZtRAJKjEI4cGdYm9X0X5a4lgRzlK0
-        sTkSBedifHMKadgDGkMuuKG4fc2owas=
+        id S234267AbhEFN6G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 May 2021 09:58:06 -0400
+Received: from mail-oi1-f177.google.com ([209.85.167.177]:42940 "EHLO
+        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233918AbhEFN6G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 May 2021 09:58:06 -0400
+Received: by mail-oi1-f177.google.com with SMTP id v24so5549219oiv.9;
+        Thu, 06 May 2021 06:57:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HqeKgXTKXZa+6B/eVofQGB4SPGukIqRcTwXruDFPnc0=;
+        b=WM4vDGpO0TCSnF9B1dzZqA0aGMBRAYnceCrwdoLD6frqCJTa7GT1DUsedPl9Fb51FO
+         p9B2O4LN/fHu9Gq45dLquQyA6n8d23+a8DJu71k2zdP1njfivEWUMMmuTn5yaaFvbddW
+         cgPowUsVfiXMDuWKF5jEBn492D1YHiXnjoU6pwCyxyJMU1zZApob+k421+pBLPDEqTQt
+         eJrokOMzotEvga8DEyji+UjUIhZmy+z/DEcQBqcZaTVJ/YnaXllx5mMu8yqZkJCCy8Re
+         wqALqHLpwMp+7A/MLlj0abCHgcQDCrEpucjBYp/kzyAacZkmIQjNTJzaJaoKA1Ysd3ui
+         AmTQ==
+X-Gm-Message-State: AOAM531aPsxW+6iESbcXDEyMdp6mZBRvk21gONyOOZiybxmxMXsW9CbP
+        0gtA2CpkghYcBFYyT7Do1DfikKXmgw==
+X-Google-Smtp-Source: ABdhPJzuyAAscLHlNDjyxPpZgIddNw7Hd0CRGlweA76ymj8ZYxCpPUqd+jN9WAA0Pn5WHOAiLiNcjA==
+X-Received: by 2002:aca:eac2:: with SMTP id i185mr10406150oih.171.1620309426564;
+        Thu, 06 May 2021 06:57:06 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j5sm535678oou.9.2021.05.06.06.57.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 May 2021 06:57:05 -0700 (PDT)
+Received: (nullmailer pid 240433 invoked by uid 1000);
+        Thu, 06 May 2021 13:57:04 -0000
+Date:   Thu, 6 May 2021 08:57:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     lee.jones@linaro.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, jdelvare@suse.com, linux@roeck-us.net,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        luka.perkov@sartura.hr, jmp@epiphyte.org, pmenzel@molgen.mpg.de,
+        buczek@molgen.mpg.de
+Subject: Re: [PATCH 2/6] dt-bindings: gpio: Add Delta TN48M CPLD GPIO bindings
+Message-ID: <20210506135704.GA3340759@robh.at.kernel.org>
+References: <20210430123511.116057-1-robert.marko@sartura.hr>
+ <20210430123511.116057-2-robert.marko@sartura.hr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 06 May 2021 15:35:26 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] regmap: add regmap_might_sleep()
-In-Reply-To: <20210506124342.GC4642@sirena.org.uk>
-References: <20210430130645.31562-1-michael@walle.cc>
- <20210430151908.GC5981@sirena.org.uk>
- <df27a6508e9edcd8b56058ac4834fd56@walle.cc>
- <20210430172603.GE5981@sirena.org.uk>
- <128a6d51af1b7c9ed24a5848347c66b9@walle.cc>
- <20210506124342.GC4642@sirena.org.uk>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <5921b32058d00a1bffda82b72286db09@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210430123511.116057-2-robert.marko@sartura.hr>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2021-05-06 14:43, schrieb Mark Brown:
-> On Sat, May 01, 2021 at 12:10:16AM +0200, Michael Walle wrote:
->> Am 2021-04-30 19:26, schrieb Mark Brown:
-> 
->> > But that's a driver for a specific device AFAICT which looks like it's
->> > only got an I2C binding on the MFD so the driver knows that it's for a
->> > device that's on a bus that's going to sleep and doesn't need to infer
->> > anything?  This looks like the common case I'd expect where there's no
->> > variation.
-> 
->> You are right, at the moment this driver only has an I2C binding. But
->> the idea was that this IP block and driver can be reused behind any
->> kind of bridge; I2C, SPI or MMIO. Actually, I had the impression
-> 
-> Is this actually a way people are building hardware though?
+On Fri, Apr 30, 2021 at 02:35:07PM +0200, Robert Marko wrote:
+> CPLD inside of the Delta TN48M does not number GPIOs
+> at all, so in order to ensure numbering lets use bindigs.
 
-Granted, this might be a special case because the driver is for an
-IP inside CPLD/FPGA, thus you could easily switch the bridge.
+Looking at the code, I'd make the gpio number something like '(offset << 
+8) | bit' rather than just making up an index.
 
->> that all you need to do to convert it to MMIO is to replace the
->> "kontron,sl28cpld" compatible with a "syscon" compatible. But it isn't
->> that easy. Anyway, the idea is that you don't need to change anything
->> in the gpio-sl28cpld driver, just change the parent. But if we can't
->> ask the regmap what type it is, then we'll have to modify the
->> gpio-sl28cpld driver and we will have to figure it out by some other
->> means.
+We don't normally have defines for GPIO numbers either.
+
 > 
-> Well, you don't need to change anything at all - the driver will work
-> perfectly fine if it's flagging up the GPIOs as potentially sleeping
-> even if they end up not actually sleeping.
-
-Unless you need the non-sleeping version for a gpio.
-
->> > If users happen to end up with a map flagged as fast they can work on
->> > the whatever driver uses this stuff and not realise they're breaking
->> > other users of the same driver that end up with slow I/O.  The whole
->> > point of the flag in GPIO is AIUI warnings to help with that case.
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> ---
+>  include/dt-bindings/gpio/tn48m-gpio.h | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 include/dt-bindings/gpio/tn48m-gpio.h
 > 
->> Hm, but as of now, the only thing which makes the gpio-regmap driver
->> slow i/o is the regmap itself.
+> diff --git a/include/dt-bindings/gpio/tn48m-gpio.h b/include/dt-bindings/gpio/tn48m-gpio.h
+> new file mode 100644
+> index 000000000000..4ece4826d746
+> --- /dev/null
+> +++ b/include/dt-bindings/gpio/tn48m-gpio.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * GPIO definitions for Delta TN48M CPLD GPIO driver
+> + *
+> + * Copyright 2020 Sartura Ltd
+> + *
+> + * Author: Robert Marko <robert.marko@sartura.hr>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_TN48M_GPIO_H
+> +#define _DT_BINDINGS_TN48M_GPIO_H
+> +
+> +#define SFP_TX_DISABLE_52	0
+> +#define SFP_TX_DISABLE_51	1
+> +#define SFP_TX_DISABLE_50	2
+> +#define SFP_TX_DISABLE_49	3
+> +#define SFP_PRESENT_52		4
+> +#define SFP_PRESENT_51		5
+> +#define SFP_PRESENT_50		6
+> +#define SFP_PRESENT_49		7
+> +#define SFP_LOS_52		8
+> +#define SFP_LOS_51		9
+> +#define SFP_LOS_50		10
+> +#define SFP_LOS_49		11
+> +
+> +#endif /* _DT_BINDINGS_TN48M_GPIO_H */
+> -- 
+> 2.31.1
 > 
-> Surely it's just a case of the device that's creating the gpio regmap
-> setting a flag when it instantiates it?  It's just one more thing that
-> the parent knows about the device.  This doesn't seem insurmountable.
-
-No its not. It just seemed like it is way easier to just ask the regmap.
-
--michael
