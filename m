@@ -2,111 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F729375924
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 19:21:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A6CE375A34
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 May 2021 20:31:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235881AbhEFRWa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 May 2021 13:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236237AbhEFRW2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 May 2021 13:22:28 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EDABC061761
-        for <linux-gpio@vger.kernel.org>; Thu,  6 May 2021 10:21:29 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id g38so8340816ybi.12
-        for <linux-gpio@vger.kernel.org>; Thu, 06 May 2021 10:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WFWC5fpqRaGTrdHip1X5fLtWHN0bHh1jKIs9xXOqvCo=;
-        b=gIZdu0zr3ZpqagrNEPWKcIoKlDQ3CN3N4AfPVFDzDwIzpjXbYoPYUXkop+y/aLEtfz
-         3ettPFVeGcLlr4fq/lsEw/tIMWiYKroW2ITLgrbICh3bDGmgLCVh6HAKLS5dpdQCbaVy
-         TCIFNQayODjdnB/b9uuRoOQgHzdMgPjVIV28h1P3VJF4tAUmlXEa2xB98R9EEl31VcO1
-         lOmjoaGvnJE9sbfUTDEQ/2zk2O/nnntaNJHqYHPyuQXesjFftBABGdTFcO1IzothY6X2
-         OVwnFlQeHYu6d67xD5WlSGxktHzDZw59uV4aqO6sldVr0vaeBBTGfaDNPmcTqipGzS7+
-         dJ2A==
+        id S234361AbhEFScq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 May 2021 14:32:46 -0400
+Received: from mail-oo1-f50.google.com ([209.85.161.50]:38512 "EHLO
+        mail-oo1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231839AbhEFScp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 May 2021 14:32:45 -0400
+Received: by mail-oo1-f50.google.com with SMTP id h9-20020a4a94090000b02901f9d4f64172so1452491ooi.5;
+        Thu, 06 May 2021 11:31:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WFWC5fpqRaGTrdHip1X5fLtWHN0bHh1jKIs9xXOqvCo=;
-        b=aeioISU9aK8RET7ShCrsJt3HWywFvZfAkqil3kXw05KdMQ0MMG7AJn1LYCu73PEHRr
-         QwHX1Kt6ioeKWv8ga6b4F4rWj+TKw8MhXk9ZvQZ+f3NGSPLby+eH+3I2I5gNjCwNEJak
-         8LIP1vpRgB2A299ikGwM1qxwQw8XCXH+u9+pveXggfE8e3odQ20kzl9vhCEME2OfV7sP
-         WW9SMnJu7GmUSaw0pfcMQVBBrjXbP0alVKNgzeLrgaVpmQfppUCRBDeabrm4WDQS8jg1
-         VBXDstyy17RGTiydlj8Kuf8aAcbITt8QwtvrmyfX4sh7CWblzRpKokxoccIyiL9P4zWH
-         eLbw==
-X-Gm-Message-State: AOAM532ktpaua4byXT6xuI4b0Pc20XSjRVOYIDNFfNWaN/mmDDSyUc/v
-        snICQaVQX2vHXJKl4fLT2hDPEcgIJa8Vshr3yDVUhA==
-X-Google-Smtp-Source: ABdhPJxLhId8udASljWKtWTJzDPUFg816nivtvIYhzWVhtN58/ebBXiVacPTAsp7k3xt4DZI1GvNbhhx7lELMqrLl6k=
-X-Received: by 2002:a05:6902:102d:: with SMTP id x13mr7583894ybt.40.1620321688463;
- Thu, 06 May 2021 10:21:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=oGGa0szYJtn5EJ7bBQYGJtU6zY5PCRxd8R546Llej+w=;
+        b=ed51Q1FbRcf7RX0Fid51UU5Q3mAdS+OJJ57gs7tYP409K88ubsvLH8tknxiNIsvjEz
+         DLdAKW7l4qp39ZWf7jecbM6Mcgs5BErRD6IbNc+aG5oQzc8ACDVUS/enV95Akk2PB6yk
+         xyqGKlCYR9ZUzbp0z+J54yZVmTf2B7BMyPXr86FLtFB+teoKhMPKg5AnqsSFWclKZKKu
+         lBbxwLhtazEwDzYrEhvzkdDHi4N3JvN392hq8N6hGAag4JV+0zkxQAA7b9Vq1wBfcAP/
+         oJhXQi3u+6d10dIm9kSPXkX6NobQog2hmmlMf3yuMXuVtiM33oGM8m6MGoWS32NPgGo9
+         tTcA==
+X-Gm-Message-State: AOAM5323gkSWStmIe/0GF6zFbzbeEyPItAujtpUru2oKsOMRx+15GJUl
+        32FGCkwtoAWA/0EA19qCH3t+b98A3A==
+X-Google-Smtp-Source: ABdhPJxZFR7SUvRUOxoQAMwpxS8RVEp+c82SIST6moTYVnQTEXDtjOvNWpS+gRu2Gdl1Eh7bdbaFcQ==
+X-Received: by 2002:a4a:a4d2:: with SMTP id c18mr4594306oom.4.1620325907152;
+        Thu, 06 May 2021 11:31:47 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x24sm718944otk.16.2021.05.06.11.31.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 May 2021 11:31:46 -0700 (PDT)
+Received: (nullmailer pid 599287 invoked by uid 1000);
+        Thu, 06 May 2021 18:31:45 -0000
+Date:   Thu, 6 May 2021 13:31:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: introduce hog properties with
+ less ambiguity
+Message-ID: <20210506183145.GA594619@robh.at.kernel.org>
+References: <20210503210526.43455-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-References: <20210430123511.116057-1-robert.marko@sartura.hr>
- <20210430123511.116057-3-robert.marko@sartura.hr> <20210506140024.GB3340759@robh.at.kernel.org>
- <3905879e67d50d6a7f73fcd83982c052@walle.cc>
-In-Reply-To: <3905879e67d50d6a7f73fcd83982c052@walle.cc>
-From:   Luka Perkov <luka.perkov@sartura.hr>
-Date:   Thu, 6 May 2021 19:21:17 +0200
-Message-ID: <CAKQ-cribKLfiZqTyBe_OtPzKGk5M2_8+0ov-D4-hTei5aouDtw@mail.gmail.com>
-Subject: Re: [PATCH 3/6] gpio: Add Delta TN48M CPLD GPIO driver
-To:     Michael Walle <michael@walle.cc>
-Cc:     Rob Herring <robh@kernel.org>,
-        Robert Marko <robert.marko@sartura.hr>, lee.jones@linaro.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        jdelvare@suse.com, linux@roeck-us.net, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, Jonathan Polom <jmp@epiphyte.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Donald Buczek <buczek@molgen.mpg.de>,
-        =?UTF-8?B?Q0xFTUVOVC5DSEFORyDlvLXlvJjmhbY=?= 
-        <CLEMENT.CHANG@deltaww.com>, upstream-wg@lists.dent.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210503210526.43455-1-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Michael,
+On Mon, May 03, 2021 at 11:05:26PM +0200, Uwe Kleine-König wrote:
+> For active low lines the semantic of output-low and output-high is hard
+> to grasp because there is a double negation involved and so output-low
+> is actually a request to drive the line high (aka inactive).
+> 
+> So introduce output-inactive and output-active with the same semantic as
+> output-low and output-high respectively have today, but with a more
+> sensible name.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
+> 
+> I already sent this patch back in July and Linus (Walleij) liked the
+> patch but asked for an implementation. For that I added the second patch
+> now.
+> 
+> Best regards
+> Uwe
+> 
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
 
-On Thu, May 6, 2021 at 6:40 PM Michael Walle <michael@walle.cc> wrote:
->
-> Am 2021-05-06 16:00, schrieb Rob Herring:
-> > On Fri, Apr 30, 2021 at 02:35:08PM +0200, Robert Marko wrote:
-> >> Delta TN48M CPLD is used as a GPIO expander for the SFP GPIOs.
-> >>
-> >> It is a mix of input only and output only pins.
-> >>
-> >> Since there is no logical GPIO numbering arbitrary one is used
-> >> along dt-bindings to make it humanly readable.
-> >>
-> >> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> >> ---
-> >>  drivers/gpio/Kconfig      |  12 +++
-> >>  drivers/gpio/Makefile     |   1 +
-> >>  drivers/gpio/gpio-tn48m.c | 191
-> >> ++++++++++++++++++++++++++++++++++++++
-> >>  drivers/mfd/tn48m-cpld.c  |   6 +-
-> >>  include/linux/mfd/tn48m.h |   3 +
-> >>  5 files changed, 212 insertions(+), 1 deletion(-)
-> >>  create mode 100644 drivers/gpio/gpio-tn48m.c
-> >
-> >
-> >> +static const struct platform_device_id tn48m_gpio_id_table[] = {
-> >> +    { "delta,tn48m-gpio", },
-> >
-> > Looks like a compatible, but is not. I think you can drop this and just
-> > use 'tm48m-gpio' (the driver name).
->
-> I'm just curious, why isn't the vendor included here (as there
-> might be a chance for name clashes in the future).
+The schema in dtschema will need to be updated too. Really, probably all 
+or most of gpio.txt needs to be moved there if not already. But for now,
 
-I'm looping in Clement from Delta as well as the Upstream Working
-Group from DENT [0].
+Acked-by: Rob Herring <robh@kernel.org>
 
-Thanks,
-
-Luka
-
-[0] https://dent.dev/
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index a8895d339bfe..1061c346a619 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -196,11 +196,16 @@ Only one of the following properties scanned in the order shown below.
+>  This means that when multiple properties are present they will be searched
+>  in the order presented below and the first match is taken as the intended
+>  configuration.
+> -- input:      A property specifying to set the GPIO direction as input.
+> -- output-low  A property specifying to set the GPIO direction as output with
+> -	      the value low.
+> -- output-high A property specifying to set the GPIO direction as output with
+> -	      the value high.
+> +- input:             A property specifying to set the GPIO direction as input.
+> +- output-deasserted: A property specifying to set the GPIO direction as output
+> +		     with the inactive value (depending on the line's polarity,
+> +		     which is active-high by default)
+> +- output-asserted:   A property specifying to set the GPIO direction as output
+> +		     with the active value.
+> +
+> +For backwards compatibility "output-low" and "output-high" should be supported
+> +as aliases for "output-deasserted" and "output-asserted" respectively. Their
+> +usage is misleading for active-low outputs, so their use is discouraged.
+>  
+>  Optional properties:
+>  - line-name:  The GPIO label name. If not present the node name is used.
+> -- 
+> 2.30.2
+> 
