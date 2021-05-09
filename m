@@ -2,138 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DD183774B4
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 May 2021 02:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE5DA377619
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 May 2021 11:46:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbhEIA26 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 8 May 2021 20:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbhEIA25 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 May 2021 20:28:57 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1025AC06175F
-        for <linux-gpio@vger.kernel.org>; Sat,  8 May 2021 17:27:53 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id b7so16311042ljr.4
-        for <linux-gpio@vger.kernel.org>; Sat, 08 May 2021 17:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sOG7GoczpFfze5AyMT4RluOASRTehzGf0LNWttOKk5c=;
-        b=fd/VQghyl1il11WcKIahjTpti38ABPOV+dWJY++N6qi+RgRaK1GW8Sk7C+ltz/7Xga
-         z0doL14X6Ldz+/jney8rR8LcRGt+D2mcXm9tdfOGM6mOugc45rNXotg+pcpI6ZU/Tuex
-         uG4xC2vISLas1g8vYAfDvc/8Vwhd6Rdc/JSw5APFXzlTg+j3aXEKzb2YGGeHPcTbK+Zz
-         qaDpZ7G34rsLW5ylHIuAe5pKPqjvDpmVNXKM8lnDzNkxYjZWOua/S1Cml+oCCo6j343y
-         cKeiz60axq1J9KfnYqCtYJfJxfVXxyJ1JA0Pl6fAzDQdiOBkEMgO3cW4jlJ4Mn16HamA
-         RMng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sOG7GoczpFfze5AyMT4RluOASRTehzGf0LNWttOKk5c=;
-        b=JlglUQhhrby+x8azFcoaSjFQMzuKx6maBidMs3AMQIwyVPqTE/vfgByTGUoBT8W951
-         OQdQR8qM0yHuCF+t251kHvQRwLzJNQWs6QDjgTv0SY1ewMhS4EVfce+Zp7tC9B1Qp7dJ
-         qbMK5wvsGkuD4BiHH0hbCePZkZC4Bt4mNtoIfI1WD4/EIgDq0/wJl34v21fkpYovLM2D
-         n9gPlv60YIACfzsesSV2g4eJNY5JUh+O4A4Efwhbj0UxkbjzTjD9SWBZV4LtjdDUIJ4M
-         qQlcrJnmYIyMCY16244AgE8Xo7dygrvc6O6UzsbcGwbZuMN5c4Bx9zLnq4Wp1DD2U7r/
-         W+qQ==
-X-Gm-Message-State: AOAM532EcbfVTGqw4b4eamQG1uB3UyT03IHQNirOxLkJBE8hEIHpCiZ1
-        /WNaw2lnBFzPJc1Cd9Ba2LhsV3gSqZ/7vcKt/i4biw==
-X-Google-Smtp-Source: ABdhPJytxvCNL0+i08ru81BLLE5rAKxOEzAlmjHrXOhOGfZ4saKKLNoNxxgTYNohihYYlBVogll59unffk6oK9h0E/k=
-X-Received: by 2002:a2e:22c3:: with SMTP id i186mr5939134lji.273.1620520071392;
- Sat, 08 May 2021 17:27:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210508142000.85116-1-kettenis@openbsd.org> <20210508142000.85116-2-kettenis@openbsd.org>
- <CACRpkdbUNs_FFv9RteWKUrxBdRuiXU2Fkt-oY4=Phke4gNBoaQ@mail.gmail.com> <c1bd678c5dc81db8@bloch.sibelius.xs4all.nl>
-In-Reply-To: <c1bd678c5dc81db8@bloch.sibelius.xs4all.nl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 9 May 2021 02:27:40 +0200
-Message-ID: <CACRpkdb=0EQN=CJqfjKS-iuAiKCvU38fw5krzEY5LvhNpyFd3w@mail.gmail.com>
+        id S229579AbhEIJrX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 May 2021 05:47:23 -0400
+Received: from sibelius.xs4all.nl ([83.163.83.176]:50771 "EHLO
+        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229555AbhEIJrW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 May 2021 05:47:22 -0400
+Received: from localhost (bloch.sibelius.xs4all.nl [local])
+        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id 88a9b5b7;
+        Sun, 9 May 2021 11:46:17 +0200 (CEST)
+Date:   Sun, 9 May 2021 11:46:17 +0200 (CEST)
+From:   Mark Kettenis <mark.kettenis@xs4all.nl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     kettenis@openbsd.org, devicetree@vger.kernel.org, marcan@marcan.st,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CACRpkdbexpwu9hDWFYe38-+issVw051YfJ-_hatZVmWzkh4M+w@mail.gmail.com>
+        (message from Linus Walleij on Sun, 9 May 2021 02:18:52 +0200)
 Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT bindings for apple,pinctrl
-To:     Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc:     kettenis@openbsd.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hector Martin <marcan@marcan.st>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        sven@svenpeter.dev
-Content-Type: text/plain; charset="UTF-8"
+References: <20210508142000.85116-1-kettenis@openbsd.org> <20210508142000.85116-2-kettenis@openbsd.org> <CACRpkdbexpwu9hDWFYe38-+issVw051YfJ-_hatZVmWzkh4M+w@mail.gmail.com>
+Message-ID: <c1bd67fcc0390275@bloch.sibelius.xs4all.nl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, May 9, 2021 at 1:02 AM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> [Me]
-> > On Sat, May 8, 2021 at 4:20 PM Mark Kettenis <kettenis@openbsd.org> wrote:
+> From: Linus Walleij <linus.walleij@linaro.org>
+> Date: Sun, 9 May 2021 02:18:52 +0200
 
-> My U-Boot driver is here:
+Hi Linus,
 
-Thanks! Looks nice.
+> here is a second note on pin mux layout:
+> 
+> On Sat, May 8, 2021 at 4:20 PM Mark Kettenis <kettenis@openbsd.org> wrote:
+> 
+> > +        pcie_pins: pcie-pins {
+> > +          pinmux = <APPLE_PINMUX(150, 1)>,
+> > +                   <APPLE_PINMUX(151, 1)>,
+> > +                   <APPLE_PINMUX(32, 1)>;
+> (...)
+> > +#define APPLE_PINMUX(pin, func) ((pin) | ((func) << 16))
+> > +#define APPLE_PIN(pinmux) ((pinmux) & 0xffff)
+> > +#define APPLE_FUNC(pinmux) ((pinmux) >> 16)
+> 
+> Since the word altfunction is used, I suppose that this is
+> one of those pin controllers where each pin can be
+> muxed individually (usually with one register or one group
+> of bits per pin).
 
-> > > +description: |
-> > > +  The Apple GPIO controller is a simple combined pin and GPIO controller
-> >
-> > spelling
->
-> Not sure I'm seeing a spelling mistake here.  Do you want a comma
-> inserted somewhere?
+Right.  So far it seems that there are just two functions: GPIO and a
+peripheral mode.  But there are some unused bits in the register right
+next to the bit that controls the function, so maybe we'll see other
+function numbers in the future.
 
-Your original mail says "conroller" but the helpful google mail
-editor autocorrected the mistake when I hit enter after it.
+> So this is one way to do it, which
+> 
+> Another way is what Qualcomm is doing and looks for
+> example like this:
+> 
+> pinctrl@800000 {
+>          /* eMMMC pins, all 8 data lines connected */
+>          dragon_sdcc1_pins: sdcc1 {
+>                  mux {
+>                          pins = "gpio159", "gpio160", "gpio161",
+>                               "gpio162", "gpio163", "gpio164",
+>                               "gpio165", "gpio166", "gpio167",
+>                               "gpio168";
+>                          function = "sdc1";
+>                  };
+> (...)
+> 
+> Here all pins have a name and they get assigned as a group
+> to a function. Each pin is referenced by name.
 
-> > So is this an entirely Apple thing now, and not based on some Samsung
-> > block from S3C like what we have seen before?
->
-> As far as I can tell, yes.  This Apple controller has a single
-> register per pin that controls the muxing and gpio functions, whereas
-> the S3C controller seems to have 4 registers per pin.
+Since we will probably never have a data sheet or board schematics for
+the Apple devices giving meaningful names to the pins isn't really
+possible.  So you'd end up with generic "gpioNNN" names like in the
+example above.
 
-Fair enough.
+> Some people don't like this because they like bitstuffing and
+> bitfiddling and are worried that the DTB file strings will take
+> up too much memory, and they have to include all these
+> strings in their operating system driver.
 
-> > What I am really wondering is if these interrupts are hierarchical,
-> > i.e. that they match 1-to-1 to a GPIO line.
->
-> They don't match 1-1.  The GPIOs can be assigned to one of
-> (apparently) 7 interrupt groups.
+The memory thing is certainly a consideration for U-Boot, although not
+particularly for this platform.  With my OpenBSD hat on I must say
+that we try to avoid string parsing in the kernel as much as possible,
+which is why I would prefer pin numbers over strings.  Interestingly
+enough the pinmux-node.yaml schema allows the use of numbers instead
+of strings for the "pins" property.  But neither U-Boot nor Linux
+seems to implement support for this in its generic pinctrl/pinmux
+code.
 
-Aha so it is a 1-to-1..* thing. How delicate.
+However, the main reason for me to pick the "pinmux" scheme used by
+STM32 is to make things a bit more future proof.  We expect Apple to
+come out with new models and new SoCs on a regular basis and there is
+some evidence that Apple tends to re-uses hardware blocks between SoC
+generations.  So we hope that it will be possible to add support for
+new Apple hardware by simply providing new device trees in m1n1 (the
+bootloader developed by Asahi).  Then all we have to do is update m1n1
+with a new device tree and people can simply use an existing distro
+without having to wait until the latest kernel becomes available for
+their distro.  My feeling is that this is a bit easier to achieve
+using the bitstuffing/fiddling approach, although with some wisely
+chosen names for the alternate functions, the string-based approach
+might work as well.
 
->  I haven't looked to closely at this
-> yet since U-Boot doesn't need/use the interrupt capability.  But I
-> suspect that pins don't have to be assigned to a interrupt group and
-> that explains why there are only 7 interrupt groups as the 8th state
-> is reserved for "unasigned".  The number of pins per controller
-> varies, but one of them has 212 pins.
+> However there are clear upsides to it, when you later on
+> come to set up the electrical pin config:
+> 
+>                 cmd {
+>                          pins = "gpio168"; /* SDC1 CMD */
+>                          drive-strength = <12>;
+>                          bias-pull-up;
+>                  };
+>                  data {
+>                          /* SDC1 D0 to D7 */
+>                          pins = "gpio159", "gpio160", "gpio161", "gpio162",
+>                                "gpio163", "gpio164", "gpio165", "gpio166";
+>                          drive-strength = <8>;
+>                          bias-pull-none;
+>                   };
+> 
+> As you can see this becomes quite readable. It is clear and
+> crisp which pins are set up for pull-up and not, and what
+> drive strength is used on each pin.
+> 
+> But notice first and foremost this: the muxing is done in
+> one node, and the electrical config is done in two separate
+> nodes, breaking muxing and config into two different
+> categories in the device tree.
 
-Wow.
+I do see the elegance of this approach.
 
-> Multiple pins can be assigned to the same interrupt group as far as I
-> can tell.  So in that case the driver will have to look at status
-> bits.
+> The problem with the magic number approach to muxing
+> is that the magic numbers will fall through to the
+> electrical pin config later and indeed it looks like in the STM32
+> device trees:
+> 
+> sdmmc1_b4_od_pins_a: sdmmc1-b4-od-0 {
+>         pins1 {
+>                 pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
+>                                 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
+>                                 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
+>                                 <STM32_PINMUX('C', 11, AF12)>, /* SDMMC1_D3 */
+>                                 <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
+>                 slew-rate = <3>;
+>                 drive-push-pull;
+>                 bias-disable;
+>         };
+>         pins2 {
+>                 pinmux = <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1_CMD */
+>                 slew-rate = <3>;
+>                 drive-open-drain;
+>                 bias-disable;
+>          };
+> };
+> 
+> Notice here how the pins need to be separated into two subnodes
+> in order to set different electrical configuration on them, and how
+> muxing and configuration are mixed up. This is a side effect of
+> using the "pinmux" attribute rather than "pins" and "function".
+> 
+> So make sure you really like this rather than the other approach
+> in your device trees.
 
-OK then this is not hierarchical.
+Right.  So far it seems we don't need to set the electrical config on
+any of the pins and I don't think we've identified any bits in the
+register that change the electrical configuration.  Although there are
+some hints in the Apple device tree that there are pins that need some
+additional configuration.  But I also see some evidence that the Apple
+firmware on these devices already sets up most of the pins for us.
 
-> > Marc Zyngier can probably tell the story of why it is handled
-> > like this,
->
-> Ok, hopefully Marc can say something sensible here, but I'd say the
-> interrupts on this hardware are cascaded.
+> I will definately insist that you electrical config be done similar
+> to how STM32 does it when you implement that later, for
+> example any magic numbers for electrical config is not
+> acceptable, you will have to find a way to use drive-open-drain;
+> and such flags in the device tree.
 
-Yes looks like so, it will be an interesting interrupt driver when
-you get to that.
+Agreed.  The plan was that when we get at the point where we need to
+fiddle with the electrical configuration of pins, we simply add a
+reference to pincfg-node.yaml to the schema.
 
-I have only the question in my second mail (just sent) but in any
-case you are not doing anything out of the ordinary (it looks very
-similar to the STM32) so I'm pleased with this binding.
+> Sadly we have something like three different ways to do
+> pin control device tree, as a result of failure to find consensus.
 
-I wanna give the DT reviewers some time to look at it as well
-but I imagine we can soon merge this.
-
-Yours.
-Linus Walleij
+Thank you for giving quite an extensive explanation of the options.  I
+think all things considered, I am still happy with using the "pinmux"
+property, but if Hector or Sven think the "pin"/"function" approach
+with strings is better, I can change it.  Implementing that approach
+in U-Boot isn't a huge burden either.  In fact that was pretty much
+what my initial implementation based on the bindings used by Corellium
+did.
