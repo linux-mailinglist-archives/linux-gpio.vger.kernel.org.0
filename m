@@ -2,44 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FE3437950C
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 May 2021 19:10:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 138D03796EC
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 May 2021 20:18:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231874AbhEJRLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 May 2021 13:11:05 -0400
-Received: from sibelius.xs4all.nl ([83.163.83.176]:63886 "EHLO
-        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231713AbhEJRLF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 May 2021 13:11:05 -0400
-Received: from localhost (bloch.sibelius.xs4all.nl [local])
-        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id 04c0d1db;
-        Mon, 10 May 2021 19:09:58 +0200 (CEST)
-Date:   Mon, 10 May 2021 19:09:58 +0200 (CEST)
-From:   Mark Kettenis <mark.kettenis@xs4all.nl>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     kettenis@openbsd.org, devicetree@vger.kernel.org, marcan@marcan.st,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <3bad54b9-599a-91c6-48b8-dd1c494f61b5@canonical.com> (message
-        from Krzysztof Kozlowski on Mon, 10 May 2021 09:03:13 -0400)
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT bindings for
- apple,pinctrl
-References: <20210508142000.85116-1-kettenis@openbsd.org>
- <20210508142000.85116-2-kettenis@openbsd.org> <3bad54b9-599a-91c6-48b8-dd1c494f61b5@canonical.com>
-Message-ID: <5612be6e2a63adbd@bloch.sibelius.xs4all.nl>
+        id S231668AbhEJSTu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 May 2021 14:19:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231538AbhEJSTu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 10 May 2021 14:19:50 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 497AC61482;
+        Mon, 10 May 2021 18:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620670725;
+        bh=MKrc8vxS2hqXSFWYT5qeFMnsprfwoWsgRYppPKS+pYs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WlQXgxkDUb8Y+UzZafia+3jSCAC4mZVopyOWkmhHfYd0xiiRzQhHXWT1J2TnUTelv
+         ecT98+BaetxDHp81MQevQaY0Pu9wh5AabTKtv9h7n10g6pbHh388LWc46UmnYSW+Kh
+         04ir2WZD0/Hrd+OIYc6a4O8HuzML126orV6+uUq9bO1X5GKvQKnVid1yeW90SiaLCs
+         1GGGatvcE5+PGtxcR0/byPOo1TyZqfs+IWo2xueyCU2jl0IT3QB/5HU+oB4rHaKx5W
+         HinybqQLSLiN9IR1VB34CCpspFoWpokoHhNXfeZxMTAIS01zbSTsp+o81xZ1vqd2/C
+         WaTk/qCWa1BpA==
+Received: by mail-ej1-f51.google.com with SMTP id t4so26016428ejo.0;
+        Mon, 10 May 2021 11:18:45 -0700 (PDT)
+X-Gm-Message-State: AOAM531SC7l1AfFYSh+HHx/NFRscNoxUHJ9gfnta3tiveaqa/xUmaD2Q
+        w8h2KYHwJBIgspS3y2H9dIqUPvaFbD0Qzk8H8Q==
+X-Google-Smtp-Source: ABdhPJzH+hWCzV2ejRCH4BuU2aXMIebOAlVCVaxn3xqgOo25O8ps5efikMC8FhthVf6UqTFwq48Jn4/sdw6T+XLt4I8=
+X-Received: by 2002:a17:906:dbdc:: with SMTP id yc28mr7579257ejb.130.1620670723760;
+ Mon, 10 May 2021 11:18:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210508142000.85116-1-kettenis@openbsd.org> <20210508142000.85116-2-kettenis@openbsd.org>
+ <1620655299.786306.41436.nullmailer@robh.at.kernel.org>
+In-Reply-To: <1620655299.786306.41436.nullmailer@robh.at.kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 10 May 2021 13:18:31 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJVOW2YV=-DOgv8Rzke57KP+1D=60d0RF7mcV7TZbdm5Q@mail.gmail.com>
+Message-ID: <CAL_JsqJVOW2YV=-DOgv8Rzke57KP+1D=60d0RF7mcV7TZbdm5Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT bindings for apple,pinctrl
+To:     Mark Kettenis <kettenis@openbsd.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hector Martin <marcan@marcan.st>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> From: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> Date: Mon, 10 May 2021 09:03:13 -0400
-> 
-> On 08/05/2021 10:19, Mark Kettenis wrote:
+On Mon, May 10, 2021 at 9:01 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, 08 May 2021 16:19:55 +0200, Mark Kettenis wrote:
 > > The Apple GPIO controller is a simple combined pin and GPIO conroller
 > > present on Apple ARM SoC platforms, including various iPhone and iPad
 > > devices and the "Apple Silicon" Macs.
-> > 
+> >
 > > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
 > > ---
 > >  .../bindings/pinctrl/apple,pinctrl.yaml       | 103 ++++++++++++++++++
@@ -48,50 +66,22 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 > >  3 files changed, 118 insertions(+)
 > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
 > >  create mode 100644 include/dt-bindings/pinctrl/apple.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-> > new file mode 100644
-> > index 000000000000..cc7805ca6ba1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-> > @@ -0,0 +1,103 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pinctrl/apple,pinctrl.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Apple GPIO controller
-> > +
-> > +maintainers:
-> > +  - Mark Kettenis <kettenis@openbsd.org>
-> > +
-> > +description: |
-> > +  The Apple GPIO controller is a simple combined pin and GPIO conroller
-> > +  present on Apple ARM SoC platforms, including various iPhone and iPad
-> > +  devices and the "Apple Silicon" Macs.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: apple,t8103-pinctrl
-> > +      - const: apple,pinctrl
-> 
-> What is the point of having very generic final compatible in the binding
-> which does not relate to actual hardware?
-> 
-> Let's say next SoC will be
-> apple,x-abcd-foo-2323-whatever-nothing-in-common and you still have to
-> use generic "apple,pinctrl" even though HW is not at all compatible?
-> This looks like wildcard, not HW description.
+> >
+>
+> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> Documentation/devicetree/bindings/pinctrl/apple,pinctrl.example.dts:19:18: fatal error: dt-bindings/interrupt-controller/apple-aic.h: No such file or directory
+>    19 |         #include <dt-bindings/interrupt-controller/apple-aic.h>
+>       |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> make[1]: *** [scripts/Makefile.lib:377: Documentation/devicetree/bindings/pinctrl/apple,pinctrl.example.dt.yaml] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> make: *** [Makefile:1414: dt_binding_check] Error 2
 
-Hi Krzysztof,
+Ignore this. I've now updated the base to 5.13-rc1.
 
-See my reply to Rob's mail.  We have some confidence that Apple isn't
-changing their GPIO block very often.  If they were to change it in an
-incompatible way in a future SoC, we'd drop the "apple,pinctrl"
-compatible of course.
-
-Thanks,
-
-Mark
+Rob
