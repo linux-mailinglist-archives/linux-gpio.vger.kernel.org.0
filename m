@@ -2,149 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78F43378F7E
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 May 2021 15:53:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 339F7378F80
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 May 2021 15:53:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236513AbhEJNl4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 May 2021 09:41:56 -0400
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:33336 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235728AbhEJM7f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 May 2021 08:59:35 -0400
-Received: by mail-lf1-f54.google.com with SMTP id h4so23258057lfv.0
-        for <linux-gpio@vger.kernel.org>; Mon, 10 May 2021 05:58:26 -0700 (PDT)
+        id S236986AbhEJNl6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 May 2021 09:41:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44298 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238635AbhEJNEh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 May 2021 09:04:37 -0400
+Received: from mail-qt1-f198.google.com ([209.85.160.198])
+        by youngberry.canonical.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <krzysztof.kozlowski@canonical.com>)
+        id 1lg5ZB-0007DH-0P
+        for linux-gpio@vger.kernel.org; Mon, 10 May 2021 13:03:21 +0000
+Received: by mail-qt1-f198.google.com with SMTP id r20-20020ac85c940000b02901bac34fa2eeso10321700qta.11
+        for <linux-gpio@vger.kernel.org>; Mon, 10 May 2021 06:03:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
-         :in-reply-to:references:mime-version:date:user-agent;
-        bh=cKn1sJZaD8pAD5FPzV5qlxqaHrySH0ASfAx5sQGN1vA=;
-        b=q1GyFM9P44Ex9ZYNLJmn5AbHIPqumPyYftR+OF4UJYPIvzKs5DQ1c5kfP9ox4tPdLc
-         HIyWHMAal1FqqRh5HRvFWj2TCwsCR6vrcjkHFnGmYi9Wv+QxsDfIgvuDcdkq5CkuUc5i
-         xrgPrB1OjIjJpqkCi3V1N7Gp9f6YqlYDVSFPeXnzmk7ORHnpxH46fEtRWS0nRcmLzH/w
-         rqC6M7fCVPjICqbEVJL21CMX6CL7jkfFVy9sSP3VIQ5RFcJ44GOqVQZCG6TpvN/naor2
-         cF4xXIyDC1Im0XXGZtBeykgKxcSTfIsZT+GMeuII8nUtW5UqL8n7DMbKFTx88XguHqKs
-         vkBg==
-X-Gm-Message-State: AOAM532Sj2h6NgtWq2JddDPGZKsuDjhmjNoJCHSfLX743sHoduniVs6z
-        9m/ml6tlmsWW5p9D2DS95i4=
-X-Google-Smtp-Source: ABdhPJwWKkjxYFguyqWWMe4S5LvTmamHD2c9xnNpJ2viZ8CA43xN/1u4blKeMgnBAMbaQe87Qxaztw==
-X-Received: by 2002:ac2:5fcb:: with SMTP id q11mr16628799lfg.248.1620651505898;
-        Mon, 10 May 2021 05:58:25 -0700 (PDT)
-Received: from dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::2])
-        by smtp.gmail.com with ESMTPSA id x1sm3137815ljd.61.2021.05.10.05.58.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 May 2021 05:58:25 -0700 (PDT)
-Message-ID: <c4faac648d3e0c7f3dcb50f7e24c8b322e8c6974.camel@fi.rohmeurope.com>
-Subject: regmap-gpio: Support set_config and other not quite so standard
- ICs?
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reply-To: matti.vaittinen@fi.rohmeurope.com
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>,
-        =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MbGqG1sl2bPlNa6+74LoXiACLGc6BiOtk88NxsSE+AY=;
+        b=RoxRTBYr+e+JMfTauDH5R5sYyp+bEVfvFt/9BILt73x8xeo5KjLCbeqwRG+dRFyMME
+         WSJCoputdJ6JihNTHkbp9uJOGjGe4nFWNfOL/d+l4QW3FWo3iGvmB9+krHZ6B2+sBPvQ
+         VLngkOdbf8VJBFtg0sMCdj9Mikbu816BRVF56wRBKJS5RC9cf5umyyFurWmuJhIvNcrM
+         wYIM5gxvNbLNB0/M91IKIq5mjVPapQi5Kh7b/4aA3zeRZ5tECS8k5LNC9h38u4VcMH7i
+         makev00RfKDvPFPS0YHnx5/BSjtTEPvehpeBQWQYTImt4DAGiPgS8WCh4DyxGwynDwSc
+         1T2w==
+X-Gm-Message-State: AOAM531vGNywhsMiyUNltlk2/62Q2nbX4nudVKyXrRk1NWPhJq+c9TWO
+        Qp88ZJMC8EM6qI4dzgeecBi1xq2C4PvLFcsdJQ6OK5pAcwfcjYKMVr2zop46rHOlhM62Tl5QCNh
+        GuDz3HXM/mBl2UAFuU2hyVNaHjO/y/OsIHLycl9E=
+X-Received: by 2002:a05:620a:15f7:: with SMTP id p23mr21786082qkm.178.1620651800142;
+        Mon, 10 May 2021 06:03:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzd8s28LSxq8tUMy7z9+LnTPfJPs32ao6LYW4bs5JpkeVNJFE9Gh7LFTqRifB+Q6AdPYAjS0w==
+X-Received: by 2002:a05:620a:15f7:: with SMTP id p23mr21786045qkm.178.1620651799761;
+        Mon, 10 May 2021 06:03:19 -0700 (PDT)
+Received: from [192.168.1.4] ([45.237.49.1])
+        by smtp.gmail.com with ESMTPSA id q13sm11608797qkj.43.2021.05.10.06.03.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 May 2021 06:03:18 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT bindings for
+ apple,pinctrl
+To:     Mark Kettenis <kettenis@openbsd.org>, devicetree@vger.kernel.org
+Cc:     Hector Martin <marcan@marcan.st>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>
-In-Reply-To: <c5a4ef7341b5b0b56d1ad950867828463cfdb7fc.camel@fi.rohmeurope.com>
-References: <cover.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
-         <b2164e5965218f270e17bf29e00ad5c5a0b54bcf.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
-         <CACRpkdZnrkiYGaOTZLvCnp72WYiV0+YhCe+TbMjN_3CLyJHvgA@mail.gmail.com>
-         <c5a4ef7341b5b0b56d1ad950867828463cfdb7fc.camel@fi.rohmeurope.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-9Gt92+/OVSlgeSHCDewM"
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210508142000.85116-1-kettenis@openbsd.org>
+ <20210508142000.85116-2-kettenis@openbsd.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Message-ID: <3bad54b9-599a-91c6-48b8-dd1c494f61b5@canonical.com>
+Date:   Mon, 10 May 2021 09:03:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Date:   Mon, 10 May 2021 15:58:13 +0300
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+In-Reply-To: <20210508142000.85116-2-kettenis@openbsd.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 08/05/2021 10:19, Mark Kettenis wrote:
+> The Apple GPIO controller is a simple combined pin and GPIO conroller
+> present on Apple ARM SoC platforms, including various iPhone and iPad
+> devices and the "Apple Silicon" Macs.
+> 
+> Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> ---
+>  .../bindings/pinctrl/apple,pinctrl.yaml       | 103 ++++++++++++++++++
+>  MAINTAINERS                                   |   2 +
+>  include/dt-bindings/pinctrl/apple.h           |  13 +++
+>  3 files changed, 118 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+>  create mode 100644 include/dt-bindings/pinctrl/apple.h
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> new file mode 100644
+> index 000000000000..cc7805ca6ba1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> @@ -0,0 +1,103 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/apple,pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Apple GPIO controller
+> +
+> +maintainers:
+> +  - Mark Kettenis <kettenis@openbsd.org>
+> +
+> +description: |
+> +  The Apple GPIO controller is a simple combined pin and GPIO conroller
+> +  present on Apple ARM SoC platforms, including various iPhone and iPad
+> +  devices and the "Apple Silicon" Macs.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: apple,t8103-pinctrl
+> +      - const: apple,pinctrl
 
---=-9Gt92+/OVSlgeSHCDewM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+What is the point of having very generic final compatible in the binding
+which does not relate to actual hardware?
 
-Hi Linus, All,
+Let's say next SoC will be
+apple,x-abcd-foo-2323-whatever-nothing-in-common and you still have to
+use generic "apple,pinctrl" even though HW is not at all compatible?
+This looks like wildcard, not HW description.
 
-On Thu, 2021-03-25 at 12:32 +0200, Matti Vaittinen wrote:
-> On Thu, 2021-03-25 at 10:35 +0100, Linus Walleij wrote:
 
-snip
-
-> > It could potentially (like the other Rohm GPIO MFD PMIC drivers)
-> > make some use of the gpio regmap library, but we have some
-> > pending changes for that so look into it after the next merge
-> > window.
-> >=20
-> > I.e. for your TODO: look at the GPIO_REGMAP helper.
->=20
-> I just took a quick peek at gpio_regmap and it looks pretty good to
-> me!
->=20
-> Any particular reason why gpio_regmap is not just part of gpio_chip?
-> I
-> guess providing the 'gpio_regmap_direction_*()', 'gpio_regmap_get()',
-> 'gpio_regmap_set()' as exported helpers and leaving calling the
-> (devm_)gpiochip_add_data() to IC driver would have allowed more
-> flexibility. Drivers could then use the gpio_regamap features which
-> fit
-> the IC (by providing pointers to helper functions in gpio_chip) - and
-> handle potential oddball-features by using pointers to some
-> customized
-> functions in gpio_chip.
-
-So, v5.13-rc1 is out. I started wondering the gpio_regamap - and same
-question persists. Why hiding the gpio_chip from gpio_regmap users?
-
-Current IF makes it very hard (impossible?) for driver to override any
-of the regmap_gpio functions (or provide own alternatives) for cases
-which do not fit the generic regmap_gpio model.
-
-My first obstacle is providing gpio_chip.set_config for BD71815.
-
-1) I guess the method fitting current design would be adding drive-mode=20
-register/mask(s) to the gpio_regmap_config. Certainly doable - but I
-have a bad feeling of this approach. I am afraid this leads to bloating
-the gpio_regmap_config with all kinds of IC specific workarounds (when
-HW designers have invented new cool control registers setups) - or then
-just not using the regmap_gpio for any ICs which have any quirks - even
-if 90% of regmap_gpio logic would fit...
-
-2) Other possibility is allowing IC driver to provide function pointers
-for some operations (in my case for example for the set_config) - if
-the default operation the regmap_gpio provides does not fit the IC.
-This would require the regmap_gpio to be visible to IC drivers so that
-IC drivers can access the regmap, device & register information - or
-some way to convert the gpio_chip pointer to IC specific private data
-pointer. Doable but still slightly bloat.
-
-3) The last option would be adding pointer to regmap_gpio to gpio_chip
-- and exporting the regmap_gpio functions as helpers - leaving the gpio
-registration to be done by the IC driver. That would allow IC driver to
-use the regmap_gpio helpers which suit the IC and write own functions
-for rest of the stuff.
-
-I'd like to hear opinions - should I draft some changes according to
-these proposals (which one, 1,2,3 or something else?) - or as this all
-been already discussed and am I just missing something?
-
-Best Regards
-	Matti Vaittinen
-
---=-9Gt92+/OVSlgeSHCDewM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmCZLV8ACgkQeFA3/03a
-ocXOIAf/VIBlVdyAe38lPehMQicv+HlB2gxgu30zw8J6n7Xfn78n742GtIC6jxJQ
-qHLF8HnhrpA5QUkY5YW0OwGhaMK2lnByf5r1dNmBL70iXUNBbL1e0R2D0M/wYM16
-Xz7xnnIdQHy2AoI9zGZUAzBm9beBS9SJbPN5GBOwpVBehQVfSGZuEi/kieIq7/Kr
-VmebWJtEZ/zZ2tcUUCXjB2wjda9DqLFeKutuJDcpMSYyqNVzMI4CtcPp2pRzm0SC
-abetCHeREBKSZE0BZ7//+Efcgz8JM/RzWV9OA/iP0akoDQ+GpB8RyyitOs5FDpeQ
-OnqF3ebf75smWQqW+H2EtgyAo05Sag==
-=VVry
------END PGP SIGNATURE-----
-
---=-9Gt92+/OVSlgeSHCDewM--
-
+Best regards,
+Krzysztof
