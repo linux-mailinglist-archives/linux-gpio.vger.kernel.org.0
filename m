@@ -2,82 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A21D377C60
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 May 2021 08:37:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD926378C0F
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 May 2021 14:23:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbhEJGin (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 May 2021 02:38:43 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:50254 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230002AbhEJGin (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 May 2021 02:38:43 -0400
-Received: from localhost (unknown [192.168.167.130])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 41CF7C8603;
-        Mon, 10 May 2021 14:37:37 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P29694T140717190006528S1620628656593974_;
-        Mon, 10 May 2021 14:37:37 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <e409584a888479cdfcdec1650aab20fe>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-RCPT-COUNT: 7
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     heiko@sntech.de, linus.walleij@linaro.org, robh+dt@kernel.org
-Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 7/7] gpio/rockchip: drop irq_gc_lock/irq_gc_unlock for irq set type
-Date:   Mon, 10 May 2021 14:37:34 +0800
-Message-Id: <20210510063734.506063-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210510063602.505829-1-jay.xu@rock-chips.com>
-References: <20210510063602.505829-1-jay.xu@rock-chips.com>
+        id S232906AbhEJMX0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 May 2021 08:23:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:61489 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232963AbhEJLmp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 10 May 2021 07:42:45 -0400
+IronPort-SDR: +Dlmg2nO2oGtVzc12S7huKkcr/sium3IlBBJhPtcow91felFSa7aOYKsdoIS++J4YwJZoy75QC
+ EvMI1yPxQM8w==
+X-IronPort-AV: E=McAfee;i="6200,9189,9979"; a="179437058"
+X-IronPort-AV: E=Sophos;i="5.82,287,1613462400"; 
+   d="scan'208";a="179437058"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2021 04:41:31 -0700
+IronPort-SDR: tKjJSy1dxkwBuZiaBhrEkYJzafCby4NctDWZ2T2FDg6VyyYnVbn/PgUEhIW1c3bu6yr5y8KaG7
+ BjbzMAouXG3w==
+X-IronPort-AV: E=Sophos;i="5.82,287,1613462400"; 
+   d="scan'208";a="541176921"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2021 04:41:29 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lg4Hu-00B9oP-GR; Mon, 10 May 2021 14:41:26 +0300
+Date:   Mon, 10 May 2021 14:41:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v1] ARM: Drop ARCH_NR_GPIOS definition
+Message-ID: <YJkb5unmBKSgbaye@smile.fi.intel.com>
+References: <20201012154709.68521-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdZCrEpXq1DrWJ7Qq4P3xbOAcQQ3qUe0k0J8_FQv2vpZSg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZCrEpXq1DrWJ7Qq4P3xbOAcQQ3qUe0k0J8_FQv2vpZSg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There has spin lock for irq set type already, so drop irq_gc_lock and
-irq_gc_unlock.
+On Tue, Mar 02, 2021 at 04:51:37PM +0100, Linus Walleij wrote:
+> Hi Andy,
+> 
+> On Mon, Oct 12, 2020 at 5:47 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > The conditional by the generic header is the same,
+> > hence drop unnecessary duplication.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> sorry for extremely slow reply.
+> 
+> I think we could merge this into the GPIO tree if Russell is OK with it,
+> alternatively put it in Russell's patch tracker. It looks absolutely correct.
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- drivers/gpio/gpio-rockchip.c | 2 --
- 1 file changed, 2 deletions(-)
+I have sent a v2 (same patch, just in case somebody lost this thread).
 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 048e7eecddba..c9c55614bbef 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -406,7 +406,6 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 		irq_set_handler_locked(d, handle_level_irq);
- 
- 	raw_spin_lock_irqsave(&bank->slock, flags);
--	irq_gc_lock(gc);
- 
- 	level = rockchip_gpio_readl(bank, bank->gpio_regs->int_type);
- 	polarity = rockchip_gpio_readl(bank, bank->gpio_regs->int_polarity);
-@@ -461,7 +460,6 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 	rockchip_gpio_writel(bank, level, bank->gpio_regs->int_type);
- 	rockchip_gpio_writel(bank, polarity, bank->gpio_regs->int_polarity);
- out:
--	irq_gc_unlock(gc);
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
- 
- 	return ret;
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
 
 
