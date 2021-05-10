@@ -2,146 +2,217 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25FCF3794A5
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 May 2021 18:54:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EF453794FB
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 May 2021 19:06:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232091AbhEJQz4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 May 2021 12:55:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231803AbhEJQzz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 May 2021 12:55:55 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523D8C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 10 May 2021 09:54:50 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id h127so14014268pfe.9
-        for <linux-gpio@vger.kernel.org>; Mon, 10 May 2021 09:54:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=57mg3zH0eIQBO65yckp+A5dcmn8vdqmIT/QkQbRlpsY=;
-        b=sIAHsBuBzRq0dRqHSzAyFu7IYZx4oPK9Hixdv7siYzH2NUGtRKHgl7XBMuRrSmnkrR
-         U8H/ltrhUmKQghvjTT/atCL99f4jWZRFvHnKrh3F9rWkbthCaaZNo32YKUX5wNqo0WzE
-         PLI/J2z/X87px6ZK9ZF2ICgPOzLbdN7z5BFIUWVn3opRD4KvwtFgJq/hG/N6lvxfQ+oc
-         u66fldXUsQKv3d3bqk+dcUgqZLb1giqx0gI4JbKTGLY3ZClEKP8HHcwbjPHvc5HwSWGh
-         irE/AQbiHvm2ay6A/aNCMJp6aZsGxd8aK/CPt9i9dKOnaReWh4/KaD4ECYYoRKwyhbjB
-         VgIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=57mg3zH0eIQBO65yckp+A5dcmn8vdqmIT/QkQbRlpsY=;
-        b=WpLLUsnGPSEGrX9gf3ytc5WDUuzTo9Fuc3Z46lYJFnmY687w+UL7OlwHFFEw2g5N5J
-         1e4TfgCp6oWU17+HL8rAQrultUoOiwB0ebcRI2MONiKZWu494gn0np+638TTpHx2pDKS
-         Y6rM0wJfgbeH1Dd0eufH9TG9Q/tJJ9u67z/NmVL8hHwT9CwHOZJZoXG0KGIT42XtAERm
-         T5ZNDN9dHVaAmujiPr1co7i062keAYWe4FKBpTQMj8aCCEdgDh7bg+tHUrLPh0MUtQsX
-         uBA/2055FnoTA0q+8ls7GbJ1iIZAhakTTRDQDihbtdSEoh50dT9Yw0RMlHyQoKYSkTFi
-         Ph7g==
-X-Gm-Message-State: AOAM530JQUmGgU1ugXJ+L8MgX4EDQm62zo4btcsQHqXcLBz9+iQa9wRP
-        Oa0HTYmw6xa6yTPvDAdFahhS7UArAhK4RqwwiVE=
-X-Google-Smtp-Source: ABdhPJztrE7CgWbK4RT79wkaSCaUPQM/e6VL27/NZdn2DZDuik0xvuHWHd33ILnJDeQZsT1+JCDep9vWVtjHWnlB54Q=
-X-Received: by 2002:a63:cd11:: with SMTP id i17mr25806600pgg.74.1620665689707;
- Mon, 10 May 2021 09:54:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
- <b2164e5965218f270e17bf29e00ad5c5a0b54bcf.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
- <CACRpkdZnrkiYGaOTZLvCnp72WYiV0+YhCe+TbMjN_3CLyJHvgA@mail.gmail.com>
- <c5a4ef7341b5b0b56d1ad950867828463cfdb7fc.camel@fi.rohmeurope.com> <c4faac648d3e0c7f3dcb50f7e24c8b322e8c6974.camel@fi.rohmeurope.com>
-In-Reply-To: <c4faac648d3e0c7f3dcb50f7e24c8b322e8c6974.camel@fi.rohmeurope.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 10 May 2021 19:54:33 +0300
-Message-ID: <CAHp75VcUva-1cv6xaU0-RADVS=GR1VMk50cqR5NPU1LCFX2N5A@mail.gmail.com>
-Subject: Re: regmap-gpio: Support set_config and other not quite so standard ICs?
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>,
-        =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
-        Michael Walle <michael@walle.cc>
-Content-Type: text/plain; charset="UTF-8"
+        id S231308AbhEJRHS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 May 2021 13:07:18 -0400
+Received: from sibelius.xs4all.nl ([83.163.83.176]:63725 "EHLO
+        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231230AbhEJRHR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 May 2021 13:07:17 -0400
+Received: from localhost (bloch.sibelius.xs4all.nl [local])
+        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id 6706a4c6;
+        Mon, 10 May 2021 19:06:10 +0200 (CEST)
+Date:   Mon, 10 May 2021 19:06:10 +0200 (CEST)
+From:   Mark Kettenis <mark.kettenis@xs4all.nl>
+To:     Rob Herring <robh@kernel.org>
+Cc:     kettenis@openbsd.org, devicetree@vger.kernel.org, marcan@marcan.st,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20210510141955.GA58072@robh.at.kernel.org> (message from Rob
+        Herring on Mon, 10 May 2021 09:19:55 -0500)
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT bindings for
+ apple,pinctrl
+References: <20210508142000.85116-1-kettenis@openbsd.org>
+ <20210508142000.85116-2-kettenis@openbsd.org> <20210510141955.GA58072@robh.at.kernel.org>
+Message-ID: <5612be5a12568600@bloch.sibelius.xs4all.nl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 10, 2021 at 4:41 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
->
-> Hi Linus, All,
->
-> On Thu, 2021-03-25 at 12:32 +0200, Matti Vaittinen wrote:
-> > On Thu, 2021-03-25 at 10:35 +0100, Linus Walleij wrote:
->
-> snip
->
-> > > It could potentially (like the other Rohm GPIO MFD PMIC drivers)
-> > > make some use of the gpio regmap library, but we have some
-> > > pending changes for that so look into it after the next merge
-> > > window.
-> > >
-> > > I.e. for your TODO: look at the GPIO_REGMAP helper.
-> >
-> > I just took a quick peek at gpio_regmap and it looks pretty good to
-> > me!
-> >
-> > Any particular reason why gpio_regmap is not just part of gpio_chip?
-> > I
-> > guess providing the 'gpio_regmap_direction_*()', 'gpio_regmap_get()',
-> > 'gpio_regmap_set()' as exported helpers and leaving calling the
-> > (devm_)gpiochip_add_data() to IC driver would have allowed more
-> > flexibility. Drivers could then use the gpio_regamap features which
-> > fit
-> > the IC (by providing pointers to helper functions in gpio_chip) - and
-> > handle potential oddball-features by using pointers to some
-> > customized
-> > functions in gpio_chip.
->
-> So, v5.13-rc1 is out. I started wondering the gpio_regamap - and same
-> question persists. Why hiding the gpio_chip from gpio_regmap users?
+> Date: Mon, 10 May 2021 09:19:55 -0500
+> From: Rob Herring <robh@kernel.org>
 
-In general to me this sounds like opening a window for
-non-controllable changes vs. controllable. Besides that, struct
-gpio_chip has more than a few callbacks. On top of that, opening this
-wide window means you won't be able to stop or refactoring become a
-burden. I would be on the stricter side here.
+Hi Rob,
 
-> Current IF makes it very hard (impossible?) for driver to override any
-> of the regmap_gpio functions (or provide own alternatives) for cases
-> which do not fit the generic regmap_gpio model.
->
-> My first obstacle is providing gpio_chip.set_config for BD71815.
->
-> 1) I guess the method fitting current design would be adding drive-mode
-> register/mask(s) to the gpio_regmap_config. Certainly doable - but I
-> have a bad feeling of this approach. I am afraid this leads to bloating
-> the gpio_regmap_config with all kinds of IC specific workarounds (when
-> HW designers have invented new cool control registers setups) - or then
-> just not using the regmap_gpio for any ICs which have any quirks - even
-> if 90% of regmap_gpio logic would fit...
->
-> 2) Other possibility is allowing IC driver to provide function pointers
-> for some operations (in my case for example for the set_config) - if
-> the default operation the regmap_gpio provides does not fit the IC.
-> This would require the regmap_gpio to be visible to IC drivers so that
-> IC drivers can access the regmap, device & register information - or
-> some way to convert the gpio_chip pointer to IC specific private data
-> pointer. Doable but still slightly bloat.
->
-> 3) The last option would be adding pointer to regmap_gpio to gpio_chip
-> - and exporting the regmap_gpio functions as helpers - leaving the gpio
-> registration to be done by the IC driver. That would allow IC driver to
-> use the regmap_gpio helpers which suit the IC and write own functions
-> for rest of the stuff.
->
-> I'd like to hear opinions - should I draft some changes according to
-> these proposals (which one, 1,2,3 or something else?) - or as this all
-> been already discussed and am I just missing something?
->
-> Best Regards
->         Matti Vaittinen
+> On Sat, May 08, 2021 at 04:19:55PM +0200, Mark Kettenis wrote:
+> > The Apple GPIO controller is a simple combined pin and GPIO conroller
+> > present on Apple ARM SoC platforms, including various iPhone and iPad
+> > devices and the "Apple Silicon" Macs.
+> > 
+> > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> > ---
+> >  .../bindings/pinctrl/apple,pinctrl.yaml       | 103 ++++++++++++++++++
+> >  MAINTAINERS                                   |   2 +
+> >  include/dt-bindings/pinctrl/apple.h           |  13 +++
+> >  3 files changed, 118 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> >  create mode 100644 include/dt-bindings/pinctrl/apple.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> > new file mode 100644
+> > index 000000000000..cc7805ca6ba1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> > @@ -0,0 +1,103 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/apple,pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Apple GPIO controller
+> > +
+> > +maintainers:
+> > +  - Mark Kettenis <kettenis@openbsd.org>
+> > +
+> > +description: |
+> > +  The Apple GPIO controller is a simple combined pin and GPIO conroller
+> > +  present on Apple ARM SoC platforms, including various iPhone and iPad
+> > +  devices and the "Apple Silicon" Macs.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: apple,t8103-pinctrl
+> > +      - const: apple,pinctrl
+> 
+> A genericish fallback is maybe questionable for pinctrl. That's not 
+> often the same from one SoC to the next.
 
+Krzysztof raised a similar point.  It seems that Apple isn't in the
+habit of changing this aspect of their SoCs.  Judging from
 
+  https://github.com/corellium/linux-sandcastle/blob/sandcastle-5.4/drivers/pinctrl/pinctrl-hx-gpio.c
 
--- 
-With Best Regards,
-Andy Shevchenko
+Apple has been using a controller with the same register layout and
+the same known bits in those registers since the T8010 SoC (the A10
+used in the iPhone 7).  So there is some confidence that a single
+driver will work for many generations of the SoC.  Of course we don't
+have any authoritative documentaton on these SoCs so I can't be 100%
+sure that there aren't any subtle differences in the behaviour of the
+hardware.  That's why I also include a more specific compatible for
+the T8103 SoC (the M1 used in the current Macs).
+
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  gpio-controller: true
+> > +
+> > +  '#gpio-cells':
+> > +    const: 2
+> > +
+> > +  gpio-ranges:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 7
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +patternProperties:
+> > +  '-pins$':
+> > +    type: object
+> > +    $ref: pinmux-node.yaml#
+> > +
+> > +    properties:
+> > +      pinmux:
+> > +        description:
+> > +          Values are constructed from pin number and alternate function
+> > +          configuration number using the APPLE_PINMUX() helper macro
+> > +          defined in include/dt-bindings/pinctrl/apple.h.
+> > +
+> > +    required:
+> > +      - pinmux
+> > +
+> > +    additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - gpio-controller
+> > +  - '#gpio-cells'
+> > +  - gpio-ranges
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/apple-aic.h>
+> > +    #include <dt-bindings/pinctrl/apple.h>
+> > +
+> > +    soc {
+> > +      #address-cells = <2>;
+> > +      #size-cells = <2>;
+> > +
+> > +      pinctrl: pinctrl@23c100000 {
+> > +        compatible = "apple,t8103-pinctrl", "apple,pinctrl";
+> > +        reg = <0x2 0x3c100000 0x0 0x100000>;
+> > +        clocks = <&gpio_clk>;
+> > +
+> > +        gpio-controller;
+> > +        #gpio-cells = <2>;
+> > +        gpio-ranges = <&pinctrl 0 0 212>;
+> > +
+> > +        interrupt-controller;
+> > +        interrupt-parent = <&aic>;
+> > +        interrupts = <AIC_IRQ 16 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <AIC_IRQ 17 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <AIC_IRQ 18 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <AIC_IRQ 19 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <AIC_IRQ 20 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <AIC_IRQ 21 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <AIC_IRQ 22 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +        pcie_pins: pcie-pins {
+> > +          pinmux = <APPLE_PINMUX(150, 1)>,
+> > +                   <APPLE_PINMUX(151, 1)>,
+> > +                   <APPLE_PINMUX(32, 1)>;
+> > +        };
+> > +      };
+> > +    };
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index ad0e9be66885..7327c9b778f1 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -1654,9 +1654,11 @@ C:	irc://chat.freenode.net/asahi-dev
+> >  T:	git https://github.com/AsahiLinux/linux.git
+> >  F:	Documentation/devicetree/bindings/arm/apple.yaml
+> >  F:	Documentation/devicetree/bindings/interrupt-controller/apple,aic.yaml
+> > +F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> >  F:	arch/arm64/boot/dts/apple/
+> >  F:	drivers/irqchip/irq-apple-aic.c
+> >  F:	include/dt-bindings/interrupt-controller/apple-aic.h
+> > +F:	include/dt-bindings/pinctrl/apple.h
+> >  
+> >  ARM/ARTPEC MACHINE SUPPORT
+> >  M:	Jesper Nilsson <jesper.nilsson@axis.com>
+> > diff --git a/include/dt-bindings/pinctrl/apple.h b/include/dt-bindings/pinctrl/apple.h
+> > new file mode 100644
+> > index 000000000000..ea0a6f466592
+> > --- /dev/null
+> > +++ b/include/dt-bindings/pinctrl/apple.h
+> > @@ -0,0 +1,13 @@
+> > +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+> > +/*
+> > + * This header provides constants for Apple pinctrl bindings.
+> > + */
+> > +
+> > +#ifndef _DT_BINDINGS_PINCTRL_APPLE_H
+> > +#define _DT_BINDINGS_PINCTRL_APPLE_H
+> > +
+> > +#define APPLE_PINMUX(pin, func) ((pin) | ((func) << 16))
+> > +#define APPLE_PIN(pinmux) ((pinmux) & 0xffff)
+> > +#define APPLE_FUNC(pinmux) ((pinmux) >> 16)
+> > +
+> > +#endif /* _DT_BINDINGS_PINCTRL_APPLE_H */
+> > -- 
+> > 2.31.1
+> > 
+> 
