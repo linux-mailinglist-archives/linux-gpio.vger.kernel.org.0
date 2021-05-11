@@ -2,87 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6209737A0C2
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 May 2021 09:23:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9E7E37A2A3
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 May 2021 10:51:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbhEKHYM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 May 2021 03:24:12 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1964 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229917AbhEKHYM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 May 2021 03:24:12 -0400
-IronPort-SDR: RS5zs9K4Z+TSwsIjzo4aqzZ6tZQXLYbTElFwEI34io4tuuhY63SaxxAycPkpESArfTNZt6mS7g
- 627iYgqyy15Q==
-X-IronPort-AV: E=McAfee;i="6200,9189,9980"; a="199054576"
-X-IronPort-AV: E=Sophos;i="5.82,290,1613462400"; 
-   d="scan'208";a="199054576"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 00:23:05 -0700
-IronPort-SDR: yq4KAV5YYtORNFKctyjJedbKsYkUglbPYIcvkQdl1p8CupKbX/JT8h80lKOg5qCp3JW71jIYzz
- lyz6gaiu+58Q==
-X-IronPort-AV: E=Sophos;i="5.82,290,1613462400"; 
-   d="scan'208";a="609388919"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 00:23:02 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lgMjL-00BNLu-DV; Tue, 11 May 2021 10:22:59 +0300
-Date:   Tue, 11 May 2021 10:22:59 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kbuild-all@lists.01.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: Introduce for_each_gpio_desc() macro
-Message-ID: <YJow03/jdelIoywx@smile.fi.intel.com>
-References: <20210510195242.12443-1-andriy.shevchenko@linux.intel.com>
- <202105110723.VQRv6lJT-lkp@intel.com>
+        id S231176AbhEKIws (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 May 2021 04:52:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2619 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230518AbhEKIws (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 May 2021 04:52:48 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FfWm25wHQzPwZY;
+        Tue, 11 May 2021 16:48:18 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.177.72) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.498.0; Tue, 11 May 2021 16:51:32 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH 1/1] pinctrl: iproc-gpio: Remove redundant error printing in iproc_gpio_probe()
+Date:   Tue, 11 May 2021 16:51:26 +0800
+Message-ID: <20210511085126.4287-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202105110723.VQRv6lJT-lkp@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.177.72]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 11, 2021 at 07:36:58AM +0800, kernel test robot wrote:
-> Hi Andy,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on gpio/for-next]
-> [also build test WARNING on v5.13-rc1 next-20210510]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Andy-Shevchenko/gpiolib-Introduce-for_each_gpio_desc-macro/20210511-035305
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git for-next
-> config: arm-randconfig-s031-20210510 (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # apt-get install sparse
->         # sparse version: v0.6.3-341-g8af24329-dirty
->         # https://github.com/0day-ci/linux/commit/ceaf41face19ca3a36b81b3b866c1708a90cb4e2
->         git remote add linux-review https://github.com/0day-ci/linux
->         git fetch --no-tags linux-review Andy-Shevchenko/gpiolib-Introduce-for_each_gpio_desc-macro/20210511-035305
->         git checkout ceaf41face19ca3a36b81b3b866c1708a90cb4e2
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' W=1 ARCH=arm 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+When devm_ioremap_resource() fails, a clear enough error message will be
+printed by its subfunction __devm_ioremap_resource(). The error
+information contains the device name, failure cause, and possibly resource
+information.
 
-Right, I missed OF part compilation, thanks for reminder, I'll fix my kernel
-configuration and the patch in v2.
+Therefore, remove the error printing here to simplify code and reduce the
+binary size.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+index e2bd2dce6bb4154..dc511b9a6b43f1b 100644
+--- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
++++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+@@ -813,10 +813,8 @@ static int iproc_gpio_probe(struct platform_device *pdev)
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+ 	if (res) {
+ 		chip->io_ctrl = devm_ioremap_resource(dev, res);
+-		if (IS_ERR(chip->io_ctrl)) {
+-			dev_err(dev, "unable to map I/O memory\n");
++		if (IS_ERR(chip->io_ctrl))
+ 			return PTR_ERR(chip->io_ctrl);
+-		}
+ 		if (of_device_is_compatible(dev->of_node,
+ 					    "brcm,cygnus-ccm-gpio"))
+ 			io_ctrl_type = IOCTRL_TYPE_CDRU;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.0.106.g9fadedd
 
 
