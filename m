@@ -2,103 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 528D8379EF5
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 May 2021 07:05:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6209737A0C2
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 May 2021 09:23:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230326AbhEKFGo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 May 2021 01:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230332AbhEKFGm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 May 2021 01:06:42 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656C6C061574;
-        Mon, 10 May 2021 22:05:28 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id r11so6459053edt.13;
-        Mon, 10 May 2021 22:05:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=60Lo7xpvw9UYiOl5jHY1jyhH6Kp5rVQT5uk6x+ikYXU=;
-        b=pjQO8ugBczY9ILfH5Ui6UlNeLY/hw0v2Wri0bS7ozgYFH7Rw7zZ2L+Ocuz6mTii+5M
-         s7scXBV+9K7VzAh1xOi1X81cAx/a8eRzcoKJeYeJD4XTAbY94W/rpTUnNxoj6bK5iwVn
-         RCxL2BKbUzyxZpsGCNKyoSWgPwrByD7gwvkJpetY3sD6qDwDrrj297WF1X64ArPugqfW
-         KxP9ah9+vSu1cCc4kInCQrJuw3yYb8tHIgqbBf65v1hCMRhalDLL29C1ZFC5nXaDdZus
-         8FVzJSKIM9mflu7XevZtKrPU5j5De0skFtRRj1wlsi3hHHTBIIxLgNrauhBnTdWWs7/Z
-         2+wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=60Lo7xpvw9UYiOl5jHY1jyhH6Kp5rVQT5uk6x+ikYXU=;
-        b=Dswy63rAq/mpd14V1QxeO/koPNO/HOkda8JbbYGU7PZZaUtJZwJ/Ja+Ts+hW60xu08
-         NKmPJIAHPkcSM/Pxtr0mkhtS1p/Zz1cCREui03L7V/JVO21V0oXEB8vErifqK0LuxHaw
-         OkXF4qit4erKL2fTM6JcXIVTwvozC+O20n6Ww7ENh/K6xJB1w6fVlJr2dsK4It34QAb8
-         ABsdRpufGbTWqrRD2znDD/PfwyuXhQMJ5aCyTqvRyynQY3I8h/29MI1QiuY8poSzu1Ry
-         1OJim3cjAC8/X0XQWMnfj30QNhIAcMPmooiEJ7a9BjZhT173mMGKyZqWFKIFubnVklrl
-         aDYA==
-X-Gm-Message-State: AOAM531CZdTyER5XnN59Kuy9HggBnBm4QXFMrlnBaR4QaJajx/KPN6PA
-        D2EfW97lVZG7mmbGJnHB9bU=
-X-Google-Smtp-Source: ABdhPJw7kqDOZphNYsS6zYAyisU/b00uYXV8iECUQs30s1WPz+PYOUmr7Ei3q1Xd9QTuux1I5TbZgg==
-X-Received: by 2002:a50:ee86:: with SMTP id f6mr33839634edr.154.1620709527251;
-        Mon, 10 May 2021 22:05:27 -0700 (PDT)
-Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g24sm3620302eds.41.2021.05.10.22.05.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 May 2021 22:05:27 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, jay.xu@rock-chips.com,
-        shawn.lin@rock-chips.com, david.wu@rock-chips.com,
-        zhangqing@rock-chips.com, huangtao@rock-chips.com,
-        cl@rock-chips.com, linux-gpio@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] arm64: dts: rename grf-gpio nodename in rk3328.dtsi
-Date:   Tue, 11 May 2021 07:05:11 +0200
-Message-Id: <20210511050511.5973-5-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20210511050511.5973-1-jbx6244@gmail.com>
-References: <20210511050511.5973-1-jbx6244@gmail.com>
+        id S229924AbhEKHYM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 May 2021 03:24:12 -0400
+Received: from mga14.intel.com ([192.55.52.115]:1964 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229917AbhEKHYM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 May 2021 03:24:12 -0400
+IronPort-SDR: RS5zs9K4Z+TSwsIjzo4aqzZ6tZQXLYbTElFwEI34io4tuuhY63SaxxAycPkpESArfTNZt6mS7g
+ 627iYgqyy15Q==
+X-IronPort-AV: E=McAfee;i="6200,9189,9980"; a="199054576"
+X-IronPort-AV: E=Sophos;i="5.82,290,1613462400"; 
+   d="scan'208";a="199054576"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 00:23:05 -0700
+IronPort-SDR: yq4KAV5YYtORNFKctyjJedbKsYkUglbPYIcvkQdl1p8CupKbX/JT8h80lKOg5qCp3JW71jIYzz
+ lyz6gaiu+58Q==
+X-IronPort-AV: E=Sophos;i="5.82,290,1613462400"; 
+   d="scan'208";a="609388919"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2021 00:23:02 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lgMjL-00BNLu-DV; Tue, 11 May 2021 10:22:59 +0300
+Date:   Tue, 11 May 2021 10:22:59 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kbuild-all@lists.01.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/1] gpiolib: Introduce for_each_gpio_desc() macro
+Message-ID: <YJow03/jdelIoywx@smile.fi.intel.com>
+References: <20210510195242.12443-1-andriy.shevchenko@linux.intel.com>
+ <202105110723.VQRv6lJT-lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202105110723.VQRv6lJT-lkp@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-A test with the command below gives this error:
+On Tue, May 11, 2021 at 07:36:58AM +0800, kernel test robot wrote:
+> Hi Andy,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on gpio/for-next]
+> [also build test WARNING on v5.13-rc1 next-20210510]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Andy-Shevchenko/gpiolib-Introduce-for_each_gpio_desc-macro/20210511-035305
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git for-next
+> config: arm-randconfig-s031-20210510 (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # apt-get install sparse
+>         # sparse version: v0.6.3-341-g8af24329-dirty
+>         # https://github.com/0day-ci/linux/commit/ceaf41face19ca3a36b81b3b866c1708a90cb4e2
+>         git remote add linux-review https://github.com/0day-ci/linux
+>         git fetch --no-tags linux-review Andy-Shevchenko/gpiolib-Introduce-for_each_gpio_desc-macro/20210511-035305
+>         git checkout ceaf41face19ca3a36b81b3b866c1708a90cb4e2
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' W=1 ARCH=arm 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
 
-/arch/arm64/boot/dts/rockchip/rk3328-a1.dt.yaml: syscon@ff100000:
-grf-gpio: {'compatible': ['rockchip,rk3328-grf-gpio'],
-'gpio-controller': True, '#gpio-cells': [[2]], 'phandle': [[68]]} is not
-of type 'array'
+Right, I missed OF part compilation, thanks for reminder, I'll fix my kernel
+configuration and the patch in v2.
 
-Due to the regex "(?<!,nr)-gpios?$" anything that ends on
-'-gpio', '-gpios' gives a match.
 
-Rename 'grf-gpio' nodename to generic 'gpio'
-
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
-schemas/gpio/gpio-consumer.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 4ce49aae7..2e458fb87 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -291,7 +291,7 @@
- 			status = "disabled";
- 		};
- 
--		grf_gpio: grf-gpio {
-+		grf_gpio: gpio {
- 			compatible = "rockchip,rk3328-grf-gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
 -- 
-2.11.0
+With Best Regards,
+Andy Shevchenko
+
 
