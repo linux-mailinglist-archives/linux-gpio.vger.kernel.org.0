@@ -2,100 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C811237BE34
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 May 2021 15:29:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7581637ED30
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 May 2021 00:38:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230197AbhELNam (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 May 2021 09:30:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230196AbhELNal (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 May 2021 09:30:41 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB348C06174A
-        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 06:29:32 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id s20so29473317ejr.9
-        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 06:29:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V2Xm0zvt+awRTlmfOBDWYmZKbcrwWg30pJhiDIwcPTA=;
-        b=urBYN7ecbgtyQef30Glwk8bNUDY42SI4LloNazJn8gqCtA2H7kJ1C6oQWM6Gb6FGEh
-         LPrcNpnRg7o30MxHMXob72hOOWZBQ4sjp18v7g/quUUksFlP/0Tzef31SrQiRzp2SWXp
-         Qny2CVZ0EpbrY6z4BFTjElB9EYUueEeNCBXd+btD5wJYlp7vyyo4lY5hwUbfjj7jaBT+
-         hZL9SZdSgVjBHho5XdD6r1V34qY4+l4JcKOkiassPaD7DLn3Hl4JSWFgnJ5hbwR5koCj
-         L53ukQvIPuSYRGQ3sbMjYxKGKPIspFA+FqM+oD62Kl1ccyPXzotOlBIW4pCM5qAtDH0L
-         B1SA==
+        id S241178AbhELUNi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 May 2021 16:13:38 -0400
+Received: from mail-oi1-f176.google.com ([209.85.167.176]:34681 "EHLO
+        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1385253AbhELUHv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 May 2021 16:07:51 -0400
+Received: by mail-oi1-f176.google.com with SMTP id u11so2262995oiv.1;
+        Wed, 12 May 2021 13:06:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V2Xm0zvt+awRTlmfOBDWYmZKbcrwWg30pJhiDIwcPTA=;
-        b=hkJ3I2UAimTyidy6LWNKRIa9eLjGXSVkIsrIpIEZS9Ar147westFnlw3W4NvlXAzkR
-         FEhKUp4uIRWjSZ2d409PbrLQ5eZVDsiyYWlvoZcvgGzUPK7cs12jqOUC+dEWGtqY7lo0
-         Ay5clXzSzfq4jIt2v5TYYypiBOtOCW7xjSCmsTdzV4HNp2FeeUESiK3eqmQV6M72H4+R
-         LWLHMGG6NwXH9AxcStOaEqFOhkuWDLrbsIobPP6nxQeFLLgXr9g+tGu+99lv3rR0O0Va
-         ZSnP+LvWe+uw79lqwL4AQP9mLyULIhHeFBJg4eCfpeGF3kvaMlqqreV9gEOB9WUB5KyT
-         iCUQ==
-X-Gm-Message-State: AOAM532v+a9dlMgutY8pQS0YHPHHqCktq+UIWaott/JPruIeZ9SBAHlJ
-        /qvI/rvZKB4uLwvLmyYXTT4hSx5zkQ97ZBz+b/zfMw==
-X-Google-Smtp-Source: ABdhPJzJND28/5zCNEuN6yQt6amOBLo1vpCnc/DKTzTtz3QIsjgaSayxUHgqB1W155wwKouhuYsoCV8wPo3/2Qb8U6s=
-X-Received: by 2002:a17:906:82d4:: with SMTP id a20mr37693177ejy.14.1620826171029;
- Wed, 12 May 2021 06:29:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G314866YQpgK6Og9SPK+7F1yLW6LxWxUdwMljvXz8GA=;
+        b=ntS1mHXkqk3pEdLJ8WoYnJ9bFVv4l5t98IzytclKC4aOoMekUirmmBCPnPDroLckTj
+         /wMt3hE1K/DF5N8k6FwkHAQuTZKZXERsnKTssbeoyjTUTcBDp73vaES6QtvXZfOMJtx+
+         cZYAhkC66111ZaRvfiZ79d339Q/4Aue7gbC7UFjUGtDTs7Kp6OqdwPcPmJN3PL8fiMqr
+         HsuaIAG73N5lvBwfihCa7uykzHb/2Bu8VRECt42YnvGybuI6MiUNwPrazU0moQI3d6A7
+         L5FYgRcX36g22BFioMrEqv5+1EqFLZK5w7zjBunZY3HXU9UZAQXDDZUyKdTRP2D5OEYn
+         4erw==
+X-Gm-Message-State: AOAM530f7dKn12hl+yRsUMIyLVvSRaPLhuBM//Y/l/l/24LeUcyW7PYi
+        jxZqauP2KfBFNXtdqqMQTw==
+X-Google-Smtp-Source: ABdhPJwxNouj8PhjvD5RQRalpsF56HCQ4sFcehx28dXWzUBDKpftaaS5YowOQ3Pe+GG7+R6Wi5KHlw==
+X-Received: by 2002:aca:b8d4:: with SMTP id i203mr155393oif.61.1620850002606;
+        Wed, 12 May 2021 13:06:42 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x141sm195890oif.13.2021.05.12.13.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 May 2021 13:06:41 -0700 (PDT)
+Received: (nullmailer pid 2232127 invoked by uid 1000);
+        Tue, 11 May 2021 16:28:02 -0000
+Date:   Tue, 11 May 2021 11:28:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     linus.walleij@linaro.org, huangtao@rock-chips.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, bgolaszewski@baylibre.com,
+        shawn.lin@rock-chips.com, linux-gpio@vger.kernel.org,
+        zhangqing@rock-chips.com, heiko@sntech.de,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        jay.xu@rock-chips.com, cl@rock-chips.com, david.wu@rock-chips.com
+Subject: Re: [PATCH v4 2/4] dt-bindings: soc: rockchip: convert grf.txt to
+ YAML
+Message-ID: <20210511162802.GA2232097@robh.at.kernel.org>
+References: <20210511050511.5973-1-jbx6244@gmail.com>
+ <20210511050511.5973-3-jbx6244@gmail.com>
 MIME-Version: 1.0
-References: <20210510063602.505829-1-jay.xu@rock-chips.com> <CAAEAJfALROYg5awL88Uux0yXyMxBthbFjRgJCyhvu4hWioSO2w@mail.gmail.com>
-In-Reply-To: <CAAEAJfALROYg5awL88Uux0yXyMxBthbFjRgJCyhvu4hWioSO2w@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 12 May 2021 15:29:20 +0200
-Message-ID: <CAMRc=MfqzrjxZBbnmpqjgR6KP6O7zr5xTwTq26oqhwu39kaLHw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] gpio-rockchip driver
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210511050511.5973-3-jbx6244@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 11, 2021 at 12:16 AM Ezequiel Garcia
-<ezequiel@vanguardiasur.com.ar> wrote:
->
-> Hi Jianqun,
->
-> Thanks a lot for the patch, and for pushing this work forward.
->
-> On Mon, 10 May 2021 at 03:36, Jianqun Xu <jay.xu@rock-chips.com> wrote:
-> >
-> > Separate gpio driver from pinctrl driver, and support v2 controller.
-> >
->
-> Usually, we expect to see a changelog here, with some information
-> about the changes from in v2, v3, etc. Also, note that only the cover
-> letter says "v4", and the individual patches are missing that. You can
-> use git-format-patch --subject-prefix="PATCH v4", and then all the patches
-> will get the same prefix.
->
-> However, the last patchset I can find in lore.kernel.org (or my
-> mailbox) is a v2:
->
-> https://lore.kernel.org/linux-gpio/20210411133030.1663936-1-pgwipeout@gmail.com/
->
-> .. which was sent by Peter Geis (so you should have Cced him).
->
-> These are just some friendly tips on the submission process,
-> for you to keep in mind,  you don't really need to resend the
-> series or do anything else.
->
-> Also, I added Bartosz the GPIO maintainer in Cc.
->
+On Tue, 11 May 2021 07:05:09 +0200, Johan Jonker wrote:
+> Current dts files with 'grf' nodes are manually verified.
+> In order to automate this process grf.txt has to be
+> converted to YAML.
+> 
+> Most compatibility strings are in use with "simple-mfd" added.
+> 
+> Add description already in use:
+> "rockchip,rv1108-pmugrf", "syscon"
+> 
+> Add new descriptions for:
+> "rockchip,rk3568-grf", "syscon", "simple-mfd"
+> "rockchip,rk3568-pmugrf", "syscon", "simple-mfd"
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+> 
+> Changed V4:
+>   revert separate schemas for each 'if' subset
+>   add additionalProperties
+>   move properties to top level
+> 
+> Changed V3:
+>   remove select
+>   change unevaluatedProperties
+>   add separate schemas for each 'if' subset
+> 
+> Changed V2:
+>   add rockchip,rk3328-grf-gpio.yaml
+>   rename grf-gpio nodename
+> ---
+>  .../devicetree/bindings/soc/rockchip/grf.txt       |  61 -----
+>  .../devicetree/bindings/soc/rockchip/grf.yaml      | 246 +++++++++++++++++++++
+>  2 files changed, 246 insertions(+), 61 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/rockchip/grf.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+> 
 
-Thanks. Jianqun: please resend the series so that I get it in my inbox.
-
-Bart
+Reviewed-by: Rob Herring <robh@kernel.org>
