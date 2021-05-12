@@ -2,89 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 243B637B48D
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 May 2021 05:34:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D9BD37B8EF
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 May 2021 11:17:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbhELDft (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 May 2021 23:35:49 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2635 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbhELDft (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 May 2021 23:35:49 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Fg0gn45lRzQkjR;
-        Wed, 12 May 2021 11:31:17 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.498.0; Wed, 12 May 2021 11:34:29 +0800
-From:   chenxiang <chenxiang66@hisilicon.com>
-To:     <robert.moore@intel.com>, <erik.kaneda@intel.com>,
-        <rafael.j.wysocki@intel.com>, <hoan@os.amperecomputing.com>,
-        <fancer.lancer@gmail.com>
-CC:     <linux-acpi@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linuxarm@huawei.com>, Xiang Chen <chenxiang66@hisilicon.com>
-Subject: [PATCH] ACPICA: fix a memleak issue related to ACPI/GPIO
-Date:   Wed, 12 May 2021 11:30:07 +0800
-Message-ID: <1620790207-128605-1-git-send-email-chenxiang66@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        id S230035AbhELJS7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 May 2021 05:18:59 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:34805 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229968AbhELJS6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 12 May 2021 05:18:58 -0400
+Received: from [185.56.157.72] (port=41428 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1lgl01-0008BZ-OV; Wed, 12 May 2021 11:17:49 +0200
+Subject: Re: [PATCH 1/3] mfd: lp87565: fix typo in define names
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210219223910.1831-1-luca@lucaceresoli.net>
+ <20210308140440.GH4931@dell>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <365cc875-e1de-0a81-6163-007f574779d3@lucaceresoli.net>
+Date:   Wed, 12 May 2021 11:17:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20210308140440.GH4931@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+Hi,
 
-There is a memleak reported as follows:
+On 08/03/21 15:04, Lee Jones wrote:
+> On Fri, 19 Feb 2021, Luca Ceresoli wrote:
+> 
+>> "GOIO" should be "GPIO" here.
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>> ---
+>>  drivers/gpio/gpio-lp87565.c |  6 +++---
+>>  include/linux/mfd/lp87565.h | 28 ++++++++++++++--------------
+>>  2 files changed, 17 insertions(+), 17 deletions(-)
+> 
+> For my own reference (apply this as-is to your sign-off block):
+> 
+>   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-unreferenced object 0xffff00208ff85a00 (size 128):
-  comm "swapper/0", pid 1, jiffies 4294892588 (age 887.572s)
-  hex dump (first 32 bytes):
-    00 00 00 00 02 00 00 00 08 5a f8 8f 20 00 ff ff  .........Z.. ...
-    08 5a f8 8f 20 00 ff ff 00 00 00 00 00 00 00 00  .Z.. ...........
-backtrace:
-    [<00000000bc25bad8>] slab_post_alloc_hook+0x80/0x2e0
-    [<000000008d547074>] kmem_cache_alloc+0x194/0x2c0
-    [<00000000b08da9ad>] acpi_os_create_semaphore+0x3c/0x78
-    [<0000000024816c0a>] acpi_ev_install_space_handler+0x214/0x274
-    [<00000000d93a5ac2>] acpi_install_address_space_handler+0x64/0xb0
-    [<0000000098c37a45>] acpi_gpiochip_add+0x130/0x348
-    [<00000000c1cf4b42>] gpiochip_add_data_with_key+0x79c/0xdd0
-    [<000000005ce539e9>] devm_gpiochip_add_data_with_key+0x30/0x90
-    [<00000000a3038b8d>] dwapb_gpio_probe+0x3e4/0x7e8
-    [<0000000047a03eba>] platform_probe+0x68/0xe0
-    [<00000000dc15c501>] really_probe+0x17c/0x4a0
-    [<00000000aa1f123d>] driver_probe_device+0x68/0xd0
-    [<00000000d97646e0>] device_driver_attach+0x74/0x80
-    [<0000000073d5b3e5>] __driver_attach+0x8c/0xe0
-    [<00000000ff60d118>] bus_for_each_dev+0x7c/0xd8
-    [<00000000b018393d>] driver_attach+0x24/0x30
+Gentle ping on patches 1 and 3. Both have at least an ack and are fairly
+trivial. Both apply cleanly on current master.
 
-It requires to delete the handler object in function 
-acpi_remove_address_space_handler() but it just up the sem with function
-acpi_os_release_mutex(), so use acpi_os_delete_mutex() instead of 
-acpi_os_release_mutex() in function acpi_remove_address_space_handler().
-
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
----
- drivers/acpi/acpica/evxfregn.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/acpica/evxfregn.c b/drivers/acpi/acpica/evxfregn.c
-index b1ff0a8..4db0bec 100644
---- a/drivers/acpi/acpica/evxfregn.c
-+++ b/drivers/acpi/acpica/evxfregn.c
-@@ -201,7 +201,7 @@ acpi_remove_address_space_handler(acpi_handle device,
- 
- 			/* Now we can delete the handler object */
- 
--			acpi_os_release_mutex(handler_obj->address_space.
-+			acpi_os_delete_mutex(handler_obj->address_space.
- 					      context_mutex);
- 			acpi_ut_remove_reference(handler_obj);
- 			goto unlock_and_exit;
+Thanks.
 -- 
-2.8.1
-
+Luca
