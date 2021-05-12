@@ -2,84 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE8A237BBD7
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 May 2021 13:33:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD6F737BBF4
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 May 2021 13:38:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbhELLes (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 May 2021 07:34:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50694 "EHLO
+        id S230114AbhELLjp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 May 2021 07:39:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230096AbhELLer (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 May 2021 07:34:47 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D28C06174A
-        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 04:33:40 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id i4so30303065ybe.2
-        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 04:33:39 -0700 (PDT)
+        with ESMTP id S230037AbhELLjp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 May 2021 07:39:45 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F7AFC061574
+        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 04:38:37 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id i4so30318446ybe.2
+        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 04:38:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Hwqwx4LJYn+nGrs/s7vt3MWR+fST/FOpGPjuEVfqI1Y=;
-        b=ZzghOpmFjMBck1DvPmfzHW9Sdd7J4gJKsYxzxHyT/K6yCOmAqFHSIghrHgQCxbq2tl
-         3UVfc6d1p1Xt+yDdLD6Og7RCTTD8O+NPaToKV/DXRYMEaMhWju5fad+YssppnmMA5hTA
-         Z5Ar6zGcfi35Lw0yHYk/Zcxi4psHs7/la7mptBxbVoeGmlUYvbyZ9jzzygTn8kP87K+Y
-         hksbrePF7VxFYOG7wBoN6L6/QCNQgUzRTtPP5SQMWYx9Tvru9NKiJbKbV2NvXrVbojHs
-         k4xoMJe4TL+6PrKAe+cQLMehmqVWre2lC6vNQ2Oq9a43g4ghs+6UzBJv//PpYfeXb1qE
-         a4Rg==
+        bh=/qL62CHxTkMZiiiWmN9ruwFx/bjZvnNBYhmIqQVBWFM=;
+        b=zw6gwd+nrFSwhJ890hbOKdC1lKIDchsoMGdJLGtedq+g4o4BNqwL8kH7tgjrJ2MCzA
+         f76I5YDatvhz0QY8cjEQ+PAE1r/HX6KGTFO/1WK5PhO4Rws2Fwn4d1Y1MdBIavil3bRJ
+         IZDhkOcMXOaMwTT/2lBs5EwSTZZxNB+NgHd+sRKYAoC4qJZxj7s2a0uXNq8ecmWnsAeW
+         U2PDNTeCf5LQZAhZztStZsbXVUgCEujgquZlzP72Kwrkm6UjPQuOq1J1izKL21mAtR3s
+         L8VH1gB1IS24O1+3JF7Bm9Wz6qzuu3zOtOlDRVwGfG0AILHaUCeZzOugxo0CaoBO+8yI
+         F7rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Hwqwx4LJYn+nGrs/s7vt3MWR+fST/FOpGPjuEVfqI1Y=;
-        b=hyPOJZnQsViO+p7/DVjhdFHsIQSQWZ+KXBZ1ANPXxCHOtVTjr/Qcg1oF01mnZuMdge
-         +b0nT4af8k+yIbL2mLUk4rc+8BmEkSMIih8A2Rydchu2daDJ9RiGB8etKASrG+Rh6lUC
-         NoFX9fQvyZStXMGWXS9pBsF3dc/j2ltphi5bpFO5x1/63Lf252ZJ535MgRqe7B61LNjX
-         aQunoCSxWTkvky/fsRNIuXo5VJqkaFa5pfi8UJSycA5vA5mBSU3TDWQjDZzIo+jCxCbN
-         Mth7ENgtrxxmgnIYOogDIjrsUIpm8bvvbqDlefuB9pRJx8RRxnFKp+aKNCxcsiPkRXus
-         g/mA==
-X-Gm-Message-State: AOAM533eurjKKezmTlXknN6n7skTPCKHihmdh6EG9Y7XsYJXjyjS4T9m
-        DkA+02SMdKG3kEPhcbX5Owiiv9FnHnl2bsr4Iq+U0Q==
-X-Google-Smtp-Source: ABdhPJzVDgzsy/eNX1ps1bd8bp+PkNNtBxIF7Wh4nsVHVqC87fdjHMvHoqdIsZ0U8nQlU9VMEcEjqK5fZzdFDLjoMGQ=
-X-Received: by 2002:a25:dbca:: with SMTP id g193mr20139314ybf.0.1620819219357;
- Wed, 12 May 2021 04:33:39 -0700 (PDT)
+        bh=/qL62CHxTkMZiiiWmN9ruwFx/bjZvnNBYhmIqQVBWFM=;
+        b=HF0HxDyzls1Nmo7bVOeo427xe1c1YqD8L8pEXY7lUiEl3nEKPf4RHT3pT5GGM4bTQN
+         u6/8dYXowHVVmAms7SBqZ6DEgrEC6Vv3qnuJgq8BInumwGMLbclEp4bNTP0e33uQSpjX
+         w6r/hN6yVgMuUyvP/7yJq0R/WNQpUzUGJwfJ2n00Ca16ldvoxBzYnvDDEYwTuXuf4Dyz
+         skS1cEGJUEya59WDv8fKfmxtvkHpGftqF7gykTHK6kLBtmoW9LTv1KgEUBZV2kJFQDg3
+         Za7NEkWO9P8cm4F6cSz5OhXn9x5ALPHE3gZL/c94WzHNTGj+eoPyEFXK7hCyso6tDtdk
+         LMVw==
+X-Gm-Message-State: AOAM532Ox6gB+L5/CkTfcjS4ERHp57r9v9DqNLUCZZQsJwwU3CyQY02d
+        Vlm9+ko1jFqxKFFqlh1TpxpfSeuQT0jEhF6zBG6rmQ==
+X-Google-Smtp-Source: ABdhPJwzHSSnZ5ljwFIGPtT9turnYrqUVPu/Ml/Vd+UmCAAAwLe1av6NFD4RzKNuYbkoF31mAzIcI2rsQop83PZQBQo=
+X-Received: by 2002:a25:238c:: with SMTP id j134mr18122257ybj.302.1620819516963;
+ Wed, 12 May 2021 04:38:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210511050511.5973-1-jbx6244@gmail.com> <20210511050511.5973-2-jbx6244@gmail.com>
-In-Reply-To: <20210511050511.5973-2-jbx6244@gmail.com>
+References: <20210511100646.5156-1-thunder.leizhen@huawei.com>
+In-Reply-To: <20210511100646.5156-1-thunder.leizhen@huawei.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 12 May 2021 13:33:28 +0200
-Message-ID: <CAMpxmJU9K9t+LOT6SLarXQYZs1YCqVZHMz_ZM+iMpzfMtqUH8g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] dt-bindings: gpio: convert rk3328-grf-gpio.txt to YAML
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        jay.xu@rock-chips.com, shawn.lin@rock-chips.com,
-        david.wu@rock-chips.com, zhangqing@rock-chips.com,
-        Tao Huang <huangtao@rock-chips.com>, cl@rock-chips.com,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 12 May 2021 13:38:26 +0200
+Message-ID: <CAMpxmJUHKOxVnaaE99_0mN3TJzNGaVjUAHziue2XUuGa5+MNfA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gpio: logicvc: Remove redundant error printing in logicvc_gpio_probe()
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 11, 2021 at 7:05 AM Johan Jonker <jbx6244@gmail.com> wrote:
+On Tue, May 11, 2021 at 12:07 PM Zhen Lei <thunder.leizhen@huawei.com> wrote:
 >
-> Current dts files with RK3328 GRF 'gpio' nodes are manually verified.
-> In order to automate this process rk3328-grf-gpio.txt has to be
-> converted to YAML.
+> When devm_ioremap_resource() fails, a clear enough error message will be
+> printed by its subfunction __devm_ioremap_resource(). The error
+> information contains the device name, failure cause, and possibly resource
+> information.
 >
-> Rename 'grf-gpio' nodename to 'gpio'.
+> Therefore, remove the error printing here to simplify code and reduce the
+> binary size.
 >
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 > ---
+>  drivers/gpio/gpio-logicvc.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-logicvc.c b/drivers/gpio/gpio-logicvc.c
+> index 015632cf159f0b8..992cc958a43fd1e 100644
+> --- a/drivers/gpio/gpio-logicvc.c
+> +++ b/drivers/gpio/gpio-logicvc.c
+> @@ -114,10 +114,8 @@ static int logicvc_gpio_probe(struct platform_device *pdev)
+>                 }
+>
+>                 base = devm_ioremap_resource(dev, &res);
+> -               if (IS_ERR(base)) {
+> -                       dev_err(dev, "Failed to map I/O base\n");
+> +               if (IS_ERR(base))
+>                         return PTR_ERR(base);
+> -               }
+>
+>                 logicvc_gpio_regmap_config.max_register = resource_size(&res) -
+>                         logicvc_gpio_regmap_config.reg_stride;
+> --
+> 2.26.0.106.g9fadedd
+>
+>
 
-Patch applied, thanks!
+Applied, thanks!
 
 Bartosz
