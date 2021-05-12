@@ -2,99 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1900D37BC1A
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 May 2021 13:56:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19B8A37BC22
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 May 2021 13:57:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbhELL5G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 May 2021 07:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55662 "EHLO
+        id S230320AbhELL7D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 May 2021 07:59:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbhELL5F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 May 2021 07:57:05 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6146AC06174A
-        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 04:55:56 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id r8so30369682ybb.9
-        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 04:55:56 -0700 (PDT)
+        with ESMTP id S230037AbhELL7C (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 May 2021 07:59:02 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F76C061760
+        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 04:57:55 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id v188so30378825ybe.1
+        for <linux-gpio@vger.kernel.org>; Wed, 12 May 2021 04:57:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aNPb1/57+5ny+pvaCXDmUs3FXsI3utW5iRWUWfHbabI=;
-        b=FJOxExQtPoHD1RHrcjDEaob9dDt5Wqym1gYzphjMrHEqE7740cdgfWxvY6SuIznd5U
-         wR5gtt6cBZLJEz+HFUJjc2Yz/Oqk21pcVTj+LAw7p3BhiX4sCYMvMCOadI9TkbHOGlxM
-         YbT+zSSe/ADP4ZnULjhsLHvDLLLpnCKI9RUbtKoP9Jy9jvvhR56GKL+fjc7+4nEFNuaS
-         gzEQ176lPHqGBITWds8rFjX1VPANHo4Xkn6fSsM5k4DaOFnpZvNieqdCo67W19wdX2D2
-         a9HhQTiAq+Q0z/dZB91FbR3b93UwqaJEi7/FMJ7yIBkejWfK6K+lImMJ5IE9VaRrskcG
-         DcdA==
+        bh=JTFIrIiIiCWw2DizIDGGX4KiOJsOkJ0nyEyBMnURzyw=;
+        b=tM5hpmiLnRMbFfnUBUzTD1fYfzVll4i5LqmZF8eVMSokXIJIQ0i3AicWS0KdrPEvlP
+         +a3Q5XMgtBaOlGzm8eT0m2pjaifHdyQG8SQAbCRgapbJuzqaRIuAjtdDtP1tGJCZuF9b
+         8olRh3E+OW5bvEHn7KAms4K49xV7UPR5Wpok7GJWTPOcWKgo0rjMmKNk9+JgQzSJbWpg
+         4E+HEbixubIa5fzsO93E84cn1Li1UaE2IKKdsDQlKehaRpvDXccBJ4K69CxcxU+/mgai
+         BOZEUB+E3fF7x0RnA2dPtJbHK9AJ89El+FcZqEqVGAuks3wfPorDz/Pj1xHD7ZUCCvuj
+         e4ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aNPb1/57+5ny+pvaCXDmUs3FXsI3utW5iRWUWfHbabI=;
-        b=P/T3HR6cw3e6/iftriYR+g8zWyUss7D7hFXWK1XXABwelTgcn3WxDAVWdhO/i+sEQ8
-         CyX0fyk8R+wOX61bfcTm8IrHxgFOgeLQDzeFXFwNznqFz2N/T6X0ohBwVbzyJ3eD4YY2
-         q9/5ZMmeQ7UMZvB8l4gZluqU+p7bpMJk8qs7N+wdhuU5rKZGM6Ew8wU7qwnVGyd8JIjt
-         4qU+VixU+nl+/ax2haTfcFCIM8cJHWqXirIkdzC+ukLUk30Ba9YJMoGxoYrbiGO+gLzE
-         QPDvIdLt4SIf38ClRcdR9+H5D1/GbpRQTJabOP+LeX4iJb4SdkSANbcc0IT9EsSzkjoj
-         DBdA==
-X-Gm-Message-State: AOAM530BCsbEO5xafQ/huH4bvUQZsEdR7mI14FEskOIHCP9Kw8nnyYvd
-        o8fSJW8eJMdWTun/D2gXn+eRP50x09nzPvYXMHK3KQ==
-X-Google-Smtp-Source: ABdhPJwZcRGvQGKt99glxvdWCFBLUljr0pyP1dW5k8kK5RnI0ZS+M4PeURiB/d1gE4Dtw3oxk/386eXqpaAuWByMSqY=
-X-Received: by 2002:a25:238c:: with SMTP id j134mr18215223ybj.302.1620820555592;
- Wed, 12 May 2021 04:55:55 -0700 (PDT)
+        bh=JTFIrIiIiCWw2DizIDGGX4KiOJsOkJ0nyEyBMnURzyw=;
+        b=CKHQwgOOF+SQNrNtHxJ3dDeA8omaNmlrsrL8GLCWvzgaSSql5e/sWpLpN1/fltYWIn
+         dpN81kiTsMu4D+OK+tRVyKTrW1nUTzdkJLUEsrrwBdPbxYBm7tnbSaFvXvi6Af83cFOT
+         3uKucS1O2alVdoI0RVmsC3uVoElUzHk8ASPR3zEWPCiO47z+xR+WiqVzy2ZhS9RLbgB1
+         ZChuDqMrBs7cZvR6vkGVXmFuNo41M1zTRx2KGJxFLc4aHFYbUZtl/7udb7+5ck8kc8xX
+         6yvljUlHkzBjxb8kg6qT1BmY2DGs1+ZfJWQk+JH26JXXeksSMR0CHj3HQ9SrxV0QU3wb
+         gKiA==
+X-Gm-Message-State: AOAM5300tlnDHgfGrkM8PVIbeYVTWTPMK0lsoe0+eF/W4lV6uB3HNL6C
+        Vlk//OKtZpYrnLMWWFXcZqD3moTGqBecfOduqruVGw==
+X-Google-Smtp-Source: ABdhPJy6XsMANIlpd9Kpw8oKwewls/90i39QKk0iIhIIA6xdY7fh3xF9LGttF39j5vgqXJEFltnKfF9g9wYGz8TRSQo=
+X-Received: by 2002:a25:cb96:: with SMTP id b144mr41828468ybg.312.1620820674262;
+ Wed, 12 May 2021 04:57:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210510194633.11943-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210510194633.11943-1-andriy.shevchenko@linux.intel.com>
+References: <20210507103411.235206-1-jonathanh@nvidia.com>
+In-Reply-To: <20210507103411.235206-1-jonathanh@nvidia.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 12 May 2021 13:55:44 +0200
-Message-ID: <CAMpxmJU0vreXf-5bEwk07oDdvOLP4rU507_Q-W3=CDQ43s+W5g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] gpio: xilinx: convert to use bitmap API
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Wed, 12 May 2021 13:57:43 +0200
+Message-ID: <CAMpxmJVa-wfRSx8CC4ac705aHLR=fovX_E3QkOUSNoUwpc-_9A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: tegra186: Don't set parent IRQ affinity
+To:     Jon Hunter <jonathanh@nvidia.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "Stable # 4 . 20+" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 10, 2021 at 9:46 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, May 7, 2021 at 12:34 PM Jon Hunter <jonathanh@nvidia.com> wrote:
 >
-> The change in the series has been inspired by [1], which, I think,
-> can be improved. Here I present the view how it may be done.
+> When hotplugging CPUs on Tegra186 and Tegra194 errors such as the
+> following are seen ...
 >
-> [1]: cover.1617380819.git.syednwaris@gmail.com
+>  IRQ63: set affinity failed(-22).
+>  IRQ65: set affinity failed(-22).
+>  IRQ66: set affinity failed(-22).
+>  IRQ67: set affinity failed(-22).
 >
-> In v2:
-> - folding followup fix into patch 4
-> - added Tested-by (Srinivas)
-> - added Ack (Yuri)
-> - added Rb (Michal)
-> - rebased on top of v5.13-rc1
+> Looking at the /proc/interrupts the above are all interrupts associated
+> with GPIOs. The reason why these error messages occur is because there
+> is no 'parent_data' associated with any of the GPIO interrupts and so
+> tegra186_irq_set_affinity() simply returns -EINVAL.
 >
-> Andy Shevchenko (5):
->   bitmap: Make bitmap_remap() and bitmap_bitremap() available to users
->   gpio: xilinx: Correct kernel doc for xgpio_probe()
->   gpio: xilinx: Introduce xgpio_read_chan() / xgpio_write_chan()
->   gpio: xilinx: Switch to use bitmap APIs
->   gpio: xilinx: No need to disable IRQs in the handler
+> To understand why there is no 'parent_data' it is first necessary to
+> understand that in addition to the GPIO interrupts being routed to the
+> interrupt controller (GIC), the interrupts for some GPIOs are also
+> routed to the Tegra Power Management Controller (PMC) to wake up the
+> system from low power states. In order to configure GPIO events as
+> wake events in the PMC, the PMC is configured as IRQ parent domain
+> for the GPIO IRQ domain. Originally the GIC was the IRQ parent domain
+> of the PMC and although this was working, this started causing issues
+> once commit 64a267e9a41c ("irqchip/gic: Configure SGIs as standard
+> interrupts") was added, because technically, the GIC is not a parent
+> of the PMC. Commit c351ab7bf2a5 ("soc/tegra: pmc: Don't create fake
+> interrupt hierarchy levels") fixed this by severing the IRQ domain
+> hierarchy for the Tegra GPIOs and hence, there may be no IRQ parent
+> domain for the GPIOs.
 >
->  drivers/gpio/gpio-xilinx.c | 385 +++++++++++++++++++------------------
->  lib/bitmap.c               |   5 +-
->  2 files changed, 198 insertions(+), 192 deletions(-)
+> The GPIO controllers on Tegra186 and Tegra194 have either one or six
+> interrupt lines to the interrupt controller. For GPIO controllers with
+> six interrupts, the mapping of the GPIO interrupt to the controller
+> interrupt is configurable within the GPIO controller. Currently a
+> default mapping is used, however, it could be possible to use the
+> set affinity callback for the Tegra186 GPIO driver to do something a
+> bit more interesting. Currently, because interrupts for all GPIOs are
+> have the same mapping and any attempts to configure the affinity for
+> a given GPIO can conflict with another that shares the same IRQ, for
+> now it is simpler to just remove set affinity support and this avoids
+> the above warnings being seen.
 >
+> Cc: <stable@vger.kernel.org>
+> Fixes: c4e1f7d92cd6 ("gpio: tegra186: Set affinity callback to parent")
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/gpio/gpio-tegra186.c | 11 -----------
+>  1 file changed, 11 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index 1bd9e44df718..05974b760796 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -444,16 +444,6 @@ static int tegra186_irq_set_wake(struct irq_data *data, unsigned int on)
+>         return 0;
+>  }
+>
+> -static int tegra186_irq_set_affinity(struct irq_data *data,
+> -                                    const struct cpumask *dest,
+> -                                    bool force)
+> -{
+> -       if (data->parent_data)
+> -               return irq_chip_set_affinity_parent(data, dest, force);
+> -
+> -       return -EINVAL;
+> -}
+> -
+>  static void tegra186_gpio_irq(struct irq_desc *desc)
+>  {
+>         struct tegra_gpio *gpio = irq_desc_get_handler_data(desc);
+> @@ -700,7 +690,6 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+>         gpio->intc.irq_unmask = tegra186_irq_unmask;
+>         gpio->intc.irq_set_type = tegra186_irq_set_type;
+>         gpio->intc.irq_set_wake = tegra186_irq_set_wake;
+> -       gpio->intc.irq_set_affinity = tegra186_irq_set_affinity;
+>
+>         irq = &gpio->gpio.irq;
+>         irq->chip = &gpio->intc;
 > --
-> 2.30.2
+> 2.17.1
 >
 
-Series applied, thanks a lot!
+Thanks for the very descriptive commit message!
 
-Bartosz
+Patch applied.
+
+Bart
