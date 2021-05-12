@@ -2,84 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7362037B0D1
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 May 2021 23:31:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD40637B459
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 May 2021 05:00:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229973AbhEKVcK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 May 2021 17:32:10 -0400
-Received: from elvis.franken.de ([193.175.24.41]:50509 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229784AbhEKVcK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 May 2021 17:32:10 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1lgZy2-0004Ah-00; Tue, 11 May 2021 23:31:02 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 5E38BC0E6B; Tue, 11 May 2021 23:13:59 +0200 (CEST)
-Date:   Tue, 11 May 2021 23:13:59 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: gpio: Add devicetree binding for IDT
- 79RC32434 GPIO controller
-Message-ID: <20210511211359.GA19043@alpha.franken.de>
-References: <20210426095426.118356-1-tsbogend@alpha.franken.de>
- <20210426095426.118356-2-tsbogend@alpha.franken.de>
- <CACRpkda7n3VL-EpwdXDxt47azFo8Wkp67-urUy7--3D6TJs7iA@mail.gmail.com>
+        id S229934AbhELDCE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 May 2021 23:02:04 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2710 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229848AbhELDCE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 May 2021 23:02:04 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Ffzxg6mp9z1BHs5;
+        Wed, 12 May 2021 10:58:15 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.498.0; Wed, 12 May 2021 11:00:45 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] gpio: cadence: Add missing MODULE_DEVICE_TABLE
+Date:   Wed, 12 May 2021 11:17:47 +0800
+Message-ID: <1620789467-15227-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkda7n3VL-EpwdXDxt47azFo8Wkp67-urUy7--3D6TJs7iA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 01, 2021 at 02:13:35PM +0200, Linus Walleij wrote:
-> On Mon, Apr 26, 2021 at 11:54 AM Thomas Bogendoerfer
-> <tsbogend@alpha.franken.de> wrote:
-> 
-> > Add YAML devicetree binding for IDT 79RC32434 GPIO controller
-> >
-> > Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > ---
-> > Changes in v4:
-> >  - renamed to idt,32434-gpio this time for real
-> 
-> Overall looks good to me.
-> 
-> > +required:
-> (...)
-> > +  - ngpios
-> 
-> Is there a *technical* reason why this is required?
-> 
-> Can't the driver just default to 32 gpios when not specified?
+This patch adds missing MODULE_DEVICE_TABLE definition which generates
+correct modalias for automatic loading of this driver when it is built
+as an external module.
 
-sure, I make it optional.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/gpio/gpio-cadence.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > +  - interrupt-controller
-> > +  - "#interrupt-cells"
-> > +  - interrupts
-> 
-> Why can't interrupt support be made optional?
-> 
-> It is fine if the driver errors out if not provided, but
-> for the bindings this feels optional.
-
-I'll make them optional.
-
-> Or does the thing break unless you handle the IRQs?
-
-no, they could be used just as GPIOs.
-
-Thomas.
-
+diff --git a/drivers/gpio/gpio-cadence.c b/drivers/gpio/gpio-cadence.c
+index a4d3239..4ab3fcd 100644
+--- a/drivers/gpio/gpio-cadence.c
++++ b/drivers/gpio/gpio-cadence.c
+@@ -278,6 +278,7 @@ static const struct of_device_id cdns_of_ids[] = {
+ 	{ .compatible = "cdns,gpio-r1p02" },
+ 	{ /* sentinel */ },
+ };
++MODULE_DEVICE_TABLE(of, cdns_of_ids);
+ 
+ static struct platform_driver cdns_gpio_driver = {
+ 	.driver = {
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.6.2
+
