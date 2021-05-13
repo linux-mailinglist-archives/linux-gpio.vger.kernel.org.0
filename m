@@ -2,265 +2,227 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D75E637FF75
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 May 2021 22:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F06037FFA5
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 May 2021 23:11:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233172AbhEMUuQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 May 2021 16:50:16 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33068 "EHLO gloria.sntech.de"
+        id S232552AbhEMVM0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 May 2021 17:12:26 -0400
+Received: from mx4.wp.pl ([212.77.101.12]:50071 "EHLO mx4.wp.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233149AbhEMUuQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 13 May 2021 16:50:16 -0400
-Received: from p5b127fd3.dip0.t-ipconnect.de ([91.18.127.211] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1lhIGR-0006yX-OO; Thu, 13 May 2021 22:48:59 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH 6/7] gpio/rockchip: always enable clock for gpio controller
-Date:   Thu, 13 May 2021 22:48:58 +0200
-Message-ID: <7622756.lOV4Wx5bFT@phil>
-In-Reply-To: <20210510063722.506009-1-jay.xu@rock-chips.com>
-References: <20210510063602.505829-1-jay.xu@rock-chips.com> <20210510063722.506009-1-jay.xu@rock-chips.com>
+        id S232569AbhEMVMZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 May 2021 17:12:25 -0400
+Received: (wp-smtpd smtp.wp.pl 8400 invoked from network); 13 May 2021 23:04:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1620939873; bh=UKMDBnG5p5APpb3tRL0n14Y5bMFveQTAt2xY2r5P3Ys=;
+          h=From:To:Cc:Subject;
+          b=f8x38V4CyT3Kz4WPRlyYZTkzgZKvyzWOm7uGGkgwBMmvzwbKgDsfI3l/Jom6MuEWf
+           5gbFGgtbgGUC8jy+8KJsdKVW2Z8LeZjPA9FwLyMqYIExn0tzl8XodtqD0Ys7ylBw2G
+           2XEs29tBKDgE0jr8FEiB5EGQUW7IT2buQMXusGfc=
+Received: from riviera.nat.ds.pw.edu.pl (HELO LAPTOP-OLEK.lan) (olek2@wp.pl@[194.29.137.1])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linus.walleij@linaro.org>; 13 May 2021 23:04:33 +0200
+From:   Aleksander Jan Bajkowski <olek2@wp.pl>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, john@phrozen.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Aleksander Jan Bajkowski <olek2@wp.pl>
+Subject: [PATCH 1/2] dt-bindings: gpio: stp: convert to json-schema
+Date:   Thu, 13 May 2021 23:03:39 +0200
+Message-Id: <20210513210340.10466-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-WP-DKIM-Status: good (id: wp.pl)                                      
+X-WP-MailID: fb27e803245d34b0a93d3341ec428926
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000A [weOU]                               
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Montag, 10. Mai 2021, 08:37:22 CEST schrieb Jianqun Xu:
-> Since gate and ungate pclk of gpio has very litte benifit for system
-> power consumption, just keep it always ungate.
-> 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+Convert the Lantiq STP Device Tree binding documentation to json-schema.
+Add the missing pinctrl property.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+---
+ .../bindings/gpio/gpio-stp-xway.txt           |  42 -------
+ .../bindings/gpio/gpio-stp-xway.yaml          | 117 ++++++++++++++++++
+ 2 files changed, 117 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
 
-I do agree with the reasoning and as an added benefit, we
-also drop all the clk_enable calls that don't do proper error
-handling right now ;-)
-
-
-> ---
->  drivers/gpio/gpio-rockchip.c | 68 +++++-------------------------------
->  1 file changed, 9 insertions(+), 59 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index 92aaf1848449..048e7eecddba 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -139,17 +139,8 @@ static int rockchip_gpio_get_direction(struct gpio_chip *chip,
->  {
->  	struct rockchip_pin_bank *bank = gpiochip_get_data(chip);
->  	u32 data;
-> -	int ret;
->  
-> -	ret = clk_enable(bank->clk);
-> -	if (ret < 0) {
-> -		dev_err(bank->drvdata->dev,
-> -			"failed to enable clock for bank %s\n", bank->name);
-> -		return ret;
-> -	}
->  	data = rockchip_gpio_readl_bit(bank, offset, bank->gpio_regs->port_ddr);
-> -	clk_disable(bank->clk);
-> -
->  	if (data & BIT(offset))
->  		return GPIO_LINE_DIRECTION_OUT;
->  
-> @@ -163,11 +154,9 @@ static int rockchip_gpio_set_direction(struct gpio_chip *chip,
->  	unsigned long flags;
->  	u32 data = input ? 0 : 1;
->  
-> -	clk_enable(bank->clk);
->  	raw_spin_lock_irqsave(&bank->slock, flags);
->  	rockchip_gpio_writel_bit(bank, offset, data, bank->gpio_regs->port_ddr);
->  	raw_spin_unlock_irqrestore(&bank->slock, flags);
-> -	clk_disable(bank->clk);
->  
->  	return 0;
->  }
-> @@ -178,11 +167,9 @@ static void rockchip_gpio_set(struct gpio_chip *gc, unsigned int offset,
->  	struct rockchip_pin_bank *bank = gpiochip_get_data(gc);
->  	unsigned long flags;
->  
-> -	clk_enable(bank->clk);
->  	raw_spin_lock_irqsave(&bank->slock, flags);
->  	rockchip_gpio_writel_bit(bank, offset, value, bank->gpio_regs->port_dr);
->  	raw_spin_unlock_irqrestore(&bank->slock, flags);
-> -	clk_disable(bank->clk);
->  }
->  
->  static int rockchip_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> @@ -190,11 +177,10 @@ static int rockchip_gpio_get(struct gpio_chip *gc, unsigned int offset)
->  	struct rockchip_pin_bank *bank = gpiochip_get_data(gc);
->  	u32 data;
->  
-> -	clk_enable(bank->clk);
->  	data = readl(bank->reg_base + bank->gpio_regs->ext_port);
-> -	clk_disable(bank->clk);
->  	data >>= offset;
->  	data &= 1;
-> +
->  	return data;
->  }
->  
-> @@ -315,9 +301,7 @@ static int rockchip_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
->  	if (!bank->domain)
->  		return -ENXIO;
->  
-> -	clk_enable(bank->clk);
->  	virq = irq_create_mapping(bank->domain, offset);
-> -	clk_disable(bank->clk);
->  
->  	return (virq) ? : -ENXIO;
->  }
-> @@ -409,7 +393,6 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
->  	unsigned long flags;
->  	int ret = 0;
->  
-> -	clk_enable(bank->clk);
->  	raw_spin_lock_irqsave(&bank->slock, flags);
->  
->  	rockchip_gpio_writel_bit(bank, d->hwirq, 0,
-> @@ -480,7 +463,6 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
->  out:
->  	irq_gc_unlock(gc);
->  	raw_spin_unlock_irqrestore(&bank->slock, flags);
-> -	clk_disable(bank->clk);
->  
->  	return ret;
->  }
-> @@ -490,10 +472,8 @@ static void rockchip_irq_suspend(struct irq_data *d)
->  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
->  	struct rockchip_pin_bank *bank = gc->private;
->  
-> -	clk_enable(bank->clk);
->  	bank->saved_masks = irq_reg_readl(gc, bank->gpio_regs->int_mask);
->  	irq_reg_writel(gc, ~gc->wake_active, bank->gpio_regs->int_mask);
-> -	clk_disable(bank->clk);
->  }
->  
->  static void rockchip_irq_resume(struct irq_data *d)
-> @@ -501,27 +481,7 @@ static void rockchip_irq_resume(struct irq_data *d)
->  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
->  	struct rockchip_pin_bank *bank = gc->private;
->  
-> -	clk_enable(bank->clk);
->  	irq_reg_writel(gc, bank->saved_masks, bank->gpio_regs->int_mask);
-> -	clk_disable(bank->clk);
-> -}
-> -
-> -static void rockchip_irq_enable(struct irq_data *d)
-> -{
-> -	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> -	struct rockchip_pin_bank *bank = gc->private;
-> -
-> -	clk_enable(bank->clk);
-> -	irq_gc_mask_clr_bit(d);
-> -}
-> -
-> -static void rockchip_irq_disable(struct irq_data *d)
-> -{
-> -	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> -	struct rockchip_pin_bank *bank = gc->private;
-> -
-> -	irq_gc_mask_set_bit(d);
-> -	clk_disable(bank->clk);
->  }
->  
->  static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
-> @@ -530,19 +490,11 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
->  	struct irq_chip_generic *gc;
->  	int ret;
->  
-> -	ret = clk_enable(bank->clk);
-> -	if (ret) {
-> -		dev_err(bank->dev, "failed to enable clock for bank %s\n",
-> -			bank->name);
-> -		return -EINVAL;
-> -	}
-> -
->  	bank->domain = irq_domain_add_linear(bank->of_node, 32,
->  					&irq_generic_chip_ops, NULL);
->  	if (!bank->domain) {
->  		dev_warn(bank->dev, "could not init irq domain for bank %s\n",
->  			 bank->name);
-> -		clk_disable(bank->clk);
->  		return -EINVAL;
->  	}
->  
-> @@ -554,7 +506,6 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
->  		dev_err(bank->dev, "could not alloc generic chips for bank %s\n",
->  			bank->name);
->  		irq_domain_remove(bank->domain);
-> -		clk_disable(bank->clk);
->  		return -EINVAL;
->  	}
->  
-> @@ -571,8 +522,8 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
->  	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
->  	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
->  	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
-> -	gc->chip_types[0].chip.irq_enable = rockchip_irq_enable;
-> -	gc->chip_types[0].chip.irq_disable = rockchip_irq_disable;
-> +	gc->chip_types[0].chip.irq_enable = irq_gc_mask_clr_bit;
-> +	gc->chip_types[0].chip.irq_disable = irq_gc_mask_set_bit;
->  	gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
->  	gc->chip_types[0].chip.irq_suspend = rockchip_irq_suspend;
->  	gc->chip_types[0].chip.irq_resume = rockchip_irq_resume;
-> @@ -591,7 +542,6 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
->  
->  	irq_set_chained_handler_and_data(bank->irq,
->  					 rockchip_irq_demux, bank);
-> -	clk_disable(bank->clk);
->  
->  	return 0;
->  }
-> @@ -695,7 +645,6 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
->  		if (IS_ERR(bank->db_clk)) {
->  			dev_err(bank->dev, "cannot find debounce clk\n");
->  			bank->db_clk = NULL;
-> -			clk_disable(bank->clk);
->  			return -EINVAL;
->  		}
->  	} else {
-> @@ -703,7 +652,6 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
->  		bank->gpio_type = GPIO_TYPE_V1;
->  	}
->  
-> -	clk_disable(bank->clk);
->  	return 0;
->  }
->  
-> @@ -756,15 +704,17 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
->  		return ret;
->  
->  	ret = rockchip_gpiolib_register(bank);
-> -	if (ret) {
-> -		clk_disable_unprepare(bank->clk);
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		goto err_clk;
->  
->  	platform_set_drvdata(pdev, bank);
->  	dev_info(dev, "probed %pOF\n", np);
->  
->  	return 0;
-> +err_clk:
-> +	clk_disable_unprepare(bank->clk);
-> +
-> +	return ret;
->  }
->  
->  static int rockchip_gpio_remove(struct platform_device *pdev)
-> 
-
-
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
+deleted file mode 100644
+index 78458adbf4b7..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-Lantiq SoC Serial To Parallel (STP) GPIO controller
+-
+-The Serial To Parallel (STP) is found on MIPS based Lantiq socs. It is a
+-peripheral controller used to drive external shift register cascades. At most
+-3 groups of 8 bits can be driven. The hardware is able to allow the DSL modem
+-to drive the 2 LSBs of the cascade automatically.
+-
+-
+-Required properties:
+-- compatible : Should be "lantiq,gpio-stp-xway"
+-- reg : Address and length of the register set for the device
+-- #gpio-cells : Should be two.  The first cell is the pin number and
+-  the second cell is used to specify optional parameters (currently
+-  unused).
+-- gpio-controller : Marks the device node as a gpio controller.
+-
+-Optional properties:
+-- lantiq,shadow : The default value that we shall assume as already set on the
+-  shift register cascade.
+-- lantiq,groups : Set the 3 bit mask to select which of the 3 groups are enabled
+-  in the shift register cascade.
+-- lantiq,dsl : The dsl core can control the 2 LSBs of the gpio cascade. This 2 bit
+-  property can enable this feature.
+-- lantiq,phy1 : The gphy1 core can control 3 bits of the gpio cascade.
+-- lantiq,phy2 : The gphy2 core can control 3 bits of the gpio cascade.
+-- lantiq,rising : use rising instead of falling edge for the shift register
+-
+-Example:
+-
+-gpio1: stp@e100bb0 {
+-	compatible = "lantiq,gpio-stp-xway";
+-	reg = <0xE100BB0 0x40>;
+-	#gpio-cells = <2>;
+-	gpio-controller;
+-
+-	lantiq,shadow = <0xffff>;
+-	lantiq,groups = <0x7>;
+-	lantiq,dsl = <0x3>;
+-	lantiq,phy1 = <0x7>;
+-	lantiq,phy2 = <0x7>;
+-	/* lantiq,rising; */
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
+new file mode 100644
+index 000000000000..a36acc98898c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
+@@ -0,0 +1,117 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-stp-xway.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Lantiq SoC Serial To Parallel (STP) GPIO controller
++
++description: |
++  The Serial To Parallel (STP) is found on MIPS based Lantiq socs. It is a
++  peripheral controller used to drive external shift register cascades. At most
++  3 groups of 8 bits can be driven. The hardware is able to allow the DSL modem
++  and Ethernet PHYs to drive some bytes of the cascade automatically.
++
++maintainers:
++  - John Crispin <john@phrozen.org>
++
++properties:
++  $nodename:
++    pattern: "^stp@[0-9a-f]+$"
++
++  compatible:
++    const: lantiq,gpio-stp-xway
++
++  reg:
++    description:
++      Address and length of the register set for the device.
++    maxItems: 1
++
++  gpio-controller:
++    description:
++      Marks the device node as a gpio controller.
++    type: boolean
++
++  "#gpio-cells":
++    description:
++      The first cell is the pin number and the second cell is used to specify
++      consumer flags.
++    const: 2
++
++  pinctrl-0:
++    description: Should specify pin control groups used for this controller.
++
++  pinctrl-names:
++    const: default
++
++  lantiq,shadow:
++    description:
++      The default value that we shall assume as already set on the
++      shift register cascade.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x000000
++    maximum: 0xffffff
++
++  lantiq,groups:
++    description:
++      Set the 3 bit mask to select which of the 3 groups are enabled
++      in the shift register cascade.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x0
++    maximum: 0x7
++
++  lantiq,dsl:
++    description:
++      The dsl core can control the 2 LSBs of the gpio cascade. This 2 bit
++      property can enable this feature.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x0
++    maximum: 0x3
++
++  lantiq,phy1:
++    description:
++      The gphy1 core can control 3 bits of the gpio cascade. Available on
++      the xRX200, xRX300 and xRX330 family.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x0
++    maximum: 0x7
++
++  lantiq,phy2:
++    description:
++      The gphy2 core can control 3 bits of the gpio cascade. Available on
++      the xRX200, xRX300 and xRX330 family.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x0
++    maximum: 0x7
++
++  lantiq,rising:
++    description:
++      Use rising instead of falling edge for the shift register.
++    type: boolean
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    stp: stp@e100bb0 {
++        compatible = "lantiq,gpio-stp-xway";
++        reg = <0xE100BB0 0x40>;
++        #gpio-cells = <2>;
++        gpio-controller;
++
++        pinctrl-0 = <&stp_pins>;
++        pinctrl-names = "default";
++
++        lantiq,shadow = <0xffffff>;
++        lantiq,groups = <0x7>;
++        lantiq,dsl = <0x3>;
++        lantiq,phy1 = <0x7>;
++        lantiq,phy2 = <0x7>;
++    };
++...
+-- 
+2.30.2
 
