@@ -2,92 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74C4837F4B5
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 May 2021 11:10:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A483B37FB43
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 May 2021 18:10:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232156AbhEMJLV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 May 2021 05:11:21 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54914 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232149AbhEMJLU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 13 May 2021 05:11:20 -0400
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mtapsc-4-O-l6zddbOw-DLiJ4G39p_w-1; Thu, 13 May 2021 10:10:08 +0100
-X-MC-Unique: O-l6zddbOw-DLiJ4G39p_w-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.2; Thu, 13 May 2021 10:10:07 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.015; Thu, 13 May 2021 10:10:07 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Colin King' <colin.king@canonical.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+        id S235030AbhEMQLJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 May 2021 12:11:09 -0400
+Received: from mout.gmx.net ([212.227.15.15]:45725 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234935AbhEMQLI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 May 2021 12:11:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1620922192;
+        bh=yHZOanl+7lAyfwZ0IKQ6jvxuiFtoltCg8sl+03ShmH8=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=d+EgMSyb8QmROW7hWrcbZbGSFvtly7XWapxJTLlocdzDTSNRbaXW4JNazd0n/553a
+         mhW3WsvKOKEwylAliV/tEJGsPShzih34d0jZBbzwdfJVT3vRjvfew34h2pe7BUF246
+         ZLHZy8SGrTeVO0pEujSJveVUo3FQSnDY91BFiKgY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.126]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MirjS-1l2g1U0sFQ-00eqXh; Thu, 13
+ May 2021 18:09:52 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][next] gpio: xilinx: Fix potential integer overflow on
- shift of a u32 int
-Thread-Topic: [PATCH][next] gpio: xilinx: Fix potential integer overflow on
- shift of a u32 int
-Thread-Index: AQHXR9VSZMAtotrvl0OPmMzLRkGfrKrhHwxw
-Date:   Thu, 13 May 2021 09:10:07 +0000
-Message-ID: <ca5918c4d9a240bc80bad1ad16d929f9@AcuMS.aculab.com>
-References: <20210513085227.54392-1-colin.king@canonical.com>
-In-Reply-To: <20210513085227.54392-1-colin.king@canonical.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: npcm: Align a few entries in the pin function table
+Date:   Thu, 13 May 2021 18:09:47 +0200
+Message-Id: <20210513160947.1716185-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4D7VmaLIN+x85KYn/jYiQDttmjIIFuuEsO2Z9vGGTBF4nN3Pbyy
+ jU2CGRW7MY+T05JPVnU5O6qUQyKcwTpeX02qZOnpddMw4sHu3ENMXIv0sh4Eo5r7icFf980
+ EhANrto7NeDtge2KIaIe/BEy9Rjciet6NG3T3UHmmeJNRHVbiDf31W5YIk6jY18ejr9kR5/
+ cqUHc5RnuRndhF29Fd39g==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9KenyV4S/E8=:vGJrOuYx47XMY5OwuK5JWf
+ XPG9gkfiAHIoOzCC0lMuMCC3YDFLEVrdAnWU+A0h0Qgry9D6nZpO91+iKKTK2RyWYHDumv05T
+ 6BGruyJaDBS/NOuHKz7mL/DMDwXmDQgTEdjBZSPKhF/Od/ypraAMydRilF6E5IFsEWS/gY15A
+ mPWD3GP7BIrDiWUBGGFsQqjGdTSIFRliZQyyt8v7vdigttY9DJpA+pFszWUe+godumb75DcLP
+ zUQzwliltKxhRgjXt24ihAEH5rHfXulzZJcjYLBxt0t1eH5NEuTrh7TT0yllJ1AomP97HWFQ+
+ ErE7jvyWd7Ih7VEajShQZoDYSU5RGkd0l2qWjO1AmyuXQW/HDJpVErd+89RLYNt5/685B9VhR
+ cD4CrDSGS7l6B7u/zfVqPnuGF3UP3ZmNo9Rj25x2UoJ9e/kq/cV4OAM3BxjlfFduaTpYzsn+7
+ IxaQlemub6Rwoopgp/qH1GSykBm6StTKeduoQVgcRr6oawUhBrIBnms4//thpo4NuS4sT/X1t
+ Eb1n/JTTVurLxqh8scfAocCXh4/MJesrFtC88hxm0aL3Zwwsb3ljzyAUZNZN/3O6jttIGRt1p
+ lc0TP0H0s+fmuNVZ+pJHlEdcuGb1biGXLKCF2r+TWAziOWDyVil5Z3jU4GwhbZVWlYtOjaQwT
+ stRqwH2FjE0/YVYW6oyK3ZEF//j9kwI/4EGovDcx8boiU+Q5n+UlNHs586c25E6CwFQOxTNSa
+ N2Qpv7/+cqiQdOLhHOoKgpJgTCYre97DHGDpAzQJchZ3la4ipF91g9BudRp7laCt4cnUvOdGR
+ NnNQmmp4twFJsw7y5hLaWp2mma7EJOfFcHO4lWaeznoxz92cN/L7SCq06iZuG8iH+9JTTYrFu
+ h7JxxNdDKnL///obFMAC2WsadW1qWMHlZE3u8z+PDilnKGhX1os7obYZvbenDL7OX/cw2Yw5J
+ OIRDm22VIm24vtDdah/uUs7TSpVptSuVsRwnAaeixLbmjnCb9zC5DB13h0s6wqHrQAsiDMWfN
+ HkvYyc+NWG4623nqOU3w3wb4D28LrSRt86i/TF9jtQ5JrWxdgV/9fr6wVlOxHR3uOp2Adqu/l
+ by+g4Q7+CVoJ4sTXuKy6vbWKCBmDBafdD5Hojlub1hsAghTX0tvi3qTn73ISeJU0yqlf8+2la
+ gadXZaHPd0/JUOnPEH24iWu6H7A/xt45KiZn673XCYTDhs/bRk8k8+0GumcgE1aMDvLetxehG
+ BzbPde71UzTGwdaHX
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-RnJvbTogQ29saW4gS2luZw0KPiBTZW50OiAxMyBNYXkgMjAyMSAwOTo1Mg0KPiANCj4gRnJvbTog
-Q29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gDQo+IFRoZSBsZWZ0
-IHNoaWZ0IG9mIHRoZSB1MzIgaW50ZWdlciB2IGlzIGV2YWx1YXRlZCB1c2luZyAzMiBiaXQNCj4g
-YXJpdGhtZXRpYyBhbmQgdGhlbiBhc3NpZ25lZCB0byBhIHU2NCBpbnRlZ2VyLiBUaGVyZSBhcmUg
-Y2FzZXMNCj4gd2hlcmUgdiB3aWxsIGN1cnJlbnRseSBvdmVyZmxvdyBvbiB0aGUgc2hpZnQuIEF2
-b2lkIHRoaXMgYnkNCj4gY2FzdGluZyBpdCB0byB1bnNpZ25lZCBsb25nIChzYW1lIHR5cGUgYXMg
-bWFwW10pIGJlZm9yZSBzaGlmdGluZw0KPiBpdC4NCj4gDQo+IEFkZHJlc3Nlcy1Db3Zlcml0eTog
-KCJVbmludGVudGlvbmFsIGludGVnZXIgb3ZlcmZsb3ciKQ0KPiBGaXhlczogMDJiM2Y4NGQ5MDgw
-ICgiZ3BpbzogeGlsaW54OiBTd2l0Y2ggdG8gdXNlIGJpdG1hcCBBUElzIikNCj4gU2lnbmVkLW9m
-Zi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gLS0tDQo+
-ICBkcml2ZXJzL2dwaW8vZ3Bpby14aWxpbnguYyB8IDIgKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAx
-IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3Bpby9ncGlvLXhpbGlueC5jIGIvZHJpdmVycy9ncGlvL2dwaW8teGlsaW54LmMNCj4gaW5kZXgg
-MTA5YjMyMTA0ODY3Li4xNjRhM2E1YTkzOTMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3Bpby9n
-cGlvLXhpbGlueC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3Bpby9ncGlvLXhpbGlueC5jDQo+IEBAIC05
-OSw3ICs5OSw3IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCB4Z3Bpb19zZXRfdmFsdWUzMih1bnNpZ25l
-ZCBsb25nICptYXAsIGludCBiaXQsIHUzMiB2KQ0KPiAgCWNvbnN0IHVuc2lnbmVkIGxvbmcgb2Zm
-c2V0ID0gKGJpdCAlIEJJVFNfUEVSX0xPTkcpICYgQklUKDUpOw0KPiANCj4gIAltYXBbaW5kZXhd
-ICY9IH4oMHhGRkZGRkZGRnVsIDw8IG9mZnNldCk7DQo+IC0JbWFwW2luZGV4XSB8PSB2IDw8IG9m
-ZnNldDsNCj4gKwltYXBbaW5kZXhdIHw9ICh1bnNpZ25lZCBsb25nKXYgPDwgb2Zmc2V0Ow0KPiAg
-fQ0KDQpUaGF0IGNvZGUgbG9va3MgZHViaW91cyBvbiAzMmJpdCBhcmNoaXRlY3R1cmVzLg0KDQpJ
-IGRvbid0IGhhdmUgMDJiM2Y4NGQ5MDgwIGluIGFueSBvZiBteSBzb3VyY2UgdHJlZXMuDQpCdXQg
-dGhhdCBwYXRjaCBtYXkgaXRzZWxmIGJlIHZlcnkgZHViaW91cy4NCg0KU2luY2UgdGhlIGhhcmR3
-YXJlIHJlcXVpcmVzIGV4cGxpY2l0IGJpdHMgYmUgc2V0LCByZWx5aW5nDQpvbiB0aGUgYml0bWFw
-IGZ1bmN0aW9ucyBzZWVtcyBwb2ludGxlc3MgYW5kIHBvc3NpYmx5IHdyb25nLg0KQ2xlYXJseSB0
-aGV5IGNhdXNlIGFkZGl0aW9uYWwgcHJvYmxlbXMgYmVjYXVzZSB0aGV5IHVzZSBsb25nW10NCmFu
-ZCBoZXJlIHRoZSBjb2RlIG5lZWRzIHUzMltdLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBB
-ZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMs
-IE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+The entries for GPIO 33 and 34 are not properly aligned. Fix the
+alignment.
+
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/n=
+uvoton/pinctrl-npcm7xx.c
+index 2535ca720668e..bb1ea47ec4c60 100644
+=2D-- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+@@ -958,8 +958,8 @@ static const struct npcm7xx_pincfg pincfg[] =3D {
+ 	NPCM7XX_PINCFG(31,	 smb3, MFSEL1, 0,	  none, NONE, 0,	none, NONE, 0,	   =
+  0),
+
+ 	NPCM7XX_PINCFG(32,    spi0cs1, MFSEL1, 3,	  none, NONE, 0,	none, NONE, 0=
+,	     0),
+-	NPCM7XX_PINCFG(33,   none, NONE, 0,     none, NONE, 0,	none, NONE, 0,	  =
+   SLEW),
+-	NPCM7XX_PINCFG(34,   none, NONE, 0,     none, NONE, 0,	none, NONE, 0,	  =
+   SLEW),
++	NPCM7XX_PINCFG(33,	 none, NONE, 0,           none, NONE, 0,	none, NONE, =
+0,	     SLEW),
++	NPCM7XX_PINCFG(34,	 none, NONE, 0,           none, NONE, 0,	none, NONE, =
+0,	     SLEW),
+ 	NPCM7XX_PINCFG(37,	smb3c, I2CSEGSEL, 12,	  none, NONE, 0,	none, NONE, 0,=
+	     SLEW),
+ 	NPCM7XX_PINCFG(38,	smb3c, I2CSEGSEL, 12,	  none, NONE, 0,	none, NONE, 0,=
+	     SLEW),
+ 	NPCM7XX_PINCFG(39,	smb3b, I2CSEGSEL, 11,	  none, NONE, 0,	none, NONE, 0,=
+	     SLEW),
+=2D-
+2.30.2
 
