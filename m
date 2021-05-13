@@ -2,105 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A483B37FB43
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 May 2021 18:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B988F37FCAF
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 May 2021 19:43:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235030AbhEMQLJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 May 2021 12:11:09 -0400
-Received: from mout.gmx.net ([212.227.15.15]:45725 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234935AbhEMQLI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 13 May 2021 12:11:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1620922192;
-        bh=yHZOanl+7lAyfwZ0IKQ6jvxuiFtoltCg8sl+03ShmH8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=d+EgMSyb8QmROW7hWrcbZbGSFvtly7XWapxJTLlocdzDTSNRbaXW4JNazd0n/553a
-         mhW3WsvKOKEwylAliV/tEJGsPShzih34d0jZBbzwdfJVT3vRjvfew34h2pe7BUF246
-         ZLHZy8SGrTeVO0pEujSJveVUo3FQSnDY91BFiKgY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.126]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MirjS-1l2g1U0sFQ-00eqXh; Thu, 13
- May 2021 18:09:52 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-gpio@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: npcm: Align a few entries in the pin function table
-Date:   Thu, 13 May 2021 18:09:47 +0200
-Message-Id: <20210513160947.1716185-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.30.2
+        id S231204AbhEMRok (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 May 2021 13:44:40 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:2707 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231184AbhEMRoi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 13 May 2021 13:44:38 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 May 2021 10:43:27 -0700
+X-QCInternal: smtphost
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 13 May 2021 10:43:27 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 261FA20EE7; Thu, 13 May 2021 10:43:26 -0700 (PDT)
+Date:   Thu, 13 May 2021 10:43:26 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     satya priya <skakit@codeaurora.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        kgunda@codeaurora.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH V3 3/3] dt-bindings: pinctrl: qcom-pmic-gpio: Convert
+ qcom pmic gpio bindings to YAML
+Message-ID: <20210513174325.GA13631@codeaurora.org>
+References: <1620817988-18809-1-git-send-email-skakit@codeaurora.org>
+ <1620817988-18809-4-git-send-email-skakit@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4D7VmaLIN+x85KYn/jYiQDttmjIIFuuEsO2Z9vGGTBF4nN3Pbyy
- jU2CGRW7MY+T05JPVnU5O6qUQyKcwTpeX02qZOnpddMw4sHu3ENMXIv0sh4Eo5r7icFf980
- EhANrto7NeDtge2KIaIe/BEy9Rjciet6NG3T3UHmmeJNRHVbiDf31W5YIk6jY18ejr9kR5/
- cqUHc5RnuRndhF29Fd39g==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9KenyV4S/E8=:vGJrOuYx47XMY5OwuK5JWf
- XPG9gkfiAHIoOzCC0lMuMCC3YDFLEVrdAnWU+A0h0Qgry9D6nZpO91+iKKTK2RyWYHDumv05T
- 6BGruyJaDBS/NOuHKz7mL/DMDwXmDQgTEdjBZSPKhF/Od/ypraAMydRilF6E5IFsEWS/gY15A
- mPWD3GP7BIrDiWUBGGFsQqjGdTSIFRliZQyyt8v7vdigttY9DJpA+pFszWUe+godumb75DcLP
- zUQzwliltKxhRgjXt24ihAEH5rHfXulzZJcjYLBxt0t1eH5NEuTrh7TT0yllJ1AomP97HWFQ+
- ErE7jvyWd7Ih7VEajShQZoDYSU5RGkd0l2qWjO1AmyuXQW/HDJpVErd+89RLYNt5/685B9VhR
- cD4CrDSGS7l6B7u/zfVqPnuGF3UP3ZmNo9Rj25x2UoJ9e/kq/cV4OAM3BxjlfFduaTpYzsn+7
- IxaQlemub6Rwoopgp/qH1GSykBm6StTKeduoQVgcRr6oawUhBrIBnms4//thpo4NuS4sT/X1t
- Eb1n/JTTVurLxqh8scfAocCXh4/MJesrFtC88hxm0aL3Zwwsb3ljzyAUZNZN/3O6jttIGRt1p
- lc0TP0H0s+fmuNVZ+pJHlEdcuGb1biGXLKCF2r+TWAziOWDyVil5Z3jU4GwhbZVWlYtOjaQwT
- stRqwH2FjE0/YVYW6oyK3ZEF//j9kwI/4EGovDcx8boiU+Q5n+UlNHs586c25E6CwFQOxTNSa
- N2Qpv7/+cqiQdOLhHOoKgpJgTCYre97DHGDpAzQJchZ3la4ipF91g9BudRp7laCt4cnUvOdGR
- NnNQmmp4twFJsw7y5hLaWp2mma7EJOfFcHO4lWaeznoxz92cN/L7SCq06iZuG8iH+9JTTYrFu
- h7JxxNdDKnL///obFMAC2WsadW1qWMHlZE3u8z+PDilnKGhX1os7obYZvbenDL7OX/cw2Yw5J
- OIRDm22VIm24vtDdah/uUs7TSpVptSuVsRwnAaeixLbmjnCb9zC5DB13h0s6wqHrQAsiDMWfN
- HkvYyc+NWG4623nqOU3w3wb4D28LrSRt86i/TF9jtQ5JrWxdgV/9fr6wVlOxHR3uOp2Adqu/l
- by+g4Q7+CVoJ4sTXuKy6vbWKCBmDBafdD5Hojlub1hsAghTX0tvi3qTn73ISeJU0yqlf8+2la
- gadXZaHPd0/JUOnPEH24iWu6H7A/xt45KiZn673XCYTDhs/bRk8k8+0GumcgE1aMDvLetxehG
- BzbPde71UzTGwdaHX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1620817988-18809-4-git-send-email-skakit@codeaurora.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The entries for GPIO 33 and 34 are not properly aligned. Fix the
-alignment.
+On Wed, May 12, 2021 at 04:43:08PM +0530, satya priya wrote:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> new file mode 100644
+> index 0000000..85381a0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> @@ -0,0 +1,245 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,pmic-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm PMIC GPIO block
+> +
+> +maintainers:
+> +  - Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> +
+> +description: |
+> +  This binding describes the GPIO block(s) found in the 8xxx series of
+> +  PMIC's from Qualcomm.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - qcom,pm8005-gpio
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+pm8008 has been missed out in the yaml file during the conversion. could
+you please add this as well?
 
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/n=
-uvoton/pinctrl-npcm7xx.c
-index 2535ca720668e..bb1ea47ec4c60 100644
-=2D-- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-@@ -958,8 +958,8 @@ static const struct npcm7xx_pincfg pincfg[] =3D {
- 	NPCM7XX_PINCFG(31,	 smb3, MFSEL1, 0,	  none, NONE, 0,	none, NONE, 0,	   =
-  0),
+> +          - qcom,pm8018-gpio
+> +          - qcom,pm8038-gpio
+> +          - qcom,pm8058-gpio
+> +          - qcom,pm8916-gpio
+> +          - qcom,pm8917-gpio
+> +          - qcom,pm8921-gpio
+> +          - qcom,pm8941-gpio
+> +          - qcom,pm8950-gpio
+> +          - qcom,pm8994-gpio
+> +          - qcom,pm8998-gpio
+> +          - qcom,pma8084-gpio
+> +          - qcom,pmi8950-gpio
+> +          - qcom,pmi8994-gpio
+> +          - qcom,pmi8998-gpio
+> +          - qcom,pms405-gpio
+> +          - qcom,pm660-gpio
+> +          - qcom,pm660l-gpio
+> +          - qcom,pm8150-gpio
+> +          - qcom,pm8150b-gpio
+> +          - qcom,pm6150-gpio
+> +          - qcom,pm6150l-gpio
+> +          - qcom,pmx55-gpio
+> +          - qcom,pm7325-gpio
+> +          - qcom,pm8350c-gpio
+> +          - qcom,pmk8350-gpio
+> +          - qcom,pmr735a-gpio
+> +
+> +      - enum:
+> +          - qcom,spmi-gpio
+> +          - qcom,ssbi-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 44
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  interrupt-controller: true
+> +
+> +  gpio-controller: true
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +    description: |
+> +        The first cell will be used to define gpio number and the
+> +        second denotes the flags for this gpio
+> +
+> +  gpio-keys:
+> +    type: object
+> +    properties:
+> +      volume-keys:
+> +        type: object
+> +        anyOf:
+> +          - $ref: "pinmux-node.yaml"
+> +          - $ref: "pincfg-node.yaml"
+> +        properties:
+> +          pins:
+> +            description: |
+> +                List of gpio pins affected by the properties specified in
+> +                this subnode.  Valid pins are
+> +                     - gpio1-gpio4 for pm8005
 
- 	NPCM7XX_PINCFG(32,    spi0cs1, MFSEL1, 3,	  none, NONE, 0,	none, NONE, 0=
-,	     0),
--	NPCM7XX_PINCFG(33,   none, NONE, 0,     none, NONE, 0,	none, NONE, 0,	  =
-   SLEW),
--	NPCM7XX_PINCFG(34,   none, NONE, 0,     none, NONE, 0,	none, NONE, 0,	  =
-   SLEW),
-+	NPCM7XX_PINCFG(33,	 none, NONE, 0,           none, NONE, 0,	none, NONE, =
-0,	     SLEW),
-+	NPCM7XX_PINCFG(34,	 none, NONE, 0,           none, NONE, 0,	none, NONE, =
-0,	     SLEW),
- 	NPCM7XX_PINCFG(37,	smb3c, I2CSEGSEL, 12,	  none, NONE, 0,	none, NONE, 0,=
-	     SLEW),
- 	NPCM7XX_PINCFG(38,	smb3c, I2CSEGSEL, 12,	  none, NONE, 0,	none, NONE, 0,=
-	     SLEW),
- 	NPCM7XX_PINCFG(39,	smb3b, I2CSEGSEL, 11,	  none, NONE, 0,	none, NONE, 0,=
-	     SLEW),
-=2D-
-2.30.2
+pm8008 has been missed out in the yaml file during the conversion. could
+you please add this as well?
 
+> +                     - gpio1-gpio6 for pm8018
+> +                     - gpio1-gpio12 for pm8038
+> +                     - gpio1-gpio40 for pm8058
