@@ -2,118 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6C9A380367
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 May 2021 07:38:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 289EC38059C
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 May 2021 10:55:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230393AbhENFkB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 May 2021 01:40:01 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:34576 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbhENFkA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 May 2021 01:40:00 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 14E5Yv5f024442;
-        Fri, 14 May 2021 05:38:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=U4WmGOoHEOZyxtBGaQ7iAVlEntFbwFTELaSYsOVR8BE=;
- b=wBj1Nl6WhOV5v6S+rPLaiMnOdVhnGkKPSua1IOkScHpieXxp2mTtX8+GJGbX7B0TIAq4
- U2Ye0a3G3oQiazD8sr3ZE75G0wfJydKTSDbOd09rmSxxATB/fWTkVhK8JsGMCGR4+P+p
- O5f+cI1PVGPcBxaXsmGnlcwFeyUiFLlCQx/QfSSspRskVGELdTZFLhoYPxPquF9Y6ZN3
- oJp+8ba969aNgQQkX6AXrcCAbYOj8/rFsg+YkhNWk7fkIvtehO4E8kLArCNrEVfKKyEb
- hxuSFJdtBqe9GSAdIxCtYIoyUXcTBpJsch1E5P/kPcj2ezEQXSqvDWnkIbBB6cw1eF8p 1g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 38gpnekd61-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 May 2021 05:38:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 14E5Tnbo188411;
-        Fri, 14 May 2021 05:38:26 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 38gpq2rpw9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 May 2021 05:38:26 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 14E5cPGD002297;
-        Fri, 14 May 2021 05:38:25 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 38gpq2rpvq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 May 2021 05:38:25 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 14E5cI2p027480;
-        Fri, 14 May 2021 05:38:18 GMT
-Received: from kadam (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 May 2021 22:38:16 -0700
-Date:   Fri, 14 May 2021 08:37:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] gpio: xilinx: Fix potential integer overflow on
- shift of a u32 int
-Message-ID: <20210514053754.GZ1955@kadam>
-References: <20210513085227.54392-1-colin.king@canonical.com>
+        id S233693AbhENI4Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 May 2021 04:56:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233762AbhENI4X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 May 2021 04:56:23 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0199C061760
+        for <linux-gpio@vger.kernel.org>; Fri, 14 May 2021 01:55:11 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id di13so33897664edb.2
+        for <linux-gpio@vger.kernel.org>; Fri, 14 May 2021 01:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=deviqon.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8hS70I1OP3BGBi55KMUKhZ8NUqBfuKwEk/1jKvD89Tc=;
+        b=sNDt00YtYYATKB+/+HmFsyPqLmPazpMGXY8lo+0xQbxa/CP3DCupoZDw8xzBpIcoVi
+         gHWh5BIUqoj+baT7E0578NQu2/m5QqetCzHL7UUkjvYCR7NI/SoiFx2gddfhmQE5NClm
+         F9RJXMInhU+jtgrm9iQKDT/6bVAzDNaXxBnc+b0VmsF+99HKyBjEOefVEHKbsc2gLNbR
+         oo1Tk3P3YWf7zQTH4lH8UNMIE0q8Jl3yxAZjT1ZXtaHqtIllY0qCqxVSjqTtzSiLNyfV
+         UTeK5Fs3c7Z0NpnYelQVN1dGFePHz+C3DgSRuDKmWwm+JOPEEfgTPRuyG1+D/oYWepj+
+         Mohg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8hS70I1OP3BGBi55KMUKhZ8NUqBfuKwEk/1jKvD89Tc=;
+        b=Zfl/jRABnjduur1d4WfSpLFvEPrhLdjYLkmnMpSt1a9Yc7mnjYITsvxh92nZR3/Cb2
+         uxDDXQH4ojbHC7cafQa16I5xunCz5zuQybpItCOHqjkylHQF6cHJQje8QlEl0tNuIsAD
+         4mKctqK8eoXjQogeWnjH75PSiocFINWHYgjPXZqxP9XMpYPoppe3gaGq/bvLFstrgaN/
+         S4tLgeEd3jGgz1kbWs/Q/Ptan6jyi6wHsD5BByix0JZ5PooatI6i5sCPsNLg4CuLLtui
+         YjrtcbHQIf2J7qwf8ETDH6v35114XwDMb29JtkA6B3QpvHXebAN4EXiM0TBwNzr/hGgD
+         F+gA==
+X-Gm-Message-State: AOAM5320EIxO9+TIWtfkSp0WphdNtdtvKqmtNWIeaw/i22qRKzTaEDOz
+        Iik2fM8GivW67jvT0aqxYYzBl6H6X8AUEwPBauM=
+X-Google-Smtp-Source: ABdhPJxFPTzi70JPIGbujAw6X1JyfuQW/pbecxxq2Sz/l2U3aJ5OtSKv15VeGC8aBFUwXOXbb5dRXg==
+X-Received: by 2002:a05:6402:cb0:: with SMTP id cn16mr54456013edb.15.1620982510375;
+        Fri, 14 May 2021 01:55:10 -0700 (PDT)
+Received: from neptune.. ([5.2.193.191])
+        by smtp.gmail.com with ESMTPSA id p4sm3249329ejr.81.2021.05.14.01.55.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 May 2021 01:55:09 -0700 (PDT)
+From:   Alexandru Ardelean <aardelean@deviqon.com>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        nobuhiro1.iwamatsu@toshiba.co.jp,
+        Alexandru Ardelean <aardelean@deviqon.com>
+Subject: [PATCH] gpio: gpio-visconti: remove platform_set_drvdata() + cleanup probe
+Date:   Fri, 14 May 2021 11:55:00 +0300
+Message-Id: <20210514085500.10761-1-aardelean@deviqon.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210513085227.54392-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-GUID: aq9JcMCzhOS1vHkJe9ZQMHGnxm2a3Aca
-X-Proofpoint-ORIG-GUID: aq9JcMCzhOS1vHkJe9ZQMHGnxm2a3Aca
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9983 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 phishscore=0
- suspectscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 clxscore=1011 mlxscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2105140038
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 13, 2021 at 09:52:27AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The left shift of the u32 integer v is evaluated using 32 bit
-> arithmetic and then assigned to a u64 integer. There are cases
-> where v will currently overflow on the shift. Avoid this by
-> casting it to unsigned long (same type as map[]) before shifting
-> it.
-> 
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Fixes: 02b3f84d9080 ("gpio: xilinx: Switch to use bitmap APIs")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/gpio/gpio-xilinx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 109b32104867..164a3a5a9393 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -99,7 +99,7 @@ static inline void xgpio_set_value32(unsigned long *map, int bit, u32 v)
->  	const unsigned long offset = (bit % BITS_PER_LONG) & BIT(5);
->  
->  	map[index] &= ~(0xFFFFFFFFul << offset);
-> -	map[index] |= v << offset;
-> +	map[index] |= (unsigned long)v << offset;
+The platform_set_drvdata() call is only useful if we need to retrieve back
+the private information.
+Since the driver doesn't do that, it's not useful to have it.
 
-Doing a shift by BIT(5) is super weird.  It looks like a double shift
-bug and should probably trigger a static checker warning.  It's like
-when people do BIT(BIT(5)).
+If this is removed, we can also just do a direct return on
+devm_gpiochip_add_data(). We don't need to print that this call failed as
+there are other ways to log/see this during probe.
 
-It would be more readable to write it as:
+Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
+---
+ drivers/gpio/gpio-visconti.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-	int shift = (bit % BITS_PER_LONG) ? 32 : 0;
-
-regards,
-dan carpenter
+diff --git a/drivers/gpio/gpio-visconti.c b/drivers/gpio/gpio-visconti.c
+index 0e3d19828eb1..47455810bdb9 100644
+--- a/drivers/gpio/gpio-visconti.c
++++ b/drivers/gpio/gpio-visconti.c
+@@ -187,15 +187,7 @@ static int visconti_gpio_probe(struct platform_device *pdev)
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 	girq->handler = handle_level_irq;
+ 
+-	ret = devm_gpiochip_add_data(dev, &priv->gpio_chip, priv);
+-	if (ret) {
+-		dev_err(dev, "failed to add GPIO chip\n");
+-		return ret;
+-	}
+-
+-	platform_set_drvdata(pdev, priv);
+-
+-	return ret;
++	return devm_gpiochip_add_data(dev, &priv->gpio_chip, priv);
+ }
+ 
+ static const struct of_device_id visconti_gpio_of_match[] = {
+-- 
+2.31.1
 
