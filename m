@@ -2,163 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF52D3811DE
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 May 2021 22:34:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98E463816A4
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 May 2021 09:52:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231373AbhENUf2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 May 2021 16:35:28 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:34821 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbhENUf1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 May 2021 16:35:27 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 426302224B;
-        Fri, 14 May 2021 22:34:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1621024453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O1L0/pKoSlcjKl/U7hViIGd8coggHl6+ZnqIjPBzihY=;
-        b=QPTMDS/nulVFrzybOahN50u8fETwnpHPmGqo5muR3NL9h/c7BHbwGiBlZci6b+3fCKt+++
-        5hytbK7nM0QVi0tNYKv8ZhJDwOLAsAyoUeFbQfHwTyzz6gErDERKt8/Sh5/WWTq0wP2e6u
-        W4CW1fbsfWs4UNX91z+45xD1e7Va7js=
+        id S233569AbhEOHx5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 15 May 2021 03:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233132AbhEOHx4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 May 2021 03:53:56 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B981CC061756
+        for <linux-gpio@vger.kernel.org>; Sat, 15 May 2021 00:52:43 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id w3so1885707ejc.4
+        for <linux-gpio@vger.kernel.org>; Sat, 15 May 2021 00:52:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=deviqon.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CZk+7UgQ/ev3klOu/zQXroC2fr8BBS83ryBvlIT0lSQ=;
+        b=btBYIMJsb2Qc8kUu+BwOzOm0bnembBDeEEMcNwO3rZ8qJl6mPDVKh4e8qHfgiGnzPC
+         xnowC/5vzGnTfe1wXi6lseO+Yu9NvNbWjX9LHvPuES1VCgvKtSxw8VAXdJ7CFV7N1Xt2
+         Hnb1hOyg2aH9hcm+rIu7BwuaY72D64La3wxF5oLBoleJpgThljTSSHuUrKCwLmuPCdFI
+         G6Ix17XOn9G5HduDq1E2r8si1105Zf+Y1hvg16SH/nOQqy21QPDZFVIr4alhANs1gmn6
+         QLizj0Y4hiHZCBnVxpeesjJ44EorJ0W/8s0xxX+VBtGRfn6kHW2ZSJ2syIy+1RXNGSEx
+         b0xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CZk+7UgQ/ev3klOu/zQXroC2fr8BBS83ryBvlIT0lSQ=;
+        b=e8WXI9ptbJv/DzqAs+dt3ZqIG5RR8Iq1F3ZsASTn3TRmyAkqd//cH68O/6zTaIit/V
+         fu6iXyKvRMPsRqvLD+K3QbMkV2AvdFQ0FxuzVCuz8hjgLL6rQBD+1bLMBiW3F7/ZDhJD
+         ikSj3i+XdxhQrvRoc5NOJZ2/jVbQhk+lLk6E/I2f/QBVD7w5c4D7EG271jEh0viEWaTl
+         wZzTccKarzZ1styj6kJK+Aq388rRF/boG3yU9j9Yla2z698BNkU7yI5RMmYcl9FmtvJH
+         y6uXb9tOYMuWf5IODbfaLsfS+G54WHaM+dk3UO1WJYJZN/dS3rhWqH54kPyf3x6jGzRN
+         1MFA==
+X-Gm-Message-State: AOAM5302pWowXLGTsCABSVU06g/AU/YHWq++8zaruPzEVZnwmcdtm0sy
+        A0n18vws0vKZlbG4PfC2/WzjFrjXUcVB3JQvhtk=
+X-Google-Smtp-Source: ABdhPJydKnPJ1GBx+K3tFJkfHdqem6TY2f81reDMs79XknWZXNikrNvVcrJowXyeYpPTPdiq5+cIlg==
+X-Received: by 2002:a17:907:1629:: with SMTP id hb41mr53659347ejc.316.1621065162220;
+        Sat, 15 May 2021 00:52:42 -0700 (PDT)
+Received: from neptune.. ([188.27.131.122])
+        by smtp.gmail.com with ESMTPSA id d25sm4868426ejd.59.2021.05.15.00.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 May 2021 00:52:41 -0700 (PDT)
+From:   Alexandru Ardelean <aardelean@deviqon.com>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        Alexandru Ardelean <aardelean@deviqon.com>
+Subject: [PATCH] gpio: gpio-tps6586x: remove platform_set_drvdata() + cleanup probe
+Date:   Sat, 15 May 2021 10:52:33 +0300
+Message-Id: <20210515075233.7594-1-aardelean@deviqon.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 May 2021 22:34:13 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     matti.vaittinen@fi.rohmeurope.com
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>,
-        =?UTF-8?Q?=C3=81lvaro_Fer?= =?UTF-8?Q?n=C3=A1ndez_Rojas?= 
-        <noltari@gmail.com>
-Subject: Re: regmap-gpio: Support set_config and other not quite so standard
- ICs?
-In-Reply-To: <3a8c418bc40a736f44ab19a549a58d6bdecc59be.camel@fi.rohmeurope.com>
-References: <cover.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
- <b2164e5965218f270e17bf29e00ad5c5a0b54bcf.1616566395.git.matti.vaittinen@fi.rohmeurope.com>
- <CACRpkdZnrkiYGaOTZLvCnp72WYiV0+YhCe+TbMjN_3CLyJHvgA@mail.gmail.com>
- <c5a4ef7341b5b0b56d1ad950867828463cfdb7fc.camel@fi.rohmeurope.com>
- <c4faac648d3e0c7f3dcb50f7e24c8b322e8c6974.camel@fi.rohmeurope.com>
- <CAHp75VcUva-1cv6xaU0-RADVS=GR1VMk50cqR5NPU1LCFX2N5A@mail.gmail.com>
- <3a8c418bc40a736f44ab19a549a58d6bdecc59be.camel@fi.rohmeurope.com>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <5ddf313b915da284211fc961971ced37@walle.cc>
-X-Sender: michael@walle.cc
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2021-05-11 05:59, schrieb Matti Vaittinen:
-> Morning Andy,
-> 
-> On Mon, 2021-05-10 at 19:54 +0300, Andy Shevchenko wrote:
->> On Mon, May 10, 2021 at 4:41 PM Matti Vaittinen
->> <matti.vaittinen@fi.rohmeurope.com> wrote:
->> > Hi Linus, All,
->> >
->> > On Thu, 2021-03-25 at 12:32 +0200, Matti Vaittinen wrote:
->> > > On Thu, 2021-03-25 at 10:35 +0100, Linus Walleij wrote:
->> >
->> > snip
->> >
->> > > > It could potentially (like the other Rohm GPIO MFD PMIC
->> > > > drivers)
->> > > > make some use of the gpio regmap library, but we have some
->> > > > pending changes for that so look into it after the next merge
->> > > > window.
->> > > >
->> > > > I.e. for your TODO: look at the GPIO_REGMAP helper.
->> > >
->> > > I just took a quick peek at gpio_regmap and it looks pretty good
->> > > to
->> > > me!
->> > >
->> > > Any particular reason why gpio_regmap is not just part of
->> > > gpio_chip?
->> > > I
->> > > guess providing the 'gpio_regmap_direction_*()',
->> > > 'gpio_regmap_get()',
->> > > 'gpio_regmap_set()' as exported helpers and leaving calling the
->> > > (devm_)gpiochip_add_data() to IC driver would have allowed more
->> > > flexibility. Drivers could then use the gpio_regamap features
->> > > which
->> > > fit
->> > > the IC (by providing pointers to helper functions in gpio_chip) -
->> > > and
->> > > handle potential oddball-features by using pointers to some
->> > > customized
->> > > functions in gpio_chip.
->> >
->> > So, v5.13-rc1 is out. I started wondering the gpio_regamap - and
->> > same
->> > question persists. Why hiding the gpio_chip from gpio_regmap users?
->> 
->> In general to me this sounds like opening a window for
->> non-controllable changes vs. controllable. Besides that, struct
->> gpio_chip has more than a few callbacks. On top of that, opening this
->> wide window means you won't be able to stop or refactoring become a
->> burden. I would be on the stricter side here.
+The platform_set_drvdata() call is only useful if we need to retrieve back
+the private information.
+Since the driver doesn't do that, it's not useful to have it.
 
-I tend to agree with Andy. Keep in mind that gpio-regmap was intended
-to catch all the simple and similar controllers.
+If this is removed, we can also just do a direct return on
+devm_gpiochip_add_data(). We don't need to print that this call failed as
+there are other ways to log/see this during probe.
 
-That being said, I'd still like to see new users. I've had a look
-at existing drivers myself some time ago and determined that there
-are quirks here and there which prevent porting that driver to
-gpio-regmap, see for example gpio-mpc8xxx.c, there is a workaround
-for some specific SoC which caches some values in the driver.
+Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
+---
+ drivers/gpio/gpio-tps6586x.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-If we make this gpio-regmap more like a library where users can
-just pick the functions they need, I fear that in the end it is
-nearly impossible to change such a function because you'll always
-break one or another user. But that is just a gut feeling.
+diff --git a/drivers/gpio/gpio-tps6586x.c b/drivers/gpio/gpio-tps6586x.c
+index 9b6cc74f47c8..20c4f96f42f0 100644
+--- a/drivers/gpio/gpio-tps6586x.c
++++ b/drivers/gpio/gpio-tps6586x.c
+@@ -76,7 +76,6 @@ static int tps6586x_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct tps6586x_platform_data *pdata;
+ 	struct tps6586x_gpio *tps6586x_gpio;
+-	int ret;
+ 
+ 	pdata = dev_get_platdata(pdev->dev.parent);
+ 	tps6586x_gpio = devm_kzalloc(&pdev->dev,
+@@ -106,16 +105,7 @@ static int tps6586x_gpio_probe(struct platform_device *pdev)
+ 	else
+ 		tps6586x_gpio->gpio_chip.base = -1;
+ 
+-	ret = devm_gpiochip_add_data(&pdev->dev, &tps6586x_gpio->gpio_chip,
+-				     tps6586x_gpio);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
+-		return ret;
+-	}
+-
+-	platform_set_drvdata(pdev, tps6586x_gpio);
+-
+-	return ret;
++	return devm_gpiochip_add_data(&pdev->dev, &tps6586x_gpio->gpio_chip, tps6586x_gpio);
+ }
+ 
+ static struct platform_driver tps6586x_gpio_driver = {
+-- 
+2.31.1
 
-> I kind of fail to see your point Andy. Or yes, I know exposing the
-> gpio_chip to user allows much more flexibility. But what are the
-> options? What would a driver developer do when his HW does almost fir
-> the standard regmap_gpio - but not just quite? Say that for example the
-> changing of gpio direction requires some odd additional register access
-> - but other than that the regmap_gpio operations like setting/getting
-> the value, IRQ options etc. fitted the regmap_gpio logic.
-> 
-> If he can not override this one function - then he will need to write
-> wholly new GPIO driver without re-using any of the regmap-gpio stuff.
-> You know, if one can't use regmap-gpio, he's likely to use the already
-> exposed gpio_chip anyways. I'd say this is much more of a pain to
-> maintain. Or maybe you add another work-around option in the
-> gpio_regmap_config to indicate this (and every other) oddball HW -
-> which eventually leads to a mess.
-
-Agreed, if possible, I'd not like to see options just for one
-obscure HW.
-
-> But this is all just my thinking - I'm kind of a "bystander" here and
-> that's why I asked for opinions. Thanks for sharing yours, Andy. I do
-> appreciate all the help and discussion.
-> 
->> > 3) The last option would be adding pointer to regmap_gpio to
->> > gpio_chip
->> > - and exporting the regmap_gpio functions as helpers - leaving the
->> > gpio
->> > registration to be done by the IC driver. That would allow IC
->> > driver to
->> > use the regmap_gpio helpers which suit the IC and write own
->> > functions
->> > for rest of the stuff.
-> 
-> I was trying to describe here the approach that has been taken in use
-> at the regulator subsystem - which has used the regmap helpers for
-> quite a while. I think that approach is scaling quite Ok even for
-> strange HW.
-
-Do you have any pointers?
-
--michael
