@@ -2,62 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F3E23816B4
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 May 2021 09:59:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A11338181F
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 May 2021 13:05:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234087AbhEOIAj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 15 May 2021 04:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57844 "EHLO
+        id S229571AbhEOLGG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 15 May 2021 07:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234009AbhEOIAi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 May 2021 04:00:38 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 004B9C061760
-        for <linux-gpio@vger.kernel.org>; Sat, 15 May 2021 00:59:25 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id lg14so1864376ejb.9
-        for <linux-gpio@vger.kernel.org>; Sat, 15 May 2021 00:59:25 -0700 (PDT)
+        with ESMTP id S235129AbhEOLFh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 May 2021 07:05:37 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5906DC06134D
+        for <linux-gpio@vger.kernel.org>; Sat, 15 May 2021 03:58:37 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id i13so1356985edb.9
+        for <linux-gpio@vger.kernel.org>; Sat, 15 May 2021 03:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=deviqon.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ruDxV1+JrGkaktFClfUuq6154xx3fQbfsw7mksEIy9Y=;
-        b=JrVcVvCWfvm8b5KZexbt5w3BqB/YLkpXSvMsA3E9+gGxzlIgQ1VVLGdXArS3k1mWxb
-         sZ/OPRv1Oliw2pxndFLmhxTnJpGWD80PtZVZSOZ43mPkxyVJf+9RndhvFv5dmlTNUY+V
-         YV/Xnu9I94ySl4jX8NI9ZUi3mBdBPsJKq5r0ZqTjCE/wIPQ+JUdXBgeoQpDu8Cgjyz7/
-         brEPijUIN9pDhZppJTGtqj/THjZ+PhrbbDmEG1R2gJGx6TkX7LYHPWqQ6sSQczIw2O87
-         J3XKibRwPfLy4Reh9a7IJP9tkGHet0Rxsh9VUec6rse5THIlUJqn3+TvTIukZS7OAbDR
-         acPg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2UIcZhVTZNdr19HjFjUOTgszjkrybyrCDOni+/NopqI=;
+        b=o4m+VlMtdqgj8eq6Tva5ZoGJU89nY9hAXeB4PWOwzbSGzzlxPFMfoA6ub7N6gOc80x
+         Ot4SkkGbxmPrKQ8j5um5EiQFFaWfyUfFk3xh3i47YWFC+tKYHFThoAo8P5Gr4yJrNRGu
+         uraVIy/4kTCmc+p82Wxq7lYkahZZ69AEMsDhvscP8+g1P0+VGrHElXsrZr8wsJwNZLv/
+         mWEHPyQf0m2CaionSQvShp9Y+pk7Y03OJUgHPQhxcma4jy+YZp0rlootYnuG456xi/Tw
+         sCeVj8DyNTsOloqQT5AbJUagFSoVwe7R85d+VGSHLWkVJ4ROqhsZMJeQZ4DgtE1DIn2M
+         WCcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ruDxV1+JrGkaktFClfUuq6154xx3fQbfsw7mksEIy9Y=;
-        b=fzj2FKYoF/qqvIF1SaieTITYij6vquK8g/rnli0YOKxOaI1MYbGNDDJM8lqtC49L/Y
-         kettXZWhZFkU6Rm7gKIZh7MAMyCU5QR+1aF7xe2CllPGjM2sS/oFOo1qqzEOEhcj2ZyM
-         S94eS9lE7IQ1Q3emRD2IngestVRJxPxrnhI2Ne4jOKHVnQUBvxGju1nl8oamHRzJzoKi
-         8LBenHwvLkYiyVmBNyxjEmcVRqKW4RQEM/UG/67viYtWqOW38FLfOZITPTib8vExWnbE
-         /dj45MwGmlemLCpyuRFAEHx8t+ykJvNckK36xznJwqUSWKBKiRwwSDKzK7mFlac/ghXK
-         5nZw==
-X-Gm-Message-State: AOAM532/bSqEglnmhcIaFPt+PujH6LOtYSi93z5YIX7M2k35dX5+iEL5
-        eRThvZgcrNiB2YAeoEz4m2jqMuAqV4M9alLC/9w=
-X-Google-Smtp-Source: ABdhPJz+mAdIayNn9GvTEbcAjrn2FCebQe6IE68YmK3rdXeyYhUFWqskChd7cVtIL1EL5M1agqzMjQ==
-X-Received: by 2002:a17:906:a403:: with SMTP id l3mr53422894ejz.251.1621065564449;
-        Sat, 15 May 2021 00:59:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2UIcZhVTZNdr19HjFjUOTgszjkrybyrCDOni+/NopqI=;
+        b=e9savlaTy8B9SgvyCqSeoUs71+jsphmX6wyVBfR732a63D5CVkfB0l/VI/TsF4XeUh
+         ARWKNbHClvcmlp75Veo2I8Np1/fyRF4gyydXWzRcCZGJ6/8SvGafPi0D4AfPa3RPm1Uj
+         Zi8BIkiBLuVA0mGk8PDwFlF4gxc/sqoL5at/RAcLa0ANkcDX8x5I6+psc7FH2DmNefov
+         L2s74G/lVFQaoa8VxtM+g/sdh3HVpJzTff4vOILW4bhFJhsIgVMHYKvZfoza27Rv90FR
+         hc2kC4AY7NwkTitx39bzYsQ2VNp9hWx0Tmp7PTrE3Q3IpzcQZOXhKVOh+UytU6H5LgNi
+         MGWQ==
+X-Gm-Message-State: AOAM5337q5Va/w2NCXrIAx7mgJh1lm+TySBcYIDAgVJyDG9KSukP371t
+        6pgLfks2EiGlmPCKtWz34TtFUJ8Z12x2F6a9CsM=
+X-Google-Smtp-Source: ABdhPJz5MXyR0avcV9T7mZWH0Uj0PD9k/Kxh4jnw0fdDXpasVY0k9S9bp/AzD4+vi0vR+dX5ChlcrQ==
+X-Received: by 2002:a05:6402:5106:: with SMTP id m6mr61248341edd.212.1621076315727;
+        Sat, 15 May 2021 03:58:35 -0700 (PDT)
 Received: from neptune.. ([188.27.131.122])
-        by smtp.gmail.com with ESMTPSA id ch30sm6185520edb.92.2021.05.15.00.59.23
+        by smtp.gmail.com with ESMTPSA id gz2sm5085276ejb.76.2021.05.15.03.58.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 May 2021 00:59:24 -0700 (PDT)
+        Sat, 15 May 2021 03:58:35 -0700 (PDT)
 From:   Alexandru Ardelean <aardelean@deviqon.com>
 To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        jonathanh@nvidia.com, thierry.reding@gmail.com,
         Alexandru Ardelean <aardelean@deviqon.com>
-Subject: [PATCH 2/2] gpio: gpio-tegra186: remove platform_set_drvdata() + cleanup probe
-Date:   Sat, 15 May 2021 10:59:05 +0300
-Message-Id: <20210515075905.12150-2-aardelean@deviqon.com>
+Subject: [PATCH] gpio: gpio-tc3589x: emove platform_set_drvdata() + cleanup probe
+Date:   Sat, 15 May 2021 13:58:31 +0300
+Message-Id: <20210515105831.9439-1-aardelean@deviqon.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210515075905.12150-1-aardelean@deviqon.com>
-References: <20210515075905.12150-1-aardelean@deviqon.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -74,28 +71,31 @@ there are other ways to log/see this during probe.
 
 Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
 ---
- drivers/gpio/gpio-tegra186.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/gpio/gpio-tc3589x.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index 10d3597e9ac2..f54ae9d4254a 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -741,13 +741,7 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 		offset += port->pins;
+diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
+index 55b8dbd13d11..8d158492488f 100644
+--- a/drivers/gpio/gpio-tc3589x.c
++++ b/drivers/gpio/gpio-tc3589x.c
+@@ -357,16 +357,7 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
+ 		return ret;
  	}
  
--	platform_set_drvdata(pdev, gpio);
+-	ret = devm_gpiochip_add_data(&pdev->dev, &tc3589x_gpio->chip,
+-				     tc3589x_gpio);
+-	if (ret) {
+-		dev_err(&pdev->dev, "unable to add gpiochip: %d\n", ret);
+-		return ret;
+-	}
 -
--	err = devm_gpiochip_add_data(&pdev->dev, &gpio->gpio, gpio);
--	if (err < 0)
--		return err;
+-	platform_set_drvdata(pdev, tc3589x_gpio);
 -
 -	return 0;
-+	return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio, gpio);
++	return devm_gpiochip_add_data(&pdev->dev, &tc3589x_gpio->chip, tc3589x_gpio);
  }
  
- #define TEGRA186_MAIN_GPIO_PORT(_name, _bank, _port, _pins)	\
+ static struct platform_driver tc3589x_gpio_driver = {
 -- 
 2.31.1
 
