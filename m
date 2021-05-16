@@ -2,29 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7B85382071
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 May 2021 20:39:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07AAA382073
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 May 2021 20:40:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231767AbhEPSlK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 May 2021 14:41:10 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:48149 "EHLO
+        id S231783AbhEPSlN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 May 2021 14:41:13 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:45137 "EHLO
         lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231724AbhEPSlJ (ORCPT
+        by vger.kernel.org with ESMTP id S231358AbhEPSlL (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 16 May 2021 14:41:09 -0400
-X-Greylist: delayed 436 seconds by postgrey-1.27 at vger.kernel.org; Sun, 16 May 2021 14:41:08 EDT
+        Sun, 16 May 2021 14:41:11 -0400
 Received: from copland.sibelius.xs4all.nl ([83.163.83.176])
         by smtp-cloud7.xs4all.net with ESMTP
-        id iLZ1lyWmcMajpiLZCl0Ad8; Sun, 16 May 2021 20:32:42 +0200
+        id iLZ1lyWmcMajpiLZIl0Ae7; Sun, 16 May 2021 20:32:48 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s2;
-        t=1621189962; bh=5ElH9uOL6nQqPho5uwOWryUINL9gmKx0dZLCtNDJe+Q=;
+        t=1621189968; bh=bsnO8l7SUux3m+SAtpyvVWCiju520gKsdmdg7rdmmrE=;
         h=From:To:Subject:Date:Message-Id:MIME-Version:From:Subject;
-        b=Ubq/HtDTBB5qlKLG6CwV2aBsDWT/lf4pCCeJDBrVVXctWy+AZ7fSW0gX86ktpiUA0
-         yLqgIfrTo3VzPxwguM2GjSw9QAywGXCknP/Bb0seGwKU9AN7OOA/Az1mkWg3Pu6Shb
-         UL562i7/WRVwpBE0DkLMC6ey+f6JZt8dJ+RbD35yAcmPSVeZA90/gvOVVAtXahvuTC
-         NF5GsWiNpP7D9tnlVRrHMx/APw5FeStMEz3StYVburxiGySGug/AvaPGv3uXBFDNC7
-         DimzJGT628QGM+JQC6rCGZ2m5CRMBuZIR1CJY48YqQSpfP3ry+oy8ycQrSlYDNqjNy
-         FI2r0Y87XahxA==
+        b=SujX6nEiLDbf0ljIL3LCoMX+ouqKRs1Ya99VxqGXc2XwNDII9nfbbPENQj/FrWA7u
+         buGX+l+ZauRWmIq/zoLEmcUK6ojwwyNWpZk9qhre3fCXNVJSXssb/r4BxMk+y5BKaZ
+         P6Mm8qCrPH8ffblMK8jbSdrLrpuhuCrNDSGap0qnbbhnj9LuArx7kGc8BcdSvjytWG
+         JLxuhOF0+tbtjRr2bmDiTrBhNJogNaA61SU+CCtGZedA2iMlBjSwIobwxhiuDcLTOe
+         g8mUtai3LP3kEsTk0WiZQsc7nzUTfLs0sEMddoD+b37c1AOc/LWh72MX3DqAMB1lzC
+         ygIw9O6KPvvEw==
 From:   Mark Kettenis <mark.kettenis@xs4all.nl>
 To:     devicetree@vger.kernel.org
 Cc:     Mark Kettenis <kettenis@openbsd.org>,
@@ -33,182 +32,136 @@ Cc:     Mark Kettenis <kettenis@openbsd.org>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: pinctrl: Add DT bindings for apple,pinctrl
-Date:   Sun, 16 May 2021 20:32:17 +0200
-Message-Id: <20210516183221.93686-2-mark.kettenis@xs4all.nl>
+Subject: [PATCH v2 2/2] arm64: apple: Add pinctrl nodes
+Date:   Sun, 16 May 2021 20:32:18 +0200
+Message-Id: <20210516183221.93686-3-mark.kettenis@xs4all.nl>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210516183221.93686-1-mark.kettenis@xs4all.nl>
 References: <20210516183221.93686-1-mark.kettenis@xs4all.nl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfJOae1O34/GSTXgUESVm4hMKxxGlPUgWAm2tPbUTIclNaqwhSrZJgxNolmj/01PD2I1fBxOQ9IsXWkw2AQoFtrw+pS/4YftUSlqJMM73Zgf59hhVRHbg
- Yghjd7GXGaRd8RGHp1zoEK3Yups4wNo8VjnWoxKPI7SE1nyYbrSa0YtWgpqR58asKO5l+u2yaQZ6RI7l6VBZ7BWYwYh+KQ22tNbn2TtwbIR6rUh28NPcHjYE
- jd7k9qGgimnMjpg7W2KifrXeIw5OtSEu/qCaVQmctX1dwRZcRm0lffhPX3cdeVcTrJ7ONQ3g/wBSNjrEvHanrSw9CHxRGUDf7IRE+AKDF0Y2GULwVdcLOunn
- p2KTk12cH8+/adZP9/PIAv4cubUoMZobQ0pN3gWp5+w9bk5Sfh8DEwqFdWHGZJzaNqCiFQ7fDLZVi89uTrbUuvetPEqja6xiYrgQokFnl0ZsFM8fC/6sub+j
- f0TsGVD6zxXhc1Fp
+X-CMAE-Envelope: MS4xfE7TE6sAt+XAoM6XPUe8AUyZOfwx2Vaq/o2WzDzTF+IjvXR3s0B21IKrbjR7UArcBkCQEps9NcOhQ1ofZsKr8fRR4WTYiwYXWc33BqJtl4Cp5E+EjsEA
+ 4ijc9xP4jlYYn/JMmI6jfxlGkudkQs4z/E0oBrFFu6i375l85E6+tiV4G6cX+ldclGY4yxHAC4Ihui0q57MtQZfgR6v2dL7xVMLE89u4qgjIGo7B6UWzP647
+ TxqBg9tNOy3ltW01Krn8gDW5ji7HpgY350a/dyhbwymtrtGG2Kmv/PBbwUzC5tPVFKV7AMPzw6K0M0YTl+/g58zKUE8HdvgCWLXmAw1UFm1PBrVgMvdWxfxo
+ 8OKJWzmcfThBdMKFr6QTT3ppbWOI8+D12TmFmqAGe/8EkCzVpklB+DGl+Oo2ovqJtl7hGX7kSE0vjQwIyNzFLJ7YSabDH9B9ifOGnmpnHTG7LgTpqCtyYSkW
+ w44IBzrZPYnXdDaT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Mark Kettenis <kettenis@openbsd.org>
 
-The Apple GPIO controller is a simple combined pin and GPIO conroller
-present on Apple ARM SoC platforms, including various iPhone and iPad
-devices and the "Apple Silicon" Macs.
+Add pinctrl nodes corresponding to the gpio,t8101 nodes in the
+Apple device tree for the Mac mini (M1, 2020).
+
+Clock references are left out at the moment and will be added once
+the appropriate bindings have been settled upon.
 
 Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
 ---
- .../bindings/pinctrl/apple,pinctrl.yaml       | 103 ++++++++++++++++++
- MAINTAINERS                                   |   2 +
- include/dt-bindings/pinctrl/apple.h           |  13 +++
- 3 files changed, 118 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
- create mode 100644 include/dt-bindings/pinctrl/apple.h
+ arch/arm64/boot/dts/apple/t8103.dtsi | 83 ++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-new file mode 100644
-index 000000000000..fae23e1d845e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/apple,pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Apple GPIO controller
-+
-+maintainers:
-+  - Mark Kettenis <kettenis@openbsd.org>
-+
-+description: |
-+  The Apple GPIO controller is a simple combined pin and GPIO
-+  controller present on Apple ARM SoC platforms, including various
-+  iPhone and iPad devices and the "Apple Silicon" Macs.
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: apple,t8103-pinctrl
-+      - const: apple,pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+  gpio-ranges:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 7
-+
-+  interrupt-controller: true
-+
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    $ref: pinmux-node.yaml#
-+
-+    properties:
-+      pinmux:
-+        description:
-+          Values are constructed from pin number and alternate function
-+          configuration number using the APPLE_PINMUX() helper macro
-+          defined in include/dt-bindings/pinctrl/apple.h.
-+
-+    required:
-+      - pinmux
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - gpio-ranges
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/apple-aic.h>
-+    #include <dt-bindings/pinctrl/apple.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      pinctrl: pinctrl@23c100000 {
-+        compatible = "apple,t8103-pinctrl", "apple,pinctrl";
-+        reg = <0x2 0x3c100000 0x0 0x100000>;
-+        clocks = <&gpio_clk>;
-+
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-ranges = <&pinctrl 0 0 212>;
-+
-+        interrupt-controller;
-+        interrupt-parent = <&aic>;
-+        interrupts = <AIC_IRQ 16 IRQ_TYPE_LEVEL_HIGH>,
-+                     <AIC_IRQ 17 IRQ_TYPE_LEVEL_HIGH>,
-+                     <AIC_IRQ 18 IRQ_TYPE_LEVEL_HIGH>,
-+                     <AIC_IRQ 19 IRQ_TYPE_LEVEL_HIGH>,
-+                     <AIC_IRQ 20 IRQ_TYPE_LEVEL_HIGH>,
-+                     <AIC_IRQ 21 IRQ_TYPE_LEVEL_HIGH>,
-+                     <AIC_IRQ 22 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        pcie_pins: pcie-pins {
-+          pinmux = <APPLE_PINMUX(150, 1)>,
-+                   <APPLE_PINMUX(151, 1)>,
-+                   <APPLE_PINMUX(32, 1)>;
-+        };
-+      };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ad0e9be66885..7327c9b778f1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1654,9 +1654,11 @@ C:	irc://chat.freenode.net/asahi-dev
- T:	git https://github.com/AsahiLinux/linux.git
- F:	Documentation/devicetree/bindings/arm/apple.yaml
- F:	Documentation/devicetree/bindings/interrupt-controller/apple,aic.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
- F:	arch/arm64/boot/dts/apple/
- F:	drivers/irqchip/irq-apple-aic.c
- F:	include/dt-bindings/interrupt-controller/apple-aic.h
-+F:	include/dt-bindings/pinctrl/apple.h
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index a1e22a2ea2e5..503a76fc30e6 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -9,6 +9,7 @@
  
- ARM/ARTPEC MACHINE SUPPORT
- M:	Jesper Nilsson <jesper.nilsson@axis.com>
-diff --git a/include/dt-bindings/pinctrl/apple.h b/include/dt-bindings/pinctrl/apple.h
-new file mode 100644
-index 000000000000..ea0a6f466592
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/apple.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
-+/*
-+ * This header provides constants for Apple pinctrl bindings.
-+ */
+ #include <dt-bindings/interrupt-controller/apple-aic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/apple.h>
+ 
+ / {
+ 	compatible = "apple,t8103", "apple,arm-platform";
+@@ -131,5 +132,87 @@ aic: interrupt-controller@23b100000 {
+ 			interrupt-controller;
+ 			reg = <0x2 0x3b100000 0x0 0x8000>;
+ 		};
 +
-+#ifndef _DT_BINDINGS_PINCTRL_APPLE_H
-+#define _DT_BINDINGS_PINCTRL_APPLE_H
++		pinctrl_ap: pinctrl@23c100000 {
++			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
++			reg = <0x2 0x3c100000 0x0 0x100000>;
 +
-+#define APPLE_PINMUX(pin, func) ((pin) | ((func) << 16))
-+#define APPLE_PIN(pinmux) ((pinmux) & 0xffff)
-+#define APPLE_FUNC(pinmux) ((pinmux) >> 16)
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl_ap 0 0 212>;
 +
-+#endif /* _DT_BINDINGS_PINCTRL_APPLE_H */
++			interrupt-controller;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 190 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 191 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 192 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 193 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 194 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 195 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 196 IRQ_TYPE_LEVEL_HIGH>;
++
++			pcie_pins: pcie-pins {
++				pinmux = <APPLE_PINMUX(150, 1)>,
++					 <APPLE_PINMUX(151, 1)>,
++					 <APPLE_PINMUX(32, 1)>;
++			};
++		};
++
++		pinctrl_aop: pinctrl@24a820000 {
++			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
++			reg = <0x2 0x4a820000 0x0 0x4000>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl_aop 0 0 42>;
++
++			interrupt-controller;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 268 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 269 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 270 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 271 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 272 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 273 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 274 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pinctrl_nub: pinctrl@23d1f0000 {
++			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
++			reg = <0x2 0x3d1f0000 0x0 0x4000>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl_nub 0 0 23>;
++
++			interrupt-controller;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 330 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 331 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 332 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 333 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 334 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 335 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 336 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pinctrl_smc: pinctrl@23e820000 {
++			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
++			reg = <0x2 0x3e820000 0x0 0x4000>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl_smc 0 0 16>;
++
++			interrupt-controller;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 391 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 392 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 393 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 394 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 395 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 396 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 397 IRQ_TYPE_LEVEL_HIGH>;
++		};
+ 	};
+ };
 -- 
 2.31.1
 
