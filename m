@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CCEC381D1A
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 May 2021 08:26:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A45C1381D4E
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 May 2021 09:43:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233320AbhEPG1z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 May 2021 02:27:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40196 "EHLO
+        id S233878AbhEPHoc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 May 2021 03:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233314AbhEPG1y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 May 2021 02:27:54 -0400
+        with ESMTP id S233869AbhEPHob (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 May 2021 03:44:31 -0400
 Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91378C06174A
-        for <linux-gpio@vger.kernel.org>; Sat, 15 May 2021 23:26:40 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id l1so4382112ejb.6
-        for <linux-gpio@vger.kernel.org>; Sat, 15 May 2021 23:26:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D27C06174A
+        for <linux-gpio@vger.kernel.org>; Sun, 16 May 2021 00:43:17 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id b25so4517057eju.5
+        for <linux-gpio@vger.kernel.org>; Sun, 16 May 2021 00:43:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=deviqon.com; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KNx8btLvd94ySzWldh8uV9ACMbuH6teV38a5e+QKGTY=;
-        b=B3Ir2Ul2SGqG/14tEGYXFNoqMiIHhi2krjwCEuNdj1mdj7glyoAUurD8ot6Va6p9gw
-         fWE02imLqvJMIY/jKcCU/b9aIPGCTcJVGDmQ3M/U0sgC/y+pSHcaNJNX0r8Gi41nGAp/
-         lcdv4rPncJuanCc7EZvgLdAOyJEvmrhGGaX2tO8lr4f1eP2SFkMPXxG1ULv4AjtdgdmR
-         ws45D9Uy4W8t+0Rs3tExcq+C2tNfcFs7iRdA6aX9XAdN4WTPSabe4vMCn9h9500feWe5
-         EZ82Gvq61u9RNl0NvgRl5V7vuK5qtuvrP8kMoCxvJuYTK11/aVWWxO1sHZ/qsDmvOMoR
-         KJCg==
+        bh=XZuJlEKURtZeYc/J4s/VV0RuP15Zpc+Mo6mw6ORDISM=;
+        b=e8fdGzwQKjeF8cC2wH91qxy76ulJvbcMS6oAVyDTtMYGwDlGtDNbZ8D0ScXbumkaJ9
+         Gd6EBhPWpJo+Qzrym6O392fB2Oz45aZGnDlzBLfGrrTvTh/rT/NhSl7H1V3xoJBT/ive
+         yQifuR02M8QcxYQa/mefzvcd5TnY2ROUAygTO7y4q7RbO9NDWzVFfopCLVCu37wnfQn8
+         mPriGo5MYyOfJU78K/jTNCrm1spVTnAXkc9TtUVkoYwUovpfkjWakToWBx75l30BUMrq
+         LRzJcSlszOsPwGY7sTczh4xx7Z1AnHx4A270PsfUnMtUj0Nxqh+qonCNXf4UcSClB9IB
+         HR2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KNx8btLvd94ySzWldh8uV9ACMbuH6teV38a5e+QKGTY=;
-        b=t724+YhyAGmXb/65o1lLOQfYpVGRzOC9QkvnpFAECqjjNqtc3YxzNT1aNQkxDyp22p
-         hLHhJApaKXwBD7mzM0NJAw6BfxdWSSP91oJ38tWOxQSresGJEQXNKmaDED0hB23vG5sE
-         uyKL2VSX5nnFDxlAulbPk9h6fVOdHytFOEd2HT8XiOjjIv/lxnrBvSM7BkXfvHyhXaAR
-         nrYCvhdRUXdbPfYuOt/CtdWl8mpmJ0QkBQbwysDAApAggexjUTHYjuIVimE35WDquIf3
-         JnL9laBSeEQmQRiGjsZBkE33OPqWAJGJIhkDzs7nv4BnpCFEFuI5eTsBRNr4xUSGVNrW
-         B8xA==
-X-Gm-Message-State: AOAM533O4m2y2yhQuqAMyOgtL8Y9gYtN2sJibqerRymI9cqRuuSziQ7Y
-        2EPjJ9OjUDKZu4zfGTPhcVe7FET1sBRXoAFaLxA=
-X-Google-Smtp-Source: ABdhPJxP7l6GWnbV/Cprv2M0q4lxxCKrdO583JHA7Nd/WpunF9yNTeC+u6psg1ZbJMV9LX6KmvgOYQ==
-X-Received: by 2002:a17:906:c04b:: with SMTP id bm11mr54940078ejb.263.1621146399103;
-        Sat, 15 May 2021 23:26:39 -0700 (PDT)
+        bh=XZuJlEKURtZeYc/J4s/VV0RuP15Zpc+Mo6mw6ORDISM=;
+        b=b5TSf8gtnavP+zb/+0Vfzfl+URS4IZpueSQhwn9sX138nD86MQ9ct6KBHmUS7/stev
+         U9b68GLQ5h6hSekmLCY5/SWGhs7SLKP+iVAdgzqvdJBqzTXMO3vupdGyIFOjj6Wj8zW5
+         QBYruc2SZI3jl1hJzRP0iX8ECZ5StKXA6N/VNnrAvjvvpALPo10Q/Xci45+ukC/3rPLg
+         ybma/k5Tw5lHj/hcK1W4ZCcSjU5WWLG6SacUX+ONUwwYk6rGVJ0Ys6IdFBwM3qER1oHN
+         28HU3QHYQXHe/hRmKI8JEYSoUMd/mfjCtdCV6AlI5tWMO2a1+gbZk5UtZfJVLh5Nzumb
+         3NEQ==
+X-Gm-Message-State: AOAM533duZ4jAEimSHnJpt5Ajb917Nij/MLUUgdI8myGNchinLYi0FEp
+        2lhI5cwiGFNF8rbj5A5zfOy3FhKoqVVvPJbZ1jc=
+X-Google-Smtp-Source: ABdhPJxveh/3LrYGxpQr81LQY4wFuuW8KnJj+LU3aKZyyAVv1NlGuZJAxu4O/gg6QMCUmOVs+69bIA==
+X-Received: by 2002:a17:906:1997:: with SMTP id g23mr16051490ejd.168.1621150995969;
+        Sun, 16 May 2021 00:43:15 -0700 (PDT)
 Received: from neptune.. ([188.27.131.122])
-        by smtp.gmail.com with ESMTPSA id p7sm138063edw.43.2021.05.15.23.26.37
+        by smtp.gmail.com with ESMTPSA id c10sm1180195eds.90.2021.05.16.00.43.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 May 2021 23:26:38 -0700 (PDT)
+        Sun, 16 May 2021 00:43:15 -0700 (PDT)
 From:   Alexandru Ardelean <aardelean@deviqon.com>
 To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
         Alexandru Ardelean <aardelean@deviqon.com>
-Subject: [PATCH] gpio: gpio-sprd: remove platform_set_drvdata() + cleanup probe
-Date:   Sun, 16 May 2021 09:26:29 +0300
-Message-Id: <20210516062629.13550-1-aardelean@deviqon.com>
+Subject: [PATCH] gpio: gpio-spear-spics: remove platform_set_drvdata() + cleanup probe
+Date:   Sun, 16 May 2021 10:43:11 +0300
+Message-Id: <20210516074311.7485-1-aardelean@deviqon.com>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -70,39 +69,52 @@ If this is removed, we can also just do a direct return on
 devm_gpiochip_add_data(). We don't need to print that this call failed as
 there are other ways to log/see this during probe.
 
+This change isn't removing the 'DT probe failed' message, as some may find
+it useful as a reason for the failed probe. But that can be part of another
+change if needed.
+
 Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
 ---
- drivers/gpio/gpio-sprd.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ drivers/gpio/gpio-spear-spics.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
-index 36ea8a3bd451..25c37edcbc6c 100644
---- a/drivers/gpio/gpio-sprd.c
-+++ b/drivers/gpio/gpio-sprd.c
-@@ -222,7 +222,6 @@ static int sprd_gpio_probe(struct platform_device *pdev)
+diff --git a/drivers/gpio/gpio-spear-spics.c b/drivers/gpio/gpio-spear-spics.c
+index 6eca531b7d96..49aac2bb8d2c 100644
+--- a/drivers/gpio/gpio-spear-spics.c
++++ b/drivers/gpio/gpio-spear-spics.c
+@@ -122,7 +122,6 @@ static int spics_gpio_probe(struct platform_device *pdev)
  {
- 	struct gpio_irq_chip *irq;
- 	struct sprd_gpio *sprd_gpio;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct spear_spics *spics;
 -	int ret;
  
- 	sprd_gpio = devm_kzalloc(&pdev->dev, sizeof(*sprd_gpio), GFP_KERNEL);
- 	if (!sprd_gpio)
-@@ -259,14 +258,7 @@ static int sprd_gpio_probe(struct platform_device *pdev)
- 	irq->num_parents = 1;
- 	irq->parents = &sprd_gpio->irq;
+ 	spics = devm_kzalloc(&pdev->dev, sizeof(*spics), GFP_KERNEL);
+ 	if (!spics)
+@@ -148,8 +147,6 @@ static int spics_gpio_probe(struct platform_device *pdev)
+ 				&spics->cs_enable_shift))
+ 		goto err_dt_data;
  
--	ret = devm_gpiochip_add_data(&pdev->dev, &sprd_gpio->chip, sprd_gpio);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Could not register gpiochip %d\n", ret);
+-	platform_set_drvdata(pdev, spics);
+-
+ 	spics->chip.ngpio = NUM_OF_GPIO;
+ 	spics->chip.base = -1;
+ 	spics->chip.request = spics_request;
+@@ -163,14 +160,7 @@ static int spics_gpio_probe(struct platform_device *pdev)
+ 	spics->chip.owner = THIS_MODULE;
+ 	spics->last_off = -1;
+ 
+-	ret = devm_gpiochip_add_data(&pdev->dev, &spics->chip, spics);
+-	if (ret) {
+-		dev_err(&pdev->dev, "unable to add gpio chip\n");
 -		return ret;
 -	}
 -
--	platform_set_drvdata(pdev, sprd_gpio);
+-	dev_info(&pdev->dev, "spear spics registered\n");
 -	return 0;
-+	return devm_gpiochip_add_data(&pdev->dev, &sprd_gpio->chip, sprd_gpio);
- }
++	return devm_gpiochip_add_data(&pdev->dev, &spics->chip, spics);
  
- static const struct of_device_id sprd_gpio_of_match[] = {
+ err_dt_data:
+ 	dev_err(&pdev->dev, "DT probe failed\n");
 -- 
 2.31.1
 
