@@ -2,119 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A45C1381D4E
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 May 2021 09:43:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A1E2381F25
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 May 2021 15:55:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233878AbhEPHoc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 May 2021 03:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233869AbhEPHob (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 May 2021 03:44:31 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D27C06174A
-        for <linux-gpio@vger.kernel.org>; Sun, 16 May 2021 00:43:17 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id b25so4517057eju.5
-        for <linux-gpio@vger.kernel.org>; Sun, 16 May 2021 00:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=deviqon.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XZuJlEKURtZeYc/J4s/VV0RuP15Zpc+Mo6mw6ORDISM=;
-        b=e8fdGzwQKjeF8cC2wH91qxy76ulJvbcMS6oAVyDTtMYGwDlGtDNbZ8D0ScXbumkaJ9
-         Gd6EBhPWpJo+Qzrym6O392fB2Oz45aZGnDlzBLfGrrTvTh/rT/NhSl7H1V3xoJBT/ive
-         yQifuR02M8QcxYQa/mefzvcd5TnY2ROUAygTO7y4q7RbO9NDWzVFfopCLVCu37wnfQn8
-         mPriGo5MYyOfJU78K/jTNCrm1spVTnAXkc9TtUVkoYwUovpfkjWakToWBx75l30BUMrq
-         LRzJcSlszOsPwGY7sTczh4xx7Z1AnHx4A270PsfUnMtUj0Nxqh+qonCNXf4UcSClB9IB
-         HR2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XZuJlEKURtZeYc/J4s/VV0RuP15Zpc+Mo6mw6ORDISM=;
-        b=b5TSf8gtnavP+zb/+0Vfzfl+URS4IZpueSQhwn9sX138nD86MQ9ct6KBHmUS7/stev
-         U9b68GLQ5h6hSekmLCY5/SWGhs7SLKP+iVAdgzqvdJBqzTXMO3vupdGyIFOjj6Wj8zW5
-         QBYruc2SZI3jl1hJzRP0iX8ECZ5StKXA6N/VNnrAvjvvpALPo10Q/Xci45+ukC/3rPLg
-         ybma/k5Tw5lHj/hcK1W4ZCcSjU5WWLG6SacUX+ONUwwYk6rGVJ0Ys6IdFBwM3qER1oHN
-         28HU3QHYQXHe/hRmKI8JEYSoUMd/mfjCtdCV6AlI5tWMO2a1+gbZk5UtZfJVLh5Nzumb
-         3NEQ==
-X-Gm-Message-State: AOAM533duZ4jAEimSHnJpt5Ajb917Nij/MLUUgdI8myGNchinLYi0FEp
-        2lhI5cwiGFNF8rbj5A5zfOy3FhKoqVVvPJbZ1jc=
-X-Google-Smtp-Source: ABdhPJxveh/3LrYGxpQr81LQY4wFuuW8KnJj+LU3aKZyyAVv1NlGuZJAxu4O/gg6QMCUmOVs+69bIA==
-X-Received: by 2002:a17:906:1997:: with SMTP id g23mr16051490ejd.168.1621150995969;
-        Sun, 16 May 2021 00:43:15 -0700 (PDT)
-Received: from neptune.. ([188.27.131.122])
-        by smtp.gmail.com with ESMTPSA id c10sm1180195eds.90.2021.05.16.00.43.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 May 2021 00:43:15 -0700 (PDT)
-From:   Alexandru Ardelean <aardelean@deviqon.com>
-To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        Alexandru Ardelean <aardelean@deviqon.com>
-Subject: [PATCH] gpio: gpio-spear-spics: remove platform_set_drvdata() + cleanup probe
-Date:   Sun, 16 May 2021 10:43:11 +0300
-Message-Id: <20210516074311.7485-1-aardelean@deviqon.com>
-X-Mailer: git-send-email 2.31.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S233915AbhEPN45 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 May 2021 09:56:57 -0400
+Received: from smtp-35.italiaonline.it ([213.209.10.35]:42616 "EHLO libero.it"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233811AbhEPN44 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 16 May 2021 09:56:56 -0400
+Received: from passgat-Modern-14-A10M.homenet.telecomitalia.it
+ ([95.244.94.151])
+        by smtp-35.iol.local with ESMTPA
+        id iHEzl2tgYpK9wiHF3lOWjb; Sun, 16 May 2021 15:55:40 +0200
+x-libjamoibt: 1601
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=libero.it; s=s2021;
+        t=1621173340; bh=caMgdLj1No6GEtQcTneWYtUSG8HDRQROvDgboDfFeJM=;
+        h=From;
+        b=VjC6oTwmnHlGYmoszv30kQABLQCUVUfTVXenXlO7JDleiER2ymI9YdGc4VxkUQ9iY
+         qYgJo37MnTv1bUJ9DDpwn0Bz5f0ro32vmkpqiaY7aaiiOdZoA19Uypzz+/AM8lfMLn
+         EBapDPvIEzVyCZ0loU6GJqqZw7Bcnp5l9oYq7Wfh1J3aIOrzUNf1noL7xZITrsGqmV
+         oVCdQK25Y6OicbL4bHbFgbU5saql25mXdgzbnojRLYve45K511ibLVHY2yX9ci5KHc
+         K+QAhQJjOh+xLF6wdM7Gn4Xuu40rlqG0sFyp2yQAVGESJO4m5erspmLhg6x19CqBK+
+         ZhfMDl4dVRUnQ==
+X-CNFS-Analysis: v=2.4 cv=A9ipg4aG c=1 sm=1 tr=0 ts=60a1245c cx=a_exe
+ a=ugxisoNCKEotYwafST++Mw==:117 a=ugxisoNCKEotYwafST++Mw==:17 a=sozttTNsAAAA:8
+ a=GWagjzjhKccDtmdoy8IA:9 a=2JrXBVNfdGAA:10 a=aeg5Gbbo78KNqacMgKqU:22
+From:   Dario Binacchi <dariobin@libero.it>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dario Binacchi <dariobin@libero.it>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH 0/2] am335x: set pinmux registers from pins debug file
+Date:   Sun, 16 May 2021 15:55:29 +0200
+Message-Id: <20210516135531.2203-1-dariobin@libero.it>
+X-Mailer: git-send-email 2.17.1
+X-CMAE-Envelope: MS4xfEKWdtsMz3AlqfPzmdLuq2ferYiAGGKj4HFvxV4liFxTxx/nYFiPaqz06WDUTeS1WHZhhCKr8poXl/NXOGleEErb2k0x7cSxCjg29j2w2RMa+NjPO2u4
+ 4EeIN4kBy38uJ1FV0leHLw675ujxfKFMtTJMJ2adb33iCj3iExzUJ8mZRRdPf4Oh3kLRuNcOhoJOmLnOddbWSOWNr62Bu7wtZP4Z5CTXjJfPjQmcf2TEO2Lk
+ XAXuI/m0gz4EMyycigk2y3wpYg5FHGTj65mF4nF1elr4L3ugmUiemOg/BB5vv2S/dn0as1i0HnKW0AcZU/mZxvS9mGfcVZCtC6SrpfIRqNbHUdEcbx7buBr7
+ ek8pPRixKmC9b1mhF/Fa3Z1/7QqwLSobY4W4X0e0+D1Tt6ca5MJpq1gsaee5pj127cbkkZFXkyJWW1//h627mckWpjqxSLdWiOo/RTIXCPCU9sh2fo7N4ELK
+ CADeBi/RBfNU/9Ps85zSTJBuhY9JjYgloMQrhA==
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The platform_set_drvdata() call is only useful if we need to retrieve back
-the private information.
-Since the driver doesn't do that, it's not useful to have it.
 
-If this is removed, we can also just do a direct return on
-devm_gpiochip_add_data(). We don't need to print that this call failed as
-there are other ways to log/see this during probe.
+The patch was born from the need to change the slew rate of the LCD pins
+of a custom AM335x board during EMC tests. The AM335x, as described in a
+note in section 9.1 of its reference manual [1], is unable to write
+pinmux registers from user space. The series now makes it possible to
+write these registers from the pins debug file.
 
-This change isn't removing the 'DT probe failed' message, as some may find
-it useful as a reason for the failed probe. But that can be part of another
-change if needed.
+[1] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
 
-Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
----
- drivers/gpio/gpio-spear-spics.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/gpio/gpio-spear-spics.c b/drivers/gpio/gpio-spear-spics.c
-index 6eca531b7d96..49aac2bb8d2c 100644
---- a/drivers/gpio/gpio-spear-spics.c
-+++ b/drivers/gpio/gpio-spear-spics.c
-@@ -122,7 +122,6 @@ static int spics_gpio_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct spear_spics *spics;
--	int ret;
- 
- 	spics = devm_kzalloc(&pdev->dev, sizeof(*spics), GFP_KERNEL);
- 	if (!spics)
-@@ -148,8 +147,6 @@ static int spics_gpio_probe(struct platform_device *pdev)
- 				&spics->cs_enable_shift))
- 		goto err_dt_data;
- 
--	platform_set_drvdata(pdev, spics);
--
- 	spics->chip.ngpio = NUM_OF_GPIO;
- 	spics->chip.base = -1;
- 	spics->chip.request = spics_request;
-@@ -163,14 +160,7 @@ static int spics_gpio_probe(struct platform_device *pdev)
- 	spics->chip.owner = THIS_MODULE;
- 	spics->last_off = -1;
- 
--	ret = devm_gpiochip_add_data(&pdev->dev, &spics->chip, spics);
--	if (ret) {
--		dev_err(&pdev->dev, "unable to add gpio chip\n");
--		return ret;
--	}
--
--	dev_info(&pdev->dev, "spear spics registered\n");
--	return 0;
-+	return devm_gpiochip_add_data(&pdev->dev, &spics->chip, spics);
- 
- err_dt_data:
- 	dev_err(&pdev->dev, "DT probe failed\n");
+
+Dario Binacchi (2):
+  pinctrl: core: configure pinmux from pins debug file
+  pinctrl: single: set pinmux from pins debug file
+
+ drivers/pinctrl/core.c           | 56 ++++++++++++++++++++++++++++++--
+ drivers/pinctrl/pinctrl-single.c | 20 ++++++++++++
+ include/linux/pinctrl/pinctrl.h  |  2 ++
+ 3 files changed, 76 insertions(+), 2 deletions(-)
+
 -- 
-2.31.1
+2.17.1
 
