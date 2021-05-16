@@ -2,111 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E1A8381F29
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 May 2021 15:55:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38F3B38206E
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 May 2021 20:39:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233869AbhEPN47 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 May 2021 09:56:59 -0400
-Received: from smtp-35.italiaonline.it ([213.209.10.35]:33398 "EHLO libero.it"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233892AbhEPN45 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 16 May 2021 09:56:57 -0400
-Received: from passgat-Modern-14-A10M.homenet.telecomitalia.it
- ([95.244.94.151])
-        by smtp-35.iol.local with ESMTPA
-        id iHEzl2tgYpK9wiHF6lOWlZ; Sun, 16 May 2021 15:55:41 +0200
-x-libjamoibt: 1601
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=libero.it; s=s2021;
-        t=1621173341; bh=zZLQBLl9wixM7xxtZD+7yOPbluTczTOuH82A39eRwh8=;
-        h=From;
-        b=YW5enN5amP39PC+aP1tW2smXXvsDSBoFeX5O+8IL2EoEi6ZbB15HvlLptBx575g5K
-         irlACxdTpZYmGCeEWUtpDAn+JAuqHfTrmMehRROecnTpHUdmFnpuxw4pC0RMSH/grP
-         1TZq8Fnxj/sQAHcugz/ADZCcBirg7Qg4vbzreYLr5MduhD/kmzca4/z4Ed3kMIXCB1
-         RPiRnweLLJtPdkkZvqEZvbdbdpH37m/qiqSkJU3NaEndxL8kogoVxVGTsp34SyHivF
-         H8+JogyONt2mqkYfEZJGMwrYoW3cNaUwtLj0iT2jU11KnUFXRiJqcCO3qqXwCZgyRW
-         s7jCQcRbxppuw==
-X-CNFS-Analysis: v=2.4 cv=A9ipg4aG c=1 sm=1 tr=0 ts=60a1245d cx=a_exe
- a=ugxisoNCKEotYwafST++Mw==:117 a=ugxisoNCKEotYwafST++Mw==:17 a=sozttTNsAAAA:8
- a=hlofsd_XEJyvNm5uEDwA:9 a=aeg5Gbbo78KNqacMgKqU:22
-From:   Dario Binacchi <dariobin@libero.it>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dario Binacchi <dariobin@libero.it>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        id S231612AbhEPSlA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 May 2021 14:41:00 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:37107 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231358AbhEPSlA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 16 May 2021 14:41:00 -0400
+X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Sun, 16 May 2021 14:40:59 EDT
+Received: from copland.sibelius.xs4all.nl ([83.163.83.176])
+        by smtp-cloud7.xs4all.net with ESMTP
+        id iLZ1lyWmcMajpiLZ2l0Aat; Sun, 16 May 2021 20:32:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s2;
+        t=1621189955; bh=7cTrg+GU9k/ZVtBQMMRNn/CYTMHS8XO/LSG0ww7pHN8=;
+        h=From:To:Subject:Date:Message-Id:MIME-Version:From:Subject;
+        b=BMcfyrvAKaHboqVTJhIC30XvVgmg4ZnM5j21EmDnLHoXWMWC9HBB3PchAsvlVNgso
+         0L/Glq+sEZUqjYHl3s6aKbyWhocpy/QPY+l4cWrT4Bnmo2nB7zTOSxJeEtq8G9ofJM
+         4j3D+H4MuQBmrf+RdMxn9gMBNk5t4juP012z3b9Fx3Qa2rvce3XLyZ4Ex7Fma2UlfM
+         g3rEXr/dyESIAk+XCOXEm6OvbQR3vgmIidhyGweZ704RBFNK/IhLzWgHNv1/KrNVN0
+         3in05HE0/gxW4zyz1VIzqMzT/YZDaO9AkRtfcX3x2vYkTztb2//4B7xEI30ioyYSFc
+         fqVtnxfIoGmzg==
+From:   Mark Kettenis <mark.kettenis@xs4all.nl>
+To:     devicetree@vger.kernel.org
+Cc:     Mark Kettenis <kettenis@openbsd.org>,
+        Hector Martin <marcan@marcan.st>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: single: set pinmux from pins debug file
-Date:   Sun, 16 May 2021 15:55:31 +0200
-Message-Id: <20210516135531.2203-3-dariobin@libero.it>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210516135531.2203-1-dariobin@libero.it>
-References: <20210516135531.2203-1-dariobin@libero.it>
-X-CMAE-Envelope: MS4xfJitAJ0M4XIXYHKFsdVSSJT/tz+2fn1XZyqRVv7cNGLeIY1LDkdsgw1cB9KctyKn3zYTLQ3J2o9S3lpE23G/fdUnSu6oIzDYCconWScoLDRvewSB93jK
- +adOMGnuKAiZD1fbVuhdaCd7yGWve3r5v4if3aGJvw+HFikj9rRLvD5sGm+rZARsa3bBpCMbA089B99Bz1mQUVg9kRajMStiHcVfG4eZE/TMiHlhqclh3G82
- OUaKF7qKSMSefEDISPS8cxucIndJC5exNSBZb+oSw7T1+HWTON6GY3va5Ki4871D5wtW3QLD8nmcWV1tAQ6wfa+IwX6khJ/mwbtYXd3dxzJRyhtvHxlqpNoA
- 6WMWOlyXZRUMw1Z5/BHpmf6eswgdvVM1vCOTSfYKe8EerB1tnI1nKBo4EXt92QunELD2IHMdHdyOeI2Dm+QdOasSN+sXKyRm3f2Lf8F4/VkAyW5kLsF8SqY4
- BzES+3DmXSMrLGbOcym3p2W4CupnRGT8YBEsZA==
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Apple M1 pinctrl DT bindings
+Date:   Sun, 16 May 2021 20:32:16 +0200
+Message-Id: <20210516183221.93686-1-mark.kettenis@xs4all.nl>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfBL2etnaLpahmImfDmopdzD+YTDabxnN0nXcvofsVQT6otmhSDmPSOM15IwXJr6DHFqFpctr+Vb4/Q6/rCAf1TFHZbTdD+jm/T1a9aon0fT9BMCZZatX
+ Bol9M552q2Z7djmv203XcTSzEReGFuNkDpajb+qbtiRyp7jT/fCQjd2ww5Fjd/n7YX2URd0zSSNu20z3LDIdWfXHSq7tC0fdgwJ/jcSTs/GgKCwplIwRI+fM
+ 53nsog6MT0ZYDkDp3g1CbjSOoDQLyCOxNWyMv86oCSPLAopr3gJ/eEnfD8E5mjAX+HLgG68iZLVQMZFCOngBS3Ohvq+OsUou1jQKnnNwlm1I6Ihcp6yH5TF+
+ haee953CsbhntPfpj/G+4arlMXVAZDtVDZNq5l4hErdUjeuZIOjY3uW+nWlmnk1GNCxkgVreev4fyqKCbyvbAr+LP48IF05TCD1Yd8J3HpE3479ilSrpL7Nf
+ U8tdrbSucSxrYk8H
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-As described in section 9.1 of the TI reference manual for AM335x [1],
-"For writing to the control module registers, the MPU will need to be in
-privileged mode of operation and writes will not work from user mode".
-By adding the pin_dbg_set helper to pcs_pinctrl_ops it will be possible
-to write these registers from the pins debug:
+From: Mark Kettenis <kettenis@openbsd.org>
 
-cd /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/
-echo <pin-number> <reg-value> >pins
+This small series adds bindings for the pin and GPIO controller found
+on the Apple M1 SoC.
 
-[1] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+At this point, the primary consumer for these bindings is U-Boot.
+With the help of these bindings U-Boot can bring up the PCIe root
+complex into a state where the OS use it without having to deal with
+the GPIO pins.  A Linux driver may be implemented later to support
+power management and/or other devices that need GPIO control.  Since
+the binding is based on standard pinmux node bindings this should be
+relatively easy.
 
-Signed-off-by: Dario Binacchi <dariobin@libero.it>
+Changelog:
 
----
+v2: - Fix typo in DT schema
 
- drivers/pinctrl/pinctrl-single.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index 2c9c9835f375..cdbc2298360d 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -313,6 +313,23 @@ static void pcs_pin_dbg_show(struct pinctrl_dev *pctldev,
- 	seq_printf(s, "%zx %08x %s ", pa, val, DRIVER_NAME);
- }
- 
-+static int pcs_pin_dbg_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+			   char *buf)
-+{
-+	struct pcs_device *pcs;
-+	unsigned int val, mux_bytes;
-+
-+	buf = skip_spaces(buf);
-+	if (kstrtouint(buf, 0, &val))
-+		return -EINVAL;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+
-+	mux_bytes = pcs->width / BITS_PER_BYTE;
-+	pcs->write(val, pcs->base + pin * mux_bytes);
-+	return 0;
-+}
-+
- static void pcs_dt_free_map(struct pinctrl_dev *pctldev,
- 				struct pinctrl_map *map, unsigned num_maps)
- {
-@@ -331,6 +348,9 @@ static const struct pinctrl_ops pcs_pinctrl_ops = {
- 	.get_group_name = pinctrl_generic_get_group_name,
- 	.get_group_pins = pinctrl_generic_get_group_pins,
- 	.pin_dbg_show = pcs_pin_dbg_show,
-+#if IS_ENABLED(CONFIG_DEVMEM) && IS_ENABLED(CONFIG_SOC_AM33XX)
-+	.pin_dbg_set = pcs_pin_dbg_set,
-+#endif
- 	.dt_node_to_map = pcs_dt_node_to_map,
- 	.dt_free_map = pcs_dt_free_map,
- };
+Mark Kettenis (2):
+  dt-bindings: pinctrl: Add DT bindings for apple,pinctrl
+  arm64: apple: Add pinctrl nodes
+
+ .../bindings/pinctrl/apple,pinctrl.yaml       | 103 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +
+ arch/arm64/boot/dts/apple/t8103.dtsi          |  83 ++++++++++++++
+ include/dt-bindings/pinctrl/apple.h           |  13 +++
+ 4 files changed, 201 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+ create mode 100644 include/dt-bindings/pinctrl/apple.h
+
 -- 
-2.17.1
+2.31.1
 
