@@ -2,132 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5275382DE0
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 15:49:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB62D383AA1
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 18:59:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233718AbhEQNvJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 09:51:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:3829 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233139AbhEQNvJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 17 May 2021 09:51:09 -0400
-IronPort-SDR: UPRhEG1ZSMGBg2WGrY8R6LgSnXJHb/uUFGuT5S3kRZKbtFp1NMMTU54UZkYTCif+VvUF2sLbcj
- AiOXjptQNxDg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9986"; a="200520459"
-X-IronPort-AV: E=Sophos;i="5.82,307,1613462400"; 
-   d="scan'208";a="200520459"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2021 06:49:51 -0700
-IronPort-SDR: qPrqaoZIsX7KFEzvrWT847vxuU/vQuXuNBSGdJJhpOobzAlB1E5ZRLycDimZlVlmDAekIzThdb
- mahwX5TRbyRg==
-X-IronPort-AV: E=Sophos;i="5.82,307,1613462400"; 
-   d="scan'208";a="393523740"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2021 06:49:48 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1lidcw-00CkNa-2G; Mon, 17 May 2021 16:49:46 +0300
-Date:   Mon, 17 May 2021 16:49:46 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        kernel-janitors <kernel-janitors@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] gpio: xilinx: Fix potential integer overflow on
- shift of a u32 int
-Message-ID: <YKJ0egfeNxw2Aoxl@smile.fi.intel.com>
-References: <20210513085227.54392-1-colin.king@canonical.com>
- <20210514053754.GZ1955@kadam>
- <CAHp75Ve-YWh_sfupwQV0xxL7Vk8GNObJ+6O29RqRMXCgAmemCw@mail.gmail.com>
- <20210517133643.GI1955@kadam>
+        id S240985AbhEQRAe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 13:00:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236776AbhEQRAc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 13:00:32 -0400
+Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19952C061573
+        for <linux-gpio@vger.kernel.org>; Mon, 17 May 2021 09:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+         s=20161220; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=mLoQT+qGBvd/1mEB5gb03+Hl/Dxp8v73Tjw/NB6UcmY=; b=qQb3r7ZcFPHktlC8bgHDO8KruT
+        mJuQP9VL+XTjf8EI8oZP/6wNKi4RiclM2APD3Ia7L/H9foXukM05VcBBqRP0TSZv1H5KW1WIeaHku
+        BQ8JNIH0vzJ9z1Zwklc2r1iJhLChWZYlhII/tFfTj19pfK2UXK5jKGJj654UJfPJusNXCRLrTLGXh
+        K5FCgPMOE8phbD6dyMrhUD4ObQTCc+9TiJoMxnig3+DeDy3Suste/N8tLu4x74x7UxYnGMJlavIxE
+        bt4+oNrWL9/u3iJE6ZV0hePTNF7glJJVa+W+ZsKCiRKfOSgSCDo0uoSYbGBX4mJaB6a2CJD+AdCM/
+        8O2hgX6w==;
+Received: from 164-105-191-90.dyn.estpak.ee ([90.191.105.164] helo=ubuntu)
+        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <sandberg@mailfence.com>)
+        id 1ligaA-00036N-0z; Mon, 17 May 2021 19:59:07 +0300
+Received: by ubuntu (sSMTP sendmail emulation); Mon, 17 May 2021 19:59:04 +0300
+From:   Mauri Sandberg <sandberg@mailfence.com>
+To:     sandberg@mailfence.com
+Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
+        geert+renesas@glider.be, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, drew@beagleboard.org
+Subject: [PATCH v3 0/2] gpio: add generic gpio input multiplexer
+Date:   Mon, 17 May 2021 19:58:45 +0300
+Message-Id: <20210517165847.206316-1-sandberg@mailfence.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210325122832.119147-1-sandberg@mailfence.com>
+References: <20210325122832.119147-1-sandberg@mailfence.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210517133643.GI1955@kadam>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 90.191.105.164
+X-SA-Exim-Mail-From: sandberg@mailfence.com
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 17, 2021 at 04:36:43PM +0300, Dan Carpenter wrote:
-> On Mon, May 17, 2021 at 10:07:20AM +0300, Andy Shevchenko wrote:
-> > On Fri, May 14, 2021 at 12:26 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > > On Thu, May 13, 2021 at 09:52:27AM +0100, Colin King wrote:
-> > 
-> > ...
-> > 
-> > > >       const unsigned long offset = (bit % BITS_PER_LONG) & BIT(5);
-> > > >
-> > > >       map[index] &= ~(0xFFFFFFFFul << offset);
-> > > > -     map[index] |= v << offset;
-> > > > +     map[index] |= (unsigned long)v << offset;
-> > >
-> > > Doing a shift by BIT(5) is super weird.
-> > 
-> > Not the first place in the kernel with such a trick.
-> > 
-> > >  It looks like a double shift
-> > > bug and should probably trigger a static checker warning.  It's like
-> > > when people do BIT(BIT(5)).
-> > >
-> > > It would be more readable to write it as:
-> > >
-> > >         int shift = (bit % BITS_PER_LONG) ? 32 : 0;
-> > 
-> > Usually this code is in a kinda fast path. Have you checked if the
-> > compiler generates the same or better code when you are using ternary?
-> 
-> I wrote a little benchmark to see which was faster and they're the same
-> as far as I can see.
+Hello all!
 
-Thanks for checking.
+This patch set is closely related to another thread at [4], which I abandoned
+against better judgement and created this one.
 
-Besides the fact that offset should be 0 for 32-bit always and if compiler can
-proof that...
+Here I am sending revised versions of the patches. It builds on v2 and adopts 
+managed device resources as suggested by Andy on the thread mentioned
+above [5].
 
-The test below doesn't take into account the exact trick is used for offset
-(i.e. implicit dependency between BITS_PER_LONG, size of unsigned long, and
- using 5th bit out of value). I don't know if compiler can properly optimize
-the ternary in this case (but it looks like it should generate the same code).
+I have tested the functionality on a NXP 74HC153 dual 4-way muxer. Drew, did
+you find the time to have a go with this [6] and if so, did it work as expected?
 
-That said, I would rather to see the diff between assembly of the exact
-function before and after your proposal.
+Thanks,
+Mauri
 
-> static inline __attribute__((__gnu_inline__)) unsigned long xgpio_set_value_orig(unsigned long *map, int bit, u32 v)
-> {
->         int shift = (bit % 64) & ((((1UL))) << (5));
->         return v << shift;
-> }
-> 
-> static inline __attribute__((__gnu_inline__)) unsigned long xgpio_set_value_new(unsigned long *map, int bit, u32 v)
-> {
->         int shift = (bit % 64) ? 32 : 0;
->         return v << shift;
-> }
-> 
-> int main(void)
-> {
->         int i;
-> 
->         for (i = 0; i < INT_MAX; i++)
->                 xgpio_set_value_orig(NULL, i, 0);
-> 
-> //      for (i = 0; i < INT_MAX; i++)
-> //              xgpio_set_value_new(NULL, i, 0);
-> 
->         return 0;
-> }
-> 
+[4] https://www.spinics.net/lists/linux-gpio/msg58573.html
+[5] https://www.spinics.net/lists/linux-gpio/msg60160.html
+[6] https://www.spinics.net/lists/linux-gpio/msg60159.html
 
+
+Mauri Sandberg (2):
+  dt-bindings: gpio-mux-input: add documentation
+  gpio: gpio-mux-input: add generic gpio input multiplexer
+
+ .../bindings/gpio/gpio-mux-input.yaml         |  75 +++++++++++
+ drivers/gpio/Kconfig                          |  16 +++
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-mux-input.c                 | 124 ++++++++++++++++++
+ 4 files changed, 216 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mux-input.yaml
+ create mode 100644 drivers/gpio/gpio-mux-input.c
+
+
+base-commit: 6453b9532b5f77d19837b159c4d074f0af9f141b
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
