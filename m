@@ -2,33 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 272BB383D4F
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 21:28:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64E4B383D53
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 21:28:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233801AbhEQT34 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 15:29:56 -0400
-Received: from polaris.svanheule.net ([84.16.241.116]:57362 "EHLO
-        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233688AbhEQT3x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 15:29:53 -0400
+        id S233688AbhEQT37 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 15:29:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233831AbhEQT35 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 15:29:57 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B10B2C06138A
+        for <linux-gpio@vger.kernel.org>; Mon, 17 May 2021 12:28:39 -0700 (PDT)
 Received: from terra.local.svanheule.net (unknown [IPv6:2a02:a03f:eafb:ee01:404a:340a:91cb:c07b])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id EB4441FFBF7;
-        Mon, 17 May 2021 21:28:35 +0200 (CEST)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 16B581FFBF8;
+        Mon, 17 May 2021 21:28:38 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1621279716;
+        s=mail1707; t=1621279718;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sCTcUHfrMYU4IbYJ3Pim5sRRRlNd4hzoqkJqPSWFtA0=;
-        b=4x8+Ta/x511RUhSXyHEnwL0IZUKRrFnlurF0qanRl1NHj82/q4FJEajvxGhF9LgkwyHVnM
-        WXwcpC8ofjZJ710mRYrdd40nkq7niDdYLo2Lhxo/mz0AIuFnC2FgpwtQnMxwKNtB8Ee3zd
-        gWKXKmWGyHg/5BZJauFJiEqCoFDfjsHq0uWOUpgVhsehhVd68sg3CVUZeswt1iSgKaa+yw
-        Su8MYRzTRyWYGquz8ghBvslWwBJIB5fnJbSD6fI7VCVgnETEB+trRfH0pzD3zAZ2d9Y8k+
-        cNh9NghjwAYWPxsnjtVFdq2blhCSQgfVk+U3N5ZqvNavBj87F1J6yRE6dEtsSg==
+        bh=3q6JoyXSrkPLBoFuPy3yaThUjOXJKmAlTPeZBosKKkc=;
+        b=LOwGCCu/IYFbqsbTPoCSb6E3ENeTVgct/Tp56oZZsi4aw3g2F2GfVsTOvZRdkH9I0hmKHe
+        gl+3TCr1Gkgm4EtEss/qK+deBP77YIWotFro6JAJz5cyK4SEnZ+n1vJ2QTivkFlC8qqlgW
+        2TjiMNXD2Aip7vvnPzDnPoTCAHGJgPhV+cAmGIAto/FR1wtR5PMU9zdHV4vyMB3dczsmHH
+        6PXBXkdm3EynCku/qOZrFwSqg4AHS/unJQNXy7d6eu4hi+PYtKWrALkj5cyjtYGWVMKFiQ
+        2fGkh44iFv+Bt+6X7p2DWw4mOj3m40NKLS64QUJC6glwjecb62OK9GBTgFPHOw==
 From:   Sander Vanheule <sander@svanheule.net>
 To:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
@@ -44,9 +47,9 @@ Cc:     Andrew Lunn <andrew@lunn.ch>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         linux-kernel@vger.kernel.org,
         Sander Vanheule <sander@svanheule.net>
-Subject: [PATCH v2 1/7] regmap: Add MDIO bus support
-Date:   Mon, 17 May 2021 21:28:03 +0200
-Message-Id: <63b99a2fec2c4ea3c461d59d451af8d675ecf312.1621279162.git.sander@svanheule.net>
+Subject: [PATCH v2 2/7] gpio: regmap: Add configurable dir/value order
+Date:   Mon, 17 May 2021 21:28:04 +0200
+Message-Id: <d5f294489d31a80b69169f358da89bb7f70d1328.1621279162.git.sander@svanheule.net>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1621279162.git.sander@svanheule.net>
 References: <cover.1621279162.git.sander@svanheule.net>
@@ -56,190 +59,86 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Basic support for MDIO bus access. Support only includes clause-22
-register access, with 5-bit addresses, and 16-bit wide registers.
+GPIO chips may not support setting the output value when a pin is
+configured as an input, although the current implementation assumes this
+is always possible.
+
+Add support for setting pin direction before value. The order defaults
+to setting the value first, but this can be reversed by setting the
+regmap_config.no_set_on_input flag, similar to the corresponding flag in
+the gpio-mmio driver.
 
 Signed-off-by: Sander Vanheule <sander@svanheule.net>
 ---
- drivers/base/regmap/Kconfig       |  6 +++-
- drivers/base/regmap/Makefile      |  1 +
- drivers/base/regmap/regmap-mdio.c | 57 +++++++++++++++++++++++++++++++
- include/linux/regmap.h            | 36 +++++++++++++++++++
- 4 files changed, 99 insertions(+), 1 deletion(-)
- create mode 100644 drivers/base/regmap/regmap-mdio.c
+ drivers/gpio/gpio-regmap.c  | 20 +++++++++++++++++---
+ include/linux/gpio/regmap.h |  3 +++
+ 2 files changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-index 50b1e2d06a25..159bac6c5046 100644
---- a/drivers/base/regmap/Kconfig
-+++ b/drivers/base/regmap/Kconfig
-@@ -4,8 +4,9 @@
- # subsystems should select the appropriate symbols.
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index 134cedf151a7..1cdb20f8f8b4 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -170,14 +170,25 @@ static int gpio_regmap_direction_input(struct gpio_chip *chip,
+ 	return gpio_regmap_set_direction(chip, offset, false);
+ }
  
- config REGMAP
--	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SOUNDWIRE || REGMAP_SOUNDWIRE_MBQ || REGMAP_SCCB || REGMAP_I3C || REGMAP_SPI_AVMM)
-+	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SOUNDWIRE || REGMAP_SOUNDWIRE_MBQ || REGMAP_SCCB || REGMAP_I3C || REGMAP_SPI_AVMM || REGMAP_MDIO)
- 	select IRQ_DOMAIN if REGMAP_IRQ
-+	select MDIO_BUS if REGMAP_MDIO
- 	bool
+-static int gpio_regmap_direction_output(struct gpio_chip *chip,
+-					unsigned int offset, int value)
++static int gpio_regmap_dir_out_val_first(struct gpio_chip *chip,
++					 unsigned int offset, int value)
+ {
+ 	gpio_regmap_set(chip, offset, value);
  
- config REGCACHE_COMPRESSED
-@@ -36,6 +37,9 @@ config REGMAP_W1
- 	tristate
- 	depends on W1
+ 	return gpio_regmap_set_direction(chip, offset, true);
+ }
  
-+config REGMAP_MDIO
-+	tristate
-+
- config REGMAP_MMIO
- 	tristate
- 
-diff --git a/drivers/base/regmap/Makefile b/drivers/base/regmap/Makefile
-index 33f63adb5b3d..11facb32a027 100644
---- a/drivers/base/regmap/Makefile
-+++ b/drivers/base/regmap/Makefile
-@@ -19,3 +19,4 @@ obj-$(CONFIG_REGMAP_SOUNDWIRE_MBQ) += regmap-sdw-mbq.o
- obj-$(CONFIG_REGMAP_SCCB) += regmap-sccb.o
- obj-$(CONFIG_REGMAP_I3C) += regmap-i3c.o
- obj-$(CONFIG_REGMAP_SPI_AVMM) += regmap-spi-avmm.o
-+obj-$(CONFIG_REGMAP_MDIO) += regmap-mdio.o
-diff --git a/drivers/base/regmap/regmap-mdio.c b/drivers/base/regmap/regmap-mdio.c
-new file mode 100644
-index 000000000000..5f18fe409f56
---- /dev/null
-+++ b/drivers/base/regmap/regmap-mdio.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/errno.h>
-+#include <linux/mdio.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+static int regmap_mdio_read(void *context, unsigned int reg, unsigned int *val)
++static int gpio_regmap_dir_out_dir_first(struct gpio_chip *chip,
++					 unsigned int offset, int value)
 +{
-+	struct mdio_device *mdio_dev = context;
-+	int ret;
++	int err;
 +
-+	ret = mdiobus_read(mdio_dev->bus, mdio_dev->addr, reg);
-+	*val = ret & 0xffff;
++	err = gpio_regmap_set_direction(chip, offset, true);
++	gpio_regmap_set(chip, offset, value);
 +
-+	return ret < 0 ? ret : 0;
++	return err;
 +}
 +
-+static int regmap_mdio_write(void *context, unsigned int reg, unsigned int val)
-+{
-+	struct mdio_device *mdio_dev = context;
-+
-+	return mdiobus_write(mdio_dev->bus, mdio_dev->addr, reg, val);
-+}
-+
-+static const struct regmap_bus regmap_mdio_bus = {
-+	.reg_write = regmap_mdio_write,
-+	.reg_read = regmap_mdio_read,
-+};
-+
-+struct regmap *__regmap_init_mdio(struct mdio_device *mdio_dev,
-+	const struct regmap_config *config, struct lock_class_key *lock_key,
-+	const char *lock_name)
-+{
-+	if (config->reg_bits != 5 || config->val_bits != 16)
-+		return ERR_PTR(-EOPNOTSUPP);
-+
-+	return __regmap_init(&mdio_dev->dev, &regmap_mdio_bus, mdio_dev, config,
-+		lock_key, lock_name);
-+}
-+EXPORT_SYMBOL_GPL(__regmap_init_mdio);
-+
-+struct regmap *__devm_regmap_init_mdio(struct mdio_device *mdio_dev,
-+	const struct regmap_config *config, struct lock_class_key *lock_key,
-+	const char *lock_name)
-+{
-+	if (config->reg_bits != 5 || config->val_bits != 16)
-+		return ERR_PTR(-EOPNOTSUPP);
-+
-+	return __devm_regmap_init(&mdio_dev->dev, &regmap_mdio_bus, mdio_dev,
-+		config, lock_key, lock_name);
-+}
-+EXPORT_SYMBOL_GPL(__devm_regmap_init_mdio);
-+
-+MODULE_AUTHOR("Sander Vanheule <sander@svanheule.net>");
-+MODULE_DESCRIPTION("Regmap MDIO Module");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index f87a11a5cc4a..e97dd05f7cdb 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -27,6 +27,7 @@ struct device_node;
- struct i2c_client;
- struct i3c_device;
- struct irq_domain;
-+struct mdio_device;
- struct slim_device;
- struct spi_device;
- struct spmi_device;
-@@ -538,6 +539,10 @@ struct regmap *__regmap_init_i2c(struct i2c_client *i2c,
- 				 const struct regmap_config *config,
- 				 struct lock_class_key *lock_key,
- 				 const char *lock_name);
-+struct regmap *__regmap_init_mdio(struct mdio_device *mdio_dev,
-+				 const struct regmap_config *config,
-+				 struct lock_class_key *lock_key,
-+				 const char *lock_name);
- struct regmap *__regmap_init_sccb(struct i2c_client *i2c,
- 				  const struct regmap_config *config,
- 				  struct lock_class_key *lock_key,
-@@ -594,6 +599,10 @@ struct regmap *__devm_regmap_init_i2c(struct i2c_client *i2c,
- 				      const struct regmap_config *config,
- 				      struct lock_class_key *lock_key,
- 				      const char *lock_name);
-+struct regmap *__devm_regmap_init_mdio(struct mdio_device *mdio_dev,
-+				      const struct regmap_config *config,
-+				      struct lock_class_key *lock_key,
-+				      const char *lock_name);
- struct regmap *__devm_regmap_init_sccb(struct i2c_client *i2c,
- 				       const struct regmap_config *config,
- 				       struct lock_class_key *lock_key,
-@@ -697,6 +706,19 @@ int regmap_attach_dev(struct device *dev, struct regmap *map,
- 	__regmap_lockdep_wrapper(__regmap_init_i2c, #config,		\
- 				i2c, config)
+ void gpio_regmap_set_drvdata(struct gpio_regmap *gpio, void *data)
+ {
+ 	gpio->driver_data = data;
+@@ -277,7 +288,10 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 	if (gpio->reg_dir_in_base || gpio->reg_dir_out_base) {
+ 		chip->get_direction = gpio_regmap_get_direction;
+ 		chip->direction_input = gpio_regmap_direction_input;
+-		chip->direction_output = gpio_regmap_direction_output;
++		if (config->no_set_on_input)
++			chip->direction_output = gpio_regmap_dir_out_dir_first;
++		else
++			chip->direction_output = gpio_regmap_dir_out_val_first;
+ 	}
  
-+/**
-+ * regmap_init_mdio() - Initialise register map
-+ *
-+ * @mdio_dev: Device that will be interacted with
-+ * @config: Configuration for register map
-+ *
-+ * The return value will be an ERR_PTR() on error or a valid pointer to
-+ * a struct regmap.
-+ */
-+#define regmap_init_mdio(mdio_dev, config)				\
-+	__regmap_lockdep_wrapper(__regmap_init_mdio, #config,		\
-+				mdio_dev, config)
-+
- /**
-  * regmap_init_sccb() - Initialise register map
-  *
-@@ -888,6 +910,20 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
- 	__regmap_lockdep_wrapper(__devm_regmap_init_i2c, #config,	\
- 				i2c, config)
+ 	ret = gpiochip_add_data(chip, gpio);
+diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+index 334dd928042b..2a732f8f23be 100644
+--- a/include/linux/gpio/regmap.h
++++ b/include/linux/gpio/regmap.h
+@@ -30,6 +30,8 @@ struct regmap;
+  * @reg_dir_out_base:	(Optional) out setting register base address
+  * @reg_stride:		(Optional) May be set if the registers (of the
+  *			same type, dat, set, etc) are not consecutive.
++ * @no_set_on_input:	Set if output value can only be set when the direction
++ *			is configured as output.
+  * @ngpio_per_reg:	Number of GPIOs per register
+  * @irq_domain:		(Optional) IRQ domain if the controller is
+  *			interrupt-capable
+@@ -73,6 +75,7 @@ struct gpio_regmap_config {
+ 	unsigned int reg_dir_out_base;
+ 	int reg_stride;
+ 	int ngpio_per_reg;
++	bool no_set_on_input;
+ 	struct irq_domain *irq_domain;
  
-+/**
-+ * devm_regmap_init_mdio() - Initialise managed register map
-+ *
-+ * @mdio_dev: Device that will be interacted with
-+ * @config: Configuration for register map
-+ *
-+ * The return value will be an ERR_PTR() on error or a valid pointer
-+ * to a struct regmap.  The regmap will be automatically freed by the
-+ * device management code.
-+ */
-+#define devm_regmap_init_mdio(mdio_dev, config)				\
-+	__regmap_lockdep_wrapper(__devm_regmap_init_mdio, #config,	\
-+				mdio_dev, config)
-+
- /**
-  * devm_regmap_init_sccb() - Initialise managed register map
-  *
+ 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
 -- 
 2.31.1
 
