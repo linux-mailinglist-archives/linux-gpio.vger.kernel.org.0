@@ -2,113 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D74AE386C7F
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 23:43:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5F5F386C8C
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 23:46:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245411AbhEQVpI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 17:45:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54302 "EHLO
+        id S238139AbhEQVsN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 17:48:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230508AbhEQVpH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 17:45:07 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56E98C061573;
-        Mon, 17 May 2021 14:43:50 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id u4-20020a05600c00c4b02901774b80945cso329557wmm.3;
-        Mon, 17 May 2021 14:43:50 -0700 (PDT)
+        with ESMTP id S230508AbhEQVsM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 17:48:12 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D71C061573;
+        Mon, 17 May 2021 14:46:55 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id j12so5557800pgh.7;
+        Mon, 17 May 2021 14:46:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kT6r2KItAdyXr6Yj4HdvbNeNJJn3Kyatb3yqGTbZ49U=;
-        b=t774CtYem/0kL0GO8c0Bs8Binz7Qh2ivYr4qAbt8k4M/ZEpxVwVSn7PxZKdCCfDPWI
-         XIgkJMHsFbL7qrWvQPHwg5hv+RiSmkr2GUqw7gLFzExzf0ujDt6WqjWkeDL9ZlT/DeY1
-         8MlFE+jjXUFRRdXRsPWDlpZnZZYIAaZNXHiKwek3g/XSWHNQrIQ0zem5rm9WEZ/Gzxap
-         Djjllf7Hbput/A9u2DDd2elcAwPIxBQMY3ST6R3TRtUat/N3bz6agPjrcHVswLkdXStY
-         vMDLot3oqKh8L0fMl2fNZTlUullwqPLKCJsEz/s2g++bn7UXXm3/RimqHr7fisUEpRQk
-         bEDA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IOPqVh4ctVMNjnNehOsFwhQ1fcOGYIeU03yW9pJuSfA=;
+        b=eo0dvdemtxA8CWklQcmccrobKYDEPMbmpgQQJ5P4RV79QGke+2rT3ahcNrscXaGiiF
+         wIC+Z0SNXbDwnqmzA1wwqZWWTwhfeQV8gQJh5myROQSbQD0x4Rgr015sLk9T6gDJ0g78
+         kIBAdpdtGAhzwvWhfXrUGo6I0CJKqJwyPMH3EMNBptvH6JTT/XPJth132dJpR1bdlXCH
+         1dToYh2sQEsKydBNRGbnFFKFn/7GolQ0OZPBQg21/0i4hWgNF5VQ1+bLXoRn1oWz5Qg3
+         OOdJ9iHsrDpT8B59OWjloAsAUVn82H3Ntvl6Z/k4tCTga47qB0+EoFkVOkd8qSALasoe
+         7pGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kT6r2KItAdyXr6Yj4HdvbNeNJJn3Kyatb3yqGTbZ49U=;
-        b=Haqh+uZSyT7eQyzZd/oRGqdlal2DB3M8phbyTBljlIbKluaX5LYIhXv9Vxd4B5cVSd
-         o7U1pTvkFq4fYHDuRyCO4ERh/020vy12EijRdJNIGPHPVOqZOpooeUs855lFQUj+7e5n
-         sGZb5DBIdVHodKEJhAa+V0Ax9G00+7krJ75QOixE3AMinzfp9/R5Zb8RMoq2BWQI+1fy
-         KkIOFfxBsXOtU2Tq5ms5UonvNa/Z8T5nImCNWT0DO7rQoVECIuZHQxvnQY4tyil3V53g
-         2v4LNlv304VvoS6hxSe8jGJIU1rmLrW/W5x3CZ4o/NxGV2+x5q+v+KYtNAoDvo5oUYOX
-         PqNw==
-X-Gm-Message-State: AOAM533BopXfV16uHThuzvHBXwAeBkh/90fZt/55kYXs7aDkr+Mp/JSg
-        H8E4sKVFmtsWlk9GixAb0eCgnebUUxHMmQ==
-X-Google-Smtp-Source: ABdhPJz2ABsZ8o6YhIcD0a0iLMmS93uLHc4hH1gSeT5wk1jKbW0GKfSe05V0FUr/5hs+hSkuknD6vw==
-X-Received: by 2002:a1c:f303:: with SMTP id q3mr1079231wmq.9.1621287829079;
-        Mon, 17 May 2021 14:43:49 -0700 (PDT)
-Received: from [192.168.1.158] ([91.110.20.117])
-        by smtp.gmail.com with ESMTPSA id u16sm748429wmj.27.2021.05.17.14.43.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 May 2021 14:43:48 -0700 (PDT)
-Subject: Re: [PATCH v3 5/6] platform/x86: Add intel_skl_int3472 driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IOPqVh4ctVMNjnNehOsFwhQ1fcOGYIeU03yW9pJuSfA=;
+        b=Av9rsSIm/jZcNkz03D5ISjwvjZvgTH8GTlDFAje588h28yCP8Yy7vFm1ib+L9s8gKK
+         HtcNJuflLv8AmSJlfkuX5JS33Wf3JbLbOVM8Q8VbAxizNBoP/u87k3zifTDW9y+F8Far
+         7nH4rN4zSIa+E8/JaBzp/jDgJfmC1tl3hGBePHmCQaciaVV7h3u5lCYXBMGEvxynmrt2
+         iPcTcqpB/O7OyMvitHfSfE2BGBGb3FNOU8m366SzjE5asM0IshiCWepcIq9t6Bq4O1Qx
+         Zr8zVXA7DYliqV5iAVw2YIosVsEQ/ht1Cx7ylkwSJi5/A0/jdNQl1aoTlLR5tnmaGOiC
+         QZ+A==
+X-Gm-Message-State: AOAM531l+dRry5pQQ/Fr3GQoLoF1ZhrZrPrOZq4MnmeL0vdqd/aDjsrb
+        AJw9uY38oF06clKGxbJAfxtJYactKk0jMuWS8xM=
+X-Google-Smtp-Source: ABdhPJxuzVusCnFFhqkZlzIBVH0h5nlCqxxXZ3VisJydlCZOFV9HeP4C0vNeRg0iCKsJP5TyzKoS5KA1oNtrbg5gsIM=
+X-Received: by 2002:a05:6a00:1591:b029:2d9:369a:b846 with SMTP id
+ u17-20020a056a001591b02902d9369ab846mr1755450pfk.40.1621288014672; Mon, 17
+ May 2021 14:46:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1621279162.git.sander@svanheule.net> <041077d195f1cc81bf6363388cb4adfb06cff4ef.1621279162.git.sander@svanheule.net>
+ <CAHp75Vf0Qo-hBUAOwhxGiH6azFg0OPV8OkUSfTxWet__MBF9yA@mail.gmail.com>
+In-Reply-To: <CAHp75Vf0Qo-hBUAOwhxGiH6azFg0OPV8OkUSfTxWet__MBF9yA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 18 May 2021 00:46:38 +0300
+Message-ID: <CAHp75Vcj3_ePO1=+p0FRGk018TYG-LeA2=xtzENJUuN5sBGGGA@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] pinctrl: Add RTL8231 pin control and GPIO support
+To:     Sander Vanheule <sander@svanheule.net>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Michael Walle <michael@walle.cc>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        kieran.bingham+renesas@ideasonboard.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        devel@acpica.org
-References: <20210222130735.1313443-1-djrscally@gmail.com>
- <20210222130735.1313443-6-djrscally@gmail.com>
- <CAHp75Vd2Dc2Poq7VNRXRT-0VjkYdEFY2WKpz8fWpAQViQRO4jA@mail.gmail.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <0241df24-11cb-fd3b-12a5-f98dea55fac5@gmail.com>
-Date:   Mon, 17 May 2021 22:43:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAHp75Vd2Dc2Poq7VNRXRT-0VjkYdEFY2WKpz8fWpAQViQRO4jA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Andrew Lunn <andrew@lunn.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy
+On Tue, May 18, 2021 at 12:42 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, May 17, 2021 at 10:28 PM Sander Vanheule <sander@svanheule.net> wrote:
 
-On 22/02/2021 14:58, Andy Shevchenko wrote
->> +#include <linux/clk-provider.h>
-> 
-> This is definitely not for *.h. (Not all C files needed this)
-> 
->> +#include <linux/gpio/machine.h>
-> 
-> Ditto.
-> 
->> +#include <linux/regulator/driver.h>
->> +#include <linux/regulator/machine.h>
-> 
-> Ditto.
+The rest of the review is here (hit the send before finished).
 
-Bit more delayed than I wanted to be, but I'm just finishing off the v4
-of this. For these includes, I'm using the actual structs from them
-rather than pointers, so removing these would mean moving the definition
-of struct int3472_discrete_device into one of the source files; you're
-happy with that?
+...
+
+> > +       int err = 0;
+>
+> Check entire series for unnecessary assignments.They
+
+They even may hide a mistake.
+
+...
+
+
+> > +static int rtl8231_pinctrl_probe(struct platform_device *pdev)
+> > +{
+
+> > +       ctrl->map = dev_get_regmap(dev->parent, NULL);
+> > +       if (IS_ERR_OR_NULL(ctrl->map)) {
+> > +               dev_err(dev, "failed to retrieve regmap\n");
+> > +               if (!ctrl->map)
+> > +                       return -ENODEV;
+> > +               else
+> > +                       return PTR_ERR(ctrl->map);
+> > +       }
+
+Simply split the outer conditional to two.
+
+-- 
+With Best Regards,
+Andy Shevchenko
