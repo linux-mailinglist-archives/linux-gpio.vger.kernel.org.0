@@ -2,255 +2,225 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14C7C383AA3
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 18:59:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE739383CBC
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 20:54:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237801AbhEQRAq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 13:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236776AbhEQRAq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 13:00:46 -0400
-Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 879DFC061573
-        for <linux-gpio@vger.kernel.org>; Mon, 17 May 2021 09:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-         s=20161220; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=o2Af4r6ondZLXI+wXQ/vPcbCdKAE02a1WwUiFgRTyC0=; b=f3sLJ2tL1QnabOxyMLsJ4GxT4A
-        TUFDfAWhC5IftcucM6TrjDs5m5otgGOKNoV26OjEajgEEhbweqZWVrGQq5x6WIWNCKGBVGNfqOmVL
-        AmXq0TLMUNr60fMTt1ZSAZBlXxscileftL8k2A+FTZq9xULb8iUPIbnrOBPEzJE/6Fj7APlVBsZVL
-        9k1xJfyGo5EhpXrN0ljYIzr5bHzdzJBC54mloadjzgf/UJdBYXL/ffTGj/BJ2RQxnxmBqf7a++gf/
-        NT908puK99Z6vgN6Rwt6GfEjuecxaWAaumX0ivduD609IUDVJYvxy1J4pAoLt5SevYfNGR8ZLa0GH
-        juEda7yQ==;
-Received: from 164-105-191-90.dyn.estpak.ee ([90.191.105.164] helo=ubuntu)
-        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <sandberg@mailfence.com>)
-        id 1ligaO-0003BP-Av; Mon, 17 May 2021 19:59:21 +0300
-Received: by ubuntu (sSMTP sendmail emulation); Mon, 17 May 2021 19:59:19 +0300
-From:   Mauri Sandberg <sandberg@mailfence.com>
-To:     sandberg@mailfence.com
-Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
-        geert+renesas@glider.be, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, drew@beagleboard.org,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v3 2/2] gpio: gpio-mux-input: add generic gpio input multiplexer
-Date:   Mon, 17 May 2021 19:58:47 +0300
-Message-Id: <20210517165847.206316-3-sandberg@mailfence.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210517165847.206316-1-sandberg@mailfence.com>
-References: <20210325122832.119147-1-sandberg@mailfence.com>
- <20210517165847.206316-1-sandberg@mailfence.com>
+        id S237325AbhEQSzh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 14:55:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:31005 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234049AbhEQSzg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 17 May 2021 14:55:36 -0400
+IronPort-SDR: 6T7Ya2Ls2D7AgttbvUUEvn0eieX5rqbYN0d2FUwq5AwsnAfql1UPn1mj8qHTAoZzrPoPlTdfkr
+ oE4UxBRVpuvQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9987"; a="200592408"
+X-IronPort-AV: E=Sophos;i="5.82,307,1613462400"; 
+   d="scan'208";a="200592408"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2021 11:54:18 -0700
+IronPort-SDR: raqvL6daLN9OwYNkcOH9KRiMwPBP8ZYFK7h4DJzHAnEpy5hMd95FYnxzuLlsA/bdSbE4nScnMR
+ JtVPLtoQGRbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,307,1613462400"; 
+   d="scan'208";a="404474424"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga007.fm.intel.com with ESMTP; 17 May 2021 11:54:18 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.4; Mon, 17 May 2021 11:54:17 -0700
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.4; Mon, 17 May 2021 11:54:17 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4
+ via Frontend Transport; Mon, 17 May 2021 11:54:17 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.40) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2106.2; Mon, 17 May 2021 11:54:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RSk0lgAbzP1DwKYE7Gs6iAsU6Fc2l7UuPwcyuU9+sVpYqr49tGROgICYNE4gbBXHbpChTqb5f2HjeGqVUW0iyDBazSDkNJLnlTkoth5fIdQXestZxRssCblM7GBqiGqXJDycziG+dUabCupcnkvSJMATMBkdRDM3IA4AKY8WXq9tjozNLqY6dgZyVIwd57uY2cVyUqOeOAFwX4F73th5MowylEUcYOJd1/wiUnwN+kKCCHdz3pIfKZVYQsBhOxFFPn9RWOX5Cl34EGTi8JBk5l9EnBp53HFO+fcMpKqkTdunB+q+o0TZqHRWQhD/nwPneOmjskEEXxUbe6n76slFbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LGnGFvPqPg0DOGWkr6jE1HtDUDSl9XVHgRtnMdePLX0=;
+ b=OBSRoyiQNKqQ8X6DzOUJVr+43fyyweblPpD3hYFCPeQywlokBktAdEq6+PTb5GP/uzg1LXynvW1WURfpN20yOOLUeCIr8jinOIG0h6EXLNWUJIGSUUYaL7JYbAdXOmbQtsZVAzYOrqaamPPfoS7lEoiY1r5+8CCBr4ZEye/f2ghNoCfuluycKkyjgZu4pPBdR4AeM99heCo+UcqjVUqvt15hbF5YbKW5Row1phJhgHE6sw596nJ7vevn33JbjvZwA2hZeA8arpqMGhWgPF0yPDOunNzxVkaTiFLFiNt8XnphOcqgV36c3XA2tJVz7oWD5qaz34N5gYEInKzRhGb9ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LGnGFvPqPg0DOGWkr6jE1HtDUDSl9XVHgRtnMdePLX0=;
+ b=r7w2DK4F0Kb9/n0G8PiMbi00nxNU2p8AnKXnVme7Aspwpqxa60ZwsTYe3BMGBV6phxglcqXVpj5SmhzhpMu+mkTwY/pGcDND86Vf7woCW4JHxnwuzmcLuSl0PfdrudgwGe/4ywmc21uNk3BELz4JsFEo0wVR0RpA4RIldxvoO1E=
+Received: from MWHPR11MB1599.namprd11.prod.outlook.com (2603:10b6:301:e::16)
+ by MW3PR11MB4666.namprd11.prod.outlook.com (2603:10b6:303:56::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.26; Mon, 17 May
+ 2021 18:54:12 +0000
+Received: from MWHPR11MB1599.namprd11.prod.outlook.com
+ ([fe80::48df:6af5:afe:ea7e]) by MWHPR11MB1599.namprd11.prod.outlook.com
+ ([fe80::48df:6af5:afe:ea7e%7]) with mapi id 15.20.4129.031; Mon, 17 May 2021
+ 18:54:12 +0000
+From:   "Kaneda, Erik" <erik.kaneda@intel.com>
+To:     chenxiang <chenxiang66@hisilicon.com>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "hoan@os.amperecomputing.com" <hoan@os.amperecomputing.com>,
+        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>
+Subject: RE: [PATCH] ACPICA: fix a memleak issue related to ACPI/GPIO
+Thread-Topic: [PATCH] ACPICA: fix a memleak issue related to ACPI/GPIO
+Thread-Index: AQHXRt/M5Z1FQ9rUF0yt6Z/2QYLiFaroDZVw
+Date:   Mon, 17 May 2021 18:54:12 +0000
+Message-ID: <MWHPR11MB159982431E024C6212960C0CF02D9@MWHPR11MB1599.namprd11.prod.outlook.com>
+References: <1620790207-128605-1-git-send-email-chenxiang66@hisilicon.com>
+In-Reply-To: <1620790207-128605-1-git-send-email-chenxiang66@hisilicon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: hisilicon.com; dkim=none (message not signed)
+ header.d=none;hisilicon.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [47.7.17.63]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 96f6197f-0a43-4897-e622-08d919652937
+x-ms-traffictypediagnostic: MW3PR11MB4666:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW3PR11MB4666FC9F95DCA4E9032ED34EF02D9@MW3PR11MB4666.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xGPXY40/0UK58dbwrkV6uoxoT3BWykI4bstQ803ZbhRPm74kFLFJaNVsAejF8iZInUi+OMD7ntrzJ1WOhYlZvJl6rHST6+Yi+ffLE8TQ/vLQxM1lTBHaeosado8c3QCyXUBwK3SplW6q3+kPuNta9+G35TeykASNsW3ihfs3spvk2E8lruKtIN2WJu5ci9FqUip7ZrWcWlZ9XvwjTM/R2ZTfgQkrlT9DZ2JhdQ7vHOl/jQHNtNw54/SMLiJJMlReTBa2yn7S5uTcFhWQIAw88K++ei6tXOQCWlUOP48dQIq0eMm3eKTyeUj95sCwQ810Ee+WglYLlE0B330texkA96pUHwODHPMzaalYl+aDSfM02f4fIFbpsfsNSQSx/U3euVENkq429XGxXjf4SuqcS3AUbb0RbGeJpEVkpS+ZnZG4F4GDLdoDnVxGGHcsxibUF/OazWQ5N9UL6lR5r5ZJuDAUPc9U8U74hfK+BYqZiAk4lxtUMZJerJ98BD3zsJbadhwHhlmN93181WX35u4CMvklLyVajDHAETF87IqOpmPAGhwadTlqYTBAErSCh6GE5nf2gxgXQfeCWY1iWVLrgEszQ1n17AnRKFNpmsH7kuk=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1599.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(39860400002)(376002)(346002)(366004)(478600001)(54906003)(110136005)(33656002)(9686003)(8676002)(55016002)(52536014)(4326008)(86362001)(122000001)(5660300002)(186003)(66476007)(83380400001)(64756008)(38100700002)(8936002)(71200400001)(316002)(6506007)(26005)(53546011)(76116006)(66446008)(66946007)(7696005)(2906002)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?pvRVDRRMxcgxGC8Egn9yYkNB1akjAYogsdK5+pw1IEvPPuv4v2qBIdq0PMMQ?=
+ =?us-ascii?Q?c8k80I6DYpGcrSdsOOa7CvpOMQjTtXhP6bn/A+b9YnoDOqb4GqOUant72GWX?=
+ =?us-ascii?Q?sGc2vJOhb4qnZpiUaUnLv6goOsNqEvf/hUWE000uFcTLi3J0aXjtsgEMGNKQ?=
+ =?us-ascii?Q?4BkVGAHgsaXNyVhSWRo+GQlACGzLIeG4qqmxnvSye8/lllqeOy4ikHxS9rRE?=
+ =?us-ascii?Q?5bqJ4FCM3jfDT2gZUTwfIZ2VyVxebwuaCYgvp05h7VvhcZ2bf/ortaU+ZmWt?=
+ =?us-ascii?Q?9Fe5pFYg7B129adIVCg7mc1e08pVTUP34zxnFFjoq6EsPWuAxUzoy/Zm9yZR?=
+ =?us-ascii?Q?b1jcKu+V2zmHQKpfvp7vbg7z6/vpeTB7dP3u05HWae/Znz4C59YVOAILbRkm?=
+ =?us-ascii?Q?ZAirYCBuTfB5q0HV/vOHJ5Ghlre/lvP0RM+TsEuVQ8sok+tZeKwUoEKgRS4E?=
+ =?us-ascii?Q?pUKvRnGy1M11BfSAeCxM2IXN6aGg9eUuzlxJb+GroLco+AGewbUwCP48m1GI?=
+ =?us-ascii?Q?IgfJcENm7gvTb+7/F+Y+zGcgzYS1xQfavBTG0pSf/TP7NHP/B9Hsq09DuH6n?=
+ =?us-ascii?Q?3kp44xRow3auR3MB7tEuslx1wKCfR8AR9+PevYLWrwVmfbEsh3q4YhCNIBZ5?=
+ =?us-ascii?Q?fnOh/+S9YKaO2Rxk7MOGJ3wnssRE1JPKpCJsdiKrYaScHDqT5FSIe3doY9Jd?=
+ =?us-ascii?Q?wcEy2q/9dNzxa1iCWLNEhPVjBLEWThiW0X+79DoAaaJMJlo+90KAUVrUK6fy?=
+ =?us-ascii?Q?OxzL6czh0jsQ1opm2aJ8IdWFUi1Up1R0/2WT8Yy6UllT/UJbwybXIhLQYNRM?=
+ =?us-ascii?Q?sYJcaRrlrofZgC1mPIGeDsy86YmY5keb6JWaqVrxg0PbALTI61QqUkzpPo2A?=
+ =?us-ascii?Q?gVIMcghkA1CoHs7TM5sGxGN8LTG0mSJGOBnT4u/spi6IBfoa1RBZowbkP0U5?=
+ =?us-ascii?Q?5PJcdoIMj42HLEk85QeCENI4j5E9jS8/niF9B4MktWmwrouv/GqlyV7adp19?=
+ =?us-ascii?Q?TKaZqiPXVq4U9qyAI/bcWfDTb0g/igWLt40I48GTj8jaDCDgCkYuEMfL8eA/?=
+ =?us-ascii?Q?ON3jlTYCeAiGSnGXqI4s0LtsAiuW8sb5goIF0yzvXjqZYD5N/EKnpvkCfmbN?=
+ =?us-ascii?Q?RpqlQ6E88r35PohhDl+nxhQQJF7tlmOlgvVj4JC6AxuBa9JIjWIu4MN4tKNw?=
+ =?us-ascii?Q?bxhkslqyRtEKDIAXCXVs4WcYjiXZ/R65o9GOADd+Zw8Fn14igwM5hgvishnz?=
+ =?us-ascii?Q?V8hjD2/hVagupPljTzDV3lAylkzrH1e9qL0rYPwkwHUsFGBZ+AGWP9TRfYLl?=
+ =?us-ascii?Q?KjU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 90.191.105.164
-X-SA-Exim-Mail-From: sandberg@mailfence.com
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1599.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96f6197f-0a43-4897-e622-08d919652937
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2021 18:54:12.2296
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9/WCrXVSyAfOhlV1yMiHTwZjHcVG0wESgDFQioUF9cPUEmKGvtmtKkpDQY8L7sL7lkQ8fu3f4pmf7Zrewpacnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4666
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Adds support for a generic GPIO multiplexer. To drive the multiplexer a
-mux-controller is needed. The output pin of the multiplexer is a GPIO
-pin.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Mauri Sandberg <sandberg@mailfence.com>
----
-v2 -> v3:
- - use managed device resources
- - update Kconfig description
-v1 -> v2:
- - removed .owner from platform_driver as per test bot's instruction
- - added MODULE_AUTHOR, MODULE_DESCRIPTION, MODULE_LICENSE
- - added gpio_mux_input_get_direction as it's recommended for all chips
- - removed because this is input only chip: gpio_mux_input_set_value
- - removed because they are not needed for input/output only chips:
-     gpio_mux_input_direction_input
-     gpio_mux_input_direction_output
- - fixed typo in an error message
- - added info message about successful registration
- - removed can_sleep flag as this does not sleep while getting GPIO value
-   like I2C or SPI do
- - Updated description in Kconfig
----
- drivers/gpio/Kconfig          |  16 +++++
- drivers/gpio/Makefile         |   1 +
- drivers/gpio/gpio-mux-input.c | 124 ++++++++++++++++++++++++++++++++++
- 3 files changed, 141 insertions(+)
- create mode 100644 drivers/gpio/gpio-mux-input.c
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1dd0ec6727fd..b7dd4ba59e6e 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1657,4 +1657,20 @@ config GPIO_MOCKUP
- 
- endmenu
- 
-+comment "Other GPIO expanders"
-+
-+config GPIO_MUX_INPUT
-+	tristate "General GPIO input multiplexer"
-+	depends on OF_GPIO
-+	select MULTIPLEXER
-+	select MUX_GPIO
-+	help
-+	  Say yes here to enable support for generic GPIO input multiplexer.
-+
-+  	  This driver uses a mux-controller to drive the multiplexer and has a
-+  	  single output pin for reading the inputs to the mux. The driver can be
-+  	  used in situations when GPIO pins are used to select what multiplexer
-+  	  pin should be used for reading input and the output pin of the
-+  	  multiplexer is connected to a GPIO input pin.
-+
- endif
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index d7c81e1611a4..ff2b530d8ef4 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -104,6 +104,7 @@ obj-$(CONFIG_GPIO_MPC5200)		+= gpio-mpc5200.o
- obj-$(CONFIG_GPIO_MPC8XXX)		+= gpio-mpc8xxx.o
- obj-$(CONFIG_GPIO_MSC313)		+= gpio-msc313.o
- obj-$(CONFIG_GPIO_MT7621)		+= gpio-mt7621.o
-+obj-$(CONFIG_GPIO_MUX_INPUT)		+= gpio-mux-input.o
- obj-$(CONFIG_GPIO_MVEBU)		+= gpio-mvebu.o
- obj-$(CONFIG_GPIO_MXC)			+= gpio-mxc.o
- obj-$(CONFIG_GPIO_MXS)			+= gpio-mxs.o
-diff --git a/drivers/gpio/gpio-mux-input.c b/drivers/gpio/gpio-mux-input.c
-new file mode 100644
-index 000000000000..3c41e6f47012
---- /dev/null
-+++ b/drivers/gpio/gpio-mux-input.c
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *  A generic GPIO input multiplexer driver
-+ *
-+ *  Copyright (C) 2021 Mauri Sandberg <sandberg@mailfence.com>
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/mux/consumer.h>
-+
-+struct gpio_mux_input {
-+	struct device		*parent;
-+	struct gpio_chip	gpio_chip;
-+	struct mux_control	*mux_control;
-+	struct gpio_desc	*mux_pin;
-+};
-+
-+static struct gpio_mux_input *gpio_to_mux(struct gpio_chip *gc)
-+{
-+	return container_of(gc, struct gpio_mux_input, gpio_chip);
-+}
-+
-+static int gpio_mux_input_get_direction(struct gpio_chip *gc,
-+					unsigned int offset)
-+{
-+	return GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static int gpio_mux_input_get_value(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct gpio_mux_input *mux;
-+	int ret;
-+
-+	mux = gpio_to_mux(gc);
-+	ret = mux_control_select(mux->mux_control, offset);
-+	if (ret)
-+		return ret;
-+
-+	ret = gpiod_get_value(mux->mux_pin);
-+	mux_control_deselect(mux->mux_control);
-+	return ret;
-+}
-+
-+static int gpio_mux_input_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct gpio_mux_input *mux;
-+	struct mux_control *mc;
-+	struct gpio_desc *pin;
-+	struct gpio_chip *gc;
-+	int err;
-+
-+	mux = devm_kzalloc(dev, sizeof(struct gpio_mux_input), GFP_KERNEL);
-+	if (mux == NULL)
-+		return -ENOMEM;
-+
-+	mc = devm_mux_control_get(dev, NULL);
-+	if (IS_ERR(mc)) {
-+		err = (int) PTR_ERR(mc);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "unable to get mux-control: %d\n", err);
-+		return err;
-+	}
-+
-+	mux->mux_control = mc;
-+	pin = devm_gpiod_get(dev, "pin",  GPIOD_IN);
-+	if (IS_ERR(pin)) {
-+		err = (int) PTR_ERR(pin);
-+		dev_err(dev, "unable to claim output pin: %d\n", err);
-+		return err;
-+	}
-+
-+	mux->mux_pin = pin;
-+	mux->parent = dev;
-+
-+	gc = &mux->gpio_chip;
-+	gc->get = gpio_mux_input_get_value;
-+	gc->get_direction = gpio_mux_input_get_direction;
-+
-+	gc->base = -1;
-+	gc->ngpio = mux_control_states(mc);
-+	gc->label = dev_name(mux->parent);
-+	gc->parent = mux->parent;
-+	gc->owner = THIS_MODULE;
-+	gc->of_node = np;
-+
-+	err = gpiochip_add(&mux->gpio_chip);
-+	if (err) {
-+		dev_err(dev, "unable to add gpio chip, err=%d\n", err);
-+		return err;
-+	}
-+
-+	platform_set_drvdata(pdev, mux);
-+	dev_info(dev, "registered %u input GPIOs\n", gc->ngpio);
-+	return 0;
-+}
-+
-+static const struct of_device_id gpio_mux_input_id[] = {
-+	{
-+		.compatible = "gpio-mux-input",
-+		.data = NULL,
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_mux_input_id);
-+
-+static struct platform_driver gpio_mux_input_driver = {
-+	.driver	= {
-+		.name		= "gpio-mux-input",
-+		.of_match_table = gpio_mux_input_id,
-+	},
-+	.probe	= gpio_mux_input_probe,
-+};
-+module_platform_driver(gpio_mux_input_driver);
-+
-+MODULE_AUTHOR("Mauri Sandberg <sandberg@mailfence.com>");
-+MODULE_DESCRIPTION("Generic GPIO input multiplexer");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+> -----Original Message-----
+> From: chenxiang <chenxiang66@hisilicon.com>
+> Sent: Tuesday, May 11, 2021 8:30 PM
+> To: Moore, Robert <robert.moore@intel.com>; Kaneda, Erik
+> <erik.kaneda@intel.com>; Wysocki, Rafael J <rafael.j.wysocki@intel.com>;
+> hoan@os.amperecomputing.com; fancer.lancer@gmail.com
+> Cc: linux-acpi@vger.kernel.org; linux-gpio@vger.kernel.org;
+> linuxarm@huawei.com; Xiang Chen <chenxiang66@hisilicon.com>
+> Subject: [PATCH] ACPICA: fix a memleak issue related to ACPI/GPIO
+>=20
+> From: Xiang Chen <chenxiang66@hisilicon.com>
+>=20
+> There is a memleak reported as follows:
+>=20
+> unreferenced object 0xffff00208ff85a00 (size 128):
+>   comm "swapper/0", pid 1, jiffies 4294892588 (age 887.572s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 02 00 00 00 08 5a f8 8f 20 00 ff ff  .........Z.. ...
+>     08 5a f8 8f 20 00 ff ff 00 00 00 00 00 00 00 00  .Z.. ...........
+> backtrace:
+>     [<00000000bc25bad8>] slab_post_alloc_hook+0x80/0x2e0
+>     [<000000008d547074>] kmem_cache_alloc+0x194/0x2c0
+>     [<00000000b08da9ad>] acpi_os_create_semaphore+0x3c/0x78
+>     [<0000000024816c0a>] acpi_ev_install_space_handler+0x214/0x274
+>     [<00000000d93a5ac2>] acpi_install_address_space_handler+0x64/0xb0
+>     [<0000000098c37a45>] acpi_gpiochip_add+0x130/0x348
+>     [<00000000c1cf4b42>] gpiochip_add_data_with_key+0x79c/0xdd0
+>     [<000000005ce539e9>] devm_gpiochip_add_data_with_key+0x30/0x90
+>     [<00000000a3038b8d>] dwapb_gpio_probe+0x3e4/0x7e8
+>     [<0000000047a03eba>] platform_probe+0x68/0xe0
+>     [<00000000dc15c501>] really_probe+0x17c/0x4a0
+>     [<00000000aa1f123d>] driver_probe_device+0x68/0xd0
+>     [<00000000d97646e0>] device_driver_attach+0x74/0x80
+>     [<0000000073d5b3e5>] __driver_attach+0x8c/0xe0
+>     [<00000000ff60d118>] bus_for_each_dev+0x7c/0xd8
+>     [<00000000b018393d>] driver_attach+0x24/0x30
+>=20
+> It requires to delete the handler object in function
+> acpi_remove_address_space_handler() but it just up the sem with function
+> acpi_os_release_mutex(), so use acpi_os_delete_mutex() instead of
+> acpi_os_release_mutex() in function
+> acpi_remove_address_space_handler().
+>=20
+> Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+> ---
+>  drivers/acpi/acpica/evxfregn.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/acpi/acpica/evxfregn.c b/drivers/acpi/acpica/evxfreg=
+n.c
+> index b1ff0a8..4db0bec 100644
+> --- a/drivers/acpi/acpica/evxfregn.c
+> +++ b/drivers/acpi/acpica/evxfregn.c
+> @@ -201,7 +201,7 @@ acpi_remove_address_space_handler(acpi_handle
+> device,
+>=20
+>  			/* Now we can delete the handler object */
+>=20
+
+Hi Xiang,
+=20
+> -			acpi_os_release_mutex(handler_obj-
+> >address_space.
+> +			acpi_os_delete_mutex(handler_obj->address_space.
+>  					      context_mutex);
+
+Thanks for this suggestion! Instead of acpi_os_delete_mutex, could you try =
+using acpi_ut_remove_reference instead?
+I believe this will is a safer option. Please test this and see if it fixes=
+ the memory leak.
+
+Thanks,
+Erik
+
+>  			acpi_ut_remove_reference(handler_obj);
+>  			goto unlock_and_exit;
+> --
+> 2.8.1
 
