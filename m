@@ -2,92 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BAD93824F2
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 09:03:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2C81382501
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 09:05:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234905AbhEQHEr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 03:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52026 "EHLO
+        id S229954AbhEQHGf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 03:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234274AbhEQHEr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 03:04:47 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB86FC061573;
-        Mon, 17 May 2021 00:03:31 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id pi6-20020a17090b1e46b029015cec51d7cdso3145522pjb.5;
-        Mon, 17 May 2021 00:03:31 -0700 (PDT)
+        with ESMTP id S229896AbhEQHGd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 03:06:33 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52CE9C061573;
+        Mon, 17 May 2021 00:05:16 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id gb21-20020a17090b0615b029015d1a863a91so5015471pjb.2;
+        Mon, 17 May 2021 00:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kso+u5oDEUI6hC/TpN6G+VEPeqtVt8JMKDkpe0hvQw4=;
-        b=NEbHNwThWEj/g23crYRi7RqFA8QTN7P7vSE8qulvyTyQ6IEA61lbeLgBIMLxpkA5kZ
-         ugEXfzy15FDU6bAn2yycy1il8SfAeERdmFfccsen7A2kODq5Zn/w4FvX3wlsdKrU+8u9
-         a5RfT7u8xCwzH96fptkWr3fGInei2PDt1l9JfMIdwsktQ2Tl149U+R07krzvwhkl/iY5
-         HAGionsDO3VG4dnaLIokeyFqrTBmQydqVgclx0qJUoLbm/BQycSSeAHfJF7YkxQPzVz1
-         IF4DXfGjlsuH2IOQ5ETXDc2Kia28lut6eHhyLpVZzQtXKD2MyEw8puW1psx4VfHsiJ13
-         SfBQ==
+        bh=BAtgXmEjVS9Lr7QYLFCDa/lR4136fUKXGdOTU6CO3Nw=;
+        b=E6+zNoW1SSwDyM4BKK6Pnzxx5XYNQDFpK7dmVLmF/0Pf1DiC2PDCjbzk88GxxHrpaz
+         ui4QZq0PdvP6zVfucMscsz31lAID2ge2pKVjUzO0WN9c3wTBy43p3SRSYuCMpRoKPVsb
+         dqiHXJ22ggH4AZz1yoVN2Wnp+3DoBLqPICjgUtl4K0s1lrPdcnXaa/p9GqhIxt95CRjT
+         hvX2wcz3HFHSf6f0morebBrDTshKbQzJzbDJ96xNdxSE8ITbtyhHpjr/t/rIra2+wCQG
+         6an7GLkS5TBHqL4dy5EyPlfwTtiFhQEUWMmq61Y+/+OU4vOcTuDFAYc+fNrprGVItpjl
+         x+Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kso+u5oDEUI6hC/TpN6G+VEPeqtVt8JMKDkpe0hvQw4=;
-        b=AhHFJq6bxUM/lRkmY+mOBtlLQ9k/rNYWYJRA3970rlhd4CVjr1rSM5Ys6rdWG6uowf
-         coPQO9t1pV6ZvBnNwvCcGk+UFhlKi8uyN1RP7Kgzks9cByS2oo14PpYt3cHCeVDEPl6R
-         ljWaMGJn1crzJhxcOQt/GBFlUdcI91O/TMOY6cZQdj2e7uT6xriouBlYPSViEmIn7CyK
-         P8ZBq+AoKTow40abOsKJECtPYS1Eyj9BhcT7vFtmGcMu8vToIK6YZ3wRgK9GSfCJAc0w
-         b7p7uUnQ4PwX0EGqF7D+My8VQkAQ7qw2BdwUQ0IGPGP2Ibm5xCAs6d7vV8+Gk6QVQk4N
-         yphw==
-X-Gm-Message-State: AOAM533G446OIKOH39jxCKjk31pU2vU/MHLxw3D1BN0po/TYaidLU2Wc
-        o3CgxIbnYbgbRBQOAFnaVz61tuu/ebjGs3+oSZE=
-X-Google-Smtp-Source: ABdhPJzEYwkmCqhc0PcoCvbscW8cdar0csJ9Ro1rhG3jcTsBopXsi87oK+hq4MY+OFYFMaVphW4HofSxoxS8Snj4u4Q=
-X-Received: by 2002:a17:90a:d184:: with SMTP id fu4mr1421945pjb.129.1621235011120;
- Mon, 17 May 2021 00:03:31 -0700 (PDT)
+        bh=BAtgXmEjVS9Lr7QYLFCDa/lR4136fUKXGdOTU6CO3Nw=;
+        b=tGgq6YPDG5Sv8kxAgh3zPWIq17L7flAUk5YfW+M4znsKGfgIA69UR86IR551YmBdXX
+         7FAlIRXaOImvHEZmUOlqeM6M4yWxyCRbf+GFQeSRmP8la8tanhrBeDvEi5Tf4Wa2D79U
+         me9+vOcXyuh3kkwddJLQR3iiQPuLEToro3H18krgjgyItGdoPp9rvwy+vZZUQK9PoKRv
+         /PAnIPbjkPdmigdsnscgX8hHhpKOOqaoZFEca4Jk0nMUYO07ptRzK9XuaWz065HZgZwK
+         ChBJAD5u/H6TAyDIys1HFgHl2rYxShZiCc/2wpG8scVnwFMCriAEBIokq0//GNBj7R5u
+         ZA3w==
+X-Gm-Message-State: AOAM532I4gxd4zq/e7U86zJHKVPNxtgilf1955EGM/PM3EBCRRPxQw0C
+        qRK6FoAw7V7bcazE7lcNfSfTXYuqC9CTQvOAgNblI8VSaXc=
+X-Google-Smtp-Source: ABdhPJyqF+o+4ZWFScsTFOEr20R8wR/0TlcoXAxKSDuSS7Rjs6Cx8+b+97X2qPXnsj1fWbgSc87SFcC/xvmpOvExbmU=
+X-Received: by 2002:a17:90a:6c23:: with SMTP id x32mr30213143pjj.228.1621235115869;
+ Mon, 17 May 2021 00:05:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210513085227.54392-1-colin.king@canonical.com>
-In-Reply-To: <20210513085227.54392-1-colin.king@canonical.com>
+References: <20210513085227.54392-1-colin.king@canonical.com> <ca5918c4d9a240bc80bad1ad16d929f9@AcuMS.aculab.com>
+In-Reply-To: <ca5918c4d9a240bc80bad1ad16d929f9@AcuMS.aculab.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 17 May 2021 10:03:15 +0300
-Message-ID: <CAHp75VdvZEhdmui0+1eS0BXvxBs60=uB0zOPex_TTDTrK7ewnQ@mail.gmail.com>
+Date:   Mon, 17 May 2021 10:04:59 +0300
+Message-ID: <CAHp75VdJ9n6Sm2HQYE_bfg-5vXceA3aG5aXOfCctxDjzhLVXpA@mail.gmail.com>
 Subject: Re: [PATCH][next] gpio: xilinx: Fix potential integer overflow on
  shift of a u32 int
-To:     Colin King <colin.king@canonical.com>
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
         Srinivas Neeli <srinivas.neeli@xilinx.com>,
         Michal Simek <michal.simek@xilinx.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        kernel-janitors <kernel-janitors@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 13, 2021 at 12:12 PM Colin King <colin.king@canonical.com> wrote:
+On Thu, May 13, 2021 at 1:04 PM David Laight <David.Laight@aculab.com> wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+
+> > @@ -99,7 +99,7 @@ static inline void xgpio_set_value32(unsigned long *map, int bit, u32 v)
+> >       const unsigned long offset = (bit % BITS_PER_LONG) & BIT(5);
+> >
+> >       map[index] &= ~(0xFFFFFFFFul << offset);
+> > -     map[index] |= v << offset;
+> > +     map[index] |= (unsigned long)v << offset;
+> >  }
 >
-> From: Colin Ian King <colin.king@canonical.com>
+> That code looks dubious on 32bit architectures.
 >
-> The left shift of the u32 integer v is evaluated using 32 bit
-> arithmetic and then assigned to a u64 integer. There are cases
-> where v will currently overflow on the shift. Avoid this by
-> casting it to unsigned long (same type as map[]) before shifting
-> it.
+> I don't have 02b3f84d9080 in any of my source trees.
+
+Can you please be more specific on which code is dubious on 32-bit
+arches and why?
+
+> But that patch may itself be very dubious.
 >
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Fixes: 02b3f84d9080 ("gpio: xilinx: Switch to use bitmap APIs")
-
-No, it is a false positive,
-
->         const unsigned long offset = (bit % BITS_PER_LONG) & BIT(5);
-
-See above, offset is 0 when BITS_PER_LONG == 32 and 32 when it's equal to 64.
-
-> -       map[index] |= v << offset;
-> +       map[index] |= (unsigned long)v << offset;
+> Since the hardware requires explicit bits be set, relying
+> on the bitmap functions seems pointless and possibly wrong.
+> Clearly they cause additional problems because they use long[]
+> and here the code needs u32[].
 
 -- 
 With Best Regards,
