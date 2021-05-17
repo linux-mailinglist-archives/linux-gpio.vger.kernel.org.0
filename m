@@ -2,253 +2,290 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B247B386CF7
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 May 2021 00:31:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D5D2386D05
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 May 2021 00:38:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238224AbhEQWcc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 18:32:32 -0400
-Received: from mail-oi1-f178.google.com ([209.85.167.178]:41900 "EHLO
-        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238052AbhEQWcc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 18:32:32 -0400
-Received: by mail-oi1-f178.google.com with SMTP id c3so7927529oic.8;
-        Mon, 17 May 2021 15:31:15 -0700 (PDT)
+        id S240548AbhEQWjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 18:39:21 -0400
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:45030 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234833AbhEQWjU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 18:39:20 -0400
+Received: by mail-ot1-f53.google.com with SMTP id r26-20020a056830121ab02902a5ff1c9b81so6959853otp.11;
+        Mon, 17 May 2021 15:38:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=sFKNGNEQ4VFVCXqmElsYGXP7lxtAMHRJSrvTNQOM490=;
-        b=DyB4BPHWMSSwGRDe3V581M9o7FQAfyxCyDH5+yl0M8RVdxkOir4HmRqvl4R+zQNzck
-         t0bf76hAkAshzX+Wsy8sfBSZMZnMKs2lprzvJpSdjAESePd17girU8X+h5xgJfcxtUw/
-         Qnd664cgANYio6fexJ1wvqBIxR/+daE11xVFeCaPMg0NZyoj1OX4HHw5o7+Sy69eQtN+
-         Hj3y8mdg4A1F1Mij/44kj5WV2hgCr4gsDtDREyGh5i9112K6NwcZei82qosXrmt1IJEc
-         Kr8Jtb+ryWmzC33T0wess2oGcmyLpxzoOdTuTM8sXqZkx5RvA6YAwAomZ3MUPgGXEGCy
-         OMcg==
-X-Gm-Message-State: AOAM530s5cAkHuiBkKgQyIqBJv6xmFdgEHu2puu8+I71Ut+mAUwYXMx2
-        jbDJu9rz0k6Wv4DoYdA9pjiXhXRV6A==
-X-Google-Smtp-Source: ABdhPJyTx0tTbvBWR12HGJ/Tfyg0uKPJqwr/U4h6fL7DPGpyeQRGomUIbg2fcZz8Eqjg/H3FO47HZg==
-X-Received: by 2002:a54:4809:: with SMTP id j9mr1021877oij.14.1621290674837;
-        Mon, 17 May 2021 15:31:14 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=NziWTrFqmyP/rozoRoN+8ISKsYh3/xIAEqWli1B7iQk=;
+        b=WWMZEjoCLBUd+xNmROMBAADXyJiGeb3Pv0It1uQCmhggodugdiQbssxYwU17SSFHyV
+         7jz7PMNgyWbUHcyur7Hveu/CPm4HxcWLALY4J0zarmH0RBZBqyjk6cBfeVmL5ed+I+ON
+         8+9CZiBbg50XDEIGOJwT7NEKn/XnGqDgFuSbM+9ilYxLQolfuBYvxsI57PQdy8gbokeM
+         FUyivqPcSj60TZqJPFlE1c2wad2cQHuhIHb+m8tlg0tB+vzv1iUZdXKifnhltJi5TTAo
+         fbVc/emDNd1mHRPO2Kf0zhL8V9pSLg9LqzxnSZdYi/nWGBVec+7znVOoVFab0CrR16iV
+         +Mpg==
+X-Gm-Message-State: AOAM531lYD2GtehMVEvl5DcO2LPguc9/60zA/q1cWvLkC+fRYPMvJPlA
+        fQwxH3TosYhw1smbT+bB7Q==
+X-Google-Smtp-Source: ABdhPJwEH4YA9xS+fX/Ylw67alvRIDTOJisxjc7xuvJ3Anjp9jX7XjM9r5/SmFdImaQychZemsnlQA==
+X-Received: by 2002:a05:6830:1d5c:: with SMTP id p28mr1596843oth.280.1621291083188;
+        Mon, 17 May 2021 15:38:03 -0700 (PDT)
 Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 19sm2964559oiy.11.2021.05.17.15.31.13
+        by smtp.gmail.com with ESMTPSA id v8sm1875917oiv.5.2021.05.17.15.38.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 May 2021 15:31:14 -0700 (PDT)
-Received: (nullmailer pid 3326623 invoked by uid 1000);
-        Mon, 17 May 2021 22:31:13 -0000
-Date:   Mon, 17 May 2021 17:31:13 -0500
+        Mon, 17 May 2021 15:38:02 -0700 (PDT)
+Received: (nullmailer pid 3337028 invoked by uid 1000);
+        Mon, 17 May 2021 22:38:01 -0000
+Date:   Mon, 17 May 2021 17:38:01 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Sander Vanheule <sander@svanheule.net>
 Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: leds: Binding for RTL8231 scan matrix
-Message-ID: <20210517223113.GA3302542@robh.at.kernel.org>
+Subject: Re: [PATCH 2/5] dt-bindings: mfd: Binding for RTL8231
+Message-ID: <20210517223801.GA3327704@robh.at.kernel.org>
 References: <cover.1620735871.git.sander@svanheule.net>
- <cb1910ab6ba0795666df1034b47221f8bac160f9.1620735871.git.sander@svanheule.net>
+ <73e017d08117cee1290b9483c23f79f956f41a6d.1620735871.git.sander@svanheule.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cb1910ab6ba0795666df1034b47221f8bac160f9.1620735871.git.sander@svanheule.net>
+In-Reply-To: <73e017d08117cee1290b9483c23f79f956f41a6d.1620735871.git.sander@svanheule.net>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 11, 2021 at 02:25:19PM +0200, Sander Vanheule wrote:
-> Add a binding description for the Realtek RTL8231's LED support, which
-> consists of up to 88 LEDs arranged in a number of scanning matrices.
+On Tue, May 11, 2021 at 02:25:20PM +0200, Sander Vanheule wrote:
+> Add a binding description for the Realtek RTL8231, a GPIO and LED
+> expander chip commonly used in ethernet switches based on a Realtek
+> switch SoC. These chips can be addressed via an MDIO or SMI bus, or used
+> as a plain 36-bit shift register.
+> 
+> This binding only describes the feature set provided by the MDIO/SMI
+> configuration, and covers the GPIO, PWM, and pin control properties. The
+> LED properties are defined in a separate binding.
 > 
 > Signed-off-by: Sander Vanheule <sander@svanheule.net>
 > ---
->  .../bindings/leds/realtek,rtl8231-leds.yaml   | 159 ++++++++++++++++++
->  1 file changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
+>  .../bindings/mfd/realtek,rtl8231.yaml         | 202 ++++++++++++++++++
+>  1 file changed, 202 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml b/Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
+> diff --git a/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml b/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
 > new file mode 100644
-> index 000000000000..aba2b55fb9c9
+> index 000000000000..2023cfa887a3
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
-> @@ -0,0 +1,159 @@
+> +++ b/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
+> @@ -0,0 +1,202 @@
 > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/leds/realtek,rtl8231-leds.yaml#
+> +$id: http://devicetree.org/schemas/mfd/realtek,rtl8231.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Realtek RTL8231 LED scan matrix.
+> +title: Realtek RTL8231 GPIO and LED expander.
 > +
 > +maintainers:
 > +  - Sander Vanheule <sander@svanheule.net>
 > +
 > +description: |
-> +  The RTL8231 has support for driving a number of LED matrices, by scanning
-> +  over the LEDs pins, alternatingly lighting different columns and/or rows.
+> +  The RTL8231 is a GPIO and LED expander chip, providing up to 37 GPIOs, up to
+> +  88 LEDs, and up to one PWM output. This device is frequently used alongside
+> +  Realtek switch SoCs, to provide additional I/O capabilities.
 > +
-> +  In single color scan mode, 88 LEDs are supported. These are grouped into
-> +  three output matrices:
-> +    - Group A of 6×6 single color LEDs. Rows and columns are driven by GPIO
-> +      pins 0-11.
-> +               L0[n]    L1[n]    L2[n]    L0[n+6]  L1[n+6]  L2[n+6]
-> +                |        |        |        |        |        |
-> +       P0/P6  --<--------<--------<--------<--------<--------< (3)
-> +                |        |        |        |        |        |
-> +       P1/P7  --<--------<--------<--------<--------<--------< (4)
-> +                |        |        |        |        |        |
-> +       P2/P8  --<--------<--------<--------<--------<--------< (5)
-> +                |        |        |        |        |        |
-> +       P3/P9  --<--------<--------<--------<--------<--------< (6)
-> +                |        |        |        |        |        |
-> +       P4/P10 --<--------<--------<--------<--------<--------< (7)
-> +                |        |        |        |        |        |
-> +       P5/P11 --<--------<--------<--------<--------<--------< (8)
-> +               (0)      (1)      (2)      (9)     (10)     (11)
-> +    - Group B of 6×6 single color LEDs. Rows and columns are driven by GPIO
-> +      pins 12-23.
-> +               L0[n]    L1[n]    L2[n]    L0[n+6]  L1[n+6]  L2[n+6]
-> +                |        |        |        |        |        |
-> +      P12/P18 --<--------<--------<--------<--------<--------< (15)
-> +                |        |        |        |        |        |
-> +      P13/P19 --<--------<--------<--------<--------<--------< (16)
-> +                |        |        |        |        |        |
-> +      P14/P20 --<--------<--------<--------<--------<--------< (17)
-> +                |        |        |        |        |        |
-> +      P15/P21 --<--------<--------<--------<--------<--------< (18)
-> +                |        |        |        |        |        |
-> +      P16/P22 --<--------<--------<--------<--------<--------< (19)
-> +                |        |        |        |        |        |
-> +      P17/P23 --<--------<--------<--------<--------<--------< (20)
-> +              (12)     (13)     (14)    (21)      (22)     (23)
-> +    - Group C of 8 pairs of anti-parallel (or bi-color) LEDs. LED selection is
-> +      provided by GPIO pins 24-27 and 29-32, polarity selection by GPIO 28.
-> +               P24     P25  ...  P30     P31
-> +                |       |         |       |
-> +      LED POL --X-------X---/\/---X-------X (28)
-> +              (24)    (25)  ... (31)    (32)
+> +  To manage the RTL8231's features, its strapping pins can be used to configure
+> +  it in one of three modes: shift register, MDIO device, or SMI device. The
+> +  shift register mode does not need special support. In MDIO or SMI mode, most
+> +  pins can be configured as a GPIO output, LED matrix scan line/column, or as a
+> +  PWM output.
 > +
-> +  In bi-color scan mode, 72 LEDs are supported. These are grouped into four
-> +  output matrices:
-> +    - Group A of 12 pairs of anti-parallel LEDs. LED selection is provided
-> +      by GPIO pins 0-11, polarity selection by GPIO 12.
-> +    - Group B of 6 pairs of anti-parallel LEDs. LED selection is provided
-> +      by GPIO pins 23-28, polarity selection by GPIO 21.
-> +    - Group C of 6 pairs of anti-parallel LEDs. LED selection is provided
-> +      by GPIO pins 29-34, polarity selection by GPIO 22.
-> +    - Group of 4×6 single color LEDs. Rows are driven by GPIO pins 15-20,
-> +      columns by GPIO pins 13-14 and 21-22 (shared with groups B and C).
-> +          P[n]     P[n+6]   P[n+12]  P[n+18]
-> +            |        |        |        |
-> +       +0 --<--------<--------<--------< (15)
-> +            |        |        |        |
-> +       +1 --<--------<--------<--------< (16)
-> +            |        |        |        |
-> +       +2 --<--------<--------<--------< (17)
-> +            |        |        |        |
-> +       +3 --<--------<--------<--------< (18)
-> +            |        |        |        |
-> +       +4 --<--------<--------<--------< (19)
-> +            |        |        |        |
-> +       +6 --<--------<--------<--------< (20)
-> +          (13)     (14)     (21)     (22)
-> +
-> +  This node must always be a child of a 'realtek,rtl8231' node.
+> +  The GPIO and pin control are part of the main node. PWM and LED support are
+> +  configured as sub-nodes.
 > +
 > +properties:
-> +  $nodename:
-> +    const: leds
-
-led-controller
-
-> +
 > +  compatible:
-> +    const: realtek,rtl8231-leds
-
-How is this device controlled?
-
+> +    const: realtek,rtl8231
 > +
-> +  "#address-cells":
+> +  reg:
+> +    description: MDIO or SMI device address.
+> +    maxItems: 1
+> +
+> +  # GPIO support
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
 > +    const: 2
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  realtek,led-scan-mode:
-> +    $ref: /schemas/types.yaml#/definitions/string
 > +    description: |
-> +      Specify the scanning mode the chip should run in. See general description
-> +      for how the scanning matrices are wired up.
-> +    enum: ["single-color", "bi-color"]
+> +      The first cell is the pin number and the second cell is used to specify
+> +      the gpio active state.
 > +
-> +patternProperties:
-> +  "^led@[0-9]+,[0-2]$":
+> +  gpio-ranges:
 > +    description: |
-> +      LEDs are addressed by their port index and led index. Ports 0-23 always
-> +      support three LEDs. Additionally, but only when used in single color scan
-> +      mode, ports 24-31 support two LEDs.
+> +      Must reference itself, and provide a zero-based mapping for 37 pins.
+> +    maxItems: 1
+> +
+> +  # Pin muxing and configuration
+> +  realtek,drive-strength:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Normally unit-addresses are hex values.
+Use the standard 'drive-strength' property.
 
+> +    description: |
+> +      Common drive strength used for all GPIO output pins, must be 4mA or 8mA.
+> +      On reset, this value will default to 8mA.
+> +    enum: [4, 8]
+> +
+> +  # LED scanning matrix
+> +  leds:
+> +    $ref: ../leds/realtek,rtl8231-leds.yaml#
+> +
+> +  # PWM output
+> +  pwm:
 > +    type: object
+> +    description: |
+> +      Subnode describing the PWM peripheral. To use the PWM output, gpio35 must
+> +      be muxed to its 'pwm' function. Valid frequency values for consumers are
+> +      1200, 1600, 2000, 2400, 2800, 3200, 4000, and 4800.
 > +
 > +    properties:
-> +      reg:
-> +        maxItems: 1
-
-This should have more constraints:
-
-reg:
-  items: 
-    - items:
-        - description: port index
-          maximum: 31
-        - description: led index
-          maximum: 2
-
-> +
-> +    allOf:
-> +      - $ref: ../leds/common.yaml#
+> +      "#pwm-cells":
+> +        description: |
+> +          Twos cells with PWM index (must be 0) and PWM frequency in Hz.
+> +        const: 2
 > +
 > +    required:
-> +      - reg
+> +      - "#pwm-cells"
+
+Just move this to the parent node. No reason for a child node or that 1 
+node can't be 2 providers.
+
+> +
+> +patternProperties:
+> +  "-pins$":
+> +    type: object
+> +    $ref: ../pinctrl/pinmux-node.yaml#
+> +
+> +    properties:
+> +      pins:
+> +        items:
+> +          oneOf:
+
+No need for oneOf when there's only 1 entry.
+
+> +            - enum: ["gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6",
+> +                     "gpio7", "gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13",
+> +                     "gpio14", "gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20",
+> +                     "gpio21", "gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27",
+> +                     "gpio28", "gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34",
+> +                     "gpio35", "gpio36"]
+> +        minItems: 1
+> +        maxItems: 37
+> +      function:
+> +        description: |
+> +          Select which function to use. "gpio" is supported for all pins, "led" is supported
+> +          for pins 0-34, "pwm" is supported for for pin 35.
+> +        enum: ["gpio", "led", "pwm"]
+> +
+> +    required:
+> +      - pins
+> +      - function
 > +
 > +required:
 > +  - compatible
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - realtek,led-scan-mode
+> +  - reg
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +  - gpio-ranges
 > +
 > +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/leds/common.h>
-> +    leds {
-> +        compatible = "realtek,rtl8231-leds";
-> +        #address-cells = <2>;
+> +    // Minimal example
+> +    mdio {
+> +        #address-cells = <1>;
 > +        #size-cells = <0>;
 > +
-> +        realtek,led-scan-mode = "single-color";
+> +        expander0: expander@0 {
+> +            compatible = "realtek,rtl8231";
+> +            reg = <0>;
 > +
-> +        led@0,0 {
-> +            reg = <0 0>;
-> +            color = <LED_COLOR_ID_GREEN>;
-> +            function = LED_FUNCTION_LAN;
-> +            function-enumerator = <0>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            gpio-ranges = <&expander0 0 0 37>;
 > +        };
+> +    };
+> +  - |
+> +    // All bells and whistles included
+> +    #include <dt-bindings/leds/common.h>
+> +    mdio {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
 > +
-> +        led@0,1 {
-> +            reg = <0 1>;
-> +            color = <LED_COLOR_ID_AMBER>;
-> +            function = LED_FUNCTION_LAN;
-> +            function-enumerator = <0>;
-> +        };
+> +        expander1: expander@1 {
+> +            compatible = "realtek,rtl8231";
+> +            reg = <1>;
 > +
-> +        led@0,2 {
-> +            reg = <0 2>;
-> +            color = <LED_COLOR_ID_GREEN>;
-> +            function = LED_FUNCTION_STATUS;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            gpio-ranges = <&expander1 0 0 37>;
+> +
+> +            realtek,drive-strength = <4>;
+> +
+> +            button-pins {
+> +                pins = "gpio36";
+> +                function = "gpio";
+> +                input-debounce = "100000";
+> +            };
+> +
+> +            pwm-pins {
+> +                pins = "gpio35";
+> +                function = "pwm";
+> +            };
+> +
+> +            led-pins {
+> +                pins = "gpio0", "gpio1", "gpio3", "gpio4";
+> +                function = "led";
+> +            };
+> +
+> +            pwm {
+> +                #pwm-cells = <2>;
+> +            };
+> +
+> +            leds {
+> +                compatible = "realtek,rtl8231-leds";
+> +                #address-cells = <2>;
+> +                #size-cells = <0>;
+> +
+> +                realtek,led-scan-mode = "single-color";
+> +
+> +                led@0,0 {
+> +                    reg = <0 0>;
+> +                    color = <LED_COLOR_ID_GREEN>;
+> +                    function = LED_FUNCTION_LAN;
+> +                    function-enumerator = <0>;
+> +                };
+> +
+> +                led@0,1 {
+> +                    reg = <0 1>;
+> +                    color = <LED_COLOR_ID_AMBER>;
+> +                    function = LED_FUNCTION_LAN;
+> +                    function-enumerator = <0>;
+> +                };
+> +
+> +                led@1,0 {
+> +                    reg = <1 0>;
+> +                    color = <LED_COLOR_ID_GREEN>;
+> +                    function = LED_FUNCTION_LAN;
+> +                    function-enumerator = <1>;
+> +                };
+> +
+> +                led@1,1 {
+> +                    reg = <1 1>;
+> +                    color = <LED_COLOR_ID_AMBER>;
+> +                    function = LED_FUNCTION_LAN;
+> +                    function-enumerator = <1>;
+> +                };
+> +            };
 > +        };
 > +    };
 > -- 
