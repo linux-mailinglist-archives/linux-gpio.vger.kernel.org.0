@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EE65386C1C
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 23:19:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCCF5386C74
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 23:43:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237845AbhEQVUS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 17:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48670 "EHLO
+        id S245389AbhEQVoS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 17:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230486AbhEQVUR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 17:20:17 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC26C061573;
-        Mon, 17 May 2021 14:19:00 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id 10so5869307pfl.1;
-        Mon, 17 May 2021 14:19:00 -0700 (PDT)
+        with ESMTP id S245384AbhEQVoR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 17:44:17 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11EDBC061573;
+        Mon, 17 May 2021 14:43:00 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id ep16-20020a17090ae650b029015d00f578a8so394074pjb.2;
+        Mon, 17 May 2021 14:43:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HmtmSlANL5hXoX5/p9EqO9MY89a2/kaIYLyVwNKJMYg=;
-        b=W8edT1gRe6XOTX2A1r44kRpv4L9Q3PtPiEGIp1rDQNfRbxWhe3/FMeAV75Qe/H39H0
-         o7JI3D4wQv5DvaQWKiza8vh+rxW9sg3rzYKtVCxtL68Gmw+fuemWEkSnM+/b+UB59FcG
-         3COaFg2IBjeXQwkMIlIFTcYGDTN3ZWJ5k2zo+IfSgYJTArEYv0ld7JY6N7QtKGhpenD3
-         xna+/Isgh6gVfL9vFW6mTc2Oya0pZVs4tBiqgjH6wVGUQS12kX2OQOy56OT2lbMe9XL4
-         SjNqlRlPlGWx1t2TaDIs712ghW+AiZNwgWO5fIkQIzfjuJkzgsCus88w3jH5uxVQh20r
-         87ZQ==
+        bh=YkF+60OFsiXklOOeHGzY2rXDGOD+az645p7FpABDSJQ=;
+        b=TiBwU8xLRdCDGWbhqN+6pW/NGnSeazADLchO5Qnny2GZghBXJWpSFkWm+TK0gz1y3w
+         80vSawpGrtbHXM+R5XcThyaoU/mPxlIb48/t1z14Y1RPNcI+QYeQY4ZibZ81I7n5Krv5
+         IR4nIeSbECOa38eXRt7dbE3SnmZDUydBjcx43Dorpq+uPLJgqppC6QtmuPfQWqScpF0/
+         j1y8y8JGoZ9dXr0f4D3D6Gg/+9YXZkD7yDawAOYXEB75L6YUcPqaNcXLN1UDm9vUM0fX
+         XezMMXaSU1OOb8AM7lur5tZtjl0wqMoWwzoXmF7M/+N9knZGD41eJovpHaU2wJDgVDW+
+         25Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HmtmSlANL5hXoX5/p9EqO9MY89a2/kaIYLyVwNKJMYg=;
-        b=lN6dFXLD3pZirhsZlX1g3IPNNPdfznGCUSDWDMJPifPdTMsHqIt2uYX2QHfMHMTHav
-         YmlXvVcGCSb406e/4iDpHQCHazGqjbLgfvvmbPh5QahQX/AAOX3QnvCpqxrLgkXk9N+w
-         EKlgPEevIVb+zuGyLnUKKyh7TsU2Cd6OXLEx/VnoDitgrYwG5tgVlAuPWhk/ZTr+4dLW
-         UVhSZKpcurcVi7cQDuBAjCR0MCVfUTfwI+RAYXs89p2/wKCIGEwy4huV7EEj6oKYZk7W
-         T+gTpxTq9tHi1mrgJH8EItE9kXF3QH0ivkLVIzAs9RNVf8Mqn6u7S9dDJ0GavW6Nchy/
-         /h6g==
-X-Gm-Message-State: AOAM531Qe9PWVDLARG/xrDtNAUGLBquheziny/pfnCyibDadH4TBOoSU
-        ipcJ/qwX2Fq8b7JbPIAzWyBWYlryt8zdwzYWQ4k=
-X-Google-Smtp-Source: ABdhPJxrzCSbJpWzIydyyWcxiebEG1ZpDDpq/sKkRgLvOnkeGgPI7sqMUTVOjYrbQ+vUtUMVItnNcNHwkRG5j3wP69U=
-X-Received: by 2002:a05:6a00:1591:b029:2d9:369a:b846 with SMTP id
- u17-20020a056a001591b02902d9369ab846mr1659775pfk.40.1621286340365; Mon, 17
- May 2021 14:19:00 -0700 (PDT)
+        bh=YkF+60OFsiXklOOeHGzY2rXDGOD+az645p7FpABDSJQ=;
+        b=Y9CpBc+QMB1zM2mzCpWi3lWvBVy9sTU3fO0C9tWE7V5o6bZyfWyRIc6jIxCzHXjS8F
+         p+Ye+wrifp6lyRum8Z++a9agVvvWMH/mgHSqmrLhyCyrPhuAyeuYDQZtdqoOFFAxadq1
+         ZngltW471GGNDRLXhpjFFvFdH5OyM7UvKQpG+oXQvSg6DrlGyfDEbQ8Uqr2NHHnZx/rE
+         phyFpdW0GmT2ITY57J/bLsqcxbSCkhezEskbd7hDBuWkeRdWY3+8JXYY6d//XXgjS1I+
+         sTdKEMk8XI3eKNiMd3x1wFm/QnluOM5e0kAz3hOdQGh5BaRCIVToqgkpy7MLpXFo/Bui
+         luJw==
+X-Gm-Message-State: AOAM530ffEGnaujjWmpHgzr1Lm2KI0jUNOHmtgp+hTJrjk4I166HOuEB
+        7BrWFH3bOTO54GDzrav2ZPIolr5CWKAICmYkxaA=
+X-Google-Smtp-Source: ABdhPJzfjGKhQZ9huDDTXMgAyDLDG/q/7gyugWfEAFK7w66R6VNvrYW5v4d6rsG0eXh3V45ZfnK52OiI7zM9oZxINzc=
+X-Received: by 2002:a17:90a:6c23:: with SMTP id x32mr1554708pjj.228.1621287779604;
+ Mon, 17 May 2021 14:42:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1621279162.git.sander@svanheule.net> <f1ca940216c0accfc804afee2dbe46d260d890ae.1621279162.git.sander@svanheule.net>
-In-Reply-To: <f1ca940216c0accfc804afee2dbe46d260d890ae.1621279162.git.sander@svanheule.net>
+References: <cover.1621279162.git.sander@svanheule.net> <041077d195f1cc81bf6363388cb4adfb06cff4ef.1621279162.git.sander@svanheule.net>
+In-Reply-To: <041077d195f1cc81bf6363388cb4adfb06cff4ef.1621279162.git.sander@svanheule.net>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 18 May 2021 00:18:43 +0300
-Message-ID: <CAHp75Vc5a4PsHsJ2sNsRNT7BaBJ=Kxb+KKM7x7jWeRdOS8WfnQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] mfd: Add RTL8231 core device
+Date:   Tue, 18 May 2021 00:42:43 +0300
+Message-ID: <CAHp75Vf0Qo-hBUAOwhxGiH6azFg0OPV8OkUSfTxWet__MBF9yA@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] pinctrl: Add RTL8231 pin control and GPIO support
 To:     Sander Vanheule <sander@svanheule.net>
 Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
@@ -64,8 +63,7 @@ Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Andrew Lunn <andrew@lunn.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel test robot <lkp@intel.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -73,155 +71,284 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Mon, May 17, 2021 at 10:28 PM Sander Vanheule <sander@svanheule.net> wrote:
 >
-> The RTL8231 is implemented as an MDIO device, and provides a regmap
-> interface for register access by the core and child devices.
+> This driver implements the GPIO and pin muxing features provided by the
+> RTL8231. The device should be instantiated as an MFD child, where the
+> parent device has already configured the regmap used for register
+> access.
 >
-> The chip can also be a device on an SMI bus, an I2C-like bus by Realtek.
-> Since kernel support for SMI is limited, and no real-world SMI
-> implementations have been encountered for this device, this is currently
-> unimplemented. The use of the regmap interface should make any future
-> support relatively straightforward.
->
-> After reset, all pins are muxed to GPIO inputs before the pin drivers
-> are enabled. This is done to prevent accidental system resets, when a
-> pin is connected to the parent SoC's reset line.
-
-> [missing MDIO_BUS dependency, provided via REGMAP_MDIO]
-> Reported-by: kernel test robot <lkp@intel.com>
-
-What is the culprit? Shouldn't this have a Fixes tag?
+> Although described in the bindings, pin debouncing and drive strength
+> selection are currently not implemented. Debouncing is only available
+> for the six highest GPIOs, and must be emulated when other pins are used
+> for (button) inputs anyway.
 
 ...
 
-> +         Support for the Realtek RTL8231 GPIO and LED expander.
-> +         Provides up to 37 GPIOs, 88 LEDs, and one PWM output.
+> +struct rtl8231_pin_desc {
+> +       unsigned int number;
+> +       const char *name;
+> +       enum rtl8231_pin_function functions;
+> +       u8 reg;
+> +       u8 offset;
+> +       u8 gpio_function_value;
+> +};
 
-> +         When built as a module, this module will be named rtl8231_expander.
+I would see rather
 
-The name is not the one it will be according to Makefile.
+sturct pinctrl_pin_desc desc;
 
-> +obj-$(CONFIG_MFD_RTL8231)      += rtl8231.o
-
-...
-
-> +#include <linux/bits.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mdio.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
+Where drv_data describes the rest of the data for pin
 
 ...
 
-> +static int rtl8231_init(struct device *dev, struct regmap *map)
+> +static int rtl8231_get_group_pins(struct pinctrl_dev *pctldev, unsigned int selector,
+> +       const unsigned int **pins, unsigned int *num_pins)
 > +{
-> +       unsigned int ready_code;
-> +       unsigned int v;
+
+> +       if (selector < ARRAY_SIZE(rtl8231_pins)) {
+
+Can we use traditional pattern, i.e.
+
+  if (... >= ARRAY_SIZE(...))
+    return -EINVAL;
+
+  ...
+  return 0;
+
+?
+
+> +               *pins = &rtl8231_pins[selector].number;
+> +               *num_pins = 1;
+> +               return 0;
+> +       }
+> +
+> +       return -EINVAL;
+> +}
+
+...
+
+> +static int rtl8231_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
+> +       unsigned int group_selector)
+> +{
 
 > +       int err = 0;
 
-Redundant assignment.
+Redundant variable.
 
-> +       err = regmap_read(map, RTL8231_REG_FUNC1, &v);
-
-> +       ready_code = FIELD_GET(RTL8231_FUNC1_READY_CODE_MASK, v);
-
-If we got an error why we need a read_core, what for?
-
-> +       if (err) {
-> +               dev_err(dev, "failed to read READY_CODE\n");
-> +               return err;
-
-> +       } else if (ready_code != RTL8231_FUNC1_READY_CODE_VALUE) {
-
-Redundant 'else'.
-
-> +               dev_err(dev, "RTL8231 not present or ready 0x%x != 0x%x\n",
-> +                       ready_code, RTL8231_FUNC1_READY_CODE_VALUE);
-> +               return -ENODEV;
+> +       switch (func_flag) {
+> +       case RTL8231_PIN_FUNCTION_LED:
+> +       case RTL8231_PIN_FUNCTION_PWM:
+> +               err = regmap_update_bits(ctrl->map, desc->reg, function_mask, ~gpio_function);
+> +               break;
+> +       case RTL8231_PIN_FUNCTION_GPIO:
+> +               err = regmap_update_bits(ctrl->map, desc->reg, function_mask, gpio_function);
+> +               break;
+> +       default:
+> +               return -EINVAL;
 > +       }
-
-...
-
+> +
 > +       return err;
-
-Is it somehow different to 0?
-
 > +}
 
 ...
 
-> +static int rtl8231_mdio_probe(struct mdio_device *mdiodev)
+> +static const struct pinmux_ops rtl8231_pinmux_ops = {
+> +       .set_mux = rtl8231_set_mux,
+> +       .get_functions_count = rtl8231_get_functions_count,
+> +       .get_function_name = rtl8231_get_function_name,
+> +       .get_function_groups = rtl8231_get_function_groups,
+> +       .gpio_request_enable = rtl8231_gpio_request_enable,
+
+> +       .strict = true
+
+Leave comma for non-terminator entries.
+
+> +};
+> +
+> +
+
+One blank line is enough.
+
+...
+
+> +static int rtl8231_pinctrl_init_functions(struct device *dev, struct rtl8231_pin_ctrl *ctrl)
 > +{
-> +       struct device *dev = &mdiodev->dev;
-> +       struct regmap_field *led_start;
-> +       struct regmap *map;
-> +       int err;
+> +       struct rtl8231_function *function;
+> +       const char **group_name;
+> +       unsigned int f_idx;
+> +       unsigned int pin;
 > +
-> +       map = devm_regmap_init_mdio(mdiodev, &rtl8231_mdio_regmap_config);
+> +       ctrl->nfunctions = ARRAY_SIZE(rtl8231_pin_function_names);
+> +       ctrl->functions = devm_kcalloc(dev, ctrl->nfunctions, sizeof(*ctrl->functions), GFP_KERNEL);
+> +       if (IS_ERR(ctrl->functions)) {
 
-> +
+Wrong.
 
-Redundant blank line.
 
-> +       if (IS_ERR(map)) {
-> +               dev_err(dev, "failed to init regmap\n");
-> +               return PTR_ERR(map);
+> +               dev_err(dev, "failed to allocate pin function descriptors\n");
+
+Noisy message, user space will print the similar.
+
+> +               return PTR_ERR(ctrl->functions);
 > +       }
 > +
-> +       led_start = devm_regmap_field_alloc(dev, map, RTL8231_FIELD_LED_START);
-> +       if (IS_ERR(led_start))
-> +               return PTR_ERR(led_start);
+> +       for (f_idx = 0; f_idx < ctrl->nfunctions; f_idx++) {
+> +               function = &ctrl->functions[f_idx];
+> +               function->name = rtl8231_pin_function_names[f_idx];
 > +
-> +       dev_set_drvdata(dev, led_start);
+> +               for (pin = 0; pin < ctrl->pctl_desc.npins; pin++)
+> +                       if (rtl8231_pins[pin].functions & BIT(f_idx))
+> +                               function->ngroups++;
 > +
-> +       mdiodev->reset_gpio = gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> +       device_property_read_u32(dev, "reset-assert-delay", &mdiodev->reset_assert_delay);
-> +       device_property_read_u32(dev, "reset-deassert-delay", &mdiodev->reset_deassert_delay);
-> +
-> +       err = rtl8231_init(dev, map);
-> +       if (err)
+> +               function->groups = devm_kcalloc(dev, function->ngroups,
+> +                       sizeof(*function->groups), GFP_KERNEL);
 
-Resource leakage.
-
-> +               return err;
-> +
-> +       /* LED_START enables power to output pins, and starts the LED engine */
-> +       regmap_field_write(led_start, 1);
-
-> +       return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, rtl8231_cells,
-> +               ARRAY_SIZE(rtl8231_cells), NULL, 0, NULL);
+> +               if (IS_ERR(function->groups)) {
+> +                       dev_err(dev, "failed to allocate pin function group names\n");
+> +                       return PTR_ERR(function->groups);
+> +               }
 
 Ditto.
 
+> +               group_name = function->groups;
+> +               for (pin = 0; pin < ctrl->pctl_desc.npins; pin++)
+> +                       if (rtl8231_pins[pin].functions & BIT(f_idx))
+> +                               *group_name++ = rtl8231_pins[pin].name;
+> +       }
+> +
+> +       return 0;
 > +}
+> +
+> +static int rtl8231_pinctrl_init(struct device *dev, struct rtl8231_pin_ctrl *ctrl)
+> +{
+> +       struct pinctrl_dev *pctl;
+> +       struct pinctrl_pin_desc *pins;
+> +       unsigned int pin;
 
-...
+> +       int err = 0;
 
-> +#ifdef CONFIG_PM
+Check entire series for unnecessary assignments.They
 
-Replace this with __maybe_unused attribute.
+> +
+> +       ctrl->pctl_desc.name = "rtl8231-pinctrl",
+> +       ctrl->pctl_desc.owner = THIS_MODULE,
+> +       ctrl->pctl_desc.pctlops = &rtl8231_pinctrl_ops,
+> +       ctrl->pctl_desc.pmxops = &rtl8231_pinmux_ops,
+> +
+> +       ctrl->pctl_desc.npins = ARRAY_SIZE(rtl8231_pins);
+> +       pins = devm_kcalloc(dev, ctrl->pctl_desc.npins, sizeof(*pins), GFP_KERNEL);
+> +       if (IS_ERR(pins)) {
+> +               dev_err(dev, "failed to allocate pin descriptors\n");
+> +               return PTR_ERR(pins);
+> +       }
 
+Ditto.
 
-> +#define RTL8231_PM_OPS (&rtl8231_pm_ops)
-
-> +#else
-> +#define RTL8231_PM_OPS NULL
-> +#endif /* CONFIG_PM */
-
-...
-
-> +static const struct of_device_id rtl8231_of_match[] = {
-> +       { .compatible = "realtek,rtl8231" },
-> +       {},
-
-No need to have a comma for the terminator line.
-
+> +       ctrl->pctl_desc.pins = pins;
+> +
+> +       for (pin = 0; pin < ctrl->pctl_desc.npins; pin++) {
+> +               pins[pin].number = rtl8231_pins[pin].number;
+> +               pins[pin].name = rtl8231_pins[pin].name;
+> +       }
+> +
+> +       err = rtl8231_pinctrl_init_functions(dev, ctrl);
+> +       if (err)
+> +               return err;
+> +
+> +       err = devm_pinctrl_register_and_init(dev->parent, &ctrl->pctl_desc, ctrl, &pctl);
+> +       if (err) {
+> +               dev_err(dev, "failed to register pin controller\n");
+> +               return err;
+> +       }
+> +
+> +       err = pinctrl_enable(pctl);
+> +       if (err)
+> +               dev_err(dev, "failed to enable pin controller\n");
+> +
+> +       return err;
+> +}
+> +
+> +/*
+> + * GPIO controller functionality
+> + */
+> +static int rtl8231_gpio_reg_mask_xlate(struct gpio_regmap *gpio, unsigned int base,
+> +       unsigned int offset, unsigned int *reg, unsigned int *mask)
+> +{
+> +       unsigned int pin_mask = BIT(offset % RTL8231_BITS_VAL);
+> +
+> +       if (base == RTL8231_REG_GPIO_DATA0 || offset < 32) {
+> +               *reg = base + offset / RTL8231_BITS_VAL;
+> +               *mask = pin_mask;
+> +       } else if (base == RTL8231_REG_GPIO_DIR0) {
+> +               *reg = RTL8231_REG_PIN_HI_CFG;
+> +               *mask = FIELD_PREP(RTL8231_PIN_HI_CFG_DIR_MASK, pin_mask);
+> +       } else {
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int rtl8231_pinctrl_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct rtl8231_pin_ctrl *ctrl;
+> +       struct gpio_regmap_config gpio_cfg = {};
+> +       struct gpio_regmap *gr;
+> +       int err;
+> +
+> +       ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
+> +       if (!ctrl)
+> +               return -ENOMEM;
+> +
+> +       ctrl->map = dev_get_regmap(dev->parent, NULL);
+> +       if (IS_ERR_OR_NULL(ctrl->map)) {
+> +               dev_err(dev, "failed to retrieve regmap\n");
+> +               if (!ctrl->map)
+> +                       return -ENODEV;
+> +               else
+> +                       return PTR_ERR(ctrl->map);
+> +       }
+> +
+> +       err = rtl8231_pinctrl_init(dev, ctrl);
+> +       if (err)
+> +               return err;
+> +
+> +       gpio_cfg.regmap = ctrl->map;
+> +       gpio_cfg.parent = dev->parent;
+> +       gpio_cfg.ngpio = RTL8231_NUM_GPIOS;
+> +       gpio_cfg.ngpio_per_reg = RTL8231_BITS_VAL;
+> +
+> +       gpio_cfg.reg_dat_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DATA0);
+> +       gpio_cfg.reg_set_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DATA0);
+> +       gpio_cfg.reg_dir_in_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DIR0);
+> +       gpio_cfg.no_set_on_input = true;
+> +
+> +       gpio_cfg.reg_mask_xlate = rtl8231_gpio_reg_mask_xlate;
+> +
+> +       gr = devm_gpio_regmap_register(dev, &gpio_cfg);
+> +       if (IS_ERR(gr)) {
+> +               dev_err(dev, "failed to register gpio controller\n");
+> +               return PTR_ERR(gr);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver rtl8231_pinctrl_driver = {
+> +       .driver = {
+> +               .name = "rtl8231-pinctrl",
+> +       },
+> +       .probe = rtl8231_pinctrl_probe,
 > +};
+> +module_platform_driver(rtl8231_pinctrl_driver);
+> +
+> +MODULE_AUTHOR("Sander Vanheule <sander@svanheule.net>");
+> +MODULE_DESCRIPTION("Realtek RTL8231 pin control and GPIO support");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.31.1
+>
+
 
 -- 
 With Best Regards,
