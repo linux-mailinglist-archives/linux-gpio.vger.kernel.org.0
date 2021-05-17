@@ -2,114 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22EAE3861A3
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 22:00:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63195386503
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 May 2021 22:02:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237105AbhEQUB3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 16:01:29 -0400
-Received: from smtp-35.italiaonline.it ([213.209.10.35]:58004 "EHLO libero.it"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S237019AbhEQUB2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 17 May 2021 16:01:28 -0400
-Received: from passgat-Modern-14-A10M.homenet.telecomitalia.it
- ([95.244.94.151])
-        by smtp-35.iol.local with ESMTPA
-        id ijPJlPskepK9wijPOlg8KC; Mon, 17 May 2021 22:00:11 +0200
-x-libjamoibt: 1601
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=libero.it; s=s2021;
-        t=1621281611; bh=CpKSAgnDhnImU3h7WHVy/pL3FGdxgW6Xn2Btiu3BZtk=;
-        h=From;
-        b=JstouEqnutiKDR803YxYAyHmN1QcDjFD28nyfBRLhD4HIv11sSRrbXO8JFC+HLDiG
-         kzOMrBtUQUQYbVCFtYG+lo+zh9vCWgVLnXMC7RE2qOpVSpglVKnwA1xxye5H7s2lsh
-         Gzt1bw6QwHbkq7LPytGMiIaJ76/fevk6C2dzPezaGIieExsDVdIzVHnK8HpeYjkMq/
-         iujd2wPVGespr7S1Y78IkdkMhjm+vA3KkCxDBxfbUT9hxdpEN17xe1zz2ITFptYbYR
-         ymrJu9B33Xtw7R1XswDh1abg6ExmukMsBrkEXwpowis+Kc5D7NgzGdmDqY+n63VeBO
-         bNDbL7YLsUOnA==
-X-CNFS-Analysis: v=2.4 cv=A9ipg4aG c=1 sm=1 tr=0 ts=60a2cb4b cx=a_exe
- a=ugxisoNCKEotYwafST++Mw==:117 a=ugxisoNCKEotYwafST++Mw==:17 a=sozttTNsAAAA:8
- a=hlofsd_XEJyvNm5uEDwA:9 a=aeg5Gbbo78KNqacMgKqU:22
-From:   Dario Binacchi <dariobin@libero.it>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dario Binacchi <dariobin@libero.it>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        id S237289AbhEQUDe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 16:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236917AbhEQUDe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 16:03:34 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A751FC061573;
+        Mon, 17 May 2021 13:02:16 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id q2so5699559pfh.13;
+        Mon, 17 May 2021 13:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IVIyPTZ6w0h3Ret1w2E/pdnyUaIbFCtkLZj+hGFpk4s=;
+        b=X/xKCa7K0LvTnwJIilIzC4PbSZ3Jyv4ccdvzbTeTE1jp0CSwvEaJQoa1aIQ4US9wBD
+         5ZtZlpz4h1vu4DczOH0/dLUQGjRsDmU2T/CBSvqNcJTN1dU6oOfQi/1kdHfyIHPloic4
+         z4OURolq6UZCMn5Y3kZx9BjxlS8+eKZFJ3FyHhqtu6vnRC6riDhJbJngl2CcLUL1ezJi
+         YJfU0bHExh3fUT7JbgrX4jaswiDvuYPqx+IX934+03pywURe+kHy907p0RAlmWJFXd5h
+         QTiwfoA90u9TXBs2NOIozH0xeippZ3xxIKSkh5Jj8cbgvCZotga6xoR/OCkBMxGMk5Ro
+         crNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IVIyPTZ6w0h3Ret1w2E/pdnyUaIbFCtkLZj+hGFpk4s=;
+        b=joxXkp8WJzcTIP72NbLwKT9UuNy6no86l5jXXfQa7RnaQRT+5QOfkeHUPCj2OL29DW
+         dhNIEGSAae96agA6nO3n4OL/houNj9sYU9BOOtuZDrYDLg0YaTh51RTGj7VlXFdd/Ssp
+         rK1B4eORQ1Ug/NQSrOvTOdO5FzguhI6uyiVIFpDtXifnxuZDjA4cnUf0EoeXGaAFIYPM
+         WEL0UXxQ3PXJ07pmP8/TNBSEuBMxGPWHao2VJEggtyXNp8apeNbUiwvW6rCvGmJ9coIk
+         6jVwONWpbY2bSnBLDJJORL4CAq3rhlpNyhE7Ji1/pOLsN8bHMvk5Quktpd0wzsmIwaqR
+         eMyQ==
+X-Gm-Message-State: AOAM5303MBDunb9eW+9FIrj2oee8A3mLnLhmpBipnUfbUP5aKTOk6eth
+        x9SQt+Xr0b8oPBaKJyxHXVE+B8I2PoOby8clWl8=
+X-Google-Smtp-Source: ABdhPJyKujI6A2w3oQvR+CotMActckhkR3dfYYFSs/2V4ykIDzqEZ/woudBpJQNuYj/9hQYzcMDzkPsIbMmhXKJZ01E=
+X-Received: by 2002:a05:6a00:1591:b029:2d9:369a:b846 with SMTP id
+ u17-20020a056a001591b02902d9369ab846mr1390908pfk.40.1621281736214; Mon, 17
+ May 2021 13:02:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210516135531.2203-1-dariobin@libero.it> <20210516135531.2203-2-dariobin@libero.it>
+In-Reply-To: <20210516135531.2203-2-dariobin@libero.it>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 17 May 2021 23:02:00 +0300
+Message-ID: <CAHp75Vd8875hRNk1JK6gkmfxjqxBSu4cRNE1zJt9TyEW7TvsMg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: core: configure pinmux from pins debug file
+To:     Dario Binacchi <dariobin@libero.it>,
+        Drew Fustini <drew@beagleboard.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH v2 2/2] pinctrl: single: set pinmux from pins debug file
-Date:   Mon, 17 May 2021 22:00:02 +0200
-Message-Id: <20210517200002.6316-3-dariobin@libero.it>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210517200002.6316-1-dariobin@libero.it>
-References: <20210517200002.6316-1-dariobin@libero.it>
-X-CMAE-Envelope: MS4xfFli/etZ/wE7L2UP5E0I4DUHCnc++t8yiL/HFQ5l9ZzB5Qp1dwXk3nPydVRszxe3HqI18CFV6eVjElNdcJNRGkbW3hCuntRHl0xDKuN4yDC2oN2ir9Iz
- a/KM8ZQG0CHvsyeSDoJ/+56aqClDlrfEAyrQ5dTojO3Px4iYzRGCaXpUYgbyE294IHWdFzVWWotJlqIXkYb2U7rmY904C9UUA1FGhKRriK/IM40TKyjDA1PM
- yhcCsm7yO6j9g79WQLEBmXsnu0pFz9kxKzY2lPRhLdBV6kG02utv8/KqgKszOYoNobWgBu2X2ZB+2tKXbKHbKOK0pY+cKeF2jhc1DnOO7g8XuTdQBqZ9AkIa
- WBcoztwBg/oXWhK3+lOPrrw6lVXX93O8u7ozYEsI8B1xWUyHX061TPTEy4ZNQpZ/3D84Mmf6FcioPkMluKM3ybuL+Qq56mdy/su6P1XmEWMvY4mLBBVmNjc6
- q6wzQTqXcY0h+ZL1QXifRDXnMmja5UEz7LjLCw==
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-As described in section 9.1 of the TI reference manual for AM335x [1],
-"For writing to the control module registers, the MPU will need to be in
-privileged mode of operation and writes will not work from user mode".
-By adding the pin_dbg_set helper to pcs_pinctrl_ops it will be possible
-to write these registers from the pins debug:
+On Sun, May 16, 2021 at 7:43 PM Dario Binacchi <dariobin@libero.it> wrote:
+>
+> The MPUs of some architectures (e.g AM335x) must be in privileged
+> operating mode to write on the pinmux
 
-cd /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/
-echo <pin-number> <reg-value> >pins
+pinmux is not pin configuration. You need to rethink the approach.
 
-[1] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+> registers. In such cases, where
+> writes will not work from user space, now it can be done from the pins
+> debug file if the platform driver exports the pin_dbg_set() helper among
+> the registered operations.
 
-Signed-off-by: Dario Binacchi <dariobin@libero.it>
+Drew, is it similar to what you are trying to achieve?
 
----
+...
 
-Changes in v2:
-- Remove CONFIG_SOC_AM33XX dependency.
+> +static ssize_t pinctrl_pins_write(struct file *file,
+> +                                 const char __user *user_buf, size_t count,
+> +                                 loff_t *ppos)
+> +{
+> +       struct seq_file *s = file->private_data;
+> +       struct pinctrl_dev *pctldev = s->private;
+> +       const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+> +       char buf[32];
+> +       char *c = &buf[0];
+> +       char *token;
+> +       int ret, buf_size;
+> +       unsigned int i, pin;
+> +
+> +       if (!ops->pin_dbg_set)
+> +               return -EFAULT;
+> +
+> +       /* Get userspace string and assure termination */
+> +       buf_size = min(count, sizeof(buf) - 1);
+> +       if (copy_from_user(buf, user_buf, buf_size))
+> +               return -EFAULT;
+> +
+> +       buf[buf_size] = 0;
 
- drivers/pinctrl/pinctrl-single.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Can't you use strncpy_from_user() ?
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index 2c9c9835f375..8497414e3384 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -313,6 +313,23 @@ static void pcs_pin_dbg_show(struct pinctrl_dev *pctldev,
- 	seq_printf(s, "%zx %08x %s ", pa, val, DRIVER_NAME);
- }
- 
-+static int pcs_pin_dbg_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+			   char *buf)
-+{
-+	struct pcs_device *pcs;
-+	unsigned int val, mux_bytes;
-+
-+	buf = skip_spaces(buf);
-+	if (kstrtouint(buf, 0, &val))
-+		return -EINVAL;
-+
-+	pcs = pinctrl_dev_get_drvdata(pctldev);
-+
-+	mux_bytes = pcs->width / BITS_PER_BYTE;
-+	pcs->write(val, pcs->base + pin * mux_bytes);
-+	return 0;
-+}
-+
- static void pcs_dt_free_map(struct pinctrl_dev *pctldev,
- 				struct pinctrl_map *map, unsigned num_maps)
- {
-@@ -331,6 +348,9 @@ static const struct pinctrl_ops pcs_pinctrl_ops = {
- 	.get_group_name = pinctrl_generic_get_group_name,
- 	.get_group_pins = pinctrl_generic_get_group_pins,
- 	.pin_dbg_show = pcs_pin_dbg_show,
-+#if IS_ENABLED(CONFIG_DEVMEM)
-+	.pin_dbg_set = pcs_pin_dbg_set,
-+#endif
- 	.dt_node_to_map = pcs_dt_node_to_map,
- 	.dt_free_map = pcs_dt_free_map,
- };
+
+> +       token = strsep(&c, " ");
+
+> +       if (kstrtouint(token, 0, &pin))
+> +               return -EINVAL;
+
+Don't shadow an error code.
+
+> +       for (i = 0; i < pctldev->desc->npins; i++) {
+> +               if (pin != pctldev->desc->pins[i].number)
+> +                       continue;
+
+Hmm... I don't get this. Why is it needed?
+
+> +               ret = ops->pin_dbg_set(pctldev, pin, c);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               return count;
+> +       }
+> +
+> +       return -EINVAL;
+> +}
+
+...
+
+> -       debugfs_create_file("pins", 0444,
+> +       debugfs_create_file("pins", 0644,
+>                             device_root, pctldev, &pinctrl_pins_fops);
+
+Why is it in this file?
+
+
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
