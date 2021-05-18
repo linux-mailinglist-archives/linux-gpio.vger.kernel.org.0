@@ -2,108 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEEE7386D57
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 May 2021 00:57:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20166386E79
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 May 2021 02:49:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238887AbhEQW6f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 18:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238509AbhEQW6e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 18:58:34 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A6FC061573
-        for <linux-gpio@vger.kernel.org>; Mon, 17 May 2021 15:57:16 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id cu11-20020a17090afa8bb029015d5d5d2175so436364pjb.3
-        for <linux-gpio@vger.kernel.org>; Mon, 17 May 2021 15:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6onhnC7x1T1SJbKsTWGvvMOggtzE2dsg7emuHSDAOKI=;
-        b=TsDx9hQPgJblA+EiIU2r2jtsDd8T6kxBsz8nr41hSHKTGD4QBfKQ6Rc4vqgOXhHfAQ
-         uu/8+FUXbnE3cTyQKUpwlpTTnIxkVi6hqu025cmd5G0zjPSK/CGFwcQcZrxyVQsOlZxM
-         IFCqn+TpO6XA/YyA2KWEvQHgeouVI6Mh7jf9wS+7FiZ5khxgxh2guGFniUsdWYHzzGjP
-         EZVU95vhsFwqSQsO1tYQ/+Xk+JJgYiLIDn/P1WKFTgCYIPtaF2KuTvZRFec3EYP6Qxrp
-         gQ1LMdBkf9pfYYr2WoJB46mPBFHrS/ymNYsnDm45I7f2MYLUeycFpC5/w9T/Of0Xrtnu
-         ndPQ==
+        id S1345158AbhERAuy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 20:50:54 -0400
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:34744 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235151AbhERAux (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 20:50:53 -0400
+Received: by mail-ot1-f41.google.com with SMTP id u25-20020a0568302319b02902ac3d54c25eso7231794ote.1;
+        Mon, 17 May 2021 17:49:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6onhnC7x1T1SJbKsTWGvvMOggtzE2dsg7emuHSDAOKI=;
-        b=OO2bEFrzw8L38XYAqICR50GlBqzMSYWU4mT1oe3nK8YHSBdGc/anpA/PtMrtzQHmTq
-         Kr8gnRt0CB0vbRvO5HfZU/vyimp5Xne+PQBZNZdInLR2SEftrAyof1vL6dEsgB5PD+VO
-         zxDZRxkyWHybsbi7lSh2VBYKliNCORWq5dD2mCN9SaEPEaZr0r4S4otOD0iG8qZ6lOBe
-         kEps+ogCvnfXkr/1ItQ6lcFEQImuKEU7hqQuToPIfx7TZah2z0o2DhUyWkLYf10lq+Ex
-         vZST31xrK92GweTghmMqnA0vQpaCm2ux6RxgsLSFpC7s4Gl4K2B3cXkvQ9KztoxOGNsE
-         uafw==
-X-Gm-Message-State: AOAM531aygoPW+8ndnOrzYCtKI8xEe+YMmASKfxB3YeitadN0Asdk23E
-        4gVs47h0lQwAXvKQdrVyRFO2kQ==
-X-Google-Smtp-Source: ABdhPJw3tP45bSqKwVdGo/U+SU8KxdHtPliGOYoyYwPfNmuu6RFQbhte2iwYzrfUlchdH5ZaRW4y4g==
-X-Received: by 2002:a17:902:a40e:b029:e9:7253:8198 with SMTP id p14-20020a170902a40eb02900e972538198mr924491plq.82.1621292236416;
-        Mon, 17 May 2021 15:57:16 -0700 (PDT)
-Received: from x1 ([2601:1c0:4701:ae70:aa60:5ddf:388a:f8f7])
-        by smtp.gmail.com with ESMTPSA id x90sm343184pjj.55.2021.05.17.15.57.15
+        bh=ajl7ACpQFyzNHdoWdNKqqUVobTElm0Nzp/Lk1+Ni+0w=;
+        b=fSOl3Ak94GPopFlK5GtgxsPEhUHRaxLQy23pTVxwOUqG7rtkk6ktdRIhHTWTj6xakY
+         LMjRZpRKS9uCt1FvktTCRbHZ7JVA22sOG3oWIQ7Y0GYeaEd5JNFZHrtPgavxqW+JCvC4
+         oTfuygXkL84S8daBMfld5eIYuaNXhY75Ppk9sUfd9kO3WRjYEAZR5lqt/KJsDJi18vHT
+         WywtyKf2da5uG10mcrrt/RTA5qBGvrolGIT8bLqPh02zEhQTpICY1dHcFcSTZv6X10Yl
+         q1X2tdRTaaJJawTBUlptEGOp7penFoIFiBqaf0MOrBikSXMBSSWISJajcUXSYduKcCR0
+         FSHQ==
+X-Gm-Message-State: AOAM531GdVfOI/4vTmGo6FyqdRjOGuScy7czW3YCkfu1h5RxJGQAuYzF
+        5KgTh6+/pCLWAlKb2sl8jw==
+X-Google-Smtp-Source: ABdhPJxkMV9E1ZRWhofvj90zd3Oz58ftaKwqAlR1fwPYjIjwdVt3ZV4UwH6tixzbcfHIX6hiLWLK3Q==
+X-Received: by 2002:a05:6830:17d5:: with SMTP id p21mr1930362ota.318.1621298975433;
+        Mon, 17 May 2021 17:49:35 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 9sm3077807oie.51.2021.05.17.17.49.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 May 2021 15:57:15 -0700 (PDT)
-Date:   Mon, 17 May 2021 15:57:13 -0700
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Dario Binacchi <dariobin@libero.it>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mon, 17 May 2021 17:49:34 -0700 (PDT)
+Received: (nullmailer pid 3539257 invoked by uid 1000);
+        Tue, 18 May 2021 00:49:34 -0000
+Date:   Mon, 17 May 2021 19:49:33 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     satya priya <skakit@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, kgunda@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 1/2] pinctrl: core: configure pinmux from pins debug file
-Message-ID: <20210517225713.GB2936462@x1>
-References: <20210516135531.2203-1-dariobin@libero.it>
- <20210516135531.2203-2-dariobin@libero.it>
- <CAHp75Vd8875hRNk1JK6gkmfxjqxBSu4cRNE1zJt9TyEW7TvsMg@mail.gmail.com>
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V3 2/3] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm7325
+ support
+Message-ID: <20210518004933.GA3539204@robh.at.kernel.org>
+References: <1620817988-18809-1-git-send-email-skakit@codeaurora.org>
+ <1620817988-18809-3-git-send-email-skakit@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vd8875hRNk1JK6gkmfxjqxBSu4cRNE1zJt9TyEW7TvsMg@mail.gmail.com>
+In-Reply-To: <1620817988-18809-3-git-send-email-skakit@codeaurora.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 17, 2021 at 11:02:00PM +0300, Andy Shevchenko wrote:
-> On Sun, May 16, 2021 at 7:43 PM Dario Binacchi <dariobin@libero.it> wrote:
-> >
-> > The MPUs of some architectures (e.g AM335x) must be in privileged
-> > operating mode to write on the pinmux
+On Wed, 12 May 2021 16:43:07 +0530, satya priya wrote:
+> Add compatible string for PM7325 pmic GPIO support to the
+> Qualcomm PMIC GPIO binding.
 > 
-> pinmux is not pin configuration. You need to rethink the approach.
+> Signed-off-by: satya priya <skakit@codeaurora.org>
+> ---
+> Changes in V2:
+>  - Placed this patch before conversion patch and updated commit text
+>    to be more clear.
 > 
-> > registers. In such cases, where
-> > writes will not work from user space, now it can be done from the pins
-> > debug file if the platform driver exports the pin_dbg_set() helper among
-> > the registered operations.
+> Changes in V3:
+>  - Rebased the patch and added pm7325 as others are already present.
+>    updated the commit text accordingly.
 > 
-> Drew, is it similar to what you are trying to achieve?
+>  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Yes, I would say this similar to what I was trying to accomplish: being
-able to change contents of conf_<module>_<pin> register [table 9-60]
-from userspace.
-
-However, I was specifically looking to change bits 2:0 which is mux
-mode. My motivation was to allow BeagleBone users to easily switch
-between pin functions on the expansion headers during runtime to make
-rapid prototyping with a breadboard easier (such as changing header pin
-from GPIO to SPI mode). Most of the header pins have 7 different modes.
-
-Ultimately, the solution I settled on with feedback from this list was
-to create pinmux-select debugfs file that can activate desired fucntion:
-6199f6becc86 ("pinctrl: pinmux: Add pinmux-select debugfs file")
-
-Bits 6:3 are related to what this subsystem would refer to as pin conf
-such as slew, input enable and bias. Thus it might make sense to expose
-something like a select-pinconf file to activate pin conf settings from
-userspace. This would require using 'pinconf-single' compatible.
-
-I fixed pinctrl-single bug regarding pinconf last year so it should be
-possible to use 'pinconf-single' compatible for the am33xx_pinmux node:
-f46fe79ff1b6 ("pinctrl-single: fix pcs_parse_pinconf() return value")
-
-Thanks,
-Drew
+Acked-by: Rob Herring <robh@kernel.org>
