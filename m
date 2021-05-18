@@ -2,75 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 541B938833F
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 01:41:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC02F388353
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 01:50:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235482AbhERXmf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 May 2021 19:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38902 "EHLO
+        id S231539AbhERXwK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 May 2021 19:52:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234681AbhERXme (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 May 2021 19:42:34 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B911CC061573
-        for <linux-gpio@vger.kernel.org>; Tue, 18 May 2021 16:41:13 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id w7so39246lji.6
-        for <linux-gpio@vger.kernel.org>; Tue, 18 May 2021 16:41:13 -0700 (PDT)
+        with ESMTP id S231148AbhERXwK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 May 2021 19:52:10 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEEBC061760
+        for <linux-gpio@vger.kernel.org>; Tue, 18 May 2021 16:50:51 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id z13so16329846lft.1
+        for <linux-gpio@vger.kernel.org>; Tue, 18 May 2021 16:50:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AktLZrGpYgV8H67Vy+ElEpmR7sF/guI5YPVEh+qgC1s=;
-        b=VI4tvm90SOABVqSHLlEITyFRSTGVQvmk72TPZQiT547coPipBUixu4qnfqMb7HkmSb
-         DmK2/yJ/UmG0BYFOQHVtgS24c8/y/quzeW5Fi+sCKFK87qzHmGeK/sBOCr5M0vpC3wHN
-         Fs+Zf4zH5qPw3cYDOxzWWWwkDerQLE7hMmc9vzgTRjSH3km3yENmZQ21VvYiJ0V/yzrZ
-         k/jyAX9xmyHpkiF6P2s8QDFZCz9cxHqjTMbePha6Ui7U8hGKzlvOlzjNp9U6qN0VaRg8
-         QrJ8fBLkeomp048ykk5CobNdieoH3GJoNAgfsD+IyFhYKxjidYwnitJAjpDdrMMhdAtp
-         RSRg==
+        bh=Or2R4Rgp1bMsUJI5I59/6T+1pBzEGWKIXn0WeYpuT0M=;
+        b=IGtBmndmCZfB4uX/YyPwXljP4djbXMsu0NxAogv7ai7K9ZHTkAW4pcHaN2Uw2RDcfP
+         svXenHwGWnTf7zcrNk0dqZroLnO/bOW9vzubw5Xb1kDwWmxiqLZJQxEmuX/toYHF+X2n
+         Ycnua+2Jt5PeaCP6XC32zNyKYEetxQ6K8QxEyZ+6wZsZcs1PZAPfhkcQ7xzp5WxlOVLe
+         b91pu1s36ZAtwk2pistrQM9PnfY0Hlxc8JMkzrmNavxn/U0aER5DgnmgVHwt0300zp8y
+         Q2I6lyWo/k248pgBHwv71GBdfHuXpoif5Ym4IqZaI2C2VzbG8wtFZF2GJTq7E40a9/sx
+         SZpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AktLZrGpYgV8H67Vy+ElEpmR7sF/guI5YPVEh+qgC1s=;
-        b=Z1JigB+6rKc0kOPrlzNCmygLtFdYgaeWmVSPCSyNb1jDPFZPVhIosTfyGN2a6YpDcD
-         1ZInwH+s5cnnT7dYVAUeoEjEB1k1TpAlkNwf8NECH4ve/4oHxZDKojDQ6ucxTuqDA6cK
-         fPGBSYqbdZ0uJtFgQBbl++99DLZOapNFF3zDXgnBXHLxUy6Pu9bIaf6xH4X4sNDGf7kR
-         ht7QGUdKODBR8u8HAY5xEBT8cBHxoNblCmcH7vAqlNLi3nSRcIDtFngOrgS5UW3nzN7s
-         k7biDus145z/+DIno5BC2bI6yhaGqwMdIZ+5kvj1YjtxC/80QnmT93/kYYWfhlTVXC+s
-         lZZQ==
-X-Gm-Message-State: AOAM533c6CGJrOwbG+96FEbG0NuiW3qbvcsZQCo0PIqlWsHQr4Irl/8r
-        CEfml0xcFgYBSrz5+PrbJTp5hWaP96FKNcP0mn5Gnw==
-X-Google-Smtp-Source: ABdhPJyEEWE3b4+6Un92qL+0uvA2Tw0R5aXwivUPrWCeMfFADssWM/8q5ALNjXZvRF/YuuyK/mjAG3EK3fmmfBXsEAI=
-X-Received: by 2002:a2e:814d:: with SMTP id t13mr5819007ljg.467.1621381272289;
- Tue, 18 May 2021 16:41:12 -0700 (PDT)
+        bh=Or2R4Rgp1bMsUJI5I59/6T+1pBzEGWKIXn0WeYpuT0M=;
+        b=LfED50Zpd39A2gv7+utsF8nP5IirIoVKYE3h2wXIMAbrUvNMwnxJhEa2HTBHzraGUu
+         jrHgvbN4QsRztxZ9PKNwOyRB5FB1r7xVvwx2F/cls5GZB1td93GpPa6MhpwiX1V1+1hF
+         4E+kWmgctPGLx782fqa+l0uNI6bKh+YFw/LoukUKzHdBhQy7Pbmj+7KLsbzguGbccRwr
+         cr9/INv8PIWgDi/FVoWMHjCYVEBldWFSv8gOwGc/S4J16sdDGTmXQSZGJAtLfiiBYVJ3
+         mV+FlBJC6wg/hHHaGS++gfKfv/TLm/TsDFTyr43O36DCJAOEljpneQM3Cl99nmCF+zZm
+         foHQ==
+X-Gm-Message-State: AOAM530Bc/Wiev+ZLjSLRR2+Q5fyJb0JAbtt/R4KZHgEbjXf31NsRXUJ
+        zFGjDcvVkib8xAxDe16eopZV+A9iWIovApg2FNPirA==
+X-Google-Smtp-Source: ABdhPJzmiFR7Y8glCvCrYZeMmfzFV7Wqr+nA7KGRL/dsYpUpI2qFsGj6xuY9vsGG6ua8zEMbHkW63HEJbWQmBmFoIA8=
+X-Received: by 2002:a19:a418:: with SMTP id q24mr5701463lfc.649.1621381849628;
+ Tue, 18 May 2021 16:50:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210518083339.23416-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210518083339.23416-1-andriy.shevchenko@linux.intel.com>
+References: <20210514123309.134048-1-tsbogend@alpha.franken.de>
+In-Reply-To: <20210514123309.134048-1-tsbogend@alpha.franken.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 19 May 2021 01:41:01 +0200
-Message-ID: <CACRpkdZXUgORMQXN2RRnPboF=EOBwkuHOWaXX+Xn=k==VVVjgg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] gpiolib: Introduce for_each_gpio_desc_if() macro
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Wed, 19 May 2021 01:50:39 +0200
+Message-ID: <CACRpkdYTor-c2qvE=6YD4A+NmvpLgS3LsOfNpBZ5EdTrDkGgkg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] gpio: Add support for IDT 79RC3243x GPIO controller
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 18, 2021 at 10:33 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Hi Thomas,
 
-> In a few places we are using a loop against all GPIO descriptors
-> with a given flag for a given device. Replace it with a consolidated
-> for_each type of macro.
+thanks for your patch!
+
+I can see this is starting to look really good.
+
+There is one thing that confuses me:
+
+On Fri, May 14, 2021 at 2:33 PM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
+
+> IDT 79RC3243x SoCs integrated a gpio controller, which handles up
+> to 32 gpios. All gpios could be used as an interrupt source.
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> ---
+> Changes in v5:
+(...)
 
-This is great for readability.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> +static int idt_gpio_irq_set_type(struct irq_data *d, unsigned int flow_type)
+> +{
+(...)
+> +       /* hardware only supports level triggered */
+> +       if (sense == IRQ_TYPE_NONE || (sense & IRQ_TYPE_EDGE_BOTH))
+> +               return -EINVAL;
+(...)
+> +       irq_set_handler_locked(d, handle_level_irq);
+
+But:
+
+> +static void idt_gpio_ack(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +       struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
+> +
+> +       writel(~BIT(d->hwirq), ctrl->gpio + IDT_GPIO_ISTAT);
+> +}
+(...)
+> +       .irq_ack = idt_gpio_ack,
+
+Correct me if I'm wrong but I thing .irq_ack() is only called
+from handle_edge_irq ... so never in this case.
+
+Can this ACK just be deleted?
+
+The code in the ACK callback also looks really weird:
+write all bits except for the current IRQ into the status
+register? It's usually the other way around with these
+things. That really makes me suspect it is unused.
 
 Yours,
 Linus Walleij
