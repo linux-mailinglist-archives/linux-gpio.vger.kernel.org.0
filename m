@@ -2,351 +2,253 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56E57386E8F
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 May 2021 02:55:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21FED386F07
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 May 2021 03:19:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345206AbhERA4v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 May 2021 20:56:51 -0400
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:33318 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238397AbhERA4v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 20:56:51 -0400
-Received: by mail-oi1-f173.google.com with SMTP id b25so8269310oic.0;
-        Mon, 17 May 2021 17:55:33 -0700 (PDT)
+        id S237500AbhERBUU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 May 2021 21:20:20 -0400
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:43688 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233019AbhERBUU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 May 2021 21:20:20 -0400
+Received: by mail-ot1-f41.google.com with SMTP id u19-20020a0568302493b02902d61b0d29adso7237646ots.10;
+        Mon, 17 May 2021 18:19:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=wGTUJVaGi2vt0X1DPJ7HK4WSdmnqY5nH6zbfoY0v/ZM=;
-        b=tegbHOriLuSxsgN7gTPAU13b67VS/jUtXrdfGclU3rkz6ev31gYDIkE3DCcFkO72Hl
-         aKWcPLwrjWrX5k2trTR54gSED2FOk29I1lOeDd0VSUUAMy233vzyne5d1oB/DIQmlHvO
-         K3CZoPNWd2c620sjNjcnwa7E+Ga7H4lGUBTnsn9Ce/be7f28l4mMVvVb/iLEhguLwzhO
-         F95+gR2naexqglmlWz4Z2fAq/zx5FiSVwnrKbcTaq7o8LzoE1tkivivhrzE9XpK/v3E0
-         VQ+W11seVWFC9RRc4IGQ6PgWk6VxslpdfaDzHjg1gbA75UE2bFNkc2nHUmC3uduAfHDy
-         syWQ==
-X-Gm-Message-State: AOAM532/C+UiEZ2f+38sGHP+lIoDbxSue6rChKajFTj+K0DLaVdlXx9I
-        f6AVwc9nQ9VniZIvSWXW5drOKdM0/Q==
-X-Google-Smtp-Source: ABdhPJx9y6NYXD/QSwdJQBZpXT3hnfJO77xc5bRiLZ0+Wo1uzpD0xR2XaeaNda9tMrrOGvAC0Q1aWQ==
-X-Received: by 2002:aca:47ca:: with SMTP id u193mr1424602oia.69.1621299332631;
-        Mon, 17 May 2021 17:55:32 -0700 (PDT)
+        bh=8YBfycSTZM5eXxJrQDdNoVunHQ8cvvjZR/bZOnqm4wI=;
+        b=GBBAwh3eaAiGyNDU+gIlhzrPXDdy7xLz9pilHWoPPnEXOMFL/1OdSrRhQEu8/NxmA1
+         rXMa+qJqbKFpkKI7+DbYUNqkMu0RMFAQX+5cP43Ksw5Oa63SJFU4BjggearxIuJOVInL
+         xHsb3Nj1K517AZ+Yr6uaRdHTEGUbzTiBooAAt+WURoeIgA6LDcLR7ja9tH84dCgilwGt
+         FB4uYLP63B8zEQnmWB/Reh9enFh+yFqj14f/Jmpr1qGfTrMFovgJFNO44N5gmDEYn+j8
+         egTC9BGM+jOgR/sKxxN7PESddliKS0yLAaematgbObT71moJfCl81KM6jqBWfy9B/5oD
+         c3MA==
+X-Gm-Message-State: AOAM532GSPBbxvctftmQDxPcBAxsTqyNidLpJWmTCjweZ+4EHx/+1UC3
+        JInN8T96OLfkbCI6X0G8ww==
+X-Google-Smtp-Source: ABdhPJwyn2+Bvltt5aKy/7oS706JXMsz1eSLk8H5Hcjb/jn2TtOh5P9eq0Jl5y7qHcu6PlO45SsFZw==
+X-Received: by 2002:a9d:4505:: with SMTP id w5mr1979413ote.265.1621300742850;
+        Mon, 17 May 2021 18:19:02 -0700 (PDT)
 Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o20sm3385995oos.19.2021.05.17.17.55.31
+        by smtp.gmail.com with ESMTPSA id v79sm3087254oia.14.2021.05.17.18.19.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 May 2021 17:55:32 -0700 (PDT)
-Received: (nullmailer pid 3548426 invoked by uid 1000);
-        Tue, 18 May 2021 00:55:31 -0000
-Date:   Mon, 17 May 2021 19:55:31 -0500
+        Mon, 17 May 2021 18:19:01 -0700 (PDT)
+Received: (nullmailer pid 3585969 invoked by uid 1000);
+        Tue, 18 May 2021 01:19:00 -0000
+Date:   Mon, 17 May 2021 20:19:00 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     satya priya <skakit@codeaurora.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        kgunda@codeaurora.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V3 3/3] dt-bindings: pinctrl: qcom-pmic-gpio: Convert
- qcom pmic gpio bindings to YAML
-Message-ID: <20210518005531.GA3539579@robh.at.kernel.org>
-References: <1620817988-18809-1-git-send-email-skakit@codeaurora.org>
- <1620817988-18809-4-git-send-email-skakit@codeaurora.org>
+To:     Aleksander Jan Bajkowski <olek2@wp.pl>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        john@phrozen.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: stp: convert to json-schema
+Message-ID: <20210518011900.GA3581937@robh.at.kernel.org>
+References: <20210513210340.10466-1-olek2@wp.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1620817988-18809-4-git-send-email-skakit@codeaurora.org>
+In-Reply-To: <20210513210340.10466-1-olek2@wp.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 12, 2021 at 04:43:08PM +0530, satya priya wrote:
-> Convert Qualcomm PMIC GPIO bindings from .txt to .yaml format.
+On Thu, May 13, 2021 at 11:03:39PM +0200, Aleksander Jan Bajkowski wrote:
+> Convert the Lantiq STP Device Tree binding documentation to json-schema.
+> Add the missing pinctrl property.
 > 
-> Signed-off-by: satya priya <skakit@codeaurora.org>
+> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
 > ---
-> Changes in V3:
->  - As per Rob's comments fixed bot erros.
->  - Moved this patch to end of the series so that other patches are not
->    blocked on this.
+>  .../bindings/gpio/gpio-stp-xway.txt           |  42 -------
+>  .../bindings/gpio/gpio-stp-xway.yaml          | 117 ++++++++++++++++++
+>  2 files changed, 117 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
 > 
-> Changes in V4:
->  - As per Rob's comments, added maxItems for reg and interrupts.
->    Added reference of "pinmux-node.yaml" and "pincfg-node.yaml".
->    Made 'additionalProperties' as false.
-> 
->  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 288 ---------------------
->  .../bindings/pinctrl/qcom,pmic-gpio.yaml           | 245 ++++++++++++++++++
->  2 files changed, 245 insertions(+), 288 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
+> deleted file mode 100644
+> index 78458adbf4b7..000000000000
+> --- a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
+> +++ /dev/null
+> @@ -1,42 +0,0 @@
+> -Lantiq SoC Serial To Parallel (STP) GPIO controller
+> -
+> -The Serial To Parallel (STP) is found on MIPS based Lantiq socs. It is a
+> -peripheral controller used to drive external shift register cascades. At most
+> -3 groups of 8 bits can be driven. The hardware is able to allow the DSL modem
+> -to drive the 2 LSBs of the cascade automatically.
+> -
+> -
+> -Required properties:
+> -- compatible : Should be "lantiq,gpio-stp-xway"
+> -- reg : Address and length of the register set for the device
+> -- #gpio-cells : Should be two.  The first cell is the pin number and
+> -  the second cell is used to specify optional parameters (currently
+> -  unused).
+> -- gpio-controller : Marks the device node as a gpio controller.
+> -
+> -Optional properties:
+> -- lantiq,shadow : The default value that we shall assume as already set on the
+> -  shift register cascade.
+> -- lantiq,groups : Set the 3 bit mask to select which of the 3 groups are enabled
+> -  in the shift register cascade.
+> -- lantiq,dsl : The dsl core can control the 2 LSBs of the gpio cascade. This 2 bit
+> -  property can enable this feature.
+> -- lantiq,phy1 : The gphy1 core can control 3 bits of the gpio cascade.
+> -- lantiq,phy2 : The gphy2 core can control 3 bits of the gpio cascade.
+> -- lantiq,rising : use rising instead of falling edge for the shift register
+> -
+> -Example:
+> -
+> -gpio1: stp@e100bb0 {
+> -	compatible = "lantiq,gpio-stp-xway";
+> -	reg = <0xE100BB0 0x40>;
+> -	#gpio-cells = <2>;
+> -	gpio-controller;
+> -
+> -	lantiq,shadow = <0xffff>;
+> -	lantiq,groups = <0x7>;
+> -	lantiq,dsl = <0x3>;
+> -	lantiq,phy1 = <0x7>;
+> -	lantiq,phy2 = <0x7>;
+> -	/* lantiq,rising; */
+> -};
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
 > new file mode 100644
-> index 0000000..85381a0
+> index 000000000000..a36acc98898c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-> @@ -0,0 +1,245 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
+> @@ -0,0 +1,117 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,pmic-gpio.yaml#
+> +$id: http://devicetree.org/schemas/gpio/gpio-stp-xway.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Qualcomm PMIC GPIO block
-> +
-> +maintainers:
-> +  - Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> +title: Lantiq SoC Serial To Parallel (STP) GPIO controller
 > +
 > +description: |
-> +  This binding describes the GPIO block(s) found in the 8xxx series of
-> +  PMIC's from Qualcomm.
+> +  The Serial To Parallel (STP) is found on MIPS based Lantiq socs. It is a
+> +  peripheral controller used to drive external shift register cascades. At most
+> +  3 groups of 8 bits can be driven. The hardware is able to allow the DSL modem
+> +  and Ethernet PHYs to drive some bytes of the cascade automatically.
+> +
+> +maintainers:
+> +  - John Crispin <john@phrozen.org>
 > +
 > +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - qcom,pm8005-gpio
-> +          - qcom,pm8018-gpio
-> +          - qcom,pm8038-gpio
-> +          - qcom,pm8058-gpio
-> +          - qcom,pm8916-gpio
-> +          - qcom,pm8917-gpio
-> +          - qcom,pm8921-gpio
-> +          - qcom,pm8941-gpio
-> +          - qcom,pm8950-gpio
-> +          - qcom,pm8994-gpio
-> +          - qcom,pm8998-gpio
-> +          - qcom,pma8084-gpio
-> +          - qcom,pmi8950-gpio
-> +          - qcom,pmi8994-gpio
-> +          - qcom,pmi8998-gpio
-> +          - qcom,pms405-gpio
-> +          - qcom,pm660-gpio
-> +          - qcom,pm660l-gpio
-> +          - qcom,pm8150-gpio
-> +          - qcom,pm8150b-gpio
-> +          - qcom,pm6150-gpio
-> +          - qcom,pm6150l-gpio
-> +          - qcom,pmx55-gpio
-> +          - qcom,pm7325-gpio
-> +          - qcom,pm8350c-gpio
-> +          - qcom,pmk8350-gpio
-> +          - qcom,pmr735a-gpio
+> +  $nodename:
+> +    pattern: "^stp@[0-9a-f]+$"
+
+gpio@...
+
 > +
-> +      - enum:
-> +          - qcom,spmi-gpio
-> +          - qcom,ssbi-gpio
+> +  compatible:
+> +    const: lantiq,gpio-stp-xway
 > +
 > +  reg:
+> +    description:
+> +      Address and length of the register set for the device.
 > +    maxItems: 1
 > +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 44
+> +  gpio-controller:
+> +    description:
+> +      Marks the device node as a gpio controller.
+> +    type: boolean
 
-Please say something about what the 1-44 interrupts are if you can't 
-define each one.
+Just:
+
+gpio-controller: true
+
+This property already has a type and description.
 
 > +
-> +  '#interrupt-cells':
+> +  "#gpio-cells":
+> +    description:
+> +      The first cell is the pin number and the second cell is used to specify
+> +      consumer flags.
 > +    const: 2
 > +
-> +  interrupt-controller: true
-> +
-> +  gpio-controller: true
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +    description: |
-> +        The first cell will be used to define gpio number and the
-> +        second denotes the flags for this gpio
-> +
-> +  gpio-keys:
-> +    type: object
-> +    properties:
-> +      volume-keys:
-> +        type: object
-> +        anyOf:
-> +          - $ref: "pinmux-node.yaml"
-> +          - $ref: "pincfg-node.yaml"
-> +        properties:
-> +          pins:
-> +            description: |
-> +                List of gpio pins affected by the properties specified in
-> +                this subnode.  Valid pins are
-> +                     - gpio1-gpio4 for pm8005
-> +                     - gpio1-gpio6 for pm8018
-> +                     - gpio1-gpio12 for pm8038
-> +                     - gpio1-gpio40 for pm8058
-> +                     - gpio1-gpio4 for pm8916
-> +                     - gpio1-gpio38 for pm8917
-> +                     - gpio1-gpio44 for pm8921
-> +                     - gpio1-gpio36 for pm8941
-> +                     - gpio1-gpio8 for pm8950 (hole on gpio3)
-> +                     - gpio1-gpio22 for pm8994
-> +                     - gpio1-gpio26 for pm8998
-> +                     - gpio1-gpio22 for pma8084
-> +                     - gpio1-gpio2 for pmi8950
-> +                     - gpio1-gpio10 for pmi8994
-> +                     - gpio1-gpio12 for pms405 (holes on gpio1, gpio9
-> +                                                and gpio10)
-> +                     - gpio1-gpio10 for pm8150 (holes on gpio2, gpio5,
-> +                                                gpio7 and gpio8)
-> +                     - gpio1-gpio12 for pm8150b (holes on gpio3, gpio4
-> +                                                 and gpio7)
-> +                     - gpio1-gpio12 for pm8150l (hole on gpio7)
-> +                     - gpio1-gpio10 for pm6150
-> +                     - gpio1-gpio12 for pm6150l
-> +                     - gpio1-gpio10 for pm7325
-> +                     - gpio1-gpio9 for pm8350c
-> +                     - gpio1-gpio4 for pmk8350
-> +                     - gpio1-gpio4 for pmr735a
-> +
-> +            items:
-> +              pattern: "^gpio([0-9]+)$"
-> +
-> +          function:
-> +            description: |
-> +                Specify the alternative function to be configured for the
-> +                specified pins.
 
-No need to redescribe a common property.
+> +  pinctrl-0:
+> +    description: Should specify pin control groups used for this controller.
+> +
+> +  pinctrl-names:
+> +    const: default
 
-> +            items:
-> +              - enum:
-> +                  - normal
-> +                  - paired
-> +                  - func1
-> +                  - func2
-> +                  - dtest1
-> +                  - dtest2
-> +                  - dtest3
-> +                  - dtest4
-> +                  - func3  # supported by LV/MV GPIO subtypes
-> +                  - func4  # supported by LV/MV GPIO subtypes
-> +
-> +          bias-disable: true
-> +
-> +          bias-pull-down: true
-> +
-> +          bias-pull-up: true
-> +
-> +          qcom,pull-up-strength:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            description: |
-> +                Specifies the strength to use for pull up, if selected.
-> +                Valid values are defined in
-> +                <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-> +                If this property is omitted 30uA strength will be used
-> +                if pull up is selected
-> +
-> +          bias-high-impedance: true
-> +
-> +          input-enable: true
-> +
-> +          output-high: true
-> +
-> +          output-low: true
-> +
-> +          power-source: true
-> +
-> +          qcom,drive-strength:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            description: |
-> +                Selects the drive strength for the specified pins
-> +                Valid drive strength values are defined in
-> +                <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-
-Please define the constraints here.
+You can drop these. They are supported by default.
 
 > +
-> +          drive-push-pull: true
+> +  lantiq,shadow:
+> +    description:
+> +      The default value that we shall assume as already set on the
+> +      shift register cascade.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0x000000
+> +    maximum: 0xffffff
 > +
-> +          drive-open-drain: true
+> +  lantiq,groups:
+> +    description:
+> +      Set the 3 bit mask to select which of the 3 groups are enabled
+> +      in the shift register cascade.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0x0
+> +    maximum: 0x7
 > +
-> +          drive-open-source: true
+> +  lantiq,dsl:
+> +    description:
+> +      The dsl core can control the 2 LSBs of the gpio cascade. This 2 bit
+> +      property can enable this feature.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0x0
+> +    maximum: 0x3
 > +
-> +          qcom,analog-pass:
-> +            $ref: /schemas/types.yaml#/definitions/flag
-> +            description: |
-> +                The specified pins are configured in
-> +                analog-pass-through mode.
+> +  lantiq,phy1:
+> +    description:
+> +      The gphy1 core can control 3 bits of the gpio cascade. Available on
+> +      the xRX200, xRX300 and xRX330 family.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0x0
+> +    maximum: 0x7
 > +
-> +          qcom,atest:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            description: |
-> +                Selects ATEST rail to route to GPIO when it's
-> +                configured in analog-pass-through mode.
-> +            enum: [1 2 3 4]
-
-enum: [ 1, 2, 3, 4 ]
-
+> +  lantiq,phy2:
+> +    description:
+> +      The gphy2 core can control 3 bits of the gpio cascade. Available on
+> +      the xRX200, xRX300 and xRX330 family.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0x0
+> +    maximum: 0x7
 > +
-> +          qcom,dtest-buffer:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            description: |
-> +                Selects DTEST rail to route to GPIO when it's
-> +                configured as digital input.
-> +            enum: [1 2 3 4]
-
-Ditto.
-
-> +
-> +        required:
-> +          - pins
-> +          - function
-> +
-> +        additionalProperties: false
-> +
-> +additionalProperties: false
+> +  lantiq,rising:
+> +    description:
+> +      Use rising instead of falling edge for the shift register.
+> +    type: boolean
 > +
 > +required:
 > +  - compatible
 > +  - reg
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+> +    stp: stp@e100bb0 {
+> +        compatible = "lantiq,gpio-stp-xway";
+> +        reg = <0xE100BB0 0x40>;
+> +        #gpio-cells = <2>;
+> +        gpio-controller;
 > +
-> +    pm8921_gpio: gpio@150 {
-> +      compatible = "qcom,pm8921-gpio", "qcom,ssbi-gpio";
-> +      reg = <0x150 0x160>;
-> +      interrupts = <192 1>, <193 1>, <194 1>,
-> +                   <195 1>, <196 1>, <197 1>,
-> +                   <198 1>, <199 1>, <200 1>,
-> +                   <201 1>, <202 1>, <203 1>,
-> +                   <204 1>, <205 1>, <206 1>,
-> +                   <207 1>, <208 1>, <209 1>,
-> +                   <210 1>, <211 1>, <212 1>,
-> +                   <213 1>, <214 1>, <215 1>,
-> +                   <216 1>, <217 1>, <218 1>,
-> +                   <219 1>, <220 1>, <221 1>,
-> +                   <222 1>, <223 1>, <224 1>,
-> +                   <225 1>, <226 1>, <227 1>,
-> +                   <228 1>, <229 1>, <230 1>,
-> +                   <231 1>, <232 1>, <233 1>,
-> +                   <234 1>, <235 1>;
+> +        pinctrl-0 = <&stp_pins>;
+> +        pinctrl-names = "default";
 > +
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +
-> +      pm8921_gpio_keys: gpio-keys {
-> +        volume-keys {
-> +          pins = "gpio20", "gpio21";
-> +          function = "normal";
-> +
-> +          input-enable;
-> +          bias-pull-up;
-> +          drive-push-pull;
-> +          qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-> +          power-source = <PM8921_GPIO_S4>;
-> +        };
-> +      };
+> +        lantiq,shadow = <0xffffff>;
+> +        lantiq,groups = <0x7>;
+> +        lantiq,dsl = <0x3>;
+> +        lantiq,phy1 = <0x7>;
+> +        lantiq,phy2 = <0x7>;
 > +    };
 > +...
 > -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-> of Code Aurora Forum, hosted by The Linux Foundation
+> 2.30.2
 > 
