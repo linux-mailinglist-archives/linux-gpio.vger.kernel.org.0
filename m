@@ -2,79 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 362623899F2
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 01:38:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4167D389A0A
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 01:44:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbhESXjk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 19:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53576 "EHLO
+        id S230149AbhESXp6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 19:45:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229465AbhESXjh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 19:39:37 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B913C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:38:15 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id v5so17521246ljg.12
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:38:15 -0700 (PDT)
+        with ESMTP id S230142AbhESXp5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 19:45:57 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319A4C061761
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:44:36 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id v8so16660026lft.8
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:44:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=H838k+WFWmKb6rty2DL9eIaIrsjQLnVxjk3iXslgoWI=;
-        b=aGvisEXveeJl32Smasmj3dD6Oc3D9XgGV87Ml8Hngzlt8gSn/f2y6nn0IiVR/bvgIv
-         qXnJBsNTVjzOXZZL1rATfW8/TCGL1zMi9+6C2MzUWoCtZMkWUNgKIFOtWLXU5xlFjKZv
-         zdblZAw24ERKcOB6MKsCHUZuuFyUbew33g315iQ2Gmxb0ehz2v1Ug2rTUUm70tjfluEw
-         YoOsDyFfQSympUSwhvUD5wQunnokDD52x/zDABZgniU59lYt50LSsbIP6aLrdD4YDoig
-         cSqlHIWNbTuiFLAa7Gf7SkiAFS4gapEBVeqMzdT82K8AY31pp8c2nBVazYghs/CBffWY
-         buow==
+        bh=wM5mCzM82gGvfQBTJBh8mxI48tmx7HiqO3orq8kFG8M=;
+        b=LXr5MO+utZ/NzeTIfmH9hyM1jISMq06v3IDaujQpMqszcM0701ZSs8bHFywI/8QidO
+         v1xGKx8SJoezcA76OFolfG4S4Jn+VjCZhpiROe9tgvN52DLstdRQGTVxhkHzM8o3ou8x
+         WVfJrMKMlyMrY/vdNVY4I7bZ44wChX0YqYbOH2hJ7pVkR/6QH+i1HqYwnyqDYyJlBeEr
+         CSKtcqKxo/Orhd8WmGlUnikhiFWAtB3I8/hpMb+S37xlmXZ9ljSAQhxzhaV00xkWZT32
+         TVOtZ2o/F3h6urKDDm5iTanJJSULolcBG+WiTgxH+jSW5a9vINs86YRi8dcJ16eAG2sY
+         bGsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H838k+WFWmKb6rty2DL9eIaIrsjQLnVxjk3iXslgoWI=;
-        b=qijuZSZlwTSGeesUaefxVdlO7LSgs6Wb/k8AAwJEx1aq0uJt7g9PCFUONcIVPcSKXR
-         +P4kT/qOlsBtev29ifWOLmELRW9WEdT/Y5Mm8ezVRdp666UW83ikqP1KcRKhEoisFpKA
-         Dz4kRTL/9cZZ5QKQ8VrA9QNvupMLUuj8puCruWyrHuWN9scLOl9cc+iQ5C3/15vN/cvW
-         RtQqthUhd6x+Q784KgPZxYghpldNrf3ek1Ic6wwxHKyPEceK1eMxjJQVLJjmk8nGklKE
-         fr0yFtXp/THWxwMz/10Ys/1e0OUqFS4xhruZLOU2WhmsH/o604R0OZxLQEJpwfhWylEF
-         AXxw==
-X-Gm-Message-State: AOAM531IogRJRT5SoHtIE4mlphDKMDX+HXW2usIlEBxvWRFqRREmDzyd
-        mEjawhdyt+tmn/BB9av28pzcVrF8KBNjkfVcipwvnA==
-X-Google-Smtp-Source: ABdhPJy9LqmYfXGE9cDr+sBaI3InXu0gfmyltLcrcJdcJWLuUignT9jF0UHKFrvXKxe7T+VneXgAO5CF1iskleK/KVU=
-X-Received: by 2002:a2e:90c7:: with SMTP id o7mr1148791ljg.368.1621467493484;
- Wed, 19 May 2021 16:38:13 -0700 (PDT)
+        bh=wM5mCzM82gGvfQBTJBh8mxI48tmx7HiqO3orq8kFG8M=;
+        b=Hdx2zmtknrDs0yIGoWeJ+mXbv80s09DpNydtYRg+I5DCzzFWd7el+yrPS3qVpCs6Io
+         HHYuHCkmRjcjbls1RcRnq0or1KDeSJ6ixAWb8OqZ7t8LotDJk24l+0vwTzfCHBUaCXkf
+         8XLH3OKOTVH3K/OpwJ/LOyOKcI4+JRMTmZKvkYM5wUGYeBTm/xiOQJJh27WPa+NB7OJf
+         0oihMS4j9np7/8vT35RcZXm4R1M2+t+0MuBLr/zN3SE4GSP18GJrylWIWZzl6OHJJ4DF
+         rlweQPlNTop6YmpZWZ3s3y3rNaX8Tf2ZZ2ve4ooOkzFzWs83Ws/QV92zYhNUYlPw42NM
+         tvRw==
+X-Gm-Message-State: AOAM530tq55iX53xtq2RwsJMwWK8tnACTBhVLvPKyalk5UAYPhwZyyk0
+        joNRQ6uSlB1EJMArP1HAUyj5WEY6WvmENYP1MmVaPA==
+X-Google-Smtp-Source: ABdhPJyo49ywD7L+dYbgOEUpr1fsXLuMJaPoe5Fi+hfuegcGmM5nkNGHmm41Em3f/9YVuOYk2ii36sKpxCMY+Gm9nNM=
+X-Received: by 2002:ac2:544f:: with SMTP id d15mr1339795lfn.465.1621467874570;
+ Wed, 19 May 2021 16:44:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210511085126.4287-1-thunder.leizhen@huawei.com>
-In-Reply-To: <20210511085126.4287-1-thunder.leizhen@huawei.com>
+References: <1620817988-18809-1-git-send-email-skakit@codeaurora.org>
+In-Reply-To: <1620817988-18809-1-git-send-email-skakit@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 May 2021 01:38:02 +0200
-Message-ID: <CACRpkdbunzp4QhcNvHHxVsXiUWC5qsE_gT9HQdgPTyrO14tqgw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] pinctrl: iproc-gpio: Remove redundant error printing
- in iproc_gpio_probe()
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 20 May 2021 01:44:23 +0200
+Message-ID: <CACRpkdYB9QSsj-23EPyX2+T=GLxjMPN8dcRopErSaA0gmuZE4g@mail.gmail.com>
+Subject: Re: [PATCH V3 0/3] Add GPIO support for PM7325
+To:     satya priya <skakit@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 11, 2021 at 10:51 AM Zhen Lei <thunder.leizhen@huawei.com> wrote:
+On Wed, May 12, 2021 at 1:13 PM satya priya <skakit@codeaurora.org> wrote:
 
-> When devm_ioremap_resource() fails, a clear enough error message will be
-> printed by its subfunction __devm_ioremap_resource(). The error
-> information contains the device name, failure cause, and possibly resource
-> information.
->
-> Therefore, remove the error printing here to simplify code and reduce the
-> binary size.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> satya priya (3):
+>   pinctrl: qcom: spmi-gpio: Add support for pm7325
+>   dt-bindings: pinctrl: qcom-pmic-gpio: Add pm7325 support
 
-Patch applied!
+These two patches applied!
+
+>   dt-bindings: pinctrl: qcom-pmic-gpio: Convert qcom pmic gpio bindings
+>     to YAML
+
+Now you only need to iterate this patch.
 
 Yours,
 Linus Walleij
