@@ -2,78 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA42A389A15
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 01:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF150389A1A
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 01:52:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229808AbhESXwY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 19:52:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56458 "EHLO
+        id S229808AbhESXxp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 19:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbhESXwX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 19:52:23 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE36C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:51:03 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id o8so17630689ljp.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:51:03 -0700 (PDT)
+        with ESMTP id S229556AbhESXxp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 19:53:45 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD55C061574
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:52:24 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id j6so19000145lfr.11
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0sYniuRP4wqiZIQyuEg/qe+aI6tAjP7d/4JXDzHYsZE=;
-        b=oJSxYQ20m+wQOda1P23ynKuBf7Os0nvDkxJdPhD3ae9EpqZJ5EJcbVWaetqjgDTChG
-         m+UY5QlrVyWMNXVavl7mV5o+QVfRaiwokaHzsQGeQaGDwkKV/dNDXu4NH9+7FAntM2ur
-         vckz0r40XkvPQz3ECPnAoSbDHtpqPxvizAHIOrtnT/doJd9ny6law0sNeMYJ25K7cqLL
-         Qer717RNGQ3xHnLCin95829gw8zCa2fjgrwDm7FPgGZg+RT3jUGxnLDR6t8685XzVznU
-         OXJ/DbXA2usE53/9Cse6ll586+207AxFauPM4/y/+XbL5LZaG9zemRENkuUZA/1a2Djy
-         GGKA==
+         :cc:content-transfer-encoding;
+        bh=n7Oe0V/LUeDNOz9LkGrom9GQWiVN8MKh46gdzx9kyn4=;
+        b=P7JJ918ULNWha1Y2qK/4BUen5FQObNbFSdCHY6KFXjpvaIDcPFreflGKgQm1PkPHZc
+         gqthbxu65Xrl95/rB3Bt4Sz4D5ImK0uJxzi5bQu2Exe6Jer9iWOqC81COHBH4tzCebp8
+         yshZcI27WA/rrWi5mVRVguOki08ih/MbvEMNpbAcGwnJDIjCerYFKQLcsMoH5yXpEns8
+         lIisNKxRhCcNSnAeI2jYifAwMLN5c+ijx4o7Qyu+wTdB6oUSgwew+5M/oRE0CN7oAKR7
+         c9g9BS8qiMewuOgXE8yLh3sZp7eKBLbGUVaYXdAWCB8mkmj6RDxlbf7exaKZ2iRAlw1o
+         NV8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0sYniuRP4wqiZIQyuEg/qe+aI6tAjP7d/4JXDzHYsZE=;
-        b=Oufn/eLBbfWC76t7X0vzULtUz23NR1je1gRkFxi/3egPRFgvGqHw/Z6AcODjEfm2DR
-         CXq9CIqXq2PwPy2zbCum9R5FHKVX2mHnA7uXJgkzcraWYlJMNi25Qv1g7eJrOkwSWRfI
-         DVY5eQcGFj/U1hcv5yKq7iGX7f9dHhEwnpDGCqrsdj7kqbc7fRFSpyuVVrG2nnYYbwW8
-         oFxnYtxOcmtQ/eh0h8ObyRdtXzuD0xSjvKI6ZkDz3wtczRqT17gPsV1Yf/xN3LomBwmh
-         W4J1I88IavqB8GDVNT9llZX+GESYCcweAi3a1g4CT1sX6floJ1sw0y2v1uYHkDEoZtyp
-         VUXw==
-X-Gm-Message-State: AOAM531sVElrZhTjXadO/XmuG1byBrDuPQrHOPs5oYk6dql02yuY9kHC
-        6qT+xTGPlEpwt4EAa4LXtmMtODD+xA/XYTujTE/W/g==
-X-Google-Smtp-Source: ABdhPJwp8DSHuZ2aQWqeW88esMeyMWsFvWsiq/HWOPEM1egcEKRRQzdxAwFFE9gysyEhGpY+ZAwyRtwQA5Uc0QHZTJg=
-X-Received: by 2002:a2e:889a:: with SMTP id k26mr1150709lji.438.1621468261465;
- Wed, 19 May 2021 16:51:01 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=n7Oe0V/LUeDNOz9LkGrom9GQWiVN8MKh46gdzx9kyn4=;
+        b=PnFmFfURp7DfqI5rIFwMK9asdW+CnbDm0A/JqAu3XNN82KfrIrVlCRDpO3xENQG5pV
+         SmWalZ+inTgmiWYJwQcxO8vNuysDJhDXTcjjSoYTbnHhwWKgPJ2eV/AX0gWkoq+hognq
+         zPQ3oNlmACBK1L9ZDkLJiTIKRV0QmaXjB7XSIlhVfiNW8ETEDVPydWd+ly9NhUu/06dH
+         ccm1NeQDTwR/qeT6r/CPtqwx7KPLBRbb6KnHuWUsD2iv4vETOWfXW77zYlju28iaYPnV
+         28DohmfaUgTTkAG2L0gT1UEAIGlMvaXI/gzWwqmaBhB1R5JcDj0MkcQGjUvvuphaBF0Z
+         WwXA==
+X-Gm-Message-State: AOAM531LILMXXORaX0u3vkwNNSV7J0jE4pZ4H9QI5fnb44KFbDMT/VI7
+        MJON3YDKi8JSPEupB7DYRHq4+Dv5yPyYMbqeCEvxhA==
+X-Google-Smtp-Source: ABdhPJx70MZQEQx8AgJ1R/ChQ/H4NYiC4ffvNrsd2zJ1jxM74BJtoinqAm4WkL0RKVNfL+N3CSxXneaPIlCwoe32Xjk=
+X-Received: by 2002:ac2:544f:: with SMTP id d15mr1357798lfn.465.1621468343155;
+ Wed, 19 May 2021 16:52:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210512210316.1982416-1-luzmaximilian@gmail.com>
-In-Reply-To: <20210512210316.1982416-1-luzmaximilian@gmail.com>
+References: <20210513160947.1716185-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20210513160947.1716185-1-j.neuschaefer@gmx.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 May 2021 01:50:50 +0200
-Message-ID: <CACRpkdZpm4w6Ym2p9xTsYpkU7CR531aLUUxXj54tssoqd6c9=Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl/amd: Add device HID for new AMD GPIO controller
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Sachi King <nakato@nakato.io>
+Date:   Thu, 20 May 2021 01:52:12 +0200
+Message-ID: <CACRpkdZLeEDipA1C3bjHF9J=JELakhKaxCsm=uDfVYsHpG-twQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: npcm: Align a few entries in the pin function table
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 12, 2021 at 11:03 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+On Thu, May 13, 2021 at 6:09 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 
-> Add device HID AMDI0031 to the AMD GPIO controller driver match table.
-> This controller can be found on Microsoft Surface Laptop 4 devices and
-> seems similar enough that we can just copy the existing AMDI0030 entry.
+> The entries for GPIO 33 and 34 are not properly aligned. Fix the
+> alignment.
 >
-> Cc: <stable@vger.kernel.org> # 5.10+
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
-Why? It's hardly a regression?
-
-> Tested-by: Sachi King <nakato@nakato.io>
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-
-I've applied the patch for next without the stable tag for now.
+Patch applied.
 
 Yours,
 Linus Walleij
