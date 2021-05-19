@@ -2,955 +2,307 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B63389398
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 18:24:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 693F638939B
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 18:24:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355212AbhESQZe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 12:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39886 "EHLO
+        id S1355222AbhESQZg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 12:25:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241786AbhESQZd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 12:25:33 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD49FC06175F
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 09:24:13 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id n17-20020a7bc5d10000b0290169edfadac9so3803239wmk.1
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 09:24:13 -0700 (PDT)
+        with ESMTP id S1355210AbhESQZf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 12:25:35 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F4CFC061760
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 09:24:15 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id o127so7609576wmo.4
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 09:24:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hJdP/kAvvDG1tQWKw8/SRYRfFCrl1jnaU56dNsU1LfA=;
-        b=X6jclHEg1lXeq9xLDsGlLk6H5njHBnjGgspkdG6h5OTwhCVcTPUp3bIF/v/p0FCBrQ
-         d5fejtJP1/5JqTEWW4U0bwxkCVUh3Msc5TbSarXwv4yWRGadfPMaRadFkDj0HUMcu5uL
-         GBiXFX23SrOoxYoB7Lw3/YqMNylZmqiyx9HYR5WNTbSffiuNoBwj5h8/6VCBW/V064fs
-         xZq/XcsRMXbmDSFHypa17NP2nPWYsvIJjgOyXl/ikf8IJlI3ssB15Rd6sUdu7N1PyjOQ
-         sdjxH/Bs9i95J6HTpbeRV1QwCqoJjucaBDqVBx27w0JrINTRRymU0eON5hxAj+7YiCbV
-         VxNQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xDecEJ8FPO187q788YjGGMjJH6kTnQ+F3dKYqIcPUTE=;
+        b=U8NQGKYWIzTHZZjQWZocDtXkC2360rFQbt29YWhB09tKEd6q20740IzNwNf9VYr9ri
+         nbGFTmyu/u/fvP4AgooP27UVva29dYIUZ4Ujh5IWqKkGXFXekjbePnEAAEWg1GKXVW/v
+         hQ6VDGt4dokyV2e/VtaYH5QsRX85vzoEZhhqvLcIPxCgq68hU0+blVeNBNwppH6AkAIU
+         q58eYPkLmNtQTFklZ0hl36MLbq+ZQ2C0PSFIlDwxcce7Gk0Db5RxZb4xsBLRrTcuotox
+         JfByYaV8dUir52DIMD+ANQIFmx2KbEeiceB1XKAxRbrfFMxdTxZu662xUecewI+Z3AV0
+         Q3yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hJdP/kAvvDG1tQWKw8/SRYRfFCrl1jnaU56dNsU1LfA=;
-        b=trPYdpYz7NAwDgX5kxHBnmWOls2BtY79cVOrg1knExW/DNbxLvnmjGAuSNmwbJlr4t
-         aezrBsUxRTRoLjdc+63wEguA2AzMY9g2cprR8EfvoZ2uE1fAt1ezkBj1i5TWzJIlz9+W
-         EcySKjvDa1TCHVy6Yym4kL9fbyxmM1LdyZH0evkR4A5nBgsHbswldNQON766oRykJWyZ
-         /Kp1W/+SlJmogdZ+uONgKNfKg5DoYBRszflmMqIY/JtiE+18IiuucB51srhflTkAzuNf
-         u3lXbPjNLpKqmrzwfjlCrOrrIo9KMOQHUXPWLhFbxddpaATBp49j6eqePtQtnftFm9jb
-         kn4Q==
-X-Gm-Message-State: AOAM531TKDvT97EKXGRGTThV9n24Ac9PQynfGzldj+nnm/fTTLOp8YoO
-        NVDzU5KHGHFe96x4Ue310SRV4w==
-X-Google-Smtp-Source: ABdhPJzv7aY0pKZdQRd77zlWRx5ljC5FaKfb+KevUGThr422ReXxIIiB/97DxEpAoGLO8bKpU8LI6w==
-X-Received: by 2002:a05:600c:22c5:: with SMTP id 5mr161447wmg.40.1621441452087;
-        Wed, 19 May 2021 09:24:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xDecEJ8FPO187q788YjGGMjJH6kTnQ+F3dKYqIcPUTE=;
+        b=CizdxXCx1CGDowHXDZc5lxe4DhKwg9D69mg/uPH9Yhk7cRX/1OckvSnSGirxlXYsJl
+         bB4jHRDlhBxnSkvrG9G5hlBfPDAtgUwe72SFJf30Y4xlZNnjdx9LOV5Xp1h86RtMgLtr
+         W61M822gGnC3Ukz9p6kM+hCD75bhK2UQXdPUWuhEGnNKAo+hkCC3oVap8rMuG52ZzKXN
+         i9cIQvxLUXkT/ly+GlFVVf4ZCcbvwpOGcx9D0nwWfFGXFWyCa7ipqcsL/qs8J3iAE4qk
+         h+tfUPSWiYk7BCU/CPyGApTSuMI8NBzLAVkmZFbUpNaDRL4zCnOJ9l13dZuaeqrlypzj
+         1iIA==
+X-Gm-Message-State: AOAM531TAdzE/519/owC63h/YZIN+ot5XDnaWPluyFeBcKbkAJe3vKN4
+        A4IzNuRAqxLjtLk01lToP/FtqA==
+X-Google-Smtp-Source: ABdhPJxBxVZ+GBRsoB7WKm0donupE/x8LTiMFNOKNBnwn090HBIP7REjBBZ/Nddf2jkgWRghlrCV+A==
+X-Received: by 2002:a7b:c154:: with SMTP id z20mr128550wmi.13.1621441454146;
+        Wed, 19 May 2021 09:24:14 -0700 (PDT)
 Received: from localhost.localdomain ([88.160.162.107])
-        by smtp.gmail.com with ESMTPSA id p10sm24489710wrr.58.2021.05.19.09.24.10
+        by smtp.gmail.com with ESMTPSA id p10sm24489710wrr.58.2021.05.19.09.24.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 May 2021 09:24:11 -0700 (PDT)
+        Wed, 19 May 2021 09:24:13 -0700 (PDT)
 From:   Fabien Parent <fparent@baylibre.com>
 To:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>
 Cc:     mkorpershoek@baylibre.com, Fabien Parent <fparent@baylibre.com>,
         linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: pinctrl: mt65xx: add mt8365 SoC binding
-Date:   Wed, 19 May 2021 18:24:06 +0200
-Message-Id: <20210519162409.3755679-1-fparent@baylibre.com>
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 2/3] pinctrl: mediatek: don't hardcode mode encoding in common code
+Date:   Wed, 19 May 2021 18:24:07 +0200
+Message-Id: <20210519162409.3755679-2-fparent@baylibre.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210519162409.3755679-1-fparent@baylibre.com>
+References: <20210519162409.3755679-1-fparent@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add binding documentation for MT8365 Pin controller.
+MT8365 encode the pins mode differently than other
+MTK pinctrl drivers that use the PINCTRL_MTK common code.
+
+Add 3 new fields in mtk_pinctrl_devdata in order to store how
+pin modes are encoded into the register. At the
+same time update all the pinctrl driver that depends on
+CONFIG_PINCTRL_MTK.
 
 Signed-off-by: Fabien Parent <fparent@baylibre.com>
 ---
- .../bindings/pinctrl/pinctrl-mt65xx.txt       |   1 +
- include/dt-bindings/pinctrl/mt8365-pinfunc.h  | 858 ++++++++++++++++++
- 2 files changed, 859 insertions(+)
- create mode 100644 include/dt-bindings/pinctrl/mt8365-pinfunc.h
+ drivers/pinctrl/mediatek/pinctrl-mt2701.c     |  3 +++
+ drivers/pinctrl/mediatek/pinctrl-mt2712.c     |  3 +++
+ drivers/pinctrl/mediatek/pinctrl-mt6397.c     |  3 +++
+ drivers/pinctrl/mediatek/pinctrl-mt8127.c     |  3 +++
+ drivers/pinctrl/mediatek/pinctrl-mt8135.c     |  3 +++
+ drivers/pinctrl/mediatek/pinctrl-mt8167.c     |  3 +++
+ drivers/pinctrl/mediatek/pinctrl-mt8173.c     |  3 +++
+ drivers/pinctrl/mediatek/pinctrl-mt8516.c     |  3 +++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 19 +++++++++----------
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.h |  3 +++
+ 10 files changed, 36 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-index 360e59c9301a..5fe2c26c28bf 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-@@ -12,6 +12,7 @@ Required properties:
- 	"mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
- 	"mediatek,mt8167-pinctrl", compatible with mt8167 pinctrl.
- 	"mediatek,mt8173-pinctrl", compatible with mt8173 pinctrl.
-+	"mediatek,mt8365-pinctrl", compatible with mt8365 pinctrl.
- 	"mediatek,mt8516-pinctrl", compatible with mt8516 pinctrl.
- - pins-are-numbered: Specify the subnodes are using numbered pinmux to
-   specify pins.
-diff --git a/include/dt-bindings/pinctrl/mt8365-pinfunc.h b/include/dt-bindings/pinctrl/mt8365-pinfunc.h
-new file mode 100644
-index 000000000000..e2ec8af57dcf
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/mt8365-pinfunc.h
-@@ -0,0 +1,858 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2021 MediaTek Inc.
-+ */
-+#ifndef __MT8365_PINFUNC_H
-+#define __MT8365_PINFUNC_H
-+
-+#include <dt-bindings/pinctrl/mt65xx.h>
-+
-+#define MT8365_PIN_0_GPIO0__FUNC_GPIO0 (MTK_PIN_NO(0) | 0)
-+#define MT8365_PIN_0_GPIO0__FUNC_DPI_D0 (MTK_PIN_NO(0) | 1)
-+#define MT8365_PIN_0_GPIO0__FUNC_PWM_A (MTK_PIN_NO(0) | 2)
-+#define MT8365_PIN_0_GPIO0__FUNC_I2S2_BCK (MTK_PIN_NO(0) | 3)
-+#define MT8365_PIN_0_GPIO0__FUNC_EXT_TXD0 (MTK_PIN_NO(0) | 4)
-+#define MT8365_PIN_0_GPIO0__FUNC_CONN_MCU_TDO (MTK_PIN_NO(0) | 5)
-+#define MT8365_PIN_0_GPIO0__FUNC_DBG_MON_A0 (MTK_PIN_NO(0) | 7)
-+
-+#define MT8365_PIN_1_GPIO1__FUNC_GPIO1 (MTK_PIN_NO(1) | 0)
-+#define MT8365_PIN_1_GPIO1__FUNC_DPI_D1 (MTK_PIN_NO(1) | 1)
-+#define MT8365_PIN_1_GPIO1__FUNC_PWM_B (MTK_PIN_NO(1) | 2)
-+#define MT8365_PIN_1_GPIO1__FUNC_I2S2_LRCK (MTK_PIN_NO(1) | 3)
-+#define MT8365_PIN_1_GPIO1__FUNC_EXT_TXD1 (MTK_PIN_NO(1) | 4)
-+#define MT8365_PIN_1_GPIO1__FUNC_CONN_MCU_DBGACK_N (MTK_PIN_NO(1) | 5)
-+#define MT8365_PIN_1_GPIO1__FUNC_DBG_MON_A1 (MTK_PIN_NO(1) | 7)
-+
-+#define MT8365_PIN_2_GPIO2__FUNC_GPIO2 (MTK_PIN_NO(2) | 0)
-+#define MT8365_PIN_2_GPIO2__FUNC_DPI_D2 (MTK_PIN_NO(2) | 1)
-+#define MT8365_PIN_2_GPIO2__FUNC_PWM_C (MTK_PIN_NO(2) | 2)
-+#define MT8365_PIN_2_GPIO2__FUNC_I2S2_MCK (MTK_PIN_NO(2) | 3)
-+#define MT8365_PIN_2_GPIO2__FUNC_EXT_TXD2 (MTK_PIN_NO(2) | 4)
-+#define MT8365_PIN_2_GPIO2__FUNC_CONN_MCU_DBGI_N (MTK_PIN_NO(2) | 5)
-+#define MT8365_PIN_2_GPIO2__FUNC_DBG_MON_A2 (MTK_PIN_NO(2) | 7)
-+
-+#define MT8365_PIN_3_GPIO3__FUNC_GPIO3 (MTK_PIN_NO(3) | 0)
-+#define MT8365_PIN_3_GPIO3__FUNC_DPI_D3 (MTK_PIN_NO(3) | 1)
-+#define MT8365_PIN_3_GPIO3__FUNC_CLKM0 (MTK_PIN_NO(3) | 2)
-+#define MT8365_PIN_3_GPIO3__FUNC_I2S2_DI (MTK_PIN_NO(3) | 3)
-+#define MT8365_PIN_3_GPIO3__FUNC_EXT_TXD3 (MTK_PIN_NO(3) | 4)
-+#define MT8365_PIN_3_GPIO3__FUNC_CONN_MCU_TCK (MTK_PIN_NO(3) | 5)
-+#define MT8365_PIN_3_GPIO3__FUNC_CONN_MCU_AICE_TCKC (MTK_PIN_NO(3) | 6)
-+#define MT8365_PIN_3_GPIO3__FUNC_DBG_MON_A3 (MTK_PIN_NO(3) | 7)
-+
-+#define MT8365_PIN_4_GPIO4__FUNC_GPIO4 (MTK_PIN_NO(4) | 0)
-+#define MT8365_PIN_4_GPIO4__FUNC_DPI_D4 (MTK_PIN_NO(4) | 1)
-+#define MT8365_PIN_4_GPIO4__FUNC_CLKM1 (MTK_PIN_NO(4) | 2)
-+#define MT8365_PIN_4_GPIO4__FUNC_I2S1_BCK (MTK_PIN_NO(4) | 3)
-+#define MT8365_PIN_4_GPIO4__FUNC_EXT_TXC (MTK_PIN_NO(4) | 4)
-+#define MT8365_PIN_4_GPIO4__FUNC_CONN_MCU_TDI (MTK_PIN_NO(4) | 5)
-+#define MT8365_PIN_4_GPIO4__FUNC_VDEC_TEST_CK (MTK_PIN_NO(4) | 6)
-+#define MT8365_PIN_4_GPIO4__FUNC_DBG_MON_A4 (MTK_PIN_NO(4) | 7)
-+
-+#define MT8365_PIN_5_GPIO5__FUNC_GPIO5 (MTK_PIN_NO(5) | 0)
-+#define MT8365_PIN_5_GPIO5__FUNC_DPI_D5 (MTK_PIN_NO(5) | 1)
-+#define MT8365_PIN_5_GPIO5__FUNC_CLKM2 (MTK_PIN_NO(5) | 2)
-+#define MT8365_PIN_5_GPIO5__FUNC_I2S1_LRCK (MTK_PIN_NO(5) | 3)
-+#define MT8365_PIN_5_GPIO5__FUNC_EXT_RXER (MTK_PIN_NO(5) | 4)
-+#define MT8365_PIN_5_GPIO5__FUNC_CONN_MCU_TRST_B (MTK_PIN_NO(5) | 5)
-+#define MT8365_PIN_5_GPIO5__FUNC_MM_TEST_CK (MTK_PIN_NO(5) | 6)
-+#define MT8365_PIN_5_GPIO5__FUNC_DBG_MON_A5 (MTK_PIN_NO(5) | 7)
-+
-+#define MT8365_PIN_6_GPIO6__FUNC_GPIO6 (MTK_PIN_NO(6) | 0)
-+#define MT8365_PIN_6_GPIO6__FUNC_DPI_D6 (MTK_PIN_NO(6) | 1)
-+#define MT8365_PIN_6_GPIO6__FUNC_CLKM3 (MTK_PIN_NO(6) | 2)
-+#define MT8365_PIN_6_GPIO6__FUNC_I2S1_MCK (MTK_PIN_NO(6) | 3)
-+#define MT8365_PIN_6_GPIO6__FUNC_EXT_RXC (MTK_PIN_NO(6) | 4)
-+#define MT8365_PIN_6_GPIO6__FUNC_CONN_MCU_TMS (MTK_PIN_NO(6) | 5)
-+#define MT8365_PIN_6_GPIO6__FUNC_CONN_MCU_AICE_TMSC (MTK_PIN_NO(6) | 6)
-+#define MT8365_PIN_6_GPIO6__FUNC_DBG_MON_A6 (MTK_PIN_NO(6) | 7)
-+
-+#define MT8365_PIN_7_GPIO7__FUNC_GPIO7 (MTK_PIN_NO(7) | 0)
-+#define MT8365_PIN_7_GPIO7__FUNC_DPI_D7 (MTK_PIN_NO(7) | 1)
-+#define MT8365_PIN_7_GPIO7__FUNC_I2S1_DO (MTK_PIN_NO(7) | 3)
-+#define MT8365_PIN_7_GPIO7__FUNC_EXT_RXDV (MTK_PIN_NO(7) | 4)
-+#define MT8365_PIN_7_GPIO7__FUNC_CONN_DSP_JCK (MTK_PIN_NO(7) | 5)
-+#define MT8365_PIN_7_GPIO7__FUNC_DBG_MON_A7 (MTK_PIN_NO(7) | 7)
-+
-+#define MT8365_PIN_8_GPIO8__FUNC_GPIO8 (MTK_PIN_NO(8) | 0)
-+#define MT8365_PIN_8_GPIO8__FUNC_DPI_D8 (MTK_PIN_NO(8) | 1)
-+#define MT8365_PIN_8_GPIO8__FUNC_SPI_CLK (MTK_PIN_NO(8) | 2)
-+#define MT8365_PIN_8_GPIO8__FUNC_I2S0_BCK (MTK_PIN_NO(8) | 3)
-+#define MT8365_PIN_8_GPIO8__FUNC_EXT_RXD0 (MTK_PIN_NO(8) | 4)
-+#define MT8365_PIN_8_GPIO8__FUNC_CONN_DSP_JINTP (MTK_PIN_NO(8) | 5)
-+#define MT8365_PIN_8_GPIO8__FUNC_DBG_MON_A8 (MTK_PIN_NO(8) | 7)
-+
-+#define MT8365_PIN_9_GPIO9__FUNC_GPIO9 (MTK_PIN_NO(9) | 0)
-+#define MT8365_PIN_9_GPIO9__FUNC_DPI_D9 (MTK_PIN_NO(9) | 1)
-+#define MT8365_PIN_9_GPIO9__FUNC_SPI_CSB (MTK_PIN_NO(9) | 2)
-+#define MT8365_PIN_9_GPIO9__FUNC_I2S0_LRCK (MTK_PIN_NO(9) | 3)
-+#define MT8365_PIN_9_GPIO9__FUNC_EXT_RXD1 (MTK_PIN_NO(9) | 4)
-+#define MT8365_PIN_9_GPIO9__FUNC_CONN_DSP_JDI (MTK_PIN_NO(9) | 5)
-+#define MT8365_PIN_9_GPIO9__FUNC_DBG_MON_A9 (MTK_PIN_NO(9) | 7)
-+
-+#define MT8365_PIN_10_GPIO10__FUNC_GPIO10 (MTK_PIN_NO(10) | 0)
-+#define MT8365_PIN_10_GPIO10__FUNC_DPI_D10 (MTK_PIN_NO(10) | 1)
-+#define MT8365_PIN_10_GPIO10__FUNC_SPI_MI (MTK_PIN_NO(10) | 2)
-+#define MT8365_PIN_10_GPIO10__FUNC_I2S0_MCK (MTK_PIN_NO(10) | 3)
-+#define MT8365_PIN_10_GPIO10__FUNC_EXT_RXD2 (MTK_PIN_NO(10) | 4)
-+#define MT8365_PIN_10_GPIO10__FUNC_CONN_DSP_JMS (MTK_PIN_NO(10) | 5)
-+#define MT8365_PIN_10_GPIO10__FUNC_DBG_MON_A10 (MTK_PIN_NO(10) | 7)
-+
-+#define MT8365_PIN_11_GPIO11__FUNC_GPIO11 (MTK_PIN_NO(11) | 0)
-+#define MT8365_PIN_11_GPIO11__FUNC_DPI_D11 (MTK_PIN_NO(11) | 1)
-+#define MT8365_PIN_11_GPIO11__FUNC_SPI_MO (MTK_PIN_NO(11) | 2)
-+#define MT8365_PIN_11_GPIO11__FUNC_I2S0_DI (MTK_PIN_NO(11) | 3)
-+#define MT8365_PIN_11_GPIO11__FUNC_EXT_RXD3 (MTK_PIN_NO(11) | 4)
-+#define MT8365_PIN_11_GPIO11__FUNC_CONN_DSP_JDO (MTK_PIN_NO(11) | 5)
-+#define MT8365_PIN_11_GPIO11__FUNC_DBG_MON_A11 (MTK_PIN_NO(11) | 7)
-+
-+#define MT8365_PIN_12_GPIO12__FUNC_GPIO12 (MTK_PIN_NO(12) | 0)
-+#define MT8365_PIN_12_GPIO12__FUNC_DPI_DE (MTK_PIN_NO(12) | 1)
-+#define MT8365_PIN_12_GPIO12__FUNC_UCTS1 (MTK_PIN_NO(12) | 2)
-+#define MT8365_PIN_12_GPIO12__FUNC_I2S3_BCK (MTK_PIN_NO(12) | 3)
-+#define MT8365_PIN_12_GPIO12__FUNC_EXT_TXEN (MTK_PIN_NO(12) | 4)
-+#define MT8365_PIN_12_GPIO12__FUNC_O_WIFI_TXD (MTK_PIN_NO(12) | 5)
-+#define MT8365_PIN_12_GPIO12__FUNC_DBG_MON_A12 (MTK_PIN_NO(12) | 7)
-+
-+#define MT8365_PIN_13_GPIO13__FUNC_GPIO13 (MTK_PIN_NO(13) | 0)
-+#define MT8365_PIN_13_GPIO13__FUNC_DPI_VSYNC (MTK_PIN_NO(13) | 1)
-+#define MT8365_PIN_13_GPIO13__FUNC_URTS1 (MTK_PIN_NO(13) | 2)
-+#define MT8365_PIN_13_GPIO13__FUNC_I2S3_LRCK (MTK_PIN_NO(13) | 3)
-+#define MT8365_PIN_13_GPIO13__FUNC_EXT_COL (MTK_PIN_NO(13) | 4)
-+#define MT8365_PIN_13_GPIO13__FUNC_SPDIF_IN (MTK_PIN_NO(13) | 5)
-+#define MT8365_PIN_13_GPIO13__FUNC_DBG_MON_A13 (MTK_PIN_NO(13) | 7)
-+
-+#define MT8365_PIN_14_GPIO14__FUNC_GPIO14 (MTK_PIN_NO(14) | 0)
-+#define MT8365_PIN_14_GPIO14__FUNC_DPI_CK (MTK_PIN_NO(14) | 1)
-+#define MT8365_PIN_14_GPIO14__FUNC_UCTS2 (MTK_PIN_NO(14) | 2)
-+#define MT8365_PIN_14_GPIO14__FUNC_I2S3_MCK (MTK_PIN_NO(14) | 3)
-+#define MT8365_PIN_14_GPIO14__FUNC_EXT_MDIO (MTK_PIN_NO(14) | 4)
-+#define MT8365_PIN_14_GPIO14__FUNC_SPDIF_OUT (MTK_PIN_NO(14) | 5)
-+#define MT8365_PIN_14_GPIO14__FUNC_DVFSRC_EXT_REQ (MTK_PIN_NO(14) | 6)
-+#define MT8365_PIN_14_GPIO14__FUNC_DBG_MON_A14 (MTK_PIN_NO(14) | 7)
-+
-+#define MT8365_PIN_15_GPIO15__FUNC_GPIO15 (MTK_PIN_NO(15) | 0)
-+#define MT8365_PIN_15_GPIO15__FUNC_DPI_HSYNC (MTK_PIN_NO(15) | 1)
-+#define MT8365_PIN_15_GPIO15__FUNC_URTS2 (MTK_PIN_NO(15) | 2)
-+#define MT8365_PIN_15_GPIO15__FUNC_I2S3_DO (MTK_PIN_NO(15) | 3)
-+#define MT8365_PIN_15_GPIO15__FUNC_EXT_MDC (MTK_PIN_NO(15) | 4)
-+#define MT8365_PIN_15_GPIO15__FUNC_IRRX (MTK_PIN_NO(15) | 5)
-+#define MT8365_PIN_15_GPIO15__FUNC_EXT_FRAME_SYNC (MTK_PIN_NO(15) | 6)
-+#define MT8365_PIN_15_GPIO15__FUNC_DBG_MON_A15 (MTK_PIN_NO(15) | 7)
-+
-+#define MT8365_PIN_16_GPIO16__FUNC_GPIO16 (MTK_PIN_NO(16) | 0)
-+#define MT8365_PIN_16_GPIO16__FUNC_DPI_D12 (MTK_PIN_NO(16) | 1)
-+#define MT8365_PIN_16_GPIO16__FUNC_USB_DRVVBUS (MTK_PIN_NO(16) | 2)
-+#define MT8365_PIN_16_GPIO16__FUNC_PWM_A (MTK_PIN_NO(16) | 3)
-+#define MT8365_PIN_16_GPIO16__FUNC_CLKM0 (MTK_PIN_NO(16) | 4)
-+#define MT8365_PIN_16_GPIO16__FUNC_ANT_SEL0 (MTK_PIN_NO(16) | 5)
-+#define MT8365_PIN_16_GPIO16__FUNC_TSF_IN (MTK_PIN_NO(16) | 6)
-+#define MT8365_PIN_16_GPIO16__FUNC_DBG_MON_A16 (MTK_PIN_NO(16) | 7)
-+
-+#define MT8365_PIN_17_GPIO17__FUNC_GPIO17 (MTK_PIN_NO(17) | 0)
-+#define MT8365_PIN_17_GPIO17__FUNC_DPI_D13 (MTK_PIN_NO(17) | 1)
-+#define MT8365_PIN_17_GPIO17__FUNC_IDDIG (MTK_PIN_NO(17) | 2)
-+#define MT8365_PIN_17_GPIO17__FUNC_PWM_B (MTK_PIN_NO(17) | 3)
-+#define MT8365_PIN_17_GPIO17__FUNC_CLKM1 (MTK_PIN_NO(17) | 4)
-+#define MT8365_PIN_17_GPIO17__FUNC_ANT_SEL1 (MTK_PIN_NO(17) | 5)
-+#define MT8365_PIN_17_GPIO17__FUNC_DVFSRC_EXT_REQ (MTK_PIN_NO(17) | 6)
-+#define MT8365_PIN_17_GPIO17__FUNC_DBG_MON_A17 (MTK_PIN_NO(17) | 7)
-+
-+#define MT8365_PIN_18_GPIO18__FUNC_GPIO18 (MTK_PIN_NO(18) | 0)
-+#define MT8365_PIN_18_GPIO18__FUNC_DPI_D14 (MTK_PIN_NO(18) | 1)
-+#define MT8365_PIN_18_GPIO18__FUNC_EXT_FRAME_SYNC (MTK_PIN_NO(18) | 2)
-+#define MT8365_PIN_18_GPIO18__FUNC_PWM_C (MTK_PIN_NO(18) | 3)
-+#define MT8365_PIN_18_GPIO18__FUNC_CLKM2 (MTK_PIN_NO(18) | 4)
-+#define MT8365_PIN_18_GPIO18__FUNC_ANT_SEL2 (MTK_PIN_NO(18) | 5)
-+#define MT8365_PIN_18_GPIO18__FUNC_MFG_TEST_CK (MTK_PIN_NO(18) | 6)
-+#define MT8365_PIN_18_GPIO18__FUNC_DBG_MON_A18 (MTK_PIN_NO(18) | 7)
-+
-+#define MT8365_PIN_19_DISP_PWM__FUNC_GPIO19 (MTK_PIN_NO(19) | 0)
-+#define MT8365_PIN_19_DISP_PWM__FUNC_DISP_PWM (MTK_PIN_NO(19) | 1)
-+#define MT8365_PIN_19_DISP_PWM__FUNC_PWM_A (MTK_PIN_NO(19) | 2)
-+#define MT8365_PIN_19_DISP_PWM__FUNC_DBG_MON_A19 (MTK_PIN_NO(19) | 7)
-+
-+#define MT8365_PIN_20_LCM_RST__FUNC_GPIO20 (MTK_PIN_NO(20) | 0)
-+#define MT8365_PIN_20_LCM_RST__FUNC_LCM_RST (MTK_PIN_NO(20) | 1)
-+#define MT8365_PIN_20_LCM_RST__FUNC_PWM_B (MTK_PIN_NO(20) | 2)
-+#define MT8365_PIN_20_LCM_RST__FUNC_DBG_MON_A20 (MTK_PIN_NO(20) | 7)
-+
-+#define MT8365_PIN_21_DSI_TE__FUNC_GPIO21 (MTK_PIN_NO(21) | 0)
-+#define MT8365_PIN_21_DSI_TE__FUNC_DSI_TE (MTK_PIN_NO(21) | 1)
-+#define MT8365_PIN_21_DSI_TE__FUNC_PWM_C (MTK_PIN_NO(21) | 2)
-+#define MT8365_PIN_21_DSI_TE__FUNC_ANT_SEL0 (MTK_PIN_NO(21) | 3)
-+#define MT8365_PIN_21_DSI_TE__FUNC_DVFSRC_EXT_REQ (MTK_PIN_NO(21) | 4)
-+#define MT8365_PIN_21_DSI_TE__FUNC_DBG_MON_A21 (MTK_PIN_NO(21) | 7)
-+
-+#define MT8365_PIN_22_KPROW0__FUNC_GPIO22 (MTK_PIN_NO(22) | 0)
-+#define MT8365_PIN_22_KPROW0__FUNC_KPROW0 (MTK_PIN_NO(22) | 1)
-+#define MT8365_PIN_22_KPROW0__FUNC_DBG_MON_A22 (MTK_PIN_NO(22) | 7)
-+
-+#define MT8365_PIN_23_KPROW1__FUNC_GPIO23 (MTK_PIN_NO(23) | 0)
-+#define MT8365_PIN_23_KPROW1__FUNC_KPROW1 (MTK_PIN_NO(23) | 1)
-+#define MT8365_PIN_23_KPROW1__FUNC_IDDIG (MTK_PIN_NO(23) | 2)
-+#define MT8365_PIN_23_KPROW1__FUNC_WIFI_TXD (MTK_PIN_NO(23) | 3)
-+#define MT8365_PIN_23_KPROW1__FUNC_CLKM3 (MTK_PIN_NO(23) | 4)
-+#define MT8365_PIN_23_KPROW1__FUNC_ANT_SEL1 (MTK_PIN_NO(23) | 5)
-+#define MT8365_PIN_23_KPROW1__FUNC_EXT_FRAME_SYNC (MTK_PIN_NO(23) | 6)
-+#define MT8365_PIN_23_KPROW1__FUNC_DBG_MON_B0 (MTK_PIN_NO(23) | 7)
-+
-+#define MT8365_PIN_24_KPCOL0__FUNC_GPIO24 (MTK_PIN_NO(24) | 0)
-+#define MT8365_PIN_24_KPCOL0__FUNC_KPCOL0 (MTK_PIN_NO(24) | 1)
-+#define MT8365_PIN_24_KPCOL0__FUNC_DBG_MON_A23 (MTK_PIN_NO(24) | 7)
-+
-+#define MT8365_PIN_25_KPCOL1__FUNC_GPIO25 (MTK_PIN_NO(25) | 0)
-+#define MT8365_PIN_25_KPCOL1__FUNC_KPCOL1 (MTK_PIN_NO(25) | 1)
-+#define MT8365_PIN_25_KPCOL1__FUNC_USB_DRVVBUS (MTK_PIN_NO(25) | 2)
-+#define MT8365_PIN_25_KPCOL1__FUNC_APU_JTAG_TRST (MTK_PIN_NO(25) | 3)
-+#define MT8365_PIN_25_KPCOL1__FUNC_UDI_NTRST_XI (MTK_PIN_NO(25) | 4)
-+#define MT8365_PIN_25_KPCOL1__FUNC_DFD_NTRST_XI (MTK_PIN_NO(25) | 5)
-+#define MT8365_PIN_25_KPCOL1__FUNC_CONN_TEST_CK (MTK_PIN_NO(25) | 6)
-+#define MT8365_PIN_25_KPCOL1__FUNC_DBG_MON_B1 (MTK_PIN_NO(25) | 7)
-+
-+#define MT8365_PIN_26_SPI_CS__FUNC_GPIO26 (MTK_PIN_NO(26) | 0)
-+#define MT8365_PIN_26_SPI_CS__FUNC_SPI_CSB (MTK_PIN_NO(26) | 1)
-+#define MT8365_PIN_26_SPI_CS__FUNC_APU_JTAG_TMS (MTK_PIN_NO(26) | 3)
-+#define MT8365_PIN_26_SPI_CS__FUNC_UDI_TMS_XI (MTK_PIN_NO(26) | 4)
-+#define MT8365_PIN_26_SPI_CS__FUNC_DFD_TMS_XI (MTK_PIN_NO(26) | 5)
-+#define MT8365_PIN_26_SPI_CS__FUNC_CONN_TEST_CK (MTK_PIN_NO(26) | 6)
-+#define MT8365_PIN_26_SPI_CS__FUNC_DBG_MON_A24 (MTK_PIN_NO(26) | 7)
-+
-+#define MT8365_PIN_27_SPI_CK__FUNC_GPIO27 (MTK_PIN_NO(27) | 0)
-+#define MT8365_PIN_27_SPI_CK__FUNC_SPI_CLK (MTK_PIN_NO(27) | 1)
-+#define MT8365_PIN_27_SPI_CK__FUNC_APU_JTAG_TCK (MTK_PIN_NO(27) | 3)
-+#define MT8365_PIN_27_SPI_CK__FUNC_UDI_TCK_XI (MTK_PIN_NO(27) | 4)
-+#define MT8365_PIN_27_SPI_CK__FUNC_DFD_TCK_XI (MTK_PIN_NO(27) | 5)
-+#define MT8365_PIN_27_SPI_CK__FUNC_APU_TEST_CK (MTK_PIN_NO(27) | 6)
-+#define MT8365_PIN_27_SPI_CK__FUNC_DBG_MON_A25 (MTK_PIN_NO(27) | 7)
-+
-+#define MT8365_PIN_28_SPI_MI__FUNC_GPIO28 (MTK_PIN_NO(28) | 0)
-+#define MT8365_PIN_28_SPI_MI__FUNC_SPI_MI (MTK_PIN_NO(28) | 1)
-+#define MT8365_PIN_28_SPI_MI__FUNC_SPI_MO (MTK_PIN_NO(28) | 2)
-+#define MT8365_PIN_28_SPI_MI__FUNC_APU_JTAG_TDI (MTK_PIN_NO(28) | 3)
-+#define MT8365_PIN_28_SPI_MI__FUNC_UDI_TDI_XI (MTK_PIN_NO(28) | 4)
-+#define MT8365_PIN_28_SPI_MI__FUNC_DFD_TDI_XI (MTK_PIN_NO(28) | 5)
-+#define MT8365_PIN_28_SPI_MI__FUNC_DSP_TEST_CK (MTK_PIN_NO(28) | 6)
-+#define MT8365_PIN_28_SPI_MI__FUNC_DBG_MON_A26 (MTK_PIN_NO(28) | 7)
-+
-+#define MT8365_PIN_29_SPI_MO__FUNC_GPIO29 (MTK_PIN_NO(29) | 0)
-+#define MT8365_PIN_29_SPI_MO__FUNC_SPI_MO (MTK_PIN_NO(29) | 1)
-+#define MT8365_PIN_29_SPI_MO__FUNC_SPI_MI (MTK_PIN_NO(29) | 2)
-+#define MT8365_PIN_29_SPI_MO__FUNC_APU_JTAG_TDO (MTK_PIN_NO(29) | 3)
-+#define MT8365_PIN_29_SPI_MO__FUNC_UDI_TDO (MTK_PIN_NO(29) | 4)
-+#define MT8365_PIN_29_SPI_MO__FUNC_DFD_TDO (MTK_PIN_NO(29) | 5)
-+#define MT8365_PIN_29_SPI_MO__FUNC_DVFSRC_EXT_REQ (MTK_PIN_NO(29) | 6)
-+#define MT8365_PIN_29_SPI_MO__FUNC_DBG_MON_A27 (MTK_PIN_NO(29) | 7)
-+
-+#define MT8365_PIN_30_JTMS__FUNC_GPIO30 (MTK_PIN_NO(30) | 0)
-+#define MT8365_PIN_30_JTMS__FUNC_JTMS (MTK_PIN_NO(30) | 1)
-+#define MT8365_PIN_30_JTMS__FUNC_DFD_TMS_XI (MTK_PIN_NO(30) | 2)
-+#define MT8365_PIN_30_JTMS__FUNC_UDI_TMS_XI (MTK_PIN_NO(30) | 3)
-+#define MT8365_PIN_30_JTMS__FUNC_MCU_SPM_TMS (MTK_PIN_NO(30) | 4)
-+#define MT8365_PIN_30_JTMS__FUNC_CONN_MCU_TMS (MTK_PIN_NO(30) | 5)
-+#define MT8365_PIN_30_JTMS__FUNC_CONN_MCU_AICE_TMSC (MTK_PIN_NO(30) | 6)
-+
-+#define MT8365_PIN_31_JTCK__FUNC_GPIO31 (MTK_PIN_NO(31) | 0)
-+#define MT8365_PIN_31_JTCK__FUNC_JTCK (MTK_PIN_NO(31) | 1)
-+#define MT8365_PIN_31_JTCK__FUNC_DFD_TCK_XI (MTK_PIN_NO(31) | 2)
-+#define MT8365_PIN_31_JTCK__FUNC_UDI_TCK_XI (MTK_PIN_NO(31) | 3)
-+#define MT8365_PIN_31_JTCK__FUNC_MCU_SPM_TCK (MTK_PIN_NO(31) | 4)
-+#define MT8365_PIN_31_JTCK__FUNC_CONN_MCU_TCK (MTK_PIN_NO(31) | 5)
-+#define MT8365_PIN_31_JTCK__FUNC_CONN_MCU_AICE_TCKC (MTK_PIN_NO(31) | 6)
-+
-+#define MT8365_PIN_32_JTDI__FUNC_GPIO32 (MTK_PIN_NO(32) | 0)
-+#define MT8365_PIN_32_JTDI__FUNC_JTDI (MTK_PIN_NO(32) | 1)
-+#define MT8365_PIN_32_JTDI__FUNC_DFD_TDI_XI (MTK_PIN_NO(32) | 2)
-+#define MT8365_PIN_32_JTDI__FUNC_UDI_TDI_XI (MTK_PIN_NO(32) | 3)
-+#define MT8365_PIN_32_JTDI__FUNC_MCU_SPM_TDI (MTK_PIN_NO(32) | 4)
-+#define MT8365_PIN_32_JTDI__FUNC_CONN_MCU_TDI (MTK_PIN_NO(32) | 5)
-+
-+#define MT8365_PIN_33_JTDO__FUNC_GPIO33 (MTK_PIN_NO(33) | 0)
-+#define MT8365_PIN_33_JTDO__FUNC_JTDO (MTK_PIN_NO(33) | 1)
-+#define MT8365_PIN_33_JTDO__FUNC_DFD_TDO (MTK_PIN_NO(33) | 2)
-+#define MT8365_PIN_33_JTDO__FUNC_UDI_TDO (MTK_PIN_NO(33) | 3)
-+#define MT8365_PIN_33_JTDO__FUNC_MCU_SPM_TDO (MTK_PIN_NO(33) | 4)
-+#define MT8365_PIN_33_JTDO__FUNC_CONN_MCU_TDO (MTK_PIN_NO(33) | 5)
-+
-+#define MT8365_PIN_34_JTRST__FUNC_GPIO34 (MTK_PIN_NO(34) | 0)
-+#define MT8365_PIN_34_JTRST__FUNC_JTRST (MTK_PIN_NO(34) | 1)
-+#define MT8365_PIN_34_JTRST__FUNC_DFD_NTRST_XI (MTK_PIN_NO(34) | 2)
-+#define MT8365_PIN_34_JTRST__FUNC_UDI_NTRST_XI (MTK_PIN_NO(34) | 3)
-+#define MT8365_PIN_34_JTRST__FUNC_MCU_SPM_NTRST (MTK_PIN_NO(34) | 4)
-+#define MT8365_PIN_34_JTRST__FUNC_CONN_MCU_TRST_B (MTK_PIN_NO(34) | 5)
-+
-+#define MT8365_PIN_35_URXD0__FUNC_GPIO35 (MTK_PIN_NO(35) | 0)
-+#define MT8365_PIN_35_URXD0__FUNC_URXD0 (MTK_PIN_NO(35) | 1)
-+#define MT8365_PIN_35_URXD0__FUNC_UTXD0 (MTK_PIN_NO(35) | 2)
-+#define MT8365_PIN_35_URXD0__FUNC_DSP_URXD0 (MTK_PIN_NO(35) | 7)
-+
-+#define MT8365_PIN_36_UTXD0__FUNC_GPIO36 (MTK_PIN_NO(36) | 0)
-+#define MT8365_PIN_36_UTXD0__FUNC_UTXD0 (MTK_PIN_NO(36) | 1)
-+#define MT8365_PIN_36_UTXD0__FUNC_URXD0 (MTK_PIN_NO(36) | 2)
-+#define MT8365_PIN_36_UTXD0__FUNC_DSP_UTXD0 (MTK_PIN_NO(36) | 7)
-+
-+#define MT8365_PIN_37_URXD1__FUNC_GPIO37 (MTK_PIN_NO(37) | 0)
-+#define MT8365_PIN_37_URXD1__FUNC_URXD1 (MTK_PIN_NO(37) | 1)
-+#define MT8365_PIN_37_URXD1__FUNC_UTXD1 (MTK_PIN_NO(37) | 2)
-+#define MT8365_PIN_37_URXD1__FUNC_UCTS2 (MTK_PIN_NO(37) | 3)
-+#define MT8365_PIN_37_URXD1__FUNC_DVFSRC_EXT_REQ (MTK_PIN_NO(37) | 4)
-+#define MT8365_PIN_37_URXD1__FUNC_CONN_UART0_RXD (MTK_PIN_NO(37) | 5)
-+#define MT8365_PIN_37_URXD1__FUNC_I2S0_MCK (MTK_PIN_NO(37) | 6)
-+#define MT8365_PIN_37_URXD1__FUNC_DSP_URXD0 (MTK_PIN_NO(37) | 7)
-+
-+#define MT8365_PIN_38_UTXD1__FUNC_GPIO38 (MTK_PIN_NO(38) | 0)
-+#define MT8365_PIN_38_UTXD1__FUNC_UTXD1 (MTK_PIN_NO(38) | 1)
-+#define MT8365_PIN_38_UTXD1__FUNC_URXD1 (MTK_PIN_NO(38) | 2)
-+#define MT8365_PIN_38_UTXD1__FUNC_URTS2 (MTK_PIN_NO(38) | 3)
-+#define MT8365_PIN_38_UTXD1__FUNC_ANT_SEL2 (MTK_PIN_NO(38) | 4)
-+#define MT8365_PIN_38_UTXD1__FUNC_CONN_UART0_TXD (MTK_PIN_NO(38) | 5)
-+#define MT8365_PIN_38_UTXD1__FUNC_I2S1_MCK (MTK_PIN_NO(38) | 6)
-+#define MT8365_PIN_38_UTXD1__FUNC_DSP_UTXD0 (MTK_PIN_NO(38) | 7)
-+
-+#define MT8365_PIN_39_URXD2__FUNC_GPIO39 (MTK_PIN_NO(39) | 0)
-+#define MT8365_PIN_39_URXD2__FUNC_URXD2 (MTK_PIN_NO(39) | 1)
-+#define MT8365_PIN_39_URXD2__FUNC_UTXD2 (MTK_PIN_NO(39) | 2)
-+#define MT8365_PIN_39_URXD2__FUNC_UCTS1 (MTK_PIN_NO(39) | 3)
-+#define MT8365_PIN_39_URXD2__FUNC_IDDIG (MTK_PIN_NO(39) | 4)
-+#define MT8365_PIN_39_URXD2__FUNC_CONN_MCU_DBGACK_N (MTK_PIN_NO(39) | 5)
-+#define MT8365_PIN_39_URXD2__FUNC_I2S2_MCK (MTK_PIN_NO(39) | 6)
-+#define MT8365_PIN_39_URXD2__FUNC_DSP_URXD0 (MTK_PIN_NO(39) | 7)
-+
-+#define MT8365_PIN_40_UTXD2__FUNC_GPIO40 (MTK_PIN_NO(40) | 0)
-+#define MT8365_PIN_40_UTXD2__FUNC_UTXD2 (MTK_PIN_NO(40) | 1)
-+#define MT8365_PIN_40_UTXD2__FUNC_URXD2 (MTK_PIN_NO(40) | 2)
-+#define MT8365_PIN_40_UTXD2__FUNC_URTS1 (MTK_PIN_NO(40) | 3)
-+#define MT8365_PIN_40_UTXD2__FUNC_USB_DRVVBUS (MTK_PIN_NO(40) | 4)
-+#define MT8365_PIN_40_UTXD2__FUNC_CONN_MCU_DBGI_N (MTK_PIN_NO(40) | 5)
-+#define MT8365_PIN_40_UTXD2__FUNC_I2S3_MCK (MTK_PIN_NO(40) | 6)
-+#define MT8365_PIN_40_UTXD2__FUNC_DSP_UTXD0 (MTK_PIN_NO(40) | 7)
-+
-+#define MT8365_PIN_41_PWRAP_SPI0_MI__FUNC_GPIO41 (MTK_PIN_NO(41) | 0)
-+#define MT8365_PIN_41_PWRAP_SPI0_MI__FUNC_PWRAP_SPI0_MI (MTK_PIN_NO(41) | 1)
-+#define MT8365_PIN_41_PWRAP_SPI0_MI__FUNC_PWRAP_SPI0_MO (MTK_PIN_NO(41) | 2)
-+
-+#define MT8365_PIN_42_PWRAP_SPI0_MO__FUNC_GPIO42 (MTK_PIN_NO(42) | 0)
-+#define MT8365_PIN_42_PWRAP_SPI0_MO__FUNC_PWRAP_SPI0_MO (MTK_PIN_NO(42) | 1)
-+#define MT8365_PIN_42_PWRAP_SPI0_MO__FUNC_PWRAP_SPI0_MI (MTK_PIN_NO(42) | 2)
-+
-+#define MT8365_PIN_43_PWRAP_SPI0_CK__FUNC_GPIO43 (MTK_PIN_NO(43) | 0)
-+#define MT8365_PIN_43_PWRAP_SPI0_CK__FUNC_PWRAP_SPI0_CK (MTK_PIN_NO(43) | 1)
-+
-+#define MT8365_PIN_44_PWRAP_SPI0_CSN__FUNC_GPIO44 (MTK_PIN_NO(44) | 0)
-+#define MT8365_PIN_44_PWRAP_SPI0_CSN__FUNC_PWRAP_SPI0_CSN (MTK_PIN_NO(44) | 1)
-+
-+#define MT8365_PIN_45_RTC32K_CK__FUNC_GPIO45 (MTK_PIN_NO(45) | 0)
-+#define MT8365_PIN_45_RTC32K_CK__FUNC_RTC32K_CK (MTK_PIN_NO(45) | 1)
-+
-+#define MT8365_PIN_46_WATCHDOG__FUNC_GPIO46 (MTK_PIN_NO(46) | 0)
-+#define MT8365_PIN_46_WATCHDOG__FUNC_WATCHDOG (MTK_PIN_NO(46) | 1)
-+
-+#define MT8365_PIN_47_SRCLKENA0__FUNC_GPIO47 (MTK_PIN_NO(47) | 0)
-+#define MT8365_PIN_47_SRCLKENA0__FUNC_SRCLKENA0 (MTK_PIN_NO(47) | 1)
-+#define MT8365_PIN_47_SRCLKENA0__FUNC_SRCLKENA1 (MTK_PIN_NO(47) | 2)
-+
-+#define MT8365_PIN_48_SRCLKENA1__FUNC_GPIO48 (MTK_PIN_NO(48) | 0)
-+#define MT8365_PIN_48_SRCLKENA1__FUNC_SRCLKENA1 (MTK_PIN_NO(48) | 1)
-+
-+#define MT8365_PIN_49_AUD_CLK_MOSI__FUNC_GPIO49 (MTK_PIN_NO(49) | 0)
-+#define MT8365_PIN_49_AUD_CLK_MOSI__FUNC_AUD_CLK_MOSI (MTK_PIN_NO(49) | 1)
-+#define MT8365_PIN_49_AUD_CLK_MOSI__FUNC_AUD_CLK_MISO (MTK_PIN_NO(49) | 2)
-+#define MT8365_PIN_49_AUD_CLK_MOSI__FUNC_I2S1_MCK (MTK_PIN_NO(49) | 3)
-+
-+#define MT8365_PIN_50_AUD_SYNC_MOSI__FUNC_GPIO50 (MTK_PIN_NO(50) | 0)
-+#define MT8365_PIN_50_AUD_SYNC_MOSI__FUNC_AUD_SYNC_MOSI (MTK_PIN_NO(50) | 1)
-+#define MT8365_PIN_50_AUD_SYNC_MOSI__FUNC_AUD_SYNC_MISO (MTK_PIN_NO(50) | 2)
-+#define MT8365_PIN_50_AUD_SYNC_MOSI__FUNC_I2S1_BCK (MTK_PIN_NO(50) | 3)
-+
-+#define MT8365_PIN_51_AUD_DAT_MOSI0__FUNC_GPIO51 (MTK_PIN_NO(51) | 0)
-+#define MT8365_PIN_51_AUD_DAT_MOSI0__FUNC_AUD_DAT_MOSI0 (MTK_PIN_NO(51) | 1)
-+#define MT8365_PIN_51_AUD_DAT_MOSI0__FUNC_AUD_DAT_MISO0 (MTK_PIN_NO(51) | 2)
-+#define MT8365_PIN_51_AUD_DAT_MOSI0__FUNC_I2S1_LRCK (MTK_PIN_NO(51) | 3)
-+
-+#define MT8365_PIN_52_AUD_DAT_MOSI1__FUNC_GPIO52 (MTK_PIN_NO(52) | 0)
-+#define MT8365_PIN_52_AUD_DAT_MOSI1__FUNC_AUD_DAT_MOSI1 (MTK_PIN_NO(52) | 1)
-+#define MT8365_PIN_52_AUD_DAT_MOSI1__FUNC_AUD_DAT_MISO1 (MTK_PIN_NO(52) | 2)
-+#define MT8365_PIN_52_AUD_DAT_MOSI1__FUNC_I2S1_DO (MTK_PIN_NO(52) | 3)
-+
-+#define MT8365_PIN_53_AUD_CLK_MISO__FUNC_GPIO53 (MTK_PIN_NO(53) | 0)
-+#define MT8365_PIN_53_AUD_CLK_MISO__FUNC_AUD_CLK_MISO (MTK_PIN_NO(53) | 1)
-+#define MT8365_PIN_53_AUD_CLK_MISO__FUNC_AUD_CLK_MOSI (MTK_PIN_NO(53) | 2)
-+#define MT8365_PIN_53_AUD_CLK_MISO__FUNC_I2S2_MCK (MTK_PIN_NO(53) | 3)
-+
-+#define MT8365_PIN_54_AUD_SYNC_MISO__FUNC_GPIO54 (MTK_PIN_NO(54) | 0)
-+#define MT8365_PIN_54_AUD_SYNC_MISO__FUNC_AUD_SYNC_MISO (MTK_PIN_NO(54) | 1)
-+#define MT8365_PIN_54_AUD_SYNC_MISO__FUNC_AUD_SYNC_MOSI (MTK_PIN_NO(54) | 2)
-+#define MT8365_PIN_54_AUD_SYNC_MISO__FUNC_I2S2_BCK (MTK_PIN_NO(54) | 3)
-+
-+#define MT8365_PIN_55_AUD_DAT_MISO0__FUNC_GPIO55 (MTK_PIN_NO(55) | 0)
-+#define MT8365_PIN_55_AUD_DAT_MISO0__FUNC_AUD_DAT_MISO0 (MTK_PIN_NO(55) | 1)
-+#define MT8365_PIN_55_AUD_DAT_MISO0__FUNC_AUD_DAT_MOSI0 (MTK_PIN_NO(55) | 2)
-+#define MT8365_PIN_55_AUD_DAT_MISO0__FUNC_I2S2_LRCK (MTK_PIN_NO(55) | 3)
-+
-+#define MT8365_PIN_56_AUD_DAT_MISO1__FUNC_GPIO56 (MTK_PIN_NO(56) | 0)
-+#define MT8365_PIN_56_AUD_DAT_MISO1__FUNC_AUD_DAT_MISO1 (MTK_PIN_NO(56) | 1)
-+#define MT8365_PIN_56_AUD_DAT_MISO1__FUNC_AUD_DAT_MOSI1 (MTK_PIN_NO(56) | 2)
-+#define MT8365_PIN_56_AUD_DAT_MISO1__FUNC_I2S2_DI (MTK_PIN_NO(56) | 3)
-+
-+#define MT8365_PIN_57_SDA0__FUNC_GPIO57 (MTK_PIN_NO(57) | 0)
-+#define MT8365_PIN_57_SDA0__FUNC_SDA0_0 (MTK_PIN_NO(57) | 1)
-+
-+#define MT8365_PIN_58_SCL0__FUNC_GPIO58 (MTK_PIN_NO(58) | 0)
-+#define MT8365_PIN_58_SCL0__FUNC_SCL0_0 (MTK_PIN_NO(58) | 1)
-+
-+#define MT8365_PIN_59_SDA1__FUNC_GPIO59 (MTK_PIN_NO(59) | 0)
-+#define MT8365_PIN_59_SDA1__FUNC_SDA1_0 (MTK_PIN_NO(59) | 1)
-+#define MT8365_PIN_59_SDA1__FUNC_USB_SDA (MTK_PIN_NO(59) | 6)
-+#define MT8365_PIN_59_SDA1__FUNC_DBG_SDA (MTK_PIN_NO(59) | 7)
-+
-+#define MT8365_PIN_60_SCL1__FUNC_GPIO60 (MTK_PIN_NO(60) | 0)
-+#define MT8365_PIN_60_SCL1__FUNC_SCL1_0 (MTK_PIN_NO(60) | 1)
-+#define MT8365_PIN_60_SCL1__FUNC_USB_SCL (MTK_PIN_NO(60) | 6)
-+#define MT8365_PIN_60_SCL1__FUNC_DBG_SCL (MTK_PIN_NO(60) | 7)
-+
-+#define MT8365_PIN_61_SDA2__FUNC_GPIO61 (MTK_PIN_NO(61) | 0)
-+#define MT8365_PIN_61_SDA2__FUNC_SDA2_0 (MTK_PIN_NO(61) | 1)
-+
-+#define MT8365_PIN_62_SCL2__FUNC_GPIO62 (MTK_PIN_NO(62) | 0)
-+#define MT8365_PIN_62_SCL2__FUNC_SCL2_0 (MTK_PIN_NO(62) | 1)
-+
-+#define MT8365_PIN_63_SDA3__FUNC_GPIO63 (MTK_PIN_NO(63) | 0)
-+#define MT8365_PIN_63_SDA3__FUNC_SDA3_0 (MTK_PIN_NO(63) | 1)
-+
-+#define MT8365_PIN_64_SCL3__FUNC_GPIO64 (MTK_PIN_NO(64) | 0)
-+#define MT8365_PIN_64_SCL3__FUNC_SCL3_0 (MTK_PIN_NO(64) | 1)
-+
-+#define MT8365_PIN_65_CMMCLK0__FUNC_GPIO65 (MTK_PIN_NO(65) | 0)
-+#define MT8365_PIN_65_CMMCLK0__FUNC_CMMCLK0 (MTK_PIN_NO(65) | 1)
-+#define MT8365_PIN_65_CMMCLK0__FUNC_CMMCLK1 (MTK_PIN_NO(65) | 2)
-+#define MT8365_PIN_65_CMMCLK0__FUNC_DBG_MON_A28 (MTK_PIN_NO(65) | 7)
-+
-+#define MT8365_PIN_66_CMMCLK1__FUNC_GPIO66 (MTK_PIN_NO(66) | 0)
-+#define MT8365_PIN_66_CMMCLK1__FUNC_CMMCLK1 (MTK_PIN_NO(66) | 1)
-+#define MT8365_PIN_66_CMMCLK1__FUNC_CMMCLK0 (MTK_PIN_NO(66) | 2)
-+#define MT8365_PIN_66_CMMCLK1__FUNC_DBG_MON_B2 (MTK_PIN_NO(66) | 7)
-+
-+#define MT8365_PIN_67_CMPCLK__FUNC_GPIO67 (MTK_PIN_NO(67) | 0)
-+#define MT8365_PIN_67_CMPCLK__FUNC_CMPCLK (MTK_PIN_NO(67) | 1)
-+#define MT8365_PIN_67_CMPCLK__FUNC_ANT_SEL0 (MTK_PIN_NO(67) | 2)
-+#define MT8365_PIN_67_CMPCLK__FUNC_TDM_RX_BCK (MTK_PIN_NO(67) | 4)
-+#define MT8365_PIN_67_CMPCLK__FUNC_I2S0_BCK (MTK_PIN_NO(67) | 5)
-+#define MT8365_PIN_67_CMPCLK__FUNC_DBG_MON_B3 (MTK_PIN_NO(67) | 7)
-+
-+#define MT8365_PIN_68_CMDAT0__FUNC_GPIO68 (MTK_PIN_NO(68) | 0)
-+#define MT8365_PIN_68_CMDAT0__FUNC_CMDAT0 (MTK_PIN_NO(68) | 1)
-+#define MT8365_PIN_68_CMDAT0__FUNC_ANT_SEL1 (MTK_PIN_NO(68) | 2)
-+#define MT8365_PIN_68_CMDAT0__FUNC_TDM_RX_LRCK (MTK_PIN_NO(68) | 4)
-+#define MT8365_PIN_68_CMDAT0__FUNC_I2S0_LRCK (MTK_PIN_NO(68) | 5)
-+#define MT8365_PIN_68_CMDAT0__FUNC_DBG_MON_B4 (MTK_PIN_NO(68) | 7)
-+
-+#define MT8365_PIN_69_CMDAT1__FUNC_GPIO69 (MTK_PIN_NO(69) | 0)
-+#define MT8365_PIN_69_CMDAT1__FUNC_CMDAT1 (MTK_PIN_NO(69) | 1)
-+#define MT8365_PIN_69_CMDAT1__FUNC_ANT_SEL2 (MTK_PIN_NO(69) | 2)
-+#define MT8365_PIN_69_CMDAT1__FUNC_DVFSRC_EXT_REQ (MTK_PIN_NO(69) | 3)
-+#define MT8365_PIN_69_CMDAT1__FUNC_TDM_RX_MCK (MTK_PIN_NO(69) | 4)
-+#define MT8365_PIN_69_CMDAT1__FUNC_I2S0_MCK (MTK_PIN_NO(69) | 5)
-+#define MT8365_PIN_69_CMDAT1__FUNC_DBG_MON_B5 (MTK_PIN_NO(69) | 7)
-+
-+#define MT8365_PIN_70_CMDAT2__FUNC_GPIO70 (MTK_PIN_NO(70) | 0)
-+#define MT8365_PIN_70_CMDAT2__FUNC_CMDAT2 (MTK_PIN_NO(70) | 1)
-+#define MT8365_PIN_70_CMDAT2__FUNC_ANT_SEL3 (MTK_PIN_NO(70) | 2)
-+#define MT8365_PIN_70_CMDAT2__FUNC_TDM_RX_DI (MTK_PIN_NO(70) | 4)
-+#define MT8365_PIN_70_CMDAT2__FUNC_I2S0_DI (MTK_PIN_NO(70) | 5)
-+#define MT8365_PIN_70_CMDAT2__FUNC_DBG_MON_B6 (MTK_PIN_NO(70) | 7)
-+
-+#define MT8365_PIN_71_CMDAT3__FUNC_GPIO71 (MTK_PIN_NO(71) | 0)
-+#define MT8365_PIN_71_CMDAT3__FUNC_CMDAT3 (MTK_PIN_NO(71) | 1)
-+#define MT8365_PIN_71_CMDAT3__FUNC_ANT_SEL4 (MTK_PIN_NO(71) | 2)
-+#define MT8365_PIN_71_CMDAT3__FUNC_DBG_MON_B7 (MTK_PIN_NO(71) | 7)
-+
-+#define MT8365_PIN_72_CMDAT4__FUNC_GPIO72 (MTK_PIN_NO(72) | 0)
-+#define MT8365_PIN_72_CMDAT4__FUNC_CMDAT4 (MTK_PIN_NO(72) | 1)
-+#define MT8365_PIN_72_CMDAT4__FUNC_ANT_SEL5 (MTK_PIN_NO(72) | 2)
-+#define MT8365_PIN_72_CMDAT4__FUNC_I2S3_BCK (MTK_PIN_NO(72) | 5)
-+#define MT8365_PIN_72_CMDAT4__FUNC_DBG_MON_B8 (MTK_PIN_NO(72) | 7)
-+
-+#define MT8365_PIN_73_CMDAT5__FUNC_GPIO73 (MTK_PIN_NO(73) | 0)
-+#define MT8365_PIN_73_CMDAT5__FUNC_CMDAT5 (MTK_PIN_NO(73) | 1)
-+#define MT8365_PIN_73_CMDAT5__FUNC_ANT_SEL6 (MTK_PIN_NO(73) | 2)
-+#define MT8365_PIN_73_CMDAT5__FUNC_I2S3_LRCK (MTK_PIN_NO(73) | 5)
-+#define MT8365_PIN_73_CMDAT5__FUNC_DBG_MON_B9 (MTK_PIN_NO(73) | 7)
-+
-+#define MT8365_PIN_74_CMDAT6__FUNC_GPIO74 (MTK_PIN_NO(74) | 0)
-+#define MT8365_PIN_74_CMDAT6__FUNC_CMDAT6 (MTK_PIN_NO(74) | 1)
-+#define MT8365_PIN_74_CMDAT6__FUNC_ANT_SEL7 (MTK_PIN_NO(74) | 2)
-+#define MT8365_PIN_74_CMDAT6__FUNC_I2S3_MCK (MTK_PIN_NO(74) | 5)
-+#define MT8365_PIN_74_CMDAT6__FUNC_DBG_MON_B10 (MTK_PIN_NO(74) | 7)
-+
-+#define MT8365_PIN_75_CMDAT7__FUNC_GPIO75 (MTK_PIN_NO(75) | 0)
-+#define MT8365_PIN_75_CMDAT7__FUNC_CMDAT7 (MTK_PIN_NO(75) | 1)
-+#define MT8365_PIN_75_CMDAT7__FUNC_I2S3_DO (MTK_PIN_NO(75) | 5)
-+#define MT8365_PIN_75_CMDAT7__FUNC_DBG_MON_B11 (MTK_PIN_NO(75) | 7)
-+
-+#define MT8365_PIN_76_CMDAT8__FUNC_GPIO76 (MTK_PIN_NO(76) | 0)
-+#define MT8365_PIN_76_CMDAT8__FUNC_CMDAT8 (MTK_PIN_NO(76) | 1)
-+#define MT8365_PIN_76_CMDAT8__FUNC_PCM_CLK (MTK_PIN_NO(76) | 5)
-+#define MT8365_PIN_76_CMDAT8__FUNC_DBG_MON_A29 (MTK_PIN_NO(76) | 7)
-+
-+#define MT8365_PIN_77_CMDAT9__FUNC_GPIO77 (MTK_PIN_NO(77) | 0)
-+#define MT8365_PIN_77_CMDAT9__FUNC_CMDAT9 (MTK_PIN_NO(77) | 1)
-+#define MT8365_PIN_77_CMDAT9__FUNC_PCM_SYNC (MTK_PIN_NO(77) | 5)
-+#define MT8365_PIN_77_CMDAT9__FUNC_DBG_MON_A30 (MTK_PIN_NO(77) | 7)
-+
-+#define MT8365_PIN_78_CMHSYNC__FUNC_GPIO78 (MTK_PIN_NO(78) | 0)
-+#define MT8365_PIN_78_CMHSYNC__FUNC_CMHSYNC (MTK_PIN_NO(78) | 1)
-+#define MT8365_PIN_78_CMHSYNC__FUNC_PCM_RX (MTK_PIN_NO(78) | 5)
-+#define MT8365_PIN_78_CMHSYNC__FUNC_DBG_MON_A31 (MTK_PIN_NO(78) | 7)
-+
-+#define MT8365_PIN_79_CMVSYNC__FUNC_GPIO79 (MTK_PIN_NO(79) | 0)
-+#define MT8365_PIN_79_CMVSYNC__FUNC_CMVSYNC (MTK_PIN_NO(79) | 1)
-+#define MT8365_PIN_79_CMVSYNC__FUNC_PCM_TX (MTK_PIN_NO(79) | 5)
-+#define MT8365_PIN_79_CMVSYNC__FUNC_DBG_MON_A32 (MTK_PIN_NO(79) | 7)
-+
-+#define MT8365_PIN_80_MSDC2_CMD__FUNC_GPIO80 (MTK_PIN_NO(80) | 0)
-+#define MT8365_PIN_80_MSDC2_CMD__FUNC_MSDC2_CMD (MTK_PIN_NO(80) | 1)
-+#define MT8365_PIN_80_MSDC2_CMD__FUNC_TDM_TX_LRCK (MTK_PIN_NO(80) | 2)
-+#define MT8365_PIN_80_MSDC2_CMD__FUNC_UTXD1 (MTK_PIN_NO(80) | 3)
-+#define MT8365_PIN_80_MSDC2_CMD__FUNC_DPI_D19 (MTK_PIN_NO(80) | 4)
-+#define MT8365_PIN_80_MSDC2_CMD__FUNC_UDI_TMS_XI (MTK_PIN_NO(80) | 5)
-+#define MT8365_PIN_80_MSDC2_CMD__FUNC_ADSP_JTAG_TMS (MTK_PIN_NO(80) | 6)
-+
-+#define MT8365_PIN_81_MSDC2_CLK__FUNC_GPIO81 (MTK_PIN_NO(81) | 0)
-+#define MT8365_PIN_81_MSDC2_CLK__FUNC_MSDC2_CLK (MTK_PIN_NO(81) | 1)
-+#define MT8365_PIN_81_MSDC2_CLK__FUNC_TDM_TX_BCK (MTK_PIN_NO(81) | 2)
-+#define MT8365_PIN_81_MSDC2_CLK__FUNC_URXD1 (MTK_PIN_NO(81) | 3)
-+#define MT8365_PIN_81_MSDC2_CLK__FUNC_DPI_D20 (MTK_PIN_NO(81) | 4)
-+#define MT8365_PIN_81_MSDC2_CLK__FUNC_UDI_TCK_XI (MTK_PIN_NO(81) | 5)
-+#define MT8365_PIN_81_MSDC2_CLK__FUNC_ADSP_JTAG_TCK (MTK_PIN_NO(81) | 6)
-+
-+#define MT8365_PIN_82_MSDC2_DAT0__FUNC_GPIO82 (MTK_PIN_NO(82) | 0)
-+#define MT8365_PIN_82_MSDC2_DAT0__FUNC_MSDC2_DAT0 (MTK_PIN_NO(82) | 1)
-+#define MT8365_PIN_82_MSDC2_DAT0__FUNC_TDM_TX_DATA0 (MTK_PIN_NO(82) | 2)
-+#define MT8365_PIN_82_MSDC2_DAT0__FUNC_UTXD2 (MTK_PIN_NO(82) | 3)
-+#define MT8365_PIN_82_MSDC2_DAT0__FUNC_DPI_D21 (MTK_PIN_NO(82) | 4)
-+#define MT8365_PIN_82_MSDC2_DAT0__FUNC_UDI_TDI_XI (MTK_PIN_NO(82) | 5)
-+#define MT8365_PIN_82_MSDC2_DAT0__FUNC_ADSP_JTAG_TDI (MTK_PIN_NO(82) | 6)
-+
-+#define MT8365_PIN_83_MSDC2_DAT1__FUNC_GPIO83 (MTK_PIN_NO(83) | 0)
-+#define MT8365_PIN_83_MSDC2_DAT1__FUNC_MSDC2_DAT1 (MTK_PIN_NO(83) | 1)
-+#define MT8365_PIN_83_MSDC2_DAT1__FUNC_TDM_TX_DATA1 (MTK_PIN_NO(83) | 2)
-+#define MT8365_PIN_83_MSDC2_DAT1__FUNC_URXD2 (MTK_PIN_NO(83) | 3)
-+#define MT8365_PIN_83_MSDC2_DAT1__FUNC_DPI_D22 (MTK_PIN_NO(83) | 4)
-+#define MT8365_PIN_83_MSDC2_DAT1__FUNC_UDI_TDO (MTK_PIN_NO(83) | 5)
-+#define MT8365_PIN_83_MSDC2_DAT1__FUNC_ADSP_JTAG_TDO (MTK_PIN_NO(83) | 6)
-+
-+#define MT8365_PIN_84_MSDC2_DAT2__FUNC_GPIO84 (MTK_PIN_NO(84) | 0)
-+#define MT8365_PIN_84_MSDC2_DAT2__FUNC_MSDC2_DAT2 (MTK_PIN_NO(84) | 1)
-+#define MT8365_PIN_84_MSDC2_DAT2__FUNC_TDM_TX_DATA2 (MTK_PIN_NO(84) | 2)
-+#define MT8365_PIN_84_MSDC2_DAT2__FUNC_PWM_A (MTK_PIN_NO(84) | 3)
-+#define MT8365_PIN_84_MSDC2_DAT2__FUNC_DPI_D23 (MTK_PIN_NO(84) | 4)
-+#define MT8365_PIN_84_MSDC2_DAT2__FUNC_UDI_NTRST_XI (MTK_PIN_NO(84) | 5)
-+#define MT8365_PIN_84_MSDC2_DAT2__FUNC_ADSP_JTAG_TRST (MTK_PIN_NO(84) | 6)
-+
-+#define MT8365_PIN_85_MSDC2_DAT3__FUNC_GPIO85 (MTK_PIN_NO(85) | 0)
-+#define MT8365_PIN_85_MSDC2_DAT3__FUNC_MSDC2_DAT3 (MTK_PIN_NO(85) | 1)
-+#define MT8365_PIN_85_MSDC2_DAT3__FUNC_TDM_TX_DATA3 (MTK_PIN_NO(85) | 2)
-+#define MT8365_PIN_85_MSDC2_DAT3__FUNC_PWM_B (MTK_PIN_NO(85) | 3)
-+#define MT8365_PIN_85_MSDC2_DAT3__FUNC_EXT_FRAME_SYNC (MTK_PIN_NO(85) | 5)
-+
-+#define MT8365_PIN_86_MSDC2_DSL__FUNC_GPIO86 (MTK_PIN_NO(86) | 0)
-+#define MT8365_PIN_86_MSDC2_DSL__FUNC_MSDC2_DSL (MTK_PIN_NO(86) | 1)
-+#define MT8365_PIN_86_MSDC2_DSL__FUNC_TDM_TX_MCK (MTK_PIN_NO(86) | 2)
-+#define MT8365_PIN_86_MSDC2_DSL__FUNC_PWM_C (MTK_PIN_NO(86) | 3)
-+
-+#define MT8365_PIN_87_MSDC1_CMD__FUNC_GPIO87 (MTK_PIN_NO(87) | 0)
-+#define MT8365_PIN_87_MSDC1_CMD__FUNC_MSDC1_CMD (MTK_PIN_NO(87) | 1)
-+#define MT8365_PIN_87_MSDC1_CMD__FUNC_CONN_MCU_AICE_TMSC (MTK_PIN_NO(87) | 2)
-+#define MT8365_PIN_87_MSDC1_CMD__FUNC_DFD_TMS_XI (MTK_PIN_NO(87) | 3)
-+#define MT8365_PIN_87_MSDC1_CMD__FUNC_APU_JTAG_TMS (MTK_PIN_NO(87) | 4)
-+#define MT8365_PIN_87_MSDC1_CMD__FUNC_MCU_SPM_TMS (MTK_PIN_NO(87) | 5)
-+#define MT8365_PIN_87_MSDC1_CMD__FUNC_CONN_DSP_JMS (MTK_PIN_NO(87) | 6)
-+#define MT8365_PIN_87_MSDC1_CMD__FUNC_ADSP_JTAG_TMS (MTK_PIN_NO(87) | 7)
-+
-+#define MT8365_PIN_88_MSDC1_CLK__FUNC_GPIO88 (MTK_PIN_NO(88) | 0)
-+#define MT8365_PIN_88_MSDC1_CLK__FUNC_MSDC1_CLK (MTK_PIN_NO(88) | 1)
-+#define MT8365_PIN_88_MSDC1_CLK__FUNC_CONN_MCU_AICE_TCKC (MTK_PIN_NO(88) | 2)
-+#define MT8365_PIN_88_MSDC1_CLK__FUNC_DFD_TCK_XI (MTK_PIN_NO(88) | 3)
-+#define MT8365_PIN_88_MSDC1_CLK__FUNC_APU_JTAG_TCK (MTK_PIN_NO(88) | 4)
-+#define MT8365_PIN_88_MSDC1_CLK__FUNC_MCU_SPM_TCK (MTK_PIN_NO(88) | 5)
-+#define MT8365_PIN_88_MSDC1_CLK__FUNC_CONN_DSP_JCK (MTK_PIN_NO(88) | 6)
-+#define MT8365_PIN_88_MSDC1_CLK__FUNC_ADSP_JTAG_TCK (MTK_PIN_NO(88) | 7)
-+
-+#define MT8365_PIN_89_MSDC1_DAT0__FUNC_GPIO89 (MTK_PIN_NO(89) | 0)
-+#define MT8365_PIN_89_MSDC1_DAT0__FUNC_MSDC1_DAT0 (MTK_PIN_NO(89) | 1)
-+#define MT8365_PIN_89_MSDC1_DAT0__FUNC_PWM_C (MTK_PIN_NO(89) | 2)
-+#define MT8365_PIN_89_MSDC1_DAT0__FUNC_DFD_TDI_XI (MTK_PIN_NO(89) | 3)
-+#define MT8365_PIN_89_MSDC1_DAT0__FUNC_APU_JTAG_TDI (MTK_PIN_NO(89) | 4)
-+#define MT8365_PIN_89_MSDC1_DAT0__FUNC_MCU_SPM_TDI (MTK_PIN_NO(89) | 5)
-+#define MT8365_PIN_89_MSDC1_DAT0__FUNC_CONN_DSP_JDI (MTK_PIN_NO(89) | 6)
-+#define MT8365_PIN_89_MSDC1_DAT0__FUNC_ADSP_JTAG_TDI (MTK_PIN_NO(89) | 7)
-+
-+#define MT8365_PIN_90_MSDC1_DAT1__FUNC_GPIO90 (MTK_PIN_NO(90) | 0)
-+#define MT8365_PIN_90_MSDC1_DAT1__FUNC_MSDC1_DAT1 (MTK_PIN_NO(90) | 1)
-+#define MT8365_PIN_90_MSDC1_DAT1__FUNC_SPDIF_IN (MTK_PIN_NO(90) | 2)
-+#define MT8365_PIN_90_MSDC1_DAT1__FUNC_DFD_TDO (MTK_PIN_NO(90) | 3)
-+#define MT8365_PIN_90_MSDC1_DAT1__FUNC_APU_JTAG_TDO (MTK_PIN_NO(90) | 4)
-+#define MT8365_PIN_90_MSDC1_DAT1__FUNC_MCU_SPM_TDO (MTK_PIN_NO(90) | 5)
-+#define MT8365_PIN_90_MSDC1_DAT1__FUNC_CONN_DSP_JDO (MTK_PIN_NO(90) | 6)
-+#define MT8365_PIN_90_MSDC1_DAT1__FUNC_ADSP_JTAG_TDO (MTK_PIN_NO(90) | 7)
-+
-+#define MT8365_PIN_91_MSDC1_DAT2__FUNC_GPIO91 (MTK_PIN_NO(91) | 0)
-+#define MT8365_PIN_91_MSDC1_DAT2__FUNC_MSDC1_DAT2 (MTK_PIN_NO(91) | 1)
-+#define MT8365_PIN_91_MSDC1_DAT2__FUNC_SPDIF_OUT (MTK_PIN_NO(91) | 2)
-+#define MT8365_PIN_91_MSDC1_DAT2__FUNC_DFD_NTRST_XI (MTK_PIN_NO(91) | 3)
-+#define MT8365_PIN_91_MSDC1_DAT2__FUNC_APU_JTAG_TRST (MTK_PIN_NO(91) | 4)
-+#define MT8365_PIN_91_MSDC1_DAT2__FUNC_MCU_SPM_NTRST (MTK_PIN_NO(91) | 5)
-+#define MT8365_PIN_91_MSDC1_DAT2__FUNC_CONN_DSP_JINTP (MTK_PIN_NO(91) | 6)
-+#define MT8365_PIN_91_MSDC1_DAT2__FUNC_ADSP_JTAG_TRST (MTK_PIN_NO(91) | 7)
-+
-+#define MT8365_PIN_92_MSDC1_DAT3__FUNC_GPIO92 (MTK_PIN_NO(92) | 0)
-+#define MT8365_PIN_92_MSDC1_DAT3__FUNC_MSDC1_DAT3 (MTK_PIN_NO(92) | 1)
-+#define MT8365_PIN_92_MSDC1_DAT3__FUNC_IRRX (MTK_PIN_NO(92) | 2)
-+#define MT8365_PIN_92_MSDC1_DAT3__FUNC_PWM_A (MTK_PIN_NO(92) | 3)
-+
-+#define MT8365_PIN_93_MSDC0_DAT7__FUNC_GPIO93 (MTK_PIN_NO(93) | 0)
-+#define MT8365_PIN_93_MSDC0_DAT7__FUNC_MSDC0_DAT7 (MTK_PIN_NO(93) | 1)
-+#define MT8365_PIN_93_MSDC0_DAT7__FUNC_NLD7 (MTK_PIN_NO(93) | 2)
-+
-+#define MT8365_PIN_94_MSDC0_DAT6__FUNC_GPIO94 (MTK_PIN_NO(94) | 0)
-+#define MT8365_PIN_94_MSDC0_DAT6__FUNC_MSDC0_DAT6 (MTK_PIN_NO(94) | 1)
-+#define MT8365_PIN_94_MSDC0_DAT6__FUNC_NLD6 (MTK_PIN_NO(94) | 2)
-+
-+#define MT8365_PIN_95_MSDC0_DAT5__FUNC_GPIO95 (MTK_PIN_NO(95) | 0)
-+#define MT8365_PIN_95_MSDC0_DAT5__FUNC_MSDC0_DAT5 (MTK_PIN_NO(95) | 1)
-+#define MT8365_PIN_95_MSDC0_DAT5__FUNC_NLD4 (MTK_PIN_NO(95) | 2)
-+
-+#define MT8365_PIN_96_MSDC0_DAT4__FUNC_GPIO96 (MTK_PIN_NO(96) | 0)
-+#define MT8365_PIN_96_MSDC0_DAT4__FUNC_MSDC0_DAT4 (MTK_PIN_NO(96) | 1)
-+#define MT8365_PIN_96_MSDC0_DAT4__FUNC_NLD3 (MTK_PIN_NO(96) | 2)
-+
-+#define MT8365_PIN_97_MSDC0_RSTB__FUNC_GPIO97 (MTK_PIN_NO(97) | 0)
-+#define MT8365_PIN_97_MSDC0_RSTB__FUNC_MSDC0_RSTB (MTK_PIN_NO(97) | 1)
-+#define MT8365_PIN_97_MSDC0_RSTB__FUNC_NLD0 (MTK_PIN_NO(97) | 2)
-+
-+#define MT8365_PIN_98_MSDC0_CMD__FUNC_GPIO98 (MTK_PIN_NO(98) | 0)
-+#define MT8365_PIN_98_MSDC0_CMD__FUNC_MSDC0_CMD (MTK_PIN_NO(98) | 1)
-+#define MT8365_PIN_98_MSDC0_CMD__FUNC_NALE (MTK_PIN_NO(98) | 2)
-+
-+#define MT8365_PIN_99_MSDC0_CLK__FUNC_GPIO99 (MTK_PIN_NO(99) | 0)
-+#define MT8365_PIN_99_MSDC0_CLK__FUNC_MSDC0_CLK (MTK_PIN_NO(99) | 1)
-+#define MT8365_PIN_99_MSDC0_CLK__FUNC_NWEB (MTK_PIN_NO(99) | 2)
-+
-+#define MT8365_PIN_100_MSDC0_DAT3__FUNC_GPIO100 (MTK_PIN_NO(100) | 0)
-+#define MT8365_PIN_100_MSDC0_DAT3__FUNC_MSDC0_DAT3 (MTK_PIN_NO(100) | 1)
-+#define MT8365_PIN_100_MSDC0_DAT3__FUNC_NLD1 (MTK_PIN_NO(100) | 2)
-+
-+#define MT8365_PIN_101_MSDC0_DAT2__FUNC_GPIO101 (MTK_PIN_NO(101) | 0)
-+#define MT8365_PIN_101_MSDC0_DAT2__FUNC_MSDC0_DAT2 (MTK_PIN_NO(101) | 1)
-+#define MT8365_PIN_101_MSDC0_DAT2__FUNC_NLD5 (MTK_PIN_NO(101) | 2)
-+
-+#define MT8365_PIN_102_MSDC0_DAT1__FUNC_GPIO102 (MTK_PIN_NO(102) | 0)
-+#define MT8365_PIN_102_MSDC0_DAT1__FUNC_MSDC0_DAT1 (MTK_PIN_NO(102) | 1)
-+#define MT8365_PIN_102_MSDC0_DAT1__FUNC_NDQS (MTK_PIN_NO(102) | 2)
-+
-+#define MT8365_PIN_103_MSDC0_DAT0__FUNC_GPIO103 (MTK_PIN_NO(103) | 0)
-+#define MT8365_PIN_103_MSDC0_DAT0__FUNC_MSDC0_DAT0 (MTK_PIN_NO(103) | 1)
-+#define MT8365_PIN_103_MSDC0_DAT0__FUNC_NLD2 (MTK_PIN_NO(103) | 2)
-+
-+#define MT8365_PIN_104_MSDC0_DSL__FUNC_GPIO104 (MTK_PIN_NO(104) | 0)
-+#define MT8365_PIN_104_MSDC0_DSL__FUNC_MSDC0_DSL (MTK_PIN_NO(104) | 1)
-+
-+#define MT8365_PIN_105_NCLE__FUNC_GPIO105 (MTK_PIN_NO(105) | 0)
-+#define MT8365_PIN_105_NCLE__FUNC_NCLE (MTK_PIN_NO(105) | 1)
-+#define MT8365_PIN_105_NCLE__FUNC_TDM_RX_MCK (MTK_PIN_NO(105) | 2)
-+#define MT8365_PIN_105_NCLE__FUNC_DBG_MON_B12 (MTK_PIN_NO(105) | 7)
-+
-+#define MT8365_PIN_106_NCEB1__FUNC_GPIO106 (MTK_PIN_NO(106) | 0)
-+#define MT8365_PIN_106_NCEB1__FUNC_NCEB1 (MTK_PIN_NO(106) | 1)
-+#define MT8365_PIN_106_NCEB1__FUNC_TDM_RX_BCK (MTK_PIN_NO(106) | 2)
-+#define MT8365_PIN_106_NCEB1__FUNC_DBG_MON_B13 (MTK_PIN_NO(106) | 7)
-+
-+#define MT8365_PIN_107_NCEB0__FUNC_GPIO107 (MTK_PIN_NO(107) | 0)
-+#define MT8365_PIN_107_NCEB0__FUNC_NCEB0 (MTK_PIN_NO(107) | 1)
-+#define MT8365_PIN_107_NCEB0__FUNC_TDM_RX_LRCK (MTK_PIN_NO(107) | 2)
-+#define MT8365_PIN_107_NCEB0__FUNC_DBG_MON_B14 (MTK_PIN_NO(107) | 7)
-+
-+#define MT8365_PIN_108_NREB__FUNC_GPIO108 (MTK_PIN_NO(108) | 0)
-+#define MT8365_PIN_108_NREB__FUNC_NREB (MTK_PIN_NO(108) | 1)
-+#define MT8365_PIN_108_NREB__FUNC_TDM_RX_DI (MTK_PIN_NO(108) | 2)
-+#define MT8365_PIN_108_NREB__FUNC_DBG_MON_B15 (MTK_PIN_NO(108) | 7)
-+
-+#define MT8365_PIN_109_NRNB__FUNC_GPIO109 (MTK_PIN_NO(109) | 0)
-+#define MT8365_PIN_109_NRNB__FUNC_NRNB (MTK_PIN_NO(109) | 1)
-+#define MT8365_PIN_109_NRNB__FUNC_TSF_IN (MTK_PIN_NO(109) | 2)
-+#define MT8365_PIN_109_NRNB__FUNC_DBG_MON_B16 (MTK_PIN_NO(109) | 7)
-+
-+#define MT8365_PIN_110_PCM_CLK__FUNC_GPIO110 (MTK_PIN_NO(110) | 0)
-+#define MT8365_PIN_110_PCM_CLK__FUNC_PCM_CLK (MTK_PIN_NO(110) | 1)
-+#define MT8365_PIN_110_PCM_CLK__FUNC_I2S0_BCK (MTK_PIN_NO(110) | 2)
-+#define MT8365_PIN_110_PCM_CLK__FUNC_I2S3_BCK (MTK_PIN_NO(110) | 3)
-+#define MT8365_PIN_110_PCM_CLK__FUNC_SPDIF_IN (MTK_PIN_NO(110) | 4)
-+#define MT8365_PIN_110_PCM_CLK__FUNC_DPI_D15 (MTK_PIN_NO(110) | 5)
-+
-+#define MT8365_PIN_111_PCM_SYNC__FUNC_GPIO111 (MTK_PIN_NO(111) | 0)
-+#define MT8365_PIN_111_PCM_SYNC__FUNC_PCM_SYNC (MTK_PIN_NO(111) | 1)
-+#define MT8365_PIN_111_PCM_SYNC__FUNC_I2S0_LRCK (MTK_PIN_NO(111) | 2)
-+#define MT8365_PIN_111_PCM_SYNC__FUNC_I2S3_LRCK (MTK_PIN_NO(111) | 3)
-+#define MT8365_PIN_111_PCM_SYNC__FUNC_SPDIF_OUT (MTK_PIN_NO(111) | 4)
-+#define MT8365_PIN_111_PCM_SYNC__FUNC_DPI_D16 (MTK_PIN_NO(111) | 5)
-+
-+#define MT8365_PIN_112_PCM_RX__FUNC_GPIO112 (MTK_PIN_NO(112) | 0)
-+#define MT8365_PIN_112_PCM_RX__FUNC_PCM_RX (MTK_PIN_NO(112) | 1)
-+#define MT8365_PIN_112_PCM_RX__FUNC_I2S0_DI (MTK_PIN_NO(112) | 2)
-+#define MT8365_PIN_112_PCM_RX__FUNC_I2S3_MCK (MTK_PIN_NO(112) | 3)
-+#define MT8365_PIN_112_PCM_RX__FUNC_IRRX (MTK_PIN_NO(112) | 4)
-+#define MT8365_PIN_112_PCM_RX__FUNC_DPI_D17 (MTK_PIN_NO(112) | 5)
-+
-+#define MT8365_PIN_113_PCM_TX__FUNC_GPIO113 (MTK_PIN_NO(113) | 0)
-+#define MT8365_PIN_113_PCM_TX__FUNC_PCM_TX (MTK_PIN_NO(113) | 1)
-+#define MT8365_PIN_113_PCM_TX__FUNC_I2S0_MCK (MTK_PIN_NO(113) | 2)
-+#define MT8365_PIN_113_PCM_TX__FUNC_I2S3_DO (MTK_PIN_NO(113) | 3)
-+#define MT8365_PIN_113_PCM_TX__FUNC_PWM_B (MTK_PIN_NO(113) | 4)
-+#define MT8365_PIN_113_PCM_TX__FUNC_DPI_D18 (MTK_PIN_NO(113) | 5)
-+
-+#define MT8365_PIN_114_I2S_DATA_IN__FUNC_GPIO114 (MTK_PIN_NO(114) | 0)
-+#define MT8365_PIN_114_I2S_DATA_IN__FUNC_I2S0_DI (MTK_PIN_NO(114) | 1)
-+#define MT8365_PIN_114_I2S_DATA_IN__FUNC_I2S1_DO (MTK_PIN_NO(114) | 2)
-+#define MT8365_PIN_114_I2S_DATA_IN__FUNC_I2S2_DI (MTK_PIN_NO(114) | 3)
-+#define MT8365_PIN_114_I2S_DATA_IN__FUNC_I2S3_DO (MTK_PIN_NO(114) | 4)
-+#define MT8365_PIN_114_I2S_DATA_IN__FUNC_PWM_A (MTK_PIN_NO(114) | 5)
-+#define MT8365_PIN_114_I2S_DATA_IN__FUNC_SPDIF_IN (MTK_PIN_NO(114) | 6)
-+#define MT8365_PIN_114_I2S_DATA_IN__FUNC_DBG_MON_B17 (MTK_PIN_NO(114) | 7)
-+
-+#define MT8365_PIN_115_I2S_LRCK__FUNC_GPIO115 (MTK_PIN_NO(115) | 0)
-+#define MT8365_PIN_115_I2S_LRCK__FUNC_I2S0_LRCK (MTK_PIN_NO(115) | 1)
-+#define MT8365_PIN_115_I2S_LRCK__FUNC_I2S1_LRCK (MTK_PIN_NO(115) | 2)
-+#define MT8365_PIN_115_I2S_LRCK__FUNC_I2S2_LRCK (MTK_PIN_NO(115) | 3)
-+#define MT8365_PIN_115_I2S_LRCK__FUNC_I2S3_LRCK (MTK_PIN_NO(115) | 4)
-+#define MT8365_PIN_115_I2S_LRCK__FUNC_PWM_B (MTK_PIN_NO(115) | 5)
-+#define MT8365_PIN_115_I2S_LRCK__FUNC_SPDIF_OUT (MTK_PIN_NO(115) | 6)
-+#define MT8365_PIN_115_I2S_LRCK__FUNC_DBG_MON_B18 (MTK_PIN_NO(115) | 7)
-+
-+#define MT8365_PIN_116_I2S_BCK__FUNC_GPIO116 (MTK_PIN_NO(116) | 0)
-+#define MT8365_PIN_116_I2S_BCK__FUNC_I2S0_BCK (MTK_PIN_NO(116) | 1)
-+#define MT8365_PIN_116_I2S_BCK__FUNC_I2S1_BCK (MTK_PIN_NO(116) | 2)
-+#define MT8365_PIN_116_I2S_BCK__FUNC_I2S2_BCK (MTK_PIN_NO(116) | 3)
-+#define MT8365_PIN_116_I2S_BCK__FUNC_I2S3_BCK (MTK_PIN_NO(116) | 4)
-+#define MT8365_PIN_116_I2S_BCK__FUNC_PWM_C (MTK_PIN_NO(116) | 5)
-+#define MT8365_PIN_116_I2S_BCK__FUNC_IRRX (MTK_PIN_NO(116) | 6)
-+#define MT8365_PIN_116_I2S_BCK__FUNC_DBG_MON_B19 (MTK_PIN_NO(116) | 7)
-+
-+#define MT8365_PIN_117_DMIC0_CLK__FUNC_GPIO117 (MTK_PIN_NO(117) | 0)
-+#define MT8365_PIN_117_DMIC0_CLK__FUNC_DMIC0_CLK (MTK_PIN_NO(117) | 1)
-+#define MT8365_PIN_117_DMIC0_CLK__FUNC_I2S2_BCK (MTK_PIN_NO(117) | 2)
-+#define MT8365_PIN_117_DMIC0_CLK__FUNC_DBG_MON_B20 (MTK_PIN_NO(117) | 7)
-+
-+#define MT8365_PIN_118_DMIC0_DAT0__FUNC_GPIO118 (MTK_PIN_NO(118) | 0)
-+#define MT8365_PIN_118_DMIC0_DAT0__FUNC_DMIC0_DAT0 (MTK_PIN_NO(118) | 1)
-+#define MT8365_PIN_118_DMIC0_DAT0__FUNC_I2S2_DI (MTK_PIN_NO(118) | 2)
-+#define MT8365_PIN_118_DMIC0_DAT0__FUNC_DBG_MON_B21 (MTK_PIN_NO(118) | 7)
-+
-+#define MT8365_PIN_119_DMIC0_DAT1__FUNC_GPIO119 (MTK_PIN_NO(119) | 0)
-+#define MT8365_PIN_119_DMIC0_DAT1__FUNC_DMIC0_DAT1 (MTK_PIN_NO(119) | 1)
-+#define MT8365_PIN_119_DMIC0_DAT1__FUNC_I2S2_LRCK (MTK_PIN_NO(119) | 2)
-+#define MT8365_PIN_119_DMIC0_DAT1__FUNC_DBG_MON_B22 (MTK_PIN_NO(119) | 7)
-+
-+#define MT8365_PIN_120_DMIC1_CLK__FUNC_GPIO120 (MTK_PIN_NO(120) | 0)
-+#define MT8365_PIN_120_DMIC1_CLK__FUNC_DMIC1_CLK (MTK_PIN_NO(120) | 1)
-+#define MT8365_PIN_120_DMIC1_CLK__FUNC_I2S2_MCK (MTK_PIN_NO(120) | 2)
-+#define MT8365_PIN_120_DMIC1_CLK__FUNC_DBG_MON_B23 (MTK_PIN_NO(120) | 7)
-+
-+#define MT8365_PIN_121_DMIC1_DAT0__FUNC_GPIO121 (MTK_PIN_NO(121) | 0)
-+#define MT8365_PIN_121_DMIC1_DAT0__FUNC_DMIC1_DAT0 (MTK_PIN_NO(121) | 1)
-+#define MT8365_PIN_121_DMIC1_DAT0__FUNC_I2S1_BCK (MTK_PIN_NO(121) | 2)
-+#define MT8365_PIN_121_DMIC1_DAT0__FUNC_DBG_MON_B24 (MTK_PIN_NO(121) | 7)
-+
-+#define MT8365_PIN_122_DMIC1_DAT1__FUNC_GPIO122 (MTK_PIN_NO(122) | 0)
-+#define MT8365_PIN_122_DMIC1_DAT1__FUNC_DMIC1_DAT1 (MTK_PIN_NO(122) | 1)
-+#define MT8365_PIN_122_DMIC1_DAT1__FUNC_I2S1_LRCK (MTK_PIN_NO(122) | 2)
-+#define MT8365_PIN_122_DMIC1_DAT1__FUNC_DBG_MON_B25 (MTK_PIN_NO(122) | 7)
-+
-+#define MT8365_PIN_123_DMIC2_CLK__FUNC_GPIO123 (MTK_PIN_NO(123) | 0)
-+#define MT8365_PIN_123_DMIC2_CLK__FUNC_DMIC2_CLK (MTK_PIN_NO(123) | 1)
-+#define MT8365_PIN_123_DMIC2_CLK__FUNC_I2S1_MCK (MTK_PIN_NO(123) | 2)
-+#define MT8365_PIN_123_DMIC2_CLK__FUNC_DBG_MON_B26 (MTK_PIN_NO(123) | 7)
-+
-+#define MT8365_PIN_124_DMIC2_DAT0__FUNC_GPIO124 (MTK_PIN_NO(124) | 0)
-+#define MT8365_PIN_124_DMIC2_DAT0__FUNC_DMIC2_DAT0 (MTK_PIN_NO(124) | 1)
-+#define MT8365_PIN_124_DMIC2_DAT0__FUNC_I2S1_DO (MTK_PIN_NO(124) | 2)
-+#define MT8365_PIN_124_DMIC2_DAT0__FUNC_DBG_MON_B27 (MTK_PIN_NO(124) | 7)
-+
-+#define MT8365_PIN_125_DMIC2_DAT1__FUNC_GPIO125 (MTK_PIN_NO(125) | 0)
-+#define MT8365_PIN_125_DMIC2_DAT1__FUNC_DMIC2_DAT1 (MTK_PIN_NO(125) | 1)
-+#define MT8365_PIN_125_DMIC2_DAT1__FUNC_TDM_RX_BCK (MTK_PIN_NO(125) | 2)
-+#define MT8365_PIN_125_DMIC2_DAT1__FUNC_DBG_MON_B28 (MTK_PIN_NO(125) | 7)
-+
-+#define MT8365_PIN_126_DMIC3_CLK__FUNC_GPIO126 (MTK_PIN_NO(126) | 0)
-+#define MT8365_PIN_126_DMIC3_CLK__FUNC_DMIC3_CLK (MTK_PIN_NO(126) | 1)
-+#define MT8365_PIN_126_DMIC3_CLK__FUNC_TDM_RX_LRCK (MTK_PIN_NO(126) | 2)
-+
-+#define MT8365_PIN_127_DMIC3_DAT0__FUNC_GPIO127 (MTK_PIN_NO(127) | 0)
-+#define MT8365_PIN_127_DMIC3_DAT0__FUNC_DMIC3_DAT0 (MTK_PIN_NO(127) | 1)
-+#define MT8365_PIN_127_DMIC3_DAT0__FUNC_TDM_RX_DI (MTK_PIN_NO(127) | 2)
-+
-+#define MT8365_PIN_128_DMIC3_DAT1__FUNC_GPIO128 (MTK_PIN_NO(128) | 0)
-+#define MT8365_PIN_128_DMIC3_DAT1__FUNC_DMIC3_DAT1 (MTK_PIN_NO(128) | 1)
-+#define MT8365_PIN_128_DMIC3_DAT1__FUNC_TDM_RX_MCK (MTK_PIN_NO(128) | 2)
-+#define MT8365_PIN_128_DMIC3_DAT1__FUNC_VAD_CLK (MTK_PIN_NO(128) | 3)
-+
-+#define MT8365_PIN_129_TDM_TX_BCK__FUNC_GPIO129 (MTK_PIN_NO(129) | 0)
-+#define MT8365_PIN_129_TDM_TX_BCK__FUNC_TDM_TX_BCK (MTK_PIN_NO(129) | 1)
-+#define MT8365_PIN_129_TDM_TX_BCK__FUNC_I2S3_BCK (MTK_PIN_NO(129) | 2)
-+#define MT8365_PIN_129_TDM_TX_BCK__FUNC_ckmon1_ck (MTK_PIN_NO(129) | 3)
-+
-+#define MT8365_PIN_130_TDM_TX_LRCK__FUNC_GPIO130 (MTK_PIN_NO(130) | 0)
-+#define MT8365_PIN_130_TDM_TX_LRCK__FUNC_TDM_TX_LRCK (MTK_PIN_NO(130) | 1)
-+#define MT8365_PIN_130_TDM_TX_LRCK__FUNC_I2S3_LRCK (MTK_PIN_NO(130) | 2)
-+#define MT8365_PIN_130_TDM_TX_LRCK__FUNC_ckmon2_ck (MTK_PIN_NO(130) | 3)
-+
-+#define MT8365_PIN_131_TDM_TX_MCK__FUNC_GPIO131 (MTK_PIN_NO(131) | 0)
-+#define MT8365_PIN_131_TDM_TX_MCK__FUNC_TDM_TX_MCK (MTK_PIN_NO(131) | 1)
-+#define MT8365_PIN_131_TDM_TX_MCK__FUNC_I2S3_MCK (MTK_PIN_NO(131) | 2)
-+#define MT8365_PIN_131_TDM_TX_MCK__FUNC_ckmon3_ck (MTK_PIN_NO(131) | 3)
-+
-+#define MT8365_PIN_132_TDM_TX_DATA0__FUNC_GPIO132 (MTK_PIN_NO(132) | 0)
-+#define MT8365_PIN_132_TDM_TX_DATA0__FUNC_TDM_TX_DATA0 (MTK_PIN_NO(132) | 1)
-+#define MT8365_PIN_132_TDM_TX_DATA0__FUNC_I2S3_DO (MTK_PIN_NO(132) | 2)
-+#define MT8365_PIN_132_TDM_TX_DATA0__FUNC_ckmon4_ck (MTK_PIN_NO(132) | 3)
-+#define MT8365_PIN_132_TDM_TX_DATA0__FUNC_DBG_MON_B29 (MTK_PIN_NO(132) | 7)
-+
-+#define MT8365_PIN_133_TDM_TX_DATA1__FUNC_GPIO133 (MTK_PIN_NO(133) | 0)
-+#define MT8365_PIN_133_TDM_TX_DATA1__FUNC_TDM_TX_DATA1 (MTK_PIN_NO(133) | 1)
-+#define MT8365_PIN_133_TDM_TX_DATA1__FUNC_DBG_MON_B30 (MTK_PIN_NO(133) | 7)
-+
-+#define MT8365_PIN_134_TDM_TX_DATA2__FUNC_GPIO134 (MTK_PIN_NO(134) | 0)
-+#define MT8365_PIN_134_TDM_TX_DATA2__FUNC_TDM_TX_DATA2 (MTK_PIN_NO(134) | 1)
-+#define MT8365_PIN_134_TDM_TX_DATA2__FUNC_DBG_MON_B31 (MTK_PIN_NO(134) | 7)
-+
-+#define MT8365_PIN_135_TDM_TX_DATA3__FUNC_GPIO135 (MTK_PIN_NO(135) | 0)
-+#define MT8365_PIN_135_TDM_TX_DATA3__FUNC_TDM_TX_DATA3 (MTK_PIN_NO(135) | 1)
-+#define MT8365_PIN_135_TDM_TX_DATA3__FUNC_DBG_MON_B32 (MTK_PIN_NO(135) | 7)
-+
-+#define MT8365_PIN_136_CONN_TOP_CLK__FUNC_GPIO136 (MTK_PIN_NO(136) | 0)
-+#define MT8365_PIN_136_CONN_TOP_CLK__FUNC_CONN_TOP_CLK (MTK_PIN_NO(136) | 1)
-+
-+#define MT8365_PIN_137_CONN_TOP_DATA__FUNC_GPIO137 (MTK_PIN_NO(137) | 0)
-+#define MT8365_PIN_137_CONN_TOP_DATA__FUNC_CONN_TOP_DATA (MTK_PIN_NO(137) | 1)
-+
-+#define MT8365_PIN_138_CONN_HRST_B__FUNC_GPIO138 (MTK_PIN_NO(138) | 0)
-+#define MT8365_PIN_138_CONN_HRST_B__FUNC_CONN_HRST_B (MTK_PIN_NO(138) | 1)
-+
-+#define MT8365_PIN_139_CONN_WB_PTA__FUNC_GPIO139 (MTK_PIN_NO(139) | 0)
-+#define MT8365_PIN_139_CONN_WB_PTA__FUNC_CONN_WB_PTA (MTK_PIN_NO(139) | 1)
-+
-+#define MT8365_PIN_140_CONN_BT_CLK__FUNC_GPIO140 (MTK_PIN_NO(140) | 0)
-+#define MT8365_PIN_140_CONN_BT_CLK__FUNC_CONN_BT_CLK (MTK_PIN_NO(140) | 1)
-+
-+#define MT8365_PIN_141_CONN_BT_DATA__FUNC_GPIO141 (MTK_PIN_NO(141) | 0)
-+#define MT8365_PIN_141_CONN_BT_DATA__FUNC_CONN_BT_DATA (MTK_PIN_NO(141) | 1)
-+
-+#define MT8365_PIN_142_CONN_WF_CTRL0__FUNC_GPIO142 (MTK_PIN_NO(142) | 0)
-+#define MT8365_PIN_142_CONN_WF_CTRL0__FUNC_CONN_WF_CTRL0 (MTK_PIN_NO(142) | 1)
-+
-+#define MT8365_PIN_143_CONN_WF_CTRL1__FUNC_GPIO143 (MTK_PIN_NO(143) | 0)
-+#define MT8365_PIN_143_CONN_WF_CTRL1__FUNC_CONN_WF_CTRL1 (MTK_PIN_NO(143) | 1)
-+
-+#define MT8365_PIN_144_CONN_WF_CTRL2__FUNC_GPIO144 (MTK_PIN_NO(144) | 0)
-+#define MT8365_PIN_144_CONN_WF_CTRL2__FUNC_CONN_WF_CTRL2 (MTK_PIN_NO(144) | 1)
-+
-+#endif /* __MT8365_PINFUNC_H */
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt2701.c b/drivers/pinctrl/mediatek/pinctrl-mt2701.c
+index df8c6fb12955..37228dd5103e 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt2701.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt2701.c
+@@ -523,6 +523,9 @@ static const struct mtk_pinctrl_devdata mt2701_pinctrl_data = {
+ 	.port_shf = 4,
+ 	.port_mask = 0x1f,
+ 	.port_align = 4,
++	.mode_mask = 0xf,
++	.mode_per_reg = 5,
++	.mode_shf = 4,
+ 	.eint_hw = {
+ 		.port_mask = 6,
+ 		.ports     = 6,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt2712.c b/drivers/pinctrl/mediatek/pinctrl-mt2712.c
+index 8398d55c01cb..ba35fc6cc138 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt2712.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt2712.c
+@@ -576,6 +576,9 @@ static const struct mtk_pinctrl_devdata mt2712_pinctrl_data = {
+ 	.port_shf = 4,
+ 	.port_mask = 0xf,
+ 	.port_align = 4,
++	.mode_mask = 0xf,
++	.mode_per_reg = 5,
++	.mode_shf = 4,
+ 	.eint_hw = {
+ 		.port_mask = 0xf,
+ 		.ports     = 8,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6397.c b/drivers/pinctrl/mediatek/pinctrl-mt6397.c
+index a1914e0e49c7..bc5c3dfcdc76 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt6397.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt6397.c
+@@ -33,6 +33,9 @@ static const struct mtk_pinctrl_devdata mt6397_pinctrl_data = {
+ 	.port_shf = 3,
+ 	.port_mask = 0x3,
+ 	.port_align = 2,
++	.mode_mask = 0xf,
++	.mode_per_reg = 5,
++	.mode_shf = 4,
+ };
+ 
+ static int mt6397_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8127.c b/drivers/pinctrl/mediatek/pinctrl-mt8127.c
+index 5f05be056309..eaf5c76b14c7 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt8127.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt8127.c
+@@ -292,6 +292,9 @@ static const struct mtk_pinctrl_devdata mt8127_pinctrl_data = {
+ 	.port_shf = 4,
+ 	.port_mask = 0xf,
+ 	.port_align = 4,
++	.mode_mask = 0xf,
++	.mode_per_reg = 5,
++	.mode_shf = 4,
+ 	.eint_hw = {
+ 		.port_mask = 7,
+ 		.ports     = 6,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8135.c b/drivers/pinctrl/mediatek/pinctrl-mt8135.c
+index 9ac784c48873..b8f4080aab45 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt8135.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt8135.c
+@@ -305,6 +305,9 @@ static const struct mtk_pinctrl_devdata mt8135_pinctrl_data = {
+ 	.port_shf = 4,
+ 	.port_mask = 0xf,
+ 	.port_align = 4,
++	.mode_mask = 0xf,
++	.mode_per_reg = 5,
++	.mode_shf = 4,
+ 	.eint_hw = {
+ 		.port_mask = 7,
+ 		.ports     = 6,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8167.c b/drivers/pinctrl/mediatek/pinctrl-mt8167.c
+index 7b68886bad16..ba12ef795e52 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt8167.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt8167.c
+@@ -324,6 +324,9 @@ static const struct mtk_pinctrl_devdata mt8167_pinctrl_data = {
+ 	.port_shf = 4,
+ 	.port_mask = 0xf,
+ 	.port_align = 4,
++	.mode_mask = 0xf,
++	.mode_per_reg = 5,
++	.mode_shf = 4,
+ 	.eint_hw = {
+ 		.port_mask = 7,
+ 		.ports     = 6,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8173.c b/drivers/pinctrl/mediatek/pinctrl-mt8173.c
+index 75e7c0978337..fc99df8a11c6 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt8173.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt8173.c
+@@ -332,6 +332,9 @@ static const struct mtk_pinctrl_devdata mt8173_pinctrl_data = {
+ 	.port_shf = 4,
+ 	.port_mask = 0xf,
+ 	.port_align = 4,
++	.mode_mask = 0xf,
++	.mode_per_reg = 5,
++	.mode_shf = 4,
+ 	.eint_hw = {
+ 		.port_mask = 7,
+ 		.ports     = 6,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8516.c b/drivers/pinctrl/mediatek/pinctrl-mt8516.c
+index b375426aa61e..219fb4bc341f 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt8516.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt8516.c
+@@ -324,6 +324,9 @@ static const struct mtk_pinctrl_devdata mt8516_pinctrl_data = {
+ 	.port_shf = 4,
+ 	.port_mask = 0xf,
+ 	.port_align = 4,
++	.mode_mask = 0xf,
++	.mode_per_reg = 5,
++	.mode_shf = 4,
+ 	.eint_hw = {
+ 		.port_mask = 7,
+ 		.ports     = 6,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+index a02ad10ec6fa..9fe91e11a877 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+@@ -33,7 +33,6 @@
+ #include "mtk-eint.h"
+ #include "pinctrl-mtk-common.h"
+ 
+-#define MAX_GPIO_MODE_PER_REG 5
+ #define GPIO_MODE_BITS        3
+ #define GPIO_MODE_PREFIX "GPIO"
+ 
+@@ -61,7 +60,7 @@ static struct regmap *mtk_get_regmap(struct mtk_pinctrl *pctl,
+ static unsigned int mtk_get_port(struct mtk_pinctrl *pctl, unsigned long pin)
+ {
+ 	/* Different SoC has different mask and port shift. */
+-	return ((pin >> 4) & pctl->devdata->port_mask)
++	return ((pin >> pctl->devdata->mode_shf) & pctl->devdata->port_mask)
+ 			<< pctl->devdata->port_shf;
+ }
+ 
+@@ -74,7 +73,7 @@ static int mtk_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
+ 	struct mtk_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	reg_addr = mtk_get_port(pctl, offset) + pctl->devdata->dir_offset;
+-	bit = BIT(offset & 0xf);
++	bit = BIT(offset & pctl->devdata->mode_mask);
+ 
+ 	if (pctl->devdata->spec_dir_set)
+ 		pctl->devdata->spec_dir_set(&reg_addr, offset);
+@@ -96,7 +95,7 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+ 	struct mtk_pinctrl *pctl = gpiochip_get_data(chip);
+ 
+ 	reg_addr = mtk_get_port(pctl, offset) + pctl->devdata->dout_offset;
+-	bit = BIT(offset & 0xf);
++	bit = BIT(offset & pctl->devdata->mode_mask);
+ 
+ 	if (value)
+ 		reg_addr = SET_ADDR(reg_addr, pctl);
+@@ -135,7 +134,7 @@ static int mtk_pconf_set_ies_smt(struct mtk_pinctrl *pctl, unsigned pin,
+ 			pin, pctl->devdata->port_align, value, arg);
+ 	}
+ 
+-	bit = BIT(pin & 0xf);
++	bit = BIT(offset & pctl->devdata->mode_mask);
+ 
+ 	if (arg == PIN_CONFIG_INPUT_ENABLE)
+ 		offset = pctl->devdata->ies_offset;
+@@ -311,7 +310,7 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
+ 		return -EINVAL;
+ 	}
+ 
+-	bit = BIT(pin & 0xf);
++	bit = BIT(pin & pctl->devdata->mode_mask);
+ 	if (enable)
+ 		reg_pullen = SET_ADDR(mtk_get_port(pctl, pin) +
+ 			pctl->devdata->pullen_offset, pctl);
+@@ -683,11 +682,11 @@ static int mtk_pmx_set_mode(struct pinctrl_dev *pctldev,
+ 		pctl->devdata->spec_pinmux_set(mtk_get_regmap(pctl, pin),
+ 					pin, mode);
+ 
+-	reg_addr = ((pin / MAX_GPIO_MODE_PER_REG) << pctl->devdata->port_shf)
++	reg_addr = ((pin / pctl->devdata->mode_per_reg) << pctl->devdata->port_shf)
+ 			+ pctl->devdata->pinmux_offset;
+ 
+ 	mode &= mask;
+-	bit = pin % MAX_GPIO_MODE_PER_REG;
++	bit = pin % pctl->devdata->mode_per_reg;
+ 	mask <<= (GPIO_MODE_BITS * bit);
+ 	val = (mode << (GPIO_MODE_BITS * bit));
+ 	return regmap_update_bits(mtk_get_regmap(pctl, pin),
+@@ -798,7 +797,7 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+ 	struct mtk_pinctrl *pctl = gpiochip_get_data(chip);
+ 
+ 	reg_addr =  mtk_get_port(pctl, offset) + pctl->devdata->dir_offset;
+-	bit = BIT(offset & 0xf);
++	bit = BIT(offset & pctl->devdata->mode_mask);
+ 
+ 	if (pctl->devdata->spec_dir_set)
+ 		pctl->devdata->spec_dir_set(&reg_addr, offset);
+@@ -820,7 +819,7 @@ static int mtk_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 	reg_addr = mtk_get_port(pctl, offset) +
+ 		pctl->devdata->din_offset;
+ 
+-	bit = BIT(offset & 0xf);
++	bit = BIT(offset & pctl->devdata->mode_mask);
+ 	regmap_read(pctl->regmap1, reg_addr, &read_val);
+ 	return !!(read_val & bit);
+ }
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common.h
+index 69364b56803f..98f27cdc609a 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.h
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.h
+@@ -254,6 +254,9 @@ struct mtk_pinctrl_devdata {
+ 	unsigned char  port_align;
+ 	struct mtk_eint_hw eint_hw;
+ 	struct mtk_eint_regs *eint_regs;
++	unsigned int mode_mask;
++	unsigned int mode_per_reg;
++	unsigned int mode_shf;
+ };
+ 
+ struct mtk_pinctrl {
 -- 
 2.31.1
 
