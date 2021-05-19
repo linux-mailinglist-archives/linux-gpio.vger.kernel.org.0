@@ -2,102 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C0A8388E2C
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 14:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F295C388E4D
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 14:44:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353408AbhESMhB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 08:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239188AbhESMhA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 08:37:00 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E98C061760
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 05:35:38 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id l11-20020a05600c4f0bb029017a7cd488f5so592796wmq.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 05:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Y06vGdT7AQw6M4ZhpKji87og+cjxY+tkZexuVa+ZoG4=;
-        b=jedgLjhU+jYdGWkBJjREpVz8Epa64b2E0r26n3C9IkindLezudF1M2vGf+qJkHPwUw
-         oLpRqo5vgEKHjR61wueSA4IdZtD7f1E9MA14Sw5HUywUYxmdbakLtdpcsT7sLx7e5vKS
-         e/wQBMGUd0HhPRKf0attdUvLB4ioA/KxMA6cF5JSnn40KoUsZghis4atbZ+WdEbpa95R
-         BSChsQSUL63XHK1rOuNzrTg1+H7dOJ5uUytu7CDrF8m+LdsmezVDoAP+P+TSBycawRmZ
-         p1A0tu5VAMEMH8vlAS0xrelLDsWznfkvXWyEHOKDqgshm5uFt9OihQe17sy/npvzpT2z
-         5bJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Y06vGdT7AQw6M4ZhpKji87og+cjxY+tkZexuVa+ZoG4=;
-        b=dTWlRQACp/XOdROIQyTMJ8myb3r8V/ATUXRPkzGWYRJehIVEKgVHjCEMCWYRn4UjL3
-         KBZ4KpfP9vT0Glp1/ESszD4t1jss/TCDmBh+wOTulP0XKUHhRKHRcmpZfAM90fllfCgw
-         sNoLc3XESycOjuKC156CYnNKw3zwcXRbQBHUoUAZKQrNw6UbNseGW025OUGl2NiKFKp0
-         nUtpSnoGM+80sNPh1roQJqMx6CFh7cP4PDAZSVae98O/Mz8fTVZmC5zhJAwao2f/7U7Z
-         ZHLOPc5Gdol1/E887b2QhyUEL6cBVQ11p3ErenWprLQhrB0tJEQ7J3DB2OT4SpIHpyiV
-         MfwA==
-X-Gm-Message-State: AOAM531LPqjDwlJ0Ph6c1VHFitdhL3pvGu5AcTBOUl65pIxAvoO14Yol
-        HTEUxDIL8odkfEyZVii9VVkYPQ==
-X-Google-Smtp-Source: ABdhPJyZrzJbg1BoZs327JjPOVbrj6yyB6CtRKk7wrTf0N0Rjv4goRayAA5SnYYzC8KCLsIDaC7zdQ==
-X-Received: by 2002:a7b:c052:: with SMTP id u18mr10929801wmc.105.1621427736921;
-        Wed, 19 May 2021 05:35:36 -0700 (PDT)
-Received: from dell ([91.110.221.215])
-        by smtp.gmail.com with ESMTPSA id b10sm29997220wrr.27.2021.05.19.05.35.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 May 2021 05:35:36 -0700 (PDT)
-Date:   Wed, 19 May 2021 13:35:34 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Immutable branch between MFD, GPIO and Regulator due for
- the v5.14 merge window
-Message-ID: <20210519123534.GD2415519@dell>
-References: <20210219223910.1831-1-luca@lucaceresoli.net>
+        id S1353440AbhESMpq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 08:45:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:39801 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238150AbhESMpp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 19 May 2021 08:45:45 -0400
+IronPort-SDR: CPD7hMO8xgY2RfPg4XgXOJk5IPHQhzKs6H338ocSePk5+7cWVTEwNQCf5pq1b9u8zQqwMkXV4I
+ Ei+i5jRxx2+Q==
+X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="199013934"
+X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
+   d="scan'208";a="199013934"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 05:44:26 -0700
+IronPort-SDR: qPeB8y2OZtYnhEvFLzEEl/fZkRC9NdAhJPXOKP6RwuBieI65dh2MB7d2LXgaIDIDeR2eym6h9x
+ R/9ysJAu0oCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
+   d="scan'208";a="630905628"
+Received: from lkp-server02.sh.intel.com (HELO 1b329be5b008) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 19 May 2021 05:44:24 -0700
+Received: from kbuild by 1b329be5b008 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1ljLYl-00008I-W7; Wed, 19 May 2021 12:44:23 +0000
+Date:   Wed, 19 May 2021 20:43:36 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ 969ef42b1ae094da99b8acbf14864f94d37f6e58
+Message-ID: <60a507f8.GWpLeJe46XAB3EG1%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210219223910.1831-1-luca@lucaceresoli.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enjoy!
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 969ef42b1ae094da99b8acbf14864f94d37f6e58  pinctrl: qcom: spmi-mpp: Add compatible for pmi8994
 
-The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
+elapsed time: 722m
 
-  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
+configs tested: 131
+configs skipped: 3
 
-are available in the Git repository at:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tb-mfd-gpio-regulator-v5.14
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                               defconfig
+arm                          pxa3xx_defconfig
+arm                         axm55xx_defconfig
+powerpc                      arches_defconfig
+mips                        maltaup_defconfig
+arm                        realview_defconfig
+arc                              alldefconfig
+sh                           se7722_defconfig
+mips                         mpc30x_defconfig
+um                            kunit_defconfig
+powerpc                      makalu_defconfig
+powerpc                 mpc8315_rdb_defconfig
+sh                      rts7751r2d1_defconfig
+sh                         apsh4a3a_defconfig
+s390                             allmodconfig
+arm                          exynos_defconfig
+mips                     loongson2k_defconfig
+m68k                       m5475evb_defconfig
+powerpc                   lite5200b_defconfig
+arm                           u8500_defconfig
+um                                  defconfig
+h8300                    h8300h-sim_defconfig
+ia64                            zx1_defconfig
+powerpc                      pcm030_defconfig
+mips                     cu1000-neo_defconfig
+mips                            gpr_defconfig
+arm                         s3c2410_defconfig
+arm                        spear3xx_defconfig
+s390                       zfcpdump_defconfig
+arm                     davinci_all_defconfig
+m68k                         amcore_defconfig
+arm                          pxa168_defconfig
+arm                      integrator_defconfig
+sh                ecovec24-romimage_defconfig
+arm                       cns3420vb_defconfig
+powerpc                      ppc6xx_defconfig
+arc                           tb10x_defconfig
+sh                          sdk7786_defconfig
+csky                                defconfig
+mips                         tb0226_defconfig
+mips                           ci20_defconfig
+nios2                         3c120_defconfig
+parisc                generic-64bit_defconfig
+x86_64                              defconfig
+arm                       multi_v4t_defconfig
+xtensa                    xip_kc705_defconfig
+m68k                        mvme16x_defconfig
+powerpc                    klondike_defconfig
+powerpc                     tqm8560_defconfig
+microblaze                          defconfig
+arm                       omap2plus_defconfig
+arm                        shmobile_defconfig
+mips                            ar7_defconfig
+mips                  decstation_64_defconfig
+m68k                        stmark2_defconfig
+openrisc                    or1ksim_defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a003-20210519
+i386                 randconfig-a001-20210519
+i386                 randconfig-a005-20210519
+i386                 randconfig-a004-20210519
+i386                 randconfig-a002-20210519
+i386                 randconfig-a006-20210519
+x86_64               randconfig-a012-20210519
+x86_64               randconfig-a015-20210519
+x86_64               randconfig-a013-20210519
+x86_64               randconfig-a011-20210519
+x86_64               randconfig-a016-20210519
+x86_64               randconfig-a014-20210519
+i386                 randconfig-a014-20210519
+i386                 randconfig-a016-20210519
+i386                 randconfig-a011-20210519
+i386                 randconfig-a015-20210519
+i386                 randconfig-a012-20210519
+i386                 randconfig-a013-20210519
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-for you to fetch changes up to 5258f7eed42f4565d065726fd82d3430dd618a68:
+clang tested configs:
+x86_64               randconfig-b001-20210519
+x86_64               randconfig-a003-20210519
+x86_64               randconfig-a004-20210519
+x86_64               randconfig-a005-20210519
+x86_64               randconfig-a001-20210519
+x86_64               randconfig-a002-20210519
+x86_64               randconfig-a006-20210519
 
-  mfd: lp87565: Move LP87565_regulator_id to .c file (2021-05-19 13:34:00 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, GPIO and Regulator due for the v5.14 merge window
-
-----------------------------------------------------------------
-Luca Ceresoli (2):
-      mfd: lp87565: Fix typo in define names
-      mfd: lp87565: Move LP87565_regulator_id to .c file
-
- drivers/gpio/gpio-lp87565.c           |  6 +++---
- drivers/regulator/lp87565-regulator.c | 11 ++++++++++
- include/linux/mfd/lp87565.h           | 39 +++++++++++++----------------------
- 3 files changed, 28 insertions(+), 28 deletions(-)
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
