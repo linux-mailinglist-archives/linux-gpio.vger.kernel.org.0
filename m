@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 973C6388E4F
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 14:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B331388E4E
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 14:44:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353444AbhESMpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 08:45:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:28954 "EHLO mga18.intel.com"
+        id S1353442AbhESMpr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 08:45:47 -0400
+Received: from mga01.intel.com ([192.55.52.88]:7664 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238150AbhESMps (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 19 May 2021 08:45:48 -0400
-IronPort-SDR: BPLNm1DHGmYD1jYLJMHJOdfxxIGE3sBNwuV6LGhumdua3AetSQYAzp6kvH3bS922r6BejSFWwu
- mj6Is3nbDDkA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="188373333"
+        id S238150AbhESMpq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 19 May 2021 08:45:46 -0400
+IronPort-SDR: V2xGOZJYVbnfH0cIMkGkIPfTvjC69yUb9iign/lM6U+ACEhY8M8fKbdayZZo8slzGh/53nB/Hh
+ MjWyoSotUZzw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="222032149"
 X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
-   d="scan'208";a="188373333"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 05:44:26 -0700
-IronPort-SDR: cUgxuyPxUeTfNPAp1UcOABFh2f2f2QAa3PpCVIcw2Haxst6GPzf1MkoeRaBZ5b3s8iQLKigK6/
- CYd+Gjo/8DNQ==
+   d="scan'208";a="222032149"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 05:44:25 -0700
+IronPort-SDR: CUL/stH/V7IhmIxKt+4ySRrrQq4swmzKXkrPFleCwZa39Ep/tylFqOURwf2JFhpDOMGnkWZgtr
+ HeEQLA5PZLOA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
-   d="scan'208";a="467008738"
+   d="scan'208";a="433476375"
 Received: from lkp-server02.sh.intel.com (HELO 1b329be5b008) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 May 2021 05:44:24 -0700
+  by orsmga007.jf.intel.com with ESMTP; 19 May 2021 05:44:24 -0700
 Received: from kbuild by 1b329be5b008 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1ljLYl-000089-SW; Wed, 19 May 2021 12:44:23 +0000
-Date:   Wed, 19 May 2021 20:43:39 +0800
+        id 1ljLYl-00008F-Vg; Wed, 19 May 2021 12:44:23 +0000
+Date:   Wed, 19 May 2021 20:43:40 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- 6fc5a68d23b7378573d5df4eae873cd9e7ba14c4
-Message-ID: <60a507fb.7FdOHrqE3aEcDb3I%lkp@intel.com>
+Subject: [pinctrl:fixes] BUILD SUCCESS
+ 333944c7c3759c546035f1f9b0b4c72bdc5b7878
+Message-ID: <60a507fc.O1AU4/iGIL+hMmmM%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +43,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 6fc5a68d23b7378573d5df4eae873cd9e7ba14c4  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: 333944c7c3759c546035f1f9b0b4c72bdc5b7878  pinctrl: aspeed: Fix minor documentation error
 
 elapsed time: 722m
 
-configs tested: 137
+configs tested: 135
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -75,6 +75,10 @@ sh                      rts7751r2d1_defconfig
 sh                         apsh4a3a_defconfig
 s390                             allmodconfig
 arm                          exynos_defconfig
+arm                        spear6xx_defconfig
+arm                         lubbock_defconfig
+powerpc                 mpc837x_mds_defconfig
+sh                  sh7785lcr_32bit_defconfig
 mips                     loongson2k_defconfig
 m68k                       m5475evb_defconfig
 powerpc                   lite5200b_defconfig
@@ -92,8 +96,6 @@ arm                     davinci_all_defconfig
 m68k                         amcore_defconfig
 arm                          pxa168_defconfig
 arm                      integrator_defconfig
-arm                          ep93xx_defconfig
-riscv             nommu_k210_sdcard_defconfig
 sh                ecovec24-romimage_defconfig
 arm                       cns3420vb_defconfig
 powerpc                      ppc6xx_defconfig
@@ -111,10 +113,6 @@ m68k                        mvme16x_defconfig
 powerpc                    klondike_defconfig
 powerpc                     tqm8560_defconfig
 microblaze                          defconfig
-arm                       imx_v4_v5_defconfig
-arm                        spear6xx_defconfig
-sparc                       sparc64_defconfig
-arm                          collie_defconfig
 arm                       omap2plus_defconfig
 arm                        shmobile_defconfig
 mips                            ar7_defconfig
