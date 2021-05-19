@@ -2,49 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 801B93889C2
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 10:51:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E70343889CC
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 10:52:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343877AbhESIxL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 04:53:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
+        id S1343896AbhESIxM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 04:53:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245541AbhESIxL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1343839AbhESIxL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Wed, 19 May 2021 04:53:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5A3B560C3F;
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 64E686139A;
         Wed, 19 May 2021 08:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1621414311;
-        bh=Xxq1uGAbMGFgeGY3ywEv0OBhOMcnDBc4Aw7rV293abg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HDXmH4kOj1Ffc8/2cPIVagMkwv75xN8kuE4Rn2GW4zUfWOy+/uoxuQky8Dxr9RDVR
-         fVbJMLGgIq+XN+7alWCEcvtKmIWWeiFvOiQyJ9+cMJ+eSmjCj1liIls/T2ERP28sI/
-         Mx2fxh/6TMjsCdbJkuDfE+YtP5rjlL4GYJEyhOZQoAdSbeHyiSWV4ePGv7ROh0zXu8
-         AjzAbT5IYTV7AdlhASpd63KP0Dt2giApS3oj5J8fG1nIer7c4N9j0aGbYuzwaHItI1
-         /kiR1YGrJsdKvu92/Jkc0v9EXHz/fFBf6YBUXpnf+fLICsbgPu9SeBtSBORPjhj95H
-         lVUyUg6TpgwrA==
+        bh=w2H34Ul+rMw0fI1d8Sc4VX5Vfwor0KfoWMGu1OVxZis=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bVb+kYmy+lqucHGGSZ+qaOMYW2zBZ73zrAkh+ChtHiZjeSJj4mULIaGR5pPNrU2Uw
+         g6/Oog4h7qMRAs/2/zXYEYOWl9S9n2RWJP+7Ve54Gf5gTKj3yX3aTQ6TPOqz+Y5d3N
+         QCgb1DZJdBdQ6KjjsAsIuCJe+9kpdWvExcrSRidi0EqGidMPWZ8JH8hDvWgo24dg1J
+         BVnfjsDMUnaO+CqE3pA2TF8v6NyfMsSglAjInO3sIYVZZKR94DWrWhptdhAq221UZ0
+         K2M/5FaZ7Osdi1mGVTvSx8Ms9skOtXI37q8oIu/lNnP6RRVvNfMgVaHLesBzeKQah9
+         ISzHMrHeLiIBg==
 Received: by mail.kernel.org with local (Exim 4.94.2)
         (envelope-from <mchehab@kernel.org>)
-        id 1ljHvh-007gXv-8w; Wed, 19 May 2021 10:51:49 +0200
+        id 1ljHvh-007gYE-I4; Wed, 19 May 2021 10:51:49 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         Jonathan Corbet <corbet@lwn.net>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Drew Fustini <drew@beagleboard.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-iio@vger.kernel.org, patches@opensource.cirrus.com
-Subject: [PATCH 00/10] Documentation build warning fixes
-Date:   Wed, 19 May 2021 10:51:37 +0200
-Message-Id: <cover.1621413933.git.mchehab+huawei@kernel.org>
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Saravana Kannan <saravanak@google.com>,
+        alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Subject: [PATCH 05/10] docs: update pin-control.rst references
+Date:   Wed, 19 May 2021 10:51:42 +0200
+Message-Id: <46ac2e918c7c4a4b701d54870f167b78466ec578.1621413933.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1621413933.git.mchehab+huawei@kernel.org>
+References: <cover.1621413933.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
@@ -52,52 +58,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jon,
+Changeset 5513b411ea5b ("Documentation: rename pinctl to pin-control")
+renamed: Documentation/driver-api/pinctl.rst
+to: Documentation/driver-api/pin-control.rst.
 
-This small series contain a series of fixes for the documentation. it is
-against your docs-next branch.
+Update the cross-references accordingly.
 
-Three of the patches fix duplicated symbols at the ABI documents.
-There are still some ABI warnings from IIO, but all but one were
-already fixed at linux-next. So, hopefully, after having everything
-merged, the ABI warnings will be solved.
+Fixes: 5513b411ea5b ("Documentation: rename pinctl to pin-control")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ include/linux/device.h                  | 2 +-
+ include/linux/mfd/madera/pdata.h        | 2 +-
+ include/linux/pinctrl/pinconf-generic.h | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Mauro Carvalho Chehab (10):
-  docs: update sysfs-platform_profile.rst reference
-  docs: vcpu-requests.rst: fix reference for atomic ops
-  docs: translations/zh_CN: fix a typo at 8.Conclusion.rst
-  docs: sched-bwc.rst: fix a typo on a doc name
-  docs: update pin-control.rst references
-  docs: virt: api.rst: fix a pointer to SGX documentation
-  docs: ABI: iommu: remove duplicated definition for
-    sysfs-kernel-iommu_groups
-  docs: ABI: sysfs-class-backlight: unify ambient light zone nodes
-  docs: ABI: sysfs-class-led-trigger-pattern: remove repeat duplication
-  iio: documentation: fix a typo
-
- Documentation/ABI/testing/sysfs-bus-iio       |   4 +-
- .../ABI/testing/sysfs-class-backlight         | 100 ++++++++++++++++++
- .../ABI/testing/sysfs-class-backlight-adp5520 |  31 ------
- .../ABI/testing/sysfs-class-backlight-adp8860 |  37 -------
- .../sysfs-class-backlight-driver-adp8870      |  32 ------
- .../testing/sysfs-class-led-driver-el15203000 |   9 --
- .../testing/sysfs-class-led-trigger-pattern   |   3 +
- .../ABI/testing/sysfs-kernel-iommu_groups     |  12 +--
- Documentation/scheduler/sched-bwc.rst         |   2 +-
- .../zh_CN/process/8.Conclusion.rst            |   2 +-
- Documentation/virt/kvm/api.rst                |   2 +-
- Documentation/virt/kvm/vcpu-requests.rst      |   2 +-
- include/linux/device.h                        |   2 +-
- include/linux/mfd/madera/pdata.h              |   2 +-
- include/linux/pinctrl/pinconf-generic.h       |   2 +-
- include/linux/platform_profile.h              |   2 +-
- 16 files changed, 117 insertions(+), 127 deletions(-)
- delete mode 100644 Documentation/ABI/testing/sysfs-class-backlight-adp5520
- delete mode 100644 Documentation/ABI/testing/sysfs-class-backlight-adp8860
- delete mode 100644 Documentation/ABI/testing/sysfs-class-backlight-driver-adp8870
- delete mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-el15203000
-
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 38a2071cf776..d1183cfdc8fb 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -399,7 +399,7 @@ struct dev_links_info {
+  * 		along with subsystem-level and driver-level callbacks.
+  * @em_pd:	device's energy model performance domain
+  * @pins:	For device pin management.
+- *		See Documentation/driver-api/pinctl.rst for details.
++ *		See Documentation/driver-api/pin-control.rst for details.
+  * @msi_list:	Hosts MSI descriptors
+  * @msi_domain: The generic MSI domain this device is using.
+  * @numa_node:	NUMA node this device is close to.
+diff --git a/include/linux/mfd/madera/pdata.h b/include/linux/mfd/madera/pdata.h
+index 601cbbc10370..32e3470708ed 100644
+--- a/include/linux/mfd/madera/pdata.h
++++ b/include/linux/mfd/madera/pdata.h
+@@ -31,7 +31,7 @@ struct pinctrl_map;
+  * @irq_flags:	    Mode for primary IRQ (defaults to active low)
+  * @gpio_base:	    Base GPIO number
+  * @gpio_configs:   Array of GPIO configurations (See
+- *		    Documentation/driver-api/pinctl.rst)
++ *		    Documentation/driver-api/pin-control.rst)
+  * @n_gpio_configs: Number of entries in gpio_configs
+  * @gpsw:	    General purpose switch mode setting. Depends on the external
+  *		    hardware connected to the switch. (See the SW1_MODE field
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index e18ab3d5908f..5a96602a3316 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -89,7 +89,7 @@ struct pinctrl_map;
+  * 	it.
+  * @PIN_CONFIG_OUTPUT: this will configure the pin as an output and drive a
+  * 	value on the line. Use argument 1 to indicate high level, argument 0 to
+- *	indicate low level. (Please see Documentation/driver-api/pinctl.rst,
++ *	indicate low level. (Please see Documentation/driver-api/pin-control.rst,
+  *	section "GPIO mode pitfalls" for a discussion around this parameter.)
+  * @PIN_CONFIG_PERSIST_STATE: retain pin state across sleep or controller reset
+  * @PIN_CONFIG_POWER_SOURCE: if the pin can select between different power
 -- 
 2.31.1
-
 
