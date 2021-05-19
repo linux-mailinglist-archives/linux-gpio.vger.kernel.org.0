@@ -2,79 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4167D389A0A
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 01:44:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA42A389A15
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 01:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbhESXp6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 19:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55022 "EHLO
+        id S229808AbhESXwY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 19:52:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230142AbhESXp5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 19:45:57 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319A4C061761
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:44:36 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id v8so16660026lft.8
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:44:36 -0700 (PDT)
+        with ESMTP id S229498AbhESXwX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 19:52:23 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE36C061574
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:51:03 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id o8so17630689ljp.0
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:51:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wM5mCzM82gGvfQBTJBh8mxI48tmx7HiqO3orq8kFG8M=;
-        b=LXr5MO+utZ/NzeTIfmH9hyM1jISMq06v3IDaujQpMqszcM0701ZSs8bHFywI/8QidO
-         v1xGKx8SJoezcA76OFolfG4S4Jn+VjCZhpiROe9tgvN52DLstdRQGTVxhkHzM8o3ou8x
-         WVfJrMKMlyMrY/vdNVY4I7bZ44wChX0YqYbOH2hJ7pVkR/6QH+i1HqYwnyqDYyJlBeEr
-         CSKtcqKxo/Orhd8WmGlUnikhiFWAtB3I8/hpMb+S37xlmXZ9ljSAQhxzhaV00xkWZT32
-         TVOtZ2o/F3h6urKDDm5iTanJJSULolcBG+WiTgxH+jSW5a9vINs86YRi8dcJ16eAG2sY
-         bGsg==
+        bh=0sYniuRP4wqiZIQyuEg/qe+aI6tAjP7d/4JXDzHYsZE=;
+        b=oJSxYQ20m+wQOda1P23ynKuBf7Os0nvDkxJdPhD3ae9EpqZJ5EJcbVWaetqjgDTChG
+         m+UY5QlrVyWMNXVavl7mV5o+QVfRaiwokaHzsQGeQaGDwkKV/dNDXu4NH9+7FAntM2ur
+         vckz0r40XkvPQz3ECPnAoSbDHtpqPxvizAHIOrtnT/doJd9ny6law0sNeMYJ25K7cqLL
+         Qer717RNGQ3xHnLCin95829gw8zCa2fjgrwDm7FPgGZg+RT3jUGxnLDR6t8685XzVznU
+         OXJ/DbXA2usE53/9Cse6ll586+207AxFauPM4/y/+XbL5LZaG9zemRENkuUZA/1a2Djy
+         GGKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wM5mCzM82gGvfQBTJBh8mxI48tmx7HiqO3orq8kFG8M=;
-        b=Hdx2zmtknrDs0yIGoWeJ+mXbv80s09DpNydtYRg+I5DCzzFWd7el+yrPS3qVpCs6Io
-         HHYuHCkmRjcjbls1RcRnq0or1KDeSJ6ixAWb8OqZ7t8LotDJk24l+0vwTzfCHBUaCXkf
-         8XLH3OKOTVH3K/OpwJ/LOyOKcI4+JRMTmZKvkYM5wUGYeBTm/xiOQJJh27WPa+NB7OJf
-         0oihMS4j9np7/8vT35RcZXm4R1M2+t+0MuBLr/zN3SE4GSP18GJrylWIWZzl6OHJJ4DF
-         rlweQPlNTop6YmpZWZ3s3y3rNaX8Tf2ZZ2ve4ooOkzFzWs83Ws/QV92zYhNUYlPw42NM
-         tvRw==
-X-Gm-Message-State: AOAM530tq55iX53xtq2RwsJMwWK8tnACTBhVLvPKyalk5UAYPhwZyyk0
-        joNRQ6uSlB1EJMArP1HAUyj5WEY6WvmENYP1MmVaPA==
-X-Google-Smtp-Source: ABdhPJyo49ywD7L+dYbgOEUpr1fsXLuMJaPoe5Fi+hfuegcGmM5nkNGHmm41Em3f/9YVuOYk2ii36sKpxCMY+Gm9nNM=
-X-Received: by 2002:ac2:544f:: with SMTP id d15mr1339795lfn.465.1621467874570;
- Wed, 19 May 2021 16:44:34 -0700 (PDT)
+        bh=0sYniuRP4wqiZIQyuEg/qe+aI6tAjP7d/4JXDzHYsZE=;
+        b=Oufn/eLBbfWC76t7X0vzULtUz23NR1je1gRkFxi/3egPRFgvGqHw/Z6AcODjEfm2DR
+         CXq9CIqXq2PwPy2zbCum9R5FHKVX2mHnA7uXJgkzcraWYlJMNi25Qv1g7eJrOkwSWRfI
+         DVY5eQcGFj/U1hcv5yKq7iGX7f9dHhEwnpDGCqrsdj7kqbc7fRFSpyuVVrG2nnYYbwW8
+         oFxnYtxOcmtQ/eh0h8ObyRdtXzuD0xSjvKI6ZkDz3wtczRqT17gPsV1Yf/xN3LomBwmh
+         W4J1I88IavqB8GDVNT9llZX+GESYCcweAi3a1g4CT1sX6floJ1sw0y2v1uYHkDEoZtyp
+         VUXw==
+X-Gm-Message-State: AOAM531sVElrZhTjXadO/XmuG1byBrDuPQrHOPs5oYk6dql02yuY9kHC
+        6qT+xTGPlEpwt4EAa4LXtmMtODD+xA/XYTujTE/W/g==
+X-Google-Smtp-Source: ABdhPJwp8DSHuZ2aQWqeW88esMeyMWsFvWsiq/HWOPEM1egcEKRRQzdxAwFFE9gysyEhGpY+ZAwyRtwQA5Uc0QHZTJg=
+X-Received: by 2002:a2e:889a:: with SMTP id k26mr1150709lji.438.1621468261465;
+ Wed, 19 May 2021 16:51:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <1620817988-18809-1-git-send-email-skakit@codeaurora.org>
-In-Reply-To: <1620817988-18809-1-git-send-email-skakit@codeaurora.org>
+References: <20210512210316.1982416-1-luzmaximilian@gmail.com>
+In-Reply-To: <20210512210316.1982416-1-luzmaximilian@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 May 2021 01:44:23 +0200
-Message-ID: <CACRpkdYB9QSsj-23EPyX2+T=GLxjMPN8dcRopErSaA0gmuZE4g@mail.gmail.com>
-Subject: Re: [PATCH V3 0/3] Add GPIO support for PM7325
-To:     satya priya <skakit@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
+Date:   Thu, 20 May 2021 01:50:50 +0200
+Message-ID: <CACRpkdZpm4w6Ym2p9xTsYpkU7CR531aLUUxXj54tssoqd6c9=Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl/amd: Add device HID for new AMD GPIO controller
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>
+        stable <stable@vger.kernel.org>, Sachi King <nakato@nakato.io>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 12, 2021 at 1:13 PM satya priya <skakit@codeaurora.org> wrote:
+On Wed, May 12, 2021 at 11:03 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 
-> satya priya (3):
->   pinctrl: qcom: spmi-gpio: Add support for pm7325
->   dt-bindings: pinctrl: qcom-pmic-gpio: Add pm7325 support
+> Add device HID AMDI0031 to the AMD GPIO controller driver match table.
+> This controller can be found on Microsoft Surface Laptop 4 devices and
+> seems similar enough that we can just copy the existing AMDI0030 entry.
+>
+> Cc: <stable@vger.kernel.org> # 5.10+
 
-These two patches applied!
+Why? It's hardly a regression?
 
->   dt-bindings: pinctrl: qcom-pmic-gpio: Convert qcom pmic gpio bindings
->     to YAML
+> Tested-by: Sachi King <nakato@nakato.io>
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-Now you only need to iterate this patch.
+I've applied the patch for next without the stable tag for now.
 
 Yours,
 Linus Walleij
