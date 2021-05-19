@@ -2,101 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEDC7388776
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 08:20:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DC9B38886F
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 09:45:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233896AbhESGWO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 02:22:14 -0400
-Received: from elvis.franken.de ([193.175.24.41]:38501 "EHLO elvis.franken.de"
+        id S238806AbhESHqm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 03:46:42 -0400
+Received: from mga02.intel.com ([134.134.136.20]:44814 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234472AbhESGWO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 19 May 2021 02:22:14 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1ljFZV-0001TL-00; Wed, 19 May 2021 08:20:45 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id EA4C8C0F89; Wed, 19 May 2021 08:20:30 +0200 (CEST)
-Date:   Wed, 19 May 2021 08:20:30 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
+        id S234879AbhESHql (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 19 May 2021 03:46:41 -0400
+IronPort-SDR: Jj44/z2AEc/GK2ugM9JhrnL0moFJFZZ0V3g1gzGzqkJVQESX3KkbGlgdcJnP3sJCYvJwSswYic
+ F/fQsMEcEIEQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="188042600"
+X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
+   d="scan'208";a="188042600"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 00:45:22 -0700
+IronPort-SDR: RPGXIXXASOkQEW3xJ1raYGkgwDAxWM2cnqOVNkfL8WTYoFlUhFZswFiUg4ZWx+qIg/p3nPfQy9
+ /qclinwFaDqQ==
+X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
+   d="scan'208";a="411625304"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 00:45:20 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ljGtI-00DARi-6B; Wed, 19 May 2021 10:45:16 +0300
+Date:   Wed, 19 May 2021 10:45:16 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 1/2] gpio: Add support for IDT 79RC3243x GPIO
- controller
-Message-ID: <20210519062030.GA4308@alpha.franken.de>
-References: <20210514123309.134048-1-tsbogend@alpha.franken.de>
- <CACRpkdYTor-c2qvE=6YD4A+NmvpLgS3LsOfNpBZ5EdTrDkGgkg@mail.gmail.com>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Suresh Balakrishnan <suresh.balakrishnan@intel.com>
+Subject: Re: [PATCH v1 1/2] gpiolib: Never return internal error codes to
+ user space
+Message-ID: <YKTCDNcyUlrgE0Y4@smile.fi.intel.com>
+References: <20210518155013.45622-1-andriy.shevchenko@linux.intel.com>
+ <20210518232451.GA7362@sol>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYTor-c2qvE=6YD4A+NmvpLgS3LsOfNpBZ5EdTrDkGgkg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210518232451.GA7362@sol>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 19, 2021 at 01:50:39AM +0200, Linus Walleij wrote:
-> Hi Thomas,
-> 
-> thanks for your patch!
-> 
-> I can see this is starting to look really good.
-> 
-> There is one thing that confuses me:
-> 
-> On Fri, May 14, 2021 at 2:33 PM Thomas Bogendoerfer
-> <tsbogend@alpha.franken.de> wrote:
-> 
-> > IDT 79RC3243x SoCs integrated a gpio controller, which handles up
-> > to 32 gpios. All gpios could be used as an interrupt source.
-> >
-> > Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > ---
-> > Changes in v5:
-> (...)
-> 
-> > +static int idt_gpio_irq_set_type(struct irq_data *d, unsigned int flow_type)
-> > +{
-> (...)
-> > +       /* hardware only supports level triggered */
-> > +       if (sense == IRQ_TYPE_NONE || (sense & IRQ_TYPE_EDGE_BOTH))
-> > +               return -EINVAL;
-> (...)
-> > +       irq_set_handler_locked(d, handle_level_irq);
-> 
-> But:
-> 
-> > +static void idt_gpio_ack(struct irq_data *d)
-> > +{
-> > +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > +       struct idt_gpio_ctrl *ctrl = gpiochip_get_data(gc);
-> > +
-> > +       writel(~BIT(d->hwirq), ctrl->gpio + IDT_GPIO_ISTAT);
-> > +}
-> (...)
-> > +       .irq_ack = idt_gpio_ack,
-> 
-> Correct me if I'm wrong but I thing .irq_ack() is only called
-> from handle_edge_irq ... so never in this case.
+On Wed, May 19, 2021 at 07:24:51AM +0800, Kent Gibson wrote:
+> On Tue, May 18, 2021 at 06:50:12PM +0300, Andy Shevchenko wrote:
+> > Currently it's possible that character device interface may return
+> > the error codes which are not supposed to be seen by user space.
+> > In this case it's EPROBE_DEFER.
+> > 
+> > Wrap it to return -ENODEV instead as sysfs does.
 
-handle_level_irq() does a mask_ack_irq() and this uses mask_irq() and
-desc->irq_data.chip->irq_ack(), if there is no irq_mask_ack function.
+> > Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines")
+> > Fixes: 61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+> > Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL")
 
-> Can this ACK just be deleted?
+...
 
-no without it interrupts won't go away.
+> You immediately revert this patch in patch 2.
+> My understanding is that is not allowed within a patch set.
 
-> The code in the ACK callback also looks really weird:
-> write all bits except for the current IRQ into the status
-> register? It's usually the other way around with these
-> things. That really makes me suspect it is unused.
+> Why split the patches instead of going direct to the new helper?
 
-interrupts are acked by writing a 0 to the bit position. I know it's
-unusal...
+It's for backporting to make it easier. (I deliberately left the context above)
 
-Thomas.
+I can fold them if maintainers think it's okay to do.
+
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+With Best Regards,
+Andy Shevchenko
+
+
