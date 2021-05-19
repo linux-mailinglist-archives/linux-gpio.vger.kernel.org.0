@@ -2,107 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E409388B49
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 12:02:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28E31388B93
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 12:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346296AbhESKEA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 06:04:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346330AbhESKD6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 06:03:58 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54DD4C061761
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 03:02:38 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id v13so6723859ple.9
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 03:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7etUJcy4Y/9kkJXKM1wnyfHQolxKQ1AcioEGekKUcRQ=;
-        b=EWqCOmbCjo6LwdSgsf5Zi53/+iBmUhLvLcVcXVf9DLyTKj2dQNCudvOA9ijXzBJZag
-         foSwnFiU0epUQXNm50yaQJai/dahSJGCCMjBWR4dY9ZDbTF1GW56UxtY6W7IuWhzlTgS
-         KmlYV4twUxy1oHAddLZ1dg7Qvg52z8NIJPqyb2j1Y3lm4qOpP1Sz1hSkX2mZbkN9tTxl
-         GjdI+GIWBIiKoY8/SF3maNxphM0xrAVVbpmka8ahE7eGCdKy3zdp8w8TJjU9jQqIvbBG
-         I6NF571XJrj4cOaOiqyzO9+UlvKTWyvdVe7l05m4WTv/I2j+SOY19ao7oYJ9ewmkpz2v
-         7j8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7etUJcy4Y/9kkJXKM1wnyfHQolxKQ1AcioEGekKUcRQ=;
-        b=AtgopImdIIbhx/8qLKqjQqE+HKiAEYicBVrwAnWwdgn28zg04XPjPmsO58lFzezrJR
-         X6Xu8+EheqdgtjNHLLuHjmo6myKfkvZTdp44G+6BkFyUolBA3CJWFQxrT9Li+CsTbWo1
-         kTAfdZE3fo5pfivyzwkTcRNqxqavlbgZd8s8vaMza0wsWLTKd8FYfeCohhby1BLQDdvK
-         YtO+9DwHyg1mpip3ENRBUIAWYr/kc7txyVckip0ugkl1KQ2pOS4ZPMy70GRi85q6rYhZ
-         3Nh9E1Xdj4rDufGce/wGKoxVsjMSBwKGZeZz+wgQIKBdLvspgyy3F3zX6Foue5Ilukf8
-         jBiA==
-X-Gm-Message-State: AOAM533VVOb7nBlL4EB+MKALTzLcesIlxZs1wEL8oCvkQMXqVhqo+7kS
-        wICUWy8gAD5tYJd/usOeHiBj8g==
-X-Google-Smtp-Source: ABdhPJzU2v6WLyXV3Auv4qGF892obiscIiBdeZGaieH6kNnsCItvnioyiaXRYUE9BtHcS4F+6pmRNA==
-X-Received: by 2002:a17:90a:e2ca:: with SMTP id fr10mr10731258pjb.6.1621418557740;
-        Wed, 19 May 2021 03:02:37 -0700 (PDT)
-Received: from x1 ([2601:1c0:4701:ae70:9384:8c4b:dc2b:c4d0])
-        by smtp.gmail.com with ESMTPSA id d12sm13692185pfv.190.2021.05.19.03.02.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 May 2021 03:02:37 -0700 (PDT)
-Date:   Wed, 19 May 2021 03:02:35 -0700
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Dario Binacchi <dariobin@libero.it>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S1347302AbhESKWP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 06:22:15 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:65356 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1346200AbhESKWP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 19 May 2021 06:22:15 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14JAGCk9022302;
+        Wed, 19 May 2021 05:20:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=372dr6SwmwYwOUb7PJzGd6F0k/qxZb2QrHZ6Tt9d8Pw=;
+ b=JKEEZqp/2QnfOrdyWkoJuCJkz1dZSQbn39px/nohG2OiEhtxpfqpO/LssvU54LoNwwcu
+ Sh8ASGHCfov1Ni6Z/JfyL7YHjtMe9BScgJKkJRp76jbTyUr2i6xOOrs/fxfdFlsJFRA0
+ ouhL2ZDAPH71QMsGu9tLTEoEpXqYCX6Pwwr5M3OHTumWEKV2cokSVu3p4jLNlc3cvRe4
+ 3SrsUXYegMl1pXBKVdCdQuwFpIjOkHxP6I311jBrVIsb7e/4O/31uWFLX0IagxbU3f4a
+ l6CHnGOH6VHrqHwuyT/VhctOxz3+KcdygELttWHOhB6PdxcPpEoN/N2GEbcpk5Z21rIH eA== 
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 38kqtwjp1r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 19 May 2021 05:20:38 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Wed, 19 May
+ 2021 11:20:36 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.2242.4 via Frontend
+ Transport; Wed, 19 May 2021 11:20:36 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 718C911CD;
+        Wed, 19 May 2021 10:20:35 +0000 (UTC)
+Date:   Wed, 19 May 2021 10:20:35 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 1/2] pinctrl: core: configure pinmux from pins debug file
-Message-ID: <20210519100235.GA3063522@x1>
-References: <20210516135531.2203-1-dariobin@libero.it>
- <20210516135531.2203-2-dariobin@libero.it>
- <CAHp75Vd8875hRNk1JK6gkmfxjqxBSu4cRNE1zJt9TyEW7TvsMg@mail.gmail.com>
- <1735504854.166374.1621346262270@mail1.libero.it>
- <CAHp75VeADiRKdfnsXQ=y3z1WAJBbtZ+P=8tdyYtVQpJrSrQ63Q@mail.gmail.com>
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Saravana Kannan <saravanak@google.com>,
+        <alsa-devel@alsa-project.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 05/10] docs: update pin-control.rst references
+Message-ID: <20210519102035.GH64205@ediswmail.ad.cirrus.com>
+References: <cover.1621413933.git.mchehab+huawei@kernel.org>
+ <46ac2e918c7c4a4b701d54870f167b78466ec578.1621413933.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAHp75VeADiRKdfnsXQ=y3z1WAJBbtZ+P=8tdyYtVQpJrSrQ63Q@mail.gmail.com>
+In-Reply-To: <46ac2e918c7c4a4b701d54870f167b78466ec578.1621413933.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-GUID: kjVnaIbt4ji1tbhMzTpF3hssfkrUUfoU
+X-Proofpoint-ORIG-GUID: kjVnaIbt4ji1tbhMzTpF3hssfkrUUfoU
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 mlxlogscore=999
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 phishscore=0
+ adultscore=0 impostorscore=0 mlxscore=0 spamscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
+ definitions=main-2105190071
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 18, 2021 at 05:01:30PM +0300, Andy Shevchenko wrote:
-> On Tue, May 18, 2021 at 4:57 PM Dario Binacchi <dariobin@libero.it> wrote:
-> > > Il 17/05/2021 22:02 Andy Shevchenko <andy.shevchenko@gmail.com> ha scritto:
-> > > On Sun, May 16, 2021 at 7:43 PM Dario Binacchi <dariobin@libero.it> wrote:
+On Wed, May 19, 2021 at 10:51:42AM +0200, Mauro Carvalho Chehab wrote:
+> Changeset 5513b411ea5b ("Documentation: rename pinctl to pin-control")
+> renamed: Documentation/driver-api/pinctl.rst
+> to: Documentation/driver-api/pin-control.rst.
 > 
-> ...
+> Update the cross-references accordingly.
 > 
-> > > Can't you use strncpy_from_user() ?
-> >
-> > Ok, I'll use strncpy_from_user() in the next version of the patch
-> 
-> Don't be in a hurry.
-> 
-> We need to settle down the interface first. We still haven't heard
-> from the maintainer (Linus?) about it. Neither we have a clear view if
-> we need to revert that patch that dropped pinconf-config (Drew, what
-> do you think?).
+> Fixes: 5513b411ea5b ("Documentation: rename pinctl to pin-control")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
 
-Vladimir Zapolskiy wrote in e73339037f6b ("pinctrl: remove unused
-'pinconf-config' debugfs interface"):
-    
-    Of course it might be possible to increase MAX_NAME_LEN, and then add
-    .pin_config_dbg_parse_modify callbacks to the drivers, but the whole
-    idea of such a limited debug option looks inviable. A more flexible
-    way to functionally substitute the original approach is to implicitly
-    or explicitly use pinctrl_select_state() function whenever needed.
+For the Madera change:
 
-This makes me think it is not a good idea to bring back pinconf-config.
-The pinmux-select debugfs file that I add added in commit 6199f6becc86
-("pinctrl: pinmux: Add pinmux-select debugfs file") provides a method to
-activate a pin function and pin group which I think provides the same
-capability as long as the possible pin functions are described in dts.
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-thanks,
-drew
-
+Thanks,
+Charles
