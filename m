@@ -2,84 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 194B33899D3
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 01:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 032733899E2
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 01:30:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230091AbhESX3M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 19:29:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51198 "EHLO
+        id S230114AbhESXbc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 19:31:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230088AbhESX3M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 19:29:12 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E31C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:27:50 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id c10so615187lfm.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:27:50 -0700 (PDT)
+        with ESMTP id S230115AbhESXb1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 19:31:27 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D25C06175F
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:30:06 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id w33so13671425lfu.7
+        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JJEJbgRPnMBu2f8ndkVjFvRlGE1bDrbkWqaeWQqS4qg=;
-        b=bmyI9zT7D6VywVO0FZYWVtTHDbNrUjUkXVxolFMUdDeEnMBLdC7WLCM/qVZf0gLrkB
-         38HpWU/YBYXIVw+em1s8JK6FdLxutwITf2ueNcN/OWecZUzx/KS1Owa3erdFfzZ+6Hav
-         wu04qZHdyorG6YixuVe8bV4KC7/lhYqGR6n4nUKIVpoy/qnlZLarxH5nK/Dvrv4Thd9v
-         z/rT9lCJaKw1mGQhS78Y3ElvmGHjB0ZaByGVboZCovpnGqQbItihDjlHUJa7jbsm5Kni
-         axIuR+6wNTXGZ4a/azftCRWKmCsWltEhdasogAMhU6AALm/SucRIVdDJ3C+/LAocPs+Y
-         Gahw==
+        bh=TMwUCc4SgPJG97Rkm0aBtlB2yukAmA0ZCOYZxIe8Tck=;
+        b=COFRVP/pO0baQb+7qWHLDz2WLUT5dypjNrj5zUFuYXzUtg6fpKRLlKYbiZzPTITPZc
+         /uUhhjfIhsoNsAMrop863YnjD+LgJVtDBP1KYoIu4ksGcJgGWz+s4WWn3kmvO/XAv0BK
+         OjUUa9da0YUMEgSfNJvNy+ql5y+6om6KV5Dn8le+pTDLe6BKSPKUmTwLt2eqm7lESk3B
+         QnO3uLAlBSJnplIxsPfmtdAsiUJVFs3wuquyVQJXmSJaQ2CdHSUXq2Mye2jrpNtdysXk
+         O4duXcZeyAtbDkRMCeOnacVwo36wilffm5IBrr8bDvT2UfALp70Ae/bNbZX+hYLGS5rx
+         LiCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JJEJbgRPnMBu2f8ndkVjFvRlGE1bDrbkWqaeWQqS4qg=;
-        b=AQ6ok1Co2a3N+2vQ1gUZGtbxA1NG2KwkW6kQYIrAaVvpOWfQ/S2/mcfkxZaqhO9dIk
-         tqLeZs4I5OcZ+kKZfMWjzUNJyozmz2kfRNRm7I99upbvRyQmKmUst9MoDMSzqoPfIRvj
-         mKY+WxoWD+E5ECyUsf+j9Y7MfSXRb1oT3nJ4/JDct2R7JRppg2n2AUG+5cMc8nLTCant
-         eJkHmbs30K1TKuo+ehtS6fAKaAjVE4EB1SEoFwMz3RbC8N2zzf3Z4Dd1JYqCiMwew01L
-         uFwOzmdyMgItaeozoI0yaLb/HqxmynVZ5WD5MZVPyjZlAoJB1xoW2bLzXNJP1xzgKmPQ
-         aOgw==
-X-Gm-Message-State: AOAM531saTItd5x+APY5qKwKMPXpsk1tf6dRi/x9ETsULsuuvk1DnwRS
-        qyh9+h34ji+sL9B+UD6SI56u1N0JsGeYE6NZ78o97g==
-X-Google-Smtp-Source: ABdhPJz/cPPzI7GxXKzBS+Gom60rdG2Gq8Pyt5scUUUDZl7Es1gZjna7v+VwnSx19MRL4DcKqfOm3IcmAfkZkzaM/VM=
-X-Received: by 2002:a05:6512:1185:: with SMTP id g5mr584031lfr.586.1621466869121;
- Wed, 19 May 2021 16:27:49 -0700 (PDT)
+        bh=TMwUCc4SgPJG97Rkm0aBtlB2yukAmA0ZCOYZxIe8Tck=;
+        b=GPGzUypa2v5POl9/Gg1sc3FvkiBLLsbaMhXuMKyF/WfEg7BStEAlaYZHJOUT/oOzT8
+         jfKy4ZUUUxgYDCNHkxr0Nzj4+iEERgr8X1ssDeAVJRNl4QUkyXwtPSOh875EqvVlj2Cz
+         OZSROhY80PnUJtHX2EN7suUC/qsi9QIvGrD0exQ1aKClGEqi91KY5JoQbPb7enWKxHl+
+         +8K2FK3UWDAjsz0tPyhKBYEr+bg1gHXxo32z5IJScEgqYmJUDp7L078IXKqLRbnXdXo9
+         cte0RMTEGky2cRjSC1AWPYjpc4IQpWmbzISk+YJ4eUUQO6ZmkBGrLYabtsvFbP/yWcF/
+         p21w==
+X-Gm-Message-State: AOAM532d5hYx3/6UXTPk2ciB/akjpQjrxtzsZake6przTJPkJHtlTcK3
+        5tpxT5z/x45HSnd4QQP9hvKcTeo4KH5taCYvEZRgcw==
+X-Google-Smtp-Source: ABdhPJzJNxbjDTEBFvL1ZTsKRGzbh5UGwMfvAMRXs41Xp0OeG3kf02/POIFVqkoTMyWq2ondcCw8vTGrfxB/0AvMAqE=
+X-Received: by 2002:a19:ef10:: with SMTP id n16mr1030061lfh.649.1621467004538;
+ Wed, 19 May 2021 16:30:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210508142000.85116-1-kettenis@openbsd.org> <20210508142000.85116-2-kettenis@openbsd.org>
- <20210510141955.GA58072@robh.at.kernel.org> <5612be5a12568600@bloch.sibelius.xs4all.nl>
-In-Reply-To: <5612be5a12568600@bloch.sibelius.xs4all.nl>
+References: <20210510194633.11943-1-andriy.shevchenko@linux.intel.com> <20210510194633.11943-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210510194633.11943-2-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 May 2021 01:27:37 +0200
-Message-ID: <CACRpkdYPsL+5ZN3WOovwqkGydaGoJZCskwMkT6rhZ1BYpYVgrw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT bindings for apple,pinctrl
-To:     Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc:     Rob Herring <robh@kernel.org>, kettenis@openbsd.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hector Martin <marcan@marcan.st>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Thu, 20 May 2021 01:29:53 +0200
+Message-ID: <CACRpkdbox-QS-2TG0U_PMRHT60dxt9HaV-k7cTReDn+uM6-fZw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] bitmap: Make bitmap_remap() and bitmap_bitremap()
+ available to users
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Neeli Srinivas <sneeli@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 10, 2021 at 7:06 PM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> > From: Rob Herring <robh@kernel.org>
+On Mon, May 10, 2021 at 9:46 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> > > +properties:
-> > > +  compatible:
-> > > +    items:
-> > > +      - const: apple,t8103-pinctrl
-> > > +      - const: apple,pinctrl
-> >
-> > A genericish fallback is maybe questionable for pinctrl. That's not
-> > often the same from one SoC to the next.
+> Currently the bitmap_remap() and bitmap_bitremap() are available
+> only for CONFIG_NUMA=y case, while some users may benefit out of it
+> and being independent to NUMA code. Make them available to users
+> by moving out of ifdeffery and exporting for modules.
 >
-> Krzysztof raised a similar point.  It seems that Apple isn't in the
-> habit of changing this aspect of their SoCs.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Tested-by: Neeli Srinivas <sneeli@xilinx.com>
+> Acked-by: Yury Norov <yury.norov@gmail.com>
 
-Rob what's your stance on this? Does it need to be changed?
-Else I'll apply the patch.
+This series:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
