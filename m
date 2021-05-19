@@ -2,99 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4169F388970
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 10:30:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 801B93889C2
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 May 2021 10:51:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245160AbhESIcG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 04:32:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:34329 "EHLO mga03.intel.com"
+        id S1343877AbhESIxL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 04:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244959AbhESIcF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 19 May 2021 04:32:05 -0400
-IronPort-SDR: 6C5Dr4t6r5QknYSrDgPH67vi2+5zfgCMIVi70gZoBbpEPZnKZrG36eTG9s5s6REuWDWjEeIDsv
- pvglub9W1ilg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="200982647"
-X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
-   d="scan'208";a="200982647"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 01:30:28 -0700
-IronPort-SDR: xTbh/GsgBHbPnnZtHA1+mOELbVKlC/3T0j19wwWAqm+E0gXXDO5KhBmbHh4vlGtg9yJd7K12zi
- I3AlsE9jcqcw==
-X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
-   d="scan'208";a="405414713"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 01:30:25 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ljHaw-00DAuF-4V; Wed, 19 May 2021 11:30:22 +0300
-Date:   Wed, 19 May 2021 11:30:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id S245541AbhESIxL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 19 May 2021 04:53:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5A3B560C3F;
+        Wed, 19 May 2021 08:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621414311;
+        bh=Xxq1uGAbMGFgeGY3ywEv0OBhOMcnDBc4Aw7rV293abg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HDXmH4kOj1Ffc8/2cPIVagMkwv75xN8kuE4Rn2GW4zUfWOy+/uoxuQky8Dxr9RDVR
+         fVbJMLGgIq+XN+7alWCEcvtKmIWWeiFvOiQyJ9+cMJ+eSmjCj1liIls/T2ERP28sI/
+         Mx2fxh/6TMjsCdbJkuDfE+YtP5rjlL4GYJEyhOZQoAdSbeHyiSWV4ePGv7ROh0zXu8
+         AjzAbT5IYTV7AdlhASpd63KP0Dt2giApS3oj5J8fG1nIer7c4N9j0aGbYuzwaHItI1
+         /kiR1YGrJsdKvu92/Jkc0v9EXHz/fFBf6YBUXpnf+fLICsbgPu9SeBtSBORPjhj95H
+         lVUyUg6TpgwrA==
+Received: by mail.kernel.org with local (Exim 4.94.2)
+        (envelope-from <mchehab@kernel.org>)
+        id 1ljHvh-007gXv-8w; Wed, 19 May 2021 10:51:49 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Suresh Balakrishnan <suresh.balakrishnan@intel.com>
-Subject: Re: [PATCH v1 1/2] gpiolib: Never return internal error codes to
- user space
-Message-ID: <YKTMninSSY3MK6Hf@smile.fi.intel.com>
-References: <20210518155013.45622-1-andriy.shevchenko@linux.intel.com>
- <20210518232451.GA7362@sol>
- <YKTCDNcyUlrgE0Y4@smile.fi.intel.com>
- <20210519080434.GA22854@sol>
+        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-iio@vger.kernel.org, patches@opensource.cirrus.com
+Subject: [PATCH 00/10] Documentation build warning fixes
+Date:   Wed, 19 May 2021 10:51:37 +0200
+Message-Id: <cover.1621413933.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210519080434.GA22854@sol>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 19, 2021 at 04:04:34PM +0800, Kent Gibson wrote:
-> On Wed, May 19, 2021 at 10:45:16AM +0300, Andy Shevchenko wrote:
-> > On Wed, May 19, 2021 at 07:24:51AM +0800, Kent Gibson wrote:
-> > > On Tue, May 18, 2021 at 06:50:12PM +0300, Andy Shevchenko wrote:
-> > > > Currently it's possible that character device interface may return
-> > > > the error codes which are not supposed to be seen by user space.
-> > > > In this case it's EPROBE_DEFER.
-> > > > 
-> > > > Wrap it to return -ENODEV instead as sysfs does.
-> > 
-> > > > Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines")
-> > > > Fixes: 61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
-> > > > Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL")
-> > 
-> > ...
-> > 
-> > > You immediately revert this patch in patch 2.
-> > > My understanding is that is not allowed within a patch set.
-> > 
-> > > Why split the patches instead of going direct to the new helper?
-> > 
-> > It's for backporting to make it easier. (I deliberately left the context above)
-> > 
-> > I can fold them if maintainers think it's okay to do.
-> > 
-> 
-> Not sure what the constraints are on backporting, but wouldn't it be
-> simpler and cleaner to backport the new helper?
+Hi Jon,
 
-Logically (and ideally) it would be three different patches:
- 1) introduce helper
- 2) use helper
- 3) fix places where it's needed to be done
+This small series contain a series of fixes for the documentation. it is
+against your docs-next branch.
 
-But the above scheme doesn't fit backporting idea (we don't backport new
-features and APIs without really necessity). So, the options left are:
+Three of the patches fix duplicated symbols at the ABI documents.
+There are still some ABI warnings from IIO, but all but one were
+already fixed at linux-next. So, hopefully, after having everything
+merged, the ABI warnings will be solved.
 
-Option a: One patch (feels a bit like above)
-Option b: Two patches like in this series (yes, you are correct about
-          disadvantages)
+Mauro Carvalho Chehab (10):
+  docs: update sysfs-platform_profile.rst reference
+  docs: vcpu-requests.rst: fix reference for atomic ops
+  docs: translations/zh_CN: fix a typo at 8.Conclusion.rst
+  docs: sched-bwc.rst: fix a typo on a doc name
+  docs: update pin-control.rst references
+  docs: virt: api.rst: fix a pointer to SGX documentation
+  docs: ABI: iommu: remove duplicated definition for
+    sysfs-kernel-iommu_groups
+  docs: ABI: sysfs-class-backlight: unify ambient light zone nodes
+  docs: ABI: sysfs-class-led-trigger-pattern: remove repeat duplication
+  iio: documentation: fix a typo
 
-> But, as you say, it is the maintainers' call.
+ Documentation/ABI/testing/sysfs-bus-iio       |   4 +-
+ .../ABI/testing/sysfs-class-backlight         | 100 ++++++++++++++++++
+ .../ABI/testing/sysfs-class-backlight-adp5520 |  31 ------
+ .../ABI/testing/sysfs-class-backlight-adp8860 |  37 -------
+ .../sysfs-class-backlight-driver-adp8870      |  32 ------
+ .../testing/sysfs-class-led-driver-el15203000 |   9 --
+ .../testing/sysfs-class-led-trigger-pattern   |   3 +
+ .../ABI/testing/sysfs-kernel-iommu_groups     |  12 +--
+ Documentation/scheduler/sched-bwc.rst         |   2 +-
+ .../zh_CN/process/8.Conclusion.rst            |   2 +-
+ Documentation/virt/kvm/api.rst                |   2 +-
+ Documentation/virt/kvm/vcpu-requests.rst      |   2 +-
+ include/linux/device.h                        |   2 +-
+ include/linux/mfd/madera/pdata.h              |   2 +-
+ include/linux/pinctrl/pinconf-generic.h       |   2 +-
+ include/linux/platform_profile.h              |   2 +-
+ 16 files changed, 117 insertions(+), 127 deletions(-)
+ delete mode 100644 Documentation/ABI/testing/sysfs-class-backlight-adp5520
+ delete mode 100644 Documentation/ABI/testing/sysfs-class-backlight-adp8860
+ delete mode 100644 Documentation/ABI/testing/sysfs-class-backlight-driver-adp8870
+ delete mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-el15203000
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.31.1
 
 
