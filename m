@@ -2,167 +2,246 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA73638AC9D
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 13:44:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 917F138AD4B
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 14:01:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241970AbhETLnD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 May 2021 07:43:03 -0400
-Received: from mail-eopbgr10061.outbound.protection.outlook.com ([40.107.1.61]:14336
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S239154AbhETLlC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 20 May 2021 07:41:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JbTJYtKSknin2/d0j+A8CCUXKrv9m7xEmP50gc2M5RNj9ejtT31YKmBrLVcxMnwWUn10minLB17wc7xrEdYEsofdtS/Exqyea1w/hZHeb0ohQUfYOjZKJlrzU3MIhmmkgO6AHZh/55PUz2VNijOus/1hw48MNZ16nj0j+Wsy7ClJxx2nBO3a2vG35Dz4HdkFgYx/uWmYQA4mg1Y55SYMhH03ijmXKM6hngbtOSw4+g6FF3Avq184q3Mu0E7+T5SLT5joqNj/VDB/73a4V0kgyQx3UtWFa0h0T7dbndtfcEZygoZgHyGU/J2Ch3b9cH6fsFQerW6MOVpXIKNaEDlKqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X3tzFKN4gZ8tVQYKVcM5fgNiBv8s5QBwOp55TNKJ1Vo=;
- b=ocVGLfIof4HH+4Qyrfi38C8WgpcBe5XbUHGlbJurxtC6xuRAvLaQSVH3fLQH6LX+P14kawn/9uAfJjMpSWuuSCPWTyBmMeIlPTEKRGvo26dZ7oHnzUs0o4+N6Eb01y4Bcv0v5RKZYUV4+JIWq5c3jwyVgJGyHOd6tQuo0xcMLoJcsd+Fjz//P2eOBRq0rJbq/tTOQgN0TFVkB42RIHwVulR8dTCsORaR/Fe1lWBWuTXfGYHJAKh7NkLemC9bGyElhO/heAXzXCwzZwHrRfxPPrVWL55OZWcyjEDvpOrWw2C3bGWlhrcBv4fzfCxmlRs53TXWtzgeu6p104M+h3XlvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fi.rohmeurope.com; dmarc=pass action=none
- header.from=fi.rohmeurope.com; dkim=pass header.d=fi.rohmeurope.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=rohmsemiconductoreurope.onmicrosoft.com;
- s=selector1-rohmsemiconductoreurope-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X3tzFKN4gZ8tVQYKVcM5fgNiBv8s5QBwOp55TNKJ1Vo=;
- b=Kireg9W2jSVY88DSNEXEcDmUkIlGkWShdIjdg+dv4eYe3kmgBhc90yaCt0co10+RGdDL/lTaoRw8qWOE2uVAawvKYD2s7TBYy38Ti8/6DEc4hmQGpcxK0KVSdicIk34w0EGQZbEZIh9B7d6ZMBkGdwDTnytMui0LLxrDWLyajck=
-Received: from HE1PR03MB3162.eurprd03.prod.outlook.com (2603:10a6:7:55::20) by
- HE1PR0301MB2474.eurprd03.prod.outlook.com (2603:10a6:3:6a::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4129.28; Thu, 20 May 2021 11:39:26 +0000
-Received: from HE1PR03MB3162.eurprd03.prod.outlook.com
- ([fe80::89f0:ff95:a73a:cf4b]) by HE1PR03MB3162.eurprd03.prod.outlook.com
- ([fe80::89f0:ff95:a73a:cf4b%7]) with mapi id 15.20.4129.033; Thu, 20 May 2021
- 11:39:26 +0000
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-CC:     linux-power <linux-power@fi.rohmeurope.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "michael@walle.cc" <michael@walle.cc>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+        id S242202AbhETMCe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 May 2021 08:02:34 -0400
+Received: from mail-lj1-f178.google.com ([209.85.208.178]:35539 "EHLO
+        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242212AbhETMCF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 May 2021 08:02:05 -0400
+Received: by mail-lj1-f178.google.com with SMTP id f12so19387693ljp.2;
+        Thu, 20 May 2021 05:00:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
+         :in-reply-to:references:mime-version:date:user-agent
+         :content-transfer-encoding;
+        bh=Od73fO/YVSXLydPlT1ud/ElrNvX8bt89vcA0n78Oo9I=;
+        b=eRgP5A9V1YLvehVr7Wzsx1Xpf9mK2ICVdLVeUrOe8RTCPTr0s3Bq/2oyy/Gqnm1tHp
+         RVnR0UsnGD9yC+oqvW/ouyI/QHBbnCB60B/EWJnkzX8IR+Wr8LxLuRxDXL0+O4hnXapn
+         NT5kkyGqAtQn5DHZXWeVQXx7pcnViGcGq7sRHDU42NoKDdOpsTyoK4HBRMCrfYx/+fYM
+         VCvZ3EbV8MbcOW9tcUia9tIPbtVxisSTGOdl1wtiC9iYBjy024mx/1Lg5t3/a6kdiOUX
+         CGb6KPPDIj1NTUpq6Hly7EEkaFFjswmBmo0lWThpsLNBuHPYbJ2P7oj8g5nfcESp9/PF
+         JUDw==
+X-Gm-Message-State: AOAM530pk99KNRIPqwzE9NG0aVoj6oZENH8UorOeYsr82ExYhSPtoHvy
+        GyxW81ru5d5DW06V7tdo6DA=
+X-Google-Smtp-Source: ABdhPJz/6VHA3K8N7sNFn9brO+GRXFQJMCmRs8KAMZtvm+caK/We7l/Z2cJzfmRQdc3HAu+2TTnjaA==
+X-Received: by 2002:a2e:b4b1:: with SMTP id q17mr2753648ljm.40.1621512041799;
+        Thu, 20 May 2021 05:00:41 -0700 (PDT)
+Received: from dc7vkhyyyyyyyyyyyyybt-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::3])
+        by smtp.gmail.com with ESMTPSA id t15sm269409ljk.99.2021.05.20.05.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 May 2021 05:00:41 -0700 (PDT)
+Message-ID: <c6acc28e87d43973561a66bdb4d78905882f2940.camel@fi.rohmeurope.com>
 Subject: Re: [PATCH 1/2] gpio: regmap: Support few IC specific operations
-Thread-Topic: [PATCH 1/2] gpio: regmap: Support few IC specific operations
-Thread-Index: AQHXTWtCG0BzFgXhPkyGPTOK/IVxL6rsPrqA
-Date:   Thu, 20 May 2021 11:39:26 +0000
-Message-ID: <06808578468493bebe8115e54fb1c439c4175cf6.camel@fi.rohmeurope.com>
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reply-To: matti.vaittinen@fi.rohmeurope.com
+To:     Michael Walle <michael@walle.cc>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-power@fi.rohmeurope.com
+In-Reply-To: <7d6f71e0a79e6ccd2a9f69be189993a9@walle.cc>
 References: <09091e75157ea28dcad1605008532016304356a4.1621509932.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <09091e75157ea28dcad1605008532016304356a4.1621509932.git.matti.vaittinen@fi.rohmeurope.com>
-Reply-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Accept-Language: fi-FI, en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: fi.rohmeurope.com; dkim=none (message not signed)
- header.d=none;fi.rohmeurope.com; dmarc=none action=none
- header.from=fi.rohmeurope.com;
-x-originating-ip: [2001:14ba:16e2:8300::2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e3964df5-9a47-4774-3dcd-08d91b83ec29
-x-ms-traffictypediagnostic: HE1PR0301MB2474:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HE1PR0301MB24741751ABE639F3DC3DF617AD2A9@HE1PR0301MB2474.eurprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LVGBNBEYrcLZr3OIDUuh2YaILHZX8cdwger2oZGLZ69UjVsef70f+EhgylIw6l6zn7Gv2FM9ZQOYsw5io6pqjZpxQmM0BZL1HdAIljnwGvSNGyWvfVobcW7kIU9mHu/t8UIsFwYw8qOhMXsvLjn8IQhPf52gLtKl55WFFhKJPfRRovisX+BhxpDJZKBkM2V7PLf+q4QWmZBxqchyX9lD5CSzB4ApwZHRvTqn8zFBEfGKhpHrI00FeQ0Rq/Sn8orfSp+UlL/01cphSa4gRXduQey8e0EFuzUfVTIh+OAEieG91jJr1NOS/x5JhrDiomudlURCvm0YjymHKGB2X0DoyllX5dXuxPjXN2+BSdtfLpFXa9kGpQGwIBXBGqR/sS7Nx+cbBApiA+u5TRyiG504/qjBv7WEvc+uzMarmdgUIojlnrnTHNB63aYLES5KSuUjRfWPc7Tfa14n8GzcAvxeeHcNKENe6UOgpThLvpn43Ky+pb4gK+yOXPAB84hnEl90LfNOxTwIKOmNMF2TraIySpF4xVNRWaqLm1Dx0D5Gxzz+RQ1oMxuLzWNcfjqtRWEFMwXE5imox4vdbXp+KCMsLWbWL8DaHZ7CtR1y+C/7LpvNTbc1H/udWx2Qn2VitNoxLJBT2QHMDzfmMjQQtJrhjkvoIzScxiOckzsFX6xIzp4VSCjuFBZw3NDZ9QQtzH25
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR03MB3162.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39840400004)(136003)(346002)(376002)(396003)(366004)(4744005)(5660300002)(38100700002)(6506007)(2616005)(3450700001)(8936002)(122000001)(6200100001)(6512007)(86362001)(8676002)(6486002)(66556008)(37006003)(966005)(66616009)(54906003)(66446008)(83380400001)(316002)(478600001)(71200400001)(76116006)(2906002)(186003)(4326008)(64756008)(6862004)(99936003)(66476007)(66946007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?QnJZY0lQemx3enZwYkFRc2htYWJOaFJwcVFpZVZFVzI1d2pMWGg3MjNhOHB1?=
- =?utf-8?B?c2N4SkpEZEZXYnlDejdaOENjbUM0UnQwcytjUXcvLzYvemthVU1KbXAra0ly?=
- =?utf-8?B?Wm5VK3F3T0t1RlVkYkRQM05va3JWc0RWMmtML20wYXBJNkVMTzFMNjc5dXpJ?=
- =?utf-8?B?Kzkybk5NemVCU25za24xYUdRYVNTbUVHUDgyVFdVbURScGh0bEdlM3U4U3NP?=
- =?utf-8?B?Qjk5clczVTB6amNYekQzajFZMHJoZmdwaFBNMUFIRHhqeFpxTkMwTFBiZmZs?=
- =?utf-8?B?ZXBLbXpmNlBqRjgwUnMzT3NRR1piWXFrbVEybUtWaC9HZXcrcHkra2xSb28v?=
- =?utf-8?B?bngvd0NrQ2lmQm1pNFBZd3lJaW1QSjdkbUtnR0VkMEdiM0pIUTBwZ0wvYXpv?=
- =?utf-8?B?NEV6SjZyZjdjcStocXRMTFdJRUtWajU0TGZrU3RmWHVHZGV4OXpReWpod3Fk?=
- =?utf-8?B?eUdSb3ZmTURXRUovRFhqOWFoaWxUUkRVVjdaWldNTXF4YUhuN0haWnFqR0hL?=
- =?utf-8?B?NHVXeXNKRzBzZkdnZ2EyRG1KT0E3V0RQR2VDN3Q4OTVVRVFHdkpkWEtyYW1H?=
- =?utf-8?B?TDlER3JVRHdPYUlRTTE1eml6L1lDWGU2eDY5VGpSRldEL1pEbi9YZU52TTdP?=
- =?utf-8?B?elllamtncFhxcjBOYXFodlo0NlRCblhaY3VFZXNjTVFOZmVIU0dvTnpjQ3dw?=
- =?utf-8?B?RXpORHVjSVE3Tm4xc2JqTW1DR3cwc1dCRXBqU2preFB2dWY5QnVXR0VybFB3?=
- =?utf-8?B?Qk5SWE15L0c1TE5paTFVZk52c1phY3lMd3F2ZW1hYWhLUzBvajdzYVJUT2tp?=
- =?utf-8?B?VGZvRklFN0VJRS93bEtyclJza0JDWWo4NVJJOUR3Y2JGa2lXenYzMUdYeVBE?=
- =?utf-8?B?cmlSK01NZUp5bE92c1hjLzZrbnY2SEFxMkNTQ2htM01qOFhuMUJ1bzdDYUg0?=
- =?utf-8?B?QVlqNzNJVkJ6N0ppckpWWjR5MXFUeXl4YUQ1bkhqUGJCczg3OStuRG5TUzMz?=
- =?utf-8?B?ZHJiQVlLUkVvanhLT3BvdzNBdDU3b0FPcWROSWdyQ1RRNXArQzhZWnFlSEQ3?=
- =?utf-8?B?ell1MDJ4bGFjYmVpRjYxajg0TlJva0VvaGJDajNJWXVpMHZIaDZjN0NuMktS?=
- =?utf-8?B?c3BKWERiOG9rbjE5aTZ0MzFmWk9xNTQxanRneVBFU09MeDFsZERnNjBqTUUy?=
- =?utf-8?B?MlVacENlZUdTVnhEL0NVNmpTUlZ3Y2ZEaXlqaW5YSXgrVC9tZ2lXUFRyc0xh?=
- =?utf-8?B?V2hpdWFDNjVWOHNWN3phR2NnM2VGUzlTKzZRZGYyUGRlTjgvQUJLKzFaUVV4?=
- =?utf-8?B?VEdVZlZkS25BYWQ5V29BdVJCaWNENEhZMDJ5ckNFbFR3TXVucXhDME5tblJj?=
- =?utf-8?B?YllGVXZqSys0bzhDYnFyZGFZaGVoaHB4SmVnK3dvU0FIRmVYVkM3YkVyWmth?=
- =?utf-8?B?N0ppMzVuMmJwdWp6cHRKZ0dXN255dDU1UEs5cmxIclAyVFdPTnFuTEdMK3FE?=
- =?utf-8?B?ZFp0OFNMZk1LWm1jeTcvcjQ0bEpQOTlzT1plV2Rsb0FKT0owM2JhUVB4Tm9X?=
- =?utf-8?B?NlRSZXhkay80QmxDTS9ubmwzYjd5aXgvVTh5eEh3QVZMNVh6WUlHVUdCcnFZ?=
- =?utf-8?B?UGJjd0JDNytxSGFQb2hQeklvVDQxZkwxZjZXa0NVT1U4Tzl0TnlTR1g0NXdh?=
- =?utf-8?B?ZGpoWDRFLzVDdFlPSFkvMHNWRmZRVUl0cUwxT205UVNHYm5sQjcrbHNUSUtG?=
- =?utf-8?B?N2JVMXRnZVROSW1DZ2xSckZNOHZubmF1VmJpRTB4eTRNbDdjM3FuaGVSbGQr?=
- =?utf-8?Q?7vVJBIzRQDEdRwz2kGXTkDXgkaUXZJIRYNVzA=3D?=
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-z8l2Q3TWI3bCSZ7rJD4G"
+         <7d6f71e0a79e6ccd2a9f69be189993a9@walle.cc>
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-X-OriginatorOrg: fi.rohmeurope.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR03MB3162.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3964df5-9a47-4774-3dcd-08d91b83ec29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2021 11:39:26.4930
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 94f2c475-a538-4112-b5dd-63f17273d67a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8MZF0B0rG063FxNuD69VqROgQNSvesSraREBZqmi4eE2eNl8hj8/B26vKmsdWEiC30whBffe9ZEClEy6ocFFF7clnJs+VHk+jOU/zWltUOZhoKip+js8wkgQmwwx1KkZ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0301MB2474
+Date:   Thu, 20 May 2021 15:00:35 +0300
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=-z8l2Q3TWI3bCSZ7rJD4G
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
+On Thu, 2021-05-20 at 13:42 +0200, Michael Walle wrote:
+> Hi Matti,
+> 
+> Am 2021-05-20 13:28, schrieb Matti Vaittinen:
+> > The set_config and init_valid_mask GPIO operations are usually very
+> > IC
+> > specific. Allow IC drivers to provide these custom operations at
+> > gpio-regmap registration.
+> > 
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > ---
+> >  drivers/gpio/gpio-regmap.c  | 49
+> > +++++++++++++++++++++++++++++++++++++
+> >  include/linux/gpio/regmap.h | 13 ++++++++++
+> >  2 files changed, 62 insertions(+)
+> > 
+> > diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-
+> > regmap.c
+> > index 134cedf151a7..315285cacd3f 100644
+> > --- a/drivers/gpio/gpio-regmap.c
+> > +++ b/drivers/gpio/gpio-regmap.c
+> > @@ -27,6 +27,10 @@ struct gpio_regmap {
+> >  	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int
+> > base,
+> >  			      unsigned int offset, unsigned int *reg,
+> >  			      unsigned int *mask);
+> > +	int (*set_config)(struct regmap *regmap, void *drvdata,
+> > +			  unsigned int offset, unsigned long config);
+> > +	int (*init_valid_mask)(struct regmap *regmap, void *drvdata,
+> > +				unsigned long *valid_mask, unsigned int
+> > ngpios);
+> 
+> Maybe we should also make the first argument a "struct gpio_regmap"
+> and provide a new gpio_regmap_get_regmap(struct gpio_regmap). Thus
+> having a similar api as for the reg_mask_xlate(). Andy?
 
-On Thu, 2021-05-20 at 14:28 +0300, Matti Vaittinen wrote:
-> The set_config and init_valid_mask GPIO operations are usually very
-> IC
-> specific. Allow IC drivers to provide these custom operations at
-> gpio-regmap registration.
->=20
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+I don't really see the reason of making this any more complicated for
+IC drivers. If we don't open the struct gpio_regmap to IC drivers -
+then they never need the struct gpio_regmap pointer itself but each IC
+driver would need to do some unnecessary function call
+(gpio_regmap_get_regmap() in this case). I'd say that would be
+unnecessary bloat.
 
-Ouch. Immediately after sending this I noticed that I omitted the
-cover-letter. Sorry folks.
+> 
+> >  	void *driver_data;
+> >  };
+> > @@ -39,6 +43,43 @@ static unsigned int gpio_regmap_addr(unsigned
+> > int 
+> > addr)
+> >  	return addr;
+> >  }
+> > 
+> > +static int regmap_gpio_init_valid_mask(struct gpio_chip *gc,
+> > +					unsigned long *valid_mask,
+> > +					unsigned int ngpios)
+> > +{
+> > +	struct gpio_regmap *gpio;
+> > +	void *drvdata;
+> > +
+> > +	gpio = gpiochip_get_data(gc);
+> > +
+> > +	if (!gpio->init_valid_mask) {
+> > +		WARN_ON(!gpio->init_valid_mask);
+> > +		return -EINVAL;
+> > +	}
+> 
+> Why not the following?
+> 
+> if (!gpio->init_valid_mask)
+>      return 0;
 
-In a nutshell - idea is to support providing some IC specific
-operations at gpio_regmap registration. This should help broaden the
-gpio-regmap IC coverage without the need of exposing the gpio_chip.
+It just feels like an error if regmap_gpio_init_valid_mask() is ever
+called by core without having the gpio->init_valid_mask set. Probably
+this would mean that the someone has errorneously modified the gpio-
+>init_valid_mask set after gpio_regmap registration - whih smells like
+a problem. Thus the WARN() sounds like a correct course of action to
+me. (I may be wrong though - see below)
 
-Some preliminary discussion can be seen here:
-https://lore.kernel.org/linux-gpio/c4faac648d3e0c7f3dcb50f7e24c8b322e8c6974=
-.camel@fi.rohmeurope.com/
+> Thus copying the behavior of gpiolib.
+
+I must admit I didn't check how this is implemented in gpiolib. But the
+gpio_chip's init_valid_mask should not be set if regmap_gpio_config
+does not have valid init_valid_mask pointer at registration. Thus it
+smells like an error to me if the GPIO core calls the
+regmap_gpio_init_valid_mask() and regmap_gpio has not set the
+init_valid_mask pointer. But as I said, I haven't looked in gpiolib for
+this so I may be wrong.
+
+> 
+> > +
+> > +	drvdata = gpio_regmap_get_drvdata(gpio);
+> > +
+> > +	return gpio->init_valid_mask(gpio->regmap, drvdata,
+> > valid_mask, 
+> > ngpios);
+> > +}
+> > +
+> > +static int gpio_regmap_set_config(struct gpio_chip *gc, unsigned
+> > int 
+> > offset,
+> > +				  unsigned long config)
+> > +{
+> > +	struct gpio_regmap *gpio;
+> > +	void *drvdata;
+> > +
+> > +	gpio = gpiochip_get_data(gc);
+> > +
+> > +	if (!gpio->set_config) {
+> > +		WARN_ON(!gpio->set_config);
+> > +		return -EINVAL;
+> > +	}
+> 
+> same here, return -ENOTSUPP.
+
+As above - 
+if (!gpio->set_config) {
+	the gpio-core should never call gpio_regmap_set_config() if the
+}
+
+Maybe I should add a comment to clarify the WARN() ?
+> 
+> > +
+> > +	drvdata = gpio_regmap_get_drvdata(gpio);
+> > +
+> > +	return gpio->set_config(gpio->regmap, drvdata, offset, config);
+> > +}
+> > +
+> >  static int gpio_regmap_simple_xlate(struct gpio_regmap *gpio,
+> >  				    unsigned int base, unsigned int
+> > offset,
+> >  				    unsigned int *reg, unsigned int
+> > *mask)
+> > @@ -235,6 +276,8 @@ struct gpio_regmap *gpio_regmap_register(const
+> > struct gpio_regmap_config *config
+> >  	gpio->reg_clr_base = config->reg_clr_base;
+> >  	gpio->reg_dir_in_base = config->reg_dir_in_base;
+> >  	gpio->reg_dir_out_base = config->reg_dir_out_base;
+> > +	gpio->set_config = config->set_config;
+> > +	gpio->init_valid_mask = config->init_valid_mask;
+> > 
+> >  	/* if not set, assume there is only one register */
+> >  	if (!gpio->ngpio_per_reg)
+> > @@ -253,6 +296,10 @@ struct gpio_regmap *gpio_regmap_register(const
+> > struct gpio_regmap_config *config
+> >  	chip->ngpio = config->ngpio;
+> >  	chip->names = config->names;
+> >  	chip->label = config->label ?: dev_name(config->parent);
+> > +	if (gpio->set_config)
+> > +		chip->set_config = gpio_regmap_set_config;
+> > +	if (gpio->init_valid_mask)
+> > +		chip->init_valid_mask = regmap_gpio_init_valid_mask;
+> > 
+> >  #if defined(CONFIG_OF_GPIO)
+> >  	/* gpiolib will use of_node of the parent if chip->of_node is
+> > NULL */
+> > @@ -280,6 +327,8 @@ struct gpio_regmap *gpio_regmap_register(const
+> > struct gpio_regmap_config *config
+> >  		chip->direction_output = gpio_regmap_direction_output;
+> >  	}
+> > 
+> > +	gpio_regmap_set_drvdata(gpio, config->drvdata);
+> 
+> I'm wondering if we need the gpio_regmap_set_drvdata() anymore or if
+> we can just drop it entirely.
+
+I wouldn't drop it. I think there _may_ be cases where the drvdata is
+set only after the registration. (Just my gut-feeling, I may be wrong
+though)
+
 
 Best Regards
 	Matti Vaittinen
 
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland
+SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
---=-z8l2Q3TWI3bCSZ7rJD4G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
 
------BEGIN PGP SIGNATURE-----
+Simon says - in Latin please.
+"non cogito me" dixit Rene Descarte, deinde evanescavit
 
-iQEzBAABCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmCmSm0ACgkQeFA3/03a
-ocUYyggAkbMvzL22LH54DBnyzvD9bsMHohOGnlFxq1mTcPEPeK/jfDY052izgF4j
-+kO9Afl6oasRxlSyj9H+p2pdBl0+Yx0c0m9OzkZLnjpCcJMYG9R+0JrAhBSMjah8
-KKuWBmJhgg2GrfkGvtXeXC7ULkH5SzCx0hHv4qCi5mzeoDG8nwrDgJ8MS4+6rRTy
-zJGBRMTLNj001Cmy8VgDX4YdsZLtSgw6fbHPiiFx2dANYTx5IbFdzKoKwirnbW3r
-AYOiKWnhGlS0PvCKWeTWiSjfCP06LJeyMPhZjABmlXq2yk7jBlDr+BqlTmcDiYoR
-hdmsOTdxDts3KBnVhy5CwpwpV44xuA==
-=//GP
------END PGP SIGNATURE-----
+(Thanks for the translation Simon)
 
---=-z8l2Q3TWI3bCSZ7rJD4G--
+
