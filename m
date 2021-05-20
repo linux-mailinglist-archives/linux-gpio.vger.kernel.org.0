@@ -2,120 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EA70389F82
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 10:10:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 747DA389F9F
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 10:15:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231185AbhETILt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 May 2021 04:11:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55106 "EHLO
+        id S230429AbhETIRK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 May 2021 04:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231176AbhETILt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 May 2021 04:11:49 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB19C061574;
-        Thu, 20 May 2021 01:10:28 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id 10so11809240pfl.1;
-        Thu, 20 May 2021 01:10:28 -0700 (PDT)
+        with ESMTP id S229536AbhETIRJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 May 2021 04:17:09 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30FCC061574;
+        Thu, 20 May 2021 01:15:47 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id c12so208338pfl.3;
+        Thu, 20 May 2021 01:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fgc3MSJEF2dvUk6J7VrW1TUKtv/b5izfCPz91BOaza0=;
-        b=fWtJFnkBqwr4/yT89SomaJ3S6WBdDp0OG4kypY94b6UdCw6ipsBwPeD5DjLw1O1b7i
-         BlKnNzo7HhhPX/XT6+yPfWx8TAvA4f1PSiMOewiV5L7gkVyK75mb8/03NaiJ/MnhPOeH
-         4oYfhT+cTHeot+gwslIG+A6YQXVzv1hbRmeRwDTp6k4aHpl+iaEpOtiql+fPQQ8MI4+z
-         300RmnrFlhXo52Cg0X09mwhgVZjgfei7TlphhegLuHil1Ri2hqtwegFiR+5NeJ4/6mhX
-         pMzYc0YFSgCOWh+g+/d8CNKmWaowoCt+xuwtZGQiu8U4iUmczwctGn4Yc7x66fr0gvDW
-         DT9w==
+        bh=SdyKECh0fEb+UvxR4lagGLq2m3LWI3riUHFAOcDJNJY=;
+        b=BOMwda17kpkCyirEBkjF3uWkvF+DQfeLpDDPMj15Shhf9xXU8/6H3yByt65Lmq5sR4
+         NdpzC8UFppX5HhXaZFzKYVFdgODz0uNGdGIgj1lkqpb6SDjKfZUx4mq8nTnjLoQO/zox
+         U/EdWXFYkjKPNFBTSV6cvopZERxUCFodJjSzOF8FBxGAtguuv1svwQJbpgVWr2dUODil
+         pB5iOEXbFfcZmmE5wjE+i6g4VcSvSsFLeuyEDRHnv+2EUjYOpeYIEr6FTkonbmayQR/A
+         skgHEfCMgoJoD8eyTLaBrzKwRdhoThXF/f6vAOwQTC4yd8skzqJGCMc0NhZz7QI0p4C3
+         brMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fgc3MSJEF2dvUk6J7VrW1TUKtv/b5izfCPz91BOaza0=;
-        b=ewGo306VYeuphfYUpd4wpXzo2CcuYsVZCxAxSyBIe7SY1xTJqIubhA1dcSPLZsTz1g
-         3Ykf1ZXIjUNgoMl9NxrtHEei45cTOvKZ1w7fwtIZTU6kRHgvKKt3XOrELkMq5MG6xte4
-         ISKuQ4mJ/bSbFO1/ogVRmoi2FZxJJDqhDx+9JRsN54f+OsY0sbVZmsyyCg4Ff96RzVwX
-         pAtk1m1Z2aaqcCF/WIJsKpFFBbGdUvGuTGALapUDAzAIpV5W/n6Kh9/q8ezdfKELnXG4
-         e8CqSQHGQPPRi2wbWcvcX+fu0SYGENrmSMaECsVJjjNoE8v3SR1NRkxfGaM26ufG8KcV
-         YUOg==
-X-Gm-Message-State: AOAM5300DQTFGtaVDc57D42iTtNzAkn2TlzACoQ5DSMjEYmOb9229uDZ
-        ZExkDs7quvpRd9FACQbUHEO/r4gouZh5MvAuhCxN/IWxLEg=
-X-Google-Smtp-Source: ABdhPJzoXv56PX9mE2cvK/ACtqsNaEmJeuGetWOrhz3jz9/Ayz3RB5OFwKJlT+lIffywJ8ITr1kYnFhIB6RbZ03EDeY=
-X-Received: by 2002:a63:79c3:: with SMTP id u186mr3377788pgc.203.1621498227612;
- Thu, 20 May 2021 01:10:27 -0700 (PDT)
+        bh=SdyKECh0fEb+UvxR4lagGLq2m3LWI3riUHFAOcDJNJY=;
+        b=b3jlhbAidHbceAJ1iwNSZ7T9ONm2R3EWRgt28vNJpfwPKDfuhADE/nNIQu8n3Ae7S5
+         JK3Kmr/+ntbQdDQRzGPEs8ej/q+QkQakVhTyv4BJg+wrnjl62T6bjQJwu8x5qyN1Y2UJ
+         9+atiS0PP7fBu/K7sNeh1++Cs+1wV14a/KacxnH6GvnWpCl3Etc1AcCl4zd7dMhZr5De
+         r2L/LI1xt+JcT7ewgTuDUP8cSIsMmQd7pJeTagS2uNwetX93/Zf7SSFDHR182gs9uu3J
+         m3kjq4lLjYBtRaDbjzeQ1s/t4nbzJakitezHbDYrAUU6wuJMgu5oJ22N0A67nH+UIWoz
+         FIbQ==
+X-Gm-Message-State: AOAM532f6qHwXC3aUIJUNUhG7kTcPV4Tg9zACfzTpWdk+TwVleGlqh3X
+        +6sbKVaDlroGHfNes8lBxqZOMbNRy6oGRpx3qLk=
+X-Google-Smtp-Source: ABdhPJyfFnQlNGsV9/iaPHlsgGs9ebuW/38steaJ9iSfBEMCuOo+ERW/WGRzgvxzw8Plhsi70HqwqJ5UWf/xSQfNpr4=
+X-Received: by 2002:a63:79c3:: with SMTP id u186mr3398497pgc.203.1621498547391;
+ Thu, 20 May 2021 01:15:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210516135531.2203-1-dariobin@libero.it> <20210516135531.2203-2-dariobin@libero.it>
- <CAHp75Vd8875hRNk1JK6gkmfxjqxBSu4cRNE1zJt9TyEW7TvsMg@mail.gmail.com>
- <1735504854.166374.1621346262270@mail1.libero.it> <CAHp75VeADiRKdfnsXQ=y3z1WAJBbtZ+P=8tdyYtVQpJrSrQ63Q@mail.gmail.com>
- <20210519100235.GA3063522@x1> <CAHp75Ve5sonh1qNgqqF1yr8OiuJVWXb-UJj+kzxQa7+R-YVoXQ@mail.gmail.com>
- <20210520041733.GA3269241@x1>
-In-Reply-To: <20210520041733.GA3269241@x1>
+References: <20210518083339.23416-1-andriy.shevchenko@linux.intel.com> <YKYYp6Z4HAYHLaFz@hovoldconsulting.com>
+In-Reply-To: <YKYYp6Z4HAYHLaFz@hovoldconsulting.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 20 May 2021 11:10:11 +0300
-Message-ID: <CAHp75Venn3Z6qz2HsELW108QORzZoLYdY8mDTxaKX-8c_3p3hA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: core: configure pinmux from pins debug file
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Dario Binacchi <dariobin@libero.it>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Thu, 20 May 2021 11:15:31 +0300
+Message-ID: <CAHp75Vf_tQxPcRa_ObYngUFQqzFrx2RyUcqemyeHFDOD1XEnbQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpiolib: Introduce for_each_gpio_desc_if() macro
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 20, 2021 at 7:17 AM Drew Fustini <drew@beagleboard.org> wrote:
-> On Wed, May 19, 2021 at 02:27:38PM +0300, Andy Shevchenko wrote:
-> > On Wed, May 19, 2021 at 1:02 PM Drew Fustini <drew@beagleboard.org> wrote:
-> > > On Tue, May 18, 2021 at 05:01:30PM +0300, Andy Shevchenko wrote:
+On Thu, May 20, 2021 at 11:07 AM Johan Hovold <johan@kernel.org> wrote:
+> On Tue, May 18, 2021 at 11:33:39AM +0300, Andy Shevchenko wrote:
+
+Thank you for the response, my answer below.
 
 ...
 
-> > > Vladimir Zapolskiy wrote in e73339037f6b ("pinctrl: remove unused
-> > > 'pinconf-config' debugfs interface"):
-> > >
-> > >     Of course it might be possible to increase MAX_NAME_LEN, and then add
-> > >     .pin_config_dbg_parse_modify callbacks to the drivers, but the whole
-> > >     idea of such a limited debug option looks inviable. A more flexible
-> > >     way to functionally substitute the original approach is to implicitly
-> > >     or explicitly use pinctrl_select_state() function whenever needed.
-> > >
-> > > This makes me think it is not a good idea to bring back pinconf-config.
-> > > The pinmux-select debugfs file that I add added in commit 6199f6becc86
-> > > ("pinctrl: pinmux: Add pinmux-select debugfs file") provides a method to
-> > > activate a pin function and pin group which I think provides the same
-> > > capability as long as the possible pin functions are described in dts.
-> >
-> > The problem is that the pinctrl_select_state() is very limited and has
-> > no clear meanings of the states. Only few are defined and still
-> > unclear. What does `sleep` or `standby` or whatever mean? It may be
-> > quite different to the device in question. Basically what we need is
-> > to say we want this device ('function') to appear on this group of
-> > pins ('group'). And pinctrl_select_state() can't fulfill this simple
-> > task :-(
-> >
-> > If we look at the ACPI case it makes that API completely out of useful
-> > context (it can be used due to above and some kind of layering
-> > violations, like PM vs. pin control).
-> >
-> > Since above is the debugfs interface we may return it for the certain
-> > task, i.e. printing current function / group choice(s) (if it's not
-> > done by other means) and allow to switch it desired function/group
-> > (that's what Dario tries to achieve AFAIU).
+> The _if suffix here is too vague.
 >
-> A write to the pinmux-select debugfs file will call pinmux_select() in
-> drivers/pinctrl/pinmux.c which, after some validation checks, will call
-> pmxops->set_mux() with function selector and group selector as
-> arguments.  For pinctrl-single, this will invoke pcs_set_mux() which
-> will ultimately set the mux mode bits in the register for each pin in
-> that function.
+> Please use a more descriptive name so that you don't need to look at the
+> implementation to understand what the macro does.
 >
-> IS that useful for pin controllers in ACPI systems as well?
+> Perhaps call it
+>
+>         for_each_gpio_desc_with_flag()
 
-Yes, the debugfs interface is useful independently of the resource
-provider. What I was talking about is the boot / driver load time pin
-muxing and configuration as well as PM transitions.
+Haha, I have the same in my internal tree, but then I have changed to
+_if and here is why:
+- the API is solely for internal use (note, internals of struct
+gpio_desc available for the same set of users)
+- the current users do only same pattern
+- I don't expect that we will have this to be anything else in the future
+
+Thus, _if is a good balance between scope of use and naming.
+
+I prefer to leave it as is.
+
+> or just add the more generic macro
+>
+>         for_each_gpio_desc()
+>
+> and open-code the test so that it's clear what's going on here.
+
+
 
 -- 
 With Best Regards,
