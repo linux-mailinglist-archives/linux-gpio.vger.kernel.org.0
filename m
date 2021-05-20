@@ -2,28 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B83E538B4FB
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 19:13:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5F5E38B4FD
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 19:13:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235214AbhETROo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 May 2021 13:14:44 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:43435 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231561AbhETROo (ORCPT
+        id S233273AbhETROu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 May 2021 13:14:50 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:59705 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235125AbhETROu (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 20 May 2021 13:14:44 -0400
+        Thu, 20 May 2021 13:14:50 -0400
 Received: from copland.sibelius.xs4all.nl ([83.163.83.176])
         by smtp-cloud9.xs4all.net with ESMTP
-        id jmEWllugRVN4kjmEXlB7at; Thu, 20 May 2021 19:13:21 +0200
+        id jmEWllugRVN4kjmEglB7cu; Thu, 20 May 2021 19:13:26 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s2;
-        t=1621530801; bh=WjpDZrKkDBV5L77ReKKWoyRdT7dzQ2/hsXfXJDi4a+Y=;
+        t=1621530806; bh=dZYL73bE1sVxLAH5jVtwDZkLnk4atcpM5ukFIe57fp4=;
         h=From:To:Subject:Date:Message-Id:MIME-Version:From:Subject;
-        b=KbjgNmR1BoCNt84sppLQ0Cz3hsLlboSUOafsMhjA5rqu70Ld9xJsHk1qF7dmI3rRn
-         FsOmH7Jdey8zMajAHTUfhLz99HwWQ4+R/P/rfzVO3aYs7NUUaFlpvd+iRvHSt3QJEV
-         MwmracWwONDSdqDnJLo/eBA/a1oX+arjhie5PSxIhnS5tErVKmxUvdL9Fg6fDGPCKN
-         siIU32UcpRJDprCl5KZcJnRcnFYhJAFW4VR9pHAzBxkOEoDcoEipnHi6+gKEdtKKxx
-         3VmmvzkqcuflL0Ih5Kzxz8O4Lxm3jJkIRj8xg1kUO6/tu51dDsf8mMg2KzMi4zhoCf
-         kfZj0aucq4dMQ==
+        b=Q/fOYQos9F+ts1pq9p94jWkdhbo1hBFjgR1IKYkTRFjNcy8XkqSi4QIdc9/OthRSa
+         8xV/pGNs5fepAArHV6iv+2ffC4nyblCL7w/0gTHb94d9x1otvG5VSISmugAs839fK/
+         wkZ3zVf48gxJ5LqxHUqdlmV2n19POxwMctMnyn7KpZ9mCZoZ6+iNfB2C9AnvFim0fw
+         WYcDEGjCLAA+IDZCOjHl497b+FibSVhdurIUXE4+fhhSIarBoj8Jzq9cZOWYRiTFIE
+         xLa62bpsqbzbrx+g2Tu0I8ttTrRZstRapxsEpAVZLFHkuEbmOuJ46yXgt33zYToWXJ
+         x4pZxMsKs0yoQ==
 From:   Mark Kettenis <mark.kettenis@xs4all.nl>
 To:     devicetree@vger.kernel.org
 Cc:     Mark Kettenis <kettenis@openbsd.org>,
@@ -32,53 +32,185 @@ Cc:     Mark Kettenis <kettenis@openbsd.org>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] Apple M1 pinctrl DT bindings
-Date:   Thu, 20 May 2021 19:13:05 +0200
-Message-Id: <20210520171310.772-1-mark.kettenis@xs4all.nl>
+Subject: [PATCH v3 1/2] dt-bindings: pinctrl: Add DT bindings for apple,pinctrl
+Date:   Thu, 20 May 2021 19:13:06 +0200
+Message-Id: <20210520171310.772-2-mark.kettenis@xs4all.nl>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210520171310.772-1-mark.kettenis@xs4all.nl>
+References: <20210520171310.772-1-mark.kettenis@xs4all.nl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfCqXz/k0b8/lGMVGcgYoRJLw0qtn4re3p3yr+MmSkj2BDUTt5nltCu2PEVnwxd2a6H7DbPpBRIpWYqaNK9C/6djCrwDheppzbOy6Hx0Beq439qg5YOnr
- IFVnt1tVcquGCbusf2njdUpkLYnJkw7YTcVYro99i+JuPg6qYE5UxZejmI4yCXrQx0bn7AY3yJ7Aoc/jAY/nlylimUwRHt2jT41afY+iw8IP9FLQA2ER6Rbh
- EvQM91mLLwNdHRzyqKbfj5UbtMPjiNDdiE/Gwjb/KP8sKkOIHCJmRKNHWGnVoNAuGUTyBSfowD1jYwyIRsxAV0X7v8ZLg2ell40OxFlGFAh3HvblRCQ9wLPP
- eB25tkRKmNMF3EMvDKk6+7YJAKE0p36xn8CJdZebY8WYnHdImP3SCwWEylZwbVOAJpB7MkV8LbbhQWKqFrrVcvngUwDYrt9Uy+B6P/QwNWui4KQsrOqs6WyD
- tfaLW17PgWu/QYes
+X-CMAE-Envelope: MS4xfL3ekawXDDW3d/hI4clRYkTxKfeAaF3GjpPUN9rQVXC+U+KFjja8Wtu6yb8dGDKirHL3L0qgToaSmDaU9bXQXqcTGHd0Y1eN/QXk4JMquZi+ykDxMBm2
+ PU6g0hUCTKJZ4DlbRsh18o5YOiw05uyAzJFmcDToapfyVCp8kl7Hsrt+BXq5f60ir5Ks4R2huuDZi2xiNTysA9aLwInoMZKuiICafvu/bcY1osfZiQymw6dC
+ vWuAFMIHDMaG3M+PyiyCmjaFuw2HWyT7qJwZ9JtffnBYi7uiTtHHsbrsVKgb1t1Ak8YQmIXz5vuNIKjNY28C3Tt6eP8zLy80MlE/wzajKwORQFmRf4VWnw+b
+ apLed56mf+HOgU9Yaw56bDkprWuKiG4s6i233QWgNX8pM8RT57UujFXT/a+rKrICEoh2TgNZ9wGtONC81hRN+tnoL5InlGEW/0HfXUCtE1hHgekyhHfkYG8k
+ Hf3vRzt8rhHZQZfw
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Mark Kettenis <kettenis@openbsd.org>
 
-This small series adds bindings for the pin and GPIO controller found
-on the Apple M1 SoC.
+The Apple GPIO controller is a simple combined pin and GPIO conroller
+present on Apple ARM SoC platforms, including various iPhone and iPad
+devices and the "Apple Silicon" Macs.
 
-At this point, the primary consumer for these bindings is U-Boot.
-With the help of these bindings U-Boot can bring up the PCIe root
-complex into a state where the OS use it without having to deal with
-the GPIO pins.  A Linux driver may be implemented later to support
-power management and/or other devices that need GPIO control.  Since
-the binding is based on standard pinmux node bindings this should be
-relatively easy.
-
-Changelog:
-
-v2: - Fix typo in DT schema
-
-v3: - Add description for interrupts property
-
-
-Mark Kettenis (2):
-  dt-bindings: pinctrl: Add DT bindings for apple,pinctrl
-  arm64: apple: Add pinctrl nodes
-
+Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+---
  .../bindings/pinctrl/apple,pinctrl.yaml       | 106 ++++++++++++++++++
  MAINTAINERS                                   |   2 +
- arch/arm64/boot/dts/apple/t8103.dtsi          |  83 ++++++++++++++
  include/dt-bindings/pinctrl/apple.h           |  13 +++
- 4 files changed, 204 insertions(+)
+ 3 files changed, 121 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
  create mode 100644 include/dt-bindings/pinctrl/apple.h
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+new file mode 100644
+index 000000000000..d50571affd1f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+@@ -0,0 +1,106 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/apple,pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Apple GPIO controller
++
++maintainers:
++  - Mark Kettenis <kettenis@openbsd.org>
++
++description: |
++  The Apple GPIO controller is a simple combined pin and GPIO
++  controller present on Apple ARM SoC platforms, including various
++  iPhone and iPad devices and the "Apple Silicon" Macs.
++
++properties:
++  compatible:
++    items:
++      - const: apple,t8103-pinctrl
++      - const: apple,pinctrl
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++  gpio-ranges:
++    maxItems: 1
++
++  interrupts:
++    description: One interrupt for each of the (up to 7) interrupt
++      groups supported by the controller sorted by interrupt group
++      number in ascending order.
++    minItems: 1
++    maxItems: 7
++
++  interrupt-controller: true
++
++patternProperties:
++  '-pins$':
++    type: object
++    $ref: pinmux-node.yaml#
++
++    properties:
++      pinmux:
++        description:
++          Values are constructed from pin number and alternate function
++          configuration number using the APPLE_PINMUX() helper macro
++          defined in include/dt-bindings/pinctrl/apple.h.
++
++    required:
++      - pinmux
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - '#gpio-cells'
++  - gpio-ranges
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/apple-aic.h>
++    #include <dt-bindings/pinctrl/apple.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      pinctrl: pinctrl@23c100000 {
++        compatible = "apple,t8103-pinctrl", "apple,pinctrl";
++        reg = <0x2 0x3c100000 0x0 0x100000>;
++        clocks = <&gpio_clk>;
++
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-ranges = <&pinctrl 0 0 212>;
++
++        interrupt-controller;
++        interrupt-parent = <&aic>;
++        interrupts = <AIC_IRQ 16 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 17 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 18 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 19 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 20 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 21 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 22 IRQ_TYPE_LEVEL_HIGH>;
++
++        pcie_pins: pcie-pins {
++          pinmux = <APPLE_PINMUX(150, 1)>,
++                   <APPLE_PINMUX(151, 1)>,
++                   <APPLE_PINMUX(32, 1)>;
++        };
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ad0e9be66885..7327c9b778f1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1654,9 +1654,11 @@ C:	irc://chat.freenode.net/asahi-dev
+ T:	git https://github.com/AsahiLinux/linux.git
+ F:	Documentation/devicetree/bindings/arm/apple.yaml
+ F:	Documentation/devicetree/bindings/interrupt-controller/apple,aic.yaml
++F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+ F:	arch/arm64/boot/dts/apple/
+ F:	drivers/irqchip/irq-apple-aic.c
+ F:	include/dt-bindings/interrupt-controller/apple-aic.h
++F:	include/dt-bindings/pinctrl/apple.h
+ 
+ ARM/ARTPEC MACHINE SUPPORT
+ M:	Jesper Nilsson <jesper.nilsson@axis.com>
+diff --git a/include/dt-bindings/pinctrl/apple.h b/include/dt-bindings/pinctrl/apple.h
+new file mode 100644
+index 000000000000..ea0a6f466592
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/apple.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++/*
++ * This header provides constants for Apple pinctrl bindings.
++ */
++
++#ifndef _DT_BINDINGS_PINCTRL_APPLE_H
++#define _DT_BINDINGS_PINCTRL_APPLE_H
++
++#define APPLE_PINMUX(pin, func) ((pin) | ((func) << 16))
++#define APPLE_PIN(pinmux) ((pinmux) & 0xffff)
++#define APPLE_FUNC(pinmux) ((pinmux) >> 16)
++
++#endif /* _DT_BINDINGS_PINCTRL_APPLE_H */
 -- 
 2.31.1
 
