@@ -2,87 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A2AC389A2A
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 01:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AFFF389A59
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 02:14:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbhESX4g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 May 2021 19:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57464 "EHLO
+        id S230048AbhETAQD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 May 2021 20:16:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230194AbhESX4d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 19:56:33 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74E8EC061761
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:55:12 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id j10so21641612lfb.12
-        for <linux-gpio@vger.kernel.org>; Wed, 19 May 2021 16:55:12 -0700 (PDT)
+        with ESMTP id S229955AbhETAQC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 May 2021 20:16:02 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C971C061574;
+        Wed, 19 May 2021 17:14:40 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id x8so15745182wrq.9;
+        Wed, 19 May 2021 17:14:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zJt4FvOdaHnERK7zPswPmt+3fi+oS0bIfqgJwwAG+cs=;
-        b=J/puEMOqZ8T7DKVZKypmjoPKYZMTdm7d14F3rAgMbCOnsJToM3PxHQae9wcGe0qK+N
-         1GbFwe+U3EFT1xj8JIqlx8z8eybFL2ZwItzst7aaCoYtGmxQv2XXNupjR0xn4X6k3mF2
-         JSvrhlnnPppLwlydiZfepQUHKVhGW31Q5YRRJkK7zmr7AiLoqTsl4Kf8GR9U22edkAIq
-         sAB8UGa/P2IQr/qz6iKBVH4BFfn1cqMKz9p0CQ20QFCV9+8F0FHaMi0jMop5a4HmH2tq
-         ZB89rgPrhEmrOkDDNwkqKd/gDO05zbaYh3+XmoVpQgCol+MpN+jfG1aFoKGKRZe3Phum
-         GxAQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2eR8QYJhsv+JHie8c9LG+Hd2DO/6eGdicO+iuYTXcdA=;
+        b=RNLuOm/JCXC2BFTP42mTHqUngG18FZLj+u1jiQ2uk4qoRR+w2QMsr+TOWYkNIEMtwj
+         kvryt6SNfJyv15XUaj/7up6uaYDv74b0ocUTWxax61qUdbLz6IrxP0DXDyWO/jDJJWz7
+         VwiHbI2Y0Lf+4jGIzBbiPalqvSzosdwFZBDzIvhQoEJ0kXb4ehZUCnq3DEmEWNKIAJZA
+         x9M2C9WwTPFqR/oAsmTIsx5nsWkfo/tZ5AtHMuCCWxUDOflvFTITsJFJzLWdquqIZbKL
+         mS8zZ0+rVGbTUlch/4cbtzQwoF78csbqXNvJ4xpbId0tykIz34ok4dnXeKO16TandpXr
+         gjwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zJt4FvOdaHnERK7zPswPmt+3fi+oS0bIfqgJwwAG+cs=;
-        b=kbNX1MHEwtjot3LHpuzA7vlZyMy9ab0r+7V1ZMxgz5q1NMI3KOFS90fRUHEA1WfXiK
-         RCnaShYL4SVoYUXz2yM3mhIdlYC80bSj+m7woloqTwNeGtIhPX9PGbjNrbqHlSjG4lkD
-         J0bwD/P8A0ixauN0q9qBIP5NYRUTXrVOixPZff0u+ePacmoEN4BaEjB3W/OsmvSjqs0U
-         EfEjgMy+OEM8JaeMhP5R4TyMZGUYvHhjFJ+ocf29EhPXzaz4s9RMnk/219m4kRHvPXmg
-         WYi7Rl71XuxCc0ebLWsyTs2XYa+5M6TrbhikPwimAgHh4TQyatPk5ELSuLtFgnVQmT/t
-         z/wg==
-X-Gm-Message-State: AOAM531TbTqMHge00I+s5lLs7SAZIyEybnl3gtc8Q70WI/8VMmNazBqT
-        rpQblJS/kzk6fHWOSuME3rfMEA60Sh8BMaPkc9L1iQ==
-X-Google-Smtp-Source: ABdhPJyfBZRTzjC/9N+poQDvG5+7aOsGGoNjXyeSwTGurMLagNUJVa7/uQRokc6Sj+EI5moCmHs3OO5kaEMwNq7bjU0=
-X-Received: by 2002:a19:b0b:: with SMTP id 11mr1383425lfl.291.1621468510806;
- Wed, 19 May 2021 16:55:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210516061425.8757-1-aardelean@deviqon.com>
-In-Reply-To: <20210516061425.8757-1-aardelean@deviqon.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 May 2021 01:55:00 +0200
-Message-ID: <CACRpkdb6Y4j0Pq5B+WaHy6akvczc-1foABFSq=uHpUg9=GL1GQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-stmpe: fully use convert probe to device-managed
-To:     Alexandru Ardelean <aardelean@deviqon.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2eR8QYJhsv+JHie8c9LG+Hd2DO/6eGdicO+iuYTXcdA=;
+        b=f211x3soJQ7W0wMv8YgcKMAAycg2KPRYSS+vJyNRROcPdVeSpPCdlv7gvqryp9nysN
+         oGfG/AdL+1f6i/x/+rftXfQJQz+B2BNsMJDUdpFJCyduDBQlYsMZ+w+R2SJgbqHCNHMT
+         2ny4awgMi4hdLAx3FvE4T8XsQf66jhXM5JLxQKUCY3ynaJD4QIHvrGmf/XPp99kTAN44
+         Nn7zsc5lKpXqvtREJsdtUQA2M9NtJPQv5LNr4cu6N/4tE4WhSdcY6v9ATbpop8YAjTSQ
+         2z1ghFSG76XB0wsIw9sqSP2ioGz6fzsjAsCCp5BmqjrIuTc+sSvjC1/dA31ieQyd9Gfk
+         sbOg==
+X-Gm-Message-State: AOAM5315dy6/XM/HvuPCva3U/P2wtmF8prGnnW3WX/g6KbWl1kXTDZBs
+        Z9NGrlfLcl1fJ4ftHbcDUEA=
+X-Google-Smtp-Source: ABdhPJzQKV9STS+dr7n2vX0gwJ9KXMyQK52wVEnx2tm9zkjT4V0x9ZWz6owRm54YAM9BVzw7TE3q2A==
+X-Received: by 2002:adf:e0c6:: with SMTP id m6mr1479940wri.66.1621469679173;
+        Wed, 19 May 2021 17:14:39 -0700 (PDT)
+Received: from [192.168.2.120] (pd9e5a1b9.dip0.t-ipconnect.de. [217.229.161.185])
+        by smtp.gmail.com with ESMTPSA id c12sm1106078wrr.90.2021.05.19.17.14.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 May 2021 17:14:37 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl/amd: Add device HID for new AMD GPIO controller
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        alexandre.torgue@foss.st.com,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        stable <stable@vger.kernel.org>, Sachi King <nakato@nakato.io>
+References: <20210512210316.1982416-1-luzmaximilian@gmail.com>
+ <CACRpkdZpm4w6Ym2p9xTsYpkU7CR531aLUUxXj54tssoqd6c9=Q@mail.gmail.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <582afe8b-76c0-7c72-bb08-5e3cca70d1a6@gmail.com>
+Date:   Thu, 20 May 2021 02:14:34 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdZpm4w6Ym2p9xTsYpkU7CR531aLUUxXj54tssoqd6c9=Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, May 16, 2021 at 8:14 AM Alexandru Ardelean
-<aardelean@deviqon.com> wrote:
+On 20/05/2021 01:50, Linus Walleij wrote:
+> On Wed, May 12, 2021 at 11:03 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+> 
+>> Add device HID AMDI0031 to the AMD GPIO controller driver match table.
+>> This controller can be found on Microsoft Surface Laptop 4 devices and
+>> seems similar enough that we can just copy the existing AMDI0030 entry.
+>>
+>> Cc: <stable@vger.kernel.org> # 5.10+
+> 
+> Why? It's hardly a regression?
 
-> The driver doesn't look like it can be built as a kmod, so leaks cannot
-> happen via a rmmod mechanism.
-> The remove hook was removed via commit 3b52bb960ec6 ("gpio: stmpe: make
-> it explicitly non-modular").
->
-> The IRQ is registered via devm_request_threaded_irq(), making the driver
-> only partially device-managed.
->
-> In any case all resources should be made device-managed, mostly as a good
-> practice. That way at least the unwinding on error is happening in reverse
-> order (as the probe).
->
-> This change also removes platform_set_drvdata() since the information is
-> never retrieved to be used in the driver.
->
-> Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
+Because that ID is already in use on the Surface Laptop 4 and
+potentially other AMD-based laptops that are already available for
+purchase. Not having it in stable means that people may have to deal
+with some things not working (as this may prevent other drivers relying
+on GPIOs from working) until 5.14 is available on their distribution of
+choice.
 
-Nice!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Given the size of this change, I hardly think that's necessary. Which
+is, I believe, also why the stable-kernel-rules doc points out that new
+device IDs are (generally) allowed.
 
-Yours,
-Linus Walleij
+Regards,
+Max
