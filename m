@@ -2,293 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07E9438AC15
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 13:32:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA73638AC9D
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 13:44:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241487AbhETLd2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 May 2021 07:33:28 -0400
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:34482 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240815AbhETLb2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 May 2021 07:31:28 -0400
-Received: by mail-lj1-f174.google.com with SMTP id b12so12040557ljp.1;
-        Thu, 20 May 2021 04:30:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U9v2XFXhxWrJhhTytw+psilkDCTZjJus/6PodmNXrec=;
-        b=HItdze0PUMMV9yizKnC0DZQAUQ+cMYOFfoiZ9WZ9SKkJJLfubXbpkFAVl6n5rG319+
-         KjqAqtdl1XQi4ZeTsSER/BaKiIz7FSd2WES1cZaA5yaM5rTByL2TLfA7FBQh3klFQ0+B
-         TgG7iRFXFas7QJ7xpOwPITNlOp0DH8RAdMUfyJ9qC6DOvAF/xfdWWmHAN7mb5VCszHYx
-         EqsIQcynBKOPMQTPEb110Zch87UX4/kBHamKxgH3R/yi7V/ygVo1k5FRP1VVVKzxxClx
-         8nHklP150UQWoGxjn40+jJsF1DEuflG0eZq/qEXQV5Cu8BB7nuiuLlZkTSYcn5JQu/R4
-         KmZQ==
-X-Gm-Message-State: AOAM531YZ7IzugmqVlUcoAX6Y91ZZsUAywZoprhXgm8udXtpVZJaObX0
-        wzEitKwfTvFSDmm96E63X3s=
-X-Google-Smtp-Source: ABdhPJwdYh5+eDjhh/s7gGLVPa8CI29IYjav5VMGf846yjxHbKRHlLhc75ZQ+QTKXlajNlYIoA2UFA==
-X-Received: by 2002:a2e:a314:: with SMTP id l20mr2634956lje.167.1621510205827;
-        Thu, 20 May 2021 04:30:05 -0700 (PDT)
-Received: from localhost.localdomain (dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::2])
-        by smtp.gmail.com with ESMTPSA id q3sm236113ljp.67.2021.05.20.04.30.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 May 2021 04:30:05 -0700 (PDT)
-Date:   Thu, 20 May 2021 14:29:57 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-power@fi.rohmeurope.com
-Subject: [PATCH 2/2] gpio: bd71815: Use gpio-regmap
-Message-ID: <7f19bf2bb61ad64a9df94ab16bc1cca08e8efe43.1621509932.git.matti.vaittinen@fi.rohmeurope.com>
+        id S241970AbhETLnD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 May 2021 07:43:03 -0400
+Received: from mail-eopbgr10061.outbound.protection.outlook.com ([40.107.1.61]:14336
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S239154AbhETLlC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 May 2021 07:41:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JbTJYtKSknin2/d0j+A8CCUXKrv9m7xEmP50gc2M5RNj9ejtT31YKmBrLVcxMnwWUn10minLB17wc7xrEdYEsofdtS/Exqyea1w/hZHeb0ohQUfYOjZKJlrzU3MIhmmkgO6AHZh/55PUz2VNijOus/1hw48MNZ16nj0j+Wsy7ClJxx2nBO3a2vG35Dz4HdkFgYx/uWmYQA4mg1Y55SYMhH03ijmXKM6hngbtOSw4+g6FF3Avq184q3Mu0E7+T5SLT5joqNj/VDB/73a4V0kgyQx3UtWFa0h0T7dbndtfcEZygoZgHyGU/J2Ch3b9cH6fsFQerW6MOVpXIKNaEDlKqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X3tzFKN4gZ8tVQYKVcM5fgNiBv8s5QBwOp55TNKJ1Vo=;
+ b=ocVGLfIof4HH+4Qyrfi38C8WgpcBe5XbUHGlbJurxtC6xuRAvLaQSVH3fLQH6LX+P14kawn/9uAfJjMpSWuuSCPWTyBmMeIlPTEKRGvo26dZ7oHnzUs0o4+N6Eb01y4Bcv0v5RKZYUV4+JIWq5c3jwyVgJGyHOd6tQuo0xcMLoJcsd+Fjz//P2eOBRq0rJbq/tTOQgN0TFVkB42RIHwVulR8dTCsORaR/Fe1lWBWuTXfGYHJAKh7NkLemC9bGyElhO/heAXzXCwzZwHrRfxPPrVWL55OZWcyjEDvpOrWw2C3bGWlhrcBv4fzfCxmlRs53TXWtzgeu6p104M+h3XlvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fi.rohmeurope.com; dmarc=pass action=none
+ header.from=fi.rohmeurope.com; dkim=pass header.d=fi.rohmeurope.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=rohmsemiconductoreurope.onmicrosoft.com;
+ s=selector1-rohmsemiconductoreurope-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X3tzFKN4gZ8tVQYKVcM5fgNiBv8s5QBwOp55TNKJ1Vo=;
+ b=Kireg9W2jSVY88DSNEXEcDmUkIlGkWShdIjdg+dv4eYe3kmgBhc90yaCt0co10+RGdDL/lTaoRw8qWOE2uVAawvKYD2s7TBYy38Ti8/6DEc4hmQGpcxK0KVSdicIk34w0EGQZbEZIh9B7d6ZMBkGdwDTnytMui0LLxrDWLyajck=
+Received: from HE1PR03MB3162.eurprd03.prod.outlook.com (2603:10a6:7:55::20) by
+ HE1PR0301MB2474.eurprd03.prod.outlook.com (2603:10a6:3:6a::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4129.28; Thu, 20 May 2021 11:39:26 +0000
+Received: from HE1PR03MB3162.eurprd03.prod.outlook.com
+ ([fe80::89f0:ff95:a73a:cf4b]) by HE1PR03MB3162.eurprd03.prod.outlook.com
+ ([fe80::89f0:ff95:a73a:cf4b%7]) with mapi id 15.20.4129.033; Thu, 20 May 2021
+ 11:39:26 +0000
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+CC:     linux-power <linux-power@fi.rohmeurope.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "michael@walle.cc" <michael@walle.cc>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] gpio: regmap: Support few IC specific operations
+Thread-Topic: [PATCH 1/2] gpio: regmap: Support few IC specific operations
+Thread-Index: AQHXTWtCG0BzFgXhPkyGPTOK/IVxL6rsPrqA
+Date:   Thu, 20 May 2021 11:39:26 +0000
+Message-ID: <06808578468493bebe8115e54fb1c439c4175cf6.camel@fi.rohmeurope.com>
 References: <09091e75157ea28dcad1605008532016304356a4.1621509932.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
-Content-Disposition: inline
 In-Reply-To: <09091e75157ea28dcad1605008532016304356a4.1621509932.git.matti.vaittinen@fi.rohmeurope.com>
+Reply-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Accept-Language: fi-FI, en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: fi.rohmeurope.com; dkim=none (message not signed)
+ header.d=none;fi.rohmeurope.com; dmarc=none action=none
+ header.from=fi.rohmeurope.com;
+x-originating-ip: [2001:14ba:16e2:8300::2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e3964df5-9a47-4774-3dcd-08d91b83ec29
+x-ms-traffictypediagnostic: HE1PR0301MB2474:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HE1PR0301MB24741751ABE639F3DC3DF617AD2A9@HE1PR0301MB2474.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LVGBNBEYrcLZr3OIDUuh2YaILHZX8cdwger2oZGLZ69UjVsef70f+EhgylIw6l6zn7Gv2FM9ZQOYsw5io6pqjZpxQmM0BZL1HdAIljnwGvSNGyWvfVobcW7kIU9mHu/t8UIsFwYw8qOhMXsvLjn8IQhPf52gLtKl55WFFhKJPfRRovisX+BhxpDJZKBkM2V7PLf+q4QWmZBxqchyX9lD5CSzB4ApwZHRvTqn8zFBEfGKhpHrI00FeQ0Rq/Sn8orfSp+UlL/01cphSa4gRXduQey8e0EFuzUfVTIh+OAEieG91jJr1NOS/x5JhrDiomudlURCvm0YjymHKGB2X0DoyllX5dXuxPjXN2+BSdtfLpFXa9kGpQGwIBXBGqR/sS7Nx+cbBApiA+u5TRyiG504/qjBv7WEvc+uzMarmdgUIojlnrnTHNB63aYLES5KSuUjRfWPc7Tfa14n8GzcAvxeeHcNKENe6UOgpThLvpn43Ky+pb4gK+yOXPAB84hnEl90LfNOxTwIKOmNMF2TraIySpF4xVNRWaqLm1Dx0D5Gxzz+RQ1oMxuLzWNcfjqtRWEFMwXE5imox4vdbXp+KCMsLWbWL8DaHZ7CtR1y+C/7LpvNTbc1H/udWx2Qn2VitNoxLJBT2QHMDzfmMjQQtJrhjkvoIzScxiOckzsFX6xIzp4VSCjuFBZw3NDZ9QQtzH25
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR03MB3162.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39840400004)(136003)(346002)(376002)(396003)(366004)(4744005)(5660300002)(38100700002)(6506007)(2616005)(3450700001)(8936002)(122000001)(6200100001)(6512007)(86362001)(8676002)(6486002)(66556008)(37006003)(966005)(66616009)(54906003)(66446008)(83380400001)(316002)(478600001)(71200400001)(76116006)(2906002)(186003)(4326008)(64756008)(6862004)(99936003)(66476007)(66946007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?QnJZY0lQemx3enZwYkFRc2htYWJOaFJwcVFpZVZFVzI1d2pMWGg3MjNhOHB1?=
+ =?utf-8?B?c2N4SkpEZEZXYnlDejdaOENjbUM0UnQwcytjUXcvLzYvemthVU1KbXAra0ly?=
+ =?utf-8?B?Wm5VK3F3T0t1RlVkYkRQM05va3JWc0RWMmtML20wYXBJNkVMTzFMNjc5dXpJ?=
+ =?utf-8?B?Kzkybk5NemVCU25za24xYUdRYVNTbUVHUDgyVFdVbURScGh0bEdlM3U4U3NP?=
+ =?utf-8?B?Qjk5clczVTB6amNYekQzajFZMHJoZmdwaFBNMUFIRHhqeFpxTkMwTFBiZmZs?=
+ =?utf-8?B?ZXBLbXpmNlBqRjgwUnMzT3NRR1piWXFrbVEybUtWaC9HZXcrcHkra2xSb28v?=
+ =?utf-8?B?bngvd0NrQ2lmQm1pNFBZd3lJaW1QSjdkbUtnR0VkMEdiM0pIUTBwZ0wvYXpv?=
+ =?utf-8?B?NEV6SjZyZjdjcStocXRMTFdJRUtWajU0TGZrU3RmWHVHZGV4OXpReWpod3Fk?=
+ =?utf-8?B?eUdSb3ZmTURXRUovRFhqOWFoaWxUUkRVVjdaWldNTXF4YUhuN0haWnFqR0hL?=
+ =?utf-8?B?NHVXeXNKRzBzZkdnZ2EyRG1KT0E3V0RQR2VDN3Q4OTVVRVFHdkpkWEtyYW1H?=
+ =?utf-8?B?TDlER3JVRHdPYUlRTTE1eml6L1lDWGU2eDY5VGpSRldEL1pEbi9YZU52TTdP?=
+ =?utf-8?B?elllamtncFhxcjBOYXFodlo0NlRCblhaY3VFZXNjTVFOZmVIU0dvTnpjQ3dw?=
+ =?utf-8?B?RXpORHVjSVE3Tm4xc2JqTW1DR3cwc1dCRXBqU2preFB2dWY5QnVXR0VybFB3?=
+ =?utf-8?B?Qk5SWE15L0c1TE5paTFVZk52c1phY3lMd3F2ZW1hYWhLUzBvajdzYVJUT2tp?=
+ =?utf-8?B?VGZvRklFN0VJRS93bEtyclJza0JDWWo4NVJJOUR3Y2JGa2lXenYzMUdYeVBE?=
+ =?utf-8?B?cmlSK01NZUp5bE92c1hjLzZrbnY2SEFxMkNTQ2htM01qOFhuMUJ1bzdDYUg0?=
+ =?utf-8?B?QVlqNzNJVkJ6N0ppckpWWjR5MXFUeXl4YUQ1bkhqUGJCczg3OStuRG5TUzMz?=
+ =?utf-8?B?ZHJiQVlLUkVvanhLT3BvdzNBdDU3b0FPcWROSWdyQ1RRNXArQzhZWnFlSEQ3?=
+ =?utf-8?B?ell1MDJ4bGFjYmVpRjYxajg0TlJva0VvaGJDajNJWXVpMHZIaDZjN0NuMktS?=
+ =?utf-8?B?c3BKWERiOG9rbjE5aTZ0MzFmWk9xNTQxanRneVBFU09MeDFsZERnNjBqTUUy?=
+ =?utf-8?B?MlVacENlZUdTVnhEL0NVNmpTUlZ3Y2ZEaXlqaW5YSXgrVC9tZ2lXUFRyc0xh?=
+ =?utf-8?B?V2hpdWFDNjVWOHNWN3phR2NnM2VGUzlTKzZRZGYyUGRlTjgvQUJLKzFaUVV4?=
+ =?utf-8?B?VEdVZlZkS25BYWQ5V29BdVJCaWNENEhZMDJ5ckNFbFR3TXVucXhDME5tblJj?=
+ =?utf-8?B?YllGVXZqSys0bzhDYnFyZGFZaGVoaHB4SmVnK3dvU0FIRmVYVkM3YkVyWmth?=
+ =?utf-8?B?N0ppMzVuMmJwdWp6cHRKZ0dXN255dDU1UEs5cmxIclAyVFdPTnFuTEdMK3FE?=
+ =?utf-8?B?ZFp0OFNMZk1LWm1jeTcvcjQ0bEpQOTlzT1plV2Rsb0FKT0owM2JhUVB4Tm9X?=
+ =?utf-8?B?NlRSZXhkay80QmxDTS9ubmwzYjd5aXgvVTh5eEh3QVZMNVh6WUlHVUdCcnFZ?=
+ =?utf-8?B?UGJjd0JDNytxSGFQb2hQeklvVDQxZkwxZjZXa0NVT1U4Tzl0TnlTR1g0NXdh?=
+ =?utf-8?B?ZGpoWDRFLzVDdFlPSFkvMHNWRmZRVUl0cUwxT205UVNHYm5sQjcrbHNUSUtG?=
+ =?utf-8?B?N2JVMXRnZVROSW1DZ2xSckZNOHZubmF1VmJpRTB4eTRNbDdjM3FuaGVSbGQr?=
+ =?utf-8?Q?7vVJBIzRQDEdRwz2kGXTkDXgkaUXZJIRYNVzA=3D?=
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-z8l2Q3TWI3bCSZ7rJD4G"
+MIME-Version: 1.0
+X-OriginatorOrg: fi.rohmeurope.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR03MB3162.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3964df5-9a47-4774-3dcd-08d91b83ec29
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2021 11:39:26.4930
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 94f2c475-a538-4112-b5dd-63f17273d67a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8MZF0B0rG063FxNuD69VqROgQNSvesSraREBZqmi4eE2eNl8hj8/B26vKmsdWEiC30whBffe9ZEClEy6ocFFF7clnJs+VHk+jOU/zWltUOZhoKip+js8wkgQmwwx1KkZ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0301MB2474
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-z8l2Q3TWI3bCSZ7rJD4G
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Utilize the gpio-regmap helper and drop the custom functions
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/gpio/Kconfig        |   1 +
- drivers/gpio/gpio-bd71815.c | 106 ++++++++++--------------------------
- 2 files changed, 29 insertions(+), 78 deletions(-)
+On Thu, 2021-05-20 at 14:28 +0300, Matti Vaittinen wrote:
+> The set_config and init_valid_mask GPIO operations are usually very
+> IC
+> specific. Allow IC drivers to provide these custom operations at
+> gpio-regmap registration.
+>=20
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1dd0ec6727fd..97e1348cd410 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1120,6 +1120,7 @@ config GPIO_BD70528
- config GPIO_BD71815
- 	tristate "ROHM BD71815 PMIC GPIO support"
- 	depends on MFD_ROHM_BD71828
-+	select GPIO_REGMAP
- 	help
- 	  Support for GPO(s) on ROHM BD71815 PMIC. There are two GPOs
- 	  available on the ROHM PMIC.
-diff --git a/drivers/gpio/gpio-bd71815.c b/drivers/gpio/gpio-bd71815.c
-index 08ff2857256f..a241c01e08d1 100644
---- a/drivers/gpio/gpio-bd71815.c
-+++ b/drivers/gpio/gpio-bd71815.c
-@@ -9,6 +9,7 @@
-  */
-=20
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/regmap.h>
- #include <linux/init.h>
- #include <linux/irq.h>
- #include <linux/module.h>
-@@ -18,81 +19,33 @@
- #include <linux/mfd/rohm-bd71815.h>
-=20
- struct bd71815_gpio {
--	/* chip.parent points the MFD which provides DT node and regmap */
--	struct gpio_chip chip;
--	/* dev points to the platform device for devm and prints */
- 	struct device *dev;
--	struct regmap *regmap;
- };
-=20
--static int bd71815gpo_get(struct gpio_chip *chip, unsigned int offset)
--{
--	struct bd71815_gpio *bd71815 =3D gpiochip_get_data(chip);
--	int ret, val;
--
--	ret =3D regmap_read(bd71815->regmap, BD71815_REG_GPO, &val);
--	if (ret)
--		return ret;
--
--	return (val >> offset) & 1;
--}
--
--static void bd71815gpo_set(struct gpio_chip *chip, unsigned int offset,
--			   int value)
--{
--	struct bd71815_gpio *bd71815 =3D gpiochip_get_data(chip);
--	int ret, bit;
--
--	bit =3D BIT(offset);
--
--	if (value)
--		ret =3D regmap_set_bits(bd71815->regmap, BD71815_REG_GPO, bit);
--	else
--		ret =3D regmap_clear_bits(bd71815->regmap, BD71815_REG_GPO, bit);
--
--	if (ret)
--		dev_warn(bd71815->dev, "failed to toggle GPO\n");
--}
--
--static int bd71815_gpio_set_config(struct gpio_chip *chip, unsigned int of=
-fset,
-+static int bd71815_gpio_set_config(struct regmap *regmap, void *drvdata,
-+				   unsigned int offset,
- 				   unsigned long config)
- {
--	struct bd71815_gpio *bdgpio =3D gpiochip_get_data(chip);
-+	struct bd71815_gpio *bdgpio =3D (struct bd71815_gpio *)drvdata;
-=20
- 	switch (pinconf_to_config_param(config)) {
- 	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
--		return regmap_update_bits(bdgpio->regmap,
-+		return regmap_update_bits(regmap,
- 					  BD71815_REG_GPO,
- 					  BD71815_GPIO_DRIVE_MASK << offset,
- 					  BD71815_GPIO_OPEN_DRAIN << offset);
- 	case PIN_CONFIG_DRIVE_PUSH_PULL:
--		return regmap_update_bits(bdgpio->regmap,
-+		return regmap_update_bits(regmap,
- 					  BD71815_REG_GPO,
- 					  BD71815_GPIO_DRIVE_MASK << offset,
- 					  BD71815_GPIO_CMOS << offset);
- 	default:
-+		dev_err(bdgpio->dev, "Unsupported config (0x%lx)\n", config);
- 		break;
- 	}
- 	return -ENOTSUPP;
- }
-=20
--/* BD71815 GPIO is actually GPO */
--static int bd71815gpo_direction_get(struct gpio_chip *gc, unsigned int off=
-set)
--{
--	return GPIO_LINE_DIRECTION_OUT;
--}
--
--/* Template for GPIO chip */
--static const struct gpio_chip bd71815gpo_chip =3D {
--	.label			=3D "bd71815",
--	.owner			=3D THIS_MODULE,
--	.get			=3D bd71815gpo_get,
--	.get_direction		=3D bd71815gpo_direction_get,
--	.set			=3D bd71815gpo_set,
--	.set_config		=3D bd71815_gpio_set_config,
--	.can_sleep		=3D true,
--};
--
- #define BD71815_TWO_GPIOS	GENMASK(1, 0)
- #define BD71815_ONE_GPIO	BIT(0)
-=20
-@@ -111,14 +64,16 @@ static const struct gpio_chip bd71815gpo_chip =3D {
-  * but allows using it by providing the DT property
-  * "rohm,enable-hidden-gpo".
-  */
--static int bd71815_init_valid_mask(struct gpio_chip *gc,
-+static int bd71815_init_valid_mask(struct regmap *regmap, void *drvdata,
- 				   unsigned long *valid_mask,
- 				   unsigned int ngpios)
- {
-+	struct bd71815_gpio *bdgpio =3D (struct bd71815_gpio *)drvdata;
-+
- 	if (ngpios !=3D 2)
- 		return 0;
-=20
--	if (gc->parent && device_property_present(gc->parent,
-+	if (bdgpio->dev && device_property_present(bdgpio->dev->parent,
- 						  "rohm,enable-hidden-gpo"))
- 		*valid_mask =3D BD71815_TWO_GPIOS;
- 	else
-@@ -127,9 +82,19 @@ static int bd71815_init_valid_mask(struct gpio_chip *gc,
- 	return 0;
- }
-=20
-+/* Template for regmap gpio config */
-+static const struct gpio_regmap_config gpio_cfg_template =3D {
-+	.label			=3D "bd71815",
-+	.reg_set_base		=3D BD71815_REG_GPO,
-+	.ngpio			=3D 2,
-+	.set_config		=3D bd71815_gpio_set_config,
-+	.init_valid_mask	=3D bd71815_init_valid_mask,
-+};
-+
- static int gpo_bd71815_probe(struct platform_device *pdev)
- {
- 	struct bd71815_gpio *g;
-+	struct gpio_regmap_config cfg;
- 	struct device *parent, *dev;
-=20
- 	/*
-@@ -144,30 +109,15 @@ static int gpo_bd71815_probe(struct platform_device *=
-pdev)
- 	if (!g)
- 		return -ENOMEM;
-=20
--	g->chip =3D bd71815gpo_chip;
--
--	/*
--	 * FIXME: As writing of this the sysfs interface for GPIO control does
--	 * not respect the valid_mask. Do not trust it but rather set the ngpios
--	 * to 1 if "rohm,enable-hidden-gpo" is not given.
--	 *
--	 * This check can be removed later if the sysfs export is fixed and
--	 * if the fix is backported.
--	 *
--	 * For now it is safest to just set the ngpios though.
--	 */
--	if (device_property_present(parent, "rohm,enable-hidden-gpo"))
--		g->chip.ngpio =3D 2;
--	else
--		g->chip.ngpio =3D 1;
--
--	g->chip.init_valid_mask =3D bd71815_init_valid_mask;
--	g->chip.base =3D -1;
--	g->chip.parent =3D parent;
--	g->regmap =3D dev_get_regmap(parent, NULL);
- 	g->dev =3D dev;
-=20
--	return devm_gpiochip_add_data(dev, &g->chip, g);
-+	cfg =3D gpio_cfg_template;
-+	cfg.parent =3D parent;
-+	cfg.regmap =3D dev_get_regmap(parent, NULL);
-+	cfg.fwnode =3D dev_fwnode(dev);
-+	cfg.drvdata =3D g;
-+
-+	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &cfg));
- }
-=20
- static struct platform_driver gpo_bd71815_driver =3D {
---=20
-2.25.4
+Ouch. Immediately after sending this I noticed that I omitted the
+cover-letter. Sorry folks.
+
+In a nutshell - idea is to support providing some IC specific
+operations at gpio_regmap registration. This should help broaden the
+gpio-regmap IC coverage without the need of exposing the gpio_chip.
+
+Some preliminary discussion can be seen here:
+https://lore.kernel.org/linux-gpio/c4faac648d3e0c7f3dcb50f7e24c8b322e8c6974=
+.camel@fi.rohmeurope.com/
+
+Best Regards
+	Matti Vaittinen
 
 
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---u3/rZRmxL6MmkK24
+--=-z8l2Q3TWI3bCSZ7rJD4G
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmCmSDUACgkQeFA3/03a
-ocVu9Af/QXYEHOU3ReHOMx+Lp4csm93q887u9NFlC5FOgvNZvnjfiWm0UzcXK39y
-h84RGdeO2n69cuYfoUKImW5ws6uz/XgPZc/rGuJHYvVicEGi1rOLWlm6VPIsIOIa
-a8PG3QCdAo6FH/l1OXVvKACHsyzIEZhQsRGGwqZapesIjaoBXLWI5KcJ7c7ywIGD
-CQ2IA7IBZn6Y7w5gFpt8155uIhGeatosD9mXiL6T35lsUqnjklaaZcDvG9GPNCbx
-5agm1E7Nm+oKawo3XkpTYVXL/9DHjbIRvjsDY6mKslweQXzpVNRKXKmibNYNdTNk
-46OFQRfWrWKKVT8hq5wXCOEtskxyRQ==
-=iz9Q
+iQEzBAABCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmCmSm0ACgkQeFA3/03a
+ocUYyggAkbMvzL22LH54DBnyzvD9bsMHohOGnlFxq1mTcPEPeK/jfDY052izgF4j
++kO9Afl6oasRxlSyj9H+p2pdBl0+Yx0c0m9OzkZLnjpCcJMYG9R+0JrAhBSMjah8
+KKuWBmJhgg2GrfkGvtXeXC7ULkH5SzCx0hHv4qCi5mzeoDG8nwrDgJ8MS4+6rRTy
+zJGBRMTLNj001Cmy8VgDX4YdsZLtSgw6fbHPiiFx2dANYTx5IbFdzKoKwirnbW3r
+AYOiKWnhGlS0PvCKWeTWiSjfCP06LJeyMPhZjABmlXq2yk7jBlDr+BqlTmcDiYoR
+hdmsOTdxDts3KBnVhy5CwpwpV44xuA==
+=//GP
 -----END PGP SIGNATURE-----
 
---u3/rZRmxL6MmkK24--
+--=-z8l2Q3TWI3bCSZ7rJD4G--
