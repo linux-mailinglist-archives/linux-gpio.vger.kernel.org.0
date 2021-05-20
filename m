@@ -2,101 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C757F389FE1
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 10:33:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 133D938A086
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 11:03:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230509AbhETIfB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 May 2021 04:35:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39002 "EHLO mail.kernel.org"
+        id S230478AbhETJFK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 May 2021 05:05:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:45664 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229536AbhETIfA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 20 May 2021 04:35:00 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 97D7860FF1;
-        Thu, 20 May 2021 08:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621499619;
-        bh=zC2Jqfc5np9GUFGI4yjQnL4CXojZ6bzom+Oi0SOtk6s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VaD2bxFUKLLJL8MZWeXdgd6q98EV/SNrK2Wqdz0NYQnUnk+uh/famzLtgHFS9cQlP
-         btasDmMYDDxyotLe+oDzQxnX2WePQ6cgFGEgpF520zG6eT95zu6L3BJG8XAE1j4oe2
-         N6VcOg5ro1zaUaQ3N62R0KqvFVeHNj4mFdU02qC6pTav5LRdtAqNbkj2pZYU9nZBGk
-         /SkTTieKeFKEMITBw7obSIsim32Pxace5CsHTE8+6NqzCl2g8a1x1iwqXZl2CMV7kU
-         ebEbltxjM8HKMJBOI2q3FxHEZr1btdImy5txRDeIudK2r0pm5aaYwQ6gVeiidLIJuS
-         XED+6/wBeYa/Q==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1lje7e-0001vI-7G; Thu, 20 May 2021 10:33:38 +0200
-Date:   Thu, 20 May 2021 10:33:38 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S230458AbhETJFK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 May 2021 05:05:10 -0400
+IronPort-SDR: Oa4/FM46h0EirZ4YwSesLRXTce9wb9NsTFfQ3LI/Yvv4azJTnv+lf+wLzU2I6zZIuTmltPy2ZE
+ d7rreW/4L7TQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9989"; a="262403018"
+X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
+   d="scan'208";a="262403018"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 02:03:46 -0700
+IronPort-SDR: YfeVf+F4r2kE5T7hr3/j2ub5v0/161DCoyXMukyDECpCk/UO05a8GFIMmx6f1gw/KwbBDC5EiX
+ msFjCwdBRACg==
+X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
+   d="scan'208";a="440369395"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 02:03:45 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1ljeak-00DRRy-ET; Thu, 20 May 2021 12:03:42 +0300
+Date:   Thu, 20 May 2021 12:03:42 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Kent Gibson <warthog618@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH v2 1/1] gpiolib: Introduce for_each_gpio_desc_if() macro
-Message-ID: <YKYe4rgGTDRfq+va@hovoldconsulting.com>
+Message-ID: <YKYl7kt5aGMAHUP9@smile.fi.intel.com>
 References: <20210518083339.23416-1-andriy.shevchenko@linux.intel.com>
  <YKYYp6Z4HAYHLaFz@hovoldconsulting.com>
  <CAHp75Vf_tQxPcRa_ObYngUFQqzFrx2RyUcqemyeHFDOD1XEnbQ@mail.gmail.com>
+ <YKYe4rgGTDRfq+va@hovoldconsulting.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vf_tQxPcRa_ObYngUFQqzFrx2RyUcqemyeHFDOD1XEnbQ@mail.gmail.com>
+In-Reply-To: <YKYe4rgGTDRfq+va@hovoldconsulting.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 20, 2021 at 11:15:31AM +0300, Andy Shevchenko wrote:
-> On Thu, May 20, 2021 at 11:07 AM Johan Hovold <johan@kernel.org> wrote:
-> > On Tue, May 18, 2021 at 11:33:39AM +0300, Andy Shevchenko wrote:
+On Thu, May 20, 2021 at 10:33:38AM +0200, Johan Hovold wrote:
+> On Thu, May 20, 2021 at 11:15:31AM +0300, Andy Shevchenko wrote:
 
-> > The _if suffix here is too vague.
-> >
-> > Please use a more descriptive name so that you don't need to look at the
-> > implementation to understand what the macro does.
-> >
-> > Perhaps call it
-> >
-> >         for_each_gpio_desc_with_flag()
-> 
-> Haha, I have the same in my internal tree, but then I have changed to
-> _if and here is why:
-> - the API is solely for internal use (note, internals of struct
-> gpio_desc available for the same set of users)
+> FWIW, NAK due to the non-descriptive for_each_desc_if() name.
 
-That's not a valid argument here. You should never make code harder to
-read.
+I'm fine without this change, thanks for review!
 
-There are other ways of marking functions as intended for internal use
-(e.g. do not export them and add a _ prefix or whatever).
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> - the current users do only same pattern
 
-That's not an argument against using a descriptive name. Possibly
-against adding a generic for_each_gpio_desc() macro.
-
-> - I don't expect that we will have this to be anything else in the future
-
-Again, irrelevant. Possibly an argument against adding another helper in
-the first place.
-
-> Thus, _if is a good balance between scope of use and naming.
-
-No, no, no. It's never a good idea to obfuscate code.
-
-> I prefer to leave it as is.
-
-I hope you'll reconsider, or that my arguments can convince the
-maintainers to step in here.
-
-> > or just add the more generic macro
-> >
-> >         for_each_gpio_desc()
-> >
-> > and open-code the test so that it's clear what's going on here.
-
-FWIW, NAK due to the non-descriptive for_each_desc_if() name.
-
-Johan
