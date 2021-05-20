@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7759538B864
+	by mail.lfdr.de (Postfix) with ESMTP id 018CE38B863
 	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 22:27:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238007AbhETU3R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S235990AbhETU3R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 20 May 2021 16:29:17 -0400
-Received: from smtp-34.italiaonline.it ([213.209.10.34]:55990 "EHLO libero.it"
+Received: from smtp-34.italiaonline.it ([213.209.10.34]:55772 "EHLO libero.it"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238481AbhETU3Q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S238545AbhETU3Q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Thu, 20 May 2021 16:29:16 -0400
 Received: from passgat-Modern-14-A10M.homenet.telecomitalia.it
  ([82.60.150.250])
         by smtp-34.iol.local with ESMTPA
-        id jpGWlKVEa5WrZjpGnlTUN7; Thu, 20 May 2021 22:27:52 +0200
+        id jpGWlKVEa5WrZjpGqlTUNb; Thu, 20 May 2021 22:27:52 +0200
 x-libjamoibt: 1601
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=libero.it; s=s2021;
-        t=1621542472; bh=hBaIiaAmNT+KuPEIlQ0UMo5FUssmoQIEdX0bE+Xrm5c=;
+        t=1621542472; bh=o/VOXlmBh1ZPZnnDv+64KXqpTUEGPerJE1a/PoV9LoU=;
         h=From;
-        b=RX9rBvhp5PXWC6mEzR/MYtEW8ay1Hk5ZYZ/FhSp1UpmxLSeM4/P6d+KExMgn4v/OA
-         M+dz3Rzh2Ta5ZGkx5r1RRvYtgZ3F9ebfEK0tzQvQCsqUy/7er0coCGkPnBamZmQaK3
-         64S2nnmakma7gsA8u8CQXnjaWpN5nFmeUEBV/xmj1oEEnzwAvayULpOkOOfO5ilEvv
-         6qdVgchWr5kD0w6VIqGL93ODQixfPPgkGV6lFmn5+vJsrc7zNqsImUdGg9nUpwGXhh
-         5MnTmsXLrHiEDbotH75z/eUKJIp40p/qJFPgZL0J9LLPeB+QO2sJRfehgjyNJ00yNt
-         KHDP2v7G/eAQg==
+        b=h+mYj61r2xOt1YhNmBxJpHL+MEu5uTWM9JEshHiHXHgKd2RJCbGXEVHZTgBjZKLJx
+         MrRhmRkF0LQNxRNxY0mLgv1YJWqE1hniHZYFqeNY8pPx7SKJXtAwM+966MCwLj1xPx
+         DObtLPpYi/ct5fcL4DtBdvKi3DznMOLJNTKnlsvH1VRP3dfp6ck8ugE13ZXaunllTh
+         +6tyk6UPIzNeLBSUmFAnizce9J94YRznIbC3vjm/Dt9HgoA3fvZS/LvFvYTXP9jEdH
+         83xoHKJhoK1Ndmfar3IBiDWffx4yKLXrNBYijq7Ue2CoVxHZHtjcpyUafO6P2O3Gtt
+         RJle74aI88PRQ==
 X-CNFS-Analysis: v=2.4 cv=W4/96Tak c=1 sm=1 tr=0 ts=60a6c648 cx=a_exe
- a=QSJ1svMVA5tvcuOEAX2Bgw==:117 a=QSJ1svMVA5tvcuOEAX2Bgw==:17 a=sozttTNsAAAA:8
- a=Fr6HURb7vaUrhCLrTtoA:9 a=aeg5Gbbo78KNqacMgKqU:22
+ a=QSJ1svMVA5tvcuOEAX2Bgw==:117 a=QSJ1svMVA5tvcuOEAX2Bgw==:17
+ a=SMixqbvZskzAqJ1qg7QA:9
 From:   Dario Binacchi <dariobin@libero.it>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dario Binacchi <dariobin@libero.it>,
@@ -35,56 +35,49 @@ Cc:     Dario Binacchi <dariobin@libero.it>,
         Drew Fustini <drew@beagleboard.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: [PATCH v3 0/3] am335x: set pinmux registers from pins debug file
-Date:   Thu, 20 May 2021 22:27:27 +0200
-Message-Id: <20210520202730.4444-1-dariobin@libero.it>
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v3 1/3] docs/pinctrl: update `pins' description under debugfs
+Date:   Thu, 20 May 2021 22:27:28 +0200
+Message-Id: <20210520202730.4444-2-dariobin@libero.it>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210520202730.4444-1-dariobin@libero.it>
+References: <20210520202730.4444-1-dariobin@libero.it>
 X-CMAE-Envelope: MS4xfC4IQyqC8yCTSZda7J5PnkJEZPbrYTBhBMpEICGiISDhj3SIApr58H3eUSX81XdpOeXFDgL4V8j6laxA6ZXoeDcOKIUSg9cKw9BjupDw/smTuSgUSlBr
- souIJhr6BvMOTnSpF4hwcJZS2Wqo/yklxTVGnC3TB8HlcSbXC3rsDCkzW9koXqdrt0TqAjMBjTQxqcwyfvfq+U0yfo25AyfLTmu7w90kljIioGrxEtn8100M
- u/NvUrsDCCrNiXi/ywcpPgxTeQTmQoKRLvxlwnltIE2F6kIvM8qHWYCr6Ct1R76fD9vDaGUyxb8/gAQRTtLzbQP8rkyCp95IBasJI6Szrxfh4MlrsxnLTt48
- R5HJ6ADI+NfLAIG4EQ1+mh5l4dzTr9/P3QjTVigjk/vzjeA7g+v/UHx2jJ07x1q64EqDXsFoY/qGjen11g1bRrcA55QqVlQllHAtVYntDerQyK7D7lO1SuWl
- cySqt6rwqoDAYBpsMJpzpHFAtJx5EP9l2xRFF436M0HF2vbKSov4PZKJslrPP7d3jMqYZer4H/8FDIIHOr04DeKKhYXMW04Aff6ZUDCUgTcsJzis2R9ifyNc
- C50kD7a9D6Y9OEBW0Qpycl90rZMY0s0rDzNjpelwUpwrQtYa4XTfiM4aaPgg7KH+fpY=
+ souIJhr6BvMOTnSpF4hwcJZS2Wqo/yklxTVGnC3TB8HlcSbXC3rsDCkzKfsgd1p6638feX3hC6nWXWDZcvgmMmXO3wW/tFtS6uaEKFqgATGlgZOQ+hSrwAFe
+ Et0byIGpu8McQQG78e6hnTxI1qp0Hg5AJyXexs7/jTHJityWfH/4UoeKEZstSCnwPQViTVNeGaHRmyeyanWUEgGxPVIsL+OXs7edxmOzRXv6HYa85nOVaQeK
+ bGX30ln9MURWLXnNh4dLXP7lZkgCY/DjJkMTBi5F6HuPhDWw7XKwz5i57vxVJ7KS0zSz3ZdI34sAT0LyKluvUvBb1Q0ldjgiY7+QdDLqmhghcrhdhytYHtq4
+ /Hf8Cn07xvWV+J06QPnjBubUpIFRw2ZizMnkwg==
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Optionally the `pins' file created inside the `/sys/kernel/debug/pinctrl'
+subdirectory of each pin controller device now allows you to set the
+mux register of a pin.
 
-The patch was born from the need to change the slew rate of the LCD pins
-of a custom AM335x board during EMC tests. The AM335x, as described in a
-note in section 9.1 of its reference manual [1], is unable to write
-pinmux registers from user space. The series now makes it possible to
-write these registers from the pins debug file.
+Signed-off-by: Dario Binacchi <dariobin@libero.it>
+---
 
-[1] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+(no changes since v1)
 
+ Documentation/driver-api/pin-control.rst | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes in v3:
-- Use strncpy_from_user() instead of copy_from_user().
-- Do not shadow the error code returned by kstrtouint().
-- Change pin_dbg_set() interface (char *buf --> unsigned int val).
-- Describe pin_dbg_set().
-- Remove CONFIG_DEV_MEM dependency.
-- Change pcs_pin_dbg_set() interface (char *buf -> unsigned int val).
-
-Changes in v2:
-- Remove CONFIG_SOC_AM33XX dependency.
-
-Dario Binacchi (3):
-  docs/pinctrl: update `pins' description under debugfs
-  pinctrl: core: configure pinmux from pins debug file
-  pinctrl: single: set pinmux from pins debug file
-
- Documentation/driver-api/pin-control.rst |  3 ++
- drivers/pinctrl/core.c                   | 63 +++++++++++++++++++++++-
- drivers/pinctrl/pinctrl-single.c         | 13 +++++
- include/linux/pinctrl/pinctrl.h          |  4 ++
- 4 files changed, 81 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/driver-api/pin-control.rst b/Documentation/driver-api/pin-control.rst
+index e2474425fb0c..3d8192fa45a3 100644
+--- a/Documentation/driver-api/pin-control.rst
++++ b/Documentation/driver-api/pin-control.rst
+@@ -1447,6 +1447,9 @@ controller device containing these files:
+ 
+ - ``pins``: prints a line for each pin registered on the pin controller. The
+   pinctrl driver may add additional information such as register contents.
++  Optionally writes the mux register for the selected pin.
++  e.g. to write the value 0x73 in the mux register of pin 19:
++  echo 19 0x73 >/sys/kernel/debug/pinctrl/pins
+ 
+ - ``gpio-ranges``: print ranges that map gpio lines to pins on the controller
+ 
 -- 
 2.17.1
 
