@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 864CE38AE69
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 14:36:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA6CA38AE61
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 14:35:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238631AbhETMhb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 May 2021 08:37:31 -0400
-Received: from mga11.intel.com ([192.55.52.93]:62764 "EHLO mga11.intel.com"
+        id S237936AbhETMhE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 May 2021 08:37:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:64470 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237941AbhETMhN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 20 May 2021 08:37:13 -0400
-IronPort-SDR: cKCZyEF8Hv1FYYqvkGOE+wjHhhhu2qNWfNP4BRmPHORmS1Wuoya0SDVV7ign/fylnInvBrUSPm
- 8HYy+xl2G/fw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9989"; a="198127678"
+        id S235963AbhETMgh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 May 2021 08:36:37 -0400
+IronPort-SDR: Zl7is/CwhYwm0FVi9knKR8P5hmBXCtUlSXpbB7GY/gdiPdBz3SwTJjCkCVyXu+Jh3iM+AswMat
+ 0Ex5elmjD5AQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9989"; a="180818266"
 X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="198127678"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 05:35:08 -0700
-IronPort-SDR: DCrhgp4v9pJUsvoqhRjYYyM7ue5MwLyU32k1rPiFFpKRJCQiFuF/TIrP/UKM1zhwbEw9NR1nDM
- nekzXtRHUFbQ==
+   d="scan'208";a="180818266"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 05:35:12 -0700
+IronPort-SDR: LNedmBEgvU/3qVn5wHFfwgO7qTW9EtFFyX5SdmCp9yW77m8E0kP2781zmmaYsSCAJOCPSmnBgM
+ cfK85l11P3pQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="543512555"
+   d="scan'208";a="544959179"
 Received: from lkp-server02.sh.intel.com (HELO 1b329be5b008) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 20 May 2021 05:35:07 -0700
+  by orsmga004.jf.intel.com with ESMTP; 20 May 2021 05:35:10 -0700
 Received: from kbuild by 1b329be5b008 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1ljhtK-0000bH-SR; Thu, 20 May 2021 12:35:06 +0000
-Date:   Thu, 20 May 2021 20:34:50 +0800
+        id 1ljhtL-0000bK-0m; Thu, 20 May 2021 12:35:07 +0000
+Date:   Thu, 20 May 2021 20:34:52 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 3dc58221cadb20cd88e5c92b2aacb528961db52a
-Message-ID: <60a6576a.59jqYntRWAFLyZfY%lkp@intel.com>
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ 9f96bd5ae866e9d061827b9eaa885f611a8afcba
+Message-ID: <60a6576c.HtYaUQ5cvEYpONDU%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +43,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 3dc58221cadb20cd88e5c92b2aacb528961db52a  pinctrl: npcm: Align a few entries in the pin function table
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 9f96bd5ae866e9d061827b9eaa885f611a8afcba  Merge branch 'devel' into for-next
 
 elapsed time: 723m
 
-configs tested: 178
+configs tested: 170
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -78,8 +78,7 @@ arm                         socfpga_defconfig
 powerpc                 mpc8272_ads_defconfig
 arm                           sama5_defconfig
 m68k                       bvme6000_defconfig
-arm                             pxa_defconfig
-sh                          rsk7264_defconfig
+mips                         tb0287_defconfig
 m68k                        m5307c3_defconfig
 m68k                         apollo_defconfig
 mips                        bcm47xx_defconfig
@@ -87,24 +86,14 @@ xtensa                         virt_defconfig
 m68k                       m5275evb_defconfig
 sh                   rts7751r2dplus_defconfig
 powerpc                  mpc885_ads_defconfig
-arc                                 defconfig
 sh                            hp6xx_defconfig
 sh                           se7721_defconfig
-powerpc                  mpc866_ads_defconfig
-arm                         bcm2835_defconfig
-sparc64                          alldefconfig
-riscv                             allnoconfig
-riscv                               defconfig
+arc                                 defconfig
 powerpc                 mpc832x_rdb_defconfig
 s390                             allyesconfig
 csky                                defconfig
 arc                           tb10x_defconfig
 sh                        edosk7705_defconfig
-arc                      axs103_smp_defconfig
-arm                           h3600_defconfig
-ia64                        generic_defconfig
-arm                            hisi_defconfig
-powerpc                      ppc40x_defconfig
 powerpc                 mpc836x_rdk_defconfig
 sh                          rsk7203_defconfig
 arm                           corgi_defconfig
@@ -119,15 +108,17 @@ powerpc                     powernv_defconfig
 um                             i386_defconfig
 x86_64                              defconfig
 ia64                                defconfig
-arm                         lpc18xx_defconfig
 mips                     cu1000-neo_defconfig
 powerpc                      cm5200_defconfig
 powerpc                     rainier_defconfig
 mips                          rb532_defconfig
 arm                          ixp4xx_defconfig
-arm                       cns3420vb_defconfig
-m68k                           sun3_defconfig
-arc                     nsimosci_hs_defconfig
+arm                         lpc18xx_defconfig
+arm                         shannon_defconfig
+powerpc                      obs600_defconfig
+mips                           jazz_defconfig
+arm                        keystone_defconfig
+mips                   sb1250_swarm_defconfig
 sh                           se7712_defconfig
 powerpc                     taishan_defconfig
 mips                         tb0226_defconfig
@@ -136,7 +127,6 @@ arm                        oxnas_v6_defconfig
 powerpc                     tqm5200_defconfig
 arm                             ezx_defconfig
 sh                          lboxre2_defconfig
-arm                         shannon_defconfig
 xtensa                  audio_kc705_defconfig
 ia64                            zx1_defconfig
 arm                      integrator_defconfig
@@ -208,6 +198,8 @@ i386                 randconfig-a013-20210519
 riscv                    nommu_k210_defconfig
 riscv                            allyesconfig
 riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
 riscv                          rv32_defconfig
 riscv                            allmodconfig
 um                               allmodconfig
