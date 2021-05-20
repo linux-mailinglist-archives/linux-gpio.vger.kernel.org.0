@@ -2,91 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9140D38B7EF
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 22:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7759538B864
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 22:27:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237967AbhETUBb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 May 2021 16:01:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237298AbhETUBa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 May 2021 16:01:30 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305CAC061574;
-        Thu, 20 May 2021 13:00:09 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:104d::5f6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id D3783301;
-        Thu, 20 May 2021 20:00:07 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D3783301
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1621540808; bh=2WNLJX/xlZc5xTtT/m0BAIjR0dGVeWDMrn8wfYaNCUM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=JWiESVFNzhYgP3LIrHH+2tY7pTjoh+gKnctlpgARBvgwBWg4BACU+o/zkUA8eRdPF
-         jS85XmMhRO5jK77x2BlQkPxDSbCrzhxlhaMXvDctoM1+BMQOa0yL/SZHdunNPbhAgt
-         4USigcfd0H+vMC4CmQMvwXkhr8hvfRf3UC0K6z2vi4HY7A5m+ShwS2LJ/UDdBlnsDP
-         SPBGKoeOrTvsAjV7A36ox1hL3nOjKNp5cU8ATBlHyBRqSKzr5ElccrOeoSfEDcgg8h
-         LH4udeqBoy+VzdXLKBnnbzSb6qpvpqwupJQPHnbWB4IHmqCdgQ0/NFGZsiTs5E64Wr
-         JxMzmR3UeuhAA==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
+        id S238007AbhETU3R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 May 2021 16:29:17 -0400
+Received: from smtp-34.italiaonline.it ([213.209.10.34]:55990 "EHLO libero.it"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S238481AbhETU3Q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 May 2021 16:29:16 -0400
+Received: from passgat-Modern-14-A10M.homenet.telecomitalia.it
+ ([82.60.150.250])
+        by smtp-34.iol.local with ESMTPA
+        id jpGWlKVEa5WrZjpGnlTUN7; Thu, 20 May 2021 22:27:52 +0200
+x-libjamoibt: 1601
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=libero.it; s=s2021;
+        t=1621542472; bh=hBaIiaAmNT+KuPEIlQ0UMo5FUssmoQIEdX0bE+Xrm5c=;
+        h=From;
+        b=RX9rBvhp5PXWC6mEzR/MYtEW8ay1Hk5ZYZ/FhSp1UpmxLSeM4/P6d+KExMgn4v/OA
+         M+dz3Rzh2Ta5ZGkx5r1RRvYtgZ3F9ebfEK0tzQvQCsqUy/7er0coCGkPnBamZmQaK3
+         64S2nnmakma7gsA8u8CQXnjaWpN5nFmeUEBV/xmj1oEEnzwAvayULpOkOOfO5ilEvv
+         6qdVgchWr5kD0w6VIqGL93ODQixfPPgkGV6lFmn5+vJsrc7zNqsImUdGg9nUpwGXhh
+         5MnTmsXLrHiEDbotH75z/eUKJIp40p/qJFPgZL0J9LLPeB+QO2sJRfehgjyNJ00yNt
+         KHDP2v7G/eAQg==
+X-CNFS-Analysis: v=2.4 cv=W4/96Tak c=1 sm=1 tr=0 ts=60a6c648 cx=a_exe
+ a=QSJ1svMVA5tvcuOEAX2Bgw==:117 a=QSJ1svMVA5tvcuOEAX2Bgw==:17 a=sozttTNsAAAA:8
+ a=Fr6HURb7vaUrhCLrTtoA:9 a=aeg5Gbbo78KNqacMgKqU:22
+From:   Dario Binacchi <dariobin@libero.it>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dario Binacchi <dariobin@libero.it>,
+        Tony Lindgren <tony@atomide.com>,
+        Drew Fustini <drew@beagleboard.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-iio@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH 00/10] Documentation build warning fixes
-In-Reply-To: <cover.1621413933.git.mchehab+huawei@kernel.org>
-References: <cover.1621413933.git.mchehab+huawei@kernel.org>
-Date:   Thu, 20 May 2021 14:00:07 -0600
-Message-ID: <87wnrtnpko.fsf@meer.lwn.net>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: [PATCH v3 0/3] am335x: set pinmux registers from pins debug file
+Date:   Thu, 20 May 2021 22:27:27 +0200
+Message-Id: <20210520202730.4444-1-dariobin@libero.it>
+X-Mailer: git-send-email 2.17.1
+X-CMAE-Envelope: MS4xfC4IQyqC8yCTSZda7J5PnkJEZPbrYTBhBMpEICGiISDhj3SIApr58H3eUSX81XdpOeXFDgL4V8j6laxA6ZXoeDcOKIUSg9cKw9BjupDw/smTuSgUSlBr
+ souIJhr6BvMOTnSpF4hwcJZS2Wqo/yklxTVGnC3TB8HlcSbXC3rsDCkzW9koXqdrt0TqAjMBjTQxqcwyfvfq+U0yfo25AyfLTmu7w90kljIioGrxEtn8100M
+ u/NvUrsDCCrNiXi/ywcpPgxTeQTmQoKRLvxlwnltIE2F6kIvM8qHWYCr6Ct1R76fD9vDaGUyxb8/gAQRTtLzbQP8rkyCp95IBasJI6Szrxfh4MlrsxnLTt48
+ R5HJ6ADI+NfLAIG4EQ1+mh5l4dzTr9/P3QjTVigjk/vzjeA7g+v/UHx2jJ07x1q64EqDXsFoY/qGjen11g1bRrcA55QqVlQllHAtVYntDerQyK7D7lO1SuWl
+ cySqt6rwqoDAYBpsMJpzpHFAtJx5EP9l2xRFF436M0HF2vbKSov4PZKJslrPP7d3jMqYZer4H/8FDIIHOr04DeKKhYXMW04Aff6ZUDCUgTcsJzis2R9ifyNc
+ C50kD7a9D6Y9OEBW0Qpycl90rZMY0s0rDzNjpelwUpwrQtYa4XTfiM4aaPgg7KH+fpY=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-> Hi Jon,
->
-> This small series contain a series of fixes for the documentation. it is
-> against your docs-next branch.
->
-> Three of the patches fix duplicated symbols at the ABI documents.
-> There are still some ABI warnings from IIO, but all but one were
-> already fixed at linux-next. So, hopefully, after having everything
-> merged, the ABI warnings will be solved.
->
-> Mauro Carvalho Chehab (10):
->   docs: update sysfs-platform_profile.rst reference
->   docs: vcpu-requests.rst: fix reference for atomic ops
->   docs: translations/zh_CN: fix a typo at 8.Conclusion.rst
->   docs: sched-bwc.rst: fix a typo on a doc name
->   docs: update pin-control.rst references
->   docs: virt: api.rst: fix a pointer to SGX documentation
->   docs: ABI: iommu: remove duplicated definition for
->     sysfs-kernel-iommu_groups
->   docs: ABI: sysfs-class-backlight: unify ambient light zone nodes
->   docs: ABI: sysfs-class-led-trigger-pattern: remove repeat duplication
->   iio: documentation: fix a typo
+The patch was born from the need to change the slew rate of the LCD pins
+of a custom AM335x board during EMC tests. The AM335x, as described in a
+note in section 9.1 of its reference manual [1], is unable to write
+pinmux registers from user space. The series now makes it possible to
+write these registers from the pins debug file.
 
-Seems like good stuff.  The last patch in the series, though, adds a
-warning:
+[1] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
 
-  Documentation/ABI/testing/sysfs-bus-iio:799: WARNING: Inline emphasis start-string without end-string.
 
-So I left that one out and applied the rest.
+Changes in v3:
+- Use strncpy_from_user() instead of copy_from_user().
+- Do not shadow the error code returned by kstrtouint().
+- Change pin_dbg_set() interface (char *buf --> unsigned int val).
+- Describe pin_dbg_set().
+- Remove CONFIG_DEV_MEM dependency.
+- Change pcs_pin_dbg_set() interface (char *buf -> unsigned int val).
 
-Thanks,
+Changes in v2:
+- Remove CONFIG_SOC_AM33XX dependency.
 
-jon
+Dario Binacchi (3):
+  docs/pinctrl: update `pins' description under debugfs
+  pinctrl: core: configure pinmux from pins debug file
+  pinctrl: single: set pinmux from pins debug file
+
+ Documentation/driver-api/pin-control.rst |  3 ++
+ drivers/pinctrl/core.c                   | 63 +++++++++++++++++++++++-
+ drivers/pinctrl/pinctrl-single.c         | 13 +++++
+ include/linux/pinctrl/pinctrl.h          |  4 ++
+ 4 files changed, 81 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
