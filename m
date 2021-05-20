@@ -2,178 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2EAA38B656
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 20:55:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9140D38B7EF
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 22:00:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234869AbhETS5D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 May 2021 14:57:03 -0400
-Received: from mail-ot1-f54.google.com ([209.85.210.54]:39698 "EHLO
-        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232552AbhETS5C (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 May 2021 14:57:02 -0400
-Received: by mail-ot1-f54.google.com with SMTP id d25-20020a0568300459b02902f886f7dd43so15797952otc.6;
-        Thu, 20 May 2021 11:55:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4rhnX4Y+eZgYOMeyuWthaw1sadq3182LEXhMCXR+I6M=;
-        b=Ox12Gt4p+9D9IeqnlOQzBVY3G+Z9rnqhAALu13dVJdmnO3p4bOHcYI+CRoOEK2rJsv
-         kDMVNZHrTtdLoIRSR3aoFoGshwkrP4LXRdw/zceoZLf87d5/aCZB9fUL6DH93uqTtNeN
-         8V5IESWgbltXVpRal1e1vH1nJRk91qMu48rZaHvw2MnfdkSI8fHJDMgbpoeFmtX9EJCN
-         mO8RxxU+LKQwwXUAsy/TAbabG0aRnmzuQ2zmdr2LviJ1BxjME9qthaiTwQyz+yUSnYXd
-         j2GfMrWTCoKpJidny2vXnJzYmDhy608BonzSwxBzY2rQvNRzWlcKVJ0x2q9ZdxDzEslz
-         fvQA==
-X-Gm-Message-State: AOAM530AnUCz5ZXBVtvif+yPa50qfkONAUpPoSGVU8ss0yIP2u3shdK8
-        R9cVROFQzPGA89UAVbuw3DZnO8q/0KvPfKY4rWg=
-X-Google-Smtp-Source: ABdhPJxv0ky80jFTVK8qLg50KX4XfRpIa0/2SCS8joVGuRdFlpjMA6BtV5bOxJTGoCZsnR1EqkSxRlQFmPk5Kra/dTM=
-X-Received: by 2002:a9d:5a7:: with SMTP id 36mr5059433otd.321.1621536925339;
- Thu, 20 May 2021 11:55:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210520140928.3252671-1-djrscally@gmail.com> <20210520140928.3252671-3-djrscally@gmail.com>
- <CAJZ5v0hoDswjr+7r4uf6jZvV3t+-UDtEA0V7A_MvdT_34XrbJA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hoDswjr+7r4uf6jZvV3t+-UDtEA0V7A_MvdT_34XrbJA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 20 May 2021 20:55:14 +0200
-Message-ID: <CAJZ5v0hdSi4BcZvhkyrtcBQqRL8CHtOtwUeYW7EnWL2zvKhDZw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/8] ACPI: scan: Add function to fetch dependent of
- acpi device
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
+        id S237967AbhETUBb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 May 2021 16:01:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237298AbhETUBa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 May 2021 16:01:30 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305CAC061574;
+        Thu, 20 May 2021 13:00:09 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:281:8300:104d::5f6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id D3783301;
+        Thu, 20 May 2021 20:00:07 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D3783301
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1621540808; bh=2WNLJX/xlZc5xTtT/m0BAIjR0dGVeWDMrn8wfYaNCUM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=JWiESVFNzhYgP3LIrHH+2tY7pTjoh+gKnctlpgARBvgwBWg4BACU+o/zkUA8eRdPF
+         jS85XmMhRO5jK77x2BlQkPxDSbCrzhxlhaMXvDctoM1+BMQOa0yL/SZHdunNPbhAgt
+         4USigcfd0H+vMC4CmQMvwXkhr8hvfRf3UC0K6z2vi4HY7A5m+ShwS2LJ/UDdBlnsDP
+         SPBGKoeOrTvsAjV7A36ox1hL3nOjKNp5cU8ATBlHyBRqSKzr5ElccrOeoSfEDcgg8h
+         LH4udeqBoy+VzdXLKBnnbzSb6qpvpqwupJQPHnbWB4IHmqCdgQ0/NFGZsiTs5E64Wr
+         JxMzmR3UeuhAA==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
         Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-iio@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH 00/10] Documentation build warning fixes
+In-Reply-To: <cover.1621413933.git.mchehab+huawei@kernel.org>
+References: <cover.1621413933.git.mchehab+huawei@kernel.org>
+Date:   Thu, 20 May 2021 14:00:07 -0600
+Message-ID: <87wnrtnpko.fsf@meer.lwn.net>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 20, 2021 at 8:33 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, May 20, 2021 at 4:11 PM Daniel Scally <djrscally@gmail.com> wrote:
-> >
-> > In some ACPI tables we encounter, devices use the _DEP method to assert
-> > a dependence on other ACPI devices as opposed to the OpRegions that the
-> > specification intends. We need to be able to find those devices "from"
-> > the dependee, so add a callback and a wrapper to walk over the
-> > acpi_dep_list and return the dependent ACPI device.
-> >
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Signed-off-by: Daniel Scally <djrscally@gmail.com>
-> > ---
-> > Changes since v3:
-> >
-> >         Both new functions were renamed.
-> >
-> >  drivers/acpi/scan.c     | 38 ++++++++++++++++++++++++++++++++++++++
-> >  include/acpi/acpi_bus.h |  1 +
-> >  2 files changed, 39 insertions(+)
-> >
-> > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> > index 195635c3462b..1a76fbdfa669 100644
-> > --- a/drivers/acpi/scan.c
-> > +++ b/drivers/acpi/scan.c
-> > @@ -2105,6 +2105,21 @@ static void acpi_bus_attach(struct acpi_device *device, bool first_pass)
-> >                 device->handler->hotplug.notify_online(device);
-> >  }
-> >
-> > +static int acpi_return_dep_dev(struct acpi_dep_data *dep, void *data)
->
-> What about calling this acpi_get_first_consumer_cb()?
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Or acpi_dev_get_first_consumer_dev_cb() if you want to be super-precise?
+> Hi Jon,
+>
+> This small series contain a series of fixes for the documentation. it is
+> against your docs-next branch.
+>
+> Three of the patches fix duplicated symbols at the ABI documents.
+> There are still some ABI warnings from IIO, but all but one were
+> already fixed at linux-next. So, hopefully, after having everything
+> merged, the ABI warnings will be solved.
+>
+> Mauro Carvalho Chehab (10):
+>   docs: update sysfs-platform_profile.rst reference
+>   docs: vcpu-requests.rst: fix reference for atomic ops
+>   docs: translations/zh_CN: fix a typo at 8.Conclusion.rst
+>   docs: sched-bwc.rst: fix a typo on a doc name
+>   docs: update pin-control.rst references
+>   docs: virt: api.rst: fix a pointer to SGX documentation
+>   docs: ABI: iommu: remove duplicated definition for
+>     sysfs-kernel-iommu_groups
+>   docs: ABI: sysfs-class-backlight: unify ambient light zone nodes
+>   docs: ABI: sysfs-class-led-trigger-pattern: remove repeat duplication
+>   iio: documentation: fix a typo
 
->
-> > +{
-> > +       struct acpi_device *adev;
-> > +       int ret;
-> > +
-> > +       ret = acpi_bus_get_device(dep->consumer, &adev);
-> > +       if (ret)
-> > +               /* If we don't find an adev then we want to continue parsing */
-> > +               return 0;
-> > +
-> > +       *(struct acpi_device **)data = adev;
->
-> And it can do the get_device() here, can't it?
->
-> So maybe use acpi_bus_get_acpi_device() instead of
-> acpi_bus_get_device()?  Would be simpler.
->
-> > +
-> > +       return 1;
-> > +}
-> > +
-> >  static int acpi_scan_clear_dep(struct acpi_dep_data *dep, void *data)
-> >  {
-> >         struct acpi_device *adev;
-> > @@ -2168,6 +2183,29 @@ void acpi_dev_clear_dependencies(struct acpi_device *supplier)
-> >  }
-> >  EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
-> >
-> > +/**
-> > + * acpi_dev_get_dependent_dev - Return ACPI device dependent on @supplier
->
-> And what about calling this acpi_get_first_consumer() ?
+Seems like good stuff.  The last patch in the series, though, adds a
+warning:
 
-Or acpi_dev_get_first_consumer_dev() (in analogy with the above)?
+  Documentation/ABI/testing/sysfs-bus-iio:799: WARNING: Inline emphasis start-string without end-string.
 
-> > + * @supplier: Pointer to the dependee device
-> > + *
-> > + * Returns the first &struct acpi_device which declares itself dependent on
-> > + * @supplier via the _DEP buffer, parsed from the acpi_dep_list.
-> > + *
-> > + * The caller is responsible for putting the reference to adev when it is no
-> > + * longer needed.
-> > + */
-> > +struct acpi_device *acpi_dev_get_dependent_dev(struct acpi_device *supplier)
-> > +{
-> > +       struct acpi_device *adev = NULL;
-> > +
-> > +       acpi_walk_dep_device_list(supplier->handle, acpi_return_dep_dev, &adev);
-> > +
-> > +       if (adev)
-> > +               get_device(&adev->dev);
-> > +
-> > +       return adev;
-> > +}
-> > +EXPORT_SYMBOL_GPL(acpi_dev_get_dependent_dev);
-> > +
-> >  /**
-> >   * acpi_bus_scan - Add ACPI device node objects in a given namespace scope.
-> >   * @handle: Root of the namespace scope to scan.
-> > diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> > index 0b2c4f170f4d..68d378207704 100644
-> > --- a/include/acpi/acpi_bus.h
-> > +++ b/include/acpi/acpi_bus.h
-> > @@ -692,6 +692,7 @@ static inline bool acpi_device_can_poweroff(struct acpi_device *adev)
-> >  bool acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2);
-> >
-> >  void acpi_dev_clear_dependencies(struct acpi_device *supplier);
-> > +struct acpi_device *acpi_dev_get_dependent_dev(struct acpi_device *supplier);
-> >  struct acpi_device *
-> >  acpi_dev_get_next_match_dev(struct acpi_device *adev, const char *hid, const char *uid, s64 hrv);
-> >  struct acpi_device *
-> > --
-> > 2.25.1
-> >
+So I left that one out and applied the rest.
+
+Thanks,
+
+jon
