@@ -2,97 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAAC6389EC7
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 09:19:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3CF6389F72
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 May 2021 10:07:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230417AbhETHVJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 May 2021 03:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229953AbhETHVI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 May 2021 03:21:08 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D9EDC061574
-        for <linux-gpio@vger.kernel.org>; Thu, 20 May 2021 00:19:47 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id g7so6006448edm.4
-        for <linux-gpio@vger.kernel.org>; Thu, 20 May 2021 00:19:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ld4LUTFYo2kr+7BQTznax6DPSkCRpJVFEAOgdzNq+NY=;
-        b=ITpsytPY+a9U1RNeX3CuHUNe86iU9WyxteT46JXigXCpaoFafAsxUUDAiFFGy84Z9N
-         mHLoiVQpmdqZ8ot8v0oreyvKOxJWX2h16LXdrigt3OAi4Nchx3nDtRuD0oVucayH/uN2
-         MMJIrJBLCPDifYFrnwb/eJf9n/FbdKn4L8vSxKZ/FkWjsWMzAOp5YwVC6N7N3Gwz2A3Y
-         tTztPrMeB00qb/zDULsQov4zwAZOLqakq00qAGfcJ5zQSMsyfLoVkeJ2A9tXiy6OQAtt
-         jc9vMbsLfFs1/AIb5aeElexY8w3O6hZ7R7raxEQ7CG3sckiDVaVIbepXCCdkcsgOK+Wb
-         5cxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ld4LUTFYo2kr+7BQTznax6DPSkCRpJVFEAOgdzNq+NY=;
-        b=Bu9bvY0hWKicGIz0EYnz327p+kqOOp0WtCQiEQWLuxVV+axNPoyyI6NvVrI8WU7cjp
-         TIssrV8Z+O31syfMFia/mbI7vkpzcHzBzElzdRDu4WhELlcUoCTrvy1HffWeRgO6ca8R
-         2YUn1C5wXSICGMlmhj80IhLSkXv1OrldLro/ItsIlWdEsd73pZy4Rp2mwAB8EzZsEZdu
-         89hNv8apTDpeFl8Dzosbt99VqDje0RBtgL3q6VFaQqfXaG/zEKm4KamYp7qU2lYsgO7W
-         EsG+BiO4+wwssaEDLCyIJZZuBx0c76/hrX0OkAGWHrddeGkh6tEUs01h/DRTCskdVWnf
-         ryRA==
-X-Gm-Message-State: AOAM530fNNYxON2cigfyOyG6QsOQsw82IkkBf8KgBLSxRK70J6pGYfBd
-        voKkNWCBfncSvPizfn2dLNwTQ3OQM139woxbHmAkIYj0GZM=
-X-Google-Smtp-Source: ABdhPJx7gcEcjTLc5GKUgx/BYavFjF0as1/6nB4TlaQcmuW1+hFEPTxGtlDJ/NgV6u0mFK2TnYhdimiH4ODI3OuK+rc=
-X-Received: by 2002:aa7:da0e:: with SMTP id r14mr3406472eds.119.1621495186025;
- Thu, 20 May 2021 00:19:46 -0700 (PDT)
+        id S230310AbhETII0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 May 2021 04:08:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229536AbhETIIZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 May 2021 04:08:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E629161001;
+        Thu, 20 May 2021 08:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621498024;
+        bh=id6zAme7GZs+vo1M9ZM5itNDYSCzHpFKTmIcfoA3cTU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qz6yu606BkTLg2CBE/zXqSojnuYgGi7sXgRjuIyIdsvGDfjuWaZ56YdOsBJSmoE6P
+         NDtEFkNp0jNa15E+3PyS/4/rZiK5efJcyMLE/6o8CokA9aQug9jW9VX0+TXD1XWi+s
+         DvXi69cxs/VYtfw/AADmqJAQQZBFry6oePkkAMYR3ssXMUP1KJEF3YntgOd/BZwk9A
+         vYvh4NaKvSHKJs0SCkgK/ghsyfWbrM1r3bIdLq9k6jKMz+h3ClonJfgzEGxAAVdlgn
+         n7l/NeXB0cKngPFOCPMtdA/cd3MkF8+PnKefpLvsh4DrYBEiluOSe3Y3I+BxmEh+AE
+         Sq4DvoqkcMx6Q==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1ljdhv-0001oS-At; Thu, 20 May 2021 10:07:04 +0200
+Date:   Thu, 20 May 2021 10:07:03 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/1] gpiolib: Introduce for_each_gpio_desc_if() macro
+Message-ID: <YKYYp6Z4HAYHLaFz@hovoldconsulting.com>
+References: <20210518083339.23416-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <b2cb3a3c-8e20-f733-9898-f8ba21b52f7d@zago.net>
-In-Reply-To: <b2cb3a3c-8e20-f733-9898-f8ba21b52f7d@zago.net>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 20 May 2021 09:19:35 +0200
-Message-ID: <CAMRc=Me84NvAohhzJO0WafvXRyDy9xy47KKB_m8uwZHRe9F+8A@mail.gmail.com>
-Subject: Re: [libgpiod] segfaults in gpiodetect and gpioinfo
-To:     Frank Zago <frank@zago.net>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210518083339.23416-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 20, 2021 at 4:59 AM Frank Zago <frank@zago.net> wrote:
->
-> Hello,
->
-> If a user doesn't have permission, both gpiodetect and gpioinfo
-> will segfault when run.
->
-> $ ./gpiodetect
-> gpiochip0 Permission denied
-> zsh: segmentation fault (core dumped)  ./gpiodetect
->
-> The problem is there:
->                         if (!chip) {
->                                 if (errno == EACCES)
->                                         printf("%s Permission denied\n",
->                                                entries[i]->d_name);
->                                 else
->                                         die_perror("unable to open %s",
->                                                    entries[i]->d_name);
->                         }
->
-> chip is NULL, but is later dereferenced.
->
-> I'm not submitting a fix as there are 2 possibilities that I can see,
-> and I don't know which one would be best:
->
->   - add a continue after the die_perror line
->   - replace the printf above with die_perror()
->
-> Regards,
->   Frank.
+On Tue, May 18, 2021 at 11:33:39AM +0300, Andy Shevchenko wrote:
+> In a few places we are using a loop against all GPIO descriptors
+> with a given flag for a given device. Replace it with a consolidated
+> for_each type of macro.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v2: fixed compilation issue (LKP), injected if (test_bit) into the loop
+>  drivers/gpio/gpiolib-of.c    | 10 ++++------
+>  drivers/gpio/gpiolib-sysfs.c |  7 ++-----
+>  drivers/gpio/gpiolib.c       |  7 +++----
+>  drivers/gpio/gpiolib.h       |  7 +++++++
+>  4 files changed, 16 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index bbcc7c073f63..2f8f3f0c8373 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -711,14 +711,12 @@ static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
+>  static void of_gpiochip_remove_hog(struct gpio_chip *chip,
+>  				   struct device_node *hog)
+>  {
+> -	struct gpio_desc *descs = chip->gpiodev->descs;
+> +	struct gpio_desc *desc;
+>  	unsigned int i;
+>  
+> -	for (i = 0; i < chip->ngpio; i++) {
+> -		if (test_bit(FLAG_IS_HOGGED, &descs[i].flags) &&
+> -		    descs[i].hog == hog)
+> -			gpiochip_free_own_desc(&descs[i]);
+> -	}
+> +	for_each_gpio_desc_if(i, chip, desc, FLAG_IS_HOGGED)
+> +		if (desc->hog == hog)
+> +			gpiochip_free_own_desc(desc);
 
-Hi Frank!
+The _if suffix here is too vague.
 
-Thanks for the report. This only happens in the master branch which
-currently undergoes a huge API overhaul. In the API v2 patch I sent
-this problem is fixed.
+Please use a more descriptive name so that you don't need to look at the
+implementation to understand what the macro does.
 
-Bartosz
+Perhaps call it 
+
+	for_each_gpio_desc_with_flag()
+
+or just add the more generic macro 
+
+	for_each_gpio_desc()
+
+and open-code the test so that it's clear what's going on here.
+
+>  struct gpio_desc *gpiochip_get_desc(struct gpio_chip *gc, unsigned int hwnum);
+> +
+> +#define for_each_gpio_desc_if(i, gc, desc, flag)		\
+> +	for (i = 0, desc = gpiochip_get_desc(gc, i);		\
+> +	     i < gc->ngpio;					\
+> +	     i++, desc = gpiochip_get_desc(gc, i))		\
+> +		if (!test_bit(flag, &desc->flags)) {} else
+> +
+>  int gpiod_get_array_value_complex(bool raw, bool can_sleep,
+>  				  unsigned int array_size,
+>  				  struct gpio_desc **desc_array,
+
+Johan
