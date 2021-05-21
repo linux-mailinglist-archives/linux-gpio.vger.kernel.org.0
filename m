@@ -2,247 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8278938CB06
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 18:30:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E0CC38CB26
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 18:36:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233409AbhEUQcN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 12:32:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231621AbhEUQcN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 21 May 2021 12:32:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E8D03613AF;
-        Fri, 21 May 2021 16:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621614649;
-        bh=Gsz7yuXP5bdGbG2AnmimRSB7YwtOJcRdSaqp/btEGw0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R1aPYV3AboHfwqgvwSrIYkEOtSq8IJUtLv6v3MnEFHbdTedstbQv/ASUkWkrWLoMB
-         VdAOFsbuD26jPmTnO3v3udF3+iBw1GFAQSDVlZZNkMTbQo4lPzstGVwuct/150lOx6
-         ZmSUtVww6eeMzjcmF97vzYqOhfEziJr8jlAo+wnNbhH/00kSHqzU7Hwshz+hVY7pmz
-         Le+Ko1iXXMIP5llGBfmMUU1FuUSHX7NLtV8Ls9qBCzmbB39r+cJHGe0CozP1yTvKM+
-         iJseRFTMqiY0k5oC/mJwIXJomz+/3k+6orUfUaIW2UH0VBOcH7E9ybmuCa/gavVtFg
-         NsevhRKSHbXgA==
-Received: by mail-ej1-f41.google.com with SMTP id s22so31143304ejv.12;
-        Fri, 21 May 2021 09:30:49 -0700 (PDT)
-X-Gm-Message-State: AOAM533VKRSj6h7kPfi0V1WoEtXq7fuHIgZJO8RckIg1CNB5Fr8fuamF
-        yzCe2UlnNBH6bsB+DbhozwAskhvS6icgnoDbKA==
-X-Google-Smtp-Source: ABdhPJw+7EoEUERdDMupKIrRfpxIOGAi4+3ULLAqX5gbaNn8ZXyzBAgUw9pdrRhJ0k/uWh8i5J7Cjfm4C2xM6j/dGJo=
-X-Received: by 2002:a17:907:76b8:: with SMTP id jw24mr11141962ejc.359.1621614648460;
- Fri, 21 May 2021 09:30:48 -0700 (PDT)
+        id S236823AbhEUQh0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 12:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235810AbhEUQh0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 12:37:26 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14DBAC061574
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 09:36:02 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id h202so7663169ybg.8
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 09:36:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1dOqFSSZPpQ9Fgo3UhWdWkVJF/jVeCSjCFheVI4a2ik=;
+        b=RoTVA2NgHUbxRJhBJ/luJ49b3as6mCmRsiOebUYm7u0Af1Dv4jYhCFuxRUolVEHw5k
+         Rh/Hm5ZrO40SNvD0NOyzH7CNaLyrCAjFz1XR+jT5yQajxGx61DlJIX3hlc1Kjl/Vduw8
+         zSM2qx65ETxEx6K6IrATwctFyiuiB7zv5ZHqvrdCPjYLG/cVnHMbCFi/wW59xMkp3P18
+         kcfDMAF7VXuyXLUOE4e5E76wvPsWKP2M+YVKBX0mr5GwHoFdQRJ+FPfMc700uBzIK+Bd
+         F/MvTVIke6bfpVCwcMli5uF5HEY99M7WI09Ov33IjJztIYA4lH6ke2vhSvJUBIlEkrWg
+         wm3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1dOqFSSZPpQ9Fgo3UhWdWkVJF/jVeCSjCFheVI4a2ik=;
+        b=lmUvTYuGOWZQnnDfVxIhIr4J/CChSwMyQlJp9eC9knt6JNTibiw5hRx5SxsXeBelnR
+         W0shfEMnn2ea6yhgRqeM9mkbuM5nNssnAAmONMa6PWAvYTSQhDYW907rT8DtJA3nLIag
+         12LuMJjxgnaZsiDOkRNTVeraCZfXumn94qDQKElQStlfjS3osgOADj5TkEC8g8JhVdYI
+         Rt2y/YaQG1dv5aRebBBvFpqwTMMeGMaqJS85ojn3qkrYFMuHk8FCo4Q6bYrsdoLsL0er
+         UI0/rZaj0elcQeqTR0SO7jjQ9MhH8mF5FmfR5Kq1oFQWdg4VI4xW9ax7hhUTy48ufCgn
+         eqWQ==
+X-Gm-Message-State: AOAM530cZhQjHaUgl2iFnd0yfmHHUwovHlFQRzaZUAU0oszY7UeAddQ/
+        6gpE310Xz+JuE8E33GdAmAuHHZL/hrWX8SiUXRorUQ==
+X-Google-Smtp-Source: ABdhPJzcuGIGx/pxw8hsmVSOoMBfMrfo9cnaLqQndAXSfql50m/o1R/dwloSkOOvXmhlfSpY7l2MnV0Osiziuq3zeLE=
+X-Received: by 2002:a25:287:: with SMTP id 129mr16144124ybc.312.1621614961384;
+ Fri, 21 May 2021 09:36:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210511090122.6995-1-a-govindraju@ti.com> <20210517221513.GA3263368@robh.at.kernel.org>
- <861cefe2-7bb6-c435-ab0d-483155852876@ti.com> <CAL_JsqKyuXYJocBMLGXL6aXuK0YnrW7qdLugV2bxdP-LJ=2+cg@mail.gmail.com>
- <42ec7cbd-1364-8dfe-c652-79b16bb6b87c@ti.com>
-In-Reply-To: <42ec7cbd-1364-8dfe-c652-79b16bb6b87c@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 21 May 2021 11:30:35 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Ft0V8d_3GJ6cgb2g5uocKL-Xn5WUsfPbn+mFmWHDhuw@mail.gmail.com>
-Message-ID: <CAL_Jsq+Ft0V8d_3GJ6cgb2g5uocKL-Xn5WUsfPbn+mFmWHDhuw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: gpio-davinci: Convert to json-schema
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Aswath Govindraju <a-govindraju@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
+ <e3d3e704804668d1403f3630c181010b34409c8f.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
+ <12bb40f022be0378ed493e7ad33122b0@walle.cc> <87a6ooh46s.fsf@miraculix.mork.no>
+ <d6bb1e458d5aa6a32f31f7731e1a6097a225d634.camel@fi.rohmeurope.com>
+In-Reply-To: <d6bb1e458d5aa6a32f31f7731e1a6097a225d634.camel@fi.rohmeurope.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 21 May 2021 18:35:50 +0200
+Message-ID: <CAMpxmJXkYZ7mZA426Jgm_zL+L1ZFB1ToRf2L8oGmyBuOHQo=UQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] gpio: gpio-regmap: Use devm_add_action()
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "michael@walle.cc" <michael@walle.cc>,
+        "bjorn@mork.no" <bjorn@mork.no>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 21, 2021 at 11:06 AM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
+On Fri, May 21, 2021 at 12:31 PM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
 >
-> Hi Rob,
 >
-> On 21/05/2021 15:56, Rob Herring wrote:
-> > On Fri, May 21, 2021 at 3:32 AM Grygorii Strashko
-> > <grygorii.strashko@ti.com> wrote:
-> >>
-> >> Hi Rob, All
-> >>
-> >> On 18/05/2021 01:15, Rob Herring wrote:
-> >>> On Tue, May 11, 2021 at 02:31:20PM +0530, Aswath Govindraju wrote:
-> >>>> Convert gpio-davinci dt-binding documentation from txt to yaml format.
-> >>>>
-> >>>> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
-> >>>> ---
-> >>>>    .../devicetree/bindings/gpio/gpio-davinci.txt | 167 ---------------
-> >>>>    .../bindings/gpio/gpio-davinci.yaml           | 193 ++++++++++++++++++
-> >>>>    MAINTAINERS                                   |   2 +-
-> >>>>    3 files changed, 194 insertions(+), 168 deletions(-)
-> >>>>    delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> >>>>    create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> >>>> deleted file mode 100644
-> >>>> index 696ea46227d1..000000000000
-> >>>> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> >>>> +++ /dev/null
-> >>>> @@ -1,167 +0,0 @@
-> >>>> -Davinci/Keystone GPIO controller bindings
-> >>>> -
-> >>>> -Required Properties:
-> >>>> -- compatible: should be "ti,dm6441-gpio": for Davinci da850 SoCs
-> >>>> -                    "ti,keystone-gpio": for Keystone 2 66AK2H/K, 66AK2L,
-> >>>> -                                            66AK2E SoCs
-> >>>> -                    "ti,k2g-gpio", "ti,keystone-gpio": for 66AK2G
-> >>>> -                    "ti,am654-gpio", "ti,keystone-gpio": for TI K3 AM654
-> >>>> -                    "ti,j721e-gpio", "ti,keystone-gpio": for J721E SoCs
-> >>>> -                    "ti,am64-gpio", "ti,keystone-gpio": for AM64 SoCs
-> >>>> -
-> >>
-> >> [...]
-> >>
-> >>>> -};
-> >>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-> >>>> new file mode 100644
-> >>>> index 000000000000..1e16172669c7
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-> >>>> @@ -0,0 +1,193 @@
-> >>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>>> +%YAML 1.2
-> >>>> +---
-> >>>> +$id: http://devicetree.org/schemas/gpio/gpio-davinci.yaml#
-> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>> +
-> >>>> +title: GPIO controller for Davinci and keystone devices
-> >>>> +
-> >>>> +maintainers:
-> >>>> +  - Keerthy <j-keerthy@ti.com>
-> >>>> +
-> >>>> +properties:
-> >>>> +  compatible:
-> >>>> +    oneOf:
-> >>>> +      - items:
-> >>>> +          - enum:
-> >>>> +              - ti,k2g-gpio
-> >>>> +              - ti,am654-gpio
-> >>>> +              - ti,j721e-gpio
-> >>>> +              - ti,am64-gpio
-> >>>> +          - const: ti,keystone-gpio
-> >>>> +
-> >>>> +      - items:
-> >>>> +          - const: ti,dm6441-gpio
-> >>>> +      - items:
-> >>>> +          - const: ti,keystone-gpio
-> >>>
-> >>> These 2 can be expressed as an 'enum'.
-> >>>
-> >>>> +
-> >>>> +  reg:
-> >>>> +    maxItems: 1
-> >>>> +    description:
-> >>>> +      Physical base address of the controller and the size of memory mapped registers.
-> >>>
-> >>> Drop. That's every 'reg' property.
-> >>>
-> >>>> +
-> >>>> +  gpio-controller: true
-> >>>> +
-> >>>> +  gpio-ranges: true
-> >>>> +
-> >>>> +  gpio-line-names:
-> >>>> +    description: strings describing the names of each gpio line.
-> >>>
-> >>> Any constraints like min/max number of lines?
-> >>>
-> >>>> +
-> >>>> +  "#gpio-cells":
-> >>>> +    const: 2
-> >>>> +    description:
-> >>>> +      first cell is the pin number and second cell is used to specify optional parameters (unused).
-> >>>> +
-> >>>> +  interrupts:
-> >>>> +    description:
-> >>>> +      Array of GPIO interrupt number. Only banked or unbanked IRQs are supported at a time.
-> >>>
-> >>> Needs constraints. How many items and what are they?
-> >>>
-> >>>> +
-> >>>> +  ti,ngpio:
-> >>>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>>> +    description: The number of GPIO pins supported consecutively.
-> >>>> +    minimum: 1
-> >>>> +
-> >>>> +  ti,davinci-gpio-unbanked:
-> >>>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>>> +    description: The number of GPIOs that have an individual interrupt line to processor.
-> >>>> +    minimum: 0
-> >>>> +
-> >>>> +  clocks:
-> >>>> +    maxItems: 1
-> >>>> +    description:
-> >>>> +      clock-specifier to represent input to the GPIO controller.
-> >>>
-> >>> Drop description.
-> >>>
-> >>>> +
-> >>>> +  clock-names:
-> >>>> +    const: gpio
-> >>>> +
-> >>>> +  interrupt-controller: true
-> >>>> +
-> >>>> +  power-domains:
-> >>>> +    maxItems: 1
-> >>>> +    description:
-> >>>> +      Phandle to the power domain provider node.
-> >>>
-> >>> Drop.
-> >>>
-> >>>> +
-> >>>> +  "#interrupt-cells":
-> >>>> +    const: 2
-> >>>> +
-> >>>> +patternProperties:
-> >>>> +  "-hog$":
-> >>>> +    type: object
-> >>>> +    properties:
-> >>>> +      gpios: true
-> >>>> +      gpio-hog: true
-> >>>> +      input: true
-> >>>> +      output-high: true
-> >>>> +      output-low: true
-> >>>> +      line-name: true
-> >>>> +
-> >>>> +    required:
-> >>>> +      - gpio-hog
-> >>>> +      - gpios
-> >>
-> >> I see that gpio-hog.yaml dtschema has been added.
-> >> Can it be reused here and how?
+> On Fri, 2021-05-21 at 10:38 +0200, Bj=C3=B8rn Mork wrote:
+> > Michael Walle <michael@walle.cc> writes:
 > >
-> > It's applied to any node containing 'gpio-hog' property, so all you need is:
+> > > Am 2021-05-21 08:28, schrieb Matti Vaittinen:
+> > > > Slightly simplify the devm_gpio_regmap_register() by using the
+> > > > devm_add_action().
+> > >
+> > > Hm, nice, but what bothers me a bit is that no other subsystem
+> > > does it that way, eg. hwmon/hwmon.c or watchdog/watchdog_core.c.
+> > > They also store just one pointer, thus could be simplified in the
+> > > same way. What I don't know is if devm_add_action() was intended
+> > > to be used this way. So I can't say much for this patch ;)
 > >
-> > required:
-> >    - gpio-hog
+> > There are some examples.  Like:
 > >
-> Thanks for you comments. But I'd like to clarify the Hog child node definition - will work as below?
-
-Yes, but...
-
-> patternProperties:
->    "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
->      type: object
+> > int devm_i2c_add_adapter(struct device *dev, struct i2c_adapter
+> > *adapter)
+> > {
+> >         int ret;
+> >
+> >         ret =3D i2c_add_adapter(adapter);
+> >         if (ret)
+> >                 return ret;
+> >
+> >         return devm_add_action_or_reset(dev, devm_i2c_del_adapter,
+> > adapter);
+> > }
+> >
+> >
+> > You should probably use the devm_add_action_or_reset() wrapper here
+> > too,
+> > catching the unlikely devm_add_action() alloc failure.
+> >
 >
->      properties:
->        gpio-hog: true
-
-Don't need this.
-
+> I was thinking of it but as the gpio registration succeeded I was
+> thinking that we could go on with it - (which means we can proceed but
+> the gpio is never released.)
 >
->      required:
->        - gpio-hog
+> I am not sure how much difference it makes in the case of small alloc
+> failure ;)
 >
-> In general, patternProperties duplicates $nodename in gpio-hog dtschema.
+> But as it seems I am in any case re-spinning this I can change this to
+> the devm_add_action_or_reset() and fail the gpio_regmap registration if
+> alloc fails.
+>
+> Best Regards
+>         Matti Vaittinen
 
-I'd hope you could be a bit stricter here and only support one form.
+Hi Matti,
 
-Rob
+Please use the reset variant. We always want to roll-back the changes
+done in a function before the failure and propagate the error code.
+
+Bart
