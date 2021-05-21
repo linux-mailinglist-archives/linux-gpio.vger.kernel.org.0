@@ -2,126 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5472E38C450
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 12:04:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9866338C465
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 12:09:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232273AbhEUKFw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 06:05:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38300 "EHLO
+        id S231538AbhEUKLR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 06:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231627AbhEUKFs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 06:05:48 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7BABC0613ED
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 03:04:25 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id v5so23235574ljg.12
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 03:04:25 -0700 (PDT)
+        with ESMTP id S231530AbhEUKLQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 06:11:16 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CAEBC061763;
+        Fri, 21 May 2021 03:09:54 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id k15so13832736pgb.10;
+        Fri, 21 May 2021 03:09:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=y703Ccx+OTVaWUBCSYH8WB2pCfwJTEkBdShX5aoEd5U=;
-        b=FK4Uxegv3dlbXSHmfZkIILoMjTrkUnCadXvOCTXwz61zBEqo8XuxaRLI477qridtDX
-         KWRqC0Xsyy0RaSBAfI6HDwck/LKYxEk94TEDa96tzAY98IC0ure6vHgQGuXZUV/0XYOe
-         1byrlbnUhRcixOf3T1VQq+B04CvZyvvz6tG+DBF4g3Sok9dofTiV0jMkvyyiZSqCs/z6
-         e7lV7gcjVa3MfE9TgNzQj7WnkfmpOF2UlkJ7vIpEVMrPfud5DKKbcPSZFcXpqMZFIllr
-         T6sTGSQtx5RTFo2r9r6qO8uQ33iyoHjb2iat48Ts9zBk5bMolvT4PaaI7DjVSkCgjqVf
-         +7ig==
+        bh=jNwcIRABGdgdsxKm1R5ZPD3oSMNkH2CN9R0AsY8oxF8=;
+        b=WWpkvx4x55xlhEBYmTeubhnOdtlBx0ZrNaHPgxxLHChAthXJ4a0/N2euUN3v6oLWD8
+         UsD9hXGluY9RrM2lWVpcBRmV+G2F2PfRNfyeHzECmeaKQRykCXCRfSfoPcw19zRG0cTj
+         p1mAccCW5WL9IQjhOMMKZ0ed0d4+wpMBUD6vNmqPvmjgUX8V7Vk2TY1zxCJ0I/4A3AgU
+         W1ylmgpZLBOsyliaswrfwggXzDDR85dimbpE01jfQ4Is8avq3A5fl4J1cb+/al8u2sej
+         e7TvkF9OCt7r098wM2KH3Bn8CCwNr9YUv62BRPUHWTejxRpio0ZZELAX3x42d6MJuiSD
+         HJ2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=y703Ccx+OTVaWUBCSYH8WB2pCfwJTEkBdShX5aoEd5U=;
-        b=onwpuiHE1kYW/7NibMtLOMS8WLJx83Z0BFpKS7Fc0G+V0VIxBbmsCHIsvdCOOOg1WX
-         VQ0jTpuIpSFdY94xj2hLAiRADVTH5qHcIbqYxKHz0xr5avRhxMQHiVtiBifD7Ta8jSUU
-         /uo+Z5jc5My+wzKocFAShsdfioQRDiZC/elLQM66qgezAlAtNRrByC6CVuBP2DcBE0+t
-         aKhINuRm3XBmhQn6+HW3IHCsiMOyVSF0qZy4vYjsWFGhPwBkQP6KHd/TYGi9ekFjeqH9
-         N5xtM6n4ZGzIBuK6HGCS0M5uY/nLjZ5tJp98u7bjulqmFWoMruMy6/n2BR7RGT+plJ+F
-         qCSA==
-X-Gm-Message-State: AOAM5322th0Ta+YGmTLeTcqJN63vN2A5oPBHnIcoEnsFReGfFQBgpi6/
-        MnRaFWz35WrY46d6RaTUgJi/IxlwRAPlEnmj74xTTB93fj2MAQ==
-X-Google-Smtp-Source: ABdhPJxYYlDb+WDA9clSQo27j62lQA1sN33Wn6ony6XmM/ZkiSizwZPVoBxp6VVDs3T+PGjG3ATJK87UTncv58xBVOI=
-X-Received: by 2002:a05:651c:4c6:: with SMTP id e6mr6517419lji.326.1621591464170;
- Fri, 21 May 2021 03:04:24 -0700 (PDT)
+        bh=jNwcIRABGdgdsxKm1R5ZPD3oSMNkH2CN9R0AsY8oxF8=;
+        b=RtQz+laSU9st1YbVXoq4nmjnUS8d6qsxRwOj40A4JtE5Jh8ExcxmUSdktn6baNEOqf
+         kkO1H+rmJscqrnPtc/10owAigMy9ltUS6G3n8njOVoIzhqkS1TkidfziyZHQ6Rr7lQaC
+         FrElMxOYGA6IYayCpgjfcTkiq68bGT1jQ1vtHjBuFY0WYZTx9BWwHozXxhT8LzVFNjgT
+         ZclRIReF/AMVmR+aOayYmHg3TYpxyhiZXBYQK/f+qZ9EBt0opbZ8XscZ5zAij4gPl6kh
+         G8X9pKIepb+Cd9vAKcZ5jiGJ32iQgt/r/k9+ZlvnP5ouez/5Mgz5aMfOpO6pInvC8HCK
+         sM/g==
+X-Gm-Message-State: AOAM5325yq6Cg8N6XSwjsoYY3cDMMLn6t1qSsz8jOOUPPU8MK80JvEhc
+        TKn8VRtc3uacpMeLTUG+UwiM6I0eV/O0jzmnNjg=
+X-Google-Smtp-Source: ABdhPJxsuBwQmnDhw1vSzlTlg3razoJBjL9X1d4xmPbheOOO3uWTTuSluT0AtAK0QodkXLmhm8IEk7qOps76y6SPKXQ=
+X-Received: by 2002:a63:79c3:: with SMTP id u186mr9158129pgc.203.1621591793580;
+ Fri, 21 May 2021 03:09:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1621583562.git.geert+renesas@glider.be> <52df0592c81ac000d3f486a9ba5a4d84b0f42c47.1621583562.git.geert+renesas@glider.be>
-In-Reply-To: <52df0592c81ac000d3f486a9ba5a4d84b0f42c47.1621583562.git.geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 May 2021 12:04:12 +0200
-Message-ID: <CACRpkdbQE1-WgD_BBkHx9DvJ=GfW7-PCoF-73TKGpgh4c6Epxw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: gpio: pcf857x: Convert to json-schema
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+References: <cover.1621577204.git.matti.vaittinen@fi.rohmeurope.com> <6e319c22b41747e3911c7a5cad877134cabc9231.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <6e319c22b41747e3911c7a5cad877134cabc9231.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 21 May 2021 13:09:37 +0300
+Message-ID: <CAHp75VcZwYdA5R=peC+8jHVT6UDsAT9msSs=W6C7rgfyjGPtXA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] gpio: regmap: Support few IC specific operations
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jan Tuerk <jan.tuerk@emtrion.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Michael Walle <michael@walle.cc>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-power <linux-power@fi.rohmeurope.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 21, 2021 at 9:54 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-
-> Convert the PCF857x-compatible I/O expanders Device Tree binding
-> documentation to json-schema.
+On Fri, May 21, 2021 at 12:53 PM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 >
-> Document missing compatible values, properties, and gpio hogs.
+> The set_config and init_valid_mask GPIO operations are usually very IC
+> specific. Allow IC drivers to provide these custom operations at
+> gpio-regmap registration.
+
+Thanks for this. In general (from design p.o.v.) looks good to me, one
+question below, though.
+
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+>
+> ---
+> Changelog v2: (based on suggestions by Michael Walle)
+>   - drop gpio_regmap_set_drvdata()
 
-(...)
-> Perhaps the "ti,pcf8575" construct should be removed, and the few users
-> fixed instead?
+But why do we have gpio_regmap_get_drvdata() and why is it different
+now to the new member handling?
 
-You would rather list it as deprecated I think?
-It is ABI...
+>   - drop checks and WARN() for pretty much impossible cases
 
-> +  gpio-controller: true
-
-So this is implicitly using the generic schema in
-/dtschema/schemas/gpio/gpio.yaml
-
-> +  lines-initial-states:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Bitmask that specifies the initial state of each line.
-> +      When a bit is set to zero, the corresponding line will be initialized to
-> +      the input (pulled-up) state.
-> +      When the  bit is set to one, the line will be initialized to the
-> +      low-level output state.
-> +      If the property is not specified all lines will be initialized to the
-> +      input state.
-
-Is this something we standardized or something that should
-actually be a custom "nxp," property we just missed it?
-(Looks like the latter... oh well, now it is there.)
-
-> +patternProperties:
-> +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
-> +    type: object
-
-But this is already in
-/dtschema/schemas/gpio/gpio-hog.yaml
-for nodename, isn't that where it properly belongs?
-
-I'm however confused here Rob will know what to do.
-
-> required:
->   - gpio-hog
->   - gpios
-
-This is already in
-/dtschema/schemas/gpio/gpio-hog.yaml
-as well?
-
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
