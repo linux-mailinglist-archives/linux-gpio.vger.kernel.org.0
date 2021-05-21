@@ -2,184 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E336D38BD85
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 06:45:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D6C338BF46
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 08:27:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239182AbhEUEqX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 00:46:23 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:36451 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239176AbhEUEqW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 21 May 2021 00:46:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1621572300; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=FkKhmAj2KxsBfO2PULHX8nz2Ss+D1VFGsLcIocuKSRE=;
- b=hDtrQRBnMJb+92lOO+c2o7JUaECAOUFUZ00DR2euSNKWLD9eAjqyzZ0vcDQ1JTMUbT/+nbhm
- EwIdgpn9Znoj71zwySHxa5SAw7eOnL5gEPTI5mnXHfPv+1wFTjM7J9XeHfE/KOrcD64iKnoy
- /kwePc/VTcskWozDJu2R7SJloNg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 60a73ab9b15734c8f9543f03 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 May 2021 04:44:41
- GMT
-Sender: skakit=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9D4E6C4338A; Fri, 21 May 2021 04:44:40 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: skakit)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8F4AC433F1;
-        Fri, 21 May 2021 04:44:39 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 21 May 2021 10:14:39 +0530
-From:   skakit@codeaurora.org
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
+        id S229991AbhEUG2n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 02:28:43 -0400
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:35429 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229782AbhEUG2n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 02:28:43 -0400
+Received: by mail-lf1-f48.google.com with SMTP id x19so28081981lfa.2;
+        Thu, 20 May 2021 23:27:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=TEd7BwEnb381M+LjsahkUGlrL6ZQJ9SCtukWES/e0HQ=;
+        b=CfUTW+xuK41HviXsjsVjigisOMQFiSM3dm4qgUWXKh2Plo3VvhaXS4xHZR+geuPjA7
+         pq8MJQHW12Sk1UROkAgtcFx9Wznaxq3rzCdK8hWT27C1xA8HaDD4WrX/7fVFKfnVhIGZ
+         oSAtkKQWrahrLCoyIH63zWjXfe35W4C/ZSY1863XaR3/6bcDfLwjtENRVu4i6Yzn06kT
+         H3RR+aYEYHp565sL3955SGevVFAYFvPfc0Qicit/RR1r9hNdygKn2tib7TW+gq8VT8rC
+         eIYI4O1DYGGWnz+Lzp2lvL5j+sgQJNVJ36qPvmQ/Bi9+NjkqYyAfvT4VSUIq4emkPVrT
+         mapQ==
+X-Gm-Message-State: AOAM532ITlj2tEuijcBuNxaT502da+aEu1S0Vf4+WzAwozZSwEfq/SzH
+        77++YDLaMK9UWI7HmT+g0oozRXIY+lhgug==
+X-Google-Smtp-Source: ABdhPJyePaIi0s7wx0tYT/mBO+4Hp2S33bjhg1sN/VST5UA6ngixt5Cg38E1XSGlt53XQ0eQeKn3bg==
+X-Received: by 2002:a05:6512:139e:: with SMTP id p30mr1112476lfa.489.1621578439576;
+        Thu, 20 May 2021 23:27:19 -0700 (PDT)
+Received: from localhost.localdomain (dc7vkhyyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::3])
+        by smtp.gmail.com with ESMTPSA id f4sm519482lfu.133.2021.05.20.23.27.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 May 2021 23:27:18 -0700 (PDT)
+Date:   Fri, 21 May 2021 09:27:11 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Matti Vaittinen <mazziesaccount@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        kgunda@codeaurora.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V3 3/3] dt-bindings: pinctrl: qcom-pmic-gpio: Convert qcom
- pmic gpio bindings to YAML
-In-Reply-To: <20210513174325.GA13631@codeaurora.org>
-References: <1620817988-18809-1-git-send-email-skakit@codeaurora.org>
- <1620817988-18809-4-git-send-email-skakit@codeaurora.org>
- <20210513174325.GA13631@codeaurora.org>
-Message-ID: <e1ca573bc60426e256bbae036ee688a1@codeaurora.org>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-power@fi.rohmeurope.com
+Subject: [PATCH v2 0/3] gpio: gpio-regmap: Support few custom operations
+Message-ID: <cover.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2021-05-13 23:13, Guru Das Srinagesh wrote:
-> On Wed, May 12, 2021 at 04:43:08PM +0530, satya priya wrote:
->> diff --git 
->> a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml 
->> b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
->> new file mode 100644
->> index 0000000..85381a0
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
->> @@ -0,0 +1,245 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,pmic-gpio.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm PMIC GPIO block
->> +
->> +maintainers:
->> +  - Bjorn Andersson <bjorn.andersson@sonymobile.com>
->> +
->> +description: |
->> +  This binding describes the GPIO block(s) found in the 8xxx series 
->> of
->> +  PMIC's from Qualcomm.
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - enum:
->> +          - qcom,pm8005-gpio
-> 
-> pm8008 has been missed out in the yaml file during the conversion. 
-> could
-> you please add this as well?
-> 
 
-Will add it, thanks.
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +          - qcom,pm8018-gpio
->> +          - qcom,pm8038-gpio
->> +          - qcom,pm8058-gpio
->> +          - qcom,pm8916-gpio
->> +          - qcom,pm8917-gpio
->> +          - qcom,pm8921-gpio
->> +          - qcom,pm8941-gpio
->> +          - qcom,pm8950-gpio
->> +          - qcom,pm8994-gpio
->> +          - qcom,pm8998-gpio
->> +          - qcom,pma8084-gpio
->> +          - qcom,pmi8950-gpio
->> +          - qcom,pmi8994-gpio
->> +          - qcom,pmi8998-gpio
->> +          - qcom,pms405-gpio
->> +          - qcom,pm660-gpio
->> +          - qcom,pm660l-gpio
->> +          - qcom,pm8150-gpio
->> +          - qcom,pm8150b-gpio
->> +          - qcom,pm6150-gpio
->> +          - qcom,pm6150l-gpio
->> +          - qcom,pmx55-gpio
->> +          - qcom,pm7325-gpio
->> +          - qcom,pm8350c-gpio
->> +          - qcom,pmk8350-gpio
->> +          - qcom,pmr735a-gpio
->> +
->> +      - enum:
->> +          - qcom,spmi-gpio
->> +          - qcom,ssbi-gpio
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    minItems: 1
->> +    maxItems: 44
->> +
->> +  '#interrupt-cells':
->> +    const: 2
->> +
->> +  interrupt-controller: true
->> +
->> +  gpio-controller: true
->> +
->> +  gpio-ranges:
->> +    maxItems: 1
->> +
->> +  '#gpio-cells':
->> +    const: 2
->> +    description: |
->> +        The first cell will be used to define gpio number and the
->> +        second denotes the flags for this gpio
->> +
->> +  gpio-keys:
->> +    type: object
->> +    properties:
->> +      volume-keys:
->> +        type: object
->> +        anyOf:
->> +          - $ref: "pinmux-node.yaml"
->> +          - $ref: "pincfg-node.yaml"
->> +        properties:
->> +          pins:
->> +            description: |
->> +                List of gpio pins affected by the properties 
->> specified in
->> +                this subnode.  Valid pins are
->> +                     - gpio1-gpio4 for pm8005
-> 
-> pm8008 has been missed out in the yaml file during the conversion. 
-> could
-> you please add this as well?
-> 
->> +                     - gpio1-gpio6 for pm8018
->> +                     - gpio1-gpio12 for pm8038
->> +                     - gpio1-gpio40 for pm8058
+Support providing some IC specific operations at gpio_regmap registration.
+
+Implementation of few GPIO related functionalities are likely to be
+very IC specific. For example the pin-configuration registers and the
+pin validity checks. Allow IC driver to provide IC specific functions
+which gpio-regmap can utilize for these IC specific configurations.
+This should help broaden the gpio-regmap IC coverage without the need
+of exposing the registered gpio_chip or struct gpio_regmap to IC drivers.
+
+The set_config and init_valid_mask are used by ROHM BD71815 GPIO driver.
+Convert the BD71815 GPIO driver to use gpio-regmap and get rid of some
+code. Rest of the ROHM GPIO drivers are to be reworked after the
+mechanism of adding IC specific functions is settled.
+
+Some preliminary discussion can be seen here:
+https://lore.kernel.org/linux-gpio/c4faac648d3e0c7f3dcb50f7e24c8b322e8c6974=
+=2Ecamel@fi.rohmeurope.com/
+
+Changelog v2:
+ - Add cover-letter
+ - Drop unnecessary checks for callback function validity
+ - drop driver_data setting function as it is likely to be a
+   race-condition-by-design
+
+---
+
+Matti Vaittinen (3):
+  gpio: regmap: Support few IC specific operations
+  gpio: gpio-regmap: Use devm_add_action()
+  gpio: bd71815: Use gpio-regmap
+
+ drivers/gpio/Kconfig        |   1 +
+ drivers/gpio/gpio-bd71815.c | 106 ++++++++++--------------------------
+ drivers/gpio/gpio-regmap.c  |  62 ++++++++++++++-------
+ include/linux/gpio/regmap.h |  14 ++++-
+ 4 files changed, 84 insertions(+), 99 deletions(-)
+
+
+base-commit: d07f6ca923ea0927a1024dfccafc5b53b61cfecc
+--=20
+2.25.4
+
+
+--=20
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =3D]=20
+
+--OXfL5xGRrasGEqWY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmCnUrIACgkQeFA3/03a
+ocXsTwf/UzPwJDsIi6gh0GTpTuRSG6VRiPtYs8kZkB9kx1wEd1GCW1r3NU8soVzq
+LQeqK3iSFhB6LYV7sloiF9XgxcvBxV3OY6hVIIWs2rDJncJ6lzpKPrLmQS3wpVU1
+8s/qoNYj7AR3+frciPYf5GWz3M3QOUNRJ3asghXtWbuqP/cCA6nwJaay/SgjY0NK
+KAFOOFsJRkpzCEHJhLDZJjrOoBSDDT3Yi5bAZciaNm6G1ir2jpeHBSi90ppRpenn
+TYL6M4Yb9E/2vPfRM1ZYRetCecGDmQ0/xWgTQDB5hg2DY+kgX0NfwaYrYAl2qgDa
+1KYEANAil2dNWWI+rdEuTMXWuTe1Tw==
+=G63J
+-----END PGP SIGNATURE-----
+
+--OXfL5xGRrasGEqWY--
