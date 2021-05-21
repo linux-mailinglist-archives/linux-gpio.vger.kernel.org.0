@@ -2,296 +2,621 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14C5A38BF59
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 08:29:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E1ED38BF5E
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 08:30:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232473AbhEUGbQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 02:31:16 -0400
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:46855 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231726AbhEUGbO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 02:31:14 -0400
-Received: by mail-lj1-f172.google.com with SMTP id e11so22606377ljn.13;
-        Thu, 20 May 2021 23:29:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ckg/y3lKzhuSd77cEsv/20UoR0BDzO0jwoLke8kVF3A=;
-        b=mJLvVNMIDnOH5PEkA9xjvEItQZUvli2mAc9MchpPXPLhBLILVHH7LS7Jw3ELdpK72c
-         SSEZoZuFPy/k0QRJRzDyz05eMKa6kQwwzNmz7MVb7SzGNUUnhBN6VP3slFybw+ZA9v7k
-         +a2NtgVOj7q38GjgEZ5QmgRztlqSYMn/ZhdjyK9HDBtoMvnwgxat9h8Jf+7nT/dmbfhr
-         CQxPJFM40YyN1Gn1Zy/xtQEVyBgH30IAOev62YxI+ZiKFP3yD1LsudetObqxK4mK+v/z
-         J9zwOw6hTBl4pazeMSxis9hJfa03K+6vRjfhZqBeumEH7cbUHO+yHeSInUtgRC1qWa9P
-         Cf2g==
-X-Gm-Message-State: AOAM533DrrBZZzDp+gEC4OhI6X2vvwlrra7GHOzMEUwHNsQ+IpjMqSVv
-        wPPJ16N4ivE3ZIYSURpUhJlj02KezparuA==
-X-Google-Smtp-Source: ABdhPJyvg/BECsjEBOjl4fdqhL0nwpgJRWANo7U4YWmbXvCo53YSON85BuX4E2CnEkjDuaMPdpB5RA==
-X-Received: by 2002:a2e:b890:: with SMTP id r16mr5664977ljp.300.1621578590265;
-        Thu, 20 May 2021 23:29:50 -0700 (PDT)
-Received: from localhost.localdomain (dc7vkhyyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::3])
-        by smtp.gmail.com with ESMTPSA id z130sm522540lfa.41.2021.05.20.23.29.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 May 2021 23:29:49 -0700 (PDT)
-Date:   Fri, 21 May 2021 09:29:43 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-power@fi.rohmeurope.com
-Subject: [PATCH v2 3/3] gpio: bd71815: Use gpio-regmap
-Message-ID: <9b040b3610a50e8c3c9579f5d28713af5a59942c.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Content-Disposition: inline
-In-Reply-To: <cover.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
+        id S232499AbhEUGcL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 02:32:11 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:54349 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231895AbhEUGcK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 02:32:10 -0400
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 20 May 2021 23:30:48 -0700
+X-QCInternal: smtphost
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 May 2021 23:30:45 -0700
+X-QCInternal: smtphost
+Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 21 May 2021 12:00:21 +0530
+Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
+        id C99974F23; Fri, 21 May 2021 12:00:19 +0530 (IST)
+From:   satya priya <skakit@codeaurora.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     kgunda@codeaurora.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, satya priya <skakit@codeaurora.org>
+Subject: [PATCH V4] dt-bindings: pinctrl: qcom-pmic-gpio: Convert qcom pmic gpio bindings to YAML
+Date:   Fri, 21 May 2021 12:00:15 +0530
+Message-Id: <1621578615-4613-1-git-send-email-skakit@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Convert Qualcomm PMIC GPIO bindings from .txt to .yaml format.
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Utilize the gpio-regmap helper and drop the custom functions
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Signed-off-by: satya priya <skakit@codeaurora.org>
 ---
-Changelog:
- - No changes
+Changes in V2:
+ - As per Rob's comments fixed bot erros.
+ - Moved this patch to end of the series so that other patches are not
+   blocked on this.
 
- drivers/gpio/Kconfig        |   1 +
- drivers/gpio/gpio-bd71815.c | 106 ++++++++++--------------------------
- 2 files changed, 29 insertions(+), 78 deletions(-)
+Changes in V3:
+ - As per Rob's comments, added maxItems for reg and interrupts.
+   Added reference of "pinmux-node.yaml" and "pincfg-node.yaml".
+   Made 'additionalProperties' as false.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1dd0ec6727fd..97e1348cd410 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1120,6 +1120,7 @@ config GPIO_BD70528
- config GPIO_BD71815
- 	tristate "ROHM BD71815 PMIC GPIO support"
- 	depends on MFD_ROHM_BD71828
-+	select GPIO_REGMAP
- 	help
- 	  Support for GPO(s) on ROHM BD71815 PMIC. There are two GPOs
- 	  available on the ROHM PMIC.
-diff --git a/drivers/gpio/gpio-bd71815.c b/drivers/gpio/gpio-bd71815.c
-index 08ff2857256f..a241c01e08d1 100644
---- a/drivers/gpio/gpio-bd71815.c
-+++ b/drivers/gpio/gpio-bd71815.c
-@@ -9,6 +9,7 @@
-  */
-=20
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/regmap.h>
- #include <linux/init.h>
- #include <linux/irq.h>
- #include <linux/module.h>
-@@ -18,81 +19,33 @@
- #include <linux/mfd/rohm-bd71815.h>
-=20
- struct bd71815_gpio {
--	/* chip.parent points the MFD which provides DT node and regmap */
--	struct gpio_chip chip;
--	/* dev points to the platform device for devm and prints */
- 	struct device *dev;
--	struct regmap *regmap;
- };
-=20
--static int bd71815gpo_get(struct gpio_chip *chip, unsigned int offset)
--{
--	struct bd71815_gpio *bd71815 =3D gpiochip_get_data(chip);
--	int ret, val;
+Changes in V4:
+ - As per Rob's comments, added description for interrupts, defined
+   constraints for "qcom,drive-strength", dropped description for function
+   property.
+
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 286 ---------------------
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml           | 256 ++++++++++++++++++
+ 2 files changed, 256 insertions(+), 286 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+deleted file mode 100644
+index f6a97605..0000000
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
++++ /dev/null
+@@ -1,286 +0,0 @@
+-Qualcomm PMIC GPIO block
 -
--	ret =3D regmap_read(bd71815->regmap, BD71815_REG_GPO, &val);
--	if (ret)
--		return ret;
+-This binding describes the GPIO block(s) found in the 8xxx series of
+-PMIC's from Qualcomm.
 -
--	return (val >> offset) & 1;
--}
+-- compatible:
+-	Usage: required
+-	Value type: <string>
+-	Definition: must be one of:
+-		    "qcom,pm8005-gpio"
+-		    "qcom,pm8018-gpio"
+-		    "qcom,pm8038-gpio"
+-		    "qcom,pm8058-gpio"
+-		    "qcom,pm8916-gpio"
+-		    "qcom,pm8917-gpio"
+-		    "qcom,pm8921-gpio"
+-		    "qcom,pm8941-gpio"
+-		    "qcom,pm8950-gpio"
+-		    "qcom,pm8994-gpio"
+-		    "qcom,pm8998-gpio"
+-		    "qcom,pma8084-gpio"
+-		    "qcom,pmi8950-gpio"
+-		    "qcom,pmi8994-gpio"
+-		    "qcom,pmi8998-gpio"
+-		    "qcom,pms405-gpio"
+-		    "qcom,pm660-gpio"
+-		    "qcom,pm660l-gpio"
+-		    "qcom,pm8150-gpio"
+-		    "qcom,pm8150b-gpio"
+-		    "qcom,pm8350-gpio"
+-		    "qcom,pm8350b-gpio"
+-		    "qcom,pm8350c-gpio"
+-		    "qcom,pmk8350-gpio"
+-		    "qcom,pmr735a-gpio"
+-		    "qcom,pmr735b-gpio"
+-		    "qcom,pm6150-gpio"
+-		    "qcom,pm6150l-gpio"
+-		    "qcom,pm8008-gpio"
+-		    "qcom,pmx55-gpio"
 -
--static void bd71815gpo_set(struct gpio_chip *chip, unsigned int offset,
--			   int value)
--{
--	struct bd71815_gpio *bd71815 =3D gpiochip_get_data(chip);
--	int ret, bit;
+-		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
+-		    if the device is on an spmi bus or an ssbi bus respectively
 -
--	bit =3D BIT(offset);
+-- reg:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: Register base of the GPIO block and length.
 -
--	if (value)
--		ret =3D regmap_set_bits(bd71815->regmap, BD71815_REG_GPO, bit);
--	else
--		ret =3D regmap_clear_bits(bd71815->regmap, BD71815_REG_GPO, bit);
+-- interrupts:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: Must contain an array of encoded interrupt specifiers for
+-		    each available GPIO
 -
--	if (ret)
--		dev_warn(bd71815->dev, "failed to toggle GPO\n");
--}
+-- gpio-controller:
+-	Usage: required
+-	Value type: <none>
+-	Definition: Mark the device node as a GPIO controller
 -
--static int bd71815_gpio_set_config(struct gpio_chip *chip, unsigned int of=
-fset,
-+static int bd71815_gpio_set_config(struct regmap *regmap, void *drvdata,
-+				   unsigned int offset,
- 				   unsigned long config)
- {
--	struct bd71815_gpio *bdgpio =3D gpiochip_get_data(chip);
-+	struct bd71815_gpio *bdgpio =3D (struct bd71815_gpio *)drvdata;
-=20
- 	switch (pinconf_to_config_param(config)) {
- 	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
--		return regmap_update_bits(bdgpio->regmap,
-+		return regmap_update_bits(regmap,
- 					  BD71815_REG_GPO,
- 					  BD71815_GPIO_DRIVE_MASK << offset,
- 					  BD71815_GPIO_OPEN_DRAIN << offset);
- 	case PIN_CONFIG_DRIVE_PUSH_PULL:
--		return regmap_update_bits(bdgpio->regmap,
-+		return regmap_update_bits(regmap,
- 					  BD71815_REG_GPO,
- 					  BD71815_GPIO_DRIVE_MASK << offset,
- 					  BD71815_GPIO_CMOS << offset);
- 	default:
-+		dev_err(bdgpio->dev, "Unsupported config (0x%lx)\n", config);
- 		break;
- 	}
- 	return -ENOTSUPP;
- }
-=20
--/* BD71815 GPIO is actually GPO */
--static int bd71815gpo_direction_get(struct gpio_chip *gc, unsigned int off=
-set)
--{
--	return GPIO_LINE_DIRECTION_OUT;
--}
+-- #gpio-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: Must be 2;
+-		    the first cell will be used to define gpio number and the
+-		    second denotes the flags for this gpio
 -
--/* Template for GPIO chip */
--static const struct gpio_chip bd71815gpo_chip =3D {
--	.label			=3D "bd71815",
--	.owner			=3D THIS_MODULE,
--	.get			=3D bd71815gpo_get,
--	.get_direction		=3D bd71815gpo_direction_get,
--	.set			=3D bd71815gpo_set,
--	.set_config		=3D bd71815_gpio_set_config,
--	.can_sleep		=3D true,
--};
+-Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+-a general description of GPIO and interrupt bindings.
 -
- #define BD71815_TWO_GPIOS	GENMASK(1, 0)
- #define BD71815_ONE_GPIO	BIT(0)
-=20
-@@ -111,14 +64,16 @@ static const struct gpio_chip bd71815gpo_chip =3D {
-  * but allows using it by providing the DT property
-  * "rohm,enable-hidden-gpo".
-  */
--static int bd71815_init_valid_mask(struct gpio_chip *gc,
-+static int bd71815_init_valid_mask(struct regmap *regmap, void *drvdata,
- 				   unsigned long *valid_mask,
- 				   unsigned int ngpios)
- {
-+	struct bd71815_gpio *bdgpio =3D (struct bd71815_gpio *)drvdata;
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices, including the meaning of the
+-phrase "pin configuration node".
+-
+-The pin configuration nodes act as a container for an arbitrary number of
+-subnodes. Each of these subnodes represents some desired configuration for a
+-pin or a list of pins. This configuration can include the
+-mux function to select on those pin(s), and various pin configuration
+-parameters, as listed below.
+-
+-
+-SUBNODES:
+-
+-The name of each subnode is not important; all subnodes should be enumerated
+-and processed purely based on their content.
+-
+-Each subnode only affects those parameters that are explicitly listed. In
+-other words, a subnode that lists a mux function but no pin configuration
+-parameters implies no information about any pin configuration parameters.
+-Similarly, a pin subnode that describes a pullup parameter implies no
+-information about e.g. the mux function.
+-
+-The following generic properties as defined in pinctrl-bindings.txt are valid
+-to specify in a pin configuration subnode:
+-
+-- pins:
+-	Usage: required
+-	Value type: <string-array>
+-	Definition: List of gpio pins affected by the properties specified in
+-		    this subnode.  Valid pins are:
+-		    gpio1-gpio4 for pm8005
+-		    gpio1-gpio6 for pm8018
+-		    gpio1-gpio12 for pm8038
+-		    gpio1-gpio40 for pm8058
+-		    gpio1-gpio4 for pm8916
+-		    gpio1-gpio38 for pm8917
+-		    gpio1-gpio44 for pm8921
+-		    gpio1-gpio36 for pm8941
+-		    gpio1-gpio8 for pm8950 (hole on gpio3)
+-		    gpio1-gpio22 for pm8994
+-		    gpio1-gpio26 for pm8998
+-		    gpio1-gpio22 for pma8084
+-		    gpio1-gpio2 for pmi8950
+-		    gpio1-gpio10 for pmi8994
+-		    gpio1-gpio12 for pms405 (holes on gpio1, gpio9 and gpio10)
+-		    gpio1-gpio10 for pm8150 (holes on gpio2, gpio5, gpio7
+-					     and gpio8)
+-		    gpio1-gpio12 for pm8150b (holes on gpio3, gpio4, gpio7)
+-		    gpio1-gpio12 for pm8150l (hole on gpio7)
+-		    gpio1-gpio10 for pm8350
+-		    gpio1-gpio8 for pm8350b
+-		    gpio1-gpio9 for pm8350c
+-		    gpio1-gpio4 for pmk8350
+-		    gpio1-gpio4 for pmr735a
+-		    gpio1-gpio4 for pmr735b
+-		    gpio1-gpio10 for pm6150
+-		    gpio1-gpio12 for pm6150l
+-		    gpio1-gpio2 for pm8008
+-		    gpio1-gpio11 for pmx55 (holes on gpio3, gpio7, gpio10
+-					    and gpio11)
+-
+-- function:
+-	Usage: required
+-	Value type: <string>
+-	Definition: Specify the alternative function to be configured for the
+-		    specified pins.  Valid values are:
+-		    "normal",
+-		    "paired",
+-		    "func1",
+-		    "func2",
+-		    "dtest1",
+-		    "dtest2",
+-		    "dtest3",
+-		    "dtest4",
+-		    And following values are supported by LV/MV GPIO subtypes:
+-		    "func3",
+-		    "func4"
+-
+-- bias-disable:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins should be configured as no pull.
+-
+-- bias-pull-down:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins should be configured as pull down.
+-
+-- bias-pull-up:
+-	Usage: optional
+-	Value type: <empty>
+-	Definition: The specified pins should be configured as pull up.
+-
+-- qcom,pull-up-strength:
+-	Usage: optional
+-	Value type: <u32>
+-	Definition: Specifies the strength to use for pull up, if selected.
+-		    Valid values are; as defined in
+-		    <dt-bindings/pinctrl/qcom,pmic-gpio.h>:
+-		    1: 30uA                     (PMIC_GPIO_PULL_UP_30)
+-		    2: 1.5uA                    (PMIC_GPIO_PULL_UP_1P5)
+-		    3: 31.5uA                   (PMIC_GPIO_PULL_UP_31P5)
+-		    4: 1.5uA + 30uA boost       (PMIC_GPIO_PULL_UP_1P5_30)
+-		    If this property is omitted 30uA strength will be used if
+-		    pull up is selected
+-
+-- bias-high-impedance:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins will put in high-Z mode and disabled.
+-
+-- input-enable:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are put in input mode.
+-
+-- output-high:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in output mode, driven
+-		    high.
+-
+-- output-low:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in output mode, driven
+-		    low.
+-
+-- power-source:
+-	Usage: optional
+-	Value type: <u32>
+-	Definition: Selects the power source for the specified pins. Valid
+-		    power sources are defined per chip in
+-		    <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+-
+-- qcom,drive-strength:
+-	Usage: optional
+-	Value type: <u32>
+-	Definition: Selects the drive strength for the specified pins. Value
+-		    drive strengths are:
+-		    0: no (PMIC_GPIO_STRENGTH_NO)
+-		    1: high (PMIC_GPIO_STRENGTH_HIGH) 0.9mA @ 1.8V - 1.9mA @ 2.6V
+-		    2: medium (PMIC_GPIO_STRENGTH_MED) 0.6mA @ 1.8V - 1.25mA @ 2.6V
+-		    3: low (PMIC_GPIO_STRENGTH_LOW) 0.15mA @ 1.8V - 0.3mA @ 2.6V
+-		    as defined in <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+-
+-- drive-push-pull:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in push-pull mode.
+-
+-- drive-open-drain:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in open-drain mode.
+-
+-- drive-open-source:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in open-source mode.
+-
+-- qcom,analog-pass:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in analog-pass-through mode.
+-
+-- qcom,atest:
+-	Usage: optional
+-	Value type: <u32>
+-	Definition: Selects ATEST rail to route to GPIO when it's configured
+-		    in analog-pass-through mode.
+-		    Valid values are 1-4 corresponding to ATEST1 to ATEST4.
+-
+-- qcom,dtest-buffer:
+-	Usage: optional
+-	Value type: <u32>
+-	Definition: Selects DTEST rail to route to GPIO when it's configured
+-		    as digital input.
+-		    Valid values are 1-4 corresponding to DTEST1 to DTEST4.
+-
+-Example:
+-
+-	pm8921_gpio: gpio@150 {
+-		compatible = "qcom,pm8921-gpio", "qcom,ssbi-gpio";
+-		reg = <0x150 0x160>;
+-		interrupts = <192 1>, <193 1>, <194 1>,
+-			     <195 1>, <196 1>, <197 1>,
+-			     <198 1>, <199 1>, <200 1>,
+-			     <201 1>, <202 1>, <203 1>,
+-			     <204 1>, <205 1>, <206 1>,
+-			     <207 1>, <208 1>, <209 1>,
+-			     <210 1>, <211 1>, <212 1>,
+-			     <213 1>, <214 1>, <215 1>,
+-			     <216 1>, <217 1>, <218 1>,
+-			     <219 1>, <220 1>, <221 1>,
+-			     <222 1>, <223 1>, <224 1>,
+-			     <225 1>, <226 1>, <227 1>,
+-			     <228 1>, <229 1>, <230 1>,
+-			     <231 1>, <232 1>, <233 1>,
+-			     <234 1>, <235 1>;
+-
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-
+-		pm8921_gpio_keys: gpio-keys {
+-			volume-keys {
+-				pins = "gpio20", "gpio21";
+-				function = "normal";
+-
+-				input-enable;
+-				bias-pull-up;
+-				drive-push-pull;
+-				qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+-				power-source = <PM8921_GPIO_S4>;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+new file mode 100644
+index 0000000..d9024eb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+@@ -0,0 +1,256 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,pmic-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	if (ngpios !=3D 2)
- 		return 0;
-=20
--	if (gc->parent && device_property_present(gc->parent,
-+	if (bdgpio->dev && device_property_present(bdgpio->dev->parent,
- 						  "rohm,enable-hidden-gpo"))
- 		*valid_mask =3D BD71815_TWO_GPIOS;
- 	else
-@@ -127,9 +82,19 @@ static int bd71815_init_valid_mask(struct gpio_chip *gc,
- 	return 0;
- }
-=20
-+/* Template for regmap gpio config */
-+static const struct gpio_regmap_config gpio_cfg_template =3D {
-+	.label			=3D "bd71815",
-+	.reg_set_base		=3D BD71815_REG_GPO,
-+	.ngpio			=3D 2,
-+	.set_config		=3D bd71815_gpio_set_config,
-+	.init_valid_mask	=3D bd71815_init_valid_mask,
-+};
++title: Qualcomm PMIC GPIO block
 +
- static int gpo_bd71815_probe(struct platform_device *pdev)
- {
- 	struct bd71815_gpio *g;
-+	struct gpio_regmap_config cfg;
- 	struct device *parent, *dev;
-=20
- 	/*
-@@ -144,30 +109,15 @@ static int gpo_bd71815_probe(struct platform_device *=
-pdev)
- 	if (!g)
- 		return -ENOMEM;
-=20
--	g->chip =3D bd71815gpo_chip;
--
--	/*
--	 * FIXME: As writing of this the sysfs interface for GPIO control does
--	 * not respect the valid_mask. Do not trust it but rather set the ngpios
--	 * to 1 if "rohm,enable-hidden-gpo" is not given.
--	 *
--	 * This check can be removed later if the sysfs export is fixed and
--	 * if the fix is backported.
--	 *
--	 * For now it is safest to just set the ngpios though.
--	 */
--	if (device_property_present(parent, "rohm,enable-hidden-gpo"))
--		g->chip.ngpio =3D 2;
--	else
--		g->chip.ngpio =3D 1;
--
--	g->chip.init_valid_mask =3D bd71815_init_valid_mask;
--	g->chip.base =3D -1;
--	g->chip.parent =3D parent;
--	g->regmap =3D dev_get_regmap(parent, NULL);
- 	g->dev =3D dev;
-=20
--	return devm_gpiochip_add_data(dev, &g->chip, g);
-+	cfg =3D gpio_cfg_template;
-+	cfg.parent =3D parent;
-+	cfg.regmap =3D dev_get_regmap(parent, NULL);
-+	cfg.fwnode =3D dev_fwnode(dev);
-+	cfg.drvdata =3D g;
++maintainers:
++  - Bjorn Andersson <bjorn.andersson@sonymobile.com>
 +
-+	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &cfg));
- }
-=20
- static struct platform_driver gpo_bd71815_driver =3D {
---=20
-2.25.4
++description: |
++  This binding describes the GPIO block(s) found in the 8xxx series of
++  PMIC's from Qualcomm.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - qcom,pm8005-gpio
++          - qcom,pm8018-gpio
++          - qcom,pm8038-gpio
++          - qcom,pm8058-gpio
++          - qcom,pm8916-gpio
++          - qcom,pm8917-gpio
++          - qcom,pm8921-gpio
++          - qcom,pm8941-gpio
++          - qcom,pm8950-gpio
++          - qcom,pm8994-gpio
++          - qcom,pm8998-gpio
++          - qcom,pma8084-gpio
++          - qcom,pmi8950-gpio
++          - qcom,pmi8994-gpio
++          - qcom,pmi8998-gpio
++          - qcom,pms405-gpio
++          - qcom,pm660-gpio
++          - qcom,pm660l-gpio
++          - qcom,pm8150-gpio
++          - qcom,pm8150b-gpio
++          - qcom,pm8350-gpio
++          - qcom,pm8350b-gpio
++          - qcom,pm8350c-gpio
++          - qcom,pmk8350-gpio
++          - qcom,pm6150-gpio
++          - qcom,pm6150l-gpio
++          - qcom,pm7325-gpio
++          - qcom,pmr735a-gpio
++          - qcom,pmr735b-gpio
++          - qcom,pm8008-gpio
++          - qcom,pmx55-gpio
++
++      - enum:
++          - qcom,spmi-gpio
++          - qcom,ssbi-gpio
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 44
++    description: |
++        Must contain an array of encoded interrupt specifiers for
++        each available GPIO
++
++  '#interrupt-cells':
++    const: 2
++
++  interrupt-controller: true
++
++  gpio-controller: true
++
++  gpio-ranges:
++    maxItems: 1
++
++  '#gpio-cells':
++    const: 2
++    description: |
++        The first cell will be used to define gpio number and the
++        second denotes the flags for this gpio
++
++  gpio-keys:
++    type: object
++    properties:
++      volume-keys:
++        type: object
++        anyOf:
++          - $ref: "pinmux-node.yaml"
++          - $ref: "pincfg-node.yaml"
++        properties:
++          pins:
++            description: |
++                List of gpio pins affected by the properties specified in
++                this subnode.  Valid pins are
++                     - gpio1-gpio4 for pm8005
++                     - gpio1-gpio6 for pm8018
++                     - gpio1-gpio12 for pm8038
++                     - gpio1-gpio40 for pm8058
++                     - gpio1-gpio4 for pm8916
++                     - gpio1-gpio38 for pm8917
++                     - gpio1-gpio44 for pm8921
++                     - gpio1-gpio36 for pm8941
++                     - gpio1-gpio8 for pm8950 (hole on gpio3)
++                     - gpio1-gpio22 for pm8994
++                     - gpio1-gpio26 for pm8998
++                     - gpio1-gpio22 for pma8084
++                     - gpio1-gpio2 for pmi8950
++                     - gpio1-gpio10 for pmi8994
++                     - gpio1-gpio12 for pms405 (holes on gpio1, gpio9
++                                                and gpio10)
++                     - gpio1-gpio10 for pm8150 (holes on gpio2, gpio5,
++                                                gpio7 and gpio8)
++                     - gpio1-gpio12 for pm8150b (holes on gpio3, gpio4
++                                                 and gpio7)
++                     - gpio1-gpio12 for pm8150l (hole on gpio7)
++                     - gpio1-gpio10 for pm8350
++                     - gpio1-gpio8 for pm8350b
++                     - gpio1-gpio9 for pm8350c
++                     - gpio1-gpio4 for pmk8350
++                     - gpio1-gpio10 for pm6150
++                     - gpio1-gpio12 for pm6150l
++                     - gpio1-gpio10 for pm7325
++                     - gpio1-gpio4 for pmr735a
++                     - gpio1-gpio4 for pmr735b
++                     - gpio1-gpio2 for pm8008
++                     - gpio1-gpio11 for pmx55 (holes on gpio3, gpio7, gpio10
++                                                and gpio11)
++
++            items:
++              pattern: "^gpio([0-9]+)$"
++
++          function:
++            items:
++              - enum:
++                  - normal
++                  - paired
++                  - func1
++                  - func2
++                  - dtest1
++                  - dtest2
++                  - dtest3
++                  - dtest4
++                  - func3  # supported by LV/MV GPIO subtypes
++                  - func4  # supported by LV/MV GPIO subtypes
++
++          bias-disable: true
++
++          bias-pull-down: true
++
++          bias-pull-up: true
++
++          qcom,pull-up-strength:
++            $ref: /schemas/types.yaml#/definitions/uint32
++            description: |
++                Specifies the strength to use for pull up, if selected.
++                Valid values are defined in
++                <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++                If this property is omitted 30uA strength will be used
++                if pull up is selected
++
++          bias-high-impedance: true
++
++          input-enable: true
++
++          output-high: true
++
++          output-low: true
++
++          power-source: true
++
++          qcom,drive-strength:
++            $ref: /schemas/types.yaml#/definitions/uint32
++            description: |
++                Selects the drive strength for the specified pins
++                Valid drive strength values are defined in
++                <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++            enum: [0, 1, 2, 3]
++
++          drive-push-pull: true
++
++          drive-open-drain: true
++
++          drive-open-source: true
++
++          qcom,analog-pass:
++            $ref: /schemas/types.yaml#/definitions/flag
++            description: |
++                The specified pins are configured in
++                analog-pass-through mode.
++
++          qcom,atest:
++            $ref: /schemas/types.yaml#/definitions/uint32
++            description: |
++                Selects ATEST rail to route to GPIO when it's
++                configured in analog-pass-through mode.
++            enum: [1, 2, 3, 4]
++
++          qcom,dtest-buffer:
++            $ref: /schemas/types.yaml#/definitions/uint32
++            description: |
++                Selects DTEST rail to route to GPIO when it's
++                configured as digital input.
++            enum: [1, 2, 3, 4]
++
++        required:
++          - pins
++          - function
++
++        additionalProperties: false
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++
++    pm8921_gpio: gpio@150 {
++      compatible = "qcom,pm8921-gpio", "qcom,ssbi-gpio";
++      reg = <0x150 0x160>;
++      interrupts = <192 1>, <193 1>, <194 1>,
++                   <195 1>, <196 1>, <197 1>,
++                   <198 1>, <199 1>, <200 1>,
++                   <201 1>, <202 1>, <203 1>,
++                   <204 1>, <205 1>, <206 1>,
++                   <207 1>, <208 1>, <209 1>,
++                   <210 1>, <211 1>, <212 1>,
++                   <213 1>, <214 1>, <215 1>,
++                   <216 1>, <217 1>, <218 1>,
++                   <219 1>, <220 1>, <221 1>,
++                   <222 1>, <223 1>, <224 1>,
++                   <225 1>, <226 1>, <227 1>,
++                   <228 1>, <229 1>, <230 1>,
++                   <231 1>, <232 1>, <233 1>,
++                   <234 1>, <235 1>;
++
++      gpio-controller;
++      #gpio-cells = <2>;
++
++      pm8921_gpio_keys: gpio-keys {
++        volume-keys {
++          pins = "gpio20", "gpio21";
++          function = "normal";
++
++          input-enable;
++          bias-pull-up;
++          drive-push-pull;
++          qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
++          power-source = <PM8921_GPIO_S4>;
++        };
++      };
++    };
++...
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
 
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmCnU1cACgkQeFA3/03a
-ocXDxAf9EzqltSuh9l25OmFpPlKg0FXziiZmfBFVJ8ikWV6FI8vEWO+qqOwFZf6K
-rMjsAf+XtgpRb6xeWzxmYYacFsaU6aIl5cYLkN9oSKZ4aLxnInqPRff1nkx9blK7
-jZMAkTGNUW9R3PwTSu23bg4XIoqu75hGF9YoXXaEHr14ZPB2vBNx3LsZ2gwp2vkU
-Cz0YCjfd5XZVJn96gbSlCUVzIrsjh+udB+YR4TOXnmbNi2whzBHGnG3Fojahrp2i
-e4wAMiOGMad4yYt3DZCiP5F2oZ8TifzCVarPKOabsqhENxc/nDlv7ocxKDbPiTE/
-eJ2cKhJ/yoHO3GRDOa9hE78GAuiimQ==
-=fx7A
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
