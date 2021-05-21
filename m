@@ -2,170 +2,217 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12B3438C739
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:56:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D206038C741
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:57:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232778AbhEUM5X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 08:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233394AbhEUM5G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 08:57:06 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F64C06138C
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:55:41 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id 191so21427651ybn.7
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:55:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wbCrc5u5unxWh09jlQjXKgEZzrmBEWTEQIs3qBVVg/w=;
-        b=OGkdAPRxmGroUrRGSScHWMXSEY0m8Gc6Bm4xfwHzmlbMFBdUpa85udXcQn+C/vvIpk
-         Ic2vB0gjKQzfuXV4Vbd717a2UEWKf97qt1ZfNzdPM8ElBoEPvRTnjqm0wFlotKjxT4So
-         WfAjqiPMnNxaRwMcnXMYfSmhPJcssnyOY5Uze0wmhtZUuHVkygV6f/e1/CzeH4d/Wc6O
-         AsvfFO1D+9FrZkxiwkTtP/Jb9fOXNTeclk+oChS96MvTqg1LBruaqdBt8pcH+QO2+J2G
-         pbTwaFLgJPRhRvrlwy/c6Wp8KCm9vVVl6CdqBo5sCM41JFpZ6btIGJ6xsQBS2ruXGyZN
-         vsoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wbCrc5u5unxWh09jlQjXKgEZzrmBEWTEQIs3qBVVg/w=;
-        b=iGy+wXuwXnrclW5BTN52lODS3wB5B45MDT+vmOaPwxWaUoINKioOMKbC+qJnDbbiPK
-         gQyp0VLVHiZStSfJFggfyE1AuaTN4zsOBxn8rPENWpHJjhanUXZHszwCahm+FzyYPkP7
-         PzQK4MYbpG6JJuqIoY0WYQM3YdJjUKqgBxwtRWe690/Q2QWsUs+n4mCVq7uyZzxgtFET
-         PhTvVY12bz3bMuljjaBWUaRweNQMrA4xVT1rl3eEVdZ5QjZgtiHAQ6clMvoOto1VodP4
-         xYS4Mo6B+GkyKCkBBehzPsfnoIa0cHXdyND5ludYZzDGkl4E731ran/xM5noR0gWqmDb
-         bb1g==
-X-Gm-Message-State: AOAM533we6NpA46j6lFoKydBXgJIL3A+qwdyUfCRoXUkzx7jgphsrGbw
-        A1R/fhi/zLL6oShEftItc3w5mCprLu5rEbeypfcbOdhpWuFlhQ==
-X-Google-Smtp-Source: ABdhPJzW6ZACmt60jgqE+MNDAf9gbbKdjI7PSG2kigpk2ddNt/q4y+4wde7IffUoAjQflZq7w7PwUBCNZsXNJhUszco=
-X-Received: by 2002:a25:287:: with SMTP id 129mr14715521ybc.312.1621601740978;
- Fri, 21 May 2021 05:55:40 -0700 (PDT)
+        id S231451AbhEUM6V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 08:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232290AbhEUM6A (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 21 May 2021 08:58:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CB1FF613D8;
+        Fri, 21 May 2021 12:56:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621601797;
+        bh=nLiWIiuQ0kxuVgZbeKOWUyyPgYrR77UCzFAel1jg22c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GWyNqRI73z76a3BP9cwhI1q4Y2hipTP6tw1R5/sCn21TJVTrA/u3S3/8OmIuokl/p
+         7lhzcQXLFM7jnJb1M6CwO/lMY58asJZn02RBlqMc2p+S6Ff2SyzdLqDJ/n6qlF0YnC
+         zrdXsEan6JTyXOxKqqHt5Pzd20nDEyZS5JK1+CUTbSpjdMCocMiKeSLgS/A7Dae1vP
+         IfwiX9FcCA1jZyxxjuDaNIhsAPXDPVoK17dQrkVfTC+FDbqtHE/Oj3z46pBzeXt9oy
+         X0OA0gCIoUkjxPIGYB3+VDpUU9KVO/t8gmExjUrW6+FlwNWXdavIPXYiTM9r96iawz
+         EKd8+0iy5bwQw==
+Received: by mail-ej1-f44.google.com with SMTP id et19so23273786ejc.4;
+        Fri, 21 May 2021 05:56:37 -0700 (PDT)
+X-Gm-Message-State: AOAM530LqUzEJjDG2TSEQpSMs71whYBkcHLzYSJxgcKEjDXYLv/mNp5N
+        o1cjdpNviEUrorV7U5GtfX6aKyrGr2qJnr2h4g==
+X-Google-Smtp-Source: ABdhPJzGaRvL+nvTQl0kfwM8PUcvI9A4QA9o8klAsKUu1HJYM2XvDEwapQ8O+ycaVUA1fNgEjfi/YaJxUfqe3vlaai0=
+X-Received: by 2002:a17:907:76e8:: with SMTP id kg8mr9610299ejc.130.1621601796326;
+ Fri, 21 May 2021 05:56:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210518120917.30336-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210518120917.30336-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 21 May 2021 14:55:30 +0200
-Message-ID: <CAMpxmJUZdvaBsWZHwDg0DzOqVVR7_Bwgoyh9w0wN61dAVYa-yQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Use sysfs_emit() in "show" functions
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+References: <20210511090122.6995-1-a-govindraju@ti.com> <20210517221513.GA3263368@robh.at.kernel.org>
+ <861cefe2-7bb6-c435-ab0d-483155852876@ti.com>
+In-Reply-To: <861cefe2-7bb6-c435-ab0d-483155852876@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 21 May 2021 07:56:24 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKyuXYJocBMLGXL6aXuK0YnrW7qdLugV2bxdP-LJ=2+cg@mail.gmail.com>
+Message-ID: <CAL_JsqKyuXYJocBMLGXL6aXuK0YnrW7qdLugV2bxdP-LJ=2+cg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: gpio-davinci: Convert to json-schema
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Aswath Govindraju <a-govindraju@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Keerthy <j-keerthy@ti.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 18, 2021 at 2:09 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, May 21, 2021 at 3:32 AM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 >
-> The sysfs_emit() function was introduced to make it less ambiguous
-> which function is preferred when writing to the output buffer in
-> a "show" callback [1].
+> Hi Rob, All
 >
-> Convert the GPIO library sysfs interface from sprintf() to sysfs_emit()
-> accordingly, as the latter is aware of the PAGE_SIZE buffer and correctly
-> returns the number of bytes written into the buffer.
+> On 18/05/2021 01:15, Rob Herring wrote:
+> > On Tue, May 11, 2021 at 02:31:20PM +0530, Aswath Govindraju wrote:
+> >> Convert gpio-davinci dt-binding documentation from txt to yaml format.
+> >>
+> >> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
+> >> ---
+> >>   .../devicetree/bindings/gpio/gpio-davinci.txt | 167 ---------------
+> >>   .../bindings/gpio/gpio-davinci.yaml           | 193 ++++++++++++++++++
+> >>   MAINTAINERS                                   |   2 +-
+> >>   3 files changed, 194 insertions(+), 168 deletions(-)
+> >>   delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> >>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> >> deleted file mode 100644
+> >> index 696ea46227d1..000000000000
+> >> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> >> +++ /dev/null
+> >> @@ -1,167 +0,0 @@
+> >> -Davinci/Keystone GPIO controller bindings
+> >> -
+> >> -Required Properties:
+> >> -- compatible: should be "ti,dm6441-gpio": for Davinci da850 SoCs
+> >> -                    "ti,keystone-gpio": for Keystone 2 66AK2H/K, 66AK2L,
+> >> -                                            66AK2E SoCs
+> >> -                    "ti,k2g-gpio", "ti,keystone-gpio": for 66AK2G
+> >> -                    "ti,am654-gpio", "ti,keystone-gpio": for TI K3 AM654
+> >> -                    "ti,j721e-gpio", "ti,keystone-gpio": for J721E SoCs
+> >> -                    "ti,am64-gpio", "ti,keystone-gpio": for AM64 SoCs
+> >> -
 >
-> No functional change intended.
+> [...]
 >
-> [1] Documentation/filesystems/sysfs.rst
+> >> -};
+> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+> >> new file mode 100644
+> >> index 000000000000..1e16172669c7
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+> >> @@ -0,0 +1,193 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/gpio/gpio-davinci.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: GPIO controller for Davinci and keystone devices
+> >> +
+> >> +maintainers:
+> >> +  - Keerthy <j-keerthy@ti.com>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    oneOf:
+> >> +      - items:
+> >> +          - enum:
+> >> +              - ti,k2g-gpio
+> >> +              - ti,am654-gpio
+> >> +              - ti,j721e-gpio
+> >> +              - ti,am64-gpio
+> >> +          - const: ti,keystone-gpio
+> >> +
+> >> +      - items:
+> >> +          - const: ti,dm6441-gpio
+> >> +      - items:
+> >> +          - const: ti,keystone-gpio
+> >
+> > These 2 can be expressed as an 'enum'.
+> >
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +    description:
+> >> +      Physical base address of the controller and the size of memory mapped registers.
+> >
+> > Drop. That's every 'reg' property.
+> >
+> >> +
+> >> +  gpio-controller: true
+> >> +
+> >> +  gpio-ranges: true
+> >> +
+> >> +  gpio-line-names:
+> >> +    description: strings describing the names of each gpio line.
+> >
+> > Any constraints like min/max number of lines?
+> >
+> >> +
+> >> +  "#gpio-cells":
+> >> +    const: 2
+> >> +    description:
+> >> +      first cell is the pin number and second cell is used to specify optional parameters (unused).
+> >> +
+> >> +  interrupts:
+> >> +    description:
+> >> +      Array of GPIO interrupt number. Only banked or unbanked IRQs are supported at a time.
+> >
+> > Needs constraints. How many items and what are they?
+> >
+> >> +
+> >> +  ti,ngpio:
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    description: The number of GPIO pins supported consecutively.
+> >> +    minimum: 1
+> >> +
+> >> +  ti,davinci-gpio-unbanked:
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    description: The number of GPIOs that have an individual interrupt line to processor.
+> >> +    minimum: 0
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +    description:
+> >> +      clock-specifier to represent input to the GPIO controller.
+> >
+> > Drop description.
+> >
+> >> +
+> >> +  clock-names:
+> >> +    const: gpio
+> >> +
+> >> +  interrupt-controller: true
+> >> +
+> >> +  power-domains:
+> >> +    maxItems: 1
+> >> +    description:
+> >> +      Phandle to the power domain provider node.
+> >
+> > Drop.
+> >
+> >> +
+> >> +  "#interrupt-cells":
+> >> +    const: 2
+> >> +
+> >> +patternProperties:
+> >> +  "-hog$":
+> >> +    type: object
+> >> +    properties:
+> >> +      gpios: true
+> >> +      gpio-hog: true
+> >> +      input: true
+> >> +      output-high: true
+> >> +      output-low: true
+> >> +      line-name: true
+> >> +
+> >> +    required:
+> >> +      - gpio-hog
+> >> +      - gpios
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib-sysfs.c | 27 ++++++++++-----------------
->  1 file changed, 10 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-> index 7c5afd999210..d836aba91d3c 100644
-> --- a/drivers/gpio/gpiolib-sysfs.c
-> +++ b/drivers/gpio/gpiolib-sysfs.c
-> @@ -66,9 +66,7 @@ static ssize_t direction_show(struct device *dev,
->         mutex_lock(&data->mutex);
->
->         gpiod_get_direction(desc);
-> -       status = sprintf(buf, "%s\n",
-> -                       test_bit(FLAG_IS_OUT, &desc->flags)
-> -                               ? "out" : "in");
-> +       status = sysfs_emit(buf, "%s\n", test_bit(FLAG_IS_OUT, &desc->flags) ? "out" : "in");
->
->         mutex_unlock(&data->mutex);
->
-> @@ -109,13 +107,9 @@ static ssize_t value_show(struct device *dev,
->         mutex_lock(&data->mutex);
->
->         status = gpiod_get_value_cansleep(desc);
-> -       if (status < 0)
-> -               goto err;
-> +       if (status >= 0)
-> +               status = sysfs_emit(buf, "%zd\n", status);
->
-> -       buf[0] = '0' + status;
-> -       buf[1] = '\n';
-> -       status = 2;
-> -err:
->         mutex_unlock(&data->mutex);
->
->         return status;
-> @@ -249,11 +243,11 @@ static ssize_t edge_show(struct device *dev,
->         mutex_lock(&data->mutex);
->
->         for (i = 0; i < ARRAY_SIZE(trigger_types); i++) {
-> -               if (data->irq_flags == trigger_types[i].flags) {
-> -                       status = sprintf(buf, "%s\n", trigger_types[i].name);
-> +               if (data->irq_flags == trigger_types[i].flags)
->                         break;
-> -               }
->         }
-> +       if (i < ARRAY_SIZE(trigger_types))
-> +               status = sysfs_emit(buf, "%s\n", trigger_types[i].name);
->
->         mutex_unlock(&data->mutex);
->
-> @@ -333,8 +327,7 @@ static ssize_t active_low_show(struct device *dev,
->
->         mutex_lock(&data->mutex);
->
-> -       status = sprintf(buf, "%d\n",
-> -                               !!test_bit(FLAG_ACTIVE_LOW, &desc->flags));
-> +       status = sysfs_emit(buf, "%d\n", !!test_bit(FLAG_ACTIVE_LOW, &desc->flags));
->
->         mutex_unlock(&data->mutex);
->
-> @@ -412,7 +405,7 @@ static ssize_t base_show(struct device *dev,
->  {
->         const struct gpio_chip  *chip = dev_get_drvdata(dev);
->
-> -       return sprintf(buf, "%d\n", chip->base);
-> +       return sysfs_emit(buf, "%d\n", chip->base);
->  }
->  static DEVICE_ATTR_RO(base);
->
-> @@ -421,7 +414,7 @@ static ssize_t label_show(struct device *dev,
->  {
->         const struct gpio_chip  *chip = dev_get_drvdata(dev);
->
-> -       return sprintf(buf, "%s\n", chip->label ? : "");
-> +       return sysfs_emit(buf, "%s\n", chip->label ?: "");
->  }
->  static DEVICE_ATTR_RO(label);
->
-> @@ -430,7 +423,7 @@ static ssize_t ngpio_show(struct device *dev,
->  {
->         const struct gpio_chip  *chip = dev_get_drvdata(dev);
->
-> -       return sprintf(buf, "%u\n", chip->ngpio);
-> +       return sysfs_emit(buf, "%u\n", chip->ngpio);
->  }
->  static DEVICE_ATTR_RO(ngpio);
->
-> --
-> 2.30.2
->
+> I see that gpio-hog.yaml dtschema has been added.
+> Can it be reused here and how?
 
-Applied, thanks!
+It's applied to any node containing 'gpio-hog' property, so all you need is:
 
-Bartosz
+required:
+  - gpio-hog
