@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D6C338BF46
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 08:27:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EE6338BF48
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 08:27:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229991AbhEUG2n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 02:28:43 -0400
-Received: from mail-lf1-f48.google.com ([209.85.167.48]:35429 "EHLO
-        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbhEUG2n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 02:28:43 -0400
-Received: by mail-lf1-f48.google.com with SMTP id x19so28081981lfa.2;
-        Thu, 20 May 2021 23:27:20 -0700 (PDT)
+        id S231220AbhEUG3R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 02:29:17 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:42766 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229782AbhEUG3Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 02:29:16 -0400
+Received: by mail-lj1-f169.google.com with SMTP id t17so5924703ljd.9;
+        Thu, 20 May 2021 23:27:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=TEd7BwEnb381M+LjsahkUGlrL6ZQJ9SCtukWES/e0HQ=;
-        b=CfUTW+xuK41HviXsjsVjigisOMQFiSM3dm4qgUWXKh2Plo3VvhaXS4xHZR+geuPjA7
-         pq8MJQHW12Sk1UROkAgtcFx9Wznaxq3rzCdK8hWT27C1xA8HaDD4WrX/7fVFKfnVhIGZ
-         oSAtkKQWrahrLCoyIH63zWjXfe35W4C/ZSY1863XaR3/6bcDfLwjtENRVu4i6Yzn06kT
-         H3RR+aYEYHp565sL3955SGevVFAYFvPfc0Qicit/RR1r9hNdygKn2tib7TW+gq8VT8rC
-         eIYI4O1DYGGWnz+Lzp2lvL5j+sgQJNVJ36qPvmQ/Bi9+NjkqYyAfvT4VSUIq4emkPVrT
-         mapQ==
-X-Gm-Message-State: AOAM532ITlj2tEuijcBuNxaT502da+aEu1S0Vf4+WzAwozZSwEfq/SzH
-        77++YDLaMK9UWI7HmT+g0oozRXIY+lhgug==
-X-Google-Smtp-Source: ABdhPJyePaIi0s7wx0tYT/mBO+4Hp2S33bjhg1sN/VST5UA6ngixt5Cg38E1XSGlt53XQ0eQeKn3bg==
-X-Received: by 2002:a05:6512:139e:: with SMTP id p30mr1112476lfa.489.1621578439576;
-        Thu, 20 May 2021 23:27:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=99R0cjHc7I0/1EYgrL6Vl+4Tcdvbw54tuyXPnybM6q8=;
+        b=kj1SmDmSnxO+EZSAOhJWhMIV3LTZydKWIkirITNb9J8Yrlc4DnfA/muyMCqHOcrLSL
+         7Dvti86ULOOh5hveaevYwDVJ5K7jERY4JTjGXQzV26AhXM4w+Eqo76YPNBQvDpRumF9U
+         NOwywMdJXW2efIgtK/Y67bym8Yc00Vw7dKHzcW9Ui/a2bBCosmuUBHCnQO8tp8zoXqQH
+         farlKrYx2co/Um2M8jXzUvZ2x3yE9qGk8Tt/kgFvuBtkT53nXs7XwRiDhA681TuXwUkt
+         xluJCt62PpWGOqaV8H6dn1sRvrO8qQVfLg0GYd8FsQdPSKb4e91neZTHznb6wcWzAQBI
+         J9Vg==
+X-Gm-Message-State: AOAM532uwxdGn+KpaZD+uxGc4Ypm7rmk2skiDcZLfbr1cyRAudkW4BHt
+        tI26SbYiY3dz2QjPeCUq75s=
+X-Google-Smtp-Source: ABdhPJw6HKcqxPIghyZlWrR7rxA9c27F98cKgasvvpYfaV5Yr8WxUZM7+tOG8yl73yj7vVLXdCmbHw==
+X-Received: by 2002:a05:651c:210:: with SMTP id y16mr5677914ljn.386.1621578472082;
+        Thu, 20 May 2021 23:27:52 -0700 (PDT)
 Received: from localhost.localdomain (dc7vkhyyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::3])
-        by smtp.gmail.com with ESMTPSA id f4sm519482lfu.133.2021.05.20.23.27.18
+        by smtp.gmail.com with ESMTPSA id r10sm523863lfc.4.2021.05.20.23.27.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 May 2021 23:27:18 -0700 (PDT)
-Date:   Fri, 21 May 2021 09:27:11 +0300
+        Thu, 20 May 2021 23:27:51 -0700 (PDT)
+Date:   Fri, 21 May 2021 09:27:45 +0300
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Matti Vaittinen <mazziesaccount@gmail.com>
@@ -42,61 +42,171 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-power@fi.rohmeurope.com
-Subject: [PATCH v2 0/3] gpio: gpio-regmap: Support few custom operations
-Message-ID: <cover.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v2 1/3] gpio: regmap: Support few IC specific operations
+Message-ID: <6e319c22b41747e3911c7a5cad877134cabc9231.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
 Content-Disposition: inline
+In-Reply-To: <cover.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---OXfL5xGRrasGEqWY
+--J/dobhs11T7y2rNN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Support providing some IC specific operations at gpio_regmap registration.
+The set_config and init_valid_mask GPIO operations are usually very IC
+specific. Allow IC drivers to provide these custom operations at
+gpio-regmap registration.
 
-Implementation of few GPIO related functionalities are likely to be
-very IC specific. For example the pin-configuration registers and the
-pin validity checks. Allow IC driver to provide IC specific functions
-which gpio-regmap can utilize for these IC specific configurations.
-This should help broaden the gpio-regmap IC coverage without the need
-of exposing the registered gpio_chip or struct gpio_regmap to IC drivers.
-
-The set_config and init_valid_mask are used by ROHM BD71815 GPIO driver.
-Convert the BD71815 GPIO driver to use gpio-regmap and get rid of some
-code. Rest of the ROHM GPIO drivers are to be reworked after the
-mechanism of adding IC specific functions is settled.
-
-Some preliminary discussion can be seen here:
-https://lore.kernel.org/linux-gpio/c4faac648d3e0c7f3dcb50f7e24c8b322e8c6974=
-=2Ecamel@fi.rohmeurope.com/
-
-Changelog v2:
- - Add cover-letter
- - Drop unnecessary checks for callback function validity
- - drop driver_data setting function as it is likely to be a
-   race-condition-by-design
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
 ---
+Changelog v2: (based on suggestions by Michael Walle)
+  - drop gpio_regmap_set_drvdata()
+  - drop checks and WARN() for pretty much impossible cases
+---
+ drivers/gpio/gpio-regmap.c  | 42 +++++++++++++++++++++++++++++++------
+ include/linux/gpio/regmap.h | 14 ++++++++++++-
+ 2 files changed, 49 insertions(+), 7 deletions(-)
 
-Matti Vaittinen (3):
-  gpio: regmap: Support few IC specific operations
-  gpio: gpio-regmap: Use devm_add_action()
-  gpio: bd71815: Use gpio-regmap
-
- drivers/gpio/Kconfig        |   1 +
- drivers/gpio/gpio-bd71815.c | 106 ++++++++++--------------------------
- drivers/gpio/gpio-regmap.c  |  62 ++++++++++++++-------
- include/linux/gpio/regmap.h |  14 ++++-
- 4 files changed, 84 insertions(+), 99 deletions(-)
-
-
-base-commit: d07f6ca923ea0927a1024dfccafc5b53b61cfecc
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index 134cedf151a7..c05370e984b9 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -27,6 +27,10 @@ struct gpio_regmap {
+ 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
+ 			      unsigned int offset, unsigned int *reg,
+ 			      unsigned int *mask);
++	int (*set_config)(struct regmap *regmap, void *drvdata,
++			  unsigned int offset, unsigned long config);
++	int (*init_valid_mask)(struct regmap *regmap, void *drvdata,
++				unsigned long *valid_mask, unsigned int ngpios);
+=20
+ 	void *driver_data;
+ };
+@@ -39,6 +43,31 @@ static unsigned int gpio_regmap_addr(unsigned int addr)
+ 	return addr;
+ }
+=20
++static int regmap_gpio_init_valid_mask(struct gpio_chip *gc,
++					unsigned long *valid_mask,
++					unsigned int ngpios)
++{
++	struct gpio_regmap *gpio;
++	void *drvdata;
++
++	gpio =3D gpiochip_get_data(gc);
++	drvdata =3D gpio_regmap_get_drvdata(gpio);
++
++	return gpio->init_valid_mask(gpio->regmap, drvdata, valid_mask, ngpios);
++}
++
++static int gpio_regmap_set_config(struct gpio_chip *gc, unsigned int offse=
+t,
++				  unsigned long config)
++{
++	struct gpio_regmap *gpio;
++	void *drvdata;
++
++	gpio =3D gpiochip_get_data(gc);
++	drvdata =3D gpio_regmap_get_drvdata(gpio);
++
++	return gpio->set_config(gpio->regmap, drvdata, offset, config);
++}
++
+ static int gpio_regmap_simple_xlate(struct gpio_regmap *gpio,
+ 				    unsigned int base, unsigned int offset,
+ 				    unsigned int *reg, unsigned int *mask)
+@@ -178,12 +207,6 @@ static int gpio_regmap_direction_output(struct gpio_ch=
+ip *chip,
+ 	return gpio_regmap_set_direction(chip, offset, true);
+ }
+=20
+-void gpio_regmap_set_drvdata(struct gpio_regmap *gpio, void *data)
+-{
+-	gpio->driver_data =3D data;
+-}
+-EXPORT_SYMBOL_GPL(gpio_regmap_set_drvdata);
+-
+ void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
+ {
+ 	return gpio->driver_data;
+@@ -235,6 +258,9 @@ struct gpio_regmap *gpio_regmap_register(const struct g=
+pio_regmap_config *config
+ 	gpio->reg_clr_base =3D config->reg_clr_base;
+ 	gpio->reg_dir_in_base =3D config->reg_dir_in_base;
+ 	gpio->reg_dir_out_base =3D config->reg_dir_out_base;
++	gpio->driver_data =3D config->drvdata;
++	gpio->set_config =3D config->set_config;
++	gpio->init_valid_mask =3D config->init_valid_mask;
+=20
+ 	/* if not set, assume there is only one register */
+ 	if (!gpio->ngpio_per_reg)
+@@ -253,6 +279,10 @@ struct gpio_regmap *gpio_regmap_register(const struct =
+gpio_regmap_config *config
+ 	chip->ngpio =3D config->ngpio;
+ 	chip->names =3D config->names;
+ 	chip->label =3D config->label ?: dev_name(config->parent);
++	if (gpio->set_config)
++		chip->set_config =3D gpio_regmap_set_config;
++	if (gpio->init_valid_mask)
++		chip->init_valid_mask =3D regmap_gpio_init_valid_mask;
+=20
+ #if defined(CONFIG_OF_GPIO)
+ 	/* gpiolib will use of_node of the parent if chip->of_node is NULL */
+diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+index 334dd928042b..96ab3151db96 100644
+--- a/include/linux/gpio/regmap.h
++++ b/include/linux/gpio/regmap.h
+@@ -33,10 +33,18 @@ struct regmap;
+  * @ngpio_per_reg:	Number of GPIOs per register
+  * @irq_domain:		(Optional) IRQ domain if the controller is
+  *			interrupt-capable
++ * @drvdata:		(Optional) Pointer to IC specific data which is
++ *			not used by gpio-remap but is provided "as is" to
++ *			the driver callback(s).
++ *
+  * @reg_mask_xlate:     (Optional) Translates base address and GPIO
+  *			offset to a register/bitmask pair. If not
+  *			given the default gpio_regmap_simple_xlate()
+  *			is used.
++ * @set_config:		(Optional) hook for all kinds of settings. Uses
++ *			the same packed config format as generic pinconf.
++ * @init_valid_mask:	(Optional) routine to initialize @valid_mask, to
++ *			be used if not all GPIOs are valid.
+  *
+  * The ->reg_mask_xlate translates a given base address and GPIO offset to
+  * register and mask pair. The base address is one of the given register
+@@ -74,17 +82,21 @@ struct gpio_regmap_config {
+ 	int reg_stride;
+ 	int ngpio_per_reg;
+ 	struct irq_domain *irq_domain;
++	void *drvdata;
+=20
+ 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
+ 			      unsigned int offset, unsigned int *reg,
+ 			      unsigned int *mask);
++	int (*set_config)(struct regmap *regmap, void *drvdata,
++			  unsigned int offset, unsigned long config);
++	int (*init_valid_mask)(struct regmap *regmap, void *drvdata,
++				unsigned long *valid_mask, unsigned int ngpios);
+ };
+=20
+ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *=
+config);
+ void gpio_regmap_unregister(struct gpio_regmap *gpio);
+ struct gpio_regmap *devm_gpio_regmap_register(struct device *dev,
+ 					      const struct gpio_regmap_config *config);
+-void gpio_regmap_set_drvdata(struct gpio_regmap *gpio, void *data);
+ void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio);
+=20
+ #endif /* _LINUX_GPIO_REGMAP_H */
 --=20
 2.25.4
 
@@ -113,19 +223,19 @@ Simon says - in Latin please.
 ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
 Thanks to Simon Glass for the translation =3D]=20
 
---OXfL5xGRrasGEqWY
+--J/dobhs11T7y2rNN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmCnUrIACgkQeFA3/03a
-ocXsTwf/UzPwJDsIi6gh0GTpTuRSG6VRiPtYs8kZkB9kx1wEd1GCW1r3NU8soVzq
-LQeqK3iSFhB6LYV7sloiF9XgxcvBxV3OY6hVIIWs2rDJncJ6lzpKPrLmQS3wpVU1
-8s/qoNYj7AR3+frciPYf5GWz3M3QOUNRJ3asghXtWbuqP/cCA6nwJaay/SgjY0NK
-KAFOOFsJRkpzCEHJhLDZJjrOoBSDDT3Yi5bAZciaNm6G1ir2jpeHBSi90ppRpenn
-TYL6M4Yb9E/2vPfRM1ZYRetCecGDmQ0/xWgTQDB5hg2DY+kgX0NfwaYrYAl2qgDa
-1KYEANAil2dNWWI+rdEuTMXWuTe1Tw==
-=G63J
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmCnUuEACgkQeFA3/03a
+ocWgfAf/Za0770rzW1myi6VSI9c7cZFGl7e63216ugFA98EQQ6iGboDNkeZ8rXJG
+HQXvdm3Wtpm8EFha5Ujk0usS2n1oIqA3ghHffuKxYqpgMNGANZDmxVfIDYgQaIpg
+Ke9FjwQEHKZo8q7XQklUu95tW49sBarDPz8SmEY7TMXZSNaL4ZDJV5DGhO5WLzIp
+atRDMlC9yQFKm1JqHcYkcLsI/Mm7zTZhSu8guE5HBf3RBtfX0toh3+G8RiiHFpau
+RJ1H9/sjRfAdXrbYguBo0AB9nOME+jMpsNrjcEMnG3R/GRb6dzSnzWL8ZqjfMPDr
+A7R/mjbX0pGQBNSAmhVyO+9krdqd3g==
+=2+JO
 -----END PGP SIGNATURE-----
 
---OXfL5xGRrasGEqWY--
+--J/dobhs11T7y2rNN--
