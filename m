@@ -2,144 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 975FD38C633
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:05:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B35E38C6B4
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234686AbhEUMHJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 08:07:09 -0400
-Received: from mga18.intel.com ([134.134.136.126]:17519 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229507AbhEUMHH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 21 May 2021 08:07:07 -0400
-IronPort-SDR: uBklas3PM9l57jdxKDTbyjcLj+tnLq3CJQHGya7DZ7+AplbceUfCPEbvd5cNa5C9szZDZ+R2p6
- XYztJLVwCh/Q==
-X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="188866420"
-X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="188866420"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 05:05:44 -0700
-IronPort-SDR: skltu30wB3m4YBEmmxugcZS/7efbrFzfmy7vEJWDiA5Ulgds4Dh/57hl0FKBNHSYjOP8j45TdU
- cNmQBuSDYeMA==
-X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="545366534"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 05:05:39 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lk3uJ-00Dhdw-St; Fri, 21 May 2021 15:05:35 +0300
-Date:   Fri, 21 May 2021 15:05:35 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org, Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v4 6/8] gpiolib: acpi: Add acpi_gpio_get_io_resource()
-Message-ID: <YKeiD8LawbyhnDZn@smile.fi.intel.com>
-References: <20210520140928.3252671-1-djrscally@gmail.com>
- <20210520140928.3252671-7-djrscally@gmail.com>
+        id S231795AbhEUMny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 08:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229689AbhEUMnv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 08:43:51 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65BADC061574
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:42:27 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id g38so27243314ybi.12
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+/Oecpa/9B6poHryXo2Ss657/x8VcGaDiINXjZStR3M=;
+        b=p2Xeg/ick8nPMzaDEjBiN7SZ9HRJosstDsZqnMbRdTciey3uuzrocdoX0UbSDNKRQA
+         YASWhp3l7LHkuGXff4QKovu20I8CdYFZLXFTpC9dj1oHQaQKX/oaBnwAlnaA/U4aDF35
+         XAqCbxiTAY79mUF3nQG4TD3tlGVgsAltZSVhbUNxJU83BrjcG1glP6VUdrQ1gRo91L/r
+         FP4H0qUvKZ7+3XLuGAdgzMB3LZJdj1WdcwyXf9bC86Iyrg3U+2pL3PYQyB4FugAM/Zi6
+         5JtUdrHiGjTFN7xTY8xd/JhzCAt5B4RqN0kWjP1TNbiYlCrqFBu5DTxrMsscVLzfG5tu
+         eYFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+/Oecpa/9B6poHryXo2Ss657/x8VcGaDiINXjZStR3M=;
+        b=HnB3/r6wAG0TIDKxHkIiRqrAbzLrehps84umIhidVX5eZAb1dT+C3JxFEr0mUGbN/2
+         sdVReajjNqeB+4wZqCFcwCsV2hc9mc/6vQGKiVMlAGtyBSnIwFfDNOV1A3W8OxVTsw0R
+         7n7b76EBekSVg6i4uGmGRBX56GhORDozrpK6WVTos+Y/iBgqiiJjd1nlYfyAKaJbf6DE
+         N9dYvVkT1N6eVfKL+KI4Tx27cp5oQ3HXUKKvBeVyLcsM/VEkz/W4LgohWme22zEBN4Yt
+         6fEgXuHUVnWcUDOqP6Sit0tvElLARyFH/I0bIenidO1CsClMePfOni0v6dEMO268YInz
+         fe8A==
+X-Gm-Message-State: AOAM533Z8K/8bAiW2dODls7P5PpBKZ6rcsdovvck40wltfFrrGN98NE1
+        +NddPrn6xgD+1aaM7EhEBW718bucth4aFfzXIDxqWg==
+X-Google-Smtp-Source: ABdhPJw8NSAh8QNT84J6otnyIWfXxOPOsTCOyvaPX/caUJfnFQc3Pj0sluJsHos7SGDAJfOig2tB9KwO7ObuEreAodo=
+X-Received: by 2002:a25:9d86:: with SMTP id v6mr14285722ybp.366.1621600946680;
+ Fri, 21 May 2021 05:42:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210520140928.3252671-7-djrscally@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210516061425.8757-1-aardelean@deviqon.com>
+In-Reply-To: <20210516061425.8757-1-aardelean@deviqon.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 21 May 2021 14:42:15 +0200
+Message-ID: <CAMpxmJVeZ2zASLN-TqasWHDvLbWN1K=4ZFTzw36_KTs6N7S-5g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-stmpe: fully use convert probe to device-managed
+To:     Alexandru Ardelean <aardelean@deviqon.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        alexandre.torgue@foss.st.com,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 20, 2021 at 03:09:26PM +0100, Daniel Scally wrote:
-> Add a function to verify that a given acpi_resource represents an IO
-> type GPIO resource, and return it if so.
+On Sun, May 16, 2021 at 8:14 AM Alexandru Ardelean
+<aardelean@deviqon.com> wrote:
+>
+> The driver doesn't look like it can be built as a kmod, so leaks cannot
+> happen via a rmmod mechanism.
+> The remove hook was removed via commit 3b52bb960ec6 ("gpio: stmpe: make
+> it explicitly non-modular").
+>
+> The IRQ is registered via devm_request_threaded_irq(), making the driver
+> only partially device-managed.
+>
+> In any case all resources should be made device-managed, mostly as a good
+> practice. That way at least the unwinding on error is happening in reverse
+> order (as the probe).
+>
+> This change also removes platform_set_drvdata() since the information is
+> never retrieved to be used in the driver.
+>
+> Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I applied the patch and tweaked the commit message because as Andy
+pointed out - this driver can be unbound over sysfs.
 
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
-> ---
-> Changes since v3:
-> 	- Patch introduced
-> 
->  drivers/gpio/gpiolib-acpi.c | 23 +++++++++++++++++++++++
->  include/linux/acpi.h        |  7 +++++++
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index 684ddb35d83b..9887bb684575 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -196,6 +196,29 @@ bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
->  }
->  EXPORT_SYMBOL_GPL(acpi_gpio_get_irq_resource);
->  
-> +/**
-> + * acpi_gpio_get_io_resource - Fetch details of an ACPI resource if it is a GPIO
-> + *			       I/O resource or return False if not.
-> + * @ares:	Pointer to the ACPI resource to fetch
-> + * @agpio:	Pointer to a &struct acpi_resource_gpio to store the output pointer
-> + */
-> +bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
-> +			       struct acpi_resource_gpio **agpio)
-> +{
-> +	struct acpi_resource_gpio *gpio;
-> +
-> +	if (ares->type != ACPI_RESOURCE_TYPE_GPIO)
-> +		return false;
-> +
-> +	gpio = &ares->data.gpio;
-> +	if (gpio->connection_type != ACPI_RESOURCE_GPIO_TYPE_IO)
-> +		return false;
-> +
-> +	*agpio = gpio;
-> +	return true;
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_gpio_get_io_resource);
-> +
->  static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
->  				      struct acpi_gpio_event *event)
->  {
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 170b9bebdb2b..e8ba7063c000 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -1098,6 +1098,8 @@ void __acpi_handle_debug(struct _ddebug *descriptor, acpi_handle handle, const c
->  #if defined(CONFIG_ACPI) && defined(CONFIG_GPIOLIB)
->  bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
->  				struct acpi_resource_gpio **agpio);
-> +bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
-> +			       struct acpi_resource_gpio **agpio);
->  int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int index);
->  #else
->  static inline bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
-> @@ -1105,6 +1107,11 @@ static inline bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
->  {
->  	return false;
->  }
-> +static inline bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
-> +					     struct acpi_resource_gpio **agpio)
-> +{
-> +	return false;
-> +}
->  static inline int acpi_dev_gpio_irq_get_by(struct acpi_device *adev,
->  					   const char *name, int index)
->  {
-> -- 
-> 2.25.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
