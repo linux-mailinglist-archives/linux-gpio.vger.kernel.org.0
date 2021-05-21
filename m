@@ -2,164 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CEFB38CD54
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 20:24:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BED238CE20
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 21:25:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233485AbhEUSZf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 14:25:35 -0400
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:37792 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238940AbhEUSZ3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 14:25:29 -0400
-Received: by mail-ot1-f43.google.com with SMTP id v19-20020a0568301413b0290304f00e3d88so18850139otp.4;
-        Fri, 21 May 2021 11:24:06 -0700 (PDT)
+        id S238932AbhEUT07 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 15:26:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238069AbhEUT0x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 15:26:53 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CB5C0613ED;
+        Fri, 21 May 2021 12:25:27 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id y14so20000433wrm.13;
+        Fri, 21 May 2021 12:25:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=fvwuU0+MYSgCo2emo2mby8YwzIh20quN69i/jewcdqk=;
+        b=uXhcuBR1rBX6+MjsTw0TttQu0s+mWQ+TkbkdxdvMgpVoTsU5jWPM4XDOWSAGyBZAM+
+         +mGE+1jHobO7W5yTECWFblJoy+3WfO4YzExgPDTPW0OHZGSZIHDmHD8KwW9GxFOdhVWZ
+         V0YIVPm3xtpYmmCvjGyF7NsG8LnSvGLqfd42R3GjSMxy2d8u3y4CtyHvuOcVpFy65Qnt
+         KZfwVM87W/hrfMctwAu8iji4Aj2RnDCzLPU4Pi3JiAW/JDgwCCU1KD7EYBECc3abuDWY
+         XSKfiKyOTkNTTZ9wlXY+6ENtOi6sjDk3eM/ZhxHWO3QhXGlVGsyBB1hc/eLuvIzMAUv8
+         9JFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M4QX6algtyH9gp6amFadSRByvGetkxKzfRSL1H+K+/U=;
-        b=dZEBWLB7i97uJhGOXEvv+Z/vHAvr4LJkatbPmPWfo/GQ8XvCwDhG4UOWGxg2jlD++V
-         ZpeUOr+k+5/npqypz1v9csH6VnwysvYTGUzmhQXP9efbSlIL/PRa07SWVILopE5hcKZk
-         EzqhcrYHEQCRPSuEP9d4Nu/jbapjEYmYiqbVIplvm9PpEKIcoVsTTl0y6N88+uNMMyg/
-         JW1tNyjzZf8dikHsp88q5sDK6Y1UNlxDbYegDQxYnKUmaZ5bi2PcWDt28a0APf8wVXQH
-         v0BNkbTciYpFGiurSDdb4nJv1Pf3NFqtB4rrfOkI/LTd3Y+/smuVwhb+l9xC0wwm+0SS
-         uCWw==
-X-Gm-Message-State: AOAM532OrtSH9UmJ9EDhraO6gun2LWIOct1MWA/aU5daHle7YBiarL1N
-        LlDQ/RKlz6t7PZzZ9gAjdE+/JO+dOw==
-X-Google-Smtp-Source: ABdhPJwUvx6WTekj9uYPxR7A/4oGbDYAgyfdI2nVf7dJuc994Lp+MYYuUcF7UyWjvLf9ApJ6oufM3A==
-X-Received: by 2002:a9d:51c7:: with SMTP id d7mr9244199oth.51.1621621445985;
-        Fri, 21 May 2021 11:24:05 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t26sm1442453otc.23.2021.05.21.11.24.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 May 2021 11:24:05 -0700 (PDT)
-Received: (nullmailer pid 151912 invoked by uid 1000);
-        Fri, 21 May 2021 18:24:03 -0000
-Date:   Fri, 21 May 2021 13:24:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jan Tuerk <jan.tuerk@emtrion.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=fvwuU0+MYSgCo2emo2mby8YwzIh20quN69i/jewcdqk=;
+        b=t/btbDa6seYaJTqPFM/VYPKfPxzGF2UcijqgvfQSB9pW6W/ar6WNTw3dK8pyqyFSqa
+         ZEPaTMc/P5uUraO98mOvrU9ca905EYgUJlieqLkSY0+n5L/0Ek3S6ED5RAezHwCQOJvD
+         zKUnr2Vc6p2FIxD+RBExQv3/ZYbZbGCbseNsKDRJezUtLdPlqZI+1HhAJ4Ss9d70U+hT
+         iCy4LZR889BCrnNizPGAjgCS2xb/MJmxEV/+oF4jWYJs/zE7OdLt1hOM7Xx3aVMrY56L
+         w/KqBYTEANrJalhdRoNjFLJlGckFvzJMQw0ZF0XamdcGbFBYWZDN17coKI7Smhak04Ym
+         kjwQ==
+X-Gm-Message-State: AOAM531nW0WC7Hk2KYp0kxcK3V7301AXp1FFYbTv9zcMgfx1JLx5hMjt
+        zyMW9/beneJGioHAwPqJWNM=
+X-Google-Smtp-Source: ABdhPJzk0TMRNGjlrE+WNMAkhVgrZq75o/VspCW4P5mv6PHAMeJDLibI7fK/d+i0DIafevp/iQ/fKA==
+X-Received: by 2002:adf:fdce:: with SMTP id i14mr10800827wrs.303.1621625125977;
+        Fri, 21 May 2021 12:25:25 -0700 (PDT)
+Received: from [192.168.1.211] ([91.110.20.117])
+        by smtp.gmail.com with ESMTPSA id r2sm3233190wrv.39.2021.05.21.12.25.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 May 2021 12:25:25 -0700 (PDT)
+Subject: Re: [PATCH v4 2/8] ACPI: scan: Add function to fetch dependent of
+ acpi device
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/3] dt-bindings: gpio: pcf857x: Convert to json-schema
-Message-ID: <20210521182403.GA50332@robh.at.kernel.org>
-References: <cover.1621583562.git.geert+renesas@glider.be>
- <52df0592c81ac000d3f486a9ba5a4d84b0f42c47.1621583562.git.geert+renesas@glider.be>
- <CACRpkdbQE1-WgD_BBkHx9DvJ=GfW7-PCoF-73TKGpgh4c6Epxw@mail.gmail.com>
- <CAMuHMdUqAwTSJuPXxJWgXGX1Hb=WLR3QtEm+RuhbyivFA5fUKA@mail.gmail.com>
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20210520140928.3252671-1-djrscally@gmail.com>
+ <20210520140928.3252671-3-djrscally@gmail.com>
+ <CAJZ5v0hoDswjr+7r4uf6jZvV3t+-UDtEA0V7A_MvdT_34XrbJA@mail.gmail.com>
+ <CAJZ5v0hdSi4BcZvhkyrtcBQqRL8CHtOtwUeYW7EnWL2zvKhDZw@mail.gmail.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <f92cf223-9cd4-9ea5-0152-d3a3d012cc31@gmail.com>
+Date:   Fri, 21 May 2021 20:25:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUqAwTSJuPXxJWgXGX1Hb=WLR3QtEm+RuhbyivFA5fUKA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hdSi4BcZvhkyrtcBQqRL8CHtOtwUeYW7EnWL2zvKhDZw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 21, 2021 at 12:23:47PM +0200, Geert Uytterhoeven wrote:
-> Hi Linus,
-> 
-> On Fri, May 21, 2021 at 12:04 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Fri, May 21, 2021 at 9:54 AM Geert Uytterhoeven
-> > <geert+renesas@glider.be> wrote:
-> > > Convert the PCF857x-compatible I/O expanders Device Tree binding
-> > > documentation to json-schema.
-> > >
-> > > Document missing compatible values, properties, and gpio hogs.
-> > >
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > (...)
-> > > Perhaps the "ti,pcf8575" construct should be removed, and the few users
-> > > fixed instead?
-> >
-> > You would rather list it as deprecated I think?
-> > It is ABI...
-> 
-> All DTS files use the "nxp,pcf8575" fallback, except for
-> arch/x86/platform/ce4100/falconfalls.dts.
-> The latter ain't working with Linux, as the Linux driver doesn't
-> match against "ti,pcf8575"...
+Hi Rafael
 
-Perhaps can it just be removed?
+On 20/05/2021 19:55, Rafael J. Wysocki wrote:
+> On Thu, May 20, 2021 at 8:33 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>> On Thu, May 20, 2021 at 4:11 PM Daniel Scally <djrscally@gmail.com> wrote:
+>>> In some ACPI tables we encounter, devices use the _DEP method to assert
+>>> a dependence on other ACPI devices as opposed to the OpRegions that the
+>>> specification intends. We need to be able to find those devices "from"
+>>> the dependee, so add a callback and a wrapper to walk over the
+>>> acpi_dep_list and return the dependent ACPI device.
+>>>
+>>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>>> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+>>> ---
+>>> Changes since v3:
+>>>
+>>>         Both new functions were renamed.
+>>>
+>>>  drivers/acpi/scan.c     | 38 ++++++++++++++++++++++++++++++++++++++
+>>>  include/acpi/acpi_bus.h |  1 +
+>>>  2 files changed, 39 insertions(+)
+>>>
+>>> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+>>> index 195635c3462b..1a76fbdfa669 100644
+>>> --- a/drivers/acpi/scan.c
+>>> +++ b/drivers/acpi/scan.c
+>>> @@ -2105,6 +2105,21 @@ static void acpi_bus_attach(struct acpi_device *device, bool first_pass)
+>>>                 device->handler->hotplug.notify_online(device);
+>>>  }
+>>>
+>>> +static int acpi_return_dep_dev(struct acpi_dep_data *dep, void *data)
+>> What about calling this acpi_get_first_consumer_cb()?
+> Or acpi_dev_get_first_consumer_dev_cb() if you want to be super-precise?
 
-> 
-> > > +  gpio-controller: true
-> >
-> > So this is implicitly using the generic schema in
-> > /dtschema/schemas/gpio/gpio.yaml
-> 
-> if you leave it out:
-> 
->     Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml: ignoring,
-> error in schema: properties
->     warning: no schema found in file:
-> Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
->     Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml:
-> properties: 'gpio-controller' is a dependency of '#gpio-cells'
->     from schema $id: http://devicetree.org/meta-schemas/gpios.yaml#
-> 
-> > > +  lines-initial-states:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description:
-> > > +      Bitmask that specifies the initial state of each line.
-> > > +      When a bit is set to zero, the corresponding line will be initialized to
-> > > +      the input (pulled-up) state.
-> > > +      When the  bit is set to one, the line will be initialized to the
-> > > +      low-level output state.
-> > > +      If the property is not specified all lines will be initialized to the
-> > > +      input state.
-> >
-> > Is this something we standardized or something that should
-> > actually be a custom "nxp," property we just missed it?
-> > (Looks like the latter... oh well, now it is there.)
-> 
-> Too late for an "nxp," prefix.
-> See the NOTE in drivers/gpio/gpio-pcf857x.c:
-> 
->         /* NOTE:  these chips have strange "quasi-bidirectional" I/O pins.
->          * We can't actually know whether a pin is configured (a) as output
->          * and driving the signal low, or (b) as input and reporting a low
->          * value ... without knowing the last value written since the chip
->          * came out of reset (if any).  We can't read the latched output.
->          *
->          * In short, the only reliable solution for setting up pin direction
->          * is to do it explicitly.  The setup() method can do that, but it
->          * may cause transient glitching since it can't know the last value
->          * written (some pins may need to be driven low).
->          *
->          * Using n_latch avoids that trouble.  When left initialized to zero,
->          * our software copy of the "latch" then matches the chip's all-ones
->          * reset state.  Otherwise it flags pins to be driven low.
->          */
-> 
-> > > +patternProperties:
-> > > +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
-> > > +    type: object
-> >
-> > But this is already in
-> > /dtschema/schemas/gpio/gpio-hog.yaml
-> > for nodename, isn't that where it properly belongs?
-> >
-> > I'm however confused here Rob will know what to do.
 
-This one is a bit odd.
+Sure; fine by me, and same for the other function
 
-> If we leave this out, something still has to refer to it?
-> I see no other binding doing that...
-
-It's selected by 'gpio-hog' being present, but here you need to make 
-sure that's the case.
-
-And I would hope you could define the node name to be just 1 of the 2 
-cases.
-
-Rob
