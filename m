@@ -2,217 +2,487 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D206038C741
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:57:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 224D138C745
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:58:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbhEUM6V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 08:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37218 "EHLO mail.kernel.org"
+        id S233900AbhEUM7U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 08:59:20 -0400
+Received: from mga09.intel.com ([134.134.136.24]:11447 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232290AbhEUM6A (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 21 May 2021 08:58:00 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CB1FF613D8;
-        Fri, 21 May 2021 12:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621601797;
-        bh=nLiWIiuQ0kxuVgZbeKOWUyyPgYrR77UCzFAel1jg22c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GWyNqRI73z76a3BP9cwhI1q4Y2hipTP6tw1R5/sCn21TJVTrA/u3S3/8OmIuokl/p
-         7lhzcQXLFM7jnJb1M6CwO/lMY58asJZn02RBlqMc2p+S6Ff2SyzdLqDJ/n6qlF0YnC
-         zrdXsEan6JTyXOxKqqHt5Pzd20nDEyZS5JK1+CUTbSpjdMCocMiKeSLgS/A7Dae1vP
-         IfwiX9FcCA1jZyxxjuDaNIhsAPXDPVoK17dQrkVfTC+FDbqtHE/Oj3z46pBzeXt9oy
-         X0OA0gCIoUkjxPIGYB3+VDpUU9KVO/t8gmExjUrW6+FlwNWXdavIPXYiTM9r96iawz
-         EKd8+0iy5bwQw==
-Received: by mail-ej1-f44.google.com with SMTP id et19so23273786ejc.4;
-        Fri, 21 May 2021 05:56:37 -0700 (PDT)
-X-Gm-Message-State: AOAM530LqUzEJjDG2TSEQpSMs71whYBkcHLzYSJxgcKEjDXYLv/mNp5N
-        o1cjdpNviEUrorV7U5GtfX6aKyrGr2qJnr2h4g==
-X-Google-Smtp-Source: ABdhPJzGaRvL+nvTQl0kfwM8PUcvI9A4QA9o8klAsKUu1HJYM2XvDEwapQ8O+ycaVUA1fNgEjfi/YaJxUfqe3vlaai0=
-X-Received: by 2002:a17:907:76e8:: with SMTP id kg8mr9610299ejc.130.1621601796326;
- Fri, 21 May 2021 05:56:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210511090122.6995-1-a-govindraju@ti.com> <20210517221513.GA3263368@robh.at.kernel.org>
- <861cefe2-7bb6-c435-ab0d-483155852876@ti.com>
-In-Reply-To: <861cefe2-7bb6-c435-ab0d-483155852876@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 21 May 2021 07:56:24 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKyuXYJocBMLGXL6aXuK0YnrW7qdLugV2bxdP-LJ=2+cg@mail.gmail.com>
-Message-ID: <CAL_JsqKyuXYJocBMLGXL6aXuK0YnrW7qdLugV2bxdP-LJ=2+cg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: gpio-davinci: Convert to json-schema
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Aswath Govindraju <a-govindraju@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        id S232256AbhEUM7K (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 21 May 2021 08:59:10 -0400
+IronPort-SDR: Ebv/aroCptOrbvMCfv315JuDJ/7zO/Bgn2QoMusyW+iz5jMy+sTS2ClpMW0j7UZDxbM1J+usuU
+ SaXKHOHvXQVw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="201511267"
+X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
+   d="scan'208";a="201511267"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 05:57:46 -0700
+IronPort-SDR: crRHv+VXHHm3QxRly6SLfRhQ3QkM3+nfkHjkuY2hto5E8N0LKoj2ndH9iwhhbJqqh+MFAy8IcS
+ Pm48BhooAG0w==
+X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
+   d="scan'208";a="395309749"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 05:57:40 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lk4ie-00Di9Q-OH; Fri, 21 May 2021 15:57:36 +0300
+Date:   Fri, 21 May 2021 15:57:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org, Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v4 7/8] platform/x86: Add intel_skl_int3472 driver
+Message-ID: <YKeuQM/O9+jDZFpb@smile.fi.intel.com>
+References: <20210520140928.3252671-1-djrscally@gmail.com>
+ <20210520140928.3252671-8-djrscally@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210520140928.3252671-8-djrscally@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 21, 2021 at 3:32 AM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
->
-> Hi Rob, All
->
-> On 18/05/2021 01:15, Rob Herring wrote:
-> > On Tue, May 11, 2021 at 02:31:20PM +0530, Aswath Govindraju wrote:
-> >> Convert gpio-davinci dt-binding documentation from txt to yaml format.
-> >>
-> >> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
-> >> ---
-> >>   .../devicetree/bindings/gpio/gpio-davinci.txt | 167 ---------------
-> >>   .../bindings/gpio/gpio-davinci.yaml           | 193 ++++++++++++++++++
-> >>   MAINTAINERS                                   |   2 +-
-> >>   3 files changed, 194 insertions(+), 168 deletions(-)
-> >>   delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> >> deleted file mode 100644
-> >> index 696ea46227d1..000000000000
-> >> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> >> +++ /dev/null
-> >> @@ -1,167 +0,0 @@
-> >> -Davinci/Keystone GPIO controller bindings
-> >> -
-> >> -Required Properties:
-> >> -- compatible: should be "ti,dm6441-gpio": for Davinci da850 SoCs
-> >> -                    "ti,keystone-gpio": for Keystone 2 66AK2H/K, 66AK2L,
-> >> -                                            66AK2E SoCs
-> >> -                    "ti,k2g-gpio", "ti,keystone-gpio": for 66AK2G
-> >> -                    "ti,am654-gpio", "ti,keystone-gpio": for TI K3 AM654
-> >> -                    "ti,j721e-gpio", "ti,keystone-gpio": for J721E SoCs
-> >> -                    "ti,am64-gpio", "ti,keystone-gpio": for AM64 SoCs
-> >> -
->
-> [...]
->
-> >> -};
-> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-> >> new file mode 100644
-> >> index 000000000000..1e16172669c7
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-> >> @@ -0,0 +1,193 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/gpio/gpio-davinci.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: GPIO controller for Davinci and keystone devices
-> >> +
-> >> +maintainers:
-> >> +  - Keerthy <j-keerthy@ti.com>
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    oneOf:
-> >> +      - items:
-> >> +          - enum:
-> >> +              - ti,k2g-gpio
-> >> +              - ti,am654-gpio
-> >> +              - ti,j721e-gpio
-> >> +              - ti,am64-gpio
-> >> +          - const: ti,keystone-gpio
-> >> +
-> >> +      - items:
-> >> +          - const: ti,dm6441-gpio
-> >> +      - items:
-> >> +          - const: ti,keystone-gpio
-> >
-> > These 2 can be expressed as an 'enum'.
-> >
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +    description:
-> >> +      Physical base address of the controller and the size of memory mapped registers.
-> >
-> > Drop. That's every 'reg' property.
-> >
-> >> +
-> >> +  gpio-controller: true
-> >> +
-> >> +  gpio-ranges: true
-> >> +
-> >> +  gpio-line-names:
-> >> +    description: strings describing the names of each gpio line.
-> >
-> > Any constraints like min/max number of lines?
-> >
-> >> +
-> >> +  "#gpio-cells":
-> >> +    const: 2
-> >> +    description:
-> >> +      first cell is the pin number and second cell is used to specify optional parameters (unused).
-> >> +
-> >> +  interrupts:
-> >> +    description:
-> >> +      Array of GPIO interrupt number. Only banked or unbanked IRQs are supported at a time.
-> >
-> > Needs constraints. How many items and what are they?
-> >
-> >> +
-> >> +  ti,ngpio:
-> >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >> +    description: The number of GPIO pins supported consecutively.
-> >> +    minimum: 1
-> >> +
-> >> +  ti,davinci-gpio-unbanked:
-> >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >> +    description: The number of GPIOs that have an individual interrupt line to processor.
-> >> +    minimum: 0
-> >> +
-> >> +  clocks:
-> >> +    maxItems: 1
-> >> +    description:
-> >> +      clock-specifier to represent input to the GPIO controller.
-> >
-> > Drop description.
-> >
-> >> +
-> >> +  clock-names:
-> >> +    const: gpio
-> >> +
-> >> +  interrupt-controller: true
-> >> +
-> >> +  power-domains:
-> >> +    maxItems: 1
-> >> +    description:
-> >> +      Phandle to the power domain provider node.
-> >
-> > Drop.
-> >
-> >> +
-> >> +  "#interrupt-cells":
-> >> +    const: 2
-> >> +
-> >> +patternProperties:
-> >> +  "-hog$":
-> >> +    type: object
-> >> +    properties:
-> >> +      gpios: true
-> >> +      gpio-hog: true
-> >> +      input: true
-> >> +      output-high: true
-> >> +      output-low: true
-> >> +      line-name: true
-> >> +
-> >> +    required:
-> >> +      - gpio-hog
-> >> +      - gpios
->
-> I see that gpio-hog.yaml dtschema has been added.
-> Can it be reused here and how?
+On Thu, May 20, 2021 at 03:09:27PM +0100, Daniel Scally wrote:
+> ACPI devices with _HID INT3472 are currently matched to the tps68470
+> driver, however this does not cover all situations in which that _HID
+> occurs. We've encountered three possibilities:
+> 
+> 1. On Chrome OS devices, an ACPI device with _HID INT3472 (representing
+> a physical TPS68470 device) that requires a GPIO and OpRegion driver
+> 2. On devices designed for Windows, an ACPI device with _HID INT3472
+> (again representing a physical TPS68470 device) which requires GPIO,
+> Clock and Regulator drivers.
+> 3. On other devices designed for Windows, an ACPI device with _HID
+> INT3472 which does **not** represent a physical TPS68470, and is instead
+> used as a dummy device to group some system GPIO lines which are meant
+> to be consumed by the sensor that is dependent on this entry.
+> 
+> This commit adds a new module, registering a platform driver to deal
+> with the 3rd scenario plus an i2c driver to deal with #1 and #2, by
+> querying the CLDB buffer found against INT3472 entries to determine
+> which is most appropriate.
 
-It's applied to any node containing 'gpio-hog' property, so all you need is:
+...
 
-required:
-  - gpio-hog
+>  create mode 100644 drivers/platform/x86/intel-int3472/Kconfig
+>  create mode 100644 drivers/platform/x86/intel-int3472/Makefile
+>  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_clk_and_regulator.c
+>  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.c
+>  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.h
+>  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c
+>  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_tps68470.c
+
+I would rather see this under .../intel/int3472/ but this we may do later on.
+
+...
+
+> +INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
+> +M:	Daniel Scally <djrscally@gmail.com>
+> +S:	Maintained
+> +F:	drivers/platform/x86/intel-int3472/intel_skl_int3472_*
+
+F:	drivers/platform/x86/intel-int3472/
+
+Should be sufficient.
+
+...
+
+> +	help
+> +	  This driver adds support for the INT3472 ACPI devices found on some
+> +	  Intel SkyLake devices.
+
+I would rephrase this
+
+"This driver adds power controller support for the Intel SkyCam devices found
+on the Intel SkyLake platforms."
+
+(Technically speaking this IP is in the entire CPU family, but may be switched
+ off)
+
+It's also possible to google for better text based on what Windows says about
+it.
+
+> +	  The INT3472 is an Intel camera power controller, a logical device
+> +	  found on some Skylake-based systems that can map to different
+
+"The INT3472 is a camera power controller, a logical device found on some Intel
+Skylake-based systems that can map to different..."
+
+> +	  hardware devices depending on the platform. On machines
+> +	  designed for Chrome OS, it maps to a TPS68470 camera PMIC. On
+> +	  machines designed for Windows, it maps to either a TP68470
+> +	  camera PMIC, a uP6641Q sensor PMIC, or a set of discrete GPIOs
+> +	  and power gates.
+> +
+> +	  If your device was designed for Chrome OS, this driver will provide
+> +	  an ACPI OpRegion, which must be available before any of the devices
+> +	  using it are probed. For this reason, you should select Y if your
+> +	  device was designed for ChromeOS. For the same reason the
+> +	  I2C_DESIGNWARE_PLATFORM option must be set to Y too.
+> +
+> +	  Say Y or M here if you have a SkyLake device designed for use
+> +	  with Windows or ChromeOS. Say N here if you are not sure.
+> +
+> +	  The module will be named "intel-skl-int3472"
+
+Period missed.
+
+...
+
+> +/*
+> + * The regulators have to have .ops to be valid, but the only ops we actually
+> + * support are .enable and .disable which are handled via .ena_gpiod. Pass an
+> + * empty struct to clear the check without lying about capabilities.
+> + */
+> +static const struct regulator_ops int3472_gpio_regulator_ops;
+
+Hmm... Can you use 'reg-fixed-voltage' platform device instead?
+
+One example, although gone from upstream, but available in the tree, I can
+point to is this:
+
+  git log -p -- arch/x86/platform/intel-mid/device_libs/platform_bcm43xx.c
+
+It uses constant structures, but I think you may dynamically generate the
+necessary ones.
+
+...
+
+> +static int skl_int3472_clk_prepare(struct clk_hw *hw)
+> +{
+> +	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+> +
+> +	gpiod_set_value(clk->ena_gpio, 1);
+> +	gpiod_set_value(clk->led_gpio, 1);
+> +
+> +	return 0;
+> +}
+> +
+> +static void skl_int3472_clk_unprepare(struct clk_hw *hw)
+> +{
+> +	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+> +
+> +	gpiod_set_value(clk->ena_gpio, 0);
+> +	gpiod_set_value(clk->led_gpio, 0);
+> +}
+> +
+> +static int skl_int3472_clk_enable(struct clk_hw *hw)
+> +{
+> +	/*
+> +	 * We're just turning a GPIO on to enable the clock, which operation
+> +	 * has the potential to sleep. Given .enable() cannot sleep, but
+> +	 * .prepare() can, we toggle the GPIO in .prepare() instead. Thus,
+> +	 * nothing to do here.
+> +	 */
+
+It's a nice comment, but you are using non-sleeping GPIO value setters. Perhaps
+you need to replace them with gpiod_set_value_cansleep()?
+
+> +	return 0;
+> +}
+
+...
+
+> +static unsigned int skl_int3472_get_clk_frequency(struct int3472_discrete_device *int3472)
+> +{
+> +	union acpi_object *obj;
+> +	unsigned int freq;
+> +
+> +	obj = skl_int3472_get_acpi_buffer(int3472->sensor, "SSDB");
+> +	if (IS_ERR(obj))
+> +		return 0; /* report rate as 0 on error */
+> +
+> +	if (obj->buffer.length < CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET + sizeof(u32)) {
+> +		dev_err(int3472->dev, "The buffer is too small\n");
+
+> +		goto out_free_buff;
+
+First of all, freq will be uninitialized here.
+
+I'm wondering if you can simple drop the goto and replace it with direct steps, i.e.
+	kfree(obj);
+	return 0;
+
+> +	}
+> +
+> +	freq = *(u32 *)(obj->buffer.pointer + CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET);
+> +
+> +out_free_buff:
+> +	kfree(obj);
+> +	return freq;
+> +}
+
+...
+
+> +int skl_int3472_register_clock(struct int3472_discrete_device *int3472)
+> +{
+> +	struct clk_init_data init = {
+> +		.ops = &skl_int3472_clock_ops,
+> +		.flags = CLK_GET_RATE_NOCACHE,
+> +	};
+
+> +	int ret = 0;
+
+I would not assign it here. See below.
+
+> +	init.name = kasprintf(GFP_KERNEL, "%s-clk",
+> +			      acpi_dev_name(int3472->adev));
+> +	if (!init.name)
+> +		return -ENOMEM;
+> +
+> +	int3472->clock.frequency = skl_int3472_get_clk_frequency(int3472);
+> +
+> +	int3472->clock.clk_hw.init = &init;
+> +	int3472->clock.clk = clk_register(&int3472->adev->dev,
+> +					  &int3472->clock.clk_hw);
+> +	if (IS_ERR(int3472->clock.clk)) {
+> +		ret = PTR_ERR(int3472->clock.clk);
+> +		goto out_free_init_name;
+> +	}
+> +
+> +	int3472->clock.cl = clkdev_create(int3472->clock.clk, NULL,
+> +					  int3472->sensor_name);
+> +	if (!int3472->clock.cl) {
+> +		ret = -ENOMEM;
+> +		goto err_unregister_clk;
+> +	}
+
+> +	goto out_free_init_name;
+
+Better pattern is
+
+	kfree(init.name);
+	return 0;
+
+directly here.
+
+> +err_unregister_clk:
+> +	clk_unregister(int3472->clock.clk);
+> +out_free_init_name:
+> +	kfree(init.name);
+> +
+> +	return ret;
+> +}
+
+...
+
+> +union acpi_object *skl_int3472_get_acpi_buffer(struct acpi_device *adev,
+> +					       char *id)
+
+One line?
+
+...
+
+> +int skl_int3472_fill_cldb(struct acpi_device *adev, struct int3472_cldb *cldb)
+> +{
+> +	union acpi_object *obj;
+
+> +	int ret = 0;
+
+I would assign it closer to the real use, see below.
+
+> +	obj = skl_int3472_get_acpi_buffer(adev, "CLDB");
+> +	if (IS_ERR(obj))
+> +		return PTR_ERR(obj);
+> +
+> +	if (obj->buffer.length > sizeof(*cldb)) {
+> +		acpi_handle_err(adev->handle, "The CLDB buffer is too large\n");
+> +		ret = -EINVAL;
+> +		goto out_free_obj;
+> +	}
+> +
+> +	memcpy(cldb, obj->buffer.pointer, obj->buffer.length);
+
+ret = 0;
+
+> +out_free_obj:
+> +	kfree(obj);
+> +	return ret;
+> +}
+
+...
+
+> +union acpi_object *skl_int3472_get_acpi_buffer(struct acpi_device *adev,
+> +					       char *id);
+
+One line?
+
+...
+
+> +static const struct int3472_sensor_config *
+> +skl_int3472_get_sensor_module_config(struct int3472_discrete_device *int3472)
+> +{
+> +	const struct int3472_sensor_config *ret;
+> +	union acpi_object *obj;
+> +	unsigned int i;
+> +
+> +	obj = acpi_evaluate_dsm_typed(int3472->sensor->handle,
+> +				      &cio2_sensor_module_guid, 0x00,
+> +				      0x01, NULL, ACPI_TYPE_STRING);
+> +
+> +	if (!obj) {
+> +		dev_err(int3472->dev,
+> +			"Failed to get sensor module string from _DSM\n");
+> +		return ERR_PTR(-ENODEV);
+> +	}
+> +
+> +	if (obj->string.type != ACPI_TYPE_STRING) {
+> +		dev_err(int3472->dev,
+> +			"Sensor _DSM returned a non-string value\n");
+> +		ret = ERR_PTR(-EINVAL);
+> +		goto out_free_obj;
+> +	}
+
+> +	ret = ERR_PTR(-EINVAL);
+> +	for (i = 0; i < ARRAY_SIZE(int3472_sensor_configs); i++) {
+> +		if (!strcmp(int3472_sensor_configs[i].sensor_module_name,
+> +			    obj->string.pointer)) {
+> +			ret = &int3472_sensor_configs[i];
+> +			break;
+> +		}
+> +	}
+
+Can be refactored like this:
+
+	for (i = 0; i < ARRAY_SIZE(int3472_sensor_configs); i++) {
+		if (!strcmp(int3472_sensor_configs[i].sensor_module_name,
+			    obj->string.pointer))
+			break;
+	}
+
+	ACPI_FREE(obj);
+
+	if (i >= ARRAY_SIZE(int3472_sensor_configs))
+		return ERR_PTR(-EINVAL);
+
+	return &int3472_sensor_configs[i];
+
+> +out_free_obj:
+> +	ACPI_FREE(obj);
+> +	return ret;
+
+And this moved to the one user above.
+
+> +}
+
+...
+
+> +		dev_err(int3472->dev, "Invalid GPIO type 0x%02x for clock\n",
+> +			type);
+
+One line?
+
+...
+
+> + * Return:
+> + * * 0		- When all resources found are handled properly.
+
+Positive number ... ?
+
+> + * * -EINVAL	- If the resource is not a GPIO IO resource
+> + * * -ENODEV	- If the resource has no corresponding _DSM entry
+> + * * -Other	- Errors propagated from one of the sub-functions.
+
+...
+
+> +	if (!acpi_gpio_get_io_resource(ares, &agpio))
+> +		return 1; /* Deliberately positive so parsing continues */
+
+Move it to description above?
+
+...
+
+> +	/*
+> +	 * n_gpios + 2 because the index of this _DSM function is 1-based and
+> +	 * the first function is just a count.
+> +	 */
+> +	obj = acpi_evaluate_dsm_typed(int3472->adev->handle,
+> +				      &int3472_gpio_guid, 0x00,
+> +				      int3472->n_gpios + 2,
+> +				      NULL, ACPI_TYPE_INTEGER);
+
+can we rename n_gpios -> ngpios?
+
+...
+
+> +	if (int3472->clock.ena_gpio) {
+> +		ret = skl_int3472_register_clock(int3472);
+> +		if (ret)
+> +			goto out_free_res_list;
+> +	} else {
+
+Hmm... Have I got it correctly that we can't have ena_gpio && led_gpio together?
+
+> +		if (int3472->clock.led_gpio)
+> +			dev_warn(int3472->dev,
+> +				 "No clk GPIO. The privacy LED won't work\n");
+> +	}
+
+...
+
+> +		dev_err(&client->dev, "Failed to create regmap: %ld\n",
+> +			PTR_ERR(regmap));
+
+One line?
+
+...
+
+> +	ret = skl_int3472_fill_cldb(adev, &cldb);
+> +	if (!ret && cldb.control_logic_type != 2) {
+> +		dev_err(&client->dev, "Unsupported control logic type %u\n",
+> +			cldb.control_logic_type);
+> +		return -EINVAL;
+> +	}
+
+> +	if (ret)
+> +		ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
+
+This I don't like. Since we get a returned variable with different meaning, can
+we use a specific variable name for it? On top of that, I would rather see
+something like this:
+
+	whatever = skl_...(...);
+	switch (whatever) {
+	case WHATEVER_ONE_CASE:
+		if (cldb.control_logic_type != 2) {
+			dev_err(&client->dev, "Unsupported control logic type %u\n",
+				cldb.control_logic_type);
+			return -EINVAL;
+		}
+		cells_data = tps68470_win;
+		cells_size = ARRAY_SIZE(tps68470_win);
+		break;
+	case WHATEVER_ANOTHER_CASE:
+		...
+		break;
+	default:
+		...Oops...
+		break; // or return -ERRNO
+	}
+
+	return devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
+				    cells_data, cells_size, NULL, 0, NULL);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
