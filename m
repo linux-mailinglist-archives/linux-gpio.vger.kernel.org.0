@@ -2,86 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B35E38C6B4
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:42:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B6B638C6C6
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:46:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231795AbhEUMny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 08:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45418 "EHLO
+        id S233900AbhEUMsA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 08:48:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbhEUMnv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 08:43:51 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65BADC061574
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:42:27 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id g38so27243314ybi.12
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:42:27 -0700 (PDT)
+        with ESMTP id S232170AbhEUMr7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 08:47:59 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32F4C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:46:32 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id y2so27267246ybq.13
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:46:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+/Oecpa/9B6poHryXo2Ss657/x8VcGaDiINXjZStR3M=;
-        b=p2Xeg/ick8nPMzaDEjBiN7SZ9HRJosstDsZqnMbRdTciey3uuzrocdoX0UbSDNKRQA
-         YASWhp3l7LHkuGXff4QKovu20I8CdYFZLXFTpC9dj1oHQaQKX/oaBnwAlnaA/U4aDF35
-         XAqCbxiTAY79mUF3nQG4TD3tlGVgsAltZSVhbUNxJU83BrjcG1glP6VUdrQ1gRo91L/r
-         FP4H0qUvKZ7+3XLuGAdgzMB3LZJdj1WdcwyXf9bC86Iyrg3U+2pL3PYQyB4FugAM/Zi6
-         5JtUdrHiGjTFN7xTY8xd/JhzCAt5B4RqN0kWjP1TNbiYlCrqFBu5DTxrMsscVLzfG5tu
-         eYFg==
+        bh=uJtv8tO+srMCLhjCuMBBHQBC6gQTo/DB8dTOrmtQwz0=;
+        b=u3Q+sm3on6BmPGIfpRvuXdbC9eMKxaBuvgYy1JWnnzsycj2cZfrZU371lePTA11gtu
+         +SE8wjEYS/h6moT8fj80cqELiBU9lIcOjUu7wN1poP1BOvEYLD52cImhNzreVJApnRJZ
+         vXk7Vg5oXpnj/qUiaAThRHYJKPqPnKCtpTsVzsVPSdISWQaTzxIupYxa5U2p9c+9+6QA
+         c9MU/drup9paSSjoteh8IbFJHeOpLLKGCboKFwNUAObbMrxoJiBTL5xWl9eioou7ZmbE
+         XEJuZZsBZzzA/SY7dj8PcotdPEIfLOSA4uxuLMReaUCNlChAvXgK3qEry3bnmfIW4CyC
+         DsGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+/Oecpa/9B6poHryXo2Ss657/x8VcGaDiINXjZStR3M=;
-        b=HnB3/r6wAG0TIDKxHkIiRqrAbzLrehps84umIhidVX5eZAb1dT+C3JxFEr0mUGbN/2
-         sdVReajjNqeB+4wZqCFcwCsV2hc9mc/6vQGKiVMlAGtyBSnIwFfDNOV1A3W8OxVTsw0R
-         7n7b76EBekSVg6i4uGmGRBX56GhORDozrpK6WVTos+Y/iBgqiiJjd1nlYfyAKaJbf6DE
-         N9dYvVkT1N6eVfKL+KI4Tx27cp5oQ3HXUKKvBeVyLcsM/VEkz/W4LgohWme22zEBN4Yt
-         6fEgXuHUVnWcUDOqP6Sit0tvElLARyFH/I0bIenidO1CsClMePfOni0v6dEMO268YInz
-         fe8A==
-X-Gm-Message-State: AOAM533Z8K/8bAiW2dODls7P5PpBKZ6rcsdovvck40wltfFrrGN98NE1
-        +NddPrn6xgD+1aaM7EhEBW718bucth4aFfzXIDxqWg==
-X-Google-Smtp-Source: ABdhPJw8NSAh8QNT84J6otnyIWfXxOPOsTCOyvaPX/caUJfnFQc3Pj0sluJsHos7SGDAJfOig2tB9KwO7ObuEreAodo=
-X-Received: by 2002:a25:9d86:: with SMTP id v6mr14285722ybp.366.1621600946680;
- Fri, 21 May 2021 05:42:26 -0700 (PDT)
+        bh=uJtv8tO+srMCLhjCuMBBHQBC6gQTo/DB8dTOrmtQwz0=;
+        b=Mo8L+DFi39BKeEjo6fGHnDsDI2+bYN3XIvVeYwBtEZsRKq9gYxBJ68ygPXIUWoS8/g
+         hIo6CklNXTLGyUgTXGxOqSx2ipXIl6QKzEedOksPspOoglv20dxMSXJiAjK/XYxGQh1f
+         MbkyO1JeQ/PO+9LgF1GD8uTEDMpjx1Jw+h3SHpLp0tjOcHYVxJUr7P+0WdMh+oNY4Pe7
+         G9vKO1Eg0AftK4zVlKatq7e1KFlXg+1Bs+PulqdTrrHVjU5VSFT3dQBgbN1tXIpTrDui
+         c4nYdDrG6Llu/gyLIwpVTWWiPo0xrcL+63KDs60dKimvCBjOvBvkstzcNLTkp+iPSv7V
+         r0ZQ==
+X-Gm-Message-State: AOAM530aQK/tDrNSV92BowrM3xuZoZVs527C31QxyAyjAg4HoDB2kGvS
+        irgdc87Ql46y2pqCXfHgrbw3tDCAAOLingkv4/S9pQ==
+X-Google-Smtp-Source: ABdhPJwo1Fd1OhhBBCEBsJ5ei5vOtm0WPuwFHnpGY6cC1UHbm4x8mSHDgVoSMHyd+1f34eFkkO5eRsYDpPANBBfQc/o=
+X-Received: by 2002:a05:6902:1026:: with SMTP id x6mr13499261ybt.23.1621601191892;
+ Fri, 21 May 2021 05:46:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210516061425.8757-1-aardelean@deviqon.com>
-In-Reply-To: <20210516061425.8757-1-aardelean@deviqon.com>
+References: <20210514092332.19966-1-aardelean@deviqon.com>
+In-Reply-To: <20210514092332.19966-1-aardelean@deviqon.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 21 May 2021 14:42:15 +0200
-Message-ID: <CAMpxmJVeZ2zASLN-TqasWHDvLbWN1K=4ZFTzw36_KTs6N7S-5g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-stmpe: fully use convert probe to device-managed
+Date:   Fri, 21 May 2021 14:46:21 +0200
+Message-ID: <CAMpxmJX=nrx6FQ2XVONf+mQWa_HsnQkEk4S-beqgTpxXi80FMQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-da9055: remove platform_set_drvdata() +
+ cleanup probe
 To:     Alexandru Ardelean <aardelean@deviqon.com>
 Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        alexandre.torgue@foss.st.com,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+        Support Opensource <support.opensource@diasemi.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, May 16, 2021 at 8:14 AM Alexandru Ardelean
+On Fri, May 14, 2021 at 11:23 AM Alexandru Ardelean
 <aardelean@deviqon.com> wrote:
 >
-> The driver doesn't look like it can be built as a kmod, so leaks cannot
-> happen via a rmmod mechanism.
-> The remove hook was removed via commit 3b52bb960ec6 ("gpio: stmpe: make
-> it explicitly non-modular").
+> The platform_set_drvdata() call is only useful if we need to retrieve back
+> the private information.
+> Since the driver doesn't do that, it's not useful to have it.
 >
-> The IRQ is registered via devm_request_threaded_irq(), making the driver
-> only partially device-managed.
->
-> In any case all resources should be made device-managed, mostly as a good
-> practice. That way at least the unwinding on error is happening in reverse
-> order (as the probe).
->
-> This change also removes platform_set_drvdata() since the information is
-> never retrieved to be used in the driver.
+> If this is removed, we can also just do a direct return on
+> devm_gpiochip_add_data(). We don't need to print that this call failed as
+> there are other ways to log/see this during probe.
 >
 > Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
+> ---
+>  drivers/gpio/gpio-da9055.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-da9055.c b/drivers/gpio/gpio-da9055.c
+> index 6ad0c37b862e..49446a030f10 100644
+> --- a/drivers/gpio/gpio-da9055.c
+> +++ b/drivers/gpio/gpio-da9055.c
+> @@ -133,7 +133,6 @@ static int da9055_gpio_probe(struct platform_device *pdev)
+>  {
+>         struct da9055_gpio *gpio;
+>         struct da9055_pdata *pdata;
+> -       int ret;
+>
+>         gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+>         if (!gpio)
+> @@ -146,15 +145,7 @@ static int da9055_gpio_probe(struct platform_device *pdev)
+>         if (pdata && pdata->gpio_base)
+>                 gpio->gp.base = pdata->gpio_base;
+>
+> -       ret = devm_gpiochip_add_data(&pdev->dev, &gpio->gp, gpio);
+> -       if (ret < 0) {
+> -               dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
+> -               return ret;
+> -       }
+> -
+> -       platform_set_drvdata(pdev, gpio);
+> -
+> -       return 0;
+> +       return devm_gpiochip_add_data(&pdev->dev, &gpio->gp, gpio);
+>  }
+>
+>  static struct platform_driver da9055_gpio_driver = {
+> --
+> 2.31.1
+>
 
-I applied the patch and tweaked the commit message because as Andy
-pointed out - this driver can be unbound over sysfs.
+Patch applied, thanks!
 
 Bart
