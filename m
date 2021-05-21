@@ -2,57 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97C3D38C726
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C57F138C736
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 14:55:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233014AbhEUMzZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 08:55:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47514 "EHLO
+        id S231841AbhEUM5V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 08:57:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235378AbhEUMw5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 08:52:57 -0400
+        with ESMTP id S231970AbhEUM4t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 08:56:49 -0400
 Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDAFC06138B
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:51:31 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id r7so5244523ybs.10
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:51:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A25DC0613CE
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:55:25 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id b13so25945882ybk.4
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 05:55:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1031xvHox3IqpUP8Gjv1QFEbAZ7S49fD5R5PiXK2yYg=;
-        b=DLPG6z39HWjkxmpSqFUVCek0GlAQ1nb3A4zG8N44ISIo/yHAWk3QMs+Ty0UCv/P7Fe
-         CBKsJmbQ/pWH1BAGQlWGyMeFlopMoCG2OqTIgg+hFaG1NzlvdKJTjgBDHEfHUmWLzZm2
-         dW8abifNbkrsW1h6G24EFgaBHGhJS82Dx6Jg+DGsGIYDMgE5nepOEOMfE9y8V1CswX8m
-         AgAsrnfobg20HP+s6frD0Zi4ngys79ksTfpMc8otFYqcfkW6BgkbEYw2ZPWx0AXt6kib
-         SoxFLTO8YCP+/N/+CDYUVNjR9cFjCYGbx1AV705Kp51tLnUPHCX7Nodh0ozoQ1pLsw1g
-         2H1Q==
+        bh=vztkWmHQgKWPGJn4DJHohOXTvYdeCFCMfmSXs9/hr3M=;
+        b=L0vrt59WhxgD223N4WjstHuvb3x0kMuwpTPtDH7AKGHLMPTAg6ba6ZHaKOSxexwizv
+         HYv4WxhsA1Kc0qdYd9P5oheM3mP8jlxq3oh9uLtPy1nQ1hy+vEBYulp6c8jTtbbdNmmV
+         nYvgc/pGqkKZE3Ye6hrEJ61lMl2Cn3P8uPsLbDTj7pmB92IMhUEPso406xRnnb2zbsKS
+         SP3fWuHDx4ihrXo7HUBeGmfaknoTUtR4K2NMmFxU5YVgEesXJeogXu6FqC0Y6PfmvNyk
+         QXuJTtOr3OKbEx2wAVcJgxmx2+CvX8LAgseksMQcMGwv/U1pZsbqdLOdOvK5xIWgY4Pv
+         t+Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1031xvHox3IqpUP8Gjv1QFEbAZ7S49fD5R5PiXK2yYg=;
-        b=WR0vUXaQ95cPFT6HMNH6zd6VtSwwzHVuIJei8wAS8qH79/gFr+jHDu0DlZP31wSbks
-         P0HKYDiOJlMvdFvbH3/gS2LlT3D+GWASalq3HOs4zsluJHwrkoUkG4r+ysOZXEMucg3N
-         1N2xSDPEG7Rf9qXAoexxXJYS7sINloAfmX2bg51S9m1sHH0lu0GSt9Ef+UaL/byFcQ+N
-         TOFXXgTCuGY5AlHZvdt06ZTE0afCvqcfFIW0SyCzpmKTr2YGFYoaFZo5+YeLGfjBAy40
-         bVjYG9ntiW4oKYfbzfvcy9VIC3RTMuT4wGZidCCQilqo0VUgSff2vQp86BXdjx6psRxv
-         Zadw==
-X-Gm-Message-State: AOAM533xTZMr7hTjcihpjm7WwR7rfSZ7DJ4Qy/juzdRKVDho1rLsJKn2
-        yuVahJVsvzhAcvzOP5xTQ27MJ2eUH0n+UNLKyfro6g==
-X-Google-Smtp-Source: ABdhPJx3gTH4ovT/cdCks76OeioQC7H7qLDbHfby4Rjjwj7m33rMzDXkAs3x6D36pyAaUZj8Tyv3wuHazQeW0FTLWKA=
-X-Received: by 2002:a25:287:: with SMTP id 129mr14691259ybc.312.1621601490936;
- Fri, 21 May 2021 05:51:30 -0700 (PDT)
+        bh=vztkWmHQgKWPGJn4DJHohOXTvYdeCFCMfmSXs9/hr3M=;
+        b=oHz1HlmlCjO+eQyEydyHx2LIiEnnucUQuwOGoJ2opyJmuoUMjnvGxRF8Mq/94axBxU
+         2st6tz1FC+Nt7YW7Gz9FGxDq6sHo/U3Ia0gVnPtm53U+JGSD41Espz8dWSJAxdJSnjzC
+         lYzraJDux4z6cJxHMW9kdPqNPleyJJOvKSdzB7Tbf3dfKRUv+jiDnVltOgF4iIXzNykq
+         oUmvLR69xd2DQxxollysFVB99j6bDdiIw53EBQAroXnoO5anCqtMlfb95L2azsNWR65p
+         VKuqp8/FnwhfuFntGLoNglANWX1tT0V0dmXrciA3+SDYwPha9xDIPcHcpV0554I1IkQo
+         98og==
+X-Gm-Message-State: AOAM532/KLc8d6qI0Qap1io+VButN1Qkgo2YoZyPDt7Gfy3l8Q7SHyDI
+        qGlwA8xqJMBmH9SHs5jU8vqxICOPl+Sujww8vJXZE+dgU2OaUA==
+X-Google-Smtp-Source: ABdhPJz6/p+C7UeedeeY3v244grS/khR9g2n2Vg622QKjp5XuojoNGUsMaNRh+rB6XoU7bh6JtrGJBgcirO0fh7x+jI=
+X-Received: by 2002:a25:748f:: with SMTP id p137mr14497003ybc.25.1621601724740;
+ Fri, 21 May 2021 05:55:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210510195221.12350-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210510195221.12350-1-andriy.shevchenko@linux.intel.com>
+References: <20210518084619.29949-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210518084619.29949-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 21 May 2021 14:51:20 +0200
-Message-ID: <CAMpxmJWiqaD6bYLSvzOA8CjgvYnswiEmBnZEzAfOskAZ3hOewg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Drop duplicate offset check in gpiochip_is_requested()
+Date:   Fri, 21 May 2021 14:55:14 +0200
+Message-ID: <CAMpxmJVGGhDfEAJNZoMsSw6Y05wRgDOtfqaYZyTzjsn_7uPfVg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Make use of assign_bit() API (part 2)
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -60,35 +59,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 10, 2021 at 9:52 PM Andy Shevchenko
+On Tue, May 18, 2021 at 10:46 AM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> gpiochip_get_desc() already does the check, drop a duplicate in
-> gpiochip_is_requested().
+> We have for some time the assign_bit() API to replace open coded
+>
+>         if (foo)
+>                 set_bit(n, bar);
+>         else
+>                 clear_bit(n, bar);
+>
+> Use this API in GPIO library code.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/gpio/gpiolib.c | 3 ---
->  1 file changed, 3 deletions(-)
+>  drivers/gpio/gpiolib-sysfs.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 >
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 1427c1be749b..220a9d8dd4e3 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2004,9 +2004,6 @@ const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned int offset)
->  {
->         struct gpio_desc *desc;
+> diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+> index 41b3b782bf3f..7c5afd999210 100644
+> --- a/drivers/gpio/gpiolib-sysfs.c
+> +++ b/drivers/gpio/gpiolib-sysfs.c
+> @@ -312,10 +312,7 @@ static int gpio_sysfs_set_active_low(struct device *dev, int value)
+>         if (!!test_bit(FLAG_ACTIVE_LOW, &desc->flags) == !!value)
+>                 return 0;
 >
-> -       if (offset >= gc->ngpio)
-> -               return NULL;
-> -
->         desc = gpiochip_get_desc(gc, offset);
->         if (IS_ERR(desc))
->                 return NULL;
+> -       if (value)
+> -               set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> -       else
+> -               clear_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> +       assign_bit(FLAG_ACTIVE_LOW, &desc->flags, value);
+>
+>         /* reconfigure poll(2) support if enabled on one edge only */
+>         if (flags == GPIO_IRQF_TRIGGER_FALLING ||
 > --
 > 2.30.2
 >
 
-I applied this some time ago just forgot to comment here.
+Patch applied, thanks!
 
-Bart
+Bartosz
