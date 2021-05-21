@@ -2,104 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF79038CB36
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 18:41:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84F0F38CC88
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 19:46:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236972AbhEUQnM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 12:43:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
+        id S235407AbhEURrk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 13:47:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236889AbhEUQnL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 12:43:11 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4453EC0613CE
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 09:41:48 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id u5-20020a7bc0450000b02901480e40338bso7079844wmc.1
-        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 09:41:48 -0700 (PDT)
+        with ESMTP id S235064AbhEURrj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 13:47:39 -0400
+Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AC8C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 10:46:15 -0700 (PDT)
+Received: by mail-vk1-xa34.google.com with SMTP id n7so4451909vkl.2
+        for <linux-gpio@vger.kernel.org>; Fri, 21 May 2021 10:46:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OLxd9YqwRbx5TAGpuwAdW+dDcsysFyUkXYIgfcZaWGs=;
-        b=gvBm+bAPQJhIJkIPOpTN+KeA385rCs8o23N7ZLIpgz2N0UIEeEmFRKRIid8GClx02G
-         uXdiryJMyuMK5PQL5I8LkD8AylRYmto6bOSH3T3uItp0Hzfa0EXhJcrlcoKp1EM3G3yc
-         sz/GesrbNn45upRo/U4KirwtmthyAKg/AmglaHcZktFtqlpHb6bCJ/MWL42Dog1pXr61
-         vbUIGw3ywbVSiu6rBLmafBzhRqWSA9EXs7daCO9H3RvP6dE5r1veSSW4/m3edo/x0Fvx
-         R6kxEbIMcl7K7OYc16kaIhvYMkkUyxTV3rRkq7gSsJ5xxOG29RehcVhYMPUxS0WHXzx+
-         8ZeQ==
+        d=deviqon.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SkEvVmINwYubZELrUT2CAhIwBMJX/lCcLqqTvO92lSY=;
+        b=f9aZx6E8jIIR5nYx9d/YJX/+u6uNBlgr2xe3NWhvUTwqMUK9UNh+hSElncvK4RTVdW
+         Y4bMGIcAVePovVZf3tZguUSINPWI2bINlUuKaEtQUsi/w7G+WJPpL2V51gRp9pufuqid
+         4m/ch3YZ6TzKlo5O8U8unhhZe+lrgIlqictdxHkwdJcXw27tWVC1GIHH1z4xXrRZ8eN9
+         ja+el01rum/DfWcXvyUO8BD3x5Fx1hXxDk+DhGK1elwO8aP9zFHnAEPAjsE6iYqgI6+8
+         JIbyEjelnovYFd3Rm7g0HBdWK1kK3u0P0iOgPIuJH+vVFGaLtQoYAEg0v1JphDtjfShs
+         abJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OLxd9YqwRbx5TAGpuwAdW+dDcsysFyUkXYIgfcZaWGs=;
-        b=XxXwfbMvo3G35hYv5+YnsTZNAVjvmU1TpPo/G3V0WbvUxiLqXmMBZtlwl3SXBdxvnz
-         0rGBXXieMqPfRZBH99WBYsfouZjnwCXW1E2sexu3QeNwpLXHoVh5atb3Jln9toG9kc0r
-         X1n1iJOk5Ji0w5/fBI1HD+GOirWvXKeCXc+ufqbtySKXYzpUbW5TyDA2pm9lN+wfjLOt
-         9q2lNXNWOUYAkeElO4L59AI428M7Rw6+yaBP1DLWRoWIRdIS1gNd2BbJzHrpQjliKlIm
-         MA3ZYpjHEXZZuimlPohvPd0hLD1mTap4s19dkkena/uUjnRhvxaQdxCWqOJntzye7fMD
-         okSg==
-X-Gm-Message-State: AOAM531zpfgt58B947wmHM52Z3oN3ZFdxR2GQXJqe+5sPIu3agwu6fZN
-        j2kStyLg+K/FEH87c//xPTuWOg==
-X-Google-Smtp-Source: ABdhPJzKat2eJCvNinu9ngsupD0zvKZM+O7J40OVu7kqwVW2AFI2slPVZ76+AQOyI8zKX9ElikBWaA==
-X-Received: by 2002:a1c:b003:: with SMTP id z3mr10116748wme.7.1621615306863;
-        Fri, 21 May 2021 09:41:46 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-149-6.w2-15.abo.wanadoo.fr. [2.15.231.6])
-        by smtp.gmail.com with ESMTPSA id g11sm2662072wri.59.2021.05.21.09.41.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 May 2021 09:41:46 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.13-rc3
-Date:   Fri, 21 May 2021 18:41:39 +0200
-Message-Id: <20210521164139.25088-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SkEvVmINwYubZELrUT2CAhIwBMJX/lCcLqqTvO92lSY=;
+        b=G9bbLPj0kdQeEWPk7l/o6GMCT+RbtfQ66iALbc7722QeaWSTnWOSFRwkpM9d8a/k5J
+         lqQm72umTPFcHYFfcBXzB60HyEYjAz+QY0fpwlPguag8qNtBKYb4vD45ocWOqWrXC3Ce
+         9LXmHBaI68gskOsxqTp0Or55pcbnezAzfhVoKthru7ZKNGAXM9OcaAKmxSpxsZVGPxNd
+         nzi6Vn/Xy8QaMsdqpgutMcO7L9yC6P9krLk4QAoE9/SeZ24xDWGodVsHqDzvpjYK/fJL
+         ZNZ1Tm7aasVyRDWqQ+fzbaPZx2g4tj0wwqyezVT2abppSmkbDWGKMRfgrYojrFVnSPaX
+         E9Aw==
+X-Gm-Message-State: AOAM532eq3Q0WISyrVQBmMMsE528QKaQI3ZmET4fq+aZ63yL6aWqXe8/
+        +BLaH8cfHnLrPp+xLnF1AhE1wdob2xaErZTzUOrJ8KfbeuzYZn0C
+X-Google-Smtp-Source: ABdhPJz4CBpFHUfT+yqDd2IndBLJfLssD18rbmXPN614JrBwyhtn3U76HjK/SRxbZhQ44l538xeE7tIgf7EOZhWGnvk=
+X-Received: by 2002:a1f:5506:: with SMTP id j6mr11944560vkb.7.1621619174763;
+ Fri, 21 May 2021 10:46:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210514094108.28890-1-aardelean@deviqon.com> <CAMpxmJWmc-8cCZ5EQcnBKSAmXPbcVUnX7GdhKgKWFp5i=B6y1w@mail.gmail.com>
+In-Reply-To: <CAMpxmJWmc-8cCZ5EQcnBKSAmXPbcVUnX7GdhKgKWFp5i=B6y1w@mail.gmail.com>
+From:   Alexandru Ardelean <aardelean@deviqon.com>
+Date:   Fri, 21 May 2021 20:46:03 +0300
+Message-ID: <CAASAkobrt=t0ObR+_nn6g403VAMP3f7uh7VmVDAo7S0PgpLE-A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-tps68470: remove platform_set_drvdata() +
+ cleanup probe
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+On Fri, 21 May 2021 at 16:52, Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> On Fri, May 14, 2021 at 11:41 AM Alexandru Ardelean
+> <aardelean@deviqon.com> wrote:
+> >
+> > The platform_set_drvdata() call is only useful if we need to retrieve back
+> > the private information.
+> > Since the driver doesn't do that, it's not useful to have it.
+> >
+> > If this is removed, we can also just do a direct return on
+> > devm_gpiochip_add_data(). We don't need to print that this call failed as
+> > there are other ways to log/see this during probe.
+> >
+> > Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
+> > ---
+> >  drivers/gpio/gpio-tps68470.c | 12 +-----------
+> >  1 file changed, 1 insertion(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
+> > index f7f5f770e0fb..423b7bc30ae8 100644
+> > --- a/drivers/gpio/gpio-tps68470.c
+> > +++ b/drivers/gpio/gpio-tps68470.c
+> > @@ -125,7 +125,6 @@ static const char *tps68470_names[TPS68470_N_GPIO] = {
+> >  static int tps68470_gpio_probe(struct platform_device *pdev)
+> >  {
+> >         struct tps68470_gpio_data *tps68470_gpio;
+> > -       int ret;
+> >
+> >         tps68470_gpio = devm_kzalloc(&pdev->dev, sizeof(*tps68470_gpio),
+> >                                      GFP_KERNEL);
+> > @@ -146,16 +145,7 @@ static int tps68470_gpio_probe(struct platform_device *pdev)
+> >         tps68470_gpio->gc.base = -1;
+> >         tps68470_gpio->gc.parent = &pdev->dev;
+> >
+> > -       ret = devm_gpiochip_add_data(&pdev->dev, &tps68470_gpio->gc,
+> > -                                    tps68470_gpio);
+> > -       if (ret < 0) {
+> > -               dev_err(&pdev->dev, "Failed to register gpio_chip: %d\n", ret);
+> > -               return ret;
+> > -       }
+> > -
+> > -       platform_set_drvdata(pdev, tps68470_gpio);
+> > -
+> > -       return ret;
+> > +       return devm_gpiochip_add_data(&pdev->dev, &tps68470_gpio->gc, tps68470_gpio);
+> >  }
+> >
+> >  static struct platform_driver tps68470_gpio_driver = {
+> > --
+> > 2.31.1
+> >
+>
+> Applied. I got confused by the dev_get_drvdata() call earlier in probe
+> but this one's for the parent.
 
-please pull the following three fixes for the GPIO subsystem.
+Yes.
+I initially got confused as well about it.
 
-Best Regards,
-Bartosz
+This pattern seems to be similar in other drivers as well; usually MFD devices.
 
-The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
-
-  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.13-rc3
-
-for you to fetch changes up to bdbe871ef0caa660e16461a2a94579d9f9ef7ba4:
-
-  gpio: tegra186: Don't set parent IRQ affinity (2021-05-12 13:56:43 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v5.13-rc3
-
-- add missing MODULE_DEVICE_TABLE in gpio-cadence
-- fix a kernel doc validator error in gpio-xilinx
-- don't set parent IRQ affinity in gpio-tegra186
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      gpio: xilinx: Correct kernel doc for xgpio_probe()
-
-Jon Hunter (1):
-      gpio: tegra186: Don't set parent IRQ affinity
-
-Zou Wei (1):
-      gpio: cadence: Add missing MODULE_DEVICE_TABLE
-
- drivers/gpio/gpio-cadence.c  |  1 +
- drivers/gpio/gpio-tegra186.c | 11 -----------
- drivers/gpio/gpio-xilinx.c   |  2 +-
- 3 files changed, 2 insertions(+), 12 deletions(-)
+>
+> Thanks,
+> Bart
