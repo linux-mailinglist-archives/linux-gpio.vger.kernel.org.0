@@ -2,111 +2,250 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BA9B38C9CA
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 17:09:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4926138CA9B
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 May 2021 18:06:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231719AbhEUPKX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 May 2021 11:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230420AbhEUPKV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 11:10:21 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A289BC061574;
-        Fri, 21 May 2021 08:08:57 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id b15-20020a17090a550fb029015dad75163dso7335014pji.0;
-        Fri, 21 May 2021 08:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZK5vDUvIgC6bF48AUmy/OX+Gvz7Keg1NucsMNX6Zy4o=;
-        b=Dx9XkbBe/GmK+FqmIbzp0hVenlj7MFt21Nz/kQwk43TKsYOEi/sCG+pnhjucrJlB4q
-         jRqOR4U2z9qArpH/YOhny/fD/vxBvpic0qZS2jCRM50tbrp1x2/nAUbFVLP7Qi19JCNn
-         qE+wcRC2PDchPNCgBK/kplZ23l4XdAGwwvK+devv43Tmy2PXYdX97oc1fqD8wahEWSJM
-         S61yrAdAUsXDHexNw5S8uDNv9I5m5zDfnwbBzysVhBp7QDRB17vjUxauVdwpiCZ5QOm6
-         GSKGV9qn/UZSHH/cHz1QKfJLUx8l+eGWf0kuCA7n9SDNwDoPDs6CXjEoCKn+r8OWexA7
-         I/nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZK5vDUvIgC6bF48AUmy/OX+Gvz7Keg1NucsMNX6Zy4o=;
-        b=bmrpmCHmBaOz+symqFd7oSYAKOpoLGfqoqbjM8ahu0rSYeC6RY+fBow7tWNih7BK9x
-         7iyvi/RscY5wVgPxV/4L/SQBJPBu6ClH9r4/+AapALXvJGBZoUq9U3quKEuqK3jb9861
-         ljPG6ig5dOgZqLrD1holSUXGnlaFyGBmGHU+GiiI7n1S7ZQf20XZF3fZyKx6ziZJkhLk
-         5REVHrOiYJO5MJmau0qW5+wJU35bJWVxV7zClo0AHVpXuPy3Cxbt6ht6zSE09A8ttAX+
-         KS5Ud+RDTiZ6awfJMybmYCp33eq2WzIUe3cY4rpihOtYRPuaWe64FqfLmwjq0ADQgejE
-         f+Gg==
-X-Gm-Message-State: AOAM532n8/P+/jvWTjig3VQj8RWNofulxwe5zzqzPKwFbngKpfhbeP9e
-        PS5oF1GlcfSo7kTcKXyhfT6yHfFsa5s=
-X-Google-Smtp-Source: ABdhPJwCvPiXdUhwh8fr71RC4veZs/oxr51w/F6wONFAA1gyWJCkV4ltIEByJrdN3ZMeHTUqHNOGzQ==
-X-Received: by 2002:a17:90a:5309:: with SMTP id x9mr1458823pjh.111.1621609736739;
-        Fri, 21 May 2021 08:08:56 -0700 (PDT)
-Received: from [10.230.29.202] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h26sm4443160pfo.203.2021.05.21.08.08.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 May 2021 08:08:56 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: bcm2835: Accept fewer than expected IRQs
-To:     "Ivan T. Ivanov" <iivanov@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Phil Elwell <phil@raspberrypi.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210521090158.26932-1-iivanov@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <47bf2b41-d42f-fb25-ee9e-5527f3324b17@gmail.com>
-Date:   Fri, 21 May 2021 08:08:47 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.10.2
+        id S233785AbhEUQIK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 May 2021 12:08:10 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38704 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229586AbhEUQIK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 May 2021 12:08:10 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14LG6jgt109831;
+        Fri, 21 May 2021 11:06:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1621613205;
+        bh=Vnl0RIBt1/tJ/Jb31YFm3Zit66WXm3me49iZt/tJsW8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Pu8V3stltZVLya0k/HKI/Ed9AT0SKZ/krdE7auA69tcPcICVJhXeJMbAXb6teil1L
+         /xcP/R1sgHmxqImJuACRzf5ZVtiwdMNcKp6uCuMCoRIEy7utV4lTrmYIG2418xEU8V
+         q/vj+8bvF2hvkBgZsxZNunvbQ3hobZj23nzfMmvU=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14LG6jw3112768
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 May 2021 11:06:45 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Fri, 21
+ May 2021 11:06:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Fri, 21 May 2021 11:06:45 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14LG6gEY020893;
+        Fri, 21 May 2021 11:06:43 -0500
+Subject: Re: [PATCH] dt-bindings: gpio: gpio-davinci: Convert to json-schema
+To:     Rob Herring <robh@kernel.org>
+CC:     Aswath Govindraju <a-govindraju@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Keerthy <j-keerthy@ti.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20210511090122.6995-1-a-govindraju@ti.com>
+ <20210517221513.GA3263368@robh.at.kernel.org>
+ <861cefe2-7bb6-c435-ab0d-483155852876@ti.com>
+ <CAL_JsqKyuXYJocBMLGXL6aXuK0YnrW7qdLugV2bxdP-LJ=2+cg@mail.gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <42ec7cbd-1364-8dfe-c652-79b16bb6b87c@ti.com>
+Date:   Fri, 21 May 2021 19:06:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210521090158.26932-1-iivanov@suse.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAL_JsqKyuXYJocBMLGXL6aXuK0YnrW7qdLugV2bxdP-LJ=2+cg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Rob,
 
-
-On 5/21/2021 2:01 AM, Ivan T. Ivanov wrote:
-> From: Phil Elwell <phil@raspberrypi.com>
+On 21/05/2021 15:56, Rob Herring wrote:
+> On Fri, May 21, 2021 at 3:32 AM Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+>>
+>> Hi Rob, All
+>>
+>> On 18/05/2021 01:15, Rob Herring wrote:
+>>> On Tue, May 11, 2021 at 02:31:20PM +0530, Aswath Govindraju wrote:
+>>>> Convert gpio-davinci dt-binding documentation from txt to yaml format.
+>>>>
+>>>> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
+>>>> ---
+>>>>    .../devicetree/bindings/gpio/gpio-davinci.txt | 167 ---------------
+>>>>    .../bindings/gpio/gpio-davinci.yaml           | 193 ++++++++++++++++++
+>>>>    MAINTAINERS                                   |   2 +-
+>>>>    3 files changed, 194 insertions(+), 168 deletions(-)
+>>>>    delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>>>>    create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>>>> deleted file mode 100644
+>>>> index 696ea46227d1..000000000000
+>>>> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>>>> +++ /dev/null
+>>>> @@ -1,167 +0,0 @@
+>>>> -Davinci/Keystone GPIO controller bindings
+>>>> -
+>>>> -Required Properties:
+>>>> -- compatible: should be "ti,dm6441-gpio": for Davinci da850 SoCs
+>>>> -                    "ti,keystone-gpio": for Keystone 2 66AK2H/K, 66AK2L,
+>>>> -                                            66AK2E SoCs
+>>>> -                    "ti,k2g-gpio", "ti,keystone-gpio": for 66AK2G
+>>>> -                    "ti,am654-gpio", "ti,keystone-gpio": for TI K3 AM654
+>>>> -                    "ti,j721e-gpio", "ti,keystone-gpio": for J721E SoCs
+>>>> -                    "ti,am64-gpio", "ti,keystone-gpio": for AM64 SoCs
+>>>> -
+>>
+>> [...]
+>>
+>>>> -};
+>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..1e16172669c7
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+>>>> @@ -0,0 +1,193 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/gpio/gpio-davinci.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: GPIO controller for Davinci and keystone devices
+>>>> +
+>>>> +maintainers:
+>>>> +  - Keerthy <j-keerthy@ti.com>
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    oneOf:
+>>>> +      - items:
+>>>> +          - enum:
+>>>> +              - ti,k2g-gpio
+>>>> +              - ti,am654-gpio
+>>>> +              - ti,j721e-gpio
+>>>> +              - ti,am64-gpio
+>>>> +          - const: ti,keystone-gpio
+>>>> +
+>>>> +      - items:
+>>>> +          - const: ti,dm6441-gpio
+>>>> +      - items:
+>>>> +          - const: ti,keystone-gpio
+>>>
+>>> These 2 can be expressed as an 'enum'.
+>>>
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +    description:
+>>>> +      Physical base address of the controller and the size of memory mapped registers.
+>>>
+>>> Drop. That's every 'reg' property.
+>>>
+>>>> +
+>>>> +  gpio-controller: true
+>>>> +
+>>>> +  gpio-ranges: true
+>>>> +
+>>>> +  gpio-line-names:
+>>>> +    description: strings describing the names of each gpio line.
+>>>
+>>> Any constraints like min/max number of lines?
+>>>
+>>>> +
+>>>> +  "#gpio-cells":
+>>>> +    const: 2
+>>>> +    description:
+>>>> +      first cell is the pin number and second cell is used to specify optional parameters (unused).
+>>>> +
+>>>> +  interrupts:
+>>>> +    description:
+>>>> +      Array of GPIO interrupt number. Only banked or unbanked IRQs are supported at a time.
+>>>
+>>> Needs constraints. How many items and what are they?
+>>>
+>>>> +
+>>>> +  ti,ngpio:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description: The number of GPIO pins supported consecutively.
+>>>> +    minimum: 1
+>>>> +
+>>>> +  ti,davinci-gpio-unbanked:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description: The number of GPIOs that have an individual interrupt line to processor.
+>>>> +    minimum: 0
+>>>> +
+>>>> +  clocks:
+>>>> +    maxItems: 1
+>>>> +    description:
+>>>> +      clock-specifier to represent input to the GPIO controller.
+>>>
+>>> Drop description.
+>>>
+>>>> +
+>>>> +  clock-names:
+>>>> +    const: gpio
+>>>> +
+>>>> +  interrupt-controller: true
+>>>> +
+>>>> +  power-domains:
+>>>> +    maxItems: 1
+>>>> +    description:
+>>>> +      Phandle to the power domain provider node.
+>>>
+>>> Drop.
+>>>
+>>>> +
+>>>> +  "#interrupt-cells":
+>>>> +    const: 2
+>>>> +
+>>>> +patternProperties:
+>>>> +  "-hog$":
+>>>> +    type: object
+>>>> +    properties:
+>>>> +      gpios: true
+>>>> +      gpio-hog: true
+>>>> +      input: true
+>>>> +      output-high: true
+>>>> +      output-low: true
+>>>> +      line-name: true
+>>>> +
+>>>> +    required:
+>>>> +      - gpio-hog
+>>>> +      - gpios
+>>
+>> I see that gpio-hog.yaml dtschema has been added.
+>> Can it be reused here and how?
 > 
-> The downstream .dts files only request two GPIO IRQs. Truncate the
-> array of parent IRQs when irq_of_parse_and_map returns 0.
+> It's applied to any node containing 'gpio-hog' property, so all you need is:
 > 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
-> Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
-> ---
->  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> required:
+>    - gpio-hog
 > 
-> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> index 1d21129f7751..2c87af1180c4 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> @@ -1274,9 +1274,13 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
->  		char *name;
->  
->  		girq->parents[i] = irq_of_parse_and_map(np, i);
-> -		if (!is_7211)
-> +		if (!is_7211) {
-> +			if (!girq->parents[i]) {
-> +				girq->num_parents = i;
-> +				break;
-> +			}
->  			continue;
+Thanks for you comments. But I'd like to clarify the Hog child node definition - will work as below?
 
-This assumes that interrupts are specified in an ordered way and skipped
-in an ordered way as well, however given that we just hand
-girq->parents[] to the GPIOLIB core, I don't really see a better solution:
+patternProperties:
+   "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+     type: object
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+     properties:
+       gpio-hog: true
+
+     required:
+       - gpio-hog
+
+In general, patternProperties duplicates $nodename in gpio-hog dtschema.
+
 -- 
-Florian
+Best regards,
+grygorii
