@@ -2,220 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FFD438DC35
-	for <lists+linux-gpio@lfdr.de>; Sun, 23 May 2021 19:39:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A01238DC6D
+	for <lists+linux-gpio@lfdr.de>; Sun, 23 May 2021 20:31:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231857AbhEWRkn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 23 May 2021 13:40:43 -0400
-Received: from mx4.wp.pl ([212.77.101.11]:43639 "EHLO mx4.wp.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231853AbhEWRkn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 23 May 2021 13:40:43 -0400
-Received: (wp-smtpd smtp.wp.pl 31298 invoked from network); 23 May 2021 19:39:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1621791554; bh=7wmUz3k8RukIl4+/pAGl0IQkKLcUdLrZ31fCJy0Ab3w=;
-          h=From:To:Cc:Subject;
-          b=BPrcf6H8wpI5F6ObS8czOeRLqHZfDuBBaTiK2131YFWiyOMTup2vCS80lohcglsKl
-           Ud6ci/bhTFhvUvAC6nRVLLi4glMwxVgeBW5NuDf5cQlyHlF/vZQ5y7ENflTTtR7duu
-           rmu5QSmzC1jUrEJXZWk9xWgUss6hYlo07bNI1VsU=
-Received: from riviera.nat.ds.pw.edu.pl (HELO LAPTOP-OLEK.lan) (olek2@wp.pl@[194.29.137.1])
-          (envelope-sender <olek2@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <linus.walleij@linaro.org>; 23 May 2021 19:39:14 +0200
-From:   Aleksander Jan Bajkowski <olek2@wp.pl>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, john@phrozen.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Aleksander Jan Bajkowski <olek2@wp.pl>
-Subject: [PATCH v3] dt-bindings: gpio: stp: convert to json-schema
-Date:   Sun, 23 May 2021 19:39:10 +0200
-Message-Id: <20210523173910.661598-1-olek2@wp.pl>
-X-Mailer: git-send-email 2.30.2
+        id S231857AbhEWScs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 23 May 2021 14:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231833AbhEWScs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 23 May 2021 14:32:48 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B77C061756
+        for <linux-gpio@vger.kernel.org>; Sun, 23 May 2021 11:31:21 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id g38so34848988ybi.12
+        for <linux-gpio@vger.kernel.org>; Sun, 23 May 2021 11:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XoKj2+lP83dFN1Xj+nF6z+/9kXVQORuKRo4UmR66iBQ=;
+        b=ucAgl6PLh5+NQYAGsG4hYMtEQSwA12FtTFU4rjsj3BqTUaGKncJxbZvmSscZv16Zig
+         Tv642nWuXX+b8ScXNi4paL9Bd4oLroZ3c7EXIFaBFYApitSDhjuAd1T7xe9j+3WlCD8y
+         3xr2myRyHc+0l+gV7qk6rSs0hr/GoIaVlTdsKA1Cm0C81SSllDm6QtWezKknSA5QbG97
+         ntqN+zH5BlaHIj4TonqvgG7Cj/gDOk4F9AQqX21XBuhMMV29fVeRUN73W05GOuBevrJs
+         TTw6c7VtqHg2/gOgUvnZcdBoNaOS2CzbjKFR50BgME77oF9JdL1FmaOPjEnd0RYBODr+
+         yrgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XoKj2+lP83dFN1Xj+nF6z+/9kXVQORuKRo4UmR66iBQ=;
+        b=nlaPZ44jk/74mysv2Vk2CZOP0+pXoasfb2HHJfTc57Nlft1GjFCHp0F6drSMDulvS5
+         HuwU12L84RrmGdygZTkNBLjIKGMstAzXhgdNkE0UizaUFtv9DBYrY28z1gB49Fe+qXkc
+         6hfOLxAb7jxDxifx9fXZ12MQ7bkPOvn7zVc0F2gZxcRKCxk6GbsID2QykZAr7U6x0GuJ
+         cYHQMNmcXabpXzjsUf/t5uSUSscTOv2Xwd/1PeXje3d1fqmtTHxz0LQOEx+dKtBtYC/2
+         PnDE/DOA9RxNm/XF38iTqOco8IadQOUr7twqPcQ+WgI+WXxiE0cHNFjjc14BKasFlPih
+         MjDA==
+X-Gm-Message-State: AOAM530saJE25ndOM+vSoNciuQIHhSiBliw7HaG365qsRfOs/8cwnhvE
+        Vpx7qUetNVcyMFx5Aao87GELChiFD98beigCB0LYOA==
+X-Google-Smtp-Source: ABdhPJznHZLraTDjzGymQbEzUGUE/T0sGF9sKDufxt2HML2dD/ZopaCG75J8/yGHHHnshJlKmhWRx4J/cAJQApbV7Rg=
+X-Received: by 2002:a25:9d86:: with SMTP id v6mr28724828ybp.366.1621794680999;
+ Sun, 23 May 2021 11:31:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-DKIM-Status: good (id: wp.pl)                                      
-X-WP-MailID: e5217d7682c23998965cbfa6554822b8
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [wXMU]                               
+References: <20210521181042.7726-1-aardelean@deviqon.com>
+In-Reply-To: <20210521181042.7726-1-aardelean@deviqon.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sun, 23 May 2021 20:31:10 +0200
+Message-ID: <CAMpxmJW1Q-m_W+n28V9sEqvnb4ZVTGq_55DedhuJxu5icuD9sQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-xgene: simplify probe, return
+ devm_gpiochip_add_data() directly
+To:     Alexandru Ardelean <aardelean@deviqon.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the Lantiq STP Device Tree binding documentation to json-schema.
-Add the missing pinctrl property to the example. Add missing lantiq,phy3
-and lantiq,phy4 bindings for xRX300 and xRX330 SoCs.
+On Fri, May 21, 2021 at 8:10 PM Alexandru Ardelean
+<aardelean@deviqon.com> wrote:
+>
+> The handling of the return value from devm_gpiochip_add_data() is a bit
+> redundant. It prints messages on error and success cases.
+> While the success message may be useful, it is more in the area of log
+> spam, and these can be printed with other forms of kernel logging.
+>
+> This change does a direct return with devm_gpiochip_add_data() in the probe
+> function.
+>
+> The platform_set_drvdata() is needed, as this driver uses the stored
+> private date in the PM suspend/resume routines.
+>
+> Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
+> ---
+>  drivers/gpio/gpio-xgene.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-xgene.c b/drivers/gpio/gpio-xgene.c
+> index 532b0df8a1f2..fb4b0c67aeef 100644
+> --- a/drivers/gpio/gpio-xgene.c
+> +++ b/drivers/gpio/gpio-xgene.c
+> @@ -159,7 +159,6 @@ static SIMPLE_DEV_PM_OPS(xgene_gpio_pm, xgene_gpio_suspend, xgene_gpio_resume);
+>  static int xgene_gpio_probe(struct platform_device *pdev)
+>  {
+>         struct xgene_gpio *gpio;
+> -       int err = 0;
+>
+>         gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+>         if (!gpio)
+> @@ -183,15 +182,7 @@ static int xgene_gpio_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, gpio);
+>
+> -       err = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
+> -       if (err) {
+> -               dev_err(&pdev->dev,
+> -                       "failed to register gpiochip.\n");
+> -               return err;
+> -       }
+> -
+> -       dev_info(&pdev->dev, "X-Gene GPIO driver registered.\n");
+> -       return 0;
+> +       return devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
+>  }
+>
+>  static const struct of_device_id xgene_gpio_of_match[] = {
+> --
+> 2.31.1
+>
 
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
----
-Changes since v2:
- - Changed phy numbering in description of pattern Properties. Numbering
-   should start with 1. 
-Changes since v1:
- - Renamed node to gpio.
- - Dropped default pinctrl from this binding.
- - Converted lantiq,phyX to patternProperties.
----
- .../bindings/gpio/gpio-stp-xway.txt           |  42 --------
- .../bindings/gpio/gpio-stp-xway.yaml          | 101 ++++++++++++++++++
- 2 files changed, 101 insertions(+), 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
+Applied, thanks.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
-deleted file mode 100644
-index 78458adbf4b7..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--Lantiq SoC Serial To Parallel (STP) GPIO controller
--
--The Serial To Parallel (STP) is found on MIPS based Lantiq socs. It is a
--peripheral controller used to drive external shift register cascades. At most
--3 groups of 8 bits can be driven. The hardware is able to allow the DSL modem
--to drive the 2 LSBs of the cascade automatically.
--
--
--Required properties:
--- compatible : Should be "lantiq,gpio-stp-xway"
--- reg : Address and length of the register set for the device
--- #gpio-cells : Should be two.  The first cell is the pin number and
--  the second cell is used to specify optional parameters (currently
--  unused).
--- gpio-controller : Marks the device node as a gpio controller.
--
--Optional properties:
--- lantiq,shadow : The default value that we shall assume as already set on the
--  shift register cascade.
--- lantiq,groups : Set the 3 bit mask to select which of the 3 groups are enabled
--  in the shift register cascade.
--- lantiq,dsl : The dsl core can control the 2 LSBs of the gpio cascade. This 2 bit
--  property can enable this feature.
--- lantiq,phy1 : The gphy1 core can control 3 bits of the gpio cascade.
--- lantiq,phy2 : The gphy2 core can control 3 bits of the gpio cascade.
--- lantiq,rising : use rising instead of falling edge for the shift register
--
--Example:
--
--gpio1: stp@e100bb0 {
--	compatible = "lantiq,gpio-stp-xway";
--	reg = <0xE100BB0 0x40>;
--	#gpio-cells = <2>;
--	gpio-controller;
--
--	lantiq,shadow = <0xffff>;
--	lantiq,groups = <0x7>;
--	lantiq,dsl = <0x3>;
--	lantiq,phy1 = <0x7>;
--	lantiq,phy2 = <0x7>;
--	/* lantiq,rising; */
--};
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
-new file mode 100644
-index 000000000000..7d817d84c434
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-stp-xway.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Lantiq SoC Serial To Parallel (STP) GPIO controller
-+
-+description: |
-+  The Serial To Parallel (STP) is found on MIPS based Lantiq socs. It is a
-+  peripheral controller used to drive external shift register cascades. At most
-+  3 groups of 8 bits can be driven. The hardware is able to allow the DSL modem
-+  and Ethernet PHYs to drive some bytes of the cascade automatically.
-+
-+maintainers:
-+  - John Crispin <john@phrozen.org>
-+
-+properties:
-+  $nodename:
-+    pattern: "^gpio@[0-9a-f]+$"
-+
-+  compatible:
-+    const: lantiq,gpio-stp-xway
-+
-+  reg:
-+    description:
-+      Address and length of the register set for the device.
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    description:
-+      The first cell is the pin number and the second cell is used to specify
-+      consumer flags.
-+    const: 2
-+
-+  lantiq,shadow:
-+    description:
-+      The default value that we shall assume as already set on the
-+      shift register cascade.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0x000000
-+    maximum: 0xffffff
-+
-+  lantiq,groups:
-+    description:
-+      Set the 3 bit mask to select which of the 3 groups are enabled
-+      in the shift register cascade.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0x0
-+    maximum: 0x7
-+
-+  lantiq,dsl:
-+    description:
-+      The dsl core can control the 2 LSBs of the gpio cascade. This 2 bit
-+      property can enable this feature.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0x0
-+    maximum: 0x3
-+
-+patternProperties:
-+  "lantiq,phy[1-4]":
-+    description:
-+      The gphy core can control 3 bits of the gpio cascade. In the xRX200 family
-+      phy[1-2] are available, in xRX330 phy[1-3] and in XRX330 phy[1-4].
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0x0
-+    maximum: 0x7
-+
-+  lantiq,rising:
-+    description:
-+      Use rising instead of falling edge for the shift register.
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio@e100bb0 {
-+        compatible = "lantiq,gpio-stp-xway";
-+        reg = <0xE100BB0 0x40>;
-+        #gpio-cells = <2>;
-+        gpio-controller;
-+
-+        pinctrl-0 = <&stp_pins>;
-+        pinctrl-names = "default";
-+
-+        lantiq,shadow = <0xffffff>;
-+        lantiq,groups = <0x7>;
-+        lantiq,dsl = <0x3>;
-+        lantiq,phy1 = <0x7>;
-+        lantiq,phy2 = <0x7>;
-+    };
-+...
--- 
-2.30.2
+For the future: the subject should be: "gpio: xgene: ..." here and
+everywhere else.
 
+Bart
