@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AE5738DC2B
-	for <lists+linux-gpio@lfdr.de>; Sun, 23 May 2021 19:24:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FFD438DC35
+	for <lists+linux-gpio@lfdr.de>; Sun, 23 May 2021 19:39:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231933AbhEWRZn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 23 May 2021 13:25:43 -0400
-Received: from mx4.wp.pl ([212.77.101.11]:4186 "EHLO mx4.wp.pl"
+        id S231857AbhEWRkn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 23 May 2021 13:40:43 -0400
+Received: from mx4.wp.pl ([212.77.101.11]:43639 "EHLO mx4.wp.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231921AbhEWRZm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 23 May 2021 13:25:42 -0400
-Received: (wp-smtpd smtp.wp.pl 10112 invoked from network); 23 May 2021 19:24:11 +0200
+        id S231853AbhEWRkn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 23 May 2021 13:40:43 -0400
+Received: (wp-smtpd smtp.wp.pl 31298 invoked from network); 23 May 2021 19:39:14 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1621790651; bh=RJx2/dYy5rKglmcq3ciiPxaS8A88JNvbT9Qw3cpTdfE=;
+          t=1621791554; bh=7wmUz3k8RukIl4+/pAGl0IQkKLcUdLrZ31fCJy0Ab3w=;
           h=From:To:Cc:Subject;
-          b=kgKsPUNyxgfo0Hd4BCd+NaD2NjTr+tVSkyiWAsmtOIos99w7wD5OGCMlnTnCzM/m3
-           +FhC/rOpJea3ojj2z+FSD6B/Hyyz3Qm4iAavpncpunf58ROxwhiyjIWLpR7GofIFTH
-           VFaeG/GqrC3WR83WpluO4QWg7VbdWjrRx7TWLPwI=
+          b=BPrcf6H8wpI5F6ObS8czOeRLqHZfDuBBaTiK2131YFWiyOMTup2vCS80lohcglsKl
+           Ud6ci/bhTFhvUvAC6nRVLLi4glMwxVgeBW5NuDf5cQlyHlF/vZQ5y7ENflTTtR7duu
+           rmu5QSmzC1jUrEJXZWk9xWgUss6hYlo07bNI1VsU=
 Received: from riviera.nat.ds.pw.edu.pl (HELO LAPTOP-OLEK.lan) (olek2@wp.pl@[194.29.137.1])
           (envelope-sender <olek2@wp.pl>)
           by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <linus.walleij@linaro.org>; 23 May 2021 19:24:11 +0200
+          for <linus.walleij@linaro.org>; 23 May 2021 19:39:14 +0200
 From:   Aleksander Jan Bajkowski <olek2@wp.pl>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         robh+dt@kernel.org, john@phrozen.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Aleksander Jan Bajkowski <olek2@wp.pl>
-Subject: [PATCH v2] dt-bindings: gpio: stp: convert to json-schema
-Date:   Sun, 23 May 2021 19:24:05 +0200
-Message-Id: <20210523172405.660171-1-olek2@wp.pl>
+Subject: [PATCH v3] dt-bindings: gpio: stp: convert to json-schema
+Date:   Sun, 23 May 2021 19:39:10 +0200
+Message-Id: <20210523173910.661598-1-olek2@wp.pl>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-WP-DKIM-Status: good (id: wp.pl)                                      
-X-WP-MailID: 4296720f8b63bf972cc73ea2edb1742d
+X-WP-MailID: e5217d7682c23998965cbfa6554822b8
 X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [IXME]                               
+X-WP-SPAM: NO 0000000 [wXMU]                               
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -47,10 +47,13 @@ and lantiq,phy4 bindings for xRX300 and xRX330 SoCs.
 
 Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
 ---
+Changes since v2:
+ - Changed phy numbering in description of pattern Properties. Numbering
+   should start with 1. 
 Changes since v1:
- - Rename note to gpio.
- - Drop default pinctrl from this binding.
- - Convert lantiq,phyX to patternProperties.
+ - Renamed node to gpio.
+ - Dropped default pinctrl from this binding.
+ - Converted lantiq,phyX to patternProperties.
 ---
  .../bindings/gpio/gpio-stp-xway.txt           |  42 --------
  .../bindings/gpio/gpio-stp-xway.yaml          | 101 ++++++++++++++++++
@@ -108,7 +111,7 @@ index 78458adbf4b7..000000000000
 -};
 diff --git a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
 new file mode 100644
-index 000000000000..999bd06e6b1c
+index 000000000000..7d817d84c434
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
 @@ -0,0 +1,101 @@
@@ -176,8 +179,8 @@ index 000000000000..999bd06e6b1c
 +patternProperties:
 +  "lantiq,phy[1-4]":
 +    description:
-+      The gphy core can control 3 bits of the gpio cascade. On xRX200 family there
-+      are available gphy[0-1]. On xRX300 gphy[0-2], on xRX330 gphy[0-3].
++      The gphy core can control 3 bits of the gpio cascade. In the xRX200 family
++      phy[1-2] are available, in xRX330 phy[1-3] and in XRX330 phy[1-4].
 +    $ref: /schemas/types.yaml#/definitions/uint32
 +    minimum: 0x0
 +    maximum: 0x7
