@@ -2,153 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D51D838E094
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 07:02:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B12E038E174
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 09:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229584AbhEXFD3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 01:03:29 -0400
-Received: from mail-db8eur05on2043.outbound.protection.outlook.com ([40.107.20.43]:32261
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229633AbhEXFD3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 24 May 2021 01:03:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j3AU0jRlPWDBFn+DKvU29IRj6foQJAuYMP7egKu9Lp+zhybPGvVzJVGjyiuw6GjkkPM2OyBnXx9aKJBQE00zjC9XhOfU4TKw+YBGmqp4wUoB91HrO36nzCHzeyVuQNJn57PBwTqOLHzMrQc/eRj5tywr25ZpXTW/XUCze5nBU9BcUJojfesT4e6TSEEBS7rym932Un7SpZSaGqyLV9QdCPd3bvbSGBnhtX4fIDqeWosluv80TcBM+S8ul8Z3ndhQoaTs1ux1ThQnYmx+ohLYR+e/hocJSYfkio+aeu+4ddttLQewJDc6JMBT28MQcaqZhSSLjhDhm2QQNPdzV5f5dQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W7rN63gQr1DMHj8E4KjUtzsrMNHeVxGSz15ZgaAH2yE=;
- b=JMNIi+4Sx0lGWEaRLNGDOf719GdINVbOhq+naaOmpoRjbjEZQZfmhbS8QGlXjlTuGCV2fnuIUrDCxYK4i8Df4NVITvqejS0BI8d5pMLSNxc7nNpzNZLMyIrvb/OZDjNpwS5wKsZasAC17BYf14cNkvrHM2d4gMht/UG5Gkgvtgn51UYrYWKMBT7uZ4gTj1EQB1LQuEnkPf9zrignJD5aEBlP+rtBLeZqNYIHls7yLvPZGk5z3WJ/3jJPWYGzkqQO7vYHaY1ph6t+Lqtto3poM/s3GJxxd3HVK49ggsSe8LVZwyfBv7TB/rrPdlQY1Ux8/uoDEmtE+yZIVZdAqwOEpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fi.rohmeurope.com; dmarc=pass action=none
- header.from=fi.rohmeurope.com; dkim=pass header.d=fi.rohmeurope.com; arc=none
+        id S232365AbhEXHXC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 03:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232353AbhEXHXA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 03:23:00 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09608C061756
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 00:21:32 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id o192so13739217vsd.7
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 00:21:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=rohmsemiconductoreurope.onmicrosoft.com;
- s=selector1-rohmsemiconductoreurope-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W7rN63gQr1DMHj8E4KjUtzsrMNHeVxGSz15ZgaAH2yE=;
- b=NWVkDfyOX2nIDFdINFyE5ZaacYg/2Ejn0ZvSxGj9jD0lytCfLTGmihdU5XkhklTSx34PATP7XYCfwPlgLDkogAkqjL3NnKIvV1USldnZ5z4Qv+DM69SJZi+/IPsobtGabT8x+rSvJfCItFBANaA/bJlYJBg2j8n4DRo6IBJNSIo=
-Received: from HE1PR03MB3162.eurprd03.prod.outlook.com (2603:10a6:7:55::20) by
- HE1PR0301MB2313.eurprd03.prod.outlook.com (2603:10a6:3:27::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4150.23; Mon, 24 May 2021 05:01:59 +0000
-Received: from HE1PR03MB3162.eurprd03.prod.outlook.com
- ([fe80::89f0:ff95:a73a:cf4b]) by HE1PR03MB3162.eurprd03.prod.outlook.com
- ([fe80::89f0:ff95:a73a:cf4b%7]) with mapi id 15.20.4150.027; Mon, 24 May 2021
- 05:01:59 +0000
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-CC:     linux-power <linux-power@fi.rohmeurope.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "michael@walle.cc" <michael@walle.cc>,
-        "bjorn@mork.no" <bjorn@mork.no>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/3] gpio: gpio-regmap: Use devm_add_action()
-Thread-Topic: [PATCH v2 2/3] gpio: gpio-regmap: Use devm_add_action()
-Thread-Index: AQHXTgqFqSIUt187g0WoCKnHHDOZNartlX2AgAAH2AmAAB8rgIAAZiIAgAP1IQA=
-Date:   Mon, 24 May 2021 05:01:59 +0000
-Message-ID: <cf42e001f0c0cdec382419acd8edfc0088f08c96.camel@fi.rohmeurope.com>
-References: <cover.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
-         <e3d3e704804668d1403f3630c181010b34409c8f.1621577204.git.matti.vaittinen@fi.rohmeurope.com>
-         <12bb40f022be0378ed493e7ad33122b0@walle.cc>
-         <87a6ooh46s.fsf@miraculix.mork.no>
-         <d6bb1e458d5aa6a32f31f7731e1a6097a225d634.camel@fi.rohmeurope.com>
-         <CAMpxmJXkYZ7mZA426Jgm_zL+L1ZFB1ToRf2L8oGmyBuOHQo=UQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJXkYZ7mZA426Jgm_zL+L1ZFB1ToRf2L8oGmyBuOHQo=UQ@mail.gmail.com>
-Reply-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Accept-Language: fi-FI, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: baylibre.com; dkim=none (message not signed)
- header.d=none;baylibre.com; dmarc=none action=none
- header.from=fi.rohmeurope.com;
-x-originating-ip: [2001:14ba:16e2:8300::4]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fcd75ee0-427e-4e51-bc7e-08d91e710fe4
-x-ms-traffictypediagnostic: HE1PR0301MB2313:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HE1PR0301MB2313C4D77FBC40174CB1B334AD269@HE1PR0301MB2313.eurprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PRYLuSVsRaGUKBPhfFKy6EUjnOXYjigwSEZqYUfDgMzd4apGvWerqByGiuI6FBBYn9lGeVwRxGfHaJT+NaIyWfga450wN5K5yj1y9SAXHSUnH7c4fV5no7WfyoNEeVG8V0k9crMhLcvxWGNrks0BsocNnloQBUFuBOFrWl1/+IXUY+eOt0Cw+XC+MJq/SIud/2s3bqlFso7Ov7LlSsOhBWC9UjEj9xVVgZLkv0THK7Z1s9Ps1SPiVJjB3jnFGBTMKj/UH12kIvnxZhEC62Hu4HTAdMRU1stm+uuIsySviFpeO3SFgTM5TEM4C+N6EVys5Sz4CAtdA4ilpyqwObO23a9zd8hq1gKaUqmGWBvFQ7/9hPWX36Bjq+sUtuDwZevtZgPbjDOlw4evE1nO5UGKwoM8JZpSHEvR+Ct/5oqCrclV49ewgz33YNagFMXomwB9+qZkYR29WABJbsdsoZ2fUGWdV7yJxbfZ9EGO09y9wfJOU0dnXIDU3svvHD7OPyFcnc/uxVMw34kDFeisMr/9wa7D8SCCDky8MlHAmFO2Tcsazh4VnKdiK9zL1vB8EqsETSMbmTJ33rinEr70u/EN5GkRkgIUgl0CP1tjlVjPv8Q=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR03MB3162.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(136003)(39830400003)(366004)(66946007)(66556008)(316002)(64756008)(66476007)(66446008)(54906003)(5660300002)(478600001)(2906002)(6486002)(4326008)(186003)(6916009)(3450700001)(76116006)(66574015)(2616005)(8676002)(6506007)(86362001)(38100700002)(6512007)(83380400001)(71200400001)(8936002)(122000001)(53546011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?MHRGT3krVUMxditaZUJsMnNNRDZqb0xab2g5Wk96WVU3c0tXekNBVlpwaW44?=
- =?utf-8?B?SDFqRjNuc0Z4Y1UxbGJlbGxzczBCOXlXUHJzQXhRM3hLK29WQjJhcjB5dDAr?=
- =?utf-8?B?dStoL0llUnN2MlY1K3p5RkgyaEI3bWhGV1Zaa3hlcUJLTW1LNHpoTzMvQldp?=
- =?utf-8?B?czVxZ0ZFNnlRbmFtMTF0aVhOVzFZT1RNU1l1dUpjb3Nvb3lmS1N1S1lTdlh4?=
- =?utf-8?B?emEzaGtYbmNhTkNBaXcrWWkzOHE3Y2YzMzdLRHdjYlpyY1FWMGdSaFYybVEz?=
- =?utf-8?B?MVlaNlNJRmZIdjNSRnh1c1MwNGluYTdNN0xUY0N6aWVaSW53ck5qZ3lPTVRH?=
- =?utf-8?B?Tm0yZlp1aGQwWm1IN0lSTEdpL08ySzNNQXZtYWNnY1FaVEsrbHFiR2NzaE1u?=
- =?utf-8?B?eUZGQlZmdkNjaWtKV0xIcEVnYTNTWFJNL2I3NnFLL1M5YUhLUlRJc05Mc1VX?=
- =?utf-8?B?N0lXT3pVYTZydHhQY2pVVTNNQUoxNGtScGJrTi9FYWtrQUk2eVdXZmxVNEtq?=
- =?utf-8?B?VzA2aTV1TjNZWGhhbm9MZmFVTXdBSE5JcTJWZHovNlEzRVVTWlBWT1RrbEx2?=
- =?utf-8?B?L0pKSTY0R2EzTVRqWFhyWDlwK25GOFI1RWQxcWNpd3VFWngwQUJIUVhScENH?=
- =?utf-8?B?blZ4bzR2VGFvN0dhUjFocUVzdlAwSlVYSFJTay9kTUhiSXNKUmZPN0d0cUpP?=
- =?utf-8?B?aEwzTkxNK2hmS1JZY0dLcFFEVUV6Wlh2ZktXWnpmSDNwN0J4YXB4UDkyLzJN?=
- =?utf-8?B?ZkZlc2gxbnozNkU3N2tBWXJibHN2YzZwb0lOaGlZZmh6ZjRkZmJQR2xmY05a?=
- =?utf-8?B?d0JPMnFweldtczdIaHR6N0Qram5HQVE2Q0dFMEU2UDZBd3N4WnlzcEZRTERV?=
- =?utf-8?B?d0FlRlRra0gwVlhqUEgyaWlzK0dleHJMeVNQTjdPUGhjNlJkYW90akhFVmF5?=
- =?utf-8?B?RDlZLzlqZ2x2SkdSR3VrUk9MK0U5dXQwZE1oSllJMU1laTZvckp1eHh5WVhJ?=
- =?utf-8?B?RmdHWm5XV1NGQ1VOR0dwTXBTK1lSc0l4MldWcFRnWTJac3dxcDVDWnVtODM4?=
- =?utf-8?B?U2NnWHBMNHFGYU1qc2lOTGV0d1BMUFQ0ejBlVDFOY0pEb3FZV3Jia2hZNUJi?=
- =?utf-8?B?a3J1QlBpNDUxSThsdmgxOWtsY1QrQ295K2hJeHZNUHJ6NDVHZC9aLzZmcHZW?=
- =?utf-8?B?RFdGYzNmeHI4Smx0L0IxZ3lkTGJtUmYyYVIvbyt3czZRTG02US9VTzNaNlhm?=
- =?utf-8?B?RnBYRnR3SHZqajkzc1U4dG5CTDlOREJYU01yTXVSOGJKdGk5YzBsR1NvM2NM?=
- =?utf-8?B?anhvNkQ5QmxXbHc1VitGTTRnbVUzYjVYTHBWUUFkTlQvUmtNcS85TExzR1V6?=
- =?utf-8?B?a0JMbllzdVk4RzduRnQzLzJ4azVYNEJ0NXZicGtlbWZxaHc3aEd3YTBqWnli?=
- =?utf-8?B?UXp0YlduRzZjcG10dk04WWJOdjl6RjFRWkVoL1RzdmtSRHZ3bGU2dGdsRHg5?=
- =?utf-8?B?T0pwdXJOeDZ0aUpDbjQ1b0xoU1ZqSml6OUtqWUpXejIyWEhyQWFRbndiS0pu?=
- =?utf-8?B?Y1lWS0tOcjR2OFQ4cG4yenlYbm9OcUpDK3d3Q05KSUZVVUxCbmRWcklRSVFh?=
- =?utf-8?B?eHhuNU5ZajFtakNqTlRUdUQ3Uy92a0xISzhiTHcrNXJURFlPeGpBWEhXSHEr?=
- =?utf-8?B?aTNsZ2NSVCtQcjY3T212SDE2QTBJb01ITklDN2FUb2drUmZOMHVxOSszYnBK?=
- =?utf-8?B?bm5lK21MV05hWVdKT0Nuem5abUF2ZVUzVXFYWmdGVkkzZ0JVS1hLQU8yWVZI?=
- =?utf-8?Q?LY69JHP3AeUIiBAxaEfnWb3X6ZWZ1Mv4xFZo0=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5976AE6B3C5DCB448DBD1B2A1478E7A0@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=deviqon.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q9optjELGGE/yo65RX7aE+4P5JsAxC90Oa22sr1MR3U=;
+        b=eqjethxm3stGXVFYIbqtC/i944yZy5WCk5w5yeOccFG7SpB4oMGJIoyK55+UongDLF
+         Thj7uaOi+gx9oAA23xzNHjx355I/Z8SY8kD385MvXo4/OBDDR0tR4dNd9FX2hQv4iSW9
+         vEvt8DSMhedO4f34cC5h3XLodL69S+afXSWDBTZ/nMZ4aQqdOdxLjXpTOwR933OQn33H
+         +OjCIM2PqxhhPhBMAXAx+r2cuTep8htw9PuaatuZqvm0FcwVSlYU+eaD89cGL55IiWR1
+         V1Dr1iO2TbR4I0RlpPH0zPaO9oNLgj+KsBfXt41Vlp9JzrZyrSmiHN18hy7bWdFtleks
+         CSVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q9optjELGGE/yo65RX7aE+4P5JsAxC90Oa22sr1MR3U=;
+        b=f6NJpCTTyErz2gcitour2ahSSNbNLziUJknIuPcU7mFcV7xL/DNqGuFXdcfHqTFO0I
+         T/ZjzXlKYS4K8et+WctG/usejFcC8WY5XTNrpOZteK+VRs6ebslZgW06vM0k4Udw+F60
+         xnMpajGoWl0OhFaBr4uRIrHEDnexWr69hi4HRXom5S7YuGjhDg5V/C306jvjgT0tYlaA
+         npaWFh4q6DoM9Q5h36r65lZAk1B9dDAyLJ7V8OUOu4+1RzdiJLO8iTplGlbldAd/ejSO
+         Vu9675XO7/AHKmGj8TcZLXpFRvs+l6OhFyW158bfqnvcciG85i8JMcFrICh2FPTnyDg0
+         4h6w==
+X-Gm-Message-State: AOAM532gGhMMzqBjErCxUTBVAoW11S0E4flmNpjUyoIBsz1FpaOTsZQr
+        3emZ1EwOPffQ2bOG2e9r9pAy2NKcIY1Maagi6o8Iqw==
+X-Google-Smtp-Source: ABdhPJxRZyK30UO9EkCv+1hq3sj8BoCtl7s93CCU/nrkc+Hg7BZWBt66ORrYI1kIoOk9tN+NJaUiVWRUYhiBgomZ/AI=
+X-Received: by 2002:a67:7d85:: with SMTP id y127mr19264486vsc.43.1621840890897;
+ Mon, 24 May 2021 00:21:30 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: fi.rohmeurope.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR03MB3162.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcd75ee0-427e-4e51-bc7e-08d91e710fe4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2021 05:01:59.4176
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 94f2c475-a538-4112-b5dd-63f17273d67a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BbdzzIHfMA5mhq2jREHy1XJck5quLKGOqO1Qt8/cNRHGc7JtvLR3RKD153755sI1qbFTF+Kt0N1uhzI+15q3LP93m1SGN3S0wFohbzT2WM3OubPcgPD98rhE6zwDE2oH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0301MB2313
+References: <20210521181042.7726-1-aardelean@deviqon.com> <CAMpxmJW1Q-m_W+n28V9sEqvnb4ZVTGq_55DedhuJxu5icuD9sQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJW1Q-m_W+n28V9sEqvnb4ZVTGq_55DedhuJxu5icuD9sQ@mail.gmail.com>
+From:   Alexandru Ardelean <aardelean@deviqon.com>
+Date:   Mon, 24 May 2021 10:21:20 +0300
+Message-ID: <CAASAkoZWeQ3xSB3P-fLrym+_0b23HRuvaw3LW2Zgy9CVKr3AWQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-xgene: simplify probe, return
+ devm_gpiochip_add_data() directly
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-TW9ybmluZyBmb2xrcyENCg0KT24gRnJpLCAyMDIxLTA1LTIxIGF0IDE4OjM1ICswMjAwLCBCYXJ0
-b3N6IEdvbGFzemV3c2tpIHdyb3RlOg0KPiBPbiBGcmksIE1heSAyMSwgMjAyMSBhdCAxMjozMSBQ
-TSBWYWl0dGluZW4sIE1hdHRpDQo+IDxNYXR0aS5WYWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+
-IHdyb3RlOg0KPiA+IA0KPiA+IE9uIEZyaSwgMjAyMS0wNS0yMSBhdCAxMDozOCArMDIwMCwgQmrD
-uHJuIE1vcmsgd3JvdGU6DQo+ID4gPiBNaWNoYWVsIFdhbGxlIDxtaWNoYWVsQHdhbGxlLmNjPiB3
-cml0ZXM6DQo+ID4gPiANCj4gPiA+ID4gQW0gMjAyMS0wNS0yMSAwODoyOCwgc2NocmllYiBNYXR0
-aSBWYWl0dGluZW46DQo+ID4gPiA+ID4gU2xpZ2h0bHkgc2ltcGxpZnkgdGhlIGRldm1fZ3Bpb19y
-ZWdtYXBfcmVnaXN0ZXIoKSBieSB1c2luZw0KPiA+ID4gPiA+IHRoZQ0KPiA+ID4gPiA+IGRldm1f
-YWRkX2FjdGlvbigpLg0KPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiBZb3Ugc2hvdWxkIHByb2Jh
-Ymx5IHVzZSB0aGUgZGV2bV9hZGRfYWN0aW9uX29yX3Jlc2V0KCkgd3JhcHBlcg0KPiA+ID4gaGVy
-ZQ0KPiA+ID4gdG9vLA0KPiA+ID4gY2F0Y2hpbmcgdGhlIHVubGlrZWx5IGRldm1fYWRkX2FjdGlv
-bigpIGFsbG9jIGZhaWx1cmUuDQo+ID4gPiANCj4gPiANCj4gPiBJIHdhcyB0aGlua2luZyBvZiBp
-dCBidXQgYXMgdGhlIGdwaW8gcmVnaXN0cmF0aW9uIHN1Y2NlZWRlZCBJIHdhcw0KPiA+IHRoaW5r
-aW5nIHRoYXQgd2UgY291bGQgZ28gb24gd2l0aCBpdCAtICh3aGljaCBtZWFucyB3ZSBjYW4gcHJv
-Y2VlZA0KPiA+IGJ1dA0KPiA+IHRoZSBncGlvIGlzIG5ldmVyIHJlbGVhc2VkLikNCj4gPiANCj4g
-PiBJIGFtIG5vdCBzdXJlIGhvdyBtdWNoIGRpZmZlcmVuY2UgaXQgbWFrZXMgaW4gdGhlIGNhc2Ug
-b2Ygc21hbGwNCj4gPiBhbGxvYw0KPiA+IGZhaWx1cmUgOykNCj4gPiANCj4gPiBCdXQgYXMgaXQg
-c2VlbXMgSSBhbSBpbiBhbnkgY2FzZSByZS1zcGlubmluZyB0aGlzIEkgY2FuIGNoYW5nZSB0aGlz
-DQo+ID4gdG8NCj4gPiB0aGUgZGV2bV9hZGRfYWN0aW9uX29yX3Jlc2V0KCkgYW5kIGZhaWwgdGhl
-IGdwaW9fcmVnbWFwDQo+ID4gcmVnaXN0cmF0aW9uIGlmDQo+ID4gYWxsb2MgZmFpbHMuDQo+ID4g
-DQo+ID4gQmVzdCBSZWdhcmRzDQo+ID4gICAgICAgICBNYXR0aSBWYWl0dGluZW4NCj4gDQo+IEhp
-IE1hdHRpLA0KPiANCj4gUGxlYXNlIHVzZSB0aGUgcmVzZXQgdmFyaWFudC4gV2UgYWx3YXlzIHdh
-bnQgdG8gcm9sbC1iYWNrIHRoZSBjaGFuZ2VzDQo+IGRvbmUgaW4gYSBmdW5jdGlvbiBiZWZvcmUg
-dGhlIGZhaWx1cmUgYW5kIHByb3BhZ2F0ZSB0aGUgZXJyb3IgY29kZS4NCg0KUmlnaHQuIEknbGwg
-ZG8gdGhhdC4gSSBob3BlIHRvIGJlIGFibGUgdG8gcmUtc3BpbiB0aGlzIHRvZGF5Lg0KDQpCZXN0
-IFJlZ2FyZHMNCgktLSBNYXR0aQ0K
+On Sun, 23 May 2021 at 21:31, Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> On Fri, May 21, 2021 at 8:10 PM Alexandru Ardelean
+> <aardelean@deviqon.com> wrote:
+> >
+> > The handling of the return value from devm_gpiochip_add_data() is a bit
+> > redundant. It prints messages on error and success cases.
+> > While the success message may be useful, it is more in the area of log
+> > spam, and these can be printed with other forms of kernel logging.
+> >
+> > This change does a direct return with devm_gpiochip_add_data() in the probe
+> > function.
+> >
+> > The platform_set_drvdata() is needed, as this driver uses the stored
+> > private date in the PM suspend/resume routines.
+> >
+> > Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
+> > ---
+> >  drivers/gpio/gpio-xgene.c | 11 +----------
+> >  1 file changed, 1 insertion(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-xgene.c b/drivers/gpio/gpio-xgene.c
+> > index 532b0df8a1f2..fb4b0c67aeef 100644
+> > --- a/drivers/gpio/gpio-xgene.c
+> > +++ b/drivers/gpio/gpio-xgene.c
+> > @@ -159,7 +159,6 @@ static SIMPLE_DEV_PM_OPS(xgene_gpio_pm, xgene_gpio_suspend, xgene_gpio_resume);
+> >  static int xgene_gpio_probe(struct platform_device *pdev)
+> >  {
+> >         struct xgene_gpio *gpio;
+> > -       int err = 0;
+> >
+> >         gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+> >         if (!gpio)
+> > @@ -183,15 +182,7 @@ static int xgene_gpio_probe(struct platform_device *pdev)
+> >
+> >         platform_set_drvdata(pdev, gpio);
+> >
+> > -       err = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
+> > -       if (err) {
+> > -               dev_err(&pdev->dev,
+> > -                       "failed to register gpiochip.\n");
+> > -               return err;
+> > -       }
+> > -
+> > -       dev_info(&pdev->dev, "X-Gene GPIO driver registered.\n");
+> > -       return 0;
+> > +       return devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
+> >  }
+> >
+> >  static const struct of_device_id xgene_gpio_of_match[] = {
+> > --
+> > 2.31.1
+> >
+>
+> Applied, thanks.
+>
+> For the future: the subject should be: "gpio: xgene: ..." here and
+> everywhere else.
+
+ack
+will keep that in mind
+
+thanks :)
+Alex
+
+>
+> Bart
