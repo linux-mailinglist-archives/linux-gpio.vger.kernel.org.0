@@ -2,57 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18E5338E6E4
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 14:48:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0D2F38E6FB
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 14:54:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232715AbhEXMtd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 08:49:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37906 "EHLO
+        id S232426AbhEXM4X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 08:56:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232512AbhEXMtc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 08:49:32 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAAF0C061574;
-        Mon, 24 May 2021 05:48:03 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id g18so19092218pfr.2;
-        Mon, 24 May 2021 05:48:03 -0700 (PDT)
+        with ESMTP id S232389AbhEXM4X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 08:56:23 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CD0C061574;
+        Mon, 24 May 2021 05:54:54 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id ep16-20020a17090ae650b029015d00f578a8so11091976pjb.2;
+        Mon, 24 May 2021 05:54:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zNATQPXCHqo6W4bfJlq6Weg8Cm+bnIyKUInS/JSGSD4=;
-        b=pc/qu/BkCRzgodJu5jz5PuyodDFdWvuGyD+UCZSpVRBhzwClgBPCJKnUGI1wPv7Qel
-         68cm5mM1fFSfBOkUfeN1OCYLj0O2iKwVdavJnU84Dp9Z6dN6UTDk0FnRdPJTwHzy+VKS
-         FXhEbaUxi3J4xYMdvgaPKtr5Q5xzPHWRXuRQSXSOmofQxscpnF5v9t2AIzlXFMoi5Yzd
-         o98g5LqXSvCv2jxyod3wqdlcBwNnIyICL1G2Sy14+l/qmA/VNRhQeFYwGQONCE0gbz9x
-         cA39If1DVwY+12SS/jmVGh8nu0WtPS1uQzZcW3zHYBeb7fdbrY7bnKkg8Y2U/ooxwwyL
-         KSjA==
+        bh=lL4mdK3OlVo5HtMpo/i3Kg+WlLytBJ9Ge9Zv4SxQ7gU=;
+        b=pGzM1IG9n01ZBmiUZlf9M9pq0HgR7inLpdsP1O6LCFKm/yy1B51ksOICc0+JwsQEBO
+         l8XnLPjK8XRcH5FpMghH4Fpsx2uTzljsuyi+qmnzoB5aQkzQaEf/POib4QJOACpkiXUq
+         xorxU/NVTqGsUGwmq/zES+XiIpQRWbaof/LyukPfzpbhExCZHQK/zgvYKdrg39pOuUZB
+         /+nXstxymUoQjhmiAdqKy+clSlVcPomamiWtmVqQVMQc/G4iFXrc/8JDNsKQryqLoIdp
+         WYs+zqYpU95pjBC8WVjrXkA36NBjfSka6KzK/u27UeFpkYTpEzQ1jqxiZCSL5Rl0gdpW
+         LaYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zNATQPXCHqo6W4bfJlq6Weg8Cm+bnIyKUInS/JSGSD4=;
-        b=dVbAyugZRrGa023hLTGrMeLXkq0ORP2keGqPGjawRktEYO8NnKMRckyM/ixuc6DGpv
-         kBQS6ZHxEVtkUTqy0iuoBspIM+pVWJ7gC9gg86hJeQXbHi6Z1dN/c9xbIXztvWtYIEoW
-         CxHrXvYa6NfuRE/4Piy70cBbWjzDx0fU/I6GYg9KHf+JdRIYlGD64UrwKMnSmmfXSnyy
-         yFXkKaHBEFwrfq6ck2+O3UJZ4rc/gZGe8FyfapshWIa9ec4VYo8TrF/IbTn1UgpQD/t3
-         btipPZg0b9nVVgHGsw+mh9JeneQbt3a2ODTI82r1mVu8BMb8JB+7WBc4dO489yFzs4o/
-         NCDQ==
-X-Gm-Message-State: AOAM530Ni+WeCe5N2m++IrppBm2pHSCm/X8pz4k9mczOzO9jkgrb/7uu
-        gqpoHAX3/HPkqLvsXJBnNb1fN0sqgDyuFVXDOhM=
-X-Google-Smtp-Source: ABdhPJzWplVZVVHOiJEAAS61tTN++D2R0EqzKEkFqB224r/OOVXTz3cs88eBTzYTf5+Z2EKbRy/M1PHbZ4Ix5rAwV3o=
-X-Received: by 2002:a63:b507:: with SMTP id y7mr5986931pge.74.1621860483387;
- Mon, 24 May 2021 05:48:03 -0700 (PDT)
+        bh=lL4mdK3OlVo5HtMpo/i3Kg+WlLytBJ9Ge9Zv4SxQ7gU=;
+        b=EM+6NYuJtEwcpZ5RIfhe9fzYsmNUNo8G02psvaHdjdYUrTczDIuOYlFOP/lqhjo2Mo
+         IFdfuXCoIIPYs4WYCh8BfEn+WbFTyyI991SAqVdV4UnXzLJ2hOWIfjfQkp+kPI4EgFbG
+         1Uz4wYs7JG3+5dpanHp2ABpDSzDK3VZiXNAB5sZ4OVEemBtD7cDRCpgrB/tUNVmXlqo0
+         NZP3wkX4Fer51bD9WVbM1cL0V680MVj3GDdl1dZYLwEMhI8TOaNwAZ4CXFtANOOqDBHE
+         tV2JSYTcnImGeb+K2MMSQTgJIE2gDJDxY5//YCrFPDhwpL13ED3k42v/xwapWqRpk6V6
+         4Tag==
+X-Gm-Message-State: AOAM5310uZDhmGT8JXQIdqVA4k9E5++50/KRjH7+fvJiFlyME4xLMzJX
+        PYplDy2uEAtbecoWHUEGlw5NuY61GnTPb6h+1Uc=
+X-Google-Smtp-Source: ABdhPJw+E3SSq/owwQFmphF7BgBwbkNmSsHWajF0qirgf9BcugvUZVhl7rsgwOsXxlWpzrkkfpBrtwDY1AxQ7XUkM7E=
+X-Received: by 2002:a17:902:bf48:b029:fa:9401:cda8 with SMTP id
+ u8-20020a170902bf48b02900fa9401cda8mr3853689pls.0.1621860893478; Mon, 24 May
+ 2021 05:54:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1621809029.git.sander@svanheule.net> <213ab7580a1d3229d32f7aac67bf4e828612153a.1621809029.git.sander@svanheule.net>
- <CAHp75VdoSfO3Y9Lf+fcoG2=Rb+SBJKq+B0tG+gS7TaHUmN-iYg@mail.gmail.com> <08375439546c04d32b158c20fb59446c3bbafb46.camel@svanheule.net>
-In-Reply-To: <08375439546c04d32b158c20fb59446c3bbafb46.camel@svanheule.net>
+References: <cover.1620735871.git.sander@svanheule.net> <cover.1621809029.git.sander@svanheule.net>
+ <YKr9G3EfrM34gCsL@lunn.ch> <CAHp75VewCw8ES_9S48qmeCtSXMkGWt0s4iub0Fu4ZuwWANHpaQ@mail.gmail.com>
+ <02bbf73ea8a14119247f07a677993aad2f45b088.camel@svanheule.net>
+In-Reply-To: <02bbf73ea8a14119247f07a677993aad2f45b088.camel@svanheule.net>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 24 May 2021 15:47:47 +0300
-Message-ID: <CAHp75VfbdmHPsscHOAnH-WjGyWF-8V_00FjQu1PD+xFLcUytig@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] leds: Add support for RTL8231 LED scan matrix
+Date:   Mon, 24 May 2021 15:54:37 +0300
+Message-ID: <CAHp75Vf_dAfoMmziVLkEQ2Yr-e7Cj5=61ua5Q05Cyz-pLwVjpw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] RTL8231 GPIO expander support
 To:     Sander Vanheule <sander@svanheule.net>
-Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+Cc:     Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
         Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -63,54 +66,90 @@ Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Linux LED Subsystem <linux-leds@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 24, 2021 at 3:04 PM Sander Vanheule <sander@svanheule.net> wrote:
-> On Mon, 2021-05-24 at 13:24 +0300, Andy Shevchenko wrote:
-> > On Mon, May 24, 2021 at 1:34 AM Sander Vanheule <sander@svanheule.net> wrote:
+On Mon, May 24, 2021 at 2:41 PM Sander Vanheule <sander@svanheule.net> wrote:
+> On Mon, 2021-05-24 at 10:53 +0300, Andy Shevchenko wrote:
+> > On Mon, May 24, 2021 at 4:11 AM Andrew Lunn <andrew@lunn.ch> wrote:
 
 ...
 
-> > > +       if (ret != 2)
-> > > +               return -ENODEV;
+> > > > Changes since v2:
+> > > >   - MDIO regmap support was merged, so patch is dropped here
+> > >
+> > > Do you have any idea how this will get merged. It sounds like one of
+> > > the Maintainers will need a stable branch of regmap.
 > >
-> > I would say -EINVAL, but -ENODEV is similarly okay.
+> > This is not a problem if Mark provides an immutable branch to pull from.
 >
-> Any specific reason you think EINVAL is more appropriate than ENODEV?
+> Mark has a tag (regmap-mdio) for this patch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/tag/?h=regmap-mdio
 
-My logic is that the initial values (from resource provider) are incorrect.
-But as I said, I'm fine with either.
+Also works but you have to provide this information in the cover letter.
 
 ...
 
-> > > +       int err;
+> > > >   - Introduce GPIO regmap quirks to set output direction first
+> > >
+> > > I thought you had determined it was possible to set output before
+> > > direction?
 > >
-> > ret or err? Be consistent across a single driver.
+> > Same thoughts when I saw an updated version of that patch. My
+> > anticipation was to not see it at all.
 >
-> I had first used 'err' for both fwnode_property_count_u32() and
-> fwnode_property_read_u32_array(). The former returns "actual count or error
-> code", while the latter is only "error code". And I found it weird to read the
-> code as "does error code equal 2", if I used 'err' as variable name.
+> The two devices I've been trying to test the behaviour on are:
+>  * Netgear GS110TPP: has an RTL8231 with three LEDs, each driven via a pin
+>    configured as (active-low) GPIO. The LEDs are easy for a quick visual check.
+>  * Zyxel GS1900-8: RTL8231 used for the front panel button, and an active-low
+>    GPIO used to hard reset the main SoC (an RTL8380). I've modified this board
+>    to change some of the strapping pin values, but testing with the jumpers and
+>    pull-up/down resistors is a bit more tedious.
 >
-> I've split this up:
->  * addr_count for fwnode_property_count_u32's result
->  * err for fwnode_property_read_u32_array's result
+> On the Netgear, I tested the following with and without the quirk:
 >
-> Since addr_count is only used before err is touched, I guess the compiler will
-> optimize this out anyway?
+>    # Set as OUT-LOW twice, to avoid the quirk. Always turns the LED on
+>    gpioset 1 32=0; gpioset 1 32=0
+>    # Get value to change to input, turns the LED off (high impedance)
+>    # Will return 1 due to (weak) internal pull-up
+>    gpioget 1 32
+>    # Set as OUT-HIGH, should result in LED off
+>    # When the quirk is disabled, the LED turns on (i.e. old OUT-LOW value)
+>    # When the quirk is enabled, the LED remains off (i.e. correct OUT-HIGH value)
+>    gpioset 1 32=1
+>
+> Now, what's confusing (to me) is that the inverse doesn't depend on the quirk:
+>
+>    # Set as OUT-HIGH twice
+>    gpioset 1 32=1; gpioset 1 32=1
+>    # Change to high-Z
+>    gpioget 1 32
+>    # Set to OUT-LOW, always results in LED on, with or without quirk
+>    gpioset 1 32=0
+>
+> Any idea why this would be (or appear) broken on the former case, but not on the
+> latter?
 
-Usually we do this pattern (and it seems you missed the point, name of
-variable is ret in some functions and err in the rest):
+GPIO tools for the shell are context-less. Can you reproduce this with
+the legacy sysfs interface?
 
-err /* ret */ = foo();
-if (err < 0)
-  return err;
-count = err;
+> I was trying to reproduce this behaviour on the Zyxel, but using the strapping
+> pins that are also used to configure the device's address. So perhaps the pull-
+> ups/-downs were confusing the results. Using a separate pin on the Zyxel's
+> RTL8231, I've now been able to confirm the same behaviour as on the Netgear,
+> including capturing the resulting glitch (with my simple logic analyser) when
+> enabling the quirk in the first test case.
+>
+> I hope this explains why I've still included the quirk in this revision. If not,
+> please let me know what isn't clear.
+
+Do you possess a schematic of either of the devices and a link to the
+RTL datasheet (Btw, if it's publicly available, or you have a link
+that will ask for necessary sign-in it would be nice to include the
+link to it as a Datasheet: tag)?
 
 -- 
 With Best Regards,
