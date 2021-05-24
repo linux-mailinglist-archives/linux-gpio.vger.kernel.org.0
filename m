@@ -2,121 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1C4138E3FB
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 12:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E081338E573
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 13:27:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232636AbhEXK0S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 06:26:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232629AbhEXK0S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 06:26:18 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B56C061574;
-        Mon, 24 May 2021 03:24:49 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id n6-20020a17090ac686b029015d2f7aeea8so10993630pjt.1;
-        Mon, 24 May 2021 03:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MEQuDKUSQKw0MZlz9rMkXgWLUEoc5fj6IhTPOzDj8iU=;
-        b=Qv4TPYvwJysNuGU2x2gZCJJZc/CsezboC7ejkinAqyTwUOPW2sQqSFyRm7Hg5oQmkZ
-         hHkbkbfd4OVdLDim98PFHsvRh46B4g67lkzIrqgNCTFjMfuHEFfrzd/sFinLOhnGhS8L
-         xFFinXINswnbZ5sMvCdGJ1I81XHwaYmhi9oRsrklreqbqE6nLbtgAG+LH/fbyXKx5+i6
-         N9a0sU0M0p8u8TnP4+otmeCJxhtED7Bp89OWdoYuxxEQtEq7134CVFOUSLR6W1iuacQt
-         w+0d3Jcg1hQPPB2OiofQYu6b++9NKmHO14Qj3DlKJ+rP2emse7HAu+6H2fkb8t/urcvZ
-         5qGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MEQuDKUSQKw0MZlz9rMkXgWLUEoc5fj6IhTPOzDj8iU=;
-        b=l0s2uTuhtVZV0khlBleRMLk0Pa5PVlLpvIMjDqtBzzM9BTojBt/esVT+71AVgg425e
-         J1SXZuptj+MlzSybG7OK3eBGlgko6xyt0FCtiIm4I5mFY1YYw+NfXB0Ziel1iQGIXrfs
-         Ka1jK9Dl6jt6vsSfRbkUIDhNkRyyUEPXPfQ8STcJJ8AHeBBWVg7jNPljzQHs1Co4u1qv
-         zylelW0cQ7EsvWQQ9uh1VGsPxH8Zr3oz6CN2W+SKM0237J2OW2lZuOyfJ90/R0LlM6oF
-         /hux8bzhHjeJeiAetTO8j5on0dmAaE0si9SHFV9gdFav8W2KT0rDvEYafHjSaJdsmeCs
-         H2sg==
-X-Gm-Message-State: AOAM5314KEfgTqemUt6MnMxZxAw8UkyhNJV2gu+maK0kEyOUMuX89k6W
-        Y1kQonIlxY5zScQnr2YQsVpWY86dW+T1laNqIfs=
-X-Google-Smtp-Source: ABdhPJx+rTrdBTgdPKGW3YRrFwFVcsETKQkPqTT0e3PgCx+XWECpiRV/lfsemIIjh58HUe7/Dq9qZgoi01trTtQ3tHQ=
-X-Received: by 2002:a17:90a:17ad:: with SMTP id q42mr24585537pja.181.1621851889142;
- Mon, 24 May 2021 03:24:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1621809029.git.sander@svanheule.net> <213ab7580a1d3229d32f7aac67bf4e828612153a.1621809029.git.sander@svanheule.net>
-In-Reply-To: <213ab7580a1d3229d32f7aac67bf4e828612153a.1621809029.git.sander@svanheule.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 24 May 2021 13:24:33 +0300
-Message-ID: <CAHp75VdoSfO3Y9Lf+fcoG2=Rb+SBJKq+B0tG+gS7TaHUmN-iYg@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] leds: Add support for RTL8231 LED scan matrix
-To:     Sander Vanheule <sander@svanheule.net>
-Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Michael Walle <michael@walle.cc>,
+        id S232726AbhEXL3E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 07:29:04 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:21159 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232674AbhEXL3B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 07:29:01 -0400
+X-Greylist: delayed 825 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 May 2021 07:29:01 EDT
+Received: from twspam01.aspeedtech.com (localhost [127.0.0.2] (may be forged))
+        by twspam01.aspeedtech.com with ESMTP id 14OB0tiC025007
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 19:00:55 +0800 (GMT-8)
+        (envelope-from steven_lee@aspeedtech.com)
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 14OB0oks024990;
+        Mon, 24 May 2021 19:00:50 +0800 (GMT-8)
+        (envelope-from steven_lee@aspeedtech.com)
+Received: from slee-VirtualBox.localdomain (192.168.100.253) by
+ TWMBX02.aspeed.com (192.168.0.24) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 24 May 2021 19:13:44 +0800
+From:   Steven Lee <steven_lee@aspeedtech.com>
+To:     Andrew Jeffery <andrew@aj.id.au>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        "moderated list:ASPEED PINCTRL DRIVERS" 
+        <linux-aspeed@lists.ozlabs.org>,
+        "moderated list:ASPEED PINCTRL DRIVERS" <openbmc@lists.ozlabs.org>,
+        "open list:ASPEED PINCTRL DRIVERS" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     <steven_lee@aspeedtech.com>, <Hongweiz@ami.com>,
+        <ryan_chen@aspeedtech.com>, <billy_tsai@aspeedtech.com>
+Subject: [PATCH v1 0/3] pinctrl: pinctrl-g6: Add the 2nd sgpio
+Date:   Mon, 24 May 2021 19:13:34 +0800
+Message-ID: <20210524111338.16049-1-steven_lee@aspeedtech.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [192.168.100.253]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 14OB0oks024990
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 24, 2021 at 1:34 AM Sander Vanheule <sander@svanheule.net> wrote:
->
-> Both single and bi-color scanning modes are supported. The driver will
-> verify that the addresses are valid for the current mode, before
-> registering the LEDs. LEDs can be turned on, off, or toggled at one of
-> six predefined rates from 40ms to 1280ms.
->
-> Implements a platform device for use as a child device with RTL8231 MFD,
-> and uses the parent regmap to access the required registers.
+AST2600 has 2 SGPIO master interfaces one with 128 pins and another one
+has 80 pins, it also supports 2 SGPIO slave interfaces.
+However, there is only the first sgpio master/slave interface defined in
+dtsi and pinctrl driver.
+The patch series adds the second SGPIO master and slave interfaces
+in dt-bindings, dtsi and pinctrl driver.
 
-...
+Please help to review.
 
-> +         This options enables support for using the LED scanning matrix output
+Thanks,
+Steven
 
-option
+Steven Lee (3):
+  dt-bindings: pinctrl: Update enum for adding SGPM2 and SGPS2
+  ARM: dts: aspeed-g6: Add pinctrl settings
+  pinctrl: pinctrl-aspeed-g6: Add sgpio pinctrl settings
 
-> +         of the RTL8231 GPIO and LED expander chip.
-> +         When built as a module, this module will be named leds-rtl8231.
-
-...
-
-> +               interval_ms = 500;
-
-Does this deserve a #define?
-
-...
-
-> +       ret = fwnode_property_count_u32(fwnode, "reg");
-> +       if (ret < 0)
-> +               return ret;
-> +       if (ret != 2)
-> +               return -ENODEV;
-
-I would say -EINVAL, but -ENODEV is similarly okay.
-
-...
-
-> +       int err;
-
-ret or err? Be consistent across a single driver.
-
-...
-
-> +       int err;
-
-Ditto.
-
+ .../pinctrl/aspeed,ast2600-pinctrl.yaml       | 10 ++++----
+ arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi      | 10 ++++++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    | 24 +++++++++++++++----
+ drivers/pinctrl/aspeed/pinmux-aspeed.h        |  9 +++++++
+ 4 files changed, 44 insertions(+), 9 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
