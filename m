@@ -2,56 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4878838E205
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 09:55:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C07F38E21A
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 10:02:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232318AbhEXH4u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 03:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56018 "EHLO
+        id S232311AbhEXIEF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 04:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232266AbhEXH4s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 03:56:48 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4242C061574;
-        Mon, 24 May 2021 00:55:18 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id k5so14370357pjj.1;
-        Mon, 24 May 2021 00:55:18 -0700 (PDT)
+        with ESMTP id S232099AbhEXIEE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 04:04:04 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F545C061574;
+        Mon, 24 May 2021 01:02:36 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id 22so19806822pfv.11;
+        Mon, 24 May 2021 01:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=m1J/Jo+r8mKr38XIJ9QtR6SB9IFiAQBUxXoKzYHmwE0=;
-        b=QXIpB+SG0A8zH+V/w3KQ2u/djXkMVX/IZX+d9fzo6Csz2xrHLL9p5Q6jTQvg0DUMU8
-         WmnYXRnT+V8PgP/7bsaDHFltfIXbbzO6D7WLUhGOqOQM2zKJzG8Vc4lMeGzLY2KuAyWH
-         Wg3/o8OJSbQ9PhQgaEeiA6AKMXMFRPX6Mci10ROPQerji7Y4soeHKnc0Woz+JgjhkZJP
-         4LcT48gWm8OHyS8g30hmYVMtPEq8hb4Dq5RMK0DYfZXczv5/UXovnfYL3m5MTXj+S/In
-         oB44mzjE4W+sREOoqv5COyC+f7zGFw5apYjsNbINuohZjsga1mByKj3npE0wQrbPIbDh
-         8mbA==
+        bh=3tG71KFeGvB6Bz61w8pRbOH7Ofvu8zef1oUzyLHGfF0=;
+        b=EjKcQ96zD1JI5HCMcQ8CIcLyTRF90OuzoQzejQpkXMvZIhYcJ/v22bfBemkMSselbF
+         PbvSnv1wnz6GDztK+u/Z6x5VdVxT+w7sifjH7oUBJ1k5wf/1u8lWhxmXLX4d1lyPLs7V
+         EW6aUPkeqsZNWIUJYuYZRD1DAJRbu+Vujr834rrjEzKfd/1gyjk9speagdG0P+6bWvm1
+         qOr+W2PPFe+6FkiwnU3b3Zr/rTzPP+w+qfwemzteqeV3GxifvciWry6OzjQD7yxfOC0O
+         ZEdRZKNGsfxU+MbW7FkKJKY6Vd632ZK7KXccQO7G+icCNvQ9aymabcaYazM44M3ZP7jL
+         R7Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=m1J/Jo+r8mKr38XIJ9QtR6SB9IFiAQBUxXoKzYHmwE0=;
-        b=rIFxd58DCgnXEAWRAIRXMXI4aS5GUnxmZC8P5pKLGd1CXM2emTcCUXeVtFZAvOZGZe
-         rnxnuMiTlyuB3tqleych9KpYX6UnxghQcqQsVfMxqZphE7+1RUWvNd62zPMOy1tsvCxW
-         fIHTauqSEnY4Wkm1iBqkCxWn+bbx/TAL207D3LuwmJ2tklxJWY7DGCacofM57edCVmPo
-         nTWbFiOxPpPQXAbCwvrkJZnlAdpnNzfZmzIX9pI82ZwPmHGH+3Y22dIJWljL4u/P3SFA
-         q4HbrvzVEvZzalPiI+i9KFafpNpHik6Pfg3snz6srBS5YXPDnhlnRc+o8xLJi+ctx5yq
-         SAEg==
-X-Gm-Message-State: AOAM5305V11EUP/88GX0NgH0Hzsb74XednbBHMY4UkMFLRrOxS1dXofJ
-        WCdUI7ObZavW6avEfcRKoluqDzWIQyCk6mv+7yM=
-X-Google-Smtp-Source: ABdhPJwhv389tH+Fd5hw1e/lij1tH8rmYSXV/xbIpl1M9c+IF8Fu+egL203tyIcW9tF5cw0JtRBntT4s1Vnn665smfU=
-X-Received: by 2002:a17:902:bf48:b029:fa:9401:cda8 with SMTP id
- u8-20020a170902bf48b02900fa9401cda8mr2816160pls.0.1621842918255; Mon, 24 May
- 2021 00:55:18 -0700 (PDT)
+        bh=3tG71KFeGvB6Bz61w8pRbOH7Ofvu8zef1oUzyLHGfF0=;
+        b=e81MYE19N2zEwdaLztnraC2uPVht1NSCCeOmmX+WWVaQVmzzlmcmIATvKuNI63ygWd
+         Y4ASH2uDG5nwfhiCtPpZAGhXg9HIfxOleIyUmPtPM69BmXuNwNjU5P0GgzD9LaagpobP
+         H/c0WzFLfSpgtASvYqi6f/dPjn3h8LsDYyMhAujgLg2tUYZhfogmlEj6AKI5NUCaWjlu
+         2DRbVlGhFxHnwHrQcSUWwWx4CikfbPQy37xThlhuXXOOYidsw8aO6du5p6uN8SNFoz72
+         7fovTQ3NX9fBEseUV8WTRcw16edJY+Zq84IuEcti/1CGZsnvEJ7FLcAadnOPxP6DT6UA
+         GtRQ==
+X-Gm-Message-State: AOAM533vv1U5EIbZH43GEyGDDb9rm7MkgjeSqN0t5l0aaKd6oR7w4RVj
+        KGsFjpfC28uAPdkbmCGYhfHYhuFlx6xVC5556+Z1VUWmsAA=
+X-Google-Smtp-Source: ABdhPJylHCLD9rP65qJ0C77l3k8KRNc0rFvkvvth1kYxsH6Q4515gZYtN0QN4f8ValEOjiGy/wQPbpixdoRVLpqE4vI=
+X-Received: by 2002:a63:4145:: with SMTP id o66mr12431070pga.4.1621843355752;
+ Mon, 24 May 2021 01:02:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1621279162.git.sander@svanheule.net> <f1ca940216c0accfc804afee2dbe46d260d890ae.1621279162.git.sander@svanheule.net>
- <CAHp75Vc5a4PsHsJ2sNsRNT7BaBJ=Kxb+KKM7x7jWeRdOS8WfnQ@mail.gmail.com> <33eb043f2ef9d81bbe26876a1c73859f56a8abd9.camel@svanheule.net>
-In-Reply-To: <33eb043f2ef9d81bbe26876a1c73859f56a8abd9.camel@svanheule.net>
+References: <cover.1621809029.git.sander@svanheule.net> <6d14b72bc545a818675d99c8e91e99c96cc3e286.1621809029.git.sander@svanheule.net>
+In-Reply-To: <6d14b72bc545a818675d99c8e91e99c96cc3e286.1621809029.git.sander@svanheule.net>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 24 May 2021 10:55:02 +0300
-Message-ID: <CAHp75VeVq31q6U+fXGi=ME0Bx5D7V+KiE70JZB4MLy+SbEJP4A@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] mfd: Add RTL8231 core device
+Date:   Mon, 24 May 2021 11:02:19 +0300
+Message-ID: <CAHp75VcbRKGYSJZK_Rg969-Uck=h+8byWt0B3MtQJDqwbdf2sw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] mfd: Add RTL8231 core device
 To:     Sander Vanheule <sander@svanheule.net>
 Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
@@ -72,22 +70,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 24, 2021 at 10:50 AM Sander Vanheule <sander@svanheule.net> wrote:
-> On Tue, 2021-05-18 at 00:18 +0300, Andy Shevchenko wrote:
-> > On Mon, May 17, 2021 at 10:28 PM Sander Vanheule <sander@svanheule.net> wrote:
-> > > +       err = regmap_read(map, RTL8231_REG_FUNC1, &v);
-> >
-> > > +       ready_code = FIELD_GET(RTL8231_FUNC1_READY_CODE_MASK, v);
-> >
-> > If we got an error why we need a read_core, what for?
+On Mon, May 24, 2021 at 1:34 AM Sander Vanheule <sander@svanheule.net> wrote:
 >
-> The chip has a static 5-bit field in register 0x01, called READY_CODE according
-> to the datasheet. If a device is present, and a read from register 0x01
-> succeeds, I still check that this field has the correct value. For the RTL8231,
-> it should return 0x37. If this isn't the case, I assume this isn't an RTL8231,
-> so the driver probe stops and returns an error value.
+> The RTL8231 is implemented as an MDIO device, and provides a regmap
+> interface for register access by the core and child devices.
+>
+> The chip can also be a device on an SMI bus, an I2C-like bus by Realtek.
+> Since kernel support for SMI is limited, and no real-world SMI
+> implementations have been encountered for this device, this is currently
+> unimplemented. The use of the regmap interface should make any future
+> support relatively straightforward.
+>
+> After reset, all pins are muxed to GPIO inputs before the pin drivers
+> are enabled. This is done to prevent accidental system resets, when a
+> pin is connected to the parent SoC's reset line.
 
-Right. And why do you get ready_code if you know that there is an error?
+...
+
+> [missing MDIO_BUS dependency, provided via REGMAP_MDIO]
+> Reported-by: kernel test robot <lkp@intel.com>
+
+What does this fix? Shouldn't it have a Fixes tag? (Yes, I know that
+you answered in the other email, but here is a hint: before settling
+these kinds of things do not send a new version. Instead of speeding
+up the review you are closer to the chance to have this been not
+applied for v5.14 at all)
+
+...
+
+> +       /* SOFT_RESET bit self-clears when done */
+> +       regmap_update_bits(map, RTL8231_REG_PIN_HI_CFG,
+> +               RTL8231_PIN_HI_CFG_SOFT_RESET, RTL8231_PIN_HI_CFG_SOFT_RESET);
+
+> +       usleep_range(1000, 10000);
+
+It's strange to see this big range of minimum and maximum sleep.
+Usually the ratio should not be bigger than ~3-4 between the values.
+
+...
+
+> +       regmap_write(map, RTL8231_REG_PIN_MODE0, 0xffff);
+> +       regmap_write(map, RTL8231_REG_GPIO_DIR0, 0xffff);
+> +       regmap_write(map, RTL8231_REG_PIN_MODE1, 0xffff);
+> +       regmap_write(map, RTL8231_REG_GPIO_DIR1, 0xffff);
+
+GENMASK() ?
+Actually it seems it deserves a special definition like
+
+..._ALL_PIN_MASK  GENMASK(15, 0)
 
 -- 
 With Best Regards,
