@@ -2,105 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45E3838E570
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 13:27:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6603A38E581
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 13:33:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232118AbhEXL2o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 07:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47256 "EHLO
+        id S232547AbhEXLe5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 07:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232050AbhEXL2n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 07:28:43 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05CCFC061574;
-        Mon, 24 May 2021 04:27:16 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id w206so5923345ybg.7;
-        Mon, 24 May 2021 04:27:15 -0700 (PDT)
+        with ESMTP id S232494AbhEXLep (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 07:34:45 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB8CC061574
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 04:33:16 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id v13so14469613ple.9
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 04:33:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n4lZKQ7D/b+Y1RnAe1IHv907xEM4UrKrYxjGnKdhmJs=;
-        b=kCzxdZSgQ+Qvkuemg1RliV7PQ15KS5a1Qe+OwDcyfwKRqZeAeqlfwqbMGUopNBnIGO
-         xV7tKYPuyGNDSKbtaR5y5JTrluPYIrSv+x8WL4KkqbqDpwfn8gmHIv8y1mjjlb32uubI
-         mpZujOUm6T+yU1K4psAp0SByHHHZxtsFW91ACMCFLavQWd+vdcrJzhfeJABoSlyFw8mq
-         5VImmopVl4M+pEntrlWzGFmO4UESaMhuUe1vhotgHvf1w0503oYPNlau5+SvFNteTdZD
-         SPgs1sG5x09+Z1s4CBdp50r+5+w3KJxgzfxR5YRlYN3J8gUZk/+1Fp7P038BtOhnedpi
-         H0NA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=x46gnLIGsJq8N7jGrCH9lPhfRM+Zfds2ZLfr1wKusVE=;
+        b=jC0voObdRyc6r9TnwWBCRQchvULo+zIFEuHpIywiy+UwGYvIFA7Vn/kqZ+MMqG5/ho
+         h217vZg0BccSzdx3NCqhJh3jhn2avoWyLnOOysPU43hrWTXAF1obKrNQrdHKfJqsm7BK
+         Ip3o20XhNt4Y7PZW9ie26Rgl9P2ILX4Gp5O5kuf/G/lbofeQySYVDtpEiXcylFZmlyk7
+         LsgO7idyPudGWLRxJ7Ti9V+NKlefwgnpBJqAwuXZzFxKCZ+hzTn+vODAdVbdl3aRhflJ
+         Ib7zVBQDh9q95kLJAoiQNKbCnzg+In9UHHdORsbHg0a5iZvLIlB/lLwMH3di/Ze3M45k
+         La5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n4lZKQ7D/b+Y1RnAe1IHv907xEM4UrKrYxjGnKdhmJs=;
-        b=ZoeBGi/pzX0HzljNBaPniT7DYWTyAlMXqpIOYwMDrBZRukRxgFjdK3H4q5l59SIKiq
-         ZPjap28EAosKsICc/bXQGOg2cNYdOuGjmaB9hT4Nm+zL7mcBWrkIY0WvPosxUhzQhKnx
-         ox86/3pza4XEehs8xkBG4RlEm0iuaEVANqWRmkdoxjqquZ0Nvo6JkhWX85YGYuiDKwgU
-         og7WNaOIZSX8eDkRdTbUbAsWYR2efjMsAkGzTLGGgLz+MQYTC1ytanAkEG2Sx3EzT5+b
-         R66hdgmegnRUgvNvgDhP/1R8AuZWrCXf5IcKtRXEX1muh1ToFNPaHGp9Wr63vXOmsSzN
-         kALg==
-X-Gm-Message-State: AOAM5318jFPClJkN2sV/F2n7vQZvsrZycUR4T1xCytdBcjhLHCHaQX/5
-        b8aX9YNttlb54EHffKF+AMNLR3XT91NARkPSmg8=
-X-Google-Smtp-Source: ABdhPJy2CiQGQD9PVjlvfc77AiGZksg4u2goErRpB2fkP/7pbqKE9HS5KbzuJSWj6Tjl5TG5N7AmZEE5geyLUdWuD1U=
-X-Received: by 2002:a25:b78e:: with SMTP id n14mr35491542ybh.474.1621855635345;
- Mon, 24 May 2021 04:27:15 -0700 (PDT)
+         :message-id:subject:to;
+        bh=x46gnLIGsJq8N7jGrCH9lPhfRM+Zfds2ZLfr1wKusVE=;
+        b=o2r+vGuL8j08S244pfZCv1xSxZHWV5HJEIXKPtO5V2E+vm5/RuXyj6prV6I2ieN5UJ
+         h9iP5kms4HyI0Qxa+lxF9+8bRKxP0fs8WTLN0ZTaqXG6skY6VEMGG2uyyq25apE7VVBb
+         L03nsG0xuIgFgPQRDuYrIsogfWiiTnOCzFrqsVuHfXcS+HkNYhwVZT1evUEmbNoDI4Kt
+         R/Au6/4+mcRATG2rsEppU0ILMebDOEhuAzM4/Yg+SysK97GYYzaAB6ZyxY3BCnGcQhll
+         Vl+8YIiiSMAP3GxS99lQidgokelIv/PuzaniQ5HlU7a9rSLRO/wEAvSx5h+4cTpl8Vuk
+         7+ag==
+X-Gm-Message-State: AOAM531oS+OXb+qB5zADTM5dIjOsJuP1qz0Wuj7/LDEUqnUArdjK90qb
+        wQnFS7ctIVcCdQJI4Z9vwyBbVq8s9QHQqy06tKvxLu2A72c=
+X-Google-Smtp-Source: ABdhPJynzscYstFTvqH/U5z21Kxt25zlQkvNifrNTQCC9/nDBg3l9jMhHvWxCDExmJ4vAaFnomsHiMeDiuAhg5vJ/dw=
+X-Received: by 2002:a17:90a:17ad:: with SMTP id q42mr24853372pja.181.1621855995917;
+ Mon, 24 May 2021 04:33:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201203191135.21576-1-info@metux.net> <20201203191135.21576-2-info@metux.net>
-In-Reply-To: <20201203191135.21576-2-info@metux.net>
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-Date:   Mon, 24 May 2021 16:57:03 +0530
-Message-ID: <CAOh2x=kcM351ObubnQSzUa=FVBQUmAUhz4u8ExORUthQQ0WbGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
+References: <cover.1621809029.git.sander@svanheule.net> <185e8c61893502575c542750c8f27b09029e3078.1621809029.git.sander@svanheule.net>
+ <CAHp75VfCCFd9SQwqv-JhdHMudYWdaa1tcVp4ZNescioWTaoXFQ@mail.gmail.com>
+In-Reply-To: <CAHp75VfCCFd9SQwqv-JhdHMudYWdaa1tcVp4ZNescioWTaoXFQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 24 May 2021 14:32:59 +0300
+Message-ID: <CAHp75VceQ_Wiaf8zFN+f4uk6nv=ZmhE_rGgbEcB1hYh2Kz5VyA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] pinctrl: Add RTL8231 pin control and GPIO support
+To:     Sander Vanheule <sander@svanheule.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 4, 2020 at 12:51 AM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+Oops, I had sent this privately, Cc'ing to ML.
+
+On Mon, May 24, 2021 at 12:08 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Introducing new gpio driver for virtual GPIO devices via virtio.
+> On Mon, May 24, 2021 at 1:34 AM Sander Vanheule <sander@svanheule.net> wrote:
+> >
+> > This driver implements the GPIO and pin muxing features provided by the
+> > RTL8231. The device should be instantiated as an MFD child, where the
+> > parent device has already configured the regmap used for register
+> > access.
+> >
+> > Although described in the bindings, pin debouncing and drive strength
+> > selection are currently not implemented. Debouncing is only available
+> > for the six highest GPIOs, and must be emulated when other pins are used
+> > for (button) inputs anyway.
 >
-> The driver allows routing gpio control into VM guests, eg. brigding
-> virtual gpios to specific host gpios, or attaching simulators for
-> automatic application testing.
+> ...
 >
-> Changes v2:
->     * fixed uapi header license
->     * sorted include's
->     * fixed formatting
->     * fixed unneeded devm allocation - plain kzalloc/kfree is enough
->     * fixed missing devm_kzalloc fail check
->     * use devm_kcalloc() for array allocation
->     * added virtio-gpio protocol specification
+> > +struct rtl8231_function {
+> > +       const char *name;
+> > +       unsigned int ngroups;
+> > +       const char **groups;
+>
+> const char * const * groups?
+> (Double check this, because I don't know if it's really const in your case)
+>
+> > +};
+>
+> ...
+>
+> > +       const struct rtl8231_pin_desc *desc =
+> > +               (struct rtl8231_pin_desc *) &rtl8231_pins[group_selector].drv_data;
+>
+> Casting from/to void * is redundant in C.
+>
+> ...
+>
+> > +       struct rtl8231_pin_desc *desc =
+> > +               (struct rtl8231_pin_desc *) &rtl8231_pins[offset].drv_data;
+>
+> Ditto.
+>
+> ...
+>
+> > +       ctrl->nfunctions = ARRAY_SIZE(rtl8231_pin_function_names);
+> > +       ctrl->functions = devm_kcalloc(dev, ctrl->nfunctions, sizeof(*ctrl->functions), GFP_KERNEL);
+> > +       if (!ctrl->functions) {
+>
+> > +               dev_err(dev, "failed to allocate pin function descriptors\n");
+>
+> Dtop this noisy message, user space will print the similar one.
+>
+> > +               return -ENOMEM;
+> > +       }
+>
+> ...
+>
+> > +       ctrl->map = dev_get_regmap(dev->parent, NULL);
+> > +       if (!ctrl->map)
+> > +               return -ENODEV;
+> > +
+> > +       if (IS_ERR(ctrl->map))
+> > +               return PTR_ERR(ctrl->map);
+>
+> Hmm... Is it really the case that you have to check for different values?
+> What does NULL mean? Optional?
+>
+> ...
+>
+> > +       gr = devm_gpio_regmap_register(dev, &gpio_cfg);
+> > +       if (IS_ERR(gr)) {
+>
+> > +               dev_err(dev, "failed to register gpio controller\n");
+> > +               return PTR_ERR(gr);
+>
+> Is it possible to get a deferred probe here? If so, use dev_err_probe()
+>
+> > +       }
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-Hi Enrico,
 
-We (Linaro's Project Stratos
-https://linaro.atlassian.net/wiki/spaces/STR/overview)
- are interested in this stuff. I was trying to look at the last status
-of all this. Few
-questions for you:
 
-- Was the spec ever posted to virtio-dev list ? I thought that's the
-very first step before
-we merge the code.
-
-- Any follow up on this patchset ?
-
-Thanks. I will be happy to help otherwise and have cycles to work on
-this if you need my help.
-
---
-viresh
+-- 
+With Best Regards,
+Andy Shevchenko
