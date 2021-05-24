@@ -2,114 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACA0F38F369
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 21:00:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB8FD38F3AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 21:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233244AbhEXTCA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 15:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233167AbhEXTCA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 15:02:00 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C014C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 12:00:32 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id w1so28184945ybt.1
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 12:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qZ/HHH6RzjFrXIpsOJzjI+Qc1VHUbpxeGOmV9lmhHyc=;
-        b=YiUrbTf9fHfnrlZaVNXWX2ffeVRP5Psh3XBE1kMs9L/sXhpgKua0laF3KHras/R3fA
-         bNbWe6WXHIATQsWiqoSeIF/HaQSPnkAiwe6vK8M8tFghbUBh/+Y21KsH3Bsgt/5M+nmv
-         mQkPJiwt0yz+D7sDDF6b2svmm40CLw5D5Woj1+iEntXkHFWZt4g/k/y1Wn7+eZVkLySH
-         Qw8DSL08hbOxcctLHINNIb0xFh9fG4UPvaYEZT+x4w56vhkK5hCkYRaowpRkzhAW6GV+
-         CRVA6ZJu4PY9KVzBdCFlFnpUDwOF3bGa8oQDqzyWxmCBavTGzhYYh002Vnxkw5AWbKt6
-         R2cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qZ/HHH6RzjFrXIpsOJzjI+Qc1VHUbpxeGOmV9lmhHyc=;
-        b=fBQiNeaVdyuTL8jerbmUmoz7KvxfCzBMogtXtxHXdfF6pQCt1690KSjb/fvNtJGunw
-         qe7n0Ruyn3ZQ+CvyOZA3k5fcXb/1iD/8AgxHZwc83dLXW2IXuQBvGWsy6N1M7lflXJg1
-         eunCEFLXegRZQ/r5U6PjZ66pHVL1C5Pa7zPDI4JawvfjNxH3DDYvJgN9/OydniIk6lWi
-         fJ3jfIDOy7uzlVw27h+F51TnQEg8NHeubDmHyfEAZiqEw/CKIk2REOKUsm3aRiYPnmnl
-         2kykg64FwVgp31z293YITUsOY53ZKtvJOedH796Tai53Ha5TdDeRPzy6BSLTCpv5lxxN
-         YhMQ==
-X-Gm-Message-State: AOAM530gopPjFC27AO/904IrYK6qTV38pxlMz7qzUJMjmFCFClETpOpU
-        3OhSCFstRkEVk6+VKc0ymrbpyXbpMITVCDQwfH7hRw==
-X-Google-Smtp-Source: ABdhPJzh926Hx6hSGwdxh6ozSTJy0YjecarXSU76V/d/BwbeV40EFDwLYSTVIkh4m/GS4WKe4225+eHJro8geqbMtwE=
-X-Received: by 2002:a25:c092:: with SMTP id c140mr2244608ybf.25.1621882831629;
- Mon, 24 May 2021 12:00:31 -0700 (PDT)
+        id S233697AbhEXTbt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 15:31:49 -0400
+Received: from m-r1.th.seeweb.it ([5.144.164.170]:53713 "EHLO
+        m-r1.th.seeweb.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233665AbhEXTbs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 15:31:48 -0400
+Received: from TimeMachine.localdomain (bband-dyn255.178-41-232.t-com.sk [178.41.232.255])
+        by m-r1.th.seeweb.it (Postfix) with ESMTPA id A27261F8F3;
+        Mon, 24 May 2021 21:30:17 +0200 (CEST)
+From:   Martin Botka <martin.botka@somainline.org>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        konrad.dybcio@somainline.org,
+        angelogioacchino.delregno@somainline.org,
+        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
+        Martin Botka <martin.botka@somainline.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V3 1/2] dt-bindings: pinctrl: qcom: sm6125: Document SM6125 pinctrl driver
+Date:   Mon, 24 May 2021 21:30:09 +0200
+Message-Id: <20210524193012.592210-1-martin.botka@somainline.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20210515075257.7918-1-aardelean@deviqon.com>
-In-Reply-To: <20210515075257.7918-1-aardelean@deviqon.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 24 May 2021 21:00:20 +0200
-Message-ID: <CAMpxmJWBi=R21pK0-g4j8bOfh7Hy4tmFrcKY+X23+c2f2CiKjw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-tps65912: remove platform_set_drvdata() +
- cleanup probe
-To:     Alexandru Ardelean <aardelean@deviqon.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 15, 2021 at 9:53 AM Alexandru Ardelean
-<aardelean@deviqon.com> wrote:
->
-> The platform_set_drvdata() call is only useful if we need to retrieve back
-> the private information.
-> Since the driver doesn't do that, it's not useful to have it.
->
-> If this is removed, we can also just do a direct return on
-> devm_gpiochip_add_data(). We don't need to print that this call failed as
-> there are other ways to log/see this during probe.
->
-> Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
-> ---
->  drivers/gpio/gpio-tps65912.c | 12 +-----------
->  1 file changed, 1 insertion(+), 11 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-tps65912.c b/drivers/gpio/gpio-tps65912.c
-> index 510d9ed9fd2a..fab771cb6a87 100644
-> --- a/drivers/gpio/gpio-tps65912.c
-> +++ b/drivers/gpio/gpio-tps65912.c
-> @@ -99,7 +99,6 @@ static int tps65912_gpio_probe(struct platform_device *pdev)
->  {
->         struct tps65912 *tps = dev_get_drvdata(pdev->dev.parent);
->         struct tps65912_gpio *gpio;
-> -       int ret;
->
->         gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
->         if (!gpio)
-> @@ -109,16 +108,7 @@ static int tps65912_gpio_probe(struct platform_device *pdev)
->         gpio->gpio_chip = template_chip;
->         gpio->gpio_chip.parent = tps->dev;
->
-> -       ret = devm_gpiochip_add_data(&pdev->dev, &gpio->gpio_chip,
-> -                                    gpio);
-> -       if (ret < 0) {
-> -               dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
-> -               return ret;
-> -       }
-> -
-> -       platform_set_drvdata(pdev, gpio);
-> -
-> -       return 0;
-> +       return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio_chip, gpio);
->  }
->
->  static const struct platform_device_id tps65912_gpio_id_table[] = {
-> --
-> 2.31.1
->
+Document the newly added SM6125 pinctrl driver
 
-Applied, thanks!
+Signed-off-by: Martin Botka <martin.botka@somainline.org>
+---
+Changes in V2:
+Add commit description
+Changes in V3:
+Fix syntax errors
+Remove not needed state from example
+ .../bindings/pinctrl/qcom,sm6125-pinctrl.yaml | 134 ++++++++++++++++++
+ 1 file changed, 134 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.yaml
 
-Bart
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.yaml
+new file mode 100644
+index 000000000000..ab65092d688d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.yaml
+@@ -0,0 +1,134 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,sm6125-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++title: Qualcomm Technologies, Inc. SM6125 TLMM block
++
++maintainers:
++  - Martin Botka <martin.botka@somainline.org>
++
++description: |
++  This binding describes the Top Level Mode Multiplexer (TLMM) block found
++  in the SM6125 platform.
++
++allOf:
++  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
++
++properties:
++  compatible:
++    const: qcom,sm6125-tlmm
++
++  reg:
++    maxItems: 1
++
++  interrupts: true
++  interrupt-controller: true
++  '#interrupt-cells': true
++  gpio-controller: true
++  gpio-reserved-ranges: true
++  '#gpio-cells': true
++  gpio-ranges: true
++  wakeup-parent: true
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++patternProperties:
++  '-state$':
++    oneOf:
++      - $ref: "#/$defs/qcom-sm6125-tlmm-state"
++      - patternProperties:
++          ".*":
++            $ref: "#/$defs/qcom-sm6125-tlmm-state"
++
++$defs:
++  qcom-sm6125-tlmm-state:
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
++
++    properties:
++      pins:
++        description:
++          List of gpio pins affected by the properties specified in this
++          subnode.
++        items:
++          oneOf:
++            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|20[0-3])$"
++            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data ]
++        minItems: 1
++        maxItems: 36
++
++      function:
++        description:
++          Specify the alternative function to be configured for the specified
++          pins.
++
++        enum: [ adsp_ext, agera_pll, atest_char, atest_char0, atest_char1,
++                atest_char2, atest_char3, atest_tsens, atest_tsens2, atest_usb1,
++                atest_usb10, atest_usb11, atest_usb12, atest_usb13, atest_usb2,
++                atest_usb20, atest_usb21, atest_usb22, atest_usb23, aud_sb,
++                audio_ref, cam_mclk, cci_async, cci_i2c, cci_timer0, cci_timer1,
++                cci_timer2, cci_timer3, cci_timer4, copy_gp, copy_phase, cri_trng,
++                cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
++                ddr_pxi2, ddr_pxi3, debug_hot, dmic0_clk, dmic0_data, dmic1_clk,
++                dmic1_data, dp_hot, edp_hot, edp_lcd, gcc_gp1, gcc_gp2, gcc_gp3,
++                gp_pdm0, gp_pdm1, gp_pdm2, gpio, gps_tx, jitter_bist, ldo_en,
++                ldo_update, m_voc, mclk1, mclk2, mdp_vsync, mdp_vsync0, mdp_vsync1,
++                mdp_vsync2, mdp_vsync3, mdp_vsync4, mdp_vsync5, mpm_pwr, mss_lte,
++                nav_pps, pa_indicator, phase_flag0, phase_flag1, phase_flag10,
++                phase_flag11, phase_flag12, phase_flag13, phase_flag14, phase_flag15,
++                phase_flag16, phase_flag17, phase_flag18, phase_flag19, phase_flag2,
++                phase_flag20, phase_flag21, phase_flag22, phase_flag23, phase_flag24,
++                phase_flag25, phase_flag26, phase_flag27, phase_flag28, phase_flag29,
++                phase_flag3, phase_flag30, phase_flag31, phase_flag4, phase_flag5,
++                phase_flag6, phase_flag7, phase_flag8, phase_flag9, pll_bist,
++                pll_bypassnl, pll_reset, pri_mi2s, pri_mi2s_ws, prng_rosc, qca_sb,
++                qdss_cti, qdss_gpio, qdss_gpio0, qdss_gpio1, qdss_gpio10, qdss_gpio11,
++                qdss_gpio12, qdss_gpio13, qdss_gpio14, qdss_gpio15, qdss_gpio2,
++                qdss_gpio3, qdss_gpio4, qdss_gpio5, qdss_gpio6, qdss_gpio7, qdss_gpio8,
++                qdss_gpio9, qlink_enable, qlink_request, qua_mi2s, qui_mi2s, qup00,
++                qup01, qup02, qup03, qup04, qup10, qup11, qup12, qup13, qup14,
++                sd_write, sec_mi2s, sp_cmu, swr_rx, swr_tx, ter_mi2s, tgu_ch0,
++                tgu_ch1, tgu_ch2, tgu_ch3, tsense_pwm, uim1_clk, uim1_data,
++                uim1_present, uim1_reset, uim2_clk, uim2_data, uim2_present,
++                uim2_reset, unused1, unused2, usb_phy, vfr_1, vsense_trigger,
++                wlan1_adc0, wlan1_adc1, wlan2_adc0, wlan2_adc1, wsa_clk, wsa_data ]
++
++
++      bias-disable: true
++      bias-pull-down: true
++      bias-pull-up: true
++      drive-strength: true
++      input-enable: true
++      output-high: true
++      output-low: true
++
++    required:
++      - pins
++      - function
++
++    additionalProperties: false
++
++examples:
++  - |
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        pinctrl@500000 {
++                compatible = "qcom,sm6125-pinctrl";
++                reg = <0x00500000 0x400000>,
++                    <0x00900000 0x400000>,
++                    <0x00d00000 0x400000>;
++                reg-names = "west", "south", "east";
++                interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
++                gpio-controller;
++                gpio-ranges = <&tlmm 0 0 134>;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++        };
+-- 
+2.31.1
+
