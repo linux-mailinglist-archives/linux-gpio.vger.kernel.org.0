@@ -2,42 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAE9F38F0E6
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 18:08:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03AFD38ECFD
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 17:31:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236372AbhEXQGq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 12:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237257AbhEXQFP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 12:05:15 -0400
-Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8123EC08C5DD
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 08:20:16 -0700 (PDT)
+        id S232760AbhEXPck (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 11:32:40 -0400
+Received: from polaris.svanheule.net ([84.16.241.116]:35128 "EHLO
+        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233020AbhEXPcD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 11:32:03 -0400
 Received: from [IPv6:2a02:a03f:eafb:ee01:cbcc:e481:3e58:4db1] (unknown [IPv6:2a02:a03f:eafb:ee01:cbcc:e481:3e58:4db1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id AACCD202FE2;
-        Mon, 24 May 2021 17:20:14 +0200 (CEST)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id A19BD202FF0;
+        Mon, 24 May 2021 17:30:31 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1621869615;
+        s=mail1707; t=1621870231;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=KKLQc2NBPOHNUHuTQ5VD+lESnzXxzbFhPv9iqnAedX0=;
-        b=U8O/lCMbraND+fUwsMSmNU7BX7DyIgkOE5GmzcAlF+BsqPEh5+xyarQ9QMacOZXRoUsHdj
-        cWTjPBxmX3lJ6iQXrr/Nxyc1PdPbTAcHuH0adEgDbUcasGzEH+cqBYlXK/5Kt8dX8AsCGF
-        MNzJQqP2eKTWUP2vzwEEVraU0z8SjvOZFhbPNBeS4MXm9OexdrCyyl3EQ73V3USNvvsl9p
-        LY9NwbZSOCEvxEFsjtFxbL69B3FmdOvuz9GdJFMOng/e9NcRN4nmBzhrInTfkPddOG6EtI
-        hznHNDLlmof6dPNvyPl8+pjVC9LivmOuvhzOGR3RmS8ZJxDBkwfUW4PHLvsiTw==
-Message-ID: <69c95adb6bafb8fbf69b9f79613606f62ba769e8.camel@svanheule.net>
-Subject: Re: [PATCH v3 0/6] RTL8231 GPIO expander support
+        bh=5MVM5bUeOBcoLoP3W/nxVP4OlAB5bSPoQyJKgckUz8I=;
+        b=Hmt76Wx3Cn2CJMDd4/vkYSZjhlGEll5naZ+AkO0EURp37WRFFvQgim6ZFQ9EwiPDGmags3
+        9IVFxsG7TCrGSMhThwoJqgjp6kUCbMxUh+izP9iLsySTh6L4HlF4cSVzDh9GnNVz+7A0gK
+        mljJApeRhSZdiANKVcKSfEIdont1J8KcgVi+VZSb0c2bg6dT9CZ5rz7rOhHIaPKz6cWFzL
+        W3hSGYMlsEL69aXJbGeHVpeVLKo83eir9rdGsR9qG8Jny63q5YiU+sG4RhERTY6zZWhlaS
+        gJ4XQNgGMnrTHGCCWRdNnF6poHSTG3O2HKB8ORb6fnv68ZRApU7NliM3KXQ+2Q==
+Message-ID: <867b81680fdf3076e8ce3fbc2dc36247d8e724a8.camel@svanheule.net>
+Subject: Re: [PATCH v3 6/6] leds: Add support for RTL8231 LED scan matrix
 From:   Sander Vanheule <sander@svanheule.net>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>,
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
         Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,14 +44,15 @@ Cc:     Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
         Linux LED Subsystem <linux-leds@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 24 May 2021 17:20:13 +0200
-In-Reply-To: <CAHp75Vf_dAfoMmziVLkEQ2Yr-e7Cj5=61ua5Q05Cyz-pLwVjpw@mail.gmail.com>
-References: <cover.1620735871.git.sander@svanheule.net>
-         <cover.1621809029.git.sander@svanheule.net> <YKr9G3EfrM34gCsL@lunn.ch>
-         <CAHp75VewCw8ES_9S48qmeCtSXMkGWt0s4iub0Fu4ZuwWANHpaQ@mail.gmail.com>
-         <02bbf73ea8a14119247f07a677993aad2f45b088.camel@svanheule.net>
-         <CAHp75Vf_dAfoMmziVLkEQ2Yr-e7Cj5=61ua5Q05Cyz-pLwVjpw@mail.gmail.com>
+Date:   Mon, 24 May 2021 17:30:30 +0200
+In-Reply-To: <CAHp75VfbdmHPsscHOAnH-WjGyWF-8V_00FjQu1PD+xFLcUytig@mail.gmail.com>
+References: <cover.1621809029.git.sander@svanheule.net>
+         <213ab7580a1d3229d32f7aac67bf4e828612153a.1621809029.git.sander@svanheule.net>
+         <CAHp75VdoSfO3Y9Lf+fcoG2=Rb+SBJKq+B0tG+gS7TaHUmN-iYg@mail.gmail.com>
+         <08375439546c04d32b158c20fb59446c3bbafb46.camel@svanheule.net>
+         <CAHp75VfbdmHPsscHOAnH-WjGyWF-8V_00FjQu1PD+xFLcUytig@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
@@ -64,75 +61,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
-
-Forgot to reply to the sysfs suggestion.
-
-On Mon, 2021-05-24 at 15:54 +0300, Andy Shevchenko wrote:
-> On Mon, May 24, 2021 at 2:41 PM Sander Vanheule <sander@svanheule.net> wrote:
-> > On Mon, 2021-05-24 at 10:53 +0300, Andy Shevchenko wrote:
-> > > On Mon, May 24, 2021 at 4:11 AM Andrew Lunn <andrew@lunn.ch> wrote:
+On Mon, 2021-05-24 at 15:47 +0300, Andy Shevchenko wrote:
+> On Mon, May 24, 2021 at 3:04 PM Sander Vanheule <sander@svanheule.net> wrote:
+> > On Mon, 2021-05-24 at 13:24 +0300, Andy Shevchenko wrote:
+> > > On Mon, May 24, 2021 at 1:34 AM Sander Vanheule <sander@svanheule.net>
+> > > wrote:
 > 
-> > > > >   - Introduce GPIO regmap quirks to set output direction first
-> > > > 
-> > > > I thought you had determined it was possible to set output before
-> > > > direction?
+> ...
+> 
+> > > > +       if (ret != 2)
+> > > > +               return -ENODEV;
 > > > 
-> > > Same thoughts when I saw an updated version of that patch. My
-> > > anticipation was to not see it at all.
+> > > I would say -EINVAL, but -ENODEV is similarly okay.
 > > 
-> > The two devices I've been trying to test the behaviour on are:
-> >  * Netgear GS110TPP: has an RTL8231 with three LEDs, each driven via a pin
-> >    configured as (active-low) GPIO. The LEDs are easy for a quick visual
-> > check.
-> >  * Zyxel GS1900-8: RTL8231 used for the front panel button, and an active-
-> > low
-> >    GPIO used to hard reset the main SoC (an RTL8380). I've modified this
-> > board
-> >    to change some of the strapping pin values, but testing with the jumpers
-> > and
-> >    pull-up/down resistors is a bit more tedious.
-> > 
-> > On the Netgear, I tested the following with and without the quirk:
-> > 
-> >    # Set as OUT-LOW twice, to avoid the quirk. Always turns the LED on
-> >    gpioset 1 32=0; gpioset 1 32=0
-> >    # Get value to change to input, turns the LED off (high impedance)
-> >    # Will return 1 due to (weak) internal pull-up
-> >    gpioget 1 32
-> >    # Set as OUT-HIGH, should result in LED off
-> >    # When the quirk is disabled, the LED turns on (i.e. old OUT-LOW value)
-> >    # When the quirk is enabled, the LED remains off (i.e. correct OUT-HIGH
-> > value)
-> >    gpioset 1 32=1
-> > 
-> > Now, what's confusing (to me) is that the inverse doesn't depend on the
-> > quirk:
-> > 
-> >    # Set as OUT-HIGH twice
-> >    gpioset 1 32=1; gpioset 1 32=1
-> >    # Change to high-Z
-> >    gpioget 1 32
-> >    # Set to OUT-LOW, always results in LED on, with or without quirk
-> >    gpioset 1 32=0
-> > 
-> > Any idea why this would be (or appear) broken on the former case, but not on
-> > the
-> > latter?
+> > Any specific reason you think EINVAL is more appropriate than ENODEV?
 > 
-> GPIO tools for the shell are context-less. Can you reproduce this with
-> the legacy sysfs interface?
+> My logic is that the initial values (from resource provider) are incorrect.
+> But as I said, I'm fine with either.
 
-Using the sysfs interface produced the same behaviour for both test cases.
+Ok, that makes sense. Actually, I'm already using "address invalid" in the error
+messages when reading the address fails, so I'll change to EINVAL for
+consistency.
 
-E.g. case 1:
-   # Set to output low
-   echo out > direction; echo 0 > value
-   # Change to input (with weak pull-up)
-   echo in > direction
-   # Try to set to output high
-   # Fails to go high if the pin value is set before the direction
-   echo high > direction
+
+> 
+> > > > +       int err;
+> > > 
+> > > ret or err? Be consistent across a single driver.
+> > 
+> > I had first used 'err' for both fwnode_property_count_u32() and
+> > fwnode_property_read_u32_array(). The former returns "actual count or error
+> > code", while the latter is only "error code". And I found it weird to read
+> > the
+> > code as "does error code equal 2", if I used 'err' as variable name.
+> > 
+> > I've split this up:
+> >  * addr_count for fwnode_property_count_u32's result
+> >  * err for fwnode_property_read_u32_array's result
+> > 
+> > Since addr_count is only used before err is touched, I guess the compiler
+> > will
+> > optimize this out anyway?
+> 
+> Usually we do this pattern (and it seems you missed the point, name of
+> variable is ret in some functions and err in the rest):
+> 
+> err /* ret */ = foo();
+> if (err < 0)
+>   return err;
+> count = err;
+
+I had only used 'ret' specifically in this one function, because I didn't like 
+"if (err != 2)" (and I apparently decided that I disliked that more than the
+inconsistency introduced by using 'ret'). I'll stick to calling the variable
+'err', and change the clause to (err != ARRAY_SIZE(addr)) to make it more
+obvious that 2 isn't just some random return value.
 
 
 Best,
