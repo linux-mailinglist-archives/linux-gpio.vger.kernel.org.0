@@ -2,204 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E71EA38F4D3
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 23:25:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CBC738F4E5
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 23:29:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232820AbhEXV1L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 17:27:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
+        id S233924AbhEXVbP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 17:31:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbhEXV1K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 17:27:10 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3025C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 14:25:41 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id t193so21057874pgb.4
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 14:25:41 -0700 (PDT)
+        with ESMTP id S229480AbhEXVbN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 17:31:13 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD27C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 14:29:44 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id v12so15276876plo.10
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 14:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=lABxjI8I0ag5Qzb4co3HpLIFDtD6I0Xr+O5YHWn2k6E=;
-        b=TWBuC/HaQdWvQgqHhNDaIiBv0qrt7mlbOf3eg37w0pu9iFvgFCNHhVNErIE2AOe7JX
-         LnkEUNEfw9O+K1KSQaIWV6941aqy4RNKXC7WJCxl7oNLyJyd4Vr4Xt2gPNPUHkGTm/Wj
-         PoD4Rdjn6if/jG/EMG7bE3kBnsjVMUeZOqRJzBsvbS5Gs7IvowRG5m600Z9kTLxJtN6Z
-         wpCdEyEQ12ELeslBG8nHpAxUn+4vqmVj53rKk5Z7L33ikT9VN2k8YImhX9fOlE7EWPsT
-         TliuVdMyB1jDGt1MAqa8VsNpCzW9mfqc5WhH5za5FAk2TiFD96UAH7156nlt6BAmTYYR
-         wKSA==
+        bh=ZAfJyN6KbcmsfNgmfey8+U+vZvNxVBX2GV4RwXp8VdM=;
+        b=hrmkMvyy7LVSTvrpLJKDsJovZAiHuVZIfBXIg28tHPEI33NnzLmta39baZ7dbPgbad
+         ZTlqZJKlm/HWjJBL/bUm/c/9nxywJBfkMrFObkGWZ41LXBL6zyNhwnGcQT6VY4h6tB5Z
+         odgZ3WyBEg/WpNlURjNjw6VuPmz7XdkpOPD0FujJZs19o6VuL0kQArG3lKCsLXkuXhy6
+         JtwQeTU8MirWYx7q5VeAR7r/lw/RRaOJ/3+Oy3OO8uUmrGKJ0EHGt1pLtX6H64kATPTM
+         0+YUCcUw3vFk8+bMlJu792QwryYDcbphvj4zPRon+4h4M6if68ZKCYNEZsGbX2eVRud6
+         S0og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=lABxjI8I0ag5Qzb4co3HpLIFDtD6I0Xr+O5YHWn2k6E=;
-        b=MwLyIwKUxx20Bl7OLudzU7+rhoo//fktYQFXyK1puKGvx7GCY9gfosZ9blqC5Bd8NG
-         UZm4LS4gQuMZHWDMuO+7G/iJY/boe25i83gBtPQ9II/q4hegiJciSqH2Lt+gTck2sMA1
-         3WjPM4/qURnEFJ7aERMRKH09UwKbqQiL+/6Cp81vgbay73dF5vWsneLaz8v+HfXqcJHA
-         +V8uEkgcNC5WV24y0g6b5M9s5CobjkuU0a0Opos9OSsDz8JueXqFqlFWK7j+YQrtzCgp
-         XVxblzcGchx/YLFNRAeZQPVPA2eXPpDS+fTzcmdelFHtn7/MuTrLaXpXHBKR2TvP1m8f
-         q47w==
-X-Gm-Message-State: AOAM532Y12Yfm9dUNDWLL2aQo5vOK3T2e0aLn2GbRQLcSKDNQjH46AV9
-        iNxsFZ7cqBpaFnprsuJE2l3+bg==
-X-Google-Smtp-Source: ABdhPJxnpal0eztqr9HsEiLxFryfIpB/VG+T6T0+dWGZZxkN3FpXSRycUV/J9D2QDVQ7G+4IJ9ahww==
-X-Received: by 2002:a63:5a5d:: with SMTP id k29mr15269183pgm.215.1621891541467;
-        Mon, 24 May 2021 14:25:41 -0700 (PDT)
+        bh=ZAfJyN6KbcmsfNgmfey8+U+vZvNxVBX2GV4RwXp8VdM=;
+        b=D5dog3MGOWcsv0nrX833GvV+wnS/hYq6vDyv9hl8Cy4VQE7voNIqFMEG1R373X7yD3
+         BSoJDWT+ifb7ZoFR9hLy378+L/QZK0MovkZWEg63gF9NHHBnN2WFQNCULIzFluazgI/S
+         8rUk4DN72dtc31VK5YAyC9D3Ad3+bl00GLgoiPYQOOe/9B3Ii6JOJ+4b5G7s0R3Vb5z5
+         Eq+56k34S+7aJKdql1ZFkTTXY/vSrsC+NrezC/ROq5/+NswtgUaD7p+KRYnVTaP4UaKs
+         +XS6fKw3y9sFuDou4qe7dmqVW01YqgvFudMZKgAid4EvahsiYeR08XHu4dZDaKTZqMWT
+         1BRw==
+X-Gm-Message-State: AOAM5328Y8hx1nRrHUWUFf/s4l7rVpPpPGTBgX8P3VoC9AVGuK7AaBfB
+        OOb/HgF0if77KgJ7wGSgsVwYxA==
+X-Google-Smtp-Source: ABdhPJyIYxJo6nyO3znGfkNdGR/rYj69B2iUpcctPf8HghlDz1mKOn9EwJ+lfkntw5gf1BYVRyLnlw==
+X-Received: by 2002:a17:902:d503:b029:f2:c88c:6349 with SMTP id b3-20020a170902d503b02900f2c88c6349mr27652879plg.84.1621891784328;
+        Mon, 24 May 2021 14:29:44 -0700 (PDT)
 Received: from x1 ([2601:1c0:4701:ae70:5a64:3ac5:f809:b62e])
-        by smtp.gmail.com with ESMTPSA id bx18sm342785pjb.9.2021.05.24.14.25.40
+        by smtp.gmail.com with ESMTPSA id p18sm6312662pff.112.2021.05.24.14.29.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 May 2021 14:25:40 -0700 (PDT)
-Date:   Mon, 24 May 2021 14:25:38 -0700
+        Mon, 24 May 2021 14:29:43 -0700 (PDT)
+Date:   Mon, 24 May 2021 14:29:41 -0700
 From:   Drew Fustini <drew@beagleboard.org>
 To:     Mauri Sandberg <sandberg@mailfence.com>
-Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
-        geert+renesas@glider.be, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] gpio: add generic gpio input multiplexer
-Message-ID: <20210524212538.GA3756746@x1>
+Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
+Subject: Re: RESEND PATCH v3
+Message-ID: <20210524212941.GB3756746@x1>
 References: <20210325122832.119147-1-sandberg@mailfence.com>
- <20210517165847.206316-1-sandberg@mailfence.com>
+ <20210524162906.30784-1-sandberg@mailfence.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210517165847.206316-1-sandberg@mailfence.com>
+In-Reply-To: <20210524162906.30784-1-sandberg@mailfence.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 17, 2021 at 07:58:45PM +0300, Mauri Sandberg wrote:
-> Hello all!
+On Mon, May 24, 2021 at 07:29:04PM +0300, Mauri Sandberg wrote:
+> For some reason Bart did not get the patches with the previous email. So
+> resending.
 > 
-> This patch set is closely related to another thread at [4], which I abandoned
-> against better judgement and created this one.
-> 
-> Here I am sending revised versions of the patches. It builds on v2 and adopts 
-> managed device resources as suggested by Andy on the thread mentioned
-> above [5].
-> 
-> I have tested the functionality on a NXP 74HC153 dual 4-way muxer. Drew, did
-> you find the time to have a go with this [6] and if so, did it work as expected?
-> 
-> Thanks,
-> Mauri
-> 
-> [4] https://www.spinics.net/lists/linux-gpio/msg58573.html
-> [5] https://www.spinics.net/lists/linux-gpio/msg60160.html
-> [6] https://www.spinics.net/lists/linux-gpio/msg60159.html
+> -- Mauri
 > 
 > 
-> Mauri Sandberg (2):
->   dt-bindings: gpio-mux-input: add documentation
->   gpio: gpio-mux-input: add generic gpio input multiplexer
-> 
->  .../bindings/gpio/gpio-mux-input.yaml         |  75 +++++++++++
->  drivers/gpio/Kconfig                          |  16 +++
->  drivers/gpio/Makefile                         |   1 +
->  drivers/gpio/gpio-mux-input.c                 | 124 ++++++++++++++++++
->  4 files changed, 216 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mux-input.yaml
->  create mode 100644 drivers/gpio/gpio-mux-input.c
-> 
-> 
-> base-commit: 6453b9532b5f77d19837b159c4d074f0af9f141b
-> -- 
-> 2.25.1
 
 Tested-by: Drew Fustini <drew@beagleboard.org>
 Reviewed-by: Drew Fustini <drew@beagleboard.org>
 
-I have wired up the TI CD74HC153E to a BeagleBone Black:
+I just replied to the original v3 cover letter with my test results [1].
 
-  S0: P8_7
-  S1: P8_8
+-Drew
 
-  1Y: P8_10
-  2Y: P8_9
-
-I added this to arch/arm/boot/dts/am335x-boneblack.dts
-
-  mux: mux-controller {
-          compatible = "gpio-mux";
-          #mux-control-cells = <0>;
-
-          mux-gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>, /* S0: P8_7 */
-                      <&gpio2 3 GPIO_ACTIVE_HIGH>  /* S1: P8_8 */;
-  };
-
-  gpio8: key-mux1 {
-          compatible = "gpio-mux-input";
-          mux-controls = <&mux>;
-
-          gpio-controller;
-          #gpio-cells = <2>;
-
-          // GPIOs used by this node, mux pin
-          pin-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>; /* 2Y: P8_9 */
-  };
-
-  gpio9: key-mux2 {
-          compatible = "gpio-mux-input";
-          mux-controls = <&mux>;
-
-          gpio-controller;
-          #gpio-cells = <2>;
-
-          // GPIOs used by this node, mux pin
-          pin-gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>; /* 1Y: P8_10 */
-  };
-
-
-The two new gpiochips appear:
-
-  root@beaglebone:~# gpiodetect
-  gpiochip0 [gpio-0-31] (32 lines)
-  gpiochip1 [gpio-32-63] (32 lines)
-  gpiochip2 [gpio-64-95] (32 lines)
-  gpiochip3 [gpio-96-127] (32 lines)
-  gpiochip4 [key-mux1] (4 lines)
-  gpiochip5 [key-mux2] (4 lines)
-  
-The mux pins and input pins are connected to lines on gpiochip1:
-
-  debian@beaglebone:~$ gpioinfo 1
-  gpiochip1 - 32 lines:
-	  line   0:     "P9_15B"       unused   input  active-high
-	  line   1:      "P8_18"       unused   input  active-high
-	  line   2:       "P8_7"        "mux"  output  active-high [used]
-	  line   3:       "P8_8"        "mux"  output  active-high [used]
-	  line   4:      "P8_10"        "pin"   input  active-high [used]
-	  line   5:       "P8_9"        "pin"   input  active-high [used]
-  <snip>
-  
-
-Test with all inputs connected to 3.3V (1I0:1I3 and 2I0:2I3)
-
-  debian@beaglebone:~$ gpioget 4 0
-  1
-  debian@beaglebone:~$ gpioget 4 1
-  1
-  debian@beaglebone:~$ gpioget 4 2
-  1
-  debian@beaglebone:~$ gpioget 4 3
-  1
-  debian@beaglebone:~$ gpioget 5 0
-  1
-  debian@beaglebone:~$ gpioget 5 1
-  1
-  debian@beaglebone:~$ gpioget 5 2
-  1
-  debian@beaglebone:~$ gpioget 5 3
-  1
-
-Connect 1I0 to GND
-
-  debian@beaglebone:~$ gpioget 4 0
-  0
-
-Connect 1I0 to 3V3
-
-  debian@beaglebone:~$ gpioget 4 0
-  1
-
-I tried this with all the rest and got the same succesfull results.
-
-thanks,
-drew
+[1] https://lore.kernel.org/linux-gpio/20210524212538.GA3756746@x1/
