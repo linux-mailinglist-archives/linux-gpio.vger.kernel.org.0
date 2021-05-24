@@ -2,40 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F71C38ECD0
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 17:24:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 493B938ECD2
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 17:24:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233854AbhEXPZR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 11:25:17 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48844 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234990AbhEXPW1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 11:22:27 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14OFK6vK118394;
-        Mon, 24 May 2021 10:20:06 -0500
+        id S233874AbhEXPZS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 11:25:18 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55112 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234299AbhEXPW3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 11:22:29 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14OFKFpY043109;
+        Mon, 24 May 2021 10:20:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1621869606;
-        bh=kGpI6I5BF57mdUVw4YFYiV1QGy9tp4KteKS2TI1W130=;
-        h=From:To:CC:Subject:Date;
-        b=LNsXPz0XeHyzStqOkKh2FV8gIcdY6KI0G586Rtp6cABgmFnjseLhYgfvlWDDGMf8z
-         Vb1f6dFLa4q3or333sxmTRcHqw9VpIdxm/Yes/76G76mOWl9l9W1pRIyHzG9uHpyvh
-         5Na3a2o6kVOqnAhj+IDA5QZFo/L7dZrK2KO3/Atg=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14OFK6Zq129447
+        s=ti-com-17Q1; t=1621869615;
+        bh=3LslfCdr+KwTeC4qD/H9BC+KoF3rigZSwH6VeGzdsq4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=FWXr18ecpZ99MzMY+NrmMOYYawUvbB1zcxITYmMq4Qhz3LNjUFNzzLGFJImzcY2wP
+         TUL6No55idLM9DxYjmxnXHHiza13yjIJQ1DyQTkwgeE26D7sMWE3Rxoi7HmXX+zDNX
+         bJpNABZ2VKpbYsTepjpGzO+kjm7xCDVGLNSN5nI0=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14OFKFeN113044
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 May 2021 10:20:06 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 24 May 2021 10:20:15 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Mon, 24
- May 2021 10:20:05 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ May 2021 10:20:15 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Mon, 24 May 2021 10:20:05 -0500
+ Frontend Transport; Mon, 24 May 2021 10:20:15 -0500
 Received: from gsaswath-HP-ProBook-640-G5.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14OFJv26055198;
-        Mon, 24 May 2021 10:19:58 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14OFJv27055198;
+        Mon, 24 May 2021 10:20:08 -0500
 From:   Aswath Govindraju <a-govindraju@ti.com>
 CC:     Lokesh Vutla <lokeshvutla@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
@@ -45,14 +45,17 @@ CC:     Lokesh Vutla <lokeshvutla@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
         David Lechner <david@lechnology.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v3 0/2] dt-bindings: gpio: davinci:  Convert to json-schema
-Date:   Mon, 24 May 2021 20:49:52 +0530
-Message-ID: <20210524151955.8008-1-a-govindraju@ti.com>
+Subject: [PATCH v3 1/2] ARM: dts: da850-lego-ev3: align GPIO hog names with dt-schema
+Date:   Mon, 24 May 2021 20:49:53 +0530
+Message-ID: <20210524151955.8008-2-a-govindraju@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210524151955.8008-1-a-govindraju@ti.com>
+References: <20210524151955.8008-1-a-govindraju@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -61,40 +64,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the davinci GPIO device tree binding documentation to json-schema.
-The GPIO hog node names are defined to end with a 'hog' suffix.
+The GPIO hog dt-schema node naming convention expect GPIO hogs node names
+to end with a 'hog' suffix.
 
-All existing GPIO hogs are fixed to follow above naming convention
-before changing the binding to avoid dtbs_check warnings.
+Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
+---
+ arch/arm/boot/dts/da850-lego-ev3.dts | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-changes since v2:
-- Used gpio-hog.yaml for gpio-hog property
-- Added constraints on gpio-hog node name
-- Corrected the gpio hog dt node names to align
-  with the dt-schema
-
-changes since v1:
-- combined the individual compatible properties into one enum
-- added maxItems and minItems properties for gpio-line-names and
-  interrupts
-- updated the description of interrupts property
-- removed the description for properties that are general
-- updated the pattern property for gpio hog to indicate any sort
-  node name based on its usage
-- corrected the example wakeup gpio node name
-
-Aswath Govindraju (2):
-  ARM: dts: da850-lego-ev3: align GPIO hog names with dt-schema
-  dt-bindings: gpio: gpio-davinci: Convert to json-schema
-
- .../devicetree/bindings/gpio/gpio-davinci.txt | 167 ----------------
- .../bindings/gpio/gpio-davinci.yaml           | 186 ++++++++++++++++++
- MAINTAINERS                                   |   2 +-
- arch/arm/boot/dts/da850-lego-ev3.dts          |  10 +-
- 4 files changed, 192 insertions(+), 173 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-
+diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
+index afd04a423856..1e86cde86406 100644
+--- a/arch/arm/boot/dts/da850-lego-ev3.dts
++++ b/arch/arm/boot/dts/da850-lego-ev3.dts
+@@ -412,14 +412,14 @@
+ 	status = "okay";
+ 
+ 	/* Don't pull down battery voltage adc io channel */
+-	batt_volt_en {
++	batt-volt-en-hog {
+ 		gpio-hog;
+ 		gpios = <6 GPIO_ACTIVE_HIGH>;
+ 		output-high;
+ 	};
+ 
+ 	/* Don't impede Bluetooth clock signal */
+-	bt_clock_en {
++	bt-clock-en-hog {
+ 		gpio-hog;
+ 		gpios = <5 GPIO_ACTIVE_HIGH>;
+ 		input;
+@@ -433,19 +433,19 @@
+ 	 * anything, but they are present in the source code from LEGO.
+ 	 */
+ 
+-	bt_pic_en {
++	bt-pic-en-hog {
+ 		gpio-hog;
+ 		gpios = <51 GPIO_ACTIVE_HIGH>;
+ 		output-low;
+ 	};
+ 
+-	bt_pic_rst {
++	bt-pic-rst-hog {
+ 		gpio-hog;
+ 		gpios = <78 GPIO_ACTIVE_HIGH>;
+ 		output-high;
+ 	};
+ 
+-	bt_pic_cts {
++	bt-pic-cts-hog {
+ 		gpio-hog;
+ 		gpios = <87 GPIO_ACTIVE_HIGH>;
+ 		input;
 -- 
 2.17.1
 
