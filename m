@@ -2,122 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03AFD38ECFD
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 17:31:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D5DB38F14D
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 May 2021 18:13:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232760AbhEXPck (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 11:32:40 -0400
-Received: from polaris.svanheule.net ([84.16.241.116]:35128 "EHLO
-        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233020AbhEXPcD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 11:32:03 -0400
-Received: from [IPv6:2a02:a03f:eafb:ee01:cbcc:e481:3e58:4db1] (unknown [IPv6:2a02:a03f:eafb:ee01:cbcc:e481:3e58:4db1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id A19BD202FF0;
-        Mon, 24 May 2021 17:30:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1621870231;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5MVM5bUeOBcoLoP3W/nxVP4OlAB5bSPoQyJKgckUz8I=;
-        b=Hmt76Wx3Cn2CJMDd4/vkYSZjhlGEll5naZ+AkO0EURp37WRFFvQgim6ZFQ9EwiPDGmags3
-        9IVFxsG7TCrGSMhThwoJqgjp6kUCbMxUh+izP9iLsySTh6L4HlF4cSVzDh9GnNVz+7A0gK
-        mljJApeRhSZdiANKVcKSfEIdont1J8KcgVi+VZSb0c2bg6dT9CZ5rz7rOhHIaPKz6cWFzL
-        W3hSGYMlsEL69aXJbGeHVpeVLKo83eir9rdGsR9qG8Jny63q5YiU+sG4RhERTY6zZWhlaS
-        gJ4XQNgGMnrTHGCCWRdNnF6poHSTG3O2HKB8ORb6fnv68ZRApU7NliM3KXQ+2Q==
-Message-ID: <867b81680fdf3076e8ce3fbc2dc36247d8e724a8.camel@svanheule.net>
-Subject: Re: [PATCH v3 6/6] leds: Add support for RTL8231 LED scan matrix
-From:   Sander Vanheule <sander@svanheule.net>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Michael Walle <michael@walle.cc>,
+        id S234384AbhEXQPV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 12:15:21 -0400
+Received: from vern.gendns.com ([98.142.107.122]:43838 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237025AbhEXQOR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 24 May 2021 12:14:17 -0400
+X-Greylist: delayed 1212 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 May 2021 12:14:16 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=mu76QB4BKzjBdZu1ybVuQhnhYDd8LEq/NCibHuc/NpI=; b=QT3nO2BecZHEyvyRTzcV140qNW
+        wnc8wO8/dZnmXj7LljHXe6bvyvzEfV5wOW/crRLjTIH8UVfV2EQVQCJdmiUqzUuHVyYTr/fZOTRE1
+        zBxYfK7KKHs/76InpIy1G9nI6orSo3NCLB89p8N3RQ7tC4MMBBNSlHdmdEHDtZt6f4BOXCBjEsPCI
+        vzDkhuw5GUs0LQByGyYPZsrtemtE96Kwl1DKqQpIzNDGSMjQhbMvwFQw8YsLyvQrxBbZ34Guayc4L
+        W11hjip8t/a/xYIpwTf924GIkAdGXiLxisXslMjDreIhNu8dCfYwYVSPilkRys+uM2LFgTTyFM/Wo
+        p4pZ2Ilw==;
+Received: from [2600:1700:4830:165f::fb2] (port=33546)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <david@lechnology.com>)
+        id 1llCsV-0002Ll-5n; Mon, 24 May 2021 11:52:30 -0400
+Subject: Re: [PATCH v3 1/2] ARM: dts: da850-lego-ev3: align GPIO hog names
+ with dt-schema
+To:     Aswath Govindraju <a-govindraju@ti.com>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 24 May 2021 17:30:30 +0200
-In-Reply-To: <CAHp75VfbdmHPsscHOAnH-WjGyWF-8V_00FjQu1PD+xFLcUytig@mail.gmail.com>
-References: <cover.1621809029.git.sander@svanheule.net>
-         <213ab7580a1d3229d32f7aac67bf4e828612153a.1621809029.git.sander@svanheule.net>
-         <CAHp75VdoSfO3Y9Lf+fcoG2=Rb+SBJKq+B0tG+gS7TaHUmN-iYg@mail.gmail.com>
-         <08375439546c04d32b158c20fb59446c3bbafb46.camel@svanheule.net>
-         <CAHp75VfbdmHPsscHOAnH-WjGyWF-8V_00FjQu1PD+xFLcUytig@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20210524151955.8008-1-a-govindraju@ti.com>
+ <20210524151955.8008-2-a-govindraju@ti.com>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <4fbab5e8-f957-0927-c9fd-3127ae30b746@lechnology.com>
+Date:   Mon, 24 May 2021 10:52:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210524151955.8008-2-a-govindraju@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 2021-05-24 at 15:47 +0300, Andy Shevchenko wrote:
-> On Mon, May 24, 2021 at 3:04 PM Sander Vanheule <sander@svanheule.net> wrote:
-> > On Mon, 2021-05-24 at 13:24 +0300, Andy Shevchenko wrote:
-> > > On Mon, May 24, 2021 at 1:34 AM Sander Vanheule <sander@svanheule.net>
-> > > wrote:
+On 5/24/21 10:19 AM, Aswath Govindraju wrote:
+> The GPIO hog dt-schema node naming convention expect GPIO hogs node names
+> to end with a 'hog' suffix.
 > 
-> ...
-> 
-> > > > +       if (ret != 2)
-> > > > +               return -ENODEV;
-> > > 
-> > > I would say -EINVAL, but -ENODEV is similarly okay.
-> > 
-> > Any specific reason you think EINVAL is more appropriate than ENODEV?
-> 
-> My logic is that the initial values (from resource provider) are incorrect.
-> But as I said, I'm fine with either.
+> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
+> ---
 
-Ok, that makes sense. Actually, I'm already using "address invalid" in the error
-messages when reading the address fails, so I'll change to EINVAL for
-consistency.
+Acked-by: David Lechner <david@lechnology.com>
 
-
-> 
-> > > > +       int err;
-> > > 
-> > > ret or err? Be consistent across a single driver.
-> > 
-> > I had first used 'err' for both fwnode_property_count_u32() and
-> > fwnode_property_read_u32_array(). The former returns "actual count or error
-> > code", while the latter is only "error code". And I found it weird to read
-> > the
-> > code as "does error code equal 2", if I used 'err' as variable name.
-> > 
-> > I've split this up:
-> >  * addr_count for fwnode_property_count_u32's result
-> >  * err for fwnode_property_read_u32_array's result
-> > 
-> > Since addr_count is only used before err is touched, I guess the compiler
-> > will
-> > optimize this out anyway?
-> 
-> Usually we do this pattern (and it seems you missed the point, name of
-> variable is ret in some functions and err in the rest):
-> 
-> err /* ret */ = foo();
-> if (err < 0)
->   return err;
-> count = err;
-
-I had only used 'ret' specifically in this one function, because I didn't like 
-"if (err != 2)" (and I apparently decided that I disliked that more than the
-inconsistency introduced by using 'ret'). I'll stick to calling the variable
-'err', and change the clause to (err != ARRAY_SIZE(addr)) to make it more
-obvious that 2 isn't just some random return value.
-
-
-Best,
-Sander
 
