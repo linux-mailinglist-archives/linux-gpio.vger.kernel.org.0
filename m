@@ -2,59 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3040A38FA05
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 07:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 364CD38FA06
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 07:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230218AbhEYFnd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 01:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40374 "EHLO
+        id S230290AbhEYFne (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 01:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbhEYFnc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 01:43:32 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC90C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 22:42:03 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id f22so20903346pgb.9
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 22:42:03 -0700 (PDT)
+        with ESMTP id S229621AbhEYFne (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 01:43:34 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33954C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 22:42:04 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id q15so21828429pgg.12
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 22:42:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m3jViPEXZqs1xUoIZMnEMnU7OR4mYl4h7j0v+N2r3nQ=;
-        b=FdYxjfpMATGVI7+u/IhDhkYf8bTP2bc8jo87+v+DcPIs9zJpRkz9mJbZCjhjhbD9ab
-         j8DA3ZZ1rLE2DXpbk41AVk0RL9Q+Me4TinU02n5l42W41BGI0BzeUSUyirPk9BTC8DvI
-         8HpLLb0Aiq3TqgSy3KeMm+iRZVzXePvJNQgM218qF94ZI9UgxbV/D7ynVXnLYHChIbZR
-         3k6TV1EMUhBqrF+uisq5AaavyggCu4tY4JM4Q/PtkMvJJezT9yZSW+6nUho8InvAsCN8
-         IeDo30XcTI4e9r5WsbkSOOSQWC1DbRPSc1An9bMjqp2u2feUKWr/uHuR9Hzyg+r3MCaD
-         XKQw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xPU34K0Muv/QXxYXLtdhoX3R2s6CNJi9OljN9dmd/KU=;
+        b=eE5kEGAtMpQaMJMeBXvELvBeADRCpsVxiaAzGUydTOkJiIHwlf/DnfIrrEljluq3K0
+         uACtmOMrfH+wDSvksS7z2JTFAx0cCVoBxMktyZ87nu0XM5h3CVNpBiwJf3THytcEzLoB
+         w3rPmFzy3nfbIjKfvdFWiQa/FUzs46rx/nPcqV8Rs9EyR1Yf0/MEytCP0rs7bvNjFdEn
+         H6UspeE+UMdTrBDf6U3SNxluZYVsbIQZP8Rgh5UnTX9HGadSOuEjdRiAjCtU2yqCgpU0
+         K5wS8cVXJ3BXtBQQQYPpWyx3pyurXRm2/VhsAl1Pz9NNiz8+Y329xPDhIh6h8Mv/5OQJ
+         LaFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m3jViPEXZqs1xUoIZMnEMnU7OR4mYl4h7j0v+N2r3nQ=;
-        b=erNNTypprZCpmkroGwF+RjgtrRuUEFKXML7NYrXIsE10WjNys0f0HNfntijjJU/JKO
-         /82lM94TICaYyntiD3r4LcscPGWn5TZMk3z61idj+1Px4l61ZNDaiBPEOUmqCEG6JsTo
-         wPc4szl6ziKzYKiJS8ny6QIuGhCaYW3nENFpwbU5aNK2jdt8UxvOXdRVlLMPHT1eR0U7
-         SzfRz5jlIiaZwWI0xyrhZQuxlr+tnF4NUOJOfQokSsbYzRAFws1TqnWJgq9I4mD+86MI
-         IFidQ5K2ZVEIzA3ulLjFqmr2B053w5Vc+SQhLSUs8i4vvdUHQsvNLbXA66cpaVUJFtj1
-         LGnA==
-X-Gm-Message-State: AOAM532FYiXG3T44cmriyVZoF42ISY8YsoB+Y+dG81AJZYWxRWzBXrmN
-        GfOYM+uy2s94L1VuUbjfMOWRRsrOemM=
-X-Google-Smtp-Source: ABdhPJwnPYvVigMLzF5UwSvKD8X5bqaJoM1NheZe0e36OwQrlx4L6qxobNmwSYWHda7BpkLQjjiB8g==
-X-Received: by 2002:a05:6a00:23d0:b029:2de:c1a2:f1e with SMTP id g16-20020a056a0023d0b02902dec1a20f1emr28592465pfc.60.1621921322324;
-        Mon, 24 May 2021 22:42:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xPU34K0Muv/QXxYXLtdhoX3R2s6CNJi9OljN9dmd/KU=;
+        b=j43GxxZJ/xQAV7tmLLn7CFwI3K6QXFB2/oIZj7dK+ExRVSS48vB1h6zhOOSLnwwUKS
+         sQ6iN1hf5A57ibhPxZnqrjNa26UkJCvwc9cyunz+cTz7c9zsyEy1ukRSo5J/W94RlsKS
+         8iRrDlgmcfgmKdSDfBLFZG8FRTqgcFw4u2fZb79BX818V/iU1HEAYsjq1SDCd0Uijqr1
+         Eq2UEdFbH66PfH3CMQ55JK9S7Ni9GYD83yIvyH0qeYsmLnwkg3Rr7ZtcdH8d8K4rHpDR
+         CBCTMf6SJecHQYW704O0Sjg8ZvnnOHKlQk64TPdtMkGr1vxx8OXjGkrBrYKUCmufJhgz
+         9RpQ==
+X-Gm-Message-State: AOAM532fE8gWDCcG53ZfJcLHW+u6tguoX7OCzC7d9dTY+f0pIM9ez4Sx
+        0A8Mm8PzcU8SPbD9QZMRF+2AGX4pVnw=
+X-Google-Smtp-Source: ABdhPJwvxFkK0z+rod2YURSXfwAW9o5kfMAhNR+n9ck9DQ+rinDY/gPoE+eEtQEs276CQtO8k7kmfg==
+X-Received: by 2002:a62:1b47:0:b029:2e8:ff52:16ab with SMTP id b68-20020a621b470000b02902e8ff5216abmr4688435pfb.5.1621921323583;
+        Mon, 24 May 2021 22:42:03 -0700 (PDT)
 Received: from asus-UPX-TGL01.hitronhub.home ([61.64.1.242])
-        by smtp.gmail.com with ESMTPSA id m3sm13208256pfh.174.2021.05.24.22.42.01
+        by smtp.gmail.com with ESMTPSA id m3sm13208256pfh.174.2021.05.24.22.42.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 May 2021 22:42:02 -0700 (PDT)
+        Mon, 24 May 2021 22:42:03 -0700 (PDT)
 From:   aaeon.asus@gmail.com
 X-Google-Original-From: kunyang_fan@asus.com
 To:     linux-gpio@vger.kernel.org
 Cc:     acelan.kao@canonical.com, Kunyang_Fan <kunyang_fan@asus.com>
-Subject: [PATCH 1/5] mfd: Add support for IO functions of AAEON devices
-Date:   Tue, 25 May 2021 13:41:45 +0800
-Message-Id: <20210525054149.1792-1-kunyang_fan@asus.com>
+Subject: [PATCH 2/5] gpio: add driver for AAEON devices
+Date:   Tue, 25 May 2021 13:41:46 +0800
+Message-Id: <20210525054149.1792-2-kunyang_fan@asus.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210525054149.1792-1-kunyang_fan@asus.com>
+References: <20210525054149.1792-1-kunyang_fan@asus.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -63,164 +65,261 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Kunyang_Fan <kunyang_fan@asus.com>
 
-This adds the supports for multiple IO functions of the
-AAEON x86 devices and makes use of the WMI interface to
-control the these IO devices including:
-
-- GPIO
-- LED
-- Watchdog
-- HWMON
-
-It also adds the mfd child device drivers to support
-the above IO functions.
+This patch add support for the GPIO pins whose control are
+transported to BIOS through ASUS WMI interface.
 
 Signed-off-by: Kunyang_Fan <kunyang_fan@asus.com>
 ---
- MAINTAINERS             | 12 +++++++
- drivers/mfd/Kconfig     | 12 +++++++
- drivers/mfd/Makefile    |  1 +
- drivers/mfd/mfd-aaeon.c | 77 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 102 insertions(+)
- create mode 100644 drivers/mfd/mfd-aaeon.c
+ drivers/gpio/Kconfig      |  11 ++
+ drivers/gpio/Makefile     |   1 +
+ drivers/gpio/gpio-aaeon.c | 205 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 217 insertions(+)
+ create mode 100644 drivers/gpio/gpio-aaeon.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1c19c1e2c970..49783dd44367 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -257,6 +257,18 @@ W:	http://www.adaptec.com/
- F:	Documentation/scsi/aacraid.rst
- F:	drivers/scsi/aacraid/
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 6d2437676a75..26acac425583 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1356,6 +1356,17 @@ endmenu
+ menu "PCI GPIO expanders"
+ 	depends on PCI
  
-+AAEON DEVICE DRIVER WITH WMI INTERFACE
-+M:	Edward Lin<edward1_lin@asus.com>
-+M:	Kunyang Fan <kunyang_fan@asus.com>
-+M:	Frank Hsieh <frank2_hsieh@asus.com>
-+M:	Jacob Wu <jacob_wu@asus.com>
-+S:	Supported
-+F:	drivers/gpio/gpio-aaeon.c
-+F:	drivers/hwmon/hwmon-aaeon.c
-+F:	drivers/leds/leds-aaeon.c
-+F:	drivers/mfd/mfd-aaeon.c
-+F:	drivers/watchdog/wdt_aaeon.c
-+
- ABI/API
- L:	linux-api@vger.kernel.org
- F:	include/linux/syscalls.h
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index a37d7d171382..f172564eed0d 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -2053,6 +2053,18 @@ config MFD_WCD934X
- 	  This driver provides common support WCD934x audio codec and its
- 	  associated Pin Controller, Soundwire Controller and Audio codec.
- 
-+
-+config MFD_AAEON
-+	tristate "AAEON WMI MFD devices"
++config GPIO_AAEON
++	tristate "AAEON GPIO support"
 +	depends on ASUS_WMI
++	select MFD_AAEON
 +	help
-+	  Say yes here to support mltiple IO devices on Single Board Computers
-+	  produced by AAEON.
++	  Say yes here to support GPIO pins on Single Board Computers produced
++	  by AAEON.
 +
 +	  This driver leverages the ASUS WMI interface to access device
 +	  resources.
 +
-+
- menu "Multimedia Capabilities Port drivers"
- 	depends on ARCH_SA1100
- 
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 9367a92f795a..36fff3d0da7e 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
- obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
- 
- obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
-+obj-$(CONFIG_MFD_AAEON)		+= mfd-aaeon.o
-diff --git a/drivers/mfd/mfd-aaeon.c b/drivers/mfd/mfd-aaeon.c
+ config GPIO_AMD8111
+ 	tristate "AMD 8111 GPIO driver"
+ 	depends on X86 || COMPILE_TEST
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 1e4894e0bf0f..50682c5c49d3 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_GPIO_104_IDI_48)		+= gpio-104-idi-48.o
+ obj-$(CONFIG_GPIO_104_IDIO_16)		+= gpio-104-idio-16.o
+ obj-$(CONFIG_GPIO_74X164)		+= gpio-74x164.o
+ obj-$(CONFIG_GPIO_74XX_MMIO)		+= gpio-74xx-mmio.o
++obj-$(CONFIG_GPIO_AAEON)                += gpio-aaeon.o
+ obj-$(CONFIG_GPIO_ADNP)			+= gpio-adnp.o
+ obj-$(CONFIG_GPIO_ADP5520)		+= gpio-adp5520.o
+ obj-$(CONFIG_GPIO_ADP5588)		+= gpio-adp5588.o
+diff --git a/drivers/gpio/gpio-aaeon.c b/drivers/gpio/gpio-aaeon.c
 new file mode 100644
-index 000000000000..9d2efde53cad
+index 000000000000..3183c45dd194
 --- /dev/null
-+++ b/drivers/mfd/mfd-aaeon.c
-@@ -0,0 +1,77 @@
++++ b/drivers/gpio/gpio-aaeon.c
+@@ -0,0 +1,205 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * UP Board main platform driver and FPGA configuration support
-+ *
++ * AAEON GPIO driver
 + * Copyright (c) 2021, AAEON Ltd.
 + *
-+ * Author: Kunyang_Fan <knuyang_fan@aaeon.com.tw>
++ * Author: Edward Lin <edward1_lin@aaeon.com.tw>
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + */
-+
 +#include <linux/acpi.h>
-+#include <linux/gpio.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/core.h>
++#include <linux/bitops.h>
++#include <linux/gpio/driver.h>
++#include <linux/init.h>
++#include <linux/io.h>
 +#include <linux/module.h>
++#include <linux/platform_data/x86/asus-wmi.h>
 +#include <linux/platform_device.h>
-+#include <linux/leds.h>
-+#include <linux/wmi.h>
 +
++#define DRVNAME "gpio_aaeon"
++#define ASUS_NB_WMI_EVENT_GUID   "0B3CBB35-E3C2-45ED-91C2-4C5A6D195D1C"
 +#define AAEON_WMI_MGMT_GUID      "97845ED0-4E6D-11DE-8A39-0800200C9A66"
 +
-+struct aaeon_wmi_priv {
-+	const struct mfd_cell *cells;
-+	size_t ncells;
++#define GET_GPIO_NUMBER_ID       0x00010000
++#define GET_LEVEL_METHOD_ID      0x00010001
++#define SET_LEVEL_METHOD_ID      0x00010002
++#define GET_DIRECTION_METHOD_ID  0x00010003
++#define SET_DIRECTION_METHOD_ID  0x00010004
++#define GET_SIO_NUMBER_METHOD_ID 0xF0010
++
++struct aaeon_gpio_bank {
++	struct gpio_chip chip;
++	unsigned int regbase;
++	struct aaeon_gpio_data *data;
 +};
 +
-+static const struct mfd_cell aaeon_mfd_cells[] = {
-+	{ .name = "gpio-aaeon" },
-+	{ .name = "hwmon-aaeon"},
-+	{ .name = "leds-aaeon"},
-+	{ .name = "wdt-aaeon"},
++struct aaeon_gpio_data {
++	int nr_bank;
++	struct aaeon_gpio_bank *bank;
 +};
 +
-+static const struct aaeon_wmi_priv aaeon_wmi_priv_data = {
-+	.cells = aaeon_mfd_cells,
-+	.ncells = ARRAY_SIZE(aaeon_mfd_cells),
++static int aaeon_gpio_get_number(void);
++static int aaeon_gpio_get_direction(struct gpio_chip *chip,
++				 unsigned int offset);
++static int aaeon_gpio_output_set_direction(struct gpio_chip *chip,
++				 unsigned int offset, int value);
++static int aaeon_gpio_input_set_direction(struct gpio_chip *chip,
++				 unsigned int offset);
++static int aaeon_gpio_get(struct gpio_chip *chip,
++				 unsigned int offset);
++static void aaeon_gpio_set(struct gpio_chip *chip, unsigned int offset,
++				 int value);
++
++#define AAEON_GPIO_BANK(_base, _ngpio, _regbase)			\
++{									\
++	.chip = {							\
++		.label            = DRVNAME,				\
++		.owner            = THIS_MODULE,			\
++		.get_direction    = aaeon_gpio_get_direction,		\
++		.direction_input  = aaeon_gpio_input_set_direction,     \
++		.direction_output = aaeon_gpio_output_set_direction,    \
++		.get              = aaeon_gpio_get,			\
++		.set              = aaeon_gpio_set,			\
++		.base             = _base,				\
++		.ngpio            = _ngpio,				\
++		.can_sleep        = true,				\
++	},								\
++	.regbase = _regbase,						\
++}
++
++static struct aaeon_gpio_bank aaeon_gpio_bank[] = {
++	AAEON_GPIO_BANK(0, 0, 0xF0),
 +};
 +
-+static int aaeon_wmi_probe(struct wmi_device *wdev, const void *context)
++static int aaeon_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
 +{
-+	struct aaeon_wmi_priv *priv;
++	int err, retval;
++	u32 dev_id = 0x0;
 +
++	dev_id |= offset;
++	err = asus_wmi_evaluate_method(GET_DIRECTION_METHOD_ID, dev_id,
++				       0, &retval);
++	if (err)
++		return err;
++
++	return retval;
++}
++
++static int aaeon_gpio_input_set_direction(struct gpio_chip *chip,
++					  unsigned int offset)
++{
++	int err, retval;
++	u32 dev_id;
++
++	dev_id = BIT(16) | offset;
++	err = asus_wmi_evaluate_method(SET_DIRECTION_METHOD_ID, dev_id,
++				       0, &retval);
++	if (err)
++		return err;
++
++	return retval;
++}
++
++static int aaeon_gpio_output_set_direction(struct gpio_chip *chip,
++					   unsigned int offset, int value)
++{
++	int err, retval;
++	u32 dev_id = 0x0;
++
++	dev_id |= offset;
++	err = asus_wmi_evaluate_method(SET_DIRECTION_METHOD_ID, dev_id,
++				       0, &retval);
++	if (err)
++		return err;
++
++	return retval;
++}
++
++static int aaeon_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	int err, retval;
++	u32 dev_id = 0x0;
++
++	dev_id |= offset;
++	err = asus_wmi_evaluate_method(GET_LEVEL_METHOD_ID, dev_id, 0, &retval);
++	if (err)
++		return err;
++
++	return retval;
++}
++
++static void aaeon_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			   int value)
++{
++	int retval;
++	u32 dev_id = offset;
++
++	if (value)
++		dev_id = BIT(16) | dev_id;
++
++	asus_wmi_evaluate_method(SET_LEVEL_METHOD_ID, dev_id, 0, &retval);
++}
++
++static int aaeon_gpio_get_number(void)
++{
++	int err, retval;
++
++	err = asus_wmi_evaluate_method(GET_GPIO_NUMBER_ID,
++				       GET_SIO_NUMBER_METHOD_ID,
++				       0, &retval);
++	if (err)
++		return err;
++
++	return retval;
++}
++
++static int __init aaeon_gpio_probe(struct platform_device *pdev)
++{
++	int err, i;
++	int dio_number = 0;
++	struct aaeon_gpio_data *data;
++	struct aaeon_gpio_bank *bank;
++
++	/* Prevent other drivers adding this platfom device */
 +	if (!wmi_has_guid(AAEON_WMI_MGMT_GUID)) {
-+		dev_info(&wdev->dev, "AAEON Management GUID not found\n");
++		pr_debug("AAEON Management GUID not found\n");
 +		return -ENODEV;
 +	}
 +
++	dio_number = aaeon_gpio_get_number();
++	if (dio_number < 0)
++		return -ENODEV;
 +
-+	priv = (struct aaeon_wmi_priv *)context;
-+	dev_set_drvdata(&wdev->dev, priv);
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
 +
-+	return devm_mfd_add_devices(&wdev->dev, 0, priv->cells,
-+				    priv->ncells, NULL, 0, NULL);
++	data->nr_bank = ARRAY_SIZE(aaeon_gpio_bank);
++	data->bank = aaeon_gpio_bank;
++	platform_set_drvdata(pdev, data);
++	bank = &data->bank[0];
++	bank->chip.parent = &pdev->dev;
++	bank->chip.ngpio = dio_number;
++	bank->data = data;
++	err = devm_gpiochip_add_data(&pdev->dev, &bank->chip, bank);
++	if (err)
++		pr_debug("Failed to register gpiochip %d: %d\n", i, err);
++
++	return err;
 +}
 +
-+static const struct wmi_device_id aaeon_wmi_id_table[] = {
-+	{ AAEON_WMI_MGMT_GUID, (void *)&aaeon_wmi_priv_data },
-+	{}
-+};
-+
-+static struct wmi_driver aaeon_wmi_driver = {
++static struct platform_driver aaeon_gpio_driver = {
 +	.driver = {
-+		.name = "mfd-aaeon",
++		.name = "gpio-aaeon",
 +	},
-+	.id_table = aaeon_wmi_id_table,
-+	.probe = aaeon_wmi_probe,
 +};
 +
-+module_wmi_driver(aaeon_wmi_driver);
++module_platform_driver_probe(aaeon_gpio_driver, aaeon_gpio_probe);
 +
-+MODULE_DEVICE_TABLE(wmi, aaeon_wmi_id_table);
-+MODULE_AUTHOR("Kunyang Fan <kunyang_fan@aaeon.com.tw>");
-+MODULE_DESCRIPTION("AAEON Board WMI driver");
++MODULE_ALIAS("platform:gpio-aaeon");
++MODULE_DESCRIPTION("AAEON GPIO Driver");
++MODULE_AUTHOR("Edward Lin <edward1_lin@aaeon.com.tw>");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.25.1
