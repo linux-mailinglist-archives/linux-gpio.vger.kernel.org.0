@@ -2,22 +2,22 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC6BC38FA49
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 07:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EA5838FA4A
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 07:53:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230108AbhEYFyt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 01:54:49 -0400
-Received: from twspam01.aspeedtech.com ([211.20.114.71]:14606 "EHLO
+        id S230270AbhEYFyu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 01:54:50 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:14608 "EHLO
         twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230218AbhEYFyr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 01:54:47 -0400
+        with ESMTP id S230262AbhEYFyu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 01:54:50 -0400
 Received: from mail.aspeedtech.com ([192.168.0.24])
-        by twspam01.aspeedtech.com with ESMTP id 14P5eDa2028241;
-        Tue, 25 May 2021 13:40:13 +0800 (GMT-8)
+        by twspam01.aspeedtech.com with ESMTP id 14P5eFBn028242;
+        Tue, 25 May 2021 13:40:15 +0800 (GMT-8)
         (envelope-from steven_lee@aspeedtech.com)
 Received: from slee-VirtualBox.localdomain (192.168.100.253) by
  TWMBX02.aspeed.com (192.168.0.24) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 25 May 2021 13:53:10 +0800
+ 15.0.1497.2; Tue, 25 May 2021 13:53:12 +0800
 From:   Steven Lee <steven_lee@aspeedtech.com>
 To:     Andrew Jeffery <andrew@aj.id.au>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -34,51 +34,62 @@ To:     Andrew Jeffery <andrew@aj.id.au>,
         open list <linux-kernel@vger.kernel.org>
 CC:     <steven_lee@aspeedtech.com>, <Hongweiz@ami.com>,
         <ryan_chen@aspeedtech.com>, <billy_tsai@aspeedtech.com>
-Subject: [PATCH v3 0/3] pinctrl: pinctrl-g6: Add the 2nd sgpio
-Date:   Tue, 25 May 2021 13:53:04 +0800
-Message-ID: <20210525055308.31069-1-steven_lee@aspeedtech.com>
+Subject: [PATCH v3 1/3] dt-bindings: pinctrl: Update enum for adding SGPM2 and SGPS2
+Date:   Tue, 25 May 2021 13:53:05 +0800
+Message-ID: <20210525055308.31069-2-steven_lee@aspeedtech.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210525055308.31069-1-steven_lee@aspeedtech.com>
+References: <20210525055308.31069-1-steven_lee@aspeedtech.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [192.168.100.253]
 X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
  (192.168.0.24)
 X-DNSRBL: 
-X-MAIL: twspam01.aspeedtech.com 14P5eDa2028241
+X-MAIL: twspam01.aspeedtech.com 14P5eFBn028242
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 AST2600 has 2 SGPIO master interfaces one with 128 pins and another one
-has 80 pins, it also supports 2 SGPIO slave interfaces.
-However, there is only the first sgpio master/slave interface defined in
-dtsi and pinctrl driver.
-The patch series adds the second SGPIO master and slave interfaces
-in dt-bindings, dtsi and pinctrl driver.
+has 80 pins. It also supports 2 SGPIO slave interfaces.
+In the current bindings, there are only SGPM1 and SGPS1 defined in enum,
+SGPM2 and SGPS2 should also be added in the bindings.
 
-Changes from v2:
-* Fix the typo of the commit message of the 3rd patch.
+Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml       | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Changes from v1:
-* Correct the function priority of multi-function pin.
-* Change the name of arguments of PIN_DECL_4.
-
-Please help to review.
-
-Thanks,
-Steven
-
-Steven Lee (3):
-  dt-bindings: pinctrl: Update enum for adding SGPM2 and SGPS2
-  ARM: dts: aspeed-g6: Add pinctrl settings
-  pinctrl: pinctrl-aspeed-g6: Add sgpio pinctrl settings
-
- .../pinctrl/aspeed,ast2600-pinctrl.yaml       | 10 ++++----
- arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi      | 10 ++++++++
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    | 24 +++++++++++++++----
- drivers/pinctrl/aspeed/pinmux-aspeed.h        |  9 +++++++
- 4 files changed, 44 insertions(+), 9 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+index ad91c0bc54da..ad2866c99738 100644
+--- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+@@ -46,8 +46,8 @@ patternProperties:
+                   PWM9, RGMII1, RGMII2, RGMII3, RGMII4, RMII1, RMII2, RMII3, RMII4,
+                   RXD1, RXD2, RXD3, RXD4, SALT1, SALT10, SALT11, SALT12, SALT13, SALT14,
+                   SALT15, SALT16, SALT2, SALT3, SALT4, SALT5, SALT6, SALT7, SALT8,
+-                  SALT9, SD1, SD2, SGPM1, SGPS1, SIOONCTRL, SIOPBI, SIOPBO, SIOPWREQ,
+-                  SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1ABR, SPI1CS1, SPI1WP, SPI2,
++                  SALT9, SD1, SD2, SGPM1, SGPM2, SGPS1, SGPS2, SIOONCTRL, SIOPBI, SIOPBO,
++                  SIOPWREQ, SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1ABR, SPI1CS1, SPI1WP, SPI2,
+                   SPI2CS1, SPI2CS2, TACH0, TACH1, TACH10, TACH11, TACH12, TACH13, TACH14,
+                   TACH15, TACH2, TACH3, TACH4, TACH5, TACH6, TACH7, TACH8, TACH9, THRU0,
+                   THRU1, THRU2, THRU3, TXD1, TXD2, TXD3, TXD4, UART10, UART11, UART12,
+@@ -74,9 +74,9 @@ patternProperties:
+                   RXD1, RXD2, RXD3, RXD4, SALT1, SALT10G0, SALT10G1, SALT11G0, SALT11G1,
+                   SALT12G0, SALT12G1, SALT13G0, SALT13G1, SALT14G0, SALT14G1, SALT15G0,
+                   SALT15G1, SALT16G0, SALT16G1, SALT2, SALT3, SALT4, SALT5, SALT6,
+-                  SALT7, SALT8, SALT9G0, SALT9G1, SD1, SD2, SD3, SGPM1, SGPS1, SIOONCTRL,
+-                  SIOPBI, SIOPBO, SIOPWREQ, SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1ABR,
+-                  SPI1CS1, SPI1WP, SPI2, SPI2CS1, SPI2CS2, TACH0, TACH1, TACH10, TACH11,
++                  SALT7, SALT8, SALT9G0, SALT9G1, SD1, SD2, SD3, SGPM1, SGPM2, SGPS1, SGPS2,
++                  SIOONCTRL, SIOPBI, SIOPBO, SIOPWREQ, SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1,
++                  SPI1ABR, SPI1CS1, SPI1WP, SPI2, SPI2CS1, SPI2CS2, TACH0, TACH1, TACH10, TACH11,
+                   TACH12, TACH13, TACH14, TACH15, TACH2, TACH3, TACH4, TACH5, TACH6,
+                   TACH7, TACH8, TACH9, THRU0, THRU1, THRU2, THRU3, TXD1, TXD2, TXD3,
+                   TXD4, UART10, UART11, UART12G0, UART12G1, UART13G0, UART13G1, UART6,
 -- 
 2.17.1
 
