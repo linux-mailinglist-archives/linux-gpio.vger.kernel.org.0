@@ -2,96 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14BD43906FB
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 18:55:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B22B390701
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 18:58:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbhEYQ5W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 12:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232245AbhEYQ5V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 12:57:21 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F5BC061756
-        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 09:55:50 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id y14so30902505wrm.13
-        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 09:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=56nDPhFIj8bYnpdmgf2D5pufG3atbZiNiJawhVqj3ks=;
-        b=bCjBiw1k+xFMqPf4nex6kscsLYlhaIHMRIYgmoLAPAYShq9qTUzpF3W5fPN+obY8Wc
-         vtsguGfPBszH7fOHD+387HersGfn3O2yVc+emyPzERdGXK8zQTp26lI2Xd25+KzMc6gm
-         QR9NAUJ2uX0Bk0AJDArhg2TKp7lL4tHFSvv1BMHSzNkEzOQqcWGu5EkB/Y8W7yOWmb0S
-         sIBylF0934BiTKctU9EmPhSnbl+vuED5mG6lxF2L9dKN7/UUyZfxhRo9bhIUj1rxAbw8
-         7+HvMcr7+cbQG8cBjt0MC8aKvOY7htL9P8VeqIsAwLCbws69uC0qW88wG40Q0a7ITM/p
-         tfsg==
+        id S231895AbhEYRAS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 13:00:18 -0400
+Received: from mail-oi1-f180.google.com ([209.85.167.180]:35779 "EHLO
+        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230451AbhEYRAR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 13:00:17 -0400
+Received: by mail-oi1-f180.google.com with SMTP id v22so30933610oic.2;
+        Tue, 25 May 2021 09:58:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=56nDPhFIj8bYnpdmgf2D5pufG3atbZiNiJawhVqj3ks=;
-        b=O4iq04rddavNDjLFuv52OczRTsojNFV/xMrjziOEamLjjAmMK9CRkMusggLM66Fmhn
-         cPwuC+J9a9viG16GDUODlQv/EA+ATWmfPml2MLJMpQJRceNO5ZhxtP3F9tFyj94kJ5q+
-         Jswl6kDg9A4P7Ew3IhISY2GhoyfcVOM0WPNld7dzUE2BUERHvmsrQLq4PxFfrrSyTztL
-         AxWd1avJUoVoK963YVtNcfmwTQlJPooBjhYabF/XiIb37ZkHTJV1jYRtW7hm48ziCP4/
-         7HwHI1LqByIpHVImuv65AyF4QLEWUWMfpgZbE7SRP4EPlyyi/oP1dwgT4QVfJlKnVe70
-         PqXg==
-X-Gm-Message-State: AOAM531h78f6hgrjXUTP59qq1UGK7Lfr5d39Pc2BDOkm4PXLCjyp1AtG
-        1i0N9117nc77d/FPy2UgyxlZ1g==
-X-Google-Smtp-Source: ABdhPJyEnBrUpX71recZ5Cz9ghtNvZv2axCQifVKUy04RpPOy0rEInHPbsrS2pzA/OHJF5g5of8r0A==
-X-Received: by 2002:a5d:650b:: with SMTP id x11mr27794223wru.186.1621961748918;
-        Tue, 25 May 2021 09:55:48 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
-        by smtp.gmail.com with ESMTPSA id l3sm11571447wmh.2.2021.05.25.09.55.47
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=+Ub17SKUCiFrW/0XnMAb39e/HKd8J7ZuUG7/Pe9ECTU=;
+        b=K2h7bnaRGKKPIkMXjAhPPjuY1ygk5HKDuwDFOotHjkndId8NjJmUWkITC/fnt1f/pU
+         Gw8C12DUxVGseQFhGt6JC0HcSo1zHMWd1+xemXGOpPTd0caB6FQMzh9Fwj8aY7M95Xsk
+         U3yA34QWUTM49K85wDwkmq5Jzi1CD4LWr/6fpBVEv89nrvsOXuDZW4fcv6jHSy6GVfrA
+         XYhK5bYuQN+MIZhGYiIHvvBCiMAgC9cnBSTGmcFHtLuepuUUYuaMfgZB+TiHgFoLm3oi
+         tmNqCcrk59eGsdQbm4sfLkPWkGfhWaTSW/H9oU/m8j+o/HSdQfNnCth6mbIULBt52cMY
+         U+7g==
+X-Gm-Message-State: AOAM531u1cZVMI4SLwEtAPJ2eUax89zFa64wXsfDdMMvbNGGWt/IE7bd
+        cdvM29Th6Nqk5e2/DcxQ1w==
+X-Google-Smtp-Source: ABdhPJwgCGUg2pkmWn431sPZ2Rha6dEqNzcF+M+tHOxzTgWGI4V4nVhgN6ikfmP91QTxww3QomGT8g==
+X-Received: by 2002:aca:602:: with SMTP id 2mr14477308oig.113.1621961925868;
+        Tue, 25 May 2021 09:58:45 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j33sm3635838otj.72.2021.05.25.09.58.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 May 2021 09:55:48 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        john.stultz@linaro.org, amit.pundir@linaro.org,
-        bjorn.andersson@linaro.org, andy.shevchenko@gmail.com,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RESEND PATCH v2] gpio: wcd934x: Fix shift-out-of-bounds error
-Date:   Tue, 25 May 2021 17:55:39 +0100
-Message-Id: <20210525165539.25330-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 25 May 2021 09:58:44 -0700 (PDT)
+Received: (nullmailer pid 18644 invoked by uid 1000);
+        Tue, 25 May 2021 16:58:43 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Botka <martin.botka@somainline.org>
+Cc:     linux-gpio@vger.kernel.org,
+        angelogioacchino.delregno@somainline.org,
+        Rob Herring <robh+dt@kernel.org>, konrad.dybcio@somainline.org,
+        marijn.suijten@somainline.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        jamipkettunen@somainline.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org
+In-Reply-To: <20210524193012.592210-1-martin.botka@somainline.org>
+References: <20210524193012.592210-1-martin.botka@somainline.org>
+Subject: Re: [PATCH V3 1/2] dt-bindings: pinctrl: qcom: sm6125: Document SM6125 pinctrl driver
+Date:   Tue, 25 May 2021 11:58:43 -0500
+Message-Id: <1621961923.316297.18643.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-bit-mask for pins 0 to 4 is BIT(0) to BIT(4) however we ended up with BIT(n - 1)
-which is not right, and this was caught by below usban check
+On Mon, 24 May 2021 21:30:09 +0200, Martin Botka wrote:
+> Document the newly added SM6125 pinctrl driver
+> 
+> Signed-off-by: Martin Botka <martin.botka@somainline.org>
+> ---
+> Changes in V2:
+> Add commit description
+> Changes in V3:
+> Fix syntax errors
+> Remove not needed state from example
+>  .../bindings/pinctrl/qcom,sm6125-pinctrl.yaml | 134 ++++++++++++++++++
+>  1 file changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.yaml
+> 
 
-UBSAN: shift-out-of-bounds in drivers/gpio/gpio-wcd934x.c:34:14
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Fixes: 59c324683400 ("gpio: wcd934x: Add support to wcd934x gpio controller")
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-changes since v1:
-	- removed unnecessary dump stack from log
+yamllint warnings/errors:
 
- drivers/gpio/gpio-wcd934x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.example.dt.yaml:0:0: /example-0/pinctrl@500000: failed to match any schema with compatible: ['qcom,sm6125-pinctrl']
 
-diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
-index 1cbce5990855..97e6caedf1f3 100644
---- a/drivers/gpio/gpio-wcd934x.c
-+++ b/drivers/gpio/gpio-wcd934x.c
-@@ -7,7 +7,7 @@
- #include <linux/slab.h>
- #include <linux/of_device.h>
- 
--#define WCD_PIN_MASK(p) BIT(p - 1)
-+#define WCD_PIN_MASK(p) BIT(p)
- #define WCD_REG_DIR_CTL_OFFSET 0x42
- #define WCD_REG_VAL_CTL_OFFSET 0x43
- #define WCD934X_NPINS		5
--- 
-2.21.0
+See https://patchwork.ozlabs.org/patch/1482937
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
