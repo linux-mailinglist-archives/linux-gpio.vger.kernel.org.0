@@ -2,91 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED2B7390176
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 15:00:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D01DA3901BA
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 15:09:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232896AbhEYNBm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 09:01:42 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:54131 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232720AbhEYNBk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 09:01:40 -0400
-Received: from [192.168.1.155] ([77.2.164.130]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Md6V3-1lD1Bp2l7b-00aGKe; Tue, 25 May 2021 14:59:54 +0200
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        id S233089AbhEYNKu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 09:10:50 -0400
+Received: from mslow1.mail.gandi.net ([217.70.178.240]:58665 "EHLO
+        mslow1.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232862AbhEYNKt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 09:10:49 -0400
+Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id 8985CC9447;
+        Tue, 25 May 2021 13:09:18 +0000 (UTC)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 59780FF812;
+        Tue, 25 May 2021 13:08:53 +0000 (UTC)
+Date:   Tue, 25 May 2021 15:08:52 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
         "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <CAOh2x=kcM351ObubnQSzUa=FVBQUmAUhz4u8ExORUthQQ0WbGQ@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <253f218d-07ac-1963-75e1-9ac2d035437a@metux.net>
-Date:   Tue, 25 May 2021 14:59:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH 2/9] rtc: bd70528: Drop BD70528 support
+Message-ID: <YKz25PDL2Z6vgqJv@piout.net>
+References: <cover.1621937490.git.matti.vaittinen@fi.rohmeurope.com>
+ <2beaa677bde0f9516f366b97e91419598f1dfde4.1621937490.git.matti.vaittinen@fi.rohmeurope.com>
+ <YKzjtml4GL+dhP6j@piout.net>
+ <83c091bef8adecd06a5c6fac9c86ca572bcc06d4.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOh2x=kcM351ObubnQSzUa=FVBQUmAUhz4u8ExORUthQQ0WbGQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:P+C+8jE7h8AIU2+P4QAc0bNMwt+Y7MdaM1X7ydHqfxe9je0tPYy
- be3w5uTCFWkLcxmoBlru5+W4Tk2mr/voJuWycO84rHSYafupt3Uq1xWjFMNW3F03qmqIeo3
- cTkcoPXdGz06y+TYfDTAeOgojJpIJezE0d1fhIopLlIyWOsuvtrqhqZJNb5hcmgo5hMAS2V
- S2cQMbRYoxbMBNMEpWoFw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RbO7NUknbTY=:HjhTGnKuau+6zb9Ta6G1Yh
- VzrJdmQ911+bCR6R5e9wvAcOFl/7wBWYHrYhRqtFvRVTd83T+WlNL0DWFZAEPaSEU2ttLc2FK
- 9/cmPPiOBLP6XfSEBMusNIoq+ZDrmgZTI7hxa0TZmkq4k1Xngkr6fCsy7WF25OeETPCaR1mBQ
- K6VZKRIfQfvIBwF/v1jTPvIjPvYEMu+rIk1AhegdZibK/mnIiDyrVQWQ4yiMFEGK13bHBEoxf
- SKmxkahtwNrpOP+R9KtOmG+DY6saa01i9Bfy6/8VTX4cV6mZCtuito1iNurgHq76etXrvUnTe
- CTxBDc6tGp61htLU6taesJY6WUUZMC+R3jOvsPgY/VnzYxLxShmRAMH7jg3arQ0w00/GQQ8aE
- haTTOXh3rQC7a5R7OjC/Y83HbrVdJqRQiRXllD3Jgr1EYKyc/o1DkpT+4eYUMMRfB+BfB7XJ7
- 2MWr61dYb2hBdvERcNIBllN4rrEzRtrxHZIzouhQ0NJ5sEvmhkmh892Iz81zBjgnawxLsrjjn
- E1gqPSNvOPVPkxwZXrp8HU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83c091bef8adecd06a5c6fac9c86ca572bcc06d4.camel@fi.rohmeurope.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 24.05.21 13:27, Viresh Kumar wrote:
-
-Hi,
-
-
-> We (Linaro's Project Stratos
-> https://linaro.atlassian.net/wiki/spaces/STR/overview)
->   are interested in this stuff. I was trying to look at the last status
-> of all this. Few
-> questions for you:
+On 25/05/2021 11:59:58+0000, Vaittinen, Matti wrote:
+> And in any case applying the MFD and RTC patches should be synced. RTC
+> parts should be applied before MFD parts because few other PMICs use
+> this same RTC driver and compilation would fail with missing headers if
+> MFD was removed before RTC changes are applied.
 > 
-> - Was the spec ever posted to virtio-dev list ? I thought that's the
-> very first step before
-> we merge the code.
+> Suggestions on how to guarantee the order of MFD and RTC - and how to
+> resolve conflicts?
+> 
 
-I had posted some spec quite some time ago, but it wasn't in the form
-of patches against the .tex documentation files yet. It's been laying
-aside for quite a while, since I've been busy w/ other things.
+The easiest is to take the RTC patches in one cycle and the rest in
+the next cycle.
 
-
---mtx
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
