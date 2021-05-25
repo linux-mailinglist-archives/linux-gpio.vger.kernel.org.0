@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEA7E38F68C
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 01:55:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C22B38F6CB
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 02:07:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbhEXX47 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 19:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47860 "EHLO
+        id S229668AbhEYAI1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 20:08:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbhEXX47 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 19:56:59 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75EE1C06138A
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 16:55:29 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id q3so12955487lfu.2
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 16:55:29 -0700 (PDT)
+        with ESMTP id S229503AbhEYAIZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 20:08:25 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EE9C061756
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 17:06:55 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id q7so41809124lfr.6
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 17:06:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=592zjrjs71MnPKYyPd/8Gk+j2UZLngCEKFNFLQ96mQY=;
-        b=Hi7md/ohZBbgNkX+gRP/A7hbkMRs56Dn/rd+BvZrdxnMamaGNiflZLG96US3F7f0yw
-         1UmztCpe3Rp7VFYMFm1l1VwnRNrT54ENZj0ZwoC7kdx7N8rOmTaEh1K+RfcdsnBiNpk+
-         vWOyNBfaty36OI3DinuIPd9/uw1VZ9G89qb1Xw1QwOzpBUZwnYRyyNWokcC6Op7gDim+
-         RUTgrZGzXfeU2xGy71lxqxLlLUNa91w9hJy0D+a1hin9uW44SQJ5dJapRN9mCBRqVXvP
-         ug7d5hDgNauAHWQ1D7epY8msb6hu1NcAn4mkeP2GaAUx3QcYcgpAomtSNBNBk1vBZ84Y
-         iA/g==
+        bh=kMpOljGnfPeM78kPggxibkmCL00Y57PzO5ZmaEV0BXY=;
+        b=MewdMHu8pSiz9xtZOKCGO2UN+t5TiiRcBHH1a51nLZOQ930DNpl6gJPaV2XGMGRFVM
+         e/50I9+o6cNImkcNqVmAHX1IG1yNlF+DM2eszkohBGYtUWYHCehhn6ipxRJhfR/9wxcu
+         yp+JYSiP05pJjGHOkI4oqCGDNxIX+rKjQWIB2oIlP8QoqW7i9RYKKn76Ir0HgL2Vkyol
+         qZ8LWSZkflFyvnqM1aEJNpem1C1r3uEIL83lAtsZ+Qs1MafIqT6TVc99DPwYyg6+YxgP
+         n9xGP/9mCT8suXOUCn2J9jmJLenG4SLFB9g1rhAIWDXz8kpASz65DzXqXMLjzllemIH9
+         menQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=592zjrjs71MnPKYyPd/8Gk+j2UZLngCEKFNFLQ96mQY=;
-        b=r1rZcuwCrs0g2JPA4t/QB6z8YwlyaGuqYbu+zSeUT2LyTGL1lTmxzRG5XjcNXp1DwC
-         WKt1GdAL6wU4kW3pxog60LHLXVDmnaP0OKAfu3kWPhONi63W5TVYHLr7nw2B4QtPAMjl
-         OIzuQhNTvLN/4k1F6uI1DfdYkhRMAXBIW48CZWptJMVHYSIY00l1KuXrhVC0agOcvrgV
-         XwEkcps5TMGztJG8mI7zN4J2+tsnokr8YpQ6e0p3KTJTFZNWNMz/uHQkJIOup6IhG84o
-         DYHquT//oRu9/9/TcDlVjPsLPWo9JiXv7HVywSDv7gtNbZUi8qjjIi9luW9CiAkK+C+5
-         TCNg==
-X-Gm-Message-State: AOAM5303i0qJ5ktJZL6M0012RZZBDf7uYEE/tV7IgGvYJFohnfvMMEKn
-        jdtJspvgpErATdcgXK3+jDuSiE6mAyGLGe3OQDIlgw==
-X-Google-Smtp-Source: ABdhPJx/e/kNcfBBwSrujRvi50rqAYpED4xQ/1Z1KiwOS/qb69WenvVA5bxXAGKmpbikyGXHTzGCq3bA7YejdGNjNPU=
-X-Received: by 2002:a05:6512:11ea:: with SMTP id p10mr11650728lfs.157.1621900527740;
- Mon, 24 May 2021 16:55:27 -0700 (PDT)
+        bh=kMpOljGnfPeM78kPggxibkmCL00Y57PzO5ZmaEV0BXY=;
+        b=DWlWZfzFtof1v8q68GgokKaxq42gfUjK/e15KomICEcH98WaEc/iN0kykjRVW9ttKf
+         tKX3CInrlMQvNST+Pz07Ue50QtA5QpojUT10fjQ222lrmYIq7XcqI2LT8yGukAyptIuz
+         ZNC+2juVhxjeMfQxKznJ34JNIOFj40kHM6h++zihLvI/ZGpThfTNre56R6gO9DJzDx9Q
+         mZ1PQ1n7OllfSesxsbJlmfVUWNZQK0rAcDzSLJ30Xid/qEdQzwp/gyjpE+IY2mfJSJSM
+         mpjZotzE6YwWVPK5fjvQqhB28DtO7N2xKGElyZXi4fkhmOdaiKD5YL7MWyR7skooU4I+
+         FVGA==
+X-Gm-Message-State: AOAM532RdJ9JNoJacbP0TScft6Xn18QcNnLQMjiU9yiNzMgSOYwmng6n
+        mA7XES5px7rLcT3Z5zzTPS6rUZoMe1+RUNyfdC233Q==
+X-Google-Smtp-Source: ABdhPJx94W96U3rvN6Jk3W8XwfHaYZxs8wqy2iOgobL2N4vLXoIZf9tS5BonEJmR9TdQKSwTD05BGaGxDwMtobVK2RA=
+X-Received: by 2002:a05:6512:1185:: with SMTP id g5mr12286057lfr.586.1621901213604;
+ Mon, 24 May 2021 17:06:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210510063602.505829-1-jay.xu@rock-chips.com> <20210510063602.505829-2-jay.xu@rock-chips.com>
-In-Reply-To: <20210510063602.505829-2-jay.xu@rock-chips.com>
+References: <20210510063602.505829-1-jay.xu@rock-chips.com> <20210510063602.505829-4-jay.xu@rock-chips.com>
+In-Reply-To: <20210510063602.505829-4-jay.xu@rock-chips.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 May 2021 01:55:16 +0200
-Message-ID: <CACRpkdaWX7OBN=SH3=epQkYyP4nyaYsvC_S3y+hThpR=J-ZAjA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] pinctrl/rockchip: separate struct rockchip_pin_bank
- to a head file
+Date:   Tue, 25 May 2021 02:06:43 +0200
+Message-ID: <CACRpkdaZ=3AsT9NiOKrwEDWXReDX0w_PsdgwC6fqSb4Yecry-g@mail.gmail.com>
+Subject: Re: [PATCH 3/7] gpio: separate gpio driver from pinctrl-rockchip driver
 To:     Jianqun Xu <jay.xu@rock-chips.com>
 Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -62,11 +61,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jianqun,
+On Mon, May 10, 2021 at 8:36 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
 
-This series does not apply cleanly on kernel v5.13-rc1, can you rebase and
-resend it so I can apply it? I hade some minor comment but overall it is very
-good and I think we should apply it to move ahead with this series.
+> Separate the gpio driver from the pinctrl driver.
+>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+
+Overall this is very good and should be applied.
+
+> +#include "../pinctrl/core.h"
+> +#include "../pinctrl/pinctrl-rockchip.h"
+
+Please explain in a comment exactly why you need to include
+these files. I think it should be the goal to get rid of this dependency.
+
+It seems that the driver can be further simplified using GPIO_GENERIC
+but we can deal with this later, once it is separate.
+
+> +static int rockchip_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+> +                                 unsigned long config)
+> +{
+> +       enum pin_config_param param = pinconf_to_config_param(config);
+> +
+> +       switch (param) {
+> +       case PIN_CONFIG_INPUT_DEBOUNCE:
+> +               rockchip_gpio_set_debounce(gc, offset, true);
+(...)
+> +       .set_config = rockchip_gpio_set_config,
+
+Can't you just use gpiochip_generic_config() and rely on the pinctrl
+back-end to deal with this?
+
+> +       .to_irq = rockchip_gpio_to_irq,
+
+Normally this should not be needed with GPIOLIB_IRQCHIP but
+since you are refactoring an existing driver it is acceptable to
+keep for now.
 
 Yours,
 Linus Walleij
