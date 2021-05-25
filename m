@@ -2,40 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BE4739083F
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 19:59:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAC20390844
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 19:59:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234141AbhEYSA5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 14:00:57 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52262 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234097AbhEYSAx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 14:00:53 -0400
+        id S234012AbhEYSBA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 14:01:00 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51352 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233937AbhEYSBA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 14:01:00 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14PHxLoY009985;
-        Tue, 25 May 2021 12:59:21 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14PHxSVH086204;
+        Tue, 25 May 2021 12:59:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1621965561;
-        bh=zU79vjzMjEJ+h5F57BdhVTx10Ng0E9vNzul9uwfoG6c=;
+        s=ti-com-17Q1; t=1621965568;
+        bh=5cnZpS1Cf4bSDQTSIxoTQa9N0oVeA1ZVmY5gEFbDlCA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=WnpARJZse9tL+oLIoDJSGme2m3H2yqB8lN5jmOrTY5RvZdd/BzcpvRjJwgWtKJwX0
-         uBwE31vAigkbbCpDLgsCsh4QnwdhmOo/FdPPzEsFApt+EK/mICIOesZaNSaGaCDaJl
-         TmOgw++/JEtpHcyTZSbWihrEpdQi2fPxdvZuQ8Vg=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14PHxLpt072323
+        b=zDnXsJAQMA17OaVSo8HexglhUfhMc1l0AN7a1ySx74jF03sf88I8B8MwG2xTjDuT1
+         O/YsoT0T0En+uBHtfFOZO2imoSADS14VTt0kbiRG56gubrg052XfHMwU2mTrFkSg6F
+         EbJAnVeEvy8QOhgS8am2ZD1YMUJSolKgoE15oRi0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14PHxSQZ072426
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 May 2021 12:59:21 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 25 May 2021 12:59:28 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 25
- May 2021 12:59:20 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ May 2021 12:59:28 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Tue, 25 May 2021 12:59:20 -0500
+ Frontend Transport; Tue, 25 May 2021 12:59:28 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14PHxJcf015339;
-        Tue, 25 May 2021 12:59:20 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14PHxRvv049697;
+        Tue, 25 May 2021 12:59:27 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -45,9 +45,9 @@ CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-omap@vger.kernel.org>,
         Aswath Govindraju <a-govindraju@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2 3/5] ARM: dts: omap3: align gpio hog names with dt-schema
-Date:   Tue, 25 May 2021 20:58:56 +0300
-Message-ID: <20210525175858.11611-4-grygorii.strashko@ti.com>
+Subject: [PATCH v2 4/5] ARM: dts: omap5-board-common: align gpio hog names with dt-schema
+Date:   Tue, 25 May 2021 20:58:57 +0300
+Message-ID: <20210525175858.11611-5-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210525175858.11611-1-grygorii.strashko@ti.com>
 References: <20210525175858.11611-1-grygorii.strashko@ti.com>
@@ -63,36 +63,22 @@ to end with a 'hog' suffix.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm/boot/dts/omap3-evm-processor-common.dtsi | 2 +-
- arch/arm/boot/dts/omap3-gta04a5.dts               | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/omap5-board-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-evm-processor-common.dtsi b/arch/arm/boot/dts/omap3-evm-processor-common.dtsi
-index b4109f48ec18..e6ba30a21166 100644
---- a/arch/arm/boot/dts/omap3-evm-processor-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-evm-processor-common.dtsi
-@@ -195,7 +195,7 @@
-  * for bus switch SN74CB3Q3384A, level-shifter SN74AVC16T245DGGR, and 1.8V.
-  */
- &gpio2 {
--	en_usb2_port {
-+	en-usb2-port-hog {
- 		gpio-hog;
- 		gpios = <29 GPIO_ACTIVE_HIGH>;	/* gpio_61 */
- 		output-low;
-diff --git a/arch/arm/boot/dts/omap3-gta04a5.dts b/arch/arm/boot/dts/omap3-gta04a5.dts
-index fd84bbf3b9cc..9ce8d81250aa 100644
---- a/arch/arm/boot/dts/omap3-gta04a5.dts
-+++ b/arch/arm/boot/dts/omap3-gta04a5.dts
-@@ -37,7 +37,7 @@
- };
+diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
+index d8f13626cfd1..45435bb88c89 100644
+--- a/arch/arm/boot/dts/omap5-board-common.dtsi
++++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+@@ -149,7 +149,7 @@
  
- &gpio5 {
--	irda_en {
-+	irda-en-hog {
+ &gpio8 {
+ 	/* TI trees use GPIO instead of msecure, see also muxing */
+-	p234 {
++	msecure-hog {
  		gpio-hog;
- 		gpios = <(175-160) GPIO_ACTIVE_HIGH>;
- 		output-high;	/* activate gpio_175 to disable IrDA receiver */
+ 		gpios = <10 GPIO_ACTIVE_HIGH>;
+ 		output-high;
 -- 
 2.17.1
 
