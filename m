@@ -2,115 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74E6938FBAE
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 09:29:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30A8738FBF6
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 09:47:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231598AbhEYHau (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 03:30:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36302 "EHLO
+        id S231477AbhEYHsZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 03:48:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231263AbhEYHat (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 03:30:49 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD995C061574;
-        Tue, 25 May 2021 00:29:20 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id h20so13996978qko.11;
-        Tue, 25 May 2021 00:29:20 -0700 (PDT)
+        with ESMTP id S231868AbhEYHsX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 03:48:23 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC46C061574
+        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 00:46:52 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id n4so5142063wrw.3
+        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 00:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4BA6UqvX9jBO1xKa7XUgf1vBNEjKeOfkciRH4B0dC6U=;
-        b=COoIlADa7tLJQD4D95gezEkwp+5F4j8gn7yVIWYsnmw45zVtD4vK9Ao1/x7B0sAMxB
-         pRDMzB8VXzkHizzKtXatIBESytLxPsicU5ezsNYTxaV/ROtdyK/865mXzdXQx8Cfq65X
-         1Tbod/AnylIzvh6WfM1u2KOVASHRYHds+ine4=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=v55P6S5W7xrOd/7SzhygqC9B4BMec90s1TTSAj2EVxE=;
+        b=JajTsqVKIfsWuZ1YrQXqPuTRbCnCPA8rGan8mjq6zPyXX2H4MFK5L3fnVH7R22ucVi
+         1SYgnolIifkRimEssKJG31YS1HT2fFeZB3zvVt3J9IaFtNnJSThrbl5Yf+TGlZVd59ta
+         D+8wOIOStaAQaJ8ifPspoDD77EDjnSSMhTZGTE+EcuAClrkId1vNjEeWZIXmbYNIqMRu
+         bWqGjVzBQd+FBecuDWce1Pw2msLiJK67HHr2EGDzSkjMeJs9U583NdjCRPKI9Od2S2rZ
+         NDe6OmegGTq7eTb5/TiycCAdK/52GDNoVy+6/062Qq3HZUE4GW8Xp5US/V23Wv48k1Pk
+         29lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4BA6UqvX9jBO1xKa7XUgf1vBNEjKeOfkciRH4B0dC6U=;
-        b=BEpHv2zqwQyuSwq4HHgun2Qgk4UidTAa3xwb8JGneia4v/fUky8xlNNLuRItX+7RXU
-         rprnk4YekafIRSeTVrznDgrllwbzR2OJsh8rsJcHvMfsFD1EzR+NdEXt+zMGf7n1M1c9
-         bAjjl1aLV7ld4RHVmZOc67PHGN9sPt376rrDUCRSg7l8oPcCLAq1IZdNXxbxF1Et7w+8
-         dejG633hZ6t2qMdTUIf7JgOiFtD3O4DDkE59KcmuCwS1eytYzzSARcbAbkjUarzjYOp5
-         +tBmKvkVDg3D9F6MAWE6AhNHUUvFas2oN58AQya7xD0lnzYi3SGl4jVEpLxEvr/AKtzO
-         Tvxw==
-X-Gm-Message-State: AOAM531OBcUmHMLLcvPXh7t6cwXREWxkujqUDvhERaUnMAwLZ+bd1/pk
-        nm7XyuoYNxPGSU5jOLvstZl2yFzlZu/EzQrg00s=
-X-Google-Smtp-Source: ABdhPJxKzrDa3VSpt0hXXJcRKDzsseymcQy9t4uFIRJUAQJ3ZUN47DWvKG2QIYS04WN6l520oVab/lNi/ety+HreRjs=
-X-Received: by 2002:a37:6442:: with SMTP id y63mr5995781qkb.273.1621927759742;
- Tue, 25 May 2021 00:29:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=v55P6S5W7xrOd/7SzhygqC9B4BMec90s1TTSAj2EVxE=;
+        b=udVyG3DQ6NDMh6gjj+NDMdYlu+WHWDsDH7rIx9cGScepdJyfkmVe/CIbV8g7tuK1J3
+         D5ccKio4YMos+5ErvMBom58eXbGoa+4f+oXuzPCFQI5lXilLnpUUPRsyRdHYevg+Zzt3
+         zusyXH0uxBLsv1V8zcFdRmMXE3LMVYU/cKpx1B66Zo5jevWNy9y+SJDlt/P7whR+Oylo
+         zFkTP+7ntSzCueIZWb+H1B4qD9MpWaXn9hbDScM5GkdbvRbrF8ecpdOf+FJRr3KTds2g
+         +4EYf23rbiY73eB98G8d/zMSaJawxqmXMIz592UV7u2geBM6rYF3pkerC9XFyfHB+Qw6
+         gy3g==
+X-Gm-Message-State: AOAM531wXmDkOPxZEzL9bePbQg7pl9qmA1WyRammvzw+VhnvEJKu4TmK
+        gdZ/NJOYE3uA7fQIivjpX3rElw==
+X-Google-Smtp-Source: ABdhPJxra+VdD0HTsZR+c2d1us85Dq8lMeLNrROWhWra+R6dRK5Bqzi5HZanKgKfTsSKdJMTHwMgdg==
+X-Received: by 2002:a5d:4408:: with SMTP id z8mr26244243wrq.2.1621928811370;
+        Tue, 25 May 2021 00:46:51 -0700 (PDT)
+Received: from dell ([91.110.221.223])
+        by smtp.gmail.com with ESMTPSA id y6sm1749432wmy.23.2021.05.25.00.46.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 May 2021 00:46:50 -0700 (PDT)
+Date:   Tue, 25 May 2021 08:46:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Robert Marko <robert.marko@sartura.hr>, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        luka.perkov@sartura.hr, jmp@epiphyte.org, pmenzel@molgen.mpg.de,
+        buczek@molgen.mpg.de
+Subject: Re: [PATCH v2 3/4] dt-bindings: mfd: Add Delta TN48M CPLD drivers
+ bindings
+Message-ID: <20210525074649.GC4005783@dell>
+References: <20210524120539.3267145-1-robert.marko@sartura.hr>
+ <20210524120539.3267145-3-robert.marko@sartura.hr>
+ <20210524230940.GA1350504@robh.at.kernel.org>
 MIME-Version: 1.0
-References: <20210525055308.31069-1-steven_lee@aspeedtech.com> <20210525055308.31069-3-steven_lee@aspeedtech.com>
-In-Reply-To: <20210525055308.31069-3-steven_lee@aspeedtech.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 25 May 2021 07:29:07 +0000
-Message-ID: <CACPK8XcgqmYWw3uL=3zckweepnM0vMucuPU1THPCNowjCkka5w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] ARM: dts: aspeed-g6: Add pinctrl settings
-To:     Steven Lee <steven_lee@aspeedtech.com>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ASPEED PINCTRL DRIVERS" 
-        <linux-aspeed@lists.ozlabs.org>,
-        "moderated list:ASPEED PINCTRL DRIVERS" <openbmc@lists.ozlabs.org>,
-        "open list:ASPEED PINCTRL DRIVERS" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hongwei Zhang <Hongweiz@ami.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210524230940.GA1350504@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 25 May 2021 at 05:53, Steven Lee <steven_lee@aspeedtech.com> wrote:
->
-> AST2600 supports 2 SGPIO master interfaces and 2 SGPIO slave interfaces.
-> Currently, only SGPIO master 1 and SGPIO slve 1 in the pinctrl dtsi.
-> SGPIO master 2 and slave 2 should be added in pinctrl dtsi as well.
->
-> Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+On Mon, 24 May 2021, Rob Herring wrote:
 
-Acked-by: Joel Stanley <joel@jms.id.au>
+> On Mon, May 24, 2021 at 02:05:38PM +0200, Robert Marko wrote:
+> > Add binding documents for the Delta TN48M CPLD drivers.
+> > 
+> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > ---
+> > Changes in v2:
+> > * Implement MFD as a simple I2C MFD
+> > * Add GPIO bindings as separate
+> 
+> I don't understand why this changed. This doesn't look like an MFD to 
+> me. Make your binding complete if there are missing functions. 
+> Otherwise, stick with what I already ok'ed.
 
-Linus, feel free to take this entire series through your tree.
+Right.  What else, besides GPIO, does this do?
 
-> ---
->  arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi b/arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi
-> index 7028e21bdd98..7e90d713f5e5 100644
-> --- a/arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi
-> @@ -862,11 +862,21 @@
->                 groups = "SGPM1";
->         };
->
-> +       pinctrl_sgpm2_default: sgpm2_default {
-> +               function = "SGPM2";
-> +               groups = "SGPM2";
-> +       };
-> +
->         pinctrl_sgps1_default: sgps1_default {
->                 function = "SGPS1";
->                 groups = "SGPS1";
->         };
->
-> +       pinctrl_sgps2_default: sgps2_default {
-> +               function = "SGPS2";
-> +               groups = "SGPS2";
-> +       };
-> +
->         pinctrl_sioonctrl_default: sioonctrl_default {
->                 function = "SIOONCTRL";
->                 groups = "SIOONCTRL";
-> --
-> 2.17.1
->
+> >  .../bindings/gpio/delta,tn48m-gpio.yaml       | 42 ++++++++++
+> >  .../bindings/mfd/delta,tn48m-cpld.yaml        | 81 +++++++++++++++++++
+> >  2 files changed, 123 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
