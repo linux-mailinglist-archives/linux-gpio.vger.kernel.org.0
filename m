@@ -2,128 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC251390731
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 19:12:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49C18390832
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 19:59:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233528AbhEYRNh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 13:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233442AbhEYRNg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 13:13:36 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CDDC061574;
-        Tue, 25 May 2021 10:12:07 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id f22so15741005pfn.0;
-        Tue, 25 May 2021 10:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wug7rsiCIoTV/mZ0CpjWys7g8dsVFdTX2MANuBYOeF8=;
-        b=j5J+1I6go75C0rL5DZ/yFaE5o0QkohMaSCU1vjEaOV1AtR6pcAc5gNjUvB17djNNQ1
-         2gvE0MyqghIfkjLRR+LdEenK+lNOiF4OvLKLXOWJX8EfOKJ9jzM6/o3bVo5BSrHNI/ST
-         mGYjYFCFeQgq+K66UsfQ8RhkpbkuYy/c3msAZe/BLDCh8I0PpW/pfjsS9YR6RUaE65U7
-         kCG7I4gPeHTLLFtEFvzfy3zqqglljWhayDWUTZN8w2VoaMljkvSpRX5IPyXu1V1swh8m
-         1rDYUXUrse58w7/ANmpImgfOVpVx93OmrZEkrJ2ets2mhICxVmelTYNiclKij3LZ2K27
-         hJQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wug7rsiCIoTV/mZ0CpjWys7g8dsVFdTX2MANuBYOeF8=;
-        b=rC1kQ3+A4IhGtrTXoQoLR7AEpklEzcJnKjoPmIvTRscCufak1B6kFpnF259yN0jZlW
-         +Z3slgWirM9hIfIiVAHT1sHyhg4n9beMnTeqHHFZ+jb26MbT3oFv5ebLSIbad6s4xdRv
-         AegaFqczwZY+88nuLj80A250jVo5jIWp/YnXyOcdGBJNwYfrTgvzJqIx5pr91/jHJ6nq
-         t1xjzrc8aLruxm1Cv0Nv1Fp+1CpMQuGcrT3spdZJFrALTod9Qo+S79KNuFcAZLgG0zQl
-         IN9XQF4G9Qhl8d6i3b470okEY0OqNGqfNLUjLT5JslP0BSOhYPrxGSAOiV/vTEXmKik+
-         gOHQ==
-X-Gm-Message-State: AOAM5330v7lwR2DNRziofQRwmM0XTK9xnBQNQV6giy4Ooh+QHh9ANQvl
-        n/dPp85zU5lAciXOiUZzQcR9uDi/ExhgAiNf7VI=
-X-Google-Smtp-Source: ABdhPJyynW/kmX1WZueKX4wBCXN+ebQo7Ihvp73ZcZbrbyogaAdSMs5P/7nrQUTcjc487cJf4U12mLZwIRdljIeJ1nY=
-X-Received: by 2002:a63:79c3:: with SMTP id u186mr20155532pgc.203.1621962726418;
- Tue, 25 May 2021 10:12:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1620735871.git.sander@svanheule.net> <cover.1621809029.git.sander@svanheule.net>
- <YKr9G3EfrM34gCsL@lunn.ch> <CAHp75VewCw8ES_9S48qmeCtSXMkGWt0s4iub0Fu4ZuwWANHpaQ@mail.gmail.com>
- <02bbf73ea8a14119247f07a677993aad2f45b088.camel@svanheule.net>
- <CAHp75Vf_dAfoMmziVLkEQ2Yr-e7Cj5=61ua5Q05Cyz-pLwVjpw@mail.gmail.com>
- <8f96b24d782e5bdeabf5370ccf3475794d0c2818.camel@svanheule.net> <CAHp75VfzEwVGR7ttdcKzirPDN8oUFw1uTDXPFE=P=9+S3CAFYQ@mail.gmail.com>
-In-Reply-To: <CAHp75VfzEwVGR7ttdcKzirPDN8oUFw1uTDXPFE=P=9+S3CAFYQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 25 May 2021 20:11:50 +0300
-Message-ID: <CAHp75VfCBtcQX4rvmQnRMquM0k7ZBqOgZN15Z7TFNSO60SB9TA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] RTL8231 GPIO expander support
-To:     Sander Vanheule <sander@svanheule.net>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S232339AbhEYSAd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 14:00:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52198 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231659AbhEYSAd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 14:00:33 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14PHx0bE009766;
+        Tue, 25 May 2021 12:59:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1621965540;
+        bh=UbudXC1wkF/+ybCjaZx0WguGjl2/QS7ge0kYEPdYsgI=;
+        h=From:To:CC:Subject:Date;
+        b=XA2bGlTE112/6TX15v249Z59MVgMOufVmVnaVTWDXhfocE2gFmS80+B2zcQjTwttL
+         +ZcbAFAZuXj0bxfcqkpU+pvoQdp01HT+TkDO9tdgHyRYL+GdzC+1fYLsWnuqNzf8zw
+         wNBj0E74SCRae7u3hyA+nffvK0EmHYfqn65r6qH8=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14PHx0GN119885
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 May 2021 12:59:00 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 25
+ May 2021 12:58:59 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Tue, 25 May 2021 12:58:59 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14PHwwIJ014044;
+        Tue, 25 May 2021 12:58:59 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Aswath Govindraju <a-govindraju@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v2 0/5] dt-bindings: gpio: omap: Convert to json-schema
+Date:   Tue, 25 May 2021 20:58:53 +0300
+Message-ID: <20210525175858.11611-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 24, 2021 at 7:30 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, May 24, 2021 at 6:03 PM Sander Vanheule <sander@svanheule.net> wrote:
-> > On Mon, 2021-05-24 at 15:54 +0300, Andy Shevchenko wrote:
+Hi
 
-...
+Convert the OMAP GPIO Device Tree binding documentation to json-schema.
+The GPIO hogs node names defined to end with a 'hog' suffix.
 
-> > Sadly, I don't. Most of the info we have comes from code archives of switch
-> > vendors (Zyxel, Cisco etc). Boards need to be reverse engineered, and the few
-> > leaked datasheets that can be found on the internet aren't exactly thick in
-> > information.
-> >
-> > The RTL8231 datasheet is actually quite useful, but makes no mention of the
-> > output value isse. Since this isn't an official resource, I don't think it would
-> > be appropriate to link it via a Datasheet: tag.
-> > https://github.com/libc0607/Realtek_switch_hacking/blob/files/RTL8231_Datasheet_
-> > 1.2.pdf
-> >
-> > Looking at the datasheet again, I came up with a... terrible hack to work around
-> > the output value issue.
-> >
-> > The chip also has GPIO_INVERT registers that I hadn't used until now, because
-> > the logical inversion is handled in the kernel. However, these inversion
-> > registers only apply to the output values. So, I could implement glitch-free
-> > output behaviour in the following way:
-> >  * After chip reset, and before enabling the output driver (MFD initialisation):
-> >     - Mux all pins as GPIO
-> >     - Change all pins to outputs,
->
-> No. no, no. This is much worse than the glitches. You never know what
-> the hardware is connected there and it's potential breakage (on hw
-> level) possible.
->
-> >  so the data registers (0x1c-0x1e) become writable
-> >     - Write value 0 to all pins
-> >     - Change all pins to GPI to change them into high-Z
-> >  * In the pinctrl/gpio driver:
-> >     - Use data registers as input-only
-> >     - Use inversion register to determine output value (can be written any time)
-> >
-> > The above gives glitch-free outputs, but the values that are read back (when
-> > configured as output), come from the data registers. They should now be coming
-> > from the inversion (reg_set_base) registers, but the code prefers to use the
-> > data registers (reg_dat_base).
->
-> Lemme read the datasheet and see if I find any clue for the hw behaviour.
+All existing GPIO Hogs fixed to follow above naming convention
+before changing the binding to avoid dtbs_check warnings.
 
-Thank you for your patience!
+Changes in v2:
+- Patch 5 fixed "wrong indentation" warning
 
-Have you explored the possibility of using En_Sync_GPIO?
+v1: https://lore.kernel.org/patchwork/cover/1434566/
+
+Grygorii Strashko (5):
+  ARM: dts: am335x: align GPIO hog names with dt-schema
+  ARM: dts: am437x: align gpio hog names with dt-schema
+  ARM: dts: omap3: align gpio hog names with dt-schema
+  ARM: dts: omap5-board-common: align gpio hog names with dt-schema
+  dt-bindings: gpio: omap: Convert to json-schema
+
+ .../devicetree/bindings/gpio/gpio-omap.txt    |  45 --------
+ .../bindings/gpio/ti,omap-gpio.yaml           | 108 ++++++++++++++++++
+ .../boot/dts/am335x-boneblack-wireless.dts    |   2 +-
+ arch/arm/boot/dts/am335x-boneblue.dts         |   2 +-
+ .../boot/dts/am335x-bonegreen-wireless.dts    |   4 +-
+ arch/arm/boot/dts/am335x-icev2.dts            |   4 +-
+ arch/arm/boot/dts/am335x-shc.dts              |   8 +-
+ arch/arm/boot/dts/am437x-gp-evm.dts           |   4 +-
+ arch/arm/boot/dts/am43x-epos-evm.dts          |   2 +-
+ .../boot/dts/omap3-evm-processor-common.dtsi  |   2 +-
+ arch/arm/boot/dts/omap3-gta04a5.dts           |   2 +-
+ arch/arm/boot/dts/omap5-board-common.dtsi     |   2 +-
+ 12 files changed, 124 insertions(+), 61 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-omap.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/ti,omap-gpio.yaml
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
