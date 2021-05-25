@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C78283905D0
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 17:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D5DA3905D8
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 17:48:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231924AbhEYPtT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 11:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
+        id S229976AbhEYPuD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 11:50:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230013AbhEYPtS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 11:49:18 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A85C1C061756
-        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 08:47:47 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id w33so38860300lfu.7
-        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 08:47:47 -0700 (PDT)
+        with ESMTP id S230010AbhEYPuD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 11:50:03 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD365C061574
+        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 08:48:32 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id q1so4378663lfo.3
+        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 08:48:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DXBXKu4W9bxzceCxfDuDHqm154FbpM/qT47Snoz44Zg=;
-        b=RZb2nnfuv0w8exQOi3HBhnZeddYTIOo2pLcjheMb+gsg7X4ErlH5cmn5sNdRYNlhML
-         I7vxiaTe08mG712R2fk0V34OtayZyieBz+2nqQL30TByHyDjKjbsq2iJ5/NZmTu+qgIK
-         xw/38rtEApX0XXfGZ6sUc4cAtYm7kl8PwY+awvcO4N/Tt8aT/Jw9rVuHCETQsgkl8qdI
-         7xBEbUya2ug05pxlmZ1zemrYSeEDYDc8p9PfFprBwRJsQlK8VoNZEmWQDyMrRfZbPh/G
-         tTQyzXUaGbEjvTgYk4HIEBiCD44kWLBYDLqy5JN7/hnwgFsH6RhrrUr+diQC4vrYjo6a
-         MUgA==
+        bh=cUH0C9YA74DmOby3SjTaaqOPA2l5Tlfgp975+242RWc=;
+        b=aAXqVkw9K0Q+3ipt9oeczZHWCkHVFaEYNXvcnaXWcz3wz/Ok7QkhkDpaXqzUVpcqF4
+         ZzIRyxX0wGTV/loRRz2cev/7bgrRLZkC8rmGQP85UQYqs9yckCC5rUgpl2y5IIyXPobI
+         veRLivly1kJpoktOmbsc6sr94r5P2mGqHk46tLpunBLupOSTyjI8m96rSCSKMFMedGuD
+         uCi+xjZAAYi6UdkpuWWFoz3+B49MZ69H7m/oHrCEFONciSFGw2GAefXDup94SDTb0CFN
+         gsnvi+/M3Pu/n7qUToEO97gfmKPEICngd06mgD9cc9K9DTIBKPswOZNUHl+i9zx1uBv2
+         0gvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DXBXKu4W9bxzceCxfDuDHqm154FbpM/qT47Snoz44Zg=;
-        b=SbOYoU2+p5KG1NFC5kIawmO21URnIbygyIrwh/bsRGUrQaETelMLr0SgJspxsVjjD/
-         BNGegUCKPw/UBBencZb5DCyZUL43/9fyZM/ydt3JhR2V/LNzPfAEnESG1HYOqZNnVwwO
-         1t0HX5wj3C90tbAKzOX0Ufmsj1khmuYsueLdmAtnD5vgLEbgTH+hI7SyCd9rt5LQ3dP1
-         z91S7RSeym4p5/orM5y01G9NpsXWNdpECRdt17oOExeuahUGUWNxc5HRiWknhQeIdmqk
-         pSGOsbpivbY2HkWTcJcP0aq/eUmq0bIZ1b35CyFaG1BGX+uE7yi73TmHpo3kmGakGVZv
-         4cdg==
-X-Gm-Message-State: AOAM530E4ivp+fzo1eVrNDZs6m4vmIgR8YvQ7NYwpYKpc3UN4vPyEOlk
-        25n0pIDMRNaQs6tosOslREuTmssRJehm8lCjjPOr3A==
-X-Google-Smtp-Source: ABdhPJz8Wo+42p45CUfc5WWr3rKVVCr+Kr6PAPDnAcvWfj66Minctqzwnosbr3mfl1YgpPjGe+SfNzw7ywQsaiJM9cw=
-X-Received: by 2002:ac2:544f:: with SMTP id d15mr14328522lfn.465.1621957665953;
- Tue, 25 May 2021 08:47:45 -0700 (PDT)
+        bh=cUH0C9YA74DmOby3SjTaaqOPA2l5Tlfgp975+242RWc=;
+        b=TDl4BgGhFP9wPjtgKGS8RP80rkjF8yamWwtrNAC33DN0TKmbsYR3ibG2O5Upls6ucf
+         jDOg6mVpFfb0qqEHFz3/MvWb7XYkcvWOafnDNiVc0aXKVSAzIMUUqFzbSvVIAYRIJ3+C
+         Xsm9Kg8LjyG7i2V2MYYGAxNHUfyGBTx8gEqjkBeAAHLBHAGkqawc49tpE1/f7PLLiIH2
+         37bGMNebSrJ2ARIRGih0TUSv1NvTd1yXoD3BUmF2yBz2L8Pao32A6PiOCMXI9VqFQ2Bu
+         8TGNiND0QQZnma9XOHjd+XbtISu2oqGqfvcdXtnYRNf0p0rSWmRcw0Gp59/NIeoRUtVB
+         FHVA==
+X-Gm-Message-State: AOAM531RwihWvLQ7tmVfhWxrp6RY7TP0rLT6fj8li9OfsNbFBZe11QeT
+        KCdJaa9mmcKolJjWeCvY34pOrDNQBG6SCwkf3MzFag==
+X-Google-Smtp-Source: ABdhPJyylFuPSxPUXUe7VyvUvEl5I9x3iooRMA8+QA4JKTcuDNfIss36TV0cUzhsZv+iI5nDGOcwm3Rrn9Bw5PU3ELs=
+X-Received: by 2002:a05:6512:11ea:: with SMTP id p10mr13968637lfs.157.1621957711276;
+ Tue, 25 May 2021 08:48:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210520171310.772-1-mark.kettenis@xs4all.nl> <20210520171310.772-2-mark.kettenis@xs4all.nl>
-In-Reply-To: <20210520171310.772-2-mark.kettenis@xs4all.nl>
+References: <20210520171310.772-1-mark.kettenis@xs4all.nl> <20210520171310.772-3-mark.kettenis@xs4all.nl>
+In-Reply-To: <20210520171310.772-3-mark.kettenis@xs4all.nl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 May 2021 17:47:34 +0200
-Message-ID: <CACRpkdaRQq4nLQHQcm9m_O6R2QL2UK+bDkfOdv7p18C9xfuX7g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: Add DT bindings for apple,pinctrl
+Date:   Tue, 25 May 2021 17:48:20 +0200
+Message-ID: <CACRpkdbATikRypCBUX2ETHsBBKqsUo=REiFD5vzPJ1vcLDJjSg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] arm64: apple: Add pinctrl nodes
 To:     Mark Kettenis <mark.kettenis@xs4all.nl>
 Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>, Mark Kettenis <kettenis@openbsd.org>,
@@ -67,16 +67,15 @@ On Thu, May 20, 2021 at 7:13 PM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
 
 > From: Mark Kettenis <kettenis@openbsd.org>
 >
-> The Apple GPIO controller is a simple combined pin and GPIO conroller
-> present on Apple ARM SoC platforms, including various iPhone and iPad
-> devices and the "Apple Silicon" Macs.
+> Add pinctrl nodes corresponding to the gpio,t8101 nodes in the
+> Apple device tree for the Mac mini (M1, 2020).
+>
+> Clock references are left out at the moment and will be added once
+> the appropriate bindings have been settled upon.
 >
 > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
 
-This patch 1/2 applied to the pin control tree.
-
-Please funnel 2/2 through the ARM SoC tree so it aligns with other changes
-to the M1 device trees.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
