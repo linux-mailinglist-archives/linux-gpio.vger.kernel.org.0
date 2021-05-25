@@ -2,100 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30A8738FBF6
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 09:47:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EE0138FC63
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 10:13:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231477AbhEYHsZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 03:48:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40236 "EHLO
+        id S232182AbhEYIPI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 04:15:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231868AbhEYHsX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 03:48:23 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC46C061574
-        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 00:46:52 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id n4so5142063wrw.3
-        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 00:46:52 -0700 (PDT)
+        with ESMTP id S232115AbhEYIOq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 04:14:46 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294DEC061360
+        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 01:01:44 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id q67so5924362pfb.4
+        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 01:01:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=v55P6S5W7xrOd/7SzhygqC9B4BMec90s1TTSAj2EVxE=;
-        b=JajTsqVKIfsWuZ1YrQXqPuTRbCnCPA8rGan8mjq6zPyXX2H4MFK5L3fnVH7R22ucVi
-         1SYgnolIifkRimEssKJG31YS1HT2fFeZB3zvVt3J9IaFtNnJSThrbl5Yf+TGlZVd59ta
-         D+8wOIOStaAQaJ8ifPspoDD77EDjnSSMhTZGTE+EcuAClrkId1vNjEeWZIXmbYNIqMRu
-         bWqGjVzBQd+FBecuDWce1Pw2msLiJK67HHr2EGDzSkjMeJs9U583NdjCRPKI9Od2S2rZ
-         NDe6OmegGTq7eTb5/TiycCAdK/52GDNoVy+6/062Qq3HZUE4GW8Xp5US/V23Wv48k1Pk
-         29lQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5+65tswV0l2w/yAwoAZbx060HkSMsB+SDFwiQTeZIRQ=;
+        b=W5j8e0m0xAafz+SnLAxP7MeKRSxZC4yakn7EpyZlnQGNCEdbUKR/qiB47t1VSKPlgc
+         vF8kjuiQKocahCPa+jGbxDe0Kg0twJssZDeILXJthppNCHFQsAqD2hgDw/qAKZQXIjQP
+         GcaYZouMT1ve9wVWBufGFzj1Os4OsR27fHvk6v9sJhQ4nhufcvwoGC3kt/5d2jdnLVL5
+         4PQXAq+nmtiSApYtVRfb+VKvfvYSKQAJXzgBEoBrxvN84TA7bw7LkRPT4aqaAdyYcsxp
+         T8JcxvKI3euteVa6IKdj/UP8/NMVWeR1hWqXxic32o8Xqpq+wV3GSxH8d/x38gMf/j4/
+         HtjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=v55P6S5W7xrOd/7SzhygqC9B4BMec90s1TTSAj2EVxE=;
-        b=udVyG3DQ6NDMh6gjj+NDMdYlu+WHWDsDH7rIx9cGScepdJyfkmVe/CIbV8g7tuK1J3
-         D5ccKio4YMos+5ErvMBom58eXbGoa+4f+oXuzPCFQI5lXilLnpUUPRsyRdHYevg+Zzt3
-         zusyXH0uxBLsv1V8zcFdRmMXE3LMVYU/cKpx1B66Zo5jevWNy9y+SJDlt/P7whR+Oylo
-         zFkTP+7ntSzCueIZWb+H1B4qD9MpWaXn9hbDScM5GkdbvRbrF8ecpdOf+FJRr3KTds2g
-         +4EYf23rbiY73eB98G8d/zMSaJawxqmXMIz592UV7u2geBM6rYF3pkerC9XFyfHB+Qw6
-         gy3g==
-X-Gm-Message-State: AOAM531wXmDkOPxZEzL9bePbQg7pl9qmA1WyRammvzw+VhnvEJKu4TmK
-        gdZ/NJOYE3uA7fQIivjpX3rElw==
-X-Google-Smtp-Source: ABdhPJxra+VdD0HTsZR+c2d1us85Dq8lMeLNrROWhWra+R6dRK5Bqzi5HZanKgKfTsSKdJMTHwMgdg==
-X-Received: by 2002:a5d:4408:: with SMTP id z8mr26244243wrq.2.1621928811370;
-        Tue, 25 May 2021 00:46:51 -0700 (PDT)
-Received: from dell ([91.110.221.223])
-        by smtp.gmail.com with ESMTPSA id y6sm1749432wmy.23.2021.05.25.00.46.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 May 2021 00:46:50 -0700 (PDT)
-Date:   Tue, 25 May 2021 08:46:49 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Robert Marko <robert.marko@sartura.hr>, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        luka.perkov@sartura.hr, jmp@epiphyte.org, pmenzel@molgen.mpg.de,
-        buczek@molgen.mpg.de
-Subject: Re: [PATCH v2 3/4] dt-bindings: mfd: Add Delta TN48M CPLD drivers
- bindings
-Message-ID: <20210525074649.GC4005783@dell>
-References: <20210524120539.3267145-1-robert.marko@sartura.hr>
- <20210524120539.3267145-3-robert.marko@sartura.hr>
- <20210524230940.GA1350504@robh.at.kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5+65tswV0l2w/yAwoAZbx060HkSMsB+SDFwiQTeZIRQ=;
+        b=UllDl8QkTAIacIa9q5BrqYM4JD3t6RLFOGLVbHNG516pKN6K2IdXHozU2+Xnd2wNLv
+         HxSuFsnWrvC//uTBn8ztbuglRvshAaK976LODDCycb/SjZrm3uRWCLtxIEk7WBsJKr42
+         Z2sT0C4QXILj38VVyDajATFuTQ1HlB04rypVO8N3M4P6Qx7mec2A2GLmh9Gcgc+FgF4U
+         mqg1Jq6Grnl0FMhfTUBB+gswdaSmA3JFF3u2sXxu/xXVLOU2cSHkMVWG6VNWl3dkH/5G
+         PPrJQuwYmZ5pXbHYAKIUjTMvusmrOyUQoRcLZGL6tuHsvsR5Eu3td5TCykY7pKgxscjE
+         q+hA==
+X-Gm-Message-State: AOAM531MvdMsdVX5p3kKzc2qUElb3dHlRgtnGyBCm5/O+MMqFxykop/1
+        xhLf+apt0TWOiaRuza+LZbhxwoIXhKcoa0W+nqE=
+X-Google-Smtp-Source: ABdhPJyfv66yoK5knXo57y1FNpZ5/hcTCdFKrwCksdpujaShuU25QtdpAaVPhu34HkPUAuFstihnVrBV/CF0ZRVS1sk=
+X-Received: by 2002:a05:6a00:1591:b029:2d9:369a:b846 with SMTP id
+ u17-20020a056a001591b02902d9369ab846mr29136587pfk.40.1621929704035; Tue, 25
+ May 2021 01:01:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210524230940.GA1350504@robh.at.kernel.org>
+References: <20210525054149.1792-1-kunyang_fan@asus.com>
+In-Reply-To: <20210525054149.1792-1-kunyang_fan@asus.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 25 May 2021 11:01:28 +0300
+Message-ID: <CAHp75VfuZNPVi4Oy_JxQB-uu0RNkvMb1sK2bz4-aG_QipNsRKw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] mfd: Add support for IO functions of AAEON devices
+To:     aaeon.asus@gmail.com, Hans de Goede <hdegoede@redhat.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Kunyang_Fan <kunyang_fan@asus.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 24 May 2021, Rob Herring wrote:
++Cc: Hans (dunno if it's something you would like to be informed of)
 
-> On Mon, May 24, 2021 at 02:05:38PM +0200, Robert Marko wrote:
-> > Add binding documents for the Delta TN48M CPLD drivers.
-> > 
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > ---
-> > Changes in v2:
-> > * Implement MFD as a simple I2C MFD
-> > * Add GPIO bindings as separate
-> 
-> I don't understand why this changed. This doesn't look like an MFD to 
-> me. Make your binding complete if there are missing functions. 
-> Otherwise, stick with what I already ok'ed.
+On Tue, May 25, 2021 at 8:42 AM <aaeon.asus@gmail.com> wrote:
+>
+> From: Kunyang_Fan <kunyang_fan@asus.com>
+>
+> This adds the supports for multiple IO functions of the
+> AAEON x86 devices and makes use of the WMI interface to
+> control the these IO devices including:
+>
+> - GPIO
+> - LED
+> - Watchdog
+> - HWMON
+>
+> It also adds the mfd child device drivers to support
+> the above IO functions.
 
-Right.  What else, besides GPIO, does this do?
+Do I miss the cover letter?
 
-> >  .../bindings/gpio/delta,tn48m-gpio.yaml       | 42 ++++++++++
-> >  .../bindings/mfd/delta,tn48m-cpld.yaml        | 81 +++++++++++++++++++
-> >  2 files changed, 123 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+...
+
+> +config MFD_AAEON
+> +       tristate "AAEON WMI MFD devices"
+> +       depends on ASUS_WMI
+> +       help
+> +         Say yes here to support mltiple IO devices on Single Board Computers
+
+multiple
+
+> +         produced by AAEON.
+> +
+> +         This driver leverages the ASUS WMI interface to access device
+> +         resources.
+
+I'm wondering should it be some kind of WMI framework part to bridge
+WMI parts to MFD or so?
+
+...
+
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+
+Please, drop all these duplications in all files. SPDX is enough.
+
+...
+
+> +static int aaeon_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +       struct aaeon_wmi_priv *priv;
+
+       struct aaeon_wmi_priv *priv = context;
+
+> +       if (!wmi_has_guid(AAEON_WMI_MGMT_GUID)) {
+> +               dev_info(&wdev->dev, "AAEON Management GUID not found\n");
+> +               return -ENODEV;
+> +       }
+
+Dead code?
+
+> +       priv = (struct aaeon_wmi_priv *)context;
+
+See above.
+
+> +       dev_set_drvdata(&wdev->dev, priv);
+> +
+> +       return devm_mfd_add_devices(&wdev->dev, 0, priv->cells,
+> +                                   priv->ncells, NULL, 0, NULL);
+> +}
+
+...
+
+> +static struct wmi_driver aaeon_wmi_driver = {
+> +       .driver = {
+> +               .name = "mfd-aaeon",
+> +       },
+> +       .id_table = aaeon_wmi_id_table,
+> +       .probe = aaeon_wmi_probe,
+> +};
+
+> +
+
+Redundant blank line.
+
+> +module_wmi_driver(aaeon_wmi_driver);
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
