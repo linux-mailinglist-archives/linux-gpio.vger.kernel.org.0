@@ -2,102 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6689A38F9A6
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 06:37:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A4C338F9E0
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 07:20:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229804AbhEYEi7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 00:38:59 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:49849 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229476AbhEYEi6 (ORCPT
+        id S230451AbhEYFWT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 01:22:19 -0400
+Received: from gproxy8-pub.mail.unifiedlayer.com ([67.222.33.93]:37071 "EHLO
+        gproxy8-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230218AbhEYFWT (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 25 May 2021 00:38:58 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 8DF82581068;
-        Tue, 25 May 2021 00:37:29 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Tue, 25 May 2021 00:37:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=zFo1oGVlR9BWzHQX/BoXdwfOJEHWy/V
-        aAoNOqIJAtPQ=; b=futuX7gOOBwrT6oJVQPSupBN1R1Ob4fVnF9YYDRvvjsQUMP
-        Y5HHsGOGuTh0vmwxs9NtIMkwTGElxuuAWADC14Ujy2iOBxcZWQJ1UPAFNLaGJ+gZ
-        17vy4KFu1mH1znFquCKgNEu/t4OOvKgA1o2g+ULakueirIA8UN2SOxSYDWbF0KmZ
-        af2zsiYtkXjh1ruSbgtzeJdOqWhS2o2OU9Zjlx6j86EdTgGA+YeNIiFrBj0CrIqR
-        ZA3LMfoQ++KK7Yddanj9/VBrqpDFJyFqtwdf6e8oh8RJ1Lb79/puVBbrAYe2ytli
-        NnsjmmIewizUb5msxd0MxaQdC/8EShEAC5TAIvg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zFo1oG
-        VlR9BWzHQX/BoXdwfOJEHWy/VaAoNOqIJAtPQ=; b=NeMLdSOvPC0GVg8cTUC+v9
-        NN0unXHXvIcxihEhFtLGFMQqiEKpqt9PHxr2fAvDhKfkmyt/Fckars9EPIy0phOd
-        FA1DEGNzvET7uPlUxU6/4D4Q8QLpNwngQo+Ib7x+PLk/ocG1evLo8fXfQ59K4w7X
-        ImnD5tRzFSzRJGjOme7BCzMUz/fxFJnCZgwoIo73V7P1oApyjCdnQWfpJCzH25Cl
-        4Y5RxL8Gtc5fmnlrmcPw9DNogptN6F5Gdv15JQVoIbzpVVieSnjuunUcHfa+REXI
-        LJfP6p5MwLnps3LF6QG9VW6VJ06rtZvw4Nzmp73wWlYFEivdnBcC17sz7F8TzPXQ
-        ==
-X-ME-Sender: <xms:CH-sYOD_4v8QbYfZqpFzj02pmQTjMxgoUCI9-H1D39NPv3FL-OEp_Q>
-    <xme:CH-sYIhOAFAfnEUzB6_MwNLXuTItp2aKyHUO4auMoxKoclVFRBXub5hQ3MjCdBK6Q
-    VZisNYOPOImxsNUQQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdektddgkeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
-    grthhtvghrnhepuddttdekueeggedvtddtueekiedutdfguedutdefieeuteefieelteet
-    vddthfeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:CH-sYBn4b6NkIap0_2dg9sPDWagHjtvUVTgnpxUQwsK0yp1i7B6uzQ>
-    <xmx:CH-sYMyEgtlytQYMsItyZ4J_Lrleo2-RwgSz-EuqbrAOdJV_M4y4Gw>
-    <xmx:CH-sYDSXNXCoVsCGPhXLZh5HDIBTFkI1EwVnwhiEja_o9shd-T7N4g>
-    <xmx:CX-sYIJewHwr4gW-amogiccRpA1IQS5dfHR3zg0Gf5hUQHOU4Wn-XQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 76510A00079; Tue, 25 May 2021 00:37:28 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-448-gae190416c7-fm-20210505.004-gae190416
-Mime-Version: 1.0
-Message-Id: <7f673953-7a90-4143-a475-444a1096e55f@www.fastmail.com>
-In-Reply-To: <20210525042736.10379-4-steven_lee@aspeedtech.com>
-References: <20210525042736.10379-1-steven_lee@aspeedtech.com>
- <20210525042736.10379-4-steven_lee@aspeedtech.com>
-Date:   Tue, 25 May 2021 14:07:07 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Steven Lee" <steven_lee@aspeedtech.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "moderated list:ASPEED PINCTRL DRIVERS" 
-        <linux-aspeed@lists.ozlabs.org>,
-        "moderated list:ASPEED PINCTRL DRIVERS" <openbmc@lists.ozlabs.org>,
-        "open list:ASPEED PINCTRL DRIVERS" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list" <linux-kernel@vger.kernel.org>
-Cc:     "Hongwei Zhang" <Hongweiz@ami.com>,
-        "Ryan Chen" <ryan_chen@aspeedtech.com>,
-        "Billy Tsai" <billy_tsai@aspeedtech.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_3/3]_pinctrl:_pinctrl-aspeed-g6:_Add_sgpio_pinct?=
- =?UTF-8?Q?rl_settings?=
-Content-Type: text/plain
+        Tue, 25 May 2021 01:22:19 -0400
+X-Greylist: delayed 1430 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 May 2021 01:22:19 EDT
+Received: from cmgw11.mail.unifiedlayer.com (unknown [10.0.90.126])
+        by gproxy8.mail.unifiedlayer.com (Postfix) with ESMTP id E116A802E9E9
+        for <linux-gpio@vger.kernel.org>; Tue, 25 May 2021 04:56:59 +0000 (UTC)
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+        by cmsmtp with ESMTP
+        id lP7glnr0h8qK0lP7jlcuTO; Tue, 25 May 2021 04:56:59 +0000
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.4 cv=VK0YI/DX c=1 sm=1 tr=0 ts=60ac839b
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=5FLXtPjwQuUA:10:nop_rcvd_month_year
+ a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
+ a=ih8mQXEslZcGCoKzrYEA:9 a=rsP06fVo5MYu2ilr0aT5:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+        ; s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=VdnD4uDwX5Sv4iXNgJb4bVnQULj/RgmEk/ImrVSPxlQ=; b=hEO0OT+UG62j3hIcRkr0d19jZP
+        fbn1+stLFrqVVaWFV+nSkquMWYSe1/dQJ0zPozmgtMhrgX854WYiWDermeCz5DqpqenVYyc/theYX
+        N/lggt9Frp2XsSKprXgUmyaWHD+57gL2cAGBij/bK+hsr8kpJHmmSRvdGX3orpbn1WGSHdFBorUuL
+        HKue5YsD4UTJ1T29Y3uoOnysmsRuzLcf0jS3SMdverN3v1VZKWOLBOeYm5a6sJMw3it0rOqloiqpt
+        4nj0izUUXmoclHmpQSM3/Y50NAW47xgqTK9fX5WCswhNd6Ghi1r0YzilH2mV+ljxfaCwK0OcOOVJ/
+        AoZb++Eg==;
+Received: from [117.202.187.62] (port=38780 helo=localhost.localdomain)
+        by md-in-79.webhostbox.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <navin@linumiz.com>)
+        id 1llP7g-000nRs-66; Tue, 25 May 2021 04:56:56 +0000
+From:   Navin Sankar Velliangiri <navin@linumiz.com>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     vilhelm.gray@gmail.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com,
+        Navin Sankar Velliangiri <navin@linumiz.com>
+Subject: [PATCH] gpio: 104-idio-16: Fix coding style issues
+Date:   Tue, 25 May 2021 10:27:17 +0530
+Message-Id: <20210525045717.20652-1-navin@linumiz.com>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 117.202.187.62
+X-Source-L: No
+X-Exim-ID: 1llP7g-000nRs-66
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (localhost.localdomain) [117.202.187.62]:38780
+X-Source-Auth: linumcmc
+X-Email-Count: 5
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Fixed multiple bare uses of 'unsigned' without int.
+Reported by checkpatch.
 
+Signed-off-by: Navin Sankar Velliangiri <navin@linumiz.com>
+---
+ drivers/gpio/gpio-104-idio-16.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-On Tue, 25 May 2021, at 13:57, Steven Lee wrote:
-> AST2600 supports 2 SGPIO master interfaces and 2 SGPIO slave interfaces.
-> Current pinctrl driver only define the first sgpio master and slave
-> interfaces.
-> The sencond SGPIO master and slave interfaces should be added in
+diff --git a/drivers/gpio/gpio-104-idio-16.c b/drivers/gpio/gpio-104-idio-16.c
+index 50ad0280fd78..55b40299ebfa 100644
+--- a/drivers/gpio/gpio-104-idio-16.c
++++ b/drivers/gpio/gpio-104-idio-16.c
+@@ -44,11 +44,12 @@ struct idio_16_gpio {
+ 	struct gpio_chip chip;
+ 	raw_spinlock_t lock;
+ 	unsigned long irq_mask;
+-	unsigned base;
+-	unsigned out_state;
++	unsigned int base;
++	unsigned int out_state;
+ };
+ 
+-static int idio_16_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
++static int idio_16_gpio_get_direction(struct gpio_chip *chip,
++				      unsigned int offset)
+ {
+ 	if (offset > 15)
+ 		return GPIO_LINE_DIRECTION_IN;
+@@ -56,22 +57,23 @@ static int idio_16_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+ 	return GPIO_LINE_DIRECTION_OUT;
+ }
+ 
+-static int idio_16_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
++static int idio_16_gpio_direction_input(struct gpio_chip *chip,
++					unsigned int offset)
+ {
+ 	return 0;
+ }
+ 
+ static int idio_16_gpio_direction_output(struct gpio_chip *chip,
+-	unsigned offset, int value)
++	unsigned int offset, int value)
+ {
+ 	chip->set(chip, offset, value);
+ 	return 0;
+ }
+ 
+-static int idio_16_gpio_get(struct gpio_chip *chip, unsigned offset)
++static int idio_16_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
+-	const unsigned mask = BIT(offset-16);
++	const unsigned int mask = BIT(offset-16);
+ 
+ 	if (offset < 16)
+ 		return -EINVAL;
+@@ -96,10 +98,11 @@ static int idio_16_gpio_get_multiple(struct gpio_chip *chip,
+ 	return 0;
+ }
+ 
+-static void idio_16_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
++static void idio_16_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			     int value)
+ {
+ 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
+-	const unsigned mask = BIT(offset);
++	const unsigned int mask = BIT(offset);
+ 	unsigned long flags;
+ 
+ 	if (offset > 15)
+@@ -180,7 +183,7 @@ static void idio_16_irq_unmask(struct irq_data *data)
+ 	}
+ }
+ 
+-static int idio_16_irq_set_type(struct irq_data *data, unsigned flow_type)
++static int idio_16_irq_set_type(struct irq_data *data, unsigned int flow_type)
+ {
+ 	/* The only valid irq types are none and both-edges */
+ 	if (flow_type != IRQ_TYPE_NONE &&
+-- 
+2.31.1
 
-Typo here: 'second', 
-
-Regardless, this looks good to me.
-
-Thanks Steven!
-
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
