@@ -2,78 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2C1538F6D4
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 02:10:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 629BE38F6EA
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 02:18:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229724AbhEYALm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 May 2021 20:11:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51208 "EHLO
+        id S229581AbhEYAUI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 May 2021 20:20:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbhEYALl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 20:11:41 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD603C061756
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 17:10:11 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id i9so43141489lfe.13
-        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 17:10:11 -0700 (PDT)
+        with ESMTP id S229543AbhEYAUH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 May 2021 20:20:07 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132C1C061756
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 17:18:38 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id q3so13026513lfu.2
+        for <linux-gpio@vger.kernel.org>; Mon, 24 May 2021 17:18:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zs8TmT1vnSuVpBrHCDIkd50pLy0g1k3AFJOO3yMYcT8=;
-        b=tn9sIfHcm2kOvHMqO9+seJvEGILq8cuacHjRYpz1xH7af/oDFavqQkpODX1iFchWjc
-         0tjcdmlLfd4xMxnHuXI3iQxvAaLebejTOe82ow6mnMeDCIzoMUrw/7GPHbenD1v3FIEN
-         2czfKM3YWsGCkZCG8V8ih2YrP93y7CzOMxSWdZiz4XW6O5r2SzQ7JteOydm3XzmsC+Kd
-         Mt76uGySuuixXUtZh41TFWtiYEbPdlAtktmmFwyXniWjv+TFPWkBl116NhqT0PtPoALj
-         +B66jH7R7btcvSI3A/26YjHgxw1/P1qMKW42UzRiFtwVvTHTwq+e2Jypn1I9XEj3pAYz
-         gczg==
+        bh=lU98oqYZy9LMpWRIVC/iOJVtPr25gCqXEbSC0KE2HyA=;
+        b=Z0A4YTuI+et7WamhQwbpeL7DsoQsF7Ua1YcYV4PuWf/unLg0FK4OyfCPtn8ju23OMV
+         f4ZRHtH3PZ51h0Rx8RGos1KrY0HJbMYeZR3l72jlxAc7gE6eHwgUXJUww9D0pIJu1yCb
+         TN6MSnljzXK2rflr6vC2q845XUCsEuKxHC8iy6LcTiK3RBNB9jXmD4t/qP/N/0pZCD2q
+         NYk7e/nIFxW5bBymJIy+MUr/AaoQgj8xdCucfU/rPEXIk4bBLBP3hvtd0648zeKrNVwB
+         vQEPXtRFtpikG60dHa1v4DPAtX6OlVy77tS5ty44hxWu9Rv1szhLYqkecfdcg1o0Z3ci
+         OfLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zs8TmT1vnSuVpBrHCDIkd50pLy0g1k3AFJOO3yMYcT8=;
-        b=d4oAZgHZ3UQlTd+CObRQBAw7TVoI8U8HabEz7+rhhgCAWilBBG67RavH5YnrwHecVY
-         Rr6QJ3Xz/TykoVOV8Km5/dtq54DoZPFrd5e2Pj2OFJod9e1DjlxU8H/YIViResjYs2am
-         Fa0ANdx2Xukn4DQZnQdRUpENhQree0xzt7UFQOWlj81MGGB3XJV/I4M9Jr1omPxVDIlH
-         LflPxpbisDt/sPOWX/gTmVghiLySPScOQm6wb2ux5TjRRU/JyM3039kE/6dCCuOUaAiY
-         znGXIqXRMLVm1EuZg4a60rtZgqfIoCgpUkHwUy+1S66VoqvTNfpz0+ppxsDz6zHf1iEf
-         b94A==
-X-Gm-Message-State: AOAM532XbYIZGRz2+Xn1pt/bjm0uLM5iIYxDRqVBoHO7CQHP4pfHgBsG
-        py/bYknZX4iIQ3vOlEHnyKE/OUkiKei42uNFEtJsbg==
-X-Google-Smtp-Source: ABdhPJzXn1frIVMSyZpovgE+XLpJdzV19ECCHFaLfT/f9QhTjVX++aWYs0UULtF12Ppj0Jl4ip17/fnvnR7dX0PJ7RA=
-X-Received: by 2002:ac2:544f:: with SMTP id d15mr11968205lfn.465.1621901409913;
- Mon, 24 May 2021 17:10:09 -0700 (PDT)
+        bh=lU98oqYZy9LMpWRIVC/iOJVtPr25gCqXEbSC0KE2HyA=;
+        b=V4NV8d6TILEFNyZgDDI9M9y+nBJObIrETgMeIgFopy+RMgOakT99lTPafKTVouRsdH
+         794dwEh6azWwM9dws4sXWbpBDWGLU1VzEdZi99jcAOIxWCPh8uWcrbKBtu+fmyqC1JoA
+         aV/VPOMbi1DtlF11sEiEsxvh6zzGs3n8tM0P7wJNs4yv2FR1cfsX+SHTxdc8s0IFz6Jk
+         W8U64P7NvZswAJBVedmTcnOqsmhKkTbruI+PDYYzIfwIdOaP+fvpbIhOnREMbZBk/dZ4
+         IWffvbpLOSajO0EUndG1KojT4bqkMUrg8Mb5X8LHDEfIl/DypNZ4013VQZEZPtNVXr8C
+         GRzg==
+X-Gm-Message-State: AOAM530wZCLlpxD9Hho9y3IKml3kmdOK0EUUALU6ojm7n1PBjWb3ii6N
+        pXHg7CtRWv7rzS8xdvgKkgbB6WQxVW4LL2h0WSd/cA==
+X-Google-Smtp-Source: ABdhPJygddabh5kIV+leOfkKFonaw9VscHm4yErigpg0emiVpFC9RYx8ml0O2HMh08c2oJ8ecYk5w/JjuH7dSDMDRTE=
+X-Received: by 2002:a19:ef10:: with SMTP id n16mr11888963lfh.649.1621901916420;
+ Mon, 24 May 2021 17:18:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210512180140.33293-1-rikard.falkeborn@gmail.com>
-In-Reply-To: <20210512180140.33293-1-rikard.falkeborn@gmail.com>
+References: <20210520202730.4444-1-dariobin@libero.it>
+In-Reply-To: <20210520202730.4444-1-dariobin@libero.it>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 May 2021 02:09:59 +0200
-Message-ID: <CACRpkdbciLfw2dOqaRwBAWQz3PF2cCzz=Kxkqf02G_G6qafRZQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: at91: Constify struct at91_pinctrl_mux_ops
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Date:   Tue, 25 May 2021 02:18:25 +0200
+Message-ID: <CACRpkdanh32PREaYhN1dW1p0GDamSZ04WgRr-afm+6L-c1fJCg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] am335x: set pinmux registers from pins debug file
+To:     Dario Binacchi <dariobin@libero.it>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Linux-OMAP <linux-omap@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 12, 2021 at 8:01 PM Rikard Falkeborn
-<rikard.falkeborn@gmail.com> wrote:
+On Thu, May 20, 2021 at 10:27 PM Dario Binacchi <dariobin@libero.it> wrote:
 
-> The at91_pinctrl_mux_ops struct is never modified by the driver. Make it
-> const wherever it is possible to allow the compiler to put the static
-> variables in read-only memory. Note that sam9x60_ops was already const,
-> but the const was cast away when the return value of of_match_device() was
-> cast to a pointer to a non-const struct at91_pinctrl_mux_ops.
->
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> The patch was born from the need to change the slew rate of the LCD pins
+> of a custom AM335x board during EMC tests. The AM335x, as described in a
+> note in section 9.1 of its reference manual [1], is unable to write
+> pinmux registers from user space. The series now makes it possible to
+> write these registers from the pins debug file.
 
-Patch applied.
+I am going to hold this series back pending more discussion on the ABI
+and whether it is useful.
 
 Yours,
 Linus Walleij
