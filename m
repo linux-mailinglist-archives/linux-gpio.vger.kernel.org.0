@@ -2,168 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 358CB38FA4E
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 07:53:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B58C38FB99
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 May 2021 09:23:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231147AbhEYFzE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 May 2021 01:55:04 -0400
-Received: from twspam01.aspeedtech.com ([211.20.114.71]:14621 "EHLO
-        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230218AbhEYFzA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 May 2021 01:55:00 -0400
-Received: from mail.aspeedtech.com ([192.168.0.24])
-        by twspam01.aspeedtech.com with ESMTP id 14P5eI8Q028256;
-        Tue, 25 May 2021 13:40:18 +0800 (GMT-8)
-        (envelope-from steven_lee@aspeedtech.com)
-Received: from slee-VirtualBox.localdomain (192.168.100.253) by
- TWMBX02.aspeed.com (192.168.0.24) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 25 May 2021 13:53:15 +0800
-From:   Steven Lee <steven_lee@aspeedtech.com>
-To:     Andrew Jeffery <andrew@aj.id.au>,
+        id S231575AbhEYHY4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 May 2021 03:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229963AbhEYHYz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 25 May 2021 03:24:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B9BFD61419;
+        Tue, 25 May 2021 07:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621927406;
+        bh=y4ikNb/ViSQgZNMZnW1LhEQXIkR+0dv/bn5f46qxtgs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Shfx5v7WOZtj2KfgKITq76KYV90j9vFvz60XpbnHc8vLS/SC+dhPQkd9VOpNexCVH
+         u6QeKE1tcDUXOadTq0auNkCrzdcBb0tOVMG06X2Rrym8qGNja92nZ5mrG2GbhoAzUy
+         V51cDYwfARz4XKpqpYvQscUnOCXkFg8l+qGTkKExEdYF9paXdZHKLTv3u+TheWUQ4C
+         b61gH4M9UWesOGOGIF3b2TTc5c9k4kYIjPAvn4R5Ddn8FSt/cJNocsqV6XnJ2Ig2EM
+         F1wOhoVZteFTjiHRIN+tZLXVFJxxfv/YBUdMiqWDwzsszU9XCwrN0JSoT14JaPEl/z
+         KZWxUMnpXvwCA==
+Date:   Tue, 25 May 2021 09:23:23 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 07/12] pinctrl: renesas: r8a7790: Add bias pinconf support
+Message-ID: <YKyl63x7lIWaG57x@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        "moderated list:ASPEED PINCTRL DRIVERS" 
-        <linux-aspeed@lists.ozlabs.org>,
-        "moderated list:ASPEED PINCTRL DRIVERS" <openbmc@lists.ozlabs.org>,
-        "open list:ASPEED PINCTRL DRIVERS" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-CC:     <steven_lee@aspeedtech.com>, <Hongweiz@ami.com>,
-        <ryan_chen@aspeedtech.com>, <billy_tsai@aspeedtech.com>
-Subject: [PATCH v3 3/3] pinctrl: pinctrl-aspeed-g6: Add sgpio pinctrl settings
-Date:   Tue, 25 May 2021 13:53:07 +0800
-Message-ID: <20210525055308.31069-4-steven_lee@aspeedtech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210525055308.31069-1-steven_lee@aspeedtech.com>
-References: <20210525055308.31069-1-steven_lee@aspeedtech.com>
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <cover.1619785375.git.geert+renesas@glider.be>
+ <dde6e0b36a4e4494039a3466df208b5ec5c594ee.1619785375.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.100.253]
-X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
- (192.168.0.24)
-X-DNSRBL: 
-X-MAIL: twspam01.aspeedtech.com 14P5eI8Q028256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RHDWKFLuLHEbLYX4"
+Content-Disposition: inline
+In-Reply-To: <dde6e0b36a4e4494039a3466df208b5ec5c594ee.1619785375.git.geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-AST2600 supports 2 SGPIO master interfaces and 2 SGPIO slave interfaces.
-Current pinctrl driver only define the first sgpio master and slave
-interfaces.
-The second SGPIO master and slave interfaces should be added in
-pinctrl driver as well.
 
-Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 24 ++++++++++++++++++----
- drivers/pinctrl/aspeed/pinmux-aspeed.h     |  9 ++++++++
- 2 files changed, 29 insertions(+), 4 deletions(-)
+--RHDWKFLuLHEbLYX4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index 5c1a109842a7..36688793b3a0 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -46,8 +46,10 @@
- #define SCU620		0x620 /* Disable GPIO Internal Pull-Down #4 */
- #define SCU634		0x634 /* Disable GPIO Internal Pull-Down #5 */
- #define SCU638		0x638 /* Disable GPIO Internal Pull-Down #6 */
-+#define SCU690		0x690 /* Multi-function Pin Control #24 */
- #define SCU694		0x694 /* Multi-function Pin Control #25 */
- #define SCU69C		0x69C /* Multi-function Pin Control #27 */
-+#define SCU6D0		0x6D0 /* Multi-function Pin Control #29 */
- #define SCUC20		0xC20 /* PCIE configuration Setting Control */
- 
- #define ASPEED_G6_NR_PINS 256
-@@ -81,13 +83,17 @@ FUNC_GROUP_DECL(I2C12, L26, K24);
- #define K26 4
- SIG_EXPR_LIST_DECL_SESG(K26, MACLINK1, MACLINK1, SIG_DESC_SET(SCU410, 4));
- SIG_EXPR_LIST_DECL_SESG(K26, SCL13, I2C13, SIG_DESC_SET(SCU4B0, 4));
--PIN_DECL_2(K26, GPIOA4, MACLINK1, SCL13);
-+SIG_EXPR_LIST_DECL_SESG(K26, SGPS2CK, SGPS2, SIG_DESC_SET(SCU690, 4));
-+SIG_EXPR_LIST_DECL_SESG(K26, SGPM2CLK, SGPM2, SIG_DESC_SET(SCU6D0, 4));
-+PIN_DECL_4(K26, GPIOA4, MACLINK1, SCL13, SGPS2CK, SGPM2CLK);
- FUNC_GROUP_DECL(MACLINK1, K26);
- 
- #define L24 5
- SIG_EXPR_LIST_DECL_SESG(L24, MACLINK2, MACLINK2, SIG_DESC_SET(SCU410, 5));
- SIG_EXPR_LIST_DECL_SESG(L24, SDA13, I2C13, SIG_DESC_SET(SCU4B0, 5));
--PIN_DECL_2(L24, GPIOA5, MACLINK2, SDA13);
-+SIG_EXPR_LIST_DECL_SESG(L24, SGPS2LD, SGPS2, SIG_DESC_SET(SCU690, 5));
-+SIG_EXPR_LIST_DECL_SESG(L24, SGPM2LD, SGPM2, SIG_DESC_SET(SCU6D0, 5));
-+PIN_DECL_4(L24, GPIOA5, MACLINK2, SDA13, SGPS2LD, SGPM2LD);
- FUNC_GROUP_DECL(MACLINK2, L24);
- 
- FUNC_GROUP_DECL(I2C13, K26, L24);
-@@ -95,16 +101,22 @@ FUNC_GROUP_DECL(I2C13, K26, L24);
- #define L23 6
- SIG_EXPR_LIST_DECL_SESG(L23, MACLINK3, MACLINK3, SIG_DESC_SET(SCU410, 6));
- SIG_EXPR_LIST_DECL_SESG(L23, SCL14, I2C14, SIG_DESC_SET(SCU4B0, 6));
--PIN_DECL_2(L23, GPIOA6, MACLINK3, SCL14);
-+SIG_EXPR_LIST_DECL_SESG(L23, SGPS2O, SGPS2, SIG_DESC_SET(SCU690, 6));
-+SIG_EXPR_LIST_DECL_SESG(L23, SGPM2O, SGPM2, SIG_DESC_SET(SCU6D0, 6));
-+PIN_DECL_4(L23, GPIOA6, MACLINK3, SCL14, SGPS2O, SGPM2O);
- FUNC_GROUP_DECL(MACLINK3, L23);
- 
- #define K25 7
- SIG_EXPR_LIST_DECL_SESG(K25, MACLINK4, MACLINK4, SIG_DESC_SET(SCU410, 7));
- SIG_EXPR_LIST_DECL_SESG(K25, SDA14, I2C14, SIG_DESC_SET(SCU4B0, 7));
--PIN_DECL_2(K25, GPIOA7, MACLINK4, SDA14);
-+SIG_EXPR_LIST_DECL_SESG(K25, SGPS2I, SGPS2, SIG_DESC_SET(SCU690, 7));
-+SIG_EXPR_LIST_DECL_SESG(K25, SGPM2I, SGPM2, SIG_DESC_SET(SCU6D0, 7));
-+PIN_DECL_4(K25, GPIOA7, MACLINK4, SDA14, SGPS2I, SGPM2I);
- FUNC_GROUP_DECL(MACLINK4, K25);
- 
- FUNC_GROUP_DECL(I2C14, L23, K25);
-+FUNC_GROUP_DECL(SGPM2, K26, L24, L23, K25);
-+FUNC_GROUP_DECL(SGPS2, K26, L24, L23, K25);
- 
- #define J26 8
- SIG_EXPR_LIST_DECL_SESG(J26, SALT1, SALT1, SIG_DESC_SET(SCU410, 8));
-@@ -2060,7 +2072,9 @@ static const struct aspeed_pin_group aspeed_g6_groups[] = {
- 	ASPEED_PINCTRL_GROUP(EMMCG4),
- 	ASPEED_PINCTRL_GROUP(EMMCG8),
- 	ASPEED_PINCTRL_GROUP(SGPM1),
-+	ASPEED_PINCTRL_GROUP(SGPM2),
- 	ASPEED_PINCTRL_GROUP(SGPS1),
-+	ASPEED_PINCTRL_GROUP(SGPS2),
- 	ASPEED_PINCTRL_GROUP(SIOONCTRL),
- 	ASPEED_PINCTRL_GROUP(SIOPBI),
- 	ASPEED_PINCTRL_GROUP(SIOPBO),
-@@ -2276,7 +2290,9 @@ static const struct aspeed_pin_function aspeed_g6_functions[] = {
- 	ASPEED_PINCTRL_FUNC(SD1),
- 	ASPEED_PINCTRL_FUNC(SD2),
- 	ASPEED_PINCTRL_FUNC(SGPM1),
-+	ASPEED_PINCTRL_FUNC(SGPM2),
- 	ASPEED_PINCTRL_FUNC(SGPS1),
-+	ASPEED_PINCTRL_FUNC(SGPS2),
- 	ASPEED_PINCTRL_FUNC(SIOONCTRL),
- 	ASPEED_PINCTRL_FUNC(SIOPBI),
- 	ASPEED_PINCTRL_FUNC(SIOPBO),
-diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-index dba5875ff276..b69ba6b360a2 100644
---- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
-+++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-@@ -730,6 +730,15 @@ struct aspeed_pin_desc {
- 			SIG_EXPR_LIST_PTR(pin, low), \
- 			SIG_EXPR_LIST_PTR(pin, other))
- 
-+#define PIN_DECL_4(pin, other, prio1, prio2, prio3, prio4) \
-+	SIG_EXPR_LIST_DECL_SESG(pin, other, other); \
-+	PIN_DECL_(pin, \
-+			SIG_EXPR_LIST_PTR(pin, prio1), \
-+			SIG_EXPR_LIST_PTR(pin, prio2), \
-+			SIG_EXPR_LIST_PTR(pin, prio3), \
-+			SIG_EXPR_LIST_PTR(pin, prio4), \
-+			SIG_EXPR_LIST_PTR(pin, other))
-+
- #define GROUP_SYM(group) group_pins_ ## group
- #define GROUP_DECL(group, ...) \
- 	static const int GROUP_SYM(group)[] = { __VA_ARGS__ }
--- 
-2.17.1
+On Fri, Apr 30, 2021 at 02:31:06PM +0200, Geert Uytterhoeven wrote:
+> Implement support for pull-up (most pins) and pull-down (ASEBRK#/ACK)
+> handling for R-Car H2 and RZ/G1H SoCs, using the common R-Car bias
+> handling.
+>=20
+> Note that on RZ/G1H, the "ASEBRK#/ACK" pin is called "ACK", but the code
+> doesn't handle that naming difference.  Hence users should use the R-Car
+> naming in DTS files.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Works fine with the SW-keys (SW2) on my Lager using the additional DTS
+update you sent, too:
+
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+
+--RHDWKFLuLHEbLYX4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmCspesACgkQFA3kzBSg
+KbaPrBAAqMyUb+Snr3LDSxp2WhngtasqM5OGxNoUth8ZPHm5zrb0pEPdSaSX9Pop
+g/pl1vohypLAyHYWivPX4q4lRIvS8Q9a5J/Y8EUOoD7JlPYHAqKDTr321FUOctqV
+UmjduxHeRlzuYEVfin+PYJkHcQigpTHani0WgqnnGP41FbPp8I8dOeZo094BWkzL
+vbYK7b6Vk1tJQHSL61/IKOk9ZQGCpbL0qqjJgTk0pEyPPZEaZavCUccofXiO2TbY
+11Y+Dzh/rOxnxiMN+VcaVTKjSsSC/tYcpSuaoL0598jugA28FcjCIOe+543pB0M/
+TeAUVV0oXztDlyJElrk9oWOPmzdiwureYHvyLWbuMptkh/Jr+dXWMjMfHcE4/j+Z
+SGLAb9rwB2Gno8063FT1Je87+VVTJPIP+2Pt3YrT0YKewS7SgrgQYWgmGAnpRADH
+hjoVwJdWOikbhqMowQUqTlUSaPZzMttXaOqHt0sRIeHo3sodMAhQejvdpWygsIb1
+rsO7PINj7Yo/J5F9pLP2n7kmJonRrSmxnAWbCwCp5EbhRYc+DNP08//sZ8xAOjiD
+1Lwx3F7UNvzodl/PQAO/M2jszmHb95RqC1/OKfTMWY6MnhESZhYcn1yx2KwcOfUT
+6p72V8vd/AY0lOlfToxHZ2P57QeNPBDlGHkQFgWR8ru0Y+IXraE=
+=q7Rz
+-----END PGP SIGNATURE-----
+
+--RHDWKFLuLHEbLYX4--
