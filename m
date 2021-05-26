@@ -2,145 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52369391190
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 May 2021 09:53:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3BFF39119E
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 May 2021 09:55:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231189AbhEZHyc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 May 2021 03:54:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233066AbhEZHyb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 May 2021 03:54:31 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F7A5C06175F
-        for <linux-gpio@vger.kernel.org>; Wed, 26 May 2021 00:52:59 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id m18so48899wrv.2
-        for <linux-gpio@vger.kernel.org>; Wed, 26 May 2021 00:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=goipG/skXtpzJOrucOfBrY3VZM0NMypmFPU8raSes5o=;
-        b=Avl4DWCrbzHPqkpuGI48j9AeJ8J0hHIoaq3PLQ0VHQrly6aBfca3S3QmyHD5kg75Mb
-         So+0y+pgVT3ZuLYxaAu8cXh/KP6F/+acEkUjb5iLHKKyvB0f/X/jRcZw8Cj4IQvg7ul3
-         KJdEsJJQNdGvGGwm6vBb7VlHeaowJxVUScfO0Bdb7gtA5WCJch7RHSCGesCWO6/fsSgv
-         XFFD0pBrlBnMWi8mV6TILI6RsR90zVmsA5sxbqQc+BLSJsnCJ0BZOOfaF9aNf2he6Biw
-         AezSph0mdR6MC9CMAwAxPiy6F7SJjSYy3kNL02OJPzSw/kkYkjvuVP+ZqQ04I7FB7HUC
-         g1qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=goipG/skXtpzJOrucOfBrY3VZM0NMypmFPU8raSes5o=;
-        b=Z2BVRRMrpZ4cc0oNcwgaqtyUq7lfleCA0+Fz7agv7lE+nH24SLaEOI9asuCcYexek1
-         zhaNV1mzapiTt5l3azeA6xixG1zWEGjX1sFXjcAAUyxch/Omo+9radHWfRC9/6cVfG6+
-         j9eKCSN7VA6fMcVOtClChnIohAgPbA0oPZkU0hJJc6NGgJMXsP77x0zpuVo8yR1nEUpR
-         4m6OxFWhCkobimbm9yKHPnAdQBA32m61vwFPti6wDcFDlYEVm+CVZsu8hNaRT/IAAqEj
-         sbdEUvKOi6SzuxXLFiFjjyATrPa8SYK57kWXldQAeLCEAhjqUAMc/BIyU1RFKCLLt4tc
-         u+HQ==
-X-Gm-Message-State: AOAM531IsrR2i/MddbQbBeEiq6gZZ38yH8V0J1wnrbW2ZDUzezWhhJjC
-        nwpj5KC20oqrGj9fJ7osbYEiUw==
-X-Google-Smtp-Source: ABdhPJz3p185K4KumVptR+JJxcC6XNNmzO6oRz2HQAxzODacIKdvbXNyGxksePhNqgeMCxhEbVE8BA==
-X-Received: by 2002:adf:8b4a:: with SMTP id v10mr31016770wra.274.1622015578162;
-        Wed, 26 May 2021 00:52:58 -0700 (PDT)
-Received: from dell ([91.110.221.223])
-        by smtp.gmail.com with ESMTPSA id g11sm19052357wri.59.2021.05.26.00.52.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 May 2021 00:52:57 -0700 (PDT)
-Date:   Wed, 26 May 2021 08:52:55 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     Rob Herring <robh@kernel.org>,
+        id S232011AbhEZH4X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 May 2021 03:56:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1698 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231998AbhEZH4W (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 26 May 2021 03:56:22 -0400
+IronPort-SDR: nxpnwqmksiAezhgL5EXgcKsxf47edoQYs+zF+X67YCaWAXHl7o28PNp7lbyynyI8j6Hln74Xqm
+ yrmCv8GszZtQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9995"; a="182732023"
+X-IronPort-AV: E=Sophos;i="5.82,330,1613462400"; 
+   d="scan'208";a="182732023"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 00:54:50 -0700
+IronPort-SDR: BOWpYMucKBb3PRHow4HJKfeFxbQ+pJKhFKY5nU+pkjl7zsFefbeEHbETfh1r5dRm5uMGJqIp9W
+ Suf9sRUeo7HA==
+X-IronPort-AV: E=Sophos;i="5.82,330,1613462400"; 
+   d="scan'208";a="464672901"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 00:54:43 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lloND-00EkYe-AH; Wed, 26 May 2021 10:54:39 +0300
+Date:   Wed, 26 May 2021 10:54:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org, Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Donald Buczek <buczek@molgen.mpg.de>
-Subject: Re: [PATCH v2 3/4] dt-bindings: mfd: Add Delta TN48M CPLD drivers
- bindings
-Message-ID: <20210526075255.GG4005783@dell>
-References: <20210524120539.3267145-1-robert.marko@sartura.hr>
- <20210524120539.3267145-3-robert.marko@sartura.hr>
- <20210524230940.GA1350504@robh.at.kernel.org>
- <20210525074649.GC4005783@dell>
- <CA+HBbNFxCKbitVctbUisuZXJWxaZp0cswNNNTgD0UxQZ1smJbg@mail.gmail.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v4 7/8] platform/x86: Add intel_skl_int3472 driver
+Message-ID: <YK3+vxmWfD0mhjU0@smile.fi.intel.com>
+References: <20210520140928.3252671-1-djrscally@gmail.com>
+ <20210520140928.3252671-8-djrscally@gmail.com>
+ <YKeuQM/O9+jDZFpb@smile.fi.intel.com>
+ <6294177b-d6e1-8bbd-d313-5cce1c498604@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+HBbNFxCKbitVctbUisuZXJWxaZp0cswNNNTgD0UxQZ1smJbg@mail.gmail.com>
+In-Reply-To: <6294177b-d6e1-8bbd-d313-5cce1c498604@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 25 May 2021, Robert Marko wrote:
+On Tue, May 25, 2021 at 11:53:21PM +0100, Daniel Scally wrote:
+> On 21/05/2021 13:57, Andy Shevchenko wrote:
 
-> On Tue, May 25, 2021 at 9:46 AM Lee Jones <lee.jones@linaro.org> wrote:
+...
+
+> >> +static const struct regulator_ops int3472_gpio_regulator_ops;
+> > Hmm... Can you use 'reg-fixed-voltage' platform device instead?
 > >
-> > On Mon, 24 May 2021, Rob Herring wrote:
+> > One example, although gone from upstream, but available in the tree, I can
+> > point to is this:
 > >
-> > > On Mon, May 24, 2021 at 02:05:38PM +0200, Robert Marko wrote:
-> > > > Add binding documents for the Delta TN48M CPLD drivers.
-> > > >
-> > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > > > ---
-> > > > Changes in v2:
-> > > > * Implement MFD as a simple I2C MFD
-> > > > * Add GPIO bindings as separate
-> > >
-> > > I don't understand why this changed. This doesn't look like an MFD to
-> > > me. Make your binding complete if there are missing functions.
-> > > Otherwise, stick with what I already ok'ed.
+> >   git log -p -- arch/x86/platform/intel-mid/device_libs/platform_bcm43xx.c
 > >
-> > Right.  What else, besides GPIO, does this do?
-> 
-> It currently does not do anything else as hwmon driver was essentially
-> NACK-ed for not exposing standard attributes.
-
-Once this provides more than GPIO capabilities i.e. becomes a proper
-Multi-Function Device, then it can use the MFD framework.  Until then,
-it's a GPIO device I'm afraid.
-
-Are you going to re-author the HWMON driver to conform?
-
-> The CPLD itself has PSU status-related information, bootstrap related
-> information,
-> various resets for the CPU-s, OOB ethernet PHY, information on the exact board
-> model it's running etc.
-> 
-> PSU and model-related info stuff is gonna be exposed via a misc driver
-> in debugfs as
-> we have user-space SW depending on that.
-> I thought we agreed on that as v1 MFD driver was exposing those directly and
-> not doing anything else.
-
-Yes, we agreed that creating an MFD driver just to expose chip
-attributes was not an acceptable solution.
-
-> So I moved to use the simple I2C MFD driver, this is all modeled on the sl28cpld
-> which currently uses the same driver and then GPIO regmap as I do.
-> 
-> Other stuff like the resets is probably gonna get exposed later when
-> it's required
-> to control it directly.
-
-In order for this driver to tick the MFD box, it's going to need more
-than one function.
-
-> > > >  .../bindings/gpio/delta,tn48m-gpio.yaml       | 42 ++++++++++
-> > > >  .../bindings/mfd/delta,tn48m-cpld.yaml        | 81 +++++++++++++++++++
-> > > >  2 files changed, 123 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
-> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+> > It uses constant structures, but I think you may dynamically generate the
+> > necessary ones.
 > >
 > 
+> I can experiment with this, though one thing is we have no actual idea
+> what voltages these are supplying...it doesn't look like that matters
+> from drivers/regulator/fixed.c, but I'd have to try it to be sure.
+
+I believe it is likely 1.8v. But I can check if I have the schematics of a
+reference design for something like this.
+
+...
+
+> >> +	if (int3472->clock.ena_gpio) {
+> >> +		ret = skl_int3472_register_clock(int3472);
+> >> +		if (ret)
+> >> +			goto out_free_res_list;
+> >> +	} else {
+> > Hmm... Have I got it correctly that we can't have ena_gpio && led_gpio together?
 > 
 > 
+> No, just that we can only have led_gpio if we also have ena_gpio (at
+> least that's the intention...)
+
+Okay, perhaps then a comment above?
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
+
+
