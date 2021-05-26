@@ -2,225 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1294039172C
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 May 2021 14:14:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27E8E39177B
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 May 2021 14:36:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233568AbhEZMPm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 May 2021 08:15:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233766AbhEZMPl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 26 May 2021 08:15:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 949CB613E1
-        for <linux-gpio@vger.kernel.org>; Wed, 26 May 2021 12:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622031250;
-        bh=5DOy1bNEKFf9vIGiiM6wZJfQ0MuF8meKnD0SY6EvZfQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=USuojgZvI/uEUVd6yUInuRNgAsTdOZbeixpH+3xu5GiwOH5ro2fvna068q6dsfMU9
-         KK7/DExz8sLF3+JieHAts1uF3oipkRkLE0+Am4XAa3E0/WtritMRhlBTfTqaQRknm7
-         RLoE/IY4yNN8Fh8aoLFnytVbrpVaQ/J9Tg98Xg68mWVe/8hgNf6Qn1R9L/qS0kv3IP
-         GK6ebCTHI4oV/voTWW93b3ky/Ld+MA9mPCdqrgPdVPnZf8MjvokPthwyhOniA57HmV
-         5YLdXG1qYOkIXnu7dPsig4O164txhnqthzJZqwlaJXNPvesNERbwYeTh/leTQiXCqw
-         /twkfrwtSOQxg==
-Received: by mail-ed1-f50.google.com with SMTP id y7so1193149eda.2
-        for <linux-gpio@vger.kernel.org>; Wed, 26 May 2021 05:14:10 -0700 (PDT)
-X-Gm-Message-State: AOAM532hcxb4g8tJv6s1aiNeK/03y7D3tnc7h0iWqW0V3w1TevOLEqyV
-        B4tzIFncuEiZ1oB6Qij54rEZrV9C9poq1VcEqbc=
-X-Google-Smtp-Source: ABdhPJzUYHLtCpkSxBrw2TFxqPuK0sTNrTYyKU6Zfaw8KktPPR3S6HkAbRKrB/Vd2N4bk+ZCvj8sRAJc/yFEgdU7H/o=
-X-Received: by 2002:a05:6402:40d0:: with SMTP id z16mr37887989edb.104.1622031249234;
- Wed, 26 May 2021 05:14:09 -0700 (PDT)
+        id S233554AbhEZMiY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 May 2021 08:38:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31306 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233605AbhEZMiR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 26 May 2021 08:38:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1622032602;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vo3CFjgMiVFpDxJLQuQQeOIXjZuz9Jnetz8hQXS67No=;
+        b=Yy2iOPvOQPOuCUbADZ8BLSpoEZ1Ylrystpzutw1Uo21w8pb2cksBGqBEKTViFzJY02VbV9
+        L0wpJD5S4mDh9UiDSfyY0EJR8m5jc5od2nvETuqdaUrkFYMZtxxN721SWcBZwqqElpZLiF
+        ELcONW10UgPJmYy1NhStOoxG2gVJYE4=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-537-0YrWAgoMMtWb4QCeInbAxw-1; Wed, 26 May 2021 08:36:40 -0400
+X-MC-Unique: 0YrWAgoMMtWb4QCeInbAxw-1
+Received: by mail-ej1-f72.google.com with SMTP id n25-20020a170906b319b02903d4dc1bc46cso348060ejz.2
+        for <linux-gpio@vger.kernel.org>; Wed, 26 May 2021 05:36:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vo3CFjgMiVFpDxJLQuQQeOIXjZuz9Jnetz8hQXS67No=;
+        b=qu35Xl4lX9OneatVckS8o94vXud9+qx/A+IqcWhcLcVjlc0Gaesy9qi57/d3ZpOnQ+
+         hnDgkaqUzrZm3kMY9Yq0IDr3fFIsMlY2YaEZvcPTfgVZU2+aLW1aQ65isK3s8kusBDxf
+         228l/6j8nqJ73ZgzVhht9wcgiRqVdOKCH7WEelmK1suFBXWPl4GILgQpV61wK+XAgRrb
+         eE6U5oM/gjXoY4CaUsEMeI61MeMqNdNuO2aecU8kx0uBopwD+v/CkL9uyHYD1mG/opQU
+         OSsI/D3Oxeqwc4GqV3mpha+MKkaOOkOUP5gxAopAKtf1uX4yN6UToTz6+UowkbBzPU0L
+         2oKw==
+X-Gm-Message-State: AOAM533yaEooVeE8cz6GBvbEDpErTBcBabXP11/jgU2iVor70aTQNrZs
+        GAbogFPeLujmr+Pwnm8QiymXQnwCHT0OtsJlnqdZNhMy8f7Fsn9UNWBXcnadYZNXVa2QopL9OJP
+        NHPywBIh4mtl5jzaubitvmw==
+X-Received: by 2002:a17:906:351a:: with SMTP id r26mr2036972eja.389.1622032599353;
+        Wed, 26 May 2021 05:36:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzCzSG2YLjcyhKgm8r3o/LZqPgFxUK6ylJOFe2YCzql+M/THNIC19JLVSjVDkUJ82LC9sNhuQ==
+X-Received: by 2002:a17:906:351a:: with SMTP id r26mr2036951eja.389.1622032599157;
+        Wed, 26 May 2021 05:36:39 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id y15sm284014ejc.48.2021.05.26.05.36.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 May 2021 05:36:38 -0700 (PDT)
+Subject: Re: [PATCH v4 0/8] Introduce intel_skl_int3472 module
+To:     Daniel Scally <djrscally@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org
+Cc:     Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+References: <20210520140928.3252671-1-djrscally@gmail.com>
+ <f2d8e74f-f33b-2489-1b90-b11bf7465d19@redhat.com>
+ <f4664310-0975-335d-8dc3-95726f53ab67@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d7b7b2ba-d941-7df3-38e6-32dbbba7a36f@redhat.com>
+Date:   Wed, 26 May 2021 14:36:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-References: <20210525054149.1792-1-kunyang_fan@asus.com> <20210525054149.1792-5-kunyang_fan@asus.com>
-In-Reply-To: <20210525054149.1792-5-kunyang_fan@asus.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 26 May 2021 08:13:55 -0400
-X-Gmail-Original-Message-ID: <CAJKOXPfcC=cqka2fgvcgVuKnAJWAS2yga6Qj_PpKN9twUPGf0A@mail.gmail.com>
-Message-ID: <CAJKOXPfcC=cqka2fgvcgVuKnAJWAS2yga6Qj_PpKN9twUPGf0A@mail.gmail.com>
-Subject: Re: [PATCH 5/5] leds: add driver for AAEON devices
-To:     aaeon.asus@gmail.com, andyshevchenko@gmail.com
-Cc:     linux-gpio@vger.kernel.org, acelan.kao@canonical.com,
-        Kunyang_Fan <kunyang_fan@asus.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f4664310-0975-335d-8dc3-95726f53ab67@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 25 May 2021 at 01:42, <aaeon.asus@gmail.com> wrote:
->
-> From: Kunyang_Fan <kunyang_fan@asus.com>
->
-> This patch adds support for the led devices which can
-> be controlled from sysfs through ASUS WMI interface.
->
-> Signed-off-by: Kunyang_Fan <kunyang_fan@asus.com>
-> ---
->  drivers/leds/Kconfig      |  11 +++
->  drivers/leds/Makefile     |   1 +
->  drivers/leds/leds-aaeon.c | 142 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 154 insertions(+)
->  create mode 100644 drivers/leds/leds-aaeon.c
->
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index be4536eef1fe..34d1b80855af 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -49,6 +49,17 @@ config LEDS_88PM860X
->           This option enables support for on-chip LED drivers found on Marvell
->           Semiconductor 88PM8606 PMIC.
->
-> +config LEDS_AAEON
-> +       tristate "AAEON LED driver"
-> +       depends on X86
-> +       select MFD_AAEON
-> +       help
-> +         This led driver adds support for LED brightness control on Single
-> +         Board Computers produced by AAEON.
-> +
-> +         This driver leverages the ASUS WMI interface to access device
-> +         resources.
-> +
->  config LEDS_AAT1290
->         tristate "LED support for the AAT1290"
->         depends on LEDS_CLASS_FLASH
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index d6b8a792c936..a8a77acc5e11 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_LEDS_TRIGGERS)             += led-triggers.o
->
->  # LED Platform Drivers (keep this sorted, M-| sort)
->  obj-$(CONFIG_LEDS_88PM860X)            += leds-88pm860x.o
-> +obj-$(CONFIG_LEDS_AAEON)               += leds-aaeon.o
->  obj-$(CONFIG_LEDS_AAT1290)             += leds-aat1290.o
->  obj-$(CONFIG_LEDS_ADP5520)             += leds-adp5520.o
->  obj-$(CONFIG_LEDS_AN30259A)            += leds-an30259a.o
-> diff --git a/drivers/leds/leds-aaeon.c b/drivers/leds/leds-aaeon.c
-> new file mode 100644
-> index 000000000000..10090a4bff65
-> --- /dev/null
-> +++ b/drivers/leds/leds-aaeon.c
-> @@ -0,0 +1,142 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * AAEON LED driver
-> + *
-> + * Copyright (c) 2021, AAEON Ltd.
-> + *
-> + * Author: Kunyang Fan <kunyang_fan@aaeon.com.tw>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +#include <linux/acpi.h>
-> +#include <linux/bitops.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_data/x86/asus-wmi.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRVNAME "led_aaeon"
-> +#define ASUS_NB_WMI_EVENT_GUID   "0B3CBB35-E3C2-45ED-91C2-4C5A6D195D1C"
-> +#define AAEON_WMI_MGMT_GUID      "97845ED0-4E6D-11DE-8A39-0800200C9A66"
-> +
-> +#define GET_LED_NUMBER_ID        0x00060000
-> +#define GET_LED_METHOD_ID        0x00060001
-> +#define SET_LED_METHOD_ID        0x00060002
-> +#define GET_LED_NUMBER_METHOD_ID 0x10
-> +
-> +
+Hi,
 
-Previous patches apply here as well (no double blank lines, missing
-SoB, missing CC to maintainers, not needed license text).
+On 5/26/21 1:03 AM, Daniel Scally wrote:
 
-> +struct aaeon_led_data {
-> +       int id;
-> +       struct led_classdev cdev;
-> +};
-> +
-> +static int aaeon_led_get_number(void)
-> +{
-> +       int err, retval;
-> +
-> +       err = asus_wmi_evaluate_method(GET_LED_NUMBER_ID,
-> +                                      GET_LED_NUMBER_METHOD_ID,
-> +                                      0, &retval);
-> +       if (err)
-> +               return err;
-> +
-> +       return retval;
-> +}
-> +
-> +static enum led_brightness aaeon_led_brightness_get(struct led_classdev
-> +                                                     *cdev)
-> +{
-> +       int err, brightness;
-> +       struct aaeon_led_data *led =
-> +                       container_of(cdev, struct aaeon_led_data, cdev);
-> +       u32 arg0;
-> +
-> +       arg0 = (u32)(led->id & 0xF);
+<snip>
 
-Hm, why do you need a cast here?
+>> 3/8 and 5/8 seem to be nice cleanups, but not really necessary. IMHO it
+>> would be best to park these cleanups for later and for 3/8 add the following
+>> where necessary for now:
+>>
+>> /* FIXME drop this once the I2C_DEV_NAME_FORMAT macro has been added to include/linux/i2c.h */
+>> #ifndef I2C_DEV_NAME_FORMAT
+>> #define I2C_DEV_NAME_FORMAT		"i2c-%s"
+>> #endif
+>>
+>> This is not the prettiest but it reduces all the subsys cross-deps and things
+>> like this have been done before for similar reasons.
+>>
+>> Likewise it would be good if you can add if (foo) as condition before any
+>> clkdev_drop(foo) calls in this patch-set and then merge
+>> 5/8 "clkdev: Make clkdev_drop() null aware" independently of this and then
+>> once both are in Linux tree follow-up with a cleanup patch dropping the if (foo)
+>> guards.
+> 
+> 
+> This is fine by me if people are happy for it to go in like that; I'll
+> just fix it up later.
 
-> +       err = asus_wmi_evaluate_method(GET_LED_METHOD_ID, arg0, 0, &brightness);
-> +       if (err)
-> +               return err;
-> +
-> +       return brightness;
-> +};
-> +
-> +static void aaeon_led_brightness_set(struct led_classdev *cdev,
-> +                                      enum led_brightness brightness)
-> +{
-> +       int err, retval;
-> +       struct aaeon_led_data *led =
-> +                       container_of(cdev, struct aaeon_led_data, cdev);
-> +       u32 arg0;
-> +
-> +       arg0 = (u32)(led->id & 0xF);
-> +       if (brightness != LED_OFF)
-> +               arg0 |= BIT(16);
-> +
-> +       err = asus_wmi_evaluate_method(SET_LED_METHOD_ID, arg0, 0, &retval);
-> +};
-> +
-> +static int __init aaeon_add_led_device(struct platform_device *pdev,
-> +                                          int id)
-> +{
-> +       struct aaeon_led_data *led;
-> +
-> +       led = devm_kzalloc(&pdev->dev, sizeof(struct aaeon_led_data), GFP_KERNEL);
+I don't expect anyone to object against these 2 small fixes going in later,
+if you can drop these 2 for v5 that would greatly help with untangling all the
+subsys dependencies. Then I can just merge an ACPI + a gpiolib-acpi immutable
+branch and then merge the big drivers/platform/x86 patch.
 
-sizeof(*led)
+Regards,
 
-> +       if (!led)
-> +               return -ENOMEM;
-> +
-> +       led->id = id;
-> +       led->cdev.brightness_get = aaeon_led_brightness_get;
-> +       led->cdev.brightness_set = aaeon_led_brightness_set;
-> +       led->cdev.name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "led:%d:", id);
-> +
-> +       if (!led->cdev.name)
-> +               return -ENOMEM;
-> +
-> +       return devm_led_classdev_register(&pdev->dev, &led->cdev);
-> +}
-> +
-> +static int aaeon_led_probe(struct platform_device *pdev)
-> +{
-> +       int err = -ENODEV, i;
+Hans
 
-Split declaration of initialized and uninitialized variables.
-
-> +       int led_number = 0;
-> +
-> +       pr_debug("aaeon led device probe!\n");
-
-No printks for simple probes. This pollutes the dmesg without any benefit.
-
-Best regards,
-Krzysztof
