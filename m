@@ -2,126 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EB5C3931AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 May 2021 17:04:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7765A3931C4
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 May 2021 17:06:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236731AbhE0PGI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 May 2021 11:06:08 -0400
-Received: from mail-ua1-f50.google.com ([209.85.222.50]:40930 "EHLO
-        mail-ua1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236752AbhE0PGF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 11:06:05 -0400
-Received: by mail-ua1-f50.google.com with SMTP id j2so366363uak.7;
-        Thu, 27 May 2021 08:04:31 -0700 (PDT)
+        id S236868AbhE0PH7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 May 2021 11:07:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236802AbhE0PH1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 11:07:27 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63969C061342
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 08:05:45 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id a2so549071lfc.9
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 08:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rahXOe6QHY33QTQOxWdfULKSVMeqoD1SZ9MMzCB7Epk=;
+        b=QgemFEUFUuuSklvkxKN/r2wK+fwxRrcB+1NIfYRwdBQcZxI+ThqfRKz3T9kBMN3R84
+         XQ+FR2t5sTM3Bo3nw8Mq/B9Bl06bJiX1lmproov3AVCqCpmoa4SUEznu4j82fsW39cK9
+         SXS5pvi+uCrSz565Boqa8z4D4+IFkE1Ard90fIVnjkJXWXMGkmzN8yGGQB1ljvscOwOE
+         s0b7aZNWFN3Iw+dv47/0gAyF+MH85d80s6T6SnhhY22pdVp+H6FXig7MG3SJNoqep6rG
+         ApOLAJevQ+ttOj2YfVZFKgK8IRfVfJmwGx+/mPZ/WTc8uULCQKMzSdbVGXJo01wTJQo/
+         MPRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3u3wWCo2lZGWRYWR5pjnSvnC6obG/x9fym7jnlVxBcM=;
-        b=Sc/vgWF+lrjo11x3BduoHAVSi0bsJNjDff17iQWzJa+qVOhm1uy6+IU5BsPffJRjo1
-         IvoIJkM1xrD61vXLD25AWFSbmSrBxXRboepZAYExcvSu0iZXtT3pBf6ZC7FZKesyzmNQ
-         6CPuK48gLMYu/7IyNk2VB5SIerokpLN3UuxnODQHY7DMVeYpcpcLL6+QaEDPRrGt58g1
-         PsgpYRN8ZtZt4jX04mz9MF0fxl2FJ9QOmo6FRguJMXbbxDzBM5hAur6D2ZytHTMMhdNs
-         6ioxOATVS2pT9ee8qKVqbYKRno85GoGNgCjCwazB0HEFhXabspCHgGZmuz+P2DCNMHRc
-         RS/g==
-X-Gm-Message-State: AOAM531Jw9gbiUjn7aJrjPOHFSxFe9YuM1wX2YLfCk5NoNS5tTq0x1MG
-        pq+KTx5sS+TKwy30TooTGe/UzURo52pkqcnLlxz/4sklMtE=
-X-Google-Smtp-Source: ABdhPJzHaOLJBSw3gQx+wVzMZyw1XojcblD4dymCtSozCyRiE6ryYMrpQjtlVbuuU6nXtCljn2TrB5YZmEsVQ/NaFAQ=
-X-Received: by 2002:ab0:7705:: with SMTP id z5mr2806791uaq.2.1622127871092;
- Thu, 27 May 2021 08:04:31 -0700 (PDT)
+        bh=rahXOe6QHY33QTQOxWdfULKSVMeqoD1SZ9MMzCB7Epk=;
+        b=NBXuYLG+Hq7XDSBPdUOW1HjIHePaQNK7LH9Cbgb+5bKKNkoZprV6W12YqWUwHhzCKd
+         KyOTr65Ul7CASPcw0LQlFDl0KGXcc/w4u3QiTV6D2lFZc8bOvv6TRe3jSVyiOPcOxY2Z
+         GF5dK8X/bVaJgZXdcoXTKX+MdqZe4rCAR0Q8DWAZ7e9ZyFDh3/I8iyUQUT01a2QaK3/C
+         74NJTLgzjX1F3KDDmGRyZrMLYefagnfrDZlEmcNTAAjHG8xs/f3HghIhMUg1+XY98udx
+         4z9yLCCt4ZT5eoqx7P4x1KymnLK7pyjgkxoGdxuAk9Eg3Ai9l4FnbNixZZfu/vadh4kE
+         DJVA==
+X-Gm-Message-State: AOAM532Ngw8DRv3S6SC1JWcuaDLD3/veLEGsLrRtSH97T1pz7+Kai2Dj
+        UrQdqvS5d0WbEAIX9SvV0aF0ufrSSwa/wBfv9EhM3Kmxhhg=
+X-Google-Smtp-Source: ABdhPJzBYi57GIctgtdTsVpbJbwy9MS4FOpEElMLUm+fWapmXHzjAEojgsu6AlyvT1IQTvqNVOXBcraYmzlssDGr3Xk=
+X-Received: by 2002:ac2:47e6:: with SMTP id b6mr2601491lfp.649.1622127943635;
+ Thu, 27 May 2021 08:05:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1621583562.git.geert+renesas@glider.be> <52df0592c81ac000d3f486a9ba5a4d84b0f42c47.1621583562.git.geert+renesas@glider.be>
- <CACRpkdbQE1-WgD_BBkHx9DvJ=GfW7-PCoF-73TKGpgh4c6Epxw@mail.gmail.com>
- <CAMuHMdUqAwTSJuPXxJWgXGX1Hb=WLR3QtEm+RuhbyivFA5fUKA@mail.gmail.com> <20210521182403.GA50332@robh.at.kernel.org>
-In-Reply-To: <20210521182403.GA50332@robh.at.kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 27 May 2021 17:04:19 +0200
-Message-ID: <CAMuHMdWvK6+GybGKc0MBn3qxJk_JQ8dOe1-3vfiezeZmNmzkxQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: gpio: pcf857x: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jan Tuerk <jan.tuerk@emtrion.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+References: <20210524193012.592210-1-martin.botka@somainline.org>
+In-Reply-To: <20210524193012.592210-1-martin.botka@somainline.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 27 May 2021 17:05:32 +0200
+Message-ID: <CACRpkdbPvxN2-VTm+n-j6JiWZnraCviZ2JDFe=A7Z=z93-seVQ@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: pinctrl: qcom: sm6125: Document
+ SM6125 pinctrl driver
+To:     Martin Botka <martin.botka@somainline.org>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>,
+        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+Hi Martin,
 
-On Fri, May 21, 2021 at 8:24 PM Rob Herring <robh@kernel.org> wrote:
-> On Fri, May 21, 2021 at 12:23:47PM +0200, Geert Uytterhoeven wrote:
-> > On Fri, May 21, 2021 at 12:04 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > > On Fri, May 21, 2021 at 9:54 AM Geert Uytterhoeven
-> > > <geert+renesas@glider.be> wrote:
-> > > > Convert the PCF857x-compatible I/O expanders Device Tree binding
-> > > > documentation to json-schema.
-> > > >
-> > > > Document missing compatible values, properties, and gpio hogs.
-> > > >
-> > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >
-> > > (...)
-> > > > Perhaps the "ti,pcf8575" construct should be removed, and the few users
-> > > > fixed instead?
-> > >
-> > > You would rather list it as deprecated I think?
-> > > It is ABI...
-> >
-> > All DTS files use the "nxp,pcf8575" fallback, except for
-> > arch/x86/platform/ce4100/falconfalls.dts.
-> > The latter ain't working with Linux, as the Linux driver doesn't
-> > match against "ti,pcf8575"...
+overall this looks good but the bot warned because of this:
 
-Correction: i2c_device_id-based matching ignores the vendor part
-of the compatible value.  One day this is gonna bite us...
-
-> Perhaps can it just be removed?
-
-I think so.  All other users of similar I2C GPIO expanders just
-use the compatible values of the original NXP parts.
-
-> > > > +patternProperties:
-> > > > +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
-> > > > +    type: object
-> > >
-> > > But this is already in
-> > > /dtschema/schemas/gpio/gpio-hog.yaml
-> > > for nodename, isn't that where it properly belongs?
-> > >
-> > > I'm however confused here Rob will know what to do.
+On Mon, May 24, 2021 at 9:30 PM Martin Botka
+<martin.botka@somainline.org> wrote:
 >
-> This one is a bit odd.
+> Document the newly added SM6125 pinctrl driver
 >
-> > If we leave this out, something still has to refer to it?
-> > I see no other binding doing that...
->
-> It's selected by 'gpio-hog' being present, but here you need to make
-> sure that's the case.
+> Signed-off-by: Martin Botka <martin.botka@somainline.org>
+(...)
+> +properties:
+> +  compatible:
+> +    const: qcom,sm6125-tlmm
+(...)
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        pinctrl@500000 {
+> +                compatible = "qcom,sm6125-pinctrl";
 
-OK. Fixed.
+So it seems like you didn't run the checks?
 
-> And I would hope you could define the node name to be just 1 of the 2
-> cases.
-
-Yep, the latter is fine.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
