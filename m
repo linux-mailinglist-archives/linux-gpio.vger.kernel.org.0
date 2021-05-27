@@ -2,30 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69AFB39251F
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 May 2021 04:58:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 937F6392532
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 May 2021 05:05:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232134AbhE0DAU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 May 2021 23:00:20 -0400
-Received: from twspam01.aspeedtech.com ([211.20.114.71]:50547 "EHLO
-        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbhE0DAU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 May 2021 23:00:20 -0400
-Received: from mail.aspeedtech.com ([192.168.0.24])
-        by twspam01.aspeedtech.com with ESMTP id 14R2jfcU078610;
-        Thu, 27 May 2021 10:45:41 +0800 (GMT-8)
-        (envelope-from steven_lee@aspeedtech.com)
-Received: from aspeedtech.com (192.168.100.253) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 27 May
- 2021 10:58:43 +0800
-Date:   Thu, 27 May 2021 10:58:37 +0800
-From:   Steven Lee <steven_lee@aspeedtech.com>
-To:     Jeremy Kerr <jk@ozlabs.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
+        id S234388AbhE0DGg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 May 2021 23:06:36 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:48089 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234331AbhE0DGf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 26 May 2021 23:06:35 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 78DE358065E;
+        Wed, 26 May 2021 23:05:01 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Wed, 26 May 2021 23:05:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=gFijnxHcgjqP0YTrL7H2zWs78QnPx7+
+        eU0DB7H0pXN0=; b=oG/V5WpMvdfBlah7MnbrhN5mg3JroAseExaProxhdnBVtqd
+        k8dQgBeu5LMYQkE27622sL0RyKRvUdHdP8ztRdx6PSrLVo0OySOjvuUlPYmpN5bG
+        7H6zKzSNmkmRcaJ9+aT54mSz67EDQOYH7OnG2yP1voGtPqldA2yBKLs3yRQbebs2
+        nqEVasxE+dnJAiwNij06rSMkov7IhKaMendina2cc7rnaAElFEIBuJJRbjPfi/mB
+        QvKDlNKqJOGfdt85LpgewnuobGv9CjOlijPK4AFev/m66UMEtiW8nycvRhiCjYK8
+        ggS6CQzD/0Bfbm5PCjpOrOZCXQZ/sSXYIZ2p8JQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=gFijnx
+        HcgjqP0YTrL7H2zWs78QnPx7+eU0DB7H0pXN0=; b=t9/xYrJTmG3YcgY26+jnz9
+        Sqjr+IH3KXBy1x8Vr0ZqrAgVtfxaibEVh+QgkFG5ziDLUfdURjpuHh0GWSH0CGzd
+        KPdHFUa6KHonssMvxNrQOPFoJcKABbg2wejnBGWQvfbjHKTLrFIlPdp1/uTtqfnk
+        5XyleO/FS9kkiXSCUrOFw8vT3ep5v85P4Iy1tFzDTkb3WXewEAy/4nBg7m/AKZT1
+        +EmdDiYzAxZDVGDekixHj2DkWAC8D3jHgIAkON7nisLq+mUZOOU999kZ30y1JAGF
+        k+KTMk4GNSv2GNHqLV0vaoWChUkIT4jwEScfaHAZt/XGZ1wOxtIooVy029qGI34Q
+        ==
+X-ME-Sender: <xms:WwyvYJyQ4fTXO6hUGGrSlSK1CM4WKK_DsJ8kfR0UVmhJek_RDaai6A>
+    <xme:WwyvYJTWvMvPZhXqa6K1y7mYuyMmX95xWoZwRYF34J6JZOUoscdyPVy6PGWtdxURW
+    fb5acLlR68QkW5mgw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdekgedgieegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhephefhfeekgfekudevheffheeihedujeefjeevjeefudfgfeeutdeuvdeh
+    hfevueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:WwyvYDWtAIjNSm5R2QEIN4g_N0aaP1mJ1f7VsKEY87PaSe7qN6MOng>
+    <xmx:WwyvYLjJpmvTsUQBYREWJtNw0f6bPvMUbxERbUIqqqVGP3dUR5CC8A>
+    <xmx:WwyvYLD3InFqfwzUOCJcqMxttiUkwEXYiYH560DHWlEIEjIVPPStWg>
+    <xmx:XQyvYIJZAVvcsazYrSU2EXRZ0XzRSoQZuEKeZKZwGk0W2Z3A7OHyWw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 883E0A00079; Wed, 26 May 2021 23:04:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-468-gdb53729b73-fm-20210517.001-gdb53729b
+Mime-Version: 1.0
+Message-Id: <3a9513fa-bdd2-45c9-bb4a-18ae3953d28a@www.fastmail.com>
+In-Reply-To: <20210527023455.GA9971@aspeedtech.com>
+References: <20210526094609.14068-1-steven_lee@aspeedtech.com>
+ <20210526094609.14068-5-steven_lee@aspeedtech.com>
+ <0826dc6a-1c76-4301-985e-7885eb0e151d@www.fastmail.com>
+ <20210527023455.GA9971@aspeedtech.com>
+Date:   Thu, 27 May 2021 12:34:38 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Steven Lee" <steven_lee@aspeedtech.com>
+Cc:     "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Joel Stanley" <joel@jms.id.au>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
@@ -33,105 +77,71 @@ CC:     Linus Walleij <linus.walleij@linaro.org>,
         <linux-arm-kernel@lists.infradead.org>,
         "moderated list:ARM/ASPEED MACHINE SUPPORT" 
         <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Hongweiz@ami.com" <Hongweiz@ami.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
-Subject: Re: [PATCH v1 1/4] dt-bindings: aspeed-sgpio: Convert txt bindings
- to yaml.
-Message-ID: <20210527025836.GD9971@aspeedtech.com>
-References: <20210526094609.14068-1-steven_lee@aspeedtech.com>
- <20210526094609.14068-2-steven_lee@aspeedtech.com>
- <f50dec3a8be8f8254321d22d784eba4f5a032887.camel@ozlabs.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f50dec3a8be8f8254321d22d784eba4f5a032887.camel@ozlabs.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [192.168.100.253]
-X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
- (192.168.0.24)
-X-DNSRBL: 
-X-MAIL: twspam01.aspeedtech.com 14R2jfcU078610
+        "open list" <linux-kernel@vger.kernel.org>,
+        "Hongwei Zhang" <Hongweiz@ami.com>,
+        "Ryan Chen" <ryan_chen@aspeedtech.com>,
+        "Billy Tsai" <billy_tsai@aspeedtech.com>,
+        "Jeremy Kerr" <jk@codeconstruct.com.au>
+Subject: Re: [PATCH v1 4/4] gpio: gpio-aspeed-sgpio: Add AST2600 sgpio support
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The 05/27/2021 09:42, Jeremy Kerr wrote:
-> Hi Steven,
+On Thu, 27 May 2021, at 12:04, Steven Lee wrote:
+> The 05/27/2021 09:26, Andrew Jeffery wrote:
+> > Hi Steven,
+> > 
+> > On Wed, 26 May 2021, at 19:16, Steven Lee wrote:
+> > >  	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
+> > > -	const struct aspeed_sgpio_bank *bank = to_bank(offset);
+> > >  	unsigned long flags;
+> > >  	enum aspeed_sgpio_reg reg;
+> > >  	int rc = 0;
+> > >  
+> > >  	spin_lock_irqsave(&gpio->lock, flags);
+> > >  
+> > > -	reg = aspeed_sgpio_is_input(offset) ? reg_val : reg_rdata;
+> > > -	rc = !!(ioread32(bank_reg(gpio, bank, reg)) & GPIO_BIT(offset));
+> > > +	reg = aspeed_sgpio_is_input(offset, gpio->max_ngpios) ? reg_val : 
+> > > reg_rdata;
+> > 
+> > We should just pass gpio here (i.e. make aspeed_sgpio_is_input take a 
+> > 'const struct aspeed_sgpio *' parameter), rather than open-coding 
+> > gpio->max_ngpios. This approach will make it easier to refactor the 
+> > implementation in the future (if necessary).
+> > 
 > 
-> > SGPIO bindings should be converted as yaml format.
-> > In addition to the file conversion, a new property max-ngpios is
-> > added in the yaml file as well.
-> > The new property is required by the enhanced sgpio driver for
-> > making the configuration of the max number of gpio pins more
-> > flexible.
-> 
-> There are a number of things going on here - you're doing the YAML
-> conversion, introducing the max-gpios property, and changing the
-> compatible value.
-> 
-> The first two make sense, but may be better split into separate
-> changes, so that the YAML conversion is a "linear" change.
-> 
+> I will rewrite the function to use aspeed_sgpio struct.
 
-Thanks for your suggestion, I will split them into 2 patches.
 
-> I'm not clear on why you're changing the compatible value though,
-> particularly as you're dropping support for the existing compatible
-> value anyway. How about we keep the old one, and use the default of 128
-> for cases where max-ngpios is absent? That way, we retain support for
-> the existing device trees.
+> > >  	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
+> > > -	const struct aspeed_sgpio_bank *bank = to_bank(offset);
+> > >  	void __iomem *addr_r, *addr_w;
+> > >  	u32 reg = 0;
+> > >  
+> > > -	if (aspeed_sgpio_is_input(offset))
+> > > +	if (aspeed_sgpio_is_input(offset, gpio->max_ngpios))
+> > >  		return -EINVAL;
+> > >  
+> > >  	/* Since this is an output, read the cached value from rdata, then
+> > > @@ -209,9 +214,9 @@ static int sgpio_set_value(struct gpio_chip *gc, 
+> > > unsigned int offset, int val)
+> > >  	reg = ioread32(addr_r);
+> > >  
+> > >  	if (val)
+> > > -		reg |= GPIO_BIT(offset);
+> > > +		reg |= GPIO_BIT(offset % gpio->max_ngpios);
+> > 
+> > Pass gpio through GPIO_BIT() too.
+> > 
 > 
+> I don't understand this comment.
+> Could you describe more?
 
-AST2600 support both SGPIO master and slave interfaces. So we decide to
-rename sgpio to sgpiom as it is the driver for sgpio master interface.
-Since Andrew also point out the compatibility issues, I will modify driver
-to keep the original design.
+Oh, sure, what I was suggesting was to make a similar change to 
+GPIO_BIT() as I suggested for aspeed_sgpio_is_input() above.
 
-> > +  max-ngpios:
-> > +    description:
-> > +      represents the number of actual hardware-supported GPIOs (ie,
-> > +      slots within the clocked serial GPIO data). Since each HW GPIO is both an
-> > +      input and an output, we provide max_ngpios * 2 lines on our gpiochip
-> > +      device. We also use it to define the split between the inputs and
-> > +      outputs; the inputs start at line 0, the outputs start at max_ngpios.
-> 
-> Most of this description is better suited to the ngpios property, which
-> controls the number of lines that the gpiochip will expose.
-> 
-> Also, minor nit: max_ngpios -> max-ngpios.
-> 
-> How about something like:
-> 
->   ngpios:
->     description:
->       Number of GPIO lines to expose. Since each HW GPIO is an input and an
->       output, we provide ngpios * 2 lines on our chip device. We also use it
->       to define the split between the inputs and outputs; the inputs start at
->       line 0, the outputs start at ngpios.
-> 
->   max-ngpios:
->     description:
->       Represents the number of actual hardware-supported GPIOs (ie, slots within
->       the clocked serial GPIO data), and therefore the maximum value for
->       the ngpios property
-> 
+Hope that helps.
 
-I will modify the description as you suggested.
-
-> > +    minimum: 0
-> > +    maximum: 128
-> 
-> Will this be the case for all (future) hardware? Can we leave this
-> unbound?
-> 
-
-Since the future hardware may supports more gpios, I will remove it.
-
-> Cheers,
-> 
-> 
-> Jeremy
-> 
+Andrew
