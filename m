@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1CE4393958
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 01:46:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA30F39395B
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 01:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229774AbhE0Xre (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 May 2021 19:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60980 "EHLO
+        id S236189AbhE0XsJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 May 2021 19:48:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235933AbhE0Xrc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 19:47:32 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF64C061761
-        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 16:45:58 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id j6so2571008lfr.11
-        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 16:45:58 -0700 (PDT)
+        with ESMTP id S235730AbhE0XsI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 19:48:08 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31915C061574
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 16:46:34 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id t17so3001917ljd.9
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 16:46:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pzhAZz5qD9tMIBygAnX25ExGzRT83UA6SsM5Jk9PK9c=;
-        b=ku+MevdNuxRQCIlQDe5WbthdcCPQDlxzodRhu4e04QT5ujq4MSRkOtpvYQW/yxHMuy
-         f8M/4piku6X9w+HnbFpx3Laek/DEUtWRK5WXzuJxghvKoAN8b1NoWQRlhGfHvluUWD3I
-         Zxo+KYHxKlMCru/TegYs6o7Wx1HC3HrsXqbOPlzPKezkluNtQhqrCVb9ewW+lVeON4aZ
-         7BAasc7TxACThYfU8UpHTYw5znXA8c7O3yUAyqzfv/JSJJzPAZMOGrlFx+tVD6pyX/cW
-         yUSCBW3S+B0M9XgiWX8isA12ea6Er/YDTkFGL4bEkXkwTv7cDHejONmAqsLBRkchgtBb
-         rtEg==
+        bh=oUMq5gMakuTv+VxVCawBoEv0d6hHmUUnitcWr50QPbU=;
+        b=n0nnJj3xNV7aoppJdcUWyqnujztsYmLvtUZZGXI8rspgnNsSoUcFFO2nRMYl4LngJR
+         i35dmrfNWtbjLVeuNXKEtG96fCcdPE/CRCUGnRQ8dLyl1qfC9cqcErJeZ00Cs537VlJb
+         nRBtj6x8BRASrwlvxGCXczuZvPyQ7+RIW3UbY+TVH6yCOPURf8Hfnx8J8gylc+BA/PIw
+         mB4asa86kLk8SgBxCTIEINX/nlnGEKXEFSbkXwjSNC+R3mGDNNNIH1fL19ZzRiWYP7oo
+         KswDkl4XlEJ7yMY90phpeO1w5UK9OzJ0rG9qotvVc0Dqhiw99s6e9RuZGdVzibJiMCvf
+         tgcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pzhAZz5qD9tMIBygAnX25ExGzRT83UA6SsM5Jk9PK9c=;
-        b=TKDzVJKXcBNXT8QWGGh0f8OHXpS45xELEvsbfS6WRb1vI2wQv7h/lOtl6WdxwQPO2y
-         DXikFpqIcoYAUU9rb2cDTQLxxKVKpd9rLJMyqvuBxuVI4MeCJ9Pkn7gRBT9dAoUxCv+z
-         8Y3mpZ1P578nKaVhc/9cK7WuVLGR5989v842O0S+M41auV4Q01c39ndeEYxHUu1YsZQr
-         +4M0VkdbdpPZipmftaYewR+tAWlRsNPrmumsNaO25qaH1DBT6SnL1Sjur3bqp4AEiaOT
-         U7J2ysr/60gW+yuGfGQH3SEs5rKgrMimxjENJc4BL4F2GOalfOlLj26eueaqF9jzGApY
-         NScQ==
-X-Gm-Message-State: AOAM530AhJLvrbGX4BbiY0pQYppdoB9Aa4xKMOChnMKfxPeL7CnRna24
-        ISXTOA8OY9DOpMWuO6wJxtlaREdUX38Vbru7t1UzF9XjyOs=
-X-Google-Smtp-Source: ABdhPJy/46H+k3aOEa5cM0efkOnNLslLyNp40ndo+HmC/hefCNnT9RC3XB9+Hy8ze9TKQNzaARS55qPRJF1ZogTpez8=
-X-Received: by 2002:a05:6512:11ea:: with SMTP id p10mr3746839lfs.157.1622159156359;
- Thu, 27 May 2021 16:45:56 -0700 (PDT)
+        bh=oUMq5gMakuTv+VxVCawBoEv0d6hHmUUnitcWr50QPbU=;
+        b=Y+jRUDhgXQsH1VU3DO6b2gdyRLczS0WlRh4WEQpCY7aDSdnXc3Uz+JgGPbgEss2J/t
+         QBRFItaNzVKawZhZFfv7njtY3D1MPXuBta+aiPD8Ba3hAnI6PoojG2BFl32V0q1ii07v
+         aO621tsMrW1DTNFAFnyPHrK8eVdAw1ZxYWd9aBDLxKm+Qf7PUpEDYcj9mBbGWyO7f68P
+         0CaIsH/ocbVbiBMi7KFZBB8iQCQa/5lfB1XVl7Oa/v/oxuDe9W/KOow2iVHHlAn4Vr98
+         Tgs4cHkCX79Fs3g5ukKNGuRl1OTDWnJmHWcmWG/RPFKy45AWNBaWxiWAyeSDZLcpm8/k
+         Pt+w==
+X-Gm-Message-State: AOAM530PQ9JuGdu5gJOa6nVNTH2O6hg+UsQDmWdaaT11ffkO8Cf5Q8jS
+        livuGoA9EDUM+oX1Xtr6rcLwduOxsNYNYO0s8x4FQg==
+X-Google-Smtp-Source: ABdhPJxmDdGYglPiAFXs4Eu7ptrL+GCuuFiVIJrOFzslyzTdz+YvWNKCStjMplLuqgpzYu5Swlu4HGv5Pt7x5GCAszY=
+X-Received: by 2002:a2e:b805:: with SMTP id u5mr4620596ljo.74.1622159192598;
+ Thu, 27 May 2021 16:46:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210525055308.31069-1-steven_lee@aspeedtech.com> <20210525055308.31069-2-steven_lee@aspeedtech.com>
-In-Reply-To: <20210525055308.31069-2-steven_lee@aspeedtech.com>
+References: <20210525055308.31069-1-steven_lee@aspeedtech.com> <20210525055308.31069-4-steven_lee@aspeedtech.com>
+In-Reply-To: <20210525055308.31069-4-steven_lee@aspeedtech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 May 2021 01:45:45 +0200
-Message-ID: <CACRpkdaFVnGeOHCdwoBS4UMho8OJ_s6cAbkqJEM+uNyf9j=EQw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: Update enum for adding SGPM2
- and SGPS2
+Date:   Fri, 28 May 2021 01:46:21 +0200
+Message-ID: <CACRpkdb90ruzyyz9xmKQRSB+cxZAn6t+bfjGahQio_kyk-5_Ug@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] pinctrl: pinctrl-aspeed-g6: Add sgpio pinctrl settings
 To:     Steven Lee <steven_lee@aspeedtech.com>
 Cc:     Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>,
         Joel Stanley <joel@jms.id.au>,
@@ -73,10 +72,11 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Tue, May 25, 2021 at 7:53 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
 
-> AST2600 has 2 SGPIO master interfaces one with 128 pins and another one
-> has 80 pins. It also supports 2 SGPIO slave interfaces.
-> In the current bindings, there are only SGPM1 and SGPS1 defined in enum,
-> SGPM2 and SGPS2 should also be added in the bindings.
+> AST2600 supports 2 SGPIO master interfaces and 2 SGPIO slave interfaces.
+> Current pinctrl driver only define the first sgpio master and slave
+> interfaces.
+> The second SGPIO master and slave interfaces should be added in
+> pinctrl driver as well.
 >
 > Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
 > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
