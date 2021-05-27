@@ -2,72 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 959D8392A15
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 May 2021 10:50:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECFE2392B82
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 May 2021 12:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235688AbhE0IwT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 May 2021 04:52:19 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:35124 "EHLO gloria.sntech.de"
+        id S236071AbhE0KNj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 May 2021 06:13:39 -0400
+Received: from mga17.intel.com ([192.55.52.151]:31997 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235736AbhE0IwI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 27 May 2021 04:52:08 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1lmBiq-0006sp-Le; Thu, 27 May 2021 10:50:32 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH v5 0/7] gpio-rockchip driver
-Date:   Thu, 27 May 2021 10:50:32 +0200
-Message-ID: <3546107.C4sosBPzcN@diego>
-In-Reply-To: <20210527071239.1424430-1-jay.xu@rock-chips.com>
-References: <20210527071239.1424430-1-jay.xu@rock-chips.com>
+        id S236069AbhE0KNi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 27 May 2021 06:13:38 -0400
+IronPort-SDR: LJHZQWA4vBo/XWD6yP2Fh+PqFumY4aivIrZ7mAKjRUDzHv+VqViaWcM0mO/0lq3JeUZGWCc7r2
+ gqq1/wX/KZAw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9996"; a="183033755"
+X-IronPort-AV: E=Sophos;i="5.82,334,1613462400"; 
+   d="scan'208";a="183033755"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2021 03:12:04 -0700
+IronPort-SDR: k7t2Emme3dYCOJ+Yu9o4VWtB5w6KcjCmn0fFrBq40yggSZpr13g3F7+FhI/S+5kOsX9vkR9Ge7
+ tyGeTPhc0OoA==
+X-IronPort-AV: E=Sophos;i="5.82,334,1613462400"; 
+   d="scan'208";a="547743416"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2021 03:12:02 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lmCzg-00F1UP-AK; Thu, 27 May 2021 13:12:00 +0300
+Date:   Thu, 27 May 2021 13:12:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     lakshmi.sowjanya.d@intel.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>, tamal.saha@intel.com
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add bindings for Intel Keembay
+ pinctrl driver
+Message-ID: <YK9wcPtCQzUHh8jm@smile.fi.intel.com>
+References: <20210524092605.734-1-lakshmi.sowjanya.d@intel.com>
+ <20210524092605.734-2-lakshmi.sowjanya.d@intel.com>
+ <CACRpkdZ2bDDNecLc5sEe36KyJCBqAo5-vZdvwM+V2a33tr4w_g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZ2bDDNecLc5sEe36KyJCBqAo5-vZdvwM+V2a33tr4w_g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jay,
-
-Am Donnerstag, 27. Mai 2021, 09:12:32 CEST schrieb Jianqun Xu:
-> Separate gpio driver from pinctrl driver, and support v2 controller.
+On Thu, May 27, 2021 at 01:19:36AM +0200, Linus Walleij wrote:
+> On Mon, May 24, 2021 at 11:26 AM <lakshmi.sowjanya.d@intel.com> wrote:
 > 
-> Jianqun Xu (7):
->   pinctrl/rockchip: separate struct rockchip_pin_bank to a head file
->   pinctrl/pinctrl-rockchip.h: add pinctrl device to gpio bank struct
->   gpio: separate gpio driver from pinctrl-rockchip driver
->   gpio/rockchip: use struct rockchip_gpio_regs for gpio controller
->   gpio/rockchip: support next version gpio controller
->   gpio/rockchip: always enable clock for gpio controller
->   gpio/rockchip: drop irq_gc_lock/irq_gc_unlock for irq set type
-
-You did want to pick the
-	"dt-bindings: gpio: change items restriction of clock for rockchip,gpio-bank"
-patch from the rk3568 dt series to here.
-The binding is part of the gpio-driver area, so should be part
-of this series.
-
-Heiko
-
-
+> > From: "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>
+> >
+> > Add Device Tree bindings documentation for Intel Keem Bay
+> > SoC's pin controller.
+> > Add entry for INTEL Keem Bay pinctrl driver in MAINTAINERS file
+> >
+> > Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+> > Signed-off-by: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>
+> > Signed-off-by: D, Lakshmi Sowjanya <lakshmi.sowjanya.d@intel.com>
+> > Acked-by: Mark Gross <mgross@linux.intel.com>
 > 
->  drivers/gpio/Kconfig               |   8 +
->  drivers/gpio/Makefile              |   1 +
->  drivers/gpio/gpio-rockchip.c       | 758 ++++++++++++++++++++++++
->  drivers/pinctrl/pinctrl-rockchip.c | 910 +----------------------------
->  drivers/pinctrl/pinctrl-rockchip.h | 287 +++++++++
->  5 files changed, 1073 insertions(+), 891 deletions(-)
->  create mode 100644 drivers/gpio/gpio-rockchip.c
->  create mode 100644 drivers/pinctrl/pinctrl-rockchip.h
+> So since this thing has device tree bindings I suppose it is one
+> of those intel-but-not-x86-and-not-acpi things that Andy should
+> not merge through his tree?
 > 
-> 
+> I bet he wants to take a look though, so keep Andy posted.
 
+Yeah, this is the series I have reviewed couple of times internally, but then
+it lost on cracks and somebody decided to submit (forgetting to include me) to
+the mailing list.
 
+In any case some points about this:
+ - this is ARM based platform
+ - this pin control doesn't have anything in common with x86 LPSS pin control
+ - Lighting Mountain is a former MIPS-based SoC with x86 core
+
+I.o.w. they all are different. I doubt the unification with equilibrium may
+have happened.
+
+But I think it's fine to continue the review publicly. We will see the
+potential issues, maintainer's desires, etc earlier.
+
+Btw, thanks for your preliminary review!
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
