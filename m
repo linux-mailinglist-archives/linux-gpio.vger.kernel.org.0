@@ -2,220 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B1E3393ECD
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 10:34:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD4A3393ED6
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 10:35:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234405AbhE1Ig2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 May 2021 04:36:28 -0400
-Received: from mleia.com ([178.79.152.223]:40780 "EHLO mail.mleia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230080AbhE1Ig0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 May 2021 04:36:26 -0400
-Received: from mail.mleia.com (localhost [127.0.0.1])
-        by mail.mleia.com (Postfix) with ESMTP id 92AC35A41;
-        Fri, 28 May 2021 08:34:49 +0000 (UTC)
-Subject: Re: [PATCH v3 2/3] pinctrl: core: configure pinmux from pins debug
- file
-To:     Dario Binacchi <dariobin@libero.it>, linux-kernel@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org
-References: <20210520202730.4444-1-dariobin@libero.it>
- <20210520202730.4444-3-dariobin@libero.it>
- <87ea9971-9e15-c595-95cc-14c68b0b68d8@mleia.com>
- <1972814783.387983.1621877304255@mail1.libero.it>
- <414c9176-7922-929f-e82e-f80f07e91b2c@mleia.com>
- <106030092.519428.1622143415836@mail1.libero.it>
- <b25a0e33-d7e8-322a-2a73-bda6e88c8f8b@mleia.com>
- <2062056721.520514.1622147634190@mail1.libero.it>
-From:   Vladimir Zapolskiy <vz@mleia.com>
-Message-ID: <3572b776-e39b-4c23-068a-a4491860bfad@mleia.com>
-Date:   Fri, 28 May 2021 11:34:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S235038AbhE1IhZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 May 2021 04:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234926AbhE1IhZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 04:37:25 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E38C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 01:35:50 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id r5so4178582lfr.5
+        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 01:35:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qXzQIPasUcthmSDz8eSF+P9ruKadFcmRFPG5VSNQtL8=;
+        b=eKWJz4art9JMWcy6y6iWK9LFwP2pQvAov+Vsbn1np7ccpJfXlVE+B9uDjzPJkkISWg
+         2jHaOl5Oe3gGxfXA6LgeTrMqL3Gcw59pnwKpxvt8qVyoVD3gBZ5kgubk2uIVa3+XtnMV
+         2V92ED5sEIA5YUZIqSGlECauLUkp+VLy0BPS29E5R4b1OW/oEDzMGfRYxzM+31d+6868
+         uf5AXz1khjan90xUAKlOHv+5eb4/32xWzgjOA4a4yMZ67GancPJwneDU6vE1rcZ2041T
+         2ZfGpbwNnxRzyB+Cw/7D8H11DdXHZHN53I7V1Mhgpvu3OZ8ELlLXIA0P4KJczeoWtWpC
+         AsSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qXzQIPasUcthmSDz8eSF+P9ruKadFcmRFPG5VSNQtL8=;
+        b=JUHZvQDzfHdBQm6/6rlz6CoZnIwza32FzfIpfz4myyrxRN66Qhaw51lz1fVI8lr3EN
+         u4tNC+OGIgA6+F2aNJzD15WRHGqe2tZEAU/7WpCFauqrJzPl7IMbm2ynGeQlrr5AXTg5
+         xOF60uiLwr0We3ZdaU8xYGZsP+MLccYV4gcMGI2oH5xolD9lK49535naRGRitXh2tsXS
+         npFOh/fDuZwkv+CQIcGWUq7jOpUH11wCPYkLziMUAdKu4Q90iZBj1odEOc3/zKUt6Plr
+         K2hoEN1rJ6w9ubycmCtUM8TaSO5YBID1zT03VK4zuHyWMGRQzEBQpO4/PomMbU9pBmiC
+         pvGA==
+X-Gm-Message-State: AOAM531QCfP+mdApZk1VaHcGv62dx0xfLOvPG98ZmHWxs4g5hljmAuEb
+        /Qdfqkz7LOzjLAvGBnwU3bjSi1po4OGETe36Nnnq7g==
+X-Google-Smtp-Source: ABdhPJx7fY2eoo3ewpiwsQcdfnOZOMZDOGzICz8TqAeiPIIG9rFXZg0ycCOFOJyYz6YC0EypW/bfzb3UTuupkbD3PwU=
+X-Received: by 2002:ac2:47e6:: with SMTP id b6mr5005230lfp.649.1622190949032;
+ Fri, 28 May 2021 01:35:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2062056721.520514.1622147634190@mail1.libero.it>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20210528_083449_628369_1D40431D 
-X-CRM114-Status: GOOD (  35.92  )
+References: <20210527005455.25758-1-steven_lee@aspeedtech.com>
+ <20210527005455.25758-2-steven_lee@aspeedtech.com> <CACRpkdZFcFuT9rdrc8BfEBmhy0--9uLMSJWfr=A+nU117_BT8A@mail.gmail.com>
+ <20210528040934.GA28403@aspeedtech.com>
+In-Reply-To: <20210528040934.GA28403@aspeedtech.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 May 2021 10:35:37 +0200
+Message-ID: <CACRpkdYnvzOW_86QgLAsNpNXWZXpaMiE7g9_jHZ0ZsFyhOjjAg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: aspeed-sgpio: Convert txt bindings to yaml.
+To:     Steven Lee <steven_lee@aspeedtech.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-aspeed@lists.ozlabs.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Hongwei Zhang <Hongweiz@ami.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Billy Tsai <billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Dario,
+On Fri, May 28, 2021 at 6:10 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
+> The 05/28/2021 07:51, Linus Walleij wrote:
+> > On Thu, May 27, 2021 at 2:55 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
+> >
+> > > +  max-ngpios:
+> > > +    description:
+> > > +      represents the number of actual hardware-supported GPIOs (ie,
+> > > +      slots within the clocked serial GPIO data). Since each HW GPIO is both an
+> > > +      input and an output, we provide max_ngpios * 2 lines on our gpiochip
+> > > +      device. We also use it to define the split between the inputs and
+> > > +      outputs; the inputs start at line 0, the outputs start at max_ngpios.
+> > > +    minimum: 0
+> > > +    maximum: 128
+> >
+> > Why can this not be derived from the compatible value?
+> >
+> > Normally there should be one compatible per hardware variant
+> > of the block. And this should be aligned with that, should it not?
+> >
+> > If this is not the case, maybe more detailed compatible strings
+> > are needed, maybe double compatibles with compatible per
+> > family and SoC?
+> >
+>
+> Thanks for your suggestion.
+> I add max-ngpios in dt-bindings as there is ngpios defined in
+> dt-bindings, users can get the both max-ngpios and ngpios information
+> from dtsi without digging sgpio driver.
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/aspeed-g5.dtsi#n354
+>
+> If adding more detailed compatibles is better, I will add them to sgpio driver
+> in V3 patch and remove max-ngpios from dt-bindings.
+>
+> Since AST2600 has 2 sgpio controller one with 128 pins and another one with 80 pins.
+> For supporting max-ngpios in compatibles, 2 platform data for each
+> ast2600 sgpio controller as follows are necessary.
+>
+> ```
+> static const struct aspeed_sgpio_pdata ast2600_sgpiom1_pdata = {
+>         .max_ngpios = 128;
+> };
+> static const struct aspeed_sgpio_pdata ast2600_sgpiom2_pdata = {
+>         .max_ngpios = 80;
+> };
+>
+> { .compatible = "aspeed,ast2500-sgpio" , .data = &ast2400_sgpio_pdata, },
+> { .compatible = "aspeed,ast2600-sgpiom1", .data = &ast2600_sgpiom1_pdata, },
+> { .compatible = "aspeed,ast2600-sgpiom2", .data = &ast2600_sgpiom2_pdata, },
 
-On 5/27/21 11:33 PM, Dario Binacchi wrote:
-> Hi Vladimir,
-> 
->> Il 27/05/2021 21:57 Vladimir Zapolskiy <vz@mleia.com> ha scritto:
->>
->>   
->> Hi Dario,
->>
->> On 5/27/21 10:23 PM, Dario Binacchi wrote:
->>> Hi Vladimir,
->>>
->>>> Il 24/05/2021 20:52 Vladimir Zapolskiy <vz@mleia.com> ha scritto:
->>>>
->>>>    
->>>> Hi Dario,
->>>>
->>>> On 5/24/21 8:28 PM, Dario Binacchi wrote:
->>>>> Hi Vladimir,
->>>>>
->>>>>> Il 21/05/2021 08:44 Vladimir Zapolskiy <vz@mleia.com> ha scritto:
->>>>>>
->>>>>>     
->>>>>> Hello Dario,
->>>>>>
->>>>>> On 5/20/21 11:27 PM, Dario Binacchi wrote:
->>>>>>> The MPUs of some architectures (e.g AM335x) must be in privileged
->>>>>>> operating mode to write on the pinmux registers. In such cases, where
->>>>>>> writes will not work from user space, now it can be done from the pins
->>>>>>
->>>>>> user space has no connection to the problem you're trying to solve.
->>>>>>
->>>>>> Please provide a reasonable rationale for adding a new interface, thank
->>>>>> you in advance.
->>>>>>
->>>>>>> debug file if the platform driver exports the pin_dbg_set() helper among
->>>>>>> the registered operations.
->>>>>>>
->>>>>>> Signed-off-by: Dario Binacchi <dariobin@libero.it>
->>>>>>
->>>>>> I strongly object against this new interface.
->>>>>>
->>>>>> As Andy've already mentioned you have to operate with defined pin groups
->>>>>> and functions, and so far you create an interface with an option to
->>>>>> disasterous misusage, it shall be avoided, because there are better
->>>>>> options.
->>>>>>
->>>>>> What's the issue with a regular declaration of pin groups and functions
->>>>>> on your SoC? When it's done, you can operate on this level of abstraction,
->>>>>> there is absolutely no need to add the proposed low-level debug interface.
->>>>>>
->>>>>
->>>>> I quote Drew's words:
->>>>>
->>>>> "I think it could be helpful to be able to set the conf_<module>_<pin>
->>>>> registers directly through debugfs as I can imagine situations where it would
->>>>> be useful for testing. It is a bit dangerous as the person using it has to be
->>>>> careful not to change the wrong bits, but they would need to have debugfs mounted
->>>>> and permissions to write to it."
->>>>>
->>>>> "Bits 6:3 are related to what this subsystem would refer to as pin conf
->>>>> such as slew, input enable and bias. Thus it might make sense to expose
->>>>> something like a select-pinconf file to activate pin conf settings from
->>>>> userspace."
->>>>
->>>> This is already present, please define all wanted configurations of pin
->>>> groups and pin group functions, then switch them in runtime. I see no
->>>> need of a coarse grained interface here...
->>>>
->>>>>    From the emails exchanged I seem to have understood that there is no way to
->>>>> reconfigure slew rate, pull up / down and other properties on the fly.
->>>>
->>>> I think you still can do all the tasks mentioned above on the recent kernel,
->>>> why not?
->>>>
->>>> I am not closely familiar with TI AM335x pinmux/pinconf controller, and if
->>>> needed I can look at the datasheet, but I can imagine that there are pins,
->>>> pin groups, and pin group functions controls. Board specific configuration
->>>> of pinmux is given in DTS, you can modify it with DT overlays for instance,
->>>> and selection of pin group functions in runtime is already possible for
->>>> users in runtime. What is missing from the picture, and why do you insist
->>>> on re-introduction of a much worse interface?
->>>>
->>>>> In the kernel version 4.1.6 that I am using on my custom board, I have fixed
->>>>> the commit f07512e615dd ("pinctrl/pinconfig: add debug interface"). However,
->>>>> this feature was later removed (https://lore.kernel.org/patchwork/patch/1033755/).
->>>>
->>>> Exactly, the feature is not needed.
->>>>
->>>>> The patches I've submitted implement some sort of devmem for pinmux. It too can
->>>>> be used in a dangerous way, but it exists and it is used.
->>>>
->>>> My objection is to giving a "red button" to users, even to users of debugfs.
->>>>
->>>> If it's possible to keep the "dangerous goods" on developers' side only,
->>>> then this shall be preferable, I believe. And fortunately there is such
->>>> a mechanism.
->>>>
->>>>> Anyway, the implementation may be wrong but it does highlight a feature that
->>>>> can be useful in testing or prototyping boards but is not present in the kernel.
->>>>> Can we then find a solution that is right for everyone?
->>>>
->>>> Please see the method above.
->>>>
->>>> In my understanding the problem you are trying to solve shall be defined
->>>> much more precised. Can you please elaborate on this part thoroughly?
->>>>
->>>> I still can not grasp a too generic explanation from you, writing of
->>>> totally arbitrary data to controller registers looks senseless to me...
->>>>
->>>> Assume you are giving a handle to users to write arbitrary data to arbitrary
->>>> I/O mem region, will it solve the problem for you? Of course yes.
->>>>
->>>> But does it sound like a good and acceptable solution? Of course no.
->>>> Why? You need a better and more fine grained interface, namely write only
->>>> to pinmux I/O mem. Great, that's provided by your change, however another
->>>> important condition is still missing, a user shall write only valid data.
->>>> Thus a higher level of abstraction is wanted:
->>>>
->>>> * writing data to I/O mem -- not good enough,
->>>> * writing data to pinmux/pinconf I/O mem -- better, but not good enough,
->>>> * writing *valid* data to pinmux/pinconf I/O mem -- that's right.
->>>
->>> So, why not start from the feature you removed?
->>> It wrote valid data to pinconf I/O mem.
->>
->> Nope. The interface you've introduced allows to write invalid data, and
->> the choice between writing valid data and writing invalid data is given
->> to a user. Please remove this choice completely, technically it's doable.
-> 
-> I was not pointing to my patch, but to patch f07512e615dd ("pinctrl / pinconfig: add debug interface"
-> (which has been removed). If I am not missing something it wrote data to the
-> pinconf I/O mem in a more controlled way. 
+There is a soft border between two IP blocks being "compatible"
+and parameterized and two IP blocks being different and having
+unique compatibles.
 
-Right, but still it's not good enough, the reasons are given in the message
-of the commit, which reverts the change. And again and again, it is not based
-on the most reasonable user-visible abstractions as pin groups and functions.
+For example we know for sure we don't use different compatibles
+because of how interrupt lines or DMA channels are connected.
 
-> Could we use this patch as a starting point for a new implementation that
-> uses pin groups and pin group functions ?
+So if this is an external thing, outside of the IP itself, I might back
+off on this and say it shall be a parameter.
 
-Well, you can include this patch into your development process as one of
-the initial stages, but it makes no sense to resurrect it in the vanilla.
+But max-ngpios? It is confusingly similar to ngpios.
 
->>
->>>
->>>>
->>>> The validity of data is defined by a developer, the abstraction name
->>>> has been mentioned multiple times, it's pin groups and pin group functions.
->>
->> Unfortunately you continue to cling to the broken interface, while I see no
->> comments from you about asked to consider pin groups and pin group functions.
-> 
-> Could you kindly explain to me, with some practical examples, what kind of interface
-> would you implement ?
-> 
+So we need to think about this name.
 
-So far I'm quite happy with device tree overlays, for me it gives a solution
-to a problem which you're trying to address, but that's my guess only, because
-I still don't quite understand what do you seek for... Changing pin slew rates
-in runtime or something else? Why can't your keep this strange function out of
-vanilla or just make it specific to the AM335x controller?
+Something like gpio-hardware-slots or something else that
+really describe what this is.
 
-Any reasonable pinmux/pinctrl "debug" interface anyway should be based on
-board device trees/firmware, that's the right place to describe SoC/board
-specific valid configurations of the controller.
+Does this always strictly follow ngpios so that the number
+of gpio slots == ngpios * 2? In that case only put ngpios into
+the device tree and multiply by 2 in the driver, because ngpios
+is exactly for this: parameterizing hardware limitations.
 
---
-Best wishes,
-Vladimir
-
+Yours,
+Linus Walleij
