@@ -2,148 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD4A3393ED6
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 10:35:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E622394103
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 12:35:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235038AbhE1IhZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 May 2021 04:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38274 "EHLO
+        id S236473AbhE1Khb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 May 2021 06:37:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234926AbhE1IhZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 04:37:25 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E38C061574
-        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 01:35:50 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id r5so4178582lfr.5
-        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 01:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qXzQIPasUcthmSDz8eSF+P9ruKadFcmRFPG5VSNQtL8=;
-        b=eKWJz4art9JMWcy6y6iWK9LFwP2pQvAov+Vsbn1np7ccpJfXlVE+B9uDjzPJkkISWg
-         2jHaOl5Oe3gGxfXA6LgeTrMqL3Gcw59pnwKpxvt8qVyoVD3gBZ5kgubk2uIVa3+XtnMV
-         2V92ED5sEIA5YUZIqSGlECauLUkp+VLy0BPS29E5R4b1OW/oEDzMGfRYxzM+31d+6868
-         uf5AXz1khjan90xUAKlOHv+5eb4/32xWzgjOA4a4yMZ67GancPJwneDU6vE1rcZ2041T
-         2ZfGpbwNnxRzyB+Cw/7D8H11DdXHZHN53I7V1Mhgpvu3OZ8ELlLXIA0P4KJczeoWtWpC
-         AsSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qXzQIPasUcthmSDz8eSF+P9ruKadFcmRFPG5VSNQtL8=;
-        b=JUHZvQDzfHdBQm6/6rlz6CoZnIwza32FzfIpfz4myyrxRN66Qhaw51lz1fVI8lr3EN
-         u4tNC+OGIgA6+F2aNJzD15WRHGqe2tZEAU/7WpCFauqrJzPl7IMbm2ynGeQlrr5AXTg5
-         xOF60uiLwr0We3ZdaU8xYGZsP+MLccYV4gcMGI2oH5xolD9lK49535naRGRitXh2tsXS
-         npFOh/fDuZwkv+CQIcGWUq7jOpUH11wCPYkLziMUAdKu4Q90iZBj1odEOc3/zKUt6Plr
-         K2hoEN1rJ6w9ubycmCtUM8TaSO5YBID1zT03VK4zuHyWMGRQzEBQpO4/PomMbU9pBmiC
-         pvGA==
-X-Gm-Message-State: AOAM531QCfP+mdApZk1VaHcGv62dx0xfLOvPG98ZmHWxs4g5hljmAuEb
-        /Qdfqkz7LOzjLAvGBnwU3bjSi1po4OGETe36Nnnq7g==
-X-Google-Smtp-Source: ABdhPJx7fY2eoo3ewpiwsQcdfnOZOMZDOGzICz8TqAeiPIIG9rFXZg0ycCOFOJyYz6YC0EypW/bfzb3UTuupkbD3PwU=
-X-Received: by 2002:ac2:47e6:: with SMTP id b6mr5005230lfp.649.1622190949032;
- Fri, 28 May 2021 01:35:49 -0700 (PDT)
+        with ESMTP id S236492AbhE1Kha (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 06:37:30 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95EB5C06138B
+        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 03:35:54 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:751e:82a3:f2a2:3459])
+        by baptiste.telenet-ops.be with bizsmtp
+        id AAbs2500P20MPSF01AbsAb; Fri, 28 May 2021 12:35:52 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lmZqK-00AD9W-B3; Fri, 28 May 2021 12:35:52 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lmYG8-007Gbk-Nt; Fri, 28 May 2021 10:54:24 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: sh-pfc: Updates for v5.14
+Date:   Fri, 28 May 2021 10:54:23 +0200
+Message-Id: <cover.1622191662.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210527005455.25758-1-steven_lee@aspeedtech.com>
- <20210527005455.25758-2-steven_lee@aspeedtech.com> <CACRpkdZFcFuT9rdrc8BfEBmhy0--9uLMSJWfr=A+nU117_BT8A@mail.gmail.com>
- <20210528040934.GA28403@aspeedtech.com>
-In-Reply-To: <20210528040934.GA28403@aspeedtech.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 May 2021 10:35:37 +0200
-Message-ID: <CACRpkdYnvzOW_86QgLAsNpNXWZXpaMiE7g9_jHZ0ZsFyhOjjAg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: aspeed-sgpio: Convert txt bindings to yaml.
-To:     Steven Lee <steven_lee@aspeedtech.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hongwei Zhang <Hongweiz@ami.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 28, 2021 at 6:10 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
-> The 05/28/2021 07:51, Linus Walleij wrote:
-> > On Thu, May 27, 2021 at 2:55 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
-> >
-> > > +  max-ngpios:
-> > > +    description:
-> > > +      represents the number of actual hardware-supported GPIOs (ie,
-> > > +      slots within the clocked serial GPIO data). Since each HW GPIO is both an
-> > > +      input and an output, we provide max_ngpios * 2 lines on our gpiochip
-> > > +      device. We also use it to define the split between the inputs and
-> > > +      outputs; the inputs start at line 0, the outputs start at max_ngpios.
-> > > +    minimum: 0
-> > > +    maximum: 128
-> >
-> > Why can this not be derived from the compatible value?
-> >
-> > Normally there should be one compatible per hardware variant
-> > of the block. And this should be aligned with that, should it not?
-> >
-> > If this is not the case, maybe more detailed compatible strings
-> > are needed, maybe double compatibles with compatible per
-> > family and SoC?
-> >
->
-> Thanks for your suggestion.
-> I add max-ngpios in dt-bindings as there is ngpios defined in
-> dt-bindings, users can get the both max-ngpios and ngpios information
-> from dtsi without digging sgpio driver.
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/aspeed-g5.dtsi#n354
->
-> If adding more detailed compatibles is better, I will add them to sgpio driver
-> in V3 patch and remove max-ngpios from dt-bindings.
->
-> Since AST2600 has 2 sgpio controller one with 128 pins and another one with 80 pins.
-> For supporting max-ngpios in compatibles, 2 platform data for each
-> ast2600 sgpio controller as follows are necessary.
->
-> ```
-> static const struct aspeed_sgpio_pdata ast2600_sgpiom1_pdata = {
->         .max_ngpios = 128;
-> };
-> static const struct aspeed_sgpio_pdata ast2600_sgpiom2_pdata = {
->         .max_ngpios = 80;
-> };
->
-> { .compatible = "aspeed,ast2500-sgpio" , .data = &ast2400_sgpio_pdata, },
-> { .compatible = "aspeed,ast2600-sgpiom1", .data = &ast2600_sgpiom1_pdata, },
-> { .compatible = "aspeed,ast2600-sgpiom2", .data = &ast2600_sgpiom2_pdata, },
+	Hi Linus,
 
-There is a soft border between two IP blocks being "compatible"
-and parameterized and two IP blocks being different and having
-unique compatibles.
+The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
 
-For example we know for sure we don't use different compatibles
-because of how interrupt lines or DMA channels are connected.
+  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
 
-So if this is an external thing, outside of the IP itself, I might back
-off on this and say it shall be a parameter.
+are available in the Git repository at:
 
-But max-ngpios? It is confusingly similar to ngpios.
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.14-tag1
 
-So we need to think about this name.
+for you to fetch changes up to 904ec4bebc1df908a943bf3178f6c633672ce47b:
 
-Something like gpio-hardware-slots or something else that
-really describe what this is.
+  pinctrl: renesas: r8a779{51,6,65}: Reduce non-functional differences (2021-05-11 10:04:42 +0200)
 
-Does this always strictly follow ngpios so that the number
-of gpio slots == ngpios * 2? In that case only put ngpios into
-the device tree and multiply by 2 in the driver, because ngpios
-is exactly for this: parameterizing hardware limitations.
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v5.14
 
-Yours,
-Linus Walleij
+  - Minor fixes and improvements.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Geert Uytterhoeven (5):
+      pinctrl: renesas: r8a7796: Add missing bias for PRESET# pin
+      pinctrl: renesas: r8a77990: JTAG pins do not have pull-down capabilities
+      pinctrl: renesas: r8a77990: Drop bogus PUEN_ prefixes in comments
+      pinctrl: renesas: r8a7778: Remove unused PORT_GP_PUP_1() macro
+      pinctrl: renesas: r8a779{51,6,65}: Reduce non-functional differences
+
+ drivers/pinctrl/renesas/pfc-r8a7778.c  |  3 --
+ drivers/pinctrl/renesas/pfc-r8a77951.c |  4 +-
+ drivers/pinctrl/renesas/pfc-r8a7796.c  | 10 +++--
+ drivers/pinctrl/renesas/pfc-r8a77965.c | 79 +++++++++++++++++-----------------
+ drivers/pinctrl/renesas/pfc-r8a77990.c | 16 +++----
+ 5 files changed, 56 insertions(+), 56 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
