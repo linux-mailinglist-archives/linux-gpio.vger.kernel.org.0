@@ -2,86 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E622394103
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 12:35:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39ECC393F68
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 11:08:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236473AbhE1Khb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 May 2021 06:37:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37286 "EHLO
+        id S236542AbhE1JKG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 May 2021 05:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236492AbhE1Kha (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 06:37:30 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95EB5C06138B
-        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 03:35:54 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:751e:82a3:f2a2:3459])
-        by baptiste.telenet-ops.be with bizsmtp
-        id AAbs2500P20MPSF01AbsAb; Fri, 28 May 2021 12:35:52 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lmZqK-00AD9W-B3; Fri, 28 May 2021 12:35:52 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lmYG8-007Gbk-Nt; Fri, 28 May 2021 10:54:24 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: sh-pfc: Updates for v5.14
-Date:   Fri, 28 May 2021 10:54:23 +0200
-Message-Id: <cover.1622191662.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S236689AbhE1JJq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 05:09:46 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4059C06134D
+        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 02:08:02 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id v8so4278409lft.8
+        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 02:08:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VJUFVUjwMi3jp1lDpVisyiJzn7Zhoa8E+bQf9DwQVqs=;
+        b=fpYeaAiobh84ePdqE0lJtTQRLx27OqasFcegutrZktiaCGsASz+DMX4fKBLm26YlY5
+         M7A6YWw3xaofHKY0wgdSuH1fc9F8P7AaH3mngotvTgh8lFRMa6ky7HvX6MZgBPWYYB0Z
+         yT6Z3ymqSzYfEstFNYIvNPKqwp7fnMbcUwMVqJtZ98ZE2Z0WoF7qORBprrS/YW3LaG/A
+         Ucd8lp1sbFF4vtWkEZ54MCc7R1NjuiRe//fgzBXCjU68LLCuIn97/TWMQ5wDwiqs93jz
+         8LLzxcaNWPAxW/pYgxCyB9/FU/uHoupokEXnqZ3uT+NFXAfoqI2pZOZBHAcHGddIGqbj
+         Gq7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VJUFVUjwMi3jp1lDpVisyiJzn7Zhoa8E+bQf9DwQVqs=;
+        b=Dn266u/RZylSw+v4jG8eyEnHNFjTHO4gDXt4dBIlJstFl7Jl4EOrdH4n5+KNE20dXM
+         9H1OCKVeQlg6orGFHiQp5a7GgbkKTgF1Lw/WKvV1n24TMvWXE+ggntTo8u8QJ5tsZeOO
+         bTrSXNIz8xXXAJX+g82gyEwRyR6G1C/4wuD/5i17OKbcVT3r+nRyXC/uZVVdUrFRdw9D
+         Fk2EjJyeaiJ/dWoNCnO3Gn16Tjt9h0OQx/j5UZ9dtgo2hw2SVHRQt6EDw8x0Qfz8GK56
+         ViYyWrmcCl98imV559Xd3dYQfPkvHGDbUzKtXCPcmrjdNwLgLGoWmsqNFtgc6gI5cx9P
+         iP2g==
+X-Gm-Message-State: AOAM5329i5NJSKJDO4FhF/lWunr25MFJhVf9XooE/sRET72F6JLOCa1m
+        JIEX2iTCxZRyzVcnipPw+LNeNmSWCcWGsaJLHpiytQ==
+X-Google-Smtp-Source: ABdhPJx+MczqJp0WaFPiI1m6x20/PKlEQDY+9K+GCnZ31rKGFb2DvTQymQLi+07iXyF2+WSjeSbcPFZAxbRKsMGeaqY=
+X-Received: by 2002:ac2:47e6:: with SMTP id b6mr5079578lfp.649.1622192881082;
+ Fri, 28 May 2021 02:08:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210520202730.4444-1-dariobin@libero.it> <20210520202730.4444-3-dariobin@libero.it>
+ <87ea9971-9e15-c595-95cc-14c68b0b68d8@mleia.com> <1972814783.387983.1621877304255@mail1.libero.it>
+ <414c9176-7922-929f-e82e-f80f07e91b2c@mleia.com> <106030092.519428.1622143415836@mail1.libero.it>
+ <b25a0e33-d7e8-322a-2a73-bda6e88c8f8b@mleia.com> <2062056721.520514.1622147634190@mail1.libero.it>
+In-Reply-To: <2062056721.520514.1622147634190@mail1.libero.it>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 May 2021 11:07:49 +0200
+Message-ID: <CACRpkdZb4WZS8cd=nFz_J0GrBc5HJ8SMYtniB2W_Jpq_vtPTYQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] pinctrl: core: configure pinmux from pins debug file
+To:     Dario Binacchi <dariobin@libero.it>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Drew Fustini <drew@beagleboard.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
+On Thu, May 27, 2021 at 10:33 PM Dario Binacchi <dariobin@libero.it> wrote:
+> > Il 27/05/2021 21:57 Vladimir Zapolskiy <vz@mleia.com> ha scritto:
 
-The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
+> > Unfortunately you continue to cling to the broken interface, while I see no
+> > comments from you about asked to consider pin groups and pin group functions.
+>
+> Could you kindly explain to me, with some practical examples, what kind of interface
+> would you implement ?
 
-  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
+I am not fully understanding this discussion.
 
-are available in the Git repository at:
+I get the feeling that this is caused by the early architectural decisions with
+pinctrl-single to put all configuration of pin groups and functions per pin into
+the device tree.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.14-tag1
+Tony specifically wanted this because what he gets from TI are some raw
+ASIC data dumps from the designers, that he could make a script to process
+into device tree rather than into .h files, and get this out of the kernel.
+(As I remember it, Tony correct me if I'm wrong.)
 
-for you to fetch changes up to 904ec4bebc1df908a943bf3178f6c633672ce47b:
+This makes it hard to align some concepts of the pin control subsystem such
+as functions and groups because pinctrl-single assume a 1-to-1 mapping
+between one pin and one group, which in turn has a 1-to-many mapping
+to functions.
 
-  pinctrl: renesas: r8a779{51,6,65}: Reduce non-functional differences (2021-05-11 10:04:42 +0200)
+Is the patch trying to debugfs around this somehow?
 
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v5.14
+If this hack is only needed for pinctrl-single.c then it should be placed in
+that driver, so Tony can review it and maintain it as applicable in that
+driver's context only, not in the pinctrl core as it appears the general
+applicability for other drivers is not there.
 
-  - Minor fixes and improvements.
+Would this really be useful for other drivers than pinctrl-single.c?
 
-Thanks for pulling!
-
-----------------------------------------------------------------
-Geert Uytterhoeven (5):
-      pinctrl: renesas: r8a7796: Add missing bias for PRESET# pin
-      pinctrl: renesas: r8a77990: JTAG pins do not have pull-down capabilities
-      pinctrl: renesas: r8a77990: Drop bogus PUEN_ prefixes in comments
-      pinctrl: renesas: r8a7778: Remove unused PORT_GP_PUP_1() macro
-      pinctrl: renesas: r8a779{51,6,65}: Reduce non-functional differences
-
- drivers/pinctrl/renesas/pfc-r8a7778.c  |  3 --
- drivers/pinctrl/renesas/pfc-r8a77951.c |  4 +-
- drivers/pinctrl/renesas/pfc-r8a7796.c  | 10 +++--
- drivers/pinctrl/renesas/pfc-r8a77965.c | 79 +++++++++++++++++-----------------
- drivers/pinctrl/renesas/pfc-r8a77990.c | 16 +++----
- 5 files changed, 56 insertions(+), 56 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Yours,
+Linus Walleij
