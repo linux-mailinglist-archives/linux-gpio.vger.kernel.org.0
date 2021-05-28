@@ -2,78 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1575393A63
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 02:42:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E1DF393AAC
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 02:53:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235323AbhE1Ao0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 May 2021 20:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45800 "EHLO
+        id S234331AbhE1Ayz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 May 2021 20:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235299AbhE1AoY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 20:44:24 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ECE7C061760
-        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:42:49 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id i9so2722992lfe.13
-        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:42:49 -0700 (PDT)
+        with ESMTP id S235905AbhE1Ayy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 20:54:54 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00AF5C061760
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:53:18 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id q1so2836789lfo.3
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:53:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bqXtv22ZUtS0qgDJidqDDJ8RaXdBnZWAHyKHD4vzru4=;
-        b=QUInkCJmJmKNYvLUhAfzQ9flwayyOiI72mHVqOSAVviq9cvKXCaQhw7YCW2lAzue5a
-         PtwE/YUdtJkMmWERc/tjvvU5g7H/D1KNkTU8PVBdpsBkEjqBDrBFKez0r0ekXSzCRB6R
-         njAsSA7upPfSrTWDTyZo+svjYdmiHwRhAg9bGucEkfz66E+6+mDKQMEnX4wl/fVh480U
-         n0b/oiJwC5jzuxN99JhcUM2wYp2vAq4drbWTA6lJyE+s55NaGsT2CJ+mblUkx+rwi22y
-         vl8fWwFPs5ZutWWT7+NXciWVoG4FPCHHx90yX7+zYywdEjxKdAGFAY/tMy6ZxI595/Tz
-         AVnQ==
+        bh=vbX6pM+seZu9wlyfbAeur9NPZdT7LDl780JRgegZV7Y=;
+        b=GFq0cmtEv7xS+1fzxOfXQ7FjbeJRs3m631Nx2J4Cd/9cvIuSueyKLRXo2PBC92s7BO
+         GefnKuBO6SiDsBzraZmhlg5wmODvAqPQ4OKhuhy4QiRfAxKbK8XSX/3mapffw4Hsauqj
+         umsgZrH5g5PvNs+862RKm51R6xLlfIkYAFpM2tqbZUNg4S29CKWimpROvIv0wFoR+3HV
+         t5lqsbfBbHkdDiFHewL1XZKrcv4ffuINTPyrKS+3Wv9XJZpqE/tcv59wP06YOjBE7YVQ
+         37c05LHLqvWAsTzb1zgW5AaRgODruiy5oskubd+WZhcSHw9Dg342JNDkv3qPSD2aid4e
+         +MWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bqXtv22ZUtS0qgDJidqDDJ8RaXdBnZWAHyKHD4vzru4=;
-        b=Y1mpIL1B6W7OJfqj8Jh/yCdzEcnc3bxi4Kj86PP/eiu8hGdgvZmGUofIGlra9fKU6I
-         1GGJHgkTQxJxZdNpULigr0q98JH17YjaA1+MFoMo0jyihL0ISY66QdBmSERaKmfgPXEy
-         I4uRjGQUl/mDbF3+3VSPiiinWkSoTXR/244W6HBgedYUrPauHhjxhzRZdRMEY7V9OxsJ
-         +GpoypEGt1GIxDcyPKJgK1GO9zsqFzpOegX+s/bc2ywcm+C2ng3TXNVN9R5rHiK9bhh3
-         hBBGGCNcqSDEwKi7VWkfk7EQzYIyk4NkIkg/airjBj9mBXcnwUoin7eWfDb2kcUw0+lL
-         dHFA==
-X-Gm-Message-State: AOAM533tcfuVVYkM3niQbj4vAhjX6xhdAA+1Pl1VWj6mJiLSdK7IZ0ad
-        +sywFQOC4iZ9rQ01EYz+zlzcYpGn+42jpRuMHf6YRg==
-X-Google-Smtp-Source: ABdhPJy+hfNUexCL8TTlUUJK8I3QzLMF+v0rvL61y44+e9fdv/apiuRrXL1TA5yo2dB7IrX8CBFMLj9cJ2SvZaMdBuA=
-X-Received: by 2002:a05:6512:49b:: with SMTP id v27mr4249864lfq.29.1622162567971;
- Thu, 27 May 2021 17:42:47 -0700 (PDT)
+        bh=vbX6pM+seZu9wlyfbAeur9NPZdT7LDl780JRgegZV7Y=;
+        b=DL7jBNcDgTZ8uqVSy/JUNMGkvHy4FISH/PiqxrwvpGe7XytLEEaVT6/LWKIjBdrDln
+         JJMCQu5Lups1cVbwcgyd7sBhukaMImuiiffRq33FTyQbxvj20QamrHdsBTIg0hoQlV1P
+         B2fs/XsVV45DmyB6PXsyIngx88X8hdOxtAVHG2OTgFHQdAcLgqteScSSuUZd27S/tdct
+         +4DtRr7p1FmxeDUbVzhlJCr0wl/iKzxrBtnDdBhQJV1pmEQbsYdeiis+tmJGLjyJzT3T
+         5p+e0I83CtxAUFUumtYEN/0linrEGF8tBLZzQ4YHN9dH9voFVNztxw6C/3raMk4Ea3s1
+         nj6Q==
+X-Gm-Message-State: AOAM5318QFq1jO9PzT+CjXPcvIFx/wjRkF8ivxd0i25cB+3rKJWgiSIN
+        8OXl745FSeAaRuBCol9eDiNGMp2BHlGemsXgOKgJ12dt1U4=
+X-Google-Smtp-Source: ABdhPJyiVLd2k1988bBN8brTDYX+FK7yEB0nKuBfhRFviLijkC7Brn667eZDBeWRCanjXoe9PhoIJB5+M94CSeQcFA8=
+X-Received: by 2002:a19:f616:: with SMTP id x22mr3976589lfe.291.1622163196370;
+ Thu, 27 May 2021 17:53:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1621998464-10918-1-git-send-email-yang.lee@linux.alibaba.com>
-In-Reply-To: <1621998464-10918-1-git-send-email-yang.lee@linux.alibaba.com>
+References: <cover.1622008846.git.matti.vaittinen@fi.rohmeurope.com>
+ <CACRpkdaSr_CV1pKS44Ru15AEJ0-1429+6E7Lei2sPHdaijr9iw@mail.gmail.com> <0c2a8ffab666ef31f5cee50b8b47767285dfe829.camel@fi.rohmeurope.com>
+In-Reply-To: <0c2a8ffab666ef31f5cee50b8b47767285dfe829.camel@fi.rohmeurope.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 May 2021 02:42:37 +0200
-Message-ID: <CACRpkdZhVfnUkMqaAi77rV8gLxRdt638S2Kq1XW_6UZCTzHN2Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: Fix kernel-doc
-To:     Yang Li <yang.lee@linux.alibaba.com>
-Cc:     ext Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
+Date:   Fri, 28 May 2021 02:53:05 +0200
+Message-ID: <CACRpkdZ2GdrGr8-XnVvf59O4AVBueBjX0PHYGtOeOdGXi=iE4A@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] gpio: gpio-regmap: Support few custom operations
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Walle <michael@walle.cc>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-power@fi.rohmeurope.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 26, 2021 at 5:07 AM Yang Li <yang.lee@linux.alibaba.com> wrote:
+On Thu, May 27, 2021 at 8:32 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
-> Fix function name in pinctrl-single.c kernel-doc comment
-> to remove a warning found by clang_w1.
->
-> drivers/pinctrl/pinctrl-single.c:1523: warning: expecting prototype for
-> pcs_irq_handle(). Prototype was for pcs_irq_chain_handler() instead.
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> I think that the disagreement boils down to few styling issues - and
+> one more pragmatic one. And only what comes to how we allow
+> implementing the IC specific call-backs for these more complex HW
+> specific cases. "Styling" boils down to providing getter-functions for
+> well-defined gpio_regmap properties like regmap, device and fwnode
+> pointers Vs. exposing these in a well-defined structure as function
+> parameters.
 
-Patch applied.
+Just do it the way the maintainer likes it I guess? Michael wrote
+the driver so do it in his fashion.
+
+> So
+> at the end of the day it's fair to go on in a way Michael and You find
+> easiest to maintain.
+
+What makes things easy for me to maintain is active and happy
+driver maintainers, so it is paramount that the file looks to Michael
+like something he wants to keep maintaining. This removes work
+from me and Bartosz.
+
+Maintainer style quirks are common, I have some myself (like
+never allowing __underscore_functions) we just adapt to their
+quirks and be good diplomats.
 
 Yours,
 Linus Walleij
