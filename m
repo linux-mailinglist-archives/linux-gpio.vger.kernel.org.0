@@ -2,98 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E1DF393AAC
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 02:53:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38F90393AC9
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 02:56:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234331AbhE1Ayz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 May 2021 20:54:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48350 "EHLO
+        id S234430AbhE1A62 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 May 2021 20:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235905AbhE1Ayy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 20:54:54 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00AF5C061760
-        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:53:18 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id q1so2836789lfo.3
-        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:53:17 -0700 (PDT)
+        with ESMTP id S233932AbhE1A61 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 20:58:27 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34705C061760
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:56:52 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id v5so3137349ljg.12
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:56:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vbX6pM+seZu9wlyfbAeur9NPZdT7LDl780JRgegZV7Y=;
-        b=GFq0cmtEv7xS+1fzxOfXQ7FjbeJRs3m631Nx2J4Cd/9cvIuSueyKLRXo2PBC92s7BO
-         GefnKuBO6SiDsBzraZmhlg5wmODvAqPQ4OKhuhy4QiRfAxKbK8XSX/3mapffw4Hsauqj
-         umsgZrH5g5PvNs+862RKm51R6xLlfIkYAFpM2tqbZUNg4S29CKWimpROvIv0wFoR+3HV
-         t5lqsbfBbHkdDiFHewL1XZKrcv4ffuINTPyrKS+3Wv9XJZpqE/tcv59wP06YOjBE7YVQ
-         37c05LHLqvWAsTzb1zgW5AaRgODruiy5oskubd+WZhcSHw9Dg342JNDkv3qPSD2aid4e
-         +MWw==
+        bh=DUgWyOBumw89BDGTv+7X0vdxC7JeU7hCOGrHDiF3VwA=;
+        b=BSasaDEaLbIQAzgG1IrhjeTDlHWhNMV9Ajsb72ajXQiKtkmoo4OTX4hdRx/jXFe9lH
+         tbpf5Q0hHvwAIkDrX9OnHynDLd5s3Z8+XSnnH9qvkAU+4yOVYyktN0m7fkRoIYnaKRJI
+         KzTWxxz9q0+1x/GVWp4Ig53vqH1huvR/cHjdqejfapdGaWwwTqiQBp+UcbEePxYlH1Q7
+         5HKEuJkjGfUtGLrS5Op63iNk/NqiKbWZCre1sDGHMWpCpHklhAmDjllKZkwlHQET1k6q
+         s6FJeU6fp7L/1WlQtCon2B5zwcVnrrMiEzrrdnVw0Huk5FIfYZB92UnJPC3M6oIqBg2K
+         CngQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vbX6pM+seZu9wlyfbAeur9NPZdT7LDl780JRgegZV7Y=;
-        b=DL7jBNcDgTZ8uqVSy/JUNMGkvHy4FISH/PiqxrwvpGe7XytLEEaVT6/LWKIjBdrDln
-         JJMCQu5Lups1cVbwcgyd7sBhukaMImuiiffRq33FTyQbxvj20QamrHdsBTIg0hoQlV1P
-         B2fs/XsVV45DmyB6PXsyIngx88X8hdOxtAVHG2OTgFHQdAcLgqteScSSuUZd27S/tdct
-         +4DtRr7p1FmxeDUbVzhlJCr0wl/iKzxrBtnDdBhQJV1pmEQbsYdeiis+tmJGLjyJzT3T
-         5p+e0I83CtxAUFUumtYEN/0linrEGF8tBLZzQ4YHN9dH9voFVNztxw6C/3raMk4Ea3s1
-         nj6Q==
-X-Gm-Message-State: AOAM5318QFq1jO9PzT+CjXPcvIFx/wjRkF8ivxd0i25cB+3rKJWgiSIN
-        8OXl745FSeAaRuBCol9eDiNGMp2BHlGemsXgOKgJ12dt1U4=
-X-Google-Smtp-Source: ABdhPJyiVLd2k1988bBN8brTDYX+FK7yEB0nKuBfhRFviLijkC7Brn667eZDBeWRCanjXoe9PhoIJB5+M94CSeQcFA8=
-X-Received: by 2002:a19:f616:: with SMTP id x22mr3976589lfe.291.1622163196370;
- Thu, 27 May 2021 17:53:16 -0700 (PDT)
+        bh=DUgWyOBumw89BDGTv+7X0vdxC7JeU7hCOGrHDiF3VwA=;
+        b=AkbGqi66RVBXWMEC/wnJt8eZc1JXlH+vvrZpIQKsbuzaQ/ow0tLX/uxOqBkZuja+OU
+         jqJCJjxzpbcuz4BPIcuSC5ICh+LagZINpvXWxsRgP3HdGjbcOv9WERAU8+L+ZzBRY/JP
+         Cl6dYDWsp6myIS/hI+X1jfexb5DODF9C6uJEPJ9UbD6n2J+QLxVj1SHX0nW9F9lpVDNr
+         Pm+UL9uYdvbblOEeM3CBLIvzD1dJofJs7apE+Xpu2mfbCmPAyXeHh9IP4I49Zkg6g8sZ
+         8zG77Tnzn00sZAhf7w21sBMGiu/KkXkVEZtqcV4tpsnlIJowxvcQ6pY5vfrN1+lDCm1U
+         LseA==
+X-Gm-Message-State: AOAM531ChhZzfstKl8X475G3OY0MmcEi3R+9adztopUjKgrIGWDSGi+6
+        AxzpPPnArQsacQj3Jvjww3XmEuZeYFJN73z2xNRI9w==
+X-Google-Smtp-Source: ABdhPJwkOKyubRtDMGrbWIPiVD0SnCCFb04nXbS/cSkd+iam3V+/E9XBgUnCx6hyWBnbMftdQo+GIHXCWBc3bzLiQGM=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr4489456ljm.467.1622163410555;
+ Thu, 27 May 2021 17:56:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1622008846.git.matti.vaittinen@fi.rohmeurope.com>
- <CACRpkdaSr_CV1pKS44Ru15AEJ0-1429+6E7Lei2sPHdaijr9iw@mail.gmail.com> <0c2a8ffab666ef31f5cee50b8b47767285dfe829.camel@fi.rohmeurope.com>
-In-Reply-To: <0c2a8ffab666ef31f5cee50b8b47767285dfe829.camel@fi.rohmeurope.com>
+References: <20210521090158.26932-1-iivanov@suse.de>
+In-Reply-To: <20210521090158.26932-1-iivanov@suse.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 May 2021 02:53:05 +0200
-Message-ID: <CACRpkdZ2GdrGr8-XnVvf59O4AVBueBjX0PHYGtOeOdGXi=iE4A@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] gpio: gpio-regmap: Support few custom operations
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Walle <michael@walle.cc>,
+Date:   Fri, 28 May 2021 02:56:39 +0200
+Message-ID: <CACRpkdYW9KCOOH_FjuPR6o4x41DvSgfmLOw201tssjAOt7q6vw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: bcm2835: Accept fewer than expected IRQs
+To:     "Ivan T. Ivanov" <iivanov@suse.de>
+Cc:     Phil Elwell <phil@raspberrypi.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
         bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-power@fi.rohmeurope.com,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 27, 2021 at 8:32 AM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+On Fri, May 21, 2021 at 11:02 AM Ivan T. Ivanov <iivanov@suse.de> wrote:
 
-> I think that the disagreement boils down to few styling issues - and
-> one more pragmatic one. And only what comes to how we allow
-> implementing the IC specific call-backs for these more complex HW
-> specific cases. "Styling" boils down to providing getter-functions for
-> well-defined gpio_regmap properties like regmap, device and fwnode
-> pointers Vs. exposing these in a well-defined structure as function
-> parameters.
+> From: Phil Elwell <phil@raspberrypi.com>
+>
+> The downstream .dts files only request two GPIO IRQs. Truncate the
+> array of parent IRQs when irq_of_parse_and_map returns 0.
+>
+> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+> Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
 
-Just do it the way the maintainer likes it I guess? Michael wrote
-the driver so do it in his fashion.
-
-> So
-> at the end of the day it's fair to go on in a way Michael and You find
-> easiest to maintain.
-
-What makes things easy for me to maintain is active and happy
-driver maintainers, so it is paramount that the file looks to Michael
-like something he wants to keep maintaining. This removes work
-from me and Bartosz.
-
-Maintainer style quirks are common, I have some myself (like
-never allowing __underscore_functions) we just adapt to their
-quirks and be good diplomats.
+Patch applied.
 
 Yours,
 Linus Walleij
