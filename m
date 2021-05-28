@@ -2,120 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48D9C393C3E
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 06:12:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7E1E393D17
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 08:29:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230201AbhE1ENy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 May 2021 00:13:54 -0400
-Received: from twspam01.aspeedtech.com ([211.20.114.71]:52837 "EHLO
-        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229774AbhE1ENu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 00:13:50 -0400
-Received: from mail.aspeedtech.com ([192.168.0.24])
-        by twspam01.aspeedtech.com with ESMTP id 14S3uTIr014580;
-        Fri, 28 May 2021 11:56:29 +0800 (GMT-8)
-        (envelope-from steven_lee@aspeedtech.com)
-Received: from aspeedtech.com (192.168.100.253) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 28 May
- 2021 12:09:36 +0800
-Date:   Fri, 28 May 2021 12:09:34 +0800
-From:   Steven Lee <steven_lee@aspeedtech.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hongwei Zhang <Hongweiz@ami.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: aspeed-sgpio: Convert txt bindings
- to yaml.
-Message-ID: <20210528040934.GA28403@aspeedtech.com>
-References: <20210527005455.25758-1-steven_lee@aspeedtech.com>
- <20210527005455.25758-2-steven_lee@aspeedtech.com>
- <CACRpkdZFcFuT9rdrc8BfEBmhy0--9uLMSJWfr=A+nU117_BT8A@mail.gmail.com>
+        id S230299AbhE1GbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 May 2021 02:31:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229753AbhE1GbO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 02:31:14 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270B2C061574;
+        Thu, 27 May 2021 23:29:40 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3577F22239;
+        Fri, 28 May 2021 08:29:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1622183376;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tvDryGjFc2b0KujgcUtBe5I3gcYMEk3E/mVvu6Bxf/A=;
+        b=LjKnecBf9GWDYelaXriWtkwJLN0XzciFDPhk3Py6yqDSW73C1NwfxuMyy9lCqPtU8rzdvc
+        CwAxmkDMpa/6TXJzBSxvbbOaHxLaufxpeSwWkbl53Ml1b3+IJEymd8ydw8x/j/8tjYm9PO
+        8YkC/Nr1g8H9TgFJZnNJGEvnDe5ntYE=
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZFcFuT9rdrc8BfEBmhy0--9uLMSJWfr=A+nU117_BT8A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [192.168.100.253]
-X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
- (192.168.0.24)
-X-DNSRBL: 
-X-MAIL: twspam01.aspeedtech.com 14S3uTIr014580
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 28 May 2021 08:29:33 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Sander Vanheule <sander@svanheule.net>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] pinctrl: Add RTL8231 pin control and GPIO support
+In-Reply-To: <185e8c61893502575c542750c8f27b09029e3078.1621809029.git.sander@svanheule.net>
+References: <cover.1621809029.git.sander@svanheule.net>
+ <185e8c61893502575c542750c8f27b09029e3078.1621809029.git.sander@svanheule.net>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <452144b056cb474321481c011ac9ccfb@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The 05/28/2021 07:51, Linus Walleij wrote:
-> On Thu, May 27, 2021 at 2:55 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
-> 
-> > SGPIO bindings should be converted as yaml format.
-> > In addition to the file conversion, a new property max-ngpios is
-> > added in the yaml file as well.
-> > The new property is required by the enhanced sgpio driver for
-> > making the configuration of the max number of gpio pins more flexible.
-> >
-> > Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
-> (...)
-> > +  max-ngpios:
-> > +    description:
-> > +      represents the number of actual hardware-supported GPIOs (ie,
-> > +      slots within the clocked serial GPIO data). Since each HW GPIO is both an
-> > +      input and an output, we provide max_ngpios * 2 lines on our gpiochip
-> > +      device. We also use it to define the split between the inputs and
-> > +      outputs; the inputs start at line 0, the outputs start at max_ngpios.
-> > +    minimum: 0
-> > +    maximum: 128
-> 
-> Why can this not be derived from the compatible value?
-> 
-> Normally there should be one compatible per hardware variant
-> of the block. And this should be aligned with that, should it not?
-> 
-> If this is not the case, maybe more detailed compatible strings
-> are needed, maybe double compatibles with compatible per
-> family and SoC?
-> 
+> +	gpio_cfg.reg_dat_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DATA0);
+> +	gpio_cfg.reg_set_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DATA0);
+> +	gpio_cfg.reg_dir_in_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DIR0);
 
-Thanks for your suggestion.
-I add max-ngpios in dt-bindings as there is ngpios defined in
-dt-bindings, users can get the both max-ngpios and ngpios information
-from dtsi without digging sgpio driver.
+Btw. you'd only need GPIO_REGMAP_ADDR(x) if x might be 0. Because you 
+have
+a constant != 0 there, you could save the GPIO_REGMAP_ADDR() call. You
+could drop this if you like, but no need to respin the series for this.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/aspeed-g5.dtsi#n354
-
-If adding more detailed compatibles is better, I will add them to sgpio driver
-in V3 patch and remove max-ngpios from dt-bindings.
-
-Since AST2600 has 2 sgpio controller one with 128 pins and another one with 80 pins.
-For supporting max-ngpios in compatibles, 2 platform data for each
-ast2600 sgpio controller as follows are necessary.
-
-```
-static const struct aspeed_sgpio_pdata ast2600_sgpiom1_pdata = {
-        .max_ngpios = 128;
-};
-static const struct aspeed_sgpio_pdata ast2600_sgpiom2_pdata = {
-        .max_ngpios = 80;
-};
-
-{ .compatible = "aspeed,ast2500-sgpio" , .data = &ast2400_sgpio_pdata, },
-{ .compatible = "aspeed,ast2600-sgpiom1", .data = &ast2600_sgpiom1_pdata, },
-{ .compatible = "aspeed,ast2600-sgpiom2", .data = &ast2600_sgpiom2_pdata, },
-```
-
-Thanks,
-Steven
-
-> Yours,
-> Linus Walleij
+-michael
