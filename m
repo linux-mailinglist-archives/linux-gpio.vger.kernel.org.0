@@ -2,56 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DD1C393A36
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 02:23:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C016393A3B
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 02:27:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229774AbhE1AZL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 May 2021 20:25:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41470 "EHLO
+        id S233938AbhE1A3M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 May 2021 20:29:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229760AbhE1AZK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 20:25:10 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B18C061574
-        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:23:36 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id c15so3091904ljr.7
-        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:23:36 -0700 (PDT)
+        with ESMTP id S233038AbhE1A3L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 May 2021 20:29:11 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3E5C061574
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:27:38 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id d25-20020a0568300459b02902f886f7dd43so1948823otc.6
+        for <linux-gpio@vger.kernel.org>; Thu, 27 May 2021 17:27:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fQ8K8hJ588LkHR6tCv8Mkq36x5bXr3IVcY7yCuXy/Kw=;
-        b=xSR4XLKSEXHNIFQBbMA4PgyCihbXnCcmj+bKm0fnH8hwtuucOePkYZR6b0nHb0C7Wd
-         BcNDuo4Dl1js60oIYD0gRtWtB69u++NHsDF7aaa32VJVMBYjfMbTFZ2GQm9N/fDu+5Bs
-         zkVzpcteKxkNAwT6T1fLdSQUsKVZ1Sijd+T4t1rY4rxb4IezSgoqnPkKZzj7am0cNKMd
-         5HPLdXDkIXRFw20JS6QuUd92T+vsRhbQRi3epsX4aIKzJdnA//QBD0OScGeWD8ZEtq7K
-         D8yiadIThTvL/Uy7g4/pqBfZLRwUT1FPPMmN5RP2WwB5ugO2b6fRqHPLvCU0FmSx81gJ
-         /IPA==
+        bh=2pUDinl+k1Y3SOfjLGyhu+yxm4zsyFOY3HXw6T+FBrw=;
+        b=XgL6or6dlFJNwuu0qexviUNUTAQymPEn0fwNU1ohf3FeamIRBN+vLD3cB+NN4aLBpG
+         gjXkghukW7VKxUaaXdkqcJQtA3ezJ3uXJCNs1586VlsOHjWegPxGqxnWKlK5JYGQl2gg
+         k/sTJ0o9WaQ5J2sWpJBf+tC2v0mdxTUZMemrnPKkSTGgMDJ0/YCzXDkf3piWOJ22wLC3
+         EeMakRqi1ToJxkFYlFKQh0XPpOFv2IFA9+9t22A6AGoZA8Weoh91OIQ/il98YFEQ9pMH
+         jEMq2fUYVGgljcc1m+7IDqAsk/5AHkwSIuvvE3idZFJH+yoswG+D1iMhYuu3Muqcurdd
+         EMvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fQ8K8hJ588LkHR6tCv8Mkq36x5bXr3IVcY7yCuXy/Kw=;
-        b=qOEnjmj9jiVtUE20E7ARF1nTIXuvQ7feRbprHkRJRSuREpeoyIzgB9MloaDonSQjjh
-         muAXZKDgZVMDpdHoX7SN849zQ+sD/HiimQtpCxXLshzbzDyqoAt7AnlRaiI8Qr0rxTMx
-         p9P8OC/dnWNUdmuYUMw8PVN5AO8PpXp/d52I3/bIt/PlBLuBF2stxwgpN/aiygbZx0Jt
-         B0rvl5lZVR/2J5whj3pylNsQMZzdE179qXwk6JXdOWSR7Y60bx7t8rLuLq95hWTu9lw0
-         ZmqBWOOxjE7cf91eMdJczFzv/pZxMivY0zMtpUVQWj3CG5kV7eSUOHQYBwJi2q1Vjumt
-         oq5Q==
-X-Gm-Message-State: AOAM533Nh/wXiZeXuhNRrqD5VHjxT2VDckP53iBht4enRs04fOP+CbxM
-        +sKl9enbGa86pSMMaXCAOry6F3tcvT7WSHOk51Rjwg==
-X-Google-Smtp-Source: ABdhPJzlK0bHwuJmklUdp/G99p+kNtQBJP0yPobbBHxkx8HxgNbaX3XMvPVVY6U7GQJn3Sx5SywTDE6hRUCI+nSmFtI=
-X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr4421003ljm.467.1622161413876;
- Thu, 27 May 2021 17:23:33 -0700 (PDT)
+        bh=2pUDinl+k1Y3SOfjLGyhu+yxm4zsyFOY3HXw6T+FBrw=;
+        b=A9AootCn0i2hX8XC/1CRPIiUAF2kVujfWfDNdsIsGiSNwKDbsnvL+VNsKwAbsxobsI
+         KBdKhUU5SZsnyMsYI/2quqxTX8PVebnHGp9E3veJzZglHh5UHo/30kDuVKwcFN49Su2M
+         VBRr7bPcKi/EPaBdesDsRWjHMbNHQZQ4CA0WMMBA0kzoTTtKwl514fzCwHRmqp7mpRJA
+         CV4E2Gtdj4tNazZMSKd7WAw2X3vJQpwgiTuRfzv6dgyQ9t22WNQQFjW/EOE/n9JrpT22
+         OyVWhAIetYuVYpdAL8tMcaC3HEDyuLaJEZ9/m7K3KdAI48bqTkr8RxF+GLn43ZLHA+o3
+         LOZA==
+X-Gm-Message-State: AOAM532BfpT2jZWdLrK9AS2P46HVWzwurYsk7WJt0i2VAhFdg2dNEuY8
+        abtShC0ta8ffj1ygLXdE8yb3aY9CWZsZit8FyVxZyw==
+X-Google-Smtp-Source: ABdhPJyv0+ibep+sdnHmq0Bg9hVKz6WSmkFPB54kLsk12TTYcd2IW7qv4oh/THflZ8c8Rxwa89TF+/k463nDVrGZhVE=
+X-Received: by 2002:a05:6830:a:: with SMTP id c10mr5188305otp.114.1622161657594;
+ Thu, 27 May 2021 17:27:37 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210325122832.119147-1-sandberg@mailfence.com>
  <20210517165847.206316-1-sandberg@mailfence.com> <20210517221343.GA2936462@x1>
-In-Reply-To: <20210517221343.GA2936462@x1>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 May 2021 02:23:23 +0200
-Message-ID: <CACRpkdaSESz7UFUKoRwpVFfyE8Vjz=zszh2NyPGf9khiJGQKmg@mail.gmail.com>
+ <CACRpkdaSESz7UFUKoRwpVFfyE8Vjz=zszh2NyPGf9khiJGQKmg@mail.gmail.com>
+In-Reply-To: <CACRpkdaSESz7UFUKoRwpVFfyE8Vjz=zszh2NyPGf9khiJGQKmg@mail.gmail.com>
+From:   Drew Fustini <drew@beagleboard.org>
+Date:   Thu, 27 May 2021 17:27:26 -0700
+Message-ID: <CAPgEAj5Ys4Cwjkh+V93Q=c8fK+19dWuw+QDUohUHZZuEKsEAzA@mail.gmail.com>
 Subject: Re: [PATCH v3 0/2] gpio: add generic gpio input multiplexer
-To:     Drew Fustini <drew@beagleboard.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Mauri Sandberg <sandberg@mailfence.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -62,10 +63,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I can't see the mails in this RFC series but it looks interesting and quite
-useful.
+On Thu, May 27, 2021 at 5:23 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> I can't see the mails in this RFC series but it looks interesting and quite
+> useful.
+>
+> Looking forward to the next posting.
+>
+> Yours,
+> Linus Walleij
 
-Looking forward to the next posting.
+That is too bad.  Hopefully Mauri can repost.  Here it is on lore:
+https://lore.kernel.org/linux-gpio/20210325122832.119147-1-sandberg@mailfence.com/
 
-Yours,
-Linus Walleij
+I tested it successfully on a BeagleBone Black with a TI CD74HC153E:
+https://lore.kernel.org/linux-gpio/20210524212538.GA3756746@x1/
+
+thanks,
+drew
