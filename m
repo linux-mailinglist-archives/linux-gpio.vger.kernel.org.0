@@ -2,105 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB0F5393FC8
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 11:21:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9939393FC4
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 11:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234038AbhE1JX0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 May 2021 05:23:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48682 "EHLO
+        id S235997AbhE1JW3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 May 2021 05:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230205AbhE1JX0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 05:23:26 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76DADC061574
-        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 02:21:51 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id b26so4340564lfq.4
-        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 02:21:51 -0700 (PDT)
+        with ESMTP id S235931AbhE1JWX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 05:22:23 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C41C06174A
+        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 02:20:46 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id s25so4348055ljo.11
+        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 02:20:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RjwPM80jhf7QqwxBuTnbQa++n8LEjK65ba/1tBbzVfA=;
-        b=wu7qxvtd9OJZMNKIdVAeANWw7VckJe0RlTmrWmCd2gVchxil2AMg1WiWdrsjttM6yO
-         C2C+iWzGbdVEUTRS55wDUl7i6/zp/Z8IARku9mL8lgjcDRQ+6zp8o9QXM6qId7teZW8c
-         rKKF5Ki5nHD96lPmFCUnZw1Yyw3+mVemnVzktDeWnQ5Wddqqm9nizZzAE6yU4seeb71t
-         7Q3eCtYK6GlITJWa21EZkOz88WA+DkpjbV2bUvm2uQXQhzCLSLkTXiPifs9W+vAjaXW+
-         9qsQBB/OzbPqsqP2Ilmw4hlc+30BHnUYzkueR/rLQeLg76PqE9mJg1HJHRJuZt/Uz0DL
-         w15A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9NyLm4M6sno3u68FwAJ1r8D39ashG0coxPAL+2ytbo8=;
+        b=m3KjY1b2H8lewGLvYfwdijyr0kT3Wu1LNZP93AXyhqs4bkCFph4GD0igddPrB5cwtJ
+         SLE8Z0Hj94599O30PbmqxaWGcDKwpl8evubGvvvDUo9qnFujjaHmzdEyVbVJGsAT9g23
+         06hlKbVRew3zE4IWYQxfbqY5/yf+h889FoOBQqzqS2DDJlYqqed2ErBfg1e2FRQMj1BU
+         3sCl43FNTZ/cWgLdzbSnCyVGjLytnIrwWAYZDB3jOEZZF7wbL7VH5XoWnkIcWlSil00x
+         WYVF1NimFto7/MwtV39GJ9iW9GCP7v/zxWwpJ900USlaLozoL38IpIVS2PdswG5uS+W8
+         +q2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RjwPM80jhf7QqwxBuTnbQa++n8LEjK65ba/1tBbzVfA=;
-        b=eMm7NuWiHgKOhbbmbqi89TerYAtN+okIHlqKlh8nroK+jU04FwD1XI6VsFuCMA/MtW
-         WDRXTEZM2f+FlTAqFtp+46U5uOUANwn961vV/Bqh6IGJhpTxgC3W5lqhtNx850Sy6/hO
-         tgT+DFWRQpQDcnfAe/6SEgG1WRJka+r0C35OFHjV+4Pj3vHhTT/lEIIMU1KISwQsAOEL
-         SBTbgFaDf+wcA4tYnHN95Vi44cDOtf0HusLdWxZ8I/hEkF901Ki2/aqpgQj1+dsRGiIp
-         KDlRwwNSmAsbG8mPgBvcUl6eA2AMngRJFo29tiTRUAZwhAP3/+uTNFQ6B6dbJnex/eKX
-         fUjQ==
-X-Gm-Message-State: AOAM531zctq2hjnkfWiS6aM5bm6K9w+JeCo7rb3vRp5/xg+9GUeTUbk3
-        rKnfr6+k2DzRhlAthR3VEwXdVV40QyZC5A==
-X-Google-Smtp-Source: ABdhPJw8PFmbP9HkmnrGbK0n1IEf8aMX6vyMKLQ4vHz2OgKqo+BvjIekuj64H9miMsvB38FKIjwU0Q==
-X-Received: by 2002:ac2:43d9:: with SMTP id u25mr5322114lfl.54.1622193709676;
-        Fri, 28 May 2021 02:21:49 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id m5sm498649ljg.118.2021.05.28.02.21.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 May 2021 02:21:49 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9NyLm4M6sno3u68FwAJ1r8D39ashG0coxPAL+2ytbo8=;
+        b=k1Cl9RduEK9gTTNGE1oq28l3dGqACT0PU9AoIaRBGX3UeNlBCk9lvJX9kn0rxXf0kV
+         akJwfnkwrGLxIvTjovDvfTgCxY1lAeCLCS1VWlIixW+hGGNK46kF3xOJs6prJrH1OmD/
+         4cILYs7KlCxOEi9uNnRUJYwprkmRQBSl8l3Y2vU/uglmzhtoGXoilDJyWWZUeAi72iWn
+         kkRRVCKuJAQ/OT1v/BgTiAt+GGT99jliD+Re1PRPIIzcHaA4Oaisu/CrDzdcmWvwRAL1
+         bZkHUb0/OlOOdeXxQ+O+01t5q0iRB0vzd9yHy2JHcuJbAMD1Z0KDKL4M+xDKcJh0bJz0
+         Ctew==
+X-Gm-Message-State: AOAM533VNxd+OZLaUsWgzb1F6HrMWMFk1NSCU7IkAfR+Slf6UN6e2Eud
+        EDT3RQ1XmRg/zUoUaQTk88AmBUWjWKeGuxGz6OBHnw==
+X-Google-Smtp-Source: ABdhPJwaCkUllAD2rNdoBS/S0G1y0aXKEWfHDRy7bbdri1JLQs5273AM4VtJgQ1pOaZbsnf9vhQWoA0ph9fTHhrOsWI=
+X-Received: by 2002:a05:651c:4c6:: with SMTP id e6mr5831209lji.326.1622193644998;
+ Fri, 28 May 2021 02:20:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210519162409.3755679-1-fparent@baylibre.com>
+ <20210519162409.3755679-2-fparent@baylibre.com> <CACRpkdZ70OcbgyFN2cQtLgsXFCTsvstsrBYYt3UY6Wc=NbXuag@mail.gmail.com>
+ <CAOwMV_zin4ODuv8pA8_tfVyg3g9=Mrt2Txdk0O2wL8JqDefzog@mail.gmail.com>
+In-Reply-To: <CAOwMV_zin4ODuv8pA8_tfVyg3g9=Mrt2Txdk0O2wL8JqDefzog@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Sean Wang <sean.wang@kernel.org>,
+Date:   Fri, 28 May 2021 11:20:33 +0200
+Message-ID: <CACRpkdZmyD-s-J50G8FJPXDyDYEJbLURSCz+DT+H7VFHJt5uLw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: mediatek: don't hardcode mode encoding in
+ common code
+To:     Fabien Parent <fparent@baylibre.com>
+Cc:     Sean Wang <sean.wang@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Mattijs Korpershoek <mkorpershoek@baylibre.com>,
-        linux-mediatek@lists.infradead.org,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] pinctrl: mediatek: move bit assignment
-Date:   Fri, 28 May 2021 11:19:45 +0200
-Message-Id: <20210528091945.411471-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.31.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The bit needs offset to be defined which happens some lines
-below. Looks like a bug. The kernel test robot complains:
+On Fri, May 28, 2021 at 11:11 AM Fabien Parent <fparent@baylibre.com> wrote:
 
-drivers/pinctrl/mediatek/pinctrl-mtk-common.c:137:12:
-warning: variable 'offset' is uninitialized when used here [-Wuninitialized]
-           bit = BIT(offset & pctl->devdata->mode_mask);
-                     ^~~~~~
+> -       bit = BIT(pin & 0xf);
+> +       bit = BIT(offset & pctl->devdata->mode_mask);
+>
+> I should not have replaced 'pin' by 'offset' here. What do you
+> recommend me to do here, shall I send a V2 of this series and you will
+> drop my V1 from your tree, or do you want me to make a new patch that
+> fixes the error created by this patch?
 
-Fix it up by reverting to what was done before.
+I just made the small patch myself, it's faster.
+Sending it out as we speak.
 
-Cc: Fabien Parent <fparent@baylibre.com>
-Cc: Sean Wang <sean.wang@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Cc: linux-mediatek@lists.infradead.org
-Fixes: 9f940d8ecf92 ("pinctrl: mediatek: don't hardcode mode encoding in common code")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index 9fe91e11a877..525b1aa7f7a6 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -134,7 +134,7 @@ static int mtk_pconf_set_ies_smt(struct mtk_pinctrl *pctl, unsigned pin,
- 			pin, pctl->devdata->port_align, value, arg);
- 	}
- 
--	bit = BIT(offset & pctl->devdata->mode_mask);
-+	bit = BIT(pin & 0xf);
- 
- 	if (arg == PIN_CONFIG_INPUT_ENABLE)
- 		offset = pctl->devdata->ies_offset;
--- 
-2.31.1
-
+Yours,
+Linus Walleij
