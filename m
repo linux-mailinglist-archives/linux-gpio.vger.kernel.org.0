@@ -2,80 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C1BB393D49
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 08:44:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9030393EA8
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 May 2021 10:21:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230512AbhE1Gpe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 May 2021 02:45:34 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:42089 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbhE1Gpe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 02:45:34 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 9031522239;
-        Fri, 28 May 2021 08:43:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1622184238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yXXSJzxAUmVNLhZeASW5jbLgZYp5eaEL/vUwOyOALjY=;
-        b=oVJbRpVc9xvCzFzNzKSWirQ6UBFhS4I5lJ73obWHxBNj14p/UOiAGiBO7nv5gBYsLZV0PK
-        qymLOpiLYCp4mYZ2lJZ0cO7Hh2fzNBkKbiKBSpRplZdq6DuRf8zDNz0EYlZ38jaMq2aAuc
-        sB+UxzYZGkHfK5tJMVpSNPjQOKyij6k=
+        id S236103AbhE1IXD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 May 2021 04:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235754AbhE1IXD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 May 2021 04:23:03 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A85C06174A
+        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 01:21:29 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id f12so4212455ljp.2
+        for <linux-gpio@vger.kernel.org>; Fri, 28 May 2021 01:21:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2u/8jjSh0h6hsJsw7KV4nyPwb2BObLFOoIj8G9tctSE=;
+        b=ec64qKIGugZR3K1gdSNeJiIIo10gQmn2+bYXnBj1LlgRMau/c0maRDCidkxICjU1Ie
+         lf7EJbEYxqfv6dKOK090ggquJmSI3vIiJkc5rX/uOdJUtjJ4jZdgVk3QGg/HwoarQOLd
+         L7cND6RhprMHIvOI2AC/b0dIBQtEGeKr57JO/BGsdTfxfaCyxfdO5v9omUp+67uD9Ffv
+         XBJlvp5IQD3DussiXZwA4g1xrpbNQ5r3ExLOIxDUpbUiw2zyrWQxN4Ag9D31J2wTvRXl
+         AiqtVGIpC8tyyBfPGc0QqctZ8iq1vxg+oeqqB3UDMgWKevtzY8h8vuRZRPLK/MynSNl2
+         vvLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2u/8jjSh0h6hsJsw7KV4nyPwb2BObLFOoIj8G9tctSE=;
+        b=JWGMDeleXCY8oX6RRVWDTZAfSG6J1ReVqPEhbkpsRtBujfKpA1ka+37GOVbY5dQj7v
+         +yzRubihN0PLV4AHdXrKuXVNQbNpJUv/fZqfqLhF0YsK0dZg5f13MypYSnXia2YSVxLa
+         ZWU4TfYFesmEoX3KC07+dPw/VvE4tIq3cdheluDdpj0wVtFgEOYzxX1+UOZ4SSYNsOPb
+         ln3e8Gq4WErl1CU3s4ZxY9MWDyTZ/AbyN8mXW78oPJ4qDDGEmq6l7t2kvaMYN7G3MYTl
+         fVSwsitc/DhGUogoO7NcuCNyV1PGzE5T1ToqvcnHFCOt311UR/e1ChHnd0v0R5TLkfI4
+         Cx/A==
+X-Gm-Message-State: AOAM531UBWg17ZIe7ncQNo5ohakPV409NgBYMlkJUL0TjwnkZUSwolbm
+        JGkMiSh1fT0PHCigS/CAlVeRJr00fhiXAdA2K2nTmQ==
+X-Google-Smtp-Source: ABdhPJyViXlwDvpqC0Pz71VCm7nKodY+/l0OZFIP9Xrzj/5oWYchfLRaAW4jfL08eclsRXuBV/onnGsI0NusUu2DmVQ=
+X-Received: by 2002:a2e:1319:: with SMTP id 25mr5611966ljt.200.1622190087290;
+ Fri, 28 May 2021 01:21:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 28 May 2021 08:43:58 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Sander Vanheule <sander@svanheule.net>
-Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] pinctrl: Add RTL8231 pin control and GPIO support
-In-Reply-To: <b7660b9deff694f7a00431b7e4706635fd4aa2be.camel@svanheule.net>
-References: <cover.1621809029.git.sander@svanheule.net>
- <185e8c61893502575c542750c8f27b09029e3078.1621809029.git.sander@svanheule.net>
- <452144b056cb474321481c011ac9ccfb@walle.cc>
- <b7660b9deff694f7a00431b7e4706635fd4aa2be.camel@svanheule.net>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <2fc281bfdbb108a956913779577f5b99@walle.cc>
-X-Sender: michael@walle.cc
+References: <20210524092605.734-1-lakshmi.sowjanya.d@intel.com>
+ <20210524092605.734-3-lakshmi.sowjanya.d@intel.com> <CACRpkdbJPSuNexLE6m-H+=ztaxHRAWT06wwMg95c17O-hR_Cdg@mail.gmail.com>
+ <BL3PR11MB5699EF2B085A9A387199179FC4239@BL3PR11MB5699.namprd11.prod.outlook.com>
+In-Reply-To: <BL3PR11MB5699EF2B085A9A387199179FC4239@BL3PR11MB5699.namprd11.prod.outlook.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 May 2021 10:21:15 +0200
+Message-ID: <CACRpkdaWLaX4vA+9GFrxBNvbnMP8t++_9LOBpzL8S-ti6avJpg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: Add Intel Keem Bay pinctrl driver
+To:     "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>,
+        "Saha, Tamal" <tamal.saha@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2021-05-28 08:42, schrieb Sander Vanheule:
-> On Fri, 2021-05-28 at 08:29 +0200, Michael Walle wrote:
->> > +       gpio_cfg.reg_dat_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DATA0);
->> > +       gpio_cfg.reg_set_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DATA0);
->> > +       gpio_cfg.reg_dir_in_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DIR0);
->> 
->> Btw. you'd only need GPIO_REGMAP_ADDR(x) if x might be 0. Because you
->> have
->> a constant != 0 there, you could save the GPIO_REGMAP_ADDR() call. You
->> could drop this if you like, but no need to respin the series for 
->> this.
-> 
-> I will need to respin this series anyway, so I can drop the 
-> GPIO_REGMAP_ADDR()
-> calls. I was aware they are no-ops in this case, as register address 0 
-> is not
-> used for the GPIO functions, so mainly included them as a form of 
-> documentation.
+On Thu, May 27, 2021 at 4:44 PM D, Lakshmi Sowjanya
+<lakshmi.sowjanya.d@intel.com> wrote:
+> From: Linus Walleij <linus.walleij@linaro.org>
 
-It's up to you if you like to change it or keep it.
+> > > +       val |= FIELD_PREP(KEEMBAY_GPIO_MODE_INV_MASK, KEEMBAY_GPIO_MODE_INV_VAL);
+> > > +       keembay_write_reg(val, kpc->base1 + KEEMBAY_GPIO_MODE, pin); }
+>
+> > Why would you want to invert? OK I guess I read and see..
+>
+> The IP doesn't support the falling edge and low level interrupt trigger. Hence
+> the invert API is used to mimic the falling edge and low level support.
 
--michael
+That is a clever hack.
+
+Write some comments about that here or at the call sites so it is
+clear what is going on and why you are doing this, so readers
+of the code understand.
+
+Yours,
+Linus Walleij
