@@ -2,124 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3E4F39526F
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 May 2021 20:16:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C7AE395296
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 May 2021 21:02:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229756AbhE3SSU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 May 2021 14:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58808 "EHLO
+        id S229756AbhE3TE1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 May 2021 15:04:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbhE3SSU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 May 2021 14:18:20 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C32AC061574;
-        Sun, 30 May 2021 11:16:42 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id e22so6634273pgv.10;
-        Sun, 30 May 2021 11:16:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pkUj3zMmHOdVNuTHNI8kn298pUVHjZoc++S5+3I/00Q=;
-        b=ubiWREhVEWrggHFu74IuBBX9P5k0XHbA7pNKYK3/B4Z4M1mCLwYoSDMml1kA5TC9Kw
-         uX6yeJA67KKv+VdRNbDgkzqxMeERFq9+bfhOGxLWFbwn5kKdwOROW6+AcS/5MulvxgSr
-         IKEudMFuimGFOYRiTKdV2lzw/E5B6r/e+a76wIfuxuK3Lo7VFYh90+KT58H/+jy0yU7M
-         +sXtU1i4v0hzakPFSbASDC/SX1UfDuItppyvJb3gThNdj+knpX6fJxEGyGI14Rh62hO+
-         VCqS0EGKjW0ha5SlGsvUZrbrv6oeylUXmyVeMjeXDPeV7jf1NI2S7Ob4ChlhSBQJcBFO
-         wD0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pkUj3zMmHOdVNuTHNI8kn298pUVHjZoc++S5+3I/00Q=;
-        b=l7VnVuHo2uui6V2qSyS9Zm+wS1QAFoqFOH7dqk3IByYKG17s627Jl+650IvPCaHHxK
-         RE+9jSQuYXXHTEzhzKZJ+gdE8vYKAL7pEbK5HqN+fA0SFFpxhuVgnG+UPtYrK7PfCh5J
-         z90XO13BI8zhrAPFVTojK5tLv/9MYqPkHyei+cpq0u/g1MbnMbJxY7Uh0D+aEb1pBhhe
-         djb+saYKMzZmHumzMesGIiKTruOzxD4eRUnawROV/uxdR+CXUz5VpA1LKrrdVLIJEaXR
-         1/W6YCgO+DAuEEyy4Od5S56IZlNCKeAkvjXJrALg6IsEeUBBU18otDi0PxgtNo4xEOeP
-         LH9w==
-X-Gm-Message-State: AOAM530hBQrlkO+zHioU2lCizu2egaUJhf1B6NgSKj0m/99jJEeuQGau
-        H6L61YXkg1VydTY72885NO8PDnhPxIbjsyPtP+o=
-X-Google-Smtp-Source: ABdhPJyOUPWjXJ/oYKp8W04hWiA9Gwj/2oAT6Q8yTLxO+CVmGKHo/gdytZ+Z9OJnX1iAMl2bwQ4EuucGS4j7k4Ag9P4=
-X-Received: by 2002:a63:b507:: with SMTP id y7mr19116473pge.74.1622398601427;
- Sun, 30 May 2021 11:16:41 -0700 (PDT)
+        with ESMTP id S229712AbhE3TE0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 May 2021 15:04:26 -0400
+Received: from mailserv1.kapsi.fi (mailserv1.kapsi.fi [IPv6:2001:67c:1be8::25:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABD4C061574;
+        Sun, 30 May 2021 12:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=ext.kapsi.fi; s=20161220; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=oZROxvW7wvBMQl3Ns3srNqiUCZx86IbX05zIEd8frNw=; b=BOqjmoGYe+OySgmuH9DibsjJ5b
+        50aMF21hockXXYccE1oqGEcgSJ0Ihg/+ILqibmywDceRH5OgzC7SEnzTeLP+z6h6Fh/Kg9Qt9JCfG
+        Y2iYRFO84rh7vrw9DSV0haWlJxYBTd1iS3m09yvKnNpP9jya4egjcN81KO2Whwb5zVlTCuj7hevUO
+        xdWeqlaZiCYUkZTmdl97Ggi+8WiigFjL0nXgJ0SeXvOqihMTYmENrhHKCmc78UwEvSNsLzKmR7Xs2
+        ORK2AmxYyS0n4w0nvetD3t4xauoOsCKeEUAHHTkIuKYW3qPHOSSAwSIIkLenuPWRHwAG614yYaUb/
+        rSH/UxqA==;
+Received: from 164-105-191-90.dyn.estpak.ee ([90.191.105.164]:51308 helo=[192.168.3.116])
+        by mailserv1.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <maukka@ext.kapsi.fi>)
+        id 1lnQhp-0003AI-9x; Sun, 30 May 2021 22:02:37 +0300
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     sandberg@mailfence.com, bgolaszewski@baylibre.com,
+        geert+renesas@glider.be, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drew@beagleboard.org, kernel test robot <lkp@intel.com>
+References: <20210325122832.119147-1-sandberg@mailfence.com>
+ <20210530161333.3996-1-maukka@ext.kapsi.fi>
+ <20210530161333.3996-3-maukka@ext.kapsi.fi>
+ <CAHp75Vffj=8WKBO23iRxxFmva+SU5u58eBkZfMRyY6GG-6maXg@mail.gmail.com>
+From:   Mauri Sandberg <maukka@ext.kapsi.fi>
+Message-ID: <0307426d-83a3-8c45-e1a6-ffc422780cbb@ext.kapsi.fi>
+Date:   Sun, 30 May 2021 22:02:35 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
-References: <cover.1620735871.git.sander@svanheule.net> <cover.1621809029.git.sander@svanheule.net>
- <YKr9G3EfrM34gCsL@lunn.ch> <CAHp75VewCw8ES_9S48qmeCtSXMkGWt0s4iub0Fu4ZuwWANHpaQ@mail.gmail.com>
- <02bbf73ea8a14119247f07a677993aad2f45b088.camel@svanheule.net>
- <f03d5cdc958110fc7d95cfc4258dac4e@walle.cc> <84352c93f27d7c8b7afea54f3932020e9cd97d02.camel@svanheule.net>
- <a644b8fa-c90a-eab6-9cca-08344abec532@redhat.com>
-In-Reply-To: <a644b8fa-c90a-eab6-9cca-08344abec532@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 30 May 2021 21:16:24 +0300
-Message-ID: <CAHp75VcFmU4rJ6jL204xGFM=s2LV=KQmsV8E75BpuSAZMXBn0w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] RTL8231 GPIO expander support
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Sander Vanheule <sander@svanheule.net>,
-        Michael Walle <michael@walle.cc>, Andrew Lunn <andrew@lunn.ch>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75Vffj=8WKBO23iRxxFmva+SU5u58eBkZfMRyY6GG-6maXg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-SA-Exim-Connect-IP: 90.191.105.164
+X-SA-Exim-Mail-From: maukka@ext.kapsi.fi
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mailserv1.kapsi.fi
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A,TVD_RCVD_IP,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.2
+Subject: Re: [PATCH v4 2/2] gpio: gpio-mux-input: add generic gpio input
+ multiplexer
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on mailserv1.kapsi.fi)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, May 30, 2021 at 7:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 5/30/21 6:19 PM, Sander Vanheule wrote:
-> > On Fri, 2021-05-28 at 08:37 +0200, Michael Walle wrote:
 
-...
+On 30.5.2021 21.09, Andy Shevchenko wrote:
+> On Sun, May 30, 2021 at 7:16 PM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
+>> Adds support for a generic GPIO multiplexer. To drive the multiplexer a
+>> mux-controller is needed. The output pin of the multiplexer is a GPIO
+>> pin.
+>>
+>> Reported-by: kernel test robot <lkp@intel.com>
+> Is it a fix? Shall we add the Fixes tag?
 
-> > I think I found a solution!
-> >
-> > As Michael suggested, I tried raw register reads and writes, to eliminate any
-> > side effects of the intermediate code. I didn't use the ioctls (this isn't a
-> > netdev), but I found regmap's debugfs write functionality, which allowed me to
-> > do the same.
-> >
-> > I was trying to reproduce the behaviour I reported earlier, but couldn't. The
-> > output levels were always the intended ones. At some point I realised that the
-> > regmap_update_bits function does a read-modify-write, which might shadow the
-> > actual current output value.
-> > For example:
-> >  * Set output low: current out is low
-> >  * Change to input with pull-up: current out is still low, but DATAx reads high
-> >  * Set output high: RMW reads a high value (the input), so assumes a write is
-> >    not necessary, leaving the old output value (low).
-> >
-> > Currently, I see two options:
-> >  * Use regmap_update_bits_base to avoid the lazy RMW behaviour
-> >  * Add a cache for the output data values to the driver, and only use these
-> >    values to write to the output registers. This would allow keeping lazy RMW
-> >    behaviour, which may be a benefit on slow busses.
-> >
-> > With either of these implemented, if I set the output value before the
-> > direction, everything works! :-)
-> >
-> > Would you like this to be added to regmap-gpio, or should I revert back to a
-> > device-specific implementation?
+In the v1 a build bot complained about .owner along these lines:
+
+--- snip ----
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+
+cocci warnings: (new ones prefixed by >>)
+ >> drivers/gpio/gpio-mux-input.c:138:3-8: No need to set .owner here. 
+The core will do it.
+
+Please review and possibly fold the followup patch.
+--- snip ---
+
+I removed the .owner attribute in v2 as requested but wasn't really sure 
+whether it was "appropriate"
+to add the tag so I put it there anyhow. Technically, this does not fix 
+any previous commit.
+
+>> Signed-off-by: Mauri Sandberg <maukka@ext.kapsi.fi>
+>> Tested-by: Drew Fustini <drew@beagleboard.org>
+>> Reviewed-by: Drew Fustini <drew@beagleboard.org>
 >
-> Regmap allows you to mark certain ranges as volatile, so that they will not
-> be cached, these GPIO registers containing the current pin value seems like
-> a good candidate for this. This is also necessary to make reading the GPIO
-> work without getting back a stale, cached value.
-
-After all it seems a simple missed proper register configuration in
-the driver for regmap.
-Oh, as usual something easy-to-solve requires tons of time to find it. :-)
-
-Sander, I think you may look at gpio-pca953x.c to understand how it
-works (volatility of registers).
-
--- 
-With Best Regards,
-Andy Shevchenko
