@@ -2,94 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 603E03966CF
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 May 2021 19:22:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB4493966F9
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 May 2021 19:24:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233092AbhEaRXn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 May 2021 13:23:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52758 "EHLO
+        id S232735AbhEaR0X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 May 2021 13:26:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232057AbhEaRXd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 May 2021 13:23:33 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C15C0467CF;
-        Mon, 31 May 2021 08:49:15 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id e7so3338588plj.7;
-        Mon, 31 May 2021 08:49:15 -0700 (PDT)
+        with ESMTP id S233289AbhEaR0E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 May 2021 13:26:04 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A8EC061243
+        for <linux-gpio@vger.kernel.org>; Mon, 31 May 2021 09:00:26 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id i23-20020a9d68d70000b02902dc19ed4c15so11525158oto.0
+        for <linux-gpio@vger.kernel.org>; Mon, 31 May 2021 09:00:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FCdzBejJr3ualFFCFvEugffbkYhoyf/lVFS4X8bD45o=;
-        b=bdkmrEDaz1FRvAfbP7TEn1zpt+08TJLzgN0LCEFc0B6LANz/eeGCSH1WJs+wJGcaW9
-         Wvnt/rRLUr+RFoH/1l0KVEmqZfwig9fqj41XSHQX67B9TGJPJJMaBItcXgaP6fJ69ViH
-         ImisCYxqJIc4QfwgVuvM3JPvIpfvGXB4/wMNCk54jrHiiUyv42YHjayS9I9XX6I8jLQl
-         R7JNQND/bAQrvd1ZHU2fOmLMRBg9yCe5Cy3AWPkA3217mWEn5MSEUK9m/Ldvh0v32hlI
-         spxq2Owd+pDNlYVK/Ce0+NgAsytZ8ft+tBK9BfQUwlmp779cBoC8pZHOoVtwhD4CttfK
-         51Tw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fN1lwP5lK2ZHeH7sczhOwIckpr3tPGWDquAjHKUZXog=;
+        b=hNYKEID4JhJQ2mBGmIIN/br18BpZwaCLF+jE9UTlU9G4HQaAIT8PKYg7Xi2ShY9p0Z
+         HJ8jwKvkcDwZpduFmnUREoPTfGTi45BgDoW21Pe2B5/y9w49N6OQ53Hf61LTOqE2mdLL
+         p41UdZh4U0m7xMBwP65sa4LSlne0ieiElX5+Z8uunSaN1FGtToqZ5ZcukecMif5DbvSV
+         Aklse3P23K5Q8Nnz2Os4uKcIOWjl/3M0wQ3LfF6/6lf4Ql6oyCkETyTm9aqwAlRiE6tr
+         8DKj0ZQxQtouvz89gHFm/TYaRI6Yeg11WhW0oD4Fy5fkkMN0Lgda4Zy1Ab3/DToUcXOb
+         7UcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FCdzBejJr3ualFFCFvEugffbkYhoyf/lVFS4X8bD45o=;
-        b=izwF2usFfDvYuAm8x79TFAq3iTwXDo9OCdJyQp8PiOi4gJ3/8/D/qP1amoK0q16fP1
-         nFC45YOW2mST3+L1CSIpwcwepZ/LTR2STeVMbrpIg9FmXozkKqnwwTaqnLqFqHdEXNBc
-         m+0p0vHjWdOAfbAe7BzuLGIHnK6UhUF0qm/2M+1yBVX7xlpGLoi/eR/bKxt74QIcNEmR
-         2M/1KQwgpGrpDSyuQIdGPNx2yi4fdWyplGAILFahMN2ZW4JF/z3I4ZBYSR4lKaVSkjSQ
-         I4aZ+nckgijtGVrcDXyAiM093MUAZXuaqYcLUCuBDIV8vuUW+F0niTxsNUXqvHb/9yHy
-         DF6g==
-X-Gm-Message-State: AOAM530cNJOmz2Qd42MhUh5tHuyWW/Sq1JYZ9WqemDdhKBTUMR8uWjY2
-        HdK9veYuJEeXEbZKaZIBbu9LYL+h29E+hkSw4X8=
-X-Google-Smtp-Source: ABdhPJx5BGVUVHf95exJairels/WYmOrI3Rug0s54UBhu0sKh0cdUjDwnxdRsZYdwZu2yCS64bpQlfmjrKScouWgFIk=
-X-Received: by 2002:a17:90a:17ad:: with SMTP id q42mr20113550pja.181.1622476154635;
- Mon, 31 May 2021 08:49:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fN1lwP5lK2ZHeH7sczhOwIckpr3tPGWDquAjHKUZXog=;
+        b=Kov/aQIepjj5lztyvhAi5PqO1qoSKVcJVD+7PYjafjgelNpRiFbge05rfLWbXF3tmy
+         VuBB2GKsuAPok57TSjk8bILE3l3XITNP1YAUs6zdBkbZVQlfTYKjSkZ+8t0ORq97cKqM
+         0jf0NHqswYcXP0JILrezE5BLssxJblE7KZtXQ7IMJJdjQ6NWpU+q70GP/kYTi1waLMMi
+         dhlo+aHDZN0O50yFhA2DrlENrun4v2ggUd+t6RSotvy2lrZGIjjVTf6BjHks8N94iwMU
+         S8VkHxjcnYdhWlqWXvdRe6Gd11U8uiMMmrTmiC9nZ3MZMoxwW0WulrRfcV9Wfv+ny+ws
+         lq2A==
+X-Gm-Message-State: AOAM532JbouIP9Q9NlRX5XG+AzNl2/YMMcEXhngQU8fYsOuFnkV1we0J
+        usHdnShs3LAMW7agzwrCwKnxlw==
+X-Google-Smtp-Source: ABdhPJwDCCFNnIT0y3dFNpGmgGCryNc2EXOVlWu47wca+TIuoheauQKmB2zZiFIG/mzl0af1KpUMHg==
+X-Received: by 2002:a9d:4105:: with SMTP id o5mr3928515ote.20.1622476825730;
+        Mon, 31 May 2021 09:00:25 -0700 (PDT)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id x14sm2924059oic.3.2021.05.31.09.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 May 2021 09:00:25 -0700 (PDT)
+Date:   Mon, 31 May 2021 11:00:23 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linus.walleij@linaro.org, vkoul@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: Fix duplication in gpio_groups
+Message-ID: <YLUIF84u6VjHyNnp@builder.lan>
+References: <20210526082857.174682-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-References: <cover.1620735871.git.sander@svanheule.net> <cover.1621809029.git.sander@svanheule.net>
- <YKr9G3EfrM34gCsL@lunn.ch> <CAHp75VewCw8ES_9S48qmeCtSXMkGWt0s4iub0Fu4ZuwWANHpaQ@mail.gmail.com>
- <02bbf73ea8a14119247f07a677993aad2f45b088.camel@svanheule.net>
- <f03d5cdc958110fc7d95cfc4258dac4e@walle.cc> <84352c93f27d7c8b7afea54f3932020e9cd97d02.camel@svanheule.net>
- <a644b8fa-c90a-eab6-9cca-08344abec532@redhat.com> <CAHp75VcFmU4rJ6jL204xGFM=s2LV=KQmsV8E75BpuSAZMXBn0w@mail.gmail.com>
- <c7239e0cbbc9748925410937a914bd8a@walle.cc> <7a9978881e9ec5d4b811fa6e5d355fb6bce6f6d8.camel@svanheule.net>
- <0047200eecbd7ee480258cc904d6b7ee@walle.cc> <CAHp75VfOrUBRQH1vrXEwHN4ZPojQfQju-_wp_3djZeozEaatug@mail.gmail.com>
- <272ac6af4a5ba5df4bb085617c9267e5ece61c19.camel@svanheule.net>
-In-Reply-To: <272ac6af4a5ba5df4bb085617c9267e5ece61c19.camel@svanheule.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 31 May 2021 18:48:58 +0300
-Message-ID: <CAHp75Vcb95HiYxvEzYr0QXcQmA_A+2M9M0uv6PAhPHtgTges8g@mail.gmail.com>
-Subject: Re: [PATCH 0/5] RTL8231 GPIO expander support
-To:     Sander Vanheule <sander@svanheule.net>
-Cc:     Michael Walle <michael@walle.cc>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210526082857.174682-1-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 31, 2021 at 6:33 PM Sander Vanheule <sander@svanheule.net> wrote:
-> On Mon, 2021-05-31 at 14:16 +0300, Andy Shevchenko wrote:
-> > On Monday, May 31, 2021, Michael Walle <michael@walle.cc> wrote:
-> > > Am 2021-05-31 10:36, schrieb Sander Vanheule:
+On Wed 26 May 03:28 CDT 2021, Manivannan Sadhasivam wrote:
 
-> Am I missing something here? It seems to me like the regmap interface can't
-> really accommodate what's required, unless maybe the rtl8231 regmap users
-> perform some manual locking. This all seems terribly complicated compared to
-> using an internal output-value cache inside regmap-gpio.
+> "gpio52" and "gpio53" are duplicated in gpio_groups, fix them!
+> 
 
-Have you had a chance to look into the PCA953x driver?
-Sounds to me that you are missing the APIs that regmap provides.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Fixes: ac43c44a7a37 ("pinctrl: qcom: Add SDX55 pincontrol driver")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sdx55.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sdx55.c b/drivers/pinctrl/qcom/pinctrl-sdx55.c
+> index 5aaf57b40407..0bb4931cec59 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sdx55.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sdx55.c
+> @@ -410,15 +410,15 @@ static const char * const gpio_groups[] = {
+>  	"gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", "gpio35",
+>  	"gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", "gpio42",
+>  	"gpio43", "gpio44", "gpio45", "gpio46", "gpio47", "gpio48", "gpio49",
+> -	"gpio50", "gpio51", "gpio52", "gpio52", "gpio53", "gpio53", "gpio54",
+> -	"gpio55", "gpio56", "gpio57", "gpio58", "gpio59", "gpio60", "gpio61",
+> -	"gpio62", "gpio63", "gpio64", "gpio65", "gpio66", "gpio67", "gpio68",
+> -	"gpio69", "gpio70", "gpio71", "gpio72", "gpio73", "gpio74", "gpio75",
+> -	"gpio76", "gpio77", "gpio78", "gpio79", "gpio80", "gpio81", "gpio82",
+> -	"gpio83", "gpio84", "gpio85", "gpio86", "gpio87", "gpio88", "gpio89",
+> -	"gpio90", "gpio91", "gpio92", "gpio93", "gpio94", "gpio95", "gpio96",
+> -	"gpio97", "gpio98", "gpio99", "gpio100", "gpio101", "gpio102",
+> -	"gpio103", "gpio104", "gpio105", "gpio106", "gpio107",
+> +	"gpio50", "gpio51", "gpio52", "gpio53", "gpio54", "gpio55", "gpio56",
+> +	"gpio57", "gpio58", "gpio59", "gpio60", "gpio61", "gpio62", "gpio63",
+> +	"gpio64", "gpio65", "gpio66", "gpio67", "gpio68", "gpio69", "gpio70",
+> +	"gpio71", "gpio72", "gpio73", "gpio74", "gpio75", "gpio76", "gpio77",
+> +	"gpio78", "gpio79", "gpio80", "gpio81", "gpio82", "gpio83", "gpio84",
+> +	"gpio85", "gpio86", "gpio87", "gpio88", "gpio89", "gpio90", "gpio91",
+> +	"gpio92", "gpio93", "gpio94", "gpio95", "gpio96", "gpio97", "gpio98",
+> +	"gpio99", "gpio100", "gpio101", "gpio102", "gpio103", "gpio104",
+> +	"gpio105", "gpio106", "gpio107",
+>  };
+>  
+>  static const char * const qdss_stm_groups[] = {
+> -- 
+> 2.25.1
+> 
