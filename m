@@ -2,224 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F0A33958A6
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 May 2021 12:02:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83FCA3958DC
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 May 2021 12:20:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231186AbhEaKEP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 May 2021 06:04:15 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:55769 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230518AbhEaKEO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 May 2021 06:04:14 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8D704221E6;
-        Mon, 31 May 2021 12:02:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1622455352;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yHnj8ZChpZfQ7rJMK2Ssfqvgsi+pIPIjW/sU2HAAnww=;
-        b=OrhsVzs4VbvB2eQXxVYhdwyrXwP8a0gKdZgKeX4Gq9mG/cevW5xLI2dLOZ1n64MjnNIQFy
-        Z2cuJ+N8iyo02+Dc9HDqYwDkuNJGlpz1XB5VFOvHMT2BatnRlBEQ9LqTcw+ibki4a8ZN68
-        H+1jixWHCNPj2O+kGfHepOOzJa3/Ki8=
+        id S231222AbhEaKV4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 May 2021 06:21:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230518AbhEaKVz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 May 2021 06:21:55 -0400
+Received: from mailserv1.kapsi.fi (mailserv1.kapsi.fi [IPv6:2001:67c:1be8::25:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77BC7C061574;
+        Mon, 31 May 2021 03:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=ext.kapsi.fi; s=20161220; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jTxFZ32tnC3Ys9+FwIaxl+M08wou4VWg96vlIkqQ/wA=; b=Zgw1ruXqLsR3QQlE0elhCRhz6M
+        DCk1NqucnKGaOJ4l5VFPh7YhuDZBQMM4wquACWDUUBHo/vQ/sVVsxExh1W9xFs7h0xbKEEVWYz/9C
+        rDgLVslQeXaSEdpM4iP7Z39EqY7Kayy3i9yxibxWqCsol43iFwRjaOnPkLt2OCsK03rv+WLhawFeU
+        TLXUOxqc4AWuTGkbRqRa9TekSyd9Sorx39KKrGkxqNOX461Dlszft8gjn6NUh8BQ4qbFCrYhknyeU
+        UxBtos19lLrGSKTaOMMzaTs7RI/K7pb/uKGTAax8JcEl9KkNYWHKjDvvX5apCS+Lp1GkdptNg3zhZ
+        ehAxhI5A==;
+Received: from 164-105-191-90.dyn.estpak.ee ([90.191.105.164]:55252 helo=[192.168.3.116])
+        by mailserv1.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <maukka@ext.kapsi.fi>)
+        id 1lnf1V-0001sN-3p; Mon, 31 May 2021 13:19:53 +0300
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     sandberg@mailfence.com, bgolaszewski@baylibre.com,
+        geert+renesas@glider.be, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drew@beagleboard.org, kernel test robot <lkp@intel.com>
+References: <20210325122832.119147-1-sandberg@mailfence.com>
+ <20210530161333.3996-1-maukka@ext.kapsi.fi>
+ <20210530161333.3996-3-maukka@ext.kapsi.fi>
+ <CAHp75Vffj=8WKBO23iRxxFmva+SU5u58eBkZfMRyY6GG-6maXg@mail.gmail.com>
+ <0307426d-83a3-8c45-e1a6-ffc422780cbb@ext.kapsi.fi>
+ <CAHp75VfkyV+2p50c=iK5n4uiv6ptypsqc-GkWi7ZJHTs7Qmr3g@mail.gmail.com>
+From:   Mauri Sandberg <maukka@ext.kapsi.fi>
+Message-ID: <a8301a34-5ce6-6bce-63c9-3a4484a8b20d@ext.kapsi.fi>
+Date:   Mon, 31 May 2021 13:19:51 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 31 May 2021 12:02:31 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Sander Vanheule <sander@svanheule.net>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/6] RTL8231 GPIO expander support
-In-Reply-To: <7a9978881e9ec5d4b811fa6e5d355fb6bce6f6d8.camel@svanheule.net>
-References: <cover.1620735871.git.sander@svanheule.net>
- <cover.1621809029.git.sander@svanheule.net> <YKr9G3EfrM34gCsL@lunn.ch>
- <CAHp75VewCw8ES_9S48qmeCtSXMkGWt0s4iub0Fu4ZuwWANHpaQ@mail.gmail.com>
- <02bbf73ea8a14119247f07a677993aad2f45b088.camel@svanheule.net>
- <f03d5cdc958110fc7d95cfc4258dac4e@walle.cc>
- <84352c93f27d7c8b7afea54f3932020e9cd97d02.camel@svanheule.net>
- <a644b8fa-c90a-eab6-9cca-08344abec532@redhat.com>
- <CAHp75VcFmU4rJ6jL204xGFM=s2LV=KQmsV8E75BpuSAZMXBn0w@mail.gmail.com>
- <c7239e0cbbc9748925410937a914bd8a@walle.cc>
- <7a9978881e9ec5d4b811fa6e5d355fb6bce6f6d8.camel@svanheule.net>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <0047200eecbd7ee480258cc904d6b7ee@walle.cc>
-X-Sender: michael@walle.cc
+In-Reply-To: <CAHp75VfkyV+2p50c=iK5n4uiv6ptypsqc-GkWi7ZJHTs7Qmr3g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-SA-Exim-Connect-IP: 90.191.105.164
+X-SA-Exim-Mail-From: maukka@ext.kapsi.fi
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mailserv1.kapsi.fi
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A,TVD_RCVD_IP,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.2
+Subject: Re: [PATCH v4 2/2] gpio: gpio-mux-input: add generic gpio input
+ multiplexer
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on mailserv1.kapsi.fi)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2021-05-31 10:36, schrieb Sander Vanheule:
-> On Sun, 2021-05-30 at 23:22 +0200, Michael Walle wrote:
->> Am 2021-05-30 20:16, schrieb Andy Shevchenko:
->> > On Sun, May 30, 2021 at 7:51 PM Hans de Goede <hdegoede@redhat.com>
->> > wrote:
->> > > On 5/30/21 6:19 PM, Sander Vanheule wrote:
->> > > > As Michael suggested, I tried raw register reads and writes, to eliminate
->> > > > any
->> > > > side effects of the intermediate code. I didn't use the ioctls (this isn't
->> > > > a
->> > > > netdev), but I found regmap's debugfs write functionality, which allowed
->> > > > me to
->> > > > do the same.
->> > > >
->> > > > I was trying to reproduce the behaviour I reported earlier, but couldn't.
->> > > > The
->> > > > output levels were always the intended ones. At some point I realised that
->> > > > the
->> > > > regmap_update_bits function does a read-modify-write, which might shadow
->> > > > the
->> > > > actual current output value.
->> > > > For example:
->> > > >  * Set output low: current out is low
->> > > >  * Change to input with pull-up: current out is still low, but DATAx reads
->> > > > high
->> > > >  * Set output high: RMW reads a high value (the input), so assumes a write
->> > > > is
->> > > >    not necessary, leaving the old output value (low).
->> > > >
->> > > > Currently, I see two options:
->> > > >  * Use regmap_update_bits_base to avoid the lazy RMW behaviour
->> > > >  * Add a cache for the output data values to the driver, and only use
->> > > > these
->> > > >    values to write to the output registers. This would allow keeping lazy
->> > > > RMW
->> > > >    behaviour, which may be a benefit on slow busses.
->> > > >
->> > > > With either of these implemented, if I set the output value before the
->> > > > direction, everything works! :-)
->> > > >
->> > > > Would you like this to be added to regmap-gpio, or should I revert back to
->> > > > a
->> > > > device-specific implementation?
->> > >
->> > > Regmap allows you to mark certain ranges as volatile, so that they
->> > > will not
->> > > be cached, these GPIO registers containing the current pin value seems
->> > > like
->> > > a good candidate for this. This is also necessary to make reading the
->> > > GPIO
->> > > work without getting back a stale, cached value.
->> >
->> > After all it seems a simple missed proper register configuration in
->> > the driver for regmap.
->> > Oh, as usual something easy-to-solve requires tons of time to find it.
->> > :-)
->> >
->> > Sander, I think you may look at gpio-pca953x.c to understand how it
->> > works (volatility of registers).
->> 
->> But as far as I see is the regmap instantiated without a cache?
-> 
-> That's correct, there currently is no cache, although I could add one.
-> 
-> The data register rather appears to be implemented as a read-only (pin 
-> inputs)
-> register and a write-only (pin outputs) register, aliased on the same 
-> register
-> address.
 
-Ahh so this makes more sense. If the data register is really write only
-regardless of the direction mode, then RMW doesn't make any sense at 
-all.
-Please note, that even if regmap caches values, it might be marked as 
-dirty
-and it will re-read the values from hardware. So I don't know if that 
-will
-help you.
+On 30.5.2021 22.38, Andy Shevchenko wrote:
+> On Sun, May 30, 2021 at 10:02 PM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
+>> On 30.5.2021 21.09, Andy Shevchenko wrote:
+>>> On Sun, May 30, 2021 at 7:16 PM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
+>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>> Is it a fix? Shall we add the Fixes tag?
+>> In the v1 a build bot complained about .owner along these lines:
+>>
+>> --- snip ----
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>>
+>> cocci warnings: (new ones prefixed by >>)
+>>   >> drivers/gpio/gpio-mux-input.c:138:3-8: No need to set .owner here.
+>> The core will do it.
+>>
+>> Please review and possibly fold the followup patch.
+>> --- snip ---
+>>
+>> I removed the .owner attribute in v2 as requested but wasn't really sure
+>> whether it was "appropriate"
+>> to add the tag so I put it there anyhow. Technically, this does not fix
+>> any previous commit.
+> For this kind of thing you may attribute the reporter(s) by mentioning
+> them in the comment lines / cover letter.
+It's there in the patch version notes so the 'Reported-by' was 
+unnecessary. Should it be removed?
+That is, is there a tool sitting somwhere that tries to match reports 
+and their fixes?
 
-So a possible quirk could be
-  GPIO_REGMAP_WRITE_ONLY_DATA_REG (or something like that)
-
-I'm not sure if regmap can cache the value for us or if we have to do it
-ourselves.
-
-> As I understand, marking the DATA registers as volatile wouldn't help. 
-> With a
-> cache this would force reads to not use the cache, which is indeed 
-> required for
-> the pin input values (DATA register reads). However, the output values 
-> (DATA
-> register writes) can in fact be cached.
-> Looking at _regmap_update_bits(), marking a register as volatile would 
-> only make
-> a difference if regmap.reg_update_bits is implemented. On an MDIO bus, 
-> this
-> would also be emulated with a lazy RMW (see mdiobus_modify()), which is 
-> why I
-> chose not to implement it for regmap-mdio.
-> 
-> So, I still think the issue lies with the lazy RMW behaviour. The patch 
-> below
-> would force a register update when reg_set_base (the data output 
-> register) and
-> reg_dat_base (the data input register) are identical. Otherwise the two
-> registers are assumed to have conventional RW behaviour. I'm just not 
-> entirely
-> sure gpio-regmap.c is the right place for this.
-> 
-> ---8<---
-> 
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index 95553734e169..c2fccd19548a 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -81,13 +81,16 @@ static void gpio_regmap_set(struct gpio_chip *chip, 
-> unsigned
-> int offset,
->  {
->         struct gpio_regmap *gpio = gpiochip_get_data(chip);
->         unsigned int base = gpio_regmap_addr(gpio->reg_set_base);
-> +       bool force = gpio->reg_set_base == gpio->reg_dat_base;
-
-Ha I've thought of the same thing, but there might be hardware which
-actually mux the data in and data out register. Thus I think we have
-to distiguish between:
-
-  (1) write only data registers
-  (2) muxed data in/data out according to the direction
-
-for (1) we'd have to cache the value (ourselves (?))
-for (2) we'd only need to drop a cached value if we switch directions
-
->         unsigned int reg, mask;
-> 
->         gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
->         if (val)
-> -               regmap_update_bits(gpio->regmap, reg, mask, mask);
-> +               regmap_update_bits_base(gpio->regmap, reg, mask, mask, 
-> NULL,
-> +                                       false, force);
-
-mh, I don't see how this will work with a write only register. I seems
-that you might accidentially change the values of the other GPIOs in
-this registers (that is depending on the input of them, because you
-are still doing a RMW).
-
->         else
-> -               regmap_update_bits(gpio->regmap, reg, mask, 0);
-> +               regmap_update_bits_base(gpio->regmap, reg, mask, 0, 
-> NULL,
-> +                                       false, force);
->  }
-> 
->  static void gpio_regmap_set_with_clear(struct gpio_chip *chip,
-
--michael
