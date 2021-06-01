@@ -2,101 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBCFB39729E
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jun 2021 13:42:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE36A3972BE
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jun 2021 13:47:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233409AbhFALnl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Jun 2021 07:43:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44398 "EHLO
+        id S233654AbhFALsw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Jun 2021 07:48:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230288AbhFALnl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Jun 2021 07:43:41 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9F0C061574;
-        Tue,  1 Jun 2021 04:41:59 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 701912224A;
-        Tue,  1 Jun 2021 13:41:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1622547718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xC7P/bcFCV2ZCGkF8kjoqn5cfA8HZsmaWEnBxWUHEDM=;
-        b=eNiCyfvWaN/+vfSha991PXVg+RUbyHmmgR0PDUfcscbxStGXX847KmZdGfsRA49Z+JNIUK
-        a+xj7o/h3+JkiKyPGmGscPC5NINmziOPzrYVBqxKhgyB1fbvhYNsWTM+lOBq8RLWllzVKI
-        CrALRlMjL7Wd82QxbvzkulHMl7axo0g=
+        with ESMTP id S233577AbhFALsv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Jun 2021 07:48:51 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D3BC06174A
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Jun 2021 04:47:10 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id v5so18749917ljg.12
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Jun 2021 04:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ItCVrZoVYv1v/xorZesjCk9X9iKX2f1cF8KOjlONSD8=;
+        b=dHa0W5r/jaxOkqLf8O4d5U3XeqmOyFo1o+aqIJiY0wAu40HLt7tkxoxI+zOcdmDliA
+         /JkYXVhVXUR1hmY7dqM5DeN00yMMBlKNR+7KW2ZxB9kHoIGfuhtwYzVkm6a7aZ4gc7mT
+         0YZ9GHPty3nMIuOgIChlhaXCEX182EeCC1R3zGBckqTjM6KpfDpfPDid0QFvoaq6RbZj
+         0d4UodeiOLi7iLIxrBpTvBrfuhUUnA/Kmc8E7Ad+GRSWTNzI9tLcHbxxWWQQUbO6rPY5
+         VPzod4tqQZksgFGDr5xuqCraD+nTWQi+0t9NTGohzgS4CDy5jnOjHuTfFGGAp3Vs0bdu
+         l2Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ItCVrZoVYv1v/xorZesjCk9X9iKX2f1cF8KOjlONSD8=;
+        b=c9f/jk/kpx7+e2BIhRPp6mCO8xmLjReeE8n9vBi5cGjHxZxnQZeWtPTDbFeRBk+z1/
+         5VI4c2D2NiUg5ppheUawCvAAIDdQIM3R7FhXoWB0kqfdkMpbHxazXwvimnI1c91DNW4F
+         H0ZoEt4zeelSG8BjKHMQHWoSYQ/BybG0k76bN3pHTPEgZ/D4idvgLT8E8SWJK0rZVY7o
+         QEiULG6jT6+PMmE9zKaSR49iJv649b0mu1S/dzuDNzzHdqTCqKQ0RJAGYSndTDczLTyq
+         CjQdRD84iMGzT+UCMUml+7WlbnBmSlU5WuGf5B/pYBglFRHR0qs9bgLDR1ErdDTZJ13Q
+         obyA==
+X-Gm-Message-State: AOAM5306bfV+n/EMkbgwWsgxrDfx9UKJsjzP8CilNeOdigl5NIZDzWWM
+        2qkDdPK7NoR4a+nokB97qMuNbgUoIH9LesVb/Ek5fQ==
+X-Google-Smtp-Source: ABdhPJzphdDpBI1vj78e5QFB4+8vwKRJMltmceYRijPXZT1d0zYnBwy8BBP/GtL4PeK1itYSd4lMv/4xJ1YfDgZ7PwI=
+X-Received: by 2002:a2e:1319:: with SMTP id 25mr20764012ljt.200.1622548028522;
+ Tue, 01 Jun 2021 04:47:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 01 Jun 2021 13:41:57 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sander Vanheule <sander@svanheule.net>,
-        Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
+References: <20210531120753.719381-1-iwamatsu@nigauri.org>
+In-Reply-To: <20210531120753.719381-1-iwamatsu@nigauri.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 1 Jun 2021 13:46:57 +0200
+Message-ID: <CACRpkdaqhMk-0mjUhENWODSjdc1uTSnVJ3E923kRe9t-nq33+g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: zynq: convert bindings to YAML
+To:     Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/6] RTL8231 GPIO expander support
-In-Reply-To: <CACRpkdb4j6krXwdZGtth9b2W2bAdy9_StGbse_YbBY86-AWdLg@mail.gmail.com>
-References: <cover.1620735871.git.sander@svanheule.net>
- <cover.1621809029.git.sander@svanheule.net> <YKr9G3EfrM34gCsL@lunn.ch>
- <CAHp75VewCw8ES_9S48qmeCtSXMkGWt0s4iub0Fu4ZuwWANHpaQ@mail.gmail.com>
- <02bbf73ea8a14119247f07a677993aad2f45b088.camel@svanheule.net>
- <f03d5cdc958110fc7d95cfc4258dac4e@walle.cc>
- <84352c93f27d7c8b7afea54f3932020e9cd97d02.camel@svanheule.net>
- <a644b8fa-c90a-eab6-9cca-08344abec532@redhat.com>
- <CAHp75VcFmU4rJ6jL204xGFM=s2LV=KQmsV8E75BpuSAZMXBn0w@mail.gmail.com>
- <CACRpkda+m5mOzMJ8KcPmojFGWkUpCrbmY0ySPTVx72RtWwf89A@mail.gmail.com>
- <e10c8ef7f758b4f7fa0fcbc992c84125@walle.cc>
- <CACRpkdb4j6krXwdZGtth9b2W2bAdy9_StGbse_YbBY86-AWdLg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <401805ef27bb273d7aca4f3377b53b07@walle.cc>
-X-Sender: michael@walle.cc
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Soren Brinkmann <soren.brinkmann@xilinx.com>,
+        Harini Katakam <harinik@xilinx.com>,
+        Anurag Kumar Vulisha <anuragku@xilinx.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2021-06-01 12:51, schrieb Linus Walleij:
-> On Tue, Jun 1, 2021 at 12:18 PM Michael Walle <michael@walle.cc> wrote:
->> Am 2021-06-01 11:59, schrieb Linus Walleij:
-> 
->> > Just regarding all registers/memory cells in a register page
->> > as default volatile (which is what we do a lot of the time)
->> > has its upsides: bugs like this doesn't happen.
->> 
->> I don't think this is the bug here. If it is really a write-only
->> register
->> the problem is the read in RMW. Because reading the register will 
->> return
->> the input value instead of the (previously written) output value.
-> 
-> True that. Write and read semantics differ on the register.
-> 
-> Volatile is used for this and some other things,
-> like for example interrupts being cleared when a register
-> is read so it is strictly read-once.
+On Mon, May 31, 2021 at 2:08 PM Nobuhiro Iwamatsu <iwamatsu@nigauri.org> wrote:
 
-Isn't that what precious is for?
+> Convert gpio for Xilinx Zynq SoC bindings documentation to YAML.
+>
+> Signed-off-by: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 
-> So the regmap config is really important to get right.
-> 
-> IIUC one of the ambitions around Rust is to encode this
-> in how memory is specified in the language. (I am still
-> thinking about whether that is really a good idea or not.)
+Looks good to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
--- 
--michael
+Yours,
+Linus Walleij
