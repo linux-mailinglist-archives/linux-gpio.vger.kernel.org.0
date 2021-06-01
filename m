@@ -2,261 +2,267 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38F473976B8
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jun 2021 17:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB3253976DB
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jun 2021 17:38:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234389AbhFAPdV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Jun 2021 11:33:21 -0400
-Received: from leibniz.telenet-ops.be ([195.130.137.77]:39292 "EHLO
-        leibniz.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232592AbhFAPdT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Jun 2021 11:33:19 -0400
-X-Greylist: delayed 334 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Jun 2021 11:33:18 EDT
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by leibniz.telenet-ops.be (Postfix) with ESMTPS id 4FvbbC49yPzMqvN6
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Jun 2021 17:25:59 +0200 (CEST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:555:bf00:6951:b6ab])
-        by baptiste.telenet-ops.be with bizsmtp
-        id BrRp2500b35oben01rRpyb; Tue, 01 Jun 2021 17:25:59 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lo6H7-00BuxR-7b; Tue, 01 Jun 2021 17:25:49 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lo6H6-000JYT-N5; Tue, 01 Jun 2021 17:25:48 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        x86@kernel.org, linux-omap@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 4/4] dt-bindings: gpio: pcf857x: Convert to json-schema
-Date:   Tue,  1 Jun 2021 17:25:47 +0200
-Message-Id: <7caa954add90255fc177e5dbabe17d62e0242861.1622560799.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1622560799.git.geert+renesas@glider.be>
-References: <cover.1622560799.git.geert+renesas@glider.be>
+        id S234074AbhFAPkI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Jun 2021 11:40:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230288AbhFAPkH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Jun 2021 11:40:07 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A54BC061574
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Jun 2021 08:38:26 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1lo6TE-0000Zs-6w; Tue, 01 Jun 2021 17:38:20 +0200
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1lo6TC-000697-Cq; Tue, 01 Jun 2021 17:38:18 +0200
+Date:   Tue, 1 Jun 2021 17:38:18 +0200
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, luka.perkov@sartura.hr,
+        jmp@epiphyte.org, pmenzel@molgen.mpg.de, buczek@molgen.mpg.de
+Subject: Re: [PATCH v3 4/6] reset: Add Delta TN48M CPLD reset controller
+Message-ID: <20210601153818.GA20254@pengutronix.de>
+References: <20210531125143.257622-1-robert.marko@sartura.hr>
+ <20210531125143.257622-4-robert.marko@sartura.hr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210531125143.257622-4-robert.marko@sartura.hr>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:15:48 up 103 days, 18:39, 131 users,  load average: 0.10, 0.12,
+ 0.15
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the PCF857x-compatible I/O expanders Device Tree binding
-documentation to json-schema.
+Hi Robert,
 
-Document missing compatible values, properties, and gpio hogs.
+thank you for the patch. A few comments below:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Drop support for "ti,pcf8575", as it's 100% compatible with
-    "nxp,pcf8575",
-  - Drop "hog-[0-9]+" from hog names,
-  - Rely on dt-schema/schemas/gpio/gpio-hog.yaml for hog properties.
----
- .../devicetree/bindings/gpio/gpio-pcf857x.txt |  69 ------------
- .../devicetree/bindings/gpio/nxp,pcf8575.yaml | 103 ++++++++++++++++++
- 2 files changed, 103 insertions(+), 69 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+On Mon, May 31, 2021 at 02:51:41PM +0200, Robert Marko wrote:
+> Delta TN48M CPLD exposes resets for the following:
+> * 88F7040 SoC
+> * 88F6820 SoC
+> * 98DX3265 switch MAC-s
+> * 88E1680 PHY-s
+> * 88E1512 PHY
+> * PoE PSE controller
+> 
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> ---
+>  drivers/reset/Kconfig       |   9 +++
+>  drivers/reset/Makefile      |   1 +
+>  drivers/reset/reset-tn48m.c | 128 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 138 insertions(+)
+>  create mode 100644 drivers/reset/reset-tn48m.c
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 4171c6f76385..e3ff4b020c96 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -64,6 +64,15 @@ config RESET_BRCMSTB_RESCAL
+>  	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
+>  	  BCM7216.
+>  
+> +config RESET_TN48M_CPLD
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-deleted file mode 100644
-index a482455a205b0855..0000000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-+++ /dev/null
-@@ -1,69 +0,0 @@
--* PCF857x-compatible I/O expanders
--
--The PCF857x-compatible chips have "quasi-bidirectional" I/O lines that can be
--driven high by a pull-up current source or driven low to ground. This combines
--the direction and output level into a single bit per line, which can't be read
--back. We can't actually know at initialization time whether a line is configured
--(a) as output and driving the signal low/high, or (b) as input and reporting a
--low/high value, without knowing the last value written since the chip came out
--of reset (if any). The only reliable solution for setting up line direction is
--thus to do it explicitly.
--
--Required Properties:
--
--  - compatible: should be one of the following.
--    - "maxim,max7328": For the Maxim MAX7378
--    - "maxim,max7329": For the Maxim MAX7329
--    - "nxp,pca8574": For the NXP PCA8574
--    - "nxp,pca8575": For the NXP PCA8575
--    - "nxp,pca9670": For the NXP PCA9670
--    - "nxp,pca9671": For the NXP PCA9671
--    - "nxp,pca9672": For the NXP PCA9672
--    - "nxp,pca9673": For the NXP PCA9673
--    - "nxp,pca9674": For the NXP PCA9674
--    - "nxp,pca9675": For the NXP PCA9675
--    - "nxp,pcf8574": For the NXP PCF8574
--    - "nxp,pcf8574a": For the NXP PCF8574A
--    - "nxp,pcf8575": For the NXP PCF8575
--
--  - reg: I2C slave address.
--
--  - gpio-controller: Marks the device node as a gpio controller.
--  - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
--    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
--    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
--
--Optional Properties:
--
--  - lines-initial-states: Bitmask that specifies the initial state of each
--  line. When a bit is set to zero, the corresponding line will be initialized to
--  the input (pulled-up) state. When the  bit is set to one, the line will be
--  initialized the low-level output state. If the property is not specified
--  all lines will be initialized to the input state.
--
--  The I/O expander can detect input state changes, and thus optionally act as
--  an interrupt controller. When the expander interrupt line is connected all the
--  following properties must be set. For more information please see the
--  interrupt controller device tree bindings documentation available at
--  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
--
--  - interrupt-controller: Identifies the node as an interrupt controller.
--  - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
--  - interrupts: Interrupt specifier for the controllers interrupt.
--
--
--Please refer to gpio.txt in this directory for details of the common GPIO
--bindings used by client devices.
--
--Example: PCF8575 I/O expander node
--
--	pcf8575: gpio@20 {
--		compatible = "nxp,pcf8575";
--		reg = <0x20>;
--		interrupt-parent = <&irqpin2>;
--		interrupts = <3 0>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-new file mode 100644
-index 0000000000000000..f0ff66c4c74e252d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/nxp,pcf8575.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PCF857x-compatible I/O expanders
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+
-+description:
-+  The PCF857x-compatible chips have "quasi-bidirectional" I/O lines that can be
-+  driven high by a pull-up current source or driven low to ground. This
-+  combines the direction and output level into a single bit per line, which
-+  can't be read back. We can't actually know at initialization time whether a
-+  line is configured (a) as output and driving the signal low/high, or (b) as
-+  input and reporting a low/high value, without knowing the last value written
-+  since the chip came out of reset (if any). The only reliable solution for
-+  setting up line direction is thus to do it explicitly.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - maxim,max7328
-+      - maxim,max7329
-+      - nxp,pca8574
-+      - nxp,pca8575
-+      - nxp,pca9670
-+      - nxp,pca9671
-+      - nxp,pca9672
-+      - nxp,pca9673
-+      - nxp,pca9674
-+      - nxp,pca9675
-+      - nxp,pcf8574
-+      - nxp,pcf8574a
-+      - nxp,pcf8575
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+    description:
-+      The first cell is the GPIO number and the second cell specifies GPIO
-+      flags, as defined in <dt-bindings/gpio/gpio.h>. Only the GPIO_ACTIVE_HIGH
-+      and GPIO_ACTIVE_LOW flags are supported.
-+
-+  lines-initial-states:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Bitmask that specifies the initial state of each line.
-+      When a bit is set to zero, the corresponding line will be initialized to
-+      the input (pulled-up) state.
-+      When the  bit is set to one, the line will be initialized to the
-+      low-level output state.
-+      If the property is not specified all lines will be initialized to the
-+      input state.
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  wakeup-source: true
-+
-+patternProperties:
-+  "^(.+-hog(-[0-9]+)?)$":
-+    type: object
-+
-+    required:
-+      - gpio-hog
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - '#gpio-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            pcf8575: gpio@20 {
-+                    compatible = "nxp,pcf8575";
-+                    reg = <0x20>;
-+                    interrupt-parent = <&irqpin2>;
-+                    interrupts = <3 0>;
-+                    gpio-controller;
-+                    #gpio-cells = <2>;
-+                    interrupt-controller;
-+                    #interrupt-cells = <2>;
-+            };
-+    };
--- 
-2.25.1
+Please sort this alphabetically.
 
+> +	tristate "Delta Networks TN48M switch CPLD reset controller"
+> +	depends on MFD_TN48M_CPLD
+> +	help
+> +	  This enables the reset controller driver for the Delta TN48M CPLD.
+> +	  It provides reset signals for Armada 7040 and 385 SoC-s, Alleycat 3X
+> +	  switch MAC-s, Alaska OOB ethernet PHY, Quad Alaska ethernet PHY-s and
+> +	  Microchip PD69200 PoE PSE controller.
+> +
+>  config RESET_HSDK
+>  	bool "Synopsys HSDK Reset Driver"
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 65a118a91b27..6d6945638b76 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+>  obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+>  obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
+> +obj-$(CONFIG_RESET_TN48M_CPLD) += reset-tn48m.o
+
+Same as here.
+
+>  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>  obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
+> diff --git a/drivers/reset/reset-tn48m.c b/drivers/reset/reset-tn48m.c
+> new file mode 100644
+> index 000000000000..960ee5f4eb40
+> --- /dev/null
+> +++ b/drivers/reset/reset-tn48m.c
+> @@ -0,0 +1,128 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Delta TN48M CPLD reset driver
+> + *
+> + * Copyright 2021 Sartura Ltd
+> + *
+> + * Author: Robert Marko <robert.marko@sartura.hr>
+> + */
+> +
+> +#include <linux/bitfield.h>
+
+What is this used for?
+
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#include <dt-bindings/reset/delta,tn48m-reset.h>
+> +
+> +#define TN48M_RESET_REG		0x10
+> +
+> +struct tn48_reset_map {
+> +	u8 bit;
+> +};
+> +
+> +struct tn48_reset_data {
+> +	struct reset_controller_dev rcdev;
+> +	struct regmap *regmap;
+> +};
+> +
+> +static const struct tn48_reset_map tn48m_resets[] = {
+> +	[CPU_88F7040_RESET] = {0},
+> +	[CPU_88F6820_RESET] = {1},
+> +	[MAC_98DX3265_RESET] = {2},
+> +	[PHY_88E1680_RESET] = {4},
+> +	[PHY_88E1512_RESET] = {6},
+> +	[POE_RESET] = {7},
+> +};
+> +
+> +static inline struct tn48_reset_data *to_tn48_reset_data(
+> +			struct reset_controller_dev *rcdev)
+> +{
+> +	return container_of(rcdev, struct tn48_reset_data, rcdev);
+> +}
+> +
+> +static int tn48m_control_assert(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	struct tn48_reset_data *data = to_tn48_reset_data(rcdev);
+> +
+> +	return regmap_update_bits(data->regmap, TN48M_RESET_REG,
+> +				  BIT(tn48m_resets[id].bit), 0);
+> +}
+
+Why is there no deassert?
+
+> +static int tn48m_control_reset(struct reset_controller_dev *rcdev,
+> +			       unsigned long id)
+> +{
+> +	return tn48m_control_assert(rcdev, id);
+
+Is this a self-clearing (or rather self re-setting) bit that triggers a
+reset pulse?
+If so, assert shouldn't be implemented.
+
+> +}
+> +
+> +static int tn48m_control_status(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	struct tn48_reset_data *data = to_tn48_reset_data(rcdev);
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = regmap_read(data->regmap, TN48M_RESET_REG, &regval);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (BIT(tn48m_resets[id].bit) & regval)
+> +		return 0;
+> +	else
+> +		return 1;
+> +}
+> +
+> +static const struct reset_control_ops tn48_reset_ops = {
+> +	.reset		= tn48m_control_reset,
+> +	.assert		= tn48m_control_assert,
+> +	.status		= tn48m_control_status,
+> +};
+> +
+> +static int tn48m_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct tn48_reset_data *data;
+> +	struct regmap *regmap;
+> +
+> +	if (!pdev->dev.parent)
+> +		return -ENODEV;
+
+That shouldn't be necessary.
+
+> +	regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!regmap)
+> +		return -ENODEV;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->regmap = regmap;
+> +
+> +	data->rcdev.owner = THIS_MODULE;
+> +	data->rcdev.ops = &tn48_reset_ops;
+> +	data->rcdev.nr_resets = ARRAY_SIZE(tn48m_resets);
+> +	data->rcdev.of_node = pdev->dev.of_node;
+> +
+> +	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
+> +}
+> +
+> +static const struct of_device_id tn48m_reset_of_match[] = {
+> +	{ .compatible = "delta,tn48m-reset", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, tn48m_reset_of_match);
+> +
+> +static struct platform_driver tn48m_reset_driver = {
+> +	.driver = {
+> +		.name = "delta-tn48m-reset",
+> +		.of_match_table = tn48m_reset_of_match,
+> +	},
+> +	.probe = tn48m_reset_probe,
+> +};
+> +module_platform_driver(tn48m_reset_driver);
+> +
+> +MODULE_AUTHOR("Robert Marko <robert.marko@sartura.hr>");
+> +MODULE_DESCRIPTION("Delta TN48M CPLD reset driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.31.1
+> 
+> 
+
+regards
+Philipp
