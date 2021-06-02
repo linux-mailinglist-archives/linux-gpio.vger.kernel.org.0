@@ -2,74 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C93B1399307
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 20:58:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB35C399318
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 21:02:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbhFBTAL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Jun 2021 15:00:11 -0400
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:34514 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbhFBTAK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 15:00:10 -0400
-Received: by mail-ot1-f43.google.com with SMTP id v27-20020a056830091bb02903cd67d40070so312137ott.1;
-        Wed, 02 Jun 2021 11:58:27 -0700 (PDT)
+        id S229635AbhFBTEi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Jun 2021 15:04:38 -0400
+Received: from mail-oi1-f176.google.com ([209.85.167.176]:35411 "EHLO
+        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229595AbhFBTEh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 15:04:37 -0400
+Received: by mail-oi1-f176.google.com with SMTP id v22so3709307oic.2;
+        Wed, 02 Jun 2021 12:02:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XxTgIILdcuRKgt2t103GTb8rzN2k3rWcVcHMsIEiZBI=;
-        b=JVigLwRxRO+f20PApScsfbFnPPi9lWpZKzZkkRKLrhBCMkfd/+dF9nioGbBpeo4e5m
-         fMPAzcV6XeDrtlN12NHXmTwE+yWsCMkbIimz6BCxTla/BtBtfJwiDan9Lr56vfXA4Qv3
-         yEqsi7R5Xpf0wMYZm6ZvsiLGuWszLzdLQ4NP84hmBYRCnjd1nZI4mcdskEP4O9d+7a8G
-         of0kGYZedCMDU+zQSHO1yRHsUVKiF7iHdT3Djw8V6XG44dw9Gu8qyJGB/WIwuicSXVJS
-         T2TdxK+rFXoL7ovmIc0ILcCp6j+f8S8hr2sP1OKhkcGGUfA2VnB1oYlHXcouBkP9anti
-         fICg==
-X-Gm-Message-State: AOAM530GWjGZStNZaWNvnAh8rfhsFx6FoaAHILf8jaWsbXX+qJzUA/S6
-        Lx6acy0tz9WxBH3dt3Vu4Q==
-X-Google-Smtp-Source: ABdhPJx6IAb1nq04AfhTZzJUGBqnvkBwEUrVVBoXVFE4RZRpp3lLMddFbDRO5gegZODRBzOO7Uas9A==
-X-Received: by 2002:a9d:289:: with SMTP id 9mr26361517otl.10.1622660305683;
-        Wed, 02 Jun 2021 11:58:25 -0700 (PDT)
+        bh=e2vrx/QBePjkyqx9ENa+RBQUczjrTw2LnQ8NzOyjcB0=;
+        b=n1PVYfXujQ5KNakLjvZ+wb+p78ky1YT2P+oXh/+4fNbY9fB44if9QiVH2/Rlaq2R4Z
+         Z2uxOOfGNz5gvQLZzAmfxQkv8iVf8s+0QSobFlej4fAjWNEza7q6Hf1snsOD6xBTe/HE
+         PN/FiuXsHaa/ntZ8rz4Jwb5NkFs+w27vFUCIsu9Hybjwf9KViMEBTTWrLsD2xQUYKZYh
+         iPRO4WO1kRMXVj3r43Okl226v42hKj7iRdQ3OeGFW3PkupZe2pKMxpcFzkVY7MjqLzC8
+         8vcTaPwAyjsw8VW5by1hrXx/VJs8FhKx3fFZj3T7nikDF2KYJrU4Hc+9yakOtbDLlY6/
+         PuAw==
+X-Gm-Message-State: AOAM533PFRuDCymSQuODmYUSemJ0vptHSpxWdD1YuAXYTNJlNMbOdZlh
+        2TFqb4Gi/9EJkjwzbItkWg==
+X-Google-Smtp-Source: ABdhPJwFzl2mCZiExS3oFX4eDQsnFWbiMLq/7d5TPsynHkoiIluIP0xq/89gZ+2sF5G/qYjOe1m54g==
+X-Received: by 2002:aca:120c:: with SMTP id 12mr22141662ois.42.1622660573455;
+        Wed, 02 Jun 2021 12:02:53 -0700 (PDT)
 Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t23sm153827oij.21.2021.06.02.11.58.24
+        by smtp.gmail.com with ESMTPSA id q63sm163420oic.15.2021.06.02.12.02.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 11:58:24 -0700 (PDT)
-Received: (nullmailer pid 3778567 invoked by uid 1000);
-        Wed, 02 Jun 2021 18:58:22 -0000
-Date:   Wed, 2 Jun 2021 13:58:22 -0500
+        Wed, 02 Jun 2021 12:02:52 -0700 (PDT)
+Received: (nullmailer pid 3786574 invoked by uid 1000);
+        Wed, 02 Jun 2021 19:02:51 -0000
+Date:   Wed, 2 Jun 2021 14:02:51 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Sander Vanheule <sander@svanheule.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Andrew Lunn <andrew@lunn.ch>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+Cc:     Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-leds@vger.kernel.org,
+        Michael Walle <michael@walle.cc>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-leds@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v3 2/6] dt-bindings: leds: Binding for RTL8231 scan matrix
-Message-ID: <20210602185822.GA3778506@robh.at.kernel.org>
+        Pavel Machek <pavel@ucw.cz>, Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: Binding for RTL8231
+Message-ID: <20210602190251.GA3786545@robh.at.kernel.org>
 References: <cover.1621809029.git.sander@svanheule.net>
- <dca103fe584c7c5a07ad521ad3d1c08ba2758c77.1621809029.git.sander@svanheule.net>
+ <ea03804a538ecf45287f8cc356b8d9536c91e688.1621809029.git.sander@svanheule.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dca103fe584c7c5a07ad521ad3d1c08ba2758c77.1621809029.git.sander@svanheule.net>
+In-Reply-To: <ea03804a538ecf45287f8cc356b8d9536c91e688.1621809029.git.sander@svanheule.net>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 24 May 2021 00:34:00 +0200, Sander Vanheule wrote:
-> Add a binding description for the Realtek RTL8231's LED support, which
-> consists of up to 88 LEDs arranged in a number of scanning matrices.
+On Mon, 24 May 2021 00:34:01 +0200, Sander Vanheule wrote:
+> Add a binding description for the Realtek RTL8231, a GPIO and LED
+> expander chip commonly used in ethernet switches based on a Realtek
+> switch SoC. These chips can be addressed via an MDIO or SMI bus, or used
+> as a plain 36-bit shift register.
+> 
+> This binding only describes the feature set provided by the MDIO/SMI
+> configuration, and covers the GPIO, PWM, and pin control properties. The
+> LED properties are defined in a separate binding.
 > 
 > Signed-off-by: Sander Vanheule <sander@svanheule.net>
 > ---
->  .../bindings/leds/realtek,rtl8231-leds.yaml   | 166 ++++++++++++++++++
->  1 file changed, 166 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
+>  .../bindings/mfd/realtek,rtl8231.yaml         | 190 ++++++++++++++++++
+>  1 file changed, 190 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
