@@ -2,90 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78191398660
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 12:22:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E52DE39869E
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 12:35:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229541AbhFBKX4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Jun 2021 06:23:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38928 "EHLO
+        id S231877AbhFBKhM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Jun 2021 06:37:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbhFBKX4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 06:23:56 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A6CC061574;
-        Wed,  2 Jun 2021 03:22:13 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 491A52222E;
-        Wed,  2 Jun 2021 12:22:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1622629330;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9JjiZVY1G39yLkYo2plpR+nek2Ix2xJGXMP7Q3ED5aw=;
-        b=v2RezFrHNxnZUZ1VpIP4uqNw6KTOg8ZHU1Kb9SuS2iu0Ulcvv1//avHR2ebe/r0G1p5JkI
-        3KLkSTk+vyyEjpfGDW1gTtpyn6NVbSnzTY2BRqw8fnGijr+iCDD3+7FMDqOCLZoJeD7Wci
-        VHHrcyy5EYnpaVpiHRztD1ksEMhOylo=
+        with ESMTP id S231792AbhFBKhL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 06:37:11 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C98AC06174A
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Jun 2021 03:35:28 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id a2so2582790lfc.9
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Jun 2021 03:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rdEIJAwf/C90MdVmxcnl9GFMUpGP/9aFprmh9SH0smc=;
+        b=vbudbSJX9/uMoq8F7wPu2EXLTplWPaIrkSkSKNy1vJ2uMkMOs8qtwP/irbUZqa4KUq
+         pIqH+1medM+pKocqJj/X0/wPlg+l4P7jp0dYsNtvlTYSrKdmcjG50kms1scvO7ityhQp
+         CW1oAX7au6inGoWhD/6oOp1zXiZbmiGvloms9htpbDhweurXqUakbUSkUfkpxd8kLz3b
+         QUBbPA1vpAUosMQmAg1z61Eob8CUGoxLp5uVSoiUzbe9unq85n9BqxBQG7O96x3BnVby
+         hRXJHkgzCoUEP5d0IYzS2qVf/nTWlZ9PWwmGoPbfzHQw2RGNqBOpmHb2vHlldxwvOCYH
+         oPag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rdEIJAwf/C90MdVmxcnl9GFMUpGP/9aFprmh9SH0smc=;
+        b=MuDblxc2qKzHvl0kA4GCe3T6eCoS7tInsM6RA7jzySwoBjI5SbgC4+2p8I1Mk2PwaJ
+         0/4lKEa4jg/ej13UNqSWfGJfaVQmwDMzHZ+kbOMyF7sEfEpwUm14S9iHC/ul3Rnwdhcv
+         9WqJd4qFHo2vp7YZ+Movv4S/VfpFAzT7bEHlFKfM3BjLMdm/VjbqQpW02NtTEOgKIMpN
+         8dWFfHuBge3IHgy7qhS9QKDJPXvmFFAX/5+/CUEPyJqqkPde6d5r4jIDnetmrUR6uyAj
+         AEbNKRPyvL9azfX+0xX13TJn4dVCi3IA84BMtcbE1W/b3+NA0cw0b6NPc5TNeqHez3f8
+         hBWg==
+X-Gm-Message-State: AOAM531I4nX6K0k2NL89Ym8eYSgFlY0XU6jj7ARKR47NL3Tx1q9s3fOI
+        dn+HhKHk/thZQoo3H++6hmYS8SPrqrfc2P1K2XSxXA==
+X-Google-Smtp-Source: ABdhPJyIN/3Se7S1fjFYFkTdtSGpmA37gohmI47+odduWtxPG/vQ7MAEqicJ3YclH1sFg/eryN0vXIuXtirSd/Q4Dns=
+X-Received: by 2002:a05:6512:3241:: with SMTP id c1mr13831781lfr.29.1622630126777;
+ Wed, 02 Jun 2021 03:35:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 02 Jun 2021 12:22:09 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Robert Marko <robert.marko@sartura.hr>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Donald Buczek <buczek@molgen.mpg.de>
-Subject: Re: [PATCH v2 3/4] dt-bindings: mfd: Add Delta TN48M CPLD drivers
- bindings
-In-Reply-To: <20210601144826.GI543307@dell>
-References: <20210524120539.3267145-1-robert.marko@sartura.hr>
- <20210524120539.3267145-3-robert.marko@sartura.hr>
- <20210524230940.GA1350504@robh.at.kernel.org>
- <20210525074649.GC4005783@dell>
- <CA+HBbNFxCKbitVctbUisuZXJWxaZp0cswNNNTgD0UxQZ1smJbg@mail.gmail.com>
- <20210526075255.GG4005783@dell>
- <CA+HBbNGSH9AvRo0Hwa5pWea94u0LwJt=Kj7gWjSAV9fS5VFr0A@mail.gmail.com>
- <20210601081933.GU543307@dell> <50ced58164999f51a8c8b9c8dc01468e@walle.cc>
- <20210601135816.GG543307@dell> <20210601144826.GI543307@dell>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <bb73c46de48094759099e244e09b333c@walle.cc>
-X-Sender: michael@walle.cc
+References: <20210325122832.119147-1-sandberg@mailfence.com>
+ <20210530161333.3996-1-maukka@ext.kapsi.fi> <20210530161333.3996-2-maukka@ext.kapsi.fi>
+ <CACRpkdZfdd=ogHoNGuLzGGZYkvw7xtNO2VJm-t-2vMibGNy=dA@mail.gmail.com> <866ff376-6d74-49c9-9e4c-2bf36bbd5981@ext.kapsi.fi>
+In-Reply-To: <866ff376-6d74-49c9-9e4c-2bf36bbd5981@ext.kapsi.fi>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 2 Jun 2021 12:35:14 +0200
+Message-ID: <CACRpkda9LD00=mUjLbb+wG3mnEVHbyqj-3L98=c-k-bV54gmTg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: gpio-mux-input: add documentation
+To:     Mauri Sandberg <maukka@ext.kapsi.fi>
+Cc:     Mauri Sandberg <sandberg@mailfence.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Drew Fustini <drew@beagleboard.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2021-06-01 16:48, schrieb Lee Jones:
-> On Tue, 01 Jun 2021, Lee Jones wrote:
-> 
->> On Tue, 01 Jun 2021, Michael Walle wrote:
->> 
->> > Am 2021-06-01 10:19, schrieb Lee Jones:
->> > > Why do you require one single Regmap anyway?  Are they register banks
->> > > not neatly separated on a per-function basis?
->> >
->> > AFAIK you can only have one I2C device driver per device, hence the
->> > simple-mfd-i2c.
->> 
->> Sorry, can you provide more detail.
-> 
-> I'd still like further explanation to be sure, but if you mean what I
-> think you mean then, no, I don't think that's correct.
+Hi Mauri,
 
-We've already discussed this:
+On Wed, Jun 2, 2021 at 11:31 AM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
 
-https://lore.kernel.org/lkml/20200622075145.1464020-1-lee.jones@linaro.org/
-https://lore.kernel.org/lkml/20200605065709.GD3714@dell/
+> But there is a small detail that needs to be sorted out.
+> The name 'gpio-mux'
+> has already been taken by 'mux-gpio' driver [2] [3].
 
-And how would a device tree binding look like if you have multiple
-i2c devices with the same i2c address?
+What about "gpio-multiplexer"?
 
--michael
+It is not good that the thing using GPIOs to do multiplexing
+has take a name that seem to infer that GPIOs are being
+multiplexed. Now we can't do much about that we just have
+to live with it. How typical of formal languages to screw
+with the semantics of natural languages and create confusion...
+
+> Should we look for another name for this driver and it's bindings or
+> refactor the mux-gpio's bindings
+> first?
+
+Bindings are etched in stone and cannot be changed.
+Unless we change them anyways.
+But generally we can't.
+
+> The bindings for mux-gpio need to be converted to .yaml anyhow
+
+Yeah just do it if you have the time, all conversions are appreciated.
+(Separate patch and work item though, don't know if you need to
+mix that with this work?)
+
+> and maybe
+> the issues with the schema
+> that Rob pointed out elsewhere would go away too. Otherwise I cannot
+> really say what's wrong as the
+> errors look unrelated to me.
+
+I don't know about these, tell Rob if you have issues and I might
+be able to pitch in, I write a fair amount of schema too.
+
+Yours,
+Linus Walleij
