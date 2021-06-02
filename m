@@ -2,132 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43F7C398503
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 11:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07F22398550
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 11:31:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231312AbhFBJOf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Jun 2021 05:14:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51578 "EHLO
+        id S231560AbhFBJdZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Jun 2021 05:33:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbhFBJOf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 05:14:35 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FAFFC061756
-        for <linux-gpio@vger.kernel.org>; Wed,  2 Jun 2021 02:12:52 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id h7so1736529iok.8
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Jun 2021 02:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BrRGZe9S7UVDsoLQx6OlURcsBADt8tx/P1nptvMx8aw=;
-        b=QhtwyovIMd9W7sHaWyWMfsGdYxpH2TYSQGdA7nWx+UR/a4gawzbeyB9d7OrrdkulUV
-         VIPug0abm74qbHjUUZL7Ss+gPj3//w31STentf1XpPxL/D8AdBV6gHxbs2OTjUu6dNZb
-         DElv9lhy+fu62/1UDhpNPSpcmC8HNYnVU52hc5I11ec3CrjyG+8gv5u+A6XsQYG6YAt5
-         9/pz6xfxcnygR+BS+5kut+bKBftxa/Ab1Z5gGD775tODljuFVm2hB1Or7ZWV7K6PvzRA
-         Uy6Qd1qGGN62TiQ7kvdSyDWa+cBKEzChkIW27+UnO4PvD2Rtlgi4y2Ki/KnraubQkyep
-         Ke+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BrRGZe9S7UVDsoLQx6OlURcsBADt8tx/P1nptvMx8aw=;
-        b=FqHJ42JlR8yd5UNikdu+qqo1Oua/QAeLX6le1+3FpmzT+B/U2itfYsPEbgVsCbFBzy
-         n1XmDDKfxMGp9KDyvJ9f8g1Qx6gPQIHHeSSQvEXpKVHWsgBv71Hqlz7pOeNClvpnVEx8
-         pt8GfTMMlAmkmAjAMMOZ7lgXu+p+oG8XxIN+6StfuORp26Mg42yDIIjHAZIsLGMtgtvG
-         wNZ/ffR2cU0QTCB8oR0xZPAn5fpjHdjsfMr2voac2xaLot4OQxu+AX/XrphJIC6bp6cy
-         MyTvPNSjpi5r+NLGeEg8tzynjykZMd/MU+ah2B+A3ftEBTVfgHyYYG2K1yHWHYPJNkyi
-         GG7A==
-X-Gm-Message-State: AOAM533IB9oziT/+pngGswMuqqgALTA1zcExA4T9K027XZ7zgdxtqKKN
-        aBVg5+eRL5+4zWyDWjL1ZtarLvrzUh2L0M/WSp6HeQ==
-X-Google-Smtp-Source: ABdhPJy3dTkiDCd5545R7VQEoXEwzqqJjzwzayxkz22WjIpGQ+1L7bqwlqaH6YQldYb3Thm7FNsjrNmL08JpwCYxb2w=
-X-Received: by 2002:a5e:8d16:: with SMTP id m22mr4008387ioj.139.1622625171801;
- Wed, 02 Jun 2021 02:12:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210524120539.3267145-1-robert.marko@sartura.hr>
- <20210524120539.3267145-3-robert.marko@sartura.hr> <20210524230940.GA1350504@robh.at.kernel.org>
- <20210525074649.GC4005783@dell> <CA+HBbNFxCKbitVctbUisuZXJWxaZp0cswNNNTgD0UxQZ1smJbg@mail.gmail.com>
- <20210526075255.GG4005783@dell> <CA+HBbNGSH9AvRo0Hwa5pWea94u0LwJt=Kj7gWjSAV9fS5VFr0A@mail.gmail.com>
- <20210601081933.GU543307@dell> <50ced58164999f51a8c8b9c8dc01468e@walle.cc>
- <20210601135816.GG543307@dell> <20210601144826.GI543307@dell>
-In-Reply-To: <20210601144826.GI543307@dell>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Wed, 2 Jun 2021 11:12:41 +0200
-Message-ID: <CA+HBbNFZhF1+B-JsHyeybcF96NQDA+afoWt-pMSKrtYdDYNgZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Michael Walle <michael@walle.cc>, Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S229524AbhFBJdY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 05:33:24 -0400
+Received: from mailserv1.kapsi.fi (mailserv1.kapsi.fi [IPv6:2001:67c:1be8::25:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE6BC061574;
+        Wed,  2 Jun 2021 02:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=ext.kapsi.fi; s=20161220; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=AjV7/JHcEMe19kxGoVpLU0xcuOHEXaPt4n0m5dWna2g=; b=CT2Kn/6BMWX/PeaMqTRJg124K7
+        /Q9OCBDYUnUEqxr/XMf4++kJb94L7XAZcXlVT7F4VSxBuMasP1I03hZzl5+xVIFJQj7czZXhDuKzf
+        pR0oWQ8hGCjizI/41IfRQiCUmPr1Drb484jhg58uweDD+pZjxrWo7fCuFwjtcbbi97ZLpMHQYSi7S
+        te21dgWhOaRnKmN9kFKMys/eWFDbUOdFCGPjvVcAfKOWcmbM0T6chtTOjzgKN0NnQqzdL658UBX1J
+        /evDLZhftQkR+INEorR8mzG1exCxw+H0jbwpBGaxorZZGPfzXKnY24z051lpOPZVeSy4BgXl0bCXT
+        z59pC7QQ==;
+Received: from 164-105-191-90.dyn.estpak.ee ([90.191.105.164]:61130 helo=[192.168.3.116])
+        by mailserv1.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <maukka@ext.kapsi.fi>)
+        id 1loNDr-0001WS-JF; Wed, 02 Jun 2021 12:31:36 +0300
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mauri Sandberg <sandberg@mailfence.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Donald Buczek <buczek@molgen.mpg.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Drew Fustini <drew@beagleboard.org>
+References: <20210325122832.119147-1-sandberg@mailfence.com>
+ <20210530161333.3996-1-maukka@ext.kapsi.fi>
+ <20210530161333.3996-2-maukka@ext.kapsi.fi>
+ <CACRpkdZfdd=ogHoNGuLzGGZYkvw7xtNO2VJm-t-2vMibGNy=dA@mail.gmail.com>
+From:   Mauri Sandberg <maukka@ext.kapsi.fi>
+Message-ID: <866ff376-6d74-49c9-9e4c-2bf36bbd5981@ext.kapsi.fi>
+Date:   Wed, 2 Jun 2021 12:31:34 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdZfdd=ogHoNGuLzGGZYkvw7xtNO2VJm-t-2vMibGNy=dA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-SA-Exim-Connect-IP: 90.191.105.164
+X-SA-Exim-Mail-From: maukka@ext.kapsi.fi
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mailserv1.kapsi.fi
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A,TVD_RCVD_IP,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.2
+Subject: Re: [PATCH v4 1/2] dt-bindings: gpio-mux-input: add documentation
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on mailserv1.kapsi.fi)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 1, 2021 at 4:48 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Tue, 01 Jun 2021, Lee Jones wrote:
->
-> > On Tue, 01 Jun 2021, Michael Walle wrote:
-> >
-> > > Am 2021-06-01 10:19, schrieb Lee Jones:
-> > > > Why do you require one single Regmap anyway?  Are they register ban=
-ks
-> > > > not neatly separated on a per-function basis?
-> > >
-> > > AFAIK you can only have one I2C device driver per device, hence the
-> > > simple-mfd-i2c.
-> >
-> > Sorry, can you provide more detail.
->
-> I'd still like further explanation to be sure, but if you mean what I
-> think you mean then, no, I don't think that's correct.
->
-> The point of simple-mfd-i2c is to provide an I2C device offering
-> multiple functions, but does so via a non-separated/linear register-
-> set, with an entry point and an opportunity to register its interwoven
-> bank of registers via Regmap.
->
-> However, if you can get away with not registering your entire register
-> set as a single Regmap chunk, then all the better.  This will allow
-> you to use the OF provided 'simple-mfd' compatible instead.
->
-> Now, if you're talking about Regmap not supporting multiple
-> registrations with only a single I2C address, this *may* very well be
-> the case, but IIRC, I've spoken to Mark about this previously and he
-> said the extension to make this possible would be trivial.
 
-This is my understanding, that you cannot have multiple regmap registration=
-s
-with on the same I2C address.
-At least that is how it was the last time I tested.
-That is why I went the MFD way.
-
-Regards,
-Robert
+On 1.6.2021 13.44, Linus Walleij wrote:
+> On Sun, May 30, 2021 at 6:16 PM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
 >
-> So we have to take this on a device-by-device basis an decide what is
-> best at the time of submission.
+>> Add documentation for a general GPIO multiplexer.
+>>
+>> Signed-off-by: Mauri Sandberg <maukka@ext.kapsi.fi>
+>> Tested-by: Drew Fustini <drew@beagleboard.org>
+>> Reviewed-by: Drew Fustini <drew@beagleboard.org>
+> After some thinking I realized these bindings should not
+> be restricted to just input. There exist electronic constructions
+> such as open drain that would make it possible to mux also
+> outputs.
 >
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+>>   .../bindings/gpio/gpio-mux-input.yaml         | 75 +++++++++++++++++++
+> Rename it just gpio-mux.yaml
+>
+>> +$id: http://devicetree.org/schemas/gpio/gpio-mux-input.yaml#
+> Also here
+>
+>> +title: Generic GPIO input multiplexer
+> Generic GPIO multiplexer
+>
+>> +description: |
+>> +  A generic GPIO based input multiplexer
+> Not just input
+>
+>> +  This driver uses a mux-controller to drive the multiplexer and has a single
+>> +  output pin for reading the inputs to the mux.
+> Make this clearer and do not mention "driver".
+> Here is a suggestion:
+>
+> This hardware construction multiplexes (cascades) several GPIO
+> lines from one-to-many using a software controlled multiplexer.
+> The most common use case is probably reading several inputs
+> by switching the multiplexer over several input lines, which in
+> practice works well since input lines has high impedance.
+>
+> Constructions with multiplexed outputs are also possible using
+> open drain electronics.
+>
+>> +  For GPIO consumer documentation see gpio.txt.
+> No need to mention this I think, not your problem :D
+>
+>> +  pin-gpios:
+> I still want this renamed like in my previous mail.
+>
+> Hope all is clear!
+>
+> Yours,
+> Linus Walleij
+
+Hi and thanks the  comments.
+
+Generally I agree with everything you noted above and elsewhere and will 
+make changes
+accordingly. But there is a small detail that needs to be sorted out. 
+The name 'gpio-mux'
+has already been taken by 'mux-gpio' driver [2] [3].
+
+Should we look for another name for this driver and it's bindings or 
+refactor the mux-gpio's bindings
+first? I would be inclined to do the latter as the config symbol for 
+mux-gpio is the same way around,
+MUX_GPIO.
+
+The bindings for mux-gpio need to be converted to .yaml anyhow and maybe 
+the issues with the schema
+that Rob pointed out elsewhere would go away too. Otherwise I cannot 
+really say what's wrong as the
+errors look unrelated to me.
+
+-- Mauri
+
+[2] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mux/gpio-mux.txt
+[3] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/mux/gpio.c
 
 
 
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+
+
