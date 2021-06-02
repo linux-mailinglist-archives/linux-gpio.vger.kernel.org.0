@@ -2,83 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 696F7398441
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 10:37:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 360A239847C
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 10:47:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232697AbhFBIir (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Jun 2021 04:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43294 "EHLO
+        id S232796AbhFBIsx convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 2 Jun 2021 04:48:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230074AbhFBIir (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 04:38:47 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84383C061574
-        for <linux-gpio@vger.kernel.org>; Wed,  2 Jun 2021 01:37:04 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id t3so1924886edc.7
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Jun 2021 01:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PR190isKuStgQQOq5rkULJ1LLuWopcJylF8R3lRy4Ps=;
-        b=bPrGJgci95Q6A3Kl1lLplCUHWgruAuntAbwhWXDrVo1fsWvYb5nVyxhLi6Lr0aCF0T
-         q4JHHn0IS/a27DtCGWnLYf1g9QfaQ5N9sjtfvn86EKqj4PhtF4hYQhJ3hrOtXVo8nq3t
-         vhap8Ule5SURC/HYowWabEXOn1W6YfZ7MXWLLmKLxK0bSEqkHB4IEMqCL/jamJy68mTy
-         AdxsgW2P3tXaMEMTRa6iS7zYx7YqQ9pLXrbuVnnVZVOGWK4nW5yL8ZCf7iQ4qVUnQ5u3
-         gS2MZqqoI6TG2qcOAX9JD8gdh4C8cqlndPFMbaajVpJxmysv52HhUl+02iEI3CcVCyCp
-         wSTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PR190isKuStgQQOq5rkULJ1LLuWopcJylF8R3lRy4Ps=;
-        b=CasCGKt8R8beqNoZKLJiYmS3w6Fw6IpfIevtno6akM6p67Bl3EzbuzZ/gLuCOhU9vh
-         9UvtQjgTnAdF9xzDzTwnG8qFIL6dMYENiMGZKx3ZLoqGiMgj71Id5m8hTf9zQZsUi3x4
-         z3wh0DgvAiI6EWLt/8JeTekU4zqTnkG0GsJIpOELOrNGWxITud8eP/TamrVTLdsybVEm
-         x6AUwHHp85Nxai03oTnehr+uKf5vVFKKGSrLO+6DXwUA24oZWhAAYTaEO51AXzj3y1c4
-         zac71aCFbEwhXNa1RJ8cvc8UjS9kXXSBcvEzgs9LrHMxi3swh3SMz3WuWv6brOs0FnoB
-         oWnw==
-X-Gm-Message-State: AOAM531J9eT+H9ig03TDOPi+2z0JC19CZ4IRE9OUPL851TTCM4EazxvP
-        ifGyvrzEkRcV6S6vzdXDF8fovEgL+kDUHIlSuXyAyw==
-X-Google-Smtp-Source: ABdhPJz+tqc2l12N9r1tiDZ05J0gqMeyXd+V2RyXnvjEzHeNv6i029j3vLtFdifQ9BMHpU2czDJI8okgd9M/4/ktFHI=
-X-Received: by 2002:a05:6402:4256:: with SMTP id g22mr36750365edb.214.1622623023158;
- Wed, 02 Jun 2021 01:37:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210518191855.12647-1-brgl@bgdev.pl> <20210527112705.GA20965@sol>
- <CAMRc=Mff+=PNNqZUGO7Mq=OdmywYgS8+QuTqVYr4eOmA6Et_5g@mail.gmail.com>
- <20210528232320.GA5165@sol> <CAMRc=MfP5jEDqONYA0b7Dmm1hi38C8V1XSaX6xm03Cv4mpCJMQ@mail.gmail.com>
- <20210530004544.GA4498@sol> <CAMRc=McYaPqFrYiQqYnzVq9YAK8sXD_dW=UYwdiWgFOBTJt2iA@mail.gmail.com>
- <20210602031257.GA6359@sol>
-In-Reply-To: <20210602031257.GA6359@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 2 Jun 2021 10:36:52 +0200
-Message-ID: <CAMRc=MdedHN8AFzuXCz7pZJX2D1h1AncbR+KH4c1-=+nLARpTA@mail.gmail.com>
-Subject: Re: [libgpiod][RFC v2] core: implement v2.0 API
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        with ESMTP id S232801AbhFBIsw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 04:48:52 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A855C061756
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Jun 2021 01:47:10 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1loMWm-0007FC-Sy; Wed, 02 Jun 2021 10:47:04 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1loMWl-0006td-5d; Wed, 02 Jun 2021 10:47:03 +0200
+Message-ID: <0601d2800a285b44271d2b5a5e28669aa913522b.camel@pengutronix.de>
+Subject: Re: [PATCH v3 4/6] reset: Add Delta TN48M CPLD reset controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Donald Buczek <buczek@molgen.mpg.de>
+Date:   Wed, 02 Jun 2021 10:47:03 +0200
+In-Reply-To: <CA+HBbNG3O_QORj1NEKvoC4C5FfyfXyO_PMOZS0pHJimGn+HTUA@mail.gmail.com>
+References: <20210531125143.257622-1-robert.marko@sartura.hr>
+         <20210531125143.257622-4-robert.marko@sartura.hr>
+         <20210601153818.GA20254@pengutronix.de>
+         <CA+HBbNG3O_QORj1NEKvoC4C5FfyfXyO_PMOZS0pHJimGn+HTUA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 2, 2021 at 5:13 AM Kent Gibson <warthog618@gmail.com> wrote:
->
+On Tue, 2021-06-01 at 19:09 +0200, Robert Marko wrote:
+[...]
+> Yes, it's self-clearing, per spec they will be cleared after 100ms.
 
-[snip]
+Can you make sure the function only returns after the reset is
+deasserted again, for example by using regmap_read_poll_timeout() on the
+reset bit?
 
-> >
-> > Ok got it.
-> >
-> > I think we're getting close to an agreement. :)
-> >
->
-> Well that makes one of us ;).
->
+> Will drop assert then, I saw that reset was for self-clearing, but other
+> drivers I looked for example implemented both which was confusing.
 
-Oh we don't? I thought there are only minor disagreements on naming
-convention and error handling but for most part we're aligned on the
-general shape of the API?
+If you have full control over the reset line, you can implement .reset
+by manually asserting and deasserting (possibly after a delay). But if
+the reset is self-clearing, you can't properly implement .(de)assert,
+which have an expectation about the state of the reset line after the
+function returns.
 
-Bart
+> > > +}
+> > > +
+> > > +static int tn48m_control_status(struct reset_controller_dev *rcdev,
+> > > +                             unsigned long id)
+> > > +{
+> > > +     struct tn48_reset_data *data = to_tn48_reset_data(rcdev);
+> > > +     unsigned int regval;
+> > > +     int ret;
+> > > +
+> > > +     ret = regmap_read(data->regmap, TN48M_RESET_REG, &regval);
+> > > +     if (ret < 0)
+> > > +             return ret;
+> > > +
+> > > +     if (BIT(tn48m_resets[id].bit) & regval)
+> > > +             return 0;
+> > > +     else
+> > > +             return 1;
+> > > +}
+> > > +
+> > > +static const struct reset_control_ops tn48_reset_ops = {
+> > > +     .reset          = tn48m_control_reset,
+> > > +     .assert         = tn48m_control_assert,
+> > > +     .status         = tn48m_control_status,
+> > > +};
+> > > +
+> > > +static int tn48m_reset_probe(struct platform_device *pdev)
+> > > +{
+> > > +     struct tn48_reset_data *data;
+> > > +     struct regmap *regmap;
+> > > +
+> > > +     if (!pdev->dev.parent)
+> > > +             return -ENODEV;
+> > 
+> > That shouldn't be necessary.
+> 
+> This driver depends on having a parent as it needs to get the
+> regmap from it.
+> The parent is a CPLD using simple-i2c-mfd.
+> So it's nice to check.
+
+pdev->dev.parent is always set to &platform_bus if there is no parent.
+
+regards
+Philipp
