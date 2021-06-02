@@ -2,110 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E52DE39869E
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 12:35:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C56D3986BD
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 12:43:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231877AbhFBKhM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Jun 2021 06:37:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42026 "EHLO
+        id S231909AbhFBKo4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Jun 2021 06:44:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231792AbhFBKhL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 06:37:11 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C98AC06174A
-        for <linux-gpio@vger.kernel.org>; Wed,  2 Jun 2021 03:35:28 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id a2so2582790lfc.9
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Jun 2021 03:35:28 -0700 (PDT)
+        with ESMTP id S231646AbhFBKo4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 06:44:56 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC407C061574
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Jun 2021 03:43:11 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id g18so1868423pfr.2
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Jun 2021 03:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rdEIJAwf/C90MdVmxcnl9GFMUpGP/9aFprmh9SH0smc=;
-        b=vbudbSJX9/uMoq8F7wPu2EXLTplWPaIrkSkSKNy1vJ2uMkMOs8qtwP/irbUZqa4KUq
-         pIqH+1medM+pKocqJj/X0/wPlg+l4P7jp0dYsNtvlTYSrKdmcjG50kms1scvO7ityhQp
-         CW1oAX7au6inGoWhD/6oOp1zXiZbmiGvloms9htpbDhweurXqUakbUSkUfkpxd8kLz3b
-         QUBbPA1vpAUosMQmAg1z61Eob8CUGoxLp5uVSoiUzbe9unq85n9BqxBQG7O96x3BnVby
-         hRXJHkgzCoUEP5d0IYzS2qVf/nTWlZ9PWwmGoPbfzHQw2RGNqBOpmHb2vHlldxwvOCYH
-         oPag==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WNy36R/oTjrtrMVEv7lR50FBdSjvXpQOmcbzPCW3S64=;
+        b=u/elTlJ90NJwNAJUIWHjoVI2tZ8xx6ffnTLHTOMrcaE8EC+3+nQQz6Z1eeOmmPZBU0
+         h/pA7GsbuOyyC/jA4nGMSxLeKJYYAzfZOS3gYUIf+h3BqSOTCwS82C2/1uTHVa3S4Mvl
+         u/kRgiBNx/fqrPQJw9ez7xOsrSGMByWpvQHpgVDlyWDQqDnu546bI30DFJozoJ6KQvL9
+         DYs3pIp8KeLFyf1wkCREqh+E33mJ1IxYPnf6nUocR5LohLVAv62k6sP9H7i0nUBDlLSw
+         MlRDtB7UUZ5EDjUx18LtK4msZdOD4MwTTzX6PfM2cG679WKOI2bEezf5ZqjXP6s7UrjC
+         OC6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rdEIJAwf/C90MdVmxcnl9GFMUpGP/9aFprmh9SH0smc=;
-        b=MuDblxc2qKzHvl0kA4GCe3T6eCoS7tInsM6RA7jzySwoBjI5SbgC4+2p8I1Mk2PwaJ
-         0/4lKEa4jg/ej13UNqSWfGJfaVQmwDMzHZ+kbOMyF7sEfEpwUm14S9iHC/ul3Rnwdhcv
-         9WqJd4qFHo2vp7YZ+Movv4S/VfpFAzT7bEHlFKfM3BjLMdm/VjbqQpW02NtTEOgKIMpN
-         8dWFfHuBge3IHgy7qhS9QKDJPXvmFFAX/5+/CUEPyJqqkPde6d5r4jIDnetmrUR6uyAj
-         AEbNKRPyvL9azfX+0xX13TJn4dVCi3IA84BMtcbE1W/b3+NA0cw0b6NPc5TNeqHez3f8
-         hBWg==
-X-Gm-Message-State: AOAM531I4nX6K0k2NL89Ym8eYSgFlY0XU6jj7ARKR47NL3Tx1q9s3fOI
-        dn+HhKHk/thZQoo3H++6hmYS8SPrqrfc2P1K2XSxXA==
-X-Google-Smtp-Source: ABdhPJyIN/3Se7S1fjFYFkTdtSGpmA37gohmI47+odduWtxPG/vQ7MAEqicJ3YclH1sFg/eryN0vXIuXtirSd/Q4Dns=
-X-Received: by 2002:a05:6512:3241:: with SMTP id c1mr13831781lfr.29.1622630126777;
- Wed, 02 Jun 2021 03:35:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WNy36R/oTjrtrMVEv7lR50FBdSjvXpQOmcbzPCW3S64=;
+        b=hSy7JKaRys0TioSWb1XjmYvtJjjwTsWFpAljjVxQM0AWhGbf4QwZOxtMJXOBnoF1l0
+         gT6F58TY4HHBwbgEdX73yRvkr1pU046YLJ4E6PMHUuqF+YW7HtQL0vMMY9covfZCGgNW
+         urMpcXgxuG3ilt9EFtf8HKdlxlJSHAIWCKMr2mZjb2kxj0Gia1YTdPA49kRNJn6Xwswo
+         LIjruJBPD5Z6IRAVGEzBZ3xi8VkQb+xrQAdAgul7WIaPD2gtoEVrgvPf7KETB6PL4Cdb
+         SctkvGwBetOgoyRx7V4Dyulo9UnEvAN5dNXm4pUfjw0BCdVaEUMPelF5KknRfTIqeLdL
+         BUmw==
+X-Gm-Message-State: AOAM531uiMne/cwg0NIcXcEbQwv0ltFl63xOp93M4FECzm8sfZ9LZTE8
+        9Nv7JK9X4qrm4sRZmrz3p3U=
+X-Google-Smtp-Source: ABdhPJwi3XsYuFMbBac73gnPZk9wvdDKPd3W9fAJttFe9xV2BoH2w/BleIVQUqpqAi+yI3bQLHgTqw==
+X-Received: by 2002:aa7:9af6:0:b029:2e9:dfed:6a59 with SMTP id y22-20020aa79af60000b02902e9dfed6a59mr12507664pfp.37.1622630591239;
+        Wed, 02 Jun 2021 03:43:11 -0700 (PDT)
+Received: from sol (106-69-174-31.dyn.iinet.net.au. [106.69.174.31])
+        by smtp.gmail.com with ESMTPSA id ig1sm494430pjb.27.2021.06.02.03.43.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jun 2021 03:43:10 -0700 (PDT)
+Date:   Wed, 2 Jun 2021 18:43:05 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod][RFC v2] core: implement v2.0 API
+Message-ID: <20210602104305.GA202614@sol>
+References: <20210518191855.12647-1-brgl@bgdev.pl>
+ <20210527112705.GA20965@sol>
+ <CAMRc=Mff+=PNNqZUGO7Mq=OdmywYgS8+QuTqVYr4eOmA6Et_5g@mail.gmail.com>
+ <20210528232320.GA5165@sol>
+ <CAMRc=MfP5jEDqONYA0b7Dmm1hi38C8V1XSaX6xm03Cv4mpCJMQ@mail.gmail.com>
+ <20210530004544.GA4498@sol>
+ <CAMRc=McYaPqFrYiQqYnzVq9YAK8sXD_dW=UYwdiWgFOBTJt2iA@mail.gmail.com>
+ <20210602031257.GA6359@sol>
+ <CAMRc=MdedHN8AFzuXCz7pZJX2D1h1AncbR+KH4c1-=+nLARpTA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210325122832.119147-1-sandberg@mailfence.com>
- <20210530161333.3996-1-maukka@ext.kapsi.fi> <20210530161333.3996-2-maukka@ext.kapsi.fi>
- <CACRpkdZfdd=ogHoNGuLzGGZYkvw7xtNO2VJm-t-2vMibGNy=dA@mail.gmail.com> <866ff376-6d74-49c9-9e4c-2bf36bbd5981@ext.kapsi.fi>
-In-Reply-To: <866ff376-6d74-49c9-9e4c-2bf36bbd5981@ext.kapsi.fi>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 2 Jun 2021 12:35:14 +0200
-Message-ID: <CACRpkda9LD00=mUjLbb+wG3mnEVHbyqj-3L98=c-k-bV54gmTg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: gpio-mux-input: add documentation
-To:     Mauri Sandberg <maukka@ext.kapsi.fi>
-Cc:     Mauri Sandberg <sandberg@mailfence.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Drew Fustini <drew@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdedHN8AFzuXCz7pZJX2D1h1AncbR+KH4c1-=+nLARpTA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mauri,
+On Wed, Jun 02, 2021 at 10:36:52AM +0200, Bartosz Golaszewski wrote:
+> On Wed, Jun 2, 2021 at 5:13 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> 
+> [snip]
+> 
+> > >
+> > > Ok got it.
+> > >
+> > > I think we're getting close to an agreement. :)
+> > >
+> >
+> > Well that makes one of us ;).
+> >
+> 
+> Oh we don't? I thought there are only minor disagreements on naming
+> convention and error handling but for most part we're aligned on the
+> general shape of the API?
+> 
 
-On Wed, Jun 2, 2021 at 11:31 AM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
+Indeed we are.  My apologies for the failed humour.
 
-> But there is a small detail that needs to be sorted out.
-> The name 'gpio-mux'
-> has already been taken by 'mux-gpio' driver [2] [3].
-
-What about "gpio-multiplexer"?
-
-It is not good that the thing using GPIOs to do multiplexing
-has take a name that seem to infer that GPIOs are being
-multiplexed. Now we can't do much about that we just have
-to live with it. How typical of formal languages to screw
-with the semantics of natural languages and create confusion...
-
-> Should we look for another name for this driver and it's bindings or
-> refactor the mux-gpio's bindings
-> first?
-
-Bindings are etched in stone and cannot be changed.
-Unless we change them anyways.
-But generally we can't.
-
-> The bindings for mux-gpio need to be converted to .yaml anyhow
-
-Yeah just do it if you have the time, all conversions are appreciated.
-(Separate patch and work item though, don't know if you need to
-mix that with this work?)
-
-> and maybe
-> the issues with the schema
-> that Rob pointed out elsewhere would go away too. Otherwise I cannot
-> really say what's wrong as the
-> errors look unrelated to me.
-
-I don't know about these, tell Rob if you have issues and I might
-be able to pitch in, I write a fair amount of schema too.
-
-Yours,
-Linus Walleij
+Cheers,
+Kent.
