@@ -2,119 +2,557 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E095E3989C1
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 14:35:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1280398A0A
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 14:51:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbhFBMh3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Jun 2021 08:37:29 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:43862 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbhFBMh3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 08:37:29 -0400
-Received: by mail-wr1-f41.google.com with SMTP id v23so2118109wrd.10
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Jun 2021 05:35:29 -0700 (PDT)
+        id S229765AbhFBMw6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Jun 2021 08:52:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229593AbhFBMwz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 08:52:55 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C55E1C061574;
+        Wed,  2 Jun 2021 05:50:56 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id i22so1639772pju.0;
+        Wed, 02 Jun 2021 05:50:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4Nhkur6Md4F0lV5cADokhI9e1ZbvHW/X/CRyud57vlc=;
-        b=mjITBjbjMNgFAedpoaAjzKs6GG7aw2Irys+uxuasdvv+6kOw6nIT0PTcb4SUwWGSpS
-         ++cCdocjqVC1DbO1CxGdHNaABJXcI8jts1CWpY4pX0tXEzuk+bhelHIuXzk2NsGJ131j
-         d1GhUbXF1HBOiWb8mLhKNiEdIoCp8YQB5rY5XF38Y/hJscxVazCerAAxE6rNQ0cP5VG9
-         gh1iZiNNk+kfsW0cuXvXwxu7iXFqXr4YX1LrZo/sTHBEvdNz6jFXOYVYdUjAKqBvtH4c
-         HsFS9fiBzQAWLsUPS9wkqOc41FBxf9keEaBlQM7okKF3i9Dm3GzH3g7OjkxTek+cLnF2
-         DeXg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vn58VojIUy8mCywESz1yU7iWzpyR5VYyYaPU788UxQY=;
+        b=J8AgUZxtt2QyU6gTbLL/F8NoI+vL+rbIhgwrTIHDKyVFDlK8qJYrqPpUB3sqfB0L91
+         gR9F5OLKvtQ9iiHE3iyVIaBersOK0NObdB2IB8NGbXYbXGNGx2ic06StlFYeH5tQ2jui
+         wXAMEbQFbXxxuXRn28vReE897gVwlMOJVGscRkpjZZJRFixL9WNTyCwK6ordL8LmFX69
+         LR22hwEMzmNUWHmxk1HfEpqlidF3dslOfjzdrfuDFZuCrT1PP1t3PHWfGHPbAfjwkCMV
+         lD4veRk65XkZVOwvV6BA4qwQzxu8W+Hpfdw9wFv3X/Wa5Z12axRDLsC5u4iGuypi1BRd
+         LswQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4Nhkur6Md4F0lV5cADokhI9e1ZbvHW/X/CRyud57vlc=;
-        b=ITuoZlD8Sb3gEGbP6JyYsTJSNx59UEWMTVaQPjUECzmDgwQyNTqs4gyLsww5ZoY4H0
-         dhrcmr6FV3Zi5g9pcAnmQhaEIkLjdO0KseOKkLQ/gYOlimynVsaCHhLvLP4zSuZYpzLZ
-         zV0I9IlYxCRLCqoEdpMtoWe28A+rOl4w1lTRLhFKuacSr8gyrsEbnOUxAlRq4xH9paD0
-         nqMVV7BEVALxQ2XzTuQTUHAyQJZQKwBw8uWIDyvbccMMNhrTeSuO4QWhfSszY2QoBqjB
-         FBvYS1epmhDjJxwA5t8NbNb+iUqyksoAgdNGU44SO9NjWOEQLjcZPzvmdBZxkbskaieU
-         vI6g==
-X-Gm-Message-State: AOAM5327XJs9+z5mqKRz1CHjquWCLLFWOtDofHpjtH9nbgT/iZ6vufuk
-        Slc8Y1jo++1Lj2FoohbBeXg=
-X-Google-Smtp-Source: ABdhPJySDC47e40En/SdS8eSyMtPUoz4xjHmatsVacgtshZ8EQ5TLQymqeonDr1136tfqGOhH3/LBg==
-X-Received: by 2002:adf:f708:: with SMTP id r8mr6328716wrp.159.1622637268881;
-        Wed, 02 Jun 2021 05:34:28 -0700 (PDT)
-Received: from ziggy.stardust ([37.223.145.68])
-        by smtp.gmail.com with ESMTPSA id a11sm6498658wrr.48.2021.06.02.05.34.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jun 2021 05:34:28 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: mediatek: move bit assignment
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     Fabien Parent <fparent@baylibre.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Mattijs Korpershoek <mkorpershoek@baylibre.com>,
-        linux-mediatek@lists.infradead.org,
-        kernel test robot <lkp@intel.com>
-References: <20210528091945.411471-1-linus.walleij@linaro.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <b3d9f92d-a311-0093-4243-b21f2646997f@gmail.com>
-Date:   Wed, 2 Jun 2021 14:34:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vn58VojIUy8mCywESz1yU7iWzpyR5VYyYaPU788UxQY=;
+        b=paHFYl13KwKlXr6wNwR0fJ1vsP4EL/k11r20OqBo4FNJnaqgvuXGhu0sRWcIY3NRe4
+         RP8+X01RbUINL6HhRQRWO/G7OAbvJpKXYiRf7qe8kw4v03aT2vRE3BOuR932s4VaAuNK
+         m/5J6fbvV6EwAQsdU5pFyAGIURg/X7XJagyDT+ixQNpZotxH1TSdyUzddQcUE1HOGy7b
+         /gDNKBKkf2tQXv1TqatKOj/PPvKj63jFiNhxDSs8PmPmXw47qqwiRCy4PTA3O8fpfiNl
+         FIfQKYG1H4XMkjZOrWTxnkZVSdCAPAa7Gv8RzbYdHsm1mIzUhBMyFBm5WDtYgOuDB6Zq
+         e9hg==
+X-Gm-Message-State: AOAM5308iRahVABx852VELTdgEr/8pSMvf5qhbkONWH5CKxButukJhk5
+        ipkLXgTSs21HbIDgpRL1Vv6pdw2nOk4ob4f9/us=
+X-Google-Smtp-Source: ABdhPJyC3O5EquhOikbreacbiTmOkvh3GFfjDMAS/bS++3MKZX0UR/loCL+OHjq30y5cvNzNn3wQst0AOQqk6l6Z5Ms=
+X-Received: by 2002:a17:90a:80c5:: with SMTP id k5mr5534105pjw.129.1622638256172;
+ Wed, 02 Jun 2021 05:50:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210528091945.411471-1-linus.walleij@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210602120329.2444672-1-j.neuschaefer@gmx.net> <20210602120329.2444672-6-j.neuschaefer@gmx.net>
+In-Reply-To: <20210602120329.2444672-6-j.neuschaefer@gmx.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 2 Jun 2021 15:50:39 +0300
+Message-ID: <CAHp75Vci1DSFu-tpgwQZfuVycqHYmhGhLDDCOH_dX8HKvqpY_A@mail.gmail.com>
+Subject: Re: [PATCH 5/8] pinctrl: nuvoton: Add driver for WPCM450
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Wed, Jun 2, 2021 at 3:05 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
+>
+> This driver is heavily based on the one for NPCM7xx, because the WPCM450
+> is a predecessor of those SoCs.
+>
+> The biggest difference is in how the GPIO controller works. In the
+> WPCM450, the GPIO registers are not organized in multiple banks, but
+> rather placed continually into the same register block, and the driver
+> reflects this.
+>
+> Some functionality implemented in the hardware was (for now) left unused
+> in the driver, specifically blinking and pull-up/down.
 
-On 28/05/2021 11:19, Linus Walleij wrote:
-> The bit needs offset to be defined which happens some lines
-> below. Looks like a bug. The kernel test robot complains:
-> 
-> drivers/pinctrl/mediatek/pinctrl-mtk-common.c:137:12:
-> warning: variable 'offset' is uninitialized when used here [-Wuninitialized]
->            bit = BIT(offset & pctl->devdata->mode_mask);
->                      ^~~~~~
-> 
-> Fix it up by reverting to what was done before.
-> 
-> Cc: Fabien Parent <fparent@baylibre.com>
-> Cc: Sean Wang <sean.wang@kernel.org>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-> Cc: linux-mediatek@lists.infradead.org
-> Fixes: 9f940d8ecf92 ("pinctrl: mediatek: don't hardcode mode encoding in common code")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> index 9fe91e11a877..525b1aa7f7a6 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> @@ -134,7 +134,7 @@ static int mtk_pconf_set_ies_smt(struct mtk_pinctrl *pctl, unsigned pin,
->  			pin, pctl->devdata->port_align, value, arg);
->  	}
->  
-> -	
-> +	bit = BIT(pin & 0xf);
+...
 
-I see this is already applied to linux-next, but I think the correct fix is to move
-bit = BIT(offset & pctl->devdata->mode_mask);
-just before calling regmap_write(...)
+> +config PINCTRL_WPCM450
+> +       bool "Pinctrl and GPIO driver for Nuvoton WPCM450"
 
-I can provide a patch for that, if you want. Just let me know if I should base
-it against linux-next or if you will drop the fix proposed by you?
+Why it can't be a module?
 
-Regards,
-Matthias
+> +       depends on (ARCH_WPCM450 || COMPILE_TEST) && OF
 
->  
->  	if (arg == PIN_CONFIG_INPUT_ENABLE)
->  		offset = pctl->devdata->ies_offset;
-> 
+Is it really OF dependent (see below)?
+
+> +       select PINMUX
+> +       select PINCONF
+> +       select GENERIC_PINCONF
+> +       select GPIOLIB
+> +       select GPIO_GENERIC
+> +       select GPIOLIB_IRQCHIP
+> +       help
+> +         Say Y here to enable pin controller and GPIO support
+> +         for the Nuvoton WPCM450 SoC.
+
+From this help it's not clear why user should or shouldn't enable it.
+Please, elaborate (and hence fix checkpatch warning).
+
+...
+
+> +#include <linux/module.h>
+
+mod_devicetable.h
+
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+
+> +#include <linux/pinctrl/machine.h>
+> +#include <linux/pinctrl/pinconf.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/pinctrl/pinmux.h>
+
+Can you move this group...
+
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+
+...here?
+
+It will show the relation with pin control subsystem and separate from
+global / generic headers.
+
+...
+
+> +       /*
+> +        * This spinlock protects registers and struct wpcm450_pinctrl fi=
+elds
+
+spin lock
+
+> +        * against concurrent access.
+> +        */
+
+...
+
+> +/* GPIO handling in the pinctrl driver */
+> +
+
+Useless.
+
+...
+
+> +static int wpcm450_gpio_get_direction(struct gpio_chip *chip,
+> +                                     unsigned int offset)
+> +{
+> +       struct wpcm450_pinctrl *pctrl =3D gpiochip_get_data(chip);
+> +       const struct wpcm450_port *port =3D to_port(offset);
+> +       unsigned long flags;
+> +       u32 cfg0;
+> +       int dir;
+> +
+> +       spin_lock_irqsave(&pctrl->lock, flags);
+> +       if (port->cfg0) {
+> +               cfg0 =3D ioread32(pctrl->gpio_base + port->cfg0);
+
+> +               dir =3D !(cfg0 & port_mask(port, offset));
+> +       } else {
+> +               /* If cfg0 is unavailable, the GPIO is always an input */
+> +               dir =3D 1;
+> +       }
+
+Why above is under spin lock?
+Same question for all other similar places in different functions, if any.
+
+> +       spin_unlock_irqrestore(&pctrl->lock, flags);
+> +       return dir;
+> +}
+
+...
+
+> +static int wpcm450_gpio_direction_output(struct gpio_chip *chip,
+> +                                        unsigned int offset, int value)
+> +{
+> +       struct wpcm450_pinctrl *pctrl =3D gpiochip_get_data(chip);
+> +       const struct wpcm450_port *port =3D to_port(offset);
+> +       unsigned long flags;
+> +       u32 dataout, cfg0;
+
+> +       int ret =3D 0;
+
+Redundant. Can do it without it.
+
+> +       spin_lock_irqsave(&pctrl->lock, flags);
+> +       if (port->cfg0) {
+
+> +       } else {
+> +               ret =3D -EINVAL;
+> +       }
+> +       spin_unlock_irqrestore(&pctrl->lock, flags);
+> +       return ret;
+> +}
+
+...
+
+> +/* Interrupt support */
+> +
+
+Useless besides being in a bad style.
+
+...
+
+> +static int event_bitmask(int gpio)
+> +{
+> +       if (gpio >=3D 0 && gpio < 16)
+> +               return BIT(gpio);
+> +       if (gpio =3D=3D 24 || gpio =3D=3D 25)
+> +               return BIT(gpio - 8);
+> +       return -EINVAL;
+> +}
+
+Can you consider to use bitmap_bitremap()
+
+> +static int event_bitnum_to_gpio(int num)
+> +{
+> +       if (num >=3D 0 && num < 16)
+> +               return num;
+> +       if (num =3D=3D 16 || num =3D=3D 17)
+> +               return num + 8;
+> +       return -EINVAL;
+> +}
+
+Ditto.
+
+See gpio-xilinx.c for example.
+
+...
+
+> +static void wpcm450_gpio_irq_ack(struct irq_data *d)
+> +{
+> +       struct wpcm450_pinctrl *pctrl =3D gpiochip_get_data(irq_data_get_=
+irq_chip_data(d));
+
+> +       int mask =3D event_bitmask(d->hwirq);
+
+Move the assignment closer to the check.
+Ditto for other same and similar cases in the code.
+
+> +       unsigned long flags;
+> +
+> +       if (mask < 0)
+> +               return;
+
+> +}
+
+...
+
+> +       int mask =3D event_bitmask(d->hwirq);
+
+Use irqd_to_hwirq() (please check that I spelled it correctly).
+Same for all hwirq getters.
+
+...
+
+> +static void wpcm450_gpio_fix_evpol(struct wpcm450_pinctrl *pctrl, unsign=
+ed long all)
+> +{
+> +       int bitnum;
+
+Can it be negative?
+
+> +       for_each_set_bit(bitnum, &all, 32) {
+
+> +               int gpio =3D event_bitnum_to_gpio(bitnum);
+> +               u32 mask =3D BIT(bitnum), evpol;
+
+unsigned long evpol;
+
+> +               int level;
+> +
+> +               do {
+> +                       evpol =3D ioread32(pctrl->gpio_base + WPCM450_GPE=
+VPOL);
+> +                       level =3D wpcm450_gpio_get(&pctrl->gc, gpio);
+
+> +                       /* Switch event polarity to the opposite of the c=
+urrent level */
+> +                       if (level)
+> +                               evpol &=3D ~mask;
+> +                       else
+> +                               evpol |=3D mask;
+
+__assign_bit(bitnum, &evpol, level);
+
+> +
+> +                       iowrite32(evpol, pctrl->gpio_base + WPCM450_GPEVP=
+OL);
+> +               } while (wpcm450_gpio_get(&pctrl->gc, gpio) !=3D level);
+> +       }
+> +}
+
+...
+
+> +static int wpcm450_gpio_set_irq_type(struct irq_data *d, unsigned int fl=
+ow_type)
+> +{
+
+Consider to assign handler type here.
+
+> +}
+
+...
+
+> +/* pinmux handing */
+> +
+
+Useless.
+
+...
+
+> +/*
+> + * pin:             name, number
+> + * group:    name, npins,   pins
+> + * function: name, ngroups, groups
+> + */
+> +struct wpcm450_group {
+> +       const char *name;
+> +       const unsigned int *pins;
+> +       int npins;
+> +};
+
+Use struct group_desc from core.h.
+
+...
+
+> +/* pinctrl_ops */
+
+Useless.
+
+> +static int wpcm450_get_groups_count(struct pinctrl_dev *pctldev)
+> +{
+> +       struct wpcm450_pinctrl *npcm =3D pinctrl_dev_get_drvdata(pctldev)=
+;
+
+> +       dev_dbg(npcm->dev, "group size: %d\n", ARRAY_SIZE(wpcm450_groups)=
+);
+
+Ditto.
+
+> +       return ARRAY_SIZE(wpcm450_groups);
+> +}
+
+...
+
+> +/* pinmux_ops  */
+
+Useless.
+
+...
+
+> +static int wpcm450_gpio_request_enable(struct pinctrl_dev *pctldev,
+> +                                      struct pinctrl_gpio_range *range,
+> +                                      unsigned int offset)
+> +{
+> +       struct wpcm450_pinctrl *npcm =3D pinctrl_dev_get_drvdata(pctldev)=
+;
+
+> +       if (!range) {
+> +               dev_err(npcm->dev, "invalid range\n");
+> +               return -EINVAL;
+> +       }
+
+Dead code?
+
+> +       if (!range->gc) {
+> +               dev_err(npcm->dev, "invalid gpiochip\n");
+> +               return -EINVAL;
+> +       }
+
+Dead code?
+
+> +       wpcm450_setfunc(npcm->gcr_regmap, &offset, 1, fn_gpio);
+> +
+> +       return 0;
+> +}
+
+...
+
+> +/* Release GPIO back to pinctrl mode */
+> +static void wpcm450_gpio_request_free(struct pinctrl_dev *pctldev,
+> +                                     struct pinctrl_gpio_range *range,
+> +                                     unsigned int offset)
+> +{
+> +       struct wpcm450_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev=
+);
+> +       int virq;
+> +
+> +       virq =3D irq_find_mapping(pctrl->domain, offset);
+> +       if (virq)
+> +               irq_dispose_mapping(virq);
+
+Why it needs to be done here? What about the GPIO library API that
+does some additional stuff?
+
+> +}
+
+...
+
+> +/* pinconf_ops */
+
+Useless.
+
+...
+
+> +static int debounce_bitmask(int gpio)
+> +{
+> +       if (gpio >=3D 0 && gpio < 16)
+> +               return BIT(gpio);
+> +       return -EINVAL;
+> +}
+
+I don't see users of it except one below, care to inline?
+
+> +static int wpcm450_config_get(struct pinctrl_dev *pctldev, unsigned int =
+pin,
+> +                             unsigned long *config)
+> +{
+
+> +       switch (param) {
+> +       case PIN_CONFIG_INPUT_DEBOUNCE:
+> +               mask =3D debounce_bitmask(pin);
+> +               if (mask < 0)
+> +                       return mask;
+
+> +               break;
+> +       default:
+> +               return -ENOTSUPP;
+> +       }
+> +
+> +       return 0;
+> +}
+
+...
+
+> +/* Set multiple configuration settings for a pin */
+
+Useless.
+
+...
+
+> +static int wpcm450_config_set(struct pinctrl_dev *pctldev, unsigned int =
+pin,
+> +                             unsigned long *configs, unsigned int num_co=
+nfigs)
+> +{
+> +       struct wpcm450_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev=
+);
+
+> +       int rc;
+
+Why out of a sudden different (inconsistent) name?
+
+> +       return 0;
+> +}
+
+...
+
+> +       if (!of_find_property(np, "gpio-controller", NULL))
+> +               return -ENODEV;
+
+Dead code?
+
+...
+
+> +       pctrl->gpio_base =3D of_iomap(np, 0);
+
+devm_platform_ioremap_resource();
+
+> +       if (!pctrl->gpio_base) {
+> +               dev_err(pctrl->dev, "Resource fail for GPIO controller\n"=
+);
+> +               return -ENOMEM;
+> +       }
+
+Here leak of resources. See above.
+
+...
+
+> +       pctrl->gc.get_direction =3D wpcm450_gpio_get_direction;
+> +       pctrl->gc.direction_input =3D wpcm450_gpio_direction_input;
+> +       pctrl->gc.direction_output =3D wpcm450_gpio_direction_output;
+> +       pctrl->gc.get =3D wpcm450_gpio_get;
+> +       pctrl->gc.set =3D wpcm450_gpio_set;
+
+No ->set_config()?
+
+...
+
+> +       girq->default_type =3D IRQ_TYPE_NONE;
+
+> +       girq->handler =3D handle_level_irq;
+
+Use ->irq_set_type() for this. Here should be handle_bad_irq().
+
+> +       for (i =3D 0; i < WPCM450_NUM_GPIO_IRQS; i++) {
+
+> +               int irq =3D irq_of_parse_and_map(np, i);
+
+fwnode_get_irq()
+
+> +               if (irq < 0) {
+> +                       dev_err(pctrl->dev, "No IRQ for GPIO controller\n=
+");
+> +                       return irq;
+> +               }
+> +               girq->parents[i] =3D irq;
+> +       }
+
+...
+
+> +       pctrl->pctldev =3D devm_pinctrl_register(&pdev->dev,
+> +                                              &wpcm450_pinctrl_desc, pct=
+rl);
+> +       if (IS_ERR(pctrl->pctldev)) {
+
+> +               dev_err(&pdev->dev, "Failed to register pinctrl device\n"=
+);
+> +               return PTR_ERR(pctrl->pctldev);
+
+Shouldn't it be return dev_err_probe(...); here?
+
+> +       }
+
+...
+
+> +       pr_info("WPCM450 pinctrl and GPIO driver probed\n");
+
+Besides you have to use dev_*() this is completely useless and noisy messag=
+e.
+
+...
+
+> +static const struct of_device_id wpcm450_pinctrl_match[] =3D {
+> +       { .compatible =3D "nuvoton,wpcm450-pinctrl" },
+
+> +       { },
+
+Comma is not needed for terminator line.
+
+> +};
+
+...
+
+> +               .suppress_bind_attrs =3D true,
+
+Why?
+
+--=20
+With Best Regards,
+Andy Shevchenko
