@@ -2,123 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FA203988E8
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 14:04:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EB52398972
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 14:25:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbhFBMGX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Jun 2021 08:06:23 -0400
-Received: from mout.gmx.net ([212.227.15.19]:34647 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229871AbhFBMGS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 2 Jun 2021 08:06:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1622635470;
-        bh=P4/CfhOzE9qRlABqP08JDSxbRq009BHSNhR9z95OX2w=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=lgQKeGjRVV6tsRoM8dHKW++3Uf3CpH6WhKM1AT4f1qaapS9x6dn9fS/sg/wZ4uAGJ
-         uLMVc9flkSrAz0qMZHFH06d1wqMUJTfpB52VIXTii3qg4tAEiDLpINRmLQ4t7RN1br
-         BfDrHqc5auxijmpSZYGz0rA7bgQ5NR3HASU5B/iY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.247]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MFKKh-1ld5st2CCn-00FmqE; Wed, 02
- Jun 2021 14:04:30 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, openbmc@lists.ozlabs.org,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 8/8] ARM: dts: wpcm450-supermicro-x9sci-ln4f: Add GPIO LEDs and buttons
-Date:   Wed,  2 Jun 2021 14:03:29 +0200
-Message-Id: <20210602120329.2444672-9-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210602120329.2444672-1-j.neuschaefer@gmx.net>
-References: <20210602120329.2444672-1-j.neuschaefer@gmx.net>
+        id S229724AbhFBM1j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Jun 2021 08:27:39 -0400
+Received: from mail-ej1-f47.google.com ([209.85.218.47]:38482 "EHLO
+        mail-ej1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229884AbhFBM1h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 08:27:37 -0400
+Received: by mail-ej1-f47.google.com with SMTP id e18so3563391eje.5
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Jun 2021 05:25:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wMQqmoj3nd3kMgvLGFUrh0di1g3/21uyykstmCG03/k=;
+        b=NAFpRO8EU0sFU8JLDKS8uFc/Sx0L1jbkbuP7t1U3t2plfSjNUBgNdk0s9PMiSp59Ka
+         C6b5ULTJ+jLzpMUcmhSh9TvUPbXen0La6LJ61Te3UNd285UzFO8/PELKD+TppKJZ+u9y
+         bRUD4XjqxeOf2JwgtTE51l0Zy5jU8SXZHFUq98CpJIHFIZY6sc/F1z3nJ6tqMvksgX0P
+         zV2+z6sIFmlep8Xz5QRkbUxnsNwo4OuaZOVD6LoJ+vgDZOczoHCxa0Et8hcXEKlY4jwl
+         Q0qIYvfpIewK3h/zlVh5FnvkY+KPcAHzHUAfzB8JGPqWyBfNJzoN3dhaN69pbcUxaWaW
+         iJwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wMQqmoj3nd3kMgvLGFUrh0di1g3/21uyykstmCG03/k=;
+        b=lh4b7CT7maXDIM8wf7UW/EnaFWK4KKVdQbit0bevBJFE9CJ0aosBID9hhYX8cjvpZ0
+         oUxTjJAvpKewxHRJ5sT2r6Z+YHlY3aWnBxK3aYCK5PEbbN9WaCL9pyjeh5Y8xfNi1TQR
+         63PvuWO0oMkSUpOE0RwAio7o3A/jD8qQweg3bWcL2isrdEYRF9SGAh9wEr6y96E/vFAW
+         trjRKU9u6kjGyj/uxEOku8xbqDayIZErxc4uMwmara6hAHKttdwkD7ZLOZTUfiTm4I8O
+         mdJm0Ucwymo42MvcxlWa20x70wJFZ1GNGsrIWCnMGFOj+rpc9t6J78UQ+cV8NI1MO5dU
+         ywIA==
+X-Gm-Message-State: AOAM53209tCUOf0EMmPy7/tiknnN7dppfexC4IeHj1GtapRlkdTDuX8r
+        zL9c0BAQFIRKwc46r/jZq5eQQA==
+X-Google-Smtp-Source: ABdhPJyhXqHlCP22Ff6XGljlqO/zNDq1mX06640rFNztfLb0dLKAQ9sTqEjYIN+tbLjNW5Ove5Nz2Q==
+X-Received: by 2002:a17:906:eb88:: with SMTP id mh8mr16455568ejb.540.1622636686035;
+        Wed, 02 Jun 2021 05:24:46 -0700 (PDT)
+Received: from localhost.localdomain (dh207-96-250.xnet.hr. [88.207.96.250])
+        by smtp.googlemail.com with ESMTPSA id z17sm8539340ejc.69.2021.06.02.05.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jun 2021 05:24:45 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, lee.jones@linaro.org, p.zabel@pengutronix.de,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     luka.perkov@sartura.hr, jmp@epiphyte.org, pmenzel@molgen.mpg.de,
+        buczek@molgen.mpg.de, Robert Marko <robert.marko@sartura.hr>
+Subject: [PATCH v4 1/6] mfd: simple-mfd-i2c: Add Delta TN48M CPLD support
+Date:   Wed,  2 Jun 2021 14:24:34 +0200
+Message-Id: <20210602122439.2084775-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yAIGTz3cD7aDJ3+2ETP6l+xFmX749yXxCxe42nbjAlS00V6VR85
- 6vyW3FtqEUrdgJuACoVtyPMbP8wR1VBJCDJVkqP0qa7lv+VasFSyn7CYEUQ0s0kt9YpQw1v
- 9UPEgaqUuOwvmfl5HpUMHkdFbvMfOxaL6Idqx8PNe9m4Q/wQJblQ2Z5mdqypNAj30FiYW1k
- oXSMU/CzqHfMiNOum7H/A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CopH+5nNWnI=:noLlRC8oYJ46PYECr24XOz
- kZcl4CxGxpi/L6w3Jp39hM5bIoo4rAa94qKCWCehQW23sFQdUKGnlsu1eW4blVOOGOIhinxqY
- eS7kYrTaVFmG5PJGrTZB3w/hxdTHsOsg3uGTDtvCJv9AfmJm/eROAh8Fi3JNkok1tK78HXBpP
- 4g5tjIHPyvijXFoO8ncloC2kgd3RD2KMHAYp8jr9KDV/7O5A+S9mcYbJIYMiGnQO9D/h3Wq2X
- XOLIgBVaVzA4d1gEPQQ400EJ2sUjyr5UMRMRJf2ySiOov3jQe+MbixFhu8a7TiWejLW9qVnIV
- 5pjmBFy0s1zoCPVoAytvlp/BO4MbRQJVsjKEUSb61aUDEqx1YJr47BrDBsvIlFNybYy7CWlQc
- 6FDdWIPJNco7PabJODHN/Ls6iJZnVlfbcTrBflVeW34fLcDG+Qav119Yn+L5GL8GTdcq9+fqc
- uc5nKx8vmV3FYfobJnB0fepFGqpKiGHuj5zX69z1WkfB+dWeQjaYL40t5I1ktjEtABx8BVZPy
- kC5sG83PgMawaPOsKcRrfzskAUmDM6d/wrKCKrEIyIsKNAVYClVNtnNJxiVG2XZXf1t40+K1G
- X1oTUJxy77uLUF3Bqf6bGFZBkJuk/5b2007gVPMDJWpJX752n3iEmzB3dgDhZSf/brNZoME0H
- 1fB9uf2lFIKOdS0uaMBfKAAdfjfbyuzS1g2PTuO9+jozDCIyQiMKITo6/81Ryl3RX5JF95x1B
- BkFQr4wkv7DGmljY8gNbt+xXZZyUcm/zaZPRTGsxfrk7t2d7h6DncJyJfti9TWY6hTkrRZC2t
- iRBjzr5RaFlHr5aVqP9FOOyudnvblXQOlxnj3JNGT2Z1evaSdrNLCth23ei7OHLLCc+w+aH5Z
- 6auUkCihSsL4SawvnbWGwi+Gl8wkfbFWlg+Kf8ZFCOGJp4jFPzJMHc+WVdJwHYI4hqsR1lrP9
- GDMtz2ZQthNcUVQ1P2T//KOxAeHrFBqGNLQesFynjYe4Lbi+ioKFv1NUj4NLACm+ejkD8enUC
- D8W4OPUlxFxprmACq0jb7CnngzyKwbtDENuoIE91ey8LMWtgEIi/tY9jj8BfOIR9GQOkCX9eQ
- 52kA1jtON+8Prtpo64ppNdK6lF5wadOqHbUZktJe2tDFPgRQpdUhE4Lqw==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Supermicro X9SCi-LN4F server mainboard has a two LEDs and a button
-under the control of the BMC. This patch makes them accessible under
-Linux running on the BMC.
+Delta TN48M switches have a Lattice CPLD that serves
+multiple purposes including being a GPIO expander.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- .../nuvoton-wpcm450-supermicro-x9sci-ln4f.dts | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+So, lets use the simple I2C MFD driver to provide the MFD core.
 
-diff --git a/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts b=
-/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts
-index 83f27fbf4e939..176e22216a75e 100644
-=2D-- a/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts
-+++ b/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts
-@@ -8,6 +8,9 @@
+Also add a virtual symbol which pulls in the simple-mfd-i2c driver and
+provide a common symbol on which the subdevice drivers can depend on.
 
- #include "nuvoton-wpcm450.dtsi"
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/mfd/Kconfig          | 10 ++++++++++
+ drivers/mfd/simple-mfd-i2c.c |  1 +
+ 2 files changed, 11 insertions(+)
 
-+#include <dt-bindings/input/linux-event-codes.h>
-+#include <dt-bindings/gpio/gpio.h>
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index b74efa469e90..733c2f9adb15 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -297,6 +297,16 @@ config MFD_ASIC3
+ 	  This driver supports the ASIC3 multifunction chip found on many
+ 	  PDAs (mainly iPAQ and HTC based ones)
+ 
++config MFD_TN48M_CPLD
++	tristate "Delta Networks TN48M switch CPLD driver"
++	depends on I2C
++	select MFD_SIMPLE_MFD_I2C
++	help
++	  Select this option to enable support for Delta Networks TN48M switch
++	  CPLD. It consists of reset and GPIO drivers. CPLD provides GPIOS-s
++	  for the SFP slots as well as power supply related information.
++	  SFP support depends on the GPIO driver being selected.
 +
- / {
- 	model =3D "Supermicro X9SCi-LN4F BMC";
- 	compatible =3D "supermicro,x9sci-ln4f-bmc", "nuvoton,wpcm450";
-@@ -20,6 +23,30 @@ memory@0 {
- 		device_type =3D "memory";
- 		reg =3D <0 0x08000000>; /* 128 MiB */
- 	};
-+
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
-+
-+		uid {
-+			label =3D "UID button";
-+			linux,code =3D <KEY_HOME>;
-+			gpios =3D <&pinctrl 14 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible =3D "gpio-leds";
-+
-+		uid {
-+			label =3D "UID";
-+			gpios =3D <&pinctrl 23 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		heartbeat {
-+			label =3D "heartbeat";
-+			gpios =3D <&pinctrl 20 GPIO_ACTIVE_LOW>;
-+		};
-+	};
+ config PMIC_DA903X
+ 	bool "Dialog Semiconductor DA9030/DA9034 PMIC Support"
+ 	depends on I2C=y
+diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
+index 87f684cff9a1..af8e91781417 100644
+--- a/drivers/mfd/simple-mfd-i2c.c
++++ b/drivers/mfd/simple-mfd-i2c.c
+@@ -39,6 +39,7 @@ static int simple_mfd_i2c_probe(struct i2c_client *i2c)
+ 
+ static const struct of_device_id simple_mfd_i2c_of_match[] = {
+ 	{ .compatible = "kontron,sl28cpld" },
++	{ .compatible = "delta,tn48m-cpld" },
+ 	{}
  };
-
- &serial0 {
-=2D-
-2.30.2
+ MODULE_DEVICE_TABLE(of, simple_mfd_i2c_of_match);
+-- 
+2.31.1
 
