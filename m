@@ -2,154 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90C8A399E44
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 12:00:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3172C399E48
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 12:01:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229754AbhFCKCM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Jun 2021 06:02:12 -0400
-Received: from mail-lf1-f46.google.com ([209.85.167.46]:33577 "EHLO
-        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbhFCKCM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 06:02:12 -0400
-Received: by mail-lf1-f46.google.com with SMTP id t7so803403lff.0;
-        Thu, 03 Jun 2021 03:00:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=TRbcTChcfkbQw4wqZMWbz/6Kdy4VvqYAnpfbOiOSptQ=;
-        b=dN5ldU6qj80YD0vsJSXWzlngvlYZf7fGOx7/esxidU2YnsypVsiGR+WpmKYsoFq/5a
-         PFPZq+8vHFnFyH+QLdgB710d16WHuM9G7jhul/srUB1CMAsVzfDct9vVSLS26XuXmj2f
-         M6fRyZpKxnB+voIwsI0TEqCh/V5eqDBDh975szs/gi12rocTCzCZb+BBgK/yGT9goFJI
-         SQi7GZcKuH6o91NTrpaK0i+dc8Tkl+kcKSPkxCGGsQmMjWwEDgFL9AQnTBx3VQUXSRRn
-         UZ69zosRmIkeV3zjQ07jTQU2nw/Sv4dI6ihwXSe4RrIC51Kzh7SzKIf0lnkp1ycy8l9y
-         PYhQ==
-X-Gm-Message-State: AOAM532daTPrrCKl7KvbaXMhTFDlBbzVoIF5dIKy5RmdotP/Dfw5/DF4
-        KpyF5c8h84xmdVDEcmsbF6o=
-X-Google-Smtp-Source: ABdhPJzFtsTeq1E+bv/fTUEFuA99L+zXukpk5I4VUVz1CO258k5OntRzitZPinm2ciozxRShW5GXiA==
-X-Received: by 2002:a19:4803:: with SMTP id v3mr11616510lfa.115.1622714426972;
-        Thu, 03 Jun 2021 03:00:26 -0700 (PDT)
-Received: from localhost.localdomain (dc7vkhyyyyyyyyyyyyycy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::4])
-        by smtp.gmail.com with ESMTPSA id c33sm305826ljr.85.2021.06.03.03.00.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jun 2021 03:00:26 -0700 (PDT)
-Date:   Thu, 3 Jun 2021 13:00:21 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>
-Cc:     Michael Walle <michael@walle.cc>,
+        id S229958AbhFCKDD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Jun 2021 06:03:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229929AbhFCKDC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 06:03:02 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E8CC061756
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Jun 2021 03:01:18 -0700 (PDT)
+Received: from terra.local.svanheule.net (unknown [IPv6:2a02:a03f:eafb:ee01:398f:956e:2c86:f184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 210C5208042;
+        Thu,  3 Jun 2021 12:01:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1622714476;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IH3A9NYNMOqQYksVqwsvqHbo0clvcQccuKAwQC0l0YQ=;
+        b=42ix+bJT/DUZcBc7i2oMW5oWVELx0LW7wc64uj4bZgwkz+z/wtDxryWBUbX3vT5Jcackqt
+        0xeXg6804K+16UtzUGu2X0ocoS4ZNjrgiAQziFWasj/DmbTnlpBLAAQNhv2NzWkjcZHnML
+        l2DCYElWG0MY5FCTQww5c+EP1Q/OlC144CNPLILIc9MQz0sKG9jam5Nr2l/CUOoGgXezo6
+        s2nOlTB9UUCYO4bAgdgFpmkSKfSkDFDvG7LLA84VkrH2yZ3k9lK9Yi7qVgyrCUED4gEIV9
+        NVrEmYTw4wL1cgjj2r3Y58KEeQ5mcC8Lvb88b8cMQhV7IlGKu9e6dGUu2iqJfg==
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Walle <michael@walle.cc>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: gpio-regmap: Use devm_add_action_or_reset()
-Message-ID: <b0a7e849dbf7e92d2e32d8c751d87382b06f6547.1622714114.git.matti.vaittinen@fi.rohmeurope.com>
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        linux-kernel@vger.kernel.org,
+        Sander Vanheule <sander@svanheule.net>
+Subject: [PATCH v4 0/5] RTL8231 GPIO expander support
+Date:   Thu,  3 Jun 2021 12:00:39 +0200
+Message-Id: <cover.1622713678.git.sander@svanheule.net>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1620735871.git.sander@svanheule.net>
+References: <cover.1620735871.git.sander@svanheule.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="H1spWtNR+x+ondvy"
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The RTL8231 GPIO and LED expander can be configured for use as an MDIO or SMI
+bus device. Currently only the MDIO mode is supported, although SMI mode
+support should be fairly straightforward, once an SMI bus driver is available.
 
---H1spWtNR+x+ondvy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Provided features by the RTL8231:
+  - Up to 37 GPIOs
+    - Configurable drive strength: 8mA or 4mA (currently unsupported)
+    - Input debouncing on high GPIOs (currently unsupported)
+  - Up to 88 LEDs in multiple scan matrix groups
+    - On, off, or one of six toggling intervals
+    - "single-color mode": 2×36 single color LEDs + 8 bi-color LEDs
+    - "bi-color mode": (12 + 2×6) bi-color LEDs + 24 single color LEDs
+  - Up to one PWM output (currently unsupported)
+    - Fixed duty cycle, 8 selectable frequencies (1.2kHz - 4.8kHz)
 
-Slightly simplify the devm_gpio_regmap_register() by using the
-devm_add_action_or_reset().
+The GPIO controller uses gpio-regmap. The assumed read-modify-write behaviour
+of the data output is provided by using a cached virtual address range for the
+output values.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
-This patch was originally part of the series here:
-https://lore.kernel.org/lkml/cover.1622008846.git.matti.vaittinen@fi.rohmeu=
-rope.com/
+Register access is provided through a new MDIO regmap provider. The required
+MDIO regmap support was merged in Mark Brown's regmap repository, and can be
+found under the regmap-mdio tag:
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/tag/?h=regmap-mdio
 
-Other patches from the series were dropped.
+Changes since v3:
+  - Drop gpio-regmap direction-before-value quirk
+  - Use secondary virtual register range to enable proper read-modify-write
+    behaviour on GPIO output values
+  - Add pin debounce support
+  - Switch to generic pinmux functions
 
- drivers/gpio/gpio-regmap.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+Changes since v2:
+  - MDIO regmap support was merged, so patch is dropped here
+  - Implement feedback for DT bindings
+  - Use correct module names in Kconfigs
+  - Fix k*alloc return value checks
+  - Introduce GPIO regmap quirks to set output direction first
+  - pinctrl: Use static pin descriptions for pin controller
+  - pinctrl: Fix gpio consumer resource leak
+  - mfd: Replace CONFIG_PM-ifdef'ery
+  - leds: Rename interval to interval_ms
 
-diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index 134cedf151a7..1ead1290eb3f 100644
---- a/drivers/gpio/gpio-regmap.c
-+++ b/drivers/gpio/gpio-regmap.c
-@@ -311,9 +311,9 @@ void gpio_regmap_unregister(struct gpio_regmap *gpio)
- }
- EXPORT_SYMBOL_GPL(gpio_regmap_unregister);
-=20
--static void devm_gpio_regmap_unregister(struct device *dev, void *res)
-+static void devm_gpio_regmap_unregister(void *res)
- {
--	gpio_regmap_unregister(*(struct gpio_regmap **)res);
-+	gpio_regmap_unregister(res);
- }
-=20
- /**
-@@ -330,20 +330,17 @@ static void devm_gpio_regmap_unregister(struct device=
- *dev, void *res)
- struct gpio_regmap *devm_gpio_regmap_register(struct device *dev,
- 					      const struct gpio_regmap_config *config)
- {
--	struct gpio_regmap **ptr, *gpio;
--
--	ptr =3D devres_alloc(devm_gpio_regmap_unregister, sizeof(*ptr),
--			   GFP_KERNEL);
--	if (!ptr)
--		return ERR_PTR(-ENOMEM);
-+	struct gpio_regmap *gpio;
-+	int ret;
-=20
- 	gpio =3D gpio_regmap_register(config);
--	if (!IS_ERR(gpio)) {
--		*ptr =3D gpio;
--		devres_add(dev, ptr);
--	} else {
--		devres_free(ptr);
--	}
-+
-+	if (IS_ERR(gpio))
-+		return gpio;
-+
-+	ret =3D devm_add_action_or_reset(dev, devm_gpio_regmap_unregister, gpio);
-+	if (ret)
-+		return ERR_PTR(ret);
-=20
- 	return gpio;
- }
---=20
-2.25.4
+Changes since v1:
+  - Reintroduce MDIO regmap, with fixed Kconfig dependencies
+  - Add configurable dir/value order for gpio-regmap direction_out call
+  - Drop allocations for regmap fields that are used only on init
+  - Move some definitions to MFD header
+  - Add PM ops to replace driver remove for MFD
+  - Change pinctrl driver to (modified) gpio-regmap
+  - Change leds driver to use fwnode
 
+Changes since RFC:
+  - Dropped MDIO regmap interface. I was unable to resolve the Kconfig
+    dependency issue, so have reverted to using regmap_config.reg_read/write.
+  - Added pinctrl support
+  - Added LED support
+  - Changed root device to MFD, with pinctrl and leds child devices. Root
+    device is now an mdio_device driver.
 
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Sander Vanheule (5):
+  dt-bindings: leds: Binding for RTL8231 scan matrix
+  dt-bindings: mfd: Binding for RTL8231
+  mfd: Add RTL8231 core device
+  pinctrl: Add RTL8231 pin control and GPIO support
+  leds: Add support for RTL8231 LED scan matrix
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
+ .../bindings/leds/realtek,rtl8231-leds.yaml   | 166 +++++++
+ .../bindings/mfd/realtek,rtl8231.yaml         | 190 ++++++++
+ drivers/leds/Kconfig                          |  10 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-rtl8231.c                   | 291 ++++++++++++
+ drivers/mfd/Kconfig                           |   9 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/rtl8231.c                         | 240 ++++++++++
+ drivers/pinctrl/Kconfig                       |  11 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-rtl8231.c             | 438 ++++++++++++++++++
+ include/linux/mfd/rtl8231.h                   |  78 ++++
+ 12 files changed, 1436 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
+ create mode 100644 drivers/leds/leds-rtl8231.c
+ create mode 100644 drivers/mfd/rtl8231.c
+ create mode 100644 drivers/pinctrl/pinctrl-rtl8231.c
+ create mode 100644 include/linux/mfd/rtl8231.h
 
---H1spWtNR+x+ondvy
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.31.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmC4qDQACgkQeFA3/03a
-ocWx0Qf+LgOMy78zsv5t6d5l75NJTJoE+zglco1yXWZoJWAeUAMlb+DXAuEUozlS
-GYVQHtUa30rvO4rKallRLnKZ+PIZ2yLHTYF49Zir8TGUTNz2GnATpu9yZ2kdGEez
-DYPehcLFHQImAb/j0a4J5rDizZM+pYw21fjZ/EiwhMcLNrfcXQbR6yeaoxTS/ZNl
-D1Mb0GYO0IvCGRzLgzBu3Y1Q8gs5Kl/sOAGeOOYYFVtOhg/CAIQ9FjH71r283qMU
-PHgkErEo94VJwyCeDhNtPspA2dI3a+etADsXmmVQLhDMdVPHTr1YcGzdi9LZ3IGq
-5sUd243emG9QE8aweD6MoJJwGxoHNA==
-=U4IZ
------END PGP SIGNATURE-----
-
---H1spWtNR+x+ondvy--
