@@ -2,99 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 997F2399F89
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 13:08:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7F2F399FC3
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 13:28:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229727AbhFCLKi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Jun 2021 07:10:38 -0400
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:43597 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229721AbhFCLKh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 07:10:37 -0400
-Received: by mail-pl1-f176.google.com with SMTP id v12so2679463plo.10;
-        Thu, 03 Jun 2021 04:08:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wDo2z8iTAiJqBqvWvLB96Okm4phCuyBKqAvyvxyTJXs=;
-        b=P78APJKcMH6oqL0fsJYDyeLXqod4sHzF3NXsn6tkC3NkBYbPumu8oRRPGT/fPb1HtZ
-         UmaBhblYD4nltFb4LfHSbYjyeyRq1q+Xng3DOD5LCgR6V+7j7JfVMVnTO18hvNonTGAh
-         nCB/Zk0yrCgyJlh9b6R39j8OT0/a53Lhanzzmvg5zyfHTnDax/5ap2oyt7s8WZ2Fdtsx
-         vy6+WrmcmYqO+6/fcHjFDZsykRNKYqfV+dcheF40g7wGoRKkln9VKOvRpJV+xDXDJPOC
-         QtohdoP4CivTDGn77Ix3q/Mdf1NSq+U0Q98iUBwG7EYtzwONK52ax/CLcWtkR7gWBfSg
-         dTPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wDo2z8iTAiJqBqvWvLB96Okm4phCuyBKqAvyvxyTJXs=;
-        b=eV9FzO7C/LiXgmjqjoSW9qro4T36Y0qYfAwUOFZc+SePCOxsyvRXStGPuXQDAbE8J3
-         Na84+fwju9daLvw2SViPUnTMD48XawuiyxUaENiKK5lrcdRRfjNz7uKifh4iUMiP0eLS
-         2HlA5hWCyyTcsymWVK6m0mfUeJl9/J8Jr/sZgF65t4FQ7s0fp2M3lAkZ7285hHb4IZOQ
-         qa0KqedqvBnS3Xw6qprrg69NGzXI2DhN7ylv4nGWcJn3AYdF9hgrk1ShEytjMrl49Krk
-         Ft74vvbwYe41L/n15zGzAeaCVxJZ4/UTopK4KCUCMiX80YCw0xzp3hGUDqyrlKU3EcFG
-         HvMw==
-X-Gm-Message-State: AOAM533n9kZclDO7z4bAM3j8/JDqSL5kqmnP1UOJpDIhcYzYGf10T19/
-        1fb2RURXcUYj6JJ+Ki+S/bb5GtIesWX38be73qk=
-X-Google-Smtp-Source: ABdhPJyCs+wp9GQAeR/SyNmg8FNfUVK6o5CEsq9kbEkhUdzsvyuzZtCKxNpGLiUoC4lv9/PO9J5wxEFTLOwFP4TIkL0=
-X-Received: by 2002:a17:90a:af8b:: with SMTP id w11mr36016810pjq.228.1622718464302;
- Thu, 03 Jun 2021 04:07:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210603101822.9645-1-steven_lee@aspeedtech.com> <20210603101822.9645-5-steven_lee@aspeedtech.com>
-In-Reply-To: <20210603101822.9645-5-steven_lee@aspeedtech.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Jun 2021 14:07:28 +0300
-Message-ID: <CAHp75VcPdUeK49w9qg9RuJY7ASMyFMEEi=cX1gnp=wM_QHDZ+w@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] gpio: gpio-aspeed-sgpio: Add set_config function
-To:     Steven Lee <steven_lee@aspeedtech.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
+        id S229747AbhFCLab (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Jun 2021 07:30:31 -0400
+Received: from polaris.svanheule.net ([84.16.241.116]:35130 "EHLO
+        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229697AbhFCLaa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 07:30:30 -0400
+Received: from [IPv6:2a02:a03f:eafb:ee01:398f:956e:2c86:f184] (unknown [IPv6:2a02:a03f:eafb:ee01:398f:956e:2c86:f184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 35D2B2080B3;
+        Thu,  3 Jun 2021 13:28:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1622719725;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uy7edqnqtaAtBfOfz9dzIFfc/RSIZezcm98QJ+kd+pE=;
+        b=rjue1kvPQCF8teUA4zwFe2KhhwYS58jf/JZvoxI2Z2CeeO6RERVPNNTrN+01Bi1VBdNwnC
+        FrGIN2vSuHzr/rZrK4pmMPVjPvoJn9mTge44lYbJavcC+tkgeQ8nrWuz9RPhIX1bgEwc4K
+        yxCpBCt2ejTJRaEPyqxf2oOsxhPAdCufUu1UWcevbDk/jRJln+tds0HvcZiEWvqTYnlFES
+        E62QrB5ah+CPN35IsglmUoS76Ee9PNycwvVhVqwYKOpIBVtehDwG3ELV6KcjFbKYcGZb0F
+        udI5N0Fl3biJbM8fOFPoZyPGAlLmwnfD24b9cc6Ohbl0AOKIPGTVFuMmxanD5g==
+Message-ID: <acc18a3b1c02b8f89023451d816031e70bec9320.camel@svanheule.net>
+Subject: Re: [PATCH v4 3/5] mfd: Add RTL8231 core device
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>, Hongweiz@ami.com,
-        ryan_chen@aspeedtech.com, Billy Tsai <billy_tsai@aspeedtech.com>
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 03 Jun 2021 13:28:42 +0200
+In-Reply-To: <CAHp75VeLUufwYagvQ2M+VKsivUzmnHHHQeH4E8-uN2avRWmBag@mail.gmail.com>
+References: <cover.1620735871.git.sander@svanheule.net>
+         <cover.1622713678.git.sander@svanheule.net>
+         <56fb027587fa067a249237ecaf40828cd508cdcc.1622713678.git.sander@svanheule.net>
+         <CAHp75VeLUufwYagvQ2M+VKsivUzmnHHHQeH4E8-uN2avRWmBag@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 3, 2021 at 1:20 PM Steven Lee <steven_lee@aspeedtech.com> wrote:
->
-> AST SoC supports *retain pin state* function when wdt reset.
-> The patch adds set_config function for handling sgpio reset tolerance
-> register.
+On Thu, 2021-06-03 at 13:58 +0300, Andy Shevchenko wrote:
+> On Thu, Jun 3, 2021 at 1:01 PM Sander Vanheule <sander@svanheule.net> wrote:
+> > 
+> > The RTL8231 is implemented as an MDIO device, and provides a regmap
+> > interface for register access by the core and child devices.
+> > 
+> > The chip can also be a device on an SMI bus, an I2C-like bus by Realtek.
+> > Since kernel support for SMI is limited, and no real-world SMI
+> > implementations have been encountered for this device, this is currently
+> > unimplemented. The use of the regmap interface should make any future
+> > support relatively straightforward.
+> > 
+> > After reset, all pins are muxed to GPIO inputs before the pin drivers
+> > are enabled. This is done to prevent accidental system resets, when a
+> > pin is connected to the parent SoC's reset line.
+> > 
+> > To provide different read and write semantics for the GPIO data
+> > registers, a secondary virtual register range is used to enable separate
+> > cacheing properties of pin input and output values.
+> 
+> caching
+> 
+> ...
+> 
+> 
+> > +static int rtl8231_reg_read(void *context, unsigned int reg, unsigned int
+> > *val)
+> > +{
+> > +       struct mdio_device *mdio_dev = context;
+> > +       int ret;
+> > +
+> > +       ret = mdiobus_read(mdio_dev->bus, mdio_dev->addr,
+> > RTL8231_REAL_REG(reg));
+> > +
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+> > +       *val = ret & 0xffff;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int rtl8231_reg_write(void *context, unsigned int reg, unsigned int
+> > val)
+> > +{
+> > +       struct mdio_device *mdio_dev = context;
+> > +
+> > +       return mdiobus_write(mdio_dev->bus, mdio_dev->addr,
+> > RTL8231_REAL_REG(reg), val);
+> > +}
+> 
+> Hmm... Maybe we can amend regmap-mdio to avoid duplication of the
+> above? Something like xlate in gpio-regmap or so?
+> 
 
-...
+I wanted to make the masking explicit, but since regmap-mdio currently requires
+a register address width of 5 bit, it could move there.
 
-> +static int aspeed_sgpio_set_config(struct gpio_chip *chip, unsigned int offset,
-> +                                  unsigned long config)
-> +{
-> +       unsigned long param = pinconf_to_config_param(config);
-> +       u32 arg = pinconf_to_config_argument(config);
-> +
-> +       if (param == PIN_CONFIG_PERSIST_STATE)
-> +               return aspeed_sgpio_reset_tolerance(chip, offset, arg);
+Actually, can we safely assume that any MDIO driver implementing clause-22
+access (5-bit register address width) will just ignore higher bits? In that
+case, I could just drop these functions and not even modify regmap-mdio. It
+appears to work for bitbanged MDIO.
 
-> +       else
 
-Redundant.
+> > +       mdiodev->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> > GPIOD_OUT_LOW);
+> 
+> Missed
+> 
+>   if (IS_ERR(mdiodev->reset_gpio))
+>     return PTR_ERR(mdiodev->reset_gpio);
+> 
 
-> +               return -EOPNOTSUPP;
+Will fix.
 
-IIRC we are using ENOTSUPP internally in the kernel. YEs, checkpatch
-warning may be ignored.
+Best,
+Sander
 
-> +}
 
--- 
-With Best Regards,
-Andy Shevchenko
