@@ -2,137 +2,223 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7F2F399FC3
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 13:28:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4385839A2AE
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 16:00:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbhFCLab (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Jun 2021 07:30:31 -0400
-Received: from polaris.svanheule.net ([84.16.241.116]:35130 "EHLO
-        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbhFCLaa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 07:30:30 -0400
-Received: from [IPv6:2a02:a03f:eafb:ee01:398f:956e:2c86:f184] (unknown [IPv6:2a02:a03f:eafb:ee01:398f:956e:2c86:f184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id 35D2B2080B3;
-        Thu,  3 Jun 2021 13:28:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1622719725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uy7edqnqtaAtBfOfz9dzIFfc/RSIZezcm98QJ+kd+pE=;
-        b=rjue1kvPQCF8teUA4zwFe2KhhwYS58jf/JZvoxI2Z2CeeO6RERVPNNTrN+01Bi1VBdNwnC
-        FrGIN2vSuHzr/rZrK4pmMPVjPvoJn9mTge44lYbJavcC+tkgeQ8nrWuz9RPhIX1bgEwc4K
-        yxCpBCt2ejTJRaEPyqxf2oOsxhPAdCufUu1UWcevbDk/jRJln+tds0HvcZiEWvqTYnlFES
-        E62QrB5ah+CPN35IsglmUoS76Ee9PNycwvVhVqwYKOpIBVtehDwG3ELV6KcjFbKYcGZb0F
-        udI5N0Fl3biJbM8fOFPoZyPGAlLmwnfD24b9cc6Ohbl0AOKIPGTVFuMmxanD5g==
-Message-ID: <acc18a3b1c02b8f89023451d816031e70bec9320.camel@svanheule.net>
-Subject: Re: [PATCH v4 3/5] mfd: Add RTL8231 core device
-From:   Sander Vanheule <sander@svanheule.net>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 03 Jun 2021 13:28:42 +0200
-In-Reply-To: <CAHp75VeLUufwYagvQ2M+VKsivUzmnHHHQeH4E8-uN2avRWmBag@mail.gmail.com>
-References: <cover.1620735871.git.sander@svanheule.net>
-         <cover.1622713678.git.sander@svanheule.net>
-         <56fb027587fa067a249237ecaf40828cd508cdcc.1622713678.git.sander@svanheule.net>
-         <CAHp75VeLUufwYagvQ2M+VKsivUzmnHHHQeH4E8-uN2avRWmBag@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        id S229744AbhFCOBp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Jun 2021 10:01:45 -0400
+Received: from mx3.wp.pl ([212.77.101.10]:8051 "EHLO mx3.wp.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230386AbhFCOBn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 3 Jun 2021 10:01:43 -0400
+Received: (wp-smtpd smtp.wp.pl 2142 invoked from network); 3 Jun 2021 15:59:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1622728793; bh=fRnCsJG2Rwzygo40iFZgcyKGawMpbMTvyVyV/dQUXyI=;
+          h=From:To:Cc:Subject;
+          b=AEs4j4HOr8uXJe4VR8tYucV0To0l82/oG9GYzlGLjN5Th2xSiwtdaEbUDfYNjz2z8
+           JzJ4aHAWrwSBorWNR7GvuevA6Dc7BHwTUYXrUkJj+IW71ccz5GUzCqfi4xbpn4d89D
+           nYETEVktySi9LX5lyd0mB/ojPPdwXhtUiisI7vBo=
+Received: from riviera.nat.ds.pw.edu.pl (HELO LAPTOP-OLEK.lan) (olek2@wp.pl@[194.29.137.1])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linus.walleij@linaro.org>; 3 Jun 2021 15:59:53 +0200
+From:   Aleksander Jan Bajkowski <olek2@wp.pl>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, john@phrozen.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Aleksander Jan Bajkowski <olek2@wp.pl>
+Subject: [PATCH v4] dt-bindings: gpio: stp: convert to json-schema
+Date:   Thu,  3 Jun 2021 15:59:45 +0200
+Message-Id: <20210603135945.3495-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-WP-DKIM-Status: good (id: wp.pl)                                      
+X-WP-MailID: d332e804784052e5af596d807155646f
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [4QNk]                               
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 2021-06-03 at 13:58 +0300, Andy Shevchenko wrote:
-> On Thu, Jun 3, 2021 at 1:01 PM Sander Vanheule <sander@svanheule.net> wrote:
-> > 
-> > The RTL8231 is implemented as an MDIO device, and provides a regmap
-> > interface for register access by the core and child devices.
-> > 
-> > The chip can also be a device on an SMI bus, an I2C-like bus by Realtek.
-> > Since kernel support for SMI is limited, and no real-world SMI
-> > implementations have been encountered for this device, this is currently
-> > unimplemented. The use of the regmap interface should make any future
-> > support relatively straightforward.
-> > 
-> > After reset, all pins are muxed to GPIO inputs before the pin drivers
-> > are enabled. This is done to prevent accidental system resets, when a
-> > pin is connected to the parent SoC's reset line.
-> > 
-> > To provide different read and write semantics for the GPIO data
-> > registers, a secondary virtual register range is used to enable separate
-> > cacheing properties of pin input and output values.
-> 
-> caching
-> 
-> ...
-> 
-> 
-> > +static int rtl8231_reg_read(void *context, unsigned int reg, unsigned int
-> > *val)
-> > +{
-> > +       struct mdio_device *mdio_dev = context;
-> > +       int ret;
-> > +
-> > +       ret = mdiobus_read(mdio_dev->bus, mdio_dev->addr,
-> > RTL8231_REAL_REG(reg));
-> > +
-> > +       if (ret < 0)
-> > +               return ret;
-> > +
-> > +       *val = ret & 0xffff;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int rtl8231_reg_write(void *context, unsigned int reg, unsigned int
-> > val)
-> > +{
-> > +       struct mdio_device *mdio_dev = context;
-> > +
-> > +       return mdiobus_write(mdio_dev->bus, mdio_dev->addr,
-> > RTL8231_REAL_REG(reg), val);
-> > +}
-> 
-> Hmm... Maybe we can amend regmap-mdio to avoid duplication of the
-> above? Something like xlate in gpio-regmap or so?
-> 
+Convert the Lantiq STP Device Tree binding documentation to json-schema.
+Add the missing pinctrl property to the example. Add missing lantiq,phy3
+and lantiq,phy4 bindings for xRX300 and xRX330 SoCs.
 
-I wanted to make the masking explicit, but since regmap-mdio currently requires
-a register address width of 5 bit, it could move there.
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Changes since v3:
+ - Removed description of the reg property.
+ - Changed regex pattern property.
+ - Moved lantiq,rising to properties.
+Changes since v2:
+ - Changed phy numbering in description of pattern Properties. Numbering
+   should start with 1. 
+Changes since v1:
+ - Renamed node to gpio.
+ - Dropped default pinctrl from this binding.
+ - Converted lantiq,phyX to patternProperties.
+---
+ .../bindings/gpio/gpio-stp-xway.txt           | 42 --------
+ .../bindings/gpio/gpio-stp-xway.yaml          | 99 +++++++++++++++++++
+ 2 files changed, 99 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
 
-Actually, can we safely assume that any MDIO driver implementing clause-22
-access (5-bit register address width) will just ignore higher bits? In that
-case, I could just drop these functions and not even modify regmap-mdio. It
-appears to work for bitbanged MDIO.
-
-
-> > +       mdiodev->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-> > GPIOD_OUT_LOW);
-> 
-> Missed
-> 
->   if (IS_ERR(mdiodev->reset_gpio))
->     return PTR_ERR(mdiodev->reset_gpio);
-> 
-
-Will fix.
-
-Best,
-Sander
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
+deleted file mode 100644
+index 78458adbf4b7..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-Lantiq SoC Serial To Parallel (STP) GPIO controller
+-
+-The Serial To Parallel (STP) is found on MIPS based Lantiq socs. It is a
+-peripheral controller used to drive external shift register cascades. At most
+-3 groups of 8 bits can be driven. The hardware is able to allow the DSL modem
+-to drive the 2 LSBs of the cascade automatically.
+-
+-
+-Required properties:
+-- compatible : Should be "lantiq,gpio-stp-xway"
+-- reg : Address and length of the register set for the device
+-- #gpio-cells : Should be two.  The first cell is the pin number and
+-  the second cell is used to specify optional parameters (currently
+-  unused).
+-- gpio-controller : Marks the device node as a gpio controller.
+-
+-Optional properties:
+-- lantiq,shadow : The default value that we shall assume as already set on the
+-  shift register cascade.
+-- lantiq,groups : Set the 3 bit mask to select which of the 3 groups are enabled
+-  in the shift register cascade.
+-- lantiq,dsl : The dsl core can control the 2 LSBs of the gpio cascade. This 2 bit
+-  property can enable this feature.
+-- lantiq,phy1 : The gphy1 core can control 3 bits of the gpio cascade.
+-- lantiq,phy2 : The gphy2 core can control 3 bits of the gpio cascade.
+-- lantiq,rising : use rising instead of falling edge for the shift register
+-
+-Example:
+-
+-gpio1: stp@e100bb0 {
+-	compatible = "lantiq,gpio-stp-xway";
+-	reg = <0xE100BB0 0x40>;
+-	#gpio-cells = <2>;
+-	gpio-controller;
+-
+-	lantiq,shadow = <0xffff>;
+-	lantiq,groups = <0x7>;
+-	lantiq,dsl = <0x3>;
+-	lantiq,phy1 = <0x7>;
+-	lantiq,phy2 = <0x7>;
+-	/* lantiq,rising; */
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
+new file mode 100644
+index 000000000000..d565c4b63dbf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
+@@ -0,0 +1,99 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-stp-xway.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Lantiq SoC Serial To Parallel (STP) GPIO controller
++
++description: |
++  The Serial To Parallel (STP) is found on MIPS based Lantiq socs. It is a
++  peripheral controller used to drive external shift register cascades. At most
++  3 groups of 8 bits can be driven. The hardware is able to allow the DSL modem
++  and Ethernet PHYs to drive some bytes of the cascade automatically.
++
++maintainers:
++  - John Crispin <john@phrozen.org>
++
++properties:
++  $nodename:
++    pattern: "^gpio@[0-9a-f]+$"
++
++  compatible:
++    const: lantiq,gpio-stp-xway
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    description:
++      The first cell is the pin number and the second cell is used to specify
++      consumer flags.
++    const: 2
++
++  lantiq,shadow:
++    description:
++      The default value that we shall assume as already set on the
++      shift register cascade.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x000000
++    maximum: 0xffffff
++
++  lantiq,groups:
++    description:
++      Set the 3 bit mask to select which of the 3 groups are enabled
++      in the shift register cascade.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x0
++    maximum: 0x7
++
++  lantiq,dsl:
++    description:
++      The dsl core can control the 2 LSBs of the gpio cascade. This 2 bit
++      property can enable this feature.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x0
++    maximum: 0x3
++
++  lantiq,rising:
++    description:
++      Use rising instead of falling edge for the shift register.
++    type: boolean
++
++patternProperties:
++  "^lantiq,phy[1-4]$":
++    description:
++      The gphy core can control 3 bits of the gpio cascade. In the xRX200 family
++      phy[1-2] are available, in xRX330 phy[1-3] and in XRX330 phy[1-4].
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x0
++    maximum: 0x7
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio@e100bb0 {
++        compatible = "lantiq,gpio-stp-xway";
++        reg = <0xE100BB0 0x40>;
++        #gpio-cells = <2>;
++        gpio-controller;
++
++        pinctrl-0 = <&stp_pins>;
++        pinctrl-names = "default";
++
++        lantiq,shadow = <0xffffff>;
++        lantiq,groups = <0x7>;
++        lantiq,dsl = <0x3>;
++        lantiq,phy1 = <0x7>;
++        lantiq,phy2 = <0x7>;
++    };
++...
+-- 
+2.30.2
 
