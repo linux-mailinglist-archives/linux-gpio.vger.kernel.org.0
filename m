@@ -2,89 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F11AF399521
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jun 2021 23:04:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 609423998DD
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 06:13:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbhFBVGD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Jun 2021 17:06:03 -0400
-Received: from mail-oi1-f177.google.com ([209.85.167.177]:47098 "EHLO
-        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbhFBVGC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Jun 2021 17:06:02 -0400
-Received: by mail-oi1-f177.google.com with SMTP id x15so4010212oic.13;
-        Wed, 02 Jun 2021 14:04:03 -0700 (PDT)
+        id S229486AbhFCEOn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Jun 2021 00:14:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229441AbhFCEOn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 00:14:43 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C55C06174A;
+        Wed,  2 Jun 2021 21:12:46 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id j184so4748253qkd.6;
+        Wed, 02 Jun 2021 21:12:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WSBVtEwjNJceUSW+ED54by5q0ntVhKU4EZfInF4XBmQ=;
+        b=ALSkX+TZCWadbcLs53Y6oEcOcUob861l+3sMaf3bsrc7RQda1oexFXL8fGmiav0Xpi
+         /ChK3KS/oFMr3CjNybg5mytdl91qRxUGZgvSeLuBQeM6IBSJhAUWrEGRlzNH5SnYxw1r
+         0LdsgZUDyGu6tfUQcjHf8Su5QHoDTMOdCLx/I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oVR3AvDB5YuftfnirDS6S655YqBrktVMLOvolfq9ZGQ=;
-        b=k8V2KqFQ8/l8Fvs0pOqGB2YZbdiFtQz3PDNwTIr6Jidpuz280VRboaF47Vr8GYrP6A
-         TMrQecDqv7L1D1Qu8KQEe9/N6C7yK12JLMNQj3EP+N+UnAZ8QvIw4vRFRsPxqM9pb82O
-         oK+aEbUFG/EqMEFevYlc7a1xb8Kfaxmi/C045AiuthVINKAjb5ANqRQEXb+bet/2D1kq
-         +ZN9gjUQKZrhGD34c1OT1Ji02tdx868bTryCCNvtRqPMoU/9Qldj2Vg+cswuAxmEnlE2
-         ZqK0qPfzTGbOnYVf8w/ul6T7gbEn73hr6lmM6Mx9Y3eR2J4X0hGZhHmcKEMBwZ+VUIwj
-         Em/Q==
-X-Gm-Message-State: AOAM530pox7+TffCzNKEdx1l87TimqmGEAEuZE8SHQtA8J1TDOOqjkrS
-        6fnYj5i5f0bw4oyXrySAug==
-X-Google-Smtp-Source: ABdhPJzyeoycgDbLMad+zV8zeFpz+fpMbATJOAz+M+rhuXu7mrVC5TLXcW3DEdGSxZh8+Iy2RdiLxg==
-X-Received: by 2002:a05:6808:1c9:: with SMTP id x9mr23365339oic.109.1622667843191;
-        Wed, 02 Jun 2021 14:04:03 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id x14sm241146oic.3.2021.06.02.14.04.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 14:04:02 -0700 (PDT)
-Received: (nullmailer pid 4038638 invoked by uid 1000);
-        Wed, 02 Jun 2021 21:04:00 -0000
-Date:   Wed, 2 Jun 2021 16:04:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-i2c@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 04/12] dt-bindings: clock: update ti,sci-clk.yaml
- references
-Message-ID: <20210602210400.GA4038575@robh.at.kernel.org>
-References: <cover.1622648507.git.mchehab+huawei@kernel.org>
- <0fae687366c09dfb510425b3c88316a727b27d6d.1622648507.git.mchehab+huawei@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WSBVtEwjNJceUSW+ED54by5q0ntVhKU4EZfInF4XBmQ=;
+        b=dHnH/JXqT13yoDam0FmA/tsdyNtrwymop5R27iVrdvvJKn0mWUC0pJzYprj0iqbd/d
+         8eCOt2felqopz+fPjuA8vfd9ekp8UHCUjGTk5oyK2tliYc4JO4UkH4SRDa82asqdqnRN
+         h7zu+z3Zdbavq7KZI2QWZXenDNtzepSUzr//5YioFo5lTIAo0Q9HOWX8otdnNosbLoC3
+         rRSv0J7u2HU68WhfwEp9moBWXS6vuDbM7x/fCVtY/bQ82xVT1LHPLYMjxEGPElV5+tJC
+         bQvm94Ig6atPzur+eH5ajctreGXQf3gpHyT8IjlYzqalhCjfLtsG19M9fCActOcoTU6c
+         OI9A==
+X-Gm-Message-State: AOAM530l0UnVT/OJ5x5jxOwOsDnD8CC3xA+J1Wb5H1AVryfKltRyuZ77
+        RNHbt8kuPi/Uae9pQNJQE2H5UcmwWmLTWkEsBwU0ayV5
+X-Google-Smtp-Source: ABdhPJwTjlMS+8+L8BrVHX4Xf5NgGJL3RRe8WHEXPcfnogTmYIgrBQEd9Bnnz7jEgKwCaeeqz/0xBZ7xr0UxwDga/Og=
+X-Received: by 2002:a37:e0f:: with SMTP id 15mr10333070qko.273.1622693565759;
+ Wed, 02 Jun 2021 21:12:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0fae687366c09dfb510425b3c88316a727b27d6d.1622648507.git.mchehab+huawei@kernel.org>
+References: <20210525055308.31069-1-steven_lee@aspeedtech.com>
+ <20210525055308.31069-3-steven_lee@aspeedtech.com> <CACRpkdZy0UwaJcYTiM9asVwNh4wuEYdMSrmqAPAiikbrvjtKpw@mail.gmail.com>
+In-Reply-To: <CACRpkdZy0UwaJcYTiM9asVwNh4wuEYdMSrmqAPAiikbrvjtKpw@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 3 Jun 2021 04:12:33 +0000
+Message-ID: <CACPK8XfbpCWx_ZOPuUy0QCT2N9kj9_+WGZv4wEPXgUUoVDf+fQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] ARM: dts: aspeed-g6: Add pinctrl settings
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Steven Lee <steven_lee@aspeedtech.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ASPEED PINCTRL DRIVERS" 
+        <linux-aspeed@lists.ozlabs.org>,
+        "moderated list:ASPEED PINCTRL DRIVERS" <openbmc@lists.ozlabs.org>,
+        "open list:ASPEED PINCTRL DRIVERS" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Hongwei Zhang <Hongweiz@ami.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Billy Tsai <billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 02 Jun 2021 17:43:10 +0200, Mauro Carvalho Chehab wrote:
-> Changeset a7dbfa6f3877 ("dt-bindings: clock: Convert ti,sci-clk to json schema")
-> renamed: Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-> to: Documentation/devicetree/bindings/clock/ti,sci-clk.yaml.
-> 
-> Update the cross-references accordingly.
-> 
-> Fixes: a7dbfa6f3877 ("dt-bindings: clock: Convert ti,sci-clk to json schema")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-davinci.txt | 2 +-
->  Documentation/devicetree/bindings/i2c/i2c-davinci.txt   | 2 +-
->  Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt | 2 +-
->  Documentation/devicetree/bindings/net/can/c_can.txt     | 2 +-
->  Documentation/devicetree/bindings/spi/spi-davinci.txt   | 2 +-
->  MAINTAINERS                                             | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
-> 
+On Thu, 27 May 2021 at 23:47, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Tue, May 25, 2021 at 7:53 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
+>
+> > AST2600 supports 2 SGPIO master interfaces and 2 SGPIO slave interfaces.
+> > Currently, only SGPIO master 1 and SGPIO slve 1 in the pinctrl dtsi.
+> > SGPIO master 2 and slave 2 should be added in pinctrl dtsi as well.
+> >
+> > Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
+> > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Please funnel this patch through the Aspeed/ARM SoC tree.
 
-Applied, thanks!
+Applied, thanks.
