@@ -2,82 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7501F399E67
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 12:03:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBE55399EC3
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 12:19:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbhFCKFT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Jun 2021 06:05:19 -0400
-Received: from polaris.svanheule.net ([84.16.241.116]:33490 "EHLO
-        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229840AbhFCKFT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 06:05:19 -0400
-Received: from [IPv6:2a02:a03f:eafb:ee01:398f:956e:2c86:f184] (unknown [IPv6:2a02:a03f:eafb:ee01:398f:956e:2c86:f184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id 2A60220804A;
-        Thu,  3 Jun 2021 12:03:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1622714613;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+jqxeeHE2pvKOfNp3PIxGrAXlH3QpY7gaOLQeOxcS/s=;
-        b=NqLeydT59bSTvV8Z8ogmgK2XCDNONLd9qe6tcdCdXHx+RSLTQSHHDXug0biMruR2LybETn
-        7V6O19Mw0ZHjIxU4ilgparRmeb1mCTurClnmL+CegwSH3Qc97os5H3pqCyXfJZE8iMohUF
-        gHFQSCH08N+seNqXDfgwWO48etDl/9McPD90eo+Mxqkc+z2etzHcwPjhIHD+kiyG3q5z2r
-        v1zTq0H92QbNgCVyyZyE5X8CdQaEi3JARVjkyz9lBIpOcrp+6og5ET/8XlnRWzsXxZI3w7
-        gzR3cOWT/kcipAKSeoMGn2nDq8NpwKM6NCL6+8pYi9kupMJdQslyATZ7uBvQyQ==
-Message-ID: <c3823af525703e08f76260e1b154110b97d91c17.camel@svanheule.net>
-Subject: Re: [PATCH v3 1/6] gpio: regmap: Add quirk for output data register
-From:   Sander Vanheule <sander@svanheule.net>
-To:     Michael Walle <michael@walle.cc>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 03 Jun 2021 12:03:31 +0200
-In-Reply-To: <001c48fb08887cbec88f79ebe3bf644b@walle.cc>
-References: <cover.1621809029.git.sander@svanheule.net>
-         <be5ffefa007ee4ebd7d4cec88f5f2fb7cd5b689e.1621809029.git.sander@svanheule.net>
-         <001c48fb08887cbec88f79ebe3bf644b@walle.cc>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        id S229665AbhFCKUy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Jun 2021 06:20:54 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:60132 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229810AbhFCKUx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 06:20:53 -0400
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 153A4udU044855;
+        Thu, 3 Jun 2021 18:04:56 +0800 (GMT-8)
+        (envelope-from steven_lee@aspeedtech.com)
+Received: from slee-VirtualBox.localdomain (192.168.100.253) by
+ TWMBX02.aspeed.com (192.168.0.24) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 3 Jun 2021 18:18:23 +0800
+From:   Steven Lee <steven_lee@aspeedtech.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-aspeed@lists.ozlabs.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     <steven_lee@aspeedtech.com>, <Hongweiz@ami.com>,
+        <ryan_chen@aspeedtech.com>, <billy_tsai@aspeedtech.com>
+Subject: [PATCH v3 0/5] ASPEED sgpio driver enhancement.
+Date:   Thu, 3 Jun 2021 18:18:16 +0800
+Message-ID: <20210603101822.9645-1-steven_lee@aspeedtech.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [192.168.100.253]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 153A4udU044855
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Michael, Bartosz,
+AST2600 SoC has 2 SGPIO master interfaces one with 128 pins another one
+with 80 pins, AST2500/AST2400 SoC has 1 SGPIO master interface that
+supports up to 80 pins.
+In the current driver design, the max number of sgpio pins is hardcoded
+in macro MAX_NR_HW_SGPIO and the value is 80.
 
-On Fri, 2021-05-28 at 08:40 +0200, Michael Walle wrote:
-> Am 2021-05-24 00:33, schrieb Sander Vanheule:
-> > GPIO chips may not support setting the output value when a pin is
-> > configured as an input, although the current implementation assumes 
-> > this
-> > is always possible.
-> > 
-> > Add support for setting pin direction before value. The order defaults
-> > to setting the value first, but this can be reversed by setting the
-> > GPIO_REGMAP_QUIRK_SET_DIRECTION_FIRST flag in regmap_config.quirks.
-> 
-> Nice! If this is really needed:
-> 
-> Reviewed-by: Michael Walle <michael@walle.cc>
+For supporting sgpio master interfaces of AST2600 SoC, the patch series
+contains the following enhancement:
+- Convert txt dt-bindings to yaml.
+- Update aspeed-g6 dtsi to support the enhanced sgpio.
+- Define max number of gpio pins in ast2600 platform data. Old chip
+  uses the original hardcoded value.
+- Support muiltiple SGPIO master interfaces.
+- Support up to 128 pins.
+- Support wdt reset tolerance.
+- Fix irq_chip issues which causes multiple sgpio devices use the same
+  irq_chip data.
 
-Looks like the quirk won't be needed for this series, but I can always resubmit
-it separately if needed.
+Changes from v2:
+* Remove maximum/minimum of ngpios from bindings.
+* Remove max-ngpios from bindings and dtsi.
+* Remove ast2400-sgpiom and ast2500-sgpiom compatibles from dts and
+  driver.
+* Add ast2600-sgpiom1 and ast2600-sgpiom2 compatibles as their max
+  number of available gpio pins are different.
+* Modify functions to pass aspeed_sgpio struct instead of passing
+  max_ngpios.
+* Split sgpio driver patch to 3 patches
 
+Changes from v1:
+* Fix yaml format issues.
+* Fix issues reported by kernel test robot.
 
-Best,
-Sander
+Please help to review.
+
+Thanks,
+Steven
+
+Steven Lee (5):
+  dt-bindings: aspeed-sgpio: Convert txt bindings to yaml.
+  ARM: dts: aspeed-g6: Add SGPIO node.
+  gpio: gpio-aspeed-sgpio: Add AST2600 sgpio support
+  gpio: gpio-aspeed-sgpio: Add set_config function
+  gpio: gpio-aspeed-sgpio: Move irq_chip to aspeed-sgpio struct
+
+ .../bindings/gpio/aspeed,sgpio.yaml           |  78 ++++++++
+ .../devicetree/bindings/gpio/sgpio-aspeed.txt |  46 -----
+ arch/arm/boot/dts/aspeed-g6.dtsi              |  30 +++
+ drivers/gpio/gpio-aspeed-sgpio.c              | 182 +++++++++++++-----
+ 4 files changed, 243 insertions(+), 93 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+
+-- 
+2.17.1
 
