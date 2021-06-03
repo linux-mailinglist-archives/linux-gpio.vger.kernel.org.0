@@ -2,119 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16E2839AB93
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 22:09:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85B3439AE3A
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jun 2021 00:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230090AbhFCUKv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Jun 2021 16:10:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230083AbhFCUKu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 3 Jun 2021 16:10:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8EBE8611C9;
-        Thu,  3 Jun 2021 20:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622750945;
-        bh=vouxc5KMLEMa3QrqPqXja2Z4KHWtjXXf/sVDLuzgUZE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UYeXhRQkhsFG2wW4pMFx1ENgilnnfZtGlHetX3wkENSTPOwGglvuReS2frt1cjTtl
-         JLKCPkpKMa+NFqpLVPYTtBPL0W7QDpwuraSUhXTED5ruFCTZ9l/ZX9j2f0fTHd72HX
-         kez6g1QVBsDVie8+Ol70lWcbLUVi1CXU1PW0xR/2pCdlEh0uFsIt5t1odTPh3MK5Rr
-         a5Km3PlwQZ/OU5n1g2kWDQQWpus4Z5O11Vo1RXQubZjb3F/M7e1Zij82vHdp1Vv0Lw
-         PNnhqdSX0wMy7B0BUu9GlN4yLxGGR/WG4yMmJYO7tsywLyQGMS7Po49eXeaSRMo1qA
-         +IfEKzjVtpXVQ==
-Date:   Thu, 3 Jun 2021 22:09:02 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jakub Kicinski <kuba@kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tero Kristo <kristo@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 04/12] dt-bindings: clock: update ti,sci-clk.yaml
- references
-Message-ID: <YLk23rrWN9ze+zru@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jakub Kicinski <kuba@kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, Tero Kristo <kristo@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfgang Grandegger <wg@grandegger.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
+        id S229894AbhFCWnS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Jun 2021 18:43:18 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:55988 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229697AbhFCWnS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 18:43:18 -0400
+Received: by mail-wm1-f46.google.com with SMTP id g204so4270872wmf.5;
+        Thu, 03 Jun 2021 15:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AGHMFQROySDuAI1WX8+v+a7AxJ/f1867TETlzbkJ1nQ=;
+        b=r8a9gJC5FypqHxKB+UOi77NVllKbePD3mMj9P4XqyUwlU8wayWLqr+0Dico3Q4l7ta
+         yGgbybsjhf0T0dJuofwy7w8ltOo3CW6920PcGOeif6QF821ltJ6S3Cr+CscucllsudIt
+         cREXhX/6AltO6rsuQQ5ffy4hmQ1bWTFzZLcJTQDeVqEOrdM6UIB+rR7Rff7xtMigNdYs
+         YQBJPgaCsqanE7Lb5DToFWJ3m2VCcbVLFJJS/aX6WLIbw4sEfgu7/1IN5qv51mx4rl1T
+         FW1DHE7bBQNRw7qGF6hgSBlii2HOGycI4g3yr+Pf+bA1aNEnwstZnnPTD1ckRh34Uilb
+         Fshg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AGHMFQROySDuAI1WX8+v+a7AxJ/f1867TETlzbkJ1nQ=;
+        b=ogUhIWJl+AUj1Da/SxE/XmVd8lcvWDoNLe8QRZ9qJKRQoceaZt2nMlR05K6SLPj1iN
+         Y3VbHST4CroSyeuKbeEki80LRW6RzJ5pR20CcEkojjVXbILZ0nN+845hQLNb0oj32Qzq
+         tjw8linDa/NKcFW6r/dMs/kx0MX4Twwm5CIXMiU28HcUaGJLFhKfjkEWs/LNmmkpWRc1
+         PwACXe3P0fymfgzdsj4R2h6aCYB6kRcP12h1T8fjiPRW6VgmottPuufx0f3RR8KKyYYF
+         hV8mkTYZGmuf34toBgdwUVSko+Au01qJ7oPuSF7mOkzk9CE1Me2O0fQfR+7JZ6t34PAj
+         jhXg==
+X-Gm-Message-State: AOAM5312/z1n10Ft1VT5aEoZsRDz8RVLSeMiETUcNqb14LLm7m7Gx7sU
+        OVSyBVO2BLnnintwrcFDr28=
+X-Google-Smtp-Source: ABdhPJy+3T3gQHQj3wZJFUax3BGw5seXgjSn2gkSQDt8uOtA+WSf1j5i6XYDGFIzhJt+KkxEjgGZ9g==
+X-Received: by 2002:a7b:c052:: with SMTP id u18mr594606wmc.105.1622760020478;
+        Thu, 03 Jun 2021 15:40:20 -0700 (PDT)
+Received: from valhalla.home ([91.110.88.218])
+        by smtp.gmail.com with ESMTPSA id f14sm4612103wry.40.2021.06.03.15.40.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jun 2021 15:40:19 -0700 (PDT)
+From:   Daniel Scally <djrscally@gmail.com>
+To:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-spi@vger.kernel.org, netdev@vger.kernel.org
-References: <cover.1622648507.git.mchehab+huawei@kernel.org>
- <0fae687366c09dfb510425b3c88316a727b27d6d.1622648507.git.mchehab+huawei@kernel.org>
+        platform-driver-x86@vger.kernel.org, devel@acpica.org
+Cc:     Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+Subject: [PATCH v5 0/6] Introduce intel_skl_int3472 module
+Date:   Thu,  3 Jun 2021 23:40:01 +0100
+Message-Id: <20210603224007.120560-1-djrscally@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HwDyggedf9K45ZIg"
-Content-Disposition: inline
-In-Reply-To: <0fae687366c09dfb510425b3c88316a727b27d6d.1622648507.git.mchehab+huawei@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hello all
 
---HwDyggedf9K45ZIg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Bit longer than hoped but here's v5.
 
-On Wed, Jun 02, 2021 at 05:43:10PM +0200, Mauro Carvalho Chehab wrote:
-> Changeset a7dbfa6f3877 ("dt-bindings: clock: Convert ti,sci-clk to json s=
-chema")
-> renamed: Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-> to: Documentation/devicetree/bindings/clock/ti,sci-clk.yaml.
->=20
-> Update the cross-references accordingly.
->=20
-> Fixes: a7dbfa6f3877 ("dt-bindings: clock: Convert ti,sci-clk to json sche=
-ma")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+v4:
+https://lore.kernel.org/lkml/20210520140928.3252671-1-djrscally@gmail.com/
 
-Acked-by: Wolfram Sang <wsa@kernel.org> # for I2C
+v3
+https://lore.kernel.org/lkml/20210222130735.1313443-1-djrscally@gmail.com/
 
+v2
+https://lore.kernel.org/platform-driver-x86/20210118003428.568892-1-djrscally@gmail.com/
 
---HwDyggedf9K45ZIg
-Content-Type: application/pgp-signature; name="signature.asc"
+v1
+https://lore.kernel.org/linux-media/20201130133129.1024662-1-djrscally@gmail.com/T/#m91934e12e3d033da2e768e952ea3b4a125ee3e67
 
------BEGIN PGP SIGNATURE-----
+The only changes are the dropped patches, renamed functions in 2/6 and most of
+Andy's suggestions on 5/6 - I didn't hit them all yet but didn't want to delay
+this any more.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmC5Nt4ACgkQFA3kzBSg
-KbYA5BAAmxrTszpFm+SFwkhyzevlAeZO+O6tTPRp2hAT0FogM2Us0fUzfwLEFgWP
-dR+9Lw8BinKXs9tNQwP3RGM6/azDSnS8tL5a1l0aaI52mxwwu0zGKPZmCvvMizT2
-AQX51DP3llTCDdTc85P1C7TYhRyhYy1GWPJrfhAxfUBS+maMcJJ3VX7rfnmQlAWG
-6FOy1eZaCP2d2DxVZNlMi0TXsYuudltp75a0T7k8wesRQv+BEEE4MpyfFwDquX/N
-3BtPLsuwSDnSQ1hL3gEPEbrm++yG+3g0PHdhWxdrDeRV/eRW8EM4rjJ0xHutgimp
-LyQ0SnSdM6/EMF0h4jjQ2CPLGedDPpKkBdXsAH0yU8GqD2P5mijVUJHZqqyCKdz4
-8elfRdDzaLOrwvZrqTQYqGpeup/953O/m8mbKfy0zhkc2X0Ceqmqb2iKDzvemODe
-OpVnrneL06Fo3k9Mi0c828teZf7T4kZPBFI896XMP8MYeT7ghBaOrRBt6mIaefTN
-dCZGUE9vm2SbKqBOJ88QHbyFwDwHDj7UU4O9uhZH77nUj3kzQC+yfp0xLhkkT3lE
-ME9gAuT18XacriGNwHQVpMUPTvMAcLUWeHqfYIvPVd/HQRNMwV/IB2paBkGThO7/
-gzP8cd9cYoh9D2thXE0J/EnXq+MPeo6KVP9Uirz9eSo6jxKoggM=
-=2IA3
------END PGP SIGNATURE-----
+Series level changelog:
 
---HwDyggedf9K45ZIg--
+	- Dropped all but the essential patches to simplify merge plan - thanks
+	Hans.
+
+Daniel Scally (6):
+  ACPI: scan: Extend acpi_walk_dep_device_list()
+  ACPI: scan: Add function to fetch dependent of acpi device
+  gpiolib: acpi: Export acpi_get_gpiod()
+  gpiolib: acpi: Add acpi_gpio_get_io_resource()
+  platform/x86: Add intel_skl_int3472 driver
+  mfd: tps68470: Remove tps68470 MFD driver
+
+ MAINTAINERS                                   |   5 +
+ drivers/acpi/ec.c                             |   2 +-
+ drivers/acpi/pmic/Kconfig                     |   2 +-
+ drivers/acpi/pmic/intel_pmic_chtdc_ti.c       |   2 +-
+ drivers/acpi/scan.c                           | 104 ++++-
+ drivers/gpio/Kconfig                          |   2 +-
+ drivers/gpio/gpiolib-acpi.c                   |  61 ++-
+ drivers/i2c/i2c-core-acpi.c                   |   8 +-
+ drivers/mfd/Kconfig                           |  18 -
+ drivers/mfd/Makefile                          |   1 -
+ drivers/mfd/tps68470.c                        |  97 ----
+ drivers/platform/surface/aggregator/core.c    |   6 +-
+ drivers/platform/surface/surface3_power.c     |  22 +-
+ .../platform/surface/surface_acpi_notify.c    |   7 +-
+ drivers/platform/x86/Kconfig                  |   2 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/intel-int3472/Kconfig    |  30 ++
+ drivers/platform/x86/intel-int3472/Makefile   |   5 +
+ .../intel_skl_int3472_clk_and_regulator.c     | 196 ++++++++
+ .../intel-int3472/intel_skl_int3472_common.c  | 106 +++++
+ .../intel-int3472/intel_skl_int3472_common.h  | 118 +++++
+ .../intel_skl_int3472_discrete.c              | 417 ++++++++++++++++++
+ .../intel_skl_int3472_tps68470.c              | 137 ++++++
+ include/acpi/acpi_bus.h                       |   8 +
+ include/linux/acpi.h                          |  11 +-
+ include/linux/gpio/consumer.h                 |   2 +
+ 26 files changed, 1205 insertions(+), 165 deletions(-)
+ delete mode 100644 drivers/mfd/tps68470.c
+ create mode 100644 drivers/platform/x86/intel-int3472/Kconfig
+ create mode 100644 drivers/platform/x86/intel-int3472/Makefile
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_clk_and_regulator.c
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.c
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.h
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_tps68470.c
+
+-- 
+2.25.1
+
