@@ -2,55 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E787F399F7B
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 13:06:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 997F2399F89
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jun 2021 13:08:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbhFCLHy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Jun 2021 07:07:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbhFCLHy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 07:07:54 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8361C06174A;
-        Thu,  3 Jun 2021 04:06:09 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id l10-20020a17090a150ab0290162974722f2so3650915pja.2;
-        Thu, 03 Jun 2021 04:06:09 -0700 (PDT)
+        id S229727AbhFCLKi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Jun 2021 07:10:38 -0400
+Received: from mail-pl1-f176.google.com ([209.85.214.176]:43597 "EHLO
+        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229721AbhFCLKh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Jun 2021 07:10:37 -0400
+Received: by mail-pl1-f176.google.com with SMTP id v12so2679463plo.10;
+        Thu, 03 Jun 2021 04:08:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ENLbFd+69Y0nrnJCUItoGXO9C5A4sDHjRpfSagYL0Ko=;
-        b=F5QtRXmZFb7NwQQkmFmgGvzp2WWX1Ixug6Zeg+t2AH9OnAcH+cl6GizbK1s3CMBlMD
-         chxLoJM2z32lx0/iKvl5XTK/wS6JXauqD0bAh8+Mj7YO6kZGpa9VHS3PvhQfPcJLCe2F
-         3S9szbHfuhTmTGaeJPHUQ+6xcQmEiKE6GAP/tzZm49HSSBzA17XM7F75jKYEBFgLI8p9
-         mvXEdonE89fUt4FBkUZHApLur+tBGpzL5MLUvpiZH90iv3QpFg/4OeP1M7kzsikHl1d5
-         Qgc3R4OWZvKBuPJT6OO/Li4zTeWcBpYqDqT5Lqxe5QJk/E3+yb5JnQIl7BACwXPXslNk
-         ovSw==
+        bh=wDo2z8iTAiJqBqvWvLB96Okm4phCuyBKqAvyvxyTJXs=;
+        b=P78APJKcMH6oqL0fsJYDyeLXqod4sHzF3NXsn6tkC3NkBYbPumu8oRRPGT/fPb1HtZ
+         UmaBhblYD4nltFb4LfHSbYjyeyRq1q+Xng3DOD5LCgR6V+7j7JfVMVnTO18hvNonTGAh
+         nCB/Zk0yrCgyJlh9b6R39j8OT0/a53Lhanzzmvg5zyfHTnDax/5ap2oyt7s8WZ2Fdtsx
+         vy6+WrmcmYqO+6/fcHjFDZsykRNKYqfV+dcheF40g7wGoRKkln9VKOvRpJV+xDXDJPOC
+         QtohdoP4CivTDGn77Ix3q/Mdf1NSq+U0Q98iUBwG7EYtzwONK52ax/CLcWtkR7gWBfSg
+         dTPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ENLbFd+69Y0nrnJCUItoGXO9C5A4sDHjRpfSagYL0Ko=;
-        b=qcMYfdYSwAEc2Z1oERxV0LIwuwVo2ue/7sUcdLfrpgKHACtasNQWNvM5s/g1QZPEn8
-         jxO2TwnZ6VdLlsFZ4fVv23RD6JEljuCWbaEYm4fV828QLF4KjkyX+9YT9Deg8YGPiovC
-         tfOLFFn1kTAvTcV/iXEdjNrrburgkOQM4pThfV0uQ+VQddbmUlrl4dwePG0TQmOkitQC
-         6kKRnaAHkugoIxKJC9CMpEvj88sgnDnsFYrxgUN/SVnim7fooCO5u37ivdzHaTwSvEPa
-         gEZDLG2c9blxEaO+QR2cVzv4CfmSfT5Ojx8JJHxjcOCKHsx0wP62U6DQVxMjdjOVZUeV
-         c1MQ==
-X-Gm-Message-State: AOAM531OJ7WNa8UF+3jVVGlgzKOAytXOQjZt2feH88tDarwmypd6BqhY
-        tolOl0AUPP+GqMhaULkb4paKqJCMg9SvnkFx6LA=
-X-Google-Smtp-Source: ABdhPJwdBL2z4L2+Wc/ypiCeWfr+P8eVqMmubLXTKRDec5XtGid3Q4+2xbH79lJMAgSDdFdV0ALw46qnoA/yXj0GJ4E=
-X-Received: by 2002:a17:902:b205:b029:105:cb55:3a7a with SMTP id
- t5-20020a170902b205b0290105cb553a7amr17392850plr.17.1622718369356; Thu, 03
- Jun 2021 04:06:09 -0700 (PDT)
+        bh=wDo2z8iTAiJqBqvWvLB96Okm4phCuyBKqAvyvxyTJXs=;
+        b=eV9FzO7C/LiXgmjqjoSW9qro4T36Y0qYfAwUOFZc+SePCOxsyvRXStGPuXQDAbE8J3
+         Na84+fwju9daLvw2SViPUnTMD48XawuiyxUaENiKK5lrcdRRfjNz7uKifh4iUMiP0eLS
+         2HlA5hWCyyTcsymWVK6m0mfUeJl9/J8Jr/sZgF65t4FQ7s0fp2M3lAkZ7285hHb4IZOQ
+         qa0KqedqvBnS3Xw6qprrg69NGzXI2DhN7ylv4nGWcJn3AYdF9hgrk1ShEytjMrl49Krk
+         Ft74vvbwYe41L/n15zGzAeaCVxJZ4/UTopK4KCUCMiX80YCw0xzp3hGUDqyrlKU3EcFG
+         HvMw==
+X-Gm-Message-State: AOAM533n9kZclDO7z4bAM3j8/JDqSL5kqmnP1UOJpDIhcYzYGf10T19/
+        1fb2RURXcUYj6JJ+Ki+S/bb5GtIesWX38be73qk=
+X-Google-Smtp-Source: ABdhPJyCs+wp9GQAeR/SyNmg8FNfUVK6o5CEsq9kbEkhUdzsvyuzZtCKxNpGLiUoC4lv9/PO9J5wxEFTLOwFP4TIkL0=
+X-Received: by 2002:a17:90a:af8b:: with SMTP id w11mr36016810pjq.228.1622718464302;
+ Thu, 03 Jun 2021 04:07:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210603101822.9645-1-steven_lee@aspeedtech.com> <20210603101822.9645-4-steven_lee@aspeedtech.com>
-In-Reply-To: <20210603101822.9645-4-steven_lee@aspeedtech.com>
+References: <20210603101822.9645-1-steven_lee@aspeedtech.com> <20210603101822.9645-5-steven_lee@aspeedtech.com>
+In-Reply-To: <20210603101822.9645-5-steven_lee@aspeedtech.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Jun 2021 14:05:53 +0300
-Message-ID: <CAHp75Vef0HDXAHzSNL-LtA0Sra6Zpivt513_+aFR_um0JeFkog@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] gpio: gpio-aspeed-sgpio: Add AST2600 sgpio support
+Date:   Thu, 3 Jun 2021 14:07:28 +0300
+Message-ID: <CAHp75VcPdUeK49w9qg9RuJY7ASMyFMEEi=cX1gnp=wM_QHDZ+w@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] gpio: gpio-aspeed-sgpio: Add set_config function
 To:     Steven Lee <steven_lee@aspeedtech.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -71,45 +67,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 3, 2021 at 1:19 PM Steven Lee <steven_lee@aspeedtech.com> wrote:
+On Thu, Jun 3, 2021 at 1:20 PM Steven Lee <steven_lee@aspeedtech.com> wrote:
 >
-> AST2600 SoC has 2 SGPIO master interfaces one with 128 pins another one
-> with 80 pins.
-> In the current driver, the maximum number of gpio pins of SoC is hardcoded
-> as 80 and the gpio pin count mask for GPIO Configuration register is
-> hardcode as GENMASK(9,6). In addition, some functions uses the hardcoded
-
-use
-
-> value to calculate the gpio offset.
-> The patch adds ast2600 compatibles and platform data that includes the
-> max number of gpio pins supported by ast2600 and gpio pin count mask for
-> GPIO Configuration register.
-> The patch also modifies some functions to pass aspeed_sgpio struct for
-> calculating gpio offset wihtout using the hardcoded value.
-
-without
+> AST SoC supports *retain pin state* function when wdt reset.
+> The patch adds set_config function for handling sgpio reset tolerance
+> register.
 
 ...
 
-> +#include <linux/of_device.h>
+> +static int aspeed_sgpio_set_config(struct gpio_chip *chip, unsigned int offset,
+> +                                  unsigned long config)
+> +{
+> +       unsigned long param = pinconf_to_config_param(config);
+> +       u32 arg = pinconf_to_config_argument(config);
+> +
+> +       if (param == PIN_CONFIG_PERSIST_STATE)
+> +               return aspeed_sgpio_reset_tolerance(chip, offset, arg);
 
-Why?
+> +       else
 
-...
+Redundant.
 
-> +#define GPIO_OFFSET(x)        ((x) & 0x1f)
+> +               return -EOPNOTSUPP;
 
-GENMASK()
+IIRC we are using ENOTSUPP internally in the kernel. YEs, checkpatch
+warning may be ignored.
 
-...
-
-> +       pdata = of_device_get_match_data(&pdev->dev);
-
-device_get_match_data()
-
-I guess you may replace all those of_*() to the corresponding
-device_*() or fwnode_*() calls.
+> +}
 
 -- 
 With Best Regards,
