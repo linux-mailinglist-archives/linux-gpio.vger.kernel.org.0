@@ -2,83 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35CE339C35A
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jun 2021 00:13:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C32A739C3A3
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jun 2021 01:01:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbhFDWP3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Jun 2021 18:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbhFDWP2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 18:15:28 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15565C061766
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Jun 2021 15:13:33 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id d2so9287256ljj.11
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Jun 2021 15:13:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OHwV5VmedMjo0fB2YIP5vfg5xQVpg3dB69VmPS6NB6w=;
-        b=MnVZxFbAveBu4SxAm6rnwMcfKbtBeKCjcevhXTmXa4rOuP9GiqtaziNuotSsoxvwM7
-         DXftDG0skvQrVaCe0j+L+NSy/INIx7jB6FBWMppgVd4y3jKx4sdyBJWUz/dhab18DgmW
-         9IitniMtnsgtDoGB26sstadfh70MjYIrU7XponIOL3slBzmKEzcCM99vNdMAzKoYYVqK
-         eQeiB4wCcGXLk5PnJnyxuKpZE3aGpvNcnS5caZuss1JCm3x3mXdK72DmUqzpx1G8mhC2
-         xg/8oYU5sK4Sn+BzJgEhvatE9M05PNnXwsdgPAwBsTr+ONkPbECP1hA5gd6lWhQZHLU0
-         Lcgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OHwV5VmedMjo0fB2YIP5vfg5xQVpg3dB69VmPS6NB6w=;
-        b=KYeHYEsxsaXAZR5nTlXbZEub5lYDy7c8xv5MZHUhutvwwYPmAidbBEXFy7TxGtlfp6
-         +tqHR+m24kcKciv/ydBYr06viNtywa48A1+ta3+Yezda5vo6Vm9n3U29K4EIM9Z5Am39
-         42gCYHdl8FMYAut4dmEHnyM7ySB0Nbj0pm4fsB4ML8yXoofK3VP6xudkeIEnl7jJ8uiy
-         dO1vPDQ9fr7KIVqMpc9BIfeEgp0jUXRl5y6HLVQrZF5uM6flF2aASQV6h/YwzCbfCfZI
-         wDJcl3p2du23EXttakA/UT4VHFsvblmXROcPsg09JjRaDSUP3ELZ0nEKPUHTgF706wxB
-         OZGg==
-X-Gm-Message-State: AOAM530K/Sglw5adr6mZS0RK43Uu7DcJcsCUsYHHa713Q67Ck8Lj0q0N
-        r10+tzydu61xjCzsarsTN+zNQph3vDw4fkouWxprVA==
-X-Google-Smtp-Source: ABdhPJzYZy+CPX4nMzDIh1hrv+mRFW4eXSwoqi6rFl1IsAzTElzai5va+d9sj7JTSpmJFNS00UuTCZ6Wsuh39dD9LCk=
-X-Received: by 2002:a2e:90c7:: with SMTP id o7mr5041191ljg.368.1622844811472;
- Fri, 04 Jun 2021 15:13:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210604110406.11006-1-michael@walle.cc> <CACRpkdZEytf1WJa4JNJy6o3CBqOJAZLb-D=_rGQb+naH=TKmZA@mail.gmail.com>
- <62d131e0c2f16d647c36406ae8f9efba@walle.cc>
-In-Reply-To: <62d131e0c2f16d647c36406ae8f9efba@walle.cc>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Jun 2021 00:13:20 +0200
-Message-ID: <CACRpkdYsh7=9KCHW8G8_qKoGy-f40rdTLUiE2dkzFGHc6KzLYQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: regmap: move drvdata to config data
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        id S231726AbhFDXD2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Jun 2021 19:03:28 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:57883 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229853AbhFDXD2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 19:03:28 -0400
+Received: from mwalle01.fritz.box (ip4d17858c.dynamic.kabel-deutschland.de [77.23.133.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B9E582224D;
+        Sat,  5 Jun 2021 01:01:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1622847698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ADrXaqp0+MMaJtBSueG99bAjGWTUIKt3XWo1eTmSkvk=;
+        b=Jg3klmP5rAGWw5nCoiV3Jsf+P3TUlk3kOqqgmFXI+Md63UWlPY9P2XWiCi42ajPS4N1iif
+        GcLdM6dmJXRKPvWevO8yBRmy2uA0luRLmhjRbdcZ3FHGd/vd30lu0fcCxPpISQ8U/TKSIR
+        OgZBv19cmVyHoZmFspr5aEOrPT4G2kM=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Walle <michael@walle.cc>,
         Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v2] gpio: regmap: move drvdata to config data
+Date:   Sat,  5 Jun 2021 00:58:57 +0200
+Message-Id: <20210604225857.18694-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jun 5, 2021 at 12:03 AM Michael Walle <michael@walle.cc> wrote:
-> Am 2021-06-05 00:00, schrieb Linus Walleij:
->
-> >> Btw, I'm not sure how to handle this "was part of another patch by
-> >> another
-> >> author" thing. Should I leave the Sob and just add mine?
-> >
-> > Ideally just stack Sign-offs it is called the "delivery path".
->
-> Even if it is just a subset of the original patch?
+Drop gpio_regmap_set_drvdata() and instead add it to the configuration
+data passed to gpio_regmap_register().
 
-Yeah it's just an indication of whose hands typed thes characters.
-Something with copyright law actually, nothing to do with actual
-attribution. See (11) here:
-https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html
+gpio_regmap_set_drvdata() can't really be used in a race free way. This
+is because the gpio_regmap object which is needed by _set_drvdata() is
+returned by gpio_regmap_register(). On the other hand, the callbacks
+which use the drvdata might already be called right after the
+gpiochip_add() call in gpio_regmap_register(). Therefore, we have to
+provide the drvdata early before we call gpiochip_add().
 
-Author: should reflect the person who wrote the majority of the
-code however.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Signed-off-by: Michael Walle <michael@walle.cc>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+changes since v1:
+ - added Matti's Sob
 
-Yours,
-Linus Walleij
+ drivers/gpio/gpio-regmap.c  | 7 +------
+ include/linux/gpio/regmap.h | 6 +++++-
+ 2 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index 134cedf151a7..583cd1cdead8 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -178,12 +178,6 @@ static int gpio_regmap_direction_output(struct gpio_chip *chip,
+ 	return gpio_regmap_set_direction(chip, offset, true);
+ }
+ 
+-void gpio_regmap_set_drvdata(struct gpio_regmap *gpio, void *data)
+-{
+-	gpio->driver_data = data;
+-}
+-EXPORT_SYMBOL_GPL(gpio_regmap_set_drvdata);
+-
+ void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
+ {
+ 	return gpio->driver_data;
+@@ -226,6 +220,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	gpio->parent = config->parent;
++	gpio->driver_data = config->drvdata;
+ 	gpio->regmap = config->regmap;
+ 	gpio->ngpio_per_reg = config->ngpio_per_reg;
+ 	gpio->reg_stride = config->reg_stride;
+diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+index 334dd928042b..a9f7b7faf57b 100644
+--- a/include/linux/gpio/regmap.h
++++ b/include/linux/gpio/regmap.h
+@@ -37,6 +37,9 @@ struct regmap;
+  *			offset to a register/bitmask pair. If not
+  *			given the default gpio_regmap_simple_xlate()
+  *			is used.
++ * @drvdata:		(Optional) Pointer to driver specific data which is
++ *			not used by gpio-remap but is provided "as is" to the
++ *			driver callback(s).
+  *
+  * The ->reg_mask_xlate translates a given base address and GPIO offset to
+  * register and mask pair. The base address is one of the given register
+@@ -78,13 +81,14 @@ struct gpio_regmap_config {
+ 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
+ 			      unsigned int offset, unsigned int *reg,
+ 			      unsigned int *mask);
++
++	void *drvdata;
+ };
+ 
+ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config);
+ void gpio_regmap_unregister(struct gpio_regmap *gpio);
+ struct gpio_regmap *devm_gpio_regmap_register(struct device *dev,
+ 					      const struct gpio_regmap_config *config);
+-void gpio_regmap_set_drvdata(struct gpio_regmap *gpio, void *data);
+ void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio);
+ 
+ #endif /* _LINUX_GPIO_REGMAP_H */
+-- 
+2.20.1
+
