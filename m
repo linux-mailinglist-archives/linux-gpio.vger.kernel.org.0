@@ -2,65 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B97C39C2E2
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jun 2021 23:48:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14B9739C2F5
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jun 2021 23:51:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231601AbhFDVuM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Jun 2021 17:50:12 -0400
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:35650 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231582AbhFDVuL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 17:50:11 -0400
-Received: by mail-oi1-f171.google.com with SMTP id v22so11181618oic.2;
-        Fri, 04 Jun 2021 14:48:24 -0700 (PDT)
+        id S229755AbhFDVxD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Jun 2021 17:53:03 -0400
+Received: from mail-oo1-f54.google.com ([209.85.161.54]:33385 "EHLO
+        mail-oo1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231623AbhFDVw5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 17:52:57 -0400
+Received: by mail-oo1-f54.google.com with SMTP id j17-20020a4ad6d10000b02901fef5280522so2599226oot.0;
+        Fri, 04 Jun 2021 14:50:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=i82elBrWcX7dkg/tjqk1o+lzd0sBqhf4Gql6Pck5Qxw=;
-        b=I+vwf5P0MfZ/OG2hqSpNHzoW4qxGAQJMVHAvE7xRHyBjEq11SjL2tU0hntVyvPbd0s
-         aXmgTRsFSNxWITMdtx7aWTAlz6HShFTd2WydNUL23kbQR9txItCF6JmmyG+gIj5PrPrO
-         bQkpBFX1urFzXvunWZP9fhjgb+HLwLHzhqSW0efYVqgiqxsBMIqCDOV7Aap0vPQdC8uW
-         LZ0On5YXhjY8E1wHOEDzwjlV6fc7g4P1GSWkhWzm4gNaPEjzsYo1RO0gBOtX38iqjwIw
-         6uCzgOFYmU++W2r2ab2M4Ww0d6hh45N/lmtHq4Eu5wPE0ILL+ESL6CtvBcc4P0MokUjK
-         mTHg==
-X-Gm-Message-State: AOAM531O5bbo+3LN/VPQrevy6Yv5D27g7EvI6L/QfE4OWlg7c9zFStzk
-        SGr0UDogALqNzNM7RzmIKw==
-X-Google-Smtp-Source: ABdhPJzr3iNWfkAEE7c1mVgS1ga0XlxU7bXabXx3Ywb6j/vupXrCOKwaQZWAn+SFf6QJF4XD7TcdGQ==
-X-Received: by 2002:a05:6808:158:: with SMTP id h24mr9895830oie.169.1622843304601;
-        Fri, 04 Jun 2021 14:48:24 -0700 (PDT)
+        bh=RablGP30AWym6iX311SHiz1tVC3w/+g5lgfSDAXTcog=;
+        b=qNfjNkXcHzG8u9HSavAcOpi8O3AHbFmEUmiGNbCZm4JZSW8ukDSnHSb5KeN8W58QFH
+         YJ8j3uI19/oip3xOlJIoDqDyYR9QHXYWgrcKwmwYiI3Q7fRmxhSf9RdAgGxhqIBVlBmd
+         RPUWeblIvRA903i0hgrGqDCfkcVgGjNUY3YsntRVJHk1+44QrVO3du+fFMukDAwWy6Z/
+         b8jiiNzyTIOxQNDH0+onN/MVGNVscvQzG43QndnWNgvVhTbnyG++mFAgOoNYgr9zImmg
+         1YLB1aCO8gGvH6UP9f3PkgjgM/DE+jfKUTpxPSdsOB9M/JuwcXm1/pis6vccoiKcRysL
+         9CLw==
+X-Gm-Message-State: AOAM530DdGttVJYg0TLwzo2dX5WQGid1Wl4Y04UHJrF5DvPDT416bI0z
+        1IXgpn60y2o4t14OguV2dg==
+X-Google-Smtp-Source: ABdhPJy+5KLpJ+PqBF8N3RxF+W0QEpeQ2BkwoGqc/1cJSpZt/cxNXfzm9ZuR3bsuLIH7dRU4dac7CQ==
+X-Received: by 2002:a4a:55c1:: with SMTP id e184mr5319694oob.74.1622843457146;
+        Fri, 04 Jun 2021 14:50:57 -0700 (PDT)
 Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b3sm737815otk.54.2021.06.04.14.48.23
+        by smtp.gmail.com with ESMTPSA id g24sm727252otp.17.2021.06.04.14.50.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jun 2021 14:48:23 -0700 (PDT)
-Received: (nullmailer pid 3982809 invoked by uid 1000);
-        Fri, 04 Jun 2021 21:48:22 -0000
-Date:   Fri, 4 Jun 2021 16:48:22 -0500
+        Fri, 04 Jun 2021 14:50:56 -0700 (PDT)
+Received: (nullmailer pid 3987100 invoked by uid 1000);
+        Fri, 04 Jun 2021 21:50:55 -0000
+Date:   Fri, 4 Jun 2021 16:50:55 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Jacky Bai <ping.bai@nxp.com>
-Cc:     kernel@pengutronix.de, devicetree@vger.kernel.org,
-        aisheng.dong@nxp.com, festevam@gmail.com,
-        linux-gpio@vger.kernel.org, linux-imx@nxp.com, stefan@agner.ch,
-        shawnguo@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: imx8ulp: Add pinctrl binding
-Message-ID: <20210604214822.GA3982753@robh.at.kernel.org>
-References: <20210601062338.1969040-1-ping.bai@nxp.com>
+To:     Wolfram Sang <wsa@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, x86@kernel.org,
+        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: i2c: ce4100: Replace "ti,pcf8575" by
+ "nxp,pcf8575"
+Message-ID: <20210604215055.GA3985497@robh.at.kernel.org>
+References: <cover.1622560799.git.geert+renesas@glider.be>
+ <9b560b7f5ded90430c989a211f2aee009aefc595.1622560799.git.geert+renesas@glider.be>
+ <YLqMsCPSCvisGyGF@kunai>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210601062338.1969040-1-ping.bai@nxp.com>
+In-Reply-To: <YLqMsCPSCvisGyGF@kunai>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 01 Jun 2021 14:23:37 +0800, Jacky Bai wrote:
-> Add pinctrl binding doc for i.MX8ULP
+On Fri, Jun 04, 2021 at 10:27:28PM +0200, Wolfram Sang wrote:
+> On Tue, Jun 01, 2021 at 05:25:44PM +0200, Geert Uytterhoeven wrote:
+> > The TI part is equivalent to the NXP part, and its compatible value is
+> > not documented in the DT bindings.
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
-> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> ---
->  .../bindings/pinctrl/fsl,imx8ulp-pinctrl.yaml | 79 +++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8ulp-pinctrl.yaml
-> 
+> I'd think I pick this individually? Or shall it all go via some tree?
+
+Yes, you can take it.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
