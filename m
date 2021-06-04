@@ -2,85 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BA2539C356
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jun 2021 00:11:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35CE339C35A
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jun 2021 00:13:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbhFDWNV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Jun 2021 18:13:21 -0400
-Received: from mail-lf1-f47.google.com ([209.85.167.47]:42917 "EHLO
-        mail-lf1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231689AbhFDWNQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 18:13:16 -0400
-Received: by mail-lf1-f47.google.com with SMTP id a2so16212694lfc.9
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Jun 2021 15:11:15 -0700 (PDT)
+        id S229746AbhFDWP3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Jun 2021 18:15:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229668AbhFDWP2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 18:15:28 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15565C061766
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Jun 2021 15:13:33 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id d2so9287256ljj.11
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Jun 2021 15:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YMx9d/KwaGXDIgZMt2DPtgDzNG9hC9FHDEasqs2eylw=;
-        b=RnWNqREAbgLaek095trmxYAB2A32y6JnXwwCOEqCb69fAeTbDadtF8FlgfjScSVIAl
-         VeeTs+PRgOCjPxTkkncXbvDpFdnykroIPzWS3ZkrcA5V09EUCUjR2N8eDmWGi1aSTldj
-         sWGtkpZHNt+L8zQ1rec0frnXufrW6BYnmCPrTRRO9+m7pZcPtC+Qyxnn28G7ujhDYXAE
-         byQy4rVnCqQe1KCfjRh86UTCzrbOPPbCEQHJjzcVwYU80D4Pmn7eHSaFdFucq0thDew9
-         mwIt+3FVhKJjw3+1RBYgxxjHifqmUr8neCsMcwOWZH12A84wexGKmonNSgDqwYVy2GKf
-         ERww==
+        bh=OHwV5VmedMjo0fB2YIP5vfg5xQVpg3dB69VmPS6NB6w=;
+        b=MnVZxFbAveBu4SxAm6rnwMcfKbtBeKCjcevhXTmXa4rOuP9GiqtaziNuotSsoxvwM7
+         DXftDG0skvQrVaCe0j+L+NSy/INIx7jB6FBWMppgVd4y3jKx4sdyBJWUz/dhab18DgmW
+         9IitniMtnsgtDoGB26sstadfh70MjYIrU7XponIOL3slBzmKEzcCM99vNdMAzKoYYVqK
+         eQeiB4wCcGXLk5PnJnyxuKpZE3aGpvNcnS5caZuss1JCm3x3mXdK72DmUqzpx1G8mhC2
+         xg/8oYU5sK4Sn+BzJgEhvatE9M05PNnXwsdgPAwBsTr+ONkPbECP1hA5gd6lWhQZHLU0
+         Lcgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YMx9d/KwaGXDIgZMt2DPtgDzNG9hC9FHDEasqs2eylw=;
-        b=WS1VUjqDfYBvp6i9+f5DkDQF29LhrNkQEgTfwgTrtClUS1RJeGG1nt6v+CVeEl17GL
-         GkBPcCwfXhyjp/bKcEkAdM2zTLbZAZ4aBugcTFKjxmrFMzlg+NalMprDPoFEWbZtiLEx
-         rxMU4TZLPwW/hmVoqtPa2xJHCRIFfRaZaRIbAZwk9i9lqcdxfFoXvpknE91LD3220Q96
-         Xmr6DcmWahGZdQoExM8iB8hrauqMklmaN5PEIAEJrJ3IQaI2i7ck4gAO11RRuW//7UQL
-         YX2v3jVmnm1FQpllDaB/tiMObhXqwlvQM4sO3iLmlmZ2VkKw84Twh70vUXhztnPpQrRg
-         b7bg==
-X-Gm-Message-State: AOAM533kywUkYU3ILG/jEXL3xUoUB6wnRvqX9O/JVtcFNQXi25r5Smlq
-        8kLEnjw8ixM6+DwkgPTBsAUKOjNg5OWuNZpeoW0ngnJTmQY=
-X-Google-Smtp-Source: ABdhPJx69CXrOaH6IjDUNE/NOqbho2qNWe/t0l5SmoR6GFbzHw8h1llh1Vq5RtbcLkcaqfSzMyNyoSf5YZK3GJZYikI=
-X-Received: by 2002:ac2:544f:: with SMTP id d15mr4065245lfn.465.1622844614933;
- Fri, 04 Jun 2021 15:10:14 -0700 (PDT)
+        bh=OHwV5VmedMjo0fB2YIP5vfg5xQVpg3dB69VmPS6NB6w=;
+        b=KYeHYEsxsaXAZR5nTlXbZEub5lYDy7c8xv5MZHUhutvwwYPmAidbBEXFy7TxGtlfp6
+         +tqHR+m24kcKciv/ydBYr06viNtywa48A1+ta3+Yezda5vo6Vm9n3U29K4EIM9Z5Am39
+         42gCYHdl8FMYAut4dmEHnyM7ySB0Nbj0pm4fsB4ML8yXoofK3VP6xudkeIEnl7jJ8uiy
+         dO1vPDQ9fr7KIVqMpc9BIfeEgp0jUXRl5y6HLVQrZF5uM6flF2aASQV6h/YwzCbfCfZI
+         wDJcl3p2du23EXttakA/UT4VHFsvblmXROcPsg09JjRaDSUP3ELZ0nEKPUHTgF706wxB
+         OZGg==
+X-Gm-Message-State: AOAM530K/Sglw5adr6mZS0RK43Uu7DcJcsCUsYHHa713Q67Ck8Lj0q0N
+        r10+tzydu61xjCzsarsTN+zNQph3vDw4fkouWxprVA==
+X-Google-Smtp-Source: ABdhPJzYZy+CPX4nMzDIh1hrv+mRFW4eXSwoqi6rFl1IsAzTElzai5va+d9sj7JTSpmJFNS00UuTCZ6Wsuh39dD9LCk=
+X-Received: by 2002:a2e:90c7:: with SMTP id o7mr5041191ljg.368.1622844811472;
+ Fri, 04 Jun 2021 15:13:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1622713678.git.sander@svanheule.net> <5d184778a6562e24abfa6e5dd2f7dbde4fede3fe.1622713678.git.sander@svanheule.net>
-In-Reply-To: <5d184778a6562e24abfa6e5dd2f7dbde4fede3fe.1622713678.git.sander@svanheule.net>
+References: <20210604110406.11006-1-michael@walle.cc> <CACRpkdZEytf1WJa4JNJy6o3CBqOJAZLb-D=_rGQb+naH=TKmZA@mail.gmail.com>
+ <62d131e0c2f16d647c36406ae8f9efba@walle.cc>
+In-Reply-To: <62d131e0c2f16d647c36406ae8f9efba@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Jun 2021 00:10:03 +0200
-Message-ID: <CACRpkdYzhC=Lt5CKpbZNK81z=0CRp2CknMqp=zk8cHVfo0wm0g@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] pinctrl: Add RTL8231 pin control and GPIO support
-To:     Sander Vanheule <sander@svanheule.net>
-Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 5 Jun 2021 00:13:20 +0200
+Message-ID: <CACRpkdYsh7=9KCHW8G8_qKoGy-f40rdTLUiE2dkzFGHc6KzLYQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: regmap: move drvdata to config data
+To:     Michael Walle <michael@walle.cc>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 3, 2021 at 12:01 PM Sander Vanheule <sander@svanheule.net> wrote:
-
-> This driver implements the GPIO and pin muxing features provided by the
-> RTL8231. The device should be instantiated as an MFD child, where the
-> parent device has already configured the regmap used for register
-> access.
+On Sat, Jun 5, 2021 at 12:03 AM Michael Walle <michael@walle.cc> wrote:
+> Am 2021-06-05 00:00, schrieb Linus Walleij:
 >
-> Debouncing is only available for the six highest GPIOs, and must be
-> emulated when other pins are used for (button) inputs. Although
-> described in the bindings, drive strength selection is currently not
-> implemented.
+> >> Btw, I'm not sure how to handle this "was part of another patch by
+> >> another
+> >> author" thing. Should I leave the Sob and just add mine?
+> >
+> > Ideally just stack Sign-offs it is called the "delivery path".
 >
-> Signed-off-by: Sander Vanheule <sander@svanheule.net>
+> Even if it is just a subset of the original patch?
 
-Wow this looks really good. Thanks for going the extra mile
-and fix this. Special thanks to Andy for the thorough review.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Yeah it's just an indication of whose hands typed thes characters.
+Something with copyright law actually, nothing to do with actual
+attribution. See (11) here:
+https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html
+
+Author: should reflect the person who wrote the majority of the
+code however.
 
 Yours,
 Linus Walleij
