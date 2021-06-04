@@ -2,123 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FA2839B777
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jun 2021 13:04:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EC5639B85F
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jun 2021 13:53:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbhFDLGA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Jun 2021 07:06:00 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:33739 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229682AbhFDLF7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 07:05:59 -0400
-Received: from mwalle01.fritz.box (ip4d17858c.dynamic.kabel-deutschland.de [77.23.133.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 17FAA22236;
-        Fri,  4 Jun 2021 13:04:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1622804652;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=5fw8Jf40Gc/YuYU1WK16FbnwfZPGSnpE7hlni55+Ha0=;
-        b=d+8jCeZ9AwzGcxK23g/UXjvhJSCYFuBvqkzA7UvjyjwboxqckGWyLbpUYsgVU+w5Z8wOEC
-        zhIYxGcpHR4ClJNlxBNKfwlJkQ8vW/exHgl5PsOEofAvCmeDuae3oR9yYRSK4mVFPqte3X
-        kgh7JdVrL3voI7RBuXI/5CtdvQO0LP8=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Walle <michael@walle.cc>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH] gpio: regmap: move drvdata to config data
-Date:   Fri,  4 Jun 2021 13:04:06 +0200
-Message-Id: <20210604110406.11006-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        id S230188AbhFDLys (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Jun 2021 07:54:48 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:38483 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230234AbhFDLys (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 07:54:48 -0400
+Received: by mail-wm1-f46.google.com with SMTP id t4-20020a1c77040000b029019d22d84ebdso7732666wmi.3;
+        Fri, 04 Jun 2021 04:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+D9StzdN0vpopnheERzUXaZ4q93k/9Dx6vRNCqWeUrg=;
+        b=GH7N2wRtV/K+Wap9/nuBByV6soY17GWg07RYNaFVloCbx/tx+5jYLNdEdl32JQ6gtf
+         8GDtqGR3sYeUEgbdy7RPiD2Pg3URvxPjaZFwYX6S9Kce7/iZQqbT6vJN65qRR29UaERH
+         p1Cp3peuc+COiX75KBMzWmKKfZl2AeWEDYOFMlqDWv5KDzTMQ3ISCRwjjBqk7LWNwL03
+         raMjKMct52L7H1LDq6NN4gSh+gk49+OsmYNpRD6ALALiR2RaiCWHxlMHLpNHwcSqFks1
+         3wJeI05nGKC5XCM40MkXlUipd/443yPQe1Ijsl4lDwZtxO9wP7F+Q4Ug2pIjRl//f/Ku
+         o/ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+D9StzdN0vpopnheERzUXaZ4q93k/9Dx6vRNCqWeUrg=;
+        b=Z5BwQIJ5FIIpXWJpCjLr64eI654xpEe63Dl+m6bBssKmQatk1mjry5FwwOONFGylro
+         vd5/oiTs7zB9yW0pOxrlwjS+D2/GjmXwOA0uIGAG9LGWOlnuTabnCOQr2MXrIkKbqZw3
+         /hcdQ8B6+W7SgXJ6BuBWSvcPZol7X+pdMbIF1rkiF5togbWukYS55jjGRlvTnl12OQRT
+         o1+NET6gSZ0Ss8M1Azgm2S+Qi+HCTckYaRsJwEvJfoMF+R1x1o2e5Acpnw8xazeFng2m
+         Jg+1jsGA2z0TbIPhZLT9jZh6crgOXsCsHGPDh2Su6txS4VzxaOXDaPooSEgFV77FdYNx
+         dReg==
+X-Gm-Message-State: AOAM5327QgIOWLD0x48mJTJnKU3II18WVWHZeTtS2nMXyz2C4c0eXv17
+        65Occ0C3Y9VqMQMsIaaDoMY=
+X-Google-Smtp-Source: ABdhPJxrFLUv28ChAPK1F4+Ght3tufcz5mIblaM9Y4oGsPIrIk0pIMkKQrC9kYMnI5du4Z0xZ6vLkg==
+X-Received: by 2002:a7b:c346:: with SMTP id l6mr3238101wmj.109.1622807521197;
+        Fri, 04 Jun 2021 04:52:01 -0700 (PDT)
+Received: from localhost.localdomain (113.red-88-4-247.dynamicip.rima-tde.net. [88.4.247.113])
+        by smtp.gmail.com with ESMTPSA id v10sm6924530wre.33.2021.06.04.04.52.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Jun 2021 04:52:00 -0700 (PDT)
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+To:     john@phrozen.org
+Cc:     linus.walleij@linaro.org, tsbogend@alpha.franken.de,
+        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org,
+        ilya.lipnitskiy@gmail.com, neil@brown.name
+Subject: [PATCH 0/6] pinctrl: ralink: move all pinmux arch stuff into driver code
+Date:   Fri,  4 Jun 2021 13:51:53 +0200
+Message-Id: <20210604115159.8834-1-sergio.paracuellos@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Drop gpio_regmap_set_drvdata() and instead add it to the configuration
-data passed to gpio_regmap_register().
+Ralink architecture have all pinmux config for different SoCs in architecture
+headers. This SoCs configs are:
+ - CONFIG_SOC_RT288X
+ - CONFIG_SOC_RT305X
+ - CONFIG_SOC_RT3883
+ - CONFIG_SOC_MT7620
+ - CONFIG_SOC_MT7621
 
-gpio_regmap_set_drvdata() can't really be used in a race free way. This
-is because the gpio_regmap object which is needed by _set_drvdata() is
-returned by gpio_regmap_register(). On the other hand, the callbacks
-which use the drvdata might already be called right after the
-gpiochip_add() call in gpio_regmap_register(). Therefore, we have to
-provide the drvdata early before we call gpiochip_add().
+We currently have 'drivers/pinctrl/ralink/' with common code to all of them
+in 'pinctrl-rt2880.c' file. Pinctrl data was being passed in SoC initilization
+to the driver. Instead of doing that just move all related code to the driver
+itself. We maintain for all of them compatible string to avoid to make more
+changes in dts's an so on. If a new compatible string is neccessary to be
+defined for each different SoC, we can change them after this series are
+applied.
 
-Reported-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Signed-off-by: Michael Walle <michael@walle.cc>
----
-Btw, I'm not sure how to handle this "was part of another patch by another
-author" thing. Should I leave the Sob and just add mine? I certainly don't
-want to take credit for work Matti had done. This patch isn't huge, but
-still ;)
+I have only tested MT7621 platform using GNUBee PC1 board. I don't have
+other boards to test other SoC changes.
 
- drivers/gpio/gpio-regmap.c  | 7 +------
- include/linux/gpio/regmap.h | 6 +++++-
- 2 files changed, 6 insertions(+), 7 deletions(-)
+This series are rebased on the master branch of linux-pinctrl git tree so
+I expect this to be merged through pinctrl tree. Thomas, if 'linux-mips' 
+is preferred to merge this series just let me know and I can rebase them
+to make you things easier.
 
-diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index 134cedf151a7..583cd1cdead8 100644
---- a/drivers/gpio/gpio-regmap.c
-+++ b/drivers/gpio/gpio-regmap.c
-@@ -178,12 +178,6 @@ static int gpio_regmap_direction_output(struct gpio_chip *chip,
- 	return gpio_regmap_set_direction(chip, offset, true);
- }
- 
--void gpio_regmap_set_drvdata(struct gpio_regmap *gpio, void *data)
--{
--	gpio->driver_data = data;
--}
--EXPORT_SYMBOL_GPL(gpio_regmap_set_drvdata);
--
- void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
- {
- 	return gpio->driver_data;
-@@ -226,6 +220,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 		return ERR_PTR(-ENOMEM);
- 
- 	gpio->parent = config->parent;
-+	gpio->driver_data = config->drvdata;
- 	gpio->regmap = config->regmap;
- 	gpio->ngpio_per_reg = config->ngpio_per_reg;
- 	gpio->reg_stride = config->reg_stride;
-diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index 334dd928042b..a9f7b7faf57b 100644
---- a/include/linux/gpio/regmap.h
-+++ b/include/linux/gpio/regmap.h
-@@ -37,6 +37,9 @@ struct regmap;
-  *			offset to a register/bitmask pair. If not
-  *			given the default gpio_regmap_simple_xlate()
-  *			is used.
-+ * @drvdata:		(Optional) Pointer to driver specific data which is
-+ *			not used by gpio-remap but is provided "as is" to the
-+ *			driver callback(s).
-  *
-  * The ->reg_mask_xlate translates a given base address and GPIO offset to
-  * register and mask pair. The base address is one of the given register
-@@ -78,13 +81,14 @@ struct gpio_regmap_config {
- 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
- 			      unsigned int offset, unsigned int *reg,
- 			      unsigned int *mask);
-+
-+	void *drvdata;
- };
- 
- struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config);
- void gpio_regmap_unregister(struct gpio_regmap *gpio);
- struct gpio_regmap *devm_gpio_regmap_register(struct device *dev,
- 					      const struct gpio_regmap_config *config);
--void gpio_regmap_set_drvdata(struct gpio_regmap *gpio, void *data);
- void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio);
- 
- #endif /* _LINUX_GPIO_REGMAP_H */
+Thanks in advance for your time.
+
+Best regards,
+    Sergio Paracuellos
+
+Sergio Paracuellos (6):
+  pinctrl: ralink: move ralink architecture pinmux header into the
+    driver
+  pinctrl: ralink: move MT7621 SoC pinmux config into a new
+    'pinctrl-mt7621.c' file
+  pinctrl: ralink: move RT3883 SoC pinmux config into a new
+    'pinctrl-rt3883.c' file
+  pinctrl: ralink: move RT305X SoC pinmux config into a new
+    'pinctrl-rt305x.c' file
+  pinctrl: ralink: move MT7620 SoC pinmux config into a new
+    'pinctrl-mt7620.c' file
+  pinctrl: ralink: move RT288X SoC pinmux config into a new
+    'pinctrl-rt288x.c' file
+
+ arch/mips/include/asm/mach-ralink/mt7620.h    |  53 +-
+ arch/mips/include/asm/mach-ralink/rt288x.h    |   9 -
+ arch/mips/include/asm/mach-ralink/rt305x.h    |  24 -
+ arch/mips/include/asm/mach-ralink/rt3883.h    |  34 --
+ arch/mips/ralink/mt7620.c                     | 320 ------------
+ arch/mips/ralink/mt7621.c                     |  88 ----
+ arch/mips/ralink/prom.c                       |   1 -
+ arch/mips/ralink/rt288x.c                     |  21 -
+ arch/mips/ralink/rt305x.c                     |  77 ---
+ arch/mips/ralink/rt3883.c                     |  45 --
+ drivers/pinctrl/ralink/Kconfig                |  25 +
+ drivers/pinctrl/ralink/Makefile               |   6 +
+ .../pinctrl/ralink/pinctrl-mt7620.c           | 472 +++---------------
+ drivers/pinctrl/ralink/pinctrl-mt7621.c       | 116 +++++
+ drivers/pinctrl/ralink/pinctrl-rt2880.c       |  30 +-
+ drivers/pinctrl/ralink/pinctrl-rt288x.c       |  60 +++
+ drivers/pinctrl/ralink/pinctrl-rt305x.c       | 136 +++++
+ drivers/pinctrl/ralink/pinctrl-rt3883.c       | 107 ++++
+ .../pinctrl/ralink}/pinmux.h                  |   3 +-
+ 19 files changed, 536 insertions(+), 1091 deletions(-)
+ copy arch/mips/ralink/mt7620.c => drivers/pinctrl/ralink/pinctrl-mt7620.c (51%)
+ create mode 100644 drivers/pinctrl/ralink/pinctrl-mt7621.c
+ create mode 100644 drivers/pinctrl/ralink/pinctrl-rt288x.c
+ create mode 100644 drivers/pinctrl/ralink/pinctrl-rt305x.c
+ create mode 100644 drivers/pinctrl/ralink/pinctrl-rt3883.c
+ rename {arch/mips/include/asm/mach-ralink => drivers/pinctrl/ralink}/pinmux.h (91%)
+
 -- 
-2.20.1
+2.25.1
 
