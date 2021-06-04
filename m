@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B204539B1E4
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jun 2021 07:19:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF7DA39B1E5
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jun 2021 07:20:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229752AbhFDFVi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Jun 2021 01:21:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:4855 "EHLO mga14.intel.com"
+        id S229752AbhFDFWj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Jun 2021 01:22:39 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60899 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229704AbhFDFVi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 4 Jun 2021 01:21:38 -0400
-IronPort-SDR: EhT6XoOTsojKSEYpZE/Ghczip4ztAyYbBXn6JUPdJ78Y/5bzFoErjG2PTFYICNy4MXQps40utI
- RWKpYwRShWDw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10004"; a="204038513"
+        id S229704AbhFDFWi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 4 Jun 2021 01:22:38 -0400
+IronPort-SDR: eNRapzMMmYzIAO4oKxWZQcgDEIebpG4nb9WweJwSjbzNm22QtviQUOmAuvOjjXU6Ec1UR5s5H/
+ 1jrwJjQ8je0A==
+X-IronPort-AV: E=McAfee;i="6200,9189,10004"; a="225538013"
 X-IronPort-AV: E=Sophos;i="5.83,247,1616482800"; 
-   d="scan'208";a="204038513"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2021 22:19:52 -0700
-IronPort-SDR: FbJ2tj262V9+6XkjeB0Q4+HJvR7oyhPRlj0mwfS36SriUY75tWPaZLk3dp+1kVzu3HYIuin/RQ
- xPhbyGvhLg5w==
+   d="scan'208";a="225538013"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2021 22:20:52 -0700
+IronPort-SDR: KoO5e8QZvf3jsaVK0pNC5Bl66T6/dZV3o9/XdehQeODcok+Hs10ZIljUgZmIWq/+FxSKScnRV7
+ 4fZGthPKX4Sg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,247,1616482800"; 
-   d="scan'208";a="417645197"
+   d="scan'208";a="618146619"
 Received: from lkp-server02.sh.intel.com (HELO 1ec8406c5392) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 03 Jun 2021 22:19:51 -0700
+  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2021 22:20:51 -0700
 Received: from kbuild by 1ec8406c5392 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lp2FK-0006gI-Bv; Fri, 04 Jun 2021 05:19:50 +0000
-Date:   Fri, 04 Jun 2021 13:19:45 +0800
+        id 1lp2GI-0006gN-Cy; Fri, 04 Jun 2021 05:20:50 +0000
+Date:   Fri, 04 Jun 2021 13:20:12 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 696beef77521d3e418a2780859d1522c3c39d9b5
-Message-ID: <60b9b7f1.bOSVZnPb8GY3CjWn%lkp@intel.com>
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ 2aefadc09b35c59ee3912b66984d617ee5510a55
+Message-ID: <60b9b80c.YLq9Yv2VnqKfOgZb%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +43,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 696beef77521d3e418a2780859d1522c3c39d9b5  pinctrl: mediatek: move bit assignment
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 2aefadc09b35c59ee3912b66984d617ee5510a55  Merge branch 'devel' into for-next
 
-elapsed time: 9648m
+elapsed time: 9649m
 
-configs tested: 311
+configs tested: 316
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -104,6 +104,8 @@ mips                malta_qemu_32r6_defconfig
 m68k                          sun3x_defconfig
 sh                            shmin_defconfig
 mips                 decstation_r4k_defconfig
+m68k                          hp300_defconfig
+sh                            titan_defconfig
 sh                          rsk7203_defconfig
 openrisc                  or1klitex_defconfig
 mips                          rm200_defconfig
@@ -121,14 +123,7 @@ nios2                         3c120_defconfig
 sh                          rsk7264_defconfig
 m68k                          atari_defconfig
 s390                                defconfig
-arc                     haps_hs_smp_defconfig
-powerpc                 linkstation_defconfig
-mips                           ip32_defconfig
-sh                     sh7710voipgw_defconfig
-mips                        vocore2_defconfig
-sh                           se7780_defconfig
 arm                             pxa_defconfig
-sh                            titan_defconfig
 mips                        jmr3927_defconfig
 arm                          iop32x_defconfig
 microblaze                          defconfig
@@ -141,6 +136,10 @@ sh                             espt_defconfig
 mips                       bmips_be_defconfig
 arm                      integrator_defconfig
 ia64                             allyesconfig
+mips                           gcw0_defconfig
+arm                     eseries_pxa_defconfig
+powerpc                      katmai_defconfig
+powerpc                        cell_defconfig
 mips                      bmips_stb_defconfig
 m68k                         amcore_defconfig
 mips                          rb532_defconfig
@@ -162,6 +161,7 @@ arm                         s3c2410_defconfig
 um                           x86_64_defconfig
 powerpc                 mpc832x_mds_defconfig
 ia64                            zx1_defconfig
+mips                        vocore2_defconfig
 powerpc                 mpc8313_rdb_defconfig
 mips                        bcm47xx_defconfig
 arm                        spear3xx_defconfig
@@ -177,6 +177,7 @@ mips                           ip28_defconfig
 m68k                       m5475evb_defconfig
 arm                         palmz72_defconfig
 sh                     magicpanelr2_defconfig
+sh                               alldefconfig
 sh                          sdk7780_defconfig
 arm                       aspeed_g5_defconfig
 sh                               j2_defconfig
@@ -189,10 +190,6 @@ mips                        workpad_defconfig
 sh                               allmodconfig
 arm                        mini2440_defconfig
 mips                            e55_defconfig
-arm                         lpc18xx_defconfig
-arm                        shmobile_defconfig
-mips                         db1xxx_defconfig
-sh                           se7712_defconfig
 powerpc                      chrp32_defconfig
 sh                           se7721_defconfig
 sh                          rsk7269_defconfig
@@ -208,7 +205,6 @@ sh                          polaris_defconfig
 powerpc                      obs600_defconfig
 powerpc                        fsp2_defconfig
 arm                        multi_v7_defconfig
-arm                     eseries_pxa_defconfig
 mips                         mpc30x_defconfig
 sh                           se7343_defconfig
 mips                            gpr_defconfig
@@ -217,16 +213,19 @@ sh                          urquell_defconfig
 parisc                generic-32bit_defconfig
 sh                           sh2007_defconfig
 sh                          lboxre2_defconfig
-arc                        vdk_hs38_defconfig
-arm                          moxart_defconfig
-mips                       capcella_defconfig
 powerpc                     mpc5200_defconfig
 m68k                          amiga_defconfig
+mips                           ip32_defconfig
 sh                            migor_defconfig
 ia64                             alldefconfig
-mips                           gcw0_defconfig
 openrisc                    or1ksim_defconfig
+mips                       capcella_defconfig
 mips                      maltasmvp_defconfig
+arm                  colibri_pxa300_defconfig
+sh                           se7206_defconfig
+arm64                            alldefconfig
+riscv             nommu_k210_sdcard_defconfig
+mips                       rbtx49xx_defconfig
 mips                        qi_lb60_defconfig
 sh                          r7780mp_defconfig
 powerpc               mpc834x_itxgp_defconfig
@@ -347,8 +346,8 @@ x86_64                                  kexec
 
 clang tested configs:
 x86_64               randconfig-b001-20210528
-x86_64               randconfig-b001-20210531
 x86_64               randconfig-b001-20210529
+x86_64               randconfig-b001-20210531
 x86_64               randconfig-b001-20210527
 x86_64               randconfig-a013-20210528
 x86_64               randconfig-a014-20210528
@@ -362,6 +361,12 @@ x86_64               randconfig-a014-20210526
 x86_64               randconfig-a016-20210526
 x86_64               randconfig-a015-20210526
 x86_64               randconfig-a011-20210526
+x86_64               randconfig-a014-20210531
+x86_64               randconfig-a012-20210531
+x86_64               randconfig-a013-20210531
+x86_64               randconfig-a016-20210531
+x86_64               randconfig-a015-20210531
+x86_64               randconfig-a011-20210531
 x86_64               randconfig-a006-20210529
 x86_64               randconfig-a001-20210529
 x86_64               randconfig-a005-20210529
