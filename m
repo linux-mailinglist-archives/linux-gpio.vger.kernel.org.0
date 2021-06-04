@@ -2,72 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2716839C32C
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jun 2021 00:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25C9A39C33C
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jun 2021 00:06:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230348AbhFDWF6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Jun 2021 18:05:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbhFDWF6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 18:05:58 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62ACFC061766
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Jun 2021 15:04:11 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id f11so16154628lfq.4
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Jun 2021 15:04:11 -0700 (PDT)
+        id S231199AbhFDWIb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Jun 2021 18:08:31 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:46723 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231470AbhFDWIb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 18:08:31 -0400
+Received: by mail-lj1-f169.google.com with SMTP id e11so13383682ljn.13
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Jun 2021 15:06:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eQZbuWUG03lQ2rSsW03oJWLnLVkei/e7oxh8vFKy7HM=;
-        b=nWeoqrwgWO9J+GywK0+9MkhsUybMt4qICY9XGVkIHqhglHGFgf1gsU6s0vwiblTgKC
-         EJ2yjEw7gmTSbvLVaWKTrTGLAzw32OApT5lGPAxEzeqkw7ff9fwT0QF8W0x7bVBwr6OI
-         IDBq2rqdoRFZOyQbTUunBPM3/qkKhATM5edS+3bVkAgEckv2uwTiSnR27+p3Zp8ecxYQ
-         j+NIQBSSgc/oHPPrJ2+YwxswY4zMVnQXwtpakhxXGGy69pNEe7HJiqxfQizni8azumPa
-         bUkAg0yy4EI72OZMDRf7S9so3g5JB68AjUgiFTPzIecay/6ac+JVlgW9ieJGdeKdjwX1
-         FHIg==
+        bh=Lm6qjNOSd7S3ElmBGLAdz/ltzncXw/D1BuDORLixUOY=;
+        b=RpZRBAvNmlvbMhdcUNBT1IRUNettfyipNir/0qTLXWWLR9kdY0t6lKvAuh/oaTO45F
+         5VYqft+IFQlJmmdwTQoAEFOwopCsUIMwZQlgODEkvQU8f/iH2vIB9Vv95mrSlCqO65kl
+         w3P8QlnkZgOEDDR8ulaMR/x/vWmMO0QXEzB2uFKqpthjGimkeTBdq6IOsgSHFlBfFdNV
+         afIVLhvu1AVawb5Ojf3Wd+4G2lTKMotrRitIkml6wxZ4ma3jZdfN6BNOWHtSBcSLtjL1
+         7ZyK2RFaieTful8M/iFLhhAu+Vmhy6kX2GC1MGVLHjNe8RzhdcF32ZuwkectC9wXalaG
+         0Trw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eQZbuWUG03lQ2rSsW03oJWLnLVkei/e7oxh8vFKy7HM=;
-        b=Jg3jxh5/j3v8/ugHAmcwC3q0iAdlIanjN7rw7sWY8xaTUMc9halPNWFqBrPI4E6K8f
-         /9O0VDGWkEhlM6APpB8DhXO6Ls/4nS6DASXJxDQxBxDDyf9lv0d77jko8xB5Uf7eYrhj
-         JLrvj4HdsEQ7e8cj/EpERP3CdwpRTec8eNuw79OS/hgllKsqk2Uae6q0JN7ffSc1uLmm
-         KQNqd7nkFvxIeWugLMXfLXh3aNzc4pcukeQGJWJ0uNs7HOO4bB4+orRBIrpg175vYn72
-         GfAjIHwQakByxyHkhvDYoo492EbIAXh4jH0J+l9DVPt0GRUkjXa2jgBBHYcAUyRR3IfY
-         2fkQ==
-X-Gm-Message-State: AOAM533SRZ+4ZzReNJBo6VyktYpGMA+kzQgbqmkdQNZGkRyu4MxO9amc
-        wPLW8s0dlv575DynNto/rmYcdjrZIdb+4TC9Tw0aFA==
-X-Google-Smtp-Source: ABdhPJxrXNHigb02NXg6KvBA1hhlWVQqvBzap419QCgz9FmREBg8ONmXhdrIziS9rug3ASrPUTOzuNFzPRSRw8rrQ90=
-X-Received: by 2002:a19:8157:: with SMTP id c84mr4135763lfd.529.1622844249725;
- Fri, 04 Jun 2021 15:04:09 -0700 (PDT)
+        bh=Lm6qjNOSd7S3ElmBGLAdz/ltzncXw/D1BuDORLixUOY=;
+        b=Q50U/8jWJKeRBcF7MnvrW4+eFaxhvwe/99eLlAUKfGXNe3nJtkzti4BhNHdwIeUqda
+         uetIX2B5Np6Q+bnIv3L6U3gROwo7kS1qCm3fnNN0xTcbBbJXc3WAY9BSIkLFZhgO9JzR
+         iAm33XKklpe0pZUNaqhcseRlGLWVJoCP7BFx0jGWbeG/X+S3EkrjBqAhCWFjiUbBzaYG
+         DXRYz1FhDIr6RmLEsUbw8YW2sFoAGHaJQe1MpX03qvmWJuDJXWoUhC0QOJ8z/rHBH1LH
+         VJC0aD7PNgjIxIwTimSUOfWVBSr+ae3kh+BgHbRWbo5yxA8hmnSOdz3ti4eQ4U3Kb8hN
+         p52w==
+X-Gm-Message-State: AOAM531ZY4R6/nsDQIds7G06V7Dk9ez0I4qqPBkfpH/O+dwHpEOa4Y5F
+        jyi5ipnPSLu1rEGjS3MMOub7CHzVg86Iv2nGDcWcxw==
+X-Google-Smtp-Source: ABdhPJxIEjo220o67L1taBJY3zqlit/QriVesKs4aC6pDmACw4lPvVzV8qVmU/R+jsc82jo3VZQGH3X9ojeu+ohPLmw=
+X-Received: by 2002:a2e:22c3:: with SMTP id i186mr5091495lji.273.1622844333120;
+ Fri, 04 Jun 2021 15:05:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210514123309.134048-1-tsbogend@alpha.franken.de> <20210604122223.GA8940@alpha.franken.de>
-In-Reply-To: <20210604122223.GA8940@alpha.franken.de>
+References: <cover.1622560799.git.geert+renesas@glider.be> <7caa954add90255fc177e5dbabe17d62e0242861.1622560799.git.geert+renesas@glider.be>
+In-Reply-To: <7caa954add90255fc177e5dbabe17d62e0242861.1622560799.git.geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Jun 2021 00:03:58 +0200
-Message-ID: <CACRpkdafaMUjai4VCxePX2kWFkh4=Ks5qQvHTtYvVtkeHPhKKA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] gpio: Add support for IDT 79RC3243x GPIO controller
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Sat, 5 Jun 2021 00:05:22 +0200
+Message-ID: <CACRpkdbSP2FEkfY74HxSUDse57iRf3MY+-i5ZDk1AeUxd=FSug@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] dt-bindings: gpio: pcf857x: Convert to json-schema
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 4, 2021 at 2:22 PM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
+On Tue, Jun 1, 2021 at 5:25 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> is there anything a still need to do to get this integrated for v5.14 ?
+> Convert the PCF857x-compatible I/O expanders Device Tree binding
+> documentation to json-schema.
+>
+> Document missing compatible values, properties, and gpio hogs.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-IMO not really:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Bartosz is collecting the patches for v5.14.
 
 Yours,
 Linus Walleij
