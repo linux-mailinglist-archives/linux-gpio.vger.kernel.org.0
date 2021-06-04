@@ -2,74 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41C5A39BFF3
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jun 2021 20:55:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46B1039C14C
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jun 2021 22:27:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230251AbhFDS5h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Jun 2021 14:57:37 -0400
-Received: from mail-yb1-f180.google.com ([209.85.219.180]:34586 "EHLO
-        mail-yb1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229791AbhFDS5g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 14:57:36 -0400
-Received: by mail-yb1-f180.google.com with SMTP id i6so437721ybm.1
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Jun 2021 11:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EKyhuzHwzLRrsOJLNCzAwhtq44OpkP3F8fch2+BlTSA=;
-        b=TQp4ocbjX84LdSjsQl5AnJhU2UlRhFc06S/cXRpXXxU7AK65AfTqzM3DdMZH78EFsF
-         VXJ3D1tMkSoRIVCm1AuAxAt9F6GUPNgduGuf+L4yQ5MBxMKxDop+BdeBFuvQWmn/mb8P
-         IcAGrrE4D7HX/BFesh9FlY35m/nTrPWT3H8pwM3xx9vnjb2XqyLeZwwu4KYNcHFF/QBn
-         Mxeio1luTMv5eBBK2lOqoyBWhI1cSBSDA0cuvT34JfK66RhHDC53XQ+9hKMR+O7uIsOZ
-         DMKoZp+kzNIxH2aR0SFGBXaYKDZ6/v7Q82WHtdN/kX7b5NGDcPrOo+cH9NyNH/nP3QgJ
-         NkTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EKyhuzHwzLRrsOJLNCzAwhtq44OpkP3F8fch2+BlTSA=;
-        b=pQ+kv6Xbm9KtTswgwrUa4IJJnWp68XZK9Ohu8tI6UPaHlCyUGiwQT7hCECAaFxZxzF
-         mLoljt/29cys4ZCy9HLxJP+2iuYOxlNrDUin9rHR20pjW+2IWLKVV+sg9yiXjDMWGii4
-         BF6tAzZEwfV5NiiXh6QQQYMuQwNHDwccFk1y21Xkhofvfjq4N2zTmWLtP7RnpOfh2zUb
-         m8viP8V44zzMeWCyp+tLDJ3+6CwCP9UiLnxPwtHeyqB885t56+QsVN+dt/ctd9itHsgi
-         nVODI+KB4h55Diu0YWp6wd37oxIiP+g4c6RkhG07KpZMpW0wmqhxOdSWUxb70LsHf4fT
-         UrAg==
-X-Gm-Message-State: AOAM5334nAJ490z+QUEYLbXxcrR05u0MSVjBMDSI9RMxgOJ1puPqGdPm
-        rXzHFwW3SYcc1uVjOkRhWKLoSprwnf6r0VmL3LPZ1w==
-X-Google-Smtp-Source: ABdhPJznQHoiBwcSy902kPnq6wK4bVbknjCmxX3xB3mYjEePUTnONNbF2234aKtQEMeFDNSwC1bDs/oZO0E4pMSfsAc=
-X-Received: by 2002:a25:1ec2:: with SMTP id e185mr7273076ybe.23.1622832889743;
- Fri, 04 Jun 2021 11:54:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <b0a7e849dbf7e92d2e32d8c751d87382b06f6547.1622714114.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <b0a7e849dbf7e92d2e32d8c751d87382b06f6547.1622714114.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 4 Jun 2021 20:54:39 +0200
-Message-ID: <CAMpxmJVX-PWBvubfKdcVYgCxoN8Xp8QjB33fSDA0Wg-xecp95Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-regmap: Use devm_add_action_or_reset()
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Michael Walle <michael@walle.cc>,
+        id S229982AbhFDU3S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Jun 2021 16:29:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229854AbhFDU3S (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 4 Jun 2021 16:29:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C3E97613B3;
+        Fri,  4 Jun 2021 20:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622838451;
+        bh=tp7EhaUIA7dhDqX73gUiMeFFSwmwo5qsAN0c2GLR7/8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J495APYqeMvGak7VjrnfXTx+O0ofgIzrHbyPJ+K5eDQGpv0IfD586Ub0mUgRKUdZm
+         QcgNb+5o90ApgmlCFc1Q7KGqa6lwLRlbadNabGKYC2gYmf5PA/ypxf5duJ6TsqhmTS
+         wO+lIPQ+eZ/sgsIVJgtZZObY2oHNQAf3Y69zERxDPzneJ2qoq2/ztUChMXbJ0Lhlkr
+         o9jjNcfjrXzh64tYGYr8m6uy88tLY4YQFupsFZU0rS2b6eBlWyeTGTQzZwp0/ZyOrm
+         K0anXq+trFoxq3HvQcW7xm+ZZdMmvKCrEOWwq50cv6k5R89yXNKRQtleBo/o5mL0gN
+         G2S30JmqCG/lg==
+Date:   Fri, 4 Jun 2021 22:27:28 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, x86@kernel.org,
+        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: i2c: ce4100: Replace "ti,pcf8575" by
+ "nxp,pcf8575"
+Message-ID: <YLqMsCPSCvisGyGF@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, x86@kernel.org,
+        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <cover.1622560799.git.geert+renesas@glider.be>
+ <9b560b7f5ded90430c989a211f2aee009aefc595.1622560799.git.geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="a1L18+0qYibZ0Ie5"
+Content-Disposition: inline
+In-Reply-To: <9b560b7f5ded90430c989a211f2aee009aefc595.1622560799.git.geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 3, 2021 at 12:00 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
->
-> Slightly simplify the devm_gpio_regmap_register() by using the
-> devm_add_action_or_reset().
->
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Michael Walle <michael@walle.cc>
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
 
-Applied, thanks!
+--a1L18+0qYibZ0Ie5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bartosz
+On Tue, Jun 01, 2021 at 05:25:44PM +0200, Geert Uytterhoeven wrote:
+> The TI part is equivalent to the NXP part, and its compatible value is
+> not documented in the DT bindings.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+I'd think I pick this individually? Or shall it all go via some tree?
+
+
+--a1L18+0qYibZ0Ie5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmC6jLAACgkQFA3kzBSg
+KbZdLg//fOeXpGmmYSRKOE1z3+qSZbfwj/LBOY9Attl8FsAI1y38e8bXXHP3kaEs
+pIaBx0M+gFM3HPb9effIwDAkxPVzuWxTDHq3Ux9EJdbPA4ZIopF5k+7CNQmr93an
+JamaH5NzzCJy/gRDtq1oGMs58RIEkuLw59XmTIhI1ZlZsACf/FlVuU1jn6hBKe6G
+/AYC9+mwqIaZnFhQGCUpf4k2S5fG8yo0cm1h/YHJHlvceIYixH6aR+7DHtgurXqP
+s0hGiAOrGnTTShOL055kg9USVL+84Nhauih9k/E74weXUkiN9tiF7wJU1KVqmGnI
+Jnne2N6Kk5kG7pT2EgeWDKQWH5TUjZbRPziN/k+N4a2aItFN84crBZOFxBlIsS5P
++8g0dVK2tUfzOkAiXI7kV9Z878vNzfrXCH0epsgJ8Eayw1ZDq98qKsi9AdpdGzTw
+BVDPrI3kyG/RYGuAfJ8Jb67aR75v9+7pytQRlhy1NvKJ4dkoeV8E41LI3Yj/Gr17
+I+12ME5xXMQPYJQscRz5L8m0mUgbvEb0sNABUwgiiaenDUtWAPCMMwGNYLkNo17Q
+Hdh/ZTHbNpDKzqUQe2HpAeNEwu8/DCrKJS8n9g8+Nf2Rn3yaUQ3KxbuGdbhDWb3k
+9hIaOgdvuDcp1xqfP7HQz+QqI9064vN9KQGpb/IFFqDmP5XiE/E=
+=a4Z4
+-----END PGP SIGNATURE-----
+
+--a1L18+0qYibZ0Ie5--
