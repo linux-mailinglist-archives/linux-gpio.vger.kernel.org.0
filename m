@@ -2,122 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C32A739C3A3
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jun 2021 01:01:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 816E439C7AE
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jun 2021 13:07:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231726AbhFDXD2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Jun 2021 19:03:28 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:57883 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbhFDXD2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Jun 2021 19:03:28 -0400
-Received: from mwalle01.fritz.box (ip4d17858c.dynamic.kabel-deutschland.de [77.23.133.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        id S229933AbhFELJg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Jun 2021 07:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229998AbhFELJg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Jun 2021 07:09:36 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 403A2C061767
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Jun 2021 04:07:48 -0700 (PDT)
+Received: from [IPv6:2a02:a03f:eafb:ee01:578f:7526:5a0:96d5] (unknown [IPv6:2a02:a03f:eafb:ee01:578f:7526:5a0:96d5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B9E582224D;
-        Sat,  5 Jun 2021 01:01:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1622847698;
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 4411A20907C;
+        Sat,  5 Jun 2021 13:07:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1622891266;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ADrXaqp0+MMaJtBSueG99bAjGWTUIKt3XWo1eTmSkvk=;
-        b=Jg3klmP5rAGWw5nCoiV3Jsf+P3TUlk3kOqqgmFXI+Md63UWlPY9P2XWiCi42ajPS4N1iif
-        GcLdM6dmJXRKPvWevO8yBRmy2uA0luRLmhjRbdcZ3FHGd/vd30lu0fcCxPpISQ8U/TKSIR
-        OgZBv19cmVyHoZmFspr5aEOrPT4G2kM=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UFmqQDr1GHxA/eAjSwi6GL9nIZuMpYiXeJXZ70OTXsk=;
+        b=55gawZN8Lm9MfXTMFG5Gc8TsY44sUdRvZ351PiFdgxZ/gs2TvofEsqFOHXLm7gt1sdD9+G
+        tnXtlKDpv5LiAvAB9p/m6HSJ+OeI7mHzYozRPSHastEb84xtvB8eu5Cq8hGZ329hkWYchN
+        MHOiGluIBMkzuU+J8mGh4Uj3QeIuP60N0KZi9LZ9duYsvQWuiSwo4L2WmMoGBnfsPH7CxN
+        QYwZF7e+kxigdWZAdrTkgqRPRcwMfuLsj3puSB3B674NtpDWdW9ufEyHUbNZu3aE/OpTcp
+        TE6xAJJmKGP95Wp0qe2Xd06UWMIE0HRllzfrzI1b4ioLWsOMCuORpSfJdMoQFw==
+Message-ID: <76c058318f5c5d984ade4f65bb359e686836b0b4.camel@svanheule.net>
+Subject: Re: [PATCH v4 3/5] mfd: Add RTL8231 core device
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Michael Walle <michael@walle.cc>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v2] gpio: regmap: move drvdata to config data
-Date:   Sat,  5 Jun 2021 00:58:57 +0200
-Message-Id: <20210604225857.18694-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Date:   Sat, 05 Jun 2021 13:07:44 +0200
+In-Reply-To: <CAHp75VeLUufwYagvQ2M+VKsivUzmnHHHQeH4E8-uN2avRWmBag@mail.gmail.com>
+References: <cover.1620735871.git.sander@svanheule.net>
+         <cover.1622713678.git.sander@svanheule.net>
+         <56fb027587fa067a249237ecaf40828cd508cdcc.1622713678.git.sander@svanheule.net>
+         <CAHp75VeLUufwYagvQ2M+VKsivUzmnHHHQeH4E8-uN2avRWmBag@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Drop gpio_regmap_set_drvdata() and instead add it to the configuration
-data passed to gpio_regmap_register().
+On Thu, 2021-06-03 at 13:58 +0300, Andy Shevchenko wrote:
+> On Thu, Jun 3, 2021 at 1:01 PM Sander Vanheule <sander@svanheule.net> wrote:
+> > +static int rtl8231_reg_read(void *context, unsigned int reg, unsigned int
+> > *val)
+> > +{
+> > +       struct mdio_device *mdio_dev = context;
+> > +       int ret;
+> > +
+> > +       ret = mdiobus_read(mdio_dev->bus, mdio_dev->addr,
+> > RTL8231_REAL_REG(reg));
+> > +
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+> > +       *val = ret & 0xffff;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int rtl8231_reg_write(void *context, unsigned int reg, unsigned int
+> > val)
+> > +{
+> > +       struct mdio_device *mdio_dev = context;
+> > +
+> > +       return mdiobus_write(mdio_dev->bus, mdio_dev->addr,
+> > RTL8231_REAL_REG(reg), val);
+> > +}
+> 
+> Hmm... Maybe we can amend regmap-mdio to avoid duplication of the
+> above? Something like xlate in gpio-regmap or so?
 
-gpio_regmap_set_drvdata() can't really be used in a race free way. This
-is because the gpio_regmap object which is needed by _set_drvdata() is
-returned by gpio_regmap_register(). On the other hand, the callbacks
-which use the drvdata might already be called right after the
-gpiochip_add() call in gpio_regmap_register(). Therefore, we have to
-provide the drvdata early before we call gpiochip_add().
+(+Cc Mark for the regmap discussion)
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Signed-off-by: Michael Walle <michael@walle.cc>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
-changes since v1:
- - added Matti's Sob
+It turns out that I can't use both devm_regmap_init_mdio and the overrides
+regmap_config.reg_read/write. This appears to be in contrast to what the
+documentation for these two overrides suggest. devm_regmap_init_mdio provides a
+bus for the regmap, which causes the overrides to be ignored in regmap.c
 
- drivers/gpio/gpio-regmap.c  | 7 +------
- include/linux/gpio/regmap.h | 6 +++++-
- 2 files changed, 6 insertions(+), 7 deletions(-)
+Then I tried to use the paging support provided by regmap, by adding the
+following config:
+   
+      static struct regmap_range_cfg rtl8231_reg_ranges[] = {
+             {
+                     /* Specify an unused register with an empty mask */
+                     .selector_reg = 0x1f,
+                     .selector_mask = 0x00,
+                     .selector_shift = 0,
+                     .range_min = 0x00,
+                     .range_max = RTL8231_VREG(RTL8231_REG_COUNT - 1),
+                     .window_start = 0x00,
+                     .window_len = 0x20,
+             },
+      };
 
-diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index 134cedf151a7..583cd1cdead8 100644
---- a/drivers/gpio/gpio-regmap.c
-+++ b/drivers/gpio/gpio-regmap.c
-@@ -178,12 +178,6 @@ static int gpio_regmap_direction_output(struct gpio_chip *chip,
- 	return gpio_regmap_set_direction(chip, offset, true);
- }
- 
--void gpio_regmap_set_drvdata(struct gpio_regmap *gpio, void *data)
--{
--	gpio->driver_data = data;
--}
--EXPORT_SYMBOL_GPL(gpio_regmap_set_drvdata);
--
- void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
+
+This also doesn't work, because the used _regmap_bus_reg_read/write don't
+resolve register pages. The patch below fixes this, but maybe this missing
+functionality is intentional, and I should actually implement
+regmap_bus.read/write?
+
+----8<----
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 0d185ec018a5..20b6a2e0d2e3 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1881,6 +1881,15 @@ static int _regmap_bus_reg_write(void *context, unsigned
+int reg,
+                                 unsigned int val)
  {
- 	return gpio->driver_data;
-@@ -226,6 +220,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 		return ERR_PTR(-ENOMEM);
- 
- 	gpio->parent = config->parent;
-+	gpio->driver_data = config->drvdata;
- 	gpio->regmap = config->regmap;
- 	gpio->ngpio_per_reg = config->ngpio_per_reg;
- 	gpio->reg_stride = config->reg_stride;
-diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index 334dd928042b..a9f7b7faf57b 100644
---- a/include/linux/gpio/regmap.h
-+++ b/include/linux/gpio/regmap.h
-@@ -37,6 +37,9 @@ struct regmap;
-  *			offset to a register/bitmask pair. If not
-  *			given the default gpio_regmap_simple_xlate()
-  *			is used.
-+ * @drvdata:		(Optional) Pointer to driver specific data which is
-+ *			not used by gpio-remap but is provided "as is" to the
-+ *			driver callback(s).
-  *
-  * The ->reg_mask_xlate translates a given base address and GPIO offset to
-  * register and mask pair. The base address is one of the given register
-@@ -78,13 +81,14 @@ struct gpio_regmap_config {
- 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
- 			      unsigned int offset, unsigned int *reg,
- 			      unsigned int *mask);
+        struct regmap *map = context;
++       struct regmap_range_node *range;
++       int ret;
 +
-+	void *drvdata;
- };
++       range = _regmap_range_lookup(map, reg);
++       if (range) {
++               ret = _regmap_select_page(map, &reg, range, 1);
++               if (ret != 0)
++                       return ret;
++       }
  
- struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config);
- void gpio_regmap_unregister(struct gpio_regmap *gpio);
- struct gpio_regmap *devm_gpio_regmap_register(struct device *dev,
- 					      const struct gpio_regmap_config *config);
--void gpio_regmap_set_drvdata(struct gpio_regmap *gpio, void *data);
- void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio);
+        return map->bus->reg_write(map->bus_context, reg, val);
+ }
+@@ -2651,6 +2660,15 @@ static int _regmap_bus_reg_read(void *context, unsigned
+int reg,
+                                unsigned int *val)
+ {
+        struct regmap *map = context;
++       struct regmap_range_node *range;
++       int ret;
++
++       range = _regmap_range_lookup(map, reg);
++       if (range) {
++               ret = _regmap_select_page(map, &reg, range, 1);
++               if (ret != 0)
++                       return ret;
++       }
  
- #endif /* _LINUX_GPIO_REGMAP_H */
--- 
-2.20.1
+        return map->bus->reg_read(map->bus_context, reg, val);
+ }
+
+--
+Best,
+Sander
 
