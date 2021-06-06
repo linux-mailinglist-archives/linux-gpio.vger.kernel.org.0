@@ -2,85 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27CCC39CC88
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Jun 2021 05:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25D1D39CF42
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Jun 2021 15:07:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230085AbhFFDiN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Jun 2021 23:38:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50668 "EHLO
+        id S230090AbhFFNJX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Jun 2021 09:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230060AbhFFDiN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Jun 2021 23:38:13 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8591C061766;
-        Sat,  5 Jun 2021 20:36:14 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id t28so10516926pfg.10;
-        Sat, 05 Jun 2021 20:36:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nOHkwYNdmBG1Urjy0pkf0c1gAzx1jqpD6R5jPP1abZI=;
-        b=gkdIEZ+2pklQ0eoJSg0wvm3WrTCelFXIA2Z558rcwgM7kBqiMLpeSsM1a36W9xQSjN
-         gA5p1Z3BUT46HKYWCkmlPBw021K+qInn+fw0VxNk9l5K4GWT4aChwE20lMgv1W/n8n/M
-         vV0mgFaBJnm5Huf7BAvSVwK5pxtaw80jhRnI5R61Ebc6vgOoGAYjq6RhtDt0VmdQRXWs
-         rFhp3P145yhd8lhF66DZsp/ONiXCHnE8rcRu25JOdLi8ob0xZbyVaLj9xRA1mepxWUrD
-         2069MQAZHKWdzJLfTQJGvHl1Q4YPSsDV3KP1xsmN1uKI52Did+C33Pxx4dgGHfrI0XQj
-         GheA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nOHkwYNdmBG1Urjy0pkf0c1gAzx1jqpD6R5jPP1abZI=;
-        b=GmLXEfz9r5yP9MTvS5KFLwu/xZtaaxqwFOdKYI3UV0eo1NzgCs86cnI1rK3O0XYuVG
-         zZNkf+8zHD5e6mSGguD0/JcOtAETiL43YMF/H/UwSPqqOAaUV8QmPrGtjlysHsb4iwwl
-         2SLLv005NJF2lcINPEwiA8/YnwKKWx9WceuiK72Xqpxx2XCdEgVKdXylpfsIELU7KsH5
-         I5ikvLTGy6oKUl+u+EtGlHCINbSIFLnUhAqCUX6d74xh2Szq3amOwj/7KItHMDy+lD2z
-         dF6Muwk7GPuy2l+YHc1+3+3VOazhcf9waEkNdp/Xqpp9jpdYN3b/Ig4l+45ACB7xnbwb
-         tAXA==
-X-Gm-Message-State: AOAM5324BnLbZ22flRhgbAgz099M/aZnljZ2nFBGDPJg0wlKtMHoEOBQ
-        exqtoFrwqwA5GgJr6CLN9Ic=
-X-Google-Smtp-Source: ABdhPJybjMuq0Kv2ZVtqtcBeoJ78w55qJfilWq78XStjq8IsOM/5oOk126HyFwJD8LHTuGxqjomr3A==
-X-Received: by 2002:a63:5511:: with SMTP id j17mr12409104pgb.191.1622950574421;
-        Sat, 05 Jun 2021 20:36:14 -0700 (PDT)
-Received: from [10.230.29.202] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id u8sm5398273pgg.51.2021.06.05.20.36.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Jun 2021 20:36:13 -0700 (PDT)
-Subject: Re: [PATCH 2/2] pinctrl: bcm: Constify static pinmux_ops
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        with ESMTP id S230084AbhFFNJW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Jun 2021 09:09:22 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58AAFC061767;
+        Sun,  6 Jun 2021 06:07:32 -0700 (PDT)
+Date:   Sun, 06 Jun 2021 13:07:30 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1622984850;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iIRFb1jKnTo5dWo4vdft2FiOkoJM8ahbNvFiqMbznyk=;
+        b=ltstbgsahkZUdbqLiyLQq5sQTlO5N41+hC9GhiDBQkPCCs/IFALZjg0pGMH6Uwo7JYURUB
+        KMsAtQS2lFbW0geZ1P+v3p7wL6Ai4mi/8YpytJX/1xu84aZGw/6yTdhDgNxjZdEQVPZN7f
+        LPx5HidkeQ+/CbxiWtppSvIC2+vrxJfsIBldLFxwTB+rHox4yP8fcdhCfCogDjKswNAT8U
+        pYzU/d/mE+hZO4uHvOc78sulXGJi0Hs/S58RRja0a6ol/wFA9tsukebZIT78QfEreqWNxR
+        2WMGZcjU5ORwt+axgoTcX8LagP0aJTCdHGs9aPqyNM27yorJ3Y/BBLuJg2Ca9g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1622984850;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iIRFb1jKnTo5dWo4vdft2FiOkoJM8ahbNvFiqMbznyk=;
+        b=4lzV7xjaPAgFsIcDl+zLI85Jv5+nn9pDqmPtDep36NRE1BISmpNMGlMVs65Rl/jw4PEYRJ
+        jUy1tGr6Aq/CETAw==
+From:   "irqchip-bot for Saravana Kannan" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
+Subject: [irqchip: irq/irqchip-next] irqchip/qcom-pdc: Switch to
+ IRQCHIP_PLATFORM_DRIVER and allow as a module
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20210605185908.39982-1-rikard.falkeborn@gmail.com>
- <20210605185908.39982-3-rikard.falkeborn@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <47d98677-556f-0f07-7089-b5f95c6739b0@gmail.com>
-Date:   Sat, 5 Jun 2021 20:36:11 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.10.2
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-gpio@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+In-Reply-To: <20210518211922.3474368-1-john.stultz@linaro.org>
+References: <20210518211922.3474368-1-john.stultz@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20210605185908.39982-3-rikard.falkeborn@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <162298485012.29796.14375276303480597518.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The following commit has been merged into the irq/irqchip-next branch of irqchip:
 
+Commit-ID:     4acd8a4be614a6c191273f2247aff7374a92f318
+Gitweb:        https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms/4acd8a4be614a6c191273f2247aff7374a92f318
+Author:        Saravana Kannan <saravanak@google.com>
+AuthorDate:    Tue, 18 May 2021 21:19:21 
+Committer:     Marc Zyngier <maz@kernel.org>
+CommitterDate: Sun, 06 Jun 2021 13:57:41 +01:00
 
-On 6/5/2021 11:59 AM, Rikard Falkeborn wrote:
-> These are only assigned, either directly or via the bcm63xx_pinctrl_soc
-> struct, to the pmxops field in the pinctrl_desc struct and never
-> modified, so make them const to allow the compiler to put them in
-> read-only memory.
-> 
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+irqchip/qcom-pdc: Switch to IRQCHIP_PLATFORM_DRIVER and allow as a module
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+This patch revives changes from Saravana Kannan to switch the
+qcom-pdc driver to use IRQCHIP_PLATFORM_DRIVER helper macros,
+and allows qcom-pdc driver to be loaded as a permanent module.
+
+Earlier attempts at this ran into trouble with loading
+dependencies, but with Saravana's fw_devlink=on set by default
+now we should avoid those.
+
+[jstultz: Folded in with my changes to allow the driver to be
+ loadable as a permenent module]
+
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Maulik Shah <mkshah@codeaurora.org>
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: iommu@lists.linux-foundation.org
+Cc: linux-gpio@vger.kernel.org
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20210518211922.3474368-1-john.stultz@linaro.org
+---
+ drivers/irqchip/Kconfig    | 2 +-
+ drivers/irqchip/qcom-pdc.c | 8 +++++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 62543a4..4d5924e 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -415,7 +415,7 @@ config GOLDFISH_PIC
+          for Goldfish based virtual platforms.
+ 
+ config QCOM_PDC
+-	bool "QCOM PDC"
++	tristate "QCOM PDC"
+ 	depends on ARCH_QCOM
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	help
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index 5dc63c2..32d5920 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -11,9 +11,11 @@
+ #include <linux/irqdomain.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
++#include <linux/of_irq.h>
+ #include <linux/soc/qcom/irq.h>
+ #include <linux/spinlock.h>
+ #include <linux/slab.h>
+@@ -459,4 +461,8 @@ fail:
+ 	return ret;
+ }
+ 
+-IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
++IRQCHIP_PLATFORM_DRIVER_BEGIN(qcom_pdc)
++IRQCHIP_MATCH("qcom,pdc", qcom_pdc_init)
++IRQCHIP_PLATFORM_DRIVER_END(qcom_pdc)
++MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
++MODULE_LICENSE("GPL v2");
