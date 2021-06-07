@@ -2,73 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2670639D6C9
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jun 2021 10:09:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2994539D880
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jun 2021 11:19:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229966AbhFGILT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Jun 2021 04:11:19 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:35632 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229545AbhFGILT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Jun 2021 04:11:19 -0400
-Received: by mail-lj1-f181.google.com with SMTP id n17so3823812ljg.2
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Jun 2021 01:09:28 -0700 (PDT)
+        id S230329AbhFGJVC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Jun 2021 05:21:02 -0400
+Received: from mail-oi1-f169.google.com ([209.85.167.169]:34685 "EHLO
+        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230262AbhFGJU7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Jun 2021 05:20:59 -0400
+Received: by mail-oi1-f169.google.com with SMTP id u11so17390849oiv.1;
+        Mon, 07 Jun 2021 02:19:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AJNQotdL7mBjqDK/i6BKdnazNCtCGN8zaF8D6zYRhMY=;
-        b=weOnKpN4tS8axKHUOKJDGbKfJIvgNkD7dyFA9rrpOhtRoUBevjdNocug35o54J+Yk4
-         epRxMipw0liSPdILI2EdIQ0hsjWRY1Zx6yg3qhw6HELLIx1gf7flXLH4s8BKhKhpLjT1
-         B9vTmTpm2XUy1PMros3T3V+YOAoAxpflRTTAVL9NfZerwBxISRK3Ikg4JUJnFtuSlsst
-         4Pckh7JeFB87sc26mg0fqoePqav/vujGI280ltgybRzU4kmjulSAYvEEthjFJOBEAQch
-         US95MsMzTQai62+ASJsQUEy4JuLOljpt2k2ekhjrNgFgH5yLEo1BK7+xQ74TG1QDP7m2
-         cpLQ==
+        bh=vaMfDc5+xZHaTJ5VtyzdwaPy3rvFSYLfAqTz4rcxcKQ=;
+        b=YB5mufC+GqLiPx78PP4hKgVJO5vjSwTwzg6cfAoYZhgCaSEWj4uXQPC0+BJUWyI681
+         epWToEASJO8izUjKBhZOGo2eLaTB7eqT5hanfAmfXUDeja4SSQekNVo5UGFvtNDyuUE9
+         tqgNhP9n625Oem72nQ03IW/uixZki+GMiV7mYhaS5j/bhH7MWTPWoyZkW4cpQ+5i20G8
+         iuEA9njdQrliLC0oz+k9n/vaGRcPB6c9wbJm6M3ZkdGA5A9Dcvn3F3nGQwRJLnW6Whgd
+         7SL7HiJlCSbbFBDd2FX1I24/iyT97piIkA50ERwPV0cFXzJaMlsykD8udqBK0viH0pjT
+         /TuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AJNQotdL7mBjqDK/i6BKdnazNCtCGN8zaF8D6zYRhMY=;
-        b=dmFip657RnTrZlr3ygnfcWYDf0hOXNo7F8DYo0ioAnZdKBe6QeqWv4AWoTvnBRZFQl
-         J3Gogo0h1eErN4u1mCx5gUU5/FMvIGQNjwHo0OShA8ynlmMcnNzwKkCkgSxVBqPJIk4i
-         +uR4kEyaZO5Q/4BP6PrmDpuTN4ILnzYBRv/nEjmQvx6WIPzYmCsOXxfSwWQOaPpFgvIL
-         9zWBTb6c9qJ+EJuV2nkkbOg9Dk5E51JFDXdPGEJex+51hOgBqqzgmHrHmtHckgZuqNyf
-         uB6/YUMRi7CkmeJTS+AgfsROAlrTrep0sL4e0FYtALHU5+VDtynOdCDJCLHi0ozmkk8j
-         CMlA==
-X-Gm-Message-State: AOAM531CQvozwZcbEUFMX6VKQVGY1ab45NeYiPSkaT8l9enFivj/8S+V
-        yM1jq/BFWcKqnGT9ioHgOjMjJmY7cjwMonr2G+72Kw==
-X-Google-Smtp-Source: ABdhPJxxdKZPAbxY1BAZW4RmsEigy3uml8wcXhbHWYHoD7+ocbk4ASZ97dVxgth1VMKfh3dEwFHkFYx1/foO/vZ+/2I=
-X-Received: by 2002:a05:651c:1411:: with SMTP id u17mr3470827lje.438.1623053307601;
- Mon, 07 Jun 2021 01:08:27 -0700 (PDT)
+        bh=vaMfDc5+xZHaTJ5VtyzdwaPy3rvFSYLfAqTz4rcxcKQ=;
+        b=Qy7sM6MCtcK0jrzQFKddu+wNs7Xx0nxaCNC5HF5pyjyg9/4gA2tx6PaVrqT9EyrE8f
+         BpY5bNQsJ+NdcpNv8fiDDueJgPaIf2qkoV58LT3P6QIeVIUdUPkrc7oDOA94WVk+l6No
+         BJSslt/pJ5tkRbLjUmlrHP9d5sCp10HuDTcXbrGUt6x7QFuEcAbIM5GxeL5tij5fygza
+         00/CRMvrDp0jEuVCqah53fI2emNiF7wEE5HEEySGf/TqaM6OaKmmXVfUk8TOIGkBhlmr
+         lJsekuPcMiTZ8yPTQtZOiEgue9CvPckjKILowjJ+0Gtg6tVT78zZd8ILRZfoaLkkMB3t
+         Q20g==
+X-Gm-Message-State: AOAM532R+7MYbNgg6Xxyqgdf1HOuZuNJQaTTI5fIsge5AFLYm0T8Z6y2
+        HCgQ46RZ+x+jxKjoBsXvkDq3QurGD4zkTbtbhXxtQfSFmy4=
+X-Google-Smtp-Source: ABdhPJzmAVq+vWXAYtgelslvcmb9xZfuSXaCyhX01mJIED4SxLCj2JymDNAcopsMCdiSE7lih9GF7um8RJSyFifHdew=
+X-Received: by 2002:a54:400a:: with SMTP id x10mr19351976oie.158.1623057487457;
+ Mon, 07 Jun 2021 02:18:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210603140618.3044976-1-yukuai3@huawei.com>
-In-Reply-To: <20210603140618.3044976-1-yukuai3@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 7 Jun 2021 10:08:16 +0200
-Message-ID: <CACRpkdZmn8YS7g=EYnc7EDs_sbzT2qM+00q7YL5R+d9OyBC2LA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: fix build error without CONFIG_PINCTRL_MTK
-To:     Yu Kuai <yukuai3@huawei.com>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
+References: <20210604115159.8834-1-sergio.paracuellos@gmail.com> <CACRpkdbn+OTdTgTj5wmDiegetoe=Wbz3YbWMwqR9TQAFND+H4g@mail.gmail.com>
+In-Reply-To: <CACRpkdbn+OTdTgTj5wmDiegetoe=Wbz3YbWMwqR9TQAFND+H4g@mail.gmail.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Mon, 7 Jun 2021 11:17:56 +0200
+Message-ID: <CAMhs-H-fRzfU8E94O4DjHGyHO2_GKhOfC0cxiGiJZ5PkxrS5Cg@mail.gmail.com>
+Subject: Re: [PATCH 0/6] pinctrl: ralink: move all pinmux arch stuff into
+ driver code
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     John Crispin <john@phrozen.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        yi.zhang@huawei.com
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
+        NeilBrown <neil@brown.name>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 3, 2021 at 3:57 PM Yu Kuai <yukuai3@huawei.com> wrote:
+Hi Linus,
 
-> If CONFIG_PINCTRL_MT8365 is set without CONFIG_PINCTRL_MTK,
-> following build errors will be triggered:
+On Mon, Jun 7, 2021 at 9:23 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Fri, Jun 4, 2021 at 1:52 PM Sergio Paracuellos
+> <sergio.paracuellos@gmail.com> wrote:
+>
+> > We currently have 'drivers/pinctrl/ralink/' with common code to all of them
+> > in 'pinctrl-rt2880.c' file. Pinctrl data was being passed in SoC initilization
+> > to the driver. Instead of doing that just move all related code to the driver
+> > itself. We maintain for all of them compatible string to avoid to make more
+> > changes in dts's an so on. If a new compatible string is neccessary to be
+> > defined for each different SoC, we can change them after this series are
+> > applied.
+> >
+> > I have only tested MT7621 platform using GNUBee PC1 board. I don't have
+> > other boards to test other SoC changes.
+> >
+> > This series are rebased on the master branch of linux-pinctrl git tree so
+> > I expect this to be merged through pinctrl tree. Thomas, if 'linux-mips'
+> > is preferred to merge this series just let me know and I can rebase them
+> > to make you things easier.
+> >
+> > Thanks in advance for your time.
+>
+> I have simply applied all patches so we get some testing in linux-next
+> (last time we found some snags through linux-next).
 
-I made a similar patch, this patch is wrong because if you check the other
-entries in the Kconfig you realized that we select the dependency for these
-drivers.
+Good! Let's see what happen, then :)
 
-Yours,
-Linus Walleij
+>
+> This is an important modernization of the ralink SoCs so I
+> am pushing the fastforward button a bit.
+
+I also do believe that having moved all of this stuff from the arch
+headers to the driver itself is a very good step.
+
+>
+> If some ralink maintainer has opinions they can either patch it or
+> complain loudly so I can take the patches out again.
+
+Please, complain loudly if necessary :). As I said I only tested the
+changes for mt7621 SoC, so it might be something wrong there.
+
+>
+> Yours,
+> Linus Walleij
+
+Thanks!
+    Sergio Paracuellos
