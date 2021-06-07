@@ -2,158 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 985F639D214
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jun 2021 00:53:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CA1239D43B
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jun 2021 07:00:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231236AbhFFWzL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Jun 2021 18:55:11 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:53791 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230368AbhFFWzK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Jun 2021 18:55:10 -0400
-Received: (Authenticated sender: n@nfraprado.net)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 861051BF203;
-        Sun,  6 Jun 2021 22:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nfraprado.net;
-        s=gm1; t=1623019997;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LEITmbgA+ypfFiT6sDRv13/uCob4oKC9Sq9src0AzZE=;
-        b=chA+i0RmfXwj/WF8vUQcsG8LWn2bONkphlI9FxGByy3xXZzQ3/zHKFPGJxmKXuKUW335J7
-        jYK4CRJ9+UN7xZA7RoqojnjXZW+0cqiNSJEER76idFul1Hmyyid+LU7eBwqw4Yf6VUnAAy
-        EO/oCOnOkrJSrla2lWMUer63YFPTS6rPVGC6R5VJrg9wTSN5B9e0Ariq05tQnFO7ePJjQo
-        bl4pkIEG3/A5X1Ubh0QT5mRcrGJQ8WehYjr1NfQyPqrYiwulB4ynbpB9vRe3MCb4L15B0r
-        jLNt083VPjq8mnz5SK6VyymWvFVmHAPrKBJPANhNFdLyuGqe1sYaP2/+H+QnUQ==
-Date:   Sun, 6 Jun 2021 19:52:25 -0300
-From:   =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <n@nfraprado.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        coresight@lists.linaro.org, devicetree@vger.kernel.org,
-        kunit-dev@googlegroups.com, kvm@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 00/34] docs: avoid using ReST :doc:`foo` tag
-Message-ID: <20210606225225.fz4dsyz6im4bqena@notapiano>
-References: <cover.1622898327.git.mchehab+huawei@kernel.org>
- <20210605151109.axm3wzbcstsyxczp@notapiano>
- <20210605210836.540577d4@coco.lan>
+        id S229449AbhFGFCq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Jun 2021 01:02:46 -0400
+Received: from mail-pj1-f46.google.com ([209.85.216.46]:38828 "EHLO
+        mail-pj1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229436AbhFGFCq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Jun 2021 01:02:46 -0400
+Received: by mail-pj1-f46.google.com with SMTP id m13-20020a17090b068db02901656cc93a75so11129599pjz.3
+        for <linux-gpio@vger.kernel.org>; Sun, 06 Jun 2021 22:00:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TBzkw3pjuLvtwqzaoprCbt8qAHs6UjkaGogTqGGAYtc=;
+        b=EwNUpP4e2UljMG9Yu6GlBUaQffTdmpIredF1PjrHjk6AVhcZ7v3gZM5pe/2M6jESew
+         nJJjTBrTpKYZIeyAA9RymzUBQgY2TnkqzV2A4yQx+Jh6zJQ9Y5LVA5ltydsFX/O1TGMs
+         QTlfB5IM0bkHp1yUn+eVzpulJPVnM1JOyK3Wkizd/orTaqpPhKSrLRSJNgUFFeZJ6BT0
+         7Gd7VueEaTP1qsXi5rJA8sg2srxx7UjYqMHIZivkxzlEMqOtndHVpTTXkLwNuxsiW8wI
+         tdyK7kXzGoNRM3pnCfm+Lmu1iiOogB2NIM6n2li2dwHlifbhxggl1FtI+hL3YiyfyEE7
+         JlAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TBzkw3pjuLvtwqzaoprCbt8qAHs6UjkaGogTqGGAYtc=;
+        b=ZbQxqfCsSmg/Y1fFwPBbiD7UnGHNT2Ihu7aoJaI0Y4s6jTuY242JJh4izMy/YqmTE6
+         F8ZV6+wDPe9FPgdO9VLBIt2+uY0VWZbgU+KIgSx3QQLz3W+soAdaEfsST3XJVxeI+K2n
+         Tt3dl0iWWHVRe3sXDkLxYrAXvqlGPMEFjXD9ADOYajjE554yspcZSDTi8Y18/6Vn8rAg
+         N6uMAQvI00TnTuYtiUoN72Mu7HmOp4HTzmMoGtPs3iMzFcQ9sBoMsEI66424kLkJALEc
+         GnxGoje+VF5pD/Tp1+N4z5S9NBJdphM+7ZbhSRXm4H9MDLJYYeAK8wGQPrBDvgyZXgW2
+         zVYw==
+X-Gm-Message-State: AOAM5338QF9Bng6mFUPdZv1uYnJT9DeHSw9BrFW7BInFZKVHabGJWSqj
+        95WVrPLUzYG+8Fc64iuDlT0SWncWgfM=
+X-Google-Smtp-Source: ABdhPJwgsZGxUR6tJ+o1F2KwXYft/gr4/Tvean/m04f8qkTIp4IH8+CD8LkKgqFlvuiw5ZsMcfqZCQ==
+X-Received: by 2002:a17:902:b683:b029:ee:f0e3:7a50 with SMTP id c3-20020a170902b683b02900eef0e37a50mr16127677pls.7.1623041995595;
+        Sun, 06 Jun 2021 21:59:55 -0700 (PDT)
+Received: from sol (106-69-174-31.dyn.iinet.net.au. [106.69.174.31])
+        by smtp.gmail.com with ESMTPSA id o3sm7486115pgh.22.2021.06.06.21.59.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Jun 2021 21:59:54 -0700 (PDT)
+Date:   Mon, 7 Jun 2021 12:59:50 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][PATCH v3] core: implement v2.0 API
+Message-ID: <20210607045950.GA18318@sol>
+References: <20210604094100.30075-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210605210836.540577d4@coco.lan>
+In-Reply-To: <20210604094100.30075-1-brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jun 05, 2021 at 09:08:36PM +0200, Mauro Carvalho Chehab wrote:
-> Em Sat, 5 Jun 2021 12:11:09 -0300
-> Nícolas F. R. A. Prado <n@nfraprado.net> escreveu:
+On Fri, Jun 04, 2021 at 11:41:00AM +0200, Bartosz Golaszewski wrote:
+> This is the bulk of changes for the core C library.
 > 
-> > Hi Mauro,
-> > 
-> > On Sat, Jun 05, 2021 at 03:17:59PM +0200, Mauro Carvalho Chehab wrote:
-> > > As discussed at:
-> > > 	https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
-> > > 
-> > > It is better to avoid using :doc:`foo` to refer to Documentation/foo.rst, as the
-> > > automarkup.py extension should handle it automatically, on most cases.
-> > > 
-> > > There are a couple of exceptions to this rule:
-> > > 
-> > > 1. when :doc:  tag is used to point to a kernel-doc DOC: markup;
-> > > 2. when it is used with a named tag, e. g. :doc:`some name <foo>`;
-> > > 
-> > > It should also be noticed that automarkup.py has currently an issue:
-> > > if one use a markup like:
-> > > 
-> > > 	Documentation/dev-tools/kunit/api/test.rst
-> > > 	  - documents all of the standard testing API excluding mocking
-> > > 	    or mocking related features.
-> > > 
-> > > or, even:
-> > > 
-> > > 	Documentation/dev-tools/kunit/api/test.rst
-> > > 	    documents all of the standard testing API excluding mocking
-> > > 	    or mocking related features.
-> > > 	
-> > > The automarkup.py will simply ignore it. Not sure why. This patch series
-> > > avoid the above patterns (which is present only on 4 files), but it would be
-> > > nice to have a followup patch fixing the issue at automarkup.py.  
-> > 
-> > What I think is happening here is that we're using rST's syntax for definition
-> > lists [1]. automarkup.py ignores literal nodes, and perhaps a definition is
-> > considered a literal by Sphinx. Adding a blank line after the Documentation/...
-> > or removing the additional indentation makes it work, like you did in your
-> > 2nd and 3rd patch, since then it's not a definition anymore, although then the
-> > visual output is different as well.
+> The documentation has been extended to document the lifetime management
+> of objects explictly.
 > 
-> A literal has a different output. I think that this is not the case, but I 
-> didn't check the python code from docutils/Sphinx.
+> The concept of attributes has been removed - instead the translation from
+> configuration options to kernel request happens at the time of the line
+> request call and can only fail at this stage - the config mutators no
+> longer return any value.
+> 
+> If the caller has passed a config that is too complicated, the request
+> function will set errno to E2BIG which stands for: "Argument list too
+> long". If the caller has passed an invalid value to any of the line config
+> mutators, the error will be returned at the time of making the request.
+> 
+> The direction and edge options have been split from the former
+> request_type.
+> 
+> The objects are no longer reference counted and no longer can be the
+> responsibility for their lifetime shared.
+> 
+> There are many other minor tweaks everywhere.
+> 
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
+> Hi Kent,
+> 
+> this is another iteration of the new API. This time there are no big
+> changes, mostly just documentation and naming-convention tweaks.
+> 
+> I will push it out to a semi-official next/libgpiod-v2.0 branch and any
+> follow-up changes will be squashed into the v2.0 API there.
+> 
 
-Okay, I went in deeper to understand the issue and indeed it wasn't what I
-thought. The reason definitions are ignored by automarkup.py is because the main
-loop iterates only over nodes that are of type paragraph:
+I haven't looked through all the code, but gpiod.h looks good to me, and
+I'm sure any issues in the implementation will come out in the wash, so
+go for it.
 
-    for para in doctree.traverse(nodes.paragraph):
-        for node in para.traverse(nodes.Text):
-            if not isinstance(node.parent, nodes.literal):
-                node.parent.replace(node, markup_refs(name, app, node))
-
-And inspecting the HTML output from your example, the definition name is inside
-a <dt> tag, and it doesn't have a <p> inside. So in summary, automarkup.py will
-only work on elements which are inside a <p> in the output.
-
-Only applying the automarkup inside paragraphs seems like a good decision (which
-covers text in lists and tables as well), so unless there are other types of
-elements without paragraphs where automarkup should work, I think we should just
-avoid using definition lists pointing to documents like that.
-
->  
-> > I'm not sure this is something we need to fix. Does it make sense to use
-> > definition lists for links like that? If it does, I guess one option would be to
-> > whitelist definition lists so they aren't ignored by automarkup, but I feel
-> > this could get ugly really quickly.
-> 
-> Yes, we should avoid handling literal blocks, as this can be a nightmare.
-> 
-> > FWIW note that it's also possible to use relative paths to docs with automarkup.
-> 
-> Not sure if you meant to say using something like ../driver-api/foo.rst.
-> If so, relative paths are a problem, as it will pass unnoticed by this script:
-> 
-> 	./scripts/documentation-file-ref-check
-> 
-> which is meant to warn when a file is moved to be elsewhere. Ok, it
-> could be taught to use "../" to identify paths, but I suspect that this
-> could lead to false positives, like here:
-> 
-> 	Documentation/usb/gadget-testing.rst:  # ln -s ../../uncompressed/u
-> 	Documentation/usb/gadget-testing.rst:  # cd ../../class/fs
-> 	Documentation/usb/gadget-testing.rst:  # ln -s ../../header/h
-
-Yes, that's what I meant. 
-
-Ok, that makes sense. Although after automarkup.py starts printing warnings on
-missing references to files (which is a patch I still need to resend), it would
-work out-of-the-box with relative paths. automarkup wouldn't face that false
-positives issue since it ignores literal blocks, which isn't as easy for a
-standalone script. But that's still in the future, we can discuss what to do
-then after it is implemented, so full paths seem better for now.
-
-Thanks,
-Nícolas
-
-> 
-> If you meant, instead, :doc:`../foo`, this series address those too.
-> 
-> Regards,
-> Mauro
+Cheers,
+Kent.
