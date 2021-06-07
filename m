@@ -2,55 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4C9D39D594
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jun 2021 09:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A478C39D5A2
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jun 2021 09:12:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbhFGHKl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Jun 2021 03:10:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbhFGHKl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Jun 2021 03:10:41 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41454C061766
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Jun 2021 00:08:49 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id f11so24461486lfq.4
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Jun 2021 00:08:49 -0700 (PDT)
+        id S229578AbhFGHNv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Jun 2021 03:13:51 -0400
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:40534 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229545AbhFGHNu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Jun 2021 03:13:50 -0400
+Received: by mail-lf1-f46.google.com with SMTP id w33so24591635lfu.7
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Jun 2021 00:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2sChFupNDISguJdQ93OuywrJgFnASQqUTk66QD3fheU=;
-        b=jEdpGpSxxxc/JBejLPt2hZOkIv+v1lW0s2dtES7baLoyk8uE+J2fBiI78gXF1g2VV8
-         sWn9RQE+J6fcHzxhHQiiGKf4pw9GkqkwLHFAbpXNUQSjEpRVq/KgDCHwaxhyQm1AbUw8
-         7ZHPZf3VsTW/zc/7ZJU3FIoChYlNF0rAH/UW3hivtdq0i1+jth0eYLf+LnBczxwBtSQn
-         VLK5LwPCSuEV7JU9bAF1lqn5Ft29DTFDkowoh1YIvR/+S9J1Q7++w3aFK+NOTs+isWJV
-         9L5qbqSlsrqch+MhXomb/3BJI3vONZtF+dkksWjxjrI8jhSRcKvpbJclAZYPbdBBmKeX
-         VcMg==
+        bh=pJqZi3n7j9AKUs/vG9dNnCAv8v6cQQzyBgG+YQYc710=;
+        b=heIRpxVgLgVE9VbdvxJ9bVlbUFs3IX84r8llXAY0+5b8E1n7RAOm1a1166iWY/gOLD
+         XNZxJFIkJuMW8RVuznJEipdDCSQJy5E+KgniSp7IQJREoBsna8hcz1a5SNFKQPui8rlV
+         1M+8FU5U6Z8ol8maP+iXKxQbGasIkt1OOngMn6ssuSQydwLBYoEoFEhG/jB3vMor/Yg/
+         rKFedQHC1A4TagAs5f5HunysdBj4CAlO3GRJzHS8zjVg1jS4CBcmgpjm/3NKKiGdZqqz
+         G10Z2zZcFVddak+M2tb/wU6iy6I2xXgkwFQQSFPN8wyaPgHWKZem/NWPJHIrmkR+nbAp
+         U9uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2sChFupNDISguJdQ93OuywrJgFnASQqUTk66QD3fheU=;
-        b=LubonVkEtksqJLcDbKpHl5nLo1RJkSGFHem2wxwyAB4GjpaR5u7XZGtqe32CeQAtxJ
-         9WFzVuISgSk4QJkSArY0uFzRCm8S3gNH1ejT0tB0WZ90kXES0IQuiHP8rOy7pjJXB3EM
-         4f9U/s2OFofDovU30vqPmZ+esXFJBOo2yKuEZOrxDD53VYVmyOHcrqT7jCTyW2SOx93Y
-         YAfoydWyEfxQmab3sZ6NPhO33iC4aXUhD4IZaxprbPwumKJo5N0n0as1LSgP2lyHPMbx
-         Pw5m7LVttunDOAeu7JdCoAZVy1AVNKD3ffQBMwXDFV6UqqNNaopQT6GAnSVlP6uqsp4Y
-         TdOQ==
-X-Gm-Message-State: AOAM530Zt1n9d5XNuku7QcJW2eQ6Ru46hRPKiBxJyOobyEMUcqY6F7+P
-        F2AuhNqZgShFHTxG/jygCC2zyrs0Qi9PQQ2OqzLwqw==
-X-Google-Smtp-Source: ABdhPJyi+8lO2eHOnf1EGT4R9C29fTCmfSZeXRtPWCzMV0LR8z1giBWDeA783U1aC4FGoaA9oN6Iint77xKwduKuttQ=
-X-Received: by 2002:a05:6512:2105:: with SMTP id q5mr10699515lfr.649.1623049727938;
- Mon, 07 Jun 2021 00:08:47 -0700 (PDT)
+        bh=pJqZi3n7j9AKUs/vG9dNnCAv8v6cQQzyBgG+YQYc710=;
+        b=tqFhf27v4HL4t4mjeisWImmtkfgo7k5ig/5VllzOTWyc1KNN2Wg0+VXCaetrRJWyAT
+         FTVeJ97/vA50iLMhuhJikyipb+HxRlCR4v2kkS6kQRjMNhVlw8kE0WS9NkBKaTlIS+mh
+         sltHcXpH0Mdq5WSnY1GN+E+cKVgV6SdSpg5/5ZmypmDb4BoqC7mrlQ9btvfULv6mfgMe
+         i4EvlLlDwi0nHoIf4SLomBq7CJkzszY+WPLkvw1er5eJ84tMUOUjNMRBqX3IADbPRq+1
+         l50GgYWoIbf3Unwbnf5k73TQTHvoFaP4hUB8jVcRIkZrqQhVA+BUORVgfbzZWwjevHKr
+         Q3ZA==
+X-Gm-Message-State: AOAM531QRA7lpfMiSu248NbIPdiT9oIaxwYuVi+ki5156vWLbkXVjRWd
+        +XSow/cRVvL5+9i8w0ZF3QKwBLhyo56vBqst2s8hPw==
+X-Google-Smtp-Source: ABdhPJwVTqQeeEbNWKQksEGrk3q9M/AgF1nnmc4hYNxFcVK0tYr6p+ohPNX2kcVIGDfNigWTl/LzEZ/LN19HxvF2LHI=
+X-Received: by 2002:a05:6512:3241:: with SMTP id c1mr11434271lfr.29.1623049858937;
+ Mon, 07 Jun 2021 00:10:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210604055337.20407-1-sergio.paracuellos@gmail.com>
-In-Reply-To: <20210604055337.20407-1-sergio.paracuellos@gmail.com>
+References: <20210604055536.20606-1-sergio.paracuellos@gmail.com>
+In-Reply-To: <20210604055536.20606-1-sergio.paracuellos@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 7 Jun 2021 09:08:37 +0200
-Message-ID: <CACRpkdYLwdgws+fDcb_hNz2=WD4+qkHiwWQgpgFNfWLU=PwSiw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: ralink: pinctrl-rt2880: avoid to error in calls
- is pin is already enabled
+Date:   Mon, 7 Jun 2021 09:10:47 +0200
+Message-ID: <CACRpkdbmu32csSoptceUcaVYxXSFwk316k5Ru09KCodvLXMOPA@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: ralink: pinctrl-rt2880: avoid to error in
+ calls if pin is already enabled
 To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
@@ -59,7 +56,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 4, 2021 at 7:53 AM Sergio Paracuellos
+On Fri, Jun 4, 2021 at 7:55 AM Sergio Paracuellos
 <sergio.paracuellos@gmail.com> wrote:
 
 > In 'rt2880_pmx_group_enable' driver is printing an error and returning
@@ -74,8 +71,11 @@ On Fri, Jun 4, 2021 at 7:53 AM Sergio Paracuellos
 > bad problem.
 >
 > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> ---
+> Changes in v2:
+>     - Fix commit message s/is/if
 
-Patch applied for fixes.
+I just fixed up the commit manually instead, no big deal.
 
-Yours,
+Thanks!
 Linus Walleij
