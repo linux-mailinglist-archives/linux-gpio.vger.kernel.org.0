@@ -2,66 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52AC939DC44
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jun 2021 14:26:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8DFC39DC79
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jun 2021 14:32:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230252AbhFGM1u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Jun 2021 08:27:50 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:7128 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbhFGM1t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Jun 2021 08:27:49 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FzCFS1dNkzYrCH;
-        Mon,  7 Jun 2021 20:23:08 +0800 (CST)
-Received: from dggemi762-chm.china.huawei.com (10.1.198.148) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Mon, 7 Jun 2021 20:25:56 +0800
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- dggemi762-chm.china.huawei.com (10.1.198.148) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Mon, 7 Jun 2021 20:25:56 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <linus.walleij@linaro.org>, <radim.pavlik@tbs-biometrics.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] pinctrl: mcp23s08: Fix missing unlock on error in mcp23s08_irq()
-Date:   Mon, 7 Jun 2021 20:44:29 +0800
-Message-ID: <1623069869-39309-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        id S230237AbhFGMeV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Jun 2021 08:34:21 -0400
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:41944 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230294AbhFGMeG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Jun 2021 08:34:06 -0400
+Received: by mail-oi1-f170.google.com with SMTP id t40so4837791oiw.8
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Jun 2021 05:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tvr2LpJO+zoZVn/wehOpfwJd2m7kH19dGowal30QNMo=;
+        b=aH7lHOFR5B7dsCa2m5tbQCoN750DuUFWr0HiN5vZAs6LAs+CGFdJpeEVFHtXY0kvoU
+         jrIBJ8bF0F4lN3VniDDO/EdA3I7SbMGk0BzQnunqQSI9dNlewZtGbkgt9ClHH5oR4h5E
+         Gjz2gUjjV+hDNF+tW0h7hRI+XSXv8XVKpZvgQO7VFo9uk4nvKKAL9bDRDG3G0lc++FyG
+         SG5s88en7owxCA5IjiLYZy5zQZroX82O9IVLHv1pHQPnS3TGR8X7mxEIKCVFWESbkgWl
+         52CoisHehVZ2VJcHrwk0XQse6tNIXeW7iKgCoQuLyfKTb9Ew86ZbFhzSdESJnT60zhuw
+         e45w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tvr2LpJO+zoZVn/wehOpfwJd2m7kH19dGowal30QNMo=;
+        b=p78XZvKPZMnwwmsN5I2P1h+2hYHQNSwk7wD02utNQZl9zymgAAx8XOp1FSFIeE4Yxu
+         7704fWgLaB6oEHtCcvxiFTC7jXTVzsGBO8xEcdZQqPMGov9AamyGIJvbGm4rTcTivx7T
+         deOsu/jAtF5BBZQtVvsESiz9i1xucmIXZsiIF/2mVfyZ4AOv7tYvGpFAQoQ9J+HP6A1X
+         na09TBb5syrf2B1b0ekU9nDVemThRbRe3CkFtdMFOXiM2UbUJ9LRtku6n9kb7Ub8EwGR
+         HAv2vuKsl2kh5sCnR55Vbk+IpBrOj4PxSX44VPbChRA85ybjwL3uro+dGMDDj15hfp9F
+         d91Q==
+X-Gm-Message-State: AOAM532jNHZnSCMc7+2jJFKp6pMjTQdxMwVpt9aWK8o12hqIP3rO4JKA
+        IDSzAkTm9oVs0syH6JrnHvvi45q7iGsNn5FFXq+vjQ==
+X-Google-Smtp-Source: ABdhPJxujfBEdFxkSmhJaaZBeJGlg2pawxqj0/1hGlU+4+i8J0LQb3IRXrgR10on+BxmXf/59rZHa0pvqkZakHHmsmo=
+X-Received: by 2002:a54:438e:: with SMTP id u14mr17939700oiv.126.1623069060601;
+ Mon, 07 Jun 2021 05:31:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggemi762-chm.china.huawei.com (10.1.198.148)
-X-CFilter-Loop: Reflected
+References: <20210607113840.15435-1-bhupesh.sharma@linaro.org>
+ <20210607113840.15435-5-bhupesh.sharma@linaro.org> <CAHp75Vd7z6ivOxHikqP5j+yPtV7C8GBogwVUAziLznSatH+8EA@mail.gmail.com>
+In-Reply-To: <CAHp75Vd7z6ivOxHikqP5j+yPtV7C8GBogwVUAziLznSatH+8EA@mail.gmail.com>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Date:   Mon, 7 Jun 2021 18:00:48 +0530
+Message-ID: <CAH=2NtxtzRhOzekHxn+V4DSYmwncX1wSRbKOe=PNkcTsQ3jqiQ@mail.gmail.com>
+Subject: Re: [PATCH 4/8] regulator: qcom-rpmh: Add new regulator types found
+ on SA8155p adp board
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        bhupesh.linux@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the missing unlock before return from function mcp23s08_irq()
-in the error handling case.
+On Mon, 7 Jun 2021 at 17:39, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Jun 7, 2021 at 2:41 PM Bhupesh Sharma <bhupesh.sharma@linaro.org> wrote:
+> >
+> > SA8155p-adp board has two new regulator types - pmm8155au_1 and
+> > pmm8155au_2.
+> >
+> > The output power management circuits in these regulators include:
+> > - FTS510 smps,
+> > - HFS510 smps, and
+> > - LDO510 linear regulators
+>
+> ...
+>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Liam Girdwood <lgirdwood@gmail.com>
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Andy Gross <agross@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-gpio@vger.kernel.org
+> > Cc: bhupesh.linux@gmail.com
+>
+> Use --cc or similar option when run `git send-email`, no need to
+> pollute the commit message with these.
 
-Fixes: 897120d41e7a ("pinctrl: mcp23s08: fix race condition in irq handler")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- drivers/pinctrl/pinctrl-mcp23s08.c | 1 +
- 1 file changed, 1 insertion(+)
+It's just a matter of preference IMO. I prefer to use a Cc list
+here.
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index 799d596..e12aa09 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -353,6 +353,7 @@ static irqreturn_t mcp23s08_irq(int irq, void *data)
- 
- 	if (intf == 0) {
- 		/* There is no interrupt pending */
-+		goto unlock;
- 		return IRQ_HANDLED;
- 	}
- 
--- 
-2.6.2
+> > +static const struct rpmh_vreg_init_data pmm8155au_1_vreg_data[] = {
+>
+>
+> > +       {},
+>
+> Comma is not needed in the terminator line.
 
+Hmm.. it's similar to the syntax already used at several places in this file.
+See ' struct rpmh_vreg_init_data pm8150l_vreg_data[] ' for example.
+
+Unless there is an obvious issue with it, let's use the same to keep
+things similar from a syntax p-o-v.
+
+Thanks,
+Bhupesh
+
+>
+> > +};
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
