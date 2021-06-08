@@ -2,140 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D59639F615
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jun 2021 14:11:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB31539F917
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jun 2021 16:28:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232146AbhFHMNV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Jun 2021 08:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231330AbhFHMNV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 8 Jun 2021 08:13:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 684516128D;
-        Tue,  8 Jun 2021 12:11:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623154288;
-        bh=SIi6eVYI+iqIU91t34ub00u4QndMSBG+LW2EGQ81hKs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UxgN9DPwHE9o0i2wrID540YisZ5d0uf3lyr2Fr0wC45qCgMoujAsW+wpkCLnEw1Z5
-         3GM7Bf7y3ajThtYFZcOrkZ9+Lk10eq2bhKE2dvIvOOeag+0I1S7Rml3zhqsBQWGTC9
-         7QUVoutuI+Wql0CI5wRoaEbcSLp6/A4Sx+x9ojtF1qrBAGEMmZybapPrtdidCNS9RP
-         DGI0hLccbKy2I/27Ky4pii5FhDBgiiP7bLK+17uIEpBkve09Aszr7Z3zLzexJmvs0d
-         ByLoz13uDzHqiRwmU60zBiqOOmWuoBb1cFjzAPgvqoN1lZqE25j82kgM6WyxMrNDmO
-         RAQq7IDnPbkdg==
-Date:   Tue, 8 Jun 2021 13:11:22 +0100
-From:   Will Deacon <will@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
+        id S233384AbhFHOa0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Jun 2021 10:30:26 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:8095 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233358AbhFHOaR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Jun 2021 10:30:17 -0400
+Received: from dggeml759-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FzswD4DkmzYrKm;
+        Tue,  8 Jun 2021 22:25:32 +0800 (CST)
+Received: from localhost.localdomain (10.175.102.38) by
+ dggeml759-chm.china.huawei.com (10.1.199.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Tue, 8 Jun 2021 22:28:21 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     <weiyongjun1@huawei.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/2] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-Message-ID: <20210608121122.GF10174@willie-the-truck>
-References: <20210518211922.3474368-1-john.stultz@linaro.org>
- <20210518211922.3474368-2-john.stultz@linaro.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     <linux-gpio@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] gpio: idt3243x: Fix return value check in idt_gpio_probe()
+Date:   Tue, 8 Jun 2021 14:38:53 +0000
+Message-ID: <20210608143853.4153234-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210518211922.3474368-2-john.stultz@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.102.38]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggeml759-chm.china.huawei.com (10.1.199.138)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 18, 2021 at 09:19:22PM +0000, John Stultz wrote:
-> Allow the qcom_scm driver to be loadable as a permenent module.
-> 
-> This still uses the "depends on QCOM_SCM || !QCOM_SCM" bit to
-> ensure that drivers that call into the qcom_scm driver are
-> also built as modules. While not ideal in some cases its the
-> only safe way I can find to avoid build errors without having
-> those drivers select QCOM_SCM and have to force it on (as
-> QCOM_SCM=n can be valid for those drivers).
-> 
-> Reviving this now that Saravana's fw_devlink defaults to on,
-> which should avoid loading troubles seen before.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: Maulik Shah <mkshah@codeaurora.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: iommu@lists.linux-foundation.org
-> Cc: linux-gpio@vger.kernel.org
-> Acked-by: Kalle Valo <kvalo@codeaurora.org>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v3:
-> * Fix __arm_smccc_smc build issue reported by
->   kernel test robot <lkp@intel.com>
-> v4:
-> * Add "depends on QCOM_SCM || !QCOM_SCM" bit to ath10k
->   config that requires it.
-> v5:
-> * Fix QCOM_QCM typo in Kconfig, it should be QCOM_SCM
-> ---
->  drivers/firmware/Kconfig                | 2 +-
->  drivers/firmware/Makefile               | 3 ++-
->  drivers/firmware/qcom_scm.c             | 4 ++++
->  drivers/iommu/Kconfig                   | 2 ++
->  drivers/net/wireless/ath/ath10k/Kconfig | 1 +
->  5 files changed, 10 insertions(+), 2 deletions(-)
+In case of error, the function devm_platform_ioremap_resource_byname()
+returns ERR_PTR() and never returns NULL. The NULL test in the return
+value check should be replaced with IS_ERR().
 
-[...]
+Fixes: 4195926aedca ("gpio: Add support for IDT 79RC3243x GPIO controller")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/gpio/gpio-idt3243x.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 1f111b399bcab..38f7b7a8e2843 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -253,6 +253,7 @@ config SPAPR_TCE_IOMMU
->  config ARM_SMMU
->  	tristate "ARM Ltd. System MMU (SMMU) Support"
->  	depends on ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)
-> +	depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
->  	select IOMMU_API
->  	select IOMMU_IO_PGTABLE_LPAE
->  	select ARM_DMA_USE_IOMMU if ARM
-> @@ -382,6 +383,7 @@ config QCOM_IOMMU
->  	# Note: iommu drivers cannot (yet?) be built as modules
->  	bool "Qualcomm IOMMU Support"
->  	depends on ARCH_QCOM || (COMPILE_TEST && !GENERIC_ATOMIC64)
-> +	depends on QCOM_SCM=y
->  	select IOMMU_API
->  	select IOMMU_IO_PGTABLE_LPAE
->  	select ARM_DMA_USE_IOMMU
+diff --git a/drivers/gpio/gpio-idt3243x.c b/drivers/gpio/gpio-idt3243x.c
+index e961acee1571..50003ad2e589 100644
+--- a/drivers/gpio/gpio-idt3243x.c
++++ b/drivers/gpio/gpio-idt3243x.c
+@@ -142,8 +142,8 @@ static int idt_gpio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	ctrl->gpio = devm_platform_ioremap_resource_byname(pdev, "gpio");
+-	if (!ctrl->gpio)
+-		return -ENOMEM;
++	if (IS_ERR(ctrl->gpio))
++		return PTR_ERR(ctrl->gpio);
+ 
+ 	ctrl->gc.parent = dev;
+ 
+@@ -160,8 +160,8 @@ static int idt_gpio_probe(struct platform_device *pdev)
+ 
+ 	if (device_property_read_bool(dev, "interrupt-controller")) {
+ 		ctrl->pic = devm_platform_ioremap_resource_byname(pdev, "pic");
+-		if (!ctrl->pic)
+-			return -ENOMEM;
++		if (IS_ERR(ctrl->pic))
++			return PTR_ERR(ctrl->pic);
+ 
+ 		parent_irq = platform_get_irq(pdev, 0);
+ 		if (!parent_irq)
 
-For this part:
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
