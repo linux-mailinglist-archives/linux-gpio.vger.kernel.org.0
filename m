@@ -2,86 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7CDC3A0F80
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jun 2021 11:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 250B43A0F83
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jun 2021 11:19:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233184AbhFIJUo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Jun 2021 05:20:44 -0400
-Received: from mail-lj1-f178.google.com ([209.85.208.178]:42661 "EHLO
-        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237954AbhFIJUo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Jun 2021 05:20:44 -0400
-Received: by mail-lj1-f178.google.com with SMTP id r16so11583023ljk.9
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Jun 2021 02:18:34 -0700 (PDT)
+        id S237972AbhFIJVQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Jun 2021 05:21:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237961AbhFIJVO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Jun 2021 05:21:14 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315A1C061574
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Jun 2021 02:19:08 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id r16so599692ljc.0
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Jun 2021 02:19:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bEG/w+83YCQdhcjk3hMB/2pU0Hzz9e45pwvsQ652QZ4=;
-        b=CKuHDfWBu2cwegozqj52R/g3GZnPS2uOKYtWbcWrnQB6pLHMwhDhTdoZjvpBq//AiL
-         MLxZwa2uz9ZntVlOJ7sQsyWFIe1iS5JsYfe6Lp4pDUma8MeZfS8l4UsRweQRithBuXfi
-         EBy5eM3VpgWhDTrdpb+aKxy/aKTOrUT+8yOM4aiREY/vEfJ8S79T46wGL2VFWYLNCAdt
-         n4Qs2ypust5VOR80/jR1KriOS1AseOLMyQ/MF2eOfQyY6vWIXkSLS1Fh12e3/L4h6yNt
-         4bBVNkTdUJT3V1j4OsonlnbJTe2gnRrchrwtR+oaGAsPQGQgUGqFBJ4KoZktllY3pBaF
-         9x7Q==
+        bh=R2VfAdxpLFSH2lKBrvUpwO3xN3M0sVoWmcLtknql0Nk=;
+        b=GkH2boXUs4nV7pBNeoqE9Jw4OjjFDzM1XubJq0jrQJU6aEc2x/USoEPuI016SjJ/Nw
+         6Cu1R0eYwGewSVwx/6AJ90lF+PsE8LXM7S5Z+/P/AlS3TZL+/yBmkkItbHS1EGdmEQkS
+         oUwpzVaulho1zoLt1Cw3B0SXVZWdSzOzP1uLtM0QXUpgUCAXGxkqUlmaWBtpcA612kgG
+         F1vsXlpEbOHvSXKHz0nNGmgN0vg1JnQGJ+tRNmCAIIoxphLHNP7aUf/axk6EbcngoH/1
+         6oKbNABh9lJveFpG3XoDp+jEfS5UgZno/3oaiA09N/reROq0VjtTgMDaocKiYrrMPoQf
+         6r9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bEG/w+83YCQdhcjk3hMB/2pU0Hzz9e45pwvsQ652QZ4=;
-        b=Mvby4Hmxafh2qV1L7SzU5dm4iK9Rj8OIWNgU0qwMHqHvTQyIIMVPNtlYFL4oOtDJDZ
-         Unmug+tW4xmlVGCucxp25NAKoBQ/7Y/9lco+ND9gHeMGz/1BVFZ0atRB2Axo8gGUnq8h
-         /CIlggzKLE6xTNKkTVvCahQHu5TuE9N0qlmWGqdaUs0hN2Syy7U1mQInw6AJNgPhkQiU
-         GIP4hnXl+L0DbYj2Y322t6v9si0g/liOkLCAAUlkDdaU3udr+A0iujldFwDGTrGws7uc
-         UGOo+v4FKFZVP6uiZAUe3kmeicHBwATLlQ69PhO08vzf6hu5/oYD9OOcbhFIfkuDAcFl
-         Yeww==
-X-Gm-Message-State: AOAM530G53aD6xHI3/17Gi5qRh2d2s2gjzdgHwEmfc2wmwyhpWVsAUgQ
-        twqJDejkK25/8vVaviQ9awzsBlNNfb/EBvBC+EM7+w==
-X-Google-Smtp-Source: ABdhPJwh4YesWYyUgVjZAE6+CeyPfHk/453koIwepndYg3pfX5+tYJ7/ek1lIJ5PGwRvjl003ULe/1DyWqcXDvcPOhc=
-X-Received: by 2002:a2e:1319:: with SMTP id 25mr21554697ljt.200.1623230253367;
- Wed, 09 Jun 2021 02:17:33 -0700 (PDT)
+        bh=R2VfAdxpLFSH2lKBrvUpwO3xN3M0sVoWmcLtknql0Nk=;
+        b=T41XrQHw1RVRbvl08GL1GbeocmPeHRY+KbeICj/BXHgxg6q6mhFgSL0n4kTwI6BMbh
+         y1H2oboRc6/d83Tr0eY66g6kXCrXey4NrrcbtUhhoz8T80IjVg/aHzEtdAGD33Fvl3AG
+         bcvPl6U6pO7sijIS85i5W4nwHQ2+M0Hk9avr0Y9kAALSxQ/q99pAIcug7X5spNDBM0oX
+         hfASTaD8/ml3gFy6TXF+5sikWA1MJJ9HR0NDkcwwaV1Yje/hvI66aQgmrxw3Wh2X90FY
+         dmrjpB46IVPnwOfgNd0lVij1HROhnoMYKATPMFlraa/fnb8e7/mzGikhqs93UzPveLw1
+         BBKg==
+X-Gm-Message-State: AOAM532060bo3dNzY78ylDrKoOVVDkeBC+MVfyB1CARJPZZ/ygCv8af+
+        5NYj18qsy7/NhXV2OOURpE3JC/FlV8/vCHNgbWziKw==
+X-Google-Smtp-Source: ABdhPJx+9yId/nH8i7TP64z+S9xoaiGdlcTIUWjloG27YUnksxOAk4gXMrytRJ4tF/cdaFmNp/Y/mw1HRTXJ40b9swk=
+X-Received: by 2002:a05:651c:1411:: with SMTP id u17mr11002125lje.438.1623230346495;
+ Wed, 09 Jun 2021 02:19:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210603101822.9645-1-steven_lee@aspeedtech.com>
- <20210603101822.9645-2-steven_lee@aspeedtech.com> <516bb11a-b75f-49e1-ba79-e5a4c344a7ab@www.fastmail.com>
- <20210604033039.GC25112@aspeedtech.com>
-In-Reply-To: <20210604033039.GC25112@aspeedtech.com>
+References: <20210605185908.39982-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20210605185908.39982-1-rikard.falkeborn@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 9 Jun 2021 11:17:22 +0200
-Message-ID: <CACRpkdawakx66Nix41h=FzhL--QEMZCcDX=a_hf_kTq+0DjpAg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] dt-bindings: aspeed-sgpio: Convert txt bindings to yaml.
-To:     Steven Lee <steven_lee@aspeedtech.com>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
+Date:   Wed, 9 Jun 2021 11:18:55 +0200
+Message-ID: <CACRpkdamjEmV1n+6iKBt+ocTNB=WHZsZ3PggSy20NrtvK6gZqA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctrl: bcm: Constify static ops structs
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hongwei Zhang <Hongweiz@ami.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 4, 2021 at 5:31 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
+On Sat, Jun 5, 2021 at 8:59 PM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
 
-> However, it might affect users who update kernel/driver from the
-> old kernel/driver as they may expect the gpio output pin base is start
-> from 80(MAX_NR_HW_SGPIO).
+> Constify a number of pinctrl_ops and pinmux_ops that are never modified
+> to allow the compiler to put them in read-only memory.
 
-Why? What users? In-kernel, out-of-tree-kernel or userspace users?
-
-In-kernel users can be fixed, out-of-tree kernels we don't care about
-and userspace should be using the character device.
-
-Just change it.
+Patches applied!
 
 Yours,
 Linus Walleij
