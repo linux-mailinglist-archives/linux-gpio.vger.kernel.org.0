@@ -2,91 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 025793A1283
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jun 2021 13:21:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACE0D3A121A
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jun 2021 13:13:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233970AbhFILXG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Jun 2021 07:23:06 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:35422 "EHLO gecko.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239011AbhFILXG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 9 Jun 2021 07:23:06 -0400
-X-Greylist: delayed 540 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Jun 2021 07:23:05 EDT
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 159BBxIE010037
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Jun 2021 13:11:59 +0200
-Received: from md1za8fc.ad001.siemens.net ([139.22.32.109])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 159B8Hm0019317;
-        Wed, 9 Jun 2021 13:08:17 +0200
-Date:   Wed, 9 Jun 2021 13:08:16 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: intel: fix NULL pointer deref
-Message-ID: <20210609130816.3631f0aa@md1za8fc.ad001.siemens.net>
-In-Reply-To: <CAHp75Vcj9wmM7H908sqGmXs10BQN8ty1C4qfmk_nXpG_s=BjTQ@mail.gmail.com>
-References: <20210609062722.9132-1-henning.schild@siemens.com>
-        <YMCT+izizEg0gPLD@lahna.fi.intel.com>
-        <CAHp75Vcj9wmM7H908sqGmXs10BQN8ty1C4qfmk_nXpG_s=BjTQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S236318AbhFILPT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Jun 2021 07:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236236AbhFILPS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Jun 2021 07:15:18 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39832C061574
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Jun 2021 04:13:24 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id r16so976173ljc.0
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Jun 2021 04:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QugCigS9fOj5XysW+4Oue4xRZg7LzQZSMpAyh31Q1WM=;
+        b=bpqS0X+jjnWtLoSwLxKHqkguPp+mF7DTHL/j5d6kq3p1JKUIV6ZTdzAPgh7f4Y3QCF
+         sjZPpWZBjkFJ/pwfeNbt5zp5zBjZCvMC2HwEHborK1gBOFVI/mfKhjwojDMpOsPdcy0C
+         HD4gfAeOfQSzZfGF0nkSpeqtq3bUHchBgqiegOmo7FkQLPWaWu+eTU1EuQwNsshs+TT4
+         nJam8YO/zprZfzlPkyo+8M5zxs9RAoMM4QNn0vSTf+yPAjlgMETHk1Wo0Su1dNKGDsLT
+         nu2redsHNb37b55YrhIpVyqdbBmmIZgJ48mdTETRD43HNC9lEZRX5+9AX6jd4RoW1Lvx
+         tvjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QugCigS9fOj5XysW+4Oue4xRZg7LzQZSMpAyh31Q1WM=;
+        b=FVxcZSHVMDsIBRDFhlD1V4okAikAkFQMEIqdLK/rKZeyJ2BaFlOQuqK62O13QeK+q3
+         Tf4N+WguEqyIIqwtSm/d7+FGA4ycAJ2E4MKAS4WDiwLcoe88Fo1d3k+MYyyDNWxut7ti
+         dDFjZJ+WcKcCqWdjJ0X0gqmArx3+H74BrjSb5HsefPZH4TSEFGhljRoP5RTZ3e3QIEzP
+         fPq5UXnTVEfhJ3COk9HZHBgG4Ngq1dfnxwC+tmSM3RtFp2v5ewvQ6dbQ/tDqezkl+5/a
+         uioOf8Pso+D/IdRlI4iSn+gQf07e6GogjiZ137tmDp+pEtXDnlmTllAnA+A/tgr66h0E
+         x2Kg==
+X-Gm-Message-State: AOAM532EhPvwRe0B3GyxmTpcXHrozWYWChmw1iQe+aM4hn0WRUAw8/Ly
+        Y6Ai2x9Ieh0M5k0ieyUeN7uW3D8QF+Nz3gc955Zi1g==
+X-Google-Smtp-Source: ABdhPJxo8J+WXMxRas2USR7baWmM68fVP/NSPDHs/rukMxOLcTL8Zz+rwryBtfYk+IPjKYzdwxIbTXKinVZtj6GmKLs=
+X-Received: by 2002:a05:651c:1057:: with SMTP id x23mr21221750ljm.467.1623237202587;
+ Wed, 09 Jun 2021 04:13:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1623134048-56051-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <1623134048-56051-1-git-send-email-zou_wei@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Jun 2021 13:13:11 +0200
+Message-ID: <CACRpkdYvU0aO5sEdDNH6C5FwO4yBMdCwY-0so5YTpBvyZqM58w@mail.gmail.com>
+Subject: Re: [PATCH -next v2] pinctrl: mcp23s08: Fix missing unlock on error
+ in mcp23s08_irq()
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     Radim Pavlik <radim.pavlik@tbs-biometrics.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Wed, 9 Jun 2021 13:33:34 +0300
-schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+On Tue, Jun 8, 2021 at 8:16 AM Zou Wei <zou_wei@huawei.com> wrote:
 
-> On Wed, Jun 9, 2021 at 1:12 PM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > On Wed, Jun 09, 2021 at 08:27:22AM +0200, Henning Schild wrote:  
-> > > match could be NULL in which case we do not go ACPI after all  
-> 
-> ...
-> 
-> > >       adev = ACPI_COMPANION(&pdev->dev);
-> > > -     if (adev) {
-> > > -             const void *match =
-> > > device_get_match_data(&pdev->dev); -
-> > > +     match = device_get_match_data(&pdev->dev);  
-> >
-> > Actually we don't even call intel_pinctrl_get_soc_data() if the
-> > ACPI ID is not listed in the corresponding driver's module table.
-> > So I don't think match can ever be NULL.
-> >
-> > But feel free to prove me wrong ;-)  
-> 
-> It's possible to have bugs in this driver, but can we see the real
-> case here?
+> Add the missing unlock before return from function mcp23s08_irq()
+> in the error handling case.
+>
+> v1-->v2:
+>    remove the "return IRQ_HANDLED" line
+>
+> Fixes: 897120d41e7a ("pinctrl: mcp23s08: fix race condition in irq handler")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
 
-Yes that is indeed only showing when using a kernel that has seen other
-patches. To be precise i applied "[rfc, PATCH v1 0/7] PCI: introduce
-p2sb helper" before running into the problem. Something in there must
-be calling the function without the ACPI ID.
+Patch applied.
 
-I am still working on a series of device drivers for Siemens PCs,
-adding i.e. LEDs which are in fact GPIO. Those PCs have a hidden p2sb
-and no ACPI entries for the LEDs.
-
-In order to use GPIO from the drivers i need to make sure
-"broxton-pinctrl" comes up even if p2sb is hidden.
-
-Long story short, i thought the patch was simple enough to merge even
-taken out of my special context.
-
-Currently intel_pinctl only works if "ps2b is not hidden by BIOS" or
-"ACPI tables are correct", lifting the ban on the hidden p2sb seems
-like a useful thing in general (i.e. sysfs gpio interface). And i was
-hoping Andy would take the lead on that. It is something my Siemens
-drivers would depend on, but really a generic thing as far as i
-understand it.
-
-regards,
-Henning
+Yours,
+Linus Walleij
