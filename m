@@ -2,70 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE1B23A260C
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 10:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C8DF3A2749
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 10:40:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230162AbhFJIEH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Jun 2021 04:04:07 -0400
-Received: from mail-ua1-f46.google.com ([209.85.222.46]:33483 "EHLO
-        mail-ua1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbhFJIDv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 04:03:51 -0400
-Received: by mail-ua1-f46.google.com with SMTP id l12so987197uai.0;
-        Thu, 10 Jun 2021 01:01:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ivptTvFqsGgv3Qpbq3w6D+6jEW1CoeV1H1Uh7PcLfwQ=;
-        b=gsG0hicAD3+g3oXtGZpQ0GX7L6mYk71kjRQablYA0L0vFaXXGxCtbsrMnwiMiq0Kbs
-         YUSw1rAAUkX7dLApuCSA3828hWKyasqB9sNNEQaahQutyfeIbJhD6cHIOHGTsM+JyngE
-         rFNU8pQPg1kGvVXNsrxIfNO2eSjfmV3wgxDdRKSaHPOuAYaxWL8xRtA1IQ+STlG9H4jt
-         ZvIWnOUVtO8/FGsUJYv5Uk6EmX73Bh5NbPUbSKbG87XuMDUwFEOREHvEroIIbdR6I0uz
-         cqelXRrGLe81+jb8q4HX+7KWSw3JZj4PzqmsHEJkY0jeiTC4U8j8nRJCPzOWLscXPsN2
-         vsHQ==
-X-Gm-Message-State: AOAM531lyeZ1iRjh5z9zn/Lkz9nn4RDRiExhnJeGkvCzWsot/dd7QhlI
-        Ui0nGcF2NeTuzWoJLe8DJ6VMZhKD7Rz0O84wotU4un1pAwc=
-X-Google-Smtp-Source: ABdhPJzotoLpVM39K0bOjJ2XYffSMcHlm2zUiy03JPPBOPdQt4B0/4Dn2C8vlGyCaTGiFC9VQ4kTgbMl5iuUI3vSqk8=
-X-Received: by 2002:ab0:484b:: with SMTP id c11mr3202139uad.100.1623312101666;
- Thu, 10 Jun 2021 01:01:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1619785375.git.geert+renesas@glider.be> <b4c9cd68f9728eb9ebc8526ee238013ddf1e1407.1619785375.git.geert+renesas@glider.be>
-In-Reply-To: <b4c9cd68f9728eb9ebc8526ee238013ddf1e1407.1619785375.git.geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 10 Jun 2021 10:01:30 +0200
-Message-ID: <CAMuHMdUg23z7w3ZkqiMgq67r+0d7Bfm1PM+jwKyWEFtWDv+koA@mail.gmail.com>
-Subject: Re: [PATCH 12/12] pinctrl: renesas: r8a77995: Add bias pinconf support
+        id S229941AbhFJImM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Jun 2021 04:42:12 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:15191 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229910AbhFJImM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 04:42:12 -0400
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 15A8Pde1068923;
+        Thu, 10 Jun 2021 16:25:39 +0800 (GMT-8)
+        (envelope-from steven_lee@aspeedtech.com)
+Received: from aspeedtech.com (192.168.100.253) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 10 Jun
+ 2021 16:39:33 +0800
+Date:   Thu, 10 Jun 2021 16:39:32 +0800
+From:   Steven Lee <steven_lee@aspeedtech.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-aspeed@lists.ozlabs.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Hongwei Zhang <Hongweiz@ami.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Billy Tsai <billy_tsai@aspeedtech.com>
+Subject: Re: [PATCH v5 00/10] ASPEED sgpio driver enhancement.
+Message-ID: <20210610083932.GA30360@aspeedtech.com>
+References: <20210608102547.4880-1-steven_lee@aspeedtech.com>
+ <CACRpkdZOStr+K9U9QTkAcsk4NxuSqBRVv_-9_VkGJbT69iSxmQ@mail.gmail.com>
+ <20210610022416.GA27188@aspeedtech.com>
+ <CACRpkda60eB6i2+2MQFyhqYn4Q0WRGPPs91cu9K-g1maov61+w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <CACRpkda60eB6i2+2MQFyhqYn4Q0WRGPPs91cu9K-g1maov61+w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [192.168.100.253]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 15A8Pde1068923
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 30, 2021 at 2:31 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Implement support for pull-up (most pins, excl. DU_DOTCLKIN0) and
-> pull-down (most pins, excl. JTAG) handling for the R-Car D3 SoC, using
-> the common R-Car bias handling.
->
-> Note that the documentation of the LSI pin pull-up/down control Register
-> 2 (PUD2) in the R-Car Gen3 Hardware User's Manual Rev. 2.20 seems to
-> have mixed up the bits for the NFRE# and NFWE# pins: their definition is
-> inconsistent with the documentation of the corresponding bits in the LSI
-> pin pull-enable register 2(PUEN2), and the bit order in Rev. 0.7 of the
-> R-Car D3 pinfunction spreadsheet, so I have used the latter.
+The 06/10/2021 15:50, Linus Walleij wrote:
+> On Thu, Jun 10, 2021 at 4:24 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
+> 
+> > Per the comment in the following mail
+> > https://lkml.org/lkml/2021/6/9/317
+> >
+> > I was wondering if I should prepare v6 for the currnet solution or
+> > I should drop this patch series then prepare another patch for the
+> > new solution(piar GPIO input/output) which breaks userspace but is
+> > better than the current solution.
+> 
+> I would say just go ahead with the new solution. AFAIK Aspeed
+> has pretty tight control over what kind of userspace run on these
+> systems.
+> 
+> BTW please influence Aspeed to use the GPIO character device
+> and ligpiod
+> https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/
+> if you are doing any kind of userspace GPIO control (which I
+> suspect that you do).
+> 
 
-It was confirmed that the documentation is correct. Will fix in v2...
+We currently use gpioset and gpioget that provided by libgpiod to test
+aspeed gpio and sgpio drivers.
 
-Gr{oetje,eeting}s,
+For the current solution on AST2600,
+the valid range of input pins  is 0 ~ 127,
+the valid range of output pins is 128 ~ 255.
+So we access input pins by the following command
 
-                        Geert
+```
+gpioget $chipId 0 1 2 3 4 ... 127
+```
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+and access output pins by the following command
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+```
+gpioset $chipId 128=1 129=0 130=1 131=1 ... 255=1
+
+```
+
+
+The new solution will change the gpio id order as follows
+Input:
+```
+gpioget $chipId 0 2 4 6 8 ... 254
+
+```
+
+Output:
+
+```
+gpioset $chipId 1=1 3=0 5=1 7=1 ... 255=1
+
+```
+
+Thanks,
+Steven
+
+> Yours,
+> Linus Walleij
