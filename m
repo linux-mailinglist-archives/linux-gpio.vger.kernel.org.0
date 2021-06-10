@@ -2,107 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F1ED3A3075
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 18:23:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E2333A3095
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 18:27:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230381AbhFJQZV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Jun 2021 12:25:21 -0400
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:44923 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230280AbhFJQZU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 12:25:20 -0400
-Received: by mail-oi1-f175.google.com with SMTP id a26so2691575oie.11;
-        Thu, 10 Jun 2021 09:23:24 -0700 (PDT)
+        id S231173AbhFJQ3Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Jun 2021 12:29:16 -0400
+Received: from mail-ot1-f43.google.com ([209.85.210.43]:36647 "EHLO
+        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230117AbhFJQ3Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 12:29:16 -0400
+Received: by mail-ot1-f43.google.com with SMTP id h24-20020a9d64180000b029036edcf8f9a6so278615otl.3;
+        Thu, 10 Jun 2021 09:27:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ajFMbmV13rSn+GZr+FQLaWoaYSbQZYLeXPdRKVG1MtA=;
-        b=m8w40JFynlgkjBnRTvPYZY9Mocg22oJlbrPnS2mBvET1tuITOVOzbfT/yDM9Vn5NkR
-         PWyzeWeuZYwAZP/jKGvfqvf5GI+wm/1+bAe+FLiH0Sus2DV78e+EyjXxrtbqOXP+9uii
-         89Tv0zUOuY4dchh8HMsGXkvdsVUbsEYg5FkJWI82fW+lfsPRsU0waVkdSn4ELPZ/gJb/
-         u6K031JkS4cbkLeo/TTWuvatI8B1aSpl4YzWT/Rvg5nMrhE8QSvqZjyX4vWrrQpfTxw2
-         K/7tfaibPrlnRlqWq0WzGfBmWcj/ZS3j5UAaIH6u1lHFgAnD6gfaBLrD/WkMCpNjxuD4
-         uyow==
-X-Gm-Message-State: AOAM531zmbP4Ph+wmdCGxBfDm5J6CXfE+Joj8m2GSDtb3CBHNLVS2s36
-        022LpMD8P4fY16Hrtsex1A==
-X-Google-Smtp-Source: ABdhPJw4r/ruF84yQMzuAkmhN9owEOanbliqra7Rbz4SR5J1wnvK6z9pA0sJEYhLuP2q3B5VVOi5pw==
-X-Received: by 2002:aca:d485:: with SMTP id l127mr4034718oig.106.1623342203689;
-        Thu, 10 Jun 2021 09:23:23 -0700 (PDT)
+        bh=EK1mjQ/f6ITujp115mW7JL3SX+0ni6SRT4tA38v94s8=;
+        b=R99UAnvNu2JpX8nTSsbEpgjrVV5j4Sk0jcdy48zekAq6YcI0myIjCWzwpnPCBVBM9T
+         EWk17p41LHIKX9MwldLsQFrmLx2VBUAzmZ6SMrwva3cp0jZqNS35N7Win4r9ZZ3uw2uW
+         fxdTtK8eGnVBxA/O5vBO3vqFfgM/cPomf8rWvSBYZyGBkZtwZ2ojC6AmehSsWISxlW8e
+         wmh7GnYGANFtCI7WQPHrMmMnq4fBQ6ieYHJdIFU+b7+Gp4svgbTLuJwsNDJJVYo5xigN
+         7/DuHGbpD4Xrinz5vEX3Kji8TrZkvFm+iZ/33heG9jGkoxB+sshVHcn2qZ2nM4bXmyie
+         9aOw==
+X-Gm-Message-State: AOAM530b8f1LoUnsqKFQ04wjigoiqfp724vjwWZJsKB3+W5VqGNh0XCy
+        c7zDOoMoEQd8frzMIWdHn44VingI+A==
+X-Google-Smtp-Source: ABdhPJwMG5KQzeXTml4Qxe43YPpLaVrfXTxJx+3v3r2q4/7IYsKPox0ZydBayDxAopu9ZE2DafgDcw==
+X-Received: by 2002:a05:6830:2415:: with SMTP id j21mr2971197ots.224.1623342439617;
+        Thu, 10 Jun 2021 09:27:19 -0700 (PDT)
 Received: from robh.at.kernel.org ([172.58.99.113])
-        by smtp.gmail.com with ESMTPSA id x24sm674126otq.34.2021.06.10.09.23.21
+        by smtp.gmail.com with ESMTPSA id k8sm604856ool.5.2021.06.10.09.27.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jun 2021 09:23:23 -0700 (PDT)
-Received: (nullmailer pid 1916785 invoked by uid 1000);
-        Thu, 10 Jun 2021 16:23:20 -0000
-Date:   Thu, 10 Jun 2021 11:23:20 -0500
+        Thu, 10 Jun 2021 09:27:18 -0700 (PDT)
+Received: (nullmailer pid 1921923 invoked by uid 1000);
+        Thu, 10 Jun 2021 16:27:15 -0000
+Date:   Thu, 10 Jun 2021 11:27:15 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Steven Lee <steven_lee@aspeedtech.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>, Hongweiz@ami.com,
-        ryan_chen@aspeedtech.com, billy_tsai@aspeedtech.com
-Subject: Re: [PATCH v5 02/10] dt-bindings: aspeed-sgpio: Add ast2600 sgpio
- compatibles.
-Message-ID: <20210610162320.GA1910317@robh.at.kernel.org>
-References: <20210608102547.4880-1-steven_lee@aspeedtech.com>
- <20210608102547.4880-3-steven_lee@aspeedtech.com>
+To:     Aleksander Jan Bajkowski <olek2@wp.pl>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, john@phrozen.org, robh+dt@kernel.org
+Subject: Re: [PATCH v4] dt-bindings: gpio: stp: convert to json-schema
+Message-ID: <20210610162715.GA1921873@robh.at.kernel.org>
+References: <20210603135945.3495-1-olek2@wp.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210608102547.4880-3-steven_lee@aspeedtech.com>
+In-Reply-To: <20210603135945.3495-1-olek2@wp.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 08, 2021 at 06:25:37PM +0800, Steven Lee wrote:
-> AST2600 SoC has 2 SGPIO master interfaces one with 128 pins another one
-> with 80 pins. Add ast2600-sgpiom0-80 and ast2600-sgpiom-128 compatibles
-> and update descriptions to introduce the max number of available gpio
-> pins that AST2600 supported.
+On Thu, 03 Jun 2021 15:59:45 +0200, Aleksander Jan Bajkowski wrote:
+> Convert the Lantiq STP Device Tree binding documentation to json-schema.
+> Add the missing pinctrl property to the example. Add missing lantiq,phy3
+> and lantiq,phy4 bindings for xRX300 and xRX330 SoCs.
 > 
-> Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+> Changes since v3:
+>  - Removed description of the reg property.
+>  - Changed regex pattern property.
+>  - Moved lantiq,rising to properties.
+> Changes since v2:
+>  - Changed phy numbering in description of pattern Properties. Numbering
+>    should start with 1.
+> Changes since v1:
+>  - Renamed node to gpio.
+>  - Dropped default pinctrl from this binding.
+>  - Converted lantiq,phyX to patternProperties.
+> ---
+>  .../bindings/gpio/gpio-stp-xway.txt           | 42 --------
+>  .../bindings/gpio/gpio-stp-xway.yaml          | 99 +++++++++++++++++++
+>  2 files changed, 99 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stp-xway.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> index b2ae211411ff..0e42eded3c1e 100644
-> --- a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> @@ -10,9 +10,10 @@ maintainers:
->    - Andrew Jeffery <andrew@aj.id.au>
->  
->  description:
-> -  This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 full
-> -  featured Serial GPIOs. Each of the Serial GPIO pins can be programmed to
-> -  support the following options
-> +  This SGPIO controller is for ASPEED AST2400, AST2500 and AST2600 SoC,
-> +  AST2600 have two sgpio master one with 128 pins another one with 80 pins,
-> +  AST2500/AST2400 have one sgpio master with 80 pins. Each of the Serial
-> +  GPIO pins can be programmed to support the following options
->    - Support interrupt option for each input port and various interrupt
->      sensitivity option (level-high, level-low, edge-high, edge-low)
->    - Support reset tolerance option for each output port
-> @@ -25,6 +26,8 @@ properties:
->      enum:
->        - aspeed,ast2400-sgpio
->        - aspeed,ast2500-sgpio
-> +      - aspeed,ast2600-sgpiom-80
-> +      - aspeed,ast2600-sgpiom-128
 
-If the number of GPIOs is the only difference, then I don't think you 
-should get rid of ngpios. It's one thing if it varies from one SoC to 
-the next, but if something is per instance we should have a property.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
