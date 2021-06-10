@@ -2,87 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F2673A2CD8
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 15:24:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75B373A2CEB
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 15:25:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230267AbhFJN0D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Jun 2021 09:26:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230238AbhFJN0D (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 10 Jun 2021 09:26:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2A44F613F1;
-        Thu, 10 Jun 2021 13:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623331447;
-        bh=Rrlo6UBorgA4yYdkeJZFkNtjOdFycP2V4Yrm2576Twk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=epP9NYZQXt89/rtsnTAtov7cnnKyjo1y/JumMdVnSnEqTTdt1fcafCGB8T6u13TNU
-         wGneCDFZD0hniYZEfbYBiYd1jQ3C8OAXUkNDYBh10PwH9bgNbd+wFGEeDhdsMBGx+x
-         7xzlmquhmtqxypCAV3zG+4WgK6D0Utmoov2C0sKhBilcR9nXWG0LFfd1u7He676Um+
-         lfeFnmeTOua8ogeu2dCVjp0YokC7Turj8V3AaoDxW7caMBAvmljcyaA897xLrpLJXk
-         aTO86TnHPdFRa/XP7/bTziJ+QUIUa1OHmp2tfkmmdGz2d4OPSMMBPq3Ia/Oqt1rPbF
-         2Oh5AStVNnlwQ==
-Received: by mail-wm1-f41.google.com with SMTP id u5-20020a7bc0450000b02901480e40338bso4764557wmc.1;
-        Thu, 10 Jun 2021 06:24:07 -0700 (PDT)
-X-Gm-Message-State: AOAM530Q0hntIJFaFBt+ZY6Q9SVdyV/tXmfs5B3DYEaOf3rZw5QLHN+T
-        bSTjR/0Dp5Lpa/TPy2KFhlrW3ywwOGikkxhW5nI=
-X-Google-Smtp-Source: ABdhPJyDrsbkOZyD6kLCD4DdVUtbci1V9QMmHUOI3yS2P/4OWrBF6VIxXEMbyhpfTZNovJKfZnVfkfNGszR1JOpr7O4=
-X-Received: by 2002:a1c:7d15:: with SMTP id y21mr14854395wmc.120.1623331445689;
- Thu, 10 Jun 2021 06:24:05 -0700 (PDT)
+        id S230493AbhFJN1N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Jun 2021 09:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231143AbhFJN1K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 09:27:10 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB03C061574;
+        Thu, 10 Jun 2021 06:25:00 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id r7so18624300edv.12;
+        Thu, 10 Jun 2021 06:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fHjU2WEAbMZiarjhmO6iycYFdVSmDuuGt5Qz3UrBd+Y=;
+        b=I/TRvtWBf2DDlmtgj9SJsOmWLpYOaIfcq4VrtTsAp2XaC6+XhDPuz1BzWHvp4mo7t6
+         fIcEaPfX63674bKdSVX+mNCqw59k+dqXNz2wAPa5apypTXMiLrHB1ivA1Nb/wtVW5jeL
+         0IbwQhmZb3QLvOzEIl6We35cXPxTp/G28sGN53xTwHwBEz3HkMOdFBAtTY2MyWg9f89r
+         txcxLqCUQGMj45LVm2dBp+ym/RXADi2xenGYWrVHloTLpPHCQP72hlxXgKlK+k0k0Pbe
+         wkrT/wtmhAKJ1j43VNNzoyaI3wPZRKnbCrJhd+BNQbXeSkTTLimAi6KEmkeO62R345v2
+         jHYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fHjU2WEAbMZiarjhmO6iycYFdVSmDuuGt5Qz3UrBd+Y=;
+        b=dQ23py5UeZkKUiIGgnc9ec2EMv5jxRoejmGRMqgyY/qMi7cRlqaY1lb5+7yeUbPYyH
+         0awGL9w+d6qP+KqFBy57/qXWQA/8OE2VqeublrYJLp5VJHvX6+KXBsV2zlkFABaHS69k
+         7yN+dln76K1QWyW5/p5vbyBFTuKS10S7n1MiLwx8JHxH+phBR0YjGzZoLdP5FPUz6nCW
+         r3G3xHkaiE5yglzm7DNsP4rMyP86E9JelMSBdcbqVfJrKemZl7yF+i5nZcEsBDMNVv9A
+         QzJUtI9DWZvsljsJ5QuM6lyLxG5nxvXa1rbtkKvVZ7ssWcuOtNqqCx10z74hPKJM9G1H
+         3EpQ==
+X-Gm-Message-State: AOAM53174bmLJQNUiwKhcRzNJtKFVGYSZDrd+1ugV/vdHheJhlbSLmsE
+        UOEsFh70PBqFRcz6LX6hRCE=
+X-Google-Smtp-Source: ABdhPJyuG6UoPJnv1fm5wbYE3JVsU3eu0AejdDreusBw8vLID7l2lSp5Fp6bM8JsuY+V/qGFKUtM/g==
+X-Received: by 2002:a05:6402:14d8:: with SMTP id f24mr4823204edx.79.1623331498736;
+        Thu, 10 Jun 2021 06:24:58 -0700 (PDT)
+Received: from lab-pc01.sra.uni-hannover.de (lab.sra.uni-hannover.de. [130.75.33.87])
+        by smtp.gmail.com with ESMTPSA id du16sm999619ejc.42.2021.06.10.06.24.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jun 2021 06:24:58 -0700 (PDT)
+From:   Andreas Kaessens <akaessens@gmail.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-kernel@i4.cs.fau.de, Andreas Kaessens <akaessens@gmail.com>,
+        Darian Biastoch <d.biastoch@gmail.com>
+Subject: [PATCH 1/2] pinctrl: mcp23s08: Add optional reset GPIO
+Date:   Thu, 10 Jun 2021 15:24:37 +0200
+Message-Id: <20210610132438.3085841-1-akaessens@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <cover.1623326176.git.viresh.kumar@linaro.org> <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
-In-Reply-To: <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Thu, 10 Jun 2021 15:22:10 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a11YhcEOjauWc872BQv+SO-E5+gnz7Lk6UK42iVw7Oyfg@mail.gmail.com>
-Message-ID: <CAK8P3a11YhcEOjauWc872BQv+SO-E5+gnz7Lk6UK42iVw7Oyfg@mail.gmail.com>
-Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        Stratos Mailing List <stratos-dev@op-lists.linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
-        <sgarzare@redhat.com>, virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 2:18 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> From: "Enrico Weigelt, metux IT consult" <info@metux.net>
->
-> This patch adds a new driver for Virtio based GPIO devices.
->
-> This allows a guest VM running Linux to access GPIO device provided by
-> the host. It supports all basic operations for now, except interrupts
-> for the GPIO lines.
->
-> Signed-off-by: "Enrico Weigelt, metux IT consult" <info@metux.net>
-> Co-developed-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+The MCP23x port expander RESET# line can be connected to a host GPIO.
+The optional reset-gpio must be set to LOW if the reset is asserted
+at probing time.
 
-Can you give an example of how this would be hooked up to other drivers
-using those gpios. Can you give an example of how using the "gpio-keys" or
-"gpio-leds" drivers in combination with virtio-gpio looks like in the DT?
+On page 5 in the datasheet [0] the "Device Active After Reset high"
+time is specified at 0 µs. Therefore no waiting is needed after the
+reset transition.
 
-Would qemu simply add the required DT properties to the device node that
-corresponds to the virtio device in this case?
+[0] https://ww1.microchip.com/downloads/en/DeviceDoc/20001952C.pdf
 
-From what I can tell, both the mmio and pci variants of virtio can have their
-dev->of_node populated, but I don't see the logic in register_virtio_device()
-that looks up the of_node of the virtio_device that the of_gpio code then
-tries to refer to.
+Signed-off-by: Andreas Kaessens <akaessens@gmail.com>
+Signed-off-by: Darian Biastoch <d.biastoch@gmail.com>
+---
+ drivers/pinctrl/pinctrl-mcp23s08.c | 3 +++
+ drivers/pinctrl/pinctrl-mcp23s08.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-        Arnd
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
+index 799d596a1a4b..8ab254170d99 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/export.h>
+ #include <linux/gpio/driver.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/slab.h>
+ #include <asm/byteorder.h>
+ #include <linux/interrupt.h>
+@@ -558,6 +559,8 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 	mcp->chip.parent = dev;
+ 	mcp->chip.owner = THIS_MODULE;
+ 
++	mcp->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++
+ 	/* verify MCP_IOCON.SEQOP = 0, so sequential reads work,
+ 	 * and MCP_IOCON.HAEN = 1, so we work with all chips.
+ 	 */
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08.h b/drivers/pinctrl/pinctrl-mcp23s08.h
+index 90dc27081a3c..b8d15939e0c2 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08.h
++++ b/drivers/pinctrl/pinctrl-mcp23s08.h
+@@ -43,6 +43,7 @@ struct mcp23s08 {
+ 
+ 	struct pinctrl_dev	*pctldev;
+ 	struct pinctrl_desc	pinctrl_desc;
++	struct gpio_desc        *reset_gpio;
+ };
+ 
+ extern const struct regmap_config mcp23x08_regmap;
+-- 
+2.25.1
+
