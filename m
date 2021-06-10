@@ -2,99 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03C073A343C
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 21:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0549C3A3515
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 22:47:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbhFJTo4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Jun 2021 15:44:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229823AbhFJToz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 10 Jun 2021 15:44:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D7A0961414;
-        Thu, 10 Jun 2021 19:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623354178;
-        bh=e1qYqp9Ml4zXeFi4sMYRsxc9z9GOxYqqa+CE28wWI4U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UtwWwOounqCQDCI2o/53cZnytek08hk2lIx6VXjwSc6qRSpnetjeqNGhQ4NmbEvU1
-         GkCRcTc3Y45E2a8Dvqy5J3RoNJMbMqPt597XTM7Jgw7RZAFohVLRXHjb691iK1autt
-         /Lbe0GfobQxTqPF2ahUPC+oQ7PvJrocoT6vNfYMHp/adAsqhzqXJ7MN509Q6moDtNU
-         qV3C8Uti77SZZaJDiSZDiihxsDa69eg6/CZw5XGIPXgSi4xfK8uEmKvtLsNJRQAnkx
-         aS5T6Mtwplu/kd6YAYlLwQKFf8IgrC14aEN4PDVRPYlRQIKAlxEiVEeeVOpsNjDa0P
-         wyBVZb8KIpBkA==
-Received: by mail-wr1-f49.google.com with SMTP id c5so3538812wrq.9;
-        Thu, 10 Jun 2021 12:42:58 -0700 (PDT)
-X-Gm-Message-State: AOAM531D1dvpY5+mNf2xqIj3xFAm6f28hzc44RYUYkzZoB7WaXJbpUAE
-        xKZOTJcwnD0GCUuJFbqRIME9+oA4Ih9s5OZCjro=
-X-Google-Smtp-Source: ABdhPJySe7wd3XPNxujQj2IjqvLZE5RbBmPWKoLwo/i2COztQ95WbJMiDewLDXNHMXFcXE1bVv/W041r59h4dgeLYOE=
-X-Received: by 2002:adf:a28c:: with SMTP id s12mr104051wra.105.1623354177356;
- Thu, 10 Jun 2021 12:42:57 -0700 (PDT)
+        id S230212AbhFJUtW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Jun 2021 16:49:22 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:35677 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229941AbhFJUtW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 16:49:22 -0400
+Received: by mail-lj1-f169.google.com with SMTP id n17so6750595ljg.2
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Jun 2021 13:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P3feXPo8hgD2FD68i8SPgVY8I4kuiJLBZN2g8qdSekM=;
+        b=yY+WLokJziltoHJ9f3XgfvwE/LSudYOXHFaEMxWzIlSAyHQ4l4493Euz5Bx9wQPb7a
+         jpyTB8qdbkY1dJd4TqfOgK+VuvohCE29cXAbv6BGujgKABmWag8PeU0649zqKmpPK+d3
+         L3YeQfMXlzWmcQPkHTiWmDTr2Ly+swbU10hGAGB5DlKfZSPjiUa/medL+veah9aYlzKz
+         HWakmG2quynID1DJ+/m3r5Vq1EEnUjoQA2Ht+5jxdI5W6AowYsdQm9TP/2CtP0evZfaU
+         1pJBZ9tM9E79EbjLcTa47JCMa41g7dXjg6ykRGszpx/NJB5cC9Ep31xpV808Li2sJr9h
+         U89g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P3feXPo8hgD2FD68i8SPgVY8I4kuiJLBZN2g8qdSekM=;
+        b=nr6XB9+s7FfnbqbjoImabwOVRcXM/iu1kEgVMxn5cC41rOPV2qjmtuR58vTe4WrWgB
+         apRsu7aPXm7o7X/L40YcSOYZgRu9ZId7p/qa0wXSW6jpD0BDqPCO82lIHF6n0xN71caZ
+         kLuBAeBmP7ZfaHKdw/r1XnrxmSe/nqla8nNyBnaXzxzvTUNIqVP1wji2qKFIwxyBCSC/
+         3IcicCulGQuG2TS3pMkSFmkZReEiRPvfdmMmWC9zvFPzLQccykjopN++n7+5rhdOba/6
+         pMy4PqOuE9eRYqCrVmZ4C1PhnwPbSewKhwjYwBaNczslUm8KlJKOdfaaw9nkcR07IY+x
+         vpyA==
+X-Gm-Message-State: AOAM533KM8TmJEALWa2jBEIxeNWdRXYqWJxoUCZ1jJK20jrBtXvskCgH
+        RGg+P1aZJdCdPIElJOMBi8lZ1r+6LuA76O18DZzKBQ==
+X-Google-Smtp-Source: ABdhPJxNKGpZ/jjSlWl2zoMMOz8tNxjDSR41dSYXKzHTgV7+ERxWWp9zJMl7Q6uw/IGcGvfEK0j0qWyEO2QHKxTxfVQ=
+X-Received: by 2002:a05:651c:1411:: with SMTP id u17mr327855lje.438.1623357976125;
+ Thu, 10 Jun 2021 13:46:16 -0700 (PDT)
 MIME-Version: 1.0
 References: <cover.1623326176.git.viresh.kumar@linaro.org> <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
- <CAK8P3a11YhcEOjauWc872BQv+SO-E5+gnz7Lk6UK42iVw7Oyfg@mail.gmail.com>
- <01000179f6a7715c-cd106846-7770-4088-bb7c-a696bfcbf83e-000000@email.amazonses.com>
- <YMJF5fF31ksmSdiq@myrica>
-In-Reply-To: <YMJF5fF31ksmSdiq@myrica>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Thu, 10 Jun 2021 21:41:01 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1E7WzhX4NvUPn6iDzsUqTzAEMcsow7feTGRWTLe9+FFQ@mail.gmail.com>
-Message-ID: <CAK8P3a1E7WzhX4NvUPn6iDzsUqTzAEMcsow7feTGRWTLe9+FFQ@mail.gmail.com>
-Subject: Re: [Stratos-dev] [PATCH V3 1/3] gpio: Add virtio-gpio driver
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
-        <sgarzare@redhat.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Stratos Mailing List <stratos-dev@op-lists.linaro.org>,
+In-Reply-To: <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 10 Jun 2021 22:46:04 +0200
+Message-ID: <CACRpkdZV2v2S5z7CZf_8DV=At9-oPSj7RYFH78hWy3ZX37QnDQ@mail.gmail.com>
+Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Jason Wang <jasowang@redhat.com>
+        Viresh Kumar <vireshk@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
+        <sgarzare@redhat.com>, virtualization@lists.linux-foundation.org,
+        Alistair Strachan <astrachan@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 7:03 PM Jean-Philippe Brucker
-<jean-philippe@linaro.org> wrote:
->
-> On Thu, Jun 10, 2021 at 04:00:39PM +0000, Enrico Weigelt, metux IT consult via Stratos-dev wrote:
-> > On 10.06.21 15:22, Arnd Bergmann wrote:
-> >
-> > > Can you give an example of how this would be hooked up to other drivers
-> > > using those gpios. Can you give an example of how using the "gpio-keys" or
-> > > "gpio-leds" drivers in combination with virtio-gpio looks like in the DT?
-> >
-> > Connecting between self-probing bus'es and DT is generally tricky. IMHO
-> > we don't have any generic mechanism for that.
->
-> DT does have a generic description of PCI endpoints, which virtio-iommu
-> relies on to express the relation between IOMMU and endpoint nodes [1].
-> I think the problem here is similar: the client node needs a phandle to
-> the GPIO controller which may use virtio-pci transport?
+Hi Viresh!
 
-Right, the code to set dev->of_node is fairly simple, the device probe
-just needs to scan for child nodes. Aside from PCI, similar code exists
-for USB and MMC/SDIO, which are usually discoverable but sometimes
-need additional properties.
+thanks for working on this, it's a really interesting driver.
 
-> Note that it mostly works if the device is on the root PCI bus. Behind a
-> bridge the OS may change the device's bus number as needed, so the BDF
-> reference in DT is only valid if the software providing the DT description
-> (VMM or firmware) initializes bus numbers accordingly (and I don't
-> remember if Linux supports this case well).
+My first question is conceptual:
 
-I think you can mark the host bridge as "probe-only" to prevent the OS
-(at least Linux) from renumbering the buses.
+We previously have Geerts driver for virtualization:
+drivers/gpio/gpio-aggregator.c
 
-The part I did not find though is assigning dev->of_node in the virtio_device
-to a child of the PCI device node.
+The idea with the aggregator is that a host script sets up a
+unique gpiochip for the virtualized instance using some poking
+in sysfs and pass that to the virtual machine.
+So this is Linux acting as virtualization host by definition.
 
-      Arnd
+I think virtio is more abstract and intended for the usecase
+where the hypervisor is not Linux, so this should be mentioned
+in the commit, possibly also in Kconfig so users immediately
+know what usecases the two different drivers are for.
+
+Possibly both could be used: aggregator to pick out the GPIOs
+you want into a synthetic GPIO chip, and the actual talk
+between the hypervisor/host and the guest using virtio, even
+with linux-on-linux.
+
+Yet another usecase would be to jit this with remoteproc/rpmsg
+and let a specific signal processor or real-time executive on
+another CPU with a few GPIOs around present these to
+Linux using this mechanism. Well that would certainly interest
+Bjorn and other rpmsg stakeholders, so they should have
+a look so that this provides what they need they day they
+need it. (CCed Bjorn and also Google who may want this for
+their Android emulators.)
+
+On Thu, Jun 10, 2021 at 2:16 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+
+> +static const char **parse_gpio_names(struct virtio_device *vdev,
+> +                              struct virtio_gpio_config *config)
+
+I really like this end-to-end plug-and-play that even provides
+the names over virtio.
+
+I think my patch to the gpiolib to make it mandatory for names to
+be unique per-chip made it in, but please make that part of the spec
+so that we don't get the problem with non-unique names here.
+
+I suppose the spec can be augmented later to also accept config
+settings like open drain pull up/down etc but no need to specify
+more than the basic for now.
+
+But to be able to add more in the future, the client needs some
+kind of query mechanism or version number so the driver can
+adapt and not announce something the underlying virtio device
+cannot do. Do we have this? A bitmask for features, a version
+number that increase monotonically for new features to be
+presented or similar?
+
+Because otherwise we have to bump this:
++#define VIRTIO_ID_GPIO                 41 /* virtio GPIO */
+
+every time we add something new (and we will).
+
+Yours,
+Linus Walleij
