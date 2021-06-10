@@ -2,88 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66C2E3A2F49
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 17:28:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A455F3A2F4C
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 17:28:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230322AbhFJPaD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Jun 2021 11:30:03 -0400
-Received: from mga07.intel.com ([134.134.136.100]:34776 "EHLO mga07.intel.com"
+        id S231482AbhFJPac (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Jun 2021 11:30:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:38211 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230445AbhFJPaD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 10 Jun 2021 11:30:03 -0400
-IronPort-SDR: UeMYQt4lCpb3sMvqdloKRNx38PvFDqF2fMUPv76fojKUtjpGhalbQYtkXzZF1CZO9ETNealTQx
- 5ostvmYuzejA==
-X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="269170717"
+        id S230445AbhFJPac (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 10 Jun 2021 11:30:32 -0400
+IronPort-SDR: dRZ10piBdAzMMZBVpvEZPI/4oiR+BnOf5xz32lNudnCXs8lqoK7pIqVKEYe26VvO8p8cHJ/xhx
+ 9H6Ly3fPH4Sg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="226719229"
 X-IronPort-AV: E=Sophos;i="5.83,263,1616482800"; 
-   d="scan'208";a="269170717"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 08:28:04 -0700
-IronPort-SDR: ld+cHW31JG7JFLKDNLbTx26PcVZ7PQ6ScESiKlvjnC1gBJFeeP2XNoXu1Sq0TLvtC8haYJ53pL
- Sq5HtF8NmTLg==
-X-ExtLoop1: 1
+   d="scan'208";a="226719229"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 08:28:36 -0700
+IronPort-SDR: EZPruktFHltxMBmWLGwqBtYUJJDYra9AstjaQrNd0NPFum4J5/A42wQ23UdzCrig9arxld13ID
+ fEzqX7XSNeuA==
 X-IronPort-AV: E=Sophos;i="5.83,263,1616482800"; 
-   d="scan'208";a="638386899"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jun 2021 08:28:02 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3AA0B108; Thu, 10 Jun 2021 18:28:25 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: [PATCH v1 1/1] pinctrl: intel: Check against matching data instead of ACPI companion
-Date:   Thu, 10 Jun 2021 18:28:23 +0300
-Message-Id: <20210610152823.1653-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+   d="scan'208";a="450413169"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 08:28:34 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1lrMbf-001BkV-Qm; Thu, 10 Jun 2021 18:28:31 +0300
+Date:   Thu, 10 Jun 2021 18:28:31 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: intel: fix NULL pointer deref
+Message-ID: <YMIvn+iGt2ijfh7z@smile.fi.intel.com>
+References: <20210609062722.9132-1-henning.schild@siemens.com>
+ <YMCT+izizEg0gPLD@lahna.fi.intel.com>
+ <CAHp75Vcj9wmM7H908sqGmXs10BQN8ty1C4qfmk_nXpG_s=BjTQ@mail.gmail.com>
+ <20210609130816.3631f0aa@md1za8fc.ad001.siemens.net>
+ <YMIgwORlAzz/gJcK@smile.fi.intel.com>
+ <YMIijnvoudaodX+A@smile.fi.intel.com>
+ <20210610165632.0d9bb321@md1za8fc.ad001.siemens.net>
+ <CAHp75Vd+r3_OnRAYJcHVTU3Q2ekLYV_oHQQ6-wWmq=9hm_cP1g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vd+r3_OnRAYJcHVTU3Q2ekLYV_oHQQ6-wWmq=9hm_cP1g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In some cases we may get a platform device that has ACPI companion
-which is different to the pin control described in the ACPI tables.
-This is primarily happens when device is instantiated by board file.
+On Thu, Jun 10, 2021 at 06:00:29PM +0300, Andy Shevchenko wrote:
+> On Thu, Jun 10, 2021 at 5:56 PM Henning Schild
+> <henning.schild@siemens.com> wrote:
+> >
+> > Am Thu, 10 Jun 2021 17:32:46 +0300
+> > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+> >
+> > > On Thu, Jun 10, 2021 at 05:25:04PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, Jun 09, 2021 at 01:08:16PM +0200, Henning Schild wrote:
+> > > > > Am Wed, 9 Jun 2021 13:33:34 +0300
+> > > > > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+> > > >
+> > > > ...
+> > > >
+> > > > > In order to use GPIO from the drivers i need to make sure
+> > > > > "broxton-pinctrl" comes up even if p2sb is hidden.
+> > > > >
+> > > > > Long story short, i thought the patch was simple enough to merge
+> > > > > even taken out of my special context.
+> > > > >
+> > > > > Currently intel_pinctl only works if "ps2b is not hidden by BIOS"
+> > > > > or "ACPI tables are correct", lifting the ban on the hidden p2sb
+> > > > > seems like a useful thing in general (i.e. sysfs gpio interface).
+> > > > > And i was hoping Andy would take the lead on that. It is
+> > > > > something my Siemens drivers would depend on, but really a
+> > > > > generic thing as far as i understand it.
+> > > >
+> > > > From p2sb series discussion it appears that this patch is not
+> > > > needed. The case is when BIOS already provides an ACPI device.
+> > > >
+> > > > So, the initial bug is in that series that needs to check if the
+> > > > ACPI device is exposed and forbid platform device instantiation in
+> > > > that case.
+> > >
+> > > Actually, I'm still thinking how this ever possible. We have all
+> > > drivers to provide SoC data pointers. match data may be NULL if and
+> > > only if the ACPI device provided is a new one that doesn't provide a
+> > > SoC data.
+> > >
+> > > So, w/o seeing ACPI table, I'm really puzzled here.
+> >
+> > Not sure what exactly you mean. Let us kill this thread and ignore the
+> > patch. It was posted out of context and the NULL deref code-path does
+> > not exist in the kernel, so the check is not needed.
+> >
+> > I will revisit the machine where your patch-series did lead to a
+> > double-init and EBUSY on claiming those memory ressources. And i will
+> > add ACPI info there as well.
+> 
+> I guess I got what's going on here. When we create a platform device
+> we get an associated companion device (which is parent in this case of
+> LPC) and that's why when we try enumerating it you have got the first
+> branch chosen.
 
-In order to allow this device being enumerated, refactor
-intel_pinctrl_get_soc_data() to check the matching data instead of
-ACPI companion.
+I have just sent another patch based on this report. Can you please test it?
 
-Reported-by: Henning Schild <henning.schild@siemens.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 15581f3e08b9..83d5e0a553ab 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1611,16 +1611,14 @@ EXPORT_SYMBOL_GPL(intel_pinctrl_probe_by_uid);
- 
- const struct intel_pinctrl_soc_data *intel_pinctrl_get_soc_data(struct platform_device *pdev)
- {
-+	const struct intel_pinctrl_soc_data * const *table;
- 	const struct intel_pinctrl_soc_data *data = NULL;
--	const struct intel_pinctrl_soc_data **table;
--	struct acpi_device *adev;
--	unsigned int i;
- 
--	adev = ACPI_COMPANION(&pdev->dev);
--	if (adev) {
--		const void *match = device_get_match_data(&pdev->dev);
-+	table = device_get_match_data(&pdev->dev);
-+	if (table) {
-+		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-+		unsigned int i;
- 
--		table = (const struct intel_pinctrl_soc_data **)match;
- 		for (i = 0; table[i]; i++) {
- 			if (!strcmp(adev->pnp.unique_id, table[i]->uid)) {
- 				data = table[i];
 -- 
-2.30.2
+With Best Regards,
+Andy Shevchenko
+
 
