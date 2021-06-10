@@ -2,98 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69FBE3A2CE6
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 15:25:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 460DB3A2E0F
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 16:25:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230453AbhFJN1F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Jun 2021 09:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230410AbhFJN1E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 09:27:04 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89BCFC061760;
-        Thu, 10 Jun 2021 06:25:08 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id r7so18624853edv.12;
-        Thu, 10 Jun 2021 06:25:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4KUvLwhdU/9cW6PmDzGD8cIpCLm/nTK5EPGoTz6gWB4=;
-        b=qYoS5ZhMiREtvyo8gfjIGqiojqvJ1Sq72ImF6yi6J6hcs89TfT/zmU1Gz5OswmI31t
-         AkQl1/YNmSL63z8XPuht0OX6mClWtUoF1+M6ZsfUaKTKhefM/45+Q1qDR5r4jwjYI1ZQ
-         E/ozrrkTjW6QZ/vgr/uPw1S8KcLugIlpV1BIdvRFNfmd640Ox2vsFlVKthJmsOjv97TE
-         WLkUS/L0vX0pbt8JjeoPmeJRvB3f9sAi9L8FjfCqySxlVW4QCoNHVvizZkyGvdQ/7tTb
-         wZARuooC8oVw9xTDNnGgq6Ik7FzmO7WJsZnm0u+BifgQRJY3xmH/nV27BGbaMf2mVYBu
-         Be2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4KUvLwhdU/9cW6PmDzGD8cIpCLm/nTK5EPGoTz6gWB4=;
-        b=c5Aq4ZIHqvsNzff7A7h8EnRTYU8WU34OB9QL3uN/c2c3ovSv7g6Vh3PlsZFUORwbuT
-         pXgvD7q8pK1NlTW+AdIO4gNwiOmL/rNjE+O3PhF0dz0O8+cDqyD4hPlwCytlCeEg+bH+
-         8f+Pttyv/qceuG87O7/aRWtx3DWKNd8TpEaK2+/6GDmS3erKXOgYamX/mYnmW9V/D6c8
-         8ciL4GsVN6pJ1quec6w24RNPJTFf1YsgaBw9qn1xxMCEuaPEf/z5OqH0nQtn8dkpk49F
-         Llv/mSHoL2GMRyGsAeIvf+5KqXoByvA7rqIQmRcad7MS02UCrypf7NEDi5rfCG5ZtGKa
-         1wlw==
-X-Gm-Message-State: AOAM533G6fvc9uwfsX6GPWUgVuZQbqnW96wYxNuZ9Dgt6L2JfJQtlHSi
-        bX5NhzuVesYOmT0fhsCmJSM=
-X-Google-Smtp-Source: ABdhPJw4uUQLR+U8Z8nJSii0cu3NIlIcHWk4BovrkPCYJWOpQAO5hoaObTRZXwK1zGMPwTOsaZ1IsQ==
-X-Received: by 2002:a05:6402:42cb:: with SMTP id i11mr3445086edc.242.1623331507180;
-        Thu, 10 Jun 2021 06:25:07 -0700 (PDT)
-Received: from lab-pc01.sra.uni-hannover.de (lab.sra.uni-hannover.de. [130.75.33.87])
-        by smtp.gmail.com with ESMTPSA id du16sm999619ejc.42.2021.06.10.06.25.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jun 2021 06:25:06 -0700 (PDT)
-From:   Andreas Kaessens <akaessens@gmail.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-kernel@i4.cs.fau.de, Andreas Kaessens <akaessens@gmail.com>,
-        Darian Biastoch <d.biastoch@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: pinctrl: mcp23s08: add documentation for reset-gpios
-Date:   Thu, 10 Jun 2021 15:24:38 +0200
-Message-Id: <20210610132438.3085841-2-akaessens@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210610132438.3085841-1-akaessens@gmail.com>
-References: <20210610132438.3085841-1-akaessens@gmail.com>
+        id S230287AbhFJO1Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Jun 2021 10:27:25 -0400
+Received: from mga09.intel.com ([134.134.136.24]:11363 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230153AbhFJO1Y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 10 Jun 2021 10:27:24 -0400
+IronPort-SDR: m3ke9AlduWM3gybvvkZdqqWTy4ZCOrwBBPUYA3bwgMYf0y/+kbJI9vWQXuZr6EuLC45AfzukQz
+ BOazx+N7ts+w==
+X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="205267272"
+X-IronPort-AV: E=Sophos;i="5.83,263,1616482800"; 
+   d="scan'208";a="205267272"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 07:25:08 -0700
+IronPort-SDR: hCAbLj1fQwzqoL6BHxgCVeU2vNdluBm4WylVZkxZ976mLCh4TDFm/a1VI41LmrHJ6ULT+gAS0z
+ qfq5yc61ZPCQ==
+X-IronPort-AV: E=Sophos;i="5.83,263,1616482800"; 
+   d="scan'208";a="402876746"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 07:25:06 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1lrLcG-001AbZ-6U; Thu, 10 Jun 2021 17:25:04 +0300
+Date:   Thu, 10 Jun 2021 17:25:04 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: intel: fix NULL pointer deref
+Message-ID: <YMIgwORlAzz/gJcK@smile.fi.intel.com>
+References: <20210609062722.9132-1-henning.schild@siemens.com>
+ <YMCT+izizEg0gPLD@lahna.fi.intel.com>
+ <CAHp75Vcj9wmM7H908sqGmXs10BQN8ty1C4qfmk_nXpG_s=BjTQ@mail.gmail.com>
+ <20210609130816.3631f0aa@md1za8fc.ad001.siemens.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210609130816.3631f0aa@md1za8fc.ad001.siemens.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The reset-gpios property is added to the optional dt-bindings and
-also an example for it's usage.
+On Wed, Jun 09, 2021 at 01:08:16PM +0200, Henning Schild wrote:
+> Am Wed, 9 Jun 2021 13:33:34 +0300
+> schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
 
-Signed-off-by: Andreas Kaessens <akaessens@gmail.com>
-Signed-off-by: Darian Biastoch <d.biastoch@gmail.com>
----
- Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 2 ++
- 1 file changed, 2 insertions(+)
+...
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-index 6ec3c8d79f49..2fa5edac7a35 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-@@ -49,6 +49,7 @@ Optional properties:
- - interrupt-controller: Marks the device node as a interrupt controller.
- - drive-open-drain: Sets the ODR flag in the IOCON register. This configures
-         the IRQ output as open drain active low.
-+- reset-gpios: Corresponds to the active-low RESET# pin for the chip
- 
- Optional device specific properties:
- - microchip,irq-mirror: Sets the mirror flag in the IOCON register. Devices
-@@ -135,6 +136,7 @@ gpio21: gpio@21 {
- 	microchip,irq-mirror;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2cgpio0irq>, <&gpio21pullups>;
-+	reset-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
- 
- 	gpio21pullups: pinmux {
- 		pins =	"gpio0", "gpio1", "gpio2", "gpio3",
+> In order to use GPIO from the drivers i need to make sure
+> "broxton-pinctrl" comes up even if p2sb is hidden.
+> 
+> Long story short, i thought the patch was simple enough to merge even
+> taken out of my special context.
+> 
+> Currently intel_pinctl only works if "ps2b is not hidden by BIOS" or
+> "ACPI tables are correct", lifting the ban on the hidden p2sb seems
+> like a useful thing in general (i.e. sysfs gpio interface). And i was
+> hoping Andy would take the lead on that. It is something my Siemens
+> drivers would depend on, but really a generic thing as far as i
+> understand it.
+
+From p2sb series discussion it appears that this patch is not needed.
+The case is when BIOS already provides an ACPI device.
+
+So, the initial bug is in that series that needs to check if the ACPI device is
+exposed and forbid platform device instantiation in that case.
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
