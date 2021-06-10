@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84F9E3A2222
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 04:09:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 900743A2225
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 04:10:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbhFJCK5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Jun 2021 22:10:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:50345 "EHLO mga02.intel.com"
+        id S229557AbhFJCLy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Jun 2021 22:11:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:50406 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229655AbhFJCKy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 9 Jun 2021 22:10:54 -0400
-IronPort-SDR: Ck5c7GRSibGJipNHO3pf0y7HoIgc+nEOldZPUCQZvxLyjJ/kkKZq0A0ULe3UGUElxsu8bOmpkQ
- ngkU8nQPGdBA==
-X-IronPort-AV: E=McAfee;i="6200,9189,10010"; a="192321300"
+        id S229659AbhFJCLy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 9 Jun 2021 22:11:54 -0400
+IronPort-SDR: nI2BPRy3dbBsCztXM71H3a6Erfzy0redCXBNkeC78R3qYgLOQ3pLYUgeA6KnnoN3GrCmNc48AN
+ 0/immRKJi91A==
+X-IronPort-AV: E=McAfee;i="6200,9189,10010"; a="192321374"
 X-IronPort-AV: E=Sophos;i="5.83,262,1616482800"; 
-   d="scan'208";a="192321300"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2021 19:08:58 -0700
-IronPort-SDR: 3XTQlIPFDqi+WMAF3MNavkitUkIzM4g/PI5uThwup/PLLlVMnhWZ4xl13/yDfxbtzl5a/3hHEw
- rGPvPci9pIPg==
+   d="scan'208";a="192321374"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2021 19:09:58 -0700
+IronPort-SDR: VgVWSKpdVkneO449I4voSlxGE54E0lTXyeOmzcUnpwyErXfKt+IJee/YIcpeni9A2qFh9WBC9X
+ CymX8OEp9C2Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,262,1616482800"; 
-   d="scan'208";a="482621349"
+   d="scan'208";a="470070585"
 Received: from lkp-server02.sh.intel.com (HELO 1ec8406c5392) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 09 Jun 2021 19:08:57 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 09 Jun 2021 19:09:57 -0700
 Received: from kbuild by 1ec8406c5392 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lrA7s-0009oH-D7; Thu, 10 Jun 2021 02:08:56 +0000
-Date:   Thu, 10 Jun 2021 10:08:53 +0800
+        id 1lrA8q-0009oN-G3; Thu, 10 Jun 2021 02:09:56 +0000
+Date:   Thu, 10 Jun 2021 10:08:57 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- ca199e1952cc7cfce9b416547108b52df05f61d4
-Message-ID: <60c17435.UL1kR1j655ErF071%lkp@intel.com>
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ 5320c72b23f99b383be1fc1ba3a2c15b7f766e35
+Message-ID: <60c17439.lkTum1xCet1k7GPW%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,8 +43,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: ca199e1952cc7cfce9b416547108b52df05f61d4  Merge tag 'intel-pinctrl-v5.14-1' of gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into devel
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 5320c72b23f99b383be1fc1ba3a2c15b7f766e35  Merge branch 'devel' into for-next
 
 elapsed time: 723m
 
