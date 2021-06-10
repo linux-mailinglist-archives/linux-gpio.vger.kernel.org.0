@@ -2,92 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B8B43A25D3
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 09:51:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE1B23A260C
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jun 2021 10:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbhFJHx0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Jun 2021 03:53:26 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:45780 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbhFJHxZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 03:53:25 -0400
-Received: by mail-lf1-f53.google.com with SMTP id a1so1689976lfr.12
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Jun 2021 00:51:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BV0mX6VHU5X8dHAexL1PQHyIj2OEzudYmOcUzeY2MX4=;
-        b=AdvT/igYobAKGf9/uDLDpNApWa3Pq6oV7rSkMR3xAYpt3CF1g7hBOIQXtIQnQnfLcg
-         V9MCCOKKAbHgP6RiOfevPWvrGybrM0Uisq1KLDzOUrRYmAiMGJf4xjX8wG0zGPaKrC2H
-         YtjNivLvnvqdYnnpF5TPK9UmUlmTSguPrDj30cheFYhIeKrdcGvDUn0VHt1DjPqlyISP
-         wivifzrYIDWZN+HQJegNQQgvR6Yf9NxaB2YBqkfqwbHZjfXWNuu+wZQ120m3N83COajN
-         pMoqB3XHUVSNPnWkV8KMdiR6S4l1UuE99hUPw9UX7pd7CLJj6lSgNilo0vQ6pn76sXTS
-         eiGg==
+        id S230162AbhFJIEH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Jun 2021 04:04:07 -0400
+Received: from mail-ua1-f46.google.com ([209.85.222.46]:33483 "EHLO
+        mail-ua1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229910AbhFJIDv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 04:03:51 -0400
+Received: by mail-ua1-f46.google.com with SMTP id l12so987197uai.0;
+        Thu, 10 Jun 2021 01:01:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BV0mX6VHU5X8dHAexL1PQHyIj2OEzudYmOcUzeY2MX4=;
-        b=HXvD/IekO5jEHkm5ekO3jf630MX9IrC+c2GmyrOJwG705ciA31uwc3x886+uy7sVF7
-         btVI+W1ZoDyVTLOum06d6siPRwIvAbtEd8sGYI8Bk0k1mPeTsv4SGf/f44OkhammT2C2
-         SozjikPoSL6ybsHUYx4UPuNdYiQzpJnC1opK8sqXvquQYBlKKnvTPlxMz5+7cmaz69xs
-         uZUuucXitpMcCefVM7/ixuMfEyl6gJtpbEfWMRJ9CNaa0BT3q0WWwPuf4JRSGAI3f5KB
-         Iv3dUhbpuyhWhr6BvNjmfDM3wx2c0EZF8bHwZMjiPiT5LmfB8urs2YvmvUXz9COCntxR
-         khnQ==
-X-Gm-Message-State: AOAM5310i6TvwFfJ4fjHnjF3PEAWGDwR6cUYjEbXA5q1w19PeKkpJMk0
-        Dc3S4c9loTUVZqGDuCQZoALhymXqSbjxUlLliTFxLw==
-X-Google-Smtp-Source: ABdhPJwXgej17X2Hq45GoFUg6Fkxs282tt7kcgRz+7nJDajhBBMWhiNOQrCm3BSAzecuEcF6CuKi3ff9MxykHNNR6SE=
-X-Received: by 2002:a05:6512:20c9:: with SMTP id u9mr1074510lfr.291.1623311420585;
- Thu, 10 Jun 2021 00:50:20 -0700 (PDT)
+        bh=ivptTvFqsGgv3Qpbq3w6D+6jEW1CoeV1H1Uh7PcLfwQ=;
+        b=gsG0hicAD3+g3oXtGZpQ0GX7L6mYk71kjRQablYA0L0vFaXXGxCtbsrMnwiMiq0Kbs
+         YUSw1rAAUkX7dLApuCSA3828hWKyasqB9sNNEQaahQutyfeIbJhD6cHIOHGTsM+JyngE
+         rFNU8pQPg1kGvVXNsrxIfNO2eSjfmV3wgxDdRKSaHPOuAYaxWL8xRtA1IQ+STlG9H4jt
+         ZvIWnOUVtO8/FGsUJYv5Uk6EmX73Bh5NbPUbSKbG87XuMDUwFEOREHvEroIIbdR6I0uz
+         cqelXRrGLe81+jb8q4HX+7KWSw3JZj4PzqmsHEJkY0jeiTC4U8j8nRJCPzOWLscXPsN2
+         vsHQ==
+X-Gm-Message-State: AOAM531lyeZ1iRjh5z9zn/Lkz9nn4RDRiExhnJeGkvCzWsot/dd7QhlI
+        Ui0nGcF2NeTuzWoJLe8DJ6VMZhKD7Rz0O84wotU4un1pAwc=
+X-Google-Smtp-Source: ABdhPJzotoLpVM39K0bOjJ2XYffSMcHlm2zUiy03JPPBOPdQt4B0/4Dn2C8vlGyCaTGiFC9VQ4kTgbMl5iuUI3vSqk8=
+X-Received: by 2002:ab0:484b:: with SMTP id c11mr3202139uad.100.1623312101666;
+ Thu, 10 Jun 2021 01:01:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210608102547.4880-1-steven_lee@aspeedtech.com>
- <CACRpkdZOStr+K9U9QTkAcsk4NxuSqBRVv_-9_VkGJbT69iSxmQ@mail.gmail.com> <20210610022416.GA27188@aspeedtech.com>
-In-Reply-To: <20210610022416.GA27188@aspeedtech.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 10 Jun 2021 09:50:09 +0200
-Message-ID: <CACRpkda60eB6i2+2MQFyhqYn4Q0WRGPPs91cu9K-g1maov61+w@mail.gmail.com>
-Subject: Re: [PATCH v5 00/10] ASPEED sgpio driver enhancement.
-To:     Steven Lee <steven_lee@aspeedtech.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hongwei Zhang <Hongweiz@ami.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
+References: <cover.1619785375.git.geert+renesas@glider.be> <b4c9cd68f9728eb9ebc8526ee238013ddf1e1407.1619785375.git.geert+renesas@glider.be>
+In-Reply-To: <b4c9cd68f9728eb9ebc8526ee238013ddf1e1407.1619785375.git.geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 10 Jun 2021 10:01:30 +0200
+Message-ID: <CAMuHMdUg23z7w3ZkqiMgq67r+0d7Bfm1PM+jwKyWEFtWDv+koA@mail.gmail.com>
+Subject: Re: [PATCH 12/12] pinctrl: renesas: r8a77995: Add bias pinconf support
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 4:24 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
-
-> Per the comment in the following mail
-> https://lkml.org/lkml/2021/6/9/317
+On Fri, Apr 30, 2021 at 2:31 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Implement support for pull-up (most pins, excl. DU_DOTCLKIN0) and
+> pull-down (most pins, excl. JTAG) handling for the R-Car D3 SoC, using
+> the common R-Car bias handling.
 >
-> I was wondering if I should prepare v6 for the currnet solution or
-> I should drop this patch series then prepare another patch for the
-> new solution(piar GPIO input/output) which breaks userspace but is
-> better than the current solution.
+> Note that the documentation of the LSI pin pull-up/down control Register
+> 2 (PUD2) in the R-Car Gen3 Hardware User's Manual Rev. 2.20 seems to
+> have mixed up the bits for the NFRE# and NFWE# pins: their definition is
+> inconsistent with the documentation of the corresponding bits in the LSI
+> pin pull-enable register 2(PUEN2), and the bit order in Rev. 0.7 of the
+> R-Car D3 pinfunction spreadsheet, so I have used the latter.
 
-I would say just go ahead with the new solution. AFAIK Aspeed
-has pretty tight control over what kind of userspace run on these
-systems.
+It was confirmed that the documentation is correct. Will fix in v2...
 
-BTW please influence Aspeed to use the GPIO character device
-and ligpiod
-https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/
-if you are doing any kind of userspace GPIO control (which I
-suspect that you do).
+Gr{oetje,eeting}s,
 
-Yours,
-Linus Walleij
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
