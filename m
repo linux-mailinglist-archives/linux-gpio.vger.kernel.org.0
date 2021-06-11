@@ -2,147 +2,244 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EAE23A37D7
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jun 2021 01:27:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C8CC3A39BD
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jun 2021 04:27:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231249AbhFJX3z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Jun 2021 19:29:55 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:48067 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230212AbhFJX3x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 10 Jun 2021 19:29:53 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2ACB45806C7;
-        Thu, 10 Jun 2021 19:27:56 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 10 Jun 2021 19:27:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=cFF/8oG3M1dicXtAwlQThY8CTKYnxK4
-        oe2z09qMEzC0=; b=I1WmP4JUnIzWVed7DF0ufUJB30mobzScfiDXaiW34NhRCDN
-        KZkL+KxdedDIbprjITw2lA9ngO8scHP7Pgvf0AL4jAMDSROXYd3xO1PpaPOsmgfu
-        OkYjgL5dnVjMJxyVV9eG+0xcQC/kEWxHg0NM/bskbIZDxD5dvtod48L1nENhQCp9
-        s4HA74Ts5s+magBEjvWyW2ABZSH1zpiOXSxWI0TOXMg5CgHh1JUYZIFA01y/tr7K
-        lkj8/0TyJlspWfYEmCsMtK+12VR9gK7pt0k7nZB7n2BOGQoSwWHcv1LiFj+bBbgi
-        ShShN3zFatpYmxDSf5NqkKuqjjzsVYn1xCcVpmQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=cFF/8o
-        G3M1dicXtAwlQThY8CTKYnxK4oe2z09qMEzC0=; b=EnisUU2J9adx4JKrNozsKF
-        o+FxpHPpBKo3EOYlitCFjioTJjA9LlKAu07URV9pyyT9/H8058gvbhAHbyumqDwR
-        +jYaZr+QxINa4Iq1FNPF+ITq9Ryj56bneQ2DvVoZQF0UK5q+sKktQmk2kN0TE0lZ
-        7bCIZnqXmjUk8Rp9qzyh8IAolLXofilztZhYFmEK9vgg7hMfw4wTN/rpGaGaw1iG
-        N33f0CW1yMZtOcv/FNOO96luD9H80CLB91So4H3w457s0HVxGC+Q9UEelI+Ru7I5
-        6X+7jDJr74P6ytX0dtIc60CXXC8SmirU4BHI9ymrn5JoJbATjf3BCiD0QCn0Yjjw
-        ==
-X-ME-Sender: <xms:-p_CYH0gycjPd9wXY7FtXAecNkq9NJWOgOlYAEiVxGfkY2RXoVGrnA>
-    <xme:-p_CYGE_BdJYPhy7RaPGRPn97NtXyX5JfRi_RsHVObE-o92l1j-ne6PeyFj0EPNLd
-    9FlkJgszfmGJbpraA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrfeduiedgvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
-    grthhtvghrnhepudehtddtleektedvfeeitdeljeekveelkeegvdfhtdejhefgfedtfedv
-    jeejledtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:-p_CYH56-aVJHv5U-UOQJwdtkZoaY4UlYTXTZpKmtuw5HkzlRZ0CQw>
-    <xmx:-p_CYM3HUUSylPIDcaK_I4awiiUE3joXqxjLdTNH3LhF-4yO9XDaNw>
-    <xmx:-p_CYKEElMOBf29gl-rPh26uz3wSodiotYvxCtqHKwVWqSvgbLVUMg>
-    <xmx:_J_CYC8B-dmfCOHgLBquuxksa1axY5h4MVpVHYrGLX-kfp879vBYFQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 09798A0007A; Thu, 10 Jun 2021 19:27:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-519-g27a961944e-fm-20210531.001-g27a96194
-Mime-Version: 1.0
-Message-Id: <f639f1bb-fe53-4c15-a6dd-91b45ea7eef1@www.fastmail.com>
-In-Reply-To: <20210610162320.GA1910317@robh.at.kernel.org>
-References: <20210608102547.4880-1-steven_lee@aspeedtech.com>
- <20210608102547.4880-3-steven_lee@aspeedtech.com>
- <20210610162320.GA1910317@robh.at.kernel.org>
-Date:   Fri, 11 Jun 2021 08:57:12 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Rob Herring" <robh@kernel.org>,
-        "Steven Lee" <steven_lee@aspeedtech.com>
-Cc:     "Linus Walleij" <linus.walleij@linaro.org>,
-        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        "open list" <linux-kernel@vger.kernel.org>,
-        "Hongwei Zhang" <Hongweiz@ami.com>,
-        "Ryan Chen" <ryan_chen@aspeedtech.com>,
-        "Billy Tsai" <billy_tsai@aspeedtech.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v5_02/10]_dt-bindings:_aspeed-sgpio:_Add_ast2600_sg?=
- =?UTF-8?Q?pio_compatibles.?=
-Content-Type: text/plain
+        id S231519AbhFKC2y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Jun 2021 22:28:54 -0400
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:36503 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231512AbhFKC2x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 22:28:53 -0400
+Received: by mail-ot1-f46.google.com with SMTP id h24-20020a9d64180000b029036edcf8f9a6so1746193otl.3
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Jun 2021 19:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IjaHeZmvkpeFh6CIfGhXwuSQrGCOdALjcUAdiW8WWjU=;
+        b=E25Jh+rCQJyItREai2cRgb2J7R0Ev1dQp5dFjeAHzXlTacCQbjNGk0qfn7EPM0nlBk
+         hgfQqzTqhtG0XnL4gQjZah4JG8VQF8LAtppcLhE6cn2YNIahQbArzjF7wRJ3J2UsfXme
+         T9pSVFzQZoIbu0V+FOqYWwoKTsv13aBxM12vnm4+8pua8IEBAZQRM0i8n6flrHrik92H
+         2T0monIFdXDRe8t0z+KaBLLY2mmk1o268DMLjuLqUcAGeqS63pMVfA5Pujg+Nf/ehNpR
+         BydTl3tiSCrvruHINMwLtZRLoyhg0CqlOk+3/amD0xnEXPEpKRHGTAh/Ybm+nC6G3sZr
+         Stzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IjaHeZmvkpeFh6CIfGhXwuSQrGCOdALjcUAdiW8WWjU=;
+        b=VRe93jLEAqQgLzRXSkQkNkAwenUv6c5aVYXxIO+rmvtfYls3MSq86oNBIWwsXODHTX
+         orIH1jmUMzUsciQlzrrTto++H9pkxYMn+txL0Ovfhr1O3eswys0ADVJ1GNYX4KrTcwL3
+         qfP/lE+pC+aJqHqf39ZOSxGUueUQWyNh5abjYtAKgDWfmrOM9aUlzt2xgHR2GEXq4Os2
+         9rTZq3sDLBW62u7WmVdPLxyXZq8RcEr/jGB3b6O7GOqKiHdheHBrD/POoBEqew5evxV2
+         XqrS6r+rS5TELNATMpm/EN7TY2QJYdMgoJRTvgVc1D3U+uk1fA7EYn/L2SgOU6pI9lk6
+         6AoA==
+X-Gm-Message-State: AOAM531MwGTSBLqCr3nfgs6iuUiSXukvjF52ebIfWDA5xiEg9qfgK+L9
+        KzKZALc0rjQHrH8dyvZ5SHlrGA==
+X-Google-Smtp-Source: ABdhPJyH9UXs091VevqePZMC9ooFDYkYXbSPKywR4X4SSB7g9iwor+mOFv6s8k0fSAczLDFlO7F+fg==
+X-Received: by 2002:a9d:589:: with SMTP id 9mr1051074otd.65.1623378356510;
+        Thu, 10 Jun 2021 19:25:56 -0700 (PDT)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id x2sm878974oog.10.2021.06.10.19.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jun 2021 19:25:56 -0700 (PDT)
+Date:   Thu, 10 Jun 2021 21:25:54 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bhupesh.linux@gmail.com
+Subject: Re: [PATCH 8/8] arm64: dts: qcom: sa8155p-adp: Add base dts file
+Message-ID: <YMLJsieGd+G+/kxK@builder.lan>
+References: <20210607113840.15435-1-bhupesh.sharma@linaro.org>
+ <20210607113840.15435-9-bhupesh.sharma@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210607113840.15435-9-bhupesh.sharma@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon 07 Jun 06:38 CDT 2021, Bhupesh Sharma wrote:
 
+> Add base DTS file for sa8155p-adp and enable boot to console,
 
-On Fri, 11 Jun 2021, at 01:53, Rob Herring wrote:
-> On Tue, Jun 08, 2021 at 06:25:37PM +0800, Steven Lee wrote:
-> > AST2600 SoC has 2 SGPIO master interfaces one with 128 pins another one
-> > with 80 pins. Add ast2600-sgpiom0-80 and ast2600-sgpiom-128 compatibles
-> > and update descriptions to introduce the max number of available gpio
-> > pins that AST2600 supported.
-> > 
-> > Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
-> > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> >  Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> > index b2ae211411ff..0e42eded3c1e 100644
-> > --- a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> > +++ b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> > @@ -10,9 +10,10 @@ maintainers:
-> >    - Andrew Jeffery <andrew@aj.id.au>
-> >  
-> >  description:
-> > -  This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 full
-> > -  featured Serial GPIOs. Each of the Serial GPIO pins can be programmed to
-> > -  support the following options
-> > +  This SGPIO controller is for ASPEED AST2400, AST2500 and AST2600 SoC,
-> > +  AST2600 have two sgpio master one with 128 pins another one with 80 pins,
-> > +  AST2500/AST2400 have one sgpio master with 80 pins. Each of the Serial
-> > +  GPIO pins can be programmed to support the following options
-> >    - Support interrupt option for each input port and various interrupt
-> >      sensitivity option (level-high, level-low, edge-high, edge-low)
-> >    - Support reset tolerance option for each output port
-> > @@ -25,6 +26,8 @@ properties:
-> >      enum:
-> >        - aspeed,ast2400-sgpio
-> >        - aspeed,ast2500-sgpio
-> > +      - aspeed,ast2600-sgpiom-80
-> > +      - aspeed,ast2600-sgpiom-128
+Please spell out "sa8155-adp", i.e. "Add base DTS for SA8155p Automotive
+Development Platform."
+
+> tlmm reserved range and also include pmic file(s).
 > 
-> If the number of GPIOs is the only difference, then I don't think you 
-> should get rid of ngpios. It's one thing if it varies from one SoC to 
-> the next, but if something is per instance we should have a property.
+> SA8155p-adp board is based on sm8150 Qualcomm Snapdragon SoC.
 > 
 
-There are two issues:
+It's not based on sm8150, it's based on sa8155p, so let's express this
+as "The SA8155p platform is similar to the SM8150, so use this as base
+for now", to document why we decided to do this.
 
-1. The maximum number of GPIOs supported by the controller
-2. The maximum number of GPIOs supported by the platform
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: bhupesh.linux@gmail.com
 
-These are different because of what the controller does - here's some previous discussion on the topic:
+This would go into the git history as "I specifically asked for input
+from these people", so please keep this list shorter (but for a change
+like this it's probably better to omit it completely)
 
-https://lore.kernel.org/linux-gpio/f2875111-9ba9-43b7-b2a4-d00c8725f5a0@www.fastmail.com/
+> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile        |   1 +
+>  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 363 +++++++++++++++++++++++
+>  2 files changed, 364 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 456502aeee49..38d3a4728871 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -71,6 +71,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-xiaomi-beryllium.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sa8155p-adp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-hdk.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm8350-hdk.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> new file mode 100644
+> index 000000000000..470d740e060a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> @@ -0,0 +1,363 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2021, Linaro Limited
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "sm8150.dtsi"
+> +#include "pmm8155au_1.dtsi"
+> +#include "pmm8155au_2.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. SA8155P ADP";
+> +	compatible = "qcom,sa8155p-adp";
+> +
+> +	aliases {
+> +		serial0 = &uart2;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	vreg_3p3: vreg_3p3_regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vreg_3p3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	/*
+> +	 * Apparently RPMh does not provide support for PM8150 S4 because it
+> +	 * is always-on; model it as a fixed regulator.
+> +	 */
 
-We've used ngpios to describe 2; this decision was made prior to the 2600 design - the SGPIO controller for both the 2400 and 2500 supported a maximum of 80 GPIOs. With the 2600 we have to differentiate between the two SGPIO controllers because they support a different maximum number of GPIOs. The proposed approach of different compatibles keeps the behaviour of ngpios the same across all controller implementations.
+You can reduce this to
 
-Cheers,
+	/* S4A is always on and not controllable through RPMh */
 
-Andrew
+> +	vreg_s4a_1p8: smps4 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vreg_s4a_1p8";
+> +
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +
+> +		vin-supply = <&vreg_3p3>;
+> +	};
+> +};
+> +
+> +&apps_rsc {
+> +	pmm8155au-1-rpmh-regulators {
+> +		compatible = "qcom,pmm8155au-1-rpmh-regulators";
+> +		qcom,pmic-id = "a";
+> +
+> +		vdd-s1-supply = <&vreg_3p3>;
+> +		vdd-s2-supply = <&vreg_3p3>;
+> +		vdd-s3-supply = <&vreg_3p3>;
+> +		vdd-s4-supply = <&vreg_3p3>;
+> +		vdd-s5-supply = <&vreg_3p3>;
+> +		vdd-s6-supply = <&vreg_3p3>;
+> +		vdd-s7-supply = <&vreg_3p3>;
+> +		vdd-s8-supply = <&vreg_3p3>;
+> +		vdd-s9-supply = <&vreg_3p3>;
+> +		vdd-s10-supply = <&vreg_3p3>;
+> +
+> +		vdd-l1-l8-l11-supply = <&vreg_s6a_0p92>;
+> +		vdd-l2-l10-supply = <&vreg_3p3>;
+> +		vdd-l3-l4-l5-l18-supply = <&vreg_s6a_0p92>;
+> +		vdd-l6-l9-supply = <&vreg_s6a_0p92>;
+> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
+> +		vdd-l13-l16-l17-supply = <&vreg_3p3>;
+> +
+> +		vreg_s5a_2p04: smps5 {
+> +			regulator-min-microvolt = <1904000>;
+> +			regulator-max-microvolt = <2000000>;
+> +		};
+> +
+> +		vreg_s6a_0p92: smps6 {
+> +			regulator-min-microvolt = <920000>;
+> +			regulator-max-microvolt = <1128000>;
+> +		};
+> +
+> +		vdda_wcss_pll:
+
+This is the "label" of the pad which the regulator typically is
+connected to (rather than a denotion of which regulator it is). So even
+though we have these in some of the other boards, I would prefer if you
+skip them and only use the vreg_xyz_abc variant.
+
+> +		vreg_l1a_0p752: ldo1 {
+> +			regulator-min-microvolt = <752000>;
+> +			regulator-max-microvolt = <752000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+[..]
+> +&usb_1_dwc3 {
+> +	dr_mode = "peripheral";
+
+We have enough pieces to handle mode switching on this platform, but as
+discussed, lets leave it as "peripheral" until your local setup is back
+online.
+
+Thanks,
+Bjorn
+
+> +};
+> +
+> +&qupv3_id_1 {
+> +	status = "okay";
+> +};
+> -- 
+> 2.31.1
+> 
