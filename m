@@ -2,221 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54EAE3A3A2D
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jun 2021 05:14:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22E053A3A57
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jun 2021 05:39:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231408AbhFKDQm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Jun 2021 23:16:42 -0400
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:33732 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231309AbhFKDQm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 23:16:42 -0400
-Received: by mail-ot1-f51.google.com with SMTP id o17-20020a9d76510000b02903eabfc221a9so1876040otl.0
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Jun 2021 20:14:30 -0700 (PDT)
+        id S230479AbhFKDl3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Jun 2021 23:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230205AbhFKDl3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Jun 2021 23:41:29 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B426C061574
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Jun 2021 20:39:32 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id 11so2124759plk.12
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Jun 2021 20:39:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KQu0eDuwQvpglxFBbKjew1x6RGhhszO56HCWSTbbarA=;
-        b=TX7g+W/s3byvmkCH7QlSOO557obd7nW2JBe6rGkstprgoJpSfCZ/kSiKJNx83GDOU+
-         xw1FIybt2mTCYrgfbBnXnPuMvGpx/6AH26eaDRdLGEGhxREwPMei3U1eTY48le7CbTuZ
-         ypX7VuXGC6vMtqgn0Seq6ZTqMWOsOJe0NVNxsKFuirQl/KT3jpwq2btseiFZW8BN8eXH
-         O6RxNAgDnLL3qOMoFpxC03Mg2lwN8TMizNBiTNerVklP/VYdpatDDAlxwyu0eprsQXt4
-         jkYVfYijx2pag0W5k7LD7UPmPAb+xg+jys+k8DszgOUYE+SOqvBfKYCCPNJHC1+Lan9e
-         /77Q==
+         :content-disposition:in-reply-to:user-agent;
+        bh=SxxbAF3jaVNlurlddu+dUL7InQzwoLHvI2QS6L1ZxjQ=;
+        b=BpsBGYsc3slgoB7ffao6X7asqYsjp6NuzRTK9sRNfRDGAbKOJwOk07koFr9cSJgJ1C
+         zS8/elLhYZqjTn0hueib/5CkQFqxhqrPifwrvceCqxnNzhyBJEiHX3W7ygy81esbwu5s
+         376cXmfHLiodod8ml8ifkYZOjjUdjM40YhDqma+KYO8E+xQri7K0gPITGNhSAm3NzsNi
+         8fCJZQhCwz7zmobOpFIGlF74GGeYtPKcp58AG0VXzkLrXtTYAdbCtB/Xwldi2L+WI9Wg
+         50QyhP5Nenm9EFuqhKd+Ah5wMUf4Hzf2o/iiCGHwr3AgeHXvgqqNqbO+A9DDZfBiHpu2
+         uUmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KQu0eDuwQvpglxFBbKjew1x6RGhhszO56HCWSTbbarA=;
-        b=bQx9lSntygqoSJH6oxaRHz1rUwZc8oL1vTkkK4CVNK90HwJ1bdi9hCS6j0woZ8MGWv
-         0viGl352tznCsvHXqE4qE0O5ACZCRMPLjy3Ew5X+s3VWkpsz/MZRK3r1VkY7Z5bpq2w1
-         105ab40Z1V8FGGqhanP1jI4clUajWF3KeuQFDkG1oI5hlP+R3jPRRF4KDY57nFwzIo+2
-         ZhAdb97ab7NxAfCEk+J75A/pl5YgM4xqlX7rkJm2CSzRhI4RC0RHvIMvcelwWglGTs3B
-         ADBAtZV7ZO08V367jtkr3SMTDktzzz+RybOt3/B5qvVDjm6UwacxantW2iQIcusUnDa0
-         vxSA==
-X-Gm-Message-State: AOAM531Asy6molmypdutYNIDPlR+LJiw19m8WaeRVQDLEr3UJrJfg9vI
-        NARtBdeoQw9PWdbJ2J7CVvrWAg==
-X-Google-Smtp-Source: ABdhPJw7EYbfaoXxnIco2pLxpPJBwR54SnN3GzbtMcq7eaTMq+GPiQAso6TL1BvXqJasrqSoKTQHyA==
-X-Received: by 2002:a05:6830:19c2:: with SMTP id p2mr1151911otp.234.1623381210437;
-        Thu, 10 Jun 2021 20:13:30 -0700 (PDT)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id z23sm601635ooz.15.2021.06.10.20.13.29
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SxxbAF3jaVNlurlddu+dUL7InQzwoLHvI2QS6L1ZxjQ=;
+        b=eZAjxierVGWCUDMwcHUkOW2N1uiHd85W3r5hDlYtNvzxQlJ0id1q6iR2lVO9N8ND6s
+         NnW35lNyjWLL7hH/c6YGMKOKE7HMSPAZAFkkbwUpywfOP9fzK32oqEMtioLCiOojSQl1
+         6mbR62MVYgmO+E0JiCbipJXnS+Ks1hloqKvO4VQhQaRerfh0Hv2Oq+oSufo4mHP3fbcb
+         jwwfhHsppJyRPv8tBaI3SRtWuphX9TmlkVwFQfZALjq/jZiYUgPJwFEAdOlGxNJ2kLZz
+         Q7RDBguHCc6XH64Qogx+fzLUnP9prUvBgOH6atRXVdJC/Vv8hKrFL75aBsBIkztIh+zt
+         y4kg==
+X-Gm-Message-State: AOAM531dbBeszlRBQM9Og/xFMA2uK18m20MVNDp3PJ/QdwQUSJzRygdv
+        /5kpKoY5ZTr8ALA7+Nu2DuxnVCpZ4iY8kQ==
+X-Google-Smtp-Source: ABdhPJyAC6rOPaOUyj6eu7wayFUFCspO1bzWLoCbHm6Ga4Glw+eFx85c6mzvlktHCLQ6inn1YqD6Dw==
+X-Received: by 2002:a17:902:8e88:b029:ee:b947:d7df with SMTP id bg8-20020a1709028e88b02900eeb947d7dfmr1954566plb.48.1623382771923;
+        Thu, 10 Jun 2021 20:39:31 -0700 (PDT)
+Received: from localhost ([136.185.134.182])
+        by smtp.gmail.com with ESMTPSA id p11sm1342742pjj.43.2021.06.10.20.39.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jun 2021 20:13:29 -0700 (PDT)
-Date:   Thu, 10 Jun 2021 22:13:28 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org,
+        Thu, 10 Jun 2021 20:39:31 -0700 (PDT)
+Date:   Fri, 11 Jun 2021 09:09:29 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bhupesh.linux@gmail.com
-Subject: Re: [PATCH 7/8] arm64: dts: qcom: pmm8155au_2: Add base dts file
-Message-ID: <YMLU2D+Jkfs6dmM9@builder.lan>
-References: <20210607113840.15435-1-bhupesh.sharma@linaro.org>
- <20210607113840.15435-8-bhupesh.sharma@linaro.org>
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Viresh Kumar <vireshk@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-gpio@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
+        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
+        <sgarzare@redhat.com>, stratos-dev@op-lists.linaro.org
+Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
+Message-ID: <20210611033929.ifnafw2gznjklnq2@vireshk-i7>
+References: <cover.1623326176.git.viresh.kumar@linaro.org>
+ <01000179f5da7763-2ea817c6-e176-423a-952e-de02443f71e2-000000@email.amazonses.com>
+ <YMJOk6RWuztRNBXO@myrica>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210607113840.15435-8-bhupesh.sharma@linaro.org>
+In-Reply-To: <YMJOk6RWuztRNBXO@myrica>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon 07 Jun 06:38 CDT 2021, Bhupesh Sharma wrote:
+On 10-06-21, 19:40, Jean-Philippe Brucker wrote:
+> On Thu, Jun 10, 2021 at 12:16:46PM +0000, Viresh Kumar via Stratos-dev wrote:
 
-> Add base DTS file for pmm8155au_2 along with GPIOs, power-on, rtc and vadc
-> nodes.
+Fixed everything else you suggested.
+
+> > +struct virtio_gpio_config {
+> > +	char name[32];
+> > +	__u16 ngpio;
+> > +	__u16 padding;
+> > +	__u32 gpio_names_size;
+> > +	char gpio_names[0];
 > 
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: bhupesh.linux@gmail.com
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi | 107 ++++++++++++++++++++++
->  1 file changed, 107 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi
+> A variable-size array here will make it very difficult to append new
+> fields to virtio_gpio_config, when adding new features to the device. (New
+> fields cannot be inserted in between, since older drivers will expect
+> existing fields at a specific offset.)
+
+Yes, I thought about that earlier and though maybe we will be able to
+play with that using the virtio-features, I mean a different layout of
+config structure if we really need to add a field in config, based on
+the feature flag.
+
+> You could replace it with a reference to the string array, for example
+> "__u16 gpio_names_offset" declaring the offset between the beginning of
+> device-specific config and the string array.
+
+But, I like this idea more and it does make it very flexible. Will
+adapt to it.
+
+> The 'name' field could also be indirect to avoid setting a fixed
+> 32-char size, but that's not as important.
+
+Yeah, 32 bytes is really enough. One won't be able to make any sense
+out of a bigger name anyway :)
+
+> > +} __packed;
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi b/arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi
+> No need for __packed, because the fields are naturally aligned (as
+> required by the virtio spec)
 
-As with _1, I approve of this design.
+Yeah, I know, but I tend to add that for structures which aren't very
+simple (like the request/response ones), just to avoid human errors
+and hours of debugging someone need to go through. __packed won't harm
+at least :)
 
-> new file mode 100644
-> index 000000000000..11c0c203a4e2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi
-> @@ -0,0 +1,107 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2021, Linaro Limited
-> + */
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/spmi/spmi.h>
-> +
-> +/ {
-> +	thermal-zones {
-> +		pmm8155au-2-thermal {
-> +			polling-delay-passive = <100>;
-> +			polling-delay = <0>;
-> +
-> +			thermal-sensors = <&pmm8155au_2_temp>;
-> +
-> +			trips {
-> +				trip0 {
-> +					temperature = <95000>;
-> +					hysteresis = <0>;
-> +					type = "passive";
-> +				};
-> +
-> +				trip1 {
-> +					temperature = <115000>;
-> +					hysteresis = <0>;
-> +					type = "hot";
-> +				};
-> +
-> +				trip2 {
-> +					temperature = <145000>;
-> +					hysteresis = <0>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&spmi_bus {
-> +	pmic@4 {
-> +		compatible = "qcom,pmm8155au-2", "qcom,spmi-pmic";
-
-"qcom,pmm8155au", "qcom,spmi-pmic"
-
-> +		reg = <0x4 SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		power-on@800 {
-> +			compatible = "qcom,pm8916-pon";
-> +			reg = <0x0800>;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		pmm8155au_2_temp: temp-alarm@2400 {
-> +			compatible = "qcom,spmi-temp-alarm";
-> +			reg = <0x2400>;
-> +			interrupts = <0x4 0x24 0x0 IRQ_TYPE_EDGE_BOTH>;
-> +			io-channels = <&pmm8155au_2_adc ADC5_DIE_TEMP>;
-> +			io-channel-names = "thermal";
-> +			#thermal-sensor-cells = <0>;
-> +		};
-> +
-> +		pmm8155au_2_adc: adc@3100 {
-> +			compatible = "qcom,spmi-adc5";
-> +			reg = <0x3100>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			#io-channel-cells = <1>;
-> +			interrupts = <0x4 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> +
-> +			ref-gnd@0 {
-> +				reg = <ADC5_REF_GND>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "ref_gnd";
-> +			};
-> +
-> +			vref-1p25@1 {
-> +				reg = <ADC5_1P25VREF>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "vref_1p25";
-> +			};
-> +
-> +			die-temp@6 {
-> +				reg = <ADC5_DIE_TEMP>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "die_temp";
-> +			};
-> +		};
-> +
-> +		pmm8155au_2_gpios: gpio@c000 {
-> +			compatible = "qcom,pmm8155au-2-gpio";
-
-"qcom,pmm8155-gpio"
-
-> +			reg = <0xc000>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +		};
-> +	};
-> +
-> +	pmic@5 {
-> +		compatible = "qcom,pmm8155au-2", "qcom,spmi-pmic";
-
-"qcom,pmm8155au", "qcom,spmi-pmic"
-
-Regards,
-Bjorn
-
-> +		reg = <0x5 SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +	};
-> +};
-> -- 
-> 2.31.1
-> 
+-- 
+viresh
