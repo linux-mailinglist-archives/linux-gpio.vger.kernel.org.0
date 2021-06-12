@@ -2,38 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BBD43A50E9
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jun 2021 23:14:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D0503A50F4
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jun 2021 23:24:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231625AbhFLVPy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Jun 2021 17:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59230 "EHLO
+        id S230136AbhFLV0U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Jun 2021 17:26:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231626AbhFLVPm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Jun 2021 17:15:42 -0400
-Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735BFC0611C0
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Jun 2021 14:13:42 -0700 (PDT)
-Received: from terra.local.svanheule.net (unknown [IPv6:2a02:a03f:eafb:ee01:a4dd:c59:8cbd:ee0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id 59DD720C9D4;
-        Sat, 12 Jun 2021 23:13:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1623532419;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zrcLchoMZqIdTITbDeghInblzMMLq4JBFFSGSpCy4xg=;
-        b=I3v24iASIQFoz3x/LthQYhV+Xp9BeyHHc2qmJzfjTPm0kL5uFI0csBKA4E6G4AhgAZJu5i
-        IWW/RpR3uYOUHr8A2PilzaE/vR9k+eSGNzRPOKTRyOxEpMfLaogyjNr1YMxfgOcVkdy1Cg
-        84d5/Am5Z0PsdVbzf2dTRkwPEgSP/bMX0aTLAYg95tnIwgqeOc5US+8+zB1aAFCAg4BN4v
-        NeEay7QG4rQcivHBKiQbyFPIjIx87NqNvhOTtXjWaVmALh53t3v+AkColApo9gDuqKCpPK
-        gnyAsE3a+eRtcRg439YHsSYAQvyRLpN8Q1sI7SL2CtM94RZolOg0dvOPojtlJg==
-From:   Sander Vanheule <sander@svanheule.net>
-To:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229753AbhFLV0P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Jun 2021 17:26:15 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0992C061574;
+        Sat, 12 Jun 2021 14:24:14 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id x73so7430236pfc.8;
+        Sat, 12 Jun 2021 14:24:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c9ib10t36R/EO1N7Re3lDE2MnwjGOz25v+dbyCiOWAI=;
+        b=Pvds2+eVgeiCLXPwrEsoZdchsy3q/vkm/NRXLwkg7m0x614cSDxMJciWOV4UtST6h8
+         9MS22TsxqWEgaHyX+Ob8arEFgfYJtMPl1JxdVxRfCPat2L5s0Wu6TV+wxWWhsnKKbUlp
+         pDWxFg+Wzctv3BnfZKg4Y1IqLu1v4a3ENihzDttnwu2gIOf/GUHF0IzatZCApFNzTa6H
+         SrQj3T5S37II5dvpzFdpw+Nw2PjD2ekHBL05EBOP4GqZB0/bEV64LCClPiEsVUXCZ4m8
+         a7rhGlU39VN3imPD0NwRVpcWngajhYJHdQMbTb/NilzZE7gy8IfJF35XtEhw96w3Znlv
+         iy4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c9ib10t36R/EO1N7Re3lDE2MnwjGOz25v+dbyCiOWAI=;
+        b=E+M9LKdNJGE8Y0IZLikXC4vKTgL61RRjYvRa7eZ+SoQzbD77acUrSzv9/rVWJCwsmk
+         7rOoWWtAk/oFHH39plyDPmQN2K45kZXpeSiXRQnYJkdHFKJMWQTy0l4qB5N0tBPcHSjt
+         BUm1LGfgtYmD1QwBCfh9BrGRmnLBJudtr2d16KxKZfjhMGhVgimSvyycDH7raprd9RJ2
+         12z3um0fLaVy1fraCYxu32H1HwH0RxIqWtHmAmhQoUmVLlQuv034eyhmxOCcuDSa/x3O
+         bBfEh9g3+fO2IE4DZD8zxMHXPJOjADv5aloH+BgZU6FDLXR89S6a03hB5swLHqgMbxO+
+         gjgA==
+X-Gm-Message-State: AOAM530WnUHGIIScvIwfOkBJ3aYdpWDopV9dcSV/bgGthzh5ZBa5QuwT
+        uJiUrkOOB4umhniJVRK8D1xLxXlGkHKfNJYjRgs=
+X-Google-Smtp-Source: ABdhPJzE4TVjeipfw8Zk5WKdZ6liL0hydNjaNzMwPu1LPUA9qnwPQRmKBbK+zeqjo78m2J99UDMDQcriFxv7+7p3+Tw=
+X-Received: by 2002:a05:6a00:139c:b029:2f7:102c:5393 with SMTP id
+ t28-20020a056a00139cb02902f7102c5393mr7900451pfg.40.1623533050891; Sat, 12
+ Jun 2021 14:24:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1623532208.git.sander@svanheule.net> <e1be20bb92cff2688153125b534b738b71c3a743.1623532208.git.sander@svanheule.net>
+In-Reply-To: <e1be20bb92cff2688153125b534b738b71c3a743.1623532208.git.sander@svanheule.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 13 Jun 2021 00:23:54 +0300
+Message-ID: <CAHp75VdsNpOdZYEjBxRZfe5tb40v4iNa2W0Ys_g-vpTpqBKkTQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/8] regmap: Support atomic forced uncached reads
+To:     Sander Vanheule <sander@svanheule.net>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
         Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -41,53 +60,41 @@ To:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Michael Walle <michael@walle.cc>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Sander Vanheule <sander@svanheule.net>
-Subject: [PATCH v5 8/8] MAINTAINERS: Add RTL8231 MFD driver
-Date:   Sat, 12 Jun 2021 23:12:38 +0200
-Message-Id: <de430ce05d463e4b8dd8091d90b622999168cbe7.1623532208.git.sander@svanheule.net>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1623532208.git.sander@svanheule.net>
-References: <cover.1623532208.git.sander@svanheule.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the files associated with the RTL8231 support, and list Sander
-Vanheule (myself) as maintainer.
+On Sun, Jun 13, 2021 at 12:13 AM Sander Vanheule <sander@svanheule.net> wrote:
+>
+> When a user wants to read a single uncached register, cache bypassing
+> can be enabled. However, this is not atomic unless an external lock is
+> used for the regmap. When using regcache_cache_bypass, the original
+> bypass state also cannot be restored.
+>
+> Add support to atomically read a single uncached value, bypassing any
+> regmap cache.
 
-Signed-off-by: Sander Vanheule <sander@svanheule.net>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> +int regmap_read_bypassed(struct regmap *map, unsigned int reg, unsigned int *val)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b706dd20ff2b..62d042c14158 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15505,6 +15505,16 @@ S:	Maintained
- F:	include/sound/rt*.h
- F:	sound/soc/codecs/rt*
- 
-+REALTEK RTL8231 MFD DRIVER
-+M:	Sander Vanheule <sander@svanheule.net>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
-+F:	Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
-+F:	drivers/leds/leds-rtl8231.c
-+F:	drivers/mfd/rtl8231.c
-+F:	drivers/pinctrl/pinctrl-rtl8231.c
-+F:	include/linux/mfd/rtl8231.h
-+
- REALTEK RTL83xx SMI DSA ROUTER CHIPS
- M:	Linus Walleij <linus.walleij@linaro.org>
- S:	Maintained
+If this is acceptable in general, I will rather name the function like
+regmap_nocache_read() to be aligned with the other API naming pattern
+(see below).
+
+>  int regmap_raw_write_async(struct regmap *map, unsigned int reg,
+>                            const void *val, size_t val_len);
+>  int regmap_read(struct regmap *map, unsigned int reg, unsigned int *val);
+> +int regmap_read_bypassed(struct regmap *map, unsigned int reg, unsigned int *val);
+>  int regmap_raw_read(struct regmap *map, unsigned int reg,
+>                     void *val, size_t val_len);
+>  int regmap_noinc_read(struct regmap *map, unsigned int reg,
+
+
 -- 
-2.31.1
-
+With Best Regards,
+Andy Shevchenko
