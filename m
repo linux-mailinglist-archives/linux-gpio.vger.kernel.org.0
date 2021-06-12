@@ -2,60 +2,175 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5866C3A503A
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jun 2021 21:09:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 106A13A50CE
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jun 2021 23:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231530AbhFLTLs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Jun 2021 15:11:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231512AbhFLTLr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 12 Jun 2021 15:11:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 8B54761001;
-        Sat, 12 Jun 2021 19:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623524987;
-        bh=z34QiRyINkAhbWILvOAIGhVphoVaG7+8QtauwTRgAu4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=enpPPSX/jrHuYgGfSjCYJZCFoUq3KefK4dq2gdXMCFo9HO38CAgY0XGm48cwSBJNs
-         kvs55jCDhvIOIr9ODiJxVGEtq2kTfYpKT1ntdkFTQ59RbWfpntWoF7HBK9kVkYXKp3
-         phbrEzPaN4ws3aDxqcPRB3njC3E6bku9cNEp06h+8rkRqSkv6FrTGpsml+VOmEa6te
-         bX7VOWicPWmxTeOwCaG3IIIctcqw7iWXDVC790HTLB8Le0P0CnuEslA8ZsK/LSxuAa
-         uyZhUBgM41DIS5/PFJLky09MTHWE9rzTHQXI5mvxuXctos91iG2zyQtZEPv7I8z2ss
-         9OESq7C8VmF1Q==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 819FD609E4;
-        Sat, 12 Jun 2021 19:09:46 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control fixes for v5.13
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdY+DKx-c+74b2xiGQ2H9+e2yeup+HEqg1+u1nvQoO6pXA@mail.gmail.com>
-References: <CACRpkdY+DKx-c+74b2xiGQ2H9+e2yeup+HEqg1+u1nvQoO6pXA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdY+DKx-c+74b2xiGQ2H9+e2yeup+HEqg1+u1nvQoO6pXA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git tags/pinctrl-v5.13-2
-X-PR-Tracked-Commit-Id: 30e9857a134905ac0d03ca244b615cc3ff0a076e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 141415d7379a02f0a75b1a7611d6b50928b3c46d
-Message-Id: <162352498652.5734.16100087693827735034.pr-tracker-bot@kernel.org>
-Date:   Sat, 12 Jun 2021 19:09:46 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        id S231572AbhFLVPj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Jun 2021 17:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231537AbhFLVPi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Jun 2021 17:15:38 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C399DC061574
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Jun 2021 14:13:37 -0700 (PDT)
+Received: from terra.local.svanheule.net (unknown [IPv6:2a02:a03f:eafb:ee01:a4dd:c59:8cbd:ee0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 8619120C9CB;
+        Sat, 12 Jun 2021 23:13:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1623532413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zY3uAKWoBS4HTwQVc15m3cJceRfFQ8cEND+kw0FBIxA=;
+        b=Ttwn1Z/VZzlJV0k2mcMc29so5hE3c+NWahTxUPWmuJ3qTb1+xmKzlVUaX5JNex1qwFF2Bs
+        ac430hyuUaFo6QjDUloYTPgRfvDzELOhUVAMmzB23l1dTMmEypnuRLGm0wHhhhShMxqy0J
+        MIboM21u4X2sNn43GmzOIxLDP7JoH9+PlbRpN1hQxrHsagCifNSS3gX9FuGGw6sC2nBePq
+        kweKp5fD5ekFLjaaH9pTKUa65dIw5YvpHkz/qMOu43G+QBM4E4uCp7E3ka9yjPQetdtTm0
+        4v8MvgZzHmpPkCevVEn6tR7rMGxU144eFcQ6UGvNZ1cNNnmxY3pYMnHYwlRHAw==
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Sander Vanheule <sander@svanheule.net>
+Subject: [PATCH v5 0/8] RTL8231 GPIO expander support
+Date:   Sat, 12 Jun 2021 23:12:30 +0200
+Message-Id: <cover.1623532208.git.sander@svanheule.net>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Sat, 12 Jun 2021 12:07:25 +0200:
+The RTL8231 GPIO and LED expander can be configured for use as an MDIO or SMI
+bus device. Currently only the MDIO mode is supported, although SMI mode
+support should be fairly straightforward, once an SMI bus driver is available.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git tags/pinctrl-v5.13-2
+Provided features by the RTL8231:
+  - Up to 37 GPIOs
+    - Configurable drive strength: 8mA or 4mA (currently unsupported)
+    - Input debouncing on GPIOs 31-36
+  - Up to 88 LEDs in multiple scan matrix groups
+    - On, off, or one of six toggling intervals
+    - "single-color mode": 2×36 single color LEDs + 8 bi-color LEDs
+    - "bi-color mode": (12 + 2×6) bi-color LEDs + 24 single color LEDs
+  - Up to one PWM output (currently unsupported)
+    - Fixed duty cycle, 8 selectable frequencies (1.2kHz - 4.8kHz)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/141415d7379a02f0a75b1a7611d6b50928b3c46d
+The GPIO controller uses gpio-regmap. To support the aliased data input and
+output registers, the regmap interface is extended to supported atomic,
+uncached register reads. This is then used with a new quirk for gpio-regmap.
 
-Thank you!
+Register access is provided through a new MDIO regmap provider. The required
+MDIO regmap support was merged in Mark Brown's regmap repository, and can be
+found under the regmap-mdio tag:
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/tag/?h=regmap-mdio
+
+---
+Another revision of this patch series, now without (virtual) register paging.
+After a few other (failed) attemps, I added a call to the regmap interface to
+perform atomic, uncached register reads. Combined with the appropriate caching
+of the register values, this can provide a split view of the data registers for
+gpio-regmap. See patches 1/7 and 2/7.
+
+These additions allowed the MFD core driver to be a bit less complex. The GPIO
+support didn't see significant changes, so I've kept the review tags. The
+bindings and LED driver are unchanged.
+
+With this patch series (hopefully) nearing its final form, I was wondering if
+this could be merged via the MFD tree, when all the necessary reviews and/or
+acks are present. Would that be OK for everyone?
+
+Changes since v4:
+  - List myself as maintainer for this chip
+  - Add uncached register reads to regmap; replaces virtual registers
+Link: https://lore.kernel.org/lkml/cover.1622713678.git.sander@svanheule.net/
+
+Changes since v3:
+  - Drop gpio-regmap direction-before-value quirk
+  - Use secondary virtual register range to enable proper read-modify-write
+    behaviour on GPIO output values
+  - Add pin debounce support
+  - Switch to generic pinmux functions
+
+Changes since v2:
+  - MDIO regmap support was merged, so patch is dropped here
+  - Implement feedback for DT bindings
+  - Use correct module names in Kconfigs
+  - Fix k*alloc return value checks
+  - Introduce GPIO regmap quirks to set output direction first
+  - pinctrl: Use static pin descriptions for pin controller
+  - pinctrl: Fix gpio consumer resource leak
+  - mfd: Replace CONFIG_PM-ifdef'ery
+  - leds: Rename interval to interval_ms
+
+Changes since v1:
+  - Reintroduce MDIO regmap, with fixed Kconfig dependencies
+  - Add configurable dir/value order for gpio-regmap direction_out call
+  - Drop allocations for regmap fields that are used only on init
+  - Move some definitions to MFD header
+  - Add PM ops to replace driver remove for MFD
+  - Change pinctrl driver to (modified) gpio-regmap
+  - Change leds driver to use fwnode
+
+Changes since RFC:
+  - Dropped MDIO regmap interface. I was unable to resolve the Kconfig
+    dependency issue, so have reverted to using regmap_config.reg_read/write.
+  - Added pinctrl support
+  - Added LED support
+  - Changed root device to MFD, with pinctrl and leds child devices. Root
+    device is now an mdio_device driver.
+
+Sander Vanheule (8):
+  regmap: Support atomic forced uncached reads
+  gpio: regmap: Add quirk for aliased data registers
+  dt-bindings: leds: Binding for RTL8231 scan matrix
+  dt-bindings: mfd: Binding for RTL8231
+  mfd: Add RTL8231 core device
+  pinctrl: Add RTL8231 pin control and GPIO support
+  leds: Add support for RTL8231 LED scan matrix
+  MAINTAINERS: Add RTL8231 MFD driver
+
+ .../bindings/leds/realtek,rtl8231-leds.yaml   | 166 +++++++
+ .../bindings/mfd/realtek,rtl8231.yaml         | 190 ++++++++
+ MAINTAINERS                                   |  10 +
+ drivers/base/regmap/regmap.c                  |  33 ++
+ drivers/gpio/gpio-regmap.c                    |   7 +-
+ drivers/leds/Kconfig                          |  10 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-rtl8231.c                   | 291 ++++++++++++
+ drivers/mfd/Kconfig                           |   9 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/rtl8231.c                         | 186 ++++++++
+ drivers/pinctrl/Kconfig                       |  11 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-rtl8231.c             | 438 ++++++++++++++++++
+ include/linux/gpio/regmap.h                   |  13 +
+ include/linux/mfd/rtl8231.h                   |  71 +++
+ include/linux/regmap.h                        |   8 +
+ 17 files changed, 1445 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
+ create mode 100644 drivers/leds/leds-rtl8231.c
+ create mode 100644 drivers/mfd/rtl8231.c
+ create mode 100644 drivers/pinctrl/pinctrl-rtl8231.c
+ create mode 100644 include/linux/mfd/rtl8231.h
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.31.1
+
