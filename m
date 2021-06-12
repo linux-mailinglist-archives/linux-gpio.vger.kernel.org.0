@@ -2,36 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34FC13A50D1
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jun 2021 23:13:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 977493A50D3
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jun 2021 23:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231580AbhFLVPj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Jun 2021 17:15:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231548AbhFLVPi (ORCPT
+        id S231598AbhFLVPk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Jun 2021 17:15:40 -0400
+Received: from polaris.svanheule.net ([84.16.241.116]:48054 "EHLO
+        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231553AbhFLVPi (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Jun 2021 17:15:38 -0400
-Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C1BFC061767
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Jun 2021 14:13:38 -0700 (PDT)
 Received: from terra.local.svanheule.net (unknown [IPv6:2a02:a03f:eafb:ee01:a4dd:c59:8cbd:ee0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id 24FE020C9CD;
-        Sat, 12 Jun 2021 23:13:34 +0200 (CEST)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 4A2EE20C9CE;
+        Sat, 12 Jun 2021 23:13:35 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1623532414;
+        s=mail1707; t=1623532415;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wGMyTGqExOUC7fcBNcFG8EWKgKVZcX6itOO0TIv9aY0=;
-        b=Hki/FRU/5sgbOdptnEi7Qtz+P4sxe3DEbzVZ32Bzhc53QEgi+BdnfCuFz8iNRB4LPlrFf8
-        osQxi5/4+ckM7XBSs+Eg1lYdqujBfy5OWDl8qwF7BtwEEXVaz7IjmUDxzF1zLDg7TT13qy
-        Tvp4GBsKcpNlnbeY0quKIOHkG7urXL0P8eYRzWht0yqM3wnFti/mtvoqbX/vgvRtU39X3p
-        l4txFpk3hOD/xxpr9gwx7Lw5Lw8aLpJ0hxdVAUPdM2p8xzmZnsRP1Tob3+k2yXzBEgE6KV
-        ZY2jsMKhzSCA3Ly8ocxYbPOgd93b0jVDHxIkoIcD6zwP1xwzx3k7smZBDBTh9w==
+        bh=317W/muonwzc8HyyIWPeaiAscRYe6DIw3INbtrhWtnM=;
+        b=RuCEaKtiUTzxYp/z23JXa71RRL9w5iN+5OQaQKxpJAXMoOgumORYPsBRakUWfcZiWSaAlY
+        s7kxGe0yVVIvzgB13qclbFAPPeMnMucXX5H9bPVrxUNLF2oe28nt3lS6Wsm5FM4REYhNye
+        eMHDRzgOKW54n6/YmKyKNhtWnX4v7pY81GtZBzFeChxxpZyfLMA1gnI5TBrmPeUrRj5n1u
+        fWmpLfPornw8GBY91LkkziaFgwLQRadl18URvbew+T5ojUMK4Y5Fe/Phw+KIhSPazgE81n
+        pKVJ55PKXBM3W9oRoH86Mj4+luMW3Fp09S5HrW4itOwTQweVsWq48xWuG1THwQ==
 From:   Sander Vanheule <sander@svanheule.net>
 To:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
@@ -47,9 +44,9 @@ Cc:     Andrew Lunn <andrew@lunn.ch>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         linux-kernel@vger.kernel.org,
         Sander Vanheule <sander@svanheule.net>
-Subject: [PATCH v5 1/8] regmap: Support atomic forced uncached reads
-Date:   Sat, 12 Jun 2021 23:12:31 +0200
-Message-Id: <e1be20bb92cff2688153125b534b738b71c3a743.1623532208.git.sander@svanheule.net>
+Subject: [PATCH v5 2/8] gpio: regmap: Add quirk for aliased data registers
+Date:   Sat, 12 Jun 2021 23:12:32 +0200
+Message-Id: <5d8e5e8a29ecf39da48beb94c42003a5c686ec4e.1623532208.git.sander@svanheule.net>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1623532208.git.sander@svanheule.net>
 References: <cover.1623532208.git.sander@svanheule.net>
@@ -59,90 +56,90 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When a user wants to read a single uncached register, cache bypassing
-can be enabled. However, this is not atomic unless an external lock is
-used for the regmap. When using regcache_cache_bypass, the original
-bypass state also cannot be restored.
+Some chips have the read-only input and write-only output data registers
+aliased to the same offset. As a result it is not possible to perform
+read-modify-writes on the output values, when a line is still configured
+as input.
 
-Add support to atomically read a single uncached value, bypassing any
-regmap cache.
+Add a quirk for aliased data registers, and document how the regmap
+should be set up for correct operation.
 
 Signed-off-by: Sander Vanheule <sander@svanheule.net>
 ---
- drivers/base/regmap/regmap.c | 33 +++++++++++++++++++++++++++++++++
- include/linux/regmap.h       |  8 ++++++++
- 2 files changed, 41 insertions(+)
+ drivers/gpio/gpio-regmap.c  |  7 ++++++-
+ include/linux/gpio/regmap.h | 13 +++++++++++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index fe3e38dd5324..a828f05535b7 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -2745,6 +2745,39 @@ int regmap_read(struct regmap *map, unsigned int reg, unsigned int *val)
- }
- EXPORT_SYMBOL_GPL(regmap_read);
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index 134cedf151a7..3a3d0d9a945c 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -15,6 +15,7 @@ struct gpio_regmap {
+ 	struct device *parent;
+ 	struct regmap *regmap;
+ 	struct gpio_chip gpio_chip;
++	unsigned int quirks;
  
-+/**
-+ * regmap_read_bypassed() - Read a value from a single register, bypassing the cache
-+ *
-+ * @map: Register map to read from
-+ * @reg: Register to be read from
-+ * @val: Pointer to store read value
-+ *
-+ * A value of zero will be returned on success, a negative errno will
-+ * be returned in error cases.
-+ */
-+int regmap_read_bypassed(struct regmap *map, unsigned int reg, unsigned int *val)
-+{
-+	bool bypass;
-+	int ret;
-+
-+	if (!IS_ALIGNED(reg, map->reg_stride))
-+		return -EINVAL;
-+
-+	map->lock(map->lock_arg);
-+
-+	bypass = map->cache_bypass;
-+	map->cache_bypass = true;
-+
-+	ret = _regmap_read(map, reg, val);
-+
-+	map->cache_bypass = bypass;
-+
-+	map->unlock(map->lock_arg);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(regmap_read_bypassed);
+ 	int reg_stride;
+ 	int ngpio_per_reg;
+@@ -68,7 +69,10 @@ static int gpio_regmap_get(struct gpio_chip *chip, unsigned int offset)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = regmap_read(gpio->regmap, reg, &val);
++	if (gpio->quirks & GPIO_REGMAP_QUIRK_ALIASED_DATA)
++		ret = regmap_read_bypassed(gpio->regmap, reg, &val);
++	else
++		ret = regmap_read(gpio->regmap, reg, &val);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -227,6 +231,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 
+ 	gpio->parent = config->parent;
+ 	gpio->regmap = config->regmap;
++	gpio->quirks = config->quirks;
+ 	gpio->ngpio_per_reg = config->ngpio_per_reg;
+ 	gpio->reg_stride = config->reg_stride;
+ 	gpio->reg_mask_xlate = config->reg_mask_xlate;
+diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+index 334dd928042b..b0751a10fa4a 100644
+--- a/include/linux/gpio/regmap.h
++++ b/include/linux/gpio/regmap.h
+@@ -12,6 +12,17 @@ struct regmap;
+ #define GPIO_REGMAP_ADDR_ZERO ((unsigned int)(-1))
+ #define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
+ 
++enum gpio_regmap_quirk {
++	/*
++	 * For hardware where the (read-only) input and (write-only) output
++	 * registers are aliased to the same offset. In this case the register
++	 * must not be marked as volatile and a regcache must be used, to cache
++	 * the write-only output values. Register reads for the input values
++	 * will be performed by bypassing the cache.
++	 */
++	GPIO_REGMAP_QUIRK_ALIASED_DATA = BIT(0),
++};
 +
  /**
-  * regmap_raw_read() - Read raw data from the device
-  *
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index f5f08dd0a116..a54dc00326ba 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -1133,6 +1133,7 @@ int regmap_multi_reg_write_bypassed(struct regmap *map,
- int regmap_raw_write_async(struct regmap *map, unsigned int reg,
- 			   const void *val, size_t val_len);
- int regmap_read(struct regmap *map, unsigned int reg, unsigned int *val);
-+int regmap_read_bypassed(struct regmap *map, unsigned int reg, unsigned int *val);
- int regmap_raw_read(struct regmap *map, unsigned int reg,
- 		    void *val, size_t val_len);
- int regmap_noinc_read(struct regmap *map, unsigned int reg,
-@@ -1607,6 +1608,13 @@ static inline int regmap_read(struct regmap *map, unsigned int reg,
- 	return -EINVAL;
- }
+  * struct gpio_regmap_config - Description of a generic regmap gpio_chip.
+  * @parent:		The parent device
+@@ -31,6 +42,7 @@ struct regmap;
+  * @reg_stride:		(Optional) May be set if the registers (of the
+  *			same type, dat, set, etc) are not consecutive.
+  * @ngpio_per_reg:	Number of GPIOs per register
++ * @quirks:		Flags indicating GPIO chip hardware issues
+  * @irq_domain:		(Optional) IRQ domain if the controller is
+  *			interrupt-capable
+  * @reg_mask_xlate:     (Optional) Translates base address and GPIO
+@@ -73,6 +85,7 @@ struct gpio_regmap_config {
+ 	unsigned int reg_dir_out_base;
+ 	int reg_stride;
+ 	int ngpio_per_reg;
++	unsigned int quirks;
+ 	struct irq_domain *irq_domain;
  
-+static inline int regmap_read_bypassed(struct regmap *map, unsigned int reg,
-+				       unsigned int *val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
- static inline int regmap_raw_read(struct regmap *map, unsigned int reg,
- 				  void *val, size_t val_len)
- {
+ 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
 -- 
 2.31.1
 
