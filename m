@@ -2,186 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77BBC3A5A1E
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Jun 2021 21:08:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EABEF3A5ABF
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jun 2021 00:04:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232003AbhFMTKk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Jun 2021 15:10:40 -0400
-Received: from mout.gmx.net ([212.227.15.19]:36867 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231912AbhFMTKj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 13 Jun 2021 15:10:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1623611313;
-        bh=i0Mw312qLzd6b/+QxKnjdD1a41SqoAdt39SqpcwjESM=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=k3fDP0+XpJ0mERPxpnrG1w4s1YiAnW2OJHaGqTrZFiafF61ZUc3Mb28kCXYp1dudr
-         bAHXOTS7BwLWqyCvWeHRv4+1fQnkj7sy0haeBZzA9S+kntPdbnxuBvI9PS2E6hmX2I
-         QmU52zd24m9W7TQc75DsALLLg7ioO3b/PewDtWNQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.247]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MAwbz-1m3p4C0JBp-00BNuS; Sun, 13
- Jun 2021 21:08:33 +0200
-Date:   Sun, 13 Jun 2021 21:08:31 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/8] pinctrl: nuvoton: Add driver for WPCM450
-Message-ID: <YMZXr2py6Esl6U2H@latitude>
-References: <20210602120329.2444672-1-j.neuschaefer@gmx.net>
- <20210602120329.2444672-6-j.neuschaefer@gmx.net>
- <CAHp75Vci1DSFu-tpgwQZfuVycqHYmhGhLDDCOH_dX8HKvqpY_A@mail.gmail.com>
- <YMVBTp4VaSilFi0H@latitude>
- <CAHp75Vd9FEGuaVbRUK67uzRoeQSXQUGAhXExHgJvkDd585kxwA@mail.gmail.com>
+        id S232119AbhFMWGo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Jun 2021 18:06:44 -0400
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:37661 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232114AbhFMWGn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Jun 2021 18:06:43 -0400
+Received: by mail-wr1-f53.google.com with SMTP id i94so12265131wri.4
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Jun 2021 15:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uEtJw6f4e0IVYQcL252NxDcj8xZCjF86wiwMU/fLRCA=;
+        b=KcXpCBlomcYGt2KEsSqRBMnS3mX2SSG3WW4V6Hp/p2Wf25aGx+rrhoZ4q0FdRd7VR6
+         HVM93/v+FmqPuA1S4Mp7KHs34RrC9IOYJ+4TbxtASK9MRaht6NkQPKcuw9YxDlHBlD1G
+         jG4hrgbKKIPorzVqTYzL2QZSzvCg8GKo54KusGdXijSwtuX25pUCNFMVJZ+UhQ/bLmre
+         H2QaCFtSf73zsT+radLrO2nv2+gRVG3W2YMLH0B77luxJJPfAEMiZj06KmFFGqgAInGx
+         hJzeVzArZDJCc9LnsXKWVuwiHJ+eGQ5/LXkCJWkIy7//VJP+Ez3s8TbH9Jw+edet7Nvh
+         VzSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uEtJw6f4e0IVYQcL252NxDcj8xZCjF86wiwMU/fLRCA=;
+        b=LzwPS4E4y4UlZxHqZ90CtYL6Gp5ocekwGjtOPG3bX/FrPXvbwie/RJCTyAgS7RiqNL
+         AtUEMGjh9LM7HZVo5COLh4QHLl/cX9Gx6iTA+LG6w7vyXXp9FzMimA1a4k/Mc5xis36B
+         ZJr2bu5lP5XCySVRW0lknk/VViUq3e3LmsvYAo2NuDuAc0PbBmm4kHSIosZazH1udEj5
+         dYO81fsaYFqNS8wb17g4VM9HDtOOBCxKRrWeAVVtTNzCciv/iJCUG+yUAeD81mLZQ+V7
+         q9/pluS3DufmEo74BMTjuFBchhETfBv9HMzZBNnBS4m+hZd7huj3EqWRQZA6BXscB8Tb
+         bmuA==
+X-Gm-Message-State: AOAM533pg4HDwsN/h0hb/7caegJUd0t2A8qHRNND3RDQKxvUTa8rxxWY
+        P6UyRYtOETK+b3nQNhCHxufbtT4xxsA=
+X-Google-Smtp-Source: ABdhPJxp1j3BdXPFHbtpQZ83pRGUaOmqHw1jXnaRPUtC/SF2xPhq/U1QYwkHsNu+sesmhFnzYPwJUA==
+X-Received: by 2002:adf:ed8d:: with SMTP id c13mr15848450wro.164.1623621808900;
+        Sun, 13 Jun 2021 15:03:28 -0700 (PDT)
+Received: from morpheus.home.roving-it.com (f.c.9.1.f.e.c.d.1.e.0.0.2.b.5.5.1.8.6.2.1.1.b.f.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:fb11:2681:55b2:e1:dcef:19cf])
+        by smtp.googlemail.com with ESMTPSA id d15sm14249507wri.58.2021.06.13.15.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Jun 2021 15:03:28 -0700 (PDT)
+From:   Peter Robinson <pbrobinson@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Peter Robinson <pbrobinson@gmail.com>
+Subject: [PATCH] gpio: pca953x: Add support for the On Semi pca9655
+Date:   Sun, 13 Jun 2021 23:03:26 +0100
+Message-Id: <20210613220326.831040-1-pbrobinson@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DDWQ4B6GayNZj/6h"
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vd9FEGuaVbRUK67uzRoeQSXQUGAhXExHgJvkDd585kxwA@mail.gmail.com>
-X-Provags-ID: V03:K1:A8u/VWr25EDlAyw608pKKSgF/NtZTMvqE/N1Z3Urcwvncdvbduf
- 6eRNbWtHYlzu/P5hI5btrI5pUpLQSbi1ZvxWYSdrSghBHsazLyWZz9ook1S6+W+mod85F8F
- eQZfTco9qvnJ8qprx0Er5AAzyUO5lc6X4SA6MDwV18TTsx0tgCdETok13P7fhv+j5dbvmkg
- EF0tp9vH6FhTiSrjI67zQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8Pz1L6EfyZ4=:ZL9mTNEevabQLNS05PDY6H
- YxgmMcwv7IdkwzBM25O1MRvBPq5TGlgYwM2badHy1olhwMDt7QS7hJ366/0EY/5KnF4WLyLUp
- hTzxA4SzAnnzsfiMp9MHHQLtTovhYqRNp0ikih/1jW8E/Nof4Kr5BWlb4HJomiDmCcyq3ikXk
- PFLYLjcIJsmbxZh+ItSBPVJxJGQ8oob2AGizZYUpFOmDAWvVI3MHN2Wqa1ZEtg3nSY/jBBTTr
- Ab40FLZV9Pm3c+xDRBDzc061iXiOoK0aiQslCoE5WlF0MfkJizjWCu3hU4aTMuOzpn9XO6h/x
- ImrBce34AnDbKsIB0xPcRz/850LmX1poLaJ1bkHKsIpTHoSI962n1fMmRuEXtZh7c4YmkQOyI
- uEyOwNZfjLkfgQWNHEgKUa0CKTCkLBIDVnQTI+jn45aXJQ5NgSy6y+CYmBbmrRoDluhWCtYPh
- gXKlheBe5S7VCjp7DU5vekV3Ng6/6os5Z5gDrh+Sxop9moO+GyF4VgBMpXcw2VxcsZTm/l+1H
- 4PuNnmM/yEca4OvqIKNYZJbNcOaoCb63jIajMwdfPwV58tSFrLZ/rVJ6bjjrOblpQHcpOLhuI
- ZyDIQHeiY+HrDho+V4w8WOM0XsoGd11yBvMIuk3kz0Uz4pJA06wX9emQ4tqI8FATAc/1phpPD
- JvgcCsPH2HBXgSlL51bzX8el7+mEvd2/r9XCrAGzdsSRNMgCa9mVGmxyX0KCPY5Orn4hA1a26
- ZmcLTa8lswkcId7GXTojDmSeUQiTRCJpW4d44uLrboguOq0lAC9K+fCDOfXetFinIILYT35eJ
- 6o0NIbBAVpGgyRtgnA7QvXz7AuYghWF7M1J+JJmK4e4QcLAlSo2sVQIfbcdGG0N0RjVSfOjXb
- Gw1XCklntsN6NLH+JyExBPi90FJeeonrKHPUkrZInoL8gA/51a5AFYQRUBzywMJKB4MzXFuzO
- wDflyye5exIuhPmXKVOKo/t+GOBoMgkL7sB99UBBqSgSmCYTkIUdgZp8GFVkbNaXw9vSmOPNb
- voEaLyi30bN3MAWiJIcXu4tKy4MvcPIbY5sFLB/tvqA56LXQZEyDkcRhNF6aPpwBZ5E420Xap
- kpzHi0/f1yNPQeXVUzXQ/qU/r5jS9Z+HnQ4n/eRgIkaaA9s81BamG+DTg==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The On Semi pca9655 is a 16 bit variant of the On Semi pca9654 GPIO
+expander, with 16 GPIOs and interrupt functionality.
 
---DDWQ4B6GayNZj/6h
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+---
+ drivers/gpio/gpio-pca953x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Sun, Jun 13, 2021 at 01:06:15PM +0300, Andy Shevchenko wrote:
-> On Sun, Jun 13, 2021 at 2:20 AM Jonathan Neusch=C3=A4fer <j.neuschaefer@g=
-mx.net> wrote:
-> > On Wed, Jun 02, 2021 at 03:50:39PM +0300, Andy Shevchenko wrote:
-> > > On Wed, Jun 2, 2021 at 3:05 PM Jonathan Neusch=C3=A4fer <j.neuschaefe=
-r@gmx.net> wrote:
-[...]
-> > > > +static int wpcm450_gpio_get_direction(struct gpio_chip *chip,
-> > > > +                                     unsigned int offset)
-> > > > +{
-> > > > +       struct wpcm450_pinctrl *pctrl =3D gpiochip_get_data(chip);
-> > > > +       const struct wpcm450_port *port =3D to_port(offset);
-> > > > +       unsigned long flags;
-> > > > +       u32 cfg0;
-> > > > +       int dir;
-> > > > +
-> > > > +       spin_lock_irqsave(&pctrl->lock, flags);
-> > > > +       if (port->cfg0) {
-> > > > +               cfg0 =3D ioread32(pctrl->gpio_base + port->cfg0);
-> > >
-> > > > +               dir =3D !(cfg0 & port_mask(port, offset));
-> > > > +       } else {
-> > > > +               /* If cfg0 is unavailable, the GPIO is always an in=
-put */
-> > > > +               dir =3D 1;
-> > > > +       }
-> > >
-> > > Why above is under spin lock?
-> > > Same question for all other similar places in different functions, if=
- any.
-> >
-> > My intention was to protect the ioread32. But given that it's just a
-> > single MMIO read, this might be unnecessary.
->=20
-> Sometimes it's necessary and I'm not talking about it. (I put blank
-> lines around the code I was commenting on)
->=20
-> So, What I meant above is to get something like this
->=20
-> if (port->cfg0) {
->   spin lock
->   ...
->   spin unlock
-> } else {
->   ...
-> }
->=20
-> or equivalent ideas.
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index c91d05651596..348040247b0b 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -1241,6 +1241,7 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 
+ 	{ .compatible = "onnn,cat9554", .data = OF_953X( 8, PCA_INT), },
+ 	{ .compatible = "onnn,pca9654", .data = OF_953X( 8, PCA_INT), },
++	{ .compatible = "onnn,pca9655", .data = OF_953X( 16, PCA_INT), },
+ 
+ 	{ .compatible = "exar,xra1202", .data = OF_953X( 8, 0), },
+ 	{ }
+-- 
+2.31.1
 
-Ah, in other words: Narrowing the scope of the lock as far as possible.
-I'll keep it in mind for v2.
-
-
-> > > What about the GPIO library API that does some additional stuff?
-> >
-> > I don't know which gpiolib function would be appropriate here, sorry.
->=20
-> When you leave those request and release callbacks untouched the GPIO
-> library will assign default ones. You may see what they do.
-
-Ah, I see. I'll look into it.
-
-
-> ...
->=20
-> > > > +       if (!of_find_property(np, "gpio-controller", NULL))
-> > > > +               return -ENODEV;
-> > >
-> > > Dead code?
-> >
-> > The point here was to check if the node is marked as a GPIO controller,
-> > with the boolean property "gpio-controller" (so device_property_read_bo=
-ol
-> > would probably be more appropriate).
-> >
-> > However, since the gpio-controller property is already defined as
-> > required in the DT binding, I'm not sure it's worth checking here.
->=20
-> Exactly my point.
-
-Alright.
-
-
-Thanks,
-Jonthan Neusch=C3=A4fer
-
---DDWQ4B6GayNZj/6h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmDGV4kACgkQCDBEmo7z
-X9s1ew/+MOmEBq0/62YYJrwtuBhjOqWUWoye5bwkJbFzS6rYDMgNnT/xc3UOBkeV
-4zL+GbDPdPwAToGEJABiz/7NdQcm95awPJP2Dif9zvNYPMrLXe19NEc+PhG33lZB
-9JL2XPefl58H3Xm7qrmx4roFA85rAuKJT9lu4UwdY382J3gJFupP2EcHFXDFpqqv
-lB6zGHdlrrsNRKjPsQ1C22B7hNBgcY8vKCurkeTgrPmn37QVipCkZMyrLat99FLi
-AUtdYRJcg1hwQD8RhGwyp9H0jbBDlbUWBhJr4JKd53mIElmB4K2J8krBVHccED1C
-iXNeRsgdjidJfz3vXLNh1vwdF0s0+4ScmtWmNvEPz2pJPx19Sh+UJFFni/P7KetC
-+fQUHyLvJnEi9EBwH2F/PnSS9jJKLAoDLD6hbaE9l5d9EhxJjHrlSU2Po6nRkUt4
-LTCyXqZ4sTPwUHQP0pWzi+sceflrjMTrRSY5itLr0cBCTvaqN7R9/kWuPHoaGLWO
-l5T6bsIKIXsrd3jHdbf/kyT2TGjBAi+0YAJMh156vxlm/zQbiGsGPVNDgW+1ghgV
-knmavClhOvzkqCKXWgUWfIMuJn9mF1bYSgQFNBvVkz5hTExzJyUAhSKXhKAqCOaA
-guOUkGM3kjpE1O2Z8mKaeXM0ZJmP6Y6m9eti9pFq0nV7CKr9a/U=
-=cSu3
------END PGP SIGNATURE-----
-
---DDWQ4B6GayNZj/6h--
