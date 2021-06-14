@@ -2,134 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D4F23A5E11
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jun 2021 10:07:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CA613A5E14
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jun 2021 10:07:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232546AbhFNIJB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Jun 2021 04:09:01 -0400
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:41488 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232530AbhFNIJB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Jun 2021 04:09:01 -0400
-Received: by mail-oi1-f172.google.com with SMTP id t40so13514481oiw.8
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 01:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bkT0W8uF7vg3HLg+/9Z/pWJKuKWmGeE2SVQvx5LKoY8=;
-        b=UPTHRDNfA8Agg10whsqifThnxL2XjDZWqPqDnpeLhEUooT4NmCe8JfPKSJeaZCeJ7T
-         duay+rmg3IWUMsdK2KaBXhhxErIf5IjOCQWgVAQXStBy/ZtCuSoCE6M21G4lWI+hnhtK
-         7IS8SESV7paEmVd97VAO2rC4HKupVRjlanCMbYifeOsGVm4Yl8ywWJ3gnkLUsvwnyXhy
-         Jx5yZm1CGq2McGnagYUi8AhwukGzYNZfeGg/XhFtMF48GiD3TItTducF4ygbfN0aaX0S
-         ijifl9upHRJvZIZBZq0dbfnWN0PSIdDMQvidCXX6jQ1NT811qraW2OIoPT981otoOInM
-         AwyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bkT0W8uF7vg3HLg+/9Z/pWJKuKWmGeE2SVQvx5LKoY8=;
-        b=k9x938xfwdJ1rhWhj9hUXp/FXuXPqjzV/AR+eNaz3Q69YIfT13tzDQ6iwemUbCKr2X
-         SRsZmrqZpSonqRg4OVaNEBEJhUa3n05ZV8TyBzYrAPlbasibAKhWSS50JD64HwPtiuGx
-         tlbzAlJaUV/1ScwiLjN4T39lNoCg9iOsOX0uPbBA2VEi3OUn1y4sLyx7x/qdy05AE0Bs
-         su8DWvAhXM1K9jXr75qMZOVLGjbuLDHapSh9wX8JcmCuSMjzjtUqs9jfxqVzlW5isbmL
-         QVFMK8hG0vAR1qR7ZyIMwbiQQZ9Fkbzp8AHsbZT9raPdq5+oMvTpNNEh9LYhX5oiqIHp
-         YeWA==
-X-Gm-Message-State: AOAM53183VSp58vJk6OWSN9YDFhWRNbRpiiwA26Zi9Q8L/CeoU7202lz
-        Afe6Yrrk/vuj7ePG1WaFflGUyxuM95R+2SoadHS3Vw==
-X-Google-Smtp-Source: ABdhPJxLGI90FU0D09Sa6LTFm9kRaJq46LUpOxjQeVzGELvxHKc/mMDygnvOtyuLc2Ha+iDkSFNEg8AgoMa2VA/mcds=
-X-Received: by 2002:aca:fc91:: with SMTP id a139mr5053908oii.12.1623657958977;
- Mon, 14 Jun 2021 01:05:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210607113840.15435-1-bhupesh.sharma@linaro.org>
- <20210607113840.15435-2-bhupesh.sharma@linaro.org> <YMLO56Rr7UGUy8vo@builder.lan>
-In-Reply-To: <YMLO56Rr7UGUy8vo@builder.lan>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Mon, 14 Jun 2021 13:35:48 +0530
-Message-ID: <CAH=2NtyV=qMn32d9nE7qBheTscUejF1UwVZSc99uiv_P65S03Q@mail.gmail.com>
-Subject: Re: [PATCH 1/8] dt-bindings: qcom: rpmh-regulator: Add compatible for
- SA8155p-adp board pmics
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S232583AbhFNIJn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Jun 2021 04:09:43 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:49753 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232530AbhFNIJn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Jun 2021 04:09:43 -0400
+Received: from [192.168.1.155] ([95.115.71.85]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M26n9-1lucVX2qYD-002Unn; Mon, 14 Jun 2021 10:07:30 +0200
+Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Viresh Kumar <vireshk@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        bhupesh.linux@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
+        <sgarzare@redhat.com>, virtualization@lists.linux-foundation.org,
+        Alistair Strachan <astrachan@google.com>
+References: <cover.1623326176.git.viresh.kumar@linaro.org>
+ <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
+ <CACRpkdZV2v2S5z7CZf_8DV=At9-oPSj7RYFH78hWy3ZX37QnDQ@mail.gmail.com>
+ <20210611035623.z4f2ynumzozigqnv@vireshk-i7>
+ <CAMuHMdVrtSnFpPbB0P3Wxqm1D6vU1_cnh3ypsZJRNF6ueKdAsw@mail.gmail.com>
+ <20210611080122.tlkidv6bowuka6fw@vireshk-i7>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <0478822f-9d10-deb8-86ae-3b4ac3bb0c6c@metux.net>
+Date:   Mon, 14 Jun 2021 10:07:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
+MIME-Version: 1.0
+In-Reply-To: <20210611080122.tlkidv6bowuka6fw@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:5H1L+Ex7ZC4oLqRcKzdvgpyI25ZIf+Ocm4zxpAaFyNTtvXvaMJv
+ 7hFfUyuU0ZTlsuQsZHLYoefeD/MNbY0jyUf52kB6Izj4LBtlhsRRsGRKFeM1gcYQ4umv456
+ qO/zCycpEg0+AoNFn9tGFgNNIOJvG6fO+2o3aRI5xkXG55E/ZD8aZfDhWaxZJIjqlmw6/O2
+ OK5KfX+UrcoMKTfpLAfVQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wHlBr1mS1qE=:Vl5Ups3XZz5i92tgw4v+SQ
+ n6aXOQ4RkWiN2MXHblKpUhMDhf0eACabCKjq9Lct+1R8ffdp8ydUd5w4mzu/NeUSFjjIAo1OA
+ 1Sc3seBFL+WY7k4/2f/BaGtBUNrwROiUR/DD2PzOJVp5E4fyyN1plD02Bs+uXtBGUHnsv6YIG
+ ya66HAz0n7H2fU6DxETvgbFn/vsNnWcf3M6uMSsL2Aj8QKExDTskQHdXe2Zxyw7XV4h7yiRka
+ kqJUtUX2UiM47U7un4qehkRIi2AmbZAXjfQreODOAAlIN8lSsn+2WGMs7h8qaBTZqq5eNGSg+
+ +itpYA82ggH/WWWy46xKgAlfjKpYQ1N6YVfB9mcoAU2NTZk7wFBjpbFdtV9VLmluIPXvuPMy3
+ KTZCCFRbMxq/Q7YUpG3W+RUwqShBlg+3R4cx+VmPCEjBaiA/pBjkNBb4pMgprLkMR44iOpRYH
+ Hd+abtCtez4oDuNb1SUJ9wQehU8ywuU/xaIXrAMPznZaUBJHIP7VcqQf9cS8x4RUIP04zs8Ip
+ 80xpEmEhCptzvXH889HdZY=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Bjorn,
+On 11.06.21 10:01, Viresh Kumar wrote:
 
-Thanks for the review comments.
+> No, QEMU passes the raw messages to the backend daemon running in host
+> userspace (which shares a socket with qemu). The backend understands
+> the virtio/vhost protocols and so won't be required to change at all
+> if we move from Qemu to something else. And that's what we (Linaro)
+> are looking to do here with Project Stratos.
 
-On Fri, 11 Jun 2021 at 08:18, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Mon 07 Jun 06:38 CDT 2021, Bhupesh Sharma wrote:
->
-> > Add compatible strings for pmm8155au_1 and pmm8155au_2 pmics
-> > found on SA8155p-adp board.
-> >
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Liam Girdwood <lgirdwood@gmail.com>
-> > Cc: Mark Brown <broonie@kernel.org>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Andy Gross <agross@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-gpio@vger.kernel.org
-> > Cc: bhupesh.linux@gmail.com
-> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > ---
-> >  .../devicetree/bindings/regulator/qcom,rpmh-regulator.yaml      | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml
-> > index e561a5b941e4..ea5cd71aa0c7 100644
-> > --- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml
-> > +++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml
-> > @@ -55,6 +55,8 @@ properties:
-> >        - qcom,pm8009-1-rpmh-regulators
-> >        - qcom,pm8150-rpmh-regulators
-> >        - qcom,pm8150l-rpmh-regulators
-> > +      - qcom,pmm8155au-1-rpmh-regulators
-> > +      - qcom,pmm8155au-2-rpmh-regulators
->
-> Looking at the component documentation and the schematics I think the
-> component is "PMM8155AU" and we have two of them.
->
-> Unless I'm mistaken we should have the compatible describe the single
-> component and we should have DT describe the fact that we have 2 of
-> them.
+Note that this is completely different from my approach that I've posted
+in autumn last year. Viresh's protocol hasn't much in common with mine.
 
-If we refer to the PM8155AU device specifications, there are two
-regulators mentioned there PMM8155AU_1 and PMM8155AU_2. Although most
-parameters of the regulators seem similar the smps regulator summary
-for both appear different (Transient Load, mA ratings etc).
 
-Although most of these differences don't probably matter to the Linux
-world, others like the gpios on the pmic are different.
+--mtx
 
-So, IMO, it makes sense to mention the different pmic types on the board.
-
-Please let me know your views on the same.
-
-Thanks,
-Bhupesh
-
->
-> >        - qcom,pm8350-rpmh-regulators
-> >        - qcom,pm8350c-rpmh-regulators
-> >        - qcom,pm8998-rpmh-regulators
-> > --
-> > 2.31.1
-> >
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
