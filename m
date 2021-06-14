@@ -2,100 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 838463A5E25
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jun 2021 10:12:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D22393A5E27
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jun 2021 10:13:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232601AbhFNIOl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Jun 2021 04:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57748 "EHLO
+        id S232530AbhFNIPq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Jun 2021 04:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232530AbhFNIOk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Jun 2021 04:14:40 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF8CC061767;
-        Mon, 14 Jun 2021 01:12:25 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id a127so4144337pfa.10;
-        Mon, 14 Jun 2021 01:12:25 -0700 (PDT)
+        with ESMTP id S232528AbhFNIPp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Jun 2021 04:15:45 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA772C061766
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 01:13:42 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id w23-20020a9d5a970000b02903d0ef989477so10022297oth.9
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 01:13:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+Vv3hBAQ8kpZIe+1+G82nUGelWzwqMrss8OA+ER4ISc=;
-        b=c4fGtjeg/GfqEDJFxCfTs2qulnbzuKMp0HYaOci+oQWvyQM4dQ7rcIDbSs28NollGJ
-         3TfnXLmrNnyCeUoYBrT6kPf1LySbpdqm9+fZ2yBD2Hw1Z4k4R7o3l6UidYHfhxQ151m/
-         MD5wP9xxOkMmZWiml42sWS2OMHvvYyzQqZJyMvE87DohZjCJMRmcXWLybcsRYqwQ3gyK
-         eCVWaiYa9epVi8oi50IEWlMypfrBpZ9vwUq1IZ2ShmB3bjAIM1O3NOwjfIh0U78zqhMr
-         mK9GFJFicIgurMGWWACJqLodhke8XP+w8c/DqpaxgC9Zt/Mdm02QiaZdUXTBg6yZW/DE
-         aJHA==
+        bh=9fAPXLcMnuwc5kCpl7ATb/uElPSg8emw9lkYjZEn50s=;
+        b=CMMB9c9SNYcug0m4F1ZbPVi7DUsIGlDUumyOHeO/i8F+E69SBXH2sjS+kqYHIRRbeG
+         Vxe/qqAlajLJuI6RUT0vWrZXQ3yy35DtDIFjP9Lcbjy3DHrXMRRCDb//DIIRPXGAb7Wh
+         XZgRATsp+E5wcEk+EfXi4aX9H5TcaKUiTv7o5gHlTMJxa3QaL8KU1Ozi+8m+7MDgNYmP
+         TvQA8FW+tptGFbQ8nONVbrrtyu6BPjDIyyDrAgiXUvVyQPvi+bLssV3s+ivDEDe6AjZK
+         5v1YM0Lgt7qYrquhTy7cqd36QDNDQ8LrWvd30MxzNCy30zzAZNn48X8TR+sgYBf1a6Nv
+         Q1yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+Vv3hBAQ8kpZIe+1+G82nUGelWzwqMrss8OA+ER4ISc=;
-        b=l/uscmRrM0Zbou93iQbtQW0ctWtsQx1SlRJjNTWq+HR94295GC/YphygsjP3nYEKx2
-         0Q4Av9F8DjXi5mxyF/+uV8SEGTMj9i0h+YaNqDQkHNv13g2Q3egDfmD5ef/vSTaz06YH
-         br8FC2P+wMU0ZNeqe/5/RSQxks2igblVwLpK4RMylK1uAXE0yjzkaS2EwL82jc1alvOY
-         NtZBYCecJ7bOcEzBzQJTfRO9Hth2GW/F7cpRHiiDJqcR6mlCSG6AxAHXPsqaxAGe1xut
-         vbp+NcFppu50S0R7YhYlCn+FYARbVc58jjitAKGUHeRWA5BwtW+c9KKbABIlZ9x3HOFj
-         fm6A==
-X-Gm-Message-State: AOAM5318oMs8AHlvvKxsTi/I0Rnd7iHBdMyczJSLmSpvoSn8n49lIVsn
-        OL5404Q8ZbpaMKIJKeZLxjPaRnLspNdI+BRw38M=
-X-Google-Smtp-Source: ABdhPJxhe15j5OGsgf6ubg65hqo067+sEZz2F1/eOHojX+9gZ7QSWo1iAgCyufmjG6vo/Icejnu1ejDf08TGvFILI5M=
-X-Received: by 2002:a05:6a00:139c:b029:2f7:102c:5393 with SMTP id
- t28-20020a056a00139cb02902f7102c5393mr13962018pfg.40.1623658344790; Mon, 14
- Jun 2021 01:12:24 -0700 (PDT)
+        bh=9fAPXLcMnuwc5kCpl7ATb/uElPSg8emw9lkYjZEn50s=;
+        b=TslOlU/jcWUgVO3qfGh3EO8sTGyTLFCjaj62aTFiajVdZ8WC23qj/tQ9MuFBJj/XzB
+         eTXtWNX656VQIs0YzYrErbe3EXmZFxl+HDTVSXfwhZk42CY6/5rK5/SYXeM86FuOHSyI
+         yfRoWGqhMqcb68nzuID3FUzb3EGqWIMFU6EuuHuTWchtP/6yR4zEnjNDrmTNk/Zr1yKu
+         XEx5fdejJ/whT0HngobKfcBWNe3w0iINXyw2DB2h98B0CyBtODMkrNMCJuff43WXiih5
+         Dd9Bmz44gKKMYKxWicDz6etT7OYftyCqcmgcPs9kyknodYOsCMwTJOCUx4VZjI1BBlcv
+         GZ0g==
+X-Gm-Message-State: AOAM5336bfBkjxTxmApbR4ZhHEbNWnDGvQEK7HsQeTXgCiESeGZAaKEv
+        kylgZSmLc0MEr1vXbyhVsH2VmsbIWQ9K5pPA8J1Tlx/AIZ4vPA==
+X-Google-Smtp-Source: ABdhPJz8DM8QT5+LPi3vLgQJFg8bNtXU1+jZbaUqleKAU+eGBqG9HteIVw8UKD4NGymqASQjqrSmND1AaABbeZkdko8=
+X-Received: by 2002:a9d:1726:: with SMTP id i38mr11894739ota.51.1623658422212;
+ Mon, 14 Jun 2021 01:13:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1623326176.git.viresh.kumar@linaro.org> <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
- <CACRpkdZV2v2S5z7CZf_8DV=At9-oPSj7RYFH78hWy3ZX37QnDQ@mail.gmail.com>
- <20210611035623.z4f2ynumzozigqnv@vireshk-i7> <CAMuHMdVrtSnFpPbB0P3Wxqm1D6vU1_cnh3ypsZJRNF6ueKdAsw@mail.gmail.com>
- <20210611080122.tlkidv6bowuka6fw@vireshk-i7> <0478822f-9d10-deb8-86ae-3b4ac3bb0c6c@metux.net>
-In-Reply-To: <0478822f-9d10-deb8-86ae-3b4ac3bb0c6c@metux.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 14 Jun 2021 11:12:08 +0300
-Message-ID: <CAHp75Vf0+bCnnD3wtkrPvFbr2k3A0r3eWNp87PyksiC7euaqdw@mail.gmail.com>
-Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+References: <20210607113840.15435-1-bhupesh.sharma@linaro.org>
+ <20210607113840.15435-3-bhupesh.sharma@linaro.org> <YMLPvrVVdx0MZJlO@builder.lan>
+In-Reply-To: <YMLPvrVVdx0MZJlO@builder.lan>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Date:   Mon, 14 Jun 2021 13:43:31 +0530
+Message-ID: <CAH=2Nty=VB2G6_eEAna8ZAysSCt9mMydR0cXLyTa=jrZ7nQO5A@mail.gmail.com>
+Subject: Re: [PATCH 2/8] dt-bindings: pinctrl: qcom,pmic-gpio: Add compatible
+ for SA8155p-adp
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
-        <sgarzare@redhat.com>, virtualization@lists.linux-foundation.org,
-        Alistair Strachan <astrachan@google.com>
+        bhupesh.linux@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 14, 2021 at 11:08 AM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
->
-> On 11.06.21 10:01, Viresh Kumar wrote:
->
-> > No, QEMU passes the raw messages to the backend daemon running in host
-> > userspace (which shares a socket with qemu). The backend understands
-> > the virtio/vhost protocols and so won't be required to change at all
-> > if we move from Qemu to something else. And that's what we (Linaro)
-> > are looking to do here with Project Stratos.
->
-> Note that this is completely different from my approach that I've posted
-> in autumn last year. Viresh's protocol hasn't much in common with mine.
+Hi Bjorn,
 
-That's why we have a thing called standard. And AFAIU virtio API/ABIs
-should be officially registered and standardized.
+On Fri, 11 Jun 2021 at 08:21, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Mon 07 Jun 06:38 CDT 2021, Bhupesh Sharma wrote:
+>
+> > Add pmic-gpio compatible strings for pmm8155au_1 and pmm8155au_2 pmics
+> > found on SA8155p-adp board.
+> >
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Liam Girdwood <lgirdwood@gmail.com>
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Andy Gross <agross@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-gpio@vger.kernel.org
+> > Cc: bhupesh.linux@gmail.com
+> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> > index f6a9760558a6..ee4721f1c477 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> > @@ -27,6 +27,8 @@ PMIC's from Qualcomm.
+> >                   "qcom,pm660l-gpio"
+> >                   "qcom,pm8150-gpio"
+> >                   "qcom,pm8150b-gpio"
+> > +                 "qcom,pmm8155au-1-gpio"
+> > +                 "qcom,pmm8155au-2-gpio"
+>
+> As with the regulator this seems to be a single component.
+>
+> >                   "qcom,pm8350-gpio"
+> >                   "qcom,pm8350b-gpio"
+> >                   "qcom,pm8350c-gpio"
+> > @@ -116,6 +118,9 @@ to specify in a pin configuration subnode:
+> >                                            and gpio8)
+> >                   gpio1-gpio12 for pm8150b (holes on gpio3, gpio4, gpio7)
+> >                   gpio1-gpio12 for pm8150l (hole on gpio7)
+> > +                 gpio1-gpio10 for pmm8155au-1 (holes on gpio2, gpio5, gpio7
+> > +                                               and gpio8)
+> > +                 gpio1-gpio10 for pmm8155au-2 (holes on gpio2, gpio5, gpio7)
+>
+> In the schematics all 10 pins are wired on both of these PMICs, so I
+> don't think there are holes. Please omit the comment.
 
--- 
-With Best Regards,
-Andy Shevchenko
+But if we look at the downstream dts (see [1]), we clearly have holes
+on gpio 2, 5 and 7 on PMM8155AU_2 whereas if we see [2], we can see
+PMM8155AU_1 has holes on gpio 2, 5, 7 and 8.
+
+As I understand, the schematics mention some optional configurations
+as well which might not be available depending on the default board
+configuration.
+
+[1]. https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/arch/arm64/boot/dts/qcom/sa8155-pmic-overlay.dtsi?h=LV.AU.0.1.0.r1-15900-gen3meta.0#n92
+[2]. https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/arch/arm64/boot/dts/qcom/sa8155-pmic-overlay.dtsi?h=LV.AU.0.1.0.r1-15900-gen3meta.0#n36
+
+Regards,
+Bhupesh
+
+>
+> >                   gpio1-gpio10 for pm8350
+> >                   gpio1-gpio8 for pm8350b
+> >                   gpio1-gpio9 for pm8350c
+> > --
+> > 2.31.1
+> >
