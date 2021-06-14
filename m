@@ -2,158 +2,203 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CFFE3A6BC7
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jun 2021 18:28:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 626963A6D1E
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jun 2021 19:27:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234687AbhFNQas (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Jun 2021 12:30:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54536 "EHLO
+        id S234009AbhFNR32 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Jun 2021 13:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234676AbhFNQar (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Jun 2021 12:30:47 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80E9C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 09:28:44 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id q5-20020a9d66450000b02903f18d65089fso11354308otm.11
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 09:28:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9CIY8AjuCRy8RieSStx5nb9rNTU57wmjgQb3HVjK27U=;
-        b=i663WzaVYh9vcq7ceJqDlWbmey3o6O+WEhi7etvgrLnxsxi8f9kgk9mEDBtlC4Piyy
-         7LteFPw1qcz5tkTdJK6vZi1eGrQ91DeQPPH4DWVoTFJ7lipp6uuWFs04mr4qJYjZkhC8
-         fDaF0llrx66733fzl44DMSzDRNRjYyaPVXt+hEmldEFM/I3fzU0FgcGx2g3i0dp8hdlb
-         Rd7qiOi8MEDfHAuuDyRhwywrohKyktaISRVuR1BVp3URCDxR6LUex6I09mb3eVb2rh0L
-         UUWgIKKRnYlVihuCna31RI/TsnF0ger4VBYtMDUjeRv0o6Urogy4ogDh+m8jnO3swO+3
-         t4Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9CIY8AjuCRy8RieSStx5nb9rNTU57wmjgQb3HVjK27U=;
-        b=TkOolDhT6K56p2OnbBJ5rZUB4PkonqcKgTH1tsw945iMTPacloCmchobmAW4NJvWqo
-         LBFzVJQupFdMgHoItY8LL3U7avQ/yDHUwnBakwzBZDmRqEoItb8ojNX8ltrdcxCAelr0
-         ldbAF9ZglKm3TEE9mGIv0zwJz/uIi6H/uK78y15kg/9jP6h3v3SvJYzM7yCh757OAZEE
-         adYON/Rah+CGbNDyqMv/JKmUYjWVtlGb11QSvTngdv7UB+ZZe4v934ITjzfBt3TpBCqj
-         yV9a/mfwydOrm2zqqh6uVEQHvuAqPv8eisx2XkisunlehR2k0F7YCnH8RoKD/o+9cdxO
-         6QQQ==
-X-Gm-Message-State: AOAM5303NfmXuujbguWxJ00y8z6nrRTVWKV73Tuoe8wZqMWpd6MtrBFE
-        ZVW2+Bu6iNxsPn0Jqlha1/yq3w==
-X-Google-Smtp-Source: ABdhPJwIXsrftnZxjGMjBdTiMtowSy+ltDxlxiwm7UMHVPBGyAbeWkXvt8Fplt0tpJ3QCoiJRkhHYg==
-X-Received: by 2002:a9d:491:: with SMTP id 17mr14139894otm.184.1623688124306;
-        Mon, 14 Jun 2021 09:28:44 -0700 (PDT)
-Received: from yoga (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id w186sm3058210oib.58.2021.06.14.09.28.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jun 2021 09:28:43 -0700 (PDT)
-Date:   Mon, 14 Jun 2021 11:28:41 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S233519AbhFNR31 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Jun 2021 13:29:27 -0400
+Received: from relay07.th.seeweb.it (relay07.th.seeweb.it [IPv6:2001:4b7a:2000:18::168])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498D4C061574;
+        Mon, 14 Jun 2021 10:27:24 -0700 (PDT)
+Received: from localhost.localdomain (bband-dyn73.178-41-129.t-com.sk [178.41.129.73])
+        by m-r2.th.seeweb.it (Postfix) with ESMTPA id 74AC03EEF1;
+        Mon, 14 Jun 2021 19:27:22 +0200 (CEST)
+From:   Martin Botka <martin.botka@somainline.org>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        konrad.dybcio@somainline.org,
+        angelogioacchino.delregno@somainline.org,
+        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
+        Martin Botka <martin.botka@somainline.org>,
         Andy Gross <agross@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        bhupesh.linux@gmail.com
-Subject: Re: [PATCH 1/8] dt-bindings: qcom: rpmh-regulator: Add compatible
- for SA8155p-adp board pmics
-Message-ID: <YMeDuToX+YG8CJEa@yoga>
-References: <20210607113840.15435-1-bhupesh.sharma@linaro.org>
- <20210607113840.15435-2-bhupesh.sharma@linaro.org>
- <YMLO56Rr7UGUy8vo@builder.lan>
- <CAH=2NtyV=qMn32d9nE7qBheTscUejF1UwVZSc99uiv_P65S03Q@mail.gmail.com>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V5 1/2] dt-bindings: pinctrl: qcom: sm6125: Document SM6125 pinctrl driver
+Date:   Mon, 14 Jun 2021 19:27:09 +0200
+Message-Id: <20210614172713.558192-1-martin.botka@somainline.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH=2NtyV=qMn32d9nE7qBheTscUejF1UwVZSc99uiv_P65S03Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon 14 Jun 03:05 CDT 2021, Bhupesh Sharma wrote:
+Document the newly added SM6125 pinctrl driver
 
-> Hello Bjorn,
-> 
-> Thanks for the review comments.
-> 
-> On Fri, 11 Jun 2021 at 08:18, Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > On Mon 07 Jun 06:38 CDT 2021, Bhupesh Sharma wrote:
-> >
-> > > Add compatible strings for pmm8155au_1 and pmm8155au_2 pmics
-> > > found on SA8155p-adp board.
-> > >
-> > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > Cc: Liam Girdwood <lgirdwood@gmail.com>
-> > > Cc: Mark Brown <broonie@kernel.org>
-> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > Cc: Vinod Koul <vkoul@kernel.org>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Andy Gross <agross@kernel.org>
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: linux-gpio@vger.kernel.org
-> > > Cc: bhupesh.linux@gmail.com
-> > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > > ---
-> > >  .../devicetree/bindings/regulator/qcom,rpmh-regulator.yaml      | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml
-> > > index e561a5b941e4..ea5cd71aa0c7 100644
-> > > --- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml
-> > > +++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml
-> > > @@ -55,6 +55,8 @@ properties:
-> > >        - qcom,pm8009-1-rpmh-regulators
-> > >        - qcom,pm8150-rpmh-regulators
-> > >        - qcom,pm8150l-rpmh-regulators
-> > > +      - qcom,pmm8155au-1-rpmh-regulators
-> > > +      - qcom,pmm8155au-2-rpmh-regulators
-> >
-> > Looking at the component documentation and the schematics I think the
-> > component is "PMM8155AU" and we have two of them.
-> >
-> > Unless I'm mistaken we should have the compatible describe the single
-> > component and we should have DT describe the fact that we have 2 of
-> > them.
-> 
-> If we refer to the PM8155AU device specifications, there are two
-> regulators mentioned there PMM8155AU_1 and PMM8155AU_2. Although most
-> parameters of the regulators seem similar the smps regulator summary
-> for both appear different (Transient Load, mA ratings etc).
-> 
-> Although most of these differences don't probably matter to the Linux
-> world, others like the gpios on the pmic are different.
-> 
-> So, IMO, it makes sense to mention the different pmic types on the board.
-> 
-> Please let me know your views on the same.
-> 
+Signed-off-by: Martin Botka <martin.botka@somainline.org>
+---
+Changes in V2:
+Add commit description
+Changes in V3:
+Fix syntax errors
+Remove not needed state from example
+Changes in V4:
+maxItems set to 3
+Correct the pattern
+Remove deleted enums
+Fix the compatible
+Changes in V5:
+Add reg-names and make them required
+Add minItems to reg
+ .../bindings/pinctrl/qcom,sm6125-pinctrl.yaml | 132 ++++++++++++++++++
+ 1 file changed, 132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.yaml
 
-Afaict, they are both physically the same component, but there is some
-configuration differences between them. I don't see any differences that
-will show up in Linux, but afaict we would capture those in the DT
-anyways.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.yaml
+new file mode 100644
+index 000000000000..5f7adaa81f83
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm6125-pinctrl.yaml
+@@ -0,0 +1,132 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,sm6125-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++title: Qualcomm Technologies, Inc. SM6125 TLMM block
++
++maintainers:
++  - Martin Botka <martin.botka@somainline.org>
++
++description: |
++  This binding describes the Top Level Mode Multiplexer (TLMM) block found
++  in the SM6125 platform.
++
++allOf:
++  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
++
++properties:
++  compatible:
++    const: qcom,sm6125-tlmm
++
++  reg:
++    minItems: 3
++    maxItems: 3
++
++  reg-names:
++    items:
++      - const: "west"
++      - const: "south"
++      - const: "east"
++
++  interrupts: true
++  interrupt-controller: true
++  '#interrupt-cells': true
++  gpio-controller: true
++  gpio-reserved-ranges: true
++  '#gpio-cells': true
++  gpio-ranges: true
++  wakeup-parent: true
++
++required:
++  - compatible
++  - reg
++  - reg-names
++
++additionalProperties: false
++
++patternProperties:
++  '-state$':
++    oneOf:
++      - $ref: "#/$defs/qcom-sm6125-tlmm-state"
++      - patternProperties:
++          ".*":
++            $ref: "#/$defs/qcom-sm6125-tlmm-state"
++
++$defs:
++  qcom-sm6125-tlmm-state:
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
++
++    properties:
++      pins:
++        description:
++          List of gpio pins affected by the properties specified in this
++          subnode.
++        items:
++          oneOf:
++            - pattern: "^gpio[0-9]|[1-9][0-9]|1[0-2][0-9]|13[0-2]$"
++            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data ]
++        minItems: 1
++        maxItems: 36
++
++      function:
++        description:
++          Specify the alternative function to be configured for the specified
++          pins.
++
++        enum: [ adsp_ext, agera_pll, atest_char, atest_char0, atest_char1,
++                atest_char2, atest_char3, atest_tsens, atest_tsens2, atest_usb1,
++                atest_usb10, atest_usb11, atest_usb12, atest_usb13, atest_usb2,
++                atest_usb20, atest_usb21, atest_usb22, atest_usb23, aud_sb,
++                audio_ref, cam_mclk, cci_async, cci_i2c, cci_timer0, cci_timer1,
++                cci_timer2, cci_timer3, cci_timer4, copy_gp, copy_phase, cri_trng,
++                cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
++                ddr_pxi2, ddr_pxi3, debug_hot, dmic0_clk, dmic0_data, dmic1_clk,
++                dmic1_data, dp_hot, edp_hot, edp_lcd, gcc_gp1, gcc_gp2, gcc_gp3,
++                gp_pdm0, gp_pdm1, gp_pdm2, gpio, gps_tx, jitter_bist, ldo_en,
++                ldo_update, m_voc, mclk1, mclk2, mdp_vsync, mdp_vsync0, mdp_vsync1,
++                mdp_vsync2, mdp_vsync3, mdp_vsync4, mdp_vsync5, mpm_pwr, mss_lte,
++                nav_pps, pa_indicator, phase_flag, pll_bist, pll_bypassnl, pll_reset,
++                pri_mi2s, pri_mi2s_ws, prng_rosc, qca_sb, qdss_cti, qdss, qlink_enable,
++                qlink_request, qua_mi2s, qui_mi2s, qup00, qup01, qup02, qup03, qup04,
++                qup10, qup11, qup12, qup13, qup14, sd_write, sec_mi2s, sp_cmu, swr_rx,
++                swr_tx, ter_mi2s, tgu_ch0, tgu_ch1, tgu_ch2, tgu_ch3, tsense_pwm,
++                uim1_clk, uim1_data, uim1_present, uim1_reset, uim2_clk, uim2_data,
++                uim2_present, uim2_reset, unused1, unused2, usb_phy, vfr_1, vsense_trigger,
++                wlan1_adc0, wlan1_adc1, wlan2_adc0, wlan2_adc1, wsa_clk, wsa_data ]
++
++
++      bias-disable: true
++      bias-pull-down: true
++      bias-pull-up: true
++      drive-strength: true
++      input-enable: true
++      output-high: true
++      output-low: true
++
++    required:
++      - pins
++      - function
++
++    additionalProperties: false
++
++examples:
++  - |
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        pinctrl@500000 {
++                compatible = "qcom,sm6125-tlmm";
++                reg = <0x00500000 0x400000>,
++                    <0x00900000 0x400000>,
++                    <0x00d00000 0x400000>;
++                reg-names = "west", "south", "east";
++                interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
++                gpio-controller;
++                gpio-ranges = <&tlmm 0 0 134>;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++        };
+-- 
+2.31.1
 
-Let me know if you see anything I'm missing, but I think we should have
-a single compatible.
-
-Regards,
-Bjorn
-
-> Thanks,
-> Bhupesh
-> 
-> >
-> > >        - qcom,pm8350-rpmh-regulators
-> > >        - qcom,pm8350c-rpmh-regulators
-> > >        - qcom,pm8998-rpmh-regulators
-> > > --
-> > > 2.31.1
-> > >
