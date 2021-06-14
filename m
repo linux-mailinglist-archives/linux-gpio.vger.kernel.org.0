@@ -2,92 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CA613A5E14
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jun 2021 10:07:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98C1F3A5E1F
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jun 2021 10:11:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232583AbhFNIJn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Jun 2021 04:09:43 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:49753 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232530AbhFNIJn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Jun 2021 04:09:43 -0400
-Received: from [192.168.1.155] ([95.115.71.85]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M26n9-1lucVX2qYD-002Unn; Mon, 14 Jun 2021 10:07:30 +0200
-Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
-        <sgarzare@redhat.com>, virtualization@lists.linux-foundation.org,
-        Alistair Strachan <astrachan@google.com>
-References: <cover.1623326176.git.viresh.kumar@linaro.org>
- <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
- <CACRpkdZV2v2S5z7CZf_8DV=At9-oPSj7RYFH78hWy3ZX37QnDQ@mail.gmail.com>
- <20210611035623.z4f2ynumzozigqnv@vireshk-i7>
- <CAMuHMdVrtSnFpPbB0P3Wxqm1D6vU1_cnh3ypsZJRNF6ueKdAsw@mail.gmail.com>
- <20210611080122.tlkidv6bowuka6fw@vireshk-i7>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <0478822f-9d10-deb8-86ae-3b4ac3bb0c6c@metux.net>
-Date:   Mon, 14 Jun 2021 10:07:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S232563AbhFNIN2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Jun 2021 04:13:28 -0400
+Received: from mail-pf1-f175.google.com ([209.85.210.175]:38490 "EHLO
+        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232560AbhFNIN2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Jun 2021 04:13:28 -0400
+Received: by mail-pf1-f175.google.com with SMTP id z26so9962903pfj.5
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 01:11:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Pgi/EMTO8YCA+/qiOMgkcaEavCEHCEXPkwAgb1oCC7E=;
+        b=cKMSnBmZKXuPmn5SBa/Vflrru71Zqa+u8ZKG5zOCYj03ID+fnDbMHPKrjelyA5L+ii
+         a3kHXMqTGuDDQsE5TyGUq0sXQ+v1IeqatQQE2J7K9E58AAtX/m3vsATWZYpcELoQ/k5W
+         6tmzai1WZFl3SRGlRjOG/nI+lPQBtlqIAIs6SK1pS2qPvRl8vEkBzu0JVzK4N75p6n9A
+         hHbnXMhpcoA0TOQVcrwjy734DwLhzEg8GvYToOTT3x3i0iomt+HSlnPDMdxLuyC8X0dx
+         4lCDPoazdmok+A6OJTF+/UWKr3kvylWpyytFQNfzzEXn3cvKBWII92Y7GRRe0Qp0e2XK
+         vu2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pgi/EMTO8YCA+/qiOMgkcaEavCEHCEXPkwAgb1oCC7E=;
+        b=cYXrB4qeFkm88UXAm77Cb7z4q4uQxrCTs5LlBLc+xNjj4DJR3Ns/1EI5TU/cqfLjVC
+         bm27yg5OMB/I4CHSGuws0X622yVeOgV0MxJq8yaRgLzQv2M2oJwFV4w5Zv2mpOgJQe6e
+         /ncG/2HTJEZ/swrhBXoS1f3OHPq9AlAClqu7NqJ//tM+2f9x1it18ca8nSrYs2zlVMlt
+         zPTpP86PJ7dMl1ckw6SYQLjsS3zZcwG2YiobkEwiiOPjZuCpRoBeP/pT3iIeQSE1zHxs
+         FwZMIiUdWUwNZfCuOQHkjJ60WZfktamdSF6ER3pbBa9nY9v5r5Z6HHXMKfXsQy3mX5eL
+         nUTQ==
+X-Gm-Message-State: AOAM531zgQdpWgfGLI9EKHSysPUaPO5eDJ/YEGzD3qr3PsRODCJpEPbd
+        E/fEbAAceSO47frJq8SNnrq25Hl6N67gu+5CSPU=
+X-Google-Smtp-Source: ABdhPJzSMN91uYSRKlP06T+Mgqd0D/iNR5+ni7v0xYKiek61ZLxNLemtRiYtLIl+3WU0SFopdZIa38f0biYX6lfxLLo=
+X-Received: by 2002:a62:e404:0:b029:2ee:f086:726f with SMTP id
+ r4-20020a62e4040000b02902eef086726fmr20453698pfh.7.1623658225619; Mon, 14 Jun
+ 2021 01:10:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210611080122.tlkidv6bowuka6fw@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:5H1L+Ex7ZC4oLqRcKzdvgpyI25ZIf+Ocm4zxpAaFyNTtvXvaMJv
- 7hFfUyuU0ZTlsuQsZHLYoefeD/MNbY0jyUf52kB6Izj4LBtlhsRRsGRKFeM1gcYQ4umv456
- qO/zCycpEg0+AoNFn9tGFgNNIOJvG6fO+2o3aRI5xkXG55E/ZD8aZfDhWaxZJIjqlmw6/O2
- OK5KfX+UrcoMKTfpLAfVQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wHlBr1mS1qE=:Vl5Ups3XZz5i92tgw4v+SQ
- n6aXOQ4RkWiN2MXHblKpUhMDhf0eACabCKjq9Lct+1R8ffdp8ydUd5w4mzu/NeUSFjjIAo1OA
- 1Sc3seBFL+WY7k4/2f/BaGtBUNrwROiUR/DD2PzOJVp5E4fyyN1plD02Bs+uXtBGUHnsv6YIG
- ya66HAz0n7H2fU6DxETvgbFn/vsNnWcf3M6uMSsL2Aj8QKExDTskQHdXe2Zxyw7XV4h7yiRka
- kqJUtUX2UiM47U7un4qehkRIi2AmbZAXjfQreODOAAlIN8lSsn+2WGMs7h8qaBTZqq5eNGSg+
- +itpYA82ggH/WWWy46xKgAlfjKpYQ1N6YVfB9mcoAU2NTZk7wFBjpbFdtV9VLmluIPXvuPMy3
- KTZCCFRbMxq/Q7YUpG3W+RUwqShBlg+3R4cx+VmPCEjBaiA/pBjkNBb4pMgprLkMR44iOpRYH
- Hd+abtCtez4oDuNb1SUJ9wQehU8ywuU/xaIXrAMPznZaUBJHIP7VcqQf9cS8x4RUIP04zs8Ip
- 80xpEmEhCptzvXH889HdZY=
+References: <20210613220326.831040-1-pbrobinson@gmail.com>
+In-Reply-To: <20210613220326.831040-1-pbrobinson@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 14 Jun 2021 11:10:09 +0300
+Message-ID: <CAHp75Vc91=PSj+4F652Wo4iEHsek_NuLGuQmyovWtQ1UMO2xeA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Add support for the On Semi pca9655
+To:     Peter Robinson <pbrobinson@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11.06.21 10:01, Viresh Kumar wrote:
+On Mon, Jun 14, 2021 at 1:05 AM Peter Robinson <pbrobinson@gmail.com> wrote:
+>
+> The On Semi pca9655 is a 16 bit variant of the On Semi pca9654 GPIO
+> expander, with 16 GPIOs and interrupt functionality.
 
-> No, QEMU passes the raw messages to the backend daemon running in host
-> userspace (which shares a socket with qemu). The backend understands
-> the virtio/vhost protocols and so won't be required to change at all
-> if we move from Qemu to something else. And that's what we (Linaro)
-> are looking to do here with Project Stratos.
+I don't remember the context...
 
-Note that this is completely different from my approach that I've posted
-in autumn last year. Viresh's protocol hasn't much in common with mine.
+>         { .compatible = "onnn,cat9554", .data = OF_953X( 8, PCA_INT), },
+>         { .compatible = "onnn,pca9654", .data = OF_953X( 8, PCA_INT), },
+> +       { .compatible = "onnn,pca9655", .data = OF_953X( 16, PCA_INT), },
 
+...but the first space (before 16) seems not necessary and the idea as
+far as I can see from here is to have those columns to be indented
+nicely.
 
---mtx
+>         { .compatible = "exar,xra1202", .data = OF_953X( 8, 0), },
+>         { }
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+With Best Regards,
+Andy Shevchenko
