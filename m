@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6768E3A760F
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jun 2021 06:43:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4B433A7614
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jun 2021 06:47:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbhFOEp5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Jun 2021 00:45:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46916 "EHLO
+        id S229811AbhFOEtX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Jun 2021 00:49:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbhFOEp4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 00:45:56 -0400
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10603C0613A2
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 21:43:53 -0700 (PDT)
-Received: by mail-ot1-x32f.google.com with SMTP id l15-20020a05683016cfb02903fca0eacd15so13066346otr.7
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 21:43:53 -0700 (PDT)
+        with ESMTP id S229728AbhFOEtX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 00:49:23 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 288C9C0617AF
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 21:47:19 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id p5-20020a9d45450000b029043ee61dce6bso5997473oti.8
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Jun 2021 21:47:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JyaUkQuIyJoeFM+aEDlAzk2ObFHbusZSFKanutxk4Kk=;
-        b=FY6KP3tPfSi18hxKQz/dPNKtBWBY9us3tn3qr64LmdnwNoD9Qygd1BfC9C5JhRkCuJ
-         KuxFdsqfmhktKgnwigHusnqRy4qmHb91U95rwe5Hjvo7eLzDeNMt2/KXQdyYipEty1Lp
-         +RASGmRooIjliky3xwViIhxwoItf2gNgzxh/NP1BBpMG4QXBD11UJ86eWU+PvCAjEtEw
-         FICAKGgenEpLUf5VRdwUP6r7+i6/DgXrv2jbKi/NfiBqXWB+6OgTgCieb+HZqUai8nOt
-         A2Iv/Ow79hksfJ5HtOM1JbFzqtm37Xr3gsBVxoQSae9kmJUvR2gCg6Gu3fjnNgEvWNsr
-         iXBQ==
+        bh=nngriT+7I5tBGdgHEeOVhQ16xcR1u7wZ3t5HbdfW8Z4=;
+        b=lp5W+n4oYwyvQD2qxXRtPuLq+miZglxCfYAqf9CAnQ4bMl9+R/43fgL94AgAHz205a
+         f8rSSQIk0JKew14zfLonjTJBToVck8l7qJjXQCf44113WPA+d2VyMHJzz6mvB86dR51m
+         P6i0gCX8Mez2PzLZdgvaSd0/I4uUbSTjqQ3wNuYra2dmuv4BV8f555lYp/z/vb/CyVgQ
+         VyYNb271xmCVwqGLbGr4Y4fFh0/ninI+QpGtlNRjfyPxLTUzPYdcurCAKPMRuobAIpA5
+         gYm7sHfjJouxVWof6d+3lFxZixtbXyX81OywFOVIhoRJonE/M8ApxCpldZfRZ2um0cFO
+         L6ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JyaUkQuIyJoeFM+aEDlAzk2ObFHbusZSFKanutxk4Kk=;
-        b=BsTvPdCIOGx1SSjggqqaZxHTDsSl40X6Y/mdSrsfp3wICriNm5ba6QfBRJ9ga5Q/UR
-         tIT+De6g2ObuMAVOVyNPEzqENVjuLogyiOYLzqCgBElhsguwsFgjEtBqHBaFjYMitPym
-         ulRBzaYtowgsSehlXEyWLCPw98+it7ly0YFnY/7wTqR4gzmf+KD8G3gBONBRjV8VYpvo
-         mASDmf7BdA4hozMvO2UH2x6ZZf/sSOlgGrehokUAVAB3nSMw2z47gbR0vVyy7J1lF+mr
-         TuLAP/jZxnaE1yVPk3t4c2TC4GtWJjL1PveEhv4E/jF2ab9AcgYA4Jh23rKASZ0tbX11
-         GGAA==
-X-Gm-Message-State: AOAM530x46RKpUj7ididli+AwkcOV65EoWYxqT1Mvf0k1HEcNTpaRvRq
-        lOfUKuSQM4e0lqTU334FBKLeqtK/BNOv9zU6S9Blpw==
-X-Google-Smtp-Source: ABdhPJwrsLZmevUqafP568aS8yI0DiAgzYfRC7baS3F8SVzDZEKsHINDgwEGHDGQM0JUnXSZZbn7/xcJ77K0LCRj0a8=
-X-Received: by 2002:a9d:74d4:: with SMTP id a20mr15883836otl.28.1623732231944;
- Mon, 14 Jun 2021 21:43:51 -0700 (PDT)
+        bh=nngriT+7I5tBGdgHEeOVhQ16xcR1u7wZ3t5HbdfW8Z4=;
+        b=kffbrxBQW25bMURDIgfY6xGUQDdgZKhXrVilWUl1a4iKQdO0fR6qAEPNNH3PwZoe5R
+         CWvDDjwEupb51m8aTAH4UBjGCPxS/GLWypTQ4AE7TRZHre5a5I2pd9PvYarH+V8LjbNP
+         ZPvgkbhP8dFWcCOaETSFErHEQLimxlEct+uYWW8yHI5oPYILlfR4szOH2U9WQuBUKGgE
+         WQZPeEGw+Uj/j1rOYO2KJYCwhCgZteZ6tU3tvvp2OvAjwcw+JCPBtyTnANAZE6CclazQ
+         e1AT5TOP9v5miCvlIAnwSRhr084HUYNumy4A+K0AvL8bqR/MGUzqi/9pDna2aoH50j2a
+         m3OQ==
+X-Gm-Message-State: AOAM531+kiPmG1B02uNTF1eFvM4IeormXF4U22zgUQaJGEZSDhvOf8Pv
+        Cr1YNiiA6dtdPt5vgKhNyqkz2LZJJ4GQMSWBwV+rvQ==
+X-Google-Smtp-Source: ABdhPJwIjnzDAGWEPWyfPs9YdC7k0RYUBiPJTLKDbEmeUW9F0RNyfETdyIC5ptMaQ0ffkA33XteJvJvxzo73fBMkNzg=
+X-Received: by 2002:a9d:74d4:: with SMTP id a20mr15893473otl.28.1623732438466;
+ Mon, 14 Jun 2021 21:47:18 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210607113840.15435-1-bhupesh.sharma@linaro.org>
- <20210607113840.15435-2-bhupesh.sharma@linaro.org> <YMLO56Rr7UGUy8vo@builder.lan>
- <CAH=2NtyV=qMn32d9nE7qBheTscUejF1UwVZSc99uiv_P65S03Q@mail.gmail.com> <YMeDuToX+YG8CJEa@yoga>
-In-Reply-To: <YMeDuToX+YG8CJEa@yoga>
+ <20210607113840.15435-5-bhupesh.sharma@linaro.org> <CAHp75Vd7z6ivOxHikqP5j+yPtV7C8GBogwVUAziLznSatH+8EA@mail.gmail.com>
+ <CAH=2NtxtzRhOzekHxn+V4DSYmwncX1wSRbKOe=PNkcTsQ3jqiQ@mail.gmail.com> <YMeBJRujxoxj9no4@yoga>
+In-Reply-To: <YMeBJRujxoxj9no4@yoga>
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Tue, 15 Jun 2021 10:13:41 +0530
-Message-ID: <CAH=2NtzKniw9tdnVFXk35qEmvXcKQMR3=DqamQwjP+wsCGpT1Q@mail.gmail.com>
-Subject: Re: [PATCH 1/8] dt-bindings: qcom: rpmh-regulator: Add compatible for
- SA8155p-adp board pmics
+Date:   Tue, 15 Jun 2021 10:17:07 +0530
+Message-ID: <CAH=2NtzSjdMr+tCLtY1W7-vLiRvqtL3hE+HKLU3UTds3_arE_w@mail.gmail.com>
+Subject: Re: [PATCH 4/8] regulator: qcom-rpmh: Add new regulator types found
+ on SA8155p adp board
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org,
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-arm-msm@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
@@ -69,23 +70,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 14 Jun 2021 at 21:58, Bjorn Andersson
+On Mon, 14 Jun 2021 at 21:47, Bjorn Andersson
 <bjorn.andersson@linaro.org> wrote:
 >
-> On Mon 14 Jun 03:05 CDT 2021, Bhupesh Sharma wrote:
+> On Mon 07 Jun 07:30 CDT 2021, Bhupesh Sharma wrote:
 >
-> > Hello Bjorn,
-> >
-> > Thanks for the review comments.
-> >
-> > On Fri, 11 Jun 2021 at 08:18, Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
+> > On Mon, 7 Jun 2021 at 17:39, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 > > >
-> > > On Mon 07 Jun 06:38 CDT 2021, Bhupesh Sharma wrote:
-> > >
-> > > > Add compatible strings for pmm8155au_1 and pmm8155au_2 pmics
-> > > > found on SA8155p-adp board.
+> > > On Mon, Jun 7, 2021 at 2:41 PM Bhupesh Sharma <bhupesh.sharma@linaro.org> wrote:
 > > > >
+> > > > SA8155p-adp board has two new regulator types - pmm8155au_1 and
+> > > > pmm8155au_2.
+> > > >
+> > > > The output power management circuits in these regulators include:
+> > > > - FTS510 smps,
+> > > > - HFS510 smps, and
+> > > > - LDO510 linear regulators
+> > >
+> > > ...
+> > >
 > > > > Cc: Linus Walleij <linus.walleij@linaro.org>
 > > > > Cc: Liam Girdwood <lgirdwood@gmail.com>
 > > > > Cc: Mark Brown <broonie@kernel.org>
@@ -97,53 +100,45 @@ On Mon, 14 Jun 2021 at 21:58, Bjorn Andersson
 > > > > Cc: linux-kernel@vger.kernel.org
 > > > > Cc: linux-gpio@vger.kernel.org
 > > > > Cc: bhupesh.linux@gmail.com
-> > > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > > > ---
-> > > >  .../devicetree/bindings/regulator/qcom,rpmh-regulator.yaml      | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml
-> > > > index e561a5b941e4..ea5cd71aa0c7 100644
-> > > > --- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml
-> > > > +++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.yaml
-> > > > @@ -55,6 +55,8 @@ properties:
-> > > >        - qcom,pm8009-1-rpmh-regulators
-> > > >        - qcom,pm8150-rpmh-regulators
-> > > >        - qcom,pm8150l-rpmh-regulators
-> > > > +      - qcom,pmm8155au-1-rpmh-regulators
-> > > > +      - qcom,pmm8155au-2-rpmh-regulators
 > > >
-> > > Looking at the component documentation and the schematics I think the
-> > > component is "PMM8155AU" and we have two of them.
-> > >
-> > > Unless I'm mistaken we should have the compatible describe the single
-> > > component and we should have DT describe the fact that we have 2 of
-> > > them.
+> > > Use --cc or similar option when run `git send-email`, no need to
+> > > pollute the commit message with these.
 > >
-> > If we refer to the PM8155AU device specifications, there are two
-> > regulators mentioned there PMM8155AU_1 and PMM8155AU_2. Although most
-> > parameters of the regulators seem similar the smps regulator summary
-> > for both appear different (Transient Load, mA ratings etc).
-> >
-> > Although most of these differences don't probably matter to the Linux
-> > world, others like the gpios on the pmic are different.
-> >
-> > So, IMO, it makes sense to mention the different pmic types on the board.
-> >
-> > Please let me know your views on the same.
+> > It's just a matter of preference IMO. I prefer to use a Cc list
+> > here.
 > >
 >
-> Afaict, they are both physically the same component, but there is some
-> configuration differences between them. I don't see any differences that
-> will show up in Linux, but afaict we would capture those in the DT
-> anyways.
+> The Cc list in the commit message will be committed to the git history
+> and there it carries the information that you specifically made sure
+> that these people saw the patch. So please limit the use to that
+> purpose.
+
+I understand, but different maintainers like different formats here.
+Infact, there
+are suggestions not to use --cc as some opens-source lists are known to drop
+folks from Cc list accidentally (mentioned via --cc) , so some folks
+prefer the git log to contain the Cc list instead.
+
+But I can trim the same for v2.
+
+> > > > +static const struct rpmh_vreg_init_data pmm8155au_1_vreg_data[] = {
+> > >
+> > >
+> > > > +       {},
+> > >
+> > > Comma is not needed in the terminator line.
+> >
+> > Hmm.. it's similar to the syntax already used at several places in this file.
+> > See ' struct rpmh_vreg_init_data pm8150l_vreg_data[] ' for example.
+> >
+> > Unless there is an obvious issue with it, let's use the same to keep
+> > things similar from a syntax p-o-v.
+> >
 >
-> Let me know if you see anything I'm missing, but I think we should have
-> a single compatible.
+> Those other places shouldn't use the ',' either, so please help set a
+> better precedence.
 
-As discussed on IRC, let's go with the approach you suggested (I can
-propose followup patches if I find something amiss). I will send a v2
-shortly.
+Sure, I will send that out as a separate clean-up patch.
 
-Thanks,
+Regards,
 Bhupesh
