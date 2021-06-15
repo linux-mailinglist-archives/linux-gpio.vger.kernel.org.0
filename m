@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4B153A8813
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jun 2021 19:50:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D81B93A88EA
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jun 2021 20:53:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231287AbhFORvp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Jun 2021 13:51:45 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:46819 "EHLO
+        id S231179AbhFOSzV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Jun 2021 14:55:21 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:51251 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231168AbhFORvo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 13:51:44 -0400
+        with ESMTP id S229749AbhFOSzV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 14:55:21 -0400
 Received: from orion.localdomain ([95.115.9.120]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MTOZQ-1ljCn02TGe-00TiL5; Tue, 15 Jun 2021 19:49:14 +0200
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MuUza-1l2m1D0zJq-00rUFJ; Tue, 15 Jun 2021 20:52:57 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     corbet@lwn.net, linus.walleij@linaro.org,
@@ -23,26 +23,26 @@ Cc:     corbet@lwn.net, linus.walleij@linaro.org,
         linux-gpio@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-riscv@lists.infradead.org
-Subject: [PATCH] drivers: gpio: add virtio-gpio guest driver
-Date:   Tue, 15 Jun 2021 19:49:11 +0200
-Message-Id: <20210615174911.973-1-info@metux.net>
+Subject: [PATCH v4] drivers: gpio: add virtio-gpio guest driver
+Date:   Tue, 15 Jun 2021 20:52:54 +0200
+Message-Id: <20210615185254.12714-1-info@metux.net>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:HxLh+DzCcaVDG4GfWoFlaSa7t9Hyw5Dz5eltszv7bOkrrV4v8lF
- PgRwv4omQG6dRJ7aE5tGOuf2GQQcqWJ2Hh6MKTYVpALqHzKwcML6EW87U145/PY1ebtFhHl
- QpT5uihZvLqMalJ8FUCnA4JJvoTDUa8OGG2SkMMK09jTOd+doBZIHjy5eqVrgopiCML6Z8W
- FUGzVWl3vUH8fmS3RlzqQ==
+X-Provags-ID: V03:K1:zAZp4GCusPL/GxQleqpqVZp+XfVHYiG5CnZSgW5t/JFd8CKaGai
+ +v1Di2rJ/JLs+AOCI8g2qLMLl7qcq2J5cf8Vmd9qAXjTvr0hXhuHiIP2wo79KOYhd9AQbrK
+ IrWTUgegeV7Vtu2nm6fJBimrOtV5E6MqNJiOCekmxinPiqKKkQirA0K9mVtll6ZcNEapNoM
+ TBBUg21RVUe+p2Pi/kXpA==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UgAZxsZq3OE=:rdo3I7XXpjtQV++JJm6UYd
- /QA1kJeJpXT1HDTmTkkyN3sEESaWKqfSl43jVEi8hDFhXXCkDqT4WTUNQN1aiFLQ1E8MqGDsq
- iiIIRdhWnCtUcruiUeOzGeVtqjcd/It140IeD1Msc7YGgvs9gx3nzzVr9SgLwZeNuh4S/OETO
- TFugCW+dFgRt4zOo3NJmNFVxb3hwCgzuVSbMVHsx6ABOTWjwv0Jdqwmzlq0qYPvHw/jWT43BT
- 7wWwTzXXRpC8MVXQSZ34pYnR/JzjtICQuY49TAsH6sLEKC8yU8hgf6/CLAGCtGlEiYOY7oDJd
- KTALHIz3u0tXvfjXBf4ZC62iY3pYoqAa/Mo/r+e8+cPgzrsxe8jjT3h/wotsBfxTw/PT6jJAY
- Bjv8K8T9329U3iZV5DSubZ2WWRMxaGj5zmJuhhs/WR9YDsrijYYKvSRCfwgDJlKoOsroYPkH4
- DJ7cqlRxPgGoSb8xKDWWTPCnrz6CEVPIx2ToffkQOYmRC94quVACx1+WCVeAHK7DzSnDYFPLH
- 6cHSey0T9jhRG2l9jQIAqo=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dt0K5vyONWA=:OQCfsOWs3VH3u/Ihnq4Zql
+ 3AT8GMXbw2rtqgqogEhGWbi5g1AjBqXBgLbxS0gTptUlHFFfOg+lIdZ9usqFAlRPrKMlR3ZTT
+ 7+BFYqpTVcflBTN+cGydavaSRnzyoe34ujX3lV/fwTEfeRrLJ2tNMbtf8xQARaWhhqaU4bQlE
+ OzKsHzOj/EoDMVdgXIPgiEv5oC+AxWhq/2xsI1tmLfntWxUapRyhHx/nxf+09+bJtwVpaBMam
+ GCjk7ptUQSvTZDyaRBmuBlSaRu0Oq08+JXxNnROIfrU+Zu3owhKZVbCfy0EYZs5TRLu8bskjy
+ 1NzcH0L8KEepXosSyHqjTCxOpoUmKzMjWllMHKjkZuzMgLpwvmPplVNqZwWal5NxeICfkLqS5
+ 8mFp+ONhIziPz9H8tiwv9wJ8mHRK2Cm8aiBmgddE/Xf3vDYC/PSrV7nVG4SnaaCluoAVAh+OH
+ RUwDEmDHhpnhjjWI+DStYdP+dnMps/rzi17Q0Vxpf1rOIBHbHZ7oJhfBoBZo3kJshu1+dCVNH
+ bEwuAOQPZ4nmILGj6FqVLE=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
