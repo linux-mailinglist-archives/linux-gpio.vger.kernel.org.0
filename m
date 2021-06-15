@@ -2,168 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7092C3A8382
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jun 2021 17:01:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A6DF3A8412
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jun 2021 17:35:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231398AbhFOPDU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Jun 2021 11:03:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231389AbhFOPDU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 11:03:20 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EC1C061574
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 08:01:15 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id r16so25458715ljk.9
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 08:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cJ3E6xz1GtHO5ssuzNBSjmKl0fJUbXbXi3ZsWAUHOk0=;
-        b=TFRBCQYrClIJos2Bez2gAp3xfty8ROT++L/cj0GEl8zFVd+2qXYMW7MfEZ/RTbX7X8
-         ynUk6KnsxaSZw5zfVWP3sUUhIZCZrvW5Xt0COoAYvroRAguETHaqzYTr0EQoThdS3GIG
-         SiUlQUttAOtFnJg/xAvQakrJwfbfne+bnc5/cJlLv3lFMKoKcPfnn4ImvFHcyWEYAkbA
-         6v9alzB6m3Uh4Alsnch1S/Ko9Ky0kP3xetjSQ1IYVO6LdzntNaVEkDE2NgiMVO5tOd3A
-         dVDRFHQDM4BjaWVfU17GsNejkj/SfPKxvQFgLHL481P+Cez2Xoty6K7uU4Omd+glDS7t
-         hwpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cJ3E6xz1GtHO5ssuzNBSjmKl0fJUbXbXi3ZsWAUHOk0=;
-        b=UatUqXlAqJYup+IHp5QuBrtJdsTzTDOnkw1C1ex0ZAGtEwdcng9n9+ATnsbyiwDkWI
-         V/9HeYtFHojFjHRsliRIX6JptbGPVrxxIVEcabAQBZCZpkF3seE54WlTfIh9gy0YziJe
-         72J/0owMF375D4f/LcWvVbVv0BOUaLKJ+6u5V/Tvt2K6uiySpQpRZo9RiaQ3gBDcwdIv
-         UvP3wtmfGerh6+GihFkXUedSZZyok3VeXSsPbnNFd2uoFIyxUXr6KZU5za6wI8BkLWdb
-         y96y0huVO1KMTMmkWxQaaZrlsJByFounbcPQYmtOByMP+vWEt8lKU21KgIMkMUjMa8vQ
-         BQ4A==
-X-Gm-Message-State: AOAM5310PW9KLgJ7gB1udYKlHuS23gu1/dsPKoiv1DZg+R1vzUNavMcP
-        n7A75LCrV8gK7bzK0hSXAwRL4qKCppXKZg==
-X-Google-Smtp-Source: ABdhPJyZi7UddXGkcWvIlaShGhMWzw3VhgvIydLd58RTNR46J3VAAHmG+yU8Md3c8gaXhYnRKAGyqw==
-X-Received: by 2002:a2e:89d9:: with SMTP id c25mr22628ljk.63.1623769271832;
-        Tue, 15 Jun 2021 08:01:11 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id c18sm788914lfd.51.2021.06.15.08.01.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Jun 2021 08:01:11 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S231579AbhFOPhZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Jun 2021 11:37:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230487AbhFOPhY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 15 Jun 2021 11:37:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CF32161628;
+        Tue, 15 Jun 2021 15:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623771320;
+        bh=bdX3AMbWyhVXruwbjaE34McyzOJL3Jr1GERY0z/RZPc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ujZRxkUwNxdzF/KNfASkyHO1e+H5Uz79J4oyEmegDARkcl5tofoaqTxfYyHFo/Wx5
+         UHPDwxKWflhSY2zWNCq9IaPGZsR3yI8HmJU4T1W2ChraltN2nryH0FYTbkoeNHhb/C
+         QYfx4xgi6WovLBGxFWoHPMT/VBdYk42F1A3dTd0zRP2FjsrqUhl0BUQa7mmKfBZJFF
+         XhtcaHvdI0tZcTxuvCpnj30yPXeDy0Ffc8bHuAr4TQsL/7YZCd/H3HdWCzkqOeVGk3
+         CksOX0csLNvG83ogAAeqLDQ+pM3WPopARszbL2jAr5fgs27pwPeNcJBpSj3xNKFcaQ
+         xYX91CtocSb7Q==
+Date:   Tue, 15 Jun 2021 16:35:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, bhupesh.linux@gmail.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH 3/3 v5] ARM: davinci: dm646x: Convert LEDs to GPIO descriptor table
-Date:   Tue, 15 Jun 2021 16:59:03 +0200
-Message-Id: <20210615145903.634565-3-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210615145903.634565-1-linus.walleij@linaro.org>
-References: <20210615145903.634565-1-linus.walleij@linaro.org>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v2 06/10] regulator: qcom-rpmh: Add new regulator found
+ on SA8155p adp board
+Message-ID: <20210615153501.GK5149@sirena.org.uk>
+References: <20210615074543.26700-1-bhupesh.sharma@linaro.org>
+ <20210615074543.26700-7-bhupesh.sharma@linaro.org>
+ <20210615111228.GB5149@sirena.org.uk>
+ <CAH=2NtwAsvU9x3pTKdf2e5YAG7N9=uT4EQZ9aPWp26THXntdNw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="1y1tiN5hVw5cPBDe"
+Content-Disposition: inline
+In-Reply-To: <CAH=2NtwAsvU9x3pTKdf2e5YAG7N9=uT4EQZ9aPWp26THXntdNw@mail.gmail.com>
+X-Cookie: See store for details.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This converts the DaVinci DM646x LEDs to use GPIO
-descriptor look-ups.
 
-Cc: Sekhar Nori <nsekhar@ti.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v4->v5:
-- Name each I2C expander instance explicitly as "u2" etc.
-- Tie the LEDs to the generated "i2c-u2" device name.
-ChangeLog v3->v4:
-- Rebase on v5.13-rc1
-- Resend
-- LED maintainers: please apply this patch, it is ACKed by a DaVinci
-  maintainer
-ChangeLog v2->v3:
-- Rebase on v5.10-rc1
-- Resend
-ChangeLog v1->v2:
-- Collect Bartosz' review tag
-- Rebase on v5.9-rc1
-- Resend
----
- arch/arm/mach-davinci/board-dm646x-evm.c | 34 +++++++++++++++++-------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+--1y1tiN5hVw5cPBDe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/mach-davinci/board-dm646x-evm.c b/arch/arm/mach-davinci/board-dm646x-evm.c
-index ee91d81ebbfd..00c074fddce6 100644
---- a/arch/arm/mach-davinci/board-dm646x-evm.c
-+++ b/arch/arm/mach-davinci/board-dm646x-evm.c
-@@ -20,6 +20,7 @@
- #include <linux/init.h>
- #include <linux/leds.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/machine.h>
- #include <linux/platform_device.h>
- #include <linux/i2c.h>
- #include <linux/property.h>
-@@ -202,10 +203,10 @@ static struct i2c_driver dm6467evm_cpld_driver = {
- /* LEDS */
- 
- static struct gpio_led evm_leds[] = {
--	{ .name = "DS1", .active_low = 1, },
--	{ .name = "DS2", .active_low = 1, },
--	{ .name = "DS3", .active_low = 1, },
--	{ .name = "DS4", .active_low = 1, },
-+	{ .name = "DS1" },
-+	{ .name = "DS2" },
-+	{ .name = "DS3" },
-+	{ .name = "DS4" },
- };
- 
- static const struct gpio_led_platform_data evm_led_data = {
-@@ -213,18 +214,32 @@ static const struct gpio_led_platform_data evm_led_data = {
- 	.leds     = evm_leds,
- };
- 
-+static struct gpiod_lookup_table evm_leds_gpio_table = {
-+	.dev_id = "leds-gpio.0",
-+	.table = {
-+		/*
-+		 * These GPIOs are on a PCF8574a GPIO expander, which
-+		 * is in turn named after the I2C device name. This is
-+		 * device "u2" on I2C bus 1 with address 0x38. These
-+		 * leds are at offset 4, 5, 6, 7.
-+		 */
-+		GPIO_LOOKUP_IDX("i2c-u2", 4, NULL, 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("i2c-u2", 5, NULL, 1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("i2c-u2", 6, NULL, 2, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("i2c-u2", 7, NULL, 3, GPIO_ACTIVE_LOW),
-+		{ },
-+	},
-+};
-+
- static struct platform_device *evm_led_dev;
- 
- static int evm_led_setup(struct i2c_client *client, int gpio,
- 			unsigned int ngpio, void *c)
- {
--	struct gpio_led *leds = evm_leds;
- 	int status;
- 
--	while (ngpio--) {
--		leds->gpio = gpio++;
--		leds++;
--	}
-+	/* Add the lookup table */
-+	gpiod_add_lookup_table(&evm_leds_gpio_table);
- 
- 	evm_led_dev = platform_device_alloc("leds-gpio", 0);
- 	platform_device_add_data(evm_led_dev, &evm_led_data,
-@@ -438,6 +453,7 @@ static struct i2c_board_info __initdata i2c_info[] =  {
- 	},
- 	{
- 		I2C_BOARD_INFO("pcf8574a", 0x38),
-+		.dev_name = "u2",
- 		.platform_data	= &pcf_data,
- 	},
- 	{
--- 
-2.31.1
+On Tue, Jun 15, 2021 at 08:08:38PM +0530, Bhupesh Sharma wrote:
+> On Tue, 15 Jun 2021 at 16:42, Mark Brown <broonie@kernel.org> wrote:
 
+> > This is adding a new compatible so it needs a matching update to the DT
+> > binding.
+
+> Yes, [PATCH v2 01/10] from this series 'dt-bindings: qcom:
+> rpmh-regulator: Add compatible for SA8155p-adp board pmic', updates
+> the dt-binding with the new compatible.
+
+> Please let me know if I am missing something here.
+
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
+
+--1y1tiN5hVw5cPBDe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDIyKUACgkQJNaLcl1U
+h9CG0gf7BGrgHg/iW6D07GqPzhY1z1FAk1LIWWMOa8ljQTOxEVfYStEA0o24Jm6u
+YspeL71jHas7z5tG/tt0OkeynuVl2E/KoS7Dsea3rPcXOVAlA0hqi/pgyss5EwMv
+YFascZLDFcLLrGH9lqsf98XH4TV04dG129M0SremQYo6dYqBXTiiUhO8NDFca2Ik
+nH7czC8zijyGudCgkTJnFtuzghszMZ/GVoxgQt0wZtG5sLdgH4BxVtD+GM0Cly0s
+uxSNISYqna5CaDutBbudjyi3lumRZYIHM+CQqWTVeFBKMysbcghj6Mh7eQuHNcfP
+AUfbTM5GtQBRGcuhoC01fUXT+N1mgw==
+=4ZR0
+-----END PGP SIGNATURE-----
+
+--1y1tiN5hVw5cPBDe--
