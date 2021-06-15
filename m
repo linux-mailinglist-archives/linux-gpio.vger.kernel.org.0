@@ -2,479 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 575283A8ACB
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jun 2021 23:13:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 388873A8CCA
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 01:43:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231156AbhFOVPZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Jun 2021 17:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbhFOVPY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 17:15:24 -0400
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF3BC061767
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 14:13:18 -0700 (PDT)
-Received: by mail-oi1-x232.google.com with SMTP id a26so25005oie.11
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 14:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iC6RXm/Qahte4XrMG2YsCeTJiMNyyXot3t+H7B1dbsM=;
-        b=zS3QB/UGlGHcJmNr0eJ13Q5X3k1+c7Z8Q68ezzP8qK2P4zw+XBXczNP2iF5EGoE1es
-         eYubnziJmblBo6ZDrBOzavH0Pu/uiHbu0fxtLExWlajRdH7EkKhIg2GKu9AHlrv9gpW8
-         rGk0P2IB8myCmz5g+JTlrd8RcCX+cG4tGsLOvMs1ztbgy3S/Bc+WKqywSpIIEJ95Rjy/
-         5FaKy4DtFmw2fU7wrl69vPItt/VtEULyXnWys/1Aw0mpwFCwokguGgK2USWjmEehRw8z
-         Qw8zgUcJIhLgFrksIUgJfXcivbb2ws8jNgIqyjhnhZZwpkB7K4Tvc4nmOIccFlu1QGSK
-         iNRw==
+        id S230039AbhFOXpa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Jun 2021 19:45:30 -0400
+Received: from mail-il1-f171.google.com ([209.85.166.171]:42681 "EHLO
+        mail-il1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229966AbhFOXpa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 19:45:30 -0400
+Received: by mail-il1-f171.google.com with SMTP id h3so681550ilc.9;
+        Tue, 15 Jun 2021 16:43:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iC6RXm/Qahte4XrMG2YsCeTJiMNyyXot3t+H7B1dbsM=;
-        b=M9Hw1+Ao2h8vpqrMZME/UGegysVqHJkKn93VxdOMDfDrhgIVIpFgWmG8FSHQmQxdSz
-         koUvlN4XEuByJraxCJ6yOVnoQ8cFqpapldsbdaznnVgIfE0VMw5TQ4KinmIy3FzhCvpy
-         fhi6AC7D+QZeaL9VNtqyiqi2oB98gqvXsjjCyTMRruq3M+dX+ju0fJciNWF301xG49gg
-         si3R4oqKJcnCP/aqsjgUKyJyyfS9gq/eQgySp4orOw5K0nDDfBYA6frCSUQMobKKKYR7
-         na0Lvi0jFPaUi7TMIpkW2Kr7xL+qMU02O6BhfMDivkxcd813UZZ2vxvKb44XgcBG2FM0
-         3UWA==
-X-Gm-Message-State: AOAM533qO28al3HL0Ya5gA5oVWb+OECBVEaWClcNwZ20pKGPoJYtjEZ5
-        YGreBXAp8HsE1rYssMwuvADWuw==
-X-Google-Smtp-Source: ABdhPJxoSuVBYBOuuVUqi6aVQmEUuOpXTGRn8L8an3iW+GXJzdRaF6FqRwrIqkbTH8nEN13ZwdecMQ==
-X-Received: by 2002:aca:618a:: with SMTP id v132mr4568903oib.144.1623791598214;
-        Tue, 15 Jun 2021 14:13:18 -0700 (PDT)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id h8sm10847oie.41.2021.06.15.14.13.17
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YPT8InEABYmuq0XIJqXJvHe3RyahNA55MTZJfxlQgHA=;
+        b=iEI4GO6DPE8/Se5XZ/gCmGlCYAypgQ4x/OjDXCupjYTfyhQQ5gM3SdIybMA8XMQQNb
+         gKJIxbIZQcGGQnIYNOp7V7aqyCgs3u3cpIzRl2Xrf4kd7ARJuLxaqlfdGdovvpanQOEA
+         xJlijuA4/CyCmskAHHGpSfkvzpvskyFu1lKpyknSAmmJxMKNsYzrrD9Y53yoBAZi15Jn
+         nA3gsYxzv+LoC+TcjgAaQTwcNuVjI2d0HUdNP6hyvK76hdS9dpup+wAHaElG6dZslVl7
+         EVHojAKJpw4v+11A56G/t6FKNTE8N1PlFGwgbzvbLgWSQk5jSv85cjiztoRvZjO7Bked
+         jV+w==
+X-Gm-Message-State: AOAM531hmbPTOcdRZ0pP+fVcGNimtjFA7zofJEo6E3gx+YytnX1P6wR4
+        WUIyNX5kXVxKUoQxms4wjg==
+X-Google-Smtp-Source: ABdhPJyVsj22o5nkeyBWGx+IAIJTqcaLmaFT2QEWslSrTplD/gIxQNsHSGBW8ljZEnNIUpa9G1LsWA==
+X-Received: by 2002:a92:750c:: with SMTP id q12mr1343089ilc.303.1623800603852;
+        Tue, 15 Jun 2021 16:43:23 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id o10sm285848ilc.75.2021.06.15.16.43.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Jun 2021 14:13:17 -0700 (PDT)
-Date:   Tue, 15 Jun 2021 16:13:15 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, bhupesh.linux@gmail.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
+        Tue, 15 Jun 2021 16:43:23 -0700 (PDT)
+Received: (nullmailer pid 1684451 invoked by uid 1000);
+        Tue, 15 Jun 2021 23:43:21 -0000
+Date:   Tue, 15 Jun 2021 17:43:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH v2 10/10] arm64: dts: qcom: sa8155p-adp: Add base dts file
-Message-ID: <YMkX63OuCW66RKek@builder.lan>
-References: <20210615074543.26700-1-bhupesh.sharma@linaro.org>
- <20210615074543.26700-11-bhupesh.sharma@linaro.org>
+        openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>,
+        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>
+Subject: Re: [PATCH 1/8] dt-bindings: arm/npcm: Add binding for global
+ control registers (GCR)
+Message-ID: <20210615234321.GA1681813@robh.at.kernel.org>
+References: <20210602120329.2444672-1-j.neuschaefer@gmx.net>
+ <20210602120329.2444672-2-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210615074543.26700-11-bhupesh.sharma@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210602120329.2444672-2-j.neuschaefer@gmx.net>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue 15 Jun 02:45 CDT 2021, Bhupesh Sharma wrote:
-
-> Add base DTS file for SA8155p Automotive Development Platform.
-> It enables boot to console, adds tlmm reserved range and ufs flash.
-> It also includes pmic file.
+On Wed, Jun 02, 2021 at 02:03:22PM +0200, Jonathan Neuschäfer wrote:
+> A nuvoton,*-gcr node is present in nuvoton-common-npcm7xx.dtsi and will
+> be added to nuvoton-wpcm450.dtsi. It is necessary for the NPCM7xx and
+> WPCM450 pinctrl drivers, and may later be used to retrieve SoC model and
+> version information.
 > 
-> SA8155p-adp board is based on sa8155p Qualcomm Snapdragon SoC.
-> SA8155p platform is similar to the SM8150, so use this as base
-> for now.
+> This patch adds a binding to describe this node.
 > 
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Andy Gross <agross@kernel.org>
-
-With the feedback of regulator-allow-set-load addressed this looks good!
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 > ---
->  arch/arm64/boot/dts/qcom/Makefile        |   1 +
->  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 355 +++++++++++++++++++++++
->  2 files changed, 356 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+>  .../bindings/arm/npcm/nuvoton,gcr.yaml        | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr.yaml
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 456502aeee49..666f3528697d 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -32,6 +32,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-oneplus-dumpling.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qrb5165-rb5.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sa8155p-adp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1-lte.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> diff --git a/Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr.yaml b/Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr.yaml
 > new file mode 100644
-> index 000000000000..95e0a6612e6b
+> index 0000000000000..3174279f7713a
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> @@ -0,0 +1,355 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2021, Linaro Limited
-> + */
+> +++ b/Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/npcm/nuvoton,gcr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +/dts-v1/;
+> +title: Global Control Registers block in Nuvoton SoCs
 > +
-> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "sm8150.dtsi"
-> +#include "pmm8155au_1.dtsi"
-> +#include "pmm8155au_2.dtsi"
+> +maintainers:
+> +  - Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 > +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. SA8155P ADP";
-> +	compatible = "qcom,sa8155p-adp", "qcom,sa8155p";
+> +description: |
+> +  The Global Control Registers (GCR) are a block of registers in Nuvoton SoCs
+> +  that expose misc functionality such as chip model and version information or
+> +  pinmux settings.
 > +
-> +	aliases {
-> +		serial0 = &uart2;
-> +	};
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - nuvoton,wpcm450-gcr
+> +          - nuvoton,npcm750-gcr
+> +      - const: syscon
+> +      - const: simple-mfd
+
+How is this a simple-mfd? There are no child nodes.
+
+> +  reg: true
 > +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +required:
+> +  - compatible
+> +  - reg
 > +
-> +	vreg_3p3: vreg_3p3_regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vreg_3p3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
+> +additionalProperties: false
 > +
-> +	/*
-> +	 * S4A is always on and not controllable through RPMh.
-> +	 * So model it as a fixed regulator.
-> +	 */
-> +	vreg_s4a_1p8: smps4 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vreg_s4a_1p8";
-> +
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +
-> +		vin-supply = <&vreg_3p3>;
-> +	};
-> +};
-> +
-> +&apps_rsc {
-> +	pmm8155au-1-rpmh-regulators {
-> +		compatible = "qcom,pmm8155au-rpmh-regulators";
-> +		qcom,pmic-id = "a";
-> +
-> +		vdd-s1-supply = <&vreg_3p3>;
-> +		vdd-s2-supply = <&vreg_3p3>;
-> +		vdd-s3-supply = <&vreg_3p3>;
-> +		vdd-s4-supply = <&vreg_3p3>;
-> +		vdd-s5-supply = <&vreg_3p3>;
-> +		vdd-s6-supply = <&vreg_3p3>;
-> +		vdd-s7-supply = <&vreg_3p3>;
-> +		vdd-s8-supply = <&vreg_3p3>;
-> +		vdd-s9-supply = <&vreg_3p3>;
-> +		vdd-s10-supply = <&vreg_3p3>;
-> +
-> +		vdd-l1-l8-l11-supply = <&vreg_s6a_0p92>;
-> +		vdd-l2-l10-supply = <&vreg_3p3>;
-> +		vdd-l3-l4-l5-l18-supply = <&vreg_s6a_0p92>;
-> +		vdd-l6-l9-supply = <&vreg_s6a_0p92>;
-> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
-> +		vdd-l13-l16-l17-supply = <&vreg_3p3>;
-> +
-> +		vreg_s5a_2p04: smps5 {
-> +			regulator-name = "vreg_s5a_2p04";
-> +			regulator-min-microvolt = <1904000>;
-> +			regulator-max-microvolt = <2000000>;
-> +		};
-> +
-> +		vreg_s6a_0p92: smps6 {
-> +			regulator-name = "vreg_s6a_0p92";
-> +			regulator-min-microvolt = <920000>;
-> +			regulator-max-microvolt = <1128000>;
-> +		};
-> +
-> +		vreg_l1a_0p752: ldo1 {
-> +			regulator-name = "vreg_l1a_0p752";
-> +			regulator-min-microvolt = <752000>;
-> +			regulator-max-microvolt = <752000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vdda_usb_hs_3p1:
-> +		vreg_l2a_3p072: ldo2 {
-> +			regulator-name = "vreg_l2a_3p072";
-> +			regulator-min-microvolt = <3072000>;
-> +			regulator-max-microvolt = <3072000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l3a_0p8: ldo3 {
-> +			regulator-name = "vreg_l3a_0p8";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <800000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vdd_usb_hs_core:
-> +		vdda_usb_ss_dp_core_1:
-> +		vreg_l5a_0p88: ldo5 {
-> +			regulator-name = "vreg_l5a_0p88";
-> +			regulator-min-microvolt = <880000>;
-> +			regulator-max-microvolt = <880000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l7a_1p8: ldo7 {
-> +			regulator-name = "vreg_l7a_1p8";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l10a_2p96: ldo10 {
-> +			regulator-name = "vreg_l10a_2p96";
-> +			regulator-min-microvolt = <2504000>;
-> +			regulator-max-microvolt = <2960000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l11a_0p8: ldo11 {
-> +			regulator-name = "vreg_l11a_0p8";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <800000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vdda_usb_hs_1p8:
-> +		vreg_l12a_1p8: ldo12 {
-> +			regulator-name = "vreg_l12a_1p8";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l13a_2p7: ldo13 {
-> +			regulator-name = "vreg_l13a_2p7";
-> +			regulator-min-microvolt = <2704000>;
-> +			regulator-max-microvolt = <2704000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l15a_1p7: ldo15 {
-> +			regulator-name = "vreg_l15a_1p7";
-> +			regulator-min-microvolt = <1704000>;
-> +			regulator-max-microvolt = <1704000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l16a_2p7: ldo16 {
-> +			regulator-name = "vreg_l16a_2p7";
-> +			regulator-min-microvolt = <2704000>;
-> +			regulator-max-microvolt = <2960000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l17a_2p96: ldo17 {
-> +			regulator-name = "vreg_l17a_2p96";
-> +			regulator-min-microvolt = <2504000>;
-> +			regulator-max-microvolt = <2960000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +	};
-> +
-> +	pmm8155au-2-rpmh-regulators {
-> +		compatible = "qcom,pmm8155au-rpmh-regulators";
-> +		qcom,pmic-id = "c";
-> +
-> +		vdd-s1-supply = <&vreg_3p3>;
-> +		vdd-s2-supply = <&vreg_3p3>;
-> +		vdd-s3-supply = <&vreg_3p3>;
-> +		vdd-s4-supply = <&vreg_3p3>;
-> +		vdd-s5-supply = <&vreg_3p3>;
-> +		vdd-s6-supply = <&vreg_3p3>;
-> +		vdd-s7-supply = <&vreg_3p3>;
-> +		vdd-s8-supply = <&vreg_3p3>;
-> +		vdd-s9-supply = <&vreg_3p3>;
-> +		vdd-s10-supply = <&vreg_3p3>;
-> +
-> +		vdd-l1-l8-l11-supply = <&vreg_s4c_1p352>;
-> +		vdd-l2-l10-supply = <&vreg_3p3>;
-> +		vdd-l3-l4-l5-l18-supply = <&vreg_s4c_1p352>;
-> +		vdd-l6-l9-supply = <&vreg_s6c_1p128>;
-> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5c_2p04>;
-> +		vdd-l13-l16-l17-supply = <&vreg_3p3>;
-> +
-> +		vreg_s4c_1p352: smps4 {
-> +			regulator-name = "vreg_s4c_1p352";
-> +			regulator-min-microvolt = <1352000>;
-> +			regulator-max-microvolt = <1352000>;
-> +		};
-> +
-> +		vreg_s5c_2p04: smps5 {
-> +			regulator-name = "vreg_s5c_2p04";
-> +			regulator-min-microvolt = <1904000>;
-> +			regulator-max-microvolt = <2000000>;
-> +		};
-> +
-> +		vreg_s6c_1p128: smps6 {
-> +			regulator-name = "vreg_s6c_1p128";
-> +			regulator-min-microvolt = <1128000>;
-> +			regulator-max-microvolt = <1128000>;
-> +		};
-> +
-> +		vreg_l1c_1p304: ldo1 {
-> +			regulator-name = "vreg_l1c_1p304";
-> +			regulator-min-microvolt = <1304000>;
-> +			regulator-max-microvolt = <1304000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l2c_1p808: ldo2 {
-> +			regulator-name = "vreg_l2c_1p808";
-> +			regulator-min-microvolt = <1704000>;
-> +			regulator-max-microvolt = <2928000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l5c_1p2: ldo5 {
-> +			regulator-name = "vreg_l5c_1p2";
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1200000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l7c_1p8: ldo7 {
-> +			regulator-name = "vreg_l7c_1p8";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l8c_1p2: ldo8 {
-> +			regulator-name = "vreg_l8c_1p2";
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1200000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l10c_3p3: ldo10 {
-> +			regulator-name = "vreg_l10c_3p3";
-> +			regulator-min-microvolt = <3000000>;
-> +			regulator-max-microvolt = <3312000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l11c_0p8: ldo11 {
-> +			regulator-name = "vreg_l11c_0p8";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <800000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l12c_1p808: ldo12 {
-> +			regulator-name = "vreg_l12c_1p808";
-> +			regulator-min-microvolt = <1704000>;
-> +			regulator-max-microvolt = <2928000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l13c_2p96: ldo13 {
-> +			regulator-name = "vreg_l13c_2p96";
-> +			regulator-min-microvolt = <2504000>;
-> +			regulator-max-microvolt = <2960000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l15c_1p9: ldo15 {
-> +			regulator-name = "vreg_l15c_1p9";
-> +			regulator-min-microvolt = <1704000>;
-> +			regulator-max-microvolt = <2928000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l16c_3p008: ldo16 {
-> +			regulator-name = "vreg_l16c_3p008";
-> +			regulator-min-microvolt = <3008000>;
-> +			regulator-max-microvolt = <3008000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l18c_0p88: ldo18 {
-> +			regulator-name = "vreg_l18c_0p88";
-> +			regulator-min-microvolt = <880000>;
-> +			regulator-max-microvolt = <880000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +	};
-> +};
-> +
-> +&tlmm {
-> +	gpio-reserved-ranges = <0 4>;
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&ufs_mem_hc {
-> +	status = "okay";
-> +
-> +	reset-gpios = <&tlmm 175 GPIO_ACTIVE_LOW>;
-> +
-> +	vcc-supply = <&vreg_l10a_2p96>;
-> +	vcc-max-microamp = <750000>;
-> +	vccq-supply = <&vreg_l5c_1p2>;
-> +	vccq-max-microamp = <700000>;
-> +	vccq2-supply = <&vreg_s4a_1p8>;
-> +	vccq2-max-microamp = <750000>;
-> +};
-> +
-> +&ufs_mem_phy {
-> +	status = "okay";
-> +
-> +	vdda-phy-supply = <&vreg_l8c_1p2>;
-> +	vdda-max-microamp = <87100>;
-> +	vdda-pll-supply = <&vreg_l5a_0p88>;
-> +	vdda-pll-max-microamp = <18300>;
-> +};
-> +
-> +
-> +&usb_1_hsphy {
-> +	status = "okay";
-> +	vdda-pll-supply = <&vdd_usb_hs_core>;
-> +	vdda33-supply = <&vdda_usb_hs_3p1>;
-> +	vdda18-supply = <&vdda_usb_hs_1p8>;
-> +};
-> +
-> +&usb_1_qmpphy {
-> +	status = "okay";
-> +	vdda-phy-supply = <&vreg_l8c_1p2>;
-> +	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
-> +};
-> +
-> +&usb_1 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_1_dwc3 {
-> +	dr_mode = "peripheral";
-> +};
-> +
-> +&qupv3_id_1 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.31.1
-> 
+> +examples:
+> +  - |
+> +    gcr: gcr@800000 {
+> +      compatible = "nuvoton,npcm750-gcr", "syscon", "simple-mfd";
+> +      reg = <0x800000 0x1000>;
+> +    };
+> --
+> 2.30.2
