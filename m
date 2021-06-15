@@ -2,95 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 318623A7D61
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jun 2021 13:37:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D99953A8308
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jun 2021 16:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230146AbhFOLjw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Jun 2021 07:39:52 -0400
-Received: from mail-vs1-f44.google.com ([209.85.217.44]:34428 "EHLO
-        mail-vs1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbhFOLjv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 07:39:51 -0400
-Received: by mail-vs1-f44.google.com with SMTP id q2so9600903vsr.1;
-        Tue, 15 Jun 2021 04:37:47 -0700 (PDT)
+        id S230487AbhFOOk4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Jun 2021 10:40:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230527AbhFOOkz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 10:40:55 -0400
+Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 203E3C061767
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 07:38:50 -0700 (PDT)
+Received: by mail-oo1-xc35.google.com with SMTP id n17-20020a4ae1d10000b029024a49ea822bso3564857oot.5
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 07:38:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gML0gNeUY9KZnMu0icpe+Ao14v4Mv0uhd+YE7NtLepk=;
+        b=m3B/jCJ4NIK9+VC+M0jt2+0xz8y8z8M7ue7AOVKicMnwJXLOJe+TboMi8SP3Ai03cz
+         8J0Ej09umI3lO3xI6c46Lf3vmX9oCXJz4iYlKwTIyCcuoEjLVuKQGPq/L0/KrdxTeSOb
+         fcpkQButmCY8qdHOqpd89BV2I26Wg898fMnD3bJLimYnh2GQ9yFNivXeex+/xduBHeRX
+         Gj99T1THHkZH2cCnGnmGEcE1Dtl9IDNP9BGtST09RlyuaI6SWxCAq+C/DKyyhQxHN5Oq
+         MEjaSbCfkqDD+0CrS4zqSvpEgNLOhRuPgfN4QXygeJYhU+RA+ENoR57QQYGUFqs4OSJ0
+         JBGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dEMwKaBtIH7S3fAHfNJawJ0VDIFQVTRz5VU7710Dgcs=;
-        b=B+0zDrwsNnKxdnPYBuIeYJBCvXer+SpPMtRQGVQTLKVTv3fNWk4QgI0C4Wf41vskdI
-         cJiqaIQ9ohZse7DuX2+Q4rsv+whkef7HR2QuThVLsn0Iw5bb8vfAkxe5Ew21fWE5t61n
-         AyxCdg2QzAaNAxv5HGEwt13DfqKzwMopaVYImBj3aMBbTJfwAM7iC7LCmhVulAia9xqn
-         k4RFPRiH9KEWI2z3zMvF3RxRddvS1L+P78mW5ORnQBwi+hXVRgaSiB7hXfeSNA5H9SaQ
-         ArBqNSvQQnxBqDe1VbYM7C/VApLZBTk2kVYnkclmBxWnIzWq35Z4fItggVN1niRYZNv+
-         ugxQ==
-X-Gm-Message-State: AOAM533RwyKuTgarMNSJGfsho4IjYkT8xB2bZdZcZq25DN5/odh69WvK
-        Jh9tY32vdlfx8oTiM7BLKYluNF05Fa8I8KteliI=
-X-Google-Smtp-Source: ABdhPJzWu0ZzQHuXV4PYNLkuX4/zyAG0cMCexlumQE0LzgSqdbPE35wZuXi0z3ynFv+/B+I3sIMNXeQKnTb1W0uliBA=
-X-Received: by 2002:a05:6102:c4c:: with SMTP id y12mr4274193vss.18.1623757067039;
- Tue, 15 Jun 2021 04:37:47 -0700 (PDT)
+        bh=gML0gNeUY9KZnMu0icpe+Ao14v4Mv0uhd+YE7NtLepk=;
+        b=ntT7CbURmr2HnuqBJZxJyA41MVj2+KNBa6OEGxxcBQUMDduonc8sbAyjaNvIIM+O7+
+         HzuUtnFufNLFDzht4VJnDN9+/g9A2CsY3Gs7yE6xNDHOIjcq/3wDc8MQEaUtl9PYcN0+
+         Iu2G1bnna1L3xIBaFwe3O02Ph473IzWjQ90P7QIkYUVQX7Y7jhVMzI27/Yyd4Q3T3sM4
+         2CXpwcD+m0cIjFM1+zrXZw97vJaFjNP8NbppYWBCSXBqJbmS6nxw6Nehs54JebyJaJXi
+         eEd1F+t+OOlOIyTuXeD+atuCB0bhjtxXRIw5yS2LL8hj5LyaIiDdRQqh3pW8Q3N6aQIK
+         JxqA==
+X-Gm-Message-State: AOAM531j58t6ZpgetUhQMUTCRuU6Y8k/6sD7ducP+U/9Eeq4xJLWt2XB
+        cM8X5i474wGKWnKSuiRFLbqGKDNLBW+vccERFymdaw==
+X-Google-Smtp-Source: ABdhPJwwl+jPtnsMwBAGXx43iRP2lffKwywPRf97DhDFHyLh7bJr2kCnaZRGmAPrN54NYfZwIJS7Cbh1a/rf+tzGTxI=
+X-Received: by 2002:a4a:e4c1:: with SMTP id w1mr17875364oov.81.1623767929348;
+ Tue, 15 Jun 2021 07:38:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1623326176.git.viresh.kumar@linaro.org> <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
- <CACRpkdZV2v2S5z7CZf_8DV=At9-oPSj7RYFH78hWy3ZX37QnDQ@mail.gmail.com>
- <20210611035623.z4f2ynumzozigqnv@vireshk-i7> <CAMuHMdVrtSnFpPbB0P3Wxqm1D6vU1_cnh3ypsZJRNF6ueKdAsw@mail.gmail.com>
- <20210611080122.tlkidv6bowuka6fw@vireshk-i7> <CAMuHMdVL4VH09ixPcpqqokNJeYd68Th2Y6Lz4PZTF7h06OOBGw@mail.gmail.com>
- <20210615111551.7tcz7teqp4olhodf@vireshk-i7>
-In-Reply-To: <20210615111551.7tcz7teqp4olhodf@vireshk-i7>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 15 Jun 2021 13:37:35 +0200
-Message-ID: <CAMuHMdUKNgRgH+=fHW9RZijdFT9syPu-FD=EyA-PkrtUrg3AdQ@mail.gmail.com>
-Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
+References: <20210615074543.26700-1-bhupesh.sharma@linaro.org>
+ <20210615074543.26700-7-bhupesh.sharma@linaro.org> <20210615111228.GB5149@sirena.org.uk>
+In-Reply-To: <20210615111228.GB5149@sirena.org.uk>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Date:   Tue, 15 Jun 2021 20:08:38 +0530
+Message-ID: <CAH=2NtwAsvU9x3pTKdf2e5YAG7N9=uT4EQZ9aPWp26THXntdNw@mail.gmail.com>
+Subject: Re: [PATCH v2 06/10] regulator: qcom-rpmh: Add new regulator found on
+ SA8155p adp board
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, bhupesh.linux@gmail.com,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
-        <sgarzare@redhat.com>, virtualization@lists.linux-foundation.org,
-        Alistair Strachan <astrachan@google.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Viresh,
+Hello Mark,
 
-On Tue, Jun 15, 2021 at 1:15 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 11-06-21, 10:22, Geert Uytterhoeven wrote:
-> > The same reasoning can apply to your backend daemon, so when using
-> > the GPIO aggregator, you can just control a full gpiochip, without
-> > having to implement access control on individual GPIO lines.
+Thanks for your review.
+
+On Tue, 15 Jun 2021 at 16:42, Mark Brown <broonie@kernel.org> wrote:
 >
-> I tried to look at it and it surely looks very temping and may fit
-> well and reduce size of my backend :)
+> On Tue, Jun 15, 2021 at 01:15:39PM +0530, Bhupesh Sharma wrote:
 >
-> I am now wondering how interrupts can be made to work here. Do you
-> have anything in mind for that ?
+> > +     {
+> > +             .compatible = "qcom,pmm8155au-rpmh-regulators",
+> > +             .data = pmm8155au_vreg_data,
+> > +     },
 >
-> GPIO sysfs already supports interrupts, just that you need to register
-> irq for the specific GPIO pins inside the aggregator ?
+> This is adding a new compatible so it needs a matching update to the DT
+> binding.
 
-So far I hadn't considered interrupts.
-Will think about it...
+Yes, [PATCH v2 01/10] from this series 'dt-bindings: qcom:
+rpmh-regulator: Add compatible for SA8155p-adp board pmic', updates
+the dt-binding with the new compatible.
 
-Gr{oetje,eeting}s,
+Please let me know if I am missing something here.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Bhupesh
