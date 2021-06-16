@@ -2,46 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64C113A924C
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 08:27:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B535B3A9278
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 08:28:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231704AbhFPG34 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Jun 2021 02:29:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59684 "EHLO mail.kernel.org"
+        id S232027AbhFPGaO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Jun 2021 02:30:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231391AbhFPG3x (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S231602AbhFPG3x (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Wed, 16 Jun 2021 02:29:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AE9C5613BF;
-        Wed, 16 Jun 2021 06:27:47 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D7F4613FF;
+        Wed, 16 Jun 2021 06:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623824867;
-        bh=HFXY5XjspzH1kzu2GrbFUWzI5z4ecY6jF7OZRuh585A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=i8M85VxHQbZ50V8fMJseWf0vWBO55h7qx/5DDF1AEmTSMWhUjzMvzzmjKrtF8AKcR
-         jwPUkMGj6skaSwKc3Nb/ClX/mf9rqCBl4EoOzg6hiQVc5LWnY4qtyfrSEJ7VphRRWH
-         KduL0CAw/YrDU6ESOYozK0J7Mwh6gXRMtkihQq/zF3LS+B2iz9xXROxs8p6G/3birc
-         rMWLHc4+eJCtsbE9xfUQ8QL3jC1cqZQSUtH6lpM1ZAmA6n8MNE4ItYkhgEns7gOcfF
-         tDqXX7qE2sdpEWYSQWyUHfCyD8Rd8Zrw4MW3EN7CUxyupE2Yrivwa8Z0A4F/HN3xgi
-         IJ4MvA1+etqjg==
+        s=k20201202; t=1623824868;
+        bh=P9b/17nerTDPTIXPJkXJyS/I/WYHTO4HZeF+DMDiqe0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qlkl73VETjnK9Y14OjFogravgxPt+S43a3pl4oiONYopKgZ5EhQ1zxye0xkCoLh/e
+         qkcdAxsJGrNcMmKVeaoIlWwEFLsvOJL1a79KAc/bVTT//QBH52K7QKYc8Pgl30AAuz
+         1va8B9jmNEEvuIiOmBJz/jD7koXlRC/vELHb1WNRLX16u8iDF9xnIk9a7mvSf6EfpW
+         FwYbREt+q8RL6NJSnd6OzS0a/Moc6lGCzDeUfldTmwhyCj2UP/B/AxXO4noe9F5EF/
+         MKXbog9ALRnpsPZbBd8nCFrzFldf5gz+ONGPUOHAUS/8/YkiHl4VG1L38gZd7U930o
+         ZxQ9ZiZW6yELg==
 Received: by mail.kernel.org with local (Exim 4.94.2)
         (envelope-from <mchehab@kernel.org>)
-        id 1ltP1d-004kIJ-Rv; Wed, 16 Jun 2021 08:27:45 +0200
+        id 1ltP1e-004kJC-IA; Wed, 16 Jun 2021 08:27:46 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        coresight@lists.linaro.org, devicetree@vger.kernel.org,
-        kunit-dev@googlegroups.com, kvm@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
-        netdev@vger.kernel.org, x86@kernel.org
-Subject: [PATCH v2 00/29] docs: avoid using ReST :doc:`foo` tag
-Date:   Wed, 16 Jun 2021 08:27:15 +0200
-Message-Id: <cover.1623824363.git.mchehab+huawei@kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 14/29] docs: driver-api: gpio: using-gpio.rst: avoid using ReST :doc:`foo` markup
+Date:   Wed, 16 Jun 2021 08:27:29 +0200
+Message-Id: <506a41353937c455c2e79b5960b0976edc8aa9e9.1623824363.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1623824363.git.mchehab+huawei@kernel.org>
+References: <cover.1623824363.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
@@ -49,133 +46,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-(Maintainers bcc, to avoid too many recipient troubles)
+The :doc:`foo` tag is auto-generated via automarkup.py.
+So, use the filename at the sources, instead of :doc:`foo`.
 
-As discussed at:
-	https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
-
-It is better to avoid using :doc:`foo` to refer to Documentation/foo.rst, as the
-automarkup.py extension should handle it automatically, on most cases.
-
-There are a couple of exceptions to this rule:
-
-1. when :doc:  tag is used to point to a kernel-doc DOC: markup;
-2. when it is used with a named tag, e. g. :doc:`some name <foo>`;
-
-On this series:
-
-Patch 1 manually adjust the references inside driver-api/pm/devices.rst,
-as there it uses :file:`foo` to refer to some Documentation/ files;
-
-Patch 2 converts a table at Documentation/dev-tools/kunit/api/index.rst
-into a list, carefully avoiding the 
-
-The remaining patches convert the other occurrences via a replace script.
-They were manually edited, in order to honour 80-columns where possible.
-
-This series based on docs-next branch. In order to avoid merge conflicts,
-I rebased it internally against yesterday's linux-next, dropping a patch
-and a hunk that would have caused conflicts there.
-
-I'll re-send the remaining patch (plus another patch) with conflicting
-changes, together with any other doc:`filename` reference that might
-still be upstream by 5.14-rc1.
-
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
+ Documentation/driver-api/gpio/using-gpio.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v2:
-   - dropped media patches (as I merged via my own tree);
-   - removed one patch that would conflict at linux-next (adm1177.rst);
-   - removed one hunk fron kunit patch that would also conflict at
-     linux-next.
-
-Mauro Carvalho Chehab (29):
-  docs: devices.rst: better reference documentation docs
-  docs: dev-tools: kunit: don't use a table for docs name
-  docs: admin-guide: pm: avoid using ReST :doc:`foo` markup
-  docs: admin-guide: hw-vuln: avoid using ReST :doc:`foo` markup
-  docs: admin-guide: sysctl: avoid using ReST :doc:`foo` markup
-  docs: block: biodoc.rst: avoid using ReST :doc:`foo` markup
-  docs: bpf: bpf_lsm.rst: avoid using ReST :doc:`foo` markup
-  docs: core-api: avoid using ReST :doc:`foo` markup
-  docs: dev-tools: testing-overview.rst: avoid using ReST :doc:`foo`
-    markup
-  docs: dev-tools: kunit: avoid using ReST :doc:`foo` markup
-  docs: devicetree: bindings: submitting-patches.rst: avoid using ReST
-    :doc:`foo` markup
-  docs: doc-guide: avoid using ReST :doc:`foo` markup
-  docs: driver-api: avoid using ReST :doc:`foo` markup
-  docs: driver-api: gpio: using-gpio.rst: avoid using ReST :doc:`foo`
-    markup
-  docs: driver-api: surface_aggregator: avoid using ReST :doc:`foo`
-    markup
-  docs: driver-api: usb: avoid using ReST :doc:`foo` markup
-  docs: firmware-guide: acpi: avoid using ReST :doc:`foo` markup
-  docs: i2c: avoid using ReST :doc:`foo` markup
-  docs: kernel-hacking: hacking.rst: avoid using ReST :doc:`foo` markup
-  docs: networking: devlink: avoid using ReST :doc:`foo` markup
-  docs: PCI: endpoint: pci-endpoint-cfs.rst: avoid using ReST :doc:`foo`
-    markup
-  docs: PCI: pci.rst: avoid using ReST :doc:`foo` markup
-  docs: process: submitting-patches.rst: avoid using ReST :doc:`foo`
-    markup
-  docs: security: landlock.rst: avoid using ReST :doc:`foo` markup
-  docs: trace: coresight: coresight.rst: avoid using ReST :doc:`foo`
-    markup
-  docs: trace: ftrace.rst: avoid using ReST :doc:`foo` markup
-  docs: userspace-api: landlock.rst: avoid using ReST :doc:`foo` markup
-  docs: virt: kvm: s390-pv-boot.rst: avoid using ReST :doc:`foo` markup
-  docs: x86: avoid using ReST :doc:`foo` markup
-
- .../PCI/endpoint/pci-endpoint-cfs.rst         |  2 +-
- Documentation/PCI/pci.rst                     |  6 +--
- .../special-register-buffer-data-sampling.rst |  3 +-
- Documentation/admin-guide/pm/intel_idle.rst   | 16 +++++---
- Documentation/admin-guide/pm/intel_pstate.rst |  9 +++--
- Documentation/admin-guide/sysctl/abi.rst      |  2 +-
- Documentation/admin-guide/sysctl/kernel.rst   | 37 ++++++++++---------
- Documentation/block/biodoc.rst                |  2 +-
- Documentation/bpf/bpf_lsm.rst                 | 13 ++++---
- .../core-api/bus-virt-phys-mapping.rst        |  2 +-
- Documentation/core-api/dma-api.rst            |  5 ++-
- Documentation/core-api/dma-isa-lpc.rst        |  2 +-
- Documentation/core-api/index.rst              |  4 +-
- Documentation/dev-tools/kunit/api/index.rst   |  8 ++--
- Documentation/dev-tools/kunit/faq.rst         |  2 +-
- Documentation/dev-tools/kunit/index.rst       | 14 +++----
- Documentation/dev-tools/kunit/start.rst       |  4 +-
- Documentation/dev-tools/kunit/tips.rst        |  5 ++-
- Documentation/dev-tools/kunit/usage.rst       |  8 ++--
- Documentation/dev-tools/testing-overview.rst  | 16 ++++----
- .../bindings/submitting-patches.rst           | 11 +++---
- Documentation/doc-guide/contributing.rst      |  8 ++--
- Documentation/driver-api/gpio/using-gpio.rst  |  4 +-
- Documentation/driver-api/ioctl.rst            |  2 +-
- Documentation/driver-api/pm/devices.rst       |  8 ++--
- .../surface_aggregator/clients/index.rst      |  3 +-
- .../surface_aggregator/internal.rst           | 15 ++++----
- .../surface_aggregator/overview.rst           |  6 ++-
- Documentation/driver-api/usb/dma.rst          |  6 +--
- .../acpi/dsd/data-node-references.rst         |  3 +-
- .../firmware-guide/acpi/dsd/graph.rst         |  2 +-
- .../firmware-guide/acpi/enumeration.rst       |  7 ++--
- Documentation/i2c/instantiating-devices.rst   |  2 +-
- Documentation/i2c/old-module-parameters.rst   |  3 +-
- Documentation/i2c/smbus-protocol.rst          |  4 +-
- Documentation/kernel-hacking/hacking.rst      |  4 +-
- .../networking/devlink/devlink-region.rst     |  2 +-
- .../networking/devlink/devlink-trap.rst       |  4 +-
- Documentation/process/submitting-patches.rst  | 32 ++++++++--------
- Documentation/security/landlock.rst           |  3 +-
- Documentation/trace/coresight/coresight.rst   |  8 ++--
- Documentation/trace/ftrace.rst                |  2 +-
- Documentation/userspace-api/landlock.rst      | 11 +++---
- Documentation/virt/kvm/s390-pv-boot.rst       |  2 +-
- Documentation/x86/boot.rst                    |  4 +-
- Documentation/x86/mtrr.rst                    |  2 +-
- 46 files changed, 171 insertions(+), 147 deletions(-)
-
+diff --git a/Documentation/driver-api/gpio/using-gpio.rst b/Documentation/driver-api/gpio/using-gpio.rst
+index dda069444032..64c8d3f76c3a 100644
+--- a/Documentation/driver-api/gpio/using-gpio.rst
++++ b/Documentation/driver-api/gpio/using-gpio.rst
+@@ -9,13 +9,13 @@ with them.
+ 
+ For examples of already existing generic drivers that will also be good
+ examples for any other kernel drivers you want to author, refer to
+-:doc:`drivers-on-gpio`
++Documentation/driver-api/gpio/drivers-on-gpio.rst
+ 
+ For any kind of mass produced system you want to support, such as servers,
+ laptops, phones, tablets, routers, and any consumer or office or business goods
+ using appropriate kernel drivers is paramount. Submit your code for inclusion
+ in the upstream Linux kernel when you feel it is mature enough and you will get
+-help to refine it, see :doc:`../../process/submitting-patches`.
++help to refine it, see Documentation/process/submitting-patches.rst.
+ 
+ In Linux GPIO lines also have a userspace ABI.
+ 
 -- 
 2.31.1
-
 
