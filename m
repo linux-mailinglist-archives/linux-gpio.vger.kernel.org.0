@@ -2,90 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B211C3AA071
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 17:55:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8405F3AA0BF
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 18:03:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234838AbhFPP5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Jun 2021 11:57:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:37293 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235033AbhFPPzn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Jun 2021 11:55:43 -0400
-Received: from [192.168.1.155] ([95.115.35.150]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MlwJv-1lT2i31xRr-00j4qj; Wed, 16 Jun 2021 17:52:24 +0200
-Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        Alex Benn?e <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
-        <sgarzare@redhat.com>, virtualization@lists.linux-foundation.org,
-        Alistair Strachan <astrachan@google.com>
-References: <cover.1623326176.git.viresh.kumar@linaro.org>
- <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
- <CACRpkdZV2v2S5z7CZf_8DV=At9-oPSj7RYFH78hWy3ZX37QnDQ@mail.gmail.com>
- <YMlwTiN4Y9bK3M4Q@yoga>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <8d58da79-8e54-048b-db89-8c1caaa0320f@metux.net>
-Date:   Wed, 16 Jun 2021 17:52:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
-MIME-Version: 1.0
-In-Reply-To: <YMlwTiN4Y9bK3M4Q@yoga>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:zYV2Vb8N523yfGwaAamnyOfO9IKmEQnqd6sTMik2ROSZ7cvYmAN
- P+VxcmAsXGX6vzb4SRBaxlBoX7KUvdrVZZEJEWZNpRygC9ACFb6Hfn33WlquBmdPoOQZvXX
- VSqVi2NWO7+sNcnkirbpTVkxHEPc7Jh96VOoZzzK8GfiJ2t1meINaY99JOXByCRWhC1rvRg
- AGnmOmcNFRqNPwmCe/9/A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bYb/owV9rlA=:ixDRRrjFdE2oUtq7B2uSI1
- VEXzB2qPM57T1OTriUP7i36IyDMD7R0aEPbCSak0OhU9eTyIcubcYk4ewmTdNVQOX2CrX9zus
- lj25xXuGUiQgI92OTRbDtrIzc/DWsqS+dZVA5dC7L4Q7Kscv4UqI+5UcmZ8vANAtwyCuJx4Cb
- 7fvWxGC0d2X3mHk9oVXX5bh+NhcqwJJIUVzAJBbnlxDcN00BsIJFqDZjNvLv6S3kOCOooUY4/
- 5iMYR9VvrPtCX0StbrMKitflvTjyfcw+HB9Ju2BAGVW5YanTpQjc2WaEui2vykhL1RJ2BMVHQ
- CD5vZ8JhGdMGu4zMa1/hWSwitBK3L2Ygpkc+sf16cGMoFwKTGATc16XIqFuYAcMMSeFnfg2Kp
- vwfr4U/Sfvt7HhWkWJRnZGorVVXY7t5VZ10YK8iakVeG1aIHplvTCYZ6WOfGO+DahUv97SB9v
- aUF9bPHxMB8QjZx/7Od2CXy18DqA0zszh32Xrn4iHELpnRg+FZ4GX6qnL3QEX1bAzEzTJRQxZ
- 63s4fqdKFtSdtj1IKOVp2M=
+        id S232742AbhFPQFb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Jun 2021 12:05:31 -0400
+Received: from mail-il1-f169.google.com ([209.85.166.169]:45734 "EHLO
+        mail-il1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230318AbhFPQF2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Jun 2021 12:05:28 -0400
+Received: by mail-il1-f169.google.com with SMTP id b5so2760517ilc.12;
+        Wed, 16 Jun 2021 09:03:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=GgCzoaHFOYAyVslQBS4dBQ8uJssoPQuTkyaaJARNtbc=;
+        b=dNLMe70SeQ4TxE+090zFQjyggArJ27gfw6/0YIdJNojfWXEmI7jEeQJEWz2pAdrez4
+         GrtAyVcWmPIldRX14oL8rwBD8cw47BYlfH2e0bspOpSu0NSa7NjQCU05gtLUiWtNVrkd
+         am+WANKuHf4zNzSOJiIUtBpjYNwRGCudSttXtY0F8Lm710vpVOASdvzFhEy8Elp2vDAg
+         J4/luyrNfLOaRJh5bYItDYyWuPMh2gJemhPJWHwLDx7/PGf4dhVewa53Xb0VLcxpJ5VI
+         kaXXaoYPS7u4uwyx+idS4pOvP1Dv3kx0kMhkCWbqDQjkfh+BkYGCGV37Gsuf6fikocUB
+         nLJw==
+X-Gm-Message-State: AOAM5311C+z7tqJD03LJlw45O9z3i+qhuNZDRYTAmx2AwuTQuFnHt9vL
+        +Kxb0/YcGPRFmBOO7OG2AA==
+X-Google-Smtp-Source: ABdhPJx8UMEZU6dAOrHiF1TT0CKqmYo2m7y/g9MmQCga6fMN4JKzVRaR2nHahtnzrZFCpkQcU87hcw==
+X-Received: by 2002:a05:6e02:1e0d:: with SMTP id g13mr285947ila.178.1623859400739;
+        Wed, 16 Jun 2021 09:03:20 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id e13sm1305123ilr.68.2021.06.16.09.03.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Jun 2021 09:03:20 -0700 (PDT)
+Received: (nullmailer pid 3471592 invoked by uid 1000);
+        Wed, 16 Jun 2021 16:03:05 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20210616132641.29087-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20210616132641.29087-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210616132641.29087-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add DT bindings for RZ/G2L pinctrl
+Date:   Wed, 16 Jun 2021 10:03:05 -0600
+Message-Id: <1623859385.212203.3471591.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16.06.21 05:30, Bjorn Andersson wrote:
+On Wed, 16 Jun 2021 14:26:39 +0100, Lad Prabhakar wrote:
+> Add device tree binding documentation and header file for Renesas
+> RZ/G2L pinctrl.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+>  .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 121 ++++++++++++++++++
+>  include/dt-bindings/pinctrl/pinctrl-rzg2l.h   |  16 +++
+>  2 files changed, 137 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-rzg2l.h
+> 
 
-> Combined with the virtio-i2c effort this could provide an alternative by
-> simply tunneling the busses and GPIOs into Linux and use standard iio
-> drivers, for cases where this suits your product requirements better.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-So, you wanna use virtio as logical interface between the two CPUs ?
-Interesting idea. Usually folks use rpmsg for those things.
+yamllint warnings/errors:
 
-What is running on the secondary CPU ? Some OS like Linux or some bare
-metal stuff ? What kind of CPU is that anyways ?
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.example.dts:20:18: fatal error: dt-bindings/clock/r9a07g044-cpg.h: No such file or directory
+   20 |         #include <dt-bindings/clock/r9a07g044-cpg.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1416: dt_binding_check] Error 2
+\ndoc reference errors (make refcheckdocs):
 
---mtx
+See https://patchwork.ozlabs.org/patch/1492923
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
