@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEC523A8E83
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 03:45:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82EAB3A8F65
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 05:30:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231841AbhFPBrf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Jun 2021 21:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50892 "EHLO
+        id S230001AbhFPDcc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Jun 2021 23:32:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231703AbhFPBra (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 21:47:30 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B8AC06175F
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 18:45:24 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id 69so297555plc.5
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 18:45:24 -0700 (PDT)
+        with ESMTP id S229931AbhFPDcb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Jun 2021 23:32:31 -0400
+Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22135C06175F
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 20:30:26 -0700 (PDT)
+Received: by mail-ot1-x32d.google.com with SMTP id q5-20020a9d66450000b02903f18d65089fso1088609otm.11
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 20:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WiRCci0E3CBaTJSov8aP3aMirNDwvb95s8pJiMPbiLE=;
-        b=wmQs8AlTFSXTCSysIARXEbA1F8qYDvxC/JZv9qRhUh+lThq4r3wrJRyXk8ugI38H86
-         y0k+4ZB8zYKxutk1/McQ5pKFtXVdJueMYp/JakTazJjxEZADr3Wj8VcM1IHHygxxbqIW
-         U9MePSdU1qpFSA98aNOtDswKC5P87uim45JLZPLaRvrxhjK0Sentrc+0CKxTk7uLKPrh
-         49gkCG6Ee+woCarfrV7WwoUITP4+6Sfgmk14OUsutuFFamAOYvspOTdONtIxue2ILu3B
-         aqOuEE+VXZLp0m1wTmZAel7OfkYiJfNuj6amtpSqZCemIEGWt8D97Xx/f4hs7wNgDLdm
-         HBUw==
+         :content-disposition:in-reply-to;
+        bh=i86DmE+FsyrX62awkaAfzqwF7YB8JnFdUJaPY+I8i5I=;
+        b=Qfat5UX9GV6c1Wcj/DNLp0BklvW/aL4PZmlQGmMT8PBMP3705UmFoBLCfCrelJbc4y
+         moGxOAKoAQcQax47jPSfd5Rv3vKiemgt/Li6txlGUBX06uIYw/pA+1QB+psYJLstFFPS
+         BRo7zqKLNQFn2V8xlKnTiRgCbLFNFCSH2PjyF2oT5v1rt3mhT0O7wdaLzuMqVd76fiP8
+         KezhGLs4e8NeKHF+o5VhG8nXGGxVA4LmxO21N9FPJgk/z2zw/DuuC/Yq3yfUGAkZ6yHF
+         l5vyY3pioS41p6KtwHqJDUlK3ZWKWG+Bi3Agri8YqthjQmMIocqPgsQQNMan6Hrg+dY6
+         hspg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WiRCci0E3CBaTJSov8aP3aMirNDwvb95s8pJiMPbiLE=;
-        b=Wc+3UpOQ/ah42TN+cBMHJsgdEtTq0v//RwkMpGDpFfjkpyGCDGQIng1RbsdQS5GinZ
-         iu4YMXJekRMCm2t4PpzSWW/T1RTCuAFTpXvypTdVCBJJodyHtpwlvOsuPUZDkq8f7ebU
-         e1WtkDkztdNxcVBb0Jk3cHclNuzlWwjSFyVW+IokxF/ejMur/ga0z+PZFAN4nDPQJYHl
-         kqnOCoqb8m2L6HHzPGlhsM9vCF6EJ1/069NYtf33Yn8Xlec/EilvwxAtrUyBLZV/7IZq
-         d9XP7quMtt/Vk5XW1YlyCYh7dLAvwDxTwnGy7e0jb/cTtNWR5bAuQmuztXnvHUTvuiwt
-         TZ8w==
-X-Gm-Message-State: AOAM532HbhRBfHt8IfU7yucxbve/z1ahF/+k55RpSGCCKSWJSm5xrPdi
-        TQ6qSWXsHxNLOCU1CfoDk2Fflw==
-X-Google-Smtp-Source: ABdhPJx12mo0fmVKv0fY6g/xDgXHcWqG9HH/gLqDFpEh659OuHf2dlOFn7d4rv5WRJXC1HgIs7MVYA==
-X-Received: by 2002:a17:90b:46c3:: with SMTP id jx3mr2257792pjb.206.1623807923967;
-        Tue, 15 Jun 2021 18:45:23 -0700 (PDT)
-Received: from localhost ([136.185.134.182])
-        by smtp.gmail.com with ESMTPSA id h8sm350000pfn.0.2021.06.15.18.45.22
+         :mime-version:content-disposition:in-reply-to;
+        bh=i86DmE+FsyrX62awkaAfzqwF7YB8JnFdUJaPY+I8i5I=;
+        b=VsUbxJk+onFsZQBbLa1gtjvTQ0HP8YfD+MAA5wmU8bYDQ6Tx6O0T/Tt0hLrQHnfRkS
+         0qK1k/hJQZeKbr0mjmJaVWncHPpxBTidIuyrEIQHww/Lzv9rukNs9ZxdDEBlmrae5dft
+         lOMrYqsJHGo7WqiKDv3bapMjJZB2lj0n2zUxRzikN2yvYsTH136Eeem/HSp+3ZSH48OY
+         Vy0v5Yo1A+JFumNfqG30ZTjlpkmP287eGTmukSibD6TFzhBhwZNdAO+3WzzpwgR3jGs3
+         iy/A2lu2/X2PKKrX2NPQrZbsDm12FqHHJpyvNn4sM9qZOIGmId4U+A4v4sGmkWRgYpY+
+         ONVw==
+X-Gm-Message-State: AOAM5331vq8eoPOTEC7ZFMdRvMS4mPyzqdVTby6Dgh1u4G2b/ZQOLOxz
+        yotocdLXws57RWD6WVxQ7Zp35DdKghvdRg==
+X-Google-Smtp-Source: ABdhPJxhs/9jElwXtk+L4DLc2u6ZKRZCiYLWJIWb/AnDz3/Z91d0jV126dADdblLKuA65fRJfmQaAA==
+X-Received: by 2002:a05:6830:22e9:: with SMTP id t9mr2019636otc.327.1623814225341;
+        Tue, 15 Jun 2021 20:30:25 -0700 (PDT)
+Received: from yoga (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id q6sm247309oth.10.2021.06.15.20.30.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Jun 2021 18:45:22 -0700 (PDT)
-Date:   Wed, 16 Jun 2021 07:15:20 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
+        Tue, 15 Jun 2021 20:30:24 -0700 (PDT)
+Date:   Tue, 15 Jun 2021 22:30:22 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Viresh Kumar <vireshk@kernel.org>,
@@ -59,62 +59,49 @@ Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Jason Wang <jasowang@redhat.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         Bill Mills <bill.mills@linaro.org>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        Alex Benn?e <alex.bennee@linaro.org>,
         stratos-dev@op-lists.linaro.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
         <sgarzare@redhat.com>, virtualization@lists.linux-foundation.org,
-        Alistair Strachan <astrachan@google.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
+        Alistair Strachan <astrachan@google.com>
 Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
-Message-ID: <20210616014520.dkkbdamgelptl3un@vireshk-i7>
+Message-ID: <YMlwTiN4Y9bK3M4Q@yoga>
 References: <cover.1623326176.git.viresh.kumar@linaro.org>
  <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
  <CACRpkdZV2v2S5z7CZf_8DV=At9-oPSj7RYFH78hWy3ZX37QnDQ@mail.gmail.com>
- <20210611035623.z4f2ynumzozigqnv@vireshk-i7>
- <CAMuHMdVrtSnFpPbB0P3Wxqm1D6vU1_cnh3ypsZJRNF6ueKdAsw@mail.gmail.com>
- <20210611080122.tlkidv6bowuka6fw@vireshk-i7>
- <CAMuHMdVL4VH09ixPcpqqokNJeYd68Th2Y6Lz4PZTF7h06OOBGw@mail.gmail.com>
- <20210615111551.7tcz7teqp4olhodf@vireshk-i7>
- <CACRpkdbyybnxP9p3Jh2TbJMhK+kfLyed-YyrZq9JbOqu1csmww@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbyybnxP9p3Jh2TbJMhK+kfLyed-YyrZq9JbOqu1csmww@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <CACRpkdZV2v2S5z7CZf_8DV=At9-oPSj7RYFH78hWy3ZX37QnDQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15-06-21, 22:03, Linus Walleij wrote:
-> On Tue, Jun 15, 2021 at 1:15 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Thu 10 Jun 15:46 CDT 2021, Linus Walleij wrote:
+[..]
+> Yet another usecase would be to jit this with remoteproc/rpmsg
+> and let a specific signal processor or real-time executive on
+> another CPU with a few GPIOs around present these to
+> Linux using this mechanism. Well that would certainly interest
+> Bjorn and other rpmsg stakeholders, so they should have
+> a look so that this provides what they need they day they
+> need it. (CCed Bjorn and also Google who may want this for
+> their Android emulators.)
 > 
-> > I am now wondering how interrupts can be made to work here. Do you
-> > have anything in mind for that ?
-> 
-> The aggregator does not aggregate interrupts only lines for now.
-> 
-> > GPIO sysfs already supports interrupts, (...)
-> 
-> I hope that doesn't make you tempted to use sysfs to get interrupts,
-> those are awful, they use sysfs_notify_dirent() which means that
-> if two IRQs happen in  fast succession you will miss one of them
-> and think it was only one.
-> 
-> The GPIO character device supports low latency events forwarding
-> interrupts to userspace including QEMU & similar, timestamps the
-> events as close in time as possible to when they actually happen
-> (which is necessary for any kind of industrial control) and will never
-> miss an event if the hardware can register it. See:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/gpio/gpio-event-mon.c
 
-The current version of backend (I am working on) will be Linux
-userspace based, so I would be required to get an interrupt there.
+Right, your typical Qualcomm platform has a dedicated sensor subsystem,
+with some CPU core with dedicated I2C controllers and GPIOs for
+processing sensor input while the rest of the SoC is in deep sleep.
 
-I was planning to use /dev/gpiochipN only for now and not a sysfs
-file, so yes it should be fine.
+Combined with the virtio-i2c effort this could provide an alternative by
+simply tunneling the busses and GPIOs into Linux and use standard iio
+drivers, for cases where this suits your product requirements better.
 
--- 
-viresh
+
+And I've seen similar interest from others in the community as well.
+
+Regards,
+Bjorn
