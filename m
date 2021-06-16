@@ -2,146 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D81D3A919D
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 08:06:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 160313A923A
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 08:26:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230403AbhFPGIF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Jun 2021 02:08:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229543AbhFPGIE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Jun 2021 02:08:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6BD9161350;
-        Wed, 16 Jun 2021 06:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1623823558;
-        bh=wj+fnX135Oi/RuBZlfcRXEj82T4M+/zm2RKoeLfcdHI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gHZLhaFOGuJEdFzGD8ad6/WT9r+ZqPlWGvOwJoE3JRn+pqz1O74eBVMbWjjeG87Dj
-         TPvrvUCNWbz/7lixm1DsLz03lLNe9Um44ZNofR+Fgv+slwMtNQEfvKCMrcTThWdf6e
-         F+7I/PxIo72YidQoQbZHHngOc0S41uEQR6nyNaRA=
-Date:   Wed, 16 Jun 2021 08:05:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
-        alsa-devel@alsa-project.org, iommu@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
-Message-ID: <YMmUwCsdy4OaQCiU@kroah.com>
-References: <20210615191543.1043414-1-robh@kernel.org>
+        id S231381AbhFPG2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Jun 2021 02:28:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231422AbhFPG2q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Jun 2021 02:28:46 -0400
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AFEAC061760
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 23:26:34 -0700 (PDT)
+Received: by mail-oi1-x231.google.com with SMTP id d19so1391414oic.7
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jun 2021 23:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9zUgDhkJImxfUh9Hmx75RiDhjdI3YARcNQ9gBrGyxCw=;
+        b=XIokmDd7gMh7WJsguRzQznvarxUBTpKC/M0FORL22R5Qkpc7zDDpeDFQZB1QEymigy
+         K6jYHoCO7hXbkG+6SY/Je4CYKQgEuLR1Ih3UDnjiHtivGyT+I/dbp2iILm9vWKhpH8ZH
+         SZvJvU8Qcb/cbAeoks7gJ2aKGN/iKTkI4p93yurQBQnKm9qXJWVVAGGqyfeYD1dWj+uZ
+         ZxlxFm5qsr5r28cNUPdnVR5InzIv3p9uQbJF7r3BkdVXm2LCP+qsfbfoyx80D06q5+I1
+         C156+VdIDmctM27juRqX+DijmwtW1TQVItomtVxpjvMfobG/OEWdYneW5K2OpAE/hgVn
+         He1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9zUgDhkJImxfUh9Hmx75RiDhjdI3YARcNQ9gBrGyxCw=;
+        b=kP+ztn+MABEezHGaPEGRhp3JYKp/x7oc6yFL39Yg4AT/wctXsnzOksIiUWALmtCXnz
+         vJ9xwKz5qygUzfqiArjzSXxOCiV/Pp+0vLEL7VJy2cpyWrvy206EypM7COqHp95/3yOD
+         ZraVsj3MXzbg9xb2av3YAJXCvy3TE7Nppp1OCMcPDJtHDlPSG1yGqU03NihCn4V78hVc
+         HlJ+YYwQp13v4iu6ssPNZ3AsXEpYgj9P3/E72QYmJMmN8iuPhAUkIiYmXvJIQq/rjdQt
+         2m0158Lw/KffBcokYSaqEPBnwoimVdj84MBKxuPaFwoZB11T6+lZi14MFSNNAO2xQpEr
+         cSYw==
+X-Gm-Message-State: AOAM531dhe2WtuJPeP0qVU8ojlvlmNnu5qzqQaBSYB5lnV2RTaJ8cDN6
+        X/Kg4Sxo3RREQthg4y5EVCFvPu5QKmNB5xv2rJ2nkQ==
+X-Google-Smtp-Source: ABdhPJxMsqZuCXp/LxfKwhV20rJVZBMQCnCg7j7tmAYQRSo241pj8V+0ieCfOfm6j4VGarto5/XKjCkdGRtP4NgaN9Y=
+X-Received: by 2002:aca:fc91:: with SMTP id a139mr5788266oii.12.1623824793682;
+ Tue, 15 Jun 2021 23:26:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
+References: <20210615074543.26700-1-bhupesh.sharma@linaro.org>
+ <20210615074543.26700-3-bhupesh.sharma@linaro.org> <YMkU/on5e92vgIll@yoga>
+In-Reply-To: <YMkU/on5e92vgIll@yoga>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Date:   Wed, 16 Jun 2021 11:56:22 +0530
+Message-ID: <CAH=2Ntx=j3w-yjRm12pqwYGrkfJ5h1cXeY-RNwzEs9tkT25b0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] dt-bindings: pinctrl: qcom,pmic-gpio: Add
+ compatible for SA8155p-adp
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, bhupesh.linux@gmail.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 15, 2021 at 01:15:43PM -0600, Rob Herring wrote:
-> If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
-> same size as the list is redundant and can be dropped. Note that is DT
-> schema specific behavior and not standard json-schema behavior. The tooling
-> will fixup the final schema adding any unspecified minItems/maxItems.
-> 
-> This condition is partially checked with the meta-schema already, but
-> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
-> An improved meta-schema is pending.
-> 
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Jassi Brar <jassisinghbrar@gmail.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Wolfgang Grandegger <wg@grandegger.com>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Vivien Didelot <vivien.didelot@gmail.com>
-> Cc: Vladimir Oltean <olteanv@gmail.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Ohad Ben-Cohen <ohad@wizery.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+On Wed, 16 Jun 2021 at 02:30, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Tue 15 Jun 02:45 CDT 2021, Bhupesh Sharma wrote:
+>
+> > Add pmic-gpio compatible string for pmm8155au pmic
+> > found on the SA8155p-adp board.
+> >
+> > ---
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+<..snip..>
+
+> >  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> > index f6a9760558a6..80b8a66e29d8 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> > @@ -27,6 +27,7 @@ PMIC's from Qualcomm.
+> >                   "qcom,pm660l-gpio"
+> >                   "qcom,pm8150-gpio"
+> >                   "qcom,pm8150b-gpio"
+> > +                 "qcom,pmm8155au-gpio"
+>
+> Please keep these sorted alphabetically.
+
+Ok, I will fix this in v3.
+
+Thanks,
+Bhupesh
