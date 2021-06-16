@@ -2,141 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C83893A9ED7
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 17:21:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B211C3AA071
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 17:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234118AbhFPPXF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Jun 2021 11:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234002AbhFPPXF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Jun 2021 11:23:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C64161375;
-        Wed, 16 Jun 2021 15:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623856859;
-        bh=27eUZzjv41JFT/kKzRpcOFEIMGKaONkaM9MTgUB4lvc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=buypIobsBvwFCoYyKG42xHmi6qlL+WknZA0yV9zcssR1qukECIItvMs5lYF24rq39
-         7G2rK+9x62EOIbBxA0GYsKblM2k/E/zY2ttt9SmAeF7mvexO/3Tz9FULTJZ4xZ8hQp
-         qo21npzZcH3m2VJR+PEzbRav27lgret3OHmHLrMa+yzTf6uyIS2u06r0IfJ8J87NEX
-         OqsnNy+LYpdR4X0lEw0DFSgZR3N9ejKQ6K068cLLxzaz7UHmmGuIxDDU53pfou+Y7I
-         7PxjBInaO0mwtN8Ezuk56bJ2wt0T5Z4h3v7InClBkLr24pCiSYHUhSE/RiPZV2v6m+
-         JY0BVpsRsnbVg==
-Received: by mail-ej1-f46.google.com with SMTP id gt18so4491497ejc.11;
-        Wed, 16 Jun 2021 08:20:59 -0700 (PDT)
-X-Gm-Message-State: AOAM5319eO8cG75H/8uYamndOULFyyErZais8PlVoSTjOLana1TnjBwa
-        rjaRFRhYxc2qqxkxtffs1dJdMJmbZy5+VesZ+Q==
-X-Google-Smtp-Source: ABdhPJwVu+BsUV7DzrQnvv679MoG3zGD601vblw0HBeBpWUI8BezJDE8UWYZlHYd9yj6WnDUi1/TfNk1GXKkgoaWTXw=
-X-Received: by 2002:a17:907:2059:: with SMTP id pg25mr76098ejb.130.1623856857816;
- Wed, 16 Jun 2021 08:20:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210608102547.4880-1-steven_lee@aspeedtech.com>
- <20210608102547.4880-3-steven_lee@aspeedtech.com> <20210610162320.GA1910317@robh.at.kernel.org>
- <f639f1bb-fe53-4c15-a6dd-91b45ea7eef1@www.fastmail.com>
-In-Reply-To: <f639f1bb-fe53-4c15-a6dd-91b45ea7eef1@www.fastmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 16 Jun 2021 09:20:44 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ_nwwyCBDg9p+AnriKw=9dC0WmLCw7dcz6qA87hRAu5g@mail.gmail.com>
-Message-ID: <CAL_JsqJ_nwwyCBDg9p+AnriKw=9dC0WmLCw7dcz6qA87hRAu5g@mail.gmail.com>
-Subject: Re: [PATCH v5 02/10] dt-bindings: aspeed-sgpio: Add ast2600 sgpio compatibles.
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     Steven Lee <steven_lee@aspeedtech.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S234838AbhFPP5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Jun 2021 11:57:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:37293 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235033AbhFPPzn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Jun 2021 11:55:43 -0400
+Received: from [192.168.1.155] ([95.115.35.150]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MlwJv-1lT2i31xRr-00j4qj; Wed, 16 Jun 2021 17:52:24 +0200
+Subject: Re: [PATCH V3 1/3] gpio: Add virtio-gpio driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Viresh Kumar <vireshk@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        Alex Benn?e <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hongwei Zhang <Hongweiz@ami.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Stefano Garzarella --cc virtualization @ lists . linux-foundation . org" 
+        <sgarzare@redhat.com>, virtualization@lists.linux-foundation.org,
+        Alistair Strachan <astrachan@google.com>
+References: <cover.1623326176.git.viresh.kumar@linaro.org>
+ <10442926ae8a65f716bfc23f32339a6b35e51d5a.1623326176.git.viresh.kumar@linaro.org>
+ <CACRpkdZV2v2S5z7CZf_8DV=At9-oPSj7RYFH78hWy3ZX37QnDQ@mail.gmail.com>
+ <YMlwTiN4Y9bK3M4Q@yoga>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <8d58da79-8e54-048b-db89-8c1caaa0320f@metux.net>
+Date:   Wed, 16 Jun 2021 17:52:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
+MIME-Version: 1.0
+In-Reply-To: <YMlwTiN4Y9bK3M4Q@yoga>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:zYV2Vb8N523yfGwaAamnyOfO9IKmEQnqd6sTMik2ROSZ7cvYmAN
+ P+VxcmAsXGX6vzb4SRBaxlBoX7KUvdrVZZEJEWZNpRygC9ACFb6Hfn33WlquBmdPoOQZvXX
+ VSqVi2NWO7+sNcnkirbpTVkxHEPc7Jh96VOoZzzK8GfiJ2t1meINaY99JOXByCRWhC1rvRg
+ AGnmOmcNFRqNPwmCe/9/A==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bYb/owV9rlA=:ixDRRrjFdE2oUtq7B2uSI1
+ VEXzB2qPM57T1OTriUP7i36IyDMD7R0aEPbCSak0OhU9eTyIcubcYk4ewmTdNVQOX2CrX9zus
+ lj25xXuGUiQgI92OTRbDtrIzc/DWsqS+dZVA5dC7L4Q7Kscv4UqI+5UcmZ8vANAtwyCuJx4Cb
+ 7fvWxGC0d2X3mHk9oVXX5bh+NhcqwJJIUVzAJBbnlxDcN00BsIJFqDZjNvLv6S3kOCOooUY4/
+ 5iMYR9VvrPtCX0StbrMKitflvTjyfcw+HB9Ju2BAGVW5YanTpQjc2WaEui2vykhL1RJ2BMVHQ
+ CD5vZ8JhGdMGu4zMa1/hWSwitBK3L2Ygpkc+sf16cGMoFwKTGATc16XIqFuYAcMMSeFnfg2Kp
+ vwfr4U/Sfvt7HhWkWJRnZGorVVXY7t5VZ10YK8iakVeG1aIHplvTCYZ6WOfGO+DahUv97SB9v
+ aUF9bPHxMB8QjZx/7Od2CXy18DqA0zszh32Xrn4iHELpnRg+FZ4GX6qnL3QEX1bAzEzTJRQxZ
+ 63s4fqdKFtSdtj1IKOVp2M=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 5:27 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
->
->
-> On Fri, 11 Jun 2021, at 01:53, Rob Herring wrote:
-> > On Tue, Jun 08, 2021 at 06:25:37PM +0800, Steven Lee wrote:
-> > > AST2600 SoC has 2 SGPIO master interfaces one with 128 pins another o=
-ne
-> > > with 80 pins. Add ast2600-sgpiom0-80 and ast2600-sgpiom-128 compatibl=
-es
-> > > and update descriptions to introduce the max number of available gpio
-> > > pins that AST2600 supported.
-> > >
-> > > Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
-> > > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-> > > ---
-> > >  Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml | 9 ++++++-=
---
-> > >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml=
- b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> > > index b2ae211411ff..0e42eded3c1e 100644
-> > > --- a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> > > +++ b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> > > @@ -10,9 +10,10 @@ maintainers:
-> > >    - Andrew Jeffery <andrew@aj.id.au>
-> > >
-> > >  description:
-> > > -  This SGPIO controller is for ASPEED AST2500 SoC, it supports up to=
- 80 full
-> > > -  featured Serial GPIOs. Each of the Serial GPIO pins can be program=
-med to
-> > > -  support the following options
-> > > +  This SGPIO controller is for ASPEED AST2400, AST2500 and AST2600 S=
-oC,
-> > > +  AST2600 have two sgpio master one with 128 pins another one with 8=
-0 pins,
-> > > +  AST2500/AST2400 have one sgpio master with 80 pins. Each of the Se=
-rial
-> > > +  GPIO pins can be programmed to support the following options
-> > >    - Support interrupt option for each input port and various interru=
-pt
-> > >      sensitivity option (level-high, level-low, edge-high, edge-low)
-> > >    - Support reset tolerance option for each output port
-> > > @@ -25,6 +26,8 @@ properties:
-> > >      enum:
-> > >        - aspeed,ast2400-sgpio
-> > >        - aspeed,ast2500-sgpio
-> > > +      - aspeed,ast2600-sgpiom-80
-> > > +      - aspeed,ast2600-sgpiom-128
-> >
-> > If the number of GPIOs is the only difference, then I don't think you
-> > should get rid of ngpios. It's one thing if it varies from one SoC to
-> > the next, but if something is per instance we should have a property.
-> >
->
-> There are two issues:
->
-> 1. The maximum number of GPIOs supported by the controller
-> 2. The maximum number of GPIOs supported by the platform
->
-> These are different because of what the controller does - here's some pre=
-vious discussion on the topic:
->
-> https://lore.kernel.org/linux-gpio/f2875111-9ba9-43b7-b2a4-d00c8725f5a0@w=
-ww.fastmail.com/
->
-> We've used ngpios to describe 2; this decision was made prior to the 2600=
- design - the SGPIO controller for both the 2400 and 2500 supported a maxim=
-um of 80 GPIOs. With the 2600 we have to differentiate between the two SGPI=
-O controllers because they support a different maximum number of GPIOs. The=
- proposed approach of different compatibles keeps the behaviour of ngpios t=
-he same across all controller implementations.
+On 16.06.21 05:30, Bjorn Andersson wrote:
 
-Okay, that makes sense.
+> Combined with the virtio-i2c effort this could provide an alternative by
+> simply tunneling the busses and GPIOs into Linux and use standard iio
+> drivers, for cases where this suits your product requirements better.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+So, you wanna use virtio as logical interface between the two CPUs ?
+Interesting idea. Usually folks use rpmsg for those things.
+
+What is running on the secondary CPU ? Some OS like Linux or some bare
+metal stuff ? What kind of CPU is that anyways ?
+
+--mtx
+
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
