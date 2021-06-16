@@ -2,23 +2,23 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D00C3A9BF4
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 15:27:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F1633A9BF7
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 15:27:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233257AbhFPN3d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Jun 2021 09:29:33 -0400
+        id S233222AbhFPN3e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Jun 2021 09:29:34 -0400
 Received: from relmlor1.renesas.com ([210.160.252.171]:2586 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230455AbhFPN3b (ORCPT
+        by vger.kernel.org with ESMTP id S233223AbhFPN3d (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Jun 2021 09:29:31 -0400
+        Wed, 16 Jun 2021 09:29:33 -0400
 X-IronPort-AV: E=Sophos;i="5.83,278,1616425200"; 
-   d="scan'208";a="84546641"
+   d="scan'208";a="84546645"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 16 Jun 2021 22:27:24 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 16 Jun 2021 22:27:26 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 6AEAF423A751;
-        Wed, 16 Jun 2021 22:27:22 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id D9B73423A668;
+        Wed, 16 Jun 2021 22:27:24 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Rob Herring <robh+dt@kernel.org>,
@@ -28,9 +28,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/3] pinctrl: renesas: Add RZ/G2L pin and gpio controller core wrapper
-Date:   Wed, 16 Jun 2021 14:26:40 +0100
-Message-Id: <20210616132641.29087-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 3/3] pinctrl: renesas: Add pins/groups/functions for I2C, SCIF and USB supported by RZ/G2L SoC
+Date:   Wed, 16 Jun 2021 14:26:41 +0100
+Message-Id: <20210616132641.29087-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210616132641.29087-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20210616132641.29087-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -38,691 +38,453 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add core support for pin and gpio controller.
+Add pins/groups/functions for I2C, SCIF and USB supported by RZ/G2L SoC and
+bind it with RZ/G2L PFC core.
 
 Based on a patch in the BSP by Hien Huynh <hien.huynh.px@renesas.com>.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- drivers/pinctrl/renesas/Kconfig         |  11 +
+ drivers/pinctrl/renesas/Kconfig         |   5 +
  drivers/pinctrl/renesas/Makefile        |   1 +
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 530 ++++++++++++++++++++++++
- drivers/pinctrl/renesas/pinctrl-rzg2l.h |  94 +++++
- 4 files changed, 636 insertions(+)
- create mode 100644 drivers/pinctrl/renesas/pinctrl-rzg2l.c
- create mode 100644 drivers/pinctrl/renesas/pinctrl-rzg2l.h
+ drivers/pinctrl/renesas/pfc-r9a07g044.c | 362 ++++++++++++++++++++++++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c |   6 +
+ drivers/pinctrl/renesas/pinctrl-rzg2l.h |   2 +
+ 5 files changed, 376 insertions(+)
+ create mode 100644 drivers/pinctrl/renesas/pfc-r9a07g044.c
 
 diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
-index 4b84a744ae87..2b4ac226ce35 100644
+index 2b4ac226ce35..dc7faa6eaeb1 100644
 --- a/drivers/pinctrl/renesas/Kconfig
 +++ b/drivers/pinctrl/renesas/Kconfig
-@@ -176,6 +176,17 @@ config PINCTRL_RZA2
- 	help
- 	  This selects GPIO and pinctrl driver for Renesas RZ/A2 platforms.
+@@ -37,6 +37,7 @@ config PINCTRL_RENESAS
+ 	select PINCTRL_PFC_R8A77990 if ARCH_R8A77990
+ 	select PINCTRL_PFC_R8A77995 if ARCH_R8A77995
+ 	select PINCTRL_PFC_R8A779A0 if ARCH_R8A779A0
++	select PINCTRL_PFC_R9A07G044 if ARCH_R9A07G044
+ 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
+ 	select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
+ 	select PINCTRL_PFC_SH7269 if CPU_SUBTYPE_SH7269
+@@ -155,6 +156,10 @@ config PINCTRL_PFC_R8A73A4
+ 	bool "pin control support for R-Mobile APE6" if COMPILE_TEST
+ 	select PINCTRL_SH_PFC_GPIO
  
-+config PINCTRL_RZG2L
-+	bool "pin control support for RZ/G2L family"
-+	depends on OF
-+	depends on ARCH_R9A07G044 || COMPILE_TEST
-+	select GPIOLIB
-+	select GENERIC_PINCTRL_GROUPS
-+	select GENERIC_PINMUX_FUNCTIONS
-+	select GENERIC_PINCONF
-+	help
-+	  This enables common pin control functionality for platforms based on RZ/G2L family.
++config PINCTRL_PFC_R9A07G044
++	bool "pin control support for RZ/G2L" if COMPILE_TEST
++	select PINCTRL_RZG2L
 +
- config PINCTRL_PFC_R8A77470
- 	bool "pin control support for RZ/G1C" if COMPILE_TEST
- 	select PINCTRL_SH_PFC
+ config PINCTRL_RZA1
+ 	bool "pin control support for RZ/A1"
+ 	depends on OF
 diff --git a/drivers/pinctrl/renesas/Makefile b/drivers/pinctrl/renesas/Makefile
-index 353563228dc2..7d9238a9ef57 100644
+index 7d9238a9ef57..2ea5fa3a7769 100644
 --- a/drivers/pinctrl/renesas/Makefile
 +++ b/drivers/pinctrl/renesas/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_PINCTRL_PFC_SHX3)		+= pfc-shx3.o
- 
- obj-$(CONFIG_PINCTRL_RZA1)	+= pinctrl-rza1.o
- obj-$(CONFIG_PINCTRL_RZA2)	+= pinctrl-rza2.o
-+obj-$(CONFIG_PINCTRL_RZG2L)	+= pinctrl-rzg2l.o
- obj-$(CONFIG_PINCTRL_RZN1)	+= pinctrl-rzn1.o
- 
- ifeq ($(CONFIG_COMPILE_TEST),y)
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -30,6 +30,7 @@ obj-$(CONFIG_PINCTRL_PFC_R8A77980)	+= pfc-r8a77980.o
+ obj-$(CONFIG_PINCTRL_PFC_R8A77990)	+= pfc-r8a77990.o
+ obj-$(CONFIG_PINCTRL_PFC_R8A77995)	+= pfc-r8a77995.o
+ obj-$(CONFIG_PINCTRL_PFC_R8A779A0)	+= pfc-r8a779a0.o
++obj-$(CONFIG_PINCTRL_PFC_R9A07G044)	+= pfc-r9a07g044.o
+ obj-$(CONFIG_PINCTRL_PFC_SH7203)	+= pfc-sh7203.o
+ obj-$(CONFIG_PINCTRL_PFC_SH7264)	+= pfc-sh7264.o
+ obj-$(CONFIG_PINCTRL_PFC_SH7269)	+= pfc-sh7269.o
+diff --git a/drivers/pinctrl/renesas/pfc-r9a07g044.c b/drivers/pinctrl/renesas/pfc-r9a07g044.c
 new file mode 100644
-index 000000000000..b9730b53fd85
+index 000000000000..3f2ef4f52173
 --- /dev/null
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -0,0 +1,530 @@
++++ b/drivers/pinctrl/renesas/pfc-r9a07g044.c
+@@ -0,0 +1,362 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Renesas RZ/G2L Pin Control and GPIO driver core
-+ *
-+ * Copyright (C) 2021 Renesas Electronics Corporation.
-+ */
-+
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+
-+#include "pinctrl-rzg2l.h"
-+
-+#define DRV_NAME	"pinctrl-rzg2l"
-+
-+#define P(n)			(0x0000 + 0x10 + (n))
-+#define PM(n)			(0x0100 + 0x20 + (n) * 2)
-+#define PMC(n)			(0x0200 + 0x10 + (n))
-+#define PFC(n)			(0x0400 + 0x40 + (n) * 4)
-+#define PIN(n)			(0x0800 + 0x10 + (n))
-+#define PWPR			(0x3014)
-+
-+#define PWPR_B0WI		BIT(7)	/* Bit Write Disable */
-+#define PWPR_PFCWE		BIT(6)	/* PFC Register Write Enable */
-+
-+#define PM_MASK			0x03
-+#define PFC_MASK		0x07
-+
-+#define PM_INPUT		0x1
-+#define PM_OUTPUT		0x2
-+#define PM_OUTPUT_INPUT		0x3
-+
-+#define GPIOF_OUTPUT			0
-+#define GPIOF_INPUT			1
-+#define GPIOF_BIDIRECTION		2
-+#define GPIOF_HI_Z			3
-+
-+#define RZG2L_PIN_ID_TO_PORT(id)	((id) / RZG2L_MAX_PINS_PER_PORT)
-+#define RZG2L_PIN_ID_TO_PIN(id)		((id) % RZG2L_MAX_PINS_PER_PORT)
-+
-+struct rzg2l_pinctrl {
-+	struct pinctrl_dev		*pctrl_dev;
-+	struct pinctrl_desc		pctrl_desc;
-+
-+	void __iomem			*base;
-+	struct device			*dev;
-+	struct clk			*clk;
-+
-+	struct gpio_chip		gpio_chip;
-+	struct pinctrl_gpio_range	gpio_range;
-+
-+	const struct rzg2l_pin_soc	*psoc;
-+
-+	spinlock_t			lock;
-+	unsigned int			nports;
-+};
-+
-+static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
-+				       int pins, unsigned long pfc_mode)
-+{
-+	u32 port = RZG2L_PIN_ID_TO_PORT(pins);
-+	u8 bit = RZG2L_PIN_ID_TO_PIN(pins);
-+	unsigned long flags;
-+	u32 reg32, mask32;
-+	u16 reg16, mask16;
-+	u8 reg8;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	/* Set pin to 'Non-use (Hi-Z input protection)'  */
-+	reg16 = readw(pctrl->base + PM(port));
-+	mask16 = PM_MASK << (bit * 2);
-+	reg16 = reg16 & ~mask16;
-+	writew(reg16, pctrl->base + PM(port));
-+
-+	/* Temporarily switch to GPIO mode with PMC register */
-+	reg8 = readb(pctrl->base + PMC(port));
-+	writeb(reg8 & ~BIT(bit), pctrl->base + PMC(port));
-+
-+	/* Set the PWPR register to allow PFC register to write */
-+	writel(0x00, pctrl->base + PWPR);        /* B0WI=0, PFCWE=0 */
-+	writel(PWPR_PFCWE, pctrl->base + PWPR);  /* B0WI=0, PFCWE=1 */
-+
-+	/* Select Pin function mode with PFC register */
-+	reg32 = readl(pctrl->base + PFC(port));
-+	mask32 = PFC_MASK << (bit * 4);
-+	reg32 = reg32 & ~mask32;
-+	pfc_mode = pfc_mode << (bit * 4);
-+	writel(reg32 | pfc_mode, pctrl->base + PFC(port));
-+
-+	/* Set the PWPR register to be write-protected */
-+	writel(0x00, pctrl->base + PWPR);        /* B0WI=0, PFCWE=0 */
-+	writel(PWPR_B0WI, pctrl->base + PWPR);  /* B0WI=1, PFCWE=0 */
-+
-+	/* Switch to Peripheral pin function with PMC register */
-+	reg8 = readb(pctrl->base + PMC(port));
-+	writeb(reg8 | BIT(bit), pctrl->base + PMC(port));
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+};
-+
-+static int rzg2l_pinctrl_set_mux(struct pinctrl_dev *pctldev,
-+				 unsigned int func_selector,
-+				 unsigned int group_selector)
-+{
-+	struct rzg2l_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct function_desc *func;
-+	struct group_desc *group;
-+	unsigned long data;
-+	int *pins;
-+	int i;
-+
-+	func = pinmux_generic_get_function(pctldev, func_selector);
-+	if (!func)
-+		return -EINVAL;
-+	group = pinctrl_generic_get_group(pctldev, group_selector);
-+	if (!group)
-+		return -EINVAL;
-+
-+	pins = group->pins;
-+	data = (unsigned long)group->data;
-+
-+	dev_dbg(pctldev->dev, "enable function %s group %s\n",
-+		func->name, group->name);
-+
-+	for (i = 0; i < group->num_pins; i++)
-+		rzg2l_pinctrl_set_pfc_mode(pctrl, *(pins + i), data);
-+
-+	return 0;
-+};
-+
-+static const struct pinctrl_ops rzg2l_pinctrl_pctlops = {
-+	.get_groups_count = pinctrl_generic_get_group_count,
-+	.get_group_name = pinctrl_generic_get_group_name,
-+	.get_group_pins = pinctrl_generic_get_group_pins,
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
-+	.dt_free_map = pinconf_generic_dt_free_map,
-+};
-+
-+static const struct pinmux_ops rzg2l_pinctrl_pmxops = {
-+	.get_functions_count = pinmux_generic_get_function_count,
-+	.get_function_name = pinmux_generic_get_function_name,
-+	.get_function_groups = pinmux_generic_get_function_groups,
-+	.set_mux = rzg2l_pinctrl_set_mux,
-+	.strict = true,
-+};
-+
-+static int rzg2l_pinctrl_add_groups(struct rzg2l_pinctrl *pctrl)
-+{
-+	int ret, i;
-+
-+	for (i = 0; i < pctrl->psoc->ngroups; i++) {
-+		const struct group_desc *group = pctrl->psoc->groups + i;
-+
-+		ret = pinctrl_generic_add_group(pctrl->pctrl_dev, group->name,
-+						group->pins, group->num_pins,
-+						group->data);
-+		if (ret < 0) {
-+			dev_err(pctrl->dev, "Failed to register group %s\n",
-+				group->name);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int rzg2l_pinctrl_add_functions(struct rzg2l_pinctrl *pctrl)
-+{
-+	int ret, i;
-+
-+	for (i = 0; i < pctrl->psoc->nfuncs; i++) {
-+		const struct function_desc *func = pctrl->psoc->funcs + i;
-+
-+		ret = pinmux_generic_add_function(pctrl->pctrl_dev, func->name,
-+						  func->group_names,
-+						  func->num_group_names,
-+						  func->data);
-+		if (ret < 0) {
-+			dev_err(pctrl->dev, "Failed to register function %s\n",
-+				func->name);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int rzg2l_gpio_request(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
-+	u32 port = RZG2L_PIN_ID_TO_PORT(offset);
-+	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
-+	unsigned long flags;
-+	u8 reg8;
-+	int ret;
-+
-+	ret = pinctrl_gpio_request(chip->base + offset);
-+	if (ret)
-+		return ret;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	/* Select GPIO mode in PMC Register */
-+	reg8 = readb(pctrl->base + PMC(port));
-+	reg8 &= ~BIT(bit);
-+	writeb(reg8, pctrl->base + PMC(port));
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void rzg2l_gpio_set_direction(struct rzg2l_pinctrl *pctrl, u32 port,
-+				     u8 bit, bool output)
-+{
-+	unsigned long flags;
-+	u16 reg16;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	reg16 = readw(pctrl->base + PM(port));
-+	reg16 = reg16 & ~(PM_MASK << (bit * 2));
-+
-+	if (output)
-+		writew(reg16 | (PM_OUTPUT << (bit * 2)),
-+		       pctrl->base + PM(port));
-+	else
-+		writew(reg16 | (PM_INPUT << (bit * 2)),
-+		       pctrl->base + PM(port));
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+static int rzg2l_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
-+	u32 port = RZG2L_PIN_ID_TO_PORT(offset);
-+	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
-+
-+	if (!(readb(pctrl->base + PMC(port)) & BIT(bit))) {
-+		u16 reg16;
-+
-+		reg16 = readw(pctrl->base + PM(port));
-+		reg16 = (reg16 >> (bit * 2)) & PM_MASK;
-+		if (reg16 == PM_OUTPUT)
-+			return GPIOF_OUTPUT;
-+		else if (reg16 == PM_INPUT)
-+			return GPIOF_INPUT;
-+		else if (reg16 == PM_OUTPUT_INPUT)
-+			return GPIOF_BIDIRECTION;
-+		else
-+			return GPIOF_HI_Z;
-+	} else {
-+		return -EINVAL;
-+	}
-+}
-+
-+static int rzg2l_gpio_direction_input(struct gpio_chip *chip,
-+				      unsigned int offset)
-+{
-+	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
-+	u32 port = RZG2L_PIN_ID_TO_PORT(offset);
-+	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
-+
-+	rzg2l_gpio_set_direction(pctrl, port, bit, false);
-+
-+	return 0;
-+}
-+
-+static void rzg2l_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			   int value)
-+{
-+	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
-+	u32 port = RZG2L_PIN_ID_TO_PORT(offset);
-+	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
-+	unsigned long flags;
-+	u8 reg8;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	reg8 = readb(pctrl->base + P(port));
-+
-+	if (value)
-+		writeb(reg8 | BIT(bit), pctrl->base + P(port));
-+	else
-+		writeb(reg8 & ~BIT(bit), pctrl->base + P(port));
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+static int rzg2l_gpio_direction_output(struct gpio_chip *chip,
-+				       unsigned int offset, int value)
-+{
-+	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
-+	u32 port = RZG2L_PIN_ID_TO_PORT(offset);
-+	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
-+
-+	rzg2l_gpio_set_direction(pctrl, port, bit, true);
-+	rzg2l_gpio_set(chip, offset, value);
-+
-+	return 0;
-+}
-+
-+static int rzg2l_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
-+	u32 port = RZG2L_PIN_ID_TO_PORT(offset);
-+	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
-+	u16 reg16;
-+
-+	reg16 = readw(pctrl->base + PM(port));
-+	reg16 = (reg16 >> (bit * 2)) & PM_MASK;
-+
-+	if (reg16 == PM_INPUT || reg16 == PM_OUTPUT_INPUT)
-+		return !!(readb(pctrl->base + PIN(port)) & BIT(bit));
-+	else if (reg16 == PM_OUTPUT)
-+		return !!(readb(pctrl->base + P(port)) & BIT(bit));
-+	else
-+		return -EINVAL;
-+}
-+
-+static void rzg2l_gpio_free(struct gpio_chip *chip, unsigned int offset)
-+{
-+	pinctrl_gpio_free(chip->base + offset);
-+
-+	/*
-+	 * Set the GPIO as an input to ensure that the next GPIO request won't
-+	 * drive the GPIO pin as an output.
-+	 */
-+	rzg2l_gpio_direction_input(chip, offset);
-+}
-+
-+static const char * const rzg2l_gpio_names[] = {
-+	"P0_0", "P0_1", "P0_2", "P0_3", "P0_4", "P0_5", "P0_6", "P0_7",
-+	"P1_0", "P1_1", "P1_2", "P1_3", "P1_4", "P1_5", "P1_6", "P1_7",
-+	"P2_0", "P2_1", "P2_2", "P2_3", "P2_4", "P2_5", "P2_6", "P2_7",
-+	"P3_0", "P3_1", "P3_2", "P3_3", "P3_4", "P3_5", "P3_6", "P3_7",
-+	"P4_0", "P4_1", "P4_2", "P4_3", "P4_4", "P4_5", "P4_6", "P4_7",
-+	"P5_0", "P5_1", "P5_2", "P5_3", "P5_4", "P5_5", "P5_6", "P5_7",
-+	"P6_0", "P6_1", "P6_2", "P6_3", "P6_4", "P6_5", "P6_6", "P6_7",
-+	"P7_0", "P7_1", "P7_2", "P7_3", "P7_4", "P7_5", "P7_6", "P7_7",
-+	"P8_0", "P8_1", "P8_2", "P8_3", "P8_4", "P8_5", "P8_6", "P8_7",
-+	"P9_0", "P9_1", "P9_2", "P9_3", "P9_4", "P9_5", "P9_6", "P9_7",
-+	"P10_0", "P10_1", "P10_2", "P10_3", "P10_4", "P10_5", "P10_6", "P10_7",
-+	"P11_0", "P11_1", "P11_2", "P11_3", "P11_4", "P11_5", "P11_6", "P11_7",
-+	"P12_0", "P12_1", "P12_2", "P12_3", "P12_4", "P12_5", "P12_6", "P12_7",
-+	"P13_0", "P13_1", "P13_2", "P13_3", "P13_4", "P13_5", "P13_6", "P13_7",
-+	"P14_0", "P14_1", "P14_2", "P14_3", "P14_4", "P14_5", "P14_6", "P14_7",
-+	"P15_0", "P15_1", "P15_2", "P15_3", "P15_4", "P15_5", "P15_6", "P15_7",
-+	"P16_0", "P16_1", "P16_2", "P16_3", "P16_4", "P16_5", "P16_6", "P16_7",
-+	"P17_0", "P17_1", "P17_2", "P17_3", "P17_4", "P17_5", "P17_6", "P17_7",
-+	"P18_0", "P18_1", "P18_2", "P18_3", "P18_4", "P18_5", "P18_6", "P18_7",
-+	"P19_0", "P19_1", "P19_2", "P19_3", "P19_4", "P19_5", "P19_6", "P19_7",
-+	"P20_0", "P20_1", "P20_2", "P20_3", "P20_4", "P20_5", "P20_6", "P20_7",
-+	"P21_0", "P21_1", "P21_2", "P21_3", "P21_4", "P21_5", "P21_6", "P21_7",
-+	"P22_0", "P22_1", "P22_2", "P22_3", "P22_4", "P22_5", "P22_6", "P22_7",
-+	"P23_0", "P23_1", "P23_2", "P23_3", "P23_4", "P23_5", "P23_6", "P23_7",
-+	"P24_0", "P24_1", "P24_2", "P24_3", "P24_4", "P24_5", "P24_6", "P24_7",
-+	"P25_0", "P25_1", "P25_2", "P25_3", "P25_4", "P25_5", "P25_6", "P25_7",
-+	"P26_0", "P26_1", "P26_2", "P26_3", "P26_4", "P26_5", "P26_6", "P26_7",
-+	"P27_0", "P27_1", "P27_2", "P27_3", "P27_4", "P27_5", "P27_6", "P27_7",
-+	"P28_0", "P28_1", "P28_2", "P28_3", "P28_4", "P28_5", "P28_6", "P28_7",
-+	"P29_0", "P29_1", "P29_2", "P29_3", "P29_4", "P29_5", "P29_6", "P29_7",
-+	"P30_0", "P30_1", "P30_2", "P30_3", "P30_4", "P30_5", "P30_6", "P30_7",
-+	"P31_0", "P31_1", "P31_2", "P31_3", "P31_4", "P31_5", "P31_6", "P31_7",
-+	"P32_0", "P32_1", "P32_2", "P32_3", "P32_4", "P32_5", "P32_6", "P32_7",
-+	"P33_0", "P33_1", "P33_2", "P33_3", "P33_4", "P33_5", "P33_6", "P33_7",
-+	"P34_0", "P34_1", "P34_2", "P34_3", "P34_4", "P34_5", "P34_6", "P34_7",
-+	"P35_0", "P35_1", "P35_2", "P35_3", "P35_4", "P35_5", "P35_6", "P35_7",
-+	"P36_0", "P36_1", "P36_2", "P36_3", "P36_4", "P36_5", "P36_6", "P36_7",
-+	"P37_0", "P37_1", "P37_2", "P37_3", "P37_4", "P37_5", "P37_6", "P37_7",
-+	"P38_0", "P38_1", "P38_2", "P38_3", "P38_4", "P38_5", "P38_6", "P38_7",
-+	"P39_0", "P39_1", "P39_2", "P39_3", "P39_4", "P39_5", "P39_6", "P39_7",
-+	"P40_0", "P40_1", "P40_2", "P40_3", "P40_4", "P40_5", "P40_6", "P40_7",
-+	"P41_0", "P41_1", "P41_2", "P41_3", "P41_4", "P41_5", "P41_6", "P41_7",
-+	"P42_0", "P42_1", "P42_2", "P42_3", "P42_4", "P42_5", "P42_6", "P42_7",
-+	"P43_0", "P43_1", "P43_2", "P43_3", "P43_4", "P43_5", "P43_6", "P43_7",
-+	"P44_0", "P44_1", "P44_2", "P44_3", "P44_4", "P44_5", "P44_6", "P44_7",
-+	"P45_0", "P45_1", "P45_2", "P45_3", "P45_4", "P45_5", "P45_6", "P45_7",
-+	"P46_0", "P46_1", "P46_2", "P46_3", "P46_4", "P46_5", "P46_6", "P46_7",
-+	"P47_0", "P47_1", "P47_2", "P47_3", "P47_4", "P47_5", "P47_6", "P47_7",
-+	"P48_0", "P48_1", "P48_2", "P48_3", "P48_4", "P48_5", "P48_6", "P48_7",
-+};
-+
-+static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
-+{
-+	struct device_node *np = pctrl->dev->of_node;
-+	struct gpio_chip *chip = &pctrl->gpio_chip;
-+	const char *name = dev_name(pctrl->dev);
-+	struct of_phandle_args of_args;
-+	int ret;
-+
-+	ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &of_args);
-+	if (ret) {
-+		dev_err(pctrl->dev, "Unable to parse gpio-ranges\n");
-+		return ret;
-+	}
-+
-+	if (of_args.args[0] != 0 || of_args.args[1] != 0 ||
-+	    of_args.args[2] != ARRAY_SIZE(rzg2l_gpio_names)) {
-+		dev_err(pctrl->dev, "gpio-ranges does not match selected SOC\n");
-+		return -EINVAL;
-+	}
-+
-+	chip->names = rzg2l_gpio_names;
-+	chip->request = rzg2l_gpio_request;
-+	chip->free = rzg2l_gpio_free;
-+	chip->get_direction = rzg2l_gpio_get_direction;
-+	chip->direction_input = rzg2l_gpio_direction_input;
-+	chip->direction_output = rzg2l_gpio_direction_output;
-+	chip->get = rzg2l_gpio_get;
-+	chip->set = rzg2l_gpio_set;
-+	chip->label = name;
-+	chip->parent = pctrl->dev;
-+	chip->owner = THIS_MODULE;
-+	chip->base = -1;
-+	chip->ngpio = of_args.args[2];
-+
-+	pctrl->gpio_range.id = 0;
-+	pctrl->gpio_range.pin_base = 0;
-+	pctrl->gpio_range.base = 0;
-+	pctrl->gpio_range.npins = chip->ngpio;
-+	pctrl->gpio_range.name = chip->label;
-+	pctrl->gpio_range.gc = chip;
-+	ret = devm_gpiochip_add_data(pctrl->dev, chip, pctrl);
-+	if (ret) {
-+		dev_err(pctrl->dev, "failed to add GPIO controller\n");
-+		return ret;
-+	}
-+
-+	dev_dbg(pctrl->dev, "Registered gpio controller\n");
-+
-+	return 0;
-+}
-+
-+static int rzg2l_pinctrl_probe(struct platform_device *pdev)
-+{
-+	const struct rzg2l_pin_soc *psoc;
-+	struct rzg2l_pinctrl *pctrl;
-+	int ret;
-+
-+	psoc = of_device_get_match_data(&pdev->dev);
-+	if (!psoc)
-+		return -EINVAL;
-+
-+	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
-+	if (!pctrl)
-+		return -ENOMEM;
-+
-+	pctrl->psoc = psoc;
-+	pctrl->nports = psoc->nports;
-+	pctrl->dev = &pdev->dev;
-+
-+	pctrl->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(pctrl->base))
-+		return PTR_ERR(pctrl->base);
-+
-+	pctrl->clk = devm_clk_get(pctrl->dev, NULL);
-+	if (IS_ERR(pctrl->clk)) {
-+		ret = PTR_ERR(pctrl->clk);
-+		dev_err(pctrl->dev, "failed to get GPIO clk : %i\n", ret);
-+		return ret;
-+	};
-+
-+	spin_lock_init(&pctrl->lock);
-+
-+	pctrl->pctrl_desc.name = DRV_NAME;
-+	pctrl->pctrl_desc.pins = pctrl->psoc->pins;
-+	pctrl->pctrl_desc.npins = pctrl->psoc->npins;
-+	pctrl->pctrl_desc.pctlops = &rzg2l_pinctrl_pctlops;
-+	pctrl->pctrl_desc.pmxops = &rzg2l_pinctrl_pmxops;
-+	pctrl->pctrl_desc.owner = THIS_MODULE;
-+
-+	ret = devm_pinctrl_register_and_init(pctrl->dev, &pctrl->pctrl_desc,
-+					     pctrl, &pctrl->pctrl_dev);
-+	if (ret) {
-+		dev_err(pctrl->dev, "could not register: %i\n", ret);
-+		return ret;
-+	};
-+
-+	ret = rzg2l_pinctrl_add_groups(pctrl);
-+	if (ret)
-+		return ret;
-+
-+	ret = rzg2l_pinctrl_add_functions(pctrl);
-+	if (ret)
-+		return ret;
-+
-+	ret = pinctrl_enable(pctrl->pctrl_dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = rzg2l_gpio_register(pctrl);
-+	if (ret) {
-+		dev_err(pctrl->dev, "failed to add GPIO chip: %i\n", ret);
-+		return ret;
-+	};
-+
-+	ret = clk_prepare_enable(pctrl->clk);
-+	if (ret) {
-+		dev_err(pctrl->dev, "failed to enable GPIO clk: %i\n", ret);
-+		return ret;
-+	};
-+
-+	platform_set_drvdata(pdev, pctrl);
-+
-+	dev_info(pctrl->dev, "%s support registered\n", DRV_NAME);
-+	return 0;
-+}
-+
-+static const struct of_device_id rzg2l_pinctrl_of_table[] = {
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver rzg2l_pinctrl_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = of_match_ptr(rzg2l_pinctrl_of_table),
-+	},
-+	.probe = rzg2l_pinctrl_probe,
-+};
-+
-+static int __init rzg2l_pinctrl_init(void)
-+{
-+	return platform_driver_register(&rzg2l_pinctrl_driver);
-+}
-+subsys_initcall_sync(rzg2l_pinctrl_init);
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.h b/drivers/pinctrl/renesas/pinctrl-rzg2l.h
-new file mode 100644
-index 000000000000..39135e5bc04e
---- /dev/null
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.h
-@@ -0,0 +1,94 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Renesas RZ/G2L Pin Function Controller and GPIO support
++ * R9A07G044 processor support - pinctrl GPIO hardware block.
 + *
 + * Copyright (C) 2021 Renesas Electronics Corp.
 + */
 +
-+#ifndef __PINCTRL_RZG2L_H__
-+#define __PINCTRL_RZG2L_H__
++#include "pinctrl-rzg2l.h"
 +
-+#include <linux/gpio.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/clk.h>
-+#include <linux/reset.h>
-+#include <linux/phy.h>
++#define RZG2L_GPIO_PIN_CONF	(0)
 +
-+#include "../core.h"
-+#include "../pinconf.h"
-+#include "../pinmux.h"
-+
-+#define RZG2L_MAX_PINS_PER_PORT		8
-+
-+struct rzg2l_pin_soc {
-+	const struct pinctrl_pin_desc	*pins;
-+	const unsigned int		npins;
-+	const struct group_desc		*groups;
-+	const unsigned int		ngroups;
-+	const struct function_desc	*funcs;
-+	const unsigned int		nfuncs;
-+	const unsigned int		nports;
++static const struct {
++	struct pinctrl_pin_desc pin_gpio[392];
++} pinmux_pins = {
++	.pin_gpio = {
++		RZ_G2L_PINCTRL_PIN_GPIO(0, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(1, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(2, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(3, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(4, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(5, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(6, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(7, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(8, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(9, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(10, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(11, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(12, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(13, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(14, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(15, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(16, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(17, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(18, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(19, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(20, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(21, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(22, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(23, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(24, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(25, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(26, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(27, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(28, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(29, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(30, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(31, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(32, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(33, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(34, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(35, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(36, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(37, 0),
++		RZ_G2L_PINCTRL_PIN_GPIO(38, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(39, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(40, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(41, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(42, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(43, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(44, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(45, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(46, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(47, RZG2L_GPIO_PIN_CONF),
++		RZ_G2L_PINCTRL_PIN_GPIO(48, RZG2L_GPIO_PIN_CONF),
++	},
 +};
 +
-+#define RZ_G2L_PINCTRL_PIN_GPIO(port, configs)			\
-+	{							\
-+		(RZG2L_MAX_PINS_PER_PORT) * (port),		\
-+		__stringify(P##port##_0),			\
-+		(void *)(configs),				\
-+	},							\
-+	{							\
-+		(RZG2L_MAX_PINS_PER_PORT) * (port) + 1,		\
-+		__stringify(P##port##_1),			\
-+		(void *)(configs),				\
-+	},							\
-+	{							\
-+		(RZG2L_MAX_PINS_PER_PORT) * (port) + 2,		\
-+		__stringify(P##port##_2),			\
-+		(void *)(configs),				\
-+	},							\
-+	{							\
-+		(RZG2L_MAX_PINS_PER_PORT) * (port) + 3,		\
-+		__stringify(P##port##_3),			\
-+		(void *)(configs),				\
-+	},							\
-+	{							\
-+		(RZG2L_MAX_PINS_PER_PORT) * (port) + 4,		\
-+		__stringify(P##port##_4),			\
-+		(void *)(configs),				\
-+	},							\
-+	{							\
-+		(RZG2L_MAX_PINS_PER_PORT) * (port) + 5,		\
-+		__stringify(P##port##_5),			\
-+		(void *)(configs),				\
-+	},							\
-+	{							\
-+		(RZG2L_MAX_PINS_PER_PORT) * (port) + 6,		\
-+		__stringify(P##port##_6),			\
-+		(void *)(configs),				\
-+	},							\
-+	{							\
-+		(RZG2L_MAX_PINS_PER_PORT) * (port) + 7,		\
-+		__stringify(P##port##_7),			\
-+		(void *)(configs),				\
-+	}
++/* - RIIC2 ------------------------------------------------------------------ */
++static int i2c2_a_pins[] = {
++	/* SDA, SCL */
++	RZ_G2L_PIN(3, 0), RZ_G2L_PIN(3, 1),
++};
++static int i2c2_b_pins[] = {
++	/* SDA, SCL */
++	RZ_G2L_PIN(19, 0), RZ_G2L_PIN(19, 1),
++};
++static int i2c2_c_pins[] = {
++	/* SDA, SCL */
++	RZ_G2L_PIN(42, 3), RZ_G2L_PIN(42, 4),
++};
++static int i2c2_d_pins[] = {
++	/* SDA, SCL */
++	RZ_G2L_PIN(46, 0), RZ_G2L_PIN(46, 1),
++};
++static int i2c2_e_pins[] = {
++	/* SDA, SCL */
++	RZ_G2L_PIN(48, 0), RZ_G2L_PIN(48, 1),
++};
++/* - RIIC3 ------------------------------------------------------------------ */
++static int i2c3_a_pins[] = {
++	/* SDA, SCL */
++	RZ_G2L_PIN(8, 1), RZ_G2L_PIN(8, 0),
++};
++static int i2c3_b_pins[] = {
++	/* SDA, SCL */
++	RZ_G2L_PIN(18, 0), RZ_G2L_PIN(18, 1),
++};
++static int i2c3_c_pins[] = {
++	/* SDA, SCL */
++	RZ_G2L_PIN(46, 2), RZ_G2L_PIN(46, 3),
++};
++static int i2c3_d_pins[] = {
++	/* SDA, SCL */
++	RZ_G2L_PIN(48, 2), RZ_G2L_PIN(48, 3),
++};
 +
-+#define RZ_G2L_PIN(port, bit)		((port) * RZG2L_MAX_PINS_PER_PORT + (bit))
++/* - SCIF0 ------------------------------------------------------------------ */
++static int scif0_clk_pins[] = {
++	/* SCK */
++	RZ_G2L_PIN(39, 0),
++};
++static int scif0_ctrl_pins[] = {
++	/* CTS, RTS */
++	RZ_G2L_PIN(39, 1), RZ_G2L_PIN(39, 2),
++};
++static int scif0_data_pins[] = {
++	/* TX, RX */
++	RZ_G2L_PIN(38, 0), RZ_G2L_PIN(38, 1),
++};
++/* - SCIF1 ------------------------------------------------------------------ */
++static int scif1_clk_pins[] = {
++	/* SCK */
++	RZ_G2L_PIN(40, 2),
++};
++static int scif1_ctrl_pins[] = {
++	/* CTS, RTS */
++	RZ_G2L_PIN(41, 0), RZ_G2L_PIN(41, 1),
++};
++static int scif1_data_pins[] = {
++	/* TX, RX */
++	RZ_G2L_PIN(40, 0), RZ_G2L_PIN(40, 1),
++};
++/* - SCIF2 ------------------------------------------------------------------ */
++static int scif2_clk_a_pins[] = {
++	/* SCK */
++	RZ_G2L_PIN(5, 0),
++};
++static int scif2_clk_b_pins[] = {
++	/* SCK */
++	RZ_G2L_PIN(17, 0),
++};
++static int scif2_clk_c_pins[] = {
++	/* SCK */
++	RZ_G2L_PIN(37, 0),
++};
++static int scif2_clk_d_pins[] = {
++	/* SCK */
++	RZ_G2L_PIN(42, 2),
++};
++static int scif2_clk_e_pins[] = {
++	/* SCK */
++	RZ_G2L_PIN(48, 2),
++};
++static int scif2_ctrl_a_pins[] = {
++	/* CTS, RTS */
++	RZ_G2L_PIN(5, 1), RZ_G2L_PIN(5, 2),
++};
++static int scif2_ctrl_b_pins[] = {
++	/* CTS, RTS */
++	RZ_G2L_PIN(17, 1), RZ_G2L_PIN(17, 2),
++};
++static int scif2_ctrl_c_pins[] = {
++	/* CTS, RTS */
++	RZ_G2L_PIN(37, 1), RZ_G2L_PIN(37, 2),
++};
++static int scif2_ctrl_d_pins[] = {
++	/* CTS, RTS */
++	RZ_G2L_PIN(42, 3), RZ_G2L_PIN(42, 4),
++};
++static int scif2_ctrl_e_pins[] = {
++	/* CTS, RTS */
++	RZ_G2L_PIN(48, 3), RZ_G2L_PIN(48, 4),
++};
++static int scif2_data_a_pins[] = {
++	/* TX, RX */
++	RZ_G2L_PIN(4, 0), RZ_G2L_PIN(4, 1),
++};
++static int scif2_data_b_pins[] = {
++	/* TX, RX */
++	RZ_G2L_PIN(16, 0), RZ_G2L_PIN(16, 1),
++};
++static int scif2_data_c_pins[] = {
++	/* TX, RX */
++	RZ_G2L_PIN(33, 0), RZ_G2L_PIN(33, 1),
++};
++static int scif2_data_d_pins[] = {
++	/* TX, RX */
++	RZ_G2L_PIN(42, 0), RZ_G2L_PIN(42, 1),
++};
++static int scif2_data_e_pins[] = {
++	/* TX, RX */
++	RZ_G2L_PIN(48, 0), RZ_G2L_PIN(48, 1),
++};
++/* - SCIF3 ------------------------------------------------------------------ */
++static int scif3_clk_pins[] = {
++	/* SCK */
++	RZ_G2L_PIN(1, 0),
++};
++static int scif3_data_pins[] = {
++	/* TX, RX */
++	RZ_G2L_PIN(0, 0), RZ_G2L_PIN(0, 1),
++};
++/* - SCIF4 ------------------------------------------------------------------ */
++static int scif4_clk_pins[] = {
++	/* SCK */
++	RZ_G2L_PIN(3, 0),
++};
++static int scif4_data_pins[] = {
++	/* TX, RX */
++	RZ_G2L_PIN(2, 0), RZ_G2L_PIN(2, 1),
++};
 +
-+#define RZ_G2L_PINCTRL_PIN_GROUP(name, mode)			\
-+	{							\
-+		__stringify(name),				\
-+		name##_pins,					\
-+		ARRAY_SIZE(name##_pins),			\
-+		(void *)mode,					\
-+	}
++/* - USB0 ------------------------------------------------------------------- */
++static int usb0_a_pins[] = {
++	/* VBUS, OVC */
++	RZ_G2L_PIN(4, 0), RZ_G2L_PIN(5, 0),
++};
++static int usb0_a_otg_exicen_pins[] = {
++	/* OTG_EXICEN */
++	RZ_G2L_PIN(5, 2),
++};
++static int usb0_a_otg_id_pins[] = {
++	/* OTG_ID */
++	RZ_G2L_PIN(5, 1),
++};
++static int usb0_b_pins[] = {
++	/* VBUS, OVC */
++	RZ_G2L_PIN(6, 0), RZ_G2L_PIN(7, 0),
++};
++static int usb0_b_otg_exicen_pins[] = {
++	/* OTG_EXICEN */
++	RZ_G2L_PIN(7, 2),
++};
++static int usb0_b_otg_id_pins[] = {
++	/* OTG_ID */
++	RZ_G2L_PIN(7, 1),
++};
++/* - USB1 ------------------------------------------------------------------- */
++static int usb1_a_pins[] = {
++	/* VBUS, OVC */
++	RZ_G2L_PIN(8, 0), RZ_G2L_PIN(8, 1),
++};
++static int usb1_b_pins[] = {
++	/* VBUS, OVC */
++	RZ_G2L_PIN(29, 0), RZ_G2L_PIN(29, 1),
++};
++static int usb1_c_pins[] = {
++	/* VBUS, OVC */
++	RZ_G2L_PIN(38, 0), RZ_G2L_PIN(38, 1),
++};
++static int usb1_d_pins[] = {
++	/* VBUS, OVC */
++	RZ_G2L_PIN(42, 0), RZ_G2L_PIN(42, 1),
++};
 +
-+#define RZ_G2L_FN_DESC(id)	{ #id, id##_groups, ARRAY_SIZE(id##_groups) }
++static struct group_desc pinmux_groups[] = {
++	RZ_G2L_PINCTRL_PIN_GROUP(i2c2_a, 2),
++	RZ_G2L_PINCTRL_PIN_GROUP(i2c2_b, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(i2c2_c, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(i2c2_d, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(i2c2_e, 3),
++	RZ_G2L_PINCTRL_PIN_GROUP(i2c3_a, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(i2c3_b, 3),
++	RZ_G2L_PINCTRL_PIN_GROUP(i2c3_c, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(i2c3_d, 3),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif0_clk, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif0_ctrl, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif0_data, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif1_clk, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif1_ctrl, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif1_data, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_clk_a, 2),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_clk_b, 2),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_clk_c, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_clk_d, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_clk_e, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_ctrl_a, 2),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_ctrl_b, 2),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_ctrl_c, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_ctrl_d, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_ctrl_e, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_data_a, 2),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_data_b, 2),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_data_c, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_data_d, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif2_data_e, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif3_clk, 5),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif3_data, 5),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif4_clk, 5),
++	RZ_G2L_PINCTRL_PIN_GROUP(scif4_data, 5),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb0_a, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb0_a_otg_exicen, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb0_a_otg_id, 1),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb0_b, 3),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb0_b_otg_exicen, 3),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb0_b_otg_id, 3),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb1_a, 2),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb1_b, 4),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb1_c, 5),
++	RZ_G2L_PINCTRL_PIN_GROUP(usb1_d, 1),
++};
 +
++static const char *i2c2_groups[] = {
++	"i2c2_a", "i2c2_b", "i2c2_c", "i2c2_d", "i2c2_e",
++};
++
++static const char *i2c3_groups[] = {
++	"i2c3_a", "i2c3_b", "i2c3_c", "i2c3_d",
++};
++
++static const char *scif0_groups[] = {
++	"scif0_clk", "scif0_ctrl", "scif0_data",
++};
++
++static const char *scif1_groups[] = {
++	"scif1_clk", "scif1_ctrl", "scif1_data",
++};
++
++static const char *scif2_groups[] = {
++	"scif2_clk_a", "scif2_clk_b", "scif2_clk_c", "scif2_clk_d", "scif2_clk_e",
++	"scif2_ctrl_a", "scif2_ctrl_b", "scif2_ctrl_c", "scif2_ctrl_d", "scif2_ctrl_e",
++	"scif2_data_a", "scif2_data_b", "scif2_data_c", "scif2_data_d", "scif2_data_e",
++};
++
++static const char *scif3_groups[] = {
++	"scif3_clk", "scif3_data",
++};
++
++static const char *scif4_groups[] = {
++	"scif4_clk", "scif4_data",
++};
++
++static const char *usb0_groups[] = {
++	"usb0_a", "usb0_a_otg_exicen", "usb0_a_otg_id",
++	"usb0_b", "usb0_b_otg_exicen", "usb0_b_otg_id",
++};
++
++static const char *usb1_groups[] = {
++	"usb1_a", "usb1_b", "usb1_c", "usb1_d",
++};
++
++static const struct function_desc pinmux_functions[] = {
++	RZ_G2L_FN_DESC(i2c2),
++	RZ_G2L_FN_DESC(i2c3),
++	RZ_G2L_FN_DESC(scif0),
++	RZ_G2L_FN_DESC(scif1),
++	RZ_G2L_FN_DESC(scif2),
++	RZ_G2L_FN_DESC(scif3),
++	RZ_G2L_FN_DESC(scif4),
++	RZ_G2L_FN_DESC(usb0),
++	RZ_G2L_FN_DESC(usb1),
++};
++
++const struct rzg2l_pin_soc r9a07g044_pinctrl_data = {
++	.pins = pinmux_pins.pin_gpio,
++	.npins = ARRAY_SIZE(pinmux_pins.pin_gpio),
++	.groups = pinmux_groups,
++	.ngroups = ARRAY_SIZE(pinmux_groups),
++	.funcs = pinmux_functions,
++	.nfuncs = ARRAY_SIZE(pinmux_functions),
++	.nports = ARRAY_SIZE(pinmux_pins.pin_gpio) / RZG2L_MAX_PINS_PER_PORT,
++};
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index b9730b53fd85..a1d67409c649 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -512,6 +512,12 @@ static int rzg2l_pinctrl_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id rzg2l_pinctrl_of_table[] = {
++#ifdef CONFIG_PINCTRL_PFC_R9A07G044
++	{
++		.compatible = "renesas,r9a07g044-pinctrl",
++		.data = &r9a07g044_pinctrl_data,
++	},
 +#endif
+ 	{ /* sentinel */ }
+ };
+ 
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.h b/drivers/pinctrl/renesas/pinctrl-rzg2l.h
+index 39135e5bc04e..c6f178c8d916 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.h
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.h
+@@ -91,4 +91,6 @@ struct rzg2l_pin_soc {
+ 
+ #define RZ_G2L_FN_DESC(id)	{ #id, id##_groups, ARRAY_SIZE(id##_groups) }
+ 
++extern const struct rzg2l_pin_soc r9a07g044_pinctrl_data;
++
+ #endif
 -- 
 2.17.1
 
