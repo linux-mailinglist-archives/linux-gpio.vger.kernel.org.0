@@ -2,186 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BE933A9E81
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 17:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C83893A9ED7
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 17:21:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234407AbhFPPHB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Jun 2021 11:07:01 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:52333 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233928AbhFPPG7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Jun 2021 11:06:59 -0400
-Received: from [192.168.1.155] ([95.115.35.150]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MRCFw-1lhUQP0Do4-00N8qA; Wed, 16 Jun 2021 17:04:33 +0200
-Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>
-References: <20210616114934.n3grzuh6c64wlaj6@vireshk-i7>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <5cffb354-0d00-5ace-260d-61ac0c4c7491@metux.net>
-Date:   Wed, 16 Jun 2021 17:04:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S234118AbhFPPXF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Jun 2021 11:23:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234002AbhFPPXF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 16 Jun 2021 11:23:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C64161375;
+        Wed, 16 Jun 2021 15:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623856859;
+        bh=27eUZzjv41JFT/kKzRpcOFEIMGKaONkaM9MTgUB4lvc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=buypIobsBvwFCoYyKG42xHmi6qlL+WknZA0yV9zcssR1qukECIItvMs5lYF24rq39
+         7G2rK+9x62EOIbBxA0GYsKblM2k/E/zY2ttt9SmAeF7mvexO/3Tz9FULTJZ4xZ8hQp
+         qo21npzZcH3m2VJR+PEzbRav27lgret3OHmHLrMa+yzTf6uyIS2u06r0IfJ8J87NEX
+         OqsnNy+LYpdR4X0lEw0DFSgZR3N9ejKQ6K068cLLxzaz7UHmmGuIxDDU53pfou+Y7I
+         7PxjBInaO0mwtN8Ezuk56bJ2wt0T5Z4h3v7InClBkLr24pCiSYHUhSE/RiPZV2v6m+
+         JY0BVpsRsnbVg==
+Received: by mail-ej1-f46.google.com with SMTP id gt18so4491497ejc.11;
+        Wed, 16 Jun 2021 08:20:59 -0700 (PDT)
+X-Gm-Message-State: AOAM5319eO8cG75H/8uYamndOULFyyErZais8PlVoSTjOLana1TnjBwa
+        rjaRFRhYxc2qqxkxtffs1dJdMJmbZy5+VesZ+Q==
+X-Google-Smtp-Source: ABdhPJwVu+BsUV7DzrQnvv679MoG3zGD601vblw0HBeBpWUI8BezJDE8UWYZlHYd9yj6WnDUi1/TfNk1GXKkgoaWTXw=
+X-Received: by 2002:a17:907:2059:: with SMTP id pg25mr76098ejb.130.1623856857816;
+ Wed, 16 Jun 2021 08:20:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210616114934.n3grzuh6c64wlaj6@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:TxZhqDkofwIuzNYeg+qu2UL02JUe3fVzRzNE+2oUee67DdHJvQj
- q68S++GyWXVYp+8YHOUzcK4e67z2YLSPoX1VGgXSjWI7wHjS7X84d832LyWhsYq3VkTR/jp
- 3pXJGRF7jXozXa2lUgk2lettiOeyxpf4g1ByE/sVy/yFtpOgrlPRb1DjgVOXpJyQAKqJE7X
- B1fZ5Vk5eKnhCra7mY27A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KynWfsTDx+Y=:tdRvN0rPwvPA1iIfjnn957
- fBCcpBlKMO/VHCgP+l4KYYTomIAtZx0fnUehwFlSijk7EC88TgVxfJZyGmuL0PAMXD2VitROp
- YnMaHdBiyiMO3K6pJmJZtaBqGoV+e4Cobu75qDqcL4aZXsRJZHp8cdZlyuJBZu0ZDsMF4Hgzb
- 030bZpqQFnSC4HSAuITLo454K0TwH5hUODZ4jgcpS+NpAAieWTdmdxrJcREZJUlHQ11LkXZm/
- ilJtB8gShOziz+Vdjb9/aWqlWbpl6wkdFkgydp8xAcTCf+aHuh/L8U5RbvSp0mrajzYCFlDjh
- NcZPuB2CMeI6nFo6K1uumTOUMhuO+zzNqS9jX4RBb4GpWH7dZyvvH8bMxdpAViVkEEgBSjbfo
- UeRFFekpBPjpNt9+w6CvxBeHPNvG2GWm38pQtsmi3kb+8qtqlX1wqkVbLP1FTwNgUJ6fpLIOm
- BsV4sy+ScU5DyUJocDfD7elOFF9PnjwP9QXOG+X+aU/g6QzqTDQb37qOWkTxlBiErrRaE3ht5
- cT+hnnMvdKgkKCL3SNaN20=
+References: <20210608102547.4880-1-steven_lee@aspeedtech.com>
+ <20210608102547.4880-3-steven_lee@aspeedtech.com> <20210610162320.GA1910317@robh.at.kernel.org>
+ <f639f1bb-fe53-4c15-a6dd-91b45ea7eef1@www.fastmail.com>
+In-Reply-To: <f639f1bb-fe53-4c15-a6dd-91b45ea7eef1@www.fastmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 16 Jun 2021 09:20:44 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ_nwwyCBDg9p+AnriKw=9dC0WmLCw7dcz6qA87hRAu5g@mail.gmail.com>
+Message-ID: <CAL_JsqJ_nwwyCBDg9p+AnriKw=9dC0WmLCw7dcz6qA87hRAu5g@mail.gmail.com>
+Subject: Re: [PATCH v5 02/10] dt-bindings: aspeed-sgpio: Add ast2600 sgpio compatibles.
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Steven Lee <steven_lee@aspeedtech.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joel Stanley <joel@jms.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-aspeed@lists.ozlabs.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Hongwei Zhang <Hongweiz@ami.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Billy Tsai <billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16.06.21 13:49, Viresh Kumar wrote:
+On Thu, Jun 10, 2021 at 5:27 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Fri, 11 Jun 2021, at 01:53, Rob Herring wrote:
+> > On Tue, Jun 08, 2021 at 06:25:37PM +0800, Steven Lee wrote:
+> > > AST2600 SoC has 2 SGPIO master interfaces one with 128 pins another o=
+ne
+> > > with 80 pins. Add ast2600-sgpiom0-80 and ast2600-sgpiom-128 compatibl=
+es
+> > > and update descriptions to introduce the max number of available gpio
+> > > pins that AST2600 supported.
+> > >
+> > > Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
+> > > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> > > ---
+> > >  Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml | 9 ++++++-=
+--
+> > >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml=
+ b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
+> > > index b2ae211411ff..0e42eded3c1e 100644
+> > > --- a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
+> > > +++ b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
+> > > @@ -10,9 +10,10 @@ maintainers:
+> > >    - Andrew Jeffery <andrew@aj.id.au>
+> > >
+> > >  description:
+> > > -  This SGPIO controller is for ASPEED AST2500 SoC, it supports up to=
+ 80 full
+> > > -  featured Serial GPIOs. Each of the Serial GPIO pins can be program=
+med to
+> > > -  support the following options
+> > > +  This SGPIO controller is for ASPEED AST2400, AST2500 and AST2600 S=
+oC,
+> > > +  AST2600 have two sgpio master one with 128 pins another one with 8=
+0 pins,
+> > > +  AST2500/AST2400 have one sgpio master with 80 pins. Each of the Se=
+rial
+> > > +  GPIO pins can be programmed to support the following options
+> > >    - Support interrupt option for each input port and various interru=
+pt
+> > >      sensitivity option (level-high, level-low, edge-high, edge-low)
+> > >    - Support reset tolerance option for each output port
+> > > @@ -25,6 +26,8 @@ properties:
+> > >      enum:
+> > >        - aspeed,ast2400-sgpio
+> > >        - aspeed,ast2500-sgpio
+> > > +      - aspeed,ast2600-sgpiom-80
+> > > +      - aspeed,ast2600-sgpiom-128
+> >
+> > If the number of GPIOs is the only difference, then I don't think you
+> > should get rid of ngpios. It's one thing if it varies from one SoC to
+> > the next, but if something is per instance we should have a property.
+> >
+>
+> There are two issues:
+>
+> 1. The maximum number of GPIOs supported by the controller
+> 2. The maximum number of GPIOs supported by the platform
+>
+> These are different because of what the controller does - here's some pre=
+vious discussion on the topic:
+>
+> https://lore.kernel.org/linux-gpio/f2875111-9ba9-43b7-b2a4-d00c8725f5a0@w=
+ww.fastmail.com/
+>
+> We've used ngpios to describe 2; this decision was made prior to the 2600=
+ design - the SGPIO controller for both the 2400 and 2500 supported a maxim=
+um of 80 GPIOs. With the 2600 we have to differentiate between the two SGPI=
+O controllers because they support a different maximum number of GPIOs. The=
+ proposed approach of different compatibles keeps the behaviour of ngpios t=
+he same across all controller implementations.
 
-> I am not looking to get any credits for the code or spec here. I don't
-> really care about that. For the very same reason I kept you as the
-> author of the 1st patch in the kernel series, so git keeps showing you
-> as the original author.
+Okay, that makes sense.
 
-Fine, and I'm not intenting to fight over credits. I'm just interested
-in having a solid solution.
-
-> All I wanted to work on was the backend (in rust). 
-
-Okay, but why did you change the whole thing into something completely
-different ?
-
-> You only ever sent 1 real versions of the Linux driver, that too
-> "6-months-back", there were no real blockers anywhere and you never
-> attempted to upstream anything.
-
-The backlog was in the maillist archive. It was just lingering because
-of yet missing formal registering w/ vitio TC and I've been to busy with
-more pressing tasks. (for example I've got keep public infrastructure
-stuff up and running while folks are in lockdown).
-
-> Similarly, you "never" sent the specification properly to the virtio
-> lists for review. You sent it once as an attachment to an email, which
-> no one ever received.
-
-Half correct: I sent it to the list, but this wasn't tex'ified yet.
-
-> When I tried to move this forward, invested a lot of time into making
-> it better from specification to code, reviews started happening, you
-> decided to start blocking it again.
-
-When we had an email conversation about this, it was about submitting
-the existing spec in a formal correct way. Don't get me wrong: I
-apreciate that somebody's doing the beaurocratic work. But still have
-no idea why you changed it completely, so there's quite nothing left
-but the name and that it somehow does gpio via virtio.
-
-> Linux upstream doesn't really care about this, you can ask any Linux
-> Maintainer about this. 
-
-I happen to be a maintainer myself, and we do actually care about
-whether some thing is well tested.
-
-> If your code and specification isn't doing the
-> right thing, and isn't good enough, you will be asked to update it
-> upon reviews.
-
-Okay, please tell me, where exactly isn't right and why so.
-
-> YOU JUST CAN'T SAY I WON'T because I have products based on this
-> version.
-
-Most of driver development goes pretty much like this. Yes, we would
-prefer HW and FW vendors to talk with us first, but that rarely happens.
-
->>>      * virtio spec has been submitted to virtio TC
-> 
-> Which specification are you talking about here ? The only
-> specification I can see on virtio lists is the one I sent.
-
-The one I've resent (now texified) a few days ago. It had been submitted
-in ascii form last year. The answer from virtio TC folks whas that there
-are some formal steps to be done and it needs to be patched int their
-tex document.
-
-> And the driver you tried to send isn't aligned to that for sure, and
-> it takes us back from all the improvements I tried to do.
-
-Which improvements, exactly ? Unfortunately, you never talked to me
-what exactly you've been missing.
-
-I really have no idea, why you just
-
-> I am not saying that my version of the specification is the best and
-> there is no flaw in it. 
-
-I did outline several problems of your spec on virtio list. Things that
-already had already incorporated in my original one.
-
-Really, I have no idea why you've never talked to me on specific issues,
-but instead threw away, made something completely different and even
-claim it would be just kinda "minor upgrade" of mine. WTF ?!
-
-> There is no point going backwards now after making so much of
-> progress. Even if you try to send your version, it will slowly and
-> slowly reach very close to my latest version of code and spec. 
-
-Or the other way round, as soon as silicon guys come in and see how
-complicated and expensive your approach becomes.
-
-> Because your version of the code and spec weren't good enough for everyone.
-
-Again, please tell me what exactly was not "good enought" and who
-exactly is "everyone".
-
-> You need to accept that changes to that are inevitable since there 
-
-You sound like a politician that tries to push an hidden agenda,
-made by some secret interest group in the back room, against the
-people - like "resistance is futile".
-
-
-Finally, please tell me what exactly you're missing so hard in my spec,
-that really needs a completely different implementation, which is hard
-and expensive to implement in hardware.
-
-
-
---mtx
-
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Reviewed-by: Rob Herring <robh@kernel.org>
