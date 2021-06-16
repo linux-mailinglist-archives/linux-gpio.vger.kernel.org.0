@@ -2,158 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8002E3A9DD2
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 16:41:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E090F3A9DDC
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jun 2021 16:41:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234091AbhFPOnM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Jun 2021 10:43:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28107 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234086AbhFPOnM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 16 Jun 2021 10:43:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623854465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/KmdDtuxC4DPMkm/dYQuBivCzYIDXejkNuC0LvGZbxU=;
-        b=Y0Vze6X8OtKKMG073i+KGKiox/M7Qi96XHWivqXno2AIcJDGiDgAHxsdOxZAE2aKFrUHrp
-        oDBxMqmChNukuiSpmd/etboKrAZsvdEORsR1wQjpejQKWIvu+CsjravTYPAgNYi2hbtVQ3
-        mBT6+iIP+Cm3pEf4abfND/nmTuv8koo=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-156-HDRKKwWwPJOdZL1ui-xrGg-1; Wed, 16 Jun 2021 10:41:04 -0400
-X-MC-Unique: HDRKKwWwPJOdZL1ui-xrGg-1
-Received: by mail-ed1-f72.google.com with SMTP id y7-20020aa7ce870000b029038fd7cdcf3bso1155094edv.15
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 07:41:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/KmdDtuxC4DPMkm/dYQuBivCzYIDXejkNuC0LvGZbxU=;
-        b=YQISAZ1Fe5JRllgP4swvrlrv0mh3xwaFMCd8gYFG5fH2HWoajeG6tCvYSFPOgTHbpI
-         QxoYCjXEmWfDGYKJuNWSuVu8MmlrtsArYJysD6fAnCm8pyGm9Q4sE8yuAvifjw4dayS3
-         +TCjVMOMWjkQMCyhe5wxXcovnfDfz34nR9TYim4uzhISDQyGLHNoP+trgn20TLot9O4A
-         cURpAC1qjOsGr/J4l6PvY5VwiOtayOV6PzyVE6ZbjEpBSZGaspLu3ZDsTMhPR27ZJjHt
-         YKiVpiEazr8oAKAfmrt1ji2rWvqnNMgWdDuHBIW5ovAdvVym+sZwurHbRiKsvT8TrWGB
-         yfBQ==
-X-Gm-Message-State: AOAM531N4/wLHJVt1degafWEkTsuOgosT9PJ+cTOg5SnSkQwCaXza340
-        3cCPYOi8g8Dqfmm/tHmYvLU4vlh1tmbRlm77MyaUQCB9YYDBZmcxHspcLdElPfDjULScKBUm3tK
-        wFm++MGDiFpt9SBthZJghjw==
-X-Received: by 2002:a05:6402:520b:: with SMTP id s11mr4598060edd.111.1623854463235;
-        Wed, 16 Jun 2021 07:41:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyczHmLu6t+yCUzUAbMlYbY+WyHHr7hOEQVqmOEk9e7Vkgp3nCAYDNB5ni47dvk6qm1OkL03A==
-X-Received: by 2002:a05:6402:520b:: with SMTP id s11mr4598044edd.111.1623854463136;
-        Wed, 16 Jun 2021 07:41:03 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id j22sm1817090ejt.11.2021.06.16.07.41.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Jun 2021 07:41:02 -0700 (PDT)
-Subject: Re: [GIT PULL] intel-gpio for 5.14-1
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux GPIO <linux-gpio@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S234119AbhFPOn5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Jun 2021 10:43:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:39925 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233914AbhFPOn5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Jun 2021 10:43:57 -0400
+Received: from [192.168.1.155] ([95.115.35.150]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MSLEm-1licf82p6u-00SerU; Wed, 16 Jun 2021 16:41:26 +0200
+Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <YL43SrZ8N8H+ZHE9@black.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <66fee594-8e13-5200-f8d9-c71caeb863a7@redhat.com>
-Date:   Wed, 16 Jun 2021 16:41:01 +0200
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-riscv <linux-riscv@lists.infradead.org>
+References: <20210615174911.973-1-info@metux.net>
+ <CACRpkdbwLOOT6nuhpkT5x-AZVipsD2qG8Qu4xoiRotHQNknwzw@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <098f669f-b451-18e1-9aed-a71f400bd581@metux.net>
+Date:   Wed, 16 Jun 2021 16:41:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-In-Reply-To: <YL43SrZ8N8H+ZHE9@black.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CACRpkdbwLOOT6nuhpkT5x-AZVipsD2qG8Qu4xoiRotHQNknwzw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:CR6mpicfGsY9r/evUqTXH8C70befzHJD17gK1boMJb2mNiw2I3w
+ u9bascsokR1YLBsRaAjFl9nCA0nXMUduSAIVdTJsuBt//Y1hu5AbrPkpQ5Bewzb1Peh7x0m
+ OJsttVts/KwE3xipe3/w+Di4ulseb46HgCXAWsbZwtIW1CWD52UQu24Sh7tjYr+AujL6fle
+ DtR3xtegpA75e0CGxI5aw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fMVu1T4nu7g=:4lDZNogMmvE1wFbQcnZQ0B
+ hBMiXVmcPPsYTquq0lJBIq7dqufr+FVBlwhCMtjMCtupVmGeVKmzhQLeZtIn0EqCtwP17PQC1
+ bI4PhWcGXUahcXYS6EV82U3W2kaSYt7WSXN334mB665gcj2/yg90+n9mZ+hGyJiwnS+1XcWQ/
+ U6OflJL9RiKDC/q+61jIjkRcm+8bbuwuCA4idwY9O67k50FabdiGYUKE1RmY05OjaAxgnk0AO
+ jZBLFx00sKx0u7GOr3YKFhpHV84KJIdnhRy9FXO4LOE5OIgUnJDHC+FG2it+fuzaV5ud9zpzM
+ Iztr85Sus6eg7hgkhxUxp+6GOYiOKJSNC1csHjDXN+RIw93lfgeqglRhXvzIDq7qAlKFORGbc
+ SgnoSFASpckcaCipHWdnINRFf+zjpPLo55xzD0+rMIVAbabemAUPj8ZuOEqiYgaqgM/WGa2Hy
+ /xsV6746LXXSuzAPiwPRjHVo4p2NJAqyjnjVbgO/gaw7BsyePIXVOSmAkD1jA7tBvxgXAny0C
+ 6dcDS5dKyeTDANgMo4EGqI=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On 16.06.21 10:31, Linus Walleij wrote:
+ > Hi Enrico,
 
-On 6/7/21 5:12 PM, Andy Shevchenko wrote:
-> Hi Linux GPIO and TWIMC maintainers,
-> 
-> This is GPIO material for v5.14 cycle. It contains some stuff that other
-> subsystems may take due to dependencies. Consider this tag immutable.
-> 
-> Thanks,
-> 
-> With Best Regards,
-> Andy Shevchenko
+ > So now there are two contesting patches for this and that creates a
+ > social problem for us as maintainers. I am not too happy about that.
 
-Thank you, I've merged this into the review-hans branch of
-platform-drivers-x86 now, because this is a dependency for:
-https://patchwork.kernel.org/project/platform-driver-x86/patch/20210603224007.120560-6-djrscally@gmail.com/
+note that this is a polished up of a repost of my original driver
+from last year.
 
-After I've run some tests I will push the review-hans branch
-to the for-next branch.
+ > Can we get the discussion down to actual technical points?
 
-Regards,
+Sure. Perhaps you recall or discussions from late 2020. The missing
+point there was (besides a few wording issues) the missing formal
+specification process w/ virtio TC. (spec was already included in this
+driver as well as the corresponding qemu patches).
 
-Hans
+My spec was not just meant for VM applications but also actual silicon
+(as already mentioned, some folks of my client also implemented it in
+FPGAs - don't ask me about details, they just mentioned it was quite
+easy for them).
+
+This is why it is so trimmed on things like fixed packet size,
+unidirectional queues, mirroring packets w/ thus a few bits changed,
+etc. In constrast, a more network-like approach might have been looking
+nicer to traditional computer programmers, but much more complex to do
+in pure logic and eat up *lots of* more gates (think of actual memory
+management instead of hardwired latches, more complex decoding, etc).
+
+Meanwhile it played out working nicely in several HIL installations
+
+If I wanted to have a simple and CPU-only approach (just for VMs), I
+would have just mounted some sysfs pieces via 9P :p
+
+Several weeks ago, Viresh just wanted to continue the missing pieces
+(which was: tex'ifying the spec and submitting to virtio TC), but then
+unfortunately he invented something entirely different also put my name
+on it.
+
+Easy to imagine that I'm not amused at all.
 
 
+--mtx
 
-
-
-> 
-> The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
-> 
->   Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.14-1
-> 
-> for you to fetch changes up to 043d7f09bf614809c10c4acbf0695ef731958300:
-> 
->   gpiolib: acpi: Add acpi_gpio_get_io_resource() (2021-06-04 16:24:19 +0300)
-> 
-> ----------------------------------------------------------------
-> intel-gpio for v5.14-1
-> 
-> * Export two functions from GPIO ACPI for wider use
-> * Clean up Whiskey Cove and Crystal Cove GPIO drivers
-> 
-> The following is an automated git shortlog grouped by driver:
-> 
-> crystalcove:
->  -  remove platform_set_drvdata() + cleanup probe
-> 
-> gpiolib:
->  -  acpi: Add acpi_gpio_get_io_resource()
->  -  acpi: Introduce acpi_get_and_request_gpiod() helper
-> 
-> wcove:
->  -  Split error handling for CTRL and IRQ registers
->  -  Unify style of to_reg() with to_ireg()
->  -  Use IRQ hardware number getter instead of direct access
-> 
-> ----------------------------------------------------------------
-> Alexandru Ardelean (1):
->       gpio: crystalcove: remove platform_set_drvdata() + cleanup probe
-> 
-> Andy Shevchenko (3):
->       gpio: wcove: Use IRQ hardware number getter instead of direct access
->       gpio: wcove: Unify style of to_reg() with to_ireg()
->       gpio: wcove: Split error handling for CTRL and IRQ registers
-> 
-> Daniel Scally (2):
->       gpiolib: acpi: Introduce acpi_get_and_request_gpiod() helper
->       gpiolib: acpi: Add acpi_gpio_get_io_resource()
-> 
->  drivers/gpio/gpio-crystalcove.c | 10 +-------
->  drivers/gpio/gpio-wcove.c       | 39 +++++++++++++++----------------
->  drivers/gpio/gpiolib-acpi.c     | 51 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/acpi.h            |  7 ++++++
->  include/linux/gpio/consumer.h   |  2 ++
->  5 files changed, 80 insertions(+), 29 deletions(-)
-> 
-
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
