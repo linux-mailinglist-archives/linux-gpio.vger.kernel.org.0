@@ -2,87 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2B213AB517
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 15:44:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 526373AB614
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 16:36:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231346AbhFQNqw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Jun 2021 09:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54234 "EHLO
+        id S232909AbhFQOif (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Jun 2021 10:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230162AbhFQNqv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 09:46:51 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CBB4C061574
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 06:44:43 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id y7so6830838wrh.7
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 06:44:43 -0700 (PDT)
+        with ESMTP id S230028AbhFQOif (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 10:38:35 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7207C061574
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 07:36:27 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id t3so4329542edc.7
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 07:36:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=TbHA93SGD1ZOJGmaoBvLrZYlY4sDOvfXZItvN28cu2w=;
-        b=ookTfhdNJOYbeUlBCRwPjuQgO5IZ8SdSZhdxoV14U3cs+YBX+4+kN663OoU4LppY13
-         BiJwu3b2+JXIH3Fx8w3SGBKYC9LvoR0+ydf2455vRVNzsVFCY6skfRgpgU+QaRFlHlVl
-         JSKL6P9w545KVZw8MW3/PX2RnchGfHQaQHv9tIz7tHfkavBdcssSd5oAbCLHyEtnzBR8
-         atJrKL9ybsjfq7MNFIuY/RzHVOg+TFxTUvnbjU69e6PKh36oqvT1Oqrid86p5xk21yXl
-         6dk+VMg9dMJZYD5Wz61mXGYW61tBbTxr8xSlMGsmm8p59UjUxpu9KoKG3xcgF8fBvFD0
-         fTlA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x3Omp+uAzmiY19Ehy5DELKA4o//eS6NE3U4qZdYmIBo=;
+        b=hODCj/T3P1W8V/HsxTIdk71dPSQ65X21QybM9xkmjD9c4r2mq6aGCYRMOMSqE4U3PX
+         4OmA/+a5edYgr/v0FAZewF3bkdqzAU4u7M68rARHY+cdLAxM0Z4AIKU+ekiKnJARvQ7i
+         LXkoUcLX7FV7WQ3wxWYy581pw8QIUGoRyUn45pntJYv2Qkr6+tqrXwLgM/G3mt/6gvYz
+         qt5j1WOdYo5U9A7ymGFto9fPNyvJtZk9JYU56miO4PkVkG3/UF9a+C4mmehmv26vdBP4
+         U5aeKvtYI/ggniaoy80fGhIXRgNQEU8r/q38oh1fx4i24hkxZOHGv86TVDULQYeNF/9S
+         g0uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TbHA93SGD1ZOJGmaoBvLrZYlY4sDOvfXZItvN28cu2w=;
-        b=PrVzQVTzyE/JHhTxINSukXadOvLF/Q5mmUzpyuZs5v6nBQl+A8qE1ZtKp61xxmWFwe
-         AOwRaOzNBroxYe6QIoE3Lqj0ePBFd8vS1ieu6Fg+/MCebvj36eTbNRduL3Kpu+hABYAH
-         kB2PkIJ9ObWBsoJ62ecFdO+PEYMu0e2pr8tjWwpqWs1Ll/ku4osh8pjHmBBtr7LYpziF
-         S4wz2cWEuYKdVdxBJ0W7d3qQqs6m1dxQCz5AYxDMGkEZ4xD1trHO/9W55/jGbA+O8xTv
-         u3tMFPa0IKlf7NgACeS+PAc+XGXIfhiNAYUBpoqUALB+zk7/ObVMOjNOGubbjM+Qf5oO
-         j4nA==
-X-Gm-Message-State: AOAM533nQ7t4TFxRYN0aBhtejQa/NIh1hjusrip/IKYpreBor0G4Sw3X
-        mFtpUCw+uPmI9BbldQ10POL7LQ==
-X-Google-Smtp-Source: ABdhPJw6P3Niokngpgm1WPnAjuRcvXouTX/ZbiJUvy5eXLkAm7b/sRP77R9EbWDiZImgfKIqhkLleA==
-X-Received: by 2002:adf:e3c7:: with SMTP id k7mr549353wrm.31.1623937481550;
-        Thu, 17 Jun 2021 06:44:41 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:82c:5f0:85ed:406e:1bc4:a268])
-        by smtp.gmail.com with ESMTPSA id j12sm5553948wrt.69.2021.06.17.06.44.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Jun 2021 06:44:40 -0700 (PDT)
-From:   Loic Poulain <loic.poulain@linaro.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, michal.koziel@emlogic.no,
-        Loic Poulain <loic.poulain@linaro.org>
-Subject: [PATCH] gpio: mxc: Fix disabled interrupt wake-up support
-Date:   Thu, 17 Jun 2021 15:54:13 +0200
-Message-Id: <1623938053-790-1-git-send-email-loic.poulain@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x3Omp+uAzmiY19Ehy5DELKA4o//eS6NE3U4qZdYmIBo=;
+        b=MhG9HHMs0tHLiJ91xyWE06yz5UfPe5/fCTHpV6iRFIsJiBu2KP/3Cr7n4AsZAyJdnf
+         xHoYLPWaC7RDiD1Qng1j6dC82arm6a3CyZV0QPWEb1imVDPdfP3M0vFXNPFAu/hboWzT
+         s6CoMtSa5gKlL0hr+7sYAC9BQgxZ5v9KB0TWnliXFpHMywh7J3SEZMXZ04mjzpjtWrhd
+         7Knjsw5cXm9Ukcr2I/UyQ++GjLMGWxIzWnOP1CzTbiI0NMcBCakqxfP8ymarVuAyusRR
+         2juCX9wVeTUzLBG+RS+Qm/h7VKo5AqSenI54D+PBDVJ1oWSdGehWWhz0w/zR9aghH1GG
+         XQLw==
+X-Gm-Message-State: AOAM531Rbpn94MVMso0QIm1ml0I3ctys1w7//OyAYaGApXi+kpLUvJJ0
+        OmFcpGppICk2bCCK35q1kyI76j6M/XY3zVPmDDZRNA==
+X-Google-Smtp-Source: ABdhPJyZnFMiQIZ9fwFzpEk1mE8MftS/MaQdnl4xTCoY519E1pBV/j1OP3/x87B8xx30SZgQ9cUzZzDw/1yVBUX0b9k=
+X-Received: by 2002:a05:6402:cb1:: with SMTP id cn17mr7018107edb.42.1623940586437;
+ Thu, 17 Jun 2021 07:36:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <1623938053-790-1-git-send-email-loic.poulain@linaro.org>
+In-Reply-To: <1623938053-790-1-git-send-email-loic.poulain@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 17 Jun 2021 16:36:15 +0200
+Message-ID: <CACRpkda=6-VkRtrBzxkzWYzcRWEYEcYUy15ALuRv6GFb=oCyZg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxc: Fix disabled interrupt wake-up support
+To:     Loic Poulain <loic.poulain@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        michal.koziel@emlogic.no
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-A disabled/masked interrupt marked as wakeup source must be re-enable
-and unmasked in order to be able to wake-up the host. That can be done
-by flaging the irqchip with IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND.
+On Thu, Jun 17, 2021 at 3:44 PM Loic Poulain <loic.poulain@linaro.org> wrote:
 
-Note: It 'sometimes' works without that change, but only thanks to the
-lazy generic interrupt disabling (keeping interrupt unmasked).
+> A disabled/masked interrupt marked as wakeup source must be re-enable
+> and unmasked in order to be able to wake-up the host. That can be done
+> by flaging the irqchip with IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND.
+>
+> Note: It 'sometimes' works without that change, but only thanks to the
+> lazy generic interrupt disabling (keeping interrupt unmasked).
+>
+> Reported-by: Michal Koziel <michal.koziel@emlogic.no>
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
 
-Reported-by: Michal Koziel <michal.koziel@emlogic.no>
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
----
- drivers/gpio/gpio-mxc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks correct:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 157106e..b9fdf05 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -334,7 +334,7 @@ static int mxc_gpio_init_gc(struct mxc_gpio_port *port, int irq_base)
- 	ct->chip.irq_unmask = irq_gc_mask_set_bit;
- 	ct->chip.irq_set_type = gpio_set_irq_type;
- 	ct->chip.irq_set_wake = gpio_set_wake_irq;
--	ct->chip.flags = IRQCHIP_MASK_ON_SUSPEND;
-+	ct->chip.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND;
- 	ct->regs.ack = GPIO_ISR;
- 	ct->regs.mask = GPIO_IMR;
- 
--- 
-2.7.4
-
+Yours,
+Linus Walleij
