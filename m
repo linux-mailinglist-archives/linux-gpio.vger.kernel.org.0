@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 704493AAB32
+	by mail.lfdr.de (Postfix) with ESMTP id 7D73F3AAB35
 	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 07:46:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbhFQFse (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Jun 2021 01:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59282 "EHLO
+        id S229897AbhFQFsf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Jun 2021 01:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229868AbhFQFs3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 01:48:29 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE4C4C06175F
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:46:20 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id ei4so3119896pjb.3
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:46:20 -0700 (PDT)
+        with ESMTP id S230001AbhFQFsc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 01:48:32 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B853AC0617AD
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:46:24 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id z3-20020a17090a3983b029016bc232e40bso3171220pjb.4
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:46:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hsJhWYmZBDgj/tFiSi4wj9WE1h/l2+Md9lyjAfn8iR8=;
-        b=wOOS4VAbMd2nYdoJCV7egK2DDp1ZSn2v/Mh602YP5TNj1U98qN22pMvHXCHEVEA1Qt
-         FbyLCP/dCif4jQFWf3+IQ80pEwNx1KWoyuxvxDN4xBTRxVAK5KPkQrUMidoUvPsLrV2Y
-         n5CnoG9OS5jzBKxDG0is7darEbEt6H5odeZdifnyx4BiSpS0sml8er8yu8ZxY/q/DdEV
-         KWSXIp+GlJhrNVUPzExysq+4SJxfPgyMraAN80OoymMQy0T+SmOmp/Ly0UDSIBixYa2V
-         tpqC94gmiLEU+4HZiv3obFyR7lGPQb3aBysr9T8Su+88O1hF9nBP8mEv6qUsnh4augaT
-         GDmw==
+        bh=+V/OkVA5GckH14yamI54FdnjOjcXAFpdGORTCzkXN5Q=;
+        b=e9xnyhv3a99MZzDr5obIZnt83NTQJn1ImH/iLNrcUhLpdqaLA3NsqW1n35jzdlEBcp
+         Gqv4R5lv4B0MiLxHoENg2Uh3Xwto83CjNHrdHMAfHipjZWLMkqVDjxW5k5dlfBPB7SJ3
+         3pVNJyXzIJg/ZT3z1WI8Ecno+oedXyyoMFlB9SXkcAPEJrKFq9tPUsCMwQyK6VMjc0X6
+         fxeYn0hwGv5iB4cJ6mcLGXEJVjqY7mtZAbEnLiqvNGWIPlm2ZYrlLL/kCiKnkH66tXEE
+         FV/BRefj1nPLSr5ma0hzH1W8z2bP+k4H0gKB4LzhvqY3j3q1v7Fjm+5TpuwuANOgwpYz
+         beww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hsJhWYmZBDgj/tFiSi4wj9WE1h/l2+Md9lyjAfn8iR8=;
-        b=gzePNRVsX4J2vKLBQ2R/5iVZ/a20gIEgYORNd7DAh7E7IOLxHUUvP4lmxM99z+yyvC
-         S//rOuqkfEZAe/g0fTHjQM4TSJNyUSrZeLl9ymv3pKDigNPKoUqhc0v1lDLYQvWm1BMo
-         RSn5vpMj2xKBwzCz7a+kg0i0cai6J7h1pZ71Jp2s2kItvp27wCZ1gECmceO6WtVNkfgb
-         KYtvOY/fztYItA+P6k+iaIrHorr7BL/XeGs8kIy1EUcQlFJHecCzj3oBiKWcRDmURd2H
-         TVpdkItQo2QMiF183mgNsHgumG4mCI/oe66qXt0qVtol0orEyv7mPQI/JuL8K8cxx1S4
-         +JNA==
-X-Gm-Message-State: AOAM533/U0NHOZleGwMhg4WZim7hun88SxIIGJSLbnOGH0kJZEA8rQxH
-        b3OvI+tMnBAhqgKkid6jOGKYHA==
-X-Google-Smtp-Source: ABdhPJwFGa8BwqCx26oWn0H764ybHhUWQQnQydJTCyAex86fJTVXNqRgghY+dzqJ0C8cV4n8umQWMg==
-X-Received: by 2002:a17:90a:d483:: with SMTP id s3mr14661286pju.61.1623908780546;
-        Wed, 16 Jun 2021 22:46:20 -0700 (PDT)
+        bh=+V/OkVA5GckH14yamI54FdnjOjcXAFpdGORTCzkXN5Q=;
+        b=dTwMyS//cjYzgfar0HUPLmGvjHeMueRLm5A4H40xbQ+uMo8uzyc/E+LWJwbwo4eMrk
+         he4rZy5+ypDezeoafAokrGZG9ucKdL2kj2mQiNDlxkK4VNgh4F1bNJsZMH20lhnqc9Uc
+         YtacYB1vvxX1GVM42eg4xV1st1XuVPbwbsUTjMZar+eUDzvuRksgFg+/DmucVNJ2vuan
+         N0ii90U/DZT4BBUzBG1/y7C3AxT2+6Q19hIrNjqI2ib9JD56tfHW6RAVU5ryi4D1f/v7
+         pm+aMCqlga4sw6OJ+e8mBxRShegCY1NiuHFsWkY7zRUaTOeLqn05SdPHotO61HWeXkYl
+         rPBA==
+X-Gm-Message-State: AOAM532TuqHMN6cWTPUsVRH/3fPtt1Z1zpn9Iij8sRfkBNkC3b8jQJnl
+        JNmtFLE3uYodpPhyPo3wuWQnig==
+X-Google-Smtp-Source: ABdhPJzzDomcM95okyaH3T7oKBHwXx9ovw/zoKwvQsgXcfFEzOqmJUYBhb6oFcTGAx79SLUJ6G+0HA==
+X-Received: by 2002:a17:902:7c05:b029:11c:1e7d:c633 with SMTP id x5-20020a1709027c05b029011c1e7dc633mr3039610pll.48.1623908784327;
+        Wed, 16 Jun 2021 22:46:24 -0700 (PDT)
 Received: from localhost.name ([122.177.46.2])
-        by smtp.gmail.com with ESMTPSA id y27sm3882700pff.202.2021.06.16.22.46.16
+        by smtp.gmail.com with ESMTPSA id y27sm3882700pff.202.2021.06.16.22.46.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 22:46:20 -0700 (PDT)
+        Wed, 16 Jun 2021 22:46:24 -0700 (PDT)
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     bhupesh.sharma@linaro.org, bhupesh.linux@gmail.com,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, robh+dt@kernel.org, agross@kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v3 1/5] dt-bindings: arm: qcom: Add compatible for sm8150-mtp board
-Date:   Thu, 17 Jun 2021 11:15:44 +0530
-Message-Id: <20210617054548.353293-2-bhupesh.sharma@linaro.org>
+Subject: [PATCH v3 2/5] dt-bindings: arm: qcom: Add compatible for SA8155p-adp board
+Date:   Thu, 17 Jun 2021 11:15:45 +0530
+Message-Id: <20210617054548.353293-3-bhupesh.sharma@linaro.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210617054548.353293-1-bhupesh.sharma@linaro.org>
 References: <20210617054548.353293-1-bhupesh.sharma@linaro.org>
@@ -65,8 +65,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-sm8150-mtp board is based on Qualcomm Snapdragon sm8150
-SoC.
+SA8155p-adp board is based on Qualcomm Snapdragon sa8155p
+SoC which is similar to the sm8150 SoC.
 
 Add support for the same in dt-bindings.
 
@@ -75,33 +75,41 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Andy Gross <agross@kernel.org>
 Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
 ---
- Documentation/devicetree/bindings/arm/qcom.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-index 9b27e991bddc..d7bb90e5082c 100644
+index d7bb90e5082c..b6dceca8b11f 100644
 --- a/Documentation/devicetree/bindings/arm/qcom.yaml
 +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-@@ -42,6 +42,7 @@ description: |
-         sdm660
-         sdm845
-         sdx55
-+        sm8150
-         sm8250
-         sm8350
+@@ -36,6 +36,7 @@ description: |
+         msm8992
+         msm8994
+         msm8996
++        sa8155p
+         sc7180
+         sc7280
+         sdm630
+@@ -48,6 +49,7 @@ description: |
  
-@@ -198,6 +199,11 @@ properties:
+   The 'board' element must be one of the following strings:
+ 
++        adp
+         cdp
+         cp01-c1
+         dragonboard
+@@ -199,6 +201,11 @@ properties:
                - qcom,ipq6018-cp01-c1
            - const: qcom,ipq6018
  
 +      - items:
 +          - enum:
-+              - qcom,sm8150-mtp
-+          - const: qcom,sm8150
++              - qcom,sa8155p-adp
++          - const: qcom,sa8155p
 +
        - items:
            - enum:
-               - qcom,qrb5165-rb5
+               - qcom,sm8150-mtp
 -- 
 2.31.1
 
