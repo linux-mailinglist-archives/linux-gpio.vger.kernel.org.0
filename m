@@ -2,140 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 320063AAAC6
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 07:18:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31EEE3AAB0B
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 07:34:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230083AbhFQFUK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Jun 2021 01:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52958 "EHLO
+        id S229671AbhFQFgu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Jun 2021 01:36:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbhFQFUF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 01:20:05 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C40C06175F
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:17:58 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id z3-20020a17090a3983b029016bc232e40bso3136392pjb.4
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:17:58 -0700 (PDT)
+        with ESMTP id S229560AbhFQFgt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 01:36:49 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB99CC06175F
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:34:42 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id m2so3991156pgk.7
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:34:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xAYIayTyQWOR4kwnnPVSbR+poJOlYjZtcTLhmbfPzAQ=;
-        b=JXUfqMzbk4vTdFXd7JVYXz/J3FA+a4JJ8hFZTrrJH45zYhi9hpJQ5Jjs/ODCqdaLI/
-         GHJ0C4A1aZOmalQRR+HRIFhlzhAZmnIUsKawZkBSaSE+lcapV+DfYAnXeHtu9evbdVP3
-         Uoo2vfMue6SjRzfjVOrbaQnHt/mqC04rvlvFjd8Kf8KO8pDo1ZvaorXqJ/WZd+F9L59C
-         d6nAN1lnGp+6wr0JtMlrVF+RE1jWUJSu4KUckItYyqjol8VIcGBekw1au+1yb8YvGtk/
-         mbd1ry5wVvg85evMjSvaKgP+ejoIc24+v82F2//+c0JPCUaEysQzlvX50XDc8QNz6ZYm
-         W/ow==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5vymR9vEe1gwFyB1z0N/gT3waUjY8ME8wV8pdxM/FA4=;
+        b=gdm7KB+XnV2iwLdfceOGNsWjtIxYaeqOY89xhyab9IFBN5WTkxN+zAoZ+ljSWyjJHm
+         oPdczqKf12eYRW4tEN1K9vM2J5hioDyKNQo7WBbqShjzcQYtvf3HwyHp7kOKwg3nwuZp
+         aVdQJySvYAdGXDAB3rDPjKaeB6QbIR0eWvgEDzLeGQX9cW2Qcga7VKkv6u1YxN2r4KSD
+         z5AKp6RPpzgf67pFJmwH6ZxOg0+gFBL7fLLdYf/F8+4lME5aNS5gozxIwSyZ8AztAlC1
+         CS4K55CMckfXAsYkk5dr+vnSvRRgz8ly17Lket8WhF+aWeUukl+Iukp//9c6YfgekSoL
+         N1PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xAYIayTyQWOR4kwnnPVSbR+poJOlYjZtcTLhmbfPzAQ=;
-        b=etIpKtkCgvbUhpLx43dsfgICCdQoBrbT/nygXn6pAq3WQR31VhuywFyqFJdvbrUG1o
-         /wvVlkUW38zeXF4mUQwfP7kKGEGSyYuL9eeWhxtUcYCXn9+4X8QV/YyErKTYjv/gDbZ2
-         UD/6Pe9b3ebEZKYG6h0xLs7WktqHb1xq5Pl4bIMZFiRQSzX4kOxZpxWRLrA6Ods6N5hM
-         1SKbDjkHWG4jRpP0b+jBdn58KECU3/m0YTekmvzJskSsNuuQ8CajHv5I5P/ENXhhG4Op
-         hqPKtb/4KQTwwKoPkgMH6w/7+Q9JtkLBHswEXuzWU92QtlFyI3efKf/uIqs9cTblwoqD
-         NGdQ==
-X-Gm-Message-State: AOAM530HXWkBKk/1vkaeAzQ644ABdDAqw4t+q9ZreiAY7oOycX4eVVA/
-        WFa/LgvP8d9IllYiaHfZbzg0/g==
-X-Google-Smtp-Source: ABdhPJx+sZ2dJXNI8fLLjYkjBGfkdJ1HXNYG5KHK0JRdn/NvwrIUfcuMdFPuKrJvDqocnDg2mM9KWw==
-X-Received: by 2002:a17:903:31c9:b029:ed:6f56:9d1e with SMTP id v9-20020a17090331c9b02900ed6f569d1emr2930145ple.46.1623907077816;
-        Wed, 16 Jun 2021 22:17:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5vymR9vEe1gwFyB1z0N/gT3waUjY8ME8wV8pdxM/FA4=;
+        b=nVKjGHIrbeae1QP7Py7t9GNhFnT4iDuex0PSBdR0OLpYsfd5jBBGr1cwgvuxd3Elje
+         5wIyRBouAUIg//A3tnZmtMqxGtePXLfpk/oeDoM2mjgv7plfkuk9oMzeJn/Q+CU78oct
+         DjgylRb5sVlCoTF3zSavzdiNTNGobDUVrBVyhBMYy1wW0agRp0BL2BaTxYE4fq12/ZY5
+         DMhpmcuqOacuCpzT9xnqnrRdIQ853IVQIXIJ4MGQWAaigwFd8TzbG/mvj+D5Oyb0G8V4
+         aszlGQrpv8mMm5v8vKm784adJAGoG62Dq7l9WYCDWCS0yJKdO/H5YSNdwd6H1KYLU2Z6
+         yofA==
+X-Gm-Message-State: AOAM530oGAvGAc4Qe6f6WCeMbjlLsoP/6fWy+mn4S1Bt5iE1QV3IB9Pt
+        sM26EShIHKwVAlJPSFk8nQTZZQ==
+X-Google-Smtp-Source: ABdhPJzp3Zjon4xOYV28bQpQM+rS40C5QGV1ys7Wdo8Mri8ZAyc2BtPPzujTjS3udRism8J2LvXRkA==
+X-Received: by 2002:a63:3c17:: with SMTP id j23mr3311249pga.281.1623908082292;
+        Wed, 16 Jun 2021 22:34:42 -0700 (PDT)
 Received: from localhost.name ([122.177.46.2])
-        by smtp.gmail.com with ESMTPSA id 188sm3900893pfz.146.2021.06.16.22.17.54
+        by smtp.gmail.com with ESMTPSA id m126sm4056405pfb.15.2021.06.16.22.34.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 22:17:57 -0700 (PDT)
+        Wed, 16 Jun 2021 22:34:41 -0700 (PDT)
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     bhupesh.sharma@linaro.org, bhupesh.linux@gmail.com,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, lgirdwood@gmail.com,
-        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v3 5/5] regulator: qcom-rpmh: Add new regulator found on SA8155p adp board
-Date:   Thu, 17 Jun 2021 10:47:12 +0530
-Message-Id: <20210617051712.345372-6-bhupesh.sharma@linaro.org>
+Subject: [PATCH v3 0/4] pinctrl: qcom/pinctrl-spmi-gpio: Add support for pmic-gpio on SA8155p-adp
+Date:   Thu, 17 Jun 2021 11:04:28 +0530
+Message-Id: <20210617053432.350486-1-bhupesh.sharma@linaro.org>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210617051712.345372-1-bhupesh.sharma@linaro.org>
-References: <20210617051712.345372-1-bhupesh.sharma@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SA8155p-adp board supports a new regulator - pmm8155au.
+Changes since v2:
+-----------------
+- v2 series can be found here: https://lore.kernel.org/linux-arm-msm/20210615074543.26700-1-bhupesh.sharma@linaro.org/T/#m8303d27d561b30133992da88198abb78ea833e21 
+- Addressed review comments from Bjorn and Mark.
+- As per suggestion from Bjorn, separated the patches in different
+  patchsets (specific to each subsystem) to ease review and patch application.
 
-The output power management circuits in this regulator include:
-- FTS510 smps,
-- HFS510 smps, and
-- LDO510 linear regulators
+Changes since v1:
+-----------------
+- v1 series can be found here: https://lore.kernel.org/linux-arm-msm/20210607113840.15435-1-bhupesh.sharma@linaro.org/T/#mc524fe82798d4c4fb75dd0333318955e0406ad18
+- Addressed review comments from Bjorn and Vinod received on the v1
+  series.
 
-Add support for the same.
+This series adds the pmic-gpio support code for SA8155p-adp board
+which is based on Qualcomm snapdragon sa8155p SoC which in turn is
+simiar to the sm8150 SoC. 
 
-Cc: Mark Brown <broonie@kernel.org>
+This board supports a new PMIC -> PMM8155AU.
+
+While at it, also make some cosmetic changes to the qcom pinctrl-spmi-gpio
+driver and dt-bindings to make sure the compatibles are 
+in alphabetical order.
+
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
----
- drivers/regulator/qcom-rpmh-regulator.c | 36 +++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index af41a517da99..6cca910a76de 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -883,6 +883,38 @@ static const struct rpmh_vreg_init_data pm8150l_vreg_data[] = {
- 	{}
- };
- 
-+static const struct rpmh_vreg_init_data pmm8155au_vreg_data[] = {
-+	RPMH_VREG("smps1",  "smp%s1",  &pmic5_ftsmps510, "vdd-s1"),
-+	RPMH_VREG("smps2",  "smp%s2",  &pmic5_ftsmps510, "vdd-s2"),
-+	RPMH_VREG("smps3",  "smp%s3",  &pmic5_ftsmps510, "vdd-s3"),
-+	RPMH_VREG("smps4",  "smp%s4",  &pmic5_hfsmps510, "vdd-s4"),
-+	RPMH_VREG("smps5",  "smp%s5",  &pmic5_hfsmps510, "vdd-s5"),
-+	RPMH_VREG("smps6",  "smp%s6",  &pmic5_ftsmps510, "vdd-s6"),
-+	RPMH_VREG("smps7",  "smp%s7",  &pmic5_ftsmps510, "vdd-s7"),
-+	RPMH_VREG("smps8",  "smp%s8",  &pmic5_ftsmps510, "vdd-s8"),
-+	RPMH_VREG("smps9",  "smp%s9",  &pmic5_ftsmps510, "vdd-s9"),
-+	RPMH_VREG("smps10", "smp%s10", &pmic5_ftsmps510, "vdd-s10"),
-+	RPMH_VREG("ldo1",   "ldo%s1",  &pmic5_nldo,      "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo2",   "ldo%s2",  &pmic5_pldo,      "vdd-l2-l10"),
-+	RPMH_VREG("ldo3",   "ldo%s3",  &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
-+	RPMH_VREG("ldo4",   "ldo%s4",  &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
-+	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
-+	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_nldo,      "vdd-l6-l9"),
-+	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
-+	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_nldo,      "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_nldo,      "vdd-l6-l9"),
-+	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l2-l10"),
-+	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_nldo,      "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo12",  "ldo%s12", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
-+	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l16-l17"),
-+	RPMH_VREG("ldo14",  "ldo%s14", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
-+	RPMH_VREG("ldo15",  "ldo%s15", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
-+	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l16-l17"),
-+	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l16-l17"),
-+	RPMH_VREG("ldo18",  "ldo%s18", &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
-+	{}
-+};
-+
- static const struct rpmh_vreg_init_data pm8350_vreg_data[] = {
- 	RPMH_VREG("smps1",  "smp%s1",  &pmic5_ftsmps510, "vdd-s1"),
- 	RPMH_VREG("smps2",  "smp%s2",  &pmic5_ftsmps510, "vdd-s2"),
-@@ -1177,6 +1209,10 @@ static const struct of_device_id __maybe_unused rpmh_regulator_match_table[] = {
- 		.compatible = "qcom,pmc8180c-rpmh-regulators",
- 		.data = pm8150l_vreg_data,
- 	},
-+	{
-+		.compatible = "qcom,pmm8155au-rpmh-regulators",
-+		.data = pmm8155au_vreg_data,
-+	},
- 	{
- 		.compatible = "qcom,pmx55-rpmh-regulators",
- 		.data = pmx55_vreg_data,
+Bhupesh Sharma (4):
+  dt-bindings: pinctrl: qcom,pmic-gpio: Arrange compatibles
+    alphabetically
+  dt-bindings: pinctrl: qcom,pmic-gpio: Add compatible for SA8155p-adp
+  pinctrl: qcom/pinctrl-spmi-gpio: Arrange compatibles alphabetically
+  pinctrl: qcom/pinctrl-spmi-gpio: Add compatible for pmic-gpio on
+    SA8155p-adp
+
+ .../bindings/pinctrl/qcom,pmic-gpio.txt       | 60 ++++++++++---------
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c      | 33 +++++-----
+ 2 files changed, 48 insertions(+), 45 deletions(-)
+
 -- 
 2.31.1
 
