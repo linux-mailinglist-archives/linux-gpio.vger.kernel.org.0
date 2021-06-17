@@ -2,120 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 870103AA9C0
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 05:59:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0AE13AAAB7
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 07:17:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbhFQEBs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Jun 2021 00:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35550 "EHLO
+        id S229677AbhFQFTp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Jun 2021 01:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbhFQEBq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 00:01:46 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380F3C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 20:59:04 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id 13-20020a17090a08cdb029016eed209ca4so3064113pjn.1
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 20:59:04 -0700 (PDT)
+        with ESMTP id S229546AbhFQFTp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 01:19:45 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A5ADC061574
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:17:38 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id e7so2298782plj.7
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Jun 2021 22:17:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a5D+ny1Y0c3O7KxzHuyI+M5mGXvaRgQ84CvvtncVlG0=;
-        b=fRcFPkiIxPDt9py7J1PQBOFWa8GEY8lHPvIBnBm1ce3CL3iHZHu/UZCEhEGJOVVCaA
-         VHKOkUgSyIJQ2Ruk0A2HflJ0G72K5plXNdgLkY4e1ZUcxSzfYUKbwM5q0pG5lNePiwOv
-         7FXxll2wYUEI85aVEsP19np7Ju9bEl8kDfsr25mfOtrQe07owDGhAhZzToqNsjeA/IPH
-         E+9IHrMS1E0RR1+reFfHNJI5ouyJ2XoNtLzW9AM3mUdmwZItucn/6F40ftKaCGJEwq2c
-         uQOFRr7oRd61zssn2NtqMyTC3iNCwKJ7UXnmUrPPz521WtPzXyoeZj+nlHxs99HDqXOZ
-         4nfw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bGMTr7YGGFoZgeDMLbeSkUvHS85PZtWqOqc9pHvL3I4=;
+        b=WwRzX0dTJ8oUULfRtohg3ikJtEaCI3dUZxPHVo0AhzfPjVveSGOvTjE/MoIgbBrQMh
+         FEQ+9x5JoLBcqiYExdja0VdB87PVHETqqQeFE5oXgkpYdyQ+4KQztT0YwWQtr19XoH4y
+         iCE3fXfFSAmyxizo8oa9pTXreKBGlV/J5ztOAw2aFWaqsWw0wH1G71lDKXxT9p3ERSLQ
+         l4+5EZEXuk29/exf+SogLVHJAK4yrBTLEQVX+yavmcI57FWEP1RM4mZQ0jymvEWtZI7N
+         eYZohPzKP6VsswLTlv/ulXupNiTjypW7HnzimF4WkiHoAB+Wm1kw08PvDeZYSaQyorWW
+         /0Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a5D+ny1Y0c3O7KxzHuyI+M5mGXvaRgQ84CvvtncVlG0=;
-        b=oCXKLl8ilqZPQLsDqLBBBXNJNnpI9lwADFC0+FjYZDUUpxRm5G3b7Ib/mudq/EiiKw
-         lw/FkGCEQfVUsuGS3NfV+Xwokwq/4D3EP5HJa2SrV7OUPowM4UnmBGAWhR0BXrMx63N7
-         cw/tsO0BLm1qEuDMwARsg/PXR+wofm4PHnM2D4hRK85dW/RlBZfUUn8OJsZ8PCQ/HBm6
-         ZYIDKtKiPkLu5vdR/eOsc9V/sT89RYGtNdf0nUk7G7ixJwI35CxQgW51PDuXYhAqP/dv
-         G5NdwIZ0BGX7wsZodgEJCs55zj7knj46+3bSGIxXZG5ucUEszWeDaX96cEMGqOET+021
-         +ogg==
-X-Gm-Message-State: AOAM533iDgwgrz/FMtjLLU37IoaXG+jMaKAXLFaccbgOqDsIAUT3pYoE
-        g0ZlUDZtHVlvYihsApSYOiaY6w==
-X-Google-Smtp-Source: ABdhPJyK8z8cdDdyBhx0CBSqDGBDOEf/ee2crujfR5xEIC5Ea+opK/+E62HCRvXJLb044uPARRa9xQ==
-X-Received: by 2002:a17:902:8d97:b029:113:d891:2ea0 with SMTP id v23-20020a1709028d97b0290113d8912ea0mr2678159plo.61.1623902343697;
-        Wed, 16 Jun 2021 20:59:03 -0700 (PDT)
-Received: from localhost ([136.185.134.182])
-        by smtp.gmail.com with ESMTPSA id j10sm3388366pjb.36.2021.06.16.20.59.02
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bGMTr7YGGFoZgeDMLbeSkUvHS85PZtWqOqc9pHvL3I4=;
+        b=BzQwTh3EjhWSWnXwiGZ3jnoiWgpWZ7RpelYdukD/9eHAECjb5FBmSLoex6/obOR39S
+         kTxeFsKgerOfWUQne2GrrjLm0icxkQVCkkP4s5S6dAVB87KT8OcFJxAJvt5j64q2cBFv
+         Ogdysu3FVZQdfjFbLEOiO6NmNnaGCAN5WWebNz8wvtCObJ7Fj31RhQZqw09GNT14emgD
+         jZ1Hae9yTCGJF0QsSNZ2kSnG8Yz+CL1aG8N4IScOYzbVaf8MDdSufAj1hdWsurcly9gv
+         inSkrHqgYNfP0T7KOLPKj5cJOoF4J1ehaBksDFn+f17nC1Wa94U0BUp5m/CnNxCRpOVq
+         wToA==
+X-Gm-Message-State: AOAM533mUqDwebP/vYL1HKjvyAOp6nDqvbQaqpryam6M+0PYIfSOiEHL
+        tOd+h5jr/QewI+FKnxgBzf+U7A==
+X-Google-Smtp-Source: ABdhPJw0fzToV+OwzCzWXoJHSCBKNiIEx2uyMi+bjAaS0PSYEQMzQueXzHoj4ZT2bxEkUV3PhkvRNg==
+X-Received: by 2002:a17:90a:5106:: with SMTP id t6mr6212572pjh.231.1623907057547;
+        Wed, 16 Jun 2021 22:17:37 -0700 (PDT)
+Received: from localhost.name ([122.177.46.2])
+        by smtp.gmail.com with ESMTPSA id 188sm3900893pfz.146.2021.06.16.22.17.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 20:59:03 -0700 (PDT)
-Date:   Thu, 17 Jun 2021 09:29:01 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
-Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
-Message-ID: <20210617035901.kfzps6kg2emthjf4@vireshk-i7>
-References: <20210616114934.n3grzuh6c64wlaj6@vireshk-i7>
- <5cffb354-0d00-5ace-260d-61ac0c4c7491@metux.net>
+        Wed, 16 Jun 2021 22:17:37 -0700 (PDT)
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     bhupesh.sharma@linaro.org, bhupesh.linux@gmail.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, lgirdwood@gmail.com,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v3 0/5] regulator: qcom,rpmh-regulator: Add support for pmic available on SA8155p-adp board
+Date:   Thu, 17 Jun 2021 10:47:07 +0530
+Message-Id: <20210617051712.345372-1-bhupesh.sharma@linaro.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5cffb354-0d00-5ace-260d-61ac0c4c7491@metux.net>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16-06-21, 17:04, Enrico Weigelt, metux IT consult wrote:
-> Half correct: I sent it to the list, but this wasn't tex'ified yet.
-> 
-> When we had an email conversation about this, it was about submitting
-> the existing spec in a formal correct way. Don't get me wrong: I
-> apreciate that somebody's doing the beaurocratic work. But still have
-> no idea why you changed it completely, so there's quite nothing left
-> but the name and that it somehow does gpio via virtio.
+Changes since v2:
+-----------------
+- v2 series can be found here: https://lore.kernel.org/linux-arm-msm/20210615074543.26700-1-bhupesh.sharma@linaro.org/T/#m8303d27d561b30133992da88198abb78ea833e21 
+- Addressed review comments from Bjorn and Mark.
+- As per suggestion from Bjorn, seperated the patches in different
+  patchsets (specific to each subsystem) to ease review and patch application.
 
-> The one I've resent (now texified) a few days ago. It had been submitted
-> in ascii form last year. The answer from virtio TC folks whas that there
-> are some formal steps to be done and it needs to be patched int their
-> tex document.
+Changes since v1:
+-----------------
+- v1 series can be found here: https://lore.kernel.org/linux-arm-msm/20210607113840.15435-1-bhupesh.sharma@linaro.org/T/#mc524fe82798d4c4fb75dd0333318955e0406ad18
+- Addressed review comments from Bjorn and Vinod received on the v1
+  series.
 
-Okay, we figured out now that you _haven't_ subscribed to virtio lists
-and so your stuff never landed in anyone's inbox. But you did send
-something and didn't completely went away.
+This series adds the regulator support code for SA8155p-adp board
+which is based on Qualcomm snapdragon sa8155p SoC which in turn is
+simiar to the sm8150 SoC. 
 
-Since you started this all and still want to do it, I will take my
-patches back and let you finish with what you started. I will help
-review them.
+This board supports a new PMIC PMM8155AU.
 
-Please start with specification first, and resend them as soon as
-possible. So we can start with reviews there.
+While at it, also make some cosmetic changes to the regulator driver
+and dt-bindings to make sure the compatibles are alphabetical and also
+fix issues with extra comma(s) at the end of terminator line(s). 
 
-Also please cc relevant people directly, like GPIO maintainers in
-kernel and few more from CC list of this email, as most of these
-people aren't subscribed to virtio lists, they will never get your
-patches otherwise. Lets get over this once and for all.
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> You sound like a politician that tries to push an hidden agenda,
-> made by some secret interest group in the back room, against the
-> people - like "resistance is futile".
+Bhupesh Sharma (5):
+  dt-bindings: regulator: qcom,rpmh-regulator: Arrange compatibles
+    alphabetically
+  dt-bindings: regulator: qcom,rpmh-regulator: Add compatible for
+    SA8155p-adp board pmic
+  regulator: qcom-rpmh: Cleanup terminator line commas
+  regulator: qcom-rpmh: Add terminator at the end of pm7325x_vreg_data[]
+    array
+  regulator: qcom-rpmh: Add new regulator found on SA8155p adp board
 
-:)
+ .../regulator/qcom,rpmh-regulator.yaml        | 17 ++---
+ drivers/regulator/qcom-rpmh-regulator.c       | 62 +++++++++++++++----
+ 2 files changed, 59 insertions(+), 20 deletions(-)
 
 -- 
-viresh
+2.31.1
+
