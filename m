@@ -2,302 +2,212 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D3F03AB217
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 13:14:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76DCB3AB2FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 13:47:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231593AbhFQLQ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Jun 2021 07:16:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53578 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231396AbhFQLQ0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Jun 2021 07:16:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623928458;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UShfFP0yGU8xaRFO0Sd23m6zKnfLcJDtjSbsNFViaSE=;
-        b=b6eGQmWmjVWh1uBUnmLDI67bUD/uHf4J+LTuFs1ySHmyHD2zleyB9IErsltBenDsFXiIdH
-        SFNmomn5+Ga3Wdfl0lVNdJjfJR54ZP12kUnaZydt4B744JCHaiA986HQLfJfyVysw/5zxi
-        6yU49bu3SHpufRCep4vO+OchtAAFZeY=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-VYTo0NMwNA6Xi4AgOQX-2w-1; Thu, 17 Jun 2021 07:14:16 -0400
-X-MC-Unique: VYTo0NMwNA6Xi4AgOQX-2w-1
-Received: by mail-ej1-f72.google.com with SMTP id jy19-20020a1709077633b02903eb7acdb38cso2020931ejc.14
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 04:14:16 -0700 (PDT)
+        id S229868AbhFQLuA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Jun 2021 07:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230269AbhFQLuA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 07:50:00 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 411ADC061760
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 04:47:53 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id 22-20020a17090a0c16b0290164a5354ad0so5947714pjs.2
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 04:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QasMKCIaT47MEF+OQcq8zCDU70HNznQ46OZY6zak3V8=;
+        b=YjZuzJ+NWs/14eFKW5mhz42xgNpTsEoV8oZ4cGMsIt9+TzUz1kdmMAfO7xXHgkQq0g
+         Ia52JM8iI2whXeKXN/2K6F02pd30D8emps0Jz+/nxWU8zMyroF/HKtyZs5qCYlzNmEFJ
+         m1yVj/8f0dsS3m91UPPLrJbA2NkmqZvlrMmaw9lNTbI7VTp9n0jNRu9BOOijGr2AEU18
+         UDj8Jdz3wNufxBoaVID02yn3JU9Jx6JugUxGJy8fvS3DFGr1i+L/IPXOWIzR9TlnRoRh
+         9r23X01QaTcw9X0haydqFp7C96joqt3lzre2lMeS5hILGfLAh249oeK4Yi6TA9AHtQlQ
+         VIOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UShfFP0yGU8xaRFO0Sd23m6zKnfLcJDtjSbsNFViaSE=;
-        b=Vt94AvMo8H7oEjQhhNZG+yMEMH6/lwSNfAxZuAJqR+F1Hy3Rboor2Pz0yPlHWZnWR6
-         FZ5MnRAhHSvukcpvCkgtckEpTxkEeNs+mK/y1DrAXJXjKhEp/TEc19Z4jaN+gZbzJx3Q
-         VWmab2fkcfSjzKQ5ZSkXZDXklhJY/0qCqviBg3dbkZtbh/k7uUBV8Sc06ToGxpuS/jAq
-         fUfwmZfczVzQ3o5gVb7rA3pNgv0+MDJUYTvGPZHNW82n1oyIsdgp8+FXq7Yx/c5RO4dx
-         3l4yhMrD0t63XqCkLClmMvQKak0h0f4C9fiq70FEs5yiS9+TiXUOreKBeZvt5BfWjvK5
-         kx2Q==
-X-Gm-Message-State: AOAM532H+zOjVyVBIsRg7/PhlXLfmYyYNIrNpI0Fwvn+n00SiKqjh6MH
-        qiXP1Z3prFWJoiR+xlXYctAW3eu2idxYSgyQckuXbMZ7t0kWCvTexQ1oTHfAEsUGuAI8uNftn+Z
-        Xm8Buj4VLi9p4L3dDfK9xvA==
-X-Received: by 2002:a05:6402:518a:: with SMTP id q10mr5854944edd.198.1623928455746;
-        Thu, 17 Jun 2021 04:14:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyIW5ArmRxaDEzKHF3ObIivFWgmTxdnHyFD1/J1dazYNKKybZCVI/wY7eL/o+yNC93TJ0levw==
-X-Received: by 2002:a05:6402:518a:: with SMTP id q10mr5854931edd.198.1623928455570;
-        Thu, 17 Jun 2021 04:14:15 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id m11sm607521ejl.102.2021.06.17.04.14.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Jun 2021 04:14:14 -0700 (PDT)
-Subject: Re: [PATCH v5 6/6] mfd: tps68470: Remove tps68470 MFD driver
-To:     Daniel Scally <djrscally@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@acpica.org
-Cc:     Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QasMKCIaT47MEF+OQcq8zCDU70HNznQ46OZY6zak3V8=;
+        b=Fbww9zOKvL31vGvCky0SzPbCOYitOBzr5pU5S7s0ecTAX0JDFG/8N+hBAtWHx/9SHe
+         2ilRll7W90EerNaYcYB0Q7RoYCO2HJtHdqborpnltG0NDYh9J2ZLhwPlnJY+InLJLZXZ
+         PHxZeWqPPvUqe2569cQwzvnXriGEGEp6+fe/tpomvdvVd+f0q3d/HOOAXparazIz4z6p
+         YkTtY9egl6a3OLp34waUxpVsGZakpMgDntMXrtoghN7GOF68iTOlXYMdqhE0C6h8E//r
+         AQPgNUtnG85j0nvTbOMNvTNlBTMCdCTethrARsWzWlDah3zmi46UXtn2luTeAdIqAqsH
+         kETw==
+X-Gm-Message-State: AOAM532uQ3JV/BCj+S/7foilXriyJQrPVe+oNOjT/e5+NJeCBjngNW83
+        IvQ4kqbdKXvcHcGo2fuclRJgIQ==
+X-Google-Smtp-Source: ABdhPJxIrIzZcQtKYc+FRL5bxfc04IWWpEdqgixoIsZEOGYOtWJ6eX9RHjce0kFNtrQQQX1ZD1W97A==
+X-Received: by 2002:a17:90a:6b42:: with SMTP id x2mr5108905pjl.16.1623930472719;
+        Thu, 17 Jun 2021 04:47:52 -0700 (PDT)
+Received: from localhost ([136.185.134.182])
+        by smtp.gmail.com with ESMTPSA id u23sm6288551pgk.38.2021.06.17.04.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Jun 2021 04:47:51 -0700 (PDT)
+Date:   Thu, 17 Jun 2021 17:17:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20210603224007.120560-1-djrscally@gmail.com>
- <20210603224007.120560-7-djrscally@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <4083819a-eabf-fb2d-2ce8-5f6a409c69a0@redhat.com>
-Date:   Thu, 17 Jun 2021 13:14:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
+Subject: Re: [PATCH] drivers: gpio: add virtio-gpio guest driver
+Message-ID: <20210617114749.uueu2v63duepfunb@vireshk-i7>
+References: <20210616114934.n3grzuh6c64wlaj6@vireshk-i7>
+ <5cffb354-0d00-5ace-260d-61ac0c4c7491@metux.net>
+ <20210617035901.kfzps6kg2emthjf4@vireshk-i7>
+ <116f8135-4ddf-e8fc-6838-94093702ec3d@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20210603224007.120560-7-djrscally@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <116f8135-4ddf-e8fc-6838-94093702ec3d@metux.net>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On 17-06-21, 11:54, Enrico Weigelt, metux IT consult wrote:
+> Actually, I am subscribed in the list. We already had debates on it,
+> including on your postings (but also other things).
 
-On 6/4/21 12:40 AM, Daniel Scally wrote:
-> This driver only covered one scenario in which ACPI devices with _HID
-> INT3472 are found, and its functionality has been taken over by the
-> intel-skl-int3472 module, so remove it.
+Right.
+
+> And the ascii
+> version of the spec actually landed on the list last year, we had
+> discussions about it there.
+
+I tried to search for it earlier, but never found anything on virtio
+list.  Maybe I missed it then.
+
+> I've just had the problem that my patches didn't go through, which is
+> very strange, since I actually am on the list and other mails of mine
+> went through all the time. I'm now suspecting it's triggered by some
+> subtle difference between my regular mail clients and git send-email.
 > 
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
-> Changes since v4:
-> 	- None
+> > Since you started this all and still want to do it, I will take my
+> > patches back and let you finish with what you started. I will help
+> > review them.
 > 
->  drivers/acpi/pmic/Kconfig |  2 +-
->  drivers/gpio/Kconfig      |  2 +-
->  drivers/mfd/Kconfig       | 18 --------
->  drivers/mfd/Makefile      |  1 -
->  drivers/mfd/tps68470.c    | 97 ---------------------------------------
->  5 files changed, 2 insertions(+), 118 deletions(-)
->  delete mode 100644 drivers/mfd/tps68470.c
+> Thank you very much.
 > 
-> diff --git a/drivers/acpi/pmic/Kconfig b/drivers/acpi/pmic/Kconfig
-> index 56bbcb2ce61b..f84b8f6038dc 100644
-> --- a/drivers/acpi/pmic/Kconfig
-> +++ b/drivers/acpi/pmic/Kconfig
-> @@ -52,7 +52,7 @@ endif	# PMIC_OPREGION
->  
->  config TPS68470_PMIC_OPREGION
->  	bool "ACPI operation region support for TPS68470 PMIC"
-> -	depends on MFD_TPS68470
-> +	depends on INTEL_SKL_INT3472
->  	help
->  	  This config adds ACPI operation region support for TI TPS68470 PMIC.
->  	  TPS68470 device is an advanced power management unit that powers
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 1dd0ec6727fd..10228abeee56 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1367,7 +1367,7 @@ config GPIO_TPS65912
->  
->  config GPIO_TPS68470
->  	bool "TPS68470 GPIO"
-> -	depends on MFD_TPS68470
-> +	depends on INTEL_SKL_INT3472
->  	help
->  	  Select this option to enable GPIO driver for the TPS68470
->  	  chip family.
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 5c7f2b100191..99c4e1a80ae0 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1499,24 +1499,6 @@ config MFD_TPS65217
->  	  This driver can also be built as a module.  If so, the module
->  	  will be called tps65217.
->  
-> -config MFD_TPS68470
-> -	bool "TI TPS68470 Power Management / LED chips"
-> -	depends on ACPI && PCI && I2C=y
-> -	depends on I2C_DESIGNWARE_PLATFORM=y
-> -	select MFD_CORE
-> -	select REGMAP_I2C
-> -	help
-> -	  If you say yes here you get support for the TPS68470 series of
-> -	  Power Management / LED chips.
-> -
-> -	  These include voltage regulators, LEDs and other features
-> -	  that are often used in portable devices.
-> -
-> -	  This option is a bool as it provides an ACPI operation
-> -	  region, which must be available before any of the devices
-> -	  using this are probed. This option also configures the
-> -	  designware-i2c driver to be built-in, for the same reason.
-> -
->  config MFD_TI_LP873X
->  	tristate "TI LP873X Power Management IC"
->  	depends on I2C
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 4f6d2b8a5f76..8b322d89a0c5 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -105,7 +105,6 @@ obj-$(CONFIG_MFD_TPS65910)	+= tps65910.o
->  obj-$(CONFIG_MFD_TPS65912)	+= tps65912-core.o
->  obj-$(CONFIG_MFD_TPS65912_I2C)	+= tps65912-i2c.o
->  obj-$(CONFIG_MFD_TPS65912_SPI)  += tps65912-spi.o
-> -obj-$(CONFIG_MFD_TPS68470)	+= tps68470.o
->  obj-$(CONFIG_MFD_TPS80031)	+= tps80031.o
->  obj-$(CONFIG_MENELAUS)		+= menelaus.o
->  
-> diff --git a/drivers/mfd/tps68470.c b/drivers/mfd/tps68470.c
-> deleted file mode 100644
-> index 4a4df4ffd18c..000000000000
-> --- a/drivers/mfd/tps68470.c
-> +++ /dev/null
-> @@ -1,97 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/*
-> - * TPS68470 chip Parent driver
-> - *
-> - * Copyright (C) 2017 Intel Corporation
-> - *
-> - * Authors:
-> - *	Rajmohan Mani <rajmohan.mani@intel.com>
-> - *	Tianshu Qiu <tian.shu.qiu@intel.com>
-> - *	Jian Xu Zheng <jian.xu.zheng@intel.com>
-> - *	Yuning Pu <yuning.pu@intel.com>
-> - */
-> -
-> -#include <linux/acpi.h>
-> -#include <linux/delay.h>
-> -#include <linux/i2c.h>
-> -#include <linux/init.h>
-> -#include <linux/mfd/core.h>
-> -#include <linux/mfd/tps68470.h>
-> -#include <linux/regmap.h>
-> -
-> -static const struct mfd_cell tps68470s[] = {
-> -	{ .name = "tps68470-gpio" },
-> -	{ .name = "tps68470_pmic_opregion" },
-> -};
-> -
-> -static const struct regmap_config tps68470_regmap_config = {
-> -	.reg_bits = 8,
-> -	.val_bits = 8,
-> -	.max_register = TPS68470_REG_MAX,
-> -};
-> -
-> -static int tps68470_chip_init(struct device *dev, struct regmap *regmap)
-> -{
-> -	unsigned int version;
-> -	int ret;
-> -
-> -	/* Force software reset */
-> -	ret = regmap_write(regmap, TPS68470_REG_RESET, TPS68470_REG_RESET_MASK);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = regmap_read(regmap, TPS68470_REG_REVID, &version);
-> -	if (ret) {
-> -		dev_err(dev, "Failed to read revision register: %d\n", ret);
-> -		return ret;
-> -	}
-> -
-> -	dev_info(dev, "TPS68470 REVID: 0x%x\n", version);
-> -
-> -	return 0;
-> -}
-> -
-> -static int tps68470_probe(struct i2c_client *client)
-> -{
-> -	struct device *dev = &client->dev;
-> -	struct regmap *regmap;
-> -	int ret;
-> -
-> -	regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
-> -	if (IS_ERR(regmap)) {
-> -		dev_err(dev, "devm_regmap_init_i2c Error %ld\n",
-> -			PTR_ERR(regmap));
-> -		return PTR_ERR(regmap);
-> -	}
-> -
-> -	i2c_set_clientdata(client, regmap);
-> -
-> -	ret = tps68470_chip_init(dev, regmap);
-> -	if (ret < 0) {
-> -		dev_err(dev, "TPS68470 Init Error %d\n", ret);
-> -		return ret;
-> -	}
-> -
-> -	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, tps68470s,
-> -			      ARRAY_SIZE(tps68470s), NULL, 0, NULL);
-> -	if (ret < 0) {
-> -		dev_err(dev, "devm_mfd_add_devices failed: %d\n", ret);
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct acpi_device_id tps68470_acpi_ids[] = {
-> -	{"INT3472"},
-> -	{},
-> -};
-> -
-> -static struct i2c_driver tps68470_driver = {
-> -	.driver = {
-> -		   .name = "tps68470",
-> -		   .acpi_match_table = tps68470_acpi_ids,
-> -	},
-> -	.probe_new = tps68470_probe,
-> -};
-> -builtin_i2c_driver(tps68470_driver);
-> 
+> Please don't me wrong, I really don't wanna any kind of power play, just
+> wanna get an technically good solution. If there had been any mis-
+> understandings at that point, I'm officially saying sorry here.
 
+Its okay, we are both trying to make things better here :)
+
+> Let's be friends.
+> 
+> You mentioned you've been missing with my spec. Please come foreward and
+> tell us what exactly you're missing and what your use cases are.
+
+I have sent a detailed review of your spec patch, lets do it there
+point by point :)
+
+> Note that I've intentionally left off certain "more sophisticated"
+> functionality we find on *some* gpio controllers, eg. per-line irq
+> masking, pinmux settings for several reasons, e.g.:
+> 
+> * those are only implemented by some hardware
+> * often implemented in or at least need to be coordinated with other
+>   pieces of hw (e.g. in SoCs, pinmux is usually done in a separate
+>   device)
+> * it shall be possible to support even the most simple devices and
+>   have the more sophisticated things totally optional. minium
+>   requirements for silicon implementations should be the lowest possible
+>   (IOW: minimal number of logic gates)
+> 
+> >> You sound like a politician that tries to push an hidden agenda,
+> >> made by some secret interest group in the back room, against the
+> >> people - like "resistance is futile".
+> >
+> > :)
+> 
+> Perhaps I've been a bit overreacting at that point. But: this is really
+> that kind of talking we hear from politicians and corporate leaders
+> since many years, whenever they wanna push something through that we the
+> people don't want. Politicians use that as a social engineering tool for
+> demotivating any resistance. Over heare in Germany this even had become
+> a meme, and folks from CCC made a radio show about and named by that
+> (the German word is "alternativlos" - in english: without any
+> alternative). No idea about other countries, maybe it's a cultural
+> issue, but over here, those kind of talking had become a red light.
+> 
+> Of course, I never intended to accuse you of being one of these people.
+> Sorry if there's been misunderstanding.
+
+It sounded strange yesterday to be honest, but I have gone past it
+already :)
+ 
+> Let's get back to your implementation: you've mentioned you're routing
+> raw virtio traffic into userland, to some other process (outside VMMs
+> like qemu) - how exactly are you doing that ?
+> 
+> That could be interesting for completely different scenarios. For
+> example, I'm currently exploring how to get VirGL running between separate
+> processes running under the same kernel instance (fow now we
+> only have the driver side inside VM and the device outside it), means
+> driver and device are running as separate processes.
+> 
+> The primary use case are containers that shall have really GPU generic
+> drivers, not knowing anything about the actual hardware on the host.
+> Currently, container workloads wanting to use a GPU need to have special
+> drivers for exactly the HW the host happens to have. This makes generic,
+> portable container images a tuff problem.
+> 
+> I haven't digged deeply into the matter, but some virtio-tap transport
+> could be an relatively easy (probably not the most efficient) way to
+> solve this problem. In that scanario it would like this:
+> 
+> * we have a "virgl server" (could be some X or wayland application, or
+>   completely own compositor) opens up the device-end of an "virtio-tap"
+>   transport and attaches its virtio-gpio device emulation on it.
+> * "virtio-tap" now creates a driver-end, kernel probes an virtio-gpu
+>   instance on this (also leading to a new DRI device)
+> * container runtime picks the new DRI device and maps it into the
+>   container(s)
+>   [ yet open question, whether one DRI device for many containers
+>     is enough ]
+> * container application sees that virtio-gpu DRI device and speaks to
+>   it (mesa->virgl backend)
+> * the "virgl-server" receives buffers and commands from via virtio and
+>   sends them to the host's GL or Gallium API.
+> 
+> Once we're already there, we might think whether it could make sense
+> putting virtio routing into kvm itself, instead of letting qemu catch
+> page faults and virtual irqs. Yet have to see whether that's a good
+> idea, but I can imagine some performance improvements here.
+
+We (at Linaro) work on software enablement normally and not end
+products (rarely that happen though), like framework level work in the
+kernel which can later be used by everyone to build their drivers on.
+
+There are many companies like Qualcomm, ST Micro, etc, who want to use
+Virtio in general for Automotive or other applications / solution. The
+purpose of Project Stratos [1], an initiative of Linaro, is working
+towards developing hypervisor agnostic Virtio interfaces and
+standards. The end products and applications will be worked on by the
+members directly and we need to add basic minimum support, with all
+the generally required APIs or interfaces.
+
+-- 
+viresh
+
+[1] https://linaro.atlassian.net/wiki/spaces/STR/overview
