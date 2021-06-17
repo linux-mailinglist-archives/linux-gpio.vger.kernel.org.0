@@ -2,92 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EDDD3AADC5
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 09:37:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 306AD3AAF6B
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 11:15:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229897AbhFQHj4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Jun 2021 03:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56214 "EHLO
+        id S231433AbhFQJRL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Jun 2021 05:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229846AbhFQHjz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 03:39:55 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C02CC061574
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 00:37:48 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id nb6so8114976ejc.10
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 00:37:47 -0700 (PDT)
+        with ESMTP id S231521AbhFQJRK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 05:17:10 -0400
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580EEC061768
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 02:15:02 -0700 (PDT)
+Received: by mail-vs1-xe2a.google.com with SMTP id c1so2596992vsh.8
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 02:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s7+p5mopcGPNeOpZtCt9thAeymr13+2bHjNv9xZ1nl8=;
-        b=niYhYVfl46lvmqWIoCx871hzP9WrXbrxylSJ60+8RRaDkzZSQJn5A/UKdFSewsdYXd
-         EN57hvkzdPYRg1VTDE94kRapKL9ee+2Th8XdiCgRjSuexDV3uiFyBjPvTElyCOxCt6SP
-         LPRhijHzHTE7vuTYNXqhGOyM24QKdxQsWu9uzRexHprydb/jPOcEl8XaxUraEfJ9QYhP
-         OBhD2BiKjlyJ1BE3qFHji1zc5yz0nmg3zHGXoj8ltHPnFpv4TjK+6rOpveO5FNf3i0eP
-         r+ZbgC2Oj0f1BG7VE96JXSE/e7E9XbojIUMaO0pJ9/ccucZd5Gm7j+Ggnm7hAJqxvrco
-         jZzQ==
+         :cc:content-transfer-encoding;
+        bh=NiiU6fiVLbE4syulfvGQUEnbQNZvmtFPXY1KRGZ4VKs=;
+        b=tspUddDmWP1nXGb8dYzDapkXukDhtaQZ8yVoZQOykE4MszNmnQ2Jc7pAu3v7qBcemT
+         UyLs98rU9nEy8e3wRIJkxsl8g3L8Eb/AvQODxlfCIA8Y+SqSVtbG2msAYvDIZFEizfbY
+         20UD8As6h7+oRqO/LBfp1JKzos5qS4bIZn22juJCAEEZOMhbhqM1f/S6KCbcFkkK35Tr
+         P7laFgsJQmqhNYip+ALRHKPPvbOtIHBYtRpZR/hgm9hpO06Ne5Y1MzvmGVRytTLSpocX
+         +CLKqhQk6OUYMP0R+b/JJQ4/QkH+6e5JGgp8Hm8OfSHuZ6CIo4hVwTpj+jWWd51a3cq+
+         7N8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s7+p5mopcGPNeOpZtCt9thAeymr13+2bHjNv9xZ1nl8=;
-        b=LKHDbiwgBVDzTHTpY4w2S3pKDvhOc7/Xcfbyi3PuOa6ODXbz3fb1uC9/dV5RqbFsZT
-         IdlhqlLw/QdFpk1J0pxS09AN44XZllmSJ+9DfY2CJ1eoxHSsR0n/gbVQOKq39MtA+YMn
-         OQDTWEY7wQCYDroua/YiGccQrU3vXYMJa96hUsLEpM7/yC0jWSvzzsp2m79FGkjmu+4E
-         fDnAC+LDr3h+IqiSGJsw8nCrDRXXtTvxSQT6fjED4PxDSo0Yc+Eh2WqwPzXj2cldF/fS
-         S7a2C+tDD5DmI9NgVyxvyRAICaINTxcv/ZqM3XR0Nc0oJridggIvqnx2u9ovG2W4pwcf
-         zkPw==
-X-Gm-Message-State: AOAM532vwIM7i77OjF7NiojJxgBXbavj0rqvPFirEjXygxTOJGDcOHZJ
-        ic98JIHT46FtD8DwnbA81QxSVfhq4vY7M6USdAp+hYcsh6Q=
-X-Google-Smtp-Source: ABdhPJwUwVdSjxIyBbGgOX1LCI1VYjG+HDD21nIGmKO0SUzLBS1j92JXDVJhkQfHRmQhMTNvLzqN+Caq5MSIIVxy9ng=
-X-Received: by 2002:a17:907:2648:: with SMTP id ar8mr3676065ejc.521.1623915466668;
- Thu, 17 Jun 2021 00:37:46 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NiiU6fiVLbE4syulfvGQUEnbQNZvmtFPXY1KRGZ4VKs=;
+        b=FO83cBXGrZYhyAIeXgtt2W5g4bimCqQCXJ7VmmaqQnF4ECDPK5reSdChwMqnGvwJ+Y
+         rOtPWxsshwS/hA6IbtZdWsi7bvxotRprPjnjImD5p12x+vnGzikTsVrX5aDQPOl5N5vp
+         2jvdfU4cvOSakEhPWqrcRJk1QqNKp1c++6GuHD9vaSpx6H5aOjhfDOeJg6MzCBGMhQAH
+         cLjPolCTvZ6psqMlEMXSbbMHbfOPGy01QK+lsqAJ5yuhRUqMt2RYuUfSEtSmH65GUtkX
+         2DLTRRAHMOvm8496feTpU4eXns8kjRBa4GiwX6QxYxgFftVV+zKsd9AwZD284Z31WK7q
+         Iinw==
+X-Gm-Message-State: AOAM532vlWUEthOpUlelpE8FYlhvVbrpk9I9E2sIeyAyS6dhC2CNFLIT
+        Ka1welqA1CNwigsnowtTlZeWw4Ja6fH8h/cR1E74sQ==
+X-Google-Smtp-Source: ABdhPJyDDRUn2syWiuy8XigFtL3iDYKz59Ub/6ekAvgFfmAY9tRuxX/nulbHrrDC8J99+RHvCUQeMQ9XnjKDaURJSR4=
+X-Received: by 2002:a05:6102:2159:: with SMTP id h25mr3349328vsg.19.1623921301368;
+ Thu, 17 Jun 2021 02:15:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210613220326.831040-1-pbrobinson@gmail.com> <CAHp75Vc91=PSj+4F652Wo4iEHsek_NuLGuQmyovWtQ1UMO2xeA@mail.gmail.com>
- <CAMpxmJWt0N_O+P=NrX2-GMtGmaLU6kz3W+JHJo2U+UTmEhcycw@mail.gmail.com>
-In-Reply-To: <CAMpxmJWt0N_O+P=NrX2-GMtGmaLU6kz3W+JHJo2U+UTmEhcycw@mail.gmail.com>
-From:   Peter Robinson <pbrobinson@gmail.com>
-Date:   Thu, 17 Jun 2021 08:37:35 +0100
-Message-ID: <CALeDE9PAUiQWBz=A-i=vyLqtGT2Kk3V6xY7NG1zHfM1=kvBWtA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Add support for the On Semi pca9655
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+References: <20210615191543.1043414-1-robh@kernel.org>
+In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 17 Jun 2021 11:14:25 +0200
+Message-ID: <CAPDyKFrY4UOO5CbZ8Bj7AH2+3Wo1PRpUv+Zs96tub=MzGuGrrQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-crypto@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-can@vger.kernel.org,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-phy@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 8:28 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
+On Tue, 15 Jun 2021 at 21:15, Rob Herring <robh@kernel.org> wrote:
 >
-> On Mon, Jun 14, 2021 at 10:10 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Mon, Jun 14, 2021 at 1:05 AM Peter Robinson <pbrobinson@gmail.com> wrote:
-> > >
-> > > The On Semi pca9655 is a 16 bit variant of the On Semi pca9654 GPIO
-> > > expander, with 16 GPIOs and interrupt functionality.
-> >
-> > I don't remember the context...
-> >
-> > >         { .compatible = "onnn,cat9554", .data = OF_953X( 8, PCA_INT), },
-> > >         { .compatible = "onnn,pca9654", .data = OF_953X( 8, PCA_INT), },
-> > > +       { .compatible = "onnn,pca9655", .data = OF_953X( 16, PCA_INT), },
-> >
-> > ...but the first space (before 16) seems not necessary and the idea as
-> > far as I can see from here is to have those columns to be indented
-> > nicely.
-> >
-> > >         { .compatible = "exar,xra1202", .data = OF_953X( 8, 0), },
-> > >         { }
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
+> If a property has an 'items' list, then a 'minItems' or 'maxItems' with t=
+he
+> same size as the list is redundant and can be dropped. Note that is DT
+> schema specific behavior and not standard json-schema behavior. The tooli=
+ng
+> will fixup the final schema adding any unspecified minItems/maxItems.
 >
-> I applied the patch and fixed the indentation problem in my tree. Thanks!
+> This condition is partially checked with the meta-schema already, but
+> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
+> An improved meta-schema is pending.
+>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Jassi Brar <jassisinghbrar@gmail.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Wolfgang Grandegger <wg@grandegger.com>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Vivien Didelot <vivien.didelot@gmail.com>
+> Cc: Vladimir Oltean <olteanv@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Ohad Ben-Cohen <ohad@wizery.com>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Awesome, thanks!
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org> # for MMC
+
+[...]
+
+Kind regards
+Uffe
