@@ -2,187 +2,302 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 782383AB0E0
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 12:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D3F03AB217
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jun 2021 13:14:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231818AbhFQKHe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Jun 2021 06:07:34 -0400
-Received: from mail-dm6nam11on2045.outbound.protection.outlook.com ([40.107.223.45]:2463
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229901AbhFQKHd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 17 Jun 2021 06:07:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nCSnBdremj+nLcn3ZayYFwYDd0/Br63iwpUcp3s6LkNUhdXOJsMvizqFONs9/DMKUeSh4eg4GvjWjDZrpCG1VQI2oGUuuZ/q1dqTasM4nF4URAgYezNcnuULcRssafLrIPuMXZ7fU0fSd8spbF2jJ/+SHyYGb7YcrErE5qCePAEGBM2HTXPYDPFFQKq4zA2ZQE9phavEAGbUGd34RIJ6M+UR9eIjFXmEYfX6jxTWfk9XdSZLZD53U26dtRaon3HxbqSz9DOK0Pa4+bATCmnIBw2wzLwcqhBFvcHkUw6Z9xJwCBsQYo6GtuJlbk9FfjGF26O9Hi4brmrAQglDixW1yQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AvR/MUuGXc54WehSPmrasOmMvjphij/wReQWb98tung=;
- b=NeBh0yINjWsu63E//JlnMCDAJg7zBQPZ+Sbivr8TorJv/gNKFjOxEegJs7LNih17VbAGPjbZLJTcF5ASyU/UU5iAXUNkImEhK/JkpQOn7YBTJSIdCuQ1cZHFkavs4PG/nZsu3pDLWaXEvTorrcqxv/0103I/m7swONQ+zx/rlS/n/pX5IfMd7ZXdSaQsFTx5RikJIXLBbWiKsPPhIxsJg4CZTAvzs/OHndDRB+VhTAR9Ux6tnl/pAR2uqPbyBhkhHPHqLYeM/KiZ+PdwomXAnu8ltO2QCT1FpeuzBFoOfq0I+EmNT7HTWpBEa/8XCNRZeaZZxWYbbk1S6n2TmO0gzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.35) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AvR/MUuGXc54WehSPmrasOmMvjphij/wReQWb98tung=;
- b=r2SzAluLiJX9E0j2xaFVxX/V847Ut76Lbh1vJgafOLlHb+Lam99e+mnUHkNzJ13txO2oTm8cDNrIX1Yn/8FD3mY5lb9Z9URLXkJUPwkzIClXLd+KsGqxN4h7s+ePQzjwW/QcKRy0riSKKIdwI+Us0Vp/WKuzj4IAc6ikbQbeam14JyHR1dlsYdQGpVH3FX9LcbQmpB/puWcfkAJpym4UsmoNCMnKU0ftDXGoVaXH0zYBORZvGWhnomijscB/Pd88J8xD8lk/WdxKeazzq+ZEPoTCA8/L4ZbOIg7iiGscBHcf+rEj8jcBSoo+vZJkhGwJUppRLkwB7YW6MxrGzdbjUA==
-Received: from MWHPR21CA0040.namprd21.prod.outlook.com (2603:10b6:300:129::26)
- by BYAPR12MB3287.namprd12.prod.outlook.com (2603:10b6:a03:131::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.18; Thu, 17 Jun
- 2021 10:05:24 +0000
-Received: from CO1NAM11FT004.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:129:cafe::bd) by MWHPR21CA0040.outlook.office365.com
- (2603:10b6:300:129::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.0 via Frontend
- Transport; Thu, 17 Jun 2021 10:05:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.35; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.35) by
- CO1NAM11FT004.mail.protection.outlook.com (10.13.175.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4242.16 via Frontend Transport; Thu, 17 Jun 2021 10:05:24 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 17 Jun
- 2021 10:05:23 +0000
-Received: from kyarlagadda-linux.nvidia.com (172.20.187.5) by mail.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 17 Jun 2021 03:05:20 -0700
-From:   Akhil R <akhilrajeev@nvidia.com>
-To:     <akhilrajeev@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>,
+        id S231593AbhFQLQ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Jun 2021 07:16:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53578 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231396AbhFQLQ0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 17 Jun 2021 07:16:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623928458;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UShfFP0yGU8xaRFO0Sd23m6zKnfLcJDtjSbsNFViaSE=;
+        b=b6eGQmWmjVWh1uBUnmLDI67bUD/uHf4J+LTuFs1ySHmyHD2zleyB9IErsltBenDsFXiIdH
+        SFNmomn5+Ga3Wdfl0lVNdJjfJR54ZP12kUnaZydt4B744JCHaiA986HQLfJfyVysw/5zxi
+        6yU49bu3SHpufRCep4vO+OchtAAFZeY=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-VYTo0NMwNA6Xi4AgOQX-2w-1; Thu, 17 Jun 2021 07:14:16 -0400
+X-MC-Unique: VYTo0NMwNA6Xi4AgOQX-2w-1
+Received: by mail-ej1-f72.google.com with SMTP id jy19-20020a1709077633b02903eb7acdb38cso2020931ejc.14
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 04:14:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UShfFP0yGU8xaRFO0Sd23m6zKnfLcJDtjSbsNFViaSE=;
+        b=Vt94AvMo8H7oEjQhhNZG+yMEMH6/lwSNfAxZuAJqR+F1Hy3Rboor2Pz0yPlHWZnWR6
+         FZ5MnRAhHSvukcpvCkgtckEpTxkEeNs+mK/y1DrAXJXjKhEp/TEc19Z4jaN+gZbzJx3Q
+         VWmab2fkcfSjzKQ5ZSkXZDXklhJY/0qCqviBg3dbkZtbh/k7uUBV8Sc06ToGxpuS/jAq
+         fUfwmZfczVzQ3o5gVb7rA3pNgv0+MDJUYTvGPZHNW82n1oyIsdgp8+FXq7Yx/c5RO4dx
+         3l4yhMrD0t63XqCkLClmMvQKak0h0f4C9fiq70FEs5yiS9+TiXUOreKBeZvt5BfWjvK5
+         kx2Q==
+X-Gm-Message-State: AOAM532H+zOjVyVBIsRg7/PhlXLfmYyYNIrNpI0Fwvn+n00SiKqjh6MH
+        qiXP1Z3prFWJoiR+xlXYctAW3eu2idxYSgyQckuXbMZ7t0kWCvTexQ1oTHfAEsUGuAI8uNftn+Z
+        Xm8Buj4VLi9p4L3dDfK9xvA==
+X-Received: by 2002:a05:6402:518a:: with SMTP id q10mr5854944edd.198.1623928455746;
+        Thu, 17 Jun 2021 04:14:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyIW5ArmRxaDEzKHF3ObIivFWgmTxdnHyFD1/J1dazYNKKybZCVI/wY7eL/o+yNC93TJ0levw==
+X-Received: by 2002:a05:6402:518a:: with SMTP id q10mr5854931edd.198.1623928455570;
+        Thu, 17 Jun 2021 04:14:15 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id m11sm607521ejl.102.2021.06.17.04.14.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Jun 2021 04:14:14 -0700 (PDT)
+Subject: Re: [PATCH v5 6/6] mfd: tps68470: Remove tps68470 MFD driver
+To:     Daniel Scally <djrscally@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org
+Cc:     Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Suresh Mangipudi <smangipudi@nvidia.com>,
-        Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Subject: [PATCH] gpio: tegra186: Add ACPI support
-Date:   Thu, 17 Jun 2021 15:35:51 +0530
-Message-ID: <1623924351-22489-1-git-send-email-akhilrajeev@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Wolfram Sang <wsa@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20210603224007.120560-1-djrscally@gmail.com>
+ <20210603224007.120560-7-djrscally@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <4083819a-eabf-fb2d-2ce8-5f6a409c69a0@redhat.com>
+Date:   Thu, 17 Jun 2021 13:14:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 22a8c65d-bc49-4d90-ee4b-08d931776cc8
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3287:
-X-Microsoft-Antispam-PRVS: <BYAPR12MB328700AE9818408639F18397C00E9@BYAPR12MB3287.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1051;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZlDT2lRBiVt0fR8V91KDtCePof6ju1S2oN2+wQzmTVmgOLCIemOXFpY7COPaKsPCQyogdJ6jnnX2Z7ZgIGGi5huj5Dy4Y9Y/fCdgXqi+VrOh3zGsCSn4ltyQreUe8hSgbvQLrMiWzs3TwkEhyDleaPVgXpPhTBs3DxZgFkXmQmRiIFyBJKC8AR+zoS/xQAkoIgUiQMSzkgEd4cuv0kfKs7N93N8FjlmTta2z3dxhPsv2yh7ajfl2Mw33WS3Vj6evGrA22F1sklfZE0+fkk1dImPfze20LUGPy3iM+UHsr+Vnm7pmT+xz4RxMaO40NjR0r3zpa7jumx7G68cg6J5W4rpW9PjY9OZu0mUFIGE/7HNmQ0pRe0YqjzA2eJGPkeKOSNqv93RQu6aY46kGGC+Yn94FbgEVI78jcdHG4XE6S8eTbuo0Q3JjpNZSaVIoaQww1BJJrUQdKCx8arkGjecNCTfk3zymWJEkT8fKWfdn8Vnlil5v159xCNM0LepEEpAVtcvsrWyeyqTr2wuK1X7OY9WhdW1wpcvt3EKRAJPqC+/HPJhLXtUbTLOJfEpkt7S0CJ5Ksabw7sktZLZ8MKMNYkQ3p5K+FZ3dsoTY1zrEgqZyZsqssSmQcx5UxdYaXHn7zQ0POtmAOXU8LBs0VEuJmzMM0C2RZ47VRLxldatQOi0=
-X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid02.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(39860400002)(396003)(36840700001)(46966006)(82740400003)(5660300002)(478600001)(70586007)(36756003)(356005)(8936002)(110136005)(47076005)(4326008)(36860700001)(70206006)(7696005)(86362001)(54906003)(2616005)(83380400001)(26005)(7636003)(6666004)(336012)(426003)(8676002)(6636002)(36906005)(316002)(2906002)(186003)(107886003)(82310400003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2021 10:05:24.4583
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22a8c65d-bc49-4d90-ee4b-08d931776cc8
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT004.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3287
+In-Reply-To: <20210603224007.120560-7-djrscally@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Akhil Rajeev <akhilrajeev@nvidia.com>
+Hi,
 
-Add ACPI module ID to probe the driver from the ACPI based bootloader
-firmware.
+On 6/4/21 12:40 AM, Daniel Scally wrote:
+> This driver only covered one scenario in which ACPI devices with _HID
+> INT3472 are found, and its functionality has been taken over by the
+> intel-skl-int3472 module, so remove it.
+> 
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Daniel Scally <djrscally@gmail.com>
 
-Signed-off-by: Akhil Rajeev <akhilrajeev@nvidia.com>
----
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
- drivers/gpio/gpio-tegra186.c | 35 ++++++++++++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 7 deletions(-)
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index 1bd9e44..c8051be 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -5,6 +5,7 @@
-  * Author: Thierry Reding <treding@nvidia.com>
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/gpio/driver.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -620,13 +621,18 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 	if (!gpio)
- 		return -ENOMEM;
- 
--	gpio->soc = of_device_get_match_data(&pdev->dev);
-+	gpio->soc = device_get_match_data(&pdev->dev);
-+	if (has_acpi_companion(&pdev->dev)) {
-+		gpio->secure = devm_platform_ioremap_resource(pdev, 0);
-+		gpio->base = devm_platform_ioremap_resource(pdev, 1);
-+	} else {
-+		gpio->secure = devm_platform_ioremap_resource_byname(pdev, "security");
-+		gpio->base = devm_platform_ioremap_resource_byname(pdev, "gpio");
-+	}
- 
--	gpio->secure = devm_platform_ioremap_resource_byname(pdev, "security");
- 	if (IS_ERR(gpio->secure))
- 		return PTR_ERR(gpio->secure);
- 
--	gpio->base = devm_platform_ioremap_resource_byname(pdev, "gpio");
- 	if (IS_ERR(gpio->base))
- 		return PTR_ERR(gpio->base);
- 
-@@ -690,11 +696,15 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 
- 	gpio->gpio.names = (const char * const *)names;
- 
--	gpio->gpio.of_node = pdev->dev.of_node;
--	gpio->gpio.of_gpio_n_cells = 2;
--	gpio->gpio.of_xlate = tegra186_gpio_of_xlate;
- 
--	gpio->intc.name = pdev->dev.of_node->name;
-+	if (!has_acpi_companion(&pdev->dev)) {
-+		gpio->gpio.of_node = pdev->dev.of_node;
-+		gpio->gpio.of_gpio_n_cells = 2;
-+		gpio->gpio.of_xlate = tegra186_gpio_of_xlate;
-+		gpio->intc.name = pdev->dev.of_node->name;
-+	} else {
-+		gpio->intc.name = gpio->soc->name;
-+	}
- 	gpio->intc.irq_ack = tegra186_irq_ack;
- 	gpio->intc.irq_mask = tegra186_irq_mask;
- 	gpio->intc.irq_unmask = tegra186_irq_unmask;
-@@ -918,10 +928,21 @@ static const struct of_device_id tegra186_gpio_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, tegra186_gpio_of_match);
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id tegra186_gpio_acpi_match[] = {
-+	{ .id = "NVDA0108", .driver_data = (kernel_ulong_t)&tegra186_main_soc },
-+	{ .id = "NVDA0208", .driver_data = (kernel_ulong_t)&tegra186_aon_soc },
-+	{ .id = "NVDA0308", .driver_data = (kernel_ulong_t)&tegra194_main_soc },
-+	{ .id = "NVDA0408", .driver_data = (kernel_ulong_t)&tegra194_aon_soc },
-+};
-+MODULE_DEVICE_TABLE(acpi, tegra186_gpio_acpi_match);
-+#endif
-+
- static struct platform_driver tegra186_gpio_driver = {
- 	.driver = {
- 		.name = "tegra186-gpio",
- 		.of_match_table = tegra186_gpio_of_match,
-+		.acpi_match_table = ACPI_PTR(tegra186_gpio_acpi_match),
- 	},
- 	.probe = tegra186_gpio_probe,
- 	.remove = tegra186_gpio_remove,
--- 
-2.7.4
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+
+> ---
+> Changes since v4:
+> 	- None
+> 
+>  drivers/acpi/pmic/Kconfig |  2 +-
+>  drivers/gpio/Kconfig      |  2 +-
+>  drivers/mfd/Kconfig       | 18 --------
+>  drivers/mfd/Makefile      |  1 -
+>  drivers/mfd/tps68470.c    | 97 ---------------------------------------
+>  5 files changed, 2 insertions(+), 118 deletions(-)
+>  delete mode 100644 drivers/mfd/tps68470.c
+> 
+> diff --git a/drivers/acpi/pmic/Kconfig b/drivers/acpi/pmic/Kconfig
+> index 56bbcb2ce61b..f84b8f6038dc 100644
+> --- a/drivers/acpi/pmic/Kconfig
+> +++ b/drivers/acpi/pmic/Kconfig
+> @@ -52,7 +52,7 @@ endif	# PMIC_OPREGION
+>  
+>  config TPS68470_PMIC_OPREGION
+>  	bool "ACPI operation region support for TPS68470 PMIC"
+> -	depends on MFD_TPS68470
+> +	depends on INTEL_SKL_INT3472
+>  	help
+>  	  This config adds ACPI operation region support for TI TPS68470 PMIC.
+>  	  TPS68470 device is an advanced power management unit that powers
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 1dd0ec6727fd..10228abeee56 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1367,7 +1367,7 @@ config GPIO_TPS65912
+>  
+>  config GPIO_TPS68470
+>  	bool "TPS68470 GPIO"
+> -	depends on MFD_TPS68470
+> +	depends on INTEL_SKL_INT3472
+>  	help
+>  	  Select this option to enable GPIO driver for the TPS68470
+>  	  chip family.
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 5c7f2b100191..99c4e1a80ae0 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1499,24 +1499,6 @@ config MFD_TPS65217
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called tps65217.
+>  
+> -config MFD_TPS68470
+> -	bool "TI TPS68470 Power Management / LED chips"
+> -	depends on ACPI && PCI && I2C=y
+> -	depends on I2C_DESIGNWARE_PLATFORM=y
+> -	select MFD_CORE
+> -	select REGMAP_I2C
+> -	help
+> -	  If you say yes here you get support for the TPS68470 series of
+> -	  Power Management / LED chips.
+> -
+> -	  These include voltage regulators, LEDs and other features
+> -	  that are often used in portable devices.
+> -
+> -	  This option is a bool as it provides an ACPI operation
+> -	  region, which must be available before any of the devices
+> -	  using this are probed. This option also configures the
+> -	  designware-i2c driver to be built-in, for the same reason.
+> -
+>  config MFD_TI_LP873X
+>  	tristate "TI LP873X Power Management IC"
+>  	depends on I2C
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 4f6d2b8a5f76..8b322d89a0c5 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -105,7 +105,6 @@ obj-$(CONFIG_MFD_TPS65910)	+= tps65910.o
+>  obj-$(CONFIG_MFD_TPS65912)	+= tps65912-core.o
+>  obj-$(CONFIG_MFD_TPS65912_I2C)	+= tps65912-i2c.o
+>  obj-$(CONFIG_MFD_TPS65912_SPI)  += tps65912-spi.o
+> -obj-$(CONFIG_MFD_TPS68470)	+= tps68470.o
+>  obj-$(CONFIG_MFD_TPS80031)	+= tps80031.o
+>  obj-$(CONFIG_MENELAUS)		+= menelaus.o
+>  
+> diff --git a/drivers/mfd/tps68470.c b/drivers/mfd/tps68470.c
+> deleted file mode 100644
+> index 4a4df4ffd18c..000000000000
+> --- a/drivers/mfd/tps68470.c
+> +++ /dev/null
+> @@ -1,97 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -/*
+> - * TPS68470 chip Parent driver
+> - *
+> - * Copyright (C) 2017 Intel Corporation
+> - *
+> - * Authors:
+> - *	Rajmohan Mani <rajmohan.mani@intel.com>
+> - *	Tianshu Qiu <tian.shu.qiu@intel.com>
+> - *	Jian Xu Zheng <jian.xu.zheng@intel.com>
+> - *	Yuning Pu <yuning.pu@intel.com>
+> - */
+> -
+> -#include <linux/acpi.h>
+> -#include <linux/delay.h>
+> -#include <linux/i2c.h>
+> -#include <linux/init.h>
+> -#include <linux/mfd/core.h>
+> -#include <linux/mfd/tps68470.h>
+> -#include <linux/regmap.h>
+> -
+> -static const struct mfd_cell tps68470s[] = {
+> -	{ .name = "tps68470-gpio" },
+> -	{ .name = "tps68470_pmic_opregion" },
+> -};
+> -
+> -static const struct regmap_config tps68470_regmap_config = {
+> -	.reg_bits = 8,
+> -	.val_bits = 8,
+> -	.max_register = TPS68470_REG_MAX,
+> -};
+> -
+> -static int tps68470_chip_init(struct device *dev, struct regmap *regmap)
+> -{
+> -	unsigned int version;
+> -	int ret;
+> -
+> -	/* Force software reset */
+> -	ret = regmap_write(regmap, TPS68470_REG_RESET, TPS68470_REG_RESET_MASK);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = regmap_read(regmap, TPS68470_REG_REVID, &version);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to read revision register: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	dev_info(dev, "TPS68470 REVID: 0x%x\n", version);
+> -
+> -	return 0;
+> -}
+> -
+> -static int tps68470_probe(struct i2c_client *client)
+> -{
+> -	struct device *dev = &client->dev;
+> -	struct regmap *regmap;
+> -	int ret;
+> -
+> -	regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
+> -	if (IS_ERR(regmap)) {
+> -		dev_err(dev, "devm_regmap_init_i2c Error %ld\n",
+> -			PTR_ERR(regmap));
+> -		return PTR_ERR(regmap);
+> -	}
+> -
+> -	i2c_set_clientdata(client, regmap);
+> -
+> -	ret = tps68470_chip_init(dev, regmap);
+> -	if (ret < 0) {
+> -		dev_err(dev, "TPS68470 Init Error %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, tps68470s,
+> -			      ARRAY_SIZE(tps68470s), NULL, 0, NULL);
+> -	if (ret < 0) {
+> -		dev_err(dev, "devm_mfd_add_devices failed: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static const struct acpi_device_id tps68470_acpi_ids[] = {
+> -	{"INT3472"},
+> -	{},
+> -};
+> -
+> -static struct i2c_driver tps68470_driver = {
+> -	.driver = {
+> -		   .name = "tps68470",
+> -		   .acpi_match_table = tps68470_acpi_ids,
+> -	},
+> -	.probe_new = tps68470_probe,
+> -};
+> -builtin_i2c_driver(tps68470_driver);
+> 
 
