@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE35F3AC83F
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jun 2021 11:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E89803AC88F
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jun 2021 12:12:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233364AbhFRKBD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Jun 2021 06:01:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40794 "EHLO
+        id S233274AbhFRKPC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Jun 2021 06:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233327AbhFRKBC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Jun 2021 06:01:02 -0400
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F08C061767
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Jun 2021 02:58:53 -0700 (PDT)
-Received: by mail-oi1-x234.google.com with SMTP id s23so9943697oiw.9
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Jun 2021 02:58:53 -0700 (PDT)
+        with ESMTP id S233321AbhFRKPB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Jun 2021 06:15:01 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AF28C061760
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Jun 2021 03:12:51 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id w23-20020a0568301117b029044c37262dadso3819425otq.8
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Jun 2021 03:12:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QOIw6n82TPYeF0v/0YjgvxC4lNlWdjmeYawtnmFBQYc=;
-        b=EPA4AJrspMLp/Ra/H5I5fQ00+L141U+Kz4boPpR/WuTEjzDeX+VKL84fkeUFeeEmq+
-         61cR65dyTXNfSQ3xpjNyTBmfGW144v60mLb4keUyKlblCJRyBDed7bv+/KrNbveNn4q/
-         CvLKaqwGTM4PDBoxomaC3t62QRQWCMFfvnaNqnwXjV4WCVDFtT1acI5RnuZ+GVSkiCKU
-         +WZUyTVXdZi9w9NRM3rMI3AQZ0iaTbTwsB27+7Etrr+ZMTVU5zKp/Q00t6iGZbd38k6n
-         +SbeCNIwT11SgimNvuQDQ+IWmHB8WyuZmemJKK7w17OYTuyRCvfspwfsv2JF9t8oPROd
-         Mc0g==
+        bh=ziEgOzcP1HByIwM5tzkw38PrntEO3ToJbYWi+oRdGcs=;
+        b=PdJl0ncgrhfekyPHp+KqwLByDJx2Zx1fUgbF2xiq4jALmjPa09pYQTcwt9o5SZ3FDq
+         +mmWaE4r4lH84yr6Q/F09ayO2bq98b2RuKnwAaqZzUXy1D5F6sNGkfD1cdXOPGC+eBXT
+         3QnVHBsPfKkchYlmwi850FIBz+aseO7hgkfjWNoCil1YxCXyhg1OzuIstRmIUAoLA1gE
+         T41vAbLC7LANLbus+TouLLqdAVDBCRPb5Yoihh14+97GnWw+k8u/txz2z7884qrYQeue
+         NiQEl77YaIM5a9ZxsLj3JTYo+Y8GqNm4LfOvYqwVnXVzPbUQCSeROhWaZo8FGGC8D4Vt
+         9v9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QOIw6n82TPYeF0v/0YjgvxC4lNlWdjmeYawtnmFBQYc=;
-        b=JranMyL7mC76Qbgdagwe3pzAn+/wuEARE9kNkmT4ms43uV1RnVDjDjBbFfjeBgN1zC
-         mtBHgHOj3rFi4IQPMXwV48uCj/P8dtGLtlOMLEslzww6VI/kdmGREvLqQvhwtqqDSXUj
-         t2QtteOXhLFm7KXFfxuh8Kmp3HOa+fjYTFt5yuoX+TYLrnJMKfRg89ISw5jiDwebAb0D
-         WEl8EVJSdP7zdaTTVe8XBtbCGd5TsXayL97arsykyKtReGHWThCl7+ihNyGDLr7jieCl
-         FUAPdEBbnrv9zGNY1+xo+65eYx5126W1w0gYGuYFISAurgI3MlZ3/ovj9+0vU4pzLezK
-         Gsaw==
-X-Gm-Message-State: AOAM531e96nh6q+m+Af5CFZOYGKg6PBqCSNkK7+WwsPg3nEZr/pQP0Zv
-        BCvx15oDhxsAmal7UBhAjeH9o/W62y2pM73qKanWYg==
-X-Google-Smtp-Source: ABdhPJyFpWjzpuT5d0e6NwVemzHMdNPpkfuJ8rhZ5h81rBu8lA4gOlgQ5xjt4ubqCEuQhfLBUC88O3DD7nYKAm65G5g=
-X-Received: by 2002:aca:4bd7:: with SMTP id y206mr6972005oia.40.1624010332587;
- Fri, 18 Jun 2021 02:58:52 -0700 (PDT)
+        bh=ziEgOzcP1HByIwM5tzkw38PrntEO3ToJbYWi+oRdGcs=;
+        b=esHt8DelPlSpPcrz6LA8u3fqn8ahtZAoHrZJRmPtZRFou+CdFbXK9ttFVrWP+6kkdH
+         8bNf33/SSh8cytNwmwPCAqN5HQTnI1vWzPE5lPB6Oo91V+5j4SnhtdxjwNx+dpxwntDp
+         5sCSbJhlmou8C6st2f3IUpaEsW7GZpuHkhey6sxtRBOaXnJMnzEnxqR5VLAuQ4BRUjfZ
+         fce6V8M7/mIpfAw4MP5Zl6IrIgTLTiqWLcDdElG1Mj8FoCVwD6OUqUOnd7/cE/UT476Y
+         2g70OSRMOKBJOSjiXXGB2PPltD5ZazS5mxyBFsTlGz2/iveqZESB6AKHCTUJjUE6EUvE
+         bhNg==
+X-Gm-Message-State: AOAM533abgMc0g7fMLIPYRHMvrA4xXnZokq35YbygrS4XyzEgb3h7cAw
+        j0J5nLD9kh3qLzdLdvfeiW7BVJFdlJMrk+r6MFmzkw==
+X-Google-Smtp-Source: ABdhPJzA9Ime81OAPZIz8ZFv0L/PCg9uztC6yCsFB33iXVicxGaKxCR3bjdzuMVRn5C3JruCfUO7TrEKZB+nh/CFwRo=
+X-Received: by 2002:a9d:74d4:: with SMTP id a20mr8644554otl.28.1624011170558;
+ Fri, 18 Jun 2021 03:12:50 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210617054548.353293-1-bhupesh.sharma@linaro.org>
- <20210617054548.353293-4-bhupesh.sharma@linaro.org> <cba788c2-f826-94f0-0bcd-bae491ac4189@somainline.org>
-In-Reply-To: <cba788c2-f826-94f0-0bcd-bae491ac4189@somainline.org>
+ <20210617054548.353293-5-bhupesh.sharma@linaro.org> <6011130d-8ce8-420b-6e55-5d168fef0347@somainline.org>
+In-Reply-To: <6011130d-8ce8-420b-6e55-5d168fef0347@somainline.org>
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Fri, 18 Jun 2021 15:28:41 +0530
-Message-ID: <CAH=2NtxezX75zfY0qVuFFjO-XfSgh7fuSwdyO25z9q8bq6nG4Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] arm64: dts: qcom: pmm8155au_1: Add base dts file
+Date:   Fri, 18 Jun 2021 15:42:39 +0530
+Message-ID: <CAH=2Ntw5uZOLmc8b3oB5CizYQQ_Oxie3Hk_Z68WwHb=u2Xx05w@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] arm64: dts: qcom: pmm8155au_2: Add base dts file
 To:     Konrad Dybcio <konrad.dybcio@somainline.org>
 Cc:     linux-arm-msm@vger.kernel.org, bhupesh.linux@gmail.com,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -67,14 +67,13 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Konrad,
 
-Thanks for the review.
+Thanks for your review.
 
-On Fri, 18 Jun 2021 at 04:04, Konrad Dybcio
+On Fri, 18 Jun 2021 at 04:02, Konrad Dybcio
 <konrad.dybcio@somainline.org> wrote:
 >
 >
-> On 17.06.2021 07:45, Bhupesh Sharma wrote:
-> > Add base DTS file for pmm8155au_1 along with GPIOs, power-on, rtc and vadc
+> > Add base DTS file for pmm8155au_2 along with GPIOs, power-on, rtc and vadc
 > > nodes.
 > >
 > > Cc: Mark Brown <broonie@kernel.org>
@@ -82,16 +81,16 @@ On Fri, 18 Jun 2021 at 04:04, Konrad Dybcio
 > > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
 > > ---
-> >  arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi | 134 ++++++++++++++++++++++
-> >  1 file changed, 134 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi
+> >  arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi | 107 ++++++++++++++++++++++
+> >  1 file changed, 107 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi
 > >
-> > diff --git a/arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi b/arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi
+> > diff --git a/arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi b/arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi
 > > new file mode 100644
-> > index 000000000000..b04c28e54470
+> > index 000000000000..0c7d7a66c0b5
 > > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi
-> > @@ -0,0 +1,134 @@
+> > +++ b/arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi
+> > @@ -0,0 +1,107 @@
 > > +// SPDX-License-Identifier: BSD-3-Clause
 > > +/*
 > > + * Copyright (c) 2021, Linaro Limited
@@ -100,15 +99,14 @@ On Fri, 18 Jun 2021 at 04:04, Konrad Dybcio
 > > +#include <dt-bindings/input/input.h>
 > > +#include <dt-bindings/interrupt-controller/irq.h>
 > > +#include <dt-bindings/spmi/spmi.h>
-> > +#include <dt-bindings/iio/qcom,spmi-vadc.h>
 > > +
 > > +/ {
 > > +     thermal-zones {
-> > +             pmm8155au-1-thermal {
+> > +             pmm8155au-2-thermal {
 > > +                     polling-delay-passive = <100>;
 > > +                     polling-delay = <0>;
 > > +
-> > +                     thermal-sensors = <&pmm8155au_1_temp>;
+> > +                     thermal-sensors = <&pmm8155au_2_temp>;
 > > +
 > > +                     trips {
 > > +                             trip0 {
@@ -134,49 +132,42 @@ On Fri, 18 Jun 2021 at 04:04, Konrad Dybcio
 > > +};
 > > +
 > > +&spmi_bus {
-> > +     pmic@0 {
+> > +     pmic@4 {
 > > +             compatible = "qcom,pmm8155au", "qcom,spmi-pmic";
-> > +             reg = <0x0 SPMI_USID>;
+> > +             reg = <0x4 SPMI_USID>;
 > > +             #address-cells = <1>;
 > > +             #size-cells = <0>;
 > > +
-> > +             pon: power-on@800 {
+> > +             power-on@800 {
 > > +                     compatible = "qcom,pm8916-pon";
 > > +                     reg = <0x0800>;
-> > +                     pwrkey {
-> > +                             compatible = "qcom,pm8941-pwrkey";
-> > +                             interrupts = <0x0 0x8 0x0 IRQ_TYPE_EDGE_BOTH>;
-> > +                             debounce = <15625>;
-> > +                             bias-pull-up;
-> > +                             linux,code = <KEY_POWER>;
+>
+> No common debounce, interrupts, bias- property or pwrkey key code?
+>
+> Besides, (as a question to Bjorn and others) do we pad reg to 4 digits in PMIC DTs now?
+
+Maybe Bjorn can pitch in with his thoughts here.
+
 > > +
-> > +                             status = "disabled";
-> > +                     };
->
-> Oh, okay, so the power key is there, then I withdraw my worries from _2.
->
-> I'm still interested in the reg situation though.
->
->
->
+> > +                     status = "disabled";
 > > +             };
 > > +
-> > +             pmm8155au_1_temp: temp-alarm@2400 {
+> > +             pmm8155au_2_temp: temp-alarm@2400 {
 > > +                     compatible = "qcom,spmi-temp-alarm";
 > > +                     reg = <0x2400>;
-> > +                     interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_BOTH>;
-> > +                     io-channels = <&pmm8155au_1_adc ADC5_DIE_TEMP>;
+> > +                     interrupts = <0x4 0x24 0x0 IRQ_TYPE_EDGE_BOTH>;
+> > +                     io-channels = <&pmm8155au_2_adc ADC5_DIE_TEMP>;
 > > +                     io-channel-names = "thermal";
 > > +                     #thermal-sensor-cells = <0>;
 > > +             };
 > > +
-> > +             pmm8155au_1_adc: adc@3100 {
+> > +             pmm8155au_2_adc: adc@3100 {
 > > +                     compatible = "qcom,spmi-adc5";
 > > +                     reg = <0x3100>;
 > > +                     #address-cells = <1>;
 > > +                     #size-cells = <0>;
 > > +                     #io-channel-cells = <1>;
-> > +                     interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
+> > +                     interrupts = <0x4 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
 > > +
 > > +                     ref-gnd@0 {
 > > +                             reg = <ADC5_REF_GND>;
@@ -197,26 +188,7 @@ On Fri, 18 Jun 2021 at 04:04, Konrad Dybcio
 > > +                     };
 > > +             };
 > > +
-> > +             pmm8155au_1_adc_tm: adc-tm@3500 {
-> > +                     compatible = "qcom,spmi-adc-tm5";
-> > +                     reg = <0x3500>;
-> > +                     interrupts = <0x0 0x35 0x0 IRQ_TYPE_EDGE_RISING>;
-> > +                     #thermal-sensor-cells = <1>;
-> > +                     #address-cells = <1>;
-> > +                     #size-cells = <0>;
-> > +                     status = "disabled";
-> > +             };
-> > +
-> > +             pmm8155au_1_rtc: rtc@6000 {
-> > +                     compatible = "qcom,pm8941-rtc";
-> > +                     reg = <0x6000>;
-> > +                     reg-names = "rtc", "alarm";
-> > +                     interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
-> > +
-> > +                     status = "disabled";
-> > +             };
-> > +
-> > +             pmm8155au_1_gpios: gpio@c000 {
+> > +             pmm8155au_2_gpios: gpio@c000 {
 > > +                     compatible = "qcom,pmm8155au-gpio";
 > > +                     reg = <0xc000>;
 > > +                     gpio-controller;
@@ -225,10 +197,33 @@ On Fri, 18 Jun 2021 at 04:04, Konrad Dybcio
 > > +                     #interrupt-cells = <2>;
 > > +             };
 >
-> And the same question about gpio-ranges from _2.
+> Don't we do gpio-ranges anymore?
 
-Sure, let's use the thread for [PATCH 2/5] for the discussion on these
-review comments as the same comments are applicable there as well.
+Maybe Bjorn can pitch in with his thoughts here as he may have more
+historical context, but I personally think that since the mapping
+between the  pin controller local number space and the pins in the
+GPIO controller local number space is 1:1 (same) here, adding
+gpio-ranges property here is optional (as it provides little
+additional information).
+
+But I might have missed something here, so I will wait for more
+thoughts from Bjorn.
 
 Thanks,
 Bhupesh
+
+>
+>
+> > +     };
+> > +
+> > +     pmic@5 {
+> > +             compatible = "qcom,pmm8155au", "qcom,spmi-pmic";
+> > +             reg = <0x5 SPMI_USID>;
+> > +             #address-cells = <1>;
+> > +             #size-cells = <0>;
+> > +     };
+> > +};
+>
+>
+> Konrad
+>
