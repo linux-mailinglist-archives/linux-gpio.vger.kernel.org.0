@@ -2,215 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92A533ABEFE
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jun 2021 00:34:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AEF53AC091
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jun 2021 03:33:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232560AbhFQWgh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Jun 2021 18:36:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
+        id S233539AbhFRBfh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Jun 2021 21:35:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231438AbhFQWgg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 18:36:36 -0400
-Received: from relay08.th.seeweb.it (relay08.th.seeweb.it [IPv6:2001:4b7a:2000:18::169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E44FEC061574;
-        Thu, 17 Jun 2021 15:34:27 -0700 (PDT)
-Received: from [192.168.1.101] (83.6.168.10.neoplus.adsl.tpnet.pl [83.6.168.10])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 0D9B63F647;
-        Fri, 18 Jun 2021 00:34:24 +0200 (CEST)
-Subject: Re: [PATCH v3 3/5] arm64: dts: qcom: pmm8155au_1: Add base dts file
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Cc:     bhupesh.linux@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, agross@kernel.org,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <20210617054548.353293-1-bhupesh.sharma@linaro.org>
- <20210617054548.353293-4-bhupesh.sharma@linaro.org>
-From:   Konrad Dybcio <konrad.dybcio@somainline.org>
-Message-ID: <cba788c2-f826-94f0-0bcd-bae491ac4189@somainline.org>
-Date:   Fri, 18 Jun 2021 00:34:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        with ESMTP id S233475AbhFRBfh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Jun 2021 21:35:37 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F064BC061574
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 18:33:27 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id y4so29910pfi.9
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jun 2021 18:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fsqG/Gj3GzVFRUh7CNQzL0N3TI1C+wp0FhYmuCLs+m0=;
+        b=Fv57BiX6YyCdwRnnhmS8297yD3ATD2ohH2NnxNg4eLVxnDfQGZ7YrFAq79wyjT5CAv
+         Wu3FFLiagwHAP22r5Q1mapTg2IIXMhZkJjmVchaj21J/jdano1VZByEm0lOU+CRWxazk
+         OzK3So104ejAk+VE2DZy6HUdMpWbNyiAL/n3i6S0ewyEAc85+WUXEyNbv4neog9QJ+YU
+         T37fpXKWCN2UJNBu5Fp9cmlMZDdgRp/Nrn1GuH7otDxHoXb2ZFtJGXuYBPkXVBzaGCZZ
+         k82hCtTa8tRoFjYxszrByaFo5FAKT+brqkUSrVoWpVpLdkx+8SW6iErSTdTOCvEjLl5c
+         1p/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fsqG/Gj3GzVFRUh7CNQzL0N3TI1C+wp0FhYmuCLs+m0=;
+        b=i3tM+jhBXkLC5WiMgJ8Tu+qfgeYaMuqZCGIsCLM/+WSBFSMaklXHzFszLO1Tc2vzjY
+         eb3+y/5FMZAPrNC+lP+tzd/TUb0VOM23xB7ATJ6QolU1p7jMpi13k8RMpCQNryXATY7P
+         X/GaIK9C+8vKhhnXW1BvqZLUOCcM09StDeFH+OFAU8zoS3nGt2XSXZXm9lj9r69hx0be
+         S4+UwkHQuYOIMH3jCCTaHZUJxGU0mOhnodt1e54CFxK3xGLYn5/Jc9pFqcG5GxHp89xY
+         RtNW+3gnB8smfxekz6iLducfkTBsVfh3eeQ/btRg41Yn+ZMxlqS4IdhezdfZ1JYtv7VX
+         rmKg==
+X-Gm-Message-State: AOAM53024Vb46ZS7RXnvg79DNLgAYhwa5V0TcwSfNHHJb0VE4OPFjS9S
+        z+l65aLTDsT7hTzoDooUHq0=
+X-Google-Smtp-Source: ABdhPJyR/DSLpMoeyAaUlMrIOzkBKgf2ZHUXF903dpE3b2SouE556jC/9nDzzxd807d+m5lvFvye3w==
+X-Received: by 2002:a62:e21a:0:b029:2ea:26c5:2ec3 with SMTP id a26-20020a62e21a0000b02902ea26c52ec3mr2740960pfi.8.1623980007422;
+        Thu, 17 Jun 2021 18:33:27 -0700 (PDT)
+Received: from sol (106-69-169-160.dyn.iinet.net.au. [106.69.169.160])
+        by smtp.gmail.com with ESMTPSA id y7sm6475481pfy.153.2021.06.17.18.33.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Jun 2021 18:33:26 -0700 (PDT)
+Date:   Fri, 18 Jun 2021 09:33:22 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Gabriel Knezek <gabeknez@microsoft.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 1/1] gpiolib: Zero structure which will be returned to
+ usermode to avoid kernel info leak.
+Message-ID: <20210618013322.GA6360@sol>
+References: <SN4PR2101MB07349B91FB076894841F7D82DA0F9@SN4PR2101MB0734.namprd21.prod.outlook.com>
+ <CAHp75VeXQeVRorGNFT0jZ=GYAqii8oDqXDkvegCUOxz4jk-fSA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210617054548.353293-4-bhupesh.sharma@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeXQeVRorGNFT0jZ=GYAqii8oDqXDkvegCUOxz4jk-fSA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Jun 17, 2021 at 08:56:50AM +0300, Andy Shevchenko wrote:
+> On Thursday, June 17, 2021, Gabriel Knezek <gabeknez@microsoft.com> wrote:
+> 
+> > Apologies if I got this slightly wrong; this is actually my first time
+> > submitting a patch to the kernel. (:
+> >
+> > Thanks.
+> > -Gabe
+> 
+> 
+> 
+> Instead of above you should put a text of your analysis as you did in other
+> thread. That text should be a commit message (assuming you have cloned a
+> Git repository). `git format-patch ... ; git send-email ...` will help you
+> with preparation and sending the message.
+> 
 
-On 17.06.2021 07:45, Bhupesh Sharma wrote:
-> Add base DTS file for pmm8155au_1 along with GPIOs, power-on, rtc and vadc
-> nodes.
->
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi | 134 ++++++++++++++++++++++
->  1 file changed, 134 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi
->
-> diff --git a/arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi b/arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi
-> new file mode 100644
-> index 000000000000..b04c28e54470
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi
-> @@ -0,0 +1,134 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2021, Linaro Limited
-> + */
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/spmi/spmi.h>
-> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
-> +
-> +/ {
-> +	thermal-zones {
-> +		pmm8155au-1-thermal {
-> +			polling-delay-passive = <100>;
-> +			polling-delay = <0>;
-> +
-> +			thermal-sensors = <&pmm8155au_1_temp>;
-> +
-> +			trips {
-> +				trip0 {
-> +					temperature = <95000>;
-> +					hysteresis = <0>;
-> +					type = "passive";
-> +				};
-> +
-> +				trip1 {
-> +					temperature = <115000>;
-> +					hysteresis = <0>;
-> +					type = "hot";
-> +				};
-> +
-> +				trip2 {
-> +					temperature = <145000>;
-> +					hysteresis = <0>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&spmi_bus {
-> +	pmic@0 {
-> +		compatible = "qcom,pmm8155au", "qcom,spmi-pmic";
-> +		reg = <0x0 SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pon: power-on@800 {
-> +			compatible = "qcom,pm8916-pon";
-> +			reg = <0x0800>;
-> +			pwrkey {
-> +				compatible = "qcom,pm8941-pwrkey";
-> +				interrupts = <0x0 0x8 0x0 IRQ_TYPE_EDGE_BOTH>;
-> +				debounce = <15625>;
-> +				bias-pull-up;
-> +				linux,code = <KEY_POWER>;
-> +
-> +				status = "disabled";
-> +			};
+I don't see Andy's reply on the list for some reason, so just to
+re-iterate, you will need to issue a v2 patch.
 
-Oh, okay, so the power key is there, then I withdraw my worries from _2.
+The title could be a little more subtle ;).
+The title should summarise what the change is, not the rationale nor
+implications.  And mentioning the sub-module is handy too - in this case
+anything mentioning cdev tends to get my attention.
+So "gpiolib: cdev: zero padding during conversion to gpioline_info_changed"
+would work better for me.
 
-I'm still interested in the reg situation though.
+The checkin comment becomes part of the permanent record and so should
+describe the rationale for the change - something more along the lines of
+your initial thread, as Andy suggests.
 
+Any additional commentary, generally related to the patch itself, goes
+immediately after the "---" line - see below.  You should be able to
+find plenty of examples on list.
 
+You should use git to help format and generate your patch, as Andy
+suggests, and run scripts/checkpatch.pl over it to make sure it looks
+kosher before submitting it.
 
-> +		};
-> +
-> +		pmm8155au_1_temp: temp-alarm@2400 {
-> +			compatible = "qcom,spmi-temp-alarm";
-> +			reg = <0x2400>;
-> +			interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_BOTH>;
-> +			io-channels = <&pmm8155au_1_adc ADC5_DIE_TEMP>;
-> +			io-channel-names = "thermal";
-> +			#thermal-sensor-cells = <0>;
-> +		};
-> +
-> +		pmm8155au_1_adc: adc@3100 {
-> +			compatible = "qcom,spmi-adc5";
-> +			reg = <0x3100>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			#io-channel-cells = <1>;
-> +			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> +
-> +			ref-gnd@0 {
-> +				reg = <ADC5_REF_GND>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "ref_gnd";
-> +			};
-> +
-> +			vref-1p25@1 {
-> +				reg = <ADC5_1P25VREF>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "vref_1p25";
-> +			};
-> +
-> +			die-temp@6 {
-> +				reg = <ADC5_DIE_TEMP>;
-> +				qcom,pre-scaling = <1 1>;
-> +				label = "die_temp";
-> +			};
-> +		};
-> +
-> +		pmm8155au_1_adc_tm: adc-tm@3500 {
-> +			compatible = "qcom,spmi-adc-tm5";
-> +			reg = <0x3500>;
-> +			interrupts = <0x0 0x35 0x0 IRQ_TYPE_EDGE_RISING>;
-> +			#thermal-sensor-cells = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pmm8155au_1_rtc: rtc@6000 {
-> +			compatible = "qcom,pm8941-rtc";
-> +			reg = <0x6000>;
-> +			reg-names = "rtc", "alarm";
-> +			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		pmm8155au_1_gpios: gpio@c000 {
-> +			compatible = "qcom,pmm8155au-gpio";
-> +			reg = <0xc000>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +		};
+> >
+> > Fixes: aad95584 ("gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and
+> > GPIO_V2_GET_LINEINFO_WATCH_IOCTL")
+> > Signed-off-by: Gabriel Knezek <gabeknez@microsoft.com>
+> > ---
 
-And the same question about gpio-ranges from _2.
+Additional commentary goes here.
 
+e.g. 
+Changes from v1: ....
 
+This is explanatory stuff for the reviewers and maintainers that will
+not become part of the git record.
 
-> +	};
-> +
-> +	pmic@1 {
-> +		compatible = "qcom,pmm8155au", "qcom,spmi-pmic";
-> +		reg = <0x1 SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +	};
-> +};
->
+As it isn't part of the git commit, this needs to be added after git
+generates your patch.
 
-Konrad
+> >  drivers/gpio/gpiolib-cdev.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> > index ee5903aac497..af68532835fe 100644
+> > --- a/drivers/gpio/gpiolib-cdev.c
+> > +++ b/drivers/gpio/gpiolib-cdev.c
+> > @@ -1865,6 +1865,7 @@ static void gpio_v2_line_info_changed_to_v1(
+> >                 struct gpio_v2_line_info_changed *lic_v2,
+> >                 struct gpioline_info_changed *lic_v1)
+> >  {
+> > +       memset(lic_v1, 0, sizeof(*lic_v1));
+> >         gpio_v2_line_info_to_v1(&lic_v2->info, &lic_v1->info);
+> >         lic_v1->timestamp = lic_v2->timestamp_ns;
+> >         lic_v1->event_type = lic_v2->event_type;
+> > --
+> > 2.25.1
+> >
+> 
 
+I'm fine with the code change - just the formatting of the patch itself
+needs to be tidied up.
+
+Cheers,
+Kent.
