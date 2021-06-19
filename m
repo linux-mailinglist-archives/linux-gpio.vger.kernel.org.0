@@ -2,78 +2,198 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9C623AD564
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jun 2021 00:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD1693AD672
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jun 2021 03:13:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232877AbhFRWuC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Jun 2021 18:50:02 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:34072 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231455AbhFRWuC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Jun 2021 18:50:02 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1101)
-        id 55B1420B7178; Fri, 18 Jun 2021 15:47:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 55B1420B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1624056472;
-        bh=vwdE2ggYCg5b34n1LuqwziDJlDuCJH5dYBLv+IDSaYI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=shn0rn5oUy0kxYxLc2BpIqE0JvIfW+veugzGyoIc2Ksl8a3lVbd8MvRg/5wJtzVgt
-         XFAzgkbNBmS9dFNg+b9S+zXfBTR7mfHBsYnT6umU+ZXyObiVIrnxj/1QH56UWi6yuJ
-         SFU/MmK4tBu10MMfW3hVRtp/g7YBhYTR7zvIUrKI=
-From:   Gabriel Knezek <gabeknez@linux.microsoft.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     Gabriel Knezek <gabeknez@microsoft.com>
-Subject: [PATCH] gpiolib: cdev: zero padding during conversion to gpioline_info_changed
-Date:   Fri, 18 Jun 2021 15:45:11 -0700
-Message-Id: <1624056311-6836-1-git-send-email-gabeknez@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S231819AbhFSBPz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Jun 2021 21:15:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:62164 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233887AbhFSBPy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 18 Jun 2021 21:15:54 -0400
+IronPort-SDR: nulyaH7biBZSDk8QJ3CMCIU0X3oEc/0lS0cxMv8RrqBWd63srQVOxJobQZOBaye5rvtdS18HGf
+ 2SW+d1fl3czQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10019"; a="267785568"
+X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
+   d="scan'208";a="267785568"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 18:13:44 -0700
+IronPort-SDR: rCFSyd9/2bOecJa7G7ADBSWfCEMmh5MBDYPuB5xJ9yJMvXqNg0UBtvajUrzOAnVN1ymKjWG7LH
+ yhmuZbboGShA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
+   d="scan'208";a="405442696"
+Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 18 Jun 2021 18:13:43 -0700
+Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1luPYM-0003Eg-CZ; Sat, 19 Jun 2021 01:13:42 +0000
+Date:   Sat, 19 Jun 2021 09:13:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ 0c3ae641a27a41e4998663b34c133d6ff3131df7
+Message-ID: <60cd44a6.w7QFkJzjp9fO9NYC%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Gabriel Knezek <gabeknez@microsoft.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 0c3ae641a27a41e4998663b34c133d6ff3131df7  drivers: qcom: pinctrl: Add pinctrl driver for sm6125
 
-When userspace requests a GPIO v1 line info changed event, the kernel
-populates and returns the gpioline_info_changed structure. That structure
-contains 5 words of padding at the end of the structure that are not
-initialized before being returned to usermode:
+elapsed time: 723m
 
-struct gpioline_info_changed {
-                struct gpioline_info info;
-                __u64 timestamp;
-                __u32 event_type;
-                __u32 padding[5]; /* for future use */
-};
+configs tested: 136
+configs skipped: 3
 
-Which is used here in the lineinfo_watch_read routine:
-} else {
-                struct gpioline_info_changed event_v1;
-                gpio_v2_line_info_changed_to_v1(&event, &event_v1);
-                if (copy_to_user(buf + bytes_read, &event_v1,
-                                                event_size))
-                                return -EFAULT;
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Fix this by zeroing the structure in gpio_v2_line_info_change_to_v1
-before populating its contents.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                         bcm2835_defconfig
+powerpc                    klondike_defconfig
+mips                          rb532_defconfig
+powerpc                     tqm8540_defconfig
+powerpc                 mpc834x_itx_defconfig
+sh                          polaris_defconfig
+x86_64                            allnoconfig
+xtensa                       common_defconfig
+arm                          pxa168_defconfig
+nios2                         3c120_defconfig
+arm                           sama5_defconfig
+arm                       imx_v6_v7_defconfig
+mips                     loongson1c_defconfig
+m68k                            mac_defconfig
+powerpc                     taishan_defconfig
+riscv             nommu_k210_sdcard_defconfig
+powerpc                   currituck_defconfig
+xtensa                  nommu_kc705_defconfig
+um                           x86_64_defconfig
+powerpc                        fsp2_defconfig
+arm                          badge4_defconfig
+sh                           se7619_defconfig
+powerpc                      pmac32_defconfig
+arm                             pxa_defconfig
+sh                                  defconfig
+arm                            pleb_defconfig
+m68k                        m5272c3_defconfig
+mips                      maltaaprp_defconfig
+arm                         axm55xx_defconfig
+arc                        vdk_hs38_defconfig
+m68k                        mvme16x_defconfig
+microblaze                          defconfig
+m68k                        stmark2_defconfig
+powerpc                 mpc836x_rdk_defconfig
+arm                          pxa3xx_defconfig
+powerpc                      cm5200_defconfig
+sparc                            alldefconfig
+powerpc                        icon_defconfig
+arm                     davinci_all_defconfig
+powerpc                 mpc832x_rdb_defconfig
+powerpc               mpc834x_itxgp_defconfig
+arm                          iop32x_defconfig
+arm                          lpd270_defconfig
+arm                          collie_defconfig
+mips                malta_qemu_32r6_defconfig
+powerpc                  storcenter_defconfig
+s390                             alldefconfig
+sh                     magicpanelr2_defconfig
+arm                        realview_defconfig
+ia64                             alldefconfig
+s390                                defconfig
+arm                        clps711x_defconfig
+sh                             espt_defconfig
+arm                     am200epdkit_defconfig
+mips                  decstation_64_defconfig
+arm                       mainstone_defconfig
+m68k                       m5475evb_defconfig
+powerpc                         wii_defconfig
+xtensa                              defconfig
+sh                            migor_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20210618
+i386                 randconfig-a006-20210618
+i386                 randconfig-a004-20210618
+i386                 randconfig-a001-20210618
+i386                 randconfig-a005-20210618
+i386                 randconfig-a003-20210618
+x86_64               randconfig-a015-20210618
+x86_64               randconfig-a011-20210618
+x86_64               randconfig-a012-20210618
+x86_64               randconfig-a014-20210618
+x86_64               randconfig-a016-20210618
+x86_64               randconfig-a013-20210618
+i386                 randconfig-a015-20210618
+i386                 randconfig-a016-20210618
+i386                 randconfig-a013-20210618
+i386                 randconfig-a014-20210618
+i386                 randconfig-a012-20210618
+i386                 randconfig-a011-20210618
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+um                            kunit_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-Signed-off-by: Gabriel Knezek <gabeknez@microsoft.com>
+clang tested configs:
+x86_64               randconfig-b001-20210618
+x86_64               randconfig-a002-20210618
+x86_64               randconfig-a001-20210618
+x86_64               randconfig-a004-20210618
+x86_64               randconfig-a003-20210618
+x86_64               randconfig-a006-20210618
+x86_64               randconfig-a005-20210618
+
 ---
- drivers/gpio/gpiolib-cdev.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index ee5903aac497..af68532835fe 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1865,6 +1865,7 @@ static void gpio_v2_line_info_changed_to_v1(
- 		struct gpio_v2_line_info_changed *lic_v2,
- 		struct gpioline_info_changed *lic_v1)
- {
-+	memset(lic_v1, 0, sizeof(*lic_v1));
- 	gpio_v2_line_info_to_v1(&lic_v2->info, &lic_v1->info);
- 	lic_v1->timestamp = lic_v2->timestamp_ns;
- 	lic_v1->event_type = lic_v2->event_type;
--- 
-2.25.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
