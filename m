@@ -2,122 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0561A3ADB97
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jun 2021 22:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 325983ADD71
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Jun 2021 09:30:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230039AbhFSULO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 19 Jun 2021 16:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229887AbhFSULN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Jun 2021 16:11:13 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E729C061574
-        for <linux-gpio@vger.kernel.org>; Sat, 19 Jun 2021 13:09:01 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id t19-20020a17090ae513b029016f66a73701so2790654pjy.3
-        for <linux-gpio@vger.kernel.org>; Sat, 19 Jun 2021 13:09:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ctcD4LQm2MWZhfE95ZjNctytDT0v4pHcjiI0HBiegwU=;
-        b=kxzQ22bnZ6N8uOgyeoyNK4kcWMimTTPlul8fvwx8RO+R4pK5tY73gm0j8CE7AXVPuH
-         JVL1Dd1NSKM1kBGN7QWsQyMZbeKe8QceMTISIjCy2YENUtT72nxeCBkKPP8FQKThj75f
-         O3SSlNzxUnKJqSSD1CbNR7qBgkIwz/m0J2tkbPVcL6DQJUbHe+hWHPo6bQGH2T4Lr/AZ
-         KtupM7RLEbmrBiYURrfc2WdsjUFVKqxhnpvpZa2HzRtyZByuF/CVPotxJWAetJIUX6da
-         zyeljD/VYwc4T3bCcP9rGTLmHHUfaM+r4PwYG2PUJLj8GyWYtmXzvz5oMUCVoK5dwoHJ
-         2bMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ctcD4LQm2MWZhfE95ZjNctytDT0v4pHcjiI0HBiegwU=;
-        b=bJMSDencMqw3i6nABXFpuJpWg3CrvyZ1ygx+nzXTRv0bgiqJvat53sfZyeSb+a9TcR
-         n7dIMVy2s336eNRz7se8aSKmm9Ehy3mLZ39BbTMBBe1YMYemE6MhvU2KZA0+5+htfjFz
-         SEhPIQy4XxgysEmymvzwCGtdHFYXaiZz0JJ6haVWx5BVXIkWV+k/YDDSz1+ie/Lgxen0
-         vuRlkrkC9Ifrw3hAC5kqu9c/hJFU5ajCYvjddt6oH/RSb0eS5zBg8Vs/6wKLqhEYWIka
-         caxAEUICO+D/q0AD5z0/nc4S62xDsNSmZjglgI0qD1YG5me56hdILLzp5uQB9G1UWfyw
-         vcDw==
-X-Gm-Message-State: AOAM530+Ykbwf72ByWWfJzYlOr4P0nj9GSecQVwpSzQuPaVBaEn80XSS
-        8OohVq3TBSG1u5gwTS+3J8kfSPKsh6pDH4zg+cp8MkBo4Vyl77vJ
-X-Google-Smtp-Source: ABdhPJy6EjTJLhpB8k6L3Qhun1l5H4Uu2gYb1bkectX4KMCMhGTH/9QA9DuSjLiGnV2fOgMQTDiTmibbBjxgjS8GpG8=
-X-Received: by 2002:a17:902:fe0a:b029:11d:81c9:3adf with SMTP id
- g10-20020a170902fe0ab029011d81c93adfmr10484092plj.0.1624133340700; Sat, 19
- Jun 2021 13:09:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <1624056311-6836-1-git-send-email-gabeknez@linux.microsoft.com>
- <20210619041144.GA15015@sol> <20210619174913.GA6966@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-In-Reply-To: <20210619174913.GA6966@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 19 Jun 2021 23:08:24 +0300
-Message-ID: <CAHp75VdMCCYVoMpq6T91x-_TsXGPSjqWz3x0VxA+YZyf19OdtA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: cdev: zero padding during conversion to gpioline_info_changed
-To:     Gabriel Knezek <gabeknez@linux.microsoft.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S229491AbhFTHcW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Jun 2021 03:32:22 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35742 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229482AbhFTHcW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Jun 2021 03:32:22 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 15K7TGOW128776;
+        Sun, 20 Jun 2021 02:29:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1624174156;
+        bh=h9LqqfdxaQYb6zdSSB63yS3PBHdKaqQkJWOXyEZFk8k=;
+        h=Subject:CC:References:To:From:Date:In-Reply-To;
+        b=V5pfwoVMejHdKvAsTtQIPaBQQ+lrePpYVXjr8H5FtpuJNBqLLQuC1pmJXkqsR/KZM
+         rz9670cw/5aDYb7CQGgi/nDjB2XLdyHb4434V5DeujqX716vmC12ZnT5NMbx8Jj2Iv
+         QENE+Y0vJ1/34q7Ag5ssLndwIWpPfyKgIiOwmlEo=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 15K7TGSF079823
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 20 Jun 2021 02:29:16 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Sun, 20
+ Jun 2021 02:29:15 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Sun, 20 Jun 2021 02:29:15 -0500
+Received: from [10.250.235.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 15K7T8wO082125;
+        Sun, 20 Jun 2021 02:29:09 -0500
+Subject: Re: [PATCH v3 0/2] dt-bindings: gpio: davinci: Convert to json-schema
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
+        David Lechner <david@lechnology.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20210524151955.8008-1-a-govindraju@ti.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+From:   Aswath Govindraju <a-govindraju@ti.com>
+Message-ID: <f011d613-0fe6-e921-91e9-79367f185284@ti.com>
+Date:   Sun, 20 Jun 2021 12:59:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20210524151955.8008-1-a-govindraju@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jun 19, 2021 at 8:49 PM Gabriel Knezek
-<gabeknez@linux.microsoft.com> wrote:
-> On Sat, Jun 19, 2021 at 12:11:44PM +0800, Kent Gibson wrote:
-> > On Fri, Jun 18, 2021 at 03:45:11PM -0700, Gabriel Knezek wrote:
-> >
-> > Probably should've been [PATCH v2], despite the subject rename.
-> >
-> > And CC the maintainers (LinusW and Bart here) and past reviewers (Andy
-> > and me).
-> Sorry about that. When sending the revised patch, should I change it to v2?
-> Or perhaps v3?
+Hi Bart, Linus,
 
-Yes, v3 with a changelog for each previous version.
+On 24/05/21 8:49 pm, Aswath Govindraju wrote:
+> Convert the davinci GPIO device tree binding documentation to json-schema.
+> The GPIO hog node names are defined to end with a 'hog' suffix.
+> 
+> All existing GPIO hogs are fixed to follow above naming convention
+> before changing the binding to avoid dtbs_check warnings.
+> 
+> changes since v2:
+> - Used gpio-hog.yaml for gpio-hog property
+> - Added constraints on gpio-hog node name
+> - Corrected the gpio hog dt node names to align
+>   with the dt-schema
+> 
 
-...
+May I know if the following series is okay to be merged ?
 
-> > > From: Gabriel Knezek <gabeknez@microsoft.com>
-> > >
-> >
-> > A second From: header?  With a different address?
-> > Perhaps you could pick one?
-> > Neither git nor checkpatch.pl seem to mind, but it is odd.
->
-> Apologies for that as well. git send-email doesn't play well with Exchange, so
-> after talking to coworkers it turns out we have a separate email server for
-> sending patches which I wasn't aware of before I sent the first one. :-/ Sorry
-> for the confusion; I'll stick to the @linux address.
+Thanks,
+Aswath
 
-Don't forget to configure your Git accordingly (globally or per this project).
-Note, you always can test this by doing
+> changes since v1:
+> - combined the individual compatible properties into one enum
+> - added maxItems and minItems properties for gpio-line-names and
+>   interrupts
+> - updated the description of interrupts property
+> - removed the description for properties that are general
+> - updated the pattern property for gpio hog to indicate any sort
+>   node name based on its usage
+> - corrected the example wakeup gpio node name
+> 
+> Aswath Govindraju (2):
+>   ARM: dts: da850-lego-ev3: align GPIO hog names with dt-schema
+>   dt-bindings: gpio: gpio-davinci: Convert to json-schema
+> 
+>  .../devicetree/bindings/gpio/gpio-davinci.txt | 167 ----------------
+>  .../bindings/gpio/gpio-davinci.yaml           | 186 ++++++++++++++++++
+>  MAINTAINERS                                   |   2 +-
+>  arch/arm/boot/dts/da850-lego-ev3.dts          |  10 +-
+>  4 files changed, 192 insertions(+), 173 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+> 
 
-  git send-email --suppress-cc=all --to "Your Second <email@address>"
-
-or so.
-
-> > > Signed-off-by: Gabriel Knezek <gabeknez@microsoft.com>
-> >
-> > You should retain the Fixes tag from v1 - it is important to identify
-> > where this patch will need to be backported to.
-> > And include at least the first twelve characters of the SHA-1 [1].
->
-> Oh shoot. Sorry about that as well. I need to make a checklist.
-
-The checklist is already made for you:
-https://www.kernel.org/doc/html/latest/process/submit-checklist.html
-
-> Thanks for the link; I did read it before submitting the second patch,
-> but I clearly missed that part.
->
-> > Still good with this bit ;)
-
-> Thanks for the kind help. I promise I'll update our wiki with these
-> learnings so hopefully dealing with the next person from our team submitting
-> a patch won't be so painful.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
