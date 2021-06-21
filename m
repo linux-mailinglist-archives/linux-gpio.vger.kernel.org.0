@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6877C3AF5E7
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jun 2021 21:18:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54B323AF5E8
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jun 2021 21:18:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230229AbhFUTUu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Jun 2021 15:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
+        id S231182AbhFUTUw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Jun 2021 15:20:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
         with ESMTP id S229940AbhFUTUu (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Jun 2021 15:20:50 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F614C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Jun 2021 12:18:35 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id i94so20880994wri.4
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A4DFC06175F
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Jun 2021 12:18:36 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id v20-20020a05600c2154b02901dcefb16af0so709593wml.5
         for <linux-gpio@vger.kernel.org>; Mon, 21 Jun 2021 12:18:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hGh+FNwz/HfHEFJcA5VOdUgVO6ib5/6hyLsex2WdJZo=;
-        b=KUFWAhYeGaSf32D9Yj5CbypCQ8s1la0Rxmyad4W7fzFT0D1zbaFl2e6jhqc7nQaweQ
-         7UxcdpT4WqG6H8vtjP3052aildeUlSE8dZvNipvf3Xz1tAUeZrBZAYBPSE+s99oI709f
-         HYrnJrBelGndlmHBJpEVwe7IfM7zd5HJ7Xv1mJf0JOsPVqqBrjQt59d2Whner+xb+ht7
-         cOk8uDcH85hW0gE1j8LT8aOEa0jkCMyLE2OQexDjbKBJP+PBFKwQ/JX++2OgTqpnVR0w
-         odjyWth+3yIgJFTOClKMqV7nqKSzLTEYXWfpGdyML4mfilIctzzpYoDJeoibF3fMcsve
-         HvIQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9vnXDcb/InbvlkMkDsIMqHDLTc2kzXqa6l+0J9MdQ+k=;
+        b=F0AfatU0TEJiTz81zFKMK9gBiSkCLixq3+Nqizb9u74dBfZICYNyTZmseOQQFA4hEV
+         hJUGrzhi92FSWVted5r5XOO67jm3sx/DFimMGoWbX9c9F2yoRGNjfdc9EkJNoxEmJer2
+         2FZqN6deNrmQ/j02RssuElut75qb1C/rqisn3o2+TMKwCpNmpwXK8Og5UWye2XUqRRU6
+         tk3rXa1yWz1urnieNiAAKDIShVmRSMRcfbnSuy9rfYgamXZfiS7gqxuHhkfTGofH4WaO
+         Fnr47SmL1W1Z765B2sB8C//5SzD4WZK7ZmiqnPo9QknC5qrhtrGm4Bsuxb7jW7mI2Bkn
+         MZAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hGh+FNwz/HfHEFJcA5VOdUgVO6ib5/6hyLsex2WdJZo=;
-        b=p1ZRmJ2gFKGTV6GO7vvrQC93VrGv1lXJg8m4sp8bwaLfo/19RaLKQOUguDEc+gew5A
-         95NC76WCi4LZC7TSTbrkcGSPPiUyceHEG14hZOPrHit2XgIN0tTyZd9BGq9drsV8YQ4C
-         ubwP0br+1lqa3FvNZOJ1Y/lSKMbJlTapHzHQNIa88Syn2NVCCngiNlN0WKAecBlqTeXU
-         Qy+CToFdLuA4DQACRQT7zZ/olQu2MKjvqR7Xw+b+lH6BghdUoMsHCgEkoJ6OH1amHAtb
-         dw0MdnwTwmCb85uBaElFNyNSCNvrrfU3lm7IeiO6nV/AsXJ0PXwwUYkm0Qobq4bzTvBv
-         F4Fg==
-X-Gm-Message-State: AOAM530sZzrGqYIFPlSZ7OXShBJXx/dWtk0sEYQkBl9odinQ5swi6F0h
-        oqEWSMOMAzmYWQJ2HeTilz844A==
-X-Google-Smtp-Source: ABdhPJzut1JI9WbHR0tbppwP7Xxz7N5yW1fQn5xQ/+n2msgCdwI/Wk0HaFamL0eBdq0v9MbGoD0XvQ==
-X-Received: by 2002:a05:6000:154c:: with SMTP id 12mr3699521wry.97.1624303114069;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9vnXDcb/InbvlkMkDsIMqHDLTc2kzXqa6l+0J9MdQ+k=;
+        b=Wlh00Zaz+VSkCY/VfgqT/pqop9AuCD+u/6BFZgfWpbTMJdGmdMNkac7aI30miLvpFf
+         5bWABuv95YzwkqlqPrZh6UYPQc1FcbyHLGPrJgN5IfeFIsl/tGJG5ej2lPf5fYH3x5wD
+         05dcfSr7CYb2b3VRhDlixOdOwHJUKsiNHTueVQTIsv9kzTJP6dTMa+7TrJ80Z6wZIxcv
+         yYC0jHTsku472tZUK2lR9w4qVOtJjuq74hJXfKmeZdfyGrQs30vCOrbyUZyhY7nnt91L
+         45QjMOASSeLAcqTA/nNQQHjn8gy/LNTa8eb1x17xJOBGbHXxIWyAXYgeCACsEY/vXnpr
+         yqYA==
+X-Gm-Message-State: AOAM532klYxrs2S3holy58B20Lum7e6jgtV/0DyMWQ3/BZYx8rwcGs6T
+        B4AtxvZVhVqBSRW18yThCTufLQ==
+X-Google-Smtp-Source: ABdhPJxByHTCRBBExYhdaMfnb8ZG2sid9ilGh/oNzaPdXlA5vIOkyyPNocj+FWXyQYUDXz3QLxLHZw==
+X-Received: by 2002:a7b:c089:: with SMTP id r9mr8386372wmh.167.1624303114677;
         Mon, 21 Jun 2021 12:18:34 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-146-78.w2-15.abo.wanadoo.fr. [2.15.229.78])
-        by smtp.gmail.com with ESMTPSA id j34sm19438243wms.19.2021.06.21.12.18.33
+        by smtp.gmail.com with ESMTPSA id j34sm19438243wms.19.2021.06.21.12.18.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jun 2021 12:18:33 -0700 (PDT)
+        Mon, 21 Jun 2021 12:18:34 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -54,109 +54,119 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Jack Winch <sunt.un.morcov@gmail.com>,
         Helmut Grohne <helmut.grohne@intenta.de>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [libgpiod][PATCH 0/4] libgpiod v2: C++ bindings
-Date:   Mon, 21 Jun 2021 21:18:26 +0200
-Message-Id: <20210621191830.10628-1-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH 1/4] events: hide the *_read_fd() symbols from the API header
+Date:   Mon, 21 Jun 2021 21:18:27 +0200
+Message-Id: <20210621191830.10628-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
+In-Reply-To: <20210621191830.10628-1-brgl@bgdev.pl>
+References: <20210621191830.10628-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This series contains the implementation of the C++ bindings for libgpiod v2.
-In general the C++ library follows the data structure model as defined by
-the C library with one notable exception: objects that represent immutable
-snapshots of kernel data (line_info and edge & info events) are copyable
-(or rather shared behind the scenes using ::std::shared_ptr). The rest of
-the classes delete their copy constructors and assignment operators and
-are only move constructible and move assignable.
+While exposing file descriptors for polling (for use by event loops) is
+a common pattern, allowing to read data directly from file descriptors
+isn't really a thing in most linux libraries. Sane event loops allow to
+associate data with polled file descriptors so users know which object
+to use for receiving data when it's available.
 
-All classes follow the pimpl idiom - using either shared_ptr or unique_ptr -
-and all implementations are hidden from the user for easier maintenance and
-less ABI breakage in the future.
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+ include/gpiod.h  | 24 ------------------------
+ lib/edge-event.c |  5 ++---
+ lib/info-event.c |  2 +-
+ lib/internal.h   |  3 +++
+ 4 files changed, 6 insertions(+), 28 deletions(-)
 
-The edge_event class is a bit of a special case. While it looks the same
-as other copyable objects to the user, the implementation uses a tiny bit of
-polymorphism (although it never crosses the ABI boundary). This is done
-to make it possible to use the edge_event_buffer without any memory
-allocations like what the C API enables. The edge_event objects stored
-in the buffer only contain a raw pointer to the C object stored in the
-underlying C edge_event_buffer. The event is copied into a fully managed
-object once the copy assignment operator is called.
-
-I'm Cc'ing people who showed interest and helped me with C++ bindings
-before for review.
-
-Bartosz Golaszewski (4):
-  events: hide the *_read_fd() symbols from the API header
-  API: drop "peek" functions
-  API: add an AS_IS value for bias setting
-  bindings: cxx: implement C++ bindings for libgpiod v2.0
-
- Doxyfile.in                                 |   4 +-
- bindings/cxx/Makefile.am                    |  16 +-
- bindings/cxx/chip.cpp                       | 213 +++--
- bindings/cxx/edge-event-buffer.cpp          | 103 +++
- bindings/cxx/edge-event.cpp                 | 123 +++
- bindings/cxx/examples/Makefile.am           |  12 +-
- bindings/cxx/examples/gpiodetectcxx.cpp     |   3 +-
- bindings/cxx/examples/gpiogetcxx.cpp        |  12 +-
- bindings/cxx/examples/gpioinfocxx.cpp       |  63 +-
- bindings/cxx/examples/gpiomoncxx.cpp        |  38 +-
- bindings/cxx/examples/gpiosetcxx.cpp        |  19 +-
- bindings/cxx/gpiod.hpp                      | 938 +-------------------
- bindings/cxx/gpiodcxx/Makefile.am           |  14 +
- bindings/cxx/gpiodcxx/chip.hpp              | 172 ++++
- bindings/cxx/gpiodcxx/edge-event-buffer.hpp | 115 +++
- bindings/cxx/gpiodcxx/edge-event.hpp        | 124 +++
- bindings/cxx/gpiodcxx/info-event.hpp        | 107 +++
- bindings/cxx/gpiodcxx/line-config.hpp       | 242 +++++
- bindings/cxx/gpiodcxx/line-info.hpp         | 205 +++++
- bindings/cxx/gpiodcxx/line-request.hpp      | 170 ++++
- bindings/cxx/gpiodcxx/misc.hpp              |  49 +
- bindings/cxx/gpiodcxx/request-config.hpp    |  95 ++
- bindings/cxx/info-event.cpp                 |  89 ++
- bindings/cxx/internal.hpp                   | 168 +++-
- bindings/cxx/iter.cpp                       |  60 --
- bindings/cxx/line-config.cpp                | 222 +++++
- bindings/cxx/line-info.cpp                  | 150 ++++
- bindings/cxx/line-request.cpp               | 161 ++++
- bindings/cxx/line.cpp                       | 321 -------
- bindings/cxx/line_bulk.cpp                  | 366 --------
- bindings/cxx/misc.cpp                       |  18 +
- bindings/cxx/request-config.cpp             |  80 ++
- configure.ac                                |   1 +
- include/gpiod.h                             |  79 +-
- lib/edge-event.c                            |  39 +-
- lib/info-event.c                            |  10 +-
- lib/internal.h                              |   4 +-
- lib/line-config.c                           |   1 +
- lib/line-info.c                             |  24 +-
- tools/gpiomon.c                             |   4 +-
- 40 files changed, 2701 insertions(+), 1933 deletions(-)
- create mode 100644 bindings/cxx/edge-event-buffer.cpp
- create mode 100644 bindings/cxx/edge-event.cpp
- create mode 100644 bindings/cxx/gpiodcxx/Makefile.am
- create mode 100644 bindings/cxx/gpiodcxx/chip.hpp
- create mode 100644 bindings/cxx/gpiodcxx/edge-event-buffer.hpp
- create mode 100644 bindings/cxx/gpiodcxx/edge-event.hpp
- create mode 100644 bindings/cxx/gpiodcxx/info-event.hpp
- create mode 100644 bindings/cxx/gpiodcxx/line-config.hpp
- create mode 100644 bindings/cxx/gpiodcxx/line-info.hpp
- create mode 100644 bindings/cxx/gpiodcxx/line-request.hpp
- create mode 100644 bindings/cxx/gpiodcxx/misc.hpp
- create mode 100644 bindings/cxx/gpiodcxx/request-config.hpp
- create mode 100644 bindings/cxx/info-event.cpp
- delete mode 100644 bindings/cxx/iter.cpp
- create mode 100644 bindings/cxx/line-config.cpp
- create mode 100644 bindings/cxx/line-info.cpp
- create mode 100644 bindings/cxx/line-request.cpp
- delete mode 100644 bindings/cxx/line.cpp
- delete mode 100644 bindings/cxx/line_bulk.cpp
- create mode 100644 bindings/cxx/misc.cpp
- create mode 100644 bindings/cxx/request-config.cpp
-
+diff --git a/include/gpiod.h b/include/gpiod.h
+index 50987a3..f3d20d4 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -410,14 +410,6 @@ gpiod_info_event_peek_line_info(struct gpiod_info_event *event);
+ struct gpiod_line_info *
+ gpiod_info_event_get_line_info(struct gpiod_info_event *event);
+ 
+-/**
+- * @brief Read the line info event from a file descriptor.
+- * @param fd File descriptor to read from.
+- * @return New info event object or NULL on error. The returned object must be
+- *         freed using ::gpiod_info_event_free.
+- */
+-struct gpiod_info_event *gpiod_info_event_read_fd(int fd);
+-
+ /**
+  * @}
+  *
+@@ -1036,22 +1028,6 @@ gpiod_edge_event_buffer_get_event(struct gpiod_edge_event_buffer *buffer,
+ unsigned int
+ gpiod_edge_event_buffer_num_events(struct gpiod_edge_event_buffer *buffer);
+ 
+-/**
+- * @brief Read GPIO edge events directly from a file descriptor.
+- * @param fd File descriptor.
+- * @param buffer Line event buffer.
+- * @param max_events Maximum number of events to read.
+- * @return On success returns the number of events read from the file
+- *         descriptor, on failure return -1.
+- *
+- * Users who directly poll the file descriptor for incoming events can also
+- * directly read the event data from it using this routine. This function
+- * translates the kernel representation of the event to the libgpiod format.
+- */
+-int gpiod_edge_event_buffer_read_fd(int fd,
+-				    struct gpiod_edge_event_buffer *buffer,
+-				    unsigned int max_events);
+-
+ /**
+  * @}
+  *
+diff --git a/lib/edge-event.c b/lib/edge-event.c
+index 4618116..f8aaa33 100644
+--- a/lib/edge-event.c
++++ b/lib/edge-event.c
+@@ -146,9 +146,8 @@ gpiod_edge_event_buffer_num_events(struct gpiod_edge_event_buffer *buffer)
+ 	return buffer->num_events;
+ }
+ 
+-GPIOD_API int
+-gpiod_edge_event_buffer_read_fd(int fd, struct gpiod_edge_event_buffer *buffer,
+-				unsigned int max_events)
++int gpiod_edge_event_buffer_read_fd(int fd, struct gpiod_edge_event_buffer *buffer,
++				    unsigned int max_events)
+ {
+ 	struct gpio_v2_line_event *curr;
+ 	struct gpiod_edge_event *event;
+diff --git a/lib/info-event.c b/lib/info-event.c
+index 587a599..3c55d36 100644
+--- a/lib/info-event.c
++++ b/lib/info-event.c
+@@ -86,7 +86,7 @@ gpiod_info_event_get_line_info(struct gpiod_info_event *event)
+ 	return gpiod_line_info_copy(event->info);
+ }
+ 
+-GPIOD_API struct gpiod_info_event *gpiod_info_event_read_fd(int fd)
++struct gpiod_info_event *gpiod_info_event_read_fd(int fd)
+ {
+ 	struct gpio_v2_line_info_changed evbuf;
+ 	ssize_t rd;
+diff --git a/lib/internal.h b/lib/internal.h
+index 20ef2e4..225e2b0 100644
+--- a/lib/internal.h
++++ b/lib/internal.h
+@@ -25,8 +25,11 @@ int gpiod_line_config_to_kernel(struct gpiod_line_config *config,
+ 				const unsigned int *offsets);
+ struct gpiod_line_request *
+ gpiod_line_request_from_kernel(struct gpio_v2_line_request *reqbuf);
++int gpiod_edge_event_buffer_read_fd(int fd, struct gpiod_edge_event_buffer *buffer,
++				    unsigned int max_events);
+ struct gpiod_info_event *
+ gpiod_info_event_from_kernel(struct gpio_v2_line_info_changed *evbuf);
++struct gpiod_info_event *gpiod_info_event_read_fd(int fd);
+ 
+ int gpiod_poll_fd(int fd, uint64_t timeout);
+ 
 -- 
 2.30.1
 
