@@ -2,56 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 003133AF238
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jun 2021 19:44:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5143E3AF51F
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jun 2021 20:32:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231566AbhFURqO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Jun 2021 13:46:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231138AbhFURqO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Jun 2021 13:46:14 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB6F3C061574;
-        Mon, 21 Jun 2021 10:43:58 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id i4so5280299plt.12;
-        Mon, 21 Jun 2021 10:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=T3D8UK1gOfFX+dIRRDU1M/FRUJLxaVbvp2i5V6ZSH0I=;
-        b=csDCzyeLDt//0q65Pr3MMBhIUfQs0CYWjquByITpiVEIcI4G+b/hUIhI3yKCa2WePd
-         XPHBCf1IQ9yGs7xBrFo1Py95qkbSL2elHkewLGXbBWrmDRQ4QF7TiRnSjv3bqtyJ7qYV
-         5yh2SMJr5u4Vux8yK9QJpOZwlHoIuknBYrv2cfaV5ihEseAMeHIn2q1vrj99+uyfwL2R
-         eaZZEBEf2z/0aE1iR6dKNeoXxDFgUrJSyDzDY+dqpIJ1nG3zIi58gWB/Be6kh5h1D0ms
-         qzasvpXq08y0Z9klwA57JO3fyveTZkpzQR7cgz8dTWKZotVkijR8p+Q90Msm/dlEwouQ
-         Ab7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=T3D8UK1gOfFX+dIRRDU1M/FRUJLxaVbvp2i5V6ZSH0I=;
-        b=nfEJ8xbWla/JWCNRHnChETpuoeXk0ePCxFLMyvBmTNg7wcXmuCJKkBDB5KnqIpXrx/
-         tNMdgl2MANq+njXd1J5k84VXdw9ApOp412rJHLcIPNtKnZ147Hof+mBwlB58Wh6X7rAW
-         ZNDCeIJMNMBpsx6mAH36GV9QSw+kXpPLr3EegMdg6s7Aeljgk11oDybzBXrzwbVwWjEW
-         51MJsC2fweGjYpT5lvJhUr93mKc9ZtP3z2piMGBLit8wXnRGJTom3NXjtqIJIm5PPaFr
-         x+BEWbQ56L/7mEqYyz8L0s9pcjeoW9a1+8yu8d3OMQ9enlCTuD9BB41bSlPWty+UHN5z
-         0Piw==
-X-Gm-Message-State: AOAM533gk/O+ZbROZqQW9hAeYh3xHZ+KEqd6wvUwiYVoXgVOhwOy22ch
-        hvdX1ODutr7smOIMCBflLcZuoz3l9cfgMAN82nc=
-X-Google-Smtp-Source: ABdhPJwC5Xjlye0MYX3gpukX12I4fnYwkUQ3eEdBjwS/AAgNYGE1WDCwOBcW5s75KMsf/fhybYG1yWZCTJ1sZu14GZ8=
-X-Received: by 2002:a17:90a:17ad:: with SMTP id q42mr40103459pja.181.1624297438238;
- Mon, 21 Jun 2021 10:43:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210325122832.119147-1-sandberg@mailfence.com>
- <20210621172053.107045-1-maukka@ext.kapsi.fi> <20210621172053.107045-3-maukka@ext.kapsi.fi>
-In-Reply-To: <20210621172053.107045-3-maukka@ext.kapsi.fi>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 21 Jun 2021 20:43:21 +0300
-Message-ID: <CAHp75VcjGpveAHNAW7Xf7d_Zf6LGSSyD6+qBiF9xxvb+EKs3tg@mail.gmail.com>
+        id S231176AbhFUSeN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Jun 2021 14:34:13 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:45633 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232144AbhFUSeL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Jun 2021 14:34:11 -0400
+Received: from [192.168.1.155] ([95.118.106.223]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mum6l-1l5DWs4Ayp-00rlVR; Mon, 21 Jun 2021 20:31:46 +0200
 Subject: Re: [PATCH v5 2/2] gpio: gpio-cascade: add generic GPIO cascade
-To:     Mauri Sandberg <maukka@ext.kapsi.fi>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mauri Sandberg <maukka@ext.kapsi.fi>
 Cc:     Mauri Sandberg <sandberg@mailfence.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -61,171 +26,63 @@ Cc:     Mauri Sandberg <sandberg@mailfence.com>,
         devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Drew Fustini <drew@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20210325122832.119147-1-sandberg@mailfence.com>
+ <20210621172053.107045-1-maukka@ext.kapsi.fi>
+ <20210621172053.107045-3-maukka@ext.kapsi.fi>
+ <CAHp75VcjGpveAHNAW7Xf7d_Zf6LGSSyD6+qBiF9xxvb+EKs3tg@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <8d28463e-7a67-229a-6934-e3a59a8ab330@metux.net>
+Date:   Mon, 21 Jun 2021 20:31:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VcjGpveAHNAW7Xf7d_Zf6LGSSyD6+qBiF9xxvb+EKs3tg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Hhh5/Dq8916GL3BChU1V2Gm++0xp8Eo4qOFj6Wdbl/qy6ca3y5L
+ qQLzqRtOLSMTzrNJFUd5sWHeCzRqLmrXnmfr4s+BvMNjtJcLZ3gDzxxqTBfrMWbL2yOvlrq
+ dJ8hRCzdxOUeF7+ln3MfdUnETyWz7i7y/rY/mu/px6oYA9sWEV51xu6432pbSKgrG3yGazQ
+ npjycJdxAcAgpHTS/0t9A==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7nCPMQ8NwI0=:yMIWa4LDmTY1Bd4Hbnefai
+ rdfJ/Hi7aRSVziZZ6lbqaoi3/JD+YwPFT58QctvFDZa66TnISBoHUcnkD3Fvy0shwKQ+AlmMG
+ XYvIZXQ10qZAz9+M01hEaClcTJWcIaOI35/ftJhJKI0dpHjMospVK78uLtkbgq/n/hDSGZlje
+ tlAVVbgjMimwDEYcePXVwHU1rlu1GstaAnDOb8D332Dzf18fmw6+ODejPMw7Gn69Pt9mWsXE+
+ u7SiSHCKg1qcqOlPpHr+urkONSrFk1HPxCEafXJTJETSq8PHI/YIIATpl8i/kqa0scJZT6ljm
+ PhrJ+IDSFYwLciIP2TWLyv5xmV+GmuTNgxIPfk+m5pkAwopgHByKptxrY/7kF6Q4vzOjarQSW
+ BYOR/Reo878icO9+ebRrf+maGbPo7+3MyQ5zZkaCSU7g+28+92zNP8FMSu05V2rQXoKs+cRHZ
+ Ab41eZ0ddGhCXJ4b8Ea9IWNCUARfDGH2d1Wcc0YEe9nBHxmNdwBbpPRzkAKELRP6LyxDr0p5f
+ 1AUSOQw5EjbIWiBDHrv2Jo=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 21, 2021 at 8:25 PM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
->
-> Adds support for a building cascades of GPIO lines. That is, it allows
+On 21.06.21 19:43, Andy Shevchenko wrote:
 
-for building
+> Since in parallel there is a discussion about the virtio-gpio
+> interface, how will this work with it?
 
-> setups when there is one upstream line and multiple cascaded lines, out
-> of which one can be chosen at a time. The status of the upstream line
-> can be conveyd to the selected cascaded line or, vice versa, the status
+Haven't really understood what this is actually doing. A multiplexer
+where only external line is connected to some actual gpio at a time ?
+Or does it merge multiple inputs into one (eg. logical OR) ?
 
-conveyed
+Is that about real hardware mux chips or just a software only ?
 
-> of the cascaded line can be conveyed to the upstream line.
->
-> A gpio-mux is being used to select, which cascaded GPIO line is being
-> used at any given time.
->
-> At the moment only input direction is supported. In future it should be
-> possible to add support for output direction, too.
+What is the actual use case ?
 
-Since in parallel there is a discussion about the virtio-gpio
-interface, how will this work with it?
+For now, I don't see any relation to virtio-gpio. Correct me if I'm
+wrong.
 
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + *  A generic GPIO cascade driver
-> + *
-> + *  Copyright (C) 2021 Mauri Sandberg <maukka@ext.kapsi.fi>
-> + *
-> + * This allows building cascades of GPIO lines in a manner illustrated
-> + * below:
-> + *
-> + *                 /|---- Cascaded GPIO line 0
-> + *  Upstream      | |---- Cascaded GPIO line 1
-> + *  GPIO line ----+ | .
-> + *                | | .
-> + *                 \|---- Cascaded GPIO line n
-> + *
-> + * A gpio-mux is being used to select, which cascaded line is being
-> + * addressed at any given time.
-> + *
-> + * At the moment only input mode is supported due to lack of means for
-> + * testing output functionality. At least theoretically output should be
-> + * possible with an open drain constructions.
-> + */
 
-...
+--mtx
 
-> +static int gpio_cascade_get_value(struct gpio_chip *gc, unsigned int off=
-set)
-> +{
-> +       struct gpio_cascade *cas;
-> +       int ret;
-
-> +       cas =3D chip_to_cascade(gc);
-
-Doing this in the definition block above will save a LOC.
-
-> +       ret =3D mux_control_select(cas->mux_control, offset);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D gpiod_get_value(cas->upstream_line);
-> +       mux_control_deselect(cas->mux_control);
-> +       return ret;
-> +}
-
-...
-
-> +       struct device_node *np =3D pdev->dev.of_node;
-
-Nope, see below.
-
-...
-
-> +       cas =3D devm_kzalloc(dev, sizeof(struct gpio_cascade), GFP_KERNEL=
-);
-
-sizeof(*cas)
-
-> +       if (cas =3D=3D NULL)
-
-if (!cas)
-
-> +               return -ENOMEM;
-
-...
-
-> +       mc =3D devm_mux_control_get(dev, NULL);
-> +       if (IS_ERR(mc)) {
-> +               err =3D (int) PTR_ERR(mc);
-> +               if (err !=3D -EPROBE_DEFER)
-> +                       dev_err(dev, "unable to get mux-control: %d\n", e=
-rr);
-> +               return err;
-
-Oh l=C3=A0 l=C3=A0! No, the explicit castings are bad. besides the fact tha=
-t all
-above can be replaced by
-
-  return dev_err_probe(...);
-
-> +       }
-> +
-> +       cas->mux_control =3D mc;
-> +       upstream =3D devm_gpiod_get(dev, "upstream",  GPIOD_IN);
-> +       if (IS_ERR(upstream)) {
-
-> +               err =3D (int) PTR_ERR(upstream);
-> +               dev_err(dev, "unable to claim upstream GPIO line: %d\n", =
-err);
-
-No castings. Use proper printf() specifiers.
-
-> +               return err;
-> +       }
-
-...
-
-> +       gc->of_node =3D np;
-
-This should be guarded by CONFIG_OF_GPIO.
-And no need to use the np temporary variable for one use like this.
-
-...
-
-> +       err =3D gpiochip_add(&cas->gpio_chip);
-
-Why not the devm variant?
-
-> +       if (err) {
-> +               dev_err(dev, "unable to add gpio chip, err=3D%d\n", err);
-> +               return err;
-> +       }
-
-...
-
-> +       dev_info(dev, "registered %u cascaded GPIO lines\n", gc->ngpio);
-
-No, we don't pollute logs when everything is fine.
-
-...
-
-> +static const struct of_device_id gpio_cascade_id[] =3D {
-> +       {
-> +               .compatible =3D "gpio-cascade",
-
-> +               .data =3D NULL,
-
-Redundant.
-
-> +       },
-
-All above may consume only a single LOC.
-
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_cascade_id);
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
