@@ -2,199 +2,512 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01A683AF176
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jun 2021 19:09:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FA5E3AF1DB
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jun 2021 19:25:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230503AbhFURLx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Jun 2021 13:11:53 -0400
-Received: from mail-dm6nam12on2075.outbound.protection.outlook.com ([40.107.243.75]:52182
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230059AbhFURLw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 21 Jun 2021 13:11:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EW8EgB1Pqa0y5v2USpEg+cC6q2YDztMS+m3l7EE+4+afud1GJ4rvz6Ecvw4YrejeHBej3WLbzkqvSlVyuibJ9c5szYE4CXOV5/svGr42B4BqPXzyLfDQ00Jdr2IR214rp5KIKVnoJbik/DYgwTZyHWqbburjm4uOa0GwEqNu2XDMz45Hifud4GYU1HiN+TRZbDV0rtx/CN6zjsAy9WLJok9LF5PbXEaR1nbj475K+2foZ9pGNeOVW/QvoxaoRxaWI/ZtzxE5f83f+EtxjZNmzxY8FiNBZBIJLzRMGvkxpnZLdAfdXf5X974sY0oWl9F2/kGdCMotyBQ86F8mAO6cgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Llv05ZLZqkhZARm5moLHUgb8N7/B+OHut3MOSKrHTRw=;
- b=LLAjENvMYIg0F1ce0BUmf2/MS/NH1gC8YoxRGhPtOOg9798yntiA+XMYwLyOvp+/Fy8YsHxyMeqeEYXgZAOd52v0knF9vrSePXSt7VVvCVN2vxV5CfH4C+hq8U92B3cKpTjXZ52KqERGLSKfusBrf24cGehan28MiJh2CoKWirbzCTY3kilbvmJQyzu1TaWVMoUCZIOQcDmB/cDFbikG8CsuvaF0aD43NWpuhwhEWY893tWRnkiS31/yTQWLGy+i+zHv2u4h27DrvxQ/Vv/OOk46mvNLSBZzfE7dCBgdpB28fWjcBSMiOTEfOfgHhXdBd5/NjFt1zKcFXPIta/TIww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Llv05ZLZqkhZARm5moLHUgb8N7/B+OHut3MOSKrHTRw=;
- b=ZPh5YVKL8ksGKvY00fnNtt8L/pWfMIYdGz6JLMfIkO573yq6U7jQYnYp9OxUBnUvKG0IQrJABilw/XfNeMM2rt8TRlWUEqKGyqEbZ/C3cJA53lunJKzMz8/I38xPipfY9gvqqz6g6q/qi7mkzijblmltX3bOXvMsC1ldzb4MV8s=
-Received: from PH0PR02MB7640.namprd02.prod.outlook.com (2603:10b6:510:4e::24)
- by PH0PR02MB7733.namprd02.prod.outlook.com (2603:10b6:510:4c::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.21; Mon, 21 Jun
- 2021 17:09:32 +0000
-Received: from PH0PR02MB7640.namprd02.prod.outlook.com
- ([fe80::1c8a:2a13:6c57:4a3]) by PH0PR02MB7640.namprd02.prod.outlook.com
- ([fe80::1c8a:2a13:6c57:4a3%8]) with mapi id 15.20.4242.023; Mon, 21 Jun 2021
- 17:09:32 +0000
-From:   Piyush Mehta <piyushm@xilinx.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        git <git@xilinx.com>, Srinivas Goud <sgoud@xilinx.com>,
-        Michal Simek <michals@xilinx.com>
-Subject: RE: [PATCH 2/2] gpio: modepin: Add driver support for modepin GPIO
- controller
-Thread-Topic: [PATCH 2/2] gpio: modepin: Add driver support for modepin GPIO
- controller
-Thread-Index: AQHXYb1lJfCxO5tPuU+yMn2AjLrheKsZiW2AgAUudAA=
-Date:   Mon, 21 Jun 2021 17:09:31 +0000
-Message-ID: <PH0PR02MB76400D00A4DA42FE1D72C1FAD40A9@PH0PR02MB7640.namprd02.prod.outlook.com>
-References: <20210615080553.2021061-1-piyush.mehta@xilinx.com>
- <20210615080553.2021061-3-piyush.mehta@xilinx.com>
- <CACRpkdYv6yosZ1KJazrMzaizpYz-cv-y4LcCqHm+Q94jva8sAA@mail.gmail.com>
-In-Reply-To: <CACRpkdYv6yosZ1KJazrMzaizpYz-cv-y4LcCqHm+Q94jva8sAA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [60.243.150.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d4b3768a-d0e3-4111-d1c3-08d934d75665
-x-ms-traffictypediagnostic: PH0PR02MB7733:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PH0PR02MB77334E7B176D7B4743AD98D9D40A9@PH0PR02MB7733.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:551;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uisEqiQNHVAwGYPZ1Th45uqvpozuTUUXC5D6JCHmv3rJULUfjHdGvRpaBuWcU/TgMl8SPgyHhjGWC3jYMa1fZZ32ZIwg4W4oYyHe0KP79Wyw/Og4KSIldb60fOs74SXpAE1vy1bTfPZo7r1kaOW4O8gThiFi0FaZwGXHL1y8FYXzp8dtFVI/vUGt30RluHzQPKCh1SvW18hzmdS3WT4KXEGWrXYIShLfkiDKMUSDOImXpdG0DwnjTl1075OFRTg3dLawcwi9lc37r7rWiOSjRHg5Fozy2yjVEXdtBB6DMbKDeX3p/6rQXKzPKo5u4HkFw2G2OUEKSWIptHaVUslez7TS+dWxoSfmmQF2cx2LBomtk+9TINMcYFilU3FoyW3SwEx7NxmEKv7N7/5Iho7e7/hCt+zr+kcUc1Ir81B0UPT04XNZ48DIHrLqjyVFLT3YO3TaByh7jYkheZNeWplN7qlkkG2rL2o3fVx/BFT2fL9wgTo/WEvAfmPZZc7Ik1W7gKH34RjAYToT3Fo/UuVFUzj2zZxjlZBjphG+ZPhMLTLldNZ84w6igqVsHWlKGUFV2dFWWhbqgkdDFNZdEHaau6jbs9dPHyVvrvpVmdr3O2Y=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR02MB7640.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39850400004)(136003)(366004)(376002)(396003)(346002)(33656002)(64756008)(66556008)(66476007)(4326008)(8676002)(316002)(6916009)(66446008)(55016002)(478600001)(76116006)(5660300002)(54906003)(83380400001)(66946007)(107886003)(52536014)(86362001)(9686003)(7696005)(186003)(26005)(6506007)(53546011)(8936002)(2906002)(38100700002)(122000001)(71200400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OEdlNnJmZGViQUZoejNrYUg5bC9RR2FvZUhkV1YrY1ZKOFMzekRHZ1FrZ01p?=
- =?utf-8?B?MklCZ2MvWkZkUGNJUTF2dXNBWmdtb1pHUHBNL0l6ZEpXbUJwS3RLMEp0Y2gv?=
- =?utf-8?B?Vi9oVGlDYmIyNzUxQXlZTm5GeTVSSkdWTjJsdjNzUlRTNzVSclA2K1BqWkVP?=
- =?utf-8?B?RU9QbURuQnRkRUMvcFNQblBzRzViZE9BMnJHUlJVdWpqaStPUWJJOVhSTFBN?=
- =?utf-8?B?bGc5SFdjSzZKODB6bFBCU3FZaE5Mb3RORy8wcURkTzBlS3hKeTQyUklRTDJ5?=
- =?utf-8?B?M1NGZzRZandUY3JwZlF5Q2xlMDBGMWc2K3hhbWtxVEVoditOS3BaYTl5Zncz?=
- =?utf-8?B?RXRZZG5FN3dtUXd3WUJKdWxuVWxaOGdLY0lVcHdwN2dyeENDMkprQzNBZEpL?=
- =?utf-8?B?Wm45N1RNMGZkdEtkTUJwbE1wa3p2SDlyOGhGWGE4ZERkK1dkSGhUWURWblFr?=
- =?utf-8?B?b2hlcmlXTXB6amg0bmNkMlIreVg0NmdXdHNOWkFKUXAzTzJ1Zi9KaEYrdW5N?=
- =?utf-8?B?aGZCQkdFQTZEc3B6S1E1RnBncUhzRUtlRmx6NndUWEZPWkNuNXRrQk5rV3JW?=
- =?utf-8?B?ZTRUT2p2aVRjcUF4WTdCc2d5UTRudzRxbXNaeXppYVBFUUU2WjJxUXU5ZWMz?=
- =?utf-8?B?bUd3V200RUs0c2RWVmY0Skk5eTVGYzBWTndPRVQzbEIvYkFVVW1LR2paaFZI?=
- =?utf-8?B?cUE2WXJ0YjdPdDUxaXZpQitrOEFkQm5NNjU3MjluNjF1aFhGeFBFd3lWWXRp?=
- =?utf-8?B?SGhzMVZWc0hubTZJc3pkcU52NE5CVnVvTVlLUE9oc29IdUMva1NhNnh1T2JE?=
- =?utf-8?B?TFFZM0daOTQvSWhKcGVnOGJVS1FObkcrcFVOY2hNcHlKYmxrUjlmMUZpTkY3?=
- =?utf-8?B?Zi96MEJZSndDTExFbXB5Q21mQnNoeUxZU0hBcmNwZjE1OEF6bUhoQVJORFFL?=
- =?utf-8?B?aUwwQStsUFdjQmgzODNwSHdKQ0o1UitVMDNIem9XZVlRQjd2UlZhMjNESVFD?=
- =?utf-8?B?cUMxWTFmQjYxOVhsRGJQWTgyVzVXT0l0a1FWSHcwNGZZK1F3TklVZG5pQ2ZK?=
- =?utf-8?B?LytZRjAydlQxTFR2RU80Wk1KaExEZGNMaTNxbGlpL1Q2MjZnaFlKZVVIYVlk?=
- =?utf-8?B?OHpnNWxjY2Z0bjV1Lzl0cnp4Mnh5SHpmY0FLaDNKcklnS09ZVXFsR3ltMndU?=
- =?utf-8?B?bCtrRFZuU0VCdTF3Rm5aMndtNlRDeVQvVURKbTBGcDlmTWZlYWVYZVByVXkw?=
- =?utf-8?B?L0tsL2h6OWFBc1Q3NTM2UE5oUkIweGQwbkY3OUtOYlo1V2JJa1BYQ2VCeWFi?=
- =?utf-8?B?Y3o3T3Q3c2VKckxGNGxJbkhJdHJsNlZpSG5KSkh5ZUlHMW1YZDN0YXlzQUxs?=
- =?utf-8?B?cHdaV1lFZDl5RlFyWnFXR1pNUlIyb0QxK0FIZWkwUzF5Vkl4MGcrVTdja2k3?=
- =?utf-8?B?Mk11ZlFFRk5RNTc4VG10ZjFBWjYxUml6bHQ0dm5Lb0IyS2dqbWR2U2g1MC9x?=
- =?utf-8?B?NFhuaEFMWHF6bmtwYVo1bWRuNG9XUmE2cUlkRmM5VVFIRXRwZ0RxYVRTblFL?=
- =?utf-8?B?NTY5RXI3SWJNcDVyQ2c2VWJ6dzdJNHh2WGF0em5OQkxoQmF3dE5FUjl1SDNK?=
- =?utf-8?B?QmlpUlR0ZGoydkpGTHNkeFhqc3ZneS9pVFF4cUpOMTJpRGZtbEVxMXREUVRO?=
- =?utf-8?B?Rk9ya2FZTlhvWlVUQWhLSWR0WGs3dVJuWlFDV1FXa2tUQ2FHdE16ZXllNFV2?=
- =?utf-8?Q?FTtBl6NUzzXIpm8SNQfQTms6lCjdaGHgnqJGMvl?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S231361AbhFUR1p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Jun 2021 13:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230381AbhFUR1p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Jun 2021 13:27:45 -0400
+Received: from mailserv1.kapsi.fi (mailserv1.kapsi.fi [IPv6:2001:67c:1be8::25:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68FBC061574;
+        Mon, 21 Jun 2021 10:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=ext.kapsi.fi; s=20161220; h=Subject:Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=L+lMV6AjikKwGor43KEcUq86KYglHxWVK1hGJ6yKg8g=; b=M/v1m9N75GRzLwsIEPcejJHs70
+        K/Q3VYFFekxzT80gZeJMhDMaiw5SdlOfFGLgeH0xuZKlmXe1Qjjv4+xp28iooUhhPZeDyM+LoMqgt
+        zWxJKzOD/8Uurs8cZdb2sZePBtBL6Z/GcUK0RR/eUZ8nOYWuAYY2rjlvRRncCIDSOLECeO+51CiFL
+        O8CeA15qt9I4HkHUYMyzPmCyWinmoPR9RP7jSTC9NaSZwnDiR0G4xHaspfguxjudT5IV4n8g/iUo6
+        8kgkvDWIyn3qR76Hw1W/QmqgCB1SlOZkBXlO8ZXBvlzkXOMq7JSFlqdaXugiQCfkzjoQWZhaDgzsF
+        oa9VrvHw==;
+Received: from 164-105-191-90.dyn.estpak.ee ([90.191.105.164]:49245 helo=localdomain)
+        by mailserv1.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <maukka@ext.kapsi.fi>)
+        id 1lvNfl-0002Cj-0g; Mon, 21 Jun 2021 20:25:22 +0300
+Received: by localdomain (sSMTP sendmail emulation); Mon, 21 Jun 2021 20:25:20 +0300
+From:   Mauri Sandberg <maukka@ext.kapsi.fi>
+To:     sandberg@mailfence.com
+Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
+        geert+renesas@glider.be, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drew@beagleboard.org, Mauri Sandberg <maukka@ext.kapsi.fi>
+Date:   Mon, 21 Jun 2021 20:20:51 +0300
+Message-Id: <20210621172053.107045-1-maukka@ext.kapsi.fi>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210325122832.119147-1-sandberg@mailfence.com>
+References: <20210325122832.119147-1-sandberg@mailfence.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR02MB7640.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4b3768a-d0e3-4111-d1c3-08d934d75665
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2021 17:09:32.0159
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PBx+uOrvEuwtuXdnxlC8GooQyB6OU57OrMmnvPE63BExN5SbMLqVznXrWZphpd9Dymi0TbfQ34J8jxgTi8eSEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7733
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 90.191.105.164
+X-SA-Exim-Mail-From: maukka@ext.kapsi.fi
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mailserv1.kapsi.fi
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        TVD_RCVD_IP,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: [PATCH v5 0/2] gpio: add generic gpio cascade
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on mailserv1.kapsi.fi)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGVsbG8gTGludXMsDQoNClRoYW5rcyBmb3IgdGhlIHJldmlldyBjb21tZW50cy4NCldlIHdpbGwg
-YWRkcmVzcyBhbGwgdGhlIHJldmlld3MgaW4gdGhlIG5leHQgdmVyc2lvbi4NCg0KUmVnYXJkcywN
-ClBpeXVzaCBNZWh0YQ0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogTGludXMg
-V2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPiANClNlbnQ6IEZyaWRheSwgSnVuZSAx
-OCwgMjAyMSAzOjE0IFBNDQpUbzogUGl5dXNoIE1laHRhIDxwaXl1c2htQHhpbGlueC5jb20+DQpD
-YzogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT47IFJvYiBI
-ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBvcGVuIGxpc3Q6R1BJTyBTVUJTWVNURU0gPGxp
-bnV4LWdwaW9Admdlci5rZXJuZWwub3JnPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZM
-QVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+
-OyBsaW51eC1rZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0g
-PGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGdpdCA8Z2l0QHhpbGlueC5j
-b20+OyBTcmluaXZhcyBHb3VkIDxzZ291ZEB4aWxpbnguY29tPjsgTWljaGFsIFNpbWVrIDxtaWNo
-YWxzQHhpbGlueC5jb20+DQpTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gZ3BpbzogbW9kZXBpbjog
-QWRkIGRyaXZlciBzdXBwb3J0IGZvciBtb2RlcGluIEdQSU8gY29udHJvbGxlcg0KDQpIaSBQaXl1
-c2ghDQoNCnRoYW5rcyBmb3IgeW91ciBwYXRjaCENCg0KT24gVHVlLCBKdW4gMTUsIDIwMjEgYXQg
-MTA6MDYgQU0gUGl5dXNoIE1laHRhIDxwaXl1c2gubWVodGFAeGlsaW54LmNvbT4gd3JvdGU6DQoN
-Cj4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBtb2RlIHBpbiBHUElPIGNvbnRyb2xs
-ZXIuIEdQSU8gTW9kZXBpbiANCj4gZHJpdmVyIHNldCBhbmQgZ2V0IHRoZSB2YWx1ZSBhbmQgc3Rh
-dHVzIG9mIHRoZSBQU19NT0RFIHBpbiwgYmFzZWQgb24gDQo+IGRldmljZS10cmVlIHBpbiBjb25m
-aWd1cmF0aW9uLiBUaGVzZSA0LWJpdHMgYm9vdC1tb2RlIHBpbnMgYXJlIA0KPiBkZWRpY2F0ZWQg
-Y29uZmlndXJhYmxlIGFzIGlucHV0L291dHB1dC4gQWZ0ZXIgdGhlIHN0YWJpbGl6YXRpb24gb2Yg
-dGhlIA0KPiBzeXN0ZW0sIHRoZXNlIG1vZGUgcGlucyBhcmUgc2FtcGxlZC4NCj4NCj4gU2lnbmVk
-LW9mZi1ieTogUGl5dXNoIE1laHRhIDxwaXl1c2gubWVodGFAeGlsaW54LmNvbT4NCg0KT0ssIHNv
-dW5kcyBpbnRlcmVzdGluZyENCg0KPiArI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCg0KSSB0aGlu
-ayBJIHNhdyBzb21ld2hlcmUgdGhhdCB0aGlzIGlzIG5vdCBuZWVkZWQgYW55bW9yZSwgY2hlY2sg
-aWYgeW91IG5lZWQgaXQuDQoNCj4gKyNkZWZpbmUgR0VUX09VVEVOX1BJTihwaW4pICAgICAgICAg
-ICAgICgxVSA8PCAocGluKSkNCg0KRGVsZXRlIHRoaXMgbWFjcm8gYW5kIGp1c3QgdXNlIEJJVChw
-aW4pIGlubGluZS4NCiNpbmNsdWRlIDxsaW51eC9iaXRzLmg+DQoNCj4gK3N0YXRpYyBpbnQgbW9k
-ZXBpbl9ncGlvX2dldF92YWx1ZShzdHJ1Y3QgZ3Bpb19jaGlwICpjaGlwLCB1bnNpZ25lZCANCj4g
-K2ludCBwaW4pIHsNCj4gKyAgICAgICB1MzIgb3V0X2VuOw0KPiArICAgICAgIHUzMiByZWd2YWwg
-PSAwOw0KPiArICAgICAgIGludCByZXQ7DQo+ICsNCj4gKyAgICAgICBvdXRfZW4gPSBHRVRfT1VU
-RU5fUElOKHBpbik7DQoNCkRyb3AgdGhpcyBhbmQgb3V0X2VuDQoNCj4gKyAgICAgICByZXQgPSB6
-eW5xbXBfcG1fYm9vdG1vZGVfcmVhZCgmcmVndmFsKTsNCj4gKyAgICAgICBpZiAocmV0KSB7DQo+
-ICsgICAgICAgICAgICAgICBwcl9lcnIoIm1vZGVwaW46IGdldCB2YWx1ZSBlcnIgJWRcbiIsIHJl
-dCk7DQo+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiArICAgICAgIH0NCj4gKw0KPiAr
-ICAgICAgIHJldHVybiAob3V0X2VuICYgKHJlZ3ZhbCA+PiA4VSkpID8gMSA6IDA7DQoNCnJldHVy
-biAhIShyZWd2YWwgJiBCSVQocGluICsgOCkpOw0KDQpzaG91bGQgd29yayBhbmQgaXMgZWFzaWVy
-IHRvIHJlYWQgSU1PLiBXZSBqdXN0IGNoZWNrIHRoZSByaWdodCBiaXQgaW1tZWRpYXRlbHkuDQoN
-Cj4gK3N0YXRpYyB2b2lkIG1vZGVwaW5fZ3Bpb19zZXRfdmFsdWUoc3RydWN0IGdwaW9fY2hpcCAq
-Y2hpcCwgdW5zaWduZWQgaW50IHBpbiwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBpbnQgc3RhdGUpIHsNCj4gKyAgICAgICB1MzIgb3V0X2VuOw0KPiArICAgICAgIHUzMiBi
-b290cGluX3ZhbCA9IDA7DQo+ICsgICAgICAgaW50IHJldDsNCj4gKw0KPiArICAgICAgIG91dF9l
-biA9IEdFVF9PVVRFTl9QSU4ocGluKTsNCg0KU2tpcCB0aGlzIGhlbHBlciB2YXJpYWJsZS4NCg0K
-PiArICAgICAgIHN0YXRlID0gc3RhdGUgIT0gMCA/IG91dF9lbiA6IDA7DQoNClVoIHRoYXQgaXMg
-cmVhbGx5IGhhcmQgdG8gcmVhZCBhbmQgbW9kaWZpZWQgYSBwYXJhbWV0ZXIuIFNraXAgdGhhdCB0
-b28uDQoNCj4gKyAgICAgICBib290cGluX3ZhbCA9IChzdGF0ZSA8PCAoOFUpKSB8IG91dF9lbjsN
-Cg0KV2hhdCB5b3Ugd2FudCBpcyBtYXNrIGFuZCBzZXQuDQoNCmJvb3RwaW5fdmFsID0gQklUKHBp
-biArIDgpOw0KDQo+ICsgICAgICAgLyogQ29uZmlndXJlIGJvb3RwaW4gdmFsdWUgKi8NCj4gKyAg
-ICAgICByZXQgPSB6eW5xbXBfcG1fYm9vdG1vZGVfd3JpdGUoYm9vdHBpbl92YWwpOw0KDQpUaGlz
-IGp1c3QgbG9va3Mgd2VpcmQuDQoNCldoeSBhcmUgeW91IG5vdCByZWFkaW5nIHRoZSB2YWx1ZSBm
-aXJzdCBzaW5jZSB5b3UgYXJlIHVzaW5nIHJlYWQvbW9kaWZ5L3dyaXRlPw0KDQpJICp0aGluayog
-eW91IHdhbnQgdG8gZG8gdGhpczoNCg0KcmV0ID0genlucW1wX3BtX2Jvb3Rtb2RlX3JlYWQoJnZh
-bCk7DQppZiAocmV0KQ0KICAgLyogZXJyb3IgaGFuZGxpbmcgKi8NCmlmIChzdGF0ZSkNCiAgICB2
-YWwgfD0gQklUKHBpbiArIDgpOw0KZWxzZQ0KICAgIHZhbCAmPSB+QklUKHBpbiArIDgpOw0KcmV0
-ID0genlucW1wX3BtX2Jvb3Rtb2RlX3dyaXRlKHZhbCk7DQppZiAocmV0KQ0KICAgLyogZXJyb3Ig
-aGFuZGxpbmcgKi8NCg0KPiArLyoNCj4gKyAqIG1vZGVwaW5fZ3Bpb19kaXJfaW4gLSBTZXQgdGhl
-IGRpcmVjdGlvbiBvZiB0aGUgc3BlY2lmaWVkIEdQSU8gcGluIGFzIGlucHV0DQo+ICsgKiBAY2hp
-cDogICAgICBncGlvX2NoaXAgaW5zdGFuY2UgdG8gYmUgd29ya2VkIG9uDQo+ICsgKiBAcGluOiAg
-ICAgICBncGlvIHBpbiBudW1iZXIgd2l0aGluIHRoZSBkZXZpY2UNCj4gKyAqDQo+ICsgKiBSZXR1
-cm46IDAgYWx3YXlzDQo+ICsgKi8NCj4gK3N0YXRpYyBpbnQgbW9kZXBpbl9ncGlvX2Rpcl9pbihz
-dHJ1Y3QgZ3Bpb19jaGlwICpjaGlwLCB1bnNpZ25lZCBpbnQgDQo+ICtwaW4pIHsNCj4gKyAgICAg
-ICByZXR1cm4gMDsNCj4gK30NCg0KSSB0aGluayB5b3Ugc2FpZCB0aGlzIHdhcyBjb25maWd1cmFi
-bGUgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLg0KDQpVc2UgdGhlIGRlZmluZSBHUElPX0xJTkVfRElS
-RUNUSU9OX09VVCByYXRoZXIgdGhhbiAwLg0KDQo+ICtzdGF0aWMgaW50IG1vZGVwaW5fZ3Bpb19k
-aXJfb3V0KHN0cnVjdCBncGlvX2NoaXAgKmNoaXAsIHVuc2lnbmVkIGludCBwaW4sDQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IHN0YXRlKSB7DQo+ICsgICAgICAgcmV0dXJu
-IDA7DQo+ICt9DQoNCkNvbmZpZ3VyYWJsZT8NCg0KPiArICAgICAgIHN0YXR1cyA9IGRldm1fZ3Bp
-b2NoaXBfYWRkX2RhdGEoJnBkZXYtPmRldiwgY2hpcCwgY2hpcCk7DQo+ICsgICAgICAgaWYgKHN0
-YXR1cykNCj4gKyAgICAgICAgICAgICAgIGRldl9lcnJfcHJvYmUoJnBkZXYtPmRldiwgc3RhdHVz
-LA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiRmFpbGVkIHRvIGFkZCBHUElPIGNo
-aXBcbiIpOw0KDQpqdXN0IHJldHVybiBkZXZfZXJyX3Byb2JlKC4uLikNCg0KWW91cnMsDQpMaW51
-cyBXYWxsZWlqDQo=
+Hello all,
+
+Thank you for your review comments so far. Here comes new attempt at the gpio
+multiplexer driver. There are quite a lot of changes if you look at the diff
+based on the v4. Functionality is still the same, though. Only renaming,
+refactoring and some more documentation.
+
+What was done
+ - rename 'gpio-mux-input' -> 'gpio-cascade' in sources
+ - bindings were changed to reflect the renaming
+ - refactoring here and there, renaming variables
+ - documentation was made simpler and more verbose
+
+Drew: I chose to drop the Reviewed-by and Tested-by tags because, even though
+mostly renaming, bindings were changed too and that affects functionality. If
+you have the time, could you please have another look?
+
+Linus: I hope the changes to the documentation were what you had in mind.
+
+Rob: I fixed a couple of errors that you bot detected but one is due to missing
+schema file (gpio-mux) and adding that is not in the scope of this work.
+
+Andy: I dropped the Reported-by tag the bot had instructed me to add.
+
+Thanks,
+Mauri
+
+diff between v4 and v5
+
+1:  496558967cd8 ! 1:  83defaf33475 dt-bindings: gpio-mux-input: add documentation
+    @@ Metadata
+     Author: Mauri Sandberg <maukka@ext.kapsi.fi>
+     
+      ## Commit message ##
+    -    dt-bindings: gpio-mux-input: add documentation
+    +    dt-bindings: gpio-cascade: add documentation
+     
+    -    Add documentation for a general GPIO multiplexer.
+    +    Add documentation for a general GPIO cascade. It allows building
+    +    one-to-many cascades of GPIO lines using multiplexer to choose
+    +    the cascaded line.
+     
+         Signed-off-by: Mauri Sandberg <maukka@ext.kapsi.fi>
+    -    Tested-by: Drew Fustini <drew@beagleboard.org>
+    -    Reviewed-by: Drew Fustini <drew@beagleboard.org>
+         ---
+    +    v4 -> v5:
+    +     - renamed gpio-mux-input -> gpio-cascade
+    +     - changed vague term 'pin' to 'upstream line'
+    +     - added more verbose description for the module
+    +     - added missing 'mux-controls' entry
+    +     - dropped Tested-by and Reviewed-by due to changes in bindings
+         v3 -> v4:
+          - Changed author email
+          - Included Tested-by and Reviewed-by from Drew
+         v2 -> v3: added a complete example on dual 4-way multiplexer
+         v1 -> v2: added a little bit more text in the binding documenation
+     
+    - ## Documentation/devicetree/bindings/gpio/gpio-mux-input.yaml (new) ##
+    + ## Documentation/devicetree/bindings/gpio/gpio-cascade.yaml (new) ##
+     @@
+     +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+     +%YAML 1.2
+     +---
+    -+$id: http://devicetree.org/schemas/gpio/gpio-mux-input.yaml#
+    ++$id: http://devicetree.org/schemas/gpio/gpio-cascade.yaml#
+     +$schema: http://devicetree.org/meta-schemas/core.yaml#
+     +
+    -+title: Generic GPIO input multiplexer
+    ++title: Generic GPIO cascade
+     +
+     +maintainers:
+     +  - Mauri Sandberg <maukka@ext.kapsi.fi>
+     +
+     +description: |
+    -+  A generic GPIO based input multiplexer
+    ++  A generic GPIO cascade
+     +
+    -+  This driver uses a mux-controller to drive the multiplexer and has a single
+    -+  output pin for reading the inputs to the mux.
+    ++  This hardware construction cascades (multiplexes) several GPIO lines from
+    ++  one-to-many using a software controlled multiplexer. The most common use
+    ++  case is probably reading several inputs by switching the multiplexer over
+    ++  several input lines, which in practice works well since input lines has
+    ++  high impedance.
+     +
+    -+  For GPIO consumer documentation see gpio.txt.
+    ++  Constructions with multiplexed outputs are also possible using open drain
+    ++  electronics.
+    ++
+    ++  The number of cascaded GPIO lines is limited by the technology used to
+    ++  switch over the cascaded lines. There are readily available dual/triple
+    ++  4-to-1 multiplexers, for example, and others.
+    ++
+    ++  Illustration (pins used to drive the multiplexer are omitted for clarity)
+    ++
+    ++                 /|---- Cascaded GPIO line 0
+    ++  Upstream      | |---- Cascaded GPIO line 1
+    ++  GPIO line ----+ | .
+    ++                | | .
+    ++                 \|---- Cascaded GPIO line n
+     +
+     +properties:
+     +  compatible:
+     +    enum:
+    -+      - gpio-mux-input
+    ++      - gpio-cascade
+     +
+     +  gpio-controller: true
+     +
+     +  '#gpio-cells':
+     +    const: 2
+     +
+    -+  pin-gpios:
+    ++  mux-controls:
+    ++    minItems: 1
+    ++    maxItems: 1
+     +    description: |
+    -+      The GPIO pin used as the output from the multiplexer
+    ++      The mux controller that will be driving the GPIO cascade.
+    ++
+    ++  upstream-gpios:
+    ++    description: |
+    ++      The GPIO line used as the upstream line will convey the status to/from
+    ++      cascaded GPIO lines. In an input mode, by using this line, it is
+    ++      possible to read the status from selected cascaded GPIO line.
+    ++
+    ++      In an output mode the status of the upstream GPIO will be conveyed to
+    ++      the selected cascaded GPIO line.
+     +
+     +required:
+     +  - compatible
+     +  - gpio-controller
+     +  - "#gpio-cells"
+    -+  - pin-gpios
+    ++  - mux-controls
+    ++  - upstream-gpios
+     +
+     +additionalProperties: false
+     +
+    @@ Documentation/devicetree/bindings/gpio/gpio-mux-input.yaml (new)
+     +    };
+     +
+     +    gpio2: key-mux1 {
+    -+        compatible = "gpio-mux-input";
+    ++        compatible = "gpio-cascade";
+     +        mux-controls = <&mux>;
+     +
+     +        gpio-controller;
+     +        #gpio-cells = <2>;
+     +
+    -+        // GPIOs used by this node, mux pin
+    -+        pin-gpios = <&gpio 12 GPIO_ACTIVE_HIGH>;
+    ++        // GPIOs used by this node, upstream pin
+    ++        upstream-gpios = <&gpio 12 GPIO_ACTIVE_HIGH>;
+     +    };
+     +
+     +    gpio3: key-mux2 {
+    -+        compatible = "gpio-mux-input";
+    ++        compatible = "gpio-cascade";
+     +        mux-controls = <&mux>;
+     +
+     +        gpio-controller;
+     +        #gpio-cells = <2>;
+     +
+    -+        // GPIOs used by this node, mux pin
+    -+        pin-gpios = <&gpio 14 GPIO_ACTIVE_HIGH>;
+    ++        // GPIOs used by this node, upstream pin
+    ++        upstream-gpios = <&gpio 14 GPIO_ACTIVE_HIGH>;
+     +    };
+     +
+     +...
+2:  782e009ba54b ! 2:  d1063611d6ac gpio: gpio-mux-input: add generic gpio input multiplexer
+    @@ Metadata
+     Author: Mauri Sandberg <maukka@ext.kapsi.fi>
+     
+      ## Commit message ##
+    -    gpio: gpio-mux-input: add generic gpio input multiplexer
+    +    gpio: gpio-cascade: add generic GPIO cascade
+     
+    -    Adds support for a generic GPIO multiplexer. To drive the multiplexer a
+    -    mux-controller is needed. The output pin of the multiplexer is a GPIO
+    -    pin.
+    +    Adds support for a building cascades of GPIO lines. That is, it allows
+    +    setups when there is one upstream line and multiple cascaded lines, out
+    +    of which one can be chosen at a time. The status of the upstream line
+    +    can be conveyd to the selected cascaded line or, vice versa, the status
+    +    of the cascaded line can be conveyed to the upstream line.
+    +
+    +    A gpio-mux is being used to select, which cascaded GPIO line is being
+    +    used at any given time.
+    +
+    +    At the moment only input direction is supported. In future it should be
+    +    possible to add support for output direction, too.
+     
+    -    Reported-by: kernel test robot <lkp@intel.com>
+         Signed-off-by: Mauri Sandberg <maukka@ext.kapsi.fi>
+    -    Tested-by: Drew Fustini <drew@beagleboard.org>
+    -    Reviewed-by: Drew Fustini <drew@beagleboard.org>
+         ---
+    +    v4 -> v5:
+    +     - renamed gpio-mux-input -> gpio-cascade. refactored code accordingly
+    +       here and there and changed to use new bindings and compatible string
+    +       - ambigious and vague 'pin' was rename to 'upstream_line'
+    +     - dropped Tested-by and Reviewed-by due to changes in bindings
+    +     - dropped Reported-by suggested by an automatic bot as it was not really
+    +       appropriate to begin with
+    +     - functionally it's the same as v4
+         v3 -> v4:
+          - Changed author email
+          - Included Tested-by and Reviewed-by from Drew
+    @@ drivers/gpio/Kconfig: config GPIO_MOCKUP
+      
+     +comment "Other GPIO expanders"
+     +
+    -+config GPIO_MUX_INPUT
+    -+	tristate "General GPIO input multiplexer"
+    ++config GPIO_CASCADE
+    ++	tristate "General GPIO cascade"
+     +	depends on OF_GPIO
+     +	select MULTIPLEXER
+     +	select MUX_GPIO
+     +	help
+    -+	  Say yes here to enable support for generic GPIO input multiplexer.
+    ++	  Say yes here to enable support for generic GPIO cascade.
+     +
+    -+	  This driver uses a mux-controller to drive the multiplexer and has a
+    -+	  single output pin for reading the inputs to the mux. The driver can
+    -+	  be used in situations when GPIO pins are used to select what
+    -+	  multiplexer pin should be used for reading input and the output pin
+    -+	  of the multiplexer is connected to a GPIO input pin.
+    ++	  This allows building one-to-many cascades of GPIO lines using
+    ++	  different types of multiplexers readily available. At the
+    ++	  moment only input lines are supported.
+     +
+      endif
+     
+      ## drivers/gpio/Makefile ##
+    -@@ drivers/gpio/Makefile: obj-$(CONFIG_GPIO_MPC5200)		+= gpio-mpc5200.o
+    - obj-$(CONFIG_GPIO_MPC8XXX)		+= gpio-mpc8xxx.o
+    - obj-$(CONFIG_GPIO_MSC313)		+= gpio-msc313.o
+    - obj-$(CONFIG_GPIO_MT7621)		+= gpio-mt7621.o
+    -+obj-$(CONFIG_GPIO_MUX_INPUT)		+= gpio-mux-input.o
+    - obj-$(CONFIG_GPIO_MVEBU)		+= gpio-mvebu.o
+    - obj-$(CONFIG_GPIO_MXC)			+= gpio-mxc.o
+    - obj-$(CONFIG_GPIO_MXS)			+= gpio-mxs.o
+    +@@ drivers/gpio/Makefile: obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
+    + obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
+    + obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
+    + obj-$(CONFIG_GPIO_CADENCE)		+= gpio-cadence.o
+    ++obj-$(CONFIG_GPIO_CASCADE)		+= gpio-cascade.o
+    + obj-$(CONFIG_GPIO_CLPS711X)		+= gpio-clps711x.o
+    + obj-$(CONFIG_GPIO_SNPS_CREG)		+= gpio-creg-snps.o
+    + obj-$(CONFIG_GPIO_CRYSTAL_COVE)		+= gpio-crystalcove.o
+     
+    - ## drivers/gpio/gpio-mux-input.c (new) ##
+    + ## drivers/gpio/gpio-cascade.c (new) ##
+     @@
+     +// SPDX-License-Identifier: GPL-2.0-only
+     +/*
+    -+ *  A generic GPIO input multiplexer driver
+    ++ *  A generic GPIO cascade driver
+     + *
+     + *  Copyright (C) 2021 Mauri Sandberg <maukka@ext.kapsi.fi>
+     + *
+    ++ * This allows building cascades of GPIO lines in a manner illustrated
+    ++ * below:
+    ++ *
+    ++ *                 /|---- Cascaded GPIO line 0
+    ++ *  Upstream      | |---- Cascaded GPIO line 1
+    ++ *  GPIO line ----+ | .
+    ++ *                | | .
+    ++ *                 \|---- Cascaded GPIO line n
+    ++ *
+    ++ * A gpio-mux is being used to select, which cascaded line is being
+    ++ * addressed at any given time.
+    ++ *
+    ++ * At the moment only input mode is supported due to lack of means for
+    ++ * testing output functionality. At least theoretically output should be
+    ++ * possible with an open drain constructions.
+     + */
+     +
+     +#include <linux/module.h>
+    @@ drivers/gpio/gpio-mux-input.c (new)
+     +#include <linux/platform_device.h>
+     +#include <linux/mux/consumer.h>
+     +
+    -+struct gpio_mux_input {
+    ++struct gpio_cascade {
+     +	struct device		*parent;
+     +	struct gpio_chip	gpio_chip;
+     +	struct mux_control	*mux_control;
+    -+	struct gpio_desc	*mux_pin;
+    ++	struct gpio_desc	*upstream_line;
+     +};
+     +
+    -+static struct gpio_mux_input *gpio_to_mux(struct gpio_chip *gc)
+    ++static struct gpio_cascade *chip_to_cascade(struct gpio_chip *gc)
+     +{
+    -+	return container_of(gc, struct gpio_mux_input, gpio_chip);
+    ++	return container_of(gc, struct gpio_cascade, gpio_chip);
+     +}
+     +
+    -+static int gpio_mux_input_get_direction(struct gpio_chip *gc,
+    ++static int gpio_cascade_get_direction(struct gpio_chip *gc,
+     +					unsigned int offset)
+     +{
+     +	return GPIO_LINE_DIRECTION_IN;
+     +}
+     +
+    -+static int gpio_mux_input_get_value(struct gpio_chip *gc, unsigned int offset)
+    ++static int gpio_cascade_get_value(struct gpio_chip *gc, unsigned int offset)
+     +{
+    -+	struct gpio_mux_input *mux;
+    ++	struct gpio_cascade *cas;
+     +	int ret;
+     +
+    -+	mux = gpio_to_mux(gc);
+    -+	ret = mux_control_select(mux->mux_control, offset);
+    ++	cas = chip_to_cascade(gc);
+    ++	ret = mux_control_select(cas->mux_control, offset);
+     +	if (ret)
+     +		return ret;
+     +
+    -+	ret = gpiod_get_value(mux->mux_pin);
+    -+	mux_control_deselect(mux->mux_control);
+    ++	ret = gpiod_get_value(cas->upstream_line);
+    ++	mux_control_deselect(cas->mux_control);
+     +	return ret;
+     +}
+     +
+    -+static int gpio_mux_input_probe(struct platform_device *pdev)
+    ++static int gpio_cascade_probe(struct platform_device *pdev)
+     +{
+     +	struct device_node *np = pdev->dev.of_node;
+     +	struct device *dev = &pdev->dev;
+    -+	struct gpio_mux_input *mux;
+    ++	struct gpio_cascade *cas;
+     +	struct mux_control *mc;
+    -+	struct gpio_desc *pin;
+    ++	struct gpio_desc *upstream;
+     +	struct gpio_chip *gc;
+     +	int err;
+     +
+    -+	mux = devm_kzalloc(dev, sizeof(struct gpio_mux_input), GFP_KERNEL);
+    -+	if (mux == NULL)
+    ++	cas = devm_kzalloc(dev, sizeof(struct gpio_cascade), GFP_KERNEL);
+    ++	if (cas == NULL)
+     +		return -ENOMEM;
+     +
+     +	mc = devm_mux_control_get(dev, NULL);
+    @@ drivers/gpio/gpio-mux-input.c (new)
+     +		return err;
+     +	}
+     +
+    -+	mux->mux_control = mc;
+    -+	pin = devm_gpiod_get(dev, "pin",  GPIOD_IN);
+    -+	if (IS_ERR(pin)) {
+    -+		err = (int) PTR_ERR(pin);
+    -+		dev_err(dev, "unable to claim output pin: %d\n", err);
+    ++	cas->mux_control = mc;
+    ++	upstream = devm_gpiod_get(dev, "upstream",  GPIOD_IN);
+    ++	if (IS_ERR(upstream)) {
+    ++		err = (int) PTR_ERR(upstream);
+    ++		dev_err(dev, "unable to claim upstream GPIO line: %d\n", err);
+     +		return err;
+     +	}
+     +
+    -+	mux->mux_pin = pin;
+    -+	mux->parent = dev;
+    ++	cas->upstream_line = upstream;
+    ++	cas->parent = dev;
+     +
+    -+	gc = &mux->gpio_chip;
+    -+	gc->get = gpio_mux_input_get_value;
+    -+	gc->get_direction = gpio_mux_input_get_direction;
+    ++	gc = &cas->gpio_chip;
+    ++	gc->get = gpio_cascade_get_value;
+    ++	gc->get_direction = gpio_cascade_get_direction;
+     +
+     +	gc->base = -1;
+     +	gc->ngpio = mux_control_states(mc);
+    -+	gc->label = dev_name(mux->parent);
+    -+	gc->parent = mux->parent;
+    ++	gc->label = dev_name(cas->parent);
+    ++	gc->parent = cas->parent;
+     +	gc->owner = THIS_MODULE;
+     +	gc->of_node = np;
+     +
+    -+	err = gpiochip_add(&mux->gpio_chip);
+    ++	err = gpiochip_add(&cas->gpio_chip);
+     +	if (err) {
+     +		dev_err(dev, "unable to add gpio chip, err=%d\n", err);
+     +		return err;
+     +	}
+     +
+    -+	platform_set_drvdata(pdev, mux);
+    -+	dev_info(dev, "registered %u input GPIOs\n", gc->ngpio);
+    ++	platform_set_drvdata(pdev, cas);
+    ++	dev_info(dev, "registered %u cascaded GPIO lines\n", gc->ngpio);
+     +	return 0;
+     +}
+     +
+    -+static const struct of_device_id gpio_mux_input_id[] = {
+    ++static const struct of_device_id gpio_cascade_id[] = {
+     +	{
+    -+		.compatible = "gpio-mux-input",
+    ++		.compatible = "gpio-cascade",
+     +		.data = NULL,
+     +	},
+     +	{ /* sentinel */ }
+     +};
+    -+MODULE_DEVICE_TABLE(of, gpio_mux_input_id);
+    ++MODULE_DEVICE_TABLE(of, gpio_cascade_id);
+     +
+    -+static struct platform_driver gpio_mux_input_driver = {
+    ++static struct platform_driver gpio_cascade_driver = {
+     +	.driver	= {
+    -+		.name		= "gpio-mux-input",
+    -+		.of_match_table = gpio_mux_input_id,
+    ++		.name		= "gpio-cascade",
+    ++		.of_match_table = gpio_cascade_id,
+     +	},
+    -+	.probe	= gpio_mux_input_probe,
+    ++	.probe	= gpio_cascade_probe,
+     +};
+    -+module_platform_driver(gpio_mux_input_driver);
+    ++module_platform_driver(gpio_cascade_driver);
+     +
+     +MODULE_AUTHOR("Mauri Sandberg <maukka@ext.kapsi.fi>");
+    -+MODULE_DESCRIPTION("Generic GPIO input multiplexer");
+    ++MODULE_DESCRIPTION("Generic GPIO cascade");
+     +MODULE_LICENSE("GPL");
+
+Mauri Sandberg (2):
+  dt-bindings: gpio-cascade: add documentation
+  gpio: gpio-cascade: add generic GPIO cascade
+
+ .../bindings/gpio/gpio-cascade.yaml           | 103 +++++++++++++
+ drivers/gpio/Kconfig                          |  14 ++
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-cascade.c                   | 139 ++++++++++++++++++
+ 4 files changed, 257 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-cascade.yaml
+ create mode 100644 drivers/gpio/gpio-cascade.c
+
+
+base-commit: 6d49b3a0f351925b5ea5047166c112b7590b918a
+-- 
+2.25.1
+
