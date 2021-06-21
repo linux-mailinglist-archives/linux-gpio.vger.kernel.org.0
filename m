@@ -2,107 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BF4C3AE092
-	for <lists+linux-gpio@lfdr.de>; Sun, 20 Jun 2021 23:08:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0EE33AE6D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jun 2021 12:16:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230290AbhFTVK5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Jun 2021 17:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230211AbhFTVK5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 20 Jun 2021 17:10:57 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8CF3C610EA;
-        Sun, 20 Jun 2021 21:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624223324;
-        bh=RV1dRe0q665rCNfncnH89ttrqFNtElN2unqX84acxys=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vCmKbaXvanXPec+PW1+BZooyGCUSyt4KNHWz5AQ/cxQrd8zooIkSvV3NVjDcVy1M0
-         lev8GonTnS6dA5tZcayI4PxkXuJhnhljHIVpA/itbL6f3Hy3rM1srP/s0yFR9mn71h
-         sOSjfQcEtX2rtb29fvtC0W7he5nriw5NU4S2j9lLX8OvqFWdfH4XpfMRbiVpmk7wb0
-         HS4RbaWpQMLswvjL3fLh9kmIKF0YfQcdAbDM97gN/oDe1GVh7/nT2WozhPr1wJb486
-         zORZrhVcBf5n1i4hJzCl6xrqGOTily1gQrpBUnIfn+Oamgvj6keBnnso+aDJA9lK6X
-         D5Sd9fuYoMXiw==
-Date:   Sun, 20 Jun 2021 23:08:41 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, x86@kernel.org,
-        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: i2c: ce4100: Replace "ti,pcf8575" by
- "nxp,pcf8575"
-Message-ID: <YM+uWXoCvi7Y/s24@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, x86@kernel.org,
-        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <cover.1622560799.git.geert+renesas@glider.be>
- <9b560b7f5ded90430c989a211f2aee009aefc595.1622560799.git.geert+renesas@glider.be>
+        id S229621AbhFUKS1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Jun 2021 06:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229576AbhFUKS1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Jun 2021 06:18:27 -0400
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18606C061756
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Jun 2021 03:16:13 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id i68so29013711qke.3
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Jun 2021 03:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g028qSMBY+7FHWgQ6byFnFnLj87H/85dq+TSG5LPRDc=;
+        b=dMbw0sPtLnVNky0bvbL7n2B8G/cNnJmwjklXdSXZIf4sPm0yxisaD0h/UaTt9mizJu
+         O6ty+V4qDjctKMRD4PppsLpCr2wb0c9fhvwvxqcDTYHzPZvhmqMIDZbT/cN3ngnLhU2/
+         nx8nqXsYupY7RZVXbQAHb+k60TosOqyf+YhUScjIlQ7KPvevxs2XObWNQ6JlMn6MVZ3Y
+         clX9xTnbEDXtit8ZLjn/ks5b2mepW18e/LpoTnRRvwYKdLbneVyFASMBjAtjsWBPyLio
+         LW9Ff+HZmmVJi7qfnSDp185Y1PDAfBw4dm8RvUBKzKn1XhMRPtGuCn1QQAt1BmlkSFc7
+         w+Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g028qSMBY+7FHWgQ6byFnFnLj87H/85dq+TSG5LPRDc=;
+        b=QokGvLOp+ptwbD+MG/jdIog7eQ9NCSKcqCUnUBe2DqXRwOoL8U65oAtzDZulvu+7QV
+         X/i26fhjDlNf8xNIMRwtTx5EYrHVXJq62ByouxotoA2dB+StYmXjNH1CdPP36vcvKFWn
+         ZwWv55KFG8xAP9Q2F9dYLHIWYyGzOw6eFGuLK0aW1+QmRBrd5HZvz5TclNE7ohmiFZKi
+         rX6+Xr7AhMao31VdyOMS3l9HHmJl48+Kd6licI+pJMCH5uO/uFs/HmpVh5sXAbihmSP0
+         wRpKRXrisUUBA0pJJStKxA8NypKg6PR8/SbCYstSrcBIgHGj6s9gMbPcyihrDcrhVdu7
+         J5kA==
+X-Gm-Message-State: AOAM532NlLSHlmnfoDE7C+Owcu6Os000fULI4jvOP3owfokC4yDuJgWW
+        jbTlct0sdpC08FwHI9ZOWUYxL8Z577D+sY7fj6j8RA==
+X-Google-Smtp-Source: ABdhPJypDMFj176dMc1i21SogoUeaBrzqgXepxpRClZ0RyTAaV46g6mff8kXjUE9/OM3Vs2YaCa93iw06eaodU246lE=
+X-Received: by 2002:a25:aae2:: with SMTP id t89mr32046600ybi.302.1624270572214;
+ Mon, 21 Jun 2021 03:16:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yGK4jxv6o8Tg62fU"
-Content-Disposition: inline
-In-Reply-To: <9b560b7f5ded90430c989a211f2aee009aefc595.1622560799.git.geert+renesas@glider.be>
+References: <20210524151955.8008-1-a-govindraju@ti.com> <20210524151955.8008-3-a-govindraju@ti.com>
+In-Reply-To: <20210524151955.8008-3-a-govindraju@ti.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 21 Jun 2021 12:16:01 +0200
+Message-ID: <CAMpxmJVY40F3m_PyQFMbDFNjr4b9sUB8t2efEAP+ComcxQKqSQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: gpio: gpio-davinci: Convert to json-schema
+To:     Aswath Govindraju <a-govindraju@ti.com>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        David Lechner <david@lechnology.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, May 24, 2021 at 5:20 PM Aswath Govindraju <a-govindraju@ti.com> wrote:
+>
+> Convert gpio-davinci dt-binding documentation from txt to yaml format.
+>
+> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
+> ---
 
---yGK4jxv6o8Tg62fU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Patch applied, thanks!
 
-On Tue, Jun 01, 2021 at 05:25:44PM +0200, Geert Uytterhoeven wrote:
-> The TI part is equivalent to the NXP part, and its compatible value is
-> not documented in the DT bindings.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Applied to for-next, thanks!
-
-
---yGK4jxv6o8Tg62fU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmDPrlkACgkQFA3kzBSg
-KbZFSRAAlvHQWYn7WuznFBAm3WzUAuqHEpUbbz32vQiJxtrX+3RgQ2ylWfaEi30P
-LwMnfIUuQxQYUhNF5f+Q/zYIdcHyscL8YdYlbMl2grtmKa68Lm1SeUZj0kJbBZ6c
-0hv7k4yT0/2wRFc3pNOi2E5fnU9oKKKdXEB+7J5zrfotCIcyOfMSmekVfcg7e/Lc
-dPm3MxH4Aixm2eNxuPRiXAXRvn4WXaf42EEdwERYx/OTIEe+ndm+OmhoQFB4PsqP
-7aglnSl+5mCrlGw3mU6/qt9gE+zXd36c1Y1DOMdu6ArMOc0zRugPon57oBSWrAA1
-IwvTDnrCAtY2Z8MnDFyYT+BCrxeWHs6y66nFT1M/w9m2t6YBB0r2ZsbstRkYHzK6
-4YE3UcZc6bvulO2ds+LZPSdLD6U0CqWjMi/Wv/1tsIz1eHuwl54J/SSneY4R+fU1
-k7pzOZF6sVk1MwvZ7iGKIxXakQ0q5YLgTFHrX1XTSAmO9tKFWwaz5tP1qrP7psnY
-p6BBWNdxYDqYnyGyzV/ujdoLT/OOHWizJceV+afJNL24fj5NDJU0ERpEH+HnwA0U
-vdubHHZN7Feqm059L3EFEA/B5f9yNSpfc359yCR4jE7HbIRiFz5fgVwIF78Q8RUf
-Dbf03mWpY2Z4GKdcxPxS7D3Pmq9qtxoLF1tK+ENHSbY1mZ9QvS8=
-=fIsi
------END PGP SIGNATURE-----
-
---yGK4jxv6o8Tg62fU--
+Bart
