@@ -2,111 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48AF73AFE78
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jun 2021 09:55:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76F4F3AFEF7
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jun 2021 10:17:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbhFVH5l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Jun 2021 03:57:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229890AbhFVH5j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Jun 2021 03:57:39 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48BEC061756
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Jun 2021 00:55:23 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id c23so1699069qkc.10
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Jun 2021 00:55:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g9aBePfq1/KpWdqkDFgr1We+3KCLkJ0L8u7O6nn+3jo=;
-        b=Px9Tadx5bMq0vSKM2XDnWx10m9NkEZC+S+ZT+Ccdf2855IhV4DbtWdLO06ur8qkiT8
-         iZVzl4yOsDQz/cLQtHNY+UPzXOckkBZg+cFuzOyJFVfxv0jJEiYSUymGF0ZqB8GbZy1w
-         BtT01X6nY9orL7tj6PQo3bkl8iIBlFrwN9fog0Tu6s6gSnaqqlyW2Vu9DqUR1cMPwSC2
-         TwWVZGus7bRQYaPsfxt0iZbDkclMVEbwyAdxULaXBOQKOAqa9msQ+7I2586IK+E6i9iV
-         GGYiSO8BaBCCI9FNJ1oOQDkb1QKi9nIxcNQcUH4H5s3GA3sb/wwd4TUTXXaUx10XGdAA
-         3Ulg==
+        id S230121AbhFVIUA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Jun 2021 04:20:00 -0400
+Received: from mail-vs1-f54.google.com ([209.85.217.54]:46782 "EHLO
+        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229844AbhFVIT7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Jun 2021 04:19:59 -0400
+Received: by mail-vs1-f54.google.com with SMTP id z15so10758892vsn.13;
+        Tue, 22 Jun 2021 01:17:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=g9aBePfq1/KpWdqkDFgr1We+3KCLkJ0L8u7O6nn+3jo=;
-        b=Fagg3XfKM6Lw2aKgDFMOV2hV7N39AfwKG1sFTydG1fAVZqOLD/RYhsGgS8fmj4lDlL
-         wbBFPUmDkIG9U4o/5W4myaoQ9ehWCcoZ432TP1ElhxKMlipH0ZeWoBLU7GJ4h65PwtgU
-         0IxpB86ox0ze9wZ1FiSCpQ1XBgPDOd8Zi0MCVJU1wiSIEBJDiHeTRSvjeQhNxi2FpW4Y
-         okOzGvovpuPoxiAnPpp1TbB7+K27fLIqnfJvDAzhhEc0vjOVEFEodGJviNd3Xn8N1w/i
-         4Jh80Fb/1sEoa5VHtT/UFiclwBhs2HBb0SBoZQgvDAzoH7XsSjjROlRAxwba6/1lspHh
-         2MqA==
-X-Gm-Message-State: AOAM532UCDG3Oz+GhO+hvJHfJIqPQHEJbnrP90gwbV86bAzi5mCnLs/p
-        04O7ewTDXGNbl79h8Flotvg1AlZ037oQqUQBvOl6/Q==
-X-Google-Smtp-Source: ABdhPJw2hXewn8FpKtmuSSAZpnVwhBWJde4ZMKIrIVNNDVTtd+9iS/Zf4hPk2BHfcx94ZNirkltH5BZ187sDZ28F5MY=
-X-Received: by 2002:a25:1804:: with SMTP id 4mr3012601yby.157.1624348522940;
- Tue, 22 Jun 2021 00:55:22 -0700 (PDT)
+        bh=s0hVMlLFV5eIwzuXXBEJWEV7FxMfuDBGtQwv1PuAfDc=;
+        b=Yc8JShUBMH1dnjUYyQ4i3CS2+y2GF6q1YtRwv/bRUTq4JGwOzFH8jz0/QYnr8ZuDpr
+         HcEesiBUGFsp/umSzAQ1ucxKn54tANWqVfYyhNDVX62VWxoC03W6vKFzSWDS1INIUujo
+         EfpD0ZvANCW00iJ41ZnsyYqUYQ7WKnBJFLN0taGCgErNoNfbEbrJRexR6AwIwIKT2Knb
+         /0emor8cfQJbNOnIXhfpVS1iQMsX9FEwTZTkt2w2NsDGz2POO5RqhJxIgP7TG7ACSbj/
+         GkkcJgg3HdSB+eNLe7DKVV3GNyEiHob+PVe9RVIKAdqt1PMr45YhOFebl4O9XRmtiOlY
+         SQDQ==
+X-Gm-Message-State: AOAM530BLNzCLpsQ3ZsdxG/iSlElsnvEgk5f19JQOeLC0TziQs7pI7vp
+        kFMx7YZsKONrP5YDTSXRni3TndxcwI12ri99DDk=
+X-Google-Smtp-Source: ABdhPJz3clw2O8tsVFk5F4OGcaBfo9Z8eHqvoF8LwYXAPGollSTCOREHx1S0f08A9nsiznMjaM5G5srL4UVXlJSotsU=
+X-Received: by 2002:a05:6102:2011:: with SMTP id p17mr21421376vsr.40.1624349860512;
+ Tue, 22 Jun 2021 01:17:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <1624314539-17396-1-git-send-email-gabeknez@linux.microsoft.com>
-In-Reply-To: <1624314539-17396-1-git-send-email-gabeknez@linux.microsoft.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 22 Jun 2021 09:55:12 +0200
-Message-ID: <CAMpxmJVREmcqxFJn9CQYL_Y9E3X-8DYRiTMLD5hNE90m8sSG6Q@mail.gmail.com>
-Subject: Re: [PATCH v3] gpiolib: cdev: zero padding during conversion to gpioline_info_changed
-To:     Gabriel Knezek <gabeknez@linux.microsoft.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
+References: <20210615191543.1043414-1-robh@kernel.org>
+In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 22 Jun 2021 10:17:28 +0200
+Message-ID: <CAMuHMdUGXu8yj3JWKwM8mt7axkrzGMiowC1t0PHrbpxRCBME3w@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-can@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-phy@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-rtc@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        joe.reviewer@hotmail.com
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 22, 2021 at 12:29 AM Gabriel Knezek
-<gabeknez@linux.microsoft.com> wrote:
->
-> When userspace requests a GPIO v1 line info changed event,
-> lineinfo_watch_read() populates and returns the gpioline_info_changed
-> structure. It contains 5 words of padding at the end which are not
-> initialized before being returned to userspace.
->
-> Zero the structure in gpio_v2_line_info_change_to_v1() before populating
-> its contents.
->
-> Fixes: aad955842d1c ("gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and
-> GPIO_V2_GET_LINEINFO_WATCH_IOCTL")
-> Signed-off-by: Gabriel Knezek <gabeknez@linux.microsoft.com>
-> ---
-> Changes in v3:
->   - Include the Fixes tag referencing the code being fixed and properly
->     version the patch.
->
-> Changes in v2:
->   - Update commit message and subject with suggestions about clarity.
->   - Patch series at https://www.spinics.net/lists/linux-gpio/msg62163.html
->
-> v1:
->   - Initial patch
->   - Patch series at https://www.spinics.net/lists/linux-gpio/msg62084.html
->
->  drivers/gpio/gpiolib-cdev.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index ee5903aac497..af68532835fe 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -1865,6 +1865,7 @@ static void gpio_v2_line_info_changed_to_v1(
->                 struct gpio_v2_line_info_changed *lic_v2,
->                 struct gpioline_info_changed *lic_v1)
->  {
-> +       memset(lic_v1, 0, sizeof(*lic_v1));
->         gpio_v2_line_info_to_v1(&lic_v2->info, &lic_v1->info);
->         lic_v1->timestamp = lic_v2->timestamp_ns;
->         lic_v1->event_type = lic_v2->event_type;
-> --
-> 2.25.1
->
+Hi Rob,
 
-I fixed the wrapping of the Fixes tag and queued this for fixes with
-Kent's review tag.
+On Tue, Jun 15, 2021 at 9:16 PM Rob Herring <robh@kernel.org> wrote:
+> If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
+> same size as the list is redundant and can be dropped. Note that is DT
+> schema specific behavior and not standard json-schema behavior. The tooling
+> will fixup the final schema adding any unspecified minItems/maxItems.
+>
+> This condition is partially checked with the meta-schema already, but
+> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
+> An improved meta-schema is pending.
 
-Bart
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> @@ -46,7 +46,6 @@ properties:
+>
+>    clocks:
+>      minItems: 3
+> -    maxItems: 5
+>      items:
+>        - description: GMAC main clock
+>        - description: MAC TX clock
+
+While resolving the conflict with commit fea99822914039c6
+("dt-bindings: net: document ptp_ref clk in dwmac") in soc/for-next,
+I noticed the following construct for clock-names:
+
+  clock-names:
+    minItems: 3
+    maxItems: 6
+    contains:
+      enum:
+        - stmmaceth
+        - mac-clk-tx
+        - mac-clk-rx
+        - ethstp
+        - eth-ck
+        - ptp_ref
+
+Should this use items instead of enum, and drop maxItems, or is this
+a valid construct to support specifying the clocks in random order?
+If the latter, it does mean that the order of clock-names may not
+match the order of the clock descriptions.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
