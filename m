@@ -2,200 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A302F3B2DC9
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jun 2021 13:24:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 911923B3085
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jun 2021 15:51:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232470AbhFXL0e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Jun 2021 07:26:34 -0400
-Received: from mail-vs1-f47.google.com ([209.85.217.47]:44731 "EHLO
-        mail-vs1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232350AbhFXL0d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Jun 2021 07:26:33 -0400
-Received: by mail-vs1-f47.google.com with SMTP id y21so851816vsm.11;
-        Thu, 24 Jun 2021 04:24:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lVDFM2egDpvqnDo30q1IPYbxI0B4Ih+sEd5+e011q5M=;
-        b=mNjwajiMNZjOetYajKbUpKEGvcRF3iFrynkLyKwl0+/AtMDJSjtH7JWbic/8L5aZ/L
-         rW/USZJ+DNTnLdLc5EFCqsPOd/C7ZnTjwABrE1crsurxRbt1omg8vP7oj1CiK0FXTJD3
-         gXXy4k8TT3e1IYsoAmO9i21WElYgnmmn2iQDL4eOfMHZoAQ1Aq6YIjmB3BpGAb9Pshk9
-         CBDMLwSAH94Hwq0Fq0IrzmTvRCWX6MbnKgmgi7YeBVY+JTqcCE4ulTFXp5N4KnQl6OoZ
-         pLi+XLTGut+NvvUujiJ1Q+ISYgI5ji8+iBLIizs2Pd8T0CElsAaOkM5p2YNVN/eI+i69
-         BBtA==
-X-Gm-Message-State: AOAM531TILFuH8UcbHohxeKyUfWYhDWYO0q9c3+HnHWObbMfe1+zZHW2
-        G/rEg3wmdE4YclIBSuV8tCECvto4s/DibAkfIXE=
-X-Google-Smtp-Source: ABdhPJwA1CABlFUl6laeiRuNOWNPw1TAWvmkoUaSFwr8okRvwOZJ8lcaUCWt+U/3kUZmWvhrxPVt0Bck8wAPZnaurNE=
-X-Received: by 2002:a05:6102:301c:: with SMTP id s28mr1364307vsa.18.1624533854391;
- Thu, 24 Jun 2021 04:24:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210616132641.29087-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210616132641.29087-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20210616132641.29087-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 24 Jun 2021 13:24:03 +0200
-Message-ID: <CAMuHMdX67Ghrw4mHt6hT+QrMtEjuOTtirHWv17Eix4XnnwMHkw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] pinctrl: renesas: Add pins/groups/functions for I2C,
- SCIF and USB supported by RZ/G2L SoC
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        id S229878AbhFXNyK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Jun 2021 09:54:10 -0400
+Received: from mx1.tq-group.com ([93.104.207.81]:1088 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231949AbhFXNyK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 24 Jun 2021 09:54:10 -0400
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Jun 2021 09:54:09 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1624542711; x=1656078711;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=szCWv6rsjrqr8YsJLJS5iNF5+J9XJY8kgMjMYUHaMwc=;
+  b=Ow2BJvt4o3mu6sOsZhrFnFxpGnPuGRsY+nBFAoju+G0qN8zjGO3683X7
+   Oez1iH21KWOxJzJ9viOuVVODeWxJV+oDUPiegDWuZxjfwrwm1LbDS2soC
+   KOxTOFdNl32KE/26nZWLFjitK6W3vjuO8ZJC3tuDk9uqE/sdv+xejRl4Z
+   VEOngt0guOkuChSuPYexaj2IHpflw4TTi2sWghHh/LvBCb6aKWKTrz/rI
+   n3NMCl/LH3LUuBR2Tdz5J3Yu9dNs/q++TEK/34MsjWe6qa+mk4Ym6Rcgz
+   zXT3gqQL2Xzs+QmkYdIF8hwtByCZPpEhKsMuEHgKosWQEc99h9Qm/1vGP
+   w==;
+IronPort-SDR: mE1l8zJr8HtmH7IbMXs/kHRDB3lrXT+qwBToX101h3ON8MWIwkWicIgY0Z7vtUbZryzWGAe8dH
+ ouR+W/1Wyom4DFcSudhtdUcKspOOKbiaMy3oBjvpat0Wpes0BvB/dXSf/cbhLUaOvoOrFrLXfs
+ AljoPnU8Jmco47ZJLDkW5a4n1aQNibuSLw7l7Yr7NLD/CHxicWZvMEH+z17GiUOlmyT1jrOyWL
+ rTWYAvy071OUmzx9DTtIMMHyZXxpwHXe/wMIMl9SFEbZhxu5nxyhOlET03JTmsCkiB2xEWJB/w
+ uR8=
+X-IronPort-AV: E=Sophos;i="5.83,296,1616454000"; 
+   d="scan'208";a="18131940"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 24 Jun 2021 15:44:40 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 24 Jun 2021 15:44:40 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 24 Jun 2021 15:44:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1624542280; x=1656078280;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=szCWv6rsjrqr8YsJLJS5iNF5+J9XJY8kgMjMYUHaMwc=;
+  b=ISnQcVdUYZc9wXMLbjE74r+PQnCebYHZ8NjwV9Yu4kRHKqMTPBnSkDNV
+   8HLaZ5qz+HIbilhUVwr9+523Hw8kpsBIvGxzJ8MTD0kCcPn3fW65Cp1KC
+   0ksaaLizF5jtpdkd8mUQqw2RYzQ0uGoqock5DsqHchISINpgfk8bqOdFh
+   TTnwGWG+BtHm1+oq1ZZ9VU29COAE6LiOcLqLOPSIIO82RpYfSuQpt2J4R
+   7soP15QpUqm1Ulwp58y9piJOIH/PUwFnTBpX0oqyNCl6gyYCRtsocucKD
+   zGXa7gu0b2XMkXztzqrGIEvsgNSoN4+g/2cdWi4xDt0YVtzux+t3oEFE4
+   g==;
+IronPort-SDR: KUdEmWQI2DueMle10kmfrcuruxrLFzwlunxRPp5U8qv8za1so+E5pg3pztc1KrPhhZuuNoL4oy
+ j8h+fNqxpKPUw4tACodznBrhN65KLXzIosoLiYW8mWHpQ/SLKvFGMahzEeilTKzyhVrSFErGoB
+ tnRAVLOdXR9HTEf85WfCxLUwO5b6rdD52N7F8nR67p4vSVbokEbv8aj4urdsmD0rw5d4L3/ZKF
+ vs5N8ByvzfnLGorLkF+PeJJksh37FtJZC0Uk8NJaq4orrIlI7t6Ih4I6wR2jcTGQDK9zSNimc+
+ 8nw=
+X-IronPort-AV: E=Sophos;i="5.83,296,1616454000"; 
+   d="scan'208";a="18131938"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 24 Jun 2021 15:44:40 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.121.48.12])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 53EB3280070;
+        Thu, 24 Jun 2021 15:44:40 +0200 (CEST)
+Message-ID: <53e222fdbb3d488a99bb24d0205b064d3fe662b0.camel@ew.tq-group.com>
+Subject: Re: [PATCH 1/3] gpio: tqmx86: really make IRQ optional
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 24 Jun 2021 15:44:38 +0200
+In-Reply-To: <CAHp75VcuD49UgkXCrPL3VKiOsx4qSDsf=zB2vp6yVS1aJCuc2w@mail.gmail.com>
+References: <cover.1617189926.git.matthias.schiffer@ew.tq-group.com>
+         <11a8323c249ae6ea7584402ab0fb74551b6a4b7d.1617189926.git.matthias.schiffer@ew.tq-group.com>
+         <CAHp75Vcc3CNXguMK-ZhRfvfjVBQBbcGEYK_+WQAmb_Sw5-Derw@mail.gmail.com>
+         <4c143c8ee65fe52840ccbb4e1b422b6e473563d9.camel@ew.tq-group.com>
+         <CAHp75VfVCTj170S_4Lh9JyDYFfUQLjTtnU=O-iXgUVXcycLxwg@mail.gmail.com>
+         <38b1191ce594d9fefe9e0e98b3fa8ca0a23ee3ea.camel@ew.tq-group.com>
+         <CAHp75VcuD49UgkXCrPL3VKiOsx4qSDsf=zB2vp6yVS1aJCuc2w@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
+On Wed, 2021-03-31 at 17:03 +0300, Andy Shevchenko wrote:
+> On Wed, Mar 31, 2021 at 4:36 PM Matthias Schiffer
+> <matthias.schiffer@ew.tq-group.com> wrote:
+> > 
+> > On Wed, 2021-03-31 at 15:39 +0300, Andy Shevchenko wrote:
+> > > On Wed, Mar 31, 2021 at 3:37 PM Matthias Schiffer
+> > > <matthias.schiffer@ew.tq-group.com> wrote:
+> > > > On Wed, 2021-03-31 at 15:29 +0300, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > > > I don't understand which part of the code is dead now. I assume the
+> > > > `return irq` case is still useful for unexpected errors, or things like
+> > > > EPROBE_DEFER? I'm not sure if EPROBE_DEFER is relevant for this driver,
+> > > > but just ignoring the error code completely doesn't seem right to me.
+> > > 
+> > > platform_get_irq() AFAIK won't ever return such a code.
+> > > So, basically your conditional is always false.
+> > > 
+> > > I would like to see the code path which makes my comment wrong.
+> > > 
+> > 
+> > EPROBE_DEFER appears a few times in platform_get_irq_optional()
+> > (drivers/base/platform.c), but it's possible that this is only relevant
+> > for OF-based platforms and not x86.
+> 
+> Ah, okay, that's something I haven't paid attention to.
+> 
+> So the root cause of the your case is platform_get_irq_optional|()
+> return code. I'm wondering why it can't return 0 instead of absent
+> IRQ? Perhaps you need to fix it instead of lurking into each caller.
+> 
 
-On Wed, Jun 16, 2021 at 3:27 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add pins/groups/functions for I2C, SCIF and USB supported by RZ/G2L SoC and
-> bind it with RZ/G2L PFC core.
->
-> Based on a patch in the BSP by Hien Huynh <hien.huynh.px@renesas.com>.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-Thanks for your patch!
+Hi Andy,
 
-> --- /dev/null
-> +++ b/drivers/pinctrl/renesas/pfc-r9a07g044.c
-> @@ -0,0 +1,362 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * R9A07G044 processor support - pinctrl GPIO hardware block.
-> + *
-> + * Copyright (C) 2021 Renesas Electronics Corp.
-> + */
-> +
-> +#include "pinctrl-rzg2l.h"
-> +
-> +#define RZG2L_GPIO_PIN_CONF    (0)
-> +
-> +static const struct {
-> +       struct pinctrl_pin_desc pin_gpio[392];
-> +} pinmux_pins = {
-> +       .pin_gpio = {
-> +               RZ_G2L_PINCTRL_PIN_GPIO(0, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(1, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(2, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(3, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(4, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(5, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(6, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(7, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(8, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(9, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(10, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(11, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(12, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(13, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(14, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(15, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(16, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(17, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(18, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(19, RZG2L_GPIO_PIN_CONF),
+what's the plan here? "driver core: platform: Make
+platform_get_irq_optional() optional" had to be reverted because it
+broke existing users of platform_get_irq_optional(). I'm not convinced
+that a slightly more convenient API is worth going through the trouble
+of fixing them all - I know we don't care much about out-of-tree
+modules, but subtly changing the behaviour of such a function doesn't
+seem like a good idea to me even if we review all in-tree users.
 
-RZG2L_GPIO_PIN_CONF is 0, ike all of the below?
+Should I just rebase my patches with the existing ENXIO handing (and
+fix up the other issues that were noted), or do you intend to give the
+platform_get_irq_optional() revamp another try?
 
-> +               RZ_G2L_PINCTRL_PIN_GPIO(20, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(21, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(22, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(23, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(24, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(25, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(26, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(27, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(28, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(29, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(30, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(31, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(32, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(33, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(34, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(35, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(36, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(37, 0),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(38, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(39, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(40, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(41, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(42, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(43, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(44, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(45, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(46, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(47, RZG2L_GPIO_PIN_CONF),
-> +               RZ_G2L_PINCTRL_PIN_GPIO(48, RZG2L_GPIO_PIN_CONF),
-> +       },
-> +};
+Kind regards,
+Matthias
 
-Doesn't the above belong in pinctrl-rzg2l.c?
-
-> +
-> +/* - RIIC2 ------------------------------------------------------------------ */
-> +static int i2c2_a_pins[] = {
-> +       /* SDA, SCL */
-> +       RZ_G2L_PIN(3, 0), RZ_G2L_PIN(3, 1),
-> +};
-> +static int i2c2_b_pins[] = {
-> +       /* SDA, SCL */
-> +       RZ_G2L_PIN(19, 0), RZ_G2L_PIN(19, 1),
-> +};
-> +static int i2c2_c_pins[] = {
-> +       /* SDA, SCL */
-> +       RZ_G2L_PIN(42, 3), RZ_G2L_PIN(42, 4),
-> +};
-> +static int i2c2_d_pins[] = {
-> +       /* SDA, SCL */
-> +       RZ_G2L_PIN(46, 0), RZ_G2L_PIN(46, 1),
-> +};
-> +static int i2c2_e_pins[] = {
-> +       /* SDA, SCL */
-> +       RZ_G2L_PIN(48, 0), RZ_G2L_PIN(48, 1),
-> +};
-
-[...]
-
-> +static struct group_desc pinmux_groups[] = {
-> +       RZ_G2L_PINCTRL_PIN_GROUP(i2c2_a, 2),
-> +       RZ_G2L_PINCTRL_PIN_GROUP(i2c2_b, 4),
-> +       RZ_G2L_PINCTRL_PIN_GROUP(i2c2_c, 1),
-> +       RZ_G2L_PINCTRL_PIN_GROUP(i2c2_d, 4),
-> +       RZ_G2L_PINCTRL_PIN_GROUP(i2c2_e, 3),
-
-[...]
-
-As RZ/G2L, unlike R-Car, does not have the concept of pin groups, I'm
-wondering why you are defining these groups? The pin function list
-spreadsheet also doesn't have the "a" to "e" names of the possible
-alternatives.
-While I agree it makes it a little bit easier to describe in DT the
-use of a group with lots of pins, it does prevent other use cases.
-As register configuration is per-pin, I believe the hardware supports
-the use of pins from multiple groups (e.g. SDA from the first group,
-and SCL from the second group), and thus the board designer may decide
-to make use of that.
-
-With pinmux_pins[] moved, and the groups removed, this file becomes
-empty?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
