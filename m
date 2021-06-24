@@ -2,84 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6F673B33DF
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jun 2021 18:22:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DA8F3B345F
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jun 2021 19:09:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbhFXQZF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Jun 2021 12:25:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42248 "EHLO
+        id S232408AbhFXRLw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Jun 2021 13:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230334AbhFXQZE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Jun 2021 12:25:04 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAFDC061574;
-        Thu, 24 Jun 2021 09:22:44 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id h4so5141853pgp.5;
-        Thu, 24 Jun 2021 09:22:44 -0700 (PDT)
+        with ESMTP id S232174AbhFXRLm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Jun 2021 13:11:42 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E775EC0617A6
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Jun 2021 10:09:21 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id o10so2179908ils.6
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Jun 2021 10:09:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3/3dGj2HIX+HnqnTIkrn2ymOpUkKJX2RUtpja3yGqZg=;
-        b=gRbh80efko0UHOzbtOODSQmAQPa3cEFTibRwGo4GbI0vOB6X3QYXefkM+qbGgWQ/SQ
-         0EkZrMQVJUkam/mC+LDtc3pKzYHXmhERmg+A7WgL5rV1aJNup7HM2a42gwicG5z1no9w
-         GY2DTBeg8c3vwsjll9bioaTkmXthn8lAGWAUM/FQtUCxhjoFLJ+/i/j5Q5cjsPe11GQT
-         Y63C4wOdkjWcE8MDjQckSWw/STHK7EfK7P2i14xNYRJheLTzeTwLZwSGTs7q32tT+Yhn
-         3b5QaI7qQp6l9yRd2dKxjylnY1jxoKkcdL8T4oBO1qgVWPtzC6K83AE3wwmorN1yZqg0
-         kiNA==
+        h=mime-version:reply-to:in-reply-to:references:from:date:message-id
+         :subject:to;
+        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
+        b=p95plxgcKdT8+TUJCmcKdAyJL6L8C+j3muAeTI6tbvEOMwKUFZvBH22Z3GEGxdnUZH
+         d9XkDasjcz/bUj2n1PkWxPPQL/Sxtf1a7ckN43IkWwU4a9v6DYeOi9Tg8DPYHl700hH/
+         xlmv54Ir2NUVB8zwaX1UsxTzP5GUW3mdywmszCeflzWKbXzDgkMNhx+qVsi3FklHnD5x
+         fSDWvxz3POXOJ/0yZM+F2G99rPMTFJK+bPA5TWYu0VJpvpEjmQwRSgXLB6dx+kXpC0Uz
+         JX+JhI0lSB7VkwJTdkbApCrUx6TGzp99N5mAm/d0lil4hmexz93RFAPSpMzmwkjNchKB
+         rXTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3/3dGj2HIX+HnqnTIkrn2ymOpUkKJX2RUtpja3yGqZg=;
-        b=NTQuV/AY4jotca/EfCNeNISYTLJUjvErcJya5ETbVFvgpdPnwAhKmpSgq7sQK8zVEk
-         4xwanDDTUmcK0GvzErwNX7iYxNhEbKD16y+U51x/u0XK3nmaXt6NbDXI6AC3exrjuhKi
-         MdhRaXgm8zLm7KqPKpn94ww/URTaPZNgc8OmTqvGstM2ttp3fTPK8BJdApJngsihcUy/
-         VvOKiZBzJKVXZQCE9sf/CKQMPPSQoKdY3qR/epldoKISjjM0ilVe97UW9SQDoYTUJztW
-         cwSD518r4pL2BCv9KYYYdT8fjea0sVCUKvfjBUYp0lusJB89It9Nsu/G5VtTm7LXRkpq
-         xeZA==
-X-Gm-Message-State: AOAM530S5FwPH4uhSbADKcK2ScJceeI4Q+k6DQRE/zqxIllTheZ8EObN
-        Cjiq/Z9ftk+uZ9rRqtOHw1iruta7PPWIdg==
-X-Google-Smtp-Source: ABdhPJzxUpS0cVQifVC2919L/lkBqcK3L+x0bKhuPqlCJT2jVwG39zL+ioypFc9OPObDNA0CbFq27A==
-X-Received: by 2002:aa7:921a:0:b029:2cf:b55b:9d52 with SMTP id 26-20020aa7921a0000b02902cfb55b9d52mr5735259pfo.35.1624551764017;
-        Thu, 24 Jun 2021 09:22:44 -0700 (PDT)
-Received: from [10.67.49.104] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 201sm3374506pfz.125.2021.06.24.09.22.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Jun 2021 09:22:43 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: bcm2835: Replace BUG with BUG_ON
-To:     Jason Wang <wangborong@cdjrlc.com>, linus.walleij@linaro.org
-Cc:     nsaenz@kernel.org, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, phil@raspberrypi.com,
-        iivanov@suse.de, linux-gpio@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210624064913.41788-1-wangborong@cdjrlc.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <7dd8b65e-0f89-9aa9-9eab-6cbc6c9495bb@gmail.com>
-Date:   Thu, 24 Jun 2021 09:22:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        h=x-gm-message-state:mime-version:reply-to:in-reply-to:references
+         :from:date:message-id:subject:to;
+        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
+        b=uWm+Yn5iaIN0k+F/bTIR5JP6EbrVpIHudBdPQE7Xx6CnTE7DaKrYurr+tTefhT++TP
+         nCOvfhUE8gX+eRKqjoANTVeC4cT8J40eTb1rj1ercTYFI8NNwadVivR7NpNSoE94N+t8
+         k10vT8WrSid86frQiLhgDJ8hTLwSvjIPajOKwzOdsWWDk5qWl023FXuKwdeNYn6x+8VQ
+         2IUmdiUxKPB2MywTTIDwQMINThaGsKAO6QH1jT2lJ4h0dlWyR1P7B+/p4ol1LEsT6OUY
+         PB9p8jAxXr8Nn4jj/7vtCosFY5fQHvuqyCxEN090RqcOF7+dXEHrlR/cB0VkmlNhp4+2
+         Cueg==
+X-Gm-Message-State: AOAM531IUR/FfTbWTAMcnzcfYqei6Zq+RoS7PP77bxf6bB62QHrH94e/
+        4A0fRoLRZ5Pmrh43+avtiJCWMtC2wdEyLoe7OGM=
+X-Google-Smtp-Source: ABdhPJzkYUuO368jts0QgMQyJe9SHzg0U698qd8KdfojEfYsXnHtwMfPGxVHmw7fwQ64+IhHRhAEJH5nusdeW4BWzcA=
+X-Received: by 2002:a05:6e02:524:: with SMTP id h4mr4098121ils.255.1624554560853;
+ Thu, 24 Jun 2021 10:09:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210624064913.41788-1-wangborong@cdjrlc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:6638:3aa:0:0:0:0 with HTTP; Thu, 24 Jun 2021 10:09:20
+ -0700 (PDT)
+Reply-To: tutywoolgar021@gmail.com
+In-Reply-To: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
+References: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
+From:   tuty woolgar <faridaamadoubas@gmail.com>
+Date:   Thu, 24 Jun 2021 17:09:20 +0000
+Message-ID: <CADB47+607zNBfYFb4bj0nUhuuYgAdwT=G_wJ9-EeV0ESHe56Jg@mail.gmail.com>
+Subject: greetings,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 6/23/21 11:49 PM, Jason Wang wrote:
-> The if condition followed by BUG can be replaced to BUG_ON which is
-> more compact and formal in linux source.
-> 
-> Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Although I would rather completely remove this BUG_ON() and replace it
-with a WARN_ON() instead, no need to kill the machine for such a
-problem, however unlikely it is to appear.
--- 
-Florian
+My greetings to you my friend i hope you are fine and good please respond
+back to me thanks,
