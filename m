@@ -2,62 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC023B4863
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jun 2021 19:49:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4608D3B4AF3
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jun 2021 01:34:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229955AbhFYRvU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Jun 2021 13:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229531AbhFYRvT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 25 Jun 2021 13:51:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id C5A636187E;
-        Fri, 25 Jun 2021 17:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624643338;
-        bh=2B+URFQ8+XNl4+OlS1RtgkgNgGqizvLSuNM+FHuUAvM=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=VS7pdTIo4GUhamw58yYUG04hsSlznEnbHOxPJmLqydufQU2PMr81DcYpyRoeSeuqz
-         wqunGBH+VP4B9s6DK+pqzT9NZgxnWqQFj/6n03G3w0RKLU9mX+fNVJU7AzS2ig47Y3
-         /VSJ7vTrYDsqi1fQA8sgmjmiC5YCKDJlsnEwQjM3lTfujsenCJ0UAn0t3GDwnOQwnw
-         t4usiZBPCgc7JCaOsyMSJjzRASBK1HzHb8VWIGC+4KL8zwhcbPUA5O43R4WaRfkVn+
-         kxmigRA1N79RflV5ptIHmiTSShquplnoPtouM++5nZdqXTURYCIO/G9VurVYeRkX2/
-         POhBLPdoVcx8w==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id B6A9960A37;
-        Fri, 25 Jun 2021 17:48:58 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v5.13
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210625123320.26510-1-brgl@bgdev.pl>
-References: <20210625123320.26510-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210625123320.26510-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.13
-X-PR-Tracked-Commit-Id: c6414e1a2bd26b0071e2b9d6034621f705dfd4c0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c13e3021331ed7736996fe61d6f26983ac3b84cc
-Message-Id: <162464333869.2214.9845530934079220985.pr-tracker-bot@kernel.org>
-Date:   Fri, 25 Jun 2021 17:48:58 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
+        id S229882AbhFYXgi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Jun 2021 19:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229850AbhFYXgi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Jun 2021 19:36:38 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D09C061766
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 16:34:14 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id d25so14730944lji.7
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 16:34:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=nbwN286/f2tgx7HnIyRwNiSzfszBKdsaXIOOZleXegQ=;
+        b=COTO6xK6XXzLj7QCuClwaJRAPiK+9eCHV3HNL+Y/ld2D3Xd90IgfXqbGgcrtNT+rsJ
+         rkAIzNNivnFrLIXiydzLgrU/h86zq0d3C8XeMW2xwTrG26BUCfvPtLPlw2xmRuhwZslq
+         Bjvy5/bUip9gjz2NDuU7EBpBoF0R3+mRdz2MKs/g3GK7zkhLZ1f0ayS9jQdyas2I8lMs
+         WvudoOTIZ1UQLuRtBOJktFORJlW9emVliYMLHmjNPbq27/CxzIOFz6JMY8x1jbRieMkf
+         eK8y1jsHyxLI7Qq8P/4agetfSATt+W+s21Vo313vskFd6FlSMSAiNdEaeP9NEdnmd0YO
+         S59g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=nbwN286/f2tgx7HnIyRwNiSzfszBKdsaXIOOZleXegQ=;
+        b=bAglG7OEu+mhr08gfBPA0pDhG/niFQuqGD33IryyoU0QjS67vt3VBt9sgiQEsCBLd1
+         BgvkIbBkZuJ1iY750yX7T5NAEN074rW4LtAKlLwfornmKBiyF+c5kCEHCilJl07s/V33
+         OmqVAGDtJw3ZLXlLL2E9GpUFg7iCDFKQz+angODx9B/3zrSEFQRg7ExEZtcn14vqqk/s
+         S1x3kStNobuvmBj8/3+AqkXgMWATMzMvMqKoV69Jl/ASdW6eNc9bAyTRLYlm0igtflPB
+         9wJfWivbVN8M2+zWDKexnh8xRwXuwheHwN7oF2S3k2lPN+HPA2GL0aJY9zMvLquE8irO
+         ASyA==
+X-Gm-Message-State: AOAM533x1SEpRHRr1pagnbvGcIsbXGJPSo2Y1qHqUR/qC5hTmNEcj808
+        6wdhyjtKQPHf2pmIRRWKi7Tmo3LQ+EtIWw83h3Kh9c3Wx1+09w==
+X-Google-Smtp-Source: ABdhPJxcM7kT2apTAfxoGcZV8wqZQjXu4w+udp8r9dPXO/OseyIYAyQI7Ri4AMx8mrA3H0WE27jDQtxukgjXXcy+uKc=
+X-Received: by 2002:a2e:9003:: with SMTP id h3mr10034672ljg.467.1624664052021;
+ Fri, 25 Jun 2021 16:34:12 -0700 (PDT)
+MIME-Version: 1.0
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 26 Jun 2021 01:34:01 +0200
+Message-ID: <CACRpkdaVqdFPKTxOuhFt=auFYjxCivRmRz7mQ7ank6rbcVQsQw@mail.gmail.com>
+Subject: [GIT PULL] Last pin control fixes for v5.13
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Fri, 25 Jun 2021 14:33:20 +0200:
+Hi Linus,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.13
+some last minute pin control fixes. A bit late because
+I have some vacation and midsommar. Two driver fixes,
+details in the signed tag.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c13e3021331ed7736996fe61d6f26983ac3b84cc
+Please pull them in!
 
-Thank you!
+Yours,
+Linus Walleij
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+The following changes since commit 009c9aa5be652675a06d5211e1640e02bbb1c33d:
+
+  Linux 5.13-rc6 (2021-06-13 14:43:10 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.13-3
+
+for you to fetch changes up to 67e2996f72c71ebe4ac2fcbcf77e54479bb7aa11:
+
+  pinctrl: stm32: fix the reported number of GPIO lines per bank
+(2021-06-18 14:56:54 +0200)
+
+----------------------------------------------------------------
+Two fixes in the last minute:
+
+- Put an fwnode in the errorpath in the SGPIO driver
+
+- Fix the number of GPIO lines per bank in the STM32 driver
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      pinctrl: microchip-sgpio: Put fwnode in error case during ->probe()
+
+Fabien Dessenne (1):
+      pinctrl: stm32: fix the reported number of GPIO lines per bank
+
+ drivers/pinctrl/pinctrl-microchip-sgpio.c | 4 +++-
+ drivers/pinctrl/stm32/pinctrl-stm32.c     | 9 +++++++--
+ 2 files changed, 10 insertions(+), 3 deletions(-)
