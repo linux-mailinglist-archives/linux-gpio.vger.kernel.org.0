@@ -2,106 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADA4A3B4151
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jun 2021 12:17:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 767373B4181
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jun 2021 12:21:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231193AbhFYKTg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Jun 2021 06:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56966 "EHLO
+        id S230152AbhFYKYP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Jun 2021 06:24:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231435AbhFYKTa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Jun 2021 06:19:30 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E658AC061766
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 03:17:07 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id p133so3829438yba.11
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 03:17:07 -0700 (PDT)
+        with ESMTP id S231182AbhFYKYO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Jun 2021 06:24:14 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D982C061574;
+        Fri, 25 Jun 2021 03:21:53 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id s6so12649144edu.10;
+        Fri, 25 Jun 2021 03:21:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Aldb5boCCxep04PBntVMCCz9EWCiEULpp6xagZbzTQw=;
-        b=aCiFlyyaydkh4N/1k5pyQ3fXGFQNuIb5wsfzWue8H/oXnENw5HZA/F60bZpDCb1+P6
-         280MZurSlnHly2925MhBE2SzoGd1tK+vdQsWDCCoLC0jRIysCp8Wurk5fyTbEFkdzinV
-         z7pYZ6GZL+EpblYEHNZVYBJXxE6FZVfJFdvsHkNCDE8XT7/xKleFp8VmQSLoAdiEosRT
-         BwoHCRdHXFv8hRNtAYgI5clhS9uAoICDxNhUK29X5WzD72a8UNxYy6oEVYlFOIvkrk3o
-         zkPR2BU9EZ5DevF+cidXqRv//+w/Hwc3jUbN36Lkn+sZzaXRMqG0NaPipywX7OYuYedH
-         43DA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1f5PfyIGOazp+4XQe+W5WTgmVXLCa6NWwYJmG2wqXmc=;
+        b=RUS/TESyXiq8i2HWAQsJvNzUSUEzLUbEzCyUGrJuAxgqehII2+/akcPCTDeu7wu9Gs
+         u5+O6Lw2+b+JZ2JSo1C4VGmTWC4cFGVuR4cmqXxMX1ekl03kofKicg1EHfUa4mxOr190
+         23epN7VaHiaWsu5UQhET2MdQT+nFe7rYnT3jXVUo5g6kgYfjFJ6M8sALBU2dcH5i9baH
+         7FrrJ+YjjJqfI3YGtrTbblodMILpnh93V9DxIhTnpi4XtHSgedMOyPYTSvZkMEtxHw2f
+         Bvvs/aWEVlaPebnJ8znaKYfxjJswcRH9aQhmuQTNmR1obGSCQ4hHbY66utAvaZyVmm/M
+         Uc9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Aldb5boCCxep04PBntVMCCz9EWCiEULpp6xagZbzTQw=;
-        b=iIUWaK7Bt8lStWS0hIWWmVKWgsLlXbYf6E2YwYLElw4uZLMIC/hJ55MYn2H1D9vl3c
-         j5Y1L9sKgPWgQKr3N2Omr1CAvUhiYIRjpuyfDVeYwr9/0hKCWsqxnkdoPBaEB6eQtvtw
-         yE0DAwD2sMWwlnFSlXba5C187GUx2ntNNMz1lpQxlZ/pdkR8UgZ+cVt59Jw3Zzv+7DZf
-         wzFSWQtIrUrUR8gqxsjA+37PMl+rBw1HbS/s6sddExIVkUOG3Et2GhSQTuHUF4qtG64U
-         gRkZ12zA6w45SoxdwaoEMX/9J+lV/yw4E8linSeUHjd3E1ydGlxlH5fMfcQaWDzwoW/4
-         iMWA==
-X-Gm-Message-State: AOAM533STGnXrfogOdC8PcdUg2+Xx+o9hLPSW4eHoJNVq3O4pds1y5/N
-        PNzwr/Ot//drgo996x44ONrTA20dZo+OWQHA0cXjhw==
-X-Google-Smtp-Source: ABdhPJzjvGHEk5dQZ2l+hmo51MGjY8KMmTyyy0KGGj5wgupaXWYKfo1Cf5UHKa6/uugqRknzWecRVXRlI5OFwbdUySo=
-X-Received: by 2002:a25:ad5f:: with SMTP id l31mr11432241ybe.0.1624616227175;
- Fri, 25 Jun 2021 03:17:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210625103734.2f29630be607.Ied890c9ca650517103410e399ef509796653f5d3@changeid>
-In-Reply-To: <20210625103734.2f29630be607.Ied890c9ca650517103410e399ef509796653f5d3@changeid>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 25 Jun 2021 12:16:56 +0200
-Message-ID: <CAMpxmJWnh6RB98H_z5U3_x7J05GNwN8TW5=eiTj7QzPJRnuKuQ@mail.gmail.com>
-Subject: Re: [PATCH] drivers: gpio: AMD8111 and TQMX86 require HAS_IOPORT_MAP
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1f5PfyIGOazp+4XQe+W5WTgmVXLCa6NWwYJmG2wqXmc=;
+        b=pUcbnqxHBNXM4yJ5chXyRwdfsUd/EQ2rhpHmCL1ka9ec7tO6vzi4h7upK2pih1XCxk
+         Il9Nklg++Px+QXmAeW6olygV7BHU0/RSPU6jyK8XdXQtrcO4G29SHOSGq9IMixKwFEaP
+         KmB12YMKTdkTR92+UbKPnTcvEjLPZ0p/ijbL20BVdU9uJiQCsO68xbueSSu+CVQ1j+Kc
+         PENZWvoWZwq2jwt/9pe4QJW/oRkbtEjPlSuwMY9a8NXPT1TOHD7l66hmNzbSixwFvsBH
+         ac5FLapuZrMh9Ic4vonSjuGZWAbvT9oTCr2vPqt+GuQ0mGYZ+97sgj1O2brA2DuldoPe
+         dg/Q==
+X-Gm-Message-State: AOAM533KXOpbKb9NptZ0nhC0CSqAxhu9/EhHseShSe+aFlVDXScbKwmy
+        WttaMVG9nR+yC5HvyzU1pwQ=
+X-Google-Smtp-Source: ABdhPJwbZqc3uwNIS3Qj2TPwlCHpzl+Q2U1a2z0pBRAkLszen3zfGnNhO/SCcd73DNVm+d1im37WtA==
+X-Received: by 2002:a50:b2c5:: with SMTP id p63mr13393399edd.5.1624616511891;
+        Fri, 25 Jun 2021 03:21:51 -0700 (PDT)
+Received: from localhost (178-169-161-196.razgrad.ddns.bulsat.com. [178.169.161.196])
+        by smtp.gmail.com with ESMTPSA id s3sm2586519ejm.49.2021.06.25.03.21.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Jun 2021 03:21:51 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Baryshkov <dbaryshkov@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-um@lists.infradead.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH v4 0/2] Add Pinctrl for SM4250 and SM6115
+Date:   Fri, 25 Jun 2021 13:21:45 +0300
+Message-Id: <20210625102147.51162-1-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 10:37 AM Johannes Berg
-<johannes@sipsolutions.net> wrote:
->
-> From: Johannes Berg <johannes.berg@intel.com>
->
-> Both of these drivers use ioport_map(), so they need to
-> depend on HAS_IOPORT_MAP. Otherwise, they cannot be built
-> even with COMPILE_TEST on architectures without an ioport
-> implementation, such as ARCH=um.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-> ---
->  drivers/gpio/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 1dd0ec6727fd..3c69b785cb79 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1383,6 +1383,7 @@ config GPIO_TPS68470
->  config GPIO_TQMX86
->         tristate "TQ-Systems QTMX86 GPIO"
->         depends on MFD_TQMX86 || COMPILE_TEST
-> +       depends on HAS_IOPORT_MAP
->         select GPIOLIB_IRQCHIP
->         help
->           This driver supports GPIO on the TQMX86 IO controller.
-> @@ -1450,6 +1451,7 @@ menu "PCI GPIO expanders"
->  config GPIO_AMD8111
->         tristate "AMD 8111 GPIO driver"
->         depends on X86 || COMPILE_TEST
-> +       depends on HAS_IOPORT_MAP
->         help
->           The AMD 8111 south bridge contains 32 GPIO pins which can be used.
->
-> --
-> 2.31.1
->
+This patch adds support for the TLMM block on QCom SM4250 and SM6115, codename
+bengal. The code is taken from OnePlus repo [1], and the keyword bengal
+corresponds to sm4250 and sm6115, so I'm adding both compat strings.
 
-Applied, thanks!
+[1]: https://github.com/OnePlusOSS/android_kernel_oneplus_sm4250
 
-Bart
+v1: https://lkml.org/lkml/2021/6/22/1163
+v2: https://lkml.org/lkml/2021/6/25/28
+v3: https://lkml.org/lkml/2021/6/25/72
+
+Changes from v3:
+- driver suggestions from Bjorn
+ - merge similarly named functions
+ - sort functions alphabetically
+ - move ufs-reset to 113
+
+Changes from v2:
+- suggestions from Rob:
+ - remove quotes around reg-names
+ - use -state$ subnode regex
+- suggestions from Bjorn
+ - remove '|' from description field
+ - use state def to allow arbitrary nesting
+ - fix gpio pattern to allow valid pin numbers
+ - fix number of gpio pins
+ - add tlmm label to example
+ - remove wakeup parent
+- other
+ - add some pins in example
+ - removed required function
+
+Changes from v1:
+- fix binding example
+- fix cover letter text
+
+Iskren Chernev (2):
+  dt-bindings: pinctrl: qcom: Add SM6115 pinctrl bindings
+  drivers: qcom: pinctrl: Add pinctrl driver for sm6115
+
+ .../bindings/pinctrl/qcom,sm6115-pinctrl.yaml | 182 ++++
+ drivers/pinctrl/qcom/Kconfig                  |   9 +
+ drivers/pinctrl/qcom/Makefile                 |   1 +
+ drivers/pinctrl/qcom/pinctrl-sm6115.c         | 924 ++++++++++++++++++
+ 4 files changed, 1116 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm6115.c
+
+
+base-commit: e71e3a48a7e89fa71fb70bf4602367528864d2ff
+prerequisite-patch-id: 0949ba2e2f20cd3acfeff8be80dc78c7a02962fc
+prerequisite-patch-id: f72aa823fffe9b245a924a6da8a14a473fffa5a2
+-- 
+2.32.0
+
