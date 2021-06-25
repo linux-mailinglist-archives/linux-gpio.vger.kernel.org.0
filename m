@@ -2,290 +2,226 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5845F3B42B0
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jun 2021 13:46:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DEE23B42BB
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jun 2021 13:53:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbhFYLsm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Jun 2021 07:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
+        id S229878AbhFYLze (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Jun 2021 07:55:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230082AbhFYLsl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Jun 2021 07:48:41 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13BECC061766
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 04:46:20 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id h3so9401107ilc.9
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 04:46:20 -0700 (PDT)
+        with ESMTP id S229498AbhFYLze (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Jun 2021 07:55:34 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CAECC061766
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 04:53:13 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id d76so4191470ybc.12
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 04:53:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tgDi0FCKsZnwX7VsEbSy0smaMpEVsSOVOBoh4nlMGXs=;
-        b=03M16gCQh193nryv5d4WNf74IV+IJgJIPDtE7SeiPN3RlDHUVdB1/BH6LBnMJVBe7a
-         Xeu2k0EB3oFvuA3070Mzg0skVcFzdyY1b1QUUB/z3V1zKkUW+Ag3yL9XX4zCHMpbIkTX
-         JDURYYR8waDrYDLa+Hh+uhkma8FJdQ+y022bFT5EGZ8ErRb59FQNcFmCCW8gXs/j7152
-         NHkMeu9uzkq5AS3Jx50pGeW0hZAfUNxoU23dlmJK78xE+TTWJxM6NaILwXDCiZjzL9zt
-         9wUAiLh/Zljpgmc2Wg9Lfnq69HYLY5S0w1t/bMR3dRWsykvSYYt4nH9cBfmhXDl4WupD
-         1WdA==
+        bh=pP+uL+ZWPlylJuCwLYmeBf3hd9pchiAlxhNsWG9VKd8=;
+        b=KI1MeyBQ0OBl6ysBQsjxlAlxN4+16jJsj7oFhcxexxNLciNx5K1id+8qbdz2CR8k0C
+         6XSMZcbErWcn4eulyTJN0ThuR3PGvZJj+LpHm4TvQr3GdEgipVR5RpPJl8bCK4VhgsFs
+         Zw02nmI1syIpkpD2cyLE377l02EmeILnZHiSSCW+FZRM2pFPU2+pofD964HNnNaz33ky
+         4nszfUbJIPjew2Xl2yv7JVrNDFK/TRIA02un2DHDi6msZ4tqufjQ2U6M+vRgRPWcmtp1
+         97TcafseGaFThhUAMjvn6R/xZ0ic0eTWeDbNRRNGvqaxHjd6aKTK/m18uVm7gbyz0A3o
+         YpWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tgDi0FCKsZnwX7VsEbSy0smaMpEVsSOVOBoh4nlMGXs=;
-        b=dPffcsnJgMTkQ6kDxNMU2kwhHW82TslvXuTvIdUbYzbXiEt3lxAhuD9yDbRdHjoFQ6
-         VtDaF528YeSW/VV3yLwOnMzrMexJu/aP3isXCXnYT34Swi5Sg1PWIhz1eNeQaQlJwaXY
-         aet7SQmliYQ8hvaPWJyH94HsmE08Dodsb+0Nh3JNOByUkaIWnGPC1g0+A0X1bdXhcmNH
-         2XHDr1bnl1Lipq871l+nQqLhoY7dju6QCwUlAfK/zbakns3zQIpVCDGvkJdVG4p1GmT0
-         1FBG6KylzGQdxeR9wAZOjgiTihZMuUgRbBIk+HG2QIOmpqR3jtunz4AFlznvUtIYQikg
-         JyuQ==
-X-Gm-Message-State: AOAM532aSipBy/ikJvAP4PkxePtjrxaFvWbBTAnzQSyTDWn9Ly4gvP7G
-        n61syQ7bjf6BUTUy5dBENtg81ycLnxkAJ4vCFeeAZg==
-X-Google-Smtp-Source: ABdhPJwfX8xjOUkxO91ZcEJg9NpMZfuHjfbio/a600BrQVKMg+GSP0qU27UWh2vlLA+FnNta6XP8f+nFJZyhFTktiBY=
-X-Received: by 2002:a92:dcc4:: with SMTP id b4mr7083720ilr.183.1624621579349;
- Fri, 25 Jun 2021 04:46:19 -0700 (PDT)
+        bh=pP+uL+ZWPlylJuCwLYmeBf3hd9pchiAlxhNsWG9VKd8=;
+        b=hiwRHdnhVFuzIRYyBeOxlsRmmQx5WOIydLfA+z5AoMNWhHFRfYvvp8iyZvYhNGdU2K
+         jkBo5fEm8a1bKdpMXJy3n/0snrZYUqWcXaMaJ7Mf3GaGARU6n92YPnI0urstno63SOht
+         OQbEfjxwl+0X9rmtagFc41SEEnQ0sJ8jPoZaxzLodRCdjI4+nfcEm7nv8SJKTu6mOtEi
+         DaG+rW622flIZKyYfM+1i+Vr765fD7lCuWeoc0ldwdNbtImamIF4XMrfbfO3jZ1wmKwj
+         cdHYFKaNXb5wertcRGYZWwiCIZsEOvEJmJirZ5DLwFdp+hSJULhyA4BQSMyvcVNyTRNT
+         sw7Q==
+X-Gm-Message-State: AOAM531Wc/A525Ue1u/Xt/Q9agUFzemURSYSBF8OM3fZwuFiGD9vngX2
+        9+34HnbWxZVtbkgFBWQAtrSdoRZnMcd5+uQ3zXnzcA==
+X-Google-Smtp-Source: ABdhPJyKERDk5E8TZFH2G2z8aCTJEgSAzS0YG0S+bfy5QafnCuqsvZrWraIDdIfxtKwzxBh8Bn9i+JhnOXKELMvtlJ0=
+X-Received: by 2002:a25:d68e:: with SMTP id n136mr11794028ybg.302.1624621992612;
+ Fri, 25 Jun 2021 04:53:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210607123317.3242031-1-robert.marko@sartura.hr> <20210607123317.3242031-5-robert.marko@sartura.hr>
-In-Reply-To: <20210607123317.3242031-5-robert.marko@sartura.hr>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Fri, 25 Jun 2021 13:46:08 +0200
-Message-ID: <CA+HBbNH7wcpfQOX2=vZmW78GoWy_WL3Pz-dMKe0N0ebZDp+oUw@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Donald Buczek <buczek@molgen.mpg.de>
+References: <20210619073551.13703-1-sergio.paracuellos@gmail.com>
+In-Reply-To: <20210619073551.13703-1-sergio.paracuellos@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 25 Jun 2021 13:53:01 +0200
+Message-ID: <CAMpxmJUvMTevyhkvq0YXg5d=G5qBzhi0mz0w0TjUuWCCvnnRCQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mt7621: support gpio-line-names property
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        git@johnthomson.fastmail.com.au,
+        LKML <linux-kernel@vger.kernel.org>, neil@brown.name,
+        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 7, 2021 at 2:33 PM Robert Marko <robert.marko@sartura.hr> wrote:
+On Sat, Jun 19, 2021 at 9:35 AM Sergio Paracuellos
+<sergio.paracuellos@gmail.com> wrote:
 >
-> Add binding documents for the Delta TN48M CPLD drivers.
+> The default handling of the gpio-line-names property by the
+> gpiolib-of implementation does not work with the multiple
+> gpiochip banks per device structure used by the gpio-mt7621
+> driver.
 >
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> This commit adds driver level support for the device tree
+> property so that GPIO lines can be assigned friendly names.
+>
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 > ---
-> Changes in v3:
-> * Include bindings for reset driver
+> Hi,
 >
-> Changes in v2:
-> * Implement MFD as a simple I2C MFD
-> * Add GPIO bindings as separate
+> This driver has three gpiochips with 32 gpios each. Core implmentation
+> got gpio's repeated along each gpio chip if chip.names is not assigned.
+> To avoid this behaviour driver will set this names as empty or
+> with desired friendly line names. Consider the following sample with
+> minimal entries for the first chip with this patch changes applied:
 >
->  .../bindings/gpio/delta,tn48m-gpio.yaml       | 42 +++++++++
->  .../bindings/mfd/delta,tn48m-cpld.yaml        | 90 +++++++++++++++++++
->  .../bindings/reset/delta,tn48m-reset.yaml     | 35 ++++++++
->  3 files changed, 167 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
->  create mode 100644 Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
+> &gpio {
+>     gpio-line-names = "", "", "", "",
+>                       "", "", "SFP LOS", "extcon port5 PoE compat",
+>                       "SFP module def0", "LED blue SFP", "SFP tx disable", "",
+>                       "switch USB power", "mode", "", "buzzer",
+>                       "LED blue pwr", "switch port5 PoE out", "reset";
+> };
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml b/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
-> new file mode 100644
-> index 000000000000..aca646aecb12
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/delta,tn48m-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> gpioinfo
+> gpiochip0 - 32 lines:
+>   line   0:      unnamed       unused  output  active-high
+>   line   1:      unnamed       unused   input  active-high
+>   line   2:      unnamed       unused   input  active-high
+>   line   3:      unnamed       unused   input  active-high
+>   line   4:      unnamed       unused   input  active-high
+>   line   5:      unnamed       unused   input  active-high
+>   line   6:    "SFP LOS"        "los"   input  active-high [used]
+>   line   7: "extcon port5 PoE compat" unused input active-high
+>   line   8: "SFP module def0" "mod-def0" input active-low [used]
+>   line   9: "LED blue SFP" "blue:sfp" output active-high [used]
+>   line  10: "SFP tx disable" "tx-disable" output active-high [used]
+>   line  11:      unnamed       unused  output  active-high
+>   line  12: "switch USB power" "usb_power" output active-high [used]
+>   line  13:       "mode"       "mode"   input  active-high [used]
+>   line  14:      unnamed       unused   input  active-high
+>   line  15:     "buzzer"     "buzzer"  output  active-high [used]
+>   line  16: "LED blue pwr" "blue:pwr" output active-high [used]
+>   line  17: "switch port5 PoE out" "sysfs" input active-high [used]
+>   line  18:      "reset"      "reset"   input  active-high [used]
+>   line  19:      unnamed       unused   input  active-high
+>   line  20:      unnamed       unused   input  active-high
+>   line  21:      unnamed       unused   input  active-high
+>   line  22:      unnamed       unused   input  active-high
+>   line  23:      unnamed       unused   input  active-high
+>   line  24:      unnamed       unused   input  active-high
+>   line  25:      unnamed       unused   input  active-high
+>   line  26:      unnamed       unused   input  active-high
+>   line  27:      unnamed       unused   input  active-high
+>   line  28:      unnamed       unused   input  active-high
+>   line  29:      unnamed       unused   input  active-high
+>   line  30:      unnamed       unused   input  active-high
+>   line  31:      unnamed       unused   input  active-high
+> gpiochip1 - 32 lines:
+>   line   0:      unnamed       unused   input  active-high
+>   line   1:      unnamed       unused   input  active-high
+>   ...
+>   line  31:      unnamed       unused   input  active-high
+> gpiochip2 - 32 lines:
+>   line   0:      unnamed       unused   input  active-high
+>   line   1:      unnamed       unused   input  active-high
+>   ...
+>   line  31:      unnamed       unused   input  active-high
+>
+> To avoid gpiochip1 and gpiochip2 entries repeated with this
+> minimal lines definition change, we assign empty reserved
+> 'names' in driver code.
+>
+> Note that we also don't want to to prevent the driver from
+> succeeding at probe due to an error in the gpio-line-names
+> property and the ENODATA error is considered a valid result
+> to terminate any further labeling so there is no need for
+> an error message in that case. Other error results are
+> unexpected so an error message indicating the consequence
+> of the error is appropriate here.
+>
+> Thanks in advance for your time.
+>
+> Best regards,
+>     Sergio Paracuellos
+>
+>  drivers/gpio/gpio-mt7621.c | 41 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
+> index 82fb20dca53a..b5f8fd8e928a 100644
+> --- a/drivers/gpio/gpio-mt7621.c
+> +++ b/drivers/gpio/gpio-mt7621.c
+> @@ -206,6 +206,45 @@ mediatek_gpio_xlate(struct gpio_chip *chip,
+>         return gpio % MTK_BANK_WIDTH;
+>  }
+>
+> +static void
+> +mediatek_gpio_set_names(struct device *dev, struct mtk_gc *rg)
+> +{
+> +       struct device_node *np = dev->of_node;
+> +       const char **names;
+> +       int nstrings, base;
+> +       unsigned int i;
 > +
-> +title: Delta Networks TN48M CPLD GPIO controller
+> +       names = devm_kcalloc(dev, MTK_BANK_WIDTH, sizeof(*names),
+> +                            GFP_KERNEL);
+> +       if (!names)
+> +               return;
+
+While the ENODATA bit makes sense, not failing after an OOM in a
+driver is wrong. Please return the error code here.
+
+Bartosz
+
 > +
-> +maintainers:
-> +  - Robert Marko <robert.marko@sartura.hr>
+> +       base = rg->bank * MTK_BANK_WIDTH;
+> +       nstrings = of_property_count_strings(np, "gpio-line-names");
+> +       if (nstrings <= base)
+> +               goto assign_names;
 > +
-> +description: |
-> +  This module is part of the Delta TN48M multi-function device. For more
-> +  details see ../mfd/delta,tn48m-cpld.yaml.
+> +       for (i = 0; i < MTK_BANK_WIDTH; i++) {
+> +               const char *name;
+> +               int ret;
 > +
-> +  GPIO controller module provides GPIO-s for the SFP slots.
-> +  It is split into 3 controllers, one output only for the SFP TX disable
-> +  pins, one input only for the SFP present pins and one input only for
-> +  the SFP LOS pins.
+> +               ret = of_property_read_string_index(np, "gpio-line-names",
+> +                                                   base + i, &name);
+> +               if (ret) {
+> +                       if (ret != -ENODATA)
+> +                               dev_err(dev, "unable to name line %d: %d\n",
+> +                                       base + i, ret);
+> +                       break;
+> +               }
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - delta,tn48m-gpio-sfp-tx-disable
-> +      - delta,tn48m-gpio-sfp-present
-> +      - delta,tn48m-gpio-sfp-los
+> +               if (*name)
+> +                       names[i] = name;
+> +       }
 > +
-> +  reg:
-> +    maxItems: 1
+> +assign_names:
+> +       rg->chip.names = names;
+> +}
 > +
-> +  "#gpio-cells":
-> +    const: 2
+>  static int
+>  mediatek_gpio_bank_probe(struct device *dev,
+>                          struct device_node *node, int bank)
+> @@ -241,6 +280,8 @@ mediatek_gpio_bank_probe(struct device *dev,
+>         if (!rg->chip.label)
+>                 return -ENOMEM;
+>
+> +       mediatek_gpio_set_names(dev, rg);
 > +
-> +  gpio-controller: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +
-> +additionalProperties: false
-> diff --git a/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml b/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
-> new file mode 100644
-> index 000000000000..2c6e2adf73ca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
-> @@ -0,0 +1,90 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/delta,tn48m-cpld.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Delta Networks TN48M CPLD controller
-> +
-> +maintainers:
-> +  - Robert Marko <robert.marko@sartura.hr>
-> +
-> +description: |
-> +  Lattice CPLD onboard the TN48M switches is used for system
-> +  management.
-> +
-> +  It provides information about the hardware model, revision,
-> +  PSU status etc.
-> +
-> +  It is also being used as a GPIO expander for the SFP slots and
-> +  reset controller for the switch MAC-s and other peripherals.
-> +
-> +properties:
-> +  compatible:
-> +    const: delta,tn48m-cpld
-> +
-> +  reg:
-> +    description:
-> +      I2C device address.
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +patternProperties:
-> +  "^gpio(@[0-9a-f]+)?$":
-> +    $ref: ../gpio/delta,tn48m-gpio.yaml
-> +
-> +  "^reset-controller?$":
-> +    $ref: ../reset/delta,tn48m-reset.yaml
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        cpld@41 {
-> +            compatible = "delta,tn48m-cpld";
-> +            reg = <0x41>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            gpio@31 {
-> +                compatible = "delta,tn48m-gpio-sfp-tx-disable";
-> +                reg = <0x31>;
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +            };
-> +
-> +            gpio@3a {
-> +                compatible = "delta,tn48m-gpio-sfp-present";
-> +                reg = <0x3a>;
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +            };
-> +
-> +            gpio@40 {
-> +                compatible = "delta,tn48m-gpio-sfp-los";
-> +                reg = <0x40>;
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +            };
-> +
-> +            reset-controller {
-> +              compatible = "delta,tn48m-reset";
-> +              #reset-cells = <1>;
-> +            };
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml b/Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
-> new file mode 100644
-> index 000000000000..0e5ee8decc0d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
-> @@ -0,0 +1,35 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/reset/delta,tn48m-reset.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Delta Networks TN48M CPLD reset controller
-> +
-> +maintainers:
-> +  - Robert Marko <robert.marko@sartura.hr>
-> +
-> +description: |
-> +  This module is part of the Delta TN48M multi-function device. For more
-> +  details see ../mfd/delta,tn48m-cpld.yaml.
-> +
-> +  Reset controller modules provides resets for the following:
-> +  * 88F7040 SoC
-> +  * 88F6820 SoC
-> +  * 98DX3265 switch MAC-s
-> +  * 88E1680 PHY-s
-> +  * 88E1512 PHY
-> +  * PoE PSE controller
-> +
-> +properties:
-> +  compatible:
-> +    const: delta,tn48m-reset
-> +
-> +  "#reset-cells":
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - "#reset-cells"
-> +
-> +additionalProperties: false
+>         rg->irq_chip.name = dev_name(dev);
+>         rg->irq_chip.parent_device = dev;
+>         rg->irq_chip.irq_unmask = mediatek_gpio_irq_unmask;
 > --
-> 2.31.1
+> 2.25.1
 >
-
-Are there any issues with the bindings?
-The patch series is depending on this as the rest has been reviewed.
-
-Regards,
-Robert
--- 
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
