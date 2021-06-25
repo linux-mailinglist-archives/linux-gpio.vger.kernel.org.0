@@ -2,225 +2,290 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05B463B41F4
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jun 2021 12:50:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5845F3B42B0
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jun 2021 13:46:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbhFYKwi convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 25 Jun 2021 06:52:38 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:33881 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbhFYKwh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Jun 2021 06:52:37 -0400
-Received: from [192.168.1.107] ([37.4.249.157]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MTikV-1lonRg45IT-00U0PL; Fri, 25 Jun 2021 12:49:58 +0200
-Subject: Re: [PATCH v2] pinctrl: bcm2835: Replace BUG with WARN_ON
-To:     Jason Wang <wangborong@cdjrlc.com>,
-        "linus.walleij" <linus.walleij@linaro.org>
-Cc:     nsaenz <nsaenz@kernel.org>, "f.fainelli" <f.fainelli@gmail.com>,
-        rjui <rjui@broadcom.com>, sbranden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        phil <phil@raspberrypi.com>, iivanov <iivanov@suse.de>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20210624235122.24772-1-wangborong@cdjrlc.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Autocrypt: addr=stefan.wahren@i2se.com; keydata=
- LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IEdudVBHIHYy
- CgptUUlOQkZ0NmdCTUJFQUN1Yi9wQmV2SHhidkplZnlaRzMySklObW4yYnNFUFgyNVY2ZmVq
- bXlZd21DR0tqRnRMCi9Eb1VNRVZIRHhDSjQ3Qk1YbzM0NGZIVjFDM0FudWRnTjFCZWhMb0J0
- TEh4bW5lQ3pnSDNLY1B0V1c3cHRqNEcKdEp2OUNRRFp5MjdTS29FUHh5YUk4Q0YweWdSeEpj
- NzJNOUk5d21zUFo1YlVIc0x1WVdNcVE3SmNSbVBzNkQ4ZwpCa2srOC95bmdFeU5FeHd4SnBS
- MXlsajVianhXREh5WVF2dUo1THpaS3VPOUxCM2xYVnNjNGJxWEVqYzZWRnVaCkZDQ2svc3lp
- by9ZaHNlOE4rUXN4N01RYWd6NHdLVWtRUWJmWGcxVnFrVG5BaXZYczQyVm5Ja211NWd6SXcv
- MHQKUkp2NTBGUmhIaHhweUtBSThCOG5oTjhRdng3TVZrUGM1dkRmZDN1R1lXNDdKUGhWUUJj
- VXdKd05rLzQ5RjllQQp2ZzJtdE1QRm5GT1JrV1VSdlArRzZGSmZtNitDdk92N1lmUDF1ZXdB
- aTRsbitKTzFnK2dqVklXbC9XSnB5MG5UCmlwZGZlSDlkSGtnU2lmUXVuWWN1Y2lzTXlvUmJG
- OTU1dENna0VZOUVNRWRZMXQ4aUdEaUNnWDZzNTBMSGJpM2sKNDUzdWFjcHhmUVhTYUF3UGtz
- bDhNa0NPc3YyZUVyNElOQ0hZUUR5WmljbEJ1dUNnOEVOYlI2QUdWdFpTUGNRYgplbnpTektS
- Wm9POUNhcUlEK2ZhdkxpQi9kaHptSEErOWJnSWhtWGZ2WFJMRFp6ZThwbzFkeXQzRTFzaFhp
- ZGRaClBBOE51SlZ6RUl0MmxtSTZWOHBaRHBuMjIxcmZLaml2UlFpYW9zNTRUZ1pqak1ZSTdu
- bko3ZTZ4endBUkFRQUIKdENCVGRHVm1ZVzRnVjJGb2NtVnVJRHgzWVdoeVpXNXpkRUJuYlhn
- dWJtVjBQb2tDTndRVEFRZ0FJUVVDWElkYwo0Z0liQXdVTENRZ0hBZ1lWQ0FrS0N3SUVGZ0lE
- QVFJZUFRSVhnQUFLQ1JDVWdld1BFWkR5MjFPVEQvOUdpWkxkCnRSWWNteVJKZ2x0aVFRekFp
- UWRjSUQ3OGxHb1dwL3grci92Y1U2YjZqdVl1ZVR3Z1Iwclc3djdsMklSQnlEN24KSEp4YSt0
- SVNvUVpCZ2hvbE1JZmI5TXRoR09KTENZNzdrL1FoQWhuMzJOR1prZWp3OXR6a3MvNDBtclpT
- VVQ4NApaeWJzUVhyTE0vSFI2VElJL0RlUEIwbktEM0ppcHBzMlVIUUQ5cUQySWpFd1NRUGxI
- akNPckVaaDQ1UFo3bTkrClo5M0x6aVRlc1dabFlRdUxpSndzNHJLcHRIVzFkL3dSZWxzaG1t
- NlFxY0wybDRDL2U0MGVEQjlncTRkU1poOVgKUEVZbGxpeU5RaDdhMkxTZHVtRTFyK2NTd0lq
- RS91ZHRSdmRPOWFLb0psT2JVSzVkTmpTUEg3d0tUYndkWGRZRApHUHdEaFhkNThOQXdyK1BY
- QmxQajB0STFMQ3ErTEJ4ZUt6aFdYK0dWcTlEb2pWanlVREV4Rk5Ga1h1b0M3ZzhtClY5VDB0
- ZUJpdVpSbm91WEt3VjJGcHRaT0hIN0JVRVd0a0t0aGgxZXRmT1dwaWdCemtVN2JQc2ZJWVQr
- cnk5dGIKMW9KK3Y0MVBOYXFaRW1QVXBKeHZmek5UN3Ayd01lRDdaajlmMHJ1YlJQdExBSjJR
- R2pyRkhzdVh3QU9xcHl6ZQoxOEVidHNZazBOMHp1SEVoY2orUEJJQmZoMFlJWWQ1MW9mNkdJ
- aU95UjlxMFhYdHBsVUo3VDIvSDF1UXFrWGxwCitnVzRWa2lmc2NJckl1eWZueFpXMTJlSXZq
- NnlicVdMN2FZS0dZbVQ2aUxDUGJIWXlZY2F5bDRFa0ZjckNGN0UKZTBXVC9zY1ZNaE8vNVgv
- SGFOQTVIQngvcjUycGdMY3Y0aTlNeExRbVUzUmxabUZ1SUZkaGFISmxiaUE4YzNSbApabUZ1
- TG5kaGFISmxia0JwTW5ObExtTnZiVDZKQWpnRUV3RUNBQ0lGQWx0NmdCTUNHd01HQ3drSUJ3
- TUNCaFVJCkFna0tDd1FXQWdNQkFoNEJBaGVBQUFvSkVKU0I3QThSa1BMYmpic1AvamdqYVNz
- NUh0bGtBSXZXUytGcm15N2MKaG5jT0F4TFRWL0Q2UkV3SU95R0poRkt3d29pck55UTJnOXZV
- YTNZQ1lDZjFmSjh3RWhhS09COWQwTHBNUm5MNApkRVQ4ZDgyMzhFL3BLK0hxTktpSXNKaHM2
- SnNLOFpnalZRR3JtbWZua0dyWisxdjBIQnV4ZGljZ0duUC9XdHVBClVsOGw2Mi9BTGJheXlq
- KzYxQ2xyc0V0UklhcU82N0xJWXdQaVBEUkkrWGlNek5pR3pIRi8xUTZHUjAyUkg2YTMKRjg5
- ejhhUHhjSGkxWnZDdDJ5a3o2VUVjaHpQMHI1Z3FGSisvTC9VcHU4ME1YaVk0djVlSWFCNTJn
- VlBnaXlNQQpsTDJkRHMxbUladm5yUkxSWTJ0YjNtQVlOa1Y1QjVJRFQzcGtXeTZrS281T0Nn
- SytZZFlPUjhGTloyb04ydDhPCnJLK1ZudGFLN01NU0tIbG1ZL3NPd3RSbEVoMU9CbXJjQ3dH
- d21wLzA1R2tSNDZmL0lzaFJWZUZPUmF3K0dBcXQKUDIrQ0ZhMkNOQS9JSG5aTm95aWtsRHpQ
- UUhVVUdzck5wcERyaFg5Sm1oQm1nMXYyeXdIMU5YdTFpRGZQMUJBdwpLZ29rdDVmNVVhUkY5
- c0FBNTN2V0V2YlVVTjllZXNGR0x6UFdkSkdRNWhwZC9WSDVJUXk5U0JyaC93SWNla3E1Cm4w
- a042cGJUSHhHRTUyU2kvTVZJa05UdURaM2FwbjJqbERaNHBPdHBCWEkydlAzYlBPK05pcUJa
- anNVM3R4TGkKV2R2MkZqeXp6NlhMUndlV1JZVkw1SGE2TER0eG9yMnZ1NlVQMDdwOXh6MXhS
- WmFPRFczb1lsSEZ6WXBhNFc1ZwpMSGIybEVrSXVVZlNjaWNHYmpqQXRDbFRkR1ZtWVc0Z1Yy
- Rm9jbVZ1SUR4emRHVm1ZVzR1ZDJGb2NtVnVRR2x1CkxYUmxZMmd1WTI5dFBva0NOd1FUQVFn
- QUlRVUNYSWRlaHdJYkF3VUxDUWdIQWdZVkNBa0tDd0lFRmdJREFRSWUKQVFJWGdBQUtDUkNV
- Z2V3UEVaRHkyeUhURC85VUY3UWxEa0d4elE3QWFDSTZOOTVpUWY4LzFvU1VhRE51Mlk2SQpL
- K0R6UXBiMVRiVE9yM1ZKd3dZOGEzT1d6NU5MU09MTVdlVnh0K29zTW1sUUlHdWJEM09EWko4
- aXpQbEcvSnJOCnQ1elNkbU41SUE1ZjNlc1dXUVZLdmdoWkFnVERxZHB2K1pIVzJFbXhuQUox
- dUxGWFhlUWQzVVpjQzVyMy9nL3YKU2FNbzl4ZWszSjVtTnVEbTcxbEVXc0FzL0JBY0ZjK3lu
- TGh4d0JXQld3c3Z3UjhiSHRKNURPTVd2YUt1RHNrcApJR0ZVZS9LYjJCK2pyYXZRM1RuNnMv
- SHFKTTBjZXhTSHo1cGUrMHNHdlArdDlKNzIzNEJGUXdlRkV4cmlleThVCkl4T3I0WEFiYWFi
- U3J5WW5VL3pWSDlVMWkyQUlRWk1XSkFldkN2VmdRL1UrTmVSaFh1ZGU5WVVtRE1EbzJzQjIK
- VkFGRUFxaUYyUVVIUEEybThhN0VPM3lmTDRyTWswaUh6TElLdmg2L3JIOFFDWThpM1h4VE5M
- OWlDTHpCV3UvTgpPbkNBYlMremx2TFphaVNNaDVFZnV4VHR2NFBsVmRFamY2MlArWkhJRDE2
- Z1VEd0VtYXpMQU1yeDY2NmpINWt1ClVDVFZ5bWJMMFR2Qis2TDZBUmw4QU55TTRBRG1rV2tw
- eU0yMmtDdUlTWUFFZlFSM3VXWFo5WWd4YVBNcWJWK3cKQnJoSmc0SGFONkM2eFRxR3YzcjRC
- MmFxYjc3L0NWb1JKMVo5Y3BIQ3dpT3pJYUFtdnl6UFU2TXhDRFhaOEZnWQpsVDR2MjNHNWlt
- SlAyemdYNXMrRjZBQ1VKOVVRUEQwdVRmK0o5RGEycitza2gvc1dPbloreWNvSE5CUXZvY1pF
- Ck5BSFFmN2tDRFFSYmVvQVRBUkFBMkhkMGZzRFZLNzJSTFNESGJ5ME9oZ0RjRGxWQk0yTSto
- WVlwTzNmWDFyKysKc2hpcVBLQ0hWQXNRNWJ4ZTdIbUppbUhhNEtLWXMya3YvbWx0L0NhdUNK
- Ly9wbWN5Y0JNN0d2d25Lem11WHp1QQpHbVZUWkM2V1I1TGtha0ZydEhPelZtc0VHcE52NVJj
- OWw2SFlGcExrYlNrVmk1U1BRWkp5K0VNZ01DRmdqclpmClZGNnlvdHdFMWFmN0hOdE1oTlBh
- TEROMW9VS0Y1aitSeVJnNWl3SnVDRGtuSGp3QlFWNHBndzIvNXZTOEE3WlEKdjJNYlcvVExF
- eXBLWGlmNzhJaGdBelh0RTJYck0xbi9vNlpINzFvUkZGS096NDJsRmR6ZHJTWDBZc3FYZ0hD
- WAo1Z0l0TGZxemoxcHNNYTlvMWVpTlRFbTFkVlFyVHFueXMwbDE4b2FsUk5zd1lsUW1uWUJ3
- cHdDa2FUSExNSHdLCmZHQmJvNWRMUEVzaHRWb3dJNm5zZ3FMVHlRSG1xSFlxVVpZSXBpZ21t
- QzNTd0JXWTFWNmZmVUVta3FwQUFDRW4KTDQvZ1Vnbjd5US81ZDBzZXFuQXEycFNCSE1VVW9D
- Y1R6RVFVV1ZraUR2M1JrN2hURm1oVHNNcTc4eHYyWFJzWApNUjZ5UWhTVFBGWkNZRFVFeEVs
- RXNTbzlGV0hXcjZ6SHlZY2M4cURMRnZHOUZQaG1RdVQyczlCbHg2Z0kzMjNHCm5FcTFsd1dQ
- SlZ6UDRqUWtKS0lBWHdGcHYrVzhDV0xxekRXT3ZkbHJEYVRhVk1zY0ZUZUg1VzZVcHJsNjVq
- cUYKUUdNcGNSR0NzOEdDVVcxM0gwSXlPdFF0d1dYQTRueStTTDgxcHZpQW1hU1hVOGxhS2FS
- dTkxVk9WYUY5ZjRzQQpFUUVBQVlrQ0h3UVlBUUlBQ1FVQ1czcUFFd0liREFBS0NSQ1VnZXdQ
- RVpEeTIrb1hELzljSEhSa0JaT2ZrbVNxCjE0U3Z4MDYyUHRVMEtWNDcwVFNucC9qV29ZSm5L
- SXczRzBtWElSZ3J0SDJkUHdwSWdWanNZeVJTVk1LbVNwdDUKWnJEZjlOdFRiTldnazhWb0xl
- WnpZRW8rSjNvUHFGclRNczNhWVl2N2U0K0pLNjk1WW5tUSttT0Q5bmlhOTE1dApyNUFaajk1
- VWZTVGx5VW15aWMxZDhvdnNmMWZQN1hDVVZSRmNSamZOZkRGMW9ML3BEZ01QNUdaMk93YVRl
- am15CkN1SGpNOElSMUNpYXZCcFlEbUJuVFlrN1B0aHk2YXRXdllsMGZ5L0NxYWpUS3N4Nytw
- OXh6aXU4WmZWWCtpS0IKQ2MrSGUrRURFZEdJRGh2TlovSVFIZk9CMlBVWFdHUytzOUZOVHhy
- L0E2bkxHWG5BOVk2dzkzaVBkWUl3eFM3SwpYTG9LSmVlMTBEamx6c1lzUmZsRk9XMFpPaVNp
- aElDWGlRVjF1cU02dHpGRzlndFJjaXVzNVVBdGhXYU8xT3dVClNDUW1mQ09tNGZ2TUlKSUE5
- cnh0b1M2T3FSUWNpRjNjcm1vMHJKQ3ROMmF3WmZnaThYRWlmN2Q2aGp2MEVLTTkKWFpvaUFa
- WVpEKy9pTG01VGFLV042b0dJdGkwVmpKdjhaWk9aT2ZDYjZ2cUZJa0pXK2FPdTRvclRMRk16
- MjhhbwpVM1F5V3BOQzhGRm1kWXNWdWE4czZnTjFOSWE2eTNxYS9aQjhiQS9pa3k1OUFFejRp
- RElScmdVek1FZzhBazdUCmZtMUtpWWVpVHRCRENvMjVCdlhqYnFzeXhrUUQxbmtSbTZGQVZ6
- RXVPUEllOEp1cVcyeEQ5aXhHWXZqVTVoa1IKZ0pwM2dQNWIrY25HM0xQcXF1UTJFNmdvS1VN
- TEFia0NEUVJiZmw5REFSQUFzRExjYStMbFAydm5mdEVHaHBjQQpCR1ZOUUVGbkdQckNhdVU2
- SGhOODA1V3RQVHRtc1JPdUp6cWdVVDBtcHFXSWZacTZzTXd5dkhLOVRzL0tIM0paClVWYlJD
- M3oyaDNLZmhIL0RhZjk1cGQ2bVBjL2g5dkYvT3kzK2VUV2hnR25QNmNBNWtsUitmTzFXaEc4
- VnJpWHYKck5lUkcyMHN6emplSG9jblNJY1Q1WHVaUjB1REhPaUd4T2l6MXNNUkZUR3h6R095
- MTlSOXJ2dTYzdGlJM2Q3dgpnYzc1T0NBZGtlQi9TZUNFbGFSdzBUZjdMWmJQampzRjI2M0JZ
- bk1mNGtrTkVLdnFXY1UyaWNNcCtxZXpqeW5CCnB2ZXVlMHJDVFFCWUFRbG9GQ1ZUR0hyV1dB
- NkQ0VzVPMkFmSWRJYzF1MUpDWnAyZjVMV1ZvVUZUVklyUW5RUVUKU0hDaWZyOU1aeExUdFBK
- ZFU1Mm9TUHczZGs0aExQOGlKSUx1dnYvYXZhakNzUVlIRXR3WXNiZUZaeGl1TGdscApBN1lj
- Sk5ObXBnQ3BNRDR3VWh2bEN0QUtOQlFXeXIyOTc2OThFUVRuNDZlQmVVNkttMkNpaFhrZ3dD
- eWY4ZXlLCkxFM3NYZXdhcTVrZ1pXdk5xNml1NXFZSVJCOXl3K2NYYzYwZE9aRE9scTkzWDVT
- QVJZemFvZXBrSHo0cmtMa1AKUG8rdENIeUhRUHNHblBYYzlXVDgwREM5Tm5KR2R2VWx5NXJk
- TUk0eHBaeWdlb2tqd293VlFsUFV1Y1M2TXluNwpmOHc4Y2dmQjdDMklBSWNEeDJwUC9IendY
- dmtDT1FOQTdtVjFsTTA4bitnVmtUcnpweGlwNURicTRDSW9ZeDJNCkpaVDhiR1JINlhqY1VE
- S2EwOVFoeVpzQUVRRUFBWWtFUkFRWUFRZ0FEd1VDVzM1ZlF3SWJBZ1VKQThKbkFBSXAKQ1JD
- VWdld1BFWkR5MjhGZElBUVpBUWdBQmdVQ1czNWZRd0FLQ1JCVnhETFBjVk1NamNkc0QvMFJo
- QXN1UVlPeQpyMTNCbDNOaFhrWUFaR3AyWkZER3VrZTdPU2tWOG9qT09UZFR5ei9jT1JHQ2J5
- ZEQrRGd2cUZ5VmRuT1hLZ08wCmxKbUd3ckdlTGRnZ0F2aDBpaHJwNU8wWVVKOWJCU1htR01t
- UVRZSC9BbUxUR2FkYnVqQ1dqNWZGVWtDeXd4aW0KSHV5MFBiMjRwelR2UzUwR1k1WStxSDBG
- SE5haWdka2tpV04zcnVnN0haRXUvQ3lsUFpqT1h6K0QxUVBNckV4dwo3ZC9NS2FiVis5YU5i
- UVlabGRJajk4UXd2VUYxS1N6YThqbFVJdnBoUnEyN0FUOGZER1lHUGZERU1nMmNCT2FlCkty
- N29uUXM0YjdhV082aWZEbHhRVHB6c3pvK0FuODA3Tk1TdFZFRmYrczNBaFZEM2U3bmY4SkJh
- dmJWckFlMGsKb20yNm96elBubnh6K2xxVlZ0dzZVazRYTUl6dGl4L0h3SFl3dUNuY1VYWndL
- MEkzeUFKd2pZd29vck9DaEozUwpFVWJKUVB0R3NneFJERXhWQkZlNk5MUC82MnhQOU82dGFj
- d09kYjBNbVAxYjM5cFJBVEM3YmdkMWxkVUxpNzVaCmxKckowL1NpVkVyb3FOWXk3OXRmbWdB
- WjJVeFptczlTckV5Nm85UVNmc24xYVh2K01QTDlKYUNHbWtQNnpiTFEKTm5kajBKY2FRbmtD
- MHZneWRPMUJtNk11OTZQOXVmbEtaY0FTNndtTE01SWRIT3lqTDg4d0h3anVjakFPQnRjdwpw
- MG9HVG5WT25Sc05ZU084VzhZWi9LZGJ1Nzg1ZGF6TXFKMmlOakFEdUJiZG02TjRqNUVkTW5r
- TG4wQklmUEpwCmRnbTR2bDJVcExqd1JHci9NM3dtbTVwdnMrNnVCN2hrL0ZKaUQvNGxsRU5Q
- NGVNMWg3U200aitWcTZOMSt6VEIKSVhKQWViSXFhc0RwNXlaUzdYcnk0STM2bjg1WEVZZkcw
- MWx0QXlob05WMkRPOFNJUlFwdWkydHErOVJQM1JLMQpKREJ4eEVKWTJFTzVKWjhNeGFQSFEw
- RFQwNWxSRmpLMkFsaGRFSXRqTGpwSjNmVW05c3FMeE1XeHpQNlV6M2lpCjJ1YTR1bnJ0Nk9D
- VHFRd2lqRi8zYlRXaXd2VkFBSG5NRlVpb1hzaEhhb2hWRGNWZm5lSU1mVjBiUUNYWWkzTnAK
- WTB2MFp3Y2lGSCtnU0M3cUQ2WE51aHBWR1NMNElpbGlGeS9TemNhSkV6QUhlTERTaFpQMkNX
- ZG5DNHZnbDM3dApocHg4aDU1WWhKbjZIU3VVelBnaGFLdFZCMmsrajdaZXlaK1NGeHA3SXVi
- SEN3TEhsUWhUNzVSd1EzaUF4S242CjBxajUxY1lUbnF4ZFpYVzZmSDNQa3VNellVNUdwcVIv
- MU9sNWMvd2ZJNmc2QW04eUtXLzBFVUx0K0tuNExGc1MKbTdZM201SDV2MTJVNkpCWXZWK3Ix
- M2paaW9zNEVFREU5M0Q1c05IMk1JeVJ6Q0RxMXpkZHQ0WHV5S0ZqUEtXMQo5aWJaRGZGVjdL
- dUNzdnVMMjNzQmMxc0NNb3ArRTFtVC9ReE9JQTZvRFQxTVFzdHdPVnVReURDdi9PdktTZ2Z6
- CjhGWEdMNkFQY2xqQ3FqOEFKaHhReXN4ZG9pUVA4bS92dStialdHR3Z4dzVzMWxncGlSRFRS
- VVBnY0pKTmFHWTIKVklEclpRaTROU2lOUTBOSWkrZGp1NGZOTW1DcFFxZzh0YkMzY0FhNnl3
- bTZvUUIxU0JobURYMmUxMWdSbGx1SQpPblRHUEUwSFRvM2w3MmxoYmc9PQo9cVpNVgotLS0t
- LUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
-Message-ID: <b0952272-c20d-71d4-911f-86db5f337540@i2se.com>
-Date:   Fri, 25 Jun 2021 12:49:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S229498AbhFYLsm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Jun 2021 07:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230082AbhFYLsl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Jun 2021 07:48:41 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13BECC061766
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 04:46:20 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id h3so9401107ilc.9
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Jun 2021 04:46:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tgDi0FCKsZnwX7VsEbSy0smaMpEVsSOVOBoh4nlMGXs=;
+        b=03M16gCQh193nryv5d4WNf74IV+IJgJIPDtE7SeiPN3RlDHUVdB1/BH6LBnMJVBe7a
+         Xeu2k0EB3oFvuA3070Mzg0skVcFzdyY1b1QUUB/z3V1zKkUW+Ag3yL9XX4zCHMpbIkTX
+         JDURYYR8waDrYDLa+Hh+uhkma8FJdQ+y022bFT5EGZ8ErRb59FQNcFmCCW8gXs/j7152
+         NHkMeu9uzkq5AS3Jx50pGeW0hZAfUNxoU23dlmJK78xE+TTWJxM6NaILwXDCiZjzL9zt
+         9wUAiLh/Zljpgmc2Wg9Lfnq69HYLY5S0w1t/bMR3dRWsykvSYYt4nH9cBfmhXDl4WupD
+         1WdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tgDi0FCKsZnwX7VsEbSy0smaMpEVsSOVOBoh4nlMGXs=;
+        b=dPffcsnJgMTkQ6kDxNMU2kwhHW82TslvXuTvIdUbYzbXiEt3lxAhuD9yDbRdHjoFQ6
+         VtDaF528YeSW/VV3yLwOnMzrMexJu/aP3isXCXnYT34Swi5Sg1PWIhz1eNeQaQlJwaXY
+         aet7SQmliYQ8hvaPWJyH94HsmE08Dodsb+0Nh3JNOByUkaIWnGPC1g0+A0X1bdXhcmNH
+         2XHDr1bnl1Lipq871l+nQqLhoY7dju6QCwUlAfK/zbakns3zQIpVCDGvkJdVG4p1GmT0
+         1FBG6KylzGQdxeR9wAZOjgiTihZMuUgRbBIk+HG2QIOmpqR3jtunz4AFlznvUtIYQikg
+         JyuQ==
+X-Gm-Message-State: AOAM532aSipBy/ikJvAP4PkxePtjrxaFvWbBTAnzQSyTDWn9Ly4gvP7G
+        n61syQ7bjf6BUTUy5dBENtg81ycLnxkAJ4vCFeeAZg==
+X-Google-Smtp-Source: ABdhPJwfX8xjOUkxO91ZcEJg9NpMZfuHjfbio/a600BrQVKMg+GSP0qU27UWh2vlLA+FnNta6XP8f+nFJZyhFTktiBY=
+X-Received: by 2002:a92:dcc4:: with SMTP id b4mr7083720ilr.183.1624621579349;
+ Fri, 25 Jun 2021 04:46:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210624235122.24772-1-wangborong@cdjrlc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Provags-ID: V03:K1:l3L8Z8QTrxJy8MSGJdXS2zmiLlqrP+b8C7qUJQnOYrkVdh9aNl1
- xNwhUodzHLH8+z+vd2Lwq2Hts1n0BAomObSLROIwTydWOZj6qrg1Iu8hHtu088EbfJYqYAC
- wh8BWLUuegqlV4G6seEciQWHmsj38u5U7rWsiXyc6s+yJ8fsQFmKnqs1tbKmYJEj0nwm3y5
- LtZDe0H8Y3IZiZ3fwCrEw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cmJJO3jXd6c=:ruEkPUQ8YmFptKrNDg4L7O
- XU8TrTU/kSNmIbpMRlHNUrxrd8r+dorV0DwJGk6fyC8CxSA3tVpFr7tjFsAesJT9yFCnualEQ
- TUfxwiCK+L4jeZOTDICsM2Hae10YuqLugnIsMUU5Gr+zL54ewRQ/ddUzoT5IdashHiIN914QQ
- KGEe0nS7ZkMn5AZOVz/ayIwq1wo9RsNLGLLlxwStmWeL+9x0fsUPOPGqGstTzDWzAEvjmocAQ
- urznqa9jd5euHSCtJcB7K74G9tw8PZAbm3pdWkXOQkvtBUuEyw4OX3MCq+m2Qpp4El2AtEYGT
- QspZA2YPS5IKz8Bgj2bYiAQ/3Hz7kJmKyqAU3l0068pxmh3AIr7gmkNw4rTgH9CXA7te/n4zm
- YtbtsYZDrPsjX5mBcdKSzY28Jm1haCacOktdrd48FHHZ2DwNGcpCm+uL3kf7RBQl1FNzyM2kl
- jA3Oe0vpzyExYC9Zzyt0QWoJ5QPfIn2Tq4oUIewKCSrGXUpPHQtUps+WV8hW6Kd7QDh6ePy9G
- J156PqGk5USSxHbPl+NC50=
+References: <20210607123317.3242031-1-robert.marko@sartura.hr> <20210607123317.3242031-5-robert.marko@sartura.hr>
+In-Reply-To: <20210607123317.3242031-5-robert.marko@sartura.hr>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Fri, 25 Jun 2021 13:46:08 +0200
+Message-ID: <CA+HBbNH7wcpfQOX2=vZmW78GoWy_WL3Pz-dMKe0N0ebZDp+oUw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Donald Buczek <buczek@molgen.mpg.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-Am 25.06.21 um 01:51 schrieb Jason Wang:
-> The if condition followed by BUG can be replaced to WARN_ON which is
-> more compact and formal in linux source.
+On Mon, Jun 7, 2021 at 2:33 PM Robert Marko <robert.marko@sartura.hr> wrote:
 >
-> Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
+> Add binding documents for the Delta TN48M CPLD drivers.
+>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
 > ---
+> Changes in v3:
+> * Include bindings for reset driver
 >
 > Changes in v2:
->  Accept Florian's advice to replace the BUG_ON() with a WARN_ON().
+> * Implement MFD as a simple I2C MFD
+> * Add GPIO bindings as separate
 >
->  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  .../bindings/gpio/delta,tn48m-gpio.yaml       | 42 +++++++++
+>  .../bindings/mfd/delta,tn48m-cpld.yaml        | 90 +++++++++++++++++++
+>  .../bindings/reset/delta,tn48m-reset.yaml     | 35 ++++++++
+>  3 files changed, 167 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+>  create mode 100644 Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
 >
-> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> index 2c87af1180c4..8440c722f6f8 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> @@ -416,8 +416,7 @@ static void bcm2835_gpio_irq_handler(struct irq_desc *desc)
->  		}
->  	}
->  	/* This should not happen, every IRQ has a bank */
-> -	if (i == BCM2835_NUM_IRQS)
-> -		BUG();
-> +	WARN_ON(i == BCM2835_NUM_IRQS);
+> diff --git a/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml b/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
+> new file mode 100644
+> index 000000000000..aca646aecb12
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
+> @@ -0,0 +1,42 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/delta,tn48m-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Delta Networks TN48M CPLD GPIO controller
+> +
+> +maintainers:
+> +  - Robert Marko <robert.marko@sartura.hr>
+> +
+> +description: |
+> +  This module is part of the Delta TN48M multi-function device. For more
+> +  details see ../mfd/delta,tn48m-cpld.yaml.
+> +
+> +  GPIO controller module provides GPIO-s for the SFP slots.
+> +  It is split into 3 controllers, one output only for the SFP TX disable
+> +  pins, one input only for the SFP present pins and one input only for
+> +  the SFP LOS pins.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - delta,tn48m-gpio-sfp-tx-disable
+> +      - delta,tn48m-gpio-sfp-present
+> +      - delta,tn48m-gpio-sfp-los
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +
+> +additionalProperties: false
+> diff --git a/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml b/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+> new file mode 100644
+> index 000000000000..2c6e2adf73ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/delta,tn48m-cpld.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Delta Networks TN48M CPLD controller
+> +
+> +maintainers:
+> +  - Robert Marko <robert.marko@sartura.hr>
+> +
+> +description: |
+> +  Lattice CPLD onboard the TN48M switches is used for system
+> +  management.
+> +
+> +  It provides information about the hardware model, revision,
+> +  PSU status etc.
+> +
+> +  It is also being used as a GPIO expander for the SFP slots and
+> +  reset controller for the switch MAC-s and other peripherals.
+> +
+> +properties:
+> +  compatible:
+> +    const: delta,tn48m-cpld
+> +
+> +  reg:
+> +    description:
+> +      I2C device address.
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +patternProperties:
+> +  "^gpio(@[0-9a-f]+)?$":
+> +    $ref: ../gpio/delta,tn48m-gpio.yaml
+> +
+> +  "^reset-controller?$":
+> +    $ref: ../reset/delta,tn48m-reset.yaml
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        cpld@41 {
+> +            compatible = "delta,tn48m-cpld";
+> +            reg = <0x41>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            gpio@31 {
+> +                compatible = "delta,tn48m-gpio-sfp-tx-disable";
+> +                reg = <0x31>;
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +            };
+> +
+> +            gpio@3a {
+> +                compatible = "delta,tn48m-gpio-sfp-present";
+> +                reg = <0x3a>;
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +            };
+> +
+> +            gpio@40 {
+> +                compatible = "delta,tn48m-gpio-sfp-los";
+> +                reg = <0x40>;
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +            };
+> +
+> +            reset-controller {
+> +              compatible = "delta,tn48m-reset";
+> +              #reset-cells = <1>;
+> +            };
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml b/Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
+> new file mode 100644
+> index 000000000000..0e5ee8decc0d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/reset/delta,tn48m-reset.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Delta Networks TN48M CPLD reset controller
+> +
+> +maintainers:
+> +  - Robert Marko <robert.marko@sartura.hr>
+> +
+> +description: |
+> +  This module is part of the Delta TN48M multi-function device. For more
+> +  details see ../mfd/delta,tn48m-cpld.yaml.
+> +
+> +  Reset controller modules provides resets for the following:
+> +  * 88F7040 SoC
+> +  * 88F6820 SoC
+> +  * 98DX3265 switch MAC-s
+> +  * 88E1680 PHY-s
+> +  * 88E1512 PHY
+> +  * PoE PSE controller
+> +
+> +properties:
+> +  compatible:
+> +    const: delta,tn48m-reset
+> +
+> +  "#reset-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - "#reset-cells"
+> +
+> +additionalProperties: false
+> --
+> 2.31.1
+>
 
-whenever this should happen, the source of this interrupt cannot be
-determined and acked. So it's very likely that we end up in some kind of
-interrupt storm. So i suggest to use at least WARN_ON_ONCE().
+Are there any issues with the bindings?
+The patch series is depending on this as the rest has been reviewed.
 
-Even worse the value of variable "group" is uninitialized in this case,
-so maybe we better return immediately after that.
-
-Regards
-
->  
->  	chained_irq_enter(host_chip, desc);
->  
-
+Regards,
+Robert
+-- 
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura Ltd.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
