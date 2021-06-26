@@ -2,37 +2,37 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6A043B4E7C
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jun 2021 14:51:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51B113B4E7D
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jun 2021 14:51:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbhFZMxU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Jun 2021 08:53:20 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14384 "EHLO mga04.intel.com"
+        id S229518AbhFZMxW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Jun 2021 08:53:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:7080 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229518AbhFZMxU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S229952AbhFZMxU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Sat, 26 Jun 2021 08:53:20 -0400
-IronPort-SDR: Eu9EyA6ZsjCLjJhcQxFyXJtxofVHtX8/mPsyA0s8wsfJxCJZwOHduSgk41LPKyJAEcjVnIvjC/
- 4i2imLkFgvkA==
-X-IronPort-AV: E=McAfee;i="6200,9189,10026"; a="205962055"
+IronPort-SDR: QQkzg1mgJJBW+La79du7IqOiohXvImT/nbJOTCqbhdqFgGtBEzc/6c8ZM61nSKm2trhqhVBXU3
+ jmeYT6JD8fNQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10026"; a="268918090"
 X-IronPort-AV: E=Sophos;i="5.83,301,1616482800"; 
-   d="scan'208";a="205962055"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2021 05:50:58 -0700
+   d="scan'208";a="268918090"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2021 05:50:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,301,1616482800"; 
-   d="scan'208";a="418652226"
+   d="scan'208";a="407222359"
 Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 26 Jun 2021 05:50:56 -0700
+  by orsmga006.jf.intel.com with ESMTP; 26 Jun 2021 05:50:57 -0700
 Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lx7lw-0007kv-6b; Sat, 26 Jun 2021 12:50:56 +0000
-Date:   Sat, 26 Jun 2021 20:50:50 +0800
+        id 1lx7lw-0007l1-Bk; Sat, 26 Jun 2021 12:50:56 +0000
+Date:   Sat, 26 Jun 2021 20:50:53 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- db0f032512443678d30aa26c247099220e3e5aee
-Message-ID: <60d722aa.CLID4sb40z/0338F%lkp@intel.com>
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ c477d9c76b1ecb0eb55f32b8dd3fac1debe91187
+Message-ID: <60d722ad.1dVTo0EeSlJkNvhb%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -41,12 +41,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: db0f032512443678d30aa26c247099220e3e5aee  pinctrl: stm32: check for IRQ MUX validity during alloc()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: c477d9c76b1ecb0eb55f32b8dd3fac1debe91187  Merge branch 'devel' into for-next
 
 elapsed time: 725m
 
-configs tested: 145
+configs tested: 157
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -59,10 +59,10 @@ arm64                               defconfig
 arm                              allyesconfig
 arm                              allmodconfig
 mips                  maltasmvp_eva_defconfig
+ia64                                defconfig
 mips                         db1xxx_defconfig
 sh                        apsh4ad0a_defconfig
 mips                         tb0226_defconfig
-ia64                                defconfig
 powerpc                           allnoconfig
 powerpc               mpc834x_itxgp_defconfig
 mips                      malta_kvm_defconfig
@@ -103,6 +103,12 @@ arm                           sunxi_defconfig
 mips                      fuloong2e_defconfig
 um                           x86_64_defconfig
 sh                  sh7785lcr_32bit_defconfig
+arm                            zeus_defconfig
+arc                          axs101_defconfig
+arm                          pxa3xx_defconfig
+sh                          landisk_defconfig
+ia64                          tiger_defconfig
+sh                        dreamcast_defconfig
 arm                         s3c6400_defconfig
 mips                      pic32mzda_defconfig
 powerpc                mpc7448_hpc2_defconfig
@@ -147,12 +153,6 @@ mips                             allyesconfig
 mips                             allmodconfig
 powerpc                          allyesconfig
 powerpc                          allmodconfig
-x86_64               randconfig-a002-20210625
-x86_64               randconfig-a001-20210625
-x86_64               randconfig-a005-20210625
-x86_64               randconfig-a003-20210625
-x86_64               randconfig-a004-20210625
-x86_64               randconfig-a006-20210625
 i386                 randconfig-a002-20210625
 i386                 randconfig-a001-20210625
 i386                 randconfig-a003-20210625
@@ -165,6 +165,18 @@ x86_64               randconfig-a015-20210622
 x86_64               randconfig-a014-20210622
 x86_64               randconfig-a013-20210622
 x86_64               randconfig-a011-20210622
+x86_64               randconfig-a012-20210626
+x86_64               randconfig-a016-20210626
+x86_64               randconfig-a015-20210626
+x86_64               randconfig-a014-20210626
+x86_64               randconfig-a013-20210626
+x86_64               randconfig-a011-20210626
+x86_64               randconfig-a002-20210625
+x86_64               randconfig-a001-20210625
+x86_64               randconfig-a005-20210625
+x86_64               randconfig-a003-20210625
+x86_64               randconfig-a004-20210625
+x86_64               randconfig-a006-20210625
 i386                 randconfig-a011-20210622
 i386                 randconfig-a014-20210622
 i386                 randconfig-a013-20210622
@@ -192,8 +204,8 @@ x86_64                      rhel-8.3-kbuiltin
 x86_64                                  kexec
 
 clang tested configs:
-x86_64               randconfig-b001-20210625
 x86_64               randconfig-b001-20210622
+x86_64               randconfig-b001-20210625
 x86_64               randconfig-a002-20210622
 x86_64               randconfig-a001-20210622
 x86_64               randconfig-a005-20210622
