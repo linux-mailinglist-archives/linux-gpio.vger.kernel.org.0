@@ -2,137 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2E923B5351
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jun 2021 15:01:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CC9D3B5355
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jun 2021 15:08:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230321AbhF0NDh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Jun 2021 09:03:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41010 "EHLO
+        id S231127AbhF0NKy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Jun 2021 09:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbhF0NDg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Jun 2021 09:03:36 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF57C061574;
-        Sun, 27 Jun 2021 06:01:12 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id l11so8276167pji.5;
-        Sun, 27 Jun 2021 06:01:12 -0700 (PDT)
+        with ESMTP id S229817AbhF0NKx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Jun 2021 09:10:53 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04602C061574;
+        Sun, 27 Jun 2021 06:08:30 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id 21so11737605pfp.3;
+        Sun, 27 Jun 2021 06:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=urTHBIKM6lEjpRzJNUmH8nQ9kyBs572HUnD7SYNnOog=;
-        b=huXjUqxe3f5WRT4AR/1ssDz+NECEWjr7TaJ+5Nz053mehwqZ8i7Mhl8QH8A9Hq52Am
-         8gJugi1gSzwvna6QWlN//Y20fG2GSGCdFLYTxa+uyrD87elnVAKRsHn1rhUJsS1QftMI
-         0scZ/vkhj05Rf84kNNkpu9GqEhenKBdwZs0+mAWHwHw9KWD5iGm9Z3BjazxSFa5pspRP
-         PIFhwYw5GjxQFTFJwRkf6P/eKMvzTgVVbl5BAq0a7PFHD3JSt7cJj+E8K2txoTvHftN6
-         cQ3tFoQOuH30iMjfrruIpctFpen0MRlcYpnnRYIW9tOTqKRFjayaibvm3L8N6gEU7NTP
-         gyVQ==
+        bh=LG15p152Q19/jYJAfgGWGQMbR7hlErO+795zyErlEJE=;
+        b=TxIecD6mGQRB7Yd60ycSuNbG0gyheNRHb6rm01H/e0AmoWhaidVwFrBbXEPQ9z71MS
+         1U8ebjec1eJemOIh0HM0Rjap9X27+o59/X2zcg3Yf65GrE4Dp6sIOrO+/FkmfkEfvo05
+         Of0CT6c2Ba+F6A0zBRf34t1VlBbG+kN4ZOmG2bXDcOCrrKoyxscnTEzzdZ41FhnWRWaC
+         YAV1oaCQSpFE8yx2E3ij9dSpyd2LpuGQ0R2tmrIvb6tlSovZDsbtJL1kQNIbWyCCyZud
+         1f7aHB4ya9A6iNA6tgGsJQjwtNvyGwHGGVQbIGXF/kPBOFWlYfsFAzxl9tcqUvhK8852
+         Cdkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=urTHBIKM6lEjpRzJNUmH8nQ9kyBs572HUnD7SYNnOog=;
-        b=eSK6URREDnxP65/vlFM4WDhfIcb/VeOZPbf1ecageD2MP7YGMZ48rj/q8AiRKp2Ud5
-         pINK1NysYoox5VP8TXG4DlABXbOJTf3ko/WDvGwXU4t2fL53cQ8h6XKZmfNtetFXYFBY
-         1hd7tTf7PD2jd7hOdLiA+aqMMdv+/wRzxfP4WD55qbMIONoSlVyDIsOSktz4G/6+Wwgk
-         T3DtMgvss0g2KMVgF284UHRq/LyRt25R6lpz1rRJh/oKGISENMnJR51/57aUOOwqDSJh
-         tKw7FyMjm9UxHY9eW+EAoPszU4YCkzIL+w/+lVHfwdC3do8JugF2hrmG73tAQErBvzkZ
-         iZaA==
-X-Gm-Message-State: AOAM5338rCVK+9jAJ5DZN+2G7l/sYI/rqqdYUmIrnXgG/fq5WyUsZCd0
-        Zq/nGISxoLTE9HzOr/9yTrPqcagpgP+Ee+17tBg=
-X-Google-Smtp-Source: ABdhPJy8T/jd/2TFl23UgtErSygoWYoU8Cqf4O0AgpGpucI2gqZ3jEGYjAer/BbUg+FW2ENCiYCl4urK/YlAdsey4fE=
-X-Received: by 2002:a17:90a:17ad:: with SMTP id q42mr32510303pja.181.1624798872128;
- Sun, 27 Jun 2021 06:01:12 -0700 (PDT)
+        bh=LG15p152Q19/jYJAfgGWGQMbR7hlErO+795zyErlEJE=;
+        b=BMDTZPWPzWrPIlegZruILelQFKWN0XYx5MWQGTtTl0/juaWtXQ7JOqXdDJPtJH0TMZ
+         QWet6PYSH9dE0SN6IlllnnCS8WZFaFXq8L6Ntzj1Yt+4gdjd5naB1w6+1J1eF1+2R3TN
+         K2+obwkIp5z2GEi/SGm4hcuIbi7S+iVmb3E/GTo8IZ9Tekj87steHaZJpjLha88KUVPw
+         rksNG+x4s5sLuavuf8MSPMk3SVBhzeQ2JzYt0k3T7uwUuarG+4oBLzEkAkSCWf3ojeLr
+         wRv43KYj/qtTNlV/CMdriVN21EyDckJl3Nv6pHuSZHA2o261v2gfVcMdIUuUI9UH1OUf
+         6qsw==
+X-Gm-Message-State: AOAM532H6E/+uzSe4OJ9LStjtDtEj6evAlEQ3xmmlcxY70PjxQMY3uvE
+        EIMbGbhnb5W9TFkJ7yCoUjHEgWCTUru6vQuKpww=
+X-Google-Smtp-Source: ABdhPJzeLc1jfR3GrTLHRCQL/6SjO7PG5HBb/f/MC9Iu7DTZSP8+GbNVqlVDpTW8VsxXXYGS7baGIrS3UBRc6QdNZ+c=
+X-Received: by 2002:aa7:8055:0:b029:303:36a6:fec7 with SMTP id
+ y21-20020aa780550000b029030336a6fec7mr20400150pfm.40.1624799308940; Sun, 27
+ Jun 2021 06:08:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210626161819.30508-1-sergio.paracuellos@gmail.com>
- <CAHp75VfM-35tQMRh98mtg2XmDOJFnmjdYRKZZoi9ADm=AT2xUw@mail.gmail.com>
- <CAMhs-H_fcNDAOHm=tZB4ku9fzeea_7f4ZLg7w5KEmcNu+8wbQQ@mail.gmail.com>
- <CAHp75VeN+vww=Bj=g-nx9AT0FKSGAZ8CKQZn=ff2kfQWM+dxdw@mail.gmail.com> <CAMhs-H-WwCfPDspgxzN=W8QouZ7WPAeyJDYf_6=YezyCkTM=Vw@mail.gmail.com>
-In-Reply-To: <CAMhs-H-WwCfPDspgxzN=W8QouZ7WPAeyJDYf_6=YezyCkTM=Vw@mail.gmail.com>
+References: <20210625235532.19575-1-dipenp@nvidia.com>
+In-Reply-To: <20210625235532.19575-1-dipenp@nvidia.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 27 Jun 2021 16:00:36 +0300
-Message-ID: <CAHp75VcF-HDZ6mKvXT=zYnBrcPaNJ+SYJ72LQ7s-62zQ5ZqoQg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: mt7621: support gpio-line-names property
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        John Thomson <git@johnthomson.fastmail.com.au>,
+Date:   Sun, 27 Jun 2021 16:07:52 +0300
+Message-ID: <CAHp75Vf4TKjtC7cLNape4r+hE-AWnbxtbww2ofCcHQJf9zyh-g@mail.gmail.com>
+Subject: Re: [RFC 00/11] Intro to Hardware timestamping engine
+To:     Dipen Patel <dipenp@nvidia.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NeilBrown <neil@brown.name>,
-        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>
+        linux-tegra@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 27, 2021 at 1:56 PM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
-> On Sun, Jun 27, 2021 at 12:51 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Sun, Jun 27, 2021 at 12:47 PM Sergio Paracuellos
-> > <sergio.paracuellos@gmail.com> wrote:
-> > > On Sun, Jun 27, 2021 at 11:33 AM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Sat, Jun 26, 2021 at 7:18 PM Sergio Paracuellos
-> > > > <sergio.paracuellos@gmail.com> wrote:
-> > > > >
-> > > > > The default handling of the gpio-line-names property by the
-> > > > > gpiolib-of implementation does not work with the multiple
-> > > > > gpiochip banks per device structure used by the gpio-mt7621
-> > > > > driver.
-> > > > >
-> > > > > This commit adds driver level support for the device tree
-> > > > > property so that GPIO lines can be assigned friendly names.
-> >
-> > > > > This driver has three gpiochips with 32 gpios each. Core implementation
-> > > >
-> > > > implementation
-> > > >
-> > > >
-> > > > > got gpio's repeated along each gpio chip if chip.names is not assigned.
-> > > > > To avoid this behaviour driver will set this names as empty or
-> > > >
-> > > > the driver
-> > > > these names
-> > > >
-> > > > > with desired friendly line names. Consider the following sample with
-> > > > > minimal entries for the first chip with this patch changes applied:
-> > > >
-> > > > The same comment as per v1:
-> > > >
-> > > > Any idea why it's not a duplicate of
-> > > > https://elixir.bootlin.com/linux/v5.13-rc7/C/ident/devprop_gpiochip_set_names,
-> > > > and why the latter is not called in your case?
-> > >
-> > > The core properly calls this function but not in the way expected.
-> > > This driver implements three banks of 32 gpios each internally using
-> > > one gpiochip per bank, all of them in the same device. So the core
-> > > code you are pointing out here duplicates the same names along the
-> > > three gpiochips which is not the expected behaviour. So implementing
-> > > in this way and setting names at least reserved avoids the core code
-> > > to be run and also avoids the duplication getting expected behaviour
-> > > for all the banks and each line friendly name.
-> >
-> > Isn't it the problem of how we supply fwnode in that case?
-> > Another possibility is to fix DT (although I'm not sure it's now possible).
+On Sat, Jun 26, 2021 at 2:48 AM Dipen Patel <dipenp@nvidia.com> wrote:
 >
-> Since the fwnode is the same for all banks of the same device, each bank
-> repeats the first MTK_BANK_WIDTH label names in each bank.
+> This patch series introduces new subsystem called hardware timestamping
+> engine (HTE). It offers functionality such as timestamping through hardware
+> means in realtime. The HTE subsystem centralizes HTE provider and consumers
+> where providers can register themselves with subsystem and the consumers can
+> request interested entity which could be lines, GPIO, signals or buses. The
+> HTE subsystem provides timestamp in nano seconds, having said that the provider
+> need to convert the timestamp if its not in that unit. There was upstream
+> discussion about the same at
+> https://lore.kernel.org/lkml/4c46726d-fa35-1a95-4295-bca37c8b6fe3@nvidia.com/
+>
+> To summarize upstream discussion:
+> - It was heavily favoured by Linus and Kent to extend GPIOLIB and supporting
+> GPIO drivers to add HTE functionality and I agreed to experiment with it.
 
-Can you point out the DT in question?
+I guess this series should include more people from different
+companies, especially documentation parts. This may be used by
+different hardware and quite different vendors. Developing a framework
+like this for only one vendor is no go in general.
 
-> This commit populates the gc.names member of each bank from the
-> device-tree node within the driver. This overrides the default behavior
-> since devprop_gpiochip_set_names() will only be called if names is NULL.
+> This patch series implements and extends GPIOLIB and GPIO tegra driver.
+> - Discussed possibility to add HTE provider as irqchip instead which
+> was argued against as HTE devices are not necessarily event emitting
+> devices.
+> - Discussed other possibility if HTE device can be added as posix clock
+> type like PTP clocks. That was also argues against since HTE devices
+> are not necessarily tightly coupled with hardware clock.
+>
+> Typical HTE provider does following:
+> - Register itself with HTE subsystem
+> - Provide *request, *release, *enable, *disable timestamp callbacks and
+> optional get_clk_src_info callback to HTE subsystem.
+> - Provide optional xlate callback to the subsystem which can translate
+> consumer provided logical ids into actual ids of the entity, where entity here
+> is the provider dependent and could be GPIO, in chip lines or signals, buses
+> etc...This converted id will be used between HTE subsystem and the provider for
+> below bullet point.
+> - Push timestamps to the subsystem. This happens when HTE provider has
+> timestamp data available and willing to push it to HTE subsystem. The HTE
+> subsystem stores it into software buffer for the consumers.
+> - Unregister itself
+>
+> Typical HTE consumer does following:
+> - Request interested entity it wishes to timestamp in realtime to the
+> subsystem. During this call HTE subsystem allocates software buffer to
+> store timestamps data.
+> - The subsystem does necessary communications with the provider to
+> complete the request, which includes translating logical id of the entity to
+> provider dependent physical/actual id and enabling hardware timestamping on
+> requested id.
+> - It can optionally specify callback during registration, this cb will
+> be called when provider pushes timestamps. Once notified through cb, the
+> consumer can call retrieve API to read the data from the software buffer.
+> If cb is not provided, the consumers can elect to call blocking version of
+> retrieve API.
+> - Manage pre allocated software buffer if needed. It includes changing buffer
+> length and watermark/threshold. The subsystem automatically sets watermark or
+> threshold at 1, consumers can later change it to any other value it wishes. The
+> main purpose for having threshold functionality is to notify consumer either
+> through callback if provided or unblock waiting consumer when threshold is
+> reached.
+> - Retrieve timestamp using various means provided by subsystem.
+> - Release entity and its resources.
+>
+> HTE and GPIOLIB:
+> - For the HTE provider which can timestamp GPIO lines.
+> - For the GPIO consumers, either in kernel or userspace, The GPIOLIB and its
+> CDEV framework are extended as frontend to the HTE by introducing new APIs.
+> - Tegra194 AON GPIO controller has HTE support also known as GTE
+> (Generic Timestamping Engine). The tegra gpio driver is modified to accommodate
+> HTE functionality.
+>
+> Dipen Patel (11):
+>   Documentation: Add HTE subsystem guide
+>   drivers: Add HTE subsystem
+>   hte: Add tegra194 HTE kernel provider
+>   dt-bindings: Add HTE bindings
+>   hte: Add Tegra194 IRQ HTE test driver
+>   gpiolib: Add HTE support
+>   gpio: tegra186: Add HTE in gpio-tegra186 driver
+>   gpiolib: cdev: Add hardware timestamp clock type
+>   tools: gpio: Add new hardware clock type
+>   hte: Add tegra GPIO HTE test driver
+>   MAINTAINERS: Added HTE Subsystem
+>
+>  .../bindings/gpio/nvidia,tegra186-gpio.txt    |    7 +
+>  .../devicetree/bindings/hte/hte-consumer.yaml |   47 +
+>  .../devicetree/bindings/hte/hte.yaml          |   34 +
+>  .../bindings/hte/nvidia,tegra194-hte.yaml     |   83 +
+>  Documentation/hte/hte.rst                     |  198 +++
+>  Documentation/hte/index.rst                   |   21 +
+>  Documentation/hte/tegra194-hte.rst            |   65 +
+>  Documentation/index.rst                       |    1 +
+>  MAINTAINERS                                   |    8 +
+>  drivers/Kconfig                               |    2 +
+>  drivers/Makefile                              |    1 +
+>  drivers/gpio/gpio-tegra186.c                  |   78 +
+>  drivers/gpio/gpiolib-cdev.c                   |   65 +-
+>  drivers/gpio/gpiolib.c                        |   92 ++
+>  drivers/gpio/gpiolib.h                        |   11 +
+>  drivers/hte/Kconfig                           |   49 +
+>  drivers/hte/Makefile                          |    4 +
+>  drivers/hte/hte-tegra194-gpio-test.c          |  255 +++
+>  drivers/hte/hte-tegra194-irq-test.c           |  400 +++++
+>  drivers/hte/hte-tegra194.c                    |  554 +++++++
+>  drivers/hte/hte.c                             | 1368 +++++++++++++++++
+>  include/linux/gpio/consumer.h                 |   21 +-
+>  include/linux/gpio/driver.h                   |   13 +
+>  include/linux/hte.h                           |  278 ++++
+>  include/uapi/linux/gpio.h                     |    1 +
+>  tools/gpio/gpio-event-mon.c                   |    6 +-
+>  26 files changed, 3657 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hte/hte-consumer.yaml
+>  create mode 100644 Documentation/devicetree/bindings/hte/hte.yaml
+>  create mode 100644 Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
+>  create mode 100644 Documentation/hte/hte.rst
+>  create mode 100644 Documentation/hte/index.rst
+>  create mode 100644 Documentation/hte/tegra194-hte.rst
+>  create mode 100644 drivers/hte/Kconfig
+>  create mode 100644 drivers/hte/Makefile
+>  create mode 100644 drivers/hte/hte-tegra194-gpio-test.c
+>  create mode 100644 drivers/hte/hte-tegra194-irq-test.c
+>  create mode 100644 drivers/hte/hte-tegra194.c
+>  create mode 100644 drivers/hte/hte.c
+>  create mode 100644 include/linux/hte.h
+>
+> --
+> 2.17.1
+>
 
-I believe this commit is not needed in the proposed (i.e. duplication) shape.
-The fwnode supports primary and secondary ones. Thus, we may create a
-pair of fwnodes when they will unify properties per device with
-properties per child together (child is primary and device, i.e.
-parent, is secondary).
 
 -- 
 With Best Regards,
