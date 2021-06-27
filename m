@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1D1D3B52AE
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jun 2021 11:32:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28EA83B52B0
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jun 2021 11:33:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230103AbhF0Jeg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Jun 2021 05:34:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52508 "EHLO
+        id S229854AbhF0JgT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Jun 2021 05:36:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbhF0Jeg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Jun 2021 05:34:36 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85ABBC061574;
-        Sun, 27 Jun 2021 02:32:12 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id kt19so207585pjb.2;
-        Sun, 27 Jun 2021 02:32:12 -0700 (PDT)
+        with ESMTP id S229534AbhF0JgS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Jun 2021 05:36:18 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80901C061574;
+        Sun, 27 Jun 2021 02:33:54 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id m15-20020a17090a5a4fb029016f385ffad0so8390301pji.0;
+        Sun, 27 Jun 2021 02:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DrTexKvAE7eD72sH911wcIhVTQqUB3PuR1hPWbayYW0=;
-        b=TuEQF7hfkVVhYz1bLcEtJ3EzxL0IwlAvhIxXB0tpQluNJrmBmYsRUAu8jqSZELIixa
-         MIqnj7jiJ3Ubamv7pkJgOoAAE8OShr8stJxNBX8ZiVLXLCRSffB2pAI/j6M1s3GLP6zj
-         PaNMS766G9m4ulyl+vPihfD4xNYc0+daKsEL5YQ3bXkeKzx15WoQQf89gZFBdA3MY44T
-         ilTouy/EwIiJUqUHH8c0Nu6xvp8Jsd+1BT3H+mE68qadhX4DGwshmAi/FSH/NVbRZ0a7
-         wD9iHkHNB91kCFKtnquO7QZZGTobvhTomHSDWmwKZIP84BovZl8pvKxifhTXInDw/pxG
-         CArw==
+        bh=tZZOgTnq26cH7u8v9oWnAIqSJbt/egQbz+Tfs+AJnPI=;
+        b=Q9eppwkaNL0zTXMDMHbQI5GQYYW0P1hAguQHSwSgJC2w+ppzBCGvAi8gHXFNcDK0TF
+         PqXaLsY5znilix5mQtPAyoCHDvp5uL/9tpdl93Z9MerCK4MTQ3B2S3ayYHK4Vx7oL5cp
+         DglfW1HcxUP8gRD246GGWKHegoUcuM0anQkuLxr2z551C1kO6WsolFC84nvhtjNDCZPc
+         K9RrnvNBt71sWp095ltGHuznLlbAJsrjZH71ItbUpXixNUigUZeqPqBGRO3XUodtshjj
+         cQsVo+xV3+gvR7ATOkWxPto7iSMhAbr2k6kKLcLYPiwYtw8sB4LT8psEBCbyhJlFLEcb
+         XNmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DrTexKvAE7eD72sH911wcIhVTQqUB3PuR1hPWbayYW0=;
-        b=PzFvr9y6WdXu4sMPyqtkSujl1LhmYrO4DEIDfAMmZKQ8i1eUOHtbG/x7ZvA4CwYJyN
-         v0nrp4ox6IoDRyMNICDKkwWAC6ajipr6ADAKfeRS9yCFYMfn0Zzq0BwwqeoUy89oilk4
-         I+Er5+2TaReIuTBzQaZLTJgtSP5EFfJJPHJjUxWilSdxzf9r+Fa2xPnhW9NxbIv7wigX
-         z+axeJzjoJGhQJ1PUiHszX/S0d5O5o7ooMYiYwpH1uLgVk6ZPpGcXfWhOobERTaTd6Q6
-         iKcziaLPPZWzrYZdrhiQNAgVXsM6acB/ZSyIO5OvH9r8nSecHlgTfEZDP7LqKznhzZXt
-         WkUg==
-X-Gm-Message-State: AOAM532X6G23dbDeaHhRpADcyZ2vX2RT1zDFFXiSX1MNLDlxpw8g1kjy
-        RUy/BZXAfscrmOK1iaqHYq5zimLgLrjqxs2jRnA=
-X-Google-Smtp-Source: ABdhPJwPV2x7Q16y9KLKLX1QMMSTIxUNPbnUrLQs4kiIMo2MkjiCgs4kLkCK5S0VLsdvYNcR1XXWKo/BOeeXS16apZ0=
-X-Received: by 2002:a17:90a:bc89:: with SMTP id x9mr21316470pjr.228.1624786331214;
- Sun, 27 Jun 2021 02:32:11 -0700 (PDT)
+        bh=tZZOgTnq26cH7u8v9oWnAIqSJbt/egQbz+Tfs+AJnPI=;
+        b=gmOS6BLVtzLo5Rr8ssfu3znN5d68nFNDNeNNnTxaGiX3WUjGLqD+IhSiAGEV930KhS
+         VzFykdgErJc/LATJzwaGnA6PeHgqguBLxheOE25gbeDoBd0oOqfvZ1MCPjU/qtp7AEzw
+         Gm8JPHx0MPnU9ROZjAe7UzN0vl2hoarXL44GA37ih4FbElwyLGbhJL2U/uXxgdK1nV0B
+         bWZJZRKqJkDqluxkWjkSAM+DTKpqrspo85dYclY7cOnGRxWxUNhHs0jFCnYEyft1SgTd
+         Izo3Lq48zKbPbrEBKXTqPH5sWKxm0pdXUc3IXxZdsS52Psl7pj3jf4MceZlkirUHNzeh
+         3Vmg==
+X-Gm-Message-State: AOAM533yglgWqBuOd4rIz/cbFl8exjuNhj+6AzkcXEJtPM2n1t1X215B
+        3wI8HaXpb1Alf+YRRsMTXXQJQ20kiRQ1EZVZE1A=
+X-Google-Smtp-Source: ABdhPJwltJO8wkNr3+ICbhVPX6HFxOvTiRYgeIkpHJD/xorGlOa81O4Efq8WKFv3ng30WnuxLHv92EYTDORymsCkRGU=
+X-Received: by 2002:a17:902:fe0a:b029:11d:81c9:3adf with SMTP id
+ g10-20020a170902fe0ab029011d81c93adfmr17190069plj.0.1624786434004; Sun, 27
+ Jun 2021 02:33:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210619073551.13703-1-sergio.paracuellos@gmail.com>
-In-Reply-To: <20210619073551.13703-1-sergio.paracuellos@gmail.com>
+References: <20210626161819.30508-1-sergio.paracuellos@gmail.com>
+In-Reply-To: <20210626161819.30508-1-sergio.paracuellos@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 27 Jun 2021 12:31:35 +0300
-Message-ID: <CAHp75Vd4UPiPKy98jV_LuCE10dCrSwU06AddCq5Q0POm0graOw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mt7621: support gpio-line-names property
+Date:   Sun, 27 Jun 2021 12:33:18 +0300
+Message-ID: <CAHp75VfM-35tQMRh98mtg2XmDOJFnmjdYRKZZoi9ADm=AT2xUw@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: mt7621: support gpio-line-names property
 To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -64,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jun 19, 2021 at 1:02 PM Sergio Paracuellos
+On Sat, Jun 26, 2021 at 7:18 PM Sergio Paracuellos
 <sergio.paracuellos@gmail.com> wrote:
 >
 > The default handling of the gpio-line-names property by the
@@ -75,51 +76,33 @@ On Sat, Jun 19, 2021 at 1:02 PM Sergio Paracuellos
 > This commit adds driver level support for the device tree
 > property so that GPIO lines can be assigned friendly names.
 
-...
 
-> +static void
-> +mediatek_gpio_set_names(struct device *dev, struct mtk_gc *rg)
-> +{
-> +       struct device_node *np = dev->of_node;
-> +       const char **names;
-> +       int nstrings, base;
-> +       unsigned int i;
-> +
-> +       names = devm_kcalloc(dev, MTK_BANK_WIDTH, sizeof(*names),
-> +                            GFP_KERNEL);
-> +       if (!names)
-> +               return;
-> +
-> +       base = rg->bank * MTK_BANK_WIDTH;
-> +       nstrings = of_property_count_strings(np, "gpio-line-names");
-> +       if (nstrings <= base)
-> +               goto assign_names;
-> +
-> +       for (i = 0; i < MTK_BANK_WIDTH; i++) {
-> +               const char *name;
-> +               int ret;
-> +
-> +               ret = of_property_read_string_index(np, "gpio-line-names",
-> +                                                   base + i, &name);
-> +               if (ret) {
-> +                       if (ret != -ENODATA)
-> +                               dev_err(dev, "unable to name line %d: %d\n",
-> +                                       base + i, ret);
-> +                       break;
-> +               }
-> +
-> +               if (*name)
-> +                       names[i] = name;
-> +       }
-> +
-> +assign_names:
-> +       rg->chip.names = names;
-> +}
+
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> ---
+> Hi,
+>
+> This driver has three gpiochips with 32 gpios each. Core implementation
+
+implementation
+
+
+> got gpio's repeated along each gpio chip if chip.names is not assigned.
+> To avoid this behaviour driver will set this names as empty or
+
+the driver
+these names
+
+> with desired friendly line names. Consider the following sample with
+> minimal entries for the first chip with this patch changes applied:
+
+The same comment as per v1:
 
 Any idea why it's not a duplicate of
 https://elixir.bootlin.com/linux/v5.13-rc7/C/ident/devprop_gpiochip_set_names,
 and why the latter is not called in your case?
 
--- 
+
+--
 With Best Regards,
 Andy Shevchenko
