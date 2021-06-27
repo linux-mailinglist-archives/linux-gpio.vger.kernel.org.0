@@ -2,92 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A4623B4FD8
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jun 2021 20:29:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB4173B51F3
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jun 2021 06:56:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230136AbhFZSbh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Jun 2021 14:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230046AbhFZSbh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Jun 2021 14:31:37 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D8FC061574
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Jun 2021 11:29:14 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id g19-20020a9d12930000b0290457fde18ad0so13235796otg.1
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Jun 2021 11:29:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xsfNESfqMuHVR/3TWEKQgeF1cU+m5Si9kUXhTtiYi2M=;
-        b=AUVNQ6pPe4FF/zaIXnkLzesJs02J5fe9cvA6qVX9vqGnmRLKlVRNk2b7820AUsu0TM
-         t/lc6GywsJN1N4kLgz2qOaad3f555GN75Rqlf4mYrF7DT2gndEbx0zR+DCZwJ/1kP+nQ
-         wSrE9eWMEmYprGC9PZJ+egb2KQLDzZIyOJUn62dd6Z1+xSF3MP90/xOUkHG9aVPM8eHk
-         ca/DAqSRA1LyiFucGgCNOzoQ7FjdW5zXr7nBGwMhWaqBwueSsDcKfCgbeohBkEaFywLk
-         dotnFrJApzg9sDzJEka/le6GZUzU06ObsF+K+jPmm64iw8f7SIGw5jHTgqpsPRf3Q1SP
-         xIgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xsfNESfqMuHVR/3TWEKQgeF1cU+m5Si9kUXhTtiYi2M=;
-        b=cAnfQEkA8taNJl3Ki+XJ3CecVyXN+z7Y1AKntKbm9t0URn9zeA9mw5aEKQeAUYxM4t
-         vcrqBUpVhTuuiL8R54N8v28Nx3lJFwcMdYGoiKKb9D/KskLFGmATwqOg5nzmkMHtv5KJ
-         KDP+4Jo7jniWjWrnDllPrq/99n7+lmbCN6giHpmN0OTg5j1fndBSIl9MEr9aJbl/IwV7
-         hxPMSuVNIi7bx/52/4LVQGw9MXN1dgAiww30336MrHhh7eVQWA+iKOc31LVAB2IcdliF
-         TtlLgTbM47Rgw6rZGV7LEDUU27wjFczOJx20NhkgpQ7NK+w+xPmjZfUHK1tF1LrrmAwc
-         xd/Q==
-X-Gm-Message-State: AOAM531TpAM9tqqutQyyvFRjy0nCMNEqowrQjt/fCKvZlJ3GU9ryij3I
-        sAWiF7PxhGQDn9rIe1VeKOPbCu4Ad371+gIsBO7BDw==
-X-Google-Smtp-Source: ABdhPJzEYyfnyegOz/k5HDxQyXJRDyKFyA6MoFz3oNGViR9pD0HqIr10ZJLT3l532va7kK+4+T+2jtpiik5jFTu1KDM=
-X-Received: by 2002:a05:6830:15d3:: with SMTP id j19mr14303580otr.51.1624732154316;
- Sat, 26 Jun 2021 11:29:14 -0700 (PDT)
+        id S229535AbhF0E7N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Jun 2021 00:59:13 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:40977 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229519AbhF0E7N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 27 Jun 2021 00:59:13 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 633CB5807B0;
+        Sun, 27 Jun 2021 00:56:49 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sun, 27 Jun 2021 00:56:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=OEzigg4+BoMPxsyoPsKvBQuXau
+        nF/DeXQiUJoqVNnGg=; b=ZzhTi7PWoalGaRkNmj4TNmwp+GyvJC1wVlMyZvGZbS
+        3FQHepYOSaREV6SWKRbqJjb+du7LOnvtCQ8NbRH3AvbnJ9XE+V40fPoj29f/F1xU
+        u3F/CRdCDLqhxBecGgZadXMk2AnZE979jOkOWXyPS4UasCYYBwVqPuRcE1WCLXi/
+        GIf67jWx8iyURz3NNX4i5AJ0Ugw5iuk1pYZneR+po9NRtM2n/jOifDba6+hn3N5R
+        I7yHz3YS37l3AbH4IBBUj/kp0e667QHHPTppVyyPnChSE5UZnoUZh2HZ7xTPolyK
+        t2gKaf4DVmELtBonu3NFhPzzloh4IA2sA0kxECsMS54w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=OEzigg4+BoMPxsyoP
+        sKvBQuXaunF/DeXQiUJoqVNnGg=; b=aiI2vGZl0DEOtYORnQ7gnZwWOIXdbacN0
+        MvjTFf2MYWr2SQ5iPtRUeGyjvGugvb7X5KPumHgT2GVcQMr4ev8wr3gX0umD15uh
+        bU2JP0ErmQua1dx/0fIUAPwWaiMLfOfwBDz+YSQhGiTXGBjs2BJyyCwZKNZUnsf+
+        u3qfEWdC5TuoFm3KQcfZHrOSGXVLpiPWvXyO/YvUSrEgtcmessV/unESf0pZkscx
+        Wx/TfNBmhhwb4gcHvyQfbub6fL+j/4qXmtsRfcXVcXQIDgUcews+GV08ajhdznih
+        GiHzrOEmS+3cRWBgRw/r0da68e9fM/fh4Z9XawGLVVnqCCuiSAAgQ==
+X-ME-Sender: <xms:EAXYYDAXl0bL-S3T0-tqW-TL5TEHRyAZDFVgS-zsxQUu9dDNH8-z_w>
+    <xme:EAXYYJgbYBU3eC_Y9svrHJLwUs8RVEuNCG-iZhn5cequ6WuigHPxVBENsgB7-vGb9
+    ZqY0Qrkdqb1OPzEM5E>
+X-ME-Received: <xmr:EAXYYOmnNqqoOpdJMFleiPLPEP0Org9Ynp7x8Y0dMQTLotn4I62b4t4qDwGM8E9hbQrj3a89GqA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrfeehuddgjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheplfhirgiguhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehf
+    lhihghhorghtrdgtohhmqeenucggtffrrghtthgvrhhnpefhjedtkedtueehtdeifeetke
+    evffetjeetfeegkeevgefftedvudfgleeihfdtudenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorg
+    htrdgtohhm
+X-ME-Proxy: <xmx:EAXYYFxA0LFQvwZP1rNzZeZ0gQBHm2W35kqSXn-UygMFqFGQJ8zRkw>
+    <xmx:EAXYYITTkShcHWtc_grNQEIkS8t-Mojh0uSopXsp29t9_UtuLy6M_Q>
+    <xmx:EAXYYIZDtkA2YTKCYXg0e336aUm20qYA7hx-vKqVstigWo3Kjd76qA>
+    <xmx:EQXYYNJO5Fj3kYT1hU07ISgqcWtMwIVLVidaufjjzE5E7KLnC_mJEw>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 27 Jun 2021 00:56:41 -0400 (EDT)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     tsbogend@alpha.franken.de, mturquette@baylibre.com,
+        daniel.lezcano@linaro.org, linus.walleij@linaro.org,
+        vkoul@kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 0/9] MIPS: Migrate pistachio to generic kernel
+Date:   Sun, 27 Jun 2021 12:56:22 +0800
+Message-Id: <20210627045631.2882-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <20210617053432.350486-1-bhupesh.sharma@linaro.org>
- <20210617053432.350486-2-bhupesh.sharma@linaro.org> <CACRpkdY9=Exgaqf4KdsfwH7gK=KGh0HVJSWD_FTqLtwd+pOBYQ@mail.gmail.com>
-In-Reply-To: <CACRpkdY9=Exgaqf4KdsfwH7gK=KGh0HVJSWD_FTqLtwd+pOBYQ@mail.gmail.com>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Sat, 26 Jun 2021 23:59:03 +0530
-Message-ID: <CAH=2Ntwef4SpAF+zAxkNvy2pjBfuQZONpUgJavMKfGuV-2uzow@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: pinctrl: qcom,pmic-gpio: Arrange
- compatibles alphabetically
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>, bhupesh.linux@gmail.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+I'm lucky enough to get a Creator CI40 board from dusts.
+This patchset move it to gerneic kernel to reduce maintenance burden.
+It have been tested with SD Card boot.
 
-On Sat, 26 Jun 2021 at 05:21, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Thu, Jun 17, 2021 at 7:34 AM Bhupesh Sharma
-> <bhupesh.sharma@linaro.org> wrote:
->
-> > Arrange the compatibles inside qcom-pmic gpio device tree
-> > bindings alphabetically.
-> >
-> > While at it, also make some minor cosmetic changes to allow
-> > future compatible addition to the bindings simpler.
-> >
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
->
-> These patches do not apply on the current devel branch in the pin control
-> tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
->
-> Please rebase and resend!
+Jiaxun Yang (9):
+  MIPS: generic: Allow generating FIT image for Marduk board
+  MIPS: DTS: Pistachio add missing cpc and cdmm
+  clk: pistachio: Make it selectable for generic MIPS kernel
+  clocksource/drivers/pistachio: Make it seletable for MIPS
+  phy: pistachio-usb: Depend on MIPS || COMPILE_TEST
+  pinctrl: pistachio: Make it as a option
+  MIPS: config: generic: Add config for Marduk board
+  MIPS: Retire MACH_PISTACHIO
+  MIPS: Make a alias for pistachio_defconfig
 
-Sure, Let me rebase and resend the pinctrl patchset.
+ arch/mips/Kbuild.platforms                    |   1 -
+ arch/mips/Kconfig                             |  29 --
+ arch/mips/Makefile                            |   3 +
+ arch/mips/boot/dts/Makefile                   |   2 +-
+ arch/mips/boot/dts/img/Makefile               |   3 +-
+ arch/mips/boot/dts/img/pistachio.dtsi         |  10 +
+ arch/mips/configs/generic/board-marduk.config |  53 +++
+ arch/mips/configs/pistachio_defconfig         | 316 ------------------
+ arch/mips/generic/Kconfig                     |   6 +
+ arch/mips/generic/Platform                    |   1 +
+ arch/mips/generic/board-marduk.its.S          |  22 ++
+ arch/mips/pistachio/Kconfig                   |  14 -
+ arch/mips/pistachio/Makefile                  |   2 -
+ arch/mips/pistachio/Platform                  |   6 -
+ arch/mips/pistachio/init.c                    | 125 -------
+ arch/mips/pistachio/irq.c                     |  24 --
+ arch/mips/pistachio/time.c                    |  55 ---
+ drivers/clk/Kconfig                           |   1 +
+ drivers/clk/Makefile                          |   2 +-
+ drivers/clk/pistachio/Kconfig                 |   8 +
+ drivers/clocksource/Kconfig                   |   3 +-
+ drivers/phy/Kconfig                           |   2 +-
+ drivers/pinctrl/Kconfig                       |   5 +-
+ 23 files changed, 114 insertions(+), 579 deletions(-)
+ create mode 100644 arch/mips/configs/generic/board-marduk.config
+ delete mode 100644 arch/mips/configs/pistachio_defconfig
+ create mode 100644 arch/mips/generic/board-marduk.its.S
+ delete mode 100644 arch/mips/pistachio/Kconfig
+ delete mode 100644 arch/mips/pistachio/Makefile
+ delete mode 100644 arch/mips/pistachio/Platform
+ delete mode 100644 arch/mips/pistachio/init.c
+ delete mode 100644 arch/mips/pistachio/irq.c
+ delete mode 100644 arch/mips/pistachio/time.c
+ create mode 100644 drivers/clk/pistachio/Kconfig
 
-Thanks,
-Bhupesh
+-- 
+2.32.0
+
