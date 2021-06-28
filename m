@@ -2,108 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0D9C3B5D80
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jun 2021 14:03:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D67813B5F3E
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jun 2021 15:41:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232651AbhF1MFo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Jun 2021 08:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59940 "EHLO
+        id S231964AbhF1Nnz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Jun 2021 09:43:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232608AbhF1MFn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Jun 2021 08:05:43 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4817DC061574;
-        Mon, 28 Jun 2021 05:03:17 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id d12so15270037pgd.9;
-        Mon, 28 Jun 2021 05:03:17 -0700 (PDT)
+        with ESMTP id S230154AbhF1Nny (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Jun 2021 09:43:54 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79FA2C061574;
+        Mon, 28 Jun 2021 06:41:29 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id b1so2459655pls.5;
+        Mon, 28 Jun 2021 06:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hC95X8dILV4yUsxnWcqyaUSRLR/4KhkkqpuXQlMJ+os=;
-        b=j/1qnIN05R1GrGDHQLT945i6wPcIK8UlPXIPynREbRgcev1CYX2vV3PdaSuMf/fkFk
-         5cqvLfoq5LYsQxXfM7WQ0FhWh/GEM4zDYp5YUE+qMxSxIVkZ7BKnlyGaKE/bSRaOvHBg
-         TBZ0p8k4IY1hA9bUBHOp66D2kooiwq9RIKp0v+M+UCECYePx1BGSp6UWwbcxRdr1vGBU
-         YhrN7Hyf6PH/SHx5y8fvtG5Q53KD9JWDK6pJ02iF3Cy0+B3mLGowTZUmWFnuQlP3f7Nx
-         +XjgCAXiaMUgzXVlCRGJGktRvkV7Bp51kBbOk6qaMNw6n64Vu4Jj8gRaEQVLEsn/xxNv
-         kMUA==
+        bh=J0zWLnENjoZcvSkz0GaaLHvicuPlecPlHuFYuJAX7Oc=;
+        b=KxFAuX6JnjLzFtLeIvbW9xVGLQkYU5APMZG7yJYfy3KH+1vxiTi8yTPN3weVUz4sH+
+         p5wNqPH4HRuv3pv1+iwZplQbU58eMLUK7r1b9RwWsl1A5sLEwt6LubEVg0vrWtYUa6PP
+         NIWxVPv3Ttri+C6vXj5PPnF9ScNhiUt4bPtPueTRizV4b/gqEjuzgNfbOhxMCT5c05zM
+         zpHIukQ1jzEy2OBZvuldeW2Telpus0/sqLiyaPfVl7On6htx6ZzfH8PbdykWOKRDRkAy
+         nAu9yHvralGM5092TlQQKLfnTkjkmU4gocadwIFH3+OYasRkJZVsN4F07tuynUMYlyvQ
+         63BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hC95X8dILV4yUsxnWcqyaUSRLR/4KhkkqpuXQlMJ+os=;
-        b=RnPTzM1taTLl4W5n+cIexpiXT28ml9J8lJs3VAWL6VH+n5K193xCj1EQARZQ0jY4lA
-         4ML/VaJaSIzavDrc6svh8wD3wkAqLI43AVbXvFFRhgRBcrkuBW+eE9HhMZlevHPW7IqS
-         tMWgGeAhV3YbKX9IILxu2iONOl250J+LcsWC9WHPJTff8TWXI2nfODpyi9SQJXJyxfZ/
-         uZeqbhcqL+HQlhu4w/yda75TxHJnX+VY7LU3NVJwbhL3l3rv7xHoyyUauWIS9h+p0Lnd
-         T4di5v1ifT1xbKisBDy/r+BcEhefhgzgiP7/ouB6PmuhlU/O02WGODi5ZVUfKNhD6E+Z
-         n7Tg==
-X-Gm-Message-State: AOAM530bKDNQSI/J+Esjde5p2KKiwTUl4Sk75mK+Wt2nz1A/62hHj37v
-        s/TSKrT/y5a/1TvHm38Lf7LFxCQWQVU1TZaOFo8=
-X-Google-Smtp-Source: ABdhPJyAv9znER5hh/JOnKHGaD1NRGWHP3IrFfiODa8IXBazHOnTNyl7L/0rKn7rdXQ7fCvZ/iGF6s9IOTuD8HfB+dg=
-X-Received: by 2002:a63:f609:: with SMTP id m9mr1004059pgh.74.1624881796677;
- Mon, 28 Jun 2021 05:03:16 -0700 (PDT)
+        bh=J0zWLnENjoZcvSkz0GaaLHvicuPlecPlHuFYuJAX7Oc=;
+        b=eBoDNe8c0VWAYZG6o3K0eeKFuvoOtgHpdl4oWfJzPe1csFNRCXGK7Zp457snkfTA7q
+         FDl9oLxlzzMfCRkbsTtgrnOaTso1GeubVGS6h+Pd/1z6ni/W3HWZrdPT9JXfjI2cu2EC
+         hrfHw5kJz0OFnvJLeyQirISvmHH4jYn/W8yLCoUIOo8ZK6ji48QtgevFBXhXWb2sGaPw
+         Rz8Fmex0n6PzqHUVC5atzxROWUxLPGH6QpJQ/P4DSBHEFLL/N87M57oDD5BsZgFieb2v
+         q+7itWvJzlLuEcEi3DnYoEU8FQtU7yx5V4+Wb/jp65gYRq3eBGf6EQ4nsmLCXMYbfTmH
+         Gf2Q==
+X-Gm-Message-State: AOAM5318nfygEB5W3sQ/JeL0Vbgy8dLVxDJKBloNNWU/lxewqDKW3IIe
+        +ZLIf0bL3dSYAwsZI7V61UbRG6/JkBezcfhqbtQ=
+X-Google-Smtp-Source: ABdhPJxlB+h0XWEqkCThUJapbV7dEugW+IqA5etEWhYXmNtmVm+YtSGhY0TzsWXZe24vh9XtpqOLhTp8Oe3qtxMTmbg=
+X-Received: by 2002:a17:90a:bc89:: with SMTP id x9mr28051362pjr.228.1624887689062;
+ Mon, 28 Jun 2021 06:41:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210625235532.19575-1-dipenp@nvidia.com> <CAHp75Vf4TKjtC7cLNape4r+hE-AWnbxtbww2ofCcHQJf9zyh-g@mail.gmail.com>
- <CACRpkdbXE2A98P0_juA9PNEKTo89FcgywYmnqJSC5bV+Vox=Fw@mail.gmail.com>
-In-Reply-To: <CACRpkdbXE2A98P0_juA9PNEKTo89FcgywYmnqJSC5bV+Vox=Fw@mail.gmail.com>
+References: <CAF78GY0jB_oeKgfZc4SHWBVusGnNfxKk5jTC4UBDsteSEVEzTw@mail.gmail.com>
+In-Reply-To: <CAF78GY0jB_oeKgfZc4SHWBVusGnNfxKk5jTC4UBDsteSEVEzTw@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 28 Jun 2021 15:02:39 +0300
-Message-ID: <CAHp75Vcv3BsQ87bnnYK07npQsp3GU4JC1k+iXUw2uuGbSKBQNg@mail.gmail.com>
-Subject: Re: [RFC 00/11] Intro to Hardware timestamping engine
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Ye Xiang <xiang.ye@intel.com>, Drew Fustini <drew@beagleboard.org>,
-        Sandeep Singh <sandeep.singh@amd.com>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Mon, 28 Jun 2021 16:40:51 +0300
+Message-ID: <CAHp75VeZwUiK2v8HZ=MLGSkK8wLudDEJFhBSm--Wu9gzABhmSg@mail.gmail.com>
+Subject: Re: gpiochip_lock_as_irq on pins without FLAG_REQUESTED: bug or
+ feature ?
+To:     Vincent Pelletier <plr.vincent@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 27, 2021 at 5:41 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Sun, Jun 27, 2021 at 3:08 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On Mon, Jun 28, 2021 at 6:37 AM Vincent Pelletier <plr.vincent@gmail.com> wrote:
 >
-> > > To summarize upstream discussion:
-> > > - It was heavily favoured by Linus and Kent to extend GPIOLIB and supporting
-> > > GPIO drivers to add HTE functionality and I agreed to experiment with it.
-> >
-> > I guess this series should include more people from different
-> > companies, especially documentation parts. This may be used by
-> > different hardware and quite different vendors. Developing a framework
-> > like this for only one vendor is no go in general.
+> Hello,
 >
-> I forwarded patch 00 to the IIO list and Jonathan Cameron,
-> and let's page Ye Xiang who made a bunch of contributions
-> from Intel's side to IIO directly. (Hi Ye, please check this concept
-> if you have time!)
+> While trying to debug an IRQ handling issue on a sifive-unmatched board
+> (which is a very recent board on a recent architecture, so I would not
+> be overly surprised if there were bugs in hiding), I realised that I was able
+> to claim via sysfs GPIO pins which are being actively used as IRQ sources.
 >
-> The actually most important target group would be people
-> doing things like sensor fusion where a common timebase is
-> important, I don't know who does really, but Sandeep Singh from
-> AMD has contributed the AMD Sensor Fusion hub in
-> drivers/hid/amd-sfh-hid and might know a few things about this
-> though I don't think SFH would need this directly.
-> https://en.wikipedia.org/wiki/Sensor_fusion
+> Checking drivers/gpio/gpiolib.c and kernel/irq/chip.c, I believe this is because
+> gpiolib (gpiochip_irq_reqres, gpiochip_reqres_irq, gpiochip_lock_as_irq)
+> does not call gpiod_request_{,commit}, resulting in a pin which is available
+> for use. I could confirm this by adding (just as a debugging aid):
+>   WARN_ON(!test_bit(FLAG_REQUESTED, &desc->flags));
+> early in gpiochip_lock_as_irq, and this statement gets triggered.
 >
-> Also Paging Drew Fustini, who knows a lot of maker and tinker
-> people, he might know a bit about this or know someone who
-> knows.
+> Is this intentional ?
 
-Thank you!
+IIRC the GPIO can be locked as IRQ without being requested (perhaps
+for legacy/historical reasons). But I forgot all code paths anyway, so
+I'm expecting that Linus and  or Bart can elaborate this better.
+
+> Does this requesting belong to something else in the codepath from
+> request_threaded_irq (and similar) ?
+> Could it be something missing in the devicetree for this board ?
+>
+> Also, I notice that both gpiochip_hierarchy_add_domain and
+> gpiochip_reqres_irq call gpiochip_lock_as_irq, and I am surprised I do not
+> get any error about this: in my understanding only the first call on a given pin
+> should succeed, but with my WARN_ON I am seeing both stack traces and
+> no other warning.
+
 
 -- 
 With Best Regards,
