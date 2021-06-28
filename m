@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88A5A3B6A43
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jun 2021 23:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 385D43B6A52
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jun 2021 23:24:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237935AbhF1VX4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Jun 2021 17:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35944 "EHLO mail.kernel.org"
+        id S237979AbhF1V0o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Jun 2021 17:26:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237915AbhF1VXa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 28 Jun 2021 17:23:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D05E461D00;
-        Mon, 28 Jun 2021 21:21:03 +0000 (UTC)
+        id S237973AbhF1VXf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 28 Jun 2021 17:23:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CB61561CFC;
+        Mon, 28 Jun 2021 21:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624915264;
-        bh=aYDKaucny87sagAC2JtISSqkoyLoQQcF0M5+HEzqVMw=;
+        s=k20201202; t=1624915269;
+        bh=JU91PN3HQaOuFJBqe/B9cryRUcTzYLhF6BbHDvNyEhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NSA4A31VyoxyLrAV22jUdOfFX0D5Gi152dNmXBqbG2uycN6esbIrX6J9/uMTfej5w
-         /63ctVWS/EG7wOJYoGAws8RVNgSOmrOBLhsALw0l+dX7BLtaISYw5+2X8PBjH/xER0
-         81BcTFpcAugsfDggIjryo1ex2ysi8ccNEN8vJ+j6PxFVEtaxIc0iqppHrSRH2SYKyh
-         N84NphxDALK7Z9zh5MsFn9CFczo+Y6WFAoN/aepB84WG71Zg8Tko1/SpGfPYUNGFwe
-         AhvwgQ1gSa/1c/fIoffw4qnHVNLPsANEUsxZp/fCSRYgViC1N8LGJ/KkpbbgFUHBsi
-         yQAFxV2xilsEQ==
+        b=R9+vt3ik2yYdoKn1xbY4jSbrgDwopw8QNLcI0vPYoXZiZog2RAS66jc89S7vdgBvE
+         rIpFeR/bP9Qf5UMrYnHd+xCPVpPo7r88XnTtfcYhxKuPAc+XTJ3wAFyYOPuEQ3AqpV
+         uGdNlxRPBL4npZm6ojw+xVaupoA1JjQtoCrTmgosNeEmZAfP/KsuyeSr9FqH115Du3
+         6pW4z5eHKO2SNyFRfkyOzo1/VGEpKD5GAoMw9RJ8A5nkg/ajqprSpOAYiv2giK5c42
+         zk3ja5SPxAwMkY65prHO86hsb1+pTB/X6V3/zLpK/kiF2JHt0Uiz3HXu6SpsMY7T9O
+         16z6li2r8o0mw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Johannes Berg <johannes.berg@intel.com>,
         kernel test robot <lkp@intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 4/4] gpio: AMD8111 and TQMX86 require HAS_IOPORT_MAP
-Date:   Mon, 28 Jun 2021 17:20:58 -0400
-Message-Id: <20210628212059.43361-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 3/3] gpio: AMD8111 and TQMX86 require HAS_IOPORT_MAP
+Date:   Mon, 28 Jun 2021 17:21:05 -0400
+Message-Id: <20210628212105.43449-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210628212059.43361-1-sashal@kernel.org>
-References: <20210628212059.43361-1-sashal@kernel.org>
+In-Reply-To: <20210628212105.43449-1-sashal@kernel.org>
+References: <20210628212105.43449-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,10 +61,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 14751c7ccd1f..d1300fc003ed 100644
+index f9263426af03..ae414045a750 100644
 --- a/drivers/gpio/Kconfig
 +++ b/drivers/gpio/Kconfig
-@@ -1337,6 +1337,7 @@ config GPIO_TPS68470
+@@ -1232,6 +1232,7 @@ config GPIO_TPS68470
  config GPIO_TQMX86
  	tristate "TQ-Systems QTMX86 GPIO"
  	depends on MFD_TQMX86 || COMPILE_TEST
@@ -72,7 +72,7 @@ index 14751c7ccd1f..d1300fc003ed 100644
  	select GPIOLIB_IRQCHIP
  	help
  	  This driver supports GPIO on the TQMX86 IO controller.
-@@ -1404,6 +1405,7 @@ menu "PCI GPIO expanders"
+@@ -1299,6 +1300,7 @@ menu "PCI GPIO expanders"
  config GPIO_AMD8111
  	tristate "AMD 8111 GPIO driver"
  	depends on X86 || COMPILE_TEST
