@@ -2,117 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F56E3B5675
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jun 2021 03:06:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22CD43B56DD
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jun 2021 03:43:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231873AbhF1BI5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Jun 2021 21:08:57 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:33027 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231706AbhF1BI4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 27 Jun 2021 21:08:56 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id DF2062B009B0;
-        Sun, 27 Jun 2021 21:06:30 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 27 Jun 2021 21:06:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=P
-        RaswZ5qlI2jc+vhwIg6RbL8e19UYG11rnfWNNUN5Ww=; b=rtQqygzsVWIKTM2Wz
-        nbuW2cVd4BkWO+d+ygZx1wQmuHM40AM87yZ+im/mRkIP3Qqb3Qi7ZruE1VpFzflN
-        tOqNi3bkH4BaHixbYOprtxkwU3hPRxJX2S0rVlw0MiAVMKvfWWMVWEzk+xorXqln
-        w+JaXqSm4A2yOTu0LWZY+kjUrM1wGmxPtlNXREp9LoXRHW9qK2MfYAoeVYkccKyf
-        PoL81hG4QuWSjAk6xmx/j3MBOvMY9NRXa9dkjr4pw7hOnQ4riGsReDEMLv8NG9iX
-        D31qD545RTGEK2wFlGXXQlOGpExl88oh2jOJ/ro0WiUCF5n8r2TIpMmJ7P8q4juh
-        DQVsw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=PRaswZ5qlI2jc+vhwIg6RbL8e19UYG11rnfWNNUN5
-        Ww=; b=YhAaq37YXqoddC48WCc2HRI74KjeXC9Aorc+wM7n7h+r1EARlSTPsHc9q
-        nRzg1HiB9ZYD7YRTwqP3Hb7j9vMGqpufBykHcZBym5vqS47w7GBYIf5EeCdNOdH9
-        LWzcHtoOm+usjGvfGGD523HUU912K15h2pM3AKqp6SUextoSrGe/jC0HPAPruBD9
-        YsKIfpeWTpZe9VSLbLvvHREF1lUa8rxdv398bjGDUGt9Hp06tgatYorngH3kqznQ
-        28GL5FNR8QGXr4qLA24oH3CSxkN0shRYUFwXQHFXzavv5J0c1r0zZdPpEAgRmuZ2
-        SZrqjSjq/jzvIDwRCrkWUfrU3Dj1Q==
-X-ME-Sender: <xms:lSDZYGvriqTvXG3CrplKdvcKu2uyywvAHxb-f3Uhk91xlUL6AK1vTw>
-    <xme:lSDZYLd6QvdmJW5F4Ldy5_n3_EBQTVqxSXFCyzDkuNFAEH2uH0efUahRuNbOA5eun
-    zO4Ueu19nDheelbiPQ>
-X-ME-Received: <xmr:lSDZYBwCo8uePpYDkaG2R4OzF_sDQwA6eHFYi5hPAq9qgQD-gabLvwBrA1PKoHoG0qwpQ8j2QoZ2C4h_g-da_A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrfeehfedggedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomheplfhirgig
-    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeeihffghfeikedugeejvefgffevgeevgeehfffhudeiieffffev
-    ffeugeevfefgfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:lSDZYBN6AKcIptkpjKqi-N-KsPj7ml_X6Oq02BikkZH0AgSRo1OcTg>
-    <xmx:lSDZYG_QqMifRz3vMX8KD5A5ROHC4C3j_kypzwmU6cSX-W3JuvWy9w>
-    <xmx:lSDZYJUVXwTZBVtyASTpLZw5BseZlJyHUWbb8A8Y3WgtYhl0oRC8ow>
-    <xmx:liDZYH1cMOcmwy2L0U6wPT_c8VAsjp0DaKUTxZ9DaAlz5S7MBiZPZSpdaDg>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 27 Jun 2021 21:06:25 -0400 (EDT)
-Subject: Re: [PATCH 3/9] clk: pistachio: Make it selectable for generic MIPS
- kernel
-To:     Stephen Boyd <sboyd@kernel.org>, linux-mips@vger.kernel.org
-Cc:     tsbogend@alpha.franken.de, mturquette@baylibre.com,
-        daniel.lezcano@linaro.org, linus.walleij@linaro.org,
-        vkoul@kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org
-References: <20210627045631.2882-1-jiaxun.yang@flygoat.com>
- <20210627045631.2882-4-jiaxun.yang@flygoat.com>
- <162483712923.3259633.15640278024587375157@swboyd.mtv.corp.google.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <45a330c0-7b4d-d569-51eb-3eac8f53512a@flygoat.com>
-Date:   Mon, 28 Jun 2021 09:06:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S231935AbhF1Bp1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Jun 2021 21:45:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231706AbhF1Bp1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 27 Jun 2021 21:45:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2758C61A1D;
+        Mon, 28 Jun 2021 01:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624844582;
+        bh=066YMFHqSGCgkK9gz/RQO+n11OjyRE0FlxJc5NciWS0=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=tF2R/1UeKoBw+YfNGIuMni8e/F24wDYu6UgRnJO65rSiuzSqX0ht37aQtoJbB5qTl
+         Gc6cTbF0kJ4ItKbo+MJhSo5w+eRgxBbjlUmK8TKkpBZTlHUFq5ybSUc80gLz4ITKAD
+         13UGSDy3pzuTT84DldFJdRqkIwoibcW8ZegVYGaBbTEC3BDUK+K58TDgyAVekRTRe/
+         KidmuMALXGEVTF+wFE6rnL28ckAqKXwAevmC0CyS9J6t87tC6x+CrmqYCuxWbBmvFM
+         x3lBrQ+m7ZjNE80ZnmhgBZPXCvzUkieUvpxyuy9BPuRTS/xJpFFPtHa3yRm9PYWYP5
+         c/Arh4ZkpATXA==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <162483712923.3259633.15640278024587375157@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <937ed0828486a08e2d00bce2815d491c1c9c49b4.1621937490.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1621937490.git.matti.vaittinen@fi.rohmeurope.com> <937ed0828486a08e2d00bce2815d491c1c9c49b4.1621937490.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH 5/9] clk: bd718xx: Drop BD70528 support
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Matti Vaittinen <mazziesaccount@gmail.com>
+Date:   Sun, 27 Jun 2021 18:43:00 -0700
+Message-ID: <162484458090.3259633.13766939155374243434@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Quoting Matti Vaittinen (2021-05-25 03:15:10)
+> The only known BD70528 use-cases are such that the PMIC is controlled
+> from separate MCU which is not running Linux. I am not aware of
+> any Linux driver users. Furthermore, it seems there is no demand for
+> this IC. Let's ease the maintenance burden and drop the driver. We can
+> always add it back if there is sudden need for it.
+>=20
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+>=20
+> ---
 
-在 2021/6/28 上午7:38, Stephen Boyd 写道:
-> Quoting Jiaxun Yang (2021-06-26 21:56:25)
->> diff --git a/drivers/clk/pistachio/Kconfig b/drivers/clk/pistachio/Kconfig
->> new file mode 100644
->> index 000000000000..efb7a7f45259
->> --- /dev/null
->> +++ b/drivers/clk/pistachio/Kconfig
->> @@ -0,0 +1,8 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +
->> +config COMMON_CLK_PISTACHIO
->> +       bool "Support for IMG Pistachio SoC clock controllers"
->> +       depends on MIPS
-> Is anything MIPS specific? Or can this be
->
-> 	depends on MIPS || COMPILE_TEST
-
-No there are nothing MIPS specific.
-
-Will fix in next revision.
-
-Thanks.
-
-- Jiaxun
-
->
->
->> +       help
->> +         Support for the IMG Pistachio SoC clock controller.
->> +         Say Y if you want to include clock support.
->> \ No newline at end of file
->> -- 
->> 2.32.0
->>
+Applied to clk-next
