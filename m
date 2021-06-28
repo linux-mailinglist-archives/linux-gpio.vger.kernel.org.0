@@ -2,86 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C87F13B57E5
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jun 2021 05:37:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 904DD3B5D26
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jun 2021 13:30:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231958AbhF1Djc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Jun 2021 23:39:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231678AbhF1Djb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Jun 2021 23:39:31 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF2D1C061574;
-        Sun, 27 Jun 2021 20:37:05 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id i5so23603225eds.1;
-        Sun, 27 Jun 2021 20:37:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=S+xTtvyf1TTdB36er16+HKLGmH62vQAYFuvDeWyNd0g=;
-        b=eTYukS3vLHJ6TCOfp73FLsOLH67UVr8/0vryD6rNl8z6Th5v9GEdkXlL8E7yC+ANgS
-         tEhQaEWwMjTgE7ZpfxPHbCRLvRuxac+XEVVov+nfmmS51FhwUb3WZtri5sCslyY01n+H
-         YG+Ohnm8zh/bvYg1Iq9p1AFSg5l9JnQ+rfnS8AK+4vQRRNlvi0Gzeb9s4gt8fj5tZrYj
-         0HsyHdSd5f5mZ5Ig0NN5U+VU+J9u50QhlsE5wHGzHskB1VhLG6EiFQ3h2VDWZKQCdNUZ
-         Q2HKukjdcYa4KTQrt1ZxU9e46oyve9OKAB2T/NQdtfYWuC6NxBJdqSM0wU270jaNwINT
-         o+6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=S+xTtvyf1TTdB36er16+HKLGmH62vQAYFuvDeWyNd0g=;
-        b=RsIZvEKCsyciafHhnOzjn8BQudFleuue3+z48tutLGkNYaDNuQNH62XKGj2VOtlPyU
-         lx/56jtUdWVzvRtWZg8+69+9y2ofO7CLK2NrMMqaStzwxKJzTnOpe5XVBE4xpEZ45xhS
-         7qeH1FyV1y0gtn0XwMzV9k+z/TBAjnpYI7PORFDVF0HvAMboS3iDtiF7XjcYm4gO5URa
-         3KPCr1AYgaExgymj4oefX9j8gZsN8W8UowLwBgx3r0LDwoT9lTwcMgqMBx2LVeIOn9cb
-         tXrCkjXWKApRmsXSW04bvxG6CQEc0+pr+mMv3ayxYxjw0Hv83cmBeSX7yeHY/YNvsbPb
-         ixkw==
-X-Gm-Message-State: AOAM531eL3wke7e+A5q71qXbp8I24bOjy6+uXg2VbvTLNdE+F8R0r+Du
-        4f3obFdFKQRff9M5gzuKhLIrNROmKNnit11e0qg=
-X-Google-Smtp-Source: ABdhPJwaW1a30AKscFeX6OiFf741RydW1YQCSGI2IOz4qiTjGZt4Plkfs4d0i+KcVrommOmr9w5JgU1F/nUy91nopqQ=
-X-Received: by 2002:a50:f68d:: with SMTP id d13mr30750719edn.318.1624851424468;
- Sun, 27 Jun 2021 20:37:04 -0700 (PDT)
+        id S232804AbhF1Lcn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Jun 2021 07:32:43 -0400
+Received: from mga01.intel.com ([192.55.52.88]:26879 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232834AbhF1Lci (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 28 Jun 2021 07:32:38 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10028"; a="229551409"
+X-IronPort-AV: E=Sophos;i="5.83,305,1616482800"; 
+   d="scan'208";a="229551409"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2021 04:30:11 -0700
+X-IronPort-AV: E=Sophos;i="5.83,305,1616482800"; 
+   d="scan'208";a="408032278"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2021 04:30:09 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lxpSn-0060vR-9w; Mon, 28 Jun 2021 14:30:05 +0300
+Date:   Mon, 28 Jun 2021 14:30:05 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][PATCH 4/4] bindings: cxx: implement C++ bindings for
+ libgpiod v2.0
+Message-ID: <YNmyvYDZwNeYRyTU@smile.fi.intel.com>
+References: <20210621191830.10628-1-brgl@bgdev.pl>
+ <20210621191830.10628-5-brgl@bgdev.pl>
+ <20210627084757.GA21720@sol>
 MIME-Version: 1.0
-From:   Vincent Pelletier <plr.vincent@gmail.com>
-Date:   Mon, 28 Jun 2021 12:36:53 +0900
-Message-ID: <CAF78GY0jB_oeKgfZc4SHWBVusGnNfxKk5jTC4UBDsteSEVEzTw@mail.gmail.com>
-Subject: gpiochip_lock_as_irq on pins without FLAG_REQUESTED: bug or feature ?
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210627084757.GA21720@sol>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+On Sun, Jun 27, 2021 at 04:47:57PM +0800, Kent Gibson wrote:
+> On Mon, Jun 21, 2021 at 09:18:30PM +0200, Bartosz Golaszewski wrote:
+> > This is the bulk of work implementing C++ bindings for the new libgpiod
+> > API. The tests are not converted yet but the examples are fully
+> > functional. More details in the cover letter as this patch will be
+> > squashed with the one for the core C library anyway.
+> 
+> Firstly, I don't have any problems with patches 1-3.
+> 
+> Secondly, I'll be focussing on the API here, but I'm not up on current C++
+> best practice, so take my comments, or the absence of them, with a
+> suitable dose of salt.
+> 
+> A general comment - you use retrieve/read/get/return for essentially the
+> same thing in the accessor method documentation.
+> Perhaps you could settle on one?
+> Variety may be the spice of life, but sometimes boring is better.
 
-While trying to debug an IRQ handling issue on a sifive-unmatched board
-(which is a very recent board on a recent architecture, so I would not
-be overly surprised if there were bugs in hiding), I realised that I was able
-to claim via sysfs GPIO pins which are being actively used as IRQ sources.
+It's a weak point of many documentation files that I saw :-)
+Nevertheless, it's good practice to define terms in the preface pages to be
+sure everybody is on the same page with meaning of them.
 
-Checking drivers/gpio/gpiolib.c and kernel/irq/chip.c, I believe this is because
-gpiolib (gpiochip_irq_reqres, gpiochip_reqres_irq, gpiochip_lock_as_irq)
-does not call gpiod_request_{,commit}, resulting in a pin which is available
-for use. I could confirm this by adding (just as a debugging aid):
-  WARN_ON(!test_bit(FLAG_REQUESTED, &desc->flags));
-early in gpiochip_lock_as_irq, and this statement gets triggered.
+Kent, do I understand correctly that Go bindings use C library?
 
-Is this intentional ?
-Does this requesting belong to something else in the codepath from
-request_threaded_irq (and similar) ?
-Could it be something missing in the devicetree for this board ?
-
-Also, I notice that both gpiochip_hierarchy_add_domain and
-gpiochip_reqres_irq call gpiochip_lock_as_irq, and I am surprised I do not
-get any error about this: in my understanding only the first call on a given pin
-should succeed, but with my WARN_ON I am seeing both stack traces and
-no other warning.
-
-FWIW, my builds are based on vanilla 5.13-rc6.
-
-Regards,
 -- 
-Vincent Pelletier
+With Best Regards,
+Andy Shevchenko
+
+
