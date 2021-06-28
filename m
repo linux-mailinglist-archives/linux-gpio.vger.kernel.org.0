@@ -2,37 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C1133B6A29
+	by mail.lfdr.de (Postfix) with ESMTP id B2FC53B6A2B
 	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jun 2021 23:21:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236794AbhF1VXZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Jun 2021 17:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35706 "EHLO mail.kernel.org"
+        id S237906AbhF1VX1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Jun 2021 17:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237866AbhF1VXX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 28 Jun 2021 17:23:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1364461D06;
-        Mon, 28 Jun 2021 21:20:54 +0000 (UTC)
+        id S237882AbhF1VXY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 28 Jun 2021 17:23:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9C8CA61CF1;
+        Mon, 28 Jun 2021 21:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624915255;
-        bh=YKmwurZwGMWzcmhMkRf94jfggcgdhpnkZCsw9DLpBAM=;
+        s=k20201202; t=1624915258;
+        bh=1ZbRRTzwJnZv5CuLlpX0aVMy1kthfBVzavQ4o73ikms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OzB/Ckt28AtAg30bMmDykdhYzO7+V7/zsFzPdr1mJE7Whec/DhKCVk5eqk1iD+FOS
-         cfjfVou5RidgDM3AGX8ZbcHlcCzX+4S/nBhETF1yiGkagrFilxr6Hr25KxpChkxDQ1
-         RDnPMqjiH412Zi8mMsvXU7ldSOzZTShFq2tllhYMOslkfKCN7L6W/1VFQoOYrGg16x
-         ZxaK7H5b9rkMIVOVNmGDJaPPLYDAMnQViTcVL4AwTIo5VT8qmclyatIRBU1KCEXs5q
-         V1Z7OesbxtlgWURfpqgNHh/MR1CI4iUGkoR12CC80NIWOh0WXicKlaTLPkwh91A7UC
-         4O8UuelsN2m+A==
+        b=A8vN/2qUtL3mEccH6caHQc0sNU6v7zjJXxoJtDp2BGAXMFAFLVSq2VOlZLNwS3uiR
+         msYosvZhAozB2BlgZO5GmqqoAqY7zj/146Uw7EljlvPrYSaVKD+sx2yB8YI8MezY6K
+         58AYT04uFbvQQk8gpKoJqEX89x9ypfistoCN/wawTkqh87evgFUeyp2l9RwLxBboY5
+         K6FRp44PoV/nUtMlMulvRHrQ2iKNT32pE0sQQPAxYLcyRayq6NbrA0bJP5kGG6O7/q
+         keqyVy3jj58zz8cIWCQ/mHeXt2oqIbaRfThi/dOKnD7SmwgIr6akS/Ea8WWx0X+Q9T
+         yGSgxYWQBHOTg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Michal Koziel <michal.koziel@emlogic.no>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        kernel test robot <lkp@intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.12 3/5] gpio: mxc: Fix disabled interrupt wake-up support
-Date:   Mon, 28 Jun 2021 17:20:49 -0400
-Message-Id: <20210628212051.43265-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.12 5/5] gpio: AMD8111 and TQMX86 require HAS_IOPORT_MAP
+Date:   Mon, 28 Jun 2021 17:20:51 -0400
+Message-Id: <20210628212051.43265-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210628212051.43265-1-sashal@kernel.org>
 References: <20210628212051.43265-1-sashal@kernel.org>
@@ -44,38 +43,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 3093e6cca3ba7d47848068cb256c489675125181 ]
+[ Upstream commit c6414e1a2bd26b0071e2b9d6034621f705dfd4c0 ]
 
-A disabled/masked interrupt marked as wakeup source must be re-enable
-and unmasked in order to be able to wake-up the host. That can be done
-by flaging the irqchip with IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND.
+Both of these drivers use ioport_map(), so they need to
+depend on HAS_IOPORT_MAP. Otherwise, they cannot be built
+even with COMPILE_TEST on architectures without an ioport
+implementation, such as ARCH=um.
 
-Note: It 'sometimes' works without that change, but only thanks to the
-lazy generic interrupt disabling (keeping interrupt unmasked).
-
-Reported-by: Michal Koziel <michal.koziel@emlogic.no>
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-mxc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 157106e1e438..b9fdf05d7669 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -334,7 +334,7 @@ static int mxc_gpio_init_gc(struct mxc_gpio_port *port, int irq_base)
- 	ct->chip.irq_unmask = irq_gc_mask_set_bit;
- 	ct->chip.irq_set_type = gpio_set_irq_type;
- 	ct->chip.irq_set_wake = gpio_set_wake_irq;
--	ct->chip.flags = IRQCHIP_MASK_ON_SUSPEND;
-+	ct->chip.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND;
- 	ct->regs.ack = GPIO_ISR;
- 	ct->regs.mask = GPIO_IMR;
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index e3607ec4c2e8..fb365aef336b 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1361,6 +1361,7 @@ config GPIO_TPS68470
+ config GPIO_TQMX86
+ 	tristate "TQ-Systems QTMX86 GPIO"
+ 	depends on MFD_TQMX86 || COMPILE_TEST
++	depends on HAS_IOPORT_MAP
+ 	select GPIOLIB_IRQCHIP
+ 	help
+ 	  This driver supports GPIO on the TQMX86 IO controller.
+@@ -1428,6 +1429,7 @@ menu "PCI GPIO expanders"
+ config GPIO_AMD8111
+ 	tristate "AMD 8111 GPIO driver"
+ 	depends on X86 || COMPILE_TEST
++	depends on HAS_IOPORT_MAP
+ 	help
+ 	  The AMD 8111 south bridge contains 32 GPIO pins which can be used.
  
 -- 
 2.30.2
