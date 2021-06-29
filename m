@@ -2,114 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EA253B6B14
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jun 2021 00:52:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25ADE3B6BC9
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jun 2021 02:40:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234038AbhF1WzG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Jun 2021 18:55:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35712 "EHLO
+        id S230203AbhF2Amb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Jun 2021 20:42:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233746AbhF1WzF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Jun 2021 18:55:05 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF93C061574;
-        Mon, 28 Jun 2021 15:52:37 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id i5so28468041eds.1;
-        Mon, 28 Jun 2021 15:52:36 -0700 (PDT)
+        with ESMTP id S230086AbhF2Amb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Jun 2021 20:42:31 -0400
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11037C061767
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Jun 2021 17:40:05 -0700 (PDT)
+Received: by mail-ot1-x32a.google.com with SMTP id h24-20020a9d64180000b029036edcf8f9a6so20862559otl.3
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Jun 2021 17:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r7tlZtsBPeNaAbSj9MQWDyFr7yrmHlDxoloBGKnf6hw=;
-        b=iJv6h2b/HU24CnnT4Idc3fSSEnU2BX+aBjk6IGawp3RzvqRM8l56MsApJH0tyIatkK
-         iRX7EMdp/XeWfDE8lsATDFQ8bGxb+zS184dlDeq9bBJtHn81JER7iQYDT/7CRJ/c4i5d
-         Jv6YeTEUq5gipxNiQlr1rJx/+Ht/RoI7OZW8C4qHPJ78OquY5QpQOjhtb9XgAWN30WBd
-         DhNK3s0qWbg+vGaV8b2XryMdsqmqFQj8q/KsIz/5VVXWFQXk+yj5yc0UqA49etnXYHJG
-         tUIbZlbgigu4EawmR83h31eB1vuxBqFG0u5VgultsN17CdSa3VPqiKUNaWY2Z2Bvbx2z
-         66cw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+6u2RG+sSlQSg+vc0Yj3ZZoGIOveJe7hDDIdJuTdPGM=;
+        b=V7kB/DTMK3LIspUUD1BmuRSiNMAFWbl/cBxbK8vYtvWpknYr2jZxiezDpkU72ZqF5k
+         O1Ecv5duSmcx8T4oheVkiSi8ooNi05+LnksmjSpCHyeIto8ZLMa9DMdGce/6/FuVU8y7
+         mEJIHhOLgSpkJWf8M6qgELcafcQUnrPK/nzSLlq4LN5D/Sb9ivmP6B8+ZKrXqJ01QP12
+         4ZLPo+Xbbw/bdcd99VLGQuWL/PpHXc8aMa7Jg4gqB+FP9YfT8kquduBkSsFGnTuNwC8z
+         erocY2F9DV9i3QnpXfCC5aCtVc3ZdhlLw8xCCUxahG4grVseNIjApmrsnWysZzUNJaEL
+         C7Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r7tlZtsBPeNaAbSj9MQWDyFr7yrmHlDxoloBGKnf6hw=;
-        b=VJehBLVSuGSAHoyui5GLrGG1ADrWIAzX4jj7Nfq2YmNiU4cyu52rzo0HkBWDgEP9oG
-         p8/ZPu6LD2F3PnbOv+Inalq3HJgbrn03iLnSCKOHrlG2rwPoLYY45COJvyRuPqdovB1h
-         G4KKcExvPF5dG/ylSm36yAm/9ealtuJHmLxJhEIYKQl5xIV6EICBr3g98HOHm32Eo8y3
-         /0U2v/BijC+ypMCP2mu7IIrGezvs8E9uAWIbeX1ipopGG0l3HxJdDxbORt8iwjayJFzZ
-         vq1LNkyQio7e05jg5AYoOuXcfYFH+RL0USpReYBazcsDg9FzsHbAaGPY44FtFnBKVKWi
-         PWBg==
-X-Gm-Message-State: AOAM531WzrMWvoxPhJhWXPkKipBsFie6yAYU0RI8sUSVxfiMjWGNJFGg
-        c+7tVcxdST7yVZPksM3fUgsTGBpz4Owb1EapQuQ=
-X-Google-Smtp-Source: ABdhPJzwyaJdUa9LIVv2wGMaosgVbNqNvl0y+YfXBQHEykJVXXK/rkhZ8t66muJlihYvBZF+2lXoyRlklFxIIbBmGb8=
-X-Received: by 2002:a05:6402:31b4:: with SMTP id dj20mr36658729edb.186.1624920755698;
- Mon, 28 Jun 2021 15:52:35 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+6u2RG+sSlQSg+vc0Yj3ZZoGIOveJe7hDDIdJuTdPGM=;
+        b=efx1gOZjk6Xj12mOBWk0eCxST3EICob4NRNQGr6uKsgvc4zgzVlzZZA/7GFej4g6jH
+         Yo0Bx6LpI/brhonfBPguWcbkOL8av8+U/25pL8ikFRSRy3QDzmkxQqAsCSFuIzW7SYEI
+         SzVkRIM+/Ar7JOHCbBtASwoEtk8i+vU5DgSxmmeG6JI8UUHOI64zZGuovgu4FH41il23
+         DpxrCL52L7D4aWLjiN6eP38l+Uhxyq3LxlMjmIbhTzVG2OfOKB2qZB1De1dOp65yQkNr
+         yo2nD3XqjkayCdzddkzzH9t7jfKHZJlRAOntcW8c57BzZonLPj1oaw8MbRd6c0jiHNeX
+         51vg==
+X-Gm-Message-State: AOAM532Scd7vt/6KI+l8OlKxWmqtNeVI1oiJheS/I16NAXPpgwMmjnpB
+        Nls/3X9AK1q8VYqNgm5eG4kn9g==
+X-Google-Smtp-Source: ABdhPJxspl+N2dD5PBNJ3IIY9QGvG1iX57PP0YC/Ke4tIoOF5jmqOC0AlSIrVBSZ5i/lB7SrqYu6uw==
+X-Received: by 2002:a9d:68d1:: with SMTP id i17mr1990775oto.227.1624927204360;
+        Mon, 28 Jun 2021 17:40:04 -0700 (PDT)
+Received: from localhost.localdomain (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id a7sm1860832oia.42.2021.06.28.17.40.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Jun 2021 17:40:04 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: qcom: spmi-gpio: Add pmc8180 & pmc8180c
+Date:   Mon, 28 Jun 2021 17:38:51 -0700
+Message-Id: <20210629003851.1787673-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <CAF78GY0jB_oeKgfZc4SHWBVusGnNfxKk5jTC4UBDsteSEVEzTw@mail.gmail.com>
- <CAHp75VeZwUiK2v8HZ=MLGSkK8wLudDEJFhBSm--Wu9gzABhmSg@mail.gmail.com> <CAHp75Vd6M6D9baiGi8fU8a=pfXnSKtEgQ4+eMiwPh6P9cg1ojA@mail.gmail.com>
-In-Reply-To: <CAHp75Vd6M6D9baiGi8fU8a=pfXnSKtEgQ4+eMiwPh6P9cg1ojA@mail.gmail.com>
-From:   Vincent Pelletier <plr.vincent@gmail.com>
-Date:   Tue, 29 Jun 2021 07:52:24 +0900
-Message-ID: <CAF78GY1PO3YwYHgQkEhYF1_FRQ=HVOOWFtECcHen9PFCR1=JOA@mail.gmail.com>
-Subject: Re: gpiochip_lock_as_irq on pins without FLAG_REQUESTED: bug or
- feature ?
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 28, 2021 at 10:42 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> And one important note: do NOT use sysfs GPIO interface. Use a GPIO
-> character device instead.
+The SC8180x platform comes with PMC8180 and PMC8180c, add support for
+the GPIO controller in these PMICs.
 
-I am indeed aware of this. My IRQ issue is unrelated to the gpios
-being claimed by anything, and I was doing it while trying to get
-more information about the current state of the gpio driver.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 4 ++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 2 ++
+ 2 files changed, 6 insertions(+)
 
-For more background, the context of my IRQ issue is:
-  PMIC (da9063) /irq -> GPIO pin 1 -> PLIC irq 24
-The PMIC has several internal interrupt sources, like the power
-button being pressed or the ADC conversion completion signal.
-The first time after a boot that I press the power button, I do
-get an interrupt and the da9063-onkey driver produces a keypress
-input event.
-But any further button press does not produce an IRQ. So something
-is going wrong in the IRQ acknowledgement.
-AFAIK the PLIC (platform-level interrupt controller) works: it is
-used for PCIe interrupts, and those work.
-The PMIC driver exists since 2013, so I assume any bug would have
-been identified long ago.
-But I believe the GPIO level has not handled any interrupt until I
-enabled the power button event source, and this one is a lot more
-recent: gpio-sifive.c from late 2019. So this is where I turned my
-attention. Discovering that the pin is somehow only half-claimed
-made me wonder if there was some important initialisation step
-missing, which could maybe be related to these IRQ issues.
-
-While on this topic, there is a bullet point in
-Documentation/driver-api/gpio/driver.rst which I fail to understand:
-
-| - Nominally set all handlers to handle_bad_irq() in the setup call and pass
-|   handle_bad_irq() as flow handler parameter in
-gpiochip_irqchip_add() if it is
-|   expected for GPIO driver that irqchip .set_type() callback will be called
-|   before using/enabling each GPIO IRQ. Then set the handler to
-|   handle_level_irq() and/or handle_edge_irq() in the irqchip .set_type()
-|   callback depending on what your controller supports and what is requested
-|   by the consumer.
-
-- why the plural in "set all handlers to handle_bad_irq()" ? Isn't
-  there only a single handler in struct gpio_irq_chip ?
-- I do not find a function named gpiochip_irqchip_add(), only
-  gpiochip_irqchip_add_domain()
-- "Then set the handler to [...] in the irqchip .set_type() callback"
-  Isn't set_type per-pin, and isn't the interrupt handler chip-level ?
-
-Regards,
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+index 161216daf463..412613c80e9e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+@@ -30,6 +30,8 @@ PMIC's from Qualcomm.
+ 		    "qcom,pm8350-gpio"
+ 		    "qcom,pm8350b-gpio"
+ 		    "qcom,pm8350c-gpio"
++		    "qcom,pmc8180-gpio"
++		    "qcom,pmc8180c-gpio"
+ 		    "qcom,pmk8350-gpio"
+ 		    "qcom,pm7325-gpio"
+ 		    "qcom,pmr735a-gpio"
+@@ -120,6 +122,8 @@ to specify in a pin configuration subnode:
+ 		    gpio1-gpio10 for pm8350
+ 		    gpio1-gpio8 for pm8350b
+ 		    gpio1-gpio9 for pm8350c
++		    gpio1-gpio10 for pmc8180
++		    gpio1-gpio12 for pmc8180c
+ 		    gpio1-gpio4 for pmk8350
+ 		    gpio1-gpio10 for pm7325
+ 		    gpio1-gpio4 for pmr735a
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index a89d24a040af..9251fb5153e7 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -1123,10 +1123,12 @@ static const struct of_device_id pmic_gpio_of_match[] = {
+ 	{ .compatible = "qcom,pm660l-gpio", .data = (void *) 12 },
+ 	/* pm8150 has 10 GPIOs with holes on 2, 5, 7 and 8 */
+ 	{ .compatible = "qcom,pm8150-gpio", .data = (void *) 10 },
++	{ .compatible = "qcom,pmc8180-gpio", .data = (void *) 10 },
+ 	/* pm8150b has 12 GPIOs with holes on 3, r and 7 */
+ 	{ .compatible = "qcom,pm8150b-gpio", .data = (void *) 12 },
+ 	/* pm8150l has 12 GPIOs with holes on 7 */
+ 	{ .compatible = "qcom,pm8150l-gpio", .data = (void *) 12 },
++	{ .compatible = "qcom,pmc8180c-gpio", .data = (void *) 12 },
+ 	{ .compatible = "qcom,pm8350-gpio", .data = (void *) 10 },
+ 	{ .compatible = "qcom,pm8350b-gpio", .data = (void *) 8 },
+ 	{ .compatible = "qcom,pm8350c-gpio", .data = (void *) 9 },
 -- 
-Vincent Pelletier
+2.29.2
+
