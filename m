@@ -2,88 +2,214 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67E5E3B7D85
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jun 2021 08:38:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A7563B82AF
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jun 2021 15:08:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232541AbhF3GlC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Jun 2021 02:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232552AbhF3GlA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Jun 2021 02:41:00 -0400
-Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897D9C061766;
-        Tue, 29 Jun 2021 23:38:31 -0700 (PDT)
-Received: by mail-ua1-x92d.google.com with SMTP id x37so597104uac.13;
-        Tue, 29 Jun 2021 23:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s2FjwLxovXBV9j2+en42ozr40O/MKm4dTTxEw/Bf9Q0=;
-        b=NKRJwc3qnwV8NIgwx+hi/D946yO6PRGMnL611nOz8th3n45Qxv5tgbb2FZ/sYMki6d
-         /Dpc9Dm/1Qj0L3NKLKQqRa1r87vZffiQy3ABOWPnZURvUr9nOtHIQpV16qIXxDRRfpwh
-         1xtW6Bqn0OIZMfm5wz7dl+zg4JXOxHokdOqEqQbahHMg4uhxu8alGUVneHw6USRFFevE
-         0uHrkW8nBPpZJhWitCO6cgY670kU7BiIXYniyv91GUfDxtLHzMgwI2tbNWyO5JIB8vcz
-         cJIw9IfVfNLtXI4PXQ29hyBSqNpkI9ZrCTE+1QSbylUgFoWfO877aqkZGvKr38Zs1nvz
-         h3qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s2FjwLxovXBV9j2+en42ozr40O/MKm4dTTxEw/Bf9Q0=;
-        b=idIgBWWNnalNvMJ51CHrUbvALvKSxhiLqzcO8J2S0k5WcupuprarfsYCdxm/0gmhZh
-         7+7uGzUuY5VrTM1DM3851HbJ/GFTj+iXjeoakj89VsFn+EunSLRuYgI5wrHRNixdYKZ3
-         G3bxHuNMG418MQ+K02cAKhgtjMH43ZwnqHOlmeWkFHb+ge2FGX8M5F5hhFCgCMsk+4uT
-         cQNVV1onvh3QBgDT7+wLZCBTWLBaXdvt/OmQVmJAr8tOCPKOzf0onCW5vYiwb/1R5tME
-         7QjlZvwdwlJVmV1aMR4dmojfvhuMvuX00wcMTJ6v7eiXeEzi47tE8+i3bmu301Imo3YX
-         xiww==
-X-Gm-Message-State: AOAM532bSfnnAkyuTXQ37hk/+/ufJa83ynzwoXcNyOZnRPi+i/ZLFYjc
-        t5QYgZL0UpJHQ/DjosMZQ0WepSrlgz0p0rnVFVg=
-X-Google-Smtp-Source: ABdhPJxJ5n2FIByplo2fbqSuTw0k3n9ealqhoFzmX//g82nZe2r8ZP3+7FVZYTdUXjA1YQejA6halQ6ecwY1hiRTGtk=
-X-Received: by 2002:a9f:35e9:: with SMTP id u38mr30206243uad.131.1625035110794;
- Tue, 29 Jun 2021 23:38:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210629143407.14703-1-sergio.paracuellos@gmail.com> <CACRpkdZJjuCMrxka5R2YLgcjwjjXCBEgDP5_+M7nxo5ZX6W4+A@mail.gmail.com>
-In-Reply-To: <CACRpkdZJjuCMrxka5R2YLgcjwjjXCBEgDP5_+M7nxo5ZX6W4+A@mail.gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Wed, 30 Jun 2021 08:38:19 +0200
-Message-ID: <CAMhs-H8up-47e9T4uGxTfwiM1V=_ofok3-ZRbawFZKBVMnYk4A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: ralink: rt305x: add missing include
+        id S234641AbhF3NLS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Jun 2021 09:11:18 -0400
+Received: from mga07.intel.com ([134.134.136.100]:25574 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234481AbhF3NLS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 30 Jun 2021 09:11:18 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10030"; a="272199245"
+X-IronPort-AV: E=Sophos;i="5.83,312,1616482800"; 
+   d="scan'208";a="272199245"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2021 06:08:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,312,1616482800"; 
+   d="scan'208";a="408553655"
+Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 30 Jun 2021 06:08:47 -0700
+Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lyZxO-0009m1-Jf; Wed, 30 Jun 2021 13:08:46 +0000
+Date:   Wed, 30 Jun 2021 21:07:53 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ bfa50166cd9d5d190b20dc33d1ec7ae19ced7022
+Message-ID: <60dc6ca9.thky3ov8XLejhjx8%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 30, 2021 at 2:40 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, Jun 29, 2021 at 4:34 PM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
->
-> > Header 'rt305x.h' is ralink architecture dependent file where
-> > other general definitions which are in 'ralink_regs.h' are
-> > being used. This 'rt305x.h' is only being included in two
-> > different files: 'rt305x.c' and 'pinctrl-rt305x.c'. When
-> > file 'pinctrl-rt305x.c' is being compiled definitions in
-> > 'ralink_regs.h' are need to build it properly. Hence, add
-> > missing include 'ralink_regs.h' in 'pinctrl-rt305x.c'
-> > source to avoid compilation problems.
-> >
-> > Fixes: 3a1b0ca5a83b ("pinctrl: ralink: move RT305X SoC pinmux config into a new 'pinctrl-rt305x.c' file")
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
->
-> Patch applied!
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: bfa50166cd9d5d190b20dc33d1ec7ae19ced7022  pinctrl: ralink: rt305x: add missing include
 
-Thanks!
+elapsed time: 725m
 
-Best regards,
-    Sergio Paracuellos
+configs tested: 156
+configs skipped: 2
 
->
-> Yours,
-> Linus Walleij
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm64                            allyesconfig
+arm64                               defconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+xtensa                           allyesconfig
+arm                         at91_dt_defconfig
+arm                       imx_v6_v7_defconfig
+ia64                         bigsur_defconfig
+powerpc                     mpc512x_defconfig
+arm                  colibri_pxa300_defconfig
+mips                            gpr_defconfig
+powerpc                      ppc44x_defconfig
+powerpc                     mpc5200_defconfig
+sh                        edosk7760_defconfig
+mips                            ar7_defconfig
+sh                           se7712_defconfig
+mips                      maltasmvp_defconfig
+powerpc                 mpc837x_rdb_defconfig
+sh                 kfr2r09-romimage_defconfig
+powerpc                 xes_mpc85xx_defconfig
+sh                           se7724_defconfig
+sh                          sdk7786_defconfig
+powerpc                     taishan_defconfig
+powerpc                      chrp32_defconfig
+arm                            mmp2_defconfig
+arm                         palmz72_defconfig
+powerpc                     stx_gp3_defconfig
+powerpc                     skiroot_defconfig
+parisc                              defconfig
+powerpc                  mpc885_ads_defconfig
+arm                            zeus_defconfig
+riscv                    nommu_k210_defconfig
+arc                         haps_hs_defconfig
+arm                      pxa255-idp_defconfig
+powerpc                     tqm8540_defconfig
+mips                           ip27_defconfig
+ia64                          tiger_defconfig
+sh                            hp6xx_defconfig
+mips                        nlm_xlp_defconfig
+mips                     cu1830-neo_defconfig
+arm                         socfpga_defconfig
+powerpc                 mpc8540_ads_defconfig
+powerpc64                           defconfig
+sh                               j2_defconfig
+arm                           u8500_defconfig
+mips                         tb0287_defconfig
+powerpc                     mpc83xx_defconfig
+xtensa                           alldefconfig
+powerpc                 mpc834x_mds_defconfig
+sh                        edosk7705_defconfig
+sh                         apsh4a3a_defconfig
+csky                                defconfig
+powerpc                   currituck_defconfig
+arm                           h3600_defconfig
+powerpc                    mvme5100_defconfig
+arm                        mvebu_v5_defconfig
+arm                             ezx_defconfig
+riscv                               defconfig
+arc                          axs101_defconfig
+arm                         shannon_defconfig
+arm                          moxart_defconfig
+mips                      pic32mzda_defconfig
+mips                          rm200_defconfig
+arm                           h5000_defconfig
+openrisc                 simple_smp_defconfig
+sh                   secureedge5410_defconfig
+arm                       netwinder_defconfig
+powerpc                      ppc6xx_defconfig
+powerpc                      katmai_defconfig
+mips                        workpad_defconfig
+powerpc                      pasemi_defconfig
+powerpc                 mpc8560_ads_defconfig
+sparc                       sparc32_defconfig
+mips                           ci20_defconfig
+sh                           se7780_defconfig
+arm                        clps711x_defconfig
+mips                         db1xxx_defconfig
+sparc64                             defconfig
+mips                       rbtx49xx_defconfig
+um                               alldefconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a001-20210628
+i386                 randconfig-a002-20210628
+i386                 randconfig-a005-20210628
+i386                 randconfig-a003-20210628
+i386                 randconfig-a006-20210628
+i386                 randconfig-a004-20210628
+x86_64               randconfig-a012-20210628
+x86_64               randconfig-a016-20210628
+x86_64               randconfig-a015-20210628
+x86_64               randconfig-a013-20210628
+x86_64               randconfig-a014-20210628
+x86_64               randconfig-a011-20210628
+i386                 randconfig-a011-20210628
+i386                 randconfig-a013-20210628
+i386                 randconfig-a012-20210628
+i386                 randconfig-a014-20210628
+i386                 randconfig-a015-20210628
+i386                 randconfig-a016-20210628
+x86_64               randconfig-a002-20210629
+x86_64               randconfig-a005-20210629
+x86_64               randconfig-a001-20210629
+x86_64               randconfig-a003-20210629
+x86_64               randconfig-a004-20210629
+x86_64               randconfig-a006-20210629
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+um                            kunit_defconfig
+um                           x86_64_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-b001-20210628
+x86_64               randconfig-a002-20210628
+x86_64               randconfig-a005-20210628
+x86_64               randconfig-a001-20210628
+x86_64               randconfig-a003-20210628
+x86_64               randconfig-a004-20210628
+x86_64               randconfig-a006-20210628
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
