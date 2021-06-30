@@ -2,114 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC2FF3B7D16
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jun 2021 07:51:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67E5E3B7D85
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jun 2021 08:38:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232235AbhF3Fx5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Jun 2021 01:53:57 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:25432 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232118AbhF3Fxv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Jun 2021 01:53:51 -0400
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 29 Jun 2021 22:51:23 -0700
-X-QCInternal: smtphost
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Jun 2021 22:51:21 -0700
-X-QCInternal: smtphost
-Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 30 Jun 2021 11:20:53 +0530
-Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
-        id ACD584A86; Wed, 30 Jun 2021 11:20:51 +0530 (IST)
-From:   satya priya <skakit@codeaurora.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     kgunda@codeaurora.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, satya priya <skakit@codeaurora.org>
-Subject: [PATCH V5 2/2] dt-bindings: pinctrl: qcom-pmic-gpio: Remove the interrupts property
-Date:   Wed, 30 Jun 2021 11:20:41 +0530
-Message-Id: <1625032241-3458-3-git-send-email-skakit@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1625032241-3458-1-git-send-email-skakit@codeaurora.org>
-References: <1625032241-3458-1-git-send-email-skakit@codeaurora.org>
+        id S232541AbhF3GlC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Jun 2021 02:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232552AbhF3GlA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Jun 2021 02:41:00 -0400
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897D9C061766;
+        Tue, 29 Jun 2021 23:38:31 -0700 (PDT)
+Received: by mail-ua1-x92d.google.com with SMTP id x37so597104uac.13;
+        Tue, 29 Jun 2021 23:38:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s2FjwLxovXBV9j2+en42ozr40O/MKm4dTTxEw/Bf9Q0=;
+        b=NKRJwc3qnwV8NIgwx+hi/D946yO6PRGMnL611nOz8th3n45Qxv5tgbb2FZ/sYMki6d
+         /Dpc9Dm/1Qj0L3NKLKQqRa1r87vZffiQy3ABOWPnZURvUr9nOtHIQpV16qIXxDRRfpwh
+         1xtW6Bqn0OIZMfm5wz7dl+zg4JXOxHokdOqEqQbahHMg4uhxu8alGUVneHw6USRFFevE
+         0uHrkW8nBPpZJhWitCO6cgY670kU7BiIXYniyv91GUfDxtLHzMgwI2tbNWyO5JIB8vcz
+         cJIw9IfVfNLtXI4PXQ29hyBSqNpkI9ZrCTE+1QSbylUgFoWfO877aqkZGvKr38Zs1nvz
+         h3qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s2FjwLxovXBV9j2+en42ozr40O/MKm4dTTxEw/Bf9Q0=;
+        b=idIgBWWNnalNvMJ51CHrUbvALvKSxhiLqzcO8J2S0k5WcupuprarfsYCdxm/0gmhZh
+         7+7uGzUuY5VrTM1DM3851HbJ/GFTj+iXjeoakj89VsFn+EunSLRuYgI5wrHRNixdYKZ3
+         G3bxHuNMG418MQ+K02cAKhgtjMH43ZwnqHOlmeWkFHb+ge2FGX8M5F5hhFCgCMsk+4uT
+         cQNVV1onvh3QBgDT7+wLZCBTWLBaXdvt/OmQVmJAr8tOCPKOzf0onCW5vYiwb/1R5tME
+         7QjlZvwdwlJVmV1aMR4dmojfvhuMvuX00wcMTJ6v7eiXeEzi47tE8+i3bmu301Imo3YX
+         xiww==
+X-Gm-Message-State: AOAM532bSfnnAkyuTXQ37hk/+/ufJa83ynzwoXcNyOZnRPi+i/ZLFYjc
+        t5QYgZL0UpJHQ/DjosMZQ0WepSrlgz0p0rnVFVg=
+X-Google-Smtp-Source: ABdhPJxJ5n2FIByplo2fbqSuTw0k3n9ealqhoFzmX//g82nZe2r8ZP3+7FVZYTdUXjA1YQejA6halQ6ecwY1hiRTGtk=
+X-Received: by 2002:a9f:35e9:: with SMTP id u38mr30206243uad.131.1625035110794;
+ Tue, 29 Jun 2021 23:38:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210629143407.14703-1-sergio.paracuellos@gmail.com> <CACRpkdZJjuCMrxka5R2YLgcjwjjXCBEgDP5_+M7nxo5ZX6W4+A@mail.gmail.com>
+In-Reply-To: <CACRpkdZJjuCMrxka5R2YLgcjwjjXCBEgDP5_+M7nxo5ZX6W4+A@mail.gmail.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Wed, 30 Jun 2021 08:38:19 +0200
+Message-ID: <CAMhs-H8up-47e9T4uGxTfwiM1V=_ofok3-ZRbawFZKBVMnYk4A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ralink: rt305x: add missing include
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Remove the interrupts property as we no longer specify it.
+On Wed, Jun 30, 2021 at 2:40 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Tue, Jun 29, 2021 at 4:34 PM Sergio Paracuellos
+> <sergio.paracuellos@gmail.com> wrote:
+>
+> > Header 'rt305x.h' is ralink architecture dependent file where
+> > other general definitions which are in 'ralink_regs.h' are
+> > being used. This 'rt305x.h' is only being included in two
+> > different files: 'rt305x.c' and 'pinctrl-rt305x.c'. When
+> > file 'pinctrl-rt305x.c' is being compiled definitions in
+> > 'ralink_regs.h' are need to build it properly. Hence, add
+> > missing include 'ralink_regs.h' in 'pinctrl-rt305x.c'
+> > source to avoid compilation problems.
+> >
+> > Fixes: 3a1b0ca5a83b ("pinctrl: ralink: move RT305X SoC pinmux config into a new 'pinctrl-rt305x.c' file")
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+>
+> Patch applied!
 
-Signed-off-by: satya priya <skakit@codeaurora.org>
----
-Changes in V5:
- - This is newly added in V5.As per Bjorn's comments on [1]
-   removed the interrupts property as it is no longer used.
+Thanks!
 
-   [1] https://lore.kernel.org/patchwork/patch/1434144/
+Best regards,
+    Sergio Paracuellos
 
- .../bindings/pinctrl/qcom,pmic-gpio.yaml           | 28 ++++------------------
- 1 file changed, 4 insertions(+), 24 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-index 22c58de..d1a5499 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-@@ -56,18 +56,11 @@ properties:
-   reg:
-     maxItems: 1
- 
--  interrupts:
--    minItems: 1
--    maxItems: 44
--    description: |
--        Must contain an array of encoded interrupt specifiers for
--        each available GPIO
-+  interrupt-controller: true
- 
-   '#interrupt-cells':
-     const: 2
- 
--  interrupt-controller: true
--
-   gpio-controller: true
- 
-   gpio-ranges:
-@@ -87,6 +80,7 @@ required:
-   - gpio-controller
-   - '#gpio-cells'
-   - gpio-ranges
-+  - interrupt-controller
- 
- patternProperties:
-   '.*':
-@@ -223,22 +217,8 @@ examples:
-     pm8921_gpio: gpio@150 {
-       compatible = "qcom,pm8921-gpio", "qcom,ssbi-gpio";
-       reg = <0x150 0x160>;
--      interrupts = <192 1>, <193 1>, <194 1>,
--                   <195 1>, <196 1>, <197 1>,
--                   <198 1>, <199 1>, <200 1>,
--                   <201 1>, <202 1>, <203 1>,
--                   <204 1>, <205 1>, <206 1>,
--                   <207 1>, <208 1>, <209 1>,
--                   <210 1>, <211 1>, <212 1>,
--                   <213 1>, <214 1>, <215 1>,
--                   <216 1>, <217 1>, <218 1>,
--                   <219 1>, <220 1>, <221 1>,
--                   <222 1>, <223 1>, <224 1>,
--                   <225 1>, <226 1>, <227 1>,
--                   <228 1>, <229 1>, <230 1>,
--                   <231 1>, <232 1>, <233 1>,
--                   <234 1>, <235 1>;
--
-+      interrupt-controller;
-+      #interrupt-cells = <2>;
-       gpio-controller;
-       gpio-ranges = <&pm8921_gpio 0 0 44>;
-       #gpio-cells = <2>;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+>
+> Yours,
+> Linus Walleij
