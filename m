@@ -2,131 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1169B3B8EBA
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 10:17:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34F093B8EE5
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 10:35:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235118AbhGAITw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jul 2021 04:19:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234684AbhGAITw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 04:19:52 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3386EC0617A8
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Jul 2021 01:17:22 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id i13so5589858ilu.4
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Jul 2021 01:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZPJEazgT8i7Ze/1+I4QL68xCucF/zfMT9D/43T7Sq7I=;
-        b=eIuw41F0BAJ8wZkYA7NmWG/a8NvDrb5h9iqkfqcjmpGkl/23FMw8J7Ddj9eVatEvys
-         AoP58ePyZW3f0WQGlVP7tZ+GTN1aMpG5o6+yWSvSyM6xCrylQ4c2APXO+83w5VAPBAam
-         D3eJF2DxiH9OAojoqbOikr6m89a2MkLHFh8SM=
+        id S235295AbhGAIhj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jul 2021 04:37:39 -0400
+Received: from mail-ua1-f43.google.com ([209.85.222.43]:44701 "EHLO
+        mail-ua1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235159AbhGAIhj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 04:37:39 -0400
+Received: by mail-ua1-f43.google.com with SMTP id e7so2148267uaj.11;
+        Thu, 01 Jul 2021 01:35:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZPJEazgT8i7Ze/1+I4QL68xCucF/zfMT9D/43T7Sq7I=;
-        b=lUJ5IfSKHO+2Kz5NDMnZeL+Y3S0wEq3MpC59V3yE3RkI39UHjfA6LsCu44Bxbecig3
-         PxRe35gJMi4yyl9g4Sv0bxxD7PseQdlCy8CvOYpjEJxSkNuUkzBcbres2FaisfcQfj7h
-         PnBvRwAHhvaJfzSInxbhfgb77m509kjCibdtF+HCMg8c5WQ4N763sCaRwbBlp658F990
-         hDB5+SwT94Q0H98bd2bL/xeBWyizXpNPQyw/x2vXUCkl5IZxNz638UJDEtDmJM0ADpvq
-         /4S0+i3sDoeWY2Vz2csNkK3ym98NU4kBXArYqh0oOuMhLEsQ6XclLTh/vOqTp+KHW9xF
-         fwfA==
-X-Gm-Message-State: AOAM531+KFB9dZcoK+KfOxdbkDt+2MNht4iBtaygjjn9xNkzQHpHrF/+
-        bksDmGjdXbBVFBQ43fKvuiqaXzl86bdTZr2Z0TlGAQ==
-X-Google-Smtp-Source: ABdhPJwmnKoA/8qGsvpQQRjfODUVGXnl9M4fCr7IxwXSfSMzbjrRBsW5KWu1USnvrPEASRrj8N2+BmSLssdrm+61XM8=
-X-Received: by 2002:a92:7b07:: with SMTP id w7mr29093529ilc.308.1625127441220;
- Thu, 01 Jul 2021 01:17:21 -0700 (PDT)
+        bh=7bpYvv8lA/1j4v7R7NAURrd4Uck8U09k/ENnDW1qf6k=;
+        b=M+ohH+lkIrViw+bXY3l8eMu148YOY4a7wRRAICP6iNCOfPBBYc+aqmOGZTjiXTzCF8
+         9d+6s3c6N+VieS9EpXd9PgIYwl/72LiYmu91VwXtyPTG2D8ZQmtDZOhZe3hqjubBF9oL
+         lvtG3uI1liabPll8WoEs7ZcnIf2eKly7KngvFCylWaA49RriInGF9AZXvB9K2rOCHlGu
+         mBFD8ULGzRy+3XLb8AU/gl351E3/hRkE/lE9IhJb9z+ROnEuetddT1HDTHkayj3CZPTO
+         KW62khfu6RXzJnYzeEt9j7Em/+8yp65KGrqwvDrFvP1eY1Pthd7Ll8W8B7DFYtGBU9Jt
+         eYxQ==
+X-Gm-Message-State: AOAM532KvTVeHfopuKU6rmFoYYWaOFsgZUPErfJdSVJh/LKYe/afdC1H
+        FcrOyNSX/L7LQM/+yWhfp84BfJLJetUWv1GZxlk=
+X-Google-Smtp-Source: ABdhPJwv1SzSKBtSCPdf+iejl9KUHvCm35kUVL+cj+WtMmtHDKpmwGbx1YK1y6nfi8T9nvDLRwwPtfy6XeF7XbGZgAw=
+X-Received: by 2002:ab0:71ca:: with SMTP id n10mr2640663uao.106.1625128507544;
+ Thu, 01 Jul 2021 01:35:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210701065439.2527790-1-hsinyi@chromium.org> <CAGXv+5GNkqHOxv9zXoa3yLh5_FXGUARqXd82W00CBTnHS_BFPw@mail.gmail.com>
-In-Reply-To: <CAGXv+5GNkqHOxv9zXoa3yLh5_FXGUARqXd82W00CBTnHS_BFPw@mail.gmail.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 1 Jul 2021 16:16:55 +0800
-Message-ID: <CAJMQK-gsJRwBGg7DBwWbozpmj-oZ1RsETQtwarRpeFkk2qjGJQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: Fix fallback behavior for bias_set_combo
-To:     Chen-Yu Tsai <wenst@chromium.org>
-Cc:     Sean Wang <sean.wang@kernel.org>,
+References: <20210701002037.912625-1-drew@beagleboard.org> <20210701002037.912625-2-drew@beagleboard.org>
+In-Reply-To: <20210701002037.912625-2-drew@beagleboard.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 1 Jul 2021 10:34:56 +0200
+Message-ID: <CAMuHMdWLNy6_CnFEYDvHSEdMYH=T_Fy=DCjZCF9kPGWcD-B0Qw@mail.gmail.com>
+Subject: Re: [RFC PATH 1/2] dt-bindings: gpio: add starfive,jh7100-gpio bindings
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        zhiyong.tao@mediatek.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, linux-gpio@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Huan Feng <huan.feng@starfivetech.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 1, 2021 at 3:21 PM Chen-Yu Tsai <wenst@chromium.org> wrote:
->
-> On Thu, Jul 1, 2021 at 2:55 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> >
-> > Some pin doesn't support PUPD register, if it fails and fallbacks with
-> > bias_set_combo case, it will call mtk_pinconf_bias_set_pupd_r1_r0() to
-> > modify the PUPD pin again.
-> >
-> > Since the general bias set are either PU/PD or PULLSEL/PULLEN, try
-> > bias_set or bias_set_rev1 for this fallback case.
-> >
-> > Fixes: 81bd1579b43e ("pinctrl: mediatek: Fix fallback call path")
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > ---
-> >  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > index 5b3b048725cc8..0cdff487836fa 100644
-> > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > @@ -926,9 +926,12 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
-> >                         if (err)
-> >                                 return err;
-> >                 } else if (hw->soc->bias_set_combo) {
-> > -                       err = hw->soc->bias_set_combo(hw, desc, pullup, arg);
-> > -                       if (err)
-> > -                               return err;
-> > +                       err = mtk_pinconf_bias_set_rev1(hw, desc, pullup);
-> > +                       if (err) {
-> > +                               err = mtk_pinconf_bias_set(hw, desc, pullup);
-> > +                               if (err)
-> > +                                       return err;
->
-> You don't need to nest this. If mtk_pinconf_bias_set_rev1() succeeds,
-> err would be 0 and the following if blocks would all be skipped. So:
->
-> err = mtk_pinconf_bias_set_rev1();
-> if (err)
->         err = mtk_pinconf_bias_set();
-> if (err)
->         return err;
->
-> Moreover, maybe you should rework the test for hw->soc->bias_set_combo,
-> as it is no longer relevant to the code within the if block?
->
+Hi Drew,
 
-Thanks for the comments. It's addressed in v2.
-
-We can try PU/PD and PULLSEL/PULLEN even for pins that don't support
-them (eg. mt6797). They will return -ENOTSUPP in
-mtk_hw_pin_field_lookup() so won't break current testing logic.
-
+On Thu, Jul 1, 2021 at 2:22 AM Drew Fustini <drew@beagleboard.org> wrote:
+> Add bindings for the GPIO controller in the StarFive JH7100 SoC [1].
 >
-> ChenYu
+> [1] https://github.com/starfive-tech/beaglev_doc
 >
-> > +                       }
-> >                 } else {
-> >                         return -ENOTSUPP;
-> >                 }
-> > --
-> > 2.32.0.93.g670b81a890-goog
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> Signed-off-by: Huan Feng <huan.feng@starfivetech.com>
+
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/starfive,jh7100-gpio.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/starfive,jh7100-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: StarFive JH7100 GPIO controller
+> +
+> +maintainers:
+> +  - Huan Feng <huan.feng@starfivetech.com>
+> +  - Drew Fustini <drew@beagleboard.org>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: starfive,jh7100-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt mapping, one per GPIO. Maximum 32 GPIOs.
+> +    minItems: 1
+> +    maxItems: 32
+
+What about clocks and resets?
+
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +      gpio@11910000 {
+> +        compatible = "starfive,jh7100-gpio";
+> +        reg = <0x11910000 0x10000>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        interrupts = <32>;
+> +      };
+> +
+> +...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
