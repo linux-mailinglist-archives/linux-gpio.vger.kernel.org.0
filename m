@@ -2,127 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C224A3B8A27
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jun 2021 23:42:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09F103B8B26
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 02:22:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231864AbhF3VpW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Jun 2021 17:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
+        id S237454AbhGAAYx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Jun 2021 20:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231770AbhF3VpV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Jun 2021 17:45:21 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EDAEC0617A8
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Jun 2021 14:42:52 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id q16so7829604lfr.4
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Jun 2021 14:42:52 -0700 (PDT)
+        with ESMTP id S237004AbhGAAYw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Jun 2021 20:24:52 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 497ACC061756
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Jun 2021 17:22:22 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id h4so4386664pgp.5
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Jun 2021 17:22:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=xtt33shXupG/IbC3afPmaamQZ/r2p5e1xGWNBbCJIVY=;
-        b=H3N3MP6h678rBeWiNjKi2hUHDkY+KBRrlM6xclBPG0RJeXEHC1pwFS4ffzXcmKSO4S
-         vwiLUaqAaxSOdGl16rKATSzQs7i79YrqV390tV3h72TTGw/hEfiBm41P5Rx9kuDkuiGX
-         ZzQSIMNuMUE330QY1ssP1r1OvZG49m8qoZCOg19s7RjcHilgZ92rUdLSlWmrT/USv6+r
-         62UUkhtIlpQOp09eur1DLpbPe3+M4aRS7KZl9BnSSd7QBc/mBHMtUyEbS0mtg9WAOsFh
-         LIHxPeDOPhMv8/CtBEE8y6XPrSTT/8cMK7XqcKuoXV1ME/Di9uciWf8Zm3IKNjSVBo5g
-         Oxug==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aDnQQVopiKheNy1UmrcDKnk3g5arjbzcZ1y90JZZMEs=;
+        b=M3wYEGtW3GTTHBiLO2Frsst4YQL4Cnl39+BXgG/RQwxVotP5Sa6p9h/ATQ2/JVZtlp
+         CP3mu+tG5NrGUOI91b9fsO9nk+eXzOkzYWywp3TRvFLqtlfB5lzxdxYh7fGkAKSoOEM2
+         CSMmS06vByZZiYM+bewyGDYmzsaOUfPpd2xmpju4H3+E4wI22B0SXPkaUUddMyIjHJ+o
+         D5QUhNAPC+FTGZbqegNyctpPLY8yuKHRcRdeaByJkVb2jxikijyl6BujzqTQMaqbOxUu
+         msWn589rNB72uXXM58oR3bSxMa/r/mxx8yVHRhma3JuJgAisLMrWPJxZ8P2wkgTNs2Zs
+         gQ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=xtt33shXupG/IbC3afPmaamQZ/r2p5e1xGWNBbCJIVY=;
-        b=jt8D1YcRtP+AnWzzH0tJu1LZQ9DqV0gIEXsj8lNh0hhLCLVms5SjsvHzWO4J6teq51
-         U9P1ads2c1PN0lJISf0TdVO7rXhRVg2f18wZLBi6U1uKnK9IoLJ5y5gD4XokWjCOSMiR
-         1HjjraECLvCWXNNzgbjHr7BeJ9SOqp5aoOe7K/Knk2AtMicdK9wygQTx6ec1mgcuhOgt
-         fZK4/xMGpCMO/CkW/XMycI3VQLB4rN2WaZj2rPSLEDvnQq3xKyukrCIs/jEO78DIYo50
-         SjVU2A/koL3gFyLlIBjwGp1RxhtzZp6SUm5XEH99sc0qN0PMZSR2FIgmUvhNUgyVjdIu
-         rtTg==
-X-Gm-Message-State: AOAM5303NCvrHakwvytzHn7VjrSs7ioOL/2KGDn0BCMzbOwVHN/f+4ib
-        TGazA9Bmse++PM8DdrzefQrciQ==
-X-Google-Smtp-Source: ABdhPJyoX61PIsxcFzJliuJHvJuevMVy6JL6+5TWwUiOlJRRUvgudiIY0o4mKYBNEw6YG9TrEo18xA==
-X-Received: by 2002:a19:e012:: with SMTP id x18mr5262061lfg.394.1625089370409;
-        Wed, 30 Jun 2021 14:42:50 -0700 (PDT)
-Received: from localhost (h-46-59-88-219.A463.priv.bahnhof.se. [46.59.88.219])
-        by smtp.gmail.com with ESMTPSA id i10sm2026006lfv.135.2021.06.30.14.42.48
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aDnQQVopiKheNy1UmrcDKnk3g5arjbzcZ1y90JZZMEs=;
+        b=SlmEEUexWOXoCHnlzAetYPP+JaB6NSwmWTu52ho6q20SZaRrI402RDimk8ouf6ipw+
+         shRnJh7SkK1d7NKfGidqj9H7Ch88aGhcNiknV5XqVlvgsA522QbuUVQkOhhQJOxPuXVm
+         UfLjqlpAa8JDl4fhp5MKRECVsKJfAkvdLXCEXA91bkdYkhYuUGm0fX2PpF9Dy96TkZXy
+         fPFxDyvKwwWnLzOXgo4Qku5Zs6iIoVQkpAn3s4y7DuxWs9sf4S6FJ2ZJeGw7HT8AevNG
+         rtbxQyzkSyk/bSFGQUNH21kn55bsbrxMXEIiQXtuGcg0kBD7HFNIjWy9Opzd7liE0SHU
+         VSWQ==
+X-Gm-Message-State: AOAM531tHI51mz/cxuT/k1/Q7WGrqJEeTEwTEzzCLcRY590iY2eVOkYF
+        RddzPFd05DXbFuoWL6kR9t+w3Q==
+X-Google-Smtp-Source: ABdhPJw9dHks1Q2cYpLQ4+BAPxfbpT1UUQrH7in4l6B4aRPRkgWDW4GfL5ler7PScrKh481PnMGNDQ==
+X-Received: by 2002:a62:e309:0:b029:310:dd66:a4ba with SMTP id g9-20020a62e3090000b0290310dd66a4bamr2138162pfh.13.1625098941778;
+        Wed, 30 Jun 2021 17:22:21 -0700 (PDT)
+Received: from x1.hsd1.or.comcast.net ([2601:1c0:4701:ae70:8687:fcbc:6b3d:c844])
+        by smtp.gmail.com with ESMTPSA id v6sm25117495pgk.33.2021.06.30.17.22.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Jun 2021 14:42:49 -0700 (PDT)
-Date:   Wed, 30 Jun 2021 23:42:48 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pinctrl: renesas: rcar: Avoid changing PUDn when
- disabling bias
-Message-ID: <YNzlWOw5rWhxkG0Z@oden.dyn.berto.se>
-References: <cover.1625064076.git.geert+renesas@glider.be>
- <071ec644de2555da593a4531ef5d3e4d79cf997d.1625064076.git.geert+renesas@glider.be>
+        Wed, 30 Jun 2021 17:22:21 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Fu Wei <tekkamanninja@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [RFC PATH 0/2] gpio: starfive-jh7100: Add StarFive JH7100 GPIO bindings and driver
+Date:   Wed, 30 Jun 2021 17:20:37 -0700
+Message-Id: <20210701002037.912625-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <071ec644de2555da593a4531ef5d3e4d79cf997d.1625064076.git.geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
+Add device tree bindings and driver for the GPIO controller in the
+StarFive JH7100 SoC [1] used on the BeagleV Starlight JH7100 board [2].
 
-On 2021-06-30 16:50:42 +0200, Geert Uytterhoeven wrote:
-> When disabling pin bias, there is no need to touch the LSI pin
-> pull-up/down control register (PUDn), which selects between pull-up and
-> pull-down.  Just disabling the pull-up/down function through the LSI pin
-> pull-enable register (PUENn) us sufficient.
+The dts using "starfive,jh7100-gpio" is in StarFive's linux repo [3] and
+is being cleaned up in preperation for submission.
 
-s/us/is/
+[1] https://github.com/starfive-tech/beaglev_doc
+[2] https://github.com/beagleboard/beaglev-starlight
+[3] https://github.com/starfive-tech/linux/blob/beaglev/arch/riscv/boot/dts/starfive/jh7100.dtsi#L262
 
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Drew Fustini (2):
+  dt-bindings: gpio: add starfive,jh7100-gpio bindings
+  gpio: starfive-jh7100: Add StarFive JH7100 GPIO driver
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
-> v2:
->   - New.
-> ---
->  drivers/pinctrl/renesas/pinctrl.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/renesas/pinctrl.c b/drivers/pinctrl/renesas/pinctrl.c
-> index bb488af298623407..85cb78cfcfa6c37d 100644
-> --- a/drivers/pinctrl/renesas/pinctrl.c
-> +++ b/drivers/pinctrl/renesas/pinctrl.c
-> @@ -898,17 +898,17 @@ void rcar_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
->  
->  	if (reg->puen) {
->  		enable = sh_pfc_read(pfc, reg->puen) & ~BIT(bit);
-> -		if (bias != PIN_CONFIG_BIAS_DISABLE)
-> +		if (bias != PIN_CONFIG_BIAS_DISABLE) {
->  			enable |= BIT(bit);
->  
-> -		if (reg->pud) {
-> -			updown = sh_pfc_read(pfc, reg->pud) & ~BIT(bit);
-> -			if (bias == PIN_CONFIG_BIAS_PULL_UP)
-> -				updown |= BIT(bit);
-> +			if (reg->pud) {
-> +				updown = sh_pfc_read(pfc, reg->pud) & ~BIT(bit);
-> +				if (bias == PIN_CONFIG_BIAS_PULL_UP)
-> +					updown |= BIT(bit);
->  
-> -			sh_pfc_write(pfc, reg->pud, updown);
-> +				sh_pfc_write(pfc, reg->pud, updown);
-> +			}
->  		}
-> -
->  		sh_pfc_write(pfc, reg->puen, enable);
->  	} else {
->  		enable = sh_pfc_read(pfc, reg->pud) & ~BIT(bit);
-> -- 
-> 2.25.1
-> 
+ .../bindings/gpio/starfive,jh7100-gpio.yaml   |  60 +++
+ MAINTAINERS                                   |   8 +
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-starfive-jh7100.c           | 425 ++++++++++++++++++
+ 5 files changed, 502 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/starfive,jh7100-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-starfive-jh7100.c
 
 -- 
-Regards,
-Niklas Söderlund
+2.27.0
+
