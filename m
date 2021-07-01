@@ -2,77 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF0873B8DCF
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 08:39:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D22673B8DED
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 08:54:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233294AbhGAGmR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jul 2021 02:42:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41862 "EHLO
+        id S234529AbhGAG5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jul 2021 02:57:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231962AbhGAGmQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 02:42:16 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE24C061756;
-        Wed, 30 Jun 2021 23:39:46 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 1D10822205;
-        Thu,  1 Jul 2021 08:39:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1625121582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kUQLL6Y7TeJ+8tLLPFCF8HC2GZgPhSFHdHVkUkxeCUY=;
-        b=Zr1qZiN2J8wIoXFgX0jLOhT8V2L7JefaDIGmnzs2YO1Gy7MyfPn85MP2ENIDUPhtsaIIyU
-        FGTKJktpDu1wg4aGgMJ4yM0GfaFiCMGqYiVvwR4bQip6yzHxzrKgomZz5oYxVyBANg2Iqb
-        wgBNnm8nIFPaJAvKXlM4Z3xQji+SYcw=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 01 Jul 2021 08:39:40 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S234250AbhGAG5P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 02:57:15 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85829C0617A8
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Jun 2021 23:54:45 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id a2so5224186pgi.6
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Jun 2021 23:54:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BaGoqmFP1tt0EpZeEpkj9x84y98y9BYCdG4DKqTdqyc=;
+        b=jytw1fUdgseF6tkwK4vPEO6tMMLx7zUiWZECq+PuslI4xmtAklxm6BQi0CekZ+tkIT
+         aqXLdrI5VN/Nc5msg6XIAk1fVxzUfAR+cKBijD9YUtszoyZNJz5//dHazXD96UAh9TOT
+         CjyS7QVqbISwamkqJs9oz5XJJYFycLwO1/P+s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BaGoqmFP1tt0EpZeEpkj9x84y98y9BYCdG4DKqTdqyc=;
+        b=a54zk9CDTVNWirRNmZpDlNgGa7xz18LgaAgnmPqkcut4R9S7hD+QFIvqxMckaBL1RL
+         7LOz7o5XTieWFGPfC1JpD16pB/89lYw23XiMvq9ciXts/7FUfCvDOeraCkm1g86Y09gw
+         SX1efCGsza0S3G/L9a9nReBcrtsZEPiw7UZaECh91u4jiz6WVE4cbh/xImTaOGTeRX34
+         iU50MAXLfWefZ8If2JA+kaQsLlhu0FztLTvqEz1ORCMBOGSWA5l5sIHFraxVHNRRN+fw
+         VcO6fNuoiSFo2gJCNG0fkVEFp8ggmws1I7gOlOuArt8zdM6UWKTwVjNQes7Wi1y372Cs
+         xkWw==
+X-Gm-Message-State: AOAM533OKKafy/E8DHBmimqhLRaNUeH6FJSnUCPMU9gLtVSdmtP6m2Vq
+        LbM87eSAwFAci6I2C2KBPLNJAw==
+X-Google-Smtp-Source: ABdhPJzxV7zCV9lAR3c0Jc9juDg8NFET/Z+3XOOmtNN2U0pMXdlVQZ61Yd8/oRnIU39J8a/TT842Sg==
+X-Received: by 2002:a05:6a00:2145:b029:30b:127:e0a3 with SMTP id o5-20020a056a002145b029030b0127e0a3mr25141688pfk.34.1625122484840;
+        Wed, 30 Jun 2021 23:54:44 -0700 (PDT)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:a18a:185:21d0:d5d6])
+        by smtp.gmail.com with ESMTPSA id l7sm24770126pgb.19.2021.06.30.23.54.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Jun 2021 23:54:44 -0700 (PDT)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Michael Zhu <michael.zhu@starfivetech.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Fu Wei <tekkamanninja@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>,
-        Huan Feng <huan.feng@starfivetech.com>
-Subject: Re: [RFC PATH 2/2] gpio: starfive-jh7100: Add StarFive JH7100 GPIO
- driver
-In-Reply-To: <20210701002037.912625-3-drew@beagleboard.org>
-References: <20210701002037.912625-1-drew@beagleboard.org>
- <20210701002037.912625-3-drew@beagleboard.org>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <8c59105d32a9936f8806501ecd20e044@walle.cc>
-X-Sender: michael@walle.cc
+        zhiyong.tao@mediatek.com
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: mediatek: Fix fallback behavior for bias_set_combo
+Date:   Thu,  1 Jul 2021 14:54:39 +0800
+Message-Id: <20210701065439.2527790-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.32.0.93.g670b81a890-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Drew,
+Some pin doesn't support PUPD register, if it fails and fallbacks with
+bias_set_combo case, it will call mtk_pinconf_bias_set_pupd_r1_r0() to
+modify the PUPD pin again.
 
-Am 2021-07-01 02:20, schrieb Drew Fustini:
-> Add GPIO driver for the StarFive JH7100 SoC [1] used on the
-> BeagleV Starlight JH7100 board [2].
-> 
-> [1] https://github.com/starfive-tech/beaglev_doc/
-> [2] https://github.com/beagleboard/beaglev-starlight
-> 
-> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> Signed-off-by: Huan Feng <huan.feng@starfivetech.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+Since the general bias set are either PU/PD or PULLSEL/PULLEN, try
+bias_set or bias_set_rev1 for this fallback case.
 
-Could this driver use GPIO_REGMAP and REGMAP_IRQ? See
-drivers/gpio/gpio-sl28cpld.c for an example.
+Fixes: 81bd1579b43e ("pinctrl: mediatek: Fix fallback call path")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
--michael
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 5b3b048725cc8..0cdff487836fa 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -926,9 +926,12 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+ 			if (err)
+ 				return err;
+ 		} else if (hw->soc->bias_set_combo) {
+-			err = hw->soc->bias_set_combo(hw, desc, pullup, arg);
+-			if (err)
+-				return err;
++			err = mtk_pinconf_bias_set_rev1(hw, desc, pullup);
++			if (err) {
++				err = mtk_pinconf_bias_set(hw, desc, pullup);
++				if (err)
++					return err;
++			}
+ 		} else {
+ 			return -ENOTSUPP;
+ 		}
+-- 
+2.32.0.93.g670b81a890-goog
+
