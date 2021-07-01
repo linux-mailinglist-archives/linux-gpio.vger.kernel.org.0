@@ -2,119 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A8443B8E21
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 09:21:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 209AC3B8EAB
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 10:10:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234829AbhGAHXz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jul 2021 03:23:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50990 "EHLO
+        id S234760AbhGAIMe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jul 2021 04:12:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234824AbhGAHXz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 03:23:55 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86458C061756
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Jul 2021 00:21:24 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id p24so7071864ljj.1
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Jul 2021 00:21:24 -0700 (PDT)
+        with ESMTP id S234941AbhGAIMe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 04:12:34 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791D4C061756
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Jul 2021 01:10:02 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id n9so778900plf.7
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Jul 2021 01:10:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ga4/H+zFc4BIvkIZp/GwacqLCotWEZsIhOfh+7jAZ3s=;
-        b=IaI97DW3ssIIS+7nQ5kQe8/cemQmh7BCye8Vf2G2Io0KFRMGvpn3hkzbv4E0GNYhAl
-         klR2AaOqqU+FUSziNdA/ipLW79CJGazcHBsd80s/iR0+tiLs3yar5ixRAwrCCH7BUFxV
-         mwR/rL3iszdTDvZjTJDIrKMoqUgj28IFMpYKc=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=05/l1i0MzcF43S74GFX7zHVjcwxLfLdqVO0nUEpbDV0=;
+        b=S3MMnrqXhNiKGF5J0TPCRduqD0uIK0JAXHkIojST/KHNV2Hl4cWZkVYFqQ++/p2DTp
+         R+oe9Lpwcdeg1hwXaxadt+3kbOnJQqdp8+Nx1mAyLdK8qlWpa3ybpx3nugkStTe6zAR7
+         wvbQmXdnS7/BdsqFi5Q1v36Xf77l+GnZQ2WIw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ga4/H+zFc4BIvkIZp/GwacqLCotWEZsIhOfh+7jAZ3s=;
-        b=faB/AmDa9I85piIVBZ6POd/s3ILy22C/Slo7AgCSprmi6dfZJpk8hTjtb92v904+ol
-         8dor9mSH4NJDfnz+3N6LkBEk+MmgdjOetCCYP0tfbJmIpvg14DHbl8v3SNchLDKyuTiS
-         Yencd5/tu+yw0qgaqKoEnkQ8VdmXczw6moUF6fj9YHRcwQziaJ3ejjXvyZwEnBQJ4t61
-         NpDHuFln12nq353Nkb1HBejzbjPip+vTgVYRbBffpMB92NDHuOP5JjaLS2yXDnfT9fec
-         wTth/cWjl82yfUjVAhC7u/GzvW5/g8IUBffTeaazCa4+gKNL68RoV4nqyvlLJzhX3Uw6
-         9SIA==
-X-Gm-Message-State: AOAM5305mft3RZ/UUb7z8u5P6pZc1d59hkTZpa5ZaMdAFYuHsFVJKwx6
-        r7eBmmbcGgdZGrynxb1C+aDIsPADKb6SnOkNyGkRCg==
-X-Google-Smtp-Source: ABdhPJyxvSNuZmwRYoKy8FDKToeJS7PWq88q64REDzsuI4/M4wTPs/gV+/Jhx06I0DFC/KinbxeFXBAee1LQDg9hUZE=
-X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr10809961ljp.251.1625124082895;
- Thu, 01 Jul 2021 00:21:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210701065439.2527790-1-hsinyi@chromium.org>
-In-Reply-To: <20210701065439.2527790-1-hsinyi@chromium.org>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Thu, 1 Jul 2021 15:21:11 +0800
-Message-ID: <CAGXv+5GNkqHOxv9zXoa3yLh5_FXGUARqXd82W00CBTnHS_BFPw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: Fix fallback behavior for bias_set_combo
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Sean Wang <sean.wang@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=05/l1i0MzcF43S74GFX7zHVjcwxLfLdqVO0nUEpbDV0=;
+        b=VmmlFJ+fcHZJQh6ALMKFvLUdIeP43pUVWU3vWnQNI7e1GvhXvgXqE/Wwa3zVNSZnw0
+         kiyyrDmTEQMVtBTf3EHvm4SA+joC+mKV/V2pDDvN9vpgaYBZKdaoCRI80uOYZ5RafKr2
+         gNlI48kSnhRcAGRls54D9QT/A7XsLeVRYFZor3o+XnDsqv0Y6SYDxgCprLkmcXdBEmjL
+         h0iagcoHlg/rPTKZ/yepyH+zej3l5a/CgiTKHx+cjM8DAkVrtyGTQ4g51l4zuQoKysmy
+         wETcCIVSRAsgIIv9blo5y6kCCf5UeEqdAWZbOP65BqkFlGcfy088myoQ9Zn9sK623rv6
+         9Hug==
+X-Gm-Message-State: AOAM533enqhmFFpauLaOX/JdYLEXXcUHq9qlpcnELE5bQlH/Ys1lq5nd
+        yz8QKvhl3m+PZFqU5iERj8kkuQ==
+X-Google-Smtp-Source: ABdhPJyG0Ea3T12jyxm6vZmzBQnlz+cN3qJCWhrgNZuvdGCJTnAoQTyEUsEeYDaU6hrJms60UflVNw==
+X-Received: by 2002:a17:90a:17e7:: with SMTP id q94mr42915950pja.117.1625127001737;
+        Thu, 01 Jul 2021 01:10:01 -0700 (PDT)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:a18a:185:21d0:d5d6])
+        by smtp.gmail.com with ESMTPSA id h8sm6846396pjs.45.2021.07.01.01.09.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jul 2021 01:10:01 -0700 (PDT)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        zhiyong.tao@mediatek.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        zhiyong.tao@mediatek.com
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v2] pinctrl: mediatek: Fix fallback behavior for bias_set_combo
+Date:   Thu,  1 Jul 2021 16:09:55 +0800
+Message-Id: <20210701080955.2660294-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.32.0.93.g670b81a890-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 1, 2021 at 2:55 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> Some pin doesn't support PUPD register, if it fails and fallbacks with
-> bias_set_combo case, it will call mtk_pinconf_bias_set_pupd_r1_r0() to
-> modify the PUPD pin again.
->
-> Since the general bias set are either PU/PD or PULLSEL/PULLEN, try
-> bias_set or bias_set_rev1 for this fallback case.
->
-> Fixes: 81bd1579b43e ("pinctrl: mediatek: Fix fallback call path")
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 5b3b048725cc8..0cdff487836fa 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -926,9 +926,12 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->                         if (err)
->                                 return err;
->                 } else if (hw->soc->bias_set_combo) {
-> -                       err = hw->soc->bias_set_combo(hw, desc, pullup, arg);
-> -                       if (err)
-> -                               return err;
-> +                       err = mtk_pinconf_bias_set_rev1(hw, desc, pullup);
-> +                       if (err) {
-> +                               err = mtk_pinconf_bias_set(hw, desc, pullup);
-> +                               if (err)
-> +                                       return err;
+Some pin doesn't support PUPD register, if it fails and fallbacks with
+bias_set_combo case, it will call mtk_pinconf_bias_set_pupd_r1_r0() to
+modify the PUPD pin again.
 
-You don't need to nest this. If mtk_pinconf_bias_set_rev1() succeeds,
-err would be 0 and the following if blocks would all be skipped. So:
+Since the general bias set are either PU/PD or PULLSEL/PULLEN, try
+bias_set or bias_set_rev1 for the other fallback case. If the pin
+doesn't support neither PU/PD nor PULLSEL/PULLEN, it will return
+-ENOTSUPP.
 
-err = mtk_pinconf_bias_set_rev1();
-if (err)
-        err = mtk_pinconf_bias_set();
-if (err)
-        return err;
+Fixes: 81bd1579b43e ("pinctrl: mediatek: Fix fallback call path")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+v2: fix v1 comments
+---
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Moreover, maybe you should rework the test for hw->soc->bias_set_combo,
-as it is no longer relevant to the code within the if block?
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 7815426e7aeaa..10002b8497fea 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -926,12 +926,10 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+ 			err = hw->soc->bias_set(hw, desc, pullup);
+ 			if (err)
+ 				return err;
+-		} else if (hw->soc->bias_set_combo) {
+-			err = hw->soc->bias_set_combo(hw, desc, pullup, arg);
+-			if (err)
+-				return err;
+ 		} else {
+-			return -ENOTSUPP;
++			err = mtk_pinconf_bias_set_rev1(hw, desc, pullup);
++			if (err)
++				err = mtk_pinconf_bias_set(hw, desc, pullup);
+ 		}
+ 	}
+ 
+-- 
+2.32.0.93.g670b81a890-goog
 
-
-ChenYu
-
-> +                       }
->                 } else {
->                         return -ENOTSUPP;
->                 }
-> --
-> 2.32.0.93.g670b81a890-goog
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
