@@ -2,184 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FFDD3B9453
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 17:54:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BA6D3B97AA
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 22:33:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233839AbhGAP5V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jul 2021 11:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233585AbhGAP5T (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 1 Jul 2021 11:57:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B78246141C;
-        Thu,  1 Jul 2021 15:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625154888;
-        bh=O06CAm7WJ4496cl30laeh/1AvJeU0pg7XZCQUJVmPNI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QlSj3zmd+DKrGqUvD72miBdMUZIXTb216PgVdkwcPqnvLsMr867mXlEqDq3QnwZ+o
-         Wql2K9G2Vll5l1DyycbEqKM0DGtSU39lyIkdjUgiQgDgjG7FQgJzC8SDIFdEm9xhAx
-         /cSZaF4kge8xK8zZ2YK4jmtvQdud1z14C+9V7SVHkdqJ1McdaF6qj72Rp6GcZfLLBd
-         sgBNRCUF5z0/Q8NYKdTha1V0p6O8IuQSLUCrloWxfH4zSeDPEwQI7TKPj5KwfDfbfQ
-         dxyauCjZ4GtC8vlAnNaRkDGazuU2kcCQJOtyPBRncRnGFg+fwanYeReKmO1kdnZrHC
-         5WjElVD6y/z4A==
-Received: by mail-ed1-f45.google.com with SMTP id t3so9078714edt.12;
-        Thu, 01 Jul 2021 08:54:48 -0700 (PDT)
-X-Gm-Message-State: AOAM530KU7gRY7sryMQqoLck0aZAab2Xcmng5anq5ETrgf/KI/b9Yu1H
-        tvYMjP5cyamfkwlcVOjgU9mRs2KTb6ZufTTpkg==
-X-Google-Smtp-Source: ABdhPJyDGAPIxTTNb6EWHJ2bVQwwFnuQfTQVDIiAx37Nf4MM2e0CE5x4dJwLmA9fI5C6HgKQd8YK6NB1MjuOVMKZnSU=
-X-Received: by 2002:aa7:c54b:: with SMTP id s11mr627155edr.373.1625154887254;
- Thu, 01 Jul 2021 08:54:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210625235532.19575-1-dipenp@nvidia.com> <20210625235532.19575-5-dipenp@nvidia.com>
-In-Reply-To: <20210625235532.19575-5-dipenp@nvidia.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 1 Jul 2021 09:54:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLUc=_oyutBQ0rQP7uGhwh2dQeOng0ZEAfgOdqjGbiwOA@mail.gmail.com>
-Message-ID: <CAL_JsqLUc=_oyutBQ0rQP7uGhwh2dQeOng0ZEAfgOdqjGbiwOA@mail.gmail.com>
-Subject: Re: [RFC 04/11] dt-bindings: Add HTE bindings
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S236489AbhGAUgJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jul 2021 16:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236785AbhGAUgI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 16:36:08 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32AC2C061762
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Jul 2021 13:33:37 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id b5-20020a17090a9905b029016fc06f6c5bso4686119pjp.5
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Jul 2021 13:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OJw8rDzzQy3DhiLUvJQW+Qdo9Q9Meb8jwgwdAgUtwaA=;
+        b=tjNf5cxiic1IPqklXIFZcopMA88yLPj7nHk9KKLZZCgnA0o/97EhJzWO3mqfHkg89j
+         kAvRHnAzxJSzeRsj/R1Zs/iQhGksf/npipynnWtszL2uJSpvaki4kcXwIWo7jKepEU9z
+         AkvXC7nruuQI0yxo9nu0Zsq5lpZMHPR9eIKAo33JCgWztrDpK9LqDUDZxTKHqX79Et+0
+         tOVNAqJxr7h0M31yRL/TyIChS9QJCX8yhqqE2EuHgPEvtzYiYLIRGE2d9f5vgNazBLv+
+         /UJF+LPAjXVH2hfPv2RyTYowAdt+Bpf0XiS2sEUhUqR5QCAmXajtoo8vcnACnaYC80CW
+         iRHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OJw8rDzzQy3DhiLUvJQW+Qdo9Q9Meb8jwgwdAgUtwaA=;
+        b=WPlA5upybmTawpPCtpA5/cshddfxylEzDvOeqfD50OVDfZQHFqpBuaVUVzKgWPlGfo
+         wK0rg+2K+p8PxyAzlVecTWQnMORFqyedrvd6KWFBISNtXxlol6fkaZizxdyR4EcUij00
+         /hx1HBKkGEbZr30VysBg6Fk+/CvIbis+wJZ0glKfwrd3wQO2uivfBM6WoGZ9eJVR8tsk
+         du4ZmFJ2fnBBL+s3H+S5cYQzuk6Cb+M/vdSb8ytyvbldyrpODij3IEIdzj0C9etoETbr
+         FJLe9bXGLp23JzbbyR+nMph5sbA4MgyzkTu0MRdHcUumGEojIPI8w/jEjWJIC1Q6B7up
+         Rw0w==
+X-Gm-Message-State: AOAM530dl831cFsx/QjiPT5doUjzZy6tDZCcgBqC7IoKc7ZgLZBXg+m/
+        C8ScrWAe0KHX+ICRJSePCI69fwMsKym6liPg
+X-Google-Smtp-Source: ABdhPJxg+Za0ZEhKlCUXAe3lsXSkyHKiJcX76VwoRNv8bPZ+omjAiffeUdkx0JcSCtpRpL5AW22CoA==
+X-Received: by 2002:a17:902:c086:b029:129:3680:32f0 with SMTP id j6-20020a170902c086b0290129368032f0mr1419861pld.47.1625171616680;
+        Thu, 01 Jul 2021 13:33:36 -0700 (PDT)
+Received: from x1 ([2601:1c0:4701:ae70:8fd:ccc0:a9a:cf98])
+        by smtp.gmail.com with ESMTPSA id d3sm501203pjo.31.2021.07.01.13.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jul 2021 13:33:35 -0700 (PDT)
+Date:   Thu, 1 Jul 2021 13:33:33 -0700
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        warthog618@gmail.com, devicetree@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Fu Wei <tekkamanninja@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>,
+        Huan Feng <huan.feng@starfivetech.com>
+Subject: Re: [RFC PATH 2/2] gpio: starfive-jh7100: Add StarFive JH7100 GPIO
+ driver
+Message-ID: <20210701203333.GA963857@x1>
+References: <20210701002037.912625-1-drew@beagleboard.org>
+ <20210701002037.912625-3-drew@beagleboard.org>
+ <8c59105d32a9936f8806501ecd20e044@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c59105d32a9936f8806501ecd20e044@walle.cc>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 5:48 PM Dipen Patel <dipenp@nvidia.com> wrote:
->
-> Introduces HTE devicetree binding details for the HTE subsystem. It
-> includes examples for the consumers, binding details for the providers
-> and specific binding details for the Tegra194 based HTE providers.
->
-> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
-> ---
->  .../devicetree/bindings/hte/hte-consumer.yaml | 47 +++++++++++
->  .../devicetree/bindings/hte/hte.yaml          | 34 ++++++++
->  .../bindings/hte/nvidia,tegra194-hte.yaml     | 83 +++++++++++++++++++
->  3 files changed, 164 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hte/hte-consumer.yaml
->  create mode 100644 Documentation/devicetree/bindings/hte/hte.yaml
->  create mode 100644 Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
->
-> diff --git a/Documentation/devicetree/bindings/hte/hte-consumer.yaml b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
-> new file mode 100644
-> index 000000000000..79ae1f7d5185
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hte/hte-consumer.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HTE Consumer Device Tree Bindings
-> +
-> +maintainers:
-> +  - Dipen Patel <dipenp@nvidia.com>
-> +
-> +description: |
-> +  HTE properties should be named "htes". The exact meaning of each htes
-> +  property must be documented in the device tree binding for each device.
-> +  An optional property "hte-names" may contain a list of strings to label
-> +  each of the HTE devices listed in the "htes" property.
-> +
-> +  The "hte-names" property if specified is used to map the name of the HTE
-> +  device requested by the devm_of_hte_request_ts() or of_hte_request_ts
-> +  call to an index into the list given by the "htes" property.
-> +
-> +properties:
-> +  htes:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description:
-> +      The list of HTE provider phandle. The provider must document the number
-> +      of cell that must be passed in this property along with phandle.
-> +
-> +  hte-names:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    description:
-> +      An optional string property.
-> +
-> +required:
-> +  - "htes"
-> +
-> +dependencies:
-> +  hte-names: [ htes ]
-> +
-> +additionalProperties: true
-> +
-> +examples:
-> +  - |
-> +    hte_irq_consumer {
-> +              htes = <&tegra_hte_lic 0x19>;
-> +              hte-names = "hte-irq";
-> +    };
-> diff --git a/Documentation/devicetree/bindings/hte/hte.yaml b/Documentation/devicetree/bindings/hte/hte.yaml
-> new file mode 100644
-> index 000000000000..e285c38f1a05
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hte/hte.yaml
-> @@ -0,0 +1,34 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hte/hte.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HTE providers
-> +
-> +maintainers:
-> +  - Dipen Patel <dipenp@nvidia.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^hte(@.*|-[0-9a-f])*$"
-> +
-> +  "#hte-cells":
-> +    description:
-> +      Number of cells in a HTE specifier.
-> +
-> +required:
-> +  - "#hte-cells"
-> +
-> +additionalProperties: true
-> +
-> +examples:
-> +  - |
-> +    tegra_hte_aon: hte@c1e0000 {
-> +              compatible = "nvidia,tegra194-gte-aon";
-> +              reg = <0xc1e0000 0x10000>;
-> +              interrupts = <0 13 0x4>;
-> +              int-threshold = <1>;
-> +              slices = <3>;
-> +              #hte-cells = <1>;
-> +    };
-> \ No newline at end of file
-> diff --git a/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
-> new file mode 100644
-> index 000000000000..bb76cc1971f0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hte/nvidia,tegra194-hte.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Tegra194 on chip generic hardware timestamping engine (HTE)
+On Thu, Jul 01, 2021 at 08:39:40AM +0200, Michael Walle wrote:
+> Hi Drew,
+> 
+> Am 2021-07-01 02:20, schrieb Drew Fustini:
+> > Add GPIO driver for the StarFive JH7100 SoC [1] used on the
+> > BeagleV Starlight JH7100 board [2].
+> > 
+> > [1] https://github.com/starfive-tech/beaglev_doc/
+> > [2] https://github.com/beagleboard/beaglev-starlight
+> > 
+> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> > Signed-off-by: Huan Feng <huan.feng@starfivetech.com>
+> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> 
+> Could this driver use GPIO_REGMAP and REGMAP_IRQ? See
+> drivers/gpio/gpio-sl28cpld.c for an example.
+> 
+> -michael
 
-I had to read until here to know what HTE is.
+Thank you for the suggestion.  I am not familiar with GPIO_REGMAP and
+REGMAP_IRQ so I will read about it.  Is the advantage is that is helps
+to reduce code duplication by using an abstraction?
 
-Is there another example of this type of h/w that this should be a
-generic binding?
+I did notice that the gpio-sifive.c driver used regmap_update_bits() and
+regmap_write().
 
-Rob
+I suppose that is better than writel_relaxed() and iowrite32() which
+this RFC driver does?
+
+thanks,
+drew
