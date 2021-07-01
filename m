@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D7F33B9343
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 16:24:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25AA43B934A
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 16:25:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234070AbhGAO0z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jul 2021 10:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60372 "EHLO
+        id S233996AbhGAO1L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jul 2021 10:27:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233996AbhGAO0x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 10:26:53 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1B0C061762;
-        Thu,  1 Jul 2021 07:24:22 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id x16so6014048pfa.13;
-        Thu, 01 Jul 2021 07:24:22 -0700 (PDT)
+        with ESMTP id S233950AbhGAO1L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 10:27:11 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF536C061762;
+        Thu,  1 Jul 2021 07:24:40 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id in17-20020a17090b4391b0290170ba0ec7fcso6732887pjb.4;
+        Thu, 01 Jul 2021 07:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=5alZOBwP7ingtuhmEtBbx8noNC2DcygfHSJRg/F5DSM=;
-        b=QHn73QpYlPlohcjd04SxHcmptUwYbvqSOiDweWa6aUFyjmlvVlndl9LoJZotTtMhX1
-         4fnwWJgMSM/6tRSt0uBDuMOPePUSaVyUGS5ZUHxBzO+DCpM8J6+WmX4Pk7F8UCV1kbde
-         9dphXYLYxqRAZp35DrNvPL6ujIz5CUcAwD8BkKvF44LAiJ7uqoWrFCjEsF4okcYFXJq0
-         0+hs4+KuPsrr/j9+VJUchKCsZjsG+jmFt+KBLOhtsabRUVePkv8HTfnfdXjQ0OeVQxHF
-         lN8VjRB/z7w0YMK1YHGiU+H84zOGw6imC4Al5j7rI0JSxwE9XWuVdj2qCShE8qyr2vD7
-         5CVg==
+        bh=mW1av2xdS1y2jG3ZVCe9a+vSXQ1T1E+gfBtuwxq5unk=;
+        b=nvfJR6qQdw1paCfrrtoYPSZdPb8p2EjkJxnL4srGXcI6juBkHU6iUXG5h458hRWEIv
+         21lfzIuboj+UfJaHB2XKPmSay/KTTdCgHXKogF8/ChqCJw4YEt3JfcsyivGs+CGaLePz
+         Gcj6NsTpOHJBZmHFMWtOymA8Wa7MSvn+8aG/8Eq6NXKxbjljMXGp4df0bcCRmYX3fO4K
+         zV5x9ax1Wq0JoEbPOjxIkjCbxOivNEd727bhdiY6qXpHH/G0WrhL8A/4LpsTSUXuPfsz
+         18KFP2ABfTLduVpF2HPj5eiEhqVjWAvo14BcciV6S4kPqzd1pKC+jKhqDcfWL8IfTzul
+         Lfkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=5alZOBwP7ingtuhmEtBbx8noNC2DcygfHSJRg/F5DSM=;
-        b=gFFHKidYS2uFlvf8rWGwruIE9U8RpV+nsOFBvx90j5aAuqW7z1Gey7hVwva5ZCYQez
-         +CK1X6FmakzK1gCpEfxWwdWyctKsfzBTylozj9Mq/iogHUF/LnNIYTTq7c4LXgPxxGJH
-         JXEwI6IMHgO1SgfkQBLEfAUcbd9tJ5qlF7cYT1uNfcfUrRZel6z+pvKZ3DCOtcYm2pBZ
-         NVjzzaUZaKCTlXbcFe5hm23nfFJDFrjraQlRo+/J9aaAfK4hLVzYB+EYquCp9vwE/VqT
-         ht1/2oJECVCC4odmUMQJBnSIsHRCU1vUn554bi9knCKLHoplzU7ELHxGnt7jKxflXB8z
-         fZ7A==
-X-Gm-Message-State: AOAM533aqTc5HQlPDAPg8JKsJWshilUUDFtGnADGHPq1Zt8qqfykiOdd
-        5LAPkMsF8FvgrJRhRU+ICpc=
-X-Google-Smtp-Source: ABdhPJy6vQgLqbWy9m2ChetMEn3fDSKh9yVu0UugOv8M0zGDXzvQZgyIFDJEW/RYlMB9D9ttCpiLiA==
-X-Received: by 2002:a05:6a00:164b:b029:305:f45e:e1d9 with SMTP id m11-20020a056a00164bb0290305f45ee1d9mr311231pfc.10.1625149461909;
-        Thu, 01 Jul 2021 07:24:21 -0700 (PDT)
+        bh=mW1av2xdS1y2jG3ZVCe9a+vSXQ1T1E+gfBtuwxq5unk=;
+        b=HvZR/OpuDGMwGeH3hHSFAQQhp4lVKzdLvWk7wC1gXQH2yu5lYbk/ZVO7cp8WbBoxSB
+         +ADPVzocQWhH3fogetl8fVgT1wMVDGLy2z/2HvkhX/U59d/F4lFQDvNxQ4m3f2aJ0xzX
+         gIKRJY0eN0zcAzTzcGfBGX4f0GcJ0VEKzqKDeOBKVlga0uMpZdvSe6L3xrz4CV3YnOQT
+         rdamfHiFTQVpRQVvpZ2yq7KDk6TwHHJHrtxnRB9vJqFDkbzDzKNZQ2tk1BephzeP390W
+         o4CdFF38ORaV7aFc1yStAmy8oWhZd+2YD/Dr0LZRuU7h2f57tNQReSojM2HhCGcxdam7
+         9nQQ==
+X-Gm-Message-State: AOAM533hhhOxSXF4cLeCFbX1nUEFHGHXZL/3LBlX8xSDO1bqSYmvpVKh
+        ctBTxFDT67wGBIfkMSqEJCM=
+X-Google-Smtp-Source: ABdhPJwN8TK5iwZB8PkGLcVbcZBrAQy2hxo1r4BcZKhVigrizTzGD6K+OZwq5uWYe/dzjVShDlT/qg==
+X-Received: by 2002:a17:90a:3ccf:: with SMTP id k15mr28417657pjd.226.1625149480366;
+        Thu, 01 Jul 2021 07:24:40 -0700 (PDT)
 Received: from sol (106-69-174-4.dyn.iinet.net.au. [106.69.174.4])
-        by smtp.gmail.com with ESMTPSA id y11sm186123pfo.160.2021.07.01.07.24.17
+        by smtp.gmail.com with ESMTPSA id t3sm204251pfl.44.2021.07.01.07.24.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jul 2021 07:24:21 -0700 (PDT)
-Date:   Thu, 1 Jul 2021 22:24:14 +0800
+        Thu, 01 Jul 2021 07:24:39 -0700 (PDT)
+Date:   Thu, 1 Jul 2021 22:24:33 +0800
 From:   Kent Gibson <warthog618@gmail.com>
 To:     Dipen Patel <dipenp@nvidia.com>
 Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
@@ -55,270 +55,241 @@ Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
         linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
         bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
         linux-doc@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [RFC 06/11] gpiolib: Add HTE support
-Message-ID: <20210701142414.GB34285@sol>
+Subject: Re: [RFC 08/11] gpiolib: cdev: Add hardware timestamp clock type
+Message-ID: <20210701142433.GC34285@sol>
 References: <20210625235532.19575-1-dipenp@nvidia.com>
- <20210625235532.19575-7-dipenp@nvidia.com>
+ <20210625235532.19575-9-dipenp@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210625235532.19575-7-dipenp@nvidia.com>
+In-Reply-To: <20210625235532.19575-9-dipenp@nvidia.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 04:55:27PM -0700, Dipen Patel wrote:
-> Some GPIO chip can provide hardware timestamp support on its GPIO lines
-> , in order to support that additional functions needs to be added which
-> can talk to both GPIO chip and HTE (hardware timestamping engine)
-> subsystem. This patch introduces functions which gpio consumer can use
-> to request hardware assisted timestamping. Below is the list of the APIs
-> that are added in gpiolib subsystem.
-> 
-> - gpiod_hw_timestamp_control - to enable/disable HTE on specified GPIO
-> line. This API will return HTE specific descriptor for the specified
-> GPIO line during the enable call, it will be stored as pointer in the
-> gpio_desc structure as hw_ts_data.
-> - gpiod_is_hw_timestamp_enabled - to query if HTE is enabled on
-> specified GPIO line.
-> - gpiod_get_hw_timestamp - to retrieve hardware timestamps.
+On Fri, Jun 25, 2021 at 04:55:29PM -0700, Dipen Patel wrote:
+> This patch adds new clock type for the GPIO controller which can
+> timestamp gpio lines using hardware means. To expose such
+> functionalities to the userspace, code has been added in this patch
+> where during line create call, it checks for new clock type and if
+> requested, calls hardware timestamp related API from gpiolib.c.
+> During line change event, it retrieves timestamp in nano seconds by
+> calling gpiod_get_hw_timestamp API from gpiolib.c. At the line release,
+> it disables this functionality by calling gpiod_hw_timestamp_control.
 > 
 > Signed-off-by: Dipen Patel <dipenp@nvidia.com>
 > ---
->  drivers/gpio/gpiolib.c        | 92 +++++++++++++++++++++++++++++++++++
->  drivers/gpio/gpiolib.h        | 11 +++++
->  include/linux/gpio/consumer.h | 21 +++++++-
->  include/linux/gpio/driver.h   | 13 +++++
->  4 files changed, 135 insertions(+), 2 deletions(-)
+>  drivers/gpio/gpiolib-cdev.c | 65 +++++++++++++++++++++++++++++++++++--
+>  include/uapi/linux/gpio.h   |  1 +
+>  2 files changed, 64 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 220a9d8dd4e3..335eaddfde98 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2361,6 +2361,98 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index 1631727bf0da..9f98c727e937 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -518,6 +518,7 @@ struct linereq {
+>  	 GPIO_V2_LINE_DRIVE_FLAGS | \
+>  	 GPIO_V2_LINE_EDGE_FLAGS | \
+>  	 GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME | \
+> +	 GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE | \
+>  	 GPIO_V2_LINE_BIAS_FLAGS)
+>  
+>  static void linereq_put_event(struct linereq *lr,
+> @@ -540,9 +541,20 @@ static void linereq_put_event(struct linereq *lr,
+>  
+>  static u64 line_event_timestamp(struct line *line)
+>  {
+> +	bool block;
+> +
+>  	if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &line->desc->flags))
+>  		return ktime_get_real_ns();
+>  
+> +	if (test_bit(FLAG_EVENT_CLOCK_HARDWARE, &line->desc->flags)) {
+> +		if (irq_count())
+> +			block = false;
+> +		else
+> +			block = true;
+> +
+> +		return gpiod_get_hw_timestamp(line->desc, block);
+> +	}
+> +
+
+Use in_task() instead of block?
+
+>  	return ktime_get_ns();
 >  }
->  EXPORT_SYMBOL_GPL(gpiod_direction_output);
 >  
-> +/**
-> + * gpiod_hw_timestamp_control - set the hardware assisted timestamp control.
-> + * @desc:	GPIO to set
-> + * @enable:	Set true to enable the hardware timestamp, false otherwise.
-> + *
-> + * Certain GPIO chip can rely on hardware assisted timestamp engines which can
-> + * record timestamp at the occurance of the configured events on selected GPIO
-> + * lines. This is helper API to control such engine.
-> + *
-> + * Return 0 in case of success, else an error code.
-> + */
-> +int gpiod_hw_timestamp_control(struct gpio_desc *desc, bool enable)
-> +{
-> +	struct gpio_chip	*gc;
-> +	int			ret = 0;
-> +
-> +	VALIDATE_DESC(desc);
-> +	gc = desc->gdev->chip;
-> +
-> +	if (!gc->timestamp_control) {
-> +		gpiod_warn(desc,
-> +			   "%s: Hardware assisted ts not supported\n",
-> +			   __func__);
-> +		return -ENOTSUPP;
-> +	}
-> +
-> +	ret = gc->timestamp_control(gc, gpio_chip_hwgpio(desc),
-> +				    &desc->hdesc, enable);
-> +
-> +	if (ret) {
-> +		gpiod_warn(desc,
-> +			   "%s: ts control operation failed\n", __func__);
-> +		return ret;
-> +	}
-> +
-> +	if (!enable)
-> +		desc->hdesc = NULL;
-> +
-> +	return ret;
-> +}
-
-Last I checked, pointer accesses are not guaranteed atomic, so how is
-hdesc protected from concurrent access?
-Here is it modified unprotected.
-Below it is read unprotected.
-
-> +EXPORT_SYMBOL_GPL(gpiod_hw_timestamp_control);
-> +
-> +/**
-> + * gpiod_is_hw_timestamp_enabled - check if hardware assisted timestamp is
-> + * enabled.
-> + * @desc:	GPIO to check
-> + *
-> + * Return true in case of success, false otherwise.
-> + */
-> +bool gpiod_is_hw_timestamp_enabled(const struct gpio_desc *desc)
-> +{
-> +	if (!desc)
-> +		return false;
-> +
-> +	return (desc->hdesc) ? true : false;
-> +}
-> +EXPORT_SYMBOL_GPL(gpiod_is_hw_timestamp_enabled);
-> +
-> +/**
-> + * gpiod_get_hw_timestamp - Get hardware timestamp in nano seconds.
-> + * @desc:	GPIO to get the timestamp.
-> + * @block:	Set true to block until data is available.
-> + *
-> + * Return non-zero on success, else 0.
-> + */
-> +u64 gpiod_get_hw_timestamp(struct gpio_desc *desc, bool block)
-> +{
-> +	struct gpio_chip	*gc;
-> +	int			ret = 0;
-> +	u64 ts;
-> +
-> +	VALIDATE_DESC(desc);
-> +	gc = desc->gdev->chip;
-> +
-> +	if (!gc->get_hw_timestamp) {
-> +		gpiod_warn(desc,
-> +			   "%s: Hardware assisted ts not supported\n",
-> +			   __func__);
-> +		return -ENOTSUPP;
-> +	}
-> +
-
-Can't return an error code here.  Return value is u64, so this will look
-like a valid ts.
-
-Just return 0 on error, as you do immediately below...
-
-> +	ret = gc->get_hw_timestamp(gc, block, desc->hdesc, &ts);
-> +	if (ret) {
-> +		gpiod_warn(desc,
-> +			   "%s: get timestamp operation failed\n", __func__);
-> +		return 0;
-> +	}
-> +
-> +	return ts;
-> +}
-> +EXPORT_SYMBOL_GPL(gpiod_get_hw_timestamp);
-> +
->  /**
->   * gpiod_set_config - sets @config for a GPIO
->   * @desc: descriptor of the GPIO for which to set the configuration
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index 30bc3f80f83e..5393e1d90f61 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -15,6 +15,7 @@
->  #include <linux/device.h>
->  #include <linux/module.h>
->  #include <linux/cdev.h>
-> +#include <linux/hte.h>
+> @@ -828,6 +840,7 @@ static int edge_detector_setup(struct line *line,
+>  		return ret;
 >  
->  #define GPIOCHIP_NAME	"gpiochip"
+>  	line->irq = irq;
+> +
+>  	return 0;
+>  }
 >  
-> @@ -117,6 +118,7 @@ struct gpio_desc {
->  #define FLAG_EDGE_RISING     16	/* GPIO CDEV detects rising edge events */
->  #define FLAG_EDGE_FALLING    17	/* GPIO CDEV detects falling edge events */
->  #define FLAG_EVENT_CLOCK_REALTIME	18 /* GPIO CDEV reports REALTIME timestamps in events */
-> +#define FLAG_EVENT_CLOCK_HARDWARE	19 /* GPIO CDEV reports hardware timestamps in events */
+
+Remove gratuitous whitespace changes.
+If you dislike the formatting then suggest it in a separate patch.
+
+> @@ -891,7 +904,6 @@ static int gpio_v2_line_flags_validate(u64 flags)
+>  	/* Return an error if an unknown flag is set */
+>  	if (flags & ~GPIO_V2_LINE_VALID_FLAGS)
+>  		return -EINVAL;
+> -
+>  	/*
+>  	 * Do not allow both INPUT and OUTPUT flags to be set as they are
+>  	 * contradictory.
+> @@ -900,6 +912,14 @@ static int gpio_v2_line_flags_validate(u64 flags)
+>  	    (flags & GPIO_V2_LINE_FLAG_OUTPUT))
+>  		return -EINVAL;
 >  
->  	/* Connection label */
->  	const char		*label;
-> @@ -129,6 +131,15 @@ struct gpio_desc {
->  	/* debounce period in microseconds */
->  	unsigned int		debounce_period_us;
->  #endif
+
+Same here.
+
 > +	/*
-> +	 * Hardware timestamp engine related internal data structure.
-> +	 * This gets set when the consumer calls gpiod_hw_timestamp_control to enable
-> +	 * hardware timestamping on the specified GPIO line. The API calls into HTE
-> +	 * subsystem, in turns HTE subsystem return the HTE descriptor for the GPIO
-> +	 * line. The hdesc will be later used with gpiod_is_hw_timestamp_enabled
-> +	 * and gpiod_get_hw_timestamp API calls.
+> +	 * Do not mix with any other clocks if hardware assisted timestamp is
+> +	 * asked.
 > +	 */
-> +	struct hte_ts_desc *hdesc;
+> +	if ((flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME) &&
+> +	    (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE))
+> +		return -EINVAL;
+> +
+
+The comment is very hw timestamp centric. It should just be something
+along the lines of "only allow one event clock source".
+
+>  	/* Edge detection requires explicit input. */
+>  	if ((flags & GPIO_V2_LINE_EDGE_FLAGS) &&
+>  	    !(flags & GPIO_V2_LINE_FLAG_INPUT))
+> @@ -992,6 +1012,8 @@ static void gpio_v2_line_config_flags_to_desc_flags(u64 flags,
+>  
+>  	assign_bit(FLAG_EVENT_CLOCK_REALTIME, flagsp,
+>  		   flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME);
+> +	assign_bit(FLAG_EVENT_CLOCK_HARDWARE, flagsp,
+> +		   flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE);
+>  }
+>  
+>  static long linereq_get_values(struct linereq *lr, void __user *ip)
+> @@ -1139,6 +1161,18 @@ static long linereq_set_config_unlocked(struct linereq *lr,
+>  			int val = gpio_v2_line_config_output_value(lc, i);
+>  
+>  			edge_detector_stop(&lr->lines[i]);
+> +
+> +			/*
+> +			 * Assuming line was input before and hardware
+> +			 * assisted timestamp only timestamps the input
+> +			 * lines.
+> +			 */
+> +			if (gpiod_is_hw_timestamp_enabled(desc)) {
+> +				ret = gpiod_hw_timestamp_control(desc, false);
+> +				if (ret)
+> +					return ret;
+> +			}
+> +
+
+So if you fail to disable the hw timestamp then you fail the set_config?
+Does that make sense?
+It should be impossible to fail, as per the preceding edge_detector_stop(),
+or any failure in this context is irrelevant and so can be ignored.
+
+>  			ret = gpiod_direction_output(desc, val);
+>  			if (ret)
+>  				return ret;
+> @@ -1152,6 +1186,13 @@ static long linereq_set_config_unlocked(struct linereq *lr,
+>  					polarity_change);
+>  			if (ret)
+>  				return ret;
+> +
+> +			/* Check if new config sets hardware assisted clock */
+> +			if (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE) {
+> +				ret = gpiod_hw_timestamp_control(desc, true);
+> +				if (ret)
+> +					return ret;
+> +			}
+>  		}
+>  
+
+The error code here can come from the pinctrl timestamp_control(), so it
+should be sanitised before being returned to userspace.
+
+>  		blocking_notifier_call_chain(&desc->gdev->notifier,
+> @@ -1281,8 +1322,12 @@ static void linereq_free(struct linereq *lr)
+>  
+>  	for (i = 0; i < lr->num_lines; i++) {
+>  		edge_detector_stop(&lr->lines[i]);
+> -		if (lr->lines[i].desc)
+> +		if (lr->lines[i].desc) {
+> +			if (gpiod_is_hw_timestamp_enabled(lr->lines[i].desc))
+> +				gpiod_hw_timestamp_control(lr->lines[i].desc,
+> +							   false);
+>  			gpiod_free(lr->lines[i].desc);
+> +		}
+
+Potential race on gpiod_is_hw_timestamp_enabled() and the call to
+gpiod_hw_timestamp_control()?
+Why not put the gpiod_is_hw_timestamp_enabled() check inside
+gpiod_hw_timestamp_control()?
+
+And the gpiod_hw_timestamp_control() call should be moved inside
+gpiod_free(), or more correctly gpiod_free_commit().
+i.e. whenever you free the gpio you release any associated hw timestamp.
+
+>  	}
+>  	kfifo_free(&lr->events);
+>  	kfree(lr->label);
+> @@ -1409,6 +1454,15 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>  					flags & GPIO_V2_LINE_EDGE_FLAGS);
+>  			if (ret)
+>  				goto out_free_linereq;
+> +
+> +			/*
+> +			 * Check if hardware assisted timestamp is requested
+> +			 */
+> +			if (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE) {
+> +				ret = gpiod_hw_timestamp_control(desc, true);
+> +				if (ret)
+> +					goto out_free_linereq;
+> +			}
+>  		}
+>  
+
+Comment can fit on one line, and probably isn't even necessary - the
+code is clear enough.
+
+>  		blocking_notifier_call_chain(&desc->gdev->notifier,
+> @@ -1956,8 +2010,15 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+>  	if (test_bit(FLAG_EDGE_FALLING, &desc->flags))
+>  		info->flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
+>  
+> +	/*
+> +	 * Practically it is possible that user will want both the real time
+> +	 * and hardware timestamps on GPIO events, for now however lets just
+> +	 * work with either clocks
+> +	 */
+>  	if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &desc->flags))
+>  		info->flags |= GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME;
+> +	else if (test_bit(FLAG_EVENT_CLOCK_HARDWARE, &desc->flags))
+> +		info->flags |= GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE;
+>
+
+If there is any need or intent to support multiple clock sources then
+avoid creeping API changes and add it now.
+Either way, drop the comment.
+
+>  	debounce_period_us = READ_ONCE(desc->debounce_period_us);
+>  	if (debounce_period_us) {
+> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> index eaaea3d8e6b4..d360545b4c21 100644
+> --- a/include/uapi/linux/gpio.h
+> +++ b/include/uapi/linux/gpio.h
+> @@ -80,6 +80,7 @@ enum gpio_v2_line_flag {
+>  	GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN	= _BITULL(9),
+>  	GPIO_V2_LINE_FLAG_BIAS_DISABLED		= _BITULL(10),
+>  	GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME	= _BITULL(11),
+> +	GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE	= _BITULL(12),
 >  };
 >  
->  #define gpiod_not_found(desc)		(IS_ERR(desc) && PTR_ERR(desc) == -ENOENT)
-> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-> index c73b25bc9213..476ee04de7d0 100644
-> --- a/include/linux/gpio/consumer.h
-> +++ b/include/linux/gpio/consumer.h
-> @@ -112,6 +112,9 @@ int gpiod_get_direction(struct gpio_desc *desc);
->  int gpiod_direction_input(struct gpio_desc *desc);
->  int gpiod_direction_output(struct gpio_desc *desc, int value);
->  int gpiod_direction_output_raw(struct gpio_desc *desc, int value);
-> +int gpiod_hw_timestamp_control(struct gpio_desc *desc, bool enable);
-> +bool gpiod_is_hw_timestamp_enabled(const struct gpio_desc *desc);
-> +u64 gpiod_get_hw_timestamp(struct gpio_desc *desc, bool block);
->  
->  /* Value get/set from non-sleeping context */
->  int gpiod_get_value(const struct gpio_desc *desc);
-> @@ -353,8 +356,22 @@ static inline int gpiod_direction_output_raw(struct gpio_desc *desc, int value)
->  	WARN_ON(desc);
->  	return -ENOSYS;
->  }
-> -
-> -
-> +static inline int gpiod_hw_timestamp_control(struct gpio_desc *desc,
-> +					     bool enable)
-> +{
-> +	WARN_ON(desc);
-> +	return -ENOSYS;
-> +}
-> +static inline bool gpiod_is_hw_timestamp_enabled(const struct gpio_desc *desc)
-> +{
-> +	WARN_ON(desc);
-> +	return false;
-> +}
-> +static inline u64 gpiod_get_hw_timestamp(struct gpio_desc *desc, bool block)
-> +{
-> +	WARN_ON(desc);
-> +	return 0;
-> +}
->  static inline int gpiod_get_value(const struct gpio_desc *desc)
->  {
->  	/* GPIO can never have been requested */
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index 3a268781fcec..f343e8f54b08 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -10,6 +10,7 @@
->  #include <linux/lockdep.h>
->  #include <linux/pinctrl/pinctrl.h>
->  #include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/hte.h> /* For hardware timestamping */
->  
->  struct gpio_desc;
->  struct of_phandle_args;
-> @@ -304,6 +305,10 @@ struct gpio_irq_chip {
->   * @add_pin_ranges: optional routine to initialize pin ranges, to be used when
->   *	requires special mapping of the pins that provides GPIO functionality.
->   *	It is called after adding GPIO chip and before adding IRQ chip.
-> + * @timestamp_control: Dependent on GPIO chip, an optional routine to
-> + * 	enable/disable hardware assisted timestamp.
-> + * @get_hw_timestamp: Retrieves hardware timestamp. The consumer can specify
-> + * 	block parameter if it wishes to block till timestamp is available. 
->   * @base: identifies the first GPIO number handled by this chip;
->   *	or, if negative during registration, requests dynamic ID allocation.
->   *	DEPRECATION: providing anything non-negative and nailing the base
-> @@ -396,6 +401,14 @@ struct gpio_chip {
->  
->  	int			(*add_pin_ranges)(struct gpio_chip *gc);
->  
-> +	int			(*timestamp_control)(struct gpio_chip *gc,
-> +						     unsigned int offset,
-> +						     struct hte_ts_desc **hdesc,
-> +						     bool enable);
-> +	int			(*get_hw_timestamp)(struct gpio_chip *gc,
-> +						    bool block,
-> +						    struct hte_ts_desc *hdesc,
-> +						    u64 *ts);
->  	int			base;
->  	u16			ngpio;
->  	const char		*const *names;
+>  /**
 > -- 
 > 2.17.1
 > 
