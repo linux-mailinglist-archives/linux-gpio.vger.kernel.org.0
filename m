@@ -2,98 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D22673B8DED
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 08:54:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A8443B8E21
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 09:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234529AbhGAG5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jul 2021 02:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
+        id S234829AbhGAHXz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jul 2021 03:23:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234250AbhGAG5P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 02:57:15 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85829C0617A8
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Jun 2021 23:54:45 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id a2so5224186pgi.6
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Jun 2021 23:54:45 -0700 (PDT)
+        with ESMTP id S234824AbhGAHXz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 03:23:55 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86458C061756
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Jul 2021 00:21:24 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id p24so7071864ljj.1
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Jul 2021 00:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BaGoqmFP1tt0EpZeEpkj9x84y98y9BYCdG4DKqTdqyc=;
-        b=jytw1fUdgseF6tkwK4vPEO6tMMLx7zUiWZECq+PuslI4xmtAklxm6BQi0CekZ+tkIT
-         aqXLdrI5VN/Nc5msg6XIAk1fVxzUfAR+cKBijD9YUtszoyZNJz5//dHazXD96UAh9TOT
-         CjyS7QVqbISwamkqJs9oz5XJJYFycLwO1/P+s=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ga4/H+zFc4BIvkIZp/GwacqLCotWEZsIhOfh+7jAZ3s=;
+        b=IaI97DW3ssIIS+7nQ5kQe8/cemQmh7BCye8Vf2G2Io0KFRMGvpn3hkzbv4E0GNYhAl
+         klR2AaOqqU+FUSziNdA/ipLW79CJGazcHBsd80s/iR0+tiLs3yar5ixRAwrCCH7BUFxV
+         mwR/rL3iszdTDvZjTJDIrKMoqUgj28IFMpYKc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BaGoqmFP1tt0EpZeEpkj9x84y98y9BYCdG4DKqTdqyc=;
-        b=a54zk9CDTVNWirRNmZpDlNgGa7xz18LgaAgnmPqkcut4R9S7hD+QFIvqxMckaBL1RL
-         7LOz7o5XTieWFGPfC1JpD16pB/89lYw23XiMvq9ciXts/7FUfCvDOeraCkm1g86Y09gw
-         SX1efCGsza0S3G/L9a9nReBcrtsZEPiw7UZaECh91u4jiz6WVE4cbh/xImTaOGTeRX34
-         iU50MAXLfWefZ8If2JA+kaQsLlhu0FztLTvqEz1ORCMBOGSWA5l5sIHFraxVHNRRN+fw
-         VcO6fNuoiSFo2gJCNG0fkVEFp8ggmws1I7gOlOuArt8zdM6UWKTwVjNQes7Wi1y372Cs
-         xkWw==
-X-Gm-Message-State: AOAM533OKKafy/E8DHBmimqhLRaNUeH6FJSnUCPMU9gLtVSdmtP6m2Vq
-        LbM87eSAwFAci6I2C2KBPLNJAw==
-X-Google-Smtp-Source: ABdhPJzxV7zCV9lAR3c0Jc9juDg8NFET/Z+3XOOmtNN2U0pMXdlVQZ61Yd8/oRnIU39J8a/TT842Sg==
-X-Received: by 2002:a05:6a00:2145:b029:30b:127:e0a3 with SMTP id o5-20020a056a002145b029030b0127e0a3mr25141688pfk.34.1625122484840;
-        Wed, 30 Jun 2021 23:54:44 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:a18a:185:21d0:d5d6])
-        by smtp.gmail.com with ESMTPSA id l7sm24770126pgb.19.2021.06.30.23.54.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Jun 2021 23:54:44 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     Sean Wang <sean.wang@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ga4/H+zFc4BIvkIZp/GwacqLCotWEZsIhOfh+7jAZ3s=;
+        b=faB/AmDa9I85piIVBZ6POd/s3ILy22C/Slo7AgCSprmi6dfZJpk8hTjtb92v904+ol
+         8dor9mSH4NJDfnz+3N6LkBEk+MmgdjOetCCYP0tfbJmIpvg14DHbl8v3SNchLDKyuTiS
+         Yencd5/tu+yw0qgaqKoEnkQ8VdmXczw6moUF6fj9YHRcwQziaJ3ejjXvyZwEnBQJ4t61
+         NpDHuFln12nq353Nkb1HBejzbjPip+vTgVYRbBffpMB92NDHuOP5JjaLS2yXDnfT9fec
+         wTth/cWjl82yfUjVAhC7u/GzvW5/g8IUBffTeaazCa4+gKNL68RoV4nqyvlLJzhX3Uw6
+         9SIA==
+X-Gm-Message-State: AOAM5305mft3RZ/UUb7z8u5P6pZc1d59hkTZpa5ZaMdAFYuHsFVJKwx6
+        r7eBmmbcGgdZGrynxb1C+aDIsPADKb6SnOkNyGkRCg==
+X-Google-Smtp-Source: ABdhPJyxvSNuZmwRYoKy8FDKToeJS7PWq88q64REDzsuI4/M4wTPs/gV+/Jhx06I0DFC/KinbxeFXBAee1LQDg9hUZE=
+X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr10809961ljp.251.1625124082895;
+ Thu, 01 Jul 2021 00:21:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210701065439.2527790-1-hsinyi@chromium.org>
+In-Reply-To: <20210701065439.2527790-1-hsinyi@chromium.org>
+From:   Chen-Yu Tsai <wenst@chromium.org>
+Date:   Thu, 1 Jul 2021 15:21:11 +0800
+Message-ID: <CAGXv+5GNkqHOxv9zXoa3yLh5_FXGUARqXd82W00CBTnHS_BFPw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mediatek: Fix fallback behavior for bias_set_combo
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        zhiyong.tao@mediatek.com
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        zhiyong.tao@mediatek.com,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: mediatek: Fix fallback behavior for bias_set_combo
-Date:   Thu,  1 Jul 2021 14:54:39 +0800
-Message-Id: <20210701065439.2527790-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.32.0.93.g670b81a890-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some pin doesn't support PUPD register, if it fails and fallbacks with
-bias_set_combo case, it will call mtk_pinconf_bias_set_pupd_r1_r0() to
-modify the PUPD pin again.
+On Thu, Jul 1, 2021 at 2:55 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+>
+> Some pin doesn't support PUPD register, if it fails and fallbacks with
+> bias_set_combo case, it will call mtk_pinconf_bias_set_pupd_r1_r0() to
+> modify the PUPD pin again.
+>
+> Since the general bias set are either PU/PD or PULLSEL/PULLEN, try
+> bias_set or bias_set_rev1 for this fallback case.
+>
+> Fixes: 81bd1579b43e ("pinctrl: mediatek: Fix fallback call path")
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index 5b3b048725cc8..0cdff487836fa 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -926,9 +926,12 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>                         if (err)
+>                                 return err;
+>                 } else if (hw->soc->bias_set_combo) {
+> -                       err = hw->soc->bias_set_combo(hw, desc, pullup, arg);
+> -                       if (err)
+> -                               return err;
+> +                       err = mtk_pinconf_bias_set_rev1(hw, desc, pullup);
+> +                       if (err) {
+> +                               err = mtk_pinconf_bias_set(hw, desc, pullup);
+> +                               if (err)
+> +                                       return err;
 
-Since the general bias set are either PU/PD or PULLSEL/PULLEN, try
-bias_set or bias_set_rev1 for this fallback case.
+You don't need to nest this. If mtk_pinconf_bias_set_rev1() succeeds,
+err would be 0 and the following if blocks would all be skipped. So:
 
-Fixes: 81bd1579b43e ("pinctrl: mediatek: Fix fallback call path")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+err = mtk_pinconf_bias_set_rev1();
+if (err)
+        err = mtk_pinconf_bias_set();
+if (err)
+        return err;
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index 5b3b048725cc8..0cdff487836fa 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -926,9 +926,12 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
- 			if (err)
- 				return err;
- 		} else if (hw->soc->bias_set_combo) {
--			err = hw->soc->bias_set_combo(hw, desc, pullup, arg);
--			if (err)
--				return err;
-+			err = mtk_pinconf_bias_set_rev1(hw, desc, pullup);
-+			if (err) {
-+				err = mtk_pinconf_bias_set(hw, desc, pullup);
-+				if (err)
-+					return err;
-+			}
- 		} else {
- 			return -ENOTSUPP;
- 		}
--- 
-2.32.0.93.g670b81a890-goog
+Moreover, maybe you should rework the test for hw->soc->bias_set_combo,
+as it is no longer relevant to the code within the if block?
 
+
+ChenYu
+
+> +                       }
+>                 } else {
+>                         return -ENOTSUPP;
+>                 }
+> --
+> 2.32.0.93.g670b81a890-goog
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
