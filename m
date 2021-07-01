@@ -2,297 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25AA43B934A
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 16:25:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FFDD3B9453
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jul 2021 17:54:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233996AbhGAO1L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jul 2021 10:27:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233950AbhGAO1L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jul 2021 10:27:11 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF536C061762;
-        Thu,  1 Jul 2021 07:24:40 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id in17-20020a17090b4391b0290170ba0ec7fcso6732887pjb.4;
-        Thu, 01 Jul 2021 07:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mW1av2xdS1y2jG3ZVCe9a+vSXQ1T1E+gfBtuwxq5unk=;
-        b=nvfJR6qQdw1paCfrrtoYPSZdPb8p2EjkJxnL4srGXcI6juBkHU6iUXG5h458hRWEIv
-         21lfzIuboj+UfJaHB2XKPmSay/KTTdCgHXKogF8/ChqCJw4YEt3JfcsyivGs+CGaLePz
-         Gcj6NsTpOHJBZmHFMWtOymA8Wa7MSvn+8aG/8Eq6NXKxbjljMXGp4df0bcCRmYX3fO4K
-         zV5x9ax1Wq0JoEbPOjxIkjCbxOivNEd727bhdiY6qXpHH/G0WrhL8A/4LpsTSUXuPfsz
-         18KFP2ABfTLduVpF2HPj5eiEhqVjWAvo14BcciV6S4kPqzd1pKC+jKhqDcfWL8IfTzul
-         Lfkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mW1av2xdS1y2jG3ZVCe9a+vSXQ1T1E+gfBtuwxq5unk=;
-        b=HvZR/OpuDGMwGeH3hHSFAQQhp4lVKzdLvWk7wC1gXQH2yu5lYbk/ZVO7cp8WbBoxSB
-         +ADPVzocQWhH3fogetl8fVgT1wMVDGLy2z/2HvkhX/U59d/F4lFQDvNxQ4m3f2aJ0xzX
-         gIKRJY0eN0zcAzTzcGfBGX4f0GcJ0VEKzqKDeOBKVlga0uMpZdvSe6L3xrz4CV3YnOQT
-         rdamfHiFTQVpRQVvpZ2yq7KDk6TwHHJHrtxnRB9vJqFDkbzDzKNZQ2tk1BephzeP390W
-         o4CdFF38ORaV7aFc1yStAmy8oWhZd+2YD/Dr0LZRuU7h2f57tNQReSojM2HhCGcxdam7
-         9nQQ==
-X-Gm-Message-State: AOAM533hhhOxSXF4cLeCFbX1nUEFHGHXZL/3LBlX8xSDO1bqSYmvpVKh
-        ctBTxFDT67wGBIfkMSqEJCM=
-X-Google-Smtp-Source: ABdhPJwN8TK5iwZB8PkGLcVbcZBrAQy2hxo1r4BcZKhVigrizTzGD6K+OZwq5uWYe/dzjVShDlT/qg==
-X-Received: by 2002:a17:90a:3ccf:: with SMTP id k15mr28417657pjd.226.1625149480366;
-        Thu, 01 Jul 2021 07:24:40 -0700 (PDT)
-Received: from sol (106-69-174-4.dyn.iinet.net.au. [106.69.174.4])
-        by smtp.gmail.com with ESMTPSA id t3sm204251pfl.44.2021.07.01.07.24.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jul 2021 07:24:39 -0700 (PDT)
-Date:   Thu, 1 Jul 2021 22:24:33 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [RFC 08/11] gpiolib: cdev: Add hardware timestamp clock type
-Message-ID: <20210701142433.GC34285@sol>
-References: <20210625235532.19575-1-dipenp@nvidia.com>
- <20210625235532.19575-9-dipenp@nvidia.com>
+        id S233839AbhGAP5V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jul 2021 11:57:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233585AbhGAP5T (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 1 Jul 2021 11:57:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B78246141C;
+        Thu,  1 Jul 2021 15:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625154888;
+        bh=O06CAm7WJ4496cl30laeh/1AvJeU0pg7XZCQUJVmPNI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QlSj3zmd+DKrGqUvD72miBdMUZIXTb216PgVdkwcPqnvLsMr867mXlEqDq3QnwZ+o
+         Wql2K9G2Vll5l1DyycbEqKM0DGtSU39lyIkdjUgiQgDgjG7FQgJzC8SDIFdEm9xhAx
+         /cSZaF4kge8xK8zZ2YK4jmtvQdud1z14C+9V7SVHkdqJ1McdaF6qj72Rp6GcZfLLBd
+         sgBNRCUF5z0/Q8NYKdTha1V0p6O8IuQSLUCrloWxfH4zSeDPEwQI7TKPj5KwfDfbfQ
+         dxyauCjZ4GtC8vlAnNaRkDGazuU2kcCQJOtyPBRncRnGFg+fwanYeReKmO1kdnZrHC
+         5WjElVD6y/z4A==
+Received: by mail-ed1-f45.google.com with SMTP id t3so9078714edt.12;
+        Thu, 01 Jul 2021 08:54:48 -0700 (PDT)
+X-Gm-Message-State: AOAM530KU7gRY7sryMQqoLck0aZAab2Xcmng5anq5ETrgf/KI/b9Yu1H
+        tvYMjP5cyamfkwlcVOjgU9mRs2KTb6ZufTTpkg==
+X-Google-Smtp-Source: ABdhPJyDGAPIxTTNb6EWHJ2bVQwwFnuQfTQVDIiAx37Nf4MM2e0CE5x4dJwLmA9fI5C6HgKQd8YK6NB1MjuOVMKZnSU=
+X-Received: by 2002:aa7:c54b:: with SMTP id s11mr627155edr.373.1625154887254;
+ Thu, 01 Jul 2021 08:54:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210625235532.19575-9-dipenp@nvidia.com>
+References: <20210625235532.19575-1-dipenp@nvidia.com> <20210625235532.19575-5-dipenp@nvidia.com>
+In-Reply-To: <20210625235532.19575-5-dipenp@nvidia.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 1 Jul 2021 09:54:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLUc=_oyutBQ0rQP7uGhwh2dQeOng0ZEAfgOdqjGbiwOA@mail.gmail.com>
+Message-ID: <CAL_JsqLUc=_oyutBQ0rQP7uGhwh2dQeOng0ZEAfgOdqjGbiwOA@mail.gmail.com>
+Subject: Re: [RFC 04/11] dt-bindings: Add HTE bindings
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        warthog618@gmail.com, devicetree@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 04:55:29PM -0700, Dipen Patel wrote:
-> This patch adds new clock type for the GPIO controller which can
-> timestamp gpio lines using hardware means. To expose such
-> functionalities to the userspace, code has been added in this patch
-> where during line create call, it checks for new clock type and if
-> requested, calls hardware timestamp related API from gpiolib.c.
-> During line change event, it retrieves timestamp in nano seconds by
-> calling gpiod_get_hw_timestamp API from gpiolib.c. At the line release,
-> it disables this functionality by calling gpiod_hw_timestamp_control.
-> 
+On Fri, Jun 25, 2021 at 5:48 PM Dipen Patel <dipenp@nvidia.com> wrote:
+>
+> Introduces HTE devicetree binding details for the HTE subsystem. It
+> includes examples for the consumers, binding details for the providers
+> and specific binding details for the Tegra194 based HTE providers.
+>
 > Signed-off-by: Dipen Patel <dipenp@nvidia.com>
 > ---
->  drivers/gpio/gpiolib-cdev.c | 65 +++++++++++++++++++++++++++++++++++--
->  include/uapi/linux/gpio.h   |  1 +
->  2 files changed, 64 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 1631727bf0da..9f98c727e937 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -518,6 +518,7 @@ struct linereq {
->  	 GPIO_V2_LINE_DRIVE_FLAGS | \
->  	 GPIO_V2_LINE_EDGE_FLAGS | \
->  	 GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME | \
-> +	 GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE | \
->  	 GPIO_V2_LINE_BIAS_FLAGS)
->  
->  static void linereq_put_event(struct linereq *lr,
-> @@ -540,9 +541,20 @@ static void linereq_put_event(struct linereq *lr,
->  
->  static u64 line_event_timestamp(struct line *line)
->  {
-> +	bool block;
-> +
->  	if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &line->desc->flags))
->  		return ktime_get_real_ns();
->  
-> +	if (test_bit(FLAG_EVENT_CLOCK_HARDWARE, &line->desc->flags)) {
-> +		if (irq_count())
-> +			block = false;
-> +		else
-> +			block = true;
-> +
-> +		return gpiod_get_hw_timestamp(line->desc, block);
-> +	}
-> +
-
-Use in_task() instead of block?
-
->  	return ktime_get_ns();
->  }
->  
-> @@ -828,6 +840,7 @@ static int edge_detector_setup(struct line *line,
->  		return ret;
->  
->  	line->irq = irq;
-> +
->  	return 0;
->  }
->  
-
-Remove gratuitous whitespace changes.
-If you dislike the formatting then suggest it in a separate patch.
-
-> @@ -891,7 +904,6 @@ static int gpio_v2_line_flags_validate(u64 flags)
->  	/* Return an error if an unknown flag is set */
->  	if (flags & ~GPIO_V2_LINE_VALID_FLAGS)
->  		return -EINVAL;
-> -
->  	/*
->  	 * Do not allow both INPUT and OUTPUT flags to be set as they are
->  	 * contradictory.
-> @@ -900,6 +912,14 @@ static int gpio_v2_line_flags_validate(u64 flags)
->  	    (flags & GPIO_V2_LINE_FLAG_OUTPUT))
->  		return -EINVAL;
->  
-
-Same here.
-
-> +	/*
-> +	 * Do not mix with any other clocks if hardware assisted timestamp is
-> +	 * asked.
-> +	 */
-> +	if ((flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME) &&
-> +	    (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE))
-> +		return -EINVAL;
-> +
-
-The comment is very hw timestamp centric. It should just be something
-along the lines of "only allow one event clock source".
-
->  	/* Edge detection requires explicit input. */
->  	if ((flags & GPIO_V2_LINE_EDGE_FLAGS) &&
->  	    !(flags & GPIO_V2_LINE_FLAG_INPUT))
-> @@ -992,6 +1012,8 @@ static void gpio_v2_line_config_flags_to_desc_flags(u64 flags,
->  
->  	assign_bit(FLAG_EVENT_CLOCK_REALTIME, flagsp,
->  		   flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME);
-> +	assign_bit(FLAG_EVENT_CLOCK_HARDWARE, flagsp,
-> +		   flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE);
->  }
->  
->  static long linereq_get_values(struct linereq *lr, void __user *ip)
-> @@ -1139,6 +1161,18 @@ static long linereq_set_config_unlocked(struct linereq *lr,
->  			int val = gpio_v2_line_config_output_value(lc, i);
->  
->  			edge_detector_stop(&lr->lines[i]);
-> +
-> +			/*
-> +			 * Assuming line was input before and hardware
-> +			 * assisted timestamp only timestamps the input
-> +			 * lines.
-> +			 */
-> +			if (gpiod_is_hw_timestamp_enabled(desc)) {
-> +				ret = gpiod_hw_timestamp_control(desc, false);
-> +				if (ret)
-> +					return ret;
-> +			}
-> +
-
-So if you fail to disable the hw timestamp then you fail the set_config?
-Does that make sense?
-It should be impossible to fail, as per the preceding edge_detector_stop(),
-or any failure in this context is irrelevant and so can be ignored.
-
->  			ret = gpiod_direction_output(desc, val);
->  			if (ret)
->  				return ret;
-> @@ -1152,6 +1186,13 @@ static long linereq_set_config_unlocked(struct linereq *lr,
->  					polarity_change);
->  			if (ret)
->  				return ret;
-> +
-> +			/* Check if new config sets hardware assisted clock */
-> +			if (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE) {
-> +				ret = gpiod_hw_timestamp_control(desc, true);
-> +				if (ret)
-> +					return ret;
-> +			}
->  		}
->  
-
-The error code here can come from the pinctrl timestamp_control(), so it
-should be sanitised before being returned to userspace.
-
->  		blocking_notifier_call_chain(&desc->gdev->notifier,
-> @@ -1281,8 +1322,12 @@ static void linereq_free(struct linereq *lr)
->  
->  	for (i = 0; i < lr->num_lines; i++) {
->  		edge_detector_stop(&lr->lines[i]);
-> -		if (lr->lines[i].desc)
-> +		if (lr->lines[i].desc) {
-> +			if (gpiod_is_hw_timestamp_enabled(lr->lines[i].desc))
-> +				gpiod_hw_timestamp_control(lr->lines[i].desc,
-> +							   false);
->  			gpiod_free(lr->lines[i].desc);
-> +		}
-
-Potential race on gpiod_is_hw_timestamp_enabled() and the call to
-gpiod_hw_timestamp_control()?
-Why not put the gpiod_is_hw_timestamp_enabled() check inside
-gpiod_hw_timestamp_control()?
-
-And the gpiod_hw_timestamp_control() call should be moved inside
-gpiod_free(), or more correctly gpiod_free_commit().
-i.e. whenever you free the gpio you release any associated hw timestamp.
-
->  	}
->  	kfifo_free(&lr->events);
->  	kfree(lr->label);
-> @@ -1409,6 +1454,15 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
->  					flags & GPIO_V2_LINE_EDGE_FLAGS);
->  			if (ret)
->  				goto out_free_linereq;
-> +
-> +			/*
-> +			 * Check if hardware assisted timestamp is requested
-> +			 */
-> +			if (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE) {
-> +				ret = gpiod_hw_timestamp_control(desc, true);
-> +				if (ret)
-> +					goto out_free_linereq;
-> +			}
->  		}
->  
-
-Comment can fit on one line, and probably isn't even necessary - the
-code is clear enough.
-
->  		blocking_notifier_call_chain(&desc->gdev->notifier,
-> @@ -1956,8 +2010,15 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->  	if (test_bit(FLAG_EDGE_FALLING, &desc->flags))
->  		info->flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
->  
-> +	/*
-> +	 * Practically it is possible that user will want both the real time
-> +	 * and hardware timestamps on GPIO events, for now however lets just
-> +	 * work with either clocks
-> +	 */
->  	if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &desc->flags))
->  		info->flags |= GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME;
-> +	else if (test_bit(FLAG_EVENT_CLOCK_HARDWARE, &desc->flags))
-> +		info->flags |= GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE;
+>  .../devicetree/bindings/hte/hte-consumer.yaml | 47 +++++++++++
+>  .../devicetree/bindings/hte/hte.yaml          | 34 ++++++++
+>  .../bindings/hte/nvidia,tegra194-hte.yaml     | 83 +++++++++++++++++++
+>  3 files changed, 164 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hte/hte-consumer.yaml
+>  create mode 100644 Documentation/devicetree/bindings/hte/hte.yaml
+>  create mode 100644 Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
 >
+> diff --git a/Documentation/devicetree/bindings/hte/hte-consumer.yaml b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
+> new file mode 100644
+> index 000000000000..79ae1f7d5185
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hte/hte-consumer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HTE Consumer Device Tree Bindings
+> +
+> +maintainers:
+> +  - Dipen Patel <dipenp@nvidia.com>
+> +
+> +description: |
+> +  HTE properties should be named "htes". The exact meaning of each htes
+> +  property must be documented in the device tree binding for each device.
+> +  An optional property "hte-names" may contain a list of strings to label
+> +  each of the HTE devices listed in the "htes" property.
+> +
+> +  The "hte-names" property if specified is used to map the name of the HTE
+> +  device requested by the devm_of_hte_request_ts() or of_hte_request_ts
+> +  call to an index into the list given by the "htes" property.
+> +
+> +properties:
+> +  htes:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      The list of HTE provider phandle. The provider must document the number
+> +      of cell that must be passed in this property along with phandle.
+> +
+> +  hte-names:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    description:
+> +      An optional string property.
+> +
+> +required:
+> +  - "htes"
+> +
+> +dependencies:
+> +  hte-names: [ htes ]
+> +
+> +additionalProperties: true
+> +
+> +examples:
+> +  - |
+> +    hte_irq_consumer {
+> +              htes = <&tegra_hte_lic 0x19>;
+> +              hte-names = "hte-irq";
+> +    };
+> diff --git a/Documentation/devicetree/bindings/hte/hte.yaml b/Documentation/devicetree/bindings/hte/hte.yaml
+> new file mode 100644
+> index 000000000000..e285c38f1a05
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hte/hte.yaml
+> @@ -0,0 +1,34 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hte/hte.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HTE providers
+> +
+> +maintainers:
+> +  - Dipen Patel <dipenp@nvidia.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^hte(@.*|-[0-9a-f])*$"
+> +
+> +  "#hte-cells":
+> +    description:
+> +      Number of cells in a HTE specifier.
+> +
+> +required:
+> +  - "#hte-cells"
+> +
+> +additionalProperties: true
+> +
+> +examples:
+> +  - |
+> +    tegra_hte_aon: hte@c1e0000 {
+> +              compatible = "nvidia,tegra194-gte-aon";
+> +              reg = <0xc1e0000 0x10000>;
+> +              interrupts = <0 13 0x4>;
+> +              int-threshold = <1>;
+> +              slices = <3>;
+> +              #hte-cells = <1>;
+> +    };
+> \ No newline at end of file
+> diff --git a/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
+> new file mode 100644
+> index 000000000000..bb76cc1971f0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hte/nvidia,tegra194-hte.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Tegra194 on chip generic hardware timestamping engine (HTE)
 
-If there is any need or intent to support multiple clock sources then
-avoid creeping API changes and add it now.
-Either way, drop the comment.
+I had to read until here to know what HTE is.
 
->  	debounce_period_us = READ_ONCE(desc->debounce_period_us);
->  	if (debounce_period_us) {
-> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-> index eaaea3d8e6b4..d360545b4c21 100644
-> --- a/include/uapi/linux/gpio.h
-> +++ b/include/uapi/linux/gpio.h
-> @@ -80,6 +80,7 @@ enum gpio_v2_line_flag {
->  	GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN	= _BITULL(9),
->  	GPIO_V2_LINE_FLAG_BIAS_DISABLED		= _BITULL(10),
->  	GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME	= _BITULL(11),
-> +	GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE	= _BITULL(12),
->  };
->  
->  /**
-> -- 
-> 2.17.1
-> 
+Is there another example of this type of h/w that this should be a
+generic binding?
 
-Cheers,
-Kent.
+Rob
