@@ -2,48 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B04003B9E92
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jul 2021 11:56:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3096F3B9F03
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jul 2021 12:19:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230302AbhGBJ7W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Jul 2021 05:59:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37018 "EHLO
+        id S231803AbhGBKVQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jul 2021 06:21:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230296AbhGBJ7V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jul 2021 05:59:21 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B027C061762;
-        Fri,  2 Jul 2021 02:56:49 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id j199so8043871pfd.7;
-        Fri, 02 Jul 2021 02:56:49 -0700 (PDT)
+        with ESMTP id S231910AbhGBKVJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jul 2021 06:21:09 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80211C0613E1
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Jul 2021 03:18:25 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id w11so12712269ljh.0
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Jul 2021 03:18:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Vi6uB4vFfoRq9MCgtt0L+5wl++IlNTg9EGNRj/RiSAU=;
-        b=cdVGBYtsL3+k1Y+8F3QU0c4ZKNS4XaSnmf3LVktYQDixERrf6cIKrmxZhYIerF1JX6
-         KwUTcAxKaU3dyW2/OnU6s5rmuNjQbMgdqxM/rk1tm8FEy+ESs4/1o7bMi7IKQUjDnQY0
-         jwOMscAH7iumc1ur1vg7nAjPcuXsfqTWve2KP9SGhvs5FZmRQ2DSkAESwysIV0nhTG8f
-         YAMQnvpPTfLV+Y+Et2GHgAwBPKJs94K4OG7TIyH1EtGYGSv2eP2MOprhZcXDAT2xhcBD
-         iZLjRftMHBAQSdti3YJPoantrwQvBwnUa+P0SyKdI3C3Fu9KApW3GKvWR/TAWggBauN9
-         +28w==
+        bh=dyD/pAf7kMsskV0+zA8WGcmiKArOOY/L95px7mtP6FU=;
+        b=AhBwhdH7CNdLp1cE+ZhUB0DHi6mDv6VbpKXfLf4JvzWmmfYm/TI+2bw7U+LgyXu1wc
+         6awmzYWKIb3DjOoRxYQM8VcvYywiy0Q7RHU01UIqTMSY+ygRMPsoxgsOnJOtOXdShstX
+         1zZBqkrB6qvf3qcm9nd7kYWhU0mArnuU/g/C/ZcM2tn4Oy6w4ikH50YCjHM9jegKoC8I
+         mp2vL2Jb7fVnKo98AOjEuf/VLymjk1spwwIxn+wOCy8xCwooYzBHtOUh+GKs7fkMDMLx
+         HhdtZl2yQo8xkywXWNG66ckluOxJfxItb3exIXQXgsnEWRqQUu/KhQXqPNui7nhKKt/g
+         FDPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Vi6uB4vFfoRq9MCgtt0L+5wl++IlNTg9EGNRj/RiSAU=;
-        b=qd79kue9z6DJo5R7VKBymCQwEftr7hsujHYod+akMnYbskSdq8Re4FqDRQip8Nc/9t
-         C1wZPQTFyu5awcnZ1YP6tBtY0MkW6KueZVXEeF1z2auNRcrgL6H9WuStLOB0KpFEkXjw
-         McvcOdllbWm1Fd5as2yU75Z1Olwi10V/MhsQCjzKCY94I/i5oHUI2FmwxtlnjnfYNZak
-         ODe0xVe2pjgJm19uGEjHJjz2e8gYMFJMgXBacfUQJwwGUxDcFqF/s+F8pNGzTUOb+iOw
-         V/CVPru0A4wbB3iJg2GqraMO0KBLLXMOFtggLm/H3MeghUPcxniFNYRf+CJSmxCR3OAw
-         ti0Q==
-X-Gm-Message-State: AOAM531xwisfEOt1p0kAWB6b2M4ObuzGYaJHCZzPxZaldTY3PPIbZXgw
-        RN/VlT2map0vyHn6n4xutgQJECegfQ0C5Qi7iUg=
-X-Google-Smtp-Source: ABdhPJzJlHjGEl/ijNWqEk/lqmxEqNMq7wQrahYIFyg31TbpskqCGjBJP6FnCp8xxXu+qZi8dcV8gAGybWX8JMSpeho=
-X-Received: by 2002:aa7:8055:0:b029:303:36a6:fec7 with SMTP id
- y21-20020aa780550000b029030336a6fec7mr4565082pfm.40.1625219808770; Fri, 02
- Jul 2021 02:56:48 -0700 (PDT)
+        bh=dyD/pAf7kMsskV0+zA8WGcmiKArOOY/L95px7mtP6FU=;
+        b=XBPl1XoFJvMx7ksW7WyjzqZpeoGyntvIC98DcetqgxmM0YSt4cGf8K3KbuscouwQSx
+         0sj3s9AVBTbNrVd1s0EaNnhsx1UvoQ/CSsyewZRaZ5HMmIxqTFkiPiwPubpRrWRiFJOt
+         DS517HX/WMToH8pqcfy6wvdYZZ2tClWZXX0mKUkhQxNCwCmPQnVbWbZX2RGD8Q4VwSuw
+         nWQMoPUYoymyOYL06nexbk/r1Q9k1p8zsyxagTONr81ypNrhAjtAEAeiNxCdUzrw6ukP
+         hvc5CLRDhS8CQoxlMyWI5MDNx+Y9rfuv41DSi9pNQueyj5BL97wZlyijSz8ZS7bZbzX7
+         NtXw==
+X-Gm-Message-State: AOAM5339Cfo9HmKO7tpMWE9Me2y53jivqQpK78dY4/1fz6xB01OV3pxr
+        p+wLLLNxUvmHqypU0rRVD4f1kFkFAhDoLXZehYFD8g==
+X-Google-Smtp-Source: ABdhPJxJwAm3vVzfjzWiRoBftL1vkTAUPI5KsG9DWqGQsRitA3QyWIgy2zE6ZZFfiy0+Z04wuXVO7relnVrlbydSJHQ=
+X-Received: by 2002:a2e:9d15:: with SMTP id t21mr3274629lji.200.1625221103869;
+ Fri, 02 Jul 2021 03:18:23 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210626161819.30508-1-sergio.paracuellos@gmail.com>
  <CAHp75VfM-35tQMRh98mtg2XmDOJFnmjdYRKZZoi9ADm=AT2xUw@mail.gmail.com>
@@ -54,15 +53,15 @@ References: <20210626161819.30508-1-sergio.paracuellos@gmail.com>
  <CAMhs-H9gw63j98vVo3y0ymW4_6rFNL8u5cYNM2hzyrmkPB3h3w@mail.gmail.com>
  <CAHp75VccSCWa=EH8i01_b_HLZRumUZ48oRjeuaV5Dp1BQAoz2w@mail.gmail.com> <CAMhs-H_Ne4W79Awbmo6w_68X+h0-ybjvzNsbh=XuHMPJJ8-hDQ@mail.gmail.com>
 In-Reply-To: <CAMhs-H_Ne4W79Awbmo6w_68X+h0-ybjvzNsbh=XuHMPJJ8-hDQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 2 Jul 2021 12:56:10 +0300
-Message-ID: <CAHp75Vdr9iM0a4EA3pKE5W=jHeeGk_u_5ygXE81L5mWtGhYHTw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 2 Jul 2021 12:18:12 +0200
+Message-ID: <CACRpkdaqSoyDUn3dVuVgzRK_7AabdY=1FzAnhHZzPs3qS+GfsA@mail.gmail.com>
 Subject: Re: [PATCH v2] gpio: mt7621: support gpio-line-names property
 To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
         John Thomson <git@johnthomson.fastmail.com.au>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         NeilBrown <neil@brown.name>,
@@ -73,57 +72,11 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 2, 2021 at 12:40 PM Sergio Paracuellos
+On Fri, Jul 2, 2021 at 11:40 AM Sergio Paracuellos
 <sergio.paracuellos@gmail.com> wrote:
 > On Fri, Jul 2, 2021 at 11:27 AM Andy Shevchenko
 > <andy.shevchenko@gmail.com> wrote:
-> > On Sun, Jun 27, 2021 at 4:13 PM Sergio Paracuellos
-> > <sergio.paracuellos@gmail.com> wrote:
-> > > On Sun, Jun 27, 2021 at 3:01 PM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Sun, Jun 27, 2021 at 1:56 PM Sergio Paracuellos
-> > > > <sergio.paracuellos@gmail.com> wrote:
 
-...
-
-> > > > Can you point out the DT in question?
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/tree/drivers/staging/mt7621-dts/mt7621.dtsi?h=staging-next
-> > >
-> > > Gpio node:
-> > >
-> > >  gpio: gpio@600 {
-> > >               #gpio-cells = <2>;
-> > >               #interrupt-cells = <2>;
-> > >               compatible = "mediatek,mt7621-gpio";
-> > >               gpio-controller;
-> > >               gpio-ranges = <&pinctrl 0 0 95>;
-> > >               interrupt-controller;
-> > >               reg = <0x600 0x100>;
-> > >               interrupt-parent = <&gic>;
-> > >               interrupts = <GIC_SHARED 12 IRQ_TYPE_LEVEL_HIGH>;
-> > >    };
-> > >
-> > > My overlay:
-> > >
-> > > &gpio {
-> > >     gpio-line-names = "", "", "", "",
-> > >                       "", "", "SFP LOS", "extcon port5 PoE compat",
-> > >                       "SFP module def0", "LED blue SFP", "SFP tx disable", "",
-> > >                       "switch USB power", "mode", "", "buzzer",
-> > >                       "LED blue pwr", "switch port5 PoE out", "reset";
-> > > };
-> > >
-> > > > > This commit populates the gc.names member of each bank from the
-> > > > > device-tree node within the driver. This overrides the default behavior
-> > > > > since devprop_gpiochip_set_names() will only be called if names is NULL.
-> > > >
-> > > > I believe this commit is not needed in the proposed (i.e. duplication) shape.
-> > > > The fwnode supports primary and secondary ones. Thus, we may create a
-> > > > pair of fwnodes when they will unify properties per device with
-> > > > properties per child together (child is primary and device, i.e.
-> > > > parent, is secondary).
-> > >
 > > > There are no child nodes, all the stuff is in the same parent node
 > > > and, as I said, belongs to the same device but internally uses three
 > > > gpiochips.
@@ -135,7 +88,9 @@ On Fri, Jul 2, 2021 at 12:40 PM Sergio Paracuellos
 >
 > See https://patchwork.ozlabs.org/project/linux-gpio/patch/1527924610-13135-3-git-send-email-sergio.paracuellos@gmail.com/#1932827
 
-Thanks for the pointer!
+Yeah this is one of those unfortunate cases where the DT representation
+(or ACPI for that matter) of the device and the Linux internal representation
+differs.
 
 > > Let's assume it can't, then the GPIO library function should be
 > > refactored in a way that it takes parameters like base index for the
@@ -143,11 +98,23 @@ Thanks for the pointer!
 >
 > Bartosz, Linus, any thoughts on this?
 
-Reading that discussion and seeing Linus there, I guess he himself
-signed (implicitly) for my idea :-)
-Otherwise we will have duplication of the code for almost no benefit
-when we can avoid it completely.
+This would be ideal, is there a reasonably simple way to get to this helper?
 
--- 
-With Best Regards,
-Andy Shevchenko
+In gpiolib.c devprop_gpiochip_set_names() need to be refactored to
+take a base number, devprop_gpiochip_set_names_base() that
+function exposed in <linux/gpio/driver.h> and then the old function
+devprop_gpiochip_set_names() wrapped in the new
+one so all old users continue to work without modification.
+Sprinkle some kerneldoc on top so we do not make mistakes
+in the future.
+
+This should work I think.
+
+Any similar drivers (several gpio_chip per FW node) that want to
+set line names need to do the same thing.
+
+Sorry that you ran into this, I hate it when I'm first at hairy stuff
+like this.
+
+Yours,
+Linus Walleij
