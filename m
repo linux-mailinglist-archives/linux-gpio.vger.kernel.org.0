@@ -2,119 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA1603BA0A8
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jul 2021 14:45:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7245C3BA14C
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jul 2021 15:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232129AbhGBMsP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Jul 2021 08:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
+        id S230509AbhGBNjw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jul 2021 09:39:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232231AbhGBMsO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jul 2021 08:48:14 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4CF8C061762
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Jul 2021 05:45:42 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id m18so12341761wrv.2
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Jul 2021 05:45:42 -0700 (PDT)
+        with ESMTP id S232558AbhGBNjv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jul 2021 09:39:51 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B7DC061764
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Jul 2021 06:37:18 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id n25so13263446edw.9
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Jul 2021 06:37:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=o9hxKcljcEc8mK0WPY7OkaX/O7ztkSKsIrvpvocYgJs=;
-        b=QMjSQis3AESqBrm6YWqjmOPOxSr5Rleq3V7ypk/TtxVMUreLcBxAIRlFoWkzzxn5Ng
-         aqtSUpVV8XyP4WM1ku3k94qOit2M+CwPveFR1xpok3nZgtWp5pbiF4DHZs3Efq1uF+ou
-         G6x7VrsdI6lz1dQD7Cud1oQ/npoQRKvW5faqMeIDdziyF33nSviB9bkispGW1pJf4xc0
-         ibuSqcpumEliA8RiS0Y9EhN1gBwT2M7fp2oqq9nNdB75D2b7YnPv8uTzvBZXH2HXZn21
-         /AgnBO6YV3N/KzrMeZqye7HQnVTzotAk1fE4DnSkLq6IwvwrhBWhq5P7TW5UkTMb8FZ+
-         V63Q==
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GP5Hvx1AiXmpH714u2kfDOsz3oFFI+owQf7RK9VTiG4=;
+        b=QlOVwfAZvZV5AExaD5Bq7aU7Xj5W34yUVf4q7B3oaOf9DRzgRstIzwi+zYMtMoZwPb
+         IiQQoHXLs3oeAp22Mq7vA+ZyhERVZbcWrg6qAxR5XVkKosSTpcoW7B/RHHTDvC5sdNqr
+         Rtj8bVXPH9rGEbLbg9yfD4twr8o13vwa4+Azs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=o9hxKcljcEc8mK0WPY7OkaX/O7ztkSKsIrvpvocYgJs=;
-        b=Bp2vcLdbA+gzOhxEHhCvlWyHk7u50ckyjec2IER7R1BXvDOSBLaO91rwrT5jB4cfkq
-         UchYpe5kkOk5v7Dr5rBP4vSMF46sdbZPE1Ya/VKwBTqcBJthOsJj0EMFnLUVbyDSYshC
-         rcLMxEr0oHuYc5KnSFt4kiJFXwSHaTmODK4Br+zIC7xmh5ppt0s1w50MKhFMQylVk5aV
-         rKNrSpb/5gUxMmc+8T/NphENO/iI84MXXfgO0qehkA7YARt5jWr8HvgPiLzTna06ss6R
-         5zrTyWur634Ao76rCi8E9jv9Y8fUrwQn1TBcOx8EafY+qfAFrIh5fMcWac7gebMm9sOK
-         rmvg==
-X-Gm-Message-State: AOAM5307LTsqoXVq5vr+W3v4YlJ/99ri4EU3uQIbzs1akQHkyoKYsKPB
-        0ZrWp8TVlidibJZTZr46amqc3A==
-X-Google-Smtp-Source: ABdhPJyAjnQA0OjBxKvOIM34pqgQn8w/StgryNytJIDMDiDME1D58QP4ltt+ygA6hU+d9Vnu48rFBw==
-X-Received: by 2002:a5d:508b:: with SMTP id a11mr5591720wrt.280.1625229940621;
-        Fri, 02 Jul 2021 05:45:40 -0700 (PDT)
-Received: from dell ([109.180.115.218])
-        by smtp.gmail.com with ESMTPSA id m7sm3315491wrv.35.2021.07.02.05.45.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GP5Hvx1AiXmpH714u2kfDOsz3oFFI+owQf7RK9VTiG4=;
+        b=OdIOi/k0g2Bw/WEO4n83GFUC416NqY3rBRGia0Bbnz2+mQAYX3XLv2q5wfKFCGQ7Mi
+         GJlC4onqXLOIP1OB5ag4pPiKd7uK/xHdZJWrdwEnJixoUoS9gpT4DF/Kp+2VRGNibYjR
+         FimarAIhSHVsrW94UrPTTI1/FVM4o5USTon/U2CmHtVADjGxoES6I4bCe5x5S8hB+9vy
+         fFInjPLjlKgN9KUYzqmKL3UQ2MSaFNc1xum15Ckyo/SDZ0/wEC2GDsLlKWjo71lg2Ntw
+         yrGX2aiyk7yfxQqTaxbob/p+tdEZlscG1kKuSdzszTYCSBYl26H/QgdFbfj2lXNF2elB
+         sHEA==
+X-Gm-Message-State: AOAM533bq6y57Lr+ls0I/phK27nSCTaA0R5B0pMIkzR7jFS5eWtTYXcw
+        k6SHx4Xtcr2RIedk1pZwmyQ81g==
+X-Google-Smtp-Source: ABdhPJxPaB8jBtbt3nSubsRoY7Xx7SIWWOxnI8+yDtNbZU7q9UePzlvCoAFCLrJ2W6DGsIOeaX+aiA==
+X-Received: by 2002:a05:6402:707:: with SMTP id w7mr6902211edx.264.1625233036688;
+        Fri, 02 Jul 2021 06:37:16 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([80.208.64.110])
+        by smtp.gmail.com with ESMTPSA id bq1sm1053046ejb.66.2021.07.02.06.37.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jul 2021 05:45:40 -0700 (PDT)
-Date:   Fri, 2 Jul 2021 13:45:38 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Chris <chrisrblake93@gmail.com>
-Cc:     ptyser@xes-inc.com, linux-kernel@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3] mfd: lpc_ich: Enable GPIO driver for DH89xxCC
-Message-ID: <YN8Kcp9p58Th/JTM@dell>
-References: <20210607233535.4198-1-chrisrblake93@gmail.com>
- <CALpBJjqfgQ2HfbF2qzGBjoGkq-TiK5rKUvs=cMwaUL7NtkoRrw@mail.gmail.com>
+        Fri, 02 Jul 2021 06:37:16 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Song Hui <hui.song_1@nxp.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        stable@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "gpio: mpc8xxx: change the gpio interrupt flags."
+Date:   Fri,  2 Jul 2021 15:37:12 +0200
+Message-Id: <20210702133712.128611-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALpBJjqfgQ2HfbF2qzGBjoGkq-TiK5rKUvs=cMwaUL7NtkoRrw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 02 Jul 2021, Chris wrote:
+This reverts commit 3d5bfbd9716318b1ca5c38488aa69f64d38a9aa5.
 
-> On Mon, Jun 7, 2021 at 6:35 PM Chris Blake <chrisrblake93@gmail.com> wrote:
-> >
-> > Based on the Intel Datasheet for the DH89xxCC PCH, the GPIO driver
-> > is the same as ICH_v5_GPIO, minus the fact the DH89xxCC also has
-> > blink support. However, blink support isn't supported by the GPIO
-> > driver so we should use ICH_v5_GPIO. Tested and working on a Meraki
-> > MX100-HW.
-> >
-> > Signed-off-by: Chris Blake <chrisrblake93@gmail.com>
-> > Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
-> > ---
-> >
-> > Changelog:
-> > V3: Update commit message format and update contributor message.
-> > V2: Updated commit message, and added Christian Lamparter as a
-> > contributor.
-> > V1: Initial Patch
-> >
-> >  drivers/mfd/lpc_ich.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/mfd/lpc_ich.c b/drivers/mfd/lpc_ich.c
-> > index 3bbb29a7e7a5..f10e53187f67 100644
-> > --- a/drivers/mfd/lpc_ich.c
-> > +++ b/drivers/mfd/lpc_ich.c
-> > @@ -489,6 +489,7 @@ static struct lpc_ich_info lpc_chipset_info[] = {
-> >         [LPC_DH89XXCC] = {
-> >                 .name = "DH89xxCC",
-> >                 .iTCO_version = 2,
-> > +               .gpio_version = ICH_V5_GPIO,
-> >         },
-> >         [LPC_PPT] = {
-> >                 .name = "Panther Point",
-> >
-> 
-> Hello,
-> 
-> Just curious if there's anything I can do to help get this reviewed
-> for merge, thanks.
+When booting with threadirqs, it causes a splat
 
-Apologies, this had slipped through the gaps.
+  WARNING: CPU: 0 PID: 29 at kernel/irq/handle.c:159 __handle_irq_event_percpu+0x1ec/0x27c
+  irq 66 handler irq_default_primary_handler+0x0/0x1c enabled interrupts
 
-Looks simple enough.  I'll review it for v5.15 once -rc1 is out.
+That splat later went away with commit 81e2073c175b ("genirq: Disable
+interrupts for force threaded handlers"), which got backported to
+-stable. However, when running an -rt kernel, the splat still
+exists. Moreover, quoting Thomas Gleixner [1]
 
+  But 3d5bfbd97163 ("gpio: mpc8xxx: change the gpio interrupt flags.")
+  has nothing to do with that:
+
+      "Delete the interrupt IRQF_NO_THREAD flags in order to gpio interrupts
+       can be threaded to allow high-priority processes to preempt."
+
+  This changelog is blatantly wrong. In mainline forced irq threads
+  have always been invoked with softirqs disabled, which obviously
+  makes them non-preemptible.
+
+So the patch didn't even do what its commit log said.
+
+[1] https://lore.kernel.org/lkml/871r8zey88.ffs@nanos.tec.linutronix.de/
+
+Cc: stable@vger.kernel.org # v5.9+
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+Thomas, please correct me if I misinterpreted your explanation.
+
+ drivers/gpio/gpio-mpc8xxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 4b9157a69fca..50b321a1ab1b 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -405,7 +405,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
+ 			       mpc8xxx_gpio_irq_cascade,
+-			       IRQF_SHARED, "gpio-cascade",
++			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
+ 			       mpc8xxx_gc);
+ 	if (ret) {
+ 		dev_err(&pdev->dev,
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.31.1
+
