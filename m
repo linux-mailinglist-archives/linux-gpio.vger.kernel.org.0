@@ -2,86 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6CD93BBA3F
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jul 2021 11:35:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 127A43BBD7D
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jul 2021 15:29:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230395AbhGEJiV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jul 2021 05:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43202 "EHLO
+        id S230480AbhGENcR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jul 2021 09:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230412AbhGEJiU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jul 2021 05:38:20 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C852C061764;
-        Mon,  5 Jul 2021 02:35:43 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id t9so17765264pgn.4;
-        Mon, 05 Jul 2021 02:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JI1vDcb79OBzxhgZoDMvIujAKof+eN/NLW1rPlw4pmM=;
-        b=qBq5VDcWzljE05k5YhS7ihzKIetelFMZEICYqqHuCopzO24S7RQFjaS3oAAFkOMs3A
-         ywRTsilTi0BTfrE+RRIqZl3SlRfLaMWtjDQkk/KgMTsAJQxeAIw7LHnhbq6pUcEptbh8
-         xtq+TN1bw5YMZYJxbHRDcd4/P49A65xYUPj1Tm7F9g+8ngKjIXH5OID4BmKT4q2OSkns
-         fC5yqG+13Ta8J+rpV9tw1apLeAkyUUnZC75xIVZsstqQeTvDXQPnEREpgiEg29z9x9a9
-         UpAXxqoSg1BXwY6Rvr1oYn+vthf/Ge2hCSADmg+ynV2BQUZhsvsmDpJTs0qRSJzYSq/j
-         Eo5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JI1vDcb79OBzxhgZoDMvIujAKof+eN/NLW1rPlw4pmM=;
-        b=Oa/CcvKy26dOdn05k3I3ggRnOXKKG92sCAEjRy1eNfQ61EGuuLuaRejf0jSmBf6aPb
-         icKkM0riN1hv1W4TZalaXkf1kau0qnqP9Islqp7qRmwVEfQFXkZ1qNsojHxTvKQk3tcS
-         uJW4/Brg5c/De9sSELAKRIl5ddr6PBFLnaBnns7iQrdy11gvQvbkrNXhM3Yd/hcDy2Lv
-         a7FkbN8Epnphiy362NTUyyrqcaKh9QoxTQpLL65f3aayBIUKkfmHOU2i10eJEMGrvaUw
-         DYrRC/rGNCipZM5PzBT9LRUOgwpZvauEdSnF05DuU6xrZc9lEQPUoO2hSuNMVZNF5qdL
-         J/zA==
-X-Gm-Message-State: AOAM5337QAQS9Xl2/9KZamYxiZC0iiJV6Py8PLKnxf8LEb1NAgKZ9oRL
-        LjnbNFM7KOcRd/Gv4VrIaTprqYSn/sdgRcUlFV8=
-X-Google-Smtp-Source: ABdhPJyxSFNMH1XXOAngvZUVssVrQV2HOw4JGtauaWMmo0k/1k/NlZnzEhTKKvKco6DaIkLMvc6iPeUFwvN6zKOt7KU=
-X-Received: by 2002:a05:6a00:158b:b029:319:c68a:8006 with SMTP id
- u11-20020a056a00158bb0290319c68a8006mr11814039pfk.7.1625477742554; Mon, 05
- Jul 2021 02:35:42 -0700 (PDT)
+        with ESMTP id S230188AbhGENcR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jul 2021 09:32:17 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02C4C06175F;
+        Mon,  5 Jul 2021 06:29:40 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 5364D2224A;
+        Mon,  5 Jul 2021 15:29:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1625491776;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ddqwepprvqFiaW8VYgzbLNgNvkfzv1fsbM9mR4tb2MU=;
+        b=KlKc6cuymWilnEHSiZybjsBCb7lqFMoM0B0qntA5wAIa83ZClp/T+yO2jhPZO3P097HPyx
+        I9LJ4cgHjYs5tbZ1GkoFxLOWaMPYXOA7xBLcq+czcgCMWb6barEtcJBGF1+1tR/jQQHk1w
+        GDVJF5uW3DqrkflWRAWNDdHoOV/WFvs=
 MIME-Version: 1.0
-References: <YL43SrZ8N8H+ZHE9@black.fi.intel.com> <YMdw6WdEQdGATBNJ@smile.fi.intel.com>
- <CAMRc=MfphPFqCaBRG6jLUFUwOB3_HTA73WXoCBg5S9GagTDeaw@mail.gmail.com>
- <75eae548-fd62-1be6-498d-9664d9c7deab@redhat.com> <cb18b7d2-8636-feed-e9f8-212ce7aa7eff@redhat.com>
-In-Reply-To: <cb18b7d2-8636-feed-e9f8-212ce7aa7eff@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Jul 2021 12:35:04 +0300
-Message-ID: <CAHp75Vf+umxDfpZ3_V3PjhsYVnQNQ2D8rvmOf0ko9Z7HmRhNiQ@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-gpio for 5.14-1
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux GPIO <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 05 Jul 2021 15:29:35 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Huan Feng <huan.feng@starfivetech.com>
+Subject: Re: [RFC PATH 2/2] gpio: starfive-jh7100: Add StarFive JH7100 GPIO
+ driver
+In-Reply-To: <20210702210622.GC1035183@x1>
+References: <20210701002037.912625-1-drew@beagleboard.org>
+ <20210701002037.912625-3-drew@beagleboard.org>
+ <CAHp75Vc7kFk_SC8MSmFE5mBt53=4yUnxpSpr=cxZ+7eA-t1r5g@mail.gmail.com>
+ <20210702210622.GC1035183@x1>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <991dddfee40c5b358c07257b58a316f3@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 5, 2021 at 12:20 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 7/5/21 11:16 AM, Hans de Goede wrote:
+Hi Drew,
 
-...
+Am 2021-07-02 23:06, schrieb Drew Fustini:
+> On Fri, Jul 02, 2021 at 07:03:19PM +0300, Andy Shevchenko wrote:
+>> On Thu, Jul 1, 2021 at 3:23 AM Drew Fustini <drew@beagleboard.org> 
+>> wrote:
+>> >
+>> > Add GPIO driver for the StarFive JH7100 SoC [1] used on the
+>> > BeagleV Starlight JH7100 board [2].
+>> >
+>> > [1] https://github.com/starfive-tech/beaglev_doc/
+>> > [2] https://github.com/beagleboard/beaglev-starlight
+>> 
+>> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+>> > Signed-off-by: Huan Feng <huan.feng@starfivetech.com>
+>> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+>> 
+>> Seems some Co-developed-by are missing.
+> 
+> Thank you for suggesting this.  Huan Feng originally wrote the driver.
+> Emil and I have made some changes to reorganize and clean it up for
+> submission.
+> 
+> Do you think all three of us should list Co-developed-by: for our names
+> in addition to the SOB?
+> 
+>> Brief look into the code brings the Q. Can't you utilize gpio-regmap
+>> here? Why not?
+> 
+> Michael Walle asked about this yesterday and it was my first time
+> looking at regmap and gpio-regmap.  I've been reading the code and it
+> does look like I should try convert this driver over to using
+> gpio-regmap.
+> 
+> The open question in my mind is how to handle the interrupt type (edge
+> trigged on positive or negative, level triggered on high or low).
+> Hopefully I can find some other examples that can help me think about
+> how to do that correctly.
 
-> I just noticed that this email is part of the same thread as the
-> pull-req which I merged, IOW it is the same pull-req as which ended
-> up in your spam folder.
->
-> So yes I believe that I took the entire thing.
+Have a look at include/linux/regmap.h, there is "struct 
+regmap_irq_type".
+If you're lucky, you can just supply the corresponding values that fits
+your hardware. If it doesn't match your hardware at all, then you can
+keep your own functions, or if its slightly different, then maybe you
+can add support for your quirk in regmap-irq. You don't necessarily have
+to use regmap-irq together with gpio-regmap. You can also just use
+regmap-irq or gpio-regmap independently.
 
-Yes, that is correct.
-Thank you!
+A quick grep for "type_rising_" lists drivers/mfd/max77650.c and
+drivers/mfd/rohm-bd70528.c for example.
 
--- 
-With Best Regards,
-Andy Shevchenko
+-michael
