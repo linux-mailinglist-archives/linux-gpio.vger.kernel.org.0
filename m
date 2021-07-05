@@ -2,120 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 513D33BB5F9
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jul 2021 05:51:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E2D53BB78E
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jul 2021 09:13:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbhGEDye (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Jul 2021 23:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbhGEDyd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jul 2021 23:54:33 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4C5C061764
-        for <linux-gpio@vger.kernel.org>; Sun,  4 Jul 2021 20:51:56 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id o18so16436280pgu.10
-        for <linux-gpio@vger.kernel.org>; Sun, 04 Jul 2021 20:51:56 -0700 (PDT)
+        id S229884AbhGEHPo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jul 2021 03:15:44 -0400
+Received: from mx1.tq-group.com ([93.104.207.81]:27440 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229817AbhGEHPn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 5 Jul 2021 03:15:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YUiMviEM4qWdeD7ggunch8ZPUKg+2qZoar2m+NNRGS8=;
-        b=uNOJqNlVsqFRp5V3Dtzs3LyZ4JxAhvTmnE2809JkV8BYzbjdgNXFu/SCqBZDhETWtO
-         UxCzhkRR3gQ9LF2lJDo5jlBbXhNOIpCTWJcJC11PU3INIgaXe2QcHww5gjZXuPFWDjNJ
-         /GwAKJfmf+1yV11uKI1brbUqXQGZUM0DqsCjdMD/F05M83wDT87QoJe0N/HgWS/Nwnhy
-         /y1aMKg7oUZy07MQjOeIRCkOVeKjvYcASAUb7Fygz0e4Dp9TnbkpE/Z/mQKeK7ASxeCc
-         AYYz7glhgtksIRljwLiWrvk+WHYi20dA2hwcZqR+hXZwhiB0ZMObCtEleUrCAoSdapiA
-         RQ2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YUiMviEM4qWdeD7ggunch8ZPUKg+2qZoar2m+NNRGS8=;
-        b=Ii656UI5SmmR9qIUVgQRd4jxPPSdd1JbicDljGZk+2jEdu587+UXC28w+kowne0WQC
-         5IGvGovqtzVvxCX5iAj2CSApRAfwSbJOeYmy5eD9dToxnH0QRxXR2lYDFHBJENTe2dYZ
-         V+4X0/B5TdDcaBJuMfyCx6fepV364oXJ9Tr2ycTNFo2tE26Gl98mLKa49ewqC9F/XECl
-         1QxVKDAhhf3F2umUINXMCtlwv6hTnrY1tpW1GNbMdX7NI8FhwvcxVL0b/licd3UZ1a/Q
-         3F2wxisvBQ/ATKx2s6G0xQHoPBmBpCxIJGEgWx3R+KLMQ6GQGZLh9Y41UBzQd31KxMhi
-         f3rA==
-X-Gm-Message-State: AOAM532XY2FXk33/BVyFiQEN8Oh+59vlqFIAT0phfKN/HVLZyiT9lqAr
-        YoUpbRkJ4v5zYcDEWKTljnGLPg==
-X-Google-Smtp-Source: ABdhPJz+JXkVhZeNayxLP5SNBpR8ubLc6ozNA5fTH8fBBTnhakkXSO8gz+YOe0X4leyKkb5WHzk6hA==
-X-Received: by 2002:a63:d60b:: with SMTP id q11mr13345118pgg.270.1625457115683;
-        Sun, 04 Jul 2021 20:51:55 -0700 (PDT)
-Received: from localhost ([106.201.108.2])
-        by smtp.gmail.com with ESMTPSA id m2sm20299200pja.9.2021.07.04.20.51.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jul 2021 20:51:55 -0700 (PDT)
-Date:   Mon, 5 Jul 2021 09:21:53 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, Jason Wang <jasowang@redhat.com>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] drivers: gpio: add virtio-gpio guest driver
-Message-ID: <20210705035153.rceytdfbmvj5tvdt@vireshk-i7>
-References: <20201203191135.21576-1-info@metux.net>
- <20201203191135.21576-2-info@metux.net>
- <CAOh2x=kcM351ObubnQSzUa=FVBQUmAUhz4u8ExORUthQQ0WbGQ@mail.gmail.com>
- <253f218d-07ac-1963-75e1-9ac2d035437a@metux.net>
- <20210526033206.5v362hdywb55msve@vireshk-i7>
- <20210703040504-mutt-send-email-mst@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210703040504-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716-391-311a52
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1625469187; x=1657005187;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WFs6iuzL8MTjqxfVBFBGlzOm4RIn2wwlIlaO03FepJI=;
+  b=bPnE+a6PSn9nOfxEXGjf4bWO1bvR7pQZvzXO9/Df99WQGetZYBsSBeeR
+   CpAJpyTRqdrdqBJADjXgtQ94A01kvJro6c+w8Ekd+ZcBAZzkguzMGVyQG
+   dw67woxmj3LEJBuyM7S4+DKjt1TPBIxKLknOfF1qngyzJoRow762jwu8L
+   h2qLDzHbVD42miEcM/K503naYg0yvSa0RhK/RXpYGYmGzkfk9y1HCjQIm
+   ZkBWQdAxBNaIi4EAg5PbdSD30bRHt4LE4/GuqclD07XZ7Srwkf8u1HASu
+   qVw3jLUYhDifmd+iFY/Qse61xIund69iV7vAqSmu2DSB1bdDg/4oXlaL0
+   g==;
+X-IronPort-AV: E=Sophos;i="5.83,325,1616454000"; 
+   d="scan'208";a="18268919"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 05 Jul 2021 09:13:05 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Mon, 05 Jul 2021 09:13:05 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Mon, 05 Jul 2021 09:13:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1625469185; x=1657005185;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WFs6iuzL8MTjqxfVBFBGlzOm4RIn2wwlIlaO03FepJI=;
+  b=fX9Qdpz8A0eRAksLNfmOq/9UAbh5ThVynvVMO94j92LYW78pWacZbFk0
+   /VqWBwhGI+zmj6PuGuXQx6TLV7EoWktV4b6NotTwkB2rf6C9oOIxJzcqy
+   Hm2AuX064/ELC3XjVuqrGb3IdHL7BjpyukLQokeaKmqhQFTjMTwCYmzh1
+   xCyzX9OHqBsXO+4rkRV3bbIvhcMTNl/6zL7N9PhzFr1ML+Ri1PjzcDhn1
+   RU0wSj/vH+vhab61B6MnE28DzQymPXAGJDWZj/BrPT0elraiHbfrF7x8O
+   06wvJ/oMyNx8TY+dCeSW4Q6Fei93aBglq0aVk94mOyCeHz6wFaHjBdQxy
+   g==;
+X-IronPort-AV: E=Sophos;i="5.83,325,1616454000"; 
+   d="scan'208";a="18268918"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 05 Jul 2021 09:13:05 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.121.48.12])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 16D9C280070;
+        Mon,  5 Jul 2021 09:13:05 +0200 (CEST)
+Message-ID: <be0f9d179f0adcc13f46c0b8d36bec78fa99c2e6.camel@ew.tq-group.com>
+Subject: Re: [PATCH v2 0/7] TQMx86: TQMx110EB and TQMxE40x MFD/GPIO support
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 05 Jul 2021 09:13:02 +0200
+In-Reply-To: <YN8Xhu3XXGeLAlhj@lunn.ch>
+References: <cover.1625227382.git.matthias.schiffer@ew.tq-group.com>
+         <YN8Xhu3XXGeLAlhj@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03-07-21, 04:05, Michael S. Tsirkin wrote:
-> On Wed, May 26, 2021 at 09:02:06AM +0530, Viresh Kumar wrote:
-> > On 25-05-21, 14:59, Enrico Weigelt, metux IT consult wrote:
-> > > On 24.05.21 13:27, Viresh Kumar wrote:
-> > > 
-> > > Hi,
-> > > 
-> > > 
-> > > > We (Linaro's Project Stratos
-> > > > https://linaro.atlassian.net/wiki/spaces/STR/overview)
-> > > >   are interested in this stuff. I was trying to look at the last status
-> > > > of all this. Few
-> > > > questions for you:
-> > > > 
-> > > > - Was the spec ever posted to virtio-dev list ? I thought that's the
-> > > > very first step before
-> > > > we merge the code.
-> > > 
-> > > I had posted some spec quite some time ago, but it wasn't in the form
-> > > of patches against the .tex documentation files yet. It's been laying
-> > > aside for quite a while, since I've been busy w/ other things.
+On Fri, 2021-07-02 at 15:41 +0200, Andrew Lunn wrote:
+> On Fri, Jul 02, 2021 at 02:23:46PM +0200, Matthias Schiffer wrote:
+> > Updated patch series:
 > > 
-> > Will you be fine if I take that up and restart the thread ?
+> > - A number of new patches (more hardware support and a few fixes)
+> > - Patches 1-3 have gained Fixes tags
+> > - Patch 2 depends on 1, so maybe we can push the GPIO patch through the
+> >   MFD tree to keep them together?
+> > - The change in patch 7 was somewhat controversial. I've added a
+> >   warning, but it is the last patch of the series, so it doesn't affect
+> >   the rest of the series if it is rejected.
 > 
-> It's been a while - why not right?
+> Hi Matthias
+> 
+> Nice to see the vendor involved. That does not happen enough.
+> 
+> Please split these into fixes and new features. They go into different
+> trees, so splitting them makes it easier for the maintainers.
+> 
+> I would also suggest splitting the patches per subsystem, and send
+> them to the specific subsystem maintainer. The exception would be when
+> there is cross subsystem dependencies.
+> 
+>      Andrew
 
-Yeah, we went past that and here is the last version I posted.
+Hi Andrew,
 
-https://lists.oasis-open.org/archives/virtio-comment/202106/msg00033.html
+thanks for the quick review.
 
-which I took back later on to let Enrico do it, as he wanted to.
+As mentioned in the cover letter, patch 2 depends on 1, so I think it
+would make sense to push all through the MFD tree, including the GPIO
+fix.
 
-And here is the last version from Enrico:
+I guess patches 5 and 6 would be covered by the "new device IDs and
+quirks" rule of the stable kernel rules. Does that mean they should
+also go through the "fixes" rather than the "next" branch, making 4 and
+7 the only ones for "next"?
 
-https://lists.oasis-open.org/archives/virtio-comment/202106/msg00048.html
+Should I add "Cc: stable@vger.kernel.org" to all patches for the
+"fixes" tree?
 
-Lets see how this goes in coming days.
+Kind regards,
+Matthias
 
--- 
-viresh
