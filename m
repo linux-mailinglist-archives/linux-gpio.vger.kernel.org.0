@@ -2,64 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63AE33BC2FD
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jul 2021 21:07:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE92D3BC316
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jul 2021 21:24:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbhGETJo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jul 2021 15:09:44 -0400
-Received: from static-190-25-223-138.static.etb.net.co ([190.25.223.138]:44694
-        "EHLO correo.hdv.gov.co" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229743AbhGETJo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jul 2021 15:09:44 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by correo.hdv.gov.co (Postfix) with ESMTP id 1D06F1EE3BAA;
-        Sat,  3 Jul 2021 15:40:18 -0500 (-05)
-Received: from correo.hdv.gov.co ([127.0.0.1])
-        by localhost (correo.hdv.gov.co [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id qGqcIvHoxqzk; Sat,  3 Jul 2021 15:40:17 -0500 (-05)
-Received: from localhost (localhost [127.0.0.1])
-        by correo.hdv.gov.co (Postfix) with ESMTP id 65E191D26D4C;
-        Sat,  3 Jul 2021 10:49:16 -0500 (-05)
-DKIM-Filter: OpenDKIM Filter v2.10.3 correo.hdv.gov.co 65E191D26D4C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hdv.gov.co;
-        s=11DF984A-9D1F-11E6-B193-F2669FC4C452; t=1625327356;
-        bh=YlrueNvYvQTA/rsidM4wE66HE6f1WhuqcZM/LO2K65o=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=oYmCYstuDFYeqBQQV2u1kXZGszxcfxghS+Zugqz8T8KAie92dB00lvxYgDBJvKXLN
-         CqgzWMUB7rNjQXaKIP5HEqM8YRUmkgBdkdQqze1S8Q8PbZObo7WsAuY7hbNz++hWq6
-         ldw25NwzEzJ86Rx17LGU0Y7wFYAwLD+AiXM9pxjg=
-X-Virus-Scanned: amavisd-new at correo.hdv.gov.co
-Received: from correo.hdv.gov.co ([127.0.0.1])
-        by localhost (correo.hdv.gov.co [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id x0lXGRRGRqk8; Sat,  3 Jul 2021 10:49:16 -0500 (-05)
-Received: from [172.20.10.6] (unknown [41.147.1.129])
-        by correo.hdv.gov.co (Postfix) with ESMTPSA id 00A5E186752A;
-        Sat,  3 Jul 2021 07:31:05 -0500 (-05)
-Content-Type: text/plain; charset="iso-8859-1"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: my subject
-To:     Recipients <planeacion.arquitecto@hdv.gov.co>
-From:   planeacion.arquitecto@hdv.gov.co
-Date:   Sat, 03 Jul 2021 05:30:55 -0700
-Reply-To: callumfoundation001@gmail.com
-Message-Id: <20210703123106.00A5E186752A@correo.hdv.gov.co>
+        id S229989AbhGET0j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jul 2021 15:26:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229982AbhGET0e (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 5 Jul 2021 15:26:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id F23296197E;
+        Mon,  5 Jul 2021 19:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625513037;
+        bh=rn65EngJsi/t8GvC4xgMwfOuK/YD0xc7xna3k9ChUaU=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=R4cT7EDooqJfTs5f5JA1hLhFlU80dHU6qwonxcDsotmajnDCWBi8sBemyODhqj9gw
+         TTxbSepzbOoDHEwrEfm1+ZThWvHpRd3GVjCcXRMR/jNmUK07N8kRDM0X26HwFV5+Sl
+         7xeFEoj0Yo13EMf5dm9SxAaZ5eyCMADJ9PsL8jp5I4bXN+fJOaTTNIvbpqJnxmwFIA
+         WF3ovo75uBRelt21eiaGJYsxmj0B7kta3eL5DYw27bYHmjGQ+y/AQDkZMI+DJdmwFC
+         UGfjbeLi1/JVIk3O9D93/mmqShwOstJ9h2WEEpH6AW6JiHqPzrmQT/VoheG8J7f2v+
+         xlQgL112HwycA==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id EB90860A4D;
+        Mon,  5 Jul 2021 19:23:56 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: updates for v5.14
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210705092848.14495-1-brgl@bgdev.pl>
+References: <20210705092848.14495-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210705092848.14495-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.14
+X-PR-Tracked-Commit-Id: c34c1228fc1cfe83aed909995f5b82e0ab7cb977
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b8052599420cd94505baec1f22b4e7c9e5ae5fce
+Message-Id: <162551303695.9654.4983597494319182829.pr-tracker-bot@kernel.org>
+Date:   Mon, 05 Jul 2021 19:23:56 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hallo,
+The pull request you sent on Mon,  5 Jul 2021 11:28:48 +0200:
 
- Sie haben eine Spende von 2.800.000,00 USD. Ich gewann die amerikanische L=
-otterie im Wert von 343 Millionen US-Dollar in Amerika und spendete einen T=
-eil davon an f=FCnf gl=FCckliche Menschen und Wohlt=E4tigkeitsorganisatione=
-n, die sich an meinen verstorbenen Enkel erinnern, der Anfang April vorzeit=
-ig geboren wurde und nur einen Tag lebte. F=FCr weitere Informationen wende=
-n Sie sich bitte an: callumfoundation001@gmail.com
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.14
 
- =
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b8052599420cd94505baec1f22b4e7c9e5ae5fce
 
+Thank you!
 
-Mit freundlichen Gr=FC=DFen
-Frau Lerynne West
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
