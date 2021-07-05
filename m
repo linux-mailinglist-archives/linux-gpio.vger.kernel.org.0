@@ -2,99 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C40543BB7DF
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jul 2021 09:30:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E28E83BB9CA
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jul 2021 11:03:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbhGEHdJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jul 2021 03:33:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229975AbhGEHdI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 5 Jul 2021 03:33:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BAC4F6135D;
-        Mon,  5 Jul 2021 07:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1625470232;
-        bh=NiW/HXfBqch2oY+lEOTlQYrXSsK64D3GwvR6BGZndyA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NY9EFz6AZqrFYFDfqnsVvqYabkcRKqofUQMVRgEUMX11+CK/ioJgr0Q316XZaOeXF
-         cyGQH9s4RQUTgLnAUUuKfXNUY1yPDkK5M41JGvqF2aRqIoYkmqQiVBm/nFu0TAa8IS
-         DQDSuP/3GsXF9VoPTthvFnvvIRyGWUcL55W3VJAM=
-Date:   Mon, 5 Jul 2021 09:30:30 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, warthog618@gmail.com,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org
-Subject: Re: [RFC 02/11] drivers: Add HTE subsystem
-Message-ID: <YOK1Fq45P/DeqxAA@kroah.com>
-References: <20210625235532.19575-1-dipenp@nvidia.com>
- <20210625235532.19575-3-dipenp@nvidia.com>
+        id S230149AbhGEJGP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jul 2021 05:06:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230228AbhGEJGP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jul 2021 05:06:15 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97148C061762
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Jul 2021 02:03:38 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id j11so22803208edq.6
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Jul 2021 02:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4IBVSwu5GomtKJRSCgsvXFvZd61ehj48dOdrbBGoQkI=;
+        b=Iw5UyVuiT7T2SjC4qNDSYnI2kvyQmEgiMDvaIdmuIuqETt1QQCvJA5r5rxTfpJe1GH
+         1lK8SJKtFd7YyWAtkd1dEAyNAFXAxzLdld41BB1cS86zdvOGAHLf6vKd/BPnEmGD7RN1
+         VtgaOmY6t3uC7HeKGgj5QHAV2Kc9sPZi0M37HzU9u5wBMDxrpRvTZqwQQB2YMK9qGkN/
+         Q7+Yopjedy+ZecY784XOCGp1hTeAT2tITcjMEStG4HLtHr0YV+gmKa0tOE5VJLT08LLk
+         Itb2EnnzJcMDVwrJ19moKF/SzTzxeUZeT7OBojPRl9+qxP16o9xEsKV9USwrKm8SvXH5
+         MmSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4IBVSwu5GomtKJRSCgsvXFvZd61ehj48dOdrbBGoQkI=;
+        b=HrxER4u4qAGMfwQISfwUMGJ5aB1ycMLfuAXbiNw8OHpJh/thDaHEDmYJAc75pZbm7g
+         tzc4KylCQPfzEnSh29FzQN2WymnWPkKmWf4Q/3yGvxROEU+O5OjCrtQSfJejqUmzKeB4
+         O64cLcqWdoRxRwIAmMlcZDzXKyPGVGuCD0qWGBPMTQ507fLuPtHxHtQz9H71Le66Iy46
+         kiGxTwC96WWvrWnxiZpYkylNDK1cSqdYAV/VuBgyHWTMLktnSqzwd0Mo+zbCWoOFZ3X2
+         /H+qBXCRADJGqn5L4EYJGyKNWDVADc7hV4Jmkb5df6Z9nE9vk8w2B3mwXOqAclA5zYXB
+         G71Q==
+X-Gm-Message-State: AOAM533aeP6j52MzfQ/asz7y1h6Rnm/b+dkV5N9lnjPuthflvQgbXzPD
+        2ydwWVAMMFMp7polYjlMfLFnq9uaen9jr+BfRCJDtQ==
+X-Google-Smtp-Source: ABdhPJzI4o7DR7HHYlcIPJSNkB3+ccsaO+zAIBEfCuedleNNnkuXHg5/ZOBvalxkeIrnb/TgJCGHyTDQdp8E53c5Ccg=
+X-Received: by 2002:aa7:cf93:: with SMTP id z19mr12462002edx.214.1625475817209;
+ Mon, 05 Jul 2021 02:03:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210625235532.19575-3-dipenp@nvidia.com>
+References: <YL43SrZ8N8H+ZHE9@black.fi.intel.com> <YMdw6WdEQdGATBNJ@smile.fi.intel.com>
+In-Reply-To: <YMdw6WdEQdGATBNJ@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 5 Jul 2021 11:03:26 +0200
+Message-ID: <CAMRc=MfphPFqCaBRG6jLUFUwOB3_HTA73WXoCBg5S9GagTDeaw@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 5.14-1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 04:55:23PM -0700, Dipen Patel wrote:
-> +static void hte_chip_dbgfs_init(struct hte_device *gdev)
-> +{
-> +	const struct hte_chip *chip = gdev->chip;
-> +	const char *name = chip->name ? chip->name : dev_name(chip->dev);
-> +
-> +	gdev->dbg_root = debugfs_create_dir(name, hte_root);
-> +	if (!gdev->dbg_root)
-> +		return;
+On Mon, Jun 14, 2021 at 5:09 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Jun 07, 2021 at 06:12:10PM +0300, Andy Shevchenko wrote:
+> > Hi Linux GPIO and TWIMC maintainers,
+> >
+> > This is GPIO material for v5.14 cycle. It contains some stuff that other
+> > subsystems may take due to dependencies. Consider this tag immutable.
+>
+> Bart, any comments on this? Can you, please, pull?
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
-No need to check for this, if it fails, your other debugfs calls
-will handle it just fine.
+Hi Andy,
 
+I was looking for you PR for this cycle and couldn't find it in my
+inbox. Somehow this went into spam. I'll make sure your email never
+goes to spam again. Sorry. I'm seeing Hand pulled it, is that right?
 
-> +
-> +	debugfs_create_atomic_t("ts_requested", 0444, gdev->dbg_root,
-> +				&gdev->ts_req);
-> +	debugfs_create_u32("total_ts", 0444, gdev->dbg_root,
-> +			   &gdev->nlines);
-> +}
-> +
-> +static void hte_ts_dbgfs_init(const char *name, struct hte_ts_info *ei)
-> +{
-> +	if (!ei->gdev->dbg_root || !name)
-> +		return;
-> +
-> +	ei->ts_dbg_root = debugfs_create_dir(name, ei->gdev->dbg_root);
-> +	if (!ei->ts_dbg_root)
-> +		return;
+Hans: did you take the entire thing?
 
-Again, no need to check.
-
-> +
-> +	debugfs_create_size_t("ts_buffer_depth", 0444, ei->ts_dbg_root,
-> +			      &ei->buf->datum_len);
-> +	debugfs_create_size_t("ts_buffer_watermark", 0444, ei->ts_dbg_root,
-> +			      &ei->buf->watermark);
-> +	debugfs_create_atomic_t("dropped_timestamps", 0444, ei->ts_dbg_root,
-> +				&ei->dropped_ts);
-> +}
-> +
-> +static inline void hte_dbgfs_deinit(struct dentry *root)
-> +{
-> +	if (!root)
-> +		return;
-
-No need to check this.
-
-> +
-> +	debugfs_remove_recursive(root);
-
-Do not wrap a single call with another call :)
-
-
-thanks,
-
-greg k-h
+Bart
