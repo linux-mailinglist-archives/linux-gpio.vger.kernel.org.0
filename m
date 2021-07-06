@@ -2,309 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8BE03BDD83
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jul 2021 20:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2EF23BDE19
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jul 2021 21:38:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230230AbhGFSuU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jul 2021 14:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33600 "EHLO
+        id S229834AbhGFTlC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jul 2021 15:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230084AbhGFSuU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jul 2021 14:50:20 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FE0C061574;
-        Tue,  6 Jul 2021 11:47:40 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id q2so11191604iot.11;
-        Tue, 06 Jul 2021 11:47:40 -0700 (PDT)
+        with ESMTP id S229730AbhGFTlB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jul 2021 15:41:01 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B62C061574
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Jul 2021 12:38:22 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id g3so21928811ilj.7
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jul 2021 12:38:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=mime-version:reply-to:from:date:message-id:subject:to
          :content-transfer-encoding;
-        bh=qw53PpKvTHHYFgRL4ikMm5dijf8wi4j4l6mqLH9Qzvs=;
-        b=ImUKrNqep9RMFy2ANLDJFB8CJJG//0cEbOChsk4ZDyMi+YvSxohMxYephLp2pkxTiR
-         OosdKiZ3FqP+2pt69MIXzqKZyJou3e62qOl1+ccn8HZlvkgu9rHp747+cD6UatVL7wn/
-         1Fc7CYKHEivZ5ZeXAV1SB0Pm8x9o4M4DxSFFhmWV5gP4zkT6WOReD1IOhGeVUmhhuBQF
-         iKjmRUErC7pmK/jybiOZrE8/yBSuLoolZJnE0oJHtFYy9gwQ6mH968onmZHbjt6Xzk3U
-         VcsXpMBL1Jrc3Ulkef7Xn3qgGgh9Sej5W1IEFpOmYKsn+xqFMXqUB6tc5xgGPWjF3bcH
-         d8/A==
+        bh=udkimfHwvw+UAlkC6MgehkJhzie88fdqV4nLq+86CHM=;
+        b=cFvXWYzEtoaENTstfb5jXZaLGvtAM+sJNFB6YxGtWJ3aP3g6Mufby5ag/PfhWUIUiw
+         SC4hQHjhfMQpRlhgRcRCZnlsrjD7txYA911yd29NMNoG6POt4gEq6dtUx+NqpPR+AWmo
+         EHy3WCYBTNxxLaBJ3Qs4NqknQoeDjXM7dvplvfmUU5TtEy8vicUF3paSwuEldR/Zf6QS
+         Kx7he9US+0NOB9M05+B01sV+Ta2vfxpewJ0iStlMm0RFWN9+cTF8bZWK7H/9F0rQcmpC
+         tJyNoYDTy9LDAJcthTo4CC1Lp/cquKSPhnozt7MyTo8BgCEFhUQafU18WcRJ6/3HN4sG
+         V4BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qw53PpKvTHHYFgRL4ikMm5dijf8wi4j4l6mqLH9Qzvs=;
-        b=S6pYevSLUpoALHRY7tvbVv6P9hM5916Q4RAcanywSsZa2gOPb8JhgoV5shfBSndPkv
-         Fx8ivPFtSJ3tCNNlTm2pbCaDd6t5e80abofuKS/gxoGIIvUKGw5KhkR7ZkPRUIiec3Nf
-         Q1j6z3WNaL/YiFviLXU8a7qIuIo3ZPod0r2ErLCxYFXiXdnV266733aNgXunBS88ysPF
-         52UNm6x3Wq/QU2GIUnyT6jKF7AnwNPBI7L/lgjs3usXgZeZzutlkX0IpiOZVwMNcosVs
-         shbXLOuhOjK1xxOcT2KJLHM8AHlyzrC8NraUC1TQSllKHVqHtkpLh0sQl1C44hw4WCdy
-         x0TQ==
-X-Gm-Message-State: AOAM533Cd6E1A12vuiG2cw8c5d0JXvHEx02YeXVqJQMVR8mo00iBRIP7
-        fmJfWdPs86r80Xpu5QlRMXtZnRG6wurnJw==
-X-Google-Smtp-Source: ABdhPJyqV3ntOgM5PjHiVtrC3iiUuZYVlk5IFnA+bqn+e5XjjmYvlJP53ZZ3Ah7p6iT1Pk48ja0Iqg==
-X-Received: by 2002:a05:6602:2205:: with SMTP id n5mr16594080ion.92.1625597259946;
-        Tue, 06 Jul 2021 11:47:39 -0700 (PDT)
-Received: from Crosshair-VIII-Hero.lan (047-012-004-136.res.spectrum.com. [47.12.4.136])
-        by smtp.gmail.com with ESMTPSA id b24sm9524823iob.4.2021.07.06.11.47.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jul 2021 11:47:39 -0700 (PDT)
-From:   Chris Blake <chrisrblake93@gmail.com>
-To:     platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        chunkeey@gmail.com
-Cc:     Chris Blake <chrisrblake93@gmail.com>
-Subject: [PATCH] platform/x86: add meraki-mx100 platform driver
-Date:   Tue,  6 Jul 2021 13:47:30 -0500
-Message-Id: <20210706184730.14951-1-chrisrblake93@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=udkimfHwvw+UAlkC6MgehkJhzie88fdqV4nLq+86CHM=;
+        b=Oaua9Hvh2Cl+YZHFqZcbxmE922LcFJx3PV9nblmI8TY2MBP1cGlyDlE+liuFMjXFKl
+         bQ/Zbo76hXfRX0xSqL23LeIVdZVSpmyZlf7TlWjRFyrJ1Qo4rQ5IuPzQ3qbNt4Wk7ZPS
+         wPMFG8LpnJZ9QLiph/xZqdqCqoyiyVTZPQXeOK5lst5dV1YYRSrdkV6D4xiBQDZeindP
+         7G+WOl+ubC50136821W1qe8cJvJbIrKKyF2RoZwgNJdziv0Ro/vB1Un0W7csxVypP2Sh
+         BpJiv44jsQxTPGOxumfUvpegqsH3PS+1PAXGFs5fv5rpM1spy4WjnA1N2BJf9UIedSFz
+         ramw==
+X-Gm-Message-State: AOAM5316ArM1od2lb1PIhgHr8mpZUcNOH1aDiTh42Qn9kngxOQCMuDrW
+        vQNYAJ76r6HuqGeIaEoSUCuyePCk6ZvVOUuqJl8=
+X-Google-Smtp-Source: ABdhPJwOH8+qPiVQqQJg5gBplgUCh4HoibUQtuunp+ZZRjjuK+Ek7/YRZ8Rs4OXufzkh5ozFT9ZAEiH+3okV2pXaedk=
+X-Received: by 2002:a92:3f01:: with SMTP id m1mr16115072ila.122.1625600302368;
+ Tue, 06 Jul 2021 12:38:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6e04:68b:0:0:0:0 with HTTP; Tue, 6 Jul 2021 12:38:21
+ -0700 (PDT)
+Reply-To: rotoloapposo371@gmail.com
+From:   Rotolo Apposo <uenorn@gmail.com>
+Date:   Tue, 6 Jul 2021 19:38:21 +0000
+Message-ID: <CAPcW-qrWgjZgHKKwe+iPuqqYQ0br80J_pD85094o2LZZsz35yQ@mail.gmail.com>
+Subject: Antworten
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds platform support for the Cisco Meraki MX100 (Tinkerbell)
-network appliance. This sets up the network LEDs and Reset
-button. Note that this patch requires
-mfd: lpc_ich: Enable GPIO driver for DH89xxCC which has been accepted
-and is currently targeted for 5.15.
+Mein lieber Freund,
 
-Signed-off-by: Chris Blake <chrisrblake93@gmail.com>
-Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
----
- drivers/platform/x86/Kconfig        |  13 ++
- drivers/platform/x86/Makefile       |   3 +
- drivers/platform/x86/meraki-mx100.c | 185 ++++++++++++++++++++++++++++
- 3 files changed, 201 insertions(+)
- create mode 100644 drivers/platform/x86/meraki-mx100.c
+Ich bin Barrister Rotolo Apposo Rechtsanw=C3=A4ltin, ich suche Ihr
+Vertrauen, um den Einlagenforderungs-Erbschaftsfonds meines
+verstorbenen Mandanten, einer Staatsangeh=C3=B6rigkeit Ihres Landes, zu
+beantragen, der viele Jahre hier lebte, bis er leider mit seiner
+ganzen Familie in einem Auto starb crash, er tr=C3=A4gt den gleichen
+Nachnamen wie du. Ich habe nach Verwandten seiner Familie gesucht, um
+seinen Nachlass zu repatriieren, aber ohne Erfolg. Daher besteht mein
+Kontakt zu Ihnen darin, dass Sie als scheinbarer Erbe (n=C3=A4chster
+Verwandter) sein Verm=C3=B6gen im Wert von (neun Millionen
+f=C3=BCnfhunderttausend Euro) erhalten, das er vor seinem Tod bei einer
+Bank hinterlegt hat. K=C3=B6nnten Sie den oben genannten Betrag auf Ihr
+Bankkonto =C3=BCberweisen?
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7d385c3b2239..8d70176e335f 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -302,6 +302,19 @@ config ASUS_NB_WMI
- 	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
- 	  here.
- 
-+config MERAKI_MX100
-+	tristate "Cisco Meraki MX100 Platform Driver"
-+	depends on GPIOLIB
-+	depends on GPIO_ICH
-+	depends on LEDS_CLASS
-+	select LEDS_GPIO
-+	help
-+	  This driver provides support for the front button and LEDs on
-+	  the Cisco Meraki MX100 (Tinkerbell) 1U appliance.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called meraki-mx100.
-+
- config EEEPC_LAPTOP
- 	tristate "Eee PC Hotkey Driver"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 7ee369aab10d..25c5aee1cde7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -39,6 +39,9 @@ obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
- obj-$(CONFIG_EEEPC_LAPTOP)	+= eeepc-laptop.o
- obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
- 
-+# Cisco/Meraki
-+obj-$(CONFIG_MERAKI_MX100)	+= meraki-mx100.o
-+
- # Dell
- obj-$(CONFIG_X86_PLATFORM_DRIVERS_DELL)		+= dell/
- 
-diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
-new file mode 100644
-index 000000000000..12b17ef06d14
---- /dev/null
-+++ b/drivers/platform/x86/meraki-mx100.c
-@@ -0,0 +1,185 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+/*
-+ * Cisco Meraki MX100 (Tinkerbell) board platform driver
-+ *
-+ * Based off of arch/x86/platform/meraki/tink.c from the
-+ * Meraki GPL release meraki-firmware-sources-r23-20150601
-+ *
-+ * Format inspired by platform/x86/pcengines-apuv2.c
-+ *
-+ * Copyright (C) 2021 Chris Blake <chrisrblake93@gmail.com>
-+ */
-+
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-+
-+#include <linux/dmi.h>
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio_keys.h>
-+#include <linux/input.h>
-+#include <linux/kernel.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define TINK_GPIO_OFFSET	436
-+
-+/* LEDs */
-+static const struct gpio_led tink_leds[] = {
-+	{
-+		.name = "mx100:green:internet", 
-+		.gpio = TINK_GPIO_OFFSET + 11,
-+		.active_low = 1,
-+		.default_trigger = "default-on",
-+	},
-+	{
-+		.name = "mx100:green:lan2",
-+		.gpio = TINK_GPIO_OFFSET + 18,
-+	},
-+	{
-+		.name = "mx100:green:lan3",
-+		.gpio = TINK_GPIO_OFFSET + 20,
-+	},
-+	{
-+		.name = "mx100:green:lan4",
-+		.gpio = TINK_GPIO_OFFSET + 22,
-+	},
-+	{
-+		.name = "mx100:green:lan5",
-+		.gpio = TINK_GPIO_OFFSET + 23,
-+	},
-+	{
-+		.name = "mx100:green:lan6",
-+		.gpio = TINK_GPIO_OFFSET + 32,
-+	},
-+	{
-+		.name = "mx100:green:lan7",
-+		.gpio = TINK_GPIO_OFFSET + 34,
-+	},
-+	{
-+		.name = "mx100:green:lan8",
-+		.gpio = TINK_GPIO_OFFSET + 35,
-+	},
-+	{
-+		.name = "mx100:green:lan9",
-+		.gpio = TINK_GPIO_OFFSET + 36,
-+	},
-+	{
-+		.name = "mx100:green:lan10",
-+		.gpio = TINK_GPIO_OFFSET + 37,
-+	},
-+	{
-+		.name = "mx100:green:lan11",
-+		.gpio = TINK_GPIO_OFFSET + 48,
-+	},
-+	{
-+		.name = "mx100:green:ha",
-+		.gpio = TINK_GPIO_OFFSET + 16,
-+		.active_low = 1,
-+	},
-+	{
-+		.name = "mx100:orange:ha",
-+		.gpio = TINK_GPIO_OFFSET + 7,
-+		.active_low = 1,
-+	},
-+	{
-+		.name = "mx100:green:usb",
-+		.gpio = TINK_GPIO_OFFSET + 21,
-+		.active_low = 1,
-+	},
-+	{
-+		.name = "mx100:orange:usb",
-+		.gpio = TINK_GPIO_OFFSET + 19,
-+		.active_low = 1,
-+	},
-+};
-+
-+static const struct gpio_led_platform_data tink_leds_pdata = {
-+	.num_leds	= ARRAY_SIZE(tink_leds),
-+	.leds		= tink_leds,
-+};
-+
-+/* Reset Button */
-+static struct gpio_keys_button tink_buttons[] = {
-+	{
-+		.desc			= "Reset",
-+		.type			= EV_KEY,
-+		.code			= KEY_RESTART,
-+		.gpio			= TINK_GPIO_OFFSET + 60,
-+		.active_low             = 1,
-+		.debounce_interval      = 100,
-+	},
-+};
-+
-+static const struct gpio_keys_platform_data tink_buttons_pdata = {
-+	.buttons	= tink_buttons,
-+	.nbuttons	= ARRAY_SIZE(tink_buttons),
-+	.poll_interval  = 20,
-+	.rep		= 0,
-+	.name		= "mx100-keys",
-+};
-+
-+/* Board setup */
-+
-+static struct platform_device *tink_leds_pdev;
-+static struct platform_device *tink_keys_pdev;
-+
-+static struct platform_device * __init tink_create_dev(
-+	const char *name,
-+	const void *pdata,
-+	size_t sz)
-+{
-+	struct platform_device *pdev;
-+
-+	pdev = platform_device_register_data(NULL,
-+		name,
-+		PLATFORM_DEVID_NONE,
-+		pdata,
-+		sz);
-+
-+	if (IS_ERR(pdev))
-+		pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
-+
-+	return pdev;
-+}
-+
-+static int __init tink_board_init(void)
-+{
-+	if (!dmi_match(DMI_SYS_VENDOR, "Cisco") || !dmi_match(DMI_PRODUCT_NAME, "MX100-HW")) {
-+		return -ENODEV;
-+	}
-+
-+	/* We need to make sure that GPIO60 isn't set to native mode as is default since it's our 
-+	 * Reset Button. To do this, write to GPIO_USE_SEL2 to have GPIO60 set to GPIO mode.
-+	 * This is documented on page 1609 of the PCH datasheet, order number 327879-005US
-+	 */
-+	outl(inl(0x530) | BIT(28), 0x530);
-+
-+	tink_leds_pdev = tink_create_dev(
-+		"leds-gpio",
-+		&tink_leds_pdata,
-+		sizeof(tink_leds_pdata));
-+
-+	tink_keys_pdev = tink_create_dev(
-+		"gpio-keys-polled",
-+		&tink_buttons_pdata,
-+		sizeof(tink_buttons_pdata));
-+
-+	return 0;
-+}
-+
-+static void __exit tink_board_exit(void)
-+{
-+	platform_device_unregister(tink_keys_pdev);
-+	platform_device_unregister(tink_leds_pdev);
-+}
-+
-+module_init(tink_board_init);
-+module_exit(tink_board_exit);
-+
-+MODULE_AUTHOR("Chris Blake <chrisrblake93@gmail.com>");
-+MODULE_DESCRIPTION("Cisco Meraki MX100 Platform Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:meraki-mx100");
-+MODULE_SOFTDEP("pre: platform:gpio_ich platform:leds-gpio platform:gpio_keys_polled");
--- 
-2.25.1
+Bitte kontaktieren Sie mich f=C3=BCr weitere Informationen: (
+rotoloapposo371@gmail.com )
 
+Freundliche Gr=C3=BC=C3=9Fe
+Rechtsanwalt Rotolo Apposo
+Hauptanwalt.
