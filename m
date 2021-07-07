@@ -2,84 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52BB53BEDA7
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jul 2021 20:03:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 145733BF117
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jul 2021 22:53:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231255AbhGGSFg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Jul 2021 14:05:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60376 "EHLO
+        id S230280AbhGGU4F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Jul 2021 16:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbhGGSFg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Jul 2021 14:05:36 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF3DC061574;
-        Wed,  7 Jul 2021 11:02:55 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id c28so6137051lfp.11;
-        Wed, 07 Jul 2021 11:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WdK02twy8pyO9wtpquNhBoO1ciKpkv+L2J5dgsFFjAI=;
-        b=IWT3gQxefwyakiP00/D+lm+LIGY9jtFE7/cqwyQPVOZ7Y53aW7h9eD2uOr9AKLMx2S
-         iShcjfYIlhkE39PvOBzpL++wwIVkqsamo0hKgk/ndFh6ec85GF23RT55NQULhVD5G7Nb
-         SckKLmMeVIHfnXVsFKUBpNDahra++ElkdnocbmnDKFoDIEb9d7pLFR42F6c7eAavC2mi
-         G52XiJ2DmjOZfUr8KgBeHPfN0h9NMDv+sDOSWrqgnXNpuH5NCpwHrmxBej5Q+ndij7TD
-         u5X/twSz/+bET0F250cNx2DXQBAywiVBs9WIuRERzBh/8uVPwMl2mSAB/v6OY6PPYTKw
-         JflQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WdK02twy8pyO9wtpquNhBoO1ciKpkv+L2J5dgsFFjAI=;
-        b=UvchVsVzdlqlL2yao1NqPGtxWlhsVvgeyYgtWYOUrn7d9nzDTKWQ2KjDAl5HTyxy+F
-         JcijJ4y5R50OWyhOin8BOtER9EOKKxTnGZFe3lurlDKKNjn4E4ucFoOqpkCwFR8AJ1mH
-         SsEhG0F2cWgeSksVij2R84rS6hC2+XA/FAecCSVI0c3TD1Nbpe1Pw+eRDygLXwDADh+q
-         5LuoIpb1O3VJF1kZhG4gRlHAM67jONgTfUBvmfiu51pv8od+44gPdRcWUabszpPUq0n0
-         OB0JI1Dxa5foKbEi38NlVKn1Pdi5wIv8ojew23z+WtWmKbwtSNGAvjKIBEh/0VQNN2Bd
-         2nOQ==
-X-Gm-Message-State: AOAM530sK+Ugrrh+ai4C4HtjasimXdx6+s1w671FppWXzX+UlMJWd/Za
-        0PABM5qVfjGD1y+kgbO/0ii6oTeNreY=
-X-Google-Smtp-Source: ABdhPJzsyUmcaHOcFZvqbMBc9bFOsQRLPYXTQaY0nN+NxeE247XE0Fu6V2mcrEgVFT0LVtNPhoh63Q==
-X-Received: by 2002:ac2:435a:: with SMTP id o26mr19414441lfl.216.1625680973581;
-        Wed, 07 Jul 2021 11:02:53 -0700 (PDT)
-Received: from [192.168.1.102] ([178.176.76.61])
-        by smtp.gmail.com with ESMTPSA id y14sm1099130lfk.81.2021.07.07.11.02.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Jul 2021 11:02:53 -0700 (PDT)
-Subject: Re: [PATCH v2 6/9] pinctrl: pistachio: Make it as a option
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
-Cc:     tsbogend@alpha.franken.de, mturquette@baylibre.com,
-        daniel.lezcano@linaro.org, linus.walleij@linaro.org,
-        vkoul@kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org
-References: <20210707031552.20166-1-jiaxun.yang@flygoat.com>
- <20210707031552.20166-7-jiaxun.yang@flygoat.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <22db9cb2-0439-7ef0-6379-ce104755a1c6@gmail.com>
-Date:   Wed, 7 Jul 2021 21:02:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        with ESMTP id S232111AbhGGU4E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Jul 2021 16:56:04 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB61C061574
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Jul 2021 13:53:23 -0700 (PDT)
+Received: from [192.168.1.109] (47.118-244-81.adsl-dyn.isp.belgacom.be [81.244.118.47])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id CC32522C733;
+        Wed,  7 Jul 2021 22:53:20 +0200 (CEST)
+Message-ID: <dee12a4f5dc1a37feb14e20074cf365dbb86bc05.camel@svanheule.net>
+Subject: Re: [PATCH v5 2/8] gpio: regmap: Add quirk for aliased data
+ registers
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 07 Jul 2021 22:53:19 +0200
+In-Reply-To: <CAHp75VeOMb2xUJ+g2UQJnBybmehmYr0dGPEzDZObUGr=Q95+wA@mail.gmail.com>
+References: <cover.1623532208.git.sander@svanheule.net>
+         <5d8e5e8a29ecf39da48beb94c42003a5c686ec4e.1623532208.git.sander@svanheule.net>
+         <CAHp75VeOMb2xUJ+g2UQJnBybmehmYr0dGPEzDZObUGr=Q95+wA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-In-Reply-To: <20210707031552.20166-7-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/7/21 6:15 AM, Jiaxun Yang wrote:
+Hi Andy, Mark,
 
-    s/a/an/ in the subject.
+My apologies for the delay in replying, work has been keeping me a bit busy.
 
-> So it will be avilable for generic MIPS kernel.
+On Sun, 2021-06-13 at 00:29 +0300, Andy Shevchenko wrote:
+> On Sun, Jun 13, 2021 at 12:13 AM Sander Vanheule <sander@svanheule.net> wrote:
+> > 
+> > Some chips have the read-only input and write-only output data registers
+> > aliased to the same offset. As a result it is not possible to perform
+> > read-modify-writes on the output values, when a line is still configured
+> > as input.
+> > 
+> > Add a quirk for aliased data registers, and document how the regmap
+> > should be set up for correct operation.
+> 
+> I still believe that there is no issue with gpio-regmap and we don't
+> need any quirk there.
+> 
+> The issue is in the regmap APIs (implementation) itself. Hardware with
+> the concept of reading X / writing Y at the same offset is okay per
+> se. regmaps doesn't support it properly and should be fixed (amended)
+> in a way that you provide this kind of register description thru
+> regmap configuration or so.
 
-   3d time's a charm -- no typo in kernel this time! :-)
+I've made an attempt at implementing a "regmap_aliased()", similar to
+"regmap_volatile()". However, this meant I had to make _regmap_read() aware of
+wether the read- or write-alias was being read (from cache), touching some parts
+of the regmap code I'm not using myself. Furthermore, this "aliased" property
+isn't really perpendicular to "volatile", since writes should never be volatile,
+and non-volatile reads don't make much sense (to me) on a read-only register.
 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-[...]
+In addition to entire registers having different meanings on reads or writes,
+individual bitfields could also have different properties. Some bits of a
+register could be aliased, while other bits are just 'plain' volatile. This is
+the case for the last register of the RTL8231, where the low bits are GPIO data
+(so aliased), and the highest bit is a self-clearing "latch new data" command
+bit (i.e. RW-volatile).
 
-MBR, Sergei
+If a regmap_field could overwrite the specifiers of it's parent register, I
+think this may provide quite a natural solution to the aliasing problem: just
+create two regmap_field defintions. One definition would be 'write-only' (and
+cached for RMW), the other 'volatile read-only'. All regmap_fields could still
+rely on a single cached register value, I think. I didn't try to implement this
+though, so maybe I'm missing some behaviour that would disqualify this solution.
+Would you think this could be an acceptable way to move forward here?
+
+
+> I expressed the idea of trying to implement regmap-8250 as an example
+> of the support for such hardware. And OTOH that this kind of hardware
+> is not unusual.
+
+This implementation indeed requires the same aliasing support, in addition to
+register paging even. I've never touched that subsystem before though, so I
+would need some more time if I wanted to try this.
+
+Best,
+Sander
+
