@@ -2,70 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72C163C1C35
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jul 2021 01:40:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F16FA3C1F5B
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jul 2021 08:31:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbhGHXnQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Jul 2021 19:43:16 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:32351 "EHLO rere.qmqm.pl"
+        id S230130AbhGIGeT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jul 2021 02:34:19 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25200 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229491AbhGHXnQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 8 Jul 2021 19:43:16 -0400
-X-Greylist: delayed 412 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Jul 2021 19:43:15 EDT
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4GLXfq4rKlzMT;
-        Fri,  9 Jul 2021 01:33:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1625787220; bh=qGNg7hSbfzBvr5magCDMkvgViKrImUwppARwb6jC+qA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FBlLRDt3tje8tO2OFphoFwEHC3eQ8/MU1ItlKZ7Hwfw+Y9sCzFfsvS36Aiqt0iK6G
-         KCZnWjpD6vWkn/MNP48ZnZ9wzh6xwE8miH73lnGN3SiWaFO1UXOApuBNNSccS+qw7Z
-         kXdgF0sFTMuakQlEC/IpdJNVaJQ3iU0O/Rlxm8D3sozTrsUe/0+QH6jgE2C0TR02TF
-         PsuSyzvmqN3WvjxbKE0VgQDxldX1N5fXtVDQps5xbE7XtzPGidg2qJuZMEKcMoSzYE
-         oIIOj5P/S3Dgw6B9pslzLHvZlEY4whdIVTAMsKRHCiu4U6hRc4KY7safXtsNr2DijO
-         M2fmG/hHVVN+Q==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.103.2 at mail
-Date:   Fri, 9 Jul 2021 01:33:35 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, warthog618@gmail.com,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org
-Subject: Re: [RFC 03/11] hte: Add tegra194 HTE kernel provider
-Message-ID: <YOeLT4T5stjsAUMr@qmqm.qmqm.pl>
-References: <20210625235532.19575-1-dipenp@nvidia.com>
- <20210625235532.19575-4-dipenp@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210625235532.19575-4-dipenp@nvidia.com>
+        id S230115AbhGIGeP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Jul 2021 02:34:15 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10039"; a="189334181"
+X-IronPort-AV: E=Sophos;i="5.84,226,1620716400"; 
+   d="scan'208";a="189334181"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2021 23:31:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,226,1620716400"; 
+   d="scan'208";a="498805983"
+Received: from inlubt0177.iind.intel.com ([10.223.67.91])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Jul 2021 23:31:30 -0700
+From:   lakshmi.sowjanya.d@intel.com
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com, tamal.saha@intel.com,
+        lakshmi.sowjanya.d@intel.com
+Subject: [PATCH v2 0/2] Add pinctrl support for Intel Keem Bay SoC
+Date:   Fri,  9 Jul 2021 12:01:27 +0530
+Message-Id: <20210709063129.11651-1-lakshmi.sowjanya.d@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 04:55:24PM -0700, Dipen Patel wrote:
-> Tegra194 device has multiple HTE instances also known as GTE
-> (Generic hardware Timestamping Engine) which can timestamp subset of
-> SoC lines/signals. This provider driver focuses on IRQ and GPIO lines
-> and exposes timestamping ability on those lines to the consumers
-> through HTE subsystem.
-[...]
-> +	ret = of_property_read_u32(dev->of_node, "slices", &slices);
-> +	if (ret != 0) {
-> +		dev_err(dev, "Could not read slices\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	hte_dev->sl = devm_kzalloc(dev, sizeof(struct hte_slices) * slices,
-> +				   GFP_KERNEL);
+From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 
-Nit: There is devm_kcalloc() that will check for overflow in the
-multiply in case @slices from DT is broken.
+Hi,
 
-Best Regards
-Micha³ Miros³aw
+This patch set enables the support for the integrated pin controller in
+the Intel Keem Bay SoC.
+
+Patch 1 holds the implementation of pinctrl driver.
+Patch 2 holds the relevant Device Tree bindings documentation and an
+entry in MAINTAINERS file
+ 
+High-Level Architecture:
+-----------------------
+
+			           +----------------------------+
+     ------------------------------|MODE 0 -			|
+      -----------------------------|MODE 1      PIN MUX		|
+       ----------------------------|...				|
+        ---------------------------|...				| PAD M
+         +-------------------------|MODE 7(GPIO)		---------
+         |			   |				|    .
+         |			   |  +---------------------+	|    .
+         |			   |  |  GPIO_MODE (0-79)   |	|    .
+         |			   |  | INV|PU|PD|DIR|MODE  |	|    .
+         |			   |  +---------------------+	|    .
+         |			   |    PIN CONFIGURATION       |    .
+         |			   +----------------------------+    .
+         |                                                          .
+         |                         +----------------------------+    .
+         |        -----------------|MODE 0 -			|    .
+         |         ----------------|MODE 1      PIN MUX		|    .
+         |          ---------------|...				|
+         |            -------------|...				| PAD N
+         |                +--------|MODE 7(GPIO)	        ---------
+         |                |	   |				|
+         |                |	   |  +---------------------+	|
+         |                |	   |  |  GPIO_MODE (0-79)   |	|
+         |                |	   |  | INV|PU|PD|DIR|MODE  |	|
+         |                |	   |  +---------------------+	|
+         |                |	   |    PIN CONFIGURATION    	|
+         |                |	   +----------------------------+
+         |                |
+         |                |
+         |                |
+         |                |        +------------------------------------+
+         |                |        |       GPIO PIN CONTROL		|
+         |                |        |					|
+         |                |        |    +-------------------------+	|
+         |                |        |    | GPIO_DATA_IN (0-2)      |	|
+         |                |        |    +-------------------------+	|
+     0   1..28   29  30  31  -------    +-------------------------+	|
+     |   |   |   |   |    |        |    | GPIO_DATA_OUT_HIGH (0-2)|	|
+     \   \   \   \   \    |        |    | GPIO_DATA_OUT_LOW (0-2) |	|
+      |   |   |   |   |   |        |    +-------------------------+	|
+      |   |   |   |   |   |        |					|
+      |   |   |   |   |   |        +------------------------------------+
+      \   \   \   \   \   |
+       |   |   |   |   |  |              GPIO_INT_CFG (Bits)
+       |   |   |   |   |  |		+---|-------|--|------|--|----|--|---+
+      +-------------------+-+		|31   30     23    16  15 14-8 7 6-0 |
+      | GPIO_INT_CFG(0-7)   |		+---|-------|--|------^--|----|--|---+
+      +---------------------+		|En   Idx   |En| Idx  |En| Idx|En|Idx|
+        |   |    |  |			+---|-------|--|------|--|----|--|---+
+       0|  1|...6| 7|
+        |   |    |  |
+     +-------------------+
+     |			 |
+     |			 |
+     |			 |
+     |			 |
+     |	Interrupt	 |
+     |	Control		 |
+     |			 |
+     |			 |
+     |			 |
+     |			 |
+     +-------------------+
+
+Explored registering GPIOCHIP per 32 bits, from the IP there are registers
+for set/clear and read pins which falls under the category of per register
+handling 32 bits, but for other functionality like direction, config,
+interrupt mux, there is a need to have customised solution.
+
+Using gpiochip per 32 bits involves additional data structures, and
+it has an impact in the device tree for all the users of these
+PADs.
+
+Spinlock is not required for all the operations like set/get as there
+are separate for each. Configuring all the registers in a single driver
+is preferred as it is easy to debug. 
+
+Please help to review this patch set.
+
+Thanks in advance,
+Sowjanya
+
+Changes from v1:
+ - Changed the boolean to true in yaml
+ - Removed spinlock for all the transactions except irq transactions
+ - Added standard ngpios instead of num-gpios
+ - Added gpiochip_generic_config() api  
+ - Added check for IRQ_ENABLE and removed the check for the mask
+   IRQ_TYPE_SENSE_MASK
+
+Lakshmi Sowjanya D (2):
+  dt-bindings: pinctrl: Add bindings for Intel Keembay pinctrl driver
+  pinctrl: Add Intel Keem Bay pinctrl driver
+
+ .../pinctrl/intel,pinctrl-keembay.yaml        |  134 ++
+ MAINTAINERS                                   |    5 +
+ drivers/pinctrl/Kconfig                       |   19 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-keembay.c             | 1732 +++++++++++++++++
+ 5 files changed, 1891 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,pinctrl-keembay.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-keembay.c
+
+-- 
+2.17.1
+
