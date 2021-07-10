@@ -2,38 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0AF03C313E
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jul 2021 04:48:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 964933C3112
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jul 2021 04:48:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235199AbhGJClB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jul 2021 22:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56638 "EHLO mail.kernel.org"
+        id S232680AbhGJCkG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jul 2021 22:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234133AbhGJChm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 9 Jul 2021 22:37:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D9745613C5;
-        Sat, 10 Jul 2021 02:34:56 +0000 (UTC)
+        id S235624AbhGJCji (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Jul 2021 22:39:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A960061416;
+        Sat, 10 Jul 2021 02:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625884497;
-        bh=4TsRwoe2ro7D8QzGFv+I3O7ZQ9kjnMVzdT1a+YTSFPg=;
+        s=k20201202; t=1625884540;
+        bh=O+Rkv8XaJU53fem/o4auysJ5ZtAu1kAUXTndaItMsrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dc82UtGolpQ3dxeUe4JpvAwUPkyHG3M2nkDziusTS6KR7TDInaF36kDL4UQLeU1LH
-         yuuL/yZTwaHmteuu8PGN3nVYxq+2EiIHBpW7eTmSwq2wSkU4UVMv9rR2Jt2kyYPBGS
-         YiQsGaZa8sZ9Wz0tMDsKA7NAS3nsLfLShhT9LBGPCZ/j17YSC4GTUrWyexsbgnATCX
-         fYPjUyKThI0UJrGzFxS8ZmYVjcG+SIch2YFv4KpAfCzb5+65aLqVeYeUeHFvpA1CMk
-         q+mkbPq4VKi6YZZzFBE8yIdDBgKKIdg8Q8lK8e+WHpVmcPzG7fDDztSZqWgrnoLCBp
-         AGUwrMuMRWz7Q==
+        b=rja/C3HuNFqcl6E0y4UX061bQlRykcwolkp/uuEcb1SmMKfLMJtG9t2z1Vu7RfM7G
+         vcuiPZAfev9VlfiES8R3q4R2vTLjy4l4vq9/t07mQXZqrigVdBpnDUYYa2BgaM8CZi
+         w9DncHhxU9uKdOxPUrHPSSQv9c1sZC7nfMFpDeuc5bFRi+da381OFYj1obL1lnIh2+
+         XDZLg/D8Nw7qQ1Wr/Gyk6DnSsOXANE6pQ6A/tWsJ5tI+cW8S7TjmVZgkQvYmVwp8Sp
+         22iADItuDc6ak15CBmJyoXKiSW7TmfA/OxaJthLPgH2RwsihBieBOgagQSP4Umq90q
+         v04eJSZ21+Pwg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Robinson <pbrobinson@gmail.com>,
+Cc:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/39] gpio: pca953x: Add support for the On Semi pca9655
-Date:   Fri,  9 Jul 2021 22:31:51 -0400
-Message-Id: <20210710023204.3171428-26-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 19/33] gpio: zynq: Check return value of pm_runtime_get_sync
+Date:   Fri,  9 Jul 2021 22:35:01 -0400
+Message-Id: <20210710023516.3172075-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710023204.3171428-1-sashal@kernel.org>
-References: <20210710023204.3171428-1-sashal@kernel.org>
+In-Reply-To: <20210710023516.3172075-1-sashal@kernel.org>
+References: <20210710023516.3172075-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -42,33 +43,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Peter Robinson <pbrobinson@gmail.com>
+From: Srinivas Neeli <srinivas.neeli@xilinx.com>
 
-[ Upstream commit 6d49b3a0f351925b5ea5047166c112b7590b918a ]
+[ Upstream commit a51b2fb94b04ab71e53a71b9fad03fa826941254 ]
 
-The On Semi pca9655 is a 16 bit variant of the On Semi pca9654 GPIO
-expander, with 16 GPIOs and interrupt functionality.
+Return value of "pm_runtime_get_sync" API was neither captured nor checked.
+Fixed it by capturing the return value and then checking for any warning.
 
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
-[Bartosz: fixed indentation as noted by Andy]
+Addresses-Coverity: "check_return"
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-pca953x.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpio-zynq.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 0232c25a1586..dc4088a47ab2 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -980,6 +980,7 @@ static const struct of_device_id pca953x_dt_ids[] = {
- 	{ .compatible = "ti,tca6424", .data = OF_953X(24, PCA_INT), },
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index f1d7066b6637..e8295519fa7d 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -900,8 +900,11 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+ static int zynq_gpio_remove(struct platform_device *pdev)
+ {
+ 	struct zynq_gpio *gpio = platform_get_drvdata(pdev);
++	int ret;
  
- 	{ .compatible = "onnn,pca9654", .data = OF_953X( 8, PCA_INT), },
-+	{ .compatible = "onnn,pca9655", .data = OF_953X(16, PCA_INT), },
- 
- 	{ .compatible = "exar,xra1202", .data = OF_953X( 8, 0), },
- 	{ }
+-	pm_runtime_get_sync(&pdev->dev);
++	ret = pm_runtime_get_sync(&pdev->dev);
++	if (ret < 0)
++		dev_warn(&pdev->dev, "pm_runtime_get_sync() Failed\n");
+ 	gpiochip_remove(&gpio->chip);
+ 	clk_disable_unprepare(gpio->clk);
+ 	device_set_wakeup_capable(&pdev->dev, 0);
 -- 
 2.30.2
 
