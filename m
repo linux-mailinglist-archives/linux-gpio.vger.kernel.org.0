@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 964933C3112
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jul 2021 04:48:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B4633C3114
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jul 2021 04:48:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232680AbhGJCkG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jul 2021 22:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58380 "EHLO mail.kernel.org"
+        id S234029AbhGJCkH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jul 2021 22:40:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235624AbhGJCji (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 9 Jul 2021 22:39:38 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A960061416;
-        Sat, 10 Jul 2021 02:35:39 +0000 (UTC)
+        id S235896AbhGJCju (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 9 Jul 2021 22:39:50 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 15B1461453;
+        Sat, 10 Jul 2021 02:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625884540;
-        bh=O+Rkv8XaJU53fem/o4auysJ5ZtAu1kAUXTndaItMsrg=;
+        s=k20201202; t=1625884582;
+        bh=KotAUrAl+RS3cUxE3mRhWKLWrAvMmX+ljQlrGK8O/Gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rja/C3HuNFqcl6E0y4UX061bQlRykcwolkp/uuEcb1SmMKfLMJtG9t2z1Vu7RfM7G
-         vcuiPZAfev9VlfiES8R3q4R2vTLjy4l4vq9/t07mQXZqrigVdBpnDUYYa2BgaM8CZi
-         w9DncHhxU9uKdOxPUrHPSSQv9c1sZC7nfMFpDeuc5bFRi+da381OFYj1obL1lnIh2+
-         XDZLg/D8Nw7qQ1Wr/Gyk6DnSsOXANE6pQ6A/tWsJ5tI+cW8S7TjmVZgkQvYmVwp8Sp
-         22iADItuDc6ak15CBmJyoXKiSW7TmfA/OxaJthLPgH2RwsihBieBOgagQSP4Umq90q
-         v04eJSZ21+Pwg==
+        b=Hhg6Gc45STzJSmWZuFicY5p7B4mjT2KXgymo/jJUUCjlcpsHR6ArgH3TGh6bgcwfd
+         p1+cg93QSrGmyYkkmhrRxLszFJNroyQhmas4jAY7tvH7cUwS/tPgOtKp0VYuJS3K8r
+         RfH6uD1QEC+JnY1nIA3ENVbL8aFyvZoJFvoDJeIRTF8ehOPg8YD9aathbv34+w3GGG
+         NiG5Co5SfWZ7eBnTtui69q/WgV8MO/QqDD1Oq3x9vmJAiASMC+MWftJtrA2yiwef3O
+         4F4hAMcCT1bjxvVVhbIWGChH3a5dh18PJurXu0oIBug4qTWzfuYfFXg69V2suxBuvi
+         aWbeN95LYxnFw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 19/33] gpio: zynq: Check return value of pm_runtime_get_sync
-Date:   Fri,  9 Jul 2021 22:35:01 -0400
-Message-Id: <20210710023516.3172075-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 14/26] gpio: zynq: Check return value of pm_runtime_get_sync
+Date:   Fri,  9 Jul 2021 22:35:52 -0400
+Message-Id: <20210710023604.3172486-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710023516.3172075-1-sashal@kernel.org>
-References: <20210710023516.3172075-1-sashal@kernel.org>
+In-Reply-To: <20210710023604.3172486-1-sashal@kernel.org>
+References: <20210710023604.3172486-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,10 +59,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index f1d7066b6637..e8295519fa7d 100644
+index 6b4d10d6e10f..5038d771ac6e 100644
 --- a/drivers/gpio/gpio-zynq.c
 +++ b/drivers/gpio/gpio-zynq.c
-@@ -900,8 +900,11 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+@@ -778,8 +778,11 @@ static int zynq_gpio_probe(struct platform_device *pdev)
  static int zynq_gpio_remove(struct platform_device *pdev)
  {
  	struct zynq_gpio *gpio = platform_get_drvdata(pdev);
