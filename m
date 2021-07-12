@@ -2,120 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4D3A3C5BBF
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jul 2021 14:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F5CB3C63DA
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jul 2021 21:44:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232186AbhGLLvM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jul 2021 07:51:12 -0400
-Received: from mga05.intel.com ([192.55.52.43]:65221 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230364AbhGLLvM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 12 Jul 2021 07:51:12 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10042"; a="295611062"
-X-IronPort-AV: E=Sophos;i="5.84,232,1620716400"; 
-   d="scan'208";a="295611062"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 04:48:21 -0700
-X-IronPort-AV: E=Sophos;i="5.84,232,1620716400"; 
-   d="scan'208";a="561721690"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 04:48:18 -0700
-Received: from andy by smile with local (Exim 4.94.2)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1m2uQ0-00CD4d-KB; Mon, 12 Jul 2021 14:48:12 +0300
-Date:   Mon, 12 Jul 2021 14:48:12 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
-        andy@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to
- dev_pm_ops
-Message-ID: <YOwr/GMIExCoNjeZ@smile.fi.intel.com>
-References: <CAHp75Vfpj+ENMe9u-SMKfvCsyFtOucUT9bD3qfWX+QjccZ9ZyQ@mail.gmail.com>
- <20210708214706.GA1059661@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210708214706.GA1059661@bjorn-Precision-5520>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S235784AbhGLTrY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jul 2021 15:47:24 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:61964 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S230199AbhGLTrX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 12 Jul 2021 15:47:23 -0400
+X-IronPort-AV: E=Sophos;i="5.84,234,1620658800"; 
+   d="scan'208";a="87354838"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 13 Jul 2021 04:44:33 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5FE5840E011B;
+        Tue, 13 Jul 2021 04:44:30 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/5] pin and gpio controller driver for Renesas RZ/G2L
+Date:   Mon, 12 Jul 2021 20:44:17 +0100
+Message-Id: <20210712194422.12405-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 08, 2021 at 04:47:06PM -0500, Bjorn Helgaas wrote:
-> On Thu, Apr 02, 2020 at 11:23:27PM +0300, Andy Shevchenko wrote:
-> > On Thu, Apr 2, 2020 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Apr 02, 2020 at 09:33:46PM +0300, Andy Shevchenko wrote:
-> > > > On Thu, Apr 2, 2020 at 6:52 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
-> > > > >
-> > > > > Convert the legacy callback .suspend() and .resume()
-> > > > > to the generic ones.
-> > > >
-> > > > Thank you for the patch.
-> > > >
-> > > > Rather then doing this I think the best approach is to unify gpio-pch
-> > > > and gpio-ml-ioh together.
-> > > > Under umbrella of the task, the clean ups like above are highly
-> > > > appreciated.
-> > >
-> > > I'd be all in favor of that, but what Vaibhav is working toward is
-> > > eliminating use of legacy PM in PCI drivers.  I think unifying drivers
-> > > is really out of scope for that project.
-> > >
-> > > If you'd rather leave gpio-ml-ioh.c alone for now, I suggest that
-> > > Vaibhav move on to other PCI drivers that use legacy PM.  If we
-> > > convert all the others away from legacy PM and gpio-ml-ioh.c is the
-> > > only one remaining, then I guess we can revisit this :)
-> > 
-> > Then skip this driver for good.
-> > 
-> > > Or, maybe converting gpio-ml-ioh.c now, along the lines of
-> > > 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops"), would be one small
-> > > step towards the eventual unification, by making gpio-pch and
-> > > gpio-ml-ioh a little more similar.
-> > 
-> > I think it will delay the real work here (very old code motivates
-> > better to get rid of it then semi-fixed one).
-> 
-> With respect, I think it is unreasonable to use the fact that
-> gpio-ml-ioh and gpio-pch should be unified to hold up the conversion
-> of gpio-ml-ioh to generic power management.
-> 
-> I do not want to skip gpio-ml-ioh for good, because it is one of the
-> few remaining drivers that use the legacy PCI PM interfaces.  We are
-> very close to being able to remove a significant amount of ugly code
-> from the PCI core.
+Hi All,
 
-Makes sense (1).
+This patch series adds pin and gpio controller driver for Renesas RZ/G2L
+SoC. RZ/G2L has a simple pin and GPIO controller combined similar to RZ/A2.
 
-> gpio-ml-ioh and gpio-pch do look quite similar, and no doubt it would
-> be great to unify them.  But without datasheets or hardware to test,
+This patch series applies on top of https://git.kernel.org/pub/scm/linux/
+kernel/git/geert/renesas-drivers.git/log/?h=topic/rzg2l-update-clock-defs-v4
 
-Datasheets are publicly available (at least one may google and find some
-information about those PCH chips). I have in possession the hardware for
-gpio-pch. I can easily test that part at least.
+Cheers,
+Prabhakar
 
-> that's not a trivial task, and I don't think that burden should fall
-> on anyone who wants to make any improvements to these drivers.
+Changes for v2:
+* Added support for per pin pinmux support
+* Added support for pins to set configs
+* Dropped pfc-r9a07g044.c/h
+* Fixed review comments pointed by Geert
+* Included clock/reset changes
+* Included DTS/I changes
 
-> Another alternative would be to remove legacy PCI PM usage
-> (ioh_gpio_suspend() and ioh_gpio_resume()) from gpio-ml-ioh.  That
-> would mean gpio-ml-ioh wouldn't support power management at all, which
-> isn't a good thing, but maybe it would be even more motivation to
-> unify it with gpio-pch (which has already been converted by
-> 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops"))?
+Lad Prabhakar (5):
+  dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add DT bindings for
+    RZ/G2L pinctrl
+  pinctrl: renesas: Add RZ/G2L pin and gpio controller driver
+  drivers: clk: renesas: r9a07g044-cpg: Add GPIO clock and reset entries
+  arm64: dts: renesas: r9a07g044: Add pinctrl node
+  arm64: dts: renesas: rzg2l-smarc: Add scif0 pins
 
-With regard to (1) probably we may exceptionally accept the fix to gpio-ml-ioh,
-but I really prefer to do the much more _useful_ job on it by unifying the two.
+ .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  155 +++
+ arch/arm64/boot/dts/renesas/r9a07g044.dtsi    |   13 +
+ arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi  |   10 +
+ drivers/clk/renesas/r9a07g044-cpg.c           |    5 +
+ drivers/pinctrl/renesas/Kconfig               |   11 +
+ drivers/pinctrl/renesas/Makefile              |    1 +
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 1196 +++++++++++++++++
+ include/dt-bindings/pinctrl/rzg2l-pinctrl.h   |   23 +
+ 8 files changed, 1414 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/renesas/pinctrl-rzg2l.c
+ create mode 100644 include/dt-bindings/pinctrl/rzg2l-pinctrl.h
 
+
+base-commit: 06c1e6911a7a76b446e4b00fc8bad5d8465932f8
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
