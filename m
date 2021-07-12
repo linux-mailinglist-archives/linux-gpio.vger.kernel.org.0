@@ -2,82 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E1173C63F4
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jul 2021 21:45:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E1AE3C6547
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jul 2021 23:08:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236545AbhGLTrk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jul 2021 15:47:40 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:53010 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S236437AbhGLTrk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 12 Jul 2021 15:47:40 -0400
-X-IronPort-AV: E=Sophos;i="5.84,234,1620658800"; 
-   d="scan'208";a="87419173"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 13 Jul 2021 04:44:50 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 88CE440E0116;
-        Tue, 13 Jul 2021 04:44:47 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 5/5] arm64: dts: renesas: rzg2l-smarc: Add scif0 pins
-Date:   Mon, 12 Jul 2021 20:44:22 +0100
-Message-Id: <20210712194422.12405-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210712194422.12405-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20210712194422.12405-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S231835AbhGLVLb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jul 2021 17:11:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230087AbhGLVLb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jul 2021 17:11:31 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D89C0613DD
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jul 2021 14:08:40 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id l1so8271522edr.11
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jul 2021 14:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=essensium.com; s=google;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=R/dZ70tU/TxD2s4cM/VW4rskmb0fFyi+OQcBpX2fQIE=;
+        b=QA/uCb4/g1ZRcJffBwMb8OdnnCxh+iWOrnHnID4Q2ldK9khpUf38D0FatH0CWkUj8Z
+         A76TWGRb4AdIwRDvulI/WuIBQOfnA9cWzX1/a5BDNKaokeevQ1udgI2YhiA/20PiINOe
+         gx8ffcFtmQmn2pRuOg5qhUwajqnSuENlzXqqpgNYTjHNqs4svrun4xL9yLTo7MFQt4Ip
+         qCKQ8UFr3xjh8Kpl2XmJ8JMthUo+hXfoxfRc2qGhaWYepI8ZZn822iiLs1mayJailvUB
+         mrzl2HxXLVUu75HmeUNmk8PyA7QYPuvLa+R3Wn2EjFwxuJrpIfZemjc6Z8eVBN66diH1
+         +kAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=R/dZ70tU/TxD2s4cM/VW4rskmb0fFyi+OQcBpX2fQIE=;
+        b=PY7t+lbpXEzh0HfNaIuHiqNBSUPxAZrN8esEs96wChusZxA7lvI8gxxIM4pX+DS171
+         gY0poRyWlSOTbltJ4fOiQYm8YTlKiu7wi1Vk7BaYUvkI9FteJfzWFkTKHvh1djcIbiyx
+         fHXCvzBoOiDk8sbjbUZXwyP+/4M4Cs6nZOWfrx5JYhBXk2TCcqPtD6akLmnSqsR4y/7O
+         mkgOg7DJx35EJ36NJyvH76s+kINiz3+6EHELXUIVluoDxVUD7p5+9dUzM06OPjDc1tGq
+         hpTM1Ui/cNxCNsVLBjyAa8zKILJPN5fLmOUrkHj3AcbGyFoT9OHUKR0yo6fyY6Dx4bTp
+         8v+Q==
+X-Gm-Message-State: AOAM533rwYPKeBJu/ttTnSMDDh6un8TC+q+tbJrRKcqCQWVHeUz+WJgH
+        sGCGGe97TJ1sgtMLCO0pty/1fm84atYKSQ==
+X-Google-Smtp-Source: ABdhPJxJSJ6zCT4d61r8fE3Kyktu+QddJ6vqyO6AIUNDnIDSMgUkadaR9CaPHMOYO/KxCulbsYv17g==
+X-Received: by 2002:a50:8d54:: with SMTP id t20mr985172edt.288.1626124119495;
+        Mon, 12 Jul 2021 14:08:39 -0700 (PDT)
+Received: from cephalopod (168.7-181-91.adsl-dyn.isp.belgacom.be. [91.181.7.168])
+        by smtp.gmail.com with ESMTPSA id ov38sm2020844ejb.105.2021.07.12.14.08.38
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jul 2021 14:08:39 -0700 (PDT)
+Date:   Mon, 12 Jul 2021 23:08:37 +0200
+From:   Ben Hutchings <ben.hutchings@essensium.com>
+To:     linux-gpio@vger.kernel.org
+Subject: [libgpiod] How stable is the v2 API?
+Message-ID: <20210712210836.GA3636@cephalopod>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add scif0 pins in pinctrl node and update the scif0 node
-to include pinctrl property.
+I'm working on a project that requires GPIO debouncing and is planned
+to use libgpiod.  But debouncing is only available on the unreleased
+next/libgpiod-2.0 branch.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+What we'd like to know is whether the current C API on that branch is
+expected to change much before release.  I don't expect any commitment
+to API or ABI stability, but it would be helpful to have some
+indication of how much change is likely to be needed in a client that
+is written for the current API.
 
-diff --git a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-index adcd4f50519e..0987163f25ee 100644
---- a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-@@ -6,6 +6,7 @@
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
- 
- / {
- 	aliases {
-@@ -22,6 +23,15 @@
- 	clock-frequency = <24000000>;
- };
- 
-+&pinctrl {
-+	scif0_pins: scif0 {
-+		pinmux = <RZG2L_PORT_PINMUX(38, 0, 1)>,	/* TxD */
-+			 <RZG2L_PORT_PINMUX(38, 1, 1)>;	/* RxD */
-+	};
-+};
-+
- &scif0 {
-+	pinctrl-0 = <&scif0_pins>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
--- 
-2.17.1
+Thanks,
+
+Ben.
 
