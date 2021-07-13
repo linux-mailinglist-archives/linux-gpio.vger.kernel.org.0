@@ -2,84 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0884E3C6D2F
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 11:20:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8E4D3C6EE9
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 12:50:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234867AbhGMJXe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jul 2021 05:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57972 "EHLO
+        id S235669AbhGMKxj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jul 2021 06:53:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234855AbhGMJXe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 05:23:34 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80D2C0613DD
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 02:20:44 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id u14so21051972pga.11
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 02:20:44 -0700 (PDT)
+        with ESMTP id S235616AbhGMKxi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 06:53:38 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A55C0613EE
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 03:50:47 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id h1-20020a17090a3d01b0290172d33bb8bcso1195048pjc.0
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 03:50:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OTmMdrMAB9bImB5lvMc1DD+Z/7YP8LKKmtvXPZXTDoA=;
-        b=eRM81P7okufqiPg6IEmABprVWTgrBmOTw/3du73QRY0jLtgQNCG+sRqGLl4mBBF5CP
-         04zo3/byHW2mCZjOeGBPjWax0rwqMfcmkL25eZDzpIfkDWGbNQ1sSeppTJlsYPJiOIER
-         a7CreGJMYDYThVYMXaXFRkxnlmnanPuaRz2WmdKqOjp6rQSOLkjl5PinCZ4CP4poU45H
-         yjRsTGKI8VU+j1g7E6Bh8cSm10LbCYltQHr79kmtDjdAkzyhnv8xpXZsW/IT1szDP8in
-         +qR4whB0u94BmWDzkHb10ueCeM2t9IED0nbaZHeVysga5j45J0XmZmxyXhIbjwhBI6vL
-         KQgg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4xLUJ1dW1Qt0KgF3pEuea/62PVc6DCT7EsaU/Szp0Bg=;
+        b=E2vCdTP4Dqtla5LUcohrAy+3w9yg8TqQrenrE5K9FTm+s6OAAqAP4MkvIUanmoewVh
+         p9Xoha8+yUnUYTMCuoC0YpI5U+SKq2/0jW9vqhW6ACR2JbmbQlA9mE3k0V9hJ0hd8oan
+         tTlxN5pFfvjiYWIdZqviVCBXIrYVnUuADNxLHBtHQAw7pqzSDE/xUbphfgNvfjOHqS5u
+         JeJ0nuh0WIXCgIrUZzo3opYAS5jkLPFYAnwd+nwZ+eSIYIbqkkdOPQeqgg2Mc7wm6yd8
+         LE1lVaUisP/flFiy87qUDrIeegoszDgg1BVBZsTYuXAIoMCvvY120W27WX3hWkBNqpEq
+         uoJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OTmMdrMAB9bImB5lvMc1DD+Z/7YP8LKKmtvXPZXTDoA=;
-        b=JF6vxKiSLU6S1Z03brpTtD36jGj9QPuQoyUD+EaQPk17PGTIY0KwcWVB488g8KqXQc
-         ef4ViUbre7QKe/EveV7dTr+ntBRRqP4qVPWo8uD1bfAuAqOiKlr/HPdH9Xc/DOmfhXva
-         1lcdQfYX1Zw3ZYzfn9Iaxh2qfGf92whTdqlWMnHPlIwS33NsggMEiuIALFjoqQ/bBX0E
-         IP0pfNlccHYAkbAoIOKTf29SUMaVWxMlnEwPwB8Wra4CPHo8PxCLPo4oj7c5EJcNl0hq
-         RlUP0zUwSfWCKPFqGKf5bJfOBoqDxRuh9tEu/SszM6/Lghbbk+Ej0gma24kA70aCLNdU
-         63Rw==
-X-Gm-Message-State: AOAM532PW9vm+RlwuZe1AdZ2yh5wCCiRec5GDONFApYwN1x16tV5TYzU
-        xM68ry/4iImEmIwuSSK7R6ASwiB5w8+to7RwW/w=
-X-Google-Smtp-Source: ABdhPJy4TSMIhbabCUl6HYY8vLuTRxbqSFh3OeOlBOyfrPde65y3joqTqoo/zbM/U0p+ccqdzOQOSMTe3iUfNqy/cFI=
-X-Received: by 2002:a65:434a:: with SMTP id k10mr3455400pgq.4.1626168044491;
- Tue, 13 Jul 2021 02:20:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4xLUJ1dW1Qt0KgF3pEuea/62PVc6DCT7EsaU/Szp0Bg=;
+        b=COS3y2+yOhjHxwUvcXhRoGECff54C0pDXbZzhySFcIHsXDhs5asziagkKNyusIEhhZ
+         n83JOxegTe9qrN+Z8KX7/eTfEyMeIjXPQcFnWRbZBWXJiyX4hA4Wx27p3T5BUsrYDXHi
+         Fnmu9g6MAq4keyAyAAHwx+yU9orkrubc1lJdplRkdAVqWST5b66ZD4D+9/BX8RdinZPh
+         kJSkWn4FH4eFAFDdcgdRVUXxnAS+pttkKCisSPbWvrydd74deM9d0XmtsY9UTpwnm++G
+         7hyTDrizqM0x1mdYnaiQso39Y6lhBJk3DPBOexOcTB9U0qG5N3flsykRY9Q6VNSZtwdE
+         8Vjw==
+X-Gm-Message-State: AOAM531Ju0bcty838zbgZvibiVXZiGlJnZoyJ7F/W1/OeI0mgPhEADff
+        9LS9YsNcb/zw3s7i2gf7Xfz6dw==
+X-Google-Smtp-Source: ABdhPJxwSt+fW6q6oLmsbQWUpPWMZxVQMEC0vEz1IMyhrgYVT2WsxbkoAvR6ROOjdRLOSHodWNX0Yg==
+X-Received: by 2002:a17:90b:957:: with SMTP id dw23mr12591539pjb.123.1626173446842;
+        Tue, 13 Jul 2021 03:50:46 -0700 (PDT)
+Received: from localhost ([106.201.108.2])
+        by smtp.gmail.com with ESMTPSA id lj13sm15276916pjb.53.2021.07.13.03.50.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jul 2021 03:50:46 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Jie Deng <jie.deng@intel.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Subject: [PATCH 0/5] virtio: Parse virtio-device nodes from DT
+Date:   Tue, 13 Jul 2021 16:20:29 +0530
+Message-Id: <cover.1626173013.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 MIME-Version: 1.0
-References: <20210712210836.GA3636@cephalopod> <CAHp75VdSVB4shmAO2Oww=UU_5pqR=W3JZ98ChjZwZaRZ9gbVdQ@mail.gmail.com>
-In-Reply-To: <CAHp75VdSVB4shmAO2Oww=UU_5pqR=W3JZ98ChjZwZaRZ9gbVdQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 13 Jul 2021 12:20:05 +0300
-Message-ID: <CAHp75VdeeAhAOYi1uEtLRH=k2BsUOE+2j5YBF8__ujb3pya33A@mail.gmail.com>
-Subject: Re: [libgpiod] How stable is the v2 API?
-To:     Ben Hutchings <ben.hutchings@essensium.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 12:16 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Jul 13, 2021 at 12:09 AM Ben Hutchings
-> <ben.hutchings@essensium.com> wrote:
-> >
-> > I'm working on a project that requires GPIO debouncing and is planned
-> > to use libgpiod.  But debouncing is only available on the unreleased
-> > next/libgpiod-2.0 branch.
-> >
-> > What we'd like to know is whether the current C API on that branch is
-> > expected to change much before release.  I don't expect any commitment
-> > to API or ABI stability, but it would be helpful to have some
-> > indication of how much change is likely to be needed in a client that
-> > is written for the current API.
->
-> I believe this is the right thread to discuss and influence if needed.
->
-> https://lore.kernel.org/linux-gpio/20210621191830.10628-1-brgl@bgdev.pl/T/#ma70b1ab80804c09644f4a018ff5eff10464b195a
+Hi,
 
-Oops, it was a follow up, but the core bindings were here:
-https://lore.kernel.org/linux-gpio/20210607045950.GA18318@sol/T/#u
+Currently the DT only provides support for following node types for virtio-mmio
+nodes:
+
+	virtio_mmio@a000000 {
+		dma-coherent;
+		interrupts = <0x00 0x10 0x01>;
+		reg = <0x00 0xa000000 0x00 0x200>;
+		compatible = "virtio,mmio";
+	};
+
+And each virtio-mmio corresponds to a virtio-device. But there is no way for
+other users in the DT to show their dependency on virtio devices.
+
+This patchset provides that support.
+
+The first patch update virtio,mmio bindings to allow for device subnodes to be
+present and the second patch updates the virtio-mmio driver to update the
+of_node.
+
+Other patches add bindings for i2c and gpio virtio devices (they have some
+dependencies, mentioned in the patches).
+
+Tested on x86 with qemu for arm64.
+
+--
+Viresh
+
+Viresh Kumar (5):
+  dt-bindings: virtio: mmio: Add support for device subnode
+  virtio_mmio: Bind virtio device to device-tree node
+  dt-bindings: i2c: Add bindings for i2c-virtio
+  i2c: virtio: Update i2c-adapter's of_node
+  dt-bindings: gpio: Add bindings for gpio-virtio
+
+ .../devicetree/bindings/gpio/gpio-virtio.yaml | 67 +++++++++++++++++++
+ .../devicetree/bindings/i2c/i2c-virtio.yaml   | 59 ++++++++++++++++
+ .../devicetree/bindings/virtio/mmio.yaml      | 41 ++++++++++++
+ drivers/i2c/busses/i2c-virtio.c               |  1 +
+ drivers/virtio/virtio_mmio.c                  | 44 ++++++++++++
+ include/dt-bindings/virtio/virtio_ids.h       |  1 +
+ 6 files changed, 213 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-virtio.yaml
+ create mode 120000 include/dt-bindings/virtio/virtio_ids.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.31.1.272.g89b43f80a514
+
