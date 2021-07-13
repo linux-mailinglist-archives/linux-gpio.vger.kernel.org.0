@@ -2,77 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 686E13C714E
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 15:37:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E8A83C71C9
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 16:03:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236484AbhGMNka (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jul 2021 09:40:30 -0400
-Received: from mail-vk1-f177.google.com ([209.85.221.177]:41634 "EHLO
-        mail-vk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236222AbhGMNka (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 09:40:30 -0400
-Received: by mail-vk1-f177.google.com with SMTP id q124so1732291vka.8;
-        Tue, 13 Jul 2021 06:37:40 -0700 (PDT)
+        id S236832AbhGMOGU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jul 2021 10:06:20 -0400
+Received: from mail-il1-f178.google.com ([209.85.166.178]:34509 "EHLO
+        mail-il1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236809AbhGMOGT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 10:06:19 -0400
+Received: by mail-il1-f178.google.com with SMTP id e13so23300905ilc.1;
+        Tue, 13 Jul 2021 07:03:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ks+aQKe2+n4Zk0Ta4yhtI3Gp8O8SNuAgjxZAciGA2PU=;
-        b=QxbfGksVo9mep89bil9LSDVB8K2B9KKcFKa+EXApU3ZWViA6CAT/ZgdPzDIvxEIKjw
-         WVWh/gSP6Zwfs6Np+El5G41d6pLHHSA30Usa41TkJRzGIvTlBwBn71grKr2pj3N1oBza
-         j0paunip912RjjPABfcKvSlkrFQwFOqi1+zUgOmfFOvn+rp+RPpdwbo5j09OQjnC5GGv
-         E2DRd3ef79u18KjiUzaJuneRd/BoOAiMew9AosEoYvhN3SR6NP73iOkylm8cREOGtI/n
-         xqXtIgRJm9yaAwD/L+ommMy40Vsx584XJ39+tJw0mmORW0xtAt8gDeiXjG+LY9BbZnLk
-         m5vg==
-X-Gm-Message-State: AOAM5314fmwtzQok8pYBT75b8JqXjcFRHolQC48c/5QnOI8WPp7/zB6C
-        vXkJT9pWfHFYvPJ4To5lq6G9RpbP2FPF2aGBGMY=
-X-Google-Smtp-Source: ABdhPJzbX0h4Uh+m6cq4jAo57sstkGWVD2F8nZ8RsWP64JZ3iNA/azYn/kT1fRyfpJYji4mRYdsYPVQZmFe18hOGedk=
-X-Received: by 2002:a05:6122:b72:: with SMTP id h18mr5122218vkf.1.1626183459647;
- Tue, 13 Jul 2021 06:37:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210712194422.12405-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210712194422.12405-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20210712194422.12405-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 13 Jul 2021 15:37:28 +0200
-Message-ID: <CAMuHMdX4bmJgtESAM50n7XbphG8BTJcC7GrDSQ+1LFrQMQpgfQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] drivers: clk: renesas: r9a07g044-cpg: Add GPIO
- clock and reset entries
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=W0tPxTxBFqwVjrERv5yBUzJYH1KOoxA14jOPXeTsapQ=;
+        b=bR91lGqkMdz4olayLpBSeAENnbHKZ6120q7JP7xzGxTa+fbeX+ysTwi2uuYZwb5ub4
+         w8qfFJHfDM285H5cbhVxi03D58AIcuKHoI4HMv0JPDJnsFAj/X0o+AL17Pp25MFW/evf
+         LTk1Bz1W6TPNIrDz1U1e6GI8n5jdZHftTkMZSgUkmsCO7XS/ZKFKz8ba2Ce4XO82DbGs
+         hQNa3VPxXxe3vOr3SzVzKN/66N7bX9r8zEkhtrnT7SOlYn4efVcOGI96MbKj1YQcD+ow
+         VMSIHbqkuMCzesW1O8egEs4lT86+Gdih6WJnGIO2P5F0c7LCGc0sb0naOdsZksaH3eUv
+         Zd8g==
+X-Gm-Message-State: AOAM532gJSIaCnF2qUTj7o7n6zTTSELwcg4FXxUhEykqkR1pYbMilhvk
+        UoWbUOl3fF/0NXaumNDT3A==
+X-Google-Smtp-Source: ABdhPJwtHCLdHMImB7FGf/LTlwtrd/GDrGn+A00ynbPDFQORtkdIz28oeNvQHmIoGkb0xe9e6AIBjQ==
+X-Received: by 2002:a92:3f08:: with SMTP id m8mr2957950ila.104.1626185009476;
+        Tue, 13 Jul 2021 07:03:29 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id e14sm9527471ilc.47.2021.07.13.07.03.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jul 2021 07:03:28 -0700 (PDT)
+Received: (nullmailer pid 129715 invoked by uid 1000);
+        Tue, 13 Jul 2021 14:03:13 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        devicetree@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Bill Mills <bill.mills@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        Jie Deng <jie.deng@intel.com>
+In-Reply-To: <268086e273df0c53e3a9a1e751304c63e50ebe12.1626173013.git.viresh.kumar@linaro.org>
+References: <cover.1626173013.git.viresh.kumar@linaro.org> <268086e273df0c53e3a9a1e751304c63e50ebe12.1626173013.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH 5/5] dt-bindings: gpio: Add bindings for gpio-virtio
+Date:   Tue, 13 Jul 2021 08:03:13 -0600
+Message-Id: <1626184993.671493.129714.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 12, 2021 at 9:44 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add GPIO clock and reset entries in CPG driver.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+On Tue, 13 Jul 2021 16:20:34 +0530, Viresh Kumar wrote:
+> gpio-virtio represents a virtio GPIO controller and this patch adds
+> binding for the same. The gpio-virtio subnode can be part of a
+> virtio,mmio node and is based on its binding.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> Depends on:
+> 
+> https://lore.kernel.org/lkml/7c716c2eb7ace5b5a560d8502af93101dbb53d24.1626170146.git.viresh.kumar@linaro.org/
+> ---
+>  .../devicetree/bindings/gpio/gpio-virtio.yaml | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk-for-v5.15.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Gr{oetje,eeting}s,
+yamllint warnings/errors:
 
-                        Geert
+dtschema/dtc warnings/errors:
+Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.8/dist-packages/dtschema/schemas/virtio/mmio.yaml'
+xargs: dt-doc-validate: exited with status 255; aborting
+Documentation/devicetree/bindings/gpio/gpio-virtio.example.dts:19:18: fatal error: dt-bindings/virtio/virtio_ids.h: No such file or directory
+   19 |         #include <dt-bindings/virtio/virtio_ids.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/gpio/gpio-virtio.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1416: dt_binding_check] Error 2
+\ndoc reference errors (make refcheckdocs):
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+See https://patchwork.ozlabs.org/patch/1504545
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
