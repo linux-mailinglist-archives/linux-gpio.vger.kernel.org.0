@@ -2,90 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6AB3C7043
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 14:25:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 686E13C714E
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 15:37:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236076AbhGMM2V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jul 2021 08:28:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236042AbhGMM2V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 08:28:21 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADAFFC0613DD
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 05:25:31 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id b5-20020a17090a9905b029016fc06f6c5bso1983838pjp.5
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 05:25:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=A7V+Qnp5gi1X6gyQ6cKEefgZdWO2pLhjYg9xWj0gReQ=;
-        b=aF+EcplbdruFO7T0XcIFGITcXd4RJPMt5uKdV5giBlXuGY88bmL0ANrGoXQckljVFg
-         Adfb+vgoRmwuFfJUtZYcK6SFrd2Ztx/ju/brZyIoZPhcXfg6Gg/wj7W18vxec5ePWf3O
-         fSmSm1di5r1Aq5b3/r1Mp4Ywt3fF6NFA5ocBrconTfvmmCpHhcHgcO26cAX5cZJiPY4A
-         OFRJ6oApcBU7E839UTlEaIm4vonwL67kiN8JEg1AN4z7K1R/oZVFYl4DMgFxqxsA+fgv
-         1cdBPyWZYiqgUpoyx2eQZAnDwpGL4cXmcNtLSLraXiUmpev4ZWuCIKnStiX00B1ayrM2
-         G+Uw==
+        id S236484AbhGMNka (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jul 2021 09:40:30 -0400
+Received: from mail-vk1-f177.google.com ([209.85.221.177]:41634 "EHLO
+        mail-vk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236222AbhGMNka (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 09:40:30 -0400
+Received: by mail-vk1-f177.google.com with SMTP id q124so1732291vka.8;
+        Tue, 13 Jul 2021 06:37:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=A7V+Qnp5gi1X6gyQ6cKEefgZdWO2pLhjYg9xWj0gReQ=;
-        b=Ws45p+8JXTFm/D/uqOfcy44iR+dwRJQtatRhklcXbrAwul4QpYvJjc+RqItjTSJ/oj
-         uLw6obkVLD0lleW6/rIVqoQ/e5QtTqUBK8vV3E07e51ACIjA6MG+EFe+eMNmqsqsCP3i
-         LS8pcpAyushXPXguUWFNPZqnWpy49YvCh381KsomY4az1qT/PxU9BsQdwwACgZEbj7gV
-         UR2kcIYAWXTnkLo89g3jSgXAwrC28vxOGFwvsYXEkfQB5F4UDFIwLBKxFn5RG05kSPMU
-         y2dFH24KZ0cl82bywwU7nfb1OJD0WbPb2NAte9vQRbotG4IM7mEK9To2CtiAkaGSr0A3
-         N7kg==
-X-Gm-Message-State: AOAM531wNU251RzV5R15z2B8+uN8Iqt0k89kaycpZgte5sY060b96s4/
-        Q87UQPIWKC5Put6bL0nmQiY=
-X-Google-Smtp-Source: ABdhPJxf3JxwxlB3aLGYkJyF64/Vrb9kOlQ1g29dR8uO+ZFQ83jktXx0f0B+A2n1KwUVa1oYv/1tcg==
-X-Received: by 2002:a17:90a:6a01:: with SMTP id t1mr4154970pjj.10.1626179130756;
-        Tue, 13 Jul 2021 05:25:30 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:485:504a:3cd0:e668:9a9b:3005])
-        by smtp.gmail.com with ESMTPSA id x7sm12782723pfc.96.2021.07.13.05.25.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 05:25:30 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, shawnguo@kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 2/2] pinctrl: imx8qxp: Constify imx_pinctrl_soc_info
-Date:   Tue, 13 Jul 2021 09:25:13 -0300
-Message-Id: <20210713122513.3112941-2-festevam@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210713122513.3112941-1-festevam@gmail.com>
-References: <20210713122513.3112941-1-festevam@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ks+aQKe2+n4Zk0Ta4yhtI3Gp8O8SNuAgjxZAciGA2PU=;
+        b=QxbfGksVo9mep89bil9LSDVB8K2B9KKcFKa+EXApU3ZWViA6CAT/ZgdPzDIvxEIKjw
+         WVWh/gSP6Zwfs6Np+El5G41d6pLHHSA30Usa41TkJRzGIvTlBwBn71grKr2pj3N1oBza
+         j0paunip912RjjPABfcKvSlkrFQwFOqi1+zUgOmfFOvn+rp+RPpdwbo5j09OQjnC5GGv
+         E2DRd3ef79u18KjiUzaJuneRd/BoOAiMew9AosEoYvhN3SR6NP73iOkylm8cREOGtI/n
+         xqXtIgRJm9yaAwD/L+ommMy40Vsx584XJ39+tJw0mmORW0xtAt8gDeiXjG+LY9BbZnLk
+         m5vg==
+X-Gm-Message-State: AOAM5314fmwtzQok8pYBT75b8JqXjcFRHolQC48c/5QnOI8WPp7/zB6C
+        vXkJT9pWfHFYvPJ4To5lq6G9RpbP2FPF2aGBGMY=
+X-Google-Smtp-Source: ABdhPJzbX0h4Uh+m6cq4jAo57sstkGWVD2F8nZ8RsWP64JZ3iNA/azYn/kT1fRyfpJYji4mRYdsYPVQZmFe18hOGedk=
+X-Received: by 2002:a05:6122:b72:: with SMTP id h18mr5122218vkf.1.1626183459647;
+ Tue, 13 Jul 2021 06:37:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210712194422.12405-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210712194422.12405-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20210712194422.12405-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 13 Jul 2021 15:37:28 +0200
+Message-ID: <CAMuHMdX4bmJgtESAM50n7XbphG8BTJcC7GrDSQ+1LFrQMQpgfQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] drivers: clk: renesas: r9a07g044-cpg: Add GPIO
+ clock and reset entries
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The imx_pinctrl_soc_info structure content is never changed, so it can be
-declared as 'const', like it is done on all other i.MX pinctrl drivers.
+On Mon, Jul 12, 2021 at 9:44 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add GPIO clock and reset entries in CPG driver.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-Make it 'const' in this driver too.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk-for-v5.15.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- drivers/pinctrl/freescale/pinctrl-imx8qxp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
-index 4f97813ba8b7..0a0acc0038d0 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
-@@ -194,7 +194,7 @@ static const struct pinctrl_pin_desc imx8qxp_pinctrl_pads[] = {
- 	IMX_PINCTRL_PIN(IMX8QXP_COMP_CTL_GPIO_1V8_3V3_QSPI0B),
- };
- 
--static struct imx_pinctrl_soc_info imx8qxp_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx8qxp_pinctrl_info = {
- 	.pins = imx8qxp_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx8qxp_pinctrl_pads),
- 	.flags = IMX_USE_SCU,
+                        Geert
+
 -- 
-2.25.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
