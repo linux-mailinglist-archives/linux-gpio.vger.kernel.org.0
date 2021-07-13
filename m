@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8E4D3C6EE9
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 12:50:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C778E3C6EFD
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 12:51:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235669AbhGMKxj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jul 2021 06:53:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50654 "EHLO
+        id S235863AbhGMKxz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jul 2021 06:53:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235616AbhGMKxi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 06:53:38 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A55C0613EE
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 03:50:47 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id h1-20020a17090a3d01b0290172d33bb8bcso1195048pjc.0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 03:50:47 -0700 (PDT)
+        with ESMTP id S235845AbhGMKxw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 06:53:52 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72404C061793
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 03:51:01 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d1so5681867plg.0
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 03:51:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4xLUJ1dW1Qt0KgF3pEuea/62PVc6DCT7EsaU/Szp0Bg=;
-        b=E2vCdTP4Dqtla5LUcohrAy+3w9yg8TqQrenrE5K9FTm+s6OAAqAP4MkvIUanmoewVh
-         p9Xoha8+yUnUYTMCuoC0YpI5U+SKq2/0jW9vqhW6ACR2JbmbQlA9mE3k0V9hJ0hd8oan
-         tTlxN5pFfvjiYWIdZqviVCBXIrYVnUuADNxLHBtHQAw7pqzSDE/xUbphfgNvfjOHqS5u
-         JeJ0nuh0WIXCgIrUZzo3opYAS5jkLPFYAnwd+nwZ+eSIYIbqkkdOPQeqgg2Mc7wm6yd8
-         LE1lVaUisP/flFiy87qUDrIeegoszDgg1BVBZsTYuXAIoMCvvY120W27WX3hWkBNqpEq
-         uoJQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xzH7sesTaozGr2aBJCA9PbVMd+/TXsUDxdM6aSXl45Y=;
+        b=UfdEgV6ejBlsj8JxfNTCpyqoujkZOrd26OFYbtyNGrFFn1w8vIXL3x/tuh8kYEN7zh
+         gMfxw3nWN67wNY+Ia620l6fmfgeo/5SjhwpvWAQldauqCMbEN1360puiqwBIkfK5Q4uZ
+         wpSwJXVJjy3E6hA7Xjo4ciCm1nwSoklVD0YtzlI7ndrcYmCfBkYSFY80XKzfNVNVyMst
+         nFIHVvEmojYLFlPQ2vf2P4X/xU56jTh3kY+isL6DcaxrPFjSjGwGKwIfDMUc7lh/xYoG
+         z4d/R32YPIe0nHFMqPqcSzBaoBw9/4vKH5Sp/SESjA6uqWTeDPV9t93lEi7qZGCipQA5
+         YXzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4xLUJ1dW1Qt0KgF3pEuea/62PVc6DCT7EsaU/Szp0Bg=;
-        b=COS3y2+yOhjHxwUvcXhRoGECff54C0pDXbZzhySFcIHsXDhs5asziagkKNyusIEhhZ
-         n83JOxegTe9qrN+Z8KX7/eTfEyMeIjXPQcFnWRbZBWXJiyX4hA4Wx27p3T5BUsrYDXHi
-         Fnmu9g6MAq4keyAyAAHwx+yU9orkrubc1lJdplRkdAVqWST5b66ZD4D+9/BX8RdinZPh
-         kJSkWn4FH4eFAFDdcgdRVUXxnAS+pttkKCisSPbWvrydd74deM9d0XmtsY9UTpwnm++G
-         7hyTDrizqM0x1mdYnaiQso39Y6lhBJk3DPBOexOcTB9U0qG5N3flsykRY9Q6VNSZtwdE
-         8Vjw==
-X-Gm-Message-State: AOAM531Ju0bcty838zbgZvibiVXZiGlJnZoyJ7F/W1/OeI0mgPhEADff
-        9LS9YsNcb/zw3s7i2gf7Xfz6dw==
-X-Google-Smtp-Source: ABdhPJxwSt+fW6q6oLmsbQWUpPWMZxVQMEC0vEz1IMyhrgYVT2WsxbkoAvR6ROOjdRLOSHodWNX0Yg==
-X-Received: by 2002:a17:90b:957:: with SMTP id dw23mr12591539pjb.123.1626173446842;
-        Tue, 13 Jul 2021 03:50:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xzH7sesTaozGr2aBJCA9PbVMd+/TXsUDxdM6aSXl45Y=;
+        b=Xhc3GLIrmqvW7weEl47E95AYW28YMuzvF5PtsX99yMKO2fBCv2OmHihLlm90TBS+Ze
+         eTvPGBizoWOzqTsnYH0aX5f1UzwyQ6Kfy8u9pDghnWTS5yeuOQPXt+q+47QcsZ8aG5Qz
+         nDX3ubrTcS/PwYyr+xx9N+e6o2kvy7hG+L76UK9i3eSnIDQXJrnS/HW3+8WqpfIO0tfQ
+         atkYtz7RrTI9lN64pPJab9V/b8KAH+UeQT3L4tNQrA12pMNdZCP16hTVh8ri0dJy8xFm
+         q2feJV72TBtoQc+/+JU2RKmIT7G7zfQn0i28VSL1YdgTPU7nvyIsp+h5x1QNLqSN9KnA
+         /9yA==
+X-Gm-Message-State: AOAM5330i7TrBMF4/zbnyuxUmU4DGE4LTsQLRSvlnQx/wvWQiw+H5ZPY
+        yHJOxAQNZ1gReoZGFsujW11aJQ==
+X-Google-Smtp-Source: ABdhPJwILSYWfsnEQ84NtkqSWa5u44NasPrQyL0/31BO0LHU+8bXmC3BJV9TCS/WGUJGHGqqDIiLVA==
+X-Received: by 2002:a17:90b:1294:: with SMTP id fw20mr18966339pjb.100.1626173460987;
+        Tue, 13 Jul 2021 03:51:00 -0700 (PDT)
 Received: from localhost ([106.201.108.2])
-        by smtp.gmail.com with ESMTPSA id lj13sm15276916pjb.53.2021.07.13.03.50.45
+        by smtp.gmail.com with ESMTPSA id i8sm5898474pfk.18.2021.07.13.03.51.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 03:50:46 -0700 (PDT)
+        Tue, 13 Jul 2021 03:51:00 -0700 (PDT)
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Jason Wang <jasowang@redhat.com>,
         "Michael S. Tsirkin" <mst@redhat.com>,
         Rob Herring <robh+dt@kernel.org>,
         Arnd Bergmann <arnd@kernel.org>,
         Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
         Bill Mills <bill.mills@linaro.org>,
@@ -63,65 +63,106 @@ Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
         Jie Deng <jie.deng@intel.com>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>
-Subject: [PATCH 0/5] virtio: Parse virtio-device nodes from DT
-Date:   Tue, 13 Jul 2021 16:20:29 +0530
-Message-Id: <cover.1626173013.git.viresh.kumar@linaro.org>
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 5/5] dt-bindings: gpio: Add bindings for gpio-virtio
+Date:   Tue, 13 Jul 2021 16:20:34 +0530
+Message-Id: <268086e273df0c53e3a9a1e751304c63e50ebe12.1626173013.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+In-Reply-To: <cover.1626173013.git.viresh.kumar@linaro.org>
+References: <cover.1626173013.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+gpio-virtio represents a virtio GPIO controller and this patch adds
+binding for the same. The gpio-virtio subnode can be part of a
+virtio,mmio node and is based on its binding.
 
-Currently the DT only provides support for following node types for virtio-mmio
-nodes:
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+Depends on:
 
-	virtio_mmio@a000000 {
-		dma-coherent;
-		interrupts = <0x00 0x10 0x01>;
-		reg = <0x00 0xa000000 0x00 0x200>;
-		compatible = "virtio,mmio";
-	};
-
-And each virtio-mmio corresponds to a virtio-device. But there is no way for
-other users in the DT to show their dependency on virtio devices.
-
-This patchset provides that support.
-
-The first patch update virtio,mmio bindings to allow for device subnodes to be
-present and the second patch updates the virtio-mmio driver to update the
-of_node.
-
-Other patches add bindings for i2c and gpio virtio devices (they have some
-dependencies, mentioned in the patches).
-
-Tested on x86 with qemu for arm64.
-
---
-Viresh
-
-Viresh Kumar (5):
-  dt-bindings: virtio: mmio: Add support for device subnode
-  virtio_mmio: Bind virtio device to device-tree node
-  dt-bindings: i2c: Add bindings for i2c-virtio
-  i2c: virtio: Update i2c-adapter's of_node
-  dt-bindings: gpio: Add bindings for gpio-virtio
-
+https://lore.kernel.org/lkml/7c716c2eb7ace5b5a560d8502af93101dbb53d24.1626170146.git.viresh.kumar@linaro.org/
+---
  .../devicetree/bindings/gpio/gpio-virtio.yaml | 67 +++++++++++++++++++
- .../devicetree/bindings/i2c/i2c-virtio.yaml   | 59 ++++++++++++++++
- .../devicetree/bindings/virtio/mmio.yaml      | 41 ++++++++++++
- drivers/i2c/busses/i2c-virtio.c               |  1 +
- drivers/virtio/virtio_mmio.c                  | 44 ++++++++++++
- include/dt-bindings/virtio/virtio_ids.h       |  1 +
- 6 files changed, 213 insertions(+)
+ 1 file changed, 67 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-virtio.yaml
- create mode 120000 include/dt-bindings/virtio/virtio_ids.h
 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-virtio.yaml b/Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
+new file mode 100644
+index 000000000000..c813cdfd60fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-virtio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Virtio memory mapped GPIO controller
++
++maintainers:
++  - Viresh Kumar <viresh.kumar@linaro.org>
++
++description:
++  Virtio GPIO controller, see /schemas/virtio/mmio.yaml for more details.
++
++allOf:
++  - $ref: /schemas/gpio/gpio.yaml#
++
++properties:
++  $nodename:
++    pattern: '^gpio-virtio@[0-9]+$'
++
++  reg:
++    description:
++      The cell is the device ID of the GPIO device (VIRTIO_ID_GPIO) as per
++      dt-bindings/virtio/virtio_ids.h.
++    const: 41
++    $ref: /schemas/virtio/mmio.yaml#/properties/reg
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++required:
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/virtio/virtio_ids.h>
++
++    virtio@3000 {
++        compatible = "virtio,mmio";
++        reg = <0x3000 0x100>;
++        interrupts = <41>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        gpio-virtio@0 {
++            reg = <VIRTIO_ID_GPIO>;
++            gpio-controller;
++            #gpio-cells = <2>;
++            interrupt-controller;
++            #interrupt-cells = <2>;
++        };
++    };
++
++...
 -- 
 2.31.1.272.g89b43f80a514
 
