@@ -2,116 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F38443C6F94
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 13:19:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16AB13C7042
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 14:25:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235877AbhGMLVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jul 2021 07:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57102 "EHLO
+        id S236050AbhGMM2T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jul 2021 08:28:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235574AbhGMLVd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 07:21:33 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CDC7C0613EE;
-        Tue, 13 Jul 2021 04:18:42 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 141so12867515ljj.2;
-        Tue, 13 Jul 2021 04:18:42 -0700 (PDT)
+        with ESMTP id S236042AbhGMM2S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 08:28:18 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F562C0613DD
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 05:25:28 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id k20so14485047pgg.7
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 05:25:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=DmW58CuQRiPy8Sg0c4NVO3FTMCEg7IqqiVpTucaJ3Tw=;
-        b=pabDNbwM68BJYigpwysEF85rUs211QosqbU8je6wotBV50cemlTavOMzN1CN6vUAa1
-         bxhS3HOMeoZq+xr0xRnedvScLuAX6X1m+gW0lHfl8BWSZdVSQLbdlAV6+RfnmeTEMv+k
-         aoyfJchdeYQWBKp/S7L/a5bmQEVNWuSA+8SqUba9qBBBMfeP7XJvxhgm76wW24c/6Ld0
-         tY+/ljx9S/G+o5gMEXfmQDLmsoeFK8aVJag0ZxMhb8stDjzZ/ypHL0xZygRGSXPkNBPs
-         rk8Rxu3MmsWRdv6UpxdaMIPthQv2rw8I0CiPo22t1s0ihY12hS8Qs0cZSg+PHR6Ndvd/
-         uSwQ==
+        bh=yFk6vFnQFG7ZWEqZL8vxx2NScrRz0FV0Zv2XkeycqM0=;
+        b=iTehfo8w2ynAJEPK10171kyKSz4ksKH4qJJ3LHJuNXGJG5znqzsVliShZN21WBEiFo
+         ffdEK69JPQiVBOW6OViL+Tue43WilPDXoLMpadkT+7XEORnrBzfmnvePK9nuI/RMPWVt
+         YmxTg+NKrcoMEKAWo1727DyiqfRIE+Jmw+wSxBsI7G4YBc0yWRt7FKdyMd8teJEfJ/7v
+         E1omPdIg7ve2jrVHO6YmRlH0ycxst1xEZKCAhi2BSj/urOYNvwCYZu7IE1DKF1CpHYIH
+         /qljVcuV5+AlXV5YQiTc9ZOfDQj6VlQBzYUom27gDegNnxX85sh0pxLXmNv7SfCFcGg3
+         5TZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DmW58CuQRiPy8Sg0c4NVO3FTMCEg7IqqiVpTucaJ3Tw=;
-        b=oU/ukQwy6/eXlxFUUCQ5tBZFtgVAFsWJuPCENWlETtGUV4fHWOqczThvp42DOdLyfx
-         OmaK6vIxMEqPjhCls4Olzsvg7HUG1vxEmQUo0FPTgpQjg38VS1AAOJiRyhFgrXrpZnMb
-         030EmIRTH4H4W52/TABCx7/5lwuw1BTqlPFeW9ZywNpm2kuRBp9jzeIn0CrHGyUrDNlX
-         SnWBsf6axpLKzxdW5X6AwtPjyCnVA6sOO6V1bXr9bCGGFnSixjuFna+NLg40PMTzDQ82
-         Zlyl92skHlgwg21s4gaYhZfyzdqRyzb7RI134YKS5lJDtxTibK1kJ+nZA2bTL2zIo3Uz
-         eaOA==
-X-Gm-Message-State: AOAM531DomxcGhFYUD25sJy08nB1qC/pDAUvpDXYwbqhjD19e4LeQIEI
-        HazCqMnMopI3HXpyz3lbSNk=
-X-Google-Smtp-Source: ABdhPJyvTGjEOf/NF26HuZzFFaI4eu/hHQhCJ+22spNmcJAWehw9gBPsA+afahpC0rX9Ib53v8by6Q==
-X-Received: by 2002:a2e:88ca:: with SMTP id a10mr1850235ljk.361.1626175120561;
-        Tue, 13 Jul 2021 04:18:40 -0700 (PDT)
-Received: from [192.168.1.100] ([178.176.78.85])
-        by smtp.gmail.com with ESMTPSA id k12sm1442939lfv.14.2021.07.13.04.18.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jul 2021 04:18:40 -0700 (PDT)
-Subject: Re: [PATCH v2 5/5] arm64: dts: renesas: rzg2l-smarc: Add scif0 pins
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-References: <20210712194422.12405-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20210712194422.12405-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <53e6c8fa-311f-f100-dd06-d806ab593488@gmail.com>
-Date:   Tue, 13 Jul 2021 14:18:30 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yFk6vFnQFG7ZWEqZL8vxx2NScrRz0FV0Zv2XkeycqM0=;
+        b=G5QMV3eGJm9zXUu073DkYwVBR9JxOyotUp1IaD7swvavnCThiAJ6XKAroEGwQL5EOu
+         wbga978IF270oG4JuAKttLwhYgGAB5cPaNdrtoCrLSdoPmYWmIZahEULDq3IpnMDV/r2
+         s0sKwsJlozCynjcNnifKzysO4cCT0F5ZvHlbp6ndDDra3t4F/zATaK8yIQVq8iKFvnZj
+         2Nhx+ZBpNzGc3CvMuWcOR/tFjh7bIMXbp2xBdHxYZ4gYvEGa/sNCLsngn/1aQeWZtbLE
+         z7geZiV/HKx6rOPLZzF1hwOagCqsMg6G8F4lWZYkdtSWwUk+1h417wjKem+Yzs1Yg2qE
+         BfsA==
+X-Gm-Message-State: AOAM5302VaDtR0LMmVPtwuQMO2EWzT2viYc15SUAssGrm1zxfDTXshhJ
+        CV6Ee0Nl+EcD4pXc6xybmpQ=
+X-Google-Smtp-Source: ABdhPJzT9kWKtoERpDGXmdUHgssQ1/yYGNo2ikbo28dQU/ROotRTf2EqLAzXNf5hmkaqSP6iIfygLw==
+X-Received: by 2002:aa7:8886:0:b029:32a:7290:ba42 with SMTP id z6-20020aa788860000b029032a7290ba42mr4455377pfe.65.1626179127948;
+        Tue, 13 Jul 2021 05:25:27 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:485:504a:3cd0:e668:9a9b:3005])
+        by smtp.gmail.com with ESMTPSA id x7sm12782723pfc.96.2021.07.13.05.25.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jul 2021 05:25:27 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, shawnguo@kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 1/2] pinctrl: imx8mn: Constify imx_pinctrl_soc_info
+Date:   Tue, 13 Jul 2021 09:25:12 -0300
+Message-Id: <20210713122513.3112941-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210712194422.12405-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12.07.2021 22:44, Lad Prabhakar wrote:
+The imx_pinctrl_soc_info structure content is never changed, so it can be
+declared as 'const', like it is done on all other i.MX pinctrl drivers.
 
-> Add scif0 pins in pinctrl node and update the scif0 node
-> to include pinctrl property.
+Make it 'const' in this driver too.
 
-    Properties? There are a couple... :-)
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ drivers/pinctrl/freescale/pinctrl-imx8mn.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
->   arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-> index adcd4f50519e..0987163f25ee 100644
-> --- a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-[...]
->   	clock-frequency = <24000000>;
->   };
->   
-> +&pinctrl {
-> +	scif0_pins: scif0 {
-> +		pinmux = <RZG2L_PORT_PINMUX(38, 0, 1)>,	/* TxD */
-> +			 <RZG2L_PORT_PINMUX(38, 1, 1)>;	/* RxD */
-> +	};
-> +};
-> +
->   &scif0 {
-> +	pinctrl-0 = <&scif0_pins>;
-> +	pinctrl-names = "default";
->   	status = "okay";
->   };
-> 
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8mn.c b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
+index 448a79eb4568..dbf89cfba477 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8mn.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
+@@ -317,7 +317,7 @@ static const struct pinctrl_pin_desc imx8mn_pinctrl_pads[] = {
+ 	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART4_TXD),
+ };
+ 
+-static struct imx_pinctrl_soc_info imx8mn_pinctrl_info = {
++static const struct imx_pinctrl_soc_info imx8mn_pinctrl_info = {
+ 	.pins = imx8mn_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8mn_pinctrl_pads),
+ 	.gpr_compatible = "fsl,imx8mn-iomuxc-gpr",
+-- 
+2.25.1
 
-MBR, Sergei
