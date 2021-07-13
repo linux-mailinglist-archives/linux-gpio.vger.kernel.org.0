@@ -2,88 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 119CB3C77AE
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 22:10:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D0653C78F4
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 23:26:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbhGMUNQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jul 2021 16:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37866 "EHLO
+        id S230376AbhGMV3m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jul 2021 17:29:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235043AbhGMUNP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 16:13:15 -0400
+        with ESMTP id S229478AbhGMV3l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 17:29:41 -0400
 Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4036DC061788
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 13:10:24 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id gn32so43758250ejc.2
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 13:10:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C071C0613DD
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 14:26:50 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id ga14so29075875ejc.6
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 14:26:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t1yqQ1gIhB9mpxretSVZpOofSqINqdpXpqCBUYRV+W4=;
-        b=MDCw2qTkqrpXZfpx5R377ufdWw+dkqWiW/YF9ClLYjY9PJXQHSKLo65PnRwONNIbYN
-         /O4sg+aieASjQSQj4+wUFqy10Ytdfhj6Vibh5uyp/J7q5sZGZp+3Pr0C/kiOhDZHCjyW
-         APB4n3E0xEjQm0VMswwTcZH6EhAZs8bh4H1cVmnwlPP841zm4HLAb+/xptUsnJlUv3C7
-         TdRVzDCM9KpBay0niZKkOcl+7yNskzFzE0GNJ+Nk2UdrHAZufZ3QZZ3IVcoi9rLsCKaP
-         ZUt3VJobq0iAz98qD7Q7VhlB/NnJErPd5m3g3QReTEi0XkMVc13KpWDv+zd8xTwxlOq5
-         Rtag==
+        d=essensium.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rB9ka8UmbSYMuMYVnBCdaHqWS9DILZjAnPwIQr9zVx8=;
+        b=cWruB+0UE+kYxdRFbie3vrAlcKqY9PCtZUDSUop3p02WobCJIt7tvQp1rD6ASViUmp
+         bi02LiJJZpdLq0/kG8P5H576jgzNCLBf8sBkd1FSaFlj1QNT5F+mxQE0UbYqyjKSd5MY
+         Db0+pCqu2WV9gJwMKcTnn01yWqos42+J1PpxDC92Vbn5NT984PxjmaSJKDS0QUuLDx6c
+         stDp2NZipViXXUfCbxhTqgvhst/wsYwOQIRo8ABqXe6va0PjkWhIlaoH19Ox7EGP7dhO
+         OR1JNs6P/aAUArVoeCgpC7sfDm5w088rrxd/CQwgR1MxeWNr9ovH/kVnLncCQxdvcsCp
+         zztQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t1yqQ1gIhB9mpxretSVZpOofSqINqdpXpqCBUYRV+W4=;
-        b=DZ5/6hFRnRylhM/0T5g2F37vpOWBgec+K46drcB7fsgxIjr7KUpU4OLmbuTTk1mE3q
-         t7tFMWAnW/CYqEhwtGKNGHoh660gvv+xN97BHzjUZhiGVAsk42n+alni20ZSSHOiB/QK
-         avyTm+6diggfdN05VGlv9bF6XM5d82DN+ncVtVTjyMBA18aSrDC/Zzy/I9uWINp2Yp6H
-         fvhCGIoh5aSUw2iHvU6hkWBTYtrlhuHL2zGlmPkUBdd259Jr9Kc0eZ4u1AFtFYSyja4c
-         h7HY4/xHwjG64Z/BnmVuLWBoHZgdPDqF9GeAHMFgQCoDcbxJnyPj8VxRk+T2+EYaCPXS
-         SK4g==
-X-Gm-Message-State: AOAM530kLa3K+DxtZir7mdifIwvlKMc+Tmq1yBSlqCmScVavV+5leb20
-        zwTdWNlZ8U5U+eCjVwwF53WoNPWaJe/lPD31c/OUWg==
-X-Google-Smtp-Source: ABdhPJzLswJC8LH8P8RzOVADmm5aQVhv45DmASPD1ZYjrn8mMherEySm2eNH5dTZy9HYkHonrjt2N29EaXlkhJ5RKvI=
-X-Received: by 2002:a17:906:5f99:: with SMTP id a25mr7697276eju.101.1626207022630;
- Tue, 13 Jul 2021 13:10:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210712210836.GA3636@cephalopod>
-In-Reply-To: <20210712210836.GA3636@cephalopod>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 13 Jul 2021 22:10:12 +0200
-Message-ID: <CAMRc=McqKfzS8EVA-RUitZMwn_TFQEzU2AOuTTxvcdSX+xLj2Q@mail.gmail.com>
-Subject: Re: [libgpiod] How stable is the v2 API?
-To:     Ben Hutchings <ben.hutchings@essensium.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rB9ka8UmbSYMuMYVnBCdaHqWS9DILZjAnPwIQr9zVx8=;
+        b=IWY52lact1YZLPl2OqXQvkNq8h10umjkp9r9DO5WVi7MU359T9k/WRsM5UJBBBQs6K
+         suy9pE1g3trvphait2mb5IZIbRsyFeftYCWtBUgbY0Dhn+e9mmeexjfSeeFr5MUUjiWn
+         AwSMH4r88GJG+H/mwXqA3Gl/QkjRaCIAkCC9HzzDX/LpmlRqvJfxXjbGhXFSnP8dCVMf
+         s9cNR0bVwxkdTQKRQKDx6WeYkZewSjw7/TB7Kd45l+1SnGRzu1UH3JcGTqzReGVLkQ6I
+         ryGFlsB/2sN1qyOtfw6y+VZbFjNxkuMNukQC45SBHo9T7zOlqLTjaYCnffLIKK9jIQES
+         6HEw==
+X-Gm-Message-State: AOAM530Nvz1fp7GxXiQcbpYUq/zM8CtYonDpCZFFrj8Z3wSqAG3vjc7U
+        YL1ctTIhPeqL2RJnPGVUnQ1tMg==
+X-Google-Smtp-Source: ABdhPJzoZkhRjq+KDF6vg964uxBOEdCGXzYV6r6EDqC2O4aRK3lc0FORK0LVvOSUxUKs5WFT0NxliA==
+X-Received: by 2002:a17:906:3658:: with SMTP id r24mr8116339ejb.179.1626211608926;
+        Tue, 13 Jul 2021 14:26:48 -0700 (PDT)
+Received: from cephalopod (168.7-181-91.adsl-dyn.isp.belgacom.be. [91.181.7.168])
+        by smtp.gmail.com with ESMTPSA id f22sm89692edr.16.2021.07.13.14.26.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jul 2021 14:26:48 -0700 (PDT)
+Date:   Tue, 13 Jul 2021 23:26:46 +0200
+From:   Ben Hutchings <ben.hutchings@essensium.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [libgpiod] How stable is the v2 API?
+Message-ID: <20210713212646.GA8031@cephalopod>
+References: <20210712210836.GA3636@cephalopod>
+ <CAHp75VdSVB4shmAO2Oww=UU_5pqR=W3JZ98ChjZwZaRZ9gbVdQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdSVB4shmAO2Oww=UU_5pqR=W3JZ98ChjZwZaRZ9gbVdQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 12, 2021 at 11:08 PM Ben Hutchings
-<ben.hutchings@essensium.com> wrote:
->
-> I'm working on a project that requires GPIO debouncing and is planned
-> to use libgpiod.  But debouncing is only available on the unreleased
-> next/libgpiod-2.0 branch.
->
-> What we'd like to know is whether the current C API on that branch is
-> expected to change much before release.  I don't expect any commitment
-> to API or ABI stability, but it would be helpful to have some
-> indication of how much change is likely to be needed in a client that
-> is written for the current API.
->
-> Thanks,
->
-> Ben.
->
+On Tue, Jul 13, 2021 at 12:16:52PM +0300, Andy Shevchenko wrote:
+> On Tue, Jul 13, 2021 at 12:09 AM Ben Hutchings
+> <ben.hutchings@essensium.com> wrote:
+> >
+> > I'm working on a project that requires GPIO debouncing and is planned
+> > to use libgpiod.  But debouncing is only available on the unreleased
+> > next/libgpiod-2.0 branch.
+> >
+> > What we'd like to know is whether the current C API on that branch is
+> > expected to change much before release.  I don't expect any commitment
+> > to API or ABI stability, but it would be helpful to have some
+> > indication of how much change is likely to be needed in a client that
+> > is written for the current API.
+> 
+> I believe this is the right thread to discuss and influence if needed.
+> 
+> https://lore.kernel.org/linux-gpio/20210621191830.10628-1-brgl@bgdev.pl/T/#ma70b1ab80804c09644f4a018ff5eff10464b195a
 
-Hi Ben!
+Thanks.  I've actually seen that already.  I don't think I need to
+exert any "influence" as the current v2 API seems to do cover our
+needs.
 
-While - as you already assumed - there are no commitments to any API &
-ABI stability yet, the interface should not change very much. I have a
-single set of API changes in my queue that we discussed while
-reviewing the C++ bindings and I don't expect there to be many more
-coming after that.
+Ben.
 
-Again: this is an estimation, not a promise.
-
-Best Regards
-Bartosz
