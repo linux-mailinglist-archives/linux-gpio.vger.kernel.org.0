@@ -2,125 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA1223C6B14
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 09:18:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 822D73C6CC6
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jul 2021 11:00:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234014AbhGMHUv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jul 2021 03:20:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57888 "EHLO
+        id S234819AbhGMJC4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jul 2021 05:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232908AbhGMHUv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 03:20:51 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15836C0613DD
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 00:18:02 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id u14so17711264ljh.0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 00:18:01 -0700 (PDT)
+        with ESMTP id S234815AbhGMJC4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jul 2021 05:02:56 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC207C0613DD
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 02:00:06 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id t17so49044593lfq.0
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jul 2021 02:00:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=v/rXhAg8/mS9EW+OBkg4YZ134yjPtz+YcrIsxDtxXHw=;
-        b=gdFmIqRJGerDFfRedrGfJCYZTiEOVZPen6UFik8USN7wSEnDhX8+z7XGhUv1Xe1UET
-         E60fQrM+rX8DuBoVnFZ+G3Kjv2Ny2c1X0zx9mmRF4HZnwKIPPcavSze3deQaq8cs/zzi
-         E1JxLrPpNqdXrdD9/4sn9ONH67XXUg9JnnlSU=
+        bh=auooqGend/MpgDzrAxPulB+LTrlAKF1M6jC9r1DHfm4=;
+        b=YewyrC2cjM63ymEp0Y0p663ELwRfw/RHQwzpyR0GigFKynIrn8GTs3GlKlRv+BQZjh
+         g23GoCFQEYrTIJWAsb+qPxppLienpkZgWOKqoGv6APbWQ/9tyPQbd7+r0FS4TO6lyY39
+         ruA3lQyrz15qRLLqrYcqFJWgJYupBQsgTprw+WTn8+QDJ9SaceCUvtyy7KKrfgaaZURE
+         a1yQAKmq2gcz1nH4B7/0DXtqG/aDPpw4kNsdrQraLIBeYQeACZRTuWmFrlu6LVcpPbfJ
+         pNMDj2gmz4l7ZRWVo9IbrZdTpG9G14YjauihkYxtUXsFD/DREw2bZoSXNQ9L30zSpO6U
+         SW4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=v/rXhAg8/mS9EW+OBkg4YZ134yjPtz+YcrIsxDtxXHw=;
-        b=kKN1vXWE2oDJkeZVYpKRB4CQQXPXcKYaOXRhOQncQPMp1xCKInuB+bXjn3Gu+SYcPa
-         Pwu7mHSjLeXqyiUkgBRwrnF5IaPXzTrwRLub+fZosGdwOhJB6C0SP6mY3GP+28Dd61GU
-         VG8GRETIwda5xshFN8rTE7PsKsyzIS1VMnuBYlvi8JWqMVYZmjf+Tazay6wCT9irmQ5L
-         KQ3P+EmguAB+oqtwI3CZelfVni3OLEPlYzSMNFdXh7kgiUE3VKRcXiIGdiAkhQFnus3s
-         3PpN6Q73LkvXqR0V8JEgE5DBpJbhTd/YNy7GzGgGbhuKJ1WwkBZ+2vPacdFIpqXVDWfc
-         dVsg==
-X-Gm-Message-State: AOAM530GZrMJaBUdArNPGowuFu9AXsPyvJeTK35CNi98gUPn2qYWqR3U
-        PWmm/zsWv21NmVy58wIP4eavwP6qun044VB+unA4/w==
-X-Google-Smtp-Source: ABdhPJwvNEV51r8aYwOBO8oRSgDCsy56hMQEygkoe/TYR9OaSobFtYzNx+irktn74bxJOc20Xg0McmWpytNswEZxIRA=
-X-Received: by 2002:a2e:5c42:: with SMTP id q63mr2849499ljb.23.1626160680315;
- Tue, 13 Jul 2021 00:18:00 -0700 (PDT)
+        bh=auooqGend/MpgDzrAxPulB+LTrlAKF1M6jC9r1DHfm4=;
+        b=JMNOX3tzRiAoUA4/Y9kJNCsUyVuMm7VSFwFQxqgfmoQQ5DSMMRLkCrJkb3gOuy9Hxd
+         BPQMzFdI6a42MZmvoNPIm5VIZX6Szv9AWJ4woxYzm0wJg9vG0aqeG5iEFm61npQWqqzM
+         KgOVrmI1nu/iP1L91SmsvP6NmH92NR/aFHoFBu6pXB2oGezAOWkaQSkAUYwgjqYW/Q9U
+         HmCsQDpm9gdxupLohjvo2I+H2Nami4GDnVqgDIjG22cN1rP0MsC7xv6cegnU14DOEYnu
+         di1cTDmCWEoCQmL7ah0qG4uHx+XB2KDOQuuXfE6MuXcnTnHJpUbUJE/2HytvyrZi08R+
+         3NxA==
+X-Gm-Message-State: AOAM530PBYU4XyNScLZl9RdDyiV9d/eF7f0978Tht6KCi++6fVCyXngq
+        VT+zSL734FLQZ8xy8KsdVmc922R76wKC/T0OIXIx6A==
+X-Google-Smtp-Source: ABdhPJz5BHsQ1V41B0ZOTtW9XeAJmBUmOzSB8o4bj4ZLB02n7lL8RL7XfT5Kjqw569hfnGdCOJXWkoXLP8XavixQNaY=
+X-Received: by 2002:a19:5018:: with SMTP id e24mr2816820lfb.29.1626166805038;
+ Tue, 13 Jul 2021 02:00:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210710081722.1828-1-zhiyong.tao@mediatek.com> <20210710081722.1828-2-zhiyong.tao@mediatek.com>
-In-Reply-To: <20210710081722.1828-2-zhiyong.tao@mediatek.com>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Tue, 13 Jul 2021 15:17:49 +0800
-Message-ID: <CAGXv+5GXg0RuOQkh4vaRmcLpehZiXnEUXBvEaObiatAa1sXvaA@mail.gmail.com>
-Subject: Re: [PATCH v10 1/2] dt-bindings: pinctrl: mt8195: add rsel define
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>, mark.rutland@arm.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>,
-        light.hsieh@mediatek.com, biao.huang@mediatek.com,
-        hongzhou.yang@mediatek.com, sean.wang@mediatek.com,
-        seiya.wang@mediatek.com, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <CAG4TOxMzf1Wn6PcWk=XfB+SV+MHwbxUq8t1RNswie5e3=Y+OXQ@mail.gmail.com>
+ <CACRpkdZyJd0TW5aVRfxSSWknzCyVhjMwQuAj9i9iuQ6pW9vftQ@mail.gmail.com>
+ <20210707105000.GA4394@sirena.org.uk> <c24c61f498f43f589eafd423e51f997134d198b7.camel@HansenPartnership.com>
+ <YOWcCG9Pm/S+EXFw@kroah.com> <11c07bc291b443c2683a2baff5b180ff5b0729a5.camel@HansenPartnership.com>
+ <YOWh0Dq+2v+wH3B4@kroah.com> <YOXhlDsMAZUn1EBg@pendragon.ideasonboard.com>
+ <YOagA4bgdGYos5aa@kroah.com> <CACRpkdasOaNgBAZVx5qpKJdU7h41jHDG2jWi2+pi9a1JBh7RTQ@mail.gmail.com>
+ <YOh/JC//dotfm5J9@google.com>
+In-Reply-To: <YOh/JC//dotfm5J9@google.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 13 Jul 2021 10:59:53 +0200
+Message-ID: <CACRpkdb1W=M5EJkGbSS4QxObU-Gd5yZ1qE439k_D4K=jevgcrQ@mail.gmail.com>
+Subject: Re: cdev/devm_* issues (was Re: [TECH TOPIC] Rust for Linux)
+To:     Wedson Almeida Filho <wedsonaf@google.com>
+Cc:     Greg KH <greg@kroah.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Mark Brown <broonie@kernel.org>,
+        Roland Dreier <roland@kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        ksummit@lists.linux.dev, Daniel Vetter <daniel@ffwll.ch>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Fri, Jul 9, 2021 at 6:54 PM Wedson Almeida Filho <wedsonaf@google.com> wrote:
 
-On Sat, Jul 10, 2021 at 4:17 PM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
->
-> This patch adds rsel define for mt8195.
->
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  include/dt-bindings/pinctrl/mt65xx.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/include/dt-bindings/pinctrl/mt65xx.h b/include/dt-bindings/pinctrl/mt65xx.h
-> index 7e16e58fe1f7..f5934abcd1bd 100644
-> --- a/include/dt-bindings/pinctrl/mt65xx.h
-> +++ b/include/dt-bindings/pinctrl/mt65xx.h
-> @@ -16,6 +16,15 @@
->  #define MTK_PUPD_SET_R1R0_10 102
->  #define MTK_PUPD_SET_R1R0_11 103
->
-> +#define MTK_PULL_SET_RSEL_000  200
-> +#define MTK_PULL_SET_RSEL_001  201
-> +#define MTK_PULL_SET_RSEL_010  202
-> +#define MTK_PULL_SET_RSEL_011  203
-> +#define MTK_PULL_SET_RSEL_100  204
-> +#define MTK_PULL_SET_RSEL_101  205
-> +#define MTK_PULL_SET_RSEL_110  206
-> +#define MTK_PULL_SET_RSEL_111  207
-> +
+> In preparation for writing the abstractions to implement a gpio driver in Rust,
+> I was reading through some of the code you describe above.
 
-Instead of all the obscure macros and the new custom "rsel" property,
-which BTW is not in the bindings, can't we just list the actual bias
-resistance of each setting? We could also migrate away from R1R0.
+Nice, bonus review :)
 
-Then we can specify the setting with the standard bias-pull-up/down
-properties [1].
+> Unless I'm missing something (very much possible!), this "numbing" seems to not
+> be synchronised, that is, there are still race windows when userspace may cause
+> UAFs in the kernel.
 
-Also, please ask internally if Mediatek could relicense all the header
-files that Mediatek has contributed under include/dt-bindings/pinctrl/ [2]
-to GPL-2.0 and BSD dual license. These files are part of the DT bindings
-and we really want them to be dual licensed as well, and not just the
-YAML files.
+That's possible.
 
+> For example, gpiochip_remove sets gdev->chip to NULL; gpio_ioctl returns -ENODEV
+> if gdev->chip is NULL, which I believe is an instance of what you describe
+> above.
 
-Regards
-ChenYu
+Yes.
 
+> However, what ensures that it remains non-null?
+(...)
+> I see that in functions
+> called by gpio_ioctl (e.g., lineinfo_get), gdev->chip is used as if it were
+> guaranteed to be valid.
+(...)
+> Is my reading correct or is there some synchronisation that I'm missing?
 
-[1] https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml#L37
-[2] Note that a few files were contributed by other people
+No there are definately possible synchronization bugs there.
 
->  #define MTK_DRIVE_2mA  2
->  #define MTK_DRIVE_4mA  4
->  #define MTK_DRIVE_6mA  6
-> --
-> 2.18.0
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+We probably need a few more
+if (!gdev->chip) return -ENODEV;
+in some of these callbacks for example.
+There are probably also more narrow possible sync bugs.
+
+They are a bit hard to reproduce in practice because people do not
+unplug their GPIO devices so much, the one case that is used a bit
+would be USB-based GPIO expanders which happens on e.g.
+serial dongles (FTDI with additional GPIO is the most common).
+These are used in practice for controlling lab boards and stuff
+but when people unplug them it is usually part of tearing down an
+entire setup so the circumstances are a bit chaotic and subtle
+bugs are not noticed.
+
+Yours,
+Linus Walleij
