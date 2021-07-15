@@ -2,123 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62CDF3C98DD
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 08:42:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA11E3C9AB1
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 10:32:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231809AbhGOGpr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jul 2021 02:45:47 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:6933 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231579AbhGOGpq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 02:45:46 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GQPq92KGLz7v0p;
-        Thu, 15 Jul 2021 14:39:17 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 15 Jul 2021 14:42:37 +0800
-Received: from thunder-town.china.huawei.com (10.174.179.0) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 15 Jul 2021 14:42:37 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Manjunathappa Prakash <prakash.pm@ti.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH] pinctrl: single: Fix error return code in pcs_parse_bits_in_pinctrl_entry()
-Date:   Thu, 15 Jul 2021 14:42:06 +0800
-Message-ID: <20210715064206.3193-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        id S239659AbhGOIe7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jul 2021 04:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230410AbhGOIe7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 04:34:59 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86508C061760
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 01:32:05 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id ca14so6992014edb.2
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 01:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8U8Y/iUBnQ74pK644aq/v3mYOcIqjZnUetvaujedZ0E=;
+        b=nj+EB5DfeXN1LkHvaViaUSbJ5FITxLYaHqrBqyIzM8cJyqV/Ski1i1LKR5Tz67Q2OY
+         /0H6QYj2+tj3kUoEBMPZ7khu0CmRmJWfOwgExtGczLWmVk2lr7AcmheMO3rNPlN+pYfL
+         2tze9fqzhEM8Cw6ohjLJSGMNmq/ELi2j0OszBLKlOR/5tZz59YrETsnJekTHSPGEYVtU
+         0O3LOUOrvRwOKB15kNv5zsa7dbJdO5la9HewcA6HCSVEGxOov5moIdrgNYaYZPmtC9i6
+         O6rcU2n7xSmTiyQgSEGOPcBKIYP7drk9mQ8HgjQQNaUg3/Ixz4Wt9oCPa5NyayPVoXmm
+         19xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8U8Y/iUBnQ74pK644aq/v3mYOcIqjZnUetvaujedZ0E=;
+        b=is0e3mYwOV28GD6cMSBxoDpPZEORElSeZ9LaWKH8+5oO4rK3SGmRrEUIIA3Fn2wMmi
+         XIfVdJaT7eYrGuhGI65SyybppAb1DVA8HmleIf0GOtkxkFkV+hH3jxE3VYEz/W4lE7bj
+         vtdeg0whLjN+S35M7CKpjEbj0pKpnzFQwa1AFxn3IvXRq5lAOJniWgQSx0wMQNEjEoR0
+         eOLRHZIHNe0uPIda7JmuTkjBNJggbIbCBhbAKAbKRZF4iohc7lZh1X3stuBM8Vslqm0j
+         iBvXCSH/Wmemu7aEPzDy2LfMAC1cZdrf0/RzCBpqCItI33XMla4VTbL4ggBbxPWivD/a
+         AeDQ==
+X-Gm-Message-State: AOAM533+ClO0FJACfb8iVnbcXjRNlvPT74nDplFikRcMExo7Ykj9wV3Q
+        6jke3XzZKRAYdEfHHgYxh2FnFYnOIHfaVcPDyHH9tg==
+X-Google-Smtp-Source: ABdhPJwDqB7YQsUgpTiDi8dz4bVA8u0mmVaySZpPHfwUYb55Yw/tTqpKg38eI3JZzm1BY1yp3AJop/5Ze3jC0REs2NQ=
+X-Received: by 2002:a05:6402:1c8a:: with SMTP id cy10mr5169121edb.232.1626337924124;
+ Thu, 15 Jul 2021 01:32:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.179.0]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+References: <20210712210836.GA3636@cephalopod> <CAMRc=McqKfzS8EVA-RUitZMwn_TFQEzU2AOuTTxvcdSX+xLj2Q@mail.gmail.com>
+ <20210713214651.GB8031@cephalopod>
+In-Reply-To: <20210713214651.GB8031@cephalopod>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 15 Jul 2021 10:31:53 +0200
+Message-ID: <CAMRc=Md3YUHSUGOjmNfZxDqJjBp4Rwnc9ROhqbMh7uPGJFy+eQ@mail.gmail.com>
+Subject: Re: [libgpiod] How stable is the v2 API?
+To:     Ben Hutchings <ben.hutchings@essensium.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix to return -ENOTSUPP instead of 0 when PCS_HAS_PINCONF is true, which
-is the same as that returned in pcs_parse_pinconf().
+On Tue, Jul 13, 2021 at 11:46 PM Ben Hutchings
+<ben.hutchings@essensium.com> wrote:
+>
+> On Tue, Jul 13, 2021 at 10:10:12PM +0200, Bartosz Golaszewski wrote:
+> [...]
+> > While - as you already assumed - there are no commitments to any API &
+> > ABI stability yet, the interface should not change very much. I have a
+> > single set of API changes in my queue that we discussed while
+> > reviewing the C++ bindings and I don't expect there to be many more
+> > coming after that.
+>
+> Is that single set of API changes the same as
+> <https://patchwork.ozlabs.org/project/linux-gpio/list/?series=250005>
+> or do you have more beyond that?
+>
 
-In addition, I found the value of pcs->flags is not overwritten in
-pcs_parse_bits_in_pinctrl_entry() and its subfunctions, so moving this
-check to the beginning of the function eliminates unnecessary rollback
-operations.
+These have already been squashed with the top commit in the
+next/libgpiod-2.0 branch (except for the last one). I have two more
+that I will try to send out today. I'll Cc you.
 
-Fixes: 4e7e8017a80e ("pinctrl: pinctrl-single: enhance to configure multiple pins of different modules")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- drivers/pinctrl/pinctrl-single.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+Bart
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index e3aa64798f7d..d8b4dc40f3c6 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -1115,7 +1115,7 @@ static int pcs_parse_bits_in_pinctrl_entry(struct pcs_device *pcs,
- {
- 	const char *name = "pinctrl-single,bits";
- 	struct pcs_func_vals *vals;
--	int rows, *pins, found = 0, res = -ENOMEM, i, fsel, gsel;
-+	int rows, *pins, found = 0, res = -ENOMEM, i, fsel;
- 	int npins_in_row;
- 	struct pcs_function *function = NULL;
- 
-@@ -1125,6 +1125,11 @@ static int pcs_parse_bits_in_pinctrl_entry(struct pcs_device *pcs,
- 		return -EINVAL;
- 	}
- 
-+	if (PCS_HAS_PINCONF) {
-+		dev_err(pcs->dev, "pinconf not supported\n");
-+		return -ENOTSUPP;
-+	}
-+
- 	npins_in_row = pcs->width / pcs->bits_per_pin;
- 
- 	vals = devm_kzalloc(pcs->dev,
-@@ -1212,29 +1217,19 @@ static int pcs_parse_bits_in_pinctrl_entry(struct pcs_device *pcs,
- 		goto free_pins;
- 	}
- 
--	gsel = pinctrl_generic_add_group(pcs->pctl, np->name, pins, found, pcs);
--	if (gsel < 0) {
--		res = gsel;
-+	res = pinctrl_generic_add_group(pcs->pctl, np->name, pins, found, pcs);
-+	if (res < 0)
- 		goto free_function;
--	}
- 
- 	(*map)->type = PIN_MAP_TYPE_MUX_GROUP;
- 	(*map)->data.mux.group = np->name;
- 	(*map)->data.mux.function = np->name;
- 
--	if (PCS_HAS_PINCONF) {
--		dev_err(pcs->dev, "pinconf not supported\n");
--		goto free_pingroups;
--	}
--
- 	*num_maps = 1;
- 	mutex_unlock(&pcs->mutex);
- 
- 	return 0;
- 
--free_pingroups:
--	pinctrl_generic_remove_group(pcs->pctl, gsel);
--	*num_maps = 1;
- free_function:
- 	pinmux_generic_remove_function(pcs->pctl, fsel);
- free_pins:
--- 
-2.25.1
-
+> > Again: this is an estimation, not a promise.
+>
+> Understood.
+>
+> Thanks,
+>
+> Ben.
