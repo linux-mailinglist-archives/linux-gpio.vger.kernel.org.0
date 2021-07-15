@@ -2,88 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7E763CA175
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 17:29:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C37103CA441
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 19:26:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238859AbhGOPb4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jul 2021 11:31:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38346 "EHLO
+        id S235350AbhGOR2r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jul 2021 13:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238855AbhGOPb4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 11:31:56 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA82C061760
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 08:29:03 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id bn5so9050896ljb.10
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 08:29:03 -0700 (PDT)
+        with ESMTP id S235533AbhGOR2q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 13:28:46 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7AC2C061766
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 10:25:52 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id t143so7508178oie.8
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 10:25:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4zXOWLxK3mPjdxHJneIRA4HXCtIcK5HkOCCx6jSBP68=;
-        b=wHMHNF4OguhcOZhW/m1XpozEkYUZoDuvjK+tWO4VAs8w/R6IxnFTohcLH+qEezHDd0
-         x5Io1lPFtHTnrHaceFZ30wp0VrRdeBT9NB2ATz4aebDMIThaUTbn19EVZDqIP0gr8qgq
-         0okJmAbuV5OSv1rTK7P98CCSbfhO4EW1PkwIVDZoTWmPRicQqDoh6SAEaZNBXtszwXke
-         k4ze0XK9EUBFv3Q6TNXjeRXtwjDc2RJdekzKcVpNp/5jNdWJtLWBVmWbIYtfZZnjvHwX
-         2mRzolJmJGhwDU3uMLAvA3U9dXuBV28aVCUIWnTtxjfOXnp37Tw7Atybg1Lgijg99Uem
-         wPHA==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
+        b=A07qw47jpyx7/pJf1ZS9aQv4pD7PiHBZWlsl9UoiurRqqc+7ZndQI51YdaaD0nkecu
+         Qd4i+G02coH8O2I/r6ZupOF8oYSIAoIwVq4zkuCtuhDJYsbynWGQdegcG7aq+QxGg/bp
+         poyp2DbaibSeABlojQr/pIAqMWExNaHg4RIE+IQzBlXdCiQq16Yp/UqkBXwITYu4DgIP
+         XTs1gXkC7Br62pPmJXs/2nF+jRhXCAs3iAxTxuy51YthTghMWE/kONdSGZKCG8sWM+Ev
+         WU1ATEDaIH5W63c7UQCvZTdM21+mq9I9FOl7BCTb650pCRFEJMZ521zklByg85zlNwmj
+         7b/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4zXOWLxK3mPjdxHJneIRA4HXCtIcK5HkOCCx6jSBP68=;
-        b=PRZMnDllbWbGrR5ff7tTaLSiF26itn9xrosO4mGNONHCRnyo5eJcMVlx3RR5J/ZY9k
-         uHL+2zg3IxNeIMyroCGIBnWcWM+fau0ZJC/ifu/kOekf0EzrrLNLucsqIzK07fBcF1I8
-         97UoQjSTRxQ84Iv8Zb3kFphRz/RUl+2eOOZ6P8l6xXnGeAI3y6epJJ1GrcGM1Q+FPioX
-         pnjm8cDBDVOdYAfPpoNpg8XmM+Fk4LPXDJMmKY3P6xoskGkNCqJzG53b5m5Ib82ELuKj
-         DFE8xdpXrf8L9Xfwi8dx81qZKzWVJ7MLKPfN9Y8yhBJ5r4IBkxJSpXkmaVJEHOjBsUJe
-         +eEA==
-X-Gm-Message-State: AOAM531nRysp7iLBkTKNISxELy8rgb2HTxuz2w5WKPu5tr/aUNP8qazC
-        54lpUvxJqtBfaHQ85Lz7J/O28A==
-X-Google-Smtp-Source: ABdhPJzx5J4Ka8IS6E1arp4w6wJbg294hGBpyIBi5rf8ELg2F7ZX8zceScs+VJOmG5OYHTFaCSKgDQ==
-X-Received: by 2002:a2e:6111:: with SMTP id v17mr4688272ljb.27.1626362941508;
-        Thu, 15 Jul 2021 08:29:01 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id m5sm53599ljq.22.2021.07.15.08.29.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 08:29:01 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] extcon: max3355: Drop unused include
-Date:   Thu, 15 Jul 2021 17:26:57 +0200
-Message-Id: <20210715152657.396185-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.31.1
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
+        b=BrJiMZfJxUuKsfQswtPGKtmI+j80Tf7hNNYPgE1wUeJJNm84+U7nMicZoGcZHkg0UW
+         fHinc6xUtgyjNe/SqJ3djawBIXWZDD+ZimH1OJntMQ6RQ21wkEPc1WGBaWTMxZvCfAem
+         e0bqIA6R+0+m0pe0DDgbW7xwsiX/AfJnN8JI6JkNTEka6SS37htv67UogZ2bp/Tbpijv
+         57ymye7B4BSQpDc+HGQtZ8QUOZ/O511UqzTAFFQzYKtzHFmpmw6ToaCeB/vRsTyKq08p
+         BO13BaeNjKeU6xFUnykbypN7GixzdO2XV/6ojIfvpRluGWmwf1em1YDloLgTat95yCeW
+         mHEg==
+X-Gm-Message-State: AOAM530xr8PIRLBcLsvuUMCkhTVtJFxOZhJX+vhvVU+x1Hkp7wRVkyna
+        RcWnOynmjomkVcA0RVPXFTReItY/7Qhmp+u/Q3g40HxqlG8=
+X-Google-Smtp-Source: ABdhPJyZMrq1Z7I3pjjmyAtUHW3ABh0oEghTe77F5dAxRk/llsByjQhtZ30eIUOoh7sIooPsLTy5+nPJ1BCNgIavtsM=
+X-Received: by 2002:a17:90b:d8f:: with SMTP id bg15mr10963237pjb.152.1626369941880;
+ Thu, 15 Jul 2021 10:25:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6a10:fc85:0:0:0:0 with HTTP; Thu, 15 Jul 2021 10:25:41
+ -0700 (PDT)
+Reply-To: faty.muhamad@gmail.com
+From:   Ms Fatima Muhammad <general.infofederalreserve@gmail.com>
+Date:   Thu, 15 Jul 2021 17:25:41 +0000
+Message-ID: <CAJzJz_Dwu6rUxmnqq1QV9qD4hugxutFJZuENGUwx7RamXm5txA@mail.gmail.com>
+Subject: Hello Dear
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This driver includes the legacy <linux/gpio.h> header but
-does not use it. Drop this include.
+Hello Dear,
 
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/extcon/extcon-max3355.c | 1 -
- 1 file changed, 1 deletion(-)
+My name is Ms.Fatima Muhammad., Please forgive me for stressing you
+with my predicaments and I sorry to approach you through this media
+because is serves the fastest means of  my communication right now,
 
-diff --git a/drivers/extcon/extcon-max3355.c b/drivers/extcon/extcon-max3355.c
-index fa01926c09f1..d7795607f693 100644
---- a/drivers/extcon/extcon-max3355.c
-+++ b/drivers/extcon/extcon-max3355.c
-@@ -7,7 +7,6 @@
-  */
- 
- #include <linux/extcon-provider.h>
--#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
--- 
-2.31.1
+I came across your Email from my personal search and I decided to
+contact you believing you will be honest to fulfill my business
+proposal which I believe that will be a very good opportunity for both
+of us. Please it is my pleasure to contact you today for a business
+partnership investments projects worth $4.6 million USD which I intend
+to establish in your country..
 
+Pls If this business proposal offends your moral and ethic values do
+accept my apology. therefore kindly contact me immediately if you are
+interested for more details.
+
+Thank you for your wiliness to help me
+Yours Sincerely Fatima Muhammad
