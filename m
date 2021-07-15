@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B38633CAC47
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 21:35:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2EB43CACAD
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 21:43:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243755AbhGOTcI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jul 2021 15:32:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
+        id S240272AbhGOTl0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jul 2021 15:41:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345000AbhGOTaj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 15:30:39 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D070C08EC75
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 12:08:10 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id q16so11750520lfa.5
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 12:08:10 -0700 (PDT)
+        with ESMTP id S1344927AbhGOTki (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 15:40:38 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E422C06B6CA
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 12:13:47 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id s18so10456171ljg.7
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 12:13:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lKQRAlePlTMlxkEvsDgVWIhm5eYPypHEzL5OrGHVjJI=;
-        b=gU5afgnHt6RHmCo+fr9n2ut1P1aFxcoE+WoQB1vwKsMcnGhR73sfI6/YfpJBIJnpqh
-         CGHyDzjNSYRsvrQ9sB+7b3CTTTiX8K405mqs0xPkpBhodaUdMcetjAcIeOjaWqFGrpPc
-         Gn5/F1eE4K7Tfd7GhDOm0yKCzplxDwwhdLyX4ijdZ/fS1NbKB3yDU5mB1anfTv0iAsHc
-         RxEBEzqb0PNIjn409FJjKyKoaaq+c7L4BbhGqsttdY+v4urd79w4o36lzTqve54Vv+zH
-         94F/Wf0z63OlfAAM2CZoRGydfZHlXat6rLzUes8MY5631HQbcAI/4TtijzM8zU8SJRoh
-         pciQ==
+        bh=Krd0KdIt7AxYBsgDXQUSitBUbG7LJwp8O8UWWfEtBx0=;
+        b=tD4hrih3gnWsKw1piEfQwvBCltU2wmYRMfPG88sSBovSWgsUPIY+s0ZfqKwp8hCSTo
+         vATl+irXD6XGeQ3vAENfyaoy6+YG/xvkTs4drVjJ+uBmCb08i1vCX3U0YBxB9UK4VW5X
+         xvkWsq9w+hMBWiwELgA3BfhcEsRdxn+P7MPaIEO2YuCIzZQ2VlutohiVu8Sfalw9J6jn
+         zDJpxmJ5T2HwOu/QmFgvx98Hh2fdOb0Wz+7qp1W+swFycCSlR6tNc9DotaIztTgPxdg4
+         xlbvCAYssierKo48g3eD1kto6LeNpfHldvCnMlhK47I5KhpylaCHjl8UxsJpOcT1Gru+
+         OrLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lKQRAlePlTMlxkEvsDgVWIhm5eYPypHEzL5OrGHVjJI=;
-        b=qhxYQmUIsXcOq6ZOcbtMblzBFhf7ReV0AzJFSriCa6sd2LwFk2czTKLV5DcYdJTTxL
-         tE6wpcxXlFoOdTB0FKo9f1/tc8cae+F4qvYd1rEANOaE2dd8lLHg5a9IF1+xZ5SiMzh4
-         bpWKGVhEuA8Lt8MYq2nTqCSPV3BIQqOFih54JKx22vG5o6FGsQRm2kFHoS3cZzA7lX6L
-         jran6OBndGwnFzMvy+O6NAbJW+i0q8QkaYK9nfWQ+Gk9n+QyrYOXhDscJtDMSacCAHXc
-         6dL8wr22LL60em2nUScy/72iqZghCkk3Ur68TaSWLQGFrDVMOX5mRQzChLWRphXXEcul
-         A0sA==
-X-Gm-Message-State: AOAM530B2NoY4XFzynoJmxBHaktB64J5jzmXuXS+0LVV+9tzghi7zVO2
-        IqzM1zw4I/DpTma7m1ASegG7Pw==
-X-Google-Smtp-Source: ABdhPJxAlbu5YugiR3VVgcx8jzlq4Lf7DJUoJ/mXxwjj5EjvRt5VMzewDCJYH37BtZZlf9eulah+cw==
-X-Received: by 2002:a05:6512:b96:: with SMTP id b22mr4789014lfv.155.1626376088904;
-        Thu, 15 Jul 2021 12:08:08 -0700 (PDT)
+        bh=Krd0KdIt7AxYBsgDXQUSitBUbG7LJwp8O8UWWfEtBx0=;
+        b=X545tcokQ3WyGWBz2P2i6Tl/HbkHTmoRyWH0/eeYKhw5mMiBYSOLmDqtsA9ce6dpe/
+         vbZr4WyvhyJsYYuqOLgogug4hqg+e251bSX2bBm8s9ZkYfO03Z8Q64pI9bDcpYD4P13a
+         P84cM1z8ayU1RTOYy2F3SOAnudOH+ED3t2iN23qe18yyzoKVQzSTLaz9d/F86h9Ny8Ek
+         4DTDOb76NTQdKrF9y2LIlinh902eTrBUkXkH/hg2fSPJY2SccU4wfLpEoAVp+5rlMGJn
+         1MS/HOvCCJe5mSegR3Dup5w26c89G76MB+YPBBnuyYhAqdGHNlR9b56aMcffXJ3fIvtj
+         pFbA==
+X-Gm-Message-State: AOAM531Q/ywVr8/ahC2IOFe/lhREvfwSVe/94/S/5EHlrVUbJnueXCyG
+        O/dh9dfIpf/LAdUFghLf8ekQLg==
+X-Google-Smtp-Source: ABdhPJyIe6SJHYJYy5EJlBc9LNXoFsoG+EPuwolJ+zaCcAtFUKVC3a48VFW73CuGAq1KWRk9LBzydw==
+X-Received: by 2002:a2e:a583:: with SMTP id m3mr5451211ljp.305.1626376424108;
+        Thu, 15 Jul 2021 12:13:44 -0700 (PDT)
 Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id c6sm469646lfp.196.2021.07.15.12.08.08
+        by smtp.gmail.com with ESMTPSA id y22sm472357lfh.154.2021.07.15.12.13.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 12:08:08 -0700 (PDT)
+        Thu, 15 Jul 2021 12:13:43 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+To:     Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] extcon: usb-gpio: Use the right includes
-Date:   Thu, 15 Jul 2021 21:06:06 +0200
-Message-Id: <20210715190606.429251-1-linus.walleij@linaro.org>
+Subject: [PATCH 1/3 v6] gpio: pcf857x: Name instance after dev_name()
+Date:   Thu, 15 Jul 2021 21:11:39 +0200
+Message-Id: <20210715191141.430307-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -62,40 +62,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The USB GPIO extcon driver does not use any of the legacy
-includes <linux/gpio.h> or <linux/of_gpio.h> but
-exploits the fact that this brings in <linux/mod_device_table.h>.
-Fix this up by using the right includes.
+Put the label on this gpio_chip from the dev_name() instead of
+the client name.
 
+The client name will be pcf8574 etc for all instances even if
+there are several chips on a system.
+
+This manifests on the DaVinci DM6467 (non-devicetree) which
+will contain 3 different pcf8574 devices that as a result cannot
+be told apart because they are all named "pcf8574", affecting
+the GPIO descriptor tables which need a unique label per chip.
+
+By passing in .dev_name in the struct i2c_board_info we can
+explicitly name each instance and use that to discern the chips
+when using board files.
+
+Cc: Sekhar Nori <nsekhar@ti.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/extcon/extcon-usb-gpio.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ChangeLog v5->v6:
+- Rebase on v5.14-rc1
+ChangeLog ->v5:
+- New patch to deal with the chip label
+---
+ drivers/gpio/gpio-pcf857x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
-index f06be6d4e2a9..0cb440bdd5cb 100644
---- a/drivers/extcon/extcon-usb-gpio.c
-+++ b/drivers/extcon/extcon-usb-gpio.c
-@@ -7,18 +7,17 @@
-  */
+diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
+index b7568ee33696..2271ec86e414 100644
+--- a/drivers/gpio/gpio-pcf857x.c
++++ b/drivers/gpio/gpio-pcf857x.c
+@@ -311,7 +311,7 @@ static int pcf857x_probe(struct i2c_client *client,
+ 	if (status < 0)
+ 		goto fail;
  
- #include <linux/extcon-provider.h>
--#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/mod_devicetable.h>
+-	gpio->chip.label = client->name;
++	gpio->chip.label = dev_name(&client->dev);
  
- #define USB_GPIO_DEBOUNCE_MS	20	/* ms */
- 
+ 	gpio->client = client;
+ 	i2c_set_clientdata(client, gpio);
 -- 
 2.31.1
 
