@@ -2,81 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CBE33CA16A
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 17:24:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7E763CA175
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 17:29:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237791AbhGOP1g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jul 2021 11:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231438AbhGOP1g (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 15 Jul 2021 11:27:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3C91260FF4;
-        Thu, 15 Jul 2021 15:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626362683;
-        bh=Ey2CvB65wW2JyRx6EZjidCehPj5wJfTrxxVY1iQuBIg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kxcOFVOCAFPQ/xwAphqCKkbT6lfTgQLqsq/YcNssRqLLE02pBlbmZuRt75YpLSF4s
-         q22yGcicEc6s25R8Ha+uLH1XJk8X3/JnGxIvmuAoUAsfK72PaBrzyu8j6/thXzE9zQ
-         kfQ7aJ4BsZwOteOZNc5jd46IllpI0vhwjFA5hQI5gLZvtdLJBgcLTeS/7NFwQ+JCwj
-         gZUdTWJgXie1YITY0/l570BrIy6ydvNR9H07oUDIVp2+ndydgR671cBGczD5EjjRTS
-         C3YVMkPSJ+wqfmL6DCFiSbBrpU8q25EoUekxcNqZkAYdOutcvEDKinsJ4lrfgOBi1g
-         1Ljex+NxZDggg==
-Date:   Thu, 15 Jul 2021 16:24:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>,
-        Dirk Opfer <dirk@opfer-online.de>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH] ARM/pxa/mfd/power/sound: Switch Tosa to GPIO descriptors
-Message-ID: <20210715152405.GA27092@sirena.org.uk>
-References: <20210715151625.394960-1-linus.walleij@linaro.org>
+        id S238859AbhGOPb4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jul 2021 11:31:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238855AbhGOPb4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 11:31:56 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA82C061760
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 08:29:03 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id bn5so9050896ljb.10
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 08:29:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4zXOWLxK3mPjdxHJneIRA4HXCtIcK5HkOCCx6jSBP68=;
+        b=wHMHNF4OguhcOZhW/m1XpozEkYUZoDuvjK+tWO4VAs8w/R6IxnFTohcLH+qEezHDd0
+         x5Io1lPFtHTnrHaceFZ30wp0VrRdeBT9NB2ATz4aebDMIThaUTbn19EVZDqIP0gr8qgq
+         0okJmAbuV5OSv1rTK7P98CCSbfhO4EW1PkwIVDZoTWmPRicQqDoh6SAEaZNBXtszwXke
+         k4ze0XK9EUBFv3Q6TNXjeRXtwjDc2RJdekzKcVpNp/5jNdWJtLWBVmWbIYtfZZnjvHwX
+         2mRzolJmJGhwDU3uMLAvA3U9dXuBV28aVCUIWnTtxjfOXnp37Tw7Atybg1Lgijg99Uem
+         wPHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4zXOWLxK3mPjdxHJneIRA4HXCtIcK5HkOCCx6jSBP68=;
+        b=PRZMnDllbWbGrR5ff7tTaLSiF26itn9xrosO4mGNONHCRnyo5eJcMVlx3RR5J/ZY9k
+         uHL+2zg3IxNeIMyroCGIBnWcWM+fau0ZJC/ifu/kOekf0EzrrLNLucsqIzK07fBcF1I8
+         97UoQjSTRxQ84Iv8Zb3kFphRz/RUl+2eOOZ6P8l6xXnGeAI3y6epJJ1GrcGM1Q+FPioX
+         pnjm8cDBDVOdYAfPpoNpg8XmM+Fk4LPXDJMmKY3P6xoskGkNCqJzG53b5m5Ib82ELuKj
+         DFE8xdpXrf8L9Xfwi8dx81qZKzWVJ7MLKPfN9Y8yhBJ5r4IBkxJSpXkmaVJEHOjBsUJe
+         +eEA==
+X-Gm-Message-State: AOAM531nRysp7iLBkTKNISxELy8rgb2HTxuz2w5WKPu5tr/aUNP8qazC
+        54lpUvxJqtBfaHQ85Lz7J/O28A==
+X-Google-Smtp-Source: ABdhPJzx5J4Ka8IS6E1arp4w6wJbg294hGBpyIBi5rf8ELg2F7ZX8zceScs+VJOmG5OYHTFaCSKgDQ==
+X-Received: by 2002:a2e:6111:: with SMTP id v17mr4688272ljb.27.1626362941508;
+        Thu, 15 Jul 2021 08:29:01 -0700 (PDT)
+Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
+        by smtp.gmail.com with ESMTPSA id m5sm53599ljq.22.2021.07.15.08.29.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jul 2021 08:29:01 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] extcon: max3355: Drop unused include
+Date:   Thu, 15 Jul 2021 17:26:57 +0200
+Message-Id: <20210715152657.396185-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
-Content-Disposition: inline
-In-Reply-To: <20210715151625.394960-1-linus.walleij@linaro.org>
-X-Cookie: The world is not octal despite DEC.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This driver includes the legacy <linux/gpio.h> header but
+does not use it. Drop this include.
 
---FCuugMFkClbJLl1L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/extcon/extcon-max3355.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On Thu, Jul 15, 2021 at 05:16:25PM +0200, Linus Walleij wrote:
-> The Tosa device (Sharp SL-6000) has a mishmash driver set-up
-> for the Toshiba TC6393xb MFD that includes a battery charger
-> and touchscreen and has some kind of relationship to the SoC
-> sound driver for the AC97 codec. Other devices define a chip
-> like this but seem only half-implemented, not really handling
-> battery charging etc.
+diff --git a/drivers/extcon/extcon-max3355.c b/drivers/extcon/extcon-max3355.c
+index fa01926c09f1..d7795607f693 100644
+--- a/drivers/extcon/extcon-max3355.c
++++ b/drivers/extcon/extcon-max3355.c
+@@ -7,7 +7,6 @@
+  */
+ 
+ #include <linux/extcon-provider.h>
+-#include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+-- 
+2.31.1
 
-Acked-by: Mark Brown <broonie@kernel.org>
-
---FCuugMFkClbJLl1L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDwUxQACgkQJNaLcl1U
-h9Bo9gf/aWENOMI5QOYgfdAa5atNN6V0rj0B49t/uOksgP039uH/WU/o63WoI7+W
-ZfhYwo2d3a1a17s46Kz4yNAq76SW0BjWl58qq3UtousmaXzQtpU4S1tuymDrQjoC
-9gVdAodVsJKwfXyGqULJ+uZoE7VRb9dqA+qAp47B9aNzEUUGzr9dokaw9DNR/7sT
-rJA2hvpDfhkfpUop5zzWqkCleUkoJ7HACtOVMo82BOrO8GGh5hIqr9PpAQ+BBcn1
-X8kozPccUISaI3iE+zmrAarJ29pxfNi/HzTFUg9vtsWgHs3Uc8D6k3uyuxTuwk9g
-KXe4LUqy3datyGDbXhl1ym2xQkXlIQ==
-=ictz
------END PGP SIGNATURE-----
-
---FCuugMFkClbJLl1L--
