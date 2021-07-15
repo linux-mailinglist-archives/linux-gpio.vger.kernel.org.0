@@ -2,76 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C37103CA441
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 19:26:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B38633CAC47
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 21:35:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235350AbhGOR2r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jul 2021 13:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
+        id S243755AbhGOTcI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jul 2021 15:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235533AbhGOR2q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 13:28:46 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7AC2C061766
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 10:25:52 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id t143so7508178oie.8
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 10:25:52 -0700 (PDT)
+        with ESMTP id S1345000AbhGOTaj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 15:30:39 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D070C08EC75
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 12:08:10 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id q16so11750520lfa.5
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jul 2021 12:08:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
-        b=A07qw47jpyx7/pJf1ZS9aQv4pD7PiHBZWlsl9UoiurRqqc+7ZndQI51YdaaD0nkecu
-         Qd4i+G02coH8O2I/r6ZupOF8oYSIAoIwVq4zkuCtuhDJYsbynWGQdegcG7aq+QxGg/bp
-         poyp2DbaibSeABlojQr/pIAqMWExNaHg4RIE+IQzBlXdCiQq16Yp/UqkBXwITYu4DgIP
-         XTs1gXkC7Br62pPmJXs/2nF+jRhXCAs3iAxTxuy51YthTghMWE/kONdSGZKCG8sWM+Ev
-         WU1ATEDaIH5W63c7UQCvZTdM21+mq9I9FOl7BCTb650pCRFEJMZ521zklByg85zlNwmj
-         7b/w==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lKQRAlePlTMlxkEvsDgVWIhm5eYPypHEzL5OrGHVjJI=;
+        b=gU5afgnHt6RHmCo+fr9n2ut1P1aFxcoE+WoQB1vwKsMcnGhR73sfI6/YfpJBIJnpqh
+         CGHyDzjNSYRsvrQ9sB+7b3CTTTiX8K405mqs0xPkpBhodaUdMcetjAcIeOjaWqFGrpPc
+         Gn5/F1eE4K7Tfd7GhDOm0yKCzplxDwwhdLyX4ijdZ/fS1NbKB3yDU5mB1anfTv0iAsHc
+         RxEBEzqb0PNIjn409FJjKyKoaaq+c7L4BbhGqsttdY+v4urd79w4o36lzTqve54Vv+zH
+         94F/Wf0z63OlfAAM2CZoRGydfZHlXat6rLzUes8MY5631HQbcAI/4TtijzM8zU8SJRoh
+         pciQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
-        b=BrJiMZfJxUuKsfQswtPGKtmI+j80Tf7hNNYPgE1wUeJJNm84+U7nMicZoGcZHkg0UW
-         fHinc6xUtgyjNe/SqJ3djawBIXWZDD+ZimH1OJntMQ6RQ21wkEPc1WGBaWTMxZvCfAem
-         e0bqIA6R+0+m0pe0DDgbW7xwsiX/AfJnN8JI6JkNTEka6SS37htv67UogZ2bp/Tbpijv
-         57ymye7B4BSQpDc+HGQtZ8QUOZ/O511UqzTAFFQzYKtzHFmpmw6ToaCeB/vRsTyKq08p
-         BO13BaeNjKeU6xFUnykbypN7GixzdO2XV/6ojIfvpRluGWmwf1em1YDloLgTat95yCeW
-         mHEg==
-X-Gm-Message-State: AOAM530xr8PIRLBcLsvuUMCkhTVtJFxOZhJX+vhvVU+x1Hkp7wRVkyna
-        RcWnOynmjomkVcA0RVPXFTReItY/7Qhmp+u/Q3g40HxqlG8=
-X-Google-Smtp-Source: ABdhPJyZMrq1Z7I3pjjmyAtUHW3ABh0oEghTe77F5dAxRk/llsByjQhtZ30eIUOoh7sIooPsLTy5+nPJ1BCNgIavtsM=
-X-Received: by 2002:a17:90b:d8f:: with SMTP id bg15mr10963237pjb.152.1626369941880;
- Thu, 15 Jul 2021 10:25:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lKQRAlePlTMlxkEvsDgVWIhm5eYPypHEzL5OrGHVjJI=;
+        b=qhxYQmUIsXcOq6ZOcbtMblzBFhf7ReV0AzJFSriCa6sd2LwFk2czTKLV5DcYdJTTxL
+         tE6wpcxXlFoOdTB0FKo9f1/tc8cae+F4qvYd1rEANOaE2dd8lLHg5a9IF1+xZ5SiMzh4
+         bpWKGVhEuA8Lt8MYq2nTqCSPV3BIQqOFih54JKx22vG5o6FGsQRm2kFHoS3cZzA7lX6L
+         jran6OBndGwnFzMvy+O6NAbJW+i0q8QkaYK9nfWQ+Gk9n+QyrYOXhDscJtDMSacCAHXc
+         6dL8wr22LL60em2nUScy/72iqZghCkk3Ur68TaSWLQGFrDVMOX5mRQzChLWRphXXEcul
+         A0sA==
+X-Gm-Message-State: AOAM530B2NoY4XFzynoJmxBHaktB64J5jzmXuXS+0LVV+9tzghi7zVO2
+        IqzM1zw4I/DpTma7m1ASegG7Pw==
+X-Google-Smtp-Source: ABdhPJxAlbu5YugiR3VVgcx8jzlq4Lf7DJUoJ/mXxwjj5EjvRt5VMzewDCJYH37BtZZlf9eulah+cw==
+X-Received: by 2002:a05:6512:b96:: with SMTP id b22mr4789014lfv.155.1626376088904;
+        Thu, 15 Jul 2021 12:08:08 -0700 (PDT)
+Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
+        by smtp.gmail.com with ESMTPSA id c6sm469646lfp.196.2021.07.15.12.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jul 2021 12:08:08 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] extcon: usb-gpio: Use the right includes
+Date:   Thu, 15 Jul 2021 21:06:06 +0200
+Message-Id: <20210715190606.429251-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:fc85:0:0:0:0 with HTTP; Thu, 15 Jul 2021 10:25:41
- -0700 (PDT)
-Reply-To: faty.muhamad@gmail.com
-From:   Ms Fatima Muhammad <general.infofederalreserve@gmail.com>
-Date:   Thu, 15 Jul 2021 17:25:41 +0000
-Message-ID: <CAJzJz_Dwu6rUxmnqq1QV9qD4hugxutFJZuENGUwx7RamXm5txA@mail.gmail.com>
-Subject: Hello Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Dear,
+The USB GPIO extcon driver does not use any of the legacy
+includes <linux/gpio.h> or <linux/of_gpio.h> but
+exploits the fact that this brings in <linux/mod_device_table.h>.
+Fix this up by using the right includes.
 
-My name is Ms.Fatima Muhammad., Please forgive me for stressing you
-with my predicaments and I sorry to approach you through this media
-because is serves the fastest means of  my communication right now,
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/extcon/extcon-usb-gpio.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-I came across your Email from my personal search and I decided to
-contact you believing you will be honest to fulfill my business
-proposal which I believe that will be a very good opportunity for both
-of us. Please it is my pleasure to contact you today for a business
-partnership investments projects worth $4.6 million USD which I intend
-to establish in your country..
+diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+index f06be6d4e2a9..0cb440bdd5cb 100644
+--- a/drivers/extcon/extcon-usb-gpio.c
++++ b/drivers/extcon/extcon-usb-gpio.c
+@@ -7,18 +7,17 @@
+  */
+ 
+ #include <linux/extcon-provider.h>
+-#include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/mod_devicetable.h>
+ 
+ #define USB_GPIO_DEBOUNCE_MS	20	/* ms */
+ 
+-- 
+2.31.1
 
-Pls If this business proposal offends your moral and ethic values do
-accept my apology. therefore kindly contact me immediately if you are
-interested for more details.
-
-Thank you for your wiliness to help me
-Yours Sincerely Fatima Muhammad
