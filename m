@@ -2,79 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1CD63C9D88
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 13:12:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B87433C9DFB
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jul 2021 13:49:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241509AbhGOLPk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jul 2021 07:15:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:22601 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234351AbhGOLPk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 15 Jul 2021 07:15:40 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="190898213"
-X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="190898213"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 04:12:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="466654360"
-Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Jul 2021 04:12:43 -0700
-Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1m3zII-000JcR-Mm; Thu, 15 Jul 2021 11:12:42 +0000
-Date:   Thu, 15 Jul 2021 19:12:41 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        id S229931AbhGOLwY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jul 2021 07:52:24 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:15020 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229710AbhGOLwY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 07:52:24 -0400
+Received: from dggeml759-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GQXdG5h0jzbcPV;
+        Thu, 15 Jul 2021 19:46:10 +0800 (CST)
+Received: from [10.174.178.165] (10.174.178.165) by
+ dggeml759-chm.china.huawei.com (10.1.199.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Thu, 15 Jul 2021 19:49:28 +0800
+Subject: Re: [PATCH] pinctrl: single: Fix error return code in
+ pcs_parse_bits_in_pinctrl_entry()
+To:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] pinctrl: mediatek: fix platform_no_drv_owner.cocci warnings
-Message-ID: <20210715111241.GA68733@f2b338499183>
-References: <202107151930.RDfhAWvb-lkp@intel.com>
+        Manjunathappa Prakash <prakash.pm@ti.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20210715064206.3193-1-thunder.leizhen@huawei.com>
+From:   "weiyongjun (A)" <weiyongjun1@huawei.com>
+Message-ID: <55d02087-e2c7-9a0c-e20e-ff6f106703a3@huawei.com>
+Date:   Thu, 15 Jul 2021 19:49:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202107151930.RDfhAWvb-lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210715064206.3193-1-thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.165]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggeml759-chm.china.huawei.com (10.1.199.138)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: kernel test robot <lkp@intel.com>
+> Fix to return -ENOTSUPP instead of 0 when PCS_HAS_PINCONF is true, which
+> is the same as that returned in pcs_parse_pinconf().
+>
+> In addition, I found the value of pcs->flags is not overwritten in
+> pcs_parse_bits_in_pinctrl_entry() and its subfunctions, so moving this
+> check to the beginning of the function eliminates unnecessary rollback
+> operations.
+>
+> Fixes: 4e7e8017a80e ("pinctrl: pinctrl-single: enhance to configure multiple pins of different modules")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>   drivers/pinctrl/pinctrl-single.c | 21 ++++++++-------------
+>   1 file changed, 8 insertions(+), 13 deletions(-)
+>
+>
+>   	npins_in_row = pcs->width / pcs->bits_per_pin;
+>   
+>   	vals = devm_kzalloc(pcs->dev,
+> @@ -1212,29 +1217,19 @@ static int pcs_parse_bits_in_pinctrl_entry(struct pcs_device *pcs,
+>   		goto free_pins;
+>   	}
+>   
+> -	gsel = pinctrl_generic_add_group(pcs->pctl, np->name, pins, found, pcs);
+> -	if (gsel < 0) {
+> -		res = gsel;
+> +	res = pinctrl_generic_add_group(pcs->pctl, np->name, pins, found, pcs);
+> +	if (res < 0)
+>   		goto free_function;
+> -	}
 
-drivers/pinctrl/mediatek/pinctrl-mt8365.c:488:3-8: No need to set .owner here. The core will do it.
 
- Remove .owner field if calls are used which set it automatically
+This change cause 'gsel' not set.
 
-Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+Do not mix this cleanup with bugfix.
 
-CC: Fabien Parent <fparent@baylibre.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
----
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   8096acd7442e613fad0354fc8dfdb2003cceea0b
-commit: e94d8b6fb83a81fa8c6595fadcada7b349e7694a pinctrl: mediatek: add support for mt8365 SoC
-:::::: branch date: 19 hours ago
-:::::: commit date: 7 weeks ago
 
- pinctrl-mt8365.c |    1 -
- 1 file changed, 1 deletion(-)
-
---- a/drivers/pinctrl/mediatek/pinctrl-mt8365.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8365.c
-@@ -485,7 +485,6 @@ static struct platform_driver mtk_pinctr
- 	.probe = mtk_pinctrl_probe,
- 	.driver = {
- 		.name = "mediatek-mt8365-pinctrl",
--		.owner = THIS_MODULE,
- 		.of_match_table = mt8365_pctrl_match,
- 		.pm = &mtk_eint_pm_ops,
- 	},
