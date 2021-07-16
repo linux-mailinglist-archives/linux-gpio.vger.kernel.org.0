@@ -2,153 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 751B03CB458
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 10:33:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E5523CB4EC
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 11:01:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237433AbhGPIep (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jul 2021 04:34:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45196 "EHLO
+        id S238411AbhGPI7g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jul 2021 04:59:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237069AbhGPIeo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jul 2021 04:34:44 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA09C061762
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:31:49 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id x192so13582490ybe.6
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:31:49 -0700 (PDT)
+        with ESMTP id S238357AbhGPI7g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jul 2021 04:59:36 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F25B8C06175F
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:56:40 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id oz7so10245220ejc.2
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HGtdpt91do0UAzKVjzqqDE3AvD/lqY8Xht/fEpMQnq0=;
-        b=P16oRGarQytiFqfhZJBl+ZUQro/UDrWvRJMIJRxWNLceCagZTA596fayFSMH/AnHGj
-         QTlAYO4VpCZMbgfGKnEwFHjpTZAVt+Xmp1kCh4ViFplkfDuIsrS1mZtuIz4bCJMufi1H
-         nA5HcY2XlZU4IZn/GXXQ6r19L0OFWRmf4/jvnbHMBVM+mItS1AXlb5NI3mckzFpSWs88
-         Ny3/J22+ib9UC4j5kLZNJvK/1M65jsTU+sm600K4LfhmJY2GQcU8MObLT2ZDg/ry2c+D
-         uLUTtLHogxXDhFn44cs9MsQAZ9G3d9mZ61UTsFnXP8JOIJRUwbyphx6Q67iaOFKMzrkc
-         7UOA==
+        bh=vyNRidzcmXecceSj2i/ZFzcStzyiUAWy+Bk4YlU5Z6Q=;
+        b=wc/j1XY/2eKV86sw5mf3gPAJQJd9Nl9dJiCnnVckVbU3sYyHjuuuwOR2zYjV3LSHbt
+         W8ckBs6FPzkOITA4GT/Fah/5UUhNPOB6xz2SqRZyJSUIO+fvTfYO0qMHF6pBVR+Ta7Ml
+         vt+/ZSAYBCYo5NLl1O7rQ912UMbwhPv3zmtVT5ZhJyEBGwtIb/lCpwelrfNcPmj/wc24
+         ItcAnfgHbFmxbfV7/uVkGwiR7aUxGFl/Ygl/G7m/UgHlJGF2WovJyyS5olTBXewulzVO
+         BHywu6TXu2xkmBr45TLo/qLidOhhLUT00shZzBjRm1fRCSd5BFsI7ToLvbsGZbRVOEGs
+         pfvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HGtdpt91do0UAzKVjzqqDE3AvD/lqY8Xht/fEpMQnq0=;
-        b=BlBteh0IXPXdCQmqUXnLlOvRQlFB4VNPh0iIMJZEVA7nxnvPVMpqRhK9lvwTUhYXgw
-         hFxuU2zhaCKwClwK5ILGxkdIhhUDSzWP9Py17h5WUtvza6RY1tS9Evga+3QHFoHgVAp2
-         nS88QeVNDVHVUppPiFOSwr0pxP8wwrI9iI+QkS/3XJVeHapVb7rAtXfsSt3U9j+yR+hc
-         YC0xYVuXRhi6dMLNPOnIIA6JTKwpDlRbY46PkFeIZ4qWNyEP7cpRKmeE59+QXj/snd9s
-         y7HHoT0PIuO9/+wFG+p9feQ5GknJxyDkuW+cG8IzIVXZdsMI/remVSh6gx8zQtlaJvyd
-         XeKA==
-X-Gm-Message-State: AOAM531bZXohcsg3YFmNJnyAPONLsnJpd5W8x+8z2llvGJVkMo8rRZ02
-        wPIitrpPE/oe9EfuSZf4EzT1ytfC2Phr8EmXPBlzGg==
-X-Google-Smtp-Source: ABdhPJzkTD6LkoXc/pFhqTkKNykHf2PVZO0AP5IDnDLnq5zEgkGOvdFHuwv0PEs9Ri9z730K1Gh6OWBhrBE68LPcXMk=
-X-Received: by 2002:a25:487:: with SMTP id 129mr11566148ybe.0.1626424309121;
- Fri, 16 Jul 2021 01:31:49 -0700 (PDT)
+        bh=vyNRidzcmXecceSj2i/ZFzcStzyiUAWy+Bk4YlU5Z6Q=;
+        b=gzesjz7mkIMxFaPIrXX44uufXl62K28BqxR8nMPt8fmuDDcwGoZ7PcpUcZ5txDirG4
+         MR93odyxMaV5pByd9H+30/8FM/sWl2UNNMxbiiN6mCNrWlrgWJygrEN84D8RjuJ8PG+9
+         opHxT5o/28lRL4+zYAtGpwhtmilJPadr4TN/VbmP1XtUJod7VBV/fNDnbsCAn72RV8ec
+         jFi8FgE5LTbXpUI62JKEumqCsbjU746vxfo7WlQmoMFCog8ah47UBxYRjOykL071R8EX
+         c6jUvLWsekbZ4Mq7WmhwU2yiW3sj4XYsdyMuOWDS4+/Z49CGg0EHEHgFein5Ce7+4TqS
+         picQ==
+X-Gm-Message-State: AOAM5312Nz4hJiAN8aay5tCKzAB2UDTYvo5YUKFTXkiPcAWES16RLdv1
+        UTcB6VSM7QimfKShSo/wyoP92B8kcMP0Hmy2t1Tyug==
+X-Google-Smtp-Source: ABdhPJwpk1h4Z0oOzFo2JIQLFq6BgEq9/CecLN7ddVMzxX4pe+dpRlfAVi3Qi0kg4113JU7BzMQ9g9J+pf5WWwrqdIg=
+X-Received: by 2002:a17:906:31d4:: with SMTP id f20mr10317768ejf.383.1626425799569;
+ Fri, 16 Jul 2021 01:56:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <2a8eb285-3b71-199c-1bf4-39fb47fac77e@nvidia.com> <1625130054-22947-1-git-send-email-akhilrajeev@nvidia.com>
-In-Reply-To: <1625130054-22947-1-git-send-email-akhilrajeev@nvidia.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 16 Jul 2021 10:31:38 +0200
-Message-ID: <CAMpxmJWZm_N3yPKa2+32PNOyCUuSbjqWiDBSO3WHjKekZj8Fzg@mail.gmail.com>
-Subject: Re: [PATCH v5] gpio: tegra186: Add ACPI support
-To:     Akhil R <akhilrajeev@nvidia.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        kyarlagadda@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>,
+References: <20210715201001.23726-1-brgl@bgdev.pl> <20210715201001.23726-4-brgl@bgdev.pl>
+ <20210715221803.GA16338@cephalopod> <CAMRc=Md0DWKBT0BJGdKDdhTN0gG3Jc4Mf71xUnYqqhxRPheR7Q@mail.gmail.com>
+In-Reply-To: <CAMRc=Md0DWKBT0BJGdKDdhTN0gG3Jc4Mf71xUnYqqhxRPheR7Q@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 16 Jul 2021 10:56:28 +0200
+Message-ID: <CAMRc=MdjjX0z=9hwvbE9mcx8J7twhb-j6yFFJqpqdZB1vfkHEg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v2 3/3] bindings: cxx: implement C++ bindings
+ for libgpiod v2.0
+To:     Ben Hutchings <ben.hutchings@essensium.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>, mperttunen@nvidia.com,
-        smangipudi@nvidia.com, Thierry Reding <thierry.reding@gmail.com>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 1, 2021 at 11:01 AM Akhil R <akhilrajeev@nvidia.com> wrote:
+On Fri, Jul 16, 2021 at 9:44 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> Add ACPI module ID to probe the driver from the ACPI based bootloader
-> firmware.
+> On Fri, Jul 16, 2021 at 12:18 AM Ben Hutchings
+> <ben.hutchings@essensium.com> wrote:
+> >
+> > On Thu, Jul 15, 2021 at 10:10:01PM +0200, Bartosz Golaszewski wrote:
+> > > This is the bulk of work implementing C++ bindings for the new libgpiod
+> > > API. The tests are not converted yet but the examples are fully
+> > > functional. More details in the cover letter as this patch will be
+> > > squashed with the one for the core C library anyway.
+> > [...]
+> > > +class line_config
+> > > +{
+> > > +public:
+> > > +
+> > > +     /**
+> > > +      * @brief Direction settings.
+> > > +      */
+> > > +     enum : int {
+> > > +             DIRECTION_AS_IS = 1,
+> > > +             /**< Request the line(s), but don't change current direction. */
+> > > +             DIRECTION_INPUT,
+> > > +             /**< Request the line(s) for reading the GPIO line state. */
+> > > +             DIRECTION_OUTPUT
+> > > +             /**< Request the line(s) for setting the GPIO line state. */
+> > > +     };
+> > [...]
+> > > +class line_info
+> > > +{
+> > > +public:
+> > > +
+> > > +     /**
+> > > +      * @brief Direction settings.
+> > > +      */
+> > > +     enum : int {
+> > > +             DIRECTION_INPUT = 1,
+> > > +             /**< Direction is input - we're reading the state of a GPIO line. */
+> > > +             DIRECTION_OUTPUT
+> > > +             /**< Direction is output - we're driving the GPIO line. */
+> > > +     };
+> > [...]
+> >
+> > Could these be enum class types, or does that introduce an ABI issue
+> > if you extend them later?
+> >
+> > Ben.
 >
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
-> v5 changes:
->         * Updated ioremap_resource check as per Jon's comments.
+> I'm not sure there would be any benefit to enum classes here except
+> for longer scope when using them in code. I would prefer to leave it
+> this way.
 >
->  drivers/gpio/gpio-tegra186.c | 30 ++++++++++++++++++++++++------
->  1 file changed, 24 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-> index 1bd9e44..8a64dcb 100644
-> --- a/drivers/gpio/gpio-tegra186.c
-> +++ b/drivers/gpio/gpio-tegra186.c
-> @@ -620,15 +620,21 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
->         if (!gpio)
->                 return -ENOMEM;
->
-> -       gpio->soc = of_device_get_match_data(&pdev->dev);
-> +       gpio->soc = device_get_match_data(&pdev->dev);
->
->         gpio->secure = devm_platform_ioremap_resource_byname(pdev, "security");
-> -       if (IS_ERR(gpio->secure))
-> -               return PTR_ERR(gpio->secure);
-> +       if (IS_ERR(gpio->secure)) {
-> +               gpio->secure = devm_platform_ioremap_resource(pdev, 0);
-> +               if (IS_ERR(gpio->secure))
-> +                       return PTR_ERR(gpio->secure);
-> +       }
->
->         gpio->base = devm_platform_ioremap_resource_byname(pdev, "gpio");
-> -       if (IS_ERR(gpio->base))
-> -               return PTR_ERR(gpio->base);
-> +       if (IS_ERR(gpio->base)) {
-> +               gpio->base = devm_platform_ioremap_resource(pdev, 1);
-> +               if (IS_ERR(gpio->base))
-> +                       return PTR_ERR(gpio->base);
-> +       }
->
->         err = platform_irq_count(pdev);
->         if (err < 0)
-> @@ -690,11 +696,13 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
->
->         gpio->gpio.names = (const char * const *)names;
->
-> +#if defined(CONFIG_OF_GPIO)
->         gpio->gpio.of_node = pdev->dev.of_node;
->         gpio->gpio.of_gpio_n_cells = 2;
->         gpio->gpio.of_xlate = tegra186_gpio_of_xlate;
-> +#endif /* CONFIG_OF_GPIO */
->
-> -       gpio->intc.name = pdev->dev.of_node->name;
-> +       gpio->intc.name = dev_name(&pdev->dev);
->         gpio->intc.irq_ack = tegra186_irq_ack;
->         gpio->intc.irq_mask = tegra186_irq_mask;
->         gpio->intc.irq_unmask = tegra186_irq_unmask;
-> @@ -918,10 +926,20 @@ static const struct of_device_id tegra186_gpio_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, tegra186_gpio_of_match);
->
-> +static const struct acpi_device_id  tegra186_gpio_acpi_match[] = {
-> +       { .id = "NVDA0108", .driver_data = (kernel_ulong_t)&tegra186_main_soc },
-> +       { .id = "NVDA0208", .driver_data = (kernel_ulong_t)&tegra186_aon_soc },
-> +       { .id = "NVDA0308", .driver_data = (kernel_ulong_t)&tegra194_main_soc },
-> +       { .id = "NVDA0408", .driver_data = (kernel_ulong_t)&tegra194_aon_soc },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(acpi, tegra186_gpio_acpi_match);
-> +
->  static struct platform_driver tegra186_gpio_driver = {
->         .driver = {
->                 .name = "tegra186-gpio",
->                 .of_match_table = tegra186_gpio_of_match,
-> +               .acpi_match_table = tegra186_gpio_acpi_match,
->         },
->         .probe = tegra186_gpio_probe,
->         .remove = tegra186_gpio_remove,
-> --
-> 2.7.4
->
+> Bartosz
 
-Can you rebase it on top of v5.14-rc1 and resend?
+Actually after a second thought, it wouldn't make it long - it would
+just look like: line_info::direction::INPUT instead. Maybe it is a
+more C++ approach after all.
 
 Bart
