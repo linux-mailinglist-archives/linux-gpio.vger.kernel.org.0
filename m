@@ -2,26 +2,26 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A82413CB03D
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 03:04:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C895E3CB056
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 03:17:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229703AbhGPBHN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jul 2021 21:07:13 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:11429 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbhGPBHN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 21:07:13 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GQtGH3Hmnzcdjr;
-        Fri, 16 Jul 2021 09:00:55 +0800 (CST)
+        id S229707AbhGPBUA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jul 2021 21:20:00 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:7020 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229603AbhGPBT7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jul 2021 21:19:59 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GQtVM0LC2zXdsl;
+        Fri, 16 Jul 2021 09:11:23 +0800 (CST)
 Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Fri, 16 Jul 2021 09:04:04 +0800
+ 15.1.2176.2; Fri, 16 Jul 2021 09:17:03 +0800
 Received: from [10.174.179.0] (10.174.179.0) by dggpemm500006.china.huawei.com
  (7.185.36.236) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 16 Jul
- 2021 09:04:03 +0800
+ 2021 09:17:02 +0800
 Subject: Re: [PATCH] pinctrl: single: Fix error return code in
  pcs_parse_bits_in_pinctrl_entry()
 To:     "weiyongjun (A)" <weiyongjun1@huawei.com>,
@@ -36,8 +36,8 @@ To:     "weiyongjun (A)" <weiyongjun1@huawei.com>,
 References: <20210715064206.3193-1-thunder.leizhen@huawei.com>
  <55d02087-e2c7-9a0c-e20e-ff6f106703a3@huawei.com>
 From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <bb27626a-fb4f-9974-35bd-64453e0f29a7@huawei.com>
-Date:   Fri, 16 Jul 2021 09:04:03 +0800
+Message-ID: <ab9e3a1a-551c-92e5-06cc-45b1081243e3@huawei.com>
+Date:   Fri, 16 Jul 2021 09:17:02 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
@@ -87,10 +87,13 @@ On 2021/7/15 19:49, weiyongjun (A) wrote:
 > 
 > 
 > This change cause 'gsel' not set.
+
+The local variable 'gsel' is no longer needed. I have deleted it.
+
 > 
 > Do not mix this cleanup with bugfix.
 
-gsel已经不需要了，已经被我删掉了
+Yes, it might be clearer.
 
 > 
 > 
