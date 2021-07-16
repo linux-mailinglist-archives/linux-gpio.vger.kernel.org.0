@@ -2,140 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DF4C3CB7D4
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 15:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90ED03CBA86
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 18:27:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239904AbhGPN1H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jul 2021 09:27:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239391AbhGPN1H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jul 2021 09:27:07 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EC3C06175F
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 06:24:12 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id hr1so15182547ejc.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 06:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LnTIlz14bs7kHjCJfj3DwfovjklktHwzI8TQbal8cp0=;
-        b=YXQhvx5yJ5aOhK1qi9zkyX8CjczHkLfUS3++M7E1lVEK1CYGoeCrPWsdC79hR6U1Xm
-         B6nPifcInazAbiCSNnfjqyZTQEd5enxxrnUAxZk7cwHmGf3kJXyBwFbkYmvDh4T4whk+
-         SY3oWmHT0TBu/I6Yg6QFN/P/2EftW13+xZnr2VgDn8eO+XR6tX86wA22xlohOIDLbbRu
-         oaPt3gndNOlqvf6aFQ8zlEZLL1+OC/X0HtEZpvL6fBMHBxsMqlfyfXdzpQPEYE2NdsoP
-         c6WwFewmMe5GJdoq8gJ7wl+lMJhDOx8MFmrLBYsmCPRbbzk+Xry/6glCNUiXBUNacoKF
-         LE3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LnTIlz14bs7kHjCJfj3DwfovjklktHwzI8TQbal8cp0=;
-        b=BCTt3+6YAdkNJorA6JfZt/QsArUOAsVWy+hYoTKJKdDMPNNlxqV4PRAie/nq1Xx4iU
-         iI6wMrGq0s0goHnLfET7yAR4kFS8lwxyEzI4MoQQxI2XuQn0DWrUOAg2PIr60qxz9JvT
-         JtkjAUBDPvImdIaGmABEABzUkB9cMRafAhjHWzH8LEqtiZbd8RGOQTcdYMyOxk/sKRNZ
-         weriv34XPKNbu4IiIwMNt4N9kZoueqn19uHY0Bro2lPXSO6TtFFyOlvYPeu+hQj5GjM9
-         nlzMfb/DBpAqcBzTJ6k2XrwhNGFHECMerjZTUPCxl66EN0oUnaverXxl9EI9gXUsQAYm
-         ZrEg==
-X-Gm-Message-State: AOAM531Du4NJm+VoYGEEljtzP489c58gEhcMtY4HpRAtiOprELpKD7z7
-        EQH4nznk9099vBB2TN4RZiqVTWCI7RBOSjOjMQXCG7OfMl8=
-X-Google-Smtp-Source: ABdhPJxsll8guGH//bzGU2uz+6ScNEGFs0xQ7/gjd4zYgyz5V5sqC9aBQQpohSOHczi5NL8r7962jAyGux6GnktQTzM=
-X-Received: by 2002:a17:906:4816:: with SMTP id w22mr11688063ejq.14.1626441851138;
- Fri, 16 Jul 2021 06:24:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210715201001.23726-1-brgl@bgdev.pl> <20210715201001.23726-4-brgl@bgdev.pl>
- <20210715221803.GA16338@cephalopod> <CAMRc=Md0DWKBT0BJGdKDdhTN0gG3Jc4Mf71xUnYqqhxRPheR7Q@mail.gmail.com>
- <CAMRc=MdjjX0z=9hwvbE9mcx8J7twhb-j6yFFJqpqdZB1vfkHEg@mail.gmail.com>
-In-Reply-To: <CAMRc=MdjjX0z=9hwvbE9mcx8J7twhb-j6yFFJqpqdZB1vfkHEg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 16 Jul 2021 15:24:00 +0200
-Message-ID: <CAMRc=MegRa=zde8i7UivLDrSS8sKabDNdHcovE=PnP=N9i+kqg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2 3/3] bindings: cxx: implement C++ bindings
- for libgpiod v2.0
-To:     Ben Hutchings <ben.hutchings@essensium.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Helmut Grohne <helmut.grohne@intenta.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S229692AbhGPQaX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jul 2021 12:30:23 -0400
+Received: from mga03.intel.com ([134.134.136.65]:27626 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229581AbhGPQaX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 16 Jul 2021 12:30:23 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10046"; a="210806014"
+X-IronPort-AV: E=Sophos;i="5.84,245,1620716400"; 
+   d="scan'208";a="210806014"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2021 09:27:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,245,1620716400"; 
+   d="scan'208";a="656442863"
+Received: from inlubt0177.iind.intel.com ([10.223.67.91])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Jul 2021 09:27:24 -0700
+From:   lakshmi.sowjanya.d@intel.com
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com, tamal.saha@intel.com,
+        lakshmi.sowjanya.d@intel.com
+Subject: [PATCH v3 0/2] Add pinctrl support for Intel Keem Bay SoC
+Date:   Fri, 16 Jul 2021 21:57:22 +0530
+Message-Id: <20210716162724.26047-1-lakshmi.sowjanya.d@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 16, 2021 at 10:56 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Fri, Jul 16, 2021 at 9:44 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > On Fri, Jul 16, 2021 at 12:18 AM Ben Hutchings
-> > <ben.hutchings@essensium.com> wrote:
-> > >
-> > > On Thu, Jul 15, 2021 at 10:10:01PM +0200, Bartosz Golaszewski wrote:
-> > > > This is the bulk of work implementing C++ bindings for the new libgpiod
-> > > > API. The tests are not converted yet but the examples are fully
-> > > > functional. More details in the cover letter as this patch will be
-> > > > squashed with the one for the core C library anyway.
-> > > [...]
-> > > > +class line_config
-> > > > +{
-> > > > +public:
-> > > > +
-> > > > +     /**
-> > > > +      * @brief Direction settings.
-> > > > +      */
-> > > > +     enum : int {
-> > > > +             DIRECTION_AS_IS = 1,
-> > > > +             /**< Request the line(s), but don't change current direction. */
-> > > > +             DIRECTION_INPUT,
-> > > > +             /**< Request the line(s) for reading the GPIO line state. */
-> > > > +             DIRECTION_OUTPUT
-> > > > +             /**< Request the line(s) for setting the GPIO line state. */
-> > > > +     };
-> > > [...]
-> > > > +class line_info
-> > > > +{
-> > > > +public:
-> > > > +
-> > > > +     /**
-> > > > +      * @brief Direction settings.
-> > > > +      */
-> > > > +     enum : int {
-> > > > +             DIRECTION_INPUT = 1,
-> > > > +             /**< Direction is input - we're reading the state of a GPIO line. */
-> > > > +             DIRECTION_OUTPUT
-> > > > +             /**< Direction is output - we're driving the GPIO line. */
-> > > > +     };
-> > > [...]
-> > >
-> > > Could these be enum class types, or does that introduce an ABI issue
-> > > if you extend them later?
-> > >
-> > > Ben.
-> >
-> > I'm not sure there would be any benefit to enum classes here except
-> > for longer scope when using them in code. I would prefer to leave it
-> > this way.
-> >
-> > Bartosz
->
-> Actually after a second thought, it wouldn't make it long - it would
-> just look like: line_info::direction::INPUT instead. Maybe it is a
-> more C++ approach after all.
->
-> Bart
+From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 
-I tried to change it but if - for example - I implement the enum type
-for the direction property of line_info as:
+Hi,
 
-enum class direction {
-    INPUT = 1,
-    OUTPUT
-};
+This patch set enables the support for the integrated pin controller in
+the Intel Keem Bay SoC.
 
-then it conflicts with the getter of line_info: direction(void) const.
+Patch 1 holds the implementation of pinctrl driver.
+Patch 2 holds the relevant Device Tree bindings documentation and an
+entry in MAINTAINERS file
 
-One option is to rename all getters to get_<property>(). What do you think?
+High-Level Architecture:
+-----------------------
 
-Bartosz
+                                   +----------------------------+
+     ------------------------------|MODE 0 -                    |
+      -----------------------------|MODE 1      PIN MUX         |
+       ----------------------------|...                         |
+        ---------------------------|...                         | PAD M
+         +-------------------------|MODE 7(GPIO)		---------
+         |                         |                            |    .
+         |                         |  +---------------------+   |    .
+         |                         |  |  GPIO_MODE (0-79)   |   |    .
+         |                         |  | INV|PU|PD|DIR|MODE  |   |    .
+         |                         |  +---------------------+   |    .
+         |                         |    PIN CONFIGURATION       |    .
+         |                         +----------------------------+    .
+         |                                                           .
+         |                         +----------------------------+    .
+         |        -----------------|MODE 0 -                    |    .
+         |         ----------------|MODE 1      PIN MUX         |    .
+         |          ---------------|...                         |
+         |            -------------|...                         | PAD N
+         |                +--------|MODE 7(GPIO)		---------
+         |                |        |                            |
+         |                |        |  +---------------------+   |
+         |                |        |  |  GPIO_MODE (0-79)   |   |
+         |                |        |  | INV|PU|PD|DIR|MODE  |   |
+         |                |        |  +---------------------+   |
+         |                |        |    PIN CONFIGURATION       |
+         |                |        +----------------------------+
+         |                |
+         |                |
+         |                |
+         |                |	   +------------------------------------+
+         |                |        |       GPIO PIN CONTROL		|
+         |                |        |					|
+         |                |        |    +-------------------------+	|
+         |                |        |    | GPIO_DATA_IN (0-2)      |	|
+         |                |        |    +-------------------------+	|
+     0   1..28   29  30  31  -------    +-------------------------+	|
+     |   |   |   |   |    |        |    | GPIO_DATA_OUT_HIGH (0-2)|	|
+     \   \   \   \   \    |        |    | GPIO_DATA_OUT_LOW (0-2) |	|
+      |   |   |   |   |   |        |    +-------------------------+	|
+      |   |   |   |   |   |        |					|
+      |   |   |   |   |   |	   +------------------------------------+
+      \   \   \   \   \   |
+       |   |   |   |   |  |              GPIO_INT_CFG (Bits)
+       |   |   |   |   |  |	+---|-------|--|------|--|----|--|---+
+      +-------------------+-+   |31   30     23    16  15 14-8 7 6-0 |
+      | GPIO_INT_CFG(0-7)   |	+---|-------|--|------^--|----|--|---+
+      +---------------------+   |En   Idx   |En| Idx  |En| Idx|En|Idx|
+        |   |    |  |		+---|-------|--|------|--|----|--|---+
+       0|  1|...6| 7|
+        |   |    |  |
+     +-------------------+
+     |                   |
+     |                   |
+     |                   |
+     |                   |
+     |  Interrupt        |
+     |  Control          |
+     |                   |
+     |                   |
+     |                   |
+     |                   |
+     +-------------------+
+
+Explored registering GPIOCHIP per 32 bits, from the IP there are
+registers
+for set/clear and read pins which falls under the category of per
+register
+handling 32 bits, but for other functionality like direction, config,
+interrupt mux, there is a need to have customised solution.
+
+Using gpiochip per 32 bits involves additional data structures, and
+it has an impact in the device tree for all the users of these
+PADs.
+
+Spinlock is not required for all the operations like set/get as there
+are separate for each. Configuring all the registers in a single driver
+is preferred as it is easy to debug.
+
+Please help to review this patch set.
+
+Thanks in advance,
+Sowjanya
+
+Changes from v2:
+ - Removed unused variable trig
+
+Changes from v1:
+ - Changed the boolean to true in yaml
+ - Removed spinlock for all the transactions except irq transactions
+ - Added standard ngpios instead of num-gpios
+ - Added gpiochip_generic_config() api
+ - Added check for IRQ_ENABLE and removed the check for the mask
+   IRQ_TYPE_SENSE_MASK
+
+Lakshmi Sowjanya D (2):
+  dt-bindings: pinctrl: Add bindings for Intel Keembay pinctrl driver
+  pinctrl: Add Intel Keem Bay pinctrl driver
+
+ .../pinctrl/intel,pinctrl-keembay.yaml        |  134 ++
+ MAINTAINERS                                   |    5 +
+ drivers/pinctrl/Kconfig                       |   19 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-keembay.c             | 1731 +++++++++++++++++
+ 5 files changed, 1890 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,pinctrl-keembay.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-keembay.c
+
+-- 
+2.17.1
+
