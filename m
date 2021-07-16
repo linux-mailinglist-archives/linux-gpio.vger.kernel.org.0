@@ -2,95 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CA7B3CB40F
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 10:23:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 751B03CB458
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 10:33:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237231AbhGPI0D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jul 2021 04:26:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43066 "EHLO
+        id S237433AbhGPIep (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jul 2021 04:34:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237066AbhGPI0D (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jul 2021 04:26:03 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EF63C06175F
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:23:07 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id g5so13529604ybu.10
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:23:07 -0700 (PDT)
+        with ESMTP id S237069AbhGPIeo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jul 2021 04:34:44 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA09C061762
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:31:49 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id x192so13582490ybe.6
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:31:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8a6AkXVjruO4FopbD7cHdtONk9UyC2A2GgPb32Yiq2E=;
-        b=ZyTpCioA2DTmHFDHMTeg+FDlIifHUOyH1dhaAD7YXIVlYWBj9a129+cVJjBASRhXWx
-         hZfemjGYHpesM8Ijj1DaOSySJeuoRhoS1KRnhHLxVbqqfA606bRO5uSEKuZ4T62U2Cez
-         5UEEMynahddp6D6SxJWAXHlaCyT0WefknrwGpKdS1oB+PQ/yxs/Qe2PCStdnT1V850f1
-         3o9KVddg7bHqvKZTFwCdudkaaWHNwqEkAtB+2QtNfiMyRPEmVWWUajbF1/pK9UkPczmS
-         6aVvI1XVBMqcJZTE8lIBf/1uisnzhjbczD03PMkkP3gaVnHyVAbWMTJZA9dYNr3dg0b0
-         i5Dw==
+        bh=HGtdpt91do0UAzKVjzqqDE3AvD/lqY8Xht/fEpMQnq0=;
+        b=P16oRGarQytiFqfhZJBl+ZUQro/UDrWvRJMIJRxWNLceCagZTA596fayFSMH/AnHGj
+         QTlAYO4VpCZMbgfGKnEwFHjpTZAVt+Xmp1kCh4ViFplkfDuIsrS1mZtuIz4bCJMufi1H
+         nA5HcY2XlZU4IZn/GXXQ6r19L0OFWRmf4/jvnbHMBVM+mItS1AXlb5NI3mckzFpSWs88
+         Ny3/J22+ib9UC4j5kLZNJvK/1M65jsTU+sm600K4LfhmJY2GQcU8MObLT2ZDg/ry2c+D
+         uLUTtLHogxXDhFn44cs9MsQAZ9G3d9mZ61UTsFnXP8JOIJRUwbyphx6Q67iaOFKMzrkc
+         7UOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8a6AkXVjruO4FopbD7cHdtONk9UyC2A2GgPb32Yiq2E=;
-        b=baGM5QAiBApPCsx3XogJ4oXRZkcL3KA6wwY34QfwHQA6R7ZTMLnU0Hs6Dhhapr8PZs
-         emBQZ/oem+3mw5OkKSoaluYhgWcdqHHwB8j/AeG2RAiGg38yGogry80tJ3D7PPAWWyZG
-         80f5nmRyUEUctV3jA7EVqrZ3nXDBkbEUyyulKAL7HcpMockjaTPdwqkqlHaPdTqTFL27
-         3Q2KhxR1pC6sNAKd2xI5hareXCe61bE2eJ9KGv/FtSNCR67ZYAPZA3rmGCoFuX5jN4GV
-         +XM0H8SZqtvRoR0/Sa2KzCzZlREU04rnIioxFK+muqAgGGIjxVAAiAJT905akS1NaZEd
-         yXPQ==
-X-Gm-Message-State: AOAM532009fduPXQo78IqFrpLCjZNRvqMxRiEsn0cV2E7hycNyoYS2hR
-        CPyIq9Zm0tN0cqL2tdJle6gktseB9JH9arffbiYxPA==
-X-Google-Smtp-Source: ABdhPJzu+0d2Cbw/zzMuzSs+c+OMw6PcwRDsAT8hBiLNMt+8KNaxtsaoxUs97RmRwzLmXGMQ6nIgZdG3Ga1wVL8hLq0=
-X-Received: by 2002:a25:487:: with SMTP id 129mr11526735ybe.0.1626423786876;
- Fri, 16 Jul 2021 01:23:06 -0700 (PDT)
+        bh=HGtdpt91do0UAzKVjzqqDE3AvD/lqY8Xht/fEpMQnq0=;
+        b=BlBteh0IXPXdCQmqUXnLlOvRQlFB4VNPh0iIMJZEVA7nxnvPVMpqRhK9lvwTUhYXgw
+         hFxuU2zhaCKwClwK5ILGxkdIhhUDSzWP9Py17h5WUtvza6RY1tS9Evga+3QHFoHgVAp2
+         nS88QeVNDVHVUppPiFOSwr0pxP8wwrI9iI+QkS/3XJVeHapVb7rAtXfsSt3U9j+yR+hc
+         YC0xYVuXRhi6dMLNPOnIIA6JTKwpDlRbY46PkFeIZ4qWNyEP7cpRKmeE59+QXj/snd9s
+         y7HHoT0PIuO9/+wFG+p9feQ5GknJxyDkuW+cG8IzIVXZdsMI/remVSh6gx8zQtlaJvyd
+         XeKA==
+X-Gm-Message-State: AOAM531bZXohcsg3YFmNJnyAPONLsnJpd5W8x+8z2llvGJVkMo8rRZ02
+        wPIitrpPE/oe9EfuSZf4EzT1ytfC2Phr8EmXPBlzGg==
+X-Google-Smtp-Source: ABdhPJzkTD6LkoXc/pFhqTkKNykHf2PVZO0AP5IDnDLnq5zEgkGOvdFHuwv0PEs9Ri9z730K1Gh6OWBhrBE68LPcXMk=
+X-Received: by 2002:a25:487:: with SMTP id 129mr11566148ybe.0.1626424309121;
+ Fri, 16 Jul 2021 01:31:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <c2d40c6934507ee694be43cda24387a1feef7b10.1626267044.git.geert+renesas@glider.be>
-In-Reply-To: <c2d40c6934507ee694be43cda24387a1feef7b10.1626267044.git.geert+renesas@glider.be>
+References: <2a8eb285-3b71-199c-1bf4-39fb47fac77e@nvidia.com> <1625130054-22947-1-git-send-email-akhilrajeev@nvidia.com>
+In-Reply-To: <1625130054-22947-1-git-send-email-akhilrajeev@nvidia.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 16 Jul 2021 10:22:56 +0200
-Message-ID: <CAMpxmJU8kb-ad8KHqvP8F-kzq89jv_jUVZSAt6Uz1+X4Lntx8g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rcar: Always use local variable dev in gpio_rcar_probe()
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Date:   Fri, 16 Jul 2021 10:31:38 +0200
+Message-ID: <CAMpxmJWZm_N3yPKa2+32PNOyCUuSbjqWiDBSO3WHjKekZj8Fzg@mail.gmail.com>
+Subject: Re: [PATCH v5] gpio: tegra186: Add ACPI support
+To:     Akhil R <akhilrajeev@nvidia.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        kyarlagadda@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>, mperttunen@nvidia.com,
+        smangipudi@nvidia.com, Thierry Reding <thierry.reding@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 14, 2021 at 2:51 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Thu, Jul 1, 2021 at 11:01 AM Akhil R <akhilrajeev@nvidia.com> wrote:
 >
-> As we have already have a pointer to the device structure in a local
-> variable in gpio_rcar_probe(), we can just use "dev" instead of
-> "p->dev".
+> Add ACPI module ID to probe the driver from the ACPI based bootloader
+> firmware.
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > ---
->  drivers/gpio/gpio-rcar.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> v5 changes:
+>         * Updated ioremap_resource check as per Jon's comments.
 >
-> diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-> index e7092d5fe700d2ce..ae1ffb2b230d4a32 100644
-> --- a/drivers/gpio/gpio-rcar.c
-> +++ b/drivers/gpio/gpio-rcar.c
-> @@ -564,9 +564,9 @@ static int gpio_rcar_probe(struct platform_device *pdev)
->         }
+>  drivers/gpio/gpio-tegra186.c | 30 ++++++++++++++++++++++++------
+>  1 file changed, 24 insertions(+), 6 deletions(-)
 >
->         if (p->info.has_inen) {
-> -               pm_runtime_get_sync(p->dev);
-> +               pm_runtime_get_sync(dev);
->                 gpio_rcar_enable_inputs(p);
-> -               pm_runtime_put(p->dev);
-> +               pm_runtime_put(dev);
->         }
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index 1bd9e44..8a64dcb 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -620,15 +620,21 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+>         if (!gpio)
+>                 return -ENOMEM;
 >
->         dev_info(dev, "driving %d GPIOs\n", npins);
+> -       gpio->soc = of_device_get_match_data(&pdev->dev);
+> +       gpio->soc = device_get_match_data(&pdev->dev);
+>
+>         gpio->secure = devm_platform_ioremap_resource_byname(pdev, "security");
+> -       if (IS_ERR(gpio->secure))
+> -               return PTR_ERR(gpio->secure);
+> +       if (IS_ERR(gpio->secure)) {
+> +               gpio->secure = devm_platform_ioremap_resource(pdev, 0);
+> +               if (IS_ERR(gpio->secure))
+> +                       return PTR_ERR(gpio->secure);
+> +       }
+>
+>         gpio->base = devm_platform_ioremap_resource_byname(pdev, "gpio");
+> -       if (IS_ERR(gpio->base))
+> -               return PTR_ERR(gpio->base);
+> +       if (IS_ERR(gpio->base)) {
+> +               gpio->base = devm_platform_ioremap_resource(pdev, 1);
+> +               if (IS_ERR(gpio->base))
+> +                       return PTR_ERR(gpio->base);
+> +       }
+>
+>         err = platform_irq_count(pdev);
+>         if (err < 0)
+> @@ -690,11 +696,13 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+>
+>         gpio->gpio.names = (const char * const *)names;
+>
+> +#if defined(CONFIG_OF_GPIO)
+>         gpio->gpio.of_node = pdev->dev.of_node;
+>         gpio->gpio.of_gpio_n_cells = 2;
+>         gpio->gpio.of_xlate = tegra186_gpio_of_xlate;
+> +#endif /* CONFIG_OF_GPIO */
+>
+> -       gpio->intc.name = pdev->dev.of_node->name;
+> +       gpio->intc.name = dev_name(&pdev->dev);
+>         gpio->intc.irq_ack = tegra186_irq_ack;
+>         gpio->intc.irq_mask = tegra186_irq_mask;
+>         gpio->intc.irq_unmask = tegra186_irq_unmask;
+> @@ -918,10 +926,20 @@ static const struct of_device_id tegra186_gpio_of_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, tegra186_gpio_of_match);
+>
+> +static const struct acpi_device_id  tegra186_gpio_acpi_match[] = {
+> +       { .id = "NVDA0108", .driver_data = (kernel_ulong_t)&tegra186_main_soc },
+> +       { .id = "NVDA0208", .driver_data = (kernel_ulong_t)&tegra186_aon_soc },
+> +       { .id = "NVDA0308", .driver_data = (kernel_ulong_t)&tegra194_main_soc },
+> +       { .id = "NVDA0408", .driver_data = (kernel_ulong_t)&tegra194_aon_soc },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, tegra186_gpio_acpi_match);
+> +
+>  static struct platform_driver tegra186_gpio_driver = {
+>         .driver = {
+>                 .name = "tegra186-gpio",
+>                 .of_match_table = tegra186_gpio_of_match,
+> +               .acpi_match_table = tegra186_gpio_acpi_match,
+>         },
+>         .probe = tegra186_gpio_probe,
+>         .remove = tegra186_gpio_remove,
 > --
-> 2.25.1
+> 2.7.4
 >
 
-Applied, thanks!
+Can you rebase it on top of v5.14-rc1 and resend?
 
 Bart
