@@ -2,90 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 013F63CB7BD
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 15:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DF4C3CB7D4
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 15:24:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239803AbhGPNQu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jul 2021 09:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53552 "EHLO
+        id S239904AbhGPN1H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jul 2021 09:27:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239822AbhGPNQt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jul 2021 09:16:49 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A938C06175F
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 06:13:53 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id a22so5011751vso.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 06:13:53 -0700 (PDT)
+        with ESMTP id S239391AbhGPN1H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jul 2021 09:27:07 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EC3C06175F
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 06:24:12 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id hr1so15182547ejc.1
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 06:24:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Jt7KsHHJ0QRR2aeG4nrHvfyry7JeoeiUDEakBZ0Su8=;
-        b=pLxDeA+DFRiaep1wQr3SbLMy2KCzdY4gFH4vlbDfWUvWycwnAMqiZVDseklr4vMQ8O
-         Kcu7KadrYxfkGljA8u8FAZvuqfE9FwCB/QVzcWT2fvYvjh3y/z042DxS8RR8iiJIJGy2
-         UU6W4mjym3GXp2WEEbbRjNojoxCGklHbD3Ww8J1h8K4cmrnPWYdKQ+indkAXI+wnnZME
-         koA3d7diY3lqnAU0cf+k+RqldZLnsCkLQccW6d8LQwkE4LNpYsEDisgZYPMXcFrJTtuI
-         Lefdw47IdpJfbavrJZheCBwUvet8YfUOgru3cIaFdL5pK3UHvZZ60nzM0EDVsNZrJicg
-         ovmA==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LnTIlz14bs7kHjCJfj3DwfovjklktHwzI8TQbal8cp0=;
+        b=YXQhvx5yJ5aOhK1qi9zkyX8CjczHkLfUS3++M7E1lVEK1CYGoeCrPWsdC79hR6U1Xm
+         B6nPifcInazAbiCSNnfjqyZTQEd5enxxrnUAxZk7cwHmGf3kJXyBwFbkYmvDh4T4whk+
+         SY3oWmHT0TBu/I6Yg6QFN/P/2EftW13+xZnr2VgDn8eO+XR6tX86wA22xlohOIDLbbRu
+         oaPt3gndNOlqvf6aFQ8zlEZLL1+OC/X0HtEZpvL6fBMHBxsMqlfyfXdzpQPEYE2NdsoP
+         c6WwFewmMe5GJdoq8gJ7wl+lMJhDOx8MFmrLBYsmCPRbbzk+Xry/6glCNUiXBUNacoKF
+         LE3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Jt7KsHHJ0QRR2aeG4nrHvfyry7JeoeiUDEakBZ0Su8=;
-        b=n8h5U/7yZenDs72fpAUekG8RnTUN6XVgXO9ZFjEHmVZTLQNsTw2rplUqWFTkpN7bKw
-         pG8N/keNQhjm5ptriqyLE5WGitIWPzXmqeqnIDfOXKAiexeu1/V1spDt9f8JTi+y7oo/
-         N09VPWcQLy+unz3ZYYDhPUQYiI+8yRjg/53nZTYlLgqeGhhPc+AGA+Rb0J0okVyxaMiD
-         PavGkMUoy/lLld7slWDn3W2aR63ExOBeaAAecaZPiEtmdyb1Wly8LpVHLcAIqx+lemFv
-         Y6D8ey3q+Ug8yKJTpnnINwPnkkfa8syQh/BigoEXF9LP+nvi8NubGZxjJ5aFMqU+EYOw
-         9TZw==
-X-Gm-Message-State: AOAM532Pj0CRl3qlPhLQ41Ihep++gkAunsTa4O7Y0hzr3TpJo1BrbN2F
-        dCe2ohOafZyuyp4B4pBE5xBg7oKxdFpi2g==
-X-Google-Smtp-Source: ABdhPJy7ocqT5v3LgeTs2QXor67+YWig9mPB3c8okuAzv+ZsCiO37dLlM517DrH1crHW4nw0o0wi2w==
-X-Received: by 2002:a67:7142:: with SMTP id m63mr12235936vsc.8.1626441232580;
-        Fri, 16 Jul 2021 06:13:52 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:485:504a:9f0b:cb12:835a:e9f9])
-        by smtp.gmail.com with ESMTPSA id z23sm1175608vsk.32.2021.07.16.06.13.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 06:13:52 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, shawnguo@kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH] pinctrl: imx8dxl: Constify imx_pinctrl_soc_info
-Date:   Fri, 16 Jul 2021 10:13:41 -0300
-Message-Id: <20210716131341.3370620-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LnTIlz14bs7kHjCJfj3DwfovjklktHwzI8TQbal8cp0=;
+        b=BCTt3+6YAdkNJorA6JfZt/QsArUOAsVWy+hYoTKJKdDMPNNlxqV4PRAie/nq1Xx4iU
+         iI6wMrGq0s0goHnLfET7yAR4kFS8lwxyEzI4MoQQxI2XuQn0DWrUOAg2PIr60qxz9JvT
+         JtkjAUBDPvImdIaGmABEABzUkB9cMRafAhjHWzH8LEqtiZbd8RGOQTcdYMyOxk/sKRNZ
+         weriv34XPKNbu4IiIwMNt4N9kZoueqn19uHY0Bro2lPXSO6TtFFyOlvYPeu+hQj5GjM9
+         nlzMfb/DBpAqcBzTJ6k2XrwhNGFHECMerjZTUPCxl66EN0oUnaverXxl9EI9gXUsQAYm
+         ZrEg==
+X-Gm-Message-State: AOAM531Du4NJm+VoYGEEljtzP489c58gEhcMtY4HpRAtiOprELpKD7z7
+        EQH4nznk9099vBB2TN4RZiqVTWCI7RBOSjOjMQXCG7OfMl8=
+X-Google-Smtp-Source: ABdhPJxsll8guGH//bzGU2uz+6ScNEGFs0xQ7/gjd4zYgyz5V5sqC9aBQQpohSOHczi5NL8r7962jAyGux6GnktQTzM=
+X-Received: by 2002:a17:906:4816:: with SMTP id w22mr11688063ejq.14.1626441851138;
+ Fri, 16 Jul 2021 06:24:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210715201001.23726-1-brgl@bgdev.pl> <20210715201001.23726-4-brgl@bgdev.pl>
+ <20210715221803.GA16338@cephalopod> <CAMRc=Md0DWKBT0BJGdKDdhTN0gG3Jc4Mf71xUnYqqhxRPheR7Q@mail.gmail.com>
+ <CAMRc=MdjjX0z=9hwvbE9mcx8J7twhb-j6yFFJqpqdZB1vfkHEg@mail.gmail.com>
+In-Reply-To: <CAMRc=MdjjX0z=9hwvbE9mcx8J7twhb-j6yFFJqpqdZB1vfkHEg@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 16 Jul 2021 15:24:00 +0200
+Message-ID: <CAMRc=MegRa=zde8i7UivLDrSS8sKabDNdHcovE=PnP=N9i+kqg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v2 3/3] bindings: cxx: implement C++ bindings
+ for libgpiod v2.0
+To:     Ben Hutchings <ben.hutchings@essensium.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The imx_pinctrl_soc_info structure content is never changed, so it can be
-declared as 'const', like it is done on all other i.MX pinctrl drivers.
+On Fri, Jul 16, 2021 at 10:56 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> On Fri, Jul 16, 2021 at 9:44 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > On Fri, Jul 16, 2021 at 12:18 AM Ben Hutchings
+> > <ben.hutchings@essensium.com> wrote:
+> > >
+> > > On Thu, Jul 15, 2021 at 10:10:01PM +0200, Bartosz Golaszewski wrote:
+> > > > This is the bulk of work implementing C++ bindings for the new libgpiod
+> > > > API. The tests are not converted yet but the examples are fully
+> > > > functional. More details in the cover letter as this patch will be
+> > > > squashed with the one for the core C library anyway.
+> > > [...]
+> > > > +class line_config
+> > > > +{
+> > > > +public:
+> > > > +
+> > > > +     /**
+> > > > +      * @brief Direction settings.
+> > > > +      */
+> > > > +     enum : int {
+> > > > +             DIRECTION_AS_IS = 1,
+> > > > +             /**< Request the line(s), but don't change current direction. */
+> > > > +             DIRECTION_INPUT,
+> > > > +             /**< Request the line(s) for reading the GPIO line state. */
+> > > > +             DIRECTION_OUTPUT
+> > > > +             /**< Request the line(s) for setting the GPIO line state. */
+> > > > +     };
+> > > [...]
+> > > > +class line_info
+> > > > +{
+> > > > +public:
+> > > > +
+> > > > +     /**
+> > > > +      * @brief Direction settings.
+> > > > +      */
+> > > > +     enum : int {
+> > > > +             DIRECTION_INPUT = 1,
+> > > > +             /**< Direction is input - we're reading the state of a GPIO line. */
+> > > > +             DIRECTION_OUTPUT
+> > > > +             /**< Direction is output - we're driving the GPIO line. */
+> > > > +     };
+> > > [...]
+> > >
+> > > Could these be enum class types, or does that introduce an ABI issue
+> > > if you extend them later?
+> > >
+> > > Ben.
+> >
+> > I'm not sure there would be any benefit to enum classes here except
+> > for longer scope when using them in code. I would prefer to leave it
+> > this way.
+> >
+> > Bartosz
+>
+> Actually after a second thought, it wouldn't make it long - it would
+> just look like: line_info::direction::INPUT instead. Maybe it is a
+> more C++ approach after all.
+>
+> Bart
 
-Make it 'const' in this driver too.
+I tried to change it but if - for example - I implement the enum type
+for the direction property of line_info as:
 
-Reported-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- drivers/pinctrl/freescale/pinctrl-imx8dxl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+enum class direction {
+    INPUT = 1,
+    OUTPUT
+};
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
-index 041455c13d0d..f947b1d0d1aa 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
-@@ -155,7 +155,7 @@ static const struct pinctrl_pin_desc imx8dxl_pinctrl_pads[] = {
- };
- 
- 
--static struct imx_pinctrl_soc_info imx8dxl_pinctrl_info = {
-+static const struct imx_pinctrl_soc_info imx8dxl_pinctrl_info = {
- 	.pins = imx8dxl_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx8dxl_pinctrl_pads),
- 	.flags = IMX_USE_SCU,
--- 
-2.25.1
+then it conflicts with the getter of line_info: direction(void) const.
 
+One option is to rename all getters to get_<property>(). What do you think?
+
+Bartosz
