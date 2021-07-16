@@ -2,383 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AEA73CB38C
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 09:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D0D13CB3DE
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jul 2021 10:14:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbhGPHyS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jul 2021 03:54:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35622 "EHLO
+        id S236777AbhGPIRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jul 2021 04:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231454AbhGPHyS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jul 2021 03:54:18 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F3AC06175F
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 00:51:23 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id r11so10974776wro.9
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 00:51:23 -0700 (PDT)
+        with ESMTP id S236342AbhGPIRX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jul 2021 04:17:23 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8375C06175F
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:14:28 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id t186so13536639ybf.2
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jul 2021 01:14:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=75hkuBoWS0vHJJzS2VgnET8y1i2k9hSa3LBfcENdXNE=;
-        b=IACJF3oamyYJKyHVKKuIo/tOKQo2eNT4+6VJNapd37DO/T4wzAQhnnf5kjrlzAGbpl
-         ItKOQHOoLV7ABATBQpiU/J7lR0nhpce41v0Fi/5sQ2wIdLv2PvSP9L2j3jIvn95Qu6by
-         1fq1QfPpY4nmw+YgC5T9D5Aq3NW9MSi79I3upyj2Rmopj/ItQ8RJOLKa51lf6rMIfw5r
-         465pcxcGsY5RIlOphtu5k/k0+2C4w3k2hNZFqryuCaYFm3xwFP7oftE/k3Uj7yfkDP7v
-         uwdWU2jL8gL0Xra4JG7mqAgVrhiVZLEUN2CSgJJnZQ/NEXFfTnC/oI63EQboC/uCRaDh
-         XYJw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/LTJmXuzBUFzzcssWYYOL1YI3GgpOb+6Dm26cGPPXco=;
+        b=lvllShBY36EhoOvyLflbD5SqvOHgXlVRd0BND8GkTXJkU0XDztOrsBdYYXiTmhqSOd
+         Ucd3uDXyzfss9cTJeDLQrjV+KVg/tZASDlFHiZYvP3Ryx18Cl8fO14fPpBoWu3IX/lQ2
+         536emUH59DeCudBg/WAYvZu7ZJuAvY4Z6I4YjUjyMKKtg5KJMQSc7Hb/Yr9dnTAfR6V+
+         miWBK+WZA77U9YjJ0bwdX5ZnPPrk/nQ5h2qWuRXw/P7LFscG0cAuTbLbLN7xOoKjuvBn
+         ByiK0ogNfAvpFTXC+tOoIZEEgbMBaHLrvYt6YHQNesOKBrMKwIA7ZUn3fz3S6bF15B2f
+         pYpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=75hkuBoWS0vHJJzS2VgnET8y1i2k9hSa3LBfcENdXNE=;
-        b=KsA0a98p5sRKF7gny7i4So1OK/CvA9AxwkdcBp6QhBUUrHbi8lxF4ZTiBewWyaoN/B
-         ePTYKY7byWSDuPP3plQ7NNzRl8EngJmusdVizKtubcxLKvrVruJln+kOtr7BhGYERGD2
-         8wBNpkR8YKtGogZc2JMXvkE4IUSTIp6wLHRodLzxDdK0+HYLOn0uW7acSg2kwTu4OJJT
-         /3xd3gypW7JMUolOkBI7LVEiZXg62PRBBaCblFCLnDo44rRjSkeextCpeiM7/FGE85dD
-         gZAJH885Yiftu4mLiZ5UfUg4ka5YpW5UzzprQ1ER6fArX5XzIxl2gzadSR97BDpYp+RX
-         nhUQ==
-X-Gm-Message-State: AOAM5334Bm+UqbnptrEAOC5slhN1UzpYxitwmUukCR1NEv9JJSIQ6Ss1
-        sguiyDHzD5TcyROrYmZkltTG6Q==
-X-Google-Smtp-Source: ABdhPJyYkCv/M75rt2/Jdzn8hQJLR21YJoYAPwfbuJZyNViAqFSzHnmN2vHdylezaNC5LUwoKRaQWw==
-X-Received: by 2002:a5d:634e:: with SMTP id b14mr10240122wrw.81.1626421882154;
-        Fri, 16 Jul 2021 00:51:22 -0700 (PDT)
-Received: from google.com ([31.124.24.141])
-        by smtp.gmail.com with ESMTPSA id f130sm8758156wmf.23.2021.07.16.00.51.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 00:51:21 -0700 (PDT)
-Date:   Fri, 16 Jul 2021 08:51:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>,
-        Dirk Opfer <dirk@opfer-online.de>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ARM/pxa/mfd/power/sound: Switch Tosa to GPIO descriptors
-Message-ID: <YPE6d4WWYAWgnsCH@google.com>
-References: <20210715151625.394960-1-linus.walleij@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/LTJmXuzBUFzzcssWYYOL1YI3GgpOb+6Dm26cGPPXco=;
+        b=bxRvFJ8UHBkXJ6ElPjctA0UIhBl4gIYbU8OA4Zn7tEWx0ZPloo94UnLJL4Ixr50E0U
+         FiJ6/QVJPjQlHTj+LjcCNgPMtdmiSFqBfnAc4mGCPG6SGlG6TP7H/QfrcZ3A/f0YDk13
+         g5z90U/dDoRTqoHIZLwD0kBLsJdkxm9+kmip3OU+xdnLZgUPc7faQ6P/VhyL0B5aLHu4
+         FAoUx3XFGsVlhq2rkNTKxmYhUshkp2awdjdmlnFL2KI9Lu4mXxFFW/GX/tCDPnEwNiz8
+         tFoJF/26Xka4KYf0mmY0SoitMOMjQQPbZyB9Kt92/+JsucbvsSUXpORDpOAXgQ1IR3ZV
+         /ipA==
+X-Gm-Message-State: AOAM532EgJgHujepDQfGR0wiQxvDaLCo4ToG4nMC3dfohAutatyh15GA
+        xlR3LA+LEEowDPEBHDpgVafrH5sUOowAFLoRb8vo9A==
+X-Google-Smtp-Source: ABdhPJzoiSlV4UPQgTJnY+HNihGEEyHLw/Ci9EaV/2UUCc0BH7/mPrhygI6wJGknqNifMEX/RADCpvfFm1B0j8OBZzQ=
+X-Received: by 2002:a25:1804:: with SMTP id 4mr11086581yby.157.1626423267892;
+ Fri, 16 Jul 2021 01:14:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210715151625.394960-1-linus.walleij@linaro.org>
+References: <20210715191141.430307-1-linus.walleij@linaro.org>
+In-Reply-To: <20210715191141.430307-1-linus.walleij@linaro.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 16 Jul 2021 10:14:17 +0200
+Message-ID: <CAMpxmJUxHL83sK2BB=Q1-RHgi55nW4Z62g8csKD2vtfvyuYxjQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3 v6] gpio: pcf857x: Name instance after dev_name()
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Sekhar Nori <nsekhar@ti.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 15 Jul 2021, Linus Walleij wrote:
-
-> The Tosa device (Sharp SL-6000) has a mishmash driver set-up
-> for the Toshiba TC6393xb MFD that includes a battery charger
-> and touchscreen and has some kind of relationship to the SoC
-> sound driver for the AC97 codec. Other devices define a chip
-> like this but seem only half-implemented, not really handling
-> battery charging etc.
-> 
-> This patch switches the Toshiba MFD device to provide GPIO
-> descriptors to the battery charger and SoC codec. As a result
-> some descriptors need to be moved out of the Tosa boardfile
-> and new one added: all SoC GPIO resources to these drivers
-> now comes from the main boardfile, while the MFD provide
-> GPIOs for its portions.
-> 
-> As a result we can request one GPIO from our own GPIO chip
-> and drop two hairy callbacks into the board file.
-> 
-> This platform badly needs to have its drivers split up and
-> converted to device tree probing to handle this quite complex
-> relationship in an orderly manner. I just do my best in solving
-> the GPIO descriptor part of the puzzle. Please don't ask me
-> to fix everything that is wrong with these driver to todays
-> standards, I am just trying to fix one aspect. I do try to
-> use modern devres resource management and handle deferred
-> probe using new functions where appropriate.
-> 
-> Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
-> Cc: Dirk Opfer <dirk@opfer-online.de>
-> Cc: Robert Jarzmik <robert.jarzmik@free.fr>
-> Cc: Daniel Mack <daniel@zonque.org>
-> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
+On Thu, Jul 15, 2021 at 9:13 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Put the label on this gpio_chip from the dev_name() instead of
+> the client name.
+>
+> The client name will be pcf8574 etc for all instances even if
+> there are several chips on a system.
+>
+> This manifests on the DaVinci DM6467 (non-devicetree) which
+> will contain 3 different pcf8574 devices that as a result cannot
+> be told apart because they are all named "pcf8574", affecting
+> the GPIO descriptor tables which need a unique label per chip.
+>
+> By passing in .dev_name in the struct i2c_board_info we can
+> explicitly name each instance and use that to discern the chips
+> when using board files.
+>
+> Cc: Sekhar Nori <nsekhar@ti.com>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
-> Dmitry/Dirk: it'd be great if you could test this patch on
-> the Tosa and try to help me iron out any bugs.
-> 
-> Merging strategy: please provide ACKs and I will attempt
-> to merge this through the SoC tree.
+> ChangeLog v5->v6:
+> - Rebase on v5.14-rc1
+> ChangeLog ->v5:
+> - New patch to deal with the chip label
 > ---
->  arch/arm/mach-pxa/eseries.c           |   2 -
->  arch/arm/mach-pxa/include/mach/tosa.h |  18 ---
->  arch/arm/mach-pxa/tosa.c              |  68 +++-------
->  drivers/mfd/tc6393xb.c                | 147 ++++++++++++++++------
->  drivers/power/supply/tosa_battery.c   | 171 ++++++++++++++++----------
->  include/linux/mfd/tc6393xb.h          |   1 -
->  sound/soc/pxa/tosa.c                  |  20 ++-
->  7 files changed, 246 insertions(+), 181 deletions(-)
+>  drivers/gpio/gpio-pcf857x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
+> index b7568ee33696..2271ec86e414 100644
+> --- a/drivers/gpio/gpio-pcf857x.c
+> +++ b/drivers/gpio/gpio-pcf857x.c
+> @@ -311,7 +311,7 @@ static int pcf857x_probe(struct i2c_client *client,
+>         if (status < 0)
+>                 goto fail;
+>
+> -       gpio->chip.label = client->name;
+> +       gpio->chip.label = dev_name(&client->dev);
+>
+>         gpio->client = client;
+>         i2c_set_clientdata(client, gpio);
+> --
+> 2.31.1
+>
 
-[...]
-
-> diff --git a/drivers/mfd/tc6393xb.c b/drivers/mfd/tc6393xb.c
-> index 3d5b14c60e20..72ac471cb0f5 100644
-> --- a/drivers/mfd/tc6393xb.c
-> +++ b/drivers/mfd/tc6393xb.c
-> @@ -22,6 +22,8 @@
->  #include <linux/mfd/tmio.h>
->  #include <linux/mfd/tc6393xb.h>
->  #include <linux/gpio/driver.h>
-> +#include <linux/gpio/machine.h> /* Provides GPIO lines to children */
-> +#include <linux/gpio/consumer.h> /* Requesting own GPIOs */
-
-Are these comments really necessary?
-
->  #include <linux/slab.h>
->  
->  #define SCR_REVID	0x08		/* b Revision ID	*/
-> @@ -87,8 +89,10 @@
->  
->  struct tc6393xb {
->  	void __iomem		*scr;
-> +	struct device		*dev;
->  
->  	struct gpio_chip	gpio;
-> +	struct gpio_desc	*vcc_on;
->  
->  	struct clk		*clk; /* 3,6 Mhz */
->  
-> @@ -497,17 +501,110 @@ static int tc6393xb_gpio_direction_output(struct gpio_chip *chip,
->  	return 0;
->  }
->  
-> -static int tc6393xb_register_gpio(struct tc6393xb *tc6393xb, int gpio_base)
-> +/*
-> + * TC6393XB GPIOs as used on TOSA, the only user of this chip. If you add more
-
-Missing an "are" for clarity?
-
-> + * platforms using this chip, rewrite things to use device tree and register GPIO
-
-Not sure we should be dictating extension methods in this way.
-
-What if DT is deprecated by the time this is expanded?
-
-> + * resources there.
-> + */
-> +#define TOSA_GC_NAME			"tc6393xb"
-
-Please use the name string in-place.
-
-> +#define TOSA_GPIO_TG_ON			0
-> +#define TOSA_GPIO_L_MUTE		1
-> +#define TOSA_GPIO_BL_C20MA		3
-> +#define TOSA_GPIO_CARD_VCC_ON		4
-> +#define TOSA_GPIO_CHARGE_OFF		6
-> +#define TOSA_GPIO_CHARGE_OFF_JC		7
-> +#define TOSA_GPIO_BAT0_V_ON		9
-> +#define TOSA_GPIO_BAT1_V_ON		10
-> +#define TOSA_GPIO_BU_CHRG_ON		11
-> +#define TOSA_GPIO_BAT_SW_ON		12
-> +#define TOSA_GPIO_BAT0_TH_ON		14
-> +#define TOSA_GPIO_BAT1_TH_ON		15
-
-Okay, I have to ask - what are 5, 8 and 13?
-
-> +static struct gpiod_lookup_table tosa_lcd_gpio_lookup = {
-> +	.dev_id = "spi2.0",
-> +	.table = {
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_TG_ON, "tg #pwr", GPIO_ACTIVE_HIGH),
-> +		{ },
-> +	},
-> +};
-> +
-> +static struct gpiod_lookup_table tosa_lcd_bl_gpio_lookup = {
-> +	.dev_id = "i2c-tosa-bl",
-> +	.table = {
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_BL_C20MA, "backlight", GPIO_ACTIVE_HIGH),
-> +		{ },
-> +	},
-> +};
-> +
-> +static struct gpiod_lookup_table tosa_audio_gpio_lookup = {
-> +	.dev_id = "tosa-audio",
-> +	.table = {
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_L_MUTE, NULL, GPIO_ACTIVE_HIGH),
-> +		{ },
-> +	},
-> +};
-
-Are these structures going to be peppered all over the kernel now?
-
-Maybe a helper can be added to make these single line entries one line
-each?
-
-> +static struct gpiod_lookup_table tosa_battery_gpio_lookup = {
-> +	.dev_id = "wm97xx-battery",
-> +	.table = {
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_CHARGE_OFF,
-> +			    "main charge off", GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_CHARGE_OFF_JC,
-> +			    "jacket charge off", GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_BAT0_V_ON,
-> +			    "main battery", GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_BAT1_V_ON,
-> +			    "jacket battery", GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_BU_CHRG_ON,
-> +			    "backup battery", GPIO_ACTIVE_HIGH),
-> +		/* BAT1 and BAT0 thermistors appear to be swapped */
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_BAT1_TH_ON,
-> +			    "main battery temp", GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_BAT0_TH_ON,
-> +			    "jacket battery temp", GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP(TOSA_GC_NAME, TOSA_GPIO_BAT_SW_ON,
-> +			    "battery switch", GPIO_ACTIVE_HIGH),
-
-These are soooo close to being <100 chars.
-
-What does Checkpatch currently warn on?  Is it 100 or 120?
-
-> +		{ },
-> +	},
-> +};
-> +
-> +static struct gpiod_lookup_table *tc6393xb_gpio_lookups[] = {
-> +	&tosa_lcd_gpio_lookup,
-> +	&tosa_lcd_bl_gpio_lookup,
-> +	&tosa_audio_gpio_lookup,
-> +	&tosa_battery_gpio_lookup,
-> +};
-> +
-> +static int tc6393xb_register_gpio(struct tc6393xb *tc6393xb)
->  {
-> -	tc6393xb->gpio.label = "tc6393xb";
-> -	tc6393xb->gpio.base = gpio_base;
-> -	tc6393xb->gpio.ngpio = 16;
-> -	tc6393xb->gpio.set = tc6393xb_gpio_set;
-> -	tc6393xb->gpio.get = tc6393xb_gpio_get;
-> -	tc6393xb->gpio.direction_input = tc6393xb_gpio_direction_input;
-> -	tc6393xb->gpio.direction_output = tc6393xb_gpio_direction_output;
-> -
-> -	return gpiochip_add_data(&tc6393xb->gpio, tc6393xb);
-> +	struct gpio_chip *gc = &tc6393xb->gpio;
-> +	struct device *dev = tc6393xb->dev;
-> +	int ret;
-> +
-> +	gc->label = TOSA_GC_NAME;
-> +	gc->base = -1; /* Dynamic allocation */
-
-Global define?
-
-> +	gc->ngpio = 16;
-> +	gc->set = tc6393xb_gpio_set;
-> +	gc->get = tc6393xb_gpio_get;
-> +	gc->direction_input = tc6393xb_gpio_direction_input;
-> +	gc->direction_output = tc6393xb_gpio_direction_output;
-> +
-> +	ret = devm_gpiochip_add_data(dev, gc, tc6393xb);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to add GPIO chip\n");
-> +
-> +	/* Register descriptor look-ups for consumers */
-> +	gpiod_add_lookup_tables(tc6393xb_gpio_lookups, ARRAY_SIZE(tc6393xb_gpio_lookups));
-> +
-> +	/* Request some of our own GPIOs */
-> +	tc6393xb->vcc_on = gpiochip_request_own_desc(gc, TOSA_GPIO_CARD_VCC_ON, "VCC ON",
-> +						     GPIO_ACTIVE_HIGH, GPIOD_OUT_HIGH);
-> +	if (IS_ERR(tc6393xb->vcc_on))
-> +		return dev_err_probe(dev, PTR_ERR(tc6393xb->vcc_on),
-> +				     "failed to request VCC ON GPIO\n");
-> +
-
-So much more code to do the same thing?
-
-> +	return 0;
->  }
->  
->  /*--------------------------------------------------------------------------*/
-> @@ -617,6 +714,7 @@ static int tc6393xb_probe(struct platform_device *dev)
->  		ret = -ENOMEM;
->  		goto err_kzalloc;
->  	}
-> +	tc6393xb->dev = &dev->dev;
-
-That confused me at first.
-
-Please consider changing the platform_device to pdev (separately).
-
->  	raw_spin_lock_init(&tc6393xb->lock);
->  
-> @@ -676,22 +774,12 @@ static int tc6393xb_probe(struct platform_device *dev)
->  			tmio_ioread8(tc6393xb->scr + SCR_REVID),
->  			(unsigned long) iomem->start, tc6393xb->irq);
->  
-> -	tc6393xb->gpio.base = -1;
-> -
-> -	if (tcpd->gpio_base >= 0) {
-> -		ret = tc6393xb_register_gpio(tc6393xb, tcpd->gpio_base);
-> -		if (ret)
-> -			goto err_gpio_add;
-> -	}
-> +	ret = tc6393xb_register_gpio(tc6393xb);
-> +	if (ret)
-> +		goto err_gpio_add;
->  
->  	tc6393xb_attach_irq(dev);
->  
-> -	if (tcpd->setup) {
-> -		ret = tcpd->setup(dev);
-> -		if (ret)
-> -			goto err_setup;
-> -	}
-> -
->  	tc6393xb_cells[TC6393XB_CELL_NAND].platform_data = tcpd->nand_data;
->  	tc6393xb_cells[TC6393XB_CELL_NAND].pdata_size =
->  						sizeof(*tcpd->nand_data);
-> @@ -705,15 +793,8 @@ static int tc6393xb_probe(struct platform_device *dev)
->  	if (!ret)
->  		return 0;
->  
-> -	if (tcpd->teardown)
-> -		tcpd->teardown(dev);
-> -
-> -err_setup:
->  	tc6393xb_detach_irq(dev);
-> -
->  err_gpio_add:
-> -	if (tc6393xb->gpio.base != -1)
-> -		gpiochip_remove(&tc6393xb->gpio);
->  	tcpd->disable(dev);
->  err_enable:
->  	clk_disable_unprepare(tc6393xb->clk);
-> @@ -738,14 +819,8 @@ static int tc6393xb_remove(struct platform_device *dev)
->  
->  	mfd_remove_devices(&dev->dev);
->  
-> -	if (tcpd->teardown)
-> -		tcpd->teardown(dev);
-> -
->  	tc6393xb_detach_irq(dev);
->  
-> -	if (tc6393xb->gpio.base != -1)
-> -		gpiochip_remove(&tc6393xb->gpio);
-> -
-
-Taking away all of these lines is nice.
-
->  	ret = tcpd->disable(dev);
->  	clk_disable_unprepare(tc6393xb->clk);
->  	iounmap(tc6393xb->scr);
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
