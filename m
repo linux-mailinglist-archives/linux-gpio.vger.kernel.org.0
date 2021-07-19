@@ -2,180 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E87D23CCD30
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jul 2021 06:47:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D5093CCEF4
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jul 2021 09:58:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230213AbhGSEui (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jul 2021 00:50:38 -0400
-Received: from mail-dm6nam11on2044.outbound.protection.outlook.com ([40.107.223.44]:12896
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229512AbhGSEuh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 19 Jul 2021 00:50:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TVapaeEgP/Mb/60iea5QUbil1Ww/D4B0xuFHzNE1OifDFiKuGws8+ZfcdpjyLwiIodx/XwImbURzfW0cjPQ0FCDUwvGyKyCmVdOviLP/Fig/dqDUXn8dt4TUVoG4H8jm1UDXNhw4+VhHNwXi+Z2uICJHkiW6gzMdswAgFwGI0KQ3cNx9cdE9MDAzd/2ge7a5rszAU/w01MQDmsni1QXCh/ghnzqfAuxq2O0e7yf/ZUaNumnazk/KetdySsxLKpQPkCDHwTB8Aw31efjYGcu3jiL9TfLNNcDpVdtr77HIFFwxjSjBexuPhOzeK2CifQB9ujEhku8ZZ6ldatuF+wke1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+5COegz6ZvBWIbEvm69/AZ2OY6Fr4/gAjjySbfpLvm4=;
- b=DxBwAfui1zPyi2R/lnzpNPY36inaNkfuOjUEfVIaPIiyFccDNtOV7kAYQyfXo1CWd5RgFDMgl0RCkyd4F+FfsjJNAtBUGaNhRGQgXqua1R0Yj50Z1JegkxX6sJ3N+QbNQttBIUaEs+wupIcHLRLs3cKodOHfe+qqXCcYo8IPqeTKIzNdxpk4oyeurVz9oQp5VAbrMket10yk0xMk05sOwijAeDItpgRbF1NcN106lDYQY3XGV/cDhl7balLUIkyrlbZPoaZo9O+oA11ceekUs7njOUV8E+fL8Dp5fUyWclg1DDSnkLxxAWdDz3xAp8caIHGIXImL1i3it/NblRPW6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.35) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+5COegz6ZvBWIbEvm69/AZ2OY6Fr4/gAjjySbfpLvm4=;
- b=d6hhGsJ0AUMENgnEOyFFq4GouDJF1pUq3JUoxphkMF5YPU2cZwDif171B08vYfvEjC1X9oxO+vO/C3oUAKBwtNt6ocbmCtcR49UAEgio1jcdTMm5q56+6Jq3pFAS5sgMLTtutbCHmcBrIUe1I1aAsKaWmcTMJkBdwkzv93gCC+YaTLORxlEDizQCkfyVVZnaLmHenPK8JHJOR8L7V0lg61MszA+0m/VOcCi2FaRXr/YTuZPHJd+aY158+WvHIA+55XFhVTyWbcMhCcz687y23OLSOk+0WVUg7JzUntYs6MpTSr9WLStktVak/bMhT6J9F3rfsoE/extnWPDBq9a8AA==
-Received: from MWHPR13CA0007.namprd13.prod.outlook.com (2603:10b6:300:16::17)
- by DM6PR12MB4337.namprd12.prod.outlook.com (2603:10b6:5:2a9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.24; Mon, 19 Jul
- 2021 04:47:37 +0000
-Received: from CO1NAM11FT018.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:16:cafe::3a) by MWHPR13CA0007.outlook.office365.com
- (2603:10b6:300:16::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.11 via Frontend
- Transport; Mon, 19 Jul 2021 04:47:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.35; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.35) by
- CO1NAM11FT018.mail.protection.outlook.com (10.13.175.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4331.21 via Frontend Transport; Mon, 19 Jul 2021 04:47:37 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 19 Jul
- 2021 04:47:36 +0000
-Received: from kyarlagadda-linux.nvidia.com (172.20.187.6) by mail.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 19 Jul 2021 04:47:33 +0000
-From:   Akhil R <akhilrajeev@nvidia.com>
-To:     <bgolaszewski@baylibre.com>
-CC:     <akhilrajeev@nvidia.com>, <andy.shevchenko@gmail.com>,
-        <jonathanh@nvidia.com>, <kyarlagadda@nvidia.com>,
-        <ldewangan@nvidia.com>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <mperttunen@nvidia.com>,
-        <smangipudi@nvidia.com>, <thierry.reding@gmail.com>
-Subject: [PATCH v6] gpio: tegra186: Add ACPI support
-Date:   Mon, 19 Jul 2021 10:16:41 +0530
-Message-ID: <1626670001-22832-1-git-send-email-akhilrajeev@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <CAMpxmJWZm_N3yPKa2+32PNOyCUuSbjqWiDBSO3WHjKekZj8Fzg@mail.gmail.com>
-References: <CAMpxmJWZm_N3yPKa2+32PNOyCUuSbjqWiDBSO3WHjKekZj8Fzg@mail.gmail.com>
-X-NVConfidentiality: public
+        id S234778AbhGSIBO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jul 2021 04:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235151AbhGSIBL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jul 2021 04:01:11 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B18C061574;
+        Mon, 19 Jul 2021 00:57:28 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id o72-20020a9d224e0000b02904bb9756274cso17400820ota.6;
+        Mon, 19 Jul 2021 00:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jNYrX4wdtnjcXzObsb+/874SVbPwMkIuBhQLIlI4CZM=;
+        b=Kenk1UhvU07pUCh5V1VMA4sBAghCbNmZt1xyQG0wIZnmpAncOV5UMfb3wcono4vNIQ
+         Uza9JAIjuQZD6IivLN1Tu7CpZEErNxflsU1l1bteJraJfjuZe+zyzy/O+sQjbDkYpSTZ
+         reTARsmQVFaujLPag9ILLv7A+x0Uvm0zmJ+Vmhw/sOlA/ZNJ4lxlgPIEz9JIXozytx37
+         VZZBiPRO2s5hq36LBfCmQTwD+v++YMHoldUtBEa8TU3VWbh/6zD3sxqyGxScTJJGPhsD
+         7tDTDEZSL1h9voOfQ4dMjAypJ8xpemATnmpm1Ko1seprT7oHHwhv3PU/fk5wzxhDsub7
+         FSiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jNYrX4wdtnjcXzObsb+/874SVbPwMkIuBhQLIlI4CZM=;
+        b=gYl6CKX21FMiNIqeD3kbMdcJ174wZUo1YcoBzAbDxwaDVu2M2RwPYLDuhxRPk4/s/5
+         JmBmuojdVsJ8MmKsMeyoUpdLtLVDi+vRvN2X3SLVdEakJJDUtoz4NbvvLT/Kjsn4X//t
+         fD2DPZVP82s7LqU00VW3f+a1Lm2TxLSIIU9HByrEwFef8T0FoYalcp51Ck7C7rJDx1hJ
+         eFbrYLgoHZyIAi1lFdU6EjN/Xk8lfOMLbKMM343euYlodAkzaKdNTGCx7ZxbyEap+pEa
+         x39vxlLkUqjJfUwi6xt4wmmudgwV8UcF4ktXFNJZ9QL6uB3RjAjamS74FaM5jCds0fHG
+         Q9AQ==
+X-Gm-Message-State: AOAM5326xgXCTCQcgqlers61tnPmGFB9lZlepRuvGeAnOUkSeFmtuGq0
+        mYLEhSwGFIb/v68S8hYCHmk=
+X-Google-Smtp-Source: ABdhPJzOq8W6oJ7zbNNa9MtZYlaSXjqpt3zJt4cheftVIQmtnRlBg69d7Ldz6V44iDsqa3H3HqV9uQ==
+X-Received: by 2002:a9d:3a5:: with SMTP id f34mr18020274otf.348.1626681447242;
+        Mon, 19 Jul 2021 00:57:27 -0700 (PDT)
+Received: from kessel ([12.23.111.199])
+        by smtp.gmail.com with ESMTPSA id s7sm1303820ool.14.2021.07.19.00.57.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jul 2021 00:57:26 -0700 (PDT)
+Date:   Mon, 19 Jul 2021 00:57:23 -0700
+From:   Gregory Fong <gregory.0xf0@gmail.com>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, f.fainelli@gmail.com,
+        matthias.bgg@gmail.com, opensource@vdorst.com,
+        andy.shevchenko@gmail.com, git@johnthomson.fastmail.com.au,
+        neil@brown.name, hofrat@osadl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] gpiolib: convert 'devprop_gpiochip_set_names' to
+ support multiple gpiochip baks per device
+Message-ID: <20210719075723.GA8818@kessel>
+References: <20210708070429.31871-1-sergio.paracuellos@gmail.com>
+ <20210708070429.31871-2-sergio.paracuellos@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c2a2709a-51a1-4958-24a4-08d94a7054fd
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4337:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB43379BE7B044FF4004ADFB02C0E19@DM6PR12MB4337.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1284;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5NZCLkl88BnlbAllZpfKh6z+U58DWo2nPaRDosetS8VBQZn+jRq9vaCCDvUBqA/89/NRziGJKLEZlpUihvMskMcJ+b3/K2tEW3Dh9eetvquaxxQkZlvV9Y/XIZNSlB1lKiZ/rllYLeRnX80Sp+1NpIMG9o7Ld/WlgkuThX3SUKzwm+W32TaSo3rfVTIaQnlpAXkGe6QsFit5vbcFZBjh8sGt1CFG4vmEuGu2aOd1TCMxEUKLVvtXT4qhJBSSmGXPJ+lY+xDUR1JsoV/EPMqgQ1nDWDOk6XfS3VMkFHuzDng3cCDURh1Uo/gdjaKYvQxvLaa0ezkYbACZBYP6ZO2KGlNhQj8K20mU+BWXkng/RL0Z+j/0MbvVi8og+/DHLdI4PB3gKi+mqjjfgZqOtUXpg6dHjHH9zKZvHhWZChmujrAnuq893wuamwQHN2yTrpiZWO4r3SkD8b8YVz4ShvGJuRVutwKGyDaoOnTe//uAdg5Vf4JVsqLcoNUFHyh6yg1kRIJORZoQ/hGknKJU2QBPO0qVdDCw0bCxgA410TK7Frl1Y6VMn7z61kp5cKqAmYZe8DWPfi5f0DzvKdZJe7Xuy732vssiY1yLUK8ASvlQGBAiqpSfSWI4hJqVNIBnJ+r5fGlWeEhu6/odwRuJf7b8YvjHO5syUjcELakesBHxPvGjVQg5gBvdcnx/bO2XyRXA1npgBJ2/3c0gtN8/HU4V8A==
-X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid02.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(396003)(136003)(346002)(376002)(36840700001)(46966006)(8676002)(7696005)(5660300002)(356005)(54906003)(8936002)(82310400003)(316002)(36906005)(7636003)(36860700001)(70206006)(6666004)(36756003)(6916009)(336012)(426003)(478600001)(83380400001)(186003)(86362001)(2906002)(82740400003)(47076005)(2616005)(70586007)(4326008)(26005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2021 04:47:37.1135
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2a2709a-51a1-4958-24a4-08d94a7054fd
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT018.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4337
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210708070429.31871-2-sergio.paracuellos@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add ACPI module ID to probe the driver from the ACPI based bootloader
-firmware.
+Hi Sergio,
 
-Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
----
-v6 changes:
-	* Rebased on top of v5.14-rc1
+On Thu, Jul 08, 2021 at 09:04:27AM +0200, Sergio Paracuellos wrote:
+> The default gpiolib-of implementation does not work with the multiple
+> gpiochip banks per device structure used for example by the gpio-mt7621
+> and gpio-brcmstb drivers. To fix these kind of situations driver code
+> is forced to fill the names to avoid the gpiolib code to set names
+> repeated along the banks. Instead of continue with that antipattern
+> fix the gpiolib core function to get expected behaviour for every
+> single situation adding a field 'offset' in the gpiochip structure.
+> Doing in this way, we can assume this offset will be zero for normal
+> driver code where only one gpiochip bank per device is used but
+> can be set explicitly in those drivers that really need more than
+> one gpiochip.
 
- drivers/gpio/gpio-tegra186.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+This is a nice improvement, thanks for putting this together!  A few
+remarks below:
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index d38980b..046b7c8 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -610,15 +610,21 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 	if (!gpio)
- 		return -ENOMEM;
- 
--	gpio->soc = of_device_get_match_data(&pdev->dev);
-+	gpio->soc = device_get_match_data(&pdev->dev);
- 
- 	gpio->secure = devm_platform_ioremap_resource_byname(pdev, "security");
--	if (IS_ERR(gpio->secure))
--		return PTR_ERR(gpio->secure);
-+	if (IS_ERR(gpio->secure)) {
-+		gpio->secure = devm_platform_ioremap_resource(pdev, 0);
-+		if (IS_ERR(gpio->secure))
-+			return PTR_ERR(gpio->secure);
-+	}
- 
- 	gpio->base = devm_platform_ioremap_resource_byname(pdev, "gpio");
--	if (IS_ERR(gpio->base))
--		return PTR_ERR(gpio->base);
-+	if (IS_ERR(gpio->base)) {
-+		gpio->base = devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(gpio->base))
-+			return PTR_ERR(gpio->base);
-+	}
- 
- 	err = platform_irq_count(pdev);
- 	if (err < 0)
-@@ -680,11 +686,13 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 
- 	gpio->gpio.names = (const char * const *)names;
- 
-+#if defined(CONFIG_OF_GPIO)
- 	gpio->gpio.of_node = pdev->dev.of_node;
- 	gpio->gpio.of_gpio_n_cells = 2;
- 	gpio->gpio.of_xlate = tegra186_gpio_of_xlate;
-+#endif /* CONFIG_OF_GPIO */
- 
--	gpio->intc.name = pdev->dev.of_node->name;
-+	gpio->intc.name = dev_name(&pdev->dev);
- 	gpio->intc.irq_ack = tegra186_irq_ack;
- 	gpio->intc.irq_mask = tegra186_irq_mask;
- 	gpio->intc.irq_unmask = tegra186_irq_unmask;
-@@ -896,10 +904,20 @@ static const struct of_device_id tegra186_gpio_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, tegra186_gpio_of_match);
- 
-+static const struct acpi_device_id  tegra186_gpio_acpi_match[] = {
-+	{ .id = "NVDA0108", .driver_data = (kernel_ulong_t)&tegra186_main_soc },
-+	{ .id = "NVDA0208", .driver_data = (kernel_ulong_t)&tegra186_aon_soc },
-+	{ .id = "NVDA0308", .driver_data = (kernel_ulong_t)&tegra194_main_soc },
-+	{ .id = "NVDA0408", .driver_data = (kernel_ulong_t)&tegra194_aon_soc },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, tegra186_gpio_acpi_match);
-+
- static struct platform_driver tegra186_gpio_driver = {
- 	.driver = {
- 		.name = "tegra186-gpio",
- 		.of_match_table = tegra186_gpio_of_match,
-+		.acpi_match_table = tegra186_gpio_acpi_match,
- 	},
- 	.probe = tegra186_gpio_probe,
- };
--- 
-2.7.4
+> 
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> ---
+>  drivers/gpio/gpiolib.c      | 34 ++++++++++++++++++++++++++++------
+>  include/linux/gpio/driver.h |  4 ++++
+>  2 files changed, 32 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 27c07108496d..f3f45b804542 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -382,11 +382,16 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+>  	if (count < 0)
+>  		return 0;
+>  
+> -	if (count > gdev->ngpio) {
+> -		dev_warn(&gdev->dev, "gpio-line-names is length %d but should be at most length %d",
+> -			 count, gdev->ngpio);
+> -		count = gdev->ngpio;
+> -	}
+> +	/*
+> +	 * When offset is set in the driver side we assume the driver internally
+> +	 * is using more than one gpiochip per the same device. We have to stop
+> +	 * setting friendly names if the specified ones with 'gpio-line-names'
+> +	 * are less than the offset in the device itself. This means all the
+> +	 * lines are not present for every single pin within all the internal
+> +	 * gpiochips.
+> +	 */
+> +	if (count <= chip->offset)
+> +		return 0;
 
+This case needs a descriptive warning message.  Silent failure to assign
+names here will leave someone confused about what they're doing wrong.
+
+>  
+>  	names = kcalloc(count, sizeof(*names), GFP_KERNEL);
+>  	if (!names)
+> @@ -400,8 +405,25 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+>  		return ret;
+>  	}
+>  
+> +	/*
+> +	 * When more that one gpiochip per device is used, 'count' can
+> +	 * contain at most number gpiochips x chip->ngpio. We have to
+> +	 * correctly distribute all defined lines taking into account
+> +	 * chip->offset as starting point from where we will assign
+> +	 * the names to pins from the 'names' array. Since property
+> +	 * 'gpio-line-names' cannot contains gaps, we have to be sure
+> +	 * we only assign those pins that really exists since chip->ngpio
+> +	 * can be different of the chip->offset.
+> +	 */
+> +	count = (count > chip->offset) ? count - chip->offset : count;
+> +	if (count > chip->ngpio) {
+
+In the multiple gpiochip case, if there are 3+ gpiochips this seems like
+it will yield an invalid warning. For example, if there are 3 gpiochips
+(banks 0, 1, and 2), and all gpios are given names in gpio-line-names,
+isn't this condition going to always evaluate to true for bank 1,
+resulting in an invalid warning?  In that case I would think setting
+count to chip->ngpio is the *expected* behavior.
+
+Since that's a "normal" behavior in the multiple gpiochip case, I'm not
+sure there's a simple way to detect an over-long gpio-line-names here
+in this function anymore.
+
+> +		dev_warn(&gdev->dev, "gpio-line-names is length %d but
+> should be at most length %d", +			 count,
+> chip->ngpio);
+> +		count = chip->ngpio; +	} + for (i = 0; i < count; i++)
+> -		gdev->descs[i].name = names[i]; +
+> gdev->descs[i].name = names[chip->offset + i];
+>  
+>  	kfree(names);
+>  
+> [snip]
+
+Best regards,
+Gregory
