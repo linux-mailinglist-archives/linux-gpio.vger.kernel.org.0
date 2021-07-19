@@ -2,135 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 989693CD3E6
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jul 2021 13:31:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 267723CD6A7
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jul 2021 16:36:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236318AbhGSKtD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jul 2021 06:49:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35644 "EHLO mail.kernel.org"
+        id S240680AbhGSN4Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jul 2021 09:56:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236076AbhGSKtD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 19 Jul 2021 06:49:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3329560698;
-        Mon, 19 Jul 2021 11:29:42 +0000 (UTC)
+        id S231618AbhGSN4Q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 19 Jul 2021 09:56:16 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 431D3610F7;
+        Mon, 19 Jul 2021 14:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626694183;
-        bh=8Bai57AVnBGXhgLKTPt1Og3K+sXqao8LMy9Cl9/cmI8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rQy4u4bJEh5hCRXk7UQYQjSrEIglO250NaZZUDk72bF7OUde601Iy1sO+tD+sXPwp
-         cRLgc97YvyOBJowK83ueXZU35Z03HuTdSejcTuFNNdkoVGTHlkOnCl90u90lKmCmw5
-         Thy/TI+df0giiolVjGOPvRAgg34SqfN0j+AWU15xBbV3f/dIFCyLClwzJL2YDQeFkA
-         tH06xsL9sXHGpjK+GiW/AtdIHPukkabIx7uMjqWQbG1CSteg5gMBY7eLc0KwFTBvMP
-         oyeN4QqXd2P98SnGb2H7NUUhJUsSnTKdugC0ap/tg9l4OeIDA/zU0HrA50cyzq8MF/
-         VLYbbN4ago1ZQ==
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>
-Cc:     Patrick Williams <alpawi@amazon.com>, pali@kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2] pinctrl: armada-37xx: Correct PWM pins definitions
-Date:   Mon, 19 Jul 2021 13:29:38 +0200
-Message-Id: <20210719112938.27594-1-kabel@kernel.org>
-X-Mailer: git-send-email 2.31.1
+        s=k20201202; t=1626705416;
+        bh=mhN+6XFHGuuvmrVr2yFFaQSZ906VYeQjF1XqdvS2+RA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WjjLIdW9lZ877buxXIbsbOKoNmokA5xO+oy/fQYIBju9wMX8xVFbCitcm3saC5VUR
+         xvrzLFfRLGjdzAmHbL7ImjA+UuNymqdm3PztZtL7yQEIL+3mQiLitDYJkn4XamH6kJ
+         j22SRvsXm0DzCNTgFQvHgdW1RBMWRf/gme6l00CYVolvOldusjLSNhvmptOuO16GgJ
+         CurhQ2Qau01CihsadccGiXDZMWrluVTmF7sdnWfIl8WIlcaTwVLo4tRLyLPLtzY6Ea
+         EU46t04MQCIbT8m2vsehXv766QiaWJ1nNIz8vmxjWWPM30hwlgbhQ2AjI9iz5sdPHF
+         h/dgLdS9Uz+gg==
+Received: by earth.universe (Postfix, from userid 1000)
+        id 3ED123C0C98; Mon, 19 Jul 2021 16:36:54 +0200 (CEST)
+Date:   Mon, 19 Jul 2021 16:36:54 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>,
+        Dirk Opfer <dirk@opfer-online.de>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ARM/pxa/mfd/power/sound: Switch Tosa to GPIO descriptors
+Message-ID: <20210719143654.xnefdgihckvd6ipo@earth.universe>
+References: <20210715151625.394960-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="knurw6njbqijvhwr"
+Content-Disposition: inline
+In-Reply-To: <20210715151625.394960-1-linus.walleij@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The PWM pins on North Bridge on Armada 37xx can be configured into PWM
-or GPIO functions. When in PWM function, each pin can also be configured
-to drive low on 0 and tri-state on 1 (LED mode).
 
-The current definitions handle this by declaring two pin groups for each
-pin:
-- group "pwmN" with functions "pwm" and "gpio"
-- group "ledN_od" ("od" for open drain) with functions "led" and "gpio"
+--knurw6njbqijvhwr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is semantically incorrect. The correct definition for each pin
-should be one group with three functions: "pwm", "led" and "gpio".
+Hi,
 
-Change the "pwmN" groups to support "led" function.
+On Thu, Jul 15, 2021 at 05:16:25PM +0200, Linus Walleij wrote:
+> The Tosa device (Sharp SL-6000) has a mishmash driver set-up
+> for the Toshiba TC6393xb MFD that includes a battery charger
+> and touchscreen and has some kind of relationship to the SoC
+> sound driver for the AC97 codec. Other devices define a chip
+> like this but seem only half-implemented, not really handling
+> battery charging etc.
+>=20
+> This patch switches the Toshiba MFD device to provide GPIO
+> descriptors to the battery charger and SoC codec. As a result
+> some descriptors need to be moved out of the Tosa boardfile
+> and new one added: all SoC GPIO resources to these drivers
+> now comes from the main boardfile, while the MFD provide
+> GPIOs for its portions.
+>=20
+> As a result we can request one GPIO from our own GPIO chip
+> and drop two hairy callbacks into the board file.
+>=20
+> This platform badly needs to have its drivers split up and
+> converted to device tree probing to handle this quite complex
+> relationship in an orderly manner. I just do my best in solving
+> the GPIO descriptor part of the puzzle. Please don't ask me
+> to fix everything that is wrong with these driver to todays
+> standards, I am just trying to fix one aspect. I do try to
+> use modern devres resource management and handle deferred
+> probe using new functions where appropriate.
 
-Remove "ledN_od" groups. This cannot break backwards compatibility with
-older device trees: no device tree uses it since there is no PWM driver
-for this SOC yet. Also "ledN_od" groups are not even documented.
+Yeah, the wm97xx-battery situation is a huge mess with
+two different drivers for the same hardware on different
+platforms :(
 
-Fixes: b835d6953009 ("pinctrl: armada-37xx: swap polarity on LED group")
-Signed-off-by: Marek Behún <kabel@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Since v1 I've added Fixes tag and Rob's Acked-by.
----
- .../pinctrl/marvell,armada-37xx-pinctrl.txt      |  8 ++++----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c      | 16 ++++++++--------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+> Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+> Cc: Dirk Opfer <dirk@opfer-online.de>
+> Cc: Robert Jarzmik <robert.jarzmik@free.fr>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Dmitry/Dirk: it'd be great if you could test this patch on
+> the Tosa and try to help me iron out any bugs.
+>=20
+> Merging strategy: please provide ACKs and I will attempt
+> to merge this through the SoC tree.
+> ---
+>  drivers/power/supply/tosa_battery.c   | 171 ++++++++++++++++----------
+> [...]
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
-index 38dc56a57760..ecec514b3155 100644
---- a/Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctrl.txt
-@@ -43,19 +43,19 @@ group emmc_nb
- 
- group pwm0
-  - pin 11 (GPIO1-11)
-- - functions pwm, gpio
-+ - functions pwm, led, gpio
- 
- group pwm1
-  - pin 12
-- - functions pwm, gpio
-+ - functions pwm, led, gpio
- 
- group pwm2
-  - pin 13
-- - functions pwm, gpio
-+ - functions pwm, led, gpio
- 
- group pwm3
-  - pin 14
-- - functions pwm, gpio
-+ - functions pwm, led, gpio
- 
- group pmic1
-  - pin 7
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 5a68e242f6b3..5cb018f98800 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -167,10 +167,14 @@ static struct armada_37xx_pin_group armada_37xx_nb_groups[] = {
- 	PIN_GRP_GPIO("jtag", 20, 5, BIT(0), "jtag"),
- 	PIN_GRP_GPIO("sdio0", 8, 3, BIT(1), "sdio"),
- 	PIN_GRP_GPIO("emmc_nb", 27, 9, BIT(2), "emmc"),
--	PIN_GRP_GPIO("pwm0", 11, 1, BIT(3), "pwm"),
--	PIN_GRP_GPIO("pwm1", 12, 1, BIT(4), "pwm"),
--	PIN_GRP_GPIO("pwm2", 13, 1, BIT(5), "pwm"),
--	PIN_GRP_GPIO("pwm3", 14, 1, BIT(6), "pwm"),
-+	PIN_GRP_GPIO_3("pwm0", 11, 1, BIT(3) | BIT(20), 0, BIT(20), BIT(3),
-+		       "pwm", "led"),
-+	PIN_GRP_GPIO_3("pwm1", 12, 1, BIT(4) | BIT(21), 0, BIT(21), BIT(4),
-+		       "pwm", "led"),
-+	PIN_GRP_GPIO_3("pwm2", 13, 1, BIT(5) | BIT(22), 0, BIT(22), BIT(5),
-+		       "pwm", "led"),
-+	PIN_GRP_GPIO_3("pwm3", 14, 1, BIT(6) | BIT(23), 0, BIT(23), BIT(6),
-+		       "pwm", "led"),
- 	PIN_GRP_GPIO("pmic1", 7, 1, BIT(7), "pmic"),
- 	PIN_GRP_GPIO("pmic0", 6, 1, BIT(8), "pmic"),
- 	PIN_GRP_GPIO("i2c2", 2, 2, BIT(9), "i2c"),
-@@ -184,10 +188,6 @@ static struct armada_37xx_pin_group armada_37xx_nb_groups[] = {
- 	PIN_GRP_EXTRA("uart2", 9, 2, BIT(1) | BIT(13) | BIT(14) | BIT(19),
- 		      BIT(1) | BIT(13) | BIT(14), BIT(1) | BIT(19),
- 		      18, 2, "gpio", "uart"),
--	PIN_GRP_GPIO_2("led0_od", 11, 1, BIT(20), BIT(20), 0, "led"),
--	PIN_GRP_GPIO_2("led1_od", 12, 1, BIT(21), BIT(21), 0, "led"),
--	PIN_GRP_GPIO_2("led2_od", 13, 1, BIT(22), BIT(22), 0, "led"),
--	PIN_GRP_GPIO_2("led3_od", 14, 1, BIT(23), BIT(23), 0, "led"),
- };
- 
- static struct armada_37xx_pin_group armada_37xx_sb_groups[] = {
--- 
-2.31.1
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
+-- Sebastian
+
+--knurw6njbqijvhwr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmD1jf8ACgkQ2O7X88g7
++pqzaxAAhHdHnDIcpqqYRZgFkFyO8hfZLW/0G0cNAfDWuueBGoK5TCPS6QKSrktK
+hLApGZmNW97Xp1O3EJgixy6Knci69+qdqpgpMXOPMLgYkyYTj8wUexadnLSVnp0m
+saNe9glCAmX1Quu9OclMF28KyYFdc2mbKZT/5yv6FGm2Bxs/h3qDcHKYNQP7Rnrt
+GiKaxhu2z0Z98qlXrKpCI9pDeJU8o2d6ZDfRY5yXtL/pvXv0eBI4/2blKLxnZNq5
+EdexXDp/bGoOuTyOX4a5SsYh//C2bzl8het/d5Tju6ZEGkJuW1fV+obgO6bG9ckU
+yBrninBdHFwfQIf9rxXhdO0iBxGZX0/eCQvRtymDvBH9v0ICKNkGFuPjCtmmMUqk
+MvpgoKFU8p2redht3DPTYLZ0PlzfIgDKIm0CEqhCaQPWGprY/jkrklv/VJN9Kj2L
+UgmN8i+sIRcgxuUKUKg5/QHz9oUAmqAqWYFp9cB2EIUplo2b2xLubWQ8MUqg4/i6
+mo8OBrm8+2WhWIiO9+L2C4g+UYbZi5d8OC27cP8ZMYGKchiw1bYcp/M+AHyhxzon
+il7tVEoSuE/q/C3xDmPNTOawuQtF2vhk8bHkYWayC2fqIifXFoj+UBMVUxKsarHn
+Kvt4Xmsgal2u2YdZB6ySXNg/prAj5kGat5H6IVUXzS9xMEhmhE4=
+=2aop
+-----END PGP SIGNATURE-----
+
+--knurw6njbqijvhwr--
