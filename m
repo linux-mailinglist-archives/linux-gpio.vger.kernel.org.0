@@ -2,285 +2,315 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2AEA3CD1B6
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jul 2021 12:18:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DA0E3CD2A1
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jul 2021 12:59:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236216AbhGSJfO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jul 2021 05:35:14 -0400
-Received: from so254-9.mailgun.net ([198.61.254.9]:30454 "EHLO
-        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236154AbhGSJfN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jul 2021 05:35:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1626689753; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=hPHHoneMDulXJqs+lPrFDQONVnYTG8TuwzUDsbTUqNw=;
- b=VteqKfJsZlIWASD6yY1C0CjJ4p/vahRCmsoA/Gtss0A00udPrhrqarSrKJbBQJAtffIirYXu
- CbgGUaLYYtF9V6+yeo73ai4xy3uzS0Mvcuvo2tCQnbF8Vf8uGy5Ab8CI0HMJwj0uBJneRFyr
- j44AD9VdXvjwEz52L/a5WWXn6rg=
-X-Mailgun-Sending-Ip: 198.61.254.9
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 60f550ccc923fb7e0943bcf8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 19 Jul 2021 10:15:40
- GMT
-Sender: skakit=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A60FBC43460; Mon, 19 Jul 2021 10:15:39 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: skakit)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6C30C433F1;
-        Mon, 19 Jul 2021 10:15:38 +0000 (UTC)
+        id S236649AbhGSKF6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jul 2021 06:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236570AbhGSKF5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jul 2021 06:05:57 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615A1C061766
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jul 2021 02:54:24 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id m2so21480909wrq.2
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jul 2021 03:46:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=5ncXnlqgE4q5bQDJOQx33EL294v17db91qKDspkowjQ=;
+        b=ungfp4cTXQ44y4KuTxVLcf1GGvurYO8TLwbQKMgP74ALdslAVaFdsPuMlRxU4pAnmK
+         pC8mWs7URc3r9WRx9HHTjmk0zhwg1j0IT7BhQMGvZCeVXavOxFIYi+hry5cTouXjXSM4
+         f6rQm5cM+95BGiGzy3N/qEj32mPCJz9J83bmarGUZEJc63/4Gts/KZUMV0Aakubh5RAL
+         4WHg7eSvlxej3s8fQbXp4K7cunElN+xETCQOt3HRChnKs7inGvfYgistkjmHgCoU8Rb9
+         f2c0EtA5ywUpQ19Ec0+XwOo2qS2AzVpGR8RWQiYz+rXGOmzWoWxnG8cqGGnRUk6zKxD7
+         SfTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=5ncXnlqgE4q5bQDJOQx33EL294v17db91qKDspkowjQ=;
+        b=oMYrGJ3mjGExtK6mzAPyha3L159I8Nwmhbm3M30W5dTufMMFUOAaNVYPaGSnwqqlMK
+         Xe8ROQ0iNooSdfXGMzZv7xuABKOwART23dmVE9PbVEYtTal/WsT+ApUIn1TTH2KQn+rA
+         rhT19Pwwcw8oGEOUh2zl5tUaudMX+h6pILgOnOfWtjCfT2KnmHltwH9cspBIv2xVThGq
+         HUdhSVfIgdEoGJZq3fxqlqtMNU34HdLPjCI9N4ZZ0N7QDDQvfS7Lw3Cj4WuIvLH6gyhe
+         Ben8Ynfa/S/0MRoRMyCBlwGXgJfIAftP2PNRkVauTNPTChA5Umbsgdv7fHlZdoLPhtIj
+         U+kw==
+X-Gm-Message-State: AOAM530kYylAGVHYWacPPsIvEY+WwIaDJHEoVBOmTxaBu0iKwpesnWO4
+        o+DwO0k03KTtEOjKj4DQ4zN/EA==
+X-Google-Smtp-Source: ABdhPJwUaYjrRPSzqoEsjQXPLH0r3dGAN4SRfhoJE2clHeZ1L9JYNPGK0AECgxfvyguoDFVppkgFFw==
+X-Received: by 2002:a5d:598f:: with SMTP id n15mr10849112wri.133.1626691594242;
+        Mon, 19 Jul 2021 03:46:34 -0700 (PDT)
+Received: from google.com ([31.124.24.141])
+        by smtp.gmail.com with ESMTPSA id h20sm12758613wmb.17.2021.07.19.03.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jul 2021 03:46:33 -0700 (PDT)
+Date:   Mon, 19 Jul 2021 11:46:31 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Donald Buczek <buczek@molgen.mpg.de>
+Subject: Re: [PATCH v6 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers
+ bindings
+Message-ID: <YPVYB/biVd4/Z1wn@google.com>
+References: <20210607123317.3242031-1-robert.marko@sartura.hr>
+ <20210607123317.3242031-5-robert.marko@sartura.hr>
+ <CA+HBbNH7wcpfQOX2=vZmW78GoWy_WL3Pz-dMKe0N0ebZDp+oUw@mail.gmail.com>
+ <20210713222528.GA952399@robh.at.kernel.org>
+ <CA+HBbNFj5+6sLKxmL8XtsZQ48ch8OjTbJ1bwkDC8dfRiOyWY1Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 19 Jul 2021 15:45:38 +0530
-From:   skakit@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, kgunda@codeaurora.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V5 1/2] dt-bindings: pinctrl: qcom-pmic-gpio: Convert qcom
- pmic gpio bindings to YAML
-In-Reply-To: <YO5QErHuGaPhU41k@yoga>
-References: <1625032241-3458-1-git-send-email-skakit@codeaurora.org>
- <1625032241-3458-2-git-send-email-skakit@codeaurora.org>
- <YO5QErHuGaPhU41k@yoga>
-Message-ID: <1007ff398382189c10474ca7178a3b0a@codeaurora.org>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+HBbNFj5+6sLKxmL8XtsZQ48ch8OjTbJ1bwkDC8dfRiOyWY1Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2021-07-14 08:16, Bjorn Andersson wrote:
-> On Wed 30 Jun 00:50 CDT 2021, satya priya wrote:
-> 
->> Convert Qualcomm PMIC GPIO bindings from .txt to .yaml format.
->> 
-> 
-> Thanks for updating this Satya, this is looking quite good now. Just 
-> got
-> one issue with the definition of the state child node.
-> 
-[..]
->> +
->> +  interrupts:
->> +    minItems: 1
->> +    maxItems: 44
->> +    description: |
->> +        Must contain an array of encoded interrupt specifiers for
->> +        each available GPIO
->> +
->> +  '#interrupt-cells':
->> +    const: 2
->> +
->> +  interrupt-controller: true
->> +
->> +  gpio-controller: true
->> +
->> +  gpio-ranges:
->> +    maxItems: 1
->> +
->> +  '#gpio-cells':
->> +    const: 2
->> +    description: |
-> 
-> Not need for the '|', as the formatting isn't significant.
-> 
+On Sun, 18 Jul 2021, Robert Marko wrote:
 
-Okay.
+> On Wed, Jul 14, 2021 at 12:25 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Jun 25, 2021 at 01:46:08PM +0200, Robert Marko wrote:
+> > > On Mon, Jun 7, 2021 at 2:33 PM Robert Marko <robert.marko@sartura.hr> wrote:
+> > > >
+> > > > Add binding documents for the Delta TN48M CPLD drivers.
+> > > >
+> > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > > > ---
+> > > > Changes in v3:
+> > > > * Include bindings for reset driver
+> > > >
+> > > > Changes in v2:
+> > > > * Implement MFD as a simple I2C MFD
+> > > > * Add GPIO bindings as separate
+> > > >
+> > > >  .../bindings/gpio/delta,tn48m-gpio.yaml       | 42 +++++++++
+> > > >  .../bindings/mfd/delta,tn48m-cpld.yaml        | 90 +++++++++++++++++++
+> > > >  .../bindings/reset/delta,tn48m-reset.yaml     | 35 ++++++++
+> > > >  3 files changed, 167 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
+> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+> > > >  create mode 100644 Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml b/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..aca646aecb12
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
+> > > > @@ -0,0 +1,42 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/gpio/delta,tn48m-gpio.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Delta Networks TN48M CPLD GPIO controller
+> > > > +
+> > > > +maintainers:
+> > > > +  - Robert Marko <robert.marko@sartura.hr>
+> > > > +
+> > > > +description: |
+> > > > +  This module is part of the Delta TN48M multi-function device. For more
+> > > > +  details see ../mfd/delta,tn48m-cpld.yaml.
+> > > > +
+> > > > +  GPIO controller module provides GPIO-s for the SFP slots.
+> > > > +  It is split into 3 controllers, one output only for the SFP TX disable
+> > > > +  pins, one input only for the SFP present pins and one input only for
+> > > > +  the SFP LOS pins.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - delta,tn48m-gpio-sfp-tx-disable
+> > > > +      - delta,tn48m-gpio-sfp-present
+> > > > +      - delta,tn48m-gpio-sfp-los
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  "#gpio-cells":
+> > > > +    const: 2
+> > > > +
+> > > > +  gpio-controller: true
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - "#gpio-cells"
+> > > > +  - gpio-controller
+> > > > +
+> > > > +additionalProperties: false
+> > > > diff --git a/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml b/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..2c6e2adf73ca
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+> > > > @@ -0,0 +1,90 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/mfd/delta,tn48m-cpld.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Delta Networks TN48M CPLD controller
+> > > > +
+> > > > +maintainers:
+> > > > +  - Robert Marko <robert.marko@sartura.hr>
+> > > > +
+> > > > +description: |
+> > > > +  Lattice CPLD onboard the TN48M switches is used for system
+> > > > +  management.
+> > > > +
+> > > > +  It provides information about the hardware model, revision,
+> > > > +  PSU status etc.
+> > > > +
+> > > > +  It is also being used as a GPIO expander for the SFP slots and
+> > > > +  reset controller for the switch MAC-s and other peripherals.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: delta,tn48m-cpld
+> > > > +
+> > > > +  reg:
+> > > > +    description:
+> > > > +      I2C device address.
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  "#address-cells":
+> > > > +    const: 1
+> > > > +
+> > > > +  "#size-cells":
+> > > > +    const: 0
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - "#address-cells"
+> > > > +  - "#size-cells"
+> > > > +
+> > > > +patternProperties:
+> > > > +  "^gpio(@[0-9a-f]+)?$":
+> > > > +    $ref: ../gpio/delta,tn48m-gpio.yaml
+> > > > +
+> > > > +  "^reset-controller?$":
+> > > > +    $ref: ../reset/delta,tn48m-reset.yaml
+> > > > +
+> > > > +additionalProperties: false
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    i2c {
+> > > > +        #address-cells = <1>;
+> > > > +        #size-cells = <0>;
+> > > > +
+> > > > +        cpld@41 {
+> > > > +            compatible = "delta,tn48m-cpld";
+> > > > +            reg = <0x41>;
+> > > > +            #address-cells = <1>;
+> > > > +            #size-cells = <0>;
+> > > > +
+> > > > +            gpio@31 {
+> > > > +                compatible = "delta,tn48m-gpio-sfp-tx-disable";
+> > > > +                reg = <0x31>;
+> > > > +                gpio-controller;
+> > > > +                #gpio-cells = <2>;
+> > > > +            };
+> > > > +
+> > > > +            gpio@3a {
+> > > > +                compatible = "delta,tn48m-gpio-sfp-present";
+> > > > +                reg = <0x3a>;
+> > > > +                gpio-controller;
+> > > > +                #gpio-cells = <2>;
+> > > > +            };
+> > > > +
+> > > > +            gpio@40 {
+> > > > +                compatible = "delta,tn48m-gpio-sfp-los";
+> > > > +                reg = <0x40>;
+> > > > +                gpio-controller;
+> > > > +                #gpio-cells = <2>;
+> > > > +            };
+> > > > +
+> > > > +            reset-controller {
+> > > > +              compatible = "delta,tn48m-reset";
+> > > > +              #reset-cells = <1>;
+> > > > +            };
+> > > > +        };
+> > > > +    };
+> > > > diff --git a/Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml b/Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..0e5ee8decc0d
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
+> > > > @@ -0,0 +1,35 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/reset/delta,tn48m-reset.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Delta Networks TN48M CPLD reset controller
+> > > > +
+> > > > +maintainers:
+> > > > +  - Robert Marko <robert.marko@sartura.hr>
+> > > > +
+> > > > +description: |
+> > > > +  This module is part of the Delta TN48M multi-function device. For more
+> > > > +  details see ../mfd/delta,tn48m-cpld.yaml.
+> > > > +
+> > > > +  Reset controller modules provides resets for the following:
+> > > > +  * 88F7040 SoC
+> > > > +  * 88F6820 SoC
+> > > > +  * 98DX3265 switch MAC-s
+> > > > +  * 88E1680 PHY-s
+> > > > +  * 88E1512 PHY
+> > > > +  * PoE PSE controller
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: delta,tn48m-reset
+> > > > +
+> > > > +  "#reset-cells":
+> > > > +    const: 1
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - "#reset-cells"
+> > > > +
+> > > > +additionalProperties: false
+> > > >
+> > >
+> > > Are there any issues with the bindings?
+> >
+> > Yes. Primarily the GPIO function being part of the compatible. I'm
+> > surprised Linus W is okay with that.
+> 
+> I think I already explained this before, having a single compatible
+> won't work here.
+> Then there would not be anything to know whether its input or output
+> only as the pins have specific purpose.
 
->> +        The first cell will be used to define gpio number and the
->> +        second denotes the flags for this gpio
->> +
->> +additionalProperties: false
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - gpio-controller
->> +  - '#gpio-cells'
->> +  - gpio-ranges
->> +
->> +patternProperties:
->> +  '.*':
-> 
-> I would prefer this match to follow tlmm and go '-state$'
-> 
+Properties?
 
-okay.
+> And knowing the capabilites is a requirment of the GPIO regmap driver
+> and the GPIO
+> core itself as it exposes that information in a generic manner and
+> driver like for the
+> SFP bus use that.
 
->> +    anyOf:
-> 
-> Either we want the immediate child node to match gpio-pinctrl-state
-> or we want one of more children matching gpio-pinctrl-state, but not
-> both. So "oneOf".
-> 
-
-Okay.
-
->> +      - $ref: "pinmux-node.yaml"
->> +      - $ref: "pincfg-node.yaml"
-> 
-> The generic definition is not sufficient, you want this to be
-> 
-> 	- $ref: "#/$defs/gpio-pinctrl-state"
-> 
-
-Okay, I will add this ref and remove generic ones as we are already 
-referring them in 'qcom-pmic-gpio-state' definition.
-
->> +      - patternProperties:
->> +          ".*":
-> 
-> The subnodes of the state can be named whatever, so this (the .*) is
-> good.
-> 
->> +            $ref: "#/$defs/gpio-pinctrl-state"
->> +
->> +$defs:
->> +  gpio-pinctrl-state:
-> 
-> This is too generic, how about qcom-pmic-gpio-state?
-> 
-
-ok.
-
->> +    type: object
->> +    anyOf:
-> 
-> I have this as "allOf" in the TLMM binding, not entirely sure what the
-> implications of anyOf here would be though...
-> 
-
-Sure, will change it to allOf.
-
->> +      - $ref: "pinmux-node.yaml"
->> +      - $ref: "pincfg-node.yaml"
->> +    properties:
->> +      pins:
->> +        description: |
->> +            List of gpio pins affected by the properties specified in
->> +            this subnode.  Valid pins are
->> +                 - gpio1-gpio10 for pm6150
->> +                 - gpio1-gpio12 for pm6150l
->> +                 - gpio1-gpio10 for pm7325
->> +                 - gpio1-gpio4 for pm8005
->> +                 - gpio1-gpio2 for pm8008
->> +                 - gpio1-gpio6 for pm8018
->> +                 - gpio1-gpio12 for pm8038
->> +                 - gpio1-gpio40 for pm8058
->> +                 - gpio1-gpio10 for pm8150 (holes on gpio2, gpio5,
->> +                                            gpio7 and gpio8)
->> +                 - gpio1-gpio12 for pm8150b (holes on gpio3, gpio4
->> +                                             and gpio7)
->> +                 - gpio1-gpio12 for pm8150l (hole on gpio7)
->> +                 - gpio1-gpio4 for pm8916
->> +                 - gpio1-gpio10 for pm8350
->> +                 - gpio1-gpio8 for pm8350b
->> +                 - gpio1-gpio9 for pm8350c
->> +                 - gpio1-gpio38 for pm8917
->> +                 - gpio1-gpio44 for pm8921
->> +                 - gpio1-gpio36 for pm8941
->> +                 - gpio1-gpio8 for pm8950 (hole on gpio3)
->> +                 - gpio1-gpio22 for pm8994
->> +                 - gpio1-gpio26 for pm8998
->> +                 - gpio1-gpio22 for pma8084
->> +                 - gpio1-gpio2 for pmi8950
->> +                 - gpio1-gpio10 for pmi8994
->> +                 - gpio1-gpio4 for pmk8350
->> +                 - gpio1-gpio4 for pmr735a
->> +                 - gpio1-gpio4 for pmr735b
->> +                 - gpio1-gpio12 for pms405 (holes on gpio1, gpio9
->> +                                            and gpio10)
->> +                 - gpio1-gpio11 for pmx55 (holes on gpio3, gpio7, 
->> gpio10
->> +                                            and gpio11)
->> +
->> +        items:
->> +          pattern: "^gpio([0-9]+)$"
->> +
->> +      function:
->> +        items:
->> +          - enum:
->> +              - normal
->> +              - paired
->> +              - func1
->> +              - func2
->> +              - dtest1
->> +              - dtest2
->> +              - dtest3
->> +              - dtest4
->> +              - func3  # supported by LV/MV GPIO subtypes
->> +              - func4  # supported by LV/MV GPIO subtypes
->> +
->> +      bias-disable: true
->> +      bias-pull-down: true
->> +      bias-pull-up: true
->> +
->> +      qcom,pull-up-strength:
->> +        $ref: /schemas/types.yaml#/definitions/uint32
->> +        description: |
->> +            Specifies the strength to use for pull up, if selected.
->> +            Valid values are defined in
->> +            <dt-bindings/pinctrl/qcom,pmic-gpio.h>
->> +            If this property is omitted 30uA strength will be used
->> +            if pull up is selected
-> 
-> 
-> enum: [0, 1, 2, 3]
-> 
-okay.
->> +
->> +      bias-high-impedance: true
-
->> +
->> +      gpio-controller;
->> +      gpio-ranges = <&pm8921_gpio 0 0 44>;
->> +      #gpio-cells = <2>;
->> +
->> +      pm8921_gpio_keys: gpio-keys {
-> 
-> Per my above request of changing the pattern, this would have to be
-> "gpio-keys-state" instead.
-> 
-
-okay.
-
-Thanks,
-Satya Priya
-
-> Regards,
-> bjorn
-> 
->> +        volume-keys {
->> +          pins = "gpio20", "gpio21";
->> +          function = "normal";
->> +
->> +          input-enable;
->> +          bias-pull-up;
->> +          drive-push-pull;
->> +          qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
->> +          power-source = <PM8921_GPIO_S4>;
->> +        };
->> +      };
->> +    };
->> +...
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
->> member
->> of Code Aurora Forum, hosted by The Linux Foundation
->> 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
