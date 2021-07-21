@@ -2,175 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 631A63D0A5F
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 10:18:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70A4D3D0E66
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 14:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233981AbhGUHcB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Jul 2021 03:32:01 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60387 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235491AbhGUH1N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 21 Jul 2021 03:27:13 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7752E5816C2;
-        Wed, 21 Jul 2021 04:07:50 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 21 Jul 2021 04:07:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=j
-        cTcJFK6RU0wnly1MKmSN+cQxU1sZbkEd7ssG8698Yc=; b=KzormehXExLlrKO+O
-        gqVt3aO1w4Lz9Hunt7BCbyj55jNe4j7XUh0cF5Dif9E3hAJjfCSh8HeMO+7o5qH+
-        KvTp470rRZvwPAAEVhUr6ahKNmA1UwRCnhQcZ9vP+CLBnn8Xw2XPqdBx+prxplcM
-        uOsdRpcBAJwHQcOEogvrL9g+Skz5D9iREnFeNl3OP8bFMOj66jU1lBGxrTmtU547
-        rRPLcbJfipo7qJ8iZljY9l3CSQWTSNO2szh1pyTnQXd4nLjA8jlm1S9fHQX/khuN
-        0YEUGp+i8p9sQ7Kac1E46PxAih8mRCLRtamwNXB6b7mER/KxewyGoZope65CDs/l
-        AbR0A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=jcTcJFK6RU0wnly1MKmSN+cQxU1sZbkEd7ssG8698
-        Yc=; b=BbRS8LDx6ldKX0qJl3jdMQ/VbvQP/8SXJBX5qZWSTC5hOQIH9mJlNAV+u
-        DUKxFb71b9bEpkIuWhecwJ/1r5tZYJdYp4rbioNl9OJ6gO5/M9cs23lVBFyNFLod
-        l/BcwOQ9fOp80hDf9MKg3EPpk4zS+CRFVDcfsAc/yPSBqRK3/e8CRggUQ6OnnAkz
-        98v1vNZqmZZMLQ6ja4dCXfzsBBwqqkOw28SQzv6D3UQ3f4InALIY7RKRYRw5CPpY
-        V1/m2piWAno6+j2ujxNKWxvwTl5YgTxFmMbtAoQfSQK6bkzGxyY2Bb+3RtSXYYE4
-        BiAnQVpddEiRMk8EO+AcaG0Lcf8XA==
-X-ME-Sender: <xms:1NX3YEGLpbej2wOCUkXWy8OlGamIQkUOPW1aqY_wgg3PO-BC9BJMtA>
-    <xme:1NX3YNXMevLE5xaOExLVBtC8F220tODKaNq5Mh8b6BfqU1lX-LventwIvvLACP8mH
-    MHUGf6CTgOYl7sM5yU>
-X-ME-Received: <xmr:1NX3YOLsDBSfykORa24MZE6NSRs7ogOVOiwqT5-vqw1-5yNlxAh2jzdXwpssbEu8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfeefgdduudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefuvfhfhffkffgfgggjtgfgsehtke
-    ertddtfeejnecuhfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghn
-    ghesfhhlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepieekgefhvdfftedttd
-    eugefhtdfhudeitedttddvvdelhfeuhfetueefteefvefgnecuffhomhgrihhnpehgihht
-    qdhstghmrdgtohhmpdhgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgpdhgihhthh
-    husghushgvrhgtohhnthgvnhhtrdgtohhmpddtuddrohhrghenucevlhhushhtvghrufhi
-    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflh
-    ihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:1NX3YGFUj8cEy0GcQZRq6T4yxA1Cu098uWxI3fTMTFvpg0CEFJ5ijA>
-    <xmx:1NX3YKXXheHhwrwRJlKFwKuYOA5C5XffxMWr3lNL3vOx-RbHFMZhZw>
-    <xmx:1NX3YJOrvajIWXC3aHUsQQxMFp59fgGcFG_yUMtwaow7ljNTZKqEoA>
-    <xmx:1tX3YGRPFoNDCVJ8-oWT3wZWQ6WxkEnOLkaEX8Fc6Tf8u5fjFK6DnQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 21 Jul 2021 04:07:44 -0400 (EDT)
-Subject: Re: [PATCH v3 8/9] MIPS: Retire MACH_PISTACHIO
-To:     linux-mips@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, tsbogend@alpha.franken.de,
-        mturquette@baylibre.com, daniel.lezcano@linaro.org,
-        linus.walleij@linaro.org, vkoul@kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-phy@lists.infradead.org
-References: <20210721030134.10562-9-jiaxun.yang@flygoat.com>
- <202107211525.XDjCm5PW-lkp@intel.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <edb62a45-5071-8fd2-92b8-4c030adaa658@flygoat.com>
-Date:   Wed, 21 Jul 2021 16:07:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S238301AbhGULVQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Jul 2021 07:21:16 -0400
+Received: from mail-sn1anam02on2044.outbound.protection.outlook.com ([40.107.96.44]:42871
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S238438AbhGULN5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 21 Jul 2021 07:13:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fm6ItjZLJfcY0ZghmuIoDWlGL/BUMkEK5FT9Yh3tMLYcZe4JQa1Hqx9GlmL4E0xOqhK4UaXW9zrnu7IDSILOEvSfFXHcSnZ7/nWtb3ugkDhFrQA/DHOe6qQVZD7GaQmuXw/6Pml23FUrO0m2vZf0c5Erk0Rp6AKNNJ5IuHJ5UsubzlrwX95F+OVaglxj8dXzvoqtW3ZnDuSFZfJVuuMWHIFHGsKmyLunWnm/uL7gLrKqU1RYfIkhE+GvmUiMZLf9jMtly56cAB6l9AaJVMCVgZjqvfb6fVsd5FJ5u1sMsED/IW80dNLP4M2k5/EGE5OPsnvK/cTtbYbw6eASJYiGzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xxpJ6fIAa/zRBwSDqYd243UC1fjkHambavZmlLQuj7k=;
+ b=NuuQnkLIG6wN7GQgIWBtuvUSIXOScWYm9GAbJAHaEv18xXoCEnjK8qE4tmJ+akzlszP8ymF/CCc/sr1UjtH6mb39Y8bqGFvOcCYhUc3Uo2mMuuyIFcNvARw6H6jw9piAzZcpjBhqn9WPfKDCbJMAtvzD94jmfN1ZyrKUgqW67hWh4+1nssNtpN+jK1OTHrMQOi3SLTR9Ajmaz8vQ/zRgKPtqbMv1oNWqO1PFkAQlV0yhWPVnX4ifyhxnDNeK8iQRAv+klCv3CjEfRCHyxKJNFpq3czD/jb387Lkl8G+Lvpo79OUWkyV5+hsJfiOd0Eq3u5zkqpaEriq/7qZER+Q6Rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xxpJ6fIAa/zRBwSDqYd243UC1fjkHambavZmlLQuj7k=;
+ b=O9/Cct3Fn0Vzuue3hDAQ4UdBV39Z+wei/DkLXhgvoWCk0LA1uUVFAJDZh1A07u1eYaVjMgt8GwzcuQK9wfG3N5nuzrNKWhrDPtclHU0Z6EVMcpLv75ul7NbZaE4RNAQrwAdvbApDV7RnQ2iWc7OQEy+A4IEMxSJM1WMyST3Mjx8=
+Received: from BN6PR13CA0059.namprd13.prod.outlook.com (2603:10b6:404:11::21)
+ by DM6PR02MB5849.namprd02.prod.outlook.com (2603:10b6:5:156::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.22; Wed, 21 Jul
+ 2021 11:54:32 +0000
+Received: from BN1NAM02FT052.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:404:11:cafe::92) by BN6PR13CA0059.outlook.office365.com
+ (2603:10b6:404:11::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.7 via Frontend
+ Transport; Wed, 21 Jul 2021 11:54:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ BN1NAM02FT052.mail.protection.outlook.com (10.13.2.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4352.24 via Frontend Transport; Wed, 21 Jul 2021 11:54:32 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 21 Jul 2021 04:54:25 -0700
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.2 via Frontend Transport; Wed, 21 Jul 2021 04:54:25 -0700
+Envelope-to: git@xilinx.com,
+ saikrishna12468@gmail.com,
+ robh+dt@kernel.org,
+ linus.walleij@linaro.org,
+ gregkh@linuxfoundation.org,
+ linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Received: from [172.23.64.106] (port=50891 helo=xhdvnc125.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <lakshmi.sai.krishna.potthuri@xilinx.com>)
+        id 1m6Anw-000EUU-EO; Wed, 21 Jul 2021 04:54:24 -0700
+Received: by xhdvnc125.xilinx.com (Postfix, from userid 14964)
+        id A7339121273; Wed, 21 Jul 2021 17:24:23 +0530 (IST)
+From:   Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <git@xilinx.com>,
+        <saikrishna12468@gmail.com>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Subject: [PATCH 0/4] pinctrl: pinctrl-zynq: yaml conversion and minor driver updates
+Date:   Wed, 21 Jul 2021 17:22:29 +0530
+Message-ID: <1626868353-96475-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+X-Mailer: git-send-email 2.1.1
 MIME-Version: 1.0
-In-Reply-To: <202107211525.XDjCm5PW-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 71e5cda5-7ca8-4f1a-3f70-08d94c3e4d95
+X-MS-TrafficTypeDiagnostic: DM6PR02MB5849:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB5849B082447EB34C20FC2198BDE39@DM6PR02MB5849.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rzb+D7CsgZj1/6puUPuulQ+XdWpnucdLDsJQTrBjvvdE7aY/pMZ1eeFTTnoeUeDQHuzkC1NgoYgMijA9QrKtIJK/0rvniQsairidlEQ8aLxqPScm6cZdyw9UuDJHWAj1IUJ3M8/8K+SQkYkqmS9IFiNSAl9rtSX5LPrRocTns5Zc9EAbvIg8ae3/JpqHysi4zG4bj6FmunyRJ6IYOendQ+ZXyoFVcl6o2V6sBT+OcXHgeeMZ9GxJzD+EQ0nqoPTcjWf7Ty6uZ/NG+y4KL9vsmVA79zKd7Z97fSJwDZeyUcb8OqAQmTJcyNKDjo+7tww1mUbtnxpzQextPHIVFtojOgFyvzRKGpSTDUkZbogqa7wClqClxto+XbSDp1N4SKpiJu5bulojbTm08MC3su4KaPNaqJ8AWpNqJBwEjXVhtrG3LN/vfvVbaHfNBXftRkjSVPsjdpS0ssPOvhndv1Y+Q/EUa2D8qnymKU9/aK7xjAzwpkmLMhP63io8BNrT9VTQ9BX94Z5bbgpGMHDDUN9irQz3ee+jnTRc0GzgaOfHW45aKivjvVZ3BIFfo/8VDnsXEO7krWrojZNz3MRmcstiL27z9MhjSTaI+ON+bnLRtCMmT8oxcnqoWEzXO8c1RoanoqKox2m8mVKClTbHIWrnN6yoh7ZgTKIbWC7P5wLQxe9ob/LK4IVvrOdt1jgso/JusMJPblJx/07XNuuXnyYJxU98VLYpBwPRi98ZvD40HOE78oNsm3ArQKQ+Og3XPH9XZyFRBUzfbhTZWSPnDXjOprOyj8s3xs3236XaokYXUN4qZUKju+7qN8smCRs5d/rt
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(396003)(346002)(376002)(136003)(39860400002)(36840700001)(46966006)(47076005)(4326008)(107886003)(26005)(36906005)(36860700001)(2906002)(83380400001)(316002)(82310400003)(42186006)(82740400003)(5660300002)(336012)(426003)(110136005)(186003)(54906003)(70206006)(2616005)(6266002)(478600001)(15650500001)(356005)(70586007)(36756003)(8936002)(8676002)(7636003)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2021 11:54:32.1626
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71e5cda5-7ca8-4f1a-3f70-08d94c3e4d95
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT052.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5849
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Oops, will fix in v4.
+This patch series does the following
+- Covert Zynq pinctrl driver binding file to yaml.
+- Update the binding for Zynq pinctrl to replace the 'io-standard' with
+'power-source' parameter as recommended by Linus during ZynqMP pinctrl
+driver review(https://lkml.org/lkml/2021/3/25/278).
+- Update the Zynq pinctrl the driver to remove custom pin
+parameter(io-standard) and instead use generic parameter(power-source).
+- Update Zynq dts files to replace 'io-standard' with 'power-source'.
 
-Thanks,
+Reason for adding the generic parameter 'power-source' in Zynq pinctrl driver
+is to maintain common pin parameter across Xilinx Zynq and ZynqMP platforms
+for power supply configuration.
 
-在 2021/7/21 下午3:15, kernel test robot 写道:
-> Hi Jiaxun,
->
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on robh/for-next]
-> [also build test ERROR on clk/clk-next linus/master v5.14-rc2 next-20210720]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
->
-> url:    https://github.com/0day-ci/linux/commits/Jiaxun-Yang/MIPS-Migrate-pistachio-to-generic-kernel/20210721-110732
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-> config: mips-randconfig-r026-20210720 (attached as .config)
-> compiler: mips64-linux-gcc (GCC) 10.3.0
-> reproduce (this is a W=1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # https://github.com/0day-ci/linux/commit/7815f6aeaf55e4b6b9de98455f68c185a5ac5916
->          git remote add linux-review https://github.com/0day-ci/linux
->          git fetch --no-tags linux-review Jiaxun-Yang/MIPS-Migrate-pistachio-to-generic-kernel/20210721-110732
->          git checkout 7815f6aeaf55e4b6b9de98455f68c185a5ac5916
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-10.3.0 make.cross ARCH=mips
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->>> arch/mips/Kconfig:1062: can't open file "arch/mips/pistachio/Kconfig"
-> --
->>> arch/mips/Kconfig:1062: can't open file "arch/mips/pistachio/Kconfig"
->     make[3]: *** [scripts/kconfig/Makefile:77: syncconfig] Error 1
->     make[2]: *** [Makefile:626: syncconfig] Error 2
->     make[1]: *** [Makefile:735: include/config/auto.conf.cmd] Error 2
->     make[1]: Failed to remake makefile 'include/config/auto.conf.cmd'.
->     make[1]: Failed to remake makefile 'include/config/auto.conf'.
->     make[1]: Target 'modules_prepare' not remade because of errors.
->     make: *** [Makefile:220: __sub-make] Error 2
->     make: Target 'modules_prepare' not remade because of errors.
-> --
->>> arch/mips/Kconfig:1062: can't open file "arch/mips/pistachio/Kconfig"
->     make[2]: *** [scripts/kconfig/Makefile:77: olddefconfig] Error 1
->     make[1]: *** [Makefile:626: olddefconfig] Error 2
->     make: *** [Makefile:220: __sub-make] Error 2
->     make: Target 'olddefconfig' not remade because of errors.
-> --
->>> arch/mips/Kconfig:1062: can't open file "arch/mips/pistachio/Kconfig"
->     make[3]: *** [scripts/kconfig/Makefile:77: syncconfig] Error 1
->     make[2]: *** [Makefile:626: syncconfig] Error 2
->     make[1]: *** [Makefile:735: include/config/auto.conf.cmd] Error 2
->     make[1]: Failed to remake makefile 'include/config/auto.conf.cmd'.
->     make[1]: Failed to remake makefile 'include/config/auto.conf'.
->     make[1]: Target 'prepare' not remade because of errors.
->     make: *** [Makefile:220: __sub-make] Error 2
->     make: Target 'prepare' not remade because of errors.
->
->
-> vim +1062 arch/mips/Kconfig
->
-> ^1da177e4c3f415 Linus Torvalds   2005-04-16  1050
-> e8c7c482347574e Ralf Baechle     2008-09-16  1051  source "arch/mips/alchemy/Kconfig"
-> 3b12308f3337c09 Sergey Ryazanov  2014-10-29  1052  source "arch/mips/ath25/Kconfig"
-> d4a67d9dc8a5a80 Gabor Juhos      2011-01-04  1053  source "arch/mips/ath79/Kconfig"
-> a656ffcbc7a98a8 Hauke Mehrtens   2011-07-23  1054  source "arch/mips/bcm47xx/Kconfig"
-> e7300d04bd0809e Maxime Bizon     2009-08-18  1055  source "arch/mips/bcm63xx/Kconfig"
-> 8945e37e103b165 Kevin Cernekee   2014-12-25  1056  source "arch/mips/bmips/Kconfig"
-> eed0eabd12ef061 Paul Burton      2016-10-05  1057  source "arch/mips/generic/Kconfig"
-> a103e9b951f9094 Paul Cercueil    2020-09-06  1058  source "arch/mips/ingenic/Kconfig"
-> 5e83d4305467c43 Ralf Baechle     2005-10-29  1059  source "arch/mips/jazz/Kconfig"
-> 8ec6d93508f705d John Crispin     2011-03-30  1060  source "arch/mips/lantiq/Kconfig"
-> 2572f00db8a68bb Joshua Henderson 2016-01-13  1061  source "arch/mips/pic32/Kconfig"
-> af0cfb2c44ee5cd Ezequiel Garcia  2015-08-06 @1062  source "arch/mips/pistachio/Kconfig"
-> ae2b5bb6570481b John Crispin     2013-01-20  1063  source "arch/mips/ralink/Kconfig"
-> 29c4869946f9182 Ralf Baechle     2005-02-07  1064  source "arch/mips/sgi-ip27/Kconfig"
-> 38b18f725874224 Ralf Baechle     2005-02-03  1065  source "arch/mips/sibyte/Kconfig"
-> 22b1d707ffc99fa Atsushi Nemoto   2008-07-11  1066  source "arch/mips/txx9/Kconfig"
-> 5e83d4305467c43 Ralf Baechle     2005-10-29  1067  source "arch/mips/vr41xx/Kconfig"
-> a86c7f72454c4e8 David Daney      2008-12-11  1068  source "arch/mips/cavium-octeon/Kconfig"
-> 71e2f4dd5a65bd8 Jiaxun Yang      2019-10-20  1069  source "arch/mips/loongson2ef/Kconfig"
-> 30ad29bb48881ee Huacai Chen      2015-04-21  1070  source "arch/mips/loongson32/Kconfig"
-> 30ad29bb48881ee Huacai Chen      2015-04-21  1071  source "arch/mips/loongson64/Kconfig"
-> 7f058e852b229ec Jayachandran C   2011-05-07  1072  source "arch/mips/netlogic/Kconfig"
-> 38b18f725874224 Ralf Baechle     2005-02-03  1073
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Sai Krishna Potthuri (4):
+  dt-bindings: pinctrl: pinctrl-zynq: Convert to yaml
+  dt-bindings: pinctrl-zynq: Replace 'io-standard' with 'power-source'
+  pinctrl: pinctrl-zynq: Add support for 'power-source' parameter
+  arm: dts: zynq: Replace 'io-standard' with 'power-source' property
+
+ .../bindings/pinctrl/xlnx,zynq-pinctrl.txt    | 105 ---------
+ .../bindings/pinctrl/xlnx,zynq-pinctrl.yaml   | 214 ++++++++++++++++++
+ arch/arm/boot/dts/zynq-ebaz4205.dts           |   8 +-
+ arch/arm/boot/dts/zynq-microzed.dts           |   2 +-
+ arch/arm/boot/dts/zynq-zc702.dts              |  20 +-
+ arch/arm/boot/dts/zynq-zc706.dts              |  18 +-
+ drivers/pinctrl/pinctrl-zynq.c                |   2 +
+ include/dt-bindings/pinctrl/pinctrl-zynq.h    |  17 ++
+ 8 files changed, 257 insertions(+), 129 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-zynq.h
+
+-- 
+2.17.1
+
