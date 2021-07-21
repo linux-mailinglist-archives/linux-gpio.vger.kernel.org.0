@@ -2,104 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CA543D12CE
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 17:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40FC53D150A
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 19:24:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232977AbhGUPJV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Jul 2021 11:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
+        id S233632AbhGUQni (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Jul 2021 12:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232494AbhGUPJU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jul 2021 11:09:20 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891A5C061575
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 08:49:57 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id gx2so1894620pjb.5
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 08:49:57 -0700 (PDT)
+        with ESMTP id S229526AbhGUQni (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jul 2021 12:43:38 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E5B2C061575
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 10:24:14 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id d17so3910510ljq.12
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 10:24:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=inBYu5ag7c45MW8HDl2wJjLOE4iuBAdb1D4julHQh2I=;
-        b=JoYCQOT90yZYg68ABYw09NUwlkvhYWyLIYIuvV9ipOkP0s5IMJzBj6Y4eWj31EP2Pj
-         YURwAVn4LFLGmPWOH2vgvHU0VZkz5Hkb1A0c6Aw7gfCGoGDGIrZQWP9fMMSQkAQ42o/4
-         QUKM37vhm8hVlZ+CCg3uLAfP96bmynoBUTlPjBHECASSdEB8VZ5rJC4ElQPIlJqMEaU4
-         Gd9bIqliavPLOCz5lnQ0tZqQ0Z3P5gREfEUGime2KX1aUctMEb6qdkF7V2Fxe/uO6eIU
-         sRgNrCWjgD3ZbHRvHMt81AtI8dNKiummeY/rh6pkE01/c5pW2sChVlYgTN4kwHUbqR25
-         l3cg==
+         :cc;
+        bh=/geap+n06qADP8bUUkTvJg1+GbqYMe8lt6RpcUMxI18=;
+        b=Hdt2KFh5xvg+QlcJKKcwzWITxdiB3zzWrNsSCi3yAmz5xkPmKzqnF9Vf88sIJjyPDe
+         Ja3BG8LkZkNqMVYCmyfVmPjbmoWDHNC6HgfHZY9miAffsE8USRj45txPlXOHFqcKntP3
+         JjG7JeL0LVCQRQFaqy6JOIaGkcz2XECZ3STKTmPSSK0EKewRHEkllDmMhuIPT0uEdT52
+         UwELbIZsRCf9PI/reTR9o+ZG02ZzwTKnr65Pk5ZvQwTvMOL5yV5Q6QklhTuJftyhkSuM
+         MNeB8hArE2/Uhg1XW/oqWLr9/271h+/O24cYDoBKJOPLkn+OgMrJxb73TsB4kCB0PkhA
+         PB9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=inBYu5ag7c45MW8HDl2wJjLOE4iuBAdb1D4julHQh2I=;
-        b=A4YIrHEzfUNkAaYMkjdWVwG2yBadpFvMnk6O/4cVBlXMXkkIDfUKJOrOGhqtCMVREl
-         d91T/C88tSlPKTSO6DyrfzkAdNFAtT++t1uQsyRuU4Tab/cE+uBq+U/0yE7jXgvVjWdO
-         +QXNKA2FeiYYLny2D2AGVuQjDf4JqgFcuT9nqzto3WM/17XKsmf5prBbHKt6Ta/B/y5z
-         Bb8nd3ZT90vXPYznzJGs3ADzLcG7cBmNcci5BHOiOuqkD0bd8bQ2z93+3t3oNa/qm9bK
-         YytprtoZpDIzK1rqffdlMkcYLeWKnj/BmNvMa+SqSrwNrLrLAVh9mfz0nWD+gnD7XrZo
-         qE3A==
-X-Gm-Message-State: AOAM532eoOjDmKXzsH24SowSvP84W0aMnSaOBP0BwJbbN43JzEcoFk0V
-        g+hQk9T2Ias00cRhLOD/cXB3kl8835aZTx6g9d8=
-X-Google-Smtp-Source: ABdhPJwtxXMeUt1ckwjLUEFJWmO5RZqlQfn6S4KZp6SzUCFHTOMZdyZ2jJ5TYjZwgNfAJEpk2VN3WDR6FtGvKnLyL8E=
-X-Received: by 2002:a17:90b:3647:: with SMTP id nh7mr36027626pjb.228.1626882597112;
- Wed, 21 Jul 2021 08:49:57 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=/geap+n06qADP8bUUkTvJg1+GbqYMe8lt6RpcUMxI18=;
+        b=JCXQ0BXtgtDZbPKHN1W88C+mu9m13EO4wBGZUwEfbI7cx3mAb9loLGh+X9uB8AfZjV
+         c9dJ3l9VisuUDkhZOH8Q5hDywGGbEZDw1c5C69R0NDkJKGsePNOtUjy+nQwTRoPK6ZTK
+         /Jg3UKgVtVTuNsunszBm6Nv7nk8EJH59Kp0qCeSLQQcDFGGGtmHHZLo1Dfsp3A3dvbQe
+         I+24uHhdsqS1Oar18WHJ0vdzUn/FcNOIJJeP+SiDShyVzppjk9GfPM1Lt+6F5C2bcZNx
+         1ZysUIJ9aa5Zu0DwnsoraZrl+UWrd5Gc9dwic4N40lOkLIRmx0oiwHiSIsobMjxe+wJG
+         rqfg==
+X-Gm-Message-State: AOAM531MwSH1xtir4hq2yXLwk6xa9eqIs9sEZ+YSBcwe65VNeGmtYs5e
+        TVqtr0XJ2yxKqbn4/51+u+b/2BUM/8EjMK0D6CQrXQBE3n4=
+X-Google-Smtp-Source: ABdhPJws9ZMve7X1DBmsQqOrLOBnsRl56RypIYvLQcQu3Pn14yEsYIeMebFKy7cEHM6l5RgopE5mNsBgOpWsXYjmmQY=
+X-Received: by 2002:a2e:a54b:: with SMTP id e11mr24488402ljn.503.1626888252628;
+ Wed, 21 Jul 2021 10:24:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAG4TOxMzf1Wn6PcWk=XfB+SV+MHwbxUq8t1RNswie5e3=Y+OXQ@mail.gmail.com>
- <CACRpkdZyJd0TW5aVRfxSSWknzCyVhjMwQuAj9i9iuQ6pW9vftQ@mail.gmail.com>
- <20210707105000.GA4394@sirena.org.uk> <c24c61f498f43f589eafd423e51f997134d198b7.camel@HansenPartnership.com>
- <YOWcCG9Pm/S+EXFw@kroah.com> <11c07bc291b443c2683a2baff5b180ff5b0729a5.camel@HansenPartnership.com>
- <YOWh0Dq+2v+wH3B4@kroah.com> <YOXhlDsMAZUn1EBg@pendragon.ideasonboard.com>
- <YOagA4bgdGYos5aa@kroah.com> <CACRpkdasOaNgBAZVx5qpKJdU7h41jHDG2jWi2+pi9a1JBh7RTQ@mail.gmail.com>
- <YOh/JC//dotfm5J9@google.com> <CACRpkdb1W=M5EJkGbSS4QxObU-Gd5yZ1qE439k_D4K=jevgcrQ@mail.gmail.com>
- <CAHp75VfW7PxAyU=eYPNWFU_oUY=aStz-4W5gX87KSo402YhMXQ@mail.gmail.com> <CACRpkdbzAzwrSJmoiO8w5KPV2dL-qxgaeD+gSzL-Gg+cmajsOQ@mail.gmail.com>
-In-Reply-To: <CACRpkdbzAzwrSJmoiO8w5KPV2dL-qxgaeD+gSzL-Gg+cmajsOQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 21 Jul 2021 18:49:17 +0300
-Message-ID: <CAHp75Vc9E3D4+roG6Hpv1TDffpy+7=kP0zwMuwy3FFghL=pTpQ@mail.gmail.com>
-Subject: Re: cdev/devm_* issues (was Re: [TECH TOPIC] Rust for Linux)
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Wedson Almeida Filho <wedsonaf@google.com>,
-        Greg KH <greg@kroah.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Mark Brown <broonie@kernel.org>,
-        Roland Dreier <roland@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "ksummit@lists.linux.dev" <ksummit@lists.linux.dev>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <20210707045320.529186-1-john.stultz@linaro.org> <YPgK50dmV7Z69WsL@kroah.com>
+In-Reply-To: <YPgK50dmV7Z69WsL@kroah.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 21 Jul 2021 10:24:01 -0700
+Message-ID: <CALAqxLUVgUT+1DyDGsFbF0138S0OYzpKADk__PsYbR4B4mbMhw@mail.gmail.com>
+Subject: Re: [PATCH] firmware: QCOM_SCM: Allow qcom_scm driver to be loadable
+ as a permenent module
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 4:46 PM Linus Walleij <linus.walleij@linaro.org> wr=
-ote:
-> On Wed, Jul 14, 2021 at 12:35 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On Wed, Jul 21, 2021 at 4:54 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> > To me described scenario sounds rather like an object lifetime possible=
- issue.
-> > In any case, shouldn=E2=80=99t VFS guarantee by a reference counting th=
-at
-> > gpiochip_remove() wouldn=E2=80=99t be called while file descriptor is i=
-n use?
-> > Or am I looking from the wrong end here?
+> On Wed, Jul 07, 2021 at 04:53:20AM +0000, John Stultz wrote:
+> > Allow the qcom_scm driver to be loadable as a permenent module.
 >
-> What happens is that the GPIO device disappears (such as unplugging
-> a USB GPIO expander) while a multithreaded userspace is hammering
-> exotic ioctl() commands to the same device like crazy.
->
-> Under these circumstances (which should be rare, but you know,
-> developers) it could happen that an ioctl() sneak in before the
-> gpio_chip pointer is NULL if I read the code right.
+> This feels like a regression, it should be allowed to be a module.
 
-So, gpio_chip is NULL but gpiodev is not NULL, correct?
-If so, it means that the above mentioned scenario applies to the
-latter one and I understand the checks.
+I'm sorry, I'm not sure I'm following you, Greg.  This patch is trying
+to enable the driver to be able to be loaded as a module.
 
---=20
-With Best Regards,
-Andy Shevchenko
+> > This still uses the "depends on QCOM_SCM || !QCOM_SCM" bit to
+> > ensure that drivers that call into the qcom_scm driver are
+> > also built as modules. While not ideal in some cases its the
+> > only safe way I can find to avoid build errors without having
+> > those drivers select QCOM_SCM and have to force it on (as
+> > QCOM_SCM=n can be valid for those drivers).
+> >
+> > Reviving this now that Saravana's fw_devlink defaults to on,
+> > which should avoid loading troubles seen before.
+>
+> fw_devlink was supposed to resolve these issues and _allow_ code to be
+> built as modules and not forced to be built into the kernel.
+
+Right. I'm re-submitting this patch to enable a driver to work as a
+module, because earlier attempts to submit it ran into boot trouble
+because fw_devlink wasn't yet enabled.
+
+I worry something in my description made it seem otherwise, so let me
+know how you read it and I'll try to avoid such confusion in the
+future.
+
+thanks
+-john
