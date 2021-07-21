@@ -2,96 +2,270 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B7D63D1020
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 15:47:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80EC03D108C
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 16:04:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238619AbhGUNGn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Jul 2021 09:06:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238629AbhGUNGU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jul 2021 09:06:20 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13B4C061575
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 06:46:56 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 8so3218502lfp.9
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 06:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MH3wH7GQIEv1Swdd+QIQdDVT9ekDsdelmOZ3OOsqFXc=;
-        b=O+uSOLGTYQVTJhJjKKImWEMyxJwDpqN4zKz7eDGNQ/A77WZNoudpwEiukD7OmO2Xj7
-         U95ec2u2G2F8l7GIV12R8oS2wAAa/LXlSWDJKu3YH9RJdmLDTxWgiHvurFYMDSub4LlN
-         Toue1x8Aha/F4znxhb+sd0JCVzrAb4yMCSLY1x+IFmjg7iEQkHugUABIKM6d1dGok6AL
-         SrGJAmmXPrqmTD3pgod7A583G3MPrHGv2sTV5P+dgkVChuDmFJ2LNxv8MN6AYfUv061C
-         fRlNClzh+ap7Wy+4kF6RTOjoJSmol6qWBISeJWe6c9hA9lxl0Fy7VhGhelD+IrtBUtSQ
-         Vo5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MH3wH7GQIEv1Swdd+QIQdDVT9ekDsdelmOZ3OOsqFXc=;
-        b=JlqyRbvrl3ffJ2h5hH1lAJUI7MGqdxRU50Rq4H+yLXFEVkkFfRY4DX4C0+aGEJV/6P
-         DA3zv3A+onEKgSxUjy2fUc1Gid1V4QwUiGyTIwXtL8hJTLlAQBp6XpJATCltN+8BgNxL
-         KnpAucduUHmpQJlFuyKkoxwpfL7XICA6LRvbKWoKhJzEpkJriG8pRiI50sNBwO8uWLWp
-         42CUDiWfzpu4zVCJhnG114w+t/Xd/4yAZKg2ievTIPlR/Nq7EonIVsqiO9fHIAkcF5h+
-         /TeLoh6vHZ5/6QhotREfHAtduZbFm5sjov4b2sToIZsX+bP2usvMghScpALZpRkIUY9/
-         cBjw==
-X-Gm-Message-State: AOAM531n6sCMlFVtpvqkmZ7bojwz7BuNjYdd+m0IYAnfrLrozgvLAGFV
-        Sdyz83yZyvOzAi8sCudpC6znPpLLYQmDFL6VjhwEFQ==
-X-Google-Smtp-Source: ABdhPJxggVBk4jRRVyxnHpG+PH0gwjJGx8TJ238oMPEiIZcFyaSi9jA3xt7AOz9j82glz6I5cVby7UkYbD6RRBYsgQ4=
-X-Received: by 2002:ac2:5e71:: with SMTP id a17mr24993123lfr.465.1626875215112;
- Wed, 21 Jul 2021 06:46:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAG4TOxMzf1Wn6PcWk=XfB+SV+MHwbxUq8t1RNswie5e3=Y+OXQ@mail.gmail.com>
- <CACRpkdZyJd0TW5aVRfxSSWknzCyVhjMwQuAj9i9iuQ6pW9vftQ@mail.gmail.com>
- <20210707105000.GA4394@sirena.org.uk> <c24c61f498f43f589eafd423e51f997134d198b7.camel@HansenPartnership.com>
- <YOWcCG9Pm/S+EXFw@kroah.com> <11c07bc291b443c2683a2baff5b180ff5b0729a5.camel@HansenPartnership.com>
- <YOWh0Dq+2v+wH3B4@kroah.com> <YOXhlDsMAZUn1EBg@pendragon.ideasonboard.com>
- <YOagA4bgdGYos5aa@kroah.com> <CACRpkdasOaNgBAZVx5qpKJdU7h41jHDG2jWi2+pi9a1JBh7RTQ@mail.gmail.com>
- <YOh/JC//dotfm5J9@google.com> <CACRpkdb1W=M5EJkGbSS4QxObU-Gd5yZ1qE439k_D4K=jevgcrQ@mail.gmail.com>
- <CAHp75VfW7PxAyU=eYPNWFU_oUY=aStz-4W5gX87KSo402YhMXQ@mail.gmail.com>
-In-Reply-To: <CAHp75VfW7PxAyU=eYPNWFU_oUY=aStz-4W5gX87KSo402YhMXQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 21 Jul 2021 15:46:44 +0200
-Message-ID: <CACRpkdbzAzwrSJmoiO8w5KPV2dL-qxgaeD+gSzL-Gg+cmajsOQ@mail.gmail.com>
-Subject: Re: cdev/devm_* issues (was Re: [TECH TOPIC] Rust for Linux)
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Wedson Almeida Filho <wedsonaf@google.com>,
-        Greg KH <greg@kroah.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Mark Brown <broonie@kernel.org>,
-        Roland Dreier <roland@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "ksummit@lists.linux.dev" <ksummit@lists.linux.dev>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        id S239082AbhGUNYU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Jul 2021 09:24:20 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:34107 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S239047AbhGUNYU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 21 Jul 2021 09:24:20 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id B2A1B580482;
+        Wed, 21 Jul 2021 10:04:56 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Wed, 21 Jul 2021 10:04:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=wpczZwFr2oV/h
+        pVBUw2hzMPAB0ad3TvRVbaqRU+T1Tg=; b=qJZBv0xVqf5ccsLlQnyhK9lpmXa14
+        rWexNwmQfLwPKLyDkPzAARmzATwCc/YZDT0tJYj1efbFpyitPCDggzO7jrjSggOF
+        Fk8rFn/a5WtAnxJr/NJRTdCi90VUJzD9MfhQtbsQBeiNMm5zvH8LBW2H945Ftkv+
+        qEg0GQ3QTY7hPT97esz2f1ITvAVsbvw39frLGTz+IUcQM1ZHIM+lX/TW1EgSud1M
+        y5xcWLK/E+1vzrgd9ABYxxXkfkxb0eYih06NDa6Hf/zb6OIVIibcmTcM+149VTAg
+        JzNNXr2QAtnTiHZrJYc3c3hNo4dsYA16AGSbbxqOhsurp6ZPBNCreGYKw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=wpczZwFr2oV/hpVBUw2hzMPAB0ad3TvRVbaqRU+T1Tg=; b=tCYQTa6v
+        Pz2YdcmdRA7wzGfHiW4xGdAL2gP+Cact1HOt8IuW8U9GM2X/t6dVIBGVp67iEG5k
+        XLbiSpGQHfOqeqnVi1u4I+JiBzukpJJ3to5hl9PN79HGbOtHT08HAaWNUummx8/F
+        O7Y2fjRsvpvXPFez9lauAwykVzszKLiepLPrEI1m6li2KQ+YJOL8glkux+ZusRtl
+        gFT+N61xskpWf41l3ZBRVyIlZuaEbKuPbJNPDw851oumRsrmcb+zjTwK1iQLXR70
+        h7xLjZ6wBEgvH83fMeOkIOEWdCAChSCMooOT6xEo4ZCmQd7o0oWzBUA0fBaHR7+r
+        vqC2tnEb86oACg==
+X-ME-Sender: <xms:iCn4YEiidTMnzMuLf5VHQKlbzeATebhIjdnXQiwG1Xv32RGFG_BKOQ>
+    <xme:iCn4YNDkOOud7SosrW97OfC09h8cm9mWQfPgXydV69oQCZj3GxpPiqqZUGzuGtSJz
+    40y3HyLfTikWL6ILk8>
+X-ME-Received: <xmr:iCn4YMGk7Is3ZmLeYdme91jumgwxMtQ4kxc5E6bM7t7Mm6XPahigJnMEbBTDLoZHdNiIG9pTdkwCdYhl8bgReGLnM0P7WdUpq5Cc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfeeggdeijecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
+    evohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffojghf
+    ggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgi
+    himhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvghrnhepveejieejtdevgfff
+    gfejuefggfeutdelteekgeetueeftddutddtgfffhffgueffnecuffhomhgrihhnpeguvg
+    hvihgtvghtrhgvvgdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:iCn4YFT4lrQbwkkxl4oGpD7lXb1hVhzdIcMNfLzE5ioziph-lM4DWQ>
+    <xmx:iCn4YBz4FonNSdl9s3dCqPe9NP6oT9INTa0mnIjCPh5RS7vrPDfK8Q>
+    <xmx:iCn4YD5oZ4TnZ2bywbwaCyV0uCxz9BD8MXrT17i_ICfkhlD6iBp9ig>
+    <xmx:iCn4YBfWaiui1s93X5VAbAybdZm9E42ni5OhDG4EG2pKUJ2Npnk4JA>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 21 Jul 2021 10:04:55 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 13/54] dt-bindings: gpio: Convert X-Powers AXP209 GPIO binding to a schema
+Date:   Wed, 21 Jul 2021 16:03:43 +0200
+Message-Id: <20210721140424.725744-14-maxime@cerno.tech>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210721140424.725744-1-maxime@cerno.tech>
+References: <20210721140424.725744-1-maxime@cerno.tech>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 14, 2021 at 12:35 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+The X-Powers AXP PMICs feature a GPIO Controller supported by Linux
+thanks to its device tree binding.
 
-> To me described scenario sounds rather like an object lifetime possible i=
-ssue.
-> In any case, shouldn=E2=80=99t VFS guarantee by a reference counting that
-> gpiochip_remove() wouldn=E2=80=99t be called while file descriptor is in =
-use?
-> Or am I looking from the wrong end here?
+Now that we have the DT validation in place, let's convert the device
+tree bindings for that driver over to a YAML schema.
 
-What happens is that the GPIO device disappears (such as unplugging
-a USB GPIO expander) while a multithreaded userspace is hammering
-exotic ioctl() commands to the same device like crazy.
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ .../devicetree/bindings/gpio/gpio-axp209.txt  | 75 -----------------
+ .../bindings/gpio/x-powers,axp209-gpio.yaml   | 84 +++++++++++++++++++
+ 2 files changed, 84 insertions(+), 75 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
 
-Under these circumstances (which should be rare, but you know,
-developers) it could happen that an ioctl() sneak in before the
-gpio_chip pointer is NULL if I read the code right.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt b/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
+deleted file mode 100644
+index fc42b2caa06d..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
++++ /dev/null
+@@ -1,75 +0,0 @@
+-AXP209 GPIO & pinctrl controller
+-
+-This driver follows the usual GPIO bindings found in
+-Documentation/devicetree/bindings/gpio/gpio.txt
+-
+-This driver follows the usual pinctrl bindings found in
+-Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+-
+-This driver employs the per-pin muxing pattern.
+-
+-Required properties:
+-- compatible: Should be one of:
+-	- "x-powers,axp209-gpio"
+-	- "x-powers,axp813-gpio"
+-- #gpio-cells: Should be two. The first cell is the pin number and the
+-  second is the GPIO flags.
+-- gpio-controller: Marks the device node as a GPIO controller.
+-
+-This node must be a subnode of the axp20x PMIC, documented in
+-Documentation/devicetree/bindings/mfd/axp20x.txt
+-
+-Example:
+-
+-axp209: pmic@34 {
+-	compatible = "x-powers,axp209";
+-	reg = <0x34>;
+-	interrupt-parent = <&nmi_intc>;
+-	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+-	interrupt-controller;
+-	#interrupt-cells = <1>;
+-
+-	axp_gpio: gpio {
+-		compatible = "x-powers,axp209-gpio";
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-};
+-
+-The GPIOs can be muxed to other functions and therefore, must be a subnode of
+-axp_gpio.
+-
+-Example:
+-
+-&axp_gpio {
+-	gpio0_adc: gpio0-adc {
+-		pins = "GPIO0";
+-		function = "adc";
+-	};
+-};
+-
+-&example_node {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&gpio0_adc>;
+-};
+-
+-GPIOs and their functions
+--------------------------
+-
+-Each GPIO is independent from the other (i.e. GPIO0 in gpio_in function does
+-not force GPIO1 and GPIO2 to be in gpio_in function as well).
+-
+-axp209
+-------
+-GPIO	|	Functions
+-------------------------
+-GPIO0	|	gpio_in, gpio_out, ldo, adc
+-GPIO1	|	gpio_in, gpio_out, ldo, adc
+-GPIO2	|	gpio_in, gpio_out
+-
+-axp813
+-------
+-GPIO	|	Functions
+-------------------------
+-GPIO0	|	gpio_in, gpio_out, ldo, adc
+-GPIO1	|	gpio_in, gpio_out, ldo
+diff --git a/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+new file mode 100644
+index 000000000000..28337f939d4e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/gpio/x-powers,axp209-gpio.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: X-Powers AXP209 GPIO Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++
++properties:
++  "#gpio-cells":
++    const: 2
++    description: >
++      The first cell is the pin number and the second is the GPIO flags.
++
++  compatible:
++    oneOf:
++      - enum:
++          - x-powers,axp209-gpio
++          - x-powers,axp813-gpio
++      - items:
++          - const: x-powers,axp803-gpio
++          - const: x-powers,axp813-gpio
++
++  gpio-controller: true
++
++patternProperties:
++  "^.*-pins?$":
++    $ref: /schemas/pinctrl/pinmux-node.yaml#
++
++    properties:
++      pins:
++        items:
++          enum:
++            - GPIO0
++            - GPIO1
++            - GPIO2
++
++      function:
++        enum:
++          - adc
++          - ldo
++          - gpio_in
++          - gpio_out
++
++required:
++  - compatible
++  - "#gpio-cells"
++  - gpio-controller
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pmic@34 {
++            #interrupt-cells = <1>;
++            compatible = "x-powers,axp209";
++            reg = <0x34>;
++            interrupt-parent = <&nmi_intc>;
++            interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++            interrupt-controller;
++
++            gpio {
++                #gpio-cells = <2>;
++                compatible = "x-powers,axp209-gpio";
++                gpio-controller;
++
++                gpio0-adc-pin {
++                    pins = "GPIO0";
++                    function = "adc";
++                };
++            };
++        };
++    };
++
++...
+-- 
+2.31.1
 
-Yours,
-Linus Walleij
