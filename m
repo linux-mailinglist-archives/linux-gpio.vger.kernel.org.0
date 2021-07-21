@@ -2,270 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80EC03D108C
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 16:04:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE0D83D10EE
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 16:13:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239082AbhGUNYU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Jul 2021 09:24:20 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:34107 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239047AbhGUNYU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 21 Jul 2021 09:24:20 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id B2A1B580482;
-        Wed, 21 Jul 2021 10:04:56 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 21 Jul 2021 10:04:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=wpczZwFr2oV/h
-        pVBUw2hzMPAB0ad3TvRVbaqRU+T1Tg=; b=qJZBv0xVqf5ccsLlQnyhK9lpmXa14
-        rWexNwmQfLwPKLyDkPzAARmzATwCc/YZDT0tJYj1efbFpyitPCDggzO7jrjSggOF
-        Fk8rFn/a5WtAnxJr/NJRTdCi90VUJzD9MfhQtbsQBeiNMm5zvH8LBW2H945Ftkv+
-        qEg0GQ3QTY7hPT97esz2f1ITvAVsbvw39frLGTz+IUcQM1ZHIM+lX/TW1EgSud1M
-        y5xcWLK/E+1vzrgd9ABYxxXkfkxb0eYih06NDa6Hf/zb6OIVIibcmTcM+149VTAg
-        JzNNXr2QAtnTiHZrJYc3c3hNo4dsYA16AGSbbxqOhsurp6ZPBNCreGYKw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=wpczZwFr2oV/hpVBUw2hzMPAB0ad3TvRVbaqRU+T1Tg=; b=tCYQTa6v
-        Pz2YdcmdRA7wzGfHiW4xGdAL2gP+Cact1HOt8IuW8U9GM2X/t6dVIBGVp67iEG5k
-        XLbiSpGQHfOqeqnVi1u4I+JiBzukpJJ3to5hl9PN79HGbOtHT08HAaWNUummx8/F
-        O7Y2fjRsvpvXPFez9lauAwykVzszKLiepLPrEI1m6li2KQ+YJOL8glkux+ZusRtl
-        gFT+N61xskpWf41l3ZBRVyIlZuaEbKuPbJNPDw851oumRsrmcb+zjTwK1iQLXR70
-        h7xLjZ6wBEgvH83fMeOkIOEWdCAChSCMooOT6xEo4ZCmQd7o0oWzBUA0fBaHR7+r
-        vqC2tnEb86oACg==
-X-ME-Sender: <xms:iCn4YEiidTMnzMuLf5VHQKlbzeATebhIjdnXQiwG1Xv32RGFG_BKOQ>
-    <xme:iCn4YNDkOOud7SosrW97OfC09h8cm9mWQfPgXydV69oQCZj3GxpPiqqZUGzuGtSJz
-    40y3HyLfTikWL6ILk8>
-X-ME-Received: <xmr:iCn4YMGk7Is3ZmLeYdme91jumgwxMtQ4kxc5E6bM7t7Mm6XPahigJnMEbBTDLoZHdNiIG9pTdkwCdYhl8bgReGLnM0P7WdUpq5Cc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfeeggdeijecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
-    evohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffojghf
-    ggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgi
-    himhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvghrnhepveejieejtdevgfff
-    gfejuefggfeutdelteekgeetueeftddutddtgfffhffgueffnecuffhomhgrihhnpeguvg
-    hvihgtvghtrhgvvgdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:iCn4YFT4lrQbwkkxl4oGpD7lXb1hVhzdIcMNfLzE5ioziph-lM4DWQ>
-    <xmx:iCn4YBz4FonNSdl9s3dCqPe9NP6oT9INTa0mnIjCPh5RS7vrPDfK8Q>
-    <xmx:iCn4YD5oZ4TnZ2bywbwaCyV0uCxz9BD8MXrT17i_ICfkhlD6iBp9ig>
-    <xmx:iCn4YBfWaiui1s93X5VAbAybdZm9E42ni5OhDG4EG2pKUJ2Npnk4JA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 21 Jul 2021 10:04:55 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 13/54] dt-bindings: gpio: Convert X-Powers AXP209 GPIO binding to a schema
-Date:   Wed, 21 Jul 2021 16:03:43 +0200
-Message-Id: <20210721140424.725744-14-maxime@cerno.tech>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210721140424.725744-1-maxime@cerno.tech>
-References: <20210721140424.725744-1-maxime@cerno.tech>
+        id S238691AbhGUNdG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Jul 2021 09:33:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238509AbhGUNdG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jul 2021 09:33:06 -0400
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 352C0C061575
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 07:13:43 -0700 (PDT)
+Received: by mail-vs1-xe32.google.com with SMTP id r25so1513588vsk.2
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 07:13:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=deviqon.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hZfNzgsD7J2Mjt1wMPXQg6aTS+MDAP37E7oHrwgMTDE=;
+        b=RiHimWEdJ/RGZ9gofssOFkx+Wfty76jxVPgU8sJf9GNjIeUy02HWR2f3yFqLtn3aZV
+         Res00d+d7X+xgbJYJtPOOOpG5ZKAXeDFChxnAVN3kC+ktsv2ZUZ/jI+Y1lS7f9Z/MlM4
+         N2+ApXcedGuK0ZsphtpBKRo7TX5qVD/mt8fxkr0u2VlANdNkGSXKd2ysAW/NsBQUqY0E
+         d2oziHVdEUbdxu5CW8fbxGW9O3zSiDp0O1cHtYX/H7CUFYxa1NzCVrMiFG6atT4/l6/y
+         GxUutU9oArsohXQYkoqOUXQ0GBPE9rC9x3CDbu5oVMJKUBHqix4yKMQRUXHlGa+w93b9
+         c1rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hZfNzgsD7J2Mjt1wMPXQg6aTS+MDAP37E7oHrwgMTDE=;
+        b=XcRnRIJHG1OCuQqTclwXXO0fPAbscs0TU6EwGAqWgmwWGVFYbCXqOGHe20/o0iTo9b
+         OnmM9FReGP9AKAJ8CnyhKxj9lpkEZ3VpkoMqYNjb5udfYzY4o2pfDL8EnVLhZQ//6YJk
+         SsM1Ckk02FnKvDh5Q7rIZ4Vzxesb7ygzEHkk9glgcllCRsaeMfOkpZboC6ylZ4N80Fuh
+         IJPYnBwK3/8lpDifJmljUIzIx17KJ38rut8GG+PcCyLZNTOCdv1KQZ0ez25Wv1WgxE2v
+         D6z4q03ynkWkPAHn1RXT8zOpXX7QboITGaDYTIfpEtDEX7TbCSbQpAQpRVIa5OPvbYJ/
+         K5tw==
+X-Gm-Message-State: AOAM533EcbsKKuvRf0V1M0t2d8SEJbE9d5t1Lfr0a7l9aXfMy4plzteu
+        V5IQxL2QXWlNcyfkK6T6TBpO7+8Tz9nm0F5m0wXqWg==
+X-Google-Smtp-Source: ABdhPJzDzZiF5vXCGP5mkzRnVr4i3jpCUZGt6JzyAJTJuPHcvtQTM87aLzJv4GnqrDPGagqH5nK/n18oBDQ0LIAiPEw=
+X-Received: by 2002:a67:c009:: with SMTP id v9mr12696459vsi.47.1626876822371;
+ Wed, 21 Jul 2021 07:13:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210707135144.191567-1-aardelean@deviqon.com> <CAMpxmJVBTqX_e6a7PjdNmwYN-SCgqXQ1WbfzZbRLBGvPSVHTFQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJVBTqX_e6a7PjdNmwYN-SCgqXQ1WbfzZbRLBGvPSVHTFQ@mail.gmail.com>
+From:   Alexandru Ardelean <aardelean@deviqon.com>
+Date:   Wed, 21 Jul 2021 17:13:30 +0300
+Message-ID: <CAASAkoYhg2VQB5En8=pybeHngnApaYoStg3ZB9=J-ZMofD7Rkg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: viperboard: remove platform_set_drvdata() call in probe
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The X-Powers AXP PMICs feature a GPIO Controller supported by Linux
-thanks to its device tree binding.
+On Wed, 21 Jul 2021 at 16:16, Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> On Wed, Jul 7, 2021 at 3:51 PM Alexandru Ardelean <aardelean@deviqon.com> wrote:
+> >
+> > The platform_set_drvdata() call is only useful if we need to retrieve back
+> > the private information.
+> > Since the driver doesn't do that, it's not useful to have it.
+> >
+> > This change removes it.
+> >
+> > Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
+> > ---
+> >  drivers/gpio/gpio-viperboard.c | 6 +-----
+> >  1 file changed, 1 insertion(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-viperboard.c b/drivers/gpio/gpio-viperboard.c
+> > index c301c1d56dd2..98ddd6590362 100644
+> > --- a/drivers/gpio/gpio-viperboard.c
+> > +++ b/drivers/gpio/gpio-viperboard.c
+> > @@ -422,12 +422,8 @@ static int vprbrd_gpio_probe(struct platform_device *pdev)
+> >         vb_gpio->gpiob.direction_input = vprbrd_gpiob_direction_input;
+> >         vb_gpio->gpiob.direction_output = vprbrd_gpiob_direction_output;
+> >         ret = devm_gpiochip_add_data(&pdev->dev, &vb_gpio->gpiob, vb_gpio);
+> > -       if (ret < 0) {
+> > +       if (ret < 0)
+> >                 dev_err(vb_gpio->gpiob.parent, "could not add gpio b");
+> > -               return ret;
+> > -       }
+> > -
+> > -       platform_set_drvdata(pdev, vb_gpio);
+> >
+> >         return ret;
+> >  }
+> > --
+> > 2.31.1
+> >
+>
+> The log is not really needed, we'll get an error message from gpiolib
+> core. Can you remove it while you're at it and just return the result
+> of devm_gpiochip_add_data()?
 
-Now that we have the DT validation in place, let's convert the device
-tree bindings for that driver over to a YAML schema.
+I thought about removing it, but in this driver there are 2
+devm_gpiochip_add_data() calls.
+It registers 2 GPIOchip instances.
+Which is not so easy to see in this patch.
 
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- .../devicetree/bindings/gpio/gpio-axp209.txt  | 75 -----------------
- .../bindings/gpio/x-powers,axp209-gpio.yaml   | 84 +++++++++++++++++++
- 2 files changed, 84 insertions(+), 75 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+First one says "could not add gpio a"  and this one says "could not add gpio b".
+I hesitated to remove either of these.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt b/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-deleted file mode 100644
-index fc42b2caa06d..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-+++ /dev/null
-@@ -1,75 +0,0 @@
--AXP209 GPIO & pinctrl controller
--
--This driver follows the usual GPIO bindings found in
--Documentation/devicetree/bindings/gpio/gpio.txt
--
--This driver follows the usual pinctrl bindings found in
--Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
--
--This driver employs the per-pin muxing pattern.
--
--Required properties:
--- compatible: Should be one of:
--	- "x-powers,axp209-gpio"
--	- "x-powers,axp813-gpio"
--- #gpio-cells: Should be two. The first cell is the pin number and the
--  second is the GPIO flags.
--- gpio-controller: Marks the device node as a GPIO controller.
--
--This node must be a subnode of the axp20x PMIC, documented in
--Documentation/devicetree/bindings/mfd/axp20x.txt
--
--Example:
--
--axp209: pmic@34 {
--	compatible = "x-powers,axp209";
--	reg = <0x34>;
--	interrupt-parent = <&nmi_intc>;
--	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--	interrupt-controller;
--	#interrupt-cells = <1>;
--
--	axp_gpio: gpio {
--		compatible = "x-powers,axp209-gpio";
--		gpio-controller;
--		#gpio-cells = <2>;
--	};
--};
--
--The GPIOs can be muxed to other functions and therefore, must be a subnode of
--axp_gpio.
--
--Example:
--
--&axp_gpio {
--	gpio0_adc: gpio0-adc {
--		pins = "GPIO0";
--		function = "adc";
--	};
--};
--
--&example_node {
--	pinctrl-names = "default";
--	pinctrl-0 = <&gpio0_adc>;
--};
--
--GPIOs and their functions
---------------------------
--
--Each GPIO is independent from the other (i.e. GPIO0 in gpio_in function does
--not force GPIO1 and GPIO2 to be in gpio_in function as well).
--
--axp209
--------
--GPIO	|	Functions
--------------------------
--GPIO0	|	gpio_in, gpio_out, ldo, adc
--GPIO1	|	gpio_in, gpio_out, ldo, adc
--GPIO2	|	gpio_in, gpio_out
--
--axp813
--------
--GPIO	|	Functions
--------------------------
--GPIO0	|	gpio_in, gpio_out, ldo, adc
--GPIO1	|	gpio_in, gpio_out, ldo
-diff --git a/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
-new file mode 100644
-index 000000000000..28337f939d4e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/gpio/x-powers,axp209-gpio.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: X-Powers AXP209 GPIO Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+
-+properties:
-+  "#gpio-cells":
-+    const: 2
-+    description: >
-+      The first cell is the pin number and the second is the GPIO flags.
-+
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - x-powers,axp209-gpio
-+          - x-powers,axp813-gpio
-+      - items:
-+          - const: x-powers,axp803-gpio
-+          - const: x-powers,axp813-gpio
-+
-+  gpio-controller: true
-+
-+patternProperties:
-+  "^.*-pins?$":
-+    $ref: /schemas/pinctrl/pinmux-node.yaml#
-+
-+    properties:
-+      pins:
-+        items:
-+          enum:
-+            - GPIO0
-+            - GPIO1
-+            - GPIO2
-+
-+      function:
-+        enum:
-+          - adc
-+          - ldo
-+          - gpio_in
-+          - gpio_out
-+
-+required:
-+  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@34 {
-+            #interrupt-cells = <1>;
-+            compatible = "x-powers,axp209";
-+            reg = <0x34>;
-+            interrupt-parent = <&nmi_intc>;
-+            interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+            interrupt-controller;
-+
-+            gpio {
-+                #gpio-cells = <2>;
-+                compatible = "x-powers,axp209-gpio";
-+                gpio-controller;
-+
-+                gpio0-adc-pin {
-+                    pins = "GPIO0";
-+                    function = "adc";
-+                };
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.31.1
+In this case, it may be a little helpful to know which GPIOchip failed
+to be registered.
 
+But I don't mind removing them both.
+Whatever you prefer. I'm undecided.
+
+>
+> Bart
