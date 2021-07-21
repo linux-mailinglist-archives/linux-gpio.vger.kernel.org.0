@@ -2,131 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 514D53D10FE
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 16:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CA543D12CE
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jul 2021 17:49:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238011AbhGUNg2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Jul 2021 09:36:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52886 "EHLO
+        id S232977AbhGUPJV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Jul 2021 11:09:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237574AbhGUNgZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jul 2021 09:36:25 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7FA3C061757
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 07:17:00 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id e14so3208742ljo.7
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 07:17:00 -0700 (PDT)
+        with ESMTP id S232494AbhGUPJU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jul 2021 11:09:20 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891A5C061575
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 08:49:57 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id gx2so1894620pjb.5
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jul 2021 08:49:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aMtC4XryKwhDIhZBjGDMT7qXwIITt0vl4IftwTuf1DM=;
-        b=tn/yPrq9tTMLPjmD5TbZ/iy3AJo6Mi9l2gxxljL5HEUbxMPZdG3RxSjQwM44qEg1Ay
-         ZSQoJ5VmiOWW4F6UY9kJyxELMnSWBgyrkKbQsc6D1cDjQNL0hgLdX0kWHGd5GZ4faBF2
-         BgkanG1I+E8lutJDzpQZ2fecWYN60jF1fRQYhx/4PhqUMW0FiAfl+lnJ7H3zb9yI3mxo
-         ve+3VAybuaeninHAl/dsVNjemwEUlUw0kquk8MkxSCod74oz+6KmpuIpHsAbGyCRXlsP
-         MAan1nHL+ko3XcitUB2qAlOM1tT6B29gN95vPLIRWqeSZymxrUpub7/K7xNOD1FSCw9z
-         BGfw==
+         :cc:content-transfer-encoding;
+        bh=inBYu5ag7c45MW8HDl2wJjLOE4iuBAdb1D4julHQh2I=;
+        b=JoYCQOT90yZYg68ABYw09NUwlkvhYWyLIYIuvV9ipOkP0s5IMJzBj6Y4eWj31EP2Pj
+         YURwAVn4LFLGmPWOH2vgvHU0VZkz5Hkb1A0c6Aw7gfCGoGDGIrZQWP9fMMSQkAQ42o/4
+         QUKM37vhm8hVlZ+CCg3uLAfP96bmynoBUTlPjBHECASSdEB8VZ5rJC4ElQPIlJqMEaU4
+         Gd9bIqliavPLOCz5lnQ0tZqQ0Z3P5gREfEUGime2KX1aUctMEb6qdkF7V2Fxe/uO6eIU
+         sRgNrCWjgD3ZbHRvHMt81AtI8dNKiummeY/rh6pkE01/c5pW2sChVlYgTN4kwHUbqR25
+         l3cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aMtC4XryKwhDIhZBjGDMT7qXwIITt0vl4IftwTuf1DM=;
-        b=BLAIEJtCRYNgfyz52+sJ6PW9KW8U7Gk7pL3RMLNP/A6l8j8H8s+WIlYexVCQESYYTi
-         l0ASbCdIRnZ9fE6iLxQlc4pXt3zixTnsUsX4dlko7kRGfuFEwqBVeCj1yjjC44hcRHU3
-         nszzQXLPMsej/CqlPywRxZOPwAzpITHRrf6cx9onaGWqdW1m5uIy5OqO4q7UzXoiNzFz
-         XXcJGThAkoOKhF1qSU0aEo/Vl5lF4JGP9+3SBQFJVQZesquSfuDC0Vm0ohGoPwLllYlG
-         HddUWrVZvUjQ7WBPusXB1ZYHws1iUfEoJz0LU7J66Jw8vWLyw4kTEUKDRRwF3QNBZTG3
-         FhuQ==
-X-Gm-Message-State: AOAM532OFZMzVcQ6dn0WvKpoOWxhVRGVtGVUV/j+5t9VzJsuJS97+7nu
-        34+cKbdONPZ8nXvhRZEt8WdmPGjzWfxo+H3sFCh3hw==
-X-Google-Smtp-Source: ABdhPJzpjzfCxuW9+8M52jHB3ZIgsPbzyBIakbaMW5R54JJyEfDj0/89vRmJI8EUQas2w0+VtPllFSyf5+6xQuZ8ilo=
-X-Received: by 2002:a2e:950:: with SMTP id 77mr31532430ljj.438.1626877019230;
- Wed, 21 Jul 2021 07:16:59 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=inBYu5ag7c45MW8HDl2wJjLOE4iuBAdb1D4julHQh2I=;
+        b=A4YIrHEzfUNkAaYMkjdWVwG2yBadpFvMnk6O/4cVBlXMXkkIDfUKJOrOGhqtCMVREl
+         d91T/C88tSlPKTSO6DyrfzkAdNFAtT++t1uQsyRuU4Tab/cE+uBq+U/0yE7jXgvVjWdO
+         +QXNKA2FeiYYLny2D2AGVuQjDf4JqgFcuT9nqzto3WM/17XKsmf5prBbHKt6Ta/B/y5z
+         Bb8nd3ZT90vXPYznzJGs3ADzLcG7cBmNcci5BHOiOuqkD0bd8bQ2z93+3t3oNa/qm9bK
+         YytprtoZpDIzK1rqffdlMkcYLeWKnj/BmNvMa+SqSrwNrLrLAVh9mfz0nWD+gnD7XrZo
+         qE3A==
+X-Gm-Message-State: AOAM532eoOjDmKXzsH24SowSvP84W0aMnSaOBP0BwJbbN43JzEcoFk0V
+        g+hQk9T2Ias00cRhLOD/cXB3kl8835aZTx6g9d8=
+X-Google-Smtp-Source: ABdhPJwtxXMeUt1ckwjLUEFJWmO5RZqlQfn6S4KZp6SzUCFHTOMZdyZ2jJ5TYjZwgNfAJEpk2VN3WDR6FtGvKnLyL8E=
+X-Received: by 2002:a17:90b:3647:: with SMTP id nh7mr36027626pjb.228.1626882597112;
+ Wed, 21 Jul 2021 08:49:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210607123317.3242031-1-robert.marko@sartura.hr>
- <20210607123317.3242031-5-robert.marko@sartura.hr> <CA+HBbNH7wcpfQOX2=vZmW78GoWy_WL3Pz-dMKe0N0ebZDp+oUw@mail.gmail.com>
- <20210713222528.GA952399@robh.at.kernel.org> <CA+HBbNFj5+6sLKxmL8XtsZQ48ch8OjTbJ1bwkDC8dfRiOyWY1Q@mail.gmail.com>
- <20210719225906.GA2769608@robh.at.kernel.org>
-In-Reply-To: <20210719225906.GA2769608@robh.at.kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 21 Jul 2021 16:16:48 +0200
-Message-ID: <CACRpkdbq6Jow6AT9OpsR7Q0JVCWVMcmamh9KHPXMtUnkoe7ZFw@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Robert Marko <robert.marko@sartura.hr>,
+References: <CAG4TOxMzf1Wn6PcWk=XfB+SV+MHwbxUq8t1RNswie5e3=Y+OXQ@mail.gmail.com>
+ <CACRpkdZyJd0TW5aVRfxSSWknzCyVhjMwQuAj9i9iuQ6pW9vftQ@mail.gmail.com>
+ <20210707105000.GA4394@sirena.org.uk> <c24c61f498f43f589eafd423e51f997134d198b7.camel@HansenPartnership.com>
+ <YOWcCG9Pm/S+EXFw@kroah.com> <11c07bc291b443c2683a2baff5b180ff5b0729a5.camel@HansenPartnership.com>
+ <YOWh0Dq+2v+wH3B4@kroah.com> <YOXhlDsMAZUn1EBg@pendragon.ideasonboard.com>
+ <YOagA4bgdGYos5aa@kroah.com> <CACRpkdasOaNgBAZVx5qpKJdU7h41jHDG2jWi2+pi9a1JBh7RTQ@mail.gmail.com>
+ <YOh/JC//dotfm5J9@google.com> <CACRpkdb1W=M5EJkGbSS4QxObU-Gd5yZ1qE439k_D4K=jevgcrQ@mail.gmail.com>
+ <CAHp75VfW7PxAyU=eYPNWFU_oUY=aStz-4W5gX87KSo402YhMXQ@mail.gmail.com> <CACRpkdbzAzwrSJmoiO8w5KPV2dL-qxgaeD+gSzL-Gg+cmajsOQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbzAzwrSJmoiO8w5KPV2dL-qxgaeD+gSzL-Gg+cmajsOQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 21 Jul 2021 18:49:17 +0300
+Message-ID: <CAHp75Vc9E3D4+roG6Hpv1TDffpy+7=kP0zwMuwy3FFghL=pTpQ@mail.gmail.com>
+Subject: Re: cdev/devm_* issues (was Re: [TECH TOPIC] Rust for Linux)
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Wedson Almeida Filho <wedsonaf@google.com>,
+        Greg KH <greg@kroah.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Mark Brown <broonie@kernel.org>,
+        Roland Dreier <roland@kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "ksummit@lists.linux.dev" <ksummit@lists.linux.dev>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Donald Buczek <buczek@molgen.mpg.de>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 20, 2021 at 12:59 AM Rob Herring <robh@kernel.org> wrote:
-
-> > > > Are there any issues with the bindings?
-> > >
-> > > Yes. Primarily the GPIO function being part of the compatible. I'm
-> > > surprised Linus W is okay with that.
-> >
-> > I think I already explained this before, having a single compatible
-> > won't work here.
-> > Then there would not be anything to know whether its input or output
-> > only as the pins
-> > have specific purpose.
+On Wed, Jul 21, 2021 at 4:46 PM Linus Walleij <linus.walleij@linaro.org> wr=
+ote:
+> On Wed, Jul 14, 2021 at 12:35 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
 >
-> The client side should tell the direction. Are you using the SFP
-> binding?: Documentation/devicetree/bindings/net/sff,sfp.txt
+> > To me described scenario sounds rather like an object lifetime possible=
+ issue.
+> > In any case, shouldn=E2=80=99t VFS guarantee by a reference counting th=
+at
+> > gpiochip_remove() wouldn=E2=80=99t be called while file descriptor is i=
+n use?
+> > Or am I looking from the wrong end here?
 >
-> Specific purpose IOs are not general purpose IOs. Repeating Linus W
-> here. Maybe his opinion has evolved...
+> What happens is that the GPIO device disappears (such as unplugging
+> a USB GPIO expander) while a multithreaded userspace is hammering
+> exotic ioctl() commands to the same device like crazy.
+>
+> Under these circumstances (which should be rare, but you know,
+> developers) it could happen that an ioctl() sneak in before the
+> gpio_chip pointer is NULL if I read the code right.
 
-Nah. I think at one time or two I was convinced to let something
-special purpose slip through as "GPIO".
+So, gpio_chip is NULL but gpiodev is not NULL, correct?
+If so, it means that the above mentioned scenario applies to the
+latter one and I understand the checks.
 
-Typical case: LED control lines that were in practice used for other
-things, such as controlling motors.
-
-Here there is a pin named "SFP TX disable" which is suspicious.
-Why isn't whatever is now managing SFP just read/write this bit
-without going through the GPIO abstraction to disable TX?
-
-If it is a regmap in Linux then that is fine, just pass the regmap
-around inside the kernel, OK finished. But really that is an OS
-detail.
-
-If the pin is in practice used for other things, say connected
-to a LED, I would soften up and accept it as a GPIO compatible.
-
-> If the programming model of each instance is different, then different
-> compatibles are justified. But describe what the difference is, not the
-> connection.
-
-IIRC that is the case as the instances are different.
-
-So those differences should be described for each compatible in the
-bindings.
-
-So there is this:
-
-> +  GPIO controller module provides GPIO-s for the SFP slots.
-> +  It is split into 3 controllers, one output only for the SFP TX disable
-> +  pins, one input only for the SFP present pins and one input only for
-> +  the SFP LOS pins.
-
-This should read "the hardware instances are different in such way
-that the first can only (by hardware restrictions) be used as output..."
-etc, so that it is crystal clear what this means.
-
-But if the lines are special purpose not general purpose, they
-should not be GPIOs to begin with.
-
-Yours,
-Linus Walleij
+--=20
+With Best Regards,
+Andy Shevchenko
