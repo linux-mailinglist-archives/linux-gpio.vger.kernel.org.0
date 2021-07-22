@@ -2,64 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A98C3D1C3A
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 05:09:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61E013D1C7C
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 05:40:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230381AbhGVC2Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Jul 2021 22:28:25 -0400
-Received: from mail-io1-f46.google.com ([209.85.166.46]:41922 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230372AbhGVC2Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jul 2021 22:28:25 -0400
-Received: by mail-io1-f46.google.com with SMTP id z9so4726957iob.8;
-        Wed, 21 Jul 2021 20:08:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+2gi8jgpBf2HT6xFKosHY+cehvCKKppSdy1MSQAO4EI=;
-        b=L4yykOExVfUfppAdrBYUcKCSgxZ8MOA92UwmMqrwWDT5KKXPASgMMFpl3fAhxPxmjk
-         geZrOWqyIQPROqPk0yy7vIl//7/VZGaLTpqNRgVDbirAnkpNyZK+vUtD5x4f7aOzP8z7
-         YTBe8MFfGDIdGZkYiXPA0weSYqo7IsL8dzb/CESWj9+XtbZcgrtuBT07VCs5MO2ktXy9
-         RgHDN/ztB29U3HZ9BAx/kwENotN0/Grvs9GPwZlxUdjK8LKfycGWtSDykNTtGnwqE4N4
-         eoueoAaQEoDuHeGrntvv8eAoP1KO9Y6+w+nyraXfgTsYj3GSQKbY+i2WVxfTrPI3LfsF
-         OLcg==
-X-Gm-Message-State: AOAM531/uqYmwClCtZFDuQX0UzAVS/VUPx/pygg/6+n6ajEajMLNV8ZA
-        kmPCujeruHJVjnyGw+PvZw==
-X-Google-Smtp-Source: ABdhPJyIndYW6uP5QZ3fQmNa+7zC+hvqSegKmYKpKp+O8vBpc5Yjh1VWed4Cxb7SD7RkAjPuPE61SA==
-X-Received: by 2002:a05:6638:2416:: with SMTP id z22mr26835174jat.57.1626923339686;
-        Wed, 21 Jul 2021 20:08:59 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id m12sm13717465iln.43.2021.07.21.20.08.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jul 2021 20:08:59 -0700 (PDT)
-Received: (nullmailer pid 3227699 invoked by uid 1000);
-        Thu, 22 Jul 2021 03:08:57 -0000
-Date:   Wed, 21 Jul 2021 21:08:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        romain.perier@gmail.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/10] dt-bindings: gpio: msc313: Add offsets for ssd20xd
-Message-ID: <20210722030857.GA3227650@robh.at.kernel.org>
-References: <20210717045627.1739959-1-daniel@0x0f.com>
- <20210717045627.1739959-3-daniel@0x0f.com>
+        id S230306AbhGVDAE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Jul 2021 23:00:04 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:11461 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229900AbhGVDAD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jul 2021 23:00:03 -0400
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GVdRs6BC5zch9G;
+        Thu, 22 Jul 2021 11:37:13 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Thu, 22 Jul 2021 11:40:36 +0800
+Received: from thunder-town.china.huawei.com (10.174.179.0) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Thu, 22 Jul 2021 11:40:35 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v2 0/2]  pinctrl: single: Move test PCS_HAS_PINCONF in pcs_parse_bits_in_pinctrl_entry() to the beginning and fix its return value
+Date:   Thu, 22 Jul 2021 11:39:28 +0800
+Message-ID: <20210722033930.4034-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210717045627.1739959-3-daniel@0x0f.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.179.0]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 17 Jul 2021 13:56:19 +0900, Daniel Palmer wrote:
-> Add the gpio offsets for the SSD201 and SSD202D chips.
-> 
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> ---
->  include/dt-bindings/gpio/msc313-gpio.h | 71 ++++++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
-> 
+v1 --> v2:
+Split bugfix and cleanup into two patches.
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+Zhen Lei (2):
+  pinctrl: single: Fix error return code in
+    pcs_parse_bits_in_pinctrl_entry()
+  pinctrl: single: Move test PCS_HAS_PINCONF in
+    pcs_parse_bits_in_pinctrl_entry() to the beginning
+
+ drivers/pinctrl/pinctrl-single.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
+
+-- 
+2.25.1
+
