@@ -2,155 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FFBC3D2163
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 11:57:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FBA83D2246
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 12:49:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231534AbhGVJQp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Jul 2021 05:16:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39494 "EHLO
+        id S231599AbhGVKIc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Jul 2021 06:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231497AbhGVJQl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Jul 2021 05:16:41 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886E8C061796
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jul 2021 02:56:58 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id p9so5386348pjl.3
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jul 2021 02:56:58 -0700 (PDT)
+        with ESMTP id S231453AbhGVKIc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Jul 2021 06:08:32 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA4AC061575
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Jul 2021 03:49:06 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id a23-20020a05600c2257b0290236ec98bebaso2693896wmm.1
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Jul 2021 03:49:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=muwPPr/wH77yClDsFJrEFYw3n7hGXGW3QcFllPO0brU=;
-        b=n8ZC3AZw3jP2jJueB1RZMhR02tbalhWqKiFDjPykAogWMoM9xPPXZM/xXeT557iwV0
-         zVxjo56XtoyPTXZ8dHUIGdZ0e5o9LsL9RZXeAHrIsa3vKQpuXZTfjQpIO2O74KzhGXSm
-         ajmmB8uQiV8rYR/qUCw0LT+ue+IV0Jr8gpbssPKe7T01IU0QGDZ03V5pN2baNV47YW7g
-         we02jklbUjKouKrsyHOvmp1DoGkFk5u6Yv14EDlWYZShNBF4I/Wd2BFKJu7eLZNtofoz
-         5KeXpmJQBYvo7SWgXVkWNZVIaMsfLwqptLsh2DasM30eBzw+YOEAF2Z2hNOmnn0HwkuL
-         v79w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jzT40Is7RsmmV/mbwZcKkzzddQgJMDg9D44JSvQ79iY=;
+        b=pDzKortj6n3pS3IWeyLUCFMc3H0HtGZ+SzCncqI2KQQVSJ5Op7PcNfX6dXNhKDnt7U
+         B3wMYe+toQDTtaEHG2XdpSdOkTaudnOQZMBw+IM9KE+jJITg8hNIx2UgX566k6UOCxCj
+         KNedDsoW25iTJZPTu9LCYshjpPdbtLXNC8uaYmuCvKOnU4nlht+JTZ178k9Kr2CULwEQ
+         C3waOb9gFzjvT3TwD04UEqdQXXp2VjxyCoeMwrYh5WImbSXGgivpAZCVV7fDaTBcal0c
+         EuiyIoOuGfhNsmfW7pzjBqrF+/h5F1S4sQnWKFp5/4JejuKG6NniJjo00yq3HMUBJQnx
+         Jr1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=muwPPr/wH77yClDsFJrEFYw3n7hGXGW3QcFllPO0brU=;
-        b=KBeiGcLJ8zIdDh2ul4yOWu79zDcIqW7eIStCmHSpd455toyG9KxeBYMYhneeZQ6hOW
-         S9CY5VwuGLj+AwqfgLNpQq0csikQGNL8Nu4gy3Oi5g3lIO9Sr7+j3y1qN012jpMZfGKM
-         8cJOBauiDqpvS3iLOIag8gXYrD1oAvuPBtG19WqKgF2kBTbU9RuFcQ4lpVgeV14DfVzU
-         S1DbjU//9X6CBe7uwLkMpJFA2FYK8+LHU0TcAKt0pI84tqATnezH8nA2Xub/UmtbXNGz
-         cmMRNLN3ZJXFrj2ZW42RTOxdMhKccRtDcpnFGhVrOuwe64WPPbPOjvBWqnL3hHs40ORt
-         M10A==
-X-Gm-Message-State: AOAM531/37MoDrMYl3YmozO9GJ/CcCfYrPX6hy8HmLNC7TkVINZ9yT+X
-        F0LagpQ9CaN4CEm48rJlD1uaLA==
-X-Google-Smtp-Source: ABdhPJyZN5CR9UcyY2gk0+/KtibNuktSAXGwPI2GxUo8LHTNu/01LbQ0OoVZsKSNKgm+Cc7KitP/dg==
-X-Received: by 2002:a63:4d09:: with SMTP id a9mr40115746pgb.278.1626947817936;
-        Thu, 22 Jul 2021 02:56:57 -0700 (PDT)
-Received: from localhost ([106.201.108.2])
-        by smtp.gmail.com with ESMTPSA id u21sm29458630pfh.163.2021.07.22.02.56.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jul 2021 02:56:57 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Jie Deng <jie.deng@intel.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH V2 3/5] dt-bindings: gpio: Add bindings for gpio-virtio
-Date:   Thu, 22 Jul 2021 15:26:41 +0530
-Message-Id: <3257b21c1179b11a5c62a95e138735f2443c90aa.1626947324.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1626947324.git.viresh.kumar@linaro.org>
-References: <cover.1626947324.git.viresh.kumar@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jzT40Is7RsmmV/mbwZcKkzzddQgJMDg9D44JSvQ79iY=;
+        b=tCbOx/GewNS+H6CU0APWavqQJjj+NrtYASGUWcV2VmkkC8j5hrWA/2JJR2JwcopRu8
+         hKB7y6SDQWG7lhRqiQaWrQ1aQxwjPrSb8fDU4RveQqHfHkFGeqdRqxbNx83gf4CYoaOl
+         eaYJRXAsicZUxDudP5yrL2p0eiNIObp097vQ8GfsZgCyHhNabtr73aU5g0noND2luN7u
+         JcMJlhtgfJ0hVjHlVLVMgyvcUshx76bBzfj2yIrZKEvhzwtMkeXROKo+4/0+BnTjsnKt
+         vHRpBJ8YEjK38ZvyAhQbrYUfgJvpjjz7bJ4w+2IwCyGfC1gCpD4WT0IsFs70pioi+DOm
+         ABEg==
+X-Gm-Message-State: AOAM530Ou75kkN9QT4f/a+rzVzIw6z4BizEQ8ALQuz94WzpMNDVG3dty
+        cMGIh+eM4taTlXlArbaQLCTpq5MUtOS81q1WseM=
+X-Google-Smtp-Source: ABdhPJyrkqQBWFiQSXRQ/0jjHHvy2KnMjaFCjJrmuNj5RoBHpw9YrocgzBxrQChpNCEzlps0FxXg74RszNZMoZjGIOg=
+X-Received: by 2002:a1c:1f47:: with SMTP id f68mr42188991wmf.58.1626950945209;
+ Thu, 22 Jul 2021 03:49:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210715201001.23726-1-brgl@bgdev.pl> <20210715201001.23726-4-brgl@bgdev.pl>
+ <20210715221803.GA16338@cephalopod> <CAMRc=Md0DWKBT0BJGdKDdhTN0gG3Jc4Mf71xUnYqqhxRPheR7Q@mail.gmail.com>
+ <CAMRc=MdjjX0z=9hwvbE9mcx8J7twhb-j6yFFJqpqdZB1vfkHEg@mail.gmail.com> <CAMRc=MegRa=zde8i7UivLDrSS8sKabDNdHcovE=PnP=N9i+kqg@mail.gmail.com>
+In-Reply-To: <CAMRc=MegRa=zde8i7UivLDrSS8sKabDNdHcovE=PnP=N9i+kqg@mail.gmail.com>
+From:   Jack Winch <sunt.un.morcov@gmail.com>
+Date:   Thu, 22 Jul 2021 11:48:54 +0100
+Message-ID: <CAFhCfDZ-O31ZivvkUvOin+7T7STCBr4wdfwmAnXuHgGSYTB7qA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v2 3/3] bindings: cxx: implement C++ bindings
+ for libgpiod v2.0
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Ben Hutchings <ben.hutchings@essensium.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds binding for virtio GPIO controller, it is based on
-virtio-device bindings.
+Hello Bartosz et al.,
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- .../devicetree/bindings/gpio/gpio-virtio.yaml | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
+Apologies for blowing hot and cold with regard to my contributions and
+responses on this mailing list.  The last nine months have been an
+incredibly busy time.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-virtio.yaml b/Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
-new file mode 100644
-index 000000000000..96108cfb7a08
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-virtio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Virtio GPIO controller
-+
-+maintainers:
-+  - Viresh Kumar <viresh.kumar@linaro.org>
-+
-+allOf:
-+  - $ref: /schemas/gpio/gpio.yaml#
-+  - $ref: /schemas/virtio/virtio-device.yaml#
-+
-+description:
-+  Virtio GPIO controller, see /schemas/virtio/virtio-device.yaml for more
-+  details.
-+
-+properties:
-+  $nodename:
-+    pattern: '^gpio-virtio(-[a-z0-9]+)?$'
-+
-+  compatible:
-+    const: virtio,29
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    virtio@3000 {
-+        compatible = "virtio,mmio";
-+        reg = <0x3000 0x100>;
-+        interrupts = <41>;
-+
-+        gpio: gpio-virtio {
-+            compatible = "virtio,29";
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+        };
-+    };
-+
-+...
--- 
-2.31.1.272.g89b43f80a514
+I would recommend using enum classes, as this offers better type
+safety.  Best practice is to avoid the use of unscoped enums within
+C++, especially of the anonymous variety.  There is now a set of ISO
+C++ Core Guidelines (see
+https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#main)
+which offer sage advice for developing C++ software.  Just be aware
+that one-size doesn't fit all and trying to maintain shared library
+ABI compatibility would be considered an edge case which affects the
+applicability of some guidance.  In time, maybe someone will
+explicitly state which guidelines are exempt in a situation similar to
+our own (i.e., providing ABI stable C++ interfaces to shared libraries
+for major revisions).
 
+ABI compatibility issues can be avoided by using one of the fixed
+width integer types introduced in C++11 (e.g., std::uint8_t) as the
+underlying type of the scoped enum class.
+
+I would personally avoid adding the 'get_' prefix to 'getter' methods
+of classes, although this choice is almost entirely aesthetical in
+nature.
+
+My advice would be to remove all anonymous unscoped enum definitions
+from class definitions, instead defining them as scoped enum classes
+using a suitable fixed-width integer type (i.e., std::uint8_t) outside
+the dependent classes.  Then, within the definitions of dependent
+classes, you can define publicly scoped type aliases for these enum
+class types (using the suffix '_type' for these aliases, as is
+commonly seen with other C++ libraries).  See my rough example below
+for illustrative purposes only.  This is a familiar approach and will
+rectify your current issue with naming collisions.
+
+namespace gpiod {
+
+enum class direction : std::uint8_t {
+    INPUT = 1,
+    OUTPUT
+};
+
+class line_info {
+public:
+    using direction_type = ::gpiod::direction;
+
+    direction_type direction () const {
+        return _m_direction;
+    }
+
+private:
+    direction_type _m_direction;
+};
+
+}
+
+If time permits, I'll do a proper review of your changes (however, I
+emigrate in less than a week, so I'm still rather busy at the moment).
+
+Best,
+Jack
