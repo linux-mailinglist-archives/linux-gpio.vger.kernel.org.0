@@ -2,133 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCC173D2537
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 16:09:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 016D93D25E2
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 16:37:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232118AbhGVN3N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Jul 2021 09:29:13 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:39927 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232105AbhGVN3M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 22 Jul 2021 09:29:12 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 358275C0164;
-        Thu, 22 Jul 2021 10:09:47 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 22 Jul 2021 10:09:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=fMIyRCILHtleUhWfpXsc7vMymcB
-        Fk2L6abLtJS24bJQ=; b=Njqj4cdRmAbN2/g98gTHuHrHlNUaywGNHVPgTX4Zu2n
-        7CcWRSEfhKSvHSbQgJfA5fdT1h3E+Rpt7GKtHJ0iYN4G3O3vpwHTht5YRn3PWJrA
-        CbEspM7IFNs0dkg9DsU29BCdcHW2OWpixRdHCwZYT6OZ3EfkkAjJ6mXnD+rwsoxe
-        eq2Yn9p0rPVYcvdwsRlH9BbZZw9UB/NBy6ki4R7ufjlIIlf0m0/EeHWTNM0QhUES
-        eaCmhSRttfWCNdKIsBbI3ejqAnYRkOxVhNuato5OoW3IHJUuEHn7aRo9maN7Tmxg
-        5iGSU1rY8cp0zms/u/fIi1Fm+kmHV8TJ46LKtFOTGMA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=fMIyRC
-        ILHtleUhWfpXsc7vMymcBFk2L6abLtJS24bJQ=; b=XqhfMC1+dXkKYbAcws+YkL
-        iZlXgAuGGe7nWLV2NwGeKpnzRQz+Wa/iaN2YL2BwPnjUyIPEmrAprCF1dKWjX/de
-        WBtX/3wiw1Us4QJseWV8A9VWF62chdegmW6qZ5E4fDIgSpQI75LgJe34LsdY+NfQ
-        GEAn4nrScCJO1zShw3207YDALiRJ6tU7qEg94lMF02/T3u7fx+nieFqjosyRS/kQ
-        ozpYm59B9X1hyUowZjT+CEPyiQ/nBTeWKwEmY0c4fgr95k/ePzyjRYaUY8Let99s
-        0R9vL7plS+fht9z5Dtf9zzSLdTxpSz3zYQfmghwzyJoeMtBJ8f3yq8d6D+vDSN/w
-        ==
-X-ME-Sender: <xms:KXz5YBXi0tYRy-CELI8Alvaqe3J0AqkBGgXthnTjBx90YL3T2RY_Iw>
-    <xme:KXz5YBk9O9iiCgP5B93K9dM4G-t4VQ-hufv2RCld7OTNNwQeWtAXKd00FNXbuFeGs
-    egQVp6j-kuph6DqsGY>
-X-ME-Received: <xmr:KXz5YNbRiULjngyBMzhfANrGpPCJNwqKA5v1bdJZNKggyD9iO2nSJIKf_HkJb45mfVOl-gxeOhSXg4TukeTmZ0x1uu2yPzu5geBd>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfeeigdejudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrg
-    igihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:KXz5YEUIYHHOkWnjOV1JK9XkRDNT4FByN9OKT5yTvlra47PFDG5hAQ>
-    <xmx:KXz5YLlHMT94vgVNVKQGz3c4OJFR28xcSnO1sN4Vgg6zCjZjp7FisQ>
-    <xmx:KXz5YBdc3jtDhpD_rYFzqj77Y3674fV1WhrkTGPoW5AKstUcc8-IQA>
-    <xmx:K3z5YJb2QC5N9r9g68L_JE2UMN2vTYuRfvpzJLt5cY-k5dG8D05SVg>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 22 Jul 2021 10:09:45 -0400 (EDT)
-Date:   Thu, 22 Jul 2021 16:09:42 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Icenowy Zheng <icenowy@aosc.io>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH] pinctrl: sunxi: Don't underestimate number of functions
-Message-ID: <20210722140942.2ew6htf5kmvpldsm@gilmour>
-References: <20210722132548.22121-1-andre.przywara@arm.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uprzxwinadb43mu3"
-Content-Disposition: inline
-In-Reply-To: <20210722132548.22121-1-andre.przywara@arm.com>
+        id S232105AbhGVN4m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Jul 2021 09:56:42 -0400
+Received: from mail-io1-f54.google.com ([209.85.166.54]:43785 "EHLO
+        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230343AbhGVN4m (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Jul 2021 09:56:42 -0400
+Received: by mail-io1-f54.google.com with SMTP id k16so6568574ios.10;
+        Thu, 22 Jul 2021 07:37:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=S9oqNdeEmjzMYqfxKnMhuJAig6YozFawShXYrQNAVqU=;
+        b=X1hUm9xqwI8NrHwal/4X82uyONyH7SmwaiYih7A/hO06kBBU6OHw9zbjqaXfV7apzm
+         zwqjfchs80zkTBtfROpaL8WL+WYqM9w9Cuc80+qfduVZYxBDPYBZW3csqGas/MgprH7H
+         0Uy747xKsmGaAa+ErPdFNc8FcwjIAWbT1YHnMGUwAMZIpskdAtpzofA45Ze6dFMvhAXK
+         tXSP42jPf8WtzVxodZCVvRASyDcpyZQPzQCxpc10Ru4ylyFVGJGtGht8RD7wn8ItsXtu
+         zfdKVQsSqo3/XPHBqOPHbBIGKoT1g4k5MR5i2a4zk7KGx1KX8FhHlc5W/wo5NU85mOte
+         fTmw==
+X-Gm-Message-State: AOAM533lJUaWNb6bWH0Y/Tqr7TOMmi+kpWkHnkDP+QQqCiuEQpDO/Udk
+        /uKpgllRmPOiruVfY3haGA==
+X-Google-Smtp-Source: ABdhPJzNL5asZ1slIsXmHQueoDE6m957UCPdvi3vzleu5OadU6dIPbq9iYTm6K3LzeoCsL6DjZtBxA==
+X-Received: by 2002:a05:6602:584:: with SMTP id v4mr45750iox.181.1626964635747;
+        Thu, 22 Jul 2021 07:37:15 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id p9sm14626199ilj.65.2021.07.22.07.37.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jul 2021 07:37:15 -0700 (PDT)
+Received: (nullmailer pid 4183864 invoked by uid 1000);
+        Thu, 22 Jul 2021 14:37:12 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <20210721191558.22484-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20210721191558.22484-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210721191558.22484-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add DT bindings for RZ/G2L pinctrl
+Date:   Thu, 22 Jul 2021 08:37:12 -0600
+Message-Id: <1626964632.914515.4183863.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, 21 Jul 2021 20:15:55 +0100, Lad Prabhakar wrote:
+> Add device tree binding documentation and header file for Renesas
+> RZ/G2L pinctrl.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 155 ++++++++++++++++++
+>  include/dt-bindings/pinctrl/rzg2l-pinctrl.h   |  23 +++
+>  2 files changed, 178 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+>  create mode 100644 include/dt-bindings/pinctrl/rzg2l-pinctrl.h
+> 
 
---uprzxwinadb43mu3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-On Thu, Jul 22, 2021 at 02:25:48PM +0100, Andre Przywara wrote:
-> When we are building all the various pinctrl structures for the
-> Allwinner pinctrl devices, we do some estimation about the maximum
-> number of distinct function (names) that we will need.
->=20
-> So far we take the number of pins as an upper bound, even though we
-> can actually have up to four special functions per pin. This wasn't a
-> problem until now, since we indeed have typically far more pins than
-> functions, and most pins share common functions.
->=20
-> However the H616 "-r" pin controller has only two pins, but four
-> functions, so we run over the end of the array when we are looking for
-> a matching function name in sunxi_pinctrl_add_function - there is no
-> NULL sentinel left that would terminate the loop:
->=20
-> [    8.200648] Unable to handle kernel paging request at virtual address =
-fffdff7efbefaff5
-> [    8.209179] Mem abort info:
-> ....
-> [    8.368456] Call trace:
-> [    8.370925]  __pi_strcmp+0x90/0xf0
-> [    8.374559]  sun50i_h616_r_pinctrl_probe+0x1c/0x28
-> [    8.379557]  platform_probe+0x68/0xd8
->=20
-> Do an actual worst case allocation (4 functions per pin, three common
-> functions and the sentinel) for the initial array allocation. This is
-> now heavily overestimating the number of functions in the common case,
-> but we will reallocate this array later with the actual number of
-> functions, so it's only temporarily.
->=20
-> Fixes: 561c1cf17c46 ("pinctrl: sunxi: Add support for the Allwinner H616-=
-R pin controller")
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+yamllint warnings/errors:
 
-Acked-by: Maxime Ripard <maxime@cerno.tech>
+dtschema/dtc warnings/errors:
+Error: Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.example.dts:29.34-35 syntax error
+FATAL ERROR: Unable to parse input tree
+make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1418: dt_binding_check] Error 2
+\ndoc reference errors (make refcheckdocs):
 
-Thanks!
-Maxime
+See https://patchwork.ozlabs.org/patch/1508385
 
---uprzxwinadb43mu3
-Content-Type: application/pgp-signature; name="signature.asc"
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
------BEGIN PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYPl8JgAKCRDj7w1vZxhR
-xc6pAP9FWmnMG+2wThYKQA0F6aZPiXi2REY9fahjVY7w+NMy6AEAk1Sf+TU5NY9W
-1zeubTfWfaPO/mEG8J3dZ8BTmMEuiQs=
-=5TJ+
------END PGP SIGNATURE-----
+pip3 install dtschema --upgrade
 
---uprzxwinadb43mu3--
+Please check and re-submit.
+
