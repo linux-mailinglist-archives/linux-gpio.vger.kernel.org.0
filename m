@@ -2,129 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FBA83D2246
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 12:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 229583D248A
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 15:26:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231599AbhGVKIc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Jul 2021 06:08:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231453AbhGVKIc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Jul 2021 06:08:32 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA4AC061575
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jul 2021 03:49:06 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id a23-20020a05600c2257b0290236ec98bebaso2693896wmm.1
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jul 2021 03:49:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jzT40Is7RsmmV/mbwZcKkzzddQgJMDg9D44JSvQ79iY=;
-        b=pDzKortj6n3pS3IWeyLUCFMc3H0HtGZ+SzCncqI2KQQVSJ5Op7PcNfX6dXNhKDnt7U
-         B3wMYe+toQDTtaEHG2XdpSdOkTaudnOQZMBw+IM9KE+jJITg8hNIx2UgX566k6UOCxCj
-         KNedDsoW25iTJZPTu9LCYshjpPdbtLXNC8uaYmuCvKOnU4nlht+JTZ178k9Kr2CULwEQ
-         C3waOb9gFzjvT3TwD04UEqdQXXp2VjxyCoeMwrYh5WImbSXGgivpAZCVV7fDaTBcal0c
-         EuiyIoOuGfhNsmfW7pzjBqrF+/h5F1S4sQnWKFp5/4JejuKG6NniJjo00yq3HMUBJQnx
-         Jr1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jzT40Is7RsmmV/mbwZcKkzzddQgJMDg9D44JSvQ79iY=;
-        b=tCbOx/GewNS+H6CU0APWavqQJjj+NrtYASGUWcV2VmkkC8j5hrWA/2JJR2JwcopRu8
-         hKB7y6SDQWG7lhRqiQaWrQ1aQxwjPrSb8fDU4RveQqHfHkFGeqdRqxbNx83gf4CYoaOl
-         eaYJRXAsicZUxDudP5yrL2p0eiNIObp097vQ8GfsZgCyHhNabtr73aU5g0noND2luN7u
-         JcMJlhtgfJ0hVjHlVLVMgyvcUshx76bBzfj2yIrZKEvhzwtMkeXROKo+4/0+BnTjsnKt
-         vHRpBJ8YEjK38ZvyAhQbrYUfgJvpjjz7bJ4w+2IwCyGfC1gCpD4WT0IsFs70pioi+DOm
-         ABEg==
-X-Gm-Message-State: AOAM530Ou75kkN9QT4f/a+rzVzIw6z4BizEQ8ALQuz94WzpMNDVG3dty
-        cMGIh+eM4taTlXlArbaQLCTpq5MUtOS81q1WseM=
-X-Google-Smtp-Source: ABdhPJyrkqQBWFiQSXRQ/0jjHHvy2KnMjaFCjJrmuNj5RoBHpw9YrocgzBxrQChpNCEzlps0FxXg74RszNZMoZjGIOg=
-X-Received: by 2002:a1c:1f47:: with SMTP id f68mr42188991wmf.58.1626950945209;
- Thu, 22 Jul 2021 03:49:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210715201001.23726-1-brgl@bgdev.pl> <20210715201001.23726-4-brgl@bgdev.pl>
- <20210715221803.GA16338@cephalopod> <CAMRc=Md0DWKBT0BJGdKDdhTN0gG3Jc4Mf71xUnYqqhxRPheR7Q@mail.gmail.com>
- <CAMRc=MdjjX0z=9hwvbE9mcx8J7twhb-j6yFFJqpqdZB1vfkHEg@mail.gmail.com> <CAMRc=MegRa=zde8i7UivLDrSS8sKabDNdHcovE=PnP=N9i+kqg@mail.gmail.com>
-In-Reply-To: <CAMRc=MegRa=zde8i7UivLDrSS8sKabDNdHcovE=PnP=N9i+kqg@mail.gmail.com>
-From:   Jack Winch <sunt.un.morcov@gmail.com>
-Date:   Thu, 22 Jul 2021 11:48:54 +0100
-Message-ID: <CAFhCfDZ-O31ZivvkUvOin+7T7STCBr4wdfwmAnXuHgGSYTB7qA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2 3/3] bindings: cxx: implement C++ bindings
- for libgpiod v2.0
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Ben Hutchings <ben.hutchings@essensium.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Helmut Grohne <helmut.grohne@intenta.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S232076AbhGVMpv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Jul 2021 08:45:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:53226 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231925AbhGVMpv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 22 Jul 2021 08:45:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B645113E;
+        Thu, 22 Jul 2021 06:26:26 -0700 (PDT)
+Received: from localhost.localdomain (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A2A53F694;
+        Thu, 22 Jul 2021 06:26:24 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Icenowy Zheng <icenowy@aosc.io>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: [PATCH] pinctrl: sunxi: Don't underestimate number of functions
+Date:   Thu, 22 Jul 2021 14:25:48 +0100
+Message-Id: <20210722132548.22121-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.14.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Bartosz et al.,
+When we are building all the various pinctrl structures for the
+Allwinner pinctrl devices, we do some estimation about the maximum
+number of distinct function (names) that we will need.
 
-Apologies for blowing hot and cold with regard to my contributions and
-responses on this mailing list.  The last nine months have been an
-incredibly busy time.
+So far we take the number of pins as an upper bound, even though we
+can actually have up to four special functions per pin. This wasn't a
+problem until now, since we indeed have typically far more pins than
+functions, and most pins share common functions.
 
-I would recommend using enum classes, as this offers better type
-safety.  Best practice is to avoid the use of unscoped enums within
-C++, especially of the anonymous variety.  There is now a set of ISO
-C++ Core Guidelines (see
-https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#main)
-which offer sage advice for developing C++ software.  Just be aware
-that one-size doesn't fit all and trying to maintain shared library
-ABI compatibility would be considered an edge case which affects the
-applicability of some guidance.  In time, maybe someone will
-explicitly state which guidelines are exempt in a situation similar to
-our own (i.e., providing ABI stable C++ interfaces to shared libraries
-for major revisions).
+However the H616 "-r" pin controller has only two pins, but four
+functions, so we run over the end of the array when we are looking for
+a matching function name in sunxi_pinctrl_add_function - there is no
+NULL sentinel left that would terminate the loop:
 
-ABI compatibility issues can be avoided by using one of the fixed
-width integer types introduced in C++11 (e.g., std::uint8_t) as the
-underlying type of the scoped enum class.
+[    8.200648] Unable to handle kernel paging request at virtual address fffdff7efbefaff5
+[    8.209179] Mem abort info:
+....
+[    8.368456] Call trace:
+[    8.370925]  __pi_strcmp+0x90/0xf0
+[    8.374559]  sun50i_h616_r_pinctrl_probe+0x1c/0x28
+[    8.379557]  platform_probe+0x68/0xd8
 
-I would personally avoid adding the 'get_' prefix to 'getter' methods
-of classes, although this choice is almost entirely aesthetical in
-nature.
+Do an actual worst case allocation (4 functions per pin, three common
+functions and the sentinel) for the initial array allocation. This is
+now heavily overestimating the number of functions in the common case,
+but we will reallocate this array later with the actual number of
+functions, so it's only temporarily.
 
-My advice would be to remove all anonymous unscoped enum definitions
-from class definitions, instead defining them as scoped enum classes
-using a suitable fixed-width integer type (i.e., std::uint8_t) outside
-the dependent classes.  Then, within the definitions of dependent
-classes, you can define publicly scoped type aliases for these enum
-class types (using the suffix '_type' for these aliases, as is
-commonly seen with other C++ libraries).  See my rough example below
-for illustrative purposes only.  This is a familiar approach and will
-rectify your current issue with naming collisions.
+Fixes: 561c1cf17c46 ("pinctrl: sunxi: Add support for the Allwinner H616-R pin controller")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+---
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-namespace gpiod {
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index dc8d39ae045b..9c7679c06dca 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -1219,10 +1219,12 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ 	}
+ 
+ 	/*
+-	 * We suppose that we won't have any more functions than pins,
+-	 * we'll reallocate that later anyway
++	 * Find an upper bound for the maximum number of functions: in
++	 * the worst case we have gpio_in, gpio_out, irq and up to four
++	 * special functions per pin, plus one entry for the sentinel.
++	 * We'll reallocate that later anyway.
+ 	 */
+-	pctl->functions = kcalloc(pctl->ngroups,
++	pctl->functions = kcalloc(4 * pctl->ngroups + 4,
+ 				  sizeof(*pctl->functions),
+ 				  GFP_KERNEL);
+ 	if (!pctl->functions)
+-- 
+2.17.6
 
-enum class direction : std::uint8_t {
-    INPUT = 1,
-    OUTPUT
-};
-
-class line_info {
-public:
-    using direction_type = ::gpiod::direction;
-
-    direction_type direction () const {
-        return _m_direction;
-    }
-
-private:
-    direction_type _m_direction;
-};
-
-}
-
-If time permits, I'll do a proper review of your changes (however, I
-emigrate in less than a week, so I'm still rather busy at the moment).
-
-Best,
-Jack
