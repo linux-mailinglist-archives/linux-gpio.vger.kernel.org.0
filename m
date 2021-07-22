@@ -2,89 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B86E3D2EF2
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 23:16:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDB4C3D2EF9
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 23:19:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231815AbhGVUfv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Jul 2021 16:35:51 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:18053 "EHLO
+        id S231462AbhGVUib (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Jul 2021 16:38:31 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:63540 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231747AbhGVUfu (ORCPT
+        by vger.kernel.org with ESMTP id S231154AbhGVUib (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 22 Jul 2021 16:35:50 -0400
+        Thu, 22 Jul 2021 16:38:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1626988585; x=1658524585;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Z6zOtxzK0SvEBwDx41Sq8+UntB+PqRhBZVtb+Sd6CmM=;
-  b=elUa8F0HV9gK5iLccOS9GMouO5XcaEUMgkJ1J4ZSs+U2Y+oko6GivR9A
-   1qeqATw2gYQD4cc9LmE5sWOLik1YaBQQg5JEbeZCMN6MLEMt5WiMjoF/Y
-   ezQe7518+4BQpBTj2oL889e3Hm7j9NR7yf3/JPjI0+6zfJ1byw/kcHNe6
+  t=1626988746; x=1658524746;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VKUEfi+FeVhAuNW1vzJ0Z+hZPuMA2B1seCFmY06vBWc=;
+  b=yjM6hQvB0VDCp1Iw/L1cEdylHHHTWOuaInl5+qhZYolVbaF6Px6eXcLU
+   HkbMbITfg40SmjxMjloVZdcYkVLS1Et6MxlQwBtiDz8uuGNttP3bShM6Z
+   qSkXhpq9MvIt8HxGtDNhKuIQcqN6RTkPct3Lg5gXPmz+PIPbd0IgBgpi9
    Q=;
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 22 Jul 2021 14:16:25 -0700
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 22 Jul 2021 14:19:05 -0700
 X-QCInternal: smtphost
 Received: from nasanexm03e.na.qualcomm.com ([10.85.0.48])
-  by ironmsg01-sd.qualcomm.com with ESMTP/TLS/AES256-SHA; 22 Jul 2021 14:16:25 -0700
+  by ironmsg05-sd.qualcomm.com with ESMTP/TLS/AES256-SHA; 22 Jul 2021 14:19:05 -0700
 Received: from vamslank1-linux.qualcomm.com (10.80.80.8) by
  nasanexm03e.na.qualcomm.com (10.85.0.48) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Thu, 22 Jul 2021 14:16:24 -0700
+ 15.0.1497.23; Thu, 22 Jul 2021 14:19:05 -0700
 From:   <quic_vamslank@quicinc.com>
 To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <olof@lixom.net>, <soc@kernel.org>, <linus.walleij@linaro.org>,
-        <sboyd@codeaurora.org>, <robh+dt@kernel.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        "Vamsi krishna Lanka" <quic_vamslank@quicinc.com>
-Subject: [PATCH v2 3/3] ARM: dts: qcom: sdx65: Add pincontrol node
-Date:   Thu, 22 Jul 2021 14:16:03 -0700
-Message-ID: <728983e44148367ab5d6ba2c66420b1e37df72b7.1626987430.git.quic_vamslank@quicinc.com>
+        <linus.walleij@linaro.org>
+CC:     <manivannan.sadhasivam@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        "Vamsi Krishna Lanka" <quic_vamslank@quicinc.com>
+Subject: [PATCH v2 0/2] Add pinctrl support for SDX65 
+Date:   Thu, 22 Jul 2021 14:18:47 -0700
+Message-ID: <cover.1626987605.git.quic_vamslank@quicinc.com>
 X-Mailer: git-send-email 2.32.0
-In-Reply-To: <cover.1626987430.git.quic_vamslank@quicinc.com>
-References: <cover.1626987430.git.quic_vamslank@quicinc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanexm03e.na.qualcomm.com (10.85.0.48)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Vamsi krishna Lanka <quic_vamslank@quicinc.com>
+From: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
 
-This commit adds pincontrol node to SDX65 dts.
+Changes from v1:
+ - Addressed all Bjorn's comments
 
-Signed-off-by: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
----
- arch/arm/boot/dts/qcom-sdx65.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+This patch series adds pinctrl bindings and tlmm support for SDX65.
 
-diff --git a/arch/arm/boot/dts/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom-sdx65.dtsi
-index fb240213cc35..db269c73c0e9 100644
---- a/arch/arm/boot/dts/qcom-sdx65.dtsi
-+++ b/arch/arm/boot/dts/qcom-sdx65.dtsi
-@@ -79,6 +79,18 @@ blsp1_uart3: serial@831000 {
- 			status = "disabled";
- 		};
- 
-+		tlmm: pinctrl@f100000 {
-+			compatible = "qcom,sdx65-tlmm";
-+			reg = <0xf100000 0x300000>;
-+			interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&tlmm 0 0 109>;
-+			interrupt-controller;
-+			interrupt-parent = <&intc>;
-+			#interrupt-cells = <2>;
-+		};
-+
- 		pdc: interrupt-controller@b210000 {
- 			compatible = "qcom,sdx65-pdc", "qcom,pdc";
- 			reg = <0xb210000 0x10000>;
+Thanks,
+Vamsi
+
+Vamsi Krishna Lanka (2):
+  dt-bindings: pinctrl: qcom: Add SDX65 pinctrl bindings
+  pinctrl: qcom: Add SDX65 pincontrol driver
+
+ .../bindings/pinctrl/qcom,sdx65-pinctrl.yaml  | 195 ++++
+ drivers/pinctrl/qcom/Kconfig                  |   9 +
+ drivers/pinctrl/qcom/Makefile                 |   1 +
+ drivers/pinctrl/qcom/pinctrl-sdx65.c          | 967 ++++++++++++++++++
+ 4 files changed, 1172 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sdx65.c
+
 -- 
 2.32.0
 
