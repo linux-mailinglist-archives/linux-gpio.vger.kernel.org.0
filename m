@@ -2,90 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 827BE3D3C7F
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 17:38:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BFE53D3CA5
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 17:43:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235568AbhGWO57 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 10:57:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50698 "EHLO
+        id S235472AbhGWPC1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 11:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235438AbhGWO56 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 10:57:58 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C76C061575
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:38:31 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id f18so2720495lfu.10
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:38:31 -0700 (PDT)
+        with ESMTP id S235595AbhGWPC0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:02:26 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9046BC061575
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:42:58 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id h9so2206734ljq.8
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:42:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=b5fKS0W78jBgl+mIxB7Xm3uGD8b8IxeNIeStjZ0bgIs=;
-        b=evLuO9t2y1KdY+CTSGy4BwPos3Vq4zxanoA1hWD9X7Hbicscye1STEqtbg/Sdvkv5C
-         djdQvdh6R9hwgJYEyJMx+uTqi7m8c6OBtGwK0GWXoRd8tfJZw7matlNo2DPmpuF2aHUk
-         DN6Z9qin5+4zvK0UJ6/hqgdLKyYnQrMPO9Daag/g/7r+D+GsVOh0HnaYoZLoYeYKpOG9
-         WsapjxStnD2hyGkzN7Sa3W1CQKpfV8ZxnTwEst9FtevCwZ/8WqwAd2q9p23pIbW6kVAW
-         6JD8VsZ6+32CqGkL6EpMhj6/Ker1hspQRoepWg0g46AoC9zoYnxJU/lufv155kTTjuab
-         uofQ==
+        bh=O/f1g+Bd2m3qWx8HKI2UdTdvCSkFMuvtajEPkZseSXo=;
+        b=P9WIEootakX6Goscgqro+lI7BeHd2NnvAGsPf77p8dHmtnMv5PdY+XquMleRjOo0en
+         N8dQ9HMTolWKMbRpxmESYskXGStw0BdpZAQsqoXuhmojOIhJ53Sf6uQcQjQ9tG2RLPTZ
+         DK4DQ5uJCDdpcyd+LAgvJ7+wh7S2b3FoMzV0i+2QMBVGLRM+mOsqIeADs/3lkS4+z1+A
+         99y88jczDL0H+qZ3diqcU528DJKCL2eP/9ale4Sv7vMfvEd7WnL0y/xqtS6t8elZqsEY
+         MN5cWFh21q1qmIBNQNsH8VgYf4mbUd/8wEympPPSlUh8I046ULUvC167RulQd0mVko7O
+         jnTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=b5fKS0W78jBgl+mIxB7Xm3uGD8b8IxeNIeStjZ0bgIs=;
-        b=jJkiT0yRWfqBBXhqHBrQl11RNyqONFtelE5xu483KQRm/KXp3vmgh9vqeAabKPo6up
-         fAde9PS1Kf8q2CfK1vKde7+d+w7KZj17r9/2FwL2AZJ579ykRWVnAa7QceuvH0JIFwga
-         Rp5JWYrl4b8y1n7yXGlzsO6zUzYzsfBgg06/nJm26TWGK41+ea2dwsILfFRZJapCAonA
-         1DwH20478Ickw9qkTWmFIy1arbzPZz+gQcFg3jUUR/Fn9wUmnnSCLhfpc9x1E4CU2v+Q
-         +Ff0bIkLS7cS0WJ3V4RjDXQDpQalUxZc/n+Vn4M6OUnbjaIty9C4X+zo/buZbfU2U8cF
-         brXA==
-X-Gm-Message-State: AOAM533rug/+GBujOVh3FqYt0TW1Y+8ilNYzdYE70jXf5y0LyceJQio9
-        C5jLJ3mhI20jJ1Via1CHZwkQJIL+Y9hdbD5MBUr42Q==
-X-Google-Smtp-Source: ABdhPJydD4EvUxZjN8jfbePd6NexZtDbTJWMSw9gG1tEl0IrnQUz8uu1ccPNLmvpaMBm4zlx+ZGvhjPSF5bNqDsr5T0=
-X-Received: by 2002:ac2:5e71:: with SMTP id a17mr3344716lfr.465.1627054710287;
- Fri, 23 Jul 2021 08:38:30 -0700 (PDT)
+        bh=O/f1g+Bd2m3qWx8HKI2UdTdvCSkFMuvtajEPkZseSXo=;
+        b=BNAjP7+S6a8l677AJDKr/rI/PmYQEJnq0X97HAoVEG0HgwxrW4A6h/sH3D9TMVMOz4
+         Uu4V3xdgEhQeFaH36SeUM0B33IsAuVaJvzv05It38EnZj0AM2SkPEIsEulrtXmtn+Klx
+         vqS1R586q5ZaBh6HYNayALbIJmyhFbxCnVQ8s1JTuE71FtKJBsmZqD9J4NtgHLXeFjhg
+         IF/mtNts3VDhXp+LsPUW5uyMOWR15qz4tsODBHMnVxd4Hh+Me6F17PCWDmer+7c2fewV
+         KuHdCA+wf/0/bi7mgLmwsVs2Kb4wVM0pmWG54G7URQ++y59RuOU3dmVnXy41XZjLONUf
+         +WvQ==
+X-Gm-Message-State: AOAM531jf+ZggTAjrhHUoKLV1on2OLBVYmhb68E8DWhE9WDrwP7S6j+I
+        3PBBlsNfJqpU4M7upBquC8p4bJNsIwLx/yUGchVb6Q==
+X-Google-Smtp-Source: ABdhPJy1g6Lo0FVctRSfD7xM4QliObCTb5e2mkP+drcrUUsa0a8KNePvOCiQfbXrF4S6/RGLWayNHJSo1qU6BxwNWB0=
+X-Received: by 2002:a05:651c:169a:: with SMTP id bd26mr3717379ljb.368.1627054976984;
+ Fri, 23 Jul 2021 08:42:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210627185628.691435-1-iskren.chernev@gmail.com>
-In-Reply-To: <20210627185628.691435-1-iskren.chernev@gmail.com>
+References: <20210701080955.2660294-1-hsinyi@chromium.org>
+In-Reply-To: <20210701080955.2660294-1-hsinyi@chromium.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 17:38:19 +0200
-Message-ID: <CACRpkdZa1apQtmwxMeFxA=Mh2DNV_ggX8JtO8AoZ5eR0pWHEEw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] Add Pinctrl for SM4250/6115
-To:     Iskren Chernev <iskren.chernev@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Fri, 23 Jul 2021 17:42:46 +0200
+Message-ID: <CACRpkdbaeXTum_tpfyoHnaNtS8Kz1JiXtardc8UsRcGRLHO8Mw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mediatek: Fix fallback behavior for bias_set_combo
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        phone-devel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-        <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy
-        Shevchenko <andy.shevchenko@gmail.com>," 
-        <~postmarketos/upstreaming@lists.sr.ht>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 27, 2021 at 8:56 PM Iskren Chernev <iskren.chernev@gmail.com> wrote:
+Hi Hsin-Yi,
 
-> This patch adds support for the TLMM block on QCom SM4250 and SM6115, codename
-> bengal. The code is taken from OnePlus repo [1]. The two platforms are
-> identical so there is only one compat string.
+On Thu, Jul 1, 2021 at 10:10 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
 >
-> [1]: https://github.com/OnePlusOSS/android_kernel_oneplus_sm4250
+> Some pin doesn't support PUPD register, if it fails and fallbacks with
+> bias_set_combo case, it will call mtk_pinconf_bias_set_pupd_r1_r0() to
+> modify the PUPD pin again.
 >
-> v1: https://lkml.org/lkml/2021/6/22/1163
-> v2: https://lkml.org/lkml/2021/6/25/28
-> v3: https://lkml.org/lkml/2021/6/25/72
-> v4: https://lkml.org/lkml/2021/6/25/351
+> Since the general bias set are either PU/PD or PULLSEL/PULLEN, try
+> bias_set or bias_set_rev1 for the other fallback case. If the pin
+> doesn't support neither PU/PD nor PULLSEL/PULLEN, it will return
+> -ENOTSUPP.
+>
+> Fixes: 81bd1579b43e ("pinctrl: mediatek: Fix fallback call path")
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> v2: fix v1 comments
 
-I wanted to apply this v5 version but it doesn't apply cleanly on v5.14-rc1
-and I am worried about making mistakes.
+Thanks for fixing this up so nicely, great work.
+Patch applied for fixes!
 
-Can you collect the final review tags, rebase this on a clean
-v5.14-rc1 and resend as v6?
-
-Thanks!
+Yours,
 Linus Walleij
