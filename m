@@ -2,88 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BFE53D3CA5
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 17:43:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDC303D3CAD
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 17:44:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235472AbhGWPC1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 11:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
+        id S235470AbhGWPEX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 11:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235595AbhGWPC0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:02:26 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9046BC061575
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:42:58 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id h9so2206734ljq.8
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:42:58 -0700 (PDT)
+        with ESMTP id S235626AbhGWPEV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:04:21 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02005C061760
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:44:54 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id h14so2777418lfv.7
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:44:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=O/f1g+Bd2m3qWx8HKI2UdTdvCSkFMuvtajEPkZseSXo=;
-        b=P9WIEootakX6Goscgqro+lI7BeHd2NnvAGsPf77p8dHmtnMv5PdY+XquMleRjOo0en
-         N8dQ9HMTolWKMbRpxmESYskXGStw0BdpZAQsqoXuhmojOIhJ53Sf6uQcQjQ9tG2RLPTZ
-         DK4DQ5uJCDdpcyd+LAgvJ7+wh7S2b3FoMzV0i+2QMBVGLRM+mOsqIeADs/3lkS4+z1+A
-         99y88jczDL0H+qZ3diqcU528DJKCL2eP/9ale4Sv7vMfvEd7WnL0y/xqtS6t8elZqsEY
-         MN5cWFh21q1qmIBNQNsH8VgYf4mbUd/8wEympPPSlUh8I046ULUvC167RulQd0mVko7O
-         jnTQ==
+        bh=HOiaAVrGjDtQAMZ/pqI5jg+/dJsFOJs35LXrLz/v398=;
+        b=Ui6Cgxcvq5elBFIoCX0IM80f9Ve53umtK6rup811IiH5eOn3Bv3B4dHBW0RlPbLM7h
+         jpwq9bg/b31wexVUXj3CVQPwpEcBg/W3z6hO2wyTDcKHC2Pf3BxTw9TLjZmP/P+Ox1uK
+         twcMLDKO6nP2BGVevCJvRosjn6YnyjTpz6i/Tk/qBBVRpOOr7gAR1Fhc7G1NC/+1Y0rk
+         B457gxgaTaph9+6wU46u+Yd2zygAF8LScdoIO6kPnFMbAbiBDNja900K9k4bcs+E6xrU
+         51MnnTgSIfNupwfpA9oPGK20nkxSopZVft268z7Xjcd27SRsBPPX8vFVo5h4Lo0JEdWs
+         i/Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=O/f1g+Bd2m3qWx8HKI2UdTdvCSkFMuvtajEPkZseSXo=;
-        b=BNAjP7+S6a8l677AJDKr/rI/PmYQEJnq0X97HAoVEG0HgwxrW4A6h/sH3D9TMVMOz4
-         Uu4V3xdgEhQeFaH36SeUM0B33IsAuVaJvzv05It38EnZj0AM2SkPEIsEulrtXmtn+Klx
-         vqS1R586q5ZaBh6HYNayALbIJmyhFbxCnVQ8s1JTuE71FtKJBsmZqD9J4NtgHLXeFjhg
-         IF/mtNts3VDhXp+LsPUW5uyMOWR15qz4tsODBHMnVxd4Hh+Me6F17PCWDmer+7c2fewV
-         KuHdCA+wf/0/bi7mgLmwsVs2Kb4wVM0pmWG54G7URQ++y59RuOU3dmVnXy41XZjLONUf
-         +WvQ==
-X-Gm-Message-State: AOAM531jf+ZggTAjrhHUoKLV1on2OLBVYmhb68E8DWhE9WDrwP7S6j+I
-        3PBBlsNfJqpU4M7upBquC8p4bJNsIwLx/yUGchVb6Q==
-X-Google-Smtp-Source: ABdhPJy1g6Lo0FVctRSfD7xM4QliObCTb5e2mkP+drcrUUsa0a8KNePvOCiQfbXrF4S6/RGLWayNHJSo1qU6BxwNWB0=
-X-Received: by 2002:a05:651c:169a:: with SMTP id bd26mr3717379ljb.368.1627054976984;
- Fri, 23 Jul 2021 08:42:56 -0700 (PDT)
+        bh=HOiaAVrGjDtQAMZ/pqI5jg+/dJsFOJs35LXrLz/v398=;
+        b=d8ykOwgaF0Ipjvjm7FYvAw4UeEJOlhOYIU56QVAWUeXi0g7AbQjQy6LiiNq2mReXze
+         Vp1jdeObCnSCFQQjxFhQh6D9ea9aK/JSQ+6qM+jHhBSeit4zrLFy5qVyM+31xq9pN4y1
+         QpyLlvN2daw+VJ5NoGNBv7qGAn/pu1AeiyQToN5yOVdcMYbnXb00KH5y7vcBq7Dg/8jI
+         ttg1Fz8yp+TEDW3kuWbMTJUUEffctZWU+/4phYj8hvfEfAk1xJfHa3ZtPGh/YomKHBOw
+         VG6TdCflStRRBc1BoAcS+INEcntaHREfBU1rTADebANU8rmnKEztx5UJd28wEL5Yfuan
+         uUvg==
+X-Gm-Message-State: AOAM531oyUeZ7ogXb8gtU2fKWtX1b+rLwI5yviGMlPuLJfOfy4Q6w4tn
+        nP3mJMjqRcMPepK0gly3yU05cGyoXSYVeTzoRTdSrw==
+X-Google-Smtp-Source: ABdhPJzyCAH/RW1JEpMxjPu1dGHg4MHXLQ9m9GcbcQ9vAesOrb2vqGsqAdrxCITJFq8clS6wDHNCmrY2ONc4FgBzkCU=
+X-Received: by 2002:a05:6512:2603:: with SMTP id bt3mr3522104lfb.529.1627055092344;
+ Fri, 23 Jul 2021 08:44:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210701080955.2660294-1-hsinyi@chromium.org>
-In-Reply-To: <20210701080955.2660294-1-hsinyi@chromium.org>
+References: <20210624191743.617073-1-konrad.dybcio@somainline.org>
+In-Reply-To: <20210624191743.617073-1-konrad.dybcio@somainline.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 17:42:46 +0200
-Message-ID: <CACRpkdbaeXTum_tpfyoHnaNtS8Kz1JiXtardc8UsRcGRLHO8Mw@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: mediatek: Fix fallback behavior for bias_set_combo
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
+Date:   Fri, 23 Jul 2021 17:44:41 +0200
+Message-ID: <CACRpkdaEZMo+_VU8QBxv6PFxn5G0wDvtJ4r2YhdhjHwKmrEDpA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add bindings for MDM9607
+To:     Konrad Dybcio <konrad.dybcio@somainline.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+        <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy
+        Shevchenko <andy.shevchenko@gmail.com>," 
+        <~postmarketos/upstreaming@lists.sr.ht>,
+        Martin Botka <martin.botka@somainline.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>,
+        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Hsin-Yi,
+On Thu, Jun 24, 2021 at 9:17 PM Konrad Dybcio
+<konrad.dybcio@somainline.org> wrote:
 
-On Thu, Jul 1, 2021 at 10:10 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> Document the newly added MDM9607 pinctrl driver.
 >
-> Some pin doesn't support PUPD register, if it fails and fallbacks with
-> bias_set_combo case, it will call mtk_pinconf_bias_set_pupd_r1_r0() to
-> modify the PUPD pin again.
->
-> Since the general bias set are either PU/PD or PULLSEL/PULLEN, try
-> bias_set or bias_set_rev1 for the other fallback case. If the pin
-> doesn't support neither PU/PD nor PULLSEL/PULLEN, it will return
-> -ENOTSUPP.
->
-> Fixes: 81bd1579b43e ("pinctrl: mediatek: Fix fallback call path")
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
-> v2: fix v1 comments
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
 
-Thanks for fixing this up so nicely, great work.
-Patch applied for fixes!
+Patch applied!
 
 Yours,
 Linus Walleij
