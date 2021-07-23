@@ -2,89 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F8A13D2F1A
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jul 2021 23:24:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3CDA3D319B
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 04:26:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231982AbhGVUny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Jul 2021 16:43:54 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:24876 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231694AbhGVUnu (ORCPT
+        id S233226AbhGWBp3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Jul 2021 21:45:29 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:38633 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233193AbhGWBp3 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 22 Jul 2021 16:43:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1626989064; x=1658525064;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Z6zOtxzK0SvEBwDx41Sq8+UntB+PqRhBZVtb+Sd6CmM=;
-  b=QzdbE1bah0lZ7VP3epHVThJOm+TTIBFv/Bz7n2sTHDDvhvzLFTfEwCJx
-   pJ2wcefFkoES6X5Qvzei1TY6aLRINQoRWQDvjakcY70FPH3/zEixWHuSL
-   o032htSPofo7/S/r9akUGZhWFnSVaf62YKQzRrF2Sic/yifrAQULuH+7k
-   c=;
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 22 Jul 2021 14:24:24 -0700
-X-QCInternal: smtphost
-Received: from nasanexm03e.na.qualcomm.com ([10.85.0.48])
-  by ironmsg01-sd.qualcomm.com with ESMTP/TLS/AES256-SHA; 22 Jul 2021 14:24:24 -0700
-Received: from vamslank1-linux.qualcomm.com (10.80.80.8) by
- nasanexm03e.na.qualcomm.com (10.85.0.48) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Thu, 22 Jul 2021 14:24:23 -0700
-From:   <quic_vamslank@quicinc.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <olof@lixom.net>, <soc@kernel.org>, <linus.walleij@linaro.org>,
-        <robh+dt@kernel.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        "Vamsi krishna Lanka" <quic_vamslank@quicinc.com>
-Subject: [PATCH v2 3/3] ARM: dts: qcom: sdx65: Add pincontrol node
-Date:   Thu, 22 Jul 2021 14:24:05 -0700
-Message-ID: <728983e44148367ab5d6ba2c66420b1e37df72b7.1626987430.git.quic_vamslank@quicinc.com>
+        Thu, 22 Jul 2021 21:45:29 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id EF8395808BF;
+        Thu, 22 Jul 2021 22:26:02 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 22 Jul 2021 22:26:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=piA92a2BDHjHVta7hxYES50nPA
+        VoWHmEd4CMr4Jw8yE=; b=O8i9iPg61BaVTDHJ+7F+p+K4obNfEWnV06plnrbs9V
+        gz59nVBrnMGyyl4ydd+J6VQ0J4TL/YghErBXWSzSNMq3046Nbubiv+JZ0q6P6nFq
+        AEo2wseY7rd/ysKnq402bSfCZCWUbAyt0fDZZK2XdgrlD+bIvOI1uXMaVHk5BKkv
+        V20slIVEOaXATSB/LIQT0Ei3uVztAsXDia8PWZD9nNDmCSPs6sDvCvzfHVUHWEyd
+        26qdkHb4CU1E1c87S4+J7ZeD4CjW7JvfgRn9tdbeWnUdVVQOBjUWZKS3Wav+BQ8n
+        OEvtgqRfualemWnGtmNNynV40m828rbL5mFIN8QGMrbw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=piA92a2BDHjHVta7h
+        xYES50nPAVoWHmEd4CMr4Jw8yE=; b=ZQ6hpGobMwmOQxd1rEYvmPe5JHMCNGCeA
+        nj0uOGapBXCKamXa7S9hx4ZDYMkNOeR31RrVUxnfBZok9j0uCYNfBlrowDEGn7eS
+        lD0Nn+HSnzb6f9LtqwZP5ov12KjhSfJTKab8FnIwrMjiqvCmqmVCF9jI8Qztqsbn
+        NFzdvGFIHg9Ls31RGrbGkmrV0Toa6PWq+ThyZCuMV4bbMCOrY0+2o2iOKwTzkj7b
+        qgtsh+/UUZKdUwo3XhksbnRbpuCbzwJHX7B3lGRPN66yV1Hd0OK2ERfEOfobhozh
+        x8CpBN1BhSxe+o1BA5/qIfBTgaINJGnT8mc+kxKUvTEEJwp5avMgA==
+X-ME-Sender: <xms:uij6YA-berd2T20nD87zdunn_9Al21zaSp3J7v0CcuKYS37EEGWI4A>
+    <xme:uij6YIubTYKKjM7bKFzjLLiUQLMQaFMiQZnG4CLzW1b84jxKyFyUqNIpCKEOMgfmR
+    Uhs_Ph9UL3Mz2yt-mw>
+X-ME-Received: <xmr:uij6YGB0ThpkdKp1pRLlKp9_BbCWtIAzRT6Vl8P1Ug_MnydkuF6j6vTIpYEVafLNsXMlKqwIjFxg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfeejgdehhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhl
+    hihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepgeffjeeitdegieeujedvvdeije
+    etkeefueevteeltdeiheffgfeuffduiefgtedvnecuffhomhgrihhnpedtuddrohhrghen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgi
+    hunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:uij6YAc5WX1sUpH0A6_9XYJ2magHEth3mi_UxIOnZ9WcTdWSHs-UOQ>
+    <xmx:uij6YFNW8WirigQDIVu5EwN_Qz_zJ26lGiSNrcjU9pS0RGSfc_rb4A>
+    <xmx:uij6YKnvupEuFHbKZ4Y1BuqcA43yIH0xTvcXo5MYo0lfhb-AiNpIRQ>
+    <xmx:uij6YGEj9lVbGfrGG17fkIQTPbnvoVjYu-5pUSV1D4Hw7ZKBA9iXZQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 22 Jul 2021 22:25:57 -0400 (EDT)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     tsbogend@alpha.franken.de, mturquette@baylibre.com,
+        daniel.lezcano@linaro.org, linus.walleij@linaro.org,
+        vkoul@kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH v4 0/9] MIPS: Migrate pistachio to generic kernel
+Date:   Fri, 23 Jul 2021 10:25:34 +0800
+Message-Id: <20210723022543.4095-1-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.32.0
-In-Reply-To: <cover.1626987430.git.quic_vamslank@quicinc.com>
-References: <cover.1626987430.git.quic_vamslank@quicinc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanexm03d.na.qualcomm.com (10.85.0.91) To
- nasanexm03e.na.qualcomm.com (10.85.0.48)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Vamsi krishna Lanka <quic_vamslank@quicinc.com>
+I'm lucky enough to get a Creator CI40 board from dusts.
+This patchset move it to gerneic kernel to reduce maintenance burden.
+It have been tested with SD Card boot.
 
-This commit adds pincontrol node to SDX65 dts.
+--
+v2: Minor fixes
+v3: Typo fixes and 0day testbot warning fix (Thanks to Sergei!)
+v4: 01.org warning fix
 
-Signed-off-by: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
----
- arch/arm/boot/dts/qcom-sdx65.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Jiaxun Yang (9):
+  MIPS: generic: Allow generating FIT image for Marduk board
+  MIPS: DTS: Pistachio add missing cpc and cdmm
+  clk: pistachio: Make it selectable for generic MIPS kernel
+  clocksource/drivers/pistachio: Make it selectable for MIPS
+  phy: pistachio-usb: Depend on MIPS || COMPILE_TEST
+  pinctrl: pistachio: Make it as an option
+  MIPS: config: generic: Add config for Marduk board
+  MIPS: Retire MACH_PISTACHIO
+  MIPS: Make a alias for pistachio_defconfig
 
-diff --git a/arch/arm/boot/dts/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom-sdx65.dtsi
-index fb240213cc35..db269c73c0e9 100644
---- a/arch/arm/boot/dts/qcom-sdx65.dtsi
-+++ b/arch/arm/boot/dts/qcom-sdx65.dtsi
-@@ -79,6 +79,18 @@ blsp1_uart3: serial@831000 {
- 			status = "disabled";
- 		};
- 
-+		tlmm: pinctrl@f100000 {
-+			compatible = "qcom,sdx65-tlmm";
-+			reg = <0xf100000 0x300000>;
-+			interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&tlmm 0 0 109>;
-+			interrupt-controller;
-+			interrupt-parent = <&intc>;
-+			#interrupt-cells = <2>;
-+		};
-+
- 		pdc: interrupt-controller@b210000 {
- 			compatible = "qcom,sdx65-pdc", "qcom,pdc";
- 			reg = <0xb210000 0x10000>;
+ arch/mips/Kbuild.platforms                    |   1 -
+ arch/mips/Kconfig                             |  30 --
+ arch/mips/Makefile                            |   3 +
+ arch/mips/boot/dts/Makefile                   |   2 +-
+ arch/mips/boot/dts/img/Makefile               |   3 +-
+ arch/mips/boot/dts/img/pistachio.dtsi         |  10 +
+ arch/mips/configs/generic/board-marduk.config |  53 +++
+ arch/mips/configs/pistachio_defconfig         | 316 ------------------
+ arch/mips/generic/Kconfig                     |   6 +
+ arch/mips/generic/Platform                    |   1 +
+ arch/mips/generic/board-marduk.its.S          |  22 ++
+ arch/mips/pistachio/Kconfig                   |  14 -
+ arch/mips/pistachio/Makefile                  |   2 -
+ arch/mips/pistachio/Platform                  |   6 -
+ arch/mips/pistachio/init.c                    | 125 -------
+ arch/mips/pistachio/irq.c                     |  24 --
+ arch/mips/pistachio/time.c                    |  55 ---
+ drivers/clk/Kconfig                           |   1 +
+ drivers/clk/Makefile                          |   2 +-
+ drivers/clk/pistachio/Kconfig                 |   8 +
+ drivers/clocksource/Kconfig                   |   3 +-
+ drivers/phy/Kconfig                           |   2 +-
+ drivers/pinctrl/Kconfig                       |   5 +-
+ 23 files changed, 114 insertions(+), 580 deletions(-)
+ create mode 100644 arch/mips/configs/generic/board-marduk.config
+ delete mode 100644 arch/mips/configs/pistachio_defconfig
+ create mode 100644 arch/mips/generic/board-marduk.its.S
+ delete mode 100644 arch/mips/pistachio/Kconfig
+ delete mode 100644 arch/mips/pistachio/Makefile
+ delete mode 100644 arch/mips/pistachio/Platform
+ delete mode 100644 arch/mips/pistachio/init.c
+ delete mode 100644 arch/mips/pistachio/irq.c
+ delete mode 100644 arch/mips/pistachio/time.c
+ create mode 100644 drivers/clk/pistachio/Kconfig
+
 -- 
 2.32.0
 
