@@ -2,96 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE42C3D3B62
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 15:46:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4716D3D3B65
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 15:47:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235314AbhGWNF7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 09:05:59 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:34077 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235243AbhGWNF6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 09:05:58 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]) by
- mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1N7AEs-1l1fkw2VZM-017TAH; Fri, 23 Jul 2021 15:46:30 +0200
-Received: by mail-wm1-f53.google.com with SMTP id j6-20020a05600c1906b029023e8d74d693so1649695wmq.3;
-        Fri, 23 Jul 2021 06:46:30 -0700 (PDT)
-X-Gm-Message-State: AOAM53176BGyy0OWAenUdEDF0gmmvu1UqqAzbEw5Aatu0UjeTJQloMJc
-        Lg/kGKqd5ih3pTt5gBol3Ac57E9lyA+KmogbeBM=
-X-Google-Smtp-Source: ABdhPJyfbJ/TTAuOw7j89Wul0Xg+2CYe0Hm+3Y35Empz4DlbpbFzr1NRRDGERsVfUMwmu0uZ4yYDMTYgM127TEzwEVk=
-X-Received: by 2002:a7b:c2fa:: with SMTP id e26mr14345036wmk.84.1627047990248;
- Fri, 23 Jul 2021 06:46:30 -0700 (PDT)
+        id S235127AbhGWNHM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 09:07:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233486AbhGWNHH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 09:07:07 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D052C061575
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 06:47:40 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id f26so2415441ybj.5
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 06:47:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AclrNr9DriONd9uxnMokdBW1rOGOgyBR/Fi4Kz2y6rY=;
+        b=SaV31Lrli/1acnfLkCpI6k9LxZX/0RCIysvoX6qtwA8lSWc1/nbOJ84tgsW/H6qKQY
+         N37UjrVL4Z2a/aSoykdxaHZTsI4aEcAVBE1JkDwkphBFEPJFtwEYJA03ZEXjJAxxbISp
+         SNVde+TuZexYyp5BgXi5VRs3zfmC15bGC/y2i1iQakMFrhyBrL/HR0r2nFvVH0Dex1Th
+         TuImrn70HPSC0BQ7vHPDkSBgqIZEoiaAYJaBV1/5LbBXonuhoTvNUaYW9o+j7mvLzO0A
+         oMUyfNOjyrtRYjWNLt7K6e2gdh6y+AMopqOLxrM55HwslDlKObktA5guQlt/iMYt6lJP
+         tXsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AclrNr9DriONd9uxnMokdBW1rOGOgyBR/Fi4Kz2y6rY=;
+        b=o6FC7XBq1DwR9RMzB83jd3kjTeLT1BCK5jzGfm5tZ/t0ZxduYYoILPtIzgVb+XjASQ
+         M+ZMP83B2pj07ZlNjhg2SPoRWA40NoJuyAZspL7osDHSfv6eECbcB4dZdET9b9lTF5zi
+         MBkSpKMbDZKZ+D/RwY+1rwpY7mHi9DP2kdI5+hU18h0elunb0AWmiBTNINGdG/kDI9l3
+         gHRZTBrsb4mIzqu9a6v2rDxAQqHP7uomKGVS1ecihJNEPpX+FE/N9UIwp2766NQ04Mrr
+         XKaLlioFBXCe0WvjI8r2P6d/EN0vnKbE0+3fToJZ9M5MNyppZmNJ35sUd0/Q7yCHB5ps
+         GIWA==
+X-Gm-Message-State: AOAM533iJ2vSGuMOnmzYwSFbiRplsF7PdqzOy3ZJCyb7TiNIHLQ9MeBh
+        vJiCU72+8fGoccyY0S5GgYYZUfMnHUnC7MDw1w4=
+X-Google-Smtp-Source: ABdhPJzYZJSPB0k1FaivnOBEYX+lKQSvu0AiuyqhCs6NJX5j7HTyd+efsHOu4YQKP45BUt6yV8tGGtChtcjaoW2EwSs=
+X-Received: by 2002:a25:ad62:: with SMTP id l34mr6580499ybe.457.1627048059209;
+ Fri, 23 Jul 2021 06:47:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210723132810.25728-1-alexandre.torgue@foss.st.com>
-In-Reply-To: <20210723132810.25728-1-alexandre.torgue@foss.st.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 23 Jul 2021 15:46:14 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1ax29ThCG867phtx1Xb12GgiJFcLDd8H9VLbsJQ1uoAw@mail.gmail.com>
-Message-ID: <CAK8P3a1ax29ThCG867phtx1Xb12GgiJFcLDd8H9VLbsJQ1uoAw@mail.gmail.com>
-Subject: Re: [PATCH 0/7] Add STM32MP13 SoCs and discovery board support
-To:     Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
+References: <20210618062449.1067106-1-jay.xu@rock-chips.com>
+ <CACRpkdYGyy+tE4_xddJWxWUQpPea0bc5CUTBfp2RtnJfQ-2t_w@mail.gmail.com> <CACRpkdadb0=KD+ZXQGNVDUBDYHUsvP94dSgPzfwhUbwjvw_6Wg@mail.gmail.com>
+In-Reply-To: <CACRpkdadb0=KD+ZXQGNVDUBDYHUsvP94dSgPzfwhUbwjvw_6Wg@mail.gmail.com>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Fri, 23 Jul 2021 09:47:28 -0400
+Message-ID: <CAMdYzYrG0mKJmnox8EK2T=KS2t=V+-LxDCX4rpDF_vkspWingw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/9] gpio-rockchip driver
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kever Yang <kever.yang@rock-chips.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:/IYV4zP0nWsjHpTv3UBJIm4gesWafe7QOTye4w1rD945/TXM8/g
- 8Q+SRjbfkrVbSKvikHvoqtehTd84cQx5IwqW9KEM/wGSSbkWyVEYXbhKzWfcyrJaO+OKs1x
- pNQ/uw17qpS7x4gqJqL8b2v+dIXAfvMoSratPfwFw+GRHuVqRS9gWynsv5IX7W3eg4uzFiu
- LpKW1hGCA85ESL3uvhI2A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EfR3PoU4teQ=:m2wGIB5uFzC3E6SakfCPm6
- zvQwbWy3jU2Z1QKngVoi7clKwI51Wo7vlnRc5juVQ2rdpBeTNbXU4/q0hQzq6jA2KH/KZm2rV
- 3bqRdhCHGGKOITjGKw1ZAFH/ueOPd/m7L0gdK+nLgVPKGTf9kdmEBSWE4hYjn4hexCDRq2MME
- 1BP+fl3qXnk2D52YPVbkh2ZyLpUa5RmoanQdXPhBhWfomVExkJEBtTvKM5F42UZmBsyvQJiwT
- cW6OkGsu9pIp9MOrfg3Ln7HZnOYVxKiKNvc+rJdFcP8RND8t5T4qKnUexG/9l0n2eMJII9uZ/
- AcFh/bt9Hsl88qLG9e3N9eCyN4qdVehWvQW9i4ALzbgR0/tmuWsURuyj08ahV4C0gmzU8Ey8x
- NVnRydpFQjZ+chBu4kzFNVK5ogbMG7eFcdJSt+Mh4vJujntHlGeiIZvkU0Ib2b3dVsrx2TGDd
- b7vxjs+akXT5kfOTvCmcJOVKA4NnLkw9/JFdo7AGFlQtEQNbuYtwvHMbMTT53N7F7vHZKlyW3
- deRg8r24IQrpR2hDp92F76zrWtLRCz8vteWKhIKjr1I2jOt4YJtMugk2CIERh95gYG+ibscqe
- wBJxK3/pd/KOJ6LV1I9ebWMy8IWTJiNDxv5sgYKimPhQvX/Y05UypKhxGINq/ueNS6JGjBaKr
- LQlr/66o7aWb0/TzgiXoc3GJLVcMbJulYUSr7ibUwxAvPQRhGBiAgtNkR2lsu4prNB4+xJhcd
- 9ySk/TsPhh9umIFpQl2wEUnOvh6sl7YQrF3qIuNpeToHFgM03uilJYp3l+1tBu+J7SMORhKHw
- S3zrLS7/VKXMh2IqokDc428Y6w0XwfjdFv2hK0ZZtD89rd7+FvcB0ko60FHsdr5VcXkg234
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 3:28 PM Alexandre Torgue
-<alexandre.torgue@foss.st.com> wrote:
+On Fri, Jul 23, 2021 at 6:15 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> This series enhance the STM32 MPU family by adding STM32MP13 SoCs support.
-> It adds machine support and device tree diversity to support the whole
-> stm32mp13 family (STM32MP131/STM32MP133/STM32MP135, plus security feature
-> diversity).
+> On Fri, Jul 23, 2021 at 12:07 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Fri, Jun 18, 2021 at 8:24 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+> >
+> > > Separate gpio driver from pinctrl driver, and support gpio v2 controller.
+> > >
+> > > Jianqun Xu (8):
+> > >   pinctrl/rockchip: always enable clock for gpio controller
+> > >   pinctrl/rockchip: separate struct rockchip_pin_bank to a head file
+> > >   pinctrl/rockchip: add pinctrl device to gpio bank struct
+> > >   gpio/rockchip: add driver for rockchip gpio
+> > >   gpio/rockchip: use struct rockchip_gpio_regs for gpio controller
+> > >   gpio/rockchip: support next version gpio controller
+> > >   gpio/rockchip: drop irq_gc_lock/irq_gc_unlock for irq set type
+> > >   pinctrl/rockchip: drop the gpio related codes
+> > >
+> > > Liang Chen (1):
+> > >   dt-bindings: gpio: change items restriction of clock for
+> > >     rockchip,gpio-bank
+> >
+> > I have applied the series to an immutable branch in the pinctrl tree:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-rockchip-split
+> > Then I pulled that into devel.
+> >
+> > Bartosz: if you want you can pull this into the GPIO tree as well
+> > (makes it possible to continue work on drivers/gpio/gpio-rockchip.c
+> > and avoids clashes in Kconfig and Makefile)
 >
-> Basically STM32MP13 SoCs embeds one Cortex A7, storage (SD/MMC/SDIO, QSPI FMC),
-> network (ETH, CAN), display (DCMIPP, LTDC, ...), audio(SAI, DFSDM, SPDIFRX),
-> com (USB EHCI/OHCI, USB OTG, I2C, SPI/I2S, U(S)ART).
+> Oops I saw there is still discussion about some of the patches
+> and found a bug myself. Pulled this out again and deleted the
+> branch.
 >
-> This series also adds STM32MP135F Discovery board support (stm32mp135f-dk). It
-> embeds a STM32MP135f SOC with 512 MB of DDR3. Several connections are available
-> on this board:
->  - 4*USB2.0, 1*USB2.0 typeC DRD, SDcard, 2*RJ45, HDMI, Combo Wifi/BT, ...
->
-> Only SD card, uart4 (console) and watchdog IPs are enabled in this commit.
->
-> Note that file stm32mp135.dtsi doesn't define nodes but I add it now to ease adding
-> of new nodes in a (close) future.
+> See you again in v7 :D
 
-I had a brief look and it seems all fine to me, nice work!
+Good Morning,
 
-The only (very minor) thing I noticed is that the crypto engine device node
-has an unusual name 'cryp@' instead of the usual 'crypto@', but this is already
-the case on stm32mp157.
+I have a patch ready to fix loading the new gpio driver with new
+device trees that are missing the named gpio banks.
+This also fixes loading on the rk3568, which need this driver for gpio support.
+I will rebase it to the v7 when it drops (hopefully soon).
 
-With this changed,
+Very Respectfully,
+Peter Geis
 
-Acked-by: Arnd Bergmann <arnd@arndb.de
+>
+> Yours,
+> Linus Walleij
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
