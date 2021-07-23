@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F6AA3D3D14
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 18:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70AF63D3D22
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 18:07:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229977AbhGWPYx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 11:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
+        id S230421AbhGWP05 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 11:26:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229780AbhGWPYx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:24:53 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D561C061757
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:05:26 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id l4so2305375ljq.4
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:05:26 -0700 (PDT)
+        with ESMTP id S230243AbhGWP04 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:26:56 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4AC6C061575;
+        Fri, 23 Jul 2021 09:07:28 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id z2so2952686lft.1;
+        Fri, 23 Jul 2021 09:07:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bA7/ot9UZ5ozCpQrarPaPgau29IefbzZIuxiBz7ToLc=;
-        b=i1Us8ierJnzSytIFLQidJ7kAyDZ9zOSyibbZnk/rfWoY4UEf+bSToXy9VYEI1TjApI
-         wUxl0CxonXCQCaOn3VKpZSR2dfNHG6gSEzrC7LDw4ZvK/S6i/npb2Kq3UzCOX4VszQAp
-         kEfevN/w4NriPJ31dE5QeUOo1qc0artfYh2R6fI5jxO+O2tTCvDG5BgJfDt2KBVFDl41
-         ydtb5kttF4gFhxcYRPVVMGE1yc/7p6LDA6plsssmWy+DuhsaZGf1KB5/HwREOzKpoNdS
-         Upx1lIv9ym/suqrQQzIr8SksjtHvChLAe7u1jMR+lB5v3iUyQTwL5r54Y+DNyu3bDKHh
-         N3rw==
+        bh=lTvO61y1SGuCg3UXl9dim6u9NJ6zEuQSX5WNIWVfWus=;
+        b=ldcP1SEKPeuCr6b4yMJb81raEbH6Kze1KunmaBZeR0vWWLm5GXNp6UW/hXWcyp665S
+         dBHnXY4/RERInUAyiTc9S3botHn+ZHRyA8YIhuLEvqEbBmn1oxHFJuI8I2W9iJS/du2S
+         624LB6QOC3gi+EwjaV/ohHOE/9W5MHdVkBjKvqz6E8YmM0x1HV6iK2Z0FMxCVgvf/kWw
+         PNkT3E+Xxxys9TJzCcbv1xFEtxl4ti8tNw0FYk6HRMg485ouQalJXcIfEGiXpOxAJCgK
+         YHV9T18N/rGgZQW9gAsGlNRKlpDzuMK9+oGKedyly6RGp0oDxq5zXgLoa4Q+x7JV68mF
+         5IEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bA7/ot9UZ5ozCpQrarPaPgau29IefbzZIuxiBz7ToLc=;
-        b=aRu+xInLBqvp64q0TLXeDZ6zqbGVxhfEIuMG8pSWlvxW/5KXxLyfzbujYsfo8/S74k
-         8vygDzKMrevIV8KG/Rj+CIc0AdQBYFfZWoSPxWgXKw5/RWHllsZWUuqVcWaA3gGBSOUW
-         954HElADbywnGlfn1u5hgAwCufvhDWnJavob/+7QWM1GpHNwxkkWdGZjYeWxpnHErwUF
-         rJcuyof0Lk6K8JzAFJgQ+H+DTLBf9QHXgJV+EEgvyFLuQaVHleu/Ynl4Xwm7xWIkA0Ex
-         5ZDcx+kcqsSABecqZhrfnaBXyDHGokF/wcazIlV12avwpmGhtRmDLUFUvw+U3OFtokwV
-         QrAg==
-X-Gm-Message-State: AOAM531Xr/Yx/EvuC2tUvm/mGAcTjOk0W7ty9LDx97Z+oDLG9dLia6FD
-        SJGRX2Sz229nZ4M8xD8nJi7PrZ3w5KNQ8rk7gbyGtA==
-X-Google-Smtp-Source: ABdhPJxo1GQlUl3Gx1ATU7U87gt7yvwVtro8AvOTmb2ym7cXKIummnAcNNoHP5rPOSQYwNuPiDlmxa4jaqyD7RwZIJM=
-X-Received: by 2002:a2e:950:: with SMTP id 77mr3739457ljj.438.1627056324543;
- Fri, 23 Jul 2021 09:05:24 -0700 (PDT)
+        bh=lTvO61y1SGuCg3UXl9dim6u9NJ6zEuQSX5WNIWVfWus=;
+        b=gX8JU6bSq7E1zBRvtZuCELdHnaLqx0gtlbKotppvYVfTR5xRWSiFTp8bZ1GEr0Iwj9
+         NoitgrPfS2tDkrb+fTwYigWH5lLLbVAUSHD6Ewbh4q/XOvnhTJBg8owLVeG2hAd1Z5qb
+         b+VFhiypk5DST/PW9zlFKEoMilafw5rZmrpttWXV8ug3C3K36ByjpDkfKjrJizNtyLYn
+         DmI6+ToW1/wFQXoxWBAX+Z/17RLQ5y8MK65XVtet4eYmVRhmjnhc3aCmUaMuP6U+hvy7
+         bKdM7vGKY/m0QO1sN56GAhFHLoEqvIOIZPLvQa2944lg1uLeMSJhWB5ZRdPX2rzbn0Ic
+         zHbg==
+X-Gm-Message-State: AOAM531UdOKTzAHieaUDswnAlhgANHBvOwBoZR4hDUQ2adD91cbowAhR
+        /ptKzq3KkEU/zSuuE9afBq8P/F+5Z8VbduiXyTA=
+X-Google-Smtp-Source: ABdhPJw35BEdaVTjN2YWB6qzLuNpgQfvBKyCXQH/vuJxImlFGQnCxAmyYZuyEzlGt/WNLS2fGf5asjZGMb+J9j7whMU=
+X-Received: by 2002:ac2:494c:: with SMTP id o12mr3548385lfi.229.1627056447210;
+ Fri, 23 Jul 2021 09:07:27 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210607061041.2654568-1-ping.bai@nxp.com> <20210607061041.2654568-2-ping.bai@nxp.com>
-In-Reply-To: <20210607061041.2654568-2-ping.bai@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 18:05:13 +0200
-Message-ID: <CACRpkdb=B644KMoL1R=JVkn-9bYQF+4miie5SAROLhQ9HKkHWA@mail.gmail.com>
+ <CACRpkdb=B644KMoL1R=JVkn-9bYQF+4miie5SAROLhQ9HKkHWA@mail.gmail.com>
+In-Reply-To: <CACRpkdb=B644KMoL1R=JVkn-9bYQF+4miie5SAROLhQ9HKkHWA@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 23 Jul 2021 13:07:16 -0300
+Message-ID: <CAOMZO5AW7185p+e1ECbfLaQvVH2Qq_w=88RDPkwGkGwSFqKTUA@mail.gmail.com>
 Subject: Re: [PATCH v2 2/2] pinctrl: imx8ulp: Add pinctrl driver support
-To:     Jacky Bai <ping.bai@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jacky Bai <ping.bai@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
         Dong Aisheng <aisheng.dong@nxp.com>,
         Stefan Agner <stefan@agner.ch>,
         Rob Herring <robh+dt@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
         Sascha Hauer <kernel@pengutronix.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
@@ -66,18 +66,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 7, 2021 at 8:00 AM Jacky Bai <ping.bai@nxp.com> wrote:
+Hi Linus,
 
-> From: Anson Huang <Anson.Huang@nxp.com>
+On Fri, Jul 23, 2021 at 1:05 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+
+> Patch applied!
 >
-> Add i.MX8ULP pinctrl driver support.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> BTW does "ULP" in the name mean "ultra low power" as usual?
 
-Patch applied!
+Yes, this is correct:
+https://www.nxp.com/products/processors-and-microcontrollers/arm-processors/i-mx-applications-processors/i-mx-8-processors/i-mx-8ulp-applications-processor-family:i.MX8ULP
 
-BTW does "ULP" in the name mean "ultra low power" as usual?
-
-Yours,
-Linus Walleij
+Thanks
