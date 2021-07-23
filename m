@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 841563D382E
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 11:58:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E68C83D3836
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 11:59:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231571AbhGWJSN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 05:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57806 "EHLO
+        id S231605AbhGWJS6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 05:18:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231195AbhGWJSN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 05:18:13 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06EC1C061575
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 02:58:47 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id bp1so1188081lfb.3
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 02:58:46 -0700 (PDT)
+        with ESMTP id S231273AbhGWJS5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 05:18:57 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13351C06175F
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 02:59:31 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id r17so1200099lfe.2
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 02:59:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bXuM8D5k6/Yl7ozL3DfM+PVJYiIerLcTEkx5mVID/UU=;
-        b=NGgdq7v+o5iqkF3EI+m7OhMam7v6/wLB+PtgVWtPK+zgiAfitTZEjpKoG8KZfnGRZ0
-         XJ8xuYkmi14aUj966cwbUP99rci0Pn0csyZhH9ZTUDnuQSS32kadqR3lypzYlQJVtsnM
-         M/Ob2kqRn3bnETXtydx4LmnRgUUYyQCgOuGSK3GFT7vITGtGj0rltsuaNPV67aIl2IPE
-         bHvysTHvHR7wop3cRkd0567v6cxdtTxGnhtE0ta1ytVcgpKU5CaZP8raw12NEl4CmFcw
-         RqAlqSRFEHdmfT39ZgMX58L1/MNwxVvr9JKjOeHcHDvcFn9WS2ZMo7vYxE3BPlFA+Tmq
-         I92A==
+        bh=SpdYc3xSgtWajYNjziQJhjZECPeeHzOqtqZRcb4yQqc=;
+        b=J4vXy3PkMvHxHdXmu8xSRDtPSWRGZj4bvC9RE+NDkeFb/PTCBojquyjxYoZngKBukS
+         StiIvPkV6z3a4W0B8hsOOpPd56wDC4/LyODf5o51sUjkXGS3ucbtUeYTkr94FeLsZI9I
+         d/R2VLKwJQK3bJWZQLXJSN6SLC9IZL6xwfLqxpqKB27esWapnkfxI/ZewCl9USmE1DTo
+         kZb5/7oUS8YBZG820r03EGq5+fhpw5hGyE/Qt+x4QpGZ5MjPKM/SHl6GNiSaYRBBDAWC
+         bljyLdTixfD+4zsprywxA0yyv73D4hssAtXXAZHB7zNeFMXzeqagJqMleKxY2ih80i8M
+         7oiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bXuM8D5k6/Yl7ozL3DfM+PVJYiIerLcTEkx5mVID/UU=;
-        b=SJC1muOuGH2T1NZul0qiMHAd3VX+rNE+NLbaxy/2q1YYdFmLoPZvu3XbU4xI1hIWTf
-         5G4eWtSIu2t9XB1PVqVzxknOQQVixhrfmil2MbMkut6doA/B0ZimroZFnQNc8qgieXgb
-         +kIeyAzVts3lKD0D3ltuWuS7rR2fmwggjK9MYDHnjGd64/pBICTmjrXeCM8t/hIOJdVG
-         A7BR1/Zgl7gAxHv7rQCkDqMdZ9NHHlFLmvj/9w9bPXmSDeucJ+6vu+sson983SQMazSa
-         nL6Vr2NHNRr30oNWsdnV0JgQPVD9H01tVE167DDjQlZjQCo8xjZzPJhr0CuB8YkrLhIw
-         0svA==
-X-Gm-Message-State: AOAM53010o3nRBQUEw+FYS8Z1h85PuLzb1RJv7OxiKSP8kUsJjhU3mV2
-        ORdablOttYYHv6je2DbJv9iGqe/u9HN60sfbfQP8bQ==
-X-Google-Smtp-Source: ABdhPJzUNSEtuAGq/AntijcVwb7VOysRbc8PRRpm+HrzsTl4s4LzDpYbxtndNsmw3C9e7zr97SPpp9rInqEhXg6DtRs=
-X-Received: by 2002:ac2:5e71:: with SMTP id a17mr2434778lfr.465.1627034325426;
- Fri, 23 Jul 2021 02:58:45 -0700 (PDT)
+        bh=SpdYc3xSgtWajYNjziQJhjZECPeeHzOqtqZRcb4yQqc=;
+        b=kZu8dygYMBeBbdYEc2ZeIJ4jhOaiOymHUKxStTLRy58G/jnukACFUQ7KJpHKUSA0wT
+         uHE5FrZhtpQKfmn/xW8WOeK41Jx64qBsDLJPATQOqevl8vKspw5LtoHzGWYc3tmQaaL2
+         gwyBWgsGv8n0z6cszmNYOq6lRue9D82sB7NkUFR2vwD0tAKWbCKHpAwQSy9lbS78goXy
+         Zg8CAnX9BckDMfydWwN5rjJ4yLAYoPg9WRtcAYnETOH9DhE5jUlwOe8Y5T7PzHjtyALo
+         +wNS9MoN4T1G7hE0WicHXQHgZktmWxCAFB/lDwfB2pZolfA4wUuD0d3wgZKX9WpL1RYo
+         697A==
+X-Gm-Message-State: AOAM531FHtgzacHUbvU6Lbzxo7dKttRmh1fhO0vTBasFa8jH84I02+ML
+        WmI0pthDC0CQbEXaeBc2nQzCFf3dpiyn9U7q6wPQgQ==
+X-Google-Smtp-Source: ABdhPJx7muHNH1C+xeS6T8GmAgw9HYxGXW+SzTbL9t3ZL9EWXY9r5EfsyJ1gcQxXWpZrxgEPKQxHcPJfogHCjHnb5R4=
+X-Received: by 2002:a05:6512:3f1f:: with SMTP id y31mr2589495lfa.29.1627034369078;
+ Fri, 23 Jul 2021 02:59:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210712100317.23298-1-steven_lee@aspeedtech.com> <20210712100317.23298-7-steven_lee@aspeedtech.com>
-In-Reply-To: <20210712100317.23298-7-steven_lee@aspeedtech.com>
+References: <20210712100317.23298-1-steven_lee@aspeedtech.com> <20210712100317.23298-8-steven_lee@aspeedtech.com>
+In-Reply-To: <20210712100317.23298-8-steven_lee@aspeedtech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 11:58:34 +0200
-Message-ID: <CACRpkdbKyV_Crw8MS63SZGf=nKztDkKnJgRprLdvXe0u7BmVNg@mail.gmail.com>
-Subject: Re: [PATCH v6 6/9] gpio: gpio-aspeed-sgpio: Add set_config function
+Date:   Fri, 23 Jul 2021 11:59:18 +0200
+Message-ID: <CACRpkdZh1TW32bqb91+g8OWkXBVDt0vsoObJ6GCX3LL+86_daQ@mail.gmail.com>
+Subject: Re: [PATCH v6 7/9] gpio: gpio-aspeed-sgpio: Move irq_chip to
+ aspeed-sgpio struct
 To:     Steven Lee <steven_lee@aspeedtech.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,14 +74,14 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Mon, Jul 12, 2021 at 12:04 PM Steven Lee <steven_lee@aspeedtech.com> wrote:
 
-> AST SoC supports *retain pin state* function when wdt reset.
-> The patch adds set_config function for handling sgpio reset tolerance
-> register.
+> The current design initializes irq->chip from a global irqchip struct,
+> which causes multiple sgpio devices use the same irq_chip.
+> The patch moves irq_chip to aspeed_sgpio struct for initializing
+> irq_chip from their private gpio struct.
 >
 > Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
 > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-Excellent reuse of existing pin config property.
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
