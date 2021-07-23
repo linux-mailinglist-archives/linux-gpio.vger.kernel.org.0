@@ -2,78 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A734B3D3D3C
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 18:12:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D51E3D3D48
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 18:13:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbhGWPbj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 11:31:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58832 "EHLO
+        id S230085AbhGWPdU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 11:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbhGWPbi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:31:38 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13E3C061575
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:12:10 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id z2so2975956lft.1
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:12:10 -0700 (PDT)
+        with ESMTP id S229622AbhGWPdT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:33:19 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F07C06175F
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:13:52 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id a26so2870207lfr.11
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5JobzZWFXvtUfDgRmItiORTv9usTl7bYtauPefrYvoE=;
-        b=wghAyG3ZGgauMwRcZbGm71RxKRvlPeCP22BBBhVS1NzdOIEbY/I2LpQPpObaDuJ3CP
-         1TpbB09pWPerjW/8q6LUWmy+1BqruhJBopfjcEHropkpLWrDSSJ1+nS+gKr8KaGBdQ6d
-         UGhVpvVVdr6mllOMhahgTdwQgtEEEX3LZY94AZv9kMxe+Ra/0v3h8XPek3NB82Mc+u72
-         JM/lf5cf6Dq4n2u51orZ6rHOrjCcfVvOEiI2lbAkyi3V5V4h/LUZGU6mtoUdwMkUyPHy
-         7V37lthQao6dBt1C54AE754kq+nSs2bEqwaD2taKOgdLIfpcrz1FjSIqmaEliov3jIi4
-         NA6g==
+        bh=ZG8EM0ibWzAiSvgD/0B7tPbf0jFZ6hKm+43FjwPiK0k=;
+        b=rlD9kU3EsUgSAXXwAp5ElP1YPzxO3q0z7M6zy8r9F8vzIGyuKKeFnlfR9ePbi3O+MU
+         iKrGUnx/6N3cB1WpOZ3l8JtjE9kKvbBMcWMS/7maqJLonFHGN4PMWzQzYUYx0S8sf0TZ
+         fRm7+ki8JlaKrLWfiuAWY1vq+4PhJc2PsEviDvGe6iOMTui96hfNscclgm+3wlXss7Iz
+         QloERXBZuBfrXWAaeZsHGAF3yuWj8k0znpzgm0Bg31Fr/VQJ+dU3lm1pyEknTf2xdyIQ
+         aJeXg082bW/eiNMFNYX4m/WuwYqi151M+Np4xmVwExaBSvO//B5JCmj+UIgUgMhnG4ls
+         S59A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5JobzZWFXvtUfDgRmItiORTv9usTl7bYtauPefrYvoE=;
-        b=A0GvxF5EuIYuurtM2IjCIdAfPNi95nsEaZQWb2IGLMoezR1l01wtHqQd1ZpYze7TUD
-         jdkXdUoaZhNtSj3h+IrTKXjj1n9n1g+fMhkb0vHwam29sVqEPPUFeJe3GyxYaUX5MUuP
-         Nzfqoo2pZjM/yKbS1lvyFESu++TqCDsa6Li8uCpFOsFtj17m4it141/kNlVPtffDkx04
-         XCE5e/vDj5vrgKa2UbEw+z5uOfnWSbLJ25XiDC0eVvvQDrA34jU5MGUne/he8pLdsRh/
-         mNheaPdOaMrBcXlqdS2aKEFbeB8HIPpv3OlGd0n7Z+KLFd1HMS8cMl2ID9nreajGRWsb
-         Wmmw==
-X-Gm-Message-State: AOAM532EIn1ZrO8+CVAfV6iPJp1S+G6obIFti/fDgrQLfG8YjBwqHJyH
-        bFL+GNRa6QlG9Q8THKZVFl2ZfBUNagaC1IPZTupErg==
-X-Google-Smtp-Source: ABdhPJy+W20LKl+Ix/kVQvN00LukBnnr3hO6oyRnDDBfy1WSOpYViToUeXueczS8wRJ/sha3rBfzQOnQZDnVWmzIZJc=
-X-Received: by 2002:a05:6512:2603:: with SMTP id bt3mr3604749lfb.529.1627056729371;
- Fri, 23 Jul 2021 09:12:09 -0700 (PDT)
+        bh=ZG8EM0ibWzAiSvgD/0B7tPbf0jFZ6hKm+43FjwPiK0k=;
+        b=R3VshFYdMO1YP5oBwBuSJbqzioSDjQGD5uWdKKRtYWxJPSAPiJk6AUSa2AFHxlXhKk
+         tMm2zkU1DkXzGNp4rtB6Z7wVsfDfjGJhT5JyXoPgwIegxw42jQZFOhgiUuHNOMq13ffZ
+         N2uAVd8G0J29g+4zfiAPaaKIwInw59LdARpnrT7eMMa7uV2cgja45jOJ0VumAvl/fOVs
+         IiJGbESN/UTMABBxUJ1eQ4BK9JOWBwzLcCokzvcO6xbYkUI1ASewjaUYKGYoYWZyJkMs
+         v165/LGkTHs7892/o/GlBEyqk6DCNLQQkutThe1vZTX6ssXGyfk2D+BYO1JlyRpgJa/q
+         7ncQ==
+X-Gm-Message-State: AOAM531MMTaOQ/m3BHkKEKIC0SoZXUmd6viaBaTY1eOO0hignCdXPjf7
+        cZLNrnX+c7/l151g3h0SKspcFYWZyvfwoTMLh5Oo7w==
+X-Google-Smtp-Source: ABdhPJxugAzgYOKChCqv3cRo/aKnwy4Bq+Q7V7eWSMFB1s+HkNGhWLe4KTH/emdsfmJ5hrY2eynft8sPj9YUAjJjH8k=
+X-Received: by 2002:a05:6512:3696:: with SMTP id d22mr3678649lfs.586.1627056830723;
+ Fri, 23 Jul 2021 09:13:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <202106261334.j23TFDJm-lkp@intel.com> <20210626051550.GA37544@d0c207d51ce8>
-In-Reply-To: <20210626051550.GA37544@d0c207d51ce8>
+References: <20210627045631.2882-1-jiaxun.yang@flygoat.com> <20210627045631.2882-7-jiaxun.yang@flygoat.com>
+In-Reply-To: <20210627045631.2882-7-jiaxun.yang@flygoat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 18:11:58 +0200
-Message-ID: <CACRpkdYcP6Bp26cUoO1fEGc04nkb9g_-i7G8=FiKvmozrz3-CQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: fix platform_no_drv_owner.cocci warnings
-To:     kernel test robot <lkp@intel.com>
-Cc:     Fabien Parent <fparent@baylibre.com>, kbuild-all@lists.01.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Fri, 23 Jul 2021 18:13:39 +0200
+Message-ID: <CACRpkdZkvSg___ZxdE639SMbTs5rJbjHBq-HkTCuv0e645Rssg@mail.gmail.com>
+Subject: Re: [PATCH 6/9] pinctrl: pistachio: Make it as a option
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-phy@lists.infradead.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jun 26, 2021 at 7:16 AM kernel test robot <lkp@intel.com> wrote:
+On Sun, Jun 27, 2021 at 6:57 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 
-> From: kernel test robot <lkp@intel.com>
+> So it will be avilable for generic MIPS kernel.
 >
-> drivers/pinctrl/mediatek/pinctrl-mt8365.c:488:3-8: No need to set .owner here. The core will do it.
->
->  Remove .owner field if calls are used which set it automatically
->
-> Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
->
-> Fixes: e94d8b6fb83a ("pinctrl: mediatek: add support for mt8365 SoC")
-> CC: Fabien Parent <fparent@baylibre.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-Patch applied. Nice robot work.
+Is this solved, or should I apply this patch?
 
 Yours,
 Linus Walleij
