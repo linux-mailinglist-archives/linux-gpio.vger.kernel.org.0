@@ -2,118 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4716D3D3B65
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 15:47:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 875743D3BA5
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 16:10:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235127AbhGWNHM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 09:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54040 "EHLO
+        id S235274AbhGWNaE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 09:30:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233486AbhGWNHH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 09:07:07 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D052C061575
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 06:47:40 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id f26so2415441ybj.5
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 06:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AclrNr9DriONd9uxnMokdBW1rOGOgyBR/Fi4Kz2y6rY=;
-        b=SaV31Lrli/1acnfLkCpI6k9LxZX/0RCIysvoX6qtwA8lSWc1/nbOJ84tgsW/H6qKQY
-         N37UjrVL4Z2a/aSoykdxaHZTsI4aEcAVBE1JkDwkphBFEPJFtwEYJA03ZEXjJAxxbISp
-         SNVde+TuZexYyp5BgXi5VRs3zfmC15bGC/y2i1iQakMFrhyBrL/HR0r2nFvVH0Dex1Th
-         TuImrn70HPSC0BQ7vHPDkSBgqIZEoiaAYJaBV1/5LbBXonuhoTvNUaYW9o+j7mvLzO0A
-         oMUyfNOjyrtRYjWNLt7K6e2gdh6y+AMopqOLxrM55HwslDlKObktA5guQlt/iMYt6lJP
-         tXsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AclrNr9DriONd9uxnMokdBW1rOGOgyBR/Fi4Kz2y6rY=;
-        b=o6FC7XBq1DwR9RMzB83jd3kjTeLT1BCK5jzGfm5tZ/t0ZxduYYoILPtIzgVb+XjASQ
-         M+ZMP83B2pj07ZlNjhg2SPoRWA40NoJuyAZspL7osDHSfv6eECbcB4dZdET9b9lTF5zi
-         MBkSpKMbDZKZ+D/RwY+1rwpY7mHi9DP2kdI5+hU18h0elunb0AWmiBTNINGdG/kDI9l3
-         gHRZTBrsb4mIzqu9a6v2rDxAQqHP7uomKGVS1ecihJNEPpX+FE/N9UIwp2766NQ04Mrr
-         XKaLlioFBXCe0WvjI8r2P6d/EN0vnKbE0+3fToJZ9M5MNyppZmNJ35sUd0/Q7yCHB5ps
-         GIWA==
-X-Gm-Message-State: AOAM533iJ2vSGuMOnmzYwSFbiRplsF7PdqzOy3ZJCyb7TiNIHLQ9MeBh
-        vJiCU72+8fGoccyY0S5GgYYZUfMnHUnC7MDw1w4=
-X-Google-Smtp-Source: ABdhPJzYZJSPB0k1FaivnOBEYX+lKQSvu0AiuyqhCs6NJX5j7HTyd+efsHOu4YQKP45BUt6yV8tGGtChtcjaoW2EwSs=
-X-Received: by 2002:a25:ad62:: with SMTP id l34mr6580499ybe.457.1627048059209;
- Fri, 23 Jul 2021 06:47:39 -0700 (PDT)
+        with ESMTP id S235094AbhGWNaE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 09:30:04 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB26FC061575
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 07:10:37 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1m6vso-0008EK-EL; Fri, 23 Jul 2021 16:10:34 +0200
+Subject: Re: [Linux-stm32] [PATCH 5/7] ARM: dts: stm32: add STM32MP13 SoCs
+ support
+To:     Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>, arnd@arndb.de,
+        Olof Johansson <olof@lixom.net>, robh+dt@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20210723132810.25728-1-alexandre.torgue@foss.st.com>
+ <20210723132810.25728-6-alexandre.torgue@foss.st.com>
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Message-ID: <048b94a6-438d-d2ee-0d93-67541c962076@pengutronix.de>
+Date:   Fri, 23 Jul 2021 16:10:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20210618062449.1067106-1-jay.xu@rock-chips.com>
- <CACRpkdYGyy+tE4_xddJWxWUQpPea0bc5CUTBfp2RtnJfQ-2t_w@mail.gmail.com> <CACRpkdadb0=KD+ZXQGNVDUBDYHUsvP94dSgPzfwhUbwjvw_6Wg@mail.gmail.com>
-In-Reply-To: <CACRpkdadb0=KD+ZXQGNVDUBDYHUsvP94dSgPzfwhUbwjvw_6Wg@mail.gmail.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Fri, 23 Jul 2021 09:47:28 -0400
-Message-ID: <CAMdYzYrG0mKJmnox8EK2T=KS2t=V+-LxDCX4rpDF_vkspWingw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/9] gpio-rockchip driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kever Yang <kever.yang@rock-chips.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210723132810.25728-6-alexandre.torgue@foss.st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 6:15 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Fri, Jul 23, 2021 at 12:07 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Fri, Jun 18, 2021 at 8:24 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
-> >
-> > > Separate gpio driver from pinctrl driver, and support gpio v2 controller.
-> > >
-> > > Jianqun Xu (8):
-> > >   pinctrl/rockchip: always enable clock for gpio controller
-> > >   pinctrl/rockchip: separate struct rockchip_pin_bank to a head file
-> > >   pinctrl/rockchip: add pinctrl device to gpio bank struct
-> > >   gpio/rockchip: add driver for rockchip gpio
-> > >   gpio/rockchip: use struct rockchip_gpio_regs for gpio controller
-> > >   gpio/rockchip: support next version gpio controller
-> > >   gpio/rockchip: drop irq_gc_lock/irq_gc_unlock for irq set type
-> > >   pinctrl/rockchip: drop the gpio related codes
-> > >
-> > > Liang Chen (1):
-> > >   dt-bindings: gpio: change items restriction of clock for
-> > >     rockchip,gpio-bank
-> >
-> > I have applied the series to an immutable branch in the pinctrl tree:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-rockchip-split
-> > Then I pulled that into devel.
-> >
-> > Bartosz: if you want you can pull this into the GPIO tree as well
-> > (makes it possible to continue work on drivers/gpio/gpio-rockchip.c
-> > and avoids clashes in Kconfig and Makefile)
->
-> Oops I saw there is still discussion about some of the patches
-> and found a bug myself. Pulled this out again and deleted the
-> branch.
->
-> See you again in v7 :D
+Hello Alex,
 
-Good Morning,
+On 23.07.21 15:28, Alexandre Torgue wrote:
+> Add initial support of STM32MP13 family. The STM32MP13 SoC diversity is
+> composed by:
+> -STM32MP131:
+>   -core: 1*CA7, 17*TIMERS, 5*LPTIMERS, DMA/MDMA/DMAMUX
+>   -storage: 3*SDMCC, 1*QSPI, FMC
+>   -com: USB (OHCI/EHCI, OTG), 5*I2C, 5*SPI/I2S, 8*U(S)ART
+>   -audio: 2*SAI
+>   -network: 1*ETH(GMAC)
+> -STM32MP133: STM32MP131 + 2*CAN, ETH2(GMAC), ADC1
+> -STM32MP135: STM32MP133 + DCMIPP, LTDC
+> 
+> A second diversity layer exists for security features:
+> -STM32MP13xY, "Y" gives information:
+>  -Y = A/D means no cryp IP and no secure boot.
+>  -Y = C/F means cryp IP + secure boot.
+> 
+> This commit adds basic peripheral.
+> 
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp131.dtsi b/arch/arm/boot/dts/stm32mp131.dtsi
+> new file mode 100644
+> index 000000000000..86126dc0d898
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/stm32mp131.dtsi
+> @@ -0,0 +1,283 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+> +/*
+> + * Copyright (C) STMicroelectronics 2021 - All Rights Reserved
+> + * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+> + */
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
 
-I have a patch ready to fix loading the new gpio driver with new
-device trees that are missing the named gpio banks.
-This also fixes loading on the rk3568, which need this driver for gpio support.
-I will rebase it to the v7 when it drops (hopefully soon).
+Could you add aliases for mmc0-2?
+That way /dev/mmcblk* numbering is fixed from the start and
+doesn't depend on which devices are enabled.
 
-Very Respectfully,
-Peter Geis
+Cheers,
+Ahmad
 
->
-> Yours,
-> Linus Walleij
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
