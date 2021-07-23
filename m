@@ -2,93 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86BB93D3CFB
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 17:55:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AA153D3D12
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 18:04:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235764AbhGWPO5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 11:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54872 "EHLO
+        id S229897AbhGWPYH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 11:24:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235657AbhGWPO5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:14:57 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598E4C061575
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:55:30 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id d18so2836084lfb.6
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 08:55:30 -0700 (PDT)
+        with ESMTP id S229510AbhGWPYH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:24:07 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A806AC061575
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:04:40 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id n6so2269779ljp.9
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=F254boyMsvGuYYqp3lw2/2iywjmwuHms3YgcIoosbWQ=;
-        b=sQP3qs9VukGUqxkt/CdirL7Xex5Vu4HEYsVMNR8bf5LALNA6MH0r9UpnOg9fZj1dJ4
-         WIUOdqQorheu3AByNYFSWGFMbB9Ujs/vRYOyUQQlpG21b8/iDSv1Lc/ImNXpffqNPTmK
-         sGd1uv5LO/5GR5OeOHdiykYnxIOFazs1aBLqT7r8/4kBz/hKnt+8pxyJ06xqMT2vZXU6
-         jyo6normElOum2zj6C8rP+QCzv8Ii7uChdZ5UmZK8SP8mUNwJX8gEUfDM9U2m2sUUKen
-         mKjNtRqEI/N8JtXvlJcESHmPlLPDOg8KOv2HfA86cqQ/LqpyLUFHXBJvphyU7VXgaQpk
-         N9Tw==
+         :cc;
+        bh=kZLoHb00e/f2uvt6VDNXJoTXgrvoGciw5eKO7Rkag8U=;
+        b=J57dd99fueJo0Ewd/FRALzk6FomUTPkmWz2HZ4Gi3VfLL89dwVw5CqFoJqS6jtDU2S
+         nIuHNd7IrBsbhH5UO7LrRS3k2VNPhFpQu1zVqTMzMWMh1X8AjlCPaq1++OG5y1aEzWvw
+         AsTNBoTFTzRjw7XhLopXN0C6O3Qt53DlWZEuD9+SIYZLJCz0IjuwyLKZDYnUl/455bcm
+         IXEIlKhkBsx/mWN3pA3la9JamMKa1FH2dmmvEQoo/T3wHotL/jObVoU1C5tPsqxlnxZY
+         g3jdTxgTeetP70wta3dJpyADgkLCgl13xN/uAdfkHOiLAx7pT0ndxjZi8FSZe+v3de3l
+         xclA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=F254boyMsvGuYYqp3lw2/2iywjmwuHms3YgcIoosbWQ=;
-        b=nojZxIRH17nOWLrhW9CL4HtGWG575gfgpacVMVZS4nAxzErv5Fk1Ycw38TJVYy/Tl9
-         Up4OId/f4beMe/JdW37CGRSwclMziIzSN2ZuOHccHeMUYg7T9/YVKv7y8DLAGGkVWdqH
-         XCOmDdaut8KASz1wSsJjhToEJ979WBO1NZgm7KsuaIzA9xJFgsrRD6pjqi6LyBGJLvEV
-         huAYcpGyZ4/FySefF3u82NLYu/aaxIs03hdPKG+yo6b3DY9Knfyhq7lw3ezASKX6pDgi
-         nP0TQPCKRUc6aRqmUoOBT0/Fhaa+4VyhR4JGf3VEYEk3jVfWcipRb3dV1FFSZtHDPta9
-         3xVw==
-X-Gm-Message-State: AOAM5323Dh7OA98r/p8ObKlWatGHBJxpxVz5Wos0r8KkqZdIcQ5IJe/p
-        MjauqGaTKtrMc8yJJ25xl0OF46p7cJnCNh8E8d9H1A==
-X-Google-Smtp-Source: ABdhPJwzqVQlVZDEl6oo11hFeps5dggV/mHbLMWzFSnJ1UBwjt0JBU5npVOsuUjo6PzpE76UE2wq6APkm76hRqUfubQ=
-X-Received: by 2002:a05:6512:3f1f:: with SMTP id y31mr3576333lfa.29.1627055728058;
- Fri, 23 Jul 2021 08:55:28 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=kZLoHb00e/f2uvt6VDNXJoTXgrvoGciw5eKO7Rkag8U=;
+        b=qb/N/nK58xJGgEyShKomnaq3gIFJu8SJqE+h42NGibIOJS2iM30ztctjFu0PiHvx/H
+         /MzuvUPTWCjjCzliou2iwhXJmTRxo2mAjbIrNvR80/UP3NvaUiVtoyriWTVFvLKQ+Bzs
+         bAJbvKOuF4EhqayhypDJ0antf+WA+wN2625evzdgmHtmGxhyjD8E9ON6ZGXMEDj2k50N
+         aaztHj2hTdg0aGUmB2UciQHdq/bykblBBFh/c1nenOz2nmT7nUYpB0Li5wiJfKKjTTnS
+         ARENzpmvKGJ0KqCsjpbNpbJnciHs2nGNINbO+XSFtMthapDJiZMQCnuYC8JVjYKRzYJR
+         wgWQ==
+X-Gm-Message-State: AOAM532FPMwCrPRRFzpYvlbhjOSxTWvE1D4ktQsX61rmEskbGS9Napgu
+        r3Ea+8RKCGtUurhe21q8hr57RJmHceONSDAsGGrbuA==
+X-Google-Smtp-Source: ABdhPJzo0PSYV15eT1qrz5sHyw5iPO4XGjMebwCKucdy2PFnKayrx6kV3CaDbrwwYX/zYhX7EUChqcq6g8MKzHPVFMQ=
+X-Received: by 2002:a05:651c:160e:: with SMTP id f14mr3794529ljq.273.1627056278976;
+ Fri, 23 Jul 2021 09:04:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210719112938.27594-1-kabel@kernel.org>
-In-Reply-To: <20210719112938.27594-1-kabel@kernel.org>
+References: <20210607061041.2654568-1-ping.bai@nxp.com>
+In-Reply-To: <20210607061041.2654568-1-ping.bai@nxp.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 17:55:17 +0200
-Message-ID: <CACRpkdbkWxw8wEOt2nsiYKLw+=TjFrJX=WYALupCtWWc9xGw7A@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: armada-37xx: Correct PWM pins definitions
-To:     =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Patrick Williams <alpawi@amazon.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Rob Herring <robh@kernel.org>
+Date:   Fri, 23 Jul 2021 18:04:28 +0200
+Message-ID: <CACRpkdYeGJvRM7g_2E174NXWv+hqS0wY1PJouQbfu1_sM0B4WA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: imx8ulp: Add pinctrl binding
+To:     Jacky Bai <ping.bai@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 19, 2021 at 1:29 PM Marek Beh=C3=BAn <kabel@kernel.org> wrote:
+On Mon, Jun 7, 2021 at 8:00 AM Jacky Bai <ping.bai@nxp.com> wrote:
 
-> The PWM pins on North Bridge on Armada 37xx can be configured into PWM
-> or GPIO functions. When in PWM function, each pin can also be configured
-> to drive low on 0 and tri-state on 1 (LED mode).
+> Add pinctrl binding doc for i.MX8ULP
 >
-> The current definitions handle this by declaring two pin groups for each
-> pin:
-> - group "pwmN" with functions "pwm" and "gpio"
-> - group "ledN_od" ("od" for open drain) with functions "led" and "gpio"
->
-> This is semantically incorrect. The correct definition for each pin
-> should be one group with three functions: "pwm", "led" and "gpio".
->
-> Change the "pwmN" groups to support "led" function.
->
-> Remove "ledN_od" groups. This cannot break backwards compatibility with
-> older device trees: no device tree uses it since there is no PWM driver
-> for this SOC yet. Also "ledN_od" groups are not even documented.
->
-> Fixes: b835d6953009 ("pinctrl: armada-37xx: swap polarity on LED group")
-> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> Since v1 I've added Fixes tag and Rob's Acked-by.
+> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Patch applied, sorry for taking such time with this.
+Patch applied!
 
 Yours,
 Linus Walleij
