@@ -2,88 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42BE23D3845
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 12:01:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1DB33D3853
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 12:08:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231680AbhGWJUK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 05:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
+        id S230098AbhGWJ12 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 05:27:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231519AbhGWJUH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 05:20:07 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E871CC061575
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 03:00:40 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id h9so1011751ljq.8
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 03:00:40 -0700 (PDT)
+        with ESMTP id S230008AbhGWJ11 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 05:27:27 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4549EC061575
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 03:08:01 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id r26so1205882lfp.5
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 03:08:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=55qDSs4WDIz8l0MaQDVpOoMRLPHxzbPjJoCBzhMJJ8M=;
-        b=t0VfOY5DOKMdO4UZ1wz28sycelxsa11TOCksLBsdZvZvMQczDIGKtx8a1UoVG9f66L
-         HD9XcjArtzwd4DkawwmM7Ns3/zOmBlp9BjoCfp50P0tPCluAXaDENmo+OdXQaKFZr+nk
-         F/H4rNK4st+nQz7TOK2RYbI371Yf8TSV1jwBbtTGiDXTBUmFgS2Nn0HsAFdxxjvU6pgQ
-         cbal5cDj8lzKLeh6gxijirLZ1zrY/XRiSczqnT7AwxoX9rcErjkjEMqa0vpOhEe0jxnp
-         WhCE+9N9OH2OFjzTMp7OJ/es6gvK7YIqqfWWyFRHxn5cjSOaAwP37M/kgQXO70hdNT+U
-         M7rA==
+        bh=Q4BU+5tZU5TQrCBXLyqih1hQuK9H2h5ckUqvAJtP9CA=;
+        b=ivr+2Uit26tqgc4oSFnrYZbDZ+9/0aaAi8x4QOnA6h2Slje1dHYQTDdjwpZxt71dqZ
+         aEqcHflA/2r0jRJOS5O5pHQwyPslqXCfDWPewO6Ze1pUiiiIhLSvGH0A7XZV3Ea/gMT2
+         5kkaWM5Jevk6L9xjyoEKKxujLLZysU9Fb5SssxCSLyjg116d2Ubx0+qK4vrZ8mQK3URr
+         koCG975hR2Pv3/QTIy3qFvHZivrZZh9pZ/HBZbPGKMhMLOPKosLwg7ZmrEgwAWt2rABZ
+         VupYFLtPHkm1wsvZ2TwVno5jp+ePXM6eOasX9VxZ3MekgX8utUAVzL5gV6bOGNGvb7Sw
+         fe2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=55qDSs4WDIz8l0MaQDVpOoMRLPHxzbPjJoCBzhMJJ8M=;
-        b=mAR1hGA7XedDuUo+KRSDB5DQ2TLW5rLdalotaPvoAG62mkwBVvKvCFcPWUE8t1Vj1E
-         3YyGiKHW+YaJ0MZ6s0stkCRJxI0zbr0woC5fe77N+oYt+rqnKnQ4Z8jE+Ra6Y8L7NLjJ
-         kDmYVlfAGDJw5/QXjklYltAMmtcNThzvUNwUFtG8VcmbREJ6HvqW9kYDLSDERSqizg6l
-         h5K1nsvxqiO8rQPctQUrFOIMG2SX41GSwFYxeEaTcN4dgVv+ao2PvoY+xs7y9LWoSM6l
-         E+OuZl8v30S8hpx7V3ihfuF/+q4k0BJ/miinoV/xrJL1ZRsYwkNpXAX2lntStTQO6zY6
-         Awtg==
-X-Gm-Message-State: AOAM5318kTYqegF88difnqxYvByaeA4//OjzLeIaiqNx9odoWE+a84CA
-        QzOHQOYQYqocGOSs0zDg+/8GxYgyubOJNNmYOSw8gA==
-X-Google-Smtp-Source: ABdhPJwmAzTPEt47e7H6MBHXMnZLqcBXHqbxHBeC/SzF8xZtLU2Y144wU08Unv3L6vzEGejGY0moi+vwH6czk+js7FU=
-X-Received: by 2002:a2e:9d15:: with SMTP id t21mr2854482lji.200.1627034439330;
- Fri, 23 Jul 2021 03:00:39 -0700 (PDT)
+        bh=Q4BU+5tZU5TQrCBXLyqih1hQuK9H2h5ckUqvAJtP9CA=;
+        b=EiqWTXK6jf1g1+EjRnTjTmoWGr38HN8oS2TVdrRXWrSv367+cEMW4oeNkO8o8biKmE
+         6iju5CE2OQUHKQAu4v7IUmlX9JEi+2atZHerGw9QBSIZvYJgbalyaHIkS/vMPt/lv9Yn
+         HZBRDe04uRDnZuLlZhbzIPTe/NCWt94s60BVL50+WYTDb52WyEIn3uSNVCTiDnnj7Qsw
+         jCRqGh190a153OceQ9CqsQPue/A5S3Ajnr36IIZTXtJFnk9Klh7FJQl8go3oLo0EmgEe
+         I7hV0tYkMoSrU7BsAOhOVVr/Xt+eknottT3fx4gtp5X62L1VvRgSbUypSIjWESIj7KM3
+         8zuw==
+X-Gm-Message-State: AOAM530GLx51tnMTay5kq4qblUtAGoBbSQ8DAPY0kdnLQUzqHAvDrb1j
+        u4DGjTNcjrP22KfWk1Z3UG9tsIieDRwCa+Zd/uPfBA==
+X-Google-Smtp-Source: ABdhPJxjnhIpgDdVp1H8m7VgEBTEDRh+H64JfXuc0U5TeQgKP8c2x8Ymes2lzQ2i3+MLX3pglOdA6mdXSp9A5y45Qz4=
+X-Received: by 2002:ac2:5e71:: with SMTP id a17mr2458517lfr.465.1627034877891;
+ Fri, 23 Jul 2021 03:07:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210712100317.23298-1-steven_lee@aspeedtech.com> <20210712100317.23298-10-steven_lee@aspeedtech.com>
-In-Reply-To: <20210712100317.23298-10-steven_lee@aspeedtech.com>
+References: <20210618062449.1067106-1-jay.xu@rock-chips.com>
+In-Reply-To: <20210618062449.1067106-1-jay.xu@rock-chips.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 12:00:28 +0200
-Message-ID: <CACRpkdZkcQyN-JuNF24gHkNOx3uk9PEWD18-0k49fV-UO=ZB2A@mail.gmail.com>
-Subject: Re: [PATCH v6 9/9] gpio: gpio-aspeed-sgpio: Return error if ngpios is
- not multiple of 8.
-To:     Steven Lee <steven_lee@aspeedtech.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
+Date:   Fri, 23 Jul 2021 12:07:46 +0200
+Message-ID: <CACRpkdYGyy+tE4_xddJWxWUQpPea0bc5CUTBfp2RtnJfQ-2t_w@mail.gmail.com>
+Subject: Re: [PATCH v6 0/9] gpio-rockchip driver
+To:     Jianqun Xu <jay.xu@rock-chips.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hongwei Zhang <Hongweiz@ami.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kever Yang <kever.yang@rock-chips.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 12, 2021 at 12:04 PM Steven Lee <steven_lee@aspeedtech.com> wrote:
+On Fri, Jun 18, 2021 at 8:24 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
 
-> Add an else-if condition in the probe function to check whether ngpios is
-> multiple of 8.
-> Per AST datasheet, numbers of available serial GPIO pins in Serial GPIO
-> Configuration Register must be n bytes. For instance, if n = 1, it means
-> AST SoC supports 8 GPIO pins.
+> Separate gpio driver from pinctrl driver, and support gpio v2 controller.
 >
-> Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> Jianqun Xu (8):
+>   pinctrl/rockchip: always enable clock for gpio controller
+>   pinctrl/rockchip: separate struct rockchip_pin_bank to a head file
+>   pinctrl/rockchip: add pinctrl device to gpio bank struct
+>   gpio/rockchip: add driver for rockchip gpio
+>   gpio/rockchip: use struct rockchip_gpio_regs for gpio controller
+>   gpio/rockchip: support next version gpio controller
+>   gpio/rockchip: drop irq_gc_lock/irq_gc_unlock for irq set type
+>   pinctrl/rockchip: drop the gpio related codes
+>
+> Liang Chen (1):
+>   dt-bindings: gpio: change items restriction of clock for
+>     rockchip,gpio-bank
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I have applied the series to an immutable branch in the pinctrl tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-rockchip-split
+Then I pulled that into devel.
+
+Bartosz: if you want you can pull this into the GPIO tree as well
+(makes it possible to continue work on drivers/gpio/gpio-rockchip.c
+and avoids clashes in Kconfig and Makefile)
 
 Yours,
 Linus Walleij
