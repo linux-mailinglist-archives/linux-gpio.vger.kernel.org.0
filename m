@@ -2,140 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DCC23D3410
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 07:28:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84FA93D353F
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 09:31:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233713AbhGWErp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 00:47:45 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:16652 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231199AbhGWEro (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 00:47:44 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20210723052817epoutp0283c455b59253b4a33e9c233ac30e766a~UVFbYjpJ12828028280epoutp02W
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 05:28:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20210723052817epoutp0283c455b59253b4a33e9c233ac30e766a~UVFbYjpJ12828028280epoutp02W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1627018097;
-        bh=CxCH/jPaDOWx+nTg9UWRrcPhdD4SDD1WTqwmoBkQExQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Hu77risrXpuhj4zcXY93prlEEIa/Lqm410bMfMHH0jM6jBPnF7SQCeGLlkOPVQgo7
-         AS0w+koPXMJH4YWYNOEWlu9gwyGJbb5QJ4uUfBEsx1CmoLRpniAgOa9EeLK65/6FKg
-         PddDL7rF67UlnK8l0NodmIDnDZDBFkmSQLCYmJYQ=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20210723052816epcas1p4e99c2fcdce2ee90189c1a9cb65b43cb4~UVFaVBOQn1549015490epcas1p4P;
-        Fri, 23 Jul 2021 05:28:16 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4GWHsV1Jt0z4x9QZ; Fri, 23 Jul
-        2021 05:28:14 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C9.CF.13454.8635AF06; Fri, 23 Jul 2021 14:28:08 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20210723052808epcas1p49a6b786c261e245362d38e651c808ac0~UVFTM2q811716617166epcas1p4T;
-        Fri, 23 Jul 2021 05:28:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20210723052808epsmtrp1894c6f82ecbba8d5097d0aa87775a6e6~UVFTMPALo1496714967epsmtrp1d;
-        Fri, 23 Jul 2021 05:28:08 +0000 (GMT)
-X-AuditID: b6c32a39-16fff7000002348e-89-60fa53688d8b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        57.88.08394.8635AF06; Fri, 23 Jul 2021 14:28:08 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20210723052808epsmtip1dfc44a1fae401779b5d8b520e70aa1a9~UVFS-l8bI0421704217epsmtip1f;
-        Fri, 23 Jul 2021 05:28:08 +0000 (GMT)
-Subject: Re: [PATCH] extcon: max3355: Drop unused include
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <e88775a5-d606-a6ca-4566-52835feb24a3@samsung.com>
-Date:   Fri, 23 Jul 2021 14:47:57 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        id S229774AbhGWGue (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 02:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229733AbhGWGud (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 02:50:33 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF666C061575
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 00:31:07 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id s19so941443ybc.6
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 00:31:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vs+we/6ft1FfVa0CVz20fRewulUcTgapCBk4PsMDMMQ=;
+        b=JPyoG4tDLazDPsS8Y3oVxlDJm75zO3sr5Mwj9G2MnrcoE/tXE6m8Q7IDz7QI/HrG18
+         xlTRSLavT1GWOuRuJSRa2gKNvB9Z25aSlfeFzmf4rtlDTcVQrSqDVdbuiz1aFt9AbmVS
+         Bn8n8SkRdYMai4NwvEI2Suhn5IvGbTMAXHcMmlN6kBJA2EWAbj7uqaOsdhx5HR6dXh8E
+         Qu1hiLp388RZyk+2SNzk0qHrlu7vQ9ohNOQXse3g8P03+XwbTLKU0GKBYXQl3hnFj5QG
+         4FyAaDXc/oappirdBhHoW7wA1+nwd8NCic04Fu6HtgJ0cfr4lCEuzvZxjEWRXAJEZ9Pv
+         uHGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vs+we/6ft1FfVa0CVz20fRewulUcTgapCBk4PsMDMMQ=;
+        b=VTFl9RCGKADv7ZfVstCwukB+3Wng13NVSjKNUMY1KH3AJAJ56502UW4SYCR82L9JS8
+         S1FgtqSvjtVp8CIhAVWOye0iDUbZLnunoT021N62U42xhOGIzNSOgcN9IAQsZJDCTi/k
+         3+3AtKJuyiSJE5CcrBOdFyEQK7zaqa0XkifGFFKGFr9i6EGLP0MWlRRPthyCqb7rClAE
+         NQG64aPE1SpBe/nd+YOmYctNsleaT4MNiVh8QpBMNOwpXG176ctd4pGPP0UTyQ9l3b8v
+         EMkGeI1YRx+fv6yotBZ8taEwcHqrxhsJp1qMbu4aFHLVVkJK/xTN4DNEV1U1YENk+Vjd
+         vK7Q==
+X-Gm-Message-State: AOAM530O2kFYAsMRAFlxOnLcNLkyOVTnuTghGgr5T3+DAv2xR6jHPMLV
+        PzmzYIKBsoFF6HEIgFPEa8Ujw3gW3MjwwW4USmAR4w==
+X-Google-Smtp-Source: ABdhPJwg0akw1mzLE5SRir9S3txrzipyiauGM7ybFw0aTjvqg6GRL6JrZTEfDza78OmWm3R7qONfl5YzUx+jnBc5bxE=
+X-Received: by 2002:a25:487:: with SMTP id 129mr5006427ybe.0.1627025466848;
+ Fri, 23 Jul 2021 00:31:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210715152657.396185-1-linus.walleij@linaro.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplk+LIzCtJLcpLzFFi42LZdljTQDcj+FeCwcNWc4spf5YzWWye/4fR
-        4vKuOWwWtxtXsFmcWXWL3YHV48HU/0wed67tYfPo27KK0ePzJrkAlqhsm4zUxJTUIoXUvOT8
-        lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE3FRbJRefAF23zBygvUoKZYk5pUChgMTiYiV9O5ui
-        /NKSVIWM/OISW6XUgpScAssCveLE3OLSvHS95PxcK0MDAyNToMKE7Iz/Wy6zF5xmq1h90aGB
-        cTdrFyMnh4SAicScx6vZuhi5OIQEdjBKnLm5lh3C+cQocfTYVUYI5xujxN/r14EcDrCWuf+1
-        IeJ7GSUOL5sLNkpI4D2jxMdNZSC2sIClxLYJ55lBbBGBcIl9xw6A2cwCJRJtbZ/ZQGw2AS2J
-        /S9ugNn8AooSV388ZgSxeQXsJO6/P8wOsotFQFXi/HZFkLCoQJjEyW0tUCWCEidnPmEBsTkF
-        7CV+/TnBDjFeXOLWk/lMELa8xPa3c5ghvmzlkJhy2RTCdpHoaJrCCGELS7w6voUdwpaSeNnf
-        BmVXS6w8eQQcKhICHYwSW/ZfgAaXscT+pZOZQG5jFtCUWL9LHyKsKLHz91xGiL18Eu++9rBC
-        gopXoqNNCKJEWeLyg7tMELakxOL2TrYJjEqzkHwzC8kHs5B8MAth2QJGllWMYqkFxbnpqcWG
-        BabIMb2JEZwetSx3ME5/+0HvECMTB+MhRgkOZiUR3iOBvxKEeFMSK6tSi/Lji0pzUosPMZoC
-        g3cis5Rocj4wQeeVxBuaGhkbG1uYGJqZGhoqifN+i/2aICSQnliSmp2aWpBaBNPHxMEp1cCU
-        uM+R9eWbspLw5txY21NnLtc1ZjFZLmwN6G1Ir54829T6MouSf3XaJjmnI3bcnCn1fZrTxW/P
-        +WXUsGjJ4me392/Pc2TPsn9+1SzTVbF/h6XWQ4O/sx57fHGIP/t5+17VzTaXvBZduSO+Srpt
-        d7Nhiu4pxguREazMyY0iF/Ze4jT6O1kh0FCxsGL/ro0nmBLrmy6U/DK4qHyI+e2Xq1bFF0Q/
-        ZkWyq6/R+rV6+Znnhz+pbzPJW1+SzXF/o6bMTcmdMw503Vzw5Z2O0dNPm7d9fx6/JeaScVN8
-        wPoV72NkJ/luKU+b2nX6tN2sl6/n33ay456d7q3X+tTwV+oV96klK2b94HqrGsXPrftJfLaO
-        EktxRqKhFnNRcSIAkeoVIhgEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsWy7bCSnG5G8K8Eg7Z2OYspf5YzWWye/4fR
-        4vKuOWwWtxtXsFmcWXWL3YHV48HU/0wed67tYfPo27KK0ePzJrkAligum5TUnMyy1CJ9uwSu
-        jP9bLrMXnGarWH3RoYFxN2sXIweHhICJxNz/2l2MXBxCArsZJTpudLB3MXICxSUlpl08ygxR
-        Iyxx+HAxRM1bRomXd0+xgdQIC1hKbJtwnhnEFhEIl5i94D2YzSxQIrF893kmiIZJjBL7dsxn
-        BUmwCWhJ7H9xA6yZX0BR4uqPx4wgNq+AncT994fZQZaxCKhKnN+uCBIWFQiT2LnkMRNEiaDE
-        yZlPWEBsTgF7iV9/TrBD7FKX+DPvEtRecYlbT+YzQdjyEtvfzmGewCg8C0n7LCQts5C0zELS
-        soCRZRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4mRnCsaGnuYNy+6oPeIUYmDsZDjBIc
-        zEoivEcCfyUI8aYkVlalFuXHF5XmpBYfYpTmYFES573QdTJeSCA9sSQ1OzW1ILUIJsvEwSnV
-        wLR92TWPU3EWXxqXRf8T/HTSkuHFOZV1ZpsKdr68lK4wK+hXhO/jGUeYa/5Y3Hp1lG+RWZif
-        mnvewyS/lUVm50rYvkueXlIUI9s6dbs9+2cx8asqB84dST/6SOfgn8d665ZP639ZVLXRqJPt
-        ZOVN98WdFqf5Q09/1nR/ZC/1xlnua/P7o161MdWZz2+lyqVs+WvamBW9UdGXUWeLmvkhZ+Zt
-        de9buU+srpE4Mc3/Wtz3R/veCAdPVF2WWP9IUVlf6p26LwfzwUul8Yt+uAndjvd9wV+ty15/
-        fWGS54ra5V9K6xZsEDaZE6si0T+z0HvV20mTvH7GyJy9H+rQMPFf0vrzKj/v3mVsbrigf72b
-        450SS3FGoqEWc1FxIgBGLLWNBAMAAA==
-X-CMS-MailID: 20210723052808epcas1p49a6b786c261e245362d38e651c808ac0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20210715152907epcas1p1326e92c0358eb514361cf4f6ca2da4e5
-References: <CGME20210715152907epcas1p1326e92c0358eb514361cf4f6ca2da4e5@epcas1p1.samsung.com>
-        <20210715152657.396185-1-linus.walleij@linaro.org>
+References: <20210712100317.23298-1-steven_lee@aspeedtech.com>
+ <CAMpxmJXfUterUdaGHOJT5hwcVJ+3cqgSQVdp-6Atuyyo36FxfQ@mail.gmail.com> <20210723031615.GA10457@aspeedtech.com>
+In-Reply-To: <20210723031615.GA10457@aspeedtech.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 23 Jul 2021 09:30:56 +0200
+Message-ID: <CAMpxmJU4jN-hpNYPLHLbjx4uZ6vDqcyuMVQXhHg1BWXOqyS22A@mail.gmail.com>
+Subject: Re: [PATCH v6 0/9] ASPEED sgpio driver enhancement.
+To:     Steven Lee <steven_lee@aspeedtech.com>,
+        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-aspeed@lists.ozlabs.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Hongwei Zhang <Hongweiz@ami.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Billy Tsai <billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/16/21 12:26 AM, Linus Walleij wrote:
-> This driver includes the legacy <linux/gpio.h> header but
-> does not use it. Drop this include.
-> 
-> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/extcon/extcon-max3355.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/extcon/extcon-max3355.c b/drivers/extcon/extcon-max3355.c
-> index fa01926c09f1..d7795607f693 100644
-> --- a/drivers/extcon/extcon-max3355.c
-> +++ b/drivers/extcon/extcon-max3355.c
-> @@ -7,7 +7,6 @@
->   */
->  
->  #include <linux/extcon-provider.h>
-> -#include <linux/gpio.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
-> 
+On Fri, Jul 23, 2021 at 5:16 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
+>
+> The 07/21/2021 21:27, Bartosz Golaszewski wrote:
+> > On Mon, Jul 12, 2021 at 12:03 PM Steven Lee <steven_lee@aspeedtech.com> wrote:
+> > >
+> > > AST2600 SoC has 2 SGPIO master interfaces one with 128 pins another one
+> > > with 80 pins, AST2500/AST2400 SoC has 1 SGPIO master interface that
+> > > supports up to 80 pins.
+> > > In the current driver design, the max number of sgpio pins is hardcoded
+> > > in macro MAX_NR_HW_SGPIO and the value is 80.
+> > >
+> > > For supporting sgpio master interfaces of AST2600 SoC, the patch series
+> > > contains the following enhancement:
+> > > - Convert txt dt-bindings to yaml.
+> > > - Update aspeed-g6 dtsi to support the enhanced sgpio.
+> > > - Support muiltiple SGPIO master interfaces.
+> > > - Support up to 128 pins by dts ngpios property.
+> > > - Pair input/output GPIOs instead of using 0 as GPIO input pin base and
+> > >   MAX_NR_HW_SGPIO as GPIO output pin base.
+> > > - Support wdt reset tolerance.
+> > > - Fix irq_chip issues which causes multiple sgpio devices use the same
+> > >   irq_chip data.
+> > > - Replace all of_*() APIs with device_*().
+> > >
+> > > Changes from v5:
+> > > * Squash v5 patch-05 and patch-06 to one patch.
+> > > * Remove MAX_NR_HW_SGPIO and corresponding design to make the gpio
+> > >   input/output pin base are determined by ngpios.
+> > >   For example, if MAX_NR_HW_SGPIO is 80 and ngpios is 10, the original
+> > >   pin order is as follows:
+> > >     Input:
+> > >     0 1 2 3 ... 9
+> > >     Output:
+> > >     80 81 82 ... 89
+> > >
+> > >   With the new design, pin order is changed as follows:
+> > >     Input:
+> > >     0 2 4 6 ... 18(ngpios * 2 - 2)
+> > >     Output:
+> > >     1 3 5 7 ... 19(ngpios * 2 - 1)
+> > > * Replace ast2600-sgpiom-128 and ast2600-sgpiom-80 compatibles by
+> > >   ast2600-sgpiom.
+> > > * Fix coding style issues.
+> > >
+> > > Changes from v4:
+> > > * Remove ngpios from dtsi
+> > > * Add ast2400 and ast2500 platform data.
+> > > * Remove unused macros.
+> > > * Add ngpios check in a separate patch.
+> > > * Fix coding style issues.
+> > >
+> > > Changes from v3:
+> > > * Split dt-bindings patch to 2 patches
+> > > * Rename ast2600-sgpiom1 compatible with ast2600-sgiom-128
+> > > * Rename ast2600-sgpiom2 compatible with ast2600-sgiom-80
+> > > * Correct the typo in commit messages.
+> > > * Fix coding style issues.
+> > > * Replace all of_*() APIs with device_*().
+> > >
+> > > Changes from v2:
+> > > * Remove maximum/minimum of ngpios from bindings.
+> > > * Remove max-ngpios from bindings and dtsi.
+> > > * Remove ast2400-sgpiom and ast2500-sgpiom compatibles from dts and
+> > >   driver.
+> > > * Add ast2600-sgpiom1 and ast2600-sgpiom2 compatibles as their max
+> > >   number of available gpio pins are different.
+> > > * Modify functions to pass aspeed_sgpio struct instead of passing
+> > >   max_ngpios.
+> > > * Split sgpio driver patch to 3 patches
+> > >
+> > > Changes from v1:
+> > > * Fix yaml format issues.
+> > > * Fix issues reported by kernel test robot.
+> > >
+> > > Please help to review.
+> > >
+> > > Thanks,
+> > > Steven
+> > >
+> > > Steven Lee (9):
+> > >   dt-bindings: aspeed-sgpio: Convert txt bindings to yaml.
+> > >   dt-bindings: aspeed-sgpio: Add ast2600 sgpio
+> > >   ARM: dts: aspeed-g6: Add SGPIO node.
+> > >   ARM: dts: aspeed-g5: Remove ngpios from sgpio node.
+> > >   gpio: gpio-aspeed-sgpio: Add AST2600 sgpio support
+> > >   gpio: gpio-aspeed-sgpio: Add set_config function
+> > >   gpio: gpio-aspeed-sgpio: Move irq_chip to aspeed-sgpio struct
+> > >   gpio: gpio-aspeed-sgpio: Use generic device property APIs
+> > >   gpio: gpio-aspeed-sgpio: Return error if ngpios is not multiple of 8.
+> > >
+> > >  .../bindings/gpio/aspeed,sgpio.yaml           |  77 ++++++++
+> > >  .../devicetree/bindings/gpio/sgpio-aspeed.txt |  46 -----
+> > >  arch/arm/boot/dts/aspeed-g5.dtsi              |   1 -
+> > >  arch/arm/boot/dts/aspeed-g6.dtsi              |  28 +++
+> > >  drivers/gpio/gpio-aspeed-sgpio.c              | 178 +++++++++++-------
+> > >  5 files changed, 215 insertions(+), 115 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > >
+> > > --
+> > > 2.17.1
+> > >
+> >
+> > The series looks good to me. Can the DTS and GPIO patches go into
+> > v5.15 separately?
+> >
+>
+> Hi Bart,
+>
+> Thanks for the review.
+> Shall we do anything to make the patches go into v5.15 or wait for picking-up?
+>
+> Steven
+>
+> > Bart
 
-Applied it. Thanks.
+It's more of a question to the relevant SoC maintainers.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Joel, Andrew: can I take the GPIO patches through the GPIO tree and
+you'll take the ARM patches separately into v5.15?
+
+Bartosz
