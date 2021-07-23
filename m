@@ -2,79 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70AF63D3D22
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 18:07:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFA553D3D31
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 18:09:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230421AbhGWP05 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 11:26:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57674 "EHLO
+        id S229733AbhGWP3E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 11:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230243AbhGWP04 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:26:56 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4AC6C061575;
-        Fri, 23 Jul 2021 09:07:28 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id z2so2952686lft.1;
-        Fri, 23 Jul 2021 09:07:28 -0700 (PDT)
+        with ESMTP id S229492AbhGWP3D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:29:03 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F03C061757
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:09:36 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id d18so2907614lfb.6
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lTvO61y1SGuCg3UXl9dim6u9NJ6zEuQSX5WNIWVfWus=;
-        b=ldcP1SEKPeuCr6b4yMJb81raEbH6Kze1KunmaBZeR0vWWLm5GXNp6UW/hXWcyp665S
-         dBHnXY4/RERInUAyiTc9S3botHn+ZHRyA8YIhuLEvqEbBmn1oxHFJuI8I2W9iJS/du2S
-         624LB6QOC3gi+EwjaV/ohHOE/9W5MHdVkBjKvqz6E8YmM0x1HV6iK2Z0FMxCVgvf/kWw
-         PNkT3E+Xxxys9TJzCcbv1xFEtxl4ti8tNw0FYk6HRMg485ouQalJXcIfEGiXpOxAJCgK
-         YHV9T18N/rGgZQW9gAsGlNRKlpDzuMK9+oGKedyly6RGp0oDxq5zXgLoa4Q+x7JV68mF
-         5IEQ==
+        bh=CUZub6tYMC5rdH2GsxFohlUBAJBqmcxB+r6GGbVLSQI=;
+        b=jDcmGZqh5+TCG4aW8YRE7eHDVom1uRP1PjSpQYjST6gGZfVqMs/Kjk2L64i30vA1mt
+         hCADMD9+8FknjB3QrSDx8L3AkP8jguROpDDeyh5Q6hSg0tqAY7OJmnyXscXNke8n3Nzp
+         CnuDn3AoeGdPYHvUUhMH14y9Ri4GhyKV1r+nUdNMiWwLL9VY+1lb+loi005d51jaPrDb
+         QGm5CV2jo2YLD1Q1SrcUwUOjXnn2+axtONqxNUMIRqM53/XKraWIULcSau3yXWU48wSi
+         neMbTsLg2McH8GmBCnBFvhK3JTib0phAX+8LjpbFD92a/7m6iTSlWrSgktWjuGCTd5fc
+         IvRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lTvO61y1SGuCg3UXl9dim6u9NJ6zEuQSX5WNIWVfWus=;
-        b=gX8JU6bSq7E1zBRvtZuCELdHnaLqx0gtlbKotppvYVfTR5xRWSiFTp8bZ1GEr0Iwj9
-         NoitgrPfS2tDkrb+fTwYigWH5lLLbVAUSHD6Ewbh4q/XOvnhTJBg8owLVeG2hAd1Z5qb
-         b+VFhiypk5DST/PW9zlFKEoMilafw5rZmrpttWXV8ug3C3K36ByjpDkfKjrJizNtyLYn
-         DmI6+ToW1/wFQXoxWBAX+Z/17RLQ5y8MK65XVtet4eYmVRhmjnhc3aCmUaMuP6U+hvy7
-         bKdM7vGKY/m0QO1sN56GAhFHLoEqvIOIZPLvQa2944lg1uLeMSJhWB5ZRdPX2rzbn0Ic
-         zHbg==
-X-Gm-Message-State: AOAM531UdOKTzAHieaUDswnAlhgANHBvOwBoZR4hDUQ2adD91cbowAhR
-        /ptKzq3KkEU/zSuuE9afBq8P/F+5Z8VbduiXyTA=
-X-Google-Smtp-Source: ABdhPJw35BEdaVTjN2YWB6qzLuNpgQfvBKyCXQH/vuJxImlFGQnCxAmyYZuyEzlGt/WNLS2fGf5asjZGMb+J9j7whMU=
-X-Received: by 2002:ac2:494c:: with SMTP id o12mr3548385lfi.229.1627056447210;
- Fri, 23 Jul 2021 09:07:27 -0700 (PDT)
+        bh=CUZub6tYMC5rdH2GsxFohlUBAJBqmcxB+r6GGbVLSQI=;
+        b=HL0B42DEnL5KGwrWYaE8XMJBzz5vGBtpfDWX0sOSy7ICXVr7epeTsd650bN8niILBs
+         NAYm2PhpWRS5OS0sgLPS8UCnANiKcBGCyTktJbxAJRlTXcgQR0xjJpCp8qgFbbPW6uUv
+         v8kkIoYiOrlS4UpZpPq6hV4QNduw8rfsZ1hfdvfnlAYZXGY7dk5tHloicaK7G0TJcppp
+         VTJtUthFNcxF9exbK0ILpm00opOqwPvrK56jXCE0g7yLSYfPqMlu/dP7MeGMvjju90e6
+         BmSAU8jB8YoPCcmPI6l0TldpVAaY6oDPrddZGu0BwSNl85EaAPAFQch/g8ppgWcYNxV4
+         +xtA==
+X-Gm-Message-State: AOAM531XaFAqR07+nkZ30wAqG4UuJP9K/VU7MH1bNFUaPoUsgA5jCFrl
+        UUkjA8JsROHrUKJdoqntvjKGhU+f6C3mLS/aHw4/oQ==
+X-Google-Smtp-Source: ABdhPJyGZM4DpxYoi4G/uaylBWCJNwRIGO7fkTktk0W9ZePKQef+muQvEXOnibA8DVz68yRY+B1BXqD87s4k8HGuhAw=
+X-Received: by 2002:a05:6512:2603:: with SMTP id bt3mr3597638lfb.529.1627056575160;
+ Fri, 23 Jul 2021 09:09:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210607061041.2654568-1-ping.bai@nxp.com> <20210607061041.2654568-2-ping.bai@nxp.com>
- <CACRpkdb=B644KMoL1R=JVkn-9bYQF+4miie5SAROLhQ9HKkHWA@mail.gmail.com>
-In-Reply-To: <CACRpkdb=B644KMoL1R=JVkn-9bYQF+4miie5SAROLhQ9HKkHWA@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 23 Jul 2021 13:07:16 -0300
-Message-ID: <CAOMZO5AW7185p+e1ECbfLaQvVH2Qq_w=88RDPkwGkGwSFqKTUA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: imx8ulp: Add pinctrl driver support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jacky Bai <ping.bai@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
+References: <20210624214458.68716-2-mail@david-bauer.net> <202106251253.ajNPgHe1-lkp@intel.com>
+In-Reply-To: <202106251253.ajNPgHe1-lkp@intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 23 Jul 2021 18:09:24 +0200
+Message-ID: <CACRpkdYH=UVnm379f2CyFJyO3eGyy9HCqaOW-=saYqshUO-M4Q@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] pinctrl: Add driver for Awinic AW9523/B I2C GPIO Expander
+To:     kernel test robot <lkp@intel.com>
+Cc:     David Bauer <mail@david-bauer.net>,
         Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, kbuild-all@lists.01.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        <devicetree@vger.kernel.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Fri, Jun 25, 2021 at 6:51 AM kernel test robot <lkp@intel.com> wrote:
 
-On Fri, Jul 23, 2021 at 1:05 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> Patch applied!
+>    drivers/pinctrl/pinctrl-aw9523.c: In function 'aw9523_init_gpiochip':
+> >> drivers/pinctrl/pinctrl-aw9523.c:812:10: error: 'struct gpio_chip' has no member named 'of_node'
+>      812 |  gpiochip->of_node = dev->of_node;
+>          |          ^~
 >
-> BTW does "ULP" in the name mean "ultra low power" as usual?
+>
+> vim +812 drivers/pinctrl/pinctrl-aw9523.c
 
-Yes, this is correct:
-https://www.nxp.com/products/processors-and-microcontrollers/arm-processors/i-mx-applications-processors/i-mx-8-processors/i-mx-8ulp-applications-processor-family:i.MX8ULP
+I haven't even seen the patch adding this driver, is the problem on my
+side?
 
-Thanks
+Yours,
+Linus Walleij
