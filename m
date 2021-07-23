@@ -2,82 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07A093D41C6
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 22:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54D213D41EB
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 23:04:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbhGWUNM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 16:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38498 "EHLO
+        id S231551AbhGWUYV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 16:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbhGWUNM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 16:13:12 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40526C061575
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 13:53:45 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id d17so4201440lfv.0
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 13:53:45 -0700 (PDT)
+        with ESMTP id S231534AbhGWUYV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 16:24:21 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20975C06175F
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 14:04:54 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id a7so3210228ljq.11
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 14:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=C1tgSaA5jfbkPSzbt45vZI5ReEyhIa0dRE9SLYpqK9s=;
-        b=gI5jwiKBsTDdJ9ZW745yh6ajgk1x+xlabKSAZOB77aA6J8nVVTLopdA79XGN/7npc9
-         A7TMSZNWsTAqyavPfIPtBOslt0A+xuoC+H9rojND9bg5F3UDHT4ESbTF3kVHI9nMTFBy
-         KRsf/46ZFCLvQqLhifKBUXnWV1HjOs7xLvm4XxB6nH6dQ5z2ugy2tiOXKTBCHTzUmTTB
-         uxLaBjEAkLsRWOSDTtem0cdl8GGnack7tABHZTykAF2v624zREMQ6wk4Jn/PtT1a11p6
-         6W+abDhkambr07sCHENVeElLqryZZWSPSCmvS6hmRJctv2nA7D/2XQVitu8H/n6Hj/NI
-         KDBw==
+        bh=+du+0LHLfACLmN4y/oi02W5K+tfyhYdkNu9bdamCZoA=;
+        b=PU8ExjLpqbQ7v0/Tet2GfCUlvlxrEFfeIpx99CC6Xk5+aELtn+8O2bULpwHlEZGAvn
+         NnHZbXmI78vEHdBxHtZdyoo4dhMLlT2nPyNgRDVcWyxKJotHDsvBsAI/8Q/F8l4YOnBQ
+         AyrT7aqeEglidsG7hJLMiRgyvgQ3JRMk5SYfTEVV7ThBCZJm5KFsOk5f+lvBLw0btP4d
+         42l2xOo19oJRKfeJBplz2KKkTKwgw9DGVyLxFvfQXjpTCqIQwObnvEaazH8ZHwd4Oykv
+         zukRN0buICPccVlmtRqHaOmhc4TWJsks2Iy/oXmqVOytYVEv4MmzD+t8N/9ISPqhEy9e
+         2cog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=C1tgSaA5jfbkPSzbt45vZI5ReEyhIa0dRE9SLYpqK9s=;
-        b=J43LajXLxjmT1vHXovx7QjeuWf5VzRi36E61wAtUBhNOhmKzTc5X+jnc9TXYNdD2pe
-         az7RI088uIMo7kFkmlVXukpXVwYXckbvmQB8f67gUbFKu9jwZ4su+GO6Agz//5Q4LzxP
-         ajiJu+HsYYceC3Nyb+uCr6QMFXufycSd5YzZ8yHprAEAzQ4aWR+QFGgjgOf0zTsZyOPG
-         fMWVdm7+ci0h/hSkicvGO73zCJxd9M8JXG+CwN+tacBqNPxuN0cXmm/cNqprR/FxVnYF
-         KTNh1zwLJ5wgh8CqDTV3bO5yHBdiRhgYl4GwK2pjNa+tUd7JtHI9yeIeooCwjzkqC0AH
-         gF3Q==
-X-Gm-Message-State: AOAM533DZH1rRWWolTHtvyiU2gMZ0ukwOfNBxruAkHQO6yYv66o6zm79
-        ecFvf42r9p89YMvBqtmaCW2CfpMiQKq3Uyseoba6vA==
-X-Google-Smtp-Source: ABdhPJyXHQoCy2hUHiDE2D+wQnjUW9fPPhk1XLNJe3QijPVJbtuffwILmMxZu3/FOgosS9ocL4hLLKSGc32tCridOcg=
-X-Received: by 2002:ac2:5312:: with SMTP id c18mr4007185lfh.649.1627073623610;
- Fri, 23 Jul 2021 13:53:43 -0700 (PDT)
+        bh=+du+0LHLfACLmN4y/oi02W5K+tfyhYdkNu9bdamCZoA=;
+        b=pQnZfhAOp7Fe62Sn92Z5ydCrNS3j672bx9bCoqasF33JE+BrV3ZpucFe46QOGPQZJT
+         3jsfHoVUO5+8EdILXK0KeUi0m1/sSxDHemkdKOxIiGsI3X7FW4sBB1FQ+EYMeRifJIOx
+         MdNogM03uBu6mSCwQkkaRfYtVtc3SNSp4gGOv7UFNNEkagEp5pz6FmaQDuZ+BPjWPaQt
+         5H7q6XnoATY7ukvh6uZZLGZkMqhOWNqshl6AtC3GtWPkPZjhmqykeQVxLhuLDyzvqnPi
+         Wp4GhyMZQ9Wbzj3GlAV0EDwKih2del9WOS9nbABKQ4VM9Avt5AuvpWexqZBJbLtFXfTP
+         JWiw==
+X-Gm-Message-State: AOAM530ZbBMkRq3xSyI+t5gBeot9oRPpqyE4NxjTxQ8d2dv3Lv506yKL
+        DMI+aMCHpLqoS/+oyzfNf9cDeuq2IWJYbJ06D/ZwSw==
+X-Google-Smtp-Source: ABdhPJxQWYsOWFLVby006xkxrHiuFL3EnCGftMH8g5GForQjSavZnil4OEtYwmjZFYh8qrp4mdkJspxPgo3NmEIWfGc=
+X-Received: by 2002:a2e:9d15:: with SMTP id t21mr4501765lji.200.1627074292231;
+ Fri, 23 Jul 2021 14:04:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210723203242.88845-1-festevam@gmail.com>
-In-Reply-To: <20210723203242.88845-1-festevam@gmail.com>
+References: <20210701002037.912625-1-drew@beagleboard.org> <20210701002037.912625-3-drew@beagleboard.org>
+ <8c59105d32a9936f8806501ecd20e044@walle.cc>
+In-Reply-To: <8c59105d32a9936f8806501ecd20e044@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 22:53:32 +0200
-Message-ID: <CACRpkda_gfTR6Z3bw_afFXPx=5XVLewkhyJKgwJodHRSysjLtw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: imx8ulp: Initialize pin_reg
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+Date:   Fri, 23 Jul 2021 23:04:41 +0200
+Message-ID: <CACRpkdbhKsuXZiLCh_iajJQWDdQQOZ87QF3xDr5Vc66SoVCnxQ@mail.gmail.com>
+Subject: Re: [RFC PATH 2/2] gpio: starfive-jh7100: Add StarFive JH7100 GPIO driver
+To:     Michael Walle <michael@walle.cc>
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        kernel test robot <lkp@intel.com>
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Huan Feng <huan.feng@starfivetech.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 10:33 PM Fabio Estevam <festevam@gmail.com> wrote:
+On Thu, Jul 1, 2021 at 8:39 AM Michael Walle <michael@walle.cc> wrote:
+> Am 2021-07-01 02:20, schrieb Drew Fustini:
+> > Add GPIO driver for the StarFive JH7100 SoC [1] used on the
+> > BeagleV Starlight JH7100 board [2].
+> >
+> > [1] https://github.com/starfive-tech/beaglev_doc/
+> > [2] https://github.com/beagleboard/beaglev-starlight
+> >
+> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> > Signed-off-by: Huan Feng <huan.feng@starfivetech.com>
+> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+>
+> Could this driver use GPIO_REGMAP and REGMAP_IRQ? See
+> drivers/gpio/gpio-sl28cpld.c for an example.
 
-> The initialization of pin_reg is missing, causing the following build
-> warning:
->
-> drivers/pinctrl/freescale/pinctrl-imx8ulp.c:228:35: warning: 'pin_reg' is used uninitialized in this function [-Wuninitialized]
->
-> Initialize pin_reg the same way as it is done on vf610 and imx7ulp
-> to fix the problem.
->
-> Fixes: 16b343e8e0ef ("pinctrl: imx8ulp: Add pinctrl driver support")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+To me it looks just memory-mapped?
 
-Wow how fast!
-Patch applied.
-Thanks for fixing Fabio, excellent work as always.
+Good old gpio-mmio.c (select GPIO_GENERIC) should
+suffice I think.
+
+Drew please look at drivers/gpio/gpio-ftgpio010.c for an example
+of GPIO_GENERIC calling bgpio_init() in probe().
 
 Yours,
 Linus Walleij
