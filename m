@@ -2,98 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54D213D41EB
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 23:04:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C792D3D432E
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jul 2021 00:58:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231551AbhGWUYV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 16:24:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231534AbhGWUYV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 16:24:21 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20975C06175F
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 14:04:54 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id a7so3210228ljq.11
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 14:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+du+0LHLfACLmN4y/oi02W5K+tfyhYdkNu9bdamCZoA=;
-        b=PU8ExjLpqbQ7v0/Tet2GfCUlvlxrEFfeIpx99CC6Xk5+aELtn+8O2bULpwHlEZGAvn
-         NnHZbXmI78vEHdBxHtZdyoo4dhMLlT2nPyNgRDVcWyxKJotHDsvBsAI/8Q/F8l4YOnBQ
-         AyrT7aqeEglidsG7hJLMiRgyvgQ3JRMk5SYfTEVV7ThBCZJm5KFsOk5f+lvBLw0btP4d
-         42l2xOo19oJRKfeJBplz2KKkTKwgw9DGVyLxFvfQXjpTCqIQwObnvEaazH8ZHwd4Oykv
-         zukRN0buICPccVlmtRqHaOmhc4TWJsks2Iy/oXmqVOytYVEv4MmzD+t8N/9ISPqhEy9e
-         2cog==
+        id S232909AbhGWWR6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 18:17:58 -0400
+Received: from mail-il1-f176.google.com ([209.85.166.176]:46786 "EHLO
+        mail-il1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232550AbhGWWR5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 18:17:57 -0400
+Received: by mail-il1-f176.google.com with SMTP id r5so2912981ilc.13;
+        Fri, 23 Jul 2021 15:58:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+du+0LHLfACLmN4y/oi02W5K+tfyhYdkNu9bdamCZoA=;
-        b=pQnZfhAOp7Fe62Sn92Z5ydCrNS3j672bx9bCoqasF33JE+BrV3ZpucFe46QOGPQZJT
-         3jsfHoVUO5+8EdILXK0KeUi0m1/sSxDHemkdKOxIiGsI3X7FW4sBB1FQ+EYMeRifJIOx
-         MdNogM03uBu6mSCwQkkaRfYtVtc3SNSp4gGOv7UFNNEkagEp5pz6FmaQDuZ+BPjWPaQt
-         5H7q6XnoATY7ukvh6uZZLGZkMqhOWNqshl6AtC3GtWPkPZjhmqykeQVxLhuLDyzvqnPi
-         Wp4GhyMZQ9Wbzj3GlAV0EDwKih2del9WOS9nbABKQ4VM9Avt5AuvpWexqZBJbLtFXfTP
-         JWiw==
-X-Gm-Message-State: AOAM530ZbBMkRq3xSyI+t5gBeot9oRPpqyE4NxjTxQ8d2dv3Lv506yKL
-        DMI+aMCHpLqoS/+oyzfNf9cDeuq2IWJYbJ06D/ZwSw==
-X-Google-Smtp-Source: ABdhPJxQWYsOWFLVby006xkxrHiuFL3EnCGftMH8g5GForQjSavZnil4OEtYwmjZFYh8qrp4mdkJspxPgo3NmEIWfGc=
-X-Received: by 2002:a2e:9d15:: with SMTP id t21mr4501765lji.200.1627074292231;
- Fri, 23 Jul 2021 14:04:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4EjJJoODvkdc6CyvJ8WnupnabiMRBiCfSTR5snkfIfA=;
+        b=btmv6ifSFtNvbu9IbUJSyFHDYaJNvoHVLuUnfDidaEkNlOS26RjbOeh55GGHhE4m5p
+         a9sQao2ZtOPoUZgO6NM5IlmcDE19llap7TBgB2SMMhrGfDhc/6v7eHHLggBZIyJN4eKL
+         lHZ9+HDq3PIvJ4qeHD6cHPpPlpGwG9KPNz4LX465onOsp/ANJxEeTLAPaRXMZDMbHkQJ
+         iqNc2LIinZQA3GN4pKqePcs5dXfuMMNt8BkvTpwWA3d0dYbDPg+VQ/fhgCgZJIgbUM6/
+         pioxtwSUH6RQEX40IQFtdj4IBZbLPOcGWSykCz+mB5IXfhB3ojzjOh7zRsPzvrwMfDpK
+         0p9w==
+X-Gm-Message-State: AOAM531C3iQJqERAxACXHM4D7kjwBCVz3XO/FEqFUWJBvJvhACncSaen
+        fQSuB0qtxund92F6eGSK0A==
+X-Google-Smtp-Source: ABdhPJwcFoHfdcoop1JvGeCqIgCqWNTlquHcUuqyvVVXqNRkOG0TE2VGciMjSdTlkkuMMi9O6lEh/A==
+X-Received: by 2002:a92:c5c2:: with SMTP id s2mr4981797ilt.180.1627081109494;
+        Fri, 23 Jul 2021 15:58:29 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id o8sm17107239ils.24.2021.07.23.15.58.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jul 2021 15:58:28 -0700 (PDT)
+Received: (nullmailer pid 2762026 invoked by uid 1000);
+        Fri, 23 Jul 2021 22:58:26 -0000
+Date:   Fri, 23 Jul 2021 16:58:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     satya priya <skakit@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, linux-gpio@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, kgunda@codeaurora.org,
+        linux-kernel@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Das Srinagesh <gurus@codeaurora.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V7 1/3] dt-bindings: mfd: pm8008: Add gpio-ranges and
+ spmi-gpio compatible
+Message-ID: <20210723225826.GA2761969@robh.at.kernel.org>
+References: <1627029074-23449-1-git-send-email-skakit@codeaurora.org>
+ <1627029074-23449-2-git-send-email-skakit@codeaurora.org>
 MIME-Version: 1.0
-References: <20210701002037.912625-1-drew@beagleboard.org> <20210701002037.912625-3-drew@beagleboard.org>
- <8c59105d32a9936f8806501ecd20e044@walle.cc>
-In-Reply-To: <8c59105d32a9936f8806501ecd20e044@walle.cc>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 23:04:41 +0200
-Message-ID: <CACRpkdbhKsuXZiLCh_iajJQWDdQQOZ87QF3xDr5Vc66SoVCnxQ@mail.gmail.com>
-Subject: Re: [RFC PATH 2/2] gpio: starfive-jh7100: Add StarFive JH7100 GPIO driver
-To:     Michael Walle <michael@walle.cc>
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Michael Zhu <michael.zhu@starfivetech.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Fu Wei <tekkamanninja@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Huan Feng <huan.feng@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1627029074-23449-2-git-send-email-skakit@codeaurora.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 1, 2021 at 8:39 AM Michael Walle <michael@walle.cc> wrote:
-> Am 2021-07-01 02:20, schrieb Drew Fustini:
-> > Add GPIO driver for the StarFive JH7100 SoC [1] used on the
-> > BeagleV Starlight JH7100 board [2].
-> >
-> > [1] https://github.com/starfive-tech/beaglev_doc/
-> > [2] https://github.com/beagleboard/beaglev-starlight
-> >
-> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> > Signed-off-by: Huan Feng <huan.feng@starfivetech.com>
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
->
-> Could this driver use GPIO_REGMAP and REGMAP_IRQ? See
-> drivers/gpio/gpio-sl28cpld.c for an example.
+On Fri, 23 Jul 2021 14:01:12 +0530, satya priya wrote:
+> Add gpio-ranges and "qcom,spmi-gpio" compatible to match with the
+> parent qcom,pmic-gpio.yaml binding.
+> 
+> Signed-off-by: satya priya <skakit@codeaurora.org>
+> ---
+> Changes in V7:
+>  - This is newly added in V7 to resolve below error.
+>  dtschema/dtc warnings/errors:
+>  /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/qcom,pm8008.example.dt.yaml: gpio@c000: compatible: ['qcom,pm8008-gpio'] is too short
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+>  /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/qcom,pm8008.example.dt.yaml: gpio@c000: 'gpio-ranges' is a required property
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> 
+>  Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
 
-To me it looks just memory-mapped?
-
-Good old gpio-mmio.c (select GPIO_GENERIC) should
-suffice I think.
-
-Drew please look at drivers/gpio/gpio-ftgpio010.c for an example
-of GPIO_GENERIC calling bgpio_init() in probe().
-
-Yours,
-Linus Walleij
+Reviewed-by: Rob Herring <robh@kernel.org>
