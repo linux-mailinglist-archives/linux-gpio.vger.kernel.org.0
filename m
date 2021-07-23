@@ -2,83 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0296D3D3D79
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 18:21:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F5763D40A5
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 21:24:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230508AbhGWPlJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 11:41:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32892 "EHLO
+        id S230361AbhGWSnb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 14:43:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbhGWPlI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 11:41:08 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 214C2C061757
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:21:41 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id g13so2905158lfj.12
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 09:21:41 -0700 (PDT)
+        with ESMTP id S230289AbhGWSna (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 14:43:30 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51ABDC061575;
+        Fri, 23 Jul 2021 12:24:02 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id b7so3432891wri.8;
+        Fri, 23 Jul 2021 12:24:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SliTX8Iw8l9nFjbx/gRlB+2uInDqKw48vi+rU2al8Nc=;
-        b=z2CkY6HOoSWT8+R5fkxgZ069VX+3PJN1Nvq/DmH1sahvH73bCUdm7/j6kXiDunpTps
-         cUSxVODN7M+P8LW7IBoaBbne7Xspvb0LzLvB0Kq7/uHI8Q6QXuW0IoT6RaGfGaaRUPpf
-         tBEKmvdDfRRvyq7poBebhbAx8eGV0FJGBGNgyJJS7SBlgjtwL3PRWg/k35p5fsvYgj9B
-         oQJ7GOjmdDMlYnXHWjdX1BvfssKceNTv/onAJz6FBzOoXqLAWFB2akrZ7JiNtZn905Sb
-         IJ6tLfZ2F+z2AmtsSST04NUyrHQxHmIqwAxTrOmTa2BJRsSVSFtZX3o2QRBinJ+0Bts5
-         YIaA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J55q72yArSUbiH3EMJZktqEzhRxtiUpg9a9enEexVsM=;
+        b=N/Aqe8my+wIJybFcu2TUrB0YaL0E11k6jlhvi31yrfZgJCuca8HrwDRbre3LO7D1go
+         vCylF4Hq8pbPw4ZdLm2Y8U2Sd87RZMHsKAn7pkpsU2QWfD8hcgYVojMLqFCwozqx9r8e
+         E+7YDQsMJ4fB1lcGqqoNXvTXKLBlULSzERP5EuOPcdGv7fzrxsCXq1Tu8jeP7r5mD3Vz
+         NzBWvpxuG3xYbI9vvwgE3PmOQYoLhauEFBFU+wtxsE+velrN1jPBCXnZ5/CAPsTwHPTJ
+         UTkKNkKQOC6VOor8mnDP2x/b3vdsKbEOUYqGw/536Qi4ve9vpIzT3xHblMuEFj+pXPn1
+         yUIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SliTX8Iw8l9nFjbx/gRlB+2uInDqKw48vi+rU2al8Nc=;
-        b=pshmQq/BzTaluPBZppUSKhMB6lFm/2Pb96c0HhrvWy8VjkCQFtqDb/66fbvETnW+Tb
-         Rql8z+61LERl+1b9Jjp5RMWBPSW4NpFmlPfLRjFfbzSTvrFo1nD5NlbjB1j+Yhl7BZ/5
-         dUZRCdLzmvqR0RG8SzwkzycgsUSxBpYhLvJ6fMeZRLSxfAH6Y57MRUoQVjPpb4XLW0L/
-         PN2GgRyc+hqwitIcJUlH736/6+nATrwzUZi54L+/2FHxSJHKG7lxItC4GIBszmf72MCh
-         vt0Fqksmc2rknZG6q7hA+Fp1EDWdBTmvdGkDAcJgxSHQ6QpwTt6LiWxuOK3Ss4XQv+Jk
-         rHuQ==
-X-Gm-Message-State: AOAM531WUTrdwzNovGwBT+HyCjXZES3hSvLR7aAsLJsd11Omwvx9aFfT
-        obIiz08rXlAwsl/OmQqoL6Se0KCf/Dyb5fn2ZVdOlA==
-X-Google-Smtp-Source: ABdhPJwyeo7rGBpxoxiquAEUXMh8R1GJJMHfyFuO8ePzx4uDJagKcKEm/Zrtnh+n4Oi7Tcg2iBTeqT0sI+9NsaX9hM0=
-X-Received: by 2002:a05:6512:169e:: with SMTP id bu30mr3470614lfb.291.1627057299505;
- Fri, 23 Jul 2021 09:21:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J55q72yArSUbiH3EMJZktqEzhRxtiUpg9a9enEexVsM=;
+        b=TxmsWbEFNg8NWhrYG1fkcVAWDtp4dnqNfSnvf4zHKUPkYZyDIvy5+ALnjvoQhn+FdU
+         xscO0qoK9iT+7406yoBsMtbTJpy0kSl1tQnR2qYR5HzLbPeC3sZi/yINzvTnC6UIvi+u
+         Zdydnb1cmuhEHCU07O/YsaERl2KpEmnzH8aCvL3gC6FSl9i2pmSu+zKg754gkaGXRDSA
+         lbAcy6FDDfuaYxhgGyHGU89EJsPK1Vqj23Qtm9H4GBfeeIxeh2kya+X4hAZPZseEZ/Fi
+         IQCgZPDGq5fC7NJD0sa099WMnc1pFJJDdlGpspZ6y5WLj2PVjC91aO8bz9Y5QaoiOpaD
+         zqug==
+X-Gm-Message-State: AOAM531bhJWhPugApP0XbhG+6Xgs5hZ4ZqLVqcPPasP+szBOogAZiI5t
+        m38gTTL4qgl1Sd9CNWZ3dAk=
+X-Google-Smtp-Source: ABdhPJwKl5qm9bsouc5rEmzohrzmVBo6lUMnTF+QMrHrm8AgA2FK13sQ9BUkSrxlDnhpbIymN8KizA==
+X-Received: by 2002:a5d:4751:: with SMTP id o17mr230746wrs.252.1627068240983;
+        Fri, 23 Jul 2021 12:24:00 -0700 (PDT)
+Received: from localhost (178-169-161-196.razgrad.ddns.bulsat.com. [178.169.161.196])
+        by smtp.gmail.com with ESMTPSA id u16sm40538911wrw.36.2021.07.23.12.23.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jul 2021 12:24:00 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH v6 0/2] Add Pinctrl for SM4250/6115
+Date:   Fri, 23 Jul 2021 22:23:50 +0300
+Message-Id: <20210723192352.546902-1-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <20210629123407.82561-1-bhupesh.sharma@linaro.org>
-In-Reply-To: <20210629123407.82561-1-bhupesh.sharma@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Jul 2021 18:21:28 +0200
-Message-ID: <CACRpkdacTi-9YzhOqpfFkNhzSATmbWHs=wMoJcsXwG8pBeW7Mg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] pinctrl: qcom/pinctrl-spmi-gpio: Add support for
- pmic-gpio on SA8155p-adp
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>, bhupesh.linux@gmail.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 29, 2021 at 2:34 PM Bhupesh Sharma
-<bhupesh.sharma@linaro.org> wrote:
+This patch adds support for the TLMM block on QCom SM4250 and SM6115, codename
+bengal. The code is taken from OnePlus repo [1]. The two platforms are
+identical so there is only one compat string.
 
-> Changes since v3:
-> -----------------
-> - v3 series can be found here: https://lore.kernel.org/linux-arm-msm/20210617053432.350486-1-bhupesh.sharma@linaro.org/T/#m2b1bf2d32dfdde3196dc5342722e356ee1f87456
-> - Rebased patchset on pinctrl/devel branch.
-> - Added Reviewed-by from Bjorn for patches 1 to 4 and Ack from Rob for
->   patches 1 and 2.
+[1]: https://github.com/OnePlusOSS/android_kernel_oneplus_sm4250
 
-This v4 patch set applied!
+v1: https://lkml.org/lkml/2021/6/22/1163
+v2: https://lkml.org/lkml/2021/6/25/28
+v3: https://lkml.org/lkml/2021/6/25/72
+v4: https://lkml.org/lkml/2021/6/25/351
+v5: https://lkml.org/lkml/2021/6/27/160
 
-Sorry for taking so long, I had a bit too much to do.
+Changes from v5:
+- suggested from Linus Walleij
+ - applied on top of v5.14-rc1
 
-Excellent work on the patches Bhupesh!
+Changes from v4:
+- suggested by Konrad
+ - remove sm4250 compat, there will be a single sm6115.dtsi for both platforms
 
-Yours,
-Linus Walleij
+Changes from v3:
+- driver suggestions from Bjorn
+ - merge similarly named functions
+ - sort functions alphabetically
+ - move ufs-reset to 113
+
+Changes from v2:
+- suggestions from Rob:
+ - remove quotes around reg-names
+ - use -state$ subnode regex
+- suggestions from Bjorn
+ - remove '|' from description field
+ - use state def to allow arbitrary nesting
+ - fix gpio pattern to allow valid pin numbers
+ - fix number of gpio pins
+ - add tlmm label to example
+ - remove wakeup parent
+- other
+ - add some pins in example
+ - removed required function
+
+Changes from v1:
+- fix binding example
+- fix cover letter text
+
+Iskren Chernev (2):
+  dt-bindings: pinctrl: qcom: Add SM6115 pinctrl bindings
+  drivers: qcom: pinctrl: Add pinctrl driver for sm6115
+
+ .../bindings/pinctrl/qcom,sm6115-pinctrl.yaml | 180 ++++
+ drivers/pinctrl/qcom/Kconfig                  |   9 +
+ drivers/pinctrl/qcom/Makefile                 |   1 +
+ drivers/pinctrl/qcom/pinctrl-sm6115.c         | 923 ++++++++++++++++++
+ 4 files changed, 1113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm6115.c
+
+
+base-commit: e73f0f0ee7541171d89f2e2491130c7771ba58d3
+--
+
+
