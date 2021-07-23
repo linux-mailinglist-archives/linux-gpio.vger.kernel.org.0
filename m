@@ -2,147 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F5A93D3411
+	by mail.lfdr.de (Postfix) with ESMTP id 2DCC23D3410
 	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jul 2021 07:28:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233725AbhGWErq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 00:47:46 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:43873 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233712AbhGWErp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 00:47:45 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20210723052817epoutp0475fd1adb728802e82e2877c54d393b4e~UVFbtdakU1735317353epoutp04M
+        id S233713AbhGWErp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jul 2021 00:47:45 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:16652 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231199AbhGWEro (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 00:47:44 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20210723052817epoutp0283c455b59253b4a33e9c233ac30e766a~UVFbYjpJ12828028280epoutp02W
         for <linux-gpio@vger.kernel.org>; Fri, 23 Jul 2021 05:28:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20210723052817epoutp0475fd1adb728802e82e2877c54d393b4e~UVFbtdakU1735317353epoutp04M
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20210723052817epoutp0283c455b59253b4a33e9c233ac30e766a~UVFbYjpJ12828028280epoutp02W
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
         s=mail20170921; t=1627018097;
-        bh=Giz6luXkypdx/JNqZxPg+aCL0iHWVejqZQpWb26TyJI=;
+        bh=CxCH/jPaDOWx+nTg9UWRrcPhdD4SDD1WTqwmoBkQExQ=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=dsSMQS56FPGyFxDi4IWRTUjt9V6vTbE7aYhXTzE7TKhIMNkWmrhhRjzWmK3TCzeC5
-         cZ2clCKwBRHcMNdq7FNSU25wFkUC9+xwBec5h9Iv/jWnyjOjCs86Qgq2pe/8ov9sm3
-         EveKks5SacdfMXV5ogBd9cZnqttxjSyoeRw2jSPI=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20210723052817epcas1p2330085db87d9a7b4aaca77d583c39988~UVFbTFIxX1409714097epcas1p2r;
-        Fri, 23 Jul 2021 05:28:17 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4GWHsV5rG6z4x9QN; Fri, 23 Jul
+        b=Hu77risrXpuhj4zcXY93prlEEIa/Lqm410bMfMHH0jM6jBPnF7SQCeGLlkOPVQgo7
+         AS0w+koPXMJH4YWYNOEWlu9gwyGJbb5QJ4uUfBEsx1CmoLRpniAgOa9EeLK65/6FKg
+         PddDL7rF67UlnK8l0NodmIDnDZDBFkmSQLCYmJYQ=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20210723052816epcas1p4e99c2fcdce2ee90189c1a9cb65b43cb4~UVFaVBOQn1549015490epcas1p4P;
+        Fri, 23 Jul 2021 05:28:16 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4GWHsV1Jt0z4x9QZ; Fri, 23 Jul
         2021 05:28:14 +0000 (GMT)
 Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E2.47.09551.3635AF06; Fri, 23 Jul 2021 14:28:03 +0900 (KST)
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C9.CF.13454.8635AF06; Fri, 23 Jul 2021 14:28:08 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20210723052803epcas1p3831510d18aeacca8774f8585e1a19fae~UVFOL79RY0494804948epcas1p3l;
-        Fri, 23 Jul 2021 05:28:03 +0000 (GMT)
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20210723052808epcas1p49a6b786c261e245362d38e651c808ac0~UVFTM2q811716617166epcas1p4T;
+        Fri, 23 Jul 2021 05:28:08 +0000 (GMT)
 Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
         epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20210723052803epsmtrp1e671d7a25dc8f1e7e45367a4c80d010b~UVFOLT80I1496714967epsmtrp1Q;
-        Fri, 23 Jul 2021 05:28:03 +0000 (GMT)
-X-AuditID: b6c32a36-2c9ff7000000254f-f9-60fa5363bccc
+        20210723052808epsmtrp1894c6f82ecbba8d5097d0aa87775a6e6~UVFTMPALo1496714967epsmtrp1d;
+        Fri, 23 Jul 2021 05:28:08 +0000 (GMT)
+X-AuditID: b6c32a39-16fff7000002348e-89-60fa53688d8b
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
         epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F4.88.08394.3635AF06; Fri, 23 Jul 2021 14:28:03 +0900 (KST)
+        57.88.08394.8635AF06; Fri, 23 Jul 2021 14:28:08 +0900 (KST)
 Received: from [10.113.221.102] (unknown [10.113.221.102]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20210723052803epsmtip1132ae8aeadcbd8a214ee7c15fad5705b~UVFOBTIOi0421704217epsmtip1Y;
-        Fri, 23 Jul 2021 05:28:02 +0000 (GMT)
-Subject: Re: [PATCH] extcon: usb-gpio: Use the right includes
+        20210723052808epsmtip1dfc44a1fae401779b5d8b520e70aa1a9~UVFS-l8bI0421704217epsmtip1f;
+        Fri, 23 Jul 2021 05:28:08 +0000 (GMT)
+Subject: Re: [PATCH] extcon: max3355: Drop unused include
 To:     Linus Walleij <linus.walleij@linaro.org>,
         MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 From:   Chanwoo Choi <cw00.choi@samsung.com>
 Organization: Samsung Electronics
-Message-ID: <393ac5f7-bd50-d36b-6b33-8ed74be11eea@samsung.com>
-Date:   Fri, 23 Jul 2021 14:47:52 +0900
+Message-ID: <e88775a5-d606-a6ca-4566-52835feb24a3@samsung.com>
+Date:   Fri, 23 Jul 2021 14:47:57 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
         Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <20210715190606.429251-1-linus.walleij@linaro.org>
+In-Reply-To: <20210715152657.396185-1-linus.walleij@linaro.org>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPKsWRmVeSWpSXmKPExsWy7bCmgW5y8K8EgylTtS2m/FnOZLF5/h9G
-        i8u75rBZ3G5cwebA4nHn2h42j74tqxg9Pm+SC2COyrbJSE1MSS1SSM1Lzk/JzEu3VfIOjneO
-        NzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAdqmpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFV
-        Si1IySmwLNArTswtLs1L10vOz7UyNDAwMgUqTMjO+NW6kqmghatiwvYl7A2Myzi6GDk5JARM
-        JB6d/83YxcjFISSwg1Hi+MpHzBDOJ0aJza8fsEA43xglvj66xQTT0rF2PztEYi+jxLWTp6D6
-        3zNKLJm3gxGkSljAVmL+RZBZnBwiAuES+44dALOZBWwkXm7vZAOx2QS0JPa/uAFm8wsoSlz9
-        8Risl1fATuL/lF1g21gEVCU6DrSA2aICYRInt7VA1QhKnJz5hAXE5hSwl9h05yMbxHxxiVtP
-        5jNB2PIS29/OYYa4+iu7xMv1yhC2i8SDzoOMELawxKvjW9ghbCmJl/1tUHa1xMqTR9hAHpMQ
-        6GCU2LL/AitEwlhi/9LJQAs4gBZoSqzfpQ8RVpTY+XsuI8RePol3X3tYQUokBHglOtqEIEqU
-        JS4/uAsNREmJxe2dbBMYlWYh+WYWkg9mIflgFsKyBYwsqxjFUguKc9NTiw0LjJBjexMjOCVq
-        me1gnPT2g94hRiYOxkOMEhzMSiK8RwJ/JQjxpiRWVqUW5ccXleakFh9iNAWG70RmKdHkfGBS
-        ziuJNzQ1MjY2tjAxNDM1NFQS5/0W+zVBSCA9sSQ1OzW1ILUIpo+Jg1OqgYmpUPfR8QnmLqvm
-        7DB3q6x9XhFvya/xJijuewDHE8XJHAf0jusubipT+7g4obG4pe91x4wDXoUf1wR83Bw0VyOw
-        hfFGqe6bPSJZjuGGs3bF3dYwEfi5vs5j6pqUgmxRc7nNFuUSPT8EbkzdfrsmdPEkZ2epmH/q
-        kiaxvT8fn3khd/2ldbFN+PXnrOUzBL8p/vt1ZOqPJUsqV/MzV6++OvcCB8e3XMY59eeu5327
-        7brsm/XBFzvsmrOnFKsGSe/m13vOV/6uSPy/elau/eP5n+bK1H8R4mVYzGnof+xuzc7/W9VX
-        s0zZ43alVUCid/0TDrmtVxOe7d6zL+rce9dvescv/t3S+6O7fNUF0wkT3xQqsRRnJBpqMRcV
-        JwIAUMJvDxIEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsWy7bCSnG5y8K8Eg2kn2S2m/FnOZLF5/h9G
-        i8u75rBZ3G5cwebA4nHn2h42j74tqxg9Pm+SC2CO4rJJSc3JLEst0rdL4Mr41bqSqaCFq2LC
-        9iXsDYzLOLoYOTkkBEwkOtbuZ+9i5OIQEtjNKDHhwD52iISkxLSLR5m7GDmAbGGJw4eLIWre
-        Mkpcvt7GBFIjLGArMf/iI2YQW0QgXGL2gvdgNrOAjcTL7Z1sEA2TGCU+PDzACJJgE9CS2P/i
-        BhuIzS+gKHH1x2OwOK+AncT/KbvAhrIIqEp0HGgBs0UFwiR2LnnMBFEjKHFy5hMWEJtTwF5i
-        052PbBDL1CX+zLsEtVhc4taT+UwQtrzE9rdzmCcwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCc
-        m55bbFhgmJdarlecmFtcmpeul5yfu4kRHB1amjsYt6/6oHeIkYmD8RCjBAezkgjvkcBfCUK8
-        KYmVValF+fFFpTmpxYcYpTlYlMR5L3SdjBcSSE8sSc1OTS1ILYLJMnFwSjUwyXOzrDXq2h+Q
-        rqfTEV0YurFCsvJy3KnNRzvMZa8Wfb61srKixWbdG+O7X9cs3/qAu+Zbkphi6v4dqTYbbivv
-        ePTMqniuLcuOXiOfvXy5Nkd/PPzzmrHphZH86iNCN+QOzv9RYZw5X253qpsW++edhRLMyiU3
-        ldun2/s4Pev+HTn1RyXjn5Dw1ikh3/Lla7Y7HelfZzvTf/8Tx0INRe9nqSfcflZs7/WcLODl
-        s/GwsU++XFXBMb7IZYlFUd93PHf7bjjhzdWf3ta3vj3L4/x3I+639iRp2z08SueZ1vzzdpgc
-        J3CqKv3agkn6fxQdzadwTPv0aL4p9/Pg3EchZjpPf893nf9vv5r5psNhN9leKbEUZyQaajEX
-        FScCAOc0zUP9AgAA
-X-CMS-MailID: 20210723052803epcas1p3831510d18aeacca8774f8585e1a19fae
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplk+LIzCtJLcpLzFFi42LZdljTQDcj+FeCwcNWc4spf5YzWWye/4fR
+        4vKuOWwWtxtXsFmcWXWL3YHV48HU/0wed67tYfPo27KK0ePzJrkAlqhsm4zUxJTUIoXUvOT8
+        lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE3FRbJRefAF23zBygvUoKZYk5pUChgMTiYiV9O5ui
+        /NKSVIWM/OISW6XUgpScAssCveLE3OLSvHS95PxcK0MDAyNToMKE7Iz/Wy6zF5xmq1h90aGB
+        cTdrFyMnh4SAicScx6vZuhi5OIQEdjBKnLm5lh3C+cQocfTYVUYI5xujxN/r14EcDrCWuf+1
+        IeJ7GSUOL5sLNkpI4D2jxMdNZSC2sIClxLYJ55lBbBGBcIl9xw6A2cwCJRJtbZ/ZQGw2AS2J
+        /S9ugNn8AooSV388ZgSxeQXsJO6/P8wOsotFQFXi/HZFkLCoQJjEyW0tUCWCEidnPmEBsTkF
+        7CV+/TnBDjFeXOLWk/lMELa8xPa3c5ghvmzlkJhy2RTCdpHoaJrCCGELS7w6voUdwpaSeNnf
+        BmVXS6w8eQQcKhICHYwSW/ZfgAaXscT+pZOZQG5jFtCUWL9LHyKsKLHz91xGiL18Eu++9rBC
+        gopXoqNNCKJEWeLyg7tMELakxOL2TrYJjEqzkHwzC8kHs5B8MAth2QJGllWMYqkFxbnpqcWG
+        BabIMb2JEZwetSx3ME5/+0HvECMTB+MhRgkOZiUR3iOBvxKEeFMSK6tSi/Lji0pzUosPMZoC
+        g3cis5Rocj4wQeeVxBuaGhkbG1uYGJqZGhoqifN+i/2aICSQnliSmp2aWpBaBNPHxMEp1cCU
+        uM+R9eWbspLw5txY21NnLtc1ZjFZLmwN6G1Ir54829T6MouSf3XaJjmnI3bcnCn1fZrTxW/P
+        +WXUsGjJ4me392/Pc2TPsn9+1SzTVbF/h6XWQ4O/sx57fHGIP/t5+17VzTaXvBZduSO+Srpt
+        d7Nhiu4pxguREazMyY0iF/Ze4jT6O1kh0FCxsGL/ro0nmBLrmy6U/DK4qHyI+e2Xq1bFF0Q/
+        ZkWyq6/R+rV6+Znnhz+pbzPJW1+SzXF/o6bMTcmdMw503Vzw5Z2O0dNPm7d9fx6/JeaScVN8
+        wPoV72NkJ/luKU+b2nX6tN2sl6/n33ay456d7q3X+tTwV+oV96klK2b94HqrGsXPrftJfLaO
+        EktxRqKhFnNRcSIAkeoVIhgEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsWy7bCSnG5G8K8Eg7Z2OYspf5YzWWye/4fR
+        4vKuOWwWtxtXsFmcWXWL3YHV48HU/0wed67tYfPo27KK0ePzJrkAligum5TUnMyy1CJ9uwSu
+        jP9bLrMXnGarWH3RoYFxN2sXIweHhICJxNz/2l2MXBxCArsZJTpudLB3MXICxSUlpl08ygxR
+        Iyxx+HAxRM1bRomXd0+xgdQIC1hKbJtwnhnEFhEIl5i94D2YzSxQIrF893kmiIZJjBL7dsxn
+        BUmwCWhJ7H9xA6yZX0BR4uqPx4wgNq+AncT994fZQZaxCKhKnN+uCBIWFQiT2LnkMRNEiaDE
+        yZlPWEBsTgF7iV9/TrBD7FKX+DPvEtRecYlbT+YzQdjyEtvfzmGewCg8C0n7LCQts5C0zELS
+        soCRZRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4mRnCsaGnuYNy+6oPeIUYmDsZDjBIc
+        zEoivEcCfyUI8aYkVlalFuXHF5XmpBYfYpTmYFES573QdTJeSCA9sSQ1OzW1ILUIJsvEwSnV
+        wLR92TWPU3EWXxqXRf8T/HTSkuHFOZV1ZpsKdr68lK4wK+hXhO/jGUeYa/5Y3Hp1lG+RWZif
+        mnvewyS/lUVm50rYvkueXlIUI9s6dbs9+2cx8asqB84dST/6SOfgn8d665ZP639ZVLXRqJPt
+        ZOVN98WdFqf5Q09/1nR/ZC/1xlnua/P7o161MdWZz2+lyqVs+WvamBW9UdGXUWeLmvkhZ+Zt
+        de9buU+srpE4Mc3/Wtz3R/veCAdPVF2WWP9IUVlf6p26LwfzwUul8Yt+uAndjvd9wV+ty15/
+        fWGS54ra5V9K6xZsEDaZE6si0T+z0HvV20mTvH7GyJy9H+rQMPFf0vrzKj/v3mVsbrigf72b
+        450SS3FGoqEWc1FxIgBGLLWNBAMAAA==
+X-CMS-MailID: 20210723052808epcas1p49a6b786c261e245362d38e651c808ac0
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20210715195441epcas1p2902263d7e7aeec6213a7ba554eff2695
-References: <CGME20210715195441epcas1p2902263d7e7aeec6213a7ba554eff2695@epcas1p2.samsung.com>
-        <20210715190606.429251-1-linus.walleij@linaro.org>
+X-CMS-RootMailID: 20210715152907epcas1p1326e92c0358eb514361cf4f6ca2da4e5
+References: <CGME20210715152907epcas1p1326e92c0358eb514361cf4f6ca2da4e5@epcas1p1.samsung.com>
+        <20210715152657.396185-1-linus.walleij@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/16/21 4:06 AM, Linus Walleij wrote:
-> The USB GPIO extcon driver does not use any of the legacy
-> includes <linux/gpio.h> or <linux/of_gpio.h> but
-> exploits the fact that this brings in <linux/mod_device_table.h>.
-> Fix this up by using the right includes.
+On 7/16/21 12:26 AM, Linus Walleij wrote:
+> This driver includes the legacy <linux/gpio.h> header but
+> does not use it. Drop this include.
 > 
+> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  drivers/extcon/extcon-usb-gpio.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/extcon/extcon-max3355.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
-> index f06be6d4e2a9..0cb440bdd5cb 100644
-> --- a/drivers/extcon/extcon-usb-gpio.c
-> +++ b/drivers/extcon/extcon-usb-gpio.c
-> @@ -7,18 +7,17 @@
+> diff --git a/drivers/extcon/extcon-max3355.c b/drivers/extcon/extcon-max3355.c
+> index fa01926c09f1..d7795607f693 100644
+> --- a/drivers/extcon/extcon-max3355.c
+> +++ b/drivers/extcon/extcon-max3355.c
+> @@ -7,7 +7,6 @@
 >   */
 >  
 >  #include <linux/extcon-provider.h>
 > -#include <linux/gpio.h>
 >  #include <linux/gpio/consumer.h>
->  #include <linux/init.h>
 >  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
 >  #include <linux/module.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/workqueue.h>
->  #include <linux/pinctrl/consumer.h>
-> +#include <linux/mod_devicetable.h>
->  
->  #define USB_GPIO_DEBOUNCE_MS	20	/* ms */
->  
 > 
 
 Applied it. Thanks.
