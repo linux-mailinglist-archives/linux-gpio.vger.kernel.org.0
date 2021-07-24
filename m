@@ -2,82 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5F063D4413
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jul 2021 02:50:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE3D43D450D
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jul 2021 07:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233465AbhGXAKP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jul 2021 20:10:15 -0400
-Received: from shellb3.lnk.telstra.net ([110.143.216.122]:38522 "EHLO
-        mail.shellbypower.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233337AbhGXAKP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jul 2021 20:10:15 -0400
-X-Greylist: delayed 1597 seconds by postgrey-1.27 at vger.kernel.org; Fri, 23 Jul 2021 20:10:14 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.shellbypower.com.au (Postfix) with ESMTP id 0C8032553E;
-        Sat, 24 Jul 2021 10:12:20 +1000 (AEST)
-Received: from mail.shellbypower.com.au ([127.0.0.1])
-        by localhost (mail.shellbypower.com.au [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id vxBJU0o4iCRn; Sat, 24 Jul 2021 10:12:18 +1000 (AEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.shellbypower.com.au (Postfix) with ESMTP id 719C52D41C;
-        Sat, 24 Jul 2021 10:12:13 +1000 (AEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.shellbypower.com.au 719C52D41C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shellbypower.com.au;
-        s=8BBA43DA-3AA7-11EA-97BE-0AE12EF764A2; t=1627085534;
-        bh=tIcrqF9jb5+AisAeW5g2E9J08tvLmLd35fIw+kDaFCg=;
-        h=Date:From:Message-ID:MIME-Version;
-        b=Nzx2J7vLNA2MJXlU7TpWNJ5I/ixEyBpEfAmCblBG1Di8MGRZpCnec9rKlPSAFjfq0
-         gI9WNlYpfGQVB6Sflzl842naPjSQyJPKjN+r1cTPK5f+IJn3R5QJFM1jZ6cpOnTihD
-         xrV+bhJgxQKDnBdY/i0PlaxDuXiBlqbkjqUY44Kc=
-X-Virus-Scanned: amavisd-new at shellbypower.com.au
-Received: from mail.shellbypower.com.au ([127.0.0.1])
-        by localhost (mail.shellbypower.com.au [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id GpVqRzqX35bU; Sat, 24 Jul 2021 10:12:13 +1000 (AEST)
-Received: from mail.shellbypower.com.au (mail.shellbypower.com.au [192.168.1.200])
-        by mail.shellbypower.com.au (Postfix) with ESMTP id BD28825538;
-        Sat, 24 Jul 2021 10:12:05 +1000 (AEST)
-Date:   Sat, 24 Jul 2021 10:12:05 +1000 (AEST)
-From:   Rinat Akhmetov <no-reply@shellbypower.com.au>
-Reply-To: Rinat Akhmetov <rinatkhmetov@gmail.com>
-Message-ID: <432780866.874391.1627085525706.JavaMail.zimbra@shellbypower.com.au>
-Subject: Lesen Sie Ihre E-Mail.
+        id S229787AbhGXE2p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Jul 2021 00:28:45 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55942 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229730AbhGXE2o (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 24 Jul 2021 00:28:44 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="208877834"
+X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
+   d="scan'208";a="208877834"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 22:09:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
+   d="scan'208";a="660425708"
+Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jul 2021 22:09:16 -0700
+Received: from kbuild by d053b881505b with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1m79uV-0002xX-Jk; Sat, 24 Jul 2021 05:09:15 +0000
+Date:   Sat, 24 Jul 2021 13:08:12 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:fixes] BUILD SUCCESS
+ 798a315fc359aa6dbe48e09d802aa59b7e158ffc
+Message-ID: <60fba03c.I7th/SfwF0J+OUhq%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.7.11_GA_3865 (zclient/8.7.11_GA_3865)
-Thread-Index: 0Kn0UGxZYc14iyik7mQBMs/CnxWBgg==
-Thread-Topic: Lesen Sie Ihre E-Mail.
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hallo Herr / Frau,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: 798a315fc359aa6dbe48e09d802aa59b7e158ffc  pinctrl: mediatek: Fix fallback behavior for bias_set_combo
 
-Mein Name ist Rinat Achmetow. Ich bin ein ukrainischer Milliard=C3=A4r, Ges=
-ch=C3=A4ftsmann, Oligarch und auch Gr=C3=BCnder und Pr=C3=A4sident von Syst=
-em Capital Management in der Ukraine (Europa). Sie k=C3=B6nnen unten =C3=BC=
-ber mich lesen.
+elapsed time: 722m
 
-https://en.wikipedia.org/wiki/Rinat_Akhmetov
+configs tested: 138
+configs skipped: 3
 
-Ich beabsichtige, Ihnen im Rahmen unseres Charity-Projekts einen (Viertel-)=
-Teil meines Nettoverm=C3=B6gens von jeweils 500.000,00 EURO an 4 Personen w=
-eltweit zu spenden. Wenn Sie meine E-Mail erhalten haben, senden Sie uns bi=
-tte Ihre Daten
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Dein Name:
-Dein Land:
-Telefonnummer:
-Adresse:
-Staatsangeh=C3=B6rigkeit:
-Alter:
-Geschlecht:
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20210723
+arc                     haps_hs_smp_defconfig
+powerpc                    klondike_defconfig
+arm                         vf610m4_defconfig
+mips                       rbtx49xx_defconfig
+sh                        dreamcast_defconfig
+m68k                          sun3x_defconfig
+arm                          collie_defconfig
+powerpc                      makalu_defconfig
+powerpc                 mpc834x_itx_defconfig
+mips                         bigsur_defconfig
+sh                ecovec24-romimage_defconfig
+powerpc                      bamboo_defconfig
+arm                           tegra_defconfig
+powerpc                 mpc837x_mds_defconfig
+sh                           se7750_defconfig
+mips                  maltasmvp_eva_defconfig
+arm                       imx_v6_v7_defconfig
+mips                           ip22_defconfig
+powerpc                     redwood_defconfig
+mips                      bmips_stb_defconfig
+arc                           tb10x_defconfig
+powerpc                 mpc836x_rdk_defconfig
+sh                         ap325rxa_defconfig
+powerpc                      pasemi_defconfig
+arm                         s3c6400_defconfig
+powerpc                      acadia_defconfig
+um                                  defconfig
+arm                          moxart_defconfig
+powerpc               mpc834x_itxgp_defconfig
+sparc64                             defconfig
+arc                        nsim_700_defconfig
+powerpc                     ppa8548_defconfig
+openrisc                  or1klitex_defconfig
+sh                          r7785rp_defconfig
+h8300                            alldefconfig
+powerpc                 mpc85xx_cds_defconfig
+powerpc                      ep88xc_defconfig
+powerpc                 mpc832x_rdb_defconfig
+powerpc                 linkstation_defconfig
+m68k                          amiga_defconfig
+arm                         orion5x_defconfig
+arc                    vdk_hs38_smp_defconfig
+powerpc                      katmai_defconfig
+powerpc                     tqm8548_defconfig
+powerpc                      walnut_defconfig
+sh                           se7619_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+x86_64                            allnoconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20210723
+i386                 randconfig-a003-20210723
+i386                 randconfig-a004-20210723
+i386                 randconfig-a002-20210723
+i386                 randconfig-a001-20210723
+i386                 randconfig-a006-20210723
+i386                 randconfig-a005-20210724
+i386                 randconfig-a003-20210724
+i386                 randconfig-a004-20210724
+i386                 randconfig-a002-20210724
+i386                 randconfig-a001-20210724
+i386                 randconfig-a006-20210724
+x86_64               randconfig-a011-20210723
+x86_64               randconfig-a016-20210723
+x86_64               randconfig-a013-20210723
+x86_64               randconfig-a014-20210723
+x86_64               randconfig-a012-20210723
+x86_64               randconfig-a015-20210723
+i386                 randconfig-a016-20210723
+i386                 randconfig-a013-20210723
+i386                 randconfig-a012-20210723
+i386                 randconfig-a011-20210723
+i386                 randconfig-a014-20210723
+i386                 randconfig-a015-20210723
+i386                 randconfig-a016-20210724
+i386                 randconfig-a013-20210724
+i386                 randconfig-a012-20210724
+i386                 randconfig-a014-20210724
+i386                 randconfig-a011-20210724
+i386                 randconfig-a015-20210724
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-Wenn ich die obigen Angaben erhalte, werde ich Sie an meine Bank weiterleit=
-en, um die =C3=9Cberweisung des Geldes in H=C3=B6he von EURO 500.000,00 zu =
-veranlassen, in der Hoffnung, dass dies auch Ihnen und anderen hilft.
+clang tested configs:
+x86_64               randconfig-c001-20210723
+x86_64               randconfig-c001-20210724
+x86_64               randconfig-b001-20210723
+x86_64               randconfig-a003-20210723
+x86_64               randconfig-a006-20210723
+x86_64               randconfig-a001-20210723
+x86_64               randconfig-a005-20210723
+x86_64               randconfig-a004-20210723
+x86_64               randconfig-a002-20210723
 
-Aufrichtig,
-
-Rinat Achmetow.
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
