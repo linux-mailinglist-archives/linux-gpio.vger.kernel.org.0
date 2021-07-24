@@ -2,89 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F97B3D45AB
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jul 2021 09:22:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ED443D4702
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jul 2021 12:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234085AbhGXGlU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Jul 2021 02:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234227AbhGXGlU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Jul 2021 02:41:20 -0400
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA8AC061757
-        for <linux-gpio@vger.kernel.org>; Sat, 24 Jul 2021 00:21:50 -0700 (PDT)
-Received: by mail-oi1-x22e.google.com with SMTP id t14so4546259oiw.0
-        for <linux-gpio@vger.kernel.org>; Sat, 24 Jul 2021 00:21:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YCIh3fMX63lUF8i5fYD8BvOZCJrvnxU7VR8u7cCIPkM=;
-        b=F8KsU4oCjmUbDiG/44a1/9d/K1RSICyr8qRoUBatEcm2yuOnbH7x5u34aeTyoaGedf
-         XspnhRRwzNL7+g4/Nx6pvKw6xYviqluCbfQMDZ6FKgnJwS48kDaZFoVynRZdK9Wuy2Kz
-         TNqPsk76y8BVKooKPaYtVeGe7DdKKQnkt3Q0duAmpsRisp/WAw9balXiT9DlpU3OV43I
-         aHFh0qKcNZuG1qHOCvcevEhEnjkx1YviTBbBqxeFr7PeZminYEs2vEQqG4fenEMeByTW
-         m0LX5Krh3ZG5XzrPwf0n85LySwF2henr06R0Fr3gGC8nvwjzVmc7MFh35mb8k+e4PXmk
-         WBRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YCIh3fMX63lUF8i5fYD8BvOZCJrvnxU7VR8u7cCIPkM=;
-        b=rsjcgLdaOcBV+bpu9f9tAU1U+ByNw6oFZBljA8VV/54QBc6L5LC+zKisULyLM97+eh
-         QR08leUJ5GN/StsEI8DK0iSYoJo1OtxcVRo1To5Ygnq1TbUJ2NDiOqR3c2JeJUokc12m
-         MrJAZY0svAWbfOMSnR6TYeBdBnbhPNazwSsT4dmzrqSoG5fDawSAdaV5twonmZoG3WMF
-         rXNedud92SgU0uDvi4RdcI8zye5L+4os7viEFddYI5Bc6dNot3s7K2CsaeUg5qH8VWkW
-         S+xNEzS4aH2ry8aNK369lRYW1rW6Y/m2R/NHiDS5uEXmbXf8FfpcgMwI64tJelN3AorU
-         SVqw==
-X-Gm-Message-State: AOAM530NjLbN+fm/EmhIPCSmvieKmXs+rDmmGDegu7qIT4JbW1l4uDR/
-        QBaafbyWgfgLsGua+69a2ZwkiVrucmFIQlqduKUC/A==
-X-Google-Smtp-Source: ABdhPJx2xQLq56xZ6EcRh66jo509CDGGbajlVjK2lo9Espbwz0WE2eEyyxbA+1wnATCEeMJ9qDOhrzNjdfKPytQAOmY=
-X-Received: by 2002:aca:af10:: with SMTP id y16mr10638074oie.12.1627111310129;
- Sat, 24 Jul 2021 00:21:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210629123407.82561-1-bhupesh.sharma@linaro.org> <CACRpkdacTi-9YzhOqpfFkNhzSATmbWHs=wMoJcsXwG8pBeW7Mg@mail.gmail.com>
-In-Reply-To: <CACRpkdacTi-9YzhOqpfFkNhzSATmbWHs=wMoJcsXwG8pBeW7Mg@mail.gmail.com>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Sat, 24 Jul 2021 12:51:38 +0530
-Message-ID: <CAH=2Ntxk5NdcPCsOD=SRyFFKrgtUqOxV2UpuJP21W-dpaPHrrQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] pinctrl: qcom/pinctrl-spmi-gpio: Add support for
- pmic-gpio on SA8155p-adp
+        id S234854AbhGXJVg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Jul 2021 05:21:36 -0400
+Received: from mga02.intel.com ([134.134.136.20]:48740 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234991AbhGXJVg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 24 Jul 2021 05:21:36 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="199208011"
+X-IronPort-AV: E=Sophos;i="5.84,266,1620716400"; 
+   d="scan'208";a="199208011"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2021 03:02:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,266,1620716400"; 
+   d="scan'208";a="496714681"
+Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Jul 2021 03:02:04 -0700
+Received: from kbuild by d053b881505b with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1m7ETs-0003Df-4G; Sat, 24 Jul 2021 10:02:04 +0000
+Date:   Sat, 24 Jul 2021 18:01:21 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>, bhupesh.linux@gmail.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ 4990672e9b2ad2cda9bbc547126d2f149a992c94
+Message-ID: <60fbe4f1.EBR2/GFnaCME5tVc%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 4990672e9b2ad2cda9bbc547126d2f149a992c94  Merge branch 'devel' into for-next
 
-On Fri, 23 Jul 2021 at 21:51, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, Jun 29, 2021 at 2:34 PM Bhupesh Sharma
-> <bhupesh.sharma@linaro.org> wrote:
->
-> > Changes since v3:
-> > -----------------
-> > - v3 series can be found here: https://lore.kernel.org/linux-arm-msm/20210617053432.350486-1-bhupesh.sharma@linaro.org/T/#m2b1bf2d32dfdde3196dc5342722e356ee1f87456
-> > - Rebased patchset on pinctrl/devel branch.
-> > - Added Reviewed-by from Bjorn for patches 1 to 4 and Ack from Rob for
-> >   patches 1 and 2.
->
-> This v4 patch set applied!
->
-> Sorry for taking so long, I had a bit too much to do.
->
-> Excellent work on the patches Bhupesh!
+elapsed time: 720m
 
-Thanks for picking the patchset.
+configs tested: 107
+configs skipped: 3
 
-Regards,
-Bhupesh
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20210723
+i386                 randconfig-c001-20210724
+m68k                         amcore_defconfig
+mips                    maltaup_xpa_defconfig
+xtensa                       common_defconfig
+arm                            mps2_defconfig
+powerpc                  iss476-smp_defconfig
+openrisc                  or1klitex_defconfig
+sh                          r7785rp_defconfig
+h8300                            alldefconfig
+powerpc                 mpc85xx_cds_defconfig
+parisc                generic-64bit_defconfig
+arc                    vdk_hs38_smp_defconfig
+powerpc                     sequoia_defconfig
+m68k                       m5275evb_defconfig
+arc                           tb10x_defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20210723
+i386                 randconfig-a003-20210723
+i386                 randconfig-a004-20210723
+i386                 randconfig-a002-20210723
+i386                 randconfig-a001-20210723
+i386                 randconfig-a006-20210723
+i386                 randconfig-a005-20210724
+i386                 randconfig-a003-20210724
+i386                 randconfig-a004-20210724
+i386                 randconfig-a002-20210724
+i386                 randconfig-a001-20210724
+i386                 randconfig-a006-20210724
+x86_64               randconfig-a011-20210723
+x86_64               randconfig-a016-20210723
+x86_64               randconfig-a013-20210723
+x86_64               randconfig-a014-20210723
+x86_64               randconfig-a012-20210723
+x86_64               randconfig-a015-20210723
+i386                 randconfig-a016-20210724
+i386                 randconfig-a013-20210724
+i386                 randconfig-a012-20210724
+i386                 randconfig-a014-20210724
+i386                 randconfig-a011-20210724
+i386                 randconfig-a015-20210724
+x86_64               randconfig-a003-20210724
+x86_64               randconfig-a006-20210724
+x86_64               randconfig-a001-20210724
+x86_64               randconfig-a005-20210724
+x86_64               randconfig-a004-20210724
+x86_64               randconfig-a002-20210724
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-c001-20210724
+x86_64               randconfig-c001-20210723
+x86_64               randconfig-b001-20210723
+x86_64               randconfig-a003-20210723
+x86_64               randconfig-a006-20210723
+x86_64               randconfig-a001-20210723
+x86_64               randconfig-a005-20210723
+x86_64               randconfig-a004-20210723
+x86_64               randconfig-a002-20210723
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
