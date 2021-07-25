@@ -2,154 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 878E63D4711
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jul 2021 12:24:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 568793D4B0A
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jul 2021 04:49:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234786AbhGXJn4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Jul 2021 05:43:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9391 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235065AbhGXJng (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 24 Jul 2021 05:43:36 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="192286455"
-X-IronPort-AV: E=Sophos;i="5.84,266,1620716400"; 
-   d="scan'208";a="192286455"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2021 03:24:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,266,1620716400"; 
-   d="scan'208";a="496843019"
-Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Jul 2021 03:24:06 -0700
-Received: from kbuild by d053b881505b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1m7EpB-0003EF-OG; Sat, 24 Jul 2021 10:24:05 +0000
-Date:   Sat, 24 Jul 2021 18:23:58 +0800
-From:   kernel test robot <lkp@intel.com>
+        id S229853AbhGYCIz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Jul 2021 22:08:55 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:35719 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229665AbhGYCIy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 24 Jul 2021 22:08:54 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id E91192B0117C;
+        Sat, 24 Jul 2021 22:49:24 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sat, 24 Jul 2021 22:49:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=0
+        YArzRMEkZVJA7cx4IMbm2POjscEV83qSQ0fdLGzAw0=; b=saY3xF7HzgMi/nVhI
+        F1/BAx64jTMHVxQpeOSLKh5TO9UvwCXrFxKcNWvd5Qj8OXQNBxnhkA7Grd5Z7S1K
+        s9xstLG1mbM4y7MIRwMaqCV+PzSoQWBh2fq/4r6qHx3rWuuCDpPGfOly6dO9ObWQ
+        N2u5VMbAh96WlWJMWAaWOw688LTlTdoz/Rwi44O+lTfR+XZA7409Lvi0JnXeJkOJ
+        doJU0ROIazWsE2H6kM7ZcWFG52e1f9pDn6+9BtKdj8tDMdrG95Ww93hrTgi8LpSj
+        efsm5gtOr8rKjq+3VWH0z14K2V9wiIK1OaIXDqAyPRprsEl7KjVSlSEipGqtV/PV
+        QK2lA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=0YArzRMEkZVJA7cx4IMbm2POjscEV83qSQ0fdLGzA
+        w0=; b=COx2CF2PAKRb5oVFOhg9pjeu6TelQj1VStflNVvGSDlCKKesfZdXRED5P
+        bzlr2pCqTWyBddhsriVxMPR9NWTFUQpFe+RnpYcJhDcpSBvntOXMutEAcXDxHMn8
+        /RQkwNubMrjK7JsKyaKtCyh/uQyqv2pZVBtuTTSvZyUokqEi2RLvevT1MD07Tl5G
+        P11KdeWutz5+zyQwMojrdrw9xylfgbv+JUdE7XtmILugwWHZhNJ+2d6KZ8HX3DAE
+        h7fmUkSHVBo19xvXqONn68TFpAiEPGeA4QrohhSCJI1Y9H5RH1hSRmCkr+cv7xyz
+        hALh7PLuDZSIY6mpCg7QTYQK20c6A==
+X-ME-Sender: <xms:M9H8YDK8fYYcYnt64PUkhbYpnqBZrLA6JCS4fQaPrAl397GMGUt0UQ>
+    <xme:M9H8YHIprFy81vo8iLnWCz9JAUZJ-tGcPDZlKuBcxLozMeHKnO7ghPampD1PbBizA
+    GkLDPTwMECoeFu1lww>
+X-ME-Received: <xmr:M9H8YLtpAivUe_UbBzp3pb6KqThR-rfmd5yiMavURt30gsVXxuA4O39_vOQlfeDE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrgedugdehkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefuvfhfhffkffgfgggjtgfgsehtkeertddtfeejnecuhfhrohhmpeflihgrgihu
+    nhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecugg
+    ftrfgrthhtvghrnhepiefhgffhieekudegjeevgfffveegveegheffhfduieeiffffveff
+    ueegveefgfefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:M9H8YMZyTGJrzxG5R33fZPERdX3k1bvx0lm5x6_D9podaM1RYDJQEQ>
+    <xmx:M9H8YKaGdkjl__1vI6d8qqflWKE-vyOxBGBEW1dxfvtCdDH4HUfW9w>
+    <xmx:M9H8YAAVX-29Dj75B7UKw_9uQ9F8xaGwKEgxRKgYd7F55PmH25wwQw>
+    <xmx:NNH8YAnRG-3WFnv40ljg0az6dd3hWEIHVGcAMvp_IB4DAZpKhtVIgbYlrrQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 24 Jul 2021 22:49:19 -0400 (EDT)
+Subject: Re: [PATCH 6/9] pinctrl: pistachio: Make it as a option
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- af0ca06f8781499bd889658b47df75ee2da8ca8f
-Message-ID: <60fbea3e.UWuxyPcUA5Bgk2NX%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Cc:     linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-phy@lists.infradead.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20210627045631.2882-1-jiaxun.yang@flygoat.com>
+ <20210627045631.2882-7-jiaxun.yang@flygoat.com>
+ <CACRpkdZkvSg___ZxdE639SMbTs5rJbjHBq-HkTCuv0e645Rssg@mail.gmail.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <c7de97c3-196b-6bc3-a8b1-d6c6e6ab583d@flygoat.com>
+Date:   Sun, 25 Jul 2021 10:49:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CACRpkdZkvSg___ZxdE639SMbTs5rJbjHBq-HkTCuv0e645Rssg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: af0ca06f8781499bd889658b47df75ee2da8ca8f  pinctrl: imx8ulp: Initialize pin_reg
 
-elapsed time: 743m
+在 2021/7/24 上午12:13, Linus Walleij 写道:
+> On Sun, Jun 27, 2021 at 6:57 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+>> So it will be avilable for generic MIPS kernel.
+>>
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Is this solved, or should I apply this patch?
 
-configs tested: 96
-configs skipped: 3
+I guess so, btw I think it should go via MIPS tree to avoid troubles.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210724
-i386                 randconfig-c001-20210723
-openrisc                  or1klitex_defconfig
-sh                          r7785rp_defconfig
-h8300                            alldefconfig
-powerpc                 mpc85xx_cds_defconfig
-parisc                generic-64bit_defconfig
-arc                    vdk_hs38_smp_defconfig
-powerpc                     sequoia_defconfig
-m68k                       m5275evb_defconfig
-arc                           tb10x_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a003-20210724
-x86_64               randconfig-a006-20210724
-x86_64               randconfig-a001-20210724
-x86_64               randconfig-a005-20210724
-x86_64               randconfig-a004-20210724
-x86_64               randconfig-a002-20210724
-i386                 randconfig-a005-20210724
-i386                 randconfig-a003-20210724
-i386                 randconfig-a004-20210724
-i386                 randconfig-a002-20210724
-i386                 randconfig-a001-20210724
-i386                 randconfig-a006-20210724
-x86_64               randconfig-a011-20210723
-x86_64               randconfig-a016-20210723
-x86_64               randconfig-a013-20210723
-x86_64               randconfig-a014-20210723
-x86_64               randconfig-a012-20210723
-x86_64               randconfig-a015-20210723
-i386                 randconfig-a016-20210724
-i386                 randconfig-a013-20210724
-i386                 randconfig-a012-20210724
-i386                 randconfig-a014-20210724
-i386                 randconfig-a011-20210724
-i386                 randconfig-a015-20210724
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+- Jiaxun
 
-clang tested configs:
-x86_64               randconfig-c001-20210723
-x86_64               randconfig-c001-20210724
-x86_64               randconfig-b001-20210723
-x86_64               randconfig-a003-20210723
-x86_64               randconfig-a006-20210723
-x86_64               randconfig-a001-20210723
-x86_64               randconfig-a005-20210723
-x86_64               randconfig-a004-20210723
-x86_64               randconfig-a002-20210723
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
+> Yours,
+> Linus Walleij
