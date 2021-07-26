@@ -2,102 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AF2D3D60B0
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jul 2021 18:11:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 363603D695A
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 00:20:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237613AbhGZPXy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jul 2021 11:23:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237655AbhGZPXn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jul 2021 11:23:43 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32373C061764;
-        Mon, 26 Jul 2021 09:04:12 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id g76so15661213ybf.4;
-        Mon, 26 Jul 2021 09:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sonZ5IE9LRRm77PBdwLAm4WORGREpWH9VgasbjikKzc=;
-        b=eh06G0zViH3jME560MP6yWXcJk2GN/59qpQ3LnX8rJj2eMalTAMbXKWEwjO/qjvWyO
-         ww7xNWA18B9+mTwfte3iYiH01qhWYxFgSw5tozlL5yCS4PCWFGIhfioGurqkM3Rqo/ZT
-         JS5AV37V+SwFzkBxBayokEXJ8o+/Q1PzNZzxQ5TBYWFkUIevZGIUYiuWr37+D/gr8f7i
-         HFoBhxS/p2A/Z1dT3oVWBGllnyz7j2YHa5PJxi2duRV0mevN7tRjKcz3Io38QR3XmuiQ
-         RkOPVPF12D4RXlOQin4mcHBJBHgetW5MypS8rzNYENyDQifsDIYolsVDElHvDx4YMbUB
-         A85w==
+        id S231978AbhGZVjr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Jul 2021 17:39:47 -0400
+Received: from mail-io1-f50.google.com ([209.85.166.50]:47099 "EHLO
+        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231502AbhGZVjq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jul 2021 17:39:46 -0400
+Received: by mail-io1-f50.google.com with SMTP id u15so13713651iol.13;
+        Mon, 26 Jul 2021 15:20:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sonZ5IE9LRRm77PBdwLAm4WORGREpWH9VgasbjikKzc=;
-        b=XbzAAoNN9VJxUEuFlxdxdStPFffq4bbn7Ghvk2k9MMADSjGBs3yodH0yMI05LC8hAg
-         boosnDgdLwQ+WnUcZ+u1C6XC5eTACgiCPkMxaZjZ9/JxgLrOhHO3qWr2idD5orWTG9LK
-         q3V7rpAG7V6LTatvJccJABhzqwXVeLClvMEsTH4wQfcdbPTmTdqUd++y5C8wkiNRlXDi
-         1R6APrCNtdOZHMxAP9vmHNa2BvCaqUNtaPvZ2r/hMO05lM3JuZ2M3csWTwhfXfQTZzhd
-         7vmdfq9bFWx1c1yeONTblhl057KBxfMRJE6ZkN4fN/fgOqZs6OcW2ESvBVHXPLDeRvg7
-         uZag==
-X-Gm-Message-State: AOAM5322ddPre/B6vP39Uifkk2ZRjK5c7yBkMhHZ9BNmAYdpLiW/yx7p
-        YB5HfjAesAqBNyRFjIrAqDFVeOabAILEXPxbELM=
-X-Google-Smtp-Source: ABdhPJy8a/Sf7kkGFjriNN9jRciI6nS8EFYeeWEqeDrEnwt/B2AGG84WkhjzRxtsyQMOAFl9Eo5axFqTvTZvPLyF/SA=
-X-Received: by 2002:a25:ba44:: with SMTP id z4mr4896024ybj.476.1627315451386;
- Mon, 26 Jul 2021 09:04:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/UPTsSiPssy2lUwQ2bCypVro7JXhjzsIo3rMa398JW0=;
+        b=rSGm8/sn0InO8elBj+QFuzY2ZhbjJWbn9hFBf+ELTEJFDmYuPWAHm/xSZgG2dLcPzk
+         pqpjyxiWEklxVD4WKOB1M3j0d+xvWS6HcKKBrpUe61c3yCj6IIlQH+7w6O0oar46bz0E
+         /t/SIAL2R6qQBk7lj2ZLrElR7TlIQAXDWyCO/3Ek375JqldJg8WI+lpH7zncKrWDjmIg
+         jbHVWIspdZ+Cuf5UE9sGQHV5OAUlZQ4bPAn9Fju1QF/SdVRF4PYFQkENS6qFy+IK4aKT
+         +4OV4Wnsv4VaUT5/uWxAihieKBBXcK6avJbgPE6ohjZaUjqR69f3NZi5SWSsBbbjseAb
+         ogdg==
+X-Gm-Message-State: AOAM532xJN5X8u3CS5i0RqzctKvKOJT7gvX/po3+GpV8pO4A7ZZVNNge
+        EXygBXuiYLzHE5wxxZeQKnReslar4Q==
+X-Google-Smtp-Source: ABdhPJyym75PURmZfN5Nxhsua4zaOr9IGbKcUMcawU/jhiLfJ7DA3ZH6Nav8c0QrQsRNSKYDZwqwmg==
+X-Received: by 2002:a6b:6f11:: with SMTP id k17mr16247995ioc.114.1627338013818;
+        Mon, 26 Jul 2021 15:20:13 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id v18sm582510iln.49.2021.07.26.15.20.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jul 2021 15:20:13 -0700 (PDT)
+Received: (nullmailer pid 974953 invoked by uid 1000);
+        Mon, 26 Jul 2021 22:20:10 -0000
+Date:   Mon, 26 Jul 2021 16:20:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     devicetree@vger.kernel.org, heiko@sntech.de,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        bgolaszewski@baylibre.com, Liang Chen <cl@rock-chips.com>,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v7 4/9] dt-bindings: gpio: change items restriction of
+ clock for rockchip,gpio-bank
+Message-ID: <20210726222010.GA974922@robh.at.kernel.org>
+References: <210726013345.1634442-1-jay.xu@rock-chips.com>
+ <20210726013457.1634557-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
-References: <20210721191558.22484-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20210721191558.22484-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWD+p7w2_KSsM-sYoZfK-7z4BM7yXAOf+5amxkmq4xvPg@mail.gmail.com> <CAHp75VeV0BsgdStTAiH6uwb4FKG4XQg7NqODw7523+s=SS6Fag@mail.gmail.com>
-In-Reply-To: <CAHp75VeV0BsgdStTAiH6uwb4FKG4XQg7NqODw7523+s=SS6Fag@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 26 Jul 2021 17:03:45 +0100
-Message-ID: <CA+V-a8t82VBJLTHx0KoShi=+ovoORg1e9wgg16UDjL1NpNtrWg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] pinctrl: renesas: Add RZ/G2L pin and gpio
- controller driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210726013457.1634557-1-jay.xu@rock-chips.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Mon, 26 Jul 2021 09:34:57 +0800, Jianqun Xu wrote:
+> From: Liang Chen <cl@rock-chips.com>
+> 
+> The clock property need 2 items on some rockchip chips.
+> 
+> Signed-off-by: Liang Chen <cl@rock-chips.com>
+> ---
+> v7:
+>  - none
+> v6:
+>  - add to this serials
+> 
+>  .../devicetree/bindings/gpio/rockchip,gpio-bank.yaml         | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
 
-Thank you for the review.
-
-On Mon, Jul 26, 2021 at 2:35 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Jul 26, 2021 at 4:25 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, Jul 21, 2021 at 9:16 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> ...
->
-> > > +#define RZG2L_GPIO_PORT_GET_PINCNT(x)  (((x) >> 28) & 0x7)
-> > > +#define RZG2L_GPIO_PORT_GET_INDEX(x)   ((((x) & GENMASK(27, 20)) >> 20) & 0x7f)
->
-> It's funny one of them uses style "a" (no GENMASK() use), another
-> style "b" (GENMASK() is in use). I suggest being consistent: either
-> drop GENMASK() everywhere, or use them in all suitable places.
->
-Will use GENMASK() everywhere to be consistent.
-
-> > > +#define RZG2L_SINGLE_PIN_GET_PORT(x)   (((x) >> 24) & 0x7f)
-> > > +#define RZG2L_SINGLE_PIN_GET_BIT(x)    ((((x) & GENMASK(23, 20)) >> 20) & 0x7)
->
-> Ditto.
->
-As mentioned above will use GENMASK()
-
-Cheers,
-Prabhakar
+Acked-by: Rob Herring <robh@kernel.org>
