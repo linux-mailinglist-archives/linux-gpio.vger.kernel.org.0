@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B805D3D53C1
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jul 2021 09:18:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83FD53D53C6
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jul 2021 09:18:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232169AbhGZGgh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jul 2021 02:36:37 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:55862 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231774AbhGZGgg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jul 2021 02:36:36 -0400
-X-UUID: acb8997731e54c20a9623734505e804f-20210726
-X-UUID: acb8997731e54c20a9623734505e804f-20210726
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
+        id S232287AbhGZGgl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Jul 2021 02:36:41 -0400
+Received: from mailgw01.mediatek.com ([60.244.123.138]:45968 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S231785AbhGZGgi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jul 2021 02:36:38 -0400
+X-UUID: 5605339293344bd281eebf37d62955e5-20210726
+X-UUID: 5605339293344bd281eebf37d62955e5-20210726
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 1892193250; Mon, 26 Jul 2021 15:16:54 +0800
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1555355200; Mon, 26 Jul 2021 15:17:01 +0800
 Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 26 Jul 2021 15:16:52 +0800
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 26 Jul 2021 15:17:00 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas10.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 26 Jul 2021 15:16:52 +0800
+ Transport; Mon, 26 Jul 2021 15:17:00 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -46,10 +46,12 @@ To:     Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>,
 CC:     John Crispin <john@phrozen.org>,
         Ryder Lee <Ryder.Lee@mediatek.com>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH 00/12] Add basic SoC support for mediatek mt7986
-Date:   Mon, 26 Jul 2021 15:14:27 +0800
-Message-ID: <20210726071439.14248-1-sam.shih@mediatek.com>
+Subject: [PATCH 01/12] dt-bindings: clock: mediatek: document clk bindings for mediatek mt7986 SoC
+Date:   Mon, 26 Jul 2021 15:14:28 +0800
+Message-ID: <20210726071439.14248-2-sam.shih@mediatek.com>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20210726071439.14248-1-sam.shih@mediatek.com>
+References: <20210726071439.14248-1-sam.shih@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -57,59 +59,80 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds basic SoC support for Mediatek's new 4-core SoC,
-MT7986, which is mainly for wifi-router application.
+This patch adds the binding documentation for topckgen, apmixedsys,
+infracfg, infracfg_ao, and ethernet subsystem clocks.
 
-Sam Shih (12):
-  dt-bindings: clock: mediatek: document clk bindings for mediatek
-    mt7986 SoC
-  clk: mediatek: add mt7986 clock IDs
-  clk: mediatek: add mt7986 clock support
-  pinctrl: mediatek: moore: use pin number in mtk_pin_desc instead of
-    array index
-  dt-bindings: pinctrl: update bindings for MT7986 SoC
-  pinctrl: mediatek: add support for MT7986 SoC
-  dt-bindings: arm64: dts: mediatek: Add mt7986 series
-  dt-bindings: rng: mediatek: add mt7986 to mtk rng binding
-  dt-bindings: serial: Add compatible for Mediatek MT7986
-  dt-bindings: watchdog: Add compatible for Mediatek MT7986
-  arm64: dts: mediatek: add mt7986a support
-  arm64: dts: mediatek: add mt7986b support
+Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+---
+ .../devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt    | 1 +
+ .../devicetree/bindings/arm/mediatek/mediatek,ethsys.txt        | 1 +
+ .../devicetree/bindings/arm/mediatek/mediatek,infracfg.txt      | 2 ++
+ .../devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt      | 2 ++
+ .../devicetree/bindings/arm/mediatek/mediatek,topckgen.txt      | 1 +
+ 5 files changed, 7 insertions(+)
 
- .../devicetree/bindings/arm/mediatek.yaml     |    8 +
- .../arm/mediatek/mediatek,apmixedsys.txt      |    1 +
- .../bindings/arm/mediatek/mediatek,ethsys.txt |    1 +
- .../arm/mediatek/mediatek,infracfg.txt        |    2 +
- .../arm/mediatek/mediatek,sgmiisys.txt        |    2 +
- .../arm/mediatek/mediatek,topckgen.txt        |    1 +
- .../bindings/pinctrl/pinctrl-mt7622.txt       |  284 +++
- .../devicetree/bindings/rng/mtk-rng.yaml      |    1 +
- .../devicetree/bindings/serial/mtk-uart.txt   |    1 +
- .../devicetree/bindings/watchdog/mtk-wdt.txt  |    1 +
- arch/arm64/boot/dts/mediatek/Makefile         |    2 +
- arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts  |   49 +
- arch/arm64/boot/dts/mediatek/mt7986a.dtsi     |  235 +++
- arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts  |   21 +
- arch/arm64/boot/dts/mediatek/mt7986b.dtsi     |  235 +++
- drivers/clk/mediatek/Kconfig                  |   17 +
- drivers/clk/mediatek/Makefile                 |    2 +
- drivers/clk/mediatek/clk-mt7986-eth.c         |  132 ++
- drivers/clk/mediatek/clk-mt7986.c             |  610 ++++++
- drivers/pinctrl/mediatek/Kconfig              |    7 +
- drivers/pinctrl/mediatek/Makefile             |    1 +
- drivers/pinctrl/mediatek/pinctrl-moore.c      |   61 +
- drivers/pinctrl/mediatek/pinctrl-mt7986.c     | 1640 +++++++++++++++++
- include/dt-bindings/clock/mt7986-clk.h        |  244 +++
- 24 files changed, 3558 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a.dtsi
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986b.dtsi
- create mode 100644 drivers/clk/mediatek/clk-mt7986-eth.c
- create mode 100644 drivers/clk/mediatek/clk-mt7986.c
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7986.c
- create mode 100644 include/dt-bindings/clock/mt7986-clk.h
-
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+index ea827e8763de..3fa755866528 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+@@ -14,6 +14,7 @@ Required Properties:
+ 	- "mediatek,mt7622-apmixedsys"
+ 	- "mediatek,mt7623-apmixedsys", "mediatek,mt2701-apmixedsys"
+ 	- "mediatek,mt7629-apmixedsys"
++	- "mediatek,mt7986-apmixedsys"
+ 	- "mediatek,mt8135-apmixedsys"
+ 	- "mediatek,mt8167-apmixedsys", "syscon"
+ 	- "mediatek,mt8173-apmixedsys"
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+index 6b7e8067e7aa..0502db73686b 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+@@ -10,6 +10,7 @@ Required Properties:
+ 	- "mediatek,mt7622-ethsys", "syscon"
+ 	- "mediatek,mt7623-ethsys", "mediatek,mt2701-ethsys", "syscon"
+ 	- "mediatek,mt7629-ethsys", "syscon"
++	- "mediatek,mt7986-ethsys", "syscon"
+ - #clock-cells: Must be 1
+ - #reset-cells: Must be 1
+ 
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+index eb3523c7a7be..5f68c30162bf 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+@@ -15,6 +15,8 @@ Required Properties:
+ 	- "mediatek,mt7622-infracfg", "syscon"
+ 	- "mediatek,mt7623-infracfg", "mediatek,mt2701-infracfg", "syscon"
+ 	- "mediatek,mt7629-infracfg", "syscon"
++	- "mediatek,mt7986-infracfg", "syscon"
++	- "mediatek,mt7986-infracfg_ao", "syscon"
+ 	- "mediatek,mt8135-infracfg", "syscon"
+ 	- "mediatek,mt8167-infracfg", "syscon"
+ 	- "mediatek,mt8173-infracfg", "syscon"
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt
+index 30cb645c0e54..0e1184392941 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt
+@@ -8,6 +8,8 @@ Required Properties:
+ - compatible: Should be:
+ 	- "mediatek,mt7622-sgmiisys", "syscon"
+ 	- "mediatek,mt7629-sgmiisys", "syscon"
++	- "mediatek,mt7986-sgmiisys", "mediatek,mt7986-sgmiisys_0", "syscon"
++	- "mediatek,mt7986-sgmiisys", "mediatek,mt7986-sgmiisys_1", "syscon"
+ - #clock-cells: Must be 1
+ 
+ The SGMIISYS controller uses the common clk binding from
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+index 5ce7578cf274..b82422bb717f 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+@@ -14,6 +14,7 @@ Required Properties:
+ 	- "mediatek,mt7622-topckgen"
+ 	- "mediatek,mt7623-topckgen", "mediatek,mt2701-topckgen"
+ 	- "mediatek,mt7629-topckgen"
++	- "mediatek,mt7986-topckgen", "syscon"
+ 	- "mediatek,mt8135-topckgen"
+ 	- "mediatek,mt8167-topckgen", "syscon"
+ 	- "mediatek,mt8173-topckgen"
 -- 
 2.29.2
 
