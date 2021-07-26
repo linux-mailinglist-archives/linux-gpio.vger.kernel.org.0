@@ -2,151 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13EEA3D59D7
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jul 2021 14:54:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90D973D5A48
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jul 2021 15:25:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234174AbhGZMNr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jul 2021 08:13:47 -0400
-Received: from mga03.intel.com ([134.134.136.65]:11476 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234067AbhGZMNr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Jul 2021 08:13:47 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10056"; a="212266438"
-X-IronPort-AV: E=Sophos;i="5.84,270,1620716400"; 
-   d="scan'208";a="212266438"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 05:54:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,270,1620716400"; 
-   d="scan'208";a="455760202"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 26 Jul 2021 05:54:13 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A02D2173; Mon, 26 Jul 2021 15:54:41 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v1 4/4] gpio: dwapb: Get rid of legacy platform data
-Date:   Mon, 26 Jul 2021 15:54:36 +0300
-Message-Id: <20210726125436.58685-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
-References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
+        id S233563AbhGZMov (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Jul 2021 08:44:51 -0400
+Received: from mail-vk1-f180.google.com ([209.85.221.180]:35625 "EHLO
+        mail-vk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232572AbhGZMou (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jul 2021 08:44:50 -0400
+Received: by mail-vk1-f180.google.com with SMTP id i26so2013743vkk.2;
+        Mon, 26 Jul 2021 06:25:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iiK1bEfZv0REyFeZQ6eGnheFa6agVqoobWMIj2sCXMM=;
+        b=BUAaXbWyaea+TAdXGje71lH1LmPH5lRnbXWr2uJubVt1CLc+2pbroEzCylgLNEkxHh
+         ZcJzPqfFBKSY1EXnNvcgkRcf5jDPC15tAq9ibx+QDPQx8UrV3PAFM2r9afDVAaNJuNac
+         AYiVCRuf+pE6evMh2S4Rh1scrz830u0IylAYslXt4sGIc8b4Aps+KltoCSjahsK2xxdi
+         Vl1L6o9xyxpCaCFzywAaw9uTa5TnClgKO8g6yaooc19ZtXZzeRiCRMwTp/yRlkQLVRy0
+         wMVOVLHH3ZeCQO7uvUmKB7Vx3u73x6RoZvty09mw6/88l0Hco01Ax3zWb4DfSd16qizq
+         o6hQ==
+X-Gm-Message-State: AOAM531Eb7x2OB78IMBwwQ+GoMSORGUDkJ2rYSnYMDl3MndsUsewkqQA
+        Ebru/gC0upMiVWkXVzPYaKbJHMeEhySWLyFCuHM=
+X-Google-Smtp-Source: ABdhPJwOmNw+NUdyRa6fs6Yd24Srzz7LWuqCJoocbSYcr4aZR7cGIgHsBgXk63yc6Xppks8q98hgWQwqMuuVn+gfchs=
+X-Received: by 2002:ac5:cd9b:: with SMTP id i27mr10079261vka.1.1627305918978;
+ Mon, 26 Jul 2021 06:25:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210721191558.22484-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210721191558.22484-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20210721191558.22484-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 26 Jul 2021 15:25:07 +0200
+Message-ID: <CAMuHMdWD+p7w2_KSsM-sYoZfK-7z4BM7yXAOf+5amxkmq4xvPg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] pinctrl: renesas: Add RZ/G2L pin and gpio
+ controller driver
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Platform data is a legacy interface to supply device properties
-to the driver. In this case we don't have anymore in-kernel users
-for it. Just remove it for good.
+Hi Prabhakar,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-dwapb.c                | 28 +++++++++++++++---------
- include/linux/platform_data/gpio-dwapb.h | 24 --------------------
- 2 files changed, 18 insertions(+), 34 deletions(-)
- delete mode 100644 include/linux/platform_data/gpio-dwapb.h
+On Wed, Jul 21, 2021 at 9:16 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for pin and gpio controller driver for RZ/G2L SoC.
+>
+> Based on a patch in the BSP by Hien Huynh <hien.huynh.px@renesas.com>.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index e3011d4e17b0..b9dd0ba812dc 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -16,7 +16,6 @@
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/platform_data/gpio-dwapb.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
- #include <linux/reset.h>
-@@ -48,6 +47,7 @@
- 
- #define DWAPB_DRIVER_NAME	"gpio-dwapb"
- #define DWAPB_MAX_PORTS		4
-+#define DWAPB_MAX_GPIOS		32
- 
- #define GPIO_EXT_PORT_STRIDE	0x04 /* register stride 32 bits */
- #define GPIO_SWPORT_DR_STRIDE	0x0c /* register stride 3*32 bits */
-@@ -63,6 +63,19 @@
- 
- #define DWAPB_NR_CLOCKS		2
- 
-+struct dwapb_port_property {
-+	struct fwnode_handle *fwnode;
-+	unsigned int idx;
-+	unsigned int ngpio;
-+	unsigned int gpio_base;
-+	int irq[DWAPB_MAX_GPIOS];
-+};
-+
-+struct dwapb_platform_data {
-+	struct dwapb_port_property *properties;
-+	unsigned int nports;
-+};
-+
- struct dwapb_gpio;
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -670,17 +683,12 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
- 	unsigned int i;
- 	struct dwapb_gpio *gpio;
- 	int err;
-+	struct dwapb_platform_data *pdata;
- 	struct device *dev = &pdev->dev;
--	struct dwapb_platform_data *pdata = dev_get_platdata(dev);
--
--	if (!pdata) {
--		pdata = dwapb_gpio_get_pdata(dev);
--		if (IS_ERR(pdata))
--			return PTR_ERR(pdata);
--	}
- 
--	if (!pdata->nports)
--		return -ENODEV;
-+	pdata = dwapb_gpio_get_pdata(dev);
-+	if (IS_ERR(pdata))
-+		return PTR_ERR(pdata);
- 
- 	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
- 	if (!gpio)
-diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
-deleted file mode 100644
-index 535e5ed549d9..000000000000
---- a/include/linux/platform_data/gpio-dwapb.h
-+++ /dev/null
-@@ -1,24 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copyright(c) 2014 Intel Corporation.
-- */
--
--#ifndef GPIO_DW_APB_H
--#define GPIO_DW_APB_H
--
--#define DWAPB_MAX_GPIOS		32
--
--struct dwapb_port_property {
--	struct fwnode_handle *fwnode;
--	unsigned int	idx;
--	unsigned int	ngpio;
--	unsigned int	gpio_base;
--	int		irq[DWAPB_MAX_GPIOS];
--};
--
--struct dwapb_platform_data {
--	struct dwapb_port_property *properties;
--	unsigned int nports;
--};
--
--#endif
+Thanks for the update!
+
+> --- /dev/null
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+
+> +#define RZG2L_MPXED_PIN_FUNCS          (PIN_CFG_IOLH | \
+> +                                        PIN_CFG_SR | \
+> +                                        PIN_CFG_PUPD | \
+> +                                        PIN_CFG_FILONOFF | \
+> +                                        PIN_CFG_FILNUM | \
+> +                                        PIN_CFG_FILCLKSEL)
+> +
+> +#define RZG2L_MPXED_ETH_PIN_FUNCS(x)   ((x) | \
+> +                                        PIN_CFG_FILONOFF | \
+> +                                        PIN_CFG_FILNUM | \
+> +                                        PIN_CFG_FILCLKSEL)
+
+I thought you were going for MULTI? ;-)
+
+> +
+> +/*
+> + * n indicates number of pins in the port, a is the register index
+> + * and f is pin configuration capabilities supported.
+> + */
+> +#define RZG2L_GPIO_PORT_PACK(n, a, f)  (((n) << 28) | ((a) << 20) | (f))
+> +#define RZG2L_GPIO_PORT_GET_PINCNT(x)  (((x) >> 28) & 0x7)
+> +#define RZG2L_GPIO_PORT_GET_INDEX(x)   ((((x) & GENMASK(27, 20)) >> 20) & 0x7f)
+
+Actually the "& 0x7f" can be removed, too, if you adjust the mask:
+
+    (((x) & GENMASK(26, 20)) >> 20)
+
+> +#define RZG2L_GPIO_PORT_GET_CFGS(x)    ((x) & GENMASK(19, 0))
+> +
+> +/*
+> + * BIT(31) indicates dedicated pin, p is the register index while
+> + * referencing to SR/IEN/IOLH/FILxx registers, b is the register bits
+> + * (b * 8) and f is the pin configuration capabilities supported.
+> + */
+> +#define RZG2L_SINGLE_PIN               BIT(31)
+> +#define RZG2L_SINGLE_PIN_PACK(p, b, f) (RZG2L_SINGLE_PIN | \
+> +                                        ((p) << 24) | ((b) << 20) | (f))
+> +#define RZG2L_SINGLE_PIN_GET_PORT(x)   (((x) >> 24) & 0x7f)
+> +#define RZG2L_SINGLE_PIN_GET_BIT(x)    ((((x) & GENMASK(23, 20)) >> 20) & 0x7)
+
+Likewise:
+
+    (((x) & GENMASK(22, 20)) >> 20)
+
+> +#define RZG2L_SINGLE_PIN_GET_CFGS(x)   ((x) & GENMASK(19, 0))
+
+> +       struct rzg2l_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+> +       struct function_desc *func;
+> +       unsigned int i, *psel_val;
+> +       struct group_desc *group;
+> +       unsigned long data;
+> +       int *pins;
+> +
+> +       func = pinmux_generic_get_function(pctldev, func_selector);
+> +       if (!func)
+> +               return -EINVAL;
+> +       group = pinctrl_generic_get_group(pctldev, group_selector);
+> +       if (!group)
+> +               return -EINVAL;
+> +
+> +       psel_val = func->data;
+> +       pins = group->pins;
+> +       data = (unsigned long)group->data;
+
+Lkp reports data is unused.
+Which matches with passing NULL as the last parameter of
+pinctrl_generic_add_group().
+
+> +
+> +       for (i = 0; i < group->num_pins; i++) {
+> +               dev_dbg(pctrl->dev, "port:%u pin: %u PSEL:%u\n",
+> +                       RZG2L_PIN_ID_TO_PORT(pins[i]), RZG2L_PIN_ID_TO_PIN(pins[i]),
+> +                       psel_val[i]);
+> +               rzg2l_pinctrl_set_pfc_mode(pctrl, RZG2L_PIN_ID_TO_PORT(pins[i]),
+> +                                          RZG2L_PIN_ID_TO_PIN(pins[i]), psel_val[i]);
+> +       }
+> +
+> +       return 0;
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.30.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
