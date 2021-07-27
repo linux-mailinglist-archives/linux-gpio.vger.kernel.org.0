@@ -2,153 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABB4E3D78D1
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 16:50:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39C143D794B
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 17:05:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236732AbhG0OtJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Jul 2021 10:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52744 "EHLO
+        id S232583AbhG0PFi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Jul 2021 11:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232598AbhG0Osl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 10:48:41 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948D6C0613D3;
-        Tue, 27 Jul 2021 07:48:23 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id l4-20020a05600c1d04b02902506f89ad2dso2088381wms.1;
-        Tue, 27 Jul 2021 07:48:23 -0700 (PDT)
+        with ESMTP id S231552AbhG0PFi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 11:05:38 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63885C061757;
+        Tue, 27 Jul 2021 08:05:37 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id m1so18203641pjv.2;
+        Tue, 27 Jul 2021 08:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+9dE9J28XSMZPaJTo0q0ZGsHy0ZcpNmQIYSkw4PBYIc=;
-        b=c7T4HchxSJ0tyuUCeITb/nJEdDiT9OU+JB1BBZKQiGn6+GTm3Oc0M6y9YhcZmIRZKN
-         5Bd0CIEbhmdm3R9LnH0zIGn0XAGpNO49yRskSnQi2KoUcU5mbC2f3MO5eOI9Y5M7HvqC
-         HNopATGnYvtXD2Zy52EBFt9puLVW1OFiiUXDgcqD19xZT6xy2clGQF8x5q2qUiQY1EoK
-         zCVN0Lw9C8S47Ynl8wrvDzWgngADO/bYClB4wxfVICB1JttPA1GuaiqWIIFdR52fzdvd
-         LjQrrReAd5NDcdE7WCROlxMFd84hEyEXsRP+YSLjmyvNJV4lCczaYML4w0ZChj+OQWHt
-         oosQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rkWTp0+7c81MOA3cEyNsoB0z/jGDOju/zoUBM++4ewo=;
+        b=B1WylBIqQyGM0yCazlGYVj3ZY2My7XNU4aLSP9KvLLaTphFpj6aZtg2y1ADZi8gov1
+         CTcyD7F5Dgg03AnsuT39QRYIbMVgwjQQg3ChX+u0Reid5z/ki4mfCplce6SqWDCJYBhy
+         kvwPJb99idzmIRksk2LHtKSwcrRVfc+iUsRa24KGyu2cF2Y6rauByM1LWGExtIT8a0Nt
+         9qf4KN/c+MiAtfhXqFQM6K8qnq1ZzISX0GtZ/3InS6SALyoNztysDN7QMUWJSNPZaAIw
+         PrE8hPY3lrcTnzI/GHmvx4l7M45MtsfTe6L2QoJwUwiihyCo1/SNZcfLSuf0IbDfxTqB
+         8u0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+9dE9J28XSMZPaJTo0q0ZGsHy0ZcpNmQIYSkw4PBYIc=;
-        b=U9Y5Xwau+2qPRPgdb2AStqn/w7sb6v29GCoks0xj+EmS+2tRhvxB/K3Ovyy/PZa2+K
-         l+wT9M3+BrvXUlCptTYLx1El3eP6phRPx1F6qi++5yO6aLNUeOHzBd6jsiuXS960Ll3n
-         uPj5U4TOG+xYiof5fwFHmVYexGIwA/Q5mingD0oskvehNnH7TipsvEXuRPIGMNW3SMj1
-         fO7uoxNhCohRlZGqoXFHXCa8XI2WT0O9K+rtMLeQ9b+phs6BwEwL5609XXgw9IcYUZy+
-         O6RFh6WL7SjJF1kFCRuUShCnXoaS2QkGkhHn/mO2rK/WKao6lPBjrVSfvH96GBNrPafq
-         7H0A==
-X-Gm-Message-State: AOAM532CbW3zX0eb9bO0j131XSt8+b8rVt/YzVeL+23/4sXlfynEaMzD
-        /k7k/Jr44NHy2a4m7OB+21Gcou70evqSgWP4
-X-Google-Smtp-Source: ABdhPJyhi6eo/w5B4AA428amwYwXb+WdTaV8gjhq8UcG5Pdn2VkbqcB9YWy9gtQ1JPiuYfNz/qpelg==
-X-Received: by 2002:a1c:1f51:: with SMTP id f78mr7018084wmf.37.1627397301989;
-        Tue, 27 Jul 2021 07:48:21 -0700 (PDT)
-Received: from localhost.localdomain (189.red-83-51-242.dynamicip.rima-tde.net. [83.51.242.189])
-        by smtp.gmail.com with ESMTPSA id o14sm3002555wmq.31.2021.07.27.07.48.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Jul 2021 07:48:21 -0700 (PDT)
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, gregory.0xf0@gmail.com,
-        bgolaszewski@baylibre.com, f.fainelli@gmail.com,
-        matthias.bgg@gmail.com, opensource@vdorst.com,
-        andy.shevchenko@gmail.com, git@johnthomson.fastmail.com.au,
-        neil@brown.name, hofrat@osadl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] gpio: brcmstb: remove custom 'brcmstb_gpio_set_names'
-Date:   Tue, 27 Jul 2021 16:48:16 +0200
-Message-Id: <20210727144816.8697-4-sergio.paracuellos@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210727144816.8697-1-sergio.paracuellos@gmail.com>
-References: <20210727144816.8697-1-sergio.paracuellos@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rkWTp0+7c81MOA3cEyNsoB0z/jGDOju/zoUBM++4ewo=;
+        b=Mhafo0XYDbk6E97HInzvcWUJkfC87NKDQ9mdllbuLO1E5Xa4Qn5Knpj4AE17GNJph7
+         Fx+HnCgVvF3e1kg/2DeQMWiDCGG6BmAYL1pQbAHWvOJDORkm0iPwyobAeq/wFYEAM7mT
+         slHCgBrYUizw0j9AjSKtAydmSd9XtZCNypDDFoVm/1xAvQ3fVjpjtT1XZjN4Yd/y/K1j
+         il6kpJPPJDvezVzO514jL9orseIcXnpzo2Dw/hy0KZd449rdBHklFcNK8VEFJlm2tDUi
+         uaEdDv5AsUl9fI7iUU0nq0Zm3uFDWU2wvEJ378FXFK+QvXD99GdIc7JfePSeqytSuK+T
+         g9KA==
+X-Gm-Message-State: AOAM531NQ7ipHdDwE8SvvxRp98oo+Rd4efew8iZCKInMFVfFasXpw1Bn
+        SdAbYmQ2D7p9sd8j2Qoy/HFBd826nhBiUy/rmNw=
+X-Google-Smtp-Source: ABdhPJzV8WVK79CHXE8mMIGYsmCqL8fOvP+g311Y7pLwfAcecyNnzEGpOzZ+D2IikHH5xAwRYrMsPRz5HsSGf5UnPkk=
+X-Received: by 2002:a17:90b:3647:: with SMTP id nh7mr22839838pjb.228.1627398336914;
+ Tue, 27 Jul 2021 08:05:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210727144816.8697-1-sergio.paracuellos@gmail.com> <20210727144816.8697-2-sergio.paracuellos@gmail.com>
+In-Reply-To: <20210727144816.8697-2-sergio.paracuellos@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 27 Jul 2021 18:04:57 +0300
+Message-ID: <CAHp75VdxrBbnkBDfhb3q7KM3CkAzyAq86gqjLFD5aaKNzVJCHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] gpiolib: convert 'devprop_gpiochip_set_names' to
+ support multiple gpiochip banks per device
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        gregory.0xf0@gmail.com,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
+        John Thomson <git@johnthomson.fastmail.com.au>,
+        NeilBrown <neil@brown.name>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Gpiolib core code has been updated to support setting
-friendly names through properly 'gpio-line-names'.
-Instead of redefine behaviour here to skip the core
-to be executed, just properly assign the desired offset
-per bank to get in the core the expected behaviour.
+On Tue, Jul 27, 2021 at 5:48 PM Sergio Paracuellos
+<sergio.paracuellos@gmail.com> wrote:
+>
+> The default gpiolib-of implementation does not work with the multiple
+> gpiochip banks per device structure used for example by the gpio-mt7621
+> and gpio-brcmstb drivers. To fix these kind of situations driver code
+> is forced to fill the names to avoid the gpiolib code to set names
+> repeated along the banks. Instead of continue with that antipattern
+> fix the gpiolib core function to get expected behaviour for every
+> single situation adding a field 'offset' in the gpiochip structure.
+> Doing in this way, we can assume this offset will be zero for normal
+> driver code where only one gpiochip bank per device is used but
+> can be set explicitly in those drivers that really need more than
+> one gpiochip.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
----
- drivers/gpio/gpio-brcmstb.c | 45 +------------------------------------
- 1 file changed, 1 insertion(+), 44 deletions(-)
+...
 
-diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index fcfc1a1f1a5c..a7275159052e 100644
---- a/drivers/gpio/gpio-brcmstb.c
-+++ b/drivers/gpio/gpio-brcmstb.c
-@@ -603,49 +603,6 @@ static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
- 	.resume_noirq = brcmstb_gpio_resume,
- };
- 
--static void brcmstb_gpio_set_names(struct device *dev,
--				   struct brcmstb_gpio_bank *bank)
--{
--	struct device_node *np = dev->of_node;
--	const char **names;
--	int nstrings, base;
--	unsigned int i;
--
--	base = bank->id * MAX_GPIO_PER_BANK;
--
--	nstrings = of_property_count_strings(np, "gpio-line-names");
--	if (nstrings <= base)
--		/* Line names not present */
--		return;
--
--	names = devm_kcalloc(dev, MAX_GPIO_PER_BANK, sizeof(*names),
--			     GFP_KERNEL);
--	if (!names)
--		return;
--
--	/*
--	 * Make sure to not index beyond the end of the number of descriptors
--	 * of the GPIO device.
--	 */
--	for (i = 0; i < bank->width; i++) {
--		const char *name;
--		int ret;
--
--		ret = of_property_read_string_index(np, "gpio-line-names",
--						    base + i, &name);
--		if (ret) {
--			if (ret != -ENODATA)
--				dev_err(dev, "unable to name line %d: %d\n",
--					base + i, ret);
--			break;
--		}
--		if (*name)
--			names[i] = name;
--	}
--
--	bank->gc.names = names;
--}
--
- static int brcmstb_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -759,6 +716,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 		gc->of_xlate = brcmstb_gpio_of_xlate;
- 		/* not all ngpio lines are valid, will use bank width later */
- 		gc->ngpio = MAX_GPIO_PER_BANK;
-+		gc->offset = bank->id * MAX_GPIO_PER_BANK;
- 		if (priv->parent_irq > 0)
- 			gc->to_irq = brcmstb_gpio_to_irq;
- 
-@@ -769,7 +727,6 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 		need_wakeup_event |= !!__brcmstb_gpio_get_active_irqs(bank);
- 		gc->write_reg(reg_base + GIO_MASK(bank->id), 0);
- 
--		brcmstb_gpio_set_names(dev, bank);
- 		err = gpiochip_add_data(gc, bank);
- 		if (err) {
- 			dev_err(dev, "Could not add gpiochip for bank %d\n",
--- 
-2.25.1
+> +               dev_warn(&gdev->dev, "gpio-line-names too short (length %d) "
+> +                        "cannot map names for the gpiochip at offset %u\n",
 
+Reflow this that string literal will be on one line (it's fine to be
+over even 100).
+
+> +                        count, chip->offset);
+
+--
+With Best Regards,
+Andy Shevchenko
