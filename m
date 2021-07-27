@@ -2,272 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4CAE3D6E0F
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 07:29:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A0C23D6E97
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 08:02:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235274AbhG0F27 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Jul 2021 01:28:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37238 "EHLO
+        id S235442AbhG0GCO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Jul 2021 02:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235267AbhG0F24 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 01:28:56 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E63C0613C1
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jul 2021 22:28:56 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id c11so14422185plg.11
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jul 2021 22:28:56 -0700 (PDT)
+        with ESMTP id S233553AbhG0GCN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 02:02:13 -0400
+Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423ACC061757;
+        Mon, 26 Jul 2021 23:02:14 -0700 (PDT)
+Received: by mail-vs1-xe29.google.com with SMTP id o12so6562540vst.3;
+        Mon, 26 Jul 2021 23:02:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sgOiW6w20j4J7SdvVbVJ67kfsguckEETP9qNYgQUNsI=;
-        b=vkW/a6RTxvBKemqwE16fSx+LxXIqOQWifdOrnmSL7mF3kd5t2hHwqJTgPMvKrhLzfo
-         ZL75NjT0x13hZCMFwy2JaubVl5oq6GtRYIYY8OjBcAywk9wLV2iWmIIB5tNoVT94mj+E
-         p6qcV4UzeFqGC9egu10qKIfTbtoKsn3TD+Hbt6K2BZeutudjdd0/uwlN1QhrTtETDxWQ
-         8ofyZ3vVN8sSrZaWn2jWz7EqSg2+xhVtJtzL1PHXiXw5Lpo2A3Doy7+3HQz3lUzELlA6
-         gIzckUtvgMgvKBHS5Gr8Ej9RNmXZfJRvyi7DZCiqYSYvTGtyP9jiWW/F8YrhoDnJ8kc1
-         cEUw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zSDe59vPWEj/SmgK0vEeTUqanfjKXhMLDM1NtWXR18M=;
+        b=gAeURxgU5XGkJikDnBL8Wt24JlOIFb/N6RmcuF7N17mdMxxJN1ZWuCgF7TeHg5Bd7w
+         zCrqAIIlzcEqY3LoGFcC+A401wGhgvTLSEkSgJV0vfx9iYVP2nEqCj/+8VMn67razSZB
+         IJM87syjlsgDsfXI8wtSrzAq6h8BY85eCHLUDl6hSmNDxvqYEzCEF7+KlaS6rScfjEJE
+         a69rPOL39OAVGYV7ufeS5t2snBs7199Jb5ltxCLUaDNTKQendAeMCONTn5YXAXESTix4
+         lWVjd9SbtD8E9JC2hXHet7DwCbHYE2E7/yYq5IcH9gJn04qZnf+QeeIl4XS6ETQTJSNw
+         GWRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sgOiW6w20j4J7SdvVbVJ67kfsguckEETP9qNYgQUNsI=;
-        b=jrRKVtMPN4Z1ZxqqVgMceuSrhoh6WgoSKakWWzKgNEAnm/lCGKIAaHCeMwrM76bGm5
-         l90d6APnhBF0kSNrS63XSX12ucPctgZ6fT1ibSVZwkjMyOw9aa43z2Ns15N1ZQG3EyX7
-         8icnI5bJgHpA/wlQNlFOWyGd8IKPx/L89/mxZS9aU++xGsVZUOD/1nmE/LmaIXn/xXCB
-         lDWAeFT5ft/Uy8hj0o81wEWrDMFl1RrmbUCEoRlE6CvvLM84wV4Czn/SLY8PeyQ2LUf7
-         vODMGH0eH4QvzrOUALtGXZGsAv7LLYyIfE8THes3eoPgAxayizJR/1vV8I160g5YyGIO
-         7xUw==
-X-Gm-Message-State: AOAM5318P3pGXZo7rSKVqvS/LkYwZhHXQpZ9ewk10IPTORAZcjv4hf2V
-        zud/UqeuvzzjgMh6zDP19J5jJA==
-X-Google-Smtp-Source: ABdhPJxkGabf4kyTW+5lVhJwSGUk30SgSmSNzobzKDTHp55bAtOdOiOjvhw61eE5M0zTsmPOoka81g==
-X-Received: by 2002:a17:902:9a02:b029:118:307e:a9dd with SMTP id v2-20020a1709029a02b0290118307ea9ddmr17070535plp.47.1627363736119;
-        Mon, 26 Jul 2021 22:28:56 -0700 (PDT)
-Received: from x1 ([174.127.163.79])
-        by smtp.gmail.com with ESMTPSA id a13sm2053720pfl.92.2021.07.26.22.28.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jul 2021 22:28:54 -0700 (PDT)
-Date:   Mon, 26 Jul 2021 22:28:51 -0700
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Michael Zhu <michael.zhu@starfivetech.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Fu Wei <tekkamanninja@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Huan Feng <huan.feng@starfivetech.com>
-Subject: Re: [RFC PATH 2/2] gpio: starfive-jh7100: Add StarFive JH7100 GPIO
- driver
-Message-ID: <20210727052851.GA3147871@x1>
-References: <20210701002037.912625-1-drew@beagleboard.org>
- <20210701002037.912625-3-drew@beagleboard.org>
- <8c59105d32a9936f8806501ecd20e044@walle.cc>
- <CACRpkdbhKsuXZiLCh_iajJQWDdQQOZ87QF3xDr5Vc66SoVCnxQ@mail.gmail.com>
- <20210726071124.GA9184@x1>
- <dad13b899b69436acc1804b7c3438639@walle.cc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zSDe59vPWEj/SmgK0vEeTUqanfjKXhMLDM1NtWXR18M=;
+        b=OLS4pC62WSIDleCUcJQwGV7jwkTXqN9iFSeb71UtKemPIJMPVvQpNwivybKJxpjHiP
+         nCAKMhIrh4KyDQCnb6eTic4SAZwbKN6AmPaLYJKSi0HMCwfmcLe4CtnuucqaQYiU8tU8
+         xiipOg4W1VlZvmBpc64UDCy9eOWazR9jS0Oz9vdfBAb74lwKSUsdmQwJwz7P9dm5AHcy
+         i1GqVSm8or60bqU/Lm3o2AOrcsI+Vuu2gONRbVw7g8z72F7+8LfDoOmvB9g0giKrUTz3
+         cQ4FSw+VaXCxiG8D1R4oDFxo5k1MewLBnOTp+lEmdKQQIQYIWhSFO16zw5AhTfIAM+RC
+         hGQA==
+X-Gm-Message-State: AOAM533y16iGH6EC/rRsOHWu0Sh+QjtkK+p86DC8iohcPzEjpi/CkJ3Y
+        nyyBnwgghQ/nFXiG+e+Izh6STGdWerC9BRtd4Q7gn4sUZ0Y=
+X-Google-Smtp-Source: ABdhPJxpxQ55+LbyITPZBLOSdQkCpHrFsXyCFzZKtzxxi2CTsd5OkKEiRCaCG8cgCHKaN3uw2Et/vPPp+/W7ratb+ms=
+X-Received: by 2002:a67:e94c:: with SMTP id p12mr15058428vso.28.1627365733212;
+ Mon, 26 Jul 2021 23:02:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dad13b899b69436acc1804b7c3438639@walle.cc>
+References: <20210708070429.31871-1-sergio.paracuellos@gmail.com>
+In-Reply-To: <20210708070429.31871-1-sergio.paracuellos@gmail.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Tue, 27 Jul 2021 08:02:01 +0200
+Message-ID: <CAMhs-H9fbHMxxSaqMj=nyACAN6aDB-bYK1nF1dRh8a1krTdaZg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] gpiolib: convert 'devprop_gpiochip_set_names' to
+ support multiple gpiochip per device
+To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        John Thomson <git@johnthomson.fastmail.com.au>,
+        NeilBrown <neil@brown.name>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 26, 2021 at 09:21:31AM +0200, Michael Walle wrote:
-> Hi Drew, Hi Linus,
-> 
-> Am 2021-07-26 09:11, schrieb Drew Fustini:
-> > On Fri, Jul 23, 2021 at 11:04:41PM +0200, Linus Walleij wrote:
-> > > On Thu, Jul 1, 2021 at 8:39 AM Michael Walle <michael@walle.cc> wrote:
-> > > > Am 2021-07-01 02:20, schrieb Drew Fustini:
-> > > > > Add GPIO driver for the StarFive JH7100 SoC [1] used on the
-> > > > > BeagleV Starlight JH7100 board [2].
-> > > > >
-> > > > > [1] https://github.com/starfive-tech/beaglev_doc/
-> > > > > [2] https://github.com/beagleboard/beaglev-starlight
-> > > > >
-> > > > > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> > > > > Signed-off-by: Huan Feng <huan.feng@starfivetech.com>
-> > > > > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> > > >
-> > > > Could this driver use GPIO_REGMAP and REGMAP_IRQ? See
-> > > > drivers/gpio/gpio-sl28cpld.c for an example.
-> > > 
-> > > To me it looks just memory-mapped?
-> > > 
-> > > Good old gpio-mmio.c (select GPIO_GENERIC) should
-> > > suffice I think.
-> 
-> But that doesn't mean gpio-regmap can't be used, no? Or what are
-> the advantages of gpio-mmio?
-> 
-> > > Drew please look at drivers/gpio/gpio-ftgpio010.c for an example
-> > > of GPIO_GENERIC calling bgpio_init() in probe().
-> > 
-> > Thank you for the suggestion. However, I am not sure that will work for
-> > this SoC.
-> > 
-> > The GPIO registers are described in section 12 of JH7100 datasheet [1]
-> > and I don't think they fit the expectation of gpio-mmio.c because there
-> > is a seperate register for each GPIO line for output data value and
-> > output enable.
-> > 
-> > There are 64 output data config registers which are 4 bytes wide. There
-> > are 64 output enable config registers which are 4 bytes wide too. Output
-> > data and output enable registers for a given GPIO pad are contiguous.
-> > GPIO0_DOUT_CFG is 0x50 and GPIO0_DOEN_CFG is 0x54 while GPIO1_DOUT_CFG
-> > is 0x58 and GPIO1_DOEN_CFG is 0x5C. The stride between GPIO pads is
-> > effectively 8, which yields the formula: GPIOn_DOUT_CFG is 0x50+8n.
-> > Similarly, GPIO0_DOEN_CFG is 0x54 and thus GPIOn_DOEN_CFG is 0x54+8n.
-> > 
-> > However, GPIO input data does use just one bit for each line. GPIODIN_0
-> > at 0x48 covers GPIO[31:0] and GPIODIN_1 at 0x4c covers GPIO[63:32].
-> 
-> I'd say, that should work with the .reg_mask_xlate of the gpio-regmap.
-> 
-> -michael
+On Thu, Jul 8, 2021 at 9:04 AM Sergio Paracuellos
+<sergio.paracuellos@gmail.com> wrote:
+>
+> There are some unfortunate cases where the DT representation
+> of the device and the Linux internal representation differs.
+> Such drivers for devices are forced to implement a custom function
+> to avoid the core code 'devprop_gpiochip_set_names' to be executed
+> since in any other case every gpiochip inside will got repeated
+> names through its internal gpiochip banks. To avoid this antipattern
+> this changes are introduced trying to adapt core 'devprop_gpiochip_set_names'
+> to get a correct behaviour for every single situation.
+>
+> This series introduces a new 'offset' field in the gpiochip structure
+> that can be used for those unfortunate drivers that must define multiple
+> gpiochips per device.
+>
+> Drivers affected by this situation are also updated. These are
+> 'gpio-mt7621' and 'gpio-brcmstb'.
+>
+> Motivation for this series available at [0].
+>
+> Thanks in advance for your feedback.
+>
+> Best regards,
+>     Sergio Paracuellos
+>
+> [0]: https://lkml.org/lkml/2021/6/26/198
+>
+> Sergio Paracuellos (3):
+>   gpiolib: convert 'devprop_gpiochip_set_names' to support multiple
+>     gpiochip baks per device
+>   gpio: mt7621: support gpio-line-names property
+>   gpio: brcmstb: remove custom 'brcmstb_gpio_set_names'
+>
+>  drivers/gpio/gpio-brcmstb.c | 45 +------------------------------------
+>  drivers/gpio/gpio-mt7621.c  |  1 +
+>  drivers/gpio/gpiolib.c      | 34 +++++++++++++++++++++++-----
+>  include/linux/gpio/driver.h |  4 ++++
+>  4 files changed, 34 insertions(+), 50 deletions(-)
 
-Thanks, yes, I think trying to figure out how .reg_mask_xlate would need
-to work this SoC.  I believe these are the only two implementations.
+Hi!
 
-From drivers/gpio/gpio-regmap.c:
+Linus, Bartosz, any comments on this series?
 
-  static int gpio_regmap_simple_xlate(struct gpio_regmap *gpio,
-				      unsigned int base, unsigned int offset,
-				      unsigned int *reg, unsigned int *mask)
-  {
-	  unsigned int line = offset % gpio->ngpio_per_reg;
-	  unsigned int stride = offset / gpio->ngpio_per_reg;
-
-	  *reg = base + stride * gpio->reg_stride;
-	  *mask = BIT(line);
-
-	  return 0;
-  }
-
-From drivers/pinctrl/bcm/pinctrl-bcm63xx.c:
-
-  static int bcm63xx_reg_mask_xlate(struct gpio_regmap *gpio,
-				    unsigned int base, unsigned int offset,
-				    unsigned int *reg, unsigned int *mask)
-  {
-	  unsigned int line = offset % BCM63XX_BANK_GPIOS;
-	  unsigned int stride = offset / BCM63XX_BANK_GPIOS;
-
-	  *reg = base - stride * BCM63XX_BANK_SIZE;
-	  *mask = BIT(line);
-
-	  return 0;
-  }
-
-Let's say a driver calls gpio_regmap_set(chip, 0, 5) to set line 5 to
-value 1.
-
-I believe this would result in call to:
-
-  gpio->reg_mask_xlate(gpio, gpio->reg_set_base, 5, &reg, &mask)
-
-Then this would be called to set the register:
-
-  regmap_update_bits(gpio->regmap, reg, mask, mask);
-
-From datasheet section 12 [1], there are 64 output data registers which
-are 4 bytes wide. There are 64 output enable registers which are also 4
-bytes wide too. Output data and output enable registers for a GPIO line
-are contiguous. Thus GPIO0_DOUT_CFG is 0x50 and GPIO0_DOEN_CFG is 0x54.
-The forumla is GPIOn_DOUT_CFG is 0x50+8n and GPIOn_DOEN_CFG is 0x54+8n.
-Thus for GPIO line 5:
-
-  GPIO5_DOUT_CFG is 0x50 + 0x28 = 0x78
-  GPIO5_DOEN_CFG is 0x54 + 0x28 = 0x7C
-
-Enable GPIO line 5 as output by writing 0x1 to 0x7C and set output value
-to 1 by writing 1 to 0x7C.
-
-Using gpio_regmap_simple_xlate() as a template, I am thinking through
-xlate for this gpio controller:
-
-
-static int gpio_regmap_starfive_xlate(struct gpio_regmap *gpio,
-				      unsigned int base, unsigned int offset,
-				      unsigned int *reg, unsigned int *mask)
-{
-	// reg_set_base is passed as base
-	// let reg_set_base = 0x50 (GPIO0_DOUT_CFG)
-	// let gpio->reg_stride = 8
-	// let offest = 5 (for gpio line 5)
-
-	*reg = base + offset * gpio->reg_stride;
-	// *reg = base:0x50 + offset:0x5 * reg_stride:0x8
-	// *reg = 0x50 + 0x28
-	// *reg=  0x78
-
-	// Each gpio line has a full register, not just a bit. To output
-	// a digital 1, then GPIO5_DOUT_CFG would be 0x1. To output
-	// digital 0, GPIO5_DOUT_CFG would be 0x0. Thus I think the mask
-	// should be the least significant bit.
-	*mask = BIT(1);
-
-	return 0;
-}
-
-Let's walk through what would happen if gpio_regmap_set() was the
-caller:
-
-static void gpio_regmap_set(struct gpio_chip *chip, unsigned int offset,
-			    int val)
-{
-	// for gpio line, offset = 5
-	// if want to set line 5 high, then val = 1
-	struct gpio_regmap *gpio = gpiochip_get_data(chip);
-
-	// reg_set_base would be set to 0x50 (GPIO0_DOUT_CFG)
-	unsigned int base = gpio_regmap_addr(gpio->reg_set_base);
-	unsigned int reg, mask;
-
-	gpio->reg_mask_xlate(gpio, base /* 0x50 */, offset /* 5 */, &reg, &mask);
-	if (val) /* if val is 1 */
-		regmap_update_bits(gpio->regmap, reg, mask, mask);
-		// if mask returned was 0x1, then this would set the
-		// bit 0 in GPIO5_DOUT_CFG
-	else /* if val is 0 */
-		regmap_update_bits(gpio->regmap, reg, mask, 0);
-		// if mask returned was 0x1, then this would clear
-		// bit 0 in GPIO5_DOUT_CFG
-}
-
-Now for the output enable register GPIO5_DOEN_CFG, the output driver is
-active low so 0x0 is actually enables output where as 0x1 disables
-output.  Thus maybe I need to add logic like:
-
-
-static int gpio_regmap_starfive_xlate(struct gpio_regmap *gpio,
-				      unsigned int base, unsigned int offset,
-				      unsigned int *reg, unsigned int *mask)
-{
-	<snip>
-	if (base == GPIO0_DOUT_CFG)
-		*mask = 0x1U;
-	else if (base == GPIO0_DOEN_CFG)
-		*bit = ~(0x1U);
-
-	return 0;
-}
-
-What do you think of that approach?
-
-Are there any other examples of regmap xlate that I missed?
-
-Thanks,
-Drew
-
-[1] https://github.com/starfive-tech/beaglev_doc/blob/main/JH7100%20Data%20Sheet%20V01.01.04-EN%20(4-21-2021).pdf
+Best regards,
+    Sergio Paracuellos
+>
+> --
+> 2.25.1
+>
