@@ -2,53 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD1063D6AF9
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 02:21:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBA873D6DF2
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 07:24:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233843AbhGZXlC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jul 2021 19:41:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233770AbhGZXlC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 26 Jul 2021 19:41:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E84FF60C51;
-        Tue, 27 Jul 2021 00:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627345290;
-        bh=jx7GrUjcBVT4+QbmqnGbi6IvhiI5CLtmhVggNmKVUU8=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=bN0owBW/W8+hcAOGEtiAIhijoEATVuN/+t1MSymdEmMpYUikvHigO6eNG1xyNFqzr
-         q2yWLXLPBCxO+Fh7xEeZg9QE3MaDq4ufdqibSsrJprqDbXzDhfqmTMGpf0rHkwACBX
-         DTs509F7RRObj8L/yjmGXM1vBwSqVeq8wZfdCy0xJZiN5pc7IcYsf2cszDFGHrt5Oa
-         XUoWvKpiPubRdKaSZMqigNwG5KDsYYjGdROgUD2sPKFUpLK7ErDd20pTs/T0R8Vo5Q
-         dTVb7KheJhWzDl7J74IT2ja6moU4gtJJbTu7jLYgi0oST45+BMODzRf/quC4lEslS7
-         EvcpJ6IxcIUpw==
-Content-Type: text/plain; charset="utf-8"
+        id S235182AbhG0FX7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Jul 2021 01:23:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233553AbhG0FX6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 01:23:58 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56001C061764
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jul 2021 22:23:58 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id f13so3986680plj.2
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jul 2021 22:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m4PnQ7w4ZXIbpbMOd9mPAvOkoi0Otfkeze5HMzWqDSM=;
+        b=o00HtKxdOf6pgzaZcv7v0RCIAoZcftZntng7XdmVuSjqtZ2b8wjG0kSMM7lu+GX68P
+         2rGAKWvz/uQTh7cL6jW438A+V9TeI9mbi7wXXpHEaCUsQO3V1v4i0tPJOb0ngMv0Bs+3
+         M9LJQEIBANelTQ65JuIiInXty805GkKN7ycj23u1RGZ6a/GCtZlF8xOOaDiuOcC7b8mI
+         iengHNowfdX5rLoqaQAOYI41O5sesvJCvfaY/KTyhE0bpWP0nsq021X7Jjh657Cqg/eO
+         0GRu4vqdaCm4aOorJ9S1mFCYSrxF5VM0sNpLMnvGF5x3CVa7NcLr3JdNlz1zonTq6BAo
+         paYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m4PnQ7w4ZXIbpbMOd9mPAvOkoi0Otfkeze5HMzWqDSM=;
+        b=sl47AMt4DIrD39cy0sN0zf6SqnqUYM49LlEQQhvvxIKg0iR+DqKllMjg9q/00wmqik
+         V0QeQUV91IKj+5sX5gACzG2puSsGAQKisdnNuEo5Qh5DWz1gKWRDitsEfpJw6Vj5T3HC
+         ij8H2QFUHrAyFQESjbggc+41/A0eZRTDBL8xLEWenAEUJByW0ulYnrZkq8EaO8DEZAk+
+         uz/Qadx1mOzeUHkiqIKQlvr5W2ZAcl/9izdoBwIhjh+mnWuljmldACPsIkyidy+rq56R
+         v6VT1UKW9fIR010vdSX/Okwy8xh7QqRH/PrkbmFXiO5z2T97odUmC63eFCFg75HUn9XO
+         N0cA==
+X-Gm-Message-State: AOAM5323SgjXjhoKvCyWk96Wwvfp5AEesdPNcyE59cUWoj5y86mmus5G
+        4hfjsCPQzz7EK5/ICT/BTyIJMQ==
+X-Google-Smtp-Source: ABdhPJy/IRVuyZuRXHBDpEnTOVpnPmvmUefMG1xV1ZaD3TQ9HJ4t8TjZaCD2LotwfkdOo+epC0N74Q==
+X-Received: by 2002:a17:90b:1d84:: with SMTP id pf4mr20491531pjb.166.1627363437795;
+        Mon, 26 Jul 2021 22:23:57 -0700 (PDT)
+Received: from localhost ([122.172.201.85])
+        by smtp.gmail.com with ESMTPSA id f18sm1903790pfe.25.2021.07.26.22.23.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jul 2021 22:23:57 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Jie Deng <jie.deng@intel.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, Wolfram Sang <wsa@kernel.org>
+Subject: [PATCH V4 0/5] virtio: Add virtio-device bindings
+Date:   Tue, 27 Jul 2021 10:53:47 +0530
+Message-Id: <cover.1627362340.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20210723022543.4095-4-jiaxun.yang@flygoat.com>
-References: <20210723022543.4095-1-jiaxun.yang@flygoat.com> <20210723022543.4095-4-jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH v4 3/9] clk: pistachio: Make it selectable for generic MIPS kernel
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     tsbogend@alpha.franken.de, mturquette@baylibre.com,
-        daniel.lezcano@linaro.org, linus.walleij@linaro.org,
-        vkoul@kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
-Date:   Mon, 26 Jul 2021 17:21:28 -0700
-Message-ID: <162734528861.2368309.16849274181317725077@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Jiaxun Yang (2021-07-22 19:25:37)
-> We're moving pistachio to generic MIPS kernel. The clk driver
-> should be avilable to the generic MIPS kernel.
->=20
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
+Hi,
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Currently the DT only provides support for following node types for virtio-mmio
+nodes:
+
+        virtio_mmio@a000000 {
+                dma-coherent;
+                interrupts = <0x00 0x10 0x01>;
+                reg = <0x00 0xa000000 0x00 0x200>;
+                compatible = "virtio,mmio";
+        };
+
+Here, each virtio-mmio corresponds to a virtio-device. But there is no way for
+other users in the DT to show their dependency on virtio devices.
+
+This patchset provides that support.
+
+The first patch adds virtio-device bindings to allow for device sub-nodes to be
+present and the second patch updates the virtio core to update the of_node.
+
+Other patches add bindings for i2c and gpio devices.
+
+Tested on x86 with qemu for arm64.
+
+V3->V4:
+- The binding is named "virtio,deviceXXXXXXXX" now.
+- The virtio binding doesn't restrict the node names anymore.
+- The i2c/gpio nodes are named i2c and gpio now.
+- Dropped including gpio.yaml.
+- Updated code to match the new binding name.
+- Use "type: object" in additional-property.
+
+V2/2.1->V3:
+- Added review-tags from Arnd and Wolfram.
+- Only the 5th patch changed otherwise:
+  - Use of_device_is_compatible() instead of keeping a list of devices.
+  - Use snprintf (with BUG_ON on return value) to create the compatible string,
+    whose length is fixed using "virtio,XXXXXXXX".
+  - Use dev_of_node().
+
+V1->V2:
+- The changes (both binding and code) are made at virtio level, instead of
+  virtio-mmio. This allows the same to be used by all device types, irrespective
+  of the transport mechanism.
+
+- Dropped the reg property and used compatible in the form "virtio,<DID>".
+
+- Dropped dt-bindings/virtio/virtio_ids.h.
+
+- Add a patch to sync virtio-ids from spec, required for the last patch.
+
+--
+Viresh
+
+Viresh Kumar (5):
+  dt-bindings: virtio: Add binding for virtio devices
+  dt-bindings: i2c: Add bindings for i2c-virtio
+  dt-bindings: gpio: Add bindings for gpio-virtio
+  uapi: virtio_ids: Sync ids with specification
+  virtio: Bind virtio device to device-tree node
+
+ .../devicetree/bindings/gpio/gpio-virtio.yaml | 59 +++++++++++++++++++
+ .../devicetree/bindings/i2c/i2c-virtio.yaml   | 51 ++++++++++++++++
+ .../devicetree/bindings/virtio/mmio.yaml      |  3 +-
+ .../bindings/virtio/virtio-device.yaml        | 41 +++++++++++++
+ drivers/virtio/virtio.c                       | 57 +++++++++++++++++-
+ include/uapi/linux/virtio_ids.h               | 12 ++++
+ 6 files changed, 219 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-virtio.yaml
+ create mode 100644 Documentation/devicetree/bindings/virtio/virtio-device.yaml
+
+-- 
+2.31.1.272.g89b43f80a514
+
