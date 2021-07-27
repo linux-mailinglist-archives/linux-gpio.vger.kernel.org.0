@@ -2,80 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70C3A3D744C
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 13:24:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0C093D746B
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 13:35:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236542AbhG0LYA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Jul 2021 07:24:00 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:59562 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S236523AbhG0LX5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 27 Jul 2021 07:23:57 -0400
-X-IronPort-AV: E=Sophos;i="5.84,273,1620658800"; 
-   d="scan'208";a="88871756"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 27 Jul 2021 20:23:54 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0ADEF40104C7;
-        Tue, 27 Jul 2021 20:23:51 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S236347AbhG0Lfu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Jul 2021 07:35:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231781AbhG0Lft (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 07:35:49 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B868C061760
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Jul 2021 04:35:49 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id w17so20063741ybl.11
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Jul 2021 04:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qco/AyihnJ5LF9OqcB7SLvxoAFgJ7udwLUJdc+kCzpo=;
+        b=OHQfAWwqSfJLysT2xL6FU2eutfu/bnXiRKUERsAljy4Uv81/MzxAEMW9OyxJokU5wr
+         W2dOvsHDPxN4CtC9uJV40eSOkvfgSWYxDoKsiPQ49Zi4GQDMqGwGJCzCm6xsJ0fAgq+d
+         H9iZvpX9NIbgNCGHa84OAKLaw7MLegBpB7/zaN6sOJN/vAGoT9ORbdQT6WNIF5SX43uJ
+         RmiSzf6JcPfkJQ46jZScHB5/m8Ue/cQvj4jquIP9RYh8xGds6LeiTd/V7hbBW9xouC5y
+         UITiIkzTBJ2wvgrAlPBi8+WUjghsteaOwPmsJErUiU5BFRjQ20bhzxZTyVY+iGlkxJcQ
+         EEvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qco/AyihnJ5LF9OqcB7SLvxoAFgJ7udwLUJdc+kCzpo=;
+        b=Vk82zVEkOh3f2UBtIcqJ2uwMH6QSv9gWijaercIn5A5rlaKS+KkpTASvhQpk7OmxbO
+         o7p5ulvRxIE+uqgexa0P64ehMbAo09Ru2BGO/XHyz43uUUPJwlX48pRZI8bAOUc6+wnc
+         DPw0Nf+/xMfUpdngYZQjnGicpHsPJkL+QDgjmpxSKNzijsqk8elwyKQ4IGMAzqqlUj7U
+         OerLl8g+bV75YsJVBwPeN69V0j+X/hrEURoIoymi53JnmmgmT/46flb9FbVjyQkewnPi
+         gRtuGzXkODLe//QXDLaq8htbUB3cdoUXE+WYxDWeizz7Zmz+kvccCW8NfeOkIYODyJpB
+         ELig==
+X-Gm-Message-State: AOAM531EyNmIahsaYuwQ8xVl7j7L/9NtVSZUxdQh3KyOKk07/tk/9I1q
+        R6XypkhOKf9nobu8gxT48k2Wuns0pFrun6m8wAR6KQ==
+X-Google-Smtp-Source: ABdhPJzfxtZ4mgMNBH40Q61Gql8DSCEAQWyHWZwB7JYUQpLZ3NY96M/waaOpz6NzjZRVOJBGFxHptQ/RrHpFlVuVv4E=
+X-Received: by 2002:a25:3750:: with SMTP id e77mr13079030yba.469.1627385748609;
+ Tue, 27 Jul 2021 04:35:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210708070429.31871-1-sergio.paracuellos@gmail.com> <CAMhs-H9fbHMxxSaqMj=nyACAN6aDB-bYK1nF1dRh8a1krTdaZg@mail.gmail.com>
+In-Reply-To: <CAMhs-H9fbHMxxSaqMj=nyACAN6aDB-bYK1nF1dRh8a1krTdaZg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 27 Jul 2021 13:35:38 +0200
+Message-ID: <CAMpxmJUQmdfesygysBHB=bx7tYqMyry9tSw6E4dOnatTNKcAug@mail.gmail.com>
+Subject: Re: [PATCH 0/3] gpiolib: convert 'devprop_gpiochip_set_names' to
+ support multiple gpiochip per device
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 4/4] arm64: dts: renesas: rzg2l-smarc: Add scif0 pins
-Date:   Tue, 27 Jul 2021 12:23:28 +0100
-Message-Id: <20210727112328.18809-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210727112328.18809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20210727112328.18809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        John Thomson <git@johnthomson.fastmail.com.au>,
+        NeilBrown <neil@brown.name>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add scif0 pins in pinctrl node and update the scif0 node
-to include pinctrl properties.
+On Tue, Jul 27, 2021 at 8:02 AM Sergio Paracuellos
+<sergio.paracuellos@gmail.com> wrote:
+>
+> On Thu, Jul 8, 2021 at 9:04 AM Sergio Paracuellos
+> <sergio.paracuellos@gmail.com> wrote:
+> >
+> > There are some unfortunate cases where the DT representation
+> > of the device and the Linux internal representation differs.
+> > Such drivers for devices are forced to implement a custom function
+> > to avoid the core code 'devprop_gpiochip_set_names' to be executed
+> > since in any other case every gpiochip inside will got repeated
+> > names through its internal gpiochip banks. To avoid this antipattern
+> > this changes are introduced trying to adapt core 'devprop_gpiochip_set_names'
+> > to get a correct behaviour for every single situation.
+> >
+> > This series introduces a new 'offset' field in the gpiochip structure
+> > that can be used for those unfortunate drivers that must define multiple
+> > gpiochips per device.
+> >
+> > Drivers affected by this situation are also updated. These are
+> > 'gpio-mt7621' and 'gpio-brcmstb'.
+> >
+> > Motivation for this series available at [0].
+> >
+> > Thanks in advance for your feedback.
+> >
+> > Best regards,
+> >     Sergio Paracuellos
+> >
+> > [0]: https://lkml.org/lkml/2021/6/26/198
+> >
+> > Sergio Paracuellos (3):
+> >   gpiolib: convert 'devprop_gpiochip_set_names' to support multiple
+> >     gpiochip baks per device
+> >   gpio: mt7621: support gpio-line-names property
+> >   gpio: brcmstb: remove custom 'brcmstb_gpio_set_names'
+> >
+> >  drivers/gpio/gpio-brcmstb.c | 45 +------------------------------------
+> >  drivers/gpio/gpio-mt7621.c  |  1 +
+> >  drivers/gpio/gpiolib.c      | 34 +++++++++++++++++++++++-----
+> >  include/linux/gpio/driver.h |  4 ++++
+> >  4 files changed, 34 insertions(+), 50 deletions(-)
+>
+> Hi!
+>
+> Linus, Bartosz, any comments on this series?
+>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Looks good, but I was thinking you were going to address Gregory's
+points first and resend a v2?
 
-diff --git a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-index adcd4f50519e..0987163f25ee 100644
---- a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-@@ -6,6 +6,7 @@
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
- 
- / {
- 	aliases {
-@@ -22,6 +23,15 @@
- 	clock-frequency = <24000000>;
- };
- 
-+&pinctrl {
-+	scif0_pins: scif0 {
-+		pinmux = <RZG2L_PORT_PINMUX(38, 0, 1)>,	/* TxD */
-+			 <RZG2L_PORT_PINMUX(38, 1, 1)>;	/* RxD */
-+	};
-+};
-+
- &scif0 {
-+	pinctrl-0 = <&scif0_pins>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
--- 
-2.17.1
-
+Bartosz
