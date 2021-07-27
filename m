@@ -2,93 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AED53D7965
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 17:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBF3C3D7994
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 17:20:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232634AbhG0PJG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Jul 2021 11:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
+        id S232698AbhG0PUa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Jul 2021 11:20:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232328AbhG0PJF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 11:09:05 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F76AC061757;
-        Tue, 27 Jul 2021 08:09:04 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id q68so7278179vsb.9;
-        Tue, 27 Jul 2021 08:09:04 -0700 (PDT)
+        with ESMTP id S232600AbhG0PUa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 11:20:30 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28ABAC061757;
+        Tue, 27 Jul 2021 08:20:30 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id f18-20020a05600c4e92b0290253c32620e7so1912200wmq.5;
+        Tue, 27 Jul 2021 08:20:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LODqsW/1ngmYUbMgNby00su93F62N06Tj3ly3YeQuu8=;
-        b=uo8EQXgRWZ9JsCmhbvecIDs7UFt6gf45CbCLSX89gZvV05cpmDYxsq4q7djWl6V+zv
-         RkgcAww9e48cgedaDiYGy02wM6kOUabDZzKSOrB31bbE+qFVKW5wTMGAYjBn1mf5DpWr
-         2oQ21yT7d62nU5z5J6s16lUG3MHh+DNe4tyltIBZ1VdrRNHemFSaB+zLGofVcnPaLM5R
-         O96ZpxwwUhKy31BZ8EmmKLYFXdPQb5c/A4b74K3NjhEGlRPs3TCA3AcUyjze3WRIx7FO
-         1xItwyCGYoHFcV4xBDB2Kk7/N7dVwwbx65UvTuZtUUwy3hHr7ooX3uHVbjcGJ4VvB4e8
-         333Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2g0Z5T/kJig7GSFBfzqqFvjtQDsXphUXlySVJdVzeEw=;
+        b=PazBalT289ywavG6jiOOxp/zFekc+czI8xvz76OV777MaNF+17QFiwpeyo2f0WtA1T
+         qWFkUHc12u5SA+HkjRs1gZlafF2YYYGy6AMBRquSs94zX6gy3vnXn1cL4GdqPtPzgKtm
+         UaqkOXKtyaRO4dBk4KIPRKO4ClnhDpk0+HFk5AAb0nT6VvG/YB0wGIEonQeNv9Z6S8kf
+         jcSjNEJIzTD1WI6pLXfdlkujeRHi6MpSjQjTxZ/08z6u2+nXOB9XK8Tf9XKqCH86hZy2
+         VvTBUTCi497thnvoPf7iBrIXdfgNTTb1fD7dpmwkfg5tQmIAxMeHo3PjMhoDyzPCSDQU
+         /cog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LODqsW/1ngmYUbMgNby00su93F62N06Tj3ly3YeQuu8=;
-        b=fXD508Rjg6xy7S4butY5P5TUg6JxGBwqIXzID1SFQ42YvO8FPQ2zxUcmt71Rw2fdAD
-         an1169E7pM2dBR0rU2jSwMp2U2g1xNFm2YiKZheOdC5Rz0XVYq6rlpvRd0eZyclKImnP
-         KCwJZDkFFujDKRPuJhlyHj9DFzWLzngIYX2vgKkTAvfq+CcnDV8/Okxk6RQ5QYkBGzEw
-         Hyxx1FtYz3Yhh1NF4GoP7dIpfLF0dWTaZjAGsfCEVVYBERRdLeyEMIqz+E+W1yLcgVZQ
-         U+AGT8xOL7Th5Rq2YxLJVpksSSRgZ5H3kGg8kEydUvBgNOz4xdt0FVym43wy9f9wFp9g
-         fxIQ==
-X-Gm-Message-State: AOAM530kVhtSKfYC8AjNZdXdcFQ45GVHbqVGNClH0p4MmAoNLvUX+XOW
-        AV4FiI581zZPpnktxdfBNrAEfTjAPi0O92nQ20c=
-X-Google-Smtp-Source: ABdhPJxoQ+xAJ8pctlldjhc+igE6bcD64Yold6eElIL6035jZ3l7JenxM765onZHshhoQQPNf/7SwtAONt5EOwCGMKY=
-X-Received: by 2002:a67:e94c:: with SMTP id p12mr16820940vso.28.1627398541870;
- Tue, 27 Jul 2021 08:09:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210727144816.8697-1-sergio.paracuellos@gmail.com>
- <20210727144816.8697-4-sergio.paracuellos@gmail.com> <CAHp75Ve9eYNbs=uBsVvFdkpU1vLXB8Fy4NpFbaWV1g59vfrenw@mail.gmail.com>
-In-Reply-To: <CAHp75Ve9eYNbs=uBsVvFdkpU1vLXB8Fy4NpFbaWV1g59vfrenw@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2g0Z5T/kJig7GSFBfzqqFvjtQDsXphUXlySVJdVzeEw=;
+        b=Ea2XukABiFeo5Wm34F39D/nx9W1M0EFrvmG041nFpm4Vux472czJQ6XQUbWo0/0I4v
+         MOYqXRJLPryKUOt2HMj2YxsSb0c4Zw5Y6kOYNhNeAQshkPdxlA1HdnvayyJjIEYqPssQ
+         I5Y6etyV5YngGeOJRNpphjU1GG8yy19Yb0vkfPYLSfuIsrX3iAw5ebWLT9w7VkDLgIQL
+         d5Ph7S4rrTSj4vIdbqR3eY7PtjQoD7CSXbiZ8bg/fWxxMxR+o4pz1uYs9X0Y4D6x0Dqr
+         hKChZUcpKPQasJbSdlTyGJy6LnUyTuYecVEDkjnpzr4wVpEWsJ0gVQbaxRguGFRq4thV
+         8rWw==
+X-Gm-Message-State: AOAM532LbDifmbtqmtFwvPMOrP5S08ORVQrKSZlGJnc7aaO7hlkbPkXA
+        qoC8/DVSZ+c6IUHKTgDSDK+Pbjuz2GjrXdZ2
+X-Google-Smtp-Source: ABdhPJyflMtMPkBLLlxiM9NLzNoLE7/SrtHZZeliauUtrDuSUtoMYlS1MDTvDU0o1FudNOitvKri6g==
+X-Received: by 2002:a1c:acca:: with SMTP id v193mr4686356wme.107.1627399228422;
+        Tue, 27 Jul 2021 08:20:28 -0700 (PDT)
+Received: from localhost.localdomain (189.red-83-51-242.dynamicip.rima-tde.net. [83.51.242.189])
+        by smtp.gmail.com with ESMTPSA id w185sm3372393wmb.11.2021.07.27.08.20.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Jul 2021 08:20:28 -0700 (PDT)
 From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Tue, 27 Jul 2021 17:08:50 +0200
-Message-ID: <CAMhs-H_Lubu2dLeSX=Q+0FAwnZ-qB6a88r=p0EfWGcE9noMpLg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] gpio: brcmstb: remove custom 'brcmstb_gpio_set_names'
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
-        John Thomson <git@johnthomson.fastmail.com.au>,
-        NeilBrown <neil@brown.name>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, gregory.0xf0@gmail.com,
+        bgolaszewski@baylibre.com, f.fainelli@gmail.com,
+        matthias.bgg@gmail.com, opensource@vdorst.com,
+        andy.shevchenko@gmail.com, git@johnthomson.fastmail.com.au,
+        neil@brown.name, hofrat@osadl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] gpiolib: convert 'devprop_gpiochip_set_names' to support multiple gpiochip banks per device
+Date:   Tue, 27 Jul 2021 17:20:23 +0200
+Message-Id: <20210727152026.31019-1-sergio.paracuellos@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 27, 2021 at 5:07 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Jul 27, 2021 at 5:48 PM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
-> >
-> > Gpiolib core code has been updated to support setting
-> > friendly names through properly 'gpio-line-names'.
-> > Instead of redefine behaviour here to skip the core
-> > to be executed, just properly assign the desired offset
-> > per bank to get in the core the expected behaviour.
->
-> Since it will be a v3, reflow commit messages to occupy a little bit
-> more available space (per line). Something ~72-75 characters per line
-> is good balance.
+There are some unfortunate cases where the DT representation
+of the device and the Linux internal representation differs.
+Such drivers for devices are forced to implement a custom function
+to avoid the core code 'devprop_gpiochip_set_names' to be executed
+since in any other case every gpiochip inside will got repeated
+names through its internal gpiochip banks. To avoid this antipattern
+this changes are introduced trying to adapt core 'devprop_gpiochip_set_names'
+to get a correct behaviour for every single situation.
 
-Sure.
+This series introduces a new 'offset' field in the gpiochip structure
+that can be used for those unfortunate drivers that must define multiple
+gpiochips per device.
 
-Thanks,
+Drivers affected by this situation are also updated. These are
+'gpio-mt7621' and 'gpio-brcmstb'.
+
+Motivation for this series available at [0].
+
+Thanks in advance for your feedback.
+
+Best regards,
     Sergio Paracuellos
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+
+Changes in v3:
+  - Reflow a string literal to be on one line in PATCH 1/3.
+  - reflow commit messages PATCH 2/3 and PATCH 3/3 to occupy a little bit
+    more available space per line.
+
+Changes in v2:
+  - Address Gregory Fong comments in v1 of the series [1].
+  - Collect Andy Shevchenko Reviewed-by for the series.
+  - Collect Gregory Fong Acked-by for PATCH 3/3.
+
+[0]: https://lkml.org/lkml/2021/6/26/198
+[1]: https://lkml.org/lkml/2021/7/8/47
+
+Sergio Paracuellos (3):
+  gpiolib: convert 'devprop_gpiochip_set_names' to support multiple
+    gpiochip banks per device
+  gpio: mt7621: support gpio-line-names property
+  gpio: brcmstb: remove custom 'brcmstb_gpio_set_names'
+
+ drivers/gpio/gpio-brcmstb.c | 45 +------------------------------------
+ drivers/gpio/gpio-mt7621.c  |  1 +
+ drivers/gpio/gpiolib.c      | 32 +++++++++++++++++++++-----
+ include/linux/gpio/driver.h |  4 ++++
+ 4 files changed, 33 insertions(+), 49 deletions(-)
+
+-- 
+2.25.1
+
