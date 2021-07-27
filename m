@@ -2,152 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5651C3D7997
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 17:20:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2F403D7D5E
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 20:26:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237046AbhG0PUl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Jul 2021 11:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236901AbhG0PUd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 11:20:33 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 219B9C061764;
-        Tue, 27 Jul 2021 08:20:33 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id k4so7817214wms.3;
-        Tue, 27 Jul 2021 08:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=A97sJEVHqRr1cAiROr2GcKYuYpM2uXOvkYVkdzP+alE=;
-        b=VpOIOtiIbqj8QEZDSZ2iuEe1kRowCX7PH/pmrU+EAxYHJRX9YNyaPRcfLhvBSVzybL
-         sJw21Pd99DpQjh9LcrCpAuhk3BmrA94nbKSHX8chSa+BsEBnhcGBdJwviOW6Gt8kpkUZ
-         GahMria5iyNigyH79NEPOuvPQc3rIZROQ3B4o/8y/kXskH7PxkDiVDAHk9DR3yW+m/Nl
-         LmyP/KOI/k6B55iCC1QSDNUM3TzcvmFe4ZD2RU99SWRv5fFmdR3Dap7cxmiIhyV+QaFi
-         9AaGf/x5OzY2W2Ltb65P9hUHj9i+V6N39N+2ZR2YUXtdBH/G0t4CmOmL6c0wCK4hRHyY
-         97bQ==
+        id S229974AbhG0S0p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Jul 2021 14:26:45 -0400
+Received: from mail-io1-f48.google.com ([209.85.166.48]:43702 "EHLO
+        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229453AbhG0S0p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 14:26:45 -0400
+Received: by mail-io1-f48.google.com with SMTP id 185so17074060iou.10;
+        Tue, 27 Jul 2021 11:26:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=A97sJEVHqRr1cAiROr2GcKYuYpM2uXOvkYVkdzP+alE=;
-        b=ghyV4yuNQWCF+lEWCZQVRMc7e3BvanGp9+1bOTfhLpziti4M71PbqsYmATOSJevqDR
-         VmaWHqliSfiYAKxyJo/+UbtJf4r7utv9ztECrbaut8AYDADwJUq7C8uclozGvSud6LHt
-         pVFTBAq/lPvK2Wx0L6xRpDgw6uy+jjD1Mwe177Hb9XGVcFrU5K4YOIBqMHIYWy8Rp2Kl
-         CBTRYNCXHBRU0PI2dLJmiOh2SSycX9z4JQ+8LfyBu7BgAmQDhiyQGyQIEyW9k4wp4Jmc
-         kWbSgxfRY7Ouu+hqZLTg90NuU2OX/ImnUpVLqEoZ9wuVYk8hYi4x0GbVdDo96Zixl1d2
-         TZ4A==
-X-Gm-Message-State: AOAM533dw2ZqVJJ2elxAI8FeTSm2vPWJrFb5yYL7joX7a7bbwQCc1ISZ
-        npvqJF0hFhPSSR/lS/SMyP/OCufv/Uzdpsz0
-X-Google-Smtp-Source: ABdhPJyhRyZ1EZ3YKM8HxTwp3POX7+E0ZO9ReE5j9PAoCL6apZ1uXjjcYL1OGvn6T0bm6KNwXuHbhA==
-X-Received: by 2002:a7b:c5d8:: with SMTP id n24mr22930583wmk.51.1627399231434;
-        Tue, 27 Jul 2021 08:20:31 -0700 (PDT)
-Received: from localhost.localdomain (189.red-83-51-242.dynamicip.rima-tde.net. [83.51.242.189])
-        by smtp.gmail.com with ESMTPSA id w185sm3372393wmb.11.2021.07.27.08.20.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Jul 2021 08:20:31 -0700 (PDT)
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, gregory.0xf0@gmail.com,
-        bgolaszewski@baylibre.com, f.fainelli@gmail.com,
-        matthias.bgg@gmail.com, opensource@vdorst.com,
-        andy.shevchenko@gmail.com, git@johnthomson.fastmail.com.au,
-        neil@brown.name, hofrat@osadl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] gpio: brcmstb: remove custom 'brcmstb_gpio_set_names'
-Date:   Tue, 27 Jul 2021 17:20:26 +0200
-Message-Id: <20210727152026.31019-4-sergio.paracuellos@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210727152026.31019-1-sergio.paracuellos@gmail.com>
-References: <20210727152026.31019-1-sergio.paracuellos@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=Snb7zzXm5yWtNjnULb0kW5b9lE7iA5FbVYfHIKqzxsw=;
+        b=VJ/yqrJYQvSRgGLdj7o9yJz12OZn89+DNiNRw4QLC8jR8EX8ZWl1c6PR8ibQmNpW//
+         S9ffPlK7wGloDCsns2KsG+etEE2Vj2e+m3vvkobFkDQEc2Pgus18sPUOvI9Iaj+bwuSM
+         +hUMfFwZOBXg/kpmzLmQoihUyar07nwKxpqw7yn6k87cIW5BjIi7PYhHowb2Kqtd7M22
+         K2KamGJiaFs6NRpYJTHEl5YZaWAdwQaOuVSewXckp8VUyXNDLaliN5uueBdN/tjEciP0
+         99R4v2eNJO68/t9g1oRmEUo3l96lNA7L6QxuQVOOtuUao1H4aGoleNngFplUplk+YYyB
+         Zq5A==
+X-Gm-Message-State: AOAM530werW3IW00WPLnHr1suszEXSPJAhDOCw71VMYWeqjgct16oiI3
+        zR82L9o5FngLELawEWZGhQ==
+X-Google-Smtp-Source: ABdhPJydLoroS1MPOE0r8YMTbwZhoygvk6C14R/FG87IJjqNCquTF05RQiCyoCtwuz4P8BnWRM5/Qw==
+X-Received: by 2002:a05:6602:59d:: with SMTP id v29mr20162821iox.132.1627410403994;
+        Tue, 27 Jul 2021 11:26:43 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id p21sm2713572iog.37.2021.07.27.11.26.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jul 2021 11:26:43 -0700 (PDT)
+Received: (nullmailer pid 3210654 invoked by uid 1000);
+        Tue, 27 Jul 2021 18:26:35 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+In-Reply-To: <20210727110232.2503763-3-hsinyi@chromium.org>
+References: <20210727110232.2503763-1-hsinyi@chromium.org> <20210727110232.2503763-3-hsinyi@chromium.org>
+Subject: Re: [PATCH 3/3] dt-bindings: mediatek: convert pinctrl to yaml
+Date:   Tue, 27 Jul 2021 12:26:35 -0600
+Message-Id: <1627410395.874547.3210653.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Gpiolib core code has been updated to support setting friendly names
-through properly 'gpio-line-names'. Instead of redefine behaviour here
-to skip the core to be executed, just properly assign the desired offset
-per bank to get in the core the expected behaviour.
+On Tue, 27 Jul 2021 19:02:32 +0800, Hsin-Yi Wang wrote:
+> Convert mt65xx, mt6796, mt7622, mt8183 bindings to yaml.
+> 
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>  .../pinctrl/mediatek,mt65xx-pinctrl.yaml      | 202 +++++++
+>  .../pinctrl/mediatek,mt6797-pinctrl.yaml      | 175 ++++++
+>  .../pinctrl/mediatek,mt7622-pinctrl.yaml      | 537 ++++++++++++++++++
+>  .../pinctrl/mediatek,mt8183-pinctrl.yaml      | 230 ++++++++
+>  .../bindings/pinctrl/pinctrl-mt65xx.txt       | 156 -----
+>  .../bindings/pinctrl/pinctrl-mt6797.txt       |  83 ---
+>  .../bindings/pinctrl/pinctrl-mt7622.txt       | 490 ----------------
+>  .../bindings/pinctrl/pinctrl-mt8183.txt       | 132 -----
+>  8 files changed, 1144 insertions(+), 861 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6797-pinctrl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt6797.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> 
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
----
- drivers/gpio/gpio-brcmstb.c | 45 +------------------------------------
- 1 file changed, 1 insertion(+), 44 deletions(-)
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index fcfc1a1f1a5c..a7275159052e 100644
---- a/drivers/gpio/gpio-brcmstb.c
-+++ b/drivers/gpio/gpio-brcmstb.c
-@@ -603,49 +603,6 @@ static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
- 	.resume_noirq = brcmstb_gpio_resume,
- };
- 
--static void brcmstb_gpio_set_names(struct device *dev,
--				   struct brcmstb_gpio_bank *bank)
--{
--	struct device_node *np = dev->of_node;
--	const char **names;
--	int nstrings, base;
--	unsigned int i;
--
--	base = bank->id * MAX_GPIO_PER_BANK;
--
--	nstrings = of_property_count_strings(np, "gpio-line-names");
--	if (nstrings <= base)
--		/* Line names not present */
--		return;
--
--	names = devm_kcalloc(dev, MAX_GPIO_PER_BANK, sizeof(*names),
--			     GFP_KERNEL);
--	if (!names)
--		return;
--
--	/*
--	 * Make sure to not index beyond the end of the number of descriptors
--	 * of the GPIO device.
--	 */
--	for (i = 0; i < bank->width; i++) {
--		const char *name;
--		int ret;
--
--		ret = of_property_read_string_index(np, "gpio-line-names",
--						    base + i, &name);
--		if (ret) {
--			if (ret != -ENODATA)
--				dev_err(dev, "unable to name line %d: %d\n",
--					base + i, ret);
--			break;
--		}
--		if (*name)
--			names[i] = name;
--	}
--
--	bank->gc.names = names;
--}
--
- static int brcmstb_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -759,6 +716,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 		gc->of_xlate = brcmstb_gpio_of_xlate;
- 		/* not all ngpio lines are valid, will use bank width later */
- 		gc->ngpio = MAX_GPIO_PER_BANK;
-+		gc->offset = bank->id * MAX_GPIO_PER_BANK;
- 		if (priv->parent_irq > 0)
- 			gc->to_irq = brcmstb_gpio_to_irq;
- 
-@@ -769,7 +727,6 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 		need_wakeup_event |= !!__brcmstb_gpio_get_active_irqs(bank);
- 		gc->write_reg(reg_base + GIO_MASK(bank->id), 0);
- 
--		brcmstb_gpio_set_names(dev, bank);
- 		err = gpiochip_add_data(gc, bank);
- 		if (err) {
- 			dev_err(dev, "Could not add gpiochip for bank %d\n",
--- 
-2.25.1
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dts:21:18: fatal error: dt-bindings/pinctrl/mt8183-pinfunc.h: No such file or directory
+   21 |         #include <dt-bindings/pinctrl/mt8183-pinfunc.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1418: dt_binding_check] Error 2
+\ndoc reference errors (make refcheckdocs):
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+MAINTAINERS: Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+MAINTAINERS: Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+
+See https://patchwork.ozlabs.org/patch/1510444
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
