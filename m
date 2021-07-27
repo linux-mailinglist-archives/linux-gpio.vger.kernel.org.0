@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0629F3D7472
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 13:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E8AA3D747F
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jul 2021 13:42:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236326AbhG0LkT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Jul 2021 07:40:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37364 "EHLO
+        id S236493AbhG0Lmt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Jul 2021 07:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236114AbhG0LkT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 07:40:19 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C19C061757;
-        Tue, 27 Jul 2021 04:40:18 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id bg4so6932770vsb.6;
-        Tue, 27 Jul 2021 04:40:18 -0700 (PDT)
+        with ESMTP id S236087AbhG0Lms (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jul 2021 07:42:48 -0400
+Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B6FC061757;
+        Tue, 27 Jul 2021 04:42:49 -0700 (PDT)
+Received: by mail-vs1-xe36.google.com with SMTP id t2so2053809vsa.11;
+        Tue, 27 Jul 2021 04:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xcEMNKjvuDrcfFCIzmvTxD8j5XhA88/xOYEHf4Nn7NE=;
-        b=ZQ+bJczVGM+2X0iBaWz/5BfkqIoQAdzIvv8kgQcuJ3VHzeeBu6GwwS67Zk/hBMeRrm
-         F2OflWQZ00VOyOqd0DhrKsn6qtEDU0ss9QgZ2Z4SINXsTTEWeZRnIN87pxa1C8zncKtM
-         IRaV8O+xOGnhoxyRZ8nmt0g3hubzhowaUTBp2H3BKdq8KdkcnjplnUhhnf8KVC//GHYD
-         DwtdAirLSdeGkPiEM3MTkaoKsRjWNBd3Vcz+yStggKdZCU8ANSw5vq/7mA/YqFycjWHn
-         GVBiF/21jq2ymA6/7/C6zHLFnmqDf7bZ89Wj6OoPlfj73E2m3JUiiDZ8hRDkJceJp2Ga
-         TGNg==
+        bh=UiUni7xpgdHXOrRF9iI6gE5NM8YW5XZI7ELH7hIFenQ=;
+        b=rPk38B4E0MlngFb2QcusabjaKZm3DrDAnb2U4dQOosK+NFOFLvSiE7JYJhpvHvXnU0
+         VQMMQI7csNAapjcTDX3wKZNySetChjeqe0J1/epzGcdzzZAunRHYUBgW8w8K3Oo83z6/
+         cIr/N0VnhktydzOADXBv/OHM9QCPrgi1iZGO/iEGBBoT0Hgo/WUFE3e7euNhoRE7CDTL
+         Ngik3ALAWWTrxMhawvWGEMFkdBWX1twI37kidJz3WBbZP2gtcGse8HGRoJpwzILcO75B
+         SzF/tAg9L3xd3jaEIaist4sXCAOEQ3nKpSRwj9CNMo70Zsyua1bWZSxCCiSZ1pabXsll
+         NuKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xcEMNKjvuDrcfFCIzmvTxD8j5XhA88/xOYEHf4Nn7NE=;
-        b=Qi0fV4naxtjSUYgUo0rsDZYhi5bVFYCrLKXr06lSSrkXvnH0mGaTMFdwg5G9R/6tQx
-         I1Dc/SbeBPngfb+12Aw4in3n5G3lRaA76YlaNCs9To4ZLFnPq2pMYCK3GPdkMbOEKBbr
-         l5AKQH8NuiNyM8ExNXW1i+JG7PF2AX3VRe39SyRGtH2JGFrgRI+fYjG8zeAfUHVVOkMT
-         YeDKlb5XsdfJaej4CrPwl2fDAhCz46mkJz6CklF2S63UkMnLrfnd1GAjfxe9QjkG1Ay4
-         74VKni4rEveUJdsVNS1ritNZnTzuD8NXzy+o5aJPwwAL548jESeEE/IxdnLs0hyd4dmp
-         8GQg==
-X-Gm-Message-State: AOAM5339MBbIofYCY3xXDG3QK/WE+0I6gG8NqcT1Z6d648Zyz1uLG5OX
-        4EqnK/DWbIE1me20ZYyCIcdAWcGePkk3VVj3Sew=
-X-Google-Smtp-Source: ABdhPJwYzF9JI6MwKdraLfpYmltLSVttyweIDytdmki4Ljrbw66Q9LkDvGzTWokxSW4+cRXW0jf/zc/2SrzAVBAH1Pw=
-X-Received: by 2002:a67:e94c:: with SMTP id p12mr15652851vso.28.1627386018116;
- Tue, 27 Jul 2021 04:40:18 -0700 (PDT)
+        bh=UiUni7xpgdHXOrRF9iI6gE5NM8YW5XZI7ELH7hIFenQ=;
+        b=eHTnR7mb81L8s806x70yoM47IvUGuNiY6FgjnmUnKkJDcqurh7wyjmMsO9OSekshJQ
+         hAIjl0yE6Apr5fWEomHo7gHj+5dEMXS1SncABZlIc5c1J338w4Bqe7wY+0mqnQT6axq/
+         hIPjl/YUj+NQxwYEpCZn7DYqgu2wtkHjkI0dV0sV2z/lMFo2qzoTW6KwIVo1TPRld6kQ
+         Pl6/n3VxB2Kz45ny/pRpkVWsWPsO0sRkHwssvCP3Sn0EJbuU4X1Eo6TCyHA/1sLRpYLU
+         SCuCXrv79LMOO5BPg8GkrID0XzZBSfxqHSiiPQBoG+k01QCyqAGyb6/+ZjVXxX1aGzIR
+         /P0Q==
+X-Gm-Message-State: AOAM531tOXQuh+WUVLsRGvDuWwXuIzykRavecJsvN4VUl002jjMBGX9K
+        LWbKROutZo2CtmK4/fp04Mx0ZIcZweK7/BtsnYo=
+X-Google-Smtp-Source: ABdhPJyNgs/F9FHTUEWc26uUxWMzgGSk+ObR/OGEDvqMxIrnyGIrZvNISzCZUkdwvU7c3zv1WNeGtai0fwBINDZjszw=
+X-Received: by 2002:a05:6102:3231:: with SMTP id x17mr12616993vsf.30.1627386168351;
+ Tue, 27 Jul 2021 04:42:48 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210708070429.31871-1-sergio.paracuellos@gmail.com>
- <CAMhs-H9fbHMxxSaqMj=nyACAN6aDB-bYK1nF1dRh8a1krTdaZg@mail.gmail.com> <CAMpxmJUQmdfesygysBHB=bx7tYqMyry9tSw6E4dOnatTNKcAug@mail.gmail.com>
-In-Reply-To: <CAMpxmJUQmdfesygysBHB=bx7tYqMyry9tSw6E4dOnatTNKcAug@mail.gmail.com>
+ <20210708070429.31871-2-sergio.paracuellos@gmail.com> <20210719075723.GA8818@kessel>
+ <CAMhs-H8QeRcY+EiCrN2Rw1A1-xDdpuDqr-knoQEAcQiTXvdBDw@mail.gmail.com> <CADtm3G50HbOe_0RpWYYOVZSZfSdkF7Z0TXzEfAM0AQUqVgvpNQ@mail.gmail.com>
+In-Reply-To: <CADtm3G50HbOe_0RpWYYOVZSZfSdkF7Z0TXzEfAM0AQUqVgvpNQ@mail.gmail.com>
 From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Tue, 27 Jul 2021 13:40:06 +0200
-Message-ID: <CAMhs-H8ABwqAOk9gmU3H+tWzoD_rSGq9d3u8dakLeKq6WT+cHg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] gpiolib: convert 'devprop_gpiochip_set_names' to
- support multiple gpiochip per device
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 27 Jul 2021 13:42:37 +0200
+Message-ID: <CAMhs-H8gVWQpC_vV=TCU6J_VdDaT0dMUgKPN7RTtt92T+4OZqg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpiolib: convert 'devprop_gpiochip_set_names' to
+ support multiple gpiochip baks per device
+To:     Gregory Fong <gregory.0xf0@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
@@ -69,70 +70,111 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi Gregory,
 
-On Tue, Jul 27, 2021 at 1:35 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
+On Tue, Jul 27, 2021 at 9:39 AM Gregory Fong <gregory.0xf0@gmail.com> wrote:
 >
-> On Tue, Jul 27, 2021 at 8:02 AM Sergio Paracuellos
+> On Mon, Jul 19, 2021 at 1:31 AM Sergio Paracuellos
 > <sergio.paracuellos@gmail.com> wrote:
+> > On Mon, Jul 19, 2021 at 9:57 AM Gregory Fong <gregory.0xf0@gmail.com> wrote:
+> > > On Thu, Jul 08, 2021 at 09:04:27AM +0200, Sergio Paracuellos wrote:
+> > [snip]
+> > > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > > index 27c07108496d..f3f45b804542 100644
+> > > > --- a/drivers/gpio/gpiolib.c
+> > > > +++ b/drivers/gpio/gpiolib.c
+> > > > @@ -382,11 +382,16 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+> > > >       if (count < 0)
+> > > >               return 0;
+> > > >
+> > > > -     if (count > gdev->ngpio) {
+> > > > -             dev_warn(&gdev->dev, "gpio-line-names is length %d but should be at most length %d",
+> > > > -                      count, gdev->ngpio);
+> > > > -             count = gdev->ngpio;
+> > > > -     }
+> > > > +     /*
+> > > > +      * When offset is set in the driver side we assume the driver internally
+> > > > +      * is using more than one gpiochip per the same device. We have to stop
+> > > > +      * setting friendly names if the specified ones with 'gpio-line-names'
+> > > > +      * are less than the offset in the device itself. This means all the
+> > > > +      * lines are not present for every single pin within all the internal
+> > > > +      * gpiochips.
+> > > > +      */
+> > > > +     if (count <= chip->offset)
+> > > > +             return 0;
+> > >
+> > > This case needs a descriptive warning message.  Silent failure to assign
+> > > names here will leave someone confused about what they're doing wrong.
 > >
-> > On Thu, Jul 8, 2021 at 9:04 AM Sergio Paracuellos
-> > <sergio.paracuellos@gmail.com> wrote:
-> > >
-> > > There are some unfortunate cases where the DT representation
-> > > of the device and the Linux internal representation differs.
-> > > Such drivers for devices are forced to implement a custom function
-> > > to avoid the core code 'devprop_gpiochip_set_names' to be executed
-> > > since in any other case every gpiochip inside will got repeated
-> > > names through its internal gpiochip banks. To avoid this antipattern
-> > > this changes are introduced trying to adapt core 'devprop_gpiochip_set_names'
-> > > to get a correct behaviour for every single situation.
-> > >
-> > > This series introduces a new 'offset' field in the gpiochip structure
-> > > that can be used for those unfortunate drivers that must define multiple
-> > > gpiochips per device.
-> > >
-> > > Drivers affected by this situation are also updated. These are
-> > > 'gpio-mt7621' and 'gpio-brcmstb'.
-> > >
-> > > Motivation for this series available at [0].
-> > >
-> > > Thanks in advance for your feedback.
-> > >
-> > > Best regards,
-> > >     Sergio Paracuellos
-> > >
-> > > [0]: https://lkml.org/lkml/2021/6/26/198
-> > >
-> > > Sergio Paracuellos (3):
-> > >   gpiolib: convert 'devprop_gpiochip_set_names' to support multiple
-> > >     gpiochip baks per device
-> > >   gpio: mt7621: support gpio-line-names property
-> > >   gpio: brcmstb: remove custom 'brcmstb_gpio_set_names'
-> > >
-> > >  drivers/gpio/gpio-brcmstb.c | 45 +------------------------------------
-> > >  drivers/gpio/gpio-mt7621.c  |  1 +
-> > >  drivers/gpio/gpiolib.c      | 34 +++++++++++++++++++++++-----
-> > >  include/linux/gpio/driver.h |  4 ++++
-> > >  4 files changed, 34 insertions(+), 50 deletions(-)
-> >
-> > Hi!
-> >
-> > Linus, Bartosz, any comments on this series?
-> >
+> > Ok, I will add something like "All line names are not defined for bank
+> > X.". Or any other suggestion would be also ok :).
 >
-> Looks good, but I was thinking you were going to address Gregory's
-> points first and resend a v2?
+> I'd like this to name the gpio-line-names property like the other
+> warning does.  Not sure there's a good way to generically determine
+> what the bank number is, since some driver might not populate at
+> regular offsets.
+>
+> We do have the count and offset available, so maybe something like
+> "gpio-line-names too short (length <count>), cannot map names for the
+> gpiochip at offset <offset>"?
 
-I was waiting for your opinion about the last warning stuff Gregory
-commented on PATCH 1 since it is not a good way to distinguish between
-normal (1 gpiochip) and special cases (multiple gpiochips). I think
-since that can happen normally we can just remove the warning. With
-that clear I properly fix it up and resend v2.
+Ok, sounds ok to me to have this warning in this way, thanks.
+>
+> >
+> > >
+> > > >
+> > > >       names = kcalloc(count, sizeof(*names), GFP_KERNEL);
+> > > >       if (!names)
+> > > > @@ -400,8 +405,25 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+> > > >               return ret;
+> > > >       }
+> > > >
+> > > > +     /*
+> > > > +      * When more that one gpiochip per device is used, 'count' can
+> > > > +      * contain at most number gpiochips x chip->ngpio. We have to
+> > > > +      * correctly distribute all defined lines taking into account
+> > > > +      * chip->offset as starting point from where we will assign
+> > > > +      * the names to pins from the 'names' array. Since property
+> > > > +      * 'gpio-line-names' cannot contains gaps, we have to be sure
+> > > > +      * we only assign those pins that really exists since chip->ngpio
+> > > > +      * can be different of the chip->offset.
+> > > > +      */
+> > > > +     count = (count > chip->offset) ? count - chip->offset : count;
+> > > > +     if (count > chip->ngpio) {
+> > >
+> > > In the multiple gpiochip case, if there are 3+ gpiochips this seems like
+> > > it will yield an invalid warning. For example, if there are 3 gpiochips
+> > > (banks 0, 1, and 2), and all gpios are given names in gpio-line-names,
+> > > isn't this condition going to always evaluate to true for bank 1,
+> > > resulting in an invalid warning?  In that case I would think setting
+> > > count to chip->ngpio is the *expected* behavior.
+> > >
+> > > Since that's a "normal" behavior in the multiple gpiochip case, I'm not
+> > > sure there's a simple way to detect an over-long gpio-line-names here
+> > > in this function anymore.
+> >
+> > Yes, in case of multiple chips with all lines names defined this
+> > warning will be displayed but I wanted to maintain the warning for
+> > normal cases and I was not able to find an easy way of distinc that
+> > cases with those having multiple gpiochips internally. So I ended up
+> > in "ok, will be displayed for those special cases and interpreted as
+> > we are just assigning names within an offset along the gpiochips in
+> > the device.". Any other suggestion of course is always welcome :)
+>
+> There are millions of parts with this gpio hardware in the wild; I'd
+> much prefer we didn't issue a warning for every chip using it.
+>
+> If there is a good way to detect the multiple gpiochip case, then that
+> could be used to determine whether to issue the warning.  Otherwise,
+> it seems like it would be better to remove the warning altogether.
+
+I think since this might be kind of "normal scenery" now, and there is
+not an easy way to distinguish between normal and special cases (it
+is?) warning can be safely removed.
 
 >
-> Bartosz
+> Best regards,
+> Gregory
 
 Best regards,
     Sergio Paracuellos
