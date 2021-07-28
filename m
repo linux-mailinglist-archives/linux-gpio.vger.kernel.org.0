@@ -2,129 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A1B83D8674
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jul 2021 06:12:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B77683D8678
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jul 2021 06:12:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbhG1EMB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Jul 2021 00:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38390 "EHLO
+        id S229734AbhG1EM7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Jul 2021 00:12:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbhG1EMB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Jul 2021 00:12:01 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF31AC061760
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Jul 2021 21:12:00 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id 185so1361884iou.10
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Jul 2021 21:12:00 -0700 (PDT)
+        with ESMTP id S229546AbhG1EM6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Jul 2021 00:12:58 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68161C061757;
+        Tue, 27 Jul 2021 21:12:57 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id c16so782251wrp.13;
+        Tue, 27 Jul 2021 21:12:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jkbI7zztV8NxbL6OAK1GEXMLTdKA0PoGPYCzxGouH9A=;
-        b=dXYscuKA9USWzwsEiMBwy5bFn/At9FyANB2VnftNc1X/3U6Q7IE+ADanciy9xfye3r
-         dagomBuKngzGJSGumLSkQdm8bYNno6ki1QW7KUxpxYe9jxJOcDIxvRU7EpP8S5E00c2/
-         pXE/MXTifhLK7UKGySp+fdKyCMkGBXoCzF4BQ=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/ZEyDUigUMqWE97oZVBOPlCSLFQfNmBWOKXXhKYmizU=;
+        b=QFi27XD5HnVz+P6yzSrdZREFrbiOnUN7XZyP+0kxpoVMWYpgwYyZLhY3tavY4UHgQJ
+         zcWqlj4labu5TH/OKww71WDkTIGZuOjT4w2zS9LmBPj9eA8OnerrCASeFfovmXS7e7ku
+         2dZKzBl0Onlmc0aeuhL5R7/qGSPVVtOkx7o2V+yaayXVYtdibMQtJq1VPWU3AkqXC7nT
+         K2yx5QairpR1fkikbVUfl9O3pqDrovnmvhNWGhEudIapo0TNlohWMXu2POWdfSIUgRRW
+         8WwOJZMVfqQEN3h7AbmoepLCNCRFtteVoDtfGlZ4TVfauzLNNZGB9+q7GjM4VGJLF9oT
+         e6+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jkbI7zztV8NxbL6OAK1GEXMLTdKA0PoGPYCzxGouH9A=;
-        b=sVS3uPseNsO6rC0Umf4q/5jd0UOsaDWZ2hHnq2opYd/EtW/3vL/CXoN5yi0ALhq6sM
-         3EmrN8WP+42cnL8DSpZ+rV+ovN6HIuDkHLgKfXNnAo/LbiXg5aZxbZ/24Ux74IKo4/Ef
-         llcSwwlV5yLn8QmUPV6h3YCN6gAfD/rBSHnT3V88fO9BAUimkklt8MsGH1xJJQkkMNDa
-         TlGwldQz84vjG2IWN1ZjmMC1UkoLZ6vtwztV0Pbr/Wr5WvxzllpAqF2G5/er6w/mtwWi
-         BvH/xbda135Beob+TFvRxxBmKSg1KEag5dxGdwxvTQyWF1xTkFhUYmCLzZgL5v5NXMi/
-         w5Sg==
-X-Gm-Message-State: AOAM531JouLstuDWKPCMWlT2BgyKcSmBRQzQAMrijF5BYzia7Rot4WgE
-        YiJwhBNsSirV6Q7Opelw7X4Nas7d3CejL0Z9+cCxOA==
-X-Google-Smtp-Source: ABdhPJwZURagtlb/Es05dXEFrkQMdNvFOAO3Y0xE8fnLEijoUW7gGe8ePUB+PSUfm3tmzaT/PUEwnpmW7dLCcUiGvtg=
-X-Received: by 2002:a02:6946:: with SMTP id e67mr24142969jac.4.1627445519987;
- Tue, 27 Jul 2021 21:11:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/ZEyDUigUMqWE97oZVBOPlCSLFQfNmBWOKXXhKYmizU=;
+        b=LolEA/otj79JeYoHiVQ9IGv43VYMrXcwff95zRCWMHMkaQh+bQ/RAW8lGKdLoJRK8G
+         TyEdc/w+b2fRD/2cq/X+Oe+hUidrClQt0b+UYACpCoa5MNI9LUUgX6xlHqN8aU21n4v/
+         C16J7FBnXyupr1p52PhCqVXchL40NDWkm2QLrJGvqti1t6pWepYTNjUqpPuhOsqsDLm5
+         0xbXOxg+LfGVJlvw3H9HTJ2lL7xCv/CMWm0LCp3kU/PuSnFY5yLQ0r0MhZdGdUm9Stw3
+         n5YBFTbVtBLTpDpbq7MI1J/OWC3rIqjrTUcJvJy9XfaPCjhk+ZqMctfbDQlJTGKl7/9w
+         oZ1g==
+X-Gm-Message-State: AOAM533Vi7RT1RH6yi2j2BFRBncS0tXuiNctYGzNn0ISha5dWllZZWKV
+        QCFfw4S8AdMMqfAxENyKPL9HanyPj2l7aoHS
+X-Google-Smtp-Source: ABdhPJws4EufK+BSOLMGfSzwcNQCASk03QmC2cA3lKZCxqTznJ5VJUx5VIzVOiNhfezwjwPh1W0zmg==
+X-Received: by 2002:adf:d1c7:: with SMTP id b7mr20284155wrd.108.1627445575735;
+        Tue, 27 Jul 2021 21:12:55 -0700 (PDT)
+Received: from localhost.localdomain (189.red-83-51-242.dynamicip.rima-tde.net. [83.51.242.189])
+        by smtp.gmail.com with ESMTPSA id e6sm6274184wrg.18.2021.07.27.21.12.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Jul 2021 21:12:55 -0700 (PDT)
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, gregory.0xf0@gmail.com,
+        bgolaszewski@baylibre.com, f.fainelli@gmail.com,
+        matthias.bgg@gmail.com, opensource@vdorst.com,
+        andy.shevchenko@gmail.com, git@johnthomson.fastmail.com.au,
+        neil@brown.name, hofrat@osadl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/3] gpiolib: convert 'devprop_gpiochip_set_names' to support multiple gpiochip banks per device
+Date:   Wed, 28 Jul 2021 06:12:50 +0200
+Message-Id: <20210728041253.15382-1-sergio.paracuellos@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210727110232.2503763-1-hsinyi@chromium.org> <20210727110232.2503763-3-hsinyi@chromium.org>
- <1627410395.874547.3210653.nullmailer@robh.at.kernel.org>
-In-Reply-To: <1627410395.874547.3210653.nullmailer@robh.at.kernel.org>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Wed, 28 Jul 2021 12:11:34 +0800
-Message-ID: <CAJMQK-jii-qqzG8Myn2svn+hBS+s+0YZLO1Gx=Co23gzd7FUgA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: mediatek: convert pinctrl to yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 2:26 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, 27 Jul 2021 19:02:32 +0800, Hsin-Yi Wang wrote:
-> > Convert mt65xx, mt6796, mt7622, mt8183 bindings to yaml.
-> >
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > ---
-> >  .../pinctrl/mediatek,mt65xx-pinctrl.yaml      | 202 +++++++
-> >  .../pinctrl/mediatek,mt6797-pinctrl.yaml      | 175 ++++++
-> >  .../pinctrl/mediatek,mt7622-pinctrl.yaml      | 537 ++++++++++++++++++
-> >  .../pinctrl/mediatek,mt8183-pinctrl.yaml      | 230 ++++++++
-> >  .../bindings/pinctrl/pinctrl-mt65xx.txt       | 156 -----
-> >  .../bindings/pinctrl/pinctrl-mt6797.txt       |  83 ---
-> >  .../bindings/pinctrl/pinctrl-mt7622.txt       | 490 ----------------
-> >  .../bindings/pinctrl/pinctrl-mt8183.txt       | 132 -----
-> >  8 files changed, 1144 insertions(+), 861 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6797-pinctrl.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-> >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt6797.txt
-> >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> >
->
-> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
->
-> yamllint warnings/errors:
->
-> dtschema/dtc warnings/errors:
-> Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dts:21:18: fatal error: dt-bindings/pinctrl/mt8183-pinfunc.h: No such file or directory
->    21 |         #include <dt-bindings/pinctrl/mt8183-pinfunc.h>
->       |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dt.yaml] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [Makefile:1418: dt_binding_check] Error 2
-> \ndoc reference errors (make refcheckdocs):
-> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> MAINTAINERS: Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-> MAINTAINERS: Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
->
-> See https://patchwork.ozlabs.org/patch/1510444
->
-> This check can fail if there are any dependencies. The base for a patch
-> series is generally the most recent rc1.
->
-This patch is dependent on
-https://patchwork.kernel.org/project/linux-mediatek/patch/20210727110232.2503763-2-hsinyi@chromium.org/
-("arm: dts: mt8183: Move pinfunc to include/dt-bindings/pinctrl")
+There are some unfortunate cases where the DT representation
+of the device and the Linux internal representation differs.
+Such drivers for devices are forced to implement a custom function
+to avoid the core code 'devprop_gpiochip_set_names' to be executed
+since in any other case every gpiochip inside will got repeated
+names through its internal gpiochip banks. To avoid this antipattern
+this changes are introduced trying to adapt core 'devprop_gpiochip_set_names'
+to get a correct behaviour for every single situation.
 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->
-> pip3 install dtschema --upgrade
->
-> Please check and re-submit.
->
+This series introduces a new 'offset' field in the gpiochip structure
+that can be used for those unfortunate drivers that must define multiple
+gpiochips per device.
+
+Drivers affected by this situation are also updated. These are
+'gpio-mt7621' and 'gpio-brcmstb'.
+
+Motivation for this series available at [0].
+
+Thanks in advance for your feedback.
+
+Best regards,
+    Sergio Paracuellos
+
+Changes in v4:
+  - Add comma in warning message for clarity. 
+  - Collect Gregory Fong Reviewed-by for PATCH 1/3.
+
+Changes in v3:
+  - Reflow a string literal to be on one line in PATCH 1/3.
+  - reflow commit messages PATCH 2/3 and PATCH 3/3 to occupy a little bit
+    more available space per line.
+
+Changes in v2:
+  - Address Gregory Fong comments in v1 of the series [1].
+  - Collect Andy Shevchenko Reviewed-by for the series.
+  - Collect Gregory Fong Acked-by for PATCH 3/3.
+
+[0]: https://lkml.org/lkml/2021/6/26/198
+[1]: https://lkml.org/lkml/2021/7/8/47
+
+Sergio Paracuellos (3):
+  gpiolib: convert 'devprop_gpiochip_set_names' to support multiple
+    gpiochip banks per device
+  gpio: mt7621: support gpio-line-names property
+  gpio: brcmstb: remove custom 'brcmstb_gpio_set_names'
+
+ drivers/gpio/gpio-brcmstb.c | 45 +------------------------------------
+ drivers/gpio/gpio-mt7621.c  |  1 +
+ drivers/gpio/gpiolib.c      | 32 +++++++++++++++++++++-----
+ include/linux/gpio/driver.h |  4 ++++
+ 4 files changed, 33 insertions(+), 49 deletions(-)
+
+-- 
+2.25.1
+
