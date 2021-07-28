@@ -2,131 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B20A23D903A
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jul 2021 16:19:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 349863D904A
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jul 2021 16:21:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236626AbhG1OTF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Jul 2021 10:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236619AbhG1OTE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Jul 2021 10:19:04 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E478C061764;
-        Wed, 28 Jul 2021 07:19:03 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id g76so4231550ybf.4;
-        Wed, 28 Jul 2021 07:19:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ejXULwDzPXwJ/LTVaK86AHBcOGDiYvQDKdZvKfGyr+E=;
-        b=izLih9JXIZe8uv9f2Y5f/dBmFONzdLNBX3NwBX8w15sMRi8/cSqjpYVpa7WPKvKmb0
-         YVeN4seCnkjHpYV1oC6tmJDU3mZiehtap5QguPxcxHLBLD8Ki993awTH38hIi9mFB9Yc
-         cbOL/VtgQCEQsKgtMylpl+gZftgiDw8jaEMXp463BpIbSnFURa+wj8OatcJMBWMvqo3K
-         vb7rXPy9/j+oseSpdi1cxsRVIHyZNLJPkpTm58hwkgdJpl+7x7FjkwEzcbEiH/5Fdb+B
-         sqmxgMRqluJgNLeHvg4ueTvoxpNW6YpitOnPKeA7gpKu12Vb0YjPZRKK6iEIstxIHpCN
-         P4CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ejXULwDzPXwJ/LTVaK86AHBcOGDiYvQDKdZvKfGyr+E=;
-        b=WtX8zBESWKjXiMLLsGI3TbmqPYq7Bewardxk6hGDTUnhknMEEAsWNOKyZlQoZ3OMNq
-         3xh+UZsv99s5GTqJcgGj8GCVZ/ZwX93C1S9EloON2b3WspT5fm0+6Hs1hvUn9tKKEuqZ
-         +N4HAQ9drv9sWH3xZXDQDCnx42HcUlk9ZIki8ZicTQb28obHiZF7ZmR/nEAub8Fn1JoM
-         NiZ2X6zbt8XDsCjMknC2Cw+ocClVhU4MWbW8PQUC3KTdJZ7fFV0bKyp0ugE7dkiglwcc
-         /dEYgsjFeueOQJ7qf6/O//muQDADtfkji7SOWelbe29FGLbVsLKEodbOxMYuGpXDuc8W
-         fGeQ==
-X-Gm-Message-State: AOAM531mvJIHe4yvoZOCMPqii/BlF1bQF+F/n8K6oZCK88fyOpbhGEui
-        ddF+9RXVUN/F0ms+6AYGz/AnAsYN6UBRBBahkzw=
-X-Google-Smtp-Source: ABdhPJxuR9VjMFM8xLFvjAI/XQvLoRT9mV8kY/kO1BcownGU4fjyQoi5dCN6U0Vxw4ND7H9kfs1D+MrhHXnhCNLzZ1o=
-X-Received: by 2002:a25:3c5:: with SMTP id 188mr8800245ybd.437.1627481942356;
- Wed, 28 Jul 2021 07:19:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210728135534.703028-1-pgwipeout@gmail.com> <20210728135534.703028-7-pgwipeout@gmail.com>
- <13247009.uLZWGnKmhe@diego>
-In-Reply-To: <13247009.uLZWGnKmhe@diego>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Wed, 28 Jul 2021 10:18:49 -0400
-Message-ID: <CAMdYzYqR+ocrXQi8TOHY0Yd2oULXuPgE_QnbcuQSw=BoaumBKA@mail.gmail.com>
-Subject: Re: [PATCH 6/9] arm64: dts: rockchip: add missing rk3568 cru phandles
-To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S235467AbhG1OVV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Jul 2021 10:21:21 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:50348 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235445AbhG1OVV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 28 Jul 2021 10:21:21 -0400
+Received: from [95.90.166.74] (helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1m8kQu-00062f-4X; Wed, 28 Jul 2021 16:21:16 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peter Geis <pgwipeout@gmail.com>
+Subject: Re: [PATCH 4/9] arm64: dts: rockchip: add rk356x gmac1 node
+Date:   Wed, 28 Jul 2021 16:21:15 +0200
+Message-ID: <21568327.EfDdHjke4D@diego>
+In-Reply-To: <20210728135534.703028-5-pgwipeout@gmail.com>
+References: <20210728135534.703028-1-pgwipeout@gmail.com> <20210728135534.703028-5-pgwipeout@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 10:06 AM Heiko St=C3=BCbner <heiko@sntech.de> wrote=
-:
->
-> Hi Peter,
->
-> Am Mittwoch, 28. Juli 2021, 15:55:31 CEST schrieb Peter Geis:
-> > The grf and pmugrf phandles are necessary for the pmucru and cru to
-> > modify clocks. Add these phandles to permit adjusting the clock rates
-> > and muxes.
-> >
-> > Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/rockchip/rk356x.dtsi | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot=
-/dts/rockchip/rk356x.dtsi
-> > index 0905fac0726a..8ba0516eedd8 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-> > @@ -218,6 +218,8 @@ grf: syscon@fdc60000 {
-> >       pmucru: clock-controller@fdd00000 {
-> >               compatible =3D "rockchip,rk3568-pmucru";
-> >               reg =3D <0x0 0xfdd00000 0x0 0x1000>;
-> > +             rockchip,grf =3D <&grf>;
-> > +             rockchip,pmugrf =3D <&pmugrf>;
->
-> I don't think the pmucru needs both and in fact the mainline
-> clock driver should just reference its specific grf at all, i.e.
->         pmucru -> pmugrf (via the rockchip,grf handle)
->         cru -> grf
->
-> I've not seen anything breaking this scope so far.
+Hi Peter,
 
-I thought the same thing as well, but for some reason the driver
-refuses to apply assigned-clocks to the plls unless these are all
-present.
-If the driver can get these assignments automatically eventually,
-perhaps it's a loading order issue?
+Am Mittwoch, 28. Juli 2021, 15:55:29 CEST schrieb Peter Geis:
+> Add the gmac1 controller to the rk356x device tree.
+> This is the controller common to both the rk3568 and rk3566.
+> 
+> Signed-off-by: Peter Geis <pgwipeout@gmail.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk356x.dtsi | 48 ++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+> index c2aa7aeec58d..77c679304916 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+> @@ -18,6 +18,7 @@ / {
+>  	#size-cells = <2>;
+>  
+>  	aliases {
+> +		ethernet1 = &gmac1;
+>  		gpio0 = &gpio0;
+>  		gpio1 = &gpio1;
+>  		gpio2 = &gpio2;
 
-Thinking about it, it's probably the grf and pmugrf haven't probed
-when the driver is attempting to assign these, and tying them together
-forces the probe to happen first.
+Looking back at the discussion about mmc aliases in board-dts vs. soc-dtsi
+I get the feeling the ethernet alias would be same case, as not all boards
+will expose ethernet.
 
->
->
-> Heiko
->
-> >               #clock-cells =3D <1>;
-> >               #reset-cells =3D <1>;
-> >       };
-> > @@ -225,6 +227,7 @@ pmucru: clock-controller@fdd00000 {
-> >       cru: clock-controller@fdd20000 {
-> >               compatible =3D "rockchip,rk3568-cru";
-> >               reg =3D <0x0 0xfdd20000 0x0 0x1000>;
-> > +             rockchip,grf =3D <&grf>;
-> >               #clock-cells =3D <1>;
-> >               #reset-cells =3D <1>;
-> >       };
-> >
->
->
->
->
+In the very least the ethernet alias should be part of the rk3566/rk3568 dtsi
+files, doing ethernet0 = &gmac1 for rk3566 and ethernet1 = &gmac1 for rk3568.
+
+But I do think the board-dts would be the more appropriate place.
+
+
+Heiko
+
+> @@ -344,6 +345,53 @@ sdmmc2: mmc@fe000000 {
+>  		status = "disabled";
+>  	};
+>  
+> +	gmac1: ethernet@fe010000 {
+> +		compatible = "rockchip,rk3568-gmac", "snps,dwmac-4.20a";
+> +		reg = <0x0 0xfe010000 0x0 0x10000>;
+> +		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "macirq", "eth_wake_irq";
+> +		clocks = <&cru SCLK_GMAC1>, <&cru SCLK_GMAC1_RX_TX>,
+> +			 <&cru SCLK_GMAC1_RX_TX>, <&cru CLK_MAC1_REFOUT>,
+> +			 <&cru ACLK_GMAC1>, <&cru PCLK_GMAC1>,
+> +			 <&cru SCLK_GMAC1_RX_TX>, <&cru CLK_GMAC1_PTP_REF>;
+> +		clock-names = "stmmaceth", "mac_clk_rx",
+> +			      "mac_clk_tx", "clk_mac_refout",
+> +			      "aclk_mac", "pclk_mac",
+> +			      "clk_mac_speed", "ptp_ref";
+> +		resets = <&cru SRST_A_GMAC1>;
+> +		reset-names = "stmmaceth";
+> +		rockchip,grf = <&grf>;
+> +		snps,mixed-burst;
+> +		snps,tso;
+> +		snps,axi-config = <&gmac1_stmmac_axi_setup>;
+> +		snps,mtl-rx-config = <&gmac1_mtl_rx_setup>;
+> +		snps,mtl-tx-config = <&gmac1_mtl_tx_setup>;
+> +		status = "disabled";
+> +
+> +		mdio1: mdio {
+> +			compatible = "snps,dwmac-mdio";
+> +			#address-cells = <0x1>;
+> +			#size-cells = <0x0>;
+> +		};
+> +
+> +		gmac1_stmmac_axi_setup: stmmac-axi-config {
+> +			snps,wr_osr_lmt = <4>;
+> +			snps,rd_osr_lmt = <8>;
+> +			snps,blen = <0 0 0 0 16 8 4>;
+> +		};
+> +
+> +		gmac1_mtl_rx_setup: rx-queues-config {
+> +			snps,rx-queues-to-use = <1>;
+> +			queue0 {};
+> +		};
+> +
+> +		gmac1_mtl_tx_setup: tx-queues-config {
+> +			snps,tx-queues-to-use = <1>;
+> +			queue0 {};
+> +		};
+> +	};
+> +
+>  	qos_gpu: qos@fe128000 {
+>  		compatible = "rockchip,rk3568-qos", "syscon";
+>  		reg = <0x0 0xfe128000 0x0 0x20>;
+> 
+
+
+
+
