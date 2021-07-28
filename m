@@ -2,126 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23CED3D90D7
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jul 2021 16:42:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A638D3D90E3
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jul 2021 16:46:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236909AbhG1Omo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Jul 2021 10:42:44 -0400
-Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:56760
-        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236889AbhG1Omn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 28 Jul 2021 10:42:43 -0400
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPS id A0DA8402C2
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Jul 2021 14:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1627483361;
-        bh=vhKtDpijEwzqypmCoxqNYUO22vvDYc0oFhewweVeSvo=;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-         MIME-Version;
-        b=MZKNYvyV4od7dbbEgXk0uBoxcjX8ydOebtLfZMZkSTClUkzk3UZDEWPISWSAUBdl0
-         JKQGfK/4vHtw6TMvZt22YK4yVLLRTkiHTKNwehQv3mZjtTRuwOPkSzsUmb2PTpEryd
-         q/xkejQMpiAE0tSVZiEjJuwYrnEE3XMxsNfpq6lAWfe/znOTbuWaZBcGr59fs3WsP1
-         WdOOrg5P+AGwBFmmgamFUZMElbbANgskPtIdmS1ld2oX0wH+OfPeZ5T6qPVfWaVYHy
-         BPg90mm01zGZHaESko1+CZ69vCrpjnUH/H6wZCFbbpNIINd7Z80YcFUbz02IvPZ92p
-         s5zyu0AQcaj7w==
-Received: by mail-ed1-f71.google.com with SMTP id a23-20020a50ff170000b02903b85a16b672so1373658edu.1
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Jul 2021 07:42:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vhKtDpijEwzqypmCoxqNYUO22vvDYc0oFhewweVeSvo=;
-        b=lQHaBpzp1Ju6ryYYsIjI8tFHL65G7YZA4jlgT3fW6fZPOIqpgLapLLFdhQVxyTZbG0
-         Ms93+VfyGbncfyjZmj7iCpBleZEfMTiUsbxZk015xv27S7oqL1tUrGrsrohsI/B912WU
-         r1qDMkDfrBjYHXEutgyIFqavPqXUtWpoqpzJzyAzFLbdbADSljqgPoByLUEmPnn/wUaY
-         eByOPAO/AoavKHnHvvqZM0W8Scvh8zy7283+O9TmpxZoA5Uo03DusQZh5FE7AU54Lrsq
-         O900NejL2pbiq9XMz1XTN1vVa7MBhmJPxGrmVeHAEmRhg1pvBuCHpo/k/MY+U1AbGeml
-         VPGg==
-X-Gm-Message-State: AOAM532McfOg5gMERTW0wPZUpC2iWCrAT0qgUv7CyTg7CBIqQRboCIX7
-        kjmlL4oI2UtL1YZMDbjh8Wx0yXxT5CIJ0SMXXuyZTEiz8FvpCLMAMPY81xvfPHxPgPvaykmXXbp
-        qn9hkd7xOOJl9BGRUjRvI5omuAUOeRR2zstIZ7Po=
-X-Received: by 2002:aa7:c858:: with SMTP id g24mr202666edt.250.1627483361437;
-        Wed, 28 Jul 2021 07:42:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz2XZQvwY+SVOhT/EErnGZDZWwl1CML/Duf2XYwD3kIwYQ2UEYLx6GZZ48zkIz7I3zJp+0/bA==
-X-Received: by 2002:aa7:c858:: with SMTP id g24mr202655edt.250.1627483361337;
-        Wed, 28 Jul 2021 07:42:41 -0700 (PDT)
-Received: from localhost.localdomain ([86.32.47.9])
-        by smtp.gmail.com with ESMTPSA id d19sm2683676eds.54.2021.07.28.07.42.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jul 2021 07:42:40 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+        id S235530AbhG1OqX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Jul 2021 10:46:23 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:50628 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235521AbhG1OqW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 28 Jul 2021 10:46:22 -0400
+Received: from [95.90.166.74] (helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1m8kp8-0006C1-2O; Wed, 28 Jul 2021 16:46:18 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Subject: [PATCH 3/3] gpiolib: of: constify few local device_node variables
-Date:   Wed, 28 Jul 2021 16:42:29 +0200
-Message-Id: <20210728144229.323611-4-krzysztof.kozlowski@canonical.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210728144229.323611-1-krzysztof.kozlowski@canonical.com>
-References: <20210728144229.323611-1-krzysztof.kozlowski@canonical.com>
+        Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peter Geis <pgwipeout@gmail.com>
+Subject: Re: [PATCH 5/9] arm64: dts: rockchip: add rk3568 tsadc nodes
+Date:   Wed, 28 Jul 2021 16:46:17 +0200
+Message-ID: <8410057.NyiUUSuA9g@diego>
+In-Reply-To: <20210728135534.703028-6-pgwipeout@gmail.com>
+References: <20210728135534.703028-1-pgwipeout@gmail.com> <20210728135534.703028-6-pgwipeout@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-gpiolib does not modify struct device_node, so few local pointers can
-point to a const data.
+Am Mittwoch, 28. Juli 2021, 15:55:30 CEST schrieb Peter Geis:
+> Add the thermal and tsadc nodes to the rk3568 device tree.
+> There are two sensors, one for the cpu, one for the gpu.
+> 
+> Signed-off-by: Peter Geis <pgwipeout@gmail.com>
+> ---
+>  .../boot/dts/rockchip/rk3568-pinctrl.dtsi     |  6 ++
+>  arch/arm64/boot/dts/rockchip/rk356x.dtsi      | 71 +++++++++++++++++++
+>  2 files changed, 77 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3568-pinctrl.dtsi b/arch/arm64/boot/dts/rockchip/rk3568-pinctrl.dtsi
+> index a588ca95ace2..b464c7bda1f7 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3568-pinctrl.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3568-pinctrl.dtsi
+> @@ -2420,6 +2420,12 @@ spi3m1_cs1: spi3m1-cs1 {
+>  	};
+>  
+>  	tsadc {
+> +		/omit-if-no-ref/
+> +		tsadc_gpio: tsadc-gpio {
+> +			rockchip,pins =
+> +				<0 RK_PA1 0 &pcfg_pull_none>;
+> +		};
+> +
+>  		/omit-if-no-ref/
+>  		tsadcm0_shut: tsadcm0-shut {
+>  			rockchip,pins =
+> diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+> index 77c679304916..0905fac0726a 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+> @@ -51,6 +51,7 @@ cpu0: cpu@0 {
+>  			compatible = "arm,cortex-a55";
+>  			reg = <0x0 0x0>;
+>  			clocks = <&scmi_clk 0>;
+> +			#cooling-cells = <2>;
+>  			enable-method = "psci";
+>  			operating-points-v2 = <&cpu0_opp_table>;
+>  		};
+> @@ -59,6 +60,7 @@ cpu1: cpu@100 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a55";
+>  			reg = <0x0 0x100>;
+> +			#cooling-cells = <2>;
+>  			enable-method = "psci";
+>  			operating-points-v2 = <&cpu0_opp_table>;
+>  		};
+> @@ -67,6 +69,7 @@ cpu2: cpu@200 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a55";
+>  			reg = <0x0 0x200>;
+> +			#cooling-cells = <2>;
+>  			enable-method = "psci";
+>  			operating-points-v2 = <&cpu0_opp_table>;
+>  		};
+> @@ -75,6 +78,7 @@ cpu3: cpu@300 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a55";
+>  			reg = <0x0 0x300>;
+> +			#cooling-cells = <2>;
+>  			enable-method = "psci";
+>  			operating-points-v2 = <&cpu0_opp_table>;
+>  		};
+> @@ -774,6 +778,73 @@ uart9: serial@fe6d0000 {
+>  		status = "disabled";
+>  	};
+>  
+> +	thermal_zones: thermal-zones {
+> +		cpu_thermal: cpu-thermal {
+> +			polling-delay-passive = <100>;
+> +			polling-delay = <1000>;
+> +
+> +			thermal-sensors = <&tsadc 0>;
+> +
+> +			trips {
+> +				cpu_alert0: cpu_alert0 {
+> +					temperature = <70000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +				cpu_alert1: cpu_alert1 {
+> +					temperature = <75000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +				cpu_crit: cpu_crit {
+> +					temperature = <95000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_alert0>;
+> +					cooling-device =
+> +						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +
+> +		gpu_thermal: gpu-thermal {
+> +			polling-delay-passive = <20>; /* milliseconds */
+> +			polling-delay = <1000>; /* milliseconds */
+> +
+> +			thermal-sensors = <&tsadc 1>;
+> +		};
+> +	};
+> +
+> +	tsadc: tsadc@fe710000 {
+> +		compatible = "rockchip,rk3568-tsadc";
+> +		reg = <0x0 0xfe710000 0x0 0x100>;
+> +		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+> +		assigned-clocks = <&cru CLK_TSADC_TSEN>, <&cru CLK_TSADC>;
+> +		assigned-clock-rates = <17000000>, <700000>;
+> +		clocks = <&cru CLK_TSADC>, <&cru PCLK_TSADC>;
+> +		clock-names = "tsadc", "apb_pclk";
+> +		resets = <&cru SRST_TSADC>, <&cru SRST_P_TSADC>,
+> +			 <&cru SRST_TSADCPHY>;
+> +		reset-names = "tsadc", "tsadc-apb", "tsadc-phy";
+> +		rockchip,grf = <&grf>;
+> +		rockchip,hw-tshut-temp = <95000>;
+> +		rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
+> +		rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
+> +		pinctrl-names = "gpio", "otpout";
+> +		pinctrl-0 = <&tsadc_gpio>;
+> +		pinctrl-1 = <&tsadc_shutorg>;
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
----
- drivers/gpio/gpiolib-of.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+The mainline thermal driver doesn't specify these pinctrl states at all.
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 1e5a6f63b2fe..0ad288ab6262 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -122,7 +122,7 @@ static struct gpio_desc *of_xlate_and_get_gpiod_flags(struct gpio_chip *chip,
- bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
- {
- 	int size;
--	struct device_node *np = gc->of_node;
-+	const struct device_node *np = gc->of_node;
- 
- 	size = of_property_count_u32_elems(np,  "gpio-reserved-ranges");
- 	if (size > 0 && size % 2 == 0)
-@@ -373,7 +373,7 @@ static struct gpio_desc *of_find_spi_gpio(struct device *dev, const char *con_id
- 					  enum of_gpio_flags *of_flags)
- {
- 	char prop_name[32]; /* 32 is max size of property name */
--	struct device_node *np = dev->of_node;
-+	const struct device_node *np = dev->of_node;
- 	struct gpio_desc *desc;
- 
- 	/*
-@@ -404,7 +404,7 @@ static struct gpio_desc *of_find_spi_cs_gpio(struct device *dev,
- 					     unsigned int idx,
- 					     unsigned long *flags)
- {
--	struct device_node *np = dev->of_node;
-+	const struct device_node *np = dev->of_node;
- 
- 	if (!IS_ENABLED(CONFIG_SPI_MASTER))
- 		return ERR_PTR(-ENOENT);
-@@ -440,7 +440,7 @@ static struct gpio_desc *of_find_regulator_gpio(struct device *dev, const char *
- 		"wlf,ldo1ena", /* WM8994 */
- 		"wlf,ldo2ena", /* WM8994 */
- 	};
--	struct device_node *np = dev->of_node;
-+	const struct device_node *np = dev->of_node;
- 	struct gpio_desc *desc;
- 	int i;
- 
--- 
-2.27.0
+Heiko
+
+> +		#thermal-sensor-cells = <1>;
+> +		status = "disabled";
+> +	};
+> +
+>  	saradc: saradc@fe720000 {
+>  		compatible = "rockchip,rk3568-saradc", "rockchip,rk3399-saradc";
+>  		reg = <0x0 0xfe720000 0x0 0x100>;
+> 
+
+
+
 
