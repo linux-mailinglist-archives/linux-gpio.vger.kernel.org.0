@@ -2,133 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EBD43D9EDD
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jul 2021 09:40:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0576E3DA07B
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jul 2021 11:43:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234594AbhG2Hku (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Jul 2021 03:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47724 "EHLO
+        id S235209AbhG2Jnq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Jul 2021 05:43:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234317AbhG2Hku (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jul 2021 03:40:50 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4A2C061757;
-        Thu, 29 Jul 2021 00:40:46 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id u9-20020a17090a1f09b029017554809f35so14230512pja.5;
-        Thu, 29 Jul 2021 00:40:46 -0700 (PDT)
+        with ESMTP id S235197AbhG2Jnq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jul 2021 05:43:46 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C93BC061765
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Jul 2021 02:43:43 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id f18so9808615lfu.10
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Jul 2021 02:43:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w0a44nIazAWCFeMTVCEPSrDUq0YniFKHNtq0Lfg2ohY=;
-        b=t7g76zVFOW82+YW0LTokF9MjLOA1uv5TRTNkErJ+A5zrihX8F4YV0jMNwhp72ra3Qo
-         j6/uIRxl7Syp0Jus87MCUNNvG028aI9vlfEKJYteeFsAGsDwU0e0BnkqUbX/PWk4Invp
-         SBh/7NCKQOn88oLj2/TOukmnNx1mdX2408K+KuJD5EyGTvAUJUtuJRYZwMCOx1I9ECPQ
-         qSkCol4vxbg0TqOU77Urzpd7DNcXd7b7FF5r18vz6vpVLRgaORohwdPZ0oekbGzgbiXd
-         NH0k1oiS1Yzvn10cdydt+xWDWIDA4rFwv4jZ/Od/NzzUSDFuVfLHpyQriy0PGSGGaQ/D
-         nPLA==
+        bh=rsaad1GJ/XkOm8cfftebiAxoVa/TpWToS62izuGJ9pY=;
+        b=ROFh5zsDdjGB7xsZ3gfN08X4TCqyLE5GcRkJ/K9oEApY7i/IignrvExID9mp+hgOyH
+         m+q2hwtfQ3PcGy4Zu1LihgEvq5qWFR/OkQ+71zz+O8nUDZjw76nkxxU3HSuT73irF7KN
+         57aQnO2wW+VyKNylkZJkCNV4eqIcS2Gdtt3M0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w0a44nIazAWCFeMTVCEPSrDUq0YniFKHNtq0Lfg2ohY=;
-        b=ABS62Z2kmuj702UeIKIMaQNu4I7NtK65TPh3PlJFgJ9+fTzaWIyn3YJHZ86fo341Sr
-         7AJi74qVCIY7OpztHhYfyG7pvcK+fPysn2UpAf9/ZGKwcPhOVorSuO8KyrqWeo9hpOVw
-         9tmKLLv9JO456xwbBg0K+KR88TROieFvp7ETKtw+QKkROh8iPssyPBwFwbyOn8yaH1e0
-         CO1DWgS+978t9sLFsz3pizxKj5OUAHB46njujxCC583i53pp/d8AtOQ0MFKZnsPRrgu+
-         g6WXGEieCkrb2YeFS5/RQ9xNE6cJad4AKWGhqbW/46s8Y5vc8Em60difw4nC010NyDoJ
-         pgiQ==
-X-Gm-Message-State: AOAM531xPqEPIcQE6aKdGEt+ChGZkocsFQiyzDgMOAEY72Fz/Pe8qhxd
-        5ozysMVvmJWZhvBMrSZzu6xstJyYvtg8paTk26FQl8Ug8Xk=
-X-Google-Smtp-Source: ABdhPJw5qTNwYA5vkwxrUjxBj2aoPq1ZzdhxfkGVQkBAcF/mi0Y9RzrkVX6d4p9LIzWpx2R9LR85dj2HijqNc4C4faY=
-X-Received: by 2002:a17:90a:7146:: with SMTP id g6mr3944401pjs.228.1627544446084;
- Thu, 29 Jul 2021 00:40:46 -0700 (PDT)
+        bh=rsaad1GJ/XkOm8cfftebiAxoVa/TpWToS62izuGJ9pY=;
+        b=UM8y+IW8d7bI75BTXYSipRXa9AqekVoiA9fKpIGE0YMHdr+2G6dUzMTmImQoofgU8A
+         RS/bmSbq8W0MxPx3NsQ3XQkEmCjAFIV0rv12Y7OaLvIA/R1T6WKjU/pltCjO3thLEhUT
+         7C51d8Nhd0wIT3BAJgX/OuG1o2qVyphoDvmaLGAqcJn6ki2N8jjRFVbg3usX+W+mbwud
+         eYYxsLjLtBgDQYsc4oezjEtq0gVyzkTNJEHr9ZukrhvTaqlR8aaG8bKPL0OKn7cseaeD
+         XXtoHq34o1ly++HW5rLoHjuYbbMXZCjVmJBV1wpjmDdUn9Pb0WQsXTWnYAYtEWc17WyB
+         Y0kA==
+X-Gm-Message-State: AOAM531j6B3rPp2MyWl0xVm+n99sGbMyfCY0w/x/pzsxzIP8vQyTsYdQ
+        cAvuHjTXPfRC4WflKG7FVWNzBl8MZiE5dBQGfN2rZA==
+X-Google-Smtp-Source: ABdhPJxZA8w1PV7njkB8YqwoZbP8na6AFtXiJ942E2I1irAuG8V7nC6e8Ne+qo+7pXOc9OavLte6E41ZTbaK5boATXU=
+X-Received: by 2002:a05:6512:a89:: with SMTP id m9mr3260592lfu.342.1627551821389;
+ Thu, 29 Jul 2021 02:43:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210723075858.376378-1-andrew@aj.id.au> <CAHp75VeQML7njMZ6x8kC-ZJVexC1xJ6n1cB3JneVMAVfuOJgWw@mail.gmail.com>
- <d019990e-a725-4ef5-bb54-aadee9d18b86@www.fastmail.com> <CAHp75Vc2W+WmwNj1AvH6EiT_80c+5gADV9QzK+asHxpd1Ucppw@mail.gmail.com>
- <6cc64039-f82a-4c1e-ad2c-16fad7aa3178@www.fastmail.com>
-In-Reply-To: <6cc64039-f82a-4c1e-ad2c-16fad7aa3178@www.fastmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 29 Jul 2021 10:40:09 +0300
-Message-ID: <CAHp75Vdx9QA7dmSWK8GHxBBxP0uYjrz=Gm=75yqaWbBX6k3v=w@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/6] leds: Fix pca955x GPIO pin mappings
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>, Pavel Machek <pavel@ucw.cz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+References: <20210710081722.1828-1-zhiyong.tao@mediatek.com>
+ <20210710081722.1828-2-zhiyong.tao@mediatek.com> <CAGXv+5GXg0RuOQkh4vaRmcLpehZiXnEUXBvEaObiatAa1sXvaA@mail.gmail.com>
+ <1626940470.29611.9.camel@mhfsdcap03> <CAGXv+5F_-W4aNt0WVSDBGLo_t8orNUq59GMKk_4xVr+hMb9Ctg@mail.gmail.com>
+ <07388dac4e25e0f260725e8f80ba099d5aa80949.camel@mediatek.com>
+In-Reply-To: <07388dac4e25e0f260725e8f80ba099d5aa80949.camel@mediatek.com>
+From:   Chen-Yu Tsai <wenst@chromium.org>
+Date:   Thu, 29 Jul 2021 17:43:30 +0800
+Message-ID: <CAGXv+5EagmhYYpri+nzo6WgGz8A=oiU3Vy+2AVjho=eo6Z+DLw@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: pinctrl: mt8195: add rsel define
+To:     "zhiyong.tao" <zhiyong.tao@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>, mark.rutland@arm.com,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>,
+        light.hsieh@mediatek.com, biao.huang@mediatek.com,
+        hongzhou.yang@mediatek.com, Sean Wang <sean.wang@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 29, 2021 at 3:39 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> On Wed, 28 Jul 2021, at 18:43, Andy Shevchenko wrote:
-> > On Wed, Jul 28, 2021 at 8:43 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > On Fri, 23 Jul 2021, at 17:45, Andy Shevchenko wrote:
+On Thu, Jul 29, 2021 at 4:23 PM zhiyong.tao <zhiyong.tao@mediatek.com> wrote:
+>
+> On Mon, 2021-07-26 at 16:02 +0800, Chen-Yu Tsai wrote:
+> > On Thu, Jul 22, 2021 at 3:54 PM zhiyong tao <zhiyong.tao@mediatek.com
+> > > wrote:
 > > >
-> > > > I was briefly looking into patches 1-4 and suddenly
-> > > > realized that the fix can be similar as in PCA9685 (PWM), I.e. we
-> > > > always have chips for the entire pin space and one may map them
-> > > > accordingly, requested in one realm (LED) in the other (GPIO)
-> > > > automatically is BUSY. Or I missed the point?
+> > > On Tue, 2021-07-13 at 15:17 +0800, Chen-Yu Tsai wrote:
+> > > > Hi,
+> > > >
+> > > > On Sat, Jul 10, 2021 at 4:17 PM Zhiyong Tao <
+> > > > zhiyong.tao@mediatek.com> wrote:
+> > > > >
+> > > > > This patch adds rsel define for mt8195.
+> > > > >
+> > > > > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > > > > ---
+> > > > >  include/dt-bindings/pinctrl/mt65xx.h | 9 +++++++++
+> > > > >  1 file changed, 9 insertions(+)
+> > > > >
+> > > > > diff --git a/include/dt-bindings/pinctrl/mt65xx.h b/include/dt-
+> > > > > bindings/pinctrl/mt65xx.h
+> > > > > index 7e16e58fe1f7..f5934abcd1bd 100644
+> > > > > --- a/include/dt-bindings/pinctrl/mt65xx.h
+> > > > > +++ b/include/dt-bindings/pinctrl/mt65xx.h
+> > > > > @@ -16,6 +16,15 @@
+> > > > >  #define MTK_PUPD_SET_R1R0_10 102
+> > > > >  #define MTK_PUPD_SET_R1R0_11 103
+> > > > >
+> > > > > +#define MTK_PULL_SET_RSEL_000  200
+> > > > > +#define MTK_PULL_SET_RSEL_001  201
+> > > > > +#define MTK_PULL_SET_RSEL_010  202
+> > > > > +#define MTK_PULL_SET_RSEL_011  203
+> > > > > +#define MTK_PULL_SET_RSEL_100  204
+> > > > > +#define MTK_PULL_SET_RSEL_101  205
+> > > > > +#define MTK_PULL_SET_RSEL_110  206
+> > > > > +#define MTK_PULL_SET_RSEL_111  207
+> > > > > +
+> > > >
+> > > > Instead of all the obscure macros and the new custom "rsel"
+> > > > property,
+> > > > which BTW is not in the bindings, can't we just list the actual
+> > > > bias
+> > > > resistance of each setting? We could also migrate away from R1R0.
+> > > >
 > > >
-> > > No, you haven't missed the point. I will look at the PCA9685 driver.
+> > > ==>Hi Chenyu,
+> > > The rsel actual bias resistance of each setting:
 > > >
-> > > That said, my goal was to implement the behaviour intended by the
-> > > existing binding (i.e. fix a bug).
+> > > MTK_PULL_SET_RSEL_000:75K in PU, 75k in PD;
+> > > MTK_PULL_SET_RSEL_001:10k in PU, 5k in PD;
+> > > MTK_PULL_SET_RSEL_010:5k in PU, 75k in PD;
+> > > MTK_PULL_SET_RSEL_011:4k in PU, 5K in PD;
+> > > MTK_PULL_SET_RSEL_100:3k in PU, 75k in PD;
+> > > MTK_PULL_SET_RSEL_101:2k in PU, 5K in PD;
+> > > MTK_PULL_SET_RSEL_110:1.5k in PU, 75k in PD;
+> > > MTK_PULL_SET_RSEL_111:1k in PU, 5k in PD.
+> > >
+> > > The rsel actual bias resistance is different between PU and PD.
 > >
-> > Okay, so it implies that this used to work at some point.
->
-> I don't think this is true. It only "works" if the lines specified as
-> GPIO in the devicetree are contiguous from line 0. That way the pin and
-> GPIO number spaces align. I suspect that's all that's been tested up
-> until this point.
->
-> We now have a board with a PCA9552 where the first 8 pins are LED and
-> the last 8 pins are GPIO, and if you specify this in the devicetree
-> according to the binding you hit the failure to map between the two
-> number spaces.
->
-> > What has
-> > changed from that point? Why can't we simply fix the culprit commit?
->
-> As such nothing has changed, I think it's always been broken, just we
-> haven't had hardware configurations that demonstrated the failure.
->
+> > Thanks. Somehow I missed this when looking through the datasheet.
+> > This
+> > encoding is interesting. Since it doesn't make sense to have both
+> > pull-up and pull-down, even though the hardware seems capable of
+> > doing
+> > so, I suppose the intent is to support 75k or 5k for pull-down, and
+> > (75k, 10k, 5k, 4k, 3k, 2k, 1.5k, 1k) for pull-up?
 > >
-> > > However, userspace would never have
-> > > got the results it expected with the existing driver implementation, so
-> > > I guess you could argue that no such (useful) userspace exists. Given
-> > > that, we could adopt the strategy of always defining a gpiochip
-> > > covering the whole pin space, and parts of the devicetree binding just
-> > > become redundant.
+> > We could add these values to the binding so we could check for
+> > misuse.
 > >
-> > I'm lost now. GPIO has its own userspace ABI, how does it work right
-> > now in application to this chip?
+> > The range of values seems to also cover those supported by the
+> > alternative R0/R1 settings. The values for kprow[01] and kpcol[01]
+> > seem to be different though.
+> >
+> > We should get rid of the MTK_PUPD_SET_R1R0_* macros at the same time.
+> > They seem to be some magic values used with bias-pull-*, which is not
+> > how the properties should be used. At the same time, they overlap
+> > with
+> > mediatek,pull-* properties.
+> >
+> > It would be great if we could standardize on the generic pinconf
+> > properties, and also use real values that fit the requirements of the
+> > properties, i.e. using real resistance values. I'm not sure if it
+> > would make sense to enumerate which pins support which configurations
+> > though.
+> >
+> >
+> > Thanks
+> > ChenYu
+> >
+> >
+> The rsel actual bias resistance of each setting is different in
+> different IC. we think that the define "MTK_PULL_SET_RSEL_000" is more
+> common for all different IC.
+
+I see. I personally prefer having things clearly described. I can
+understand this might be an extra burden to support different chips
+with different parameters, though this should be fairly straightforward
+with lookup tables tied to the compatible strings.
+
+Let's see if Rob and Linus have anything to add.
+
+
+ChenYu
+
+
+> Thanks.
 >
-> As above, it "works" if the GPIOs specified in the devicetree are
-> contiguous from line 0. It's broken if they're not.
-
-So, "it never works" means there is no bug. Now, what we need is to
-keep the same enumeration scheme, but if you wish to be used half/half
-(or any other ratio), the driver should do like the above mentioned
-PWM, i.e. register entire space and depending on the requestor either
-proceed with a line or mark it as BUSY.
-
-Ideally, looking into what the chip can do, this should be indeed
-converted to some like pin control + PWM + LED + GPIO drivers. Then
-the function in pin mux configuration can show what exactly is enabled
-on the certain line(s).
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> > > > Then we can specify the setting with the standard bias-pull-
+> > > > up/down
+> > > > properties [1].
+> > > >
+> > > > Also, please ask internally if Mediatek could relicense all the
+> > > > header
+> > > > files that Mediatek has contributed under include/dt-
+> > > > bindings/pinctrl/ [2]
+> > > > to GPL-2.0 and BSD dual license. These files are part of the DT
+> > > > bindings
+> > > > and we really want them to be dual licensed as well, and not just
+> > > > the
+> > > > YAML files.
+> > > >
+> > >
+> > > ==> We will confirm it internally and reply it later.
+> > >
+> > > Thanks.
+> > > >
+> > > > Regards
+> > > > ChenYu
+> > > >
+> > > >
+> > > > [1]
+> > > > https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml#L37
+> > > > [2] Note that a few files were contributed by other people
+> > > >
+> > > > >  #define MTK_DRIVE_2mA  2
+> > > > >  #define MTK_DRIVE_4mA  4
+> > > > >  #define MTK_DRIVE_6mA  6
+> > > > > --
+> > > > > 2.18.0
+> > > > > _______________________________________________
+> > > > > Linux-mediatek mailing list
+> > > > > Linux-mediatek@lists.infradead.org
+> > > > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
