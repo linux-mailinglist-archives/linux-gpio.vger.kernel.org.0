@@ -2,341 +2,450 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 625DB3DB3ED
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 08:52:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CB163DB525
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 10:42:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237606AbhG3GwQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jul 2021 02:52:16 -0400
-Received: from mail-bn8nam08on2046.outbound.protection.outlook.com ([40.107.100.46]:32352
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230040AbhG3GwP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 30 Jul 2021 02:52:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IVIVUBlV78n8Of33lSdnAIpxifFeiKreG18xsCD+bpcBwZJzBhKdOKXF/Gs8PSk10OFYEWGOhxgMepfjRVtl00GmCa4iJAp0f4M5T6iQiitkKSqGn1k+2an40laz+IAI56sdOqRdYGELjk/5C7fOgJR3Udz/N/HwmkdOzm8+e9pxTDgRN6iOVvv9VTiG3b5BxXP/X73Jw7CkboJNXKz+9HZtODwmlzx5ztxCN2hx+1HkS6ZSQflxrFOyfqrMfWAzYPIhPwJfXlT5AcgXBzVqDfuiMeLxIlCuhZQfYjEfJlpVAX9wknJv952YegNxkYWWQ5NfNAUHRhUoWUrO4wLwcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PMvEaSZtVVvIxG0xUufuxfkHE0FiE7BnuAsQNsX4DC0=;
- b=VS0yJ85pQgpjlpadNiYU7ezoN6fhaa73iG5mL/zA5z4RExsQcfIi2+dfM6+rOJe3A0xorb2CwMYgIllSDYLSzf19AH0TNo01EuEJuRb/j6HyxdTc4k5RStWUJhPzOyT2C9qd2UQ3MepQROhZ31Cb9LblmTS62/y18JwYhpHUtRk+rhfsESVOIPBT6A6lwmIzhnQS+76BhFIAagG2vzP3XqYZEvCXhmxBuDcuGhicQ6glPAGN+TILZoZlNv4hI6xsBeYR/q0IAWXCcgxUsWD/6qogvFa+YafaJKZYhGXFIXmLH13OHAEYYqO4UyW3LPVUe/cTipEvYieUN4Nlnvesbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PMvEaSZtVVvIxG0xUufuxfkHE0FiE7BnuAsQNsX4DC0=;
- b=lZpfQXiNytQ4X7bkN3tZe7rpWYumCm71kDymSnVRHbdMPHpimLxg/5T1LXtI+8kvPCELRJGWDjxta2FrBCqJgRZb8GXPWB737QRIxLcdQc3tWr3pJbHL/Hk2zBbE/egwNo5hIK4m81op25kYt2278ejpmkRwidyCQs1buwESQqVI6HwFemb05nRbPoiTMOiecI5LSOHMEFSye2Hsfu358QiCMyPUHnuW2Ii1p2Nq826nZwuusRwNPqP0czvnpQPfo+to90EAsE0ZHC0iFNDkn6DkJW+iXQuOG34inCPWLzwIcv490+uRi04e46vAdiIKT7YaGQBB6T8946RGbPUUaA==
-Received: from DM6PR17CA0028.namprd17.prod.outlook.com (2603:10b6:5:1b3::41)
- by MWHPR12MB1632.namprd12.prod.outlook.com (2603:10b6:301:10::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.19; Fri, 30 Jul
- 2021 06:52:08 +0000
-Received: from DM6NAM11FT053.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1b3:cafe::77) by DM6PR17CA0028.outlook.office365.com
- (2603:10b6:5:1b3::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.18 via Frontend
- Transport; Fri, 30 Jul 2021 06:52:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- DM6NAM11FT053.mail.protection.outlook.com (10.13.173.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4373.18 via Frontend Transport; Fri, 30 Jul 2021 06:52:08 +0000
-Received: from [172.17.173.69] (172.20.187.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 30 Jul
- 2021 06:52:07 +0000
-Subject: Re: [RFC 03/11] hte: Add tegra194 HTE kernel provider
-From:   Dipen Patel <dipenp@nvidia.com>
-To:     Kent Gibson <warthog618@gmail.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linus.walleij@linaro.org>,
-        <bgolaszewski@baylibre.com>, <devicetree@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <robh+dt@kernel.org>
-References: <20210625235532.19575-1-dipenp@nvidia.com>
- <20210625235532.19575-4-dipenp@nvidia.com> <20210701142156.GA34285@sol>
- <52768891-6c01-7588-e557-5c9eae5375b6@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <928b9d68-c0be-49d7-96be-5f12aa699402@nvidia.com>
-Date:   Fri, 30 Jul 2021 00:01:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S230336AbhG3ImI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jul 2021 04:42:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238107AbhG3ImH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 04:42:07 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 107E3C0613C1
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 01:42:02 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id yk17so7760529ejb.11
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 01:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZFTWYv7+g9dubrObjFBcEVhd6PNhFHQ2eRgI36MYn34=;
+        b=qmjSjtaE4CtI6JPPBnQNKGWAS8+CUQtAL41rFNpSOEz/iVKiHBBjjeCz+ZnEVEHAIL
+         ng3gNCiPOIEeIcxxIgRbEuf3qX+9qHxSKs5T25csCzIR7+YxoLvR17FU7rQYZ20ALoJL
+         XA2t+7PtK4J50LNa1ZajTlWdkPDTjvmvisEWfwUGUman1V0LI/1J96B2HfIZSEH8c3pn
+         wKH/LFDt6LSCXx8ROXnm5tqHLBa5BGhS+3AGvdtNZdRImkj9g5b0o9aGs9tp6K7Faf5o
+         lcyyJDFk8WW1C9brh4F3PKA5kYh8x3MkInawsoS/LXkIZLvsVSJEjGdSYWC/H96B8rZg
+         9k7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZFTWYv7+g9dubrObjFBcEVhd6PNhFHQ2eRgI36MYn34=;
+        b=R2sZByYzsVS1f5sdD9tKhN3s3M59eGj6JudDeXwToWYxISxlaP9EErMtZSQDr52Ega
+         YZqe9AMj4RILx+LaZnvLM61gsVPhhidt0C85LjGvdfO4RrmDCiJIBgU5CXygXlxCiypZ
+         PTyzjJ4j6NhNHWXvHWiTySrjg1hKkRJMbDJvQ2lbVBA8dlRbSKrC+Aq2KIVsBVmwi5ID
+         0Oo0czd03V4+dNiR4lLOrqDSneFrAjKdU76NSeMSCfpWdjdgb6tqsnaiSCMk2NOKAKxf
+         LVtx97seiefE4xA37gzEvGD005oyBU1kWcMaT7hclWnIcDUW/IsX8jLEv2wOhi38TXpd
+         XBiQ==
+X-Gm-Message-State: AOAM532ob2D0tuniqkudnK8I5o/ztimHa8crhbem1YWf7Mpg2M396/zb
+        rIs/5lfit9qtDEpV49sqQqinNCO5Rylo06GafOntcw==
+X-Google-Smtp-Source: ABdhPJxWQlHk5MRP/y17Sgc0R98uqBadTws1MBb4bu22E/ZgVI08ZJrPtkK+L8fs4FA0Jylwbn+V88c3wvXhi0NdwUU=
+X-Received: by 2002:a17:906:384c:: with SMTP id w12mr1498695ejc.445.1627634520448;
+ Fri, 30 Jul 2021 01:42:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <52768891-6c01-7588-e557-5c9eae5375b6@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [172.20.187.6]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a1411abd-046d-4f4e-1512-08d953268ca7
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1632:
-X-Microsoft-Antispam-PRVS: <MWHPR12MB163250E1EFFB5F2F05EA015AAEEC9@MWHPR12MB1632.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7VyOajw+fXpfoFYsSrDSZSHbia8IPS2rCO6geQ17wdIpnDl8x/pHJ/ZkPceP+iE6IAUnqw6QCQDRPNuI80i1kQMwhyHBftUOFguTG+O/9fAYFSgVlOsYpsIuieu5QeA+gCvMVqBoNTdaL08LsVXECAd+91ez/RvM8NHYCET29I1TUp803mnBnm1E3bjA57jLYNpcXOf9RzmpfKTbxSQYq+uRwxuYV8XKxlS9jA+G7+gBO6iAS9RRNY9s6mnmPNuCKALv/dHKtf6nwKfw7NFqFXkixpPWDL6e68h0ccyRBszq8FxrATBkWsrxHDFw6MPXSN1bC8JsYCCrRmB0+/rRXGHY63MbukCEkxbTw8F8Lp3xDF2vL/7knQICAC1cAbFGptEksjAPpKe10SjeKpEBOg5bC34ynJDIQEztxmvAw4VDscEbvhBUXCST5PbVffC0BvJF5wXUc/pGlj/Jt9s2tJ+Ep+pjXbElOrbLEIfZQPNRNFfdgqpAMHHpCdH9FSJr3Ntvkndkt9PZvx8D12idMFn7+qO+5gnoEZDMS7MG/jPPYBJAk4rZzOcULIoOSiMWLCuyXQbfA0qXEJPpuLkMo/TibJNNAsPX3aO8qIc0Nq2QtH5y96djOgB1drVwNYmmmf1uarViy/mIqc0i//7uHN/RgZIbf4OHdhZ3Rxb4M+eEYeaT9j2y3q2bVgRGHTUlrJJ3fk3Gp86XZll88KywoNK8IhMhhZVb/B1Ru2vvCuM=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(2616005)(36756003)(356005)(8676002)(336012)(5660300002)(6916009)(8936002)(426003)(70206006)(4326008)(508600001)(31696002)(70586007)(16526019)(47076005)(53546011)(86362001)(186003)(16576012)(82310400003)(26005)(54906003)(36860700001)(83380400001)(31686004)(316002)(2906002)(7636003)(7416002)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2021 06:52:08.2249
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1411abd-046d-4f4e-1512-08d953268ca7
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT053.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1632
+References: <20210727143400.32543-1-brgl@bgdev.pl> <20210727143400.32543-4-brgl@bgdev.pl>
+ <20210730064216.GA9544@sol>
+In-Reply-To: <20210730064216.GA9544@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 30 Jul 2021 10:41:49 +0200
+Message-ID: <CAMRc=MeZN-QLqumBm+3csjkpcr2_fMs_zOTzo8Yk1sW8wkyEww@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v3 3/3] bindings: cxx: implement C++ bindings
+ for libgpiod v2.0
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
+        Ben Hutchings <ben.hutchings@essensium.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Jul 30, 2021 at 8:42 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Tue, Jul 27, 2021 at 04:34:00PM +0200, Bartosz Golaszewski wrote:
+> > This is the bulk of work implementing C++ bindings for the new libgpiod
+> > API. The tests are not converted yet but the examples are fully
+> > functional. More details in the cover letter as this patch will be
+> > squashed with the one for the core C library anyway.
+> >
+>
+> My apologies for not getting around to reviewing v2, so here is a
+> quick(??) review of v3...
+>
+> I don't have any problems with the C API changes in patches 1 and 2.
+> I would prefer that we didn't need the num_lines, offsets and capacity
+> getters, but their addition is a reasonable compromise.
+>
+> <snip>
+>
+> > -GPIOD_CXX_API bool is_gpiochip_device(const ::std::string& path)
+> > +struct chip::impl
+> >  {
+> > -     return ::gpiod_is_gpiochip_device(path.c_str());
+> > -}
+> > +     impl(const ::std::string& path)
+> > +             : chip(open_chip(path)),
+> > +               name(::gpiod_chip_get_name(this->chip.get())),
+> > +               label(::gpiod_chip_get_label(this->chip.get()))
+> > +     {
+> > +
+> > +     }
+> > +
+> > +     impl(const impl& other) = delete;
+> > +     impl(impl&& other) = delete;
+> > +     impl& operator=(const impl& other) = delete;
+> > +     impl& operator=(impl&& other) = delete;
+> > +
+> > +     void throw_if_closed(void) const
+> > +     {
+> > +             if (!this->chip)
+> > +                     throw ::std::logic_error("GPIO chip has been closed");
+> > +     }
+> > +
+>
+> Perhaps throw something more specific than a logic_error?
+>
 
-On 7/28/21 4:59 PM, Dipen Patel wrote:
-> Thanks Kent for the review comment. My responses inline.
->
-> On 7/1/21 7:21 AM, Kent Gibson wrote:
->> On Fri, Jun 25, 2021 at 04:55:24PM -0700, Dipen Patel wrote:
->>> Tegra194 device has multiple HTE instances also known as GTE
->>> (Generic hardware Timestamping Engine) which can timestamp subset of
->>> SoC lines/signals. This provider driver focuses on IRQ and GPIO lines
->>> and exposes timestamping ability on those lines to the consumers
->>> through HTE subsystem.
->>>
->>> Also, with this patch, added:
->>> - documentation about this provider and its capabilities at
->>> Documentation/hte.
->>> - Compilation support in Makefile and Kconfig
->>>
->>> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
->>> ---
->>>  Documentation/hte/index.rst        |  21 ++
->>>  Documentation/hte/tegra194-hte.rst |  65 ++++
->>>  Documentation/index.rst            |   1 +
->>>  drivers/hte/Kconfig                |  12 +
->>>  drivers/hte/Makefile               |   1 +
->>>  drivers/hte/hte-tegra194.c         | 554 +++++++++++++++++++++++++++++
->>>  6 files changed, 654 insertions(+)
->>>  create mode 100644 Documentation/hte/index.rst
->>>  create mode 100644 Documentation/hte/tegra194-hte.rst
->>>  create mode 100644 drivers/hte/hte-tegra194.c
->>>
->>> diff --git a/Documentation/hte/index.rst b/Documentation/hte/index.rst
->>> new file mode 100644
->>> index 000000000000..f311ebec6b47
->>> --- /dev/null
->>> +++ b/Documentation/hte/index.rst
->>> @@ -0,0 +1,21 @@
->>> +.. SPDX-License-Identifier: GPL-2.0
->>> +
->>> +============================================
->>> +The Linux Hardware Timestamping Engine (HTE)
->>> +============================================
->>> +
->>> +The HTE Subsystem
->>> +=================
->>> +
->>> +.. toctree::
->>> +   :maxdepth: 1
->>> +
->>> +   hte
->>> +
->>> +HTE Tegra Provider
->>> +==================
->>> +
->>> +.. toctree::
->>> +   :maxdepth: 1
->>> +
->>> +   tegra194-hte
->>> \ No newline at end of file
->>> diff --git a/Documentation/hte/tegra194-hte.rst b/Documentation/hte/tegra194-hte.rst
->>> new file mode 100644
->>> index 000000000000..c23eaafcf080
->>> --- /dev/null
->>> +++ b/Documentation/hte/tegra194-hte.rst
->>> @@ -0,0 +1,65 @@
->>> +HTE Kernel provider driver
->>> +==========================
->>> +
->>> +Description
->>> +-----------
->>> +The Nvidia tegra194 chip has many hardware timestamping engine (HTE) instances
->>> +known as generic timestamping engine (GTE). This provider driver implements
->>> +two GTE instances 1) GPIO GTE and 2) IRQ GTE. The both GTEs instances get the
->>> +timestamp from the system counter TSC which has 31.25MHz clock rate, and the
->>> +driver converts clock tick rate to nano seconds before storing it as timestamp
->>> +value.
->>> +
->>> +GPIO GTE
->>> +--------
->>> +
->>> +This GTE instance help timestamps GPIO in real time, for that to happen GPIO
->>> +needs to be configured as input and IRQ needs to ba enabled as well. The only
->>> +always on (AON) gpio controller instance supports timestamping GPIOs in
->>> +realtime and it has 39 GPIO lines. There is also a dependency on AON GPIO
->>> +controller as it requires very specific bits to be set in GPIO config register.
->>> +It in a way creates cyclic dependency between GTE and GPIO controller. The GTE
->>> +GPIO functionality is accessed from the GPIOLIB. It can support both the in
->>> +kernel and userspace consumers. In the later case, requests go through GPIOLIB
->>> +CDEV framework. The below APIs are added in GPIOLIB framework to access HTE
->>> +subsystem and GPIO GTE for in kernel consumers.
->>> +
->>> +.. c:function:: int gpiod_hw_timestamp_control( struct gpio_desc *desc, bool enable )
->>> +
->>> +	To enable HTE on given GPIO line.
->>> +
->>> +.. c:function:: u64 gpiod_get_hw_timestamp( struct gpio_desc *desc, bool block )
->>> +
->>> +	To retrieve hardwre timestamp in nano seconds.
->>> +
->>> +.. c:function:: bool gpiod_is_hw_timestamp_enabled( const struct gpio_desc *desc )
->>> +
->>> +	To query if HTE is enabled on the given GPIO.
->>> +
->>> +There is hte-tegra194-gpio-test.c, located in ``drivers/hte/`` directory, test
->>> +driver which demonstrates above APIs for the Jetson AGX platform. For userspace
->>> +consumers, GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE flag must be specifed during
->>> +IOCTL calls, refer ``tools/gpio/gpio-event-mon.c``, which returns the timestamp
->>> +in nano second.
->>> +
->> <snip>
->>
->>> +
->>> +static void tegra_hte_read_fifo(struct tegra_hte_soc *gs)
->>> +{
->>> +	u32 tsh, tsl, src, pv, cv, acv, slice, bit_index, line_id;
->>> +	u64 tsc;
->>> +	int dir;
->>> +	struct hte_ts_data el;
->>> +
->>> +	while ((tegra_hte_readl(gs, HTE_TESTATUS) >>
->>> +		HTE_TESTATUS_OCCUPANCY_SHIFT) &
->>> +		HTE_TESTATUS_OCCUPANCY_MASK) {
->>> +		tsh = tegra_hte_readl(gs, HTE_TETSCH);
->>> +		tsl = tegra_hte_readl(gs, HTE_TETSCL);
->>> +		tsc = (((u64)tsh << 32) | tsl);
->>> +
->>> +		src = tegra_hte_readl(gs, HTE_TESRC);
->>> +		slice = (src >> HTE_TESRC_SLICE_SHIFT) &
->>> +			    HTE_TESRC_SLICE_DEFAULT_MASK;
->>> +
->>> +		pv = tegra_hte_readl(gs, HTE_TEPCV);
->>> +		cv = tegra_hte_readl(gs, HTE_TECCV);
->>> +		acv = pv ^ cv;
->>> +		while (acv) {
->>> +			bit_index = __builtin_ctz(acv);
->>> +			if ((pv >> bit_index) & BIT(0))
->>> +				dir = HTE_EVENT_RISING_EDGE;
->>> +			else
->>> +				dir = HTE_EVENT_FALLING_EDGE;
->>> +
->>> +			line_id = bit_index + (slice << 5);
->>> +			el.dir = dir;
->>> +			el.tsc = tsc << HTE_TS_NS_SHIFT;
->>> +			hte_push_ts_ns_atomic(gs->chip, line_id, &el,
->>> +					      sizeof(el));
->>> +			acv &= ~BIT(bit_index);
->>> +		}
->>> +		tegra_hte_writel(gs, HTE_TECMD, HTE_TECMD_CMD_POP);
->>> +	}
->>> +}
->> What happens when the hte_push_ts_ns_atomic() fails?
->> The timestamp will be quietly dropped?
->> What happens when the interrupt corresponding to that dropped timestamp
->> asks for it?  The irq handler thread will block until it can get a
->> timestamp from the subsequent interrupt?
-> Two things happen, 1) at the push, HTE core increments seq counter
->
-> 2) If the consumer has provided callback, it will either call that callback
->
-> with HTE_TS_DROPPED or HTE_TS_AVAIL. The seq counter gives indirect
->
-> view of dropped ts. However, I see the problem with the consumers not
->
-> providing callback, in that case, push_ts* API just wakes up process without
->
-> indicating why (assuming notify variable is true or else there is a chance for
->
-> the thread to block forever). One easy approach I can think of for now is to
->
-> make callback mandatory (which is optional right now), I will have to rethink
->
-> that scenario and will push corrected version next RFC version.
->
-> Thanks for pointing out.
->
->> Which brings me back to the concern I have with the approach used in
->> the hte/gpiolib integration - how do you guarantee that the timestamp
->> returned by gpiod_get_hw_timestamp() corresponds to the irq interrupt
->> being handled, particularly in the face of errors such as:
->>  - overflows of the timestamp FIFO in the chip
-> I currently do not have any indication mechanism as the providers
->
-> I am dealing with right now does not have overflow hardware detection
->
-> support. If the chip supports, it should be easy to integrate that feature.
->
-> I will provide some hook function or change in push_* API to accommodate
->
-> this in next version of RFC.
->
->>  - overflows of software FIFOs as here
-> HTE core records sequence counter as well it callsback the consumer with
->
-> HTE_TS_DROPPED.
->
->>  - lost interupts (if the hw generates interrupts faster than the CPU
->>    can service them)
-> For this, I have no idea unless hardware supports some sort of mechanism
->
-> to catch that. For the current providers, as soon as it detects changes on lines
->
-> it captures TS in its hw fifo. Its interrupt gets generated based on threshold
->
-> set in that hw fifo. This interrupt is different than the lines of actual device
->
-> that is why I said I have no idea how we can tackle that. Let me know if there
->
-> is any idea or reference of the codes which does tackle this.
->
->
-> Regarding HTE/GPIOLIB integration comment:
->
-> You are right, currently, I have only tsc field returned from struct hte_ts_data
->
-> to gpiolib. If I can extend that to return hte_ts_data structure which has seq
->
-> counter, which I believe can be used to track the overflow situation. The
+There's no standard exception that would inherit from std::logic_error
+that would fit here. I can define new exceptions (gpiod::chip_closed
+and gpiod::request_released) inheriting from logic_error if that works
+for you.
 
-The reason I only return timestamp and not other details like its seq
+> <snip>
+>
+> > diff --git a/bindings/cxx/edge-event.cpp b/bindings/cxx/edge-event.cpp
+> > new file mode 100644
+> > index 0000000..d6dce22
+> > --- /dev/null
+> > +++ b/bindings/cxx/edge-event.cpp
+> > @@ -0,0 +1,123 @@
+> > +// SPDX-License-Identifier: LGPL-3.0-or-later
+> > +// SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl>
+> > +
+> > +#include <map>
+> > +#include <stdexcept>
+> > +#include <system_error>
+> > +#include <utility>
+> > +
+> > +#include "internal.hpp"
+> > +
+> > +namespace gpiod {
+> > +
+> > +namespace {
+> > +
+> > +const ::std::map<int, edge_event::type> event_type_mapping = {
+> > +     { GPIOD_LINE_EVENT_RISING_EDGE,         edge_event::type::RISING_EDGE },
+> > +     { GPIOD_LINE_EVENT_FALLING_EDGE,        edge_event::type::FALLING_EDGE }
+> > +};
+> > +
+>
+> Use of a map for just two event types seems like overkill.
+> Wouldn't an if-else in edge_event::get_type(void) be simpler and cleaner?
+> Also, as written, edge_event::get_type(void) can throw std::out_of_range
+> which doesn't seem right. Wouldn't std::range_error be more appropriate?
+> Or adding an unknown event type for failed mappings, so get_type() can
+> never throw??
+>
 
-counter, is because to comply with line_event_timestamp since it returns
+While it's true that we can throw the range_error, it's very unlikely
+and would occur only if a serious programming error was present in the
+C library or the kernel. I'm fine with this possibility - adding an
+unknown type, would suggest this is a normal situation and not an
+exception.
 
-only u64. Not sure which is the best way to extend and bring out its seq.
+For the mapping: to me this looks more consistent and also allows to
+detect the rare and unlikely error mentioned above. In any case - this
+is an implementation detail and can be changed later.
+
+> Same applies for mappings throughout.  If the C++ values match the C
+> values then you could just perform a range check and cast for the cases
+> where there are more than two values.
+>
+
+Casting in general is to be avoided in C++ - as defined in the
+document Jack linked recently. Mapping isn't expensive and looks more
+robust IMO. I would prefer to leave it like this.
+
+> <snip>
+>
+> > +     /**
+> > +      * @brief Retrieve the current snapshot of line information for a
+> > +      *        single line.
+> > +      * @param offset Offset of the line to get the info for.
+> > +      * @param watch Indicates whether the caller wants to watch for line
+> > +      *              info changes.
+> > +      * @return New ::gpiod::line_info object.
+> > +      */
+> > +     line_info get_line_info(unsigned int offset, bool watch = false) const;
+> > +
+> > +     /**
+> > +      * @brief Wrapper around ::gpiod::chip::get_line_info that retrieves
+> > +      *        the line info and starts watching the line for changes.
+> > +      * @param offset Offset of the line to get the info for.
+> > +      * @return New ::gpiod::line_info object.
+> > +      */
+> > +     line_info watch_line_info(unsigned int offset) const;
+> > +
+>
+> I repeat my objection to get_line_info() accepting a watch parameter and
+> watch_line_info() wrapping it.  While they both happen to return
+> line_info, the purpose of the two methods are quite different and so
+> should be kept separate.
+>
+
+OK, I will change it.
+
+> Also, should be watch_line_info() really be allowed on a const chip?
+> While it does not alter the C++ object, and so technically can be allowed
+> on a const, it does alter the state of the underlying C object and so I
+> would argue it should not be allowed.
+>
+
+Makes sense.
+
+> <snip>
+>
+> > +     /**
+> > +      * @brief Get the constant reference to the edge event at given index.
+> > +      * @param index Index of the event in the buffer.
+> > +      * @return Constant reference to the edge event.
+> > +      */
+> > +     const edge_event& get_event(unsigned int index) const;
+> > +
+> > +     /**
+> > +      * @brief Get the number of edge events currently stored in the buffer.
+> > +      * @return Number of edge events in the buffer.
+> > +      */
+> > +     unsigned int num_events(void) const;
+> > +
+>
+> A getter not prefixed with "get_" ;-).
+> (note that I'm kidding - I prefer it this way - more on that later in
+> class line_info)
+>
+> > +     /**
+> > +      * @brief Maximum capacity of the buffer.
+> > +      * @return Buffer capacity.
+> > +      */
+> > +     unsigned int capacity(void) const noexcept;
+> > +
+>
+> And again.
+>
+> <snip>
+>
+> > +/**
+> > + * @brief Contains a set of line config options used in line requests and
+> > + *        reconfiguration.
+> > + */
+> > +class line_config
+> > +{
+> > +public:
+> > +
+>
+> This class has setters but no getters.
+> There is no use case for getters?
+> Also applies to C API - just wondering given the addition of the getters
+> in patch 1 and 2 - there may be cases where the user would like to read
+> back the config?
+>
+
+IMO if a use-case like this appears, we can extend the interface. The
+reason for adding the new functions was because we added the all-lines
+getters and now the user would need to store the offsets outside the
+request if we didn't provide them. Adding getters for config
+structures now would unnecessarily bloat the interface. Let me know if
+you disagree though. I usually eventually get convinced by you. :)
+
+> > +     /**
+> > +      * @brief Direction settings.
+> > +      */
+> > +     enum class direction : unsigned int
+> > +     {
+> > +             AS_IS = 1,
+> > +             /**< Request the line(s), but don't change current direction. */
+> > +             INPUT,
+> > +             /**< Request the line(s) for reading the GPIO line state. */
+> > +             OUTPUT
+> > +             /**< Request the line(s) for setting the GPIO line state. */
+> > +     };
+> > +
+>
+> line_info and line_config should use common direction types (also
+> applies to C API)? Perhaps in a ::gpiod::line namespace?
+>
+
+So that would seem obvious to do this but the values stored in line
+info and passed to line config are not always the same. BIAS_UNKNOWN
+and BIAS_AS_IS are not the same and the former is only suitable for
+line_info while the latter only works for the config. I agree though
+that it may be a bit confusing for users. If we'd change it - where
+should these go wrt doxygen sections of the core API?
+
+> Same applies to other fields that map to GPIO_V2_LINE_FLAGs, so edge,
+> drive, bias and event clock.
+> Oh, and the C API lacks a gpiod_line_info_get_event_clock(), and not
+> surprisingly class line_info lacks a getter for event clock.
+>
+
+Yeah I noticed that and already have a patch for that in my dev branch
+for python bindings. I'll post it shortly.
+
+> <snip>
+>
+> > +     /**
+> > +      * @brief Move assignment operator.
+> > +      * @param other Object to move.
+> > +      * @return Reference to self.
+> > +      */
+> > +     line_config& operator=(line_config&& other) noexcept;
+> > +
+> > +     /**
+> > +      * @brief Set the direction, either globally or for a set of offsets.
+> > +      * @param dir_val New direction setting.
+> > +      * @param offsets Vector of line offsets to set the direction for. If
+> > +      *                empty, the setting will be global.
+> > +      */
+> > +     void set_direction(direction dir_val, const line_offsets& offsets = line_offsets()) const;
+> > +
+>
+> Setters should not be const.
+> While your implementation may allow it now, conceptually it is wrong.
+> And what happens if your implementation changes later?
+> Removing the const later would break ABI compatibility.
+>
+> This applies throughout.
+>
+
+Indeed.
+
+> <snip>
+>
+> > +/**
+> > + * @brief Contains an immutable snapshot of the line's state at the
+> > + *        time when the object of this class was instantiated.
+> > + */
+> > +class line_info
+> > +{
+> > +public:
+> > +
+> > +     /**
+> > +      * @brief Direction settings.
+> > +      */
+> > +     enum class direction : unsigned int
+> > +     {
+> > +             INPUT = 1,
+> > +             /**< Direction is input - we're reading the state of a GPIO line. */
+> > +             OUTPUT
+> > +             /**< Direction is output - we're driving the GPIO line. */
+> > +     };
+> > +
+>
+> And as previously noted, I'd like to see the line_info and line_config
+> use common types.
+>
+> And I agree with Jack Winch on not prefixing getters with "get_".
+> The only thing I would change from Jack's suggestion is to put the types
+> in the line namespace so rather than his
+>
+>     using direction_type = ::gpiod::direction;
+>
+> I would have
+>
+>     using direction_type = ::gpiod::line::direction;
+>
+> - if you want to use an alias at all.
+
+I think we'll be able to skip the aliases with the additional line namespace.
 
 >
-> dropped scenario can be easily tracked if gpiolib can be notified with above
+> The types are used relatively rarely, so I'm no fussed if their names
+> are a bit clunky.  OTOH getters are frequently used and I much prefer
+> the shorter form.
 >
-> mentioned DROP event through callback. If that is the case, is it ok to have
+
+Fair enough.
+
+> Where you have an "enum class type" that would conflict with a type()
+> getter, such as in info_event and edge_event, I would rename the enum to
+> event_type, or similar.
 >
-> some sort of callback per gpio in gpiolib?
+> That applies throughout.
 >
+> Wrt setters, I'm happy with them being prefixed with "set_" so they are
+> clearly distinguished from getters.
 >
-> Any idea how I can integrate callback notification with gpiolib if you do not agree on
+> <snip>
 >
-> above callback suggestion?
+> > +/**
+> > + * @brief Stores the context of a set of requested GPIO lines.
+> > + */
+> > +class line_request
+> > +{
+> > +public:
+> > +
+> <snip>
+> > +
+> > +     /**
+> > +      * @brief Get the number of requested lines.
+> > +      * @return Number of lines in this request.
+> > +      */
+> > +     unsigned int num_lines(void) const;
+> > +
 >
->> ?
->>
->> Cheers,
->> Kent.
->>
+> More getters not prefixed with "get_" ;-).
+>
+> > +     /**
+> > +      * @brief Get the list of offsets of requested lines.
+> > +      * @return List of hardware offsets of the lines in this request.
+> > +      */
+> > +     line_offsets offsets(void) const;
+> > +
+>
+> And again.
+>
+> <snip>
+>
+> > +template<class enum_type, void global_func(::gpiod_line_config*, int),
+> > +      void subset_func(::gpiod_line_config*, int, unsigned int, const unsigned int*)>
+> > +void set_mapped_value(::gpiod_line_config* config, enum_type value,
+> > +                   const line_offsets& offsets, const ::std::map<enum_type, int>& mapping)
+> > +{
+> > +     int mapped_val = mapping.at(value);
+> > +
+>
+> This can throw ::std::out_of_range, which set_mapped_value() should catch
+> and re-throw as ::std::invalid_argument.
+>
+
+Makes sense.
+
+> The use of templating means mapping using ::std::map in this direction
+> makes more sense than the reverse in the other modules, but I'm still not
+> a fan.
+>
+> <snip>
+>
+> > +void line_request::impl::throw_if_released(void) const
+> > +{
+> > +     if (!this->request)
+> > +             throw ::std::logic_error("GPIO lines have been released");
+> > +}
+> > +
+>
+> Throw a more specific exception, rather than a generic logic_error.
+>
+> <snip>
+>
+> Hopefully I haven't snipped out too much...
+>
+> Cheers,
+> Kent.
+
+Thanks Kent for the thorough - as always - review!
+
+Bart
