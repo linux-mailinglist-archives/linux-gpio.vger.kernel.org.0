@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B93543DB8C7
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 14:41:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FB373DB8CF
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 14:45:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238779AbhG3Mlz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jul 2021 08:41:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41514 "EHLO
+        id S238847AbhG3MpF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jul 2021 08:45:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbhG3Mly (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 08:41:54 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D74C06175F
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:41:49 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id u3so17633217lff.9
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:41:49 -0700 (PDT)
+        with ESMTP id S238899AbhG3Mou (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 08:44:50 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A96C0617A4
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:44:10 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id u20so12244378ljo.0
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:44:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/kRBaSoBVL6nxcj2peq5Os69JE28/PQ01R2kk52zEtQ=;
-        b=B1kunCRaY6no1HNTHwInM799kDhf+SgjE7ndjdQ84sewMwawNelivcKSO+rton5MPJ
-         y4VYcB/Cg8peeDLhGK/2EDol6AoEzxmHYcf4vDsVIvQScv0t+nkECI19WiJCCVlgzSgP
-         vFD0ICa74wfojGbkMPz1WlXVD+sTiS7IDtsPAuUIm0e/cPN8eoJve3FJYuc9eqFBSPIz
-         i0frmYAuX8hlfM2KV0J7JYvmnPggSsWJhhRXEsSRslLQTn4l1vL4o4mvfZn8qW/NJ5ln
-         y4D4C5Fbi3GRWp9Q6Xd1R+v1fTQHcQrQmEoBarlD93n03ymt092utj2uYKtbbo30Hpy3
-         5xZg==
+        bh=a5XQMaz35GQWI34eEmf85Zx/0SDB9xb9F4beO3eG0XQ=;
+        b=RpUdgmOB94oKKBxx25fYPzJfPirqOqPOiI9Az6hFs3LBDAaNX33ixBDdZbSkXcVt2y
+         orsjULwTyJ19wTZ7kDCwurpUtf2DoJZdKM2dz/Prd0WCs6z1DINKVUc2r2+4AYOtOGVa
+         z1vVE0jOOuH348DsSgMLXLJnnwApuZyvpe4OWpuTjDeVYbw44TC9iRRKjaGmJpv2Vrb9
+         +8+i06tBsvnfM+RZtu+r3Yv2tCwYQVMWce5oLHcllClGJrtK9tjzosAVZdxSEQ8x1u1H
+         bWd6rdj7+yh+fWGtT+mZdgOpGLLZsiYMgk6ev3FuwwfCJ3f2Evxc9L2hacEvhFfUFAgh
+         QSTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/kRBaSoBVL6nxcj2peq5Os69JE28/PQ01R2kk52zEtQ=;
-        b=c9VAogSidvepvcJnmgaV5n3nEahlMJJ+UmyqE1t9FoVoZFnR87piYjC2Qq/5j8mSyC
-         cs8GoCP7aEx2MA+OOKw/P7yD5Ip8az7P969Hti5bYBnw9VDNdAeUqCcUI8MiQnQHOHs9
-         jcVOHoiBuJ3U0d5g6EAcNMNn5SjOlTsgYNlfc6OwfOJD77lJAyZcvXAXoE1ZgDq7/Jhr
-         ccY+Cg41ZuRGnmtHagCQvoPYMnmHe5S/2XOwIbw91PlVJUVBMV84R0WkpENN/b4+1TIM
-         nbdSqEe/uiaptQDWkowlnk+Oex+5m/dOOa/B3g3dKGRC8cU/mYYKT9z0M4eUVJJK2jqr
-         mTIw==
-X-Gm-Message-State: AOAM530WV1WdBOSVgKkGRXJqxuSAHBK/yFK9Zs4TdTfSgt63Xg62sh46
-        scYFi+x3hvHLoLeinj8ComB5C31aBSR8AD9N4AptSQ==
-X-Google-Smtp-Source: ABdhPJweLT/YBIhfBwINTJU7OPApJzz6dnBvoUzGLj8wntDPaxCPjbi2z1j7Y4AtTc+9QppJM2z/97sOVnrc/zLurXo=
-X-Received: by 2002:ac2:4c4c:: with SMTP id o12mr1712680lfk.157.1627648908126;
- Fri, 30 Jul 2021 05:41:48 -0700 (PDT)
+        bh=a5XQMaz35GQWI34eEmf85Zx/0SDB9xb9F4beO3eG0XQ=;
+        b=Wv5ekWKYCaZzMnfqDBfFt/y907D3BHXFrNCwohub0/nthXCkFWbghBATTpQjGdu1Dg
+         c8sYeKwDuTix8pBeEn7G3chdA5eSrowAmT28sXmwGxLbxKKkBTF+gl+B8tmyrJWm7XyC
+         s8malVdSJRN2+Y29QsKyUCEUogcF080pfVRFY/5amZL06NAPozfTYbbljH35ZH5FK8pu
+         76dOKqIdfqVT1QnDaxAzd5sklZDvU4NrmsfCu/9KFak6HhJQkv5V5WDO96Li4y0bzg1u
+         FHwjxHxgRgXUufeQONNPWk2YW9tyo57NOnFsUDrZAJDl7t7tGxgpMTOVHR2C8kDklAZM
+         mvnA==
+X-Gm-Message-State: AOAM530OP6MXi41+xQg0Aikwk2YwBMdKDKmR9W09i7jNcEMrRQDfZN2u
+        CKYINV+6RCypf3TLEIzXvSIxIOHmAwCqxb3yHULAWA==
+X-Google-Smtp-Source: ABdhPJxtTbhsXYkjhw0pIqrXNFx09EJLycc+oiEbbtK8QeKVWUojjl8+nDB0lnoHOK7O+8o+Hx46gdF6gTSo1NaQeTM=
+X-Received: by 2002:a05:651c:169a:: with SMTP id bd26mr1511169ljb.368.1627649048309;
+ Fri, 30 Jul 2021 05:44:08 -0700 (PDT)
 MIME-Version: 1.0
 References: <1626868353-96475-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
-In-Reply-To: <1626868353-96475-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <1626868353-96475-5-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com> <YQMIhBPwcNw1YqMq@robh.at.kernel.org>
+In-Reply-To: <YQMIhBPwcNw1YqMq@robh.at.kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 30 Jul 2021 14:41:37 +0200
-Message-ID: <CACRpkdZ=sJTz04NUbKzMkGa1_hW6VrzKCG5xkSYDdNiZfgvhqA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pinctrl: pinctrl-zynq: yaml conversion and minor
- driver updates
-To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+Date:   Fri, 30 Jul 2021 14:43:57 +0200
+Message-ID: <CACRpkdYrHTMLL_CQi0BoNZsXV3=2dBK38pkvd+EEkuPrzoG_Cw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm: dts: zynq: Replace 'io-standard' with
+ 'power-source' property
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
         Michal Simek <michal.simek@xilinx.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
@@ -66,24 +67,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 1:54 PM Sai Krishna Potthuri
-<lakshmi.sai.krishna.potthuri@xilinx.com> wrote:
-
-> This patch series does the following
-> - Covert Zynq pinctrl driver binding file to yaml.
-> - Update the binding for Zynq pinctrl to replace the 'io-standard' with
-> 'power-source' parameter as recommended by Linus during ZynqMP pinctrl
-> driver review(https://lkml.org/lkml/2021/3/25/278).
-> - Update the Zynq pinctrl the driver to remove custom pin
-> parameter(io-standard) and instead use generic parameter(power-source).
-> - Update Zynq dts files to replace 'io-standard' with 'power-source'.
+On Thu, Jul 29, 2021 at 9:59 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jul 21, 2021 at 05:22:33PM +0530, Sai Krishna Potthuri wrote:
+> > Replace 'io-standard' property with 'power-source' property in all zynq dts
+> > files to be in sync with Zynq pinctrl driver.
+> >
+> > Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+> > ---
+> >  arch/arm/boot/dts/zynq-ebaz4205.dts |  8 ++++----
+> >  arch/arm/boot/dts/zynq-microzed.dts |  2 +-
+> >  arch/arm/boot/dts/zynq-zc702.dts    | 20 ++++++++++----------
+> >  arch/arm/boot/dts/zynq-zc706.dts    | 18 +++++++++---------
+> >  4 files changed, 24 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/zynq-ebaz4205.dts b/arch/arm/boot/dts/zynq-ebaz4205.dts
+> > index b0b836aedd76..be7eae611fb7 100644
+> > --- a/arch/arm/boot/dts/zynq-ebaz4205.dts
+> > +++ b/arch/arm/boot/dts/zynq-ebaz4205.dts
+> > @@ -57,7 +57,7 @@
+> >
+> >               conf {
+> >                       groups = "gpio0_20_grp", "gpio0_32_grp";
+> > -                     io-standard = <3>;
+> > +                     power-source = <3>;
 >
-> Reason for adding the generic parameter 'power-source' in Zynq pinctrl driver
-> is to maintain common pin parameter across Xilinx Zynq and ZynqMP platforms
-> for power supply configuration.
+> This will break using a new DT with a kernel without patch 3.
 
-I applied patches 1-3 to the pinctrl tree, patch 4 should be applied
-to the SoC tree.
+The old (Linux) kernel never supported the "io-standard" property
+anyway.
+
+Unless someone is running som BSD or Windows with support for
+this property it can be merged by the quality of zero real-world
+impacts (no-one there to hear the tree fall in the forest).
+
+Sai Krishna: correct?
 
 Yours,
 Linus Walleij
