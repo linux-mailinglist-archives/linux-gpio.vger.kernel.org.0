@@ -2,85 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 301E03DC110
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 Jul 2021 00:28:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D89423DC105
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 Jul 2021 00:28:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233310AbhG3W2Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jul 2021 18:28:25 -0400
-Received: from mail-il1-f172.google.com ([209.85.166.172]:43586 "EHLO
-        mail-il1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233153AbhG3W2X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 18:28:23 -0400
-Received: by mail-il1-f172.google.com with SMTP id x7so7577261ilh.10;
-        Fri, 30 Jul 2021 15:28:18 -0700 (PDT)
+        id S230077AbhG3W2S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jul 2021 18:28:18 -0400
+Received: from mail-io1-f42.google.com ([209.85.166.42]:46706 "EHLO
+        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229543AbhG3W2S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 18:28:18 -0400
+Received: by mail-io1-f42.google.com with SMTP id z7so12383289iog.13;
+        Fri, 30 Jul 2021 15:28:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
          :message-id;
-        bh=D52Vy0CgcE0wfPHmI57Uv6O5bCcoMUm9q+qsHe1m5OE=;
-        b=Ym4V16ChMgDMYEcRaLIj91P7ur1Qpanl56iMYdBlNaTx4OaPOpycWoNmHs2h6uc6b1
-         rWad75hIj6FZhjv4bpojPzVl5R1KsRsAGITujjg9Fd129vMnaYoK9R6zpqIxNkR1TFkW
-         F+jdqyyGp5YOqfaEumsa3lxkY4HWr0QXlAx8kxjn8WFmpKFhgQ6qm6DpFGyDkw4ZmBc4
-         dbmmL1RldrAwQRvqs7CkELEhY5DtJDz7rUGNPsoi+QsV1LI0l2hZLe9kPa/7+ouAkNpB
-         SbKqpjGzpO0pHBtY7+n4azgp7JpDxW4Dads8t8CwG7VVUMxifGWE6f18PjPdmvGQrafP
-         Aihg==
-X-Gm-Message-State: AOAM53277ZtUwun3pAOoYs/Kbi1yt+9CBm0ReEgPi/3lX0JeN5sxY2oX
-        +ZPV1vkG28VVt1q/uAlH6Q==
-X-Google-Smtp-Source: ABdhPJwxFmwDv+5IpRAc36U/IY0R6KHUZxqyVwE7pzDL8f+orD1mZ/cnblLwZldJa1oLxZ4RdtDipw==
-X-Received: by 2002:a92:cf4d:: with SMTP id c13mr1018767ilr.300.1627684098045;
-        Fri, 30 Jul 2021 15:28:18 -0700 (PDT)
+        bh=1SioxWYOB4GKQF75otjmPAgYQGJ4juMB4TymylBvulE=;
+        b=P0oOjp24LssnbVlPk3D5V1NeORXdoYw0NAbgnpFs3zBRQAUzC5OqCIUA5FEGXWfXSC
+         jtBE5lf9imS4oP7f6dBARdZ44IL1MaShg/6APgsop5KA7NdUYEpTQuNv61ePpXIZYp+/
+         wntmrXX1/lxxcK86eGdFAVbvdocNTWJcu0w6qcxPcPnu9YQqpf6GB70G35GBI6SsFQk7
+         dTHbtWz65RQsdcewEqMiMcy2bj5WU4425dZydAyhKc81XkwVTGOrfTBMP9SMtm+Uob9Y
+         yNksvrVoGsOxM/ZGkwUuIQPuvhujvZTYkRvGsgRjXkxh5klou8WIhW9tz18dXUug/70r
+         /uAQ==
+X-Gm-Message-State: AOAM530dv4Y0kUN7WRRr9UZJDnzVMhYrTnW3XcsEtTu3ZXNVe4MVM0g4
+        oB42/vJCkjV7z1WDgXD9IOPEcvF8xw==
+X-Google-Smtp-Source: ABdhPJw92Pxgc45lpYhnZL98mHP5QmwqnkzlX6tQ6SiGz6QcI3EsfiGGEi2BDOlTWCaMN4QVg4tTIA==
+X-Received: by 2002:a02:90cb:: with SMTP id c11mr3909371jag.53.1627684092766;
+        Fri, 30 Jul 2021 15:28:12 -0700 (PDT)
 Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id d18sm1505290ile.32.2021.07.30.15.28.15
+        by smtp.gmail.com with ESMTPSA id q1sm1887882ioi.42.2021.07.30.15.28.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jul 2021 15:28:17 -0700 (PDT)
-Received: (nullmailer pid 3442795 invoked by uid 1000);
+        Fri, 30 Jul 2021 15:28:12 -0700 (PDT)
+Received: (nullmailer pid 3442792 invoked by uid 1000);
         Fri, 30 Jul 2021 22:28:10 -0000
 From:   Rob Herring <robh@kernel.org>
-To:     Sam Protsenko <semen.protsenko@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Amit Pundir <amit.pundir@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Tom Gall <tom.gall@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        Ryu Euiyoul <ryu.real@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Andy Teng <andy.teng@mediatek.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-serial@vger.kernel.org
-In-Reply-To: <20210730144922.29111-10-semen.protsenko@linaro.org>
-References: <20210730144922.29111-1-semen.protsenko@linaro.org> <20210730144922.29111-10-semen.protsenko@linaro.org>
-Subject: Re: [PATCH 09/12] dt-bindings: clock: Add bindings for Exynos850 clock controller
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20210730120937.1435204-3-hsinyi@chromium.org>
+References: <20210730120937.1435204-1-hsinyi@chromium.org> <20210730120937.1435204-3-hsinyi@chromium.org>
+Subject: Re: [PATCH v2 3/3] dt-bindings: mediatek: convert pinctrl to yaml
 Date:   Fri, 30 Jul 2021 16:28:10 -0600
-Message-Id: <1627684090.562853.3442794.nullmailer@robh.at.kernel.org>
+Message-Id: <1627684090.548356.3442791.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 30 Jul 2021 17:49:19 +0300, Sam Protsenko wrote:
-> Add documentation for Exynos850 clock driver bindings and corresponding
-> clock ID constants, which will be used further both in clock driver and
-> in device tree files. Constants are grouped per domain basis (CMU) for
-> more convenient usage, but those are just unique numbers and have
-> nothing to do with register offsets, etc.
+On Fri, 30 Jul 2021 20:09:37 +0800, Hsin-Yi Wang wrote:
+> Convert mt65xx, mt6796, mt7622, mt8183 bindings to yaml.
 > 
-> Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 > ---
->  .../bindings/clock/exynos850-clock.yaml       |  70 +++++
->  include/dt-bindings/clock/exynos850.h         | 267 ++++++++++++++++++
->  2 files changed, 337 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/exynos850-clock.yaml
->  create mode 100644 include/dt-bindings/clock/exynos850.h
+> v1->v2:
+> - fix comments in v1.
+> - fix mt7622 where groups is not required for conf node.
+> ---
+>  .../pinctrl/mediatek,mt65xx-pinctrl.yaml      | 206 ++++++++
+>  .../pinctrl/mediatek,mt6797-pinctrl.yaml      | 173 +++++++
+>  .../pinctrl/mediatek,mt7622-pinctrl.yaml      | 416 +++++++++++++++
+>  .../pinctrl/mediatek,mt8183-pinctrl.yaml      | 228 ++++++++
+>  .../bindings/pinctrl/pinctrl-mt65xx.txt       | 156 ------
+>  .../bindings/pinctrl/pinctrl-mt6797.txt       |  83 ---
+>  .../bindings/pinctrl/pinctrl-mt7622.txt       | 490 ------------------
+>  .../bindings/pinctrl/pinctrl-mt8183.txt       | 132 -----
+>  8 files changed, 1023 insertions(+), 861 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6797-pinctrl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt6797.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
 > 
 
 My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
@@ -89,14 +89,20 @@ on your patch (DT_CHECKER_FLAGS is new in v5.13):
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/clock/exynos850-clock.example.dts:71.27-28 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/clock/exynos850-clock.example.dt.yaml] Error 1
+Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dts:21:18: fatal error: dt-bindings/pinctrl/mt8183-pinfunc.h: No such file or directory
+   21 |         #include <dt-bindings/pinctrl/mt8183-pinfunc.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dt.yaml] Error 1
 make[1]: *** Waiting for unfinished jobs....
 make: *** [Makefile:1419: dt_binding_check] Error 2
 \ndoc reference errors (make refcheckdocs):
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+MAINTAINERS: Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+MAINTAINERS: Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
 
-See https://patchwork.ozlabs.org/patch/1511715
+See https://patchwork.ozlabs.org/patch/1511632
 
 This check can fail if there are any dependencies. The base for a patch
 series is generally the most recent rc1.
