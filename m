@@ -2,106 +2,219 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AFCD3DBF00
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 21:31:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F31A23DBF48
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 21:57:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231124AbhG3Tbf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jul 2021 15:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230335AbhG3Tbf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 15:31:35 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA82C061765
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 12:31:30 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id t2so6004868vsa.11
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 12:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sTwg3ftZdEkrZwjfbTZZgZqiWtz0ELEQs7iMOHDjt2g=;
-        b=HKmhgCdKit1ByfXm1vUXRBJaKei6NULPm63n6c2KVb9iuaElf59ZwnTL02wsd6NPws
-         QwRQhNvHf0+lQ+Gm8OYtFYztLcHhEC+X0QX5nkGRcXiFgCUyLlQdcPISgIvUJVytwgqD
-         kN8qBrat9s/S8OIvWKC1rRafR+WObVT5PuMa0/KFpXCOMnsGoimMqXEDfc9tWsKVSKMB
-         UEjF9O0ttCakSUWYdn/aWrDLBqz4LMcniW8wFEmsPP+JYrt/ghGxsyAclVeZYeGWMwlq
-         iEiN5NyiTS+2U5zr5EW3zLCTojChAVdXNSQzzW81jX1zjIBUVtdn8WQ66U3w5Q5Pm0M0
-         CvCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sTwg3ftZdEkrZwjfbTZZgZqiWtz0ELEQs7iMOHDjt2g=;
-        b=ZnvxFzqTbAFFLllaoth91ODRbuPw62J/kCLiEpTlsl+SttEcxeY8yrFUAe5nGXM+cD
-         aM4hGwxOJrlZqGzyGduGJZdxEexK0urzuDS9QNnytPmiV9gsBnWUaqya3hT4XGmx/cQT
-         uYm2YgZHufiWjDgEgWXSL2TWEGv3M+xEstTq46XnJD0VSrM3tFywI25zVZbz0QO2Uovd
-         SsWDmIlqK35WT4bvfxXg2OdV2XEjUEmCT98R0IeYmJqPzXbDqhrhd7mP9G/yWjf/4JzV
-         2rZv2+3UCgptm6OWf1DnjzyUbdQn+7E5p/6eT20JNFT8EGi5wCX3VR7NdlwynPf4YCqI
-         6YCw==
-X-Gm-Message-State: AOAM531lXEui3jEY3uBH8kTdSkZIIJ2/TrfmPdQLrYbHkw36yKHkJtnW
-        pDegtkHVHtiuBk8sw2fxJ/IujyWAHyHpjrwY9nQXCg==
-X-Google-Smtp-Source: ABdhPJwzN5k9K9wcPdG8qks1LUn6IIYRhNxortw/xuZYWjsFGojdp/CFbFwlotzlaZrTcQ0+7fQjW+AwzT3YGLiK5+Y=
-X-Received: by 2002:a67:16c1:: with SMTP id 184mr3619118vsw.14.1627673489430;
- Fri, 30 Jul 2021 12:31:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210730144922.29111-1-semen.protsenko@linaro.org>
- <20210730144922.29111-4-semen.protsenko@linaro.org> <61a6c636-6f72-d086-79b8-e87dbab6b456@canonical.com>
-In-Reply-To: <61a6c636-6f72-d086-79b8-e87dbab6b456@canonical.com>
-From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Fri, 30 Jul 2021 22:31:18 +0300
-Message-ID: <CAPLW+4kCuFGYdrkTuXFaGgPy-EyENkBZMGV-BaY6qn2_j+ABTw@mail.gmail.com>
-Subject: Re: [PATCH 03/12] dt-bindings: pinctrl: samsung: Add Exynos850 doc
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        id S231163AbhG3T5N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jul 2021 15:57:13 -0400
+Received: from www.zeus03.de ([194.117.254.33]:56430 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230483AbhG3T5N (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 30 Jul 2021 15:57:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=dFgkfs7h5HCGabqrXi3Y912hwcPp
+        W6d1p3avVbd5EtE=; b=I7AryB0/6JUP7ze9vrSOtvEIrmz50OjmSviqecywNpKK
+        XXKWynOkf18Zsi7g9jrNY4wlF49uIbs5h8T5yRyYN8uQfXi3ZNA+5FJkU+UQ87jX
+        ebWzjGoAo+Ece9jqtUkoizY8bFnQpGjm1+w75GAHawWARzquoOpOCd+1L37WbdA=
+Received: (qmail 3099733 invoked from network); 30 Jul 2021 21:57:06 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Jul 2021 21:57:06 +0200
+X-UD-Smtp-Session: l3s3148p1@qm26n1zIoKYgAwDPXwtrAFZwfe2Gefyo
+Date:   Fri, 30 Jul 2021 21:57:04 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
-        Ryu Euiyoul <ryu.real@samsung.com>,
-        Tom Gall <tom.gall@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: Re: [RFC PATCH v2 1/1] misc: add sloppy logic analyzer using polling
+Message-ID: <YQRZkFApESOIMRmv@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+References: <20210519132528.4394-1-wsa+renesas@sang-engineering.com>
+ <20210519132528.4394-2-wsa+renesas@sang-engineering.com>
+ <YKUlbsWhT45l5Zm0@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d/nvodR47AXtcLzp"
+Content-Disposition: inline
+In-Reply-To: <YKUlbsWhT45l5Zm0@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 30 Jul 2021 at 18:25, Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> On 30/07/2021 16:49, Sam Protsenko wrote:
-> > Document compatible string for Exynos850 SoC. Nothing else is changed,
-> > as Exynos850 SoC uses already existing samsung pinctrl driver.
-> >
-> > Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
->
-> The patch should be first in the series - dt-bindings go at beginning.
-> Although no need to resend just for this.
-> If the resend happens, the fix ("pinctrl: samsung: Fix pinctrl bank pin
-> count") should be sent separately (no mixing fixes and new features)
-> because they are independent and usually easier for review.
->
 
-Thanks, will be done in v2. Also, just re-sent ("pinctrl: samsung: Fix
-pinctrl bank pin count") fix separately, as you recommended.
+--d/nvodR47AXtcLzp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> Best regards,
-> Krzysztof
+Hi Andy,
+
+finally I found some time to get back to this one. For anyhting I didn't
+comment on, it means I am okay with your suggestion. Thanks for the
+review!
+
+> 'For ACPI one may use PRP0001 approach with the following ASL excerpt exa=
+mple::
+>=20
+>     Device (GSLA) {
+>         Name (_HID, "PRP0001")
+>         Name (_DDN, "GPIO sloppy logic analyzer")
+>         Name (_CRS, ResourceTemplate () {
+>             GpioIo(Exclusive, PullNone, 0, 0, IoRestrictionNone,
+>                 "\\_SB.PCI0.GPIO", 0, ResourceConsumer, , ) { 13 }
+>             PinConfig(Exclusive, 0x07, 0, "\\_SB.PCI0.GPIO", 0, ResourceC=
+onsumer, ) { 7 }
+>             GpioIo(Exclusive, PullNone, 0, 0, IoRestrictionNone,
+>                 "\\_SB.PCI0.GPIO", 0, ResourceConsumer, , ) { 12 }
+>             PinConfig(Exclusive, 0x07, 0, "\\_SB.PCI0.GPIO", 0, ResourceC=
+onsumer, ) { 6 }
+>         })
+>=20
+>         Name (_DSD, Package () {
+>             ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>             Package () {
+>                 Package () { "compatible", Package () { "gpio-sloppy-logi=
+c-analyzer" } },
+>                 Package () {
+>                     "probe-gpios", Package () {
+>                         ^GSLA, 0, 0, 0,
+>                         ^GSLA, 1, 0, 0,
+>                     },
+>                 Package () {
+>                     "probe-names", Package () {
+>                         "SCL",
+>                         "SDA",
+>                     },
+>             }
+>         })
+>=20
+> Note, that pin configuration uses pin numbering space, while GPIO resourc=
+es
+> are in GPIO numbering space, which may be different in ACPI. In other wor=
+ds,
+> there is no guarantee that GPIO and pins are mapped 1:1, that's why there=
+ are
+> two different pairs in the example, i.e. {13,12} GPIO vs. {7,6} pin.
+>=20
+> Yet pin configuration support in Linux kernel is subject to implement.'
+
+Have you tested this snippet? I am totally open to add ACPI but it
+should be tested, of course. Is there any on-going effort to add ACPI
+pin config?
+
+> > + * Copyright (C) Wolfram Sang <wsa@sang-engineering.com>
+> > + * Copyright (C) Renesas Electronics Corporation
+>=20
+> No years?
+
+After reading this*, I agreed they are not really needed.
+
+* https://www.linuxfoundation.org/blog/copyright-notices-in-open-source-sof=
+tware-projects/
+
+
+> > +#define GPIO_LA_MAX_PROBES 8
+> > +#define GPIO_LA_NUM_TESTS 1024
+>=20
+> I prefer TAB indentation of the values for better reading, but it's up to=
+ you.
+
+I don't ;)
+
+> > +	struct debugfs_blob_wrapper meta;
+> > +	unsigned long gpio_acq_delay;
+> > +	struct device *dev;
+>=20
+> > +	unsigned int trig_len;
+>=20
+> On 64-bit arch you may save 4 bytes by moving this to be together with u32
+> member above.
+
+I don't want to save bytes here. I sorted the struct for cachelines,
+important members first.
+
+> > +static struct dentry *gpio_la_poll_debug_dir;
+>=20
+> I have seen the idea of looking up the debugfs entry. That said, do we ac=
+tually
+> need this global variable?
+
+I don't understand the first sentence. And we still need it to clean up?
+
+
+> > +		/* '10' is length of 'probe00=3D\n\0' */
+> > +		add_len =3D strlen(gpio_names[i]) + 10;
+> > +		meta =3D devm_krealloc(dev, meta, meta_len + add_len, GFP_KERNEL);
+>=20
+> First of all, this realloc() pattern *) is bad. While it's tricky and has=
+ side
+> effects (i.e. it has no leaks) better not to use it to avoid confusion.
+>=20
+> *) foo =3D realloc(foo, ...); is 101 mistake.
+
+Because generally you lose the old pointer on error. But we don't here
+because we are using managed devices.
+
+However, I see that all kernel users of devm_krealloc() are using a
+seperate variable and then update the old one. I can do this, too.
+
+> But second, all your use is based on:
+>  - all strings are of equal lengths
+
+They are not. The gpio names come from the user via DT or ACPI and can
+have an arbitrary length.
+
+> > +	[ ! -d $CPUSETDIR ] && mkdir $CPUSETDIR
+>=20
+> [ -d ... ] || ...
+
+Will think about it. I think the former is a tad more readable.
+
+> > +			# Check if we could parse something and the channel number fits
+> > +			[ $chan !=3D $c -a $chan -le $MAX_CHANS ] 2> /dev/null || { echo "S=
+yntax error: $c" && exit 1; }
+>=20
+> Why 2>/dev/null ?
+
+I forgot, have to recheck.
+
+> > +[ $SAMPLEFREQ -eq 0 ] &&
+>=20
+>  echo "Invalid sample frequency" && exit 1
+>=20
+> This kind of stuff deserves an exit function, like
+
+I'll think about it!
+
+All the best,
+
+   Wolfram
+
+
+--d/nvodR47AXtcLzp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmEEWYwACgkQFA3kzBSg
+KbbE7A/7BTvFJM39BOOKYzyCALRnQLBaSnka5lMQnDbBkD8O4XnH8E2q5K16VR8C
+ZHga188t5yYYYY3TYaLlepqEVOswWZF795MczPBjyhprqVaMb3UWsYu7Q/Nzptar
+DO0sQ2yfUOVGZJHn8lfA9IBaC9MxxkGlzM27NEikB4CzTmi/NKIL4KxtYxNThSm4
+0Kc8dyGygDrcj9uD5o88vO0TmiqgTJRagrtzWlH08QLqd5QkBWWxP1BHqcbILbPF
+UmZiFF/+pcGMyfGKbaku/LeRfJl7MauVc44rM0p4VCkHCxDX1VnpKy67a2oVmXZj
+vgm/XFgI70GagSnxNKXvubtRwexSROVnHKKDOE3+EnjdPja2q6zVKse9qCy1qYcv
+XaTSwYRQqTFYKBqFWsm74p49d8eTCQrUsjNofj+kszAbU+AaVG7/hO1EFybx+sby
+KTXFRB3h2W7HkQOoIDgSmsiksPGbJQknikC7Hz0fm0uA7gKukbtw4HTCBt9C/4lH
+1LiL+DmxSsnVr1yyVPFjS+lOB8+fSJn1MvRArywgidLlfTxyMQ/xFQJ16g5R05ez
+Juj2KpnP3ZmJY4PXh2G2rUasN84y34dYA0t7ot6FYvaTU/EIvl4YiBT1jQXczfD/
++5CX4WlEZHQwb6D/iUYemp+LscBZB0Z6eCtVXXbP+Jzt4ao+F7g=
+=B0F4
+-----END PGP SIGNATURE-----
+
+--d/nvodR47AXtcLzp--
