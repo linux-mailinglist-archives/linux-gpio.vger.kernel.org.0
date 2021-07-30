@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A15AF3DB857
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 14:09:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB6543DB859
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 14:09:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238731AbhG3MJw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jul 2021 08:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33436 "EHLO
+        id S238789AbhG3MJz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jul 2021 08:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238705AbhG3MJu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 08:09:50 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD67BC0613C1
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:09:45 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id k4-20020a17090a5144b02901731c776526so20430315pjm.4
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:09:45 -0700 (PDT)
+        with ESMTP id S238754AbhG3MJx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 08:09:53 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0137C061799
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:09:48 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id t3so8727894plg.9
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:09:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9jhmmW00U1t6nu8Et2gPe9VWIRq7R6Jr8Ar5v9ZMFtg=;
-        b=VgT+e2A0IF77HhCmq2v6gbviN4IFKA14+DyHg8G0xXNc0t531MsdMsNgKTJhiUViYc
-         ggx33OQt6gRHAzv/ahTT5A6vhoFV36OjYD4WTGda6NKOqY8jeXrwa6D+n3QeM+2d9vxi
-         aKgXY76W0OMXpUKyeu4ztuhnxxFUYijR1+F6g=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=A/eExhXdIB0K8jv2+SmtKO1+FtOUyPYgVYzl6RJq3V8=;
+        b=QRJz5lVdjRsvWISh2iV2BSbzouh75mPkyhUJhTIBAgiabqTwhFKu2CNTn5uW1GSAbF
+         PIdyIdyddC137sV65D8pSc7pAtBLyB0FehzbL5Iq9nXGn6QEJZPbdQPD53BKfiv38HcX
+         GfB0hSiNCUrRywKrRFHSFvA72qqnDuemCUmy4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9jhmmW00U1t6nu8Et2gPe9VWIRq7R6Jr8Ar5v9ZMFtg=;
-        b=HS07LzXnIN9VBTKdC3v0mcLPv6eW1KL1HaliwgQPMY6UOiPu67DoeyL3kHOUtrqfZz
-         FLG/E1drXWscVuHbMOPNr8ccdcLfMqdUHFv2XC+inOxN9ProVh6x9eoIH+QAO1wZlsn5
-         dEi/YlsOSirM/xWwGXotWZ63dnMntUxQJdZIOCvDczguqOPL8ZcpJIjq7oGlynM9a2WT
-         Zf5/eJvyUDh6B5UaLFNHLuimQPvQX7MdIcAIfNpUr2qwNBoLHyO4QFyzvf+N50PRM/a6
-         jB5NgEqjmM9XNdkwvi0UBemao72ClNYS3SB5z8L6IgfBUlfxYNAbEqf49LYJqAySMVoX
-         dXWg==
-X-Gm-Message-State: AOAM53017npx3BFkGig4SThCY+/aV3M8vLyTOAzJZ98hdkDOOPCTxtfh
-        OBRwjpbgaNQ85p0S6AbqMnWcBw==
-X-Google-Smtp-Source: ABdhPJyUiLCxqCC6f1d5CYwKUP8Qk7BYcm75N+d9XbtZsZfdM08Fxck+IkBKHdeny9OLqapp+4YTTQ==
-X-Received: by 2002:a62:8f0b:0:b029:356:ba53:a041 with SMTP id n11-20020a628f0b0000b0290356ba53a041mr2443083pfd.10.1627646985133;
-        Fri, 30 Jul 2021 05:09:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=A/eExhXdIB0K8jv2+SmtKO1+FtOUyPYgVYzl6RJq3V8=;
+        b=qTwPVRaHfwWAv72SaDgLguezROYJ+R0dc8okM7PfhcIpfQVvnTeTjI88wRcT28Anup
+         TNKymr2WALMLKDw+73wQW63bffYH+aSxzqtdkxQ+u8O1PBDeZarkEmTgbDkYxwYtGqy9
+         c9tLIkvabV4yYAeGiPlEirQzDe9hyDTYqEYxZ1maVW0ejox/kD1G3R/3M+EOkJC4j4jp
+         cg0oHQYyO9tNJKmkQnTbGlDmy6032ASZgZk9bTSKe2f0A/yAVRf+y9v1btqk2bgmhrqE
+         hJK1qtLLliz1toGi/pf8fYmvVx0jnFHKcs1642k/b99oQ78LxKQ3ArmlxqVj8uCc942F
+         WbcA==
+X-Gm-Message-State: AOAM533plAUetH4/Doq3DGwxL3p7qHX+XXklbz28wK7xylkKeDCW1eo9
+        pMktCxf3PmiJjIAHf857VYpIBw==
+X-Google-Smtp-Source: ABdhPJwYYlJ/bHg3Ia2iSzowLObpVO3bMpgvCuXtEZnF/wZSyLvxIbXfeCaP4TVBTVk2ugT6ZnFGyg==
+X-Received: by 2002:a05:6a00:124b:b029:358:fcd2:fa37 with SMTP id u11-20020a056a00124bb0290358fcd2fa37mr2597130pfi.35.1627646988084;
+        Fri, 30 Jul 2021 05:09:48 -0700 (PDT)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:c144:3a3e:e06f:59])
-        by smtp.gmail.com with ESMTPSA id a9sm2182071pjs.32.2021.07.30.05.09.43
+        by smtp.gmail.com with ESMTPSA id a9sm2182071pjs.32.2021.07.30.05.09.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jul 2021 05:09:44 -0700 (PDT)
+        Fri, 30 Jul 2021 05:09:47 -0700 (PDT)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -53,43 +53,45 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] arm: dts: mt8135: Move pinfunc to include/dt-bindings/pinctrl
-Date:   Fri, 30 Jul 2021 20:09:35 +0800
-Message-Id: <20210730120937.1435204-1-hsinyi@chromium.org>
+Subject: [PATCH v2 2/3] arm: dts: mt8183: Move pinfunc to include/dt-bindings/pinctrl
+Date:   Fri, 30 Jul 2021 20:09:36 +0800
+Message-Id: <20210730120937.1435204-2-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.32.0.554.ge1b32706d8-goog
+In-Reply-To: <20210730120937.1435204-1-hsinyi@chromium.org>
+References: <20210730120937.1435204-1-hsinyi@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Move mt8135-pinfunc.h into include/dt-bindings/pinctrl so that we can
+Move mt8183-pinfunc.h into include/dt-bindings/pinctrl so that we can
 include it in yaml examples.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
- arch/arm/boot/dts/mt8135.dtsi                                   | 2 +-
- .../boot/dts => include/dt-bindings/pinctrl}/mt8135-pinfunc.h   | 0
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi                        | 2 +-
+ .../mediatek => include/dt-bindings/pinctrl}/mt8183-pinfunc.h   | 0
  2 files changed, 1 insertion(+), 1 deletion(-)
- rename {arch/arm/boot/dts => include/dt-bindings/pinctrl}/mt8135-pinfunc.h (100%)
+ rename {arch/arm64/boot/dts/mediatek => include/dt-bindings/pinctrl}/mt8183-pinfunc.h (100%)
 
-diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-index 0e4e835026db0..a031b36363187 100644
---- a/arch/arm/boot/dts/mt8135.dtsi
-+++ b/arch/arm/boot/dts/mt8135.dtsi
-@@ -9,7 +9,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/mt8135-resets.h>
--#include "mt8135-pinfunc.h"
-+#include <dt-bindings/pinctrl/mt8135-pinfunc.h>
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index f90df6439c088..1933045da95de 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -14,7 +14,7 @@
+ #include <dt-bindings/reset-controller/mt8183-resets.h>
+ #include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/thermal/thermal.h>
+-#include "mt8183-pinfunc.h"
++#include <dt-bindings/pinctrl/mt8183-pinfunc.h>
  
  / {
- 	#address-cells = <2>;
-diff --git a/arch/arm/boot/dts/mt8135-pinfunc.h b/include/dt-bindings/pinctrl/mt8135-pinfunc.h
+ 	compatible = "mediatek,mt8183";
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h b/include/dt-bindings/pinctrl/mt8183-pinfunc.h
 similarity index 100%
-rename from arch/arm/boot/dts/mt8135-pinfunc.h
-rename to include/dt-bindings/pinctrl/mt8135-pinfunc.h
+rename from arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h
+rename to include/dt-bindings/pinctrl/mt8183-pinfunc.h
 -- 
 2.32.0.554.ge1b32706d8-goog
 
