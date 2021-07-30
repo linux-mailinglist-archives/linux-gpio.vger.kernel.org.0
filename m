@@ -2,36 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80EFD3DBD50
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 18:50:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAA663DBD9F
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 19:21:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229708AbhG3QvB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jul 2021 12:51:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229479AbhG3Qu6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 30 Jul 2021 12:50:58 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S229738AbhG3RVj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jul 2021 13:21:39 -0400
+Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:56108
+        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230203AbhG3RVj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 30 Jul 2021 13:21:39 -0400
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59F1360E09;
-        Fri, 30 Jul 2021 16:50:53 +0000 (UTC)
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1m9Vil-0023AS-Ha; Fri, 30 Jul 2021 17:50:51 +0100
-MIME-Version: 1.0
-Date:   Fri, 30 Jul 2021 17:50:51 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sam Protsenko <semen.protsenko@linaro.org>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPS id 4DAF43F232
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 17:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1627665693;
+        bh=o5z17HicOMnibSKxbfutUtdmQTlkkNRFgUGIEJq9A5o=;
+        h=From:To:Cc:References:Subject:Message-ID:Date:MIME-Version:
+         In-Reply-To:Content-Type;
+        b=iP1hWkWZT5MwdLvttmMex0l/IDza+w9yJmXaClovbGuDZQk3A2vKh1UBx7N6XEXUf
+         GNXXL8D5F3rXZ5Gk+bybOiO4/AKiZ7BIjrf5nXR6f/srdiMQJrjD9ug4gTS6YHKUel
+         ZAj8ig1/r+6/u6DxOfF5AWYwJ7EZ2kdNKbLo5orIKO84lDxlBO6O/uitwevsCqDyXt
+         KSvAX6pY3v035Z1khVp0+xT81wAuBHXccX256pOfkSlKBKQItACijOQLvezemEmR2e
+         acouAcnqVlz5aWFP0O0Kz/JaVgqa2l5eApzLQ07eyR6uNpREj44eMVSq34ifNmACXo
+         xIKWVdmtXeorQ==
+Received: by mail-ej1-f71.google.com with SMTP id kf3-20020a17090776c3b0290536d9b62eb6so3346463ejc.2
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 10:21:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o5z17HicOMnibSKxbfutUtdmQTlkkNRFgUGIEJq9A5o=;
+        b=jmlw9H/lVDxf7lHb1KapLKddRIilH37RVu4pZXu2C6Nvwms/iDSSfm9C/vWkkcHK1/
+         Y+Zluof+0w9LH0Dfc/2l+Ldj49VI4i46StEagJcz2u2F5+9DLzEbDY3BGyTRTmOyUFzh
+         xDGWUcMqY7ZSoWMZrF5T5tEWB0xJy/TNMK77Lmpx2sFVJ2MUpIgX9Ay342aStjgtPnBS
+         AKY7Lnj+tDhEiTaIZUN7Y/vNdiwiVa7CdygHIR6X23Y5x5F5rjvm9HmN1Zo/2CDK4POq
+         HA2Lh25BfMu1QuVpGkIBzYx+i8EMqLG1BkfSDOPM43Hj/oDtjKGHBRBMD/qCHxvLXWsk
+         BRTQ==
+X-Gm-Message-State: AOAM532gaUR8S0NIWmrrTW6F4fkgh099JgHyuQy+p61wVrU7ncK6I1uu
+        OoUSAcZ1GWO/DsAQG2eWnHoAnzGSWFS9tcagbdnVnkKGvjcDUxC/SK14Zb2Vc6mTI3Hf6N6MHjr
+        lLi9xiFDuDL0Am9j7SR0cVZ2LgHIZw484WCFD/tk=
+X-Received: by 2002:a17:907:724b:: with SMTP id ds11mr3758108ejc.192.1627665692503;
+        Fri, 30 Jul 2021 10:21:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzFiKJlif1uhqb84VdmehIjJr5DEUQdSGnnvL110bm0Y0Y4Awj/aQgY4XpZWPb/ITBePmMBnw==
+X-Received: by 2002:a17:907:724b:: with SMTP id ds11mr3758080ejc.192.1627665692316;
+        Fri, 30 Jul 2021 10:21:32 -0700 (PDT)
+Received: from [192.168.8.102] ([86.32.47.9])
+        by smtp.gmail.com with ESMTPSA id p16sm944758eds.73.2021.07.30.10.21.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Jul 2021 10:21:31 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+To:     Sam Protsenko <semen.protsenko@linaro.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Jiri Slaby <jirislaby@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -45,113 +75,52 @@ Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
         linux-serial@vger.kernel.org
-Subject: Re: [PATCH 12/12] arm64: dts: exynos: Add Exynos850 SoC support
-In-Reply-To: <20210730144922.29111-13-semen.protsenko@linaro.org>
 References: <20210730144922.29111-1-semen.protsenko@linaro.org>
- <20210730144922.29111-13-semen.protsenko@linaro.org>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <15871f8ced3c757fad1ab3b6e62c4e64@misterjones.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: semen.protsenko@linaro.org, s.nawrocki@samsung.com, cw00.choi@samsung.com, krzysztof.kozlowski@canonical.com, linus.walleij@linaro.org, tomasz.figa@gmail.com, robh+dt@kernel.org, sboyd@kernel.org, mturquette@baylibre.com, jirislaby@kernel.org, gregkh@linuxfoundation.org, ckeepax@opensource.wolfsonmicro.com, ryu.real@samsung.com, tom.gall@linaro.org, sumit.semwal@linaro.org, john.stultz@linaro.org, amit.pundir@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+ <5e35b0a7-13aa-3c62-ca49-14af2fcb2a08@canonical.com>
+Subject: Re: [PATCH 00/12] Add minimal support for Exynos850 SoC
+Message-ID: <c3486111-0ec9-9679-d2a2-68b2f33a2450@canonical.com>
+Date:   Fri, 30 Jul 2021 19:21:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <5e35b0a7-13aa-3c62-ca49-14af2fcb2a08@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2021-07-30 15:49, Sam Protsenko wrote:
-> Samsung Exynos850 is ARMv8-based mobile-oriented SoC.
+On 30/07/2021 17:18, Krzysztof Kozlowski wrote:
+> On 30/07/2021 16:49, Sam Protsenko wrote:
+>> This patch series adds initial platform support for Samsung Exynos850
+>> SoC [1]. With this patchset it's possible to run the kernel with BusyBox
+>> rootfs as a RAM disk. More advanced platform support (like MMC driver
+>> additions) will be added later. The idea is to keep the first submission
+>> minimal to ease the review, and then build up on top of that.
+>>
+>> [1] https://www.samsung.com/semiconductor/minisite/exynos/products/mobileprocessor/exynos-850/
+>>
 > 
-> Features:
->  * CPU: Cortex-A55 Octa (8 cores), up to 2 GHz
->  * Memory interface: LPDDR4/4x 2 channels (12.8 GB/s)
->  * SD/MMC: SD 3.0, eMMC5.1 DDR 8-bit
->  * Modem: 4G LTE, 3G, GSM/GPRS/EDGE
->  * RF: Quad GNSS, WiFi 5 (802.11ac), Bluetooth 5.0
->  * GPU: Mali-G52 MP1
->  * Codec: 1080p 60fps H64, HEVC, JPEG HW Codec
->  * Display: Full HD+ (2520x1080)@60fps LCD
->  * Camera: 16+5MP/13+8MP ISP, MIPI CSI 4/4/2, FD, DRC
->  * Connectivity: USB 2.0 DRD, USI (SPI/UART/I2C), HSI2C, I3C, ADC, 
-> Audio
+> Great work!
 > 
-> This patch adds minimal SoC support. Particular board device tree files
-> can include exynos850.dtsi file to get SoC related nodes, and then
-> reference those nodes further as needed.
-> 
-> Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-> ---
->  .../boot/dts/exynos/exynos850-pinctrl.dtsi    | 782 ++++++++++++++++++
->  arch/arm64/boot/dts/exynos/exynos850-usi.dtsi |  30 +
->  arch/arm64/boot/dts/exynos/exynos850.dtsi     | 245 ++++++
->  3 files changed, 1057 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos850-pinctrl.dtsi
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos850-usi.dtsi
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos850.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos850-pinctrl.dtsi
-> b/arch/arm64/boot/dts/exynos/exynos850-pinctrl.dtsi
-> new file mode 100644
-> index 000000000000..4cf0a22cc6db
+> What's the SoC revision number (should be accessible via
+> /sys/bus/soc/devices/soc0/)? Recent wrap in numbering of Exynos chips
+> might bring confusion...
 
-[...]
+Judging by vendor's sources it is quite confusing. It looks mostly like
+Exynos3830 but in few other cases it uses Exynos9 compatibles (Exynos9,
+Exynos9820). Only in few places there is Exynos850. Marketing department
+made it so confusing...  The revision embedded in SoC would be very
+interesting.
 
-> +	gic: interrupt-controller@12a00000 {
-> +		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+Anyway, judging by current versioning, there is a risk Samsung will come
+with a new chipset name conflicting with existing ones. It already
+overflowed.
 
-One thing for sure, it cannot be both. And given that it is
-an A55-based SoC, it isn't either. It is more likely a GIC400.
-
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <0>;
-> +		interrupt-controller;
-> +		reg = <0x0 0x12a01000 0x1000>,
-> +		      <0x0 0x12a02000 0x1000>,
-
-This is wrong. It is architecturally set to 8kB.
-
-> +		      <0x0 0x12a04000 0x2000>,
-> +		      <0x0 0x12a06000 0x2000>;
-> +		interrupts = <GIC_PPI 9
-> +				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-
-4? With 8 CPUs?
-
-I also find it curious that you went through the unusual
-(and IMO confusing) effort to allocate a name to each and
-every SPI in the system, but didn't do it for any on the PPIs...
+It's even worse with a thingy called "Exynos9 auto" which hides
+numbering even more.
 
 
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <26000000>;
-
-No, please. Fix the firmware to program CNTFRQ_EL0 on each
-and every CPU. This isn't 2012 anymore.
-
-You are also missing the hypervisor virtual timer interrupt.
-
-> +		use-clocksource-only;
-> +		use-physical-timer;
-
-Thankfully, these two properties do not exist.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Best regards,
+Krzysztof
