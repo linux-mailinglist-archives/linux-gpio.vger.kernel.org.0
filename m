@@ -2,84 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74FDF3DB81E
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 13:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A15AF3DB857
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jul 2021 14:09:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238275AbhG3L6i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jul 2021 07:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58802 "EHLO
+        id S238731AbhG3MJw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jul 2021 08:09:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238617AbhG3L6h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 07:58:37 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D2DC0613C1
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 04:58:32 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id f18so17397853lfu.10
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 04:58:32 -0700 (PDT)
+        with ESMTP id S238705AbhG3MJu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jul 2021 08:09:50 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD67BC0613C1
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:09:45 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id k4-20020a17090a5144b02901731c776526so20430315pjm.4
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jul 2021 05:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TUMiykQNfMbAmHAwrv+rEI/bGM+ClnUap5p0JH7cDWk=;
-        b=nOEuMX16PEbcv7Ku8Wq0OOJf4JaQLloyxnXX69y4ciEH+9JpQLa5sHl8FFzp6P+HZN
-         A3TPw0IuNgRaZBkIBzQUZSVSAUhQtNi/3TR98vof2uhGG45DmUck1crDb0YJ1jPjO1rQ
-         BAdKrrooSGJhQRwqoWTg6r/dM6D2V43cVZdH5WQAMTVgj6gyp9iAj8RMflYWtJ+InJfx
-         oeOarek4Cip/AJVkDOOfFxfUteS6BH1V17sl7k/G1qR6RgusjFS7P2A7538buW5i0twT
-         3lyBoozMlsRPrBYb9rBoPox7Or6Yi5dwoxKO1x/2PnOH3xYFitQBJ9fbvcJ0/5+MMvXg
-         JJYQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jhmmW00U1t6nu8Et2gPe9VWIRq7R6Jr8Ar5v9ZMFtg=;
+        b=VgT+e2A0IF77HhCmq2v6gbviN4IFKA14+DyHg8G0xXNc0t531MsdMsNgKTJhiUViYc
+         ggx33OQt6gRHAzv/ahTT5A6vhoFV36OjYD4WTGda6NKOqY8jeXrwa6D+n3QeM+2d9vxi
+         aKgXY76W0OMXpUKyeu4ztuhnxxFUYijR1+F6g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TUMiykQNfMbAmHAwrv+rEI/bGM+ClnUap5p0JH7cDWk=;
-        b=iL3CqeTKwgWS4SSSXgJI934U3Y/2vObQJ3sUPk9NRf9YY+Ry16pI8Hi9qHPVbtKa7W
-         l5yhVft5buZ1kBWNpmb6W0/a9bot7RDsjubW2+tw59jjzALlvcd8mIvYAnLy0JW7J9PT
-         AO5qvupo3GlCjpk0qZdCLkulplDsklYu7vOgsmLnKq2lzK61p2YeUUnKbvK62zQTk0Gt
-         xB410Ly58vV5goj9jPhIE09Pqko34DPo4QC51GP5FNqLmny6leAQkdTG01DtJbUo5dHY
-         HdfPwd/WtvpJOYcsiS31ufbLaAHNQ2y2bRqqT3d9/Y8NqHIBD05MwbKGuT6OvpvkE79p
-         qsEA==
-X-Gm-Message-State: AOAM531H3l89ds4lM2dcV/bRaWI0YoO9tYW9IfMpaw3HXbYlP3MEg21e
-        8tbf8reA7kPiQYaKab666L+rt/7Pw/0ONs7BYLmuyg==
-X-Google-Smtp-Source: ABdhPJwEx3oEbRgthFsX8r5lKXXApepAFs4jKYkBuxT5GrK36PWVmz/RO1TegRk5uc5YVBYD9kcProL40+fEW37UOkI=
-X-Received: by 2002:ac2:4c4c:: with SMTP id o12mr1587755lfk.157.1627646310474;
- Fri, 30 Jul 2021 04:58:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jhmmW00U1t6nu8Et2gPe9VWIRq7R6Jr8Ar5v9ZMFtg=;
+        b=HS07LzXnIN9VBTKdC3v0mcLPv6eW1KL1HaliwgQPMY6UOiPu67DoeyL3kHOUtrqfZz
+         FLG/E1drXWscVuHbMOPNr8ccdcLfMqdUHFv2XC+inOxN9ProVh6x9eoIH+QAO1wZlsn5
+         dEi/YlsOSirM/xWwGXotWZ63dnMntUxQJdZIOCvDczguqOPL8ZcpJIjq7oGlynM9a2WT
+         Zf5/eJvyUDh6B5UaLFNHLuimQPvQX7MdIcAIfNpUr2qwNBoLHyO4QFyzvf+N50PRM/a6
+         jB5NgEqjmM9XNdkwvi0UBemao72ClNYS3SB5z8L6IgfBUlfxYNAbEqf49LYJqAySMVoX
+         dXWg==
+X-Gm-Message-State: AOAM53017npx3BFkGig4SThCY+/aV3M8vLyTOAzJZ98hdkDOOPCTxtfh
+        OBRwjpbgaNQ85p0S6AbqMnWcBw==
+X-Google-Smtp-Source: ABdhPJyUiLCxqCC6f1d5CYwKUP8Qk7BYcm75N+d9XbtZsZfdM08Fxck+IkBKHdeny9OLqapp+4YTTQ==
+X-Received: by 2002:a62:8f0b:0:b029:356:ba53:a041 with SMTP id n11-20020a628f0b0000b0290356ba53a041mr2443083pfd.10.1627646985133;
+        Fri, 30 Jul 2021 05:09:45 -0700 (PDT)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:c144:3a3e:e06f:59])
+        by smtp.gmail.com with ESMTPSA id a9sm2182071pjs.32.2021.07.30.05.09.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jul 2021 05:09:44 -0700 (PDT)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] arm: dts: mt8135: Move pinfunc to include/dt-bindings/pinctrl
+Date:   Fri, 30 Jul 2021 20:09:35 +0800
+Message-Id: <20210730120937.1435204-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.32.0.554.ge1b32706d8-goog
 MIME-Version: 1.0
-References: <20210716162724.26047-1-lakshmi.sowjanya.d@intel.com>
- <20210716162724.26047-2-lakshmi.sowjanya.d@intel.com> <CACRpkdZdK38iwwCQKqUQ1Xbd-5kf8NFjAxT8pvq+e7jT+wiThA@mail.gmail.com>
- <YQPis1mVrVNwplKY@smile.fi.intel.com>
-In-Reply-To: <YQPis1mVrVNwplKY@smile.fi.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 30 Jul 2021 13:58:19 +0200
-Message-ID: <CACRpkdb+N_FFqZpk9fsECM5q+T9UPzZoCpKzDX5T5f5F_QuWtQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: Add bindings for Intel
- Keembay pinctrl driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Raja Subramanian, Lakshmi Bai" 
-        <lakshmi.bai.raja.subramanian@intel.com>,
-        "Saha, Tamal" <tamal.saha@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 30, 2021 at 1:30 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Fri, Jul 30, 2021 at 11:05:43AM +0200, Linus Walleij wrote:
-> > Since this is one of those "Intel but Arm" things I don't know how
-> > Andy feels about picking up the patch to his Intel pinctrl tree
-> > (I think we discussed it in the past) so I need to know how to handle
-> > this. It'd be great if Andy queues "all Intel stuff" but I don't want
-> > to force unfamiliar stuff on him either.
-> >
-> > Andy? Do you pick this (when finished) or should I?
->
-> I think it's for you. Mika and I are about Intel pin controllers on x86.
+Move mt8135-pinfunc.h into include/dt-bindings/pinctrl so that we can
+include it in yaml examples.
 
-OK I'll deal with it, I do have some experience with some
-other funny Intel-Arm silicon like XScale IXP4xx etc.
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+ arch/arm/boot/dts/mt8135.dtsi                                   | 2 +-
+ .../boot/dts => include/dt-bindings/pinctrl}/mt8135-pinfunc.h   | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename {arch/arm/boot/dts => include/dt-bindings/pinctrl}/mt8135-pinfunc.h (100%)
 
-Yours,
-Linus Walleij
+diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+index 0e4e835026db0..a031b36363187 100644
+--- a/arch/arm/boot/dts/mt8135.dtsi
++++ b/arch/arm/boot/dts/mt8135.dtsi
+@@ -9,7 +9,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/mt8135-resets.h>
+-#include "mt8135-pinfunc.h"
++#include <dt-bindings/pinctrl/mt8135-pinfunc.h>
+ 
+ / {
+ 	#address-cells = <2>;
+diff --git a/arch/arm/boot/dts/mt8135-pinfunc.h b/include/dt-bindings/pinctrl/mt8135-pinfunc.h
+similarity index 100%
+rename from arch/arm/boot/dts/mt8135-pinfunc.h
+rename to include/dt-bindings/pinctrl/mt8135-pinfunc.h
+-- 
+2.32.0.554.ge1b32706d8-goog
+
