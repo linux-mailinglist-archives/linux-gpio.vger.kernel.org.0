@@ -2,181 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 842FE3DC375
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 Jul 2021 07:13:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BBBF3DC3BC
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 Jul 2021 08:06:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231529AbhGaFNl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 31 Jul 2021 01:13:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60744 "EHLO
+        id S236806AbhGaGGL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 31 Jul 2021 02:06:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231419AbhGaFNl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 31 Jul 2021 01:13:41 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE3BC06175F;
-        Fri, 30 Jul 2021 22:13:35 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id o44-20020a17090a0a2fb0290176ca3e5a2fso17363581pjo.1;
-        Fri, 30 Jul 2021 22:13:35 -0700 (PDT)
+        with ESMTP id S229683AbhGaGGL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 31 Jul 2021 02:06:11 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A571BC06175F;
+        Fri, 30 Jul 2021 23:06:04 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id e21so13612624pla.5;
+        Fri, 30 Jul 2021 23:06:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=cQkct7+MQbZOt6wGLdVq4ubYRizvB/PleDCKxiuSLAQ=;
-        b=JY6uE7OmqZLx2DeOIDrlQAN4yuqjul4ka8dSWZ3z4TY2V/X57XBR2/CaHPYLP9ONXH
-         euq0O8IcXR/G3X7v2iW/2/YxMZTLkcyQ+mcwXSNaa0+Njfzex3Cdxfkv1wVGpzWTZ7H1
-         f1IDjpRgk+V5qcuHh/bEr33QmUk+TB68VXLfHHUp7GDNpSq0MCkFgx1mlpWTbiylDfjb
-         j7Gtad7kuh7JwJoW6CcpnXm6P5uCW+iHgvq3XljIpaSzTwQoL1opEu5pUntvNZ+hVS1Z
-         +x/LZlzqLx3KvyO30YsFNMudDKqSh0Mj5FahZ25BAPbQDq5DxyLWK7rKR/NGM9UIiPa0
-         2uQg==
+        bh=kkYR/Frx4R2DyWI2gfNu67QMmpFEnLowXEkWWryWivM=;
+        b=AoJSquL7GgEWOobaTQEfJLGCXM0PcvCt2eErc/2yoWwggZHpEdLrTkclA0FJjBkBZ7
+         6aXxc1xUv7hcgCoeFttNerIddA5xcGK8XdjMzOnr2gLa3K6HttHBqnsx+U0Y0/wnjTuT
+         fgAjR5TutFhSARuT7oxJnixSnCau8DflhS7X3pBDI1qIQspkmeTk635rj2+x+kvRFgLy
+         hYc0IeBLqaJJPXvkl7t88wVJLbsk3LOc5RF3cZVj2yu7LxnoEIWLQ3/KNtReS9tSfNjV
+         A9PE9cgJf23KFQjoL6SKUjCZHQmqmIgKshVk9utoOMrj1OzNOAtSwVi/+RTqqTa/0pYF
+         m9OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=cQkct7+MQbZOt6wGLdVq4ubYRizvB/PleDCKxiuSLAQ=;
-        b=e0i9IGcXaTKdWs00jJOStoVFrSWL9CmWMxy/1dqtRKVxKjiCAJyeF5JYklmatDLV9k
-         ZVWqZYGYVhdI5rsXGUoDA6xmMCUaZ75FmKmvAoDreo8c4OjEekWnTtkcH7Nl/ccD11st
-         MAGZ7TJ3mheGAv710PEZ3Ek2O5Q9dB2NqFZiilaiPVG9UQUF111SVWkUyBBF3xCgDEw9
-         ffaHnDzwYGcJ9TUsg84p/3l7XjAt/FTQAu/yr+etGwGaZ+FQEp7xkLKM3RuDaoxQDwJw
-         DNqLdzaDbgJ9JsBL4lM6Br7Inq4HpCVfQWgxpPzwckhVizm/dE85mjYI/2F4SKVwEiTT
-         FZmQ==
-X-Gm-Message-State: AOAM533P/EUfHGZs4Nor05pXjYUTD35ibvVFOnmdKYMf9PBiDH2zlirn
-        cAgBJhoAELL5uNHM8NTwu60=
-X-Google-Smtp-Source: ABdhPJxt1L+HVos1Ge3CONswo2aMEin8MnpEQfdMTyH2pCFRj8kfN3wQ1R/oazB0xt8c7vMZEj1Y3A==
-X-Received: by 2002:a63:e14c:: with SMTP id h12mr2054727pgk.431.1627708415365;
-        Fri, 30 Jul 2021 22:13:35 -0700 (PDT)
+        bh=kkYR/Frx4R2DyWI2gfNu67QMmpFEnLowXEkWWryWivM=;
+        b=hmzRTjkJFloTL14yGGoCVZZlinGUI9v8btc3wFN97aKu0yyODD5TE1BBNN0niufAtU
+         hPfJjj8AIF/JawKIS7Iw1eFMme5K0pFdYnRECr8e7T5hw4pU2IMP24CljXSll0y/Oh4q
+         B7F0aXowRBiRiw6H4abgbPeVzMKevU3fM1GhnTJD2ouGL9WD82fGbxgJ63kZGwwwsF4c
+         ukaiRHpkxc8OAl3X+WxW8uGUh55YdEXSuvu5Nvm3VHVNys5/hqUdxMFgPmglhiuXmrpf
+         e8gIkVyZmuzyvnbNdw9j1rX3evNw0Cnc+bWgB21cmOFeY8sCEHW8NOexXcG9KPe/Ty7d
+         7E5g==
+X-Gm-Message-State: AOAM533z4mSjDr3Hv/xD+6CDTOJVIWVOZUKoX6xv8hQ9JfF7Qj5bxsSa
+        wl/emleN1YUtSOCpf78V9xA=
+X-Google-Smtp-Source: ABdhPJw318ZWUUbeFdJlv0DZtWwRI4JcsO14Qj8eF/dtAOvDDJIe8xicf6GNtnQ3RQM2eKmKKvNnQQ==
+X-Received: by 2002:a63:e14b:: with SMTP id h11mr4441417pgk.283.1627711564186;
+        Fri, 30 Jul 2021 23:06:04 -0700 (PDT)
 Received: from sol (106-69-176-40.dyn.iinet.net.au. [106.69.176.40])
-        by smtp.gmail.com with ESMTPSA id z2sm2483144pgz.43.2021.07.30.22.13.30
+        by smtp.gmail.com with ESMTPSA id m1sm4711142pfc.36.2021.07.30.23.05.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jul 2021 22:13:34 -0700 (PDT)
-Date:   Sat, 31 Jul 2021 13:13:28 +0800
+        Fri, 30 Jul 2021 23:06:03 -0700 (PDT)
+Date:   Sat, 31 Jul 2021 14:05:56 +0800
 From:   Kent Gibson <warthog618@gmail.com>
 To:     Dipen Patel <dipenp@nvidia.com>
 Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
         linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
         bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [RFC 06/11] gpiolib: Add HTE support
-Message-ID: <20210731051328.GA10526@sol>
+        linux-doc@vger.kernel.org, robh+dt@kernel.org,
+        andriy.shevchenko@linux.intel.com
+Subject: Re: [RFC 08/11] gpiolib: cdev: Add hardware timestamp clock type
+Message-ID: <20210731060556.GA11043@sol>
 References: <20210625235532.19575-1-dipenp@nvidia.com>
- <20210625235532.19575-7-dipenp@nvidia.com>
- <20210701142414.GB34285@sol>
- <5ed6ca9e-ee1e-23dd-5f2c-d674c74b3ea3@nvidia.com>
+ <20210625235532.19575-9-dipenp@nvidia.com>
+ <20210701142433.GC34285@sol>
+ <ba32de51-0639-36e2-3575-1f7915542a19@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5ed6ca9e-ee1e-23dd-5f2c-d674c74b3ea3@nvidia.com>
+In-Reply-To: <ba32de51-0639-36e2-3575-1f7915542a19@nvidia.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 29, 2021 at 07:25:36PM -0700, Dipen Patel wrote:
+On Thu, Jul 29, 2021 at 08:07:15PM -0700, Dipen Patel wrote:
 > 
 > On 7/1/21 7:24 AM, Kent Gibson wrote:
-> > On Fri, Jun 25, 2021 at 04:55:27PM -0700, Dipen Patel wrote:
-> >> Some GPIO chip can provide hardware timestamp support on its GPIO lines
-> >> , in order to support that additional functions needs to be added which
-> >> can talk to both GPIO chip and HTE (hardware timestamping engine)
-> >> subsystem. This patch introduces functions which gpio consumer can use
-> >> to request hardware assisted timestamping. Below is the list of the APIs
-> >> that are added in gpiolib subsystem.
-> >>
-> >> - gpiod_hw_timestamp_control - to enable/disable HTE on specified GPIO
-> >> line. This API will return HTE specific descriptor for the specified
-> >> GPIO line during the enable call, it will be stored as pointer in the
-> >> gpio_desc structure as hw_ts_data.
-> >> - gpiod_is_hw_timestamp_enabled - to query if HTE is enabled on
-> >> specified GPIO line.
-> >> - gpiod_get_hw_timestamp - to retrieve hardware timestamps.
-> >>
-> >> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
-> >> ---
-> >>  drivers/gpio/gpiolib.c        | 92 +++++++++++++++++++++++++++++++++++
-> >>  drivers/gpio/gpiolib.h        | 11 +++++
-> >>  include/linux/gpio/consumer.h | 21 +++++++-
-> >>  include/linux/gpio/driver.h   | 13 +++++
-> >>  4 files changed, 135 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> >> index 220a9d8dd4e3..335eaddfde98 100644
-> >> --- a/drivers/gpio/gpiolib.c
-> >> +++ b/drivers/gpio/gpiolib.c
-> >> @@ -2361,6 +2361,98 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(gpiod_direction_output);
+
+<snip>
+> >
+> >>  			ret = gpiod_direction_output(desc, val);
+> >>  			if (ret)
+> >>  				return ret;
+> >> @@ -1152,6 +1186,13 @@ static long linereq_set_config_unlocked(struct linereq *lr,
+> >>  					polarity_change);
+> >>  			if (ret)
+> >>  				return ret;
+> >> +
+> >> +			/* Check if new config sets hardware assisted clock */
+> >> +			if (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE) {
+> >> +				ret = gpiod_hw_timestamp_control(desc, true);
+> >> +				if (ret)
+> >> +					return ret;
+> >> +			}
+> >>  		}
 > >>  
-> >> +/**
-> >> + * gpiod_hw_timestamp_control - set the hardware assisted timestamp control.
-> >> + * @desc:	GPIO to set
-> >> + * @enable:	Set true to enable the hardware timestamp, false otherwise.
-> >> + *
-> >> + * Certain GPIO chip can rely on hardware assisted timestamp engines which can
-> >> + * record timestamp at the occurance of the configured events on selected GPIO
-> >> + * lines. This is helper API to control such engine.
-> >> + *
-> >> + * Return 0 in case of success, else an error code.
-> >> + */
-> >> +int gpiod_hw_timestamp_control(struct gpio_desc *desc, bool enable)
-> >> +{
-> >> +	struct gpio_chip	*gc;
-> >> +	int			ret = 0;
-> >> +
-> >> +	VALIDATE_DESC(desc);
-> >> +	gc = desc->gdev->chip;
-> >> +
-> >> +	if (!gc->timestamp_control) {
-> >> +		gpiod_warn(desc,
-> >> +			   "%s: Hardware assisted ts not supported\n",
-> >> +			   __func__);
-> >> +		return -ENOTSUPP;
-> >> +	}
-> >> +
-> >> +	ret = gc->timestamp_control(gc, gpio_chip_hwgpio(desc),
-> >> +				    &desc->hdesc, enable);
-> >> +
-> >> +	if (ret) {
-> >> +		gpiod_warn(desc,
-> >> +			   "%s: ts control operation failed\n", __func__);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	if (!enable)
-> >> +		desc->hdesc = NULL;
-> >> +
-> >> +	return ret;
-> >> +}
-> > Last I checked, pointer accesses are not guaranteed atomic, so how is
-> > hdesc protected from concurrent access?
-> > Here is it modified unprotected.
-> > Below it is read unprotected.
+> > The error code here can come from the pinctrl timestamp_control(), so it
+> > should be sanitised before being returned to userspace.
 > 
-> The assumption I made here was, gpiod_hw_timestamp_control will be
+> I do not understand what do you mean by sanitise. I just followed what
 > 
-> called after client has made at least gpdio_request call. With that assumption,
+> gpiod_direction_output did just above which also returns ret from gpio
 > 
-> how two or more client/consumers call gpiod_hw_timestamp_control API
-> 
-> with the same gpio_desc? I believe its not allowed as gpiod_request call will
-> 
-> fail for the looser if there is a race and hence there will not be any race here
-> 
-> in this API. Let me know your thoughts.
+> driver code similar to timestamp_control API.
 > 
 
-My assumptions are that the userspace client is multi-threaded and that
-there is nothing preventing concurrent uAPI calls, including closing the
-line request fd.
+In this context, sanitise means convert any kernel internal error codes
+to their userspace equivalent before returning them to userspace.
 
-The specific case I had in mind is one thread closing the req fd while
-another is using set_config to switch to the hardware event clock.
-In that race, the close be calling linereq_free() at the same time the
-linereq_set_config_unlocked() is being called.  Both of those functions
-make calls to the functions here that read and write the hdesc.
-
-There may be others, e.g. line_event_timestamp() running in the
-irq_thread at the same time a set_config call switches the event clock
-away from the hardware clock.
-
-So assume concurrent access unless you can prove otherwise.
+Fair enough with the gpiod_direction_output() comparison.  I was thinking
+of a patch Andy recently submitted[1] to sanitise gpiod_request(), which
+can sometimes return EPROBE_DEFER.  But I guess we can wait until we find
+a case of a driver returning an internal error code and add a sanitiser
+then.
 
 Cheers,
 Kent.
+
+[1] https://www.spinics.net/lists/linux-gpio/msg60998.html
+
