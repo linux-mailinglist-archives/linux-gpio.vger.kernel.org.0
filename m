@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D1D23DCC41
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 Aug 2021 17:21:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CC143DCCA6
+	for <lists+linux-gpio@lfdr.de>; Sun,  1 Aug 2021 18:10:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232064AbhHAPV7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 1 Aug 2021 11:21:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47610 "EHLO mail.kernel.org"
+        id S231645AbhHAQKi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 1 Aug 2021 12:10:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231940AbhHAPV7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 1 Aug 2021 11:21:59 -0400
+        id S231518AbhHAQKi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 1 Aug 2021 12:10:38 -0400
 Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CC9461078;
-        Sun,  1 Aug 2021 15:21:47 +0000 (UTC)
-Date:   Sun, 1 Aug 2021 16:24:27 +0100
+        by mail.kernel.org (Postfix) with ESMTPSA id 8263C60EB2;
+        Sun,  1 Aug 2021 16:10:25 +0000 (UTC)
+Date:   Sun, 1 Aug 2021 17:13:04 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Dipen Patel <dipenp@nvidia.com>
 Cc:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -25,13 +25,13 @@ Cc:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <bgolaszewski@baylibre.com>, <warthog618@gmail.com>,
         <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <robh+dt@kernel.org>
-Subject: Re: [RFC 01/11] Documentation: Add HTE subsystem guide
-Message-ID: <20210801162427.40d619af@jic23-huawei>
-In-Reply-To: <65cf5f8b-6be1-afef-9224-8a3b05bb932a@nvidia.com>
+Subject: Re: [RFC 02/11] drivers: Add HTE subsystem
+Message-ID: <20210801171304.6e8d70d9@jic23-huawei>
+In-Reply-To: <52ecf0a6-07a6-ec43-4b1e-fb341ad969b6@nvidia.com>
 References: <20210625235532.19575-1-dipenp@nvidia.com>
-        <20210625235532.19575-2-dipenp@nvidia.com>
-        <20210704195528.2fdfb320@jic23-huawei>
-        <65cf5f8b-6be1-afef-9224-8a3b05bb932a@nvidia.com>
+        <20210625235532.19575-3-dipenp@nvidia.com>
+        <20210704211525.4efb6ba0@jic23-huawei>
+        <52ecf0a6-07a6-ec43-4b1e-fb341ad969b6@nvidia.com>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -40,352 +40,491 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 27 Jul 2021 16:44:30 -0700
+On Tue, 27 Jul 2021 21:38:45 -0700
 Dipen Patel <dipenp@nvidia.com> wrote:
 
-> On 7/4/21 11:55 AM, Jonathan Cameron wrote:
-> > On Fri, 25 Jun 2021 16:55:22 -0700
+> On 7/4/21 1:15 PM, Jonathan Cameron wrote:
+> > On Fri, 25 Jun 2021 16:55:23 -0700
 > > Dipen Patel <dipenp@nvidia.com> wrote:
 > >  
-> >> Adding hte document which can help understand various APIs implemented
-> >> in HTE framework for the HTE producers and the consumers.
+> >> Some devices can timestamp system lines/signals/Buses in real-time
+> >> using the hardware counter or other hardware means which can give
+> >> finer granularity and help avoid jitter introduced by software means
+> >> of timestamping. To utilize such functionality there has to be
+> >> framework where such devices can register themselves as producers or
+> >> providers so that the consumers or clients devices can request specific
+> >> line from the providers. This patch introduces such subsystem as
+> >> hardware timestamping engine (HTE).
+> >>
+> >> It provides below APIs for the provider:
+> >> - hte_register_chip() -- To register the HTE chip.
+> >> - hte_unregister_chip() -- To unregister the HTE chip.
+> >> - hte_push_ts_ns_atomic() -- To push timestamp data into HTE subsystem.
+> >>
+> >> It provides below APIs for the consumer:
+> >> - of_hte_request_ts() -- To request timestamp functionality.
+> >> - devm_of_hte_request_ts() -- Managed version of the above.
+> >> - hte_req_ts_by_dt_node() -- To request timestamp functionality by
+> >> using HTE provider dt node.
+> >> - devm_hte_release_ts() -- The managed version to release timestamp
+> >> functionality and associated resources.
+> >> - hte_retrieve_ts_ns() -- To retrieve timestamps.
+> >> - hte_retrieve_ts_ns_wait() -- Same as above but blocking version.
+> >> - hte_enable_ts() -- To disable timestamp functionality.
+> >> - hte_disable_ts() -- To enable timestamp functionality.
+> >> - hte_available_ts() -- To query available timestamp data.
+> >> - hte_release_ts() -- To release timestamp functionality and its
+> >> associated resources.
+> >> - hte_get_clk_src_info() -- To query clock source information from
+> >> the provider
+> >>
+> >> It provides centralized software buffer management per requested id to
+> >> store the timestamp data for the consumers as below:
+> >> - hte_set_buf_len() -- To set the buffer length.
+> >> - hte_get_buf_len() -- To get the buffer length.
+> >> - hte_set_buf_watermark() -- To set the software threshold/watermark.
+> >> - hte_get_buf_watermark() -- To get the software threshold/watermark.
+> >>
+> >> The detail about parameters and API usage are described in each
+> >> functions definitions in drivers/hte/hte.c file.
+> >>
+> >> The patch adds compilation support in Makefile and menu options in
+> >> Kconfig.
 > >>
 > >> Signed-off-by: Dipen Patel <dipenp@nvidia.com>  
-> > Some editorial stuff inline. (I can't resist even on RFCs)
+> > Hi Dipen, this isn't a particularly thorough review as I'm still getting my head
+> > around what this is doing + it is an RFC :)  
+> Thanks for the review comments. My responses inline.
+
+You are welcome, some follow up responses inline.
+I've tried to crop this down a bit so only kept the bits we are discussing.
+
+> >> +
+> >> +static int hte_ts_dis_en_common(struct hte_ts_desc *desc, bool en)
+> >> +{
+> >> +	u32 ts_id;
+> >> +	struct hte_device *gdev;
+> >> +	struct hte_ts_info *ei;
+> >> +	int ret;
+> >> +
+> >> +	if (!desc)
+> >> +		return -EINVAL;
+> >> +
+> >> +	ei = (struct hte_ts_info *)desc->data_subsys;  
+> > As above, no need to cast - though it rather implies the type of data_subsys
+> > should not be void *.  
+> 
+> desc is public facing structure, I wanted to make subsystem related
+> 
+> information opaque that is why I had it void *.
+> 
+
+you can keep it opaque, just have a forwards definition of
+struct hte_ts_desc;
+which just means it is defined somewhere.  You can have that in the header with
+the definition hidden away.
+
+It will only need to have a visible complete definition when you dereference it inside
+the the core.
+
+Mind you, I'm suggesting allowing it to be embedded in another structure anyway which
+would require you to have it exposed.  Perhaps this desire to keep it opaque is
+a reason to not take that suggestion but it isn't relevant for this one.
+
+
+> >> + */
+> >> +struct hte_ts_desc *devm_of_hte_request_ts(struct device *dev,
+> >> +					   const char *label,
+> >> +					   void (*cb)(enum hte_notify n))
+> >> +{
+> >> +
+> >> +	struct hte_ts_desc **ptr, *desc;
+> >> +
+> >> +	ptr = devres_alloc(__devm_hte_release_ts, sizeof(*ptr), GFP_KERNEL);  
+> > Superficially looks like you might get way with just calling dev_add_action_or_reset() in here
+> > and avoid this boilerplate.  A lot of cases that looked like this got cleaned up in the
+> > last kernel cycle.  
+> I based my patches from linux-next/master. Not sure if that has
+> 
+> dev_add_action_or_reset
+
+typo on my part was meant to be
+
+devm_add_action_or_reset()
+
+> 
 > >
-> > Certainly interesting. I'm running a bit tight on time today, so not sure how
-> > much of the code I'll get a chance to look at.  Will try to get to it soon though.
+
+> >> +
+> >> +/**
+> >> + * hte_req_ts_by_dt_node() - Request entity to monitor by passing HTE device
+> >> + * node directly, where meaning of the entity is provider specific, for example
+> >> + * lines, signals, GPIOs, buses etc...
+> >> + *
+> >> + * @of_node: HTE provider device node.
+> >> + * @id: entity id to monitor, this id belongs to HTE provider of_node.
+> >> + * @cb: Optional callback to notify.
+> >> + *
+> >> + * Context: Holds mutex lock, can not be called from atomic context.  
+> > What mutex and why?  If it is one you can check is held even better.  
+> 
+> ___hte_req_ts holds the mutex lock to serialize multiple consumers
+> 
+> requesting same entity.
+
+Add that detail to the comment.
+
+> 
+> >  
+> >> + * Returns: ts descriptor on success or error pointers.
+> >> + */
+> >> +struct hte_ts_desc *hte_req_ts_by_dt_node(struct device_node *of_node,
+> >> +					  unsigned int id,
+> >> +					  void (*cb)(enum hte_notify n))
+> >> +{
+> >> +	struct hte_device *gdev;
+> >> +	struct hte_ts_desc *desc;
+> >> +	int ret;
+> >> +	u32 xlated_id;
+> >> +
+> >> +	gdev = of_node_to_htedevice(of_node);
+> >> +	if (IS_ERR(gdev))
+> >> +		return ERR_PTR(-ENOTSUPP);
+> >> +
+> >> +	if (!gdev->chip || !gdev->chip->ops)
+> >> +		return ERR_PTR(-ENOTSUPP);
+> >> +
+> >> +	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+> >> +	if (!desc) {
+> >> +		ret = -ENOMEM;
+> >> +		goto out_put_device;
+> >> +	}  
+> > Pass a desc pointer into this function rather than allocating the structure
+> > in here.  That lets the caller embed that structure inside one of it's own
+> > structures if it wants to, resulting in fewer small allocations which is always good.
 > >
-> > Jonathan  
-> Thanks Jonathan for the review comment and time. My answers inline.
-Hi Dipen,
-
-A few follow up comments inline.
-
-> >  
-> >> ---
-> >>  Documentation/hte/hte.rst | 198 ++++++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 198 insertions(+)
-> >>  create mode 100644 Documentation/hte/hte.rst
-> >>
-> >> diff --git a/Documentation/hte/hte.rst b/Documentation/hte/hte.rst
-> >> new file mode 100644
-> >> index 000000000000..11744dbc6d16
-> >> --- /dev/null
-> >> +++ b/Documentation/hte/hte.rst
-> >> @@ -0,0 +1,198 @@
-> >> +============================================
-> >> +The Linux Hardware Timestamping Engine (HTE)
-> >> +============================================
-> >> +
-> >> +:Author: Dipen Patel
-> >> +
-> >> +Introduction
-> >> +------------
-> >> +
-> >> +The certain devices have the built in hardware timestamping engine which can  
-> > Certain devices have built in hardware timestamping engines which can
-> >  
-> >> +monitor sets of system signals, lines, buses etc... in realtime for the state  
-> > for state changes;
-> >  
-> >> +change; upon detecting the change it can automatically store the timestamp at  
-> > they can  
-> Will add above in next RFC version2.
-> >  
-> >> +the moment of occurrence. Such functionality may help achieve better accuracy
-> >> +in obtaining timestamp than using software counterparts i.e. ktime and friends.
-> >> +
-> >> +This document describes the API that can be used by hardware timestamping
-> >> +engine provider and consumer drivers that want to use the hardware timestamping
-> >> +engine (HTE) framework.
-> >> +
-> >> +The HTE framework APIs for the providers
-> >> +----------------------------------------
-> >> +Each driver must #include <linux/hte.h>. The ``linux/hte.h`` declares the
-> >> +following functions for the provider:
-> >> +
-> >> +.. c:function:: int hte_register_chip( struct hte_chip *chip )
-> >> +		int hte_unregister_chip( struct hte_chip *chip )
-> >> +
-> >> +	The provider uses these APIs to un/register itself with HTE framework.
-> >> +
-> >> +.. c:function:: int hte_push_ts_ns_atomic( const struct hte_chip *chip, u32 xlated_id, struct hte_ts_data *data, size_t n )
-> >> +
-> >> +	The provider pushes timestamp data in nano seconds unit using this API.
-> >> +
-> >> +The detail about parameters and API usage are described in each functions
-> >> +definitions in ``drivers/hte/hte.c`` file.
-> >> +
-> >> +The HTE framework APIs for the consumers
-> >> +----------------------------------------
-> >> +The consumers use following APIs to control the line for the timestamp:
-> >> +  
-> > When documenting APIs you may well be better including a reference to the files
-> > themselves and using kernel doc there.  The documentation build can then pull that
-> > in when creating the html docs etc (and crucially you don't have to provide the
-> > same docs in two places.).   Having them here is very convenient for the RFC however :)  
-> You mean to omit description here and put reference to file like ``drivers/hte/hte.c``?
-
-Exactly. You can cross reference to kernel-doc from within the rst. That means the
-documentation will be in the generated html etc and available in the source code,
-cutting down on duplication and chances of them disagreeing.  The disadvantage
-is it isn't quite as useful to provide an easily reviewable single document when
-discussing the design.
-
-What can be useful in a docs file though is to describe the 'flow' of how these
-functions might be used.  That can be harder to do inline in comments etc.
-
-> >  
-> >> +.. c:function:: int hte_release_ts( struct hte_ts_desc *desc )
-> >> +		int devm_hte_release_ts( struct device *dev, struct hte_ts_desc *desc )
-> >> +
-> >> +	The consumer uses API to release specified desc from timestamping.
-> >> +	The API frees resources associated with the desc and disables the
-> >> +	timestamping on it. The later is managed version of the same API.
-> >> +
-> >> +.. c:function:: struct hte_ts_desc *of_hte_request_ts( struct device *dev, const char *label, void (*cb)(enum hte_notify n) )
-> >> +		struct hte_ts_desc *devm_of_hte_request_ts( struct device *dev, const char *label, void (*cb)(enum hte_notify n) )
-> >> +
-> >> +	The consumers can use above request APIs to request real timestamp
-> >> +	capability on specified entity. The later is resource managed version
-> >> +	of the of_hte_request_ts API. Both the APIs expect consumer to follow
-> >> +	device tree bindings for the HTE consumer. The details about binding
-> >> +	is in ``Documentation/devicetree/bindings/hte/hte-consumer.yaml``.
-> >> +
-> >> +.. c:function:: struct hte_ts_desc *hte_req_ts_by_dt_node( struct device_node *of_node, unsigned int id, void (*cb)(enum hte_notify n) )
-> >> +
-> >> +	The consumer can request timestamping directly specifying provider
-> >> +	device tree node.  
-> > When does this make sense?  
+> > It's far from obvious that the caller needs to free desc.  
 > 
-> This is needed when provider has dependencies on other IP within chip, for example
+> Are you suggesting to shift burden of allocation/deallocation (static or dynamic)
 > 
-> tegra chip GPIO HTE has to talk to GPIO controller to fully enable HTE functionality.
+> at client/consumer side?
 
-I'd expect that to be done via a device tree handle at the consumer end.  So you'd be
-requesting based on your own struct device pointer (and the firmware node
-underneath though that would ideally not be visible in this interface).
-
-Similar to how regulator and other provider / consumer firmware description works.
-
-Whilst it's not immediately clear what this would map to in other firmware types, you
-should also try to avoid exposing device tree specific interfaces, in favour of
-generic ones (see include/property.h)
+It's been a while so I've forgotten how this works, but 'probably' yes...
+If a function creates some sort of record (of fixed known size and type) then
+letting that be passed in + filled in by the function is normally more efficient
+than having an allocation in here.   Chances are the consumer will just have
+it embedded in an existing state structure and not need to do any explicit
+allocation / deallocation.  Disadvantage is you can't keep it opaque.
 
 > 
 > >  
 > >> +
-> >> +.. c:function:: int hte_enable_ts( struct hte_ts_desc *desc )
-> >> +.. c:function:: int hte_disable_ts( struct hte_ts_desc *desc )
+> >> +	desc->con_id = id;
+> >> +	ret = gdev->chip->xlate(gdev->chip, NULL, desc, &xlated_id);
+> >> +	if (ret < 0) {
+> >> +		dev_err(gdev->chip->dev,
+> >> +			"failed to xlate id: %d\n", id);
+> >> +		goto out_free_desc;
+> >> +	}
 > >> +
-> >> +	The consumer can enable/disable timestamping on given desc.
+> >> +	ret = ___hte_req_ts(gdev, desc, xlated_id, cb);
+> >> +	if (ret < 0) {
+> >> +		dev_err(gdev->chip->dev,
+> >> +			"failed to request id: %d\n", id);
+> >> +		goto out_free_desc;
+> >> +	}
 > >> +
-> >> +.. c:function:: int hte_retrieve_ts_ns( const struct hte_ts_desc *desc, struct hte_ts_data *el, size_t n )
-> >> +		int hte_retrieve_ts_ns_wait( const struct hte_ts_desc *desc, struct hte_ts_data *el, size_t n )
+> >> +	return desc;
 > >> +
-> >> +	The consumer uses above two API versions to get/retrieve timestamp data
-> >> +	for the given desc. The later is blocking version.
+> >> +out_free_desc:
+> >> +	kfree(desc);
 > >> +
-> >> +.. c:function:: hte_get_clk_src_info(const struct hte_line_desc *desc, struct hte_clk_info *ci)
+> >> +out_put_device:
+> >> +	return ERR_PTR(ret);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(hte_req_ts_by_dt_node);
 > >> +
-> >> +	The consumer retrieves clock source information that provider uses to
-> >> +	timestamp entity in the structure hte_clk_info. This information
-> >> +	specifies clock rate in HZ and clock.
+> >> +/**
+> >> + * hte_get_clk_src_info() - Consumer calls this API to query clock source
+> >> + * information of the desc.
+> >> + *
+> >> + * @desc: ts descriptor, same as returned from request API.
+> >> + *
+> >> + * Context: Any context.
+> >> + * Returns: 0 on success else negative error code on failure.
+> >> + */
+> >> +int hte_get_clk_src_info(const struct hte_ts_desc *desc,
+> >> +			 struct hte_clk_info *ci)
+> >> +{
+> >> +	struct hte_chip *chip;
+> >> +	struct hte_ts_info *ei;
 > >> +
-> >> +The details on struct hte_clk_info
-> >> +-----------------------------------
-> >> +This structure presents detail of the hardware clock that provider uses for
-> >> +realtime timestamping purposes. The consumer can use hte_get_clk_src_info API
-> >> +to get the information in hte_clk_info structure. It has hz and type parameters
-> >> +where hz represents clock rate in HZ and type is clock type of clockid_t and
-> >> +of CLOCK_* family (for example, CLOCK_MONOTONIC).
+> >> +	if (!desc || !desc->data_subsys || !ci) {
+> >> +		pr_debug("%s:%d\n", __func__, __LINE__);
+> >> +		return -EINVAL;
+> >> +	}
 > >> +
-> >> +The consumers calling of_hte_request_ts or hte_req_ts_by_dt_node APIs with
-> >> +cb parameter set, usually will call hte_retrieve_ts (non blocking
-> >> +version) after being notified by the callbacks from HTE subsystem. The
-> >> +consumers calling those requests APIs with cb parameter NULL, usually will call
-> >> +hte_retrieve_ts_wait API.
+> >> +	ei = desc->data_subsys;
+> >> +	if (!ei || !ei->gdev || !ei->gdev->chip)
+> >> +		return -EINVAL;
 > >> +
-> >> +The HTE subsystem provides software buffer per requested id/entity to store
-> >> +timestamp data (struct hte_ts_data type). The consumers can manage the buffer.
-> >> +It also provides buffer watermark which can notify (if cb parameter is provided
-> >> +during request API call) consumer or unblock consumers calling
-> >> +hte_retrieve_ts_wait API. The following APIs are used to manipulate the
-> >> +software buffer:  
-> > Have you come across any devices that have a hardware fifo for these timestamps?
-> > It's moderately common on sensor hubs to do so, and then you get into a fun question
-> > of how to manage the watermark.  You don't want to pull from the hardware too early,
-> > but conversely you can get out of sync between the software and hardware buffers if
-> > someone reasons less than 'watermark' samples from the software buffer.
-> >
-> > Anyhow, it can be entertaining.  So in those cases it can be simpler to explicitly provide
-> > control of two separate watermarks.  
+> >> +	chip = ei->gdev->chip;
+> >> +	if (!chip->ops->get_clk_src_info)
+> >> +		return -ENOTSUPP;
+> >> +
+> >> +	return chip->ops->get_clk_src_info(chip, ci);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(hte_get_clk_src_info);
+> >> +
+> >> +static inline void hte_add_to_device_list(struct hte_device *gdev)
+> >> +{
+> >> +	struct hte_device *prev;  
+> > Needs to take an appropriate lock as you may have concurrent calls.  
 > 
-> The provider I have dealt with had single hardware FIFO to store timestamps
-> 
-> indiscriminately. I am sure this will come up in future in which case we can
-> 
-> expand it to separate watermark.
+> There is spin_lock held from register API from where this gets
+> called.
 
-Just to check I've understood this correctly.
-You do have a hardware fifo and it has a fixed watermark? (perhaps of 1 timestamp?)
-If so, indeed one for the future.
-
-> 
-> >  
-> >> +
-> >> +.. c:function:: int hte_set_buf_len( const struct hte_ts_desc *desc,unsigned int len )
-> >> +		int hte_get_buf_len( const struct hte_ts_desc *desc )
-> >> +
-> >> +	The consumer uses above APIs to set/get software buffer depth.  
-> > What happens if there is content when it is resized?  
-> 
-> I have described in the hte_set_buf_len API description. To summarize, you can
-> 
-> follow certain sequences to consume old data if you still care. Otherwise this
-> 
-> is a destructive API.
-
-OK.  You might want to think about blocking this from changing if the timestamping
-is currently enabled (assuming you don't already!)  Otherwise you tend to get
-entertaining race conditions that consumers will need to deal with - probably by
-doing the locking at their end.
+Great. I'd missed that.
 
 > 
 > >  
 > >> +
-> >> +.. c:function:: int hte_set_buf_watermark( const struct hte_ts_desc *desc, unsigned int val )
-> >> +		int hte_get_buf_watermark( const struct hte_ts_desc *desc )
-> >> +
-> >> +	The consumer uses above APIs to set/get software threshold, threshold
-> >> +	can be used to notity or unblock waiting consumer when data becomes
-> >> +	available equal or above to threshold value.
-> >> +
-> >> +.. c:function:: size_t hte_available_ts( const struct hte_ts_desc *desc )
-> >> +
-> >> +	The consumer uses above API to get available timestamp data stored
-> >> +	in the software buffer for the desc.
-> >> +
-> >> +The detail about parameters and API usage are described in each functions
-> >> +definitions in ``drivers/hte/hte.c`` file.
-> >> +
-> >> +The HTE timestamp element detail
-> >> +--------------------------------
-> >> +The struct hte_ts_data, declared at ``include/linux/hte.h``, is used to pass
-> >> +timestamp details between the consumers and the providers. It expresses
-> >> +timestamp data in nano second in u64 data type.  
-> > I'd suggest s64 to match with kernel timestamp format.  
-> Make sense, I will update in next revision.
+> >> +	if (list_empty(&hte_devices)) {
+> >> +		list_add_tail(&gdev->list, &hte_devices);  
+> > Needs a comment. I've no idea why you might want to only add it if there were
+> > no other hte_devices already there.
 > >  
-> >> For now all the HTE APIs
-> >> +using struct hte_ts_data requires tsc to be in nano seconds. The timestamp
-> >> +element structure stores below information along with timestamp data::
+> >> +		return;
+> >> +	}
 > >> +
-> >> + struct hte_ts_data {
-> >> +	/*
-> >> +	 * Timestamp value
-> >> +	 */
+> >> +	prev = list_last_entry(&hte_devices, struct hte_device, list);  
+> > Why woud you do this?  
+> 
+> Thanks for pointing out. I definitely missed cleaning this up. Now, I will
+> 
+> remove this function in next RFC version as one line can be added directly
+> 
+> in register API.
+> 
+> >  
+> >> +	list_add_tail(&gdev->list, &hte_devices);
+> >> +}
+> >> +
+> >> +/**
+> >> + * hte_push_ts_ns_atomic() - Used by the provider to push timestamp in nano
+> >> + * seconds i.e data->tsc will be in ns, it is assumed that provider will be
+> >> + * using this API from its ISR or atomic context.
+> >> + *
+> >> + * @chip: The HTE chip, used during the registration.
+> >> + * @xlated_id: entity id understood by both subsystem and provider, usually this
+> >> + * is obtained from xlate callback during request API.
+> >> + * @data: timestamp data.
+> >> + * @n: Size of the data.
+> >> + *
+> >> + * Context: Atomic.
+> >> + * Returns: 0 on success or a negative error code on failure.
+> >> + */
+> >> +int hte_push_ts_ns_atomic(const struct hte_chip *chip, u32 xlated_id,
+> >> +			  struct hte_ts_data *data, size_t n)
+> >> +{
+> >> +	unsigned int ret;
+> >> +	bool notify;
+> >> +	size_t el_avail;
+> >> +	struct hte_ts_buf *buffer;
+> >> +	struct hte_ts_info *ei;
+> >> +
+> >> +	if (!chip || !data || !chip->gdev)
+> >> +		return -EINVAL;
+> >> +
+> >> +	if (xlated_id > chip->nlines)
+> >> +		return -EINVAL;
+> >> +
+> >> +	ei = &chip->gdev->ei[xlated_id];
+> >> +
+> >> +	if (!test_bit(HTE_TS_REGISTERED, &ei->flags) ||
+> >> +	    test_bit(HTE_TS_DISABLE, &ei->flags)) {
+> >> +		dev_dbg(chip->dev, "Unknown timestamp push\n");
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >> +	/* timestamp sequence counter, start from 0 */
+> >> +	data->seq = ei->seq++;
+> >> +
+> >> +	buffer = ei->buf;
+> >> +	el_avail = buffer->access->el_available(buffer);
+> >> +	ret = buffer->access->store(buffer, data, n);  
+> > If we are doing this from the hte core, why is buffer definition in the scope of the
+> > drivers rather than the core?  That seems backwards to me.  
+> 
+> I do not understand this comment. The buffer definition is in scope of hte core
+> 
+> as it is the only entity that manages it.
+
+I think I figured that out later and forgot to come back and edit this comment.
+However...
+
+In that case, why is it an ops function?  Don't introduce abstraction
+until you need it. Will be simpler and easier to review if you just
+call those functions directly for now. e.g.
+
+	ret = hs_ts_store_to_buf(buffer, data, n);
+
+Chances are you'll never introduce another buffer choice.
+For a long time I thought we'd have both fifo and ring options in IIO
+but it turned out no one really cared. We do have an ops structure, but
+that's because in IIO the buffer interface is used for two things:
+1) Pushing to a kfifo that is going to userspace.
+2) Pushing to a callback function owned by a consumer.
+and there is a rather fiddly data demux on the front end to ensure each
+of those only gets the data requested via that path - at least with timestamps
+there is only one type of data!
+
+Hmm, thinking about this raises an interesting question.
+Why do we want a kfifo here at all for HTE?  You could
+just call a callback function registered by the consumer of that
+kfifo directly.  If that consumer then wants to buffer then of
+course it can, but it not (perhaps it only cares about the latest
+value and will drop the rest) then it can chose not to.  Maybe
+it's just gathering stats rather than caring about individual
+timestamps?  Probably lots of other things that might happen in
+the consumer that I've not thought of.  We need a buffer if
+userspace becomes involved, but here IIRC that's not (yet) true.
+
+> 
+> >  
+> >> +	if (ret != n) {
+> >> +		atomic_inc(&ei->dropped_ts);
+> >> +		if (ei->cb)
+> >> +			ei->cb(HTE_TS_DROPPED);
+> >> +		return -ENOMEM;
+> >> +	}
+
+...
+
+> >  
+> >> +
+> >> +/**
+> >> + * struct hte_ts_data - HTE timestamp data.
+> >> + * The provider uses and fills timestamp related details during push_timestamp
+> >> + * API call. The consumer uses during retrieve_timestamp API call.
+> >> + *
+> >> + * @tsc: Timestamp value.
+> >> + * @seq: Sequence counter of the timestamps.
+> >> + * @dir: Direction of the event at the time of timestamp.
+> >> + */
+> >> +struct hte_ts_data {
 > >> +	u64 tsc;
-> >> +	/*
-> >> +	 * The sequence counter, keep track of the number of timestamps.
-> >> +	 * It can be used to check if data is dropped in between.
-> >> +	 */  
-> > Is this a hardware feature?  A bit unusual to have this rather than simple
-> > overflow flag to indicate we dropped an unknown number of samples.  
-> Its software feature. I Believe having seq helps consumer to backtrack.
-
-Will be interesting to see how this works out, particularly as I expect you
-will get hardware that only tells you it's dropped something, but not how much.
-That's what all the sensor hardware with timestamps currently does on overflow
-Often you can control if old or new samples are dropped, but either way you will
-get a hole of unknown size.
-
-> >  
 > >> +	u64 seq;
-> >> +	/* Direction of the event, i.e. falling or rising */
-> >> +	int dir;  
-> > Given an even could do more than that potentially, or indeed not be able to
-> > tell if it was rising or falling, I would suggest an enum to which we can add
-> > more options as needed.  
-> I have two defines in hte.h for now. I can convert them into enum type.
+> >> +	int dir;
+> >> +};
+> >> +
+> >> +/**
+> >> + * struct hte_clk_info - Clock source info that HTE provider uses.
+> >> + * The provider uses hardware clock as a source to timestamp real time. This
+> >> + * structure presents the clock information to consumers. 
+> >> + *
+> >> + * @hz: Clock rate in HZ, for example 1KHz clock = 1000.
+> >> + * @type: Clock type. CLOCK_* types.  
+> > So this is something we got a it wrong in IIO. It's much better to define
+> > a subset of clocks that can be potentially used.  There are some that make
+> > absolutely no sense and consumers really don't want to have to deal with them.  
+> Is there anything I have to change here?
 
-yikes, I should proof read my comments before sending! Glad you figured out what
-I meant.  
+Yes - specify which clocks would make sense.  You might not need to explicitly
+allow only those, but that might also be worthwhile. Otherwise, the chances are
+you'll end up with a bunch of special purpose code in consumers on the basis
+they might get CLOCK_TAI or similar and have to deal with it.
+As for exactly which clocks do make sense, that's one which may take some figuring
+out. Probably REALTIME, MONOTONIC and BOOTTIME depending on whether you care
+what happens when the time of the system gets adjusted, or whether it carries
+on measuring time across suspend.   Very application dependent but there are some
+you can definitely rule out. Don't repeat my mistake of leaving it vague
+(which incidentally was a follow up to picking a silly clock to use for timestamps
+ before we allowed it to be configured).
 
+> >    
+> >> + */
+> >> +struct hte_clk_info {
+> >> +	u64 hz;
+> >> +	clockid_t type;
+> >> +};
+> >> +
+> >> +/**
+> >> + * HTE subsystem notifications for the consumers.
+> >> + *
+> >> + * @HTE_TS_AVAIL: Timestamps available notification.
+> >> + * @HTE_TS_DROPPED: Timestamps dropped notification.  
+> > Something I've missed so far is whether drops are in a kfifo or a ring
+> > fashion.  I'm guess that's stated somewhere, but it might be useful to have
+> > it here.  
+> Dropped are from kfifo if kfifo does not have space.
+
+Ok, perhaps expand the comment?
+
+...
+
+> 
 > >  
-> >> + };
+> >> + *
+> >> + * xlated_id parameter is used to communicate between HTE subsystem and the
+> >> + * providers. It is the same id returned during xlate API call and translated
+> >> + * by the provider. This may be helpful as both subsystem and provider locate
+> >> + * the requested entity in constant time, where entity could be anything from
+> >> + * lines, signals, events, buses etc.. that providers support.
+> >> + */
+> >> +struct hte_ops {
+> >> +	int (*request)(struct hte_chip *chip, u32 xlated_id);
+> >> +	int (*release)(struct hte_chip *chip, u32 xlated_id);
+> >> +	int (*enable)(struct hte_chip *chip, u32 xlated_id);
+> >> +	int (*disable)(struct hte_chip *chip, u32 xlated_id);
+> >> +	int (*get_clk_src_info)(struct hte_chip *chip,
+> >> +				struct hte_clk_info *ci);
+> >> +};
 > >> +
-> >> +The typical hte_ts_data data life cycle::
-> >> +In this example the provider provides timestamp in nano seconds and for the
-> >> +GPIO line::
+> >> +/**
+> >> + * struct hte_chip - Abstract HTE chip structure.
+> >> + * @name: functional name of the HTE IP block.
+> >> + * @dev: device providing the HTE.  
+> > Unclear naming.  Is this the parent device, or one associated with the HTE itself?
+> > I'm guessing today you don't have one associated with the HTE, but it is plausible you
+> > might gain on in future to make it fit nicely in the device model as a function of another
+> > device.  
+> 
+> This is provider's device, could be &pdev->dev or any dev provider deems fit hence the
+> 
+> generic name.
+
+Ok, for now this works as a name, but I wonder if you will end up growing another
+layer in the device model as would happen for majority of subsystems.
+You may end up doing so when adding support to query the provider via a handle
+in the dt of the consumer.  It could probably be avoided, but throwing this into
+a class might make your life easier as you can use more standard infrastructure.
+
+> 
+> >  
+> >> + * @ops: callbacks for this HTE.
+> >> + * @nlines: number of lines/signals supported by this chip.
+> >> + * @xlate: Callback which translates consumer supplied logical ids to
+> >> + * physical ids, return from 0 for the success and negative for the
+> >> + * failures. It stores (0 to @nlines) in xlated_id parameter for the success.
+> >> + * @of_hte_n_cells: Number of cells used to form the HTE specifier.
+> >> + * @gdev: HTE subsystem abstract device, internal to the HTE subsystem.
+> >> + * @data: chip specific private data.
+> >> + */
+> >> +struct hte_chip {
+> >> +	const char *name;
+> >> +	struct device *dev;
+> >> +	const struct hte_ops *ops;
+> >> +	u32 nlines;
+> >> +	int (*xlate)(struct hte_chip *gc,
+> >> +		     const struct of_phandle_args *args,
+> >> +		     struct hte_ts_desc *desc, u32 *xlated_id);
+> >> +	u8 of_hte_n_cells;
 > >> +
-> >> + - Monitors GPIO line change.
-> >> + - Detects the state change on GPIO line.
-> >> + - Converts timestamps in nano seconds and stores it in tsc.
-> >> + - Stores GPIO direction in dir variable if the provider has that hardware
-> >> + capability.  
-> > We definitely want to know if it does or not.  How does an application query that?  
-> Its stored in dir field of the hte_ts_data structure.
-
-I wasn't clear in this comment.  We need a way to know the hardware does not support
-providing the direction and hence the dir field is not valid.  Is there a way to
-find that out from a consumer driver?
-
-Thanks,
+> >> +	/* only used internally by the HTE framework */
+> >> +	struct hte_device *gdev;
+> >> +	void *data;
+> >> +};
+...
 
 Jonathan
-
-> >  
-> >> + - Pushes this hte_timestamp_el object to HTE subsystem.
-> >> + - HTE subsystem increments seq counter and stores it in software buffer
-> >> + dedicated to requested GPIO line.  
-> > Ah. So that seq counter is only for software drops if the fifo fills up.  
-> Yes.
-> >  
-> >> + - Waiting consumer gets notified.
-> >> + - The consumer calls the retrieve timestamp API.
-> >> +
-> >> +HTE subsystem debugfs attributes
-> >> +--------------------------------
-> >> +HTE subsystem creates debugfs attributes at ``/sys/kernel/debug/hte/``.
-> >> +It also creates line/signal related debugfs attributes at
-> >> +``/sys/kernel/debug/hte/<provider>/<label or line id>/``.
-> >> +
-> >> +`ts_requested`
-> >> +		The total number of entities requested from the given provider,
-> >> +		where entity is the provider specific and could represent
-> >> +		lines, GPIO, chip signals, buses etc...
-> >> +                The attribute will be availble at
-> >> +		``/sys/kernel/debug/hte/<provider>/``.
-> >> +
-> >> +		Read only value
-> >> +
-> >> +`total_ts`
-> >> +		The total number of entities supported by the provider.
-> >> +                The attribute will be availble at
-> >> +		``/sys/kernel/debug/hte/<provider>/``.
-> >> +
-> >> +		Read only value
-> >> +
-> >> +`ts_buffer_depth`
-> >> +		The software buffer lenth to store timestamp data.
-> >> +                The attribute will be availble at
-> >> +		``/sys/kernel/debug/hte/<provider>/<label or id>/``.
-> >> +
-> >> +		Read only value
-> >> +
-> >> +`ts_buffer_watermark`
-> >> +		The software buffer watermark or threshold.
-> >> +                The attribute will be availble at
-> >> +		``/sys/kernel/debug/hte/<provider>/<label or line id>/``.
-> >> +
-> >> +		Read only value
-> >> +
-> >> +`dropped_timestamps`
-> >> +		The dropped timestamps for a given line.
-> >> +                The attribute will be availble at
-> >> +		``/sys/kernel/debug/hte/<provider>/<label or line id>/``.
-> >> +
-> >> +		Read only value  
-
