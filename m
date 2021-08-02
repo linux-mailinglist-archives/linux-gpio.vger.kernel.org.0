@@ -2,55 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A84463DE2DA
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 01:06:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37D523DE306
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 01:27:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232242AbhHBXG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Aug 2021 19:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36296 "EHLO
+        id S232614AbhHBX2H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Aug 2021 19:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232130AbhHBXG1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 19:06:27 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8F8C061796
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 16:06:17 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id y1so2800255vsc.1
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 16:06:17 -0700 (PDT)
+        with ESMTP id S232311AbhHBX2H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 19:28:07 -0400
+Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5036C0613D5
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 16:27:56 -0700 (PDT)
+Received: by mail-vs1-xe2f.google.com with SMTP id f27so4194984vsp.8
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 16:27:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xpyVU3ei/AP0KmybjlqX88a6HrifRHguk/VSuzK6yLo=;
-        b=ohEu439CYwzdTzfT11BrJ44b15ggEvl6dUJjbnhwnZVt5QmMPMHbfZX+Y4vMm5gv2x
-         MBIpC1bQ+TY5lKTRmdNBt+pW38dNcGDFpfFiy/EnwvOvW+uomleQyojIFn6NIDyDghgR
-         XwH7Ud7MvQ2uk7HCNkeYZb8G4Zpa4COEHhPw4zGqht5omFkvUnxcLaOqJ0KA2Ohi/Tgz
-         A1k5o3iiTu7IF+YkXGofinmq0KwAhxekEOP9ivHeh0DJZIBoe/2/dUc/xbHK7oVNhdno
-         YMIy56Zp5BRQFzJAJhqmPmnbJ3o+TeAJntwXv7E8QGwHBbCjaDq2BY2doN6FCTdEWg/2
-         92GQ==
+        bh=QlzAmryyyeDSDQ1srUNZEgdUE1Lb18Ti4rrmaegWVkw=;
+        b=Ajmr1ho9O5wL+Ew02Av/bUFYn8XmF5TlaNe9PnsD4qjKZxYPBh8Ge6NcYutRfxIzUc
+         JzKbAgn+JG95Zms5Z5w0a2ZuyOjUQWCuyc9IxcYp61b9ECvW9FXLrqERM7GgSVg8cNHW
+         zOJHKvgJHXFIZAc7W7wvYHcGLp3zh5CaIo49Ttue+NXQGnSzoEWNn5lQSeOtryypEVU7
+         B/RKTe48HxHJspuGTebmsxIS1Wg/+LaA22N5jp/iqCGfOvsWgWY2BRLf/F33Bivk3UBt
+         2+f/FYN/8cvKYlCMFXDkVTvCA/ocfTaDlhP7x+uxHc+w6C7WVl0L13Zk6bdrEHKgsX4C
+         gC9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xpyVU3ei/AP0KmybjlqX88a6HrifRHguk/VSuzK6yLo=;
-        b=kH4cr+rvJIO3pwXW9z+J+48WgxA+s/1bE1zCdx7jE/+0cDdIjhOcnbnZ8cYjZGnvYe
-         quUCdacUwsBtKReqKFX8KEpfwFs+e54l0zHJgPodXSljZomJvhbckW5lm1XYK2R7ftIR
-         qrvusBfIUdxvnV/QYsUAhF8JxlY+wUOaqPAqNbd3l6URDAfHBYDC9K7lKFRjO8Tnc78h
-         DDxf0KMClsMdHp62oXtHQ5Sxe/dBTatNOgN+IC9bkbPs3snfXGqL+PdoReQGQjI3n1Dq
-         kwkLponasKNN/3aD5tvy+0RpOVFyKLTdUP+RI4httNSIjwvGGKAbVibDy4bBkZCgEBHf
-         NNZw==
-X-Gm-Message-State: AOAM5313LHEXvfdhrenYpHZovl2XP11xB02R/TQdbsCYl+ipTFZ3uwIA
-        6z6VBGPvgYBFaTa2YioGxOFp+J2eWpoWlE+bio8XrA==
-X-Google-Smtp-Source: ABdhPJy4VIZWnscV1Z5U3ENe5sVJSmubutu5e/54rLKoUQ9TLsjSTGstTYauXexlME0HYczpKQNgpC7vEN1H5rzIAmc=
-X-Received: by 2002:a05:6102:21b:: with SMTP id z27mr12281035vsp.27.1627945576875;
- Mon, 02 Aug 2021 16:06:16 -0700 (PDT)
+        bh=QlzAmryyyeDSDQ1srUNZEgdUE1Lb18Ti4rrmaegWVkw=;
+        b=uOxI9PSMhT3DnpqVQbQPf3n2yezlZlTmc/XNZ2SO6Xq4AHITtDOci0mhiO4S7EP8tV
+         DgWtot1RmZx41uMnxjUgXm3hXVB/DNb8GS7QBJPE+wUeKp5DVoPvxSyVLmxmCLpz3nYf
+         sUp/P6odvdc6Mcw4XmlxUs9boMyibDvq1Nof//7s26Q5dNKLz5ZReqRdu7rbccosiCph
+         il8S8nJ8hw/Guoogr4Opwwa6mns4UmHjTowTam6xEsT81hV8Le+dMXMp1dPmtj+BRfUP
+         brqszgVBK7r88/dBWM6eWPbHEbYxvOn+3sqSuFTzgFMH+t+xkCLWd9RZDmeC+nzxerZ+
+         zzOA==
+X-Gm-Message-State: AOAM532TX3dVgQjnj3F/GZpI/0xkKJ7JCntvOBoysdzND+hTt7jtUZqr
+        vFCO66JjDxQ9xrMJXfBtiMvgGFPZMbJSUk8PEZ4nHw==
+X-Google-Smtp-Source: ABdhPJzJ3U5wtXY2YCtx/k4DqUJTlrgpZ48cDKUw9DVG41O8Yu+2eqmJVsghdHYCgAijN2Q95YtCA/yFaRSlHV3vfbA=
+X-Received: by 2002:a67:f60e:: with SMTP id k14mr12216795vso.30.1627946875840;
+ Mon, 02 Aug 2021 16:27:55 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210730144922.29111-1-semen.protsenko@linaro.org>
- <20210730144922.29111-5-semen.protsenko@linaro.org> <a1701931-136e-235c-8392-a3f64c050d74@canonical.com>
-In-Reply-To: <a1701931-136e-235c-8392-a3f64c050d74@canonical.com>
+ <5e35b0a7-13aa-3c62-ca49-14af2fcb2a08@canonical.com> <c3486111-0ec9-9679-d2a2-68b2f33a2450@canonical.com>
+ <CAPLW+4kbnJEBkc0D=RWt59JxBan8X1uDy6sSXBiYAq8N9FDV6A@mail.gmail.com>
+ <13f166bb-7103-25d5-35a6-8ec53a1f1817@canonical.com> <2dacc205-04ce-c206-a393-50ba0d5aa1a7@canonical.com>
+In-Reply-To: <2dacc205-04ce-c206-a393-50ba0d5aa1a7@canonical.com>
 From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Tue, 3 Aug 2021 02:06:05 +0300
-Message-ID: <CAPLW+4mMCzzyqqJTse-UEpjQoVu1b-9Xz3_3L=nmg63uKYFnGw@mail.gmail.com>
-Subject: Re: [PATCH 04/12] tty: serial: samsung: Init USI to keep clocks running
+Date:   Tue, 3 Aug 2021 02:27:44 +0300
+Message-ID: <CAPLW+4=1Anr6rCWEBL04D81aEAEVKD5cGE+ObXH3q-HNHce07w@mail.gmail.com>
+Subject: Re: [PATCH 00/12] Add minimal support for Exynos850 SoC
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Chanwoo Choi <cw00.choi@samsung.com>,
@@ -79,202 +81,82 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 30 Jul 2021 at 19:32, Krzysztof Kozlowski
+On Sat, 31 Jul 2021 at 11:12, Krzysztof Kozlowski
 <krzysztof.kozlowski@canonical.com> wrote:
 >
-> On 30/07/2021 16:49, Sam Protsenko wrote:
-> > UART block is a part of USI (Universal Serial Interface) IP-core in
-> > Samsung SoCs since Exynos9810 (e.g. in Exynos850). USI allows one to
-> > enable one of three types of serial interface: UART, SPI or I2C. That's
-> > possible because USI shares almost all internal circuits within each
-> > protocol. USI also provides some additional registers so it's possible
-> > to configure it.
+> On 31/07/2021 09:29, Krzysztof Kozlowski wrote:
+> > On 30/07/2021 21:02, Sam Protsenko wrote:
+> >> Hi Krzysztof,
+> >>
+> >> On Fri, 30 Jul 2021 at 20:21, Krzysztof Kozlowski
+> >> <krzysztof.kozlowski@canonical.com> wrote:
+> >>>
+> >>> On 30/07/2021 17:18, Krzysztof Kozlowski wrote:
+> >>>> On 30/07/2021 16:49, Sam Protsenko wrote:
+> >>>>> This patch series adds initial platform support for Samsung Exynos850
+> >>>>> SoC [1]. With this patchset it's possible to run the kernel with BusyBox
+> >>>>> rootfs as a RAM disk. More advanced platform support (like MMC driver
+> >>>>> additions) will be added later. The idea is to keep the first submission
+> >>>>> minimal to ease the review, and then build up on top of that.
+> >>>>>
+> >>>>> [1] https://www.samsung.com/semiconductor/minisite/exynos/products/mobileprocessor/exynos-850/
+> >>>>>
+> >>>>
+> >>>> Great work!
+> >>>>
+> >>
+> >> Thanks, Krzysztof! And thank you for reviewing the whole series.
+> >>
+> >>>> What's the SoC revision number (should be accessible via
+> >>>> /sys/bus/soc/devices/soc0/)? Recent wrap in numbering of Exynos chips
+> >>>> might bring confusion...
+> >>
+> >> # cat /sys/devices/soc0/revision
+> >> 0
 > >
-> > One USI register called USI_OPTION has reset value of 0x0. Because of
-> > this the clock gating behavior is controlled by hardware (HWACG =
-> > Hardware Auto Clock Gating), which simply means the serial won't work
-> > after reset as is. In order to make it work, USI_OPTION[2:1] bits must
-> > be set to 0b01, so that HWACG is controlled manually (by software).
-> > Bits meaning:
-> >   - CLKREQ_ON = 1: clock is continuously provided to IP
-> >   - CLKSTOP_ON = 0: drive IP_CLKREQ to High (needs to be set along with
-> >                     CLKREQ_ON = 1)
+> > soc_id but you're right it won't be set for unknown SoCs. You need to
+> > extend drivers/soc/samsung/exynos-chipid.c to parse new values (E3830000
+> > for product ID) and maybe new register offsets (previous offset is 0x0,
+> > for 3830 is 0x10 I think). Also revision mask might change.
 > >
-> > USI is not present on older chips, like s3c2410, s3c2412, s3c2440,
-> > s3c6400, s5pv210, exynos5433, exynos4210. So the new boolean field
-> > '.has_usi' was added to struct s3c24xx_uart_info. USI registers will be
-> > only actually accessed when '.has_usi' field is set to "1".
+> >>> Judging by vendor's sources it is quite confusing. It looks mostly like
+> >>> Exynos3830 but in few other cases it uses Exynos9 compatibles (Exynos9,
+> >>> Exynos9820). Only in few places there is Exynos850. Marketing department
+> >>> made it so confusing...  The revision embedded in SoC would be very
+> >>> interesting.
+> >>>
+> >>
+> >> As I understand, this SoC is called Exynos850 everywhere now.
+> >> Exynos3830 is its old name, not used anymore. As you noticed from
+> >> patch #2, it shares some definitions with Exynos9 SoC, so I guess some
+> >> software is similar for both architectures. Not sure about hardware
+> >> though, never worked with Exynos9 CPUs. Anyway, I asked Samsung
+> >> representatives about naming, and it seems like we should stick to
+> >> "Exynos850" name, even in code.
 > >
-> > This feature is needed for further serial enablement on Exynos850, but
-> > some other new Exynos chips (like Exynos9810) may benefit from this
-> > feature as well.
 > >
-> > Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-> > ---
-> >  drivers/tty/serial/samsung_tty.c | 33 +++++++++++++++++++++++++++++++-
-> >  include/linux/serial_s3c.h       |  9 +++++++++
-> >  2 files changed, 41 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-> > index 9fbc61151c2e..0f3cbd0b37e3 100644
-> > --- a/drivers/tty/serial/samsung_tty.c
-> > +++ b/drivers/tty/serial/samsung_tty.c
-> > @@ -65,6 +65,7 @@ enum s3c24xx_port_type {
-> >  struct s3c24xx_uart_info {
-> >       char                    *name;
-> >       enum s3c24xx_port_type  type;
-> > +     unsigned int            has_usi;
-> >       unsigned int            port_type;
-> >       unsigned int            fifosize;
-> >       unsigned long           rx_fifomask;
-> > @@ -1352,6 +1353,29 @@ static int apple_s5l_serial_startup(struct uart_port *port)
-> >       return ret;
-> >  }
-> >
-> > +static void exynos_usi_init(struct uart_port *port)
-> > +{
-> > +     struct s3c24xx_uart_port *ourport = to_ourport(port);
-> > +     struct s3c24xx_uart_info *info = ourport->info;
-> > +
-> > +     if (!info->has_usi)
-> > +             return;
-> > +
-> > +     /*
-> > +      * USI_RESET is an active High signal. Reset value of USI_RESET is 0x1
-> > +      * to drive stable value to PAD. Due to this feature, the USI_RESET must
-> > +      * be cleared (set as 0x0) before starting a transaction.
+> > Since the chip identifies itself as E3830000, I would prefer naming
+> > matching real product ID instead of what is pushed by marketing or sales
+> > representatives. The marketing names don't have to follow any
+> > engineering rules, they can be changed and renamed. Sales follows rather
+> > money and corporate rules, not consistency for upstream project.
 >
-> "before starting a transaction" suggests it is related with transaction
-> or something before starting it. Don't you need it simply after reset or
-> resume?
+> On the other hand we have already two exceptions for naming
+> inconsistency - Exynos3250 identifies itself as 3472 (which is confusing
+> because 3250 is two core and there is a separate quad-core
+> Exyons3472...) and Exynos5800 is actually marketing name for a revision
+> of Exynos5422. Maybe indeed will be easier to go with the branded name
+> 850...
 >
 
-Not sure what you are suggesting. USI_RESET is set to "1" at start up
-(means USI block hangs in reset state), so we have to make it "0"
-(that's what this code does); only then UART becomes functional and
-UART transactions can be performed. And exynos_usi_init() is called
-exactly where you hinted: at init and on resume.
-
-Anyway, the whole comment is confusing, I'll simplify and rework it in
-v2. Please let me know if I'm missing the point though.
-
-> > +      */
-> > +     wr_regl(port, USI_CON, USI_RESET);
->
-> You are clearing entire register, not only USI_RESET bitfield. Is it
-> really what you want?
->
-
-Yeah, USI_CON[31:1] bits are reserved, and the reset value of this
-register is 0x00000001. But anyway, I'm going to rework that code like
-this, for clarity and consistence:
-
-8<--------------------------------------------------------------------->8
-    /* Clear the software reset of USI block (it's set at startup) */
-    val = rd_regl(port, USI_CON);
-    val &= ~(USI_RESET_MASK)
-    wr_regl(port, USI_CON, val);
-    udelay(1);
-
-    /* Continuously provide the clock to USI IP w/o gating (for Rx mode) */
-    val = rd_regl(port, USI_OPTION);
-    val &= ~USI_HWACG_MASK;
-    val |= USI_HWACG_CLKREQ_ON;
-    wr_regl(port, USI_OPTION, val);
-8<--------------------------------------------------------------------->8
-
-> > +     udelay(1);
-> > +
-> > +     /*
-> > +      * Set the HWACG option bit in case of UART Rx mode.
-> > +      * CLKREQ_ON = 1, CLKSTOP_ON = 0 (set USI_OPTION[2:1] = 0x1).
-> > +      */
-> > +     wr_regl(port, USI_OPTION, USI_HWACG_CLKREQ_ON);
-> > +}
-> > +
-> >  /* power power management control */
-> >
-> >  static void s3c24xx_serial_pm(struct uart_port *port, unsigned int level,
-> > @@ -1379,6 +1403,7 @@ static void s3c24xx_serial_pm(struct uart_port *port, unsigned int level,
-> >               if (!IS_ERR(ourport->baudclk))
-> >                       clk_prepare_enable(ourport->baudclk);
-> >
-> > +             exynos_usi_init(port);
-> >               break;
-> >       default:
-> >               dev_err(port->dev, "s3c24xx_serial: unknown pm %d\n", level);
-> > @@ -2102,6 +2127,8 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
-> >       if (ret)
-> >               pr_warn("uart: failed to enable baudclk\n");
-> >
-> > +     exynos_usi_init(port);
-> > +
-> >       /* Keep all interrupts masked and cleared */
-> >       switch (ourport->info->type) {
-> >       case TYPE_S3C6400:
-> > @@ -2750,10 +2777,11 @@ static struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
-> >  #endif
-> >
-> >  #if defined(CONFIG_ARCH_EXYNOS)
-> > -#define EXYNOS_COMMON_SERIAL_DRV_DATA                                \
-> > +#define EXYNOS_COMMON_SERIAL_DRV_DATA_USI(_has_usi)          \
-> >       .info = &(struct s3c24xx_uart_info) {                   \
-> >               .name           = "Samsung Exynos UART",        \
-> >               .type           = TYPE_S3C6400,                 \
-> > +             .has_usi        = _has_usi,                     \
-> >               .port_type      = PORT_S3C6400,                 \
-> >               .has_divslot    = 1,                            \
-> >               .rx_fifomask    = S5PV210_UFSTAT_RXMASK,        \
-> > @@ -2773,6 +2801,9 @@ static struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
-> >               .has_fracval    = 1,                            \
-> >       }                                                       \
-> >
-> > +#define EXYNOS_COMMON_SERIAL_DRV_DATA                                \
-> > +     EXYNOS_COMMON_SERIAL_DRV_DATA_USI(0)
-> > +
-> >  static struct s3c24xx_serial_drv_data exynos4210_serial_drv_data = {
-> >       EXYNOS_COMMON_SERIAL_DRV_DATA,
-> >       .fifosize = { 256, 64, 16, 16 },
-> > diff --git a/include/linux/serial_s3c.h b/include/linux/serial_s3c.h
-> > index f6c3323fc4c5..013c2646863e 100644
-> > --- a/include/linux/serial_s3c.h
-> > +++ b/include/linux/serial_s3c.h
-> > @@ -28,6 +28,15 @@
-> >  #define S3C2410_UFSTAT         (0x18)
-> >  #define S3C2410_UMSTAT         (0x1C)
-> >
-> > +/* USI Control Register offset */
-> > +#define USI_CON                      (0xC4)
-> > +/* USI Option Register offset */
-> > +#define USI_OPTION           (0xC8)
-> > +/* USI_CON[0] = 0b0: clear USI global software reset (Active High) */
-> > +#define USI_RESET            (0<<0)
->
-> Just 0x0. I understand you wanted to hint it is a bit field, but the
-> shift of 0 actually creates more questions.
->
-
-After some consideration I decided to adhere to existing style and do
-something like this (in v2):
-
-8<--------------------------------------------------------------------->8
-#define USI_CON          (0xC4)
-#define USI_OPTION      (0xC8)
-
-#define USI_CON_RESET_CLEAR        (0<<0)
-#define USI_CON_RESET_SET        (1<<0)
-#define USI_CON_RESET_MASK        (1<<0)
-
-#define USI_OPTION_HWACG_CLKREQ_ON    (1<<1)
-#define USI_OPTION_HWACG_CLKSTOP_ON    (1<<2)
-#define USI_OPTION_HWACG_MASK        (3<<1)
-8<--------------------------------------------------------------------->8
-
-The whole reason for those comments was missing public TRM. But in the
-end I decided it just looks ugly. Also, this way I can do RMW
-operation (discussed above) in more logical way.
-
-Please let me know if code snippets above look good to you.
+Well, chip engraving says "3830", but I was specifically told to stick
+to "850" in upstream kernel. I can presume there was some mix ups with
+this naming, and it might be the case it's better to stick to "850"
+exactly to avoid further confusion. Yes, I can see that
+EXYNOS3830_SOC_ID = 0xE3830000 in chipid driver, but we can return
+"EXYNOS850" string for that const, right? If you google "Exynos850"
+and "Exynos3830", it's obvious everybody uses the former, so I'd
+appreciate if we can stick to "850" in the end.
 
 >
 > Best regards,
