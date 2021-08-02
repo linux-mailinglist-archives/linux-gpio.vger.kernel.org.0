@@ -2,115 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 562D53DDA66
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 16:13:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23DDE3DDAD6
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 16:22:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234477AbhHBONt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Aug 2021 10:13:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43542 "EHLO
+        id S235009AbhHBOWc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Aug 2021 10:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235705AbhHBOM6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 10:12:58 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F8D1C044007;
-        Mon,  2 Aug 2021 06:58:44 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id bq29so8292350lfb.5;
-        Mon, 02 Aug 2021 06:58:44 -0700 (PDT)
+        with ESMTP id S234867AbhHBOW0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 10:22:26 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AF0EC08EAF5;
+        Mon,  2 Aug 2021 07:07:25 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id l4so24085667ljq.4;
+        Mon, 02 Aug 2021 07:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=lUrLfWKHwEhlXNu+G+ug5oDQiGH2kq3pcgFyRRDl+Po=;
-        b=DuiizHMIrtaxRR9PWeYyrgAjcEkkLcAh2CDMqXaZUN6T9kqeDYCwMqni+hLezeJUZP
-         QW6tIm44eipXWIerOOZoKTMnQqNHRdcY1WXG8U+XHrIowsaXsxSA9Y2xr1dE3P6cS3M3
-         yDsEvLb5QKpI9Fqm33EMAxzABXRxwDKMM3+Qb2UpW64E4jb9vG58bieij1xmFK4OEc5S
-         3qZh0cFTL8DYUL7dCpcapw3L3GqW/WEmbXSAVf+JvRDIHaDhwlPdWpKe3mjGUTcFiwZ6
-         edFdtvkKulBR4RTEfl7nzUFoslDXz2JLX3QBqS87MtEb0oGKqQvB10Zed3X5fwI+5DA6
-         +OvQ==
+        bh=QSRmyGOQKi26XFJcHlkzbFSHx2fpkufJxW98dYtkbJM=;
+        b=u0Y9ayklqAWjyoyQ60wihHL84rHSb1g62wltZ0Iwp5Qd83r7B9QQs+EV54HcOVA/ul
+         kOLj+m6FA4Dv5tFupwjD4Blybv3lMbku6KWYfSXUo2GIRL8NZN0U5oAzrG2IhoioUBNQ
+         G0nx5OvEa57rhD4p9HOD5q7ADJoBK6uOW0Tjil92uzefZ56DDwn2yBS54fKgxtga4kq6
+         THp49KV9AYDMKnKJHT8ubp+6XkppSgozjTfCz19+BUk4BRBETAdDUzh8iSyVopVsfNuk
+         PmES+9USYeUprBPpfgf3FdjU5uPdasTPrPfcxdAspZZ7YbEbJGzHH4UrGUZnS2gHkW/u
+         OoJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=lUrLfWKHwEhlXNu+G+ug5oDQiGH2kq3pcgFyRRDl+Po=;
-        b=TnRvM2lcHUFgJbUVsDw7Bt8fnS9Yq8sN+mg81EfgOLdOFl3tMEtu01V8Ysa2NV1iHY
-         ak1iv5sS/AjauQhL+hkf7azwGs4Mjca11+fUX1Fhzn5p7EniRDShWiKg2ziA0bhzCwso
-         k7hgEd+mGOvmQDMJSX7vm0vAC+6ZYJBY0ICbjuIIIx2+N456ROxlHIC85Q8yewZ8a56N
-         36k3bPto5002DnlMp4WuGzn3eV/PN77jGpoG0D+XSrq7MXmUOZNCvKNl0tWtiZIrDh9F
-         h0GHWuIBAYzXo0tgOd8TZ4pRsrjX3JJnSIkkUAR/ilu73wFdzhYFjUXTByPDdW0Z76Cb
-         g5kQ==
-X-Gm-Message-State: AOAM532+s7BFO5UqPbC4QL+yxcZEoZYRWtFBd9cGTbSSK6vByzwGZrY5
-        O/wke3lvoRK3oqxu3c7hOT0=
-X-Google-Smtp-Source: ABdhPJxxC5kwQl8bk0MXIADHQnZjmGCGtons4lKKmkx7ojsSH/ec5mrPjiGZkqwDJlbHiwJorl6X8g==
-X-Received: by 2002:ac2:4ec3:: with SMTP id p3mr12355176lfr.556.1627912722499;
-        Mon, 02 Aug 2021 06:58:42 -0700 (PDT)
+        bh=QSRmyGOQKi26XFJcHlkzbFSHx2fpkufJxW98dYtkbJM=;
+        b=nZKnVLzKonDphSM2i7S/AoQBnxeUiPsl/345CqmveVxXSBJ+OcbaBLZi7pCm7JTNMb
+         FUQFjqSX4fWxJyMbPdJfqMAO6V/YzTAWrTQ4EX6DP+Dc+NH1pjHKbrxnalQUacgp91c3
+         vttH6EN3Qj0ex6MixFCxs8tK3M9vydgD08GlyG9bKBD2NVKY46GyQEZ/GpqgeWzhqfvX
+         KTW4qM7kUAoRTDYMxxJ7TGt5QpWBsLkNizLJZmRPYvdYvpHsyMBat41s//B4RFxVUfNI
+         7Jrrh4oWsa/rOaA4AphEkyullOSFID32y2N4NkF2Zk5XU4jpVzYb+c0bnoK5Zk0QJG5o
+         orrw==
+X-Gm-Message-State: AOAM532bKwbKSKHj8UlWeIeqQexC9pf8Jhr8gUv2mKxZmpM7PPHg6yLf
+        p8/3ZdDARW3e1XkNv9nWPfM=
+X-Google-Smtp-Source: ABdhPJz+OFyTx3UdWqBUphRa9VvAMkkbPhcsHju7u0s9/D1D4dhNHRLtgWWgqzFVJMtDcasY9YnF+w==
+X-Received: by 2002:a2e:98d1:: with SMTP id s17mr10996439ljj.457.1627913243692;
+        Mon, 02 Aug 2021 07:07:23 -0700 (PDT)
 Received: from mobilestation ([95.79.127.110])
-        by smtp.gmail.com with ESMTPSA id o19sm961005lfk.299.2021.08.02.06.58.41
+        by smtp.gmail.com with ESMTPSA id q66sm884304ljb.83.2021.08.02.07.07.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Aug 2021 06:58:41 -0700 (PDT)
-Date:   Mon, 2 Aug 2021 16:58:39 +0300
+        Mon, 02 Aug 2021 07:07:23 -0700 (PDT)
+Date:   Mon, 2 Aug 2021 17:07:21 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org,
         Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v1 2/4] gpio: dwapb: Read GPIO base from gpio-base
- property
-Message-ID: <20210802135839.4clqd34npppwasyh@mobilestation>
+Subject: Re: [PATCH v1 4/4] gpio: dwapb: Get rid of legacy platform data
+Message-ID: <20210802140721.vxhqidrkcxo3ex53@mobilestation>
 References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
- <20210726125436.58685-2-andriy.shevchenko@linux.intel.com>
+ <20210726125436.58685-4-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210726125436.58685-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210726125436.58685-4-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-+Cc Rob
-
-On Mon, Jul 26, 2021 at 03:54:34PM +0300, Andy Shevchenko wrote:
-> For backward compatibility with some legacy devices introduce
-> a new (*) property gpio-base to read GPIO base. This will allow
-> further cleanup of the driver.
-> 
-> *) Note, it's not new for GPIO library since mockup driver is
->    using it already.
-
-You are right but I don't think it's a good idea to advertise the
-pure Linux-internal property "gpio-base" to any use-case like OF
-and ACPI FW nodes. Especially seeing we don't have it described in the
-DT-bindings and noting that the mockup driver is dedicated for the
-GPIO tests only. What about restricting the property usage for the
-SW-nodes only by adding an additional check: is_software_node() here?
-
-@Linus, @Bartosz, @Rob, what do you think about that?
-
--Sergey
-
+On Mon, Jul 26, 2021 at 03:54:36PM +0300, Andy Shevchenko wrote:
+> Platform data is a legacy interface to supply device properties
+> to the driver. In this case we don't have anymore in-kernel users
+> for it. Just remove it for good.
 > 
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/gpio/gpio-dwapb.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/gpio/gpio-dwapb.c                | 28 +++++++++++++++---------
+>  include/linux/platform_data/gpio-dwapb.h | 24 --------------------
+>  2 files changed, 18 insertions(+), 34 deletions(-)
+>  delete mode 100644 include/linux/platform_data/gpio-dwapb.h
 > 
 > diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index f6ae69d5d644..e3011d4e17b0 100644
+> index e3011d4e17b0..b9dd0ba812dc 100644
 > --- a/drivers/gpio/gpio-dwapb.c
 > +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -581,7 +581,8 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
->  			pp->ngpio = DWAPB_MAX_GPIOS;
->  		}
+> @@ -16,7 +16,6 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> -#include <linux/platform_data/gpio-dwapb.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/property.h>
+>  #include <linux/reset.h>
+> @@ -48,6 +47,7 @@
 >  
-> -		pp->gpio_base	= -1;
-> +		if (fwnode_property_read_u32(fwnode, "gpio-base", &pp->gpio_base))
-> +			pp->gpio_base = -1;
+>  #define DWAPB_DRIVER_NAME	"gpio-dwapb"
+>  #define DWAPB_MAX_PORTS		4
+> +#define DWAPB_MAX_GPIOS		32
 >  
->  		/*
->  		 * Only port A can provide interrupts in all configurations of
+>  #define GPIO_EXT_PORT_STRIDE	0x04 /* register stride 32 bits */
+>  #define GPIO_SWPORT_DR_STRIDE	0x0c /* register stride 3*32 bits */
+> @@ -63,6 +63,19 @@
+>  
+>  #define DWAPB_NR_CLOCKS		2
+>  
+
+> +struct dwapb_port_property {
+> +	struct fwnode_handle *fwnode;
+> +	unsigned int idx;
+> +	unsigned int ngpio;
+> +	unsigned int gpio_base;
+> +	int irq[DWAPB_MAX_GPIOS];
+> +};
+> +
+> +struct dwapb_platform_data {
+> +	struct dwapb_port_property *properties;
+> +	unsigned int nports;
+> +};
+> +
+>  struct dwapb_gpio;
+
+If you need to resend the series anyway could you please move the
+structures declarations to being below the forward declaration of the
+dwapb_gpio structure? Of course it's not that critical, but for the
+sake of just not to have the later one left somewhere in the middle of
+the unrelated structures and for at least to keep some order in the
+declarations.
+
+Then feel free to add:
+Acked-by: Serge Semin <fancer.lancer@gmail.com>
+
+The whole series has been tested on Baikal-T1 SoC:
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+
+-Sergey
+
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> @@ -670,17 +683,12 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
+>  	unsigned int i;
+>  	struct dwapb_gpio *gpio;
+>  	int err;
+> +	struct dwapb_platform_data *pdata;
+>  	struct device *dev = &pdev->dev;
+> -	struct dwapb_platform_data *pdata = dev_get_platdata(dev);
+> -
+> -	if (!pdata) {
+> -		pdata = dwapb_gpio_get_pdata(dev);
+> -		if (IS_ERR(pdata))
+> -			return PTR_ERR(pdata);
+> -	}
+>  
+> -	if (!pdata->nports)
+> -		return -ENODEV;
+> +	pdata = dwapb_gpio_get_pdata(dev);
+> +	if (IS_ERR(pdata))
+> +		return PTR_ERR(pdata);
+>  
+>  	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+>  	if (!gpio)
+> diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
+> deleted file mode 100644
+> index 535e5ed549d9..000000000000
+> --- a/include/linux/platform_data/gpio-dwapb.h
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0-only */
+> -/*
+> - * Copyright(c) 2014 Intel Corporation.
+> - */
+> -
+> -#ifndef GPIO_DW_APB_H
+> -#define GPIO_DW_APB_H
+> -
+> -#define DWAPB_MAX_GPIOS		32
+> -
+> -struct dwapb_port_property {
+> -	struct fwnode_handle *fwnode;
+> -	unsigned int	idx;
+> -	unsigned int	ngpio;
+> -	unsigned int	gpio_base;
+> -	int		irq[DWAPB_MAX_GPIOS];
+> -};
+> -
+> -struct dwapb_platform_data {
+> -	struct dwapb_port_property *properties;
+> -	unsigned int nports;
+> -};
+> -
+> -#endif
 > -- 
 > 2.30.2
 > 
