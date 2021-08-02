@@ -2,98 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B7CF3DD1B5
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 10:11:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68B5A3DD1BD
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 10:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232688AbhHBILu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Aug 2021 04:11:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
+        id S232646AbhHBIND (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Aug 2021 04:13:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232657AbhHBILt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 04:11:49 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F317C06175F
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 01:11:39 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id n12so20417069wrr.2
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 01:11:39 -0700 (PDT)
+        with ESMTP id S232537AbhHBINC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 04:13:02 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B8EC061796
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 01:12:52 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id hs10so20868852ejc.0
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 01:12:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0x3dgReXcWC1iYS+qAFXrajP0ewYcayc6ZfVqT+YfLM=;
-        b=c4ULYQYnFODtSFxOCRIK+uB3bc4g+h2xCaHtmtontDioQWPqE11fRSw1pyTYLspiWE
-         ynH5XhNaQuIZnrNns4h7VPbDlJZbNI7igjlBg4Qoukcsq/yuCqJIFUZW7pu0OetCguZn
-         OPvV03I9iVBdyZ9BUheiOG+dTxelg9mYMVnUm3BIaq7zyDwTAfNV3+Yp1RMVgPZd3sJz
-         U+2oTQwS+YTK6fhoi6hxbZ5nvJYWifv3c55QahSuXEhWLPijdSH+0hnQv+ZtLuY8m2e5
-         PWbfXLGnNVBRUqrXXNjiShXRgSBBPhO3doI7jSfTimAn+aw5zMqtpGoFYrDs6rNzCvqz
-         6x4Q==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ALQjZJEiyWOt6jqRU+2ULQP/fQS0nGSJjaQXN/Wtd4I=;
+        b=v3Ix30UvbSkcu6gMs9+ZCKT7td8W1WBhUu+ehaLoQlYinzcYUTTSZjCly5+QTouhIs
+         goj1Enb9AVE9x/mysMKQa6FiHSptNziOg5uREh2XSYsfiJiFR/8wJKSWHdJ+xYhq2ESw
+         XR3UlHzh5eo/L28XfhlJLCtU+l1ZXJaUUA1EwTEVTa6hnCSjKXzZNwizAGUf2mQFFg2r
+         VEKdK4F/Vpp3A5jMTml+ibmzOI5WwM2u1cF90yA9mcDYhH8GyTcdhnthpqBHNwe6uz8G
+         n5M3lPHgQDKYyhDnm+xndm+G/KUleVUD8P9cgOf+u+flcHEh7WdHqJxkVgWEvcF4va2z
+         ip8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=0x3dgReXcWC1iYS+qAFXrajP0ewYcayc6ZfVqT+YfLM=;
-        b=TytjhcIIs+6qAHMCB1PBpw/jp9RbrVASXq93Bf9x37oynfmgptOiBFql7bUJUqI9sw
-         4PoxQ5GMh4yR0OCjUDdl0emXfGOV3l3iDp62wE9AcmZ9NulTlabI+dPNrnp7jpmZjho8
-         N/kd0yuENbFX1YltdjFW3w15uZAsJW1OfTJqBdxYH/pBofWSOK2Hc21RWz6/hk4AoXbx
-         9K71yV7FGrIpudC/BmVqkv/mm3UCIpO6vi1T/ydD8Fo8srNnCYbv9metv4FQg4oh+ANS
-         xEYcy03S4kIk4nzVv4H1xtTfRBqGbspaJniS7s/7xfXk4uNNKQGXJwNjP2RXNSjTucuQ
-         RoUQ==
-X-Gm-Message-State: AOAM5333jG7IglRjVIKMfZLS+wxX3SONgikTisaewwlwawCzQ0TjwYWS
-        ON8ADPVtigP+lvHmOeoeLHbrsA==
-X-Google-Smtp-Source: ABdhPJyytz0qtGBKDG8wz0JExBsJg4sVp89R90AMZHsqTJLfgh0N2TC4adR2r3yMg0+e/RVuP4cveA==
-X-Received: by 2002:adf:eb4a:: with SMTP id u10mr5296618wrn.11.1627891898264;
-        Mon, 02 Aug 2021 01:11:38 -0700 (PDT)
-Received: from google.com ([109.180.115.228])
-        by smtp.gmail.com with ESMTPSA id d15sm10299636wrn.28.2021.08.02.01.11.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Aug 2021 01:11:37 -0700 (PDT)
-Date:   Mon, 2 Aug 2021 09:11:35 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     satya priya <skakit@codeaurora.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Das Srinagesh <gurus@codeaurora.org>, kgunda@codeaurora.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V7 1/3] dt-bindings: mfd: pm8008: Add gpio-ranges and
- spmi-gpio compatible
-Message-ID: <YQeot5xqsiQqxXkR@google.com>
-References: <1627029074-23449-1-git-send-email-skakit@codeaurora.org>
- <1627029074-23449-2-git-send-email-skakit@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ALQjZJEiyWOt6jqRU+2ULQP/fQS0nGSJjaQXN/Wtd4I=;
+        b=NkGlQvtdBVS6CHknBvecipUdapfyw7cp4nxGEzSFisoXiwBjO+xKUDaLKJss2TTcp+
+         nsgC0dEbeRU3P0xezNUhXKeak0vn3eJmyC5CaxKC/aJr3e4wP0BNtQYq0oNIma/wnflM
+         kFF35QaZlyMk7PwLoC0EE/tnT38WRpsXAgkbI6mNf5crKoPrmputMaBN5HMIsnlytYaW
+         rgwwQRLTVQ2vaOWL9o/T4YiP2b9zPwxRpJpy/16bcz+CTRnez+TryOv71dGVkIpnZA+e
+         Ve9kKz1LsQS/h5Ac6kmLv/lE7h8GZSnSgw+Jxvvz+KjySFJ9/qdppnuFeTGbrptUIAkg
+         jRMA==
+X-Gm-Message-State: AOAM530ojw4joDJ6UkVdYQCNRDPYQoNiy8Re+xkFx/68chKGsWGpiAHJ
+        e8WjwQt5iFe5RogJBoeOda4BQonad2LIlIteWjXinA==
+X-Google-Smtp-Source: ABdhPJxrtMqg6F0OamRb1pRNxk9sDzh1rs0kvEqibDZfNpUg9BvePVl8tEHUY2aHbV3HR5utXsJiO5eeXt9sMPD9bLY=
+X-Received: by 2002:a17:907:e92:: with SMTP id ho18mr14089468ejc.261.1627891971179;
+ Mon, 02 Aug 2021 01:12:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1627029074-23449-2-git-send-email-skakit@codeaurora.org>
+References: <20210730144356.23079-1-brgl@bgdev.pl> <20210730144356.23079-3-brgl@bgdev.pl>
+ <20210731022732.GA4434@sol>
+In-Reply-To: <20210731022732.GA4434@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 2 Aug 2021 10:12:40 +0200
+Message-ID: <CAMRc=MfKxA624Fmt-XpxVyiWwNzu9PeooyP4pQtpZ_kGsX3mwA@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH 2/3] line-info: provide gpiod_line_info_get_event_clock()
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
+        Ben Hutchings <ben.hutchings@essensium.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 23 Jul 2021, satya priya wrote:
+On Sat, Jul 31, 2021 at 4:27 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Fri, Jul 30, 2021 at 04:43:55PM +0200, Bartosz Golaszewski wrote:
+> > Provide a new getter for the line-info object that becomes the
+> > counterpart for the setter used to configure the event clock type with
+> > line_config. It allows to check which even clock the line uses for
+> > edge detection.
+> >
+>
+> "to check which even" -> "checking which event"
+>
+> That is my only comment for the whole patch set - eveything else looks
+> good.
+>
+> Cheers,
+> Kent.
 
-> Add gpio-ranges and "qcom,spmi-gpio" compatible to match with the
-> parent qcom,pmic-gpio.yaml binding.
-> 
-> Signed-off-by: satya priya <skakit@codeaurora.org>
-> ---
-> Changes in V7:
->  - This is newly added in V7 to resolve below error.
->  dtschema/dtc warnings/errors:
->  /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/qcom,pm8008.example.dt.yaml: gpio@c000: compatible: ['qcom,pm8008-gpio'] is too short
-> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
->  /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/qcom,pm8008.example.dt.yaml: gpio@c000: 'gpio-ranges' is a required property
-> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-> 
->  Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+This will be squashed with the big v2 commit, thanks!
 
-Applied, thanks.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Bart
