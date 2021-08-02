@@ -2,98 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB54B3DD599
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 14:25:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4A0B3DD645
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 14:59:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233567AbhHBMZK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Aug 2021 08:25:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233498AbhHBMZK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 08:25:10 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BEF4C06175F
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 05:25:00 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id p145so13541978ybg.6
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 05:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pSQOvSojt3sSTQUfw9yD1dATj/dm5qCUjIkmi9JVr/U=;
-        b=EHQz7jM8DBQiawB5Ef3CsUo8yqsSqaIL5ogAiNpIcbj4uAIXs8raxUuC7mwX4GjcA9
-         twJXhzawZ9uRWYQzC9lBOsU86Xw394g2TTgNPm2j6KwH0ce5hs++diV8RXwg3l9yrKtH
-         tBn7Xnt27IOQ6jXBsGI3hOJ8WP6pyX2RJurSmVTs21gRrtP0Py7LASQsGQ18LzVZDV/B
-         C17/K5wWfA9dkUjH8DT0rVb+620YnoWMnCVvJc1ZP0ScsyzNEXYv2A3SmsO+UiiySf8j
-         Ign9Ik34Z8p6Xnv8P16kr+kvCvy3579Jgbr6Us+PoJkKWznnZdyQfqvsSoKACOskqHxj
-         d89g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pSQOvSojt3sSTQUfw9yD1dATj/dm5qCUjIkmi9JVr/U=;
-        b=lvfFRuxl0KfzJdq0J8939DJaKifWcHzZ0ZriITk4BJYqCXtf5MROrFxW6WMnZrCNES
-         bTOaXNOJYsXVs39HIdgxKIKX7oeIvii9hNBxK1GK0E4/DN+A/NBRJ7CEiMMsKAw9nULu
-         6mEycGscspAMtQcWRVJcHicuW/HPjV64nPgGtEo2DZmVKO3m63OKcqPBa/hBwTbTGasG
-         mHdPZdqhxM0Zyrq+4W5AZOI/IvYk40PY23zjpl6aNKc4SUa7L8p7F53yq9Pfey1+i0cY
-         8GEWpSa9QFksNG6iXFq+yaBNTldohGHgfV0yFJ+JjM1YIcgnxwEpURbYnGbKtpawMwTj
-         lkFQ==
-X-Gm-Message-State: AOAM5308kzjMlrP3oPtO+rmA71gbMSMGGMiIL78wZVyOufOBVdc25VLY
-        akgsXk6GNJPs5DHHA2HYCkrkEODCs7kEMHMxki3dlRdzJoI=
-X-Google-Smtp-Source: ABdhPJxlLShZyXI/nVCHCmk1N2v/4hHIE66E5Kxuam23mK6LetyBHGhznoffj7cLeKKP9K9BTdhKfarJIO1DpRQlbT8=
-X-Received: by 2002:a25:2789:: with SMTP id n131mr21851802ybn.12.1627907099521;
- Mon, 02 Aug 2021 05:24:59 -0700 (PDT)
+        id S233786AbhHBNAH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Aug 2021 09:00:07 -0400
+Received: from so254-9.mailgun.net ([198.61.254.9]:42164 "EHLO
+        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233878AbhHBNAH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 09:00:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1627909198; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=IYmX3vUPkg+ubeSfl6k4KFsqTWARHNbMrBlR5kA54iw=;
+ b=PUHzKyS/fpB9OHZ/25d1zWehvKpw2MUHqzr+ScfaVhnb8Rwxf7Vl/Rty18WRJyR9nJem4wcC
+ 5dokatkrej+Eii0IG65rCGyoF4ZBSjo57bH05qiov/NAw2Cr4dnxqPe2Sc7ZHQxPQSfjHbv9
+ VH9GaR1iSB0RjIoPtrNs6TnxqNc=
+X-Mailgun-Sending-Ip: 198.61.254.9
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 6107ec3c290ea35ee6030371 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 02 Aug 2021 12:59:40
+ GMT
+Sender: skakit=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2EEA8C43460; Mon,  2 Aug 2021 12:59:40 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: skakit)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 73A54C433F1;
+        Mon,  2 Aug 2021 12:59:39 +0000 (UTC)
 MIME-Version: 1.0
-References: <20210727143400.32543-1-brgl@bgdev.pl> <CAFhCfDZ1gHj2W0uDe1MZK71N87eH1pPBdEP32kcZys=pYEwSdA@mail.gmail.com>
- <CAMRc=MfVVTLeRmGMK0ScOEOo1RGvWmgxe+9Js0nYSxwBs3vmiA@mail.gmail.com>
-In-Reply-To: <CAMRc=MfVVTLeRmGMK0ScOEOo1RGvWmgxe+9Js0nYSxwBs3vmiA@mail.gmail.com>
-From:   Jack Winch <sunt.un.morcov@gmail.com>
-Date:   Mon, 2 Aug 2021 13:24:48 +0100
-Message-ID: <CAFhCfDYmn_y4FcDvK5eKAdcFN3OfsSqVo1yd7quiZdN0+STipA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v3 0/3] libgpiod v2: C++ bindings
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Helmut Grohne <helmut.grohne@intenta.de>,
-        Ben Hutchings <ben.hutchings@essensium.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 02 Aug 2021 18:29:39 +0530
+From:   skakit@codeaurora.org
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bhupesh Sharma <bhupesh.sharma@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Das Srinagesh <gurus@codeaurora.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH V7 0/3] Convert qcom pmic gpio bindings to YAML
+In-Reply-To: <CACRpkdYsDNDcCYWOygN+V=1LFBZ6-PHYaePy5truR9ybVzkMUg@mail.gmail.com>
+References: <1627029074-23449-1-git-send-email-skakit@codeaurora.org>
+ <CACRpkdYsDNDcCYWOygN+V=1LFBZ6-PHYaePy5truR9ybVzkMUg@mail.gmail.com>
+Message-ID: <c8d6f1cdb64bcaca0f429b4e535d4cad@codeaurora.org>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 2, 2021 at 11:34 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> It's actually my fault. Let me explain: the development of the v2 API
-> for the entire project (C, C++ and Python parts) happens in the
-> next/libgpiod-2.0 branch of
-> git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git I squash the
-> new changes into the big patch with the plan of resending it for a
-> final review once we agree on the interface (more or less anyway).
-> That will allow the repo to remain bisectable. Then we'll be able to
-> fine-tune different elements.
+Hi Linus,
 
-Understood and sensible.  Thanks for clarifying.
+On 2021-07-30 15:28, Linus Walleij wrote:
+> Hi Satya,
+> 
+> On Fri, Jul 23, 2021 at 10:32 AM satya priya <skakit@codeaurora.org> 
+> wrote:
+>> 
+>> satya priya (3):
+>>   dt-bindings: mfd: pm8008: Add gpio-ranges and spmi-gpio compatible
+>>   dt-bindings: pinctrl: qcom-pmic-gpio: Convert qcom pmic gpio 
+>> bindings
+>>     to YAML
+>>   dt-bindings: pinctrl: qcom-pmic-gpio: Remove the interrupts property
+>> 
+>>  .../devicetree/bindings/mfd/qcom,pm8008.yaml       |  13 +-
+>>  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 288 
+>> ---------------------
+>>  .../bindings/pinctrl/qcom,pmic-gpio.yaml           | 239 
+>> +++++++++++++++++
+>>  3 files changed, 249 insertions(+), 291 deletions(-)
+>>  delete mode 100644 
+>> Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> 
+> I tried to apply these patches to the pinctrl tree but there is a 
+> conflict
+> because I merged these patches (I think):
+> 0ac2c2aebf82 dt-bindings: pinctrl: qcom,pmic-gpio: Add compatible for
+> SA8155p-adp
+> ffdf4cecac07 dt-bindings: pinctrl: qcom,pmic-gpio: Arrange compatibles
+> alphabetically
+> 
+> Can you please rebase the patches on top of this branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
+> 
 
-> Maybe you could wait until I post v4? I'm addressing a lot of issues
-> in this revision. Previous small patches have already been squashed
-> and they concerned the core C library anyway.
+Sure, but I don't see above patches present on this branch, anyway I 
+found them on linux-next, will rebase on linux-next.
+Hope that's not a problem.
 
-Sounds like a plan.  I've noticed that, both in the mailing list and
-your recent commits into next/libgpiod-2.0 (which is why I wondered
-what the mode of operation is for these changes).  Once v4 is out, I
-will look to review.
+> then resend so I can apply them?
+> 
+> Include Bhupesh on Cc so we get confirmation that this ends up as 
+> intended.
+> 
 
-> There's no target, it'll be ready when it's done.
+Okay.
 
-Again, understood and sensible.
+Thanks,
+Satya Priya
 
-> PS How did the move go?
-
-Very well, thank you.  Setup with everything I've brought over to
-Romania, with a little more to be shipped over very soon.  On a
-somewhat related topic, I'll be reaching out to you directly over the
-next few days (mainly regarding your relationship / work with
-BayLibre, if that's okay).
-
-Jack
+> Thanks,
+> Linus Walleij
