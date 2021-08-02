@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68B5A3DD1BD
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 10:12:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14C663DD235
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 10:43:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232646AbhHBIND (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Aug 2021 04:13:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40870 "EHLO
+        id S232831AbhHBIoF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Aug 2021 04:44:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232537AbhHBINC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 04:13:02 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B8EC061796
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 01:12:52 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id hs10so20868852ejc.0
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 01:12:52 -0700 (PDT)
+        with ESMTP id S232433AbhHBIoF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 04:44:05 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4E89C06175F
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 01:43:55 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id k65so5492960yba.13
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 01:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ALQjZJEiyWOt6jqRU+2ULQP/fQS0nGSJjaQXN/Wtd4I=;
-        b=v3Ix30UvbSkcu6gMs9+ZCKT7td8W1WBhUu+ehaLoQlYinzcYUTTSZjCly5+QTouhIs
-         goj1Enb9AVE9x/mysMKQa6FiHSptNziOg5uREh2XSYsfiJiFR/8wJKSWHdJ+xYhq2ESw
-         XR3UlHzh5eo/L28XfhlJLCtU+l1ZXJaUUA1EwTEVTa6hnCSjKXzZNwizAGUf2mQFFg2r
-         VEKdK4F/Vpp3A5jMTml+ibmzOI5WwM2u1cF90yA9mcDYhH8GyTcdhnthpqBHNwe6uz8G
-         n5M3lPHgQDKYyhDnm+xndm+G/KUleVUD8P9cgOf+u+flcHEh7WdHqJxkVgWEvcF4va2z
-         ip8A==
+        bh=mFmvk8TebGShCTrQBKpRkbFcYKVOOJV5TrTcdCo9MiQ=;
+        b=n64NzB9HjTV9VuD03fWGODYfaTheyHM82/TbUD8NbyOeQ78vyj0PMT7H2lCIJseslA
+         83xeUsQfkejT3vk4J6H8B7L+1CMYrOu4+6fieAhvRuC4sHhlSp9qHsUiKsDBuDalRCUD
+         EqIjrL8uoHcay32Jqju1KxkzP674e9VOEO5bQNBKDwuRVM64sdSc/34EgsU7T/tuVrIF
+         n5G2DNljB1mnFIiKGgRj1oaJvaXVhOdhQ2An3/72deFIJbF/tXOvtQvA6iFOwhOtd/Uo
+         yXf/Qa6pBf8v5HsEZepda4Mmn7qs+FBQJdQVtcBbNCnZP2zo3e9+k0e8l9I6YxdmUL9w
+         y8Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ALQjZJEiyWOt6jqRU+2ULQP/fQS0nGSJjaQXN/Wtd4I=;
-        b=NkGlQvtdBVS6CHknBvecipUdapfyw7cp4nxGEzSFisoXiwBjO+xKUDaLKJss2TTcp+
-         nsgC0dEbeRU3P0xezNUhXKeak0vn3eJmyC5CaxKC/aJr3e4wP0BNtQYq0oNIma/wnflM
-         kFF35QaZlyMk7PwLoC0EE/tnT38WRpsXAgkbI6mNf5crKoPrmputMaBN5HMIsnlytYaW
-         rgwwQRLTVQ2vaOWL9o/T4YiP2b9zPwxRpJpy/16bcz+CTRnez+TryOv71dGVkIpnZA+e
-         Ve9kKz1LsQS/h5Ac6kmLv/lE7h8GZSnSgw+Jxvvz+KjySFJ9/qdppnuFeTGbrptUIAkg
-         jRMA==
-X-Gm-Message-State: AOAM530ojw4joDJ6UkVdYQCNRDPYQoNiy8Re+xkFx/68chKGsWGpiAHJ
-        e8WjwQt5iFe5RogJBoeOda4BQonad2LIlIteWjXinA==
-X-Google-Smtp-Source: ABdhPJxrtMqg6F0OamRb1pRNxk9sDzh1rs0kvEqibDZfNpUg9BvePVl8tEHUY2aHbV3HR5utXsJiO5eeXt9sMPD9bLY=
-X-Received: by 2002:a17:907:e92:: with SMTP id ho18mr14089468ejc.261.1627891971179;
- Mon, 02 Aug 2021 01:12:51 -0700 (PDT)
+        bh=mFmvk8TebGShCTrQBKpRkbFcYKVOOJV5TrTcdCo9MiQ=;
+        b=XxiH8xIq+B0+N4N4ghSeTt6RePDn27Lcy7Q5t2y8jGGlhRN/hsZxwleInnyKZsIp4T
+         MpHtpn3lJPzFDGX9VS7VK3eFyDYlGLDaFLMA4f14MUNCGDolNlYKtEpfpCTURlFIw5lN
+         psU5A5Ys3iw8R5Gbk40B+nAy5EeM7eLYgxt4ZfuXk9z9lJGtAIh4DzLhMTPqvUIdQ3mk
+         hrfK2NV6cjJ6EnyTvuWKPQwYtVwEDX9nvU84o1nc/1EGPsh3R0WxTrqvbr/Kx60eJ7XL
+         EhcrlC77zNMZaDZKBBWKeV+hBJ4Eno2AgTyZURNYCFYbj06EmN4WijSZ/V6XYFDiIVJn
+         UrCA==
+X-Gm-Message-State: AOAM533yzYq6GZiFsYL/yqZkvFJvpX9aWU1cdCZQkYYPEHz0gtjVI9qL
+        906J6AJnXw3s3zPOcIX4el0+n4J/Nlyr2VI68Xg=
+X-Google-Smtp-Source: ABdhPJz9ndflg7eyOnHvNU2z6cXIwAtNxfjQ/zEfdKwgvTB7tvdUkGova3/SbRqXFp1WF1VqQsuOiEb/gC3nDZcwwOc=
+X-Received: by 2002:a25:7a03:: with SMTP id v3mr19838398ybc.202.1627893834963;
+ Mon, 02 Aug 2021 01:43:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210730144356.23079-1-brgl@bgdev.pl> <20210730144356.23079-3-brgl@bgdev.pl>
- <20210731022732.GA4434@sol>
-In-Reply-To: <20210731022732.GA4434@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 2 Aug 2021 10:12:40 +0200
-Message-ID: <CAMRc=MfKxA624Fmt-XpxVyiWwNzu9PeooyP4pQtpZ_kGsX3mwA@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH 2/3] line-info: provide gpiod_line_info_get_event_clock()
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+References: <20210727143400.32543-1-brgl@bgdev.pl>
+In-Reply-To: <20210727143400.32543-1-brgl@bgdev.pl>
+From:   Jack Winch <sunt.un.morcov@gmail.com>
+Date:   Mon, 2 Aug 2021 09:43:44 +0100
+Message-ID: <CAFhCfDZ1gHj2W0uDe1MZK71N87eH1pPBdEP32kcZys=pYEwSdA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v3 0/3] libgpiod v2: C++ bindings
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
         Helmut Grohne <helmut.grohne@intenta.de>,
         Ben Hutchings <ben.hutchings@essensium.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
@@ -63,23 +62,132 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jul 31, 2021 at 4:27 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Fri, Jul 30, 2021 at 04:43:55PM +0200, Bartosz Golaszewski wrote:
-> > Provide a new getter for the line-info object that becomes the
-> > counterpart for the setter used to configure the event clock type with
-> > line_config. It allows to check which even clock the line uses for
-> > edge detection.
-> >
->
-> "to check which even" -> "checking which event"
->
-> That is my only comment for the whole patch set - eveything else looks
-> good.
->
-> Cheers,
-> Kent.
+Hello Bartosz,
 
-This will be squashed with the big v2 commit, thanks!
+I am most certainly being *dense* here, but which libgpiod branch
+should I be applying this patch series to?  Also, what other patch
+series is this particular set of patches dependent on?  I tried to
+apply against master and next/libgpiod-2.0 without much success this
+weekend.  Also, just for clarity, how is the next/libgpiod-2.0 branch
+being used at current?  Which and at what point are you applying
+patches to this particular branch?
 
-Bart
+Once I've got over this basic hurdle, I'd like to do a 'holistic'
+review of this patch series.  As I've not been following changes to
+either the kernel subsystem or user library as of late, I feel this
+approach to be more appropriate and thorough.
+
+Finally, what is the target deadline for completion of the v2 API?
+
+Best,
+Jack
+
+On Tue, Jul 27, 2021 at 3:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> This series contains the implementation of the C++ bindings for libgpiod v2.
+> In general the C++ library follows the data structure model as defined by
+> the C library with one notable exception: objects that represent immutable
+> snapshots of kernel data (line_info and edge & info events) are copyable
+> (or rather shared behind the scenes using ::std::shared_ptr). The rest of
+> the classes delete their copy constructors and assignment operators and
+> are only move constructible and move assignable.
+>
+> All classes follow the pimpl idiom - using either shared_ptr or unique_ptr -
+> and all implementations are hidden from the user for easier maintenance and
+> less ABI breakage in the future.
+>
+> The edge_event class is a bit of a special case. While it looks the same
+> as other copyable objects to the user, the implementation uses a tiny bit of
+> polymorphism (although it never crosses the ABI boundary). This is done
+> to make it possible to use the edge_event_buffer without any memory
+> allocations like what the C API enables. The edge_event objects stored
+> in the buffer only contain a raw pointer to the C object stored in the
+> underlying C edge_event_buffer. The event is copied into a fully managed
+> object once the copy assignment operator is called.
+>
+> I'm Cc'ing people who showed interest and helped me with C++ bindings
+> before for review.
+>
+> v1 -> v2:
+> Kent: I addressed most points from your review. Some are unaddressed due to
+> personal preference (for instance: I still allow creating of empty line-request
+> objects as they may be reused in subsequent requests). I also kept the 'watch'
+> argument in get_line_info() as well as the boolean operators for chip and
+> request - although with (hopefully) better documentation.
+>
+> v2 -> v3:
+> - use scoped class enums instead of regular integer ones
+> - rename getters to get_<property>() in order to avoid name conflicts with
+>   the new enum types
+>
+> The first two patches extend the core C API of libgpiod as discussed.
+>
+> Bartosz Golaszewski (3):
+>   API: add a function for retrieving the capacity of edge event buffers
+>   API: extend the line request functionality
+>   bindings: cxx: implement C++ bindings for libgpiod v2.0
+>
+>  Doxyfile.in                                 |   4 +-
+>  bindings/cxx/Makefile.am                    |  16 +-
+>  bindings/cxx/chip.cpp                       | 214 +++--
+>  bindings/cxx/edge-event-buffer.cpp          | 103 +++
+>  bindings/cxx/edge-event.cpp                 | 123 +++
+>  bindings/cxx/examples/Makefile.am           |  12 +-
+>  bindings/cxx/examples/gpiodetectcxx.cpp     |   9 +-
+>  bindings/cxx/examples/gpiofindcxx.cpp       |   2 +-
+>  bindings/cxx/examples/gpiogetcxx.cpp        |  12 +-
+>  bindings/cxx/examples/gpioinfocxx.cpp       |  63 +-
+>  bindings/cxx/examples/gpiomoncxx.cpp        |  39 +-
+>  bindings/cxx/examples/gpiosetcxx.cpp        |  19 +-
+>  bindings/cxx/gpiod.hpp                      | 938 +-------------------
+>  bindings/cxx/gpiodcxx/Makefile.am           |  14 +
+>  bindings/cxx/gpiodcxx/chip.hpp              | 180 ++++
+>  bindings/cxx/gpiodcxx/edge-event-buffer.hpp | 115 +++
+>  bindings/cxx/gpiodcxx/edge-event.hpp        | 125 +++
+>  bindings/cxx/gpiodcxx/info-event.hpp        | 108 +++
+>  bindings/cxx/gpiodcxx/line-config.hpp       | 250 ++++++
+>  bindings/cxx/gpiodcxx/line-info.hpp         | 209 +++++
+>  bindings/cxx/gpiodcxx/line-request.hpp      | 207 +++++
+>  bindings/cxx/gpiodcxx/misc.hpp              |  49 +
+>  bindings/cxx/gpiodcxx/request-config.hpp    |  97 ++
+>  bindings/cxx/info-event.cpp                 |  89 ++
+>  bindings/cxx/internal.hpp                   | 168 +++-
+>  bindings/cxx/iter.cpp                       |  60 --
+>  bindings/cxx/line-config.cpp                | 226 +++++
+>  bindings/cxx/line-info.cpp                  | 150 ++++
+>  bindings/cxx/line-request.cpp               | 194 ++++
+>  bindings/cxx/line.cpp                       | 321 -------
+>  bindings/cxx/line_bulk.cpp                  | 366 --------
+>  bindings/cxx/misc.cpp                       |  18 +
+>  bindings/cxx/request-config.cpp             |  80 ++
+>  configure.ac                                |   1 +
+>  include/gpiod.h                             |  63 +-
+>  lib/edge-event.c                            |   6 +
+>  lib/line-request.c                          |  50 +-
+>  tools/gpioget.c                             |   3 +-
+>  38 files changed, 2854 insertions(+), 1849 deletions(-)
+>  create mode 100644 bindings/cxx/edge-event-buffer.cpp
+>  create mode 100644 bindings/cxx/edge-event.cpp
+>  create mode 100644 bindings/cxx/gpiodcxx/Makefile.am
+>  create mode 100644 bindings/cxx/gpiodcxx/chip.hpp
+>  create mode 100644 bindings/cxx/gpiodcxx/edge-event-buffer.hpp
+>  create mode 100644 bindings/cxx/gpiodcxx/edge-event.hpp
+>  create mode 100644 bindings/cxx/gpiodcxx/info-event.hpp
+>  create mode 100644 bindings/cxx/gpiodcxx/line-config.hpp
+>  create mode 100644 bindings/cxx/gpiodcxx/line-info.hpp
+>  create mode 100644 bindings/cxx/gpiodcxx/line-request.hpp
+>  create mode 100644 bindings/cxx/gpiodcxx/misc.hpp
+>  create mode 100644 bindings/cxx/gpiodcxx/request-config.hpp
+>  create mode 100644 bindings/cxx/info-event.cpp
+>  delete mode 100644 bindings/cxx/iter.cpp
+>  create mode 100644 bindings/cxx/line-config.cpp
+>  create mode 100644 bindings/cxx/line-info.cpp
+>  create mode 100644 bindings/cxx/line-request.cpp
+>  delete mode 100644 bindings/cxx/line.cpp
+>  delete mode 100644 bindings/cxx/line_bulk.cpp
+>  create mode 100644 bindings/cxx/misc.cpp
+>  create mode 100644 bindings/cxx/request-config.cpp
+>
+> --
+> 2.30.1
+>
