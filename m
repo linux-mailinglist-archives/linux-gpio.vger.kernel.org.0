@@ -2,108 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97FA33DDCD6
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 17:54:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58F623DDE5E
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 19:22:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234998AbhHBPzH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Aug 2021 11:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42086 "EHLO
+        id S230286AbhHBRWW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Aug 2021 13:22:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229979AbhHBPzG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 11:55:06 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD1CC06175F;
-        Mon,  2 Aug 2021 08:54:56 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id t3so18016455plg.9;
-        Mon, 02 Aug 2021 08:54:56 -0700 (PDT)
+        with ESMTP id S229607AbhHBRWV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 13:22:21 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D3BC06175F
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 10:22:11 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id g21so6236288edb.4
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 10:22:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tb85RMd9lzkgRNrQJGP8oYSwbsR7j/RmW0SM+oKm+9g=;
-        b=biJkJVShAZPizW0Zk8lJBNq+QNccEkZm+iMXZnSFhrigzxYnbHH+BJBEr2i8XGZWVp
-         51Mcc51l9cMacwkF0FJpj9eX5ZAR9njx5pi/20fvo9UkfZ4mWeyvNaUIt9J0mT+wF4Dm
-         FfxX8Ret+gxR+fQP37ljnO6OQnUFTwOogDXXKRNoJW15qez7xW8iKi5tc2kprlvnJxGJ
-         cvSt/zTLSQq7BBhA0FIGRagPNMKsmKbxHtN5JtiHIKhZOduPsaUIyzbQBFsGhZbxFtDA
-         kkcETgljLWf/V6b/eZVRCnyesCUFgh7Aiyx8z+tRWH/zk5LFWkHRdxu4J1HV2/K5711c
-         FnVg==
+         :cc:content-transfer-encoding;
+        bh=h2WFxDixB/3t9fazJ8CAmz6nn6qFdm6PXqRa55jZXDc=;
+        b=IGA65fp6Y9kJutWjUbrVyl2Fs2yX4Y5Nyw28VRkXSOrXNKV4pwbGtsURCm+e8WZpUR
+         x0mtLdrpESyaHaw5TKqAI4w4xDOMKeUyHWzIHWMLfffMCzKuK37dchQ901kx1R8JCCCc
+         6i0KLFK3B4yuhCa1XgAC3ZyvHMLOtcSTV1I39so7gLs1g2zafIyK5AdnKEns1eKgIRoJ
+         nGtoTkpucKVO/x5axn0iLPo+QW+yyDIGhhfKvmu0Pzf9DKd3u0Lv6XI1hGK1b0+n7pl7
+         +k94W8iuHbX4nsGDg8w9cs/qu5UN3+k2ssGkVkTrkr9PxQhyEot9u7KqB5CxRtuG5T85
+         3bgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tb85RMd9lzkgRNrQJGP8oYSwbsR7j/RmW0SM+oKm+9g=;
-        b=ADlN18JyG2qs+MuVFUnuYkWu57Sp/NColBDcK2jt6Bf20o8CQKd0spcQ50J9lcuEl7
-         6zKRpAwMoIcgXjFRapg2M9A6reMCKxemwui5EkQiU2YM4XX6L6I9elAH4qVBno878wMx
-         agzdlbDDjL3GtRgSu0GSl1qIU20aeLiPeC37EIXuqV9zAZP7uo4Eec0QvMywkTcn42GU
-         lMrYZfBQ5F6I+w7R8qtLSZlm1Q6o5wph43eZlbdffbU9oaQMtywjtmmpLJyTlhd0f7uP
-         cUhMNcJoQbSfnWp5NU+OqcbVaXJ6zosOp3DMeP/LXcKj3DN0asjpG2cjxY/4LdadfLkW
-         9bRA==
-X-Gm-Message-State: AOAM531sVbti3wFeqkdJ5iFP+0nzr6t/gyRMD5x3nEi9WZ+hz/hz1dND
-        1pi/KEbp+AB0p04ZaEn5hdj70/BKnlxxgAKoe1E=
-X-Google-Smtp-Source: ABdhPJy0Jqcrx1ia5Jl2W6+BUhbaj9OxP6HDKEm12FPAajn32MMtkxVsT8QkgABU3DD4jhlELo8RWN55xab2LobApWI=
-X-Received: by 2002:aa7:860e:0:b029:3bd:7e49:7a14 with SMTP id
- p14-20020aa7860e0000b02903bd7e497a14mr5793319pfn.40.1627919696170; Mon, 02
- Aug 2021 08:54:56 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h2WFxDixB/3t9fazJ8CAmz6nn6qFdm6PXqRa55jZXDc=;
+        b=rVEFGIcnVyTIa6URsAzSg40G7iN+B7CU+KQ/5HAEVTiLMFnZe438hM3aH6jzRF6i/e
+         4zQ3rrWNbVgtBGErN/1Hx3qXbCElvWbN0qPDShrlLqIR5tZ6g8SHK9mKyHoxVLIkVI/G
+         T/IUGH6oNWwoCI0J9Kmljpp7yEcILu0ryPoQtc0UQI3n+4ijneZ7ACgsdmXgKv6H85+/
+         w91JXW9Hwx8hKpoovoDgiRsqeCSZTcJp7igho0u97dMoDrJEl3lr8O1H4fq2bh5p9q9m
+         THYdMIF45uGnoeOujXSmxK+Wk8+3YSmGBAI1+WVGhs6duTx5AuvrNZZbS7zZy3KUNATd
+         vvlQ==
+X-Gm-Message-State: AOAM530zCm8+sRGmc8FTZK5HVap1I5ZjjOlxszOQlSJm1Y9ev98ilmGg
+        5LY8+QmhzXzDmCq5ae19TmBnSojwOG/qkltMwrY9dw==
+X-Google-Smtp-Source: ABdhPJz19+tyHdDM44MeIwvI3vcyw7uKr8xbYUpmMeohq0U2lnKM5LfUtJK3ERmgE2kBTYOttq+f+oTgLkTURIWbxDQ=
+X-Received: by 2002:a50:9ae3:: with SMTP id p90mr20511605edb.154.1627924929507;
+ Mon, 02 Aug 2021 10:22:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
- <20210726125436.58685-4-andriy.shevchenko@linux.intel.com> <20210802140721.vxhqidrkcxo3ex53@mobilestation>
-In-Reply-To: <20210802140721.vxhqidrkcxo3ex53@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 2 Aug 2021 18:54:16 +0300
-Message-ID: <CAHp75Vf0a=SFPz8atUaDP=M=m9Umny4+msUaVT1gBWuHXPnOrQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] gpio: dwapb: Get rid of legacy platform data
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+References: <1626868353-96475-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <1626868353-96475-5-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <YQMIhBPwcNw1YqMq@robh.at.kernel.org> <CACRpkdYrHTMLL_CQi0BoNZsXV3=2dBK38pkvd+EEkuPrzoG_Cw@mail.gmail.com>
+ <2f5d9197-4a5e-08b5-7e47-595d337478d2@xilinx.com> <CACRpkdZu2-EE1hqJ4nVA5uxaPuJRGWDH_ciKxRvrNncQ2Pyd5w@mail.gmail.com>
+In-Reply-To: <CACRpkdZu2-EE1hqJ4nVA5uxaPuJRGWDH_ciKxRvrNncQ2Pyd5w@mail.gmail.com>
+From:   Michal Simek <monstr@monstr.eu>
+Date:   Mon, 2 Aug 2021 19:21:58 +0200
+Message-ID: <CAHTX3dLbRcfBhaqfbcK=RbQOAG5uxpSzHmMx7aP+QYHaP-idew@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm: dts: zynq: Replace 'io-standard' with
+ 'power-source' property
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        git <git@xilinx.com>, saikrishna12468@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 2, 2021 at 5:23 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> On Mon, Jul 26, 2021 at 03:54:36PM +0300, Andy Shevchenko wrote:
-> > Platform data is a legacy interface to supply device properties
-> > to the driver. In this case we don't have anymore in-kernel users
-> > for it. Just remove it for good.
-
-
-> > +struct dwapb_port_property {
-> > +     struct fwnode_handle *fwnode;
-> > +     unsigned int idx;
-> > +     unsigned int ngpio;
-> > +     unsigned int gpio_base;
-> > +     int irq[DWAPB_MAX_GPIOS];
-> > +};
-> > +
-> > +struct dwapb_platform_data {
-> > +     struct dwapb_port_property *properties;
-> > +     unsigned int nports;
-> > +};
-> > +
-> >  struct dwapb_gpio;
+po 2. 8. 2021 v 15:20 odes=C3=ADlatel Linus Walleij
+<linus.walleij@linaro.org> napsal:
 >
-> If you need to resend the series anyway could you please move the
-> structures declarations to being below the forward declaration of the
-> dwapb_gpio structure? Of course it's not that critical, but for the
-> sake of just not to have the later one left somewhere in the middle of
-> the unrelated structures and for at least to keep some order in the
-> declarations.
-
-Fine with me, I'll modify accordingly in the next version, thanks for
-the review!
-
-> Then feel free to add:
-> Acked-by: Serge Semin <fancer.lancer@gmail.com>
+> On Fri, Jul 30, 2021 at 2:46 PM Michal Simek <michal.simek@xilinx.com> wr=
+ote:
 >
-> The whole series has been tested on Baikal-T1 SoC:
-> Tested-by: Serge Semin <fancer.lancer@gmail.com>
+> > Linux Zynq pinctrl driver and in tree dts files are using io-standard
+> > properties at least from 2015.
+>
+> Ooops my wrong.
+>
+> What about supporting both the new property and io-standard as
+> a fallback, simply?
 
--- 
-With Best Regards,
-Andy Shevchenko
+That's exactly what I have Sai to do and PIN_CONFIG_IOSTANDARD is still the=
+re.
+
+https://lore.kernel.org/linux-arm-kernel/1626868353-96475-1-git-send-email-=
+lakshmi.sai.krishna.potthuri@xilinx.com/T/#md7d304d9d8f746e51d909237b9073f2=
+ae8930543
+
+But IIRC I have also asked to show any warning message when io
+standard property is used to convert to new property.
+
+Thanks,
+Michal
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
