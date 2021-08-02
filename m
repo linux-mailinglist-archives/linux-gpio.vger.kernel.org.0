@@ -2,170 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E626A3DD76F
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 15:40:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 562D53DDA66
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Aug 2021 16:13:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233850AbhHBNkg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Aug 2021 09:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36592 "EHLO
+        id S234477AbhHBONt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Aug 2021 10:13:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233826AbhHBNkf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 09:40:35 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87243C06175F;
-        Mon,  2 Aug 2021 06:40:25 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id m9so23946976ljp.7;
-        Mon, 02 Aug 2021 06:40:25 -0700 (PDT)
+        with ESMTP id S235705AbhHBOM6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 10:12:58 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F8D1C044007;
+        Mon,  2 Aug 2021 06:58:44 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id bq29so8292350lfb.5;
+        Mon, 02 Aug 2021 06:58:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Jv8pADUt4yLh8Zvkj2Wwg6PjtKLLuSJnq1IBfyqLTPQ=;
-        b=fHbHSk+ly2b1uuApY9A3faV6nTgSnmMnZJbaz5Dj7ZByMy45dqUSUkHo2otbrCKk2x
-         +81RCNfKeZr/LOVvcwCxoBMrBooaJAT8C4RNVqNcLju3A22ut7ehW7s/0MEzQTt77Dn8
-         9SVsBPVGqzt88Obk92BaO5QFpkTM/ljHSH+nOLk+9LRhoP+qwgAC/3vd1zZ6iXczIPwP
-         0Tf6RFlNJCTls7LUi8P6XhX1s1VPSl0kf5lR2hi0aGHPaazzBLpgXHRTUUPYDtbi3/aQ
-         g2NkkzfwTiayX6AtbLHtUPrTw/gtRBG3VtApXTtOUs8gvqR8qpgWUKr3JC0QDBG+GqRF
-         FfBA==
+        bh=lUrLfWKHwEhlXNu+G+ug5oDQiGH2kq3pcgFyRRDl+Po=;
+        b=DuiizHMIrtaxRR9PWeYyrgAjcEkkLcAh2CDMqXaZUN6T9kqeDYCwMqni+hLezeJUZP
+         QW6tIm44eipXWIerOOZoKTMnQqNHRdcY1WXG8U+XHrIowsaXsxSA9Y2xr1dE3P6cS3M3
+         yDsEvLb5QKpI9Fqm33EMAxzABXRxwDKMM3+Qb2UpW64E4jb9vG58bieij1xmFK4OEc5S
+         3qZh0cFTL8DYUL7dCpcapw3L3GqW/WEmbXSAVf+JvRDIHaDhwlPdWpKe3mjGUTcFiwZ6
+         edFdtvkKulBR4RTEfl7nzUFoslDXz2JLX3QBqS87MtEb0oGKqQvB10Zed3X5fwI+5DA6
+         +OvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Jv8pADUt4yLh8Zvkj2Wwg6PjtKLLuSJnq1IBfyqLTPQ=;
-        b=Gdczc7SenZ689x7ULcxht9SkCz88nNrEzNFYGXpbaV4maHBu2sfuK9JfYhRNdLFafa
-         V9dda8fI99jX+sSxbxurwdr0vzlOHR4LXGaVvrabY31X9se0GWr4dgpmMarexmu8Ph57
-         QHgGPjVODxKh9jnuOkAYTSoVmnJJFrBrDECYWXvHaXnKd7CnZHk/zNcaIVVnzuoaSDL+
-         G/jMRTKiMihSEvY5VpeZhBjrAEp5b9/8m+/fpdXd0gW64uHcKnYzeXbpfYnA/NU16Nzd
-         mi7Der6UTQQWUls5d1ynVsZl4UPAjfGcy5Cxypb8iAl27VwFEP4K3bhQqqzBj+5TacOX
-         VZ2A==
-X-Gm-Message-State: AOAM533dCYHC/1LbVzfdqmkuZXpMscr21Dsig7VwzjPR7Dmz7c7YeChx
-        LBWeF0+By6pP5e8wZDzxg8A=
-X-Google-Smtp-Source: ABdhPJxrR08Mepotg5t2qwFcX1z1f1faX8x6Vf0zkF6B/lDjqWbtZmiBqiRyXu+zZdvtKgAsx9cOJA==
-X-Received: by 2002:a2e:bf27:: with SMTP id c39mr11284669ljr.59.1627911623896;
-        Mon, 02 Aug 2021 06:40:23 -0700 (PDT)
+        bh=lUrLfWKHwEhlXNu+G+ug5oDQiGH2kq3pcgFyRRDl+Po=;
+        b=TnRvM2lcHUFgJbUVsDw7Bt8fnS9Yq8sN+mg81EfgOLdOFl3tMEtu01V8Ysa2NV1iHY
+         ak1iv5sS/AjauQhL+hkf7azwGs4Mjca11+fUX1Fhzn5p7EniRDShWiKg2ziA0bhzCwso
+         k7hgEd+mGOvmQDMJSX7vm0vAC+6ZYJBY0ICbjuIIIx2+N456ROxlHIC85Q8yewZ8a56N
+         36k3bPto5002DnlMp4WuGzn3eV/PN77jGpoG0D+XSrq7MXmUOZNCvKNl0tWtiZIrDh9F
+         h0GHWuIBAYzXo0tgOd8TZ4pRsrjX3JJnSIkkUAR/ilu73wFdzhYFjUXTByPDdW0Z76Cb
+         g5kQ==
+X-Gm-Message-State: AOAM532+s7BFO5UqPbC4QL+yxcZEoZYRWtFBd9cGTbSSK6vByzwGZrY5
+        O/wke3lvoRK3oqxu3c7hOT0=
+X-Google-Smtp-Source: ABdhPJxxC5kwQl8bk0MXIADHQnZjmGCGtons4lKKmkx7ojsSH/ec5mrPjiGZkqwDJlbHiwJorl6X8g==
+X-Received: by 2002:ac2:4ec3:: with SMTP id p3mr12355176lfr.556.1627912722499;
+        Mon, 02 Aug 2021 06:58:42 -0700 (PDT)
 Received: from mobilestation ([95.79.127.110])
-        by smtp.gmail.com with ESMTPSA id o10sm962492lfl.129.2021.08.02.06.40.22
+        by smtp.gmail.com with ESMTPSA id o19sm961005lfk.299.2021.08.02.06.58.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Aug 2021 06:40:23 -0700 (PDT)
-Date:   Mon, 2 Aug 2021 16:40:21 +0300
+        Mon, 02 Aug 2021 06:58:41 -0700 (PDT)
+Date:   Mon, 2 Aug 2021 16:58:39 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org,
         Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v1 1/4] gpio: dwapb: Unify ACPI enumeration checks in
- get_irq() and configure_irqs()
-Message-ID: <20210802134021.flrkpmlrcjfxdrdr@mobilestation>
+Subject: Re: [PATCH v1 2/4] gpio: dwapb: Read GPIO base from gpio-base
+ property
+Message-ID: <20210802135839.4clqd34npppwasyh@mobilestation>
 References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
+ <20210726125436.58685-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210726125436.58685-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Andy
-Thanks for the cleanup series. A tiny note is below.
++Cc Rob
 
-On Mon, Jul 26, 2021 at 03:54:33PM +0300, Andy Shevchenko wrote:
-> Shared IRQ is only enabled for ACPI enumeration, there is no need
-> to have a special flag for that, since we simple can test if device
-> has been enumerated by ACPI. This unifies the checks in dwapb_get_irq()
-> and dwapb_configure_irqs().
+On Mon, Jul 26, 2021 at 03:54:34PM +0300, Andy Shevchenko wrote:
+> For backward compatibility with some legacy devices introduce
+> a new (*) property gpio-base to read GPIO base. This will allow
+> further cleanup of the driver.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpio-dwapb.c                | 13 ++++++-------
->  drivers/mfd/intel_quark_i2c_gpio.c       |  1 -
->  include/linux/platform_data/gpio-dwapb.h |  1 -
->  3 files changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index 3eb13d6d31ef..f6ae69d5d644 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -436,12 +436,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
->  	pirq->irqchip.irq_set_wake = dwapb_irq_set_wake;
->  #endif
->  
+> *) Note, it's not new for GPIO library since mockup driver is
+>    using it already.
 
-> -	if (!pp->irq_shared) {
-> -		girq->num_parents = pirq->nr_irqs;
-> -		girq->parents = pirq->irq;
-> -		girq->parent_handler_data = gpio;
-> -		girq->parent_handler = dwapb_irq_handler;
-> -	} else {
-> +	if (has_acpi_companion(gpio->dev)) {
+You are right but I don't think it's a good idea to advertise the
+pure Linux-internal property "gpio-base" to any use-case like OF
+and ACPI FW nodes. Especially seeing we don't have it described in the
+DT-bindings and noting that the mockup driver is dedicated for the
+GPIO tests only. What about restricting the property usage for the
+SW-nodes only by adding an additional check: is_software_node() here?
 
-Before this patch the platform flag irq_shared has been as kind of a
-hint regarding the shared IRQ case being covered here. But now it
-doesn't seem obvious why we've got the ACPI and ACPI-less cases
-differently handled. What about adding a small comment about that?
-E.g. like this: "Intel ACPI-based platforms mostly have the DW APB
-GPIO IRQ lane shared between several devices. In that case the
-parental IRQ has to be handled in the shared way so to be properly
-delivered to all the connected devices." or something more detailed
-for your preference. After that the rest of the comments in the
-if-clause could be discarded.
-
-Other than that, feel free to add:
->  drivers/gpio/gpio-dwapb.c                | 13 ++++++-------
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
-Tested-by: Serge Semin <fancer.lancer@gmail.com>
+@Linus, @Bartosz, @Rob, what do you think about that?
 
 -Sergey
 
->  		/* This will let us handle the parent IRQ in the driver */
->  		girq->num_parents = 0;
->  		girq->parents = NULL;
-> @@ -458,6 +453,11 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
->  			dev_err(gpio->dev, "error requesting IRQ\n");
->  			goto err_kfree_pirq;
->  		}
-> +	} else {
-> +		girq->num_parents = pirq->nr_irqs;
-> +		girq->parents = pirq->irq;
-> +		girq->parent_handler_data = gpio;
-> +		girq->parent_handler = dwapb_irq_handler;
->  	}
->  
->  	girq->chip = &pirq->irqchip;
-> @@ -581,7 +581,6 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index f6ae69d5d644..e3011d4e17b0 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -581,7 +581,8 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
 >  			pp->ngpio = DWAPB_MAX_GPIOS;
 >  		}
 >  
-> -		pp->irq_shared	= false;
->  		pp->gpio_base	= -1;
+> -		pp->gpio_base	= -1;
+> +		if (fwnode_property_read_u32(fwnode, "gpio-base", &pp->gpio_base))
+> +			pp->gpio_base = -1;
 >  
 >  		/*
-> diff --git a/drivers/mfd/intel_quark_i2c_gpio.c b/drivers/mfd/intel_quark_i2c_gpio.c
-> index 01935ae4e9e1..a43993e38b6e 100644
-> --- a/drivers/mfd/intel_quark_i2c_gpio.c
-> +++ b/drivers/mfd/intel_quark_i2c_gpio.c
-> @@ -227,7 +227,6 @@ static int intel_quark_gpio_setup(struct pci_dev *pdev)
->  	pdata->properties->ngpio	= INTEL_QUARK_MFD_NGPIO;
->  	pdata->properties->gpio_base	= INTEL_QUARK_MFD_GPIO_BASE;
->  	pdata->properties->irq[0]	= pci_irq_vector(pdev, 0);
-> -	pdata->properties->irq_shared	= true;
->  
->  	cell->platform_data = pdata;
->  	cell->pdata_size = sizeof(*pdata);
-> diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
-> index 0aa5c6720259..535e5ed549d9 100644
-> --- a/include/linux/platform_data/gpio-dwapb.h
-> +++ b/include/linux/platform_data/gpio-dwapb.h
-> @@ -14,7 +14,6 @@ struct dwapb_port_property {
->  	unsigned int	ngpio;
->  	unsigned int	gpio_base;
->  	int		irq[DWAPB_MAX_GPIOS];
-> -	bool		irq_shared;
->  };
->  
->  struct dwapb_platform_data {
+>  		 * Only port A can provide interrupts in all configurations of
 > -- 
 > 2.30.2
 > 
