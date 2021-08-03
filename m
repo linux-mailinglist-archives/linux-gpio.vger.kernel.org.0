@@ -2,216 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AEDD3DF58A
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 21:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ADDB3DF806
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Aug 2021 00:38:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239837AbhHCTY1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Aug 2021 15:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47646 "EHLO
+        id S229931AbhHCWix (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Aug 2021 18:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239807AbhHCTY0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 15:24:26 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E7EC061757
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Aug 2021 12:24:15 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id r1so20494711iln.6
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Aug 2021 12:24:15 -0700 (PDT)
+        with ESMTP id S233459AbhHCWi0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 18:38:26 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE3EC061757;
+        Tue,  3 Aug 2021 15:38:13 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d1so864341pll.1;
+        Tue, 03 Aug 2021 15:38:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y/96BfjABv+2ZK/jpZFi0iu7CC65Hm3uVOTHPl3m7mc=;
-        b=Ko8QTO3UZSL5npPAstJpoSRhMsNNBsd/m+RXr2vM4jmlvFN7qFCzS2Pel07CpVgoeX
-         fwBBq7ddPVKUAPWN8a87MqRGb9P2/Z5aAKH1ENiY25Hn5M09EgDvChWoZ+USVGBrawS/
-         Aurnhygcg52ToqtSfIQtMLFg6HScrNQXM/33c0M01M+itkfov12rPTIg/b34qBXMBmub
-         pvWAIUI8mQRFLtAGY3PSt4bdvqkYmBZFcQbSHioXvnXQUGxeSdMmNDj64L5n6UPopYef
-         O3wwWReeV6RTCpGuPSuQHOA6sWKPNyoSmF8I9L+1nEsrKSHExR9zVAFTngqD41zI61c4
-         ZAqQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mtMk8/id55tqF/zH96Hx9KDINyNpzaA5iOGXRjHT2Ag=;
+        b=jleiWgAB+ErOvppHrQTI6/6LNUqK5nTuAAsk807AE73YrDfBinh5rbszK868ED/peS
+         GLy2HCBng6nFc7zfdRHugPswGeAdXhun3S6JJqmf8qI1QGz4CvMw4PEcKg1mn8vaj5kQ
+         +p7ALCHjNLtOB9bbpVLBolZ1qao1nuiGmPFQFk6JOYFM9HXLw+Uu8/MsGSsyH7PWaset
+         b3n5c/rqQEc2uvhUHqAZXUqx0kIfOiWqJjm4rYNuybq8eYOjkxdX8THxlssEuf7Azu/u
+         M8n2wSq3LFvMRVWltVD34WmwsI/nWrD5UAFhP2UdnuUBlpM1ruMnkAQNssWnWsm0KcMl
+         FORA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y/96BfjABv+2ZK/jpZFi0iu7CC65Hm3uVOTHPl3m7mc=;
-        b=iek6J83PfN3PHieduBjzlb+sLzQcw7pwJy3oKS5lEpbBIv5kdtf8oHdKKhzkADPLZ5
-         1uwd6BOFFN9XMPf/Z/hlH3mHKcYmwLN+jOICUVzsEd2CjED1FeJ7svzrXYuSrgD2Vf/M
-         oNMF8NoTK6yY/99k2/bPgbNtLquEl5CqbUSOkrL5/UAQX836HasL8f/WtwzGIN5EAjz+
-         VqnQw07FnAomcXals5m7bAclhDE2xChHFrlIofddlCjI0XBENQq9IS+ZKl+Xhl0tVKex
-         kqZzoGKTTs2gvI5MzotgbOhb6CKlIrPeDf8egZCCEyLxDH5FB5H5M9wUNGK63vyL2lKO
-         Vchw==
-X-Gm-Message-State: AOAM530ffbdZal/jNusuvbRjlTmdCynX39k0h0I8V4mfNQ4U7sVhGhK1
-        QCWN/l0Uj1peh7sb+AGVbtx42h2tFLxuF9K7l/TLjw==
-X-Google-Smtp-Source: ABdhPJyX1ZSfqH/AM+chZ4P6MWp2pVXcWeKNvN7A233YTlajJvq47+chl66UqJg64+jhJfxV2EFAZb7KkWOPXkqX60s=
-X-Received: by 2002:a05:6e02:5cf:: with SMTP id l15mr2268307ils.90.1628018655151;
- Tue, 03 Aug 2021 12:24:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mtMk8/id55tqF/zH96Hx9KDINyNpzaA5iOGXRjHT2Ag=;
+        b=flySSOElmr0oCgyNJAuYrYgpFRc81+8rgTWsKlbGOeS7MwIi6as2z0TLejCdXt5saI
+         nvxcFoLXda5V77OaAfKxbn8KzQree8jwx1y/nE5Iv0qCtbipzPGGXYaE8v7esas5m3iS
+         gPw808noc6+GRqqE63h+dEuBHXx1ExsBfUJ5Vuo7YZZuIlEoOnLzu/GdSEeLqZ+DW4RI
+         v4992rwnTKPX90561p6tiXAcmVVtgZyFiDLCjODlk3Bz4CHWIbrl31b/H/WbtSkDyo+M
+         aK7noYoZJosVKvQjCkKtwGJIktJrAarVD+WIWJJH+nuWHKnGcfDRe6S8dO6/oHSpDdJQ
+         LuEA==
+X-Gm-Message-State: AOAM533PmZ3OkaJGcCTU9aM6kYIajJiCEepMa22jKtrXmZExZKk/TCQH
+        z9ushqLg+4b97CyqyE5nrec=
+X-Google-Smtp-Source: ABdhPJz/24XejeMFwYlrbJbo/3K6SkKR/MpUdvnaGZ5Cz9m67paQR1r/TT1DZIYvou03g8MiNpktjg==
+X-Received: by 2002:a17:90a:3489:: with SMTP id p9mr6676048pjb.197.1628030293220;
+        Tue, 03 Aug 2021 15:38:13 -0700 (PDT)
+Received: from sol (106-69-177-173.dyn.iinet.net.au. [106.69.177.173])
+        by smtp.gmail.com with ESMTPSA id mr18sm207607pjb.39.2021.08.03.15.38.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Aug 2021 15:38:12 -0700 (PDT)
+Date:   Wed, 4 Aug 2021 06:38:05 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, robh+dt@kernel.org,
+        andriy.shevchenko@linux.intel.com
+Subject: Re: [RFC 08/11] gpiolib: cdev: Add hardware timestamp clock type
+Message-ID: <20210803223805.GA5020@sol>
+References: <20210625235532.19575-1-dipenp@nvidia.com>
+ <20210625235532.19575-9-dipenp@nvidia.com>
+ <20210701142433.GC34285@sol>
+ <ba32de51-0639-36e2-3575-1f7915542a19@nvidia.com>
+ <20210731060556.GA11043@sol>
+ <1102e1b2-9d53-fc93-b7c5-bfeb9eb2e18d@nvidia.com>
 MIME-Version: 1.0
-References: <20210716221744.5445-1-robert.marko@sartura.hr>
- <CAMpxmJXy1L-OC7k+h6pOwFGNS8WntNSMjP1Kvu7tnCQvGNwnRw@mail.gmail.com> <CAMpxmJVJzaRRe5XyyZM6qOzpi2t36hSbsTec=M3EUk9w17W4qQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJVJzaRRe5XyyZM6qOzpi2t36hSbsTec=M3EUk9w17W4qQ@mail.gmail.com>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Tue, 3 Aug 2021 21:24:04 +0200
-Message-ID: <CA+HBbNGZ7=bfVQ0k6Yz6ywomBpf7upG7gOxN8dJEd6ErdWzaMA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: tn48m: Add support for Delta TN4810M CPLD
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1102e1b2-9d53-fc93-b7c5-bfeb9eb2e18d@nvidia.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 2, 2021 at 2:12 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
->
-> On Mon, Aug 2, 2021 at 2:10 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
+On Tue, Aug 03, 2021 at 03:41:56PM -0700, Dipen Patel wrote:
+> 
+> On 7/30/21 11:05 PM, Kent Gibson wrote:
+> > On Thu, Jul 29, 2021 at 08:07:15PM -0700, Dipen Patel wrote:
+> >> On 7/1/21 7:24 AM, Kent Gibson wrote:
+> > <snip>
+> >>>>  			ret = gpiod_direction_output(desc, val);
+> >>>>  			if (ret)
+> >>>>  				return ret;
+> >>>> @@ -1152,6 +1186,13 @@ static long linereq_set_config_unlocked(struct linereq *lr,
+> >>>>  					polarity_change);
+> >>>>  			if (ret)
+> >>>>  				return ret;
+> >>>> +
+> >>>> +			/* Check if new config sets hardware assisted clock */
+> >>>> +			if (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE) {
+> >>>> +				ret = gpiod_hw_timestamp_control(desc, true);
+> >>>> +				if (ret)
+> >>>> +					return ret;
+> >>>> +			}
+> >>>>  		}
+> >>>>  
+> >>> The error code here can come from the pinctrl timestamp_control(), so it
+> >>> should be sanitised before being returned to userspace.
+> >> I do not understand what do you mean by sanitise. I just followed what
+> >>
+> >> gpiod_direction_output did just above which also returns ret from gpio
+> >>
+> >> driver code similar to timestamp_control API.
+> >>
+> > In this context, sanitise means convert any kernel internal error codes
+> > to their userspace equivalent before returning them to userspace.
 > >
-> > On Sat, Jul 17, 2021 at 12:17 AM Robert Marko <robert.marko@sartura.hr> wrote:
-> > >
-> > > Delta TN4810M uses a similar CPLD GPIO expander
-> > > like the TN48M, but it has pins for 48 SFP+ ports,
-> > > making a total of 192 pins.
-> > > It also provides the TX fault pins which the TN48M
-> > > does not.
-> > >
-> > > Only TX disable pins like on the TN48M are output
-> > > ones.
-> > >
-> > > Thankfully, regmap GPIO allows for the driver to be
-> > > easily extended to support the TN4810M.
-> > >
-> > > Note that this patch depends on the following series:
-> > > https://patchwork.ozlabs.org/project/linux-gpio/list/?series=247538
-> > >
-> > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > > ---
-> > >  drivers/gpio/gpio-tn48m.c | 56 ++++++++++++++++++++++++++++++++++++---
-> > >  1 file changed, 52 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/gpio/gpio-tn48m.c b/drivers/gpio/gpio-tn48m.c
-> > > index b12a6b4bc4b3..e429e7ade941 100644
-> > > --- a/drivers/gpio/gpio-tn48m.c
-> > > +++ b/drivers/gpio/gpio-tn48m.c
-> > > @@ -19,6 +19,10 @@ enum tn48m_gpio_type {
-> > >         TN48M_SFP_TX_DISABLE = 1,
-> > >         TN48M_SFP_PRESENT,
-> > >         TN48M_SFP_LOS,
-> > > +       TN4810M_SFP_TX_DISABLE,
-> > > +       TN4810M_SFP_TX_FAULT,
-> > > +       TN4810M_SFP_PRESENT,
-> > > +       TN4810M_SFP_LOS,
-> > >  };
-> > >
-> > >  static int tn48m_gpio_probe(struct platform_device *pdev)
-> > > @@ -46,17 +50,36 @@ static int tn48m_gpio_probe(struct platform_device *pdev)
-> > >
-> > >         config.regmap = regmap;
-> > >         config.parent = &pdev->dev;
-> > > -       config.ngpio = 4;
-> > > +       config.ngpio_per_reg = 8;
-> > >
-> > >         switch (type) {
-> > >         case TN48M_SFP_TX_DISABLE:
-> > >                 config.reg_set_base = base;
-> > > +               config.ngpio = 4;
-> > >                 break;
-> > >         case TN48M_SFP_PRESENT:
-> > >                 config.reg_dat_base = base;
-> > > +               config.ngpio = 4;
-> > >                 break;
-> > >         case TN48M_SFP_LOS:
-> > >                 config.reg_dat_base = base;
-> > > +               config.ngpio = 4;
-> > > +               break;
-> > > +       case TN4810M_SFP_TX_DISABLE:
-> > > +               config.reg_set_base = base;
-> > > +               config.ngpio = 48;
-> > > +               break;
-> > > +       case TN4810M_SFP_TX_FAULT:
-> > > +               config.reg_dat_base = base;
-> > > +               config.ngpio = 48;
-> > > +               break;
-> > > +       case TN4810M_SFP_PRESENT:
-> > > +               config.reg_dat_base = base;
-> > > +               config.ngpio = 48;
-> > > +               break;
-> > > +       case TN4810M_SFP_LOS:
-> > > +               config.reg_dat_base = base;
-> > > +               config.ngpio = 48;
-> > >                 break;
-> > >         default:
-> > >                 dev_err(&pdev->dev, "unknown type %d\n", type);
-> > > @@ -67,9 +90,34 @@ static int tn48m_gpio_probe(struct platform_device *pdev)
-> > >  }
-> > >
-> > >  static const struct of_device_id tn48m_gpio_of_match[] = {
-> > > -       { .compatible = "delta,tn48m-gpio-sfp-tx-disable", .data = (void *)TN48M_SFP_TX_DISABLE },
-> > > -       { .compatible = "delta,tn48m-gpio-sfp-present", .data = (void *)TN48M_SFP_PRESENT },
-> > > -       { .compatible = "delta,tn48m-gpio-sfp-los", .data = (void *)TN48M_SFP_LOS },
-> > > +       {
-> > > +               .compatible = "delta,tn48m-gpio-sfp-tx-disable",
-> > > +               .data = (void *)TN48M_SFP_TX_DISABLE
-> > > +       },
-> > > +       {
-> > > +               .compatible = "delta,tn48m-gpio-sfp-present",
-> > > +               .data = (void *)TN48M_SFP_PRESENT
-> > > +       },
-> > > +       {
-> > > +               .compatible = "delta,tn48m-gpio-sfp-los",
-> > > +               .data = (void *)TN48M_SFP_LOS
-> > > +       },
-> > > +       {
-> > > +               .compatible = "delta,tn4810m-gpio-sfp-tx-disable",
-> > > +               .data = (void *)TN4810M_SFP_TX_DISABLE
-> > > +       },
-> > > +       {
-> > > +               .compatible = "delta,tn4810m-gpio-sfp-tx-fault",
-> > > +               .data = (void *)TN4810M_SFP_TX_FAULT
-> > > +       },
-> > > +       {
-> > > +               .compatible = "delta,tn4810m-gpio-sfp-present",
-> > > +               .data = (void *)TN4810M_SFP_PRESENT
-> > > +       },
-> > > +       {
-> > > +               .compatible = "delta,tn4810m-gpio-sfp-los",
-> > > +               .data = (void *)TN4810M_SFP_LOS
-> > > +       },
-> > >         { }
-> > >  };
-> > >  MODULE_DEVICE_TABLE(of, tn48m_gpio_of_match);
-> > > --
-> > > 2.31.1
-> > >
+> > Fair enough with the gpiod_direction_output() comparison.  I was thinking
+> > of a patch Andy recently submitted[1] to sanitise gpiod_request(), which
+> > can sometimes return EPROBE_DEFER.  But I guess we can wait until we find
+> > a case of a driver returning an internal error code and add a sanitiser
+> > then.
+> Make sense, I will add sanity check
 > >
-> > This looks good to me. I suppose the other patches are going in
-> > through the MFD tree. I don't see anything that can fail here at
-> > build-time - can you confirm that I can pick these patches up
-> > separately for v5.15?
-> >
-> > Bartosz
->
-> Scratch that, I now saw Linus' comment about the special purpose pins
-> under the other series. Let's clear that up first.
 
-Yeah,
-I have finally replied to Linus,
-hopefully, we can clear it up.
+But I said don't bother yet.  And you need to know what errors to sanitise
+before you sanitise them - unless you want to run through all the
+possibilities that can be returned to userspace.
 
-Thanks,
-Robert
->
-> Bart
+Cheers,
+Kent.
 
-
-
--- 
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
