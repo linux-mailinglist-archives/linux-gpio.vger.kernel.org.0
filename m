@@ -2,511 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52F323DEC31
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 13:37:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD423DEC67
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 13:41:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235705AbhHCLhi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Aug 2021 07:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43754 "EHLO
+        id S235942AbhHCLls (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Aug 2021 07:41:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235669AbhHCLha (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 07:37:30 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B6CC0617A2
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Aug 2021 04:37:19 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id t3so21244229plg.9
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Aug 2021 04:37:19 -0700 (PDT)
+        with ESMTP id S235945AbhHCLlm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 07:41:42 -0400
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA0BC061799
+        for <linux-gpio@vger.kernel.org>; Tue,  3 Aug 2021 04:41:28 -0700 (PDT)
+Received: by mail-ua1-x92d.google.com with SMTP id 79so8065190uau.9
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Aug 2021 04:41:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lyHPGnrDqtjmesKnhAqm7ap8dmXtrIEAp5hauUQrxIg=;
-        b=yIbKAhAQb5ITTaZWHl5XueJVHbzOPOD7c0swK8JDs6HfDU4sVhK7fWZh/xFgxYYggk
-         QK49KQ46ZmDc9IXDnM3yJpitU05jEi9yL9rBXz24tx6/llAuRGPgh7tbI1D+6271/wea
-         MC6mt9DaSc0GyNILRlSWrLYd6xD0Uy5C1iy3gnL3FHgytiSG3Wxn2EmjbEl1IDwtu55F
-         W+vQeA1xN+ALI2cQuHIxkVODcd7RjUq7zqlmRRASsKFbJn5VPhl8+I/tIM81CMhBmKcK
-         gOYyqrR8tciDzwVvklhiG1OZRMH8yqRe5zA7neGMc6OoX6O/GW1a3xVZXW514j6+75z2
-         1S2Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q9weUQNZb8zSNK5Fi3st7B7Mx/yd5pLorJlvNfQAB7M=;
+        b=kfcBVwLo2v4t80n4OumhhW192grQ72/pi1j+v0NLCEfgB2B7gJ5T9Az1FmJquZjew+
+         pV28mDG/VvEawMLGiiyTlwSYOpy4tuqlTl0HdBcu/rJlfa2S6EkvhYc9Gzp+5ly2XoMA
+         JmTF+5CQu64TXVH5tUYJTSG/JR3Y/SZutL+lx90PjFoWTf5hBfWsz/Szga2pgnAGiZnr
+         sPZX1K4poC/VjFsxpeM5+nic+zPT9zJwux1h+BGJA5K8BL6/6Zh77XjkUnLJYtocjyeK
+         9zwoiTXM6DVIqKTxJwvhgIZGQNPFBomEZ57Cjfd/vhcTWVXvqrmhZQBBHonRj5c9Unfi
+         KjWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lyHPGnrDqtjmesKnhAqm7ap8dmXtrIEAp5hauUQrxIg=;
-        b=bqvJdkN/jfUjxEUR1zhSa702BRD6hfNla9jSTFTNUJiw1MYTG8F0B4LAhr9DH50SLg
-         Z7JhAu+hkHqHooF3D8C/S62QyK5UQ49eFlypZ96Nvr/3Cb1n3xKKDiqdsRftLfV8eAZf
-         +s51Twc3/EhFwGElxy9fhxVbhQHTbOR1sFKxXybPcJAUrEVl1azbdhMpyYDYCaS5Ps++
-         aNaPBBI93XHGmosC7gYr18KTyWVz5SDfKj2iuxjh0f0ktWbeE2vqoqcPL6E9Crdn0zR7
-         XkyvkpCYqZ6VjaOamfGR/MvMrBoj8eAA2meMAdLsJw0+y3WnDOPQ6oDXvCxXSTQPwZBC
-         Uqpg==
-X-Gm-Message-State: AOAM531Kx6MWNXqoc+TLI9N2UXINQispiBY4p16NlXj/jCnL2DpyTSOv
-        12SuOsqseetMmoImlG+cL8klbw==
-X-Google-Smtp-Source: ABdhPJzk/HKT1QqpIOv0teFh+F2fwM7w3ipgn+FFVfMcJFQ78YWZXYR0V3mygUzfqI3x7afQZSaveg==
-X-Received: by 2002:a17:90a:aa05:: with SMTP id k5mr21855090pjq.47.1627990638742;
-        Tue, 03 Aug 2021 04:37:18 -0700 (PDT)
-Received: from localhost ([122.172.201.85])
-        by smtp.gmail.com with ESMTPSA id t37sm15390085pfg.14.2021.08.03.04.37.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Aug 2021 04:37:18 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Arnd Bergmann <arnd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        stratos-dev@op-lists.linaro.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH V4 2/2] gpio: virtio: Add IRQ support
-Date:   Tue,  3 Aug 2021 17:06:56 +0530
-Message-Id: <75c8e6e5e8dfa1889938f3a6b2d991763c7a3717.1627989586.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1627989586.git.viresh.kumar@linaro.org>
-References: <cover.1627989586.git.viresh.kumar@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q9weUQNZb8zSNK5Fi3st7B7Mx/yd5pLorJlvNfQAB7M=;
+        b=UYQAAWrtTk/AtY4EPy1gsxD9J+oNlZH85UQI2KydfjhJvmY3T1byhxNx4DKMET8vgW
+         UahRvg8V3/6hykmLiF7F40vM7904cA3/r5SuI4i7KA27eX7Luvk3j6FLQh0zRzraUeZK
+         NimePumTuPX9kiz2MkOuvtiqKE8EAIVkTnMSm/Ig7V+Upsu/IdMLBjIJu2H5fSUOt1tQ
+         7dISZOOAPlVidavjMxeV9j4ERjLTx+AA5ntC8ZwCcKHsDEh1jyKb+g/dye84a7A8fAKv
+         Yjvmb1WJ0zcZtNoYRV3/X1XRgssqVJRy4ZzC1npfO1rQGnFFC69wBDytvZQlNSgYbb/A
+         C2zg==
+X-Gm-Message-State: AOAM531xFIHanwhU5/zuUC89NjiiF+qRzShKOBj4+DO9qn0hUGzvZtXN
+        fE3SoUcVlVOxjYJxPmAGlo5PF683FHmIsCHZ74lSZw==
+X-Google-Smtp-Source: ABdhPJyMm8jbzan+OPnDFk8P5ouN4DVyswFjAchUVuSljur2ivO50vwXOgB9rQG9t/IlQF5od7rElB1Vo73792CVc80=
+X-Received: by 2002:ab0:4e22:: with SMTP id g34mr14114826uah.17.1627990887450;
+ Tue, 03 Aug 2021 04:41:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210730144922.29111-1-semen.protsenko@linaro.org>
+ <20210730144922.29111-5-semen.protsenko@linaro.org> <a1701931-136e-235c-8392-a3f64c050d74@canonical.com>
+ <CAPLW+4mMCzzyqqJTse-UEpjQoVu1b-9Xz3_3L=nmg63uKYFnGw@mail.gmail.com> <7364ccb2-70da-6400-ae6d-6a30171b6678@canonical.com>
+In-Reply-To: <7364ccb2-70da-6400-ae6d-6a30171b6678@canonical.com>
+From:   Sam Protsenko <semen.protsenko@linaro.org>
+Date:   Tue, 3 Aug 2021 14:41:15 +0300
+Message-ID: <CAPLW+4m=rAAcRuRp7oC4_opjPpM=eVyeBipbaC+V=wtjErWxUQ@mail.gmail.com>
+Subject: Re: [PATCH 04/12] tty: serial: samsung: Init USI to keep clocks running
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
+        Ryu Euiyoul <ryu.real@samsung.com>,
+        Tom Gall <tom.gall@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds IRQ support for the virtio GPIO driver. Note that this
-uses the irq_bus_lock/unlock() callbacks, since those operations over
-virtio may sleep. Also the notifications for the eventq are processed
-using a work item to allow sleep-able operations.
+On Tue, 3 Aug 2021 at 10:37, Krzysztof Kozlowski
+<krzysztof.kozlowski@canonical.com> wrote:
+>
+> On 03/08/2021 01:06, Sam Protsenko wrote:
+>
+> (...)
+>
+> >>> diff --git a/include/linux/serial_s3c.h b/include/linux/serial_s3c.h
+> >>> index f6c3323fc4c5..013c2646863e 100644
+> >>> --- a/include/linux/serial_s3c.h
+> >>> +++ b/include/linux/serial_s3c.h
+> >>> @@ -28,6 +28,15 @@
+> >>>  #define S3C2410_UFSTAT         (0x18)
+> >>>  #define S3C2410_UMSTAT         (0x1C)
+> >>>
+> >>> +/* USI Control Register offset */
+> >>> +#define USI_CON                      (0xC4)
+> >>> +/* USI Option Register offset */
+> >>> +#define USI_OPTION           (0xC8)
+> >>> +/* USI_CON[0] = 0b0: clear USI global software reset (Active High) */
+> >>> +#define USI_RESET            (0<<0)
+> >>
+> >> Just 0x0. I understand you wanted to hint it is a bit field, but the
+> >> shift of 0 actually creates more questions.
+> >>
+> >
+> > After some consideration I decided to adhere to existing style and do
+> > something like this (in v2):
+> >
+> > 8<--------------------------------------------------------------------->8
+> > #define USI_CON          (0xC4)
+> > #define USI_OPTION      (0xC8)
+> >
+> > #define USI_CON_RESET_CLEAR        (0<<0)
+> > #define USI_CON_RESET_SET        (1<<0)
+> > #define USI_CON_RESET_MASK        (1<<0)
+> >
+> > #define USI_OPTION_HWACG_CLKREQ_ON    (1<<1)
+> > #define USI_OPTION_HWACG_CLKSTOP_ON    (1<<2)
+> > #define USI_OPTION_HWACG_MASK        (3<<1)
+> > 8<--------------------------------------------------------------------->8
+> >
+> > The whole reason for those comments was missing public TRM. But in the
+> > end I decided it just looks ugly. Also, this way I can do RMW
+> > operation (discussed above) in more logical way.
+> >
+> > Please let me know if code snippets above look good to you.
+>
+> Please skip the USI_CON_RESET_CLEAR. There is no such pattern in the
+> code. Clearing bit is an obvious operation and such code is already
+> everywhere:
+>     val &= ~USI_CON_RESET
+>
+> (or &= ~USI_RESET_MASK)
+>
+> Therefore for USI_CON_RESET only:
+>     #define USI_CON_RESET             (1<<0)
+>     #define USI_CON_RESET_MASK        (1<<0)
+>
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/gpio/Kconfig             |   1 +
- drivers/gpio/gpio-virtio.c       | 281 ++++++++++++++++++++++++++++++-
- include/uapi/linux/virtio_gpio.h |  25 +++
- 3 files changed, 303 insertions(+), 4 deletions(-)
+Sure, I'll make it so.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index e5993d6864fb..222f4ae98a35 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1672,6 +1672,7 @@ config GPIO_MOCKUP
- config GPIO_VIRTIO
- 	tristate "VirtIO GPIO support"
- 	depends on VIRTIO
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say Y here to enable guest support for virtio-based GPIO controllers.
- 
-diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-index 3ed4240fe670..0be132d75396 100644
---- a/drivers/gpio/gpio-virtio.c
-+++ b/drivers/gpio/gpio-virtio.c
-@@ -17,6 +17,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/virtio_config.h>
-+#include <linux/workqueue.h>
- #include <uapi/linux/virtio_gpio.h>
- #include <uapi/linux/virtio_ids.h>
- 
-@@ -28,6 +29,16 @@ struct virtio_gpio_line {
- 	unsigned int rxlen;
- };
- 
-+struct vgpio_irq_line {
-+	u8 type;
-+	bool masked;
-+	bool update_pending;
-+	bool queued;
-+
-+	struct virtio_gpio_irq_request ireq;
-+	struct virtio_gpio_irq_response ires;
-+};
-+
- struct virtio_gpio {
- 	struct virtio_device *vdev;
- 	struct mutex lock; /* Protects virtqueue operation */
-@@ -35,6 +46,12 @@ struct virtio_gpio {
- 	struct virtio_gpio_config config;
- 	struct virtio_gpio_line *lines;
- 	struct virtqueue *request_vq;
-+
-+	/* fields for irq support */
-+	struct virtqueue *event_vq;
-+	struct mutex irq_lock; /* Protects irq operation */
-+	struct work_struct work;
-+	struct vgpio_irq_line *irq_lines;
- };
- 
- static int _virtio_gpio_req(struct virtio_gpio *vgpio, u16 type, u16 gpio,
-@@ -187,6 +204,220 @@ static void virtio_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
- 	virtio_gpio_req(vgpio, VIRTIO_GPIO_MSG_SET_VALUE, gpio, value, NULL);
- }
- 
-+/* Interrupt handling */
-+static void virtio_gpio_irq_prepare(struct virtio_gpio *vgpio, u16 gpio)
-+{
-+	struct vgpio_irq_line *irq_line = &vgpio->irq_lines[gpio];
-+	struct virtio_gpio_irq_request *ireq = &irq_line->ireq;
-+	struct virtio_gpio_irq_response *ires = &irq_line->ires;
-+	struct scatterlist *sgs[2], req_sg, res_sg;
-+	int ret;
-+
-+	ireq->gpio = cpu_to_le16(gpio);
-+	sg_init_one(&req_sg, ireq, sizeof(*ireq));
-+	sg_init_one(&res_sg, ires, sizeof(*ires));
-+	sgs[0] = &req_sg;
-+	sgs[1] = &res_sg;
-+
-+	ret = virtqueue_add_sgs(vgpio->event_vq, sgs, 1, 1, irq_line, GFP_KERNEL);
-+	if (ret) {
-+		dev_err(&vgpio->vdev->dev, "failed to add request to eventq\n");
-+		return;
-+	}
-+
-+	WARN_ON(irq_line->queued);
-+
-+	irq_line->queued = true;
-+	virtqueue_kick(vgpio->event_vq);
-+}
-+
-+static void virtio_gpio_irq_eoi(struct irq_data *d)
-+{
-+	/*
-+	 * Queue buffers, by calling virtio_gpio_irq_prepare(), from
-+	 * virtio_gpio_event_vq() itself, after taking into consideration the
-+	 * masking status of the interrupt.
-+	 */
-+}
-+
-+static void virtio_gpio_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct virtio_gpio *vgpio = gpiochip_get_data(gc);
-+	struct vgpio_irq_line *irq_line = &vgpio->irq_lines[d->hwirq];
-+
-+	irq_line->masked = true;
-+	irq_line->update_pending = true;
-+}
-+
-+static void virtio_gpio_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct virtio_gpio *vgpio = gpiochip_get_data(gc);
-+	struct vgpio_irq_line *irq_line = &vgpio->irq_lines[d->hwirq];
-+
-+	irq_line->masked = false;
-+	irq_line->update_pending = true;
-+}
-+
-+static int virtio_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct virtio_gpio *vgpio = gpiochip_get_data(gc);
-+	struct vgpio_irq_line *irq_line = &vgpio->irq_lines[d->hwirq];
-+
-+	switch (type) {
-+	case IRQ_TYPE_NONE:
-+		type = VIRTIO_GPIO_IRQ_TYPE_NONE;
-+		break;
-+	case IRQ_TYPE_EDGE_RISING:
-+		type = VIRTIO_GPIO_IRQ_TYPE_EDGE_RISING;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		type = VIRTIO_GPIO_IRQ_TYPE_EDGE_FALLING;
-+		break;
-+	case IRQ_TYPE_EDGE_BOTH:
-+		type = VIRTIO_GPIO_IRQ_TYPE_EDGE_BOTH;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		type = VIRTIO_GPIO_IRQ_TYPE_LEVEL_LOW;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		type = VIRTIO_GPIO_IRQ_TYPE_LEVEL_HIGH;
-+		break;
-+	default:
-+		dev_err(&vgpio->vdev->dev, "unsupported irq type: %u\n", type);
-+		return -EINVAL;
-+	}
-+
-+	irq_line->type = type;
-+	irq_line->update_pending = true;
-+
-+	return 0;
-+}
-+
-+static void update_irq_type(struct virtio_gpio *vgpio, u16 gpio, u8 type)
-+{
-+	virtio_gpio_req(vgpio, VIRTIO_GPIO_MSG_IRQ_TYPE, gpio, type, NULL);
-+}
-+
-+static void virtio_gpio_irq_bus_lock(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct virtio_gpio *vgpio = gpiochip_get_data(gc);
-+
-+	mutex_lock(&vgpio->irq_lock);
-+}
-+
-+static void virtio_gpio_irq_bus_sync_unlock(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct virtio_gpio *vgpio = gpiochip_get_data(gc);
-+	int gpio = d->hwirq;
-+	struct vgpio_irq_line *irq_line = &vgpio->irq_lines[gpio];
-+
-+	if (unlikely(!irq_line->update_pending))
-+		goto out;
-+
-+	if (irq_line->masked) {
-+		update_irq_type(vgpio, gpio, VIRTIO_GPIO_IRQ_TYPE_NONE);
-+	} else {
-+		update_irq_type(vgpio, gpio, irq_line->type);
-+		virtio_gpio_irq_prepare(vgpio, gpio);
-+	}
-+
-+	irq_line->update_pending = false;
-+
-+out:
-+	mutex_unlock(&vgpio->irq_lock);
-+}
-+
-+static struct irq_chip vgpio_irq_chip = {
-+	.name			= "virtio-gpio",
-+	.irq_eoi		= virtio_gpio_irq_eoi,
-+	.irq_mask		= virtio_gpio_irq_mask,
-+	.irq_unmask		= virtio_gpio_irq_unmask,
-+	.irq_set_type		= virtio_gpio_irq_set_type,
-+
-+	/* These are required to implement irqchip for slow busses */
-+	.irq_bus_lock		= virtio_gpio_irq_bus_lock,
-+	.irq_bus_sync_unlock	= virtio_gpio_irq_bus_sync_unlock,
-+};
-+
-+static void vgpio_work_handler(struct work_struct *work)
-+{
-+	struct virtio_gpio *vgpio = container_of(work, struct virtio_gpio,
-+						 work);
-+	struct device *dev = &vgpio->vdev->dev;
-+	struct vgpio_irq_line *irq_line;
-+	int irq, gpio, ret;
-+	unsigned int len;
-+
-+	mutex_lock(&vgpio->irq_lock);
-+
-+	while (true) {
-+		irq_line = virtqueue_get_buf(vgpio->event_vq, &len);
-+		if (!irq_line)
-+			break;
-+
-+		if (len != sizeof(irq_line->ires)) {
-+			dev_err(dev, "irq with incorrect length (%u : %lu)\n",
-+				len, sizeof(irq_line->ires));
-+			continue;
-+		}
-+
-+		WARN_ON(!irq_line->queued);
-+		irq_line->queued = false;
-+
-+		/* Buffer is returned after interrupt is masked */
-+		if (irq_line->ires.status == VIRTIO_GPIO_IRQ_STATUS_INVALID)
-+			continue;
-+
-+		if (WARN_ON(irq_line->ires.status != VIRTIO_GPIO_IRQ_STATUS_VALID))
-+			continue;
-+
-+		/*
-+		 * Find GPIO line number from the offset of irq_line within the
-+		 * irq_lines block. We can also get GPIO number from
-+		 * irq-request, but better not rely on a value returned by
-+		 * remote.
-+		 */
-+		gpio = irq_line - vgpio->irq_lines;
-+		WARN_ON(gpio >= vgpio->config.ngpio);
-+
-+		irq = irq_find_mapping(vgpio->gc.irq.domain, gpio);
-+		WARN_ON(!irq);
-+
-+		local_irq_disable();
-+		ret = generic_handle_irq(irq);
-+		local_irq_enable();
-+
-+		if (ret)
-+			dev_err(dev, "failed to handle interrupt: %d\n", ret);
-+
-+		/* The interrupt may have been disabled by now */
-+		if (irq_line->update_pending && irq_line->masked)
-+			update_irq_type(vgpio, gpio, VIRTIO_GPIO_IRQ_TYPE_NONE);
-+		else
-+			virtio_gpio_irq_prepare(vgpio, gpio);
-+
-+		irq_line->update_pending = false;
-+	};
-+
-+	mutex_unlock(&vgpio->irq_lock);
-+}
-+
-+static void virtio_gpio_event_vq(struct virtqueue *vq)
-+{
-+	struct virtio_gpio *vgpio = vq->vdev->priv;
-+
-+	/*
-+	 * We can't initiate virtio-gpio operations from hard irq context, as
-+	 * they need sleep-able context.
-+	 */
-+	schedule_work(&vgpio->work);
-+}
-+
- static void virtio_gpio_request_vq(struct virtqueue *vq)
- {
- 	struct virtio_gpio_line *line;
-@@ -211,14 +442,15 @@ static void virtio_gpio_free_vqs(struct virtio_device *vdev)
- static int virtio_gpio_alloc_vqs(struct virtio_gpio *vgpio,
- 				 struct virtio_device *vdev)
- {
--	const char * const names[] = { "requestq" };
-+	const char * const names[] = { "requestq", "eventq" };
- 	vq_callback_t *cbs[] = {
- 		virtio_gpio_request_vq,
-+		virtio_gpio_event_vq,
- 	};
--	struct virtqueue *vqs[1] = { NULL };
-+	struct virtqueue *vqs[2] = { NULL, NULL };
- 	int ret;
- 
--	ret = virtio_find_vqs(vdev, 1, vqs, cbs, names, NULL);
-+	ret = virtio_find_vqs(vdev, vgpio->irq_lines ? 2 : 1, vqs, cbs, names, NULL);
- 	if (ret) {
- 		dev_err(&vdev->dev, "failed to find vqs: %d\n", ret);
- 		return ret;
-@@ -226,11 +458,23 @@ static int virtio_gpio_alloc_vqs(struct virtio_gpio *vgpio,
- 
- 	if (!vqs[0]) {
- 		dev_err(&vdev->dev, "failed to find requestq vq\n");
--		return -ENODEV;
-+		goto out;
- 	}
- 	vgpio->request_vq = vqs[0];
- 
-+	if (vgpio->irq_lines && !vqs[1]) {
-+		dev_err(&vdev->dev, "failed to find eventq vq\n");
-+		goto out;
-+	}
-+	vgpio->event_vq = vqs[1];
-+
- 	return 0;
-+
-+out:
-+	if (vqs[0] || vqs[1])
-+		virtio_gpio_free_vqs(vdev);
-+
-+	return -ENODEV;
- }
- 
- static const char **virtio_gpio_get_names(struct virtio_gpio *vgpio)
-@@ -326,6 +570,29 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
- 	vgpio->gc.owner			= THIS_MODULE;
- 	vgpio->gc.can_sleep		= true;
- 
-+	/* Interrupt support */
-+	if (virtio_has_feature(vdev, VIRTIO_GPIO_F_IRQ)) {
-+		vgpio->irq_lines = devm_kcalloc(dev, config->ngpio,
-+						sizeof(*vgpio->irq_lines),
-+						GFP_KERNEL);
-+		if (!vgpio->irq_lines)
-+			return -ENOMEM;
-+
-+		/* The event comes from the outside so no parent handler */
-+		vgpio->gc.irq.parent_handler	= NULL;
-+		vgpio->gc.irq.num_parents	= 0;
-+		vgpio->gc.irq.parents		= NULL;
-+		vgpio->gc.irq.default_type	= IRQ_TYPE_NONE;
-+		vgpio->gc.irq.handler		= handle_fasteoi_irq;
-+		vgpio->gc.irq.chip		= &vgpio_irq_chip;
-+
-+		for (i = 0; i < config->ngpio; i++)
-+			vgpio->irq_lines[i].type = VIRTIO_GPIO_IRQ_TYPE_NONE;
-+
-+		mutex_init(&vgpio->irq_lock);
-+		INIT_WORK(&vgpio->work, vgpio_work_handler);
-+	}
-+
- 	ret = virtio_gpio_alloc_vqs(vgpio, vdev);
- 	if (ret)
- 		return ret;
-@@ -358,7 +625,13 @@ static const struct virtio_device_id id_table[] = {
- };
- MODULE_DEVICE_TABLE(virtio, id_table);
- 
-+static const unsigned int features[] = {
-+	VIRTIO_GPIO_F_IRQ,
-+};
-+
- static struct virtio_driver virtio_gpio_driver = {
-+	.feature_table		= features,
-+	.feature_table_size	= ARRAY_SIZE(features),
- 	.id_table		= id_table,
- 	.probe			= virtio_gpio_probe,
- 	.remove			= virtio_gpio_remove,
-diff --git a/include/uapi/linux/virtio_gpio.h b/include/uapi/linux/virtio_gpio.h
-index 844574acf095..297ffdae1a5d 100644
---- a/include/uapi/linux/virtio_gpio.h
-+++ b/include/uapi/linux/virtio_gpio.h
-@@ -5,12 +5,16 @@
- 
- #include <linux/types.h>
- 
-+/* Virtio GPIO Feature bits */
-+#define VIRTIO_GPIO_F_IRQ			0
-+
- /* Virtio GPIO request types */
- #define VIRTIO_GPIO_MSG_GET_NAMES		0x0001
- #define VIRTIO_GPIO_MSG_GET_DIRECTION		0x0002
- #define VIRTIO_GPIO_MSG_SET_DIRECTION		0x0003
- #define VIRTIO_GPIO_MSG_GET_VALUE		0x0004
- #define VIRTIO_GPIO_MSG_SET_VALUE		0x0005
-+#define VIRTIO_GPIO_MSG_IRQ_TYPE		0x0006
- 
- /* Possible values of the status field */
- #define VIRTIO_GPIO_STATUS_OK			0x0
-@@ -21,6 +25,14 @@
- #define VIRTIO_GPIO_DIRECTION_OUT		0x01
- #define VIRTIO_GPIO_DIRECTION_IN		0x02
- 
-+/* Virtio GPIO IRQ types */
-+#define VIRTIO_GPIO_IRQ_TYPE_NONE		0x00
-+#define VIRTIO_GPIO_IRQ_TYPE_EDGE_RISING	0x01
-+#define VIRTIO_GPIO_IRQ_TYPE_EDGE_FALLING	0x02
-+#define VIRTIO_GPIO_IRQ_TYPE_EDGE_BOTH		0x03
-+#define VIRTIO_GPIO_IRQ_TYPE_LEVEL_HIGH		0x04
-+#define VIRTIO_GPIO_IRQ_TYPE_LEVEL_LOW		0x08
-+
- struct virtio_gpio_config {
- 	__u16 ngpio;
- 	__u8 padding[2];
-@@ -44,4 +56,17 @@ struct virtio_gpio_response_get_names {
- 	__u8 value[];
- };
- 
-+/* Virtio GPIO IRQ Request / Response */
-+struct virtio_gpio_irq_request {
-+	__u16 gpio;
-+};
-+
-+struct virtio_gpio_irq_response {
-+	__u8 status;
-+};
-+
-+/* Possible values of the interrupt status field */
-+#define VIRTIO_GPIO_IRQ_STATUS_INVALID		0x0
-+#define VIRTIO_GPIO_IRQ_STATUS_VALID		0x1
-+
- #endif /* _LINUX_VIRTIO_GPIO_H */
--- 
-2.31.1.272.g89b43f80a514
-
+>
+> Best regards,
+> Krzysztof
