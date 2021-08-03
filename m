@@ -2,76 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C0053DF404
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 19:39:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E925E3DF41B
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 19:51:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238334AbhHCRjQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Aug 2021 13:39:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:34917 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238332AbhHCRjQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 3 Aug 2021 13:39:16 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10065"; a="200933717"
-X-IronPort-AV: E=Sophos;i="5.84,292,1620716400"; 
-   d="scan'208";a="200933717"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2021 10:39:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,292,1620716400"; 
-   d="scan'208";a="441268539"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Aug 2021 10:38:59 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 717C3169; Tue,  3 Aug 2021 20:39:29 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v1 1/1] gpiolib: Deduplicate forward declaration in the consumer.h header
-Date:   Tue,  3 Aug 2021 20:39:25 +0300
-Message-Id: <20210803173925.57216-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S238382AbhHCRvg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Aug 2021 13:51:36 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:40647 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S238316AbhHCRvg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 13:51:36 -0400
+X-IronPort-AV: E=Sophos;i="5.84,292,1620658800"; 
+   d="scan'208";a="89707983"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 04 Aug 2021 02:51:23 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5C7FA40BF58E;
+        Wed,  4 Aug 2021 02:51:21 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [RFC PATCH 0/4] Renesas RZ/G2L IRQC support
+Date:   Tue,  3 Aug 2021 18:51:05 +0100
+Message-Id: <20210803175109.1729-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-struct acpi_device is repeated in two branches of ifdeffery.
-Move it out and hence deduplicate.
+Hi All,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/gpio/consumer.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+The RZ/G2L Interrupt Controller is a front-end for the GIC found on
+Renesas RZ/G2L SoC's with below pins:
+- IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
+- GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
+  maximum of only 32 can be mapped to 32 GIC SPI interrupts,
+- NMI edge select.
 
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 566feb56601f..414b8f98d70f 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -680,10 +680,10 @@ struct acpi_gpio_mapping {
- 	unsigned int quirks;
- };
- 
--#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_ACPI)
--
- struct acpi_device;
- 
-+#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_ACPI)
-+
- int acpi_dev_add_driver_gpios(struct acpi_device *adev,
- 			      const struct acpi_gpio_mapping *gpios);
- void acpi_dev_remove_driver_gpios(struct acpi_device *adev);
-@@ -696,8 +696,6 @@ struct gpio_desc *acpi_get_and_request_gpiod(char *path, int pin, char *label);
- 
- #else  /* CONFIG_GPIOLIB && CONFIG_ACPI */
- 
--struct acpi_device;
--
- static inline int acpi_dev_add_driver_gpios(struct acpi_device *adev,
- 			      const struct acpi_gpio_mapping *gpios)
- {
+                                                                _____________
+                                                                |    GIC     |
+                                                                |  ________  |
+                                         ____________           | |        | |
+NMI ------------------------------------>|          |  SPI0-479 | | GIC-600| |
+                _______                  |          |------------>|        | |
+                |      |                 |          |  PPI16-31 | |        | |
+                |      | IRQ0-IRQ8       |   IRQC   |------------>|        | |
+P0_P48_4 ------>| GPIO |---------------->|          |           | |________| |
+                |      |GPIOINT0-122     |          |           |            |
+                |      |---------------->| TINT0-31 |           |            |
+                |______|                 |__________|           |____________|
+
+The proposed RFC patches, add the IRQ domains in GPIO (pinctrl driver) and the
+IRQC driver. The IRQC domain handles the actual SPI interrupt and upon reception
+of the interrupt it propagates to the GPIO IRQ domain to handle virq.
+Out of GPIOINT0-122 only 32 can be mapped to GIC SPI, this mapping is handled by
+the IRQC driver.
+
+GPIO interrupts TINT0-T31 support rising/falling/high/low trigger, support for
+both falling/rising edges is handled by the SW by toggling the RISING/FALLING
+(we might loose interrupts, I have done limited testing for SD card detection
+where interrupt is requested for both rising and falling edge).
+
+Please share your valuable comments on the above implementation.
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (4):
+  dt-bindings: interrupt-controller: Add Renesas RZ/G2L Interrupt
+    Controller
+  irqchip: Add RZ/G2L IA55 Interrupt Controller driver
+  pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO
+    interrupt
+  arm64: dts: renesas: r9a07g044: Add IRQC node to SoC DTSI
+
+ .../renesas,rzg2l-irqc.yaml                   | 129 ++++
+ arch/arm64/boot/dts/renesas/r9a07g044.dtsi    |  58 ++
+ drivers/irqchip/Kconfig                       |   8 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-renesas-rzg2l.c           | 557 ++++++++++++++++++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 205 +++++++
+ drivers/soc/renesas/Kconfig                   |   1 +
+ 7 files changed, 959 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+ create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
+
 -- 
-2.30.2
+2.17.1
 
