@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AB053DE60B
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 07:13:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB5DE3DE611
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 07:14:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233718AbhHCFNt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Aug 2021 01:13:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35776 "EHLO
+        id S234133AbhHCFOP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Aug 2021 01:14:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233758AbhHCFNo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 01:13:44 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14E08C06179A
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 22:13:34 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id e21so22286038pla.5
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 22:13:34 -0700 (PDT)
+        with ESMTP id S234103AbhHCFOO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 01:14:14 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24EAC061764
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 22:14:03 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d1so22324103pll.1
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 22:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=A/eExhXdIB0K8jv2+SmtKO1+FtOUyPYgVYzl6RJq3V8=;
-        b=UTBe3IQVAlVhEdWXsxUvzz2ICfA2z/fzXCB4Q5r+4bdnmj6mJoVLFsQE2GZqliTgUA
-         6raQ3ESffrnA6PFRdfN9nUwhzoiQlNbnvPQiGYKlHIzsoIpQEPi75Jq8wDIYDUI9+cBk
-         ZSD5pN7WfoHn2au99FIOdL6aoYbAxI8arJ3dg=
+        bh=zCrVK16loiXJ3V7D4GgzzzOuf3WsXTxumS9o+qZPR4s=;
+        b=emxV7L3n9Y2DIIgKrvrDXg+H2gYZcXE3dZpQVdT4WxnHK8nMYcqASMovjWBzUl/zpm
+         8ApSy6KZ4tQv37Sv40bzL8/5zH3/6TNtuSA1QoPiunYncqytd6QpD+Z+RNk/SHR8cZEd
+         YtQUDvfUIdpK1wBMPLx/vUNxcv+1+lbsl4d4c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=A/eExhXdIB0K8jv2+SmtKO1+FtOUyPYgVYzl6RJq3V8=;
-        b=D/14fNYam5YBx3J+wfYVo5hjWoOtCkC/vwBSCy1ZM8Uss6mRqVN4u8zpCPrYXQ0tsp
-         3MbqzRFWb4WC5tDPmUUBS/kdWyMsT63wZjdM50A4FVs7hsiDTB2FZLYsG0eIl2/VCHu8
-         XeItju+fXqu7JQBXhXs99gAVgkS/mU0crOvTLp3jC1gfqWXtHJc/aETG/ce4Ei/izK6F
-         zw0t44evbrEdtJObUZcEGfcxGrTSbMJ+jc4DqHmgbt9HL8d8umg9ZLK01V8SJdVcqTUW
-         dGVFb0mLnN4htAmS0jkhrV71jhkgVXjUySoDvvgEJwyonEbkueSthyFXY/j1vWvGANXE
-         2drw==
-X-Gm-Message-State: AOAM533Fzn0Ul15loWy6MJq8a4XEKGN2AyMDDO94z7vSvD0N6M4pGZSZ
-        jRElsXRrg4i6DSRPipng3NNqoQ==
-X-Google-Smtp-Source: ABdhPJzQt8TWRZsHH1uJM4CJVQw+lKk4RiXB/VDw+tt52D8vL7+IRXvqOexSWAwzK6UWFlXEaBzIUg==
-X-Received: by 2002:a63:4e51:: with SMTP id o17mr949944pgl.126.1627967613386;
-        Mon, 02 Aug 2021 22:13:33 -0700 (PDT)
+        bh=zCrVK16loiXJ3V7D4GgzzzOuf3WsXTxumS9o+qZPR4s=;
+        b=fyeJq+nKrDvX5drLbJpQIMNmPxjMpdFUCwNmZ8CQ1guIWhJc2hS3Ijz1TLFATMhUNT
+         OkPul60E6e3xc5fR6WKjScETont0iSww7LYnpH0xfAadwwmJHcy6RoKPduOqgKP/n2M4
+         WU1ToohZOb4d+7+HXHsq4KOpuRrtyWwTKwFpHKHsg3sK6m/ZmDY2GeutRM9RF83+Obrs
+         iZ6R3MyOKjiR4fCBjJp0WLILBxR1qjT2Nf+QS4gukWtzeEet8Xl2rS8vsJ6l2TId1I23
+         ylSim6cSu/mB+2adHt9grxt4nfOIRbFzKsNlxSiWIja6UgpEqhgdFk3+0gqm+0nQVda9
+         tsDw==
+X-Gm-Message-State: AOAM533cWEH7XfaEm4sL2OSchBg2/i4+dKKw7y+bxzQylS5nOWyFcf4L
+        wBO6Jai31K0Sq5GKjQuJvwVYtA==
+X-Google-Smtp-Source: ABdhPJxnWLc9L/K6/1qB0QHdTq821wQdTUFYx6zKWPIuWhgEbttWP+OIMtqVAOXPHW71at7G5YJMow==
+X-Received: by 2002:a05:6a00:1488:b029:332:5e67:1198 with SMTP id v8-20020a056a001488b02903325e671198mr20616011pfu.9.1627967642628;
+        Mon, 02 Aug 2021 22:14:02 -0700 (PDT)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:c800:1b1d:5677:31a7])
-        by smtp.gmail.com with ESMTPSA id x25sm115732pfq.28.2021.08.02.22.13.31
+        by smtp.gmail.com with ESMTPSA id x25sm115732pfq.28.2021.08.02.22.14.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Aug 2021 22:13:33 -0700 (PDT)
+        Mon, 02 Aug 2021 22:14:02 -0700 (PDT)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -53,9 +53,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/3] arm: dts: mt8183: Move pinfunc to include/dt-bindings/pinctrl
-Date:   Tue,  3 Aug 2021 13:13:17 +0800
-Message-Id: <20210803051318.2570994-2-hsinyi@chromium.org>
+Subject: [PATCH v3 3/3] dt-bindings: mediatek: convert pinctrl to yaml
+Date:   Tue,  3 Aug 2021 13:13:19 +0800
+Message-Id: <20210803051318.2570994-3-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.32.0.554.ge1b32706d8-goog
 In-Reply-To: <20210803051318.2570994-1-hsinyi@chromium.org>
 References: <20210803051318.2570994-1-hsinyi@chromium.org>
@@ -65,33 +65,1920 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Move mt8183-pinfunc.h into include/dt-bindings/pinctrl so that we can
-include it in yaml examples.
+Convert mt65xx, mt6796, mt7622, mt8183 bindings to yaml.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi                        | 2 +-
- .../mediatek => include/dt-bindings/pinctrl}/mt8183-pinfunc.h   | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename {arch/arm64/boot/dts/mediatek => include/dt-bindings/pinctrl}/mt8183-pinfunc.h (100%)
+v2->v3:
+fix comments in v2.
+---
+ .../pinctrl/mediatek,mt65xx-pinctrl.yaml      | 206 ++++++++
+ .../pinctrl/mediatek,mt6797-pinctrl.yaml      | 173 +++++++
+ .../pinctrl/mediatek,mt7622-pinctrl.yaml      | 373 +++++++++++++
+ .../pinctrl/mediatek,mt8183-pinctrl.yaml      | 228 ++++++++
+ .../bindings/pinctrl/pinctrl-mt65xx.txt       | 156 ------
+ .../bindings/pinctrl/pinctrl-mt6797.txt       |  83 ---
+ .../bindings/pinctrl/pinctrl-mt7622.txt       | 490 ------------------
+ .../bindings/pinctrl/pinctrl-mt8183.txt       | 132 -----
+ 8 files changed, 980 insertions(+), 861 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6797-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt6797.txt
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index f90df6439c088..1933045da95de 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -14,7 +14,7 @@
- #include <dt-bindings/reset-controller/mt8183-resets.h>
- #include <dt-bindings/phy/phy.h>
- #include <dt-bindings/thermal/thermal.h>
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
+new file mode 100644
+index 0000000000000..b977fbb8cb5e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
+@@ -0,0 +1,206 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/mediatek,mt65xx-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mediatek MT65xx Pin Controller Device Tree Bindings
++
++maintainers:
++  - Andy Teng <andy.teng@mediatek.com>
++
++description: |+
++  The Mediatek's Pin controller is used to control SoC pins.
++
++properties:
++  compatible:
++    enum:
++      - mediatek,mt2701-pinctrl
++      - mediatek,mt2712-pinctrl
++      - mediatek,mt6397-pinctrl
++      - mediatek,mt7623-pinctrl
++      - mediatek,mt8127-pinctrl
++      - mediatek,mt8135-pinctrl
++      - mediatek,mt8167-pinctrl
++      - mediatek,mt8173-pinctrl
++      - mediatek,mt8516-pinctrl
++
++  reg:
++    maxItems: 1
++
++  pins-are-numbered:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Specify the subnodes are using numbered pinmux to specify pins.
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++    description: |
++      Number of cells in GPIO specifier. Since the generic GPIO
++      binding is used, the amount of cells must be specified as 2. See the below
++      mentioned gpio binding representation for description of particular cells.
++
++  mediatek,pctl-regmap:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    minItems: 1
++    maxItems: 2
++    description: |
++      Should be phandles of the syscfg node.
++
++  interrupt-controller: true
++
++  interrupts:
++    minItems: 1
++    maxItems: 3
++
++  "#interrupt-cells":
++    const: 2
++
++required:
++  - compatible
++  - pins-are-numbered
++  - gpio-controller
++  - "#gpio-cells"
++
++patternProperties:
++  '-[0-9]+$':
++    type: object
++    additionalProperties: false
++    patternProperties:
++      'pins':
++        type: object
++        additionalProperties: false
++        description: |
++          A pinctrl node should contain at least one subnodes representing the
++          pinctrl groups available on the machine. Each subnode will list the
++          pins it needs, and how they should be configured, with regard to muxer
++          configuration, pullups, drive strength, input enable/disable and input
++          schmitt.
++        $ref: "/schemas/pinctrl/pincfg-node.yaml"
++
++        properties:
++          pinmux:
++            description:
++              integer array, represents gpio pin number and mux setting.
++              Supported pin number and mux varies for different SoCs, and are
++              defined as macros in <soc>-pinfunc.h directly.
++
++          bias-disable: true
++
++          bias-pull-up:
++            description: |
++              Besides generic pinconfig options, it can be used as the pull up
++              settings for 2 pull resistors, R0 and R1. User can configure those
++              special pins. Some macros have been defined for this usage, such
++              as MTK_PUPD_SET_R1R0_00. See dt-bindings/pinctrl/mt65xx.h for
++              valid arguments.
++
++          bias-pull-down: true
++
++          input-enable: true
++
++          input-disable: true
++
++          output-low: true
++
++          output-high: true
++
++          input-schmitt-enable: true
++
++          input-schmitt-disable: true
++
++          drive-strength:
++            description: |
++              Can support some arguments, such as MTK_DRIVE_4mA, MTK_DRIVE_6mA,
++              etc. See dt-bindings/pinctrl/mt65xx.h for valid arguments.
++
++        required:
++          - pinmux
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/pinctrl/mt8135-pinfunc.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        syscfg_pctl_a: syscfg-pctl-a@10005000 {
++          compatible = "mediatek,mt8135-pctl-a-syscfg", "syscon";
++          reg = <0 0x10005000 0 0x1000>;
++        };
++
++        syscfg_pctl_b: syscfg-pctl-b@1020c020 {
++          compatible = "mediatek,mt8135-pctl-b-syscfg", "syscon";
++          reg = <0 0x1020C020 0 0x1000>;
++        };
++
++        pinctrl@1c20800 {
++          compatible = "mediatek,mt8135-pinctrl";
++          reg = <0 0x1000B000 0 0x1000>;
++          mediatek,pctl-regmap = <&syscfg_pctl_a>, <&syscfg_pctl_b>;
++          pins-are-numbered;
++          gpio-controller;
++          #gpio-cells = <2>;
++          interrupt-controller;
++          #interrupt-cells = <2>;
++          interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++              <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++              <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++
++          i2c0_pins_a: i2c0-0 {
++            pins1 {
++              pinmux = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
++                <MT8135_PIN_101_SCL0__FUNC_SCL0>;
++              bias-disable;
++            };
++          };
++
++          i2c1_pins_a: i2c1-0 {
++            pins {
++              pinmux = <MT8135_PIN_195_SDA1__FUNC_SDA1>,
++                <MT8135_PIN_196_SCL1__FUNC_SCL1>;
++              bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++            };
++          };
++
++          i2c2_pins_a: i2c2-0 {
++            pins1 {
++              pinmux = <MT8135_PIN_193_SDA2__FUNC_SDA2>;
++              bias-pull-down;
++            };
++
++            pins2 {
++              pinmux = <MT8135_PIN_49_WATCHDOG__FUNC_GPIO49>;
++              bias-pull-up;
++            };
++          };
++
++          i2c3_pins_a: i2c3-0 {
++            pins1 {
++              pinmux = <MT8135_PIN_40_DAC_CLK__FUNC_GPIO40>,
++                <MT8135_PIN_41_DAC_WS__FUNC_GPIO41>;
++              bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++            };
++
++            pins2 {
++              pinmux = <MT8135_PIN_35_SCL3__FUNC_SCL3>,
++                <MT8135_PIN_36_SDA3__FUNC_SDA3>;
++              output-low;
++              bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++            };
++
++            pins3 {
++              pinmux = <MT8135_PIN_57_JTCK__FUNC_GPIO57>,
++                <MT8135_PIN_60_JTDI__FUNC_JTDI>;
++              drive-strength = <32>;
++            };
++          };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6797-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6797-pinctrl.yaml
+new file mode 100644
+index 0000000000000..17b4a33bb23b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6797-pinctrl.yaml
+@@ -0,0 +1,173 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/mediatek,mt6797-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mediatek MT6797 Pin Controller Device Tree Bindings
++
++maintainers:
++  - Andy Teng <andy.teng@mediatek.com>
++
++description: |+
++  The MediaTek's MT6797 Pin controller is used to control SoC pins.
++
++properties:
++  compatible:
++    const: mediatek,mt6797-pinctrl
++
++  reg:
++    minItems: 5
++    maxItems: 5
++
++  reg-names:
++    items:
++      - const: gpio
++      - const: iocfgl
++      - const: iocfgb
++      - const: iocfgr
++      - const: iocfgt
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++    description: |
++      Number of cells in GPIO specifier. Since the generic GPIO
++      binding is used, the amount of cells must be specified as 2. See the below
++      mentioned gpio binding representation for description of particular cells.
++
++  interrupt-controller: true
++
++  interrupts:
++    maxItems: 1
++
++  "#interrupt-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - gpio-controller
++  - "#gpio-cells"
++
++patternProperties:
++  '-[0-9]+$':
++    type: object
++    additionalProperties: false
++    patternProperties:
++      'pins':
++        type: object
++        additionalProperties: false
++        description: |
++          A pinctrl node should contain at least one subnodes representing the
++          pinctrl groups available on the machine. Each subnode will list the
++          pins it needs, and how they should be configured, with regard to muxer
++          configuration, pullups, drive strength, input enable/disable and input
++          schmitt.
++        $ref: "/schemas/pinctrl/pincfg-node.yaml"
++
++        properties:
++          pinmux:
++            description:
++              integer array, represents gpio pin number and mux setting.
++              Supported pin number and mux varies for different SoCs, and are
++              defined as macros in <soc>-pinfunc.h directly.
++
++          bias-disable: true
++
++          bias-pull-up: true
++
++          bias-pull-down: true
++
++          input-enable: true
++
++          input-disable: true
++
++          output-enable: true
++
++          output-low: true
++
++          output-high: true
++
++          input-schmitt-enable: true
++
++          input-schmitt-disable: true
++
++          drive-strength:
++            enum: [2, 4, 8, 12, 16]
++
++          slew-rate:
++            enum: [0, 1]
++
++          mediatek,pull-up-adv:
++            description: |
++              Pull up setings for 2 pull resistors, R0 and R1. User can
++              configure those special pins. Valid arguments are described as below:
++              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
++              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
++              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
++              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
++            $ref: /schemas/types.yaml#/definitions/uint32
++            enum: [0, 1, 2, 3]
++
++          mediatek,pull-down-adv:
++            description: |
++              Pull down settings for 2 pull resistors, R0 and R1. User can
++              configure those special pins. Valid arguments are described as below:
++              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
++              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
++              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
++              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
++            $ref: /schemas/types.yaml#/definitions/uint32
++            enum: [0, 1, 2, 3]
++
++          mediatek,tdsel:
++            description: |
++              An integer describing the steps for output level shifter duty
++              cycle when asserted (high pulse width adjustment). Valid arguments
++              are from 0 to 15.
++            $ref: /schemas/types.yaml#/definitions/uint32
++
++          mediatek,rdsel:
++            description: |
++              An integer describing the steps for input level shifter duty cycle
++              when asserted (high pulse width adjustment). Valid arguments are
++              from 0 to 63.
++            $ref: /schemas/types.yaml#/definitions/uint32
++
++        required:
++          - pinmux
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/pinctrl/mt6797-pinfunc.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pio: pinctrl@10005000 {
++            compatible = "mediatek,mt6797-pinctrl";
++            reg = <0 0x10005000 0 0x1000>,
++                  <0 0x10002000 0 0x400>,
++                  <0 0x10002400 0 0x400>,
++                  <0 0x10002800 0 0x400>,
++                  <0 0x10002C00 0 0x400>;
++            reg-names = "gpio", "iocfgl", "iocfgb", "iocfgr", "iocfgt";
++            gpio-controller;
++            #gpio-cells = <2>;
++
++            uart_pins_a: uart-0 {
++                pins1 {
++                    pinmux = <MT6797_GPIO232__FUNC_URXD1>,
++                            <MT6797_GPIO233__FUNC_UTXD1>;
++                };
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+new file mode 100644
+index 0000000000000..94c0352e206a1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+@@ -0,0 +1,373 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/mediatek,mt7622-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mediatek MT7622 Pin Controller Device Tree Bindings
++
++maintainers:
++  - Andy Teng <andy.teng@mediatek.com>
++
++description: |+
++  The MediaTek's MT7622 Pin controller is used to control SoC pins.
++
++properties:
++  compatible:
++    enum:
++      - mediatek,mt7622-pinctrl
++      - mediatek,mt7629-pinctrl
++
++  reg:
++    maxItems: 1
++
++  reg-names:
++    items:
++      - const: eint
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++    description: |
++      Number of cells in GPIO specifier. Since the generic GPIO
++      binding is used, the amount of cells must be specified as 2. See the below
++      mentioned gpio binding representation for description of particular cells.
++
++  interrupt-controller: true
++
++  interrupts:
++    maxItems: 1
++
++  "#interrupt-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++
++if:
++  required:
++    - interrupt-controller
++then:
++  required:
++    - reg-names
++    - interrupts
++    - "#interrupt-cells"
++
++patternProperties:
++  '-[0-9]+$':
++    type: object
++    additionalProperties: false
++    patternProperties:
++      'mux':
++        type: object
++        additionalProperties: false
++        description: |
++          pinmux configuration nodes.
++        $ref: "/schemas/pinctrl/pinmux-node.yaml"
++        properties:
++          function:
++            description: |
++              A string containing the name of the function to mux to the group.
++            enum: [emmc, eth, i2c, i2s, ir, led, flash, pcie, pmic, pwm, sd,
++                   spi, tdm, uart, watchdog, wifi]
++
++          groups:
++            description: |
++              An array of strings. Each string contains the name of a group.
++
++          drive-strength:
++            enum: [4, 8, 12, 16]
++
++        required:
++          - groups
++          - function
++
++        allOf:
++          - if:
++              properties:
++                function:
++                  const: emmc
++            then:
++              properties:
++                groups:
++                  enum: [emmc, emmc_rst]
++          - if:
++              properties:
++                function:
++                  const: eth
++            then:
++              properties:
++                groups:
++                  enum: [esw, esw_p0_p1, esw_p2_p3_p4, rgmii_via_esw,
++                         rgmii_via_gmac1, rgmii_via_gmac2, mdc_mdio]
++          - if:
++              properties:
++                function:
++                  const: i2c
++            then:
++              properties:
++                groups:
++                  enum: [i2c0, i2c_0, i2c_1, i2c1_0, i2c1_1, i2c1_2, i2c2_0,
++                         i2c2_1, i2c2_2]
++          - if:
++              properties:
++                function:
++                  const: i2s
++            then:
++              properties:
++                groups:
++                  enum: [i2s_in_mclk_bclk_ws, i2s1_in_data, i2s2_in_data,
++                         i2s3_in_data, i2s4_in_data, i2s_out_mclk_bclk_ws,
++                         i2s1_out_data, i2s2_out_data, i2s3_out_data,
++                         i2s4_out_data]
++          - if:
++              properties:
++                function:
++                  const: ir
++            then:
++              properties:
++                groups:
++                  enum: [ir_0_tx, ir_1_tx, ir_2_tx, ir_0_rx, ir_1_rx, ir_2_rx]
++          - if:
++              properties:
++                function:
++                  const: led
++            then:
++              properties:
++                groups:
++                  enum: [ephy_leds, ephy0_led, ephy1_led, ephy2_led, ephy3_led,
++                         ephy4_led, wled, wf2g_led, wf5g_led]
++          - if:
++              properties:
++                function:
++                  const: flash
++            then:
++              properties:
++                groups:
++                  enum: [par_nand, snfi, spi_nor]
++          - if:
++              properties:
++                function:
++                  const: pcie
++            then:
++              properties:
++                groups:
++                  enum: [pcie0_0_waken, pcie0_1_waken, pcie1_0_waken,
++                         pcie0_0_clkreq, pcie0_1_clkreq, pcie1_0_clkreq,
++                         pcie0_pad_perst, pcie1_pad_perst, pcie_pereset,
++                         pcie_wake, pcie_clkreq]
++          - if:
++              properties:
++                function:
++                  const: pmic
++            then:
++              properties:
++                groups:
++                  enum: [pmic_bus]
++          - if:
++              properties:
++                function:
++                  const: pwm
++            then:
++              properties:
++                groups:
++                  enum: [pwm_ch1_0, pwm_ch1_1, pwm_ch1_2, pwm_ch2_0, pwm_ch2_1,
++                         pwm_ch2_2, pwm_ch3_0, pwm_ch3_1, pwm_ch3_2, pwm_ch4_0,
++                         pwm_ch4_1, pwm_ch4_2, pwm_ch4_3, pwm_ch5_0, pwm_ch5_1,
++                         pwm_ch5_2, pwm_ch6_0, pwm_ch6_1, pwm_ch6_2, pwm_ch6_3,
++                         pwm_ch7_0, pwm_0, pwm_1]
++          - if:
++              properties:
++                function:
++                  const: sd
++            then:
++              properties:
++                groups:
++                  enum: [sd_0, sd_1]
++          - if:
++              properties:
++                function:
++                  const: spi
++            then:
++              properties:
++                groups:
++                  enum: [spic0_0, spic0_1, spic1_0, spic1_1, spic2_0_wp_hold,
++                         spic2_0, spi_0, spi_1, spi_wp, spi_hold]
++          - if:
++              properties:
++                function:
++                  const: tdm
++            then:
++              properties:
++                groups:
++                  enum: [tdm_0_out_mclk_bclk_ws, tdm_0_in_mclk_bclk_ws,
++                         tdm_0_out_data, tdm_0_in_data, tdm_1_out_mclk_bclk_ws,
++                         tdm_1_in_mclk_bclk_ws, tdm_1_out_data, tdm_1_in_data]
++          - if:
++              properties:
++                function:
++                  const: uart
++            then:
++              properties:
++                groups:
++                  enum: [uart0_0_tx_rx, uart1_0_tx_rx, uart1_0_rts_cts,
++                         uart1_1_tx_rx, uart1_1_rts_cts, uart2_0_tx_rx,
++                         uart2_0_rts_cts, uart2_1_tx_rx, uart2_1_rts_cts,
++                         uart2_2_tx_rx, uart2_2_rts_cts, uart2_3_tx_rx,
++                         uart3_0_tx_rx, uart3_1_tx_rx, uart3_1_rts_cts,
++                         uart4_0_tx_rx, uart4_1_tx_rx, uart4_1_rts_cts,
++                         uart4_2_tx_rx, uart4_2_rts_cts, uart0_txd_rxd,
++                         uart1_0_txd_rxd, uart1_0_cts_rts, uart1_1_txd_rxd,
++                         uart1_1_cts_rts, uart2_0_txd_rxd, uart2_0_cts_rts,
++                         uart2_1_txd_rxd, uart2_1_cts_rts]
++          - if:
++              properties:
++                function:
++                  const: watchdog
++            then:
++              properties:
++                groups:
++                  enum: [watchdog]
++          - if:
++              properties:
++                function:
++                  const: wifi
++            then:
++              properties:
++                groups:
++                  enum: [wf0_2g, wf0_5g]
++
++      'conf':
++        type: object
++        additionalProperties: false
++        description: |
++          pinconf configuration nodes.
++        $ref: "/schemas/pinctrl/pincfg-node.yaml"
++
++        properties:
++          groups:
++            description: |
++              An array of strings. Each string contains the name of a group.
++              Valid values are the same as the pinmux node.
++
++          pins:
++            description: |
++              An array of strings. Each string contains the name of a pin.
++            enum: [GPIO_A, I2S1_IN, I2S1_OUT, I2S_BCLK, I2S_WS, I2S_MCLK, TXD0,
++                   RXD0, SPI_WP, SPI_HOLD, SPI_CLK, SPI_MOSI, SPI_MISO, SPI_CS,
++                   I2C_SDA, I2C_SCL, I2S2_IN, I2S3_IN, I2S4_IN, I2S2_OUT,
++                   I2S3_OUT, I2S4_OUT, GPIO_B, MDC, MDIO, G2_TXD0, G2_TXD1,
++                   G2_TXD2, G2_TXD3, G2_TXEN, G2_TXC, G2_RXD0, G2_RXD1, G2_RXD2,
++                   G2_RXD3, G2_RXDV, G2_RXC, NCEB, NWEB, NREB, NDL4, NDL5, NDL6,
++                   NDL7, NRB, NCLE, NALE, NDL0, NDL1, NDL2, NDL3, MDI_TP_P0,
++                   MDI_TN_P0, MDI_RP_P0, MDI_RN_P0, MDI_TP_P1, MDI_TN_P1,
++                   MDI_RP_P1, MDI_RN_P1, MDI_RP_P2, MDI_RN_P2, MDI_TP_P2,
++                   MDI_TN_P2, MDI_TP_P3, MDI_TN_P3, MDI_RP_P3, MDI_RN_P3,
++                   MDI_RP_P4, MDI_RN_P4, MDI_TP_P4, MDI_TN_P4, PMIC_SCL,
++                   PMIC_SDA, SPIC1_CLK, SPIC1_MOSI, SPIC1_MISO, SPIC1_CS,
++                   GPIO_D, WATCHDOG, RTS3_N, CTS3_N, TXD3, RXD3, PERST0_N,
++                   PERST1_N, WLED_N, EPHY_LED0_N, AUXIN0, AUXIN1, AUXIN2,
++                   AUXIN3, TXD4, RXD4, RTS4_N, CST4_N, PWM1, PWM2, PWM3, PWM4,
++                   PWM5, PWM6, PWM7, GPIO_E, TOP_5G_CLK, TOP_5G_DATA,
++                   WF0_5G_HB0, WF0_5G_HB1, WF0_5G_HB2, WF0_5G_HB3, WF0_5G_HB4,
++                   WF0_5G_HB5, WF0_5G_HB6, XO_REQ, TOP_RST_N, SYS_WATCHDOG,
++                   EPHY_LED0_N_JTDO, EPHY_LED1_N_JTDI, EPHY_LED2_N_JTMS,
++                   EPHY_LED3_N_JTCLK, EPHY_LED4_N_JTRST_N, WF2G_LED_N,
++                   WF5G_LED_N, GPIO_9, GPIO_10, GPIO_11, GPIO_12, UART1_TXD,
++                   UART1_RXD, UART1_CTS, UART1_RTS, UART2_TXD, UART2_RXD,
++                   UART2_CTS, UART2_RTS, SMI_MDC, SMI_MDIO, PCIE_PERESET_N,
++                   PWM_0, GPIO_0, GPIO_1, GPIO_2, GPIO_3, GPIO_4, GPIO_5,
++                   GPIO_6, GPIO_7, GPIO_8, UART0_TXD, UART0_RXD, TOP_2G_CLK,
++                   TOP_2G_DATA, WF0_2G_HB0, WF0_2G_HB1, WF0_2G_HB2, WF0_2G_HB3,
++                   WF0_2G_HB4, WF0_2G_HB5, WF0_2G_HB6]
++
++          bias-disable: true
++
++          bias-pull-up: true
++
++          bias-pull-down: true
++
++          input-enable: true
++
++          input-disable: true
++
++          output-enable: true
++
++          output-low: true
++
++          output-high: true
++
++          input-schmitt-enable: true
++
++          input-schmitt-disable: true
++
++          drive-strength:
++            enum: [4, 8, 12, 16]
++
++          slew-rate:
++            enum: [0, 1]
++
++          mediatek,tdsel:
++            description: |
++              An integer describing the steps for output level shifter duty
++              cycle when asserted (high pulse width adjustment). Valid arguments
++              are from 0 to 15.
++            $ref: /schemas/types.yaml#/definitions/uint32
++
++          mediatek,rdsel:
++            description: |
++              An integer describing the steps for input level shifter duty cycle
++              when asserted (high pulse width adjustment). Valid arguments are
++              from 0 to 63.
++            $ref: /schemas/types.yaml#/definitions/uint32
++
++        required:
++          - pins
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pio: pinctrl@10211000 {
++          compatible = "mediatek,mt7622-pinctrl";
++          reg = <0 0x10211000 0 0x1000>;
++          gpio-controller;
++          #gpio-cells = <2>;
++
++          pinctrl_eth_default: eth-0 {
++            mux-mdio {
++              groups = "mdc_mdio";
++              function = "eth";
++              drive-strength = <12>;
++            };
++
++            mux-gmac2 {
++              groups = "rgmii_via_gmac2";
++              function = "eth";
++              drive-strength = <12>;
++            };
++
++            mux-esw {
++              groups = "esw";
++              function = "eth";
++              drive-strength = <8>;
++            };
++
++            conf-mdio {
++              pins = "MDC";
++              bias-pull-up;
++            };
++          };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+new file mode 100644
+index 0000000000000..2d5b646a6d3bd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+@@ -0,0 +1,228 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/mediatek,mt8183-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mediatek MT8183 Pin Controller Device Tree Bindings
++
++maintainers:
++  - Andy Teng <andy.teng@mediatek.com>
++
++description: |+
++  The MediaTek's MT8183 Pin controller is used to control SoC pins.
++
++properties:
++  compatible:
++    const: mediatek,mt8183-pinctrl
++
++  reg:
++    minItems: 10
++    maxItems: 10
++
++  reg-names:
++    items:
++      - const: iocfg0
++      - const: iocfg1
++      - const: iocfg2
++      - const: iocfg3
++      - const: iocfg4
++      - const: iocfg5
++      - const: iocfg6
++      - const: iocfg7
++      - const: iocfg8
++      - const: eint
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++    description: |
++      Number of cells in GPIO specifier. Since the generic GPIO
++      binding is used, the amount of cells must be specified as 2. See the below
++      mentioned gpio binding representation for description of particular cells.
++
++  gpio-ranges:
++    minItems: 1
++    maxItems: 5
++    description: |
++      GPIO valid number range.
++
++  interrupt-controller: true
++
++  interrupts:
++    maxItems: 1
++
++  "#interrupt-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++  - gpio-ranges
++
++patternProperties:
++  '-[0-9]+$':
++    type: object
++    additionalProperties: false
++    patternProperties:
++      'pins':
++        type: object
++        additionalProperties: false
++        description: |
++          A pinctrl node should contain at least one subnodes representing the
++          pinctrl groups available on the machine. Each subnode will list the
++          pins it needs, and how they should be configured, with regard to muxer
++          configuration, pullups, drive strength, input enable/disable and input
++          schmitt.
++        $ref: "/schemas/pinctrl/pincfg-node.yaml"
++
++        properties:
++          pinmux:
++            description:
++              integer array, represents gpio pin number and mux setting.
++              Supported pin number and mux varies for different SoCs, and are
++              defined as macros in <soc>-pinfunc.h directly.
++
++          bias-disable: true
++
++          bias-pull-up: true
++
++          bias-pull-down: true
++
++          input-enable: true
++
++          input-disable: true
++
++          output-low: true
++
++          output-high: true
++
++          input-schmitt-enable: true
++
++          input-schmitt-disable: true
++
++          drive-strength:
++            enum: [2, 4, 6, 8, 10, 12, 14, 16]
++
++          mediatek,drive-strength-adv:
++            description: |
++              Describe the specific driving setup property.
++              For I2C pins, the existing generic driving setup can only support
++              2/4/6/8/10/12/14/16mA driving. But in specific driving setup, they
++              can support 0.125/0.25/0.5/1mA adjustment. If we enable specific
++              driving setup, the existing generic setup will be disabled.
++              The specific driving setup is controlled by E1E0EN.
++              When E1=0/E0=0, the strength is 0.125mA.
++              When E1=0/E0=1, the strength is 0.25mA.
++              When E1=1/E0=0, the strength is 0.5mA.
++              When E1=1/E0=1, the strength is 1mA.
++              EN is used to enable or disable the specific driving setup.
++              Valid arguments are described as below:
++              0: (E1, E0, EN) = (0, 0, 0)
++              1: (E1, E0, EN) = (0, 0, 1)
++              2: (E1, E0, EN) = (0, 1, 0)
++              3: (E1, E0, EN) = (0, 1, 1)
++              4: (E1, E0, EN) = (1, 0, 0)
++              5: (E1, E0, EN) = (1, 0, 1)
++              6: (E1, E0, EN) = (1, 1, 0)
++              7: (E1, E0, EN) = (1, 1, 1)
++              So the valid arguments are from 0 to 7.
++            $ref: /schemas/types.yaml#/definitions/uint32
++            enum: [0, 1, 2, 3, 4, 5, 6, 7]
++
++          mediatek,pull-up-adv:
++            description: |
++              Pull up setings for 2 pull resistors, R0 and R1. User can
++              configure those special pins. Valid arguments are described as below:
++              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
++              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
++              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
++              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
++            $ref: /schemas/types.yaml#/definitions/uint32
++            enum: [0, 1, 2, 3]
++
++          mediatek,pull-down-adv:
++            description: |
++              Pull down settings for 2 pull resistors, R0 and R1. User can
++              configure those special pins. Valid arguments are described as below:
++              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
++              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
++              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
++              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
++            $ref: /schemas/types.yaml#/definitions/uint32
++            enum: [0, 1, 2, 3]
++
++          mediatek,tdsel:
++            description: |
++              An integer describing the steps for output level shifter duty
++              cycle when asserted (high pulse width adjustment). Valid arguments
++              are from 0 to 15.
++            $ref: /schemas/types.yaml#/definitions/uint32
++
++          mediatek,rdsel:
++            description: |
++              An integer describing the steps for input level shifter duty cycle
++              when asserted (high pulse width adjustment). Valid arguments are
++              from 0 to 63.
++            $ref: /schemas/types.yaml#/definitions/uint32
++
++        required:
++          - pinmux
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/pinctrl/mt8183-pinfunc.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pio: pinctrl@10005000 {
++          compatible = "mediatek,mt8183-pinctrl";
++          reg = <0 0x10005000 0 0x1000>,
++                <0 0x11f20000 0 0x1000>,
++                <0 0x11e80000 0 0x1000>,
++                <0 0x11e70000 0 0x1000>,
++                <0 0x11e90000 0 0x1000>,
++                <0 0x11d30000 0 0x1000>,
++                <0 0x11d20000 0 0x1000>,
++                <0 0x11c50000 0 0x1000>,
++                <0 0x11f30000 0 0x1000>,
++                <0 0x1000b000 0 0x1000>;
++          reg-names = "iocfg0", "iocfg1", "iocfg2",
++                "iocfg3", "iocfg4", "iocfg5",
++                "iocfg6", "iocfg7", "iocfg8",
++                "eint";
++          gpio-controller;
++          #gpio-cells = <2>;
++          gpio-ranges = <&pio 0 0 192>;
++          interrupt-controller;
++          interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
++          #interrupt-cells = <2>;
++
++          i2c0_pins_a: i2c-0 {
++            pins1 {
++              pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
++                <PINMUX_GPIO49__FUNC_SDA5>;
++              mediatek,pull-up-adv = <3>;
++              mediatek,drive-strength-adv = <7>;
++            };
++          };
++
++          i2c1_pins_a: i2c-1 {
++            pins {
++              pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
++                <PINMUX_GPIO51__FUNC_SDA3>;
++              mediatek,pull-down-adv = <2>;
++              mediatek,drive-strength-adv = <4>;
++            };
++          };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+deleted file mode 100644
+index 5fe2c26c28bf1..0000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
++++ /dev/null
+@@ -1,156 +0,0 @@
+-* Mediatek MT65XX Pin Controller
+-
+-The Mediatek's Pin controller is used to control SoC pins.
+-
+-Required properties:
+-- compatible: value should be one of the following.
+-	"mediatek,mt2701-pinctrl", compatible with mt2701 pinctrl.
+-	"mediatek,mt2712-pinctrl", compatible with mt2712 pinctrl.
+-	"mediatek,mt6397-pinctrl", compatible with mt6397 pinctrl.
+-	"mediatek,mt7623-pinctrl", compatible with mt7623 pinctrl.
+-	"mediatek,mt8127-pinctrl", compatible with mt8127 pinctrl.
+-	"mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
+-	"mediatek,mt8167-pinctrl", compatible with mt8167 pinctrl.
+-	"mediatek,mt8173-pinctrl", compatible with mt8173 pinctrl.
+-	"mediatek,mt8365-pinctrl", compatible with mt8365 pinctrl.
+-	"mediatek,mt8516-pinctrl", compatible with mt8516 pinctrl.
+-- pins-are-numbered: Specify the subnodes are using numbered pinmux to
+-  specify pins.
+-- gpio-controller : Marks the device node as a gpio controller.
+-- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+-  binding is used, the amount of cells must be specified as 2. See the below
+-  mentioned gpio binding representation for description of particular cells.
+-
+-	Eg: <&pio 6 0>
+-	<[phandle of the gpio controller node]
+-	[line number within the gpio controller]
+-	[flags]>
+-
+-	Values for gpio specifier:
+-	- Line number: is a value between 0 to 202.
+-	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
+-            Only the following flags are supported:
+-            0 - GPIO_ACTIVE_HIGH
+-            1 - GPIO_ACTIVE_LOW
+-
+-Optional properties:
+-- mediatek,pctl-regmap: Should be a phandle of the syscfg node.
+-- reg: physicall address base for EINT registers
+-- interrupt-controller: Marks the device node as an interrupt controller
+-- #interrupt-cells: Should be two.
+-- interrupts : The interrupt outputs from the controller.
+-
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices.
+-
+-Subnode format
+-A pinctrl node should contain at least one subnodes representing the
+-pinctrl groups available on the machine. Each subnode will list the
+-pins it needs, and how they should be configured, with regard to muxer
+-configuration, pullups, drive strength, input enable/disable and input schmitt.
+-
+-    node {
+-	pinmux = <PIN_NUMBER_PINMUX>;
+-	GENERIC_PINCONFIG;
+-    };
+-
+-Required properties:
+-- pinmux: integer array, represents gpio pin number and mux setting.
+-    Supported pin number and mux varies for different SoCs, and are defined
+-    as macros in boot/dts/<soc>-pinfunc.h directly.
+-
+-Optional properties:
+-- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
+-    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
+-    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
+-
+-    Some special pins have extra pull up strength, there are R0 and R1 pull-up
+-    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
+-    So when config bias-pull-up, it support arguments for those special pins.
+-    Some macros have been defined for this usage, such as MTK_PUPD_SET_R1R0_00.
+-    See dt-bindings/pinctrl/mt65xx.h.
+-
+-    When config drive-strength, it can support some arguments, such as
+-    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
+-
+-Examples:
+-
+-#include "mt8135-pinfunc.h"
+-
+-...
+-{
+-	syscfg_pctl_a: syscfg-pctl-a@10005000 {
+-		compatible = "mediatek,mt8135-pctl-a-syscfg", "syscon";
+-		reg = <0 0x10005000 0 0x1000>;
+-	};
+-
+-	syscfg_pctl_b: syscfg-pctl-b@1020c020 {
+-		compatible = "mediatek,mt8135-pctl-b-syscfg", "syscon";
+-		reg = <0 0x1020C020 0 0x1000>;
+-	};
+-
+-	pinctrl@1c20800 {
+-		compatible = "mediatek,mt8135-pinctrl";
+-		reg = <0 0x1000B000 0 0x1000>;
+-		mediatek,pctl-regmap = <&syscfg_pctl_a>, <&syscfg_pctl_b>;
+-		pins-are-numbered;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+-				<GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+-				<GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+-
+-		i2c0_pins_a: i2c0@0 {
+-			pins1 {
+-				pinmux = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
+-					 <MT8135_PIN_101_SCL0__FUNC_SCL0>;
+-				bias-disable;
+-			};
+-		};
+-
+-		i2c1_pins_a: i2c1@0 {
+-			pins {
+-				pinmux = <MT8135_PIN_195_SDA1__FUNC_SDA1>,
+-					 <MT8135_PIN_196_SCL1__FUNC_SCL1>;
+-				bias-pull-up = <55>;
+-			};
+-		};
+-
+-		i2c2_pins_a: i2c2@0 {
+-			pins1 {
+-				pinmux = <MT8135_PIN_193_SDA2__FUNC_SDA2>;
+-				bias-pull-down;
+-			};
+-
+-			pins2 {
+-				pinmux = <MT8135_PIN_49_WATCHDOG__FUNC_GPIO49>;
+-				bias-pull-up;
+-			};
+-		};
+-
+-		i2c3_pins_a: i2c3@0 {
+-			pins1 {
+-				pinmux = <MT8135_PIN_40_DAC_CLK__FUNC_GPIO40>,
+-					 <MT8135_PIN_41_DAC_WS__FUNC_GPIO41>;
+-				bias-pull-up = <55>;
+-			};
+-
+-			pins2 {
+-				pinmux = <MT8135_PIN_35_SCL3__FUNC_SCL3>,
+-					 <MT8135_PIN_36_SDA3__FUNC_SDA3>;
+-				output-low;
+-				bias-pull-up = <55>;
+-			};
+-
+-			pins3 {
+-				pinmux = <MT8135_PIN_57_JTCK__FUNC_GPIO57>,
+-					 <MT8135_PIN_60_JTDI__FUNC_JTDI>;
+-				drive-strength = <32>;
+-			};
+-		};
+-
+-		...
+-	}
+-};
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt6797.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt6797.txt
+deleted file mode 100644
+index bd83401e6179a..0000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt6797.txt
++++ /dev/null
+@@ -1,83 +0,0 @@
+-* MediaTek MT6797 Pin Controller
+-
+-The MediaTek's MT6797 Pin controller is used to control SoC pins.
+-
+-Required properties:
+-- compatible: Value should be one of the following.
+-              "mediatek,mt6797-pinctrl", compatible with mt6797 pinctrl.
+-- reg:        Should contain address and size for gpio, iocfgl, iocfgb,
+-              iocfgr and iocfgt register bases.
+-- reg-names:  An array of strings describing the "reg" entries. Must
+-              contain "gpio", "iocfgl", "iocfgb", "iocfgr", "iocfgt".
+-- gpio-controller: Marks the device node as a gpio controller.
+-- #gpio-cells: Should be two. The first cell is the gpio pin number
+-               and the second cell is used for optional parameters.
+-
+-Optional properties:
+-- interrupt-controller: Marks the device node as an interrupt controller.
+-- #interrupt-cells: Should be two.
+-- interrupts : The interrupt outputs from the controller.
+-
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices.
+-
+-Subnode format
+-A pinctrl node should contain at least one subnodes representing the
+-pinctrl groups available on the machine. Each subnode will list the
+-pins it needs, and how they should be configured, with regard to muxer
+-configuration, pullups, drive strength, input enable/disable and input schmitt.
+-
+-    node {
+-        pinmux = <PIN_NUMBER_PINMUX>;
+-        GENERIC_PINCONFIG;
+-    };
+-
+-Required properties:
+-- pinmux: Integer array, represents gpio pin number and mux setting.
+-    Supported pin number and mux varies for different SoCs, and are defined
+-    as macros in dt-bindings/pinctrl/<soc>-pinfunc.h directly.
+-
+-Optional properties:
+-- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
+-    bias-pull, bias-pull-down, input-enable, input-schmitt-enable,
+-    input-schmitt-disable, output-enable output-low, output-high,
+-    drive-strength, and slew-rate are valid.
+-
+-    Valid arguments for 'slew-rate' are '0' for no slew rate controlled and
+-    '1' for slower slew rate respectively. Valid arguments for 'drive-strength'
+-    is limited, such as 2, 4, 8, 12, or 16 in mA.
+-
+-    Some optional vendor properties as defined are valid to specify in a
+-    pinconf subnode:
+-    - mediatek,tdsel: An integer describing the steps for output level shifter
+-      duty cycle when asserted (high pulse width adjustment). Valid arguments
+-      are from 0 to 15.
+-    - mediatek,rdsel: An integer describing the steps for input level shifter
+-      duty cycle when asserted (high pulse width adjustment). Valid arguments
+-      are from 0 to 63.
+-    - mediatek,pull-up-adv: An integer describing the code R1R0 as 0, 1, 2
+-      or 3 for the advanced pull-up resistors.
+-    - mediatek,pull-down-adv: An integer describing the code R1R0 as 0, 1, 2,
+-      or 3 for the advanced pull-down resistors.
+-
+-Examples:
+-
+-        pio: pinctrl@10005000 {
+-                compatible = "mediatek,mt6797-pinctrl";
+-                reg = <0 0x10005000 0 0x1000>,
+-                      <0 0x10002000 0 0x400>,
+-                      <0 0x10002400 0 0x400>,
+-                      <0 0x10002800 0 0x400>,
+-                      <0 0x10002C00 0 0x400>;
+-                reg-names = "gpio", "iocfgl", "iocfgb",
+-                            "iocfgr", "iocfgt";
+-                gpio-controller;
+-                #gpio-cells = <2>;
+-
+-                uart1_pins_a: uart1 {
+-                        pins1 {
+-                                pinmux = <MT6797_GPIO232__FUNC_URXD1>,
+-                                         <MT6797_GPIO233__FUNC_UTXD1>;
+-                        };
+-                };
+-        };
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+deleted file mode 100644
+index 7a7aca1ed705b..0000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
++++ /dev/null
+@@ -1,490 +0,0 @@
+-== MediaTek MT7622 pinctrl controller ==
+-
+-Required properties for the root node:
+- - compatible: Should be one of the following
+-	       "mediatek,mt7622-pinctrl" for MT7622 SoC
+-	       "mediatek,mt7629-pinctrl" for MT7629 SoC
+- - reg: offset and length of the pinctrl space
+-
+- - gpio-controller: Marks the device node as a GPIO controller.
+- - #gpio-cells: Should be two. The first cell is the pin number and the
+-   second is the GPIO flags.
+-
+-Optional properties:
+-- interrupt-controller  : Marks the device node as an interrupt controller
+-
+-If the property interrupt-controller is defined, following property is required
+-- reg-names: A string describing the "reg" entries. Must contain "eint".
+-- interrupts : The interrupt output from the controller.
+-- #interrupt-cells: Should be two.
+-
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices, including the meaning of the
+-phrase "pin configuration node".
+-
+-MT7622 pin configuration nodes act as a container for an arbitrary number of
+-subnodes. Each of these subnodes represents some desired configuration for a
+-pin, a group, or a list of pins or groups. This configuration can include the
+-mux function to select on those pin(s)/group(s), and various pin configuration
+-parameters, such as pull-up, slew rate, etc.
+-
+-We support 2 types of configuration nodes. Those nodes can be either pinmux
+-nodes or pinconf nodes. Each configuration node can consist of multiple nodes
+-describing the pinmux and pinconf options.
+-
+-The name of each subnode doesn't matter as long as it is unique; all subnodes
+-should be enumerated and processed purely based on their content.
+-
+-== pinmux nodes content ==
+-
+-The following generic properties as defined in pinctrl-bindings.txt are valid
+-to specify in a pinmux subnode:
+-
+-Required properties are:
+- - groups: An array of strings. Each string contains the name of a group.
+-  Valid values for these names are listed below.
+- - function: A string containing the name of the function to mux to the
+-  group. Valid values for function names are listed below.
+-
+-== pinconf nodes content ==
+-
+-The following generic properties as defined in pinctrl-bindings.txt are valid
+-to specify in a pinconf subnode:
+-
+-Required properties are:
+- - pins: An array of strings. Each string contains the name of a pin.
+-  Valid values for these names are listed below.
+- - groups: An array of strings. Each string contains the name of a group.
+-  Valid values for these names are listed below.
+-
+-Optional properies are:
+- bias-disable, bias-pull, bias-pull-down, input-enable,
+- input-schmitt-enable, input-schmitt-disable, output-enable
+- output-low, output-high, drive-strength, slew-rate
+-
+- Valid arguments for 'slew-rate' are '0' for no slew rate controlled and '1' for
+- slower slew rate respectively.
+- Valid arguments for 'drive-strength', 4, 8, 12, or 16 in mA.
+-
+-The following specific properties as defined are valid to specify in a pinconf
+-subnode:
+-
+-Optional properties are:
+- - mediatek,tdsel: An integer describing the steps for output level shifter duty
+-   cycle when asserted (high pulse width adjustment). Valid arguments are from 0
+-   to 15.
+- - mediatek,rdsel: An integer describing the steps for input level shifter duty
+-   cycle when asserted (high pulse width adjustment). Valid arguments are from 0
+-   to 63.
+-
+-== Valid values for pins, function and groups on MT7622 ==
+-
+-Valid values for pins are:
+-pins can be referenced via the pin names as the below table shown and the
+-related physical number is also put ahead of those names which helps cross
+-references to pins between groups to know whether pins assignment conflict
+-happens among devices try to acquire those available pins.
+-
+-	Pin #:  Valid values for pins
+-	-----------------------------
+-	PIN 0: "GPIO_A"
+-	PIN 1: "I2S1_IN"
+-	PIN 2: "I2S1_OUT"
+-	PIN 3: "I2S_BCLK"
+-	PIN 4: "I2S_WS"
+-	PIN 5: "I2S_MCLK"
+-	PIN 6: "TXD0"
+-	PIN 7: "RXD0"
+-	PIN 8: "SPI_WP"
+-	PIN 9: "SPI_HOLD"
+-	PIN 10: "SPI_CLK"
+-	PIN 11: "SPI_MOSI"
+-	PIN 12: "SPI_MISO"
+-	PIN 13: "SPI_CS"
+-	PIN 14: "I2C_SDA"
+-	PIN 15: "I2C_SCL"
+-	PIN 16: "I2S2_IN"
+-	PIN 17: "I2S3_IN"
+-	PIN 18: "I2S4_IN"
+-	PIN 19: "I2S2_OUT"
+-	PIN 20: "I2S3_OUT"
+-	PIN 21: "I2S4_OUT"
+-	PIN 22: "GPIO_B"
+-	PIN 23: "MDC"
+-	PIN 24: "MDIO"
+-	PIN 25: "G2_TXD0"
+-	PIN 26: "G2_TXD1"
+-	PIN 27: "G2_TXD2"
+-	PIN 28: "G2_TXD3"
+-	PIN 29: "G2_TXEN"
+-	PIN 30: "G2_TXC"
+-	PIN 31: "G2_RXD0"
+-	PIN 32: "G2_RXD1"
+-	PIN 33: "G2_RXD2"
+-	PIN 34: "G2_RXD3"
+-	PIN 35: "G2_RXDV"
+-	PIN 36: "G2_RXC"
+-	PIN 37: "NCEB"
+-	PIN 38: "NWEB"
+-	PIN 39: "NREB"
+-	PIN 40: "NDL4"
+-	PIN 41: "NDL5"
+-	PIN 42: "NDL6"
+-	PIN 43: "NDL7"
+-	PIN 44: "NRB"
+-	PIN 45: "NCLE"
+-	PIN 46: "NALE"
+-	PIN 47: "NDL0"
+-	PIN 48: "NDL1"
+-	PIN 49: "NDL2"
+-	PIN 50: "NDL3"
+-	PIN 51: "MDI_TP_P0"
+-	PIN 52: "MDI_TN_P0"
+-	PIN 53: "MDI_RP_P0"
+-	PIN 54: "MDI_RN_P0"
+-	PIN 55: "MDI_TP_P1"
+-	PIN 56: "MDI_TN_P1"
+-	PIN 57: "MDI_RP_P1"
+-	PIN 58: "MDI_RN_P1"
+-	PIN 59: "MDI_RP_P2"
+-	PIN 60: "MDI_RN_P2"
+-	PIN 61: "MDI_TP_P2"
+-	PIN 62: "MDI_TN_P2"
+-	PIN 63: "MDI_TP_P3"
+-	PIN 64: "MDI_TN_P3"
+-	PIN 65: "MDI_RP_P3"
+-	PIN 66: "MDI_RN_P3"
+-	PIN 67: "MDI_RP_P4"
+-	PIN 68: "MDI_RN_P4"
+-	PIN 69: "MDI_TP_P4"
+-	PIN 70: "MDI_TN_P4"
+-	PIN 71: "PMIC_SCL"
+-	PIN 72: "PMIC_SDA"
+-	PIN 73: "SPIC1_CLK"
+-	PIN 74: "SPIC1_MOSI"
+-	PIN 75: "SPIC1_MISO"
+-	PIN 76: "SPIC1_CS"
+-	PIN 77: "GPIO_D"
+-	PIN 78: "WATCHDOG"
+-	PIN 79: "RTS3_N"
+-	PIN 80: "CTS3_N"
+-	PIN 81: "TXD3"
+-	PIN 82: "RXD3"
+-	PIN 83: "PERST0_N"
+-	PIN 84: "PERST1_N"
+-	PIN 85: "WLED_N"
+-	PIN 86: "EPHY_LED0_N"
+-	PIN 87: "AUXIN0"
+-	PIN 88: "AUXIN1"
+-	PIN 89: "AUXIN2"
+-	PIN 90: "AUXIN3"
+-	PIN 91: "TXD4"
+-	PIN 92: "RXD4"
+-	PIN 93: "RTS4_N"
+-	PIN 94: "CST4_N"
+-	PIN 95: "PWM1"
+-	PIN 96: "PWM2"
+-	PIN 97: "PWM3"
+-	PIN 98: "PWM4"
+-	PIN 99: "PWM5"
+-	PIN 100: "PWM6"
+-	PIN 101: "PWM7"
+-	PIN 102: "GPIO_E"
+-
+-Valid values for function are:
+-	"emmc", "eth", "i2c", "i2s", "ir", "led", "flash", "pcie",
+-	"pmic", "pwm", "sd", "spi", "tdm", "uart", "watchdog"
+-
+-Valid values for groups are:
+-additional data is put followingly with valid value allowing us to know which
+-applicable function and which relevant pins (in pin#) are able applied for that
+-group.
+-
+-	Valid value			function	pins (in pin#)
+-	-------------------------------------------------------------------------
+-	"emmc"				"emmc"		40, 41, 42, 43, 44, 45,
+-							47, 48, 49, 50
+-	"emmc_rst"			"emmc"		37
+-	"esw"				"eth"		51, 52, 53, 54, 55, 56,
+-							57, 58, 59, 60, 61, 62,
+-							63, 64, 65, 66, 67, 68,
+-							69, 70
+-	"esw_p0_p1"			"eth"		51, 52, 53, 54, 55, 56,
+-							57, 58
+-	"esw_p2_p3_p4"			"eth"		59, 60, 61, 62, 63, 64,
+-							65, 66, 67, 68, 69, 70
+-	"rgmii_via_esw"			"eth"		59, 60, 61, 62, 63, 64,
+-							65, 66, 67, 68, 69, 70
+-	"rgmii_via_gmac1"		"eth"		59, 60, 61, 62, 63, 64,
+-							65, 66, 67, 68, 69, 70
+-	"rgmii_via_gmac2"		"eth"		25, 26, 27, 28, 29, 30,
+-							31, 32, 33, 34, 35, 36
+-	"mdc_mdio"			"eth"		23, 24
+-	"i2c0"				"i2c"		14, 15
+-	"i2c1_0"			"i2c"		55, 56
+-	"i2c1_1"			"i2c"		73, 74
+-	"i2c1_2"			"i2c"		87, 88
+-	"i2c2_0"			"i2c"		57, 58
+-	"i2c2_1"			"i2c"		75, 76
+-	"i2c2_2"			"i2c"		89, 90
+-	"i2s_in_mclk_bclk_ws"		"i2s"		3, 4, 5
+-	"i2s1_in_data"			"i2s"		1
+-	"i2s2_in_data"			"i2s"		16
+-	"i2s3_in_data"			"i2s"		17
+-	"i2s4_in_data"			"i2s"		18
+-	"i2s_out_mclk_bclk_ws"		"i2s"		3, 4, 5
+-	"i2s1_out_data"			"i2s"		2
+-	"i2s2_out_data"			"i2s"		19
+-	"i2s3_out_data"			"i2s"		20
+-	"i2s4_out_data"			"i2s"		21
+-	"ir_0_tx"			"ir"		16
+-	"ir_1_tx"			"ir"		59
+-	"ir_2_tx"			"ir"		99
+-	"ir_0_rx"			"ir"		17
+-	"ir_1_rx"			"ir"		60
+-	"ir_2_rx"			"ir"		100
+-	"ephy_leds"			"led"		86, 91, 92, 93, 94
+-	"ephy0_led"			"led"		86
+-	"ephy1_led"			"led"		91
+-	"ephy2_led"			"led"		92
+-	"ephy3_led"			"led"		93
+-	"ephy4_led"			"led"		94
+-	"wled"				"led"		85
+-	"par_nand"			"flash"		37, 38, 39, 40, 41, 42,
+-							43, 44, 45, 46, 47, 48,
+-							49, 50
+-	"snfi"				"flash"		8, 9, 10, 11, 12, 13
+-	"spi_nor"			"flash"		8, 9, 10, 11, 12, 13
+-	"pcie0_0_waken"			"pcie"		14
+-	"pcie0_1_waken"			"pcie"		79
+-	"pcie1_0_waken"			"pcie"		14
+-	"pcie0_0_clkreq"		"pcie"		15
+-	"pcie0_1_clkreq"		"pcie"		80
+-	"pcie1_0_clkreq"		"pcie"		15
+-	"pcie0_pad_perst"		"pcie"		83
+-	"pcie1_pad_perst"		"pcie"		84
+-	"pmic_bus"			"pmic"		71, 72
+-	"pwm_ch1_0"			"pwm"		51
+-	"pwm_ch1_1"			"pwm"		73
+-	"pwm_ch1_2"			"pwm"		95
+-	"pwm_ch2_0"			"pwm"		52
+-	"pwm_ch2_1"			"pwm"		74
+-	"pwm_ch2_2"			"pwm"		96
+-	"pwm_ch3_0"			"pwm"		53
+-	"pwm_ch3_1"			"pwm"		75
+-	"pwm_ch3_2"			"pwm"		97
+-	"pwm_ch4_0"			"pwm"		54
+-	"pwm_ch4_1"			"pwm"		67
+-	"pwm_ch4_2"			"pwm"		76
+-	"pwm_ch4_3"			"pwm"		98
+-	"pwm_ch5_0"			"pwm"		68
+-	"pwm_ch5_1"			"pwm"		77
+-	"pwm_ch5_2"			"pwm"		99
+-	"pwm_ch6_0"			"pwm"		69
+-	"pwm_ch6_1"			"pwm"		78
+-	"pwm_ch6_2"			"pwm"		81
+-	"pwm_ch6_3"			"pwm"		100
+-	"pwm_ch7_0"			"pwm"		70
+-	"pwm_ch7_1"			"pwm"		82
+-	"pwm_ch7_2"			"pwm"		101
+-	"sd_0"				"sd"		16, 17, 18, 19, 20, 21
+-	"sd_1"				"sd"		25, 26, 27, 28, 29, 30
+-	"spic0_0"			"spi"		63, 64, 65, 66
+-	"spic0_1"			"spi"		79, 80, 81, 82
+-	"spic1_0"			"spi"		67, 68, 69, 70
+-	"spic1_1"			"spi"		73, 74, 75, 76
+-	"spic2_0_wp_hold"		"spi"		8, 9
+-	"spic2_0"			"spi"		10, 11, 12, 13
+-	"tdm_0_out_mclk_bclk_ws"	"tdm"		8, 9, 10
+-	"tdm_0_in_mclk_bclk_ws"		"tdm"		11, 12, 13
+-	"tdm_0_out_data"		"tdm"		20
+-	"tdm_0_in_data"			"tdm"		21
+-	"tdm_1_out_mclk_bclk_ws"	"tdm"		57, 58, 59
+-	"tdm_1_in_mclk_bclk_ws"		"tdm"		60, 61, 62
+-	"tdm_1_out_data"		"tdm"		55
+-	"tdm_1_in_data"			"tdm"		56
+-	"uart0_0_tx_rx"			"uart"		6, 7
+-	"uart1_0_tx_rx"			"uart"		55, 56
+-	"uart1_0_rts_cts"		"uart"		57, 58
+-	"uart1_1_tx_rx"			"uart"		73, 74
+-	"uart1_1_rts_cts"		"uart"		75, 76
+-	"uart2_0_tx_rx"			"uart"		3, 4
+-	"uart2_0_rts_cts"		"uart"		1, 2
+-	"uart2_1_tx_rx"			"uart"		51, 52
+-	"uart2_1_rts_cts"		"uart"		53, 54
+-	"uart2_2_tx_rx"			"uart"		59, 60
+-	"uart2_2_rts_cts"		"uart"		61, 62
+-	"uart2_3_tx_rx"			"uart"		95, 96
+-	"uart3_0_tx_rx"			"uart"		57, 58
+-	"uart3_1_tx_rx"			"uart"		81, 82
+-	"uart3_1_rts_cts"		"uart"		79, 80
+-	"uart4_0_tx_rx"			"uart"		61, 62
+-	"uart4_1_tx_rx"			"uart"		91, 92
+-	"uart4_1_rts_cts"		"uart"		93, 94
+-	"uart4_2_tx_rx"			"uart"		97, 98
+-	"uart4_2_rts_cts"		"uart"		95, 96
+-	"watchdog"			"watchdog"	78
+-
+-
+-== Valid values for pins, function and groups on MT7629 ==
+-
+-	Pin #:  Valid values for pins
+-	-----------------------------
+-	PIN 0: "TOP_5G_CLK"
+-	PIN 1: "TOP_5G_DATA"
+-	PIN 2: "WF0_5G_HB0"
+-	PIN 3: "WF0_5G_HB1"
+-	PIN 4: "WF0_5G_HB2"
+-	PIN 5: "WF0_5G_HB3"
+-	PIN 6: "WF0_5G_HB4"
+-	PIN 7: "WF0_5G_HB5"
+-	PIN 8: "WF0_5G_HB6"
+-	PIN 9: "XO_REQ"
+-	PIN 10: "TOP_RST_N"
+-	PIN 11: "SYS_WATCHDOG"
+-	PIN 12: "EPHY_LED0_N_JTDO"
+-	PIN 13: "EPHY_LED1_N_JTDI"
+-	PIN 14: "EPHY_LED2_N_JTMS"
+-	PIN 15: "EPHY_LED3_N_JTCLK"
+-	PIN 16: "EPHY_LED4_N_JTRST_N"
+-	PIN 17: "WF2G_LED_N"
+-	PIN 18: "WF5G_LED_N"
+-	PIN 19: "I2C_SDA"
+-	PIN 20: "I2C_SCL"
+-	PIN 21: "GPIO_9"
+-	PIN 22: "GPIO_10"
+-	PIN 23: "GPIO_11"
+-	PIN 24: "GPIO_12"
+-	PIN 25: "UART1_TXD"
+-	PIN 26: "UART1_RXD"
+-	PIN 27: "UART1_CTS"
+-	PIN 28: "UART1_RTS"
+-	PIN 29: "UART2_TXD"
+-	PIN 30: "UART2_RXD"
+-	PIN 31: "UART2_CTS"
+-	PIN 32: "UART2_RTS"
+-	PIN 33: "MDI_TP_P1"
+-	PIN 34: "MDI_TN_P1"
+-	PIN 35: "MDI_RP_P1"
+-	PIN 36: "MDI_RN_P1"
+-	PIN 37: "MDI_RP_P2"
+-	PIN 38: "MDI_RN_P2"
+-	PIN 39: "MDI_TP_P2"
+-	PIN 40: "MDI_TN_P2"
+-	PIN 41: "MDI_TP_P3"
+-	PIN 42: "MDI_TN_P3"
+-	PIN 43: "MDI_RP_P3"
+-	PIN 44: "MDI_RN_P3"
+-	PIN 45: "MDI_RP_P4"
+-	PIN 46: "MDI_RN_P4"
+-	PIN 47: "MDI_TP_P4"
+-	PIN 48: "MDI_TN_P4"
+-	PIN 49: "SMI_MDC"
+-	PIN 50: "SMI_MDIO"
+-	PIN 51: "PCIE_PERESET_N"
+-	PIN 52: "PWM_0"
+-	PIN 53: "GPIO_0"
+-	PIN 54: "GPIO_1"
+-	PIN 55: "GPIO_2"
+-	PIN 56: "GPIO_3"
+-	PIN 57: "GPIO_4"
+-	PIN 58: "GPIO_5"
+-	PIN 59: "GPIO_6"
+-	PIN 60: "GPIO_7"
+-	PIN 61: "GPIO_8"
+-	PIN 62: "SPI_CLK"
+-	PIN 63: "SPI_CS"
+-	PIN 64: "SPI_MOSI"
+-	PIN 65: "SPI_MISO"
+-	PIN 66: "SPI_WP"
+-	PIN 67: "SPI_HOLD"
+-	PIN 68: "UART0_TXD"
+-	PIN 69: "UART0_RXD"
+-	PIN 70: "TOP_2G_CLK"
+-	PIN 71: "TOP_2G_DATA"
+-	PIN 72: "WF0_2G_HB0"
+-	PIN 73: "WF0_2G_HB1"
+-	PIN 74: "WF0_2G_HB2"
+-	PIN 75: "WF0_2G_HB3"
+-	PIN 76: "WF0_2G_HB4"
+-	PIN 77: "WF0_2G_HB5"
+-	PIN 78: "WF0_2G_HB6"
+-
+-Valid values for function are:
+-	"eth", "i2c", "led", "flash", "pcie", "pwm", "spi", "uart",
+-	"watchdog", "wifi"
+-
+-Valid values for groups are:
+-	Valid value			function	pins (in pin#)
+-	----------------------------------------------------------------
+-	"mdc_mdio"			"eth"		23, 24
+-	"i2c_0"				"i2c"		19, 20
+-	"i2c_1"				"i2c"		53, 54
+-	"ephy_leds"			"led"		12, 13, 14, 15, 16,
+-							17, 18
+-	"ephy0_led"			"led"		12
+-	"ephy1_led"			"led"		13
+-	"ephy2_led"			"led"		14
+-	"ephy3_led"			"led"		15
+-	"ephy4_led"			"led"		16
+-	"wf2g_led"			"led"		17
+-	"wf5g_led"			"led"		18
+-	"snfi"				"flash"		62, 63, 64, 65, 66, 67
+-	"spi_nor"			"flash"		62, 63, 64, 65, 66, 67
+-	"pcie_pereset"			"pcie"		51
+-	"pcie_wake"			"pcie"		55
+-	"pcie_clkreq"			"pcie"		56
+-	"pwm_0"				"pwm"		52
+-	"pwm_1"				"pwm"		61
+-	"spi_0"				"spi"		21, 22, 23, 24
+-	"spi_1"				"spi"		62, 63, 64, 65
+-	"spi_wp"			"spi"		66
+-	"spi_hold"			"spi"		67
+-	"uart0_txd_rxd"			"uart"		68, 69
+-	"uart1_0_txd_rxd"		"uart"		25, 26
+-	"uart1_0_cts_rts"		"uart"		27, 28
+-	"uart1_1_txd_rxd"		"uart"		53, 54
+-	"uart1_1_cts_rts"		"uart"		55, 56
+-	"uart2_0_txd_rxd"		"uart"		29, 30
+-	"uart2_0_cts_rts"		"uart"		31, 32
+-	"uart2_1_txd_rxd"		"uart"		57, 58
+-	"uart2_1_cts_rts"		"uart"		59, 60
+-	"watchdog"			"watchdog"	11
+-	"wf0_2g"			"wifi"		70, 71, 72, 73, 74,
+-							75, 76, 77, 78
+-	"wf0_5g"			"wifi"		0, 1, 2, 3, 4, 5, 6,
+-							7, 8, 9, 10
+-
+-Example:
+-
+-	pio: pinctrl@10211000 {
+-		compatible = "mediatek,mt7622-pinctrl";
+-		reg = <0 0x10211000 0 0x1000>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-
+-		pinctrl_eth_default: eth-default {
+-			mux-mdio {
+-				groups = "mdc_mdio";
+-				function = "eth";
+-				drive-strength = <12>;
+-			};
+-
+-			mux-gmac2 {
+-				groups = "gmac2";
+-				function = "eth";
+-				drive-strength = <12>;
+-			};
+-
+-			mux-esw {
+-				groups = "esw";
+-				function = "eth";
+-				drive-strength = <8>;
+-			};
+-
+-			conf-mdio {
+-				pins = "MDC";
+-				bias-pull-up;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+deleted file mode 100644
+index eccbe3f55d3f3..0000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
++++ /dev/null
+@@ -1,132 +0,0 @@
+-* Mediatek MT8183 Pin Controller
+-
+-The Mediatek's Pin controller is used to control SoC pins.
+-
+-Required properties:
+-- compatible: value should be one of the following.
+-	"mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
+-- gpio-controller : Marks the device node as a gpio controller.
+-- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+-  binding is used, the amount of cells must be specified as 2. See the below
+-  mentioned gpio binding representation for description of particular cells.
+-- gpio-ranges : gpio valid number range.
+-- reg: physical address base for gpio base registers. There are 10 GPIO
+-  physical address base in mt8183.
+-
+-Optional properties:
+-- reg-names: gpio base register names. There are 10 gpio base register
+-  names in mt8183. They are "iocfg0", "iocfg1", "iocfg2", "iocfg3", "iocfg4",
+-  "iocfg5", "iocfg6", "iocfg7", "iocfg8", "eint".
+-- interrupt-controller: Marks the device node as an interrupt controller
+-- #interrupt-cells: Should be two.
+-- interrupts : The interrupt outputs to sysirq.
+-
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices.
+-
+-Subnode format
+-A pinctrl node should contain at least one subnodes representing the
+-pinctrl groups available on the machine. Each subnode will list the
+-pins it needs, and how they should be configured, with regard to muxer
+-configuration, pullups, drive strength, input enable/disable and input schmitt.
+-
+-    node {
+-	pinmux = <PIN_NUMBER_PINMUX>;
+-	GENERIC_PINCONFIG;
+-    };
+-
+-Required properties:
+-- pinmux: integer array, represents gpio pin number and mux setting.
+-    Supported pin number and mux varies for different SoCs, and are defined
+-    as macros in boot/dts/<soc>-pinfunc.h directly.
+-
+-Optional properties:
+-- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
+-    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low,
+-    output-high, input-schmitt-enable, input-schmitt-disable
+-    and drive-strength are valid.
+-
+-    Some special pins have extra pull up strength, there are R0 and R1 pull-up
+-    resistors available, but for user, it's only need to set R1R0 as 00, 01,
+-    10 or 11. So It needs config "mediatek,pull-up-adv" or
+-    "mediatek,pull-down-adv" to support arguments for those special pins.
+-    Valid arguments are from 0 to 3.
+-
+-    mediatek,tdsel: An integer describing the steps for output level shifter
+-      duty cycle when asserted (high pulse width adjustment). Valid arguments
+-      are from 0 to 15.
+-    mediatek,rdsel: An integer describing the steps for input level shifter
+-      duty cycle when asserted (high pulse width adjustment). Valid arguments
+-      are from 0 to 63.
+-
+-    When config drive-strength, it can support some arguments, such as
+-    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
+-    It can only support 2/4/6/8/10/12/14/16mA in mt8183.
+-    For I2C pins, there are existing generic driving setup and the specific
+-    driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA driving
+-    adjustment in generic driving setup. But in specific driving setup,
+-    they can support 0.125/0.25/0.5/1mA adjustment. If we enable specific
+-    driving setup for I2C pins, the existing generic driving setup will be
+-    disabled. For some special features, we need the I2C pins specific
+-    driving setup. The specific driving setup is controlled by E1E0EN.
+-    So we need add extra vendor driving preperty instead of
+-    the generic driving property.
+-    We can add "mediatek,drive-strength-adv = <XXX>;" to describe the specific
+-    driving setup property. "XXX" means the value of E1E0EN. EN is 0 or 1.
+-    It is used to enable or disable the specific driving setup.
+-    E1E0 is used to describe the detail strength specification of the I2C pin.
+-    When E1=0/E0=0, the strength is 0.125mA.
+-    When E1=0/E0=1, the strength is 0.25mA.
+-    When E1=1/E0=0, the strength is 0.5mA.
+-    When E1=1/E0=1, the strength is 1mA.
+-    So the valid arguments of "mediatek,drive-strength-adv" are from 0 to 7.
+-
+-Examples:
+-
 -#include "mt8183-pinfunc.h"
-+#include <dt-bindings/pinctrl/mt8183-pinfunc.h>
- 
- / {
- 	compatible = "mediatek,mt8183";
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h b/include/dt-bindings/pinctrl/mt8183-pinfunc.h
-similarity index 100%
-rename from arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h
-rename to include/dt-bindings/pinctrl/mt8183-pinfunc.h
+-
+-...
+-{
+-	pio: pinctrl@10005000 {
+-		compatible = "mediatek,mt8183-pinctrl";
+-		reg = <0 0x10005000 0 0x1000>,
+-		      <0 0x11f20000 0 0x1000>,
+-		      <0 0x11e80000 0 0x1000>,
+-		      <0 0x11e70000 0 0x1000>,
+-		      <0 0x11e90000 0 0x1000>,
+-		      <0 0x11d30000 0 0x1000>,
+-		      <0 0x11d20000 0 0x1000>,
+-		      <0 0x11c50000 0 0x1000>,
+-		      <0 0x11f30000 0 0x1000>,
+-		      <0 0x1000b000 0 0x1000>;
+-		reg-names = "iocfg0", "iocfg1", "iocfg2",
+-			    "iocfg3", "iocfg4", "iocfg5",
+-			    "iocfg6", "iocfg7", "iocfg8",
+-			    "eint";
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		gpio-ranges = <&pio 0 0 192>;
+-		interrupt-controller;
+-		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
+-		#interrupt-cells = <2>;
+-
+-		i2c0_pins_a: i2c0 {
+-			pins1 {
+-				pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
+-					 <PINMUX_GPIO49__FUNC_SDA5>;
+-				mediatek,pull-up-adv = <3>;
+-				mediatek,drive-strength-adv = <7>;
+-			};
+-		};
+-
+-		i2c1_pins_a: i2c1 {
+-			pins {
+-				pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
+-					 <PINMUX_GPIO51__FUNC_SDA3>;
+-				mediatek,pull-down-adv = <2>;
+-				mediatek,drive-strength-adv = <4>;
+-			};
+-		};
+-		...
+-	};
+-};
 -- 
 2.32.0.554.ge1b32706d8-goog
 
