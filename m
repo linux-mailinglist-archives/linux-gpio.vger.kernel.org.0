@@ -2,162 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37D523DE306
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 01:27:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E80B3DE4E3
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 06:07:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232614AbhHBX2H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Aug 2021 19:28:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232311AbhHBX2H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Aug 2021 19:28:07 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5036C0613D5
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Aug 2021 16:27:56 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id f27so4194984vsp.8
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Aug 2021 16:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QlzAmryyyeDSDQ1srUNZEgdUE1Lb18Ti4rrmaegWVkw=;
-        b=Ajmr1ho9O5wL+Ew02Av/bUFYn8XmF5TlaNe9PnsD4qjKZxYPBh8Ge6NcYutRfxIzUc
-         JzKbAgn+JG95Zms5Z5w0a2ZuyOjUQWCuyc9IxcYp61b9ECvW9FXLrqERM7GgSVg8cNHW
-         zOJHKvgJHXFIZAc7W7wvYHcGLp3zh5CaIo49Ttue+NXQGnSzoEWNn5lQSeOtryypEVU7
-         B/RKTe48HxHJspuGTebmsxIS1Wg/+LaA22N5jp/iqCGfOvsWgWY2BRLf/F33Bivk3UBt
-         2+f/FYN/8cvKYlCMFXDkVTvCA/ocfTaDlhP7x+uxHc+w6C7WVl0L13Zk6bdrEHKgsX4C
-         gC9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QlzAmryyyeDSDQ1srUNZEgdUE1Lb18Ti4rrmaegWVkw=;
-        b=uOxI9PSMhT3DnpqVQbQPf3n2yezlZlTmc/XNZ2SO6Xq4AHITtDOci0mhiO4S7EP8tV
-         DgWtot1RmZx41uMnxjUgXm3hXVB/DNb8GS7QBJPE+wUeKp5DVoPvxSyVLmxmCLpz3nYf
-         sUp/P6odvdc6Mcw4XmlxUs9boMyibDvq1Nof//7s26Q5dNKLz5ZReqRdu7rbccosiCph
-         il8S8nJ8hw/Guoogr4Opwwa6mns4UmHjTowTam6xEsT81hV8Le+dMXMp1dPmtj+BRfUP
-         brqszgVBK7r88/dBWM6eWPbHEbYxvOn+3sqSuFTzgFMH+t+xkCLWd9RZDmeC+nzxerZ+
-         zzOA==
-X-Gm-Message-State: AOAM532TX3dVgQjnj3F/GZpI/0xkKJ7JCntvOBoysdzND+hTt7jtUZqr
-        vFCO66JjDxQ9xrMJXfBtiMvgGFPZMbJSUk8PEZ4nHw==
-X-Google-Smtp-Source: ABdhPJzJ3U5wtXY2YCtx/k4DqUJTlrgpZ48cDKUw9DVG41O8Yu+2eqmJVsghdHYCgAijN2Q95YtCA/yFaRSlHV3vfbA=
-X-Received: by 2002:a67:f60e:: with SMTP id k14mr12216795vso.30.1627946875840;
- Mon, 02 Aug 2021 16:27:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210730144922.29111-1-semen.protsenko@linaro.org>
- <5e35b0a7-13aa-3c62-ca49-14af2fcb2a08@canonical.com> <c3486111-0ec9-9679-d2a2-68b2f33a2450@canonical.com>
- <CAPLW+4kbnJEBkc0D=RWt59JxBan8X1uDy6sSXBiYAq8N9FDV6A@mail.gmail.com>
- <13f166bb-7103-25d5-35a6-8ec53a1f1817@canonical.com> <2dacc205-04ce-c206-a393-50ba0d5aa1a7@canonical.com>
-In-Reply-To: <2dacc205-04ce-c206-a393-50ba0d5aa1a7@canonical.com>
-From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Tue, 3 Aug 2021 02:27:44 +0300
-Message-ID: <CAPLW+4=1Anr6rCWEBL04D81aEAEVKD5cGE+ObXH3q-HNHce07w@mail.gmail.com>
-Subject: Re: [PATCH 00/12] Add minimal support for Exynos850 SoC
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
-        Ryu Euiyoul <ryu.real@samsung.com>,
-        Tom Gall <tom.gall@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S229611AbhHCEHl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Aug 2021 00:07:41 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:50127 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229498AbhHCEHl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 00:07:41 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id E90DD2B0114E;
+        Tue,  3 Aug 2021 00:07:29 -0400 (EDT)
+Received: from imap43 ([10.202.2.93])
+  by compute2.internal (MEProxy); Tue, 03 Aug 2021 00:07:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=Ppnjgn9uT3nmuKcO7tOFj+ln9O4wmRR
+        NvfgdBYB7dI8=; b=OKHYuR8QZZlGqTrvGubS+4e0MQo1R70rVcET9ytidu7sxph
+        yJt4i/gOXrrca9QRlpLIr4NrWiEI+dNx6aWV9jbF+t1pifDlnWZWYwFWzq08FP6W
+        JFnZJs+QcTR339vXltq9ATJN9WIS1nsQSOp+/2CVnsTDqxX14GwcVRVtjyw0y+7a
+        MUZyOiTBN6/MpcHwhtwT4T8D14ZU3McUGXMZWwvr9A929IDxtdoUcu5aFh3A/B9E
+        DD1EqRncPBaRp+nm9eevBS3dkRBzH2z0RcMm1rXrSaq7cEum+BYVbs2778qA9WWb
+        CxNXl+f2uix6CeRXubuWw6FoDVLukJAbSkw47Qg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Ppnjgn
+        9uT3nmuKcO7tOFj+ln9O4wmRRNvfgdBYB7dI8=; b=eaIYKV3Y5GoVbgReKh+RM2
+        JGBu+L4Afj8EUiBJI3cDyRe3Jryb23kYKJMZRIJGkEfYaGy1jhvCaSaJKdwRAjps
+        nC6lYM4h37UnmrhFIZJk67D1AtRO4xDJcmwbQcUZw98bbv6tSBap2Jhw9oZc3ndD
+        jG843fceNArsjNPKqsa89HzJ6gujxDdjLYPRP7AH1RDlGBjH5FqbWvyLl9PaK/qx
+        oa3tPvSvToJc/T+uj5LO+NKzgnvi22EKyGxMIKuhS+sA6OqGd/QtzXSIFYNbsNsY
+        DCri3zyPwqWOw26Nl434ybU6EeX3LB+PgEWBj4jgmryZugkwrhvglX3/VipwmYDA
+        ==
+X-ME-Sender: <xms:AMEIYVLjt93FybOWFgADOALilosXVsR4f5JrWUspOxDvlhUL35q_Sg>
+    <xme:AMEIYRKSFZGOCubEzXBIftEsnTEQZdSkUfiNTOilAhzQBjO-Exn9v9y4NFsArGkh7
+    k_TgDlCDDdsJe0tnQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrieefgdejtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
+    htthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedvhefh
+    veeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:AMEIYdu1Y2NPjTkklOrZaN2uA00iHraj7UGZ4WR0bVrM8OC4tnoBcQ>
+    <xmx:AMEIYWacnrv6Yz8o-MtOdRkAnWaMIgzj13hQNDaMUWMlMoVahMIAWw>
+    <xmx:AMEIYcb_V0H3WIDP4K4Pb4F4YMTBu8uAWnxU6C2YZfijNAuGsp-Pfw>
+    <xmx:AcEIYamiyxvRIf1TCYYqtGn9mUAjzZhuewuQ_42ivabLuCy-wfVw_wXguRs>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id EEF55AC0DD0; Tue,  3 Aug 2021 00:07:27 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-548-g3a0b1fef7b-fm-20210802.001-g3a0b1fef
+Mime-Version: 1.0
+Message-Id: <50aaf381-8cda-4656-9222-f23fda75d3bc@www.fastmail.com>
+In-Reply-To: <CAHp75Vdx9QA7dmSWK8GHxBBxP0uYjrz=Gm=75yqaWbBX6k3v=w@mail.gmail.com>
+References: <20210723075858.376378-1-andrew@aj.id.au>
+ <CAHp75VeQML7njMZ6x8kC-ZJVexC1xJ6n1cB3JneVMAVfuOJgWw@mail.gmail.com>
+ <d019990e-a725-4ef5-bb54-aadee9d18b86@www.fastmail.com>
+ <CAHp75Vc2W+WmwNj1AvH6EiT_80c+5gADV9QzK+asHxpd1Ucppw@mail.gmail.com>
+ <6cc64039-f82a-4c1e-ad2c-16fad7aa3178@www.fastmail.com>
+ <CAHp75Vdx9QA7dmSWK8GHxBBxP0uYjrz=Gm=75yqaWbBX6k3v=w@mail.gmail.com>
+Date:   Tue, 03 Aug 2021 13:37:07 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Joel Stanley" <joel@jms.id.au>, "Pavel Machek" <pavel@ucw.cz>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/6] leds: Fix pca955x GPIO pin mappings
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 31 Jul 2021 at 11:12, Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> On 31/07/2021 09:29, Krzysztof Kozlowski wrote:
-> > On 30/07/2021 21:02, Sam Protsenko wrote:
-> >> Hi Krzysztof,
-> >>
-> >> On Fri, 30 Jul 2021 at 20:21, Krzysztof Kozlowski
-> >> <krzysztof.kozlowski@canonical.com> wrote:
-> >>>
-> >>> On 30/07/2021 17:18, Krzysztof Kozlowski wrote:
-> >>>> On 30/07/2021 16:49, Sam Protsenko wrote:
-> >>>>> This patch series adds initial platform support for Samsung Exynos850
-> >>>>> SoC [1]. With this patchset it's possible to run the kernel with BusyBox
-> >>>>> rootfs as a RAM disk. More advanced platform support (like MMC driver
-> >>>>> additions) will be added later. The idea is to keep the first submission
-> >>>>> minimal to ease the review, and then build up on top of that.
-> >>>>>
-> >>>>> [1] https://www.samsung.com/semiconductor/minisite/exynos/products/mobileprocessor/exynos-850/
-> >>>>>
-> >>>>
-> >>>> Great work!
-> >>>>
-> >>
-> >> Thanks, Krzysztof! And thank you for reviewing the whole series.
-> >>
-> >>>> What's the SoC revision number (should be accessible via
-> >>>> /sys/bus/soc/devices/soc0/)? Recent wrap in numbering of Exynos chips
-> >>>> might bring confusion...
-> >>
-> >> # cat /sys/devices/soc0/revision
-> >> 0
-> >
-> > soc_id but you're right it won't be set for unknown SoCs. You need to
-> > extend drivers/soc/samsung/exynos-chipid.c to parse new values (E3830000
-> > for product ID) and maybe new register offsets (previous offset is 0x0,
-> > for 3830 is 0x10 I think). Also revision mask might change.
-> >
-> >>> Judging by vendor's sources it is quite confusing. It looks mostly like
-> >>> Exynos3830 but in few other cases it uses Exynos9 compatibles (Exynos9,
-> >>> Exynos9820). Only in few places there is Exynos850. Marketing department
-> >>> made it so confusing...  The revision embedded in SoC would be very
-> >>> interesting.
-> >>>
-> >>
-> >> As I understand, this SoC is called Exynos850 everywhere now.
-> >> Exynos3830 is its old name, not used anymore. As you noticed from
-> >> patch #2, it shares some definitions with Exynos9 SoC, so I guess some
-> >> software is similar for both architectures. Not sure about hardware
-> >> though, never worked with Exynos9 CPUs. Anyway, I asked Samsung
-> >> representatives about naming, and it seems like we should stick to
-> >> "Exynos850" name, even in code.
-> >
-> >
-> > Since the chip identifies itself as E3830000, I would prefer naming
-> > matching real product ID instead of what is pushed by marketing or sales
-> > representatives. The marketing names don't have to follow any
-> > engineering rules, they can be changed and renamed. Sales follows rather
-> > money and corporate rules, not consistency for upstream project.
->
-> On the other hand we have already two exceptions for naming
-> inconsistency - Exynos3250 identifies itself as 3472 (which is confusing
-> because 3250 is two core and there is a separate quad-core
-> Exyons3472...) and Exynos5800 is actually marketing name for a revision
-> of Exynos5422. Maybe indeed will be easier to go with the branded name
-> 850...
->
 
-Well, chip engraving says "3830", but I was specifically told to stick
-to "850" in upstream kernel. I can presume there was some mix ups with
-this naming, and it might be the case it's better to stick to "850"
-exactly to avoid further confusion. Yes, I can see that
-EXYNOS3830_SOC_ID = 0xE3830000 in chipid driver, but we can return
-"EXYNOS850" string for that const, right? If you google "Exynos850"
-and "Exynos3830", it's obvious everybody uses the former, so I'd
-appreciate if we can stick to "850" in the end.
 
->
-> Best regards,
-> Krzysztof
+On Thu, 29 Jul 2021, at 17:10, Andy Shevchenko wrote:
+> On Thu, Jul 29, 2021 at 3:39 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > On Wed, 28 Jul 2021, at 18:43, Andy Shevchenko wrote:
+> > > On Wed, Jul 28, 2021 at 8:43 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > > > However, userspace would never have
+> > > > got the results it expected with the existing driver implementation, so
+> > > > I guess you could argue that no such (useful) userspace exists. Given
+> > > > that, we could adopt the strategy of always defining a gpiochip
+> > > > covering the whole pin space, and parts of the devicetree binding just
+> > > > become redundant.
+> > >
+> > > I'm lost now. GPIO has its own userspace ABI, how does it work right
+> > > now in application to this chip?
+> >
+> > As above, it "works" if the GPIOs specified in the devicetree are
+> > contiguous from line 0. It's broken if they're not.
+> 
+> So, "it never works" means there is no bug. Now, what we need is to
+> keep the same enumeration scheme, but if you wish to be used half/half
+> (or any other ratio), the driver should do like the above mentioned
+> PWM, i.e. register entire space and depending on the requestor either
+> proceed with a line or mark it as BUSY.
+> 
+> Ideally, looking into what the chip can do, this should be indeed
+> converted to some like pin control + PWM + LED + GPIO drivers. Then
+> the function in pin mux configuration can show what exactly is enabled
+> on the certain line(s).
+
+So just to clarify, you want both solutions here?
+
+1. A gpiochip that covers the entire pin space
+2. A pinmux implementation that manages pin allocation to the different drivers
+
+In that case we can largely leave this series as is? We only need to 
+adjust how we configure the gpiochip by dropping the pin-mapping 
+implementation?
+
+I don't have a need to implement a PWM driver for it right now but that 
+would make sense to do at some point.
+
+Andrew
