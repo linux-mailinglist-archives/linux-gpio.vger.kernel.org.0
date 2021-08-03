@@ -2,109 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83C163DEE6F
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 14:58:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9BFA3DEF78
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 15:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236045AbhHCM7C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Aug 2021 08:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235895AbhHCM7B (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 08:59:01 -0400
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C9EFC061798
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Aug 2021 05:58:50 -0700 (PDT)
-Received: by mail-ua1-x92e.google.com with SMTP id t25so6275505uar.13
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Aug 2021 05:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZNSRpZlFlkmyaZcGeRCdqzNpmwaM/CsxmQZTU5Q+xqI=;
-        b=JTvNoxAfXZ9vd1+wTKKiK81cryvFYXUGiGJWt11dtugSKCRZzRqEhcPYJix7xbxCp3
-         YKo8vQZvgq9xZzfTHfarl0LQRITIaB4flkRr46M/PM11DUdJZCYJj4JHzB1m4bqx5bK8
-         EtJobyfZ5hYhOHAmCcTk1L77+1UWYJBdyJGjdJ30Ntetl239/qIi+Fiv0aETt/cPMddI
-         ms9C8NsZJic+woCQWggmqJrKuEW+FhJ3tl1PWC1C8h6wEZIajpUf5wuiwiZo6WQaNEmA
-         JlftDOWGep6h0KpoD8jIiUEJIHA707wXiVqyP72XfW2jJC1M40uKyybpRAtzIlzWGXYI
-         vljQ==
+        id S236128AbhHCN7t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Aug 2021 09:59:49 -0400
+Received: from mail-il1-f182.google.com ([209.85.166.182]:35788 "EHLO
+        mail-il1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236045AbhHCN7s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 09:59:48 -0400
+Received: by mail-il1-f182.google.com with SMTP id k3so19579880ilu.2;
+        Tue, 03 Aug 2021 06:59:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZNSRpZlFlkmyaZcGeRCdqzNpmwaM/CsxmQZTU5Q+xqI=;
-        b=EoE7hnhjfW1hrTwUieOJVNpiGDwNKNssX8sk0gDeu7ujulaBvee+70Y9+reNcmeF3X
-         pkjk6kkK8K/T8cnNATlBXobWlAJq/tvyVVladm94V1/nqvH6i9VNAjBh8rGvHIm8xPvQ
-         t9GCxkSsR+Su9tfZ86t35oTymFDXWk9IyJ3A//U81XVSebYuJDnOuCdLMF/2U+XtELic
-         9HWgR35QA6R11ZhgBCful9/4hrV4yB2ThgoPMDe+6rlvaFTZ9JsVz/V7wYkXpAxayWp4
-         U6hY4N2asuxA9D0HM1NGUapRbkx4C3cmp3VsTmnIBjMdhqvz02UqFogt/7qXFReKHYg4
-         O9pg==
-X-Gm-Message-State: AOAM533JKHG2S4/b1Cd+ByFILBzBsRHLuHbXuxx1gUEl03tXWKollpYE
-        qsJ0f5rasmR4BN85fFRyAd0+AVowCn4M35JPcsnCQw==
-X-Google-Smtp-Source: ABdhPJwmT+9f8+SVTRLGGJ8jMXd1p1owMfyXKEFiXfIxd5UXzXpXp2cbHPwsCzFyYJ/B7mnJE2eGb95SBJDpnGdNpVs=
-X-Received: by 2002:ab0:6f4b:: with SMTP id r11mr4698819uat.104.1627995529623;
- Tue, 03 Aug 2021 05:58:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210730144922.29111-1-semen.protsenko@linaro.org>
- <20210730144922.29111-12-semen.protsenko@linaro.org> <d603be80-4fb6-1bad-1963-c9fa7d1e63fb@canonical.com>
-In-Reply-To: <d603be80-4fb6-1bad-1963-c9fa7d1e63fb@canonical.com>
-From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Tue, 3 Aug 2021 15:58:38 +0300
-Message-ID: <CAPLW+4mPeSOuiQ1iYTVXqTzmPP7o1uPX8Gapzr7Es0wRBpYt6g@mail.gmail.com>
-Subject: Re: [PATCH 11/12] dt-bindings: interrupt-controller: Add IRQ
- constants for Exynos850
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
-        Ryu Euiyoul <ryu.real@samsung.com>,
-        Tom Gall <tom.gall@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=YJEwfvXxEQoCSvi3Imkoy2A3S44+KPxOIY3UOxwGxYQ=;
+        b=hDF5TTvJm6RMl6lMIiIAi27zZIFhspe8JBB42RXhRkwobWToDSSV9ygdLV0qBw1Bzl
+         By/sfNztFmoyrU3LyFnn/PDyku84v27lmeMHb7Dez62+HsM6KbD4B69fj/xuvcKF7W6s
+         bmIM6X8emE6yLugatcGjs7PDChRVq0Le+ELN53TtSiR3w6Tyy+yng3YyFeVBiaDLoTXW
+         CgJ/078qJmWXc3lY97/nNnAZdcCk+lbqDOioiVY033OmLUjhiptapg2xbbYChjpzuqlS
+         wbv1EqUHPQlMAbGMdKm6eLKrw1rBPvaJjuplmPQngwdcLDx9CuMwKNjFdftd0DCPN7/I
+         a/DA==
+X-Gm-Message-State: AOAM532uxRERaitgsxwyWs5jf0VkcrOxW1fAmdpgEf/v31J1Kwin7/n1
+        tX7AIevLVZERuDBWrLhnpg==
+X-Google-Smtp-Source: ABdhPJydosHbUMC3l3Q5iokZVtVDy0/O4JeNWAppyEHHOo14g7SwbkcNcU6C2ZSn78b0VCB1rUrOgw==
+X-Received: by 2002:a92:c043:: with SMTP id o3mr876190ilf.189.1627999176150;
+        Tue, 03 Aug 2021 06:59:36 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id d9sm7561292ilu.9.2021.08.03.06.59.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Aug 2021 06:59:34 -0700 (PDT)
+Received: (nullmailer pid 3179056 invoked by uid 1000);
+        Tue, 03 Aug 2021 13:59:32 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <20210803051318.2570994-3-hsinyi@chromium.org>
+References: <20210803051318.2570994-1-hsinyi@chromium.org> <20210803051318.2570994-3-hsinyi@chromium.org>
+Subject: Re: [PATCH v3 3/3] dt-bindings: mediatek: convert pinctrl to yaml
+Date:   Tue, 03 Aug 2021 07:59:32 -0600
+Message-Id: <1627999172.502726.3179055.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 31 Jul 2021 at 11:45, Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> On 30/07/2021 16:49, Sam Protsenko wrote:
-> > Add external GIC interrupt constants for SPI[479:0] for Exynos850 SoC.
-> > Interrupt names were taken from TRM without change, hence double
-> > underscore in const namings.
->
-> I am not sure what is the benefit of defining these in header. Unlike
-> other DT consts (e.g. clock IDs) drivers do not us them at all. Using
-> them in DT does not reduce chance of mistakes in numbers - instead of in
-> DTS you can make a mistake here in header file. In the same time, they
-> grow the interrupt property in DTS making it more difficult to read.
->
-> I also did not see anyone else using this approach, so it's not only me
-> (Marc also find it confusing).
->
-> If vendor kernel did similar, it's not an argument. Samsung LSI /.
-> vendor kernel has terrible code quality so usually it is not a good example.
->
+On Tue, 03 Aug 2021 13:13:19 +0800, Hsin-Yi Wang wrote:
+> Convert mt65xx, mt6796, mt7622, mt8183 bindings to yaml.
+> 
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> v2->v3:
+> fix comments in v2.
+> ---
+>  .../pinctrl/mediatek,mt65xx-pinctrl.yaml      | 206 ++++++++
+>  .../pinctrl/mediatek,mt6797-pinctrl.yaml      | 173 +++++++
+>  .../pinctrl/mediatek,mt7622-pinctrl.yaml      | 373 +++++++++++++
+>  .../pinctrl/mediatek,mt8183-pinctrl.yaml      | 228 ++++++++
+>  .../bindings/pinctrl/pinctrl-mt65xx.txt       | 156 ------
+>  .../bindings/pinctrl/pinctrl-mt6797.txt       |  83 ---
+>  .../bindings/pinctrl/pinctrl-mt7622.txt       | 490 ------------------
+>  .../bindings/pinctrl/pinctrl-mt8183.txt       | 132 -----
+>  8 files changed, 980 insertions(+), 861 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6797-pinctrl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt6797.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> 
 
-Agreed. I'll use IRQ numbers in dts directly, in v2. I probably
-thought that IRQ header might replace missing public TRM, but that's a
-poor substitute anyway.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
->
-> Best regards,
-> Krzysztof
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dts:21:18: fatal error: dt-bindings/pinctrl/mt8183-pinfunc.h: No such file or directory
+   21 |         #include <dt-bindings/pinctrl/mt8183-pinfunc.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1419: dt_binding_check] Error 2
+\ndoc reference errors (make refcheckdocs):
+MAINTAINERS: Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+MAINTAINERS: Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+
+See https://patchwork.ozlabs.org/patch/1512734
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
