@@ -2,130 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E19003DEAFC
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 12:34:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B2E63DEC2E
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Aug 2021 13:37:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235495AbhHCKep (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Aug 2021 06:34:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56516 "EHLO
+        id S235666AbhHCLhe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Aug 2021 07:37:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235458AbhHCKef (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 06:34:35 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2AC7C06179A;
-        Tue,  3 Aug 2021 03:34:14 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id t3so21046581plg.9;
-        Tue, 03 Aug 2021 03:34:14 -0700 (PDT)
+        with ESMTP id S235842AbhHCLhW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 07:37:22 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 253E8C0613D5
+        for <linux-gpio@vger.kernel.org>; Tue,  3 Aug 2021 04:37:12 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id pj14-20020a17090b4f4eb029017786cf98f9so4271009pjb.2
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Aug 2021 04:37:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gUlOdJ9XQT6Y1TLMVY7TvS0f9TdTpUJkbcu/euswTpI=;
-        b=OVGAJCGQgKOfrQtMQ+7oLZn99a1NlqUPMTDYPgr7T9jc92sQG/9KI8DH0WfHC+/HiE
-         saufWO4B0WzYKSYqksSWu5YnTe0LBW0kDJG9cc9cXJ55JMOlW9mgc4HxYDnFNTlQbkNi
-         dBCm1uqNi8kfufYnmAyNtGBKzB9qBGA+SXDKn2X/Ls7CFl3F4qAgWj1dHnIg9DuDIKu1
-         XEiufcn580Usz96z7gH9cW2vzLamg9tdNJBtiaW53Y6zaR9eHIu57raRdPDmSznS52Z+
-         NMe474lh61Fc5mMDSo8gM3x4Ba348w+2PlOZdMX8DqlG0DGtqigoyUobasMWjUkAuD/D
-         qWAQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lx8aY+/yDtRv3FLOutHx5ZS4iEMyIdYBOMCpO0cyw18=;
+        b=BUOS8Ggwq+VCAPWWigjVP6z8eL2qBxxXXQBzAIuTNLlNZXZxPG4jPoV/9pRshmmPte
+         gdH/a/PdZt30r1WZkEoC+6upgD9f6cwEtXdpNuhy0qY08oNZlxyYLMPfb18zMZPmljTc
+         3cDhZ3vYl3qbrLYPUjkmv54kKQyMdH5yBLC20skpM3bXCbOFTTgAHbWUqn8OPDGin1MB
+         KOvd+xRYIi+k8vyURRBTnFR5+8q5NpLedWzLZx0hXEOzdeTtZJWK5Cumwh4BSnUcaVMe
+         7/OWuyQr0QVSOq/aLUQyLSZNCaWBAMGGzuca90NABo62tyJ0KZytiDXryJ0BAf73yI7V
+         gtmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gUlOdJ9XQT6Y1TLMVY7TvS0f9TdTpUJkbcu/euswTpI=;
-        b=HOvztEg2mw+FYBdNU/Rb2N3bSx5Icvr9Gk1iFiMtbok4SWNWYRuGSOnDa1solXHOVC
-         YMLQxNqDuOLdGr3TaOnND01pqFZqYsdXqjuoTPNao3FZh0Ai7WBfSaBaiNq9jCk6zz41
-         e9KqLnMQ8D8EsZl/tBLFhXyoXjb+JWWv27xcsEd6xWFpsZOMfttzfHfwgUG/XSrkAjgL
-         3BrL+0h35v0PoMKFptIbEQkUgcYbtd3dQVYVl2lmUc+gtfklA63WVPzZbcDs9M874lWD
-         +LSS++Ke7g/ZvRYb3e0raUKtMu2IS5JhPquBbJBUnI1MBEvWEcn0yGBUHrhog0ol2kWA
-         2jJg==
-X-Gm-Message-State: AOAM532GSaCFeK8MnzsFRGI/IjTfSS4qSDCJczChZG69Sx35Ty5MNRNF
-        5Z10abpSLjTpNGhj5rOjR4TcSwQQUHu6Ihtf7ly3tSlN50YfGw==
-X-Google-Smtp-Source: ABdhPJy8/GLzJXE0Sbq4RzvQ2nMWzsr/B9cP3HzwsDbrXs4gyEVrA0uvccH3J3UGBLIYJ9viNfcDuohGBOr5NXxaViI=
-X-Received: by 2002:a17:902:b713:b029:12b:b249:693f with SMTP id
- d19-20020a170902b713b029012bb249693fmr1633411pls.17.1627986854331; Tue, 03
- Aug 2021 03:34:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210723075858.376378-1-andrew@aj.id.au> <CAHp75VeQML7njMZ6x8kC-ZJVexC1xJ6n1cB3JneVMAVfuOJgWw@mail.gmail.com>
- <d019990e-a725-4ef5-bb54-aadee9d18b86@www.fastmail.com> <CAHp75Vc2W+WmwNj1AvH6EiT_80c+5gADV9QzK+asHxpd1Ucppw@mail.gmail.com>
- <6cc64039-f82a-4c1e-ad2c-16fad7aa3178@www.fastmail.com> <CAHp75Vdx9QA7dmSWK8GHxBBxP0uYjrz=Gm=75yqaWbBX6k3v=w@mail.gmail.com>
- <50aaf381-8cda-4656-9222-f23fda75d3bc@www.fastmail.com>
-In-Reply-To: <50aaf381-8cda-4656-9222-f23fda75d3bc@www.fastmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 3 Aug 2021 13:33:38 +0300
-Message-ID: <CAHp75Ve-6zKE9UX+LR022cGAA6xvd8CeLnnKE_fT3snnzmNusA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/6] leds: Fix pca955x GPIO pin mappings
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>, Pavel Machek <pavel@ucw.cz>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lx8aY+/yDtRv3FLOutHx5ZS4iEMyIdYBOMCpO0cyw18=;
+        b=R9NbvKmdFowpaUZpi74e1sUq9IuCnOrTUDTTMmu+51z4UzceLIybxXIXrQLqf3EAdG
+         yFPfNmoVPBSEVHJCHh2Ce9ud63/A4f+w/URdLNw5rwQ+VEh8/Puu144dgaQbN3rTJo8y
+         POdj3UMNCjMu3jkS9qe9Vx5DpZKzak/F3K7zE223LwVNadSLGfWj4lGQ0fVk2kzli4KA
+         ndMLF18g7V1LpVRCA7w6x2KjR8rDhLE2CNtuMkVrhTEB1wzF7z5FGNIFzIcalW7WhKms
+         5R4LE65N/ZtYjxqPJdM89AEzJ6iFufqPBBkcTQGDlmphA34KC9b3ZhJDSV9u0FbJE7YH
+         ojEQ==
+X-Gm-Message-State: AOAM532v2MtL/1u5Od+we4s/9x/Mljm0bgV0f//qlcgO+yGbtrZD3aOF
+        EwjLOEWFRIge2Ajnj77V9hG2Eg==
+X-Google-Smtp-Source: ABdhPJza6By/DI7WFRBuWNKSnUEnJyrqLv1g7UqN9TlFDao7Pbvy0JReR7BuPUrsYAZVWyN05p6Fiw==
+X-Received: by 2002:a63:120e:: with SMTP id h14mr647881pgl.215.1627990631637;
+        Tue, 03 Aug 2021 04:37:11 -0700 (PDT)
+Received: from localhost ([122.172.201.85])
+        by smtp.gmail.com with ESMTPSA id s36sm17710157pgk.64.2021.08.03.04.37.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Aug 2021 04:37:11 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Viresh Kumar <vireshk@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        stratos-dev@op-lists.linaro.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH V4 0/2] gpio: Add virtio based driver
+Date:   Tue,  3 Aug 2021 17:06:54 +0530
+Message-Id: <cover.1627989586.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 3, 2021 at 7:07 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> On Thu, 29 Jul 2021, at 17:10, Andy Shevchenko wrote:
-> > On Thu, Jul 29, 2021 at 3:39 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > On Wed, 28 Jul 2021, at 18:43, Andy Shevchenko wrote:
-> > > > On Wed, Jul 28, 2021 at 8:43 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > > > However, userspace would never have
-> > > > > got the results it expected with the existing driver implementation, so
-> > > > > I guess you could argue that no such (useful) userspace exists. Given
-> > > > > that, we could adopt the strategy of always defining a gpiochip
-> > > > > covering the whole pin space, and parts of the devicetree binding just
-> > > > > become redundant.
-> > > >
-> > > > I'm lost now. GPIO has its own userspace ABI, how does it work right
-> > > > now in application to this chip?
-> > >
-> > > As above, it "works" if the GPIOs specified in the devicetree are
-> > > contiguous from line 0. It's broken if they're not.
-> >
-> > So, "it never works" means there is no bug. Now, what we need is to
-> > keep the same enumeration scheme, but if you wish to be used half/half
-> > (or any other ratio), the driver should do like the above mentioned
-> > PWM, i.e. register entire space and depending on the requestor either
-> > proceed with a line or mark it as BUSY.
-> >
-> > Ideally, looking into what the chip can do, this should be indeed
-> > converted to some like pin control + PWM + LED + GPIO drivers. Then
-> > the function in pin mux configuration can show what exactly is enabled
-> > on the certain line(s).
->
-> So just to clarify, you want both solutions here?
->
-> 1. A gpiochip that covers the entire pin space
-> 2. A pinmux implementation that manages pin allocation to the different drivers
->
-> In that case we can largely leave this series as is? We only need to
-> adjust how we configure the gpiochip by dropping the pin-mapping
-> implementation?
+Hello,
 
-Nope. It's far from what I think of. Re-reading again your cover
-letter it points out that pin mux per se does not exist in the
-hardware. In this case things become a bit too complicated, but we
-still may manage to handle them. Before I was thinking about this
-hierarchy
+This adds Virtio GPIO driver based on the proposed specification [1].
 
-1. pinmux driver (which is actually the main driver here)
-2. LED driver (using regmap API)
-3. GPIO driver (via gpio-regmap)
-4. PWM driver.
+The specification for basic GPIO operations is already reviewed by Linus and
+Arnd, while the IRQ stuff is still under discussion and not finalized.
 
-Now what we need here is some kind of "virtual" pinmux. Do I
-understand correctly?
+I am sharing the code, so everyone gets more clarity on how it will work
+eventually in Linux.
 
-To be clear: I do not like putting everything into one driver when the
-logical parts may be separated.
+I have tested this patchset with Qemu guest with help of the libgpiod utility.
+I have also tested basic handling of interrupts on the guest side. It works as
+expected.
+
+The host side virtio-backend isn't ready yet and my tests only tested the flow
+control between guest and host, but didn't play with real GPIO pins.  That will
+be done once I have a working backend in place (WIP).
+
+V3->V4:
+- Lots of changes, as the specification changed too much. Better forget
+  everything we have done until now :)
+
+--
+Viresh
+
+[1] https://lists.oasis-open.org/archives/virtio-dev/202107/msg00232.html
+
+Viresh Kumar (2):
+  gpio: Add virtio-gpio driver
+  gpio: virtio: Add IRQ support
+
+ MAINTAINERS                      |   7 +
+ drivers/gpio/Kconfig             |  10 +
+ drivers/gpio/Makefile            |   1 +
+ drivers/gpio/gpio-virtio.c       | 648 +++++++++++++++++++++++++++++++
+ include/uapi/linux/virtio_gpio.h |  72 ++++
+ 5 files changed, 738 insertions(+)
+ create mode 100644 drivers/gpio/gpio-virtio.c
+ create mode 100644 include/uapi/linux/virtio_gpio.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.31.1.272.g89b43f80a514
+
