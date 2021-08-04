@@ -2,193 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD18B3E0A02
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Aug 2021 23:30:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C1C53E0A76
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Aug 2021 00:36:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231555AbhHDVbB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Aug 2021 17:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38680 "EHLO
+        id S230259AbhHDWgl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Aug 2021 18:36:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230418AbhHDVbB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Aug 2021 17:31:01 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B53C0613D5
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Aug 2021 14:30:48 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id t29so1845230vsr.5
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Aug 2021 14:30:48 -0700 (PDT)
+        with ESMTP id S230138AbhHDWgl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Aug 2021 18:36:41 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC33EC0613D5;
+        Wed,  4 Aug 2021 15:36:26 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id x8so7177647lfe.3;
+        Wed, 04 Aug 2021 15:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dxaJFL8Y5c22Jta0cMEZC2iEw41WS8AsvJV/yCHApHU=;
-        b=aFm4foLY/Ah5O7HrLETjBorHA/Cbd4vqMKInq5ZltFuYyRmeKeRRProzZ+QYj1F0ki
-         L2nCrSrSWq1ivhi/Sz+Tvs0z70lHYq8V5kPuzV4lb/KmyuYPEesHqj9zGjfXp81gNjwk
-         Hc8Y8XbiQQygnK8nDxfxY4Ea+ILEnS2D8ZLh6V01K3pd1mGl3frQ7WWWlHFzRfyNTfGU
-         j9IzlCghKlDvyGKZMPPu+sM+kackw0OGiBzo3/kNfT8KUCGiNk/ALNyTSEBJ8sZHhQ6i
-         t2uCyKv4JHyjy++JVm1Phmm+hJCtaJj8F1RV4pEnOFs9kYHFlXCAi4Rzj/26hZfjQ9OI
-         vPxA==
+        bh=AnR/vwLGsL7Poij+z8KIk9gwayPey3/PAXIR24vHmP0=;
+        b=c2q/uQrMO4jPVQnQdZ9sjj+CN79C/J8jIUpR4Pc7BSXnwzep3tlimNRR/H2xhI7r6g
+         t9D2kA58NXmF1rqVtdzP0FR8q9jJM22Mn6hWLWADNWK8MxxY4tjkI3YeDcLL7q5Ye6W4
+         Vd8n9Q6h0bWS0pozeAtwyIu5N/GLYGIHpovDwgEtyd80IypPv8CUvmJV+VsbVMjNuUB2
+         bTwUoXTWuqUUXAxubDTnps3NtV8zE8czLZOiP4YvnTVMnUoHxybN+CO7NKXDYoVb+2JX
+         EEWYg5JWheFJyWDRADgSIAigH3Z9vfuZ7kP3ZbwQ1fxPV6iEjPjojHIFKhEBv4D99Fkx
+         l9yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dxaJFL8Y5c22Jta0cMEZC2iEw41WS8AsvJV/yCHApHU=;
-        b=geKufaP6OABxFTJux+zRV89hdMonlbisIF8Uz6cr0xVEsYDO27la9VdCpz895Q1MEI
-         27SC9uQyF5d8LFWq1larmaoEZwlBw70D8qUF8Uk0prhdK1kIMKDWuBualZtmIAFlJStk
-         NeHSL/QYbs0NtnzbsjG/uogzLl6vZCkH3zPdoq4K5y8ACyTm4UKOmqU+S21T892CG0Kz
-         +6x2YrKhQHGbN0Kph/uWbf2bowo4oDMVgUrgzeEoMPbwYtGCvZNksSHBhCLNdc/kCNhl
-         urmUqVmEcqcrKzqbBnvpyYYjz8zxev35b8mF0JNyzU8yHUV28pld0h1Xl5QIcfEdeV96
-         ZRUA==
-X-Gm-Message-State: AOAM531/ZvRiqBFlO3OwDFVET/NtqrQPeYyQNLsF7B1EtEVa9B6OAxKG
-        ybN+E6OjZ5Z8Tra+U+9fpxHrwzliJlLywrPfUbZ7cA==
-X-Google-Smtp-Source: ABdhPJxs3KtlDburhMJ7hb4H+QMZ+qFnQt7AfD5vKDnUEhepBfw+rufW06PMmUaJ+YMjNVp0Vvi4JO3VVZ/yl7ndwcc=
-X-Received: by 2002:a67:de06:: with SMTP id q6mr2048185vsk.57.1628112646443;
- Wed, 04 Aug 2021 14:30:46 -0700 (PDT)
+        bh=AnR/vwLGsL7Poij+z8KIk9gwayPey3/PAXIR24vHmP0=;
+        b=bfezMsyZAj5nm/LrzQ3cfsImf5BtwVJyCoZPJu2vCMGtVAPO0+FZQVY/KHkJ+Qxjoo
+         MjAEs963JWIX/OVIrpVnZe33+PSptouVNQWXhG/IY+y8JZG9ltMNIxlLq6aehvnjimcd
+         cTRKgBiaTmw2tgjr+OiZmXRsSEb065IpdfyggIk3RrZf9Jvo3N564TmcKqFNPysReO/T
+         ryIusBnkkrTXS0s4IbfJIAjIHdZpqYgj6k0axBcuNzPGO7P2kGAlVLhnMpwbha0bS3v9
+         rcE5CPDzdFTv8/LcggIu665XVsr3rvpey1m12J3HTM/ppYuePtcjwHJt00LvgSYUSfW5
+         Lujg==
+X-Gm-Message-State: AOAM533qVaubkAGyM9iFv2elwZ5GfsR9To882qRWc/jNevxFdMoFNaNm
+        UtJM4PmB00AKeRH4ItE+B0HJOEs0WxUdO44Stw==
+X-Google-Smtp-Source: ABdhPJxLxuyttu7imt6SnqjaH9qPL5KqPGfCTvbu+tVQhehjnWS73vs3lJQiFmP5Zsx+YK9RTSzIftCqHotYVCX4WqQ=
+X-Received: by 2002:a05:6512:a8c:: with SMTP id m12mr1020129lfu.526.1628116585131;
+ Wed, 04 Aug 2021 15:36:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210730144922.29111-1-semen.protsenko@linaro.org>
- <20210730144922.29111-13-semen.protsenko@linaro.org> <15871f8ced3c757fad1ab3b6e62c4e64@misterjones.org>
- <CAPLW+4=v4bDcuxGVqs06mobGj34At4cD+vg48b4dPujarS07Tg@mail.gmail.com> <bf21badb-804f-45f0-c02b-80ff57ab9931@canonical.com>
-In-Reply-To: <bf21badb-804f-45f0-c02b-80ff57ab9931@canonical.com>
-From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Thu, 5 Aug 2021 00:30:34 +0300
-Message-ID: <CAPLW+4nY=hozOR+B_0sPZODrk9PXaXg+NB-9pVhDbAjEy7yjhg@mail.gmail.com>
-Subject: Re: [PATCH 12/12] arm64: dts: exynos: Add Exynos850 SoC support
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
-        Ryu Euiyoul <ryu.real@samsung.com>,
-        Tom Gall <tom.gall@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+References: <8ee569d3-7fac-68c6-a1f7-f6457ce0343c@gmail.com>
+In-Reply-To: <8ee569d3-7fac-68c6-a1f7-f6457ce0343c@gmail.com>
+From:   Gabriel C <nix.or.die@googlemail.com>
+Date:   Thu, 5 Aug 2021 00:35:59 +0200
+Message-ID: <CAEJqkgiUv1q3tz2JPSyqrAifQQDsS8uPf6QmbG3C4Hs6fDRTJA@mail.gmail.com>
+Subject: Re: [pinctrl-amd] 5.14-rcX, d62bd5ce12d79bcd6a6c3e4381daa7375dc21158
+ breaks poweroff/shutdown on ThinkPads
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 4 Aug 2021 at 21:36, Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> On 04/08/2021 16:39, Sam Protsenko wrote:
-> > Hi Marc,
-> >
-> > On Fri, 30 Jul 2021 at 19:50, Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> On 2021-07-30 15:49, Sam Protsenko wrote:
-> >>> Samsung Exynos850 is ARMv8-based mobile-oriented SoC.
-> >>>
-> >>> Features:
-> >>>  * CPU: Cortex-A55 Octa (8 cores), up to 2 GHz
-> >>>  * Memory interface: LPDDR4/4x 2 channels (12.8 GB/s)
-> >>>  * SD/MMC: SD 3.0, eMMC5.1 DDR 8-bit
-> >>>  * Modem: 4G LTE, 3G, GSM/GPRS/EDGE
-> >>>  * RF: Quad GNSS, WiFi 5 (802.11ac), Bluetooth 5.0
-> >>>  * GPU: Mali-G52 MP1
-> >>>  * Codec: 1080p 60fps H64, HEVC, JPEG HW Codec
-> >>>  * Display: Full HD+ (2520x1080)@60fps LCD
-> >>>  * Camera: 16+5MP/13+8MP ISP, MIPI CSI 4/4/2, FD, DRC
-> >>>  * Connectivity: USB 2.0 DRD, USI (SPI/UART/I2C), HSI2C, I3C, ADC,
-> >>> Audio
-> >>>
-> >>> This patch adds minimal SoC support. Particular board device tree files
-> >>> can include exynos850.dtsi file to get SoC related nodes, and then
-> >>> reference those nodes further as needed.
-> >>>
-> >>> Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-> >>> ---
-> >>>  .../boot/dts/exynos/exynos850-pinctrl.dtsi    | 782 ++++++++++++++++++
-> >>>  arch/arm64/boot/dts/exynos/exynos850-usi.dtsi |  30 +
-> >>>  arch/arm64/boot/dts/exynos/exynos850.dtsi     | 245 ++++++
-> >>>  3 files changed, 1057 insertions(+)
-> >>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos850-pinctrl.dtsi
-> >>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos850-usi.dtsi
-> >>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos850.dtsi
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/exynos/exynos850-pinctrl.dtsi
-> >>> b/arch/arm64/boot/dts/exynos/exynos850-pinctrl.dtsi
-> >>> new file mode 100644
-> >>> index 000000000000..4cf0a22cc6db
-> >>
-> >> [...]
-> >>
-> >>> +     gic: interrupt-controller@12a00000 {
-> >>> +             compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
-> >>
-> >> One thing for sure, it cannot be both. And given that it is
-> >> an A55-based SoC, it isn't either. It is more likely a GIC400.
-> >>
-> >
-> > Yes, it's GIC-400, thanks for pointing that out. Will fix that in v2.
-> >
-> >>> +             #interrupt-cells = <3>;
-> >>> +             #address-cells = <0>;
-> >>> +             interrupt-controller;
-> >>> +             reg = <0x0 0x12a01000 0x1000>,
-> >>> +                   <0x0 0x12a02000 0x1000>,
-> >>
-> >> This is wrong. It is architecturally set to 8kB.
-> >>
-> >
-> > Nice catch! Actually there is an error (typo?) in SoC's TRM, saying
-> > that Virtual Interface Control Register starts at 0x3000 offset (from
-> > 0x12a00000), where it obviously should be 0x4000, that's probably
-> > where this dts error originates from. Btw, I'm also seeing the same
-> > error in exynos7.dtsi.
->
-> What's the error exactly? The "Virtual interface control register"
-> offset (3rd region) is set properly to 0x4000 on Exynos7. Also one for
-> the Exynos5433 looks correct.
->
+Adding gpio list to CC
 
-The issue is that 2nd region's size is 0x1000, but it must be 0x2000.
-It's defined by GIC-400 architecture, as I understand. Please look at
-[1], table 3-1 has very specific offsets and sizes for each functional
-block, and each particular SoC must adhere to that spec. So having
-0x1000 for 2nd region can't be correct. And because exynos7.dtsi has
-GIC-400 as well, and 0x1000 is specified there for 2nd region size
-too, so I presume there is the same mistake there.
 
-Can you please check the TRM for Exynos7 SoC (if you have one in your
-possession), and see if there is a typo there? E.g. in case of
-Exynos850 TRM I can see that in "Register Map Summary" section the
-offset for the first register (GICH_HCR) in "Virtual Interface Control
-Register" region is specified as 0x3000, where it should be 0x4000, so
-it's probably a typo. But the register description is correct, saying
-that: "Address = Base Address + 0x4000".
-
-[1] https://developer.arm.com/documentation/ddi0471/b/programmers-model/gic-400-register-map
-
-> > Though I don't have a TRM for Exynos7 SoCs, so
-> > not sure if I should go ahead and fix that too. Anyway, for Exynos850,
-> > I'll fix that in v2 series.
+Am Mo., 2. Aug. 2021 um 20:18 Uhr schrieb Gabriel C <nix.or.die@googlemail.com>:
+>
+> Hello,
+>
+> while doing S0ix testing on my P14s gen1 AMD I noticed the machine won't
+> poweroff/shutdown anymore starting with 5.14-rc1,
+>
+> it just reboots. The machine set to S3 in BIOS works as expected.
+>
+> I have  confirmed the T14/T14s/X13 AMD gen1 models have the same problem
+> so I've run a bisect.
 >
 >
-> However while we are at addresses - why are you using address-cells 2?
-> It adds everywhere additional 0x0 before actual address.
+> crazy@ThinkPad-P14s:~/Work/kernel/git/linux$ git bisect log
+> git bisect start
+> # bad: [e73f0f0ee7541171d89f2e2491130c7771ba58d3] Linux 5.14-rc1
+> git bisect bad e73f0f0ee7541171d89f2e2491130c7771ba58d3
+> # good: [62fb9874f5da54fdb243003b386128037319b219] Linux 5.13
+> git bisect good 62fb9874f5da54fdb243003b386128037319b219
+> # good: [e058a84bfddc42ba356a2316f2cf1141974625c9] Merge tag
+> 'drm-next-2021-07-01' of git://anongit.freedesktop.org/drm/drm
+> git bisect good e058a84bfddc42ba356a2316f2cf1141974625c9
+> # bad: [eed0218e8cae9fcd186c30e9fcf5fe46a87e056e] Merge tag
+> 'char-misc-5.14-rc1' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
+> git bisect bad eed0218e8cae9fcd186c30e9fcf5fe46a87e056e
+> # bad: [bd31b9efbf549d9630bf2f269a3a56dcb29fcac1] Merge tag 'scsi-misc'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+> git bisect bad bd31b9efbf549d9630bf2f269a3a56dcb29fcac1
+> # bad: [406254918b232db198ed60f5bf1f8b84d96bca00] Merge tag
+> 'perf-tools-for-v5.14-2021-07-01' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
+> git bisect bad 406254918b232db198ed60f5bf1f8b84d96bca00
+> # good: [e04360a2ea01bf42aa639b65aad81f502e896c7f] Merge tag 'for-linus'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+> git bisect good e04360a2ea01bf42aa639b65aad81f502e896c7f
+> # good: [b869d5be0acf0e125e69adcffdca04000dc5b17c] ipc/util.c: use
+> binary search for max_idx
+> git bisect good b869d5be0acf0e125e69adcffdca04000dc5b17c
+> # good: [6495e762522d4cf73d0b339830091799881eb025] perf dlfilter: Add
+> attr() to perf_dlfilter_fns
+> git bisect good 6495e762522d4cf73d0b339830091799881eb025
+> # bad: [a32b344e6f4375c5bdc3e89d0997b7eae187a3b1] Merge tag
+> 'pinctrl-v5.14-1' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
+> git bisect bad a32b344e6f4375c5bdc3e89d0997b7eae187a3b1
+> # bad: [897120d41e7afd9da435cb00041a142aeeb53c07] pinctrl: mcp23s08: fix
+> race condition in irq handler
+> git bisect bad 897120d41e7afd9da435cb00041a142aeeb53c07
+> # bad: [8b4c397d88d97d4fd9c3f3527aa66688b1a3387a] dt-bindings: pinctrl:
+> mt65xx: add mt8365 SoC binding
+> git bisect bad 8b4c397d88d97d4fd9c3f3527aa66688b1a3387a
+> # bad: [ef9385fbf30e9484e4291db76e000b8961419782] pinctrl: iproc-gpio:
+> Remove redundant error printing in iproc_gpio_probe()
+> git bisect bad ef9385fbf30e9484e4291db76e000b8961419782
+> # bad: [969ef42b1ae094da99b8acbf14864f94d37f6e58] pinctrl: qcom:
+> spmi-mpp: Add compatible for pmi8994
+> git bisect bad 969ef42b1ae094da99b8acbf14864f94d37f6e58
+> # bad: [d62bd5ce12d79bcd6a6c3e4381daa7375dc21158] pinctrl: amd:
+> Implement irq_set_wake
+> git bisect bad d62bd5ce12d79bcd6a6c3e4381daa7375dc21158
+> # good: [ac5f8197d15cf37d7ae37ff5b6438abe6c8509a6] dt-bindings: pinctrl:
+> convert Broadcom Northstar to the json-schema
+> git bisect good ac5f8197d15cf37d7ae37ff5b6438abe6c8509a6
+> # first bad commit: [d62bd5ce12d79bcd6a6c3e4381daa7375dc21158] pinctrl:
+> amd: Implement irq_set_wake
 >
-
-Right. For "cpus" node I'll change the address-cells to 1 in my v2
-series. I'll keep address-cells=2 for the root node, but I'm going to
-encapsulate some nodes into soc node (as you suggested earlier), where
-I'll make address-cells=1. That's pretty much how it's done in
-exynos7.dtsi and in exynos5433.dtsi, so I guess that's should be fine
-(to get rid of superfluous 0x0 and conform with other Exynos DTs)?
-
 >
-> Best regards,
-> Krzysztof
+> Reverting d62bd5ce12d79bcd6a6c3e4381daa7375dc21158 fixes the problem.
+>
+>
+> Best Regards,
+>
+>
+> Gabriel C.
+>
