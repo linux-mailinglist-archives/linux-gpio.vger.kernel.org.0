@@ -2,160 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C05D73E0161
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Aug 2021 14:45:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 642423E028D
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Aug 2021 15:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238219AbhHDMpI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Aug 2021 08:45:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58858 "EHLO
+        id S230325AbhHDN7k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Aug 2021 09:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238192AbhHDMou (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Aug 2021 08:44:50 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E36AC061799;
-        Wed,  4 Aug 2021 05:44:37 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id n17so1497560lft.13;
-        Wed, 04 Aug 2021 05:44:37 -0700 (PDT)
+        with ESMTP id S238053AbhHDN7j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Aug 2021 09:59:39 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0086C061798
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Aug 2021 06:59:25 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id l18so2377997wrv.5
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Aug 2021 06:59:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wnktbUFKuuRskzgHK8SlfPzSzc87+GmivQtXGmsj37A=;
-        b=mSTEzfrGofZh5G859M5bI23nQF7ztT0ECQ/RNAWtHFOaVbpAwxQytlZ7FLz5Um5cdf
-         dHmXfnjVMFe+6qdF0Zh8116wH+dcIp/JY2jRvYZLNN5hQK6ue4FTPhaGf3+u6FnzJftz
-         iMf7skkmlSYlG9xAGLHgCg0CeQkeYI2CSG1I9vQFWLJI7O4m/A/Y/QtVinCtmOP8R/b5
-         L53WSqC9cSCJoSaHYjsqpR6nKRk2kDAu4qUNz3xLemqLB2oSuVmhBZkGv7Mt8BwwRAHK
-         RVA7QdGXolNDVOmlYm3Gt7wvqTm8jdRFApcp8qzVuCaW5xaZeA0PGn6GON1+dvy11uHR
-         +1zw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C8AVWyR2/nU5NIf312f2J5aD2AcP4YWEdaMMUYDNvZQ=;
+        b=0DzaXrDnbqZ/EIwUGa4zxn1I2cVvf1w4L1g2rlLfhCHtVWcASETR7t4UQiJyhQh0Op
+         WT18dAxniDN002X7En7j36OymTUdH51EVypI9Hz4R/g9LXiMA3XdqeXH4M78qOsNvaRU
+         3l3xGfuCIoYbdVclBsxsBB7/D5iE/X9HtYSScjTbqGzGr1PCsh8SwFXIplu1NQ6nEtAK
+         nEZkgmxIeUOEcLlcbcbqjuLKdUwcxtl2BEOab1Du4NneowbFUG4hp3BNqwtnNH1+HLpH
+         rt+gZbbRYRF1eh95SQN11MfZ/3lah3jAUIvdsEgsAUN2yrTHk0laNlihVS2pRxVfg/eq
+         wgSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wnktbUFKuuRskzgHK8SlfPzSzc87+GmivQtXGmsj37A=;
-        b=GzpokhFQJo5zHXtIHz0hNPQlzA+k9yxImiI3fd5GRRbqkW83m9ATbvxJyR1z9Qfzt4
-         pNlwkpyEQbzqTUqa2Cssroz3wtDkYXdqb3NqpYHURl56c7x8bnB9dAJgI3kZGGCWtGWZ
-         kInifezlSENkv7aYJ7FEJHwUbYGqSQOhjxRlSIS1GDn5M58K1WsZ0lVBx2hVfmz/nK/9
-         f2pnUL22xTqVoxQlFwiQ0xKgWLfPVjxvmaGSoVRDLOSlR1sXxSpZc/H+DQNont8Azfuw
-         M1hpjastNPqdgKgI8Xd/cbgJ+7b9YptTLOKUlnn3WSdKzMS9A6NdM/BY5HiXKEdnkJSn
-         gqUg==
-X-Gm-Message-State: AOAM532Ghq8HVV9/sev9SafY+H/e9QpuhgybctIlu8E+9XhciatWCgtL
-        G/DtLbIwoVlQGJO495N3tDU=
-X-Google-Smtp-Source: ABdhPJy2eX5UL9NlcymGWnUOdyVSFQEbYwyyG7vUFvYUzWmBwDRLd/jtmcHii/0jHnuHC20hzhzbRQ==
-X-Received: by 2002:a05:6512:3f16:: with SMTP id y22mr13668373lfa.356.1628081075653;
-        Wed, 04 Aug 2021 05:44:35 -0700 (PDT)
-Received: from mobilestation ([95.79.127.110])
-        by smtp.gmail.com with ESMTPSA id w26sm153859ljd.89.2021.08.04.05.44.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C8AVWyR2/nU5NIf312f2J5aD2AcP4YWEdaMMUYDNvZQ=;
+        b=MRDDRrk8fzMpkA0+WCEUSiS7poOQBuUSWtrByFH2gJXdewFER3iv1tfVQ8VzbrYiI2
+         Vsnan+mzBoaPNCBwd8s9dkpBzN7w85sbzvbHZ+z0FDsxJfIE/FlXL2ULKNJmXmUBfCF+
+         CBMt0DygBryxFblVBF2Z75VZGYgOrCopJCCOCSZ4VNGEIx/zv3SfxlSqGD01x3G1sVx9
+         W2Gncx8mUEmBSHBpj43mr+vt+PO8NuCUhUKTGpHVLlwUobeQrLRMK+3ErVY/8CAUzx4P
+         JwU/2968q/obAkPGpMhY8+BRW/AMnmEAc9b93jP34sm80YgukwsksvnQUv0uL78HObcP
+         mBLw==
+X-Gm-Message-State: AOAM531do0412HerOI9ROtsbiKpuSbYIYOQqjNJ7MvvnIk/MGBFJLzrH
+        S57RgF4uxhzjR1XCOdbJO+XFxA==
+X-Google-Smtp-Source: ABdhPJwhH+IrL5qDPqg0/PiBZf7SiY9LChCd5dJcrcOKywNuI+ir6xENLzMaG2fRYlW5Ab67k9FwWw==
+X-Received: by 2002:a5d:63cf:: with SMTP id c15mr28949764wrw.230.1628085564164;
+        Wed, 04 Aug 2021 06:59:24 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id g16sm3071637wro.63.2021.08.04.06.59.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 05:44:35 -0700 (PDT)
-Date:   Wed, 4 Aug 2021 15:44:33 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 04 Aug 2021 06:59:23 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>
-Subject: Re: [PATCH v1 2/4] gpio: dwapb: Read GPIO base from gpio-base
- property
-Message-ID: <20210804124433.crh7w6jzfjcswubo@mobilestation>
-References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
- <20210726125436.58685-2-andriy.shevchenko@linux.intel.com>
- <20210802135839.4clqd34npppwasyh@mobilestation>
- <CAHp75Vcz=vkaGObUcOOTZA51pHPoMc50RpPBLg4fgZgHdUStRA@mail.gmail.com>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.14-rc5
+Date:   Wed,  4 Aug 2021 15:59:22 +0200
+Message-Id: <20210804135922.13050-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vcz=vkaGObUcOOTZA51pHPoMc50RpPBLg4fgZgHdUStRA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-@Linus, @Bartosz, @Rob, could you join the discussion regarding the
-gpio-base property usage?
+Linus,
 
-On Mon, Aug 02, 2021 at 06:52:28PM +0300, Andy Shevchenko wrote:
-> On Mon, Aug 2, 2021 at 5:14 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > On Mon, Jul 26, 2021 at 03:54:34PM +0300, Andy Shevchenko wrote:
-> > > For backward compatibility with some legacy devices introduce
-> > > a new (*) property gpio-base to read GPIO base. This will allow
-> > > further cleanup of the driver.
-> 
-> Thanks for the review! My answers below.
-> 
-> > > *) Note, it's not new for GPIO library since mockup driver is
-> > >    using it already.
-> >
-> > You are right but I don't think it's a good idea to advertise the
-> > pure Linux-internal property "gpio-base" to any use-case like OF
-> > and ACPI FW nodes.
-> 
+Please pull the following GPIO fixes for the next rc.
 
-> I don't want to advertise them, actually (that's why no bindings are
-> modified). Perhaps introducing a paragraph in the GPIO documentation
-> about this (and / or in GPIO generic bindings) that gpio-base property
-> is solely for internal use and should't be used in actual DTs?
+Thanks!
+Bartosz
 
-It might have been not that clear but by "advertising" I meant to have
-the property generically handled in the driver, thus permitting it
-being specified not only via the SW-nodes but also via the ACPI
-and OF firmware. (Please see my next comment for more details.)
+The following changes since commit e73f0f0ee7541171d89f2e2491130c7771ba58d3:
 
-Regarding adding the gpio-base property documentation. I am pretty
-sure it shouldn't be mentioned neither in the DW APB GPIO bindings,
-nor in any other GPIO device DT-bindings because as you are right
-saying it is the solely Linux kernel-specific parameter and isn't
-supposed to be part of the device tree specification. On the other
-hand if it gets to be frequently used then indeed we need to somehow
-have it described and of course make sure it isn't used
-inappropriately. Thus a possible option of documenting the property
-would be just adding a new paragraph/file somewhere in
-Documentation/driver-api/gpio/ since the property name implies that
-it's going to be generic and permitted to be specified for all
-GPIO-chips. Though it's for @Linus and @Bartosz to decide after all.
+  Linux 5.14-rc1 (2021-07-11 15:07:40 -0700)
 
-> 
-> >  Especially seeing we don't have it described in the
-> > DT-bindings and noting that the mockup driver is dedicated for the
-> > GPIO tests only. What about restricting the property usage for the
-> > SW-nodes only by adding an additional check: is_software_node() here?
-> 
+are available in the Git repository at:
 
-> I don't think we need this. But if you think it's better this way just
-> to avoid usage of this property outside of internal properties, I'm
-> fine to add. Perhaps we may issue a warning and continue? (see also
-> above)
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.14-rc5
 
-In my opinion it's very required and here is why. Adding the generic
-gpio-base property support into the driver basically means saying:
-"Hey, the driver supports it, so you can add it to your firmware."
-Even if the property isn't described in the bindings, the platform
-developers will be able to use it in new DTS-files since it's much
-easier to add a property into a DT-file and make things working than
-to convert the drivers/platforms/apps to using the GPIOd API. In case
-if maintainers aren't that careful at review such dts may get slip
-into the kernel, which in its turn will de facto make the property
-being part of the DT specification and will need to be supported. That
-is we must be very careful in what properties are permitted in the
-driver. Thus, yes, I think we need to make sure here that the property
-is only used in framework of the kernel and isn't passed via
-inappropriate paths like DT/ACPI fw so not to get into the
-maintainability troubles in future.
+for you to fetch changes up to 9b87f43537acfa24b95c236beba0f45901356eb2:
 
-Issuing a warning but accepting the property isn't good alternative
-due to the same reason. Why do we need to add the DT/ACPI property
-support, which isn't supposed to be used like that instead of just
-restricting the usecases beforehand? So I vote for parsing the
-"gpio-base" property only if it's passed as a part of the SW-node.
+  gpio: tqmx86: really make IRQ optional (2021-08-02 17:17:27 +0200)
 
--Sergey
+----------------------------------------------------------------
+gpio fixes for v5.14-rc5
 
-> 
-> > @Linus, @Bartosz, @Rob, what do you think about that?
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+- revert a patch intruducing breakage in interrupt handling in gpio-mpc8xxx
+- correctly handle missing IRQs in gpio-tqmx86 by really making them optional
+
+----------------------------------------------------------------
+Matthias Schiffer (1):
+      gpio: tqmx86: really make IRQ optional
+
+Rasmus Villemoes (1):
+      Revert "gpio: mpc8xxx: change the gpio interrupt flags."
+
+ drivers/gpio/gpio-mpc8xxx.c | 2 +-
+ drivers/gpio/gpio-tqmx86.c  | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
