@@ -2,106 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C99AC3DFA15
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Aug 2021 05:49:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D0933DFA22
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Aug 2021 05:56:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231339AbhHDDtm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Aug 2021 23:49:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50790 "EHLO
+        id S234975AbhHDD4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Aug 2021 23:56:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230060AbhHDDtl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 23:49:41 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E5DC061799
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Aug 2021 20:49:29 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id c16so1537992plh.7
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Aug 2021 20:49:29 -0700 (PDT)
+        with ESMTP id S234971AbhHDD4h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Aug 2021 23:56:37 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ACB6C0613D5
+        for <linux-gpio@vger.kernel.org>; Tue,  3 Aug 2021 20:56:26 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id mt6so1149215pjb.1
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Aug 2021 20:56:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=hy1NnP0wO2zT/VrMPRCtNkUc0gMbU7esFhgTPbbumaI=;
-        b=pV3LQkTEVPVFO26bH4qKathJhoDVM53Wle33GPuHirv2DuW2qDklwIScy2sYGP/qdo
-         G4Fmk/hM5GcDgdrbTSDp9aukIqKPSx6ouUAghX8NOe+h5E2A7j9bPvjpV/XTqKVKj9uo
-         F2fF/0YVnI2g2AAxnKAFhoz1HwI540CBzUl8YtRiX1g9l40QcPUnmzgIy+61h0NHsif7
-         phCMi0sqqj3sWKI9HBhiXrkLZXiHvVq5Zp/pu4c583bc9oFKSxPmWJ3qmkxAdQ0K2Pre
-         vagCPQZjsoHJUYzHOnegWEXQxrCooPRXeM0B8S1DSWq+ldZqIL/hwUbfTZBeTOeSuCZi
-         MPRA==
+        bh=0ZHYwmuwBB2HtOoKEULFjho6JxP6yZHRiPr37fJbra4=;
+        b=hl3XdlB4jYy+wT1mdMb8yurr9oZXxti9oqh96q80dPuJJF/Yq+NLcAsFU04oNDtSkD
+         /YyxOcvDDixL+wIRumzrx/wtV7hbWudOPV0de0xzY7Ci3OgQYTmX3aby0hACRe7JMytr
+         MAIx2lvf/rhNZ4/sGTlxWkPnjhkDmnPgnprTf/1AQRV12jGmQ0GGTq8zhewY4fGlrpu0
+         s92TpMZXI3V9KbWV1SFxIvMvXpIKcNRfD1EZ133zkkhq7K9S39ejxti1vTlneWC5H4uG
+         dro0H3VInrzzA+lFf4NAm7rJrV9K4PM7/doxeiBvy4E+IE145vm3So/6OVwP7mtlzDY1
+         3Wow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hy1NnP0wO2zT/VrMPRCtNkUc0gMbU7esFhgTPbbumaI=;
-        b=Kdj958oNK62hVfJMY9rqEcoK1B9vkgGts3LMZ2XyIWjApz46a6dzlm4r7+MmqiELIN
-         Yes9FDpThZlewrvuiRfUSkoxm40RBPHT2xetbzzd4HVQPArY5QqdO4GQu5gZKeb+KlcO
-         VwIgt1c4kISnWuBTEYM4oKTXJJu46ShelDqnllEtSlInOrjTj+DQWIvQZN2X9Gax+Y/D
-         mKqUP/Vc/xbXI7nL7taJ/2QwuIMRsHRPX1KXz5gwfcxQyOX7yyBEiM7c5tGbfiKFZgAZ
-         CY20F4iD8yj4jN3akAiM9JSaYygdwU7YXNaVHObXDMrYJeaF3J6oxWcbm1zVreONOcZ7
-         KXuA==
-X-Gm-Message-State: AOAM533aahiDHz74mkvidRuk5nAUj+MkfpkDBnTCcUvb/NgdLkdCmXoY
-        bXokQs0NioLEHZgbohmd3VrcVQ==
-X-Google-Smtp-Source: ABdhPJzu/UIWjSp9w8Y+KDSNX/I9Gp6Tb85pVQV1NeAG9BQWHvOy0AKG892wKsDIlxZIxK3pOYSmvQ==
-X-Received: by 2002:a17:902:8ec7:b029:12c:6a1a:3e8d with SMTP id x7-20020a1709028ec7b029012c6a1a3e8dmr20768190plo.83.1628048969221;
-        Tue, 03 Aug 2021 20:49:29 -0700 (PDT)
+        bh=0ZHYwmuwBB2HtOoKEULFjho6JxP6yZHRiPr37fJbra4=;
+        b=pDP07bAXjIwxPlMKWrM4lId4XVTtfiDdNIefRLRh5gh9n3f5YLn9dPMcZzL9ROXBg5
+         1oO2D3PAapXYSLwlrpiNwJxHef0delc8Mms8+pE10rzkuxOIxKsPbqaRiFKsv7cD39tx
+         hnvrkaKUQQB4Lb7OMIvobKOGCzrs2ZrVJ9ekm5ShdH2OlO/CPqWEcgd0BafsBUPiEbdR
+         bwyBdEtX02vOyQNK3grN4isOGAPnutgKlcNGiNzClYK90LM4YjQtIE95wDaggvFzhTTn
+         ortApDMfrj/FR2d29JerOYto1Qu2v/dQ63MRuCoksqpgegARGxeBtXtl4oxFFu8e3Faj
+         VxyQ==
+X-Gm-Message-State: AOAM530+K+AdfB5g57h1TtdAyRyl3QE8lAxgKTWxKTgAn0n2pcg5lXzA
+        3/RaFa/qWFU75DPe4o12ZjZiyQ==
+X-Google-Smtp-Source: ABdhPJyWbX7rhBTYZkB+2/CNdO7HVuodEfPZIWRtTfENeVnwx7K5DDQjjk4B2l/Qr4+ABKbp6VpteQ==
+X-Received: by 2002:a17:902:6a82:b029:12c:58c0:1af3 with SMTP id n2-20020a1709026a82b029012c58c01af3mr39186plk.50.1628049385534;
+        Tue, 03 Aug 2021 20:56:25 -0700 (PDT)
 Received: from localhost ([122.172.201.85])
-        by smtp.gmail.com with ESMTPSA id b17sm739174pgl.61.2021.08.03.20.49.28
+        by smtp.gmail.com with ESMTPSA id j15sm736558pfu.171.2021.08.03.20.56.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Aug 2021 20:49:28 -0700 (PDT)
-Date:   Wed, 4 Aug 2021 09:19:26 +0530
+        Tue, 03 Aug 2021 20:56:25 -0700 (PDT)
+Date:   Wed, 4 Aug 2021 09:26:23 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jason Wang <jasowang@redhat.com>,
+To:     Jason Wang <jasowang@redhat.com>,
         "Michael S. Tsirkin" <mst@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Arnd Bergmann <arnd@kernel.org>,
         Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
         Bill Mills <bill.mills@linaro.org>,
         Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
         "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Jie Deng <jie.deng@intel.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH V4 3/5] dt-bindings: gpio: Add bindings for gpio-virtio
-Message-ID: <20210804034926.qtagdoopeaeaskaw@vireshk-i7>
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH V4 0/5] virtio: Add virtio-device bindings
+Message-ID: <20210804035623.flacrogemvjina3o@vireshk-i7>
 References: <cover.1627362340.git.viresh.kumar@linaro.org>
- <acf7402ef4aabc0ad6295c32846f2bef1cd9b56a.1627362340.git.viresh.kumar@linaro.org>
- <YQhKKyPmOUE8z+US@robh.at.kernel.org>
- <20210803043014.paskwghdio6azplp@vireshk-i7>
- <CAL_JsqJ6_ktTQKiy_xx9DhjQ3=imfvSZpBem5fXwVY7O49EgCw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ6_ktTQKiy_xx9DhjQ3=imfvSZpBem5fXwVY7O49EgCw@mail.gmail.com>
+In-Reply-To: <cover.1627362340.git.viresh.kumar@linaro.org>
 User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03-08-21, 09:47, Rob Herring wrote:
-> n Mon, Aug 2, 2021 at 10:30 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 02-08-21, 13:40, Rob Herring wrote:
-> > > Humm, how does one implement interrupts without a parent interrupt? It
-> > > uses the parent virtio,mmio interrupt?
-> >
-> > Kind of, yeah, but not necessarily.
-> >
-> > The interrupt information is passed over buffers shared between host and guest.
-> > Now the guest may process the buffers when it receives a notification from the
-> > host, that will be at downpath of an interrupt for virtio,mmio. Or the guest may
-> > poll on the virtqueue and process any buffers as soon as they are made
-> > available, no interrupts then.
+On 27-07-21, 10:53, Viresh Kumar wrote:
+> Hi,
 > 
-> Okay, thanks for the explanation.
+> Currently the DT only provides support for following node types for virtio-mmio
+> nodes:
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+>         virtio_mmio@a000000 {
+>                 dma-coherent;
+>                 interrupts = <0x00 0x10 0x01>;
+>                 reg = <0x00 0xa000000 0x00 0x200>;
+>                 compatible = "virtio,mmio";
+>         };
+> 
+> Here, each virtio-mmio corresponds to a virtio-device. But there is no way for
+> other users in the DT to show their dependency on virtio devices.
+> 
+> This patchset provides that support.
+> 
+> The first patch adds virtio-device bindings to allow for device sub-nodes to be
+> present and the second patch updates the virtio core to update the of_node.
+> 
+> Other patches add bindings for i2c and gpio devices.
+> 
+> Tested on x86 with qemu for arm64.
 
-Thanks for reviewing this Rob.
+Michael,
+
+I hope you will be picking this series (Now that it is reviewed by
+others) ? Just so you know, Wolfram needs the 4th patch, 4/5, to base
+the virtio-i2c driver over it and has requested an immutable branch
+for the same.
+
+Thanks.
 
 -- 
 viresh
