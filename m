@@ -2,23 +2,23 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 434683E1A9D
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Aug 2021 19:43:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D2B23E1AA1
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Aug 2021 19:43:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240434AbhHERnU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Aug 2021 13:43:20 -0400
-Received: from mail-bn8nam08on2045.outbound.protection.outlook.com ([40.107.100.45]:38625
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        id S240533AbhHERnf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Aug 2021 13:43:35 -0400
+Received: from mail-bn8nam11on2051.outbound.protection.outlook.com ([40.107.236.51]:16992
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S240220AbhHERnO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 5 Aug 2021 13:43:14 -0400
+        id S240460AbhHERnY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 5 Aug 2021 13:43:24 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UIquILNDoRz+r4YVBHfXURDqyTAgMAeMNFx9lBrommmuzyXcArjYArc/qV9Z2W30ZlGlC+SlsAs0eamKw7mNmqBhMsIhYwKtkM6N2QslJUmAwxMzOLpmUvbSr96PJqIYNXLAbGvqpImKtDrCcLlueO6H3GDadq6estVxR/N8XCzv1OMMF01kmVRQSwEe3KHCSc+Cofzgcm5oLdjhDYgbLNT6c+Q1evgpw9sTnCyelZausYJOvoOKuGfldaW2v17Tydcp3dr8T3hHBHtZo5nrSxwuwLhhUtCNUQhHrdJpBM4hOg2iEmbXHdlK4wG8csfa7SAY6NCYcnbD4G2e1NBdUw==
+ b=bboOSvtADXckM5tUUkSc8K4ep8wiWtBAeMGrwloBIZO+tmX6t3UA2onumTAQuG4GV7itUGqick6Y1ES1qBrQszY3Yib8SMDH1lafxR/6gSUh/1rbbL7BkciqZMpiO+XyZwNCC9EIMbY4RMPL0GcgdOMwa8MeiGe5VKC92T/Sd1zTc/vZ1ll0i0vSS+gP9DiTnNTp3N6enFpf63HT6nL2TOOJS5LEMbs0O/Xs/wVDvz12EnvyBx1d9u88MyLWaVX9y+AY8Rhcl3X0r1RxibSWh6nBzeVTE3/yFkE5Dsv6IWay+NttbTMN1DO9RwVUAKKx+ihtPV9P2Lpj+GdSt2z93g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OGgrylPFRlZDl0LlZm5Ykwzr9e81ByYC48TKKUSOQeQ=;
- b=jzQJORI6C1/Tp3ApQRAr1HOIGJPeq4nkAeYk5Ql8lN4IRnZ2fLUkxP7EkrdP8GCc1/IZHhBZmYr4dhDuoJzxBbHguxIAHADWHV0ISRMs4kth4HENjEA48lJDhcZsNXHw0aimfz9yGQrz9FphT+mC0hG4wp/kiQuO9nMk6AIlIFxi1Z4smjFFELkHaXiNVFAJ+e3TsrFz6tM29gfSntthlzqRzN0Aw+BXCX54TJaIskOSrd0K7xPIAZCAAMAwm9MX38T1N1sdTOohrX/3QBkRxUz6nAKvM0s0i2xwl5G70yj9z7QqpQwRfWplmUAZnJX3/XFRhvwoTXFIl1wBgivXoQ==
+ bh=lodLg64lReQGcCsYcxpXPr29vJsoc8wdmyOTOlzt238=;
+ b=I/mWlGDW7JHvClvAhiZbl2p7f6RQW5JVpP7d54quPKrJ6eIeKKDq4r+KUzXY78jxiozBnIIYx0qAc2TYVCBiIlGI0CvGxBnwxl8NsEnVRDbVJ4bb8azfwPdOkIULzQVAj9KCYtYDKVBCnDU3lZaaBnv6eOA0/O2Dj4C7ZNJovF1+XqPZjmQF49M32ibDrlusyKYbJc1hrVAtEe8vO8DWAowXwcYmhxOsTtPf220RpSU4pON0hCUnsNwgR3f6bwMXnaDCtwjHl/7l+41JEWN6mKqlQpIjhdfgN/fogT+Xy/jsX3RS+HBwA76KCfPhtZOgwGH/7Oru/2ga9aTKdoiJhg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.62.198) smtp.rcpttodomain=arndb.de smtp.mailfrom=xilinx.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
@@ -26,35 +26,35 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OGgrylPFRlZDl0LlZm5Ykwzr9e81ByYC48TKKUSOQeQ=;
- b=dDYGcqMsyMHmEGtIeTblkPYe7ZcjVFAU9u9dqwpjuSA+qbCf9m7PBmnk8aIyDUIWAHTDz4+xSlCKuE+C+JtPAU/yVkJKrF1siym5pY1iL672w2rVVLPZJ0zSkHzYVDzslJc4zVBdSucXyTdLGMKfsvSniFPbH8AstOU9Ch/Tf9o=
-Received: from SN4PR0501CA0105.namprd05.prod.outlook.com
- (2603:10b6:803:42::22) by CY4PR02MB2679.namprd02.prod.outlook.com
- (2603:10b6:903:126::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.25; Thu, 5 Aug
- 2021 17:42:57 +0000
-Received: from SN1NAM02FT0046.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:42:cafe::9b) by SN4PR0501CA0105.outlook.office365.com
- (2603:10b6:803:42::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.5 via Frontend
- Transport; Thu, 5 Aug 2021 17:42:57 +0000
+ bh=lodLg64lReQGcCsYcxpXPr29vJsoc8wdmyOTOlzt238=;
+ b=ncUAz0yS9PfkuvHS8aBzQf2zTJyZBzrUp/K6E9ne9jwSAalmA/bKXLI4ileUpKOQoRyTjsUdl3aC8/6FytKQSDd7eFCbnohlbMJeQSIPviKjnn+wAfkmb/BmBjSAXAy29E36HKNysq5jPH5K+U/3Wee+oGsQaABPtb0YU3/ZWuE=
+Received: from SN6PR16CA0051.namprd16.prod.outlook.com (2603:10b6:805:ca::28)
+ by DM8PR02MB8155.namprd02.prod.outlook.com (2603:10b6:8:1c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.20; Thu, 5 Aug
+ 2021 17:43:06 +0000
+Received: from SN1NAM02FT0028.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:ca:cafe::60) by SN6PR16CA0051.outlook.office365.com
+ (2603:10b6:805:ca::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.15 via Frontend
+ Transport; Thu, 5 Aug 2021 17:43:06 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
  smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
  header.d=none;arndb.de; dmarc=pass action=none header.from=xilinx.com;
 Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0046.mail.protection.outlook.com (10.97.5.4) with Microsoft SMTP
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ SN1NAM02FT0028.mail.protection.outlook.com (10.97.4.206) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4394.16 via Frontend Transport; Thu, 5 Aug 2021 17:42:57 +0000
+ 15.20.4394.16 via Frontend Transport; Thu, 5 Aug 2021 17:43:06 +0000
 Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 5 Aug 2021 10:42:50 -0700
+ 15.1.2176.2; Thu, 5 Aug 2021 10:42:55 -0700
 Received: from smtp.xilinx.com (172.19.127.95) by
  xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.2 via Frontend Transport; Thu, 5 Aug 2021 10:42:50 -0700
+ 15.1.2176.2 via Frontend Transport; Thu, 5 Aug 2021 10:42:55 -0700
 Envelope-to: git@xilinx.com,
  arnd@arndb.de,
  zou_wei@huawei.com,
@@ -70,7 +70,7 @@ Envelope-to: git@xilinx.com,
 Received: from [10.140.6.35] (port=51088 helo=xhdsaipava40.xilinx.com)
         by smtp.xilinx.com with esmtp (Exim 4.90)
         (envelope-from <piyush.mehta@xilinx.com>)
-        id 1mBhOL-0005Bw-Cf; Thu, 05 Aug 2021 10:42:49 -0700
+        id 1mBhOP-0005Bw-P9; Thu, 05 Aug 2021 10:42:54 -0700
 From:   Piyush Mehta <piyush.mehta@xilinx.com>
 To:     <arnd@arndb.de>, <zou_wei@huawei.com>,
         <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
@@ -82,9 +82,9 @@ CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Piyush Mehta <piyush.mehta@xilinx.com>
-Subject: [PATCH V2 1/3] firmware: zynqmp: Add MMIO read and write support for PS_MODE pin
-Date:   Thu, 5 Aug 2021 23:12:17 +0530
-Message-ID: <20210805174219.3000667-2-piyush.mehta@xilinx.com>
+Subject: [PATCH V2 2/3] dt-bindings: gpio: zynqmp: Add binding documentation for modepin
+Date:   Thu, 5 Aug 2021 23:12:18 +0530
+Message-ID: <20210805174219.3000667-3-piyush.mehta@xilinx.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210805174219.3000667-1-piyush.mehta@xilinx.com>
 References: <20210805174219.3000667-1-piyush.mehta@xilinx.com>
@@ -93,147 +93,103 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6ceffa2d-5aec-457c-6e09-08d958387658
-X-MS-TrafficTypeDiagnostic: CY4PR02MB2679:
-X-Microsoft-Antispam-PRVS: <CY4PR02MB2679893027085783B22320B2D4F29@CY4PR02MB2679.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 8b3ee291-671e-4152-d1db-08d958387b78
+X-MS-TrafficTypeDiagnostic: DM8PR02MB8155:
+X-Microsoft-Antispam-PRVS: <DM8PR02MB815579BDC8E579D237A1B5B1D4F29@DM8PR02MB8155.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xXEO5Mch5j/c1D1r0HhvlvMt3Fnnuoh4BgYZNTDNVWRL20F9lw5oxrcRFTpZjC6GnRGgJSJ/EU783sLYVELMnuJarrQ61/CDSM72KBGXT6T1bHS659pPsIous2SEEeZIpP1F3S0hlyqzIrZOJ3KHexu4BCwORq7oH4T9wfoDUyI+RmMa562FRkmk9PNoaxbIYRRVs4Px7ow9TVpH2fUIuBW903EFUDXshXqaAQg9w2HR7cZcA5DdUB25ihwFPG9P+jI2dHmnvZPH7i3uQQ+LO8oFS0x17AVDzGI/ZpDs6ZcYYR6uaht8hr9KlDODoApWXl1CYxwfIiGZ58df7+0eFs7fD2F/DqDDM+GbZTH/RHKxl4Shb9dCTheRLtunOGo/LVucwc0craYuN/CDsKWzgru9NEWSuFExqbwQ7AFywBlJOeWPRINswoAXOa7kkPnPryRWFAXielwPi5pKiJaShmqthxI9pLS/XEraPhkeqnMjG4g34QNruF8kSWbBfb6p2S1FqYneObCEcGUubt17ntFp3qszjMdHPD0Hz0EM0sJtU7JnoQkfuSws595Hg6p5hNRjFwTuWlVrxibxOvRMCAUz2IUHvR+eehbINqXBaROdCWuA65W2lB9l64/N835xYRrr5rFOTHdonUKPS7lovNQhuhBrwL3/fLoJ9NOo0TyObbbMwbnOK6q19mF81ltAq+XkvHVN46qraMbZb2StX3Au4sKlu27VYOxLsmQv+okX/YFuRfIdA2MM41o7Wes4fciVLtUMZFhur6zwNWSdEH4ZCHq5SBZuHD+t+OXH50o=
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(136003)(396003)(36840700001)(46966006)(4326008)(2906002)(356005)(336012)(36756003)(7416002)(44832011)(6666004)(426003)(478600001)(9786002)(82740400003)(1076003)(5660300002)(70586007)(47076005)(316002)(83380400001)(2616005)(110136005)(70206006)(186003)(82310400003)(26005)(54906003)(36906005)(8936002)(921005)(6636002)(36860700001)(8676002)(7696005)(107886003)(7636003)(102446001)(83996005)(2101003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 29+ECZR9c1MVx68hvOuPqjHARNuU7VPNJ338YZtwQ4/LymOgdlx4PKlEjHdy8kMYGGiaQfh9Zpw/A6UVxRZGzE65uTYncXEAIgiO5O89XPIVmM6TGc0KpzZZuFBKXhJnnpe1MPxhcL32rfrFhSfvh8qAwn9ibQTIeVRYuOpH2nnaHMHd2qjdhNM8zX7kr5JAbIDG0lhKE8M7EJRlPAQGiGzXw+60FnvnZSwuaTdnxnsC8scd+CYF9132unohcgB7WP2VWDOgaqj6IbvH250J4sCP5qZQYNEeXDcwxPfxxRF5tBeYgN9PWprWFz/+2OdUZ8zF3qI9LywedsaeuPrgxhbC5l5BykIszLBML5F9KNVliKRuhPw9N2hMHzhb6Dhg0xXMV9tRQ6Q/QTuSBjV2JisC2keEWAgfBFM8iNUGqHyNqrLfzFZ2mv+a7Vv1WwdQxXyoSORFpUa43sG07Eys9QPHuMh3y2WyQbhisJKxe+VWcOHmg47eSiiet/BzcpA4bWFKQPPMdWiC6GcYimTlPQLn32ES/snDXdpLiG8BckPBfOClPYT29oeZVNTL0aDCum2RxFVI4Ny8ZcZ65FA1A0X6atRM0NqTDJniuD0M8bhyHWXa9R9b7yGOJTreupCfItFefqKX+yZcpz/v+8Wll7Hdy/yWjCAlPws+b3e45T6qHHMP4ayfskKWFm09Xin2yJM7qkaz2mnju+RY3FngG7HGCdSrsHycxK/vRCJduBg+I4VGjv8M2R4xx907G6w0wB514rIuh7R9hJosgCMCZptGf3gTHRURVNy2mxwJhFAJCDw9KdGbzok1IFOOp+qLb6D5Iz+YXUu3CWmMn4kvU+Q7slLbRf5uRG3GHtl7E0Qa9bZQZsfqnGFNNYB/08vcYrrznIhGPqrAxf/GLBT64k5gmw/JCWMbksegmGxixtI=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(376002)(39850400004)(136003)(346002)(396003)(36840700001)(46966006)(7636003)(54906003)(82740400003)(36756003)(6666004)(2616005)(47076005)(7416002)(6636002)(2906002)(356005)(426003)(110136005)(82310400003)(44832011)(26005)(7696005)(921005)(316002)(70206006)(36860700001)(8676002)(83380400001)(36906005)(107886003)(70586007)(1076003)(478600001)(336012)(4326008)(5660300002)(9786002)(8936002)(186003)(966005)(102446001)(2101003)(83996005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2021 17:42:57.5735
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2021 17:43:06.1734
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ceffa2d-5aec-457c-6e09-08d958387658
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b3ee291-671e-4152-d1db-08d958387b78
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0046.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0028.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2679
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR02MB8155
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add Xilinx ZynqMP firmware MMIO APIs support to set and get PS_MODE
-pins value and status. These APIs create an interface path between
-mode pin controller driver and low-level API to access GPIO pins.
+This patch adds DT binding document for zynqmp modepin GPIO controller.
+Modepin GPIO controller has four GPIO pins which can be configurable
+as input or output.
+
+Modepin driver is a bridge between the peripheral driver and GPIO pins.
+It has set and get APIs for accessing GPIO pins, based on the device-tree
+entry of reset-gpio property in the peripheral driver, every pin can be
+configured as input/output and trigger GPIO pin.
+
+For more information please refer zynqMp TRM link:
+Link: https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf
+Chapter 2: Signals, Interfaces, and Pins
+Table 2-2: Clock, Reset, and Configuration Pins - PS_MODE
 
 Signed-off-by: Piyush Mehta <piyush.mehta@xilinx.com>
 ---
 Changes in v2:
-- Added Xilinx ZynqMP firmware MMIO API support to set and get pin
-  value and status.
----
- drivers/firmware/xilinx/zynqmp.c     | 46 ++++++++++++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h | 14 +++++++++++
- 2 files changed, 60 insertions(+)
+- Addressed review comments: Update commit message
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 15b13832..0234423 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -28,6 +28,13 @@
- /* Max HashMap Order for PM API feature check (1<<7 = 128) */
- #define PM_API_FEATURE_CHECK_MAX_ORDER  7
- 
-+/* CRL registers and bitfields */
-+#define CRL_APB_BASE			0xFF5E0000U
-+/* BOOT_PIN_CTRL- Used to control the mode pins after boot */
-+#define CRL_APB_BOOT_PIN_CTRL		(CRL_APB_BASE + (0x250U))
-+/* BOOT_PIN_CTRL_MASK- out_val[11:8], out_en[3:0] */
-+#define CRL_APB_BOOTPIN_CTRL_MASK	0xF0FU
+https://lore.kernel.org/linux-arm-kernel/20210615080553.2021061-2-piyush.mehta@xilinx.com/T/#mbd1fbda813e33b19397b350bde75747c92a0d7e1
+https://lore.kernel.org/linux-arm-kernel/20210615080553.2021061-2-piyush.mehta@xilinx.com/T/#me82b1444ab3776162cdb0077dfc9256365c7e736
+---
+ .../bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
+new file mode 100644
+index 0000000..39d78f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/gpio/xlnx,zynqmp-gpio-modepin.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- static bool feature_check_enabled;
- static DEFINE_HASHTABLE(pm_api_features_map, PM_API_FEATURE_CHECK_MAX_ORDER);
- 
-@@ -926,6 +933,45 @@ int zynqmp_pm_pinctrl_set_config(const u32 pin, const u32 param,
- EXPORT_SYMBOL_GPL(zynqmp_pm_pinctrl_set_config);
- 
- /**
-+ * zynqmp_pm_bootmode_read() - PM Config API for read bootpin status
-+ * @ps_mode: Returned output value of ps_mode
-+ *
-+ * This API function is to be used for notify the power management controller
-+ * to read bootpin status.
-+ *
-+ * Return: status, either success or error+reason
-+ */
-+unsigned int zynqmp_pm_bootmode_read(u32 *ps_mode)
-+{
-+	unsigned int ret;
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
++title: ZynqMP Mode Pin GPIO controller
 +
-+	ret = zynqmp_pm_invoke_fn(PM_MMIO_READ, CRL_APB_BOOT_PIN_CTRL, 0,
-+				  0, 0, ret_payload);
++description:
++  PS_MODE is 4-bits boot mode pins sampled on POR deassertion. Mode Pin
++  GPIO controller with configurable from numbers of pins (from 0 to 3 per
++  PS_MODE). Every pin can be configured as input/output.
 +
-+	*ps_mode = ret_payload[1];
++maintainers:
++  - Piyush Mehta <piyush.mehta@xilinx.com>
 +
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(zynqmp_pm_bootmode_read);
++properties:
++  compatible:
++    const: xlnx,zynqmp-gpio-modepin
 +
-+/**
-+ * zynqmp_pm_bootmode_write() - PM Config API for Configure bootpin
-+ * @ps_mode: Value to be written to the bootpin ctrl register
-+ *
-+ * This API function is to be used for notify the power management controller
-+ * to configure bootpin.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+int zynqmp_pm_bootmode_write(u32 ps_mode)
-+{
-+	return zynqmp_pm_invoke_fn(PM_MMIO_WRITE, CRL_APB_BOOT_PIN_CTRL,
-+				   CRL_APB_BOOTPIN_CTRL_MASK, ps_mode, 0, NULL);
-+}
-+EXPORT_SYMBOL_GPL(zynqmp_pm_bootmode_write);
++  gpio-controller: true
 +
-+/**
-  * zynqmp_pm_init_finalize() - PM call to inform firmware that the caller
-  *			       master has initialized its own power management
-  *
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 9d1a5c1..dc6f39f 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -68,6 +68,8 @@ enum pm_api_id {
- 	PM_SET_REQUIREMENT = 15,
- 	PM_RESET_ASSERT = 17,
- 	PM_RESET_GET_STATUS = 18,
-+	PM_MMIO_WRITE = 19,
-+	PM_MMIO_READ = 20,
- 	PM_PM_INIT_FINALIZE = 21,
- 	PM_FPGA_LOAD = 22,
- 	PM_FPGA_GET_STATUS = 23,
-@@ -386,6 +388,8 @@ int zynqmp_pm_sd_dll_reset(u32 node_id, u32 type);
- int zynqmp_pm_reset_assert(const enum zynqmp_pm_reset reset,
- 			   const enum zynqmp_pm_reset_action assert_flag);
- int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset, u32 *status);
-+unsigned int zynqmp_pm_bootmode_read(u32 *ps_mode);
-+int zynqmp_pm_bootmode_write(u32 ps_mode);
- int zynqmp_pm_init_finalize(void);
- int zynqmp_pm_set_suspend_mode(u32 mode);
- int zynqmp_pm_request_node(const u32 node, const u32 capabilities,
-@@ -515,6 +519,16 @@ static inline int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
- 	return -ENODEV;
- }
- 
-+static inline unsigned int zynqmp_pm_bootmode_read(u32 *ps_mode)
-+{
-+	return -ENODEV;
-+}
++  "#gpio-cells":
++    const: 2
 +
-+static inline int zynqmp_pm_bootmode_write(u32 ps_mode)
-+{
-+	return -ENODEV;
-+}
++required:
++  - compatible
++  - gpio-controller
++  - "#gpio-cells"
 +
- static inline int zynqmp_pm_init_finalize(void)
- {
- 	return -ENODEV;
++additionalProperties: false
++
++examples:
++  - |
++    modepin_gpio: gpio {
++        compatible = "xlnx,zynqmp-gpio-modepin";
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
++
++...
 -- 
 2.7.4
 
