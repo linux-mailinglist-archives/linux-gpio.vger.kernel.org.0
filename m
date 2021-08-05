@@ -2,98 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D7AA3E1460
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Aug 2021 14:04:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E7823E1473
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Aug 2021 14:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232358AbhHEMEM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Aug 2021 08:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232222AbhHEMEM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 5 Aug 2021 08:04:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 81B8061154;
-        Thu,  5 Aug 2021 12:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628165038;
-        bh=PUkPUdCS+EFwjPhDiy36RRp9jIOhYjhIvZ+Y2AdomvU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gRHH4wLfHAoHckki0adkRHZJlxKorg3iI1ULFM2E1CmKFkyeK3EN6KbVYfvnq5c4d
-         uNCvzAxNFrCPn4XOmw36Q9A+7nbaMYSXnKGfDkaPfzAtkZ/wCtt2QRSmsJ5tMO6i8D
-         kvMJ/1dvyO4y7v4roat2f//N1vQWt3puk31Ui3ogfhA2S1DNu2EmWc0o41QDhmwIDX
-         zfdxRO/VbcQXZQvcFV2+HadCruWfDnYlpk5KtPlGQapjtf+iBtzHS0QpDoaettVdWe
-         lE24CJ9o1Ab4qXg+1MmpHnSODKr4oGw6XS5oEGAgtSJ8Hpy4vnti9oBYRZGGN0kiFA
-         tgQSAp34BgFRA==
-Received: by mail-wr1-f54.google.com with SMTP id n12so6217159wrr.2;
-        Thu, 05 Aug 2021 05:03:58 -0700 (PDT)
-X-Gm-Message-State: AOAM532VrQYeiBo9bVW9raWm+vBeceDHUiREzZz3WNQ8W9P0NzzDCm21
-        iKjNscsiA8V5wQVJYEVAWjngrnLDyJIXwG+W9D4=
-X-Google-Smtp-Source: ABdhPJxM8yF9ntp+YFGPcBdE5QsOflMbRxXUGLBCAojbJQuy7+TQBwukBkQT2c6tY70LJ/zmNnIXtCtz5o6RtYRO4wI=
-X-Received: by 2002:adf:fd90:: with SMTP id d16mr5092822wrr.105.1628165037147;
- Thu, 05 Aug 2021 05:03:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1627989586.git.viresh.kumar@linaro.org> <75c8e6e5e8dfa1889938f3a6b2d991763c7a3717.1627989586.git.viresh.kumar@linaro.org>
- <CAK8P3a29NfFWwtGHhqos1P8f_SmzPJTXvEY5BZJAEMbV2SKe-Q@mail.gmail.com> <0100017b1610f711-c53c79f2-9e28-4c45-bb42-8db09688b18e-000000@email.amazonses.com>
-In-Reply-To: <0100017b1610f711-c53c79f2-9e28-4c45-bb42-8db09688b18e-000000@email.amazonses.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Thu, 5 Aug 2021 14:03:40 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0DWkfQcZpmyfKcdNt1MHf8ha6a9L2LmLt1Tv-j0HDr3w@mail.gmail.com>
-Message-ID: <CAK8P3a0DWkfQcZpmyfKcdNt1MHf8ha6a9L2LmLt1Tv-j0HDr3w@mail.gmail.com>
-Subject: Re: [Stratos-dev] [PATCH V4 2/2] gpio: virtio: Add IRQ support
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Viresh Kumar <vireshk@kernel.org>,
+        id S237830AbhHEMIu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Aug 2021 08:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232222AbhHEMIt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Aug 2021 08:08:49 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4212DC061765;
+        Thu,  5 Aug 2021 05:08:34 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id f42so10585505lfv.7;
+        Thu, 05 Aug 2021 05:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aScZkbb/5ZiuN37rlwqVKOBH127Feu3HCQ0ibyVkBUs=;
+        b=XmFz63jRxLr9uS2/XywHpaOTqRHNYlyiXeiE2yzpV2i7LF3n9kmeZ9/MXFL0RSERRP
+         LDpORCRxivFvLWwJayU6eGk7l+8fBOPYCGsPg9I5wAkYPtzcYjIkwKuEQisaeRBEKxsQ
+         OuKZdlISYrbIapFbvab7IG+1lLDGekzOxye91ZrPuH3YX7zlqo/tKq5hLsS/P5zJQR4l
+         0N9fqaRQ54jFUOzuQRX2uYgyjz1f+GeJGUyG0H6kHUpImSd4opVpN9KePmrGkeUYkk14
+         u8aMlsn6/FJiTaijeEKlYDsFdjQ0+zYzvdtKlKCzjAofY/GNDx9MJIs6Sl+VWu4DNnr7
+         t34Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aScZkbb/5ZiuN37rlwqVKOBH127Feu3HCQ0ibyVkBUs=;
+        b=duDCoAtEdqT+tBZqieagspo5X5IlmkK0ZWGUSJsgn1ahwrCaujPdfYash9jQPckQSg
+         kRhMj9uazk7tX4lbD+5qNJryCJizhAhZmoPgaA113ohdIAy05DFsAy3EbIYJ3tiGH7DM
+         wJITKYZNW0HnLpKDJrjy7UlIJy983Av1IpvAOLUhzu89qifzzBDSiv+nck2XG6Rf7U17
+         plLAO6ZDiUxKCBRBoOdU3du8vVsy6jDOCoOYuTGnYxEWZZTpPA5g/xAkNrtG9yltW+uG
+         ADu40Zfixh9MOf7o93+LKDaWM1mdR0OPMrJa/ZML6kOwZKCN9iWoUcH+JWeOJyAVoVhY
+         D9Kw==
+X-Gm-Message-State: AOAM533IEcefcQntsrWYHmexypL1dmeQ9RWkFLTgTGxgDN6JNjGOxm6x
+        wo/Uwe5Z3RGScaJyuZ5aiM4=
+X-Google-Smtp-Source: ABdhPJyR1z0aIIPjNsJTUBlSBWZhZpF4VttMvLL+Pe92PtYtRT0aAkUNHKIwUO92S6jupm8Z+0BH+Q==
+X-Received: by 2002:a05:6512:5c5:: with SMTP id o5mr3605940lfo.93.1628165312639;
+        Thu, 05 Aug 2021 05:08:32 -0700 (PDT)
+Received: from mobilestation ([95.79.127.110])
+        by smtp.gmail.com with ESMTPSA id p21sm495938lfa.264.2021.08.05.05.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Aug 2021 05:08:30 -0700 (PDT)
+Date:   Thu, 5 Aug 2021 15:08:28 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stratos Mailing List <stratos-dev@op-lists.linaro.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Jason Wang <jasowang@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 2/4] gpio: dwapb: Read GPIO base from gpio-base
+ property
+Message-ID: <20210805120828.kv22vb35d5b5b4li@mobilestation>
+References: <20210804160019.77105-1-andriy.shevchenko@linux.intel.com>
+ <20210804160019.77105-2-andriy.shevchenko@linux.intel.com>
+ <YQu/tscUCweZdoCo@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YQu/tscUCweZdoCo@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 5, 2021 at 1:26 PM Viresh Kumar via Stratos-dev
-<stratos-dev@op-lists.linaro.org> wrote:
->
-> On 03-08-21, 17:01, Arnd Bergmann wrote:
-> > As far as I can tell, the update_irq_type() message would lead to the
-> > interrupt getting delivered when it was armed and is now getting disabled,
-> > but I don't see why we would call update_irq_type() as a result of the
-> > eventq notification.
->
-> Based on discussion we had today (offline), I changed the design a bit
-> and used handle_level_irq() instead, as it provides consistent calls
-> to mask/unmask(), which simplified the whole thing a bit.
+Hi Andy
 
-The new flow looks much nicer to me, without the workqueue, and
-doing the requeue directly in the unmask() operation.
+On Thu, Aug 05, 2021 at 01:38:46PM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 04, 2021 at 07:00:17PM +0300, Andy Shevchenko wrote:
+> > For backward compatibility with some legacy devices introduce
+> > a new (*) property gpio-base to read GPIO base. This will allow
+> > further cleaning up of the driver.
+> > 
+> > *) Note, it's not new for the GPIO library since the mockup driver
+> >    is using it already.
+> 
+> Serge, I haven't put any tags here since the patch has been modified.
+> It still works for my case. I hope that's what you wanted me to do.
 
-I don't quite understand the purpose of the type_pending and
-mask_pending flags yet, can you explain what they actually
-do?
 
-Also, I have no idea about whether using the handle_level_irq()
-function is actually correct here. I suppose if necessary, the driver
-could provide its own irq.handler callback in place of that.
+Thanks for the update. Yep, it works like a charm. No gpio-base is read
+from DT.
 
-> Also I have broken the rule from specs, maybe we should update spec
-> with that, where the specs said that the buffer must not be queued
-> before enabling the interrupt. I just queue the buffer unconditionally
-> now from unmask().
->
-> I am not sure but there may be some race around the "queued" flag and
-> I wonder if we can land in a scenario where the buffer is left
-> un-queued somehow, while an interrupt is enabled.
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Acked-by: Serge Semin <fancer.lancer@gmail.com>
 
-Can that be integrated with the "masked" state now? It looks like
-the two flags are always opposites now.
+-Sergey
 
-      Arnd
+> 
+> Since Lee gave his ACKs, this is the last in the series to be reviewed.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
