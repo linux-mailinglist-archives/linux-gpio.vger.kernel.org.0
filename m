@@ -2,90 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91E293E15E6
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Aug 2021 15:43:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C39013E16FA
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Aug 2021 16:29:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241189AbhHENnh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Aug 2021 09:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239750AbhHENnh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Aug 2021 09:43:37 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34734C061765;
-        Thu,  5 Aug 2021 06:43:22 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id t7-20020a17090a5d87b029017807007f23so11665849pji.5;
-        Thu, 05 Aug 2021 06:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=58Ffi1Arbxce6aerw4WIspWj9tMJZpszbjIyc6AUL44=;
-        b=GH/dqod3qaeVISZlEavJ1B1Q2ckMHBpygJRbUAG5V15AKHnuh55c1+0DnCQfcNbAyw
-         32WP6Gwu7hlLL4eVrUid6reGBAB99eRuwoKBdSpon4fBYCmtWJuvMBjD04HNTYP15yKp
-         O5gijcBXRvf9QfPDgdkclQ/bCXKms1Bm2yv4WHa/9PJAL01s2fY3YROgs6i4PTjP1ZZG
-         i7/LeLwWzEnaq1r3AaGAV+ajMePlfLjvM6jeZof49A+vH6REdJtSeYvr7UmIhZ87KrqH
-         N+v97k784K8vvMdS8WdoGR2cXG1CJ0KURs/MDyq432JX3l1TbkVaNFUxI2ThcLZfZVG5
-         z+YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=58Ffi1Arbxce6aerw4WIspWj9tMJZpszbjIyc6AUL44=;
-        b=k2n9X6l0PSqsM8KtnilmXZfOFsEAUetnYxfnblZHWbj45rdnLl2n5RornYAd7jvdfm
-         kZWmNg5+nrMu61s5dxHLW1GR7TH7A1b1G9BOV/Uw9QpUSMTs157uRzd9vArjbbei1OJc
-         ZWyxxk3HRPK7UiUhVCL3CK7chO6TqnI47a/YgDd5H76t4eHsJcDE5qtIyniynGPNI/bC
-         jWoMIdf5Hw0GLmccoyUsryBatUlnYqBuPKf8XfpfsUviwmKYHXz4fVkOw4a8gW+KQnse
-         tyvrILRnO2NjkMle17hoTtjyzlTAXy4l69Ii9+iloudJVHspJcq02FS6f0royz63CBIA
-         vuJw==
-X-Gm-Message-State: AOAM531bXP3r+RBZnvBcTu3n6LuvhWvAXKbCr1eg/So2fOCfUGkWMV7i
-        YI8Q4Bcr+B6d/U8g3eb3+6sDiQZUDGKbJsi62Q0=
-X-Google-Smtp-Source: ABdhPJxQ7j9Z8TwVs6BQjf+UxIRFeNyr6I+JFKe1EKX8uckU3zdLzwQe9cpuMb/d5VHLmMrqWrtO9A2gpZpoukuqZYQ=
-X-Received: by 2002:a65:5ccd:: with SMTP id b13mr232696pgt.203.1628171001734;
- Thu, 05 Aug 2021 06:43:21 -0700 (PDT)
+        id S241960AbhHEO35 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Aug 2021 10:29:57 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:40964 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240801AbhHEO35 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Aug 2021 10:29:57 -0400
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 175EBmGX031318;
+        Thu, 5 Aug 2021 16:29:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=selector1;
+ bh=64HVz0Gg+wUo7z89cmaaEfQ54A59MSPLHnaUZCxYN+8=;
+ b=4L4CeUNf2sOsb8dX3pB3ooJ6Sbv97tbMXVQiszaUfnQ1dr/ytgBL5M5jfcezU+g66R45
+ tvaUPcthHSfmduxSGx7CsZMlX99N4BDWHGISL5LdG6pcgAb5wuiFBNZuJ6H6bmSq4M2k
+ WBh0uxqTxp54H/erqxdmyKxrlmR7MmORGbYYyZW5sBL+HbmwHpLx0HA3XxJLBqaiO1lG
+ UmwkhNgF57MZQcIEDX1N7rGWSQPxHoQPmdrl2vg4SwdkwfashSazYfhOd7i8SjA0u4W3
+ R9hdzF3LlxDCsDd4LNtjDLigyz47TTcxl7Pi0cSkef0OOmudIEu0BqaVgoccTi4UkWeg yQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3a854tkmf9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Aug 2021 16:29:23 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1C97410002A;
+        Thu,  5 Aug 2021 16:29:22 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag2node3.st.com [10.75.127.6])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 008BD22FA5A;
+        Thu,  5 Aug 2021 16:29:21 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG2NODE3.st.com
+ (10.75.127.6) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 5 Aug
+ 2021 16:29:21 +0200
+Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: stm32: add new compatible for
+ STM32MP135 SoC
+To:     Linus Walleij <linus.walleij@linaro.org>, <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>, <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+References: <20210723132810.25728-1-alexandre.torgue@foss.st.com>
+ <20210723132810.25728-2-alexandre.torgue@foss.st.com>
+From:   Alexandre TORGUE <alexandre.torgue@foss.st.com>
+Message-ID: <1d7fe9a6-bf37-e8ca-1bc3-fda536a10359@foss.st.com>
+Date:   Thu, 5 Aug 2021 16:29:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <cover.1626429286.git.matthias.schiffer@ew.tq-group.com>
- <65f9787ebd6725e90fad9ea7f936ee0d5712da94.1626429286.git.matthias.schiffer@ew.tq-group.com>
- <YQvn9dkFluRYj80r@google.com> <9dc9fb4b37f7afa661bf1bb9148e5109b3f4329c.camel@ew.tq-group.com>
-In-Reply-To: <9dc9fb4b37f7afa661bf1bb9148e5109b3f4329c.camel@ew.tq-group.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Aug 2021 16:42:42 +0300
-Message-ID: <CAHp75VeQxr3pkX9j10wUi3NjZY-Nkn=waPsMDxG=pDprY3Wsyg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] mfd: tqmx86: clear GPIO IRQ resource when no IRQ
- is set
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210723132810.25728-2-alexandre.torgue@foss.st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG2NODE3.st.com
+ (10.75.127.6)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-08-05_05:2021-08-05,2021-08-05 signatures=0
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 5, 2021 at 4:40 PM Matthias Schiffer
-<matthias.schiffer@ew.tq-group.com> wrote:
-> On Thu, 2021-08-05 at 14:30 +0100, Lee Jones wrote:
-> > On Fri, 16 Jul 2021, Matthias Schiffer wrote:
+Hi Linus
 
-...
+On 7/23/21 3:28 PM, Alexandre Torgue wrote:
+> New compatible to manage ball out and pin muxing of STM32MP135 SoC.
+> 
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> index 72877544ca78..dfee6d38a701 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> @@ -24,6 +24,7 @@ properties:
+>         - st,stm32f746-pinctrl
+>         - st,stm32f769-pinctrl
+>         - st,stm32h743-pinctrl
+> +      - st,stm32mp135-pinctrl
+>         - st,stm32mp157-pinctrl
+>         - st,stm32mp157-z-pinctrl
+>   
+> 
 
-> > Strange - why is this !0 in the first place?
->
-> I don't see anything strange here. DEFINE_RES_IRQ() sets flags to
-> IORESOURCE_IRQ. We reset it to 0 when there is no IRQ to clear that
-> resource entry.
->
-> An alternative would be to start with an empty entry and only fill in
-> the fields when an IRQ is used, but that seems more cumbersome than the
-> current code to me.
+If you are ok with this patch, can I take it in my tree to avoid yaml 
+validation issue ? If you disagree I'll wait the next cycle to take DT 
+patches.
 
-Another alternative is to start using the IRQ DISABLED resource flag,
-but I'm afraid that OF code is not ready for that.
-https://elixir.bootlin.com/linux/latest/source/include/linux/ioport.h#L331
-
--- 
-With Best Regards,
-Andy Shevchenko
+cheers
+alex
