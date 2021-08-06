@@ -2,122 +2,341 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 610F73E2021
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Aug 2021 02:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C57AE3E2052
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Aug 2021 02:58:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241339AbhHFAn2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Aug 2021 20:43:28 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:46002 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241490AbhHFAn2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Aug 2021 20:43:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1628210593; x=1659746593;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SfYCrpZr5PyZzo73q36HdKbLa3BC6t616PMbQxgDuBQ=;
-  b=m8g6jrnhj5lTjL2uUCclFgPXzNnqg7POuL+QN5QnBWffY7KBovegWO39
-   zQ+U19mcGRtCJCEycRhMQTX9dbwhQbLpmba4BDC1HD2z75WuDiPxwXl9R
-   qWrXpiNA2MOsJpE+PYJmyDH8A7kBuSJCxfGgSdwaztPUzlbHvbWix4WVP
-   +8KrLUDIE7SFHjgL68S8grWSYNkuoBjtZUJ2p/3j5JxnSovquPRfVMCsJ
-   RYq4g2N4EH7Ihq/dsK2Qkr3U+SRWi4FTgIXlI8V1K+pny7n9+e+4GWpoM
-   HQBt2Wra9o7FPMi7udp+08KIELBtVVsvL+LLutt8U0F5T8FkgmPfKdKW3
-   w==;
-X-IronPort-AV: E=Sophos;i="5.84,299,1620662400"; 
-   d="scan'208";a="176455620"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Aug 2021 08:43:13 +0800
-IronPort-SDR: f3uiLj9DJwOTBDdLtmYru+VaHqlsWx5c3MGd72GJZwMFmhqGxeHmvFMrSbD6jfDwmDM/2yYL2d
- Dc5DRGSEzroaZ9+88vHt3x1Cs/nBiMGcW7kXqkdxDweDmPKWjYZduq8iy2fY2JgQGnbw5RWTQ7
- xLoE3oJ/G6nQejwKKHac4H2Lks1PMnYhKMsHq2qrLWNVzAhlXpm9Lm76C5AZh5Hkya/uI0j4La
- s1JlhWiQ77yTvNHWNxYx8DovjmShZTCPv2XAXkQq/15Y9eerVkC0DZo9IfMto+ReaUwC4mxh5f
- LuYIDNpTCZLsMdIFlqVA1Jam
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2021 17:20:42 -0700
-IronPort-SDR: rSwYUbW5gotH32ZkP8gMJps5GKoU0fexTeoOJw4Pdk1MOq1fz5lyQCxa4oH9PJcThfdH62qqEC
- nz459ppCEGv8jn0dYOy2aBfV1EYq/kFfc5ZUMxsBE14bbP8UT7QnvrxwL/PX0DSEehXmbRk3sN
- Aaply430bK+zt2CSMagL7dPhhN84BN2mrno2xULdYuMn11WFh4AIU5++yABp/B07wGwCntjlS2
- ZXXCrJ3zIDLed6w6rMDC9mPz6+CsZhMtS4p0UN0FgvGgYwxIeuX9kPGrkv34f8mFO/G3s8OE1/
- hso=
-WDCIronportException: Internal
-Received: from unknown (HELO twashi.fujisawa.hgst.com) ([10.225.163.81])
-  by uls-op-cesaip02.wdc.com with ESMTP; 05 Aug 2021 17:43:12 -0700
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH] pinctrl: k210: Fix k210_fpioa_probe()
-Date:   Fri,  6 Aug 2021 09:43:11 +0900
-Message-Id: <20210806004311.52859-1-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.31.1
+        id S242631AbhHFA6T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Aug 2021 20:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232902AbhHFA6S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Aug 2021 20:58:18 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B38C0613D5;
+        Thu,  5 Aug 2021 17:58:02 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id k3so7068308ilu.2;
+        Thu, 05 Aug 2021 17:58:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZaFqxs2ibbd66JSfHZiGtBRKx+hbncn5lf2tbbdXTmw=;
+        b=VFjiJ4eSRSRQbK7EXNw9PSj+Agjd7gN5JXgwx+bkZNRUHTQB16PWvBKCxSTo0YlwSc
+         /5LPv+3EyeHo5/4nkpYmUXX6aFFc5Texa5vauSVgEtyrD0yUwJqOinKf4r9QE9Eeym1j
+         2bUtp9fGsrpTW9NSGVcbpb8XF9tC8wKZXF8ghsrkPX86o1yHrXVp+xBoOR/uOGN2LaTy
+         ogS1MlgKrmLgZG+20YTsNqyxJXMC8IeZnwnDx5Fzpav4kquqmU810N4yeaFn80w+Crqx
+         sq6ELF1ZszPx/nt+uMdwo4z/hbXpiShR5USr43nhDhuY72NZBB2LP9BE7UQrFSF6qErg
+         LbiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZaFqxs2ibbd66JSfHZiGtBRKx+hbncn5lf2tbbdXTmw=;
+        b=kM/PWELZWTcMD2BKlXe5sMCZlSeMKvZ3KgUJu+VYjz+t0R9Qy2RCjK0nPiWLbfAjY1
+         +C7A4iiAInKUr62iqiD8bX50pcF4ZfZaNAiN5N8TvMOOyJjUZhCBV+PFZtYNpRIHosNX
+         gkwYWVyWf8K8Fqvxc2GG+ZwAFW+fkaZTNWu6UQwBinzzQJtebJPM4Pjg97gN1sePkF95
+         v6b53X3TMXX20REqLea5LpqvBpJ2lCHX2ZfApdTp9i+fknmfWT6Hwj4U2e5t3uLqmRaL
+         nxjnQp+aK2BuXuatw/nBA4wWMlzZ1hMeboBjqbrjB/iDaeYRERrK0AuVQieczQGm0Uy7
+         zHJA==
+X-Gm-Message-State: AOAM533fQlCP/wUMbD729vXmIAYTlJ+bYeKJu0x4qYLfH1sQF/g+5knj
+        wvZ8QMPVR0GhGsue3bjPGH8pdAEYNsfhmfcd
+X-Google-Smtp-Source: ABdhPJzmGbgsIAiqwQhPT9J+aINMQXd/dXr93285q2Qowm2uZupWv9fvSBGIi5Jxx8RWGJGKu7hQ8Q==
+X-Received: by 2002:a92:c746:: with SMTP id y6mr664489ilp.211.1628211481953;
+        Thu, 05 Aug 2021 17:58:01 -0700 (PDT)
+Received: from Crosshair-VIII-Hero.lan ([2600:6c46:7d7f:ec00::a11])
+        by smtp.gmail.com with ESMTPSA id p131sm1359588iod.31.2021.08.05.17.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Aug 2021 17:58:01 -0700 (PDT)
+From:   Chris Blake <chrisrblake93@gmail.com>
+To:     platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        chunkeey@gmail.com, hdegoede@redhat.com
+Cc:     Chris Blake <chrisrblake93@gmail.com>
+Subject: [PATCH v2] platform/x86: add meraki-mx100 platform driver
+Date:   Thu,  5 Aug 2021 19:57:55 -0500
+Message-Id: <20210806005755.2295193-1-chrisrblake93@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In k210_fpioa_probe(), add missing calls to clk_disable_unprepare() in
-case of error after cenabling the clk and pclk clocks. Also add missing
-error handling when enabling pclk.
+This adds platform support for the Cisco Meraki MX100 (Tinkerbell)
+network appliance. This sets up the network LEDs and Reset
+button. Note that this patch requires
+mfd: lpc_ich: Enable GPIO driver for DH89xxCC which has been accepted
+and is currently targeted for 5.15.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: d4c34d09ab03 ("pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Chris Blake <chrisrblake93@gmail.com>
+Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
 ---
- drivers/pinctrl/pinctrl-k210.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-k210.c b/drivers/pinctrl/pinctrl-k210.c
-index f831526d06ff..49e32684dbb2 100644
---- a/drivers/pinctrl/pinctrl-k210.c
-+++ b/drivers/pinctrl/pinctrl-k210.c
-@@ -950,23 +950,37 @@ static int k210_fpioa_probe(struct platform_device *pdev)
- 		return ret;
+Changelog:
+V2: Move to using gpiod lookup tables, misc cleanups
+V1: Initial Patch
+
+ drivers/platform/x86/Kconfig        |  13 ++
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/meraki-mx100.c | 212 ++++++++++++++++++++++++++++
+ 3 files changed, 228 insertions(+)
+ create mode 100644 drivers/platform/x86/meraki-mx100.c
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 7d385c3b2239..8d70176e335f 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -302,6 +302,19 @@ config ASUS_NB_WMI
+ 	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
+ 	  here.
  
- 	pdata->pclk = devm_clk_get_optional(dev, "pclk");
--	if (!IS_ERR(pdata->pclk))
--		clk_prepare_enable(pdata->pclk);
-+	if (!IS_ERR(pdata->pclk)) {
-+		ret = clk_prepare_enable(pdata->pclk);
-+		if (ret)
-+			goto disable_clk;
-+	}
- 
- 	pdata->sysctl_map =
- 		syscon_regmap_lookup_by_phandle_args(np,
- 						"canaan,k210-sysctl-power",
- 						1, &pdata->power_offset);
--	if (IS_ERR(pdata->sysctl_map))
--		return PTR_ERR(pdata->sysctl_map);
-+	if (IS_ERR(pdata->sysctl_map)) {
-+		ret = PTR_ERR(pdata->sysctl_map);
-+		goto disable_pclk;
-+	}
- 
- 	k210_fpioa_init_ties(pdata);
- 
- 	pdata->pctl = pinctrl_register(&k210_pinctrl_desc, dev, (void *)pdata);
--	if (IS_ERR(pdata->pctl))
--		return PTR_ERR(pdata->pctl);
-+	if (IS_ERR(pdata->pctl)) {
-+		ret = PTR_ERR(pdata->pctl);
-+		goto disable_pclk;
-+	}
- 
- 	return 0;
++config MERAKI_MX100
++	tristate "Cisco Meraki MX100 Platform Driver"
++	depends on GPIOLIB
++	depends on GPIO_ICH
++	depends on LEDS_CLASS
++	select LEDS_GPIO
++	help
++	  This driver provides support for the front button and LEDs on
++	  the Cisco Meraki MX100 (Tinkerbell) 1U appliance.
 +
-+disable_pclk:
-+	clk_disable_unprepare(pdata->pclk);
-+disable_clk:
-+	clk_disable_unprepare(pdata->clk);
++	  To compile this driver as a module, choose M here: the module
++	  will be called meraki-mx100.
 +
-+	return ret;
- }
+ config EEEPC_LAPTOP
+ 	tristate "Eee PC Hotkey Driver"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 7ee369aab10d..25c5aee1cde7 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -39,6 +39,9 @@ obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
+ obj-$(CONFIG_EEEPC_LAPTOP)	+= eeepc-laptop.o
+ obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
  
- static const struct of_device_id k210_fpioa_dt_ids[] = {
++# Cisco/Meraki
++obj-$(CONFIG_MERAKI_MX100)	+= meraki-mx100.o
++
+ # Dell
+ obj-$(CONFIG_X86_PLATFORM_DRIVERS_DELL)		+= dell/
+ 
+diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
+new file mode 100644
+index 000000000000..d64508aeb92c
+--- /dev/null
++++ b/drivers/platform/x86/meraki-mx100.c
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++/*
++ * Cisco Meraki MX100 (Tinkerbell) board platform driver
++ *
++ * Based off of arch/x86/platform/meraki/tink.c from the
++ * Meraki GPL release meraki-firmware-sources-r23-20150601
++ *
++ * Format inspired by platform/x86/pcengines-apuv2.c
++ *
++ * Copyright (C) 2021 Chris Blake <chrisrblake93@gmail.com>
++ */
++
++#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
++
++#include <linux/dmi.h>
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/gpio_keys.h>
++#include <linux/gpio/machine.h>
++#include <linux/input.h>
++#include <linux/kernel.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#define TINK_GPIO_DRIVER_NAME "gpio_ich"
++
++/* LEDs */
++static const struct gpio_led tink_leds[] = {
++	{
++		.name = "mx100:green:internet",
++		.default_trigger = "default-on",
++	},
++	{
++		.name = "mx100:green:lan2",
++	},
++	{
++		.name = "mx100:green:lan3",
++	},
++	{
++		.name = "mx100:green:lan4",
++	},
++	{
++		.name = "mx100:green:lan5",
++	},
++	{
++		.name = "mx100:green:lan6",
++	},
++	{
++		.name = "mx100:green:lan7",
++	},
++	{
++		.name = "mx100:green:lan8",
++	},
++	{
++		.name = "mx100:green:lan9",
++	},
++	{
++		.name = "mx100:green:lan10",
++	},
++	{
++		.name = "mx100:green:lan11",
++	},
++};
++
++static const struct gpio_led_platform_data tink_leds_pdata = {
++	.num_leds	= ARRAY_SIZE(tink_leds),
++	.leds		= tink_leds,
++};
++
++static struct gpiod_lookup_table tink_leds_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 11,
++				NULL, 0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 18,
++				NULL, 1, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 20,
++				NULL, 2, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 22,
++				NULL, 3, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 23,
++				NULL, 4, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 32,
++				NULL, 5, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 34,
++				NULL, 6, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 35,
++				NULL, 7, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 36,
++				NULL, 8, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 37,
++				NULL, 9, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 48,
++				NULL, 10, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 16,
++				NULL, 11, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 7,
++				NULL, 12, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 21,
++				NULL, 13, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 19,
++				NULL, 14, GPIO_ACTIVE_LOW),
++	}
++};
++
++/* Reset Button */
++static struct gpio_keys_button tink_buttons[] = {
++	{
++		.desc			= "Reset",
++		.type			= EV_KEY,
++		.code			= KEY_RESTART,
++		.active_low             = 1,
++		.debounce_interval      = 100,
++	},
++};
++
++static const struct gpio_keys_platform_data tink_buttons_pdata = {
++	.buttons	= tink_buttons,
++	.nbuttons	= ARRAY_SIZE(tink_buttons),
++	.poll_interval  = 20,
++	.rep		= 0,
++	.name		= "mx100-keys",
++};
++
++static struct gpiod_lookup_table tink_keys_table = {
++	.dev_id = "gpio-keys-polled",
++	.table = {
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 60,
++				NULL, 0, GPIO_ACTIVE_LOW),
++	}
++};
++
++/* Board setup */
++
++static const struct dmi_system_id tink_systems[] __initconst = {
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Cisco"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MX100-HW"),
++		},
++	},
++	{} /* Terminating entry */
++};
++
++static struct platform_device *tink_leds_pdev;
++static struct platform_device *tink_keys_pdev;
++
++static struct platform_device * __init tink_create_dev(
++	const char *name,
++	const void *pdata,
++	size_t sz)
++{
++	struct platform_device *pdev;
++
++	pdev = platform_device_register_data(NULL,
++		name,
++		PLATFORM_DEVID_NONE,
++		pdata,
++		sz);
++
++	if (IS_ERR(pdev))
++		pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
++
++	return pdev;
++}
++
++static int __init tink_board_init(void)
++{
++	if (!dmi_first_match(tink_systems))
++                return -ENODEV;
++
++	/* We need to make sure that GPIO60 isn't set to native mode as is default since it's our 
++	 * Reset Button. To do this, write to GPIO_USE_SEL2 to have GPIO60 set to GPIO mode.
++	 * This is documented on page 1609 of the PCH datasheet, order number 327879-005US
++	 */
++	outl(inl(0x530) | BIT(28), 0x530);
++
++	gpiod_add_lookup_table(&tink_leds_table);
++	gpiod_add_lookup_table(&tink_keys_table);
++
++	tink_leds_pdev = tink_create_dev(
++		"leds-gpio",
++		&tink_leds_pdata,
++		sizeof(tink_leds_pdata));
++
++	tink_keys_pdev = tink_create_dev(
++		"gpio-keys-polled",
++		&tink_buttons_pdata,
++		sizeof(tink_buttons_pdata));
++
++	return 0;
++}
++
++static void __exit tink_board_exit(void)
++{
++	platform_device_unregister(tink_keys_pdev);
++	platform_device_unregister(tink_leds_pdev);
++	gpiod_remove_lookup_table(&tink_keys_table);
++	gpiod_remove_lookup_table(&tink_leds_table);
++}
++
++module_init(tink_board_init);
++module_exit(tink_board_exit);
++
++MODULE_AUTHOR("Chris Blake <chrisrblake93@gmail.com>");
++MODULE_DESCRIPTION("Cisco Meraki MX100 Platform Driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:meraki-mx100");
++MODULE_DEVICE_TABLE(dmi, tink_systems);
++MODULE_SOFTDEP("pre: platform:" TINK_GPIO_DRIVER_NAME);
 -- 
-2.31.1
+2.25.1
 
