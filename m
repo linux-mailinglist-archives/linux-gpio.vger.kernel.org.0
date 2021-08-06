@@ -2,102 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07A7D3E249F
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Aug 2021 10:01:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1B713E2722
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Aug 2021 11:20:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230402AbhHFIBQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Aug 2021 04:01:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39192 "EHLO mail.kernel.org"
+        id S244214AbhHFJUt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Aug 2021 05:20:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18440 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230119AbhHFIBQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 6 Aug 2021 04:01:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9554E61164;
-        Fri,  6 Aug 2021 08:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628236860;
-        bh=ztwkXxuWZMz/g6yZbgT0o5O4xY3oCyRVtcaRxW+vzjc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GJcB4WYC17pGs7DrCFLhOVLYml6GF4ytUAgy+rJpR/UpPv+ykfP9B+7FDb65CjZMf
-         EQ9P7LssjEowBvl7E+IYCesSfHJUBCNu4sMbwbNkQ8Wl4+cB4lmB6xoB/pj+J5UHSV
-         mm+XML2WZBrGO0/3DMsY2W40k8Qjng1CqIAHlhMmdhC6/ISkLC4AQXRtJ/dJc9bRVp
-         73yeP//jZ6tpI7O6cYQW6riWzLkTH15TVGrbOz7d+kk/8PEMKcEbnEMUuNyfxe70M3
-         Ksy0Y+uOxu3/6mmIpHDgzBN2KpCySBf2GTMbp6MddPn4cn+oIxVJ0Zxiu1qpJ5XRkZ
-         H8/5hxq6Tfqog==
-Received: by mail-wr1-f49.google.com with SMTP id c9so9884393wri.8;
-        Fri, 06 Aug 2021 01:01:00 -0700 (PDT)
-X-Gm-Message-State: AOAM531nGkBErkA5AQucV+qGafBwBE99QHbCBm5qxq2HdzBQ4kU5kbD4
-        cAeYvSalAoPPiy03zt0vbNYeFbm6LXZdgnQ7cJE=
-X-Google-Smtp-Source: ABdhPJwo6F2j4b2SHDNHGQozJB+IoZwYRfg4nlpJNBaRYbtLxX3J/PyAE2/Fn575dufIMYN5qJa9QILoPOtN4acsUKE=
-X-Received: by 2002:a5d:44c7:: with SMTP id z7mr9646198wrr.286.1628236859101;
- Fri, 06 Aug 2021 01:00:59 -0700 (PDT)
+        id S243821AbhHFJUs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 6 Aug 2021 05:20:48 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10067"; a="201510901"
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="201510901"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2021 02:20:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="420677272"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 06 Aug 2021 02:20:31 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 032B815E; Fri,  6 Aug 2021 12:13:57 +0300 (EEST)
+Date:   Fri, 6 Aug 2021 12:13:57 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linux pin control <linux-gpio@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for 5.14-2
+Message-ID: <YQz9VXAHPcvQOSi2@black.fi.intel.com>
 MIME-Version: 1.0
-References: <cover.1627989586.git.viresh.kumar@linaro.org> <75c8e6e5e8dfa1889938f3a6b2d991763c7a3717.1627989586.git.viresh.kumar@linaro.org>
- <CAK8P3a29NfFWwtGHhqos1P8f_SmzPJTXvEY5BZJAEMbV2SKe-Q@mail.gmail.com>
- <0100017b1610f711-c53c79f2-9e28-4c45-bb42-8db09688b18e-000000@email.amazonses.com>
- <CAK8P3a0DWkfQcZpmyfKcdNt1MHf8ha6a9L2LmLt1Tv-j0HDr3w@mail.gmail.com>
- <20210805124922.j7lts7tfmm4t2kpf@vireshk-i7> <CAK8P3a0kbmPLGCBrjAv7-dW=JWq-pdSBeGUHCxUFmMKvKhCg7w@mail.gmail.com>
- <0100017b1a6c0a05-e41dc16c-b326-4017-a63d-a24a6c1fde70-000000@email.amazonses.com>
-In-Reply-To: <0100017b1a6c0a05-e41dc16c-b326-4017-a63d-a24a6c1fde70-000000@email.amazonses.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Fri, 6 Aug 2021 10:00:42 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2rrueXJHZxuiiShgVmLD916RaxW7xQHHjQXNFkM3Fpvg@mail.gmail.com>
-Message-ID: <CAK8P3a2rrueXJHZxuiiShgVmLD916RaxW7xQHHjQXNFkM3Fpvg@mail.gmail.com>
-Subject: Re: [Stratos-dev] [PATCH V4 2/2] gpio: virtio: Add IRQ support
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Jason Wang <jasowang@redhat.com>,
-        Stratos Mailing List <stratos-dev@op-lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 6, 2021 at 9:44 AM Viresh Kumar via Stratos-dev
-<stratos-dev@op-lists.linaro.org> wrote:
->
-> On 05-08-21, 15:10, Arnd Bergmann wrote:
-> > I hope this can still be simplified by working out better which state
-> > transitions are needed exactly. In particular, I would expect that we
-> > can get away with not sending a VIRTIO_GPIO_MSG_IRQ_TYPE
-> > for 'mask' state changes at all, but use that only for forcing 'enabled'
-> > state changes.
->
-> Something like this ?
+Hi Linux pin control  maintainers,
 
-> static void virtio_gpio_irq_mask(struct irq_data *d)
-> {
->         /* Nothing to do here */
-> }
+One fix for number of bug reports. Should go as soon as possible to v5.14.
 
-You'd have to do /something/ here I think, if only setting the flag
-that we don't want to deliver the next interrupt.
+Thanks,
 
-> static void virtio_gpio_irq_unmask(struct irq_data *d)
-> {
->         struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->         struct virtio_gpio *vgpio = gpiochip_get_data(gc);
->
->         /* Queue the buffer unconditionally on unmask */
->         virtio_gpio_irq_prepare(vgpio, d->hwirq);
-> }
+With Best Regards,
+Andy Shevchenko
 
-And check the flag here to not requeue it if it's masked.
+The following changes since commit e73f0f0ee7541171d89f2e2491130c7771ba58d3:
 
-Now, there is already a flag in the irq descriptor, so rather than
-having double accounting, the easy way may be to
-just use irqd_irq_masked()/irq_state_set_masked(), or
-have the irq core take care of this.
+  Linux 5.14-rc1 (2021-07-11 15:07:40 -0700)
 
-     Arnd
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.14-2
+
+for you to fetch changes up to 2f658f7a3953f6d70bab90e117aff8d0ad44e200:
+
+  pinctrl: tigerlake: Fix GPIO mapping for newer version of software (2021-08-04 18:47:50 +0300)
+
+----------------------------------------------------------------
+intel-pinctrl for v5.14-2
+
+* Fix the software mapping of GPIOs on Intel Tiger Lake-H
+
+The following is an automated git shortlog grouped by driver:
+
+tigerlake:
+ -  Fix GPIO mapping for newer version of software
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      pinctrl: tigerlake: Fix GPIO mapping for newer version of software
+
+ drivers/pinctrl/intel/pinctrl-tigerlake.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
