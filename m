@@ -2,70 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 137763E2C2E
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Aug 2021 16:11:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C2733E2C71
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Aug 2021 16:25:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235909AbhHFOLK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Aug 2021 10:11:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235427AbhHFOKv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Aug 2021 10:10:51 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14FE9C0617B9
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Aug 2021 07:10:33 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id f13so13161331edq.13
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Aug 2021 07:10:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/oMubRmlLM5EZ/UdY6Fj3wsfS2kyoMzN9ASXgZ3xneY=;
-        b=q3xyYt1HrVQnyL1KZndhIFKim0Z6RZXWCajZa6+jKaUt/xPBmWrU2b2TpwIqgxHoY3
-         6sUeXJPoUC3zz+xqx5Y/7bh16ON7BcCcP2liy5jl/yv+hyxVGmxIcBCDJXoapuOO0RIl
-         REN9Zv+ClhtVVEMybVDTEUTnyt+YraWqvgNO4CiPEvSNbjJp0ymaQzc4FwPALfOqM4La
-         f+KzIMXFoGuca5XlZdCXXnnqi+xUiOGsem/cV9JUjNFonSZWOzEGazowyEr2eG3dp5DR
-         pLBa7cN2FmOkeXw/dSFAaB7k29Eu0Yivashc8iQbXHlro4ZoI7aiyRP21+G8wGDlMmu6
-         HPDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/oMubRmlLM5EZ/UdY6Fj3wsfS2kyoMzN9ASXgZ3xneY=;
-        b=hfE23HTcddXe/SlxYINdOWS6WMNlBUqInjElcaM6TSwzVx1MV02wOM7RIc8QINS61a
-         B+hcPQkU9ww2tusZvVzAO8prkYOc3os/+XOg2SrElUe6tbAranXMBkI3Bo0/BG4sLO/U
-         OxmA7GPlxPIEPPyQ6TyK0+lVC6OTScMpJeDAFqpnPiEXw9h6PfPN7zteSgjvThQd7M77
-         oAdfzr9QoNnghbXxErglmX7A6/gdJkXfMiVMi2FA7e5g+Z3+bMOLPDIzqfndZodx/Zw+
-         8uDXqYKdd5Q/cqdAJ50BPiqXGQeOju11Q9U5qQKZPgPBknLG7q+W3W0epxkfq9bjISy7
-         64Fg==
-X-Gm-Message-State: AOAM530ZG92x+o2Yemq7R2xyj/OlfrnjsJX6L/4omGUiZoy2EhzGsxe5
-        M9AlGgO4QqLajOQW2aOoN5qJsySAELqDkDnlyg==
-X-Google-Smtp-Source: ABdhPJx229jhz+o+nQwdgIkoqR5HwLh3S4+JGHt0eG+5fB4X3WTmNmInTj1ZpuXDIVm9CYEhhFZzLyuZYbLrplGdX6A=
-X-Received: by 2002:a05:6402:3094:: with SMTP id de20mr13526197edb.272.1628259031175;
- Fri, 06 Aug 2021 07:10:31 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a54:26cf:0:0:0:0:0 with HTTP; Fri, 6 Aug 2021 07:10:30 -0700 (PDT)
-Reply-To: mrmaxwellwatford@gmail.com
-From:   Maxwell Watford <orchowskiruthi@gmail.com>
-Date:   Fri, 6 Aug 2021 14:10:30 +0000
-Message-ID: <CA+q9Q6OJB6Z0+y=5_3MBDNGkAUG9rVxg7bZVma38uDOvJ+sOGw@mail.gmail.com>
-Subject: i need your reply
-To:     orchowskiruthi@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        id S238286AbhHFOZr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Aug 2021 10:25:47 -0400
+Received: from mga11.intel.com ([192.55.52.93]:17257 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238173AbhHFOZr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 6 Aug 2021 10:25:47 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10068"; a="211274586"
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="211274586"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2021 07:25:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="420742652"
+Received: from inlubt0177.iind.intel.com ([10.223.67.91])
+  by orsmga003.jf.intel.com with ESMTP; 06 Aug 2021 07:25:27 -0700
+From:   lakshmi.sowjanya.d@intel.com
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com, tamal.saha@intel.com,
+        lakshmi.sowjanya.d@intel.com
+Subject: [PATCH v4 0/2] Add pinctrl support for Intel Keem Bay SoC
+Date:   Fri,  6 Aug 2021 19:55:25 +0530
+Message-Id: <20210806142527.29113-1-lakshmi.sowjanya.d@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Greetings,
+From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 
-We are writing to you from Ecowas Finance Controller Office Lome Togo,
-because we have received a file from the Ministry of Finance Lome-
-Togo, concerning an Inherited Fund bearing your name on it, And after
-our verifications, we found out that the funds belong to you.
+Hi,
 
-It has been awarded and I will like to guide you to claim the funds.
-Please contact me at my private email address
-(mrmaxwellwatford@gmail.com) for more information and directive
+This patch set enables the support for the integrated pin controller in
+the Intel Keem Bay SoC.
 
-I am looking forward to your urgent reply,
-Best regards
-Mr Maxwell Watford
+Patch 1 holds the implementation of pinctrl driver.
+Patch 2 holds the relevant Device Tree bindings documentation and an
+entry in MAINTAINERS file
+
+High-Level Architecture:
+-----------------------
+
+                                   +----------------------------+
+     ------------------------------|MODE 0 -                    |
+      -----------------------------|MODE 1      PIN MUX         |
+       ----------------------------|...                         |
+        ---------------------------|...                         | PAD M
+         +-------------------------|MODE 7(GPIO)		-------
+         |                         |                            |    .
+         |                         |  +---------------------+   |    .
+         |                         |  |  GPIO_MODE (0-79)   |   |    .
+         |                         |  | INV|PU|PD|DIR|MODE  |   |    .
+         |                         |  +---------------------+   |    .
+         |                         |    PIN CONFIGURATION       |    .
+         |                         +----------------------------+    .
+         |                                                           .
+         |                         +----------------------------+    .
+         |        -----------------|MODE 0 -                    |    .
+         |         ----------------|MODE 1      PIN MUX         |    .
+         |          ---------------|...                         |
+         |            -------------|...                         | PAD N
+         |                +--------|MODE 7(GPIO)		-------
+         |                |        |                            |
+         |                |        |  +---------------------+   |
+         |                |        |  |  GPIO_MODE (0-79)   |   |
+         |                |        |  | INV|PU|PD|DIR|MODE  |   |
+         |                |        |  +---------------------+   |
+         |                |        |    PIN CONFIGURATION       |
+         |                |        +----------------------------+
+         |                |
+         |                |
+         |                |
+         |                |	   +------------------------------------+
+         |                |        |       GPIO PIN CONTROL		|
+         |                |        |					|
+         |                |        |    +-------------------------+	|
+         |                |        |    | GPIO_DATA_IN (0-2)      |	|
+         |                |        |    +-------------------------+	|
+     0   1..28   29  30  31  -------    +-------------------------+	|
+     |   |   |   |   |    |        |    | GPIO_DATA_OUT_HIGH (0-2)|	|
+     \   \   \   \   \    |        |    | GPIO_DATA_OUT_LOW (0-2) |	|
+      |   |   |   |   |   |        |    +-------------------------+	|
+      |   |   |   |   |   |        |					|
+      |   |   |   |   |   |	   +------------------------------------+
+      \   \   \   \   \   |
+       |   |   |   |   |  |              GPIO_INT_CFG (Bits)
+       |   |   |   |   |  |     +---|-------|--|------|--|----|--|---+
+      +-------------------+-+   |31   30     23    16  15 14-8 7 6-0 |
+      | GPIO_INT_CFG(0-7)   |   +---|-------|--|------^--|----|--|---+
+      +---------------------+   |En   Idx   |En| Idx  |En| Idx|En|Idx|
+        |   |    |  |           +---|-------|--|------|--|----|--|---+
+       0|  1|...6| 7|
+        |   |    |  |
+     +-------------------+
+     |                   |
+     |                   |
+     |                   |
+     |                   |
+     |  Interrupt        |
+     |  Control          |
+     |                   |
+     |                   |
+     |                   |
+     |                   |
+     +-------------------+
+
+Explored registering GPIOCHIP per 32 bits, from the IP there are
+registers
+for set/clear and read pins which falls under the category of per
+register
+handling 32 bits, but for other functionality like direction, config,
+interrupt mux, there is a need to have customised solution.
+
+Using gpiochip per 32 bits involves additional data structures, and
+it has an impact in the device tree for all the users of these
+PADs.
+
+Spinlock is not required for all the operations like set/get as there
+are separate for each. Configuring all the registers in a single driver
+is preferred as it is easy to debug.
+
+Please help to review this patch set.
+
+Thanks in advance,
+Sowjanya
+
+Changes from v3:
+ - Initialized ret variable 
+
+Changes from v2:
+ - Removed unused variable trig
+
+Changes from v1:
+ - Changed the boolean to true in yaml
+ - Removed spinlock for all the transactions except irq transactions
+ - Added standard ngpios instead of num-gpios
+ - Added gpiochip_generic_config() api
+ - Added check for IRQ_ENABLE and removed the check for the mask
+   IRQ_TYPE_SENSE_MASK
+
+Lakshmi Sowjanya D (2):
+  dt-bindings: pinctrl: Add bindings for Intel Keembay pinctrl driver
+  pinctrl: Add Intel Keem Bay pinctrl driver
+
+ .../pinctrl/intel,pinctrl-keembay.yaml        |  135 ++
+ MAINTAINERS                                   |    5 +
+ drivers/pinctrl/Kconfig                       |   19 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-keembay.c             | 1731 +++++++++++++++++
+ 5 files changed, 1891 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,pinctrl-keembay.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-keembay.c
+
+-- 
+2.17.1
+
