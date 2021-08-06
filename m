@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F4C23E2B4F
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Aug 2021 15:27:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C340E3E2B59
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Aug 2021 15:28:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236885AbhHFN1k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Aug 2021 09:27:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44504 "EHLO
+        id S1344046AbhHFN2g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Aug 2021 09:28:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344012AbhHFN1j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Aug 2021 09:27:39 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D96C06179A
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Aug 2021 06:27:23 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id b13so11096202wrs.3
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Aug 2021 06:27:23 -0700 (PDT)
+        with ESMTP id S1344041AbhHFN2e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Aug 2021 09:28:34 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7116EC061798
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Aug 2021 06:28:17 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id e25-20020a05600c4b99b0290253418ba0fbso6138374wmp.1
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Aug 2021 06:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=7bej4esUzfs7BDSkpfXOekMMi7jzFDuTSD7crJqy3kw=;
-        b=TA4neuko79BOfNvSegnPwxbP39yj5bzyEawu+I1l4ZbcQiUQ4Z0HNDmUyb6UCV5y55
-         /vFGYtZkXpyIMN0YIHijbg+qhxfoXxgr54OW2LEDJEWWOIXUh4z4/yWSvwx+AgUzr4dj
-         9CVUAuDVvbY8ON8B2Q07mIzWHsCU83cv4fWlBid01FOlBy7Oia10tg32wwsVYvPvItka
-         LDqCnkFx+0ht0GDs0zwgv8Dkvehzkt3+3xWqcSZpnNE9kQA8Y1tvSa07MZmdbflQko03
-         BwVHhzLMcXOaXujMfrjKrK5howNPhD9nmd+myLiFyo86EcOiPxvgr9zhTPMKW7buiZ6b
-         bL8A==
+        b=GI5YpWltIACVYnJdMIqoFFQHPZhN1971h0c5nit+xkvPC1v7qkfTrcUvk4rOZx3Y3r
+         8rx8bYDt9Gxp6zh2OHWwSQ8aEgeGWknIh998xUj6TXZQYr+Z6UW0SADpNoxtyBWYlaBJ
+         ioBfBqPxezXzTET+4vCZ8CB9VZbk3XKAmAp+VHwhMu8xV5dtIDuVuY0kfJdajuizCQzP
+         0kgomhcSOs9iKl7m2L6TIHAGswwhQjBJBZB7sz2g8m3Q+Tpm1yehvlQxNM1sgto7RJHK
+         uqI37AScJ8y5qJHiGt+0CxmfulxQMqGGzk7XH0Dbxc+3beaTsbTrwJLwpncGSojYR/Ye
+         dYnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=7bej4esUzfs7BDSkpfXOekMMi7jzFDuTSD7crJqy3kw=;
-        b=KBX+Y6CvlFeK8y05hzoZa4y8uCZ6F/rNDYa6bf5c+AWT18zmiMz4ChdaYOZEal+evw
-         406KU8l3aVaPShAoifCupdfDvBMOF4gTIMsNQEvfqikxGtHSKFgN7hR8p8p0FETLRUAB
-         bUsee2/PjW+3RtCDYy4MmZDWVAFrAFa+GUJGD4o8oCgM5eMzcWQcTjJzKXODiL+XGGj0
-         QTYfdsU/NEn9HckRICSgy6bSjP4MoNbT4dXVdG/2pAgoMgSkaH25BoUgEI4ZWLEi0W9i
-         3gdQQnNvlAVSfbmtxXP2LwSyPxuHcz6cQS31eY8Rs5tR7Kl/GFAn0ftXwwuI2x8zkwbG
-         3msQ==
-X-Gm-Message-State: AOAM531riW+/eCI/ILTJds0mZ9cT3vWVCRMGu/tCdkYMyf8vYsfA43Hl
-        w0U56x419tnYovivE/MOiSzCHI1H4/d5rQ==
-X-Google-Smtp-Source: ABdhPJxMsrC7kEN32JqeJUtXLHD9NuVamLu+HQZF+yKbs7hU0UwZ5lL5MQUkaz/xyMDv3/14cNmAuQ==
-X-Received: by 2002:adf:f109:: with SMTP id r9mr10739763wro.370.1628256441467;
-        Fri, 06 Aug 2021 06:27:21 -0700 (PDT)
+        b=R4dwXs8pdAlb3hf8IBcCAvmTidL5RTeEIy4UXYUxHcBKFty3unlEW4Pr8davjc0sQU
+         APxRZqjcUUHgcUCIbckChNKNHv5Rj6xSEo/y1TOYa1pSVRT0EjjqCJwGANCq3AEO9iZ9
+         cReYfoSPiAfeK94pjcJbTgqOpEaw4Vsdl0EWbK7ExTKE4MH6BA4ncKkUKuZXos+QOrbN
+         9Udd9VxLv4BTJLlwL26/j4LB8Ve75wIHs+CBTkS90lONrO7NrJpA6f5Hc58Rhb0yhAuQ
+         r9C3pyPfBZv30Nx9Z6JT1zuLkgxNsijpELoynVwbPInUHt3MqffGwLa+676kTvDKABZK
+         Olzw==
+X-Gm-Message-State: AOAM533PUrP1dV+ms2EmOheMT0STqxATdGjXrzDQXasS2zFPAqM48AcB
+        5EsGm2uNo8KNe9VT0UezC0grug==
+X-Google-Smtp-Source: ABdhPJyjFtTVtb0XRL6HHQS/BiBQVu+D4kHIHnvkkhc+635K8G4pakYW0YalFyrH6p8SSyliLMpcqQ==
+X-Received: by 2002:a1c:2642:: with SMTP id m63mr3254247wmm.13.1628256495841;
+        Fri, 06 Aug 2021 06:28:15 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id j2sm9797702wrd.14.2021.08.06.06.27.20
+        by smtp.gmail.com with ESMTPSA id q20sm8656155wmj.27.2021.08.06.06.28.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Aug 2021 06:27:21 -0700 (PDT)
+        Fri, 06 Aug 2021 06:28:15 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -55,9 +55,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Helmut Grohne <helmut.grohne@intenta.de>,
         Ben Hutchings <ben.hutchings@essensium.com>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH] core: extend config objects
-Date:   Fri,  6 Aug 2021 15:27:19 +0200
-Message-Id: <20210806132719.23469-1-brgl@bgdev.pl>
+Subject: [libgpiod v2.0][PATCH] core: extend config objects
+Date:   Fri,  6 Aug 2021 15:28:10 +0200
+Message-Id: <20210806132810.23556-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
