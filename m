@@ -2,69 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9BBF3E457E
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 14:20:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 491C53E4587
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 14:22:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234553AbhHIMUk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Aug 2021 08:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43820 "EHLO
+        id S234654AbhHIMXR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Aug 2021 08:23:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233632AbhHIMUk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Aug 2021 08:20:40 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D40B5C0613D3;
-        Mon,  9 Aug 2021 05:20:19 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id z9-20020a9d62c90000b0290462f0ab0800so8353539otk.11;
-        Mon, 09 Aug 2021 05:20:19 -0700 (PDT)
+        with ESMTP id S234619AbhHIMXQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Aug 2021 08:23:16 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98EE7C0613D3;
+        Mon,  9 Aug 2021 05:22:56 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id u16so16155756ple.2;
+        Mon, 09 Aug 2021 05:22:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=oGsAvSdgKRu8fhmRgYOCEUPwgqjzXbVYGJowCGAt0iQ=;
-        b=htdm9KXqHhQmGU4mscn7Vn6FITaNgXVfZAmH6G8vYskf9veKzp0iy4QV7gEz3kuCTm
-         ncZAH931uMM66sxJJ+STasgMOpsmf0m7pks0ZBkJDjJlb4foq5dR2bTwSvs/6QzcyeVA
-         VRu5s3D62K2S/6AoskZNiYvhyZ0YEDLcLBZmtmooLx7MEEgc6nfIbJ0WR6ks1C/MOG4N
-         RrVnggb+IueBAwlwwOB63JYUowS0EJ/tkU4/2tBqTsAUvhK/raeMNMWWiBJruNDNcq/V
-         4n6Y8cOPvbVVjgTjMCklRpdzV9BfeegkpUpTDequauiuyGsu/QeIk+snS5tkka0qENQT
-         I9ng==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZozHPN5A0DW3qZDlh5+jVQhUsRKVEgmhxlS9Pcy2SpQ=;
+        b=O6W3MZXs6fnpJH16hwmynecWnukJw8HtBQoVtnh3zMEDQDm5bz/mLgbkznKa1/SoQu
+         60tkpckZzDNuvV68n4/smYsnm5AFytn2pLiQX8YRAPGy2xv4/1l584kneAZFbkObRvIS
+         cEfTeM03dgAZ7u4TWNSlKyKnMs/w/GYWh4fWMCFPdYwnpHwBb3BgKHKXu/EtFiKMPlGU
+         r7KsZk+w5owRN1TpKzJrCnUuAcRmA1KPqDrKYKGM08NFEZA+Cs8pvkAXVZSbE9LgfOae
+         qbgBxUrnGZNZ1mIQpOha/9GDl6sZ1J/jHAloegxFRnMhu0/bgCSB9bgLIItT1IDGRO8n
+         ok6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=oGsAvSdgKRu8fhmRgYOCEUPwgqjzXbVYGJowCGAt0iQ=;
-        b=ZEjDG555aHdV3fZ2zQPzuOFt9QOlETNbCN4HKkvda/PIM4531mKinaotx7uLIwxVd/
-         FbtsTV5kfUqoU5El7aKAexK2g4KiQwbgVAxHqAhnTfx0qzRuHXBuf1WLIqcsjEtLB4hJ
-         c/4XDtaV9X6l9NP46/yOM2+DhtIjGuZBhujD+R09JZEMWRyBSW9W3SaQWjKsbu6JDOIG
-         2uVRccIm7yY4Vwa8SVPXiKouOn05bX/2rLjY490Ok1sAa3YO0gxLQ2kqlWmbwYiKBx3P
-         3BJ36kjTPWho//uvod2s83qqWk4FSqyTjfSFKIl7Bp6bKwgNk63y+EFTGVO25dl6XH9Y
-         dSAw==
-X-Gm-Message-State: AOAM5336XJWDVUHFeJQGetrCl0BFYjq3Splif9C2gxveNQ0hOXJRb0cf
-        SKfU3+p5kWFjNVF+c23zKgxFq7+Sn77FaEr1prG1IuLYOM0J5A==
-X-Google-Smtp-Source: ABdhPJw67yUdh5QbdTBEQ5snA09MNJQZc/uBHr1QS9ALxamQ414IpvWvvUdqjFC7FMALu1lvGsAAddWPijiLuzz4fhA=
-X-Received: by 2002:a9d:2609:: with SMTP id a9mr491716otb.365.1628511618857;
- Mon, 09 Aug 2021 05:20:18 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ZozHPN5A0DW3qZDlh5+jVQhUsRKVEgmhxlS9Pcy2SpQ=;
+        b=NeEb2oC7jCczDBLWaMiIHDoar5ho7M5cPb7EawmbZFeFG45N8htRiyvTe86UjnfREk
+         ol1Th3mZLraz3Yw8nhPQnfs71UKenXdk4miH2Pp33puhFFvQCnETFlD5w3jddaixIb02
+         COwLQMN5+wqTyAJGxUa578racr2OkPww0tTD5uk6C/v9YYlhlOtugTVOj8EvRfK9jHNP
+         nGpaiv7LIWDPr2O0CGd0n/JHA+xJIXftFaZC7bBJhuL1M2xMnbB3et5GctaKuuUn0qGo
+         ezrk0ppJv5+NEuKadg8x19nqW7hrjftE7yIvgW9Hn/YECL0y8GAjspK9cxFIP+n27M8p
+         QVJw==
+X-Gm-Message-State: AOAM533nPvOKcVhUGvi+nchBwwqKbBSKSiy3lcwN+3rIoNZNx3VU/tki
+        U2dUDjXBiSwIqgainpWGuVlvyMfjnKt/4i9aRgg=
+X-Google-Smtp-Source: ABdhPJwTER/FTD0Ez+yw3PnNczUX9V7VDyo6qWj0RIaYbrSr1gWm9qfdIJc0KUH9OM+l1hQHs6pwQYWXe4FmfmArmIE=
+X-Received: by 2002:a17:90b:33c5:: with SMTP id lk5mr36483327pjb.129.1628511775974;
+ Mon, 09 Aug 2021 05:22:55 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210809121345.967597-1-chrisrblake93@gmail.com>
 In-Reply-To: <20210809121345.967597-1-chrisrblake93@gmail.com>
-From:   Chris <chrisrblake93@gmail.com>
-Date:   Mon, 9 Aug 2021 07:20:07 -0500
-Message-ID: <CALpBJjoc91-WWFYE4h-2eT-wf2Gv8fc8Mn57vq-nD_LG1MKuXQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 9 Aug 2021 15:22:19 +0300
+Message-ID: <CAHp75VfQr6XKQ0UDQDq0pH7TK=_WUGBhRKcC_=-zzUGOwO8tWQ@mail.gmail.com>
 Subject: Re: [PATCH v3] platform/x86: add meraki-mx100 platform driver
-To:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+To:     Chris Blake <chrisrblake93@gmail.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Christian Lamparter <chunkeey@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+        Hans de Goede <hdegoede@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 9, 2021 at 7:13 AM Chris Blake <chrisrblake93@gmail.com> wrote:
+On Mon, Aug 9, 2021 at 3:13 PM Chris Blake <chrisrblake93@gmail.com> wrote:
 >
 > This adds platform support for the Cisco Meraki MX100 (Tinkerbell)
 > network appliance. This sets up the network LEDs and Reset
 > button.
->
+
+Almost good to me, see below for some comments. After addressing them
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+
 > Depends-on: ef0eea5b151ae ("mfd: lpc_ich: Enable GPIO driver for DH89xxCC")
 > Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
 > Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
@@ -307,10 +312,25 @@ On Mon, Aug 9, 2021 at 7:13 AM Chris Blake <chrisrblake93@gmail.com> wrote:
 > +
 > +       tink_leds_pdev = tink_create_dev("leds-gpio",
 > +               &tink_leds_pdata, sizeof(tink_leds_pdata));
-> +
+
+Seems you forgot to add
+if (IS_ERR())
+  return PTR_ERR();
+
+here...
+
 > +       tink_keys_pdev = tink_create_dev("gpio-keys-polled",
 > +               &tink_buttons_pdata, sizeof(tink_buttons_pdata));
-> +
+
+and
+
+if (IS_ERR()) {
+ pdev_unreg();
+ return PTR_ERR();
+}
+
+here.
+
 > +       return 0;
 > +}
 > +module_init(tink_board_init);
@@ -332,8 +352,7 @@ On Mon, Aug 9, 2021 at 7:13 AM Chris Blake <chrisrblake93@gmail.com> wrote:
 > 2.25.1
 >
 
-Please do not merge, I just realized I forgot to add in 2x LEDs after
-the move to gpiod lookup tables. Expect a V4 in the future.
 
-Regards,
-Chris B
+-- 
+With Best Regards,
+Andy Shevchenko
