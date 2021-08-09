@@ -2,112 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 033B43E3EA3
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 06:05:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0C1B3E40B5
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 09:11:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231157AbhHIEFt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Aug 2021 00:05:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:37854 "EHLO m43-7.mailgun.net"
+        id S233086AbhHIHMJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Aug 2021 03:12:09 -0400
+Received: from mx1.tq-group.com ([93.104.207.81]:4125 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230491AbhHIEFs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Aug 2021 00:05:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1628481929; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Vbpd/GuClOmGWBsNoX7W4sL/Zu3cwNTKNWcrglilN1g=; b=oAlpi27Zctqge+8w1XwN7wYIWz6ok0Jmnq9N361v7wPGsgq/fuOBASfTPpv4AfjfvTVEp22H
- 1u5VvcUUsOKR8ydST4o/q1Lp8z8GqwVcb5o/LgtL9aVQQrkpqFj37dYZb13b8sH1EkxpM6WO
- mhZQ1KX0gMPjwTTxtcGZEqy8rD4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 6110a982b14e7e2ecb658920 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 09 Aug 2021 04:05:22
- GMT
-Sender: miaoqing=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8077CC433D3; Mon,  9 Aug 2021 04:05:22 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from miaoqing-HP-Z220-SFF-Workstation.ap.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: miaoqing)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B476C433D3;
-        Mon,  9 Aug 2021 04:05:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B476C433D3
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=miaoqing@codeaurora.org
-From:   Miaoqing Pan <miaoqing@codeaurora.org>
-To:     linux-wireless@vger.kernel.org
-Cc:     ath9k-devel@qca.qualcomm.com, kvalo@codeaurora.org,
-        dan.carpenter@oracle.com, linux-gpio@vger.kernel.org,
-        Miaoqing Pan <miaoqing@codeaurora.org>
-Subject: [PATCH] ath9k: fix sleeping in atomic context
-Date:   Mon,  9 Aug 2021 12:05:16 +0800
-Message-Id: <1628481916-15030-1-git-send-email-miaoqing@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        id S232094AbhHIHMI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Aug 2021 03:12:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1628493108; x=1660029108;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Jchn+0QaoRgRfHcg8wEX42Cbtdnk/xP5dCyP3/ZW7kU=;
+  b=CGzrxVLUXPVOXIuCvtzTD1l2im0+xPddDZ6/5NKPCzyKH8hVMsltJjXE
+   ZHdVsXDjY0434MtAJUXZtp2QCi5ph2sZhfLe7BwA4PDGER8/xAQgSZ+6h
+   A95U4msjfwJ5ghQPczhR6XuifVZtS9qR3CfM3utRG7LTNk/aOdVJ0+qEo
+   x6k1gChyZgjMv3ObosDO291ZFe/cgcKN+7zkkVh/Fg8u73kqtbPf+GxC/
+   508ovVYGvpHeBlvdWj8c2Mgaq4mCRrcUICMtFHbpbS4jDXr14TkOuOtxM
+   q8ro9OabA3Jn/P2+zxY4SYx0EvMI53/OFh66J041mSx4F6Fm8XBs5+KBB
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.84,305,1620684000"; 
+   d="scan'208";a="18880859"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 09 Aug 2021 09:11:46 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Mon, 09 Aug 2021 09:11:46 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Mon, 09 Aug 2021 09:11:46 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1628493106; x=1660029106;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Jchn+0QaoRgRfHcg8wEX42Cbtdnk/xP5dCyP3/ZW7kU=;
+  b=AV7WBQqYwhGgX+hTgUW+47B9c9O6rFIC0RmlirE4K8RmqxkPk1gtN4/U
+   nxWvIL/kJEDgpXDh3DwUOJLTcCdl8+VPWgMcJrF7SAOF1+q1EoWz+prpW
+   6KTO2444O6D8TerRIEbNkpr/rFCBRSvullUThQcPRu1c/FKe25ufo4m+a
+   PpsUcz00QNDzq8QpFepfyl4FXzd1TGkeQm2nUex1IAn0dTmeQS34ZgxRR
+   UMFkAotBzcCq+j//+BYGVxskMebJ1o/FEDHhJuJQAzdCyu1Q6ugMhj6Lv
+   uduGRJn2K2yo1BRFOOhTYRCg4n9frlRwBzOjprqgQpxTlK1Va9coXum/v
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.84,305,1620684000"; 
+   d="scan'208";a="18880858"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 09 Aug 2021 09:11:46 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.121.48.12])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 5D561280070;
+        Mon,  9 Aug 2021 09:11:46 +0200 (CEST)
+Message-ID: <8419a1b779a65ab3df8c90e7abc46759360066aa.camel@ew.tq-group.com>
+Subject: Re: [PATCH v3 2/7] mfd: tqmx86: clear GPIO IRQ resource when no IRQ
+ is set
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 09 Aug 2021 09:11:44 +0200
+In-Reply-To: <CAHp75VeQxr3pkX9j10wUi3NjZY-Nkn=waPsMDxG=pDprY3Wsyg@mail.gmail.com>
+References: <cover.1626429286.git.matthias.schiffer@ew.tq-group.com>
+         <65f9787ebd6725e90fad9ea7f936ee0d5712da94.1626429286.git.matthias.schiffer@ew.tq-group.com>
+         <YQvn9dkFluRYj80r@google.com>
+         <9dc9fb4b37f7afa661bf1bb9148e5109b3f4329c.camel@ew.tq-group.com>
+         <CAHp75VeQxr3pkX9j10wUi3NjZY-Nkn=waPsMDxG=pDprY3Wsyg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The problem is that gpio_free() can sleep and the cfg_soc() can be
-called with spinlocks held. One problematic call tree is:
+On Thu, 2021-08-05 at 16:42 +0300, Andy Shevchenko wrote:
+> On Thu, Aug 5, 2021 at 4:40 PM Matthias Schiffer
+> <matthias.schiffer@ew.tq-group.com> wrote:
+> > On Thu, 2021-08-05 at 14:30 +0100, Lee Jones wrote:
+> > > On Fri, 16 Jul 2021, Matthias Schiffer wrote:
+> 
+> ...
+> 
+> > > Strange - why is this !0 in the first place?
+> > 
+> > I don't see anything strange here. DEFINE_RES_IRQ() sets flags to
+> > IORESOURCE_IRQ. We reset it to 0 when there is no IRQ to clear that
+> > resource entry.
+> > 
+> > An alternative would be to start with an empty entry and only fill in
+> > the fields when an IRQ is used, but that seems more cumbersome than the
+> > current code to me.
+> 
+> Another alternative is to start using the IRQ DISABLED resource flag,
+> but I'm afraid that OF code is not ready for that.
+> https://elixir.bootlin.com/linux/latest/source/include/linux/ioport.h#L331
+> 
 
---> ath_reset_internal() takes &sc->sc_pcu_lock spin lock
-   --> ath9k_hw_reset()
-      --> ath9k_hw_gpio_request_in()
-         --> ath9k_hw_gpio_request()
-            --> ath9k_hw_gpio_cfg_soc()
-
-Remove gpio_free(), use error message instead, so we should make sure
-there is no GPIO conflict.
-
-Also remove ath9k_hw_gpio_free() from ath9k_hw_apply_gpio_override(),
-as gpio_mask will never be set for SOC chips.
-
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
----
- drivers/net/wireless/ath/ath9k/hw.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
-index 2ca3b86..172081f 100644
---- a/drivers/net/wireless/ath/ath9k/hw.c
-+++ b/drivers/net/wireless/ath/ath9k/hw.c
-@@ -1621,7 +1621,6 @@ static void ath9k_hw_apply_gpio_override(struct ath_hw *ah)
- 		ath9k_hw_gpio_request_out(ah, i, NULL,
- 					  AR_GPIO_OUTPUT_MUX_AS_OUTPUT);
- 		ath9k_hw_set_gpio(ah, i, !!(ah->gpio_val & BIT(i)));
--		ath9k_hw_gpio_free(ah, i);
- 	}
- }
- 
-@@ -2728,14 +2727,17 @@ static void ath9k_hw_gpio_cfg_output_mux(struct ath_hw *ah, u32 gpio, u32 type)
- static void ath9k_hw_gpio_cfg_soc(struct ath_hw *ah, u32 gpio, bool out,
- 				  const char *label)
- {
-+	int err;
-+
- 	if (ah->caps.gpio_requested & BIT(gpio))
- 		return;
- 
--	/* may be requested by BSP, free anyway */
--	gpio_free(gpio);
--
--	if (gpio_request_one(gpio, out ? GPIOF_OUT_INIT_LOW : GPIOF_IN, label))
-+	err = gpio_request_one(gpio, out ? GPIOF_OUT_INIT_LOW : GPIOF_IN, label);
-+	if (err) {
-+		ath_err(ath9k_hw_common(ah), "request GPIO%d failed:%d\n",
-+			gpio, err);
- 		return;
-+	}
- 
- 	ah->caps.gpio_requested |= BIT(gpio);
- }
--- 
-2.7.4
+As this patch is a fairly simple bugfix, I'd prefer to get it (or a
+similar fix) applied without having to wait for improvements of the
+core code - also for the sake of stable backports.
 
