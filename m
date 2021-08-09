@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 502593E4BFF
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 20:18:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7756B3E4C69
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 20:52:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234964AbhHISTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Aug 2021 14:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41742 "EHLO
+        id S235628AbhHISwX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Aug 2021 14:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235007AbhHISTC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Aug 2021 14:19:02 -0400
-Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F996C06179E
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Aug 2021 11:18:42 -0700 (PDT)
-Received: by mail-vk1-xa32.google.com with SMTP id q3so4149915vkd.2
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Aug 2021 11:18:41 -0700 (PDT)
+        with ESMTP id S235668AbhHISwW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Aug 2021 14:52:22 -0400
+Received: from mail-vk1-xa2e.google.com (mail-vk1-xa2e.google.com [IPv6:2607:f8b0:4864:20::a2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7B4C06179B
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Aug 2021 11:52:01 -0700 (PDT)
+Received: by mail-vk1-xa2e.google.com with SMTP id u138so326497vku.7
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Aug 2021 11:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kjXVJjhEvR65+Z4ewOj5xb9PKKSWhFxsxBVNcUv+8M0=;
-        b=smQyp8aCntQWqx50j3QCg9imrJunJPc/fUtV2QCjb25K8h6DM663/X997pvKkuAIt4
-         F+2wnhwGDszBtm7bu15NgY3VaroX3gOC7zzDBi0UyBW/CRfDBSV1ACdVK8XWfsSkYWgD
-         zHneNu3AlOQI6wfINpBJEUnLqZ/91LPuyPb8HuZ6RezQ6Cl4C4dtjUse7Tyd3vpyF/kP
-         Qc1oLo6nCaL9DVFljinZIWdSkFphDzO+1nGuSM5SZ5UCSmgTxu8r7g0++1wE85YerrJs
-         AswwaUIO76/xPKTCYoPR64GznLV8OHhT85TzOaTrx1osrE0Bd1sgkKEvSA/LkF9sVQys
-         Nb0A==
+        bh=d/b2tS7YMRHPjI6VGiV4WlYzcCT+N2pnoJeTL1fGmn8=;
+        b=x+VgKgaGdpHjdkRUURCM+NYQxSTBy0MkPCmpbM3VIbSGIOsKT8McvVHvOqpCfPDp7H
+         M4W8cRoidhuJJ6xT+Q0fvemdLheGyBHuuf5PbDY/5f/gJVpiXvdbLy8wi5Fwg9b41XRO
+         y0nFK2KV9XPrj+MkW1Ph1EeavmWj8Yhtfftbfkr0al6WVOiySz908r+BA0cssptNHJQc
+         6Z4Rfg52GaKWJPr5qdvIIg51iZXrOjEC+yV4RslNN/Crz2zsd1wfyKnhglVo780qMky2
+         4hfrfphfWh78WUlxasiDzHL7OqWsWdhaRa6FjMADzGi5pnL3DD5vxXq06vA/PITiesQu
+         WXiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kjXVJjhEvR65+Z4ewOj5xb9PKKSWhFxsxBVNcUv+8M0=;
-        b=SHri03a6yZ/DFX1A8V+BvZCNLiVi9VzNAM1vth0t1ptAfIceg8VdbDARpr6yVDdi6M
-         8tXiyWk56k/zsVITcpxrHwaAFRk9w6rUEpJJZbPiiOpKFU5mIKgpUKgDvPUf27Fe8jCP
-         9/PPw0UyLi1FcSSDFa/2n5ChzFpNSHFXz6MGcTnAuq0Yo+Dakd2++EV536rfRvVn7CdA
-         9aQ/rBpWbPTVPLNPe0zEqDvnnVS0ZujH8BgHDV9trx7quN4mIPRIFGorZ5MtO1DVTUIn
-         M0Re8VnKH+ydhpoviQw+0YtkkZXNO3mIMn9lU1UYD3rqGfNQkuL7AFV6yUi41EGHafnS
-         dASA==
-X-Gm-Message-State: AOAM533X08KiIHxCCmbowUKYd8IFZeiMl/zjNYD/MD9MZEpe7E4xxl9H
-        MMIkATCTM5WIZGfDm2oCadIQ8YKXK3LhV0VzZWudtA==
-X-Google-Smtp-Source: ABdhPJxZIMAieQwRraZ3xFtXse7kceCifmxgmHFDrtnoOgP6oXdmx/b2tdhN9tRkyzJ9KjHmPAmG6AO4++pOLiw8bbQ=
-X-Received: by 2002:a1f:1dc2:: with SMTP id d185mr15370667vkd.21.1628533120787;
- Mon, 09 Aug 2021 11:18:40 -0700 (PDT)
+        bh=d/b2tS7YMRHPjI6VGiV4WlYzcCT+N2pnoJeTL1fGmn8=;
+        b=BpXf4RSKTZa3gT+TbEcA407rtTjrzilw1ICkY9wPuvKWswJ/mQ8WOsDV30AnFmSPRe
+         sJO1mG8pK23yhWBu10zI9VBmkAc2DQzgcKar5MWOzU/mDm4W/jRSQfNE+7DhktZQ8CJn
+         xz1XqZBtAmXdobzmJNwTk/TEhSdLr51a+TMPPVXYpfP157xAs/cbUdyApjMNBGAvjnGN
+         O3A8xyfHzswkE0DjEIRkBNYXj/Ac8CFOwqch7S02E2YmBq6nJv4Ex/VE8flw215t0wWN
+         nGTzvZ47xsnddOXOoHrtw+9jLwxAuwEYTwo2kj4+0tF4nKE6eu5u11eJ1ZUSdjsDpAAm
+         mcyg==
+X-Gm-Message-State: AOAM532sfwMRVMQueJZ5EgCZPl307FJ+nnklSF2QAb9yOJiQPxSZEaLa
+        VHnnv9QQJT8Ll7U2rzaAwWanw/48VvJL0Gv/Au5Z7w==
+X-Google-Smtp-Source: ABdhPJztTV7fFHE7DAa32TUbP4AmYOxZsrntgIge/gVbMCQBwXCNWE/Kq/pQ1JbUoXC+yXA/gvcXiKD7IlttIEP5jKE=
+X-Received: by 2002:a1f:6203:: with SMTP id w3mr15362595vkb.24.1628535120427;
+ Mon, 09 Aug 2021 11:52:00 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210806152146.16107-1-semen.protsenko@linaro.org>
- <20210806152146.16107-3-semen.protsenko@linaro.org> <407ee65f-6004-5173-9fcc-99023c85db4e@canonical.com>
-In-Reply-To: <407ee65f-6004-5173-9fcc-99023c85db4e@canonical.com>
+ <20210806152146.16107-8-semen.protsenko@linaro.org> <7110b1e2-1aee-6ddf-803f-ee392e494f2d@canonical.com>
+In-Reply-To: <7110b1e2-1aee-6ddf-803f-ee392e494f2d@canonical.com>
 From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Mon, 9 Aug 2021 21:18:29 +0300
-Message-ID: <CAPLW+4mfTMWWssW8+nTt8Yp3dN5=WJpji=o_rRYYr6+kx_dctA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] pinctrl: samsung: Add Exynos850 SoC specific data
+Date:   Mon, 9 Aug 2021 21:51:48 +0300
+Message-ID: <CAPLW+4=yK-dfWjKjLEOKL2o2sG1eyqSNqgVCnQNYvbUHo+Om4w@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] clk: samsung: Add Exynos850 clock driver stub
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Chanwoo Choi <cw00.choi@samsung.com>,
@@ -81,212 +81,140 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 9 Aug 2021 at 13:43, Krzysztof Kozlowski
+On Mon, 9 Aug 2021 at 13:55, Krzysztof Kozlowski
 <krzysztof.kozlowski@canonical.com> wrote:
 >
 > On 06/08/2021 17:21, Sam Protsenko wrote:
-> > Add Samsung Exynos850 SoC specific data to enable pinctrl support for
-> > all platforms based on Exynos850.
+> > For now it's just a stub driver to make the serial driver work. Later it
+> > will be implemented properly. This driver doesn't really change clocks,
+> > only registers the UART clock as a fixed-rate clock. Without this clock
+> > driver the UART driver won't work, as it's trying to obtain "uart" clock
+> > and fails if it's not able to.
+>
+> You know that as temporary solution you can add necessary clocks
+> directly in your DTS as fixed-rate-clocks? Effect would be quite similar
+> to the one here for UART driver but instead adding some temporary code
+> you would add temporary DTS nodes and references.
+>
+> I am fine with this approach although the binding (if ever defined...)
+> would need to be marked as experimental.
+>
+
+Let's keep this driver then. My next step would be implementing the
+proper clk driver, so this review would be a good starting point for
+me. I will, of course, address your other comments.
+
+> >
+> > In order to get a functional serial console we have to implement that
+> > minimal clock driver with "uart" clock. It's not necessary to actually
+> > configure clocks, as those are already configured in bootloader, so
+> > kernel can rely on that for now.
 > >
 > > Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
 > > ---
 > > Changes in v2:
-> >   - Removed .suspend/.resume callbacks, as retention registers are not
-> >     implemented yet for Exynos850
-> >   - Removed .eint_gpio_init for AUD domain, as there are no external
-> >     interrupts available for that domain
+> >   - Used hard coded clock indexes, as clock bindings were removed; will
+> >     add clock bindings back (reimplemented) once proper clock driver is
+> >     ready
+> >   - Removed .data = 0 for exynos850-oscclk, as it's in BSS section
+> >   - Removed comma for terminator {}
+> >   - Made exynos850_clk_init() static
+> >   - Removed checking np for NULL, as it's already done in of_iomap()
 > >
-> >  .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 116 ++++++++++++++++++
-> >  drivers/pinctrl/samsung/pinctrl-exynos.h      |  29 +++++
-> >  drivers/pinctrl/samsung/pinctrl-samsung.c     |   2 +
-> >  drivers/pinctrl/samsung/pinctrl-samsung.h     |   1 +
-> >  4 files changed, 148 insertions(+)
+> >  drivers/clk/samsung/Makefile        |  1 +
+> >  drivers/clk/samsung/clk-exynos850.c | 64 +++++++++++++++++++++++++++++
+> >  2 files changed, 65 insertions(+)
+> >  create mode 100644 drivers/clk/samsung/clk-exynos850.c
 > >
-> > diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> > index b6e56422a700..3157bdf0233c 100644
-> > --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> > +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> > @@ -40,6 +40,24 @@ static const struct samsung_pin_bank_type exynos5433_bank_type_alive = {
-> >       .reg_offset = { 0x00, 0x04, 0x08, 0x0c, },
-> >  };
-> >
+> > diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
+> > index 028b2e27a37e..c46cf11e4d0b 100644
+> > --- a/drivers/clk/samsung/Makefile
+> > +++ b/drivers/clk/samsung/Makefile
+> > @@ -17,6 +17,7 @@ obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)       += clk-exynos5433.o
+> >  obj-$(CONFIG_EXYNOS_AUDSS_CLK_CON) += clk-exynos-audss.o
+> >  obj-$(CONFIG_EXYNOS_CLKOUT)  += clk-exynos-clkout.o
+> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        += clk-exynos7.o
+> > +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        += clk-exynos850.o
+> >  obj-$(CONFIG_S3C2410_COMMON_CLK)+= clk-s3c2410.o
+> >  obj-$(CONFIG_S3C2410_COMMON_DCLK)+= clk-s3c2410-dclk.o
+> >  obj-$(CONFIG_S3C2412_COMMON_CLK)+= clk-s3c2412.o
+> > diff --git a/drivers/clk/samsung/clk-exynos850.c b/drivers/clk/samsung/clk-exynos850.c
+> > new file mode 100644
+> > index 000000000000..36c7c7fe7cf0
+> > --- /dev/null
+> > +++ b/drivers/clk/samsung/clk-exynos850.c
+> > @@ -0,0 +1,64 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
 > > +/*
-> > + * Bank type for non-alive type. Bit fields:
-> > + * CON: 4, DAT: 1, PUD: 4, DRV: 4, CONPDN: 2, PUDPDN: 4
+> > + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
+> > + * Copyright (C) 2021 Linaro Ltd.
+> > + *
+> > + * Common Clock Framework support for Exynos850 SoC.
 > > + */
-> > +static struct samsung_pin_bank_type exynos850_bank_type_off  = {
-> > +     .fld_width = { 4, 1, 4, 4, 2, 4, },
-> > +     .reg_offset = { 0x00, 0x04, 0x08, 0x0c, 0x10, 0x14, },
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/clkdev.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +
+> > +#include "clk.h"
+> > +
+> > +/* Will be extracted to bindings header once proper clk driver is implemented */
+> > +#define OSCCLK               1
+> > +#define DOUT_UART    2
+> > +#define CLK_NR_CLKS  3
+> > +
+> > +/* Fixed rate clocks generated outside the SoC */
+> > +static struct samsung_fixed_rate_clock exynos850_fixed_rate_ext_clks[] __initdata = {
+> > +     FRATE(OSCCLK, "fin_pll", NULL, 0, 26000000),
 > > +};
 > > +
 > > +/*
-> > + * Bank type for alive type. Bit fields:
-> > + * CON: 4, DAT: 1, PUD: 4, DRV: 4
+> > + * Model the UART clock as a fixed-rate clock for now, to make serial driver
+> > + * work. This clock is already configured in the bootloader.
 > > + */
-> > +static struct samsung_pin_bank_type exynos850_bank_type_alive = {
+> > +static const struct samsung_fixed_rate_clock exynos850_peri_clks[] __initconst = {
+> > +     FRATE(DOUT_UART, "DOUT_UART", NULL, 0, 200000000),
+> > +};
+> > +
+> > +static const struct of_device_id ext_clk_match[] __initconst = {
+> > +     { .compatible = "samsung,exynos850-oscclk" },
+> > +     {}
+> > +};
+> > +
+> > +static void __init exynos850_clk_init(struct device_node *np)
+> > +{
+> > +     void __iomem *reg_base;
+> > +     struct samsung_clk_provider *ctx;
+> > +
+> > +     reg_base = of_iomap(np, 0);
+> > +     if (!reg_base)
+> > +             panic("%s: failed to map registers\n", __func__);
+> > +
+> > +     ctx = samsung_clk_init(np, reg_base, CLK_NR_CLKS);
+> > +     if (!ctx)
+> > +             panic("%s: unable to allocate ctx\n", __func__);
 >
-> I missed that part last time - this and one before should be const.
->
-> > +     .fld_width = { 4, 1, 4, 4, },
-> > +     .reg_offset = { 0x00, 0x04, 0x08, 0x0c, },
-> > +};
-> > +
-> >  /* Pad retention control code for accessing PMU regmap */
-> >  static atomic_t exynos_shared_retention_refcnt;
-> >
-> > @@ -422,3 +440,101 @@ const struct samsung_pinctrl_of_match_data exynos7_of_data __initconst = {
-> >       .ctrl           = exynos7_pin_ctrl,
-> >       .num_ctrl       = ARRAY_SIZE(exynos7_pin_ctrl),
-> >  };
-> > +
-> > +/* pin banks of exynos850 pin-controller 0 (ALIVE) */
-> > +static struct samsung_pin_bank_data exynos850_pin_banks0[] = {
->
-> All these as well - initconst - unless they are somehow different than
-> rest of such structures?
->
-> > +     /* Must start with EINTG banks, ordered by EINT group number. */
-> > +     EXYNOS9_PIN_BANK_EINTW(8, 0x000, "gpa0", 0x00),
-> > +     EXYNOS9_PIN_BANK_EINTW(8, 0x020, "gpa1", 0x04),
-> > +     EXYNOS9_PIN_BANK_EINTW(8, 0x040, "gpa2", 0x08),
-> > +     EXYNOS9_PIN_BANK_EINTW(8, 0x060, "gpa3", 0x0c),
-> > +     EXYNOS9_PIN_BANK_EINTW(4, 0x080, "gpa4", 0x10),
-> > +     EXYNOS9_PIN_BANK_EINTN(3, 0x0A0, "gpq0"),
-> > +};
-> > +
-> > +/* pin banks of exynos850 pin-controller 1 (CMGP) */
-> > +static struct samsung_pin_bank_data exynos850_pin_banks1[] = {
-> > +     /* Must start with EINTG banks, ordered by EINT group number. */
-> > +     EXYNOS9_PIN_BANK_EINTW(1, 0x000, "gpm0", 0x00),
-> > +     EXYNOS9_PIN_BANK_EINTW(1, 0x020, "gpm1", 0x04),
-> > +     EXYNOS9_PIN_BANK_EINTW(1, 0x040, "gpm2", 0x08),
-> > +     EXYNOS9_PIN_BANK_EINTW(1, 0x060, "gpm3", 0x0C),
-> > +     EXYNOS9_PIN_BANK_EINTW(1, 0x080, "gpm4", 0x10),
-> > +     EXYNOS9_PIN_BANK_EINTW(1, 0x0A0, "gpm5", 0x14),
-> > +     EXYNOS9_PIN_BANK_EINTW(1, 0x0C0, "gpm6", 0x18),
-> > +     EXYNOS9_PIN_BANK_EINTW(1, 0x0E0, "gpm7", 0x1C),
-> > +};
-> > +
-> > +/* pin banks of exynos850 pin-controller 2 (AUD) */
-> > +static struct samsung_pin_bank_data exynos850_pin_banks2[] = {
-> > +     /* Must start with EINTG banks, ordered by EINT group number. */
-> > +     EXYNOS9_PIN_BANK_EINTG(5, 0x000, "gpb0", 0x00),
-> > +     EXYNOS9_PIN_BANK_EINTG(5, 0x020, "gpb1", 0x04),
-> > +};
-> > +
-> > +/* pin banks of exynos850 pin-controller 3 (HSI) */
-> > +static struct samsung_pin_bank_data exynos850_pin_banks3[] = {
-> > +     /* Must start with EINTG banks, ordered by EINT group number. */
-> > +     EXYNOS9_PIN_BANK_EINTG(6, 0x000, "gpf2", 0x00),
-> > +};
-> > +
-> > +/* pin banks of exynos850 pin-controller 4 (CORE) */
-> > +static struct samsung_pin_bank_data exynos850_pin_banks4[] = {
-> > +     /* Must start with EINTG banks, ordered by EINT group number. */
-> > +     EXYNOS9_PIN_BANK_EINTG(4, 0x000, "gpf0", 0x00),
-> > +     EXYNOS9_PIN_BANK_EINTG(8, 0x020, "gpf1", 0x04),
-> > +};
-> > +
-> > +/* pin banks of exynos850 pin-controller 5 (PERI) */
-> > +static struct samsung_pin_bank_data exynos850_pin_banks5[] = {
-> > +     /* Must start with EINTG banks, ordered by EINT group number. */
-> > +     EXYNOS9_PIN_BANK_EINTG(2, 0x000, "gpg0", 0x00),
-> > +     EXYNOS9_PIN_BANK_EINTG(6, 0x020, "gpp0", 0x04),
-> > +     EXYNOS9_PIN_BANK_EINTG(4, 0x040, "gpp1", 0x08),
-> > +     EXYNOS9_PIN_BANK_EINTG(4, 0x060, "gpp2", 0x0C),
-> > +     EXYNOS9_PIN_BANK_EINTG(8, 0x080, "gpg1", 0x10),
-> > +     EXYNOS9_PIN_BANK_EINTG(8, 0x0A0, "gpg2", 0x14),
-> > +     EXYNOS9_PIN_BANK_EINTG(1, 0x0C0, "gpg3", 0x18),
-> > +     EXYNOS9_PIN_BANK_EINTG(3, 0x0E0, "gpc0", 0x1C),
-> > +     EXYNOS9_PIN_BANK_EINTG(6, 0x100, "gpc1", 0x20),
-> > +};
-> > +
-> > +static const struct samsung_pin_ctrl exynos850_pin_ctrl[] __initconst = {
-> > +     {
-> > +             /* pin-controller instance 0 ALIVE data */
-> > +             .pin_banks      = exynos850_pin_banks0,
-> > +             .nr_banks       = ARRAY_SIZE(exynos850_pin_banks0),
-> > +             .eint_gpio_init = exynos_eint_gpio_init,
-> > +             .eint_wkup_init = exynos_eint_wkup_init,
-> > +     }, {
-> > +             /* pin-controller instance 1 CMGP data */
-> > +             .pin_banks      = exynos850_pin_banks1,
-> > +             .nr_banks       = ARRAY_SIZE(exynos850_pin_banks1),
-> > +             .eint_gpio_init = exynos_eint_gpio_init,
-> > +             .eint_wkup_init = exynos_eint_wkup_init,
-> > +     }, {
-> > +             /* pin-controller instance 2 AUD data */
-> > +             .pin_banks      = exynos850_pin_banks2,
-> > +             .nr_banks       = ARRAY_SIZE(exynos850_pin_banks2),
-> > +     }, {
-> > +             /* pin-controller instance 3 HSI data */
-> > +             .pin_banks      = exynos850_pin_banks3,
-> > +             .nr_banks       = ARRAY_SIZE(exynos850_pin_banks3),
-> > +             .eint_gpio_init = exynos_eint_gpio_init,
-> > +     }, {
-> > +             /* pin-controller instance 4 CORE data */
-> > +             .pin_banks      = exynos850_pin_banks4,
-> > +             .nr_banks       = ARRAY_SIZE(exynos850_pin_banks4),
-> > +             .eint_gpio_init = exynos_eint_gpio_init,
-> > +     }, {
-> > +             /* pin-controller instance 5 PERI data */
-> > +             .pin_banks      = exynos850_pin_banks5,
-> > +             .nr_banks       = ARRAY_SIZE(exynos850_pin_banks5),
-> > +             .eint_gpio_init = exynos_eint_gpio_init,
-> > +     },
-> > +};
-> > +
-> > +const struct samsung_pinctrl_of_match_data exynos850_of_data __initconst = {
-> > +     .ctrl           = exynos850_pin_ctrl,
-> > +     .num_ctrl       = ARRAY_SIZE(exynos850_pin_ctrl),
-> > +};
-> > diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/samsung/pinctrl-exynos.h
-> > index da1ec13697e7..595086f2d5dd 100644
-> > --- a/drivers/pinctrl/samsung/pinctrl-exynos.h
-> > +++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
-> > @@ -108,6 +108,35 @@
-> >               .pctl_res_idx   = pctl_idx,                     \
-> >       }                                                       \
-> >
-> > +#define EXYNOS9_PIN_BANK_EINTN(pins, reg, id)                        \
-> > +     {                                                       \
-> > +             .type           = &exynos850_bank_type_alive,   \
->
-> Having the prefix EXYNOS9 is actually confusing because:
-> 1. There is no Exynos9 support,
-> 2. The type is exynos850.
->
-> Let's keep it consistent, so 850 everywhere,
+> Not needed, the samsung_clk_init() panics or returns valid memory.
 >
 
-Sure. Will send v3 shortly with fixes for everything you mentioned.
+Done. Btw, I noticed that similar check is present in clk-exynos5433.c.
 
-> > +             .pctl_offset    = reg,                          \
-> > +             .nr_pins        = pins,                         \
-> > +             .eint_type      = EINT_TYPE_NONE,               \
-> > +             .name           = id                            \
-> > +     }
 > > +
-> > +#define EXYNOS9_PIN_BANK_EINTG(pins, reg, id, offs)          \
-> > +     {                                                       \
-> > +             .type           = &exynos850_bank_type_off,     \
-> > +             .pctl_offset    = reg,                          \
-> > +             .nr_pins        = pins,                         \
-> > +             .eint_type      = EINT_TYPE_GPIO,               \
-> > +             .eint_offset    = offs,                         \
-> > +             .name           = id                            \
-> > +     }
+> > +     samsung_clk_of_register_fixed_ext(ctx,
+> > +                     exynos850_fixed_rate_ext_clks,
+> > +                     ARRAY_SIZE(exynos850_fixed_rate_ext_clks),
+> > +                     ext_clk_match);
 > > +
-> > +#define EXYNOS9_PIN_BANK_EINTW(pins, reg, id, offs)          \
-> > +     {                                                       \
-> > +             .type           = &exynos850_bank_type_alive,   \
-> > +             .pctl_offset    = reg,                          \
-> > +             .nr_pins        = pins,                         \
-> > +             .eint_type      = EINT_TYPE_WKUP,               \
-> > +             .eint_offset    = offs,                         \
-> > +             .name           = id                            \
-> > +     }
+> > +     samsung_clk_register_fixed_rate(ctx, exynos850_peri_clks,
+> > +                     ARRAY_SIZE(exynos850_peri_clks));
 > > +
+> > +     samsung_clk_of_add_provider(np, ctx);
+> > +}
+> > +
+> > +CLK_OF_DECLARE(exynos850_clk, "samsung,exynos850-clock", exynos850_clk_init);
+> >
 >
 > Best regards,
 > Krzysztof
