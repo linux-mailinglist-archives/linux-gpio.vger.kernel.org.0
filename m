@@ -2,73 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F8AC3E41DB
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 10:52:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4D233E4205
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 11:05:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233977AbhHIIwo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Aug 2021 04:52:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51934 "EHLO
+        id S234061AbhHIJGM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Aug 2021 05:06:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234008AbhHIIwn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Aug 2021 04:52:43 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDD6C0613CF
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Aug 2021 01:52:20 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id y7so11585623ljp.3
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Aug 2021 01:52:20 -0700 (PDT)
+        with ESMTP id S234095AbhHIJGM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Aug 2021 05:06:12 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47330C0613CF
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Aug 2021 02:05:51 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id i10-20020a05600c354ab029025a0f317abfso13990974wmq.3
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Aug 2021 02:05:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=RoG+HotGorIZBL7Lv/gQLBLOxpJ4Vy9MxVgvyBzKAr4=;
-        b=ElqolWcXsCXZYFtDl0WgV66CTTgS2FOCVEAhfJ3YQAjj8Gx9z8Xi0cdQahoXH1jjRL
-         vPwo1G9ooVMAJhkMA52NVhfhq8p8REb9dOLqGRVgBkUf32ZWFD9PBxi/i0hFSbfaRqWv
-         s+Do/M6KqrlmwHb87apmKdoHedSneVLBq7HaiuVdwYzpsqQvLTnpufwPLHti03tHNgQ4
-         7MAVPLkhF6p8NthU7OJhq/X6riNE0E3xdS19BepQqgBxQ7hJdYhEX9LjaOVcv+rf+kFb
-         kkfNa7iMTzermiZDANZlT/8J+51gDKNk6ay/Vqo5ox40cx//ZG+ppR6opAFg0TfBcKQJ
-         GhUQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=90uNnlJE5iHK79/8GYVpG/M6EW6OsXMEoHMUbHWYZbc=;
+        b=LXg512mauFVdZqBZuUfn8USTSGm4NLLMcdLW88SJ/u0Sa1w8EHb6zM9bt8408x5vxL
+         C3Rx4IHDQ4+VnVWPK+VE7kPw5csGgL5L10tgPn3DG0bq/ShCthfbEo2U74eYzYGkpNNd
+         qV8dPAdnOcfCHYwupSLouUCjAmxAbmysOkXgx4KgUdDUhkEhTBI05Pe/PrianrKSX4wc
+         mzkkVXa7eEm/O8Lwz4SC/vuPGoe++NB4OGOpWGsimEQovWr117juEqVK+n1RNpyDlzEL
+         vC0DnLX8ThougFfHAQkPXwVIpGSWzBtCBQ4FNrgrSCz5SOY10Pnw/rbgDVZsr5Pddic5
+         sQvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=RoG+HotGorIZBL7Lv/gQLBLOxpJ4Vy9MxVgvyBzKAr4=;
-        b=VkWwvbTxZHYMSQX58mK2VztfKZiypvBSYwSRu/KMqEtfPpXkaXoLsas3pzj28e60oh
-         fJxeaTghPvw/5B8GbVbBQGT8ebVjf6nQSBwakqBgq7mjv7An3Wl1THRteoxC1Pqf+qjt
-         HkIF+nnKnM2uMSfe+AaEXu8yMfEJi6aSWk3xLDKRQXjJvLh09eUNKbdRUD+7eh+l6KTE
-         ovxTh6TGTqZ1FkAd3QDUOPvhTYxOuPrr0gn6HMTjzqYHDUAr9/K78yxCjHyopa6cTl8M
-         UVEBlYuYUyRUxrLuu8kDYAJfdnsk8n9Dp/NKQxmoL3RHlyrkmFSGbXiVZHr9UPD968nK
-         JeFA==
-X-Gm-Message-State: AOAM531MPbkYS4fPQ0x9RHCX+fMK53O8N7uKdi6Ct5zvAf/BtQw0vru+
-        qmp4KJZD+4Z1M6eHSRu7QMfoshp1fpqgPCOc/a8=
-X-Google-Smtp-Source: ABdhPJys1Ha0YABB+P0TuitPtGpQMmq/7DLWFBQDkBVTJUXex2cw1pT4BUDUn1PKwQxmJ37BhFRGYfyU+CIFs1OZak0=
-X-Received: by 2002:a05:651c:243:: with SMTP id x3mr15148781ljn.172.1628499139035;
- Mon, 09 Aug 2021 01:52:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=90uNnlJE5iHK79/8GYVpG/M6EW6OsXMEoHMUbHWYZbc=;
+        b=Aqr0URDC0pmZKTVL1Tm3O7LqSM+KnbAtiEDY/+1qO1jLILRSjNBlMjPUbgei2pRErX
+         P8NyQte24JnPjHdO/dtuiV/5AeQL6qLvSAAdklPihwYUII6pYcUhLi7gmZWaJEuTQGUm
+         WBx+/9Y3loSRpecqDyrK8RFWqot3nehc1YFUefsgDfPFgbDo5D8o/4+2f4kNphnqec+L
+         wFmuSeSIIJ9UqMnP4Wx175CL/8YNrBb8AfhuVrF6cYzVdpxzvZUYKEyRUb+YQmERm9nR
+         BpCxbeFVE2CG+xnyTRSzZNi2TLtzsfdvnt4y7X3eaPG55nVEqceVuGtZI44NadJ6XJQH
+         pDnA==
+X-Gm-Message-State: AOAM533UXL7x4wvb19e3SJAQhFzU6bmdQps+4311kRTrFkI+QoLltakZ
+        AJAg1H4rrkjUeZwy6AEs6CVHjA==
+X-Google-Smtp-Source: ABdhPJxYuYeHY8fFHmkbqr9+K9X8cx3jH9r/IAs6cTIqFLHWwpnHcJ1kR7JylqUwlmjs50g6e6+iig==
+X-Received: by 2002:a05:600c:154d:: with SMTP id f13mr15817826wmg.0.1628499949941;
+        Mon, 09 Aug 2021 02:05:49 -0700 (PDT)
+Received: from google.com ([95.146.142.85])
+        by smtp.gmail.com with ESMTPSA id q14sm17943641wrs.8.2021.08.09.02.05.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Aug 2021 02:05:49 -0700 (PDT)
+Date:   Mon, 9 Aug 2021 10:05:47 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Chris <chrisrblake93@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Christian Lamparter <chunkeey@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: add meraki-mx100 platform driver
+Message-ID: <YRDv61SWABt8kJjx@google.com>
+References: <20210806005755.2295193-1-chrisrblake93@gmail.com>
+ <CAHp75VenSw9BanwH58VSCNpw4cNFf7h3uSWTXLb5n0+OPtnDTQ@mail.gmail.com>
+ <b5430038-c18c-6037-44d1-a3c0089645a1@redhat.com>
+ <CAHp75VeUcrHuBOW9LJ=sPR0atxoEEe19mpD32UfjY1NncD5dLA@mail.gmail.com>
+ <CALpBJjosR8WvG=8QB=i12JSpbS3wyPbWLC_N1YM+8FSfVyL1rQ@mail.gmail.com>
 MIME-Version: 1.0
-Sender: kalgboy6@gmail.com
-Received: by 2002:a2e:a4b8:0:0:0:0:0 with HTTP; Mon, 9 Aug 2021 01:52:18 -0700 (PDT)
-From:   Alary Jean Claude <claudealaryjean@gmail.com>
-Date:   Mon, 9 Aug 2021 08:52:18 +0000
-X-Google-Sender-Auth: C_fy1fMLYcFI19lnxxNOKbd8i60
-Message-ID: <CADW8ezXJ_CS4VH-a6VRgXewU+X39Rgsy6jdRp+hSQJ=Bs6uTtA@mail.gmail.com>
-Subject: Good Day My beloved,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALpBJjosR8WvG=8QB=i12JSpbS3wyPbWLC_N1YM+8FSfVyL1rQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
- Hello My Dear,
+On Fri, 06 Aug 2021, Chris wrote:
 
-It is my pleasure to communicate with you, I know that this message
-will be a surprise to you my name is Mrs.Alary Jean Claude, I am
-diagnosed with ovarian cancer which my doctor have confirmed that I
-have only some weeks to live so I have decided you handover the sum
-of($12,000.000 Million Dollar) through I decided handover the money in
-my account to you for help of the orphanage homes and the needy once
+> On Fri, Aug 6, 2021 at 8:59 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Fri, Aug 6, 2021 at 4:55 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> > > On 8/6/21 9:52 AM, Andy Shevchenko wrote:
+> > > > On Fri, Aug 6, 2021 at 5:47 AM Chris Blake <chrisrblake93@gmail.com> wrote:
+> >
+> > ...
+> >
+> > > >> +#include <linux/gpio/machine.h>
+> > > >
+> > > > Does this provide a GPIO controller driver? I don't think so.
+> > >
+> > > Actually GPIO controller drivers use <linux/gpio/driver.h>
+> > > <linux/gpio/machine.h> for board files / glue code which
+> > > e.g. needs to add lookup-tables, which this code does,
+> > > so including this header is correct.
+> >
+> > Ah, indeed. I stand corrected.
+> >
+> 
+> Hello,
+> 
+> Thank you both for the feedback, i'll work on getting the fixes
+> implemented. The only one I have issues with is finding the git hash
+> for the dependency commit in mfd, since I don't see it merged up yet
+> to the maintainers staging branch at
+> https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/.
 
-Please   kindly reply me here as soon as possible to enable me give
-you more information but before handing over my bank to you please
-assure me that you will only take 40%  of the money and share the rest
-to the poor orphanage home and the needy once, thank you am waiting to
-hear from you
+Check again. :)
 
-Mrs Alary Jean Claude.
+> @Lee, sorry to tag you in but any chance you have the git hash for the
+> PR I did earlier that you accepted for 5.15? It was named: mfd:
+> lpc_ich: Enable GPIO driver for DH89xxCC.
+
+ef0eea5b151ae ("mfd: lpc_ich: Enable GPIO driver for DH89xxCC")
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
