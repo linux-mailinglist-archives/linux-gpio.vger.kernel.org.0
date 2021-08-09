@@ -2,189 +2,332 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E47FA3E4497
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 13:23:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B8153E4570
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Aug 2021 14:14:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234996AbhHILXc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Aug 2021 07:23:32 -0400
-Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:43120
-        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235045AbhHILXb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Aug 2021 07:23:31 -0400
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPS id B333A3F350
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Aug 2021 11:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1628508190;
-        bh=vRoT5BSxcI/qFuszLL/O88HOU90cRS5N0ZHejOSe9B0=;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-         In-Reply-To:Content-Type;
-        b=hFMY9oQ7c01pr7d0dnaLHwuOYPIN/dP7XtUDHAbGAU9yZUdsziovni5IpjKeAfLo5
-         DLPyotD3yGHqpjD1joQUCjKr78K6lhvMJDHvqmv19aZAsU7fqoGaZvVCREtmfsKlNl
-         tso8u2FpyfqSSk71mTMVGU2a/FKgrbSK95T9468OENT1RhUAQCjYrKRhkdUQJPNd/V
-         3zV6LdYnsAl5Z49UdeLAznuzBRC7TQgi29ZwR9Fi/o5sGtV2ZlLUlITcRpit/FFWZA
-         HAFWhhSKM0kEPG2r6pj0HDOE98rdqIKkswOKSG1cIWkeIn7oHnP+8H83ARGB1EoHE1
-         5kZOB10GzUvbA==
-Received: by mail-wm1-f71.google.com with SMTP id b196-20020a1c80cd0000b02902e677003785so2443382wmd.7
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Aug 2021 04:23:10 -0700 (PDT)
+        id S233193AbhHIMOV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Aug 2021 08:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234645AbhHIMOM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Aug 2021 08:14:12 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80AD9C0613D3;
+        Mon,  9 Aug 2021 05:13:52 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id f8so11156034ilr.4;
+        Mon, 09 Aug 2021 05:13:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PQACd5GWebR2qRbsmRwc5hEdO7V8PUPVaRknhZhjXJw=;
+        b=VadWKszYdfnW6JFMRIbZuXZly14NrB9m2a4O5+hSJXGyFegCCxx1uVghyOniEk+nym
+         a7M1iTgcnwLOhzb+HmwUABwpaSVvkOMun85pis83HvdCFEWNafUn0fsUMeBW7fM/07jt
+         vn5LJ2jZTHZ7K+ymORSCrih2CvxQfkO7yvWzFKPk7YbT+MpyqbKTnNo+5/Q2lz/tkflm
+         uAvl6vOHoThD9HK0c+P1NXvXf30wH9LgI2K74PJZsdnljA9o1vaJ6zpXCfk9ViF4b9j2
+         Gk/SZOzS2Xa3utrgiq04xP6nW3BeWJpiB+IdK/d4wcx0J44h7+gRWV8zOCDFXRIcIHWD
+         w14A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vRoT5BSxcI/qFuszLL/O88HOU90cRS5N0ZHejOSe9B0=;
-        b=EWSYoTKdBAC91ixga0k72nD4VTsXbOQtiukGa0lsKZNtlsgghSy3naIKB3cdW9VF6/
-         eH0FE/TdfS4lAFnHlTq3kLvLCGmJHdsBN1OzfWu5T1Dwwd0PKp6GIHIPlQemih//QQol
-         QuGB0wyllecum9qVE/armAS/OBAe4M7pj9dHDAFDm3VTtuAmvDGfH1BagTC/nIcwNWCa
-         U2TGPe9ZOca88wrD/yqeNxZo18lDNoCosiBShglkrzFD5UQOAe5OqOVFCvrZzB00LEEj
-         jl5BYhCwmR+t1Ryqdiv/srEutr+Ra8y+VM6vk7zej56C/mduwErHzoiIZj1zBgVDGS3/
-         Ixyg==
-X-Gm-Message-State: AOAM5330ciSkgS4QMxhqfBZSqyQZYuUZVprfbKTQ7jGnya9L45O7jgET
-        iRESjfgJ//loqjvOBpC59jZ5benbJLAT23YknsmQuV9eW9M4W7k94UbbXGH1Wov/fY4nEP321d1
-        7iglj1V7pZXz4jpwdCRgl/+HZLWcNYXiiBuB6Rjw=
-X-Received: by 2002:a50:cc06:: with SMTP id m6mr8360389edi.97.1628508179579;
-        Mon, 09 Aug 2021 04:22:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy6XjMI02FzZDa29mvOYI4lhR2QTlk6CwiRU3KFxBkR1w1Iwv1+C2mD+X6K5L1Go6NB91ffkw==
-X-Received: by 2002:a50:cc06:: with SMTP id m6mr8360357edi.97.1628508179449;
-        Mon, 09 Aug 2021 04:22:59 -0700 (PDT)
-Received: from [192.168.8.102] ([86.32.42.198])
-        by smtp.gmail.com with ESMTPSA id l20sm5813866ejb.23.2021.08.09.04.22.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Aug 2021 04:22:59 -0700 (PDT)
-Subject: Re: [PATCH v2 7/8] clk: samsung: Add Exynos850 clock driver stub
-To:     Sam Protsenko <semen.protsenko@linaro.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
-        Ryu Euiyoul <ryu.real@samsung.com>,
-        Tom Gall <tom.gall@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-References: <20210806152146.16107-1-semen.protsenko@linaro.org>
- <20210806152146.16107-8-semen.protsenko@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Message-ID: <3add6f87-7293-e1ae-8f9e-c69e9de18cf5@canonical.com>
-Date:   Mon, 9 Aug 2021 13:22:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        bh=PQACd5GWebR2qRbsmRwc5hEdO7V8PUPVaRknhZhjXJw=;
+        b=IoX5Tm1W+Yh/I/NiVj8qnX6KraWEA8MfcMblPbXcR+dHCdmtPQgmZu4eSfa5Hk3hDO
+         ymi15xJF9foUwqojMRz8lo3ON6BZBiLhroYvxa7kY/Xqut13agseLm+/BAkntlBL3Ena
+         Mpuio9gXq/xYDSoQ8HH6+A2V+vzrMQ9Sg6mEjQ6ANajIxeLGDT5TplD6miQpnZBTLeyn
+         yiMdMCgVkEFkmH1d8jvlX1bRSQahHYP1jdVs/XHKcVY3nKHxflH5/b03P6bMWRFu9tSY
+         YA6Bl9IxeO9Eq01aBCp/r9HpmU3RWfxANPDzulMDhcyJTvlRdwWOvJCc234E3gGAJGtr
+         kaiA==
+X-Gm-Message-State: AOAM530DtP/P3zyzDnm/w86IyGDNNvogJHCPnNZYYjaop/bgUhczNFKv
+        0SyyCtbJJ3wyVuvLowc03zdxglZ6jKQwuvIj
+X-Google-Smtp-Source: ABdhPJxzDZwTtPvYu6bOl+0pSkoNfw13DoVIalI5hTjSxXuaPcSVd2eIGmm5KQTM7n1SSD7QCnXfmg==
+X-Received: by 2002:a92:7f03:: with SMTP id a3mr193811ild.254.1628511231582;
+        Mon, 09 Aug 2021 05:13:51 -0700 (PDT)
+Received: from Crosshair-VIII-Hero.lan ([2600:6c46:7d7f:ec00::a11])
+        by smtp.gmail.com with ESMTPSA id w10sm2013736ioc.55.2021.08.09.05.13.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Aug 2021 05:13:51 -0700 (PDT)
+From:   Chris Blake <chrisrblake93@gmail.com>
+To:     platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        chunkeey@gmail.com, hdegoede@redhat.com, andy.shevchenko@gmail.com
+Cc:     Chris Blake <chrisrblake93@gmail.com>
+Subject: [PATCH v3] platform/x86: add meraki-mx100 platform driver
+Date:   Mon,  9 Aug 2021 07:13:45 -0500
+Message-Id: <20210809121345.967597-1-chrisrblake93@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210806152146.16107-8-semen.protsenko@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/08/2021 17:21, Sam Protsenko wrote:
-> For now it's just a stub driver to make the serial driver work. Later it
-> will be implemented properly. This driver doesn't really change clocks,
-> only registers the UART clock as a fixed-rate clock. Without this clock
-> driver the UART driver won't work, as it's trying to obtain "uart" clock
-> and fails if it's not able to.
-> 
-> In order to get a functional serial console we have to implement that
-> minimal clock driver with "uart" clock. It's not necessary to actually
-> configure clocks, as those are already configured in bootloader, so
-> kernel can rely on that for now.
-> 
-> Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-> ---
-> Changes in v2:
->   - Used hard coded clock indexes, as clock bindings were removed; will
->     add clock bindings back (reimplemented) once proper clock driver is
->     ready
->   - Removed .data = 0 for exynos850-oscclk, as it's in BSS section
->   - Removed comma for terminator {}
->   - Made exynos850_clk_init() static
->   - Removed checking np for NULL, as it's already done in of_iomap()
-> 
->  drivers/clk/samsung/Makefile        |  1 +
->  drivers/clk/samsung/clk-exynos850.c | 64 +++++++++++++++++++++++++++++
->  2 files changed, 65 insertions(+)
->  create mode 100644 drivers/clk/samsung/clk-exynos850.c
-> 
-> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
-> index 028b2e27a37e..c46cf11e4d0b 100644
-> --- a/drivers/clk/samsung/Makefile
-> +++ b/drivers/clk/samsung/Makefile
-> @@ -17,6 +17,7 @@ obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynos5433.o
->  obj-$(CONFIG_EXYNOS_AUDSS_CLK_CON) += clk-exynos-audss.o
->  obj-$(CONFIG_EXYNOS_CLKOUT)	+= clk-exynos-clkout.o
->  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynos7.o
-> +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynos850.o
->  obj-$(CONFIG_S3C2410_COMMON_CLK)+= clk-s3c2410.o
->  obj-$(CONFIG_S3C2410_COMMON_DCLK)+= clk-s3c2410-dclk.o
->  obj-$(CONFIG_S3C2412_COMMON_CLK)+= clk-s3c2412.o
-> diff --git a/drivers/clk/samsung/clk-exynos850.c b/drivers/clk/samsung/clk-exynos850.c
-> new file mode 100644
-> index 000000000000..36c7c7fe7cf0
-> --- /dev/null
-> +++ b/drivers/clk/samsung/clk-exynos850.c
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
-> + * Copyright (C) 2021 Linaro Ltd.
-> + *
-> + * Common Clock Framework support for Exynos850 SoC.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +
-> +#include "clk.h"
-> +
-> +/* Will be extracted to bindings header once proper clk driver is implemented */
-> +#define OSCCLK		1
-> +#define DOUT_UART	2
-> +#define CLK_NR_CLKS	3
-> +
-> +/* Fixed rate clocks generated outside the SoC */
-> +static struct samsung_fixed_rate_clock exynos850_fixed_rate_ext_clks[] __initdata = {
-> +	FRATE(OSCCLK, "fin_pll", NULL, 0, 26000000),
-> +};
-> +
-> +/*
-> + * Model the UART clock as a fixed-rate clock for now, to make serial driver
-> + * work. This clock is already configured in the bootloader.
-> + */
-> +static const struct samsung_fixed_rate_clock exynos850_peri_clks[] __initconst = {
-> +	FRATE(DOUT_UART, "DOUT_UART", NULL, 0, 200000000),
-> +};
-> +
-> +static const struct of_device_id ext_clk_match[] __initconst = {
-> +	{ .compatible = "samsung,exynos850-oscclk" },
+This adds platform support for the Cisco Meraki MX100 (Tinkerbell)
+network appliance. This sets up the network LEDs and Reset
+button.
 
-One more thing - I am not sure anymore if this is correct. AFAIR, we
-wanted to drop compatibles for external clocks.
+Depends-on: ef0eea5b151ae ("mfd: lpc_ich: Enable GPIO driver for DH89xxCC")
+Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Chris Blake <chrisrblake93@gmail.com>
+---
 
-Chanwoo, Sylwester, Tomasz,
-Do you remember the recommended approach? Shall it be like Exynos542x
-(samsung,exynos5420-oscclk) or Exynos5433?
+Changelog:
+V3: Additional cleanups, formatting changes
+V2: Move to using gpiod lookup tables, misc cleanups
+V1: Initial Patch
 
+ drivers/platform/x86/Kconfig        |  13 ++
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/meraki-mx100.c | 202 ++++++++++++++++++++++++++++
+ 3 files changed, 218 insertions(+)
+ create mode 100644 drivers/platform/x86/meraki-mx100.c
 
-BTW, I am now converting some of existing clock controller bindings to
-dtschema.
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 7d385c3b2239..8d70176e335f 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -302,6 +302,19 @@ config ASUS_NB_WMI
+ 	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
+ 	  here.
+ 
++config MERAKI_MX100
++	tristate "Cisco Meraki MX100 Platform Driver"
++	depends on GPIOLIB
++	depends on GPIO_ICH
++	depends on LEDS_CLASS
++	select LEDS_GPIO
++	help
++	  This driver provides support for the front button and LEDs on
++	  the Cisco Meraki MX100 (Tinkerbell) 1U appliance.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called meraki-mx100.
++
+ config EEEPC_LAPTOP
+ 	tristate "Eee PC Hotkey Driver"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 7ee369aab10d..25c5aee1cde7 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -39,6 +39,9 @@ obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
+ obj-$(CONFIG_EEEPC_LAPTOP)	+= eeepc-laptop.o
+ obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
+ 
++# Cisco/Meraki
++obj-$(CONFIG_MERAKI_MX100)	+= meraki-mx100.o
++
+ # Dell
+ obj-$(CONFIG_X86_PLATFORM_DRIVERS_DELL)		+= dell/
+ 
+diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
+new file mode 100644
+index 000000000000..eebbd0a3d806
+--- /dev/null
++++ b/drivers/platform/x86/meraki-mx100.c
+@@ -0,0 +1,202 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++/*
++ * Cisco Meraki MX100 (Tinkerbell) board platform driver
++ *
++ * Based off of arch/x86/platform/meraki/tink.c from the
++ * Meraki GPL release meraki-firmware-sources-r23-20150601
++ *
++ * Format inspired by platform/x86/pcengines-apuv2.c
++ *
++ * Copyright (C) 2021 Chris Blake <chrisrblake93@gmail.com>
++ */
++
++#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
++
++#include <linux/dmi.h>
++#include <linux/err.h>
++#include <linux/gpio_keys.h>
++#include <linux/gpio/machine.h>
++#include <linux/input.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#define TINK_GPIO_DRIVER_NAME "gpio_ich"
++
++/* LEDs */
++static const struct gpio_led tink_leds[] = {
++	{
++		.name = "mx100:green:internet",
++		.default_trigger = "default-on",
++	},
++	{
++		.name = "mx100:green:lan2",
++	},
++	{
++		.name = "mx100:green:lan3",
++	},
++	{
++		.name = "mx100:green:lan4",
++	},
++	{
++		.name = "mx100:green:lan5",
++	},
++	{
++		.name = "mx100:green:lan6",
++	},
++	{
++		.name = "mx100:green:lan7",
++	},
++	{
++		.name = "mx100:green:lan8",
++	},
++	{
++		.name = "mx100:green:lan9",
++	},
++	{
++		.name = "mx100:green:lan10",
++	},
++	{
++		.name = "mx100:green:lan11",
++	},
++};
++
++static const struct gpio_led_platform_data tink_leds_pdata = {
++	.num_leds	= ARRAY_SIZE(tink_leds),
++	.leds		= tink_leds,
++};
++
++static struct gpiod_lookup_table tink_leds_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 11,
++				NULL, 0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 18,
++				NULL, 1, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 20,
++				NULL, 2, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 22,
++				NULL, 3, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 23,
++				NULL, 4, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 32,
++				NULL, 5, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 34,
++				NULL, 6, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 35,
++				NULL, 7, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 36,
++				NULL, 8, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 37,
++				NULL, 9, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 48,
++				NULL, 10, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 16,
++				NULL, 11, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 7,
++				NULL, 12, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 21,
++				NULL, 13, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 19,
++				NULL, 14, GPIO_ACTIVE_LOW),
++		{} /* Terminating entry */
++	}
++};
++
++/* Reset Button */
++static struct gpio_keys_button tink_buttons[] = {
++	{
++		.desc			= "Reset",
++		.type			= EV_KEY,
++		.code			= KEY_RESTART,
++		.active_low             = 1,
++		.debounce_interval      = 100,
++	},
++};
++
++static const struct gpio_keys_platform_data tink_buttons_pdata = {
++	.buttons	= tink_buttons,
++	.nbuttons	= ARRAY_SIZE(tink_buttons),
++	.poll_interval  = 20,
++	.rep		= 0,
++	.name		= "mx100-keys",
++};
++
++static struct gpiod_lookup_table tink_keys_table = {
++	.dev_id = "gpio-keys-polled",
++	.table = {
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 60,
++				NULL, 0, GPIO_ACTIVE_LOW),
++		{} /* Terminating entry */
++	}
++};
++
++/* Board setup */
++static const struct dmi_system_id tink_systems[] __initconst = {
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Cisco"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MX100-HW"),
++		},
++	},
++	{} /* Terminating entry */
++};
++MODULE_DEVICE_TABLE(dmi, tink_systems);
++
++static struct platform_device *tink_leds_pdev;
++static struct platform_device *tink_keys_pdev;
++
++static struct platform_device * __init tink_create_dev(
++	const char *name, const void *pdata, size_t sz)
++{
++	struct platform_device *pdev;
++
++	pdev = platform_device_register_data(NULL,
++		name, PLATFORM_DEVID_NONE, pdata, sz);
++	if (IS_ERR(pdev))
++		pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
++
++	return pdev;
++}
++
++static int __init tink_board_init(void)
++{
++	if (!dmi_first_match(tink_systems))
++		return -ENODEV;
++
++	/*
++	 * We need to make sure that GPIO60 isn't set to native mode as is default since it's our
++	 * Reset Button. To do this, write to GPIO_USE_SEL2 to have GPIO60 set to GPIO mode.
++	 * This is documented on page 1609 of the PCH datasheet, order number 327879-005US
++	 */
++	outl(inl(0x530) | BIT(28), 0x530);
++
++	gpiod_add_lookup_table(&tink_leds_table);
++	gpiod_add_lookup_table(&tink_keys_table);
++
++	tink_leds_pdev = tink_create_dev("leds-gpio",
++		&tink_leds_pdata, sizeof(tink_leds_pdata));
++
++	tink_keys_pdev = tink_create_dev("gpio-keys-polled",
++		&tink_buttons_pdata, sizeof(tink_buttons_pdata));
++
++	return 0;
++}
++module_init(tink_board_init);
++
++static void __exit tink_board_exit(void)
++{
++	platform_device_unregister(tink_keys_pdev);
++	platform_device_unregister(tink_leds_pdev);
++	gpiod_remove_lookup_table(&tink_keys_table);
++	gpiod_remove_lookup_table(&tink_leds_table);
++}
++module_exit(tink_board_exit);
++
++MODULE_AUTHOR("Chris Blake <chrisrblake93@gmail.com>");
++MODULE_DESCRIPTION("Cisco Meraki MX100 Platform Driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:meraki-mx100");
+-- 
+2.25.1
 
-Best regards,
-Krzysztof
