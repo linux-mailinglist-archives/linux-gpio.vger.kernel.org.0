@@ -2,78 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A38713E5A12
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 14:38:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B5F63E5A41
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 14:43:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238824AbhHJMjG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Aug 2021 08:39:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37542 "EHLO
+        id S237785AbhHJMoK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Aug 2021 08:44:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238749AbhHJMjG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 08:39:06 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0850C061798
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 05:38:43 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id g13so41159430lfj.12
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 05:38:43 -0700 (PDT)
+        with ESMTP id S239007AbhHJMoK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 08:44:10 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05BDC0613D3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 05:43:47 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id b6so24870560lff.10
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 05:43:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yqPESqjgmWgALZq9dnXABMl8Vg5hguPUvo5W3Xrxf3k=;
-        b=JVbUmhAH5zgYRhQNH4gd8yXFNNsCDkA64qbCAMYGZ223wkQ66XkcYiSesU4Obq4nIP
-         xRBxrBrR8dWNDkg0njCTspEINYS1iNM5Qb+lj0e6Z5czdOFOIxuPIOYSuqKOXMF2sRnw
-         7qPGKb+SBNOKbS7wpoHzOLzUW+CFPlpEL8P9cDPOdH38wpHuJecC1Qk7iIF2/7jkSg09
-         4omrE9BIDqGu1dvL8fOijxPvA+rsqmUJV5InTLeRAhXM2t5Sc5pLnDedWFmlyNSu664w
-         9GFzTmD5eQp8pkEgZry0kD7ALm9drjOFV2ga/m0JyM5V3CEoG5V8QQBt2V+p7XHAvv/Y
-         Ys/g==
+        bh=rOi0FzJnU1WuNHAREyHt3NRP6amd/ZUjldzq+Pj4Qwg=;
+        b=PgxtWQmKoEM2unN+JYTi6YU4uufVUt5SoE3Y0CqtBvDox7f/OWllpXL3er56FDo1s7
+         EMgmYSt9+RTo1FQn0Sw6UQxwpqHYoJz9obk5QTSXYbrJk10+udCbCdbCHL2GT6siwFHn
+         nbrxmGOF8GOh0bqYTPxwCGIWMY80rrTZoAWP5ZNHYwII+hBdqXNZhZ5RTKuPCOmr+sZ6
+         2uxu7NtQuXI4Dy1Tb+RTt0ciEZSpI9osu5tI4SxAODD028SXvXmgVYUj5ngkZ5ONelDV
+         /AeVyaL7O7yH7Eh4t6L5scgsaWKk/PiK+m0eiTHFiVHWDEGJfiBVS+2i4E6jELwPus9F
+         9a0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yqPESqjgmWgALZq9dnXABMl8Vg5hguPUvo5W3Xrxf3k=;
-        b=XcojRK02ZEhd5yE2L5Dwarmqthkpq4Zh6NweVjebF3h2dIkxXWY/XheCo+Zjwo7vxO
-         A8r6sLPEsoFs45kv4pVUKhS76/LDiEdLuTMCjoFPfHtQbdjOrfV0MRsJuYmATS1iDB7M
-         ZQ5fFerp9zXhcch/rRjQPBSa7IC0rMeGmrj7rBAotFQG1NUxgh8+TAvZdLRRcXikhi3c
-         2olQs5e6YLwWUnQdSHUlygFCqHkfVvhzNVwwb13CMqiG4sgjnCVbG3PUwKqSlnHIx/p6
-         Id0EJ5xEr9pcMGS2s6HYtAkY+QdS6D+6wzFJr11lfjG1a1pm42H4Eg2r072SeC5jYr0j
-         +cbw==
-X-Gm-Message-State: AOAM533Cg+C/ssvC65BDkTlqWvhMusIfiudV3J8eCDazDEQiUix61Mop
-        srYj0bOeJ0+LIbZiVF/BIT5Q+pFHTpwjAg/+LyPVZg==
-X-Google-Smtp-Source: ABdhPJxCH32JmAlqn5LAdRI634JOmrxRSuLk6eTMuhYyoMuTesZ8ZwY0luzOzNE+RnBim73zKfg6EnPTOK7Nv5pLy2E=
-X-Received: by 2002:ac2:5d4a:: with SMTP id w10mr21903717lfd.529.1628599122109;
- Tue, 10 Aug 2021 05:38:42 -0700 (PDT)
+        bh=rOi0FzJnU1WuNHAREyHt3NRP6amd/ZUjldzq+Pj4Qwg=;
+        b=XhnoM/qfEqIzL3c72hCYZ96TTSBsX+4anGHgdWeoXemLAEI+DxYwGzc8uPTBk8hjDl
+         rq1sK0mVAkxevPPGeikt+XyDpwIfrblvThnfbXZHbC/VXvgTOBV7dZn6EFH787YrxWfd
+         snU+2ZbxwcdUa1oaiz1qJvKU8SlFqe5ngwcOKE43vMnawvW6OT7r26lFSRmUlhzp0uVU
+         ouDU0kV5qS1MrHJpcFK9Gk+dyGuEc6eS65Y+VU+k0nirjqRhueBeHYl8kK4ROTl+7Ymu
+         oc9oDFF9HFb+CNMm17kQnRgDD4H1mcycq4Z9L9XVdXYoehZhgA99IjHjls+ewWQ9Hm3r
+         ZpKg==
+X-Gm-Message-State: AOAM5312W/EXJBUjaH4izgIL1oaJxWdmWVILvUduaJ3aC81Yu8s/itf/
+        7EYPE+0L2oAJx1nQ5qJGoG3ueNUq33IhTHS73Hd8wQ==
+X-Google-Smtp-Source: ABdhPJxbF1bBXolhzTgqSiZogGeQ/LtVQ5tXYydF5PKis8x8K6NIU/AkGspTNHz97t9pSfFBm7Le9MEdxNZ0nsKHYRI=
+X-Received: by 2002:a19:c7cd:: with SMTP id x196mr21283639lff.465.1628599424634;
+ Tue, 10 Aug 2021 05:43:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210629003851.1787673-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20210629003851.1787673-1-bjorn.andersson@linaro.org>
+References: <20210722033930.4034-1-thunder.leizhen@huawei.com>
+In-Reply-To: <20210722033930.4034-1-thunder.leizhen@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Aug 2021 14:38:31 +0200
-Message-ID: <CACRpkdb2BZ4Cpc4zm+rTyxjr16Z4ZJGSN78wKmQxZOAdQ0o7ng@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: Add pmc8180 & pmc8180c
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+Date:   Tue, 10 Aug 2021 14:43:33 +0200
+Message-ID: <CACRpkdaHDZpHayo+ytHJik6CAkx2NhYrmxoObxQiu3ELRxCBQw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: single: Move test PCS_HAS_PINCONF in
+ pcs_parse_bits_in_pinctrl_entry() to the beginning and fix its return value
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 29, 2021 at 2:40 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Thu, Jul 22, 2021 at 5:40 AM Zhen Lei <thunder.leizhen@huawei.com> wrote:
 
-> The SC8180x platform comes with PMC8180 and PMC8180c, add support for
-> the GPIO controller in these PMICs.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> v1 --> v2:
+> Split bugfix and cleanup into two patches.
 
-Patch applied, sorry for missing this. I blame stress.
-
-I had to hand-edit in the DT changes, not even fuzzing worked
-so check the result.
+Patches applied! Thanks for fixing this Zhen, sorry for the delay.
 
 Yours,
 Linus Walleij
