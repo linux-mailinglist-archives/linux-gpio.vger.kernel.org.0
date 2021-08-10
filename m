@@ -2,69 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F37A43E7EBE
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 19:34:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 656AE3E8466
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 22:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233257AbhHJRfH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Aug 2021 13:35:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
+        id S233153AbhHJUd3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Aug 2021 16:33:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232964AbhHJRec (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 13:34:32 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C30FC06119A
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 10:33:14 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id n7so5353521ljq.0
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 10:33:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=y3BZ+wT7TMDVjM2/WQcyPOhYkG/NWjvDbJIsMqFI2RA=;
-        b=RsiBBdA9QKOcTCF5lGXKVsjmClQ3sMV8nYRHi5UzQ6RFRdaZ6t981j56diJ7q3WLiT
-         dSrogDmRt6kwHS+J+pcIdphvlu5Vk62bOJudqb0dzEOf5Tr6sAVMWTY2NbEn++ZnSdaf
-         F4yj6h4F7VBk6uVCXN4p2StSiBpSckLhr0NJoCtUTvVh+gCrpSdvA2dss+nT8Q4XWg+b
-         4x9fMuBGMminOSzPCK8njOsWexpWsfb2omBFXa3GLhHqzUauC1r8oyB3fDvFuiS7qNjT
-         fDqijYMWxjmP3EeBvtWaIUY7Z5YEma/9OhqmI5Ya7ZKqW/5hzlkm8xAdNsqyzESz/5Xj
-         5sZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=y3BZ+wT7TMDVjM2/WQcyPOhYkG/NWjvDbJIsMqFI2RA=;
-        b=XFSQnr8a5L1VRvAN7o0m/qmhtiaALbmWoVd+n76i+cJjnggYcZrdCyKl8y6822WRYt
-         8qlnTfwfstjZTUkAN102IFJmcR0XiuQr6JI4PVM1y+axELZWFZ+TlwAg1rx12iYb4I1p
-         uzrAZjk0QcIoYEKzuJ6ir8YVj5owpRg52oSwNZ4aqmRE7rUH3kHGEiwCM94aHLLYu5b+
-         PAxXJekWz2TvVIHBNWMxBSM2GQqWWtKzUROiQvX7ZUZ6BzELCDgTH5ZL0rFrZbKj44sf
-         5mrHt/QztHxWCiq1HkXiwrOLwVd+wkMPyrFgMpapLUf+uw+1xYaOFkyG60tQRSfcK3Ks
-         co8Q==
-X-Gm-Message-State: AOAM5323DqcoNELlVMBhSrV8/ShHUNgv133rxxCbikalto8kZ8XchNyf
-        oO2rMYcyghA0Mf04BX7jp+AQ1zSNfj7AHod+7W4=
-X-Google-Smtp-Source: ABdhPJw+sC+pBQw0G+0ULVvin/r/jCVVb1V7XUqN67UCoWrnBzyIXnaSzK5br1SZrCupI/L0LIZWgMfi7vhpZK+Wcm0=
-X-Received: by 2002:a05:651c:32c:: with SMTP id b12mr1745558ljp.198.1628616792032;
- Tue, 10 Aug 2021 10:33:12 -0700 (PDT)
+        with ESMTP id S233083AbhHJUd2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 16:33:28 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1821AC0613C1;
+        Tue, 10 Aug 2021 13:33:06 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1628627582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VmNO/6PZX/ukpmKUxgFb784BLjZWMf0I28FYYc/qH+Q=;
+        b=geT0QKa+FGH9C4lt7qI+awsmOAPGEPnuKNhteiIPNmgcQaziJdqJBjQY00zPcEFuZmuBmB
+        oOh5oInajQrBVbX67j2q2iD9BWXDlbwu+g8lE5rVLGMCIErd9No4tCqHdEseYSHugHI1zg
+        zHWyd3cFWnmyd3BVs5lJX5LyVJozvZFjkzQaV/wHC6r+3d7TYpJlg2oG+v1mmVFYWDsD/m
+        yJWjYV/irDIoGlQPhZaJOQK49VMOnb5dU12SyIIcmXk83MxnTdGzx+YuXNArtOFDUHB7qb
+        PYtamAOAZKRt461Vh7cGXI2uzw3URsGPaKwXtzw2i4OBmySXjMRNqhkygKAVAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1628627582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VmNO/6PZX/ukpmKUxgFb784BLjZWMf0I28FYYc/qH+Q=;
+        b=9RUz3+Q/kDOp5LEbghaANWydLhI9VhI74udmE/onDz0uMdyQg6tGx5YzKhMZhoGJCeflAI
+        3S/vPf9bzVldkWCw==
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Linus Walleij <linusw@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [SPLAT 3/3] gpio: dwapb: Sleeping spinlocks down IRQ mapping
+In-Reply-To: <20210810134127.1394269-4-valentin.schneider@arm.com>
+References: <20210810134127.1394269-1-valentin.schneider@arm.com>
+ <20210810134127.1394269-4-valentin.schneider@arm.com>
+Date:   Tue, 10 Aug 2021 22:33:01 +0200
+Message-ID: <87v94doxaa.ffs@tglx>
 MIME-Version: 1.0
-Received: by 2002:ac2:5d2e:0:0:0:0:0 with HTTP; Tue, 10 Aug 2021 10:33:10
- -0700 (PDT)
-Reply-To: majidmuzaffar8@gmail.com
-From:   Majid Muzaffar <ing.abdullabin.rishid.me@gmail.com>
-Date:   Tue, 10 Aug 2021 20:33:10 +0300
-Message-ID: <CAFsu49XXzY7ugKhGzJm5OPKe2LG1R35c-Dkp83VgS3+u27y=sQ@mail.gmail.com>
-Subject: Proposal
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Salam alaikum,
+On Tue, Aug 10 2021 at 14:41, Valentin Schneider wrote:
+> [   11.549824] rt_spin_lock (kernel/locking/rtmutex.c:1641 (discriminator 4) kernel/locking/spinlock_rt.c:30 (discriminator 4) kernel/locking/spinlock_rt.c:36 (discriminator 4) kernel/locking/spinlock_rt.c:44 (discriminator 4)) 
+> [   11.549827] dwapb_irq_ack (drivers/gpio/gpio-dwapb.c:151 drivers/gpio/gpio-dwapb.c:233) gpio_dwapb
+> [   11.549831] __irq_do_set_handler (kernel/irq/chip.c:414 kernel/irq/chip.c:406 kernel/irq/chip.c:1009) 
+> [   11.549833] __irq_set_handler (kernel/irq/internals.h:178 kernel/irq/chip.c:1053) 
 
-I am the investment officer of UAE based investment company who are
-ready to fund projects outside UAE, in the form of debt finance. We
-grant loan to both Corporate and private entities at a low interest
-rate of 3% ROI per annum. The terms are very flexible and interesting.
-Kindly revert back if you have projects that needs funding for further
-discussion and negotiation.
+This is gpio_chip->bgpio_lock which is a regular spinlock. AFAICT this
+lock should merely serializing access to MMIO registers, so it should
+not be a problem to make this lock raw.
 
-Thanks
+Except for the obligatory exception:
 
-investment officer
+ grgpio_irq_handler() holds that lock from the demultiplexing
+ handler and invokes all handlers for the individual GPIOs which have
+ interrupts enabled without ever consulting a pending register.
+
+ That drivers usage of that lock is interesting in general, see
+ grgpio_map_irq() for illustration. Quality stuff for mission critical
+ systems...
+
+ But nevertheless it should just work with a raw lock on RT AFACIT.
+
+Thanks,
+
+        tglx
