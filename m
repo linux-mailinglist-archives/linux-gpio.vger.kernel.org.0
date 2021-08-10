@@ -2,99 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3791F3E557D
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 10:33:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 299BE3E5678
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 11:13:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238402AbhHJIdQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Aug 2021 04:33:16 -0400
-Received: from www.zeus03.de ([194.117.254.33]:38312 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238461AbhHJIc5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Aug 2021 04:32:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=w/gJ095skrfvL1/SC/xS3/zoKeiU
-        RiAKx6U1BK1iVP8=; b=FqotDhBXY3RfyNUP808nEQ6IzS93IrYIL4HUKHRRGk8P
-        NgbVlGR5Va384cq1XEGSMScu6SJwRuC4E3YBkiKxXu4bw2BMfap3edRYOK5inDIB
-        PXfrp3q/gkPrX/UcoUOTznDrD4DCWEeYOKneCz1H5QF5PMqeYWW99JKFpM2iXM0=
-Received: (qmail 2221528 invoked from network); 10 Aug 2021 10:32:28 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Aug 2021 10:32:28 +0200
-X-UD-Smtp-Session: l3s3148p1@OmhJVzDJsqQgARa4RbjTAX75MNjKNQSJ
-Date:   Tue, 10 Aug 2021 10:32:23 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: Re: [RFC PATCH v2 1/1] misc: add sloppy logic analyzer using polling
-Message-ID: <YRI5l+T1o3QXZ9Lo@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-References: <20210519132528.4394-1-wsa+renesas@sang-engineering.com>
- <20210519132528.4394-2-wsa+renesas@sang-engineering.com>
- <YKUlbsWhT45l5Zm0@smile.fi.intel.com>
- <YQRZkFApESOIMRmv@ninjato>
- <YQRk0vpo1V709z/Z@smile.fi.intel.com>
+        id S236537AbhHJJNw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Aug 2021 05:13:52 -0400
+Received: from mail-vs1-f41.google.com ([209.85.217.41]:36566 "EHLO
+        mail-vs1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229827AbhHJJNt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 05:13:49 -0400
+Received: by mail-vs1-f41.google.com with SMTP id y65so1469045vsy.3;
+        Tue, 10 Aug 2021 02:13:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D4zFUoQGWXvJJzszKGbYHtmhD6iQDxYUpdvSAl+bWOM=;
+        b=n/aBVUK99Rmm2MaI+JLChXRJm1A059O4buVZjxXJgxCY3kBlujqs7HeegoWLIiHvGa
+         E0LGs69wzyT8DIzIhaB1LNz3iEtk7lw9xx+LTdAgyEwYFq3hsHGwVVcaY+bPYqCX0mTh
+         499n2NF/ogRk9RdcVM4nCtI/TB/z/+Wv75yXp9aZ2Ni+wyjLxDXf/ZX6WZkgYTRBSpBA
+         c1fNZbD0Y6yyUkhom1Mwmgut/W/O1MseAEeDhzIgWevskuzK8c+L3mO13A2sBMOo5WSe
+         nv37EjGuDZSx4DWxyrHCYTV+cOU5hGF9AOIM/af11D/q+N2HXW04py7v8ewAFouhFV8i
+         H/FQ==
+X-Gm-Message-State: AOAM532zqhJnsUpDgFwIXI4dVsPoNYlluwXAWQfzrfWgWNOv0eJGdXBS
+        pyj593JnrZ+APGUgNe7qF9pvEpBkKpG4PdQG+SQ=
+X-Google-Smtp-Source: ABdhPJzi/lB8toRXF6TLgirnwNVqdViDEm3Wk1WLbMzBb5EExiEX3qWBYRajb5yqiHccxcg+Sc4I+H0YhXdr/mU8G4o=
+X-Received: by 2002:a67:e2c7:: with SMTP id i7mr20048451vsm.3.1628586807159;
+ Tue, 10 Aug 2021 02:13:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1os8AFbjS/jUEc2N"
-Content-Disposition: inline
-In-Reply-To: <YQRk0vpo1V709z/Z@smile.fi.intel.com>
+References: <20210727112328.18809-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210727112328.18809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20210727112328.18809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Aug 2021 11:13:15 +0200
+Message-ID: <CAMuHMdWy4JNZ2=Z+FdMdHukN6rGQMma7cc+Pm06AtsOk8j_eGA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] pinctrl: renesas: Add RZ/G2L pin and gpio
+ controller driver
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Prabhakar,
 
---1os8AFbjS/jUEc2N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 27, 2021 at 1:23 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for pin and gpio controller driver for RZ/G2L SoC.
+>
+> Based on a patch in the BSP by Hien Huynh <hien.huynh.px@renesas.com>.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-Hi Andy,
+Thanks for your patch!
 
-> Nope. Below is the compile-tested one:
+> --- /dev/null
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 
-Well, then let's add this incrementally once it has actually been
-tested.
+> +static void rzg2l_pinctrl_clk_disable(void *data)
+> +{
+> +       struct clk *clk = data;
 
-> > I don't understand the first sentence. And we still need it to clean up?
->=20
-> If you know the name of the folder, you may look up it, no need to keep a
-> variable for that.
+No need for the intermediate variable.
 
-I need the dentry twice, subdirs are also created in there. Of course, I
-could look it up twice, but why the computation? The variable seems
-simpler to me, despite it being static. Or is it a debugfs rule to not
-save dentries?
+> +
+> +       clk_disable_unprepare(clk);
+> +}
+> +
+> +static int rzg2l_pinctrl_probe(struct platform_device *pdev)
+> +{
+> +       struct rzg2l_pinctrl *pctrl;
+> +       int ret;
+> +
+> +       pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
+> +       if (!pctrl)
+> +               return -ENOMEM;
+> +
+> +       pctrl->dev = &pdev->dev;
+> +
+> +       pctrl->data = of_device_get_match_data(&pdev->dev);
+> +       if (!pctrl->data)
+> +               return -EINVAL;
+> +
+> +       pctrl->base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(pctrl->base))
+> +               return PTR_ERR(pctrl->base);
+> +
+> +       pctrl->clk = devm_clk_get(pctrl->dev, NULL);
+> +       if (IS_ERR(pctrl->clk)) {
+> +               ret = PTR_ERR(pctrl->clk);
+> +               dev_err(pctrl->dev, "failed to get GPIO clk : %i\n", ret);
+> +               return ret;
+> +       };
+> +
+> +       spin_lock_init(&pctrl->lock);
+> +
+> +       platform_set_drvdata(pdev, pctrl);
+> +
+> +       ret = clk_prepare_enable(pctrl->clk);
+> +       if (ret) {
+> +               dev_err(pctrl->dev, "failed to enable GPIO clk: %i\n", ret);
+> +               return ret;
+> +       };
+> +
+> +       ret = devm_add_action_or_reset(&pdev->dev, rzg2l_pinctrl_clk_disable, pctrl->clk);
 
-Happy hacking,
+This line is a bit long.
 
-   Wolfram
+> +       if (ret) {
+> +               dev_err(pctrl->dev, "failed to register pinctrl clk disable devm action, %i\n",
 
+Elsewhere, this is called the "GPIO clk".
+This line is a bit long.
 
---1os8AFbjS/jUEc2N
-Content-Type: application/pgp-signature; name="signature.asc"
+> +                       ret);
+> +               return ret;
+> +       }
+> +
+> +       ret = rzg2l_pinctrl_register(pctrl);
+> +       if (ret)
+> +               return ret;
+> +
+> +       dev_info(pctrl->dev, "%s support registered\n", DRV_NAME);
+> +       return 0;
+> +}
 
------BEGIN PGP SIGNATURE-----
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v5.15, with the above fixed, so no need
+to resend.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmESOY8ACgkQFA3kzBSg
-Kba9nA//eTlnTTsWqLfUhMH+z8eYbUMarQHSTCPKF0lu1mZbW0jteLy7nr+GGve/
-28w0aZ6/TfYSw+KKqkoSfCx5P4VfKsvoPmSMQsgUQk2uDFmt3op5zNOpugswv9Em
-n2YwQA00XSS4IcHEsKlWn9HTOWs/YxpcrEdWUTsQOgtgt0pZ1Y+pLvcpLyJgKRlJ
-Ma3KvRdNkOpdMJMisyqdRaPZZZxx4l6IvCip1MHS/EQXdiqlS2x0HzrNhPqV3O4e
-oZPznlwpLLpYGQHEigxPUmzKcpiW/cqTrHMdsg20MsCPYzIJZldh9zxUf6Ba64FJ
-OiEnlIRYTXMO6fLYxOo4g0IEBH3QS9dglfXtf4kZCL9I82FX0P72nLxDOrWkpYsH
-YH6aMIA+GCA0nMvgLe3Vwu4Tzex2XsRx72BmN/lkBj6Bdbf/lTdt2JAvNyamRYIj
-YnOyD8wnzP3aWhfAs1ndCXPBrDL5LwX3cGE8kOT5Z51p1FMW3A9Wv50HrH7HIbey
-F9NktrtOOJv2sVaGmHYEs6RDsElrXr4W994V3RY6QmCsoEYwpAUmCeaW0ILybtCF
-oLkqB46Fl8rwuFol1dFA/e6ssT7EkkhCo1OUW3TGNFdnLx38SQVciaIUqynEkS4h
-BvRUj1bFeoRwfpo4QP+ALQ/kLlTDG0ww5MDIyrHJ2fQyx3pRLVo=
-=Wnc5
------END PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
---1os8AFbjS/jUEc2N--
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
