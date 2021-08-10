@@ -2,80 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D18D63E5B98
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 15:28:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8563C3E5BA4
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 15:30:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239693AbhHJN2c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Aug 2021 09:28:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49664 "EHLO
+        id S230243AbhHJNas (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Aug 2021 09:30:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238862AbhHJN2b (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 09:28:31 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245D7C06179B
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 06:28:09 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id d4so12599521lfk.9
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 06:28:09 -0700 (PDT)
+        with ESMTP id S229663AbhHJNas (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 09:30:48 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358D4C0613D3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 06:30:26 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id h9so29102622ljq.8
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 06:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=txwmknRtly19dwG2TwLijdSUyS9aLwYWp1obTuXBfoc=;
-        b=uZbA+1J935R3usprafc8LRUQw8doPbVfcapR1X2WEhOvM+EX7M63d5ZsO0VAvsVNZS
-         xc3FivfT6ubgZbfMXKz52jSnsZIMXiSe+40kgwcbMhimzux+MtLWI03TsIxYPR8J+FXy
-         Fg5ItgR5ZgUAVtjsevhX75vxMeq6H4bInYp3SkK3AbY468I630NCUa9R16uQJpzFZaVl
-         wSQXu0x1FHzzpXqhzKbQ58q8eGA3P6T88AslMArgdP9Yv7k4KPId9rJKhKVQ0lnvZMgF
-         JJiyC3XFKOXLI7k7TQbwnJZ6QDbjb2mbVHMVLbZcReEvjhfrU1stahisnFI79GDgAQW9
-         +JTA==
+        bh=e3k641rwlK4MjDsfjkE7+BTpqeUM8sPvABevxA/pIVM=;
+        b=i5U4cbLjrYhQspm4zofa6nrbEwE0/197GBiQ6/qBUZCcNpjHttwNIVdfDw2yGu6SKb
+         bUNC0n+XD7MXNIcuUMKiNA54afRKgRX6j2CUSuVx37b05Glig/CrWA4A3K16uozbX6iM
+         VpWWBJgTyJMwuL4oQLzXAo3DJykGzLWwM4DyG8oDqJ/oi40S9ieTYDqd1LhKawuHYX97
+         MrRad2Upe+VZyel12NVI6iypzQ7Ll25dmRvd0phOLHwA4Uv3/yFYnVxaUVHmTBVOCekr
+         l+DVQlzPS6tEyY/XlcONbOPQopwaz5/JL6XD6YWy1cn0xzHjtxcRXZZznLnO+P7SNDuX
+         7nGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=txwmknRtly19dwG2TwLijdSUyS9aLwYWp1obTuXBfoc=;
-        b=XHc4iGh54IkefQi52YFBQ1VQeVhH27OfIG8frEYH/cWEVk/OJEo40dX7qAnAVWR+Je
-         DjtdMZDqZqbc7IxV9NAdqSk+RuFDBOYUjDOJJLT6W0/vzS676X6YUsfoQljAArJcV+f6
-         utH7AoW1lLJSlqhXAbDH7V6lCIp5rBDHJ4DjEGMBZs8xhycclCslhAo9Y+A9Np/Uwip2
-         5by1zy1FMi3y1ALB+qt1DXOsuMFOifnp64UnPD/z7Sgqs0eoKuLWm8yCuVpDV6TiTdRn
-         Me5VL2FA2tlfEPSlftSbgKr9497l1Lg2W7qKeihAuYsSBOBnRoh+cpm19okoHRsEVY3K
-         Dd0g==
-X-Gm-Message-State: AOAM533MlD0gKxRv2Lzevr+vlnFki7yaXbfQ0f+WegbKLc85ZlckrWVd
-        RR/mybZYC+J/ME9nr44SkA4/x1M0zQLa0Hph3RrMlg==
-X-Google-Smtp-Source: ABdhPJwobs4y7d/rU3nBa6u5h3FCXzTiFu5hBR5q/ktt76N9parIbFxpmpXXOJKBBwsROkKpvYnYcohfRvGFRZM7pmY=
-X-Received: by 2002:ac2:5d4a:: with SMTP id w10mr22073687lfd.529.1628602087498;
- Tue, 10 Aug 2021 06:28:07 -0700 (PDT)
+        bh=e3k641rwlK4MjDsfjkE7+BTpqeUM8sPvABevxA/pIVM=;
+        b=iW+1xAk9T13S29EgAXEl+n9Dyliuop44PITdni0uGWzVMuAIiYwce6n5LKF6lOuCX4
+         j0O2eaTPvMFUFMckiHdIctqN+UN//pDaYVd7BE9K0R+hznRZi/MVg418R0E62W07XRkz
+         NdPM8rdoS0G2a4gnT7Cmf/KUL/jQxSPR5+Dy3q/gfYP6qy+Lm2sUyKnpf90D9UnNQWyz
+         qB0YGTDRrhupcAqDoSUFgmLawKp93DvWSkb5YFG3cyFP+9eOcnFeB5U+6m+aFA4u0+IN
+         8Ch52ttRVi/dmFCWluGgbB6zm3RmNWYBhDK4C1Lwp460AsMo2nznUeIv6FVX36GhVG5Z
+         ieQA==
+X-Gm-Message-State: AOAM5305UWImcmzLyW4VIfys0CiFNrhMijGJVcNrOdhNwMZBbsZGE4rP
+        9Xwbdw2M7yCWO3RQS5ubg6x4Y7s+TMgLAcMZGYvvGg==
+X-Google-Smtp-Source: ABdhPJwQMqlYA/iD2LkwYjMyrISm/5VpD00G3ZreRxQPNQedZ6skQPLl6AsFHnOZAHKoQ0C63+sliSuUdCJf7E7plto=
+X-Received: by 2002:a2e:888f:: with SMTP id k15mr19654778lji.326.1628602224614;
+ Tue, 10 Aug 2021 06:30:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210723022543.4095-1-jiaxun.yang@flygoat.com> <20210723022543.4095-7-jiaxun.yang@flygoat.com>
-In-Reply-To: <20210723022543.4095-7-jiaxun.yang@flygoat.com>
+References: <20210723034840.8752-1-rdunlap@infradead.org>
+In-Reply-To: <20210723034840.8752-1-rdunlap@infradead.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Aug 2021 15:27:56 +0200
-Message-ID: <CACRpkdYVcCW2yD_Xva+cog7i5C=YokMw+52i7iq0Nj2vVbWacA@mail.gmail.com>
-Subject: Re: [PATCH v4 6/9] pinctrl: pistachio: Make it as an option
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-phy@lists.infradead.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+Date:   Tue, 10 Aug 2021 15:30:13 +0200
+Message-ID: <CACRpkdaXWhKNdmWSsoYZnZi_umfvSv7mZvg1JgkG=-k0JGoUTw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: aspeed: placate kernel-doc warnings
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Aditya Srivastava <yashsri421@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 4:26 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+On Fri, Jul 23, 2021 at 5:49 AM Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> So it will be avilable for generic MIPS kernel.
+> Eliminate kernel-doc warnings in drivers/pinctrl/aspeed by using
+> proper kernel-doc notation.
 >
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> --
-> v3: Depend on OF as well
+> Fixes these kernel-doc warnings:
+>
+> drivers/pinctrl/aspeed/pinmux-aspeed.c:61: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>     * Query the enabled or disabled state for a mux function's signal on a pin
+> drivers/pinctrl/aspeed/pinctrl-aspeed.c:135: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>     * Search for the signal expression needed to enable the pin's signal for the
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Cc: Aditya Srivastava <yashsri421@gmail.com>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: linux-aspeed@lists.ozlabs.org
+> Cc: openbmc@lists.ozlabs.org
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied.
 
 Yours,
 Linus Walleij
