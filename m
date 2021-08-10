@@ -2,101 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A8743E5A7E
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 14:56:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86E2E3E5B48
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 15:24:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbhHJM4d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Aug 2021 08:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41878 "EHLO
+        id S241298AbhHJNYX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Aug 2021 09:24:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237431AbhHJM4d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 08:56:33 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 299F6C0613D3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 05:56:11 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id n7so3961084ljq.0
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 05:56:11 -0700 (PDT)
+        with ESMTP id S241351AbhHJNYV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 09:24:21 -0400
+Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6EF4C06179C
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 06:23:58 -0700 (PDT)
+Received: by mail-ua1-x930.google.com with SMTP id v3so8558827uau.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Aug 2021 06:23:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Eg3c72WxfY/AkMY5/Ux5BoPto2wsC9nVFGQQrOCK6K4=;
-        b=W2L6I00RxalHhv1J+KdbMdGE9rIp7UQg8NRBrfkh2uT7jJqhAZ5WTVaO+AbOd/px8Z
-         kUnNn0fwDDHr7E/f8q1JTrp+FPksDUKra2uky7kWp3n/HbnYdLH1/bKU9j3tRAQpc3FH
-         wLvWmV1Q6xDmeya1Zmdqa8b/NRL0rd2lzwAjf6s6Clcai4NsmnnrFVS60mxN/ckkWChH
-         /J1swI38Llq16cEBV9JsVx5TtzfSbtWdE8GpFek1EAgmFK5OzfV4TV6Cawvvn0EjtNGB
-         eU5Qj+a+/ipJDswS9yNqou3+vX0FdyV/51uXIqYpFZZmdwLmwecKSoLae7Od++q6pCdX
-         6f+Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=2tvLhkad0w+Mh63WhnFJkmRFgYsLXsJmUqGVjzUAFIo=;
+        b=qJkL8fZ0S06Z0FQYNh/4MmhK7j+A3bS9xjmC8OhX22QJHec66aC0Yf4uxmFTWU4uq4
+         4zaEpRJNfTE5P16qMJLxRcIb0ytBzoINHrciZ16oueveU7FDwweNrhTU3c5UDo/z56b1
+         V6OdxuJ3tySYUYaZ04rAyM/uWtPYMenii8jy05cVXjVhDDgXkFHgaK2GOhpBsc52YFve
+         VL8iidod2m9w/QUkoClpuMrUGWkFzng1pEsZ+h9zY+IQVIYyQzRt6aNjeoljVsfoneAG
+         aU0zlSqRp6BET5jUs8EdKhkDPhg4/tsUe0YNuMP0A6vUsTut9Hk4K2nn2uiUPyEelDJr
+         VDiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Eg3c72WxfY/AkMY5/Ux5BoPto2wsC9nVFGQQrOCK6K4=;
-        b=YCVer0zlzFvbJ9a3SADoldG9Mwa+i9VWO6agSSA9UZvN3zQGajaazRb27N59TtNh22
-         6XiVtf689/iUrpF31N/V6mZfDi7kCPY5jB8HBGly4VEWEy+2c1aCdlsp6Frx+xu3Tk6S
-         /DLx9KL2P7dUCS6D9Qbw7ZoXH0to/IGsTCMZ3HzJQIZjdMyEzl2yZ9pBU+B1pRtqzM+h
-         s0OEaEWL2wLgc15hc0uT0hHoqS82bgJ4+uZ99zF1tb4CX2J0BQ/I8a0740ZBqiRawPEJ
-         2s9emu2jt1FECmlJUgXPVLoc5c79a8RDONQMDbaTqaM9g4COTejOMTyQfy6oEeyz62R+
-         U90w==
-X-Gm-Message-State: AOAM532vmIUCKR/CVpP8n577qnqQP7xAoLDk8dtwe3eGmvckRuYySmNe
-        7g2ve5DTTKZiiZ1VUc/dRrx+oo0/4HXjVoslLvLsfg==
-X-Google-Smtp-Source: ABdhPJyirmUH7PBSPfBVVVbbuOdns3uDP6PM97CUkBd41cgMWWS6PeftvgpmfmQdr32ujlwVreU7BZeBFBIexyDvooI=
-X-Received: by 2002:a2e:a231:: with SMTP id i17mr9057345ljm.467.1628600169499;
- Tue, 10 Aug 2021 05:56:09 -0700 (PDT)
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=2tvLhkad0w+Mh63WhnFJkmRFgYsLXsJmUqGVjzUAFIo=;
+        b=NSHqxzT2ea/xlOw/dULjPLulFm1kZqK9rNgS2hdtq76vB2P6xZG0HANyLYKgmT2DAs
+         mfEasJGpo/xnuASYH0MawCxFv99fhnXcikprd+gbPKasdbfix0HQXaPhnMKyfzKlni4e
+         fVVL5FtcMSnfSEFD3nLq0CAgaEKw+Uf38pHtu1dRQw6Ew77rGWbC3PweZ8pEm5XZyzvN
+         AXRoXCWyJ3agKxd69CBQy/sIUTPusiyduiKLj8EWOdPkoPYHim/UsSRVmVaaJ+LdkN+9
+         TJZQQHL1n7qTwOMkDRuoHJyTgkl3D84I+RYhmxmTEJ6CtQu6PQP+PuWP6esSQPJ3EAvN
+         wG9g==
+X-Gm-Message-State: AOAM531ExwqsGuCjM5f0EzjfYCkHWMH7OeaOfYx8K9Na9cKVOf10meZj
+        bjCReaRVluQP43/m7vsDRX8J7wZ0c8lzud55n44=
+X-Google-Smtp-Source: ABdhPJzvLPSDVsAzGJ6P6qYZROOmnBdkR5scyeQ8xySEfopDOzsn96BkEsNJXYQk9ma1do3JY374g/deOX6n1CT3K3s=
+X-Received: by 2002:ab0:3b59:: with SMTP id o25mr9024839uaw.80.1628601838128;
+ Tue, 10 Aug 2021 06:23:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210722132548.22121-1-andre.przywara@arm.com>
-In-Reply-To: <20210722132548.22121-1-andre.przywara@arm.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Aug 2021 14:55:58 +0200
-Message-ID: <CACRpkdYKk4An56a0rmoXgmcpAmGTLeyhM6qfTK+y1yopHB4NXA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: sunxi: Don't underestimate number of functions
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi@lists.linux.dev
+Sender: immeublesourou@gmail.com
+Received: by 2002:ab0:3903:0:0:0:0:0 with HTTP; Tue, 10 Aug 2021 06:23:57
+ -0700 (PDT)
+From:   John Kumor <owo219901@gmail.com>
+Date:   Wed, 11 Aug 2021 01:23:57 +1200
+X-Google-Sender-Auth: yS3UzgPnn68wNDbf-hnce3gLnn0
+Message-ID: <CAHdg_cT_K-3CiTtG_z=2JyS3OA_ir2VvAFdLZYYHbPxjicSz0w@mail.gmail.com>
+Subject: Urgent
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 22, 2021 at 3:26 PM Andre Przywara <andre.przywara@arm.com> wrote:
-
-> When we are building all the various pinctrl structures for the
-> Allwinner pinctrl devices, we do some estimation about the maximum
-> number of distinct function (names) that we will need.
->
-> So far we take the number of pins as an upper bound, even though we
-> can actually have up to four special functions per pin. This wasn't a
-> problem until now, since we indeed have typically far more pins than
-> functions, and most pins share common functions.
->
-> However the H616 "-r" pin controller has only two pins, but four
-> functions, so we run over the end of the array when we are looking for
-> a matching function name in sunxi_pinctrl_add_function - there is no
-> NULL sentinel left that would terminate the loop:
->
-> [    8.200648] Unable to handle kernel paging request at virtual address fffdff7efbefaff5
-> [    8.209179] Mem abort info:
-> ....
-> [    8.368456] Call trace:
-> [    8.370925]  __pi_strcmp+0x90/0xf0
-> [    8.374559]  sun50i_h616_r_pinctrl_probe+0x1c/0x28
-> [    8.379557]  platform_probe+0x68/0xd8
->
-> Do an actual worst case allocation (4 functions per pin, three common
-> functions and the sentinel) for the initial array allocation. This is
-> now heavily overestimating the number of functions in the common case,
-> but we will reallocate this array later with the actual number of
-> functions, so it's only temporarily.
->
-> Fixes: 561c1cf17c46 ("pinctrl: sunxi: Add support for the Allwinner H616-R pin controller")
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-
-Patch applied for fixes!
-Thanks for finding this.
-
-Yours,
-Linus Walleij
+My dear,
+Greetings! I trust that all is well with you and your family. Did you
+receive my previous email?
+Regards
+John Kumor.
