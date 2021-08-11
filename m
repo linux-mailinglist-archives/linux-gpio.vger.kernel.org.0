@@ -2,218 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20F7A3E8ADA
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 09:11:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2949E3E8BB2
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 10:23:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235250AbhHKHMS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Aug 2021 03:12:18 -0400
-Received: from mga07.intel.com ([134.134.136.100]:39451 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235096AbhHKHMR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Aug 2021 03:12:17 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="278817465"
-X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
-   d="scan'208";a="278817465"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 00:11:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
-   d="scan'208";a="675925842"
-Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 11 Aug 2021 00:11:52 -0700
-Received: from kbuild by d053b881505b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mDiP1-000LNN-Sv; Wed, 11 Aug 2021 07:11:51 +0000
-Date:   Wed, 11 Aug 2021 15:11:07 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- 1a35b73067bab7f3f0b6162ccf7f1e87582d5209
-Message-ID: <6113780b.569IrDDJzbZgUApm%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S236012AbhHKIXa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Aug 2021 04:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229679AbhHKIXa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 04:23:30 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE9CC061765
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 01:23:06 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id w20so3980219lfu.7
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 01:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VLTtyMmDGDzeJmduXV6qMoL0oSJQa7XeVXUnu5F9xhw=;
+        b=HDGk1fId7KbzdQVPCRZyRCmG6dLn3wcHt9IncviPIvRV693NxWhT/l47Cv417wx4r3
+         MbrOh9r1OxZsgDqZVWBmzY6q49QXuXg7JT0ZpSMaf9MZzZCDsYFoutOLEIIs+nJ/Mb/C
+         FLus4CHORu+cOoZmBlwSTxaxFifcBTexkVeeelKS7H4ti+v1hqPTlo6+piCWFLMi3Kv8
+         cYKDXTD/FrXr/+SMEQM4WYPUCZTrQeWFKWaC3GapTcfvrkb5uWpL/+lVEYXKqQG0ApMw
+         j2CMdbexfaeCprtLrflmZue1znqqsIVpXgoPzZDfBk2ijQfWutDCy6uv80VyByNlGvk2
+         rZzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VLTtyMmDGDzeJmduXV6qMoL0oSJQa7XeVXUnu5F9xhw=;
+        b=aEchAScGTyzZbrAK+aIUGdGo9sx0/NdCrWZHSGi2peP0Tjqhu8F93LILM6kW9M1Wc2
+         d6bn+YqRVmaZkOEz3H5samO58cCbWbHD2Z1vE5v40+kp2mGSXZ+YNm6Y48U5n6MIQxzC
+         /I8udjb3wpqmqKXTl6+AF3fE7hA3KQ8+f1KqSFQ+22KGDfYPAVBergV2cw8RSwXErn5P
+         je7nbfPFejxBUfpiCvJuObaLl1FXmMt7L+rKW/NW8gITBTxergp4v5L9rg/IFiGA3Awi
+         e42UzRdYy8YSZ8y94QwC/7+Uo+POxuCiksKsHHRalL0eqJGqfwAs0nIYPCeZrNRlWslB
+         k74g==
+X-Gm-Message-State: AOAM530H2Xz4EP5P89PAJF3sIl23hdihbpgz9+XtHyhGQ2mVnV2A1Wl4
+        PKyUopiu47HbgXIOTl6CWvpxpIkhFb8TAnurVDeY3w==
+X-Google-Smtp-Source: ABdhPJwxR7J7CWgtxQ9zR8UiucjVpB8YXeg3uQTR6CcylRP3Ow10t/9bkiil8nl37QrHQ+6BQYXbvMb7F5VU3KhcwzA=
+X-Received: by 2002:a19:c7cd:: with SMTP id x196mr24351162lff.465.1628670184894;
+ Wed, 11 Aug 2021 01:23:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <1627108604-91304-1-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To: <1627108604-91304-1-git-send-email-zhouyanjie@wanyeetech.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Aug 2021 10:22:54 +0200
+Message-ID: <CACRpkdaEL46NzPOk=fU4jAZpf-0aV1gQyPjjLzrNYJUY3Xm73w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Improve Ingenic pinctrl support.
+To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, sihui.liu@ingenic.com,
+        jun.jiang@ingenic.com, sernia.zhou@foxmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 1a35b73067bab7f3f0b6162ccf7f1e87582d5209  Merge branch 'devel' into for-next
+On Sat, Jul 24, 2021 at 8:37 AM =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)
+<zhouyanjie@wanyeetech.com> wrote:
 
-elapsed time: 724m
+> 1.Improve the code to avoid misunderstandings.
+> 2.Add missing SSI pins for JZ4755 and JZ4760.
+> 3.Add support for the X2100 SoC.
+>
+> =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) (4):
+>   pinctrl: Ingenic: Improve the code.
+>   pinctrl: Ingenic: Add SSI pins support for JZ4755 and JZ4760.
+>   dt-bindings: pinctrl: Add bindings for Ingenic X2100.
+>   pinctrl: Ingenic: Add pinctrl driver for X2100.
 
-configs tested: 160
-configs skipped: 3
+Patches applied!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210809
-i386                 randconfig-c001-20210810
-arm                       omap2plus_defconfig
-arm                         at91_dt_defconfig
-arm                           omap1_defconfig
-arm                         s3c2410_defconfig
-arm                           viper_defconfig
-xtensa                         virt_defconfig
-sh                           se7722_defconfig
-m68k                        m5307c3_defconfig
-arc                         haps_hs_defconfig
-arc                     nsimosci_hs_defconfig
-m68k                            q40_defconfig
-arm                            mmp2_defconfig
-csky                             alldefconfig
-mips                       bmips_be_defconfig
-powerpc                 canyonlands_defconfig
-powerpc64                           defconfig
-arm                        realview_defconfig
-arm                        mvebu_v7_defconfig
-arc                              alldefconfig
-mips                            gpr_defconfig
-s390                          debug_defconfig
-powerpc                 mpc834x_itx_defconfig
-nds32                               defconfig
-mips                           jazz_defconfig
-mips                           rs90_defconfig
-powerpc                           allnoconfig
-nds32                            alldefconfig
-arm                        clps711x_defconfig
-sh                          sdk7780_defconfig
-powerpc                      katmai_defconfig
-riscv             nommu_k210_sdcard_defconfig
-sh                           se7724_defconfig
-arm64                            alldefconfig
-powerpc                        cell_defconfig
-riscv                          rv32_defconfig
-xtensa                  nommu_kc705_defconfig
-powerpc                      tqm8xx_defconfig
-arm                         lpc18xx_defconfig
-powerpc                    klondike_defconfig
-arc                            hsdk_defconfig
-m68k                         amcore_defconfig
-m68k                          hp300_defconfig
-arm                       imx_v4_v5_defconfig
-mips                      bmips_stb_defconfig
-arm                        cerfcube_defconfig
-mips                      pistachio_defconfig
-powerpc                 mpc836x_rdk_defconfig
-mips                  cavium_octeon_defconfig
-riscv                    nommu_k210_defconfig
-nios2                         3c120_defconfig
-s390                             alldefconfig
-powerpc                 mpc8315_rdb_defconfig
-nds32                             allnoconfig
-powerpc                     mpc83xx_defconfig
-mips                      loongson3_defconfig
-microblaze                      mmu_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a004-20210810
-x86_64               randconfig-a006-20210810
-x86_64               randconfig-a003-20210810
-x86_64               randconfig-a005-20210810
-x86_64               randconfig-a002-20210810
-x86_64               randconfig-a001-20210810
-i386                 randconfig-a004-20210810
-i386                 randconfig-a002-20210810
-i386                 randconfig-a001-20210810
-i386                 randconfig-a003-20210810
-i386                 randconfig-a006-20210810
-i386                 randconfig-a005-20210810
-i386                 randconfig-a004-20210809
-i386                 randconfig-a005-20210809
-i386                 randconfig-a006-20210809
-i386                 randconfig-a002-20210809
-i386                 randconfig-a001-20210809
-i386                 randconfig-a003-20210809
-i386                 randconfig-a004-20210811
-i386                 randconfig-a001-20210811
-i386                 randconfig-a002-20210811
-i386                 randconfig-a003-20210811
-i386                 randconfig-a006-20210811
-i386                 randconfig-a005-20210811
-x86_64               randconfig-a013-20210811
-x86_64               randconfig-a011-20210811
-x86_64               randconfig-a012-20210811
-x86_64               randconfig-a016-20210811
-x86_64               randconfig-a014-20210811
-x86_64               randconfig-a015-20210811
-x86_64               randconfig-a016-20210808
-x86_64               randconfig-a012-20210808
-x86_64               randconfig-a013-20210808
-x86_64               randconfig-a011-20210808
-x86_64               randconfig-a014-20210808
-x86_64               randconfig-a015-20210808
-i386                 randconfig-a012-20210809
-i386                 randconfig-a015-20210809
-i386                 randconfig-a011-20210809
-i386                 randconfig-a013-20210809
-i386                 randconfig-a014-20210809
-i386                 randconfig-a016-20210809
-i386                 randconfig-a011-20210810
-i386                 randconfig-a015-20210810
-i386                 randconfig-a013-20210810
-i386                 randconfig-a014-20210810
-i386                 randconfig-a016-20210810
-i386                 randconfig-a012-20210810
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-c001-20210810
-x86_64               randconfig-a013-20210810
-x86_64               randconfig-a011-20210810
-x86_64               randconfig-a012-20210810
-x86_64               randconfig-a016-20210810
-x86_64               randconfig-a014-20210810
-x86_64               randconfig-a015-20210810
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Yours,
+Linus Walleij
