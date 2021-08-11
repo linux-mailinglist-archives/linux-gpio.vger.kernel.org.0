@@ -2,81 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 656AE3E8466
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Aug 2021 22:33:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C0BA3E8731
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 02:19:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233153AbhHJUd3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Aug 2021 16:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233083AbhHJUd2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Aug 2021 16:33:28 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1821AC0613C1;
-        Tue, 10 Aug 2021 13:33:06 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1628627582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VmNO/6PZX/ukpmKUxgFb784BLjZWMf0I28FYYc/qH+Q=;
-        b=geT0QKa+FGH9C4lt7qI+awsmOAPGEPnuKNhteiIPNmgcQaziJdqJBjQY00zPcEFuZmuBmB
-        oOh5oInajQrBVbX67j2q2iD9BWXDlbwu+g8lE5rVLGMCIErd9No4tCqHdEseYSHugHI1zg
-        zHWyd3cFWnmyd3BVs5lJX5LyVJozvZFjkzQaV/wHC6r+3d7TYpJlg2oG+v1mmVFYWDsD/m
-        yJWjYV/irDIoGlQPhZaJOQK49VMOnb5dU12SyIIcmXk83MxnTdGzx+YuXNArtOFDUHB7qb
-        PYtamAOAZKRt461Vh7cGXI2uzw3URsGPaKwXtzw2i4OBmySXjMRNqhkygKAVAg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1628627582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VmNO/6PZX/ukpmKUxgFb784BLjZWMf0I28FYYc/qH+Q=;
-        b=9RUz3+Q/kDOp5LEbghaANWydLhI9VhI74udmE/onDz0uMdyQg6tGx5YzKhMZhoGJCeflAI
-        3S/vPf9bzVldkWCw==
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linus Walleij <linusw@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [SPLAT 3/3] gpio: dwapb: Sleeping spinlocks down IRQ mapping
-In-Reply-To: <20210810134127.1394269-4-valentin.schneider@arm.com>
-References: <20210810134127.1394269-1-valentin.schneider@arm.com>
- <20210810134127.1394269-4-valentin.schneider@arm.com>
-Date:   Tue, 10 Aug 2021 22:33:01 +0200
-Message-ID: <87v94doxaa.ffs@tglx>
-MIME-Version: 1.0
+        id S235881AbhHKAUO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Aug 2021 20:20:14 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:53659 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235692AbhHKAUN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Aug 2021 20:20:13 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4019058041A;
+        Tue, 10 Aug 2021 20:19:50 -0400 (EDT)
+Received: from imap43 ([10.202.2.93])
+  by compute2.internal (MEProxy); Tue, 10 Aug 2021 20:19:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=TJnR3Y1jRHyuvNKz98aoSVU7LBqrfX9
+        Q1XFcqdbpwL0=; b=otc4PnNARgoLm1XBiDUZWQ8vgpp/dj0SeUE3PcX17toYGay
+        SLVTUGVuw9SgBR623QsWDhaHx594itB5W6LGMjYcb3mRnBdj/lj4PosvJfI/lYwd
+        cmAE+ZP7K9QckxMGAwQ/S/zSXaKpy0nCEooyyK0jIsErAs0fwu1WKxqvQkaR9fvX
+        g98qBCk3+1W/H9N+9Vm0cTf7chZ4eqf7pXRulyxZ3907MoYBBPAhdb2tq0+3K5m+
+        WWcNrQgnJf+wt+QcCAn9IEeqbpYGKvMSK6/A93kBe9ICmS5yWoO4rBEP+V07SJkC
+        p0Osqu9r2ZTc4dUcME63iniXInzHVX2kM57MvCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=TJnR3Y
+        1jRHyuvNKz98aoSVU7LBqrfX9Q1XFcqdbpwL0=; b=ZSUuRYKCUqHRZBsFFklFyz
+        IoHgNcnsC9GQLtyhUERApUoK46BH/NzfAV4S6U525WMZqiEOXYetQEXYnPnIAp85
+        ZyxufUwGuO8RRnqOJ7ZY7Wk9EqYWIrJXx+xo/Bz9iR8PyRSue9rVt328dF6TNNPw
+        0svbooiiaPdEDDVJXD37f2g9bRtNOGSd9/7K/BYEL16o/vxkZiQFNRQmqvM1E/mv
+        xyg7jEup2VIfpm2odPeJK+/O2vFaYfknt/JRevmlQLqDz9K1r8yoiFNSCnMPjVjE
+        yAbxejAhkjFF72bxuJBXVwZyXEYZv2Hy/BH4bW7iUjOk0lLvEeSG/xfMvobNpWUA
+        ==
+X-ME-Sender: <xms:oxcTYQMs9hRztGtED_kTlD9Hcik9VxQ8he7kjxErnKtRbIsIAAgxHA>
+    <xme:oxcTYW-LFY09y7PMvujnBEg2srKUu_Pk66ylPyC-B5P6FIOeXFp9R2AlI-wgbVN-R
+    YF4RRCeT-aFYmlPEQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkedtgdeftdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
+    htthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedvhefh
+    veeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:oxcTYXRwJjHMLOmgVtRkmOHdavu-M1RbiUfLeo8UZQr3hZfrUd_8og>
+    <xmx:oxcTYYuFOf7V3nLo1y0AdEiAKOREhvWOTQxNrL4tYYuZxSY34_nDSw>
+    <xmx:oxcTYYeC4M5cveV0Zodk6hgp-e9hgtHBg80uctI2a5BcWp44JMLw8g>
+    <xmx:phcTYfxd4nMtKVK_Jn7ebZTvlJPezURA6FbGPOMUA_o_pbQoLrB3Yw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 91878AC0DD0; Tue, 10 Aug 2021 20:19:47 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-554-g53a5f93b7d-fm-20210809.002-g53a5f93b
+Mime-Version: 1.0
+Message-Id: <96e52916-f113-4a91-b83f-e0de144611ca@www.fastmail.com>
+In-Reply-To: <CACRpkdZm9C23aHTWs8DNX1RChSB4A-X0PoyW5wnH2XyQQeviag@mail.gmail.com>
+References: <20210723075858.376378-1-andrew@aj.id.au>
+ <20210723075858.376378-5-andrew@aj.id.au>
+ <CACRpkdZm9C23aHTWs8DNX1RChSB4A-X0PoyW5wnH2XyQQeviag@mail.gmail.com>
+Date:   Wed, 11 Aug 2021 09:49:05 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     "Linux LED Subsystem" <linux-leds@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Joel Stanley" <joel@jms.id.au>, "Pavel Machek" <pavel@ucw.cz>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 4/6] leds: pca955x: Use pinctrl to map GPIOs to pins
 Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 10 2021 at 14:41, Valentin Schneider wrote:
-> [   11.549824] rt_spin_lock (kernel/locking/rtmutex.c:1641 (discriminator 4) kernel/locking/spinlock_rt.c:30 (discriminator 4) kernel/locking/spinlock_rt.c:36 (discriminator 4) kernel/locking/spinlock_rt.c:44 (discriminator 4)) 
-> [   11.549827] dwapb_irq_ack (drivers/gpio/gpio-dwapb.c:151 drivers/gpio/gpio-dwapb.c:233) gpio_dwapb
-> [   11.549831] __irq_do_set_handler (kernel/irq/chip.c:414 kernel/irq/chip.c:406 kernel/irq/chip.c:1009) 
-> [   11.549833] __irq_set_handler (kernel/irq/internals.h:178 kernel/irq/chip.c:1053) 
 
-This is gpio_chip->bgpio_lock which is a regular spinlock. AFAICT this
-lock should merely serializing access to MMIO registers, so it should
-not be a problem to make this lock raw.
 
-Except for the obligatory exception:
+On Tue, 10 Aug 2021, at 23:24, Linus Walleij wrote:
+> On Fri, Jul 23, 2021 at 9:59 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> 
+> > The leds-pca955x driver currently assumes that the GPIO numberspace and
+> > the pin numberspace are the same. This quickly falls apart with a
+> > devicetree binding such as the following:
+> (...)
+> 
+> Honestly I do not understand this patch. It seems to implement a pin
+> controller and using it in nonstandard ways.
 
- grgpio_irq_handler() holds that lock from the demultiplexing
- handler and invokes all handlers for the individual GPIOs which have
- interrupts enabled without ever consulting a pending register.
+Yeah, it's a bit abusive, hence RFC :)
 
- That drivers usage of that lock is interesting in general, see
- grgpio_map_irq() for illustration. Quality stuff for mission critical
- systems...
+> 
+> If something implements the pin controller driver API it should be
+> used as such IMO, externally. This seems to be using it do relay
+> calls to itself which seems complicated, just invent something
+> locally in the driver in that case? No need to use pin control?
 
- But nevertheless it should just work with a raw lock on RT AFACIT.
+Right. After discussions with Andy I'm going to rework the approach to 
+GPIOs which will remove a lot of complexity.
 
-Thanks,
+The thought was to try to maintain the intent of the devicetree binding 
+and use existing APIs, but all-in-all it's ended up twisting things up 
+in knots a fair bit. We discard a lot of it by making the gpiochip 
+always cover all pins and track use directly in the driver.
 
-        tglx
+> 
+> Can you explain why this LED driver needs to implement a pin
+> controller?
+
+The short answer is it doesn't as it has none of the associated 
+hardware.
+
+I'll cook up something simpler with the aim to avoid non-standard (or 
+any) pinctrl.
+
+Andrew
