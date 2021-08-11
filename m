@@ -2,95 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ABE43E8CCD
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 11:05:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29CC3E8CEB
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 11:11:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236498AbhHKJGQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Aug 2021 05:06:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37072 "EHLO
+        id S236539AbhHKJLx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Aug 2021 05:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236485AbhHKJGO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 05:06:14 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B0A7C0613D3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 02:05:51 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id y7so3423039ljp.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 02:05:50 -0700 (PDT)
+        with ESMTP id S236312AbhHKJLx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 05:11:53 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4863C0613D3
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 02:11:29 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id m9so3416190ljp.7
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 02:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WHR5vMYM5Xq0aEUZrFZkJXPDd1LunIEi4v9qS0h1HO0=;
-        b=U9Jax0Pz4olLYQJIFk2TzLLCgD1/AgsJjjc1jPyfKN+iHIfSf+sOvIgQ2mOcBufJOe
-         dbr669Dfx7xE+7MQXb/jTVZ9PEgd6/3eyXVPGZOoS32v5CEmRvBSJBGOfOGRPUkMz0hr
-         Ytp9oJLePRyBugqYenwQeXFNI4dEVGqFCsCV9UzVJQcEW9lrhEZrg4sUfRmNk7ACOHck
-         a4a2fqVpcZG274sxyUTFt0N2g+UU5o//7Meh9BOOjDCmzm2tbbJtOrxGrx25r3/4WXhB
-         lNP5/JqECXVMx468VZLokXnF9EuF27I4yPLn2YSKV9ndXpW7fCzOgPzKek/fUy820QsH
-         bx0g==
+        bh=45L965AHZgo82l4aN2SrSPr1cis24KkD7elj4CXl2IE=;
+        b=tHkB54ySsHx551ghZG3oiWj9E5OW/jA0gsGikYmUj5abrUVPS1pVfN3YxmEs2Txlur
+         ZUKxCfCNrdIg4aTp9DKXjGgZMeKIi7GQEmtRY7jd6QCzL89NhZceOeCtuySmIX8VXHB0
+         +fwB+P1mzXXtfPraNDkgH0mZOQmFtC97CavMsU6Y7KYupLPgkK2B5BYh77cPr/720/ks
+         CK6XjfVWlCWsRwnBexZGmArWthojlDpRrGh4UTWPSanKqLH2ldait5j3KFIvWCI5ji6d
+         67JYZJ2Xm+uVc0Cv6VHJn5x7tGKGvldtq2Kcfk0d1vuVQbKOsUwkjr5fuAm0fDlrX5yC
+         TbXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WHR5vMYM5Xq0aEUZrFZkJXPDd1LunIEi4v9qS0h1HO0=;
-        b=e8Xi0aqGXC04/XttHaktduzqV0T+B7Dz5Hv77RVsgiwhycdTeby0Q+KObWl4eOS8Kq
-         sSF5Jk5PzAN24KTNRoM7ls5846zn7Z4dkqlcd3Miywq927ll9S8p50jAowB2UrzlYCqM
-         sRdwWTSCAp2w3pmLhByqRR+FhlsOZ54SueSfiiiYhQgBVEOUjFwAfbj8wAQLTH02Wb7Z
-         ZIIPdsPB/yUnHwLmcNE+zNkpd8TSdWgF1kaKNtzxBPhYNe795sJkjGiThUPHy0/fejwd
-         XejzJgW0ff0XIEKO9GoO5CqzUcNleImTofGKVuG1Wbb0o0hIi3pTcLxeiZZ/BGeQyMZ1
-         v/jg==
-X-Gm-Message-State: AOAM531dOmyhUSyUCV2BMAB+rEusKxNYrpi7uTmxPgvUh1J3qQFasrby
-        aTcDJQ4fZFUg7m1PZrtJxIwUmwb0X/A8BuCVRf/XLQ==
-X-Google-Smtp-Source: ABdhPJzJiIAevboqUG5VU4DSPztTjR+dTM5JpLH29JynmMjAv5LJj9eIi3aCBtOUd4vqeU+9At92D/p9hhh83zGz9LA=
-X-Received: by 2002:a2e:b819:: with SMTP id u25mr22350417ljo.438.1628672749431;
- Wed, 11 Aug 2021 02:05:49 -0700 (PDT)
+        bh=45L965AHZgo82l4aN2SrSPr1cis24KkD7elj4CXl2IE=;
+        b=CeNSUpa22CpPfCkzDsaEedBjD7FtFWO5rs67VZCkCMBv7tvkkWao7pFPR5vGPp1KgP
+         Ds/7dkZKuHq0nJ0XD2lFF/3W5Ej83r3idWHJpOWQCP5SL3sSNKqRy2hWL9N7r55uNhsU
+         vL7skk+B6B4pUWFgyOT/TqZfO/SFeUgndIY2XK4M85LgCvyjl1zTfR4nH8dljb83Q54g
+         k0FwVgBxzbhj7cMXeG9zMpiMR0Bj8XXvlEF5OGPD4HlZF+XCdOfMZt7emBnkSuaGXhE9
+         O0LjR6+IA8lfP7WfiCB2kxNZYcu6iiiqQIAd9zXF8egP+Zo4jB+VMB8XyOkx1S6ntP0a
+         HXRg==
+X-Gm-Message-State: AOAM5327YaCOuPW37/N11RJSW8bVM4JbAvyTmikTiqR2sv42oH9ZH0rO
+        hZ3PpERhV7pa3sHK1YzJRuuivZU7OL2K6pXXdMULuQ==
+X-Google-Smtp-Source: ABdhPJzRqUz/cks6mC/kThItyPh6HXSuFGyiXatmiGVouPLRVCOkyePXj7L3M7v54DYVWz6HfqDUb6kTsZt1fLEjXvo=
+X-Received: by 2002:a2e:9e46:: with SMTP id g6mr2650552ljk.326.1628673088252;
+ Wed, 11 Aug 2021 02:11:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210726111941.1447057-1-wenst@chromium.org>
-In-Reply-To: <20210726111941.1447057-1-wenst@chromium.org>
+References: <20210625235532.19575-1-dipenp@nvidia.com> <20210625235532.19575-10-dipenp@nvidia.com>
+ <CACRpkdaqKJLUdf3NiFHaTgu6buyhMb_D1yKyHF4M=eTQ94pe-g@mail.gmail.com>
+ <b87fa5d8-bef9-9046-9747-d4428ddf58ea@nvidia.com> <20210731061617.GA12414@sol>
+In-Reply-To: <20210731061617.GA12414@sol>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Aug 2021 11:05:38 +0200
-Message-ID: <CACRpkdYgTeqWz=S+HfLAhd4M3HYESkhvOEBbS6_185PYUzzxWQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: mt8195: Use real world values for
- drive-strength arguments
-To:     Chen-Yu Tsai <wenst@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+Date:   Wed, 11 Aug 2021 11:11:17 +0200
+Message-ID: <CACRpkdab=VhSgWOpBQ2rB4AiQF4zXJ_S20A826ZxufJAvN9cWg@mail.gmail.com>
+Subject: Re: [RFC 09/11] tools: gpio: Add new hardware clock type
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Dipen Patel <dipenp@nvidia.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 26, 2021 at 1:19 PM Chen-Yu Tsai <wenst@chromium.org> wrote:
+On Sat, Jul 31, 2021 at 8:16 AM Kent Gibson <warthog618@gmail.com> wrote:
+> On Thu, Jul 29, 2021 at 08:17:22PM -0700, Dipen Patel wrote:
+> >
+> > On 6/27/21 4:36 AM, Linus Walleij wrote:
+> > > On Sat, Jun 26, 2021 at 1:48 AM Dipen Patel <dipenp@nvidia.com> wrote:
+> > >
+> > >> gpiolib-cdev is extended to support hardware clock type, this
+> > >> patch reflects that fact.
+> > >>
+> > >> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+> > > (...)
+> > >>                 case 'w':
+> > >>                         config.flags |= GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME;
+> > >>                         break;
+> > >> +               case 't':
+> > >> +                       config.flags |= GPIO_V2_LINE_FLAG_EVENT_CLOCK_HARDWARE;
+> > >> +                       break;
+> > > After the checking of the command line options we need a small sanity
+> > > check so we don't try to enable both realtime and hardware clock
+> > > at the same time, we will only be able to request one of them.
+> >
+> > This will any way fail at gpiolib-cdev layer. Do we want to add it here
+> >
+> > as well?
+> >
+>
+> I can't speak for Linus, but I'm fine with it as is as it allows the tool
+> to be used to exercise the sanity check in the kernel.
 
-> The original binding submission for MT8195 pinctrl described the
-> possible drive strength values in micro-amps in its description, but
-> then proceeded to list register values in its device tree binding
-> constraints.
->
-> However, the macros used with the Mediatek pinctrl bindings directly
-> specify the drive strength in micro-amps, instead of hardware register
-> values. The current driver implementation in Linux does convert the
-> value from micro-amps to hardware register values. This implementation
-> is also used with MT7622 and MT8183, which use real world values in
-> their device trees.
->
-> Given the above, it was likely an oversight to use the raw register
-> values in the binding. Correct the values in the binding. Also drop
-> the description since the binding combined with its parent,
-> pinctrl/pincfg.yaml, the binding is now self-describing.
->
-> Fixes: 7f7663899d94 ("dt-bindings: pinctrl: mt8195: add pinctrl file and binding document")
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-
-Patch applied.
+Fair enough, that sounds useful. Go ahead with this as-is.
 
 Yours,
 Linus Walleij
