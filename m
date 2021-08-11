@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D0703E8FF8
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 14:00:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35E123E8FFC
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 14:01:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237453AbhHKMA1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Aug 2021 08:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49320 "EHLO
+        id S236679AbhHKMBj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Aug 2021 08:01:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236497AbhHKMA1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 08:00:27 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1E1C061765
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:00:03 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id c24so5090168lfi.11
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:00:03 -0700 (PDT)
+        with ESMTP id S232042AbhHKMBi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 08:01:38 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E6FC0613D5
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:01:14 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id n17so5070131lft.13
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:01:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QntYPwFND9ivHl8sCJvuIY4mpIehwKkRWinAMkSwKQI=;
-        b=Q0Rl26bYxsSXpjb/CTuzjeMm5nCjftG0kx2CothuzSLlucNNJW0/NiYUD+62g5T/7F
-         Z6Kfdw4iijdQB++sg5aqqT5FQ0Tb3T5im+W0cIQIlxEl/a066C0h+hS3qpvE4YxDcHjf
-         6jBnQ1Rd6eFzB3xnkAlhaTdmU88Vw6bFzINRxoDxd0bGZTCqRQIG7K+by4B9VecmTBmd
-         md+lPrseDhnPsickBg5Ex4+ZC+BL370H+N8yZipMuK1n/5klrHg5Zp8AdANs3POX0LYd
-         KR8d5D3i3fl6Lev3XJrkthKG2Y/zZvfBJWQH7X8WGaIvMNexPiteMDzi85vfI244aZFe
-         uaFg==
+        bh=l3GJTHSzcRfHRR7rYGofO7K/3tvMaQU+g+vXNUrYfNc=;
+        b=s8jSb/4Uxm7mLtCWQ2a4ZTfZNKh0PtCo+djrABMmW9bWNgE7UtV3CM2Nn+QNxReuga
+         UaW/eQhPCJP6y6RUK1U2BdjaY3497uDkyKPiZXuyDtEY9oitBvzPhnvauHAbdfWA0Mwv
+         PBW0sy6nkTx5NyMZu4n1vnT1YjISbuHLBQSfrSyiqFTmQCPqTwpEUuwldJvOObR8QPtg
+         gj0Nngb6I2Si6VNexA/DIbO8AD1h6bpUl8qlVCay2qX3If2E1Jph3ZeWi+vLsF7aGVQy
+         qm/KBlXngnTnojVwCGJc3n1phgHBkCKkXgBf9vjJGC9c+yUxu6R7h9RAaFSBmRbW5Okm
+         iZdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QntYPwFND9ivHl8sCJvuIY4mpIehwKkRWinAMkSwKQI=;
-        b=a9gsfx3QKrvgPMN10RgmczFKhRty2IoBMkWXgrTXX5w06T9v36tmoIVp6loPRvXeRM
-         xwV9Umrp7QCYIbc2Jo+9tvtJiyKPMxz8NqIau09sp47+saIUA6H/KwSlKkEGhm0WNezy
-         g/Dm4iwrR0MK7T6Bcru/dICTE6lj6c8bQOq/GTB1CqYEdX68CNakUbTvof9znD3ifYzr
-         n0mHn3h8wMxxFJOptwO0TJfZD1LWPIPk6FSZcAvXx3AcBtW25iDxJETgtH1Lj5VewT0/
-         xkDKMNntXquDNeTSwkBy6dtx9fmcQAS336wR9cdGceVl7stFJjF/lVaGdsKI3lg5yKoU
-         D+HQ==
-X-Gm-Message-State: AOAM53211VNRG50X4j2JRmG7W20ghr0HKOFLnXmkt8Hx4Ulsns4RkSr0
-        ezCV6bdfOqD/KFyYmLg83tlRLsBBmChD4PNemqx7vg==
-X-Google-Smtp-Source: ABdhPJzqoMybmK8uaattKPYwTnFX/Xb8AOXz9OVi7tq94+ZUBT0mQ9v5TUujLzeL/jhAn7u4PSiH8KInRYVs+H4KkXk=
-X-Received: by 2002:ac2:5d4a:: with SMTP id w10mr25656028lfd.529.1628683201902;
- Wed, 11 Aug 2021 05:00:01 -0700 (PDT)
+        bh=l3GJTHSzcRfHRR7rYGofO7K/3tvMaQU+g+vXNUrYfNc=;
+        b=aQdA+vJ1NeWUcUHtq2ytqWOHTYxWy5jKCHwYG8fu85Sn26U3T9mWQN4aa+/jlu/ex3
+         KdyQet4FfbdJUbvetrgd31l/WhVn1z9BHR4YY3WTHtdRxFgQdVRZG5SWy5sFkROcjGcb
+         fD0kB7vKT91iSNtW7+VvQcflLak0B/qheKi4bIX+wFHdz/zbGwuqcIS5yLSYbNKPu1uP
+         VCcYaO7FWkOFDY16KkSoMNC1BWytEPWeK2ryyCVyC/0rnHtN6d56C/5xkuOxJRMJMR2r
+         zJ0+HY48ADmAe9YF/jT4l86gjBYvc6m13BAf7EdmdhvURzzSvunxfxs8vYXcPAyAtiLD
+         5Udw==
+X-Gm-Message-State: AOAM532DDci2tEovxR0A4MgPRYHt1QKftuF78f1DGS8FPFh0Oq0Gj3V5
+        f3nU6RBH9tb17Tgamb6eXcXDlY4EuZ6x7zxZK6FZ3Q==
+X-Google-Smtp-Source: ABdhPJxASVpzZF63UvkPFlBxtwrWbbdQ5itq42p8VSocVX8aKD/TLTr8NlFYMefpF+MYtCEpIEz1YBiNJfYM7nhiEsU=
+X-Received: by 2002:a05:6512:32a3:: with SMTP id q3mr13681368lfe.157.1628683272677;
+ Wed, 11 Aug 2021 05:01:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <1627910464-19363-1-git-send-email-skakit@codeaurora.org> <1627910464-19363-4-git-send-email-skakit@codeaurora.org>
-In-Reply-To: <1627910464-19363-4-git-send-email-skakit@codeaurora.org>
+References: <1627910464-19363-1-git-send-email-skakit@codeaurora.org> <182fc9a13b78d114bd209f9658274f0c@codeaurora.org>
+In-Reply-To: <182fc9a13b78d114bd209f9658274f0c@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Aug 2021 13:59:50 +0200
-Message-ID: <CACRpkda6f0QTuW2p13OyPDer4B2NgAMWC5FMN3XrGx5NfL=zUQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH V7 3/3] dt-bindings: pinctrl: qcom-pmic-gpio:
- Remove the interrupts property
+Date:   Wed, 11 Aug 2021 14:01:01 +0200
+Message-ID: <CACRpkdYQ-r2Xw0BHt0Mu78FWemXWU0jjKixTSPpspH9wkEmtCA@mail.gmail.com>
+Subject: Re: [RESEND PATCH V7 0/3] Convert qcom pmic gpio bindings to YAML
 To:     satya priya <skakit@codeaurora.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -67,15 +66,11 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 2, 2021 at 3:22 PM satya priya <skakit@codeaurora.org> wrote:
+On Wed, Aug 11, 2021 at 8:17 AM <skakit@codeaurora.org> wrote:
 
-> Remove the interrupts property as we no longer specify it.
->
-> Signed-off-by: satya priya <skakit@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Can you pls merge these patches? I have rebased them on linux-next.
 
-Patch applied!
+Yeah I tried, hope it worked. Sorry for the delay.
 
 Yours,
 Linus Walleij
