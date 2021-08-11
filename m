@@ -2,74 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D617E3E8BD2
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 10:32:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 595013E8BED
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 10:38:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235670AbhHKIcj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Aug 2021 04:32:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57094 "EHLO
+        id S236041AbhHKIiw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Aug 2021 04:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbhHKIcj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 04:32:39 -0400
+        with ESMTP id S232630AbhHKIiv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 04:38:51 -0400
 Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7F8C061765
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 01:32:15 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id n17so3947909lft.13
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 01:32:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1243BC0613D3
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 01:38:28 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id g13so3994558lfj.12
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 01:38:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=T9aF/gnHHaozYj2J+OBaspaiiV6uiEkY/GBIP7m0gEg=;
-        b=z4zPOj2oXB+m27UeJcQn5BVLsxsB4z1KOcQYkV7Zp4KvMRcbXTwGaQYgvfjzMX/nBU
-         +zmL0eQOyKOXcbZUzpKCJJfPmbA62iwzKwBm+4YtiuzZjzMDYUtdFO0Mz87QkQPr38YJ
-         fggNcHhRGF/BagSG37jlWaIkXwYqR0dnF13GLl5azCiqyXmrLFlj3Tzz5mag8r20A6HE
-         pZ7rAO2PUBHurc0seOXsZIH1lLrsbGPHPpF9eFSVOwVG8GzQQjJDJ79SKGk+YdBFO9Gx
-         3MZeVhJt+5R2p2mJ8v9vcjavRhrjmWHrZ+uhVc8cVKFVyzaTQfCwk2AHhFi9e1n9y8UE
-         jwsw==
+        bh=AaNOC3cQ/uorpXn6DtIck0TXPz/EwiFlRh4xw/zA/n0=;
+        b=Y7TepyPwo5NDwLntwW51ULnit/gk52wZ3nqcPd4Pw7P4wPxvskf0EbFqjuVM7QmMLN
+         WOAs78fOmyBajz3GLxhvF7abXEfFIxfLG+bceaUFjwyZUWKAm1e8neQvgRnDTGJSu7Lk
+         gzqtg1cj9VBOk9EzNQpwuiqlHsfe/PMx6QZjfuhegZIOVtId2HT9r/k02mULPrJOwwLT
+         c1JBidqXV8MfEBIDRq4TOcphTR4sZku5Fjh3bqZPLjsNlszwIXpbuYfv94MbIW3kgSYu
+         vPPmBoaN5ll980SI0nWnpqsQDBUgpoMHi5cOSl4x9hcwjkO8gXRkxa6WVqVQFI6K6d1C
+         rVcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=T9aF/gnHHaozYj2J+OBaspaiiV6uiEkY/GBIP7m0gEg=;
-        b=a3yAfx2/8Jxx7BXpvnlyuzXFy5OJnKuTubNLX7LNzAtOakHSshpdG46Vw/TdJPi0zf
-         Egw0io2G2oSjEkSStMfZKTx4hbJCAilZTRIGt5bKJV7mcfYoSiu3bKC3Xuqiu+vHAtUi
-         9E2lySD3K2sidh3u3sqt7fI29fUiOyuIiP+SpNflxRBpWeo/kbUogLbSOahPq6Kt3V0+
-         9USqwgrOoGcG/d7V8ZVTmfmk7HC2jizgs15DywOzdMKxklYf0R48l2Q9BXO/5rD32upV
-         PzxfmihM8yjlQUY7oZXG5bf8xdaV/bEb10Xtzob3B5aEHY17vfVbN4Ca2avOqgk8F0Za
-         eAVg==
-X-Gm-Message-State: AOAM532aDJSenePw8zHUnv9UgKbmNtjXCbaU0Z/6eJ+cMLXfuVH+3qi7
-        +I5Da2O8GuN9rAoOVmnopdv/YYnlf3ighvIIAN1JLw==
-X-Google-Smtp-Source: ABdhPJx8KOnvL7KNjPPz1PGddRFRscqa0/aQu7hNC6SM9IIiyOqA7hHEP9AiCoar+a37Et8CsHj/YEfe9PFf6cIfeKQ=
-X-Received: by 2002:a19:c7cd:: with SMTP id x196mr24373795lff.465.1628670734307;
- Wed, 11 Aug 2021 01:32:14 -0700 (PDT)
+        bh=AaNOC3cQ/uorpXn6DtIck0TXPz/EwiFlRh4xw/zA/n0=;
+        b=KhrtbVYDNhQ3ZqlxHDo8k7moSz5rG/tcT5RPMLLt0Pl5lc3DJEfHV8WQ7b2Sntj2qW
+         i0zA7wnlP3nH/mQlYFRMVAzEPA/yh2QLg3efcRV5MNIzp/AQbHTf70Su69jbgo8g5nAX
+         kmMpvZQPjVYtEgT5dij3jY/1bIA9DrKPBvnYG5k5iPsZ8XLyoSwGIDbQYFU9CQsKG9eY
+         FONSdLoI+mcWmny6JDE9Lnk47DMI/dlUMPAohV96dri1NXtKyeh4MJbFsNc4jgVPcTb8
+         c2sE6FGtZixGbu9xivik8lDXhezHj3/TkIkpcql+iY5z7KfC6mw4HINxQ50WQF5v6jDf
+         vNjw==
+X-Gm-Message-State: AOAM531TSo25uDyNYMHJkYSkikYu3Bov+YYnl65cxC/AKGNcZgV5VgQ4
+        h1/z4s9bp9q/e8xjE0bKeQfAk8ncqyAiupaDDDLgKw==
+X-Google-Smtp-Source: ABdhPJx7v0Fu/ELoRaBaA9FkYkMoNYsLY1wBNnd0D/uWJPSi2EWxY8BDYUIAPPDVJd36CEeCmD3X72In5OwfijSe++Q=
+X-Received: by 2002:a05:6512:32a3:: with SMTP id q3mr13185278lfe.157.1628671106413;
+ Wed, 11 Aug 2021 01:38:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210726013345.1634442-1-jay.xu@rock-chips.com>
-In-Reply-To: <20210726013345.1634442-1-jay.xu@rock-chips.com>
+References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com> <20210726125436.58685-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210726125436.58685-3-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Aug 2021 10:32:03 +0200
-Message-ID: <CACRpkdbU+SXCaJ5N65zKw-btn_CQisp+rhozjtCaZ7y59mvTtQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/9] gpio-rockchip driver
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+Date:   Wed, 11 Aug 2021 10:38:15 +0200
+Message-ID: <CACRpkdZ5NZA0XCZe5X0g6uRGn6cdeFcvtR8WrRoNtu8EwrMV2Q@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] mfd: intel_quark_i2c_gpio: Convert GPIO to use
+ software nodes
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 26, 2021 at 3:34 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+On Mon, Jul 26, 2021 at 2:54 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> Separate gpio driver from pinctrl driver, and support gpio v2 controller.
+> The driver can provide a software node group instead of
+> passing legacy platform data. This will allow to drop
+> the legacy platform data structures along with unifying
+> a child device driver to use same interface for all
+> property providers, i.e. Device Tree, ACPI, and board files.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Mostly looks good, but waiting for a respin to address Bartosz
-comments on patch 5.
+This is really nice, I wish I knew better how to use this mechanism
+myself, so I need to practice.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
