@@ -2,106 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 043D23E9072
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 14:22:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE74B3E910B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 14:30:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237658AbhHKMWY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Aug 2021 08:22:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54642 "EHLO
+        id S237179AbhHKMa1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Aug 2021 08:30:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237639AbhHKMWX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 08:22:23 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F40C0613D5;
-        Wed, 11 Aug 2021 05:21:59 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id c24so5226900lfi.11;
-        Wed, 11 Aug 2021 05:21:59 -0700 (PDT)
+        with ESMTP id S231962AbhHKMaJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 08:30:09 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8224C06119A
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:25:31 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id n6so4229021ljp.9
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:25:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4KUOFyypq+10So6g9be46ycrQC/QhunD2Vt34K5LKwU=;
-        b=e4HBU1klgeOsBG3WXQrhLEpTv16b1/3rw3sDbsgLe/Bfmde3afBXMbUtpKDAOf0scw
-         88kPqyrhxiTsIp7AqxVmjoy/e/5DFM6d89JaAy1DIv0cjy9M9waNnlAQkFLIhWNSrfCK
-         TS2/rJSCj14iC0+vrt/jpPvUglgafGVNt5Ig2LHMQ8Si4ocP5aA7gKDNqfhTszh0PCUR
-         4cCNbD5ITHD4LlHkAlwOrOnNr2/W5Z7n29OEgSgP6sn0BWtfBoOoXMmKH0PGLlDLmBao
-         I3QU6QHLtuINLtQOlSGyffwz232Ddeefg2gVfZNai7ekAo6Djbnwtf65HVIsM4UOnPPB
-         b5YQ==
+        bh=zEH3nbdjRk3iKKEKjuiI8MahBqLUdJ0ANeHswehlAC4=;
+        b=fryX8NC6y6XlhC7j8uc53VpWuPhaK1RvrhW4QxLCjceOa1J59cngm58Q5breUEAZbO
+         OdlWLshstDrjt6UOfytqzUzuH9ayTdiWPqaDLgUlsUlCyZld1UlCCVRE0nBVaW4paNh6
+         1a3FNJ14ZhQ8hNw03miW5hJUrtt3hETfd0HLclQFNJOttkWqXJ3IQJ2dZonNKhWThxNV
+         s25hAQibOskooQ2GsZBsZ7KyVni2733OGYGblU+c4qNb68oeRVGM9Zmcpn+boaMC4754
+         13X17tG6W+wmrmnj86w4abOEdedO5ZYDks6sohT3FniDvvsgkv/WrYVhuuAwaLgJG3Rb
+         a1kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4KUOFyypq+10So6g9be46ycrQC/QhunD2Vt34K5LKwU=;
-        b=tuQdlfdBi9D3/wRuZeT7+JWtO5ZyLD2hGhszP1EtX2EYoBhGY7U40GGtPO6g9sBwTn
-         5j7yZHe0ah/6flTKem5pPj3+dtDMtpj3mst4u5imKCb6gGS5EKdWQkj9nKfd/HwuIcr8
-         vMOTCAhk99YiVrfpcRosZNx+WnLuOf7Z2VkJ07SrC2ZLNQLOBrh1ob8uw7p0qyuFKaKU
-         BTdtY5NAKgChy6b7lkFxwE4OTFSu8lapBpSekOtCFjSs/mnAdAwn2h4iT/SP/0sVyPow
-         DwyILQRWXfBE3Jz7y03VU0KxpCmN5PsZRwIOZy4Qvn8K73prHBBMjrm1M17FVCxx1fvK
-         NNyg==
-X-Gm-Message-State: AOAM533twBU4WrIvkYRRISgKYak8KHbCJA4UuKS+2AYG3pIKEXsOxWX1
-        Z8chqiAdDONlpmrFHg7aSJbyo3eRUkcBPjJvfw==
-X-Google-Smtp-Source: ABdhPJzaJ+0YrNs+2N41pBaFHT0xRNpN4T1esdV8kWvY54gUYHuqki/9kh4LvLKp2R1Uhm4rHMWuMkSuCzOsB2FuE14=
-X-Received: by 2002:a05:6512:234a:: with SMTP id p10mr25275553lfu.472.1628684517417;
- Wed, 11 Aug 2021 05:21:57 -0700 (PDT)
+        bh=zEH3nbdjRk3iKKEKjuiI8MahBqLUdJ0ANeHswehlAC4=;
+        b=LIuHGR24yldJySqnwr4slJaiJTzPjCR7dj9QPkrubOPXVxhk3UIIh5fdeP7aIWWwpm
+         Dpu9kQjPw7G7c0qQMWz8aMGWMFgNOZK6mBUUpi15F/DwWnR5bSREeofthZcCITUGsAb/
+         YRD4asPwZMHh3axMK2wkclcNIYi6qBOSMwQq2ccnyVT828V9zW0LqYo0r35rvl7NBoU5
+         CY2YXUvqo5EgzNoc+EOaiUAlRpNkcgXkc5geS4TPQmQN9zN0cqjXKDW7V9O4wK84yT4J
+         Ow+GyvLb4ZMdTTZmEt+VyeDjzSn6inkT9JOMWALDfDX3pJ2K8QtU3ZIiAztEPNkCo/fN
+         EjoA==
+X-Gm-Message-State: AOAM533ld3jiaXJ3Go0yRQjle+TNZTYIgSxtI6yvRYi39skzhwipYH3q
+        G7arf4j9BE2yuiURdJ2sB44/Vp55CL09Up/9H7j5UiWebQc=
+X-Google-Smtp-Source: ABdhPJz/gGHq1zq1jYiqFyFHQT7Hh0KkvI1s2Ai88t2QU+nt6YVYNQmSr60cJpcwWEILkaeEmBjD5VELf9BFPZPEGi4=
+X-Received: by 2002:a2e:9a4b:: with SMTP id k11mr12624317ljj.368.1628684730077;
+ Wed, 11 Aug 2021 05:25:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210809201513.12367-1-mario.limonciello@amd.com> <CAEJqkggAQ3=ppMHr7fAirHspOgHRkrDDxCb59MX8Sy=U0qvk0g@mail.gmail.com>
-In-Reply-To: <CAEJqkggAQ3=ppMHr7fAirHspOgHRkrDDxCb59MX8Sy=U0qvk0g@mail.gmail.com>
-From:   Gabriel C <nix.or.die@googlemail.com>
-Date:   Wed, 11 Aug 2021 14:21:31 +0200
-Message-ID: <CAEJqkghZOLaEyJz-rahe8O2c-_gCBbwCKcAeTObPxM1BFY43Sg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: Fix an issue with shutdown when system set
- to s0ix
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+References: <cover.1628590591.git.viresh.kumar@linaro.org> <afc7b34cee856f1ed1a65034f4a9fe705dd04d6a.1628590591.git.viresh.kumar@linaro.org>
+In-Reply-To: <afc7b34cee856f1ed1a65034f4a9fe705dd04d6a.1628590591.git.viresh.kumar@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Aug 2021 14:25:18 +0200
+Message-ID: <CACRpkdajnPsD01ztx5xdVnR=cEK78KY+D169HXeDKuaOMS9qfQ@mail.gmail.com>
+Subject: Re: [PATCH V5 1/2] gpio: Add virtio-gpio driver
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Viresh Kumar <vireshk@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        stratos-dev@op-lists.linaro.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Mi., 11. Aug. 2021 um 10:26 Uhr schrieb Gabriel C
-<nix.or.die@googlemail.com>:
->
-> Am Mo., 9. Aug. 2021 um 22:15 Uhr schrieb Mario Limonciello
-> <mario.limonciello@amd.com>:
-> >
-> > IRQs are getting armed on shutdown causing the system to immediately
-> > wake back up.
-> >
-> > Link: https://lkml.org/lkml/2021/8/2/1114
-> > Reported-by: nix.or.die@googlemail.com
-> > CC: Raul E Rangel <rrangel@chromium.org>
-> > Fixes: d62bd5ce12d7 ("pinctrl: amd: Implement irq_set_wake")
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > ---
-> >  drivers/pinctrl/pinctrl-amd.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-> > index a76be6cc26ee..5b764740b829 100644
-> > --- a/drivers/pinctrl/pinctrl-amd.c
-> > +++ b/drivers/pinctrl/pinctrl-amd.c
-> > @@ -444,8 +444,7 @@ static int amd_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
-> >         unsigned long flags;
-> >         struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> >         struct amd_gpio *gpio_dev = gpiochip_get_data(gc);
-> > -       u32 wake_mask = BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3) |
-> > -                       BIT(WAKE_CNTRL_OFF_S4);
-> > +       u32 wake_mask = BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3);
-> >
-> >         raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-> >         pin_reg = readl(gpio_dev->base + (d->hwirq)*4);
-> > --
->
-> Is working fine again with this fix.
->
+On Tue, Aug 10, 2021 at 12:25 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 
-Ofc feel free to add:
+> This patch adds a new driver for Virtio based GPIO devices.
+>
+> This allows a guest VM running Linux to access GPIO lines provided by
+> the host. It supports all basic operations, except interrupts for the
+> GPIO lines.
+>
+> Based on the initial work posted by:
+> "Enrico Weigelt, metux IT consult" <lkml@metux.net>.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Tested-by: Gabriel Craciunescu <nix.or.die@gmail.com>
+I see there is a dependency that needs to be fixed but
+the driver looks good to me:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Best Regards
+Yours,
+Linus Walleij
