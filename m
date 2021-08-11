@@ -2,89 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC3213E9125
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 14:31:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6B943E913B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 14:32:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbhHKMb7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Aug 2021 08:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56162 "EHLO
+        id S231146AbhHKMcS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Aug 2021 08:32:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230209AbhHKMb5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 08:31:57 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A48BCC061385
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:28:19 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id bn16so929093ljb.4
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:28:19 -0700 (PDT)
+        with ESMTP id S229989AbhHKMcM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 08:32:12 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CADFBC061A04
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:30:02 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id t128so4329779oig.1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 05:30:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D5OlZ8oq6iOCdn4aMeG+EEph9Sb1Lla5I4LvuXvSK8A=;
-        b=yxqhdCu/Qo68ddda8afkVdUuov6gTdX9x074yF+7r4kxHkkK2vFbEbiXB2Kl42komk
-         uz5NPqfrnDYX3RbRLlnmXZODJDggmdPFMxMDSLwoD2l/HwkgDbE1gvy7STJCz+e65YtN
-         z5xesgxo3uN8jH9rYn0Sob+2LRCkPlEIYS237Vz7rm8UqyQsV9NsHYVvmJqG1bjPQAMX
-         zRStxZCtg5aGpGjtPDcYzmvw1ubJIwRv/tIDlskxY8flufvRcPbFDuYaVf3Con+7JPUe
-         rOYO6dE9dJyA56ZEgtW0ecC8NkUjs+NlntX1f9Y4W60bbXOss6v4DpUWQ7CLJZgNXKct
-         bixA==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=77BwqRII9XCweQU8IJul6unijI/BEL+vUJmVmCRLxH4=;
+        b=l4gMJVQR0kiw5jB7QjBwuNpfM6KgRmAnZ+U3/uWnaDOrOmeNXH1cBsuQp1/yvU/vbe
+         h7truI0tSaL01ahWzSqREXmT86UPLmMGQ2+FLEgN9spMzc4cuAIBO//Q+H5br/KBc0TV
+         kFrfyS3HAXSTLm9xum/FyUF/jALDjxDHHjAbGHdZk+wTj7O/Gvjxi495MUWK0LMLb61t
+         xWjyjzLQh6acP97vVSQvECAoNev4PY9q3zMqG/1nqsutkiyZpW2+ssMsVdYVIVzVs9ax
+         stDtdqMeOw7/9vXNfePZRksemawFwQjcQ1gGbjzrFwOEwtevs3PZsUTk25T8b2r2n2+I
+         0gBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D5OlZ8oq6iOCdn4aMeG+EEph9Sb1Lla5I4LvuXvSK8A=;
-        b=dOkuhj64YA5naM1Vn5qIZVvBq4UFCC/TWWipFQV9RW1TgMjiN7Zh5lwgv4aYhzIJkg
-         1Jr5EzUwb4jeQfbzTWZPdSmgsFqGx1J7woXFWpQO8JZDThOKAACJWhSF3CxJNpMEN0RX
-         P8q7S8h45Z3rgCoCJtm34/MvKfbpSKwG2ar7hYXa2gbVAvm60JkGXpyOv3plnbsXyB9h
-         TneWlZ7g1eASWO/ZNlCI4eS3zRc4ONLmgfBcxP2SYIBGA4YuflF+2m76O8c5XeO6j4qb
-         MvLdF3rijz+9OTZOGggOvwWcM+GR9zQO9V8PKEoxO0uPBEWxJU9w8X2MAc0/x8CJgXS3
-         N00w==
-X-Gm-Message-State: AOAM531BJkXBx8JJyPQw6pjALfzVzMWg4dnNX3PZyrR6V6xTIf4dgM6h
-        lDcgRP5P+JrdU+pZysT0ylttQrT94pspifdpqfoufA==
-X-Google-Smtp-Source: ABdhPJwR2jWpMR0T0owMZaLYzWcyHOEHETHN6xD7KLu7UfEpJk7ksIDK0sBzw2b6PX7p1HpG0zZox0yZRkt4VIF0sKA=
-X-Received: by 2002:a2e:a231:: with SMTP id i17mr12603890ljm.467.1628684898091;
- Wed, 11 Aug 2021 05:28:18 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=77BwqRII9XCweQU8IJul6unijI/BEL+vUJmVmCRLxH4=;
+        b=TNiZusHVl3j3sFxkQZgzRZt0qfYnXLdFcXmlr9UxioRsbh167P0HI1sohkf3qSiGeJ
+         vbBBPyzdyTtuHq0F9BZyX8qWqi+XsdrSrBZcGKtUqxS8/QGrOx762LuJCqOuXStrZZ7B
+         jUIEhQeuOM9eWcgmFXfog8vlFdblTLpfj4PkyDrEEWuRhAoxgmPSjvftdFLLbQNHY0uy
+         2aimhLhUW8ZqpaCUIpD2FPvrq+eFypfHD0zDCbcaNf04DeoeRMCycxm24p217RFGWBdP
+         7wOC/dPD4mr24Sxe0hQFZULXJ5c6aVrP9sJnyOhljSCgu8pmj0Wn5EhtcvhlceMqwryQ
+         vHwA==
+X-Gm-Message-State: AOAM531s69aMQGED0/P3fkCagN4ryQZep5eAPy62kKFYOp0jco5LTec/
+        tj4/ZYTBtizpvqmsabzi7XkPK4dv8l0ccluqRaA=
+X-Google-Smtp-Source: ABdhPJwW80yC3Jv4N7Ygd/oz/W2w0OMWMVUNvF3laMRZsfuxi/a2uJ5LPRrNJQDqCRwhEl9YwYATyhizs0DKY0HnRMk=
+X-Received: by 2002:a05:6808:1924:: with SMTP id bf36mr24189327oib.106.1628685002002;
+ Wed, 11 Aug 2021 05:30:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1628590591.git.viresh.kumar@linaro.org> <96223fb8143a4eaa9b183d376ff46e5cd8ef54b4.1628590591.git.viresh.kumar@linaro.org>
-In-Reply-To: <96223fb8143a4eaa9b183d376ff46e5cd8ef54b4.1628590591.git.viresh.kumar@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Aug 2021 14:28:07 +0200
-Message-ID: <CACRpkdbonnFd5xu=3_CdR=1QtxL0fDoWX-A16fTPMJypWsmcdw@mail.gmail.com>
-Subject: Re: [PATCH V5 2/2] gpio: virtio: Add IRQ support
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Arnd Bergmann <arnd@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Bill Mills <bill.mills@linaro.org>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        stratos-dev@op-lists.linaro.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
+Received: by 2002:a05:6830:23a5:0:0:0:0 with HTTP; Wed, 11 Aug 2021 05:30:01
+ -0700 (PDT)
+Reply-To: rihabmanyang07@yahoo.com
+From:   Rihab Manyang <ndourandiogou1@gmail.com>
+Date:   Wed, 11 Aug 2021 13:30:01 +0100
+Message-ID: <CAP5_mB76a-FSZzks8OG9YWvLEFv62qfHQ6sTAFQrmH0xjgR9bw@mail.gmail.com>
+Subject: hi
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 10, 2021 at 12:25 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-
-> This patch adds IRQ support for the virtio GPIO driver. Note that this
-> uses the irq_bus_lock/unlock() callbacks, since those operations over
-> virtio may sleep. Also the notifications for the eventq are processed
-> using a work item to allow sleep-able operations.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-
-Looks good to me from a GPIO point of view:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+-- 
+How are you?I am miss.Rihab Manyang i will like to be your friend
+please write me back on my email for more details, Thanks.
