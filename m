@@ -2,75 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AE533E922C
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 15:04:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B58E3E922D
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 15:05:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbhHKNFS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Aug 2021 09:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbhHKNFS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 09:05:18 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9662C061765
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 06:04:54 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id y7so4474609ljp.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 06:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QLDwaiNtrdg29GwlWr7lrkTXMN4ehqouExtTXW9KE7A=;
-        b=DzHl8arDswpD32LuoSsTVQ8dfUL4SwtSbHg32XMF53+nuymbBHknpqjmK/zpjW6Gpx
-         pGxNxI74qw4nJygP/CyAsSPMU7E+xIP0iA3N7TU8k2qGQygZj4d6yJ/NickXs/0ZF0Z9
-         gQIo4Y//QP2pnz0A8UHTcyodTUfGCmZRUOJTdFpSoXdVRF9QqhSv3sOUHgvr9H2atyNC
-         jRkA5b73YdAGun7UEsUWleovZLQCbTg/GYKCqVBllW9sZTTxTBnKMpttdUeG4tKWNLq9
-         ax31VcRGle3ZH+dV7l8BDDj9OcgQMZ/T+rc0J4isruz1p+6nJfxsl7utbFQeWgb/eaUf
-         me2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QLDwaiNtrdg29GwlWr7lrkTXMN4ehqouExtTXW9KE7A=;
-        b=Ewc5qVd1EludaN1Z5b0PB88dEf44yiTMHM9dBjr9+E8aCjqFnffy/Rgq6LlTZOLnc3
-         4JDfHiBPQCiCLs1coxX0+y+ALmlPhLPit5LX5gkxwZ8i4zMm6bpJ8OnstbjMFawul+iA
-         xXLEX4MspDD1UCd7Evl6MLKoEE3PxFhsf6oeFEYmN6GMtFkq0KKHX0Amzh4ianA+Jl+L
-         yH6DawJ7dmZBu7NcYvyhDQfLBOgGSqkCNMjqKXo8NMxyjRm8lEffvGFkI4vYur18gxQ5
-         mK3H38CjxsgTOLPuw3ZQQK+81QVgOcy2MquvMDtaI/3JI6wXI0KZpAeYPt7MYhYQnCdP
-         x4EA==
-X-Gm-Message-State: AOAM5336dxM7m6vtP7CO/dPmVe9ti/eaJeQl4hF2TQ2dIDbNPvAhm1oM
-        EhSgMS/2s+Bp5H+zFNMlUkO0v7/u7WyHOpGhFx1DOKRiido=
-X-Google-Smtp-Source: ABdhPJzxGVKcz5RrbFhvlL00FbbubB29/GhukwkN+sX/bMnB+khyTQWHaAFlKNl+CRHEBa8Gpse4zXGm9UEH+0EB4Ao=
-X-Received: by 2002:a2e:9a4b:: with SMTP id k11mr12754854ljj.368.1628687092725;
- Wed, 11 Aug 2021 06:04:52 -0700 (PDT)
+        id S231376AbhHKNFl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Aug 2021 09:05:41 -0400
+Received: from mga03.intel.com ([134.134.136.65]:57334 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230033AbhHKNFl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Aug 2021 09:05:41 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="215144050"
+X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
+   d="scan'208";a="215144050"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 06:05:16 -0700
+X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
+   d="scan'208";a="672866927"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 06:05:13 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mDnut-007pVX-Lh; Wed, 11 Aug 2021 16:05:07 +0300
+Date:   Wed, 11 Aug 2021 16:05:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 2/4] gpio: dwapb: Read GPIO base from gpio-base
+ property
+Message-ID: <YRPLA5xMDS5EnYrc@smile.fi.intel.com>
+References: <20210804160019.77105-1-andriy.shevchenko@linux.intel.com>
+ <20210804160019.77105-2-andriy.shevchenko@linux.intel.com>
+ <CACRpkdazSqdOaoCknv=0wo3vw-FjrZKAy0rgh1hFbgd6au0vYw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210806004311.52859-1-damien.lemoal@wdc.com>
-In-Reply-To: <20210806004311.52859-1-damien.lemoal@wdc.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Aug 2021 15:04:41 +0200
-Message-ID: <CACRpkdafkWv1amgxhVCQsS9kRT5zsJ0wwU_sJy0Ztmqx0b-87A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: k210: Fix k210_fpioa_probe()
-To:     Damien Le Moal <damien.lemoal@wdc.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdazSqdOaoCknv=0wo3vw-FjrZKAy0rgh1hFbgd6au0vYw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 6, 2021 at 2:43 AM Damien Le Moal <damien.lemoal@wdc.com> wrote:
+On Wed, Aug 11, 2021 at 02:50:46PM +0200, Linus Walleij wrote:
+> On Wed, Aug 4, 2021 at 6:15 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > For backward compatibility with some legacy devices introduce
+> > a new (*) property gpio-base to read GPIO base. This will allow
+> > further cleaning up of the driver.
+> >
+> > *) Note, it's not new for the GPIO library since the mockup driver
+> >    is using it already.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> > v2: added check to ensure that the property won't be used by FW (Serge)
+> >  drivers/gpio/gpio-dwapb.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> > index 4c7153cb646c..674e91e69cc5 100644
+> > --- a/drivers/gpio/gpio-dwapb.c
+> > +++ b/drivers/gpio/gpio-dwapb.c
+> > @@ -584,6 +584,10 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
+> >
+> >                 pp->gpio_base   = -1;
+> >
+> > +               /* For internal use only, new platforms mustn't exercise this */
+> > +               if (is_software_node(fwnode))
+> > +                       fwnode_property_read_u32(fwnode, "gpio-base", &pp->gpio_base);
+> 
+> You rewrite the code quicker than I can review  :D
 
-> In k210_fpioa_probe(), add missing calls to clk_disable_unprepare() in
-> case of error after cenabling the clk and pclk clocks. Also add missing
-> error handling when enabling pclk.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Fixes: d4c34d09ab03 ("pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Sorry for that :-)
 
-Patch applied for fixes!
+> So this is elegant, I would prefer "linux,gpio-base" but the
+> overall change is more important, with or without that change:
 
-Yours,
-Linus Walleij
+I'm okay with the either, but the thing is that gpio-base is already in use.
+Perhaps in the future somebody can change both (gpio-mockup and this driver)
+to use the proposed one (AFAIU we free to change it since it's not part of FW
+interface).
+
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Thanks!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
