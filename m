@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C076A3E9215
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 15:02:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1917E3E9220
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Aug 2021 15:03:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230041AbhHKNDF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Aug 2021 09:03:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36320 "EHLO
+        id S230518AbhHKNDs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Aug 2021 09:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229994AbhHKNDE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 09:03:04 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F32FC061798
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 06:02:40 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id h17so4378992ljh.13
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 06:02:40 -0700 (PDT)
+        with ESMTP id S230425AbhHKNDr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Aug 2021 09:03:47 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DFAC061765
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 06:03:23 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id m18so4475626ljo.1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Aug 2021 06:03:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oqknCsbFpsHTcdIkxTiepqaukGt+0UkYz6s7BEcJxW0=;
-        b=zETW/RQQHABCPBWuPA21hB380a9P/ufFTxArOH3AaD1VokQTofGE/ANxcRxgoNULmQ
-         ipqIJsQMqFLEoW9XU4E3x506DWqChTc44adnhPxP7z+Y8EoXBeqiDdzKLrbAAvHfiinn
-         VprQ+jUDCJOBSqYmiykbr+ZwlS8aSuce7cgTxZr+h5hgdVPUjPcuU/iECulFJQU4u6F4
-         2yq8GatDqLQXM8e/5sW10Y2eJBsggfyKjvwZMsJc8E8sJ0Dn4MHjpU8HSJZPbFnWjQfr
-         YUwBb39mM6Pt78gMM6jhMRTwlS9X5riSOFdusr/5lzS/0ga2yejBkbKMHT7r+VEG96eH
-         581Q==
+        bh=zuMFwAVD6fY0KArmeR9wSduaNs/aEjUW6qkJa3ECyv8=;
+        b=TCpUp5F1rIsu50ljO5tUd8VYmUjjBPVQQXUGND2l8iThkPszFllIURH2d9QO5Kp3wr
+         20hdUcM+6Mq2hwT8/HawHY7iF3d23NShYFzrA0yQTxhpIVWNWG6J4+mwqwZRds7vSWkn
+         ryr9QAZapCb+OCy9ATaGG5pWUNjSb0zXfOsY4sGS9wEDMP4gMGMuPjB4EBZbhBJ4ZJau
+         qYXAq8dS5PbHEiyDb/SNZ+os+lZI8mkwHbsYaFgwJ+E7cCOvstIh2d3ZmcSjmxSrk5tr
+         XZ0kwT+zphh3jDjsZruTgmXrO7y+kZ3ssAa6Yha3uKi5GrbF+U7p13/r2FIWYwnzAxBW
+         aX1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oqknCsbFpsHTcdIkxTiepqaukGt+0UkYz6s7BEcJxW0=;
-        b=tXwHuQM0MH+2Ync0L6r4qAA1Ry9WpTkjCa0ahG317QFp3LkLEiNmqtnim2/lMdCQ5j
-         1H7wiYeoCBwlfGpLXzbNAMz7R8ByIDlZWSsT0IBquoZSRQ+KhjCf8IcYlLIVufWPO972
-         CFtSCR46Zvg5NsmWwf3Q6/vjYRz3D6luvMgbb8GUDiJBhxQJqY8sHOnuYKa7UnD12hvj
-         MtB5b0TRdhfYsJlq8cM56dbIT8HhkYyf3/AxQqiliItJ0xOKtFXu2NOLFsTntBv/YrbS
-         vJ4hPu5dObuhHUa6DbhMtYANN/1/iw+KLHhFtwIewbZx0QwY+rcLYpsAnddCGij/jLvI
-         fSpQ==
-X-Gm-Message-State: AOAM530K5jWAC+/+fy4tH8RsLHgdmV5x8JV0ec3SqUyUkhMjWjsz33/7
-        VExFIMMZWWNopJfZ0Tc7j+NqozUWVVoLVzG/Smyl7A==
-X-Google-Smtp-Source: ABdhPJy/Dd1dNZKjIqWmvk3JaALAdtf1mDPqUYu8w58dq7IJd2Vi8KCQzgqnXLjDFA87tT2tRnXVOB9p0MHdi165UhQ=
-X-Received: by 2002:a2e:b819:: with SMTP id u25mr22997754ljo.438.1628686957962;
- Wed, 11 Aug 2021 06:02:37 -0700 (PDT)
+        bh=zuMFwAVD6fY0KArmeR9wSduaNs/aEjUW6qkJa3ECyv8=;
+        b=d93Kp41LhnDOEG3g2s9S3isR2jtFGTp6gIe2GtkQp13v76a2cHWSnPCdrhG0IRpI2P
+         HuJ879sPrACfVjosbakW5DZv1AZZPz7OWVU27Svp0V4HGaznulAASTHjKV179mWjTOgK
+         4/IvHzg0gpFNemrmEIjrcJYcDXGmqJKe47FvPqWoRCSJldy4v5P1/V0o61XzUVaeQZ26
+         Fs5GJHDhBzD26i/f7FPiLDgTcAd/mp6muYoQzckXqYBTiS+VGuOQ6vQNLbQWM4V+M3Gc
+         ZpyDlLA9dOcPNLKdMy2EVirFJedc8h0BELW2t+KBzaOGgMX7h648c94Vptt1B+oPtoh1
+         Nwfg==
+X-Gm-Message-State: AOAM530YhYkPqW3pSo4KNr3cNyWQ6yGvRvPWgWcY/OOzd0H+abXvZviR
+        VeeGZbz5WLepLM0UXYZLGpygtsu68zYJugpmZ2H3bA==
+X-Google-Smtp-Source: ABdhPJzx+NlgiIZnomfYiB8/G4LgCd6WP6GFsrtvbCL30ZLORab4/n85+ZBn2rA47FR1ujRI3K0kFKlULjuaBeSQo5k=
+X-Received: by 2002:a05:651c:327:: with SMTP id b7mr23695765ljp.74.1628687001676;
+ Wed, 11 Aug 2021 06:03:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210805222625.40236-1-konrad.dybcio@somainline.org>
-In-Reply-To: <20210805222625.40236-1-konrad.dybcio@somainline.org>
+References: <20210805222625.40236-1-konrad.dybcio@somainline.org> <20210805222625.40236-2-konrad.dybcio@somainline.org>
+In-Reply-To: <20210805222625.40236-2-konrad.dybcio@somainline.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Aug 2021 15:02:26 +0200
-Message-ID: <CACRpkdYkoETS02DZWyXR_CzR_m4H=E6NyBa==8vH6A5+My2KYA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm8019 support
+Date:   Wed, 11 Aug 2021 15:03:10 +0200
+Message-ID: <CACRpkdYm_Ky+D5=rhX9gekKYZkTXwvS-FGED_Ou+_0=nEGZUUA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: qcom-pmic-gpio: Add support for pm8019
 To:     Konrad Dybcio <konrad.dybcio@somainline.org>
 Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
         <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy
@@ -75,16 +75,11 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Aug 6, 2021 at 12:26 AM Konrad Dybcio
 <konrad.dybcio@somainline.org> wrote:
 
-> Add compatible string for pm8019 pmic GPIO support to the
-> Qualcomm PMIC GPIO binding.
+> PM8019 provides 6 GPIOs. Add a compatible to support that.
 >
 > Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
 
-Sadly I just merged a patch converting this file to YAML.
-
-Please respin this on top of the "devel" branch in the pinctrl
-tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
+I will merge this as soon as the binding is fixed (please resend both)
 
 Yours,
 Linus Walleij
