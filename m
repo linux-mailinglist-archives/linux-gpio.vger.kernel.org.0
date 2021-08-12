@@ -2,98 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BC7C3EA188
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Aug 2021 11:06:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09E623EA1C5
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Aug 2021 11:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235576AbhHLJGu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Aug 2021 05:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58536 "EHLO
+        id S234587AbhHLJST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Aug 2021 05:18:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235158AbhHLJGt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Aug 2021 05:06:49 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B326FC061765;
-        Thu, 12 Aug 2021 02:06:24 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id x5so2369783ybe.12;
-        Thu, 12 Aug 2021 02:06:24 -0700 (PDT)
+        with ESMTP id S234224AbhHLJSS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Aug 2021 05:18:18 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C03C061765
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Aug 2021 02:17:53 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id r9so2784647lfn.3
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Aug 2021 02:17:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UfZh+k1iAdsLIsImkWxhdGBlZUauAKUc9V8AaIWdDLA=;
-        b=jmBbkkDTZSYO+UGViOLwdhrmdon+GQ54mQKtBIbMHMQA5FfuXjF1thDh/9/Ner/wsq
-         FI/EQq+VcGGJJiY9q5EMACIzdsSU88V4Bms6zg8oW7csFrSOWslRAEdnD67waOvrUXCU
-         ezIvaltAF1G0U6phNkV51luNWQt+G7qHIzJB0umhKZZcdnN5ihouBisCBMI1XCvPS7ZG
-         COSVOwgzNJYlX+3hqR4YXYQuUfeoV6wPq8qiVi2zgiZFsVsWJQwqVOvl/aDfuiXlH66r
-         SNGYXx4rQ0nC7OH4w1Yt1saXrqh8Ebb2LqnrEEISt5oInxJ9lqadwqoDBC0iX3wZ2X1J
-         ob3A==
+        bh=vlnCjZjx1dq/H2qB63RqlDicLcJRpH3K8WfM9ayn2uY=;
+        b=EphcxfV2jMbb4CHVOqy3ezGW28YDwekOHaZ77TrbNfDikUWohM+aH+V2xCkggA2tRJ
+         6QmtuDQGjMgmgpSfVhhljhqz0e/bP4/EPKEAm/FJjoP4//hSVjZIpXxKt+kYgclkZH4S
+         0+OaWQVe9m1s3gvCiX3KL5E1rUNnjxpL6HEyiQ7uKd0Ve8ctjaigfJGYtdNG0E/h+HeI
+         B/e36bSwX05jzgu66ae4g71KDlQDti9VemRedfgUe4kpDYw5lCoxqXaqp15oOiWqb4kY
+         HoX9NAMX/jseubevEFuaP2Y1hI0cjX5ZqQ2qOnhIDjjwANZrqBADROPh3pP6iFn+42r5
+         oQWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UfZh+k1iAdsLIsImkWxhdGBlZUauAKUc9V8AaIWdDLA=;
-        b=ZjTsEK4VcMFiXS+/3hpN/CxpTIUJu10TwlK6twsfXvkpWm9YEKUF0r1dY8a3TAG/qH
-         5wQLU3WXZ+iLlxm6hwf0LC5rAv3KfrobLcRX/ger+ssSttThANNWR0UxhT7NmoVeN1/1
-         PFP4jTI5uJZInA7Y66lI3M/o6PSc/gVxY+MiG4z/PaT4sOAzIKjZAzsppTHh+sOE6J2E
-         /Hk3fxWMEeplvjtIH7kiquVXrlqjkl71U3X18SLuMl3Z/sELbEhew3REqo4zSSk8DmW2
-         JyZgm5wzHSCxS6csFvGmG7Xumjwbh+8cq6J7SXpAkAM4nnFj5UR3sW7HWYu4rr7b/Mu3
-         FTTw==
-X-Gm-Message-State: AOAM530TTInIaxP5IpQOCpwD9Q66N/+klD8s7/N1WZQTAnpdlukY7CPd
-        aQz+oUkGXtSa0JiIGO8B3xXobnWlazVb7g12mvw=
-X-Google-Smtp-Source: ABdhPJy6v1oi26KbRlEl5TfTKWL5oHZpUSdR0vUs9uYXaket0TYLZL/E4Q4aSTLbQfOqX4FNCGzY3kmNCIv4sRqspAQ=
-X-Received: by 2002:a05:6902:703:: with SMTP id k3mr3009285ybt.47.1628759184010;
- Thu, 12 Aug 2021 02:06:24 -0700 (PDT)
+        bh=vlnCjZjx1dq/H2qB63RqlDicLcJRpH3K8WfM9ayn2uY=;
+        b=UUahrGnGOwA7UWRIN6t5KvWHtLBwTkF0vRtlZDEGjlFOKst/gWgVwvX/brp7P6pwZz
+         +Z5a+11XFjfEQ4Evp0GpMpb14ydc+ftrK84oubhWe3IvFqyOtSL7C+r131mvsk/ipXJv
+         nZIcyH4TUn3fbakg98FdD/K0jp6+om94GlF7ats1/hGjTK/x07B+QLudT0dP/z5K0VaV
+         Vr+O3THXQlWqaea2EeEJk/1R5snx21paBO4GA5N6depwQLLSFrPefGljtDAaO28qaoYW
+         v1I67SoQr9Hi3/qFgSh+2qnwtVot/VyliPb5I0K+/RBSgBGiKqT8HFfHFyK1T+2RnSTO
+         feeg==
+X-Gm-Message-State: AOAM532SvY0BhIH5Zl01O5OufbySLwylO6/k1Ud2rAD1/EHEYKPFxEb7
+        X5TusUXjQa7Wd2zipcy1Jov7ZeSjXMVfUutfiWpXjQ==
+X-Google-Smtp-Source: ABdhPJy5J/bkEHHotUgSklMelctUg5orqWwIVjsNVyLt2OpPUcZYHiaTzeAbTeNPshUHqLcdFRkQL/VKcn4CGp4bqY8=
+X-Received: by 2002:a05:6512:3250:: with SMTP id c16mr1814844lfr.465.1628759871726;
+ Thu, 12 Aug 2021 02:17:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210803175109.1729-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20210803175109.1729-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CACRpkdaMmGCwmA6j0CvJUX3S6cthoeqWRmY1RssSTmSKukwHkg@mail.gmail.com>
-In-Reply-To: <CACRpkdaMmGCwmA6j0CvJUX3S6cthoeqWRmY1RssSTmSKukwHkg@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 12 Aug 2021 10:05:57 +0100
-Message-ID: <CA+V-a8u25EN3fuGG9CnYoSwt9nk-=DduUR9RAZwZWLr0=PW9BA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: interrupt-controller: Add Renesas
- RZ/G2L Interrupt Controller
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+References: <20210809201513.12367-1-mario.limonciello@amd.com>
+In-Reply-To: <20210809201513.12367-1-mario.limonciello@amd.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Aug 2021 11:17:40 +0200
+Message-ID: <CACRpkdY10DoJdaLnGSwT4icPQRR23vhaDYiY9aShaBs4oU91NQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: amd: Fix an issue with shutdown when system set
+ to s0ix
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Raul E Rangel <rrangel@chromium.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Gabriel C <nix.or.die@googlemail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Mon, Aug 9, 2021 at 10:15 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
 
-Thank you for the review.
+> IRQs are getting armed on shutdown causing the system to immediately
+> wake back up.
+>
+> Link: https://lkml.org/lkml/2021/8/2/1114
+> Reported-by: nix.or.die@googlemail.com
+> CC: Raul E Rangel <rrangel@chromium.org>
+> Fixes: d62bd5ce12d7 ("pinctrl: amd: Implement irq_set_wake")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-On Wed, Aug 11, 2021 at 1:10 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, Aug 3, 2021 at 7:51 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> > +description: |
-> > +  The RZ/G2L Interrupt Controller is a front-end for the GIC found on Renesas RZ/G2L SoC's
-> > +    - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts,
-> > +    - GPIO pins used as external interrupt input pins, mapped to 32 GIC SPI interrupts,
-> > +    - NMI edge select.
->
-> Not that we don't have weird documentation but what on earth is an
-> "NMI edge"???
->
-On this SoC NMI is not treated as an NMI exception, the irqc has bits
-to select the NMI interrupt (Rising/Falling-edge) detection.
+Patch is applied.
 
-> I know about rising and falling edges, and I know about non-maskable
-> interrupts. But NMI edge? Maybe expand this to explain what it is?
->
-sure will add more details on the above.
-
-Cheers,
-Prabhakar
+Yours,
+Linus Walleij
