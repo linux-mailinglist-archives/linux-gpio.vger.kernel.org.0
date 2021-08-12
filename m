@@ -2,100 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E9C23EA68A
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Aug 2021 16:25:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56C933EA649
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Aug 2021 16:13:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237948AbhHLO0O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Aug 2021 10:26:14 -0400
-Received: from elvis.franken.de ([193.175.24.41]:57499 "EHLO elvis.franken.de"
+        id S237937AbhHLOON (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Aug 2021 10:14:13 -0400
+Received: from mga17.intel.com ([192.55.52.151]:19633 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233282AbhHLO0O (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 12 Aug 2021 10:26:14 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1mEBeQ-0002iE-00; Thu, 12 Aug 2021 16:25:42 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id DCCD2C07DD; Thu, 12 Aug 2021 16:09:34 +0200 (CEST)
-Date:   Thu, 12 Aug 2021 16:09:34 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, mturquette@baylibre.com,
-        daniel.lezcano@linaro.org, linus.walleij@linaro.org,
-        vkoul@kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 0/9] MIPS: Migrate pistachio to generic kernel
-Message-ID: <20210812140934.GA9924@alpha.franken.de>
-References: <20210723022543.4095-1-jiaxun.yang@flygoat.com>
+        id S237893AbhHLOON (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Aug 2021 10:14:13 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="195628171"
+X-IronPort-AV: E=Sophos;i="5.84,316,1620716400"; 
+   d="scan'208";a="195628171"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 07:13:47 -0700
+X-IronPort-AV: E=Sophos;i="5.84,316,1620716400"; 
+   d="scan'208";a="673619429"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 07:13:44 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mEBSk-008fEr-5m; Thu, 12 Aug 2021 17:13:38 +0300
+Date:   Thu, 12 Aug 2021 17:13:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linux GPIO <linux-gpio@vger.kernel.org>,
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     David Thompson <davthompson@nvidia.com>,
+        Asmaa Mnebhi <asmaa@nvidia.com>,
+        Liming Sun <limings@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Possible ACPI abuse in Mellanox BlueField Gigabit Ethernet driver
+Message-ID: <YRUskkALrPLa2cSf@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210723022543.4095-1-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 10:25:34AM +0800, Jiaxun Yang wrote:
-> I'm lucky enough to get a Creator CI40 board from dusts.
-> This patchset move it to gerneic kernel to reduce maintenance burden.
-> It have been tested with SD Card boot.
-> 
-> --
-> v2: Minor fixes
-> v3: Typo fixes and 0day testbot warning fix (Thanks to Sergei!)
-> v4: 01.org warning fix
-> 
-> Jiaxun Yang (9):
->   MIPS: generic: Allow generating FIT image for Marduk board
->   MIPS: DTS: Pistachio add missing cpc and cdmm
->   clk: pistachio: Make it selectable for generic MIPS kernel
->   clocksource/drivers/pistachio: Make it selectable for MIPS
->   phy: pistachio-usb: Depend on MIPS || COMPILE_TEST
->   pinctrl: pistachio: Make it as an option
->   MIPS: config: generic: Add config for Marduk board
->   MIPS: Retire MACH_PISTACHIO
->   MIPS: Make a alias for pistachio_defconfig
-> 
->  arch/mips/Kbuild.platforms                    |   1 -
->  arch/mips/Kconfig                             |  30 --
->  arch/mips/Makefile                            |   3 +
->  arch/mips/boot/dts/Makefile                   |   2 +-
->  arch/mips/boot/dts/img/Makefile               |   3 +-
->  arch/mips/boot/dts/img/pistachio.dtsi         |  10 +
->  arch/mips/configs/generic/board-marduk.config |  53 +++
->  arch/mips/configs/pistachio_defconfig         | 316 ------------------
->  arch/mips/generic/Kconfig                     |   6 +
->  arch/mips/generic/Platform                    |   1 +
->  arch/mips/generic/board-marduk.its.S          |  22 ++
->  arch/mips/pistachio/Kconfig                   |  14 -
->  arch/mips/pistachio/Makefile                  |   2 -
->  arch/mips/pistachio/Platform                  |   6 -
->  arch/mips/pistachio/init.c                    | 125 -------
->  arch/mips/pistachio/irq.c                     |  24 --
->  arch/mips/pistachio/time.c                    |  55 ---
->  drivers/clk/Kconfig                           |   1 +
->  drivers/clk/Makefile                          |   2 +-
->  drivers/clk/pistachio/Kconfig                 |   8 +
->  drivers/clocksource/Kconfig                   |   3 +-
->  drivers/phy/Kconfig                           |   2 +-
->  drivers/pinctrl/Kconfig                       |   5 +-
->  23 files changed, 114 insertions(+), 580 deletions(-)
->  create mode 100644 arch/mips/configs/generic/board-marduk.config
->  delete mode 100644 arch/mips/configs/pistachio_defconfig
->  create mode 100644 arch/mips/generic/board-marduk.its.S
->  delete mode 100644 arch/mips/pistachio/Kconfig
->  delete mode 100644 arch/mips/pistachio/Makefile
->  delete mode 100644 arch/mips/pistachio/Platform
->  delete mode 100644 arch/mips/pistachio/init.c
->  delete mode 100644 arch/mips/pistachio/irq.c
->  delete mode 100644 arch/mips/pistachio/time.c
->  create mode 100644 drivers/clk/pistachio/Kconfig
+Hi!
 
-series applied to mips-next.
+From time to time I do grep kernel for ACPI_RESOURCE_TYPE_GPIO usage.
+Recently the drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_gpio.c
+caught my eye.
 
-Thomas.
+Looking into the code I see that it looks like misunderstanding of how ACPI
+works with GPIOs. First of all, I would like to inform that this code has
+been properly reviewed neither by GPIO nor by ACPI maintainers. Second, before
+going it to the real conclusions (and potential revert of this), I would like
+to see the real ACPI tables for this and some explanations from the authors of
+the driver about GPIO usage here (from hw and sw perspectives).
+
+It makes sense to discuss ASAP, otherwise I would really want to revert it.
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+With Best Regards,
+Andy Shevchenko
+
+
