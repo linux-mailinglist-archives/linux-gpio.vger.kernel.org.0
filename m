@@ -2,119 +2,211 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7482E3EA70A
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Aug 2021 17:02:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C74013EA80E
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Aug 2021 17:55:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238251AbhHLPC7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Aug 2021 11:02:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238247AbhHLPC5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Aug 2021 11:02:57 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA88C061756
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Aug 2021 08:02:32 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id n12so6996051plf.4
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Aug 2021 08:02:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KNEQZNxpx38I2l1fGOSwKTuYmC/Mv4bGO3lFF6ZP0xE=;
-        b=ZsCvlc25Vk2hColqy2aVCxkBjEEkhGYVHZ4o/dcI+kweu7waKrFAxAIWCG0/IetG1Y
-         FpUPw3M88QWCOggB2782meckY9AsBHzrGGLPEGBWIxELMTsV58ges0fwuN9PTCvRbPvj
-         /PyA44/UrDjn0o3omFJcbuO1VFcNxzM84baYvQN5fH8flwv8R5Cb9IbcNxhjyYOpkqT8
-         fwZivcujyO56nxKeQQ1KvABxsWWHEMZ77tkOmQ313gN7+bTFikd+4qpWN+YNl2dwJioB
-         0ZhySZ7YpIaoHQLK549DrVkqG8f+4uoT/zFh9pXTFtnDnD5sEani0CzJEWNXM+X7uyyK
-         Vrhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KNEQZNxpx38I2l1fGOSwKTuYmC/Mv4bGO3lFF6ZP0xE=;
-        b=GhTi4mwh4S5M7uu7KA+ecVr2dOrQpt4tyLVvJKkuDviR8NPhzipeHBnpuxd/OrDhNe
-         dfzZ+wmt80eKsFN3PZOocjhOUp9f14qr34aKzN/64CpFSZGejN6TJo/yRg7Z8Faa2tJJ
-         3CvLda4wqXfDM8jM8dHlP/aQfJ4efgps06FaoNbIH8tAVd6d+KNfw9+/CbhiIycrx8Vg
-         XyfhTixt1T5OMcJdzzs4Z/okiCLgHQHNM3dTCw89SPKbHRBcD30iMTFRIJprmVoQOHX0
-         Bd9q3uhOkOB0HDqTaP0KSgYn2DKLsgwHQ0nsRVEsEhnHT1V/76M1oWEtvixLqBZ7OPv2
-         /XWw==
-X-Gm-Message-State: AOAM533lc3wTJSDqdBYeVNB3KROk5OOAqJhCh7gF/a9wWIHWDwk6cAEK
-        Wq8Sp4bDZOvvh2qJBtdQ7oY=
-X-Google-Smtp-Source: ABdhPJwAdYWA6uG9M0Ts7iDui5AvtkVZmY2//yvtjmWXXkN3IU5objSt3FPTh//gpAGaH7xkRvKf2A==
-X-Received: by 2002:a63:f63:: with SMTP id 35mr4181841pgp.148.1628780551350;
-        Thu, 12 Aug 2021 08:02:31 -0700 (PDT)
-Received: from sol (106-69-178-229.dyn.iinet.net.au. [106.69.178.229])
-        by smtp.gmail.com with ESMTPSA id m4sm10616193pjl.6.2021.08.12.08.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Aug 2021 08:02:30 -0700 (PDT)
-Date:   Thu, 12 Aug 2021 23:02:23 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Helmut Grohne <helmut.grohne@intenta.de>,
-        Ben Hutchings <ben.hutchings@essensium.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2.0][PATCH] core: extend config objects
-Message-ID: <20210812150223.GA38195@sol>
-References: <20210807084809.GA17852@sol>
- <CAMRc=McQOcWDexBeWKcA9CosxfG_59quusnVLYN7qu-p86BPag@mail.gmail.com>
- <20210808231012.GA6224@sol>
- <CAMRc=Me5N=gthd4ESrh5ChStEkHQmG1AuzKf6nZNbq2ZXtTrGQ@mail.gmail.com>
- <20210810103113.GA6637@sol>
- <CAMRc=MeKB4wmZw2FS79H0W75394MpzS6sq+2iehD4tXkdDGGzQ@mail.gmail.com>
- <20210812102913.GA21938@sol>
- <CAMRc=MfzGh7ER4VankzR5qStbrW=hCxK-d_1rF+SzD3zik=z2w@mail.gmail.com>
- <20210812142345.GA29599@sol>
- <CAMRc=MdV+GDGpwdMLwKTxaXR+x1ogLzanRBuvwG-aL2jQFrxsA@mail.gmail.com>
+        id S238488AbhHLPzB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Aug 2021 11:55:01 -0400
+Received: from mail-bn8nam11on2060.outbound.protection.outlook.com ([40.107.236.60]:57569
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S238351AbhHLPy7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Aug 2021 11:54:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=crMRmZ+4n5c4lgCpl0Dx/G6/9O7fwoeGCCAB2OUrgGiVsIHR/mYsJCrKEAWfjjMUptah66QEgaKc9O/Y/fNET29JOvG5DRgUkxI2fp5ReMY4lZ4yftK7b9rKi4XegqJtkIszXvcOiVAl1MU1I4uXphhUNl+BtjdErZ+1vtA2RrPYmNDJkhSaWAVQt8N0HC3KyY/tqS+fuXC02B+gKM4cWMNX63nnAaXeCpWvOaUEXKPDtH7oMA/G/AZFY8lG+AnqpGtCcb9TOkX14FfssssFdrmt4M67IpONu32AmMEbE1whUVnjxoDAVKAke3sq2QfrymECdvsSQoj9v2y93rXTPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iTUQWAGyzMCrYMcCjPmi4bSXsP6IP1xzWAbT7KnfXDQ=;
+ b=DKnzapm9/xIh3X0WnIPpsxBqbWZHuhZBG3oyVrxqLeYwklBLZ7C/GmuYoQtTAkP0SsBmFE9p34GRzFh48/hlNmyaTtZHNuqMJOg3ttOkhNymkrbrnWzk0FhR2q4To9bm7qbrywkh1Vma6Xi1zaNurfSuGkX3GXdp8lH33R0U7k0CQ2qJ7eWa6CtU8nGQEwL9z6GODuiZvTCP+2bIK20yt8hMXJXUdOVLfSVnANxYTk6Vj6yPe5EL3V9nCIfow9W9HsrTV3wO68jAxZYQDit7Jz7f8z1BDUkRmkoTd7X11KYg6fbmWNyRHPDraoWkv++Xkcsjm0ursRryn4qF3o8ltw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iTUQWAGyzMCrYMcCjPmi4bSXsP6IP1xzWAbT7KnfXDQ=;
+ b=rklN+Oc711cq9Vc9KkS5vm4G1K1huMOC9znDpIrdu2ew688JqdWF5cxxtHx45OU8NjECJATdQe4r56U/Gf3wwhuPEGn2j4iCoUV2xxrjY2ufgteMStQxLQcEXrIhmVqqNy/9xazyxZQvCcpGcp4e5c2ObJGH0gh4uMCiUqydMbF7qg0UxFVSIcD12+ZD8+s2JxSg8vykjGPE/ekMD2ia55U3qWIKUaiDRGYCkT0+YErdmjBItffEKnKX7QmP0Lb4zTzfoESIkFe1lnK4MEITlC8ggu+vheyh1WJernn/OzlmqSxWILz5BLublld/Sz8acVhRaaSiGZVF4qYHSYGdjw==
+Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
+ by CH2PR12MB4230.namprd12.prod.outlook.com (2603:10b6:610:aa::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.13; Thu, 12 Aug
+ 2021 15:54:27 +0000
+Received: from CH2PR12MB3895.namprd12.prod.outlook.com
+ ([fe80::9473:20a9:50d1:4b1f]) by CH2PR12MB3895.namprd12.prod.outlook.com
+ ([fe80::9473:20a9:50d1:4b1f%6]) with mapi id 15.20.4415.018; Thu, 12 Aug 2021
+ 15:54:27 +0000
+From:   Asmaa Mnebhi <asmaa@nvidia.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux GPIO <linux-gpio@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     David Thompson <davthompson@nvidia.com>,
+        Liming Sun <limings@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: Possible ACPI abuse in Mellanox BlueField Gigabit Ethernet driver
+Thread-Topic: Possible ACPI abuse in Mellanox BlueField Gigabit Ethernet
+ driver
+Thread-Index: AQHXj4RFqEwJ+TxolE6RFm/HH+1hB6twAdMQ
+Date:   Thu, 12 Aug 2021 15:54:26 +0000
+Message-ID: <CH2PR12MB389540C4C751277287147E95D7F99@CH2PR12MB3895.namprd12.prod.outlook.com>
+References: <YRUskkALrPLa2cSf@smile.fi.intel.com>
+In-Reply-To: <YRUskkALrPLa2cSf@smile.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e3c64691-c1e7-430b-2a40-08d95da976a1
+x-ms-traffictypediagnostic: CH2PR12MB4230:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR12MB423071C7B1CEDCD970017830D7F99@CH2PR12MB4230.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3uI8hJC6Jot0VCOaq05s1tErj9fim7Zp0PnNmULI4+YgR5sKAVNxbSKXc6w+IRjwl9bYFwegA8TUEKctRgVL8t8HZ1/qoaA5K7mtih1Jwv65dElV1yRz6uZ9DKb9/kiFLV8XG3V8r+5izyGe6+aMng6Xw4alwYRXO/pWkbZe6UB4ozqbNwP8G6UxAjo20zCpcUR7ZmFZe9h5koUkkg+si/dYJDs8WAzK+umqu3hFAFRIaAna3lxfFbC33PSBnvJxiJOx8XoSz2drq1Hquav/1DdmrEfvIo4lY0ql4s2Qwle3P23F9FiXY+idWckeDk+IkVaVleg9e4fmuVai0JM66tnf3drD1s3SxXVeEjd+A+judxjriyu2zQoLiuqmZEm5vr7ng9N5qojWG4Pc6j+Snfe1CW32nyzl+nZSFkPy7iOazl+KTcJzPdSZx9h4SpFgNPnnfXCrlw8y5jAEfabQUi266EcsBf6TdZ7zV/jrbt7UlJazOrmlpyYBYcLZWf3kJTRWIJqnjjbKKXpgZajROheVFH/X7BuWgho0P8kxFFKpUKiptwblh2csInhJYjS4m3bDQoObp97MGs7N0nz+IHM94rh5gBI607q4Fb/6Gp4aFz2i+Wy0lYc8Bywl3iPuMed2m3iRV8aCtccXFayTyGrr6NyS4Fo3f15lbjfRPNS+qHVrZrKS/nRiY0AiP6sUiGtJKfSAXzlIVf10qM8bcw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(346002)(366004)(396003)(376002)(55016002)(186003)(38100700002)(52536014)(7696005)(54906003)(8936002)(66946007)(66446008)(66476007)(76116006)(64756008)(478600001)(2906002)(66556008)(33656002)(38070700005)(53546011)(110136005)(86362001)(316002)(122000001)(6506007)(9686003)(5660300002)(83380400001)(8676002)(71200400001)(26005)(4326008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?+ujUYt3LZUF59eqxREJeUl8eggLOBdMDlIIPRwZqPT8+iAcPa4wjvHMsYfV2?=
+ =?us-ascii?Q?ZnPQfuw4nGR2PDVg1kzcD5FzeBvX9Vv2GY0zl2/MFjqV42qAofE9O/f70xvp?=
+ =?us-ascii?Q?AYWmBOWrBER9wqw1gymZfpUwymoAyDXgXIm68hg/0OafrOV8egTBQ6MsupMc?=
+ =?us-ascii?Q?7ASNZTwQMjzrz7RczQQEJO//0Nhs6cDwqjCG19By+1CNz7NZkSUUxyV+/k87?=
+ =?us-ascii?Q?+Q3/2bSWdxYAQZiMSUkT/gJDfoY8VMwQgbDvMVMrx8FmViPOOkAzDJb8rPf8?=
+ =?us-ascii?Q?2OgEh0CMKUa0yijjwe29DEpOkkTus56eHbR8BXupe27klTBwGaykBGxKx4tv?=
+ =?us-ascii?Q?ZvR9YEkElTs2fxTVfQ7h+g3uf2TTpx+mM5aOPQqSJK0XETxa5trbkA0MdfDf?=
+ =?us-ascii?Q?FQ7QY33Ju7HCg9KGfIi98WinVCNfq31ffE63mBQivdQgErY/D/s+LCaDvBH3?=
+ =?us-ascii?Q?juik226C+fn9+OYh20GNN083vDCqMMXKe2Yf2l/Bba+ApXAWVvcTGY+wm8Uk?=
+ =?us-ascii?Q?EYRezsZNonO6PM4w6S0b/OT+YZTCta5B7H1l/aHrNT/PrFH4Apbe1QmuBrWM?=
+ =?us-ascii?Q?onrnzYOxi8WJxzzLoSu0ifx65s36btVoeA5YW524LVkJNMUsRhImRLZcB6ex?=
+ =?us-ascii?Q?CDfr17ZJ/NYrrtDQZZupJ7gOR5YW59DyUgV2CCrlj9BdfVkk9E8QSFPZmdOH?=
+ =?us-ascii?Q?kGmDk6yp/dCInledHoksJqGCtAoNOYPqQC3LLusKauX8gHlgE6kkv8xNwHip?=
+ =?us-ascii?Q?qBPKZCXK16BUmVURZysqyrp8ev93Lp5vyKIuJbk1iZY8cr6/6GE4Se+e5vrG?=
+ =?us-ascii?Q?0riGI/IC53fhLR8jQ14ERGuyWSgSu9Xq2XFAt1E56WEG9M38v6g7vDGp2rTe?=
+ =?us-ascii?Q?oyzPTOykJLqw5g1Gps2G0lVBJLoxJVM1kEYH797k0/+hNktaNv2iabeLQVwv?=
+ =?us-ascii?Q?7PeSb3ujfPSwVxmCdv9xfXf3XRMzOk2GtkgNsTRvCkws6huZUI8zmWdt5LZ5?=
+ =?us-ascii?Q?iQkfs6MPJolMFsoL/hMVUWXLiMO5Vh7bRCAeEpaDhV+SZFfM1gwxLC/dDE9S?=
+ =?us-ascii?Q?gPBqbiHQjhq2fgSWH06b9e/Zqn5HvMLj9TBcewM2YUrFHFJntiMr7lcmdqO4?=
+ =?us-ascii?Q?wEn4/RVgIm/XVwZrIX0XIrSteCzv9aNGPXzjhevr+KvyAPMxc6DR2BBXCSPZ?=
+ =?us-ascii?Q?sZgXyw/6vjRx4QXMYwEfF3Rjt3KEcbyk3ruy4EgOqVRmiRZI4dNNZ9yi4Q3d?=
+ =?us-ascii?Q?ImMLwu3K24csIZpQpHoBtcPUiqCzdfYz0ZqfmmQBEa+1wCw1bPyksHjjLV5p?=
+ =?us-ascii?Q?KdoO10WJQn7erPRGYaNHunbp?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdV+GDGpwdMLwKTxaXR+x1ogLzanRBuvwG-aL2jQFrxsA@mail.gmail.com>
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3c64691-c1e7-430b-2a40-08d95da976a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2021 15:54:26.7727
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vwTh/ugk9aOVAA0mCMu7GPS78kA64knus5+NnWB6OIeoeoMAdgy1JezcfiHMqUIie4KJ0wofrvx7C9wnmw0HzA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4230
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 04:43:46PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Aug 12, 2021 at 4:23 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Thu, Aug 12, 2021 at 02:51:02PM +0200, Bartosz Golaszewski wrote:
-> > > On Thu, Aug 12, 2021 at 12:29 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> > >
-> >
-> > <snip>
-> >
-> > > >
-> > > > Sure, it's a trade-off, but the alternative is requiring a 2-3k block
-> > > > even for a one line request, which seems a wee bit excessive.
-> > > >
-> > >
-> > > As you said - it's on the heap, so who cares. But this is also an
-> > > internal structure and so we can use bit fields. That should reduce
-> > > the memory footprint significantly as we now don't require more than 3
-> > > bits for any given enum. That would leave us with the debounce period
-> > > and offset as full size variables.
-> > >
-> >
-> > Rather than introducing a new collection of enums and bitfields, why not
-> > just store the v2 flags for the line?
-> >
-> 
-> Why a new collection of enums? It wouldn't change anything, we'd just
-> make sure in the setters we never overflow.
-> 
+Hi Andy,
 
-Yeah, my bad - you already have the enums.
+We have 1 image common to all our board types. The ACPI tables are selected=
+ based on the board id. Some board types have PHY_INT pin connected to GPIO=
+ pin 9 and other boards have it connected to GPIO pin 12. So we have 2 ssdt=
+.asl files:
 
-> I would prefer to limit the use of kernel symbols (and types!) to the
-> minimum for clarity.
-> 
+// first file: PHY_INT -> GPIO pin 12
+Device(OOB) {
+        Name(_HID, "MLNXBF17")
+        Name(_UID, 0)
+        Name(_CCA, 1)
+        Name (_CRS, ResourceTemplate () {
+           // OOB Ethernet
+           Memory32Fixed (ReadWrite, 0x03000000, 0x00000600)
+           // mdio[9]
+           Memory32Fixed (ReadWrite, 0x028004C8, 0x00000008)
+           // gpio[0]
+           Memory32Fixed (ReadWrite, 0x0280c000, 0x00000100)
+           // OOB LLU
+           Memory32Fixed (ReadWrite, 0x039C0000, 0x0000A100)
+           // OOB PLU
+           Memory32Fixed (ReadWrite, 0x04000000, 0x00001100)
+           Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { BF_=
+RSH0_DEVICE_OOB_INT }
+           Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive) { BF_R=
+SH0_DEVICE_OOB_LLU_INT }
+           Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { BF_=
+RSH0_DEVICE_OOB_PLU_INT }
+           Interrupt (ResourceConsumer, Edge, ActiveHigh, Shared) { BF_RSH0=
+_DEVICE_YU_INT }
+ =20
+           // GPIO PHY interrupt
+           GpioInt (Edge, ActiveHigh, Exclusive, PullUp, , " \\_SB.GPI0") {=
+12}
+        }) // Name(_CRS)
 
-OK, but you need to map the libgpiod config to kernel flags at some
-point...
-And this is all internal to line-config.c...
+// Second file: PHY_INT -> GPIO pin 9
+Device(OOB) {
+        Name(_HID, "MLNXBF17")
+        Name(_UID, 0)
+        Name(_CCA, 1)
+        Name (_CRS, ResourceTemplate () {
+           // OOB Ethernet
+           Memory32Fixed (ReadWrite, 0x03000000, 0x00000600)
+           // mdio[9]
+           Memory32Fixed (ReadWrite, 0x028004C8, 0x00000008)
+           // gpio[0]
+           Memory32Fixed (ReadWrite, 0x0280c000, 0x00000100)
+           // OOB LLU
+           Memory32Fixed (ReadWrite, 0x039C0000, 0x0000A100)
+           // OOB PLU
+           Memory32Fixed (ReadWrite, 0x04000000, 0x00001100)
+           Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { BF_=
+RSH0_DEVICE_OOB_INT }
+           Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive) { BF_R=
+SH0_DEVICE_OOB_LLU_INT }
+           Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { BF_=
+RSH0_DEVICE_OOB_PLU_INT }
+           Interrupt (ResourceConsumer, Edge, ActiveHigh, Shared) { BF_RSH0=
+_DEVICE_YU_INT }
+ =20
+           // GPIO PHY interrupt
+           GpioInt (Edge, ActiveHigh, Exclusive, PullUp, , " \\_SB.GPI0") {=
+9}
+        }) // Name(_CRS)
 
-Cheers,
-Kent.
+-----Original Message-----
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>=20
+Sent: Thursday, August 12, 2021 10:14 AM
+To: Linux GPIO <linux-gpio@vger.kernel.org>; linux-acpi@vger.kernel.org; Ra=
+fael J. Wysocki <rjw@rjwysocki.net>; Linus Walleij <linus.walleij@linaro.or=
+g>; Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: David Thompson <davthompson@nvidia.com>; Asmaa Mnebhi <asmaa@nvidia.com=
+>; Liming Sun <limings@nvidia.com>; David S. Miller <davem@davemloft.net>
+Subject: Possible ACPI abuse in Mellanox BlueField Gigabit Ethernet driver
+
+Hi!
+
+From time to time I do grep kernel for ACPI_RESOURCE_TYPE_GPIO usage.
+Recently the drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_gpio.c
+caught my eye.
+
+Looking into the code I see that it looks like misunderstanding of how ACPI=
+ works with GPIOs. First of all, I would like to inform that this code has =
+been properly reviewed neither by GPIO nor by ACPI maintainers. Second, bef=
+ore going it to the real conclusions (and potential revert of this), I woul=
+d like to see the real ACPI tables for this and some explanations from the =
+authors of the driver about GPIO usage here (from hw and sw perspectives).
+
+It makes sense to discuss ASAP, otherwise I would really want to revert it.
+
+--
+With Best Regards,
+Andy Shevchenko
+
+
