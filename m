@@ -2,92 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD9D23EAE3A
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 03:44:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CE633EAE89
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 04:24:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238228AbhHMBoy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Aug 2021 21:44:54 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:44853 "EHLO
+        id S237149AbhHMCYx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Aug 2021 22:24:53 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:38721 "EHLO
         wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238284AbhHMBoy (ORCPT
+        by vger.kernel.org with ESMTP id S235385AbhHMCYx (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 12 Aug 2021 21:44:54 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 0DED83200035;
-        Thu, 12 Aug 2021 21:44:27 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Thu, 12 Aug 2021 21:44:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=fm3; bh=toCks6kx61gRjktx+WjnXJgHc4
-        kjzWtdq99W+rp0VQQ=; b=jGRLTB/N7hxu/PJsUeQlYrRpbAX2uUqsKdgdyDnXyL
-        vW0ZB7wlctNTV5j4jeN3TXsxuM7/dlfcc/5t3jnauLcHCDFhq7ZSbCzpxm2xZ866
-        i4mV+EQoQ/N0589Gp62aLtQQOvNQgRL4AESP99w2brQ3mMfLq/oTTeQJQHDYF1ig
-        BTpmKNyg08ZhAqy3RjJRxayBI4lnV9chAg3Plfn17jCiCG3nIUCbAaEQ1/Ry/z4X
-        z+8II4era4L3RkX/pVrJmAzsxpcedCqN05joPSdwOZlFkR42b3ehmK5YNC3AP1Ei
-        O73Rq9nPTCPTbOuJo7oWNKhvSKLNZj1D076gQOKMy6Vw==
+        Thu, 12 Aug 2021 22:24:53 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.west.internal (Postfix) with ESMTP id D4069320055E;
+        Thu, 12 Aug 2021 22:24:26 -0400 (EDT)
+Received: from imap43 ([10.202.2.93])
+  by compute2.internal (MEProxy); Thu, 12 Aug 2021 22:24:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:date:from:to:subject:content-type; s=
+        fm3; bh=R4Av/bV5lLfvxbCya7BJK+Ld7wNO0xoQgrCdynH0xe8=; b=oSnc2RqD
+        Uz833OsNNryYKUZH3IyNYr85zFxR2p/Nrh8d1xdXP/q+YSirkuP79+Ni60zZ7COG
+        uIVg3vWV8JJEGah+SpwsjDuQuGqpJi9rYFWH2mXbjYxqXmMdww4PyMZripigomkq
+        tFoeDDOSpQvEy3cyV0xpEgwBth5NPPDw7H+dBAdLr+xfjVGBBi+8zObD7g0CO/HX
+        D5NPqNJRJO6j5if4t8kxIiGI4OXnBr68V8nULJpKGH2qSEj8teLjo+wwV4+23Q4J
+        wxaRRxd1Sr0MlrCq0pOdA+eWEilHbK8Hz7/TCCSYd8q4zBYO3VEUGUmJWeJdMhql
+        LeDDlH7KCe7dYA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=toCks6kx61gRjktx+WjnXJgHc4kjzWtdq99W+rp0VQQ=; b=L5kVPGhG
-        E1IHt/BtEWzuWYW2P71aeiEEFwqb/xEYz+oL96TvtTAKCZNM1YgJ0QdxSIOS1gkr
-        VEWkvGYGx26/57icpaehqahZg54XFMMcW+WvsZWN2FjF8YZbTQG0h8lW+Ijjfnhf
-        /jinqADCK3SS/xR3bN+WTaEyalvpq3zjsA87ybx+IuA+4uF98GAs5OmdrdACP3D/
-        106zoygovSz0ov1x4opVDDsJdlFJZhPhieoPbUfyEHF6cIgQnXbcm8FEh1YTJc8S
-        hnUphapikoYbeLk3wjRaM8eu159SsRen0QRnJHFRgSVh88nP1LgF8Hjbdeohrh5s
-        DWBB9RJ41b9YrA==
-X-ME-Sender: <xms:e84VYa-GqeE97_K19D1CpGbD_GM84IWaugc024ciSJ-_jPVLVm80_A>
-    <xme:e84VYauueZeKO-5GhanBY1-i_tmp7buEJRayX39YkFZY3wo3xzQ855iPqbQls3U7i
-    T-kNxUpFQI2YLug0w>
-X-ME-Received: <xmr:e84VYQBZwRiaaEnZidLA0DUtqJEmlrSO1ZW3n7v8PLSghbKgKcXSAHUVDkYjdZqD5Js2AHk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkeeggdehtdcutefuodetggdotefrodftvf
+        messagingengine.com; h=content-type:date:from:message-id
+        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
+        :x-me-sender:x-sasl-enc; s=fm3; bh=R4Av/bV5lLfvxbCya7BJK+Ld7wNO0
+        xoQgrCdynH0xe8=; b=tIc3VHyi7W8BCuyGGZn2TpTto7fX8uZHGoyP9kVlgykfr
+        QMabM0jjV6LMRXbekGKoWh+o3XZOtvNFKAoATkIptRnME0vshIrs401pn0ov/bn8
+        j8v9DW0Di5PMP4IaTKe34NiH6Pfdh6UH5wM8jveMxqaV4LLyYXlGSBlrI4nbFj1U
+        FKzKwYwTx4kBbCOFNFoJy/IVNXmxw0/UUIF+jRGz/kRcVyBPnFcxy8agtBmixzks
+        x42FNzh6zSIRIKQsGodxs7ZxQt4srgnqj/HFN7sRbrDMiFE/RnipEnXgKrd4CSD/
+        tFdDg5b4QyFdqYJzSxdRpIhMW7EU2nLwA+s4wY2KQ==
+X-ME-Sender: <xms:2tcVYZP5pFUIKm3ipfwHwiZ65Hb8FizW_-LJJleao_pbLa8PK0fJ4w>
+    <xme:2tcVYb9x8oSHlw52qlGrY4oUioKE77Pke8O5lLlcOgsxnudTxMwG16IClMWL_gpeg
+    7Bz7FMIpVsr3iyAUQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkeeggdehjecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
-    rdhiugdrrghuqeenucggtffrrghtthgvrhhnpeejgfdvveehteekveeggeellefgleette
-    ejffelffdvudduveeiffegteelvefhteenucevlhhushhtvghrufhiiigvpedtnecurfgr
-    rhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:e84VYSdRLJHI93akWaXYG4pd_U7i2OD-uNViX_gToMEiOb8blVZzyg>
-    <xmx:e84VYfNb_365sS5OVZXspNrnA7yuuT6qIcSn9DrgaJMhvQEhnGk22A>
-    <xmx:e84VYckUQX5FWJEdnZ6tJOdfzyhuXrDq60f6m4hO1xR0PNu87CZ6Ag>
-    <xmx:e84VYRWWgEyUi51rCTfR4uN43jTNVFa9WSoGne5e0hpcm-25QwB8mA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Aug 2021 21:44:26 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
+    uegrihhlohhuthemuceftddtnecunecujfgurhepofgfggfkfffhvffutgesthdtredtre
+    ertdenucfhrhhomhepfdetnhgurhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegr
+    jhdrihgurdgruheqnecuggftrfgrthhtvghrnhepgeejveetveetkeefgeetvdeihfekvd
+    dvgfehtedvtdfhtdetieevvefhffdvvdeunecuffhomhgrihhnpehgihhthhhusgdrtgho
+    mhdpohhpvghnsghmtgdrohhrghdpmhgvshhonhgsuhhilhgurdgtohhmnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdr
+    ihgurdgruh
+X-ME-Proxy: <xmx:2tcVYYRg4OIm2lj1WEN2XKMIjCeAAmfyaz0BN-PXDuX8CaeNmbIrGg>
+    <xmx:2tcVYVsc0-ag-IhpfsJl7IP4erEA6nw9z57e4ZDZc_1MeaoL9nygMg>
+    <xmx:2tcVYReZhD0-e-m37CIq62fTt0KargAGchWkDPf5bDCea0vXxHHBtQ>
+    <xmx:2tcVYXp9RTkBhJ1801tHgEjxpDUfoltYAo_1YTkknD-2F38uKp1GvA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 365D6AC0DD0; Thu, 12 Aug 2021 22:24:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-1082-gccb13bca62-fm-ubox-20210811.001-gccb13bca
+Mime-Version: 1.0
+Message-Id: <cc4926af-95bb-4178-a760-d55821dfb626@www.fastmail.com>
+Date:   Fri, 13 Aug 2021 11:53:35 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
 To:     bartekgola@gmail.com, linux-gpio@vger.kernel.org
-Subject: [PATCH libgpiod 2/2] configure: Drop unnecessary double-quote character
-Date:   Fri, 13 Aug 2021 11:14:13 +0930
-Message-Id: <20210813014413.4080109-3-andrew@aj.id.au>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210813014413.4080109-1-andrew@aj.id.au>
-References: <20210813014413.4080109-1-andrew@aj.id.au>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [libgpiod]: Meson wrap for libgpiod
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The double-quote was also missing its matching pair.
+Hi Bartosz,
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- configure.ac | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I use libgpiod as part of supporting various platforms in 
+OpenBMC[1][2], among other things. OpenBMC generally targets ARM SoCs, 
+and this means cross-compiling applications and their dependencies as 
+part of the day-to-day work.
 
-diff --git a/configure.ac b/configure.ac
-index 351d5479a319..ce6de99c1edd 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -139,7 +139,7 @@ then
- 		AC_CHECK_PROG([has_bats], [bats], [true], [false])
- 		if test "x$has_bats" = "xfalse"
- 		then
--			AC_MSG_NOTICE(["bats not found - gpio-tools tests cannot be run])
-+			AC_MSG_NOTICE([bats not found - gpio-tools tests cannot be run])
- 		fi
- 	fi
- fi
--- 
-2.30.2
+While cross-compilation for (complex) userspace can be achieved using 
+distro systems like buildroot and openembedded/bitbake or their SDKs, 
+the meson build system[3] provides dependency resolution and (cross) 
+builds as explicit features through subprojects[4] and the wrap package 
+system[5]. In my experience, these features are compelling.
 
+To help me develop userspace applications that depend on libgpiod I've 
+opened a pull-request against meson's wrap database[6] to add libgpiod 
+support for v1.6.3:
+
+https://github.com/mesonbuild/wrapdb/pull/130
+
+Meson overlays this reimplementation of the build system along side the 
+source as shipped in the tag, enabling meson dependency management 
+without any impact on the upstream project. However, as you might 
+guess, the wrap implementation is non-trivial as it transliterates the 
+autotools scripts. While maintenance of this approach doesn't require 
+any work on your part, it does have to adapt as the autotools scripts 
+change. As such:
+
+How do you feel about switching from autotools to meson for the build 
+system of libgpiod?
+
+If this is something you're interested in we can rebase the work in the 
+pull-request above on libgpiod master and have something that's mostly 
+ready. If you're not interested, I can at least carry on maintaining 
+the wrap, but I felt like it was worth asking the question :)
+
+Interested in your thoughts!
+
+Andrew
+
+[1] https://www.openbmc.org/
+[2] https://github.com/openbmc/openbmc/
+[3] https://mesonbuild.com/
+[4] https://mesonbuild.com/Subprojects.html
+[5] https://mesonbuild.com/Wrap-dependency-system-manual.html
+[6] https://mesonbuild.com/Wrapdb-projects.html
