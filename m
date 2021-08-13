@@ -2,77 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3CF53EAC35
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Aug 2021 23:07:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CF0A3EAE38
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 03:44:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbhHLVHa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Aug 2021 17:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234500AbhHLVH2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Aug 2021 17:07:28 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07414C061756
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Aug 2021 14:07:03 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id z2so15991024lft.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Aug 2021 14:07:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6PC9qkv0bT5Q6RXEYPNOhipMKAifPwXWAHn4hf32awA=;
-        b=vYBXkKzxA1EduNxnfN1Numn+ttQQ0nz3qIeVUko6iVKC/NjsgH83Zru6BhgsImsWIQ
-         8wfmTu1KPc4fLXq5wLA+Z6wIoMIlghED7eGC8Snq2SaAQcKmfzs+4GsQoa+jVCEC5Tie
-         C3NOi/XrUgdJIujw5fQY7Ma7EhVidMLYQDELAw1hTUvKEO1CEAkhocKD53L7/qW433kV
-         zHR+1kCbSp+kCN00MD+oxygnC/SqGCTYsLkJ9gUjT+0K2yCPCDuBjlli6z97la/+jDR3
-         PzK5ZH8iaw/f7OwfQR550zGdcRYr47BJe+D6TEkPpUG36wtjIvX3sAefJo6q1BZaBJob
-         5gWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6PC9qkv0bT5Q6RXEYPNOhipMKAifPwXWAHn4hf32awA=;
-        b=SZUK6AE5Ooiy3l3WTCc0JGA2OMx2Di2WqpBo4pIXk8Do32CM+DAk13sO1zHX8oJevl
-         hLEWQt4hsC/LR782VJJBFBs873JvN9SGIcStevsq4MqnTObNPDb8JV2PhX+auY8kXC/i
-         /s3KVq5pVntCyDNju/+SzrvigU/2dSOXLDDvu3Y4V8Ofuoy455mHkQ98GzJDbsJU/MSo
-         RFlLm1xUHUF6PvLNmlHxRnP9BclQZJj1G7GtamL062n5SpkSg/qrfvWUcZC4Eu8v9UXc
-         hZ+aKsGw3UV2FGkBfWc3bMLkdRaOcNDfYWwdagMgj5sM/dIV34aruB2RoKPtjYpXyDRF
-         IhJQ==
-X-Gm-Message-State: AOAM532Rgb/xqzMXoHYWKdd4HTvW0QaPQFDPTS1kbMz+rLj+60h5z1nB
-        Ky9uu37yzXPDoLkP4SRCu2oIcyhzCwAcKHVaLpaQsA==
-X-Google-Smtp-Source: ABdhPJxG7tjf/3lJu727KTAlDk9tbnswuGrxJU9a2UtDAP01GNjfL1zAJjqiqNFgL0ryBoEgKoxD0oLgMGot3sehaiU=
-X-Received: by 2002:a05:6512:32a3:: with SMTP id q3mr3709067lfe.157.1628802421338;
- Thu, 12 Aug 2021 14:07:01 -0700 (PDT)
+        id S238130AbhHMBot (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Aug 2021 21:44:49 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:53073 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238228AbhHMBot (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Aug 2021 21:44:49 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id DF9AD320092A;
+        Thu, 12 Aug 2021 21:44:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 12 Aug 2021 21:44:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=J5HIHNv6dygC+Q+ruyIu/h2GK6
+        PEWsPP/EL7DiQ//RY=; b=BClhw22LzMaaiyvBXRxd0vjBmETZHSZlvJ/yXcvqvJ
+        viLgvg3e8/hvJEdP6tnt7/PaZfBV1a/CyZpopvCjCZHOBIt4oGPQ5EgWvAKKCoU7
+        tipivuhZalw7QHh4LIQO73zftfGk22Gos1eSbG8TgaPDgwnmiPB2Hv1bZm3fZb0e
+        0zI3jPy2fMpTQb8qmlShYtJZP+GgUMm504FPPxkH1tIbZfRepKDNz7Ycvz9D08Mf
+        s0NvOHh+/uj2Pe0SkEgTp1741ucEIAvYU+SKxZu6LvdUq8Okq4TSFkiudFDR6SyV
+        86cdF+xESaCnzZ8q8Ygyqf5IeG01pU65iq8aVPaCdaAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=J5HIHNv6dygC+Q+ru
+        yIu/h2GK6PEWsPP/EL7DiQ//RY=; b=jM1/KfwK5EPNLeWFOAYJUEH0Bll08RuKX
+        IteD3UqgDISO/2BamV9SLCCTDKaYq+DSer6ezffauDNR4CDyaxhLx418kqcUqpZn
+        nIJ5H6DT+Wksj4ZkZgHpYu1MWatSdee6kvVrLJ+UMdWo8kKzJHp30Gt+MA0K1nT5
+        9Y5Rm8wlfscUHbi6MfFLm/yEhH2Msx6pd33nPngGrrnS2MrKckmWBgZnQViYsD9n
+        1hmt23+rYJYSRF59LZhLKsi1MvH2XiVXfCBsfG6LSXzho3i/vJZYa7+sdfEe1DOC
+        C4jgB2pbNLSxfEILNUDlCKPrEs4z/KRhipkotdusGFmF/VLhjn97Q==
+X-ME-Sender: <xms:ds4VYUi_DHHAE6edYYKHz2fZzVbvBXVHi5LVwLcl-xi0a93e0n9UfA>
+    <xme:ds4VYdA9nqRJBj7IRH0hr7BjWIFwhmwEtvn_fkAGVv8msDM66H_zL7yUlu2ez_-ym
+    3Ql5UsSo-I9zudYoA>
+X-ME-Received: <xmr:ds4VYcGJCZbAmVpJFh47LOWOci-Rq4mUrF0j-GRTGOqoWlI-4r0FxebKnbfE7appI0Egc4I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkeeggdehtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhi
+    ugdrrghuqeenucggtffrrghtthgvrhhnpeekhfeiffejveefveehtdeiiefhfedvjeelvd
+    dvtdehffetudejtefhueeuleeftdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
+    mhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:ds4VYVR5ohTivjjS3QcTnsrzBHfgYbfHjuqLoP96x3tf9u1wB5ying>
+    <xmx:ds4VYRzl4q8oVxixIBAgHhBX6U94uJ2PKDAC_yn-VsOxAKQ7y2Tthg>
+    <xmx:ds4VYT5RKbzr8Q7HvYMbsf_Sb9y4gbBNzN1qREzakBC7jQUWgqcc_Q>
+    <xmx:ds4VYfa9-zPTkNAzgTq64L0rqDmyj2UlJEyZU7LGf4UW6J9-PVTZFQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 12 Aug 2021 21:44:20 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     bartekgola@gmail.com, linux-gpio@vger.kernel.org
+Subject: [PATCH libgpiod 0/2] configure: Minor cleanups
+Date:   Fri, 13 Aug 2021 11:14:11 +0930
+Message-Id: <20210813014413.4080109-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <YRUskkALrPLa2cSf@smile.fi.intel.com>
-In-Reply-To: <YRUskkALrPLa2cSf@smile.fi.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Aug 2021 23:06:49 +0200
-Message-ID: <CACRpkdbAw=+x9vJL7TiqyA+M8J9CA2go+hjuP0EUzzkEZikbbg@mail.gmail.com>
-Subject: Re: Possible ACPI abuse in Mellanox BlueField Gigabit Ethernet driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        David Thompson <davthompson@nvidia.com>,
-        Asmaa Mnebhi <asmaa@nvidia.com>,
-        Liming Sun <limings@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 4:13 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Hello,
 
-> From time to time I do grep kernel for ACPI_RESOURCE_TYPE_GPIO usage.
-> Recently the drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_gpio.c
-> caught my eye.
+Here are a couple of minor fixes for the bats test in configure.ac.
 
-Thanks for doing this Andy, I wonder if there are other GPIO things we
-should be looking out for.
+Cheers,
 
-Yours,
-Linus Walleij
+Andrew
+
+Andrew Jeffery (2):
+  configure: Fix 'flase' typo in bats dependency test
+  configure: Drop unnecessary double-quote character
+
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.30.2
+
