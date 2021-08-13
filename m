@@ -2,78 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14ED43EB33E
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 11:15:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A9663EB347
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 11:21:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239179AbhHMJQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Aug 2021 05:16:22 -0400
-Received: from mail-vs1-f42.google.com ([209.85.217.42]:42883 "EHLO
-        mail-vs1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239035AbhHMJQV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Aug 2021 05:16:21 -0400
-Received: by mail-vs1-f42.google.com with SMTP id k24so5781117vsg.9;
-        Fri, 13 Aug 2021 02:15:55 -0700 (PDT)
+        id S238823AbhHMJWX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Aug 2021 05:22:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234716AbhHMJWX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Aug 2021 05:22:23 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A446DC0617AD
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Aug 2021 02:21:56 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id z2so18864482lft.1
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Aug 2021 02:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=MIjzmWOcO2qIDbveR8D+xuH4rtgwCBu1WunRV4Qrdcc=;
+        b=xnADoA8/sVgouYWhh2X/p/FFDTnxnWQHLA5tbe/x7qDpeVVM6ZI5Kd6QNQ6i+w12Su
+         ZkYMR5D1x0jqkGsi4NLTNnYE3rzd2G8KwE9KSEDh09VUi0OzZjtYYA4FCZATBiSz4h3G
+         psrgPsQm9hMh0qm/hbgZGckCS1rMuDLpbfIEh+k0rH0htE8PWFKqdx+XD08qIU2UWMIG
+         /zoW3J6Clj05OR/0y6F15xDWTYWHwzrPAlhkXTFu+s9+2acyxPp9KLzVZuQt3MC2XOFZ
+         TQud3lSb/8mPJnjpE8TuLmAnBNOP/Dc9HBkx5zksnYki9JItNZCJRb3NDduiHkWhTCxk
+         1N3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rCQ9uXbTrQHU/iDHOCGr2LIgoLj89U2ek51LwvC1c9Q=;
-        b=Th8eB53I78lc2TdtHDg6govBDu+I7Iny+xM/BJyGj3QKC4fYNqPEX15/xHXyRvtiBc
-         mkbZssFWyKWrj5mjjYKo7VKa9uLGnnnSAzUymiS+JdyqVwEvvKhszhJNg/q4rvXfUhxa
-         gIWq7o8LCg8S6p49otBKzXnhWieEcerCoEpWb1RMRGwrsyPTLPOtBJtwBAfpmJpJ5RRz
-         /2rA+EezUhXG13LyqvkckCj0vYfmun2QglssdVG+XRjN/JOJuw0M00AzI1jpIrAMq2n6
-         lvsDfZS4nHnoEZCgEbGzGZ/Ah1PTBPqIgthlrERrswlnrDUMpRM4kZzIC4Vzeytjwkl9
-         pIDw==
-X-Gm-Message-State: AOAM5335b0YcALrBPsvnbBp2foZYKnEzglpGAzRUBqXa2Ce9Xnuxl8hu
-        97ZXHppgdlD6yV7Gpw8eQzH9PtyUGnps/JNtkweWQxEOGBM=
-X-Google-Smtp-Source: ABdhPJyIZkIzdLpu8aBEF0dZmhbgHM8CuPZ2+9KJELjMvZfjDw3jnJndhBWm/YCGGa/sgxiGgGft1msE3bNDWX6yQHA=
-X-Received: by 2002:a67:cb0a:: with SMTP id b10mr665899vsl.9.1628846154669;
- Fri, 13 Aug 2021 02:15:54 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=MIjzmWOcO2qIDbveR8D+xuH4rtgwCBu1WunRV4Qrdcc=;
+        b=AAwFnPi2wRnR1/FOIyeFeysl50hIpllhVx2+pmn/pLSWf8r+Q1BL4jOM76XBAcqrIe
+         5EfXDCYMKEymOFDt5us6uj3wYkxbJ33L4z69WFMjfLVCkNfOOjic9JZ8mnxGsEkiI6zM
+         NtnGOyxhHP4NIGZpW5liuXtdMXzt/6kQHQlkSnQOpQ35FYNM+mOfVJY08RTS9EVZ/m3P
+         OIaLg77DwG7CUA3ibbFt0+qAR4HEVhyoNt7FiTsCLPHR/Q5WMYRLVQq21zHSg894Wsf8
+         6v31rC3kAqFhb9H0WsTOCILFK2rVnPXNzmXvHb/E65a1owWnSeQvM3qLwpyurmFHtRym
+         crQQ==
+X-Gm-Message-State: AOAM530SUblRtg5y6wASY/ZhTTj1sY3FWyJNvmTsS6tLOvXhYkaFjEMZ
+        S+t7VtcViMdXnOaJGtfpkKw2ApoEs4JJQ5z0XZVD8FlfKbXysA==
+X-Google-Smtp-Source: ABdhPJyj5QBzVVFVD1kPu1OwFdUgT/EQiQcXMJnBvNlQX+L55coE2v3ZmacTQ/IM8xQCR24bGiKh3eeYgzU35ywglu0=
+X-Received: by 2002:a05:6512:1084:: with SMTP id j4mr1056599lfg.586.1628846514730;
+ Fri, 13 Aug 2021 02:21:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <1628840413-21880-1-git-send-email-jiapeng.chong@linux.alibaba.com>
-In-Reply-To: <1628840413-21880-1-git-send-email-jiapeng.chong@linux.alibaba.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 13 Aug 2021 11:15:42 +0200
-Message-ID: <CAMuHMdXHFYLHXcTLPFeJwDEKu1PGwDq0A5w0R2U8P4BsVksHqQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: Remove unneeded semicolon
-To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 13 Aug 2021 11:21:43 +0200
+Message-ID: <CACRpkdZzV_cCt6QPTHRtUNgWAJt6grE=CFYJH-qjnsP_Z0nnbw@mail.gmail.com>
+Subject: [GIT PULL] pin control fixes for v5.14
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jiapeng,
+Hi Linus,
 
-On Fri, Aug 13, 2021 at 9:40 AM Jiapeng Chong
-<jiapeng.chong@linux.alibaba.com> wrote:
-> Fix the following coccicheck warnings:
->
-> ./drivers/pinctrl/renesas/pinctrl-rzg2l.c:1124:2-3: Unneeded semicolon.
-> ./drivers/pinctrl/renesas/pinctrl-rzg2l.c:1114:2-3: Unneeded semicolon.
-> ./drivers/pinctrl/renesas/pinctrl-rzg2l.c:1080:2-3: Unneeded semicolon.
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+here is an assortment of pin control fixes of varying importance,
+the most important ones affecting Intel and AMD laptops turned
+up the recent few days so it's time to push this to your tree.
 
-Thanks!
+Details in the signed tag.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Please pull it in!
 
-As this fixes the top commit in my renesas-pinctrl-for-v5.15 branch,
-for which I'm about to send a PR soon, I will fold this into the offending
-commit.
+Yours,
+Linus Walleij
 
-Gr{oetje,eeting}s,
+The following changes since commit e73f0f0ee7541171d89f2e2491130c7771ba58d3:
 
-                        Geert
+  Linux 5.14-rc1 (2021-07-11 15:07:40 -0700)
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+are available in the Git repository at:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.14-2
+
+for you to fetch changes up to c4b68e513953c3370ce02c3208c1c628c0b86fd3:
+
+  pinctrl: amd: Fix an issue with shutdown when system set to s0ix
+(2021-08-12 11:16:40 +0200)
+
+----------------------------------------------------------------
+Pin control fixes for the v5.14 kernel series:
+
+- Fix the Kconfig dependency for Qualcomm SM8350 pin
+  controller.
+
+- Fix pin biasing fallback behaviour on the Mediatek pin
+  controller.
+
+- Fix the GPIO numbering scheme for Intel Tiger Lake-H
+  to correspond to the products that are now actually out
+  on the market.
+
+- Fix a pin control function itemization in the Sunxi driver
+  out-of-bounds access bug.
+
+- Fix disable clocking for the RISC-V K210 pin controller on
+  the errorpath.
+
+- Fix a system shutdown bug affecting AMD Ryzen-based laptops,
+  the system would not suspend but just bounce back up.
+
+----------------------------------------------------------------
+Andre Przywara (1):
+      pinctrl: sunxi: Don't underestimate number of functions
+
+Andy Shevchenko (1):
+      pinctrl: tigerlake: Fix GPIO mapping for newer version of software
+
+Arnd Bergmann (1):
+      pinctrl: qcom: fix GPIOLIB dependencies
+
+Damien Le Moal (1):
+      pinctrl: k210: Fix k210_fpioa_probe()
+
+Hsin-Yi Wang (1):
+      pinctrl: mediatek: Fix fallback behavior for bias_set_combo
+
+Linus Walleij (1):
+      Merge tag 'intel-pinctrl-v5.14-2' of
+gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
+
+Mario Limonciello (1):
+      pinctrl: amd: Fix an issue with shutdown when system set to s0ix
+
+ drivers/pinctrl/intel/pinctrl-tigerlake.c        | 26 +++++-----
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |  8 ++-
+ drivers/pinctrl/pinctrl-amd.c                    |  3 +-
+ drivers/pinctrl/pinctrl-k210.c                   | 26 +++++++---
+ drivers/pinctrl/qcom/Kconfig                     | 63 ++++++++++++------------
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c            |  8 +--
+ 6 files changed, 73 insertions(+), 61 deletions(-)
