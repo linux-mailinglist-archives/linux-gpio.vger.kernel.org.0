@@ -2,142 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 047833EB5F0
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 15:04:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 825B53EB643
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 15:50:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240560AbhHMNE3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Aug 2021 09:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240520AbhHMNE2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Aug 2021 09:04:28 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB998C061756
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Aug 2021 06:04:01 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id e15so11864538plh.8
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Aug 2021 06:04:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uKxPSauy+2U0pFIji3W55hcw3dahBR/1HB1TsLq3Fc8=;
-        b=L4uonK6M6OMWfFoHR+vTxxLtpMSFkL1I8N9Vqml/0qq8rUCkwMQ9bESb3dgo/g3TL3
-         DYGj11jzcL9VlU5HuvUTuucSK3pDGBwfZc6KTtD67CDR3w/2GuPjgUE/tr9C0YzEcWmP
-         QgsKDHCSIMyby9mQ3u7PYyc1LhLle1/tqpJx/EGM0t3P7s+r1LJdyNRC+nJe/l93eiee
-         GP1MK4IgKKo2EoCNV56VBW1Wiy6gviZvr4pyd+iq7iw8A4UzcsgmUtJTH4ly68fjKald
-         bchpOHcu0pqzt894iQI3B321kdIUnCMjey6g/jKIFpto3608L3r5brFT4RNXyUFaqAv8
-         zbRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uKxPSauy+2U0pFIji3W55hcw3dahBR/1HB1TsLq3Fc8=;
-        b=QfOIUEOVHQP5c1FsomCgK2ikr7Bq4uMVbGyIVNXIEqiui2+WLMzEG4A8wLT7+5OqlU
-         VPxkPiLPkwF7txtg9UBNGLyL3/XCyMD0U6ZArJ+Sq2ZjjefD17OXWVoNE80TcOcmKG7/
-         jPeagYM/d5tMG/GHAcWwDAw4YHyyB+7Vb6h/K9rF2BRfZ56XKVJRUxGUCrioP0ygLsRK
-         k7s/0yWHUGivo6y7a+hEJ+3srDV/avuLg6Ry+QeKGLSlch4Tp50At1Vi5RO+T/lzz6TB
-         k0Dxy6P0ElOtxk5aopKCQayU0hVgKil/uspnS+1rym7m0qyforx38EM204cI+oiDQ0OP
-         9RBw==
-X-Gm-Message-State: AOAM5301nwO8L9Cahv3TVK29IQWrl/29bJ1+mBw8qUY/owrFsGFWUXgE
-        UzpM2zIWVoiMxN+cQQKyWiNQiZFOMnddPg==
-X-Google-Smtp-Source: ABdhPJye/RMP+dfQpEpKcMjjgwYSfwnLy29Ymjleu5i0bTVrqsndnD+d9MY9Vx3OHUes6sqoqAZvKQ==
-X-Received: by 2002:a17:90b:3718:: with SMTP id mg24mr2683609pjb.158.1628859841494;
-        Fri, 13 Aug 2021 06:04:01 -0700 (PDT)
-Received: from sol (106-69-178-229.dyn.iinet.net.au. [106.69.178.229])
-        by smtp.gmail.com with ESMTPSA id n33sm2838289pgm.55.2021.08.13.06.03.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Aug 2021 06:04:00 -0700 (PDT)
-Date:   Fri, 13 Aug 2021 21:03:55 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Helmut Grohne <helmut.grohne@intenta.de>,
-        Ben Hutchings <ben.hutchings@essensium.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2.0][PATCH] core: extend config objects
-Message-ID: <20210813130355.GA54036@sol>
-References: <20210808231012.GA6224@sol>
- <CAMRc=Me5N=gthd4ESrh5ChStEkHQmG1AuzKf6nZNbq2ZXtTrGQ@mail.gmail.com>
- <20210810103113.GA6637@sol>
- <CAMRc=MeKB4wmZw2FS79H0W75394MpzS6sq+2iehD4tXkdDGGzQ@mail.gmail.com>
- <20210812102913.GA21938@sol>
- <CAMRc=MfzGh7ER4VankzR5qStbrW=hCxK-d_1rF+SzD3zik=z2w@mail.gmail.com>
- <20210812142345.GA29599@sol>
- <CAMRc=MdV+GDGpwdMLwKTxaXR+x1ogLzanRBuvwG-aL2jQFrxsA@mail.gmail.com>
- <20210812150223.GA38195@sol>
- <CAMRc=Mdt=SmzTuVMgXwk6OKeCT3U8U_oZNPLuGQmKU6yRCCz-Q@mail.gmail.com>
+        id S239165AbhHMNvF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Aug 2021 09:51:05 -0400
+Received: from mga14.intel.com ([192.55.52.115]:11007 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235656AbhHMNvF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 13 Aug 2021 09:51:05 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="215289739"
+X-IronPort-AV: E=Sophos;i="5.84,319,1620716400"; 
+   d="scan'208";a="215289739"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 06:50:38 -0700
+X-IronPort-AV: E=Sophos;i="5.84,319,1620716400"; 
+   d="scan'208";a="591139854"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 06:50:35 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mEXZt-00958O-Ki; Fri, 13 Aug 2021 16:50:29 +0300
+Date:   Fri, 13 Aug 2021 16:50:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        David Thompson <davthompson@nvidia.com>,
+        Liming Sun <limings@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: Possible ACPI abuse in Mellanox BlueField Gigabit Ethernet driver
+Message-ID: <YRZ4palCFBFdR/7D@smile.fi.intel.com>
+References: <YRUskkALrPLa2cSf@smile.fi.intel.com>
+ <CH2PR12MB389540C4C751277287147E95D7F99@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <YRVLkMoTvp4+X0Nx@smile.fi.intel.com>
+ <CH2PR12MB3895CB35E6EA17908979D631D7F99@CH2PR12MB3895.namprd12.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=Mdt=SmzTuVMgXwk6OKeCT3U8U_oZNPLuGQmKU6yRCCz-Q@mail.gmail.com>
+In-Reply-To: <CH2PR12MB3895CB35E6EA17908979D631D7F99@CH2PR12MB3895.namprd12.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 02:59:43PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Aug 12, 2021 at 5:02 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Thu, Aug 12, 2021 at 04:43:46PM +0200, Bartosz Golaszewski wrote:
-> > > On Thu, Aug 12, 2021 at 4:23 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> > > > On Thu, Aug 12, 2021 at 02:51:02PM +0200, Bartosz Golaszewski wrote:
-> > > > > On Thu, Aug 12, 2021 at 12:29 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > > > >
-> > > > >
-> > > >
-> > > > <snip>
-> > > >
-> > > > > >
-> > > > > > Sure, it's a trade-off, but the alternative is requiring a 2-3k block
-> > > > > > even for a one line request, which seems a wee bit excessive.
-> > > > > >
-> > > > >
-> > > > > As you said - it's on the heap, so who cares. But this is also an
-> > > > > internal structure and so we can use bit fields. That should reduce
-> > > > > the memory footprint significantly as we now don't require more than 3
-> > > > > bits for any given enum. That would leave us with the debounce period
-> > > > > and offset as full size variables.
-> > > > >
-> > > >
-> > > > Rather than introducing a new collection of enums and bitfields, why not
-> > > > just store the v2 flags for the line?
-> > > >
-> > >
-> > > Why a new collection of enums? It wouldn't change anything, we'd just
-> > > make sure in the setters we never overflow.
-> > >
-> >
-> > Yeah, my bad - you already have the enums.
-> >
-> > > I would prefer to limit the use of kernel symbols (and types!) to the
-> > > minimum for clarity.
-> > >
-> >
-> > OK, but you need to map the libgpiod config to kernel flags at some
-> > point...
+On Thu, Aug 12, 2021 at 08:07:49PM +0000, Asmaa Mnebhi wrote:
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Sent: Thursday, August 12, 2021 12:26 PM
+> On Thu, Aug 12, 2021 at 03:54:26PM +0000, Asmaa Mnebhi wrote:
+
+> My first question, is it already firmware in the wild that does this?
+> I.o.w. is there any time to amend it if needed?
+
+> > Are you asking if it is possible to change the ACPI table's GPIO pin on the
+> > fly at boot time in UEFI code?
+
+I'm asking if there is any device with these tables on market?
+
+...
+
+
+> > We have 1 image common to all our board types. The ACPI tables are selected
+> > based on the board id. Some board types have PHY_INT pin connected to GPIO
+> > pin 9 and other boards have it connected to GPIO pin 12. So we have 2
+> > ssdt.asl files:
 > 
-> Yep, right before passing the arguments to the kernel. Having separate
-> fields for each setting is much clearer IMO than storing flags.
+> Okay (You may have one and actually choose it based on some [NVS] variable)
 > 
-> > And this is all internal to line-config.c...
+> Asmaa> Ok!
+> 
+> > // first file: PHY_INT -> GPIO pin 12
+> > Device(OOB) {
+> >         Name(_HID, "MLNXBF17")
+> >         Name(_UID, 0)
+> >         Name(_CCA, 1)
+> >         Name (_CRS, ResourceTemplate () {
+> >            // OOB Ethernet
+> >            Memory32Fixed (ReadWrite, 0x03000000, 0x00000600)
+> >            // mdio[9]
+> >            Memory32Fixed (ReadWrite, 0x028004C8, 0x00000008)
+> >            // gpio[0]
+> >            Memory32Fixed (ReadWrite, 0x0280c000, 0x00000100)
+> >            // OOB LLU
+> >            Memory32Fixed (ReadWrite, 0x039C0000, 0x0000A100)
+> >            // OOB PLU
+> >            Memory32Fixed (ReadWrite, 0x04000000, 0x00001100)
+> >            Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { BF_RSH0_DEVICE_OOB_INT }
+> >            Interrupt (ResourceConsumer, Edge, ActiveHigh, Exclusive) { BF_RSH0_DEVICE_OOB_LLU_INT }
+> >            Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { BF_RSH0_DEVICE_OOB_PLU_INT }
+> >            Interrupt (ResourceConsumer, Edge, ActiveHigh, Shared) { BF_RSH0_DEVICE_YU_INT }
 > >
+> >            // GPIO PHY interrupt
+> >            GpioInt (Edge, ActiveHigh, Exclusive, PullUp, , " 
+> > \\_SB.GPI0") {12}
+
+Just a side note I forgot in previous reply: The tables themselves look good in
+my opinion.
+
+> PullUp with Edge/Rise seems a bit awkward. Recently I have added a
+> corresponding paragraph to the
+> https://www.kernel.org/doc/html/latest/firmware-guide/acpi/gpio-properties.html.
+> But it's just to double check that you got the idea how your hardware works
+> (maybe it uses open-drain or so and it's indeed the correct setting).
 > 
-> This code still needs to be maintained and using enums makes it easier.
+> > I forgot to cp/paste one more line from the ACPI tables. I have created a
+> > DSD entry and named the gpio (although as you pointed below, it is not
+> > really needed in this case):
+
+> Name (_DSD, Package () {
+>            ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301") /* Device Properties for _DSD */,
+>            Package ()
+>            {
+>               Package () { "phy-gpios", Package() {^OOB, 0, 0, 0 }},
+>            }
+>        })
+
+Yes. in this case it's not needed. Only case when it might if you have a bunch
+of platforms where a few GpioInt() resources are present and they have no
+mapping. This will help to figure out what resource is related to what IRQ
+line. Overall it's not bad decision to add one.
+
+> The interrupt that we care about (which signals link up/link down events) is
+> actually the shared HW irq BF_RSH0_DEVICE_YU_INT (edge triggered, active high
+> whenever there is an i2c, mdio or gpio interrupt).  We get that interrupt
+> value from the ACPI table as follows:
+> priv->hw_phy_irq = platform_get_irq(pdev, MLXBF_GIGE_PHY_INT_N);
+
+Wait, what you are telling is that the GpioInt() resource is a dup for one of
+Interrupt() resource. Is it correct interpretation?
+
+> Although it is overkill, I only used "GpioInt (Edge, ActiveHigh, Exclusive,
+> PullUp, \\_SB.GPI0") {12}" to retrieve the GPIO pin number (12 or 9) in
+> mlxbf-gige.
+
+Yes, but why do you need to know this pin in software?
+
+> We could also have created a property (phy-gpio-pin) to pass the
+> GPIO pin and that would enable us to remove all code related to "GpioInt"
+> code in the acpi and mlxbf-gige driver. But I thought that properties are in
+> general not the preferred approach?
+
+Properties make sense when there is no standard ACPI approach or it lacks of
+some information. As far as I can tell here the properties is better, but I
+would like to understand first the need for this information in the first place
+(see above comment).
+
+> So whenever that shared interrupt is triggered, this routine is executed mlxbf_gige_gpio_handler:
+> ret = devm_request_irq(dev, priv->hw_phy_irq, mlxbf_gige_gpio_handler,
+>                                 IRQF_ONESHOT | IRQF_SHARED, "mlxbf_gige_phy", priv);
+> It checks whether the interrupt is for GPIO pin 9 or 12 (depending on the board). If it is, it clears the interrupt accordingly and triggers the generic phy_interrupt routine (in phy.c)
+> phy_interrupt is registered via phy_connect_direct.
+
+This sounds strange to me. What you are telling is that there is no hw register
+from which you may retrieve this information? So it's a workaround of silicon
+bug?
+
+> What I have seen here is a regular GpioInt() resource with a single pin.
 > 
-
-Fair enough.
-
-> Anyway, this is implementation detail really as with bit fields we'll
-> fit in an 32-bit integer anyway with all those enums.
-
-Agreed - I thought of that after I posted.
-
-> Does the general idea sound good? If so, then I'll rework it.
+> Asmaa> Yes we only use one GPIO pin.
 > 
+> As far as I can see in the code it has the flaw that it actually will use the last GpioInt() resource available in _CRS.
+> 
+> Besides that, why do you need to know the pin name and can't simply request an IRQ as every other driver does (the exception is only yours in the entire kernel)? The acpi_dev_gpio_irq_get() call can get Linux vIRQ for you same way you have got it for Interrupt() resources via platform_get_irq().
 
-Sounds like a plan - rework away.
+> To understand better this piece, can you point out to the GPIO driver code,
+> which implements the driver for _SB.GPI0 in the kernel?
 
-Cheers,
-Kent.
+Any comments on this? Do you have a GPIO driver available?
+
+> >         }) // Name(_CRS)
+
+> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Sent: Thursday, August 12, 2021 10:14 AM
+
+> > From time to time I do grep kernel for ACPI_RESOURCE_TYPE_GPIO usage.
+> > Recently the drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_gpio.c
+> > caught my eye.
+> > 
+> > Looking into the code I see that it looks like misunderstanding of how ACPI
+> > works with GPIOs. First of all, I would like to inform that this code has
+> > been properly reviewed neither by GPIO nor by ACPI maintainers. Second,
+> > before going it to the real conclusions (and potential revert of this), I
+> > would like to see the real ACPI tables for this and some explanations from
+> > the authors of the driver about GPIO usage here (from hw and sw
+> > perspectives).  It makes sense to discuss ASAP, otherwise I would really
+> > want to revert it.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
