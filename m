@@ -2,207 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A281C3EBE03
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 23:43:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE14E3EBE59
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Aug 2021 00:41:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234841AbhHMVoA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Aug 2021 17:44:00 -0400
-Received: from mga12.intel.com ([192.55.52.136]:42615 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234824AbhHMVoA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 13 Aug 2021 17:44:00 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10075"; a="195219599"
-X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="195219599"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 14:43:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="591345189"
-Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2021 14:43:30 -0700
-Received: from kbuild by d053b881505b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mEexd-000OBL-Nk; Fri, 13 Aug 2021 21:43:29 +0000
-Date:   Sat, 14 Aug 2021 05:42:32 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- a58b06083f789f6672ae44a21054e8f621125704
-Message-ID: <6116e748.lL4TFOREJB0gjDFI%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S235335AbhHMWmI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Aug 2021 18:42:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235325AbhHMWmI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Aug 2021 18:42:08 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78C9C0617AD
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Aug 2021 15:41:40 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id n7so17927380ljq.0
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Aug 2021 15:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gg2dj+Ghgetmvc+mMf0/S4duMGD84/QEoSOPyY6l8pQ=;
+        b=fMrGMth5ttz773anaFDqQ1DEn0qZxKH/bSrWu/t60MEQF7hdUS+Xw8gnJ4a1jkDHkC
+         cbk9Feyvph1NTGdNqZG2vaKeYX8Iy/c7eFWoVcyiHNSpBLSVVQGbYMdS/F5PCK03zCh9
+         GIQ2g/6kurPr2n3pBQ00TphC3aTATJl+RFWHcJ3R4kcmMR+ATigUCPyk0f8/hFvmbzIr
+         BOvKOska9lWyby5tzgDqCCNEe3PsKhDjqpOuZKbFBTOdW0ZnaesLRnMkDTbu1+2zzall
+         5ogX/qHifWtBVU3ar8onNM+RtyQMGUDnBHkyHuUpp7k3Q3hmje/eMcuw4q3veucUkuJo
+         nHpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gg2dj+Ghgetmvc+mMf0/S4duMGD84/QEoSOPyY6l8pQ=;
+        b=evdGF7YL7xYcgnggpUwOB8jqwYXAckfH7/8SvpsFa5PPrqiMh9kBcx7nsAVvlDVzXB
+         ec6Llzgp9isaSn4VqAZCOXu7eD7beVAqxVPCLa9uUX736SkLhJ2T+19ALKc5kJZnXzKt
+         tcHSidDns/fMA9XXuCmAbUg4GipRDbOQdyHgXUWtU6PGIQLZzRrbIBxWzbpyqyW/3x8E
+         y00twgvSFCZfUXNEWqS/4rIBxiL0r5x9bo8v4UxcdqlHKhxPvetqiZV6N3Hls3Hwrmat
+         wtSQ52WI9d15VXYp2WbR6chNJfzhii8oaqZxnCQJjHc6N1frpDvF2zohF5HWsWBmHKJP
+         kmhw==
+X-Gm-Message-State: AOAM5303Gu907BNf1wJl7wC0SmqJDqhh9/PjyC0oW1vOWjOLvoIf6kMx
+        4V0ov0c499FCMrS+uefucZE/llzg6RIQVKVmKxIYhg==
+X-Google-Smtp-Source: ABdhPJwwZqNFL9U3AG7S2Mt3ahulRT6tWTMf9AUcRUrrv0VzehC1gyqRY7BxDEi4z2Ew41uqGbVGTeCMYhs8yE6s6Xs=
+X-Received: by 2002:a2e:9e46:: with SMTP id g6mr3442282ljk.326.1628894499045;
+ Fri, 13 Aug 2021 15:41:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <cover.1628850411.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1628850411.git.geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 14 Aug 2021 00:41:28 +0200
+Message-ID: <CACRpkdZks7_gUHs8SWugX8KubPqWfAuOQiPLa_uWKmpNU1iY6Q@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v5.15 (take two)
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: a58b06083f789f6672ae44a21054e8f621125704  MAINTAINERS: Add maintainers for amd-pinctrl driver
+On Fri, Aug 13, 2021 at 12:28 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-elapsed time: 726m
+> The following changes since commit 91d1be9fb7d667ae136f05cc645276eb2c9fa40e:
+>
+>   pinctrl: renesas: Fix pin control matching on R-Car H3e-2G (2021-07-27 09:29:02 +0200)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.15-tag2
+>
+> for you to fetch changes up to c4c4637eb57f2a25c445421aadeb689a2538b20b:
+>
+>   pinctrl: renesas: Add RZ/G2L pin and gpio controller driver (2021-08-13 12:09:04 +0200)
 
-configs tested: 149
-configs skipped: 3
+Pulled in for v5.15!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210813
-i386                 randconfig-c001-20210812
-nios2                         3c120_defconfig
-powerpc                     pseries_defconfig
-mips                         mpc30x_defconfig
-powerpc                     kmeter1_defconfig
-m68k                             allyesconfig
-m68k                       m5475evb_defconfig
-csky                                defconfig
-powerpc                      acadia_defconfig
-mips                       bmips_be_defconfig
-powerpc                 mpc837x_mds_defconfig
-xtensa                           allyesconfig
-arm                       imx_v4_v5_defconfig
-powerpc                      ep88xc_defconfig
-powerpc                     rainier_defconfig
-sh                            shmin_defconfig
-h8300                               defconfig
-riscv                    nommu_k210_defconfig
-mips                  maltasmvp_eva_defconfig
-powerpc               mpc834x_itxgp_defconfig
-mips                        maltaup_defconfig
-mips                           ip22_defconfig
-sh                           se7721_defconfig
-arm                           sama5_defconfig
-m68k                          amiga_defconfig
-powerpc                   microwatt_defconfig
-mips                          ath25_defconfig
-sh                          rsk7201_defconfig
-powerpc                    amigaone_defconfig
-arm                         s5pv210_defconfig
-arm                           viper_defconfig
-arm                         orion5x_defconfig
-sh                          lboxre2_defconfig
-arm                       omap2plus_defconfig
-arm                         bcm2835_defconfig
-arm                            pleb_defconfig
-arc                        nsim_700_defconfig
-mips                 decstation_r4k_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20210812
-x86_64               randconfig-a004-20210812
-x86_64               randconfig-a003-20210812
-x86_64               randconfig-a005-20210812
-x86_64               randconfig-a002-20210812
-x86_64               randconfig-a001-20210812
-i386                 randconfig-a004-20210813
-i386                 randconfig-a003-20210813
-i386                 randconfig-a001-20210813
-i386                 randconfig-a002-20210813
-i386                 randconfig-a006-20210813
-i386                 randconfig-a005-20210813
-i386                 randconfig-a004-20210814
-i386                 randconfig-a002-20210814
-i386                 randconfig-a001-20210814
-i386                 randconfig-a003-20210814
-i386                 randconfig-a006-20210814
-i386                 randconfig-a005-20210814
-x86_64               randconfig-a011-20210813
-x86_64               randconfig-a013-20210813
-x86_64               randconfig-a012-20210813
-x86_64               randconfig-a016-20210813
-x86_64               randconfig-a015-20210813
-x86_64               randconfig-a014-20210813
-i386                 randconfig-a011-20210813
-i386                 randconfig-a015-20210813
-i386                 randconfig-a014-20210813
-i386                 randconfig-a013-20210813
-i386                 randconfig-a016-20210813
-i386                 randconfig-a012-20210813
-i386                 randconfig-a011-20210814
-i386                 randconfig-a015-20210814
-i386                 randconfig-a013-20210814
-i386                 randconfig-a014-20210814
-i386                 randconfig-a016-20210814
-i386                 randconfig-a012-20210814
-i386                 randconfig-a011-20210812
-i386                 randconfig-a015-20210812
-i386                 randconfig-a013-20210812
-i386                 randconfig-a014-20210812
-i386                 randconfig-a016-20210812
-i386                 randconfig-a012-20210812
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-c001-20210814
-x86_64               randconfig-c001-20210813
-x86_64               randconfig-a006-20210813
-x86_64               randconfig-a004-20210813
-x86_64               randconfig-a003-20210813
-x86_64               randconfig-a002-20210813
-x86_64               randconfig-a005-20210813
-x86_64               randconfig-a001-20210813
-x86_64               randconfig-a013-20210814
-x86_64               randconfig-a011-20210814
-x86_64               randconfig-a016-20210814
-x86_64               randconfig-a012-20210814
-x86_64               randconfig-a014-20210814
-x86_64               randconfig-a015-20210814
-x86_64               randconfig-a011-20210812
-x86_64               randconfig-a013-20210812
-x86_64               randconfig-a012-20210812
-x86_64               randconfig-a016-20210812
-x86_64               randconfig-a015-20210812
-x86_64               randconfig-a014-20210812
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Yours,
+Linus Walleij
