@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FE243EAFB9
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 07:39:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AA8B3EAFDA
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Aug 2021 08:05:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237146AbhHMFju (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Aug 2021 01:39:50 -0400
-Received: from mga17.intel.com ([192.55.52.151]:22934 "EHLO mga17.intel.com"
+        id S238785AbhHMGFp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Aug 2021 02:05:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:54769 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229654AbhHMFjt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 13 Aug 2021 01:39:49 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="195777317"
+        id S238757AbhHMGFp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 13 Aug 2021 02:05:45 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="215238293"
 X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
-   d="scan'208";a="195777317"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 22:39:14 -0700
+   d="scan'208";a="215238293"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 23:05:18 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
-   d="scan'208";a="508029132"
+   d="scan'208";a="528213591"
 Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Aug 2021 22:39:13 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 12 Aug 2021 23:05:17 -0700
 Received: from kbuild by d053b881505b with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mEPuT-000NMG-1R; Fri, 13 Aug 2021 05:39:13 +0000
-Date:   Fri, 13 Aug 2021 13:38:53 +0800
+        id 1mEQJg-000NOe-89; Fri, 13 Aug 2021 06:05:16 +0000
+Date:   Fri, 13 Aug 2021 14:05:04 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:fixes] BUILD SUCCESS
- c4b68e513953c3370ce02c3208c1c628c0b86fd3
-Message-ID: <6116056d.FvW8iWK8T/W9E4LN%lkp@intel.com>
+Subject: [pinctrl:for-next] BUILD SUCCESS
+ 1f3ab079db2f74393730477299961f78c9deba29
+Message-ID: <61160b90.eWPblZVtVErT0m76%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,10 +39,10 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: c4b68e513953c3370ce02c3208c1c628c0b86fd3  pinctrl: amd: Fix an issue with shutdown when system set to s0ix
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 1f3ab079db2f74393730477299961f78c9deba29  Merge branch 'devel' into for-next
 
-elapsed time: 1215m
+elapsed time: 1241m
 
 configs tested: 130
 configs skipped: 3
