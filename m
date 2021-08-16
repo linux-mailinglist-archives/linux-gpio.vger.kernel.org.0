@@ -2,92 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F81D3ED92C
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 16:48:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFA0B3ED941
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 16:54:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232266AbhHPOtW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Aug 2021 10:49:22 -0400
-Received: from mga17.intel.com ([192.55.52.151]:32699 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232095AbhHPOtW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Aug 2021 10:49:22 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10078"; a="196140208"
-X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
-   d="scan'208";a="196140208"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 07:48:50 -0700
-X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
-   d="scan'208";a="504935472"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 07:48:47 -0700
-Received: from andy by smile with local (Exim 4.94.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mFduq-00AQUa-Ie; Mon, 16 Aug 2021 17:48:40 +0300
-Date:   Mon, 16 Aug 2021 17:48:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v1 1/1] x86/platform: Increase maximum GPIO number for
- X86_64
-Message-ID: <YRp6yHt7JMmGvvQn@smile.fi.intel.com>
-References: <20210806143711.37553-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0iTNwQfh6ZZxry16hOjokGOOSZthq6C_yed07a2HQ7h2Q@mail.gmail.com>
- <YRppqnAqJ1G+4mva@smile.fi.intel.com>
- <CAJZ5v0ib7oP5EG2k6_Q0Yiq=_WGu01iGVDmV+QoVRLaxTXZHDw@mail.gmail.com>
+        id S232237AbhHPOzF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Aug 2021 10:55:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231971AbhHPOzE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Aug 2021 10:55:04 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC81C061764;
+        Mon, 16 Aug 2021 07:54:33 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id m24-20020a17090a7f98b0290178b1a81700so402181pjl.4;
+        Mon, 16 Aug 2021 07:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XqGlFzf6yPC8mxVmv/EzUERHXBD+D2QbKkrAV4TyyeU=;
+        b=i59ch55wQ8kjlsDh0c/JMmkl3eJPrTvs1H/xODbRobY695ZKyv5MaaOBveizHJdPEF
+         VIcE13x/ZCwPGWkDuQEjFdg1HIw288rvfMM2BAU+kqDP5iOEpoZ7Y+ld8fcO9bdbKjEq
+         JpP9oqM94RQp4ihzVm2LFDKC7kmaN1C/eRqU+/CarwgKiprY+qyj5hrOzTEJAgCLlZBY
+         oqb3o+VHSqqn+tAHzWuZSkNuHqDEjndQCSieuJcnANa857hK31PYUPlRsKX8H94q4tJh
+         wv8fCFXrdoVW03TyDx8iOmXrmxaBz30yFd+X2tnymAxU4cAAs0nNOJXz+7Q2F2jslF0p
+         pTJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XqGlFzf6yPC8mxVmv/EzUERHXBD+D2QbKkrAV4TyyeU=;
+        b=r3jtsA71DhELiHQ3rARVQiCOd2xVMd0YpEZQVjR8fGYhhku4fmZJSPL3/cwWiU7APN
+         MF55muMZSRvaBjKtBSLAN7pS6DpViw0UErY0Emmz+32qNYIgC5U1KwqIlv+a014sUSjV
+         WqDW1nCSuUpmrYHRdLTVr/1Cpl4gizBwPuRAPDIzQ9LZVsZpTb8Z/Hc/MNyJc8yDBdLC
+         pE933lFsdXPyxE40M6VRLE+ZrzV/wrMu/+waSQ61HgJqENX6LVigMDKG4AZ4/p8k2nlV
+         hoHhM9JmGU3kxYQFKlZ6vdlqcGIWnPEt3QbImG/ghIXY9xZhw65yvmujeGnn9pkmn43w
+         HC+g==
+X-Gm-Message-State: AOAM5319nkmJj5dXo0uvp6BFtJ+G4vmvqBUh23ke3/k+jJLwE+Wl5MDh
+        5d7mzR7A76M5okulWxTG6KVKiEXZ4Eu5qfxpieU=
+X-Google-Smtp-Source: ABdhPJyVegWRrZRtIYbsGYD+ZovjO/z0i75jLJNm0tM0YKOl6CTHLgikpQiSH7t7xrsM/ZsbB5XNycIHZXc7R8NRoYk=
+X-Received: by 2002:a63:40c1:: with SMTP id n184mr16436749pga.74.1629125672892;
+ Mon, 16 Aug 2021 07:54:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0ib7oP5EG2k6_Q0Yiq=_WGu01iGVDmV+QoVRLaxTXZHDw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
+ <20210726125436.58685-3-andriy.shevchenko@linux.intel.com>
+ <YRpihHP3kDz5nYV9@google.com> <CAHp75VdcWsNFervoU7e4_m7qVKAnWXzF2z2mUgKg06-qmwn-2A@mail.gmail.com>
+ <YRppKOxp4Jya5iEI@google.com> <YRpva4gS1LfncPUj@smile.fi.intel.com> <YRpz5UEDQbpewq5o@google.com>
+In-Reply-To: <YRpz5UEDQbpewq5o@google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 16 Aug 2021 17:53:53 +0300
+Message-ID: <CAHp75VczCKwNQE8k6_e9Trk0qkD2EumFVxxG5w2BTYhiOTDUzA@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] mfd: intel_quark_i2c_gpio: Convert GPIO to use
+ software nodes
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 16, 2021 at 03:55:59PM +0200, Rafael J. Wysocki wrote:
-> On Mon, Aug 16, 2021 at 3:35 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Aug 16, 2021 at 03:25:13PM +0200, Rafael J. Wysocki wrote:
-> > > On Fri, Aug 6, 2021 at 4:44 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-
-...
-
-> > > Wouldn't
+On Mon, Aug 16, 2021 at 5:19 PM Lee Jones <lee.jones@linaro.org> wrote:
+> On Mon, 16 Aug 2021, Andy Shevchenko wrote:
+> > On Mon, Aug 16, 2021 at 02:33:28PM +0100, Lee Jones wrote:
+> > > On Mon, 16 Aug 2021, Andy Shevchenko wrote:
+> > > > On Mon, Aug 16, 2021 at 4:11 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > On Mon, 26 Jul 2021, Andy Shevchenko wrote:
+> > > > >
+> > > > > > The driver can provide a software node group instead of
+> > > > > > passing legacy platform data. This will allow to drop
+> > > > > > the legacy platform data structures along with unifying
+> > > > > > a child device driver to use same interface for all
+> > > > > > property providers, i.e. Device Tree, ACPI, and board files.
+> > > > > >
+> > > > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > > > ---
+> > > > > >  drivers/mfd/intel_quark_i2c_gpio.c | 70 ++++++++++++++++--------------
+> > > > > >  1 file changed, 37 insertions(+), 33 deletions(-)
+> > > > >
+> > > > > Doesn't seem to want to apply.
+> > > >
+> > > > Would it be okay for you to pull the immutable tag?
 > > >
-> > > default 1024 if X86_64
-> > > default 512
-> > >
-> > > be sufficient?
-> > >
-> > > It's either X86_64 or X86_32 anyway AFAICS.
+> > > What immutable tag?
+> >
+> > It's here:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git/tag/?h=intel-gpio-v5.15-1
+>
+> My Ack can't be merged like that.
 
-Fixed in v2.
-
-...
-
-> > Btw, what do you think. do we need comment above and help text here? I copied
-> > these from ARM, but I'm not sure it would be useful on x86 as much.
-> 
-> Both the comment and the help text aren't particularly useful IMO.
-> 
-> The comment is a bit confusing even, because x86 kernels are
-> multiplatform as a rule.
-
-Ditto.
-
+Which one? There are two on different patches.
+Do you have any documentation on the rules you imply by MFD?
 
 -- 
 With Best Regards,
 Andy Shevchenko
-
-
