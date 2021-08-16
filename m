@@ -2,111 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66E7A3ED227
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 12:41:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A7FA3ED384
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 14:00:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235851AbhHPKmK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Aug 2021 06:42:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50397 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230250AbhHPKmK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Aug 2021 06:42:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629110498;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=V9lD4ZmCA2xeNbbRR9JsVRuBy+tH5ySdLMD/ECLgSTI=;
-        b=OMOeiWJSoG39MheNAZuMedrhXYfBdTpRS+e38UT2QDmMsmASKgfuRZhj54F7gKr/SPrVAT
-        wDOkJYIS5aW3JQAOI9TB2nRLz07MSYR7KxWQ+CxHU86LuOCo+ghNuM05UfFNzmdQ0Qgs+3
-        oJmS1UiXJN0H86TTNew6qYZRW2H6vPI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-567-Jhr0IT9cMJGxc__N4WMSAQ-1; Mon, 16 Aug 2021 06:41:23 -0400
-X-MC-Unique: Jhr0IT9cMJGxc__N4WMSAQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD5561853026;
-        Mon, 16 Aug 2021 10:41:21 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.194.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A2D25D6A8;
-        Mon, 16 Aug 2021 10:41:19 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH regression fix v2] gpiolib: acpi: Make set-debounce-timeout failures non fatal
-Date:   Mon, 16 Aug 2021 12:41:19 +0200
-Message-Id: <20210816104119.75019-1-hdegoede@redhat.com>
+        id S235016AbhHPMBG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Aug 2021 08:01:06 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49131 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234791AbhHPMAz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Aug 2021 08:00:55 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10077"; a="279586998"
+X-IronPort-AV: E=Sophos;i="5.84,324,1620716400"; 
+   d="scan'208";a="279586998"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 05:00:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,324,1620716400"; 
+   d="scan'208";a="572448305"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 16 Aug 2021 05:00:03 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DD688FF; Mon, 16 Aug 2021 15:00:02 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Thompson <davthompson@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Asmaa Mnebhi <asmaa@nvidia.com>,
+        Liming Sun <limings@nvidia.com>
+Subject: [PATCH v1 0/6] gpio: mlxbf2: Introduce proper interrupt handling
+Date:   Mon, 16 Aug 2021 14:59:47 +0300
+Message-Id: <20210816115953.72533-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 8dcb7a15a585 ("gpiolib: acpi: Take into account debounce settings")
-made the gpiolib-acpi code call gpio_set_debounce_timeout() when requesting
-GPIOs.
+This is just a WIP / TODO series based on the discussion [1].
+I hope nVidia will finish it and fix the initial problem sooner than later.
 
-This in itself is fine, but it also made gpio_set_debounce_timeout()
-errors fatal, causing the requesting of the GPIO to fail. This is causing
-regressions. E.g. on a HP ElitePad 1000 G2 various _AEI specified GPIO
-ACPI event sources specify a debouncy timeout of 20 ms, but the
-pinctrl-baytrail.c only supports certain fixed values, the closest
-ones being 12 or 24 ms and pinctrl-baytrail.c responds with -EINVAL
-when specified a value which is not one of the fixed values.
+Bart, Linus, First 4 patches may be directly applied to the tree (they are
+at least compile-tested, but I believe they won't change any functionality.
 
-This is causing the acpi_request_own_gpiod() call to fail for 3
-ACPI event sources on the HP ElitePad 1000 G2, which in turn is causing
-e.g. the battery charging vs discharging status to never get updated,
-even though a charger has been plugged-in or unplugged.
+Patch 5 is some stubs that should have been done in the driver.
+Patch 6 is follow up removal of custom GPIO IRQ handling from
+Mellanox GBE driver. Both of them are quite far from finishing,
+but it's a start for nVidia to develop and test proper solution.
 
-Make gpio_set_debounce_timeout() errors non fatal, warning about the
-failure instead, to fix this regression.
+In any case, I will probably sent end this week the ACPI IRQ abuse
+part from the GBE driver (I won't touch OF path).
 
-Note we should probably also fix various pinctrl drivers to just
-pick the first bigger discrete value rather then returning -EINVAL but
-this will need to be done on a per driver basis, where as this fix
-at least gets us back to where things were before and thus restores
-functionality on devices where this was lost due to
-gpio_set_debounce_timeout() errors.
+ARs for nVidia:
+0) review this series;
+1) properly develop GPIO driver;
+2) replace custom code with correct one;
+3) send the work for review to GPIO and ACPI maintainers (basically list
+   of this series).
 
-Fixes: 8dcb7a15a585 ("gpiolib: acpi: Take into account debounce settings")
-Depends-on: 2e2b496cebef ("gpiolib: acpi: Extract acpi_request_own_gpiod() helper")
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
--Fix typo in commit msg
--Add Mika's Reviewed-by
--Add Depends-on tag
----
- drivers/gpio/gpiolib-acpi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On my side I will help you if you have any questions regarding to GPIO
+and ACPI.
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 411525ac4cc4..47712b6903b5 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -313,9 +313,11 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
- 
- 	ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout);
- 	if (ret)
--		gpiochip_free_own_desc(desc);
-+		dev_warn(chip->parent,
-+			 "Failed to set debounce-timeout for pin 0x%04X, err %d\n",
-+			 pin, ret);
- 
--	return ret ? ERR_PTR(ret) : desc;
-+	return desc;
- }
- 
- static bool acpi_gpio_in_ignore_list(const char *controller_in, int pin_in)
+Andy Shevchenko (6):
+  gpio: mlxbf2: Convert to device PM ops
+  gpio: mlxbf2: Drop wrong use of ACPI_PTR()
+  gpio: mlxbf2: Use devm_platform_ioremap_resource()
+  gpio: mlxbf2: Use DEFINE_RES_MEM_NAMED() helper macro
+  TODO: gpio: mlxbf2: Introduce IRQ support
+  TODO: net: mellanox: mlxbf_gige: Replace non-standard interrupt
+    handling
+
+ drivers/gpio/gpio-mlxbf2.c                    | 151 ++++++++++---
+ .../mellanox/mlxbf_gige/mlxbf_gige_gpio.c     | 212 ------------------
+ 2 files changed, 120 insertions(+), 243 deletions(-)
+ delete mode 100644 drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_gpio.c
+
 -- 
-2.31.1
+2.30.2
 
