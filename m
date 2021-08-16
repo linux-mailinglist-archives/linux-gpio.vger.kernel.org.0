@@ -2,103 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFA0B3ED941
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 16:54:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 551933ED9FA
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 17:38:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232237AbhHPOzF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Aug 2021 10:55:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42324 "EHLO
+        id S233157AbhHPPiq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Aug 2021 11:38:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231971AbhHPOzE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Aug 2021 10:55:04 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC81C061764;
-        Mon, 16 Aug 2021 07:54:33 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id m24-20020a17090a7f98b0290178b1a81700so402181pjl.4;
-        Mon, 16 Aug 2021 07:54:33 -0700 (PDT)
+        with ESMTP id S236475AbhHPPih (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Aug 2021 11:38:37 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15446C061764
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Aug 2021 08:38:04 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id i28so8583426lfl.2
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Aug 2021 08:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XqGlFzf6yPC8mxVmv/EzUERHXBD+D2QbKkrAV4TyyeU=;
-        b=i59ch55wQ8kjlsDh0c/JMmkl3eJPrTvs1H/xODbRobY695ZKyv5MaaOBveizHJdPEF
-         VIcE13x/ZCwPGWkDuQEjFdg1HIw288rvfMM2BAU+kqDP5iOEpoZ7Y+ld8fcO9bdbKjEq
-         JpP9oqM94RQp4ihzVm2LFDKC7kmaN1C/eRqU+/CarwgKiprY+qyj5hrOzTEJAgCLlZBY
-         oqb3o+VHSqqn+tAHzWuZSkNuHqDEjndQCSieuJcnANa857hK31PYUPlRsKX8H94q4tJh
-         wv8fCFXrdoVW03TyDx8iOmXrmxaBz30yFd+X2tnymAxU4cAAs0nNOJXz+7Q2F2jslF0p
-         pTJw==
+        bh=Bm8tYluwE2tHBRzqwzgJszhrItkJk+y3RCcuMDJTmI8=;
+        b=OT95Md82WHgRGyLWmxE6nitIx0C8BB1adlzRDuzRT9M2zqetzj87ra3kpFm3KgMYga
+         8RIHvMHWlEO+gCYykxVaQ3u+tQvAxFx9yTJkeOeM0wj3hI/3jYP76ODLd+t8d7vyCUu9
+         YqAXy0/NlJDrv+x2x/UfYn7oZho6vLBJ3zIdM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XqGlFzf6yPC8mxVmv/EzUERHXBD+D2QbKkrAV4TyyeU=;
-        b=r3jtsA71DhELiHQ3rARVQiCOd2xVMd0YpEZQVjR8fGYhhku4fmZJSPL3/cwWiU7APN
-         MF55muMZSRvaBjKtBSLAN7pS6DpViw0UErY0Emmz+32qNYIgC5U1KwqIlv+a014sUSjV
-         WqDW1nCSuUpmrYHRdLTVr/1Cpl4gizBwPuRAPDIzQ9LZVsZpTb8Z/Hc/MNyJc8yDBdLC
-         pE933lFsdXPyxE40M6VRLE+ZrzV/wrMu/+waSQ61HgJqENX6LVigMDKG4AZ4/p8k2nlV
-         hoHhM9JmGU3kxYQFKlZ6vdlqcGIWnPEt3QbImG/ghIXY9xZhw65yvmujeGnn9pkmn43w
-         HC+g==
-X-Gm-Message-State: AOAM5319nkmJj5dXo0uvp6BFtJ+G4vmvqBUh23ke3/k+jJLwE+Wl5MDh
-        5d7mzR7A76M5okulWxTG6KVKiEXZ4Eu5qfxpieU=
-X-Google-Smtp-Source: ABdhPJyVegWRrZRtIYbsGYD+ZovjO/z0i75jLJNm0tM0YKOl6CTHLgikpQiSH7t7xrsM/ZsbB5XNycIHZXc7R8NRoYk=
-X-Received: by 2002:a63:40c1:: with SMTP id n184mr16436749pga.74.1629125672892;
- Mon, 16 Aug 2021 07:54:32 -0700 (PDT)
+        bh=Bm8tYluwE2tHBRzqwzgJszhrItkJk+y3RCcuMDJTmI8=;
+        b=q+GfGuMkFC5eqCsx2+V7U1IGcV47O4sc41ncuk/qa8phTbQ+FOMdHxwrdKn8UVHwuD
+         EIwagRDqUnI+3rdovCJMeE5KmD7xiIrp+z1kz1GTc4v7ggBZDr0UwqGcZ3DcuOYGP0cH
+         CsyrQvyze8sbvRKe7q/oDxylyqEyHnl+YZf5yaKHR2nhVLofCQdgNskvr1sRaKFKZHhm
+         2adVe0tTDvxVeKYcpc9Id7uSrd5bCQ+NATj+ZxpctwPdogRr03LW9ubtqkUz7tmaWw83
+         8E72QQYFV0Bd63lFT7QDjJYzvyqTIJtr1WNGIHkRScpIC2sTrPQ2wcwvDrhv9+ONt/uX
+         c5sA==
+X-Gm-Message-State: AOAM532C5PdAMA4tIeidZv0uexcrgFmEY65ObatfScf2Z3NUOJu2Zlu2
+        QYJhXXjn+RBI47Esuiz9bzphvlaAclzM/SiFyYdhnA==
+X-Google-Smtp-Source: ABdhPJwM3WmrduknwaHuwv1oS/UWCa6rCVwvP8lSpnbJ99wYVLFaUwqD8adqCCp2RUVXMwg7jhadsyw/D/byN4yaDyY=
+X-Received: by 2002:ac2:51dc:: with SMTP id u28mr10792613lfm.444.1629128282504;
+ Mon, 16 Aug 2021 08:38:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
- <20210726125436.58685-3-andriy.shevchenko@linux.intel.com>
- <YRpihHP3kDz5nYV9@google.com> <CAHp75VdcWsNFervoU7e4_m7qVKAnWXzF2z2mUgKg06-qmwn-2A@mail.gmail.com>
- <YRppKOxp4Jya5iEI@google.com> <YRpva4gS1LfncPUj@smile.fi.intel.com> <YRpz5UEDQbpewq5o@google.com>
-In-Reply-To: <YRpz5UEDQbpewq5o@google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 16 Aug 2021 17:53:53 +0300
-Message-ID: <CAHp75VczCKwNQE8k6_e9Trk0qkD2EumFVxxG5w2BTYhiOTDUzA@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] mfd: intel_quark_i2c_gpio: Convert GPIO to use
- software nodes
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20210710081722.1828-1-zhiyong.tao@mediatek.com>
+ <20210710081722.1828-2-zhiyong.tao@mediatek.com> <CAGXv+5GXg0RuOQkh4vaRmcLpehZiXnEUXBvEaObiatAa1sXvaA@mail.gmail.com>
+ <1626940470.29611.9.camel@mhfsdcap03> <CAGXv+5F_-W4aNt0WVSDBGLo_t8orNUq59GMKk_4xVr+hMb9Ctg@mail.gmail.com>
+ <07388dac4e25e0f260725e8f80ba099d5aa80949.camel@mediatek.com>
+ <CAGXv+5EagmhYYpri+nzo6WgGz8A=oiU3Vy+2AVjho=eo6Z+DLw@mail.gmail.com>
+ <CACRpkdZ4k9Km3vBtdN6AnBM89c4355GtPMzCQ0_YHaTb4V5cKA@mail.gmail.com>
+ <CAGXv+5HohMwU8jow5QXO5MK1tO+u=5YsfhArBWCP4Dgm1Q8igg@mail.gmail.com> <4fd12d5c53f6492e5fa3ba94a78b9a149f5b6ed9.camel@mediatek.com>
+In-Reply-To: <4fd12d5c53f6492e5fa3ba94a78b9a149f5b6ed9.camel@mediatek.com>
+From:   Chen-Yu Tsai <wenst@chromium.org>
+Date:   Mon, 16 Aug 2021 23:37:51 +0800
+Message-ID: <CAGXv+5GCuNK=-z9VAOjkpJdZLUSZFPfUsQ09m1FhfTsbCYLLRw@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: pinctrl: mt8195: add rsel define
+To:     "zhiyong.tao" <zhiyong.tao@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>,
+        Light Hsieh <light.hsieh@mediatek.com>,
+        Biao Huang <biao.huang@mediatek.com>,
+        Hongzhou Yang <hongzhou.yang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 16, 2021 at 5:19 PM Lee Jones <lee.jones@linaro.org> wrote:
-> On Mon, 16 Aug 2021, Andy Shevchenko wrote:
-> > On Mon, Aug 16, 2021 at 02:33:28PM +0100, Lee Jones wrote:
-> > > On Mon, 16 Aug 2021, Andy Shevchenko wrote:
-> > > > On Mon, Aug 16, 2021 at 4:11 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > On Mon, 26 Jul 2021, Andy Shevchenko wrote:
-> > > > >
-> > > > > > The driver can provide a software node group instead of
-> > > > > > passing legacy platform data. This will allow to drop
-> > > > > > the legacy platform data structures along with unifying
-> > > > > > a child device driver to use same interface for all
-> > > > > > property providers, i.e. Device Tree, ACPI, and board files.
-> > > > > >
-> > > > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > > > ---
-> > > > > >  drivers/mfd/intel_quark_i2c_gpio.c | 70 ++++++++++++++++--------------
-> > > > > >  1 file changed, 37 insertions(+), 33 deletions(-)
-> > > > >
-> > > > > Doesn't seem to want to apply.
-> > > >
-> > > > Would it be okay for you to pull the immutable tag?
-> > >
-> > > What immutable tag?
-> >
-> > It's here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git/tag/?h=intel-gpio-v5.15-1
+On Mon, Aug 16, 2021 at 6:48 PM zhiyong.tao <zhiyong.tao@mediatek.com> wrote:
 >
-> My Ack can't be merged like that.
+> On Mon, 2021-08-16 at 14:10 +0800, Chen-Yu Tsai wrote:
+> > On Thu, Aug 5, 2021 at 7:02 AM Linus Walleij <
+> > linus.walleij@linaro.org> wrote:
+> > >
+> > > On Thu, Jul 29, 2021 at 11:43 AM Chen-Yu Tsai <wenst@chromium.org>
+> > > wrote:
+> > > > On Thu, Jul 29, 2021 at 4:23 PM zhiyong.tao <
+> > > > zhiyong.tao@mediatek.com> wrote:
+> > > > > The rsel actual bias resistance of each setting is different in
+> > > > > different IC. we think that the define "MTK_PULL_SET_RSEL_000"
+> > > > > is more
+> > > > > common for all different IC.
+> > > >
+> > > > I see. I personally prefer having things clearly described. I can
+> > > > understand this might be an extra burden to support different
+> > > > chips
+> > > > with different parameters, though this should be fairly
+> > > > straightforward
+> > > > with lookup tables tied to the compatible strings.
+> > > >
+> > > > Let's see if Rob and Linus have anything to add.
+> > >
+> > > Not much. We have "soft pushed" for this to be described as generic
+> > > as possible, using SI units (ohms). But we also allow vendor-
+> > > specific
+> > > numbers in this attribute. Especially when reverse engineering SoCs
+> > > that the contributor don't really have specs on (example M1 Mac).
+> > >
+> > > The intent with the SI units is especially for people like you
+> > > folks working
+> > > with Chromium to be able to use different SoCs and not feel lost
+> > > to a forest of different ways of doing things and associated
+> > > mistakes because vendors have hopelessly idiomatic pin configs.
+> >
+> > I'll take that as "use SI units whenever possible and reasonable".
+>
+> ==> so It doesn't need to change the define, is it right?
+> we will keep the common define.
 
-Which one? There are two on different patches.
-Do you have any documentation on the rules you imply by MFD?
+Actually I think it would be possible and reasonable to use SI units
+in this case, since you are the vendor and have the resistor values
+to implement the support. Having different sets of values for different
+chips is nothing out of the ordinary. We already have to account for
+different number of pins and different pin functions. That is what
+compatible strings are for.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Now if you have _many_ different sets of values within the same chip,
+that could make things more difficult. However the clearness of having
+the real values visible in the device tree would likely benefit both
+software and hardware engineers outside of Mediatek. That is what we
+should be aiming for.
+
+
+Regards
+ChenYu
