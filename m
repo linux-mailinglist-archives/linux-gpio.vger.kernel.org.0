@@ -2,223 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D3253ECEA0
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 08:28:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF0C53ECED0
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 08:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232958AbhHPG2i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Aug 2021 02:28:38 -0400
-Received: from mail-bn1nam07on2087.outbound.protection.outlook.com ([40.107.212.87]:44929
-        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233252AbhHPG2f (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Aug 2021 02:28:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZN4P8/a104bENgDNFmJrNU6/AZGGGm9U3GNl+RdeW8FFycEDMmImZCBJYz9yI5DIi23uvLj2Pp0kmBTUE3GW547rDjX0MKStitEwVxxBA90LEFthARvID5QJPGg2s+LY3HKCFxhpq3t6LuvHX7qLrivKw0O88Oa0jckDpuVHiEDiClHjaEuSwacnnbYO6s8JTwt1w2Mu+Eoow4g0+OBU/+aeZJMuFCQxIOTko1AdGDtc7ApygNfUtswHuiENARLvacAJGH5uWUyQVYz93N7ETRUn3IkPORbaBT0EA7Npp0cCh49bLK6i/KjPCsB+2IHwXZOlmM4U4x45kn3fH5CTBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uioSGVnCtYlpbsoB0wjtpHulcp8uRTEqapSHGb8TJak=;
- b=bHKrHdQSQYzpc85atG723VrUjMNKth3A9I4xm8zuOL/bjbrlEueYWmtEQjEc4Y5LQw6hllNX8/YxOuXerIHvW5tP8MPzFpdC+vdNo8NjOmoODEzu4Cm2jfRlrd0ijZ30OgjYZnI5F3kg4g345EAKO8rXVe/YrbdC6kn3BalFvx3ddk41X/lQrlqKUtp5zBTVblWz5EH5PiLKBN3ThgjGL1KG2FrTFoudhjJRc7XrRgNKjHm7DLiCG2lyDrrPSKTn4KY140lWEdaqsle2BmzPeh2JJln+07p4nz+HvVA/Sgx/iFjEhS9sdoD61GhqY9RCGcVyWuHK6YFKykfnh24mQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uioSGVnCtYlpbsoB0wjtpHulcp8uRTEqapSHGb8TJak=;
- b=QZYlrXKHB3alxSVNLrOb/zTc9+/X/H3rn7Ts9skaufbTzfTJAiLfCpvm9ra58OThrio2UkghW4j4qcsOdQzYDOC2ayZYzCPV4AvvtPzz6xqlrM/tqYyLrgEBBFTBirFwbG77BjspmjS2LVTwHQ0Ch0QX2gmWdOJgjV6aexrDVd0=
-Received: from SN2PR01CA0083.prod.exchangelabs.com (2603:10b6:800::51) by
- DM5PR02MB2347.namprd02.prod.outlook.com (2603:10b6:3:5b::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4415.13; Mon, 16 Aug 2021 06:28:01 +0000
-Received: from SN1NAM02FT0016.eop-nam02.prod.protection.outlook.com
- (2603:10b6:800:0:cafe::92) by SN2PR01CA0083.outlook.office365.com
- (2603:10b6:800::51) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.16 via Frontend
- Transport; Mon, 16 Aug 2021 06:28:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
-Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0016.mail.protection.outlook.com (10.97.4.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4415.16 via Frontend Transport; Mon, 16 Aug 2021 06:28:01 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Sun, 15 Aug 2021 23:27:50 -0700
-Received: from smtp.xilinx.com (172.19.127.95) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.2 via Frontend Transport; Sun, 15 Aug 2021 23:27:50 -0700
-Envelope-to: git@xilinx.com,
- linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org,
- bgolaszewski@baylibre.com,
- iwamatsu@nigauri.org,
- linus.walleij@linaro.org,
- gregkh@linuxfoundation.org,
- zou_wei@huawei.com,
- arnd@arndb.de,
- robh@kernel.org
-Received: from [172.30.17.109] (port=39402)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1mFW69-0008W8-D5; Sun, 15 Aug 2021 23:27:49 -0700
-Subject: Re: [PATCH V2 2/3] dt-bindings: gpio: zynqmp: Add binding
- documentation for modepin
-To:     Rob Herring <robh@kernel.org>,
-        Piyush Mehta <piyush.mehta@xilinx.com>
-CC:     <arnd@arndb.de>, <zou_wei@huawei.com>,
-        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
-        <michal.simek@xilinx.com>, <wendy.liang@xilinx.com>,
-        <iwamatsu@nigauri.org>, <bgolaszewski@baylibre.com>,
-        <rajan.vaja@xilinx.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <git@xilinx.com>, <sgoud@xilinx.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20210805174219.3000667-1-piyush.mehta@xilinx.com>
- <20210805174219.3000667-3-piyush.mehta@xilinx.com>
- <YRbBnRS0VosXcZWz@robh.at.kernel.org>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <d71ad7f9-6972-8cc0-6dfb-b5306c9900d0@xilinx.com>
-Date:   Mon, 16 Aug 2021 08:27:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S233459AbhHPGvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Aug 2021 02:51:32 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:16973 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233561AbhHPGvb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Aug 2021 02:51:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1629096660; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=gdILqRmVTD/TFVQVBfNPgHl11ZlKVgr1wHcPFQbbszM=;
+ b=Ag7pMNo9NM4YEz/piukAZgstpiYn19UHawj4Se3F3q6DPcRHz7WnXE8Ptkj4I6sCoa/Cq41q
+ 6c+tNgRzxUmmZwEfQmuLCPrznhPM8J3bfZkNAGbodZeEKcgNxffThPPaz7hLtLbCp9gTFacS
+ NjAXusbjtjiLA/40kVcSckbCd48=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 611a0abef746c298d91898e2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 16 Aug 2021 06:50:38
+ GMT
+Sender: skakit=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2391BC43617; Mon, 16 Aug 2021 06:50:38 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: skakit)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 69BFCC4360C;
+        Mon, 16 Aug 2021 06:50:37 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <YRbBnRS0VosXcZWz@robh.at.kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: aacb8674-7152-4885-6c8a-08d9607eff58
-X-MS-TrafficTypeDiagnostic: DM5PR02MB2347:
-X-Microsoft-Antispam-PRVS: <DM5PR02MB2347B78CE5DE7BCEC0CFB8F2C6FD9@DM5PR02MB2347.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9Xgl56Osob751vjGxt3SG0MrSklvtImNyNeS3H65qSlKfluNi156En6GXZWI8FcM0pELHa97UHLX3dstvUlv5xytFZ/We6f2HUZi588btvF5Sfl/8ymp2BcbOgGvJUduvJWtcYfEJ6LoA7glhNFSOAZUDdgr2YkJonPjSGok1RLAltbTsF2iNIHZiBRy+chjZXl168tBQjnwtSEYBB22VHvcIyeJDVZriZWtgBmU5lMdT5YMGMbv+M3E6vuM6FUOPQmtFhcuEn8vOfhQsmLzoeCPN1OR/vvaf5GLWLTqZnz3TeSppumHb4kAf9h7idHK1stZX1K6r8Vu7w78pvOwoNFM2u8fWjLebnsra0AmgaRQ+3nYy3JduIq106+uRDp6EOouFP4dIrnex+FHsmZPcr8rW9pIALehe+wvdOHkwz34F2ehuBdYK/Exq9e5/yuiNkve3NHcg4v+x3WKpdPVA1Kp+t6HSLiXBEsudHnQtOGpZiNwOgHGKuxTzImNEYrmzuTK9xY6kaZjQU8cpBN8088Te8P7qdQ9KU+ISuIx3GFUGKmFSLlU3IOIajdbLuoed99piEowh1rojQkpvzseaZByCjJj9bVX6ZHqHWWxorc6Fwxrc7mcdb7oNkn6otqKCZYpJJK8FupgzWWk52VKz7AtTnXU8iszc4eEozstDPG/p/ASMsY57nx+l+rCBUtoOPWhbQrs93uDFsf5UKRFoOgfkO0/3MLzo63DGiVClwUjfQfYQenZfAB/+6cVCeoMnFu4uu3Yenp4VJPW4ng0/0bs7K5pKz01paHGzrtDOUd1PoWfdk4vekMeYJkbi24M+2fRizKkSxW87OfxNdiw9OdPcHzuW89n/w7BnsiZNLua6jH56+0+aU1KLqZgzAgP
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(136003)(376002)(396003)(39850400004)(346002)(46966006)(36840700001)(36860700001)(31686004)(6636002)(186003)(336012)(47076005)(356005)(54906003)(7416002)(26005)(82740400003)(426003)(9786002)(2616005)(2906002)(7636003)(5660300002)(83380400001)(316002)(82310400003)(4326008)(36906005)(966005)(8676002)(70206006)(36756003)(6666004)(44832011)(70586007)(31696002)(53546011)(8936002)(110136005)(478600001)(50156003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2021 06:28:01.4957
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: aacb8674-7152-4885-6c8a-08d9607eff58
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0016.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2347
+Date:   Mon, 16 Aug 2021 12:20:37 +0530
+From:   skakit@codeaurora.org
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH 1/2] pinctrl: qcom: spmi-gpio: correct parent irqspec
+ translation
+In-Reply-To: <CACRpkdZteWY6X+prHeAF0rtPVbCk+X9=ZYgpjgAMH24LhOjhaQ@mail.gmail.com>
+References: <1628830531-14648-1-git-send-email-skakit@codeaurora.org>
+ <1628830531-14648-2-git-send-email-skakit@codeaurora.org>
+ <CACRpkdZteWY6X+prHeAF0rtPVbCk+X9=ZYgpjgAMH24LhOjhaQ@mail.gmail.com>
+Message-ID: <4af8171aefd6f0387438225666ec1ccc@codeaurora.org>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Linus,
 
-
-On 8/13/21 9:01 PM, Rob Herring wrote:
-> On Thu, Aug 05, 2021 at 11:12:18PM +0530, Piyush Mehta wrote:
->> This patch adds DT binding document for zynqmp modepin GPIO controller.
->> Modepin GPIO controller has four GPIO pins which can be configurable
->> as input or output.
->>
->> Modepin driver is a bridge between the peripheral driver and GPIO pins.
->> It has set and get APIs for accessing GPIO pins, based on the device-tree
->> entry of reset-gpio property in the peripheral driver, every pin can be
->> configured as input/output and trigger GPIO pin.
->>
->> For more information please refer zynqMp TRM link:
->> Link: https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf
->> Chapter 2: Signals, Interfaces, and Pins
->> Table 2-2: Clock, Reset, and Configuration Pins - PS_MODE
->>
->> Signed-off-by: Piyush Mehta <piyush.mehta@xilinx.com>
->> ---
->> Changes in v2:
->> - Addressed review comments: Update commit message
->>
->> https://lore.kernel.org/linux-arm-kernel/20210615080553.2021061-2-piyush.mehta@xilinx.com/T/#mbd1fbda813e33b19397b350bde75747c92a0d7e1
->> https://lore.kernel.org/linux-arm-kernel/20210615080553.2021061-2-piyush.mehta@xilinx.com/T/#me82b1444ab3776162cdb0077dfc9256365c7e736
->> ---
->>  .../bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    | 41 ++++++++++++++++++++++
->>  1 file changed, 41 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
->> new file mode 100644
->> index 0000000..39d78f8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
->> @@ -0,0 +1,41 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/gpio/xlnx,zynqmp-gpio-modepin.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: ZynqMP Mode Pin GPIO controller
->> +
->> +description:
->> +  PS_MODE is 4-bits boot mode pins sampled on POR deassertion. Mode Pin
->> +  GPIO controller with configurable from numbers of pins (from 0 to 3 per
->> +  PS_MODE). Every pin can be configured as input/output.
->> +
->> +maintainers:
->> +  - Piyush Mehta <piyush.mehta@xilinx.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: xlnx,zynqmp-gpio-modepin
->> +
->> +  gpio-controller: true
->> +
->> +  "#gpio-cells":
->> +    const: 2
->> +
->> +required:
->> +  - compatible
->> +  - gpio-controller
->> +  - "#gpio-cells"
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    modepin_gpio: gpio {
->> +        compatible = "xlnx,zynqmp-gpio-modepin";
->> +        gpio-controller;
->> +        #gpio-cells = <2>;
+On 2021-08-13 14:27, Linus Walleij wrote:
+> Hi Satya/David,
 > 
-> No way to interact with this h/w?
+> nice work on identifying this bug!
 > 
-> As it is part of the firmware interface, it must be a child node in the 
-> firmware node schema.
+> On Fri, Aug 13, 2021 at 6:56 AM satya priya <skakit@codeaurora.org> 
+> wrote:
+>> 
+>> From: David Collins <collinsd@codeaurora.org>
+>> 
+>> pmic_gpio_child_to_parent_hwirq() and
+>> gpiochip_populate_parent_fwspec_fourcell() translate a pinctrl-
+>> spmi-gpio irqspec to an SPMI controller irqspec.  When they do
+>> this, they use a fixed SPMI slave ID of 0 and a fixed GPIO
+>> peripheral offset of 0xC0 (corresponding to SPMI address 0xC000).
+>> This translation results in an incorrect irqspec for secondary
+>> PMICs that don't have a slave ID of 0 as well as for PMIC chips
+>> which have GPIO peripherals located at a base address other than
+>> 0xC000.
+>> 
+>> Correct this issue by passing the slave ID of the pinctrl-spmi-
+>> gpio device's parent in the SPMI controller irqspec and by
+>> calculating the peripheral ID base from the device tree 'reg'
+>> property of the pinctrl-spmi-gpio device.
+>> 
+>> Signed-off-by: David Collins <collinsd@codeaurora.org>
+>> Signed-off-by: satya priya <skakit@codeaurora.org>
+> 
+> Is this a regression or is it fine if I just apply it for v5.15?
+> I was thinking v5.15 since it isn't yet used in device trees.
+> 
 
-Actually it is there. Only example is not showing this properly.
-https://github.com/Xilinx/u-boot-xlnx/blob/master/arch/arm/dts/zynqmp.dtsi#L250
+Without this fix, [2/2] Vol+ support is failing. If possible please 
+merge it on current branch.
 
-Piyush: Can you please do it as we have done with pinctrl.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml?h=v5.14-rc6#n301
-
-like this
-
-zynqmp_firmware: zynqmp-firmware {
-    modepin_gpio: gpio {
-        compatible = "xlnx,zynqmp-gpio-modepin";
-        gpio-controller;
-        #gpio-cells = <2>;
-    };
-};
-
-That dt labels can be also removed because they are not needed in example.
-
-Thanks,
-Michal
+> Yours,
+> Linus Walleij
