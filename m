@@ -2,120 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4255F3ED910
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 16:43:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F81D3ED92C
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 16:48:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbhHPOnj convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 16 Aug 2021 10:43:39 -0400
-Received: from mail-eopbgr1390083.outbound.protection.outlook.com ([40.107.139.83]:13952
-        "EHLO IND01-BO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232183AbhHPOlU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Aug 2021 10:41:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BfNjInkwbtw189gqVybocsatEXjESKzYs7ZCMNZHQogY3c5Md69jganePvTxc2rmjrkcdtdqnz3LLER3KBuAnAJykbXXWv6nsGyDqdHXfO9y91zbrxOrMP99XFKZRktWdbOL7ivf+4XqivoYrWhuGFE3v7Qp0j7REgKxu1QAXId5Lf2WG6lSLEYzsiv6SuzHGdy4eZ7eK4sQsP5NE5A/mi/SV4FUGqQ1Ohrze6Jx6D5IZXoEPQCkqWpB7FP8NiXtm+VJxmNRfSrDAWAeUKU8ESpcNOH4Y4JMBqGXUQCHcHEWQte+TsvCD8vyrh/OHhxGtL92ZuLWYQSmYM7GXR3bMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EQGYpJlMUFyjlPs1Fr8XU2wtjDCmuf+PWmqhv3/YXfs=;
- b=H8Ir8Q0nOZwepw62nzHqtmAOssO/muXH5pSf2ix9byLitA41WEO9ExdDxaWe3hH5w2SSHB/wlgfPX6ID6VO0WkgODl3zk5bShdmrds6xSTntqAlQLUWq05VxQSQBBNlOq0mTFbOzO8lP1yBtUbU/hyH3Jsf2TUfS/itYH1XzTFsNROMGpYLsyI/pJQpMwEGv1d2CrMpFgABUP5dkdyPjvjKr+yiulpFHQJErOK78fGuL957dumuhg9ahvi7vV4VpSW1rL5onyXFv421PUNLOSonOHCLtJVZDrOW5JbXBjSdCO4YZ8IAOQSEnQj//QN/A7ZrjNJd8OZJNvOihSXt0dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspiredatatech.com; dmarc=pass action=none
- header.from=aspiredatatech.com; dkim=pass header.d=aspiredatatech.com;
- arc=none
-Received: from MA1PR01MB4209.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:17::11)
- by MA1PR0101MB1287.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:26::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.17; Mon, 16 Aug
- 2021 14:39:31 +0000
-Received: from MA1PR01MB4209.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::949c:c61c:7838:78ad]) by MA1PR01MB4209.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::949c:c61c:7838:78ad%6]) with mapi id 15.20.4415.023; Mon, 16 Aug 2021
- 14:39:31 +0000
-From:   Jessie Parker <jessie.parker@aspiredatatech.com>
-To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Data Records
-Thread-Topic: Data Records
-Thread-Index: AdeTBHmYycuooZalSNm2JMqF9L4z/A==
-Date:   Mon, 16 Aug 2021 14:39:31 +0000
-Message-ID: <MA1PR01MB42097B163D4EFD0DD07B124C91FD9@MA1PR01MB4209.INDPRD01.PROD.OUTLOOK.COM>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=aspiredatatech.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e0cc36e0-b6c6-4ed5-ef08-08d960c3a8ec
-x-ms-traffictypediagnostic: MA1PR0101MB1287:
-x-microsoft-antispam-prvs: <MA1PR0101MB1287E6D7CD24519EEB877AAB91FD9@MA1PR0101MB1287.INDPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rmPoc2x1ja+ckPKs0xyDO2eHQOs85Glap+WfGvbCMd8sUbtOutYga7Z0dLDWcSJ7QmfAYdfHuXLCkby0uIvww5Pa8dg27FelVtQQEuc2iHkMfJaS4VwHQW25IWEvkuS8XOpAG2GIX967NmIl7CYGGNcjRRgQRSTOjRHpwtlQXBM907Cd1ILD6gbxo+luWUuw6X5YESB8oYi1nBisgDbH3eJOchRwb7BPMFGBDcjluKMn8DE8ZtY4Hm+0ubvRt/EOZ0glIWWWFNZkS+1bR2XPtWzO7MeiCCnuJoUxtGEclOVJaTe33cd7e8g+vGnmB0aJJds280OqnBA124iLiqCBci4CB/g8c532k79Zff09q16Z/MPpr5fwhugcZ89DnAqddCYVSpaH+FEOW+TSsmNtXJ45aLX13Z1/PscxvMiHbBDSM0lB/AZmYi+68HkfJE2eE9UuVFuqGa0d/eHCXAxYqN904EvnJBZTe65Phay1eITk5AirdClc4Ju/chEvvPpF19jNhflEtcL4fM4Xbx5uuKmk+8mgUbSZCUj5mmDrX8AoXCkTtg5rPVU1Zs/wJtk6377tvSvnt9moVl0xvzf2tVvutH5jUcUhTDbab5G2NpzS5igk9cula9jQGKw2XDBymbL0w03tBI2y9gSimMaHRNKygBWm+hqHow16al2rbT7Q0LnFmusUMp/7UoV7mbbxSOACSc2OGCqGw53Mi311q/z4Nlne6YC1sTOw6SWYYmk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA1PR01MB4209.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(39840400004)(366004)(136003)(346002)(396003)(376002)(6916009)(8676002)(64756008)(66446008)(71200400001)(8936002)(86362001)(478600001)(66574015)(66476007)(66946007)(66556008)(76116006)(7116003)(5660300002)(52536014)(9686003)(55016002)(3480700007)(186003)(33656002)(38070700005)(122000001)(7696005)(26005)(2906002)(6506007)(316002)(38100700002)(44832011)(17020400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?c1EqPjVgdsGaew0lSA22ncaKueEcCqsiK1RbDoZeeSjuNrUccDTRvJ6Uk7QR?=
- =?us-ascii?Q?FRi4ri6EQnNRIHRU8B7JMuYfqMAEItSTZS5Nm4yw8b2tGTg7SHb/voIgrxEx?=
- =?us-ascii?Q?dqTFW6Fmc3vhpP1gYOLfa/GBy6xrkIA5plYk3+pM+dmwEbRZE7RDRgO1zU1A?=
- =?us-ascii?Q?HbaRsDKY+Xsa6Srn3gKg7kPVHoLD2y44xAcWpai91We/ychwIoEU3cOG2/0R?=
- =?us-ascii?Q?9bmhLPtL+GpS8XQFc0gWPa0ZJkljcQjgKRwVYLIiIfLD6THWV6TOKOVmBib4?=
- =?us-ascii?Q?QBIvTeoUGeJ5fdB3Ytldl2d0Jpr87FIswNkxkHOQ4K6F6vhNePV32F3Wqtnl?=
- =?us-ascii?Q?IO/OJhdcx90+x9LAf71WevN6KMDGXdmq5a51AoYxgNNX/cJ1bVXuM2C2d97g?=
- =?us-ascii?Q?EAN5fd10Ly6B40paj/GWhWNHWNM0tBzntUDZ6NVZjrMXI8/bUP+DCWJGyY9M?=
- =?us-ascii?Q?9AGIqGVdI9lWk5mDkzcsE0cdQhym/znLrBWUPrMXe3sDG5bEEgIq4/nPiyzc?=
- =?us-ascii?Q?VbzMrLNF/Zuwh6V/3V/qoo1gIVx3MoA1R9pHJkFiUs9TCyH6aGiUqonrXOrc?=
- =?us-ascii?Q?gDUj8Q8hJa9X31Toic85mxQ4mtAVpg6fK7IgS1wNysJFXKi4/7QBlZ8q7Twu?=
- =?us-ascii?Q?JscWcFbQfgNxfFX8wsF6ZaOf4CvF1B3ZBfMTU63Xe9u47JFr7W+sC6nMjC6h?=
- =?us-ascii?Q?h5Lh7b6tGezxS4DFLy6nPblJeB2+PFXhL/3UGZgROKce+DcYclq2zX3r8mSJ?=
- =?us-ascii?Q?pw5mohpUFGnykdSChHhIkVWi9pgYzee97270b2/DpcHurYgWHDNeJB0h9viF?=
- =?us-ascii?Q?b5r8b3vcnq/4xwagzpUX8l3jmy/snCimDKAiPZwZC6FtCu7gTXSWCrG0AJhx?=
- =?us-ascii?Q?sluWvl7s7oRHFUFQMi9WsHw0I5f/730Jg5BFCNFfvNcxpZoHspa2zjMsYIg2?=
- =?us-ascii?Q?hEYzzLksa5EZzt0mXs19yXkgNl0VxPOXxPusx+VCt3U3dCj/GDtQ6sA9e6kf?=
- =?us-ascii?Q?HuLRr8GfS8vpYVhLRDsPQfeeY25kiZZD0pJtFOIOaKJdvMajvmQzrzcb9OCj?=
- =?us-ascii?Q?SR8P5l+sQ3ZgJ+S7URIIAxtHUQDRmeEUcYbeEdzLmnolWHCW3Yj/E41nuINV?=
- =?us-ascii?Q?btd2hc7y+VVTW/Y4typra47oajRmxsqLwA9RnrGTyNj4Cu/5ynzYdU+0NhmW?=
- =?us-ascii?Q?qqdGR6xiVemtVuPLNABfjj0VxgZhCVSqFtQolBWO1qRaHKJ9v+3EJY93m7sJ?=
- =?us-ascii?Q?jQn2XAvzZgENUNImxym+QOq1RJIbNuembU41h/QPa/h0QBQSvuumjBIL8ec0?=
- =?us-ascii?Q?9tQ=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S232266AbhHPOtW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Aug 2021 10:49:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:32699 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232095AbhHPOtW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Aug 2021 10:49:22 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10078"; a="196140208"
+X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
+   d="scan'208";a="196140208"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 07:48:50 -0700
+X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
+   d="scan'208";a="504935472"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 07:48:47 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mFduq-00AQUa-Ie; Mon, 16 Aug 2021 17:48:40 +0300
+Date:   Mon, 16 Aug 2021 17:48:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v1 1/1] x86/platform: Increase maximum GPIO number for
+ X86_64
+Message-ID: <YRp6yHt7JMmGvvQn@smile.fi.intel.com>
+References: <20210806143711.37553-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0iTNwQfh6ZZxry16hOjokGOOSZthq6C_yed07a2HQ7h2Q@mail.gmail.com>
+ <YRppqnAqJ1G+4mva@smile.fi.intel.com>
+ <CAJZ5v0ib7oP5EG2k6_Q0Yiq=_WGu01iGVDmV+QoVRLaxTXZHDw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: aspiredatatech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MA1PR01MB4209.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0cc36e0-b6c6-4ed5-ef08-08d960c3a8ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2021 14:39:31.7609
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: ded1d0ac-4f91-4688-a87e-893bb8eed455
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iAq5URab3VGMrwfYAzfxIhEuTZbj3fmtoVWSmh6Z/4fxFmUO+uPUhlB/+DPqeCJ5KzswT8AmrtkzNUxHOzW5GT2khusy60A7BmUOszW3FjC4h2BHxOKkV8xkqtKcaV+F
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA1PR0101MB1287
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0ib7oP5EG2k6_Q0Yiq=_WGu01iGVDmV+QoVRLaxTXZHDw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Mon, Aug 16, 2021 at 03:55:59PM +0200, Rafael J. Wysocki wrote:
+> On Mon, Aug 16, 2021 at 3:35 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Aug 16, 2021 at 03:25:13PM +0200, Rafael J. Wysocki wrote:
+> > > On Fri, Aug 6, 2021 at 4:44 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
 
-How are you weathering through the virus? Hopefully, everyone is staying healthy! COVID-19 is changing the way businesses operate.  
+...
 
-We provide B2B contact lists as per your target profile. You can use these contact lists to do email as well as calling campaigns to reach decision-makers. I believe I could be of value to your business and would love to work with you.
+> > > Wouldn't
+> > >
+> > > default 1024 if X86_64
+> > > default 512
+> > >
+> > > be sufficient?
+> > >
+> > > It's either X86_64 or X86_32 anyway AFAICS.
 
-I understand that this may not be a top priority during the health crisis, but I'd like to have an initial discussion to chat and understand your needs.
+Fixed in v2.
 
-Please let me know your exact target industry, geography & job titles to reach, so that I will provide you counts, cost and more details.
+...
 
-Target Industry: - ________ (Any Industry)
-Target Country/ State: - ________ (EX: APAC Countries, European Countries, North America Countries)
-Target Job Title: - ___________EX: CEO, President, VP's, Managing Director, Director, Manager and many more.)
+> > Btw, what do you think. do we need comment above and help text here? I copied
+> > these from ARM, but I'm not sure it would be useful on x86 as much.
+> 
+> Both the comment and the help text aren't particularly useful IMO.
+> 
+> The comment is a bit confusing even, because x86 kernels are
+> multiplatform as a rule.
 
-Thanks and looking forward to hear from you!
+Ditto.
 
-Jessie Parker
-Marketing Dept
 
-P.S.: If this email is unwelcome, I'd like to apologize. Please let me know with a reply of "UNSUBSCRIBE" & I won't email you again.
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
