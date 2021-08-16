@@ -2,103 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EEFC3ED800
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 15:56:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C84EC3ED859
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 16:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbhHPN46 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Aug 2021 09:56:58 -0400
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:38628 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbhHPN45 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Aug 2021 09:56:57 -0400
-Received: by mail-oi1-f181.google.com with SMTP id u25so26782416oiv.5;
-        Mon, 16 Aug 2021 06:56:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0uKKAqouMrQ5RgAbl37XN2HPKshvq14pMZ68Q1KvZR4=;
-        b=GoE6oa48lNfNl1J4y5toavcHOWmP+I7MQpWI+llmbsBWT/bsFQw+3xWrh669vhyagO
-         DkY/KJNHivFeg3qXwnex4KVyhQruDt31sPOpPAoQ6vb0wRondhnzQaVpR4mm7XoeR3O/
-         1RLXISFU5urDA8eGKOIVicFacEGmh0kwuD3v3t8fwc4ow+cduQ+Brfnui2j0tB2YyG2R
-         C7Kuvo1y1obDz4IYSD5PIonRANsIyKuXF4PQW0TTULv+E7qnQiGMTosO3csvYpHe3T49
-         2njrR2N5ziOT6jF6wuEX7gZlHLwrTmU874nX0i4GSKRDngMNs5opLlh4KtI9XESm0hV9
-         di3g==
-X-Gm-Message-State: AOAM530sx8cho9lAiOcPWTJbeVfJ1cex5TbluSKaRh7RF7HFFdAVlIFJ
-        zen15Yif3xHxSE9ZH3bSV0XKRoHl9OXKxc/bE1c=
-X-Google-Smtp-Source: ABdhPJzr4FSgkxW5uRL0cvQgUoHQ2a9lqILSFnzzFljV07kigV/zFHRKEVbH4KzCPm8eekeCuQ0eIA+Kxb0DZTa0IdE=
-X-Received: by 2002:a05:6808:220c:: with SMTP id bd12mr12147522oib.157.1629122185765;
- Mon, 16 Aug 2021 06:56:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210806143711.37553-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0iTNwQfh6ZZxry16hOjokGOOSZthq6C_yed07a2HQ7h2Q@mail.gmail.com> <YRppqnAqJ1G+4mva@smile.fi.intel.com>
-In-Reply-To: <YRppqnAqJ1G+4mva@smile.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 16 Aug 2021 15:55:59 +0200
-Message-ID: <CAJZ5v0ib7oP5EG2k6_Q0Yiq=_WGu01iGVDmV+QoVRLaxTXZHDw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] x86/platform: Increase maximum GPIO number for X86_64
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        id S231447AbhHPOBG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Aug 2021 10:01:06 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28333 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232050AbhHPOAw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Aug 2021 10:00:52 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10077"; a="276893477"
+X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
+   d="scan'208";a="276893477"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 07:00:20 -0700
+X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
+   d="scan'208";a="423553512"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 07:00:18 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1mFd9w-00APcH-07; Mon, 16 Aug 2021 17:00:12 +0300
+Date:   Mon, 16 Aug 2021 17:00:11 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v1 3/4] mfd: intel_quark_i2c_gpio: Convert GPIO to use
+ software nodes
+Message-ID: <YRpva4gS1LfncPUj@smile.fi.intel.com>
+References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
+ <20210726125436.58685-3-andriy.shevchenko@linux.intel.com>
+ <YRpihHP3kDz5nYV9@google.com>
+ <CAHp75VdcWsNFervoU7e4_m7qVKAnWXzF2z2mUgKg06-qmwn-2A@mail.gmail.com>
+ <YRppKOxp4Jya5iEI@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YRppKOxp4Jya5iEI@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 16, 2021 at 3:35 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Aug 16, 2021 at 03:25:13PM +0200, Rafael J. Wysocki wrote:
-> > On Fri, Aug 6, 2021 at 4:44 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Aug 16, 2021 at 02:33:28PM +0100, Lee Jones wrote:
+> On Mon, 16 Aug 2021, Andy Shevchenko wrote:
+> 
+> > On Mon, Aug 16, 2021 at 4:11 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > On Mon, 26 Jul 2021, Andy Shevchenko wrote:
 > > >
-> > > By default the 512 GPIOs is a maximum on any x86 platform.
-> > > With, for example, Intel Tiger Lake-H the SoC based controller
-> > > occupies up to 480 pins. This leaves only 32 available for
-> > > GPIO expanders or other drivers, like PMIC. Hence, bump the
-> > > maximum GPIO number to 1024 for X86_64 and leave 512 for X86_32.
->
-> Thanks for review, my answers below.
->
-> > > +# The GPIO number here must be sorted by descending number. In case of
-> > > +# a multiplatform kernel, we just want the highest value required by the
-> > > +# selected platforms.
-> > > +config ARCH_NR_GPIO
-> > > +       int
-> > > +       default 1024 if X86_64
-> > > +       default 512 if X86_32
-> > > +       default 0
-> >
-> > Wouldn't
-> >
-> > default 1024 if X86_64
-> > default 512
-> >
-> > be sufficient?
-> >
-> > It's either X86_64 or X86_32 anyway AFAICS.
->
-> I guess so.
->
-> > > +       help
-> > > +         Maximum number of GPIOs in the system.
-> > > +
-> > > +         If unsure, leave the default value.
->
-> Btw, what do you think. do we need comment above and help text here? I copied
-> these from ARM, but I'm not sure it would be useful on x86 as much.
+> > > > The driver can provide a software node group instead of
+> > > > passing legacy platform data. This will allow to drop
+> > > > the legacy platform data structures along with unifying
+> > > > a child device driver to use same interface for all
+> > > > property providers, i.e. Device Tree, ACPI, and board files.
+> > > >
+> > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > ---
+> > > >  drivers/mfd/intel_quark_i2c_gpio.c | 70 ++++++++++++++++--------------
+> > > >  1 file changed, 37 insertions(+), 33 deletions(-)
+> > >
+> > > Doesn't seem to want to apply.
+> > 
+> > Would it be okay for you to pull the immutable tag?
+> 
+> What immutable tag?
 
-Both the comment and the help text aren't particularly useful IMO.
+It's here:
+https://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git/tag/?h=intel-gpio-v5.15-1
 
-The comment is a bit confusing even, because x86 kernels are
-multiplatform as a rule.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
