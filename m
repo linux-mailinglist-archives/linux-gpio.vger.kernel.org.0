@@ -2,1379 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C57A3ED3E0
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 14:26:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DB063ED3EE
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 14:28:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbhHPM0z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Aug 2021 08:26:55 -0400
-Received: from mga07.intel.com ([134.134.136.100]:50881 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229600AbhHPM0z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Aug 2021 08:26:55 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10077"; a="279590761"
-X-IronPort-AV: E=Sophos;i="5.84,324,1620716400"; 
-   d="scan'208";a="279590761"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 05:26:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,324,1620716400"; 
-   d="scan'208";a="592735522"
-Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Aug 2021 05:26:19 -0700
-Received: from kbuild by d053b881505b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mFbh4-000QeA-U9; Mon, 16 Aug 2021 12:26:18 +0000
-Date:   Mon, 16 Aug 2021 20:25:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpiochip-no-driver-h] BUILD REGRESSION
- 3357a6b5d4c178fcbe95eb72c4e653b3a5b41569
-Message-ID: <611a5954.JCw6KCj4iiIRDOFV%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S229600AbhHPM2p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Aug 2021 08:28:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23749 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233796AbhHPM2o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Aug 2021 08:28:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629116893;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8J8uBMlBdBuZQDmBUgS0XJpmfufRjyMynx7EajosaWQ=;
+        b=Rd0D5gld+i4RIOsIMjjalUvi8LqqKy1a8RX1t++5DQ/lV7hld7M73I6gNF3Gv9kCUodXl8
+        vP4PqukWO4QiyFoc/YNg3duNYH7SqalECgTdELJhETG8vG8jItUIlv3LIsP6bCJp/nc9Jk
+        bnkAPU0rwYMRwiTcDH1q6p8oJqVUqg0=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-506-Ar8_JnevOsG9M_yqFBxM7g-1; Mon, 16 Aug 2021 08:28:10 -0400
+X-MC-Unique: Ar8_JnevOsG9M_yqFBxM7g-1
+Received: by mail-ed1-f71.google.com with SMTP id e18-20020a0564020892b02903be9702d63eso7574455edy.17
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Aug 2021 05:28:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8J8uBMlBdBuZQDmBUgS0XJpmfufRjyMynx7EajosaWQ=;
+        b=gyEan9Qk4OUjpvHZKDT+R0aJSZMfw7xGFPwLAfRqaUvLTTFcxEHoUDI8KoO+Fq1DDg
+         k0J3QPHceLmSIsachYDpimGUEfE9NwAAoO8tDqa1iznDhsSH5Hq2fJ+n31gDhNJtpkMd
+         jJk88y6O+tq/er29qgWmx0gHEQnLIWZohAA2EjfOlkS2nUihAgWSnftTCi5CNi+6iXkd
+         yTLMs/Lp8Ux5ys6Ar7nzhngs6YnLnwy0zkTFeH2LDlZyMyd5PGY9c46xV7CcRRh5ANZN
+         R43SjkxAHe5u5+ZbqRDv68AU4nKM1EJGxCmIQoMPIToMhpfqU5f6Frw4QfCrvVN5xxh9
+         20+w==
+X-Gm-Message-State: AOAM53141O2gFvFlJYmPoGDvXb9CCKNR+ORC0VRL5OZRYjfZHmm3T1xT
+        mbPU66VoX5W+cDJ5/ptzwRKvLrr0rDYV8AHwXWyRmaijQ50Uwt+KJ007cUpBqyYBVW/S121G64G
+        Q1MC1toa7u9JF7zFhvMteTQ==
+X-Received: by 2002:aa7:c1c4:: with SMTP id d4mr19752500edp.301.1629116888797;
+        Mon, 16 Aug 2021 05:28:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxUmlBUHs63dKqL9LT4V4WRNxi+CMzooXe+Mwa29D+sBIDUIx5mArm48KO18Z6xhvLDCt7yJA==
+X-Received: by 2002:aa7:c1c4:: with SMTP id d4mr19752482edp.301.1629116888636;
+        Mon, 16 Aug 2021 05:28:08 -0700 (PDT)
+Received: from x1.localdomain ([81.30.35.201])
+        by smtp.gmail.com with ESMTPSA id c8sm3608839ejp.124.2021.08.16.05.28.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Aug 2021 05:28:08 -0700 (PDT)
+Subject: Re: [PATCH regression fix v2] gpiolib: acpi: Make
+ set-debounce-timeout failures non fatal
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20210816104119.75019-1-hdegoede@redhat.com>
+ <YRpWxnZvM2kzjcX/@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e7c1b41a-4d11-21f4-0add-9b6dd00a8da6@redhat.com>
+Date:   Mon, 16 Aug 2021 14:28:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <YRpWxnZvM2kzjcX/@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git gpiochip-no-driver-h
-branch HEAD: 3357a6b5d4c178fcbe95eb72c4e653b3a5b41569  See what explodes if we apply this patch
+Hi,
 
-Error/Warning reports:
+On 8/16/21 2:15 PM, Andy Shevchenko wrote:
+> On Mon, Aug 16, 2021 at 12:41:19PM +0200, Hans de Goede wrote:
+>> Commit 8dcb7a15a585 ("gpiolib: acpi: Take into account debounce settings")
+>> made the gpiolib-acpi code call gpio_set_debounce_timeout() when requesting
+>> GPIOs.
+>>
+>> This in itself is fine, but it also made gpio_set_debounce_timeout()
+>> errors fatal, causing the requesting of the GPIO to fail. This is causing
+>> regressions. E.g. on a HP ElitePad 1000 G2 various _AEI specified GPIO
+>> ACPI event sources specify a debouncy timeout of 20 ms, but the
+>> pinctrl-baytrail.c only supports certain fixed values, the closest
+>> ones being 12 or 24 ms and pinctrl-baytrail.c responds with -EINVAL
+>> when specified a value which is not one of the fixed values.
+>>
+>> This is causing the acpi_request_own_gpiod() call to fail for 3
+>> ACPI event sources on the HP ElitePad 1000 G2, which in turn is causing
+>> e.g. the battery charging vs discharging status to never get updated,
+>> even though a charger has been plugged-in or unplugged.
+>>
+>> Make gpio_set_debounce_timeout() errors non fatal, warning about the
+>> failure instead, to fix this regression.
+>>
+>> Note we should probably also fix various pinctrl drivers to just
+>> pick the first bigger discrete value rather then returning -EINVAL but
+>> this will need to be done on a per driver basis, where as this fix
+>> at least gets us back to where things were before and thus restores
+>> functionality on devices where this was lost due to
+>> gpio_set_debounce_timeout() errors.
+> 
+> Yes, I also think that we need to choose upper debounce instead of rejecting
+> the settings. And yes, I agree that for now it's not suitable as a fix.
+> 
+> That said,
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-https://lore.kernel.org/linux-gpio/202108161000.8tMhP8zb-lkp@intel.com
-https://lore.kernel.org/linux-gpio/202108161021.d0uh6KDo-lkp@intel.com
-https://lore.kernel.org/linux-gpio/202108161032.H1ht6WyJ-lkp@intel.com
+Thank you.
 
-Error/Warning in current branch:
+FYI, I've prepared a patch to choose the upper debounce time for
+pintctrl-baytrail . I'll test it when I'm back home tonight and
+then submit it upstream.
 
-drivers/input/keyboard/adp5589-keys.c:391:23: warning: incompatible integer to pointer conversion initializing 'struct adp5589_kpad *' with an expression of type 'int' [-Wint-conversion]
-drivers/media/dvb-frontends/cxd2820r_core.c:424:24: warning: incompatible integer to pointer conversion initializing 'struct cxd2820r_priv *' with an expression of type 'int' [-Wint-conversion]
-drivers/media/dvb-frontends/cxd2820r_core.c:424:31: error: implicit declaration of function 'gpiochip_get_data' [-Werror,-Wimplicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_core.c:660:9: error: implicit declaration of function 'gpiochip_add_data' [-Werror,-Wimplicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_core.c:716:3: error: implicit declaration of function 'gpiochip_remove' [-Werror,-Wimplicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_priv.h:46:19: error: field has incomplete type 'struct gpio_chip'
-include/linux/gpio/driver.h:704:19: error: conflicting types for 'gpiod_to_chip'; have 'struct gpio_chip *(const struct gpio_desc *)'
+Regards,
 
-possible Error/Warning in current branch:
+Hans
 
-arch/arm/mach-s3c/h1940.h:28:41: warning: excess elements in struct initializer
-arch/arm/mach-s3c/mach-h1940.c:159:15: error: variable 'h1940_latch_gpiochip' has initializer but incomplete type
-arch/arm/mach-s3c/mach-h1940.c:159:25: error: storage size of 'h1940_latch_gpiochip' isn't known
-arch/arm/mach-s3c/mach-h1940.c:160:10: error: 'struct gpio_chip' has no member named 'base'
-arch/arm/mach-s3c/mach-h1940.c:161:10: error: 'struct gpio_chip' has no member named 'owner'
-arch/arm/mach-s3c/mach-h1940.c:162:10: error: 'struct gpio_chip' has no member named 'label'
-arch/arm/mach-s3c/mach-h1940.c:162:35: warning: excess elements in struct initializer
-arch/arm/mach-s3c/mach-h1940.c:163:10: error: 'struct gpio_chip' has no member named 'ngpio'
-arch/arm/mach-s3c/mach-h1940.c:164:10: error: 'struct gpio_chip' has no member named 'direction_output'
-arch/arm/mach-s3c/mach-h1940.c:165:10: error: 'struct gpio_chip' has no member named 'set'
-arch/arm/mach-s3c/mach-h1940.c:166:10: error: 'struct gpio_chip' has no member named 'get'
-arch/arm/mach-s3c/mach-h1940.c:707:17: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
-arch/arm/mach-s3c/s3c64xx.c:212:13: error: implicit declaration of function 'of_have_populated_dt' [-Werror=implicit-function-declaration]
-drivers/gpio/gpio-ucb1400.c:14:7: warning: incompatible integer to pointer conversion assigning to 'struct ucb1400_gpio *' from 'int' [-Wint-conversion]
-drivers/gpio/gpio-ucb1400.c:14:9: error: implicit declaration of function 'gpiochip_get_data' [-Werror,-Wimplicit-function-declaration]
-drivers/gpio/gpio-ucb1400.c:66:8: error: implicit declaration of function 'devm_gpiochip_add_data' [-Werror,-Wimplicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:213:10: error: implicit declaration of function 'gpiochip_add_data' [-Werror,-Wimplicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:213:10: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:213:17: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:254:2: error: implicit declaration of function 'gpiochip_remove' [-Werror,-Wimplicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:254:2: error: implicit declaration of function 'gpiochip_remove' [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:254:9: error: implicit declaration of function 'gpiochip_remove' [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:254:9: error: implicit declaration of function 'gpiochip_remove'; did you mean 'proc_remove'? [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:51:19: error: field 'gc' has incomplete type
-drivers/input/keyboard/adp5588-keys.c:51:19: error: field has incomplete type 'struct gpio_chip'
-drivers/input/keyboard/adp5588-keys.c:51:26: error: field 'gc' has incomplete type
-drivers/input/keyboard/adp5588-keys.c:76:23: warning: incompatible integer to pointer conversion initializing 'struct adp5588_kpad *' with an expression of type 'int' [-Wint-conversion]
-drivers/input/keyboard/adp5588-keys.c:76:30: error: implicit declaration of function 'gpiochip_get_data' [-Werror,-Wimplicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:76:30: error: implicit declaration of function 'gpiochip_get_data'; did you mean 'acpi_get_data'? [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:76:30: warning: initialization of 'struct adp5588_kpad *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-drivers/input/keyboard/adp5588-keys.c:76:37: error: implicit declaration of function 'gpiochip_get_data'; did you mean 'acpi_get_data'? [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5588-keys.c:76:37: warning: initialization of 'struct adp5588_kpad *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-drivers/input/keyboard/adp5589-keys.c:243:19: error: field 'gc' has incomplete type
-drivers/input/keyboard/adp5589-keys.c:243:19: error: field has incomplete type 'struct gpio_chip'
-drivers/input/keyboard/adp5589-keys.c:243:26: error: field 'gc' has incomplete type
-drivers/input/keyboard/adp5589-keys.c:391:30: error: implicit declaration of function 'gpiochip_get_data' [-Werror,-Wimplicit-function-declaration]
-drivers/input/keyboard/adp5589-keys.c:391:30: error: implicit declaration of function 'gpiochip_get_data'; did you mean 'acpi_get_data'? [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5589-keys.c:391:30: warning: initialization of 'struct adp5589_kpad *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-drivers/input/keyboard/adp5589-keys.c:391:37: error: implicit declaration of function 'gpiochip_get_data'; did you mean 'acpi_get_data'? [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5589-keys.c:391:37: warning: initialization of 'struct adp5589_kpad *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-drivers/input/keyboard/adp5589-keys.c:528:10: error: implicit declaration of function 'devm_gpiochip_add_data' [-Werror,-Wimplicit-function-declaration]
-drivers/input/keyboard/adp5589-keys.c:528:10: error: implicit declaration of function 'devm_gpiochip_add_data' [-Werror=implicit-function-declaration]
-drivers/input/keyboard/adp5589-keys.c:528:17: error: implicit declaration of function 'devm_gpiochip_add_data' [-Werror=implicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_core.c:424:31: error: implicit declaration of function 'gpiochip_get_data'; did you mean 'acpi_get_data'? [-Werror=implicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_core.c:424:31: warning: initialization of 'struct cxd2820r_priv *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-drivers/media/dvb-frontends/cxd2820r_core.c:424:38: error: implicit declaration of function 'gpiochip_get_data'; did you mean 'acpi_get_data'? [-Werror=implicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_core.c:424:38: warning: initialization of 'struct cxd2820r_priv *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-drivers/media/dvb-frontends/cxd2820r_core.c:660:23: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_core.c:660:9: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_core.c:716:17: error: implicit declaration of function 'gpiochip_remove' [-Werror=implicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_core.c:716:17: error: implicit declaration of function 'gpiochip_remove'; did you mean 'proc_remove'? [-Werror=implicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_core.c:716:3: error: implicit declaration of function 'gpiochip_remove' [-Werror=implicit-function-declaration]
-drivers/media/dvb-frontends/cxd2820r_priv.h:46:19: error: field 'gpio_chip' has incomplete type
-drivers/media/dvb-frontends/cxd2820r_priv.h:46:26: error: field 'gpio_chip' has incomplete type
-drivers/mfd/htc-i2cpld.c:216:22: warning: incompatible integer to pointer conversion initializing 'struct htcpld_chip *' with an expression of type 'int' [-Wint-conversion]
-drivers/mfd/htc-i2cpld.c:216:34: error: implicit declaration of function 'gpiochip_get_data'; did you mean 'acpi_get_data'? [-Werror=implicit-function-declaration]
-drivers/mfd/htc-i2cpld.c:216:34: warning: initialization of 'struct htcpld_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-drivers/mfd/htc-i2cpld.c:216:41: error: implicit declaration of function 'gpiochip_get_data'; did you mean 'acpi_get_data'? [-Werror=implicit-function-declaration]
-drivers/mfd/htc-i2cpld.c:216:41: error: implicit declaration of function 'gpiochip_get_data'; did you mean 'ioasid_set_data'? [-Werror=implicit-function-declaration]
-drivers/mfd/htc-i2cpld.c:216:41: warning: initialization of 'struct htcpld_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-drivers/mfd/htc-i2cpld.c:248:26: error: invalid use of undefined type 'struct gpio_chip'
-drivers/mfd/htc-i2cpld.c:37:26: error: field 'chip_out' has incomplete type
-drivers/mfd/htc-i2cpld.c:37:33: error: field 'chip_out' has incomplete type
-drivers/mfd/htc-i2cpld.c:41:26: error: field 'chip_in' has incomplete type
-drivers/mfd/htc-i2cpld.c:41:33: error: field 'chip_in' has incomplete type
-drivers/mfd/htc-i2cpld.c:436:15: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
-drivers/mfd/htc-i2cpld.c:436:8: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
-drivers/mfd/htc-i2cpld.c:447:17: error: implicit declaration of function 'gpiochip_remove' [-Werror=implicit-function-declaration]
-drivers/mfd/htc-i2cpld.c:447:17: error: implicit declaration of function 'gpiochip_remove'; did you mean 'proc_remove'? [-Werror=implicit-function-declaration]
-drivers/mfd/htc-i2cpld.c:447:3: error: implicit declaration of function 'gpiochip_remove' [-Werror=implicit-function-declaration]
-drivers/net/ethernet/broadcom/tg3.c:17754:33: warning: shift count >= width of type [-Wshift-count-overflow]
-include/asm-generic/gpio.h:58:16: error: implicit declaration of function 'gpiod_to_chip'; did you mean 'gpio_to_chip'? [-Werror=implicit-function-declaration]
-include/asm-generic/gpio.h:58:16: warning: returning 'int' from a function with return type 'struct gpio_chip *' makes pointer from integer without a cast [-Wint-conversion]
-include/asm-generic/gpio.h:58:9: error: implicit declaration of function 'gpiod_to_chip' [-Werror,-Wimplicit-function-declaration]
-include/asm-generic/gpio.h:58:9: error: implicit declaration of function 'gpiod_to_chip'; did you mean 'gpio_to_chip'? [-Werror=implicit-function-declaration]
-include/asm-generic/gpio.h:58:9: warning: incompatible integer to pointer conversion returning 'int' from a function with result type 'struct gpio_chip *' [-Wint-conversion]
-include/asm-generic/gpio.h:58:9: warning: returning 'int' from a function with return type 'struct gpio_chip *' makes pointer from integer without a cast [-Wint-conversion]
-include/linux/bcma/bcma_driver_chipcommon.h:647:19: error: field has incomplete type 'struct gpio_chip'
-include/linux/export.h:19:21: warning: excess elements in struct initializer
-include/linux/gpio/driver.h:704:19: error: conflicting types for 'gpiod_to_chip'
-include/linux/gpio/driver.h:708:19: error: conflicting types for 'gpiod_to_chip'
-include/linux/gpio/driver.h:708:19: error: conflicting types for 'gpiod_to_chip'; have 'struct gpio_chip *(const struct gpio_desc *)'
-include/linux/spi/max7301.h:16:19: error: field 'chip' has incomplete type
-include/linux/spi/max7301.h:16:19: error: field has incomplete type 'struct gpio_chip'
-include/linux/spi/max7301.h:16:26: error: field 'chip' has incomplete type
-include/linux/ssb/ssb.h:496:19: error: field has incomplete type 'struct gpio_chip'
-include/linux/ucb1400.h:84:19: error: field has incomplete type 'struct gpio_chip'
 
-Error/Warning ids grouped by kconfigs:
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- alpha-randconfig-s031-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arc-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arc-randconfig-c023-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arc-randconfig-r006-20210816
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arc-randconfig-r043-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arm-allyesconfig
-|   `-- arch-arm-mach-s3c-s3c64xx.c:error:implicit-declaration-of-function-of_have_populated_dt
-|-- arm-colibri_pxa300_defconfig
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arm-palmz72_defconfig
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arm-randconfig-c003-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|   `-- include-linux-spi-max7301.h:error:field-chip-has-incomplete-type
-|-- arm-randconfig-r014-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arm-s3c2410_defconfig
-|   |-- arch-arm-mach-s3c-h1940.h:warning:excess-elements-in-struct-initializer
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:storage-size-of-h1940_latch_gpiochip-isn-t-known
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:struct-gpio_chip-has-no-member-named-base
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:struct-gpio_chip-has-no-member-named-direction_output
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:struct-gpio_chip-has-no-member-named-get
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:struct-gpio_chip-has-no-member-named-label
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:struct-gpio_chip-has-no-member-named-ngpio
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:struct-gpio_chip-has-no-member-named-owner
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:struct-gpio_chip-has-no-member-named-set
-|   |-- arch-arm-mach-s3c-mach-h1940.c:error:variable-h1940_latch_gpiochip-has-initializer-but-incomplete-type
-|   |-- arch-arm-mach-s3c-mach-h1940.c:warning:excess-elements-in-struct-initializer
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   |-- include-linux-export.h:warning:excess-elements-in-struct-initializer
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arm-tegra_defconfig
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- arm-zeus_defconfig
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- h8300-allyesconfig
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- i386-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- i386-randconfig-a001-20210816
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- i386-randconfig-a002-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- i386-randconfig-a003-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- i386-randconfig-a004-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- i386-randconfig-a005-20210816
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- i386-randconfig-a006-20210816
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- i386-randconfig-c001-20210816
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-spi-max7301.h:error:field-chip-has-incomplete-type
-|-- i386-randconfig-c021-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- i386-randconfig-p002-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- i386-randconfig-s002-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- ia64-allmodconfig
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- ia64-allyesconfig
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- ia64-randconfig-r002-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- ia64-randconfig-r005-20210816
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- ia64-randconfig-r013-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- m68k-allmodconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|   `-- include-linux-spi-max7301.h:error:field-chip-has-incomplete-type
-|-- m68k-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- m68k-randconfig-r022-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- m68k-randconfig-r025-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|   `-- include-linux-spi-max7301.h:error:field-chip-has-incomplete-type
-|-- mips-allmodconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- mips-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- mips-bcm63xx_defconfig
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- mips-capcella_defconfig
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- mips-pistachio_defconfig
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- mips-randconfig-c004-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|   `-- include-linux-spi-max7301.h:error:field-chip-has-incomplete-type
-|-- nds32-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- nds32-randconfig-r001-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- nios2-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- nios2-randconfig-s032-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- openrisc-allnoconfig
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- openrisc-defconfig
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- openrisc-randconfig-r012-20210816
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- openrisc-randconfig-r015-20210816
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- parisc-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- parisc-randconfig-r003-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- parisc-randconfig-r013-20210816
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- parisc-randconfig-r021-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- powerpc-allmodconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- powerpc-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- riscv-allmodconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- riscv-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- riscv-defconfig
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- riscv-nommu_k210_defconfig
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- riscv-randconfig-p001-20210816
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- s390-allmodconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- s390-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- sh-allmodconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- sh-randconfig-p002-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- sh-randconfig-r011-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- sh-randconfig-r015-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- sparc-allyesconfig
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- sparc-randconfig-r026-20210816
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:error:invalid-use-of-undefined-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- sparc64-randconfig-r016-20210816
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- x86_64-randconfig-a001-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-a002-20210816
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-a003-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-a004-20210816
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-a005-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-a006-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-c002-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-spi-max7301.h:error:field-chip-has-incomplete-type
-|-- x86_64-randconfig-c022-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-c024-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-r001-20210816
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-s021-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-of-struct-adp5588_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-gc-has-incomplete-type
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:initialization-of-struct-adp5589_kpad-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_in-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:field-chip_out-has-incomplete-type
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-mfd-htc-i2cpld.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-mfd-htc-i2cpld.c:warning:initialization-of-struct-htcpld_chip-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-randconfig-s022-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- x86_64-rhel-8.3-kselftests
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:initialization-of-struct-cxd2820r_priv-from-int-makes-pointer-from-integer-without-a-cast
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-gpio_chip-has-incomplete-type
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   `-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|-- xtensa-allyesconfig
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-|-- xtensa-randconfig-r005-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-|   |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-|   `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
-`-- xtensa-randconfig-r024-20210816
-    |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip
-    |-- include-asm-generic-gpio.h:warning:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
-    `-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip-have-struct-gpio_chip-(const-struct-gpio_desc-)
 
-clang_recent_errors
-|-- arm-randconfig-r002-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-cxd2820r_priv-with-an-expression-of-type-int
-|   `-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- arm64-randconfig-r016-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-cxd2820r_priv-with-an-expression-of-type-int
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|   `-- include-linux-spi-max7301.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- hexagon-randconfig-r003-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip-Werror-Wimplicit-function-declaration
-|   |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|   `-- include-linux-ssb-ssb.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- hexagon-randconfig-r041-20210816
-|   |-- drivers-gpio-gpio-ucb1400.c:error:implicit-declaration-of-function-devm_gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-gpio-gpio-ucb1400.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-gpio-gpio-ucb1400.c:warning:incompatible-integer-to-pointer-conversion-assigning-to-struct-ucb1400_gpio-from-int
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-devm_gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-input-keyboard-adp5589-keys.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-adp5589_kpad-with-an-expression-of-type-int
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip-Werror-Wimplicit-function-declaration
-|   |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|   |-- include-linux-bcma-bcma_driver_chipcommon.h:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip
-|   |-- include-linux-spi-max7301.h:error:field-has-incomplete-type-struct-gpio_chip
-|   `-- include-linux-ucb1400.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- hexagon-randconfig-r045-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip-Werror-Wimplicit-function-declaration
-|   |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|   |-- include-linux-bcma-bcma_driver_chipcommon.h:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip
-|   `-- include-linux-spi-max7301.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- i386-randconfig-r022-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip-Werror-Wimplicit-function-declaration
-|   |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|   |-- include-linux-bcma-bcma_driver_chipcommon.h:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip
-|   `-- include-linux-spi-max7301.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- powerpc-randconfig-r023-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-adp5588_kpad-with-an-expression-of-type-int
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-cxd2820r_priv-with-an-expression-of-type-int
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- drivers-mfd-htc-i2cpld.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-htcpld_chip-with-an-expression-of-type-int
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip-Werror-Wimplicit-function-declaration
-|   |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip
-|   `-- include-linux-spi-max7301.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- riscv-randconfig-r012-20210816
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-adp5589_kpad-with-an-expression-of-type-int
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-cxd2820r_priv-with-an-expression-of-type-int
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-has-incomplete-type-struct-gpio_chip
-|   `-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|-- riscv-randconfig-r025-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip-Werror-Wimplicit-function-declaration
-|   |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|   |-- include-linux-bcma-bcma_driver_chipcommon.h:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip
-|   `-- include-linux-spi-max7301.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- riscv-randconfig-r042-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip-Werror-Wimplicit-function-declaration
-|   |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip
-|   `-- include-linux-spi-max7301.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- x86_64-randconfig-a011-20210816
-|   |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip-Werror-Wimplicit-function-declaration
-|   |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|   |-- include-linux-bcma-bcma_driver_chipcommon.h:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip
-|   `-- include-linux-ssb-ssb.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- x86_64-randconfig-a012-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-cxd2820r_priv-with-an-expression-of-type-int
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-has-incomplete-type-struct-gpio_chip
-|   `-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|-- x86_64-randconfig-a013-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-cxd2820r_priv-with-an-expression-of-type-int
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-has-incomplete-type-struct-gpio_chip
-|   `-- drivers-mfd-htc-i2cpld.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-htcpld_chip-with-an-expression-of-type-int
-|-- x86_64-randconfig-a014-20210816
-|   |-- drivers-input-keyboard-adp5589-keys.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-adp5589_kpad-with-an-expression-of-type-int
-|   `-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|-- x86_64-randconfig-a015-20210816
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-cxd2820r_priv-with-an-expression-of-type-int
-|   |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:shift-count-width-of-type
-|   `-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-|-- x86_64-randconfig-a016-20210816
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:field-has-incomplete-type-struct-gpio_chip
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-input-keyboard-adp5588-keys.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-adp5588_kpad-with-an-expression-of-type-int
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-|   |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-cxd2820r_priv-with-an-expression-of-type-int
-|   `-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-has-incomplete-type-struct-gpio_chip
-|-- x86_64-randconfig-c001-20210816
-|   `-- drivers-input-keyboard-adp5589-keys.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-adp5589_kpad-with-an-expression-of-type-int
-`-- x86_64-randconfig-r023-20210816
-    |-- drivers-input-keyboard-adp5588-keys.c:error:field-has-incomplete-type-struct-gpio_chip
-    |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-    |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-    |-- drivers-input-keyboard-adp5588-keys.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-    |-- drivers-input-keyboard-adp5588-keys.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-adp5588_kpad-with-an-expression-of-type-int
-    |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_add_data-Werror-Wimplicit-function-declaration
-    |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_get_data-Werror-Wimplicit-function-declaration
-    |-- drivers-media-dvb-frontends-cxd2820r_core.c:error:implicit-declaration-of-function-gpiochip_remove-Werror-Wimplicit-function-declaration
-    |-- drivers-media-dvb-frontends-cxd2820r_core.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-cxd2820r_priv-with-an-expression-of-type-int
-    |-- drivers-media-dvb-frontends-cxd2820r_priv.h:error:field-has-incomplete-type-struct-gpio_chip
-    |-- drivers-mfd-htc-i2cpld.c:warning:incompatible-integer-to-pointer-conversion-initializing-struct-htcpld_chip-with-an-expression-of-type-int
-    |-- include-asm-generic-gpio.h:error:implicit-declaration-of-function-gpiod_to_chip-Werror-Wimplicit-function-declaration
-    |-- include-asm-generic-gpio.h:warning:incompatible-integer-to-pointer-conversion-returning-int-from-a-function-with-result-type-struct-gpio_chip
-    |-- include-linux-gpio-driver.h:error:conflicting-types-for-gpiod_to_chip
-    `-- include-linux-ssb-ssb.h:error:field-has-incomplete-type-struct-gpio_chip
+> 
+>> Fixes: 8dcb7a15a585 ("gpiolib: acpi: Take into account debounce settings")
+>> Depends-on: 2e2b496cebef ("gpiolib: acpi: Extract acpi_request_own_gpiod() helper")
+>> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> -Fix typo in commit msg
+>> -Add Mika's Reviewed-by
+>> -Add Depends-on tag
+>> ---
+>>  drivers/gpio/gpiolib-acpi.c | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+>> index 411525ac4cc4..47712b6903b5 100644
+>> --- a/drivers/gpio/gpiolib-acpi.c
+>> +++ b/drivers/gpio/gpiolib-acpi.c
+>> @@ -313,9 +313,11 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
+>>  
+>>  	ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout);
+>>  	if (ret)
+>> -		gpiochip_free_own_desc(desc);
+>> +		dev_warn(chip->parent,
+>> +			 "Failed to set debounce-timeout for pin 0x%04X, err %d\n",
+>> +			 pin, ret);
+>>  
+>> -	return ret ? ERR_PTR(ret) : desc;
+>> +	return desc;
+>>  }
+>>  
+>>  static bool acpi_gpio_in_ignore_list(const char *controller_in, int pin_in)
+>> -- 
+>> 2.31.1
+>>
+> 
 
-elapsed time: 724m
-
-configs tested: 98
-configs skipped: 4
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210816
-alpha                            alldefconfig
-mips                       capcella_defconfig
-riscv             nommu_k210_sdcard_defconfig
-powerpc                 mpc837x_rdb_defconfig
-h8300                     edosk2674_defconfig
-powerpc                    klondike_defconfig
-riscv                    nommu_virt_defconfig
-arm                        keystone_defconfig
-arm                            zeus_defconfig
-mips                      malta_kvm_defconfig
-arm                         palmz72_defconfig
-mips                      pistachio_defconfig
-mips                        bcm63xx_defconfig
-i386                             alldefconfig
-powerpc                      pcm030_defconfig
-openrisc                            defconfig
-arm                           tegra_defconfig
-arm                         s3c2410_defconfig
-arm                           h5000_defconfig
-powerpc                      pmac32_defconfig
-sh                  sh7785lcr_32bit_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20210816
-x86_64               randconfig-a004-20210816
-x86_64               randconfig-a003-20210816
-x86_64               randconfig-a001-20210816
-x86_64               randconfig-a005-20210816
-x86_64               randconfig-a002-20210816
-i386                 randconfig-a004-20210816
-i386                 randconfig-a003-20210816
-i386                 randconfig-a002-20210816
-i386                 randconfig-a001-20210816
-i386                 randconfig-a006-20210816
-i386                 randconfig-a005-20210816
-i386                 randconfig-a011-20210816
-i386                 randconfig-a015-20210816
-i386                 randconfig-a013-20210816
-i386                 randconfig-a014-20210816
-i386                 randconfig-a016-20210816
-i386                 randconfig-a012-20210816
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-c001-20210816
-x86_64               randconfig-a011-20210816
-x86_64               randconfig-a013-20210816
-x86_64               randconfig-a016-20210816
-x86_64               randconfig-a012-20210816
-x86_64               randconfig-a015-20210816
-x86_64               randconfig-a014-20210816
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
