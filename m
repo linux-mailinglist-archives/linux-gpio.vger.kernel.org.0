@@ -2,80 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81D833EC887
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Aug 2021 12:26:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 720553ECC3D
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Aug 2021 03:19:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233390AbhHOK1G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 15 Aug 2021 06:27:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232507AbhHOK1F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 15 Aug 2021 06:27:05 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C5B3C061764
-        for <linux-gpio@vger.kernel.org>; Sun, 15 Aug 2021 03:26:36 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id 67so6328782uaq.4
-        for <linux-gpio@vger.kernel.org>; Sun, 15 Aug 2021 03:26:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=7QQSzcl0x3OrVPCjvB04w3pl4cFUuiPCxKGgXXlAKXw=;
-        b=c7e+EkkbzPAZ3tZz2SXFV+QxISNdj+CDqM+UdfBuAno/hN15kBUlU8+ZKsYAVB8KHT
-         /N6OfpwuPVCAOYPgd96sWIzV1atHj84sR1WB27aOFW+RMQo2m9MhK/HuwDic6gw5GH77
-         uiuRYWw7viqZoGw0VJ+APfXGaJ24oIlMI5Jrtds7Jh9D78ZsKlafa7zQ4FvSA34f/PJQ
-         zqzOW6de0ZA525MdQ+283gjnnYw3h3Ai9S73h/aZvohoLmvUiNT/RlpcVsSmKogXPLkZ
-         v1U43A9fTIxoSX7cucSzyieJgFJNl2WUlp+wTFSc5CqgVT5qZ5sfPQzXCr6xjCjigTY7
-         36tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=7QQSzcl0x3OrVPCjvB04w3pl4cFUuiPCxKGgXXlAKXw=;
-        b=k9d1N8nOVKoKE4wB/jRFm0IoJtq9vG3q4uJa6jVQNigXIClZnzrPtVCGmIaOMipeGt
-         PJW7T2iQ6mLYlRvGuJb0uPfGeuanM5juOoX4/Ziz1VrBkXJrAC+gaZtXbv9BLsUKBFIj
-         ehO21hgHx0wQjJP1ywCZIJQ7ZFpILbqBzyYTiCUr5vPGCyFUYmfVd5Ks/ih2oVn3lrlU
-         TxXgJ3APQG1I81LAjiwyDh9VpVkB+JtoUx4TG3aFRHViM7EKJWrUiD3mujMKkplhnwXk
-         WvOqx5YJIKxKkICaBrk1fL0pPee1jV22e/hopBG7LBC+SIggChltLwLMC+0IKcTFD1tP
-         ILRw==
-X-Gm-Message-State: AOAM531WpV9fQQj0M+Cvvz6i7m3tkEHDytYDHfaoq8sTqspf7hgIL0ug
-        rhqEvmk7kf3SrOe92VbuppspTQUgwaF1PI5A/POND3UR2foX/A==
-X-Google-Smtp-Source: ABdhPJyIUH1TV9HYCeeYOeiaOU7kDu518Fk13Kpp1rNYZT6mW6Mh+WUih4rmxySQw6awMAclmJMzLZ/XmyLBm9uCEAA=
-X-Received: by 2002:ab0:695a:: with SMTP id c26mr6023764uas.23.1629023195112;
- Sun, 15 Aug 2021 03:26:35 -0700 (PDT)
+        id S231772AbhHPBU0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 15 Aug 2021 21:20:26 -0400
+Received: from lucky1.263xmail.com ([211.157.147.133]:45892 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229594AbhHPBU0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 15 Aug 2021 21:20:26 -0400
+Received: from localhost (unknown [192.168.167.16])
+        by lucky1.263xmail.com (Postfix) with ESMTP id CB635D63BE;
+        Mon, 16 Aug 2021 09:19:51 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P26933T140041269528320S1629076790609014_;
+        Mon, 16 Aug 2021 09:19:51 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <2bb0cc66aeba7389703dedd80a74259f>
+X-RL-SENDER: jay.xu@rock-chips.com
+X-SENDER: xjq@rock-chips.com
+X-LOGIN-NAME: jay.xu@rock-chips.com
+X-FST-TO: linus.walleij@linaro.org
+X-RCPT-COUNT: 9
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-System-Flag: 0
+From:   Jianqun Xu <jay.xu@rock-chips.com>
+To:     linus.walleij@linaro.org, heiko@sntech.de
+Cc:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH v8 0/9] gpio-rockchip driver
+Date:   Mon, 16 Aug 2021 09:19:39 +0800
+Message-Id: <20210816011948.1118959-1-jay.xu@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Received: by 2002:ab0:5931:0:0:0:0:0 with HTTP; Sun, 15 Aug 2021 03:26:34
- -0700 (PDT)
-Reply-To: markhugo1913@outlook.com
-From:   Mark Hugo <ozonchemicalcompany@gmail.com>
-Date:   Sun, 15 Aug 2021 11:26:34 +0100
-Message-ID: <CAERy9KatoHLLtHFh4QCqh0ziWsVibkt2b0yTcs5pKj=qQY_vXQ@mail.gmail.com>
-Subject: Re:Funds for Investment ($65,000,000:00 USD)
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
+Separate gpio driver from pinctrl driver, and support gpio v2 controller.
 
-RE: Funds Investment and Management Placement of $65,000,000:00 USD.
+Jianqun Xu (9):
+  pinctrl/rockchip: always enable clock for gpio controller
+  pinctrl/rockchip: separate struct rockchip_pin_bank to a head file
+  pinctrl/rockchip: add pinctrl device to gpio bank struct
+  dt-bindings: gpio: change items restriction of clock for
+    rockchip,gpio-bank
+  gpio/rockchip: add driver for rockchip gpio
+  gpio/rockchip: use struct rockchip_gpio_regs for gpio controller
+  gpio/rockchip: support next version gpio controller
+  gpio/rockchip: drop irq_gc_lock/irq_gc_unlock for irq set type
+  pinctrl/rockchip: drop the gpio related codes
 
-We solicit for a private investor who wants to invest his financial
-estate in long-term business venture in your country/company under
-your supervision.
+ .../bindings/gpio/rockchip,gpio-bank.yaml     |   5 +-
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-rockchip.c                  | 771 +++++++++++++++
+ drivers/pinctrl/pinctrl-rockchip.c            | 909 +-----------------
+ drivers/pinctrl/pinctrl-rockchip.h            | 287 ++++++
+ 6 files changed, 1089 insertions(+), 892 deletions(-)
+ create mode 100644 drivers/gpio/gpio-rockchip.c
+ create mode 100644 drivers/pinctrl/pinctrl-rockchip.h
 
-You will be required to;
+--
+v8:
+ - fix rockchip,gpio-bank.yaml about clocks and clock-names
+ - fix commit author of rockchip,gpio-bank.yaml patch to me
 
-[1]. Receive the funds.
-[2]. Invest and Manage the funds profitably.
+v7:
+ - include <linux/gpio/driver.h> instead of <linux/gpio.h>
+ - use gpio align id instead of gpio-name
 
-My client is willing to negotiate Management sharing percentage after
-your acceptance. We expect to hear from you urgently as this is a high
-priority Investment Placement and kindly send your information to
-enhance communication.
+v6:
+ - new gpio-driver first and then drop gpio from pinctrl
+ - reorder patches
+ - cherry-pick gpio dt-binding from chenliang
 
-Thank you for your understanding.
+v5:
+ - change to devel branch
 
-Sincerely Yours,
-Barr.Mark Hugo
-Email:markhugo1913@outlook.com
+2.25.1
+
+
+
