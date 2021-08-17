@@ -2,83 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A85273EF3F0
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Aug 2021 22:49:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B9C93EF4D3
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Aug 2021 23:22:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235090AbhHQUXN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Aug 2021 16:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234601AbhHQUXK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Aug 2021 16:23:10 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDE0C06129D;
-        Tue, 17 Aug 2021 13:22:31 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id i9so22992294lfg.10;
-        Tue, 17 Aug 2021 13:22:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tdArbszDF0w5Eojonc3/z7aHZTmugHtPfpWzsgEPiog=;
-        b=DaWtZ1GqM4zkpnwiMS9GIDx0jpdrMeJ9ObnsMHPNwRq5WBqzIOJStvdW9Z+tUebaOM
-         IVvyH6NaqltMsUwVD5mrr+o+d2CLVE1MEKfEDkfcmithMJOUHkD/tq8IW4MejrfbSMI2
-         dLJeiTJ0Dm5ZvkIlb4QFVPI8GyR71Gkv3nHKzNSubYtZ5H4zyGqlY55o2t5aQPs5ucEP
-         WTsI8NRex5zu3hXrCmOi0cjAKVMKjqqTOB3of6gy/Aqur37VjRyxBgu+v9HG3i5pkoU1
-         tb2mx3z2PndeeEhCMoEXEIikuuPbWmeMWnvx7TZMgxAy1kMbvB2etwVGVkrRnIjfnvdq
-         8AAA==
+        id S232862AbhHQVWf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Aug 2021 17:22:35 -0400
+Received: from mail-oi1-f182.google.com ([209.85.167.182]:36450 "EHLO
+        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230515AbhHQVWf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Aug 2021 17:22:35 -0400
+Received: by mail-oi1-f182.google.com with SMTP id bd1so1246496oib.3;
+        Tue, 17 Aug 2021 14:22:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tdArbszDF0w5Eojonc3/z7aHZTmugHtPfpWzsgEPiog=;
-        b=P/L1BJgbE0zZMoy04pNyic4QrTO0nRWDUaPkqNRgDfgT89ZFFpX0v7lOjU02xgYECr
-         Qu+D1QAvseAz82CCEtxIcpT43GNXBswHQtO87KfqO4xAMfMffJq7mHP5/snzaeTMH+XQ
-         tYMgCQuiRnWSen4Tw3NHC8xfidr8OIer97NosWHc27mwCEeuiAIPQPd7uT12OEQlKr9w
-         7WhKRpCr4JBPKxJIYSOpToQfwaI3Bbd51o/ZlEqWROWkc2DVA04q8n1xkD1hGzSfsojC
-         Y4PDQO69y8t2exUS+qlk1ljudpOgw+x04eYd5CJXnJV7TSSpfKdlS185KGCADYRW45hc
-         ebeA==
-X-Gm-Message-State: AOAM532eEppGPTu42c+UXBePJCKU03eOiyIcKi8gtMBI6uyFg0NnsKhV
-        HPxN9MXG0vk8h9yYK/AQiDUYCgxcKR7H/8ezjl4=
-X-Google-Smtp-Source: ABdhPJxGQcT9nkUnf9D6jfUmhvH074lalPuRiL4/yEaY5ZQBcAbNGbPO7prV5tDUlhPuXcsaVU6MwQLFzUMStGTqNbw=
-X-Received: by 2002:a05:6512:ac3:: with SMTP id n3mr3585311lfu.583.1629231750178;
- Tue, 17 Aug 2021 13:22:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210817080118.9201-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20210817080118.9201-1-lukas.bulwahn@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 17 Aug 2021 17:22:19 -0300
-Message-ID: <CAOMZO5CaH6GQbMaXNj+Zg_=hTXtQSoHb7DfHeqfxBmOvzvkPWA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: remove the obsolete MX35 3DS BOARD MC9S08DZ60 GPIO functions
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6L+5wlMt2yzIbfshHduMjrMVAdkTpwetAGTBAeNQdRg=;
+        b=jTG3eQr8kJfzQYWwrL73J28Ns/gDtyg91UPXTlnWfcIQyUvZOv4NBaepfXOIweiwvK
+         rs0N3cmXURa9qK2ZS5Baw2G6lVl3gx24GdAa+97acu9eUdKPMq52k3LkhLUM3STh1zSX
+         jB8gy7bzKgMAPSO0X4/J11JNBaKjktfyzpjSWK2aQmMMEeQwm7LY84jvmLdI7I1zMYP6
+         WR0Og32gCgNcPgjzD4O56jzPJH5weLtwoXeBXZOhpoWAfHSkJZh11NqonWUKFIhik/DH
+         IITQLTFAoEKvajudDxys71ZNlicllhjt33vBM9vuAGr818s8R4W/xX+AEYod4YV8qjMH
+         N5ZQ==
+X-Gm-Message-State: AOAM532yAND7IkZYpafEZPeljH+qerb8K3z7qijiNmMOEK7t2juV/n8d
+        j9PeClS6SkGOlbVm+9q9Hw==
+X-Google-Smtp-Source: ABdhPJwOmIKfALlUUV7/8OtxuGv3plXSNmLw/cppX34gG2KRU+NuHHV0PYqmGWcFcGmvBOy24j+mgA==
+X-Received: by 2002:aca:1911:: with SMTP id l17mr4172891oii.160.1629235321616;
+        Tue, 17 Aug 2021 14:22:01 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s63sm753605oia.52.2021.08.17.14.21.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 14:22:00 -0700 (PDT)
+Received: (nullmailer pid 862324 invoked by uid 1000);
+        Tue, 17 Aug 2021 21:21:58 -0000
+Date:   Tue, 17 Aug 2021 16:21:58 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sam Protsenko <semen.protsenko@linaro.org>
+Cc:     linux-serial@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
+        linux-samsung-soc@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tom Gall <tom.gall@linaro.org>, Marc Zyngier <maz@kernel.org>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Ryu Euiyoul <ryu.real@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Sumit Semwal <sumit.semwal@linaro.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 3/7] dt-bindings: serial: samsung: Add Exynos850 doc
+Message-ID: <YRwodjUxlZmvrvSC@robh.at.kernel.org>
+References: <20210811114827.27322-1-semen.protsenko@linaro.org>
+ <20210811114827.27322-4-semen.protsenko@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210811114827.27322-4-semen.protsenko@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Lukas,
+On Wed, 11 Aug 2021 14:48:23 +0300, Sam Protsenko wrote:
+> Add compatible string for Exynos850 SoC.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
+> ---
+> Changes in v3:
+>   - None
+> 
+> Changes in v2:
+>   - None
+> 
+>  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-On Tue, Aug 17, 2021 at 5:01 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
->
-> Commit e1324ece2af4 ("ARM: imx: Remove i.MX35 board files") removes the
-> config MACH_MX35_3DS in arch/arm/mach-imx/Kconfig.
->
-> Hence, since then, the MX35 3DS BOARD MC9S08DZ60 GPIO functions are dead
-> code as its config GPIO_MC9S08DZ60 depends on the config MACH_MX35_3DS.
->
-> Luckily, ./scripts/checkkconfigsymbols.py warns on non-existing configs:
->
-> MACH_MX35_3DS
-> Referencing files: drivers/gpio/Kconfig
->
-> Remove the obsolete MX35 3DS BOARD MC9S08DZ60 GPIO functions.
->
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
