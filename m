@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D28883EEB73
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Aug 2021 13:18:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB7543EEB81
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Aug 2021 13:19:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231515AbhHQLSu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Aug 2021 07:18:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:22279 "EHLO mga14.intel.com"
+        id S236772AbhHQLUD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Aug 2021 07:20:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:29182 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239740AbhHQLSt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 17 Aug 2021 07:18:49 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10078"; a="215769823"
+        id S231515AbhHQLUD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 17 Aug 2021 07:20:03 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10078"; a="214196664"
 X-IronPort-AV: E=Sophos;i="5.84,328,1620716400"; 
-   d="scan'208";a="215769823"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 04:18:16 -0700
+   d="scan'208";a="214196664"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 04:19:30 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,328,1620716400"; 
-   d="scan'208";a="487963496"
+   d="scan'208";a="423875161"
 Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Aug 2021 04:18:15 -0700
+  by orsmga003.jf.intel.com with ESMTP; 17 Aug 2021 04:19:28 -0700
 Received: from kbuild by d053b881505b with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mFx6k-000RjV-NY; Tue, 17 Aug 2021 11:18:14 +0000
-Date:   Tue, 17 Aug 2021 19:17:56 +0800
+        id 1mFx7v-000Rk0-Sy; Tue, 17 Aug 2021 11:19:27 +0000
+Date:   Tue, 17 Aug 2021 19:18:14 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 0dda8b013329aab86d48f3376b2a5bb44c6b9437
-Message-ID: <611b9ae4.whWnOeeKTRQpzaWj%lkp@intel.com>
+Subject: [pinctrl:ib-rockchip] BUILD SUCCESS
+ 9ce9a02039de72ec8af1bd4bff14f1780337ffcc
+Message-ID: <611b9af6.t6way2KCFFT2XdwZ%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,12 +39,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 0dda8b013329aab86d48f3376b2a5bb44c6b9437  Merge branch 'ib-rockchip' into devel
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-rockchip
+branch HEAD: 9ce9a02039de72ec8af1bd4bff14f1780337ffcc  pinctrl/rockchip: drop the gpio related codes
 
 elapsed time: 729m
 
-configs tested: 110
+configs tested: 114
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -72,6 +72,11 @@ arm                             pxa_defconfig
 arm                       omap2plus_defconfig
 arm                         axm55xx_defconfig
 arm                        spear6xx_defconfig
+nios2                               defconfig
+alpha                            alldefconfig
+arm                         s3c6400_defconfig
+m68k                        mvme16x_defconfig
+arm                      pxa255-idp_defconfig
 arc                          axs101_defconfig
 mips                     loongson2k_defconfig
 arm                        cerfcube_defconfig
@@ -99,7 +104,6 @@ ia64                             allyesconfig
 m68k                             allmodconfig
 m68k                                defconfig
 m68k                             allyesconfig
-nios2                               defconfig
 arc                              allyesconfig
 nds32                             allnoconfig
 nds32                               defconfig
