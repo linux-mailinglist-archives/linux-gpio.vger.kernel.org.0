@@ -2,361 +2,237 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48B273EE7C1
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Aug 2021 09:47:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AAC93EE7EB
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Aug 2021 10:01:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239036AbhHQHrg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Aug 2021 03:47:36 -0400
-Received: from mailgw01.mediatek.com ([60.244.123.138]:50056 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S239033AbhHQHrT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Aug 2021 03:47:19 -0400
-X-UUID: 5579d9b2cf0a4e0181096449c4ec3b1a-20210817
-X-UUID: 5579d9b2cf0a4e0181096449c4ec3b1a-20210817
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 647250091; Tue, 17 Aug 2021 15:46:42 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 17 Aug 2021 15:46:41 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkcas07.mediatek.inc
- (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 17 Aug
- 2021 15:46:39 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 17 Aug 2021 15:46:39 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-crypto@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-clk@vger.kernel.org>
-CC:     John Crispin <john@phrozen.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        "Sam Shih" <sam.shih@mediatek.com>
-Subject: [v2,12/12] arm64: dts: mediatek: add mt7986b support
-Date:   Tue, 17 Aug 2021 15:45:57 +0800
-Message-ID: <20210817074557.30953-13-sam.shih@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20210817074557.30953-1-sam.shih@mediatek.com>
-References: <20210817074557.30953-1-sam.shih@mediatek.com>
+        id S234829AbhHQIB7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Aug 2021 04:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234446AbhHQIB7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Aug 2021 04:01:59 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93792C061764;
+        Tue, 17 Aug 2021 01:01:26 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id w24so5349774wmi.5;
+        Tue, 17 Aug 2021 01:01:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aS9xpuWQ7cV7oWrmqXRiXydvlbggR6/xVxVxKlldG2A=;
+        b=pFGPUp4kSUKg9FmnRTvYONtxyYCteiKQTidHOzpn6LqXrk11oui65PlZuQC4jl/Dzl
+         PrNpKd4BU67Z6DxDXkgX57sL+CKNq9qSW2+zjc7cp8PnUu4GwFgmDO9Qz8pkLu9phyMp
+         uvNs1jsf0CtBqtDfAyRf3cRQZPOn3eVyG651vGQU6f/uIAjiD3eQM6PVeBz25mPkvw5+
+         pZOpH6bBwBIa0vwwAGR3P22uFXGExi300wrmkYwzK7m4OsGMb/4/EpWGa3XVhVUlGAzN
+         wFqfnet19/msSI7mAdGBzwTSFmXCH8m9tTq5/PxYTsFUxPdIQyWJzsDDjZ3CN4Gbhk0d
+         6z3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aS9xpuWQ7cV7oWrmqXRiXydvlbggR6/xVxVxKlldG2A=;
+        b=IxNBTSJL745ZYhRrUquYZRrwdvTciFgnmvbfBClv8iK2kcVBgQh3VyrD7tLim0v6BQ
+         9dUGW5AtLRVQBjR/ft5sVwvtFk+cJRdOWWO0Rh+zkqw8y4/LNg9+Dv81k1toTqlxhKQN
+         F5xAyWha9NkpLul9i1lsIIdiLbD7epeNbqD4cAmsq3QWo4feXLLk8uLEo6I7xSVVUXS5
+         gkH1xZmgJuo1ePainegMPaAZr2bOjTlipjnWAbxyqYdqcTk8EDrIsLxyg8HiA8t7Z7TX
+         saaipieeekLsPZ962Y+FpdkQjOuSBoXfgYpiAeItkYBHtdhs0KRyVkXY+/iTlTVWhaDE
+         2FVw==
+X-Gm-Message-State: AOAM532UOsLUEgAGkgqUxUQO3YS1czLuoFBYRQniJffdyXU9/OOyAb+K
+        LT76MvJpNUWBnxrur5YCxu4=
+X-Google-Smtp-Source: ABdhPJxLlkljaDHAjvjfXeQNfMj5qQ/PYZEDlt79p5gmmxYTpHZSjdIMfwaeazfI5FPMDkOEK3Kwiw==
+X-Received: by 2002:a05:600c:4e87:: with SMTP id f7mr2053403wmq.42.1629187285139;
+        Tue, 17 Aug 2021 01:01:25 -0700 (PDT)
+Received: from localhost.localdomain (arl-84-90-178-246.netvisao.pt. [84.90.178.246])
+        by smtp.gmail.com with ESMTPSA id n3sm1269212wmi.0.2021.08.17.01.01.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 01:01:24 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] gpio: remove the obsolete MX35 3DS BOARD MC9S08DZ60 GPIO functions
+Date:   Tue, 17 Aug 2021 10:01:18 +0200
+Message-Id: <20210817080118.9201-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add basic chip support for Mediatek mt7986b, include
-uart nodes with correct clocks, rng node with correct clock,
-and watchdog node and mt7986b pinctrl node.
+Commit e1324ece2af4 ("ARM: imx: Remove i.MX35 board files") removes the
+config MACH_MX35_3DS in arch/arm/mach-imx/Kconfig.
 
-Add cpu node, timer node, gic node, psci and reserved-memory node
-for ARM Trusted Firmware,
+Hence, since then, the MX35 3DS BOARD MC9S08DZ60 GPIO functions are dead
+code as its config GPIO_MC9S08DZ60 depends on the config MACH_MX35_3DS.
 
-Add clock controller nodes, include 40M clock source, topckgen, infracfg,
-apmixedsys and ethernet subsystem.
+Luckily, ./scripts/checkkconfigsymbols.py warns on non-existing configs:
 
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+MACH_MX35_3DS
+Referencing files: drivers/gpio/Kconfig
 
+Remove the obsolete MX35 3DS BOARD MC9S08DZ60 GPIO functions.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
-v2: modified clock and uart node due to clock driver updated
+ drivers/gpio/Kconfig           |   6 --
+ drivers/gpio/Makefile          |   1 -
+ drivers/gpio/gpio-mc9s08dz60.c | 112 ---------------------------------
+ 3 files changed, 119 deletions(-)
+ delete mode 100644 drivers/gpio/gpio-mc9s08dz60.c
 
----
- arch/arm64/boot/dts/mediatek/Makefile        |   1 +
- arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts |  21 ++
- arch/arm64/boot/dts/mediatek/mt7986b.dtsi    | 227 +++++++++++++++++++
- 3 files changed, 249 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986b.dtsi
-
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index e6c3a73b9e4a..d555e43d1ccc 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986b-rfb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8167-pumpkin.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm-hana.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-new file mode 100644
-index 000000000000..8296f1d27e77
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2021 MediaTek Inc.
-+ * Author: Sam.Shih <sam.shih@mediatek.com>
-+ */
-+
-+/dts-v1/;
-+#include "mt7986b.dtsi"
-+
-+/ {
-+	model = "MediaTek MT7986b RFB";
-+	compatible = "mediatek,mt7986b-rfb";
-+	chosen {
-+		bootargs = "console=ttyS0,115200n1 loglevel=8  \
-+				earlycon=uart8250,mmio32,0x11002000";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986b.dtsi b/arch/arm64/boot/dts/mediatek/mt7986b.dtsi
-new file mode 100644
-index 000000000000..1fd98fb7ba84
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7986b.dtsi
-@@ -0,0 +1,227 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2021 MediaTek Inc.
-+ * Author: Sam.Shih <sam.shih@mediatek.com>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/mt7986-clk.h>
-+
-+/ {
-+	compatible = "mediatek,mt7986b";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	clk40m: oscillator@0 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <40000000>;
-+		clock-output-names = "clkxtal";
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x1>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x2>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x3>;
-+			#cooling-cells = <2>;
-+		};
-+	};
-+
-+	psci {
-+		compatible  = "arm,psci-0.2";
-+		method      = "smc";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
-+		secmon_reserved: secmon@43000000 {
-+			reg = <0 0x43000000 0 0x30000>;
-+			no-map;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		clock-frequency = <13000000>;
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	soc {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		gic: interrupt-controller@c000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			interrupt-controller;
-+			reg = <0 0x0c000000 0 0x40000>,
-+			      <0 0x0c080000 0 0x200000>;
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		infracfg: infracfg@10001000 {
-+			compatible = "mediatek,mt7986-infracfg", "syscon";
-+			reg = <0 0x10001000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		topckgen: topckgen@1001b000 {
-+			compatible = "mediatek,mt7986-topckgen", "syscon";
-+			reg = <0 0x1001B000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		watchdog: watchdog@1001c000 {
-+			compatible = "mediatek,mt7986-wdt",
-+				     "mediatek,mt6589-wdt";
-+			reg = <0 0x1001c000 0 0x1000>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			#reset-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		apmixedsys: apmixedsys@1001e000 {
-+			compatible = "mediatek,mt7986-apmixedsys";
-+			reg = <0 0x1001E000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		pio: pinctrl@1001f000 {
-+			compatible = "mediatek,mt7986b-pinctrl";
-+			reg = <0 0x1001f000 0 0x1000>,
-+			      <0 0x11c30000 0 0x1000>,
-+			      <0 0x11c40000 0 0x1000>,
-+			      <0 0x11e20000 0 0x1000>,
-+			      <0 0x11e30000 0 0x1000>,
-+			      <0 0x11f00000 0 0x1000>,
-+			      <0 0x11f10000 0 0x1000>,
-+			      <0 0x1000b000 0 0x1000>;
-+			reg-names = "gpio_base", "iocfg_rt_base", "iocfg_rb_base",
-+				    "iocfg_lt_base", "iocfg_lb_base", "iocfg_tr_base",
-+				    "iocfg_tl_base", "eint";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pio 0 0 41>, <&pio 66 66 35>;
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&gic>;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		sgmiisys0: syscon@10060000 {
-+			compatible = "mediatek,mt7986-sgmiisys_0",
-+				     "syscon";
-+			reg = <0 0x10060000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		sgmiisys1: syscon@10070000 {
-+			compatible = "mediatek,mt7986-sgmiisys_1",
-+				     "syscon";
-+			reg = <0 0x10070000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		trng: trng@1020f000 {
-+			compatible = "mediatek,mt7986-rng",
-+				     "mediatek,mt7623-rng";
-+			reg = <0 0x1020f000 0 0x100>;
-+			clocks = <&infracfg CLK_INFRA_TRNG_CK>;
-+			clock-names = "rng";
-+			status = "disabled";
-+		};
-+
-+		uart0: serial@11002000 {
-+			compatible = "mediatek,mt7986-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11002000 0 0x400>;
-+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_UART0_SEL>,
-+				 <&infracfg CLK_INFRA_UART0_CK>;
-+			clock-names = "baud", "bus";
-+			assigned-clocks = <&topckgen CLK_TOP_UART_SEL>,
-+					  <&infracfg CLK_INFRA_UART0_SEL>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_XTAL>,
-+						 <&topckgen CLK_TOP_UART_SEL>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@11003000 {
-+			compatible = "mediatek,mt7986-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11003000 0 0x400>;
-+			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_UART1_SEL>,
-+				 <&infracfg CLK_INFRA_UART1_CK>;
-+			clock-names = "baud", "bus";
-+			assigned-clocks = <&infracfg CLK_INFRA_UART1_SEL>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_F26M_SEL>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@11004000 {
-+			compatible = "mediatek,mt7986-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11004000 0 0x400>;
-+			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_UART2_SEL>,
-+				 <&infracfg CLK_INFRA_UART2_CK>;
-+			clock-names = "baud", "bus";
-+			assigned-clocks = <&infracfg CLK_INFRA_UART2_SEL>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_F26M_SEL>;
-+			status = "disabled";
-+		};
-+
-+		ethsys: syscon@15000000 {
-+			 #address-cells = <1>;
-+			 #size-cells = <1>;
-+			 compatible = "mediatek,mt7986-ethsys",
-+				      "syscon";
-+			 reg = <0 0x15000000 0 0x1000>;
-+			 #clock-cells = <1>;
-+			 #reset-cells = <1>;
-+		};
-+
-+	};
-+
-+};
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index fab571016adf..9a494cab5dbf 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1010,12 +1010,6 @@ config GPIO_MAX732X_IRQ
+ 	  Say yes here to enable the max732x to be used as an interrupt
+ 	  controller. It requires the driver to be built in the kernel.
+ 
+-config GPIO_MC9S08DZ60
+-	bool "MX35 3DS BOARD MC9S08DZ60 GPIO functions"
+-	depends on I2C=y && MACH_MX35_3DS
+-	help
+-	  Select this to enable the MC9S08DZ60 GPIO driver
+-
+ config GPIO_PCA953X
+ 	tristate "PCA95[357]x, PCA9698, TCA64xx, and MAX7310 I/O ports"
+ 	select REGMAP_I2C
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 32a32659866a..7856222ae855 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -92,7 +92,6 @@ obj-$(CONFIG_GPIO_MAX77620)		+= gpio-max77620.o
+ obj-$(CONFIG_GPIO_MAX77650)		+= gpio-max77650.o
+ obj-$(CONFIG_GPIO_MB86S7X)		+= gpio-mb86s7x.o
+ obj-$(CONFIG_GPIO_MC33880)		+= gpio-mc33880.o
+-obj-$(CONFIG_GPIO_MC9S08DZ60)		+= gpio-mc9s08dz60.o
+ obj-$(CONFIG_GPIO_MENZ127)		+= gpio-menz127.o
+ obj-$(CONFIG_GPIO_MERRIFIELD)		+= gpio-merrifield.o
+ obj-$(CONFIG_GPIO_ML_IOH)		+= gpio-ml-ioh.o
+diff --git a/drivers/gpio/gpio-mc9s08dz60.c b/drivers/gpio/gpio-mc9s08dz60.c
+deleted file mode 100644
+index a9f17cebd5ed..000000000000
+--- a/drivers/gpio/gpio-mc9s08dz60.c
++++ /dev/null
+@@ -1,112 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- * Copyright 2009-2012 Freescale Semiconductor, Inc. All Rights Reserved.
+- *
+- * Author: Wu Guoxing <b39297@freescale.com>
+- */
+-
+-#include <linux/kernel.h>
+-#include <linux/init.h>
+-#include <linux/slab.h>
+-#include <linux/i2c.h>
+-#include <linux/gpio/driver.h>
+-
+-#define GPIO_GROUP_NUM 2
+-#define GPIO_NUM_PER_GROUP 8
+-#define GPIO_NUM (GPIO_GROUP_NUM*GPIO_NUM_PER_GROUP)
+-
+-struct mc9s08dz60 {
+-	struct i2c_client *client;
+-	struct gpio_chip chip;
+-};
+-
+-static void mc9s_gpio_to_reg_and_bit(int offset, u8 *reg, u8 *bit)
+-{
+-	*reg = 0x20 + offset / GPIO_NUM_PER_GROUP;
+-	*bit = offset % GPIO_NUM_PER_GROUP;
+-}
+-
+-static int mc9s08dz60_get_value(struct gpio_chip *gc, unsigned offset)
+-{
+-	u8 reg, bit;
+-	s32 value;
+-	struct mc9s08dz60 *mc9s = gpiochip_get_data(gc);
+-
+-	mc9s_gpio_to_reg_and_bit(offset, &reg, &bit);
+-	value = i2c_smbus_read_byte_data(mc9s->client, reg);
+-
+-	return (value >= 0) ? (value >> bit) & 0x1 : 0;
+-}
+-
+-static int mc9s08dz60_set(struct mc9s08dz60 *mc9s, unsigned offset, int val)
+-{
+-	u8 reg, bit;
+-	s32 value;
+-
+-	mc9s_gpio_to_reg_and_bit(offset, &reg, &bit);
+-	value = i2c_smbus_read_byte_data(mc9s->client, reg);
+-	if (value >= 0) {
+-		if (val)
+-			value |= 1 << bit;
+-		else
+-			value &= ~(1 << bit);
+-
+-		return i2c_smbus_write_byte_data(mc9s->client, reg, value);
+-	} else
+-		return value;
+-
+-}
+-
+-
+-static void mc9s08dz60_set_value(struct gpio_chip *gc, unsigned offset, int val)
+-{
+-	struct mc9s08dz60 *mc9s = gpiochip_get_data(gc);
+-
+-	mc9s08dz60_set(mc9s, offset, val);
+-}
+-
+-static int mc9s08dz60_direction_output(struct gpio_chip *gc,
+-				       unsigned offset, int val)
+-{
+-	struct mc9s08dz60 *mc9s = gpiochip_get_data(gc);
+-
+-	return mc9s08dz60_set(mc9s, offset, val);
+-}
+-
+-static int mc9s08dz60_probe(struct i2c_client *client,
+-			    const struct i2c_device_id *id)
+-{
+-	struct mc9s08dz60 *mc9s;
+-
+-	mc9s = devm_kzalloc(&client->dev, sizeof(*mc9s), GFP_KERNEL);
+-	if (!mc9s)
+-		return -ENOMEM;
+-
+-	mc9s->chip.label = client->name;
+-	mc9s->chip.base = -1;
+-	mc9s->chip.parent = &client->dev;
+-	mc9s->chip.owner = THIS_MODULE;
+-	mc9s->chip.ngpio = GPIO_NUM;
+-	mc9s->chip.can_sleep = true;
+-	mc9s->chip.get = mc9s08dz60_get_value;
+-	mc9s->chip.set = mc9s08dz60_set_value;
+-	mc9s->chip.direction_output = mc9s08dz60_direction_output;
+-	mc9s->client = client;
+-	i2c_set_clientdata(client, mc9s);
+-
+-	return devm_gpiochip_add_data(&client->dev, &mc9s->chip, mc9s);
+-}
+-
+-static const struct i2c_device_id mc9s08dz60_id[] = {
+-	{"mc9s08dz60", 0},
+-	{},
+-};
+-
+-static struct i2c_driver mc9s08dz60_i2c_driver = {
+-	.driver = {
+-		.name = "mc9s08dz60",
+-	},
+-	.probe = mc9s08dz60_probe,
+-	.id_table = mc9s08dz60_id,
+-};
+-builtin_i2c_driver(mc9s08dz60_i2c_driver);
 -- 
-2.29.2
+2.26.2
 
