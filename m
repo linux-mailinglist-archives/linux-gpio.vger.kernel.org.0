@@ -2,31 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E5C93EEACA
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Aug 2021 12:19:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 439B63EEACC
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Aug 2021 12:19:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236424AbhHQKT4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Aug 2021 06:19:56 -0400
-Received: from so254-9.mailgun.net ([198.61.254.9]:25801 "EHLO
+        id S229956AbhHQKUQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Aug 2021 06:20:16 -0400
+Received: from so254-9.mailgun.net ([198.61.254.9]:30995 "EHLO
         so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235203AbhHQKT4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Aug 2021 06:19:56 -0400
+        with ESMTP id S234632AbhHQKUQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Aug 2021 06:20:16 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1629195563; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=WcCFdH5JEmFHqMKvWJSTXib1yDiU97/7LOIWNYewueE=; b=eagdFNYTAm2L3bPz3snv/SYogLgyrZGbs866Z1mciBn4fnru5g3HtMws5R6MUw4c4CuYW40u
- FbVfhK+uaxKMaUjXC+c3r7ZypHr0kqAuWG3YSQFLNomA9mf+h6h9VFggtji45RWfl+qrs3OO
- I/0kqb+LArBQOOctEclO4XiJz6Q=
+ s=smtp; t=1629195583; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=/YQlYBOjwBJ+7NfOnYyDE5dO/Re4iHoVSVeAwLV1xhc=; b=eSfOBbJ6EhJp4dSa4IDCHOsbRZiL/RzKeHIzVBmutrYR5AbUV23L+8Gky2BLRbJE0M57IZU3
+ kpdWIU16OAGdkGmeBPrAqmTdjw8uhnEuKB9+QcjfZJoy79WEB2fp6O6NB+TjndNO8nWldHA0
+ VWcnOcHiN/hfCnkympaozqNS9Q8=
 X-Mailgun-Sending-Ip: 198.61.254.9
 X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 611b8d29b3873958f56e7bd5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 17 Aug 2021 10:19:21
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 611b8d2c9507ca1a34c48c5c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 17 Aug 2021 10:19:24
  GMT
 Sender: mkshah=codeaurora.org@mg.codeaurora.org
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2DF03C43617; Tue, 17 Aug 2021 10:19:20 +0000 (UTC)
+        id AA8CDC43460; Tue, 17 Aug 2021 10:19:23 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
         aws-us-west-2-caf-mail-1.web.codeaurora.org
 X-Spam-Level: 
@@ -36,9 +37,9 @@ Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4F57EC43460;
-        Tue, 17 Aug 2021 10:19:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 4F57EC43460
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E0B4C43619;
+        Tue, 17 Aug 2021 10:19:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 2E0B4C43619
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
 From:   Maulik Shah <mkshah@codeaurora.org>
@@ -47,34 +48,44 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-gpio@vger.kernel.org, bjorn.andersson@linaro.org,
         linus.walleij@linaro.org, tkjos@google.com, lsrao@codeaurora.org,
         Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH 1/2] irqdomain: Export irq_domain_disconnect_hierarchy()
-Date:   Tue, 17 Aug 2021 15:49:05 +0530
-Message-Id: <1629195546-27811-1-git-send-email-mkshah@codeaurora.org>
+Subject: [PATCH 2/2] irqchip: qcom-pdc: Disconnect domain hierarchy for GPIO_NO_WAKE_IRQs
+Date:   Tue, 17 Aug 2021 15:49:06 +0530
+Message-Id: <1629195546-27811-2-git-send-email-mkshah@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1629195546-27811-1-git-send-email-mkshah@codeaurora.org>
+References: <1629195546-27811-1-git-send-email-mkshah@codeaurora.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Export irq_domain_disconnect_hierarchy() so irqchip module drivers
-can use it.
+gpio_to_irq() reports error at irq_domain_trim_hierarchy() for non wakeup
+capable GPIOs that do not have dedicated interrupt at GIC.
+
+Since PDC irqchip do not allocate irq at parent GIC domain for such GPIOs
+indicate same by using irq_domain_disconnect_hierarchy().
 
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 ---
- kernel/irq/irqdomain.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/qcom-pdc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 0eee481..19e83e9 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1216,6 +1216,7 @@ int irq_domain_disconnect_hierarchy(struct irq_domain *domain,
- 	irqd->chip = ERR_PTR(-ENOTCONN);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(irq_domain_disconnect_hierarchy);
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index 32d5920..0ba0461 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -324,8 +324,11 @@ static int qcom_pdc_gpio_alloc(struct irq_domain *domain, unsigned int virq,
+ 	if (ret)
+ 		return ret;
  
- static int irq_domain_trim_hierarchy(unsigned int virq)
- {
+-	if (hwirq == GPIO_NO_WAKE_IRQ)
++	if (hwirq == GPIO_NO_WAKE_IRQ) {
++		if (domain->parent)
++			irq_domain_disconnect_hierarchy(domain->parent, virq);
+ 		return 0;
++	}
+ 
+ 	parent_hwirq = get_parent_hwirq(hwirq);
+ 	if (parent_hwirq == PDC_NO_PARENT_IRQ)
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
