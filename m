@@ -2,274 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60ED73F0123
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Aug 2021 12:01:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 994BA3F014B
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Aug 2021 12:09:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232885AbhHRKCH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Aug 2021 06:02:07 -0400
-Received: from mail-bn7nam10on2060.outbound.protection.outlook.com ([40.107.92.60]:31841
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        id S232983AbhHRKJ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Aug 2021 06:09:58 -0400
+Received: from mail-bn8nam12on2068.outbound.protection.outlook.com ([40.107.237.68]:45152
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232720AbhHRKCF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 18 Aug 2021 06:02:05 -0400
+        id S231218AbhHRKJ5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Aug 2021 06:09:57 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PMyjyBnw5A9yQ9cBMPvY3qMoft14PkvuioMrX2AXAKtJCCz41YSoJ+/ILNVHLTg7JbpTabEIyQ4/uy/HS/AX5rjySkguAxQzsasiNf2EPNL83AsJI9mT/LwMJxAtSjXKsu2VpBeh1tVSGMkhk9rngVbTYsVnw2hP4FuXhGL0Hx6p82iO5+19X/AYpHpIMNkxROa2x6PJrRW/cUGkHCuZkXLA1IL8fw2KCiRRSHMJOCS8Ud0Mh28qvVpBrVGWeeFpjsc2scvIgF57QYwUsfJs4ImFqUHQ9uLstNJgKEdKzbOjdQFUItt9ofQwvWTJCUtGKerR505+HdzfKYws5+N7YQ==
+ b=jCshf6dkx1OwAO8kgjdt83gnZQ2JZG/ET4+pvfBNpzODlikqx5XeAh/mrbseBQM3jTLdkn5meNO6VbnxosGJ2jWXrpI8AmxZUD0STs+koTDsNHiz9mjQqo72vQTgPPVPDWHYVAEAcUcOjkRZX7galA2ntxdsK0NreLUOsAPrKof6AKHZFDiEVxroeoNTqvNgh8Ww/Wig1yUrsY+Xt766eqen/aHBAXoP1pVvqZykssg0LveZZiPeqLUMUMOvaX2zixUfHGcJQo5Cq6UunnN2WUOC9sR/kwJ7nQvN98l1+zX1Wej1Y5P8jNh82OaXoKU62JzHVfR5iELRjFuAEYHzew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5o/LzcW6Lie+m5TeOEKBABhUPOocM7W0zepGR9pHjQk=;
- b=kiHjVLPJ2EgU8ybdC45GpIVUlI0bJ4y+53d4h8oVSaGWFmIAUlwRn1l+gezNEcFOtvDw9oBE2Cw1zTNgKBuAJCFu9AC15KRNq8kBBqjVqDrQxHDo+CGmelcMzfXzHsGuOthPiYn3bbu96Dx3K5NLaFga9rYsa94eeFGAc5Xh9hT98ODVs3HWMZCjHPBsWZer5ph5xijLU2Cs3iR+IompEGhhlNZkTC1QTQF7Vd6qkENS6VkIt1hNIdETEaxxRu43gsY1UyWUpPqr9IHT9FFw31Ud8YTBrPzttl5nN1fDDH/HGbFfCQp0T8VOXK6avumA6fxJspJyNQJfoGuOvzgXNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=pengutronix.de smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
+ bh=NPvr/23hTaLPHtRsPHupvAeRMno1K3AodMC5tgpzueQ=;
+ b=l5jtX8toLGaBcIJDGKa28yXqDRXvWJLf3HC/tiHefvFs2mbTW0s4ds1Druj4PwghbG0w79SJu5/DVYPqrE/ifU3jTQYdNYpO8J7PfEDPSen1/ByrY3dkUkpW1i9+G7p0FVQs9+jBOso96yU05+EZb0IEcY6MrTBfrIK65qIxWGgo6lcDXw6y3SLh++fA0HviUIvI2UxtexA09Pk0eXU2kt85oQKK5HujZR6JtpE2rOzg4t+API2d5mxmTYm59/8Psx0ABcqw5FTUYf+8Rz1GLLC6mA86lLn61NJruwailtUCpv4UFQsHAsW9lSlZLRMYUcUutaqdxjmlj3BmETgORQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5o/LzcW6Lie+m5TeOEKBABhUPOocM7W0zepGR9pHjQk=;
- b=m1UDW88F9E6EV2jh4w6Iy28/wHgqklZOBXxo1AyNFkR84uh6MI/DGKf0t8Z5C1L2fxd5w2lEthSmTqvLqTcRHkLkrRd9x0gtPMV+zhfHYC82nArltDOjoVycBFhKGIGDKOG9KqsNvW/MM+08FdsUuqAU1exA1pIitkh3ZvoTl+I=
-Received: from SA9PR11CA0021.namprd11.prod.outlook.com (2603:10b6:806:6e::26)
- by DM6PR02MB4411.namprd02.prod.outlook.com (2603:10b6:5:25::11) with
+ bh=NPvr/23hTaLPHtRsPHupvAeRMno1K3AodMC5tgpzueQ=;
+ b=WRw79jj6RFkKTW77dbUTdEUoT6Q9/moMiPVvAlC0GV689JFYH5jEkNRHduaCQ3TUa+WNy4ofoep79VT8UiUd8f2Ni+YqZ28p/sheWuTedDpCyGfFLvE3X5XUTtSfrnFsIJKj1KZwPYNr49eISWoYnWNXeuYxxA/Ky/jLHG45ctE=
+Received: from SJ0PR02MB8644.namprd02.prod.outlook.com (2603:10b6:a03:3fe::20)
+ by BYAPR02MB5877.namprd02.prod.outlook.com (2603:10b6:a03:118::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.18; Wed, 18 Aug
- 2021 10:01:27 +0000
-Received: from SN1NAM02FT0033.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:6e:cafe::ee) by SA9PR11CA0021.outlook.office365.com
- (2603:10b6:806:6e::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.18 via Frontend
- Transport; Wed, 18 Aug 2021 10:01:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0033.mail.protection.outlook.com (10.97.5.40) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4436.19 via Frontend Transport; Wed, 18 Aug 2021 10:01:26 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Wed, 18 Aug 2021 03:01:25 -0700
-Received: from smtp.xilinx.com (172.19.127.95) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Wed, 18 Aug 2021 03:01:25 -0700
-Envelope-to: git@xilinx.com,
- kernel@pengutronix.de,
- linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org,
- robh+dt@kernel.org,
- bgolaszewski@baylibre.com,
- iwamatsu@nigauri.org,
- linus.walleij@linaro.org,
- gregkh@linuxfoundation.org,
- zou_wei@huawei.com,
- arnd@arndb.de,
- a.fatoum@pengutronix.de
-Received: from [172.30.17.109] (port=37904)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1mGINw-0006KG-0p; Wed, 18 Aug 2021 03:01:24 -0700
-Subject: Re: [PATCH V3 2/3] dt-bindings: gpio: zynqmp: Add binding
- documentation for modepin
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19; Wed, 18 Aug
+ 2021 10:09:18 +0000
+Received: from SJ0PR02MB8644.namprd02.prod.outlook.com
+ ([fe80::86c:2d65:34de:65f1]) by SJ0PR02MB8644.namprd02.prod.outlook.com
+ ([fe80::86c:2d65:34de:65f1%9]) with mapi id 15.20.4436.019; Wed, 18 Aug 2021
+ 10:09:17 +0000
+From:   Piyush Mehta <piyushm@xilinx.com>
 To:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Piyush Mehta <piyush.mehta@xilinx.com>, <arnd@arndb.de>,
-        <zou_wei@huawei.com>, <gregkh@linuxfoundation.org>,
-        <linus.walleij@linaro.org>, <wendy.liang@xilinx.com>,
-        <iwamatsu@nigauri.org>, <bgolaszewski@baylibre.com>,
-        <robh+dt@kernel.org>, <rajan.vaja@xilinx.com>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <git@xilinx.com>, <sgoud@xilinx.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "zou_wei@huawei.com" <zou_wei@huawei.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        Michal Simek <michals@xilinx.com>,
+        Jiaying Liang <jliang@xilinx.com>,
+        "iwamatsu@nigauri.org" <iwamatsu@nigauri.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Rajan Vaja <RAJANV@xilinx.com>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        git <git@xilinx.com>, Srinivas Goud <sgoud@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: RE: [PATCH V3 3/3] gpio: modepin: Add driver support for modepin GPIO
+ controller
+Thread-Topic: [PATCH V3 3/3] gpio: modepin: Add driver support for modepin
+ GPIO controller
+Thread-Index: AQHXlAiba+p8agT4/0mzE0t9iLwfL6t49I4AgAAN9tA=
+Date:   Wed, 18 Aug 2021 10:09:17 +0000
+Message-ID: <SJ0PR02MB86443029095BF5949E51808AD4FF9@SJ0PR02MB8644.namprd02.prod.outlook.com>
 References: <20210818081018.2620544-1-piyush.mehta@xilinx.com>
- <20210818081018.2620544-3-piyush.mehta@xilinx.com>
- <5e44ee87-f727-99fd-9860-d3d58a035dc4@pengutronix.de>
- <50e468b1-9a32-0017-bd6a-8d47c3fa1a9c@xilinx.com>
- <4a724736-8bb9-a21d-974c-d9598c3d7b37@pengutronix.de>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <c53d7b06-e619-45c5-8b93-d1688792f270@xilinx.com>
-Date:   Wed, 18 Aug 2021 12:01:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <4a724736-8bb9-a21d-974c-d9598c3d7b37@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
+ <20210818081018.2620544-4-piyush.mehta@xilinx.com>
+ <b3d718af-6eb7-a212-f599-d0d91273afdc@pengutronix.de>
+In-Reply-To: <b3d718af-6eb7-a212-f599-d0d91273afdc@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ca20d63c-8de6-4cfc-a2c5-08d9622f24ba
-X-MS-TrafficTypeDiagnostic: DM6PR02MB4411:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB4411786568EFCC4B7F70FCB1C6FF9@DM6PR02MB4411.namprd02.prod.outlook.com>
+X-MS-Has-Attach: 
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5Xifg4RRhiaDvLeGtHtEy/yuWZfiKYVWK4v9LTZ8TEeyHZUc4aCzxveh72ojmJWXr5MqLUE8sHv7LiDfRSRR2GXCUIetP8ZlpyR2iOgfvD39fWPh0U3TFitiVLjdI/qRIv4MA3CS5CTbKnU2wJ5FnzjgndYgfWpMmnKCx2jn/cydv2z+WkpL+ggEPJqN3WHodHNo6CNGdICwJaYLdxmpCJZ4m4UhKbSbSBBmXWn7F2KAS4dUvVLKdlC4AuLjZIJtuhe+eMGyKScFoyZvkCryJEq86p4WtV6dcWTYmjOyK6+ZKnlHnO7htfaaBm62sPWSdqHisFYYBZT4vXS1OPRDgyjZq2GFoWp3RZxQ8rjfjaS6+gplfohgbPpNYBBaTnjwm/TJEch9F9ol1nPlpsuQpGQd0Qje0GqgVwoI9PJ37nbvp4NBsc6JFweRaNA/stOGX5uFlOWt6U6DZ5F0cfhAJUfL0fEVHzD9ylr3xFGzviq8TU/K9te0VYw53oYxodY6e0/GYhpHGUI3TJiXrK2MzRdGspQEhCTPwRgxnL8o49+U8f/uKVbzr0J3y8vHmnf9qwPUr5Blmfp7iMC9Z+UbGynrC3eYvqPIpjHI/vOU3vERTSz2SzR0Qeip7EiXrAeZp8GPjY1Z0jWCCR9LpWxTJ2ikA1cPqQwu6JMMogfzN5vde2jgIsWnnUYKsS6kOB6+zn1Ks89dooUdvjPUaULMEoQdA+3L+CuWPfr3Ir24Vhc9/pT5QwwaIoSCr17T78aOTUADUL59iuCol7GtrRSpo2eaUS6DfHO0R3h+A/rz1BAWDjgtw1RkqEHfNRj82ZG8763NEIdYFSFTNR6yMgCkS5jql2SLdswA7ejHNwNUKxHvb+VFYy5ej1MV2J8MGXcwazNV6osP05Bpvlv7w6m5wJHblqRBrw64S+nf0gaCa9focRZwPJ85FYPe8ZcayhCz
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(39860400002)(376002)(136003)(346002)(396003)(36840700001)(46966006)(8936002)(316002)(356005)(83380400001)(53546011)(70206006)(26005)(44832011)(7636003)(8676002)(54906003)(82310400003)(6636002)(36756003)(36906005)(478600001)(6666004)(2906002)(7416002)(110136005)(5660300002)(4326008)(921005)(186003)(31686004)(426003)(70586007)(82740400003)(2616005)(336012)(47076005)(36860700001)(9786002)(966005)(31696002)(50156003)(43740500002)(83996005)(2101003);DIR:OUT;SFP:1101;
+X-MS-TNEF-Correlator: 
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=xilinx.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1319c81c-28d9-46e5-7a05-08d962303d7a
+x-ms-traffictypediagnostic: BYAPR02MB5877:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB5877727B58915116739EA328D4FF9@BYAPR02MB5877.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GiePoapQg0YXj4KrYIWEsGqDynM69Ewg9l000pAXtdc15vF9XooTyO2TGiOqMSQSkdMnUGxkvcQybdF90WSve4ZQKKwndxKeECbKz8+CM07FV+4FJ38yic9zIaQW6sD4qnN5GBdiyO1hOylQleaL/gkViqrFQf07jk+H/rGkQB6N/Jgg1xvVGT2F/6vkxHp2byqo5xeZDyCOMp81uuCKrO6qW7W9DsN45+99K4IeH/CWl1vPesqkozv2mkIJ9yXqQcdCp8uKJlp5Sru4M8DIRVq5g27WzBc2lEUUL7fpLlTDemJx7Ka/U4I40a5iRjM/VV0Yf20CXab0UUnPAaXMU14lIea9fIxXSFfjsER/XjRt1uWs8pQLrUfAZ7D8MhW2+J3HxG9Vc59P0aDIZP6ayxgGRlNnqrvP+93gcoTm1bdfdSOlZDZv4k9cXFgj624k5udFj1sJ1nO2ivr8EjXj38baWiLIyATqF+9Jr/Llad6gYNinMFyDFTRxAp7WAw86NxmtQIoBbHYs9rhG+JBe0DS7jWr3u7Wx9VVNsLf8WipDdx1i7fM4U46H1UcNRKRgsF+/n6vH01g9EZwza4X7uTNXIDyWFMVr7Wa/2KVCjUi31ijAoaJ4gL12EwGT38/wFzrcCgO/QgAP+1ANT3+NVctsxpSGDuNdKVkF56VZMDAfKjRR9WqEdhZYoIFvb8PXMcf6/q5PZeiSzNpew5TpX3jmb55zpMJOiLqz503upX1a7TdYHlCMk5lRce7unNMjLzkwkQQ6tiRqAetyHMeWk+eXYyN5fcFoYyyDi3WDmdzisMm+HASKprk8hje8NpyM
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR02MB8644.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(39860400002)(376002)(366004)(396003)(83380400001)(110136005)(54906003)(2906002)(6636002)(66946007)(966005)(86362001)(5660300002)(38070700005)(33656002)(66556008)(76116006)(66446008)(55236004)(66476007)(478600001)(7696005)(53546011)(26005)(52536014)(64756008)(6506007)(8936002)(55016002)(4326008)(186003)(316002)(122000001)(9686003)(38100700002)(8676002)(7416002)(71200400001)(921005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?R3k3TVpqKzg1cHpaSjM2MGJyRTgyaUNXMTE0aC9ReitSOWk5dkpudEpIU2d3?=
+ =?utf-8?B?RUZVUXdzSU16bzkzNHdrTk9IcUZVc25HUHZERWdZMkE5SGluRDg5cG9VMUpq?=
+ =?utf-8?B?TjJ6c3VFSWZhQWs2OGc5VHVzVFZGRXhUa0NjYmlnaHVTakJQT1NXYndic0lo?=
+ =?utf-8?B?aG91dDFHalpOZkUyRzZhdU93c3ZVa1BmNWZkbERRUGY1eUQ4WFpLa0VYQjhr?=
+ =?utf-8?B?S1ZCa2lnQmNxSENQOG02elNxbWJydVpoWXFRSk1iNzI1OFZSVVZKb3VZYmlz?=
+ =?utf-8?B?T2dmKy9vQytIdFlIWnd5NVBJWlkvd2RRckJBcStPS25nSjlzaGVMUWI1VTN4?=
+ =?utf-8?B?b3JHbUpqSW5iN2VUdHhGZFZGM3Iyam0xZTVpdGIrSXgwNm1BQWxzTkJpZUdo?=
+ =?utf-8?B?UHMvSllkVTh6dG9RdnM3ZnFrZEF2MVIrYVhSZVdhOE56M3ovZkUwREc4MmlR?=
+ =?utf-8?B?SG42STRqVGRNSjd5SnF1ektlRHJkdHlHbHVYQnNlS0JLbTVoVUxjbUlWbEpM?=
+ =?utf-8?B?U3N5cnVYN2RIVjhNUXlZRXNDcFc1U2ZpV1pOYko1dTRSU1IzemFzb3pVdk50?=
+ =?utf-8?B?aGhFVVBLdlQzR0t4eHZza09Ha2NjT3RNYzJ2d1drSlk1RWY3KzVlbWtwWGVG?=
+ =?utf-8?B?VkIxc0hMNzVxWE9nRnRVY252OEsyN0NwYXhzU0hMR3ZERE9Za2NoeTVhZmhC?=
+ =?utf-8?B?TDRnRGRTZGhiVDJaVkJWMGxwY0ZYTWJaaUtzODE4NzIxMGNWMEkyQVU1ZWM3?=
+ =?utf-8?B?RnRyNEZiVGZ0VUlJYStSU1FUNlFKUzBkQmxvRjlGUE80YXZsK2VYYnJzSmR2?=
+ =?utf-8?B?RnBiaXVVd0d5dlNLSW82ZUFSSE9CWFpSVUdubmEzeHlramFDSGR2WG1KVHhL?=
+ =?utf-8?B?a0VlaG9heXJESTU2ZnNCdEZlUjRXZHI2M2lvV1BKays0WXBFV1pEMXZ4NFd5?=
+ =?utf-8?B?eTlXOWdyYjRyYUhQNlRDSm5qbGF2VlJYNVJTSGJZWGVScjVZRWlXOGRyQXlr?=
+ =?utf-8?B?RTZUakJaUDh1SFpVZngvK3RPYlBGV3N2U3pOK2xuYXE4cVVqZ1FEMHNHQktQ?=
+ =?utf-8?B?NDB1MGkwTWxGTVhOU3VPQUpoQ25SbDdXMWY4Vjk4SUlqM2pnNXFnQXg4QkE3?=
+ =?utf-8?B?VXpXVjFiQm1uNTlRWkpIaEE2VDlQM3V1SytTeGViNnR1RzRkNm9lMlhRUXNZ?=
+ =?utf-8?B?bUlwcDVtQjJvWS81SURLTGVGS1ZkNFFxMGdmMGlLMXF5NkNqSlpRbEowUnps?=
+ =?utf-8?B?RThsSnQzY2IydlR6clY1VzhDZGVrVXRvaElDQlN1YVBuWUF5V1cvNFhuQVRK?=
+ =?utf-8?B?QzFoYmNsaWRNM2phbHVhbER4bnBZeXlUTkUzTkMrUGs3b0svNGNPZ2ZHSTQ4?=
+ =?utf-8?B?WFpWNFozeFRleGpzYWlsSkcvekRaM0lIR2RSQm43Q0VQSmhDMXl1dXZRZzdn?=
+ =?utf-8?B?UTJleWJCY2FFa2N4NDgydjI4dnIvQnVRaHliUkxObGhSZlpFSXZSbEo4QVJw?=
+ =?utf-8?B?ZFo0eVNBd2xPcmdra3JUQXZ5Y1IzNHBXRkIydExQMzg5cXIvdkIwZzA0SVdm?=
+ =?utf-8?B?b214Y0MvSzdIN1MwdE1FR0xnaStqWU91d3BYNVVlM0kyWFJsdXV2YTg2Zm9I?=
+ =?utf-8?B?blZOUWhjUlFHS3lUZnorRnFHUVBLRXdCWjVhTkZodmx3aEdsSU5xSjF1ZTc2?=
+ =?utf-8?B?bU9kK0gxR2d6djNLTHVwSDdjajdpZUF0aUpXaEt6UitXL1I1VWhwbldVdFpq?=
+ =?utf-8?Q?L5+orF6QS3UW41FRfA=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2021 10:01:26.8022
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR02MB8644.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1319c81c-28d9-46e5-7a05-08d962303d7a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2021 10:09:17.7322
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca20d63c-8de6-4cfc-a2c5-08d9622f24ba
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0033.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4411
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0k8XI6AiezyxbSu7+Ws0OrGZVI1itIGw5554ajcwxDxGndYGfqURgEUMtRMGk/dNunbdvNSNfB7eLorWaJ//bw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5877
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 8/18/21 11:55 AM, Ahmad Fatoum wrote:
-> On 18.08.21 11:38, Michal Simek wrote:
->> Hi Ahmad,
->>
->> On 8/18/21 11:00 AM, Ahmad Fatoum wrote:
->>> On 18.08.21 10:10, Piyush Mehta wrote:
->>>> This patch adds DT binding document for zynqmp modepin GPIO controller.
->>>> Modepin GPIO controller has four GPIO pins which can be configurable
->>>> as input or output.
->>>>
->>>> Modepin driver is a bridge between the peripheral driver and GPIO pins.
->>>> It has set and get APIs for accessing GPIO pins, based on the device-tree
->>>> entry of reset-gpio property in the peripheral driver, every pin can be
->>>> configured as input/output and trigger GPIO pin.
->>>>
->>>> For more information please refer zynqMp TRM link:
->>>> Link: https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf
->>>> Chapter 2: Signals, Interfaces, and Pins
->>>> Table 2-2: Clock, Reset, and Configuration Pins - PS_MODE
->>>>
->>>> Signed-off-by: Piyush Mehta <piyush.mehta@xilinx.com>
->>>> Acked-by: Michal Simek <michal.simek@xilinx.com>
->>>> ---
->>>> Changes in v2:
->>>> - Addressed review comments: Update commit message
->>>>
->>>> Review Comments:
->>>> https://lore.kernel.org/linux-arm-kernel/20210615080553.2021061-2-piyush.mehta@xilinx.com/T/#mbd1fbda813e33b19397b350bde75747c92a0d7e1
->>>> https://lore.kernel.org/linux-arm-kernel/20210615080553.2021061-2-piyush.mehta@xilinx.com/T/#me82b1444ab3776162cdb0077dfc9256365c7e736
->>>>
->>>> Changes in v3:
->>>> - Addressed Rob and Michal review comments:
->>>>   - Update DT example. 
->>>>
->>>> Review Comments:
->>>> https://lore.kernel.org/linux-arm-kernel/YRbBnRS0VosXcZWz@robh.at.kernel.org/
->>>> https://lore.kernel.org/linux-arm-kernel/d71ad7f9-6972-8cc0-6dfb-b5306c9900d0@xilinx.com/
->>>> ---
->>>>  .../bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    | 41 ++++++++++++++++++++++
->>>>  .../bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    | 43 ++++++++++++++++++++++
->>>>  1 file changed, 43 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
->>>> new file mode 100644
->>>> index 0000000..1442815
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
->>>> @@ -0,0 +1,43 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: "http://devicetree.org/schemas/gpio/xlnx,zynqmp-gpio-modepin.yaml#"
->>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>>> +
->>>> +title: ZynqMP Mode Pin GPIO controller
->>>> +
->>>> +description:
->>>> +  PS_MODE is 4-bits boot mode pins sampled on POR deassertion. Mode Pin
->>>> +  GPIO controller with configurable from numbers of pins (from 0 to 3 per
->>>> +  PS_MODE). Every pin can be configured as input/output.
->>> So, at Linux runtime, someone decides to boot the system into e.g. a USB
->>> recovery mode and then toggles the appropriate GPIOs and does a system
->>> reset?
->>>
->>> If so, are you aware of the reboot mode[1] infrastructure?
->>>
->>> A reboot-mode-gpio driver on top of this GPIO controller would allow you
->>> to describe the supported reboot modes in the device tree and instead of
->>> exporting GPIOs to userspace, users can then just do
->>>
->>> 	systemctl restart recovery
->>>
->>> to toggle the appropriate bits.
->>>
->>> Also to be sure: PS_MODE are actual GPIO pins that you could toggle
->>> board level components with, right? i.e. it's not just a register that
->>> overrides the values read from the boot mode pins? (In the latter case
->>> a syscon-reboot-mode without GPIO controller would be the correct
->>> abstraction).
->>>
->>> [1]: drivers/power/reset/reboot-mode.c
->>
->> Thanks for these links. I wasn't aware about it.
->> But this device/IP is not working like this. Changing gpios to certain
->> state won't ensure that on reboot/reset (done in whatever way) won't
->> stay on values you chose.
-> 
-> Ah, the "PS_MODE is 4-bits boot mode pins sampled on POR deassertion" part
-> misled me. These pins are sampled on startup, but can afterwards be reused 
-> via talking to firmware. Thanks for clearing this up.
-
-yes
-
->> modepin gpio driver is at BOOT_PIN_CTRL 	0xFF5E0250
->>
->> (To be fair if you add additional external chip it could work like this
->> but I have never seen it).
-> 
-> Ye, that would've been strange, that's why I asked. :)
-
-No issue at all.
-
-> 
->> But when you bring this up. Xilinx ZynqMP is providing a way how to
->> setup alternative boot mode which is done via
->> BOOT_MODE_USER 	0xFF5E0200
->> Bit 8 and 15-12.
->> Then you can setup any bootmode.
->>
->> ZynqMP supports couple of modes listed here
->> https://source.denx.de/u-boot/u-boot/-/blob/master/arch/arm/mach-zynqmp/include/mach/hardware.h#L73
->>
->> but again routing to this register needs to be done via firmware
->> interface but it should be done via separate driver.
-> 
-> Yes.
-> 
->> Is there an option to setup whatever modes you like?
->>
->> I mean to simply cover all modes like this?
->>
->> mode-jtag = <0>;
->> mode-sd = <3>;
->> mode-sd1 = <5>;
-> 
-> Yes, you can define the supported modes in the SoC dtsi
-> and boards inherit that and can extend it as necessary.
-
-ok.
-
-> 
->> And then users/customers can say what normal/recovery/test modes are.
-> 
-> Yes, that would be nice. But after your clarification, I see that it's
-> unrelated to this patch series. Binding is fine. Question on driver
-> is still applicable.
-
-I remember any discussion about it between Piyush and Linus and I will
-let Piyush to handle it.
-
-Thanks,
-Michal
+SGkgQWhtYWQsDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBBaG1hZCBGYXRv
+dW0gPGEuZmF0b3VtQHBlbmd1dHJvbml4LmRlPiANClNlbnQ6IFdlZG5lc2RheSwgQXVndXN0IDE4
+LCAyMDIxIDI6MjIgUE0NClRvOiBQaXl1c2ggTWVodGEgPHBpeXVzaG1AeGlsaW54LmNvbT47IGFy
+bmRAYXJuZGIuZGU7IHpvdV93ZWlAaHVhd2VpLmNvbTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
+cmc7IGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZzsgTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlu
+eC5jb20+OyBKaWF5aW5nIExpYW5nIDxqbGlhbmdAeGlsaW54LmNvbT47IGl3YW1hdHN1QG5pZ2F1
+cmkub3JnOyBiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IFJh
+amFuIFZhamEgPFJBSkFOVkB4aWxpbnguY29tPg0KQ2M6IGxpbnV4LWdwaW9Admdlci5rZXJuZWwu
+b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgZ2l0IDxnaXRAeGlsaW54LmNvbT47IFNy
+aW5pdmFzIEdvdWQgPHNnb3VkQHhpbGlueC5jb20+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFBlbmd1dHJvbml4IEtl
+cm5lbCBUZWFtIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+DQpTdWJqZWN0OiBSZTogW1BBVENIIFYz
+IDMvM10gZ3BpbzogbW9kZXBpbjogQWRkIGRyaXZlciBzdXBwb3J0IGZvciBtb2RlcGluIEdQSU8g
+Y29udHJvbGxlcg0KDQpPbiAxOC4wOC4yMSAxMDoxMCwgUGl5dXNoIE1laHRhIHdyb3RlOg0KPiBU
+aGlzIHBhdGNoIGFkZHMgZHJpdmVyIHN1cHBvcnQgZm9yIHRoZSB6eW5xbXAgbW9kZXBpbiBHUElP
+IGNvbnRyb2xsZXIuDQo+IEdQSU8gbW9kZXBpbiBkcml2ZXIgc2V0IGFuZCBnZXQgdGhlIHZhbHVl
+IGFuZCBzdGF0dXMgb2YgdGhlIFBTX01PREUgDQo+IHBpbiwgYmFzZWQgb24gZGV2aWNlLXRyZWUg
+cGluIGNvbmZpZ3VyYXRpb24uIFRoZXNlIGZvdXIgbW9kZSBwaW5zIGFyZSANCj4gY29uZmlndXJh
+YmxlIGFzIGlucHV0L291dHB1dC4gVGhlIG1vZGUgcGluIGhhcyBhIGNvbnRyb2wgcmVnaXN0ZXIs
+IA0KPiB3aGljaCBoYXZlIGxvd2VyIGZvdXItYml0cyBbMDozXSBhcmUgY29uZmlndXJhYmxlIGFz
+IGlucHV0L291dHB1dCwgDQo+IG5leHQgZm91ci1iaXRzIGNhbiBiZSB1c2VkIGZvciByZWFkaW5n
+IHRoZSBkYXRhICBhcyBpbnB1dFs0OjddLCBhbmQgDQo+IG5leHQgc2V0dGluZyB0aGUgb3V0cHV0
+IHBpbiBzdGF0ZSBvdXRwdXRbODoxMV0uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQaXl1c2ggTWVo
+dGEgPHBpeXVzaC5tZWh0YUB4aWxpbnguY29tPg0KPiBBY2tlZC1ieTogTWljaGFsIFNpbWVrIDxt
+aWNoYWwuc2ltZWtAeGlsaW54LmNvbT4NCj4gUmV2aWV3ZWQtYnk6IExpbnVzIFdhbGxlaWogPGxp
+bnVzLndhbGxlaWpAbGluYXJvLm9yZz4NCj4gLS0tDQoNCj4gKy8qKg0KPiArICogbW9kZXBpbl9n
+cGlvX2Rpcl9pbiAtIFNldCB0aGUgZGlyZWN0aW9uIG9mIHRoZSBzcGVjaWZpZWQgR1BJTyBwaW4g
+YXMgaW5wdXQNCj4gKyAqIEBjaGlwOglncGlvX2NoaXAgaW5zdGFuY2UgdG8gYmUgd29ya2VkIG9u
+DQo+ICsgKiBAcGluOglncGlvIHBpbiBudW1iZXIgd2l0aGluIHRoZSBkZXZpY2UNCj4gKyAqDQo+
+ICsgKiBSZXR1cm46IDAgYWx3YXlzDQo+ICsgKi8NCj4gK3N0YXRpYyBpbnQgbW9kZXBpbl9ncGlv
+X2Rpcl9pbihzdHJ1Y3QgZ3Bpb19jaGlwICpjaGlwLCB1bnNpZ25lZCBpbnQgDQo+ICtwaW4pIHsN
+Cj4gKwlyZXR1cm4gMDsNCj4gK30NCg0KWW91IHNheSB0aGUgZ3BpbyBjb250cm9sbGVyIGNhbiBj
+b25maWd1cmUgcGlucyBhcyBpbnB1dHMgb3Igb3V0cHV0cy4NClRoZXNlIHBpbnMgYXJlIGNvbnRy
+b2xsZXIgdmlhIGZpcm13YXJlIGRyaXZlci4gV2UgYXJlIHVwZGF0aW5nIEJPT1RfUElOX0NUUkwg
+CTB4RkY1RTAyNTAgcmVnaXN0ZXIuDQpbMDozXSAgPSBXaGVuIDAsIHRoZSBwaW5zIHdpbGwgYmUg
+aW5wdXRzIGZyb20gdGhlIGJvYXJkIHRvIHRoZSBQUy4gV2hlbiAxLCB0aGUgUFMgd2lsbCBkcml2
+ZSB0aGVzZSBwaW5zDQpbNDo3XSA9IFZhbHVlIGNhcHR1cmVkIGZyb20gdGhlIG1vZGUgcGlucw0K
+Wzg6MTFdID0gVmFsdWUgZHJpdmVuIG9udG8gdGhlIG1vZGUgcGlucywgd2hlbiBjb250cm9sIHJl
+Z2lzdGVyIGJpdCBzZXQgb3V0ID0gMQ0KDQpUaGUgbG93ZXIgZm91ci1iaXRzIFswOjNdIHdlIGNh
+biBzZXQgZWl0aGVyIGlucHV0IGFuZCBvdXRwdXQsIGJhc2VkIG9uIGNvbmZpZ3VyYXRpb24gd2Ug
+cmVhZCBwaW4gYXMgZm9yIGlucHV0IFs0OjddDQphbmQgd3JpdGUgb24gcGluIFs4OjExXS4NCkV4
+YW1wbGU6DQpJZiB3ZSB3YW50IHRvIGNvbmZpZ3VyZSBwaW4gMSBhcyBvdXRwdXQsIHRoZW4gd2Ug
+d2lsbCBjb25maWd1cmUgYXMgWzA6M109WzAxMDBdLCBmb3IgYWNjZXNzIHBpbiB3aWxsIHRyaWdn
+ZXIgdXBwZXIgYml0IFs4OjExXT1bMDEwMF0uDQoNCkJhc2VkIG9uDQpodHRwczovL3d3dy54aWxp
+bnguY29tL3N1cHBvcnQvZG9jdW1lbnRhdGlvbi91c2VyX2d1aWRlcy91ZzEwODUtenlucS11bHRy
+YXNjYWxlLXRybS5wZGYNCg0KcGFnZSA0Ng0KDQpQU19NT0RFIElucHV0L091dHB1dCBEZWRpY2F0
+ZWQgNC1iaXQgYm9vdCBtb2RlIHBpbnMgc2FtcGxlZCBvbiBQT1IgZGVhc3NlcnRpb24NCg0KWGls
+aW54IGlzIHVzaW5nIHRoaXMgcGluIGZvciB1c2IgcGh5IHJlc2V0cy4NCg0KWWV0LCAuZGlyZWN0
+aW9uX2lucHV0IGlzIGRvaW5nIG5vdGhpbmcuIFNvLCBpdCdzIG5vdCBjbGVhciB0byBtZSwgaG93
+IHRoaXMgc2VxdWVuY2UgY291bGQgd29yazoNCg0KIC0gc2V0IGdwaW8gb3V0cHV0IGhpZ2ggKHdy
+aXRlcyBib290bW9kZSkNCiAtIHNldCBncGlvIHRvIGlucHV0IChuby1vcCwgcGluIHdpbGwgcmVt
+YWluIGhpZ2gsIG5vdCBoaWdoIGltcGVkYW5jZSkNCg0KDQoNCg0KDQoNCkkgZGlkbid0IGNoZWNr
+IHRoZSBwcmV2aW91cyBkaXNjdXNzaW9ucywgYnV0IGlmIHRoaXMgaW5kZWVkIHdvcmtzIGFzIGlu
+dGVuZGVkLCB0aGUgaG93IHNob3VsZCBiZSB3cml0dGVuIGhlcmUgaW50byB0aGUgZHJpdmVyLiBU
+aGF0IGlzIGEgbW9yZSB1c2VmdWwgY29tbWVudCB0aGFuIGtlcm5lbCBkb2MgZm9yIGEgc3R1YiBm
+dW5jdGlvbi4NCg0KLS0gDQpQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KU3RldWVyd2FsZGVyIFN0ci4gMjEg
+ICAgICAgICAgICAgICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8gIHwNCjMx
+MTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkgICAgICAgICAgICAgICAgICB8IFBob25lOiArNDktNTEy
+MS0yMDY5MTctMCAgICB8DQpBbXRzZ2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAgICAgICAg
+ICAgfCBGYXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfA0KDQpSZWdhcmRzLA0KUGl5dXNoIE1l
+aHRhDQo=
