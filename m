@@ -2,92 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CA483EF776
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Aug 2021 03:20:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1006A3EFA07
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Aug 2021 07:26:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236113AbhHRBVH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Aug 2021 21:21:07 -0400
-Received: from mail-ot1-f50.google.com ([209.85.210.50]:44571 "EHLO
-        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232410AbhHRBVG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Aug 2021 21:21:06 -0400
-Received: by mail-ot1-f50.google.com with SMTP id l36-20020a0568302b24b0290517526ce5e3so760722otv.11;
-        Tue, 17 Aug 2021 18:20:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SvKci2pGuG7ajQwJqFrJTn5mqUzF+JKynExPCCsdFYI=;
-        b=lX4ZiWBwjAeKqlK/nkbkIk4CHAGr1HZbhKE2hF+SXpBx6DYunb6cz8VL2ZwH90JJwW
-         5uC1Y7OeYOOyik4H8o11AcpZO6n3GsHqBjgXP8pSYBQ0GH+/86qBK90tkR44d++aLBFd
-         rH6bQ/IKnt6XxNitlXs3aABspCfPYYLe5Ft09gkLe1kXM3VN7p3kAA+0uEJEz+7n7zvL
-         l4lovIMH8fCkZd6s8wqvo+yWU0Rp5j3ftW9ZcliW4KHKceSkkVheI5z363vF3aQSiCU1
-         Tk9Gg/ojptwKGWHyDaY0dozzS4Cd5PVBjIdY394AReyrU48KGAYNXVaXaTH+deGApFK0
-         Si0w==
-X-Gm-Message-State: AOAM530ekd3Dp58+GjFXX8hWNwnA+1Z1FL9jPIKMItss71gOUBM7SIJo
-        BFbfC07UXBJg/EWJoE9VOg==
-X-Google-Smtp-Source: ABdhPJw+xR0Z6Q/+z2YaeF5ZyVo4tytqq09prFN4la6ON8Lt4wub10K9mhw5q6rk8gFvLBnMjoJ6XA==
-X-Received: by 2002:a9d:71c7:: with SMTP id z7mr5012000otj.194.1629249632592;
-        Tue, 17 Aug 2021 18:20:32 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d26sm781598oos.41.2021.08.17.18.20.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 18:20:32 -0700 (PDT)
-Received: (nullmailer pid 1182736 invoked by uid 1000);
-        Wed, 18 Aug 2021 01:20:30 -0000
-Date:   Tue, 17 Aug 2021 20:20:30 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-watchdog@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-serial@vger.kernel.org, Sean Wang <sean.wang@kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        John Crispin <john@phrozen.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [v2,02/12] clk: mediatek: add mt7986 clock IDs
-Message-ID: <YRxgXso7qQcAqg6+@robh.at.kernel.org>
-References: <20210817074557.30953-1-sam.shih@mediatek.com>
- <20210817074557.30953-3-sam.shih@mediatek.com>
+        id S236730AbhHRF1N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Aug 2021 01:27:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:52058 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236055AbhHRF1M (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Aug 2021 01:27:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1629264398; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=OD3bhfIfOCgRHQjgqA6MewvJUinJk6gIaknhjrubRj0=;
+ b=sbXFCsnD/v2T0uapANuEdBtiZYVkYYDRc3CXId3vZGG+is5gI1kd3iLW9ZiBELBWzEieygqH
+ lqNvk2j3aKPCeaST36iSxOmtbjtLmtYKwUNRkf8JHi/6p/wKmTQzm8+WV5olPVfPR/LWA4qB
+ dKxt/yDUmVeohI2RmIVkb+VOEIQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 611c99fc66ff1079049e47e4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 18 Aug 2021 05:26:20
+ GMT
+Sender: skakit=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5E9C1C4360D; Wed, 18 Aug 2021 05:26:19 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: skakit)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B7948C4338F;
+        Wed, 18 Aug 2021 05:26:18 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210817074557.30953-3-sam.shih@mediatek.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Aug 2021 10:56:18 +0530
+From:   skakit@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        linux-gpio@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] pinctrl: qcom: spmi-gpio: correct parent irqspec
+ translation
+In-Reply-To: <CAE-0n52Ki2tA6qy6ADym3r4UQ0tkvgz3bpif_Mm2q3Y+N=huGg@mail.gmail.com>
+References: <1628830531-14648-1-git-send-email-skakit@codeaurora.org>
+ <1628830531-14648-2-git-send-email-skakit@codeaurora.org>
+ <CACRpkdZteWY6X+prHeAF0rtPVbCk+X9=ZYgpjgAMH24LhOjhaQ@mail.gmail.com>
+ <4af8171aefd6f0387438225666ec1ccc@codeaurora.org>
+ <CAE-0n53sR12fEa_cNPeT5eGcQVzzL57pd-tYnJbpP0NXkHMTsw@mail.gmail.com>
+ <6801879ddd0edf9a8d0e3605f3868e79@codeaurora.org>
+ <CAE-0n52Ki2tA6qy6ADym3r4UQ0tkvgz3bpif_Mm2q3Y+N=huGg@mail.gmail.com>
+Message-ID: <5be25c9710b7706cff91f1db71f9e25e@codeaurora.org>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 17 Aug 2021 15:45:47 +0800, Sam Shih wrote:
-> Add MT7986 clock dt-bindings, include topckgen, apmixedsys,
-> infracfg, and ethernet subsystem clocks.
+On 2021-08-18 00:45, Stephen Boyd wrote:
+> Quoting skakit@codeaurora.org (2021-08-17 02:06:42)
+>> On 2021-08-17 02:38, Stephen Boyd wrote:
+>> >
+>> > Are there any boards supported upstream that have a gpio block that
+>> > isn't at 0xc000?
+>> 
+>> yes, all the pmics used in sm8350-mtp.dts board have gpio block at
+>> addresses different than 0xc000.
+>> 
 > 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> So maybe
 > 
-> ---
-> v2: changed to dual licience
->     applied the comment suggested by reviewers:
->     - removed 1:1 factor clock
->     - renamed factor clock for easier to understand
+> Fixes: f67cc6a91d88 ("arm64: dts: qcom: sm8350-mtp: Add PMICs")
 > 
-> ---
->  include/dt-bindings/clock/mt7986-clk.h | 169 +++++++++++++++++++++++++
->  1 file changed, 169 insertions(+)
->  create mode 100644 include/dt-bindings/clock/mt7986-clk.h
-> 
+> is appropriate then?
 
-Acked-by: Rob Herring <robh@kernel.org>
+This patch is actually fixing the pinctrl-spmi-gpio.c driver.
+So, I think we should add
+
+Fixes: ca69e2d165eb ("qcom: spmi-gpio: add support for hierarchical IRQ 
+chip")
