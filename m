@@ -2,138 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF2503EFCA0
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Aug 2021 08:26:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F19E3EFCDB
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Aug 2021 08:34:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238161AbhHRG11 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Aug 2021 02:27:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48356 "EHLO
+        id S238602AbhHRGer (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Aug 2021 02:34:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238263AbhHRG1P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Aug 2021 02:27:15 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F28C06122E
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Aug 2021 23:26:07 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id n7so3165526ljq.0
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Aug 2021 23:26:07 -0700 (PDT)
+        with ESMTP id S238791AbhHRGep (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Aug 2021 02:34:45 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72550C061764
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Aug 2021 23:34:11 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id f10so893476wml.2
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Aug 2021 23:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0niOOKpLOqJWr+G2N4qsyCfMLmKR4C8+b8TBbZbKaU8=;
-        b=Et8efFBgzM1OWhTpqkovSGInq7BYnqTenDPJF5Sfp/8L2BDfO3pcqtdv6gK9Xf6rVi
-         bPlFqq3u2Mlnv1Oxq7zttZXNhuIFaIoCKH5Il61HHre6WKqQXBgZ2rtyo6Ql01WiAgAf
-         iqwYaadnd/cBDGdzYU20uWob0rjtS561A0+w4=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qOf5Jw9NRa4SnulC1GyAvxwxYZYUNjqANJtiqJ12E6k=;
+        b=znseoqEQvCvDTiITGYGWtCHD5uYGQQVRv+bSBqQqXJOJ1F+g1QUmAE4jNIZITVJG6N
+         S57i9sxX//DJuIv/HBLrtpp+SgS02xQhymyol7i+CNQBFzjL79ylGT9LxbKUnP8NdPTH
+         +A90CDwX4v6onk2k4gAHMRTOoqrQXjlXqjLk4Wg5zIBacgPNotibcTD3f8F/iBY2B155
+         LJjexGZq9d4vzeTVuHPPan7U29D0ILqDD/BKehxq9E3gDgOmZdTzeQRev7MqjeYvd9WR
+         6ix1rNEtdYVlWQl7NuR8Xa8u9DQtJGasxfmcJjpxsXqMr99cBEef8PTivGs+CBQ4UHAe
+         dKmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0niOOKpLOqJWr+G2N4qsyCfMLmKR4C8+b8TBbZbKaU8=;
-        b=Z4J4G56ot047f2EfQ9KvSUB9hJ/lXpSweKmeSPwXoVUl117Tu4toC07TSeKCrnOLZM
-         1ENHy2Z1lWOI9ZfOGQ0JHRXR+kz3KuvBCMJE/MciMkWS+t0k3feAVYvYHXnvUOhtxBCQ
-         m0fZis9hKTlhEuQ5eScZxGrayhyXvik9TEshAISdkgnNypHk4bfopNKJJ/vTLgSNoJbi
-         uFcnA7sEgn/l2Rj9+ubuZt9lwPHsYp1CyTGSBtySHjkFvvvicY3KzGlCjOhtPiMmEEm/
-         2qLjSHS25PTiKUJm4XBObx2iiz+PQxd50/hfhF+Z3o5u3WRYOl8hcItmBIUuL6x/KBJn
-         sXjA==
-X-Gm-Message-State: AOAM530lSJ+0bj64dWzXwo8COzOijXhKrIkjOYobTCqt2uTPMPK/EEMc
-        krnCRdE9pip3jBRwUW80fcvjWtS0/nQQr82xLJ4cJg==
-X-Google-Smtp-Source: ABdhPJycOOwNmb0zD73kqTDlXcUFSNdJdOw1Y3p1pB/PjGtP3t4iluned8prH8xjVYxNIs08EqJIS54IEOaxSu1nOPY=
-X-Received: by 2002:a2e:7d0e:: with SMTP id y14mr6438392ljc.251.1629267965676;
- Tue, 17 Aug 2021 23:26:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qOf5Jw9NRa4SnulC1GyAvxwxYZYUNjqANJtiqJ12E6k=;
+        b=Fa06atzysdsnoUwcFskeWItSedL24wSowyhnKZj4gG2SemP7DQ8co9n1Th0hIvk42I
+         CebCo7W5JpOniJ+KFRLc30nAZlvv9+La8JYaSPiiLAu95wb+jh8VhJYTsQhCZAzW0ofK
+         0RaRGAEzjh1OgkWH9MR2h/CEMMeiu7XRKkIClPQZXxdfCN6vk8AZ8pQ27m9TUqy+tWFv
+         7SoyhFpESHNf721Mv3FOHup1RCW/3vf68j6x3IYEEcH3fnoGnZQXaWostnYHVVBfn7H4
+         MItTYu40TvJjthWovvyYjlCH5NwpjYxu01W9TZ6fc8Q+uUUysAe8SIEtCO2CFdmMQ60J
+         fYHw==
+X-Gm-Message-State: AOAM533yV/++Q54VRjFDlheFh1jCqTi3V5k/yjQM+ebX8+Ts7HMoTfTZ
+        AVDMOn+K+qusIyP5a0ZXCvbjZw==
+X-Google-Smtp-Source: ABdhPJyqwVqtJb4NtNNkAw8GfCWH/ZiuHGihKlf6jY83moLG3xgjEG5JYotG3JsX4/XRz6Mcqr3pAg==
+X-Received: by 2002:a1c:f002:: with SMTP id a2mr7074623wmb.79.1629268450034;
+        Tue, 17 Aug 2021 23:34:10 -0700 (PDT)
+Received: from google.com ([2.31.167.59])
+        by smtp.gmail.com with ESMTPSA id a11sm4837580wrw.67.2021.08.17.23.34.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 23:34:09 -0700 (PDT)
+Date:   Wed, 18 Aug 2021 07:34:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v1 3/4] mfd: intel_quark_i2c_gpio: Convert GPIO to use
+ software nodes
+Message-ID: <YRyp3x14ziGYlOAx@google.com>
+References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
+ <20210726125436.58685-3-andriy.shevchenko@linux.intel.com>
+ <YRpihHP3kDz5nYV9@google.com>
+ <CAHp75VdcWsNFervoU7e4_m7qVKAnWXzF2z2mUgKg06-qmwn-2A@mail.gmail.com>
+ <YRppKOxp4Jya5iEI@google.com>
+ <YRpva4gS1LfncPUj@smile.fi.intel.com>
+ <YRpz5UEDQbpewq5o@google.com>
+ <CAHp75VczCKwNQE8k6_e9Trk0qkD2EumFVxxG5w2BTYhiOTDUzA@mail.gmail.com>
+ <YRtkt8e25ZSeOICx@google.com>
+ <CAHp75Ve-24wno-z8rQSCtgBdf6_a70TFf3aCJPP7JSFPG8sfhg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210710081722.1828-1-zhiyong.tao@mediatek.com>
- <20210710081722.1828-2-zhiyong.tao@mediatek.com> <CAGXv+5GXg0RuOQkh4vaRmcLpehZiXnEUXBvEaObiatAa1sXvaA@mail.gmail.com>
- <1626940470.29611.9.camel@mhfsdcap03> <CAGXv+5F_-W4aNt0WVSDBGLo_t8orNUq59GMKk_4xVr+hMb9Ctg@mail.gmail.com>
- <07388dac4e25e0f260725e8f80ba099d5aa80949.camel@mediatek.com>
- <CAGXv+5EagmhYYpri+nzo6WgGz8A=oiU3Vy+2AVjho=eo6Z+DLw@mail.gmail.com>
- <CACRpkdZ4k9Km3vBtdN6AnBM89c4355GtPMzCQ0_YHaTb4V5cKA@mail.gmail.com>
- <CAGXv+5HohMwU8jow5QXO5MK1tO+u=5YsfhArBWCP4Dgm1Q8igg@mail.gmail.com>
- <4fd12d5c53f6492e5fa3ba94a78b9a149f5b6ed9.camel@mediatek.com>
- <CAGXv+5GCuNK=-z9VAOjkpJdZLUSZFPfUsQ09m1FhfTsbCYLLRw@mail.gmail.com>
- <CACRpkdbZKh8cqqiDRUik6Ooo33e+feGwYsLjcLRvBQnT3x5M3A@mail.gmail.com>
- <a7c8ab68ac3513865698cde27e665bdd554f459e.camel@mediatek.com>
- <CAGXv+5FtL2zaSWx4tUymx6mpCSb5dXG4XNWM9AJL+b6Ok3dxMg@mail.gmail.com>
- <d40f6d5fd26aedb13e7a393202e5794b1893ecf8.camel@mediatek.com> <CACRpkdYkwXr76Kq5WYdz=1KkLTpaByAL1vJFo8V+2mncqs8-3Q@mail.gmail.com>
-In-Reply-To: <CACRpkdYkwXr76Kq5WYdz=1KkLTpaByAL1vJFo8V+2mncqs8-3Q@mail.gmail.com>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Wed, 18 Aug 2021 14:25:54 +0800
-Message-ID: <CAGXv+5EUAVFJd7VZsDgpOK_6fhs12ztwKHioghq5ZQHzFKY89w@mail.gmail.com>
-Subject: Re: [PATCH v10 1/2] dt-bindings: pinctrl: mt8195: add rsel define
-To:     "zhiyong.tao" <zhiyong.tao@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>,
-        Light Hsieh <light.hsieh@mediatek.com>,
-        Biao Huang <biao.huang@mediatek.com>,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Ve-24wno-z8rQSCtgBdf6_a70TFf3aCJPP7JSFPG8sfhg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 4:09 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, Aug 17, 2021 at 9:51 AM zhiyong.tao <zhiyong.tao@mediatek.com> wrote:
->
-> > In one chip, If GPIO is different, the MTXXXX_PULL_UP_RSEL_001 may
-> > means different actual bias resistance setting.
+On Tue, 17 Aug 2021, Andy Shevchenko wrote:
+
+> On Tue, Aug 17, 2021 at 10:26 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > On Mon, 16 Aug 2021, Andy Shevchenko wrote:
+> > > On Mon, Aug 16, 2021 at 5:19 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > On Mon, 16 Aug 2021, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > > > > > > Would it be okay for you to pull the immutable tag?
+> > > > > >
+> > > > > > What immutable tag?
+> > > > >
+> > > > > It's here:
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git/tag/?h=intel-gpio-v5.15-1
+> > > >
+> > > > My Ack can't be merged like that.
+> > >
+> > > Which one? There are two on different patches.
 > >
-> > For example,
+> > The one that I specifically said was "for my own reference".
 > >
-> > KPROW IO
-> > Paramters       Descriptions                   Min      Typ     Max
-> >  UNIT
-> > Rpd     Input pull-down resistance      40      75      190     Kohm
-> > Rpu     Input pull-up resistance        40      75      190     Kohm
-> > Rpd     Input pull-down resistance      0.8     1.6     2       Kohm
-> > Rpu     Input pull-up resistance        0.8     1.6     2       Kohm
->
-> This is exactly why we should try to use SI units in the device tree.
-> I assume that the software can eventually configure which resistance
-> it gets?
->
-> The electronics people will say make sure it is pulled down by around
-> 80 kOhm, they can put that on the device tree and your code can
-> say, "hm 40 < 80 < 190 this is OK" and let the value pass.
->
-> We do not define these exact semantics, it is up to the driver code
-> to decide what to do with the Ohm value 80000 in this case, but
-> it makes perfect sent for me to let it pass and fail if someone
-> for example requests 20 kOhm, or at least print a helpful warning:
->
-> dev_warn(dev, "the requested resistance %d is out of range, supported
-> range %d to %d kOhm\n",
->                  val, low, high);
->
-> This is what makes the SI units really helpful for people writing device
-> trees: solve real integration tasks and make it easy to do the right thing.
+> > > Do you have any documentation on the rules you imply by MFD?
+> >
+> > No, the documentation is provided with the tag.
+> 
+> I see.
+> 
+> So, what is the recommended solution?
 
-I think this makes a lot of sense. The driver could select the closest
-setting. And from what Zhiyong mentioned offline, the resistor values
-aren't exact as specified in the datasheet. I suppose this is expected
-with any electronics. So the hardware integration will say to pull up
-or down by some value, and the driver will do its best to fulfill that
-request. That precludes DT schema checking for the values used, but I
-think that is a good compromise.
+I planned to take the patch.
 
-Zhiyong also mentioned that some of their downstream integrators might
-not be able to deal with actual values, and would prefer symbols tied
-to specific RSEL values. I think that would be doable together using
-some _magic_ values, but I would prefer not to if it were avoidable.
+I'm also happy to take the set, if they are interdependent.
 
+What is the reason the MFD patch doesn't apply to my tree?
 
-Regards
-ChenYu
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
