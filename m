@@ -2,70 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 345053F059A
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Aug 2021 16:04:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A49D53F05C2
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Aug 2021 16:08:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237978AbhHROEu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Aug 2021 10:04:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235822AbhHROEt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Aug 2021 10:04:49 -0400
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEEE6C0613CF
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Aug 2021 07:04:14 -0700 (PDT)
-Received: by mail-il1-x12d.google.com with SMTP id j15so2352568ila.1
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Aug 2021 07:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=kLxLfuOX3hWSwg8NnP9dWx3PEBsYS1lcXWlaz2D9of8=;
-        b=IQzbifrK62nZyAEvJU4RpxIKKse5FuaURzNYSPlc6ujV7OP6ZNFx2/ACkWysydkJGm
-         PbfWdG4X9Riz1UnW1E1TfMFqTK/lqEmhhzHQ7NKBlaDwGUc3Vg4V2pWR92JY8PATdiQA
-         XpdSyXBWkl32Zf6X9v/zkRGDuOdDV6McZFkQQTMZjmU2C5vb6CSL+16iwOKXQKUtW1uD
-         mMEb4Fg7VbMuq7e2k69x0pJ5Im46OkMrAM4WOqgTr8srWBVGn001qSPuaQsg9/8x2J5T
-         pcxNt/K85XqvK1moNuCbx+Q8LVzki+5/lsxIGHOc9/RFoQk9ikT3Ph8u2WfIp719XzCk
-         LJZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=kLxLfuOX3hWSwg8NnP9dWx3PEBsYS1lcXWlaz2D9of8=;
-        b=Nrcx9rkL6tXD2ZEjDm5mg9PKh08F/awwbI9GibcJk+E+lgvRh5YNby9Wzh6V23u/cY
-         DxK2HwHXsTRmA8SHJ+poOaQ8o0yV6OSRi/yaNuMZaXQeEFZErdZUVNPYIw3KQq7j4S2I
-         h/7QbhZYIeChP70fGt0fvrlvv196j4r+V84Tcya5/OLa4I8/TJTFAUanXb+s3kWZDYat
-         dRgW8wnQ+T8DpCPi2Jav7kkrY4B+Un3bM5F8cgO7OQu3/2v8GGCkH1ibTgNUfIg3HeNh
-         qJVCd16hp7dKhKlcWoVStJllFY/FslzTX1uvMbVWkj7ajnDmZue8tkDPOu9gIC7NulPZ
-         UrOA==
-X-Gm-Message-State: AOAM532mNDDLPVcp8l58N5bt9bWzncUhso/WbU3Fz2sR0aYi+7+otZtD
-        NPCOyLt5YL4K2K/jY2WBXQxe9FZ0y9+cGP/rf9g=
-X-Google-Smtp-Source: ABdhPJwcs9k8Eqp+CSWU57igPrIHOA3bOhqS8cf3a2LhAJvzbvAOM6hd5URfy+tplgDqTfcHaPr1XhcXhncmxeLjMb0=
-X-Received: by 2002:a05:6e02:2199:: with SMTP id j25mr6225933ila.97.1629295454400;
- Wed, 18 Aug 2021 07:04:14 -0700 (PDT)
+        id S238217AbhHROIu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Aug 2021 10:08:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:11730 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238406AbhHROIu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Aug 2021 10:08:50 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10080"; a="280066329"
+X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
+   d="scan'208";a="280066329"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2021 07:08:14 -0700
+X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
+   d="scan'208";a="511212717"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2021 07:08:07 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mGMEW-00B8AF-Ie; Wed, 18 Aug 2021 17:07:56 +0300
+Date:   Wed, 18 Aug 2021 17:07:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     David Thompson <davthompson@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Liming Sun <limings@nvidia.com>
+Subject: Re: [PATCH v1 5/6] TODO: gpio: mlxbf2: Introduce IRQ support
+Message-ID: <YR0UPG2451aGt9Xg@smile.fi.intel.com>
+References: <20210816115953.72533-1-andriy.shevchenko@linux.intel.com>
+ <20210816115953.72533-6-andriy.shevchenko@linux.intel.com>
+ <CH2PR12MB3895ACF821C8242AA55A1DCDD7FD9@CH2PR12MB3895.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Received: by 2002:a02:6388:0:0:0:0:0 with HTTP; Wed, 18 Aug 2021 07:04:13
- -0700 (PDT)
-Reply-To: ms.lisahugh000@gmail.com
-From:   MS LISA HUGH <safi.kabore22@gmail.com>
-Date:   Wed, 18 Aug 2021 16:04:13 +0200
-Message-ID: <CA+c1m-th9M9bJLrvazKV0x_p51LcuYND6Y6BOhgzfe2LfjDDDw@mail.gmail.com>
-Subject: MASSAGE OF THE BUSINESS.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR12MB3895ACF821C8242AA55A1DCDD7FD9@CH2PR12MB3895.namprd12.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
+On Mon, Aug 16, 2021 at 09:34:50PM +0000, Asmaa Mnebhi wrote:
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com> 
+> Sent: Monday, August 16, 2021 8:00 AM
 
-I am Ms Lisa Hugh, work in the department of Audit and accounting
-manager here in the Bank.
+...
 
-I need Your help for this transfer($4,500,000,00 ,U.S.DOLLARS)to your
-bank account with your co-operation
+> +static irqreturn_t mlxbf2_gpio_irq_handler(int irq, void *ptr) {
+> 
+> So how do you suggest registering this handler?
 
-Please send the follow below,
-1)AGE....2)TELEPHONENUMBER,,,,,...,3)COUNTRY.....4)OCCUPATION......
+As usual. This handler should be probably registered via standard mechanisms.
+Perhaps it's hierarchical IRQ, then use that facility of GPIO library.
+(see gpio-dwapb.c for the example).
 
-Thanks.
-Ms Lisa Hugh
+> 1) should I still use BF_RSH0_DEVICE_YU_INT shared interrupt signal?
+
+I don't know your hardware connection between GPIO and GIC. You have to look
+into TRM and see how they are connected and what should be programmed for the
+mode you want to run this in.
+
+> 2) or does Linux kernel know (based on parsing GpioInt) how trigger the
+> handler based on the GPIO datain changing (active low/high)? In this case,
+> the kernel will call this handler whenever the GPIO pin (9 or 12) value
+> changes.
+
+After driver in place kernel will know how to map, register and handle the GPIO
+interrupt. But the GIC part is out of the picture here. It may be you will need
+additional stuff there, like disabling (or else) the interrupts, or providing a
+bypass. I can't answer to this.
+
+> I need to check whether GPIO is active low/high but lets assume for
+> now it is open drain active low. We will use acpi_dev_gpio_irq_get to
+> translate GpioInt to a Linux IRQ number:
+
+> irq = acpi_dev_gpio_irq_get_by(ACPI_COMPANION(dev), "phy-gpios", 0);
+> ret = devm_request_irq(dev, irq, mlxbf2_gpio_irq_handler, IRQF_ONESHOT | IRQF_SHARED, dev_name(dev), gs);
+
+Yes.
+(I dunno about one short and shared flags, but you should know it better than me)
+
+> And I will need to add GpioInt to the GPI0 ACPI table as follows:
+
+But you told me that it's already on the market, how are you suppose to change
+existing tables?
+
+> // GPIO Controller
+>       Device(GPI0) {
+>        Name(_HID, "MLNXBF22")
+>         Name(_UID, Zero)
+>         Name(_CCA, 1)
+>         Name(_CRS, ResourceTemplate() {
+>           // for gpio[0] yu block
+>          Memory32Fixed(ReadWrite, 0x0280c000, 0x00000100)
+>          GpioInt (Level, ActiveLow, Exclusive, PullDefault, , " \\_SB.GPI0") {9}
+>         })
+>         Name(_DSD, Package() {
+>           ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>           Package() {
+>             Package () { "phy-gpios", Package() {^GPI0, 0, 0, 0 }},
+>             Package () { "rst-pin", 32 }, // GPIO pin triggering soft reset on BlueSphere and PRIS
+>           }
+>         })
+>       }
+
+No, it's completely wrong. The resources are provided by GPIO controller and
+consumed by devices. You showed me the table for the consumer, which is good
+(of course if you wish to use Edge triggered interrupts there).
+
+...
+
+> +		handle_nested_irq(nested_irq);
+
+> Now how can the mlxbf_gige_main.c driver also retrieve this nested_irq to
+> register its interrupt handler as well? This irq.domain is only visible to
+> the gpio-mlxbf2.c driver isn't it?  phydev->irq (below) should be populated
+> with nested_irq at init time because it is used to register the phy interrupt
+> in this generic function:
+
+nested here is an example, you have to check which one to use.
+
+Moreover the code misses ->irq_set_type() callback.
+
+So, yes, domain will be GPIOs but IRQ core will handle it properly.
+
+> void phy_request_interrupt(struct phy_device *phydev)
+> {
+> 	int err;
+> 
+> 	err = request_threaded_irq(phydev->irq, NULL, phy_interrupt,
+> 				   IRQF_ONESHOT | IRQF_SHARED,
+> 				   phydev_name(phydev), phydev);
+
+You have several IRQ resources (Interrupt() and GpioInt() ones) in the consumer
+device node. I don't know how your hardware is designed, but if you want to use
+GPIO, then this phydev->irq should be a Linux vIRQ returned from above
+mentioned acpi_dev_gpio_irq_get_by() call. Everything else is magically happens.
+
+...
+
+> +	int offset = irqd_to_hwirq(irqd) % MLXBF2_GPIO_MAX_PINS_PER_BLOCK;
+
+> Why is the modulo needed? Isn't the hwirq returned a number between 0 and
+> MLXBF2_GPIO_MAX_PINS_PER_BLOCK-1 ?
+
+It's copy'n'paste from somewhere, since you have device per bank you don't
+need it.
+
+...
+
+> We also need to make sure that the gpio driver is loaded before the
+> mlxbf-gige driver. Otherwise, the mlxbf-gige 1G interface fails to come up.
+> I have implemented this dependency on the gpio driver before, something like
+> this at the end of the mlxbf-gige driver:
+
+> MODULE_SOFTDEP("pre: gpio_mlxbf2");
+
+No, when you have GPIO device is listed in the tables the IRQ mapping will
+return you deferred probe. It doesn't matter when device will appear, but it
+will be functional only when all resource requirements are satisfied.
+
+Above soft dependency doesn't guarantee this, deferred probe does.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
