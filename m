@@ -2,75 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC99F3F0EAD
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Aug 2021 01:37:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85DB93F10E8
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Aug 2021 05:03:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234889AbhHRXiV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Aug 2021 19:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36070 "EHLO
+        id S235804AbhHSDDm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Aug 2021 23:03:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234860AbhHRXiV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Aug 2021 19:38:21 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03CABC061764
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Aug 2021 16:37:46 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id g13so8327867lfj.12
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Aug 2021 16:37:45 -0700 (PDT)
+        with ESMTP id S235679AbhHSDDl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Aug 2021 23:03:41 -0400
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748DFC0613CF
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Aug 2021 20:03:05 -0700 (PDT)
+Received: by mail-oi1-x232.google.com with SMTP id r26so6573370oij.2
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Aug 2021 20:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YhIy9znc3R8woK0Yh7F5fhaRRY/b4r09z95kantGp8k=;
-        b=FAqmndSysaYMKv2k/Pyn7x9vHZIivco6iQoVrwvorawqJeWA9tQL7JnBsCMSVmty7T
-         94Wc1dg257KjAz7v9Kpzx5JSi55gxpMnI0qV5vv1FQnxTnjY1eUiru0RDozdmDfBkJdz
-         lDS+y/nRRraZ4UmagC9hDeu/faE4sOqxE5d2LX4Q2Z83lThYsY7Z7Ao41JA/+OJKQrst
-         qKoMN8Pi2yU6wnD1+UXa3T7OO9k7U6WHFoBlIZ7+ASZeOqK9QVr9mSebI3xc1Wq2V2SV
-         JGrnbLc1+IiCmtNx22ZSaig75ywBThanKqC8UDOaxD6Y05hpCs6pOm8wzFgp2DvFjjW7
-         SWpA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oLtmGWWWFpy0RrcCLUcbKoN2iq+DyMnqMq+mMo4DPc4=;
+        b=eangeZEGbtS69BS4hN/L+x7MnIZ8dMi46+6iuZFfHLBX2wwl5y6oWH6Vf6wOLJayeu
+         OPfonrfs7f+MMVUmvYb2sEH+dC2baGKAn1mqncorX+ueqV2rLSfdAs/U5xZSC50XLC/w
+         N7YXYEIrK2+JqGNPOPEeByI756min3FkQJ9UgtutLBuNYOwQ4rCUcXyJAvFPrgw7RIrY
+         H7Zpp8R5MJZz21lamrc8IJCO8BAGVEY7xd5FrcVrOqkNLIPTvS5esUDmP8UBqO1yJ8i5
+         EX31ASk7UEpM1JNc41WXtS6UyDJQtT7Qb1Y5zrbiuUH6cbE7vSZIKiQ/JeKLfOenHeuP
+         eL1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YhIy9znc3R8woK0Yh7F5fhaRRY/b4r09z95kantGp8k=;
-        b=LqsBDvsqqKvCAzEKf41i4ZCLECyRzY/7JBgd06RVmt+kezNR2h+XVkeadoXgum3EQq
-         xvlgmuvtMFBwk7dWLYlybDx7TUnRzAGdsvnq8k55zA+iNy8DFvhCTOsp1sGL13ZPPJz7
-         jZkTpeQcoZ4MLfJ8trwKOzQFKcUyXGxf0qNm6VWrfG92enEpSg3meG49DPKJ5uN6IyI/
-         si9Yycy8c/G3ZC0BhDNdzW5zcjtyFkvX7ZK724PP0Nan1K2lyMa+eKRNJFgssMC3lgnp
-         jdN0bNfqUzFXNWnqvn4VvpFdSQLvm3AUw9VzdRNdg117twBLcj9MCQ/7xKuBQnbfWdFc
-         3Ffw==
-X-Gm-Message-State: AOAM532E6IhM1LIqxReKsUm/RwFkYpdZ8MBnbjamPRhU2043daw8G91a
-        KdedVTbs2beSzzDBrbQF8jdIDL8JsUZRUmTbffVAUg==
-X-Google-Smtp-Source: ABdhPJxFuwdipfU8mB3bkgwXWO5+wtIESz6BPxgGvCF6DejBFdyr9qxRYbgcxPe0FYC4XcON3bjyXaLoS2nwu6Hz1Ak=
-X-Received: by 2002:a05:6512:3e26:: with SMTP id i38mr8422086lfv.29.1629329864245;
- Wed, 18 Aug 2021 16:37:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oLtmGWWWFpy0RrcCLUcbKoN2iq+DyMnqMq+mMo4DPc4=;
+        b=q8Y+rhSfxfwY3rdUgnmvMBpdYWFdsxv/Gm3dPAF5V1gfel69ORMaTR80334qRUGP1P
+         x3GJT96iXrCaZSjGLzt3Itgsogsbdwrft233GA4T3/QeqJftDQ1E6L1iyMCjurHpNQX9
+         E7AArKGMZdi9xtsKOA+RBbXhrIg2a3M9tYhYYWiJTNCCbLwZzLUWxF8ws8AjT0yDfC/u
+         GaUA9L3i6HZleGZXtgcP7pHjv6IotJrQnAX7bTC62HYDEltZopAtUYOCLAC2aJcWqnmm
+         arJT+6meqFq1hqTSuoStofz/uyrcMwTgBD5OXTzzUVOy/IZus9OoMeNwNwMjduC0ozAw
+         9ylg==
+X-Gm-Message-State: AOAM531HkSEwpUQ6u57QTzOm0X3rmbUFYTH6a146liYEFJUk+hxs2jra
+        mifDEDh5caw2t1pfOZ5vuJoFzw==
+X-Google-Smtp-Source: ABdhPJzCCQcupwH4mOOFBHjl11BaWd+S5X0W91b9Y+9RFM8yUV8G/G+t8Ov9Nw/Bu8UbM4AsfBGugw==
+X-Received: by 2002:aca:1a0f:: with SMTP id a15mr991874oia.42.1629342184854;
+        Wed, 18 Aug 2021 20:03:04 -0700 (PDT)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id w14sm436276otl.58.2021.08.18.20.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Aug 2021 20:03:04 -0700 (PDT)
+Date:   Wed, 18 Aug 2021 22:03:02 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     quic_vamslank@quicinc.com
+Cc:     agross@kernel.org, linus.walleij@linaro.org,
+        manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SDX65 pinctrl
+ bindings
+Message-ID: <YR3J5jHr2CTTU92D@builder.lan>
+References: <cover.1626987605.git.quic_vamslank@quicinc.com>
+ <341f8af967fb0c699996a8f73d34c2b8bd0789cc.1626987605.git.quic_vamslank@quicinc.com>
 MIME-Version: 1.0
-References: <1629265999-33358-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <447d7205-f562-72c2-8317-031cd733d60c@xilinx.com>
-In-Reply-To: <447d7205-f562-72c2-8317-031cd733d60c@xilinx.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 19 Aug 2021 01:37:33 +0200
-Message-ID: <CACRpkdadQujzApH_XKhe5LD46S4GUseXKQ_mV4Jv7eaA5u1yUg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: pinctrl-zynq: Add warning for not to use 'io-standard'
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        git <git@xilinx.com>, saikrishna12468@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <341f8af967fb0c699996a8f73d34c2b8bd0789cc.1626987605.git.quic_vamslank@quicinc.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 8:00 AM Michal Simek <michal.simek@xilinx.com> wrote:
+On Thu 22 Jul 16:18 CDT 2021, quic_vamslank@quicinc.com wrote:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml
+[..]
+> +'$defs':
+> +  qcom-sdx65-tlmm-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-1][0-6])$"
 
-> Linus: would be good to know how long we should keep the support for
-> this deprecated dt property.
+The last part doesn't seem right and this gives us the following
+possible values gpio0-9, gpio10-99, gpio100-106 and gpio110-116.
 
-We use the "noone hears the tree fall in an empty forest"-metric.
-If no user suffers, we can drop it. Determining that requires some
-kind of reasoning about when that happens, and then the maintainer
-of the driver decides.
+I think the correct pattern would be:
+	"^gpio([0-9]|[1-9][0-9]|10[0-9])$"
 
-Yours,
-Linus Walleij
+
+[..]
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        tlmm: pinctrl@f100000{
+
+Please include a space between the unit address and '{'.
+
+> +                compatible = "qcom,sdx65-tlmm";
+> +                reg = <0x03000000 0xdc2000>;
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                gpio-ranges = <&tlmm 0 0 109>;
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +                interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +                serial-pins {
+> +                        pins = "gpio8", "gpio9";
+> +                        function = "blsp_uart3";
+> +                        drive-strength = <2>;
+> +                        bias-disable;
+> +                };
+> +
+> +		uart-w-subnodes-state {
+
+This line is indented with tabs, the rest with spaces.
+
+With those changes this looks really good.
+
+Thanks,
+Bjorn
