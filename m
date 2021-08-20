@@ -2,81 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 925E03F2544
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Aug 2021 05:25:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CF043F272F
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Aug 2021 09:04:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237933AbhHTD01 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Aug 2021 23:26:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237934AbhHTD00 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Aug 2021 23:26:26 -0400
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0248FC061575
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Aug 2021 20:25:49 -0700 (PDT)
-Received: by mail-il1-x12c.google.com with SMTP id v2so8104359ilg.12
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Aug 2021 20:25:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=x0vBVfs0aObTvBgrsn3BERoDEnWTvuRAY6vysnNfl/8=;
-        b=F4/hOE0x+XrUxDWjAJwVps8owXigBlanJwH19baFI8hBN8fRggKxGFzk6+FS5UJjqK
-         FRQw1wTayriMXbnu0UGkDZ/OKcUkLXbO4HEaBvQTc4bV0CB3iANlSCL6VT0WTNkvjSrc
-         DEwRXk0OKYYSI2pXnddX6mIOl/CaWr0GLe45JHv562324ellh52NxEdMDoxPRBlBnSGM
-         71sX5I31vYb6O1HAZtaPMRQK1ghs6sTlZhXUP4j0O+RVHHGi4gPKmmAULmyOzmXZ/lmW
-         Bp8kgd2KOds0vpPj8DwB6oKbQfyek+2NQjsTq/3IUFBOXZtNdKZ/dcqFt3FuWk+0WMbA
-         3B0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=x0vBVfs0aObTvBgrsn3BERoDEnWTvuRAY6vysnNfl/8=;
-        b=WPaczjRd6hMnw16N+4XZku8kzJuBTu2VmWFKz8n7+tHtTpyOC6r64T6+6nBb0SCUJY
-         HpSb+f8m0BAtpCsfpZjD91WB4HNeMdmzMpVLxkmS1HpqzNdPcqotCauCSzRU59vNb3sJ
-         R9OCNcNOeA9mGl9VK9J8aZVMBNAGopWjbDUjKDRSy0MwaE+rwb7RnPF8Z+4RHvRlPnCM
-         6umMnGU8+vHp3+5eAuNZVLeNJmsugPOSY3m4w2wADyPkO0VqSXLg5yFt071lTK6QF9cW
-         5z6IrKr4Ck5+GMH0ifBEXdWCPNtJnsXCxcFRtNb3CV33uNzIIWWf1Aj6iRyjxJ5AdE/q
-         iA4w==
-X-Gm-Message-State: AOAM530AIajMWEPEe8Q4QdYUQxaIEQIuD9GDoyo11rZk5Bju6TnRQEYS
-        uz+nmralIOaQ02Ykcfbs5bzpwqxnRtG5MuCvrQFBCud4kkCX4w==
-X-Google-Smtp-Source: ABdhPJznnIFUBGnlz+tzZQNWQem8ZKRPOQo5NJaVUO52f9tCio+DXUP+VzXkC/aZZ6TFNqewyqZOK9qdN6EknIgUSrI=
-X-Received: by 2002:a05:6e02:1a4f:: with SMTP id u15mr12129726ilv.251.1629429947382;
- Thu, 19 Aug 2021 20:25:47 -0700 (PDT)
+        id S238523AbhHTHB5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Aug 2021 03:01:57 -0400
+Received: from mailgw01.mediatek.com ([60.244.123.138]:37072 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S235172AbhHTHB5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Aug 2021 03:01:57 -0400
+X-UUID: acfcbdcf3e5b4a30a64e3878c740b93e-20210820
+X-UUID: acfcbdcf3e5b4a30a64e3878c740b93e-20210820
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 557516772; Fri, 20 Aug 2021 15:01:17 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 20 Aug 2021 15:01:15 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 20 Aug 2021 15:01:16 +0800
+From:   <sean.wang@mediatek.com>
+To:     <sam.shih@mediatek.com>
+CC:     <robh+dt@kernel.org>, <sean.wang@kernel.org>,
+        <linus.walleij@linaro.org>, <matthias.bgg@gmail.com>,
+        <mpm@selenic.com>, <herbert@gondor.apana.org.au>,
+        <gregkh@linuxfoundation.org>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <hsinyi@chromium.org>,
+        <enric.balletbo@collabora.com>, <fparent@baylibre.com>,
+        <seiya.wang@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-crypto@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <john@phrozen.org>, <Ryder.Lee@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [v2, 04/12] pinctrl: mediatek: moore: check if pin_desc is valid before use
+Date:   Fri, 20 Aug 2021 15:01:13 +0800
+Message-ID: <1629442873-24655-1-git-send-email-sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <20210817074557.30953-5-sam.shih@mediatek.com--annotate>
+References: <20210817074557.30953-5-sam.shih@mediatek.com--annotate>
 MIME-Version: 1.0
-From:   Riz <mdrizwan827@gmail.com>
-Date:   Fri, 20 Aug 2021 08:55:36 +0530
-Message-ID: <CA+FSg4rJcDPhPoBbEYjsq_UOysLUdp6YnBh+3XeHL7UkH2cfdA@mail.gmail.com>
-Subject: Regarding export of GPIOs
-To:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
-I have some basic questions around the exporting of a GPIO.
+From: Sean Wang <sean.wang@mediatek.com>
 
-1. Regarding gpio-hog mechanism:
-The gpio-hog mechanism would help us to initialise a GPIO to either
-high/low & in/out during bootup.
-This is fine.
-
-So my question is, if we hog a GPIO, does it also gets exported to the
-userspace by default?
+>Certain SoC are missing the middle part gpios in consecutive pins, it's better to check if mtk_pin_desc is a valid pin for the extensibility
+>
+>Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+>
 
 
-2. With the older sysfs interface, we would be using "echo x >
-/sys/class/gpio/export" to export the gpiox to userspace.
+>---
+>v2: applied the comment suggested by reviewers:
+>    - for the pins not ballout, we can fill .name in struct mtk_pin_desc
+>      as NULL and return -ENOTSUPP in gpio/pinconf ops.
 
-I wanted to know what would be the right way to do this with the newer
-interface?
+Thanks for take the suggestion and the improvement.
+Acked-by: Sean Wang <sean.wang@mediatek.com>
 
-3. To check if a GPIO is being exported or not, we would see the
-/sys/class/gpio with the sysfs interface.
+>
+>---
+> drivers/pinctrl/mediatek/pinctrl-moore.c | 18 ++++++++++++++++++
+> 1 file changed, 18 insertions(+)
+>
+>diff --git a/drivers/pinctrl/mediatek/pinctrl-moore.c b/drivers/pinctrl/mediatek/pinctrl-moore.c
+>index 3a4a23c40a71..ad3b67163973 100644
+>--- a/drivers/pinctrl/mediatek/pinctrl-moore.c
+>+++ b/drivers/pinctrl/mediatek/pinctrl-moore.c
+>@@ -60,6 +60,8 @@ static int mtk_pinmux_set_mux(struct pinctrl_dev *pctldev,
+>		int pin = grp->pins[i];
+>
+>		desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
+>+		if (!desc->name)
+>+			return -ENOTSUPP;
+>
+>		mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_MODE,
+>				 pin_modes[i]);
+>@@ -76,6 +78,8 @@ static int mtk_pinmux_gpio_request_enable(struct pinctrl_dev *pctldev,
+>	const struct mtk_pin_desc *desc;
+>
+>	desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
+>+	if (!desc->name)
+>+		return -ENOTSUPP;
 
-With the newer character device interface, what would be the right way
-to check what GPIOs are exported to userspace?
-
-Looking forward to hearing from you
-
-Regards,
-Rizwan
+<snip>
