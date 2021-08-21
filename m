@@ -2,89 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 357413F3725
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Aug 2021 01:00:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CE523F395A
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Aug 2021 09:38:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238009AbhHTXBG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Aug 2021 19:01:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40156 "EHLO
+        id S232469AbhHUHjU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 Aug 2021 03:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230303AbhHTXBG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Aug 2021 19:01:06 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D82FFC061575
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Aug 2021 16:00:27 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id i9so23589900lfg.10
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Aug 2021 16:00:27 -0700 (PDT)
+        with ESMTP id S232530AbhHUHjT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 Aug 2021 03:39:19 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 041B7C061756
+        for <linux-gpio@vger.kernel.org>; Sat, 21 Aug 2021 00:38:41 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id w68so10637366pfd.0
+        for <linux-gpio@vger.kernel.org>; Sat, 21 Aug 2021 00:38:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V+/U9FpQyY4U//iKVyDtUsveyTibEXlro27MkRbNWVk=;
-        b=c9aS7ULVPcx2QXgHIjuFJrVMHy38F8f/e3aeCtMCpOYUeSsob4okqYL/ACkJRyeEQk
-         wnj0/n3Ua+3dCkiF1q3cjlm51oTzhx95i8IndOpYlmyF56n/r5Bf9JDEFk2ZPHAfKKc+
-         axl38K9nxdNc7hfoXwXnjzfCOHumu2xLtHJ8VW4mpwQDXxrHLsNVvDo2r1RVc4qeIbH7
-         D3pbgsvmljbv8VY5jefWwP5d9leuUi8b761h7y7qdrP16LMxkd2oZwFOG/b/ynQFb+Gn
-         Ht7uWDEdvD3wdj5p4VxCbuf/QUvKdpSKL2nx+sz44HQg1PXpVb/ecTCLFwmJWYca+dGE
-         qYew==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S5if0l/GBo8pSRDSllBTw6ibDxcL1nC216nNhyyQqFA=;
+        b=gprDKGtfTe7FkvWOROE1HZdJusSxBMFUPNXyjQOUsMBFA/7TfyFmeKmsSULAbxDgWQ
+         By3QFmNKZ91EUd9jmukfJh9tdJqHa5A9yZcwl2cuymYDkI9DTgsMzt0KqAMlpHIW9Dzy
+         bnAvdkguEX8GIXaDNnVfl9DtIxIhLoW83+2FDWyiVTB7ecNofBLycEB98n+ooCTP4IP+
+         tInflQdBUgPP/dAQ62CzReRmayF3hLppJOlu7vrcrdb/uow8GY7tsomIMb84Sm9jC9lL
+         9C2jZD5sO5CRqiaPwJ3kL7AdAL2FtND9Ae6HZyISw9ow2V/nQ51jw/d2iYaQh9uHwhmQ
+         3jNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V+/U9FpQyY4U//iKVyDtUsveyTibEXlro27MkRbNWVk=;
-        b=m5lOoggBlSAh941OJilbp/fVkLXn/GJZFdUX+RuQQGijqLxi3RkjZ9I4JRzmk5j5NT
-         jMPnIQsVKZ14lP82A2DcDFR2AxeIGzTDeyfILu016ub8OyImzZreZl8nyqARIqW9utDs
-         Bbvzpi1btFE32zQ8VVddYiLW6FiZl9nJrWLFIsmpbqP67m2j8dSrvN2NaWagk/cd3y04
-         XP6jV99nPPefTfKuGt4i0FQgsCVUN2an3LfJKAkFqLh3mzzJjB0oZjzxS8panlqzH+1H
-         Wlz9f7V3hjQqjsmmEyYXz5pog6Xx/jYEX5tsBPZ6UHME53F/jr9ykNVgh2SOJG/S+6oN
-         dSOw==
-X-Gm-Message-State: AOAM533L573PH2bgGGjuQILbyoAJYreGun56PCuVnoNTUwX8Wh+ztLX7
-        bjt8YETRC6sGGApvdqrvpvpSlUzHpYG3xg==
-X-Google-Smtp-Source: ABdhPJw4umd96KmnM6lxsTS3NHgkVYYA6bafCNblPXcy/+jiqgJOTLIznwCcBtRPcmNbiCmx8QmVUQ==
-X-Received: by 2002:a05:6512:1589:: with SMTP id bp9mr16338425lfb.567.1629500425822;
-        Fri, 20 Aug 2021 16:00:25 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id r25sm636046ljc.118.2021.08.20.16.00.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Aug 2021 16:00:25 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: max730x: Use the right include
-Date:   Sat, 21 Aug 2021 00:58:21 +0200
-Message-Id: <20210820225821.103070-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.31.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S5if0l/GBo8pSRDSllBTw6ibDxcL1nC216nNhyyQqFA=;
+        b=Np6wQM70M53qxA/syHlALu+uiJp3oMCFeIK5RZ8BOooHgyz0YsAKWOrhwsiQeGa/oQ
+         NR5VwSjScDMBlghdmFL0JvCB08oxtSSAmcXoNYJqvMdk7eXk6GrgAGaq23VQvozMhwfz
+         DU/DrwdZl7G+S4fLhSM31ggeFp8jPRvyEOsJKhzWRzFzLYeuWnjnvEURknY7Vs1aL34f
+         PnZ7C1htPnVQLXfxILaBvrxvl6Mz21lTg/vCwcUCZYejxEkSMSd4pFhMdLRVe9eBI3AV
+         X5XsfGeeMJ7u7DHuPLHVsLiS+ICjtkL6wkQuV1pH5nidZ/F+iiKCkA6TeFFvDr8TTgXJ
+         ZUTQ==
+X-Gm-Message-State: AOAM531WdMnSp335p8hF63naDuJYV2vNN7CEGIHiJ5rBYl9pGd8jyGMw
+        VJCJR4HKanKvQa0782H9T2GMNsxc/viDowvvuXk=
+X-Google-Smtp-Source: ABdhPJxpdMO78VzBWSs5ZQMNd89LkWrW/WstS6e5H541qCB72qzNUiOqWW99efd/E9N37X2eEZH1KxTYr2yFin9yOIc=
+X-Received: by 2002:a05:6a00:d41:b0:3e1:3316:2ef with SMTP id
+ n1-20020a056a000d4100b003e1331602efmr23842180pfv.40.1629531520456; Sat, 21
+ Aug 2021 00:38:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210820222446.56747-1-linus.walleij@linaro.org>
+In-Reply-To: <20210820222446.56747-1-linus.walleij@linaro.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 21 Aug 2021 10:38:04 +0300
+Message-ID: <CAHp75VcYv=jpf6SfJEE0=iH_Xrty5USobyR52N-10g4nVsuEWA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ucb1400: Use proper header
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-<linux/spi/max7301.h> despite the placement of the header, is
-used by drivers/gpio/gpio-max730*.
+On Sat, Aug 21, 2021 at 1:27 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> The UCB1400 implements a GPIO driver so it needs to include the
+> <linux/gpio/driver.h> header, not the legacy <linux/gpio.h> header.
+> Compile tested on pxa_defconfig.
 
-The include needs struct gpio_chip and needs to include
-<linux/gpio/driver.h> not the legacy <linux/gpio.h> include.
+...
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- include/linux/spi/max7301.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  #include <linux/module.h>
+>  #include <linux/ucb1400.h>
+> +#include <linux/gpio/driver.h>
 
-diff --git a/include/linux/spi/max7301.h b/include/linux/spi/max7301.h
-index 433c20e2f46e..21449067aedb 100644
---- a/include/linux/spi/max7301.h
-+++ b/include/linux/spi/max7301.h
-@@ -2,7 +2,7 @@
- #ifndef LINUX_SPI_MAX7301_H
- #define LINUX_SPI_MAX7301_H
- 
--#include <linux/gpio.h>
-+#include <linux/gpio/driver.h>
- 
- /*
-  * Some registers must be read back to modify.
+Can you add it in an order?
+
+...
+
+> --- a/include/linux/ucb1400.h
+> +++ b/include/linux/ucb1400.h
+> @@ -23,7 +23,7 @@
+>  #include <sound/ac97_codec.h>
+>  #include <linux/mutex.h>
+>  #include <linux/platform_device.h>
+> -#include <linux/gpio.h>
+> +#include <linux/gpio/driver.h>
+
+Ditto (to some extent) and the question here, do you still need it
+after adding to the C file?
+
 -- 
-2.31.1
-
+With Best Regards,
+Andy Shevchenko
