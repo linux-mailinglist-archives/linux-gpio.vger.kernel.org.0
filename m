@@ -2,226 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EC2D3F465A
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Aug 2021 10:05:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 814F83F465F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Aug 2021 10:06:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235470AbhHWIFx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Aug 2021 04:05:53 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:53058 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235488AbhHWIFx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 23 Aug 2021 04:05:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1629705911; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=liVXi05SB5unm8X7XLacM7I2ln2fD58WOmR6wSA0EJY=; b=DvI98GLnEi279H91ZGyWClGM2o7mkBW1RbchjHhQXtSLmOjtooznO7xxBu/euDj1yUD+aT27
- rQZbYzVq0YDRDHyx76zRkAZvDGQph09vYMvhC7C0yKMP70fbZeXfKrfombKd48KTKl60Vlb1
- sp7t9zduIfdwOupQ2LBcv+GcAyk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 612356aff588e42af10e749c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 23 Aug 2021 08:05:03
- GMT
-Sender: mkshah=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9E049C4361A; Mon, 23 Aug 2021 08:05:03 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
-        autolearn=no autolearn_force=no version=3.4.0
-Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 45191C43618;
-        Mon, 23 Aug 2021 08:04:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 45191C43618
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     maz@kernel.org, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, tkjos@google.com, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v3 2/2] irqchip/qcom-pdc: Start getting rid of the GPIO_NO_WAKE_IRQ
-Date:   Mon, 23 Aug 2021 13:34:40 +0530
-Message-Id: <1629705880-27877-3-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1629705880-27877-1-git-send-email-mkshah@codeaurora.org>
-References: <1629705880-27877-1-git-send-email-mkshah@codeaurora.org>
+        id S235398AbhHWIHh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Aug 2021 04:07:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235329AbhHWIHg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Aug 2021 04:07:36 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD156C061756
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Aug 2021 01:06:54 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id f15so4181629ybg.3
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Aug 2021 01:06:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D/zCG9ivFnH5oqg7ao6RBT5SBq8GrO87iHWo6rWwoX4=;
+        b=M4olpOi5c6kiBdUGJ3UItw1G0SBvluTYJzZRYymjprivaDsdZK6MnPhB8usOxlLa7w
+         W2zaXqSeW3Jbn7b+OoyNQJbyiMKgp6tjk8VW9oUJtXG9+PNzpYoGoNDvj79Ic4bi/zMs
+         E3cwLugJU1+jXscaCQzEhdeyGlKrRByY59Psvoep+iZZ+oQWNrQoockrhDzNpQ06//oH
+         mVIGNe/UcjjLC0Z2pnb8RYE0BiDcpzktqUuX44YXiSZRTvMJmfJFaQRkkyA3SXMuTnH6
+         CEybtA554/XPXAYQ8Rs9CoiP9lXB8cAZYwSJzqWIlTxxzX+uD1Jlp936JYAYSWl2ry/7
+         Bctw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D/zCG9ivFnH5oqg7ao6RBT5SBq8GrO87iHWo6rWwoX4=;
+        b=BD5nI2ROAGvV3eWzt9N+a2YYBHWHtn2IE39lzk7dHAm0AKZHKF9tG01CVVOIvzw8mN
+         nAlapn7nYPwurllNed4XNzs7O1Pl2FAQJaUC3Agt54BZ3SVVZKGr3T4IyzlOMG2l4e+m
+         WT/T4YjBhn9Q/Epnv2x9zcXGMxPi3IrFHa/UkF3jSaGHx59fqdKthdoY8nTOKhYIdwtu
+         ve8XVH5oY7fjNyQNGAEqjlA6Kmn8pdPgrnLMcpcz40aIYMVbW1v6IkV/E/X3/lTxjQt8
+         cKOm/OwyfHhg2sKH8J25NR1lxhUCxZ3YduxrfgQNwuU69LxYTU8TuTaSNDN8Zh5WDk3Q
+         hpYA==
+X-Gm-Message-State: AOAM533V1b7xcs6AUwdBfW3t29tM7mffOelcvpQAq6RLFfGjWE2dJLYn
+        j5ngBIWHnbfMJCJjfVMBan/AmDEACCC7Wzni8GdDzQ==
+X-Google-Smtp-Source: ABdhPJzFQqLG99qfpoMaXnaBRKXLdVxUqfwc1eLs6IWkwE8rXnfq1pJ040CA+QX5zWWtABZR4cqJRYtZ2jB0Ao4oFHI=
+X-Received: by 2002:a25:21c5:: with SMTP id h188mr40272726ybh.23.1629706013975;
+ Mon, 23 Aug 2021 01:06:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1629472813.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <cover.1629472813.git.christophe.jaillet@wanadoo.fr>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 23 Aug 2021 10:06:43 +0200
+Message-ID: <CAMpxmJXO595xXbyG4fnc1ckadPOt4d0SXJ8qD7KuSP1XP5dFzA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] gpio: mpc8xxx: Fix 3 errors related to the error
+ handling path of the 'mpc8xxx_probe()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        alexandru.marginean@nxp.com, Laurentiu.Tudor@nxp.com,
+        Hui Song <hui.song_1@nxp.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ran Wang <ran.wang_1@nxp.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors <kernel-janitors@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+On Fri, Aug 20, 2021 at 5:37 PM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+>
+> This has been split in 3 patches because:
+>   - the root issue of patch 1 and 3 is not the same commit as the one for patch 2.
+>   - the strategy to fix the issues is not the same
+>      - patch 1: add a new call in the rror handling path
+>      - patch 3: switch to a resource managed function
+>
+> They could be merged together if easier to review. The subject would then be
+> something like "gpio: mpc8xxx: Fix the error handling path of 'mpc8xxx_probe()'"
+>
+> If prefered, 'devm_add_action_or_reset()' could be used to switch the probe to
+> a fully managed resource function and remove the 'remove' function.
+> That's mostly a matter of taste.
+>
+> If such an option is preferred, I'm a bit puzzled by the
+> 'irq_set_chained_handler_and_data()' call in the remove function because I
+> don't see why it is there.
+> Also see the comment at the end of patch 1 also related to this function call.
+>
+>
+> Christophe JAILLET (3):
+>   gpio: mpc8xxx: Fix a resources leak in the error handling path of
+>     'mpc8xxx_probe()'
+>   gpio: mpc8xxx: Fix a potential double iounmap call in
+>     'mpc8xxx_probe()'
+>   gpio: mpc8xxx: Use 'devm_gpiochip_add_data()' to simplify the code and
+>     avoid a leak
+>
+>  drivers/gpio/gpio-mpc8xxx.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+>
+> --
+> 2.30.2
+>
 
-gpio_to_irq() reports error at irq_domain_trim_hierarchy() for non
-wakeup capable GPIOs that do not have dedicated interrupt at GIC.
+Hi Christophe,
 
-Since PDC irqchip do not allocate irq at parent GIC domain for such
-GPIOs indicate same by using irq_domain_disconnect_hierarchy().
+These look good but I'm leaving for a couple days in an hour so I
+won't be able to send a PR to Linus before the next release. I'll make
+these part of my regular PR for the upcoming merge window.
 
-Replace qcom_pdc_gic_mask/unmask() and qcom_pdc_gic_get/set_irqchip_state()
-with respective parent forward callbacks since all they were doing is to
-check for valid irq and forward to parent.
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Tested-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/irqchip/qcom-pdc.c | 68 ++++++++--------------------------------------
- 1 file changed, 11 insertions(+), 57 deletions(-)
-
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 32d5920..173e652 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -53,26 +53,6 @@ static u32 pdc_reg_read(int reg, u32 i)
- 	return readl_relaxed(pdc_base + reg + i * sizeof(u32));
- }
- 
--static int qcom_pdc_gic_get_irqchip_state(struct irq_data *d,
--					  enum irqchip_irq_state which,
--					  bool *state)
--{
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return 0;
--
--	return irq_chip_get_parent_state(d, which, state);
--}
--
--static int qcom_pdc_gic_set_irqchip_state(struct irq_data *d,
--					  enum irqchip_irq_state which,
--					  bool value)
--{
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return 0;
--
--	return irq_chip_set_parent_state(d, which, value);
--}
--
- static void pdc_enable_intr(struct irq_data *d, bool on)
- {
- 	int pin_out = d->hwirq;
-@@ -91,38 +71,16 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
- 
- static void qcom_pdc_gic_disable(struct irq_data *d)
- {
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
--
- 	pdc_enable_intr(d, false);
- 	irq_chip_disable_parent(d);
- }
- 
- static void qcom_pdc_gic_enable(struct irq_data *d)
- {
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
--
- 	pdc_enable_intr(d, true);
- 	irq_chip_enable_parent(d);
- }
- 
--static void qcom_pdc_gic_mask(struct irq_data *d)
--{
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
--
--	irq_chip_mask_parent(d);
--}
--
--static void qcom_pdc_gic_unmask(struct irq_data *d)
--{
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
--
--	irq_chip_unmask_parent(d);
--}
--
- /*
-  * GIC does not handle falling edge or active low. To allow falling edge and
-  * active low interrupts to be handled at GIC, PDC has an inverter that inverts
-@@ -159,14 +117,10 @@ enum pdc_irq_config_bits {
-  */
- static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
- {
--	int pin_out = d->hwirq;
- 	enum pdc_irq_config_bits pdc_type;
- 	enum pdc_irq_config_bits old_pdc_type;
- 	int ret;
- 
--	if (pin_out == GPIO_NO_WAKE_IRQ)
--		return 0;
--
- 	switch (type) {
- 	case IRQ_TYPE_EDGE_RISING:
- 		pdc_type = PDC_EDGE_RISING;
-@@ -191,8 +145,8 @@ static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
- 		return -EINVAL;
- 	}
- 
--	old_pdc_type = pdc_reg_read(IRQ_i_CFG, pin_out);
--	pdc_reg_write(IRQ_i_CFG, pin_out, pdc_type);
-+	old_pdc_type = pdc_reg_read(IRQ_i_CFG, d->hwirq);
-+	pdc_reg_write(IRQ_i_CFG, d->hwirq, pdc_type);
- 
- 	ret = irq_chip_set_type_parent(d, type);
- 	if (ret)
-@@ -216,12 +170,12 @@ static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
- static struct irq_chip qcom_pdc_gic_chip = {
- 	.name			= "PDC",
- 	.irq_eoi		= irq_chip_eoi_parent,
--	.irq_mask		= qcom_pdc_gic_mask,
--	.irq_unmask		= qcom_pdc_gic_unmask,
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
- 	.irq_disable		= qcom_pdc_gic_disable,
- 	.irq_enable		= qcom_pdc_gic_enable,
--	.irq_get_irqchip_state	= qcom_pdc_gic_get_irqchip_state,
--	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
-+	.irq_get_irqchip_state	= irq_chip_get_parent_state,
-+	.irq_set_irqchip_state	= irq_chip_set_parent_state,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_type		= qcom_pdc_gic_set_type,
- 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
-@@ -282,7 +236,7 @@ static int qcom_pdc_alloc(struct irq_domain *domain, unsigned int virq,
- 
- 	parent_hwirq = get_parent_hwirq(hwirq);
- 	if (parent_hwirq == PDC_NO_PARENT_IRQ)
--		return 0;
-+		return irq_domain_disconnect_hierarchy(domain->parent, virq);
- 
- 	if (type & IRQ_TYPE_EDGE_BOTH)
- 		type = IRQ_TYPE_EDGE_RISING;
-@@ -319,17 +273,17 @@ static int qcom_pdc_gpio_alloc(struct irq_domain *domain, unsigned int virq,
- 	if (ret)
- 		return ret;
- 
-+	if (hwirq == GPIO_NO_WAKE_IRQ)
-+		return irq_domain_disconnect_hierarchy(domain, virq);
-+
- 	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
- 					    &qcom_pdc_gic_chip, NULL);
- 	if (ret)
- 		return ret;
- 
--	if (hwirq == GPIO_NO_WAKE_IRQ)
--		return 0;
--
- 	parent_hwirq = get_parent_hwirq(hwirq);
- 	if (parent_hwirq == PDC_NO_PARENT_IRQ)
--		return 0;
-+		return irq_domain_disconnect_hierarchy(domain->parent, virq);
- 
- 	if (type & IRQ_TYPE_EDGE_BOTH)
- 		type = IRQ_TYPE_EDGE_RISING;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Bart
