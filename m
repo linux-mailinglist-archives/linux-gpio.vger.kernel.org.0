@@ -2,96 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFFE23F4304
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Aug 2021 03:25:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8612C3F430C
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Aug 2021 03:27:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234779AbhHWB0a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 22 Aug 2021 21:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49178 "EHLO
+        id S234620AbhHWB1u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 22 Aug 2021 21:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234566AbhHWB03 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Aug 2021 21:26:29 -0400
+        with ESMTP id S234612AbhHWB1u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Aug 2021 21:27:50 -0400
 Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909B4C061575
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Aug 2021 18:25:47 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id a25so6797189ejv.6
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Aug 2021 18:25:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A550C061757
+        for <linux-gpio@vger.kernel.org>; Sun, 22 Aug 2021 18:27:08 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id bt14so33520873ejb.3
+        for <linux-gpio@vger.kernel.org>; Sun, 22 Aug 2021 18:27:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=pensando.io; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QqpWK2NpNMam+FVrnd5Qq4UQdG4vZMylCROkJYXdu6w=;
-        b=mtHYLDxx+doZhDcK8JqpU0r2bgFOmLiQYIGB6kkMOuslrKGLPdnXfhACq0msmAHHqV
-         wUSGl/V1rpTV5MzKxsKUzcrWv90OZg2d6Aq43ZEbaM8j9WbxaUhk5Cg/HfMf0OjgUaTk
-         RPcOo7irbUFOg9p/PFpYoxcXZI2xfBc0qYsU+Rs8jtG6wsktBqgyfJFiKtstXvDcXvGl
-         6BryYhWCifc74SPcD/Xrl5U0CwwvfWaze1TRdwesoE2CjUli9pDLPvhrD03LgyIrobpk
-         myi2pB7Bv5gkYlxhrXSia6dWyqf/PfYY76vmH16/gcxECjrohJ+cUinGWq4XUNZbUs87
-         oquA==
+        bh=A2begKrsVruCVFeZ8bmp5S3srbzJHX+xkiz5yVBPaB0=;
+        b=v6M3jOOYiHr6DwA8pLmIRMx2zdb4b60QpDLrttOohnvH8xqixtUDMEAiRRcDRbEOLJ
+         DSy/eoDgDPvJ0IAPQ77KG0SRgAaksBdhg7+oi/eJmct/W43EUqFgcaRWDVTobkERdWIu
+         j7KkrbJ8vEx7pOsp4EgnXCGRILKI8kgxwr+2CvuOMIlzcuu9dKiXd83NcRKGvgEV+5EH
+         miHjxyXzpTl1lIrj+KB5xnLB9CHcboCgFtS2Nj3lZYbJiHUk5k6RX40SqxmcoTzRO8Yc
+         3TS7sSjj+LehqA0J4SgRNPXoVQ9z5Vxo1nNXhPK4jTm62OGz+ccXqY1L79ogsTBVha39
+         H88g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QqpWK2NpNMam+FVrnd5Qq4UQdG4vZMylCROkJYXdu6w=;
-        b=BFOSXgvSLZw7EIhYpW6PjkDJDC/Z9NyqCcmKUDYebOwF6AQAqj9LxDCMVDXecApMG9
-         XEt+Myv09Mz5uNlOpnQ4VLdhErRneC7cMOi8eKBUM3nWfmr8599lVsurIDezlphhj2N/
-         2qDC2rJ3gMGoemrE3ZaYz7divzWOZgaar4bPokTQKzW5z9lxmDK1YP9sLN9r+sCQqsdm
-         p81q4JTUJTpOni63MmL+4zUe3N85HZalmHHo6NkH1KZO846NG8ntqNc9m63obc9y6FBx
-         0iXmUCGdQ0jASNni9Yg2TJqzK/tC1RuDYH3FSFzH4HKHyx1HxzQLXv7X+b4uHnFF5tW1
-         /Hlg==
-X-Gm-Message-State: AOAM5304aJAoCnmksHNAUkP14z9hKYEkZ3HxyldnqhG49SXNDwszq80O
-        T07g0Omd9txwRGslnq3KywtppaaHjk9j9VONtH1Oqw==
-X-Google-Smtp-Source: ABdhPJy/0sXtHHmKiUqDX9OM8jGFwko/lR4cRRRmI4r2eEOY/cer4itLJuSzsZZTroiumuKovs5s5IlI725zYJ9AWMo=
-X-Received: by 2002:a17:906:b25a:: with SMTP id ce26mr1436524ejb.174.1629681946141;
- Sun, 22 Aug 2021 18:25:46 -0700 (PDT)
+        bh=A2begKrsVruCVFeZ8bmp5S3srbzJHX+xkiz5yVBPaB0=;
+        b=gGvVF5BOW/drtJb/sp8TnKy8gQo3Dqtn0ujPL6sp1t4dxGChXDv0yyReWw0IMzntiI
+         Zck0lvwlHiNPiljuxSPY00kh+lYk3T4PvoTyWPbvCCS43Nfn4YdXHL8zMeA0auYG81YX
+         QMpRZerhPCxUGogGN+QmUNyymRhOP47Fv5pUoskUYlMcwHu6mZ8gFO7GFqKCmXbLvUzo
+         euLLOEn/ptaaRTl5eVJYYgVz1M3yAXV72Yq9PDgcU9Y01va+t+Fh/nUY9VEsmlK2sZTt
+         sSszP8XFjWgtOwHlyxqrg+sHtVDLfuaQZ5sMK5lJ+R2ioaF4J3uT6GcGnArU/vz8YvrD
+         avbA==
+X-Gm-Message-State: AOAM530kuBDhzTG3M3wX/4Rf5+w0iqLL9sVoWDaMKM8HTc4w2PvUgfqk
+        XC1tK2PnKkj2z9tVVp0vG5SL/5cMeg3zQS7y7/tNBw==
+X-Google-Smtp-Source: ABdhPJz+zD9molsnaSU1Wf+bRjrriq0R1N70JnNmz/Xlv5Du293t/g7zCjRmL+ggHKWoD6xuspCkxkwdiW53ALI1dAU=
+X-Received: by 2002:a17:906:cb11:: with SMTP id lk17mr32487256ejb.271.1629682026850;
+ Sun, 22 Aug 2021 18:27:06 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210329015938.20316-1-brad@pensando.io> <20210329015938.20316-4-brad@pensando.io>
- <CAHp75VfmSKVRB+Rm+sWDjZaJwdX4qt56Qj6aehe4YnA5d6+a6Q@mail.gmail.com>
-In-Reply-To: <CAHp75VfmSKVRB+Rm+sWDjZaJwdX4qt56Qj6aehe4YnA5d6+a6Q@mail.gmail.com>
+ <20210331180018.jir2vusuf3sbare5@mobilestation>
+In-Reply-To: <20210331180018.jir2vusuf3sbare5@mobilestation>
 From:   Brad Larson <brad@pensando.io>
-Date:   Sun, 22 Aug 2021 18:25:35 -0700
-Message-ID: <CAK9rFnzdPpVBZu8uxHU04pak9OxPMjFqAt_qnPQY2qK2WK4rTQ@mail.gmail.com>
+Date:   Sun, 22 Aug 2021 18:26:56 -0700
+Message-ID: <CAK9rFnxs_8fFnQPCDuW-=w36zq8+TStRVSBijjkGsEaMF-R6MA@mail.gmail.com>
 Subject: Re: [PATCH v2 03/13] spi: dw: Add support for Pensando Elba SoC SPI
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Olof Johansson <olof@lixom.net>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-spi <linux-spi@vger.kernel.org>,
         linux-mmc <linux-mmc@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+Hi Sergey,
 
-On Mon, Mar 29, 2021 at 3:43 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Wed, Mar 31, 2021 at 11:00 AM Serge Semin <fancer.lancer@gmail.com> wrote:
 >
-> On Mon, Mar 29, 2021 at 5:01 AM Brad Larson <brad@pensando.io> wrote:
-> >
+> On Sun, Mar 28, 2021 at 06:59:28PM -0700, Brad Larson wrote:
 > > The Pensando Elba SoC uses a GPIO based chip select
 > > for two DW SPI busses with each bus having two
 > > chip selects.
-...
+(...)
 > > +static void dw_spi_elba_set_cs(struct spi_device *spi, bool enable)
 > > +{
-> > +       struct dw_spi *dws = spi_master_get_devdata(spi->master);
+> > +     struct dw_spi *dws = spi_master_get_devdata(spi->master);
 > > +
-> > +       if (!enable) {
 >
-> Can you use positive conditional?
+> > +     if (!enable) {
+>
+> Please, be more attentive to the review-comments given to you before
+> resending a new patchset. One more time. This version of set_cs won't
+> work for Active-high CS. Each SPI controller working with GPIO-based
+> chip-select is marked as supporting that feature. So your DW
+> SPI controller won't be able to work correctly with SPI-devices
+> activated by active-high chip-select signal. Note default
+> dw_spi_set_cs() callback supports that.
 
-This function has been re-written to use the existing dw_spi_set_cs().
-This is what I currently plan for the v3 patchset.
+Thanks for your patience.  It took me a while to understand what you
+were asking about regarding dw_spi_set_cs() due to the unnecessarily
+complicated function that was being used.  The current implementation
+I propose for v3 patchset is this which as you identified handles cs
+active high/low properly.
 
 static void dw_spi_elba_set_cs(struct spi_device *spi, bool enable)
 {
