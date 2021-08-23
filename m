@@ -2,99 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE2863F501D
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Aug 2021 20:09:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0C593F51BD
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Aug 2021 22:11:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229837AbhHWSKQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Aug 2021 14:10:16 -0400
-Received: from mail-ot1-f45.google.com ([209.85.210.45]:37378 "EHLO
-        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229705AbhHWSKP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Aug 2021 14:10:15 -0400
-Received: by mail-ot1-f45.google.com with SMTP id i3-20020a056830210300b0051af5666070so28910865otc.4;
-        Mon, 23 Aug 2021 11:09:32 -0700 (PDT)
+        id S231377AbhHWUMX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Aug 2021 16:12:23 -0400
+Received: from mail-ua1-f48.google.com ([209.85.222.48]:41889 "EHLO
+        mail-ua1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231716AbhHWUMW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Aug 2021 16:12:22 -0400
+Received: by mail-ua1-f48.google.com with SMTP id 75so8628582uav.8;
+        Mon, 23 Aug 2021 13:11:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=g+CqhkyW2c8CXWLjQLbAdHrQQUJ+lxu98gFxCWPW9UY=;
-        b=gaFFH1TtGaesnUM3luk4145124LurLFLPoERf4NTgkgXARY/wRm3BtcJzOgNbpW3qz
-         GqpdO7vxKluoGrUSDnBQc15RifEYLx3ujNHAIPcwMkvCEEcHZH6BQ4e0h4hUV5AA9npz
-         bV5JHXlds8ZVl6En7HHAeCTeEZKP6DlKofQbmPRQYkHu0lq/eZ4LzWnXeOg4kXhnYhar
-         2uP97US1bK4l8itIe2CTClGX9rEaEcl7plAHt3xTCu55/2U60WUN2ah7MHpw9sjVoTgR
-         XDR4J+y8Ba7UPddZc1Q5gwSatusGXYSYsPfAa+i1QWddnsqCSpVOgagKwWO0QNpp4xbr
-         mNXg==
-X-Gm-Message-State: AOAM530j5rLDzPlUFG652ViDaJtt808XveSpCFU0FNBSWVxQTUpV8moY
-        cGqmGsm8OdMVG3ynS0M7QQ==
-X-Google-Smtp-Source: ABdhPJy808XGMxfgtJt2olJn0b2kz8EiXE3TMOiTOMuQ2t08pHFJLizMoZJWfluz+DhSee7b56XMgg==
-X-Received: by 2002:a05:6830:2809:: with SMTP id w9mr10268776otu.114.1629742172567;
-        Mon, 23 Aug 2021 11:09:32 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id s63sm3875103oia.52.2021.08.23.11.09.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Aug 2021 11:09:31 -0700 (PDT)
-Received: (nullmailer pid 2445747 invoked by uid 1000);
-        Mon, 23 Aug 2021 18:09:29 -0000
-Date:   Mon, 23 Aug 2021 13:09:29 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Piyush Mehta <piyush.mehta@xilinx.com>
-Cc:     sgoud@xilinx.com, git@xilinx.com, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, zou_wei@huawei.com, arnd@arndb.de,
-        michal.simek@xilinx.com, robh+dt@kernel.org, iwamatsu@nigauri.org,
-        wendy.liang@xilinx.com, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, rajan.vaja@xilinx.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 2/3] dt-bindings: gpio: zynqmp: Add binding
- documentation for modepin
-Message-ID: <YSPkWUs0Y2zDiHQU@robh.at.kernel.org>
-References: <20210818081018.2620544-1-piyush.mehta@xilinx.com>
- <20210818081018.2620544-3-piyush.mehta@xilinx.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AUpBckzMvXVbMxlgD0BPIwC+4lv7J+IVl66jvYDUuHo=;
+        b=b/b73x2JZ4KjhsEwbh5qDWlakyitUjKztvAIJ2rAAS4I4bNKH+9KGyptdIZoxFWiDs
+         xQ/JCbD6F/C+01FIMrGXBChGCGpFU8WOaTevRNKmehs/N1R1QuDMmDQvQqtFoAwFSQcS
+         nHwi55DtxdZh7Ti9Vvjqwh4TOGEq2ZccpGCkDiiZkl34QyVdGaOzdAB3dNugpW6ItK2A
+         i8FNJobWm6h2P6tNbJEbh6zdm7bko7rp/n+06ZbOqLaDwOEihCYapfnXO/SnHl4Fo8Yz
+         KxTOcqZkMrBKZWH06K0/wurAt6tuwMu9t36vhdnGK3T8mYFytmwnNVfALqScEc4hMqkC
+         Ydjw==
+X-Gm-Message-State: AOAM530bdWMhqCjhvhTk+pTYI9PsLqsxz4jvhMEzCNeWqOd3888NK55r
+        UarhKBuKCqKEwMvXHvR/MjVBdfIeBkGr1IokwoA=
+X-Google-Smtp-Source: ABdhPJwDCxee7jV2n8a1Svw2CcluiW33jrACAl+tVwINni9XvoTwC+e80Xv1R19D9/bVXLChNcBX2LeY5QOT0/9jxzU=
+X-Received: by 2002:a67:c789:: with SMTP id t9mr25809822vsk.60.1629749499174;
+ Mon, 23 Aug 2021 13:11:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210818081018.2620544-3-piyush.mehta@xilinx.com>
+References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-2-brad@pensando.io>
+ <CAHp75VcG9KajNpDbewDq7QzotB6t7MfwiGk15FaobX+cmMVSzg@mail.gmail.com>
+ <CAK9rFnwrA=W2Vk5yFwG4N_WS=eBXXnhtexA+tqgAYb6xOAO4oQ@mail.gmail.com>
+ <CAHp75VdfrJ3JV_gL3xCLHOiw6Tj-5Ep7z5JKWUFKFbUt8gobcw@mail.gmail.com>
+ <CAK9rFnx--z_pr_yR6CqGsH04ddwUtx4rxc7MxNNmy7ZSF86+Mg@mail.gmail.com>
+ <CAMuHMdUz4vUQzXBHA9AiT3w6L20yBpgd0emVZJb=v_qw70qiJQ@mail.gmail.com> <CAK9rFnw-j8whcsK-NQ4w4+sCdrumCk7Bb=J+KfsF9ZO2Tf5r5g@mail.gmail.com>
+In-Reply-To: <CAK9rFnw-j8whcsK-NQ4w4+sCdrumCk7Bb=J+KfsF9ZO2Tf5r5g@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 23 Aug 2021 22:11:27 +0200
+Message-ID: <CAMuHMdW0s=x+DBZffeuEcyifDRfy8YM3c_wEAZscO7twR2wj3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/8] gpio: Add Elba SoC gpio driver for spi cs control
+To:     Brad Larson <brad@pensando.io>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 18 Aug 2021 13:40:17 +0530, Piyush Mehta wrote:
-> This patch adds DT binding document for zynqmp modepin GPIO controller.
-> Modepin GPIO controller has four GPIO pins which can be configurable
-> as input or output.
-> 
-> Modepin driver is a bridge between the peripheral driver and GPIO pins.
-> It has set and get APIs for accessing GPIO pins, based on the device-tree
-> entry of reset-gpio property in the peripheral driver, every pin can be
-> configured as input/output and trigger GPIO pin.
-> 
-> For more information please refer zynqMp TRM link:
-> Link: https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf
-> Chapter 2: Signals, Interfaces, and Pins
-> Table 2-2: Clock, Reset, and Configuration Pins - PS_MODE
-> 
-> Signed-off-by: Piyush Mehta <piyush.mehta@xilinx.com>
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> Changes in v2:
-> - Addressed review comments: Update commit message
-> 
-> Review Comments:
-> https://lore.kernel.org/linux-arm-kernel/20210615080553.2021061-2-piyush.mehta@xilinx.com/T/#mbd1fbda813e33b19397b350bde75747c92a0d7e1
-> https://lore.kernel.org/linux-arm-kernel/20210615080553.2021061-2-piyush.mehta@xilinx.com/T/#me82b1444ab3776162cdb0077dfc9256365c7e736
-> 
-> Changes in v3:
-> - Addressed Rob and Michal review comments:
->   - Update DT example.
-> 
-> Review Comments:
-> https://lore.kernel.org/linux-arm-kernel/YRbBnRS0VosXcZWz@robh.at.kernel.org/
-> https://lore.kernel.org/linux-arm-kernel/d71ad7f9-6972-8cc0-6dfb-b5306c9900d0@xilinx.com/
-> ---
->  .../bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    | 41 ++++++++++++++++++++++
->  .../bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
-> 
+Hi Brad,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, Aug 23, 2021 at 6:31 PM Brad Larson <brad@pensando.io> wrote:
+> On Mon, Aug 23, 2021 at 12:50 AM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Mon, Aug 23, 2021 at 3:14 AM Brad Larson <brad@pensando.io> wrote:
+> > > On Mon, Mar 29, 2021 at 3:40 AM Andy Shevchenko
+> [...]
+> > > Regarding the above module question and Kconfig definition, since I
+> > > first looked at this and reviewed the comments I realized I should be
+> > > using builtin.  The file gpio/Kconfig is currently this
+> > >
+> > > config GPIO_ELBA_SPICS
+> > >         def_bool y
+> > >         depends on ARCH_PENSANDO_ELBA_SOC || COMPILE_TEST
+> >
+> > That means the driver will default to yes by merely enabling
+> > COMPILE_TEST, which is a no-go.
+> >
+> >     config GPIO_ELBA_SPICS
+> >             bool "one-line summary"
+> >             depends on ARCH_PENSANDO_ELBA_SOC || COMPILE_TEST
+> >             default y if ARCH_PENSANDO_ELBA_SOC
+>
+> Thanks Geert, changed to this
+>
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -241,8 +241,9 @@ config GPIO_EIC_SPRD
+>           Say yes here to support Spreadtrum EIC device.
+>
+>  config GPIO_ELBA_SPICS
+> +       bool "Pensando Elba SoC SPI Chip Select as GPIO support"
+> +       depends on ARCH_PENSANDO_ELBA_SOC
+>         def_bool y
+> -       depends on ARCH_PENSANDO_ELBA_SOC || COMPILE_TEST
+
+So we're losing the COMPILE_TEST ability again?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
