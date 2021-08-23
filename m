@@ -2,297 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E1893F4DE6
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Aug 2021 17:58:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 412F43F4E5F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Aug 2021 18:31:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231880AbhHWP6m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Aug 2021 11:58:42 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13724 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231857AbhHWP6l (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 23 Aug 2021 11:58:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1629734279; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=WknB8TeMHhJrnfwMX6wg3BT34rrUTZ32YkFLxT0g65Y=; b=eNZ6aaDdptYKhA/Yxb2MxVnhegruqhs9IZb+9yI9yMMMb5g2jA5l0tmARCWyewSL8jRcAemz
- 9vjujuXJ0zGklkbCP/dJYcH1PIfCzk/Hcp0PaoSrpT5/v4pf/4Lj1Z8H3Pb/bCfUc9YqtFaW
- aRdUUxUlUE4QlkPYizlpQ0ewsO4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 6123c55ee19abc79591c2bfd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 23 Aug 2021 15:57:18
- GMT
-Sender: mkshah=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 22F3FC4338F; Mon, 23 Aug 2021 15:57:18 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A,SPF_FAIL autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from [192.168.29.129] (unknown [49.36.85.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4440EC43460;
-        Mon, 23 Aug 2021 15:57:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 4440EC43460
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SM6350 pinctrl
- bindings
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, martin.botka@somainline.org,
-        angelogioacchino.delregno@somainline.org,
-        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210820203751.232645-1-konrad.dybcio@somainline.org>
- <20210820203751.232645-2-konrad.dybcio@somainline.org>
- <YSO+kQnDsqcaBIOg@ripper>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <82cb4d2d-f347-b823-fa4c-4c2b0c0bfb0c@codeaurora.org>
-Date:   Mon, 23 Aug 2021 21:27:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S229837AbhHWQbn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Aug 2021 12:31:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229725AbhHWQbn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Aug 2021 12:31:43 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B456C061764
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Aug 2021 09:31:00 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id s25so14381756edw.0
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Aug 2021 09:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3UJqarI9sJh/SEzyJatryVnyGRWftRgbiqbTe8APv5I=;
+        b=FsrV/vjP9FwD6+gGUwE7brUSey8SYKVwpEPyJQ0ZE91a3dyKjLFv4giwo7QDacAyFw
+         egWdkhxhj9NUwi0HHZgK6yGJwJqJ9HDb4qRQTaVMnHGO8gG3ZeKZZnYYlrfNm693Fy0Y
+         oQ7hh6DOM1oB/BYhyFoBA7veyoZ+c37euu8VuV+OZ6P//3RXOx3M7EEGpEYyTjgd2uYE
+         MuUNLxBrhnc9SLBdXN+ef9CFeC33EpLfc4dt8uuN0PDzFbh3LbEJ8k/+9p+0HmJfgQdQ
+         CnTT/UROf8/CFKl03Gou5JKZcVBU8MPgFGcCZmh4qpB9Vjhu1UYXY1utX6FUrmozWZgV
+         tXbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3UJqarI9sJh/SEzyJatryVnyGRWftRgbiqbTe8APv5I=;
+        b=rY2646HDnTE00EncCXZgOBSQfgOxhW+uNDSMeRFrL5PIM91MXiF4o5JloP/DK/4WSi
+         bD/LqRis/yY4GV/mOMVC43LLIIhMgE/jwcX+geVxfEGcFbejF00mrS6SwoGV/1H+2243
+         6xp3fMgZOM7QUNYjsvIgm/uuToCiR47NpaEKc3pz6rLDkPowuPboEcF7oxzag8/C24cQ
+         SB+HqPe3YulxZptmvjEk6Xkfz8+YgHYVXdNPbtG6PyBhYkSrdfqcGnOPFKKd/df+ifHv
+         /FUOzdkVSFf7mr1YgmjPJvPAF1kzBmvZz2DS2XydaqJzfHCyYPjxeCLQ0JLtYfdjIi6a
+         LHDA==
+X-Gm-Message-State: AOAM532GdkUnPdPmt2vAPaxBsLm2MrFitv54B7POMcTzOB0jfo/Rs3Ww
+        UDrAtPLGOiXBmFWwQv33vCdBH73EAfRhDxJtr4GgJw==
+X-Google-Smtp-Source: ABdhPJwCkyepKnYLjaro8KpvCFMhXySyvI2odnfjv7k323shjYJULMJoXC1kqfT5uu34xj4dmG7LvzhRZ/0V8efQvKs=
+X-Received: by 2002:a05:6402:5208:: with SMTP id s8mr38656411edd.222.1629736258724;
+ Mon, 23 Aug 2021 09:30:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <YSO+kQnDsqcaBIOg@ripper>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-2-brad@pensando.io>
+ <CAHp75VcG9KajNpDbewDq7QzotB6t7MfwiGk15FaobX+cmMVSzg@mail.gmail.com>
+ <CAK9rFnwrA=W2Vk5yFwG4N_WS=eBXXnhtexA+tqgAYb6xOAO4oQ@mail.gmail.com>
+ <CAHp75VdfrJ3JV_gL3xCLHOiw6Tj-5Ep7z5JKWUFKFbUt8gobcw@mail.gmail.com>
+ <CAK9rFnx--z_pr_yR6CqGsH04ddwUtx4rxc7MxNNmy7ZSF86+Mg@mail.gmail.com> <CAMuHMdUz4vUQzXBHA9AiT3w6L20yBpgd0emVZJb=v_qw70qiJQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdUz4vUQzXBHA9AiT3w6L20yBpgd0emVZJb=v_qw70qiJQ@mail.gmail.com>
+From:   Brad Larson <brad@pensando.io>
+Date:   Mon, 23 Aug 2021 09:30:47 -0700
+Message-ID: <CAK9rFnw-j8whcsK-NQ4w4+sCdrumCk7Bb=J+KfsF9ZO2Tf5r5g@mail.gmail.com>
+Subject: Re: [PATCH 1/8] gpio: Add Elba SoC gpio driver for spi cs control
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Konrad,
+Hi Geert,
 
-On 8/23/2021 8:58 PM, Bjorn Andersson wrote:
-> On Fri 20 Aug 13:37 PDT 2021, Konrad Dybcio wrote:
+On Mon, Aug 23, 2021 at 12:50 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 >
->> Add device tree binding Documentation details for Qualcomm SM6350
->> pinctrl driver.
->>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
->> ---
->>   .../bindings/pinctrl/qcom,sm6350-pinctrl.yaml | 156 ++++++++++++++++++
->>   .../bindings/pinctrl/qcom,tlmm-common.yaml    |   2 +-
->>   2 files changed, 157 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm6350-pinctrl.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm6350-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm6350-pinctrl.yaml
->> new file mode 100644
->> index 000000000000..e4d8b7a044e6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm6350-pinctrl.yaml
->> @@ -0,0 +1,156 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm6350-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies, Inc. SM6350 TLMM block
->> +
->> +maintainers:
->> +  - Konrad Dybcio <konrad.dybcio@somainline.org>
->> +
->> +description: |
->> +  This binding describes the Top Level Mode Multiplexer (TLMM) block found
->> +  in the SM6350 platform.
->> +
->> +allOf:
->> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,sm6350-tlmm
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts: true
->> +  interrupt-controller: true
->> +  '#interrupt-cells': true
->> +  gpio-controller: true
->> +  gpio-reserved-ranges: true
->> +  '#gpio-cells': true
->> +  gpio-ranges: true
->> +  wakeup-parent: true
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +additionalProperties: false
->> +
->> +patternProperties:
->> +  '-state$':
->> +    oneOf:
->> +      - $ref: "#/$defs/qcom-sm6350-tlmm-state"
->> +      - patternProperties:
->> +          ".*":
->> +            $ref: "#/$defs/qcom-sm6350-tlmm-state"
->> +
->> +$defs:
->> +  qcom-sm6350-tlmm-state:
->> +    type: object
->> +    description:
->> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->> +      Client device subnodes use below standard properties.
->> +    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
->> +
->> +    properties:
->> +      pins:
->> +        description:
->> +          List of gpio pins affected by the properties specified in this
->> +          subnode.
->> +        items:
->> +          oneOf:
->> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|20[0-3])$"
-> "^gpio([0-9]|[1-9][0-9]|1[0-4][0-9]|15[0-7])$"
+> Hi Brad,
 >
->> +            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data ]
->> +        minItems: 1
->> +        maxItems: 36
->> +
->> +      function:
->> +        description:
->> +          Specify the alternative function to be configured for the specified
->> +          pins.
->> +
->> +        enum: [ adsp_ext, agera_pll, atest_char, atest_char0, atest_char1, atest_char2,
->> +                atest_char3, atest_tsens, atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
->> +                atest_usb12, atest_usb13, atest_usb2, atest_usb20, atest_usb21, atest_usb22,
->> +                atest_usb23, audio_ref, btfm_slimbus, cam_mclk0, cam_mclk1, cam_mclk2, cam_mclk3,
->> +                cam_mclk4, cci_async, cci_i2c, cci_timer0, cci_timer1, cci_timer2, cci_timer3,
->> +                cci_timer4, cri_trng, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1, ddr_pxi2, ddr_pxi3,
->> +                dp_hot, edp_lcd, gcc_gp1, gcc_gp2, gcc_gp3, gp_pdm0, gp_pdm1, gp_pdm2, gpio,
->> +                gps_tx, ibi_i3c, jitter_bist, ldo_en, ldo_update, lpass_ext, m_voc, mclk,
->> +                mdp_vsync, mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s_0, mi2s_1, mi2s_2,
->> +                mss_lte, nav_gpio, nav_pps, pa_indicator, pcie0_clk, phase_flag0, phase_flag1,
->> +                phase_flag10, phase_flag11, phase_flag12, phase_flag13, phase_flag14, phase_flag15,
->> +                phase_flag16, phase_flag17, phase_flag18, phase_flag19, phase_flag2, phase_flag20,
->> +                phase_flag21, phase_flag22, phase_flag23, phase_flag24, phase_flag25, phase_flag26,
->> +                phase_flag27, phase_flag28, phase_flag29, phase_flag3, phase_flag30, phase_flag31,
->> +                phase_flag4, phase_flag5, phase_flag6, phase_flag7, phase_flag8, phase_flag9,
->> +                pll_bist, pll_bypassnl, pll_reset, prng_rosc, qdss_cti, qdss_gpio, qdss_gpio0,
->> +                qdss_gpio1, qdss_gpio10, qdss_gpio11, qdss_gpio12, qdss_gpio13, qdss_gpio14,
->> +                qdss_gpio15, qdss_gpio2, qdss_gpio3, qdss_gpio4, qdss_gpio5, qdss_gpio6,
->> +                qdss_gpio7, qdss_gpio8, qdss_gpio9, qlink0_enable, qlink0_request, qlink0_wmss,
->> +                qlink1_enable, qlink1_request, qlink1_wmss, qup00, qup01, qup02, qup10, qup11,
->> +                qup12, qup13_f1, qup13_f2, qup14, rffe0_clk, rffe0_data, rffe1_clk, rffe1_data,
->> +                rffe2_clk, rffe2_data, rffe3_clk, rffe3_data, rffe4_clk, rffe4_data, sd_write,
->> +                sdc1_tb, sdc2_tb, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2, tgu_ch3, tsense_pwm1,
->> +                tsense_pwm2, uim1_clk, uim1_data, uim1_present, uim1_reset, uim2_clk, uim2_data,
->> +                uim2_present, uim2_reset, usb_phy, vfr_1, vsense_trigger, wlan1_adc0, wlan1_adc1,
->> +                wlan2_adc0, wlan2_adc1, ]
->> +
->> +
->> +      bias-disable: true
->> +      bias-pull-down: true
->> +      bias-pull-up: true
->> +      drive-strength: true
->> +      input-enable: true
->> +      output-high: true
->> +      output-low: true
->> +
->> +    required:
->> +      - pins
->> +      - function
->> +
->> +    additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +        pinctrl@f100000 {
->> +                compatible = "qcom,sm6350-tlmm";
->> +                reg = <0x0f100000 0x300000>;
->> +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
->> +                            <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
->> +                            <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,
->> +                            <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
->> +                            <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
->> +                            <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>,
->> +                            <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>,
->> +                            <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
->> +                            <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +                interrupt-controller;
->> +                #interrupt-cells = <2>;
->> +                gpio-ranges = <&tlmm 0 0 156>;
-> Shouldn't this be 157?
+> On Mon, Aug 23, 2021 at 3:14 AM Brad Larson <brad@pensando.io> wrote:
+> > On Mon, Mar 29, 2021 at 3:40 AM Andy Shevchenko
+[...]
+> > Regarding the above module question and Kconfig definition, since I
+> > first looked at this and reviewed the comments I realized I should be
+> > using builtin.  The file gpio/Kconfig is currently this
+> >
+> > config GPIO_ELBA_SPICS
+> >         def_bool y
+> >         depends on ARCH_PENSANDO_ELBA_SOC || COMPILE_TEST
 >
->> +
->> +                gpio-wo-subnode-state {
->> +                        pins = "gpio1";
->> +                        function = "gpio";
->> +                };
->> +
->> +                uart-w-subnodes-state {
->> +                        rx {
->> +                                pins = "gpio25";
->> +                                function = "qup13_f2";
->> +                                bias-disable;
->> +                        };
->> +
->> +                        tx {
->> +                                pins = "gpio26";
->> +                                function = "qup13_f2";
->> +                                bias-disable;
->> +                        };
->> +                };
->> +        };
->> +...
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
->> index 3b37cf102d41..99975122a2ce 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
->> @@ -17,7 +17,7 @@ properties:
->>     interrupts:
->>       description:
->>         Specifies the TLMM summary IRQ
->> -    maxItems: 1
->> +    maxItems: 9
-> Is this to support direct connected interrupts?
+> That means the driver will default to yes by merely enabling
+> COMPILE_TEST, which is a no-go.
 >
-> Don't you need to add minItems: 1, to permit the other bindings to not
-> define these? I think that's what Rob's automatic reply complains about
-> at least.
->
->
-> PS. Any plans to work up support for direct connected interrupts? I
-> think that and "egpio" is the only downstream delta these days... That
-> said, I don't know if anyone actually uses direct connected interrupts?
+>     config GPIO_ELBA_SPICS
+>             bool "one-line summary"
+>             depends on ARCH_PENSANDO_ELBA_SOC || COMPILE_TEST
+>             default y if ARCH_PENSANDO_ELBA_SOC
 
-Using .wakeirq_dual_edge_errata = true, in pinctrl-sm6350.c 
-(msm_pinctrl_soc_data structure) in [1] should help. The direct connect 
-interrupt were added to support dual edge in downstream driver but in 
-upstream setting this flag should help.
+Thanks Geert, changed to this
 
-This was used in sc7180 but should apply SM6350 too.
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -241,8 +241,9 @@ config GPIO_EIC_SPRD
+          Say yes here to support Spreadtrum EIC device.
 
-That way you don't need other TLMM interrupts to be listed here.
+ config GPIO_ELBA_SPICS
++       bool "Pensando Elba SoC SPI Chip Select as GPIO support"
++       depends on ARCH_PENSANDO_ELBA_SOC
+        def_bool y
+-       depends on ARCH_PENSANDO_ELBA_SOC || COMPILE_TEST
 
-[1] 
-https://patchwork.kernel.org/project/linux-arm-msm/patch/20210820203751.232645-3-konrad.dybcio@somainline.org/
-
-Thanks,
-Maulik
-
-
->
-> Regards,
-> Bjorn
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Regards,
+Brad
