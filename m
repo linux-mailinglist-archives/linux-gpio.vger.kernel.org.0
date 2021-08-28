@@ -2,139 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 451403FA5AA
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Aug 2021 14:45:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9E763FA5B6
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Aug 2021 14:56:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234260AbhH1MlI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 28 Aug 2021 08:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35788 "EHLO
+        id S234012AbhH1Mrv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 28 Aug 2021 08:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234272AbhH1MlF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Aug 2021 08:41:05 -0400
-Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [IPv6:2001:4b7a:2000:18::163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D818C061756;
-        Sat, 28 Aug 2021 05:40:13 -0700 (PDT)
-Received: from [192.168.1.101] (83.6.168.105.neoplus.adsl.tpnet.pl [83.6.168.105])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 50CFD20123;
-        Sat, 28 Aug 2021 14:40:08 +0200 (CEST)
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SM6350 pinctrl
- bindings
-To:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, martin.botka@somainline.org,
-        angelogioacchino.delregno@somainline.org,
-        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210820203751.232645-1-konrad.dybcio@somainline.org>
- <20210820203751.232645-2-konrad.dybcio@somainline.org>
- <YSO+kQnDsqcaBIOg@ripper>
- <82cb4d2d-f347-b823-fa4c-4c2b0c0bfb0c@codeaurora.org>
-From:   Konrad Dybcio <konrad.dybcio@somainline.org>
-Message-ID: <07862c1f-f7c0-51c5-b2a5-60c164a53700@somainline.org>
-Date:   Sat, 28 Aug 2021 14:40:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        with ESMTP id S234316AbhH1Mru (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Aug 2021 08:47:50 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06093C0613D9
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Aug 2021 05:47:00 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id q21so16580096ljj.6
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Aug 2021 05:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=b9iYCiedFW90BoTCcYvgC5pThEpnCb7p4vhek6KauzY=;
+        b=S/b7UsLv25gunIAaraDGy7PNaF0ardT226EgWCqWjTbo3832UqBQ73orDGkmu/Y9un
+         f756Gf1l1+R4/KgnVZOVu1+mWkA2/E6k2gBLnZ1dLfCjTrqYcW+8Hf32kQgzSKJUDUHl
+         a+G1ouifA7YLs+x7RQEp5jtrUfXqorp5fNkgFtFUYQp4ePV0X3i/qvYoJ6FbWjj1bGVw
+         1ui38wtEoxuqF9VpMDJLbspGc/JiwCM11VfzuyR5aul+KDNpL0w+pel1pxVaVXIXhV/P
+         1+p5B5m17M4/J+qUS/nefQAINzna1sAlyAVNKCKG8b6V2im3uAEaCKKF5VFfV2bDnA8z
+         ANbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=b9iYCiedFW90BoTCcYvgC5pThEpnCb7p4vhek6KauzY=;
+        b=BSJe+jy1+gE5XO9HT81+IfiPahA5aqf5ZRyxc8R2aRagsNeJUl7mkDM96SO9VVUVmR
+         Wea30ScRWPBLngdyLi60Lk+JIw9A7SrUmtRVe5JRT67KF4YIuPbXeFchuLKh/VztRZGo
+         I3fvU3ExvcJCMar2R/cSaPzQd39niB7Axngi/bdIbY4v/LqvUAsSnydz/XeMOUyxnuhC
+         d5bQzgitbI7Ed6MGuAPoZKAmse50mhjSG9eaf+o4SyXlxMYcbk4yx6dhVObffgQ/bEWu
+         8Mv0FAcand+UX6mQWyEFT6GhKsqS0+zTInTU2npXdMt1li1NtsXnhpA/ve+zRgJGSJgu
+         2BKA==
+X-Gm-Message-State: AOAM532SA3F4f2HJk/cR1CY9NV9SLqKCnk6z31U7Vdn/p9x2Na5v4ofg
+        dT2MBw6OSjaN89QNMK4eCZw34ViWkskDiSwFKjI=
+X-Google-Smtp-Source: ABdhPJzVgMVKg+ssAHnhGgRSeLawM0bIU/6HuXeVxtcx96VYziUUGmFAvo5lert8/FNi9vWAjp1IpWX0GFTzc8joIXY=
+X-Received: by 2002:a2e:a4ca:: with SMTP id p10mr11970836ljm.415.1630154818247;
+ Sat, 28 Aug 2021 05:46:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <82cb4d2d-f347-b823-fa4c-4c2b0c0bfb0c@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Received: by 2002:a05:6520:3816:b0:138:b14c:bc76 with HTTP; Sat, 28 Aug 2021
+ 05:46:57 -0700 (PDT)
+Reply-To: hamadoufabien@gmail.com
+From:   hamadou fabien <mr.sohalarfan.latif888@gmail.com>
+Date:   Sat, 28 Aug 2021 05:46:57 -0700
+Message-ID: <CAJLrsjqu3-cdGX010KOoXNA-U9TzrbPYFazXcNhafOntmeExEA@mail.gmail.com>
+Subject: Dear partner.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+DEAR FRIEND.
 
->>> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +        pinctrl@f100000 {
->>> +                compatible = "qcom,sm6350-tlmm";
->>> +                reg = <0x0f100000 0x300000>;
->>> +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
->>> +                            <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
->>> +                            <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,
->>> +                            <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
->>> +                            <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
->>> +                            <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>,
->>> +                            <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>,
->>> +                            <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
->>> +                            <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
->>> +                gpio-controller;
->>> +                #gpio-cells = <2>;
->>> +                interrupt-controller;
->>> +                #interrupt-cells = <2>;
->>> +                gpio-ranges = <&tlmm 0 0 156>;
->> Shouldn't this be 157?
+My name is Mr.Hamadou Fabien. I am working with one of the prime banks
+in Burkina Faso.
+Here in this bank existed a dormant account for many years, which
+belonged to one of our late foreign customer.
+The amount in this account stands at $13,300,000.00 (Thirteen Million
+Three Hundred Thousand USA Dollars).
 
-Yes, it should. Good catch.
+I want a foreign account where the bank will transfer this fund. I
+know you would be surprised to read this message,
+especially from someone relatively unknown to you. But do not worry
+yourself so much. This is a genuine risk free and legal business
+transaction.
 
+Reply back to me urgently, if you are interested. All details shall be
+sent to you once I hear from you.
 
->>
->>> +
->>> +                gpio-wo-subnode-state {
->>> +                        pins = "gpio1";
->>> +                        function = "gpio";
->>> +                };
->>> +
->>> +                uart-w-subnodes-state {
->>> +                        rx {
->>> +                                pins = "gpio25";
->>> +                                function = "qup13_f2";
->>> +                                bias-disable;
->>> +                        };
->>> +
->>> +                        tx {
->>> +                                pins = "gpio26";
->>> +                                function = "qup13_f2";
->>> +                                bias-disable;
->>> +                        };
->>> +                };
->>> +        };
->>> +...
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
->>> index 3b37cf102d41..99975122a2ce 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
->>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
->>> @@ -17,7 +17,7 @@ properties:
->>>     interrupts:
->>>       description:
->>>         Specifies the TLMM summary IRQ
->>> -    maxItems: 1
->>> +    maxItems: 9
->> Is this to support direct connected interrupts?
->>
->> Don't you need to add minItems: 1, to permit the other bindings to not
->> define these? I think that's what Rob's automatic reply complains about
->> at least.
->>
->>
->> PS. Any plans to work up support for direct connected interrupts? I
->> think that and "egpio" is the only downstream delta these days... That
->> said, I don't know if anyone actually uses direct connected interrupts?
-
-I haven't really gotten into that piece yet, trying to get the platform up first..
-
-
-
->
-> Using .wakeirq_dual_edge_errata = true, in pinctrl-sm6350.c (msm_pinctrl_soc_data structure) in [1] should help. The direct connect interrupt were added to support dual edge in downstream driver but in upstream setting this flag should help.
->
-> This was used in sc7180 but should apply SM6350 too.
->
-> That way you don't need other TLMM interrupts to be listed here.
->
-> [1] https://patchwork.kernel.org/project/linux-arm-msm/patch/20210820203751.232645-3-konrad.dybcio@somainline.org/
->
-> Thanks,
-> Maulik
->
-Thanks, I'll check and respin a v2 with that.
-
-
-Konrad
-
+Best regards,
+Mr.Hamadou Fabien
