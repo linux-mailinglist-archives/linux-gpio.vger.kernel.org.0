@@ -2,77 +2,210 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9E763FA5B6
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Aug 2021 14:56:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F7073FA5BA
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Aug 2021 14:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234012AbhH1Mrv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 28 Aug 2021 08:47:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37290 "EHLO
+        id S234286AbhH1MwL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 28 Aug 2021 08:52:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234316AbhH1Mru (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Aug 2021 08:47:50 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06093C0613D9
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Aug 2021 05:47:00 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id q21so16580096ljj.6
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Aug 2021 05:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=b9iYCiedFW90BoTCcYvgC5pThEpnCb7p4vhek6KauzY=;
-        b=S/b7UsLv25gunIAaraDGy7PNaF0ardT226EgWCqWjTbo3832UqBQ73orDGkmu/Y9un
-         f756Gf1l1+R4/KgnVZOVu1+mWkA2/E6k2gBLnZ1dLfCjTrqYcW+8Hf32kQgzSKJUDUHl
-         a+G1ouifA7YLs+x7RQEp5jtrUfXqorp5fNkgFtFUYQp4ePV0X3i/qvYoJ6FbWjj1bGVw
-         1ui38wtEoxuqF9VpMDJLbspGc/JiwCM11VfzuyR5aul+KDNpL0w+pel1pxVaVXIXhV/P
-         1+p5B5m17M4/J+qUS/nefQAINzna1sAlyAVNKCKG8b6V2im3uAEaCKKF5VFfV2bDnA8z
-         ANbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=b9iYCiedFW90BoTCcYvgC5pThEpnCb7p4vhek6KauzY=;
-        b=BSJe+jy1+gE5XO9HT81+IfiPahA5aqf5ZRyxc8R2aRagsNeJUl7mkDM96SO9VVUVmR
-         Wea30ScRWPBLngdyLi60Lk+JIw9A7SrUmtRVe5JRT67KF4YIuPbXeFchuLKh/VztRZGo
-         I3fvU3ExvcJCMar2R/cSaPzQd39niB7Axngi/bdIbY4v/LqvUAsSnydz/XeMOUyxnuhC
-         d5bQzgitbI7Ed6MGuAPoZKAmse50mhjSG9eaf+o4SyXlxMYcbk4yx6dhVObffgQ/bEWu
-         8Mv0FAcand+UX6mQWyEFT6GhKsqS0+zTInTU2npXdMt1li1NtsXnhpA/ve+zRgJGSJgu
-         2BKA==
-X-Gm-Message-State: AOAM532SA3F4f2HJk/cR1CY9NV9SLqKCnk6z31U7Vdn/p9x2Na5v4ofg
-        dT2MBw6OSjaN89QNMK4eCZw34ViWkskDiSwFKjI=
-X-Google-Smtp-Source: ABdhPJzVgMVKg+ssAHnhGgRSeLawM0bIU/6HuXeVxtcx96VYziUUGmFAvo5lert8/FNi9vWAjp1IpWX0GFTzc8joIXY=
-X-Received: by 2002:a2e:a4ca:: with SMTP id p10mr11970836ljm.415.1630154818247;
- Sat, 28 Aug 2021 05:46:58 -0700 (PDT)
+        with ESMTP id S234182AbhH1MwK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Aug 2021 08:52:10 -0400
+Received: from relay03.th.seeweb.it (relay03.th.seeweb.it [IPv6:2001:4b7a:2000:18::164])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04804C061756;
+        Sat, 28 Aug 2021 05:51:19 -0700 (PDT)
+Received: from localhost.localdomain (83.6.168.105.neoplus.adsl.tpnet.pl [83.6.168.105])
+        by m-r1.th.seeweb.it (Postfix) with ESMTPA id 59C981FA69;
+        Sat, 28 Aug 2021 14:51:17 +0200 (CEST)
+From:   Konrad Dybcio <konrad.dybcio@somainline.org>
+To:     ~postmarketos/upstreaming@lists.sr.ht
+Cc:     martin.botka@somainline.org,
+        angelogioacchino.delregno@somainline.org,
+        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SM6350 pinctrl bindings
+Date:   Sat, 28 Aug 2021 14:51:10 +0200
+Message-Id: <20210828125112.14721-1-konrad.dybcio@somainline.org>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Received: by 2002:a05:6520:3816:b0:138:b14c:bc76 with HTTP; Sat, 28 Aug 2021
- 05:46:57 -0700 (PDT)
-Reply-To: hamadoufabien@gmail.com
-From:   hamadou fabien <mr.sohalarfan.latif888@gmail.com>
-Date:   Sat, 28 Aug 2021 05:46:57 -0700
-Message-ID: <CAJLrsjqu3-cdGX010KOoXNA-U9TzrbPYFazXcNhafOntmeExEA@mail.gmail.com>
-Subject: Dear partner.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DEAR FRIEND.
+Add device tree binding Documentation details for Qualcomm SM6350
+pinctrl driver.
 
-My name is Mr.Hamadou Fabien. I am working with one of the prime banks
-in Burkina Faso.
-Here in this bank existed a dormant account for many years, which
-belonged to one of our late foreign customer.
-The amount in this account stands at $13,300,000.00 (Thirteen Million
-Three Hundred Thousand USA Dollars).
+Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+---
+Changes since v1:
+- Fix gpio-ranges from 156 to 157
+- Don't mess with the common binding, one interrupt is enough
 
-I want a foreign account where the bank will transfer this fund. I
-know you would be surprised to read this message,
-especially from someone relatively unknown to you. But do not worry
-yourself so much. This is a genuine risk free and legal business
-transaction.
+ .../bindings/pinctrl/qcom,sm6350-pinctrl.yaml | 148 ++++++++++++++++++
+ 1 file changed, 148 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm6350-pinctrl.yaml
 
-Reply back to me urgently, if you are interested. All details shall be
-sent to you once I hear from you.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm6350-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm6350-pinctrl.yaml
+new file mode 100644
+index 000000000000..02c660ebc78e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm6350-pinctrl.yaml
+@@ -0,0 +1,148 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,sm6350-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. SM6350 TLMM block
++
++maintainers:
++  - Konrad Dybcio <konrad.dybcio@somainline.org>
++
++description: |
++  This binding describes the Top Level Mode Multiplexer (TLMM) block found
++  in the SM6350 platform.
++
++allOf:
++  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
++
++properties:
++  compatible:
++    const: qcom,sm6350-tlmm
++
++  reg:
++    maxItems: 1
++
++  interrupts: true
++  interrupt-controller: true
++  '#interrupt-cells': true
++  gpio-controller: true
++  gpio-reserved-ranges: true
++  '#gpio-cells': true
++  gpio-ranges: true
++  wakeup-parent: true
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++patternProperties:
++  '-state$':
++    oneOf:
++      - $ref: "#/$defs/qcom-sm6350-tlmm-state"
++      - patternProperties:
++          ".*":
++            $ref: "#/$defs/qcom-sm6350-tlmm-state"
++
++$defs:
++  qcom-sm6350-tlmm-state:
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
++
++    properties:
++      pins:
++        description:
++          List of gpio pins affected by the properties specified in this
++          subnode.
++        items:
++          oneOf:
++            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|20[0-3])$"
++            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data ]
++        minItems: 1
++        maxItems: 36
++
++      function:
++        description:
++          Specify the alternative function to be configured for the specified
++          pins.
++
++        enum: [ adsp_ext, agera_pll, atest_char, atest_char0, atest_char1, atest_char2,
++                atest_char3, atest_tsens, atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
++                atest_usb12, atest_usb13, atest_usb2, atest_usb20, atest_usb21, atest_usb22,
++                atest_usb23, audio_ref, btfm_slimbus, cam_mclk0, cam_mclk1, cam_mclk2, cam_mclk3,
++                cam_mclk4, cci_async, cci_i2c, cci_timer0, cci_timer1, cci_timer2, cci_timer3,
++                cci_timer4, cri_trng, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1, ddr_pxi2, ddr_pxi3,
++                dp_hot, edp_lcd, gcc_gp1, gcc_gp2, gcc_gp3, gp_pdm0, gp_pdm1, gp_pdm2, gpio,
++                gps_tx, ibi_i3c, jitter_bist, ldo_en, ldo_update, lpass_ext, m_voc, mclk,
++                mdp_vsync, mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s_0, mi2s_1, mi2s_2,
++                mss_lte, nav_gpio, nav_pps, pa_indicator, pcie0_clk, phase_flag0, phase_flag1,
++                phase_flag10, phase_flag11, phase_flag12, phase_flag13, phase_flag14, phase_flag15,
++                phase_flag16, phase_flag17, phase_flag18, phase_flag19, phase_flag2, phase_flag20,
++                phase_flag21, phase_flag22, phase_flag23, phase_flag24, phase_flag25, phase_flag26,
++                phase_flag27, phase_flag28, phase_flag29, phase_flag3, phase_flag30, phase_flag31,
++                phase_flag4, phase_flag5, phase_flag6, phase_flag7, phase_flag8, phase_flag9,
++                pll_bist, pll_bypassnl, pll_reset, prng_rosc, qdss_cti, qdss_gpio, qdss_gpio0,
++                qdss_gpio1, qdss_gpio10, qdss_gpio11, qdss_gpio12, qdss_gpio13, qdss_gpio14,
++                qdss_gpio15, qdss_gpio2, qdss_gpio3, qdss_gpio4, qdss_gpio5, qdss_gpio6,
++                qdss_gpio7, qdss_gpio8, qdss_gpio9, qlink0_enable, qlink0_request, qlink0_wmss,
++                qlink1_enable, qlink1_request, qlink1_wmss, qup00, qup01, qup02, qup10, qup11,
++                qup12, qup13_f1, qup13_f2, qup14, rffe0_clk, rffe0_data, rffe1_clk, rffe1_data,
++                rffe2_clk, rffe2_data, rffe3_clk, rffe3_data, rffe4_clk, rffe4_data, sd_write,
++                sdc1_tb, sdc2_tb, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2, tgu_ch3, tsense_pwm1,
++                tsense_pwm2, uim1_clk, uim1_data, uim1_present, uim1_reset, uim2_clk, uim2_data,
++                uim2_present, uim2_reset, usb_phy, vfr_1, vsense_trigger, wlan1_adc0, wlan1_adc1,
++                wlan2_adc0, wlan2_adc1, ]
++
++
++      bias-disable: true
++      bias-pull-down: true
++      bias-pull-up: true
++      drive-strength: true
++      input-enable: true
++      output-high: true
++      output-low: true
++
++    required:
++      - pins
++      - function
++
++    additionalProperties: false
++
++examples:
++  - |
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        pinctrl@f100000 {
++                compatible = "qcom,sm6350-tlmm";
++                reg = <0x0f100000 0x300000>;
++                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++                gpio-controller;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++                gpio-ranges = <&tlmm 0 0 157>;
++
++                gpio-wo-subnode-state {
++                        pins = "gpio1";
++                        function = "gpio";
++                };
++
++                uart-w-subnodes-state {
++                        rx {
++                                pins = "gpio25";
++                                function = "qup13_f2";
++                                bias-disable;
++                        };
++
++                        tx {
++                                pins = "gpio26";
++                                function = "qup13_f2";
++                                bias-disable;
++                        };
++                };
++        };
++...
+-- 
+2.33.0
 
-Best regards,
-Mr.Hamadou Fabien
