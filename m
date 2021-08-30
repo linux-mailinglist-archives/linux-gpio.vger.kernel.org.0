@@ -2,96 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3291B3FAEA4
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Aug 2021 23:10:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02E253FAF41
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Aug 2021 02:38:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236053AbhH2VK0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 29 Aug 2021 17:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236019AbhH2VKZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Aug 2021 17:10:25 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0847DC061575
-        for <linux-gpio@vger.kernel.org>; Sun, 29 Aug 2021 14:09:32 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id c12so22394302ljr.5
-        for <linux-gpio@vger.kernel.org>; Sun, 29 Aug 2021 14:09:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BxGuGUCOWFryUZD+MaZ59To0anU+4+sFudo5C46Dub0=;
-        b=nfV4aILK8Dhh0ahV+TeoNvDhnE+SFerHJVlQxUxDjik6lEG0UgGuflyvtwuZM3YQdm
-         4qQpuazJBdWnkrpt4pxqeGR2ZFUjui1ttQiGi0NSY0EcDZ4jZ3R/AQRXWUCIgJP7OVwK
-         O45bi3/RbDPtmOwEU4zDvmLxZdYW0R+TNFfnmNx1w2z0ehUmRJXYhtjzBs7s/KsczncH
-         QkM250uLLIMG0o3c+ZFspIKI8WbWDbWAIYHmTNRLyNh6FDls+xLNU4mhI437adrXa7+e
-         IlBSD8RjKAm0Uyce5YAKTJcXYTWGPHLc5TE08oh4vmz/ETInqZxez23f0cGw8+TXNDTo
-         OS0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BxGuGUCOWFryUZD+MaZ59To0anU+4+sFudo5C46Dub0=;
-        b=ONQQT2HKI046/VK5SmyTqTK8J1dhy84U0Yp3UzAl2UeP9Z8ObBU43G9EuHv+eIa3De
-         8Y04H1ZS+VDbDnDQtE3ODYfhZQZw+oPSOrXX54wMJSnZftvm3fbYi9VZULmVnF/QcIbM
-         fNwe3LFJtENWuynKNEbbVL8nUDOOrr5qLzSbPpsBwhIPFftnZvwOvAQKlRld1m9AufnT
-         ToqIE8zA53AoS5+xbuh2eGKAJz6jNdjthew9L9hHlaVgU5Nit4O5ufT3j1Ofy8MdG3vo
-         qDoeX5wAZhomNLxl5scJIE0T+mdaBDDB3Iqxlkispiwxq1cuPB7IVpVUeWcMqp/qdZqX
-         eJKg==
-X-Gm-Message-State: AOAM533F+jknB4V+7C2WESkt+XmriUZahmKg1bp5kMgWWANjA2TW2Hmd
-        6OV86+zfv3WxKFAV5FMb9ISOBqH77r64V82cgEUqxQ==
-X-Google-Smtp-Source: ABdhPJyLBGZC3w/XZYPqVgq7E9XJqzge4fnt3b3JacxNwyWo1sRegJwGgEN+8tVF7EFU69+xMuu7WMDdF20ZdQXFkk0=
-X-Received: by 2002:a2e:54f:: with SMTP id 76mr17978352ljf.326.1630271370403;
- Sun, 29 Aug 2021 14:09:30 -0700 (PDT)
+        id S236191AbhH3AhF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Aug 2021 20:37:05 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:52704 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S236190AbhH3AhE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Aug 2021 20:37:04 -0400
+X-UUID: 5994fbb0c5c34f2cb65ccdb8d8f40913-20210830
+X-UUID: 5994fbb0c5c34f2cb65ccdb8d8f40913-20210830
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 668291029; Mon, 30 Aug 2021 08:36:07 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 30 Aug 2021 08:36:06 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 30 Aug 2021 08:36:05 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
+        <light.hsieh@mediatek.com>, <biao.huang@mediatek.com>,
+        <hongzhou.yang@mediatek.com>, <sean.wang@mediatek.com>,
+        <seiya.wang@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Subject: [PATCH v11 0/4]  Mediatek pinctrl patch on mt8195 
+Date:   Mon, 30 Aug 2021 08:35:59 +0800
+Message-ID: <20210830003603.31864-1-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-2-brad@pensando.io>
- <CACRpkdbQD6p7fbGtuu1c92uXfSFDCTwqjqsXHpgnD5Lg4v0Okw@mail.gmail.com>
- <20210304091025.ny52qjm7wbfvmjgl@mobilestation> <CACRpkdZroi+_oHqipS71MAGif190y7jWU5Myf55vz=_um4w5cQ@mail.gmail.com>
- <CAK9rFnzDZ4MNm68AJ75g7zegLD-7UMHyoVR-4ssitYTTEeQm5g@mail.gmail.com>
-In-Reply-To: <CAK9rFnzDZ4MNm68AJ75g7zegLD-7UMHyoVR-4ssitYTTEeQm5g@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 29 Aug 2021 23:09:19 +0200
-Message-ID: <CACRpkdZEURRTe15HGf93SvyHej=_6qhfP9KWPSQbCM=SLUVKmA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] gpio: Add Elba SoC gpio driver for spi cs control
-To:     Brad Larson <brad@pensando.io>, Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 3:06 AM Brad Larson <brad@pensando.io> wrote:
+This series includes 4 patches:
+1.add rsel define.
+2.change pull up/down description
+3.add pm_ops.
+4.add rsel setting.
 
-> The gpio pins being used for the Elba SoC SPI CS are dedicated to this
-> function.  Are you recommending that the code in
-> drivers/gpio/gpio-elba-spics.c be integrated into
-> drivers/spi/spi-dw-mmio.c?
+Changes in patch v11:
+1)add pm_ops fucntion support
+2)change pull up/down description
+3)add resistance value feature support.
 
-That makes most sense does it not?
+Changes in patch v10:
+1)fix PARENTHESIS_ALIGNMENT of mtk_pinconf_bias_set_rsel
+2)fix LONG_LINE warning in 615 in pinctrl-paris.c.
 
-Special purpose pins should be managed by that special purpose
-hardware driver, DW SPI in this case.
+Changes in patch v9:
+1)fix "mtk_pinconf_bias_set_rsel" build warning.
 
-The compatible string etc should be enough to determine that we
-need some extra GPIO control here, possibly specify extra registers
-for the SPI host etc.
+Changes in patch v8:
+1)add rsel define patch
+2)avoid  CamelCase
+3)add pinctrl rsel setting patch which is another resistance selection
+  solution for I2C on MT8195.
 
-The struct spi_master has a special callback .set_cs() and you
-should make this behave special for your special hardware.
-In the case of the DW driver it appears that even subdrivers can
-pass a custom version of this call in struct dw_spi.
+Changes in patch v7:
+1)add version in patch and fix spelling mistakes.
 
-Yours,
-Linus Walleij
+Changes in patch v6:
+1)add "pintcrl: mediatek" as prefix.
+
+Changes in patch v5:
+1)document and driver patch are apploed.
+2)change '-EOPNOTSUPP' to '-ENOTSUPP'
+
+Changes in patch v4:
+1)fix pinctrl-mt8195.yaml warning error.
+2)remove pinctrl device node patch which is based on "mt8195.dtsi".
+
+Changes in patch v3:
+1)change '^pins' to '-pins$'.
+2)change 'state_0_node_a' to 'gpio_pin' which is defined in dts.
+3)change 'state_0_node_b' to 'i2c0_pin' which is defined in dts.
+4)reorder this series patches. change pinctrl file and binding document
+together in one patch.
+
+There are no changes in v1 & v2.
+
+Zhiyong Tao (4):
+dt-bindings: pinctrl: mt8195: add rsel define
+  dt-bindings: pinctrl: mt8195: change pull up/down description
+  pinctrl: mediatek: mt8195: Add pm_ops
+  pinctrl: mediatek: add rsel setting on MT8195
+
+ .../bindings/pinctrl/pinctrl-mt8195.yaml      |  32 +++-
+ drivers/pinctrl/mediatek/pinctrl-mt8195.c     | 134 +++++++++++++
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 181 ++++++++++++++++--
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  35 +++-
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |  24 ++-
+ drivers/pinctrl/mediatek/pinctrl-paris.h      |   2 +-
+ include/dt-bindings/pinctrl/mt65xx.h          |   9 +
+ 7 files changed, 387 insertions(+), 30 deletions(-)
+
+--
+2.18.0
+
+
