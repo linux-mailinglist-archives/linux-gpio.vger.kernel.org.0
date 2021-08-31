@@ -2,133 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA2D83FC70C
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Aug 2021 14:29:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D22D3FC9AE
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Aug 2021 16:25:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241637AbhHaMIC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Aug 2021 08:08:02 -0400
-Received: from mail-mw2nam12on2043.outbound.protection.outlook.com ([40.107.244.43]:22752
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S241707AbhHaMHk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 31 Aug 2021 08:07:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PZBA3JHWhpUO/bUw1/I7yxKbLvlmpez3eEpmFC2jUAXRlFuWg0mwQvHl9X+iMg/xI6ZMwJhEnu+7KSByU3oCJah6sJkWCXimtePGeIvDtr+wd4yzL3nsNK1Xw7u9Dq8zdnt5EULCnyYS2w37A+h6bqaTEIK1J3GOzFlSyzX0LUeT0EdjhCT0Jj1p3RZAgCrRlg22F3bF47gZO3PSGkh/pIt6sSAkZVHPOP5J7FVV32F7lv017dc71LmqBUzfPa+3wOUJDms6rSkc4aKzEk/pMB7KdVq9Kz/953t9/YhWNk7Uu9ZFKDZxfF8CYTu46vEeKpdC7sR6Q/bzJda/wksZmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=nmja5eKGdENevEm4HCUs+h5pzNfi2ty2EwxmkX1Z6GE=;
- b=ARZHMIWaSjjZ85+qo9r/kc6tF7pm8MBK2RB0R8YDWpo4EjiObnrDVap24dEvUW3RS3daaMcjpDIre1/gLIWyaZCqTo1sa5O1aBdS5F7amkHwFwaLHF0VdcfkrCkwEMtitYZwWMzHq4ODN0X3UL4FmgmYp49Anpcs65R7+iDpdvGDXEFzJyFhKkSwhQAnfbT0eJzyYinggp5cTMYQQGFnyCIa55mufn/bZUyu1FmeihHxUoqR00suA1pk++SU25/CqTOON8uhWwsIQddoyxXREK1ny0LOC2IcunvgqNoVuEO7P4uzYP+E2I/JZKHZVp8uINuE7XfhMyOb+lSgjy0abA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nmja5eKGdENevEm4HCUs+h5pzNfi2ty2EwxmkX1Z6GE=;
- b=A59mcUuRv0dkjNOdvCUXWxnUyX3Q4+wD/7i7OcQQvLvancyE8aVN9oM2AZeaWcbbP3zfRry984zB09Og+PVnFlRefBURjCA+5sCuSzW+7IF4NR5ZZuazS5BnCe7U3u5B7eYeRQk5xtTLtiV64Dtghkf21WNoxueNe+Riu+BJNRA=
-Received: from BN9PR03CA0641.namprd03.prod.outlook.com (2603:10b6:408:13b::16)
- by BY5PR12MB3825.namprd12.prod.outlook.com (2603:10b6:a03:1a2::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.17; Tue, 31 Aug
- 2021 12:06:42 +0000
-Received: from BN8NAM11FT024.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:13b:cafe::9f) by BN9PR03CA0641.outlook.office365.com
- (2603:10b6:408:13b::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.17 via Frontend
- Transport; Tue, 31 Aug 2021 12:06:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT024.mail.protection.outlook.com (10.13.177.38) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4457.17 via Frontend Transport; Tue, 31 Aug 2021 12:06:42 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.12; Tue, 31 Aug
- 2021 07:06:37 -0500
-From:   Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-To:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <Shyam-sundar.S-k@amd.com>
-CC:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Subject: [PATCH 2/2] pinctrl: amd: Handle wake-up interrupt
-Date:   Tue, 31 Aug 2021 17:36:13 +0530
-Message-ID: <20210831120613.1514899-3-Basavaraj.Natikar@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210831120613.1514899-1-Basavaraj.Natikar@amd.com>
-References: <20210831120613.1514899-1-Basavaraj.Natikar@amd.com>
+        id S234827AbhHaO0X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Aug 2021 10:26:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27858 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233558AbhHaO0X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 31 Aug 2021 10:26:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1630419927;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OA/jhyLAYtK1tYZ39fbir6HGMf0iZmNE8/Rh8O+Ui3Q=;
+        b=Ee2oFBqiEdBsw45OB+cwbDyOThwixg1+zYqbSLlcixvOiukyHna+tFznnPYbnt1oNAbCLi
+        H3oru32Wn3CgT13dWzkPPOm/De7il63fxbWn8OhCVMEgmI9gAIC5zyhBO5UwnmpPN3arfn
+        jSyf4QsNVPHRleLsZtim4xiSHblXjpU=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-c8xnKk3_Pc24Nr0qf0joaw-1; Tue, 31 Aug 2021 10:25:26 -0400
+X-MC-Unique: c8xnKk3_Pc24Nr0qf0joaw-1
+Received: by mail-ej1-f71.google.com with SMTP id x6-20020a170906710600b005c980192a39so991255ejj.9
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Aug 2021 07:25:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OA/jhyLAYtK1tYZ39fbir6HGMf0iZmNE8/Rh8O+Ui3Q=;
+        b=FNDFbHXmLX/fvTnWV+0jtXtFewWjLxaHm0hgcWCuolhh7Kl8gWlQzqRkw8ft/7sUvN
+         rsofY/V5hmnH2GHc6JGFoIoYaHr/XFasgfjoygGvpKWGjlSY6Pd3fMwfrYzMFm2bHbIY
+         KUBrfr6DF0jmNjgZTt6K5aHvsOj4ojOBzON5n4gcUo5OaK48I3jOVA6p/ugqQ0250o6v
+         j7GSdrDUlzaAnTnNJ9rIQayH0ImaFFE/4BXfijb9hKMPBwGFXM+AcuXILQAbr6B/0oNh
+         TvLD6uvQz3xQiNHagFq6wEFqUHCgJG+qIJ4kyL7xmPAyX6RrkSwPIYoBAuL/L8ydfgHX
+         K/LQ==
+X-Gm-Message-State: AOAM5318dc+4KRiDY2sA6c/g0C4OfUTOtPIMbMjtrWgS0WVwVOb5pa72
+        0+SA4gmqwnTuZxBqhusg4fXkFSoATwtQSBuVEFLszJsydvn8JBkMcLNJdhjMmQkCntshkUtdMS4
+        BlsX+KrKaLfhRits7CRDAvg==
+X-Received: by 2002:a17:906:70b:: with SMTP id y11mr31329818ejb.274.1630419925019;
+        Tue, 31 Aug 2021 07:25:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwSzD9zkr7wPpktKq9Ktr39dANS1nu+utRyQ0BSDOUx3yoPFWOxowvAJPabM1ziUJDcXh+Mmg==
+X-Received: by 2002:a17:906:70b:: with SMTP id y11mr31329801ejb.274.1630419924831;
+        Tue, 31 Aug 2021 07:25:24 -0700 (PDT)
+Received: from redhat.com ([2.55.138.60])
+        by smtp.gmail.com with ESMTPSA id b2sm8403019ejj.124.2021.08.31.07.25.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Aug 2021 07:25:24 -0700 (PDT)
+Date:   Tue, 31 Aug 2021 10:25:19 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Jason Wang <jasowang@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Jie Deng <jie.deng@intel.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH V4 0/5] virtio: Add virtio-device bindings
+Message-ID: <20210831102514-mutt-send-email-mst@kernel.org>
+References: <cover.1627362340.git.viresh.kumar@linaro.org>
+ <20210831053105.ut73bmvxcop65nuv@vireshk-i7>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2bb600a6-2a13-4900-45e1-08d96c77cbbe
-X-MS-TrafficTypeDiagnostic: BY5PR12MB3825:
-X-Microsoft-Antispam-PRVS: <BY5PR12MB38254FD27725915E579E654DE6CC9@BY5PR12MB3825.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:478;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: a+a1ZP2RZzSxX/UfwvDfTYJhbllQibATe/fOIa6kOwUbZlaAuRcs6yyBB0a+dVBkZvitA448muvfU02aFeINpbIPURZ/u4jKJNrgT5xrNgmjT2dCspUq1QUWSFNOHT4JfmOvWw8fCLqwjinpksC5XE5ZqziKwaTCAGPcZDj7HvD9CVzp1bayi8tsG18TZ5COidkMnvC8FDKkf7M10xs//BkcoQnpJ5MJTULKv6PTjqyjxRo2g44Tm2n0pPkJoH5pV2aM1mNXFvzhg7/lkytbNPUVpPLhBS1/X/KAlZVjbgb4ijN9Arb36C8YJ9SCNXljfGV1q1UARRMUw5+1SG5o5jhsrYDReWri7cKC+ZZYwIcflCSPumDwBH1amxOae7Gb1//OO5hNbyw8mivOUBTRbMHoNMjlxoWjC3pmr/UaMR06eMw42zHfYHzpNhOvTbwAPMgQ9q+bwS6FBCEADUWRuQU5ocabdI7AvdeVSM/oH621KfApuqczm4MgGqHXS0MuFsKLB8bviQBSkSugme/A4a0YmzzJ0JQiNyApB6fqj2golvxEuq+ZUrc4rYrkWdISnUkCit9XGo/o/vCk4ZkXL4mSLKN/YsiKT/6V3brDNCkk3loKQvGtO5Nb+Q4QQdle5166IzGU3RICdKnEF6gf8WAXwt2mgzZvqBtiX1y1ghist02JmGcgritoqrFK5exCmQXI1JIji5lZr++M48OErVB7mphE4CGrF0DhLZ89e6ssz58iim+KKjHDej8dLVGK
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(376002)(396003)(136003)(39860400002)(346002)(36840700001)(46966006)(7696005)(2616005)(86362001)(70586007)(6636002)(36756003)(36860700001)(5660300002)(4326008)(70206006)(110136005)(26005)(316002)(186003)(16526019)(6666004)(8936002)(336012)(82310400003)(83380400001)(47076005)(8676002)(478600001)(426003)(82740400003)(2906002)(356005)(1076003)(81166007)(36900700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2021 12:06:42.4358
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bb600a6-2a13-4900-45e1-08d96c77cbbe
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT024.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3825
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210831053105.ut73bmvxcop65nuv@vireshk-i7>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enable/disable power management wakeup mode, which is disabled by
-default. enable_irq_wake enables wakes the system from sleep.
+On Tue, Aug 31, 2021 at 11:01:05AM +0530, Viresh Kumar wrote:
+> On 27-07-21, 10:53, Viresh Kumar wrote:
+> > Hi,
+> > 
+> > Currently the DT only provides support for following node types for virtio-mmio
+> > nodes:
+> > 
+> >         virtio_mmio@a000000 {
+> >                 dma-coherent;
+> >                 interrupts = <0x00 0x10 0x01>;
+> >                 reg = <0x00 0xa000000 0x00 0x200>;
+> >                 compatible = "virtio,mmio";
+> >         };
+> > 
+> > Here, each virtio-mmio corresponds to a virtio-device. But there is no way for
+> > other users in the DT to show their dependency on virtio devices.
+> > 
+> > This patchset provides that support.
+> > 
+> > The first patch adds virtio-device bindings to allow for device sub-nodes to be
+> > present and the second patch updates the virtio core to update the of_node.
+> > 
+> > Other patches add bindings for i2c and gpio devices.
+> > 
+> > Tested on x86 with qemu for arm64.
+> 
+> Michael, are you picking these up for 5.15 ?
 
-Hence added enable/disable irq_wake to handle wake-up interrupt.
+Okay.
 
-Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
----
- drivers/pinctrl/pinctrl-amd.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 79b8b7f91996..d19974aceb2e 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -445,6 +445,7 @@ static int amd_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct amd_gpio *gpio_dev = gpiochip_get_data(gc);
- 	u32 wake_mask = BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3);
-+	int err;
- 
- 	raw_spin_lock_irqsave(&gpio_dev->lock, flags);
- 	pin_reg = readl(gpio_dev->base + (d->hwirq)*4);
-@@ -457,6 +458,15 @@ static int amd_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
- 	writel(pin_reg, gpio_dev->base + (d->hwirq)*4);
- 	raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
- 
-+	if (on)
-+		err = enable_irq_wake(gpio_dev->irq);
-+	else
-+		err = disable_irq_wake(gpio_dev->irq);
-+
-+	if (err)
-+		dev_err(&gpio_dev->pdev->dev, "failed to %s wake-up interrupt\n",
-+			on ? "enable" : "disable");
-+
- 	return 0;
- }
- 
--- 
-2.25.1
+> -- 
+> viresh
 
