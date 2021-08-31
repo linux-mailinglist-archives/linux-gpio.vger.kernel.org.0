@@ -2,213 +2,237 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43F613FC224
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Aug 2021 07:31:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 332AC3FC227
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Aug 2021 07:31:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236726AbhHaFaK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Aug 2021 01:30:10 -0400
-Received: from mail-bn8nam11on2069.outbound.protection.outlook.com ([40.107.236.69]:50049
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235359AbhHaFaJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 31 Aug 2021 01:30:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d6b/cO5Y2TbsYqGltOZ+n3XEYlc+YgP8PomdD/VgFZcL2fr34sGRyZXRMUVLIyw6xF6Z+P+d4UhVrtU24XEX0/6Rulq2y1ULwCFR3kyR32v/vsrDy+XnfVKQQJf2fzyhmdhpFieHjC492kzYvl1ElHVLYTRL9Ij8NIcXA/+C4yI6psqx+gel0Ho5R3nCF14xLbkq/8IHcxSwKIvUDn/5R6WtGHrlbZIhLOuqxkSc6d55FlNxAl98A1WQTz4ZsyFxEa6HmpJ8aGrdH4ApPWDpHMfl4+3lsskzBcgBrNNOcWaaVRonOSO/W1/MB3XyUaVyBZnfvHF3tFrFlhU0+d5AiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Y/Zs2rwwjhZFmtip6qc+ty1wzxI8lt02B2eoj2dePs=;
- b=Q+TfbaAvq9rzWaEup7x+iUVAlXKgeh0IFQ+RrPtpreoKp3m5aBmSMLBvt5MP8NlgLVBkcR9wSXEattHgIbGR5xQlMeCKUdXFg5KUzrttpv/jZBZHDc+//27KH2V+g59wo2iwlSInjuN5uabWGcOpmApXLuguBzkyREHJZqmn7JdUAs1/YOL9QwfYeOkOoFNDJyO+BRXmpy1dx0Vryjfalo8zBz2UGn4yiGH4/u0KiNYJ+4yfmtdJ/SeP4sRAbgIhGj0JQjCJ06zGMhff63+yDKNokqCYKi4a/kS6oyAr4XTW5TU1hzIVQI3lW+dHJnJzSSWFGbCtDv3ab+Ph6Ax4AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Y/Zs2rwwjhZFmtip6qc+ty1wzxI8lt02B2eoj2dePs=;
- b=WuhxnNTEKyYB09jxMxPRQ2hQEpqRbuKplDfecnXBw3N11KB/8NgRQhQ4115SU/YQLta5sxF4gcnk6E615cgjUdYrYvGm6ihOz6cxafUap2s8MDTynxFpBamu3fwjf5Sz/wmw7jPkL/X2ylpKeTKksWxw1OHQ/csBzKzVQZRh5BcL7Oe5m8sedWWY1NePJ/p45xwdq5rspLTojQ3xgfSJ+r2i+NjO5foLPHYctkckb5vHHNf3vRic1FGKV4r/KaEL4cTt613A62nczOfgG17+mwTCDKHxAEk6gx866zSGvxjEOZ5j2z4q6uFB5FrAcdtcwBImwD4vv6xX98UlxFs+mQ==
-Received: from BN9PR03CA0958.namprd03.prod.outlook.com (2603:10b6:408:108::33)
- by CO6PR12MB5476.namprd12.prod.outlook.com (2603:10b6:303:138::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.20; Tue, 31 Aug
- 2021 05:29:12 +0000
-Received: from BN8NAM11FT011.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:108:cafe::64) by BN9PR03CA0958.outlook.office365.com
- (2603:10b6:408:108::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.23 via Frontend
- Transport; Tue, 31 Aug 2021 05:29:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT011.mail.protection.outlook.com (10.13.176.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4457.17 via Frontend Transport; Tue, 31 Aug 2021 05:29:11 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 31 Aug
- 2021 05:29:08 +0000
-Received: from pshete-ubuntu.nvidia.com (172.20.187.5) by mail.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 31 Aug 2021 05:29:06 +0000
-From:   Prathamesh Shete <pshete@nvidia.com>
-To:     <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <ldewangan@nvidia.com>,
-        <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <smangipudi@nvidia.com>, <pshete@nvidia.com>
-Subject: [PATCH 2/2] pinctrl: tegra: Implement pinmux register save and restore
-Date:   Tue, 31 Aug 2021 10:58:34 +0530
-Message-ID: <20210831052834.4136-3-pshete@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210831052834.4136-1-pshete@nvidia.com>
-References: <20210831052834.4136-1-pshete@nvidia.com>
+        id S237872AbhHaFa1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Aug 2021 01:30:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235359AbhHaFa1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Aug 2021 01:30:27 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D62C06175F
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Aug 2021 22:29:32 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id g184so15581717pgc.6
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Aug 2021 22:29:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jFcTPdCtyitTZJIxV4LdmuAXMlqcd0E1IFXZnG1zNlc=;
+        b=qtuqrUWrX0xG1t+1moMNCudmKDWrljvH+h661ddNymptPT+bedvPZFIhW2u+cLE9rT
+         fsbl5TDmqhYHOunrx7JmBaXMyx0y6xscctRtg0abpImTCXnVVi9TSdeQ61shoW586QpN
+         MKSiPMr0gYtETNQtabGq98xtmIplvAs4vv1xSWc6D4FBLUyK+f6PuQz7QZUFy7Mlgj40
+         aBZDYdU5Pb/zQwDeujPYsOfrzass1O3pXIVoagyAqIS8YZBKHlnpVJoMcF5UMRE0ih3H
+         wqmguIQJHwKUVVI7Q3JcOme1zD1ARSJksO/bP6TguDk/9yK2FYXEVmFSpqjxJAUNgGMb
+         MPkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jFcTPdCtyitTZJIxV4LdmuAXMlqcd0E1IFXZnG1zNlc=;
+        b=VekCcKlu3Ix6pEkR10HzPpP3BPz5G6VZQqP9ka4+uqJH+ryhtLnCrR+tdprrUl0qR+
+         RJbP/ZGN4mg0kQLqoXeH4pIfB2FaPatW+1pf3YEE1mssSUif6i6KgUkDxorfmbaZqqrv
+         y1EebB2qZ9zocD15aJbS8b4sfqS35gn0YZ08zJdPtoT8lL/sY7BnRMg7o3Wccd7Xwo7P
+         /GbK8TS4Ls1dpMstCH4uan16APsxyI4zQoVlq8xMRWWEAJ1oAr50KwblC6p4XOekM5lD
+         XWJU3yr8pJam85aJvAVTAIGVwmoefcu2OV0CzCGhIOswUxx17jZCzXJUJZAIdDJy4/n7
+         XDzA==
+X-Gm-Message-State: AOAM533Xs8vsnHYeb0UjJzfISkFUlq0aAn1GJiIieGJ67SHbuiczIPlH
+        CjPPH8shBYFaeL50cIbmM6V6Mmt3YpF4Ug==
+X-Google-Smtp-Source: ABdhPJzEvCEb7zzZIjZLgHKvGKWo8op/2Aby3r18tLBO9CS1c/y0W2sautmFMxGJTrSbLhSpWBNHmw==
+X-Received: by 2002:a62:1453:0:b0:3fd:ffd5:35cf with SMTP id 80-20020a621453000000b003fdffd535cfmr10488051pfu.34.1630387772432;
+        Mon, 30 Aug 2021 22:29:32 -0700 (PDT)
+Received: from localhost ([122.172.201.85])
+        by smtp.gmail.com with ESMTPSA id q18sm16584356pfj.46.2021.08.30.22.29.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Aug 2021 22:29:31 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        kernel test robot <lkp@intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH] gpio: virtio: Fix sparse warnings
+Date:   Tue, 31 Aug 2021 10:59:25 +0530
+Message-Id: <32ab7b833743449b21f529cae41f4cbb60dc863c.1630387746.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7ae77144-d30a-4c28-6bef-08d96c4043d3
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5476:
-X-Microsoft-Antispam-PRVS: <CO6PR12MB547657708C848D5B3A099AE5B7CC9@CO6PR12MB5476.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:632;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0JYHPEQVX1wyBpyLukoh8lHDiWYsmm1rwGGSYo9TH0ALHpU1EdGRVXvlSAHB8xzZj0oqQGRQiXRtNKjIyyHcJYfp2VYGebhvLDHULGKipAKAy/uKt2UgrgMa5fzjAHdcmN2D5ULy3czdJSgl0fgt7awWYmqi4yLM5HFMEgayhCJVnk5xDnA4I2dVcnObToCZVYcje38VNB3xthG1yr68mtac4GU+6b2bwr5aXbUJci7/AdBzCODXE9/qAxSXBpmbcdntlaPgB76mBhD5JIx/l86TAcfTyab39ujLIuD2RJBEHA4vrK9NtLWqbJ92GqEhz1Z+Qwa0Bp9xCHeEtQbjh+3REnhUyeBoZmYuU2AwFdaRfa+k+i6tLpCDy4lewEB2CB8kp6Fu1bfnDTDmFHqOKSaSTl96FuXiftZnc04x4ArD8+UB1PPGDXIeejOSBbyRDIZ+EEkeiYbzpR1ZHDDAVYZxOy6kKZrctfwTT8EQMoEhb9nb2JOuvdDOuza4jUroVMsnAkuYT02mrZ55EPAxD1RbJiczGGCfbMDhKeNNHQkq1QcgqTVFRxC32WYggeVcxwlW004X+3bYEKasgghjvGXhK5voznjC89SxYvEr3sjtOURulWManBB1lQdw5ZDCSp0lgljnnq5UwqR1MACm/CpsM1jq6MAMTlkhPJq+QJjg5W/RRq6TJkGfiGAGRI8NeWBZpnUYLj1eXgvAdHR+o4S0u9s60VmTwlllVMZf9VE=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(136003)(396003)(376002)(346002)(36840700001)(46966006)(4326008)(1076003)(7636003)(6666004)(36756003)(356005)(70206006)(26005)(86362001)(36860700001)(47076005)(5660300002)(70586007)(110136005)(478600001)(336012)(426003)(36906005)(2906002)(83380400001)(316002)(8936002)(82310400003)(2616005)(82740400003)(8676002)(7696005)(54906003)(186003)(107886003)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2021 05:29:11.9382
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ae77144-d30a-4c28-6bef-08d96c4043d3
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT011.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5476
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Laxman Dewangan <ldewangan@nvidia.com>
+Fix warnings reported by sparse, related to type mismatch between u16
+and __le16.
 
-Implement the pinmux register save and restore for the GPIO
-configuration of pins. This helps in changing the pins
-configuration for suspend state only.
-
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Signed-off-by: pshete <pshete@nvidia.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: 3a29355a22c0 ("gpio: Add virtio-gpio driver")
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 66 +++++++++++++++++++++++++++
- drivers/pinctrl/tegra/pinctrl-tegra.h |  1 +
- 2 files changed, 67 insertions(+)
+ drivers/gpio/gpio-virtio.c       | 41 ++++++++++++++++----------------
+ include/uapi/linux/virtio_gpio.h | 10 ++++----
+ 2 files changed, 25 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 195cfe557511..7f947c952e09 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -275,6 +275,66 @@ static int tegra_pinctrl_set_mux(struct pinctrl_dev *pctldev,
+diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
+index d33eb237c0b9..d24f1c9264bc 100644
+--- a/drivers/gpio/gpio-virtio.c
++++ b/drivers/gpio/gpio-virtio.c
+@@ -32,7 +32,6 @@ struct virtio_gpio {
+ 	struct virtio_device *vdev;
+ 	struct mutex lock; /* Protects virtqueue operation */
+ 	struct gpio_chip gc;
+-	struct virtio_gpio_config config;
+ 	struct virtio_gpio_line *lines;
+ 	struct virtqueue *request_vq;
+ };
+@@ -57,7 +56,7 @@ static int _virtio_gpio_req(struct virtio_gpio *vgpio, u16 type, u16 gpio,
+ 
+ 	req->type = cpu_to_le16(type);
+ 	req->gpio = cpu_to_le16(gpio);
+-	req->value = txvalue;
++	req->value = cpu_to_le32(txvalue);
+ 
+ 	sg_init_one(&req_sg, req, sizeof(*req));
+ 	sg_init_one(&res_sg, res, rxlen);
+@@ -233,19 +232,19 @@ static int virtio_gpio_alloc_vqs(struct virtio_gpio *vgpio,
  	return 0;
  }
  
-+static int tegra_pinctrl_gpio_save_config(struct pinctrl_dev *pctldev,
-+					  struct pinctrl_gpio_range *range,
-+					  unsigned offset)
-+{
-+	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
-+	const struct tegra_pingroup *g;
-+	unsigned group, num_pins;
-+	const unsigned *pins;
-+	int ret;
-+
-+	for (group = 0; group < pmx->soc->ngroups; ++group) {
-+		ret = tegra_pinctrl_get_group_pins(pctldev, group, &pins, &num_pins);
-+		if (ret < 0 || num_pins != 1)
-+			continue;
-+		if (offset ==  pins[0])
-+			break;
-+	}
-+
-+	if (group == pmx->soc->ngroups) {
-+		dev_err(pctldev->dev, "Pingroup not found for pin %u\n", offset);
-+		return -EINVAL;
-+	}
-+
-+	g = &pmx->soc->groups[group];
-+	if (g->mux_reg >= 0)
-+		pmx->gpio_conf[offset] = pmx_readl(pmx, g->mux_bank, g->mux_reg);
-+
-+	return 0;
-+}
-+
-+static int tegra_pinctrl_gpio_restore_config(struct pinctrl_dev *pctldev,
-+					     struct pinctrl_gpio_range *range,
-+					     unsigned offset)
-+{
-+	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
-+	const struct tegra_pingroup *g;
-+	unsigned group, num_pins;
-+	const unsigned *pins;
-+	int ret;
-+
-+	for (group = 0; group < pmx->soc->ngroups; ++group) {
-+		ret = tegra_pinctrl_get_group_pins(pctldev, group, &pins, &num_pins);
-+		if (ret < 0 || num_pins != 1)
-+			continue;
-+		if (offset == pins[0])
-+			break;
-+	}
-+
-+	if (group == pmx->soc->ngroups) {
-+		dev_err(pctldev->dev, "Pingroup not found for pin %u\n", offset);
-+		return -EINVAL;
-+	}
-+
-+	g = &pmx->soc->groups[group];
-+	if (g->mux_reg >= 0)
-+		pmx_writel(pmx, pmx->gpio_conf[offset], g->mux_bank, g->mux_reg);
-+
-+	return 0;
-+}
-+
- static int tegra_pinctrl_gpio_request_enable(struct pinctrl_dev *pctldev,
- 					     struct pinctrl_gpio_range *range,
- 					     unsigned int offset)
-@@ -326,6 +386,8 @@ static const struct pinmux_ops tegra_pinmux_ops = {
- 	.set_mux = tegra_pinctrl_set_mux,
- 	.gpio_request_enable = tegra_pinctrl_gpio_request_enable,
- 	.gpio_disable_free = tegra_pinctrl_gpio_disable_free,
-+	.gpio_save_config = tegra_pinctrl_gpio_save_config,
-+	.gpio_restore_config = tegra_pinctrl_gpio_restore_config,
- };
+-static const char **virtio_gpio_get_names(struct virtio_gpio *vgpio)
++static const char **virtio_gpio_get_names(struct virtio_gpio *vgpio,
++					  u32 gpio_names_size, u16 ngpio)
+ {
+-	struct virtio_gpio_config *config = &vgpio->config;
+ 	struct virtio_gpio_response_get_names *res;
+ 	struct device *dev = &vgpio->vdev->dev;
+ 	u8 *gpio_names, *str;
+ 	const char **names;
+ 	int i, ret, len;
  
- static int tegra_pinconf_reg(struct tegra_pmx *pmx,
-@@ -826,6 +888,10 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
- 	if (!pmx->backup_regs)
+-	if (!config->gpio_names_size)
++	if (!gpio_names_size)
+ 		return NULL;
+ 
+-	len = sizeof(*res) + config->gpio_names_size;
++	len = sizeof(*res) + gpio_names_size;
+ 	res = devm_kzalloc(dev, len, GFP_KERNEL);
+ 	if (!res)
+ 		return NULL;
+@@ -258,18 +257,18 @@ static const char **virtio_gpio_get_names(struct virtio_gpio *vgpio)
+ 		return NULL;
+ 	}
+ 
+-	names = devm_kcalloc(dev, config->ngpio, sizeof(*names), GFP_KERNEL);
++	names = devm_kcalloc(dev, ngpio, sizeof(*names), GFP_KERNEL);
+ 	if (!names)
+ 		return NULL;
+ 
+ 	/* NULL terminate the string instead of checking it */
+-	gpio_names[config->gpio_names_size - 1] = '\0';
++	gpio_names[gpio_names_size - 1] = '\0';
+ 
+-	for (i = 0, str = gpio_names; i < config->ngpio; i++) {
++	for (i = 0, str = gpio_names; i < ngpio; i++) {
+ 		names[i] = str;
+ 		str += strlen(str) + 1; /* zero-length strings are allowed */
+ 
+-		if (str > gpio_names + config->gpio_names_size) {
++		if (str > gpio_names + gpio_names_size) {
+ 			dev_err(dev, "gpio_names block is too short (%d)\n", i);
+ 			return NULL;
+ 		}
+@@ -280,31 +279,31 @@ static const char **virtio_gpio_get_names(struct virtio_gpio *vgpio)
+ 
+ static int virtio_gpio_probe(struct virtio_device *vdev)
+ {
+-	struct virtio_gpio_config *config;
++	struct virtio_gpio_config config;
+ 	struct device *dev = &vdev->dev;
+ 	struct virtio_gpio *vgpio;
++	u32 gpio_names_size;
++	u16 ngpio;
+ 	int ret, i;
+ 
+ 	vgpio = devm_kzalloc(dev, sizeof(*vgpio), GFP_KERNEL);
+ 	if (!vgpio)
  		return -ENOMEM;
  
-+	pmx->gpio_conf = devm_kzalloc(&pdev->dev, backup_regs_size, GFP_KERNEL);
-+	if (!pmx->gpio_conf)
-+		return -ENOMEM;
-+
- 	for (i = 0; i < pmx->nbanks; i++) {
- 		pmx->regs[i] = devm_platform_ioremap_resource(pdev, i);
- 		if (IS_ERR(pmx->regs[i]))
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
-index fcad7f74c5a2..c08c676bfa03 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.h
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
-@@ -18,6 +18,7 @@ struct tegra_pmx {
- 	int nbanks;
- 	void __iomem **regs;
- 	u32 *backup_regs;
-+	u32 *gpio_conf;
+-	config = &vgpio->config;
+-
+ 	/* Read configuration */
+-	virtio_cread_bytes(vdev, 0, config, sizeof(*config));
+-	config->gpio_names_size = le32_to_cpu(config->gpio_names_size);
+-	config->ngpio = le16_to_cpu(config->ngpio);
+-	if (!config->ngpio) {
++	virtio_cread_bytes(vdev, 0, &config, sizeof(config));
++	gpio_names_size = le32_to_cpu(config.gpio_names_size);
++	ngpio = le16_to_cpu(config.ngpio);
++	if (!ngpio) {
+ 		dev_err(dev, "Number of GPIOs can't be zero\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	vgpio->lines = devm_kcalloc(dev, config->ngpio, sizeof(*vgpio->lines), GFP_KERNEL);
++	vgpio->lines = devm_kcalloc(dev, ngpio, sizeof(*vgpio->lines), GFP_KERNEL);
+ 	if (!vgpio->lines)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < config->ngpio; i++) {
++	for (i = 0; i < ngpio; i++) {
+ 		mutex_init(&vgpio->lines[i].lock);
+ 		init_completion(&vgpio->lines[i].completion);
+ 	}
+@@ -319,7 +318,7 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
+ 	vgpio->gc.direction_output	= virtio_gpio_direction_output;
+ 	vgpio->gc.get			= virtio_gpio_get;
+ 	vgpio->gc.set			= virtio_gpio_set;
+-	vgpio->gc.ngpio			= config->ngpio;
++	vgpio->gc.ngpio			= ngpio;
+ 	vgpio->gc.base			= -1; /* Allocate base dynamically */
+ 	vgpio->gc.label			= dev_name(dev);
+ 	vgpio->gc.parent		= dev;
+@@ -333,7 +332,7 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
+ 	/* Mark the device ready to perform operations from within probe() */
+ 	virtio_device_ready(vdev);
+ 
+-	vgpio->gc.names = virtio_gpio_get_names(vgpio);
++	vgpio->gc.names = virtio_gpio_get_names(vgpio, gpio_names_size, ngpio);
+ 
+ 	ret = gpiochip_add_data(&vgpio->gc, vgpio);
+ 	if (ret) {
+diff --git a/include/uapi/linux/virtio_gpio.h b/include/uapi/linux/virtio_gpio.h
+index 844574acf095..0445f905d8cc 100644
+--- a/include/uapi/linux/virtio_gpio.h
++++ b/include/uapi/linux/virtio_gpio.h
+@@ -22,16 +22,16 @@
+ #define VIRTIO_GPIO_DIRECTION_IN		0x02
+ 
+ struct virtio_gpio_config {
+-	__u16 ngpio;
++	__le16 ngpio;
+ 	__u8 padding[2];
+-	__u32 gpio_names_size;
++	__le32 gpio_names_size;
+ } __packed;
+ 
+ /* Virtio GPIO Request / Response */
+ struct virtio_gpio_request {
+-	__u16 type;
+-	__u16 gpio;
+-	__u32 value;
++	__le16 type;
++	__le16 gpio;
++	__le32 value;
  };
  
- enum tegra_pinconf_param {
+ struct virtio_gpio_response {
 -- 
-2.17.1
+2.31.1.272.g89b43f80a514
 
