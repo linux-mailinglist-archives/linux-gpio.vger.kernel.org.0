@@ -2,90 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 665DA3FCDD1
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Aug 2021 22:01:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C30C63FCF29
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Aug 2021 23:33:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240792AbhHaT21 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Aug 2021 15:28:27 -0400
-Received: from mail-oi1-f180.google.com ([209.85.167.180]:38868 "EHLO
-        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240607AbhHaT20 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Aug 2021 15:28:26 -0400
-Received: by mail-oi1-f180.google.com with SMTP id u25so567486oiv.5;
-        Tue, 31 Aug 2021 12:27:31 -0700 (PDT)
+        id S235696AbhHaVel (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Aug 2021 17:34:41 -0400
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:47047 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235761AbhHaVel (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Aug 2021 17:34:41 -0400
+Received: by mail-oi1-f173.google.com with SMTP id o185so994814oih.13;
+        Tue, 31 Aug 2021 14:33:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=B18XCxdh5roXXYBkgIgsolQaF3/RyCT+RYjyoh97Brk=;
-        b=p/K7gazXe3lixbGJQhpSlMMBsSaHaLL9r11KMAZPuYN6euzDBiqxKMoPvLu397c0Fx
-         0Yjhxb7elnwVI+RgLm0KersY5tqv1Rn3KROfZfKxND20+0QCkXuP3JFfZxcVpMz1CZbY
-         +V7xCMOeN4zKnCvltLRJLyV48jfcJzBAzL8N0BA5WtNoeaJy7OhTjINMYi78FGsiwEo9
-         st42Pp1rtkSUYeb/kvshA/f4l7aYkJN3TnjEQgTErml7RKRAxGgG+QkQGadiLe3rE6Jk
-         aYBMpz17HUCKL/FONrAzgqigRS4N3MR3OojosvZv9lJS6rsfW41gOdrgh9eoQD+doIMT
-         k10g==
-X-Gm-Message-State: AOAM532L1Ck3ANTACeGOZLg6bMaXtLx0U3s460Y6JEANYkSIwjxNqYhX
-        3tvAg7MDFWyFsVd5Ezq+mjwbX5pO7g==
-X-Google-Smtp-Source: ABdhPJyISGNvUkiwv/aZwGtTy7OmqleXpitzw8KMrZYdmigKN/S7wGPQvq/Drjnoa3iN8bG0Uc6OpA==
-X-Received: by 2002:a54:4182:: with SMTP id 2mr4533320oiy.66.1630438050741;
-        Tue, 31 Aug 2021 12:27:30 -0700 (PDT)
+        bh=J/4rk321aST3R1dX7uB1Sz8tt/BHBEqAaVrBW+SYz70=;
+        b=INNi+wO82tqt2wirxpAP9TRWOCK1gYnjKvmroEpjDpXmXA1U+3cUQZIij40EHUmS7q
+         y/8GIRxYiJb+VBn7vLjNJsmKJ6SaCm1IU0Ms4FwnqGd/KoYn7XqOS5dq9Vrl2jQNP/Lk
+         8aBs4Pyl/ojJ8PhLZ3fZP52Td8hJx+eMusOrdg+s1288+8oQg9Ky9FGSF0gSX2llYkvI
+         dEeE2Bl8uh6f/11E75oKN/VOh608aXtWvJOUSPVWff/VQeYvAgRXISPEnjrSNp8WFglb
+         qQIk1XxjcJIZd/WOZrx7DGMB6p8SPClPKIHkMaZoRjtWCMOlhPb0nBr1Yyg+Msq0LXbC
+         350Q==
+X-Gm-Message-State: AOAM531zCuHPbfM2yv0+Pp6AF2BPdwuBv+AJFK+uKRprRHmoUEcSc7WL
+        UthUxysxERwd7JYENpfdvA==
+X-Google-Smtp-Source: ABdhPJxTxOStSIvir2iEJq4mjIa41utLlNeQXu3O+1z8752kfXnyDVgGNxNEOI52q/hcSeLwMg9+9w==
+X-Received: by 2002:a54:4714:: with SMTP id k20mr4801241oik.103.1630445625304;
+        Tue, 31 Aug 2021 14:33:45 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id o8sm3712041oiw.55.2021.08.31.12.27.29
+        by smtp.gmail.com with ESMTPSA id o68sm4194764ota.33.2021.08.31.14.33.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Aug 2021 12:27:30 -0700 (PDT)
-Received: (nullmailer pid 515234 invoked by uid 1000);
-        Tue, 31 Aug 2021 19:27:28 -0000
-Date:   Tue, 31 Aug 2021 14:27:28 -0500
+        Tue, 31 Aug 2021 14:33:44 -0700 (PDT)
+Received: (nullmailer pid 683290 invoked by uid 1000);
+        Tue, 31 Aug 2021 21:33:44 -0000
+Date:   Tue, 31 Aug 2021 16:33:44 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-clk@vger.kernel.org, John Crispin <john@phrozen.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>
-Subject: Re: [v2,05/12] dt-bindings: pinctrl: update bindings for MT7986 SoC
-Message-ID: <YS6CoAxnarhqdTl+@robh.at.kernel.org>
-References: <20210817074557.30953-1-sam.shih@mediatek.com>
- <20210817074557.30953-6-sam.shih@mediatek.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     linux-rockchip@lists.infradead.org, bgolaszewski@baylibre.com,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org
+Subject: Re: [PATCH] dt-bindings: gpio: add gpio-line-names to
+ rockchip,gpio-bank.yaml
+Message-ID: <YS6gOGhoQKNlg5cL@robh.at.kernel.org>
+References: <20210828121007.14865-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210817074557.30953-6-sam.shih@mediatek.com>
+In-Reply-To: <20210828121007.14865-1-jbx6244@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 17, 2021 at 03:45:50PM +0800, Sam Shih wrote:
-> This updates bindings for MT7986 pinctrl driver.
-> The difference of pinctrl between mt7986a and mt7986b
-> is that pin-41 to pin-65 do not exist on mt7986b
+On Sat, 28 Aug 2021 14:10:07 +0200, Johan Jonker wrote:
+> Some people and companies may want to add more description
+> to there gpio pins. Add a gpio-line-names property to the
+> rockchip,gpio-bank.yaml file to reduce the notifications
+> from the existing mainline DT.
 > 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
-> v2 : deleted the redundant description of mt7986a/mt7986b
+>  Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> ---
->  .../bindings/pinctrl/pinctrl-mt7622.txt       | 170 ++++++++++++++++++
->  1 file changed, 170 insertions(+)
 
-This is adding a lot to not be in schema format. I imagine this will 
-need to be a separate file if the pin and function names are different 
-for each SoC.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
