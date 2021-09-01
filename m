@@ -2,159 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 943683FD790
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Sep 2021 12:21:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DA933FDDE0
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Sep 2021 16:39:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233356AbhIAKWr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Sep 2021 06:22:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56220 "EHLO
+        id S244752AbhIAOkO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Sep 2021 10:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233230AbhIAKWr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Sep 2021 06:22:47 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D15DC061760
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Sep 2021 03:21:50 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id f2so4041117ljn.1
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Sep 2021 03:21:50 -0700 (PDT)
+        with ESMTP id S234001AbhIAOkO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Sep 2021 10:40:14 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6ADEC061575
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Sep 2021 07:39:17 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id x4so3029511pgh.1
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Sep 2021 07:39:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mgYfR3/CpQ3YFz8SbMrcJmhQtblgI9cHByyIJ0goOBI=;
-        b=eWVsHdCtUIQxAlqIqaA9KKdn3ovd4zMoXEx2w4VxVZ4sy2vrn74BKX9DJH6nV6/1Al
-         aLop/fzzMw45Lo6jMK04X/WVagNiH7iG2IYhIoKUvHwFiedVaFaXUiVBEdCcMUQwnJMd
-         sVDmB0MR92tBXbGf2gdX/3C2Kc33dlgSVrhXc=
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=NWKMZ//AyFWFbpFk6FF66OtPadVuan7a1ybZS8hGNR8=;
+        b=ixuJdOADo9kp3+x2m67gBGkGj7ggYyT+zGP50JF8w2YrBxZocb1hx2yx+2reg2W5dm
+         CmxhHG+J0Z+Ar1cI3WmZPo/7Qef2uJUZtN2axUW7vSZQ39wkg+/pDc1z/SalLE0N9/O2
+         KhVhWcSmMOSzF+08xeWXZ3AqhKpDDgUqMxK/SGtsXKOeLYKZ3m3Nbq7dKg5VU8/8EQz1
+         DMhf782y6uboGQ2EW9w+bokilUJCsriGRiMbnMetge1fepnSoppJ6V4tL2247lyqBwb+
+         Gr/wagJ/9sQYRH30RErSzBaBzPsuM8SkK5H+mNFyPpjfYNlyOULpdblLpTfFmshwI7J/
+         s7wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mgYfR3/CpQ3YFz8SbMrcJmhQtblgI9cHByyIJ0goOBI=;
-        b=HG+AaStRev0jBPkJuC188+G/vXRW3OfGrpy4B+v1IV2RszXVrfQi5KmP8UPHuTC6X2
-         lZH9f3bj3irQDpQze3PbofnCD8jonlZCPVPltB88Tph59IvgXtHcryaESxhcKS9jG7Ef
-         zRXnChw7wZSHWhtxQK0Q1kxHAtPiJ8pn4JyOGFgsqAt0z2cFVt765rK0nsgBN1VahgvG
-         yTSsVnFTVf/n9hCg63xcWQRW85DpofsqETXF3dVZ9kApQIy2+zkXDgsOLjXKDrLl7SqP
-         nJf4XrApQPKsuQfB0XzgoDqaE1oSvmUuRtH0bvJg7EXDPTGiw0ZxxPpNwWCBUOabdc4o
-         dVQA==
-X-Gm-Message-State: AOAM530vhDMg706iL2cQHSUpvYZXoQdB1OQu/gAgL7fS5oNRa98k/ggF
-        yyvHse/Bc+nztjj2C+qkkQlTeUnIwDHLPuRrwVuoSA==
-X-Google-Smtp-Source: ABdhPJyrlHHkley1jLqdJEA9M3j2B5m5WxNfwf3JuAH+EwmCKfYibJMfqcFndwA7usdLIL6NyzfXvJC3GLizwiSgejs=
-X-Received: by 2002:a2e:964b:: with SMTP id z11mr17242550ljh.91.1630491708890;
- Wed, 01 Sep 2021 03:21:48 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=NWKMZ//AyFWFbpFk6FF66OtPadVuan7a1ybZS8hGNR8=;
+        b=E5nh5Tp+Kogz4zKH5zB23s0Bn2I7wN+7Gh2cYgw8qOwSIxBSUP21NOmi86wy1Wpf3e
+         /n0KceeJ2NNciM1H5hwyI9/D3rk31R6uuRf+GnLrIgfaUQqIVFbVyDzKgc9NzkzF5nul
+         AsZQC4HyK9/vmUsKIyrw7w+zF53y+mX1KoNzTPuOuuT3CcY3Il7AVdDuHvkGAi5pjFjY
+         tFPkyyarBLWWXpCRwPRNJt7lUVEgTkwKJ7fR1DsyA01lAUW2LxHLQbhpcSbSDKilixLa
+         9TBIysnJaFKzRhsIkRM1IKGjI2FU7S1Pvi3mr/0TX1JIdDYzwbR1uw1QuOMcvhoC4rAC
+         cOjA==
+X-Gm-Message-State: AOAM530GO4Bhvh4l9tya07KCoywsrhYY8YbkeuqAXRdOKlVyGSCiGM+n
+        tRJsCs/ZbGIUi8kspKL9H39osEEBwaNzpu8flO4=
+X-Google-Smtp-Source: ABdhPJwKUYrwsNUeSIdFeFkG1QUUiMompzO3laENDU13DBeOV0U/c43EUkr3mJE4fIFDSx0yYt2ULonRYVfaKLvZZWY=
+X-Received: by 2002:aa7:9282:0:b0:3e2:800a:b423 with SMTP id
+ j2-20020aa79282000000b003e2800ab423mr34414031pfa.21.1630507157084; Wed, 01
+ Sep 2021 07:39:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210830003603.31864-1-zhiyong.tao@mediatek.com>
- <20210830003603.31864-3-zhiyong.tao@mediatek.com> <YS6pbO4hmNyX//tP@robh.at.kernel.org>
- <1630461636.21764.1.camel@mhfsdcap03>
-In-Reply-To: <1630461636.21764.1.camel@mhfsdcap03>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Wed, 1 Sep 2021 18:21:37 +0800
-Message-ID: <CAGXv+5H2-o91VGHwBUB_Gui1pa5m9jz6xTjHvP3+ue8=-ZWGvQ@mail.gmail.com>
-Subject: Re: [PATCH v11 2/4] dt-bindings: pinctrl: mt8195: change pull up/down description
-To:     "zhiyong.tao" <zhiyong.tao@mediatek.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>,
-        Light Hsieh <light.hsieh@mediatek.com>,
-        Biao Huang <biao.huang@mediatek.com>,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Received: by 2002:a05:6a10:ce9c:0:0:0:0 with HTTP; Wed, 1 Sep 2021 07:39:16
+ -0700 (PDT)
+From:   ekesine ugwu <ekesineugwu@gmail.com>
+Date:   Wed, 1 Sep 2021 07:39:16 -0700
+Message-ID: <CALCrinQ1LQB=U9wSXAf=sxStVjbBV+cXukjMupFQHkSpcUvF0w@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 1, 2021 at 10:01 AM zhiyong.tao <zhiyong.tao@mediatek.com> wrote:
->
-> On Tue, 2021-08-31 at 17:13 -0500, Rob Herring wrote:
-> > On Mon, Aug 30, 2021 at 08:36:01AM +0800, Zhiyong Tao wrote:
-> > > Change pull up/down description
-> >
-> > Every commit is a 'change'. Your commit msg should explain 'why', not
-> > what the diff is.
-> >
-> Hi robh,
-> we will add 'why' explanation in the commit msg in v12.
->
->
-> > >
-> > > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > > ---
-> > >  .../bindings/pinctrl/pinctrl-mt8195.yaml      | 32 +++++++++++++++++--
-> > >  1 file changed, 29 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-> > > index 2f12ec59eee5..a341ed9f0095 100644
-> > > --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-> > > @@ -85,9 +85,35 @@ patternProperties:
-> > >            2/4/6/8/10/12/14/16mA in mt8195.
-> > >          enum: [0, 1, 2, 3, 4, 5, 6, 7]
-> > >
-> > > -      bias-pull-down: true
-> > > -
-> > > -      bias-pull-up: true
-> > > +      bias-pull-down:
-> > > +        description: |
-> > > +          For pull down type is normal, it don't need add RSEL & R1R0 define
-> > > +          and resistance value.
-> > > +          For pull down type is PUPD/R0/R1 type, it can add R1R0 define to
-> > > +          set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
-> > > +          "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" & "MTK_PUPD_SET_R1R0_11"
-> > > +          define in mt8195.
-> > > +          For pull down type is RSEL, it can add RSEL define & resistance value(ohm)
-> > > +          to set different resistance. It can support "MTK_PULL_SET_RSEL_000" &
-> > > +          "MTK_PULL_SET_RSEL_001" & "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011" &
-> > > +          "MTK_PULL_SET_RSEL_100" & "MTK_PULL_SET_RSEL_101" & "MTK_PULL_SET_RSEL_110" &
-> > > +          "MTK_PULL_SET_RSEL_111" define in mt8195. It can also support resistance value(ohm)
-> > > +          "75000" & "5000" in mt8195.
-> >
-> > Sounds like constraints on the values. Please write a schema.
-> >
-> we will add a schema here in v12.
+Attention Please,
 
-Could the description be written to encourage device tree authors to
-use SI units instead of the macros?
+I am Bar. uchenna ilobi ,  How are you, I hope you are fine and
+healthy? This is to inform you that i have concluded the transaction
+successfully with the help of a new partner from Venezuela and now the
+fund has been transferred to Venezuela into the bank account of the
+new partner.
 
-Thanks
-ChenYu
+Meanwhile, I have decided to compensate you with the sum of
+US$350,000.00 (thiree Hundred and Fifty Thousand United States
+Dollars) due to your past effort, though you disappointed me along the
+line. But nevertheless I am very happy for the successful ending of
+the transaction without any problem and that is the reason why i have
+decided to compensate you with the sum of US$350,000.00 so that you
+will share the joy with me.
 
->
-> Thanks
-> > > +
-> > > +      bias-pull-up:
-> > > +        description: |
-> > > +          For pull up type is normal, it don't need add RSEL & R1R0 define
-> > > +          and resistance value.
-> > > +          For pull up type is PUPD/R0/R1 type, it can add R1R0 define to
-> > > +          set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
-> > > +          "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" & "MTK_PUPD_SET_R1R0_11"
-> > > +          define in mt8195.
-> > > +          For pull up type is RSEL, it can add RSEL define & resistance value(ohm)
-> > > +          to set different resistance. It can support "MTK_PULL_SET_RSEL_000" &
-> > > +          "MTK_PULL_SET_RSEL_001" & "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011" &
-> > > +          "MTK_PULL_SET_RSEL_100" & "MTK_PULL_SET_RSEL_101" & "MTK_PULL_SET_RSEL_110" &
-> > > +          "MTK_PULL_SET_RSEL_111" define in mt8195. It can also support resistance value(ohm)
-> > > +          "1000" & "1500" & "2000" & "3000" & "4000" & "5000" & "10000" & "75000" in mt8195.
-> > >
-> > >        bias-disable: true
-> > >
-> > > --
-> > > 2.18.0
-> > >
-> > >
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+I advise you to contact my secretary for Atm Card of US$350.000.00,
+which I kept for you. Contact him now without any delay.
+
+Name: solomon brandy
+
+Email:solomonbrandyfiveone@gmail.com
+
+Kindly reconfirm to him the following below information:
+
+Your full name_________________________
+Your address__________________________
+Your country___________________________
+Your age______________________________
+Your occupation________________________
+Your cell Phone number______________________
+
+Note that if you did not send him the above information complete, he
+will not release the Atm card to you because he has to be sure that it
+is you. Ask him to send you the total sum of ($350.000.00 ) Atm card,
+which I kept for you.
+
+Best regards,
+
+Mr. uchenna ilobi
