@@ -2,109 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F2193FF55B
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Sep 2021 23:08:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD2083FF751
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Sep 2021 00:42:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346604AbhIBVJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Sep 2021 17:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346669AbhIBVJH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Sep 2021 17:09:07 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B456C061757
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Sep 2021 14:08:08 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id a13so4289942iol.5
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Sep 2021 14:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QNlvKyocSbzCvO9CW/S4ozdKVMf5jmvLtYdfRVLUT7M=;
-        b=HVStBy/xTTuVL0VzYJJW66/jAWAr/V7lfgEHeKg6iwJ02uaEz6Dc8TIqj9Kq/I0sSJ
-         3itc1L722n6PfmlUXy+vMKnGA0weFwpA5jvORhsCJzNFjsQGSnP+pqzL0lqxvepcLH8J
-         oFCQPo9L2ibV8EesfKMiiBkVrBA45JJjpG6K4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QNlvKyocSbzCvO9CW/S4ozdKVMf5jmvLtYdfRVLUT7M=;
-        b=OehqdWkhGr+jKbCEClSXr/AFY9etCzK7crdEHQ4FoPwUkVbBhI4QuujZ1GsuGj5hsU
-         RuC0OwDhf5VBE66jIAlhGzUhrUSA+9YTJzXVELhrShjTl7yCFoUj4THNCY99Qk3qoLWQ
-         YP7P3TqQNOcQIUM/8c9ux7YoovR1ZE2Q/8sWAi430mIDjc/3U3F/hw3ogR3LE5SjPBMC
-         TaK62h54t4tB9rX1aD+zFoGsJ3rRoNG5M3SLc5vxzvuiFPVEGpwFEuGtp78xrygmntwQ
-         3CJwCdl89Va9hYj5cZVwSdny3qcQpCLJ0iKO9tBhoSGIGTqJbCfp5OT3ByukJ+FJ5exX
-         Jd6A==
-X-Gm-Message-State: AOAM531/IqqBSUCcg0Lsu5P9J/FeHnGd8SF/aIE7JVhOYqSBzXc4mlMr
-        jYADWFibz2cbx71yPUnnewBguw==
-X-Google-Smtp-Source: ABdhPJwiMeCAqGbdJpdasKrAHyVZ+PwegE7nTHtqLYwVSFDWz29O+UKflzZ0URqfHKgBLoRUOmd1gA==
-X-Received: by 2002:a05:6638:1646:: with SMTP id a6mr215464jat.27.1630616887436;
-        Thu, 02 Sep 2021 14:08:07 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id c11sm1469438ilo.57.2021.09.02.14.08.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Sep 2021 14:08:06 -0700 (PDT)
-Subject: Re: [PATCH] selftests/gpio: Fix gpio compiling error
-To:     Li Zhijian <lizhijian@cn.fujitsu.com>, bamv2005@gmail.com,
-        shuah@kernel.org, linux-gpio@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Philip Li <philip.li@intel.com>,
-        kernel test robot <lkp@intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20210902084635.103622-1-lizhijian@cn.fujitsu.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <22f8bef6-a399-8579-b73a-5c6b96dd6145@linuxfoundation.org>
-Date:   Thu, 2 Sep 2021 15:08:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-MIME-Version: 1.0
-In-Reply-To: <20210902084635.103622-1-lizhijian@cn.fujitsu.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1347699AbhIBWnb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Sep 2021 18:43:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1347749AbhIBWnb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 2 Sep 2021 18:43:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 381C76023F;
+        Thu,  2 Sep 2021 22:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630622552;
+        bh=4aUlYHvBzCqFQa64GvyxlbVMnHl1SyWbd2V7JWduEH8=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=PaRzT7w1t7FH9dl/99DBlvY65PltBaVq7qfVa1oaQ/qBw0hY1Wgg0udA89CT/tvAJ
+         6WEFjmWnwzpArHNrLBeRvsQrTOs+MAcEj8aMXSeFn1t5K/He0L8fQkEHe+KWEdSjx7
+         WMDl++zpqUbZDjfnL2uZ/WecTXrDHAd3PZIJj7kIf2LYFGEm/zJEz027uSQ/ZnjV5S
+         Ow0oRCNm2C6h4Vf0eefYnrmaznz5AKTa7ww+7aIocQEwTPBlArJU0e/mIjGef37Bp8
+         CWZlM7vlKqrOv+IQpQEz9SnpTK8A6WgtTRe78LM0sgQeztw8bV9G8wkUfEic59UdOJ
+         nEKrZIMBxvaHg==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 294D160A0C;
+        Thu,  2 Sep 2021 22:42:32 +0000 (UTC)
+Subject: Re: [GIT PULL] pin control changes for v5.15
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdaQGYoyJ2R1zF2P-S5VMFyPZtySdmNAhuv7KVAjE+o_wg@mail.gmail.com>
+References: <CACRpkdaQGYoyJ2R1zF2P-S5VMFyPZtySdmNAhuv7KVAjE+o_wg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdaQGYoyJ2R1zF2P-S5VMFyPZtySdmNAhuv7KVAjE+o_wg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.15-1
+X-PR-Tracked-Commit-Id: 04853352952b7dd17f355ed54bd81305b341af55
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c793011242d182e5f12800c12dbaf37af80be735
+Message-Id: <163062255210.25965.5032934280915714613.pr-tracker-bot@kernel.org>
+Date:   Thu, 02 Sep 2021 22:42:32 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 9/2/21 2:46 AM, Li Zhijian wrote:
+The pull request you sent on Thu, 2 Sep 2021 21:52:35 +0200:
 
-I like to see the reason for this compile error followed by how
-it is fixed.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.15-1
 
-> [root@iaas-rpma gpio]# make
-> gcc     gpio-mockup-cdev.c  -o /home/lizhijian/linux/tools/testing/selftests/gpio/gpio-mockup-cdev
-> gpio-mockup-cdev.c: In function ‘request_line_v2’:
-> gpio-mockup-cdev.c:24:30: error: storage size of ‘req’ isn’t known
->     24 |  struct gpio_v2_line_request req;
->        |                              ^~~
-> gpio-mockup-cdev.c:32:14: error: ‘GPIO_V2_LINE_FLAG_OUTPUT’ undeclared (first use in this function); did you mean ‘GPIOLINE_FLAG_IS_OUT’?
->     32 |  if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
->        |              ^~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Search headers from linux tree like others, such as sched
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c793011242d182e5f12800c12dbaf37af80be735
 
+Thank you!
 
-> 
-> CC: Philip Li <philip.li@intel.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Li Zhijian <lizhijian@cn.fujitsu.com>
-> ---
->   tools/testing/selftests/gpio/Makefile | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/testing/selftests/gpio/Makefile b/tools/testing/selftests/gpio/Makefile
-> index 39f2bbe8dd3d..42ea7d2aa844 100644
-> --- a/tools/testing/selftests/gpio/Makefile
-> +++ b/tools/testing/selftests/gpio/Makefile
-> @@ -3,5 +3,6 @@
->   TEST_PROGS := gpio-mockup.sh
->   TEST_FILES := gpio-mockup-sysfs.sh
->   TEST_GEN_PROGS_EXTENDED := gpio-mockup-cdev
-> +CFLAGS += -I../../../../usr/include
->   
->   include ../lib.mk
-> 
-
-thanks,
--- Shuah
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
