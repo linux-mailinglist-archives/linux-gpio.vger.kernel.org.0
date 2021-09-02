@@ -2,96 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F8953FE814
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Sep 2021 05:37:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2B0C3FEABF
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Sep 2021 10:41:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233122AbhIBDis (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Sep 2021 23:38:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231267AbhIBDis (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Sep 2021 23:38:48 -0400
-Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3724C061757
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Sep 2021 20:37:50 -0700 (PDT)
-Received: by mail-oo1-xc35.google.com with SMTP id k18-20020a4abd92000000b002915ed21fb8so119862oop.11
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Sep 2021 20:37:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
-         :subject:to:cc;
-        bh=jTP/sG1HuvFKXr+3xQRfYJQh8HDh4ZXkCSrzx8/zILA=;
-        b=jK7DTpWCdzZ36LyxOqDmYAbosBcu7xVDGahQiC+dPcCbJm11HRmSPMvWnxO4jb9FoC
-         zpiJgMN95jn/Oc5IzsDVNWDhubX5S1Sc7DzgSaAsbs5TSEAZlT3dUI1sS9jKsdKd/A8N
-         orgpEHbC32aA5KkyoJautVtKk4qX6Dw5/yrZA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from
-         :user-agent:date:message-id:subject:to:cc;
-        bh=jTP/sG1HuvFKXr+3xQRfYJQh8HDh4ZXkCSrzx8/zILA=;
-        b=sSiKW6zW7Ydc+PCv1JvbR7VrYEJHrX8t55xi4miMZz5plBjLBD7sz/yxCAowFDFQQI
-         y7Q+DuhijNQdl36K2vYqHFA6iob/1p5yRZT0MoyKQfI1U2FmLgj6o/YMGVN9QViKyZZw
-         H74w6uDSSH+MPW+rO+SGvP0H+F3yhN5Tw80gHzts11KeE5mXDGwrUAYhjNSgTmZPaT6e
-         vjABamn3ZxpyFzMJ+lrodZhvyFwnhAaSj8blViL7prjsK/6gRYqxrkJ5ZTd9LCeMbmZi
-         aj1GfL7zStLkIZXW8BlrtMIw/22hhCnlkp9Z7xuccMm8wtCb/JP8Zn3fFqfLLAG4UYvd
-         USvQ==
-X-Gm-Message-State: AOAM531+jFM/nZhZlx5C1MABOUUZYeaGGMQNZCrT0Pe9Kk0F/Uikktg5
-        H7XebRbCyRgE+ukqCTNe8Eqjwyd5eSjxmRspZWNwmg==
-X-Google-Smtp-Source: ABdhPJxWjgk6/3pIlbxH85C1ptiNv0bNKyYD19/tfQg0xIqiQUFjM2i0BdYDC3Ps5LwCFqpjGowDB1MlUFcs5zuH4TM=
-X-Received: by 2002:a4a:a98c:: with SMTP id w12mr910632oom.29.1630553870182;
- Wed, 01 Sep 2021 20:37:50 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 1 Sep 2021 20:37:49 -0700
+        id S233465AbhIBImq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Sep 2021 04:42:46 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:35308 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S233362AbhIBImq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Sep 2021 04:42:46 -0400
+IronPort-HdrOrdr: =?us-ascii?q?A9a23=3Avw/ria3LZLj8maIxy2eP8gqjBIAkLtp133Aq?=
+ =?us-ascii?q?2lEZdPUMSL38qyiv9M516faGskd0ZJhAo6H5BEDuewK+yXcY2+Qs1NSZLXLbUQ?=
+ =?us-ascii?q?mTXeNfBOLZqlWKcREWndQy6U4USchD4arLbGSS4/yX3ODyKadG/DDOytHPuQ7x?=
+ =?us-ascii?q?9QYVcT1X?=
+X-IronPort-AV: E=Sophos;i="5.84,371,1620662400"; 
+   d="scan'208";a="113896117"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 02 Sep 2021 16:41:46 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 8B52F4D0D9DC;
+        Thu,  2 Sep 2021 16:41:45 +0800 (CST)
+Received: from G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.85) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.23; Thu, 2 Sep 2021 16:41:40 +0800
+Received: from localhost.localdomain (10.167.225.141) by
+ G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.23 via Frontend Transport; Thu, 2 Sep 2021 16:41:39 +0800
+From:   Li Zhijian <lizhijian@cn.fujitsu.com>
+To:     <bamv2005@gmail.com>, <shuah@kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Li Zhijian <lizhijian@cn.fujitsu.com>,
+        Philip Li <philip.li@intel.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] selftests/gpio: Fix gpio compiling error
+Date:   Thu, 2 Sep 2021 16:46:35 +0800
+Message-ID: <20210902084635.103622-1-lizhijian@cn.fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <5be25c9710b7706cff91f1db71f9e25e@codeaurora.org>
-References: <1628830531-14648-1-git-send-email-skakit@codeaurora.org>
- <1628830531-14648-2-git-send-email-skakit@codeaurora.org> <CACRpkdZteWY6X+prHeAF0rtPVbCk+X9=ZYgpjgAMH24LhOjhaQ@mail.gmail.com>
- <4af8171aefd6f0387438225666ec1ccc@codeaurora.org> <CAE-0n53sR12fEa_cNPeT5eGcQVzzL57pd-tYnJbpP0NXkHMTsw@mail.gmail.com>
- <6801879ddd0edf9a8d0e3605f3868e79@codeaurora.org> <CAE-0n52Ki2tA6qy6ADym3r4UQ0tkvgz3bpif_Mm2q3Y+N=huGg@mail.gmail.com>
- <5be25c9710b7706cff91f1db71f9e25e@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.9.1
-Date:   Wed, 1 Sep 2021 20:37:49 -0700
-Message-ID: <CAE-0n51_v3rjoknfFTt3QcMnyNnHgXnkazDEsfJuroHZ_s5TRg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: qcom: spmi-gpio: correct parent irqspec translation
-To:     skakit@codeaurora.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        linux-gpio@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-yoursite-MailScanner-ID: 8B52F4D0D9DC.AECA9
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: lizhijian@fujitsu.com
+X-Spam-Status: No
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting skakit@codeaurora.org (2021-08-17 22:26:18)
-> On 2021-08-18 00:45, Stephen Boyd wrote:
-> > Quoting skakit@codeaurora.org (2021-08-17 02:06:42)
-> >> On 2021-08-17 02:38, Stephen Boyd wrote:
-> >> >
-> >> > Are there any boards supported upstream that have a gpio block that
-> >> > isn't at 0xc000?
-> >>
-> >> yes, all the pmics used in sm8350-mtp.dts board have gpio block at
-> >> addresses different than 0xc000.
-> >>
-> >
-> > So maybe
-> >
-> > Fixes: f67cc6a91d88 ("arm64: dts: qcom: sm8350-mtp: Add PMICs")
-> >
-> > is appropriate then?
->
-> This patch is actually fixing the pinctrl-spmi-gpio.c driver.
-> So, I think we should add
->
-> Fixes: ca69e2d165eb ("qcom: spmi-gpio: add support for hierarchical IRQ
-> chip")
+[root@iaas-rpma gpio]# make
+gcc     gpio-mockup-cdev.c  -o /home/lizhijian/linux/tools/testing/selftests/gpio/gpio-mockup-cdev
+gpio-mockup-cdev.c: In function ‘request_line_v2’:
+gpio-mockup-cdev.c:24:30: error: storage size of ‘req’ isn’t known
+   24 |  struct gpio_v2_line_request req;
+      |                              ^~~
+gpio-mockup-cdev.c:32:14: error: ‘GPIO_V2_LINE_FLAG_OUTPUT’ undeclared (first use in this function); did you mean ‘GPIOLINE_FLAG_IS_OUT’?
+   32 |  if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~
 
-OK. Were you going to resend this patch? I don't see it in linux-next so
-I worry that Linus dropped it while the Fixes tag was figured out.
+Search headers from linux tree like others, such as sched
+
+CC: Philip Li <philip.li@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Li Zhijian <lizhijian@cn.fujitsu.com>
+---
+ tools/testing/selftests/gpio/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/testing/selftests/gpio/Makefile b/tools/testing/selftests/gpio/Makefile
+index 39f2bbe8dd3d..42ea7d2aa844 100644
+--- a/tools/testing/selftests/gpio/Makefile
++++ b/tools/testing/selftests/gpio/Makefile
+@@ -3,5 +3,6 @@
+ TEST_PROGS := gpio-mockup.sh
+ TEST_FILES := gpio-mockup-sysfs.sh
+ TEST_GEN_PROGS_EXTENDED := gpio-mockup-cdev
++CFLAGS += -I../../../../usr/include
+ 
+ include ../lib.mk
+-- 
+2.31.1
+
+
+
