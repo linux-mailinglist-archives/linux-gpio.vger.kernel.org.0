@@ -2,94 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FF5E3FF89F
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Sep 2021 03:18:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D09C83FFE0A
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Sep 2021 12:15:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345842AbhICBTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Sep 2021 21:19:04 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:36200 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S234035AbhICBTE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Sep 2021 21:19:04 -0400
-IronPort-HdrOrdr: =?us-ascii?q?A9a23=3ActeZza6ie09Y4z5rkAPXwPTXdLJyesId70hD?=
- =?us-ascii?q?6qkRc20wTiX8ra2TdZsguyMc9wx6ZJhNo7G90cq7MBbhHPxOkOos1N6ZNWGIhI?=
- =?us-ascii?q?LCFvAB0WKN+V3dMhy73utc+IMlSKJmFeD3ZGIQse/KpCW+DPYsqePqzJyV?=
-X-IronPort-AV: E=Sophos;i="5.85,263,1624291200"; 
-   d="scan'208";a="113929416"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 03 Sep 2021 09:18:03 +0800
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
-        by cn.fujitsu.com (Postfix) with ESMTP id 483AE4D0D9D8;
-        Fri,  3 Sep 2021 09:17:58 +0800 (CST)
-Received: from G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.85) by
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
- (TLS) id 15.0.1497.23; Fri, 3 Sep 2021 09:17:47 +0800
-Received: from localhost.localdomain (10.167.225.141) by
- G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.23 via Frontend Transport; Fri, 3 Sep 2021 09:17:47 +0800
-From:   Li Zhijian <lizhijian@cn.fujitsu.com>
-To:     <shuah@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Li Zhijian <lizhijian@cn.fujitsu.com>,
-        Philip Li <philip.li@intel.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v2] selftests/gpio: Fix gpio compiling error
-Date:   Fri, 3 Sep 2021 09:22:36 +0800
-Message-ID: <20210903012236.160858-1-lizhijian@cn.fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+        id S1349010AbhICKQO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Sep 2021 06:16:14 -0400
+Received: from mail-dm6nam08on2057.outbound.protection.outlook.com ([40.107.102.57]:53234
+        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1348987AbhICKQN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 3 Sep 2021 06:16:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GWUREdyj/4r59gBGd18GVswfwH7YfXCBeEqPt3SlLzn5GMUieMaQcxR6ipbzHpkqkiugfSQIl5kychz3FuxidK3ezIFVUlLZlbjidF5SP1J40RJUuJ9A1Bylw/IIpzPyqtDLJZ4dtE4J+LgcbZ0mxATlodY3biMW5KIf4kql5AGCs8iTRYqrymrygAk9dxwI3LyV2VvATIG2LRipuEdcxBc9ltZ/cYSEQ+s/33O52uCbCXerSLVv7H7tBe9SVCMjzbx3CKOlEDLwQXWUgN4a2/L5Zmjad2/J5YL/jwJIK94kcC63dTe4ATz+x2eqipOM45nVjw+YtMSgYRxihWZ0eA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=VuIk28lCjfp02OHJsIQ3CXgUwRgOgKb0IbeATEFDDKw=;
+ b=c2V6Htu28EpamUq2JpUaUZEtJYKB3oDCeuj/JeUX3C8Np1rMVwJaaw+ZdMjX27MsGif4ZYM2KEHp4JZcxg4fNfyYDIwryx+vMhbSh6mQGyc0n/KCpO6ooTJxzYgMhcccjMeDy5iWcsClcFeEdXaZ0NOMT2rJ5nMKYhyOEEfZbHaDsvOQtZfkGBDfO9w5CZ11KP/oyKPF/F3O0ON3m6WD70CCroRsJg7jlTuoqAuuCdbhCTN0ewJCnLDoWjH/UI59ISk+FwANs0k5yIehL3Yz27WSohEZTC90O4qs10eUYCfu5Vn7ufyH5P4JOylPRQp8QMoCCaUkOkxHRB+bOt1bBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.36) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VuIk28lCjfp02OHJsIQ3CXgUwRgOgKb0IbeATEFDDKw=;
+ b=c+yEfesYhgK1X4XITTEPHGxaR7luwjkPI57OzPK3GfPPy2f6xxpILlXLKTTumbT7n9mQ0aE1tbx7wRJcuRpiPaoNzu+F+LT777mNumJLq7i6vYiDwXyY8+4YbfeEj8ZgDrO534sTgf3ueE3V61WyOGuTyBRQRBiQJsQ9J1ONjCsN7nsP19rwV1fUMz9zJztKYCm2pU9OtE6mmprTIaoIczgRjKjxUHjMXSgCdy7tgukSOGmcK1spaEwjXD5et9G70kGzZ49OmV1VudyG9fIn4rQrS0r7+Qftq+zVyq89AV4Kd1anaHb4URcvupoCp19vGMG5K/s2EEJjcTDYkIKHLg==
+Received: from MWHPR17CA0052.namprd17.prod.outlook.com (2603:10b6:300:93::14)
+ by BN9PR12MB5338.namprd12.prod.outlook.com (2603:10b6:408:103::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19; Fri, 3 Sep
+ 2021 10:15:12 +0000
+Received: from CO1NAM11FT003.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:300:93:cafe::8f) by MWHPR17CA0052.outlook.office365.com
+ (2603:10b6:300:93::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19 via Frontend
+ Transport; Fri, 3 Sep 2021 10:15:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.36; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.36) by
+ CO1NAM11FT003.mail.protection.outlook.com (10.13.175.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4478.19 via Frontend Transport; Fri, 3 Sep 2021 10:15:11 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Fri, 3 Sep
+ 2021 10:15:10 +0000
+Received: from pshete-ubuntu.nvidia.com (172.20.187.6) by mail.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
+ Transport; Fri, 3 Sep 2021 10:15:08 +0000
+From:   Prathamesh Shete <pshete@nvidia.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <smangipudi@nvidia.com>, <pshete@nvidia.com>
+Subject: [PATCH v2 0/2] gpio: tegra: add multiple interrupt support
+Date:   Fri, 3 Sep 2021 15:45:10 +0530
+Message-ID: <20210903101512.32430-1-pshete@nvidia.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-yoursite-MailScanner-ID: 483AE4D0D9D8.AF33E
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: lizhijian@fujitsu.com
-X-Spam-Status: No
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f4131ab1-de0e-478b-9487-08d96ec3b704
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5338:
+X-Microsoft-Antispam-PRVS: <BN9PR12MB53385B309F49BCC7ABC22A1DB7CF9@BN9PR12MB5338.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nP464lFHJcVWWAiKAUeqcVsBLeN9rmKDkobZlBQ8JyQ/osZqUnom/53BD7YnwiuFUal9JCYP46K/qzW15pp44E6YPIkZwaQDV5Pc05MsKrTxwwvOtVA9d96ylaaSLSDlkUglojaZ0CFTwbb9b3TePcfFISxPQ/778B8X+6knUN4ahL/H5am15zEH64t+1rgUG9tXlA1atWl0sqVmCDKsHV1XOqGpwntmSbU1HqemOsHwVTI0UvCKVWOncRvc2ENxVfYOIOGElNwh4XBbekrpu+79cSGjrN8LrQRE7lCN5VkZpI3RmXMXrE+CQiJ9QCv+iygowqT6nSLwDVG9Htvf0r2Bf/0SiZJGs7v832mvSEfVKcRA1C6Wa4sLO1iVsRskixckbvv92ODIp/hQzwEdmkMA0IQomFdBWxU1VGnaNxr4Eg4qCQ36AOxC6DvNbhQ1Qq34NL9pE4o0zYczrQmoMWcKECV+py2MwP8x6axiP36eEBZ6Yxd7nmg3M5cyZwspoeP17y99ZsK03yibwRRyvRmCVc6d6JdsGPWxooGv1luc/GdR5QPW/aNWG043QlWNNFkwCDAAr5CdCBglF99DQyNe7XAaCbH5FPGnDZPcEPX6FyGbHukjx9wCyJznMzLjLcPdOCC/xLiqeABr8tjz5C7zz8ZC5EP6nrysDM765GXXK9S3dIUDhgCYxGU1T6p4IJdGXbaSR2dVcVR4xyZr/Q==
+X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(2906002)(7696005)(8676002)(426003)(82310400003)(54906003)(8936002)(70206006)(5660300002)(508600001)(4744005)(336012)(2616005)(6666004)(83380400001)(110136005)(70586007)(26005)(7636003)(47076005)(316002)(4326008)(36756003)(36860700001)(356005)(186003)(1076003)(86362001)(107886003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2021 10:15:11.6795
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4131ab1-de0e-478b-9487-08d96ec3b704
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT003.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5338
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[root@iaas-rpma gpio]# make
-gcc     gpio-mockup-cdev.c  -o /home/lizhijian/linux/tools/testing/selftests/gpio/gpio-mockup-cdev
-gpio-mockup-cdev.c: In function ‘request_line_v2’:
-gpio-mockup-cdev.c:24:30: error: storage size of ‘req’ isn’t known
-   24 |  struct gpio_v2_line_request req;
-      |                              ^~~
-gpio-mockup-cdev.c:32:14: error: ‘GPIO_V2_LINE_FLAG_OUTPUT’ undeclared (first use in this function); did you mean ‘GPIOLINE_FLAG_IS_OUT’?
-   32 |  if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
-      |              ^~~~~~~~~~~~~~~~~~~~~~~~
+From: pshete <pshete@nvidia.com>
 
-gpio-mockup-cdev.c includes <linux/gpio.h> which could be provided by
-kernel-headers package, and where it's expected to declare
-GPIO_V2_LINE_FLAG_OUTPUT. However distros or developers will not always
-install the same kernel-header as we are compiling.
+These patches adds multiple interrupt support.
+Each main GPIO is associated with 8 interrupts 
+per controller in case of NON-AON GPIO's and 
+4 interrupts per controller in AON GPIO.
+This is new feature starting T194
+The interrupt route map determines which interrupt line is to be used.
 
-So we can tell compiler to search headers from linux tree simply like others,
-such as sched.
+pshete (2):
+  gpio: tegra: add multiple interrupt support
+  arm64: tegra: GPIO Interrupt entries
 
-CC: Philip Li <philip.li@intel.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Li Zhijian <lizhijian@cn.fujitsu.com>
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 49 +++++++++++++++++++++++-
+ drivers/gpio/gpio-tegra186.c             | 25 ++++++++++--
+ 2 files changed, 68 insertions(+), 6 deletions(-)
 
----
-V2: add more details about the fix
----
- tools/testing/selftests/gpio/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/testing/selftests/gpio/Makefile b/tools/testing/selftests/gpio/Makefile
-index 39f2bbe8dd3d..42ea7d2aa844 100644
---- a/tools/testing/selftests/gpio/Makefile
-+++ b/tools/testing/selftests/gpio/Makefile
-@@ -3,5 +3,6 @@
- TEST_PROGS := gpio-mockup.sh
- TEST_FILES := gpio-mockup-sysfs.sh
- TEST_GEN_PROGS_EXTENDED := gpio-mockup-cdev
-+CFLAGS += -I../../../../usr/include
- 
- include ../lib.mk
 -- 
-2.31.1
-
-
+2.17.1
 
