@@ -2,60 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD2083FF751
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Sep 2021 00:42:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FF5E3FF89F
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Sep 2021 03:18:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347699AbhIBWnb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Sep 2021 18:43:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1347749AbhIBWnb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 2 Sep 2021 18:43:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 381C76023F;
-        Thu,  2 Sep 2021 22:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630622552;
-        bh=4aUlYHvBzCqFQa64GvyxlbVMnHl1SyWbd2V7JWduEH8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=PaRzT7w1t7FH9dl/99DBlvY65PltBaVq7qfVa1oaQ/qBw0hY1Wgg0udA89CT/tvAJ
-         6WEFjmWnwzpArHNrLBeRvsQrTOs+MAcEj8aMXSeFn1t5K/He0L8fQkEHe+KWEdSjx7
-         WMDl++zpqUbZDjfnL2uZ/WecTXrDHAd3PZIJj7kIf2LYFGEm/zJEz027uSQ/ZnjV5S
-         Ow0oRCNm2C6h4Vf0eefYnrmaznz5AKTa7ww+7aIocQEwTPBlArJU0e/mIjGef37Bp8
-         CWZlM7vlKqrOv+IQpQEz9SnpTK8A6WgtTRe78LM0sgQeztw8bV9G8wkUfEic59UdOJ
-         nEKrZIMBxvaHg==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 294D160A0C;
-        Thu,  2 Sep 2021 22:42:32 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control changes for v5.15
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdaQGYoyJ2R1zF2P-S5VMFyPZtySdmNAhuv7KVAjE+o_wg@mail.gmail.com>
-References: <CACRpkdaQGYoyJ2R1zF2P-S5VMFyPZtySdmNAhuv7KVAjE+o_wg@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdaQGYoyJ2R1zF2P-S5VMFyPZtySdmNAhuv7KVAjE+o_wg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.15-1
-X-PR-Tracked-Commit-Id: 04853352952b7dd17f355ed54bd81305b341af55
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c793011242d182e5f12800c12dbaf37af80be735
-Message-Id: <163062255210.25965.5032934280915714613.pr-tracker-bot@kernel.org>
-Date:   Thu, 02 Sep 2021 22:42:32 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        id S1345842AbhICBTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Sep 2021 21:19:04 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:36200 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S234035AbhICBTE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Sep 2021 21:19:04 -0400
+IronPort-HdrOrdr: =?us-ascii?q?A9a23=3ActeZza6ie09Y4z5rkAPXwPTXdLJyesId70hD?=
+ =?us-ascii?q?6qkRc20wTiX8ra2TdZsguyMc9wx6ZJhNo7G90cq7MBbhHPxOkOos1N6ZNWGIhI?=
+ =?us-ascii?q?LCFvAB0WKN+V3dMhy73utc+IMlSKJmFeD3ZGIQse/KpCW+DPYsqePqzJyV?=
+X-IronPort-AV: E=Sophos;i="5.85,263,1624291200"; 
+   d="scan'208";a="113929416"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 03 Sep 2021 09:18:03 +0800
+Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
+        by cn.fujitsu.com (Postfix) with ESMTP id 483AE4D0D9D8;
+        Fri,  3 Sep 2021 09:17:58 +0800 (CST)
+Received: from G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.85) by
+ G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.23; Fri, 3 Sep 2021 09:17:47 +0800
+Received: from localhost.localdomain (10.167.225.141) by
+ G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.23 via Frontend Transport; Fri, 3 Sep 2021 09:17:47 +0800
+From:   Li Zhijian <lizhijian@cn.fujitsu.com>
+To:     <shuah@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Li Zhijian <lizhijian@cn.fujitsu.com>,
+        Philip Li <philip.li@intel.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v2] selftests/gpio: Fix gpio compiling error
+Date:   Fri, 3 Sep 2021 09:22:36 +0800
+Message-ID: <20210903012236.160858-1-lizhijian@cn.fujitsu.com>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-yoursite-MailScanner-ID: 483AE4D0D9D8.AF33E
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: lizhijian@fujitsu.com
+X-Spam-Status: No
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Thu, 2 Sep 2021 21:52:35 +0200:
+[root@iaas-rpma gpio]# make
+gcc     gpio-mockup-cdev.c  -o /home/lizhijian/linux/tools/testing/selftests/gpio/gpio-mockup-cdev
+gpio-mockup-cdev.c: In function ‘request_line_v2’:
+gpio-mockup-cdev.c:24:30: error: storage size of ‘req’ isn’t known
+   24 |  struct gpio_v2_line_request req;
+      |                              ^~~
+gpio-mockup-cdev.c:32:14: error: ‘GPIO_V2_LINE_FLAG_OUTPUT’ undeclared (first use in this function); did you mean ‘GPIOLINE_FLAG_IS_OUT’?
+   32 |  if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.15-1
+gpio-mockup-cdev.c includes <linux/gpio.h> which could be provided by
+kernel-headers package, and where it's expected to declare
+GPIO_V2_LINE_FLAG_OUTPUT. However distros or developers will not always
+install the same kernel-header as we are compiling.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c793011242d182e5f12800c12dbaf37af80be735
+So we can tell compiler to search headers from linux tree simply like others,
+such as sched.
 
-Thank you!
+CC: Philip Li <philip.li@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Li Zhijian <lizhijian@cn.fujitsu.com>
 
+---
+V2: add more details about the fix
+---
+ tools/testing/selftests/gpio/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/testing/selftests/gpio/Makefile b/tools/testing/selftests/gpio/Makefile
+index 39f2bbe8dd3d..42ea7d2aa844 100644
+--- a/tools/testing/selftests/gpio/Makefile
++++ b/tools/testing/selftests/gpio/Makefile
+@@ -3,5 +3,6 @@
+ TEST_PROGS := gpio-mockup.sh
+ TEST_FILES := gpio-mockup-sysfs.sh
+ TEST_GEN_PROGS_EXTENDED := gpio-mockup-cdev
++CFLAGS += -I../../../../usr/include
+ 
+ include ../lib.mk
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.31.1
+
+
+
