@@ -2,88 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 309154005DA
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Sep 2021 21:32:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76CAB400CE5
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Sep 2021 22:28:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235133AbhICTd4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Sep 2021 15:33:56 -0400
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:38644 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232516AbhICTd4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Sep 2021 15:33:56 -0400
-Received: by mail-oi1-f175.google.com with SMTP id u25so464974oiv.5;
-        Fri, 03 Sep 2021 12:32:55 -0700 (PDT)
+        id S233622AbhIDUSN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 Sep 2021 16:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230490AbhIDUSN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Sep 2021 16:18:13 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 287C4C061757
+        for <linux-gpio@vger.kernel.org>; Sat,  4 Sep 2021 13:17:11 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id a66so2789031qkc.1
+        for <linux-gpio@vger.kernel.org>; Sat, 04 Sep 2021 13:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=j7cP6KDL4wA3lHlu85RzKHhk6XobH2UxQmLjPil4Z4Y=;
+        b=P1uN5R1SI0nfKZwBbTSf9YyY6YJ5B19dGyMjMf6OJeVtoySQD+NuBg9ojg4tuWsmjB
+         yHJmpGY8TjdPmExakj+WWqmOwmTipqpQE1n4KywLoWMpjzEt1t5sBjwD6V/eWUa/Jt9F
+         S5KjYL19qDHz8BU17WKCa6Y1Fhu+j1g/1WjLyrmHgG39D8c7gIm50SzEdA3foNUox40O
+         amjyae+Y5Ce2zjO0vc1vLo8C5WHliTs/1gnpbkt5+CVez19GLoCEzc9OP4ZRML29McGE
+         t7JcRrrg3VejcFva2C1BRq7XNxGBJf/O+9Fc0B02G6TsfAa6ZuWKr59ZNULTh3EqsSfC
+         ASWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KheS+b13SKBDM5Cw+jQcKqwiqg25iR1Yy5WSWs+WcCE=;
-        b=pixGb6ZMzriVBWL+FF3w1HuszjjVdYRz2T769j7APbmjaTeXvYOaVj28NfC3ZvxsFs
-         tZ04Glh6QQ9MfKTRJdCETCmzBBC9I16kc8Qt3uFuCeNnEtKi9rmLzVmRHe674gSD76xJ
-         IKSNUCshGJ72Pu+NG41d2wzZJalHo1zY4pwsv3S4lzTUGr4VR1d9BKqIJyXNheU6wU/k
-         l1YUkFid0Z04s21b19I5zUTHHn3a7i4dFSjtgSTND6jMk4VZSn+mpuI40iHftEtFVehD
-         Rn6Nfpnys+1LTSY5JXDTJSs7/GvWQthwTGCQe0/gB2iTOdYhihrWQYE6HyPBQuZZeusx
-         n4uw==
-X-Gm-Message-State: AOAM532eB9UDrQtoi3K0xA1cdpkFZ4tjt+5l2do0m09gMukkrgERc+Cb
-        /MpZaHbu8HorJCDHQTJngw==
-X-Google-Smtp-Source: ABdhPJzLt3LVPMzouNMsLAkLdBJidudfteM4PetC18oSXhQoyXr7xTBPWBX8jxV0fVylGSipHxUsrg==
-X-Received: by 2002:aca:42c2:: with SMTP id p185mr269289oia.159.1630697575482;
-        Fri, 03 Sep 2021 12:32:55 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id a6sm59968oto.36.2021.09.03.12.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Sep 2021 12:32:54 -0700 (PDT)
-Received: (nullmailer pid 3322715 invoked by uid 1000);
-        Fri, 03 Sep 2021 19:32:53 -0000
-Date:   Fri, 3 Sep 2021 14:32:53 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-gpio@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-sunxi@googlegroups.com,
-        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 22/52] dt-bindings: gpio: Convert X-Powers AXP209 GPIO
- binding to a schema
-Message-ID: <YTJ4ZV1v2ssnwR5O@robh.at.kernel.org>
-References: <20210901091852.479202-1-maxime@cerno.tech>
- <20210901091852.479202-23-maxime@cerno.tech>
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=j7cP6KDL4wA3lHlu85RzKHhk6XobH2UxQmLjPil4Z4Y=;
+        b=bv1/cWfVFBb34wTlDr4PD4dh3bEg4MJTfbw6Y7u0YWv5NsIFdLTlJIl2WaO6hOQSXx
+         ePf8ztsUYYCP1brCorjAFEJB6VCQvwUTfBRGX23gNIiH8eWvyam+zNs0jYUb//cQsTcC
+         MbaC0NM5diDkR7QjMBHJkM+k0dc8ky6DRve+pb2S2F1wophM+DaeTtUzabGX8Uhd8r4l
+         kG3KV/kmqtVnCrOtORBcg+3dRC+zTzT71Lj7sUWTy7ErVM5fk0eDwZr2agEwCJtdwRav
+         GMNyZodtQ2qhoBFFlk115wYTpHB3wXKe3raykKJRd3sS/fXRrovyueYpvkYgsdNQrpSt
+         1DGw==
+X-Gm-Message-State: AOAM533I/d+0TnhM5j3ESXWbNeHgGGJRrpKPOdZw0kAeE7fW+PDWOw6L
+        x+bH33nQArtoXUw2QurH0ybxWc46iHk0Iuq65WA=
+X-Google-Smtp-Source: ABdhPJwlcomnBRsOyya5JNjn27C50p3Mp0kasWHi8x9X4LKq/jPUjIMbewdGVT3lDKbEWAuMOlzOJ2cqLfwz+29g4iU=
+X-Received: by 2002:a37:9cc8:: with SMTP id f191mr4577325qke.113.1630786630102;
+ Sat, 04 Sep 2021 13:17:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210901091852.479202-23-maxime@cerno.tech>
+Sender: missglory.kipkalyakones24@gmail.com
+Received: by 2002:a05:620a:19a3:0:0:0:0 with HTTP; Sat, 4 Sep 2021 13:17:09
+ -0700 (PDT)
+From:   Aisha Al-Qaddafi <aisha.gdaffi24@gmail.com>
+Date:   Sat, 4 Sep 2021 21:17:09 +0100
+X-Google-Sender-Auth: lNU6RTofJdrHEGYG7b9_m_xdhaU
+Message-ID: <CAGTUnnpS8vPHwUjT-uNpxLr4CT4BTinWhrKa9Q4qMNwh8HrhNA@mail.gmail.com>
+Subject: My Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 01 Sep 2021 11:18:22 +0200, Maxime Ripard wrote:
-> The X-Powers AXP PMICs feature a GPIO Controller supported by Linux
-> thanks to its device tree binding.
-> 
-> Now that we have the DT validation in place, let's convert the device
-> tree bindings for that driver over to a YAML schema.
-> 
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> 
-> ---
-> 
-> Changes from v1:
->   - Removed the example and moved it in the mfd schema
-> ---
->  .../devicetree/bindings/gpio/gpio-axp209.txt  | 75 -------------------
->  .../bindings/gpio/x-powers,axp209-gpio.yaml   | 55 ++++++++++++++
->  2 files changed, 55 insertions(+), 75 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
-> 
+Dear Friend,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 
-This needs to be applied with the MFD schema.
+ I came across your e-mail contact prior to a private search while in
+need of your assistance. I am Aisha Al-Qaddafi, the only biological
+ Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children.
+
+ I have investment funds worth Twenty Seven Million Five Hundred
+Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
+ investment Manager/Partner because of my current refugee status,
+however, I am interested in you for investment project assistance in
+ your country
+ If you are willing to handle this project on my behalf kindly reply
+urgently to enable me to provide you more information about the
+investment
+ funds.
+ Your Urgent Reply Will Be Appreciated
+
+ Best Regards
+ Mrs Aisha Al-Qaddafi
