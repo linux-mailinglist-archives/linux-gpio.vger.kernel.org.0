@@ -2,126 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D258401A41
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Sep 2021 12:58:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E27FF401B11
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Sep 2021 14:21:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240396AbhIFK7V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Sep 2021 06:59:21 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:32290 "EHLO m43-7.mailgun.net"
+        id S241644AbhIFMWh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Sep 2021 08:22:37 -0400
+Received: from www.zeus03.de ([194.117.254.33]:42860 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240404AbhIFK7U (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 6 Sep 2021 06:59:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1630925895; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=vsOcnMr2wpiwvzUcC8f61q76ivDkmYdEEI0Rs1N9cVE=;
- b=tWnLLBcer4ahKFBZKflFNR1FqbbxDfTkPOu3jwEGsbpXj6EPBoJ2OoXLHkndjsDjIJePa/QC
- IgOowgkQufjThdat/sPNA1d4bYRWlRslfjYLQYce7B82WoWDo2+IaXTjqvkzyEeMi0a5n6U8
- E9i4+Qoy8A/68WvrBGgyago0s6U=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 6135f44740d2129ac15e150e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 06 Sep 2021 10:58:15
- GMT
-Sender: skakit=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D75D9C4360D; Mon,  6 Sep 2021 10:58:14 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: skakit)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5FF9AC4338F;
-        Mon,  6 Sep 2021 10:58:14 +0000 (UTC)
+        id S239993AbhIFMWh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 6 Sep 2021 08:22:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=hnOVDPy4wQT6lRUTZ5FlrXLSl7zn
+        Bdab4cizSh4j1ZE=; b=WKH029+o7GLhjVCk8AtQpn/E9UYR0rpTyQuHq5hV9DlR
+        Atk4/dfrEI77a8f9+82CVjsYNhI5iaOkf5uOT6fZ17rLrB4ZAsLcbDfA/n97ZIRc
+        6/3QmDlIPGvo8itGS4MUv6JgO6LZ3F8qd26CDg4sc8UNDA45+IBZrxnHt0MKdD0=
+Received: (qmail 470026 invoked from network); 6 Sep 2021 14:21:30 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Sep 2021 14:21:30 +0200
+X-UD-Smtp-Session: l3s3148p1@NPMtsFLLBMsgAwDPXwUCAIKQ4fZTZm0q
+Date:   Mon, 6 Sep 2021 14:21:26 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <YTYHxkNdtCA0v244@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <20210901194549.3999-1-wsa+renesas@sang-engineering.com>
+ <20210901194549.3999-2-wsa+renesas@sang-engineering.com>
+ <CAHp75VdZt_dDb0YpThfsoqRvWdjfVZT70o=eCJCbThJ9qbD42w@mail.gmail.com>
+ <YTXZgNQJj0aI4zuC@kunai>
+ <CAHp75VdJZhgqshOQS=L1rKiNZLTqNnrc4FXoJKaNpaQT0QB_Eg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 06 Sep 2021 16:28:14 +0530
-From:   skakit@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Collins <collinsd@codeaurora.org>, kgunda@codeaurora.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V2 2/2] arm64: dts: sc7280: Add volume up support for
- sc7280-idp
-In-Reply-To: <CAE-0n52VOzjexezuEe449vT_crB_zVkn5Bnrkh6-RcJfWGTQ9w@mail.gmail.com>
-References: <1630574106-3394-1-git-send-email-skakit@codeaurora.org>
- <1630574106-3394-3-git-send-email-skakit@codeaurora.org>
- <CAE-0n52VOzjexezuEe449vT_crB_zVkn5Bnrkh6-RcJfWGTQ9w@mail.gmail.com>
-Message-ID: <9137f113e0cdd718edaa3d32b30bf043@codeaurora.org>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="E2KqYzKKcD6Ak7yQ"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdJZhgqshOQS=L1rKiNZLTqNnrc4FXoJKaNpaQT0QB_Eg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2021-09-03 23:42, Stephen Boyd wrote:
-> Quoting satya priya (2021-09-02 02:15:06)
->> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
->> index 371a2a9..52bcbbc 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
->> @@ -199,6 +199,37 @@
->>         modem-init;
->>  };
->> 
->> +&soc {
-> 
-> 's' comes after 'p' so this is in the wrong place.
-> 
 
-Okay will move it accordingly.
+--E2KqYzKKcD6Ak7yQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +       gpio_keys {
->> +               compatible = "gpio-keys";
->> +               label = "gpio-keys";
->> +
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&key_vol_up_default>;
->> +
->> +               vol_up {
->> +                       label = "volume_up";
->> +                       gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
->> +                       linux,input-type = <1>;
->> +                       linux,code = <KEY_VOLUMEUP>;
->> +                       gpio-key,wakeup;
->> +                       debounce-interval = <15>;
->> +                       linux,can-disable;
->> +               };
->> +       };
->> +};
->> +
->> +&pm7325_gpios {
->> +       key_vol_up_default: key_vol_up_default {
-> 
-> Please move this to the "PINCTRL - additions to nodes defined in
-> sc7280.dtsi" section and then sort alphabetically on node naem.
-> 
 
-Okay.
+> Yes, it means you are not able to use * (a.k.a. glob() function) in
+> the shell which increases a lot security and other (misuse) concerns.
+> Instead you have to use `find` or similar tools to collect the list of
+> the files of your interest.
 
->> +               pins = "gpio6";
->> +               function = "normal";
->> +               input-enable;
->> +               bias-pull-up;
->> +               power-source = <0>;
->> +               qcom,drive-strength = <3>;
->> +       };
->> +};
->> +
->>  &pmk8350_vadc {
->>         pmk8350_die_temp {
->>                 reg = <PMK8350_ADC7_DIE_TEMP>;
+I see. I don't think this is relevant for the script here, but I'll try
+it nonetheless for educational reasons.
+
+> To me it's less error prone to have something like this:
+>=20
+> while [ $# -gt 1 ]; do # notice the condition, btw
+>   case "$1" in
+>   opt_with_parameter) ...; shift;;
+>   toggler_opt) ...;;
+>   esac
+>   shift
+> done
+
+Ok, I like it. Thanks!
+
+
+--E2KqYzKKcD6Ak7yQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmE2B8MACgkQFA3kzBSg
+KbbM2w/+O/7VKU5zWJjfyw0XWGAcLDw8fPBjXuH4Wo9GrgpyP6gb+OJZB2qxMjzE
+uj6lWuMc8LfgpqDdApUBnxjtuVA0IlyLfwVmIL/LXL9q8MtTPC9e2jIzcyjPlDP7
+eyZG9NdF/DGC9CE2wCntk+f4tadGxD9L+NX4OwpoPSmk5M7NFIorz1lVBR9AKCNd
+nPGCX6FPfD/bxQLFj5pCA/f27kWzY371OlU6ifWuX6rLUwwAIrKsA0UMwRBMQ88P
+shhqnOt1ELS08IubdTw4Zp5sxQNMhIqhSm1Iaq0A0BcSAXTVbYnxYpC+pAHbLqtm
+A5qyUed7/bCNEKa8WzdmL2NDCtEJi6bB/2dMNdc7BzQqwHLqEFHfYM2IPbYwADzJ
+4YQm0OjVoKxOTLIipkS0ND9utid7b61kjfMA/2+uTWc/CgzU8F7QyKWiR7NxKmVl
+BAX1A4Cx9fhDmKMxucwCbU5avNjPHOFP4j8s6lKt8jQU2uAUh+q3o3pqXOLXjwXC
+hr/KLhQP3JGHT5FxgAyzfurk8aCGvdGWGsydveFiR6jfM7QnEdxfBeoxEaucgRGU
+Lk6xbKOKve7usethcKWVGfuskcvtOcLs2aNLErprE8IkX3zeML5b8WDdlaVxsi9r
+xSUz7Mb/9Rgb1cuzQOodnAqzdXpnTG8nbG873XbY8c6HEw1XGaA=
+=g5mu
+-----END PGP SIGNATURE-----
+
+--E2KqYzKKcD6Ak7yQ--
