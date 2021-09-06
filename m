@@ -2,120 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A7BA401995
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Sep 2021 12:16:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D258401A41
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Sep 2021 12:58:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235565AbhIFKRM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Sep 2021 06:17:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241728AbhIFKRM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Sep 2021 06:17:12 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72882C061575;
-        Mon,  6 Sep 2021 03:16:07 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id g22so8814454edy.12;
-        Mon, 06 Sep 2021 03:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=oo2xWBhFucxQhgfCJPJat37DS4B52WhmbBtOKiTxJic=;
-        b=B9i+FFaL+D8vW6JzaIvpiMpQLI5G6NuCqRABbmuyN9Go+TPC077khQtAC2bumJiYdD
-         YQEYetWy3pRZQdkqviEFHgyMW37viZyEKkuGccUHVwzD8zE/fXEtFNLTsuofwQOvTOCk
-         /6sv2RsXeQTHzc1+40h5z0hrYmC5SL+hlO1BKFLFdtg/CtMLZFa06buv4+xT4n35SQ1O
-         GJP0T6kQSNKwlNobt+fUSf+0+FSZfy0LegUe8uHgXzDvUoBvsU8xtTN+Mb88zHIBnqnO
-         msdqp1LPFV0X8oHdupo7PiujDfyG6z56IABPyFw+nPCyY6otkfAc/ErxL+vC0A+3Yu4r
-         bi5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=oo2xWBhFucxQhgfCJPJat37DS4B52WhmbBtOKiTxJic=;
-        b=afuvZgwboLSDzepqN2mFuQALmOZ9dDbnX4OA9WYq2HeCRYyCDfaXY9NVP5rr+sNlJf
-         JDH5UL/0gw6pgSh2sWCdUtZh8282lNBatbFyLo0g4Xr1uod5nH4imGuzlHGUNs9D3o59
-         7NQWCUY9yVnRq5IOQikRAxKJkv7HMH6D3GxW4W0t4PZ9KbugacjJ5DcsHjUeSyPhWJYB
-         uuIi/9aorbTHmtUt6mJZzRGRr7u3gTnoPkjuGCFz+IOoZsITBVK5zOEdv3jMoMbw2Da1
-         mTAgKrC8McuW8ywr3OCHZx8mMtoyhg/aIExMTnQ6PVUbef24pyXaIPxjjTpbDjm05qrN
-         jx5A==
-X-Gm-Message-State: AOAM531BQCUj+TuN2wvJuSxRkEJ4WjDfuS8aK2pdWP4zbTsKxtFt2MWU
-        M3ASK2/GH3wey0rWSCqJjhm4mlis8cGoe/Rho74=
-X-Google-Smtp-Source: ABdhPJzQw6zHxo7M/Y9oDkgLCijq13EI4QrtckTgsiLz8v+rHPvKT09fsdCpvstKi6F8ke87yChzNGGZPuY2ofzSlcQ=
-X-Received: by 2002:aa7:d40b:: with SMTP id z11mr12832262edq.224.1630923365971;
- Mon, 06 Sep 2021 03:16:05 -0700 (PDT)
+        id S240396AbhIFK7V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Sep 2021 06:59:21 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:32290 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240404AbhIFK7U (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 6 Sep 2021 06:59:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1630925895; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=vsOcnMr2wpiwvzUcC8f61q76ivDkmYdEEI0Rs1N9cVE=;
+ b=tWnLLBcer4ahKFBZKflFNR1FqbbxDfTkPOu3jwEGsbpXj6EPBoJ2OoXLHkndjsDjIJePa/QC
+ IgOowgkQufjThdat/sPNA1d4bYRWlRslfjYLQYce7B82WoWDo2+IaXTjqvkzyEeMi0a5n6U8
+ E9i4+Qoy8A/68WvrBGgyago0s6U=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 6135f44740d2129ac15e150e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 06 Sep 2021 10:58:15
+ GMT
+Sender: skakit=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D75D9C4360D; Mon,  6 Sep 2021 10:58:14 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: skakit)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5FF9AC4338F;
+        Mon,  6 Sep 2021 10:58:14 +0000 (UTC)
 MIME-Version: 1.0
-References: <20210901194549.3999-1-wsa+renesas@sang-engineering.com>
- <20210901194549.3999-2-wsa+renesas@sang-engineering.com> <CAHp75VdZt_dDb0YpThfsoqRvWdjfVZT70o=eCJCbThJ9qbD42w@mail.gmail.com>
- <YTXZgNQJj0aI4zuC@kunai>
-In-Reply-To: <YTXZgNQJj0aI4zuC@kunai>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 6 Sep 2021 13:15:28 +0300
-Message-ID: <CAHp75VdJZhgqshOQS=L1rKiNZLTqNnrc4FXoJKaNpaQT0QB_Eg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] gpio: add sloppy logic analyzer using polling
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 06 Sep 2021 16:28:14 +0530
+From:   skakit@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Collins <collinsd@codeaurora.org>, kgunda@codeaurora.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH V2 2/2] arm64: dts: sc7280: Add volume up support for
+ sc7280-idp
+In-Reply-To: <CAE-0n52VOzjexezuEe449vT_crB_zVkn5Bnrkh6-RcJfWGTQ9w@mail.gmail.com>
+References: <1630574106-3394-1-git-send-email-skakit@codeaurora.org>
+ <1630574106-3394-3-git-send-email-skakit@codeaurora.org>
+ <CAE-0n52VOzjexezuEe449vT_crB_zVkn5Bnrkh6-RcJfWGTQ9w@mail.gmail.com>
+Message-ID: <9137f113e0cdd718edaa3d32b30bf043@codeaurora.org>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 6, 2021 at 12:04 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
+On 2021-09-03 23:42, Stephen Boyd wrote:
+> Quoting satya priya (2021-09-02 02:15:06)
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+>> index 371a2a9..52bcbbc 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+>> @@ -199,6 +199,37 @@
+>>         modem-init;
+>>  };
+>> 
+>> +&soc {
+> 
+> 's' comes after 'p' so this is in the wrong place.
+> 
 
-...
+Okay will move it accordingly.
 
-> > > +#!/bin/sh -eu
-> >
-> > Next step is to add 'f' to the mix here :-)
->
-> -f broke zip file generation in a way I didn't know how to resolve
-> differently. Sadly, I can't recall the details right now.
+>> +       gpio_keys {
+>> +               compatible = "gpio-keys";
+>> +               label = "gpio-keys";
+>> +
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&key_vol_up_default>;
+>> +
+>> +               vol_up {
+>> +                       label = "volume_up";
+>> +                       gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
+>> +                       linux,input-type = <1>;
+>> +                       linux,code = <KEY_VOLUMEUP>;
+>> +                       gpio-key,wakeup;
+>> +                       debounce-interval = <15>;
+>> +                       linux,can-disable;
+>> +               };
+>> +       };
+>> +};
+>> +
+>> +&pm7325_gpios {
+>> +       key_vol_up_default: key_vol_up_default {
+> 
+> Please move this to the "PINCTRL - additions to nodes defined in
+> sc7280.dtsi" section and then sort alphabetically on node naem.
+> 
 
-Yes, it means you are not able to use * (a.k.a. glob() function) in
-the shell which increases a lot security and other (misuse) concerns.
-Instead you have to use `find` or similar tools to collect the list of
-the files of your interest.
+Okay.
 
-...
-
-> > > +while true; do
-> > > +       case "$1" in
-> > > +       -c|--cpu) initcpu="$2"; shift 2;;
-> > > +       -d|--duration-us) duration="$2"; shift 2;;
-> > > +       -h|--help) print_help; exit 0;;
-> > > +       -i|--instance) lasysfsdir="$sysfsdir/$2"; shift 2;;
-> > > +       -k|--kernel-debug-dir) debugdir="$2"; shift 2;;
-> > > +       -n|--num_samples) numsamples="$2"; shift 2;;
-> > > +       -o|--output-dir) outputdir="$2"; shift 2;;
-> > > +       -s|--sample_freq) samplefreq="$2"; shift 2;;
-> > > +       -t|--trigger) triggerdat="$2"; shift 2;;
-> > > +       --)     shift; break;;
-> > > +       *)      fail "error parsing commandline: $*";;
-> > > +       esac
-> >
-> > I would prefer to have a clear shift here instead of doing shift 2
-> > everywhere above (less error prone).
->
-> If we ever support binary arguments (toggles), then a generic 'shift 2'
-> won't work?
-
-To me it's less error prone to have something like this:
-
-while [ $# -gt 1 ]; do # notice the condition, btw
-  case "$1" in
-  opt_with_parameter) ...; shift;;
-  toggler_opt) ...;;
-  esac
-  shift
-done
-
-> > > +done
-
-Either way it's minor.
-
--- 
-With Best Regards,
-Andy Shevchenko
+>> +               pins = "gpio6";
+>> +               function = "normal";
+>> +               input-enable;
+>> +               bias-pull-up;
+>> +               power-source = <0>;
+>> +               qcom,drive-strength = <3>;
+>> +       };
+>> +};
+>> +
+>>  &pmk8350_vadc {
+>>         pmk8350_die_temp {
+>>                 reg = <PMK8350_ADC7_DIE_TEMP>;
