@@ -2,105 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BB2E401D83
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Sep 2021 17:18:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B48C1401E3D
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Sep 2021 18:27:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231841AbhIFPTs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Sep 2021 11:19:48 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:37521 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbhIFPTo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Sep 2021 11:19:44 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]) by
- mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MK3mS-1mfUnL2mly-00LUiJ; Mon, 06 Sep 2021 17:18:37 +0200
-Received: by mail-wm1-f48.google.com with SMTP id u26-20020a05600c441a00b002f66b2d8603so5257727wmn.4;
-        Mon, 06 Sep 2021 08:18:37 -0700 (PDT)
-X-Gm-Message-State: AOAM530BqXq2/fIzlWxE6383hv64bnPUbL5M4ZwvBplz5n+EWD275bIe
-        HXggC7AhcnfzzXSNky3wB031MVfeTe6u3FpAocU=
-X-Google-Smtp-Source: ABdhPJyUmcqlSXXDo6N5xidc4owjAr9mq6VnGYegss8BqCjEoHDJDIGQSX81vWKqdKbgR3AuSKJGRRdG3vRKY6C0l/U=
-X-Received: by 2002:a1c:a9ce:: with SMTP id s197mr11919353wme.173.1630941517194;
- Mon, 06 Sep 2021 08:18:37 -0700 (PDT)
+        id S243963AbhIFQ2f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Sep 2021 12:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244027AbhIFQ2e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Sep 2021 12:28:34 -0400
+Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C13A8C0613C1
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Sep 2021 09:27:29 -0700 (PDT)
+Received: by mail-vs1-xe31.google.com with SMTP id u1so6001386vsq.10
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Sep 2021 09:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1v7i8HiyO/1Ym8mqrztY8OP2nXDvUjYMU9SPvvdR5iI=;
+        b=KeHclL15otyM8f+dOzQIGQr7RAW+HW31nUm+fsJMd5ukKGOzcIIoebv4l1rxxXdtow
+         2fLv4nH55dwxD6gWWBmA140rbu234m3x5wf0LDpPh4sAK0NohP5zfd6vUKchNaYgOGiA
+         HL7C76TFHjncsA/UknFYGkUCsGfGwNvcBjRl5b9pqn7T8e3GeSmQeE2JviKh+hTXPiH8
+         W3BLdUlb6j6hZMp6lyDcAHGq2rNF5/ZzxpvNboC+KUURUxc2GOwJ+tpmmR73RePzER5F
+         xgX63er1eENm88yda0CY34Qf6EDq5VLW6gBxZ6qPPjiD1bt3kIioC5S7Sq5kOXmX7nKi
+         JUrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1v7i8HiyO/1Ym8mqrztY8OP2nXDvUjYMU9SPvvdR5iI=;
+        b=EdzWKrZ5opUmBQ5Uth7oAHLzrfUAVTNdIeg4cwfFttT7Pv5hqMTgGzZoi1g+0HWHjb
+         L6cdO/7EhPqyH0G+fYYnvmhHt2SMKSVbzIJeJT0n4ZDq5uoUnFcg/fUrXAYvKT/VeY4b
+         3WLgmtPnAvgk8sHFW26/Ew5h9T7PBWPuBMK4o8f94/ON8j1vy5HYeTMcHPe1E5wN0yyQ
+         b9h+WZs7i7iLERNx2T90ajS/TXxQfIOrMj2CjaQ2dyDvNbr3rN2gQGIHexPmrJwFjghU
+         +SUJMqqY5+x7gQfx0dx7RxRQcr+8t0oJ8/lalgujg3BZ2YhgLfCq2Ab+YvTSZjUbGPYa
+         sv2Q==
+X-Gm-Message-State: AOAM530gl+3xOovYzetK849uodDx2RUGQIKrukUEr71lURUnkakAWgVv
+        RnOS55rK1K6EkFrZxmsJGZ5C0Rh9oj+BY5y19/x82Q==
+X-Google-Smtp-Source: ABdhPJx42jYyWvN/Qn4VgmviI0/F3R5RsPLT5EvzkWi6iwNer+i/tY/TKP2zG7TW4SPXjMUt+ScleFoLjPAzV0zGCcs=
+X-Received: by 2002:a67:d387:: with SMTP id b7mr6860162vsj.55.1630945648771;
+ Mon, 06 Sep 2021 09:27:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210906134040.96642-1-wangborong@cdjrlc.com> <CAMuHMdXq-ACdy8C7Efamnwz_h=h8_C4-3y14O8-S61EnB7pWmQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdXq-ACdy8C7Efamnwz_h=h8_C4-3y14O8-S61EnB7pWmQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 6 Sep 2021 17:18:21 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a03pYn3RvayqxWhHYbS9qcp13B3Mj29iS0hsrD3cpCi6w@mail.gmail.com>
-Message-ID: <CAK8P3a03pYn3RvayqxWhHYbS9qcp13B3Mj29iS0hsrD3cpCi6w@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: no need to initialise global statics
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jason Wang <wangborong@cdjrlc.com>,
+References: <20210811114827.27322-1-semen.protsenko@linaro.org>
+ <20210811114827.27322-4-semen.protsenko@linaro.org> <YRwodjUxlZmvrvSC@robh.at.kernel.org>
+In-Reply-To: <YRwodjUxlZmvrvSC@robh.at.kernel.org>
+From:   Sam Protsenko <semen.protsenko@linaro.org>
+Date:   Mon, 6 Sep 2021 19:27:17 +0300
+Message-ID: <CAPLW+4kvty3PQmSki8eM+WSgcA+zFfyD+--e6KBpird0-gOhMw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] dt-bindings: serial: samsung: Add Exynos850 doc
+To:     Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
+        Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tom Gall <tom.gall@linaro.org>, Marc Zyngier <maz@kernel.org>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Ryu Euiyoul <ryu.real@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:MDau2A3ITdVaKwn/eUO9FoEXzsR/ztjrl5xQOna+foyVY8KydV2
- voiN+1Sf1AYfH8fbv4KHEuA6wvxZ+FY6u3v83rfUjIkNbPIXlGetNRjgsTPcnoNiYqCoUUb
- HRE2d//rJSOsILah+pVhHj4gHaSfVxrbLqGOAA9xhp/V0t5acJmy1CGrxZBFyi4TsadnDXF
- LJsgP/e3zWuwZyd+TwnLQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vafXHZNZbmk=:+GPJ0Q9Tb02Lx0FPcEEyxm
- Iu9foELLjNIQfxZipii8KJVG4kPsLT2Q0bXbmlWaObLqECnDruNC1baBQdwbKyh3k6N9U4Z38
- szpd9ZlWSi/un1MgTxJLNeqvJqzMmAid/Utt1Dh/u78cYFnhBDrCihgUlJlkQnSxysASk/LxB
- fQn3EvcBZiCXn8d5B3/QvNzc+IDOH9Ztv51wLWOYSkd/n0L3DNZSRJuoPx6z2P5jG1hVVIid2
- nRX3ozBxeRKri4gkfdWAQufaZ0Xe2aFwwDhI5045GaV1oD4jxw3bAF3b+T8iqVceVMk4i+ga0
- t7ZcTxZi0NQuM8WxkTC12XDnLxawnvTEBlsi9O6ZRGd32Xdb2Gl3BcpsPzkgrEL4boLVX7yqS
- s3njH0DulHGrF5jYRs1uFo7qXfGPWckVoCf9/F9HeQDVvKajN3bvrKEl9aofwhuuEJziWcvv2
- Vuk/tempMe0EUAXZp7YCMV5EqXKHJHb6CcJ0+4b2RBBmhumgyGik6H5A6ppovBDw5a0jFaUGF
- iwM9KXwRjs31wAsJjIBe2R0YAs3w+s9bufPP0D9jisD+Bm5qLiPo9awWSnoZ5THlHNp5ZcLQq
- OyKPWgphauLfAblPCrsERyUz3lHaDrq+JASse6GuKBdZ3hviU8v7cJSH/4A7BEW/z12GTAfKH
- 1XAVIFkqCOuS5s6iq1M/+EuZjeNlMVq9/BIL5eLl9mtO+ri93n4wxkVa5ez1jE2pm+QdLu5lf
- AL7Htp/y+wDvrmsB25T+sMlXeW6FiugcVwaSoA==
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 6, 2021 at 4:36 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > --- a/drivers/pinctrl/renesas/core.c
-> > +++ b/drivers/pinctrl/renesas/core.c
-> > @@ -741,12 +741,12 @@ static int sh_pfc_suspend_init(struct sh_pfc *pfc) { return 0; }
-> >  #define SH_PFC_MAX_REGS                300
-> >  #define SH_PFC_MAX_ENUMS       3000
+On Wed, 18 Aug 2021 at 00:22, Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, 11 Aug 2021 14:48:23 +0300, Sam Protsenko wrote:
+> > Add compatible string for Exynos850 SoC.
 > >
-> > -static unsigned int sh_pfc_errors __initdata = 0;
-> > -static unsigned int sh_pfc_warnings __initdata = 0;
-> > -static u32 *sh_pfc_regs __initdata = NULL;
-> > -static u32 sh_pfc_num_regs __initdata = 0;
-> > -static u16 *sh_pfc_enums __initdata = NULL;
-> > -static u32 sh_pfc_num_enums __initdata = 0;
-> > +static unsigned int sh_pfc_errors __initdata;
-> > +static unsigned int sh_pfc_warnings __initdata;
-> > +static u32 *sh_pfc_regs __initdata;
-> > +static u32 sh_pfc_num_regs __initdata;
-> > +static u16 *sh_pfc_enums __initdata;
-> > +static u32 sh_pfc_num_enums __initdata;
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> > Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
+> > ---
+> > Changes in v3:
+> >   - None
+> >
+> > Changes in v2:
+> >   - None
+> >
+> >  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
 >
-> These are special, as they use __initdata.
-> While dropping the initializers seems to work fine with e.g. gcc 9,
-> I'm quite sure that would fail with older compiler versions, where
-> the variable would be put in bss instead of initdata.
->
-> See the example in include/linux/init.h, which explicitly
-> initializes a variable with zero:
->
->     static int init_variable __initdata = 0;
->
-> Arnd: do you know in which version of gcc this was fixed?
-> It seems at least 6.5.0 and later are fine (I don't have all required
-> shared libs to run e.g. 5.5.0).
+> Acked-by: Rob Herring <robh@kernel.org>
 
-I think you mixed up what happens: As far as I know, older compilers
-would put variables without the =0 into .bss, but those with the explicit
-=0 would end up in .data. Newer compilers treat them exactly the
-same, and these variables all get put into .bss by default. This seems
-to already be the case with gcc-4.1, which is the oldest one I could
-easily try.
+Hi guys,
 
-I'm rather sure that regardless of the compiler version, adding an
-explicit section attribute like the __initdata would force the section
-even on the pre-4.1 compilers.
+Can we please merge this one? I can see that corresponding driver
+changes were pulled in already into malinline, but this one seems to
+be missed.
 
-        Arnd
+Thanks!
