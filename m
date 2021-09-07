@@ -2,80 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15415402F6B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Sep 2021 22:08:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C87A402F71
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Sep 2021 22:14:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242169AbhIGUJw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Sep 2021 16:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241385AbhIGUJw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Sep 2021 16:09:52 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76752C061575
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Sep 2021 13:08:45 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id l10so138031lfg.4
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Sep 2021 13:08:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UB1aa4k6oVCC3ZcKTNT6pk9uCjLuerGp3iiuYcgHab0=;
-        b=GXUz8Yu58LAfdayBqLmD43RvsjiIxZAFWS+hUHR+8BPg2YlRn0p0H+Oog9x5JRVqVu
-         yJjKTnuw5QOSKhG/nuWafIMV3f5kgfP0FFtXTzuh+CZ3irP1Hd4zKQ9gz9ZGShWNxE1X
-         KzTs2W6uu6THgvmQSmdZ3WS5DErtWFQKPuRTWjNeJwLp4AW7CYYVY/4R36O+AnV6JKMQ
-         1m/KDG5y1mz1R8qypDZDQn5ynfcTC14sxqZ3k1snMEr0wyU2i/H1wwL5qU2oy/rhPTjC
-         UO/TF5bnOzW+CvxIO+MXUsFJEwN3gjbsyzdWF9H7YVGX6iys0ZjDlWbl2sb7gb6CcFcS
-         h51Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UB1aa4k6oVCC3ZcKTNT6pk9uCjLuerGp3iiuYcgHab0=;
-        b=dDGK71euhxUL+aPqYG1CfflEOR1eMD1dmvqG9iT1JSL20vHYXsVQGZDg46PysLieMV
-         UfWnyy2VrpeSzjsJeEKLR4FfIA2x65M7T8nxzxd0XOmEJbHFjD5w3iTjdg+tn8zQkoWC
-         xvLoiNDgYXGudcZYHPbi172hSAHPgj1GZVLcqGIKtg2LsChELZ162w6cMrqtZvuwqhzP
-         v2bqc5dnciuZvt5JuZZ4nCi+lWhp76j4EIq1lMjQwVQXiw9VLYK9vH4U+m5xQfjI8eRR
-         EKNGNCwvM9hpPVX6RXra/vlFmQiCAAVQxMHN9XzcGun1HLI2Ef5aLbXYCWHemsAR2JNF
-         lX+A==
-X-Gm-Message-State: AOAM531+Z3qSmndISY4M38Emjohxf/hUrKRylEd/qAyI0WPTiO5xP/06
-        Bazu6FMJxowfaibteavmMO9tj6NBVmKwdS3/t4bY5w==
-X-Google-Smtp-Source: ABdhPJwwPKqhHma6Z4YaFvZipgRD24ypIJOPL5RKt1Hw0Mc5YyFrZGWs8Ts5NJdslSxw1qbP7cIz5GzjkpBGqkrRCVU=
-X-Received: by 2002:a19:6455:: with SMTP id b21mr102063lfj.656.1631045323793;
- Tue, 07 Sep 2021 13:08:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210907083613.31268-1-brgl@bgdev.pl> <CAHk-=wgQBgkut6zXTbZN45AtJmSceXwDw6Y60ZmwrPkOL__A8g@mail.gmail.com>
-In-Reply-To: <CAHk-=wgQBgkut6zXTbZN45AtJmSceXwDw6Y60ZmwrPkOL__A8g@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Sep 2021 22:08:32 +0200
-Message-ID: <CACRpkdbG+pG8SXA1OGsfv2ZBoT8v9mgzUqWY-VFNLDN9pUAHUA@mail.gmail.com>
+        id S233066AbhIGUPb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Sep 2021 16:15:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230474AbhIGUP3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 7 Sep 2021 16:15:29 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 8F73460187;
+        Tue,  7 Sep 2021 20:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631045662;
+        bh=BkQV6zeg2LQkGC46zrw+hhHOEnp7Tv+sYE/Fj0iNkmU=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=oVMAhW5tteryp/KM9INUTNwvVRdjz+56sVKQcF6E/gJwt8xqVU+TwLIUvnCvrESg/
+         uVMe+U8vgRNlSWqrHGQhULJ05KRljVMzJ/Zd856tYkFgpQjWYJ4o7q+IeHuBVF430X
+         zR/jCkRwwLXvn+HiwmPC+P9YYhGt6XHUcaWY1nE65POcyMyavd3d9OjUVL0aoGtnWx
+         bQs+h2qBbjfMSSwgkvnnzZcIiD8NzC+BYikLIL6L81x0NbC9mXPqvGZ9rxN/kuJIQF
+         wfqomO0kBetGkU82jq8q5cue3nml9Wk+H+7xpgwMO9SV9rj4yZX9vQxMAlG6qaeSXb
+         aEnKyvb4cuXBw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 7ACBE60A38;
+        Tue,  7 Sep 2021 20:14:22 +0000 (UTC)
 Subject: Re: [GIT PULL] gpio: updates for v5.15
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210907083613.31268-1-brgl@bgdev.pl>
+References: <20210907083613.31268-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210907083613.31268-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.15
+X-PR-Tracked-Commit-Id: 889a1b3f35db6ba5ba6a0c23a3a55594570b6a17
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5e6a5845dd651b00754a62edec2f0a439182024d
+Message-Id: <163104566243.21240.4845140527007156447.pr-tracker-bot@kernel.org>
+Date:   Tue, 07 Sep 2021 20:14:22 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 7, 2021 at 9:36 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+The pull request you sent on Tue,  7 Sep 2021 10:36:13 +0200:
 
-> Merge commits need explanations. They need explanations for why the
-> merge is done, and what the merge pulls in. Not this "single line that
-> doesn't explain anything".
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.15
 
-Good point, I think I am one of the offenders here as well, and I see
-there has been quite a bit of media stir about github doing blank
-merges like this by default (IIUC).
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5e6a5845dd651b00754a62edec2f0a439182024d
 
-I'll try to do it better going forward, it'd be nice if there is or could be
-a way to just configure a git tree to disallow blank commit messages,
-then we can configure the maintainer trees so that we just can't do
-it wrong, and if we mention this in
-Documentation/maintainer/configure-git.rst
-I think it would considerably improve things, I wonder if this is possible?
+Thank you!
 
-Yours,
-Linus Walleij
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
