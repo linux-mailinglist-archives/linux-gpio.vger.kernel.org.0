@@ -2,178 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B18AD402469
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Sep 2021 09:32:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF81F40249C
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Sep 2021 09:44:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237640AbhIGHeB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Sep 2021 03:34:01 -0400
-Received: from mail-bn8nam12on2050.outbound.protection.outlook.com ([40.107.237.50]:33377
+        id S242493AbhIGHoG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Sep 2021 03:44:06 -0400
+Received: from mail-bn8nam12on2072.outbound.protection.outlook.com ([40.107.237.72]:37601
         "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S237574AbhIGHeA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Sep 2021 03:34:00 -0400
+        id S241896AbhIGHnp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 7 Sep 2021 03:43:45 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ChwdIDWTpeEO6EpO4NKT8ZQIZbCVpsCzrfACL3kMZy0e4t06gBIJeSpN3wBeGS1FCyxp77kTXnrUWc9i36bs0EItg29lF4ixMl7hdjM4aXd065BGGdddalIMdRhpzG8fFYNGTHhA5FGHDP84cE+8iZkEov3vuKwg1ARq8684Mcak2nm1Jdzir9GVN/DrX9F12Vz4jss8Ti4WpH2hkcXQ+fg2FHcRgaAolpyL/uiejpTXfT95I682eNmpZ1tgbbXkAu2yYJNoH5Szgvpfv/1PJeJ67hdZT36FrFsm/lN2rbRLTOyjVPiiJaB82Ws4srMdgLnl/21UNFaFqiOylRKQng==
+ b=Sl3/orb4NsuLb7TICWFc4QHbtKJXscKkiIq7cCvaxdiXj2apaeSB/ZosP/wt1C+VYx4MRoPoVx7oNIOnHMD3kjbqnMeYpSZsmiQRsQcJ8l73BrviNZYGrUMmW4uTfyLJL7uG1BheNdlatQL9popWMqJLbXXmqS4r6V7DdxGXQ2gWs1Fet51KGY/uh+eJRT5fqKpvp95/Y4clJQe17nBYzktiDU3ou5Wk9k3n0B6Lgv9nFVeudPNcNuegRCIzRYWs3qtbQGwMsI1ibQqWjDjz6xCMkW3cdFay3Y44sgBFZGLVdyXmFWHdbRHLN2nmtNIUAjptTldRWANfao7vi1abzA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=Q9SmtQF/3R/2CpmdaDA6rdxMKwUi699jXGv1X0n2HiM=;
- b=FerkhcHDg3KpEZ9euhSexW/SmC3AM4QEVn/2/OTuWoeuvRhtJj7Z+HXEXnsOpgF4hhHPgqde9qF18iKZcVDT/nngA2NmBPtccat97oWCXhUyzWkygrlbZaEX3rO+xYZmEt0wDVb0fCmkgPJkMXVeVBiYEP9k8Nw7AI317tUohldhNAj2Y5hWpVBsA5BCogHkcDJpHW60a9kV642yPWc22eciaFIMp2DCL3Wi6xVpmF55xHsVUosVSm1xQzKFyRRpOdspJnKlTX8cF769hYtHGdGrpMNKNOb65sX9zSdIWggyQsw4UCPDABUppXV4ZPbNNaNOTbEyTQEY5AJnFHNazA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.35) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=3HRSgEvsxJ/2MrD9JoE3n/Om9TSX+BLUCxz3QFIDgiw=;
+ b=GQmyp5vON6cr6I3TjXYHcNS0okZZT9DbM86HvZVEzgbk6df0ZNy4TNsx1Ys3kAO8TeoQUN9bWWg6yuc65odm2+v/ZM33IuOFqzIpArztR1AdxdM10r+fkkt6mSyWd5SAgMXMRJPkRaL9Nkao30fZCojTwKSbaGHoQjtcwFzn4gwPna/9dZb0oHjf1+GIue8tQ3Yt8SXPBWMAd3sX+MNKq3AZ/kgGdQCGR+tnkTlrQwV0MQBum+F4NOCzuYKFEWiYFgGA5/1Vq+h16/UUL3YJ65jSR2yq7em28QDwUKDvtHfG+hzVr7/8tSYAnP9Z2jIRzW248B/eeBIjKpM5oOIBHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q9SmtQF/3R/2CpmdaDA6rdxMKwUi699jXGv1X0n2HiM=;
- b=ICEVd3XLjcO2qeobOFkzgMbdmw2j1RMgiyODnd41Jr5QMUZ7LnWmy9jYhKnpmJjnLxB3PLoeE+rOSZbNTxSCo/mY5TRRhyQHIl2bZK9YS9luquxt7rSNRaW2JKKQB9SHmB34YtdrgbkQQ2urphwjwu80/81oCGuCszKIa/LLdRYpFFNaDCHUvw6N1LmXRKFuESMAoPjPxsBir2dnPCvXi0Ts2/SLSb9tAqH2l2Cm8B5Sk7AAc01HFHUjC3XxJKvyfmxWZv3RFwZBXFnsnjahwQbgekUxfufkLfAMa47GJmdWuOczbdFGFXrrtnEaW1gUEhX9mBxqAqLS2YjGlEv3bg==
-Received: from MW2PR16CA0014.namprd16.prod.outlook.com (2603:10b6:907::27) by
- SJ0PR12MB5438.namprd12.prod.outlook.com (2603:10b6:a03:3ba::23) with
+ bh=3HRSgEvsxJ/2MrD9JoE3n/Om9TSX+BLUCxz3QFIDgiw=;
+ b=sLeP7jH9zzPUbvLSBvIURBbmR+lzCaICDmCeXWCquyR4sz65CbVg39AKRhP8EoUhHvLbBMXCAtE2hs1NHNH5bQm7jbMGK1Bf5KwjDgQja4yQt1AkxkapYGdiN34TEnn7XMbTz9PUykDSDv0GksZdvp0NejMYVZeQggrao8uy168=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by BL1PR12MB5317.namprd12.prod.outlook.com (2603:10b6:208:31f::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.25; Tue, 7 Sep
- 2021 07:32:52 +0000
-Received: from CO1NAM11FT012.eop-nam11.prod.protection.outlook.com
- (2603:10b6:907:0:cafe::b8) by MW2PR16CA0014.outlook.office365.com
- (2603:10b6:907::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19 via Frontend
- Transport; Tue, 7 Sep 2021 07:32:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.35; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.35) by
- CO1NAM11FT012.mail.protection.outlook.com (10.13.175.192) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4478.19 via Frontend Transport; Tue, 7 Sep 2021 07:32:52 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Tue, 7 Sep
- 2021 07:32:51 +0000
-Received: from pshete-ubuntu.nvidia.com (172.20.187.6) by mail.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Tue, 7 Sep 2021 07:32:49 +0000
-From:   Prathamesh Shete <pshete@nvidia.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <smangipudi@nvidia.com>, <pshete@nvidia.com>
-Subject: [PATCH v3 2/2] arm64: tegra: GPIO Interrupt entries
-Date:   Tue, 7 Sep 2021 13:02:24 +0530
-Message-ID: <20210907073224.3070-3-pshete@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210907073224.3070-1-pshete@nvidia.com>
-References: <YTWeSJ7jGamxx9Uu@orome.fritz.box>
- <20210907073224.3070-1-pshete@nvidia.com>
+ 2021 07:42:34 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::888b:8deb:3f8b:8d61]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::888b:8deb:3f8b:8d61%5]) with mapi id 15.20.4478.025; Tue, 7 Sep 2021
+ 07:42:34 +0000
+Subject: Re: [PATCH 0/2] Add irq PM wakeup
+To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+References: <20210831120613.1514899-1-Basavaraj.Natikar@amd.com>
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Message-ID: <65cb2134-c209-6381-fccd-43f252af6f9f@amd.com>
+Date:   Tue, 7 Sep 2021 13:12:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+In-Reply-To: <20210831120613.1514899-1-Basavaraj.Natikar@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN1PR01CA0078.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c00:1::18) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
+Received: from [172.31.152.48] (165.204.158.249) by PN1PR01CA0078.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:1::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19 via Frontend Transport; Tue, 7 Sep 2021 07:42:32 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: efa3bb30-3da3-4c87-7574-08d971d1b38d
-X-MS-TrafficTypeDiagnostic: SJ0PR12MB5438:
-X-Microsoft-Antispam-PRVS: <SJ0PR12MB5438107F5648C4EF87439537B7D39@SJ0PR12MB5438.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
+X-MS-Office365-Filtering-Correlation-Id: bf558a33-de8c-4cb1-1709-08d971d30e78
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5317:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL1PR12MB5317A9782E7342DCE38096199AD39@BL1PR12MB5317.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FpJ/H3bAW+1EGY3WyrXPUoW2GsW4wB7TxOYy+E8vsDzVqvNj7/ODAIZl6JXGhyvdk4pXyo18iV5eENZSR3fBZu4DKgEk7dhMlSFETvQiGTcSluf5nLzFoWJUh/MRVh5F2XWEaivSAoooPiMDv83ZQhHY0if7Mia7DcZ8pHcXSUbRXxOpAsPd5WmrKT3qhhRNFsN5Wa3DhSOlPcsDraA3H1nhZAGh+TjFGy1QFWBKQCb04G5lqAZaTHsnvC4eQ4k/RhnaOPAk7ayoI7Ygv3JOhMfzQy9CHUHzsr6NfNhr0c7kLD9OSAuPn5F3d87kUDn9CUAKZ1IJ7Y9AKrohop1I5DbZrxZnHCFYMZ9Y+Bdul9lsWOqz72g5x/KBWtk2T1HssIt4VFTKoRANZFFb5NdGfMruwX6pHVQMPbcNOQaSpkODcNRqT98Yq/bqk7dPG32VDxj5zlmsefnYPRGah9rIMsyJt03BzP0uVM3Foog61wTbtwEcwGUEawiTxUO2rEoKFJJsQQVNQHoOOtyk+101Vh/bxL3qZlWNpTfdkZvzs4v3sv7WN9/kL3WLmc11OCi2ifUpWFDcZc0dmxcPjuYSzUoBcxESuDmsBvg02GuqsUDshX51Ni1md4qj9tShrI/evt9w0fSb8oclpJmzJxW1eS1uTaBlHZ/8m0Y4d62HOVXHsHTPMBwBv7fGEEEdVE+KvPBcBkBeFr5obRwaJSMbEw==
-X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid04.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(6666004)(356005)(2906002)(508600001)(336012)(186003)(8936002)(2616005)(4326008)(36756003)(7636003)(8676002)(107886003)(26005)(47076005)(86362001)(70586007)(7696005)(426003)(1076003)(36860700001)(70206006)(316002)(110136005)(82310400003)(83380400001)(54906003)(5660300002)(36906005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2021 07:32:52.3093
+X-Microsoft-Antispam-Message-Info: RWf/Y8SEDRpynp19sPCJgqikuqF1/BZCfaqR+8DoxDzYvrE60CbSbUd1MOWyUro7GUfmpJsrDOQZjM0Ci/HRv+HPfM9WOaEr8bcEXC4XYXWatDKOe+Eno0+YvRcxxseiKmD2Zrf+VPXBaGwHOc1ka/xXnb08Np8J9+xQQdewnSH6t99KLohJl24TBfmGELsUxB0d4HkvzTu/75btVmcCKk1TDgyHlvHLopOhi3/mmm3MrWolJe4n3rBw0+1OR+urW7UxNKXmKKwAhSVJq7Mg9TdAzxCGyal3xpT1BKC8d0uc15FMhCZZtxTAGVIV/2hHgcZRCVaxOtKo3afcP5xx7CJGKU2iP9R3nAIcY5Aop1JvFn5cU2joiXx17LY5j5KfAG1NuWrXzui5PqZ1wPB1GSQhW4gj7XvzOM4WpNnXsJNGciIibZt/QP+r8vkcOPPX4bFjrrYniePk1ozpRrAIhQ55TgJRagqjq3DHmxjJlLca8McsX/iR55IM0HPUS2h2WpkGulqBbmh96++MXL1TPHtJWhMkp/iPUw7oGJaVsPtJJiQeWONYIRqxQiP90DqXNLg1Ez0JGykOoBM/m6nQ7Zp7isHcERcFMoG3K7/+i/Fa/n8ls3QXxmhsvx5wMqk1I/vfviRNciyFh3rkmYDgVHWsXanAwWsLDK6Cx+3Hrx9IVZkMEr7X1SAIbHa95yp5jdCq2W48eLnyUqm+0tGZXOEbOxr1PCOZovVEWoFzaOw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(366004)(396003)(39860400002)(5660300002)(53546011)(4744005)(8676002)(86362001)(83380400001)(31696002)(478600001)(26005)(2906002)(8936002)(186003)(36756003)(956004)(2616005)(6486002)(66946007)(66556008)(66476007)(6666004)(31686004)(38100700002)(16576012)(316002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b3YzOHRKbjlGUlBWdEtoWDk4TTR1Q21nNWFPTHNDUHFIaVVNV1FZRVZuODN1?=
+ =?utf-8?B?elhOYU4zaGJHZFhWdmtJMWd0SWM2ajBnUWlSMFd4Um5JYXlEZmVnNjJrdUxU?=
+ =?utf-8?B?NCtnY0F0UnJCTno2T0JSRVB2ZXRlVkFYYUlEZk9sVDE1WmZpcCtWTWNhb3c0?=
+ =?utf-8?B?WWZWd3N5ZlYrdENHR3dEWEVOZEV1U3R5UEw2VmdPV2x3V2V2czYwTHFLNGdS?=
+ =?utf-8?B?aFl6UzFXZ1h2Z3FPMldDM001LzZIWkFLd1VIQ3UyVVNqOHhSbjdjc0FMQ0Q1?=
+ =?utf-8?B?RW01bi9qaXYzaGVjK1hrdDVnU2tTL2cwSDhCa3FWem5HeUg4NmpCZkl5eXBl?=
+ =?utf-8?B?eVRiZHdqQW5mZ0dRaUpzL1pJZVN2K2VvVkdQMHVBeGtJNnR4WkYrQkdEOTZF?=
+ =?utf-8?B?MUwxcTRzdzEyTUJhc3ErL2RkVWJIV3U3U2dZenpCaStqVlFrMDBQamFpT3dt?=
+ =?utf-8?B?Q051dVNsNHZxeUdiWHVUb3FjakdtSENGanZ6amVzb2NPN2lacjBjaStESE5K?=
+ =?utf-8?B?S3NkTHJ3RExrU09VcVVXMEZUVW0xR0xrTmhxbXpVVUVJWXBQdUlKSDlLYlIx?=
+ =?utf-8?B?Y0tDSVExN2FzRDVEZ1RxWTJhdzVLY3ptUHlBKzR5U2EvR3hsNVZNZTUxZ2Ix?=
+ =?utf-8?B?eW1rMDZLaE11eTlJVStlN2xFNUthZlhQekdneVc3U3d0VHhVM2NkNlI2NUlj?=
+ =?utf-8?B?WDZwL3hkaDBOL3Y1SlVGRC9iZUxSTDBmUytPNXZDdVpTd2xDUEhIdFl5ZEhq?=
+ =?utf-8?B?SFNWWlRJMFlBdUVUV0lacGhVWVpTdEVMSEg3R3FJSG1qbXNkZ2RzZGsvTWZF?=
+ =?utf-8?B?bFlGbWJpeC9Ca0VmOVFmaStUaThDSi83TlNoR1JiN1pYMC9GNXNpMWxmdnZp?=
+ =?utf-8?B?NklkR014V1ViSGlCOGkvTXhSdmczMU5VaWJNa1JZdnNQUkFKZzBrRG5oS202?=
+ =?utf-8?B?N3lUU2VaVUdveUZVcitvY0VMcVNzWk4vSmN4K3VyZU4xbUJXVHBQYmluNW1P?=
+ =?utf-8?B?RmdlUUUvbDNKNHMzRWtuTThnRllWcUpnTis2Qmk0MlluODFhRGFjc0JNMSt1?=
+ =?utf-8?B?UHpNMGR6MTI3ZElFU3g3cll4Wk80OEdiNUxEbzFoT2JDVjJzYVRtYmFZVDV5?=
+ =?utf-8?B?N2NVZ1gyVncraVNEMU9nTUFVRlk1M0VCejA4N003L2x2MVV5ZFdLWS85NjhD?=
+ =?utf-8?B?VFlTb3E3d0xDMEhvY3R3UC9FY2NSeUdLcldNdHFPVU5rb2N3NDZOblhybFpr?=
+ =?utf-8?B?SFhrNWs2eHlpRFErZXdNKzZJNW83YU1tbGtxQkRPWmphOUc1RjcvUmI3NVEw?=
+ =?utf-8?B?UXFlNlJ2NG9OWkR2ZUVKM0dwRnNUNDJuRlZKNDVDVTFVcHA1dWFjUTE5VThm?=
+ =?utf-8?B?S2lkL2RGNElFWlVGeVRwazk5NWZsaWJZUVhrQkdMdmI5cXFaOGxWVEQ3V3pG?=
+ =?utf-8?B?YzlkamF1Tk9nN1FIaytBS0c3OUdSVS9YVThuVHlTK29RUUg0RmZIRVJoMi9h?=
+ =?utf-8?B?NmxRWjZqMDB2QzRTejV2dHlPVkd4RytmaFp0aitFU3ZLcGNMZ3ZFWTlaY3NG?=
+ =?utf-8?B?K0pGZ0htRUNkMjdKSDZWYnlnQVJrcXBrMUd1NGRNWWZNUk5INk0xK2hhc0FV?=
+ =?utf-8?B?STVTVkFkNFZETUdieWFlSGsyYlRpWW44a1JWQW9mTGUyeTRxVG0xK09GZmhI?=
+ =?utf-8?B?Qkx3eTlDT3hlQm4rUHk5OXAyYTY2RnFQc0YyeHREOE5ENzUybGZsbkcvSDFB?=
+ =?utf-8?Q?kXXt9XGo/iXT/1kaXxoz6AmuorLAWMkRgc+yF4B?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf558a33-de8c-4cb1-1709-08d971d30e78
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2021 07:42:34.5998
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: efa3bb30-3da3-4c87-7574-08d971d1b38d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT012.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5438
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e6TmWKswYg/68pB+i4yTimevjS2wG8iqLZfXMAAD22mQF0pVOlc4OxEfMe8peOYEx8kvwk8OojKSduAIqlrkFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5317
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: pshete <pshete@nvidia.com>
 
-Tegra19x supports 8 entries for GPIO controller.
-This change adds the required interrupt entires for all GPIO controllers.
 
-Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 49 +++++++++++++++++++++++-
- 1 file changed, 47 insertions(+), 2 deletions(-)
+On 8/31/2021 5:36 PM, Basavaraj Natikar wrote:
+> Changes include to handle IRQ wakeup mode wake the system from sleep
+> states like "suspend to RAM".
+> 
+> Basavaraj Natikar (2):
+>   pinctrl: amd: Add irq field data
+>   pinctrl: amd: Handle wake-up interrupt
+> 
+>  drivers/pinctrl/pinctrl-amd.c | 19 ++++++++++++++-----
+>  drivers/pinctrl/pinctrl-amd.h |  1 +
+>  2 files changed, 15 insertions(+), 5 deletions(-)
+> 
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index b7d532841390..c681a79c44ec 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -34,11 +34,53 @@
- 			reg = <0x2200000 0x10000>,
- 			      <0x2210000 0x10000>;
- 			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 291 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 293 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 294 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 295 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 303 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
- 			#gpio-cells = <2>;
-@@ -1273,7 +1315,10 @@
- 			reg-names = "security", "gpio";
- 			reg = <0xc2f0000 0x1000>,
- 			      <0xc2f1000 0x1000>;
--			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
--- 
-2.17.1
+Series Looks good to me.
 
+Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
