@@ -2,64 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC601402F8D
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Sep 2021 22:21:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AEB0402FB6
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Sep 2021 22:27:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242646AbhIGUWa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Sep 2021 16:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39892 "EHLO
+        id S239260AbhIGU2M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Sep 2021 16:28:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232816AbhIGUW3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Sep 2021 16:22:29 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C81C061575
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Sep 2021 13:21:23 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id y6so565747lje.2
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Sep 2021 13:21:22 -0700 (PDT)
+        with ESMTP id S1346478AbhIGU2M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Sep 2021 16:28:12 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E2EC061575
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Sep 2021 13:27:05 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id z2so253365lft.1
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Sep 2021 13:27:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qLPM3CmAMxCZympRP7kvfM9bqd+LVpjvPnRaMAwi04k=;
-        b=Pt3HaPqsQd/xVFlPx5FDQsGrdVQ+8S0LeNXHzsGEpQmH7rKovEryR630JuJZZLuxDd
-         hD5CoPHyHb3CaUOjQbJqpLFLeuJep69F6kModAS8eCqcsbcrTFnFlCgd0jyPPb20Ws0H
-         JOCVKDlW9Dcl0+1nXXE0QaBu3zRadKzUuF1YQ=
+        bh=kNnWr7VvFbJVbHak9kzp8+A6N60RsRSsS3eaMhvDg9w=;
+        b=dHhZoSbrc9jWRGG2vEoUeiijoLGiPxW++foOws+QuVh2LrLYuJ+tCVwuNxIipJVZiL
+         oR7MAdYImKp2LiksWPkITfXqUtoLqq9zDDbaTXUMBNnZUPgMzpq25BkouYXu/XVZq0lB
+         CPX5srk4/vlW/QWGQ0ICoBHq8bPy7YQhkNDmU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qLPM3CmAMxCZympRP7kvfM9bqd+LVpjvPnRaMAwi04k=;
-        b=dKRbd13JiwNrZmWaj6o8QmRzyFLn/Zd90MOhftJrd6bCPUKjrxg7s9uu58opaAmDM9
-         UhAtW7hsCOlRYUy+QsRLyJwakvbIdikiPZCbwrHG4ZWRwhS+hSf7r7+BGnj5hJHBNlPa
-         CM1gmaCUCplisEwsrZxGtTBKHaUZtNNCKB5a+GbDdy1Y477hWRG9H4thhs5HXz3TpbYl
-         zhsMqnv65Rdq7QAfXuYUtwN4It4gNZlrnsm/2ajQc/dHB/Mzj+eJ9PQLxL1s8tLNM1v4
-         KZdzlD5YpIyfKkdNbkT4CtLFGAK9AgPfQy1oBeYC8vGU+P1ZdRymoqBLkOxAScX+cZbs
-         b6kQ==
-X-Gm-Message-State: AOAM533H2NJDwgEkP2r2wQLT0wdL8O24TRFuD0lT3rOUBSF1jPkkNxJ0
-        FYnfKbi1fbKj64vj1qFMBIBVJNjcQqueR8fFNwQ=
-X-Google-Smtp-Source: ABdhPJwlhFhVdEKUhwopemRsMUqBMSsiT+jkHK7WtT6ETSK5qt2N2J1YNFTfIyx4EOO/xgugUqMXYw==
-X-Received: by 2002:a2e:58c:: with SMTP id 134mr31645ljf.269.1631046081005;
-        Tue, 07 Sep 2021 13:21:21 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id i12sm1538837ljm.116.2021.09.07.13.21.20
+        bh=kNnWr7VvFbJVbHak9kzp8+A6N60RsRSsS3eaMhvDg9w=;
+        b=Jfh1soRAwk9XmwueRCRE1v+jC12U5x5rwIzUFdi09Jez5oRO7QtQway+P1Hs/Oi3Lh
+         zIFW6q2QaHLmEpBfEa38FgC3eESlBY4kTt1qKgGexSGzlDhEb3yttYlBbdNykUNxKx1/
+         l6Eue4OvFT8+4Y6eoTGM4Woi0kN0JyvggNunq6WMN7wC8O34XZeKI4yo0vAIR1AYwMfl
+         xC13P2iZnWJ2GV6bLXI9jbPaTaO0VID3djkM4lhu2zvr62lovq79rF3wHq2tK0Fz72ye
+         K91aMeLp8Gtag/94d9VKrri96mt0W404DDz7FPsOY7xD49dIC4lnM5id9kcZLxAbbWx1
+         HmZQ==
+X-Gm-Message-State: AOAM533cSFa+RQ49z/2ocW2c/Yg1/kNbEz3SSoqYRlTdTvVK+iCpSspx
+        p/TdnbJnHITDwFa0p3D84eA7tk03E1PBdWDS784=
+X-Google-Smtp-Source: ABdhPJz5/L2Owxc3tWYXZhOo1hx4BCiBcmbH65IKl+uH0liypTMd3pdclsVRbvrikVkaPlVUL6ThTQ==
+X-Received: by 2002:ac2:46d3:: with SMTP id p19mr133548lfo.689.1631046422854;
+        Tue, 07 Sep 2021 13:27:02 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id d5sm1095219lfv.14.2021.09.07.13.27.01
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Sep 2021 13:21:20 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id q21so531774ljj.6
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Sep 2021 13:21:20 -0700 (PDT)
-X-Received: by 2002:a2e:8185:: with SMTP id e5mr38605ljg.31.1631046080210;
- Tue, 07 Sep 2021 13:21:20 -0700 (PDT)
+        Tue, 07 Sep 2021 13:27:02 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id y34so201668lfa.8
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Sep 2021 13:27:01 -0700 (PDT)
+X-Received: by 2002:a05:6512:1112:: with SMTP id l18mr158455lfg.402.1631046421443;
+ Tue, 07 Sep 2021 13:27:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210907083613.31268-1-brgl@bgdev.pl> <163104566243.21240.4845140527007156447.pr-tracker-bot@kernel.org>
-In-Reply-To: <163104566243.21240.4845140527007156447.pr-tracker-bot@kernel.org>
+References: <20210907083613.31268-1-brgl@bgdev.pl> <CAHk-=wgQBgkut6zXTbZN45AtJmSceXwDw6Y60ZmwrPkOL__A8g@mail.gmail.com>
+ <163104361220.4526.774832613459764535.pr-tracker-bot@kernel.org>
+ <CAHk-=wgAi8jHOFuk8iqXsL4Aekst996HGeN18aKQhXd-qu2dcQ@mail.gmail.com>
+ <20210907195647.jutizso7o2r4mddj@meerkat.local> <CAHk-=wiFkW3XGD+Ejv_mxTaPxh+tpRTCP+zufrWnNEiMm9PPEQ@mail.gmail.com>
+ <20210907202047.2tm4q5euaxlb7cjz@meerkat.local>
+In-Reply-To: <20210907202047.2tm4q5euaxlb7cjz@meerkat.local>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 7 Sep 2021 13:21:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg97FcRFyY=xSLfOmZ5XntCsp9bAj6VZXSbU8YXVzyOfA@mail.gmail.com>
-Message-ID: <CAHk-=wg97FcRFyY=xSLfOmZ5XntCsp9bAj6VZXSbU8YXVzyOfA@mail.gmail.com>
+Date:   Tue, 7 Sep 2021 13:26:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiEPq1QkCMQvL449rdEbJmhkpUo0Uv5OkisYeYKv7LcsA@mail.gmail.com>
+Message-ID: <CAHk-=wiEPq1QkCMQvL449rdEbJmhkpUo0Uv5OkisYeYKv7LcsA@mail.gmail.com>
 Subject: Re: [GIT PULL] gpio: updates for v5.15
-To:     pr-tracker-bot@kernel.org,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc:     pr-tracker-bot@kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -69,24 +72,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 7, 2021 at 1:14 PM <pr-tracker-bot@kernel.org> wrote:
+On Tue, Sep 7, 2021 at 1:20 PM Konstantin Ryabitsev
+<konstantin@linuxfoundation.org> wrote:
 >
-> The pull request you sent on Tue,  7 Sep 2021 10:36:13 +0200:
->
-> > git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.15
->
-> has been merged into torvalds/linux.git:
-> https://git.kernel.org/torvalds/c/5e6a5845dd651b00754a62edec2f0a439182024d
+> So, we can either live with an occasional fail like this or I can try to
+> figure out how to narrow down the rules for what is and isn't a valid pull
+> request.
 
-Yup, this is the real pr-tracker-bot response for Bartosz' pull
-request, not the over-eager slightly random one.
+I guess the occasional false positives are fine - if this was the
+first time I noticed something like that in the almost three years (?)
+we've had pr-tracker-bot, and you figured out what happened quickly,
+it clearly isn't a huge problem in practice.
 
-Looks like there was possibly some parsing problem with the email having that
-
-      Merge branch 'ib-rockchip' of
-git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
-into gpio/for-next
-
-in the shortlog. Or something like that?
-
-         Linus
+           Linus
