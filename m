@@ -2,167 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3896240631F
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Sep 2021 02:46:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86625407238
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Sep 2021 21:59:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242378AbhIJAqy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Sep 2021 20:46:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233808AbhIJAVu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 9 Sep 2021 20:21:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 83A3A61167;
-        Fri, 10 Sep 2021 00:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631233240;
-        bh=ThNscb1eXMOwmXv1J52+3yPD7APMCFSDNbyH5NyxMi8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=um8PFoQqtohXcToZBGDsgs0NLDG9urRyBiVtyXvI0LlA83yfqAOJGicpEwXr2oLmc
-         RD4OHCRv7AkUzI7oPyBJgx7B0pDZX3oNI8Sva+1KywVUoaQrk3aR8MqgXF2ct0uLCe
-         OlVCGqs/RmHz76GLWQ8WEAlg0W7dgOzFFtU3cuMSmhghIz33UHdsFQNymZVx6QQNH5
-         wL+90yJ6V47czymkFxOTfzdKSuPVY1njEvmKylYYnE+zZArRefXIsq00mzQgASUF/Q
-         ZR3WChCHFt3esrmUHIIFhPHhzfoQiY1mJsOzfInnF+TpLsMtfJAFntFJnLBtto98wK
-         rXxRcKr1QfgfQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 08/53] pinctrl: renesas: Fix pin control matching on R-Car H3e-2G
-Date:   Thu,  9 Sep 2021 20:19:43 -0400
-Message-Id: <20210910002028.175174-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210910002028.175174-1-sashal@kernel.org>
-References: <20210910002028.175174-1-sashal@kernel.org>
+        id S233384AbhIJUAx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Sep 2021 16:00:53 -0400
+Received: from wes1-so1-redir.wedos.net ([46.28.106.44]:39507 "EHLO
+        wes1-so1.wedos.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233114AbhIJUAw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Sep 2021 16:00:52 -0400
+Received: from [192.168.42.180] (pc-213-194-230-47.valachnet.cz [213.194.230.47])
+        by wes1-so1.wedos.net (Postfix) with ESMTPSA id 4H5mtK3bCKzpm;
+        Fri, 10 Sep 2021 21:59:37 +0200 (CEST)
+Subject: Re: [libgpiod] Add Lua 5.1 binding for libgpiod v1.0.x branch
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <8a49314e-f727-aace-9c54-122b038d1fad@acrios.com>
+ <CAMRc=MeMhxv60r4M-Obi1TYo97n0YaYYyRNR7HNLT5ousbUYAg@mail.gmail.com>
+From:   "Marek Novak | ACRIOS Systems s.r.o." <novak@acrios.com>
+Message-ID: <4e125d57-0cf3-16ea-96de-c6fbbafd5bd9@acrios.com>
+Date:   Fri, 10 Sep 2021 21:59:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeMhxv60r4M-Obi1TYo97n0YaYYyRNR7HNLT5ousbUYAg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On 09. 09. 21 10:20, Bartosz Golaszewski wrote:
+> On Tue, Sep 7, 2021 at 6:10 PM Marek Novak | ACRIOS Systems s.r.o.
+> <novak@acrios.com> wrote:
+>>
+>>   From ca1b5688de2d1cb63bb9823e28b87c52f23df449 Mon Sep 17 00:00:00 2001
+>> From: Marek NOVAK <novak@acrios.com>
+>> Date: Fri, 3 Sep 2021 18:41:02 +0200
+>> Subject: [PATCH] Adding Lua 5.1 bindings as 'gpiod' Lua module
+>>
+>> - Adding bindings directory with wrapper code
+>> - Adding Makefile.am for building and distributing as a Lua module
+>> - Adding --enable-bindings-lua option for autogen.sh
+>> - Adding examples with basic lua gpioset and gpioget implementation
+>> - Output, input and event input with new(), get(), set() and wait()
+>>     methods are implemented.
+>>
+>> Signed-off-by: Marek NOVAK <novak@acrios.com>
+>> ---
+> 
+> Hi Marek!
+> 
+> Thanks for the patch, any new bindings are much appreciated! However
+> the 1.0.x branch has been unsupported for over 3 years. Why did you
+> decide to base your work on this one?
+> 
+> The currently supported branch for the 1.x series is 1.6.x but even
+> then I don't really want to add new features to it as we're currently
+> developing the 2.0 version which will become the new preferred base
+> for all new work. Any chance you could base your work on the
+> next/libgpiod-2.0 branch just like Viresh did with his Rust bindings?
+> 
+> Bartosz
+> 
 
-[ Upstream commit 91d1be9fb7d667ae136f05cc645276eb2c9fa40e ]
+Hi Bartosz!
 
-As R-Car H3 ES1.x (R8A77950) and R-Car ES2.0+ (R8A77951) use the same
-compatible value, the pin control driver relies on soc_device_match()
-with soc_id = "r8a7795" and the (non)matching of revision = "ES1.*" to
-match with and distinguish between the two SoC variants.  The
-corresponding entries in the normal of_match_table are present only to
-make the optional sanity checks work.
+Thanks for checking my patch. I later realized it was not well processed 
+when sent using Thunderbird (I will use git send-email next time). I 
+also learnt that on some systems, the macros from ax_lua.m4 are not 
+available and I added it in a m4 folder. I have a v2 of the patch almost 
+ready (build being tested on different environments by my colleagues). 
+So I can post it here if anybody needs it on 1.x version supported...
 
-The R-Car H3e-2G (R8A779M1) SoC is a different grading of the R-Car H3
-ES3.0 (R8A77951) SoC.  It uses the same compatible values for individual
-devices, but has an additional compatible value for the root node.
-When running on an R-Car H3e-2G SoC, soc_device_match() with soc_id =
-"r8a7795" does not return a match.  Hence the pin control driver falls
-back to the normal of_match_table, and, as the R8A77950 entry is listed
-first, incorrectly uses the sub-driver for R-Car H3 ES1.x.
+To my motivation to select v1.0.x branch - I wanted to select a 1.x 
+branch as base since this one is used in OpenWRT distribution 
+(https://github.com/openwrt/packages/blob/openwrt-21.02/libs/libgpiod/Makefile). 
+And my target use-case is to have Lua support for GPIO interaction there 
+for some late device-specific initialization scripts.
 
-Fix this by moving the entry for R8A77951 before the entry for R8A77950.
-Simplify sh_pfc_quirk_match() to only handle R-Car H3 ES1,x, as R-Car H3
-ES2.0+ can now be matched using the normal of_match_table as well.
+However, I think I can switch to a 2.x version of libgpiod on our fork 
+of OpenWRT v21.02 and base my contribution on it... Currently I use a 
+package which builds Lua binding "out of tree", being quite ugly, but 
+available for public here (https://sw.acrios.com/acrios/lua-gpiod). I 
+could / should maybe also support not just Lua 5.1, but also the other 
+actively used version of Lua...
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/6cdc5bfa424461105779b56f455387e03560cf66.1626707688.git.geert+renesas@glider.be
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+I will update my contibution to 2.x, test it and then post it here...
+
 ---
- drivers/pinctrl/renesas/core.c   | 29 ++++++++++++-----------------
- drivers/pinctrl/renesas/sh_pfc.h |  4 ++--
- 2 files changed, 14 insertions(+), 19 deletions(-)
+Marek Novak
+ACRIOS Systems s.r.o.
 
-diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
-index c528c124fb0e..c2a2f1b3de06 100644
---- a/drivers/pinctrl/renesas/core.c
-+++ b/drivers/pinctrl/renesas/core.c
-@@ -581,17 +581,21 @@ static const struct of_device_id sh_pfc_of_table[] = {
- 		.data = &r8a7794_pinmux_info,
- 	},
- #endif
--/* Both r8a7795 entries must be present to make sanity checks work */
--#ifdef CONFIG_PINCTRL_PFC_R8A77950
-+/*
-+ * Both r8a7795 entries must be present to make sanity checks work, but only
-+ * the first entry is actually used.
-+ * R-Car H3 ES1.x is matched using soc_device_match() instead.
-+ */
-+#ifdef CONFIG_PINCTRL_PFC_R8A77951
- 	{
- 		.compatible = "renesas,pfc-r8a7795",
--		.data = &r8a77950_pinmux_info,
-+		.data = &r8a77951_pinmux_info,
- 	},
- #endif
--#ifdef CONFIG_PINCTRL_PFC_R8A77951
-+#ifdef CONFIG_PINCTRL_PFC_R8A77950
- 	{
- 		.compatible = "renesas,pfc-r8a7795",
--		.data = &r8a77951_pinmux_info,
-+		.data = &r8a77950_pinmux_info,
- 	},
- #endif
- #ifdef CONFIG_PINCTRL_PFC_R8A77960
-@@ -1085,26 +1089,20 @@ static inline void sh_pfc_check_driver(struct platform_driver *pdrv) {}
- #ifdef CONFIG_OF
- static const void *sh_pfc_quirk_match(void)
- {
--#if defined(CONFIG_PINCTRL_PFC_R8A77950) || \
--    defined(CONFIG_PINCTRL_PFC_R8A77951)
-+#ifdef CONFIG_PINCTRL_PFC_R8A77950
- 	const struct soc_device_attribute *match;
- 	static const struct soc_device_attribute quirks[] = {
- 		{
- 			.soc_id = "r8a7795", .revision = "ES1.*",
- 			.data = &r8a77950_pinmux_info,
- 		},
--		{
--			.soc_id = "r8a7795",
--			.data = &r8a77951_pinmux_info,
--		},
--
- 		{ /* sentinel */ }
- 	};
- 
- 	match = soc_device_match(quirks);
- 	if (match)
--		return match->data ?: ERR_PTR(-ENODEV);
--#endif /* CONFIG_PINCTRL_PFC_R8A77950 || CONFIG_PINCTRL_PFC_R8A77951 */
-+		return match->data;
-+#endif /* CONFIG_PINCTRL_PFC_R8A77950 */
- 
- 	return NULL;
- }
-@@ -1119,9 +1117,6 @@ static int sh_pfc_probe(struct platform_device *pdev)
- #ifdef CONFIG_OF
- 	if (pdev->dev.of_node) {
- 		info = sh_pfc_quirk_match();
--		if (IS_ERR(info))
--			return PTR_ERR(info);
--
- 		if (!info)
- 			info = of_device_get_match_data(&pdev->dev);
- 	} else
-diff --git a/drivers/pinctrl/renesas/sh_pfc.h b/drivers/pinctrl/renesas/sh_pfc.h
-index eff1bb872325..0d3f13230fe9 100644
---- a/drivers/pinctrl/renesas/sh_pfc.h
-+++ b/drivers/pinctrl/renesas/sh_pfc.h
-@@ -320,8 +320,8 @@ extern const struct sh_pfc_soc_info r8a7791_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7792_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7793_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7794_pinmux_info;
--extern const struct sh_pfc_soc_info r8a77950_pinmux_info __weak;
--extern const struct sh_pfc_soc_info r8a77951_pinmux_info __weak;
-+extern const struct sh_pfc_soc_info r8a77950_pinmux_info;
-+extern const struct sh_pfc_soc_info r8a77951_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77960_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77961_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77965_pinmux_info;
--- 
-2.30.2
 
