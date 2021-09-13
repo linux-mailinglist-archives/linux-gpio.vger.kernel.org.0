@@ -2,218 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 703CA407ACA
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Sep 2021 01:28:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0A8E40894D
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Sep 2021 12:45:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234320AbhIKX3T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 11 Sep 2021 19:29:19 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:56426 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231534AbhIKX3S (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 11 Sep 2021 19:29:18 -0400
-Received: from localhost.localdomain (ip-213-127-63-121.ip.prioritytelecom.net [213.127.63.121])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 6F69CCAEE3;
-        Sat, 11 Sep 2021 23:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1631402884; bh=Ktxuspf8zLP6lR/lYt9+9Mxagdfs83zP+MehmPTG1CM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Mg/PB8NJU6g5JRVRr5OmWTStLoW1tS4SMr+HVnNlhzitKABZlldHUs90EZncgonj0
-         aXLcONAs3R2hdDImEZnvNB62ctUF1vzEbUC60OfuG2W7ywiUsBN5pee1y6yiQyimY2
-         EDFU34Qe0PWAJynUWyiWCENOFIhI81f0N3wkvECc=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, bartosz.dudziak@snejp.pl,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/8] pinctrl: qcom: msm8226: fill in more functions
-Date:   Sun, 12 Sep 2021 01:26:55 +0200
-Message-Id: <20210911232707.259615-2-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210911232707.259615-1-luca@z3ntu.xyz>
-References: <20210911232707.259615-1-luca@z3ntu.xyz>
+        id S238610AbhIMKqZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Sep 2021 06:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239032AbhIMKqY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Sep 2021 06:46:24 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EE7C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Sep 2021 03:45:09 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id j16so8421909pfc.2
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Sep 2021 03:45:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3HKBpsH3PNknJdcvmjTAgwPJTvamLZlsD+nQrGYrlJM=;
+        b=hwTUfN3VYbOylF75Bd9CtF3oKIc0FsOU4XcFY8R8yi4No3ysJklEGajDBhyiHCUihM
+         gNQc+MaNGpLY6u+ZeTn2f7/QFFqclOu7vioBE/O0JbF9mx5YCdRAQlsQSrSUb1lhqT+p
+         0XNG/q5QbdPIU7dVy38SHhIRjrEPQ6mogsWZ0AyhaEo0wFZ/IwH/1MhJeSOXFQchFenq
+         mzq8JoVWdt/6SXh0lNHHXZPKFpTsZwLxv8QarrXL1b0XiyihX6WGK0xEIox9ib3Cvmr1
+         QJ4LH/2SbvX32VFKRAyC6zWk9akYj6ZIcdB2M7tJvBM8LyruV0BfPfe8e1h2amCZ94Cd
+         61iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3HKBpsH3PNknJdcvmjTAgwPJTvamLZlsD+nQrGYrlJM=;
+        b=e4MsLKxWzFep34DwX54wRsTbYnkKAWsU2YpPX/nM0LQR4fPDiWx3Ln0RjfiC+HTFXz
+         asmMlzv1c8w8rxqoZMIzidQTHz7h5CsoS8JfRwHvR2O1p7qGQdTnjMcKeUR1w6RoQC0M
+         re+4bZGeCf/9r7x3jYbUGmgM6ZLWPGxsVzrsPqWMmpss0DhVO7You0g1n5IHXmokU917
+         BUtWQLD4cbfW7Zqmy72myjQh5gDvUEhvvFAgBD8S+FZx8XjJuUCrIoOuOh6vKFN5norX
+         g+sKMluE3I8ymcamXV+a4x0omPc2cP1MeIv4VCEcAYIT/npPRUvehoGhgsCMzQMKsPN/
+         KzPQ==
+X-Gm-Message-State: AOAM53349NAwx4gaPGPR7Dl+3PcsjurYV+z4R0f4QphlRFAbJDYo4wr3
+        wgTJwrsjh/1YK3OVOfkaK7zNYzYFyccIPw==
+X-Google-Smtp-Source: ABdhPJxvTohzjUeMqGq41kK6htkAVASzFz1NfTgRmtFKu7tVOHoSS+BU3surNe7F6L3tzVAEDVUNAA==
+X-Received: by 2002:aa7:9ac9:0:b0:3fb:28ca:584b with SMTP id x9-20020aa79ac9000000b003fb28ca584bmr10367484pfp.64.1631529908415;
+        Mon, 13 Sep 2021 03:45:08 -0700 (PDT)
+Received: from sol (106-69-191-134.dyn.iinet.net.au. [106.69.191.134])
+        by smtp.gmail.com with ESMTPSA id x9sm6531428pjp.50.2021.09.13.03.45.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Sep 2021 03:45:07 -0700 (PDT)
+Date:   Mon, 13 Sep 2021 18:45:03 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     "Marek Novak | ACRIOS Systems s.r.o." <novak@acrios.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod] Add Lua 5.1 binding for libgpiod v1.0.x branch
+Message-ID: <20210913104503.GA37615@sol>
+References: <8a49314e-f727-aace-9c54-122b038d1fad@acrios.com>
+ <CAMRc=MeMhxv60r4M-Obi1TYo97n0YaYYyRNR7HNLT5ousbUYAg@mail.gmail.com>
+ <4e125d57-0cf3-16ea-96de-c6fbbafd5bd9@acrios.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e125d57-0cf3-16ea-96de-c6fbbafd5bd9@acrios.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the functions for QUP4 (spi, uart, uim & i2c), sdc3 and audio_pcm as
-derived from the downstream gpiomux configuration.
+On Fri, Sep 10, 2021 at 09:59:36PM +0200, Marek Novak | ACRIOS Systems s.r.o. wrote:
+> On 09. 09. 21 10:20, Bartosz Golaszewski wrote:
+> > On Tue, Sep 7, 2021 at 6:10 PM Marek Novak | ACRIOS Systems s.r.o.
+> > <novak@acrios.com> wrote:
+> > > 
+> > >   From ca1b5688de2d1cb63bb9823e28b87c52f23df449 Mon Sep 17 00:00:00 2001
+> > > From: Marek NOVAK <novak@acrios.com>
+> > > Date: Fri, 3 Sep 2021 18:41:02 +0200
+> > > Subject: [PATCH] Adding Lua 5.1 bindings as 'gpiod' Lua module
+> > > 
+> > > - Adding bindings directory with wrapper code
+> > > - Adding Makefile.am for building and distributing as a Lua module
+> > > - Adding --enable-bindings-lua option for autogen.sh
+> > > - Adding examples with basic lua gpioset and gpioget implementation
+> > > - Output, input and event input with new(), get(), set() and wait()
+> > >     methods are implemented.
+> > > 
+> > > Signed-off-by: Marek NOVAK <novak@acrios.com>
+> > > ---
+> > 
+> > Hi Marek!
+> > 
+> > Thanks for the patch, any new bindings are much appreciated! However
+> > the 1.0.x branch has been unsupported for over 3 years. Why did you
+> > decide to base your work on this one?
+> > 
+> > The currently supported branch for the 1.x series is 1.6.x but even
+> > then I don't really want to add new features to it as we're currently
+> > developing the 2.0 version which will become the new preferred base
+> > for all new work. Any chance you could base your work on the
+> > next/libgpiod-2.0 branch just like Viresh did with his Rust bindings?
+> > 
+> > Bartosz
+> > 
+> 
+> Hi Bartosz!
+> 
+> Thanks for checking my patch. I later realized it was not well processed
+> when sent using Thunderbird (I will use git send-email next time). I also
+> learnt that on some systems, the macros from ax_lua.m4 are not available and
+> I added it in a m4 folder. I have a v2 of the patch almost ready (build
+> being tested on different environments by my colleagues). So I can post it
+> here if anybody needs it on 1.x version supported...
+> 
+> To my motivation to select v1.0.x branch - I wanted to select a 1.x branch
+> as base since this one is used in OpenWRT distribution (https://github.com/openwrt/packages/blob/openwrt-21.02/libs/libgpiod/Makefile).
+> And my target use-case is to have Lua support for GPIO interaction there for
+> some late device-specific initialization scripts.
+> 
+> However, I think I can switch to a 2.x version of libgpiod on our fork of
+> OpenWRT v21.02 and base my contribution on it... Currently I use a package
+> which builds Lua binding "out of tree", being quite ugly, but available for
+> public here (https://sw.acrios.com/acrios/lua-gpiod). I could / should maybe
+> also support not just Lua 5.1, but also the other actively used version of
+> Lua...
+> 
+> I will update my contibution to 2.x, test it and then post it here...
+> 
 
-Also sort the functions alphabetically, while we're at it.
+Be aware that libgpiod 2.x relies on the GPIO uAPI v2 which was released
+in Linux v5.10, while OpenWRT v21.02 has only just transitioned to
+Linux v5.4.
+So you might be stuck between a rock and a hard place - unless OpenWRT
+happens to be planning another kernel jump in the near future.
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- drivers/pinctrl/qcom/pinctrl-msm8226.c | 74 ++++++++++++++++++--------
- 1 file changed, 52 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8226.c b/drivers/pinctrl/qcom/pinctrl-msm8226.c
-index 98779e62e951..fca0645e8008 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8226.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8226.c
-@@ -338,26 +338,32 @@ static const unsigned int sdc2_data_pins[] = { 122 };
-  * the pingroup table below.
-  */
- enum msm8226_functions {
--	MSM_MUX_gpio,
--	MSM_MUX_cci_i2c0,
-+	MSM_MUX_audio_pcm,
- 	MSM_MUX_blsp_i2c1,
- 	MSM_MUX_blsp_i2c2,
- 	MSM_MUX_blsp_i2c3,
-+	MSM_MUX_blsp_i2c4,
- 	MSM_MUX_blsp_i2c5,
- 	MSM_MUX_blsp_spi1,
- 	MSM_MUX_blsp_spi2,
- 	MSM_MUX_blsp_spi3,
-+	MSM_MUX_blsp_spi4,
- 	MSM_MUX_blsp_spi5,
- 	MSM_MUX_blsp_uart1,
- 	MSM_MUX_blsp_uart2,
- 	MSM_MUX_blsp_uart3,
-+	MSM_MUX_blsp_uart4,
- 	MSM_MUX_blsp_uart5,
- 	MSM_MUX_blsp_uim1,
- 	MSM_MUX_blsp_uim2,
- 	MSM_MUX_blsp_uim3,
-+	MSM_MUX_blsp_uim4,
- 	MSM_MUX_blsp_uim5,
- 	MSM_MUX_cam_mclk0,
- 	MSM_MUX_cam_mclk1,
-+	MSM_MUX_cci_i2c0,
-+	MSM_MUX_gpio,
-+	MSM_MUX_sdc3,
- 	MSM_MUX_wlan,
- 	MSM_MUX_NA,
- };
-@@ -382,6 +388,10 @@ static const char * const gpio_groups[] = {
- 	"gpio111", "gpio112", "gpio113", "gpio114", "gpio115", "gpio116",
- };
- 
-+static const char * const audio_pcm_groups[] = {
-+	"gpio63", "gpio64", "gpio65", "gpio66"
-+};
-+
- static const char * const blsp_uart1_groups[] = {
- 	"gpio0", "gpio1", "gpio2", "gpio3"
- };
-@@ -412,6 +422,16 @@ static const char * const blsp_spi3_groups[] = {
- 	"gpio8", "gpio9", "gpio10", "gpio11"
- };
- 
-+static const char * const blsp_uart4_groups[] = {
-+	"gpio12", "gpio13", "gpio14", "gpio15"
-+};
-+
-+static const char * const blsp_uim4_groups[] = { "gpio12", "gpio13" };
-+static const char * const blsp_i2c4_groups[] = { "gpio14", "gpio15" };
-+static const char * const blsp_spi4_groups[] = {
-+	"gpio12", "gpio13", "gpio14", "gpio15"
-+};
-+
- static const char * const blsp_uart5_groups[] = {
- 	"gpio16", "gpio17", "gpio18", "gpio19"
- };
-@@ -427,31 +447,41 @@ static const char * const cci_i2c0_groups[] = { "gpio29", "gpio30" };
- static const char * const cam_mclk0_groups[] = { "gpio26" };
- static const char * const cam_mclk1_groups[] = { "gpio27" };
- 
-+static const char * const sdc3_groups[] = {
-+	"gpio39", "gpio40", "gpio41", "gpio42", "gpio43", "gpio44"
-+};
-+
- static const char * const wlan_groups[] = {
- 	"gpio40", "gpio41", "gpio42", "gpio43", "gpio44"
- };
- 
- static const struct msm_function msm8226_functions[] = {
--	FUNCTION(gpio),
--	FUNCTION(cci_i2c0),
--	FUNCTION(blsp_uim1),
--	FUNCTION(blsp_uim2),
--	FUNCTION(blsp_uim3),
--	FUNCTION(blsp_uim5),
-+	FUNCTION(audio_pcm),
- 	FUNCTION(blsp_i2c1),
- 	FUNCTION(blsp_i2c2),
- 	FUNCTION(blsp_i2c3),
-+	FUNCTION(blsp_i2c4),
- 	FUNCTION(blsp_i2c5),
- 	FUNCTION(blsp_spi1),
- 	FUNCTION(blsp_spi2),
- 	FUNCTION(blsp_spi3),
-+	FUNCTION(blsp_spi4),
- 	FUNCTION(blsp_spi5),
- 	FUNCTION(blsp_uart1),
- 	FUNCTION(blsp_uart2),
- 	FUNCTION(blsp_uart3),
-+	FUNCTION(blsp_uart4),
- 	FUNCTION(blsp_uart5),
-+	FUNCTION(blsp_uim1),
-+	FUNCTION(blsp_uim2),
-+	FUNCTION(blsp_uim3),
-+	FUNCTION(blsp_uim4),
-+	FUNCTION(blsp_uim5),
- 	FUNCTION(cam_mclk0),
- 	FUNCTION(cam_mclk1),
-+	FUNCTION(cci_i2c0),
-+	FUNCTION(gpio),
-+	FUNCTION(sdc3),
- 	FUNCTION(wlan),
- };
- 
-@@ -468,10 +498,10 @@ static const struct msm_pingroup msm8226_groups[] = {
- 	PINGROUP(9,   blsp_spi3, blsp_uart3, blsp_uim3, NA, NA, NA, NA),
- 	PINGROUP(10,  blsp_spi3, blsp_uart3, blsp_i2c3, NA, NA, NA, NA),
- 	PINGROUP(11,  blsp_spi3, blsp_uart3, blsp_i2c3, NA, NA, NA, NA),
--	PINGROUP(12,  NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(13,  NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(14,  NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(15,  NA, NA, NA, NA, NA, NA, NA),
-+	PINGROUP(12,  blsp_spi4, blsp_uart4, blsp_uim4, NA, NA, NA, NA),
-+	PINGROUP(13,  blsp_spi4, blsp_uart4, blsp_uim4, NA, NA, NA, NA),
-+	PINGROUP(14,  blsp_spi4, blsp_uart4, blsp_i2c4, NA, NA, NA, NA),
-+	PINGROUP(15,  blsp_spi4, blsp_uart4, blsp_i2c4, NA, NA, NA, NA),
- 	PINGROUP(16,  blsp_spi5, blsp_uart5, blsp_uim5, NA, NA, NA, NA),
- 	PINGROUP(17,  blsp_spi5, blsp_uart5, blsp_uim5, NA, NA, NA, NA),
- 	PINGROUP(18,  blsp_spi5, blsp_uart5, blsp_i2c5, NA, NA, NA, NA),
-@@ -495,12 +525,12 @@ static const struct msm_pingroup msm8226_groups[] = {
- 	PINGROUP(36,  NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(37,  NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(38,  NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(39,  NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(40,  wlan, NA, NA, NA, NA, NA, NA),
--	PINGROUP(41,  wlan, NA, NA, NA, NA, NA, NA),
--	PINGROUP(42,  wlan, NA, NA, NA, NA, NA, NA),
--	PINGROUP(43,  wlan, NA, NA, NA, NA, NA, NA),
--	PINGROUP(44,  wlan, NA, NA, NA, NA, NA, NA),
-+	PINGROUP(39,  NA, sdc3, NA, NA, NA, NA, NA),
-+	PINGROUP(40,  wlan, sdc3, NA, NA, NA, NA, NA),
-+	PINGROUP(41,  wlan, sdc3, NA, NA, NA, NA, NA),
-+	PINGROUP(42,  wlan, sdc3, NA, NA, NA, NA, NA),
-+	PINGROUP(43,  wlan, sdc3, NA, NA, NA, NA, NA),
-+	PINGROUP(44,  wlan, sdc3, NA, NA, NA, NA, NA),
- 	PINGROUP(45,  NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(46,  NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(47,  NA, NA, NA, NA, NA, NA, NA),
-@@ -519,10 +549,10 @@ static const struct msm_pingroup msm8226_groups[] = {
- 	PINGROUP(60,  NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(61,  NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(62,  NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(63,  NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(64,  NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(65,  NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(66,  NA, NA, NA, NA, NA, NA, NA),
-+	PINGROUP(63,  audio_pcm, NA, NA, NA, NA, NA, NA),
-+	PINGROUP(64,  audio_pcm, NA, NA, NA, NA, NA, NA),
-+	PINGROUP(65,  audio_pcm, NA, NA, NA, NA, NA, NA),
-+	PINGROUP(66,  audio_pcm, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(67,  NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(68,  NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(69,  NA, NA, NA, NA, NA, NA, NA),
--- 
-2.33.0
-
+Cheers,
+Kent.
