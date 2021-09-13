@@ -2,367 +2,253 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD33C409A96
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Sep 2021 19:23:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 406F5409B27
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Sep 2021 19:45:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242906AbhIMRZE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Sep 2021 13:25:04 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:40758 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244624AbhIMRYg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 13 Sep 2021 13:24:36 -0400
-Received: from g550jk.localnet (ip-213-127-63-121.ip.prioritytelecom.net [213.127.63.121])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 80BE5CB143;
-        Mon, 13 Sep 2021 17:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1631553798; bh=P7YQBLqM1FKYNMlzZbHNW7UioCxjAprhTAD1I+29b00=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=udSXMj1qcTeaReyUQWRkKY7Upe+Zzbq7Q1r+4FRzC96ypP79XeJf7c3pRVzH+T3wm
-         omCGREirKpjvJSOZiq67n4XC6Pr9MWW5LTSMo8+gtVolY8k86Ury49pOgAXgzuNpo4
-         emZ/zI4rKzrqALkWIgesYr/kJ2v7boOn/HT9ssJ8=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     ~postmarketos/upstreaming@lists.sr.ht
-Cc:     martin.botka@somainline.org,
-        angelogioacchino.delregno@somainline.org,
-        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        id S238180AbhIMRqg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Sep 2021 13:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243543AbhIMRqf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Sep 2021 13:46:35 -0400
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7435C061760
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Sep 2021 10:45:19 -0700 (PDT)
+Received: by mail-oi1-x231.google.com with SMTP id w144so15072173oie.13
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Sep 2021 10:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c/DHXuk14m7uILgZ2IPqdDPLEotN8dRdqkDvOEyQCIE=;
+        b=kGHN3BZBgbL/EpS9EsDMxfUClo2vojFYB38hm94QfXt0JFqHf9K50zlmvAqHKodM1w
+         BNAs+BZvwhJ1E/B5HNVHDITzwAr7HgZDym1TfmkKfn/UW7BP1wcG/9FdMTJiLvhALaZ1
+         KDrzfzYbktz+2ws3q0Z6rCfG/yEx3b/vyZU5bDv6Tpj19HrJM1D0nPZliQR1hKZm37Au
+         Cg9sj8N0f0y8KnMv5uKGbtWw8ubNAfFvvWtn4IIq/3Fcs0/uwpcJLngoB0bZeNSkzZbX
+         6KfCywtu9M5jBWVw3NFhWc+jnCkTHy4W6VnxL5pJwcDYPkN5KDfqaVp4/ECOJdJJWczi
+         CsQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c/DHXuk14m7uILgZ2IPqdDPLEotN8dRdqkDvOEyQCIE=;
+        b=2CYrXZeqGnUj+6+P07NxoEeOE61OenJlX3+vANvjQhm1P+MW5ga9OoiGNjZm+DbYWy
+         MySE09GOTqoDWWZNPlXMlNz/VijzSUq90dAzExtrz2Sq7km6ToGS6fA6B8sxJSRznDte
+         leNYy8wix4n7+sHjBDXl+aSLTRBpu4Tkk12nBDEz2dRcTrYTxghE4HMHGAwCLVsw9QMJ
+         h1QK2bscm1OulvhM8kortTadle8f9V7GpHSXRf0tOebb86updr1uzwP2Bdkpqrh9N9HV
+         aBlPGVRs8X8Fd2RBn1tlayi/+rfqo4FFbml9mLk8StFJEsgXYYogNnHP6w92zCNSG4Ph
+         Y+gQ==
+X-Gm-Message-State: AOAM533zapKQU6Q3JxmexZ/pyagRWtHxHh6PkXz2RHZS0FOth1KiJefF
+        AvHUF2HGGMkJnpeUq5e1boH64TfmscifDg==
+X-Google-Smtp-Source: ABdhPJxzcr7SOgHFPzSbXiyMjEFzKm+8xwwEQ1Bqb2+srqPRJEvsk1oY2zd6XNv+3+eoe/7rg+0yrA==
+X-Received: by 2002:a05:6808:bc2:: with SMTP id o2mr9015755oik.73.1631555118953;
+        Mon, 13 Sep 2021 10:45:18 -0700 (PDT)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id m25sm2063620otp.41.2021.09.13.10.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Sep 2021 10:45:18 -0700 (PDT)
+Date:   Mon, 13 Sep 2021 12:45:16 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-arm-msm@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, bartosz.dudziak@snejp.pl,
         Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@somainline.org>
-Subject: Re: [PATCH v3 2/2] pinctrl: qcom: Add SM6350 pinctrl driver
-Date:   Mon, 13 Sep 2021 19:23:18 +0200
-Message-ID: <6673399.dA2BYh7nEs@g550jk>
-In-Reply-To: <20210828172315.55742-2-konrad.dybcio@somainline.org>
-References: <20210828172315.55742-1-konrad.dybcio@somainline.org> <20210828172315.55742-2-konrad.dybcio@somainline.org>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/8] pinctrl: qcom: msm8226: fill in more functions
+Message-ID: <YT+OLEldZ0ZGGWvV@builder.lan>
+References: <20210911232707.259615-1-luca@z3ntu.xyz>
+ <20210911232707.259615-2-luca@z3ntu.xyz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210911232707.259615-2-luca@z3ntu.xyz>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Konrad,
+On Sat 11 Sep 18:26 CDT 2021, Luca Weiss wrote:
 
-based on other reviews on the mailing list/IRC I have some comments here
-
-On Samstag, 28. August 2021 19:23:14 CEST Konrad Dybcio wrote:
-> This adds pincontrol driver for tlmm block found in SM6350 SoC
+> Add the functions for QUP4 (spi, uart, uim & i2c), sdc3 and audio_pcm as
+> derived from the downstream gpiomux configuration.
 > 
-> This patch is based on downstream copyleft code.
+> Also sort the functions alphabetically, while we're at it.
 > 
-> Reviewed-by: AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@somainline.org> Signed-off-by: Konrad Dybcio
-> <konrad.dybcio@somainline.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> Changes since v2:
-> - Trim the forgotten-about comments
-> - Add Bjorn's r-b
-> 
->  drivers/pinctrl/qcom/Kconfig          |    9 +
->  drivers/pinctrl/qcom/Makefile         |    1 +
->  drivers/pinctrl/qcom/pinctrl-sm6350.c | 1593 +++++++++++++++++++++++++
->  3 files changed, 1603 insertions(+)
->  create mode 100644 drivers/pinctrl/qcom/pinctrl-sm6350.c
-> 
-[SNIP]
->
-> +DECLARE_MSM_GPIO_PINS(128);
-> +DECLARE_MSM_GPIO_PINS(129);
-> +DECLARE_MSM_GPIO_PINS(130);
-> +DECLARE_MSM_GPIO_PINS(131);
-> +DECLARE_MSM_GPIO_PINS(132);
-> +DECLARE_MSM_GPIO_PINS(133);
-> +DECLARE_MSM_GPIO_PINS(134);
-> +DECLARE_MSM_GPIO_PINS(135);
-> +DECLARE_MSM_GPIO_PINS(136);
-> +DECLARE_MSM_GPIO_PINS(137);
-> +DECLARE_MSM_GPIO_PINS(138);
-> +DECLARE_MSM_GPIO_PINS(139);
-> +DECLARE_MSM_GPIO_PINS(140);
-> +DECLARE_MSM_GPIO_PINS(141);
-> +DECLARE_MSM_GPIO_PINS(142);
-> +DECLARE_MSM_GPIO_PINS(143);
-> +DECLARE_MSM_GPIO_PINS(144);
-> +DECLARE_MSM_GPIO_PINS(145);
-> +DECLARE_MSM_GPIO_PINS(146);
-> +DECLARE_MSM_GPIO_PINS(147);
-> +DECLARE_MSM_GPIO_PINS(148);
-> +DECLARE_MSM_GPIO_PINS(149);
-> +DECLARE_MSM_GPIO_PINS(150);
-> +DECLARE_MSM_GPIO_PINS(151);
-> +DECLARE_MSM_GPIO_PINS(152);
-> +DECLARE_MSM_GPIO_PINS(153);
-> +DECLARE_MSM_GPIO_PINS(154);
-> +DECLARE_MSM_GPIO_PINS(155);
-> +
-> +static const unsigned int sdc1_rclk_pins[] = { 156 };
-> +static const unsigned int sdc1_clk_pins[] = { 157 };
-> +static const unsigned int sdc1_cmd_pins[] = { 158 };
-> +static const unsigned int sdc1_data_pins[] = { 159 };
-> +static const unsigned int sdc2_clk_pins[] = { 160 };
-> +static const unsigned int sdc2_cmd_pins[] = { 161 };
-> +static const unsigned int sdc2_data_pins[] = { 162 };
-> +static const unsigned int ufs_reset_pins[] = { 163 };
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 
-All these numbers don't match anymore after moving ufs_reset to 156
-
-(ref: https://lore.kernel.org/lkml/YNTYvKYDWFxUcb+Y@yoga/ )
-
-> +
-> +enum sm6350_functions {
-> +	msm_mux_adsp_ext,
-> +	msm_mux_agera_pll,
-> +	msm_mux_atest_char,
-> +	msm_mux_atest_char0,
-> +	msm_mux_atest_char1,
-> +	msm_mux_atest_char2,
-> +	msm_mux_atest_char3,
-> +	msm_mux_atest_tsens,
-> +	msm_mux_atest_tsens2,
-> +	msm_mux_atest_usb1,
-> +	msm_mux_atest_usb10,
-> +	msm_mux_atest_usb11,
-> +	msm_mux_atest_usb12,
-> +	msm_mux_atest_usb13,
-> +	msm_mux_atest_usb2,
-> +	msm_mux_atest_usb20,
-> +	msm_mux_atest_usb21,
-> +	msm_mux_atest_usb22,
-> +	msm_mux_atest_usb23,
-
-Bjorn mentioned to merge all the atest_usb* functions into a single one.
-
-> +	msm_mux_audio_ref,
-> +	msm_mux_btfm_slimbus,
-> +	msm_mux_cam_mclk0,
-> +	msm_mux_cam_mclk1,
-> +	msm_mux_cam_mclk2,
-> +	msm_mux_cam_mclk3,
-> +	msm_mux_cam_mclk4,
-> +	msm_mux_cci_async,
-> +	msm_mux_cci_i2c,
-> +	msm_mux_cci_timer0,
-> +	msm_mux_cci_timer1,
-> +	msm_mux_cci_timer2,
-> +	msm_mux_cci_timer3,
-> +	msm_mux_cci_timer4,
-> +	msm_mux_cri_trng,
-> +	msm_mux_dbg_out,
-> +	msm_mux_ddr_bist,
-> +	msm_mux_ddr_pxi0,
-> +	msm_mux_ddr_pxi1,
-> +	msm_mux_ddr_pxi2,
-> +	msm_mux_ddr_pxi3,
-> +	msm_mux_dp_hot,
-> +	msm_mux_edp_lcd,
-> +	msm_mux_gcc_gp1,
-> +	msm_mux_gcc_gp2,
-> +	msm_mux_gcc_gp3,
-> +	msm_mux_gp_pdm0,
-> +	msm_mux_gp_pdm1,
-> +	msm_mux_gp_pdm2,
-> +	msm_mux_gpio,
-> +	msm_mux_gps_tx,
-> +	msm_mux_ibi_i3c,
-> +	msm_mux_jitter_bist,
-> +	msm_mux_ldo_en,
-> +	msm_mux_ldo_update,
-> +	msm_mux_lpass_ext,
-> +	msm_mux_m_voc,
-> +	msm_mux_mclk,
-> +	msm_mux_mdp_vsync,
-> +	msm_mux_mdp_vsync0,
-> +	msm_mux_mdp_vsync1,
-> +	msm_mux_mdp_vsync2,
-> +	msm_mux_mdp_vsync3,
-> +	msm_mux_mi2s_0,
-> +	msm_mux_mi2s_1,
-> +	msm_mux_mi2s_2,
-> +	msm_mux_mss_lte,
-> +	msm_mux_nav_gpio,
-> +	msm_mux_nav_pps,
-> +	msm_mux_pa_indicator,
-> +	msm_mux_pcie0_clk,
-> +	msm_mux_phase_flag0,
-> +	msm_mux_phase_flag1,
-> +	msm_mux_phase_flag10,
-> +	msm_mux_phase_flag11,
-> +	msm_mux_phase_flag12,
-> +	msm_mux_phase_flag13,
-> +	msm_mux_phase_flag14,
-> +	msm_mux_phase_flag15,
-> +	msm_mux_phase_flag16,
-> +	msm_mux_phase_flag17,
-> +	msm_mux_phase_flag18,
-> +	msm_mux_phase_flag19,
-> +	msm_mux_phase_flag2,
-> +	msm_mux_phase_flag20,
-> +	msm_mux_phase_flag21,
-> +	msm_mux_phase_flag22,
-> +	msm_mux_phase_flag23,
-> +	msm_mux_phase_flag24,
-> +	msm_mux_phase_flag25,
-> +	msm_mux_phase_flag26,
-> +	msm_mux_phase_flag27,
-> +	msm_mux_phase_flag28,
-> +	msm_mux_phase_flag29,
-> +	msm_mux_phase_flag3,
-> +	msm_mux_phase_flag30,
-> +	msm_mux_phase_flag31,
-> +	msm_mux_phase_flag4,
-> +	msm_mux_phase_flag5,
-> +	msm_mux_phase_flag6,
-> +	msm_mux_phase_flag7,
-> +	msm_mux_phase_flag8,
-> +	msm_mux_phase_flag9,
-
-.. and all the phase_flag* ones.
-
-> +	msm_mux_pll_bist,
-> +	msm_mux_pll_bypassnl,
-> +	msm_mux_pll_reset,
-> +	msm_mux_prng_rosc,
-> +	msm_mux_qdss_cti,
-> +	msm_mux_qdss_gpio,
-> +	msm_mux_qdss_gpio0,
-> +	msm_mux_qdss_gpio1,
-> +	msm_mux_qdss_gpio10,
-> +	msm_mux_qdss_gpio11,
-> +	msm_mux_qdss_gpio12,
-> +	msm_mux_qdss_gpio13,
-> +	msm_mux_qdss_gpio14,
-> +	msm_mux_qdss_gpio15,
-> +	msm_mux_qdss_gpio2,
-> +	msm_mux_qdss_gpio3,
-> +	msm_mux_qdss_gpio4,
-> +	msm_mux_qdss_gpio5,
-> +	msm_mux_qdss_gpio6,
-> +	msm_mux_qdss_gpio7,
-> +	msm_mux_qdss_gpio8,
-> +	msm_mux_qdss_gpio9,
-> +	msm_mux_qlink0_enable,
-> +	msm_mux_qlink0_request,
-> +	msm_mux_qlink0_wmss,
-> +	msm_mux_qlink1_enable,
-> +	msm_mux_qlink1_request,
-> +	msm_mux_qlink1_wmss,
-> +	msm_mux_qup00,
-> +	msm_mux_qup01,
-> +	msm_mux_qup02,
-> +	msm_mux_qup10,
-> +	msm_mux_qup11,
-> +	msm_mux_qup12,
-> +	msm_mux_qup13_f1,
-> +	msm_mux_qup13_f2,
-> +	msm_mux_qup14,
-> +	msm_mux_rffe0_clk,
-> +	msm_mux_rffe0_data,
-> +	msm_mux_rffe1_clk,
-> +	msm_mux_rffe1_data,
-> +	msm_mux_rffe2_clk,
-> +	msm_mux_rffe2_data,
-> +	msm_mux_rffe3_clk,
-> +	msm_mux_rffe3_data,
-> +	msm_mux_rffe4_clk,
-> +	msm_mux_rffe4_data,
-> +	msm_mux_sd_write,
-> +	msm_mux_sdc1_tb,
-> +	msm_mux_sdc2_tb,
-> +	msm_mux_sp_cmu,
-> +	msm_mux_tgu_ch0,
-> +	msm_mux_tgu_ch1,
-> +	msm_mux_tgu_ch2,
-> +	msm_mux_tgu_ch3,
-> +	msm_mux_tsense_pwm1,
-> +	msm_mux_tsense_pwm2,
-> +	msm_mux_uim1_clk,
-> +	msm_mux_uim1_data,
-> +	msm_mux_uim1_present,
-> +	msm_mux_uim1_reset,
-
-maybe even uim1_* into uim1?
-
-> +	msm_mux_uim2_clk,
-> +	msm_mux_uim2_data,
-> +	msm_mux_uim2_present,
-> +	msm_mux_uim2_reset,
-
-.. and uim2?
-
-> +	msm_mux_usb_phy,
-> +	msm_mux_vfr_1,
-> +	msm_mux_vsense_trigger,
-> +	msm_mux_wlan1_adc0,
-> +	msm_mux_wlan1_adc1,
-> +	msm_mux_wlan2_adc0,
-> +	msm_mux_wlan2_adc1,
-> +	msm_mux__,
-> +};
-> +
->
-[SNIP]
->
-> +
-> +static const struct msm_pinctrl_soc_data sm6350_pinctrl = {
-> +	.pins = sm6350_pins,
-> +	.npins = ARRAY_SIZE(sm6350_pins),
-> +	.functions = sm6350_functions,
-> +	.nfunctions = ARRAY_SIZE(sm6350_functions),
-> +	.groups = sm6350_groups,
-> +	.ngroups = ARRAY_SIZE(sm6350_groups),
-> +	.ngpios = 157,
-> +	.wakeirq_map = sm6350_pdc_map,
-> +	.nwakeirq_map = ARRAY_SIZE(sm6350_pdc_map),
-> +	.wakeirq_dual_edge_errata = true,
-> +};
-> +
-> +static int sm6350_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	return msm_pinctrl_probe(pdev, &sm6350_pinctrl);
-> +}
-> +
-> +static const struct of_device_id sm6350_pinctrl_of_match[] = {
-> +	{ .compatible = "qcom,sm6350-tlmm", },
-> +	{ },
-
-No need for a trailing comma here ;)
-
-> +};
-> +
-> +static struct platform_driver sm6350_pinctrl_driver = {
-> +	.driver = {
-> +		.name = "sm6350-pinctrl",
-> +		.of_match_table = sm6350_pinctrl_of_match,
-> +	},
-> +	.probe = sm6350_pinctrl_probe,
-> +	.remove = msm_pinctrl_remove,
-> +};
-> +
-> +static int __init sm6350_pinctrl_init(void)
-> +{
-> +	return platform_driver_register(&sm6350_pinctrl_driver);
-> +}
-> +arch_initcall(sm6350_pinctrl_init);
-> +
-> +static void __exit sm6350_pinctrl_exit(void)
-> +{
-> +	platform_driver_unregister(&sm6350_pinctrl_driver);
-> +}
-> +module_exit(sm6350_pinctrl_exit);
-> +
-> +MODULE_DESCRIPTION("QTI sm6350 pinctrl driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DEVICE_TABLE(of, sm6350_pinctrl_of_match);
-
-Some/most(?) newer drivers also use the name tlmm instead of pinctrl in the 
-function names and in the .name of the driver.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
-Luca
+Bjorn
 
-
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm8226.c | 74 ++++++++++++++++++--------
+>  1 file changed, 52 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm8226.c b/drivers/pinctrl/qcom/pinctrl-msm8226.c
+> index 98779e62e951..fca0645e8008 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm8226.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm8226.c
+> @@ -338,26 +338,32 @@ static const unsigned int sdc2_data_pins[] = { 122 };
+>   * the pingroup table below.
+>   */
+>  enum msm8226_functions {
+> -	MSM_MUX_gpio,
+> -	MSM_MUX_cci_i2c0,
+> +	MSM_MUX_audio_pcm,
+>  	MSM_MUX_blsp_i2c1,
+>  	MSM_MUX_blsp_i2c2,
+>  	MSM_MUX_blsp_i2c3,
+> +	MSM_MUX_blsp_i2c4,
+>  	MSM_MUX_blsp_i2c5,
+>  	MSM_MUX_blsp_spi1,
+>  	MSM_MUX_blsp_spi2,
+>  	MSM_MUX_blsp_spi3,
+> +	MSM_MUX_blsp_spi4,
+>  	MSM_MUX_blsp_spi5,
+>  	MSM_MUX_blsp_uart1,
+>  	MSM_MUX_blsp_uart2,
+>  	MSM_MUX_blsp_uart3,
+> +	MSM_MUX_blsp_uart4,
+>  	MSM_MUX_blsp_uart5,
+>  	MSM_MUX_blsp_uim1,
+>  	MSM_MUX_blsp_uim2,
+>  	MSM_MUX_blsp_uim3,
+> +	MSM_MUX_blsp_uim4,
+>  	MSM_MUX_blsp_uim5,
+>  	MSM_MUX_cam_mclk0,
+>  	MSM_MUX_cam_mclk1,
+> +	MSM_MUX_cci_i2c0,
+> +	MSM_MUX_gpio,
+> +	MSM_MUX_sdc3,
+>  	MSM_MUX_wlan,
+>  	MSM_MUX_NA,
+>  };
+> @@ -382,6 +388,10 @@ static const char * const gpio_groups[] = {
+>  	"gpio111", "gpio112", "gpio113", "gpio114", "gpio115", "gpio116",
+>  };
+>  
+> +static const char * const audio_pcm_groups[] = {
+> +	"gpio63", "gpio64", "gpio65", "gpio66"
+> +};
+> +
+>  static const char * const blsp_uart1_groups[] = {
+>  	"gpio0", "gpio1", "gpio2", "gpio3"
+>  };
+> @@ -412,6 +422,16 @@ static const char * const blsp_spi3_groups[] = {
+>  	"gpio8", "gpio9", "gpio10", "gpio11"
+>  };
+>  
+> +static const char * const blsp_uart4_groups[] = {
+> +	"gpio12", "gpio13", "gpio14", "gpio15"
+> +};
+> +
+> +static const char * const blsp_uim4_groups[] = { "gpio12", "gpio13" };
+> +static const char * const blsp_i2c4_groups[] = { "gpio14", "gpio15" };
+> +static const char * const blsp_spi4_groups[] = {
+> +	"gpio12", "gpio13", "gpio14", "gpio15"
+> +};
+> +
+>  static const char * const blsp_uart5_groups[] = {
+>  	"gpio16", "gpio17", "gpio18", "gpio19"
+>  };
+> @@ -427,31 +447,41 @@ static const char * const cci_i2c0_groups[] = { "gpio29", "gpio30" };
+>  static const char * const cam_mclk0_groups[] = { "gpio26" };
+>  static const char * const cam_mclk1_groups[] = { "gpio27" };
+>  
+> +static const char * const sdc3_groups[] = {
+> +	"gpio39", "gpio40", "gpio41", "gpio42", "gpio43", "gpio44"
+> +};
+> +
+>  static const char * const wlan_groups[] = {
+>  	"gpio40", "gpio41", "gpio42", "gpio43", "gpio44"
+>  };
+>  
+>  static const struct msm_function msm8226_functions[] = {
+> -	FUNCTION(gpio),
+> -	FUNCTION(cci_i2c0),
+> -	FUNCTION(blsp_uim1),
+> -	FUNCTION(blsp_uim2),
+> -	FUNCTION(blsp_uim3),
+> -	FUNCTION(blsp_uim5),
+> +	FUNCTION(audio_pcm),
+>  	FUNCTION(blsp_i2c1),
+>  	FUNCTION(blsp_i2c2),
+>  	FUNCTION(blsp_i2c3),
+> +	FUNCTION(blsp_i2c4),
+>  	FUNCTION(blsp_i2c5),
+>  	FUNCTION(blsp_spi1),
+>  	FUNCTION(blsp_spi2),
+>  	FUNCTION(blsp_spi3),
+> +	FUNCTION(blsp_spi4),
+>  	FUNCTION(blsp_spi5),
+>  	FUNCTION(blsp_uart1),
+>  	FUNCTION(blsp_uart2),
+>  	FUNCTION(blsp_uart3),
+> +	FUNCTION(blsp_uart4),
+>  	FUNCTION(blsp_uart5),
+> +	FUNCTION(blsp_uim1),
+> +	FUNCTION(blsp_uim2),
+> +	FUNCTION(blsp_uim3),
+> +	FUNCTION(blsp_uim4),
+> +	FUNCTION(blsp_uim5),
+>  	FUNCTION(cam_mclk0),
+>  	FUNCTION(cam_mclk1),
+> +	FUNCTION(cci_i2c0),
+> +	FUNCTION(gpio),
+> +	FUNCTION(sdc3),
+>  	FUNCTION(wlan),
+>  };
+>  
+> @@ -468,10 +498,10 @@ static const struct msm_pingroup msm8226_groups[] = {
+>  	PINGROUP(9,   blsp_spi3, blsp_uart3, blsp_uim3, NA, NA, NA, NA),
+>  	PINGROUP(10,  blsp_spi3, blsp_uart3, blsp_i2c3, NA, NA, NA, NA),
+>  	PINGROUP(11,  blsp_spi3, blsp_uart3, blsp_i2c3, NA, NA, NA, NA),
+> -	PINGROUP(12,  NA, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(13,  NA, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(14,  NA, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(15,  NA, NA, NA, NA, NA, NA, NA),
+> +	PINGROUP(12,  blsp_spi4, blsp_uart4, blsp_uim4, NA, NA, NA, NA),
+> +	PINGROUP(13,  blsp_spi4, blsp_uart4, blsp_uim4, NA, NA, NA, NA),
+> +	PINGROUP(14,  blsp_spi4, blsp_uart4, blsp_i2c4, NA, NA, NA, NA),
+> +	PINGROUP(15,  blsp_spi4, blsp_uart4, blsp_i2c4, NA, NA, NA, NA),
+>  	PINGROUP(16,  blsp_spi5, blsp_uart5, blsp_uim5, NA, NA, NA, NA),
+>  	PINGROUP(17,  blsp_spi5, blsp_uart5, blsp_uim5, NA, NA, NA, NA),
+>  	PINGROUP(18,  blsp_spi5, blsp_uart5, blsp_i2c5, NA, NA, NA, NA),
+> @@ -495,12 +525,12 @@ static const struct msm_pingroup msm8226_groups[] = {
+>  	PINGROUP(36,  NA, NA, NA, NA, NA, NA, NA),
+>  	PINGROUP(37,  NA, NA, NA, NA, NA, NA, NA),
+>  	PINGROUP(38,  NA, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(39,  NA, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(40,  wlan, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(41,  wlan, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(42,  wlan, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(43,  wlan, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(44,  wlan, NA, NA, NA, NA, NA, NA),
+> +	PINGROUP(39,  NA, sdc3, NA, NA, NA, NA, NA),
+> +	PINGROUP(40,  wlan, sdc3, NA, NA, NA, NA, NA),
+> +	PINGROUP(41,  wlan, sdc3, NA, NA, NA, NA, NA),
+> +	PINGROUP(42,  wlan, sdc3, NA, NA, NA, NA, NA),
+> +	PINGROUP(43,  wlan, sdc3, NA, NA, NA, NA, NA),
+> +	PINGROUP(44,  wlan, sdc3, NA, NA, NA, NA, NA),
+>  	PINGROUP(45,  NA, NA, NA, NA, NA, NA, NA),
+>  	PINGROUP(46,  NA, NA, NA, NA, NA, NA, NA),
+>  	PINGROUP(47,  NA, NA, NA, NA, NA, NA, NA),
+> @@ -519,10 +549,10 @@ static const struct msm_pingroup msm8226_groups[] = {
+>  	PINGROUP(60,  NA, NA, NA, NA, NA, NA, NA),
+>  	PINGROUP(61,  NA, NA, NA, NA, NA, NA, NA),
+>  	PINGROUP(62,  NA, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(63,  NA, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(64,  NA, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(65,  NA, NA, NA, NA, NA, NA, NA),
+> -	PINGROUP(66,  NA, NA, NA, NA, NA, NA, NA),
+> +	PINGROUP(63,  audio_pcm, NA, NA, NA, NA, NA, NA),
+> +	PINGROUP(64,  audio_pcm, NA, NA, NA, NA, NA, NA),
+> +	PINGROUP(65,  audio_pcm, NA, NA, NA, NA, NA, NA),
+> +	PINGROUP(66,  audio_pcm, NA, NA, NA, NA, NA, NA),
+>  	PINGROUP(67,  NA, NA, NA, NA, NA, NA, NA),
+>  	PINGROUP(68,  NA, NA, NA, NA, NA, NA, NA),
+>  	PINGROUP(69,  NA, NA, NA, NA, NA, NA, NA),
+> -- 
+> 2.33.0
+> 
