@@ -2,133 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0A8E40894D
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Sep 2021 12:45:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDE4F408B1F
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Sep 2021 14:36:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238610AbhIMKqZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Sep 2021 06:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50600 "EHLO
+        id S238428AbhIMMhc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Sep 2021 08:37:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239032AbhIMKqY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Sep 2021 06:46:24 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EE7C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Sep 2021 03:45:09 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id j16so8421909pfc.2
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Sep 2021 03:45:08 -0700 (PDT)
+        with ESMTP id S236211AbhIMMhc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Sep 2021 08:37:32 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A2EC061760
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Sep 2021 05:36:16 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id m70so19025091ybm.5
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Sep 2021 05:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3HKBpsH3PNknJdcvmjTAgwPJTvamLZlsD+nQrGYrlJM=;
-        b=hwTUfN3VYbOylF75Bd9CtF3oKIc0FsOU4XcFY8R8yi4No3ysJklEGajDBhyiHCUihM
-         gNQc+MaNGpLY6u+ZeTn2f7/QFFqclOu7vioBE/O0JbF9mx5YCdRAQlsQSrSUb1lhqT+p
-         0XNG/q5QbdPIU7dVy38SHhIRjrEPQ6mogsWZ0AyhaEo0wFZ/IwH/1MhJeSOXFQchFenq
-         mzq8JoVWdt/6SXh0lNHHXZPKFpTsZwLxv8QarrXL1b0XiyihX6WGK0xEIox9ib3Cvmr1
-         QJ4LH/2SbvX32VFKRAyC6zWk9akYj6ZIcdB2M7tJvBM8LyruV0BfPfe8e1h2amCZ94Cd
-         61iA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8/7I4pp3bCeX5QtDeGFLNRIAdhczuRGJY+RZHqPbZaY=;
+        b=v4RvoaeIBbVIdxvY8xRQ4WL4/b7BIh5z4yAdugyL3U40o0OAox8l/o86/wCLeuSVLY
+         SkFl2x/4cP7fQHUKJB8Lum7jMTkL+sdW7a2alYIYIXzR0hK+km75ixtIK6FVRwCa1zwb
+         Mrpaa3nC7c3HRCbgxOJjL40Sl+/Caliwzv1Lmb4FnJx2C+rIF1+zpzyjAIqHeHAO4cOz
+         ew07jy2l/SUzCzjyxoGsRJVgwl7J9IxvHXVdwboZxIMKtsj/QHOe0G2/54yqlAI76mpi
+         PdjYXZpimIImuJDxV+h7gP1v/xG11paG1BAUkn6RKxGfoc8sshK0JokDrcZIpsXsUphJ
+         RCFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3HKBpsH3PNknJdcvmjTAgwPJTvamLZlsD+nQrGYrlJM=;
-        b=e4MsLKxWzFep34DwX54wRsTbYnkKAWsU2YpPX/nM0LQR4fPDiWx3Ln0RjfiC+HTFXz
-         asmMlzv1c8w8rxqoZMIzidQTHz7h5CsoS8JfRwHvR2O1p7qGQdTnjMcKeUR1w6RoQC0M
-         re+4bZGeCf/9r7x3jYbUGmgM6ZLWPGxsVzrsPqWMmpss0DhVO7You0g1n5IHXmokU917
-         BUtWQLD4cbfW7Zqmy72myjQh5gDvUEhvvFAgBD8S+FZx8XjJuUCrIoOuOh6vKFN5norX
-         g+sKMluE3I8ymcamXV+a4x0omPc2cP1MeIv4VCEcAYIT/npPRUvehoGhgsCMzQMKsPN/
-         KzPQ==
-X-Gm-Message-State: AOAM53349NAwx4gaPGPR7Dl+3PcsjurYV+z4R0f4QphlRFAbJDYo4wr3
-        wgTJwrsjh/1YK3OVOfkaK7zNYzYFyccIPw==
-X-Google-Smtp-Source: ABdhPJxvTohzjUeMqGq41kK6htkAVASzFz1NfTgRmtFKu7tVOHoSS+BU3surNe7F6L3tzVAEDVUNAA==
-X-Received: by 2002:aa7:9ac9:0:b0:3fb:28ca:584b with SMTP id x9-20020aa79ac9000000b003fb28ca584bmr10367484pfp.64.1631529908415;
-        Mon, 13 Sep 2021 03:45:08 -0700 (PDT)
-Received: from sol (106-69-191-134.dyn.iinet.net.au. [106.69.191.134])
-        by smtp.gmail.com with ESMTPSA id x9sm6531428pjp.50.2021.09.13.03.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Sep 2021 03:45:07 -0700 (PDT)
-Date:   Mon, 13 Sep 2021 18:45:03 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     "Marek Novak | ACRIOS Systems s.r.o." <novak@acrios.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] Add Lua 5.1 binding for libgpiod v1.0.x branch
-Message-ID: <20210913104503.GA37615@sol>
-References: <8a49314e-f727-aace-9c54-122b038d1fad@acrios.com>
- <CAMRc=MeMhxv60r4M-Obi1TYo97n0YaYYyRNR7HNLT5ousbUYAg@mail.gmail.com>
- <4e125d57-0cf3-16ea-96de-c6fbbafd5bd9@acrios.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8/7I4pp3bCeX5QtDeGFLNRIAdhczuRGJY+RZHqPbZaY=;
+        b=RwcxlixFSg65WlWFTnUKw54VsktJF0G4AtH559cH/xDGqD3HG5X2QxPtLmH8UmG9YV
+         9wVgifGnQRQ78NRwNjsDtM3wKgIPnAGZmynWfcFmAtMA+lyHbiqkAQsqxfAP7PmwI1bE
+         1SLGgQ2ekC+vM6Z88lcQsy3Hg1XJcB8nReVIdAyynrfEyQJWU61CauqszWCEgWX6aZxG
+         ziy6hyM9Kp9971Ug4nMBT9i91TD+zWByTomkUZss0+sYUYTccvX0NU9K6VM+fJ78sHCX
+         X1FDOIaslUsh5XP4aDr4J0Tg7KY7+iWJHLO+PvAOiU7Lunq5AZ3+jvqCnQ136EGXF2sb
+         o5Bw==
+X-Gm-Message-State: AOAM5321KwOlzWcMnsi8g1xGQBWcvafkSHuaxSVj+LzLcYwE71VjBe++
+        UYU2lTjVUfRljWy5rqmaN35puK7l3D2DL6rBL9Ae6w==
+X-Google-Smtp-Source: ABdhPJwxn1AKm92da/Waw57h9E+5bL6agaUKuU1Ri+g26ebKDO6jncg+nkjCj8CjiBlxY7UbSLfr+ulCb6LaiDBmvtI=
+X-Received: by 2002:a25:388c:: with SMTP id f134mr15710121yba.209.1631536575709;
+ Mon, 13 Sep 2021 05:36:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e125d57-0cf3-16ea-96de-c6fbbafd5bd9@acrios.com>
+References: <20210828121007.14865-1-jbx6244@gmail.com>
+In-Reply-To: <20210828121007.14865-1-jbx6244@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 13 Sep 2021 14:36:04 +0200
+Message-ID: <CAMpxmJWncsMtjsjZY7c5aOtvf0+gxgui=yu27acouO1XjaGq7Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: add gpio-line-names to rockchip,gpio-bank.yaml
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 10, 2021 at 09:59:36PM +0200, Marek Novak | ACRIOS Systems s.r.o. wrote:
-> On 09. 09. 21 10:20, Bartosz Golaszewski wrote:
-> > On Tue, Sep 7, 2021 at 6:10 PM Marek Novak | ACRIOS Systems s.r.o.
-> > <novak@acrios.com> wrote:
-> > > 
-> > >   From ca1b5688de2d1cb63bb9823e28b87c52f23df449 Mon Sep 17 00:00:00 2001
-> > > From: Marek NOVAK <novak@acrios.com>
-> > > Date: Fri, 3 Sep 2021 18:41:02 +0200
-> > > Subject: [PATCH] Adding Lua 5.1 bindings as 'gpiod' Lua module
-> > > 
-> > > - Adding bindings directory with wrapper code
-> > > - Adding Makefile.am for building and distributing as a Lua module
-> > > - Adding --enable-bindings-lua option for autogen.sh
-> > > - Adding examples with basic lua gpioset and gpioget implementation
-> > > - Output, input and event input with new(), get(), set() and wait()
-> > >     methods are implemented.
-> > > 
-> > > Signed-off-by: Marek NOVAK <novak@acrios.com>
-> > > ---
-> > 
-> > Hi Marek!
-> > 
-> > Thanks for the patch, any new bindings are much appreciated! However
-> > the 1.0.x branch has been unsupported for over 3 years. Why did you
-> > decide to base your work on this one?
-> > 
-> > The currently supported branch for the 1.x series is 1.6.x but even
-> > then I don't really want to add new features to it as we're currently
-> > developing the 2.0 version which will become the new preferred base
-> > for all new work. Any chance you could base your work on the
-> > next/libgpiod-2.0 branch just like Viresh did with his Rust bindings?
-> > 
-> > Bartosz
-> > 
-> 
-> Hi Bartosz!
-> 
-> Thanks for checking my patch. I later realized it was not well processed
-> when sent using Thunderbird (I will use git send-email next time). I also
-> learnt that on some systems, the macros from ax_lua.m4 are not available and
-> I added it in a m4 folder. I have a v2 of the patch almost ready (build
-> being tested on different environments by my colleagues). So I can post it
-> here if anybody needs it on 1.x version supported...
-> 
-> To my motivation to select v1.0.x branch - I wanted to select a 1.x branch
-> as base since this one is used in OpenWRT distribution (https://github.com/openwrt/packages/blob/openwrt-21.02/libs/libgpiod/Makefile).
-> And my target use-case is to have Lua support for GPIO interaction there for
-> some late device-specific initialization scripts.
-> 
-> However, I think I can switch to a 2.x version of libgpiod on our fork of
-> OpenWRT v21.02 and base my contribution on it... Currently I use a package
-> which builds Lua binding "out of tree", being quite ugly, but available for
-> public here (https://sw.acrios.com/acrios/lua-gpiod). I could / should maybe
-> also support not just Lua 5.1, but also the other actively used version of
-> Lua...
-> 
-> I will update my contibution to 2.x, test it and then post it here...
-> 
+On Sat, Aug 28, 2021 at 2:10 PM Johan Jonker <jbx6244@gmail.com> wrote:
+>
+> Some people and companies may want to add more description
+> to there gpio pins. Add a gpio-line-names property to the
+> rockchip,gpio-bank.yaml file to reduce the notifications
+> from the existing mainline DT.
+>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+> index 0d62c28fb..d4e42c2b9 100644
+> --- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+> @@ -29,6 +29,8 @@ properties:
+>
+>    gpio-controller: true
+>
+> +  gpio-line-names: true
+> +
+>    "#gpio-cells":
+>      const: 2
+>
+> --
+> 2.20.1
+>
 
-Be aware that libgpiod 2.x relies on the GPIO uAPI v2 which was released
-in Linux v5.10, while OpenWRT v21.02 has only just transitioned to
-Linux v5.4.
-So you might be stuck between a rock and a hard place - unless OpenWRT
-happens to be planning another kernel jump in the near future.
+Applied, thanks!
 
-Cheers,
-Kent.
+Bart
