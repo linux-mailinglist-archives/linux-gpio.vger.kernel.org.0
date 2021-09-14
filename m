@@ -2,360 +2,393 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DAD740A9F3
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Sep 2021 10:53:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E04240AB3D
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Sep 2021 11:56:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232098AbhINIyj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Sep 2021 04:54:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:51974 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231625AbhINIyQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Sep 2021 04:54:16 -0400
-X-UUID: df1420a64bf5421bb633141d7c3d8c2f-20210914
-X-UUID: df1420a64bf5421bb633141d7c3d8c2f-20210914
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1018219810; Tue, 14 Sep 2021 16:52:54 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 14 Sep 2021 16:52:53 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas07.mediatek.inc
- (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 14 Sep
- 2021 16:52:52 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 14 Sep 2021 16:52:52 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-crypto@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-clk@vger.kernel.org>
-CC:     John Crispin <john@phrozen.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        "Sam Shih" <sam.shih@mediatek.com>
-Subject: [RESEND,v2,9/9] arm64: dts: mediatek: add mt7986b support
-Date:   Tue, 14 Sep 2021 16:51:37 +0800
-Message-ID: <20210914085137.31761-10-sam.shih@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20210914085137.31761-1-sam.shih@mediatek.com>
-References: <20210914085137.31761-1-sam.shih@mediatek.com>
+        id S231328AbhINJ5h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Sep 2021 05:57:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229907AbhINJ5h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Sep 2021 05:57:37 -0400
+Received: from relay03.th.seeweb.it (relay03.th.seeweb.it [IPv6:2001:4b7a:2000:18::164])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE34C061762;
+        Tue, 14 Sep 2021 02:56:19 -0700 (PDT)
+Received: from [192.168.1.101] (83.6.166.65.neoplus.adsl.tpnet.pl [83.6.166.65])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id A2F821F6A2;
+        Tue, 14 Sep 2021 11:56:14 +0200 (CEST)
+Subject: Re: [PATCH v3 2/2] pinctrl: qcom: Add SM6350 pinctrl driver
+To:     Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht
+Cc:     martin.botka@somainline.org,
+        angelogioacchino.delregno@somainline.org,
+        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210828172315.55742-1-konrad.dybcio@somainline.org>
+ <20210828172315.55742-2-konrad.dybcio@somainline.org>
+ <6673399.dA2BYh7nEs@g550jk>
+From:   Konrad Dybcio <konrad.dybcio@somainline.org>
+Message-ID: <9ef42060-7cf8-35e6-b7c8-9b51963d378a@somainline.org>
+Date:   Tue, 14 Sep 2021 11:56:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <6673399.dA2BYh7nEs@g550jk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add basic chip support for Mediatek mt7986b, include
-uart nodes with correct clocks, rng node with correct clock,
-and watchdog node and mt7986b pinctrl node.
 
-Add cpu node, timer node, gic node, psci and reserved-memory node
-for ARM Trusted Firmware,
+On 13.09.2021 19:23, Luca Weiss wrote:
+> Hi Konrad,
+>
+> based on other reviews on the mailing list/IRC 
 
-Add clock controller nodes, include 40M clock source, topckgen, infracfg,
-apmixedsys and ethernet subsystem.
+Sorry, I wasn't very active for a while:)
 
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 
----
-v2: modified clock and uart node due to clock driver updated
----
- arch/arm64/boot/dts/mediatek/Makefile        |   1 +
- arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts |  21 ++
- arch/arm64/boot/dts/mediatek/mt7986b.dtsi    | 227 +++++++++++++++++++
- 3 files changed, 249 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986b.dtsi
+> I have some comments here
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index e6c3a73b9e4a..d555e43d1ccc 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986b-rfb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8167-pumpkin.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm-hana.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-new file mode 100644
-index 000000000000..8296f1d27e77
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2021 MediaTek Inc.
-+ * Author: Sam.Shih <sam.shih@mediatek.com>
-+ */
-+
-+/dts-v1/;
-+#include "mt7986b.dtsi"
-+
-+/ {
-+	model = "MediaTek MT7986b RFB";
-+	compatible = "mediatek,mt7986b-rfb";
-+	chosen {
-+		bootargs = "console=ttyS0,115200n1 loglevel=8  \
-+				earlycon=uart8250,mmio32,0x11002000";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986b.dtsi b/arch/arm64/boot/dts/mediatek/mt7986b.dtsi
-new file mode 100644
-index 000000000000..1fd98fb7ba84
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7986b.dtsi
-@@ -0,0 +1,227 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2021 MediaTek Inc.
-+ * Author: Sam.Shih <sam.shih@mediatek.com>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/mt7986-clk.h>
-+
-+/ {
-+	compatible = "mediatek,mt7986b";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	clk40m: oscillator@0 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <40000000>;
-+		clock-output-names = "clkxtal";
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x1>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x2>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x3>;
-+			#cooling-cells = <2>;
-+		};
-+	};
-+
-+	psci {
-+		compatible  = "arm,psci-0.2";
-+		method      = "smc";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
-+		secmon_reserved: secmon@43000000 {
-+			reg = <0 0x43000000 0 0x30000>;
-+			no-map;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		clock-frequency = <13000000>;
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	soc {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		gic: interrupt-controller@c000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			interrupt-controller;
-+			reg = <0 0x0c000000 0 0x40000>,
-+			      <0 0x0c080000 0 0x200000>;
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		infracfg: infracfg@10001000 {
-+			compatible = "mediatek,mt7986-infracfg", "syscon";
-+			reg = <0 0x10001000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		topckgen: topckgen@1001b000 {
-+			compatible = "mediatek,mt7986-topckgen", "syscon";
-+			reg = <0 0x1001B000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		watchdog: watchdog@1001c000 {
-+			compatible = "mediatek,mt7986-wdt",
-+				     "mediatek,mt6589-wdt";
-+			reg = <0 0x1001c000 0 0x1000>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			#reset-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		apmixedsys: apmixedsys@1001e000 {
-+			compatible = "mediatek,mt7986-apmixedsys";
-+			reg = <0 0x1001E000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		pio: pinctrl@1001f000 {
-+			compatible = "mediatek,mt7986b-pinctrl";
-+			reg = <0 0x1001f000 0 0x1000>,
-+			      <0 0x11c30000 0 0x1000>,
-+			      <0 0x11c40000 0 0x1000>,
-+			      <0 0x11e20000 0 0x1000>,
-+			      <0 0x11e30000 0 0x1000>,
-+			      <0 0x11f00000 0 0x1000>,
-+			      <0 0x11f10000 0 0x1000>,
-+			      <0 0x1000b000 0 0x1000>;
-+			reg-names = "gpio_base", "iocfg_rt_base", "iocfg_rb_base",
-+				    "iocfg_lt_base", "iocfg_lb_base", "iocfg_tr_base",
-+				    "iocfg_tl_base", "eint";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pio 0 0 41>, <&pio 66 66 35>;
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&gic>;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		sgmiisys0: syscon@10060000 {
-+			compatible = "mediatek,mt7986-sgmiisys_0",
-+				     "syscon";
-+			reg = <0 0x10060000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		sgmiisys1: syscon@10070000 {
-+			compatible = "mediatek,mt7986-sgmiisys_1",
-+				     "syscon";
-+			reg = <0 0x10070000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		trng: trng@1020f000 {
-+			compatible = "mediatek,mt7986-rng",
-+				     "mediatek,mt7623-rng";
-+			reg = <0 0x1020f000 0 0x100>;
-+			clocks = <&infracfg CLK_INFRA_TRNG_CK>;
-+			clock-names = "rng";
-+			status = "disabled";
-+		};
-+
-+		uart0: serial@11002000 {
-+			compatible = "mediatek,mt7986-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11002000 0 0x400>;
-+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_UART0_SEL>,
-+				 <&infracfg CLK_INFRA_UART0_CK>;
-+			clock-names = "baud", "bus";
-+			assigned-clocks = <&topckgen CLK_TOP_UART_SEL>,
-+					  <&infracfg CLK_INFRA_UART0_SEL>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_XTAL>,
-+						 <&topckgen CLK_TOP_UART_SEL>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@11003000 {
-+			compatible = "mediatek,mt7986-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11003000 0 0x400>;
-+			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_UART1_SEL>,
-+				 <&infracfg CLK_INFRA_UART1_CK>;
-+			clock-names = "baud", "bus";
-+			assigned-clocks = <&infracfg CLK_INFRA_UART1_SEL>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_F26M_SEL>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@11004000 {
-+			compatible = "mediatek,mt7986-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11004000 0 0x400>;
-+			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_UART2_SEL>,
-+				 <&infracfg CLK_INFRA_UART2_CK>;
-+			clock-names = "baud", "bus";
-+			assigned-clocks = <&infracfg CLK_INFRA_UART2_SEL>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_F26M_SEL>;
-+			status = "disabled";
-+		};
-+
-+		ethsys: syscon@15000000 {
-+			 #address-cells = <1>;
-+			 #size-cells = <1>;
-+			 compatible = "mediatek,mt7986-ethsys",
-+				      "syscon";
-+			 reg = <0 0x15000000 0 0x1000>;
-+			 #clock-cells = <1>;
-+			 #reset-cells = <1>;
-+		};
-+
-+	};
-+
-+};
--- 
-2.29.2
+>
+> On Samstag, 28. August 2021 19:23:14 CEST Konrad Dybcio wrote:
+>> This adds pincontrol driver for tlmm block found in SM6350 SoC
+>>
+>> This patch is based on downstream copyleft code.
+>>
+>> Reviewed-by: AngeloGioacchino Del Regno
+>> <angelogioacchino.delregno@somainline.org> Signed-off-by: Konrad Dybcio
+>> <konrad.dybcio@somainline.org>
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> ---
+>> Changes since v2:
+>> - Trim the forgotten-about comments
+>> - Add Bjorn's r-b
+>>
+>>  drivers/pinctrl/qcom/Kconfig          |    9 +
+>>  drivers/pinctrl/qcom/Makefile         |    1 +
+>>  drivers/pinctrl/qcom/pinctrl-sm6350.c | 1593 +++++++++++++++++++++++++
+>>  3 files changed, 1603 insertions(+)
+>>  create mode 100644 drivers/pinctrl/qcom/pinctrl-sm6350.c
+>>
+> [SNIP]
+>> +DECLARE_MSM_GPIO_PINS(128);
+>> +DECLARE_MSM_GPIO_PINS(129);
+>> +DECLARE_MSM_GPIO_PINS(130);
+>> +DECLARE_MSM_GPIO_PINS(131);
+>> +DECLARE_MSM_GPIO_PINS(132);
+>> +DECLARE_MSM_GPIO_PINS(133);
+>> +DECLARE_MSM_GPIO_PINS(134);
+>> +DECLARE_MSM_GPIO_PINS(135);
+>> +DECLARE_MSM_GPIO_PINS(136);
+>> +DECLARE_MSM_GPIO_PINS(137);
+>> +DECLARE_MSM_GPIO_PINS(138);
+>> +DECLARE_MSM_GPIO_PINS(139);
+>> +DECLARE_MSM_GPIO_PINS(140);
+>> +DECLARE_MSM_GPIO_PINS(141);
+>> +DECLARE_MSM_GPIO_PINS(142);
+>> +DECLARE_MSM_GPIO_PINS(143);
+>> +DECLARE_MSM_GPIO_PINS(144);
+>> +DECLARE_MSM_GPIO_PINS(145);
+>> +DECLARE_MSM_GPIO_PINS(146);
+>> +DECLARE_MSM_GPIO_PINS(147);
+>> +DECLARE_MSM_GPIO_PINS(148);
+>> +DECLARE_MSM_GPIO_PINS(149);
+>> +DECLARE_MSM_GPIO_PINS(150);
+>> +DECLARE_MSM_GPIO_PINS(151);
+>> +DECLARE_MSM_GPIO_PINS(152);
+>> +DECLARE_MSM_GPIO_PINS(153);
+>> +DECLARE_MSM_GPIO_PINS(154);
+>> +DECLARE_MSM_GPIO_PINS(155);
+>> +
+>> +static const unsigned int sdc1_rclk_pins[] = { 156 };
+>> +static const unsigned int sdc1_clk_pins[] = { 157 };
+>> +static const unsigned int sdc1_cmd_pins[] = { 158 };
+>> +static const unsigned int sdc1_data_pins[] = { 159 };
+>> +static const unsigned int sdc2_clk_pins[] = { 160 };
+>> +static const unsigned int sdc2_cmd_pins[] = { 161 };
+>> +static const unsigned int sdc2_data_pins[] = { 162 };
+>> +static const unsigned int ufs_reset_pins[] = { 163 };
+> All these numbers don't match anymore after moving ufs_reset to 156
+>
+> (ref: https://lore.kernel.org/lkml/YNTYvKYDWFxUcb+Y@yoga/ )
 
+Good catch, thanks!
+
+
+>
+>> +
+>> +enum sm6350_functions {
+>> +	msm_mux_adsp_ext,
+>> +	msm_mux_agera_pll,
+>> +	msm_mux_atest_char,
+>> +	msm_mux_atest_char0,
+>> +	msm_mux_atest_char1,
+>> +	msm_mux_atest_char2,
+>> +	msm_mux_atest_char3,
+>> +	msm_mux_atest_tsens,
+>> +	msm_mux_atest_tsens2,
+>> +	msm_mux_atest_usb1,
+>> +	msm_mux_atest_usb10,
+>> +	msm_mux_atest_usb11,
+>> +	msm_mux_atest_usb12,
+>> +	msm_mux_atest_usb13,
+>> +	msm_mux_atest_usb2,
+>> +	msm_mux_atest_usb20,
+>> +	msm_mux_atest_usb21,
+>> +	msm_mux_atest_usb22,
+>> +	msm_mux_atest_usb23,
+> Bjorn mentioned to merge all the atest_usb* functions into a single one.
+
+Will do.
+
+
+
+>
+>> +	msm_mux_audio_ref,
+>> +	msm_mux_btfm_slimbus,
+>> +	msm_mux_cam_mclk0,
+>> +	msm_mux_cam_mclk1,
+>> +	msm_mux_cam_mclk2,
+>> +	msm_mux_cam_mclk3,
+>> +	msm_mux_cam_mclk4,
+>> +	msm_mux_cci_async,
+>> +	msm_mux_cci_i2c,
+>> +	msm_mux_cci_timer0,
+>> +	msm_mux_cci_timer1,
+>> +	msm_mux_cci_timer2,
+>> +	msm_mux_cci_timer3,
+>> +	msm_mux_cci_timer4,
+>> +	msm_mux_cri_trng,
+>> +	msm_mux_dbg_out,
+>> +	msm_mux_ddr_bist,
+>> +	msm_mux_ddr_pxi0,
+>> +	msm_mux_ddr_pxi1,
+>> +	msm_mux_ddr_pxi2,
+>> +	msm_mux_ddr_pxi3,
+>> +	msm_mux_dp_hot,
+>> +	msm_mux_edp_lcd,
+>> +	msm_mux_gcc_gp1,
+>> +	msm_mux_gcc_gp2,
+>> +	msm_mux_gcc_gp3,
+>> +	msm_mux_gp_pdm0,
+>> +	msm_mux_gp_pdm1,
+>> +	msm_mux_gp_pdm2,
+>> +	msm_mux_gpio,
+>> +	msm_mux_gps_tx,
+>> +	msm_mux_ibi_i3c,
+>> +	msm_mux_jitter_bist,
+>> +	msm_mux_ldo_en,
+>> +	msm_mux_ldo_update,
+>> +	msm_mux_lpass_ext,
+>> +	msm_mux_m_voc,
+>> +	msm_mux_mclk,
+>> +	msm_mux_mdp_vsync,
+>> +	msm_mux_mdp_vsync0,
+>> +	msm_mux_mdp_vsync1,
+>> +	msm_mux_mdp_vsync2,
+>> +	msm_mux_mdp_vsync3,
+>> +	msm_mux_mi2s_0,
+>> +	msm_mux_mi2s_1,
+>> +	msm_mux_mi2s_2,
+>> +	msm_mux_mss_lte,
+>> +	msm_mux_nav_gpio,
+>> +	msm_mux_nav_pps,
+>> +	msm_mux_pa_indicator,
+>> +	msm_mux_pcie0_clk,
+>> +	msm_mux_phase_flag0,
+>> +	msm_mux_phase_flag1,
+>> +	msm_mux_phase_flag10,
+>> +	msm_mux_phase_flag11,
+>> +	msm_mux_phase_flag12,
+>> +	msm_mux_phase_flag13,
+>> +	msm_mux_phase_flag14,
+>> +	msm_mux_phase_flag15,
+>> +	msm_mux_phase_flag16,
+>> +	msm_mux_phase_flag17,
+>> +	msm_mux_phase_flag18,
+>> +	msm_mux_phase_flag19,
+>> +	msm_mux_phase_flag2,
+>> +	msm_mux_phase_flag20,
+>> +	msm_mux_phase_flag21,
+>> +	msm_mux_phase_flag22,
+>> +	msm_mux_phase_flag23,
+>> +	msm_mux_phase_flag24,
+>> +	msm_mux_phase_flag25,
+>> +	msm_mux_phase_flag26,
+>> +	msm_mux_phase_flag27,
+>> +	msm_mux_phase_flag28,
+>> +	msm_mux_phase_flag29,
+>> +	msm_mux_phase_flag3,
+>> +	msm_mux_phase_flag30,
+>> +	msm_mux_phase_flag31,
+>> +	msm_mux_phase_flag4,
+>> +	msm_mux_phase_flag5,
+>> +	msm_mux_phase_flag6,
+>> +	msm_mux_phase_flag7,
+>> +	msm_mux_phase_flag8,
+>> +	msm_mux_phase_flag9,
+> .. and all the phase_flag* ones.
+
+Sure
+
+
+>
+>> +	msm_mux_pll_bist,
+>> +	msm_mux_pll_bypassnl,
+>> +	msm_mux_pll_reset,
+>> +	msm_mux_prng_rosc,
+>> +	msm_mux_qdss_cti,
+>> +	msm_mux_qdss_gpio,
+>> +	msm_mux_qdss_gpio0,
+>> +	msm_mux_qdss_gpio1,
+>> +	msm_mux_qdss_gpio10,
+>> +	msm_mux_qdss_gpio11,
+>> +	msm_mux_qdss_gpio12,
+>> +	msm_mux_qdss_gpio13,
+>> +	msm_mux_qdss_gpio14,
+>> +	msm_mux_qdss_gpio15,
+>> +	msm_mux_qdss_gpio2,
+>> +	msm_mux_qdss_gpio3,
+>> +	msm_mux_qdss_gpio4,
+>> +	msm_mux_qdss_gpio5,
+>> +	msm_mux_qdss_gpio6,
+>> +	msm_mux_qdss_gpio7,
+>> +	msm_mux_qdss_gpio8,
+>> +	msm_mux_qdss_gpio9,
+>> +	msm_mux_qlink0_enable,
+>> +	msm_mux_qlink0_request,
+>> +	msm_mux_qlink0_wmss,
+>> +	msm_mux_qlink1_enable,
+>> +	msm_mux_qlink1_request,
+>> +	msm_mux_qlink1_wmss,
+>> +	msm_mux_qup00,
+>> +	msm_mux_qup01,
+>> +	msm_mux_qup02,
+>> +	msm_mux_qup10,
+>> +	msm_mux_qup11,
+>> +	msm_mux_qup12,
+>> +	msm_mux_qup13_f1,
+>> +	msm_mux_qup13_f2,
+>> +	msm_mux_qup14,
+>> +	msm_mux_rffe0_clk,
+>> +	msm_mux_rffe0_data,
+>> +	msm_mux_rffe1_clk,
+>> +	msm_mux_rffe1_data,
+>> +	msm_mux_rffe2_clk,
+>> +	msm_mux_rffe2_data,
+>> +	msm_mux_rffe3_clk,
+>> +	msm_mux_rffe3_data,
+>> +	msm_mux_rffe4_clk,
+>> +	msm_mux_rffe4_data,
+>> +	msm_mux_sd_write,
+>> +	msm_mux_sdc1_tb,
+>> +	msm_mux_sdc2_tb,
+>> +	msm_mux_sp_cmu,
+>> +	msm_mux_tgu_ch0,
+>> +	msm_mux_tgu_ch1,
+>> +	msm_mux_tgu_ch2,
+>> +	msm_mux_tgu_ch3,
+>> +	msm_mux_tsense_pwm1,
+>> +	msm_mux_tsense_pwm2,
+>> +	msm_mux_uim1_clk,
+>> +	msm_mux_uim1_data,
+>> +	msm_mux_uim1_present,
+>> +	msm_mux_uim1_reset,
+> maybe even uim1_* into uim1?
+
+Not sure about these ones though..
+
+
+>
+>> +	msm_mux_uim2_clk,
+>> +	msm_mux_uim2_data,
+>> +	msm_mux_uim2_present,
+>> +	msm_mux_uim2_reset,
+> .. and uim2?
+
+Ditto
+
+
+>> +	msm_mux_usb_phy,
+>> +	msm_mux_vfr_1,
+>> +	msm_mux_vsense_trigger,
+>> +	msm_mux_wlan1_adc0,
+>> +	msm_mux_wlan1_adc1,
+>> +	msm_mux_wlan2_adc0,
+>> +	msm_mux_wlan2_adc1,
+>> +	msm_mux__,
+>> +};
+>> +
+>>
+> [SNIP]
+>> +
+>> +static const struct msm_pinctrl_soc_data sm6350_pinctrl = {
+>> +	.pins = sm6350_pins,
+>> +	.npins = ARRAY_SIZE(sm6350_pins),
+>> +	.functions = sm6350_functions,
+>> +	.nfunctions = ARRAY_SIZE(sm6350_functions),
+>> +	.groups = sm6350_groups,
+>> +	.ngroups = ARRAY_SIZE(sm6350_groups),
+>> +	.ngpios = 157,
+>> +	.wakeirq_map = sm6350_pdc_map,
+>> +	.nwakeirq_map = ARRAY_SIZE(sm6350_pdc_map),
+>> +	.wakeirq_dual_edge_errata = true,
+>> +};
+>> +
+>> +static int sm6350_pinctrl_probe(struct platform_device *pdev)
+>> +{
+>> +	return msm_pinctrl_probe(pdev, &sm6350_pinctrl);
+>> +}
+>> +
+>> +static const struct of_device_id sm6350_pinctrl_of_match[] = {
+>> +	{ .compatible = "qcom,sm6350-tlmm", },
+>> +	{ },
+> No need for a trailing comma here ;)
+
+Heh, true
+
+
+>
+>> +};
+>> +
+>> +static struct platform_driver sm6350_pinctrl_driver = {
+>> +	.driver = {
+>> +		.name = "sm6350-pinctrl",
+>> +		.of_match_table = sm6350_pinctrl_of_match,
+>> +	},
+>> +	.probe = sm6350_pinctrl_probe,
+>> +	.remove = msm_pinctrl_remove,
+>> +};
+>> +
+>> +static int __init sm6350_pinctrl_init(void)
+>> +{
+>> +	return platform_driver_register(&sm6350_pinctrl_driver);
+>> +}
+>> +arch_initcall(sm6350_pinctrl_init);
+>> +
+>> +static void __exit sm6350_pinctrl_exit(void)
+>> +{
+>> +	platform_driver_unregister(&sm6350_pinctrl_driver);
+>> +}
+>> +module_exit(sm6350_pinctrl_exit);
+>> +
+>> +MODULE_DESCRIPTION("QTI sm6350 pinctrl driver");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DEVICE_TABLE(of, sm6350_pinctrl_of_match);
+> Some/most(?) newer drivers also use the name tlmm instead of pinctrl in the 
+> function names and in the .name of the driver.
+
+I can do the same for consistency.
+
+
+Konrad
