@@ -2,287 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EEE640CD30
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Sep 2021 21:27:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17A7F40CD52
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Sep 2021 21:39:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231562AbhIOT3M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Sep 2021 15:29:12 -0400
-Received: from mail-dm6nam10on2061.outbound.protection.outlook.com ([40.107.93.61]:60832
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        id S231535AbhIOTlL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Sep 2021 15:41:11 -0400
+Received: from mail-bn8nam08on2085.outbound.protection.outlook.com ([40.107.100.85]:23574
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231583AbhIOT3L (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Sep 2021 15:29:11 -0400
+        id S230451AbhIOTlL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Sep 2021 15:41:11 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IMNKU6gUtIKmXHw+VrwLPvGfO7EWCx4c/nPB6N4/YsuvDiRL9+bShLMhNPw/spbKYZT4SEGffdGT2cvvSSqk6M5Trn1bLEDLzxi8bMK0FjiFq6YMDcKkltkh7VFeRhmjBgd2tYq1wEbjyeXW24CP9or3HNXV2KqalIn7BZ5dwGsevML1E5tXghTTegvwBx+dUj6BY6E3P1qH5uMm0olyr4rzQ0VLGaH+wrSuTgjivmFWPVaZz+QZsUAUXGrF61NuDlpCj9P+ZMX+DdKRdfvwTYTuUPdReC/JKL2WGQK2lxXqpSoMm0UufYm997Yd3N2XSK+REzknaEic/goQ2AIsYw==
+ b=DQNdbo7De2sVvXGb//hCY8tN8UVe7+gjofArgkS0+VsWG39o7jtvYLOisP7/uC26elW4DO5/62IVszlvspK64QFKtVlulDoAQkIY9+yq9UqyyuJJSrmhFzXi51t0P7P+uBTrWgGM+5axAdoC17ZvjMuQVvmCkm4TCbmPx24bd8oAwFo3+f4NhaWLm50qlT+pIXYTe8uhkLitMmgawpzz0jS0O0BJn4fEBCbJ+fgx/bmkWU6kgPqnkdlyQ4wLoNXw3SlpCffYVr6yFw4DPeWHIOzgwQ8JIXMkYniumoiFP8wbndrKes81XWhQERfEgGaVTuSX1T1+H95R1vMqIMpJhA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=KWuQL4Gel86ltbYscK31uyfz2fKoBm+ZM4wGBea2K3s=;
- b=N+gDyxYDPWmCulylrae7n3jE8L6c7MrpGismrxoTsm4Y7uy5oaiwvrYef1BMwlEa99g/K1TNsIrQ7m2CFvDo7AZSfTMRxbUQteUlmN1dzyQXVSyNOKdEDdBs/b3BGLbw+wkHnlg72MBFgrWlb2sDiRnVNadKz2c7UptuBNE8TqLo2R20QjdOIpoqiGqYJg6voAXcQk/454f/idJfCsQNqybnwttQ7TFP6bSTRH9ezQossM0mp92Ny31+ZQ5wwhUwT+GCIUEPJKesVDcNEBbh+QJHkZ9GJmdepFbQpBUuh4i0zIE3Qu2q1Mrw7B6kZQseFKmR/8kHFBzknAJaY6ZfjA==
+ bh=I/qzLRs20TAHLPBOHZrXCmmDyMyUq1abqIz1tH/oNT8=;
+ b=KGaJ0sJZDMfxLMjMQ4lJL+A3Hm786aD+tXAeSMPPnUK18wgnrF9xltPkImj3H+ZxXA9ADqALs7CUu/oI4S40W/VzCD6Wbe1t1gngx66Pmjw7LrJAyTGRQbzwx3dO8bctxXeTwMScXkNvZOlxr4igghTmRYWfqSOFXsUHcrRXyJddz+WG4tRvdsREpaLCZDCA5HUwnxPZQYd5Gm3knmsnZnfg2yBQc2FrLDfqd6pVSYrKpdVGHmFlIrkKSfocpeW6niJ48IhNxFkomVSwG790A94bMzy9+nKLItXNtKiPCSjTkZjyKfnXPb16JFVwec4qTbGWzLeiXmvBi60GoCBkrw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KWuQL4Gel86ltbYscK31uyfz2fKoBm+ZM4wGBea2K3s=;
- b=Z53TLNOGkBI8oeYHwneZrn8XV8HUJzR4D0D3nojcNEEpvWU41o2coeNnhMY8DOS1ZyrxFnIuuMtWdTV1DHuKJxHERjvWJc0vmc14VcWUK7+Wov8Wk+b4PQhKTxlfMmxG4Er2MkLIBCkwu5LE36rfLywG0O0++oMPh+TjF393JWug3VxfQNJaOr8mQ6sWEF0GovEDBQFbM7aw1SKLyGkYDc7FpFfSmbzjZlckZVythsvtij2W7MPD7N13ArkmhVf51wVU/m2U5B+5dJL7cScRXl2TcQJqw+f7gwUVrkE0GfwufitZLkIwDZu+1wrbnaJm8a+1rkixUaWsPfliG8DL1A==
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
- by CH2PR12MB4199.namprd12.prod.outlook.com (2603:10b6:610:a7::13) with
+ bh=I/qzLRs20TAHLPBOHZrXCmmDyMyUq1abqIz1tH/oNT8=;
+ b=yfL9Ja7u1qVBR2phqJ2czPS//LcTB/gb2D8BK01yqA8dkjH0rvLWliFOuAoBORKJTPpyh++zbrFgEbpWejoZS5ZR1rgRZlkGs6Ls08mbn8+ZH+OiK2p+sQrDQVpI674KOEznipTCv/hBWsg4teRajxLPmnwZqu2qp1oukb4ERsg=
+Received: from SA0PR12MB4510.namprd12.prod.outlook.com (2603:10b6:806:94::8)
+ by SN6PR12MB2782.namprd12.prod.outlook.com (2603:10b6:805:73::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.14; Wed, 15 Sep
- 2021 19:27:51 +0000
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::a46b:a8b7:59d:9142]) by CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::a46b:a8b7:59d:9142%5]) with mapi id 15.20.4500.019; Wed, 15 Sep 2021
- 19:27:51 +0000
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     David Thompson <davthompson@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Liming Sun <limings@nvidia.com>
-Subject: RE: [PATCH v1 5/6] TODO: gpio: mlxbf2: Introduce IRQ support
-Thread-Topic: [PATCH v1 5/6] TODO: gpio: mlxbf2: Introduce IRQ support
-Thread-Index: AQHXkpZRAcQDwgai0k+eK2nQg5Bpo6t2INuggAMu2gCALFilUA==
-Date:   Wed, 15 Sep 2021 19:27:51 +0000
-Message-ID: <CH2PR12MB3895E8CDC7DC1AD0144E1416D7DB9@CH2PR12MB3895.namprd12.prod.outlook.com>
-References: <20210816115953.72533-1-andriy.shevchenko@linux.intel.com>
- <20210816115953.72533-6-andriy.shevchenko@linux.intel.com>
- <CH2PR12MB3895ACF821C8242AA55A1DCDD7FD9@CH2PR12MB3895.namprd12.prod.outlook.com>
- <YR0UPG2451aGt9Xg@smile.fi.intel.com>
-In-Reply-To: <YR0UPG2451aGt9Xg@smile.fi.intel.com>
+ 2021 19:39:50 +0000
+Received: from SA0PR12MB4510.namprd12.prod.outlook.com
+ ([fe80::f909:b733:33ff:e3b1]) by SA0PR12MB4510.namprd12.prod.outlook.com
+ ([fe80::f909:b733:33ff:e3b1%4]) with mapi id 15.20.4523.014; Wed, 15 Sep 2021
+ 19:39:50 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+CC:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "Natikar, Basavaraj" <Basavaraj.Natikar@amd.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH 0/2] Add irq PM wakeup
+Thread-Topic: [PATCH 0/2] Add irq PM wakeup
+Thread-Index: AQHXpBb+++ZKkCe0JE+I4GACxOg6fauligVA
+Date:   Wed, 15 Sep 2021 19:39:50 +0000
+Message-ID: <SA0PR12MB4510586AE3CBCDFDADE93417E2DB9@SA0PR12MB4510.namprd12.prod.outlook.com>
+References: <20210831120613.1514899-1-Basavaraj.Natikar@amd.com>
+ <65cb2134-c209-6381-fccd-43f252af6f9f@amd.com>
+ <9c3a0ce4-efbc-e5b7-c51c-317b89ca8d52@amd.com>
+In-Reply-To: <9c3a0ce4-efbc-e5b7-c51c-317b89ca8d52@amd.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=nvidia.com;
+msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2021-09-15T19:39:48Z;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=b5f9b8d4-34a4-4bed-acc7-12b74110001b;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=amd.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4ab5089b-71c8-488d-72b7-08d9787ee877
-x-ms-traffictypediagnostic: CH2PR12MB4199:
+x-ms-office365-filtering-correlation-id: 88a4da1b-63d7-4c7a-143b-08d97880954d
+x-ms-traffictypediagnostic: SN6PR12MB2782:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR12MB4199411E37A9C5A1383F2FFCD7DB9@CH2PR12MB4199.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-microsoft-antispam-prvs: <SN6PR12MB27822384B71D0D0DFF5E59A9E2DB9@SN6PR12MB2782.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5m9kSDCOwOMIUjF+EnpegzoVKAI6HvjuZN2HVPMe+18ABYhg3/SP8e3IDt9eVut/GO3ZhggkvI7OVLNQdc6vIbSn9vBGZ1qrYjDud7pzcbTwpVV5jRPEjEPiNAyOelqCRf3pd+U2Se6lHtb1it1IkruSTkZe7nzWJ2vjnGeNKMN+oq3SN+YJvBKvJmJ9raRV9FodEF5L0iOOkRQTVDTkbSFrUrO6VddoyXX1JE2MHpeUgl671XieKCvz8e43T/+DilABZh67Qj4f1+Xx/oVMKsPW+t5/B/fnJvXBTdEepIeRjfmp6dnHUEoD1FMGXQ5JXXDMLz1BuhjjuHdVr4Qkv7ft3JfQBatIBvKsWoeh+GTrIbeNkHvrqtTF8NJbHP7CFUv3d5cpoF4wXomzlrU/3J+NLf5N/xZbHKlPhWe3OwinfLNI0PyYOTRWIGs0uW//FI3UDj32pupEOYTIHL7rqYlFWSPaJgzY19UiTAgtb9ct2F3UVwUY7UwO5i1FVZobOVyLDOJy72NRolnEvruNp4odl+zhH6OYlIkD/mz878nTo937ClrC+KzqXht9hr/UDR16wrMvctEkB9xHAKbBPihuGu5kOvgse3rhxWLYCSHH/S1uPaGbCwlWtHetbrCKoGwjmoEVtxyGjGlSR5f9Mb7xFKeHGoXudRpvyKJ3W9sIFBeIgPKBHJgcb4GKpxSzMBh9SfxZePWqVEBM+4mmq488KdI1/UrnH0XQJ+AxPuo=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(346002)(136003)(366004)(376002)(186003)(8676002)(8936002)(64756008)(66446008)(66556008)(86362001)(4326008)(478600001)(316002)(26005)(33656002)(7416002)(53546011)(107886003)(71200400001)(5660300002)(2906002)(6506007)(38070700005)(54906003)(52536014)(110136005)(76116006)(122000001)(38100700002)(66946007)(9686003)(7696005)(55016002)(66476007)(83380400001)(341764005);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: f2XbDIxDuCCnjVBCIEiyce7fDUreM/C7kp3JtG0aHUwhs6ahX/WKq51hBOjKfWvi7Bjpq6SxXDgfKJIy32XJG17CIxI6m8MPlh9lFHcRT3Vx/5lZ6yOzVGmoh4HfuF1L7rJahufqI1s4DW+2thWWUrHcnRI3R7b/MSW841MX6JkGsHTCXdkhMPo3cWL5gUTLW14PE41BBT8TPuiKSFGe/jfbvVljjQmVPAcLeiD8T0eaFpPMk4wFSIFHR9OcoLiAJhlGC6uKXgxRt3i9Zb9q4Orc9FZcG+fitFbsUUDJNTUrvcXKR9Q3gzd7uEJUZEB6nSZNg4egbny9yoeJes5DVmTT8efRms7cvDgs6Xi3beahZto1aIEH9gCDwvhBywrsy83Cn2bJBOW2PmpKZXsWSCHY2escFxcLyKtw8pyfcGaSJbRMlAsBbbRkDZdHD2o5Yy8abHDtZt9Lv2znVFJpm2wvilC6nyaHChHiEuV0Q02AS8OdbP2U3enkrdclhhQo9FPfOUi5SfIV9cKVi2l7h8TWIGKMGmiAHycbHqRT7DYtNMSKzq2ebdWdDbZK5NU5dP+ApHA75YMK/KUqkgG4W+9gsi/9DT3WCD3jTsddkczX4eW6GvdG1lJcEUj3mRwhxHpog3hE04GOO2sB0zYDVQ2Z9bxHQqtL2cV9KT+v1WqRFzQRhhuoDTwaGRqx94MmYfYzjQRdv/pWSd1c4G3Wzg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4510.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(136003)(396003)(39860400002)(346002)(66446008)(9686003)(4326008)(53546011)(4744005)(33656002)(186003)(55016002)(2906002)(8936002)(71200400001)(66946007)(478600001)(64756008)(66556008)(38070700005)(86362001)(110136005)(38100700002)(52536014)(83380400001)(8676002)(66476007)(6506007)(54906003)(7696005)(316002)(5660300002)(76116006)(122000001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?BaKKRZy0ZhSzZywI8APFYRhi0qVaoysZcKikyHoGtbJvyl8LU5x7yBL3KJoy?=
- =?us-ascii?Q?8iOWqP75c0B9XdK5m6x7P1P2As3ggrxQz0O8R9ilarmJvRX8ey19CIpV+CZo?=
- =?us-ascii?Q?hWsFnn7VdyyN6ChlLnO20g80INSpcMcIBLrrogCI5IIjifP5NOLe4wKmKD8O?=
- =?us-ascii?Q?C4B+Cafpkx8D0Irj/JH8mXrq3Ho02X1w1wlv//jO/dPNxr+T6dWdqz4P1acA?=
- =?us-ascii?Q?LL4mIIapco1yCnDUqNcZVpTLhpzByk4D6r6SKdr6szF90A3zOZOfTugSo4JC?=
- =?us-ascii?Q?0xuXZdFIApqsB3+CFZ6xH5PtypHJpvMJep7EyYqXdOqI3C4yz04C8q42rxPe?=
- =?us-ascii?Q?ywoAyScoWt7K5MkuXeHdKZBTcoZHL4Ru4IACEbkCAOQy2LKjElv8/cdvjZZB?=
- =?us-ascii?Q?ikAZqDBxxlnBNymAV51xz4iTpUXC/1gRWF7b8DTeFLbOcKbRVTn1t/vJ8trs?=
- =?us-ascii?Q?pf1eXrsiwaomfHZzea9g5s8raKdzjFkx1mnTr3tbE4eI1Y98OnhO42EdQKLi?=
- =?us-ascii?Q?kSFANnthaxjgKV0pFWI22YY4lCjnY1LeOhbnXp/o2nJDZPrY4p0CNbjQ49z0?=
- =?us-ascii?Q?uB3bG7Iw345Iw3+QuS7uDSbSvx3HeGsv4PtqBU27gjR6X9fKbtzGPJ/PORDF?=
- =?us-ascii?Q?2gMOG8zDYSi4dfulSEajDZRjvpClk9izzTeVho1Ww1VqIKuDKhHSPI6OnsaO?=
- =?us-ascii?Q?v0oQcVJRlzGxPfLefZ6sS16g29pyz/8kcpvKkWbQ6F7LX8vC6HrhxoXMeuuA?=
- =?us-ascii?Q?QCxxH7wckv7VOTC6ehMXu6cXkWg0SIs2lDf918UaUeiW0XtibMht9en2zwkD?=
- =?us-ascii?Q?4R/q9/+O184S9+rdBjrIIMC33ROJKeL3vgHnFbOC+1nmJdVw27wvSLjc9GM6?=
- =?us-ascii?Q?myEH5bQ5HBQWMC2lXRkN8mjGA1XZJ06+MlJ8ynY6vAxqJxfgv0bsEL7+OeIt?=
- =?us-ascii?Q?PiYvxpODLkrzj6VPC2oefdCWbMecV4WfFrbnudmpAj0kNCzRwCnTfCStYum5?=
- =?us-ascii?Q?aAHFBe+1YZ0SqpgF7rnDzrhlWh2nVXaUKEy2LoIfp3D8xhOvabr3JGIqEzqk?=
- =?us-ascii?Q?si8y0N8gNyQR59qz+NIerj5YCknM1huqlTybRCrNMxv4MLefuZDk5EfM8ajY?=
- =?us-ascii?Q?huSnuiWDprOqr7R7EbU6Oxp1xBA93GjhlFzsyL8kDcxvLid0aoPzR9p28ThQ?=
- =?us-ascii?Q?cFOCG/b4YJv6185ssme6Fu1cB/kBI+JyN/RnGGJlQ9EFE/hMqcPQJjs5JvR4?=
- =?us-ascii?Q?5I1H9MpMtdmL4gJOe7YkMWVpCRIHUZ09hUGSlD+Bk0TKSTORBqy9u+5+rVVa?=
- =?us-ascii?Q?Zvi3E7OIUX5ZVut6Mf0Njj+K?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WjJ2dFM4T0pOOXNJVUV0WUsxa25SWmhtcUt0cmFYT1d1VVZZVXBLVmg3OUVV?=
+ =?utf-8?B?N0piUTdMd2RwWU9MdFhERVN6RTd3WEcvejNpL1NZYXhPaDhzMzJtMURKTnB6?=
+ =?utf-8?B?cDloZ3pBZUNISVJ5cFlreVR3OHl6czJ3b29ZaEZJWFNDUWsxMXZVTGxUL2pD?=
+ =?utf-8?B?a0tCc2ZzbHhYQjZBUlVTL3hCTm5rUmRMUzVhYk1iMWlHZ2lRR0lJRTBTWlNL?=
+ =?utf-8?B?ZEJZNDB0ZkdQMlFldHVUNFZ5Wi9MajBKU2FzdGJzN2hPUk0wWWN0bTZLeEIz?=
+ =?utf-8?B?aCszUEhvQXpKU2JsZ050bWRQWGFtWXhwZERsOWdXRmNyRndYMVJ6OFhjNnFz?=
+ =?utf-8?B?NzlHRkZkeVNxUGY0OE4vSjhybTQrQmZRWlh2VkZvbmk4MllIYUg2c3JtNnhr?=
+ =?utf-8?B?TUNzZHM5UmlzVjlNa0ZXMUxrYUtBUkxFVm5MMExKT0ErU0QvOTR1RFFFbmNm?=
+ =?utf-8?B?M2xuZm5qUXBuYmpZNEMzTGZQYXZHWnpqNkNWNXYvVFJYZURFcFNSaWZ3QTdW?=
+ =?utf-8?B?bjdhTDYwYUNPTWI1a2NrM0JscVVvekVQT29acVk4aDF5ZllsTWlLQ29VZGpv?=
+ =?utf-8?B?Ri9MMnFkTG52bnlIaFRGOWk4ZEM1N083dmM2dWF1cjFlZU13VEFqb1c5TnFG?=
+ =?utf-8?B?dnhxM3FScm5RWlVmN0YrZ21FT01hYmZBNmhNQjRxWjRRa25PQXVrQzVXV1N2?=
+ =?utf-8?B?WXRsV2lJTlpMVE1VTG9HaWJtMWJtUUtaZFN4YVJqS3dPbUwrRGVwRnpWRWto?=
+ =?utf-8?B?UFVpaW02bDJaMnZBaHNVZ2JxelJIN3N6cW5LSEZ0Vm1VN2hPY1NFQ2JGWTBE?=
+ =?utf-8?B?TlJpY1p6aFRuSk5lakVYb3hkaG1kNmNuWE0wbkNXa0gyRU50ZStIWnFMek40?=
+ =?utf-8?B?VmcxQlJnSHVsd3RpVE4wVGpQRk1NWTFFVDBWeHJyS0hHNmFjUHByRHNodVZs?=
+ =?utf-8?B?RnkyMVhMbEhHV3ZBaGw0VUNndFNTQllTcEYvVnpzRkswdW5sNDk5UjJMUUhZ?=
+ =?utf-8?B?ZGNLTDF3VTZzRklHb1ViQmExMVd0R2wvNS8yTDYzaGFjZmVoQVJ1bkVvdnZh?=
+ =?utf-8?B?Q0p4OVBIRTBSQnd0OVVteVl1N2ZCMjNqNlFIRUhaS2VJK1JQQ1dwSENFVkl3?=
+ =?utf-8?B?ZkhiVWNtd1pwY3RPRDZSRTRNd2pvTGR3K2NGNmdaOHlVcWU3aTIxRnlyTmZq?=
+ =?utf-8?B?QlRjZWZ6UER4aVFGK2FJbHFZd0x6dFJreFVvdVgzZ3hvUlZZVXBoWmp3NEFw?=
+ =?utf-8?B?T1dPUURIVmlMRlVPbmc4Z3hyUlJkeDNFb1FHVXNzS21qNXBCbzl3bjg1Ykgr?=
+ =?utf-8?B?Vk1CVGJ6QWtSQUdaRW5vVWp5NjIydTh1Q0QrWnZHc0dsRWVZbDFIUnBzMjJI?=
+ =?utf-8?B?cTlkVU8rMmFBa2E3YlJmN091TlBwYnptOWRuRzdBYThYenc4bW00dk5uU2d4?=
+ =?utf-8?B?UndJa0dpbEV6cGVlNWtmNjh0a012T1gzQXlLMjVLQkl3SjloTHpkejF3SzRO?=
+ =?utf-8?B?VXpBM05IODdHUDRrTk9YV1daUGhJenJiZDd0b2lhVXA1RS93Qlh6NUZrZnRS?=
+ =?utf-8?B?VzFEeEN2K1lUc1JHM0NvTk95WXlDdzYzOE01WndONkJQTjRMcUNCM1o3K2Ra?=
+ =?utf-8?B?YkxRd2ZyaFRYK2hNSElwNFVtTHVBS2d4WXgxRkMrcE85cTJDVi9ycFFjQlFY?=
+ =?utf-8?B?ZlZDV0JjcENuM28wVzlwWHlQdjY2bFdtdTdtTTQyZ2k5YjBxdjJZdzQzZXBD?=
+ =?utf-8?B?WGZMSlhIN1lPaU5yemFYUFFNOXQwdUxyR29uUStXcytwcW9YUzNydEtLeEJR?=
+ =?utf-8?B?ckw4OHBnTnF1bHdDM1NhUHVuV1dkcm51eVRoc3BvRWhXMEsyOGk0V0llVnFQ?=
+ =?utf-8?Q?H89e/zHuvhZJn?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
+X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ab5089b-71c8-488d-72b7-08d9787ee877
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Sep 2021 19:27:51.0270
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4510.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88a4da1b-63d7-4c7a-143b-08d97880954d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Sep 2021 19:39:50.3936
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2ZgQsk2T6dA5NnbSkTm38vrUQV431naakuX4QCkNF/rbZLOVt8lrkX5RLlppgyyThuERouE3cOsfXIK4ywmrNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4199
+X-MS-Exchange-CrossTenant-userprincipalname: ySG6lqiI2qM9ax9rUwlHdNCbrW6vpCh4yKIki5i4OTXcwDIUHmPSmWNYUNqcMcyxOXoppc80aLBNIhfYbk6Xkw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2782
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy, Hi Andrew,
-
-I have a question regarding patch submission. I am going to mimic what Andy=
- has done for v5/6 and v6/6 and send 2 patches in a bundle as follows:
-/* for the cover letter */ : Subject: [PATCH v1 0/2] gpio: mlxbf2: Introduc=
-e proper interrupt handling
-Subject: [PATCH v1 1/2] gpio: mlxbf2: Introduce IRQ support
-Subject: [PATCH v1 2/2] net: mellanox: mlxbf_gige: Replace non-standard int=
-errupt handling
-
-Questions:
-1) do the subject lines look ok? i.e. sending patches that target "net" as =
-opposed to "net-next"
-2) would you like me to add a "Fixes" tag to each patch as follows? I am no=
-t sure if you consider this a bug?
-Fixes: f92e1869d74e ("Add Mellanox BlueField Gigabit Ethernet driver")
-
-Thank you.
-Asmaa
-
------Original Message-----
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>=20
-Sent: Wednesday, August 18, 2021 10:08 AM
-To: Asmaa Mnebhi <asmaa@nvidia.com>
-Cc: David Thompson <davthompson@nvidia.com>; linux-kernel@vger.kernel.org; =
-linux-gpio@vger.kernel.org; netdev@vger.kernel.org; linux-acpi@vger.kernel.=
-org; Linus Walleij <linus.walleij@linaro.org>; Bartosz Golaszewski <bgolasz=
-ewski@baylibre.com>; David S. Miller <davem@davemloft.net>; Jakub Kicinski =
-<kuba@kernel.org>; Rafael J. Wysocki <rjw@rjwysocki.net>; Liming Sun <limin=
-gs@nvidia.com>
-Subject: Re: [PATCH v1 5/6] TODO: gpio: mlxbf2: Introduce IRQ support
-Importance: High
-
-On Mon, Aug 16, 2021 at 09:34:50PM +0000, Asmaa Mnebhi wrote:
-> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Sent: Monday, August 16, 2021 8:00 AM
-
-...
-
-> +static irqreturn_t mlxbf2_gpio_irq_handler(int irq, void *ptr) {
->=20
-> So how do you suggest registering this handler?
-
-As usual. This handler should be probably registered via standard mechanism=
-s.
-Perhaps it's hierarchical IRQ, then use that facility of GPIO library.
-(see gpio-dwapb.c for the example).
-
-> 1) should I still use BF_RSH0_DEVICE_YU_INT shared interrupt signal?
-
-I don't know your hardware connection between GPIO and GIC. You have to loo=
-k into TRM and see how they are connected and what should be programmed for=
- the mode you want to run this in.
-
-> 2) or does Linux kernel know (based on parsing GpioInt) how trigger=20
-> the handler based on the GPIO datain changing (active low/high)? In=20
-> this case, the kernel will call this handler whenever the GPIO pin (9=20
-> or 12) value changes.
-
-After driver in place kernel will know how to map, register and handle the =
-GPIO interrupt. But the GIC part is out of the picture here. It may be you =
-will need additional stuff there, like disabling (or else) the interrupts, =
-or providing a bypass. I can't answer to this.
-
-> I need to check whether GPIO is active low/high but lets assume for=20
-> now it is open drain active low. We will use acpi_dev_gpio_irq_get to=20
-> translate GpioInt to a Linux IRQ number:
-
-> irq =3D acpi_dev_gpio_irq_get_by(ACPI_COMPANION(dev), "phy-gpios", 0);=20
-> ret =3D devm_request_irq(dev, irq, mlxbf2_gpio_irq_handler, IRQF_ONESHOT=
-=20
-> | IRQF_SHARED, dev_name(dev), gs);
-
-Yes.
-(I dunno about one short and shared flags, but you should know it better th=
-an me)
-
-> And I will need to add GpioInt to the GPI0 ACPI table as follows:
-
-But you told me that it's already on the market, how are you suppose to cha=
-nge existing tables?
-
-> // GPIO Controller
->       Device(GPI0) {
->        Name(_HID, "MLNXBF22")
->         Name(_UID, Zero)
->         Name(_CCA, 1)
->         Name(_CRS, ResourceTemplate() {
->           // for gpio[0] yu block
->          Memory32Fixed(ReadWrite, 0x0280c000, 0x00000100)
->          GpioInt (Level, ActiveLow, Exclusive, PullDefault, , " \\_SB.GPI=
-0") {9}
->         })
->         Name(_DSD, Package() {
->           ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->           Package() {
->             Package () { "phy-gpios", Package() {^GPI0, 0, 0, 0 }},
->             Package () { "rst-pin", 32 }, // GPIO pin triggering soft res=
-et on BlueSphere and PRIS
->           }
->         })
->       }
-
-No, it's completely wrong. The resources are provided by GPIO controller an=
-d consumed by devices. You showed me the table for the consumer, which is g=
-ood (of course if you wish to use Edge triggered interrupts there).
-
-...
-
-> +		handle_nested_irq(nested_irq);
-
-> Now how can the mlxbf_gige_main.c driver also retrieve this nested_irq=20
-> to register its interrupt handler as well? This irq.domain is only=20
-> visible to the gpio-mlxbf2.c driver isn't it?  phydev->irq (below)=20
-> should be populated with nested_irq at init time because it is used to=20
-> register the phy interrupt in this generic function:
-
-nested here is an example, you have to check which one to use.
-
-Moreover the code misses ->irq_set_type() callback.
-
-So, yes, domain will be GPIOs but IRQ core will handle it properly.
-
-> void phy_request_interrupt(struct phy_device *phydev) {
-> 	int err;
->=20
-> 	err =3D request_threaded_irq(phydev->irq, NULL, phy_interrupt,
-> 				   IRQF_ONESHOT | IRQF_SHARED,
-> 				   phydev_name(phydev), phydev);
-
-You have several IRQ resources (Interrupt() and GpioInt() ones) in the cons=
-umer device node. I don't know how your hardware is designed, but if you wa=
-nt to use GPIO, then this phydev->irq should be a Linux vIRQ returned from =
-above mentioned acpi_dev_gpio_irq_get_by() call. Everything else is magical=
-ly happens.
-
-...
-
-> +	int offset =3D irqd_to_hwirq(irqd) % MLXBF2_GPIO_MAX_PINS_PER_BLOCK;
-
-> Why is the modulo needed? Isn't the hwirq returned a number between 0=20
-> and
-> MLXBF2_GPIO_MAX_PINS_PER_BLOCK-1 ?
-
-It's copy'n'paste from somewhere, since you have device per bank you don't =
-need it.
-
-...
-
-> We also need to make sure that the gpio driver is loaded before the=20
-> mlxbf-gige driver. Otherwise, the mlxbf-gige 1G interface fails to come u=
-p.
-> I have implemented this dependency on the gpio driver before,=20
-> something like this at the end of the mlxbf-gige driver:
-
-> MODULE_SOFTDEP("pre: gpio_mlxbf2");
-
-No, when you have GPIO device is listed in the tables the IRQ mapping will =
-return you deferred probe. It doesn't matter when device will appear, but i=
-t will be functional only when all resource requirements are satisfied.
-
-Above soft dependency doesn't guarantee this, deferred probe does.
-
---
-With Best Regards,
-Andy Shevchenko
-
-
+W1B1YmxpY10NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW1vbmNp
+ZWxsbywgTWFyaW8NCj4gU2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDcsIDIwMjEgMTM6MzUNCj4g
+VG86IFMtaywgU2h5YW0tc3VuZGFyIDxTaHlhbS1zdW5kYXIuUy1rQGFtZC5jb20+OyBOYXRpa2Fy
+LCBCYXNhdmFyYWoNCj4gPEJhc2F2YXJhai5OYXRpa2FyQGFtZC5jb20+OyBsaW51cy53YWxsZWlq
+QGxpbmFyby5vcmc7IGxpbnV4LQ0KPiBncGlvQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIDAvMl0gQWRkIGlycSBQTSB3YWtldXANCj4gDQo+IE9uIDkvNy8yMDIxIDAyOjQy
+LCBTaHlhbSBTdW5kYXIgUyBLIHdyb3RlOg0KPiA+DQo+ID4NCj4gPiBPbiA4LzMxLzIwMjEgNToz
+NiBQTSwgQmFzYXZhcmFqIE5hdGlrYXIgd3JvdGU6DQo+ID4+IENoYW5nZXMgaW5jbHVkZSB0byBo
+YW5kbGUgSVJRIHdha2V1cCBtb2RlIHdha2UgdGhlIHN5c3RlbSBmcm9tIHNsZWVwDQo+ID4+IHN0
+YXRlcyBsaWtlICJzdXNwZW5kIHRvIFJBTSIuDQo+ID4+DQo+ID4+IEJhc2F2YXJhaiBOYXRpa2Fy
+ICgyKToNCj4gPj4gICAgcGluY3RybDogYW1kOiBBZGQgaXJxIGZpZWxkIGRhdGENCj4gPj4gICAg
+cGluY3RybDogYW1kOiBIYW5kbGUgd2FrZS11cCBpbnRlcnJ1cHQNCj4gPj4NCj4gPj4gICBkcml2
+ZXJzL3BpbmN0cmwvcGluY3RybC1hbWQuYyB8IDE5ICsrKysrKysrKysrKysrLS0tLS0NCj4gPj4g
+ICBkcml2ZXJzL3BpbmN0cmwvcGluY3RybC1hbWQuaCB8ICAxICsNCj4gPj4gICAyIGZpbGVzIGNo
+YW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4NCj4gPiBT
+ZXJpZXMgTG9va3MgZ29vZCB0byBtZS4NCj4gPg0KPiA+IEFja2VkLWJ5OiBTaHlhbSBTdW5kYXIg
+UyBLIDxTaHlhbS1zdW5kYXIuUy1rQGFtZC5jb20+DQo+ID4NCj4gDQo+IEkndmUgY29uZmlybWVk
+IHRoaXMgaGVscHMgd2FrZS11cHMgb24gc29tZSBwcm9ibGVtYXRpYyBzeXN0ZW1zIGFzIHdlbGwN
+Cj4gbXlzZWxmLg0KPiANCj4gVGVzdGVkLWJ5OiBNYXJpbyBMaW1vbmNpZWxsbyA8bWFyaW8ubGlt
+b25jaWVsbG9AYW1kLmNvbT4NCg0KTGludXMgV2FsbGVpaiwgQmFydG9zeiwNCg0KUGluZyBvbiB0
+aGlzIG9uZT8gDQoNClRoYW5rcywNCg==
