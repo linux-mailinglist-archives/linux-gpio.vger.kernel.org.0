@@ -2,123 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0288440EAA3
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 21:06:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4421640EAF0
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 21:41:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347148AbhIPTIP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Sep 2021 15:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347028AbhIPTID (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Sep 2021 15:08:03 -0400
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28AFC06AA7A
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 12:02:37 -0700 (PDT)
-Received: by mail-ot1-x32f.google.com with SMTP id i3-20020a056830210300b0051af5666070so9641734otc.4
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 12:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
-         :subject:to:cc;
-        bh=FWeWVI89CMKoqS12Pp2ofBTtl9f9+kDvHLEYyvtvj3Y=;
-        b=Wt7OcJpNUxw12DAwblAXr10E60SnW77IXBLxYGtjl4MPd+CK4GnWnRs87pe+Uuu3c8
-         ohI3BW3y/F/UIenD56eQVQ6KreefgJIrVNqutHJM0rSM4Fb/zmBfCpOGmXur9lqq2EyJ
-         IzKs4ujCFIvkiccoa6fLoYT+/DDXEJgWTUK08=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from
-         :user-agent:date:message-id:subject:to:cc;
-        bh=FWeWVI89CMKoqS12Pp2ofBTtl9f9+kDvHLEYyvtvj3Y=;
-        b=EDVSVJF4lYKxeoBau1Da9TdXd7+t8lTkN2YMt3y/v8zfr56whTpHLsMMn3BvugtiXF
-         GwXBIyAaDaLZpqHZPgYuBw5umlnM8bhcS26FGt0pdn+TIfjmwGzVCVrGgTN/s97BbHJK
-         Wp8l7kac6BZEpRFYMMx9VbbimnDH2EN3AhX+iFfKabwiXopRJU7S11ELtPBltiqr23ug
-         8CN4Ftr9tfD8SjO52GX1tHCxrQzSmzzoceOY8NGW6pXwb5euhUBNozSWltAK13mXhygS
-         bA0hx3RJ4yWX4csuVdZRUaTU16rj7y4wapIharWlri+pNuMsWG8c1zWtzfOUF2ZfIn2y
-         vYdQ==
-X-Gm-Message-State: AOAM531iF2BlaQ8jt67bEwvPGTJV2iovQOFy0Ih9humF3X6rdcCiOHdw
-        eMSzRIpinCwzpKMCSxO6j2/vB2jcT4bFGtf8mPwL3Q==
-X-Google-Smtp-Source: ABdhPJzEFLzP9i6NLH2BNZiamfhPoIiZWSUb5DRAGv784Z0t+KDMcv3d9XBq8O+KgpL10r2bUObyqJ+JYSPOsod0imQ=
-X-Received: by 2002:a05:6830:1212:: with SMTP id r18mr5777608otp.159.1631818956932;
- Thu, 16 Sep 2021 12:02:36 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 16 Sep 2021 12:02:36 -0700
+        id S233450AbhIPTmZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Sep 2021 15:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230452AbhIPTmY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Sep 2021 15:42:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 93D3761164;
+        Thu, 16 Sep 2021 19:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631821263;
+        bh=soyfUqVQbP0TrX3MUGTCtp9M3EsGu8pssJ5XKcFWprU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o8SNT7ENEBzSRvnpewmA/7iWvL7Q61LSeFRnC1pugyW7mzrVUOhghrYs8oNIZT0Qx
+         p5A1O3kkdDMILw8O/WnmxW1oZp/gbDrPdW8EDJh4cJL12MPdy2ToeHzZCpyfk2+qb4
+         eI0OkIjdk2oFUWVh1alOgqEr4UrS/UsG9JBbn3CrFA4qV9W+D5unbt+Yolxs2scAhQ
+         fBEfj3xUNXMiTabH8tLPkUQiPqWng8n2SYAnDmdIG7LGCul63BADhBSM74M46mBVdQ
+         VEPmAPpF0I+z7imdkfNmbyZMU7XD0VS2X4URA5Km6FqpqsB7gJUkugByScQxic1wvO
+         rv/jVZyice3zQ==
+Received: by mail-pf1-f180.google.com with SMTP id y4so5391367pfe.5;
+        Thu, 16 Sep 2021 12:41:03 -0700 (PDT)
+X-Gm-Message-State: AOAM533xiXUUGEUXNdPnEntZGyoORPmyKYZWARXw+NUfMa36ePmwEQU9
+        5dvfNLFTdJBVbEfQmUILd9wXqTu4yunPLlXJMEw=
+X-Google-Smtp-Source: ABdhPJxSK0Md4SdwZxQEm62tQpRGeq+lHK11/cMSAJz7jYpspL00UImVffNfMonjsjbKr0XkSgC4uIilxre0QhXL/ao=
+X-Received: by 2002:a63:841:: with SMTP id 62mr6376041pgi.354.1631821263269;
+ Thu, 16 Sep 2021 12:41:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1631798498-10864-3-git-send-email-skakit@codeaurora.org>
-References: <1631798498-10864-1-git-send-email-skakit@codeaurora.org> <1631798498-10864-3-git-send-email-skakit@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.9.1
-Date:   Thu, 16 Sep 2021 12:02:36 -0700
-Message-ID: <CAE-0n53i4pU==W-dc=md_x+0Tqbd1gtwkPBFode+rtupSFi0WQ@mail.gmail.com>
-Subject: Re: [PATCH V5 2/2] arm64: dts: sc7280: Add volume up support for sc7280-idp
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Satya Priya <skakit@codeaurora.org>
-Cc:     David Collins <collinsd@codeaurora.org>, kgunda@codeaurora.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20200827185829.30096-1-krzk@kernel.org> <20201002162353.GA5870@kozik-lap>
+In-Reply-To: <20201002162353.GA5870@kozik-lap>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 16 Sep 2021 21:40:51 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdOvmuGJCF9Edw8zFfOY7r+QFc23OAgjoXtHxN65Ovh7A@mail.gmail.com>
+Message-ID: <CAJKOXPdOvmuGJCF9Edw8zFfOY7r+QFc23OAgjoXtHxN65Ovh7A@mail.gmail.com>
+Subject: Re: [PATCH v3 01/27] Input: Simplify with dev_err_probe()
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Satya Priya (2021-09-16 06:21:38)
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-> index 371a2a9..cbbb0ee 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-> @@ -12,6 +12,26 @@
->  #include "pm8350c.dtsi"
->  #include "pmk8350.dtsi"
+On Fri, 2 Oct 2020 at 18:23, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> +/ {
-> +       gpio-keys {
-> +               compatible = "gpio-keys";
-> +               label = "gpio-keys";
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&key_vol_up_default>;
-> +
-> +               volume-up {
-> +                       label = "volume_up";
-> +                       gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
-> +                       linux,input-type = <1>;
-> +                       linux,code = <KEY_VOLUMEUP>;
+> On Thu, Aug 27, 2020 at 08:58:02PM +0200, Krzysztof Kozlowski wrote:
+> > Hi,
+> >
+> > Changes since v2:
+> > 1. Add review tags,
+> > 2. Fixes after review (see individual patches).
+> > 3. Two new patches - 26 and 27.
+> >
+> >
+>
+> Hi Dmitry,
+>
+> Any comments here? Some of these nicely simplify the code or remove some
+> lines.
 
-Is there an include for this define? Looks like
-<dt-bindings/input/input.h> should be added as well? Did you try
-compiling?
+Hi Dmitry,
 
-> +                       gpio-key,wakeup;
-> +                       debounce-interval = <15>;
-> +                       linux,can-disable;
-> +               };
-> +       };
-> +};
-> +
->  &apps_rsc {
->         pm7325-regulators {
->                 compatible = "qcom,pm7325-rpmh-regulators";
-> @@ -284,6 +304,17 @@
->
->  /* PINCTRL - additions to nodes defined in sc7280.dtsi */
->
-> +&pm7325_gpios {
-> +       key_vol_up_default: key-vol-up-default {
-> +               pins = "gpio6";
-> +               function = "normal";
-> +               input-enable;
-> +               bias-pull-up;
-> +               power-source = <0>;
-> +               qcom,drive-strength = <3>;
-> +       };
-> +};
-> +
->  &qup_uart5_default {
->         tx {
->                 pins = "gpio46";
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+You never shared your thoughts about this simplification. Some of
+these could be redundant with Rob's work:
+https://lore.kernel.org/lkml/CAL_Jsq+ajm5aiAJfQdS2+2DO1ynBDHWha_7TsA4u-2qwd87y6g@mail.gmail.com/
+but I am not sure if it was merged.
+
+On the other hand there are here also few other changes like:
+>   gpio: Add devm_fwnode_gpiod_get_optional() helpers
+>   Input: gpio_keys - Simplify with dev_err_probe()
+which does:
+8 insertions(+), 17 deletions(-)
+
+and these:
+>   Input: bu21013_ts - Use local 'client->dev' variable in probe()
+>   Input: bu21029_ts - Use local 'client->dev' variable in probe()
+
+Any comments?
+
+Best regards,
+Krzysztof
+
+
+
+> > Krzysztof Kozlowski (27):
+> >   Input: gpio_keys_polled - Simplify with dev_err_probe()
+> >   Input: gpio-vibra - Simplify with dev_err_probe()
+> >   Input: pwm-beeper - Simplify with dev_err_probe()
+> >   Input: pwm-vibra - Simplify with dev_err_probe()
+> >   Input: rotary_encoder - Simplify with dev_err_probe()
+> >   Input: elan_i2c - Simplify with dev_err_probe()
+> >   Input: bu21013_ts - Simplify with dev_err_probe()
+> >   Input: bu21029_ts - Simplify with dev_err_probe()
+> >   Input: chipone_icn8318 - Simplify with dev_err_probe()
+> >   Input: cy8ctma140 - Simplify with dev_err_probe()
+> >   Input: edf-ft5x06 - Simplify with dev_err_probe()
+> >   Input: ektf2127 - Simplify with dev_err_probe()
+> >   Input: elants_i2c - Simplify with dev_err_probe()
+> >   Input: goodix - Simplify with dev_err_probe()
+> >   Input: melfas_mip4 - Simplify with dev_err_probe()
+> >   Input: pixcir_i2c_ts - Simplify with dev_err_probe()
+> >   Input: raydium_i2c_ts - Simplify with dev_err_probe()
+> >   Input: resistive-adc-touch - Simplify with dev_err_probe()
+> >   Input: silead - Simplify with dev_err_probe()
+> >   Input: sis_i2c - Simplify with dev_err_probe()
+> >   Input: surface3_spi - Simplify with dev_err_probe()
+> >   Input: sx8643 - Simplify with dev_err_probe()
+> >   Input: bcm-keypad - Simplify with dev_err_probe()
+> >   gpio: Add devm_fwnode_gpiod_get_optional() helpers
+> >   Input: gpio_keys - Simplify with dev_err_probe()
+> >   Input: bu21013_ts - Use local 'client->dev' variable in probe()
+> >   Input: bu21029_ts - Use local 'client->dev' variable in probe()
+> >
+> >  drivers/gpio/gpiolib-devres.c                 | 71 ++++++++++++++++++
+> >  drivers/input/keyboard/bcm-keypad.c           | 14 ++--
+> >  drivers/input/keyboard/gpio_keys.c            | 25 +++----
+> >  drivers/input/keyboard/gpio_keys_polled.c     |  8 +--
+> >  drivers/input/misc/gpio-vibra.c               | 20 ++----
+> >  drivers/input/misc/pwm-beeper.c               | 19 ++---
+> >  drivers/input/misc/pwm-vibra.c                | 20 ++----
+> >  drivers/input/misc/rotary_encoder.c           |  8 +--
+> >  drivers/input/mouse/elan_i2c_core.c           |  9 +--
+> >  drivers/input/touchscreen/bu21013_ts.c        | 72 ++++++++-----------
+> >  drivers/input/touchscreen/bu21029_ts.c        | 53 ++++++--------
+> >  drivers/input/touchscreen/chipone_icn8318.c   |  8 +--
+> >  drivers/input/touchscreen/cy8ctma140.c        |  8 +--
+> >  drivers/input/touchscreen/edt-ft5x06.c        | 10 +--
+> >  drivers/input/touchscreen/ektf2127.c          |  8 +--
+> >  drivers/input/touchscreen/elants_i2c.c        | 22 ++----
+> >  drivers/input/touchscreen/goodix.c            | 40 +++--------
+> >  drivers/input/touchscreen/melfas_mip4.c       |  9 +--
+> >  drivers/input/touchscreen/pixcir_i2c_ts.c     | 38 ++++------
+> >  drivers/input/touchscreen/raydium_i2c_ts.c    | 30 +++-----
+> >  .../input/touchscreen/resistive-adc-touch.c   |  8 +--
+> >  drivers/input/touchscreen/silead.c            |  8 +--
+> >  drivers/input/touchscreen/sis_i2c.c           | 20 ++----
+> >  drivers/input/touchscreen/surface3_spi.c      | 13 +---
+> >  drivers/input/touchscreen/sx8654.c            | 10 +--
+> >  include/linux/gpio/consumer.h                 | 30 ++++++++
+> >  26 files changed, 253 insertions(+), 328 deletions(-)
+> >
+> > --
+> > 2.17.1
+> >
