@@ -2,325 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9E7440DCAC
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 16:27:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2C1840DE89
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 17:49:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237408AbhIPO3J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Sep 2021 10:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236200AbhIPO3I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Sep 2021 10:29:08 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE83BC061574
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 07:27:47 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id v24so17507037eda.3
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 07:27:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=U96rC0g/peJr6dSY+10oSUpegB80yWQ/fLi7m72YJHg=;
-        b=NLw1apfC7UTNO9JiwAlraazzrvW7vsmpLHu0R2k7PS/JioqLSl48S7BwAssxvtkE7B
-         F3aDCyo/IVGHJkwzbYKs5oe8tFRn73LeN08kpnEPnhihcGaagFO2XnujY6FSIqENMGbG
-         s6TkZhptdq9vGJAfinjvLd52w5/Gt+85ZK6KEn8aa/QX+1NHBb7QXXeiShhZybFQR9lN
-         AUC87Po2vicOGo5jcZdHJMU8HyB1s7wAcsiVmRIuGxFPWvd/lX4JxvmWEq693X2oYhEi
-         4n+0zxZ7eFQBfXr3uf1pr+WBNvBC6hLU4Fimo0GKDSCiVEn373fAJ+2CQZ6dwx7EORGg
-         EJHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=U96rC0g/peJr6dSY+10oSUpegB80yWQ/fLi7m72YJHg=;
-        b=eMnndKSaYQQLwQFUncE+s8oKKfOQZLEcjiT+4ooLNR7lB68kJTfHeoHhtNoNNaNxr9
-         S34n9UQDb1CkhbAV4qRuHRVu18WkF8JfHvEXeX1SmSFY9MgIIpGOd4jvuqDo/8JbYv7p
-         B9kWF+Gz6Zc/EkMNyP036WpuAW1yaj6NdLKQ8CpgRl0ZfCUZhICZ35GY2tZAPOVbWRoL
-         9XGbPYqW6FdQAAi8v4wfZAu2TX5Sy8DM7+teU5ld1sIK5ccFR0rLr6yAXbeAMBhGmBpk
-         aIyHVicTGtPViLYnKwzh4cQ+f3xofuvuMpxgmoUFkGVSizsf0pq8wws65ceU/lr4/veQ
-         14BA==
-X-Gm-Message-State: AOAM531+qA+w0J1HtBtYuxpqA25qjUm3ZutPERj6Z6RVa7oFLP0Md9ai
-        n7Z64CpGecYL9QUy02qpYhvODSogdNwehy6IrPulpwiJ50o=
-X-Google-Smtp-Source: ABdhPJwpAlqEStUkxziDRfznClnTQ95NXNlfP5InMQrOxe2EmJKe9Q/cikV0v4C7w1Dnlsr+rQCGLjI36PTHmW+9xTM=
-X-Received: by 2002:a05:6402:886:: with SMTP id e6mr6739475edy.41.1631802465521;
- Thu, 16 Sep 2021 07:27:45 -0700 (PDT)
+        id S240135AbhIPPuP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Sep 2021 11:50:15 -0400
+Received: from mail-bn7nam10on2076.outbound.protection.outlook.com ([40.107.92.76]:25056
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S240126AbhIPPuO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Sep 2021 11:50:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gzRgLlVEoSOt5AdyX9Xu4laDQtraD+4LEYJSirDXGNnjPUuXCDDLFLSaygG7DST/I2rJlYzJ0xI53gOa4K1O+xLwCBniEyWKIYavaB2pBVj4FZ7RGAL9e0ZGfyckz2hyu5AFvAUlHcJTlQxH+iqP0WLY2fEMfz9BpgAJAB5N0dDjAWXrHmEI+aK99zMjpRp5iDRPRx+Izszq3VdyCuxP2DzHyt2ot5EObPoecD5X+i9GX9RnXTKPJoAf909oS9vpxXRLMki3tudzF+W4Xb2MGUPj85VzW1Nek0mdUCgTCiD1k/Z4cC79BXqGvvUv5bYVMLfB7hwktr4v4H/bOatR5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=sUzza7z5a95TMuwSVipHSQItmdJRvTDuiF5ffNkYPlc=;
+ b=n165IOiYajsSy98N2QLT6ops5FFRiEHYEmpcui8m6JpIVuDucwzjUMYTKx5BaeJiDoEhrj7KSx57yubWPBiS5tufCJNc+PYmkSat3hvTyn/Ditk6wjJUiBCVVhx9bA40yjEBCWT0du642iG4zq++xNhn5wABB94q02VycfquOp7urqyqtPm5Z/58AMAWKPUYy4CithQ6OIqTsxtknmSFLdI/b2SxtHWccjGMupMjz7SeZHw2vejio1fQrZi06VUNtwWgJRZfI3FwkOgi/n2LacnRNInAeCDyFgs7+0teoVADfiGXlEk0ky5Wy+pKzZVq/4f9uUq/Mu94EsGS1wihGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sUzza7z5a95TMuwSVipHSQItmdJRvTDuiF5ffNkYPlc=;
+ b=dMdgQWZwPlKxLtY34Mm7zZHJz4OyagOiX/syR0AAJIjFM20tquXrI+lvyMDEL/qpxwnwhO0xgPViNHeRpsr3GEI5ffaYlGikiFotovf62TN5ga3xY3JgZs4DcqPbidOVXPZGq0oMUt+s8KRhOVfnV5RA2aGEUfXtDY+zGNM1ma9Y/MDu2jch//BJVoZhheGwkXFqtw/+DNu5tvHteeZsZlxUIxir38YVdmdJsLhO/xreCae35Uo69sNO4nhOt2kIs1iaPNEPxexaH1NQvzokowHWqB6scO+sH+YNOPLlWjdHoVxRCWiYneMsGoLxK0aKj9f3rXIPOxAb6J7IgH/VeQ==
+Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
+ by CH2PR12MB4891.namprd12.prod.outlook.com (2603:10b6:610:36::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.18; Thu, 16 Sep
+ 2021 15:48:52 +0000
+Received: from CH2PR12MB3895.namprd12.prod.outlook.com
+ ([fe80::a46b:a8b7:59d:9142]) by CH2PR12MB3895.namprd12.prod.outlook.com
+ ([fe80::a46b:a8b7:59d:9142%5]) with mapi id 15.20.4523.016; Thu, 16 Sep 2021
+ 15:48:52 +0000
+From:   Asmaa Mnebhi <asmaa@nvidia.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        David Thompson <davthompson@nvidia.com>
+Subject: RE: [PATCH v1 1/2] gpio: mlxbf2: Introduce IRQ support
+Thread-Topic: [PATCH v1 1/2] gpio: mlxbf2: Introduce IRQ support
+Thread-Index: AQHXqoEVVyA+enuCGUKWJgFkwmB1oKumsuKAgAABitA=
+Date:   Thu, 16 Sep 2021 15:48:51 +0000
+Message-ID: <CH2PR12MB3895D5E16EAA1D3E5796C177D7DC9@CH2PR12MB3895.namprd12.prod.outlook.com>
+References: <20210915222847.10239-1-asmaa@nvidia.com>
+ <20210915222847.10239-2-asmaa@nvidia.com> <YUNPO9/YacBNr/yQ@lunn.ch>
+In-Reply-To: <YUNPO9/YacBNr/yQ@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lunn.ch; dkim=none (message not signed)
+ header.d=none;lunn.ch; dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bc52171c-c330-4aa9-7d8c-08d979297b86
+x-ms-traffictypediagnostic: CH2PR12MB4891:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR12MB4891A0092774242AED51DD84D7DC9@CH2PR12MB4891.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QaJjQa6iYvTaytKsEZKL8DCSaAZYRB3Dagj/rCY65OQB4Fpsohj95SEDZJmPVJgZZ8jghi4c+VgBJAPzcCzU+ZGsui/8Z4H8iMiV1q37Q9XYwxSkcN9OqXZ/avw+FOzQ1I6EuvU8h9gw+XwGhkhkaFwjhiurgjYGPZpFqXOoOxTvmJg/7Nt9eg1pP9Zs0uZQI6c6QIE4iApP0Qh+gr83GYH2AaS15Ndx7E7j7Lwui2lECP8F1bg2IaR1aBg3/jL0M92aoEr+LY9pJYJbWLOtissqy47hXY9L/2nannrNVgWHVRftFsHBccFSCj0+qrBYozAC00KLjllBoqDYZNp/tlrYh0vtXCLz9bF2dT6GES5L/Vmx0LyArqAEQAYEeb7f5P/Ix2p9apDXxonCxWr/8wEYfTX6W0j1dAEzvHR3zXd36X9Fy5a3ER3KpznxB7bMrIVt/eZ2KRY8KV/rI73hNUakMf+zYtnZHTeZc+0RsQ3vbW5xKwkIVLz/qXYxCqZmRHFxcs34//Np1gK3oejy8RRRImKhEbVTDr3ipi1hV4Iioos+fnjK89DJ5VWHyjAnKQ7VBhR75nJo4zP16p2YZGqhDSVilAEDOIvBz7kDJVMqySE3GQ9ZZPwC6TxNnNF68OamTDnRdJS5Is3sB6JOrGaSG4+VPqk09UDi0rtw4IM2oiNcs70irwPMCJQLiQBarzGyiGiZuWfwTV4WZzfgbw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(5660300002)(6506007)(316002)(55016002)(54906003)(66446008)(66476007)(52536014)(4326008)(122000001)(8676002)(186003)(64756008)(8936002)(76116006)(86362001)(66946007)(478600001)(66556008)(26005)(7696005)(71200400001)(6916009)(2906002)(83380400001)(107886003)(33656002)(38100700002)(38070700005)(9686003)(7416002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ifJjatJ7eB2P/ravyLyPbh9rhKYy61WIklblQ/gcI22N7wHIk+IYHVUA5DMK?=
+ =?us-ascii?Q?hoeDWBtUDh16xsUAtKKp93EHpVkm7i6BkzlXcXPxX3X98oynjiy8UBSMIw0C?=
+ =?us-ascii?Q?l2yfbYDk/6FyzhsVE6H1SSSPdR4jeTLEh+gRiZ7oXtu1IxRzvMqIxFBGLwed?=
+ =?us-ascii?Q?7+UhhqcBI3YStpKEq+DudAN7rD9rwEknx76wXInxiVJ3c2QcosQoDG8V1M5f?=
+ =?us-ascii?Q?RwE54P0xNinZQipKjd0l0OX3VFfqA0JgZYhAPb9lgKjX804tGzLKx5RywOvn?=
+ =?us-ascii?Q?7f7UcphTA0fQD7BVYG6jPZjrhiH37iTPGCmF84jLD9GJlasJrMS+P2zfJg5y?=
+ =?us-ascii?Q?Uu17aFGMR7oWzVgqet2jvivQ15RYBauoHpW3wA6hDknuIqLXx2yhDyTtX/jt?=
+ =?us-ascii?Q?P4f9R0rd9iMik/20Ja24nJdDobUT4bphNGMqyIlEWYWpEjGntX2gRMoGjV9c?=
+ =?us-ascii?Q?pQQYDfYH4A69fZL44+cy2mVl5wB/ZnzGL+O7HLeNm31I0S11ywJwaMAbjZ1x?=
+ =?us-ascii?Q?5uC8LLxPIiyg0phQgWPr0oQNgd4XyDTxDRp675mEjyLA3iLW9JAMd8ezWoij?=
+ =?us-ascii?Q?+DSKwi3gbHtSffW6NaenfHkNbKMNt9Yh9IyiZ4DOhE2jKrj0QDELI2pkKIrx?=
+ =?us-ascii?Q?WZBo1ez15upF9gFaypnkb8Sss2gvz6lV0MKDLjIuZzFAdl1tWkZaYTK2/XL6?=
+ =?us-ascii?Q?kA5cuSyIz98Iw+nKOG/qiVlPMscEP3pMcWSHtfHkUmqw3NCXTt/PCDOsCSA5?=
+ =?us-ascii?Q?AUrq0S1tGs86vgXvOc9Mfd0o81k3U6pZtXn5oRyYIFVwUTYZW4lQLBHLcL29?=
+ =?us-ascii?Q?EBEtAMMV6B2c8AdeufiHQNaOXMF9Qf4CcKfWfbtSF85jjyC2m5rxrfvB785L?=
+ =?us-ascii?Q?Y6JdRebyArELlGT6b6GCULBwiuGFJX4IcdPAaj45fZOfFU7GxSQO0fK/ztMK?=
+ =?us-ascii?Q?xMB3sWMO+x8ckNf668yRs1Yvd1m6pQVgvU+ghjJm8t8snQaeOCdyr2dvIhTT?=
+ =?us-ascii?Q?rtWkOUR/h14h0xqymBH4UL0QazF2yZHrBN5UiABYZ0+aK6WmojsDdMgjl6nA?=
+ =?us-ascii?Q?kAQ/UKokAFmQslEtrnzkj3/wj6tsp4syLcdOpQT5i4BvecR2srQdWDD9HeWd?=
+ =?us-ascii?Q?6QNnqoNxNf+fN9Inklb/id6u70XbuJzp7L/ssEZjj1KwuwqVOKJoeIKMr04m?=
+ =?us-ascii?Q?NLMQIjwclKHKsjS9jLr8YCj4l24LgC3MWI+XH40MacDoWhuL2Yd9GgwVWJuB?=
+ =?us-ascii?Q?dPYMHwndTvrTJVqeV1UFCYcU7ZZLTBlB2x2Nr3e7LKkkcseu1VD72XNBuB+t?=
+ =?us-ascii?Q?xDaskvc3UkdWxi/z43hCvZ/8?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-From:   Andreas Pokorny <andreas.pokorny@gmail.com>
-Date:   Thu, 16 Sep 2021 16:27:34 +0200
-Message-ID: <CAFKLa4+CB5Of1T-fjvtxtzBoeB8xYVENsAZCShRPmBmkGe6ZKQ@mail.gmail.com>
-Subject: [libgpiod PATCH v3] Add cmake support
-To:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc52171c-c330-4aa9-7d8c-08d979297b86
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2021 15:48:52.1108
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +Q5t27dCDTPBbNtSiFPb3I2hiAdUU5MAFQbZDWzH4DmwizZnROjuTzjFte9yyXl9a6NwHG2AucOEVQG6+vScEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4891
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This is a wip cmake support for libgpiod. It allows to integrate
-libgpiod as part of a bigger cmake project built via the new package
-management feature of cmake called FetchContent or as git submodule.
-This work is motivated by the fact that not all distributions offer
-proper development packages with bindings enabled and for the different
-kernel api versions of gpio. This change can be provided/used as an
-external build script, or conveniently shipped with libgpiod if desired.
-Both ways I felt the urge to share it with upstream and potential users.
+> +	/* Enable PHY interrupt by setting the priority level */
 
-It does offer various build options to control whether tests, C++
-bindings, tools, python bindings or examples are built. Furthermore
-you can control if the libraries are built as archives or shared
-libraries. Basic install support is available.
+This should be an abstract driver for a collection of GPIO lines.
+Yes, one of these GPIOs is used for the PHY, but the GPIO driver does not c=
+are. So please remove this comment.
+Asmaa>> Done
 
-The options are:
- * GPIOD_TOOLS_ENABLED (OFF)
- * GPIOD_TESTS_ENABLED (OFF)
- * GPIOD_CXX_BINDINGS_ENABLED (ON)
- * GPIOD_PYTHON_BINDINGS_ENABLED (ON)
- * GPIOD_EXAMPLES_ENABLED (OFF)
+> +	val =3D readl(gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
+> +	val |=3D BIT(offset);
+> +	writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
 
-This change is still wip, not everything works well enough:
- * examples are not built
- * tests are built but not integrated properly
- * install location of the python module is still incorrect
- * man page generation is missing
----
- CMakeLists.txt | 218 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 218 insertions(+)
- create mode 100644 CMakeLists.txt
+What exactly does this do? It appears to clear the interrupt, if i understa=
+nd mlxbf2_gpio_irq_handler(). I don't know the GPIO framework well enough t=
+o know if this is correct. It does mean if the interrupt signal is active b=
+ut masked, and you enable it, you appear to loose the interrupt? Maybe you =
+want the interrupt to fire as soon as it is enabled?
 
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-new file mode 100644
-index 0000000..7eeed01
---- /dev/null
-+++ b/CMakeLists.txt
-@@ -0,0 +1,218 @@
-+ # Support Version in project
-+cmake_policy(SET CMP0048 NEW)
-+# All integrating projects to control the optiom values
-+cmake_policy(SET CMP0077 NEW)
-+# 3.11 for FetchContent, 3.13 for CMP0077 and 3.14 for FetchContent
-improvements
-+cmake_minimum_required(VERSION 3.14)
-+
-+project(gpiod VERSION 2.2.1 LANGUAGES C CXX)
-+set(GPIOD_VERSION_STR "${PROJECT_VERSION}-${GPIOD_EXTRA_VERSION}")
-+set(GPIOD_EXTRA_VERSION "devel")
-+set(GPIOD_MOCK_SOVERSION 0)
-+set(GPIOD_CXX_BINDING_SOVERSION 1)
-+
-+include(FetchContent)
-+include(CheckSymbolExists)
-+include(CheckIncludeFile)
-+include(GNUInstallDirs)
-+
-+FetchContent_Declare(
-+  Catch2
-+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-+  GIT_TAG v2.13.7
-+  )
-+
-+# libgpiod c library dependencies:
-+check_symbol_exists(ioctl "sys/ioctl.h" HAVE_IOCTL)
-+# Enable _GNU_SOURCE in symbol exists checks - this is
-+# a setting handled by the check_symbol_exists macro
-+set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
-+check_symbol_exists(asprintf "stdio.h" HAVE_ASPRINTF)
-+check_symbol_exists(scandir "dirent.h" HAVE_SCANDIR)
-+check_symbol_exists(alphasort "dirent.h" HAVE_ALPHASORT)
-+check_symbol_exists(ppoll "signal.h;poll.h"  HAVE_PPOLL)
-+check_symbol_exists(realpath "limits.h;stdlib.h"  HAVE_REALPATH)
-+check_include_file(getopt.h HAVE_GETOPT_H)
-+check_include_file(sys/sysmacros.h  HAVE_SYS_MACROS_H)
-+check_include_file(linux/version.h  HAVE_LINUX_VERSION_H)
-+check_include_file(linux/const.h  HAVE_LINUX_CONST_H)
-+check_include_file(linux/ioctl.h  HAVE_LINUX_IOCTL_H)
-+check_include_file(linux/types.h  HAVE_LINUX_TYPES_H)
-+if(HAVE_IOCTL AND HAVE_ASPRINTF AND HAVE_SCANDIR AND HAVE_ALPHASORT
-AND HAVE_PPOLL AND HAVE_REALPATH AND HAVE_GETOPT_H
-+  AND HAVE_LINUX_CONST_H AND HAVE_LINUX_IOCTL_H AND HAVE_LINUX_TYPES_H)
-+  message(STATUS "Header and function check successfull")
-+else()
-+  message(SEND_ERROR "Missing headers or symbols - libgpiod will not compile")
-+endif()
-+
-+option(GPIOD_TOOLS_ENABLED "enable libgpiod tools" OFF)
-+option(GPIOD_TESTS_ENABLED "enable libgpiod tests" OFF)
-+option(GPIOD_CXX_BINDINGS_ENABLED "enable libgpiod C++ bindings" ON)
-+option(GPIOD_PYTHON_BINDINGS_ENABLED "enable libgpiod C++ bindings" ON)
-+option(GPIOD_EXAMPLES_ENABLED "enable libgpiod examples" OFF)
-+
-+if(GPIOD_TESTS_ENABLED)
-+  find_package(PkgConfig)
-+  find_package(Threads)
-+  pkg_check_modules(KMOD REQUIRED IMPORTED_TARGET libkmod>=18)
-+  pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev>=215)
-+  pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0>=2.50)
-+  check_symbol_exists(qsort "stdlib.h" HAVE_QSORT)
-+
-+  add_library(gpiomockup
-+        tests/mockup/gpio-mockup.c
-+        tests/mockup/gpio-mockup.h)
-+  set_target_properties(gpiomockup PROPERTIES
-+    VERSION 0.0.1
-+    SOVERSION ${GPIOD_MOCK_SOVERSION}
-+    PUBLIC_HEADER tests/mockup/gpio-mockup.h
-+    )
-+  target_compile_options(gpiomockup PRIVATE -Wall -Wextra -fvisibility=hidden)
-+  target_compile_definitions(gpiomockup PRIVATE _GNU_SOURCE=1
-GPIOD_VERSION_STR="${GPIOD_VERSION_STR}")
-+  target_link_libraries(gpiomockup PRIVATE PkgConfig::KMOD
-PkgConfig::UDEV Threads::Threads)
-+  target_include_directories(gpiomockup PUBLIC
-$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/tests/mockup/>)
-+
-+  enable_testing()
-+  add_executable(gpiod_tests
-+        tests/gpiod-test.c
-+        tests/gpiod-test.h
-+        tests/tests-chip.c
-+        tests/tests-event.c
-+        tests/tests-line.c
-+        tests/tests-misc.c)
-+  target_compile_options(gpiod_tests PRIVATE -Wall -Wextra)
-+  target_compile_definitions(gpiod_tests PRIVATE
-+    G_LOG_DOMAIN="gpiod-test"
-+    _GNU_SOURCE=1
-+    GPIOD_VERSION_STR="${GPIOD_VERSION_STR}")
-+  target_link_libraries(gpiod_tests PRIVATE gpiod PkgConfig::GLIB
-Threads::Threads gpiomockup)
-+
-+  find_program(BATS bats)
-+     #REQUIRED)
-+  if(BATS_FOUND)
-+    # TODO
-+  endif()
-+endif()
-+
-+add_library(gpiod lib/core.c lib/helpers.c lib/internal.h lib/misc.c
-lib/uapi/gpio.h)
-+target_compile_options(gpiod PRIVATE -Wall -Wextra -fvisibility=hidden)
-+target_compile_definitions(gpiod PRIVATE _GNU_SOURCE=1
-GPIOD_VERSION_STR="${GPIOD_VERSION_STR}")
-+add_library(gpiod::gpiod ALIAS gpiod)
-+set_target_properties(gpiod PROPERTIES
-+  VERSION ${PROJECT_VERSION}
-+  SOVERSION ${PROJECT_VERSION_MAJOR}
-+  PUBLIC_HEADER include/gpiod.h
-+  )
-+target_include_directories(gpiod PUBLIC
-$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/>)
-+install(TARGETS gpiod
-+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib)
-+
-+if(GPIOD_TOOLS_ENABLED)
-+  check_symbol_exists(basename "libgen.h" HAVE_BASENAME)
-+  check_symbol_exists(daemon "unistd.h" HAVE_DAEMON)
-+  check_symbol_exists(signalfd "sys/signalfd.h" HAVE_SIGNALFD)
-+  check_symbol_exists(setlinebuf "stdio.h"   HAVE_SETLINEBUF)
-+  if(HAVE_BASENAME AND HAVE_DAEMON AND HAVE_SIGNALFD AND HAVE_SETLINEBUF)
-+    message(STATUS "Header and function check for tools successfull")
-+  else()
-+    message(SEND_ERROR "Missing headers or symbols - libgpiod tools
-will not compile")
-+  endif()
-+
-+  # common library is static
-+  add_library(tools-common STATIC tools/tools-common.c tools/tools-common.h)
-+  target_compile_definitions(tools-common PUBLIC _GNU_SOURCE=1
-GPIOD_VERSION_STR="${GPIOD_VERSION_STR}")
-+  target_link_libraries(tools-common PUBLIC gpiod)
-+  add_executable(gpiodetect tools/gpiodetect.c)
-+  add_executable(gpioinfo tools/gpioinfo.c)
-+  add_executable(gpioget tools/gpioget.c)
-+  add_executable(gpioset tools/gpioset.c)
-+  add_executable(gpiomon tools/gpiomon.c)
-+  add_executable(gpiofind tools/gpiofind.c)
-+  target_link_libraries(gpiodetect tools-common)
-+  target_link_libraries(gpioinfo tools-common)
-+  target_link_libraries(gpioget tools-common)
-+  target_link_libraries(gpioset tools-common)
-+  target_link_libraries(gpiomon tools-common)
-+  target_link_libraries(gpiofind tools-common)
-+endif()
-+
-+if(GPIOD_CXX_BINDINGS_ENABLED)
-+  add_library(gpiodcxx
-+    bindings/cxx/gpiod.hpp
-+    bindings/cxx/chip.cpp
-+    bindings/cxx/internal.hpp
-+    bindings/cxx/iter.cpp
-+    bindings/cxx/line.cpp
-+    bindings/cxx/line_bulk.cpp
-+    )
-+  add_library(gpiod::gpiodcxx ALIAS gpiodcxx)
-+  target_compile_options(gpiodcxx PRIVATE -Wall -Wextra -fvisibility=hidden)
-+  target_include_directories(gpiodcxx PUBLIC
-$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/bindings/cxx>)
-+  target_link_libraries(gpiodcxx PUBLIC gpiod)
-+  set_target_properties(gpiodcxx PROPERTIES
-+    VERSION 1.1.1
-+    SOVERSION ${GPIOD_CXX_BINDING_SOVERSION}
-+    PUBLIC_HEADER bindings/cxx/gpiod.hpp
-+    )
-+
-+  install(TARGETS gpiodcxx
-+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-+    LIBRARY DESTINATION lib
-+    ARCHIVE DESTINATION lib)
-+
-+  target_compile_features(gpiodcxx PUBLIC cxx_std_11)
-+  if(GPIOD_TESTS_ENABLED)
-+    FetchContent_MakeAvailable(Catch2)
-+    add_executable(gpiod_cxx_test
-+      bindings/cxx/tests/gpio-mockup.cpp
-+      bindings/cxx/tests/gpio-mockup.hpp
-+      bindings/cxx/tests/gpiod-cxx-test-main.cpp
-+      bindings/cxx/tests/gpiod-cxx-test.cpp
-+      bindings/cxx/tests/tests-chip.cpp
-+      bindings/cxx/tests/tests-event.cpp
-+      bindings/cxx/tests/tests-iter.cpp
-+      bindings/cxx/tests/tests-line.cpp
-+      )
-+    target_link_libraries(gpiod_cxx_test PUBLIC Threads::Threads
-gpiomockup gpiodcxx Catch2::Catch2)
-+  endif()
-+  if(GPIOD_EXAMPLES_ENABLED)
-+    # TODO add c++ examples
-+    # target_compile_features(libgpiodcxx-examples PUBLIC cxx_std_17)
-+  endif()
-+endif()
-+
-+if(GPIOD_PYTHON_BINDINGS_ENABLED)
-+  find_program(PYTHON_CONFIG python3-config REQUIRED)
-+  execute_process(COMMAND ${PYTHON_CONFIG} --includes OUTPUT_VARIABLE
-PYTHON_CPPFLAGS)
-+  execute_process(COMMAND ${PYTHON_CONFIG} --libs OUTPUT_VARIABLE PYTHON_LIBS)
-+  string(STRIP ${PYTHON_CPPFLAGS} PYTHON_CPPFLAGS)
-+  string(REGEX REPLACE " " ";" PYTHON_CPPFLAGS ${PYTHON_CPPFLAGS})
-+  string(STRIP ${PYTHON_LIBS} PYTHON_LIBS)
-+  string(REGEX REPLACE " " ";" PYTHON_LIBS ${PYTHON_LIBS})
-+  add_library(gpiod_module MODULE
-+    bindings/python/gpiodmodule.c
-+    )
-+  add_library(gpiod::gpiod_module ALIAS gpiod_module)
-+  target_link_libraries(gpiod_module gpiod ${PYTHON_LIBS})
-+  target_compile_options(gpiod_module PRIVATE -Wall -Wextra ${PYTHON_CPPFLAGS})
-+  set_target_properties(gpiod_module PROPERTIES OUTPUT_NAME gpiod PREFIX "")
-+  install(TARGETS gpiod_module
-+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-+    RUNTIME DESTINATION bin
-+    LIBRARY DESTINATION lib
-+    ARCHIVE DESTINATION lib)
-+endif()
-+find_package(Doxygen)
-+if(DOXYGEN_FOUND)
-+  doxygen_add_docs(doxygen include/gpiod.h bindings/cxx/gpiod.hpp)
-+endif()
-+
-+if(NOT CMAKE_CROSSCOMPILING)
-+  find_program(HELP2MAN help2man)
-+endif()
-+
-+if(NOT HELP2MAN_FOUND)
-+  message(STATUS "help2man not found - man pages annot be generated
-automatically")
-+endif()
--- 
-2.30.2
+Asmaa>>
+YU_GPIO_CAUSE_OR_CLRCAUSE - Makes sure the interrupt is initially cleared. =
+Otherwise, we will not receive further interrupts.
+YU_GPIO_CAUSE_OR_EVTEN0 - All interrupts are disabled by default. This regi=
+ster is what actually unmasks/enables the specific interrupt to start "firi=
+ng".
+
+> +static void mlxbf2_gpio_irq_mask(struct irq_data *irqd) {
+> +	mlxbf2_gpio_irq_disable(irqd);
+> +}
+> +
+> +static void mlxbf2_gpio_irq_unmask(struct irq_data *irqd) {
+> +	mlxbf2_gpio_irq_enable(irqd);
+> +}
+
+Do these two functions have any value?
+
+Asmaa>>
+This code is actually not being called. enable/disable is what's being call=
+ed. So I will remove it.
+
+> +	switch (type & IRQ_TYPE_SENSE_MASK) {
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +	case IRQ_TYPE_LEVEL_MASK:
+> +		fall =3D true;
+> +		rise =3D true;
+> +		break;
+> +	case IRQ_TYPE_EDGE_RISING:
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		rise =3D true;
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		fall =3D true;
+> +		break;
+
+This looks wrong. You cannot map a level interrupt into an edge. It looks l=
+ike your hardware only supports edges. If asked to do level, return -EINVAL=
+.
+
+Asmaa>> done
+
+> +
+> +	/* The INT_N interrupt level is active low.
+> +	 * So enable cause fall bit to detect when GPIO
+> +	 * state goes low.
+> +	 */
+
+I don't understand this comment.
+
+Asmaa>> removed.=20
+
