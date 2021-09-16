@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DC6340ED6E
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 00:39:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C63F540ED7D
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 00:43:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231521AbhIPWkY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Sep 2021 18:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47504 "EHLO
+        id S241229AbhIPWpO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Sep 2021 18:45:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241141AbhIPWkV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Sep 2021 18:40:21 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404F0C061574
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 15:39:00 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id t10so18919686lfd.8
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 15:39:00 -0700 (PDT)
+        with ESMTP id S241258AbhIPWpO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Sep 2021 18:45:14 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3672C061574
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 15:43:52 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id m3so22876851lfu.2
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 15:43:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VJW074vLgkoqEfzmkBJVye6DJySeX1QdR4ydnv5ldM0=;
-        b=PIAc938g5uZYYwPlOYfKw4cymERB2FD6wPlH9N3T+NfPgnrYUyolSfYoSinYvqdJdQ
-         VVcZVw+INqIGGcPDwAuS4yFC46mZsUE9VR42VaAFAZoZ7TrCwSppqMQy/vjby7SapQLX
-         1FCdz/QDlFsWudBiBwban3oAZ/v/SlFDsqNK7IZMI8xFyZ7Nlr8FEu3AkyX0hpK9/D53
-         wl5JX6chlZ6xF+pDEfLdN7xm38wZ7RgFMfIrRR7jC3bVdCkAU6JLUUeNcvXHhUCt2N8Y
-         A7RSLRf6P03rKm+KOMLgoAPKA250xD2IacDzRox7r9H5ZUrM25ahVYKDxozv+KSm7Y2T
-         1BNg==
+        bh=e9vK4vGdDC63WMAqL32ZNqGgnqulhBvjxKLEPBFCsPA=;
+        b=j2X3xuesVddiYakqolrzCKr9jK5YwQRvS1m/NFUYB2C+E2msRu3jOs0+A8oGBZ+DLw
+         lvXAr/8dZTXiKo1MfPOBQTj2hnJZDAfkqwF0g1H4fMuNyVPc4Ge0FLCVrDlq9UmFPfY3
+         Fsq7OpO90y86sZb5RToJH9HC0TSuAkIWYiGh6ijyazJXyge2HgBdsOdtGuRa/fPnpCxr
+         nqyVEeTSqOA5tRSaVrZhji4L5+9R4uZbB6Yg1a8iga5Kio0Yp3xTuT3AaSmMF4bE9ulH
+         f66WJA7HV08KrnfsNikDoySAO7nfsQxrEfda1kaP15QKvzwcEA51PvPTHswnIuMrdRXZ
+         gRjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VJW074vLgkoqEfzmkBJVye6DJySeX1QdR4ydnv5ldM0=;
-        b=fQqUHDJgy/xJJ34lRXQUy/KdEMn7vYpA3HhYBvqjcPCHCVK+9XyP98JLFdmxAlOVpM
-         +G3ng/AES0Ox1u1Prn45yiQ4UTDnPnekItUTMz/2gf5GNfoDQYRVeFKCQ3nWlssPW0Rc
-         IvpJo/ZLj1U14LmRiUAFB9re6nh6rG5lQw9kQFldlZxYw4unnYvnmADfS81SmVIMmCZy
-         AGqIVAFziJh717sp1Lwik9ugw6y5aWFv8QcuxSqrLBhNSCaikfMFZW8uj+wfAV8SUXve
-         nMLUF2/AGPdH53FQZowV+01vZoliBZM3VMBEIsGlPIFz0/lgv6/2HV/dVLo+INYEjcd5
-         84Fg==
-X-Gm-Message-State: AOAM533CxfIwCs9ark2QklP+gB/uczhLVYOP381Uqw8inWhQSXDMMewU
-        bqiXEMPaMvFVOkGJ6/w10JsYMiafya2kg5glvjk/wQ==
-X-Google-Smtp-Source: ABdhPJzAM1iGWm0mTqQLqvtggvF4ws4zkDKoP/9UtR+5WjZEORVDgE46IVA1xOjWnbxzQBPHy7aP2IysGpEJsIhCBI0=
-X-Received: by 2002:a2e:1548:: with SMTP id 8mr6773945ljv.358.1631831938638;
- Thu, 16 Sep 2021 15:38:58 -0700 (PDT)
+        bh=e9vK4vGdDC63WMAqL32ZNqGgnqulhBvjxKLEPBFCsPA=;
+        b=lR2o7jzIPnBioR3rRTdUWwxvakD+UY7sqJoPSBvJza6FoaeGfAb76LCuXQrewUJ2BM
+         Fp936JgOovtH/LjnIci8BrYET28C7gVKKLI+33qQ6I78vpu9DQ/Rcd4jywyZxHAtKY0E
+         K0YfUKJVIA/EpQFuJ1LryW/+j8W7a5tAdD48NRuT1mlSepngYwP4CbUCizJvNcxv86v4
+         y32Z2loiSNb5RQW848KnkRtoOTbJNh2k/q8U3BdlDcMaTJpEazIR4taPntQni24CPz0Y
+         Iu0ScTf/hyGpN+5ozdLIOKRPgHuRq7Uw9VDxICp032XeYv5gt88oxDkfH4jgcE34GSvq
+         zrQQ==
+X-Gm-Message-State: AOAM530cug41LVC3oL6l/YlzG0CuyR0pIJ0Gye7r2sWTi5EM6llcPTsV
+        t/S0OUb0z0RysvOWIyTEEcdPVQRYJRIuGExLpZ6nrg==
+X-Google-Smtp-Source: ABdhPJwLtz+ZO0Z2RjSau7oR30xF9dsV8wJbMLCWs0Yp4WIzSOFFcj8LCcpAQQfg4rw614RBF+9sWq+9RBEShjwIMoI=
+X-Received: by 2002:a2e:b5a7:: with SMTP id f7mr6906537ljn.19.1631832231047;
+ Thu, 16 Sep 2021 15:43:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210830095357.21108-1-pshete@nvidia.com>
-In-Reply-To: <20210830095357.21108-1-pshete@nvidia.com>
+References: <20210830095357.21108-1-pshete@nvidia.com> <CACRpkdau6v-QQhtWKVqiVaT3kPERRwmLtMWh3zXSM8+tStF9RQ@mail.gmail.com>
+In-Reply-To: <CACRpkdau6v-QQhtWKVqiVaT3kPERRwmLtMWh3zXSM8+tStF9RQ@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Sep 2021 00:38:47 +0200
-Message-ID: <CACRpkdau6v-QQhtWKVqiVaT3kPERRwmLtMWh3zXSM8+tStF9RQ@mail.gmail.com>
+Date:   Fri, 17 Sep 2021 00:43:40 +0200
+Message-ID: <CACRpkdaZG0U8Z6bV+uZxJBjkfWHnmfSJ4iGcwW9JSsZUWfJgiw@mail.gmail.com>
 Subject: Re: [PATCH] gpio: tegra: add multiple interrupt support
 To:     Prathamesh Shete <pshete@nvidia.com>,
         "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
@@ -60,28 +60,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prathamesh,
+On Fri, Sep 17, 2021 at 12:38 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-thanks for your patch!
-
-I think Thierry Reding and/or Jon Hunter needs to look at this
-patch to review it.
-
-On Mon, Aug 30, 2021 at 11:54 AM Prathamesh Shete <pshete@nvidia.com> wrote:
-
-> From: pshete <pshete@nvidia.com>
+> > Signed-off-by: pshete <pshete@nvidia.com>
+> (...)
+> >  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 49 +++++++++++++++++++++++-
+> >  drivers/gpio/gpio-tegra186.c             | 25 ++++++++++--
 >
-> T19x GPIO controller's support multiple interrupts. The GPIO
-> controller is capable to route 8 interrupts per controller in
-> case of NON-AON GPIO's and 4 interrupts per controller in AON GPIO.
->
-> Signed-off-by: pshete <pshete@nvidia.com>
-(...)
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 49 +++++++++++++++++++++++-
->  drivers/gpio/gpio-tegra186.c             | 25 ++++++++++--
+> It is a bit unorthodox to patch the driver and the DTSI in the same
+> patch, can these be split in two and applied separately?
 
-It is a bit unorthodox to patch the driver and the DTSI in the same
-patch, can these be split in two and applied separately?
+I see you already fixed this, sorry for the fuzz.
 
 Yours,
 Linus Walleij
