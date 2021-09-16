@@ -2,69 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 872A540E3B6
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 19:21:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AE8240E557
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 19:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239722AbhIPQve (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Sep 2021 12:51:34 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:58382
+        id S1345781AbhIPRKv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Sep 2021 13:10:51 -0400
+Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:59422
         "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S245232AbhIPQsM (ORCPT
+        by vger.kernel.org with ESMTP id S244843AbhIPRIr (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Sep 2021 12:48:12 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        Thu, 16 Sep 2021 13:08:47 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 94E2540261
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 16:46:49 +0000 (UTC)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 5293A402DA
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 17:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1631810809;
-        bh=SMR3OEjJnvU6Lq70UuE37nqW0hNeWUERd9tx+SjC/vg=;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-         MIME-Version;
-        b=TI0DBY4jjXkzmNSWBNIg+LzPLp9ZS0NbXca7o7I0ZjPYvFWmj/dc/DQ7f11nWOPnd
-         5B4/8AtliYSv9Z/JFO1jECXr7ecd6hOaUUZlAHK7t640maLVCSkVokaZa2SPpedc5z
-         NMzklmvnlY38/KrGUYTCpJehrhBXl39TG/LyhiV5/2qfMSE9puTodNfmQdEhu89vSC
-         ROHdj7a+VriYPKG7GbY42mrHLeL2F/vzz/MkUGvFO5DbTONt1hJAlVwHV52iOKpDg+
-         BqlMWUWnO35FoNErQX5viiprPaTjZYlcW/8tEfbpM9cML/kaOt8n0hedVwpErfnZYo
-         kJVwR8vJmnXKg==
-Received: by mail-wr1-f70.google.com with SMTP id r5-20020adfb1c5000000b0015cddb7216fso2672804wra.3
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 09:46:49 -0700 (PDT)
+        s=20210705; t=1631811928;
+        bh=WXKe5m1WFK2T2xtC6IGo+bzCWD4dX+Fxzr37C4Jwfqk=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=XDV96Uo6A3d1xsslfwEKMXrSEyevng8Sh5kjQQM60necY2IaDDD1xLS24zHKzvM/w
+         BtDOGqctWGotqfn6ndbih8Q/JqOcLsVTcseTtb51z20UkkAazSJ+QTtN9T9+tdZXQW
+         Z4Udy++5Ns1LrgYTVVco8ExuOiQ1/GtODvkfvtRZhACeKLGfSzE3v0E5ujChndm0Ve
+         BRWoJ1aQvSUbi/uZWNQlim/o0RaGsuS6yJhJEYM+W7hiaI8YCLKr/2Azy0qLwNshlz
+         hdD6XxzpbBCL66o9Y1rN0yDoblK+qLlXpc9llYIms03GCv/jSVjmnZQet7TIwQhkrY
+         8XUdNAXp2XOBg==
+Received: by mail-wr1-f69.google.com with SMTP id z1-20020adfec81000000b0015b085dbde3so2694983wrn.14
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 10:05:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SMR3OEjJnvU6Lq70UuE37nqW0hNeWUERd9tx+SjC/vg=;
-        b=W0EbOObS9ckABWsDtgBwip0RJBIr1MORLIjilmoijlZIQHW679LWETTTsrJC1Jptl7
-         ovLFHRmtZsQ92mmBsmwEMeD/mdyKRwvMsEMhkYC04GRgJX3/K9s1glMjE8Du7BvywtUR
-         HazXdqk41z2p8zT4TowkdqZSbwfRUrJYSeBUngGahnAi8HYYsj1UXjfeZYDTF/n5wDOv
-         IwlxZyFr7cVKzW80jHRbA+8DMe+iKwMbVndsTxjJe0OMnlOW6WxOtOpqfMk00ZSNSYWo
-         hhzFRqc6YCy4cK24nFpQTItcWA4GY5oOkSdGfVboe8iyDwanauuBAnTHCqZqufR41Atv
-         ctFg==
-X-Gm-Message-State: AOAM5307OHB1MnQUobHD31lwFS/zR9PUYwAj3x1ginJHMPtdFrWwg69W
-        ksvD95goobkrQi08eU5B437UQZ3u3Pg3c3PNVcsoiJKXfRMArkXhDfcaP8OsMhaNO/fo/a3vLCK
-        DEyDFGL7VN/bf1/r1NAU/P28r3TrFN8qD62NC0MA=
-X-Received: by 2002:adf:b7c1:: with SMTP id t1mr7086036wre.387.1631810808900;
-        Thu, 16 Sep 2021 09:46:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzk+/VktLMkMTDXQ8ed1cN2PJYqdXSHljTkdq8A5dkKwHxD6n28xm+Y9U8aBc6AaCQuaMX66A==
-X-Received: by 2002:adf:b7c1:: with SMTP id t1mr7086023wre.387.1631810808793;
-        Thu, 16 Sep 2021 09:46:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WXKe5m1WFK2T2xtC6IGo+bzCWD4dX+Fxzr37C4Jwfqk=;
+        b=Hm0vSnvEyhsQXwFJ8ieHhdXsv6TXCMbj8AUj01KaZe/1BVKXDDwLU5GVqWDIb70Fof
+         w1gl66YuAB8A2KrPciX69LAoeHLC62G4c/MDRLhPZd51BhHYhlfnnCsRDpwFo8UVnUgZ
+         2RwzhiIao/IkE6fACzMmyXhMGIug9Hm4PWQa6ni6oymH4xIWuGQJHQEF7646r47zWhV0
+         3pC8gE/iMnPl/E6ouIvs67GYUkKfQrg6Z+tpKBcl2s8VNgJpAtUt8Stl+DrdfoDRPJ5W
+         5j+HaVIq9L1+Q5hugFb7ZYsnYhw2YVavSjHuKD5bbsgVa40j1+UD6cfaiR8R1j2SHCI0
+         IYow==
+X-Gm-Message-State: AOAM53124I0Cu99iVirMeSxRLI95a7BQvpXftUMCm85ic6uEXFUQYghm
+        nnWlKUeD2q2shQ62ax1oPUADWjtnETVCATCS6gel2NplY2v/eMVu/YaxlbbcVcBgty9B0TaD5l/
+        iY7SrhCCscN2A+LHdMdNGe6YztLrVRhGznFFBc8A=
+X-Received: by 2002:a5d:64ab:: with SMTP id m11mr5224068wrp.343.1631811928049;
+        Thu, 16 Sep 2021 10:05:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyzbiXH7/wi3JUra7ET2cX0rxHHywWY9UGoVMmDagLPhxHP6EXY2072ZIdGH85KuTjhOrMlCQ==
+X-Received: by 2002:a5d:64ab:: with SMTP id m11mr5224037wrp.343.1631811927837;
+        Thu, 16 Sep 2021 10:05:27 -0700 (PDT)
 Received: from kozik-lap.lan (lk.84.20.244.219.dc.cable.static.lj-kabel.net. [84.20.244.219])
-        by smtp.gmail.com with ESMTPSA id o1sm3975340wru.91.2021.09.16.09.46.46
+        by smtp.gmail.com with ESMTPSA id c15sm4139946wrc.83.2021.09.16.10.05.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Sep 2021 09:46:47 -0700 (PDT)
+        Thu, 16 Sep 2021 10:05:27 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Subject: [PATCH 2/2] gpio: tps65218: drop unneeded MODULE_ALIAS
-Date:   Thu, 16 Sep 2021 18:46:41 +0200
-Message-Id: <20210916164641.135008-2-krzysztof.kozlowski@canonical.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH] pinctrl: max77620: drop unneeded MODULE_ALIAS
+Date:   Thu, 16 Sep 2021 19:05:25 +0200
+Message-Id: <20210916170525.138216-1-krzysztof.kozlowski@canonical.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210916164641.135008-1-krzysztof.kozlowski@canonical.com>
-References: <20210916164641.135008-1-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -76,18 +73,19 @@ driver.  Having another MODULE_ALIAS causes the alias to be duplicated.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 ---
- drivers/gpio/gpio-tps65218.c | 1 -
+ drivers/pinctrl/pinctrl-max77620.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-tps65218.c b/drivers/gpio/gpio-tps65218.c
-index 3517debe2b0b..912382be48e1 100644
---- a/drivers/gpio/gpio-tps65218.c
-+++ b/drivers/gpio/gpio-tps65218.c
-@@ -230,4 +230,3 @@ module_platform_driver(tps65218_gpio_driver);
- MODULE_AUTHOR("Nicolas Saenz Julienne <nicolassaenzj@gmail.com>");
- MODULE_DESCRIPTION("GPO interface for TPS65218 PMICs");
+diff --git a/drivers/pinctrl/pinctrl-max77620.c b/drivers/pinctrl/pinctrl-max77620.c
+index c643ed43ebbf..004299cc3f7b 100644
+--- a/drivers/pinctrl/pinctrl-max77620.c
++++ b/drivers/pinctrl/pinctrl-max77620.c
+@@ -665,5 +665,4 @@ module_platform_driver(max77620_pinctrl_driver);
+ MODULE_DESCRIPTION("MAX77620/MAX20024 pin control driver");
+ MODULE_AUTHOR("Chaitanya Bandi<bandik@nvidia.com>");
+ MODULE_AUTHOR("Laxman Dewangan<ldewangan@nvidia.com>");
+-MODULE_ALIAS("platform:max77620-pinctrl");
  MODULE_LICENSE("GPL v2");
--MODULE_ALIAS("platform:tps65218-gpio");
 -- 
 2.30.2
 
