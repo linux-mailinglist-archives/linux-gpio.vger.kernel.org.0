@@ -2,84 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 402E340E81A
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 20:00:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0288440EAA3
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 21:06:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353961AbhIPRhw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Sep 2021 13:37:52 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44556 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344330AbhIPRfp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Sep 2021 13:35:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=PTXGEnB9DiyWtB63yQyALlfETOKew7D8vM+rEURPg4c=; b=sKtAMXHFMpblRZ4ZRcrz3Vsxv/
-        WIbEKb+DoWjYcKLVSx2GGZcWy2SuVFnCAAPPQ/+cKa0xYfKEl/bkvwqKeRQkBbHmMFjWROzU8FXCu
-        aovJgT/IyReR4tuKGEsosFtUANPUkUPRNIyohpH04+CGUpMdtHYKSjMnN8KlrAqk3zWU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1mQvHA-006x1E-ST; Thu, 16 Sep 2021 19:34:20 +0200
-Date:   Thu, 16 Sep 2021 19:34:20 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        David Thompson <davthompson@nvidia.com>
-Subject: Re: [PATCH v1 1/2] gpio: mlxbf2: Introduce IRQ support
-Message-ID: <YUOAHMmaSf2gs6ho@lunn.ch>
-References: <20210915222847.10239-1-asmaa@nvidia.com>
- <20210915222847.10239-2-asmaa@nvidia.com>
- <YUNPO9/YacBNr/yQ@lunn.ch>
- <CH2PR12MB3895D5E16EAA1D3E5796C177D7DC9@CH2PR12MB3895.namprd12.prod.outlook.com>
+        id S1347148AbhIPTIP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Sep 2021 15:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347028AbhIPTID (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Sep 2021 15:08:03 -0400
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28AFC06AA7A
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 12:02:37 -0700 (PDT)
+Received: by mail-ot1-x32f.google.com with SMTP id i3-20020a056830210300b0051af5666070so9641734otc.4
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 12:02:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
+         :subject:to:cc;
+        bh=FWeWVI89CMKoqS12Pp2ofBTtl9f9+kDvHLEYyvtvj3Y=;
+        b=Wt7OcJpNUxw12DAwblAXr10E60SnW77IXBLxYGtjl4MPd+CK4GnWnRs87pe+Uuu3c8
+         ohI3BW3y/F/UIenD56eQVQ6KreefgJIrVNqutHJM0rSM4Fb/zmBfCpOGmXur9lqq2EyJ
+         IzKs4ujCFIvkiccoa6fLoYT+/DDXEJgWTUK08=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from
+         :user-agent:date:message-id:subject:to:cc;
+        bh=FWeWVI89CMKoqS12Pp2ofBTtl9f9+kDvHLEYyvtvj3Y=;
+        b=EDVSVJF4lYKxeoBau1Da9TdXd7+t8lTkN2YMt3y/v8zfr56whTpHLsMMn3BvugtiXF
+         GwXBIyAaDaLZpqHZPgYuBw5umlnM8bhcS26FGt0pdn+TIfjmwGzVCVrGgTN/s97BbHJK
+         Wp8l7kac6BZEpRFYMMx9VbbimnDH2EN3AhX+iFfKabwiXopRJU7S11ELtPBltiqr23ug
+         8CN4Ftr9tfD8SjO52GX1tHCxrQzSmzzoceOY8NGW6pXwb5euhUBNozSWltAK13mXhygS
+         bA0hx3RJ4yWX4csuVdZRUaTU16rj7y4wapIharWlri+pNuMsWG8c1zWtzfOUF2ZfIn2y
+         vYdQ==
+X-Gm-Message-State: AOAM531iF2BlaQ8jt67bEwvPGTJV2iovQOFy0Ih9humF3X6rdcCiOHdw
+        eMSzRIpinCwzpKMCSxO6j2/vB2jcT4bFGtf8mPwL3Q==
+X-Google-Smtp-Source: ABdhPJzEFLzP9i6NLH2BNZiamfhPoIiZWSUb5DRAGv784Z0t+KDMcv3d9XBq8O+KgpL10r2bUObyqJ+JYSPOsod0imQ=
+X-Received: by 2002:a05:6830:1212:: with SMTP id r18mr5777608otp.159.1631818956932;
+ Thu, 16 Sep 2021 12:02:36 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 16 Sep 2021 12:02:36 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH2PR12MB3895D5E16EAA1D3E5796C177D7DC9@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <1631798498-10864-3-git-send-email-skakit@codeaurora.org>
+References: <1631798498-10864-1-git-send-email-skakit@codeaurora.org> <1631798498-10864-3-git-send-email-skakit@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.9.1
+Date:   Thu, 16 Sep 2021 12:02:36 -0700
+Message-ID: <CAE-0n53i4pU==W-dc=md_x+0Tqbd1gtwkPBFode+rtupSFi0WQ@mail.gmail.com>
+Subject: Re: [PATCH V5 2/2] arm64: dts: sc7280: Add volume up support for sc7280-idp
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Satya Priya <skakit@codeaurora.org>
+Cc:     David Collins <collinsd@codeaurora.org>, kgunda@codeaurora.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 03:48:51PM +0000, Asmaa Mnebhi wrote:
-> > +	/* Enable PHY interrupt by setting the priority level */
-> 
-> This should be an abstract driver for a collection of GPIO lines.
-> Yes, one of these GPIOs is used for the PHY, but the GPIO driver does not care. So please remove this comment.
-> Asmaa>> Done
-> 
-> > +	val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-> > +	val |= BIT(offset);
-> > +	writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-> 
-> What exactly does this do? It appears to clear the interrupt, if i understand mlxbf2_gpio_irq_handler(). I don't know the GPIO framework well enough to know if this is correct. It does mean if the interrupt signal is active but masked, and you enable it, you appear to loose the interrupt? Maybe you want the interrupt to fire as soon as it is enabled?
-> 
-> Asmaa>>
-> YU_GPIO_CAUSE_OR_CLRCAUSE - Makes sure the interrupt is initially cleared. Otherwise, we will not receive further interrupts.
+Quoting Satya Priya (2021-09-16 06:21:38)
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> index 371a2a9..cbbb0ee 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> @@ -12,6 +12,26 @@
+>  #include "pm8350c.dtsi"
+>  #include "pmk8350.dtsi"
+>
+> +/ {
+> +       gpio-keys {
+> +               compatible = "gpio-keys";
+> +               label = "gpio-keys";
+> +
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&key_vol_up_default>;
+> +
+> +               volume-up {
+> +                       label = "volume_up";
+> +                       gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
+> +                       linux,input-type = <1>;
+> +                       linux,code = <KEY_VOLUMEUP>;
 
-If the interrupt status bit is set, as soon as you unmask the
-interrupt, the hardware should fire the interrupt. At least, that is
-how interrupt controllers usually work.
+Is there an include for this define? Looks like
+<dt-bindings/input/input.h> should be added as well? Did you try
+compiling?
 
-A typical pattern is that the interrupt fires. You mask it, ack it,
-and then do what is needed to actually handle the interrupt. While
-doing the handling, the hardware can indicate the interrupt again. But
-since it is masked nothing happened. This avoids your interrupt handler
-going recursive. Once the handler has finished, the interrupt is
-unmasked. At this point it actually fires, triggering the interrupt
-handler again.
-
-Please also get your email client fixed. I wrap my emails at around 75
-characters. Your mailer has destroyed it. Your text should also be
-wrapped at about 75 characters.
-
-	Andrew
+> +                       gpio-key,wakeup;
+> +                       debounce-interval = <15>;
+> +                       linux,can-disable;
+> +               };
+> +       };
+> +};
+> +
+>  &apps_rsc {
+>         pm7325-regulators {
+>                 compatible = "qcom,pm7325-rpmh-regulators";
+> @@ -284,6 +304,17 @@
+>
+>  /* PINCTRL - additions to nodes defined in sc7280.dtsi */
+>
+> +&pm7325_gpios {
+> +       key_vol_up_default: key-vol-up-default {
+> +               pins = "gpio6";
+> +               function = "normal";
+> +               input-enable;
+> +               bias-pull-up;
+> +               power-source = <0>;
+> +               qcom,drive-strength = <3>;
+> +       };
+> +};
+> +
+>  &qup_uart5_default {
+>         tx {
+>                 pins = "gpio46";
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
