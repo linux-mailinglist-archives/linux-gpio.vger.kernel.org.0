@@ -2,89 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 780EF40ED63
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 00:33:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DC6340ED6E
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 00:39:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241128AbhIPWeW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Sep 2021 18:34:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46124 "EHLO
+        id S231521AbhIPWkY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Sep 2021 18:40:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241102AbhIPWeV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Sep 2021 18:34:21 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772F0C061574
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 15:33:00 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id i25so24860456lfg.6
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 15:33:00 -0700 (PDT)
+        with ESMTP id S241141AbhIPWkV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Sep 2021 18:40:21 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404F0C061574
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 15:39:00 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id t10so18919686lfd.8
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 15:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=C2Pd9oQGhsIAALkBCdNNs3Jk3IqYwXgIkUsJNmKqGe4=;
-        b=AFSoc9u3yI+qZzT607V2n1nfEHCXO38yJEtaibfgn8ZEFzLgedJN/Rop5q/SWjAqam
-         NExNaUbhkeVgxA/JRNTOLd+QU79s8Y0aRXFaxaTY9UbFHBAAjtNlESlSl/L/dMqas/vG
-         +prNUa2EEa2Ft6E1RlwGuxTVLZjNN8Stgh+JZr3AtjtKO62Q/XIs3iS6mNbSSQUw1eCz
-         fgHlZx78TKrmNlK/BOZrlviCUFCG3Ip8T8nDqFbZB8w5r/F6h9uu89rWa+upbH3cJpcY
-         0wlfA0GY9GgbLoNL4fllS6wGxeD06CTdJZ7HMLfPfpKeTyefnImaRTMjLjJsKql8PrUe
-         YBvA==
+        bh=VJW074vLgkoqEfzmkBJVye6DJySeX1QdR4ydnv5ldM0=;
+        b=PIAc938g5uZYYwPlOYfKw4cymERB2FD6wPlH9N3T+NfPgnrYUyolSfYoSinYvqdJdQ
+         VVcZVw+INqIGGcPDwAuS4yFC46mZsUE9VR42VaAFAZoZ7TrCwSppqMQy/vjby7SapQLX
+         1FCdz/QDlFsWudBiBwban3oAZ/v/SlFDsqNK7IZMI8xFyZ7Nlr8FEu3AkyX0hpK9/D53
+         wl5JX6chlZ6xF+pDEfLdN7xm38wZ7RgFMfIrRR7jC3bVdCkAU6JLUUeNcvXHhUCt2N8Y
+         A7RSLRf6P03rKm+KOMLgoAPKA250xD2IacDzRox7r9H5ZUrM25ahVYKDxozv+KSm7Y2T
+         1BNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=C2Pd9oQGhsIAALkBCdNNs3Jk3IqYwXgIkUsJNmKqGe4=;
-        b=2ubVhKcgvnbDEIrs53ieyctapg5upfStAQwIhbQ4pCdMvHDjrgNvBIqmW9DPX0GDVm
-         9W1EM/o9WbfkzE9rxWzj2CgAlyTXQkIRN2AJtNRL34Tjh1bCRub1I5l4zokb4vjNEuu+
-         EWU57JFiqUu9wLmVALYpQ80BSyymB30dlVomkOMo0QYWKRIJ+FL4rK7Qo/WASlEuIRDC
-         mltZCHmj2EfjLJKSt61neXv9qajFELS96t/4POGrw5FxEU5AW5YdxnMv7TMvcEQLEW37
-         xi2WgoTSpVn6DTwx/rC6e8uI968xoCwBNps4sjceiS75sKCmlEuGhPGGA20YMYtulZbV
-         Ow9Q==
-X-Gm-Message-State: AOAM531rn4lQ3if55eAHWTEGv5voDd2lpuNN+hJXPJAugXvIQe0Tu2uq
-        psn5gmRWcHnDIlFiyPvXczgeiLMj8/PQCRGSpSuPCg==
-X-Google-Smtp-Source: ABdhPJyxqxvinOj8aMJiZNnMyx2DgvsDEllzpmCWgV30ksZxAhfVIZ1rNGoh75+UjjbXoIY477ApJn6fT4OHdj1weFc=
-X-Received: by 2002:a2e:5758:: with SMTP id r24mr6861004ljd.432.1631831578894;
- Thu, 16 Sep 2021 15:32:58 -0700 (PDT)
+        bh=VJW074vLgkoqEfzmkBJVye6DJySeX1QdR4ydnv5ldM0=;
+        b=fQqUHDJgy/xJJ34lRXQUy/KdEMn7vYpA3HhYBvqjcPCHCVK+9XyP98JLFdmxAlOVpM
+         +G3ng/AES0Ox1u1Prn45yiQ4UTDnPnekItUTMz/2gf5GNfoDQYRVeFKCQ3nWlssPW0Rc
+         IvpJo/ZLj1U14LmRiUAFB9re6nh6rG5lQw9kQFldlZxYw4unnYvnmADfS81SmVIMmCZy
+         AGqIVAFziJh717sp1Lwik9ugw6y5aWFv8QcuxSqrLBhNSCaikfMFZW8uj+wfAV8SUXve
+         nMLUF2/AGPdH53FQZowV+01vZoliBZM3VMBEIsGlPIFz0/lgv6/2HV/dVLo+INYEjcd5
+         84Fg==
+X-Gm-Message-State: AOAM533CxfIwCs9ark2QklP+gB/uczhLVYOP381Uqw8inWhQSXDMMewU
+        bqiXEMPaMvFVOkGJ6/w10JsYMiafya2kg5glvjk/wQ==
+X-Google-Smtp-Source: ABdhPJzAM1iGWm0mTqQLqvtggvF4ws4zkDKoP/9UtR+5WjZEORVDgE46IVA1xOjWnbxzQBPHy7aP2IysGpEJsIhCBI0=
+X-Received: by 2002:a2e:1548:: with SMTP id 8mr6773945ljv.358.1631831938638;
+ Thu, 16 Sep 2021 15:38:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210911071046.17349-1-zhiyong.tao@mediatek.com> <20210911071046.17349-2-zhiyong.tao@mediatek.com>
-In-Reply-To: <20210911071046.17349-2-zhiyong.tao@mediatek.com>
+References: <20210830095357.21108-1-pshete@nvidia.com>
+In-Reply-To: <20210830095357.21108-1-pshete@nvidia.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Sep 2021 00:32:48 +0200
-Message-ID: <CACRpkdYim-2xcKux+4M3JTwRuE7SgEH7d2HszPXO3Z=AKdHTrg@mail.gmail.com>
-Subject: Re: [PATCH v1] pinctrl: mediatek: mt8195: Add pm_ops
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        hui.liu@mediatek.com, Light Hsieh <light.hsieh@mediatek.com>,
-        Biao Huang <biao.huang@mediatek.com>,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Chen-Yu Tsai <wenst@chromium.org>
+Date:   Fri, 17 Sep 2021 00:38:47 +0200
+Message-ID: <CACRpkdau6v-QQhtWKVqiVaT3kPERRwmLtMWh3zXSM8+tStF9RQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: tegra: add multiple interrupt support
+To:     Prathamesh Shete <pshete@nvidia.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Sep 11, 2021 at 9:10 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+Hi Prathamesh,
 
-> Setting this up will configure wake from suspend properly,
-> and wake only for the interrupts that are setup in wake_mask,
-> not all interrupts.
+thanks for your patch!
+
+I think Thierry Reding and/or Jon Hunter needs to look at this
+patch to review it.
+
+On Mon, Aug 30, 2021 at 11:54 AM Prathamesh Shete <pshete@nvidia.com> wrote:
+
+> From: pshete <pshete@nvidia.com>
 >
-> Fixes: 6cf5e9ef362af824de2e4e8afb78d74537f1e3db ("pinctrl: add pinctrl driver on mt8195")
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+> T19x GPIO controller's support multiple interrupts. The GPIO
+> controller is capable to route 8 interrupts per controller in
+> case of NON-AON GPIO's and 4 interrupts per controller in AON GPIO.
+>
+> Signed-off-by: pshete <pshete@nvidia.com>
+(...)
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 49 +++++++++++++++++++++++-
+>  drivers/gpio/gpio-tegra186.c             | 25 ++++++++++--
 
-Patch applied.
+It is a bit unorthodox to patch the driver and the DTSI in the same
+patch, can these be split in two and applied separately?
 
 Yours,
 Linus Walleij
