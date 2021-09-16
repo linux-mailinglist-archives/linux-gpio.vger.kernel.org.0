@@ -2,157 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4421640EAF0
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 21:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C00040EC6B
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Sep 2021 23:22:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233450AbhIPTmZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Sep 2021 15:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230452AbhIPTmY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Sep 2021 15:42:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 93D3761164;
-        Thu, 16 Sep 2021 19:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631821263;
-        bh=soyfUqVQbP0TrX3MUGTCtp9M3EsGu8pssJ5XKcFWprU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=o8SNT7ENEBzSRvnpewmA/7iWvL7Q61LSeFRnC1pugyW7mzrVUOhghrYs8oNIZT0Qx
-         p5A1O3kkdDMILw8O/WnmxW1oZp/gbDrPdW8EDJh4cJL12MPdy2ToeHzZCpyfk2+qb4
-         eI0OkIjdk2oFUWVh1alOgqEr4UrS/UsG9JBbn3CrFA4qV9W+D5unbt+Yolxs2scAhQ
-         fBEfj3xUNXMiTabH8tLPkUQiPqWng8n2SYAnDmdIG7LGCul63BADhBSM74M46mBVdQ
-         VEPmAPpF0I+z7imdkfNmbyZMU7XD0VS2X4URA5Km6FqpqsB7gJUkugByScQxic1wvO
-         rv/jVZyice3zQ==
-Received: by mail-pf1-f180.google.com with SMTP id y4so5391367pfe.5;
-        Thu, 16 Sep 2021 12:41:03 -0700 (PDT)
-X-Gm-Message-State: AOAM533xiXUUGEUXNdPnEntZGyoORPmyKYZWARXw+NUfMa36ePmwEQU9
-        5dvfNLFTdJBVbEfQmUILd9wXqTu4yunPLlXJMEw=
-X-Google-Smtp-Source: ABdhPJxSK0Md4SdwZxQEm62tQpRGeq+lHK11/cMSAJz7jYpspL00UImVffNfMonjsjbKr0XkSgC4uIilxre0QhXL/ao=
-X-Received: by 2002:a63:841:: with SMTP id 62mr6376041pgi.354.1631821263269;
- Thu, 16 Sep 2021 12:41:03 -0700 (PDT)
+        id S240515AbhIPVX1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Sep 2021 17:23:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240560AbhIPVXQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Sep 2021 17:23:16 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E89DC0613EF
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 14:21:47 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id b18so22383810lfb.1
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 14:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VCWdjNx1tyfTuOxA33WFnltsnI9BaPgD2xX9ANb6iQM=;
+        b=LLERr/poYuP2KNkCGTHCHiW3TE1k9xFlvEYL7Or6w1srOrRqfDR0FoVqCcMKPhbPQ+
+         qoNntOPIZBLCpVuwkZh/S0fFCwvGbTaiXaBzi+I+iqAMEn3+fqx/CaoHF0madtuZQMC6
+         XzCoqEMM5K1/hhbxxwhADguA/rZUU1Dr7OTeCU6KSpIljuvTVwaVuZJoCl6nkc0gs2qN
+         jlCo2+mqIxe+ZUPKzGkNC/6B4QQq+rvB/QwMxoZrqGFMuTPDd22kT0tVWK6vOSqJUEXA
+         oRn5nkMH6++jWrV6tk7tM8E9jBfmxXLvTXKVR6V1XrPlGh4gZc3DCUpL7rtMgKuIwrjS
+         C2JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VCWdjNx1tyfTuOxA33WFnltsnI9BaPgD2xX9ANb6iQM=;
+        b=JwfGl3m1sl7gSMFSQwjDR8piHA4r1Xmrg/bNye9GdQY1OkpWMFkMLSv8M/wVLK8+r5
+         Oz93evpuDIc01rQk02qFJKyYCKqyonowCnzvwc7MLnn64eWaReHBotgcDc5L1WPJHzhn
+         jlLEZ7aD83bOW+rdg/lefbTBWC6LXDLgA2JIag9dFVh5pB8RYD+dtewBSeHRLPvdpHs+
+         DEf1HN+xmv26j3VczkyYLwp/MOYbJA454UhtKOtM1yiSjr9fmeozeTb6CYiLi3kD4Dk7
+         tUhi4tYUVwTyA542W7uGTm7Nk/pB/EEWE4tN4jy58ze3iLRvOzhRoruPc+F09HP1VHed
+         pOUQ==
+X-Gm-Message-State: AOAM532013t39d8WZoaJ7ha0yE04l4pIlY9G+CxMjVCA+Ski8AmBLiiZ
+        Wxuy5iKEyMB5savGpzJOE811XI/Fcs2V7xFzpvEQhA==
+X-Google-Smtp-Source: ABdhPJybM19mqelDkBkwzCpVjUJCAtNVJyiwg59S/uwAdiyxpocBhlzf9ak+4D5WkA/BKBW89Bqlqahg4SzJM2/87CM=
+X-Received: by 2002:a05:6512:132a:: with SMTP id x42mr5561031lfu.291.1631827305443;
+ Thu, 16 Sep 2021 14:21:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827185829.30096-1-krzk@kernel.org> <20201002162353.GA5870@kozik-lap>
-In-Reply-To: <20201002162353.GA5870@kozik-lap>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 16 Sep 2021 21:40:51 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdOvmuGJCF9Edw8zFfOY7r+QFc23OAgjoXtHxN65Ovh7A@mail.gmail.com>
-Message-ID: <CAJKOXPdOvmuGJCF9Edw8zFfOY7r+QFc23OAgjoXtHxN65Ovh7A@mail.gmail.com>
-Subject: Re: [PATCH v3 01/27] Input: Simplify with dev_err_probe()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+References: <20210824164801.28896-1-lakshmi.sowjanya.d@intel.com>
+In-Reply-To: <20210824164801.28896-1-lakshmi.sowjanya.d@intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Sep 2021 23:21:34 +0200
+Message-ID: <CACRpkdZEp0FZOefBPP_sR4g6rKzeKQhpdL-XHYO+CRt5MfTrYg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 00/20] Review Request: Add support for Intel PMC
+To:     "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>,
+        Dipen Patel <dipenp@nvidia.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        clang-built-linux@googlegroups.com
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Saha, Tamal" <tamal.saha@intel.com>, bala.senthil@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 2 Oct 2020 at 18:23, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+Hi Sowjanya,
+
+thanks for your patches!
+
+On Tue, Aug 24, 2021 at 6:48 PM <lakshmi.sowjanya.d@intel.com> wrote:
+
+> From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 >
-> On Thu, Aug 27, 2020 at 08:58:02PM +0200, Krzysztof Kozlowski wrote:
-> > Hi,
-> >
-> > Changes since v2:
-> > 1. Add review tags,
-> > 2. Fixes after review (see individual patches).
-> > 3. Two new patches - 26 and 27.
-> >
-> >
+> Starting with Intel(R) Tiger Lake and Elkhart Lake platforms the PMC
+> hardware adds the Timed I/O hardware interface.
 >
-> Hi Dmitry,
+> The Timed I/O hardware implements some functionality similar to GPIO
+> with added timing logic that is driven by the Always Running Timer
+> (ART).
 >
-> Any comments here? Some of these nicely simplify the code or remove some
-> lines.
+> The Timed I/O Hardware implement 3 basic functions:
+>   * Input Timestamping
+>   * Single Shot Timed Output
+>   * Periodic Timed Output
+>
+>  Please help to review the changes.
 
-Hi Dmitry,
+This looks very similar to the usecase proposed for the HTE
+Hardware Timestamping Engine, proposed by Dipen Patel
+for the nVidia 194 and which is currently in RFC:
+https://lore.kernel.org/linux-gpio/20210625235532.19575-1-dipenp@nvidia.com/
 
-You never shared your thoughts about this simplification. Some of
-these could be redundant with Rob's work:
-https://lore.kernel.org/lkml/CAL_Jsq+ajm5aiAJfQdS2+2DO1ynBDHWha_7TsA4u-2qwd87y6g@mail.gmail.com/
-but I am not sure if it was merged.
+Please review this new subsystem and see if you can just
+make a slot-in driver using Dipen's patches instead.
 
-On the other hand there are here also few other changes like:
->   gpio: Add devm_fwnode_gpiod_get_optional() helpers
->   Input: gpio_keys - Simplify with dev_err_probe()
-which does:
-8 insertions(+), 17 deletions(-)
+Dipen: please have a look at Sowjanya's patches to see
+if this hardware is similar to yours.
 
-and these:
->   Input: bu21013_ts - Use local 'client->dev' variable in probe()
->   Input: bu21029_ts - Use local 'client->dev' variable in probe()
+Sometimes several vendors come up with similar hardware
+around the same time, because of industry trends, so I would
+not be surprised if these two hardwares address the very
+same usecase.
 
-Any comments?
-
-Best regards,
-Krzysztof
-
-
-
-> > Krzysztof Kozlowski (27):
-> >   Input: gpio_keys_polled - Simplify with dev_err_probe()
-> >   Input: gpio-vibra - Simplify with dev_err_probe()
-> >   Input: pwm-beeper - Simplify with dev_err_probe()
-> >   Input: pwm-vibra - Simplify with dev_err_probe()
-> >   Input: rotary_encoder - Simplify with dev_err_probe()
-> >   Input: elan_i2c - Simplify with dev_err_probe()
-> >   Input: bu21013_ts - Simplify with dev_err_probe()
-> >   Input: bu21029_ts - Simplify with dev_err_probe()
-> >   Input: chipone_icn8318 - Simplify with dev_err_probe()
-> >   Input: cy8ctma140 - Simplify with dev_err_probe()
-> >   Input: edf-ft5x06 - Simplify with dev_err_probe()
-> >   Input: ektf2127 - Simplify with dev_err_probe()
-> >   Input: elants_i2c - Simplify with dev_err_probe()
-> >   Input: goodix - Simplify with dev_err_probe()
-> >   Input: melfas_mip4 - Simplify with dev_err_probe()
-> >   Input: pixcir_i2c_ts - Simplify with dev_err_probe()
-> >   Input: raydium_i2c_ts - Simplify with dev_err_probe()
-> >   Input: resistive-adc-touch - Simplify with dev_err_probe()
-> >   Input: silead - Simplify with dev_err_probe()
-> >   Input: sis_i2c - Simplify with dev_err_probe()
-> >   Input: surface3_spi - Simplify with dev_err_probe()
-> >   Input: sx8643 - Simplify with dev_err_probe()
-> >   Input: bcm-keypad - Simplify with dev_err_probe()
-> >   gpio: Add devm_fwnode_gpiod_get_optional() helpers
-> >   Input: gpio_keys - Simplify with dev_err_probe()
-> >   Input: bu21013_ts - Use local 'client->dev' variable in probe()
-> >   Input: bu21029_ts - Use local 'client->dev' variable in probe()
-> >
-> >  drivers/gpio/gpiolib-devres.c                 | 71 ++++++++++++++++++
-> >  drivers/input/keyboard/bcm-keypad.c           | 14 ++--
-> >  drivers/input/keyboard/gpio_keys.c            | 25 +++----
-> >  drivers/input/keyboard/gpio_keys_polled.c     |  8 +--
-> >  drivers/input/misc/gpio-vibra.c               | 20 ++----
-> >  drivers/input/misc/pwm-beeper.c               | 19 ++---
-> >  drivers/input/misc/pwm-vibra.c                | 20 ++----
-> >  drivers/input/misc/rotary_encoder.c           |  8 +--
-> >  drivers/input/mouse/elan_i2c_core.c           |  9 +--
-> >  drivers/input/touchscreen/bu21013_ts.c        | 72 ++++++++-----------
-> >  drivers/input/touchscreen/bu21029_ts.c        | 53 ++++++--------
-> >  drivers/input/touchscreen/chipone_icn8318.c   |  8 +--
-> >  drivers/input/touchscreen/cy8ctma140.c        |  8 +--
-> >  drivers/input/touchscreen/edt-ft5x06.c        | 10 +--
-> >  drivers/input/touchscreen/ektf2127.c          |  8 +--
-> >  drivers/input/touchscreen/elants_i2c.c        | 22 ++----
-> >  drivers/input/touchscreen/goodix.c            | 40 +++--------
-> >  drivers/input/touchscreen/melfas_mip4.c       |  9 +--
-> >  drivers/input/touchscreen/pixcir_i2c_ts.c     | 38 ++++------
-> >  drivers/input/touchscreen/raydium_i2c_ts.c    | 30 +++-----
-> >  .../input/touchscreen/resistive-adc-touch.c   |  8 +--
-> >  drivers/input/touchscreen/silead.c            |  8 +--
-> >  drivers/input/touchscreen/sis_i2c.c           | 20 ++----
-> >  drivers/input/touchscreen/surface3_spi.c      | 13 +---
-> >  drivers/input/touchscreen/sx8654.c            | 10 +--
-> >  include/linux/gpio/consumer.h                 | 30 ++++++++
-> >  26 files changed, 253 insertions(+), 328 deletions(-)
-> >
-> > --
-> > 2.17.1
-> >
+Yours,
+Linus Walleij
