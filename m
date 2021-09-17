@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1B0C4101B4
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Sep 2021 01:30:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 588CB4101CC
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Sep 2021 01:35:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231542AbhIQXb5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Sep 2021 19:31:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46146 "EHLO
+        id S229715AbhIQXgo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Sep 2021 19:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231263AbhIQXb5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Sep 2021 19:31:57 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF62C061574
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Sep 2021 16:30:34 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id g1so39776194lfj.12
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Sep 2021 16:30:34 -0700 (PDT)
+        with ESMTP id S229554AbhIQXgo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Sep 2021 19:36:44 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E13EC061574
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Sep 2021 16:35:21 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id y28so38421372lfb.0
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Sep 2021 16:35:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cpnSJMR29KAOxGqlXqlxDiInk1Lq6rehAogLugRUoe8=;
-        b=J5VPAEh1xGS3X/v/0MYXeaLoKImveKzwMsHGOu8nHDMw7OjmFS9Hou2DcQqHis3bJR
-         yeTxXrd2Yct2FZWJCtE/OJyzjAS7gOjNaJ1UfrT8m/IKfIR6Ha/pRB3ns7pjoh3ffDGW
-         6Q9a//cKO492bBwb6zzZLKHO3x2SuphfCZ9u5nxYZhNdpp86UwyCIR1Ee2QEwZ3Nyg6a
-         mAoQ37zUuuOTzNHmvZaRH76EnvVXZW6hjBMaA80gH0WQOraP8EPskOPfoiLmDdY8GrdA
-         5DT3P22RheTshOqWiZJnCGjltGh7klLb/bfCxIAFjrxFAjY9Zfs3oLwOr6k/m4B+mC+m
-         4BGA==
+        bh=PkDGmP0aGYLJS6/pcxej119Ez5GceZ/Qr9wqpNPM2Hg=;
+        b=iRflbXUDbQwR8fPuqpGMIZRh5d5XJIBmq1xET2tbgxzSe+8GcHffEhQyAF9XeGYfA1
+         l4zVOrlw8Z1Hdpl4/B223pyke78E3D/9CDXOR3ZENcxqmdg4OvgJtr/u8yq3EQXYk6sk
+         T7r2o+56gRd5mBmTSwiicZgiyQtw86FFhemFN4LWj0ksot3wSIO4QvNDpuKbIU56ykjC
+         T1vggMUqdATSRQnUtCDMnp6Th5CAN+cSR2G3pP1FLHRPaEJlPaJnkbEYGjMGy9Xak558
+         kMUztiwqCtIb43GpMoSgmMzVc1IeWXBXaL8dZDHpr2m06b3AjpBbYtLZ9fHOYIfa7uTX
+         cC/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cpnSJMR29KAOxGqlXqlxDiInk1Lq6rehAogLugRUoe8=;
-        b=V6ukdu/O4fZDVqsPFq8mT6iA7iy+U/eaRA6WyoUdG9udV4M1+MzmzZ6ptVA+Bl7+TL
-         Phm4OIYcXjg0geVwd5S+8Lhezk1xEipiZzoTsDZOA1a5KqIHgHMAUS5ULFvOxj8xkuM+
-         HjYSI6h9e81dW9nMRGbTqYIi++FPUmlRuW31CxW6FNPkEYNoUApYPdLxXuVzKtfDHl+Y
-         p7I05+qgcWAIZvsVXeaDd6kOm+TXH7QkYs7Pva8YYpbrH8yJqZCIwhFrp2TLUyHHwDr+
-         AQenqlndtmY5sHHCCkSwu6cWdl9A/R+jAeW8XyqyLcFsjFYhWDr1QpsTxarzU44gN5dX
-         EuaA==
-X-Gm-Message-State: AOAM532SeJRDrbIQlZl7G7h8hsR/mbv0LO52T6nWH7sdCINxUiMHEF4Q
-        p1i34xYleM0oy2CiNpyzT4lusw+V/k2K2gdPxrzjnA==
-X-Google-Smtp-Source: ABdhPJyz8i7tHc9BbXGhfKFUhzwRCGvX190zW4oQ4YvwUaz8bQwCLLvxh0LMZ/w9bzt9ovtFB9KZDI98BNQ3BoIYc9E=
-X-Received: by 2002:a05:651c:11c7:: with SMTP id z7mr11406831ljo.288.1631921432572;
- Fri, 17 Sep 2021 16:30:32 -0700 (PDT)
+        bh=PkDGmP0aGYLJS6/pcxej119Ez5GceZ/Qr9wqpNPM2Hg=;
+        b=F+j1r4fQ3b1bru178CwvXHlDlJQLAkrtM4KtsqRbCfP/qnrB5CbOni2c22NRq6CdV7
+         H3FmtEzZOddiSoyXHYnXIWX5DIzo4JNKp4krgvcwApXmSABkrq1BgwQm201bdxhEnSWb
+         ekWeOZSkQyPXGJpOOyVqkK3P9CFlPb8KDDglLRwsFDeDzeB4lJgDv96erVwiCR+yVzhX
+         rX+xiceGB01b0tu94hBO92zdBULvUnVt4Q64+qZJNyWsYRuLoCi7NK7MMqc9He44wv7X
+         YcTVBRQ6qDuqoBUmJyFiHXrdcnP2BI1BgrEB4l1P/FxTRQ83UUHoD9sJn8JoMywU7aZM
+         5bHw==
+X-Gm-Message-State: AOAM530u5Xu7cnhUgCacBGIIZXCndQQK0MR+5nGBuXjpbg0tROCh9U7l
+        3IaYGANah1Kgd6YlRqL/ey96Xlj0YW8Fx3hDNw0J2g==
+X-Google-Smtp-Source: ABdhPJwCbWUAYcAMUm1bFcDDe3zwixhPDj6NEeY3En+++VFztG2zcjFpXcFPx6/FTV0ZDCyJo9XMKU7O4NzvBvTy9cg=
+X-Received: by 2002:ac2:4d03:: with SMTP id r3mr10251096lfi.339.1631921719948;
+ Fri, 17 Sep 2021 16:35:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210913224926.1260726-1-heiko@sntech.de> <20210913224926.1260726-3-heiko@sntech.de>
-In-Reply-To: <20210913224926.1260726-3-heiko@sntech.de>
+References: <20210913224926.1260726-1-heiko@sntech.de> <20210913224926.1260726-4-heiko@sntech.de>
+In-Reply-To: <20210913224926.1260726-4-heiko@sntech.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 18 Sep 2021 01:30:21 +0200
-Message-ID: <CACRpkdbcHi0+pe3jC6AkdBfZZv=EhA1prV1XAXfQKfi4fMtg+A@mail.gmail.com>
-Subject: Re: [PATCH 2/4] gpio/rockchip: fix get_direction value handling
+Date:   Sat, 18 Sep 2021 01:35:09 +0200
+Message-ID: <CACRpkdbWR68xv6a96Nt6mXhrMZaEVT=ejMvqm=TPYngEo6C3RA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] pinctrl/rockchip: add a queue for deferred pin output
+ settings on probe
 To:     Heiko Stuebner <heiko@sntech.de>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Jianqun Xu <jay.xu@rock-chips.com>,
@@ -64,17 +65,32 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Tue, Sep 14, 2021 at 12:49 AM Heiko Stuebner <heiko@sntech.de> wrote:
 
-> The function uses the newly introduced rockchip_gpio_readl_bit()
-> which directly returns the actual value of the requeste bit.
-> So using the existing bit-wise check for the bit inside the value
-> will always return 0.
+> The separation of pinctrl and gpio drivers created a tiny window where
+> a pinconfig setting might produce a null-pointer dereference.
 >
-> Fix this by dropping the bit manipulation on the result.
+> The affected device were rk3288-veyron devices in this case.
 >
-> Fixes: 3bcbd1a85b68 ("gpio/rockchip: support next version gpio controller")
+> Pinctrl-hogs are claimed when the pinctrl driver is registered,
+> at which point their pinconfig settings will be applied.
+> At this time the now separate gpio devices will not have been created
+> yet and the matching driver won't have probed yet, making the gpio->foo()
+> call run into a null-ptr.
+>
+> As probing is not really guaranteed to have been completed at a specific
+> time, introduce a queue that can hold the output settings until the gpio
+> driver has probed and will (in a separate patch) fetch the elements
+> of the list.
+>
+> We expect the gpio driver to empty the list, but will nevertheless empty
+> it ourself on remove if that didn't happen.
+>
+> Fixes: 9ce9a02039de ("pinctrl/rockchip: drop the gpio related codes")
 > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Hm this is not very elegant but what can we do.
+Tentatively applied for fixes.
+
+Can we not use device links to get around this?
 
 Yours,
 Linus Walleij
