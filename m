@@ -2,70 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 280AC40EF1F
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 04:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A78B040EF36
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 04:32:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242643AbhIQCMZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Sep 2021 22:12:25 -0400
-Received: from mx22.baidu.com ([220.181.50.185]:44446 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S242642AbhIQCMY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Sep 2021 22:12:24 -0400
-X-Greylist: delayed 987 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Sep 2021 22:12:24 EDT
-Received: from BC-Mail-Ex25.internal.baidu.com (unknown [172.31.51.19])
-        by Forcepoint Email with ESMTPS id D007E98AF78AADBE57E8;
-        Fri, 17 Sep 2021 09:54:34 +0800 (CST)
-Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
- BC-Mail-Ex25.internal.baidu.com (172.31.51.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2242.12; Fri, 17 Sep 2021 09:54:34 +0800
-Received: from localhost (172.31.63.8) by BJHW-MAIL-EX27.internal.baidu.com
- (10.127.64.42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 17
- Sep 2021 09:54:34 +0800
-Date:   Fri, 17 Sep 2021 09:54:34 +0800
-From:   Cai Huoqing <caihuoqing@baidu.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>, open list:
-        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>, ;
-        linux-kernel <linux-kernel@vger.kernel.org>
-Illegal-Object: Syntax error in CC: address found on vger.kernel.org:
-        CC:     ;linux-kernel <linux-kernel@vger.kernel.org>
-                        ^-missing semicolon to end mail group, extraneous tokens in mailbox, missing end of mailbox
-Subject: Re: [PATCH] pinctrl: freescale: Add helper dependency on COMPILE_TEST
-Message-ID: <20210917015434.GA17483@LAPTOP-UKSR4ENP.internal.baidu.com>
-References: <20210825082251.2484-1-caihuoqing@baidu.com>
- <CACRpkdYekS+2WKoyT5ssSp28XR4pxb+4yMZnP9PPRXpG+UE-LA@mail.gmail.com>
+        id S242755AbhIQCdp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Sep 2021 22:33:45 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:37362 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S235118AbhIQCdm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Sep 2021 22:33:42 -0400
+X-UUID: 49b5bf126a7246a88068a627cfd78c39-20210917
+X-UUID: 49b5bf126a7246a88068a627cfd78c39-20210917
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 2077872568; Fri, 17 Sep 2021 10:32:18 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 17 Sep 2021 10:32:17 +0800
+Received: from localhost.localdomain (10.17.3.154) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 17 Sep 2021 10:32:16 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <hui.liu@mediatek.com>, <light.hsieh@mediatek.com>,
+        <biao.huang@mediatek.com>, <hongzhou.yang@mediatek.com>,
+        <sean.wang@mediatek.com>, <seiya.wang@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Subject: [PATCH v12 0/5] Mediatek pinctrl patch on mt8195
+Date:   Fri, 17 Sep 2021 10:32:11 +0800
+Message-ID: <20210917023216.18384-1-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdYekS+2WKoyT5ssSp28XR4pxb+4yMZnP9PPRXpG+UE-LA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [172.31.63.8]
-X-ClientProxiedBy: BC-Mail-Ex27.internal.baidu.com (172.31.51.21) To
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17 9月 21 00:07:32, Linus Walleij wrote:
-> On Wed, Aug 25, 2021 at 10:23 AM Cai Huoqing <caihuoqing@baidu.com> wrote:
-> 
-> > it's helpful for complie test in other platform(e.g.X86)
-> >
-> > Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
-> 
-> It seems weird to only enable this on a few select subdrivers rather
-> than all of the Freescale drivers?
-The others seem to depend on SOC_IMX arch related headers
-but it's ok for ARCH_IMX related to use COMPILE_TEST.
-> 
-> (Also: the Freescale maintainers are very silent, some feedback
-> would be helpful.)
-> 
-> Yours,
-> Linus Walleij
+This series includes 5 patches:
+1.add rsel define.
+2.change pull up/down description
+3.fix coding style
+4.support rsel feature for common ICs
+5.add rsel setting on MT8195
+
+Changes in patch v12:
+1)add "ack-by" on "rsel define" patch.
+2)add "change reason" in commit message and write a shema
+  on patch document patch 2/5.
+3)separate eint pm_ops fucntion support patch
+4)separate rsel patch, the common parts as patch 4/5 to support
+  common ICs. The mt8195 specific changes as patch 5/5.
+5)add fix coding style patch to fix Camel spelling to avoid checkpatch
+  warning in a following patch.
+6)remove unrelated changes in rsel patch.
+7)change ternary ops in resel patch
+8)add "rsel_is_unit" property on struct mtk_pinctrl, and itendify
+  "mediatek,rsel_resistance_in_si_unit" property in probe function.
+9)add explanation for "MTK_PULL_RSEL_TYPE" and "MTK_PULL_PU_PD_RSEL_TYPE".
+10) fix spell warning in rsel patch.
+
+Changes in patch v11:
+1)add pm_ops fucntion support
+2)change pull up/down description
+3)add resistance value feature support.
+
+Changes in patch v10:
+1)fix PARENTHESIS_ALIGNMENT of mtk_pinconf_bias_set_rsel
+2)fix LONG_LINE warning in 615 in pinctrl-paris.c.
+
+Changes in patch v9:
+1)fix "mtk_pinconf_bias_set_rsel" build warning.
+
+Changes in patch v8:
+1)add rsel define patch
+2)avoid  CamelCase
+3)add pinctrl rsel setting patch which is another resistance selection
+  solution for I2C on MT8195.
+
+Changes in patch v7:
+1)add version in patch and fix spelling mistakes.
+
+Changes in patch v6:
+1)add "pintcrl: mediatek" as prefix.
+
+Changes in patch v5:
+1)document and driver patch are apploed.
+2)change '-EOPNOTSUPP' to '-ENOTSUPP'
+
+Changes in patch v4:
+1)fix pinctrl-mt8195.yaml warning error.
+2)remove pinctrl device node patch which is based on "mt8195.dtsi".
+
+Changes in patch v3:
+1)change '^pins' to '-pins$'.
+2)change 'state_0_node_a' to 'gpio_pin' which is defined in dts.
+3)change 'state_0_node_b' to 'i2c0_pin' which is defined in dts.
+4)reorder this series patches. change pinctrl file and binding document
+together in one patch.
+
+There are no changes in v1 & v2.
+
+Zhiyong Tao (5):
+  dt-bindings: pinctrl: mt8195: add rsel define
+  dt-bindings: pinctrl: mt8195: change pull up/down description
+  pinctrl: mediatek: fix coding style
+  pinctrl: mediatek: support rsel feature
+  pinctrl: mediatek: add rsel setting on MT8195
+
+ .../bindings/pinctrl/pinctrl-mt8195.yaml      |  65 ++++-
+ drivers/pinctrl/mediatek/pinctrl-mt8195.c     | 133 ++++++++++
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 231 +++++++++++++++---
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  45 ++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |  68 ++++--
+ include/dt-bindings/pinctrl/mt65xx.h          |   9 +
+ 6 files changed, 497 insertions(+), 54 deletions(-)
+
+--
+2.18.0
+
+
